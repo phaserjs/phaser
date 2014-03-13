@@ -320,12 +320,12 @@ Phaser.Physics.P2.Body.prototype = {
         {
             if (clearGroup)
             {
-                shapes.collisionGroup = null;
+                shape.collisionGroup = null;
             }
 
             if (clearMask)
             {
-                shapes.collisionMask = null;
+                shape.collisionMask = null;
             }
         }
 
@@ -967,11 +967,12 @@ Phaser.Physics.P2.Body.prototype = {
             path[p][1] = this.world.pxmi(path[p][1]);
         }
 
-        result = this.data.fromPolygon(path, options);
+        var result = this.data.fromPolygon(path, options);
 
         this.shapeChanged();
 
-        return result
+        return result;
+
     },
 
     /**
@@ -1148,10 +1149,11 @@ Phaser.Physics.P2.Body.prototype = {
                 this.data.addShape(c, cm);
             }
 
-            // this.data.adjustCenterOfMass();
             this.data.aabbNeedsUpdate = true;
             this.shapeChanged();
+
             return true;
+
         }
 
         return false;
@@ -1173,13 +1175,13 @@ Phaser.Physics.P2.Body.prototype = {
     */
     loadData: function (key, object, options) {
 
-        var data = game.cache.getPhysicsData(key, object);
+        var data = this.game.cache.getPhysicsData(key, object);
 
         if (data && data.shape)
         {
             this.mass = data.density;
-            //  set friction + bounce here
-            this.loadPolygon(key, object);
+            this.loadPolygon(key, object, options);
+            //  TODO set friction + bounce here
         }
 
     }
@@ -1429,7 +1431,6 @@ Object.defineProperty(Phaser.Physics.P2.Body.prototype, "fixedRotation", {
         if (value !== this.data.fixedRotation)
         {
             this.data.fixedRotation = value;
-            //  update anything?
         }
 
     }
@@ -1474,11 +1475,6 @@ Object.defineProperty(Phaser.Physics.P2.Body.prototype, "mass", {
         {
             this.data.mass = value;
             this.data.updateMassProperties();
-
-            if (value === 0)
-            {
-                // this.static = true;
-            }
         }
 
     }
@@ -1502,7 +1498,6 @@ Object.defineProperty(Phaser.Physics.P2.Body.prototype, "motionState", {
         if (value !== this.data.motionState)
         {
             this.data.motionState = value;
-            //  update?
         }
 
     }

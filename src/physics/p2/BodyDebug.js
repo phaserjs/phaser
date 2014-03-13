@@ -26,7 +26,7 @@ Phaser.Physics.P2.BodyDebug = function(game, body, settings) {
     * @property {object} defaultSettings - Default debug settings.
     * @private
     */
-    defaultSettings = {
+    var defaultSettings = {
         pixelsPerLengthUnit: 20,
         debugPolygons: false,
         lineWidth: 1,
@@ -96,7 +96,7 @@ Phaser.Utils.extend(Phaser.Physics.P2.BodyDebug.prototype, {
     */
     draw: function() {
     
-        var angle, child, color, i, j, lineColor, lw, obj, offset, sprite, v, verts, vrot, _i, _j, _ref, _ref1, _results;
+        var angle, child, color, i, j, lineColor, lw, obj, offset, sprite, v, verts, vrot, _j, _ref1;
         obj = this.body;
         sprite = this.canvas;
         sprite.clear();
@@ -115,12 +115,12 @@ Phaser.Utils.extend(Phaser.Physics.P2.BodyDebug.prototype, {
                 child = obj.shapes[i];
                 offset = obj.shapeOffsets[i];
                 angle = obj.shapeAngles[i];
-                offset = offset || zero;
+                offset = offset || 0;
                 angle = angle || 0;
         
                 if (child instanceof p2.Circle)
                 {
-                  this.drawCircle(sprite, offset[0] * this.ppu, -offset[1] * this.ppu, angle, child.radius * this.ppu, color, lw);
+                    this.drawCircle(sprite, offset[0] * this.ppu, -offset[1] * this.ppu, angle, child.radius * this.ppu, color, lw);
                 }
                 else if (child instanceof p2.Convex)
                 {
@@ -324,12 +324,11 @@ Phaser.Utils.extend(Phaser.Physics.P2.BodyDebug.prototype, {
                         g.lineTo(x, y);
                     }
                 }
-            lastx = x;
-            lasty = y;
+                lastx = x;
+                lasty = y;
+            }
 
-          }
-
-          i++;
+            i++;
 
         }
 

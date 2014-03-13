@@ -1437,7 +1437,7 @@ Phaser.Physics.P2.prototype = {
                 {
                     if (optimize)
                     {
-                        right = map.getTileRight(layer, x, y);
+                        var right = map.getTileRight(layer, x, y);
 
                         if (width === 0)
                         {

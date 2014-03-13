@@ -85,7 +85,6 @@
     <script src="$path/src/input/SinglePad.js"></script>
     <script src="$path/src/input/GamepadButton.js"></script>
     <script src="$path/src/input/InputHandler.js"></script>
-    <script src="$path/src/input/Gestures.js"></script>
 
     <script src="$path/src/gameobjects/Events.js"></script>
     <script src="$path/src/gameobjects/GameObjectCreator.js"></script>

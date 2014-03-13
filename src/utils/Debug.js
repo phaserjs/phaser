@@ -408,7 +408,7 @@ Phaser.Utils.Debug.prototype = {
 
         var bounds = sprite.getBounds();
 
-        this.renderRectangle(bounds, color, filled);
+        this.rectangle(bounds, color, filled);
 
     },
 
