@@ -362,7 +362,7 @@ Phaser.Physics.Arcade.Body.prototype = {
 
         // this.x = this.preX;
         // this.y = this.preY;
-        // this.rotation = this.preRotation;
+        this.rotation = this.preRotation;
 
         // this.overlapX = 0;
         // this.overlapY = 0;
