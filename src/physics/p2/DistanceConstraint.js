@@ -18,6 +18,8 @@
 */
 Phaser.Physics.P2.DistanceConstraint = function (world, bodyA, bodyB, distance, maxForce) {
 
+    if (typeof distance === 'undefined') { distance = 100; }
+
     /**
     * @property {Phaser.Game} game - Local reference to game.
     */
@@ -27,8 +29,6 @@ Phaser.Physics.P2.DistanceConstraint = function (world, bodyA, bodyB, distance, 
     * @property {Phaser.Physics.P2} world - Local reference to P2 World.
     */
     this.world = world;
-
-    if (typeof distance === 'undefined') { distance = 100; }
 
     distance = world.pxm(distance);
 

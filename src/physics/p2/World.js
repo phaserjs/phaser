@@ -752,10 +752,10 @@ Phaser.Physics.P2.prototype = {
     * The pivot points are given in world (pixel) coordinates.
     *
     * @method Phaser.Physics.P2#createRevoluteConstraint
-    * @param {p2.Body} bodyA - First connected body.
-    * @param {Float32Array} pivotA - The point relative to the center of mass of bodyA which bodyA is constrained to. The value is an array with 2 elements matching x and y, i.e: [32, 32].
-    * @param {p2.Body} bodyB - Second connected body.
-    * @param {Float32Array} pivotB - The point relative to the center of mass of bodyB which bodyB is constrained to. The value is an array with 2 elements matching x and y, i.e: [32, 32].
+    * @param {Phaser.Sprite|Phaser.Physics.P2.Body|p2.Body} bodyA - First connected body.
+    * @param {Array} pivotA - The point relative to the center of mass of bodyA which bodyA is constrained to. The value is an array with 2 elements matching x and y, i.e: [32, 32].
+    * @param {Phaser.Sprite|Phaser.Physics.P2.Body|p2.Body} bodyB - Second connected body.
+    * @param {Array} pivotB - The point relative to the center of mass of bodyB which bodyB is constrained to. The value is an array with 2 elements matching x and y, i.e: [32, 32].
     * @param {number} [maxForce=0] - The maximum force that should be applied to constrain the bodies.
     * @return {Phaser.Physics.P2.RevoluteConstraint} The constraint
     */
@@ -771,6 +771,63 @@ Phaser.Physics.P2.prototype = {
         else
         {
             return this.addConstraint(new Phaser.Physics.P2.RevoluteConstraint(this, bodyA, pivotA, bodyB, pivotB, maxForce));
+        }
+
+    },
+
+    /**
+    * Locks the relative position between two bodies.
+    *
+    * @method Phaser.Physics.P2#createLockConstraint
+    * @param {Phaser.Sprite|Phaser.Physics.P2.Body|p2.Body} bodyA - First connected body.
+    * @param {Phaser.Sprite|Phaser.Physics.P2.Body|p2.Body} bodyB - Second connected body.
+    * @param {Array} [offset] - The offset of bodyB in bodyA's frame. The value is an array with 2 elements matching x and y, i.e: [32, 32].
+    * @param {number} [angle=0] - The angle of bodyB in bodyA's frame.
+    * @param {number} [maxForce] - The maximum force that should be applied to constrain the bodies.
+    * @return {Phaser.Physics.P2.LockConstraint} The constraint
+    */
+    createLockConstraint: function (bodyA, bodyB, offset, angle, maxForce) {
+
+        bodyA = this.getBody(bodyA);
+        bodyB = this.getBody(bodyB);
+
+        if (!bodyA || !bodyB)
+        {
+            console.warn('Cannot create Constraint, invalid body objects given');
+        }
+        else
+        {
+            return this.addConstraint(new Phaser.Physics.P2.LockConstraint(this, bodyA, bodyB, offset, angle, maxForce));
+        }
+
+    },
+
+    /**
+    * Constraint that only allows bodies to move along a line, relative to each other.
+    * See http://www.iforce2d.net/b2dtut/joints-prismatic
+    *
+    * @method Phaser.Physics.P2#createPrismaticConstraint
+    * @param {Phaser.Sprite|Phaser.Physics.P2.Body|p2.Body} bodyA - First connected body.
+    * @param {Phaser.Sprite|Phaser.Physics.P2.Body|p2.Body} bodyB - Second connected body.
+    * @param {boolean} [lock=false] - If set to true, bodyB will be free to rotate around its anchor point.
+    * @param {Array} [anchorA] - Body A's anchor point, defined in its own local frame. The value is an array with 2 elements matching x and y, i.e: [32, 32].
+    * @param {Array} [anchorB] - Body A's anchor point, defined in its own local frame. The value is an array with 2 elements matching x and y, i.e: [32, 32].
+    * @param {Array} [axis] - An axis, defined in body A frame, that body B's anchor point may slide along. The value is an array with 2 elements matching x and y, i.e: [32, 32].
+    * @param {number} [maxForce] - The maximum force that should be applied to constrain the bodies.
+    * @return {Phaser.Physics.P2.PrismaticConstraint} The constraint
+    */
+    createPrismaticConstraint: function (bodyA, bodyB, lock, anchorA, anchorB, axis, maxForce) {
+
+        bodyA = this.getBody(bodyA);
+        bodyB = this.getBody(bodyB);
+
+        if (!bodyA || !bodyB)
+        {
+            console.warn('Cannot create Constraint, invalid body objects given');
+        }
+        else
+        {
+            return this.addConstraint(new Phaser.Physics.P2.PrismaticConstraint(this, bodyA, bodyB, lock, anchorA, anchorB, axis, maxForce));
         }
 
     },
