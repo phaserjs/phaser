@@ -709,8 +709,20 @@
       "title": "load polygon 2"
     },
     {
+      "file": "lock+constraint.js",
+      "title": "lock constraint"
+    },
+    {
       "file": "postbroadphase+callback.js",
       "title": "postbroadphase callback"
+    },
+    {
+      "file": "prismatic+constraint.js",
+      "title": "prismatic constraint"
+    },
+    {
+      "file": "revolute+constraint.js",
+      "title": "revolute constraint"
     },
     {
       "file": "springs.js",

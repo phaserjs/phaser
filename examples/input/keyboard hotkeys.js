@@ -17,6 +17,8 @@ function create() {
 
     game.stage.backgroundColor = '#736357';
 
+    game.add.text(0,0,'Press one, two or three !',{});
+
     //  Here we create 3 hotkeys, keys 1-3 and bind them all to their own functions
 
     key1 = game.input.keyboard.addKey(Phaser.Keyboard.ONE);

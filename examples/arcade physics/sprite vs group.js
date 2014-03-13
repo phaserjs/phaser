@@ -16,12 +16,12 @@ function create() {
 
     game.stage.backgroundColor = '#2d2d2d';
 
-    game.physics.enable(game.world, Phaser.Physics.ARCADE);
-
     //  This example will check Sprite vs. Group collision
 
     sprite = game.add.sprite(32, 200, 'phaser');
     sprite.name = 'phaser-dude';
+
+    game.physics.enable(sprite, Phaser.Physics.ARCADE);
     
     group = game.add.group();
     group.enableBody = true;
@@ -29,7 +29,7 @@ function create() {
 
     for (var i = 0; i < 50; i++)
     {
-        var c = group.create(game.rnd.integerInRange(100, 770), game.rnd.integerInRange(0, 570), 'veggies', game.rnd.integerInRange(0, 36));
+        var c = group.create(game.rnd.integerInRange(100, 770), game.rnd.integerInRange(0, 570), 'veggies', game.rnd.integerInRange(0, 35));
         c.name = 'veg' + i;
         c.body.immovable = true;
     }

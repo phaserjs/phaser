@@ -24,6 +24,8 @@ function create() {
         game.add.sprite(game.world.randomX, game.world.randomY, 'ufo');
     }
 
+    game.physics.startSystem(Phaser.Physics.P2JS);
+
     fixed = game.add.sprite(300, 320, 'player');
     fixed.fixedToCamera = true;
     fixed.cameraOffset.x = 300;
@@ -31,7 +33,7 @@ function create() {
 
     player = game.add.sprite(150, 320, 'player');
 
-    player.physicsEnabled = true;
+    game.physics.p2.enable(player);
 
     cursors = game.input.keyboard.createCursorKeys();
 

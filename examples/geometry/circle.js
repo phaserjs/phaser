@@ -12,7 +12,7 @@ function create() {
 
 function render () {
 
-    game.debug.circle(circle,'#cfffff');
+    game.debug.geom(circle,'#cfffff');
     game.debug.text('Diameter : '+circle.diameter,50,200);
     game.debug.text('Circumference : '+circle.circumference(),50,230);
 

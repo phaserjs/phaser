@@ -14,21 +14,34 @@ function preload() {
 
 function create() {
 
+    game.physics.arcade.gravity.y = 20;
+
     ball = game.add.sprite(400, 0, 'ball');
-    ball.physicsEnabled = true;
+
+    
+
+
+    game.physics.enable(ball, Phaser.Physics.ARCADE);
 
     tilesprite = game.add.tileSprite(300, 450, 200, 100, 'starfield');
 
-    tilesprite.physicsEnabled = true;
-    // tilesprite.body.immovable = true;
 
-    // tilesprite.body.setRectangle(200, 100, 0, 0);
+
+    game.physics.enable(tilesprite, Phaser.Physics.ARCADE);
+
+
+    ball.body.collideWorldBounds = true;
+
+    tilesprite.body.collideWorldBounds = true;
+
 
     cursors = game.input.keyboard.createCursorKeys();
 
 }
 
 function update() {
+
+    game.physics.arcade.collide(ball,tilesprite);
 
     if (cursors.left.isDown)
     {
