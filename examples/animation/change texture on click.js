@@ -34,6 +34,6 @@ function changeMummy() {
 
 function render() {
 
-    game.debug.spriteBounds(bot);
+    game.debug.body(bot);
 
 }

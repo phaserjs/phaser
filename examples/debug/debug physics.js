@@ -20,15 +20,16 @@ function create() {
     sprite = game.add.sprite(0, 0, 'sprite');
     sprite.alpha = 0.5 ;
     sprite.x = game.width / 2 ;
-    sprite.physicsEnabled = true;
 
     // create sprite B
     otherSprite = game.add.sprite(0, 0, 'otherSprite');
     otherSprite.alpha = 0.5 ;
     otherSprite.x = (game.width / 2) + 150 ;
     otherSprite.y = (game.height / 2) + 150 ;
-    otherSprite.physicsEnabled = true;
+    
     otherSprite.body.immovable = true ;
+
+    game.physics.enable([sprite,otherSprite], Phaser.Physics.ARCADE);
 }
 
 function update()

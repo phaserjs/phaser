@@ -19,8 +19,8 @@ function create() {
     //  and assign it to a variable
     var image = game.add.sprite(0, 0, 'einstein');
 
-    image.physicsEnabled = true;
+    game.physics.enable(image, Phaser.Physics.ARCADE);
 
-    image.body.moveRight(150);
+    image.body.velocity.x=150;
 
 }

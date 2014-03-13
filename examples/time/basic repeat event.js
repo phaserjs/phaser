@@ -33,7 +33,7 @@ function createBall() {
 
     var ball = game.add.sprite(game.world.randomX, 0, 'ball');
 
-    ball.physicsEnabled = true;
+    game.physics.enable(ball, Phaser.Physics.ARCADE);
 
 }
 

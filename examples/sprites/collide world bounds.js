@@ -11,6 +11,8 @@ var pineapples;
 function create() {
 
     pineapples = game.add.group();
+    pineapples.enableBody = true;
+    pineapples.physicsBodyType = Phaser.Physics.ARCADE;
 
     for (var i = 0; i < 10; i++)
     {
