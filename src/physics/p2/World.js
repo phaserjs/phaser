@@ -843,7 +843,7 @@ Phaser.Physics.P2.prototype = {
     },
 
     /**
-    * Populates and returns an array of all current Bodies in the world.
+    * Populates and returns an array with references to of all current Bodies in the world.
     *
     * @method Phaser.Physics.P2#getBodies
     * @return {array<Phaser.Physics.P2.Body>} An array containing all current Bodies in the world.
@@ -859,6 +859,35 @@ Phaser.Physics.P2.prototype = {
         }
 
         return output;
+
+    },
+
+    /**
+    * Checks the given object to see if it has a p2.Body and if so returns it.
+    *
+    * @method Phaser.Physics.P2#getBody
+    * @param {object} object - The object to check for a p2.Body on.
+    * @return {p2.Body} The p2.Body, or null if not found.
+    */
+    getBody: function (object) {
+
+        if (object['world'])
+        {
+            //  Native p2 body
+            return object;
+        }
+        else if (object instanceof Phaser.Physics.P2.Body)
+        {
+            //  Phaser P2 Body
+            return object.data;
+        }
+        else if (object['body'] && object['body'].type === Phaser.Physics.P2JS)
+        {
+            //  Sprite, TileSprite, etc
+            return object.body.data;
+        }
+
+        return null;
 
     },
 
@@ -1031,11 +1060,11 @@ Phaser.Physics.P2.prototype = {
     },
 
     /**
-    * Creates a spring, connecting two bodies.
+    * Creates a spring, connecting two bodies. A spring can have a resting length, a stiffness and damping.
     *
     * @method Phaser.Physics.P2#createSpring
-    * @param {Phaser.Physics.P2.Body} bodyA - First connected body.
-    * @param {Phaser.Physics.P2.Body} bodyB - Second connected body.
+    * @param {Phaser.Sprite|Phaser.Physics.P2.Body|p2.Body} bodyA - First connected body.
+    * @param {Phaser.Sprite|Phaser.Physics.P2.Body|p2.Body} bodyB - Second connected body.
     * @param {number} [restLength=1] - Rest length of the spring. A number > 0.
     * @param {number} [stiffness=100] - Stiffness of the spring. A number >= 0.
     * @param {number} [damping=1] - Damping of the spring. A number >= 0.
@@ -1050,7 +1079,17 @@ Phaser.Physics.P2.prototype = {
     */
     createSpring: function (bodyA, bodyB, restLength, stiffness, damping, worldA, worldB, localA, localB) {
 
-        return new Phaser.Physics.P2.Spring(this, bodyA, bodyB, restLength, stiffness, damping, worldA, worldB, localA, localB);
+        bodyA = this.getBody(bodyA);
+        bodyB = this.getBody(bodyB);
+
+        if (!bodyA || !bodyB)
+        {
+            console.warn('Cannot create Spring, invalid body objects given');
+        }
+        else
+        {
+            return new Phaser.Physics.P2.Spring(this, bodyA, bodyB, restLength, stiffness, damping, worldA, worldB, localA, localB);
+        }
 
     },
 

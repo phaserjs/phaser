@@ -274,6 +274,22 @@ Phaser.Group.prototype.create = function (x, y, key, frame, exists) {
 
     var child = new Phaser.Sprite(this.game, x, y, key, frame);
 
+    if (this.enableBody)
+    {
+        if (this.physicsBodyType === Phaser.Physics.ARCADE)
+        {
+            this.game.physics.arcade.enable(child);
+        }
+        else if (this.physicsBodyType === Phaser.Physics.NINJA && this.game.physics.ninja)
+        {
+            this.game.physics.ninja.enable(child);
+        }
+        else if (this.physicsBodyType === Phaser.Physics.P2JS && this.game.physics.p2)
+        {
+            this.game.physics.p2.enable(child, this.enableBodyDebug);
+        }
+    }
+
     child.exists = exists;
     child.visible = exists;
     child.alive = exists;
@@ -290,22 +306,6 @@ Phaser.Group.prototype.create = function (x, y, key, frame, exists) {
     if (this.cursor === null)
     {
         this.cursor = child;
-    }
-
-    if (this.enableBody)
-    {
-        if (this.physicsBodyType === Phaser.Physics.ARCADE)
-        {
-            this.game.physics.arcade.enable(child);
-        }
-        else if (this.physicsBodyType === Phaser.Physics.NINJA && this.game.physics.ninja)
-        {
-            this.game.physics.ninja.enable(child);
-        }
-        else if (this.physicsBodyType === Phaser.Physics.P2JS && this.game.physics.p2)
-        {
-            this.game.physics.p2.enable(child, this.enableBodyDebug);
-        }
     }
 
     return child;

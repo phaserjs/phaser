@@ -4,11 +4,13 @@ var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload:
 function preload() {
 
     game.load.image('atari', 'assets/sprites/atari130xe.png');
-	game.load.image('sky', 'assets/skies/sunset.png');
+    game.load.image('ball', 'assets/sprites/red_ball.png');
+	game.load.image('sky', 'assets/skies/cavern2.png');
 
 }
 
-var sprite;
+var sprite1;
+var sprite2;
 var cursors;
 
 function create() {
@@ -18,22 +20,15 @@ function create() {
 	//	Enable p2 physics
 	game.physics.startSystem(Phaser.Physics.P2JS);
 
-    //  Add a sprite
-	sprite = game.add.sprite(200, 200, 'atari');
+    //  Add 2 sprites which we'll join with a spring
+    sprite1 = game.add.sprite(200, 100, 'ball');
+	sprite2 = game.add.sprite(200, 300, 'atari');
 
-    //  Enable if for physics. This creates a default rectangular body.
-	game.physics.p2.enable(sprite);
+	game.physics.p2.enable([sprite1, sprite2]);
 
     //  Create our spring
-    var spring = game.physics.p2.createSpring(bodyA, bodyB, restLength, stiffness, damping, worldA, worldB, localA, localB);
-
-    // var spring = game.physics.p2.
-
-    //             var spring = new p2.Spring(bodyA,bodyB, {
-    //                 stiffness: k,
-    //                 restLength: l,
-    //                 damping : d
-    //             });
+    // var spring = game.physics.p2.createSpring(sprite1, sprite2, restLength, stiffness, damping, worldA, worldB, localA, localB);
+    // var spring = game.physics.p2.createSpring(sprite1, sprite2);
 
 
 
