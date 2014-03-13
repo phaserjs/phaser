@@ -245,6 +245,36 @@ Phaser.Tile.prototype = {
     },
 
     /**
+    * Is this tile interesting?
+    *
+    * @method Phaser.Tile#isInteresting
+    * @param {boolean} collides - If true will check any collides value.
+    * @param {boolean} faces - If true will check any face value.
+    * @return {boolean} True if the Tile is interesting, otherwise false.
+    */
+    isInteresting: function (collides, faces) {
+
+        if (collides && faces)
+        {
+            //  Does this tile EITHER collide OR have an interesting face?
+            return (this.collideLeft || this.collideRight || this.collideUp || this.collideDown || this.faceTop || this.faceBottom || this.faceLeft || this.faceRight);
+        }
+        else if (collides)
+        {
+            //  Does this tile collide?
+            return (this.collideLeft || this.collideRight || this.collideUp || this.collideDown);
+        }
+        else if (faces)
+        {
+            //  Does this tile have an interesting face?
+            return (this.faceTop || this.faceBottom || this.faceLeft || this.faceRight);
+        }
+
+        return false;
+
+    },
+
+    /**
     * Copies the tile data and properties from the given tile to this tile.
     *
     * @method Phaser.Tile#copy

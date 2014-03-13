@@ -606,7 +606,8 @@ Phaser.Physics.Arcade.prototype = {
     */
     collideSpriteVsTilemapLayer: function (sprite, tilemapLayer, collideCallback, processCallback, callbackContext) {
 
-        this._mapData = tilemapLayer.getIntersectingTiles(sprite.body.position.x, sprite.body.position.y, sprite.body.width, sprite.body.height, sprite.body.right, sprite.body.bottom);
+        // this._mapData = tilemapLayer.getIntersectingTiles(sprite.body.position.x, sprite.body.position.y, sprite.body.width, sprite.body.height, sprite.body.right, sprite.body.bottom);
+        this._mapData = tilemapLayer.getTiles(sprite.body.position.x, sprite.body.position.y, sprite.body.width, sprite.body.height, false, true);
 
         if (this._mapData.length === 0)
         {
@@ -616,6 +617,8 @@ Phaser.Physics.Arcade.prototype = {
         for (var i = 0; i < this._mapData.length; i++)
         {
             // console.log('-------------------------------------- tile', this._mapData[i].faceLeft, this._mapData[i].faceRight, this._mapData[i].faceTop, this._mapData[i].faceBottom);
+            // console.log('-------------------------------------- tile', i, 'of', this._mapData.length, 'xy', this._mapData[i].x, this._mapData[i].y);
+
             if (this.separateTile(i, sprite.body, this._mapData[i]))
             {
                 //  They collided, is there a custom process callback?
@@ -743,7 +746,9 @@ Phaser.Physics.Arcade.prototype = {
                 }
                 else
                 {
+                    body1.touching.none = false;
                     body1.touching.right = true;
+                    body2.touching.none = false;
                     body2.touching.left = true;
                 }
             }
@@ -758,7 +763,9 @@ Phaser.Physics.Arcade.prototype = {
                 }
                 else
                 {
+                    body1.touching.none = false;
                     body1.touching.left = true;
+                    body2.touching.none = false;
                     body2.touching.right = true;
                 }
             }
@@ -852,7 +859,9 @@ Phaser.Physics.Arcade.prototype = {
                 }
                 else
                 {
+                    body1.touching.none = false;
                     body1.touching.down = true;
+                    body2.touching.none = false;
                     body2.touching.up = true;
                 }
             }
@@ -867,7 +876,9 @@ Phaser.Physics.Arcade.prototype = {
                 }
                 else
                 {
+                    body1.touching.none = false;
                     body1.touching.up = true;
+                    body2.touching.none = false;
                     body2.touching.down = true;
                 }
             }
@@ -1023,8 +1034,8 @@ Phaser.Physics.Arcade.prototype = {
     */
     separateTile: function (i, body, tile) {
 
-        //  we re-check for collision in case body was separated in a previous step
-        if (i > 0 && !tile.intersects(body.position.x, body.position.y, body.right, body.bottom))
+        //  We re-check for collision in case body was separated in a previous step
+        if (!tile.intersects(body.position.x, body.position.y, body.right, body.bottom))
         {
             //  no collision so bail out (separted in a previous step)
             return false;
@@ -1048,64 +1059,157 @@ Phaser.Physics.Arcade.prototype = {
 
         var ox = 0;
         var oy = 0;
+        var minX = 0;
+        var minY = 1;
 
-        if (tile.faceLeft || tile.faceRight)
+        if (body.deltaAbsX() > body.deltaAbsY())
         {
-            if (body.deltaX() < 0 && !body.blocked.left && tile.collideRight && body.checkCollision.left)
-            {
-                //  Body is moving LEFT
-                if (tile.faceRight && body.x < tile.right)
-                {
-                    ox = body.x - tile.right;
-                }
-            }
-            else if (body.deltaX() > 0 && !body.blocked.right && tile.collideLeft && body.checkCollision.right)
-            {
-                //  Body is moving RIGHT
-                if (tile.faceLeft && body.right > tile.left)
-                {
-                    ox = body.right - tile.left;
-                }
-            }
-
-            if (ox !== 0)
-            {
-                this.processTileSeparationX(body, ox);
-            }
-
-            //  That's horizontal done, check if we still intersects? If not then we can return now
-            if (!tile.intersects(body.position.x, body.position.y, body.right, body.bottom))
-            {
-                return (ox !== 0);
-            }
+            //  Moving faster horizontally, check X axis first
+            minX = -1;
+        }
+        else if (body.deltaAbsX() < body.deltaAbsY())
+        {
+            //  Moving faster vertically, check Y axis first
+            minY = -1;
         }
 
-        if (tile.faceTop || tile.faceBottom)
+        if (body.deltaX() !== 0 && body.deltaY() !== 0 && (tile.faceLeft || tile.faceRight) && (tile.faceTop || tile.faceBottom))
         {
-            if (body.deltaY() < 0 && !body.blocked.up && tile.collideDown && body.checkCollision.up)
-            {
-                //  Body is moving UP
-                if (tile.faceBottom && body.y < tile.bottom)
-                {
-                    oy = body.y - tile.bottom;
-                }
-            }
-            else if (body.deltaY() > 0 && !body.blocked.down && tile.collideUp && body.checkCollision.down)
-            {
-                //  Body is moving DOWN
-                if (tile.faceTop && body.bottom > tile.top)
-                {
-                    oy = body.bottom - tile.top;
-                }
-            }
+            //  We only need do this if both axis have checking faces AND we're moving in both directions
+            minX = Math.min(Math.abs(body.position.x - tile.right), Math.abs(body.right - tile.left));
+            minY = Math.min(Math.abs(body.position.y - tile.bottom), Math.abs(body.bottom - tile.top));
 
-            if (oy !== 0)
+            // console.log('checking faces', minX, minY);
+
+            // var distLeft = Math.abs(body.position.x - tile.right);
+            // var distRight = Math.abs(body.right - tile.left);
+            // var distTop = Math.abs(body.position.y - tile.bottom);
+            // var distBottom = Math.abs(body.bottom - tile.top);
+            // minX = Math.min(distLeft, distRight);
+            // minY = Math.min(distTop, distBottom);
+            // console.log('dist left', distLeft, 'right', distRight, 'top', distTop, 'bottom', distBottom, 'minX', minX, 'minY', minY);
+            // console.log('tile lr', tile.left, tile.right, 'tb', tile.top, tile.bottom);
+            // console.log('body lr', body.x, body.right, 'tb', body.y, body.bottom);
+        }
+
+        if (minX < minY)
+        {
+            if (tile.faceLeft || tile.faceRight)
             {
-                this.processTileSeparationY(body, oy);
+                ox = this.tileCheckX(body, tile);
+
+                //  That's horizontal done, check if we still intersects? If not then we can return now
+                if (ox !== 0 && !tile.intersects(body.position.x, body.position.y, body.right, body.bottom))
+                {
+                    return true;
+                }
+            }
+    
+            if (tile.faceTop || tile.faceBottom)
+            {
+                oy = this.tileCheckY(body, tile);
+            }
+        }
+        else
+        {
+            if (tile.faceTop || tile.faceBottom)
+            {
+                oy = this.tileCheckY(body, tile);
+
+                //  That's vertical done, check if we still intersects? If not then we can return now
+                if (oy !== 0 && !tile.intersects(body.position.x, body.position.y, body.right, body.bottom))
+                {
+                    return true;
+                }
+            }
+    
+            if (tile.faceLeft || tile.faceRight)
+            {
+                ox = this.tileCheckX(body, tile);
             }
         }
 
         return (ox !== 0 || oy !== 0);
+
+    },
+
+    tileCheckX: function (body, tile) {
+
+        var ox = 0;
+
+        if (body.deltaX() < 0 && !body.blocked.left && tile.collideRight && body.checkCollision.left)
+        {
+            //  Body is moving LEFT
+            if (tile.faceRight && body.x < tile.right)
+            {
+                ox = body.x - tile.right;
+
+                if (ox < -this.OVERLAP_BIAS)
+                {
+                    ox = 0;
+                }
+            }
+        }
+        else if (body.deltaX() > 0 && !body.blocked.right && tile.collideLeft && body.checkCollision.right)
+        {
+            //  Body is moving RIGHT
+            if (tile.faceLeft && body.right > tile.left)
+            {
+                ox = body.right - tile.left;
+
+                if (ox > this.OVERLAP_BIAS)
+                {
+                    ox = 0;
+                }
+            }
+        }
+
+        if (ox !== 0)
+        {
+            this.processTileSeparationX(body, ox);
+        }
+
+        return ox;
+
+    },
+
+    tileCheckY: function (body, tile) {
+
+        var oy = 0;
+
+        if (body.deltaY() < 0 && !body.blocked.up && tile.collideDown && body.checkCollision.up)
+        {
+            //  Body is moving UP
+            if (tile.faceBottom && body.y < tile.bottom)
+            {
+                oy = body.y - tile.bottom;
+
+                if (oy < -this.OVERLAP_BIAS)
+                {
+                    oy = 0;
+                }
+            }
+        }
+        else if (body.deltaY() > 0 && !body.blocked.down && tile.collideUp && body.checkCollision.down)
+        {
+            //  Body is moving DOWN
+            if (tile.faceTop && body.bottom > tile.top)
+            {
+                oy = body.bottom - tile.top;
+
+                if (oy > this.OVERLAP_BIAS)
+                {
+                    oy = 0;
+                }
+            }
+        }
+
+        if (oy !== 0)
+        {
+            this.processTileSeparationY(body, oy);
+        }
+
+        return oy;
 
     },
 

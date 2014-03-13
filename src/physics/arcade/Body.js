@@ -632,12 +632,12 @@ Phaser.Physics.Arcade.Body.render = function (context, body, filled, color) {
     if (filled)
     {
         context.fillStyle = color;
-        context.fillRect(body.x - body.game.camera.x, body.y - body.game.camera.y, body.width, body.height);
+        context.fillRect(body.position.x - body.game.camera.x, body.position.y - body.game.camera.y, body.width, body.height);
     }
     else
     {
         context.strokeStyle = color;
-        context.strokeRect(body.x - body.game.camera.x, body.y - body.game.camera.y, body.width, body.height);
+        context.strokeRect(body.position.x - body.game.camera.x, body.position.y - body.game.camera.y, body.width, body.height);
     }
 
 }

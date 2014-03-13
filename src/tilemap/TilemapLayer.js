@@ -541,12 +541,14 @@ Phaser.TilemapLayer.prototype.getTilesX = function (x, y, width, height, collide
 * @param {number} width - Width of the area to get.
 * @param {number} height - Height of the area to get.
 * @param {boolean} [collides=false] - If true only return tiles that collide on one or more faces.
+* @param {boolean} [interestingFace=false] - If true only return tiles that have interesting faces.
 * @return {array} Array with tiles informations (each contains x, y, and the tile).
 */
-Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides) {
+Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides, interestingFace) {
 
     //  Should we only get tiles that have at least one of their collision flags set? (true = yes, false = no just get them all)
     if (typeof collides === 'undefined') { collides = false; }
+    if (typeof interestingFace === 'undefined') { interestingFace = false; }
 
     // adjust the x,y coordinates for scrollFactor
     x = this._fixX(x);
@@ -577,16 +579,13 @@ Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides
         {
             if (this.layer.data[wy] && this.layer.data[wy][wx])
             {
-                if (collides === false || (collides && this.layer.data[wy][wx].canCollide))
+                if ((!collides && !interestingFace) || this.layer.data[wy][wx].isInteresting(collides, interestingFace))
                 {
                     this._results.push(this.layer.data[wy][wx]);
                 }
             }
         }
     }
-
-    //  DEBUG ONLY - REMOVE
-    this.layer.dirty = true;
 
     return this._results;
 

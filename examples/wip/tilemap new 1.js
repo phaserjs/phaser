@@ -36,7 +36,6 @@ function create() {
     game.camera.follow(sprite);
 
     // game.physics.arcade.gravity.y = 500;
-    // sprite.body.velocity.x = 100;
 
     cursors = game.input.keyboard.createCursorKeys();
 
@@ -51,27 +50,32 @@ function update() {
 
     if (cursors.up.isDown)
     {
-        sprite.body.velocity.y = -100;
+        sprite.body.velocity.y = -200;
     }
     else if (cursors.down.isDown)
     {
-        sprite.body.velocity.y = 100;
+        sprite.body.velocity.y = 200;
     }
 
     if (cursors.left.isDown)
     {
-        sprite.body.velocity.x = -100;
+        sprite.body.velocity.x = -200;
     }
     else if (cursors.right.isDown)
     {
-        sprite.body.velocity.x = 100;
+        sprite.body.velocity.x = 200;
     }
 
 }
 
 function render() {
 
-    game.debug.text(sprite.body.velocity.x, 32, 32);
-    game.debug.text(sprite.body.velocity.y, 64, 32);
+    // game.debug.text(sprite.body.deltaAbsX(), 32, 32);
+    // game.debug.text(sprite.body.deltaAbsY(), 32, 64);
+
+    // game.debug.text(sprite.body.deltaX(), 400, 32);
+    // game.debug.text(sprite.body.deltaY(), 400, 64);
+
+    game.debug.body(sprite);
 
 }
