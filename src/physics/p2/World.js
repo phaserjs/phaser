@@ -34,6 +34,18 @@ Phaser.Physics.P2 = function (game, config) {
     this.world = new p2.World(config);
 
     /**
+    * @property {number} frameRate - The frame rate the world will be stepped at. Defaults to 1 / 60, but you can change here. Also see useElapsedTime property.
+    * @default
+    */
+    this.frameRate =  1 / 60;
+
+    /**
+    * @property {boolean} useElapsedTime - If true the frameRate value will be ignored and instead p2 will step with the value of Game.Time.physicsElapsed, which is a delta time value.
+    * @default
+    */
+    this.useElapsedTime = false;
+
+    /**
     * @property {array<Phaser.Physics.P2.Material>} materials - A local array of all created Materials.
     * @protected
     */
@@ -592,7 +604,14 @@ Phaser.Physics.P2.prototype = {
     */
     update: function () {
 
-        this.world.step(1 / 60);
+        if (this.useElapsedTime)
+        {
+            this.world.step(this.game.time.physicsElapsed);
+        }
+        else
+        {
+            this.world.step(this.frameRate);
+        }
 
     },
 
