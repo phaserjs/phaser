@@ -11,15 +11,15 @@
 * @classdesc Physics Spring Constructor
 * @constructor
 * @param {Phaser.Physics.P2} world - A reference to the P2 World.
-* @param {p2.Body} bodyA - First connected body.
-* @param {p2.Body} bodyB - Second connected body.
+* @param {Phaser.Physics.P2.Body} bodyA - First connected body.
+* @param {Phaser.Physics.P2.Body} bodyB - Second connected body.
 * @param {number} [restLength=1] - Rest length of the spring. A number > 0.
 * @param {number} [stiffness=100] - Stiffness of the spring. A number >= 0.
 * @param {number} [damping=1] - Damping of the spring. A number >= 0.
-* @param {Array} [worldA] - Where to hook the spring to body A, in world coordinates, i.e. [32, 32].
-* @param {Array} [worldB] - Where to hook the spring to body B, in world coordinates, i.e. [32, 32].
-* @param {Array} [localA] - Where to hook the spring to body A, in local body coordinates.
-* @param {Array} [localB] - Where to hook the spring to body B, in local body coordinates.
+* @param {Array} [worldA] - Where to hook the spring to body A in world coordinates. This value is an array by 2 elements, x and y, i.e: [32, 32].
+* @param {Array} [worldB] - Where to hook the spring to body B in world coordinates. This value is an array by 2 elements, x and y, i.e: [32, 32].
+* @param {Array} [localA] - Where to hook the spring to body A in local body coordinates. This value is an array by 2 elements, x and y, i.e: [32, 32].
+* @param {Array} [localB] - Where to hook the spring to body B in local body coordinates. This value is an array by 2 elements, x and y, i.e: [32, 32].
 */
 Phaser.Physics.P2.Spring = function (world, bodyA, bodyB, restLength, stiffness, damping, worldA, worldB, localA, localB) {
 
@@ -29,7 +29,7 @@ Phaser.Physics.P2.Spring = function (world, bodyA, bodyB, restLength, stiffness,
     this.game = world.game;
 
     /**
-    * @property {Phaser.Physics.P2.World} world - Local reference to P2 World.
+    * @property {Phaser.Physics.P2} world - Local reference to P2 World.
     */
     this.world = world;
 
@@ -63,7 +63,7 @@ Phaser.Physics.P2.Spring = function (world, bodyA, bodyB, restLength, stiffness,
         options.localAnchorB = [ world.pxm(localB[0]), world.pxm(localB[1]) ];
     }
 
-    p2.Spring.call(this, bodyA, bodyB, options);
+    p2.Spring.call(this, bodyA.data, bodyB.data, options);
 
 }
 

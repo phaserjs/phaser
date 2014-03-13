@@ -1031,7 +1031,33 @@ Phaser.Physics.P2.prototype = {
     },
 
     /**
-    * @method Phaser.Physics.P2.prototype.createBody
+    * Creates a spring, connecting two bodies.
+    *
+    * @method Phaser.Physics.P2#createSpring
+    * @param {Phaser.Physics.P2.Body} bodyA - First connected body.
+    * @param {Phaser.Physics.P2.Body} bodyB - Second connected body.
+    * @param {number} [restLength=1] - Rest length of the spring. A number > 0.
+    * @param {number} [stiffness=100] - Stiffness of the spring. A number >= 0.
+    * @param {number} [damping=1] - Damping of the spring. A number >= 0.
+    * @param {number} [restLength=1] - Rest length of the spring. A number > 0.
+    * @param {number} [stiffness=100] - Stiffness of the spring. A number >= 0.
+    * @param {number} [damping=1] - Damping of the spring. A number >= 0.
+    * @param {Array} [worldA] - Where to hook the spring to body A in world coordinates. This value is an array by 2 elements, x and y, i.e: [32, 32].
+    * @param {Array} [worldB] - Where to hook the spring to body B in world coordinates. This value is an array by 2 elements, x and y, i.e: [32, 32].
+    * @param {Array} [localA] - Where to hook the spring to body A in local body coordinates. This value is an array by 2 elements, x and y, i.e: [32, 32].
+    * @param {Array} [localB] - Where to hook the spring to body B in local body coordinates. This value is an array by 2 elements, x and y, i.e: [32, 32].
+    * @return {Phaser.Physics.P2.Spring} The spring
+    */
+    createSpring: function (bodyA, bodyB, restLength, stiffness, damping, worldA, worldB, localA, localB) {
+
+        return new Phaser.Physics.P2.Spring(this, bodyA, bodyB, restLength, stiffness, damping, worldA, worldB, localA, localB);
+
+    },
+
+    /**
+    * Creates a new Body and adds it to the World.
+    *
+    * @method Phaser.Physics.P2#createBody
     * @param {number} x - The x coordinate of Body.
     * @param {number} y - The y coordinate of Body.
     * @param {number} mass - The mass of the Body. A mass of 0 means a 'static' Body is created.
@@ -1043,6 +1069,7 @@ Phaser.Physics.P2.prototype = {
     * @param {(number[]|...number)} points - An array of 2d vectors that form the convex or concave polygon. 
     *                                       Either [[0,0], [0,1],...] or a flat array of numbers that will be interpreted as [x,y, x,y, ...], 
     *                                       or the arguments passed can be flat x,y values e.g. `setPolygon(options, x,y, x,y, x,y, ...)` where `x` and `y` are numbers.
+    * @return {Phaser.Physics.P2.Body} The body
     */
     createBody: function (x, y, mass, addToWorld, options, data) {
 
@@ -1070,7 +1097,9 @@ Phaser.Physics.P2.prototype = {
     },
 
     /**
-    * @method Phaser.Physics.P2.prototype.createBody
+    * Creates a new Particle and adds it to the World.
+    *
+    * @method Phaser.Physics.P2#createParticle
     * @param {number} x - The x coordinate of Body.
     * @param {number} y - The y coordinate of Body.
     * @param {number} mass - The mass of the Body. A mass of 0 means a 'static' Body is created.
@@ -1112,7 +1141,7 @@ Phaser.Physics.P2.prototype = {
     * Converts all of the polylines objects inside a Tiled ObjectGroup into physics bodies that are added to the world.
     * Note that the polylines must be created in such a way that they can withstand polygon decomposition.
     *
-    * @method Phaser.Tilemap#createCollisionObjects
+    * @method Phaser.Physics.P2#convertCollisionObjects
     * @param {Phaser.Tilemap} map - The Tilemap to get the map data from.
     * @param {number|string|Phaser.TilemapLayer} [layer] - The layer to operate on. If not given will default to map.currentLayer.
     * @param {boolean} [addToWorld=true] - If true it will automatically add each body to the world.

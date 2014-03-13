@@ -22,8 +22,13 @@ Phaser.Text = function (game, x, y, text, style) {
 
     x = x || 0;
     y = y || 0;
-    text = text || '';
-    style = style || '';
+    text = text || ' ';
+    style = style || {};
+
+    if (text.length == 0)
+    {
+        text = ' ';
+    }
 
     /**
     * @property {Phaser.Game} game - A reference to the currently running Game.
@@ -103,7 +108,9 @@ Phaser.Text = function (game, x, y, text, style) {
     */
     this.cameraOffset = new Phaser.Point();
 
-    PIXI.Text.call(this, text, style);
+    this.setStyle(style);
+
+    PIXI.Text.call(this, text, this.style);
 
     this.position.set(x, y);
 
