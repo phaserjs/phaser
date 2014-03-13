@@ -71,7 +71,7 @@ Phaser.Utils.extend(Phaser.Physics.P2.BodyDebug.prototype, {
     */
     update: function() {
 
-        this.updateSpriteTransform()
+        this.updateSpriteTransform();
 
     },
 

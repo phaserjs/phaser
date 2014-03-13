@@ -101,9 +101,9 @@ Phaser.Physics.P2.Body = function (game, sprite, x, y, mass) {
     this.collidesWith = [];
 
     /**
-    * @property {boolean} safeRemove - To avoid deleting this body during a physics step, and causing all kinds of problems, set safeRemove to true to have it removed in the next preUpdate.
+    * @property {boolean} removeNextStep - To avoid deleting this body during a physics step, and causing all kinds of problems, set removeNextStep to true to have it removed in the next preUpdate.
     */
-    this.safeRemove = false;
+    this.removeNextStep = false;
 
     this._collideWorldBounds = true;
 
@@ -652,10 +652,10 @@ Phaser.Physics.P2.Body.prototype = {
     */
     preUpdate: function () {
 
-        if (this.safeRemove)
+        if (this.removeNextStep)
         {
             this.removeFromWorld();
-            this.safeRemove = false;
+            this.removeNextStep = false;
         }
 
     },
@@ -734,7 +734,7 @@ Phaser.Physics.P2.Body.prototype = {
 
         if (this.data.world === this.game.physics.p2.world)
         {
-            this.game.physics.p2.removeBody(this);
+            this.game.physics.p2.removeBodyNextStep(this);
         }
 
     },
@@ -750,12 +750,19 @@ Phaser.Physics.P2.Body.prototype = {
 
         this.clearShapes();
 
-        this.sprite = null;
+        this._bodyCallbacks = {};
+        this._bodyCallbackContext = {};
+        this._groupCallbacks = {};
+        this._groupCallbackContext = {};
 
-        /*
-        this.collideCallback = null;
-        this.collideCallbackContext = null;
-        */
+        if (this.debugBody)
+        {
+            this.debugBody.destroy();
+        }
+
+        this.debugBody = null
+
+        this.sprite = null;
 
     },
 

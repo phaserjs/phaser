@@ -272,7 +272,7 @@ Phaser.Sprite.prototype.preUpdate = function() {
 
     this.animations.update();
 
-    if (this.exists && this.body)
+    if (this.body)
     {
         this.body.preUpdate();
     }
@@ -906,7 +906,7 @@ Object.defineProperty(Phaser.Sprite.prototype, "exists", {
 
             if (this.body && this.body.type === Phaser.Physics.P2JS)
             {
-                this.body.safeRemove = true;
+                this.body.removeFromWorld();
             }
 
             this.visible = false;

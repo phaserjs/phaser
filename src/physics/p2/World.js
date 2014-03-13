@@ -144,6 +144,11 @@ Phaser.Physics.P2 = function (game, config) {
     this.world.on("endContact", this.endContactHandler, this);
 
     /**
+    * @property {array} _toRemove - Internal var used to hold references to bodies to remove from the world on the next step.
+    */
+    this._toRemove = [];
+    
+    /**
     * @property {array} collisionGroups - Internal var.
     */
     this.collisionGroups = [];
@@ -172,6 +177,36 @@ Phaser.Physics.P2 = function (game, config) {
 Phaser.Physics.P2.LIME_CORONA_JSON = 0;
 
 Phaser.Physics.P2.prototype = {
+
+    /**
+    * This will add a P2 Physics body into the removal list for the next step.
+    *
+    * @method Phaser.Physics.P2#removeBodyNextStep
+    * @param {Phaser.Physics.P2.Body} body - The body to remove at the start of the next step.
+    */
+    removeBodyNextStep: function (body) {
+
+        this._toRemove.push(body);
+
+    },
+
+    /**
+    * Called at the start of the core update loop. Purges flagged bodies from the world.
+    *
+    * @method Phaser.Physics.P2#preUpdate
+    */
+    preUpdate: function () {
+
+        var i = this._toRemove.length;
+
+        while (i--)
+        {
+            this.removeBody(this._toRemove[i]);
+        }
+
+        this._toRemove.length = 0;
+
+    },
 
     /**
     * This will create a P2 Physics body on the given game object or array of game objects.

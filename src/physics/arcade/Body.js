@@ -294,30 +294,11 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     * For example if blocked.up is true then the Body cannot move up.
     * @property {object} blocked - An object containing on which faces this Body is blocked from moving, if any.
     */
-    this.blocked = { x: 0, y: 0, up: false, down: false, left: false, right: false };
-
-    /**
-    * This object is populated with boolean values when the Body collides with the World bounds or a Tile.
-    * For example if blocked.up is true then the Body cannot move up.
-    * @property {object} blocked - An object containing on which faces this Body is blocked from moving, if any.
-    */
-    this.result = { x: 0, y: 0, px: 0, py: 0, tx: 0, ty: 0, slope: false };
+    this.blocked = { up: false, down: false, left: false, right: false };
 
 };
 
 Phaser.Physics.Arcade.Body.prototype = {
-
-    resetResult: function () {
-
-        this.result.x = false;
-        this.result.y = false;
-        this.result.slope = false;
-        this.result.px = this.position.x;
-        this.result.py = this.position.y;
-        this.result.tx = 0;
-        this.result.ty = 0;
-
-    },
 
     /**
     * Internal method.
@@ -348,8 +329,6 @@ Phaser.Physics.Arcade.Body.prototype = {
     */
     preUpdate: function () {
 
-        // this.resetResult();
-
         //  Store and reset collision flags
         this.wasTouching.none = this.touching.none;
         this.wasTouching.up = this.touching.up;
@@ -365,33 +344,10 @@ Phaser.Physics.Arcade.Body.prototype = {
 
         this.embedded = false;
 
-        // this.screenX = (this.sprite.worldTransform[2] - (this.sprite.anchor.x * this.width)) + this.offset.x;
-        // this.screenY = (this.sprite.worldTransform[5] - (this.sprite.anchor.y * this.height)) + this.offset.y;
-
-        //  this is where the Sprite currently is, in world coordinates
-        // this.preX = (this.sprite.world.x - (this.sprite.anchor.x * this.width)) + this.offset.x;
-        // this.preY = (this.sprite.world.y - (this.sprite.anchor.y * this.height)) + this.offset.y;
-
-        // this.preRotation = this.sprite.angle;
-        // this.preRotation = this.sprite.rotation;
-
-        // this.x = this.preX;
-        // this.y = this.preY;
-        // this.rotation = this.preRotation;
-
-        // this.overlapX = 0;
-        // this.overlapY = 0;
-
-        // this.prev.set(this.position.x, this.position.y);
-
-        // this.position.x = (this.sprite.world.x - (this.sprite.anchor.x * this.width)) + this.offset.x;
-        // this.position.y = (this.sprite.world.y - (this.sprite.anchor.y * this.height)) + this.offset.y;
-
-
-        // this.blocked.up = false;
-        // this.blocked.down = false;
-        // this.blocked.left = false;
-        // this.blocked.right = false;
+        this.blocked.up = false;
+        this.blocked.down = false;
+        this.blocked.left = false;
+        this.blocked.right = false;
 
         if (this.moves)
         {
@@ -447,11 +403,6 @@ Phaser.Physics.Arcade.Body.prototype = {
 
         if (this.deltaX() !== 0 || this.deltaY() !== 0)
         {
-            //  this is where the Sprite currently is, in world coordinates
-            // this.sprite.x = (this.sprite.world.x - (this.sprite.anchor.x * this.width)) + this.offset.x;
-            // this.sprite.y = (this.sprite.world.y - (this.sprite.anchor.y * this.height)) + this.offset.y;
-            // this.sprite.x = (this.position.x - this.offset.x);
-            // this.sprite.y = (this.position.y - this.offset.y);
             // this.sprite.position.x = this.position.x;
             // this.sprite.position.y = this.position.y;
             this.sprite.x += this.deltaX();

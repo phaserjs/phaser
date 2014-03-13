@@ -661,7 +661,15 @@ Phaser.Tilemap.prototype = {
 
                 if (tile && tile.index === index)
                 {
-                    tile.collides = collides;
+                    if (collides)
+                    {
+                        tile.setCollision(true, true, true, true);
+                    }
+                    else
+                    {
+                        tile.resetCollision();
+                    }
+
                     tile.faceTop = collides;
                     tile.faceBottom = collides;
                     tile.faceLeft = collides;

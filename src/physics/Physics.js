@@ -193,6 +193,23 @@ Phaser.Physics.prototype = {
     },
 
     /**
+    * preUpdate checks.
+    *
+    * @method Phaser.Physics#preUpdate
+    * @protected
+    */
+    preUpdate: function () {
+
+        //  ArcadePhysics / Ninja don't have a core to preUpdate
+
+        if (this.p2)
+        {
+            this.p2.preUpdate();
+        }
+
+    },
+
+    /**
     * Updates all running physics systems.
     *
     * @method Phaser.Physics#update

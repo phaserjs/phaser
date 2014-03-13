@@ -105,17 +105,6 @@ Phaser.Tile = function (layer, index, x, y, width, height) {
     this.faceRight = false;
 
     /**
-    * @property {boolean} collides - Does this tile collide at all?
-    */
-    this.collides = false;
-
-    /**
-    * @property {boolean} collideNone - Indicating this Tile doesn't collide at all.
-    * @default
-    */
-    this.collideNone = true;
-
-    /**
     * @property {boolean} collideLeft - Indicating collide with any object on the left.
     * @default
     */
@@ -155,6 +144,15 @@ Phaser.Tile = function (layer, index, x, y, width, height) {
 
 Phaser.Tile.prototype = {
 
+    /**
+    * Check for intersection with this tile.
+    *
+    * @method Phaser.Tile#intersects
+    * @param {number} x - The x axis in pixels.
+    * @param {number} y - The y axis in pixels.
+    * @param {number} right - The right point.
+    * @param {number} bottom - The bottom point.
+    */
     intersects: function (x, y, right, bottom) {
 
         if (right <= this.worldX)
@@ -198,6 +196,7 @@ Phaser.Tile.prototype = {
 
     /**
     * Clean up memory.
+    *
     * @method Phaser.Tile#destroy
     */
     destroy: function () {
@@ -210,6 +209,7 @@ Phaser.Tile.prototype = {
 
     /**
     * Set collision settings on this tile.
+    *
     * @method Phaser.Tile#setCollision
     * @param {boolean} left - Indicating collide with any object on the left.
     * @param {boolean} right - Indicating collide with any object on the right.
@@ -223,31 +223,20 @@ Phaser.Tile.prototype = {
         this.collideUp = up;
         this.collideDown = down;
 
-        if (left || right || up || down)
-        {
-            this.collides = true;
-            this.collideNone = false;
-        }
-        else
-        {
-            this.collides = false;
-            this.collideNone = true;
-        }
-
     },
 
     /**
     * Reset collision status flags.
+    *
     * @method Phaser.Tile#resetCollision
     */
     resetCollision: function () {
 
-        this.collideNone = true;
         this.collideLeft = false;
         this.collideRight = false;
         this.collideUp = false;
         this.collideDown = false;
-        this.collides = false;
+
         this.faceTop = false;
         this.faceBottom = false;
         this.faceLeft = false;
@@ -257,6 +246,7 @@ Phaser.Tile.prototype = {
 
     /**
     * Copies the tile data and properties from the given tile to this tile.
+    *
     * @method Phaser.Tile#copy
     * @param {Phaser.Tile} tile - The tile to copy from.
     */
@@ -265,12 +255,12 @@ Phaser.Tile.prototype = {
         this.index = tile.index;
         this.alpha = tile.alpha;
         this.properties = tile.properties;
-        this.collides = tile.collides;
-        this.collideNone = tile.collideNone;
+
         this.collideUp = tile.collideUp;
         this.collideDown = tile.collideDown;
         this.collideLeft = tile.collideLeft;
         this.collideRight = tile.collideRight;
+
         this.collisionCallback = tile.collisionCallback;
         this.collisionCallbackContext = tile.collisionCallbackContext;
 
@@ -285,23 +275,36 @@ Phaser.Tile.prototype.constructor = Phaser.Tile;
 * @property {boolean} canCollide - True if this tile can collide or has a collision callback.
 * @readonly
 */
+Object.defineProperty(Phaser.Tile.prototype, "collides", {
+    
+    get: function () {
+        return (this.collideLeft || this.collideRight || this.collideUp || this.collideDown);
+    }
+
+});
+
+/**
+* @name Phaser.Tile#canCollide
+* @property {boolean} canCollide - True if this tile can collide or has a collision callback.
+* @readonly
+*/
 Object.defineProperty(Phaser.Tile.prototype, "canCollide", {
     
     get: function () {
-        return (this.collides || this.collisionCallback || this.layer.callbacks[this.index]);
+        return (this.collideLeft || this.collideRight || this.collideUp || this.collideDown || this.collisionCallback || this.layer.callbacks[this.index]);
     }
 
 });
 
 /**
 * @name Phaser.Tile#left
-* @property {number} left - The x value.
+* @property {number} left - The x value in pixels.
 * @readonly
 */
 Object.defineProperty(Phaser.Tile.prototype, "left", {
     
     get: function () {
-        return this.x;
+        return this.worldX;
     }
 
 });
@@ -314,7 +317,7 @@ Object.defineProperty(Phaser.Tile.prototype, "left", {
 Object.defineProperty(Phaser.Tile.prototype, "right", {
     
     get: function () {
-        return this.x + this.width;
+        return this.worldX + this.width;
     }
 
 });
@@ -327,7 +330,7 @@ Object.defineProperty(Phaser.Tile.prototype, "right", {
 Object.defineProperty(Phaser.Tile.prototype, "top", {
     
     get: function () {
-        return this.y;
+        return this.worldY;
     }
 
 });
@@ -340,7 +343,7 @@ Object.defineProperty(Phaser.Tile.prototype, "top", {
 Object.defineProperty(Phaser.Tile.prototype, "bottom", {
     
     get: function () {
-        return this.y + this.height;
+        return this.worldY + this.height;
     }
 
 });

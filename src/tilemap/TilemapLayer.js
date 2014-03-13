@@ -454,31 +454,20 @@ Phaser.TilemapLayer.prototype.getTileXY = function (x, y, point) {
 
 }
 
-Phaser.TilemapLayer.prototype.getIntersectingTiles = function (x, y, width, height) {
+Phaser.TilemapLayer.prototype.getIntersectingTiles = function (x, y, width, height, right, bottom) {
 
-    // var tiles = this.getTiles(x, y, width,height, true);
-    var tiles = this.getTiles(x, y, width,height, false);
-
-    /*
-    var right = x + width;
-    var bottom = y + height;
+    var tiles = this.getTiles(x, y, width, height, false);
 
     //  We only want the ones that we actually intersect with
     var i = tiles.length;
 
     while (i--)
     {
-        if (tiles[i].intersects(x, y, right, bottom))
+        if (!tiles[i].intersects(x, y, right, bottom))
         {
-            // tiles[i].debug = true;
-        }
-        else
-        {
-            // console.log('sliced off tile', i);
-            // tiles.pop();
+            tiles.pop();
         }
     }
-    */
 
     return tiles;
 
@@ -580,8 +569,7 @@ Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides
     this._th = (this.game.math.snapToCeil(height, this._ch) + this._ch) / this._ch;
 
     //  This should apply the layer x/y here
-    // this._results.length = 0;
-    this._results = [];
+    this._results.length = 0;
 
     for (var wy = this._ty; wy < this._ty + this._th; wy++)
     {
@@ -591,23 +579,7 @@ Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides
             {
                 if (collides === false || (collides && this.layer.data[wy][wx].canCollide))
                 {
-                    /*
-                    //  Convert tile coordinates back to camera space for return
-                    var _wx = this._unfixX(wx * this._cw) / this._cw;
-                    var _wy = this._unfixY(wy * this._ch) / this._ch;
-
-                    this._results.push({ 
-                        x: _wx * this._cw, 
-                        y: _wy * this._ch, 
-                        right: (_wx * this._cw) + this._cw, 
-                        bottom: (_wy * this._ch) + this._ch, 
-                        tile: this.layer.data[wy][wx],
-                        layer: this.layer.data[wy][wx].layer
-                    });
-                    */
-
                     this._results.push(this.layer.data[wy][wx]);
-
                 }
             }
         }
@@ -708,11 +680,11 @@ Phaser.TilemapLayer.prototype.render = function () {
 
                 set.draw(this.context, Math.floor(this._tx), Math.floor(this._ty), tile.index);
 
-                if (tile.debug)
-                {
-                    this.context.fillStyle = 'rgba(0, 255, 0, 0.4)';
-                    this.context.fillRect(Math.floor(this._tx), Math.floor(this._ty), this.map.tileWidth, this.map.tileHeight);
-                }
+                // if (tile.debug)
+                // {
+                //     this.context.fillStyle = 'rgba(0, 255, 0, 0.4)';
+                //     this.context.fillRect(Math.floor(this._tx), Math.floor(this._ty), this.map.tileWidth, this.map.tileHeight);
+                // }
             }
 
             this._tx += this.map.tileWidth;
@@ -933,14 +905,6 @@ Phaser.TilemapLayer.prototype.renderDebug = function () {
 
                 this.context.stroke();
             }
-
-            //  Collision callback
-            // if (tile && (tile.collisionCallback || tile.layer.callbacks[tile.index]))
-            // {
-            //     this.context.fillStyle = this.debugCallbackColor;
-            //     this.context.fillRect(this._tx, this._ty, this._cw, this._ch);
-            //     this.context.fillStyle = this.debugFillColor;
-            // }
 
             this._tx += this.map.tileWidth;
 
