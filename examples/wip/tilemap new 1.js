@@ -27,15 +27,18 @@ function create() {
 
     map.setCollisionBetween(1, 12);
 
-    layer.debug = true;
+    // layer.debug = true;
 
     sprite = game.add.sprite(260, 70, 'phaser');
 
     game.physics.enable(sprite);
 
+    sprite.body.bounce.set(0.8);
+    sprite.body.tilePadding.set(32);
+
     game.camera.follow(sprite);
 
-    // game.physics.arcade.gravity.y = 500;
+    game.physics.arcade.gravity.y = 200;
 
     cursors = game.input.keyboard.createCursorKeys();
 
@@ -46,7 +49,7 @@ function update() {
     game.physics.arcade.collide(sprite, layer);
 
     sprite.body.velocity.x = 0;
-    sprite.body.velocity.y = 0;
+    // sprite.body.velocity.y = 0;
 
     if (cursors.up.isDown)
     {
@@ -76,6 +79,6 @@ function render() {
     // game.debug.text(sprite.body.deltaX(), 400, 32);
     // game.debug.text(sprite.body.deltaY(), 400, 64);
 
-    game.debug.body(sprite);
+    // game.debug.body(sprite);
 
 }

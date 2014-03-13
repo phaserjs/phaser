@@ -240,35 +240,12 @@ Phaser.Physics.Arcade.prototype = {
     */
     updateMotion: function (body) {
 
-        this._velocityDelta = this.computeVelocity(body.angularVelocity, body.angularAcceleration, body.angularDrag, body.maxAngular) - body.angularVelocity;
+        this._velocityDelta = this.computeVelocity(0, body, body.angularVelocity, body.angularAcceleration, body.angularDrag, body.maxAngular) - body.angularVelocity;
         body.angularVelocity += this._velocityDelta;
         body.rotation += (body.angularVelocity * this.game.time.physicsElapsed);
 
-        //  Apply gravity using the p2 style gravityScale
-        if (body.allowGravity)
-        {
-            if (body.gravity.x !== 0)
-            {
-                body.velocity.x += body.gravity.x * this.game.time.physicsElapsed;
-            }
-            else
-            {
-                body.velocity.x += this.gravity.x * this.game.time.physicsElapsed * body.gravityScale.x;
-            }
-
-            if (body.gravity.y !== 0)
-            {
-                body.velocity.y += body.gravity.y * this.game.time.physicsElapsed;
-            }
-            else
-            {
-                body.velocity.y += this.gravity.y * this.game.time.physicsElapsed * body.gravityScale.y;
-            }
-        }
-
-        //  Apply velocity
-        body.velocity.x = this.computeVelocity(body.velocity.x, body.acceleration.x, body.drag.x, body.maxVelocity.x);
-        body.velocity.y = this.computeVelocity(body.velocity.y, body.acceleration.y, body.drag.y, body.maxVelocity.y);
+        body.velocity.x = this.computeVelocity(1, body, body.velocity.x, body.acceleration.x, body.drag.x, body.maxVelocity.x);
+        body.velocity.y = this.computeVelocity(2, body, body.velocity.y, body.acceleration.y, body.drag.y, body.maxVelocity.y);
 
     },
 
@@ -277,15 +254,26 @@ Phaser.Physics.Arcade.prototype = {
     * Based on a function in Flixel by @ADAMATOMIC
     *
     * @method Phaser.Physics.Arcade#computeVelocity
+    * @param {number} axis - 0 for nothing, 1 for horizontal, 2 for vertical.
+    * @param {Phaser.Physics.Arcade.Body} body - The Body object to be updated.
     * @param {number} velocity - Any component of velocity (e.g. 20).
     * @param {number} acceleration - Rate at which the velocity is changing.
     * @param {number} drag - Really kind of a deceleration, this is how much the velocity changes if Acceleration is not set.
     * @param {number} [max=10000] - An absolute value cap for the velocity.
     * @return {number} The altered Velocity value.
     */
-    computeVelocity: function (velocity, acceleration, drag, max) {
+    computeVelocity: function (axis, body, velocity, acceleration, drag, max) {
 
         max = max || 10000;
+
+        if (axis == 1 && body.allowGravity)
+        {
+            velocity += (this.gravity.x + body.gravity.x) * this.game.time.physicsElapsed;
+        }
+        else if (axis == 2 && body.allowGravity)
+        {
+            velocity += (this.gravity.y + body.gravity.y) * this.game.time.physicsElapsed;
+        }
 
         if (acceleration)
         {
@@ -606,8 +594,12 @@ Phaser.Physics.Arcade.prototype = {
     */
     collideSpriteVsTilemapLayer: function (sprite, tilemapLayer, collideCallback, processCallback, callbackContext) {
 
-        // this._mapData = tilemapLayer.getIntersectingTiles(sprite.body.position.x, sprite.body.position.y, sprite.body.width, sprite.body.height, sprite.body.right, sprite.body.bottom);
-        this._mapData = tilemapLayer.getTiles(sprite.body.position.x, sprite.body.position.y, sprite.body.width, sprite.body.height, false, true);
+        this._mapData = tilemapLayer.getTiles(
+            sprite.body.position.x - sprite.body.tilePadding.x, 
+            sprite.body.position.y - sprite.body.tilePadding.y, 
+            sprite.body.width + sprite.body.tilePadding.x, 
+            sprite.body.height + sprite.body.tilePadding.y, 
+            false, true);
 
         if (this._mapData.length === 0)
         {
@@ -616,9 +608,6 @@ Phaser.Physics.Arcade.prototype = {
 
         for (var i = 0; i < this._mapData.length; i++)
         {
-            // console.log('-------------------------------------- tile', this._mapData[i].faceLeft, this._mapData[i].faceRight, this._mapData[i].faceTop, this._mapData[i].faceBottom);
-            // console.log('-------------------------------------- tile', i, 'of', this._mapData.length, 'xy', this._mapData[i].x, this._mapData[i].y);
-
             if (this.separateTile(i, sprite.body, this._mapData[i]))
             {
                 //  They collided, is there a custom process callback?
@@ -945,86 +934,6 @@ Phaser.Physics.Arcade.prototype = {
 
     },
 
-    BUSTEDseparateTile: function (i, body, tile) {
-
-        //  we re-check for collision in case body was separated in a previous step
-        if (i > 0 && !tile.intersects(body.position.x, body.position.y, body.right, body.bottom))
-        {
-            //  no collision so bail out (separted in a previous step)
-            console.log('no collision so bail out (separted in a previous step');
-            return false;
-        }
-
-        console.log('body intersecting tile');
-        console.log('x', body.position.x, 'y', body.position.y, 'r', body.right, 'b', body.bottom, 'wh', body.width, body.height);
-        console.log('x', tile.x, 'y', tile.y, 'r', tile.right, 'b', tile.bottom);
-
-        if (body.newVelocity.x && (tile.faceLeft || tile.faceRight))
-        {
-            var px = 0;
-            var tx = 0;
-
-            if (body.newVelocity.x > 0 && tile.faceLeft)
-            {
-                px = body.width;
-            }
-            else if (body.newVelocity.x < 0 && tile.faceRight)
-            {
-                tx = tile.width;
-            }
-
-            body.position.x = tile.worldX - px + tx;
-    
-            body.velocity.x = 0; // rebound check
-            // body.newVelocity.x = 0; // rebound check
-        }
-
-        //  Vertical only if still colliding
-
-        // if (tile.intersects(body.position.x, body.position.y, body.right, body.bottom))
-        // if (body.newVelocity.y && tile.intersects(body.position.x, body.position.y, body.right, body.bottom))
-        if (body.newVelocity.y && (tile.faceTop || tile.faceBottom))
-        {
-            var py = 0;
-            var ty = 0;
-
-            if (body.newVelocity.y > 0 && tile.faceBottom)
-            {
-                py = body.height;
-            }
-            else if (body.newVelocity.y < 0 && tile.faceTop)
-            {
-                ty = tile.height;
-            }
-
-            // console.log('cy', body.newVelocity.y, py, ty);
-
-            body.position.y = tile.worldY - py + ty;
-
-            body.velocity.y = 0; // rebound check
-            // body.newVelocity.y = 0; // rebound check
-        }
-
-        // var pxOffsetX = (body.newVelocity.x > 0 ? body.width : 0);
-        // var tileOffsetX = (body.newVelocity.x < 0 ? tile.width : 0);
-        // var pxOffsetY = (body.newVelocity.y > 0 ? body.height : 0);
-        // var tileOffsetY = (body.newVelocity.y < 0 ? tile.height : 0);
-
-        //  Assume fully solid for now
-
-        // body.result.x = true;
-        // body.result.tile = tile;
-        // body.result.px = tile.x - pxOffsetX + tileOffsetX;
-        // body.position.x = tile.x - pxOffsetX + tileOffsetX;
-
-        // res.pos.y = tileY * this.tilesize - pxOffsetY + tileOffsetY;
-
-
-
-        // console.log('nv', body.newVelocity.x, 'tile.xy', tile.x, tile.y, 'p', pxOffsetX, 't', tileOffsetX, 'body xy', body.position.x, body.position.y);
-
-    },
-
     /**
     * The core separation function to separate a physics body and a tile.
     * @method Phaser.Physics.Arcade#separateTile
@@ -1080,16 +989,6 @@ Phaser.Physics.Arcade.prototype = {
             minY = Math.min(Math.abs(body.position.y - tile.bottom), Math.abs(body.bottom - tile.top));
 
             // console.log('checking faces', minX, minY);
-
-            // var distLeft = Math.abs(body.position.x - tile.right);
-            // var distRight = Math.abs(body.right - tile.left);
-            // var distTop = Math.abs(body.position.y - tile.bottom);
-            // var distBottom = Math.abs(body.bottom - tile.top);
-            // minX = Math.min(distLeft, distRight);
-            // minY = Math.min(distTop, distBottom);
-            // console.log('dist left', distLeft, 'right', distRight, 'top', distTop, 'bottom', distBottom, 'minX', minX, 'minY', minY);
-            // console.log('tile lr', tile.left, tile.right, 'tb', tile.top, tile.bottom);
-            // console.log('body lr', body.x, body.right, 'tb', body.y, body.bottom);
         }
 
         if (minX < minY)
@@ -1133,6 +1032,15 @@ Phaser.Physics.Arcade.prototype = {
 
     },
 
+    /**
+    * Check the body against the given tile on the X axis.
+    *
+    * @method Phaser.Physics.Arcade#tileCheckX
+    * @protected
+    * @param {Phaser.Physics.Arcade.Body} body - The Body object to separate.
+    * @param {Phaser.Tile} tile - The tile to check.
+    * @returns {number} The amount of separation that occured.
+    */
     tileCheckX: function (body, tile) {
 
         var ox = 0;
@@ -1173,6 +1081,15 @@ Phaser.Physics.Arcade.prototype = {
 
     },
 
+    /**
+    * Check the body against the given tile on the Y axis.
+    *
+    * @method Phaser.Physics.Arcade#tileCheckY
+    * @protected
+    * @param {Phaser.Physics.Arcade.Body} body - The Body object to separate.
+    * @param {Phaser.Tile} tile - The tile to check.
+    * @returns {number} The amount of separation that occured.
+    */
     tileCheckY: function (body, tile) {
 
         var oy = 0;

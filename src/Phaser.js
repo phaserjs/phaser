@@ -18,6 +18,12 @@ var Phaser = Phaser || {
 	WEBGL: 2,
 	HEADLESS: 3,
 
+	NONE: 0,
+	LEFT: 1,
+	RIGHT: 2,
+	UP: 3,
+	DOWN: 4,
+
 	SPRITE: 0,
 	BUTTON: 1,
 	IMAGE: 2,

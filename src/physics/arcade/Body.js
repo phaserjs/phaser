@@ -148,11 +148,6 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.gravity = new Phaser.Point(0, 0);
 
     /**
-    * @property {Phaser.Point} gravityScale - Gravity scaling factor. This is only applied to world gravity, not local gravity. If you want the body to ignore gravity, set this to zero. If you want to reverse gravity, set it to -1.
-    */
-    this.gravityScale = new Phaser.Point(1, 1);
-
-    /**
     * @property {Phaser.Point} bounce - The elasticitiy of the Body when colliding. bounce.x/y = 1 means full rebound, bounce.x/y = 0.5 means 50% rebound velocity.
     */
     this.bounce = new Phaser.Point();
@@ -296,6 +291,13 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     */
     this.blocked = { up: false, down: false, left: false, right: false };
 
+    /**
+    * If this is an especially small or fast moving object then it can sometimes skip over tilemap collisions if it moves through a tile in a step.
+    * Set this padding value to add extra padding to its bounds. tilePadding.x applied to its width, y to its height.
+    * @property {Phaser.Point} tilePadding - Extra padding to be added to this sprites dimensions when checking for tile collision.
+    */
+    this.tilePadding = new Phaser.Point();
+
 };
 
 Phaser.Physics.Arcade.Body.prototype = {
@@ -403,8 +405,6 @@ Phaser.Physics.Arcade.Body.prototype = {
 
         if (this.deltaX() !== 0 || this.deltaY() !== 0)
         {
-            // this.sprite.position.x = this.position.x;
-            // this.sprite.position.y = this.position.y;
             this.sprite.x += this.deltaX();
             this.sprite.y += this.deltaY();
             this.center.setTo(this.x + this.halfWidth, this.y + this.halfHeight);
