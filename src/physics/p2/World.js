@@ -696,6 +696,58 @@ Phaser.Physics.P2.prototype = {
     },
 
     /**
+    * Creates a constraint that tries to keep the distance between two bodies constant.
+    *
+    * @method Phaser.Physics.P2#createDistanceConstraint
+    * @param {Phaser.Sprite|Phaser.Physics.P2.Body|p2.Body} bodyA - First connected body.
+    * @param {Phaser.Sprite|Phaser.Physics.P2.Body|p2.Body} bodyB - Second connected body.
+    * @param {number} distance - The distance to keep between the bodies.
+    * @param {number} [maxForce] - The maximum force to apply to the constraint
+    * @return {Phaser.Physics.P2.DistanceConstraint} The constraint
+    */
+    createDistanceConstraint: function (bodyA, bodyB, distance, maxForce) {
+
+        bodyA = this.getBody(bodyA);
+        bodyB = this.getBody(bodyB);
+
+        if (!bodyA || !bodyB)
+        {
+            console.warn('Cannot create Constraint, invalid body objects given');
+        }
+        else
+        {
+            return this.addConstraint(new Phaser.Physics.P2.DistanceConstraint(this, bodyA, bodyB, distance, maxForce));
+        }
+
+    },
+
+    /**
+    * Creates a constraint that tries to keep the distance between two bodies constant.
+    *
+    * @method Phaser.Physics.P2#createGearConstraint
+    * @param {Phaser.Sprite|Phaser.Physics.P2.Body|p2.Body} bodyA - First connected body.
+    * @param {Phaser.Sprite|Phaser.Physics.P2.Body|p2.Body} bodyB - Second connected body.
+    * @param {number} [angle=0] - The relative angle
+    * @param {number} [ratio=1] - The gear ratio.
+    * @return {Phaser.Physics.P2.GearConstraint} The constraint
+    */
+    createGearConstraint: function (bodyA, bodyB, angle, ratio) {
+
+        bodyA = this.getBody(bodyA);
+        bodyB = this.getBody(bodyB);
+
+        if (!bodyA || !bodyB)
+        {
+            console.warn('Cannot create Constraint, invalid body objects given');
+        }
+        else
+        {
+            return this.addConstraint(new Phaser.Physics.P2.GearConstraint(this, bodyA, bodyB, angle, ratio));
+        }
+
+    },
+
+    /**
     * Adds a Constraint to the world.
     *
     * @method Phaser.Physics.P2#addConstraint

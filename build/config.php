@@ -156,6 +156,8 @@
     <script src="$path/src/physics/p2/Material.js"></script>
     <script src="$path/src/physics/p2/ContactMaterial.js"></script>
     <script src="$path/src/physics/p2/CollisionGroup.js"></script>
+    <script src="$path/src/physics/p2/DistanceConstraint.js"></script>
+    <script src="$path/src/physics/p2/GearConstraint.js"></script>
 
     <script src="$path/src/particles/Particles.js"></script>
     <script src="$path/src/particles/arcade/ArcadeParticles.js"></script>
@@ -169,9 +171,6 @@
 EOL;
 
 /*
-
-
-
 
 */
 
