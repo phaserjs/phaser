@@ -135,14 +135,6 @@
       "title": "quadtree - collision infos"
     },
     {
-      "file": "quadtree+-+ids.js",
-      "title": "quadtree - ids"
-    },
-    {
-      "file": "rotated+bounding+box.js",
-      "title": "rotated bounding box"
-    },
-    {
       "file": "ship+trail.js",
       "title": "ship trail"
     },
@@ -153,10 +145,6 @@
     {
       "file": "snake.js",
       "title": "snake"
-    },
-    {
-      "file": "sprite+bounds.js",
-      "title": "sprite bounds"
     },
     {
       "file": "sprite+vs+group.js",
@@ -447,6 +435,10 @@
       "title": "for each"
     },
     {
+      "file": "get+first+dead.js",
+      "title": "get first dead"
+    },
+    {
       "file": "get+first.js",
       "title": "get first"
     },
@@ -657,6 +649,82 @@
       "title": "repeatable random numbers"
     }
   ],
+  "ninja physics": [
+    {
+      "file": "ninja+aabb+vs+aabb.js",
+      "title": "ninja aabb vs aabb"
+    },
+    {
+      "file": "ninja+aabb+vs+tile.js",
+      "title": "ninja aabb vs tile"
+    },
+    {
+      "file": "ninja+impact.js",
+      "title": "ninja impact"
+    },
+    {
+      "file": "ninja+tilemap.js",
+      "title": "ninja tilemap"
+    }
+  ],
+  "p2 physics": [
+    {
+      "file": "basic+movement.js",
+      "title": "basic movement"
+    },
+    {
+      "file": "body+click.js",
+      "title": "body click"
+    },
+    {
+      "file": "collision+groups.js",
+      "title": "collision groups"
+    },
+    {
+      "file": "contact+events.js",
+      "title": "contact events"
+    },
+    {
+      "file": "distance+constraint.js",
+      "title": "distance constraint"
+    },
+    {
+      "file": "gear+constraint.js",
+      "title": "gear constraint"
+    },
+    {
+      "file": "gravity.js",
+      "title": "gravity"
+    },
+    {
+      "file": "impact+events.js",
+      "title": "impact events"
+    },
+    {
+      "file": "load+polygon+1.js",
+      "title": "load polygon 1"
+    },
+    {
+      "file": "load+polygon+2.js",
+      "title": "load polygon 2"
+    },
+    {
+      "file": "postbroadphase+callback.js",
+      "title": "postbroadphase callback"
+    },
+    {
+      "file": "springs.js",
+      "title": "springs"
+    },
+    {
+      "file": "thrust.js",
+      "title": "thrust"
+    },
+    {
+      "file": "world+move.js",
+      "title": "world move"
+    }
+  ],
   "particles": [
     {
       "file": "click+burst.js",
@@ -763,6 +831,14 @@
       "title": "bitmap fonts"
     },
     {
+      "file": "bitmapfont+drag.js",
+      "title": "bitmapfont drag"
+    },
+    {
+      "file": "dynamic+text+shadow.js",
+      "title": "dynamic text shadow"
+    },
+    {
       "file": "google+webfonts.js",
       "title": "google webfonts"
     },
@@ -789,6 +865,22 @@
     {
       "file": "retro+font+2.js",
       "title": "retro font 2"
+    },
+    {
+      "file": "set+properties+after+creation.js",
+      "title": "set properties after creation"
+    },
+    {
+      "file": "text+gradient.js",
+      "title": "text gradient"
+    },
+    {
+      "file": "text+reflect.js",
+      "title": "text reflect"
+    },
+    {
+      "file": "text+shadow.js",
+      "title": "text shadow"
     },
     {
       "file": "text+stroke.js",
