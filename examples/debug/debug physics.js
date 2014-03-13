@@ -27,9 +27,11 @@ function create() {
     otherSprite.x = (game.width / 2) + 150 ;
     otherSprite.y = (game.height / 2) + 150 ;
     
-    otherSprite.body.immovable = true ;
+    
 
     game.physics.enable([sprite,otherSprite], Phaser.Physics.ARCADE);
+
+    
 }
 
 function update()

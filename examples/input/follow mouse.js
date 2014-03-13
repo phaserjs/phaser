@@ -12,6 +12,7 @@ var sprite;
 function create() {
 
     sprite = game.add.sprite(game.world.centerX, game.world.centerY, 'ball');
+    game.physics.enable(sprite, Phaser.Physics.ARCADE);
 
 }
 
@@ -21,7 +22,7 @@ function update() {
     if (game.input.mousePointer.isDown)
     {
         //  400 is the speed it will move towards the mouse
-        game.physics.moveToPointer(sprite, 400);
+        game.physics.arcade.moveToPointer(sprite, 400);
 
         //  if it's overlapping the mouse, don't move any more
         if (Phaser.Rectangle.contains(sprite.body, game.input.x, game.input.y))

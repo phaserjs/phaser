@@ -7,7 +7,7 @@
 *
 * Phaser - http://www.phaser.io
 *
-* v2.0.0 "Aes Sedai" - Built: Thu Mar 13 2014 16:07:29
+* v2.0.0 "Aes Sedai" - Built: Thu Mar 13 2014 16:47:24
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -9603,7 +9603,7 @@ PIXI.RenderTexture.tempMatrix = new PIXI.Matrix();
 *
 * Phaser - http://www.phaser.io
 *
-* v2.0.0 "Aes Sedai" - Built: Thu Mar 13 2014 16:07:29
+* v2.0.0 "Aes Sedai" - Built: Thu Mar 13 2014 16:47:24
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -18889,7 +18889,7 @@ Phaser.Input = function (game) {
     /**
     * @property {Phaser.Gestures} gestures - The Gestures manager.
     */
-    this.gestures = null;
+    // this.gestures = null;
 
     /**
     * @property {Phaser.Signal} onDown - A Signal that is dispatched each time a pointer is pressed down.
@@ -18985,7 +18985,7 @@ Phaser.Input.prototype = {
         this.touch = new Phaser.Touch(this.game);
         this.mspointer = new Phaser.MSPointer(this.game);
         this.gamepad = new Phaser.Gamepad(this.game);
-        this.gestures = new Phaser.Gestures(this.game);
+        // this.gestures = new Phaser.Gestures(this.game);
 
         this.onDown = new Phaser.Signal();
         this.onUp = new Phaser.Signal();
@@ -19026,7 +19026,7 @@ Phaser.Input.prototype = {
         this.touch.stop();
         this.mspointer.stop();
         this.gamepad.stop();
-        this.gestures.stop();
+        // this.gestures.stop();
 
         this.moveCallback = null;
 
@@ -19115,7 +19115,7 @@ Phaser.Input.prototype = {
 
         this._pollCounter = 0;
 
-        if (this.gestures.active) { this.gestures.update(); }
+        // if (this.gestures.active) { this.gestures.update(); }
 
     },
 
@@ -24398,751 +24398,6 @@ Phaser.InputHandler.prototype = {
 };
 
 Phaser.InputHandler.prototype.constructor = Phaser.InputHandler;
-
-/**
-* @author       Antony Woods <antony@teamwoods.org>
-* @copyright    2014 Photon Storm Ltd.
-* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
-*/
-
-/**
-* Phaser - Gestures constructor.
-*
-* @class Phaser.Gestures
-* @classdesc An object for controlling the detection of global gestures.
-* @constructor
-* @param {Phaser.Game} game - A reference to the currently running game.
-*/
-Phaser.Gestures = function (game) {
-
-    /**
-    * @property {Phaser.Game} game - A reference to the currently running game.
-    */
-    this.game = game;
-    
-    /**
-    * @property {boolean} active - If true, the Gestures class will attempt to detect gestures
-    * @default
-    */
-    this.active = false;
-    
-    /**
-    * @property {Array} _gestures - A list of gestures that we're currently tracking.
-    * @default
-    */
-    this._gestures = [];
-    
-    /**
-    * @property {Array} _pointers - A list of of pointers that are in the process of being detected
-    * @default
-    */
-    this._pointers = [];
-    
-    /**
-    * Update pointer state
-    */
-    this.game.input.setMoveCallback(function (pointer) {
-
-        if (this.active)
-        {
-           this._updatePointerState(pointer);
-        }
-    }, this);
-
-};
-
-Phaser.Gestures.prototype = {
-
-    /**
-    * Add a new pointer and gesture type to the detection system
-    * @method Phaser.Gestures#add
-    * @param {Phaser.Gestures} gesture - a gesture that we wish to detect (i.e. Phaser.Gesture.SwipeLeft)
-    * @param {function} onGestureUpdated - a callback for when the gesture updates (returns with valid data)
-    */
-    add: function (gesture, onGestureUpdated) {
-
-        this.add(gesture, onGestureUpdated, null, null);
-
-    },
-    
-    /**
-    * Add a new pointer and gesture type to the detection system
-    * @method Phaser.Gestures#add
-    * @param {Phaser.Gestures} gesture - a gesture that we wish to detect (i.e. Phaser.Gesture.SwipeLeft)
-    * @param {function} onGestureUpdated - a callback for when the gesture updates (returns with valid data)
-    * @param {function} onGestureStarted - a callback for when the gesture starts (begins detection)
-    * @param {function} onGestureStopped - a callback for when the gesture stops (ends detection)
-    */
-    add: function (gesture, onGestureUpdated, onGestureStarted, onGestureStopped) {
-
-        var gestureObject = {
-            gesture: new gesture(),
-            hasStarted: false,
-            onGestureStarted: onGestureStarted,
-            onGestureUpdated: onGestureUpdated,
-            onGestureStopped: onGestureStopped,
-        }
-        
-        this._gestures.push(gestureObject);       
-
-    },
-    
-    /**
-    * Remove a pointer and gesture combination from the detection system
-    * @method Phaser.Gestures#remove
-    * @param {Phaser.Gestures} gesture - a gesture that we no longer wish to detect (i.e. Phaser.Gesture.SwipeLeft)
-    */
-    remove: function (gesture) {
-
-        for (var i = this._gestures.length - 1; i >= 0; --i)
-        {
-            if (this._gestures[i].gesture.name == new gesture().name)
-            {
-                delete this._gestures[i];
-            }
-        }       
-
-        this._gestures = this._gestures.filter(function(a){return typeof a !== 'undefined';});
-
-    },
-    
-    /**
-    * Update function, called whenever a pointer triggers an event.
-    * @method Phaser.Gestures#update
-    */
-    update: function () {
-    
-        if (this.active && this._pointers.length > 0)
-        {   
-            var hasPointers = this._pointers.filter(function(p){return p.isDown;}).length > 0;
-
-            for (var i = this._gestures.length - 1; i >= 0; --i)
-            {
-                if (!this._gestures[i].hasStarted)
-                {
-                    this._gestures[i].hasStarted = true;
-                    this._gestures[i].gesture.start(this._pointers);
-
-                    if (this._gestures[i].onGestureStarted != null)
-                    {
-                        this._gestures[i].onGestureStarted();
-                    }
-                }
-                else
-                {
-                    var result = this._gestures[i].gesture.update(this._pointers);
-
-                    if (result)
-                    {
-                        var data = this._gestures[i].gesture.getData();
-
-                        if (this._gestures[i].onGestureUpdated != null)
-                        {
-                            this._gestures[i].onGestureUpdated(data);
-                        }
-                    }
-                    if (!hasPointers)
-                    {
-                        this._gestures[i].gesture.stop(this._pointers);
-                        this._gestures[i].hasStarted = false;
-
-                        if (this._gestures[i].onGestureStopped != null)
-                        {
-                            this._gestures[i].onGestureStopped();
-                        }
-                    }
-                }               
-            }
-
-            this._pointers = this._pointers.filter(function(p){return p.isDown;});
-        }
-
-    },
-    
-    /**
-    * Updates internal pointer state
-    * @method Phaser.Gestures#update
-    * @param {Phaser.Pointer} pointer - the pointer that triggered this update
-    */
-    _updatePointerState: function (pointer) {
-    
-        var pointerObject = null;
-
-        for (var i = this._pointers.length - 1; i >= 0; --i)
-        {
-            if (this._pointers[i].pointer == pointer)
-            {
-                pointerObject = this._pointers[i];
-                break;
-            }
-        }
-
-        if (pointerObject == null && pointer.isDown)
-        {
-            pointerObject = {
-                pointer: pointer,
-                justPressed: true,
-                isUp: false,
-                isDown: true
-            }
-
-            this._pointers.push(pointerObject);
-        } 
-        else if (pointerObject != null)
-        {
-            pointerObject.justPressed = false;
-            pointerObject.isDown = pointer.isDown;
-            pointerObject.isUp = pointer.isUp;
-        }
-    }
-
-};
-
-Phaser.Gestures.prototype.constructor = Phaser.Gestures;
-
-/* ---------------------------------------- */
-
-Phaser.Gestures.Helpers = {
-
-    /**
-    * Finds or creates a local 'pointer' object from a given array
-    *
-    * @method Phaser.Gestures.Helpers#createOrFindPointerData 
-    * @param {Array} - an array of objects that expose 'pointer' as a field.
-    * @param {Phaser.Point} - the pointer object we're attempting to find.
-    */
-    createOrFindPointerData: function(pointerArray, pointer) {
-
-        var pointerObject = null;
-
-        for (var i = pointerArray.length - 1; i >= 0; --i)
-        {
-            if (pointerArray[i].pointer == pointer)
-            {
-                pointerObject = pointerArray[i];
-                break;
-            }
-        }
-
-        if (pointerObject == null)
-        {
-            pointerObject = {
-                pointer:pointer,
-                isNew: true
-            }
-
-            pointerArray.push(pointerObject);
-        } 
-
-        return pointerObject;
-    }
-
-};
-
-Phaser.Gesture = {};
-
-/**
-* Swipe-Left detection
-*
-* @class Phaser.Gesture.SwipeLeft
-*/
-Phaser.Gesture.SwipeLeft = function (game) {
-
-    /**
-    * @property {Phaser.Game} game - A reference to the currently running game. 
-    */
-    this.game = game;
-    
-    /**
-    * @property {String} - the name of the gesture
-    * @default
-    */
-    this.name = "SwipeLeft";
-    
-    /**
-    * @property {Array} _deltaXPerPointer - A list of delta X value for each pointer.
-    * @default
-    */
-    this._pointerData = [];
-
-};
-
-Phaser.Gesture.SwipeLeft.prototype = {
-
-    /** 
-    * Find a pointer data object using the helper
-    *
-    * @method Phaser.Gesture.SwipeLeft#_createOrFindPointerData 
-    * @param {Phaser.Pointer} - the pointer for which we want to retrieve data
-    */
-    _createOrFindPointerData: function (pointer) {
-
-        var ptrObject = Phaser.Gestures.Helpers.createOrFindPointerData(this._pointerData, pointer);
-
-        if (ptrObject.isNew)
-        {
-            ptrObject.isNew = false;
-            ptrObject.lastX = pointer.pointer.x;
-            ptrObject.lastY = pointer.pointer.y;
-            ptrObject.hasTriggered = false;
-        }
-
-        return ptrObject;
-
-    },
-
-    /**
-    * Start detection process for gesture, called when a pointer touches the screen
-    *
-    * @method Phaser.Gesture.SwipeLeft#update 
-    * @param {Array} - an array to all the current pointers
-    */
-    start: function (pointers) {
-    
-        for (var i = pointers.length - 1; i >=0; --i)
-        {
-            this._createOrFindPointerData(pointers[i]);
-        }
-
-    },
-    
-    /**
-    * Update during the detection of a gesture, called when a pointer moves
-    *
-    * @method Phaser.Gesture.SwipeLeft#update 
-    * @param {Array} - an array to all the current pointers
-    * @returns {boolean} True, if the gesture has been detected and can return some tangible information.
-    */
-    update: function (pointers) {
-
-        for (var i = pointers.length - 1; i >=0; --i)
-        {
-            var ptrObject = this._createOrFindPointerData(pointers[i]);
-
-            if (ptrObject.pointer.isDown && !ptrObject.hasTriggered)
-            {
-                var currentX = pointers[i].pointer.x;
-                var deltaX = ptrObject.lastX - currentX;
-
-                ptrObject.lastX = currentX;
-
-                if (deltaX > 100)
-                {
-                    ptrObject.hasTriggered = true;
-                    return true;
-                }
-            }
-        }
-        
-        return false
-
-    },
-    
-    /**
-    * Stop detection process for gesture, called when a pointer leaves the screen
-    *
-    * @method Phaser.Gesture.SwipeLeft#update 
-    * @param {Array} - an array to all the current pointers
-    */
-    stop: function (pointers) {
-
-        this._pointerData = [];
-
-    },
-    
-    /**
-    * Fetches the current relevant data for this gesture
-    *
-    * @method Phaser.Gesture.SwipeLeft#getData 
-    * @returns {object} an object with data relating to the current state of this gesture
-    */
-    getData: function () {
-
-        return { didSwipe: true };
-
-    }
-
-}
-
-Phaser.Gesture.SwipeLeft.prototype.constructor = Phaser.Gesture.SwipeLeft;
-    
-/**
-* Swipe-Right detection
-*
-* @class Phaser.Gesture.SwipeRight
-*/
-Phaser.Gesture.SwipeRight = function (game) {
-
-    /**
-    * @property {Phaser.Game} game - A reference to the currently running game. 
-    */
-    this.game = game;
-    
-    /**
-    * @property {String} - the name of the gesture
-    * @default
-    */
-    this.name = "SwipeRight";
-    
-    /**
-    * @property {Array} _pointerData - A pointer data array.
-    * @default
-    */
-    this._pointerData = [];
-
-};
-
-Phaser.Gesture.SwipeRight.prototype = {
-
-    /** 
-    * Find a pointer data object using the helper
-    *
-    * @method Phaser.Gesture.SwipeRight#_createOrFindPointerData 
-    * @private
-    * @param {Phaser.Pointer} - the pointer for which we want to retrieve data
-    */
-    _createOrFindPointerData: function(pointer) {
-
-        var ptrObject = Phaser.Gestures.Helpers.createOrFindPointerData(this._pointerData, pointer);
-
-        if (ptrObject.isNew)
-        {
-            ptrObject.isNew = false;
-            ptrObject.lastX = pointer.pointer.x;
-            ptrObject.lastY = pointer.pointer.y;
-            ptrObject.hasTriggered = false;
-        }
-
-        return ptrObject;
-
-    },
-
-    /**
-    * Start detection process for gesture, called when a pointer touches the screen
-    *
-    * @method Phaser.Gesture.SwipeRight#update 
-    * @param {Array} - an array to all the current pointers
-    */
-    start: function (pointers) {
-    
-        for (var i = pointers.length - 1; i >=0; --i)
-        {
-            this._createOrFindPointerData(pointers[i]);
-        }
-
-    },
-    
-    /**
-    * Update during the detection of a gesture, called when a pointer moves
-    *
-    * @method Phaser.Gesture.SwipeRight#update 
-    * @param {Array} - an array to all the current pointers
-    * @returns {boolean} True, if the gesture has been detected and can return some tangible information.
-    */
-    update: function (pointers) {
-
-        for (var i = pointers.length - 1; i >=0; --i)
-        {
-            var ptrObject = this._createOrFindPointerData(pointers[i]);
-
-            if (ptrObject.pointer.isDown && !ptrObject.hasTriggered)
-            {
-                var currentX = pointers[i].pointer.x;
-                var deltaX = ptrObject.lastX - currentX;
-
-                ptrObject.lastX = currentX;
-
-                if (deltaX < -100)
-                {
-                    ptrObject.hasTriggered = true;
-                    return true;
-                }
-            }
-        }
-        
-        return false
-
-    },
-    
-    /**
-    * Stop detection process for gesture, called when a pointer leaves the screen
-    *
-    * @method Phaser.Gesture.SwipeRight#update 
-    * @param {Array} - an array to all the current pointers
-    */
-    stop: function (pointers) {
-
-        this._pointerData = [];
-
-    },
-    
-    /**
-    * Fetches the current relevant data for this gesture
-    *
-    * @method Phaser.Gesture.SwipeRight#getData 
-    * @returns {object} an object with data relating to the current state of this gesture
-    */
-    getData: function () {
-
-        return { didSwipe: true };
-
-    }
-
-}
-
-Phaser.Gesture.SwipeRight.prototype.constructor = Phaser.Gesture.SwipeRight;
-    
-/**
-* Swipe-Down detection
-*
-* @class Phaser.Gesture.SwipeDown
-*/
-Phaser.Gesture.SwipeDown = function (game) {
-
-    /**
-    * @property {Phaser.Game} game - A reference to the currently running game. 
-    */
-    this.game = game;
-    
-    /**
-    * @property {String} - the name of the gesture
-    * @default
-    */
-    this.name = "SwipeDown";
-    
-    /**
-    * @property {Array} _pointerData - Array of pointer data.
-    * @default
-    */
-    this._pointerData = [];
-
-};
-
-Phaser.Gesture.SwipeDown.prototype = {
-
-    /** 
-    * Find a pointer data object using the helper
-    *
-    * @method Phaser.Gesture.SwipeDown#_createOrFindPointerData 
-    * @private
-    * @param {Phaser.Pointer} - the pointer for which we want to retrieve data
-    */
-    _createOrFindPointerData: function (pointer) {
-
-        var ptrObject = Phaser.Gestures.Helpers.createOrFindPointerData(this._pointerData, pointer);
-
-        if (ptrObject.isNew)
-        {
-            ptrObject.isNew = false;
-            ptrObject.lastX = pointer.pointer.x;
-            ptrObject.lastY = pointer.pointer.y;
-            ptrObject.hasTriggered = false;
-        }
-
-        return ptrObject;
-
-    },
-
-    /**
-    * Start detection process for gesture, called when a pointer touches the screen
-    *
-    * @method Phaser.Gesture.SwipeDown#update 
-    * @param {Array} - an array to all the current pointers
-    */
-    start: function (pointers) {
-    
-        for (var i = pointers.length - 1; i >=0; --i)
-        {
-            this._createOrFindPointerData(pointers[i]);
-        }
-
-    },
-    
-    /**
-    * Update during the detection of a gesture, called when a pointer moves
-    *
-    * @method Phaser.Gesture.SwipeDown#update 
-    * @param {Array} - an array to all the current pointers
-    * @returns {boolean} True, if the gesture has been detected and can return some tangible information.
-    */
-    update: function (pointers) {
-
-        for (var i = pointers.length - 1; i >=0; --i)
-        {
-            var ptrObject = this._createOrFindPointerData(pointers[i]);
-
-            if (ptrObject.pointer.isDown && !ptrObject.hasTriggered)
-            {
-                var currentY = pointers[i].pointer.y;
-                var deltaY = ptrObject.lastY - currentY;
-
-                ptrObject.lastY = currentY;
-
-                if (deltaY < -100)
-                {
-                    ptrObject.hasTriggered = true;
-                    return true;
-                }
-            }
-        }
-        
-        return false
-
-    },
-    
-    /**
-    * Stop detection process for gesture, called when a pointer leaves the screen
-    *
-    * @method Phaser.Gesture.SwipeDown#update 
-    * @param {Array} pointers - an array to all the current pointers
-    */
-    stop: function (pointers) {
-
-        this._pointerData = [];
-
-    },
-    
-    /**
-    * Fetches the current relevant data for this gesture
-    *
-    * @method Phaser.Gesture.SwipeDown#getData 
-    * @returns {object} an object with data relating to the current state of this gesture
-    */
-    getData: function ( ) {
-
-        return { didSwipe: true };
-
-    }
-
-}
-
-Phaser.Gesture.SwipeDown.prototype.constructor = Phaser.Gesture.SwipeDown;
-
-/**
-* Swipe-Up detection
-*
-* @class Phaser.Gesture.SwipeUp
-*/
-Phaser.Gesture.SwipeUp = function (game) {
-
-    /**
-    * @property {Phaser.Game} game - A reference to the currently running game. 
-    */
-    this.game = game;
-    
-    /**
-    * @property {String} - the name of the gesture
-    * @default
-    */
-    this.name = "SwipeUp";
-    
-    /**
-    * @property {Array} _pointerData - Array of pointer data.
-    * @default
-    */
-    this._pointerData = [];
-
-};
-
-Phaser.Gesture.SwipeUp.prototype = {
-
-    /** 
-    * Find a pointer data object using the helper
-    *
-    * @method Phaser.Gesture.SwipeUp#_createOrFindPointerData 
-    * @private
-    * @param {Phaser.Pointer} - the pointer for which we want to retrieve data
-    */
-    _createOrFindPointerData: function (pointer) {
-
-        var ptrObject = Phaser.Gestures.Helpers.createOrFindPointerData(this._pointerData, pointer);
-
-        if (ptrObject.isNew)
-        {
-            ptrObject.isNew = false;
-            ptrObject.lastX = pointer.pointer.x;
-            ptrObject.lastY = pointer.pointer.y;
-            ptrObject.hasTriggered = false;
-        }
-
-        return ptrObject;
-
-    },
-
-    /**
-    * Start detection process for gesture, called when a pointer touches the screen
-    *
-    * @method Phaser.Gesture.SwipeUp#update 
-    * @param {Array} - an array to all the current pointers
-    */
-    start: function (pointers) {
-    
-        for (var i = pointers.length - 1; i >=0; --i)
-        {
-            this._createOrFindPointerData(pointers[i]);
-        }
-
-    },
-    
-    /**
-    * Update during the detection of a gesture, called when a pointer moves
-    *
-    * @method Phaser.Gesture.SwipeUp#update 
-    * @param {Array} - an array to all the current pointers
-    * @returns {boolean} True, if the gesture has been detected and can return some tangible information.
-    */
-    update: function ( pointers ) {
-
-        for (var i = pointers.length - 1; i >=0; --i)
-        {
-            var ptrObject = this._createOrFindPointerData(pointers[i]);
-
-            if (ptrObject.pointer.isDown && !ptrObject.hasTriggered)
-            {
-                var currentY = pointers[i].pointer.y;
-                var deltaY = ptrObject.lastY - currentY;
-
-                ptrObject.lastY = currentY;
-
-                if (deltaY > 100)
-                {
-                    ptrObject.hasTriggered = true;
-                    return true;
-                }
-            }
-        }
-        
-        return false
-
-    },
-    
-    /**
-    * Stop detection process for gesture, called when a pointer leaves the screen
-    *
-    * @method Phaser.Gesture.SwipeUp#update 
-    * @param {Array} - an array to all the current pointers
-    */
-    stop: function (pointers) {
-
-        this._pointerData = [];
-
-    },
-    
-    /**
-    * Fetches the current relevant data for this gesture
-    *
-    * @method Phaser.Gesture.SwipeUp#getData 
-    * @returns {object} an object with data relating to the current state of this gesture
-    */
-    getData: function () {
-
-        return { didSwipe: true };
-
-    }
-
-}
-
-Phaser.Gesture.SwipeUp.prototype.constructor = Phaser.Gesture.SwipeUp;
 
 /**
 * @author       Richard Davey <rich@photonstorm.com>
@@ -43833,7 +43088,7 @@ Phaser.Utils.Debug.prototype = {
 
         var bounds = sprite.getBounds();
 
-        this.renderRectangle(bounds, color, filled);
+        this.rectangle(bounds, color, filled);
 
     },
 
@@ -69258,7 +68513,7 @@ Phaser.Physics.P2.prototype = {
                 {
                     if (optimize)
                     {
-                        right = map.getTileRight(layer, x, y);
+                        var right = map.getTileRight(layer, x, y);
 
                         if (width === 0)
                         {
@@ -70010,12 +69265,12 @@ Phaser.Physics.P2.Body.prototype = {
         {
             if (clearGroup)
             {
-                shapes.collisionGroup = null;
+                shape.collisionGroup = null;
             }
 
             if (clearMask)
             {
-                shapes.collisionMask = null;
+                shape.collisionMask = null;
             }
         }
 
@@ -70657,11 +69912,12 @@ Phaser.Physics.P2.Body.prototype = {
             path[p][1] = this.world.pxmi(path[p][1]);
         }
 
-        result = this.data.fromPolygon(path, options);
+        var result = this.data.fromPolygon(path, options);
 
         this.shapeChanged();
 
-        return result
+        return result;
+
     },
 
     /**
@@ -70838,10 +70094,11 @@ Phaser.Physics.P2.Body.prototype = {
                 this.data.addShape(c, cm);
             }
 
-            // this.data.adjustCenterOfMass();
             this.data.aabbNeedsUpdate = true;
             this.shapeChanged();
+
             return true;
+
         }
 
         return false;
@@ -70863,13 +70120,13 @@ Phaser.Physics.P2.Body.prototype = {
     */
     loadData: function (key, object, options) {
 
-        var data = game.cache.getPhysicsData(key, object);
+        var data = this.game.cache.getPhysicsData(key, object);
 
         if (data && data.shape)
         {
             this.mass = data.density;
-            //  set friction + bounce here
-            this.loadPolygon(key, object);
+            this.loadPolygon(key, object, options);
+            //  TODO set friction + bounce here
         }
 
     }
@@ -71119,7 +70376,6 @@ Object.defineProperty(Phaser.Physics.P2.Body.prototype, "fixedRotation", {
         if (value !== this.data.fixedRotation)
         {
             this.data.fixedRotation = value;
-            //  update anything?
         }
 
     }
@@ -71164,11 +70420,6 @@ Object.defineProperty(Phaser.Physics.P2.Body.prototype, "mass", {
         {
             this.data.mass = value;
             this.data.updateMassProperties();
-
-            if (value === 0)
-            {
-                // this.static = true;
-            }
         }
 
     }
@@ -71192,7 +70443,6 @@ Object.defineProperty(Phaser.Physics.P2.Body.prototype, "motionState", {
         if (value !== this.data.motionState)
         {
             this.data.motionState = value;
-            //  update?
         }
 
     }
@@ -71385,7 +70635,7 @@ Phaser.Physics.P2.BodyDebug = function(game, body, settings) {
     * @property {object} defaultSettings - Default debug settings.
     * @private
     */
-    defaultSettings = {
+    var defaultSettings = {
         pixelsPerLengthUnit: 20,
         debugPolygons: false,
         lineWidth: 1,
@@ -71455,7 +70705,7 @@ Phaser.Utils.extend(Phaser.Physics.P2.BodyDebug.prototype, {
     */
     draw: function() {
     
-        var angle, child, color, i, j, lineColor, lw, obj, offset, sprite, v, verts, vrot, _i, _j, _ref, _ref1, _results;
+        var angle, child, color, i, j, lineColor, lw, obj, offset, sprite, v, verts, vrot, _j, _ref1;
         obj = this.body;
         sprite = this.canvas;
         sprite.clear();
@@ -71474,12 +70724,12 @@ Phaser.Utils.extend(Phaser.Physics.P2.BodyDebug.prototype, {
                 child = obj.shapes[i];
                 offset = obj.shapeOffsets[i];
                 angle = obj.shapeAngles[i];
-                offset = offset || zero;
+                offset = offset || 0;
                 angle = angle || 0;
         
                 if (child instanceof p2.Circle)
                 {
-                  this.drawCircle(sprite, offset[0] * this.ppu, -offset[1] * this.ppu, angle, child.radius * this.ppu, color, lw);
+                    this.drawCircle(sprite, offset[0] * this.ppu, -offset[1] * this.ppu, angle, child.radius * this.ppu, color, lw);
                 }
                 else if (child instanceof p2.Convex)
                 {
@@ -71683,12 +70933,11 @@ Phaser.Utils.extend(Phaser.Physics.P2.BodyDebug.prototype, {
                         g.lineTo(x, y);
                     }
                 }
-            lastx = x;
-            lasty = y;
+                lastx = x;
+                lasty = y;
+            }
 
-          }
-
-          i++;
+            i++;
 
         }
 
