@@ -25,7 +25,7 @@ Phaser.Text = function (game, x, y, text, style) {
     text = text || ' ';
     style = style || {};
 
-    if (text.length == 0)
+    if (text.length === 0)
     {
         text = ' ';
     }
@@ -327,7 +327,10 @@ Phaser.Text.prototype.updateText = function () {
 
     // word wrap
     // preserve original text
-    if(this.style.wordWrap)outputText = this.runWordWrap(this.text);
+    if (this.style.wordWrap)
+    {
+        outputText = this.runWordWrap(this.text);
+    }
 
     //split text into lines
     var lines = outputText.split(/(?:\r\n|\r|\n)/);
@@ -335,19 +338,25 @@ Phaser.Text.prototype.updateText = function () {
     //calculate text width
     var lineWidths = [];
     var maxLineWidth = 0;
+
     for (var i = 0; i < lines.length; i++)
     {
         var lineWidth = this.context.measureText(lines[i]).width;
         lineWidths[i] = lineWidth;
         maxLineWidth = Math.max(maxLineWidth, lineWidth);
     }
+
     this.canvas.width = maxLineWidth + this.style.strokeThickness;
 
     //calculate text height
     var lineHeight = this.determineFontHeight('font: ' + this.style.font  + ';') + this.style.strokeThickness + this._lineSpacing + this.style.shadowOffsetY;
+
     this.canvas.height = lineHeight * lines.length;
 
-    if(navigator.isCocoonJS) this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
+    if (navigator.isCocoonJS)
+    {
+        this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
+    }
     
     //set canvas text styles
     this.context.fillStyle = this.style.fill;
@@ -520,7 +529,7 @@ Object.defineProperty(Phaser.Text.prototype, 'fontSize', {
 
     set: function(value) {
 
-        value = parseInt(value);
+        value = parseInt(value, 10);
 
         if (value !== this._fontSize)
         {

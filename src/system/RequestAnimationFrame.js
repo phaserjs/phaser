@@ -103,9 +103,8 @@ Phaser.RequestAnimationFrame.prototype = {
     /**
     * The update method for the requestAnimationFrame
     * @method Phaser.RequestAnimationFrame#updateRAF    
-    * @param {number} time - A timestamp, either from RAF or setTimeOut
     */
-    updateRAF: function (time) {
+    updateRAF: function () {
 
         this.game.update(Date.now());
 

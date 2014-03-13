@@ -459,6 +459,7 @@ Phaser.TilemapLayer.prototype.getIntersectingTiles = function (x, y, width, heig
     // var tiles = this.getTiles(x, y, width,height, true);
     var tiles = this.getTiles(x, y, width,height, false);
 
+    /*
     var right = x + width;
     var bottom = y + height;
 
@@ -477,6 +478,7 @@ Phaser.TilemapLayer.prototype.getIntersectingTiles = function (x, y, width, heig
             // tiles.pop();
         }
     }
+    */
 
     return tiles;
 
@@ -677,8 +679,8 @@ Phaser.TilemapLayer.prototype.render = function () {
 
     var tile;
     var set;
-    var ox = 0;
-    var oy = 0;
+    // var ox = 0;
+    // var oy = 0;
 
     if (this.debug)
     {
@@ -731,7 +733,7 @@ Phaser.TilemapLayer.prototype.render = function () {
     if (this.game.renderType === Phaser.WEBGL)
     {
         // PIXI.updateWebGLTexture(this.baseTexture, renderSession.gl);        
-        PIXI.updateWebGLTexture(this.baseTexture, this.game.renderer.gl);        
+        PIXI.updateWebGLTexture(this.baseTexture, this.game.renderer.gl);
     }
 
     this.dirty = false;
@@ -755,7 +757,7 @@ Phaser.TilemapLayer.prototype.OLDrender = function () {
 
     if (!this.dirty || !this.visible)
     {
-        // return;
+        return;
     }
 
     this._prevX = this._dx;
@@ -773,8 +775,8 @@ Phaser.TilemapLayer.prototype.OLDrender = function () {
 
     var tile;
     var set;
-    var ox = 0;
-    var oy = 0;
+    // var ox = 0;
+    // var oy = 0;
 
     if (this.debug)
     {
@@ -832,11 +834,11 @@ Phaser.TilemapLayer.prototype.OLDrender = function () {
                             );
                         }
 
-                        // if (tile.debug)
-                        // {
+                        if (tile.debug)
+                        {
                             this.context.fillStyle = 'rgba(0, 255, 0, 0.4)';
                             this.context.fillRect(Math.floor(this._tx), Math.floor(this._ty), this.map.tileWidth, this.map.tileHeight);
-                        // }
+                        }
                     }
                     else
                     {
@@ -863,7 +865,7 @@ Phaser.TilemapLayer.prototype.OLDrender = function () {
     if (this.game.renderType === Phaser.WEBGL)
     {
         // PIXI.updateWebGLTexture(this.baseTexture, renderSession.gl);        
-        PIXI.updateWebGLTexture(this.baseTexture, this.game.renderer.gl);        
+        PIXI.updateWebGLTexture(this.baseTexture, this.game.renderer.gl);
     }
 
     this.dirty = false;

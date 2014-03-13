@@ -222,19 +222,6 @@ Phaser.Cache.prototype = {
     },
 
     /**
-    * Add a Phaser.BitmapFont in to the cache.
-    *
-    * @method Phaser.Cache#addBitmapFont
-    * @param {string} key - The unique key by which you will reference this object.
-    * @param {Phaser.BitmapFont} texture - The BitmapFont object to be stored. This can be applied to any Image/Sprite as a texture.
-    */
-    addBitmapFont: function (key, texture) {
-
-        this._bitmapFont[key] = texture;
-
-    },
-
-    /**
     * Add a new sprite sheet in to the cache.
     *
     * @method Phaser.Cache#addSpriteSheet

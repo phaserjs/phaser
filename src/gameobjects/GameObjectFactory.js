@@ -377,7 +377,7 @@ Phaser.GameObjectFactory.prototype = {
     * @param {boolean} [addToCache=false] - Should this BitmapData be added to the Game.Cache? If so you can retrieve it with Cache.getBitmapData(key)
     * @return {Phaser.BitmapData} The newly created BitmapData object.
     */
-    bitmapData: function (width, height, addToCache) {
+    bitmapData: function (width, height, key, addToCache) {
 
         if (typeof addToCache === 'undefined') { addToCache = false; }
         if (typeof key === 'undefined' || key === '') { key = this.game.rnd.uuid(); }

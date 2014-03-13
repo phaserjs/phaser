@@ -357,7 +357,7 @@ Object.defineProperty(Phaser.BitmapText.prototype, 'fontSize', {
 
     set: function(value) {
 
-        value = parseInt(value);
+        value = parseInt(value, 10);
 
         if (value !== this._fontSize)
         {

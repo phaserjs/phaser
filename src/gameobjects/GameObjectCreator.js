@@ -168,7 +168,7 @@ Phaser.GameObjectCreator.prototype = {
     * @param {object} style - The style object containing style attributes like font, font size , etc.
     * @return {Phaser.Text} The newly created text object.
     */
-    text: function (x, y, text, style, group) {
+    text: function (x, y, text, style) {
 
         return new Phaser.Text(this.game, x, y, text, style);
 
@@ -189,7 +189,7 @@ Phaser.GameObjectCreator.prototype = {
     * @param {string|number} [upFrame] This is the frame or frameName that will be set when this button is in an up state. Give either a number to use a frame ID or a string for a frame name.
     * @return {Phaser.Button} The newly created button object.
     */
-    button: function (x, y, key, callback, callbackContext, overFrame, outFrame, downFrame, upFrame, group) {
+    button: function (x, y, key, callback, callbackContext, overFrame, outFrame, downFrame, upFrame) {
 
         return new Phaser.Button(this.game, x, y, key, callback, callbackContext, overFrame, outFrame, downFrame, upFrame);
 
@@ -201,10 +201,9 @@ Phaser.GameObjectCreator.prototype = {
     * @method Phaser.GameObjectCreator#graphics
     * @param {number} x - X position of the new graphics object.
     * @param {number} y - Y position of the new graphics object.
-    * @param {Phaser.Group} [group] - Optional Group to add the object to. If not specified it will be added to the World group.
     * @return {Phaser.Graphics} The newly created graphics object.
     */
-    graphics: function (x, y, group) {
+    graphics: function (x, y) {
 
         return new Phaser.Graphics(this.game, x, y);
 
@@ -264,7 +263,7 @@ Phaser.GameObjectCreator.prototype = {
     * @param {number} [size] - The size the font will be rendered in, in pixels.
     * @return {Phaser.BitmapText} The newly created bitmapText object.
     */
-    bitmapText: function (x, y, font, text, size, group) {
+    bitmapText: function (x, y, font, text, size) {
 
         return new Phaser.BitmapText(this.game, x, y, font, text, size);
 
@@ -326,7 +325,7 @@ Phaser.GameObjectCreator.prototype = {
     * @param {boolean} [addToCache=false] - Should this BitmapData be added to the Game.Cache? If so you can retrieve it with Cache.getBitmapData(key)
     * @return {Phaser.BitmapData} The newly created BitmapData object.
     */
-    bitmapData: function (width, height, addToCache) {
+    bitmapData: function (width, height, key, addToCache) {
 
         if (typeof addToCache === 'undefined') { addToCache = false; }
         if (typeof key === 'undefined' || key === '') { key = this.game.rnd.uuid(); }

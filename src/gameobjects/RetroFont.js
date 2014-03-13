@@ -267,7 +267,7 @@ Phaser.RetroFont.TEXT_SET11 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ.,\"-+!?()':;0123456789
 * @param {number} width - Width in pixels of this RetroFont. Set to zero to disable and re-enable automatic resizing.
 * @param {string} [lineAlignment='left'] - Align the text within this width. Set to RetroFont.ALIGN_LEFT (default), RetroFont.ALIGN_RIGHT or RetroFont.ALIGN_CENTER.
 */
-Phaser.RetroFont.prototype.setFixedWidth = function (width, lineAlignment) { 
+Phaser.RetroFont.prototype.setFixedWidth = function (width, lineAlignment) {
 
     if (typeof lineAlignment === 'undefined') { lineAlignment = 'left'; }
 
@@ -352,7 +352,7 @@ Phaser.RetroFont.prototype.resize = function (width, height) {
 * @method Phaser.RetroFont#buildRetroFontText
 * @memberof Phaser.RetroFont
 */
-Phaser.RetroFont.prototype.buildRetroFontText = function () { 
+Phaser.RetroFont.prototype.buildRetroFontText = function () {
 
     var cx = 0;
     var cy = 0;
@@ -363,7 +363,7 @@ Phaser.RetroFont.prototype.buildRetroFontText = function () {
     
         if (this.fixedWidth > 0)
         {
-            this.resize(fixedWidth, (lines.length * (this.characterHeight + this.customSpacingY)) - this.customSpacingY);
+            this.resize(this.fixedWidth, (lines.length * (this.characterHeight + this.customSpacingY)) - this.customSpacingY);
         }
         else
         {
@@ -407,7 +407,7 @@ Phaser.RetroFont.prototype.buildRetroFontText = function () {
     {
         if (this.fixedWidth > 0)
         {
-            this.resize(fixedWidth, this.characterHeight);
+            this.resize(this.fixedWidth, this.characterHeight);
         }
         else
         {
@@ -448,7 +448,7 @@ Phaser.RetroFont.prototype.buildRetroFontText = function () {
 * @param {number} y - The y coordinate.
 * @param {number} customSpacingX - Custom X spacing.
 */
-Phaser.RetroFont.prototype.pasteLine = function (line, x, y, customSpacingX) { 
+Phaser.RetroFont.prototype.pasteLine = function (line, x, y, customSpacingX) {
 
     var p = new Phaser.Point();
 
@@ -457,7 +457,7 @@ Phaser.RetroFont.prototype.pasteLine = function (line, x, y, customSpacingX) {
         //  If it's a space then there is no point copying, so leave a blank space
         if (line.charAt(c) == " ")
         {
-            x += this.characterWidth + this.customSpacingX;
+            x += this.characterWidth + customSpacingX;
         }
         else
         {
@@ -468,7 +468,7 @@ Phaser.RetroFont.prototype.pasteLine = function (line, x, y, customSpacingX) {
                 p.set(x, y);
                 this.render(this.stamp, p, false);
                 
-                x += this.characterWidth + this.customSpacingX;
+                x += this.characterWidth + customSpacingX;
                 
                 if (x > this.width)
                 {
@@ -486,7 +486,7 @@ Phaser.RetroFont.prototype.pasteLine = function (line, x, y, customSpacingX) {
 * @memberof Phaser.RetroFont
 * @return {number} The length of the longest line of text.
 */
-Phaser.RetroFont.prototype.getLongestLine = function () { 
+Phaser.RetroFont.prototype.getLongestLine = function () {
 
     var longestLine = 0;
     
@@ -515,18 +515,18 @@ Phaser.RetroFont.prototype.getLongestLine = function () {
 * @param {boolean} [stripCR=true] - Should it strip carriage returns as well?
 * @return {string}  A clean version of the string.
 */
-Phaser.RetroFont.prototype.removeUnsupportedCharacters = function (stripCR) { 
+Phaser.RetroFont.prototype.removeUnsupportedCharacters = function (stripCR) {
 
     var newString = "";
     
     for (var c = 0; c < this._text.length; c++)
     {
-        var char = this._text[c];
-        var code = char.charCodeAt(0);
+        var aChar = this._text[c];
+        var code = aChar.charCodeAt(0);
 
-        if (this.grabData[code] >= 0 || (!stripCR && char === "\n"))
+        if (this.grabData[code] >= 0 || (!stripCR && aChar === "\n"))
         {
-            newString = newString.concat(char);
+            newString = newString.concat(aChar);
         }
     }
     

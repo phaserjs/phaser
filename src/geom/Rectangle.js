@@ -288,235 +288,234 @@ Phaser.Rectangle.prototype = {
 
         return "[{Rectangle (x=" + this.x + " y=" + this.y + " width=" + this.width + " height=" + this.height + " empty=" + this.empty + ")}]";
 
-    },
+    }
 
-    /**
-    * @name Phaser.Rectangle#halfWidth
-    * @property {number} halfWidth - Half of the width of the Rectangle.
-    * @readonly
-    */
-    get halfWidth() {
+};
 
+/**
+* @name Phaser.Rectangle#halfWidth
+* @property {number} halfWidth - Half of the width of the Rectangle.
+* @readonly
+*/
+Object.defineProperty(Phaser.Rectangle.prototype, "halfWidth", {
+
+    get: function () {
         return Math.round(this.width / 2);
+    }
 
-    },
+});
 
-    /**
-    * @name Phaser.Rectangle#halfHeight
-    * @property {number} halfHeight - Half of the height of the Rectangle.
-    * @readonly
-    */
-    get halfHeight() {
+/**
+* @name Phaser.Rectangle#halfHeight
+* @property {number} halfHeight - Half of the height of the Rectangle.
+* @readonly
+*/
+Object.defineProperty(Phaser.Rectangle.prototype, "halfHeight", {
 
+    get: function () {
         return Math.round(this.height / 2);
+    }
 
-    },
+});
 
-    /**
-    * The sum of the y and height properties. Changing the bottom property of a Rectangle object has no effect on the x, y and width properties, but does change the height property.
-    * @name Phaser.Rectangle#bottom
-    * @property {number} bottom - The sum of the y and height properties.
-    */
-    get bottom() {
-
+/**
+* The sum of the y and height properties. Changing the bottom property of a Rectangle object has no effect on the x, y and width properties, but does change the height property.
+* @name Phaser.Rectangle#bottom
+* @property {number} bottom - The sum of the y and height properties.
+*/
+Object.defineProperty(Phaser.Rectangle.prototype, "bottom", {
+    
+    get: function () {
         return this.y + this.height;
-
     },
   
-    set bottom(value) {
-
-        if (value <= this.y)
-        {
+    set: function (value) {
+        if (value <= this.y) {
             this.height = 0;
-        }
-        else
-        {
+        } else {
             this.height = (this.y - value);
         }
-    },
+    }
 
-    /**
-    * The location of the Rectangles bottom right corner as a Point object.
-    * @name Phaser.Rectangle#bottomRight
-    * @property {Phaser.Point} bottomRight - Gets or sets the location of the Rectangles bottom right corner as a Point object.
-    */
-    get bottomRight() {
+});
 
+/**
+* The location of the Rectangles bottom right corner as a Point object.
+* @name Phaser.Rectangle#bottom
+* @property {Phaser.Point} bottomRight - Gets or sets the location of the Rectangles bottom right corner as a Point object.
+*/
+Object.defineProperty(Phaser.Rectangle.prototype, "bottomRight", {
+    
+    get: function () {
         return new Phaser.Point(this.right, this.bottom);
     },
 
-
-    set bottomRight(value) {
-
+    set: function (value) {
         this.right = value.x;
         this.bottom = value.y;
+    }
 
-    },
+});
 
-    /**
-    * The x coordinate of the left of the Rectangle. Changing the left property of a Rectangle object has no effect on the y and height properties. However it does affect the width property, whereas changing the x value does not affect the width property.
-    * @name Phaser.Rectangle#left
-    * @property {number} left - The x coordinate of the left of the Rectangle.
-    */
-    get left() {
-
+/**
+* The x coordinate of the left of the Rectangle. Changing the left property of a Rectangle object has no effect on the y and height properties. However it does affect the width property, whereas changing the x value does not affect the width property.
+* @name Phaser.Rectangle#left
+* @property {number} left - The x coordinate of the left of the Rectangle.
+*/
+Object.defineProperty(Phaser.Rectangle.prototype, "left", {
+   
+    get: function () {
         return this.x;
-
     },
 
-    set left(value) {
-
-        if (value >= this.right)
-        {
+    set: function (value) {
+        if (value >= this.right) {
             this.width = 0;
-        }
-        else
-        {
+        } else {
             this.width = this.right - value;
         }
-
         this.x = value;
-    },
+    }
 
-    /**
-    * The sum of the x and width properties. Changing the right property of a Rectangle object has no effect on the x, y and height properties, however it does affect the width property.
-    * @name Phaser.Rectangle#right
-    * @property {number} right - The sum of the x and width properties.
-    */
-    get right() {
+});
 
+/**
+* The sum of the x and width properties. Changing the right property of a Rectangle object has no effect on the x, y and height properties, however it does affect the width property.
+* @name Phaser.Rectangle#right
+* @property {number} right - The sum of the x and width properties.
+*/
+Object.defineProperty(Phaser.Rectangle.prototype, "right", {
+       
+    get: function () {
         return this.x + this.width;
-
     },
 
-    set right(value) {
-
-        if (value <= this.x)
-        {
+    set: function (value) {
+        if (value <= this.x) {
             this.width = 0;
-        }
-        else
-        {
+        } else {
             this.width = this.x + value;
         }
+    }
 
-    },
+});
 
-    /**
-    * The volume of the Rectangle derived from width * height.
-    * @name Phaser.Rectangle#volume
-    * @property {number} volume - The volume of the Rectangle derived from width * height.
-    * @readonly
-    */
-    get volume() {
-
+/**
+* The volume of the Rectangle derived from width * height.
+* @name Phaser.Rectangle#volume
+* @property {number} volume - The volume of the Rectangle derived from width * height.
+* @readonly
+*/
+Object.defineProperty(Phaser.Rectangle.prototype, "volume", {
+    
+    get: function () {
         return this.width * this.height;
+    }
 
-    },
+});
 
-    /**
-    * The perimeter size of the Rectangle. This is the sum of all 4 sides.
-    * @name Phaser.Rectangle#perimeter
-    * @property {number} perimeter - The perimeter size of the Rectangle. This is the sum of all 4 sides.
-    * @readonly
-    */
-    get perimeter() {
-
+/**
+* The perimeter size of the Rectangle. This is the sum of all 4 sides.
+* @name Phaser.Rectangle#perimeter
+* @property {number} perimeter - The perimeter size of the Rectangle. This is the sum of all 4 sides.
+* @readonly
+*/
+Object.defineProperty(Phaser.Rectangle.prototype, "perimeter", {
+    
+    get: function () {
         return (this.width * 2) + (this.height * 2);
+    }
 
-    },
+});
 
-    /**
-    * The x coordinate of the center of the Rectangle.
-    * @name Phaser.Rectangle#centerX
-    * @property {number} centerX - The x coordinate of the center of the Rectangle.
-    */
-    get centerX() {
-
+/**
+* The x coordinate of the center of the Rectangle.
+* @name Phaser.Rectangle#centerX
+* @property {number} centerX - The x coordinate of the center of the Rectangle.
+*/
+Object.defineProperty(Phaser.Rectangle.prototype, "centerX", {
+    
+    get: function () {
         return this.x + this.halfWidth;
-
     },
 
-    set centerX(value) {
-
+    set: function (value) {
         this.x = value - this.halfWidth;
+    }
 
-    },
+});
 
-    /**
-    * The y coordinate of the center of the Rectangle.
-    * @name Phaser.Rectangle#centerY
-    * @property {number} centerY - The y coordinate of the center of the Rectangle.
-    */
-    get centerY() {
-
+/**
+* The y coordinate of the center of the Rectangle.
+* @name Phaser.Rectangle#centerY
+* @property {number} centerY - The y coordinate of the center of the Rectangle.
+*/
+Object.defineProperty(Phaser.Rectangle.prototype, "centerY", {
+    
+    get: function () {
         return this.y + this.halfHeight;
-
     },
 
-    set centerY(value) {
-
+    set: function (value) {
         this.y = value - this.halfHeight;
+    }
 
-    },
+});
 
-    /**
-    * The y coordinate of the top of the Rectangle. Changing the top property of a Rectangle object has no effect on the x and width properties.
-    * However it does affect the height property, whereas changing the y value does not affect the height property.
-    * @name Phaser.Rectangle#top
-    * @property {number} top - The y coordinate of the top of the Rectangle.
-    */
-    get top() {
-
+/**
+* The y coordinate of the top of the Rectangle. Changing the top property of a Rectangle object has no effect on the x and width properties.
+* However it does affect the height property, whereas changing the y value does not affect the height property.
+* @name Phaser.Rectangle#top
+* @property {number} top - The y coordinate of the top of the Rectangle.
+*/
+Object.defineProperty(Phaser.Rectangle.prototype, "top", {
+    
+    get: function () {
         return this.y;
-
     },
 
-    set top(value) {
-
-        if (value >= this.bottom)
-        {
+    set: function (value) {
+        if (value >= this.bottom) {
             this.height = 0;
             this.y = value;
-        }
-        else
-        {
+        } else {
             this.height = (this.bottom - value);
         }
+    }
 
-    },
+});
 
-    /**
-    * The location of the Rectangles top left corner as a Point object.
-    * @name Phaser.Rectangle#topLeft
-    * @property {Phaser.Point} topLeft - The location of the Rectangles top left corner as a Point object.
-    */
-    get topLeft() {
+/**
+* The location of the Rectangles top left corner as a Point object.
+* @name Phaser.Rectangle#topLeft
+* @property {Phaser.Point} topLeft - The location of the Rectangles top left corner as a Point object.
+*/
+Object.defineProperty(Phaser.Rectangle.prototype, "topLeft", {
 
+    get: function () {
         return new Phaser.Point(this.x, this.y);
-
     },
     
-    set topLeft(value) {
-
+    set: function (value) {
         this.x = value.x;
         this.y = value.y;
+    }
 
-    },
+});
 
-    /**
-    * Determines whether or not this Rectangle object is empty. A Rectangle object is empty if its width or height is less than or equal to 0.
-    * If set to true then all of the Rectangle properties are set to 0. 
-    * @name Phaser.Rectangle#empty
-    * @property {boolean} empty - Gets or sets the Rectangles empty state.
-    */
-    get empty() {
-
+/**
+* Determines whether or not this Rectangle object is empty. A Rectangle object is empty if its width or height is less than or equal to 0.
+* If set to true then all of the Rectangle properties are set to 0. 
+* @name Phaser.Rectangle#empty
+* @property {boolean} empty - Gets or sets the Rectangles empty state.
+*/
+Object.defineProperty(Phaser.Rectangle.prototype, "empty", {
+    
+    get: function () {
         return (!this.width || !this.height);
-
     },
 
-    set empty(value) {
+    set: function (value) {
 
         if (value === true)
         {
@@ -525,7 +524,7 @@ Phaser.Rectangle.prototype = {
         
     }
 
-};
+});
 
 Phaser.Rectangle.prototype.constructor = Phaser.Rectangle;
 

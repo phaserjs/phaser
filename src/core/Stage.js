@@ -76,7 +76,7 @@ Phaser.Stage = function (game, width, height) {
     * @property {number} _backgroundColor - Stage background color.
     * @private
     */
-    this._backgroundColor;
+    this._backgroundColor = 0x000000;
 
     if (game.config)
     {
@@ -261,19 +261,19 @@ Phaser.Stage.prototype.boot = function () {
 */
 Phaser.Stage.prototype.checkVisibility = function () {
 
-    if (document.webkitHidden != undefined)
+    if (document.webkitHidden !== undefined)
     {
         this._hiddenVar = 'webkitvisibilitychange';
     }
-    else if (document.mozHidden != undefined)
+    else if (document.mozHidden !== undefined)
     {
         this._hiddenVar = 'mozvisibilitychange';
     }
-    else if (document.msHidden != undefined)
+    else if (document.msHidden !== undefined)
     {
         this._hiddenVar = 'msvisibilitychange';
     }
-    else if (document.hidden != undefined)
+    else if (document.hidden !== undefined)
     {
         this._hiddenVar = 'visibilitychange';
     }

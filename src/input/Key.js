@@ -19,6 +19,12 @@ Phaser.Key = function (game, keycode) {
     this.game = game;
 
     /**
+    * @property {object} event - Stores the most recent DOM event.
+    * @readonly
+    */
+    this.event = null;
+
+    /**
     * @property {boolean} isDown - The "down" state of the key.
     * @default
     */
@@ -125,6 +131,8 @@ Phaser.Key.prototype = {
     */
     processKeyDown: function (event) {
 
+        this.event = event;
+
         if (this.isDown)
         {
             return;
@@ -151,6 +159,8 @@ Phaser.Key.prototype = {
     * @protected
     */
     processKeyUp: function (event) {
+
+        this.event = event;
 
         if (this.isUp)
         {

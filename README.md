@@ -184,6 +184,7 @@ Updates:
 * The Particle Emitter now remembers the frames given to it and resets it when a new particle is emitted.
 * Game.focusLoss and focusGain methods and onBlur and onFocus Signals added, allowing for more fine-grained control over game pause vs. focus loss.
 * Keyboard.removeKey method added (thanks qdrj, #550)
+* Key.event now stores the most recent DOM event that triggered it.
 
 
 Bug Fixes:

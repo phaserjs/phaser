@@ -141,7 +141,7 @@ Phaser.StateManager.prototype = {
             if (typeof this._pendingState === 'string')
             {
                 //  State was already added, so just start it
-                // this.start(this._pendingState, false, false);
+                this.start(this._pendingState, false, false);
             }
             else
             {

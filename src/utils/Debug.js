@@ -199,9 +199,8 @@ Phaser.Utils.Debug.prototype = {
     *
     * @method Phaser.Utils.Debug#line
     * @protected
-    * @param {string} text - The text to render. You can have as many columns of text as you want, just pass them as additional parameters.
     */
-    line: function (text) {
+    line: function () {
 
         var x = this.currentX;
 
@@ -682,7 +681,7 @@ Phaser.Utils.Debug.prototype = {
             if (sprite.body.type === Phaser.Physics.ARCADE)
             {
                 this.start();
-                Phaser.Physics.Arcade.Body.render(this.context, sprite.body, color);
+                Phaser.Physics.Arcade.Body.render(this.context, sprite.body, color, filled);
                 this.stop();
             }
         }

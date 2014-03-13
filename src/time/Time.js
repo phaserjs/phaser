@@ -284,14 +284,7 @@ Phaser.Time.prototype = {
     */
     gamePaused: function () {
         
-        // if (typeof time === 'undefined')
-        // {
-            this._pauseStarted = this.now;
-        // }
-        // else
-        // {
-            // this._pauseStarted = time;
-        // }
+        this._pauseStarted = this.now;
 
         this.events.pause();
 
@@ -312,14 +305,7 @@ Phaser.Time.prototype = {
     */
     gameResumed: function () {
 
-        // if (typeof time === 'undefined')
-        // {
-            this.pauseDuration = Date.now() - this._pauseStarted;
-        // }
-        // else
-        // {
-        //     this.pauseDuration = time - this._pauseStarted;
-        // }
+        this.pauseDuration = Date.now() - this._pauseStarted;
 
         //  Level out the elapsed timer to avoid spikes
         this.time = Date.now();

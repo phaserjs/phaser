@@ -650,27 +650,6 @@ Phaser.Math = {
     },
 
     /**
-    * Significantly faster version of Math.max
-    * See http://jsperf.com/math-s-min-max-vs-homemade/5
-    *
-    * @method Phaser.Math#max
-    * @return {number} The highest value from those given.
-    */
-    max: function () {
-
-        for (var i = 1, max = 0, len = arguments.length; i < len; i++)
-        {
-            if (arguments[max] < arguments[i])
-            {
-                max = i;
-            }
-        }
-        
-        return arguments[max];
-
-    },
-
-    /**
     * Updated version of Math.min that can be passed either an array of numbers or the numbers as parameters.
     * See http://jsperf.com/math-s-min-max-vs-homemade/5
     *

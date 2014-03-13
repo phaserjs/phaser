@@ -183,7 +183,7 @@ Object.defineProperty(Phaser.Ellipse.prototype, "right", {
         }
         else
         {
-            this.width = this.x + width;
+            this.width = this.x + value;
         }
     }
 

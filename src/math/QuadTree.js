@@ -79,7 +79,7 @@ Phaser.QuadTree = function(x, y, width, height, maxObjects, maxLevels, level) {
     /**
     * @property {object} bounds - Object that contains the quadtree bounds.
     */
-    this.bounds;
+    this.bounds = {};
 
     /**
     * @property {array} objects - Array of quadtree children.

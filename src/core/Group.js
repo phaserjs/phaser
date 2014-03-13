@@ -916,7 +916,7 @@ Phaser.Group.prototype.preUpdate = function () {
         return false;
     }
 
-   var i = this.children.length;
+    var i = this.children.length;
 
     while (i--)
     {
@@ -1406,7 +1406,7 @@ Phaser.Group.prototype.removeBetween = function (startIndex, endIndex) {
 
         this.removeChild(this.children[i]);
 
-        if (this.cursor === child)
+        if (this.cursor === this.children[i])
         {
             this.cursor = null;
         }
