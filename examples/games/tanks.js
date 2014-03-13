@@ -98,6 +98,8 @@ var turret;
 
 var enemies;
 var enemyBullets;
+var enemiesTotal = 0;
+var enemiesAlive = 0;
 var explosions;
 
 var logo;
@@ -147,7 +149,10 @@ function create () {
     //  Create some baddies to waste :)
     enemies = [];
 
-    for (var i = 0; i < 20; i++)
+    enemiesTotal = 20;
+    enemiesAlive = 20;
+
+    for (var i = 0; i < enemiesTotal; i++)
     {
         enemies.push(new EnemyTank(i, game, tank, enemyBullets));
     }
@@ -160,7 +165,7 @@ function create () {
     bullets = game.add.group();
     bullets.enableBody = true;
     bullets.physicsBodyType = Phaser.Physics.ARCADE;
-    bullets.createMultiple(30, 'bullet');
+    bullets.createMultiple(30, 'bullet', 0, false);
     bullets.setAll('anchor.x', 0.5);
     bullets.setAll('anchor.y', 0.5);
     bullets.setAll('outOfBoundsKill', true);
@@ -203,10 +208,13 @@ function update () {
 
     game.physics.arcade.overlap(enemyBullets, tank, bulletHitPlayer, null, this);
 
+    enemiesAlive = 0;
+
     for (var i = 0; i < enemies.length; i++)
     {
         if (enemies[i].alive)
         {
+            enemiesAlive++;
             game.physics.arcade.collide(tank, enemies[i].tank);
             game.physics.arcade.overlap(bullets, enemies[i].tank, bulletHitEnemy, null, this);
             enemies[i].update();
@@ -299,7 +307,8 @@ function fire () {
 
 function render () {
 
-    // game.debug.text('Active Bullets: ' + bullets.countLiving() + ' / ' + bullets.total, 32, 32);
+    // game.debug.text('Active Bullets: ' + bullets.countLiving() + ' / ' + bullets.length, 32, 32);
+    game.debug.text('Enemies: ' + enemiesAlive + ' / ' + enemiesTotal, 32, 32);
 
 }
 

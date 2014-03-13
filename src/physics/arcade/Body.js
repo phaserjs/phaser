@@ -533,21 +533,21 @@ Phaser.Physics.Arcade.Body.prototype = {
     * Resets all Body values (velocity, acceleration, rotation, etc)
     *
     * @method Phaser.Physics.Arcade#reset
+    * @param {number} x - The new x position of the Body.
+    * @param {number} y - The new x position of the Body.
     */
-    reset: function () {
+    reset: function (x, y) {
 
         this.velocity.setTo(0, 0);
         this.acceleration.setTo(0, 0);
 
         this.angularVelocity = 0;
         this.angularAcceleration = 0;
-        this.preX = (this.sprite.world.x - (this.sprite.anchor.x * this.width)) + this.offset.x;
-        this.preY = (this.sprite.world.y - (this.sprite.anchor.y * this.height)) + this.offset.y;
-        this.preRotation = this.sprite.angle;
 
-        this.x = this.preX;
-        this.y = this.preY;
-        this.rotation = this.preRotation;
+        this.position.set(x, y);
+        this.prev.set(x, y);
+        this.rotation = this.sprite.rotation;
+        this.preRotation = this.rotation;
         
         this.center.setTo(this.x + this.halfWidth, this.y + this.halfHeight);
 
