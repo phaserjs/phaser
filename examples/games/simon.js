@@ -30,6 +30,7 @@ function create() {
     {
         item = simon.create(150 + 168 * i, 150, 'item', i);
         // Enable input.
+        item.inputEnabled = true;
         item.input.start(0, true);
         item.events.onInputDown.add(select);
         item.events.onInputUp.add(release);
@@ -41,6 +42,7 @@ function create() {
     {    
         item = simon.create(150 + 168 * i, 318, 'item', i + 3);
         // Enable input.
+        item.inputEnabled = true;
         item.input.start(0, true);
         item.events.onInputDown.add(select);
         item.events.onInputUp.add(release);
