@@ -528,7 +528,7 @@ Object.defineProperty(Phaser.TileSprite.prototype, "exists", {
 
             if (this.body && this.body.type === Phaser.Physics.P2)
             {
-                this.body.removeFromWorld();
+                this.body.safeRemove = true;
             }
 
             this.visible = false;

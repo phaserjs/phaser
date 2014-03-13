@@ -5,8 +5,7 @@ function preload() {
 
     game.load.image('stars', 'assets/misc/starfield.jpg');
     game.load.spritesheet('ship', 'assets/sprites/humstar.png', 32, 32);
-    game.load.image('panda', 'assets/sprites/spinObj_01.png');
-    game.load.image('sweet', 'assets/sprites/spinObj_06.png');
+    game.load.spritesheet('veggies', 'assets/sprites/fruitnveg64wh37.png', 64, 64);
 
 }
 
@@ -24,21 +23,20 @@ function create() {
     starfield = game.add.tileSprite(0, 0, 800, 600, 'stars');
     starfield.fixedToCamera = true;
 
-    balls = game.add.group();
-    balls.enableBody = true;
-    // balls.enableBodyDebug = true;
-    balls.physicsBodyType = Phaser.Physics.P2JS;
+    veggies = game.add.group();
+    veggies.enableBody = true;
+    veggies.physicsBodyType = Phaser.Physics.P2JS;
 
-    for (var i = 0; i < 10; i++)
+    var vegFrames = [ 1, 3, 4, 8 ];
+
+    for (var i = 0; i < 25; i++)
     {
-        var panda = balls.create(game.world.randomX, game.world.randomY, 'panda');
-        panda.body.setCircle(26);
-
-        var sweet = balls.create(game.world.randomX, game.world.randomY, 'sweet');
-        sweet.body.setCircle(28);
+        var veg = veggies.create(game.world.randomX, game.world.randomY, 'veggies', game.rnd.pick(vegFrames));
+        veg.body.setCircle(26);
     }
 
     ship = game.add.sprite(200, 200, 'ship');
+    ship.name = 'ship';
     ship.scale.set(2);
     ship.smoothed = false;
     ship.animations.add('fly', [0,1,2,3,4,5], 10, true);
@@ -50,13 +48,31 @@ function create() {
 
     game.camera.follow(ship);
 
-    // ship.body.onBeginContact.add(hitBall, this);
+    game.physics.p2.setPostBroadphaseCallback(checkVeg, this);
 
     cursors = game.input.keyboard.createCursorKeys();
 
 }
 
-function hitBall(body) {
+function checkVeg(body1, body2) {
+
+    //  To explain - the post broadphase event has collected together all potential collision pairs in the world
+    //  It doesn't mean they WILL collide, just that they might do.
+
+    //  This callback is sent each collision pair of bodies. It's up to you how you compare them.
+    //  If you return true then the pair will carry on into the narrow phase, potentially colliding.
+    //  If you return false they will be removed from the narrow phase check all together.
+
+    //  In this simple example if one of the bodies is our space ship, 
+    //  and the other body is the green pepper sprite (frame ID 4) then we DON'T allow the collision to happen.
+    //  Usually you would use a collision mask for something this simple, but it demonstates use.
+
+    if ((body1.sprite.name === 'ship' && body2.sprite.frame === 4) || (body2.sprite.name === 'ship' && body1.sprite.frame === 4))
+    {
+        return false;
+    }
+
+    return true;
 
 }
 

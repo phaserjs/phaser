@@ -96,19 +96,17 @@ Phaser.Physics.P2 = function (game, config) {
     this.onContactMaterialRemoved = new Phaser.Signal();
 
     /**
-    * @property {Phaser.Signal} onPostStep - Dispatched after the World.step()
-    */
-    this.onPostStep = new Phaser.Signal();
-
-    /**
     * @property {Phaser.Signal} onPostBroadphase - Dispatched after the Broadphase has collected collision pairs in the world.
     */
-    this.onPostBroadphase = new Phaser.Signal();
+    // this.onPostBroadphase = new Phaser.Signal();
+    this.postBroadphaseCallback = null;
+    this.callbackContext = null;
 
     /**
     * @property {Phaser.Signal} onImpact - Dispatched when a first contact is created between two bodies. This event is fired after the step has been done.
     */
-    this.onImpact = new Phaser.Signal();
+    // this.onImpact = new Phaser.Signal();
+    this.impactCallback = null;
 
     /**
     * @property {Phaser.Signal} onBeginContact - Dispatched when a first contact is created between two bodies. This event is fired before the step has been done.
@@ -130,9 +128,6 @@ Phaser.Physics.P2 = function (game, config) {
     }
 
     //  Hook into the World events
-    // this.world.on("postStep", this.postStepHandler, this);
-    // this.world.on("postBroadphase", this.postBroadphaseHandler, this);
-    // this.world.on("impact", this.impactHandler, this);
     this.world.on("beginContact", this.beginContactHandler, this);
     this.world.on("endContact", this.endContactHandler, this);
 
@@ -169,10 +164,10 @@ Phaser.Physics.P2.LIME_CORONA_JSON = 0;
 Phaser.Physics.P2.prototype = {
 
     /**
-    * This will create an Arcade Physics body on the given game object or array of game objects.
+    * This will create a P2 Physics body on the given game object or array of game objects.
     * A game object can only have 1 physics body active at any one time, and it can't be changed until the object is destroyed.
     *
-    * @method Phaser.Physics.Arcade#enable
+    * @method Phaser.Physics.P2#enable
     * @param {object|array|Phaser.Group} object - The game object to create the physics body on. Can also be an array or Group of objects, a body will be created on every child that has a `body` property.
     * @param {boolean} [debug=false] - Create a debug object to go with this body?
     * @param {boolean} [children=true] - Should a body be created on all children of this object? If true it will recurse down the display list as far as it can go.
@@ -227,10 +222,10 @@ Phaser.Physics.P2.prototype = {
     },
 
     /**
-    * Creates an Arcade Physics body on the given game object.
+    * Creates a P2 Physics body on the given game object.
     * A game object can only have 1 physics body active at any one time, and it can't be changed until the body is nulled.
     *
-    * @method Phaser.Physics.Arcade#enableBody
+    * @method Phaser.Physics.P2#enableBody
     * @param {object} object - The game object to create the physics body on. A body will only be created if this object has a null `body` property.
     * @param {boolean} debug - Create a debug object to go with this body?
     */
@@ -246,19 +241,53 @@ Phaser.Physics.P2.prototype = {
     },
 
     /**
-    * Handles a p2 postStep event.
+    * Impact event handling is disabled by default. Enable it before any impact events will be dispatched.
+    * In a busy world hundreds of impact events can be generated every step, so only enable this if you cannot do what you need via beginContact or collision masks.
     *
-    * @method Phaser.Physics.P2#postStepHandler
-    * @private
-    * @param {object} event - The event data.
+    * @method Phaser.Physics.P2#setImpactEvents
+    * @param {boolean} state - Set to true to enable impact events, or false to disable.
     */
-    postStepHandler: function (event) {
+    setImpactEvents: function (state) {
+
+        if (state)
+        {
+            this.world.on("impact", this.impactHandler, this);
+        }
+        else
+        {
+            this.world.off("impact", this.impactHandler, this);
+        }
 
     },
 
     /**
-    * Fired after the Broadphase has collected collision pairs in the world.
-    * Inside the event handler, you can modify the pairs array as you like, to prevent collisions between objects that you don't want.
+    * Sets a callback to be fired after the Broadphase has collected collision pairs in the world.
+    * Just because a pair exists it doesn't mean they *will* collide, just that they potentially could do.
+    * If your calback returns `false` the pair will be removed from the narrowphase. This will stop them testing for collision this step.
+    * Returning `true` from the callback will ensure they are checked in the narrowphase.
+    *
+    * @method Phaser.Physics.P2#setPostBroadphaseCallback
+    * @param {function} callback - The callback that will receive the postBroadphase event data. It must return a boolean. Set to null to disable an existing callback.
+    * @param {object} context - The context under which the callback will be fired.
+    */
+    setPostBroadphaseCallback: function (callback, context) {
+
+        this.postBroadphaseCallback = callback;
+        this.callbackContext = context;
+
+        if (callback !== null)
+        {
+            this.world.on("postBroadphase", this.postBroadphaseHandler, this);
+        }
+        else
+        {
+            this.world.off("postBroadphase", this.postBroadphaseHandler, this);
+        }
+
+    },
+
+    /**
+    * Internal handler for the postBroadphase event.
     *
     * @method Phaser.Physics.P2#postBroadphaseHandler
     * @private
@@ -266,16 +295,17 @@ Phaser.Physics.P2.prototype = {
     */
     postBroadphaseHandler: function (event) {
 
-        //  Body.id 1 is always the World bounds object
-
-        for (var i = 0; i < event.pairs.length; i += 2)
+        if (this.postBroadphaseCallback)
         {
-            var a = event.pairs[i];
-            var b = event.pairs[i+1];
+            //  Body.id 1 is always the World bounds object
+            var i = event.pairs.length;
 
-            if (a.id !== 1 && b.id !== 1)
+            while (i -= 2)
             {
-                // console.log('postBroadphaseHandler', a, b);
+                if (event.pairs[i].id !== 1 && event.pairs[i+1].id !== 1 && !this.postBroadphaseCallback.call(this.callbackContext, event.pairs[i].parent, event.pairs[i+1].parent))
+                {
+                    event.pairs.splice(i, 2);
+                }
             }
         }
 

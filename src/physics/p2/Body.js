@@ -78,21 +78,27 @@ Phaser.Physics.P2.Body = function (game, sprite, x, y, mass) {
     * A Body can be set to collide against the World bounds automatically if this is set to true. Otherwise it will leave the World.
     * Note that this only applies if your World has bounds! The response to the collision should be managed via CollisionMaterials.
     * @property {boolean} collideWorldBounds - Should the Body collide with the World bounds?
+    * @default
     */
     this.collideWorldBounds = true;
 
     /**
-    * @property {Phaser.Signal} onImpact - Dispatched when the shape/s of this Body impact with another. The event will be sent 2 parameters, this Body and the impact Body.
+    * Dispatched when the shape/s of this Body impact with another. The event will be sent 2 parameters, this Body and the impact Body.
+    * @property {Phaser.Signal} onImpact
     */
     this.onImpact = new Phaser.Signal();
 
     /**
-    * @property {Phaser.Signal} onBeginContact - Dispatched when a first contact is created between two bodies. This event is fired before the step has been done.
+    * Dispatched when a first contact is created between shapes in two bodies. This event is fired during the step, so collision has already taken place.
+    * The event will be sent 4 parameters: The body it is in contact with, the shape from this body that caused the contact, the shape from the contact body and the contact equation data array.
+    * @property {Phaser.Signal} onBeginContact
     */
     this.onBeginContact = new Phaser.Signal();
 
     /**
-    * @property {Phaser.Signal} onEndContact - Dispatched when final contact occurs between two bodies. This event is fired before the step has been done.
+    * Dispatched when contact ends between shapes in two bodies. This event is fired during the step, so collision has already taken place.
+    * The event will be sent 3 parameters: The body it is in contact with, the shape from this body that caused the contact and the shape from the contact body.
+    * @property {Phaser.Signal} onEndContact
     */
     this.onEndContact = new Phaser.Signal();
 
@@ -101,6 +107,11 @@ Phaser.Physics.P2.Body = function (game, sprite, x, y, mass) {
     * @private
     */
     this.collidesWith = [];
+
+    /**
+    * @property {boolean} safeRemove - To avoid deleting this body during a physics step, and causing all kinds of problems, set safeRemove to true to have it removed in the next preUpdate.
+    */
+    this.safeRemove = false;
 
     /**
     * @property {array} _bodyCallbacks - Array of Body callbacks.
@@ -146,16 +157,26 @@ Phaser.Physics.P2.Body.prototype = {
     /**
     * Sets a callback to be fired any time this Body impacts with the given Body. The impact test is performed against body.id values.
     * The callback will be sent 4 parameters: This body, the body that impacted, the Shape in this body and the shape in the impacting body.
+    * Note that the impact event happens after collision resolution, so it cannot be used to prevent a collision from happening.
+    * It also happens mid-step. So do not destroy a Body during this callback, instead set safeDestroy to true so it will be killed on the next preUpdate.
     *
     * @method Phaser.Physics.P2.Body#createBodyCallback
-    * @param {Phaser.Physics.P2.Body} body - The Body to send impact events for.
+    * @param {Phaser.Physics.P2.Body|p2.Body} body - The Body to send impact events for.
     * @param {function} callback - The callback to fire on impact. Set to null to clear a previously set callback.
     * @param {object} callbackContext - The context under which the callback will fire.
     */
     createBodyCallback: function (body, callback, callbackContext) {
 
-        this._bodyCallbacks[body.data.id] = callback;
-        this._bodyCallbackContext[body.data.id] = callbackContext;
+        if (body instanceof Phaser.Physics.P2.Body)
+        {
+            this._bodyCallbacks[body.data.id] = callback;
+            this._bodyCallbackContext[body.data.id] = callbackContext;
+        }
+        else if (body instanceof p2.Body)
+        {
+            this._bodyCallbacks[body.id] = callback;
+            this._bodyCallbackContext[body.id] = callbackContext;
+        }
 
     },
 
@@ -163,6 +184,8 @@ Phaser.Physics.P2.Body.prototype = {
     * Sets a callback to be fired any time this Body impacts with the given Group. The impact test is performed against shape.collisionGroup values.
     * The callback will be sent 4 parameters: This body, the body that impacted, the Shape in this body and the shape in the impacting body.
     * This callback will only fire if this Body has been assigned a collision group.
+    * Note that the impact event happens after collision resolution, so it cannot be used to prevent a collision from happening.
+    * It also happens mid-step. So do not destroy a Body during this callback, instead set safeDestroy to true so it will be killed on the next preUpdate.
     *
     * @method Phaser.Physics.P2.Body#createGroupCallback
     * @param {Phaser.Physics.CollisionGroup} group - The Group to send impact events for.
@@ -588,6 +611,13 @@ Phaser.Physics.P2.Body.prototype = {
     * @protected
     */
     preUpdate: function () {
+
+        if (this.safeRemove)
+        {
+            this.removeFromWorld();
+            this.safeRemove = false;
+        }
+
     },
 
     /**

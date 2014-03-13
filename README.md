@@ -182,6 +182,8 @@ Updates:
 * TileSprites now have a physics body property and call it in the pre and post updates. As with all physics bodies it's null by default.
 * json is now the default tilemap format when not defined (thanks RyanDansie, #528)
 * The Particle Emitter now remembers the frames given to it and resets it when a new particle is emitted.
+* Game.focusLoss and focusGain methods and onBlur and onFocus Signals added, allowing for more fine-grained control over game pause vs. focus loss.
+* Keyboard.removeKey method added (thanks qdrj, #550)
 
 
 Bug Fixes:

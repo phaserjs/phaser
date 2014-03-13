@@ -126,8 +126,7 @@ Phaser.Keyboard.prototype = {
 
         if (this._keys[keycode])
         {
-                
-            delete (this._keys[keycode]);
+            this._keys[keycode] = null;
             
             this.removeKeyCapture(keycode);
         }

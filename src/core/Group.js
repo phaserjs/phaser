@@ -96,9 +96,16 @@ Phaser.Group = function (game, parent, name, addToStage) {
     this.cameraOffset = new Phaser.Point();
 
     /**
+    * @default
     * @property {boolean} enableBody - If true all Sprites created with `Group.create` or `Group.createMulitple` will have a physics body created on them. Change the body type with `Group.physicsBodyType`.
     */
     this.enableBody = false;
+
+    /**
+    * @property {boolean} enableBodyDebug - If true when a physics body is created (via Group.enableBody) it will create a physics debug object as well. Only works for P2 bodies.
+    * @default
+    */
+    this.enableBodyDebug = false;
 
     /**
     * @property {number} physicsBodyType - If Group.enableBody is true this is the type of physics body that is created on new Sprites. Phaser.Physics.ARCADE, Phaser.Physics.P2, Phaser.Physics.NINJA, etc.
@@ -297,7 +304,7 @@ Phaser.Group.prototype.create = function (x, y, key, frame, exists) {
         }
         else if (this.physicsBodyType === Phaser.Physics.P2JS && this.game.physics.p2)
         {
-            this.game.physics.p2.enable(child);
+            this.game.physics.p2.enable(child, this.enableBodyDebug);
         }
     }
 
