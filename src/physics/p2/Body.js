@@ -45,7 +45,7 @@ Phaser.Physics.P2.Body = function (game, sprite, x, y, mass) {
     /**
     * @property {number} type - The type of physics system this body belongs to.
     */
-    this.type = Phaser.Physics.P2;
+    this.type = Phaser.Physics.P2JS;
 
     /**
     * @property {Phaser.Point} offset - The offset of the Physics Body from the Sprite x/y position.
@@ -114,28 +114,28 @@ Phaser.Physics.P2.Body = function (game, sprite, x, y, mass) {
     this.safeRemove = false;
 
     /**
-    * @property {array} _bodyCallbacks - Array of Body callbacks.
+    * @property {object} _bodyCallbacks - Array of Body callbacks.
     * @private
     */
-    this._bodyCallbacks = [];
+    this._bodyCallbacks = {};
 
     /**
-    * @property {array} _bodyCallbackContext - Array of Body callback contexts.
+    * @property {object} _bodyCallbackContext - Array of Body callback contexts.
     * @private
     */
-    this._bodyCallbackContext = [];
+    this._bodyCallbackContext = {};
 
     /**
-    * @property {array} _groupCallbacks - Array of Group callbacks.
+    * @property {object} _groupCallbacks - Array of Group callbacks.
     * @private
     */
-    this._groupCallbacks = [];
+    this._groupCallbacks = {};
 
     /**
-    * @property {array} _bodyCallbackContext - Array of Grouo callback contexts.
+    * @property {object} _bodyCallbackContext - Array of Grouo callback contexts.
     * @private
     */
-    this._groupCallbackContext = [];
+    this._groupCallbackContext = {};
 
     /**
     * @property {Phaser.Physics.P2.BodyDebug} debugBody - Reference to the debug body.
@@ -155,27 +155,41 @@ Phaser.Physics.P2.Body = function (game, sprite, x, y, mass) {
 Phaser.Physics.P2.Body.prototype = {
 
     /**
-    * Sets a callback to be fired any time this Body impacts with the given Body. The impact test is performed against body.id values.
+    * Sets a callback to be fired any time a shape in this Body impacts with a shape in the given Body. The impact test is performed against body.id values.
     * The callback will be sent 4 parameters: This body, the body that impacted, the Shape in this body and the shape in the impacting body.
     * Note that the impact event happens after collision resolution, so it cannot be used to prevent a collision from happening.
     * It also happens mid-step. So do not destroy a Body during this callback, instead set safeDestroy to true so it will be killed on the next preUpdate.
     *
     * @method Phaser.Physics.P2.Body#createBodyCallback
-    * @param {Phaser.Physics.P2.Body|p2.Body} body - The Body to send impact events for.
+    * @param {Phaser.Sprite|Phaser.TileSprite|Phaser.Physics.P2.Body|p2.Body} object - The object to send impact events for.
     * @param {function} callback - The callback to fire on impact. Set to null to clear a previously set callback.
     * @param {object} callbackContext - The context under which the callback will fire.
     */
-    createBodyCallback: function (body, callback, callbackContext) {
+    createBodyCallback: function (object, callback, callbackContext) {
 
-        if (body instanceof Phaser.Physics.P2.Body)
+        var id = -1;
+
+        if (object['id'])
         {
-            this._bodyCallbacks[body.data.id] = callback;
-            this._bodyCallbackContext[body.data.id] = callbackContext;
+            id = object.id;
         }
-        else if (body instanceof p2.Body)
+        else if (object['body'])
         {
-            this._bodyCallbacks[body.id] = callback;
-            this._bodyCallbackContext[body.id] = callbackContext;
+            id = object.body.id;
+        }
+
+        if (id > -1)
+        {
+            if (callback === null)
+            {
+                delete (this._bodyCallbacks[id]);
+                delete (this._bodyCallbackContext[id]);
+            }
+            else
+            {
+                this._bodyCallbacks[id] = callback;
+                this._bodyCallbackContext[id] = callbackContext;
+            }
         }
 
     },
@@ -194,8 +208,16 @@ Phaser.Physics.P2.Body.prototype = {
     */
     createGroupCallback: function (group, callback, callbackContext) {
 
-        this._groupCallbacks[group.mask] = callback;
-        this._groupCallbackContext[group.mask] = callbackContext;
+        if (callback === null)
+        {
+            delete (this._groupCallbacks[group.mask]);
+            delete (this._groupCallbacksContext[group.mask]);
+        }
+        else
+        {
+            this._groupCallbacks[group.mask] = callback;
+            this._groupCallbackContext[group.mask] = callbackContext;
+        }
 
     },
 
@@ -228,7 +250,7 @@ Phaser.Physics.P2.Body.prototype = {
     * This also resets the collisionMask.
     *
     * @method Phaser.Physics.P2.Body#setCollisionGroup
-    * @param {Phaser.Physics.CollisionGroup|array} group - The Collision Group that this Bodies shapes will use.
+    * @param {Phaser.Physics.CollisionGroup} group - The Collision Group that this Bodies shapes will use.
     * @param {p2.Shape} [shape] - An optional Shape. If not provided the collision group will be added to all Shapes in this Body.
     */
     setCollisionGroup: function (group, shape) {
@@ -246,7 +268,7 @@ Phaser.Physics.P2.Body.prototype = {
         else
         {
             shape.collisionGroup = group.mask;
-            shapes.collisionMask = mask;
+            shape.collisionMask = mask;
         }
 
     },
@@ -902,24 +924,15 @@ Phaser.Physics.P2.Body.prototype = {
         else if (Array.isArray(points[0]))
         {
             path = points[0].slice(0);
-            // for (var i = 0, len = points[0].length; i < len; i += 2)
-            // {
-            //     path.push([points[0][i], points[0][i + 1]]);
-            // }
         }
         else if (typeof points[0] === 'number')
         {
-            // console.log('addPolygon --- We\'ve a list of numbers');
             //  We've a list of numbers
             for (var i = 0, len = points.length; i < len; i += 2)
             {
                 path.push([points[i], points[i + 1]]);
             }
         }
-
-        // console.log('addPolygon PATH pre');
-        // console.log(path[1]);
-        // console.table(path);
 
         //  top and tail
         var idx = path.length - 1;
@@ -935,10 +948,6 @@ Phaser.Physics.P2.Body.prototype = {
             path[p][0] = this.world.pxmi(path[p][0]);
             path[p][1] = this.world.pxmi(path[p][1]);
         }
-
-        // console.log('addPolygon PATH POST');
-        // console.log(path[1]);
-        // console.table(path);
 
         result = this.data.fromPolygon(path, options);
 
@@ -1560,6 +1569,21 @@ Object.defineProperty(Phaser.Physics.P2.Body.prototype, "y", {
     set: function (value) {
 
         this.data.position[1] = this.world.pxmi(value);
+
+    }
+
+});
+
+/**
+* @name Phaser.Physics.P2.Body#id
+* @property {number} id - The Body ID. Each Body that has been added to the World has a unique ID.
+* @readonly
+*/
+Object.defineProperty(Phaser.Physics.P2.Body.prototype, "id", {
+    
+    get: function () {
+
+        return this.data.id;
 
     }
 

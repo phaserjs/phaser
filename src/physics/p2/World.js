@@ -148,8 +148,6 @@ Phaser.Physics.P2 = function (game, config) {
 
     this.boundsCollidesWith = [];
 
-    //  Group vs. Group callbacks
-
     //  By default we want everything colliding with everything
     this.setBoundsToWorld(true, true, true, true, false);
 
@@ -417,6 +415,7 @@ Phaser.Physics.P2.prototype = {
 
     },
 
+
     /**
     * Sets the given material against the 4 bounds of this World.
     *
@@ -452,6 +451,35 @@ Phaser.Physics.P2.prototype = {
         if (bottom && this._wallShapes[3])
         {
             this._wallShapes[3].material = material;
+        }
+
+    },
+
+    /**
+    * By default the World will be set to collide everything with everything. The bounds of the world is a Body with 4 shapes, one for each face.
+    * If you start to use your own collision groups then your objects will no longer collide with the bounds.
+    * To fix this you need to adjust the bounds to use its own collision group first BEFORE changing your Sprites collision group.
+    *
+    * @method Phaser.Physics.P2#updateBoundsCollisionGroup
+    * @param {boolean} [setCollisionGroup=true] - If true the Bounds will be set to use its own Collision Group.
+    */
+    updateBoundsCollisionGroup: function (setCollisionGroup) {
+
+        if (typeof setCollisionGroup === 'undefined') { setCollisionGroup = true; }
+
+        for (var i = 0; i < 4; i++)
+        {
+            if (this._wallShapes[i])
+            {
+                if (setCollisionGroup)
+                {
+                    this._wallShapes[i].collisionGroup = this.boundsCollisionGroup.mask;
+                }
+                else
+                {
+                    this._wallShapes[i].collisionGroup = this.everythingCollisionGroup.mask;
+                }
+            }
         }
 
     },
@@ -514,8 +542,6 @@ Phaser.Physics.P2.prototype = {
             if (setCollisionGroup)
             {
                 this._wallShapes[0].collisionGroup = this.boundsCollisionGroup.mask;
-                // this._wallShapes[0].collisionGroup = this.everythingCollisionGroup.mask;
-                // this._wallShapes[0].collisionMask = this.everythingCollisionGroup.mask;
             }
 
             this.bounds.addShape(this._wallShapes[0], [this.pxmi(-hw), 0], 1.5707963267948966 );
@@ -528,8 +554,6 @@ Phaser.Physics.P2.prototype = {
             if (setCollisionGroup)
             {
                 this._wallShapes[1].collisionGroup = this.boundsCollisionGroup.mask;
-                // this._wallShapes[1].collisionGroup = this.everythingCollisionGroup.mask;
-                // this._wallShapes[1].collisionMask = this.everythingCollisionGroup.mask;
             }
 
             this.bounds.addShape(this._wallShapes[1], [this.pxmi(hw), 0], -1.5707963267948966 );
@@ -542,8 +566,6 @@ Phaser.Physics.P2.prototype = {
             if (setCollisionGroup)
             {
                 this._wallShapes[2].collisionGroup = this.boundsCollisionGroup.mask;
-                // this._wallShapes[2].collisionGroup = this.everythingCollisionGroup.mask;
-                // this._wallShapes[2].collisionMask = this.everythingCollisionGroup.mask;
             }
 
             this.bounds.addShape(this._wallShapes[2], [0, this.pxmi(-hh)], -3.141592653589793 );
@@ -556,8 +578,6 @@ Phaser.Physics.P2.prototype = {
             if (setCollisionGroup)
             {
                 this._wallShapes[3].collisionGroup = this.boundsCollisionGroup.mask;
-                // this._wallShapes[3].collisionGroup = this.everythingCollisionGroup.mask;
-                // this._wallShapes[3].collisionMask = this.everythingCollisionGroup.mask;
             }
 
             this.bounds.addShape(this._wallShapes[3], [0, this.pxmi(hh)] );
@@ -937,12 +957,14 @@ Phaser.Physics.P2.prototype = {
     },
 
     /**
-    * Creates a Collision Group for the wall shapes.
+    * Creates a new Collision Group and optionally applies it to the given object.
+    * Collision Groups are handled using bitmasks, therefore you have a fixed limit you can create before you need to re-use older groups.
     *
     * @method Phaser.Physics.P2#createCollisionGroup
+    * @param {Phaser.Group|Phaser.Sprite} [object] - An optional Sprite or Group to apply the Collision Group to. If a Group is given it will be applied to all top-level children.
     * @protected
     */
-    createCollisionGroup: function () {
+    createCollisionGroup: function (object) {
 
         var bitmask = Math.pow(2, this._collisionGroupID);
 
@@ -972,7 +994,39 @@ Phaser.Physics.P2.prototype = {
 
         this.collisionGroups.push(group);
 
+        if (object)
+        {
+            this.setCollisionGroup(object, group);
+        }
+
         return group;
+
+    },
+
+    /**
+    * Sets the given CollisionGroup to be the collision group for all shapes in this Body, unless a shape is specified.
+    * Note that this resets the collisionMask and any previously set groups. See Body.collides() for appending them.
+    *
+    * @method Phaser.Physics.P2y#setCollisionGroup
+    * @param {Phaser.Group|Phaser.Sprite} object - A Sprite or Group to apply the Collision Group to. If a Group is given it will be applied to all top-level children.
+    * @param {Phaser.Physics.CollisionGroup} group - The Collision Group that this Bodies shapes will use.
+    */
+    setCollisionGroup: function (object, group) {
+
+        if (object instanceof Phaser.Group)
+        {
+            for (var i = 0; i < object.total; i++)
+            {
+                if (object.children[i]['body'] && object.children[i]['body'].type === Phaser.Physics.P2JS)
+                {
+                    object.children[i].body.setCollisionGroup(group);
+                }
+            }
+        }
+        else
+        {
+            object.body.setCollisionGroup(group);
+        }
 
     },
 
