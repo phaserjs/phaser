@@ -43,10 +43,11 @@ function create() {
 
     layer.resizeWorld();
 
-    game.physics.gravity.y = 250;
-    game.physics.setBoundsToWorld();
+    game.physics.arcade.gravity.y = 250;
+    game.physics.arcade.setBoundsToWorld();
 
     player = game.add.sprite(32, 32, 'dude');
+    game.physics.enable(player, Phaser.Physics.ARCADE);
     player.body.bounce.y = 0.2;
     player.body.minVelocity.y = 5;
     player.body.collideWorldBounds = true;
@@ -68,7 +69,7 @@ function create() {
 
 function update() {
 
-    game.physics.collide(player, layer);
+    game.physics.arcade.collide(player, layer);
 
     player.body.velocity.x = 0;
 
@@ -121,10 +122,10 @@ function update() {
 
 function render () {
 
-    if (player.debug)
-    {
-        game.debug.physicsBody(player.body);
-        game.debug.bodyInfo(player, 16, 24);
-    }
+    // if (player.debug)
+    // {
+    //     game.debug.physicsBody(player.body);
+    //     game.debug.bodyInfo(player, 16, 24);
+    // }
 
 }
