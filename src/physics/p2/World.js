@@ -702,7 +702,7 @@ Phaser.Physics.P2.prototype = {
     * @param {Phaser.Sprite|Phaser.Physics.P2.Body|p2.Body} bodyA - First connected body.
     * @param {Phaser.Sprite|Phaser.Physics.P2.Body|p2.Body} bodyB - Second connected body.
     * @param {number} distance - The distance to keep between the bodies.
-    * @param {number} [maxForce] - The maximum force to apply to the constraint
+    * @param {number} [maxForce] - The maximum force that should be applied to constrain the bodies.
     * @return {Phaser.Physics.P2.DistanceConstraint} The constraint
     */
     createDistanceConstraint: function (bodyA, bodyB, distance, maxForce) {
@@ -743,6 +743,34 @@ Phaser.Physics.P2.prototype = {
         else
         {
             return this.addConstraint(new Phaser.Physics.P2.GearConstraint(this, bodyA, bodyB, angle, ratio));
+        }
+
+    },
+
+    /**
+    * Connects two bodies at given offset points, letting them rotate relative to each other around this point.
+    * The pivot points are given in world (pixel) coordinates.
+    *
+    * @method Phaser.Physics.P2#createRevoluteConstraint
+    * @param {p2.Body} bodyA - First connected body.
+    * @param {Float32Array} pivotA - The point relative to the center of mass of bodyA which bodyA is constrained to. The value is an array with 2 elements matching x and y, i.e: [32, 32].
+    * @param {p2.Body} bodyB - Second connected body.
+    * @param {Float32Array} pivotB - The point relative to the center of mass of bodyB which bodyB is constrained to. The value is an array with 2 elements matching x and y, i.e: [32, 32].
+    * @param {number} [maxForce=0] - The maximum force that should be applied to constrain the bodies.
+    * @return {Phaser.Physics.P2.RevoluteConstraint} The constraint
+    */
+    createRevoluteConstraint: function (bodyA, pivotA, bodyB, pivotB, maxForce) {
+
+        bodyA = this.getBody(bodyA);
+        bodyB = this.getBody(bodyB);
+
+        if (!bodyA || !bodyB)
+        {
+            console.warn('Cannot create Constraint, invalid body objects given');
+        }
+        else
+        {
+            return this.addConstraint(new Phaser.Physics.P2.RevoluteConstraint(this, bodyA, pivotA, bodyB, pivotB, maxForce));
         }
 
     },

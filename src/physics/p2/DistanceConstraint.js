@@ -14,7 +14,7 @@
 * @param {p2.Body} bodyA - First connected body.
 * @param {p2.Body} bodyB - Second connected body.
 * @param {number} distance - The distance to keep between the bodies.
-* @param {number} [maxForce] - The maximum force to apply to the constraint
+* @param {number} [maxForce] - The maximum force that should be applied to constrain the bodies.
 */
 Phaser.Physics.P2.DistanceConstraint = function (world, bodyA, bodyB, distance, maxForce) {
 
