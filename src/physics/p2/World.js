@@ -871,7 +871,7 @@ Phaser.Physics.P2.prototype = {
     */
     getBody: function (object) {
 
-        if (object['world'])
+        if (object instanceof p2.Body)
         {
             //  Native p2 body
             return object;
@@ -1088,7 +1088,7 @@ Phaser.Physics.P2.prototype = {
         }
         else
         {
-            return new Phaser.Physics.P2.Spring(this, bodyA, bodyB, restLength, stiffness, damping, worldA, worldB, localA, localB);
+            return this.addSpring(new Phaser.Physics.P2.Spring(this, bodyA, bodyB, restLength, stiffness, damping, worldA, worldB, localA, localB));
         }
 
     },

@@ -21,16 +21,17 @@ function create() {
 	game.physics.startSystem(Phaser.Physics.P2JS);
 
     //  Add 2 sprites which we'll join with a spring
-    sprite1 = game.add.sprite(200, 100, 'ball');
-	sprite2 = game.add.sprite(200, 300, 'atari');
+    sprite1 = game.add.sprite(400, 300, 'ball');
+	sprite2 = game.add.sprite(400, 400, 'atari');
 
 	game.physics.p2.enable([sprite1, sprite2]);
 
+    sprite2.body.collideWorldBounds = false;
+
     //  Create our spring
-    // var spring = game.physics.p2.createSpring(sprite1, sprite2, restLength, stiffness, damping, worldA, worldB, localA, localB);
-    // var spring = game.physics.p2.createSpring(sprite1, sprite2);
-
-
+    //  The parameters are: createSpring(sprite1, sprite2, restLength, stiffness, damping, worldA, worldB, localA, localB)
+    //  See the docs for more details
+    var spring = game.physics.p2.createSpring(sprite1, sprite2, 150, 5, 1);
 
     text = game.add.text(20, 20, 'move with arrow keys', { fill: '#ffffff' });
 
@@ -40,24 +41,16 @@ function create() {
 
 function update() {
 
-	// sprite.body.setZeroVelocity();
+	sprite1.body.setZeroVelocity();
 
- //    if (cursors.left.isDown)
- //    {
- //    	sprite.body.moveLeft(400);
- //    }
- //    else if (cursors.right.isDown)
- //    {
- //    	sprite.body.moveRight(400);
- //    }
-
- //    if (cursors.up.isDown)
- //    {
- //    	sprite.body.moveUp(400);
- //    }
- //    else if (cursors.down.isDown)
- //    {
- //    	sprite.body.moveDown(400);
- //    }
+    if (cursors.left.isDown)
+    {
+    	sprite1.body.moveLeft(400);
+    }
+    else if (cursors.right.isDown)
+    {
+    	sprite1.body.moveRight(400);
+    }
 
 }
+
