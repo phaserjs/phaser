@@ -1,11 +1,11 @@
 ![Phaser 2.0](http://www.phaser.io/images/phaser2-github.png)
 
-Phaser 2.0.0
+Phaser 2.0.1
 ============
 
 Phaser is a fast, free and fun open source game framework for making desktop and mobile browser HTML5 games. It uses [Pixi.js](https://github.com/GoodBoyDigital/pixi.js/) internally for fast 2D Canvas and WebGL rendering.
 
-Version: 2.0.0 "Aes Sedai" - Released: March 13th 2014
+Version: 2.0.1 "Aes Sedai" - Released: -in development-
 
 By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 
@@ -52,6 +52,15 @@ There is also an [un-official Getting Started Guide](http://www.antonoffplus.com
 
 Change Log
 ----------
+
+Version 2.0.1 - "Aes Sedai" - -in development-
+
+Bug Fixes
+
+* The Static, Kinematic and Dynamic consts that P2.Body uses were incorrect (fixes #563)
+
+
+
 
 Version 2.0.0 - "Aes Sedai" - March 13th 2014
 
