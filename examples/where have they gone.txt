@@ -1,0 +1,6 @@
+Ever since we started Phaser we've been growing and expanding our extensive set of Examples.
+
+They used to be bundled in the main Phaser repo, but because they got so large and in order 
+to help with versioning we've moved them to their own repository:
+
+https://github.com/photonstorm/phaser-examples
