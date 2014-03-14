@@ -33,15 +33,23 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     /**
     * @property {Phaser.Point} offset - The offset of the Physics Body from the Sprite x/y position.
     */
-    // this.offset = new Phaser.Point(-(sprite.anchor.x * sprite.width), -(sprite.anchor.y * sprite.height));
     this.offset = new Phaser.Point();
 
     /**
     * @property {Phaser.Point} position - The position of the physics body.
     * @readonly
     */
-    // this.position = new Phaser.Point(sprite.x + this.offset.x, sprite.y + this.offset.y);
     this.position = new Phaser.Point(sprite.x, sprite.y);
+
+    if (sprite.anchor.x !== 0)
+    {
+        this.position.x -= (sprite.anchor.x * sprite.width);
+    }
+
+    if (sprite.anchor.y !== 0)
+    {
+        this.position.y -= (sprite.anchor.y * sprite.height);
+    }
 
     /**
     * @property {Phaser.Point} prev - The previous position of the physics body.

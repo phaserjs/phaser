@@ -30,13 +30,12 @@ function create() {
     //  Basically this sets EVERY SINGLE tile to fully collide on all faces
     map.setCollisionByExclusion([7, 32, 35, 36, 47]);
 
-    layer.debug = true;
+    // layer.debug = true;
 
     layer.resizeWorld();
 
     cursors = game.input.keyboard.createCursorKeys();
 
-    /*
     emitter = game.add.emitter(0, 0, 200);
 
     emitter.makeParticles('chunk');
@@ -44,17 +43,16 @@ function create() {
     emitter.maxRotation = 0;
     emitter.gravity = 150;
     emitter.bounce.setTo(0.5, 0.5);
-    */
 
     sprite = game.add.sprite(200, 70, 'phaser');
-    sprite.anchor.setTo(0.5, 0.5);
-
+    sprite.anchor.set(0.5);
 
     game.physics.enable(sprite);
 
-    // sprite.body.setSize(14, 14, 2, 0);
-
-    console.log(sprite.body);
+    //  Because both our body and our tiles are so tiny,
+    //  and the body is moving pretty fast, we need to add
+    //  some tile padding to the body. WHat this does
+    sprite.body.tilePadding.set(64, 64);
 
     game.camera.follow(sprite);
 
@@ -62,9 +60,9 @@ function create() {
 
 function particleBurst() {
 
-    // emitter.x = sprite.x;
-    // emitter.y = sprite.y;
-    // emitter.start(true, 2000, null, 1);
+    emitter.x = sprite.x;
+    emitter.y = sprite.y;
+    emitter.start(true, 2000, null, 1);
 
 }
 
@@ -78,38 +76,32 @@ function update() {
 
     if (cursors.up.isDown)
     {
-        sprite.body.velocity.y = -100;
-        // particleBurst();
+        sprite.body.velocity.y = -200;
+        particleBurst();
     }
     else if (cursors.down.isDown)
     {
-        sprite.body.velocity.y = 100;
-        // particleBurst();
+        sprite.body.velocity.y = 200;
+        particleBurst();
     }
 
     if (cursors.left.isDown)
     {
-        sprite.body.velocity.x = -100;
+        sprite.body.velocity.x = -200;
         sprite.scale.x = -1;
-        // particleBurst();
+        particleBurst();
     }
     else if (cursors.right.isDown)
     {
-        sprite.body.velocity.x = 100;
+        sprite.body.velocity.x = 200;
         sprite.scale.x = 1;
-        // particleBurst();
+        particleBurst();
     }
 
 }
 
 function render() {
 
-    // game.debug.text(game.physics.arcade._intersection.width, 32, 32);
-    // game.debug.text(game.physics.arcade._intersection.height, 32, 64);
-
-    game.debug.geom(sprite.body, 'rgba(0,255,0,0.4)', true, 1);
-
-    game.debug.text(sprite.body.overlapX, 32, 32);
-    game.debug.text(sprite.body.overlapY, 32, 64);
+    game.debug.body(sprite);
 
 }

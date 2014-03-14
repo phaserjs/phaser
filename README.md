@@ -151,6 +151,7 @@ New features:
 * ScaleManager.fullScreenTarget allows you to change the DOM element that the fullscreen API is called on (feature request #526)
 * Merged Georges p2 BodyDebug and reformatted for jshint pass. Looks awesome :)
 * ArcadePhysics.Body has a new gravityScale property, which is a modifier multiplied against the world gravity value on a Body.
+* Line.coordinatesOnLine will return all coordinates on the line using Bresenhams line algorithm.
 
 
 Updates:
