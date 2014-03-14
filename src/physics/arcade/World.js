@@ -604,7 +604,7 @@ Phaser.Physics.Arcade.prototype = {
             sprite.body.position.y - sprite.body.tilePadding.y, 
             sprite.body.width + sprite.body.tilePadding.x, 
             sprite.body.height + sprite.body.tilePadding.y, 
-            false, true);
+            true, true);
 
         if (this._mapData.length === 0)
         {
@@ -956,10 +956,10 @@ Phaser.Physics.Arcade.prototype = {
         }
 
         //  They overlap. Any custom callbacks?
-        if (tile.callback || tile.layer.callbacks[tile.index])
+        if (tile.collisionCallback || tile.layer.callbacks[tile.index])
         {
             //  A local callback takes priority over a global callback.
-            if (tile.callback && tile.callback.call(tile.callbackContext, body.sprite, tile) === false)
+            if (tile.collisionCallbackk && tile.collisionCallback.call(tile.collisionCallbackContext, body.sprite, tile) === false)
             {
                 //  Is there a tile specific collision callback? If it returns true then we can carry on, otherwise we should abort.
                 return false;

@@ -247,13 +247,15 @@ Phaser.Tilemap.prototype = {
     * @param {number} [tileHeight] - The height of the tiles in the Tileset Image. If not given it will default to the map.tileHeight value.
     * @param {number} [tileMargin=0] - The width of the tiles in the Tileset Image. If not given it will default to the map.tileWidth value.
     * @param {number} [tileSpacing=0] - The height of the tiles in the Tileset Image. If not given it will default to the map.tileHeight value.
+    * @param {number} [gid=0] - If adding multiple tilesets to a blank/dynamic map, specify the starting GID the set will use here.
     */
-    addTilesetImage: function (tileset, key, tileWidth, tileHeight, tileMargin, tileSpacing) {
+    addTilesetImage: function (tileset, key, tileWidth, tileHeight, tileMargin, tileSpacing, gid) {
 
         if (typeof tileWidth === 'undefined') { tileWidth = this.tileWidth; }
         if (typeof tileHeight === 'undefined') { tileHeight = this.tileHeight; }
         if (typeof tileMargin === 'undefined') { tileMargin = 0; }
         if (typeof tileSpacing === 'undefined') { tileSpacing = 0; }
+        if (typeof gid === 'undefined') { gid = 0; }
 
         if (typeof key === 'undefined')
         {
@@ -279,11 +281,50 @@ Phaser.Tilemap.prototype = {
         }
         else
         {
-            var newSet = new Phaser.Tileset(key, 0, tileWidth, tileHeight, tileMargin, tileSpacing, {});
+            var newSet = new Phaser.Tileset(key, gid, tileWidth, tileHeight, tileMargin, tileSpacing, {});
 
             newSet.setImage(this.game.cache.getImage(key));
 
             this.tilesets.push(newSet);
+
+            var i = this.tilesets.length - 1;
+            var x = tileMargin;
+            var y = tileMargin;
+
+            var count = 0;
+            var countX = 0;
+            var countY = 0;
+
+            for (var t = gid; t < gid + newSet.total; t++)
+            {
+                this.tiles[t] = [x, y, i];
+
+                x += tileWidth + tileSpacing;
+
+                count++;
+
+                if (count === newSet.total)
+                {
+                    break;
+                }
+
+                countX++;
+
+                if (countX === newSet.columns)
+                {
+                    x = tileMargin;
+                    y += tileHeight + tileSpacing;
+
+                    countX = 0;
+                    countY++;
+
+                    if (countY === set.rows)
+                    {
+                        break;
+                    }
+                }
+            }
+
         }
 
         return false;
@@ -488,7 +529,7 @@ Phaser.Tilemap.prototype = {
     },
 
     /**
-    * Sets a global collision callback for the given tile index within the layer. This will affect all tiles on this layer that have the same index.
+    * Sets a global collision callback for the given map location within the layer. This will affect all tiles on this layer found in the given area.
     * If a callback is already set for the tile index it will be replaced. Set the callback to null to remove it.
     * If you want to set a callback for a tile at a specific location on the map then see setTileLocationCallback.
     *

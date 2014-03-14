@@ -12,60 +12,6 @@
 Phaser.TilemapParser = {
 
     /**
-    * Creates a Tileset object.
-    * @method Phaser.TilemapParser.tileset
-    * @param {Phaser.Game} game - Game reference to the currently running game.
-    * @param {string} key - The Cache key of this tileset.
-    * @param {number} tileWidth - Width of each single tile in pixels.
-    * @param {number} tileHeight - Height of each single tile in pixels.
-    * @param {number} [tileMargin=0] - If the tiles have been drawn with a margin, specify the amount here.
-    * @param {number} [tileSpacing=0] - If the tiles have been drawn with spacing between them, specify the amount here.
-    * @param {number} [rows=-1] - How many tiles are placed horizontally in each row? If -1 it will calculate rows by dividing the image width by tileWidth.
-    * @param {number} [columns=-1] - How many tiles are placed vertically in each column? If -1 it will calculate columns by dividing the image height by tileHeight.
-    * @param {number} [total=-1] - The maximum number of tiles to extract from the image. If -1 it will extract `rows * columns` worth. You can also set a value lower than the actual number of tiles.
-    * @return {Phaser.Tileset} Generated Tileset object.
-    */
-    tileset: function (game, key, tileWidth, tileHeight, tileMargin, tileSpacing, rows, columns, total) {
-
-        //  How big is our image?
-        var img = game.cache.getTilesetImage(key);
-
-        if (img === null)
-        {
-            console.warn("Phaser.TilemapParser.tileSet: Invalid image key given");
-            return null;
-        }
-
-        var width = img.width;
-        var height = img.height;
-
-        if (rows === -1)
-        {
-            rows = Math.round(width / tileWidth);
-        }
-
-        if (columns === -1)
-        {
-            columns = Math.round(height / tileHeight);
-        }
-
-        if (total === -1)
-        {
-            total = rows * columns;
-        }
-        
-        //  Zero or smaller than tile sizes?
-        if (width === 0 || height === 0 || width < tileWidth || height < tileHeight || total === 0)
-        {
-            console.warn("Phaser.TilemapParser.tileSet: width/height zero or width/height < given tileWidth/tileHeight");
-            return null;
-        }
-
-        return new Phaser.Tileset(img, key, tileWidth, tileHeight, tileMargin, tileSpacing, rows, columns, total);
-
-    },
-
-    /**
     * Parse tilemap data from the cache and creates a Tilemap object.
     *
     * @method Phaser.TilemapParser.parse

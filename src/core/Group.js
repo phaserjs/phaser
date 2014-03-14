@@ -1067,7 +1067,7 @@ Phaser.Group.prototype.sort = function (index, order) {
         return;
     }
 
-    if (typeof index === 'undefined') { index = 'y'; }
+    if (typeof index === 'undefined') { index = 'z'; }
     if (typeof order === 'undefined') { order = Phaser.Group.SORT_ASCENDING; }
 
     this._sortProperty = index;

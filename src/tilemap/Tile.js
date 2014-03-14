@@ -270,8 +270,8 @@ Phaser.Tile.prototype = {
 
         if (collides && faces)
         {
-            //  Does this tile EITHER collide OR have an interesting face?
-            return (this.collideLeft || this.collideRight || this.collideUp || this.collideDown || this.faceTop || this.faceBottom || this.faceLeft || this.faceRight);
+            //  Does this tile have any collide flags OR interesting face?
+            return (this.collideLeft || this.collideRight || this.collideUp || this.collideDown || this.faceTop || this.faceBottom || this.faceLeft || this.faceRight || this.collisionCallback || this.layer.callbacks[this.index]);
         }
         else if (collides)
         {

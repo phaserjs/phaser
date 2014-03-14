@@ -27,18 +27,19 @@ function create() {
     map.addTilesetImage('coin');
 
     map.setCollisionBetween(1, 12);
+
+    //  This will set Tile ID 26 (the coin) to call the hitCoin function when collided with
     map.setTileIndexCallback(26, hitCoin, this);
+
+    //  This will set the map location 2, 0 to call the function
     map.setTileLocationCallback(2, 0, 1, 1, hitCoin, this);
 
     layer = map.createLayer('Tile Layer 1');
 
     layer.resizeWorld();
 
-    game.physics.arcade.gravity.y = 100;
-
     sprite = game.add.sprite(260, 100, 'phaser');
     sprite.anchor.set(0.5);
-
     game.physics.enable(sprite);
 
     sprite.body.setSize(16, 16, 8, 8);
@@ -57,7 +58,7 @@ function create() {
 
 function hitCoin(sprite, tile) {
 
-    tile.tile.alpha = 0.2;
+    tile.alpha = 0.2;
 
     layer.dirty = true;
 
@@ -91,7 +92,6 @@ function update() {
 
 function render() {
 
-    game.debug.bodyInfo(sprite, 16, 24);
     game.debug.body(sprite);
 
 }

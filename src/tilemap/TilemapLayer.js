@@ -640,9 +640,7 @@ Phaser.TilemapLayer.prototype.render = function () {
             {
                 tile = this._column[x];
 
-                //  this needs to know which set the index is from
-                // set = this.map.tilesets[this.map.tiles[tile.index][2]]
-                set = this.map.tilesets[0];
+                set = this.map.tilesets[this.map.tiles[tile.index][2]]
 
                 if (this.debug === false && tile.alpha !== this.context.globalAlpha)
                 {
