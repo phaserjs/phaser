@@ -956,7 +956,7 @@ Phaser.Physics.Arcade.prototype = {
         }
 
         //  They overlap. Any custom callbacks?
-        if (tile.collisionCallback || tile.layer.callbacks[tile.index])
+        if (!!tile.collisionCallback || (tile.layer.callbacks && tile.layer.callbacks[tile.index]))
         {
             //  A local callback takes priority over a global callback.
             if (tile.collisionCallbackk && tile.collisionCallback.call(tile.collisionCallbackContext, body.sprite, tile) === false)
