@@ -13,8 +13,13 @@ var map;
 var layer;
 var cursors;
 var sprite;
+var line;
+var tileHits = [];
+var plotting = false;
 
 function create() {
+
+    line = new Phaser.Line();
 
     map = game.add.tilemap('map');
 
@@ -26,29 +31,74 @@ function create() {
 
     map.setCollisionBetween(1, 12);
 
-    // layer.debug = true;
+    layer.debug = true;
 
     sprite = game.add.sprite(260, 70, 'phaser');
 
     game.physics.enable(sprite);
 
-    sprite.body.bounce.set(0.8);
-    sprite.body.tilePadding.set(32);
-
     game.camera.follow(sprite);
-
-    game.physics.arcade.gravity.y = 200;
 
     cursors = game.input.keyboard.createCursorKeys();
 
+    var help = game.add.text(10, 10, 'Arrows to move, click and drag to cast a ray', { font: '16px Arial', fill: '#ffffff' });
+    help.fixedToCamera = true;
+
+    game.input.onDown.add(startLine, this);
+    game.input.onUp.add(raycast, this);
+
+}
+
+function startLine(pointer) {
+
+    if (tileHits.length > 0)
+    {
+        for (var i = 0; i < tileHits.length; i++)
+        {
+            tileHits[i].debug = false;
+        }
+
+        layer.dirty = true;
+    }
+
+    line.start.set(pointer.worldX, pointer.worldY);
+
+    plotting = true;
+
+}
+
+function raycast(pointer) {
+
+    line.end.set(pointer.worldX, pointer.worldY);
+
+    tileHits = layer.getRayCastTiles(line, 4, false, false);
+
+    if (tileHits.length > 0)
+    {
+        //  Just so we can visually see the tiles
+        for (var i = 0; i < tileHits.length; i++)
+        {
+            tileHits[i].debug = true;
+        }
+
+        layer.dirty = true;
+    }
+
+    plotting = false;
+    
 }
 
 function update() {
 
+    if (plotting)
+    {
+        line.end.set(game.input.activePointer.worldX, game.input.activePointer.worldY);
+    }
+
     game.physics.arcade.collide(sprite, layer);
 
-    // sprite.body.velocity.x = 0;
-    // sprite.body.velocity.y = 0;
+    sprite.body.velocity.x = 0;
+    sprite.body.velocity.y = 0;
 
     if (cursors.up.isDown)
     {
@@ -72,6 +122,6 @@ function update() {
 
 function render() {
 
-    // game.debug.body(sprite);
+    game.debug.geom(line);
 
 }

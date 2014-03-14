@@ -1,5 +1,5 @@
 
-var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', { preload: preload, create: create, update: update });
+var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', { preload: preload, create: create, update: update, render: render });
 
 function preload() {
 
@@ -29,8 +29,6 @@ function create() {
     //  Basically this sets EVERY SINGLE tile to fully collide on all faces
     map.setCollisionByExclusion([7, 32, 35, 36, 47]);
 
-    // layer.debug = true;
-
     layer.resizeWorld();
 
     cursors = game.input.keyboard.createCursorKeys();
@@ -43,8 +41,15 @@ function create() {
     emitter.gravity = 150;
     emitter.bounce.setTo(0.5, 0.5);
 
-    sprite = game.add.sprite(200, 70, 'phaser');
-    sprite.anchor.setTo(0.5, 0.5);
+    sprite = game.add.sprite(300, 90, 'phaser');
+    sprite.anchor.set(0.5);
+
+    game.physics.enable(sprite);
+
+    //  Because both our body and our tiles are so tiny,
+    //  and the body is moving pretty fast, we need to add
+    //  some tile padding to the body. WHat this does
+    sprite.body.tilePadding.set(32, 32);
 
     game.camera.follow(sprite);
 
@@ -60,34 +65,40 @@ function particleBurst() {
 
 function update() {
 
-    game.physics.collide(sprite, layer);
-    game.physics.collide(emitter, layer);
+    game.physics.arcade.collide(sprite, layer);
+    game.physics.arcade.collide(emitter, layer);
 
     sprite.body.velocity.x = 0;
     sprite.body.velocity.y = 0;
 
     if (cursors.up.isDown)
     {
-        sprite.body.velocity.y = -150;
+        sprite.body.velocity.y = -200;
         particleBurst();
     }
     else if (cursors.down.isDown)
     {
-        sprite.body.velocity.y = 150;
+        sprite.body.velocity.y = 200;
         particleBurst();
     }
 
     if (cursors.left.isDown)
     {
-        sprite.body.velocity.x = -150;
+        sprite.body.velocity.x = -200;
         sprite.scale.x = -1;
         particleBurst();
     }
     else if (cursors.right.isDown)
     {
-        sprite.body.velocity.x = 150;
+        sprite.body.velocity.x = 200;
         sprite.scale.x = 1;
         particleBurst();
     }
+
+}
+
+function render() {
+
+    // game.debug.body(sprite);
 
 }

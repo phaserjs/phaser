@@ -47,6 +47,7 @@ function update() {
 
     game.physics.arcade.collide(sprite, layer);
 
+    //  Un-comment these to gain full control over the sprite
     // sprite.body.velocity.x = 0;
     // sprite.body.velocity.y = 0;
 
