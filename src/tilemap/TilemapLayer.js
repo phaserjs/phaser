@@ -152,6 +152,12 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
     this.dirty = true;
 
     /**
+    * @property {number} rayStepRate - When ray-casting against tiles this is the number of steps it will jump. For larger tile sizes you can increase this to improve performance.
+    * @default
+    */
+    this.rayStepRate = 4;
+
+    /**
     * @property {number} _cw - Local collision var.
     * @private 
     */
@@ -457,17 +463,46 @@ Phaser.TilemapLayer.prototype.getTileXY = function (x, y, point) {
 /**
 * Gets all tiles that intersect with the given line.
 *
-* @method Phaser.TilemapLayer#getIntersectingTiles
+* @method Phaser.TilemapLayer#getRayCastTiles
 * @memberof Phaser.TilemapLayer
 * @param {Phaser.Line} line - The line used to determine which tiles to return.
+* @param {number} [stepRate] - How many steps through the ray will we check? If undefined or null it uses TilemapLayer.rayStepRate.
+* @param {boolean} [collides=false] - If true only return tiles that collide on one or more faces.
+* @param {boolean} [interestingFace=false] - If true only return tiles that have interesting faces.
 * @return {array<Phaser.Tile>} An array of Phaser.Tiles.
 */
-Phaser.TilemapLayer.prototype.getIntersectingTiles = function (line) {
+Phaser.TilemapLayer.prototype.getRayCastTiles = function (line, stepRate, collides, interestingFace) {
 
-    var tiles = this.getTiles(x, y, width, height, false);
+    if (typeof stepRate === 'undefined' || stepRate === null) { stepRate = this.rayStepRate; }
+    if (typeof collides === 'undefined') { collides = false; }
+    if (typeof interestingFace === 'undefined') { interestingFace = false; }
 
+    //  First get all tiles that touch the bounds of the line
+    var tiles = this.getTiles(line.x, line.y, line.width, line.height, collides, interestingFace);
 
-    return tiles;
+    if (tiles.length === 0)
+    {
+        return [];
+    }
+
+    //  Now we only want the tiles that intersect with the points on this line
+    var coords = line.coordinatesOnLine(stepRate);
+    var total = coords.length;
+    var results = [];
+
+    for (var i = 0; i < tiles.length; i++)
+    {
+        for (var t = 0; t < total; t++)
+        {
+            if (tiles[i].containsPoint(coords[t][0], coords[t][1]))
+            {
+                results.push(tiles[i]);
+                break;
+            }
+        }
+    }
+
+    return results;
 
 }
 
@@ -589,8 +624,6 @@ Phaser.TilemapLayer.prototype.render = function () {
 
     var tile;
     var set;
-    // var ox = 0;
-    // var oy = 0;
 
     if (this.debug)
     {
@@ -618,11 +651,11 @@ Phaser.TilemapLayer.prototype.render = function () {
 
                 set.draw(this.context, Math.floor(this._tx), Math.floor(this._ty), tile.index);
 
-                // if (tile.debug)
-                // {
-                //     this.context.fillStyle = 'rgba(0, 255, 0, 0.4)';
-                //     this.context.fillRect(Math.floor(this._tx), Math.floor(this._ty), this.map.tileWidth, this.map.tileHeight);
-                // }
+                if (tile.debug)
+                {
+                    this.context.fillStyle = 'rgba(0, 255, 0, 0.4)';
+                    this.context.fillRect(Math.floor(this._tx), Math.floor(this._ty), this.map.tileWidth, this.map.tileHeight);
+                }
             }
 
             this._tx += this.map.tileWidth;

@@ -153,6 +153,7 @@ New features:
 * ArcadePhysics.Body has a new gravityScale property, which is a modifier multiplied against the world gravity value on a Body.
 * Line.coordinatesOnLine will return all coordinates on the line using Bresenhams line algorithm.
 * Line now has x, y, width, height, top, bottom, left and right properties, so you can effectively get its bounds.
+* TilemapLayer.getRayCastTiles will let you get all tiles that hit the given line for further processing.
 
 
 Updates:

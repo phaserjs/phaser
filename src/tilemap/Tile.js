@@ -145,6 +145,20 @@ Phaser.Tile = function (layer, index, x, y, width, height) {
 Phaser.Tile.prototype = {
 
     /**
+    * Check if the given x and y world coordinates are within this Tile.
+    *
+    * @method Phaser.Tile#containsPoint
+    * @param {number} x - The x coordinate to test.
+    * @param {number} y - The y coordinate to test.
+    * @return {boolean} True if the coordinates are within this Tile, otherwise false.
+    */
+    containsPoint: function (x, y) {
+
+        return !(x < this.worldX || y < this.worldY || x > this.right || y > this.bottom);
+
+    },
+
+    /**
     * Check for intersection with this tile.
     *
     * @method Phaser.Tile#intersects

@@ -6,7 +6,7 @@ function create() {
 
 	var line = new Phaser.Line(100, 50, 10, 300);
 
-	var coords = line.coordinatesOnLine();
+	var coords = line.coordinatesOnLine(8);
 
 	var bmd = game.add.bitmapData(800, 600);
 	bmd.context.fillStyle = '#ffffff';

@@ -45,6 +45,11 @@ Phaser.Physics.Arcade = function (game) {
     this.OVERLAP_BIAS = 4;
 
     /**
+    * @property {number} TILE_BIAS - A value added to the delta values during collision with tiles. Adjust this if you get tunnelling.
+    */
+    this.TILE_BIAS = 16;
+
+    /**
     * @property {Phaser.QuadTree} quadTree - The world QuadTree.
     */
     this.quadTree = new Phaser.QuadTree(this.game.world.bounds.x, this.game.world.bounds.y, this.game.world.bounds.width, this.game.world.bounds.height, this.maxObjects, this.maxLevels);
@@ -1052,7 +1057,7 @@ Phaser.Physics.Arcade.prototype = {
             {
                 ox = body.x - tile.right;
 
-                if (ox < -this.OVERLAP_BIAS)
+                if (ox < -this.TILE_BIAS)
                 {
                     ox = 0;
                 }
@@ -1065,7 +1070,7 @@ Phaser.Physics.Arcade.prototype = {
             {
                 ox = body.right - tile.left;
 
-                if (ox > this.OVERLAP_BIAS)
+                if (ox > this.TILE_BIAS)
                 {
                     ox = 0;
                 }
@@ -1101,7 +1106,7 @@ Phaser.Physics.Arcade.prototype = {
             {
                 oy = body.y - tile.bottom;
 
-                if (oy < -this.OVERLAP_BIAS)
+                if (oy < -this.TILE_BIAS)
                 {
                     oy = 0;
                 }
@@ -1114,7 +1119,7 @@ Phaser.Physics.Arcade.prototype = {
             {
                 oy = body.bottom - tile.top;
 
-                if (oy > this.OVERLAP_BIAS)
+                if (oy > this.TILE_BIAS)
                 {
                     oy = 0;
                 }
