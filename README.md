@@ -152,6 +152,7 @@ New features:
 * Merged Georges p2 BodyDebug and reformatted for jshint pass. Looks awesome :)
 * ArcadePhysics.Body has a new gravityScale property, which is a modifier multiplied against the world gravity value on a Body.
 * Line.coordinatesOnLine will return all coordinates on the line using Bresenhams line algorithm.
+* Line now has x, y, width, height, top, bottom, left and right properties, so you can effectively get its bounds.
 
 
 Updates:

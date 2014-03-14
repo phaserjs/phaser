@@ -575,7 +575,7 @@ Phaser.Utils.Debug.prototype = {
 
         if (typeof filled === 'undefined') { filled = true; }
 
-        color = color || 'rgba(0,255,0,0.4)';
+        color = color || 'rgba(0, 255, 0, 0.4)';
 
         this.start();
 

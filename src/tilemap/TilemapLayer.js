@@ -454,83 +454,22 @@ Phaser.TilemapLayer.prototype.getTileXY = function (x, y, point) {
 
 }
 
-Phaser.TilemapLayer.prototype.getIntersectingTiles = function (x, y, width, height, right, bottom) {
+/**
+* Gets all tiles that intersect with the given line.
+*
+* @method Phaser.TilemapLayer#getIntersectingTiles
+* @memberof Phaser.TilemapLayer
+* @param {Phaser.Line} line - The line used to determine which tiles to return.
+* @return {array<Phaser.Tile>} An array of Phaser.Tiles.
+*/
+Phaser.TilemapLayer.prototype.getIntersectingTiles = function (line) {
 
     var tiles = this.getTiles(x, y, width, height, false);
 
-    //  We only want the ones that we actually intersect with
-    var i = tiles.length;
-
-    while (i--)
-    {
-        if (!tiles[i].intersects(x, y, right, bottom))
-        {
-            tiles.pop();
-        }
-    }
 
     return tiles;
 
 }
-
-/*
-Phaser.TilemapLayer.prototype.getTilesX = function (x, y, width, height, collides) {
-
-    //  Should we only get tiles that have at least one of their collision flags set? (true = yes, false = no just get them all)
-    if (typeof collides === 'undefined') { collides = false; }
-
-    // adjust the x,y coordinates for scrollFactor
-    x = this._fixX(x);
-    y = this._fixY(y);
-
-    if (width > this.layer.widthInPixels)
-    {
-        width = this.layer.widthInPixels;
-    }
-
-    if (height > this.layer.heightInPixels)
-    {
-        height = this.layer.heightInPixels;
-    }
-
-    //  Convert the pixel values into tile coordinates
-    // this._tx = this.game.math.snapToFloor(x, this._cw) / this._cw;
-    // this._ty = this.game.math.snapToFloor(y, this._ch) / this._ch;
-    // this._tw = (this.game.math.snapToCeil(width, this._cw) + this._cw) / this._cw;
-    // this._th = (this.game.math.snapToCeil(height, this._ch) + this._ch) / this._ch;
-
-    // var firstTileX = Math.max( Math.floor(res.pos.x / this.tilesize), 0 );
-    // var lastTileX = Math.min( Math.ceil((res.pos.x + width) / this.tilesize), this.width );
-    // var tileY = Math.floor( (res.pos.y + pxOffsetY) / this.tilesize );
-
-    this._tx = Math.max(Math.floor(x / this.tileWidth), 0);
-    this._tw = Math.min(Math.ceil((x + width) / this.tileWidth), this.width);
-    this._ty = Math.floor((y + px) / this.tileHeight);
-
-    this._results.length = 0;
-
-    for (var wy = this._ty; wy < this._ty + this._th; wy++)
-    {
-        for (var wx = this._tx; wx < this._tx + this._tw; wx++)
-        {
-            if (this.layer.data[wy] && this.layer.data[wy][wx])
-            {
-                if (collides === false || (collides && this.layer.data[wy][wx].canCollide))
-                {
-                    this._results.push(this.layer.data[wy][wx]);
-                }
-            }
-        }
-    }
-
-    //  DEBUG ONLY - REMOVE
-    this.layer.dirty = true;
-
-    return this._results;
-
-}
-*/
-
 
 /**
 * Get all tiles that exist within the given area, defined by the top-left corner, width and height. Values given are in pixels, not tiles.
@@ -542,7 +481,7 @@ Phaser.TilemapLayer.prototype.getTilesX = function (x, y, width, height, collide
 * @param {number} height - Height of the area to get.
 * @param {boolean} [collides=false] - If true only return tiles that collide on one or more faces.
 * @param {boolean} [interestingFace=false] - If true only return tiles that have interesting faces.
-* @return {array} Array with tiles informations (each contains x, y, and the tile).
+* @return {array<Phaser.Tile>} An array of Phaser.Tiles.
 */
 Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides, interestingFace) {
 
