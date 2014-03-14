@@ -33,12 +33,13 @@ function create() {
 
     layer = map.createLayer('Tile Layer 1');
 
-    // layer.debug = true;
-
     layer.resizeWorld();
+
+    game.physics.startSystem(Phaser.Physics.ARCADE);
 
     //  Here we create our coins group
     coins = game.add.group();
+    coins.enableBody = true;
 
     //  And now we convert all of the Tiled objects with an ID of 34 into sprites within the coins group
     map.createFromObjects('Object Layer 1', 34, 'coin', 0, true, false, coins);
@@ -48,10 +49,12 @@ function create() {
     coins.callAll('animations.play', 'animations', 'spin');
 
     sprite = game.add.sprite(260, 100, 'phaser');
-    sprite.anchor.setTo(0.5, 0.5);
+    sprite.anchor.set(0.5);
+
+    game.physics.arcade.enable(sprite);
 
     //  This adjusts the collision body size.
-    sprite.body.setRectangle(16, 16, 25, 15);
+    sprite.body.setSize(32, 32, 16, 16);
 
     //  We'll set a lower max angular velocity here to keep it from going totally nuts
     sprite.body.maxAngular = 500;
@@ -67,8 +70,8 @@ function create() {
 
 function update() {
 
-    game.physics.collide(sprite, layer);
-    game.physics.overlap(sprite, coins, collectCoin, null, this);
+    game.physics.arcade.collide(sprite, layer);
+    game.physics.arcade.overlap(sprite, coins, collectCoin, null, this);
 
     sprite.body.velocity.x = 0;
     sprite.body.velocity.y = 0;
@@ -85,9 +88,8 @@ function update() {
 
     if (cursors.up.isDown)
     {
-        game.physics.velocityFromAngle(sprite.angle, 300, sprite.body.velocity);
+        game.physics.arcade.velocityFromAngle(sprite.angle, 300, sprite.body.velocity);
     }
-
 
 }
 
@@ -99,6 +101,6 @@ function collectCoin(player, coin) {
 
 function render() {
 
-    game.debug.physicsBody(sprite.body);
+    game.debug.body(sprite);
 
 }

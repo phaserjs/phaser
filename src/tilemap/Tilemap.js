@@ -290,14 +290,6 @@ Phaser.Tilemap.prototype = {
 
     },
 
-    /*
-    createFromTiles: function (layer, tileIndex, key, frame, group) {
-
-        if (typeof group === 'undefined') { group = this.game.world; }
-
-    },
-    */
-
     /**
     * Creates a Sprite for every object matching the given gid in the map data. You can optionally specify the group that the Sprite will be created in. If none is
     * given it will be created in the World. All properties from the map data objectgroup are copied across to the Sprite, so you can use this as an easy way to
@@ -347,7 +339,6 @@ Phaser.Tilemap.prototype = {
                 {
                     group.set(sprite, property, this.objects[name][i].properties[property], false, false, 0);
                 }
-
             }
         }
 

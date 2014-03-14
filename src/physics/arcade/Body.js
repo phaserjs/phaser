@@ -35,21 +35,21 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     */
     this.offset = new Phaser.Point();
 
+    if (sprite.anchor.x !== 0)
+    {
+        this.offset.x = (sprite.anchor.x * sprite.width);
+    }
+
+    if (sprite.anchor.y !== 0)
+    {
+        this.offset.y = (sprite.anchor.y * sprite.height);
+    }
+
     /**
     * @property {Phaser.Point} position - The position of the physics body.
     * @readonly
     */
     this.position = new Phaser.Point(sprite.x, sprite.y);
-
-    if (sprite.anchor.x !== 0)
-    {
-        this.position.x -= (sprite.anchor.x * sprite.width);
-    }
-
-    if (sprite.anchor.y !== 0)
-    {
-        this.position.y -= (sprite.anchor.y * sprite.height);
-    }
 
     /**
     * @property {Phaser.Point} prev - The previous position of the physics body.
@@ -316,7 +316,7 @@ Phaser.Physics.Arcade.Body.prototype = {
     * @method Phaser.Physics.Arcade#updateBounds
     * @protected
     */
-    updateBounds: function (centerX, centerY, scaleX, scaleY) {
+    updateBounds: function (scaleX, scaleY) {
 
         if (scaleX != this._sx || scaleY != this._sy)
         {
@@ -411,12 +411,11 @@ Phaser.Physics.Arcade.Body.prototype = {
             this.facing = Phaser.DOWN;
         }
 
-        if (this.deltaX() !== 0 || this.deltaY() !== 0)
-        {
-            this.sprite.x += this.deltaX();
-            this.sprite.y += this.deltaY();
-            this.center.setTo(this.x + this.halfWidth, this.y + this.halfHeight);
-        }
+        this.sprite.x = this.position.x + this.offset.x;
+        this.sprite.y = this.position.y + this.offset.y;
+        // this.sprite.x += this.deltaX();
+        // this.sprite.y += this.deltaY();
+        this.center.setTo(this.x + this.halfWidth, this.y + this.halfHeight);
 
         if (this.allowRotation)
         {
@@ -440,22 +439,26 @@ Phaser.Physics.Arcade.Body.prototype = {
         {
             this.x = this.game.world.bounds.x;
             this.velocity.x *= -this.bounce.x;
+            this.blocked.left = true;
         }
         else if (this.right > this.game.world.bounds.right)
         {
             this.x = this.game.world.bounds.right - this.width;
             this.velocity.x *= -this.bounce.x;
+            this.blocked.right = true;
         }
 
         if (this.y < this.game.world.bounds.y)
         {
             this.y = this.game.world.bounds.y;
             this.velocity.y *= -this.bounce.y;
+            this.blocked.up = true;
         }
         else if (this.bottom > this.game.world.bounds.bottom)
         {
             this.y = this.game.world.bounds.bottom - this.height;
             this.velocity.y *= -this.bounce.y;
+            this.blocked.down = true;
         }
 
     },
@@ -510,6 +513,26 @@ Phaser.Physics.Arcade.Body.prototype = {
         
         this.center.setTo(this.x + this.halfWidth, this.y + this.halfHeight);
 
+    },
+
+    /**
+    * Returns true if the bottom of this Body is in contact with either the world bounds or a tile.
+    *
+    * @method Phaser.Physics.Arcade.Body#onFloor
+    * @return {boolean} True if in contact with either the world bounds or a tile.
+    */
+    onFloor: function () {
+        return this.blocked.down;
+    },
+
+    /**
+    * Returns true if either side of this Body is in contact with either the world bounds or a tile.
+    *
+    * @method Phaser.Physics.Arcade.Body#onWall
+    * @return {boolean} True if in contact with either the world bounds or a tile.
+    */
+    onWall: function () {
+        return (this.blocked.left || this.blocked.right);
     },
 
     /**
@@ -664,12 +687,10 @@ Phaser.Physics.Arcade.Body.renderBodyInfo = function (debug, body) {
     debug.line('x: ' + body.x.toFixed(2), 'y: ' + body.y.toFixed(2), 'width: ' + body.width, 'height: ' + body.height);
     // debug.line('velocity x: ' + body.velocity.x.toFixed(2), 'y: ' + body.velocity.y.toFixed(2), 'deltaX: ' + body.deltaX().toFixed(2), 'deltaY: ' + body.deltaY().toFixed(2));
     debug.line('velocity x: ' + body.velocity.x.toFixed(2), 'y: ' + body.velocity.y.toFixed(2));
-    debug.line('acceleration x: ' + body.acceleration.x.toFixed(2), 'y: ' + body.acceleration.y.toFixed(2));
-    // debug.line('gravity x: ' + body.gravity.x, 'y: ' + body.gravity.y, 'world gravity x: ' + this.game.physics.gravity.x, 'y: ' + this.game.physics.gravity.y);
-    debug.line('gravity x: ' + body.gravity.x, 'y: ' + body.gravity.y);
-    debug.line('bounce x: ' + body.bounce.x.toFixed(2), 'y: ' + body.bounce.y.toFixed(2));
-    debug.line('speed: ' + body.speed.toFixed(2), 'angle: ' + body.angle.toFixed(2));
+    debug.line('acceleration x: ' + body.acceleration.x.toFixed(2), 'y: ' + body.acceleration.y.toFixed(2), 'speed: ' + body.speed.toFixed(2), 'angle: ' + body.angle.toFixed(2));
+    debug.line('gravity x: ' + body.gravity.x, 'y: ' + body.gravity.y, 'bounce x: ' + body.bounce.x.toFixed(2), 'y: ' + body.bounce.y.toFixed(2));
     debug.line('touching left: ' + body.touching.left, 'right: ' + body.touching.right, 'up: ' + body.touching.up, 'down: ' + body.touching.down);
+    debug.line('blocked left: ' + body.blocked.left, 'right: ' + body.blocked.right, 'up: ' + body.blocked.up, 'down: ' + body.blocked.down);
 
 }
 

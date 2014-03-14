@@ -100,8 +100,8 @@ Phaser.Group = function (game, parent, name, addToStage, enableBody, physicsBody
     this.cameraOffset = new Phaser.Point();
 
     /**
+    * @property {boolean} enableBody - If true all Sprites created by, or added to this Group, will have a physics body enabled on them. Change the body type with `Group.physicsBodyType`.
     * @default
-    * @property {boolean} enableBody - If true all Sprites created with `Group.create` or `Group.createMulitple` will have a physics body created on them. Change the body type with `Group.physicsBodyType`.
     */
     this.enableBody = false;
 
@@ -188,6 +188,11 @@ Phaser.Group.prototype.add = function (child) {
 
     if (child.parent !== this)
     {
+        if (this.enableBody)
+        {
+            this.game.physics.enable(child, this.physicsBodyType);
+        }
+
         this.addChild(child);
 
         child.z = this.children.length;
@@ -220,6 +225,11 @@ Phaser.Group.prototype.addAt = function (child, index) {
 
     if (child.parent !== this)
     {
+        if (this.enableBody)
+        {
+            this.game.physics.enable(child, this.physicsBodyType);
+        }
+
         this.addChildAt(child, index);
 
         this.updateZ();
@@ -279,18 +289,7 @@ Phaser.Group.prototype.create = function (x, y, key, frame, exists) {
 
     if (this.enableBody)
     {
-        if (this.physicsBodyType === Phaser.Physics.ARCADE)
-        {
-            this.game.physics.arcade.enable(child);
-        }
-        else if (this.physicsBodyType === Phaser.Physics.NINJA && this.game.physics.ninja)
-        {
-            this.game.physics.ninja.enable(child);
-        }
-        else if (this.physicsBodyType === Phaser.Physics.P2JS && this.game.physics.p2)
-        {
-            this.game.physics.p2.enable(child, this.enableBodyDebug);
-        }
+        this.game.physics.enable(child, this.physicsBodyType);
     }
 
     child.exists = exists;
