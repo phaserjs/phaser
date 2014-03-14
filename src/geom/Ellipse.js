@@ -283,7 +283,7 @@ Phaser.Ellipse.contains = function (a, x, y) {
 /**
 * Returns the framing rectangle of the ellipse as a Phaser.Rectangle object.
 *
-* @method getBounds
+* @method Phaser.Ellipse.getBounds
 * @return {Phaser.Rectangle} The framing rectangle
 */
 Phaser.Ellipse.prototype.getBounds = function() {

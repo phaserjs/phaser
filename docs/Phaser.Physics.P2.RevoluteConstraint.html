@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>Phaser Class: PointProxy</title>
+	<title>Phaser Class: RevoluteConstraint</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -56,10 +56,6 @@
 						
 						<li>
 							<a href="Phaser.BitmapData.html">BitmapData</a>
-						</li>
-						
-						<li>
-							<a href="Phaser.BitmapFont.html">BitmapFont</a>
 						</li>
 						
 						<li>
@@ -259,35 +255,83 @@
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.Body.html">Body</a>
+							<a href="Phaser.Physics.Arcade.Body.html">Body</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.CollisionGroup.html">CollisionGroup</a>
+							<a href="Phaser.Physics.Ninja.html">Ninja</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.ContactMaterial.html">ContactMaterial</a>
+							<a href="Phaser.Physics.Ninja.AABB.html">AABB</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.InversePointProxy.html">InversePointProxy</a>
+							<a href="Phaser.Physics.Ninja.Body.html">Body</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.Material.html">Material</a>
+							<a href="Phaser.Physics.Ninja.Circle.html">Circle</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.PointProxy.html">PointProxy</a>
+							<a href="Phaser.Physics.Ninja.Tile.html">Tile</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.Spring.html">Spring</a>
+							<a href="Phaser.Physics.P2.html">P2</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.World.html">World</a>
+							<a href="Phaser.Physics.P2.Body.html">Body</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.BodyDebug.html">BodyDebug</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.CollisionGroup.html">CollisionGroup</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.ContactMaterial.html">ContactMaterial</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.DistanceConstraint.html">DistanceConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.GearConstraint.html">GearConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.InversePointProxy.html">InversePointProxy</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.LockConstraint.html">LockConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.Material.html">Material</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.PointProxy.html">PointProxy</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.PrismaticConstraint.html">PrismaticConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.RevoluteConstraint.html">RevoluteConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.Spring.html">Spring</a>
 						</li>
 						
 						<li>
@@ -311,6 +355,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.QuadTree.html">QuadTree</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.RandomDataGenerator.html">RandomDataGenerator</a>
 						</li>
 						
@@ -324,6 +372,14 @@
 						
 						<li>
 							<a href="Phaser.RequestAnimationFrame.html">RequestAnimationFrame</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.RetroFont.html">RetroFont</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.ScaleManager.html">ScaleManager</a>
 						</li>
 						
 						<li>
@@ -352,10 +408,6 @@
 						
 						<li>
 							<a href="Phaser.Stage.html">Stage</a>
-						</li>
-						
-						<li>
-							<a href="Phaser.StageScaleMode.html">StageScaleMode</a>
 						</li>
 						
 						<li>
@@ -438,40 +490,6 @@
 					</ul>
 				</li>
 				
-				<li class="dropdown">
-					<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b
-						class="caret"></b></a>
-
-					<ul class="dropdown-menu ">
-						
-						<li>
-							<a href="global.html#canUseNewCanvasBlendModes">canUseNewCanvasBlendModes</a>
-						</li>
-						
-						<li>
-							<a href="global.html#getBounds">getBounds</a>
-						</li>
-						
-						<li>
-							<a href="global.html#getNextPowerOfTwo">getNextPowerOfTwo</a>
-						</li>
-						
-						<li>
-							<a href="global.html#hex2rgb">hex2rgb</a>
-						</li>
-						
-						<li>
-							<a href="global.html#hitTest">hitTest</a>
-						</li>
-						
-						<li>
-							<a href="global.html#rgb2hex">rgb2hex</a>
-						</li>
-						
-
-					</ul>
-				</li>
-				
 			</ul>
 		</div>
 	</div>
@@ -485,17 +503,17 @@
 					
 
 
-	<h1 class="page-title">Class: PointProxy</h1>
+	<h1 class="page-title">Class: RevoluteConstraint</h1>
 <section>
 
 <header>
     <h2>
-        <span class="ancestors"><a href="Phaser.html">Phaser</a><a href="Phaser.Physics.html">.Physics</a>.</span>
+        <span class="ancestors"><a href="Phaser.html">Phaser</a><a href="Phaser.Physics.html">.Physics</a><a href="Phaser.Physics.P2.html">.P2</a>.</span>
     
-    PointProxy
+    RevoluteConstraint
     </h2>
     
-        <div class="class-description"><p>PointProxy</p></div>
+        <div class="class-description"><p>Physics RevoluteConstraint Constructor</p></div>
     
 </header>
 
@@ -506,7 +524,7 @@
     
         
 <dt>
-    <h4 class="name" id="PointProxy"><span class="type-signature"></span>new PointProxy<span class="signature">(game, destination)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="RevoluteConstraint"><span class="type-signature"></span>new RevoluteConstraint<span class="signature">(world, bodyA, pivotA, bodyB, pivotB, <span class="optional">maxForce</span>)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -514,7 +532,8 @@
     
     
     <div class="description">
-        <p>A PointProxy is an internal class that allows for direct getter/setter style property access to Arrays and TypedArrays.</p>
+        <p>Connects two bodies at given offset points, letting them rotate relative to each other around this point.
+The pivot points are given in world (pixel) coordinates.</p>
     </div>
     
 
@@ -536,7 +555,11 @@
 		<th>Type</th>
 
 		
+		<th>Argument</th>
+		
 
+		
+		<th>Default</th>
 		
 
 		<th class="last">Description</th>
@@ -548,46 +571,214 @@
 
         <tr>
             
-                <td class="name"><code>game</code></td>
+                <td class="name"><code>world</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="Phaser.Game.html">Phaser.Game</a></span>
+<span class="param-type"><a href="Phaser.Physics.P2.html">Phaser.Physics.P2</a></span>
 
 
             
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
             
 
-            <td class="description last"><p>A reference to the Phaser.Game instance.</p></td>
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>A reference to the P2 World.</p></td>
         </tr>
 
 	
 
         <tr>
             
-                <td class="name"><code>destination</code></td>
+                <td class="name"><code>bodyA</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">any</span>
+<span class="param-type"><a href="p2.Body.html">p2.Body</a></span>
 
 
             
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
             
 
-            <td class="description last"><p>The object to bind to.</p></td>
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>First connected body.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>pivotA</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Float32Array</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The point relative to the center of mass of bodyA which bodyA is constrained to. The value is an array with 2 elements matching x and y, i.e: [32, 32].</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>bodyB</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="p2.Body.html">p2.Body</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>Second connected body.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>pivotB</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Float32Array</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The point relative to the center of mass of bodyB which bodyB is constrained to. The value is an array with 2 elements matching x and y, i.e: [32, 32].</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>maxForce</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
+            
+
+            <td class="description last"><p>The maximum force that should be applied to constrain the bodies.</p></td>
         </tr>
 
 	
@@ -619,7 +810,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="PointProxy.js.html">physics/PointProxy.js</a>, <a href="PointProxy.js.html#sunlight-1-line-16">line 16</a>
+        <a href="RevoluteConstraint.js.html">physics/p2/RevoluteConstraint.js</a>, <a href="RevoluteConstraint.js.html#sunlight-1-line-21">line 21</a>
     </li></ul></dd>
     
 
@@ -663,7 +854,7 @@
         <dl>
             
 <dt>
-    <h4 class="name" id="x"><span class="type-signature"></span>x<span class="type-signature"></span></h4>
+    <h4 class="name" id="game"><span class="type-signature"></span>game<span class="type-signature"></span></h4>
     
     
 </dt>
@@ -702,13 +893,13 @@
 
         <tr>
             
-                <td class="name"><code>x</code></td>
+                <td class="name"><code>game</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type"><a href="Phaser.Game.html">Phaser.Game</a></span>
 
 
             
@@ -718,7 +909,7 @@
 
             
 
-            <td class="description last"><p>The x property of this PointProxy.</p></td>
+            <td class="description last"><p>Local reference to game.</p></td>
         </tr>
 
 	
@@ -747,7 +938,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="PointProxy.js.html">physics/PointProxy.js</a>, <a href="PointProxy.js.html#sunlight-1-line-25">line 25</a>
+        <a href="RevoluteConstraint.js.html">physics/p2/RevoluteConstraint.js</a>, <a href="RevoluteConstraint.js.html#sunlight-1-line-28">line 28</a>
     </li></ul></dd>
     
 
@@ -765,7 +956,7 @@
         
             
 <dt>
-    <h4 class="name" id="y"><span class="type-signature"></span>y<span class="type-signature"></span></h4>
+    <h4 class="name" id="world"><span class="type-signature"></span>world<span class="type-signature"></span></h4>
     
     
 </dt>
@@ -804,13 +995,13 @@
 
         <tr>
             
-                <td class="name"><code>y</code></td>
+                <td class="name"><code>world</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type"><a href="Phaser.Physics.P2.html">Phaser.Physics.P2</a></span>
 
 
             
@@ -820,7 +1011,7 @@
 
             
 
-            <td class="description last"><p>The y property of this PointProxy.</p></td>
+            <td class="description last"><p>Local reference to P2 World.</p></td>
         </tr>
 
 	
@@ -849,7 +1040,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="PointProxy.js.html">physics/PointProxy.js</a>, <a href="PointProxy.js.html#sunlight-1-line-45">line 45</a>
+        <a href="RevoluteConstraint.js.html">physics/p2/RevoluteConstraint.js</a>, <a href="RevoluteConstraint.js.html#sunlight-1-line-33">line 33</a>
     </li></ul></dd>
     
 
@@ -892,7 +1083,7 @@
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Mon Feb 24 2014 12:11:43 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Fri Mar 14 2014 06:34:31 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>
@@ -923,6 +1114,9 @@
 	<script>
 		$( function () {
 			$( "#toc" ).toc( {
+			    anchorName  : function(i, heading, prefix) {
+					return $(heading).attr("id") || ( prefix + i );
+				},
 				selectors   : "h1,h2,h3,h4",
 				showAndHide : false,
 				scrollTo    : 60

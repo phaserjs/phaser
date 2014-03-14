@@ -59,10 +59,6 @@
 						</li>
 						
 						<li>
-							<a href="Phaser.BitmapFont.html">BitmapFont</a>
-						</li>
-						
-						<li>
 							<a href="Phaser.BitmapText.html">BitmapText</a>
 						</li>
 						
@@ -259,35 +255,83 @@
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.Body.html">Body</a>
+							<a href="Phaser.Physics.Arcade.Body.html">Body</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.CollisionGroup.html">CollisionGroup</a>
+							<a href="Phaser.Physics.Ninja.html">Ninja</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.ContactMaterial.html">ContactMaterial</a>
+							<a href="Phaser.Physics.Ninja.AABB.html">AABB</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.InversePointProxy.html">InversePointProxy</a>
+							<a href="Phaser.Physics.Ninja.Body.html">Body</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.Material.html">Material</a>
+							<a href="Phaser.Physics.Ninja.Circle.html">Circle</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.PointProxy.html">PointProxy</a>
+							<a href="Phaser.Physics.Ninja.Tile.html">Tile</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.Spring.html">Spring</a>
+							<a href="Phaser.Physics.P2.html">P2</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.World.html">World</a>
+							<a href="Phaser.Physics.P2.Body.html">Body</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.BodyDebug.html">BodyDebug</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.CollisionGroup.html">CollisionGroup</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.ContactMaterial.html">ContactMaterial</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.DistanceConstraint.html">DistanceConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.GearConstraint.html">GearConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.InversePointProxy.html">InversePointProxy</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.LockConstraint.html">LockConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.Material.html">Material</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.PointProxy.html">PointProxy</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.PrismaticConstraint.html">PrismaticConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.RevoluteConstraint.html">RevoluteConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.Spring.html">Spring</a>
 						</li>
 						
 						<li>
@@ -311,6 +355,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.QuadTree.html">QuadTree</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.RandomDataGenerator.html">RandomDataGenerator</a>
 						</li>
 						
@@ -324,6 +372,14 @@
 						
 						<li>
 							<a href="Phaser.RequestAnimationFrame.html">RequestAnimationFrame</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.RetroFont.html">RetroFont</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.ScaleManager.html">ScaleManager</a>
 						</li>
 						
 						<li>
@@ -352,10 +408,6 @@
 						
 						<li>
 							<a href="Phaser.Stage.html">Stage</a>
-						</li>
-						
-						<li>
-							<a href="Phaser.StageScaleMode.html">StageScaleMode</a>
 						</li>
 						
 						<li>
@@ -438,40 +490,6 @@
 					</ul>
 				</li>
 				
-				<li class="dropdown">
-					<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b
-						class="caret"></b></a>
-
-					<ul class="dropdown-menu ">
-						
-						<li>
-							<a href="global.html#canUseNewCanvasBlendModes">canUseNewCanvasBlendModes</a>
-						</li>
-						
-						<li>
-							<a href="global.html#getBounds">getBounds</a>
-						</li>
-						
-						<li>
-							<a href="global.html#getNextPowerOfTwo">getNextPowerOfTwo</a>
-						</li>
-						
-						<li>
-							<a href="global.html#hex2rgb">hex2rgb</a>
-						</li>
-						
-						<li>
-							<a href="global.html#hitTest">hitTest</a>
-						</li>
-						
-						<li>
-							<a href="global.html#rgb2hex">rgb2hex</a>
-						</li>
-						
-
-					</ul>
-				</li>
-				
 			</ul>
 		</div>
 	</div>
@@ -502,7 +520,12 @@
 * @constructor
 */
 
-Phaser.Device = function () {
+Phaser.Device = function (game) {
+
+    /**
+    * @property {Phaser.Game} game - A reference to the currently running game.
+    */
+    this.game = game;
 
     /**
     * An optional 'fix' for the horrendous Android stock browser bug https://code.google.com/p/android/issues/detail?id=39247
@@ -566,6 +589,12 @@ Phaser.Device = function () {
     * @default
     */
     this.windows = false;
+
+    /**
+    * @property {boolean} windowsPhone - Is running on a Windows Phone?
+    * @default
+    */
+    this.windowsPhone = false;
 
     //  Features
 
@@ -816,6 +845,30 @@ Phaser.Device = function () {
     */
     this.littleEndian = false;
 
+    /**
+    * @property {boolean} fullscreen - Does the browser support the Full Screen API?
+    * @default
+    */
+    this.fullscreen = false;
+
+    /**
+    * @property {string} requestFullscreen - If the browser supports the Full Screen API this holds the call you need to use to activate it.
+    * @default
+    */
+    this.requestFullscreen = '';
+
+    /**
+    * @property {string} cancelFullscreen - If the browser supports the Full Screen API this holds the call you need to use to cancel it.
+    * @default
+    */
+    this.cancelFullscreen = '';
+
+    /**
+    * @property {boolean} fullscreenKeyboard - Does the browser support access to the Keyboard during Full Screen mode?
+    * @default
+    */
+    this.fullscreenKeyboard = false;
+
     //  Run the checks
     this._checkAudio();
     this._checkBrowser();
@@ -860,11 +913,22 @@ Phaser.Device.prototype = {
         else if (/Windows/.test(ua))
         {
             this.windows = true;
+
+            if (/Windows Phone/i.test(ua))
+            {
+                this.windowsPhone = true;
+            }
         }
 
         if (this.windows || this.macOS || (this.linux && this.silk === false))
         {
             this.desktop = true;
+        }
+
+        //  Windows Phone / Table reset
+        if (this.windowsPhone || ((/Windows NT/i.test(ua)) && (/Touch/i.test(ua))))
+        {
+            this.desktop = false;
         }
 
     },
@@ -876,7 +940,7 @@ Phaser.Device.prototype = {
     */
     _checkFeatures: function () {
 
-        this.canvas = !!window['CanvasRenderingContext2D'] || this.iscocoonJS;
+        this.canvas = !!window['CanvasRenderingContext2D'] || this.cocoonJS;
 
         try {
             this.localStorage = !!localStorage.getItem;
@@ -912,6 +976,65 @@ Phaser.Device.prototype = {
         this.pointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
 
         this.quirksMode = (document.compatMode === 'CSS1Compat') ? false : true;
+
+
+
+    },
+
+    /**
+    * Checks for support of the Full Screen API.
+    *
+    * @method Phaser.Device#checkFullScreenSupport
+    */
+    checkFullScreenSupport: function () {
+
+        var fs = [
+            'requestFullscreen',
+            'requestFullScreen',
+            'webkitRequestFullscreen',
+            'webkitRequestFullScreen',
+            'msRequestFullscreen',
+            'msRequestFullScreen',
+            'mozRequestFullScreen',
+            'mozRequestFullscreen'
+        ];
+
+        for (var i = 0; i &lt; fs.length; i++)
+        {
+            if (this.game.canvas[fs[i]])
+            {
+                this.fullscreen = true;
+                this.requestFullscreen = fs[i];
+            }
+        }
+
+        var cfs = [
+            'cancelFullScreen',
+            'exitFullscreen',
+            'webkitCancelFullScreen',
+            'webkitExitFullscreen',
+            'msCancelFullScreen',
+            'msExitFullscreen',
+            'mozCancelFullScreen',
+            'mozExitFullscreen'
+        ];
+
+        if (this.fullscreen)
+        {
+            for (var i = 0; i &lt; cfs.length; i++)
+            {
+                if (this.game.canvas[cfs[i]])
+                {
+                    this.cancelFullscreen = cfs[i];
+                }
+            }
+        }
+
+        //  Keyboard Input?
+        if (window['Element'] && Element['ALLOW_KEYBOARD_INPUT'])
+        {
+            this.fullscreenKeyboard = true;
+        }
 
     },
 
@@ -1190,7 +1313,7 @@ Phaser.Device.prototype.constructor = Phaser.Device;
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Mon Feb 24 2014 12:11:34 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Fri Mar 14 2014 06:34:17 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>
@@ -1217,6 +1340,9 @@ Phaser.Device.prototype.constructor = Phaser.Device;
 	<script>
 		$( function () {
 			$( "#toc" ).toc( {
+			    anchorName  : function(i, heading, prefix) {
+					return $(heading).attr("id") || ( prefix + i );
+				},
 				selectors   : "h1,h2,h3,h4",
 				showAndHide : false,
 				scrollTo    : 60

@@ -59,10 +59,6 @@
 						</li>
 						
 						<li>
-							<a href="Phaser.BitmapFont.html">BitmapFont</a>
-						</li>
-						
-						<li>
 							<a href="Phaser.BitmapText.html">BitmapText</a>
 						</li>
 						
@@ -259,35 +255,83 @@
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.Body.html">Body</a>
+							<a href="Phaser.Physics.Arcade.Body.html">Body</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.CollisionGroup.html">CollisionGroup</a>
+							<a href="Phaser.Physics.Ninja.html">Ninja</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.ContactMaterial.html">ContactMaterial</a>
+							<a href="Phaser.Physics.Ninja.AABB.html">AABB</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.InversePointProxy.html">InversePointProxy</a>
+							<a href="Phaser.Physics.Ninja.Body.html">Body</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.Material.html">Material</a>
+							<a href="Phaser.Physics.Ninja.Circle.html">Circle</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.PointProxy.html">PointProxy</a>
+							<a href="Phaser.Physics.Ninja.Tile.html">Tile</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.Spring.html">Spring</a>
+							<a href="Phaser.Physics.P2.html">P2</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.World.html">World</a>
+							<a href="Phaser.Physics.P2.Body.html">Body</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.BodyDebug.html">BodyDebug</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.CollisionGroup.html">CollisionGroup</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.ContactMaterial.html">ContactMaterial</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.DistanceConstraint.html">DistanceConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.GearConstraint.html">GearConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.InversePointProxy.html">InversePointProxy</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.LockConstraint.html">LockConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.Material.html">Material</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.PointProxy.html">PointProxy</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.PrismaticConstraint.html">PrismaticConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.RevoluteConstraint.html">RevoluteConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.Spring.html">Spring</a>
 						</li>
 						
 						<li>
@@ -311,6 +355,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.QuadTree.html">QuadTree</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.RandomDataGenerator.html">RandomDataGenerator</a>
 						</li>
 						
@@ -324,6 +372,14 @@
 						
 						<li>
 							<a href="Phaser.RequestAnimationFrame.html">RequestAnimationFrame</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.RetroFont.html">RetroFont</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.ScaleManager.html">ScaleManager</a>
 						</li>
 						
 						<li>
@@ -352,10 +408,6 @@
 						
 						<li>
 							<a href="Phaser.Stage.html">Stage</a>
-						</li>
-						
-						<li>
-							<a href="Phaser.StageScaleMode.html">StageScaleMode</a>
 						</li>
 						
 						<li>
@@ -432,40 +484,6 @@
 						
 						<li>
 							<a href="SignalBinding.html">SignalBinding</a>
-						</li>
-						
-
-					</ul>
-				</li>
-				
-				<li class="dropdown">
-					<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b
-						class="caret"></b></a>
-
-					<ul class="dropdown-menu ">
-						
-						<li>
-							<a href="global.html#canUseNewCanvasBlendModes">canUseNewCanvasBlendModes</a>
-						</li>
-						
-						<li>
-							<a href="global.html#getBounds">getBounds</a>
-						</li>
-						
-						<li>
-							<a href="global.html#getNextPowerOfTwo">getNextPowerOfTwo</a>
-						</li>
-						
-						<li>
-							<a href="global.html#hex2rgb">hex2rgb</a>
-						</li>
-						
-						<li>
-							<a href="global.html#hitTest">hitTest</a>
-						</li>
-						
-						<li>
-							<a href="global.html#rgb2hex">rgb2hex</a>
 						</li>
 						
 
@@ -690,6 +708,31 @@ Phaser.Loader.prototype = {
     },
 
     /**
+    * Gets the fileList index for the given key.
+    *
+    * @method Phaser.Loader#getAssetIndex
+    * @param {string} type - The type asset you want to check.
+    * @param {string} key - Key of the asset you want to check.
+    * @return {number} The index of this key in the filelist, or -1 if not found.
+    */
+    getAssetIndex: function (type, key) {
+
+        if (this._fileList.length > 0)
+        {
+            for (var i = 0; i &lt; this._fileList.length; i++)
+            {
+                if (this._fileList[i].type === type && this._fileList[i].key === key)
+                {
+                    return i;
+                }
+            }
+        }
+
+        return -1;
+        
+    },
+
+    /**
     * Gets the asset that is queued for load.
     *
     * @method Phaser.Loader#getAsset
@@ -793,9 +836,15 @@ Phaser.Loader.prototype = {
             }
         }
 
-        if (this.checkKeyExists(type, key) === false)
+        var index = this.getAssetIndex(type, key);
+
+        if (index === -1)
         {
             this._fileList.push(entry);
+        }
+        else
+        {
+            this._fileList[index] = entry;
         }
 
     },
@@ -880,15 +929,21 @@ Phaser.Loader.prototype = {
 
     /**
     * Add a JavaScript file to the Loader. Once loaded the JavaScript file will be automatically turned into a script tag (and executed), so be careful what you load!
+    * You can also specify a callback. This will be executed as soon as the script tag has been created.
     *
     * @method Phaser.Loader#script
     * @param {string} key - Unique asset key of the script file.
     * @param {string} url - URL of the JavaScript file.
+    * @param {function} [callback] - Optional callback that will be called after the script tag has loaded, so you can perform additional processing.
+    * @param {function} [callbackContext] - The context under which the callback will be applied. If not specified it will use the callback itself as the context.
     * @return {Phaser.Loader} This Loader instance.
     */
-    script: function (key, url) {
+    script: function (key, url, callback, callbackContext) {
 
-        this.addToFileList('script', key, url);
+        if (typeof callback === 'undefined') { callback = false; }
+        if (callback !== false && typeof callbackContext === 'undefined') { callbackContext = callback; }
+
+        this.addToFileList('script', key, url, { callback: callback, callbackContext: callbackContext });
 
         return this;
 
@@ -968,7 +1023,7 @@ Phaser.Loader.prototype = {
     * @param {string} key - Unique asset key of the tilemap data.
     * @param {string} [mapDataURL] - The url of the map data file (csv/json)
     * @param {object} [mapData] - An optional JSON data object. If given then the mapDataURL is ignored and this JSON object is used for map data instead.
-    * @param {string} [format=Phaser.Tilemap.CSV] - The format of the map data. Either Phaser.Tilemap.CSV or Phaser.Tilemap.TILED_JSON.
+    * @param {number} [format=Phaser.Tilemap.CSV] - The format of the map data. Either Phaser.Tilemap.CSV or Phaser.Tilemap.TILED_JSON.
     * @return {Phaser.Loader} This Loader instance.
     */
     tilemap: function (key, mapDataURL, mapData, format) {
@@ -1655,6 +1710,10 @@ Phaser.Loader.prototype = {
                 file.data.defer = false;
                 file.data.text = this._xhr.responseText;
                 document.head.appendChild(file.data);
+                if (file.callback)
+                {
+                    file.data = file.callback.call(file.callbackContext, file.key, this._xhr.responseText);
+                }
                 break;
 
             case 'binary':
@@ -1924,7 +1983,7 @@ Phaser.Loader.prototype.constructor = Phaser.Loader;
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Mon Feb 24 2014 12:11:34 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Fri Mar 14 2014 06:34:17 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>
@@ -1951,6 +2010,9 @@ Phaser.Loader.prototype.constructor = Phaser.Loader;
 	<script>
 		$( function () {
 			$( "#toc" ).toc( {
+			    anchorName  : function(i, heading, prefix) {
+					return $(heading).attr("id") || ( prefix + i );
+				},
 				selectors   : "h1,h2,h3,h4",
 				showAndHide : false,
 				scrollTo    : 60

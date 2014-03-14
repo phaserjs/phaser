@@ -11,14 +11,14 @@
 *
 * It does what it does very well, but is ripe for expansion and optimisation. Here are some features that I'd love to see the community add:
 *
-* AABB to AABB collision
-* AABB to Circle collision
-* AABB and Circle 'immovable' property support
-* n-way collision, so an AABB/Circle could pass through a tile from below and land upon it.
-* QuadTree or spatial grid for faster Body vs. Tile Group look-ups.
-* Optimise the internal vector math and reduce the quantity of temporary vars created.
-* Expand Gravity and Bounce to allow for separate x/y axis values.
-* Support Bodies linked to Sprites that don't have anchor set to 0.5
+* * AABB to AABB collision
+* * AABB to Circle collision
+* * AABB and Circle 'immovable' property support
+* * n-way collision, so an AABB/Circle could pass through a tile from below and land upon it.
+* * QuadTree or spatial grid for faster Body vs. Tile Group look-ups.
+* * Optimise the internal vector math and reduce the quantity of temporary vars created.
+* * Expand Gravity and Bounce to allow for separate x/y axis values.
+* * Support Bodies linked to Sprites that don't have anchor set to 0.5
 *
 * Feel free to attempt any of the above and submit a Pull Request with your code! Be sure to include test cases proving they work.
 *

@@ -59,10 +59,6 @@
 						</li>
 						
 						<li>
-							<a href="Phaser.BitmapFont.html">BitmapFont</a>
-						</li>
-						
-						<li>
 							<a href="Phaser.BitmapText.html">BitmapText</a>
 						</li>
 						
@@ -259,35 +255,83 @@
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.Body.html">Body</a>
+							<a href="Phaser.Physics.Arcade.Body.html">Body</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.CollisionGroup.html">CollisionGroup</a>
+							<a href="Phaser.Physics.Ninja.html">Ninja</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.ContactMaterial.html">ContactMaterial</a>
+							<a href="Phaser.Physics.Ninja.AABB.html">AABB</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.InversePointProxy.html">InversePointProxy</a>
+							<a href="Phaser.Physics.Ninja.Body.html">Body</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.Material.html">Material</a>
+							<a href="Phaser.Physics.Ninja.Circle.html">Circle</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.PointProxy.html">PointProxy</a>
+							<a href="Phaser.Physics.Ninja.Tile.html">Tile</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.Spring.html">Spring</a>
+							<a href="Phaser.Physics.P2.html">P2</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.World.html">World</a>
+							<a href="Phaser.Physics.P2.Body.html">Body</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.BodyDebug.html">BodyDebug</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.CollisionGroup.html">CollisionGroup</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.ContactMaterial.html">ContactMaterial</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.DistanceConstraint.html">DistanceConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.GearConstraint.html">GearConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.InversePointProxy.html">InversePointProxy</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.LockConstraint.html">LockConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.Material.html">Material</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.PointProxy.html">PointProxy</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.PrismaticConstraint.html">PrismaticConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.RevoluteConstraint.html">RevoluteConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.Spring.html">Spring</a>
 						</li>
 						
 						<li>
@@ -311,6 +355,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.QuadTree.html">QuadTree</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.RandomDataGenerator.html">RandomDataGenerator</a>
 						</li>
 						
@@ -324,6 +372,14 @@
 						
 						<li>
 							<a href="Phaser.RequestAnimationFrame.html">RequestAnimationFrame</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.RetroFont.html">RetroFont</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.ScaleManager.html">ScaleManager</a>
 						</li>
 						
 						<li>
@@ -352,10 +408,6 @@
 						
 						<li>
 							<a href="Phaser.Stage.html">Stage</a>
-						</li>
-						
-						<li>
-							<a href="Phaser.StageScaleMode.html">StageScaleMode</a>
 						</li>
 						
 						<li>
@@ -438,40 +490,6 @@
 					</ul>
 				</li>
 				
-				<li class="dropdown">
-					<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b
-						class="caret"></b></a>
-
-					<ul class="dropdown-menu ">
-						
-						<li>
-							<a href="global.html#canUseNewCanvasBlendModes">canUseNewCanvasBlendModes</a>
-						</li>
-						
-						<li>
-							<a href="global.html#getBounds">getBounds</a>
-						</li>
-						
-						<li>
-							<a href="global.html#getNextPowerOfTwo">getNextPowerOfTwo</a>
-						</li>
-						
-						<li>
-							<a href="global.html#hex2rgb">hex2rgb</a>
-						</li>
-						
-						<li>
-							<a href="global.html#hitTest">hitTest</a>
-						</li>
-						
-						<li>
-							<a href="global.html#rgb2hex">rgb2hex</a>
-						</li>
-						
-
-					</ul>
-				</li>
-				
 			</ul>
 		</div>
 	</div>
@@ -504,10 +522,14 @@
 * @param {Phaser.Group|Phaser.Sprite|null} parent - The parent Group, DisplayObject or DisplayObjectContainer that this Group will be added to. If undefined it will use game.world. If null it won't be added to anything.
 * @param {string} [name=group] - A name for this Group. Not used internally but useful for debugging.
 * @param {boolean} [addToStage=false] - If set to true this Group will be added directly to the Game.Stage instead of Game.World.
+* @param {boolean} [enableBody=false] - If true all Sprites created with `Group.create` or `Group.createMulitple` will have a physics body created on them. Change the body type with physicsBodyType.
+* @param {number} [physicsBodyType=0] - If enableBody is true this is the type of physics body that is created on new Sprites. Phaser.Physics.ARCADE, Phaser.Physics.P2, Phaser.Physics.NINJA, etc.
 */
-Phaser.Group = function (game, parent, name, addToStage) {
+Phaser.Group = function (game, parent, name, addToStage, enableBody, physicsBodyType) {
 
     if (typeof addToStage === 'undefined') { addToStage = false; }
+    if (typeof enableBody === 'undefined') { enableBody = false; }
+    if (typeof physicsBodyType === 'undefined') { physicsBodyType = Phaser.Physics.ARCADE; }
 
     /**
     * @property {Phaser.Game} game - A reference to the currently running Game.
@@ -537,6 +559,11 @@ Phaser.Group = function (game, parent, name, addToStage) {
             parent.addChild(this);
         }
     }
+
+    /**
+    * @property {number} z - The z-depth value of this object within its Group (remember the World is a Group as well). No two objects in a Group can have the same z value.
+    */
+    this.z = 0;
 
     /**
     * @property {number} type - Internal Phaser Type value.
@@ -576,12 +603,32 @@ Phaser.Group = function (game, parent, name, addToStage) {
     */
     this.cursor = null;
 
-    this._cursorIndex = 0;
-
     /**
     * @property {Phaser.Point} cameraOffset - If this object is fixedToCamera then this stores the x/y offset that its drawn at, from the top-left of the camera view.
     */
     this.cameraOffset = new Phaser.Point();
+
+    /**
+    * @property {boolean} enableBody - If true all Sprites created by, or added to this Group, will have a physics body enabled on them. Change the body type with `Group.physicsBodyType`.
+    * @default
+    */
+    this.enableBody = false;
+
+    /**
+    * @property {boolean} enableBodyDebug - If true when a physics body is created (via Group.enableBody) it will create a physics debug object as well. Only works for P2 bodies.
+    */
+    this.enableBodyDebug = enableBody;
+
+    /**
+    * @property {number} physicsBodyType - If Group.enableBody is true this is the type of physics body that is created on new Sprites. Phaser.Physics.ARCADE, Phaser.Physics.P2, Phaser.Physics.NINJA, etc.
+    */
+    this.physicsBodyType = physicsBodyType;
+
+    /**
+    * @property {string} _sortProperty - The property on which children are sorted.
+    * @private
+    */
+    this._sortProperty = 'z';
 
     /**
     * A small internal cache:
@@ -593,10 +640,12 @@ Phaser.Group = function (game, parent, name, addToStage) {
     * 5 = outOfBoundsFired (0 = no, 1 = yes)
     * 6 = exists (0 = no, 1 = yes)
     * 7 = fixed to camera (0 = no, 1 = yes)
+    * 8 = cursor index
+    * 9 = sort order
     * @property {Int16Array} _cache
     * @private
     */
-    this._cache = new Int16Array([0, 0, 0, 0, 1, 0, 1, 0]);
+    this._cache = new Int16Array([0, 0, 0, 0, 1, 0, 1, 0, 0, 0]);
 
 };
 
@@ -648,17 +697,24 @@ Phaser.Group.prototype.add = function (child) {
 
     if (child.parent !== this)
     {
+        if (this.enableBody)
+        {
+            this.game.physics.enable(child, this.physicsBodyType);
+        }
+
         this.addChild(child);
+
+        child.z = this.children.length;
 
         if (child.events)
         {
             child.events.onAddedToGroup.dispatch(child, this);
         }
-    }
 
-    if (this.cursor === null)
-    {
-        this.cursor = child;
+        if (this.cursor === null)
+        {
+            this.cursor = child;
+        }
     }
 
     return child;
@@ -678,17 +734,24 @@ Phaser.Group.prototype.addAt = function (child, index) {
 
     if (child.parent !== this)
     {
+        if (this.enableBody)
+        {
+            this.game.physics.enable(child, this.physicsBodyType);
+        }
+
         this.addChildAt(child, index);
+
+        this.updateZ();
 
         if (child.events)
         {
             child.events.onAddedToGroup.dispatch(child, this);
         }
-    }
 
-    if (this.cursor === null)
-    {
-        this.cursor = child;
+        if (this.cursor === null)
+        {
+            this.cursor = child;
+        }
     }
 
     return child;
@@ -700,11 +763,18 @@ Phaser.Group.prototype.addAt = function (child, index) {
 *
 * @method Phaser.Group#getAt
 * @param {number} index - The index to return the child from.
-* @return {*} The child that was found at the given index.
+* @return {*} The child that was found at the given index. If the index was out of bounds then this will return -1.
 */
 Phaser.Group.prototype.getAt = function (index) {
 
-    return this.getChildAt(index);
+    if (index &lt; 0 || index > this.children.length)
+    {
+        return -1;
+    }
+    else
+    {
+        return this.getChildAt(index);
+    }
 
 }
 
@@ -726,11 +796,18 @@ Phaser.Group.prototype.create = function (x, y, key, frame, exists) {
 
     var child = new Phaser.Sprite(this.game, x, y, key, frame);
 
+    if (this.enableBody)
+    {
+        this.game.physics.enable(child, this.physicsBodyType);
+    }
+
     child.exists = exists;
     child.visible = exists;
     child.alive = exists;
 
     this.addChild(child);
+    
+    child.z = this.children.length;
         
     if (child.events)
     {
@@ -769,6 +846,23 @@ Phaser.Group.prototype.createMultiple = function (quantity, key, frame, exists) 
 }
 
 /**
+* Internal method that re-applies all of the childrens Z values.
+*
+* @method Phaser.Group#updateZ
+* @protected
+*/
+Phaser.Group.prototype.updateZ = function () {
+
+    var i = this.children.length;
+
+    while (i--)
+    {
+        this.children[i].z = i;
+    }
+
+}
+
+/**
 * Advances the Group cursor to the next object in the Group. If it's at the end of the Group it wraps around to the first object.
 *
 * @method Phaser.Group#next
@@ -778,16 +872,16 @@ Phaser.Group.prototype.next = function () {
     if (this.cursor)
     {
         //  Wrap the cursor?
-        if (this._cursorIndex === this.children.length)
+        if (this._cache[8] === this.children.length)
         {
-            this._cursorIndex = 0;
+            this._cache[8] = 0;
         }
         else
         {
-            this._cursorIndex++;
+            this._cache[8]++;
         }
 
-        this.cursor = this.children[this._cursorIndex];
+        this.cursor = this.children[this._cache[8]];
     }
 
 }
@@ -802,16 +896,16 @@ Phaser.Group.prototype.previous = function () {
     if (this.cursor)
     {
         //  Wrap the cursor?
-        if (this._cursorIndex === 0)
+        if (this._cache[8] === 0)
         {
-            this._cursorIndex = this.children.length - 1;
+            this._cache[8] = this.children.length - 1;
         }
         else
         {
-            this._cursorIndex--;
+            this._cache[8]--;
         }
 
-        this.cursor = this.children[this._cursorIndex];
+        this.cursor = this.children[this._cache[8]];
     }
 
 }
@@ -826,7 +920,14 @@ Phaser.Group.prototype.previous = function () {
 */
 Phaser.Group.prototype.swap = function (child1, child2) {
 
-    return this.swapChildren(child1, child2);
+    var result = this.swapChildren(child1, child2);
+
+    if (result)
+    {
+        this.updateZ();
+    }
+
+    return result;
     
 }
 
@@ -839,7 +940,7 @@ Phaser.Group.prototype.swap = function (child1, child2) {
 */
 Phaser.Group.prototype.bringToTop = function (child) {
 
-    if (child.parent === this)
+    if (child.parent === this && this.getIndex(child) &lt; this.children.length)
     {
         this.remove(child);
         this.add(child);
@@ -850,7 +951,108 @@ Phaser.Group.prototype.bringToTop = function (child) {
 }
 
 /**
-* Get the index position of the given child in this Group.
+* Sends the given child to the bottom of this Group so it renders below all other children.
+*
+* @method Phaser.Group#sendToBack
+* @param {*} child - The child to send to the bottom of this Group.
+* @return {*} The child that was moved.
+*/
+Phaser.Group.prototype.sendToBack = function (child) {
+
+    if (child.parent === this && this.getIndex(child) > 0)
+    {
+        this.remove(child);
+        this.addAt(child, 0);
+    }
+
+    return child;
+
+}
+
+/**
+* Moves the given child up one place in this Group unless it's already at the top.
+*
+* @method Phaser.Group#moveUp
+* @param {*} child - The child to move up in the Group.
+* @return {*} The child that was moved.
+*/
+Phaser.Group.prototype.moveUp = function (child) {
+
+    if (child.parent === this && this.getIndex(child) &lt; this.children.length - 1)
+    {
+        var a = this.getIndex(child);
+        var b = this.getAt(a + 1);
+
+        if (b)
+        {
+            this.swap(a, b);
+        }
+    }
+
+    return child;
+
+}
+
+/**
+* Moves the given child down one place in this Group unless it's already at the top.
+*
+* @method Phaser.Group#moveDown
+* @param {*} child - The child to move down in the Group.
+* @return {*} The child that was moved.
+*/
+Phaser.Group.prototype.moveDown = function (child) {
+
+    if (child.parent === this && this.getIndex(child) > 0)
+    {
+        var a = this.getIndex(child);
+        var b = this.getAt(a - 1);
+
+        if (b)
+        {
+            this.swap(a, b);
+        }
+    }
+
+    return child;
+
+}
+
+/**
+* Positions the child found at the given index within this Group to the given x and y coordinates.
+*
+* @method Phaser.Group#xy
+* @param {number} index - The index of the child in the Group to set the position of.
+* @param {number} x - The new x position of the child.
+* @param {number} y - The new y position of the child.
+*/
+Phaser.Group.prototype.xy = function (index, x, y) {
+
+    if (index &lt; 0 || index > this.children.length)
+    {
+        return -1;
+    }
+    else
+    {
+        this.getChildAt(index).x = x;
+        this.getChildAt(index).y = y;
+    }
+
+}
+
+/**
+* Reverses all children in this Group. Note that this does not propagate, only direct children are re-ordered.
+*
+* @method Phaser.Group#reverse
+*/
+Phaser.Group.prototype.reverse = function () {
+
+    this.children.reverse();
+    this.updateZ();
+
+}
+
+/**
+* Get the index position of the given child in this Group. This should always match the childs z property.
 *
 * @method Phaser.Group#getIndex
 * @param {*} child - The child to get the index for.
@@ -867,7 +1069,7 @@ Phaser.Group.prototype.getIndex = function (child) {
 *
 * @method Phaser.Group#replace
 * @param {*} oldChild - The child in this Group that will be replaced.
-* @param {*} newChild - The child to be inserted into this group.
+* @param {*} newChild - The child to be inserted into this Group.
 */
 Phaser.Group.prototype.replace = function (oldChild, newChild) {
 
@@ -879,17 +1081,16 @@ Phaser.Group.prototype.replace = function (oldChild, newChild) {
         {
             newChild.events.onRemovedFromGroup.dispatch(newChild, this);
             newChild.parent.removeChild(newChild);
+
+            if (newChild.parent instanceof Phaser.Group)
+            {
+                newChild.parent.updateZ();
+            }
         }
 
         this.removeChild(oldChild);
-        this.addChildAt(newChild, index);
 
-        newChild.events.onAddedToGroup.dispatch(newChild, this);
-
-        if (this.cursor === oldChild)
-        {
-            this.cursor = newChild;
-        }
+        this.addAt(newChild, index);
     }
 
 }
@@ -1171,7 +1372,7 @@ Phaser.Group.prototype.callAll = function (method, context) {
 
     var methodLength = method.length;
 
-    if (typeof context === 'undefined')
+    if (typeof context === 'undefined' || context === null || context === '')
     {
         context = null;
     }
@@ -1223,7 +1424,7 @@ Phaser.Group.prototype.preUpdate = function () {
         return false;
     }
 
-   var i = this.children.length;
+    var i = this.children.length;
 
     while (i--)
     {
@@ -1364,18 +1565,87 @@ Phaser.Group.prototype.forEachDead = function (callback, callbackContext) {
 * For example to depth sort Sprites for Zelda-style game you might call `group.sort('y', Phaser.Group.SORT_ASCENDING)` at the bottom of your `State.update()`.
 *
 * @method Phaser.Group#sort
-* @param {string} [index='y'] - The `string` name of the property you want to sort on.
+* @param {string} [index='z'] - The `string` name of the property you want to sort on. Defaults to the objects z-depth value.
 * @param {number} [order=Phaser.Group.SORT_ASCENDING] - The `Group` constant that defines the sort order. Possible values are Phaser.Group.SORT_ASCENDING and Phaser.Group.SORT_DESCENDING.
 */
 Phaser.Group.prototype.sort = function (index, order) {
 
-    if (typeof index === 'undefined') { index = 'y'; }
+    if (this.children.length &lt; 2)
+    {
+        //  Nothing to swap
+        return;
+    }
+
+    if (typeof index === 'undefined') { index = 'z'; }
     if (typeof order === 'undefined') { order = Phaser.Group.SORT_ASCENDING; }
 
+    this._sortProperty = index;
+
+    if (order === Phaser.Group.SORT_ASCENDING)
+    {
+        this.children.sort(this.ascendingSortHandler.bind(this));
+    }
+    else
+    {
+        this.children.sort(this.descendingSortHandler.bind(this));
+    }
+
+    this.updateZ();
 
 }
 
-Phaser.Group.prototype.sortHandler = function (a, b) {
+/**
+* An internal helper function for the sort process.
+*
+* @method Phaser.Group#ascendingSortHandler
+* @param {object} a - The first object being sorted.
+* @param {object} b - The second object being sorted.
+*/
+Phaser.Group.prototype.ascendingSortHandler = function (a, b) {
+
+    if (a[this._sortProperty] &lt; b[this._sortProperty])
+    {
+        return -1;
+    }
+    else if (a[this._sortProperty] > b[this._sortProperty])
+    {
+        return 1;
+    }
+    else
+    {
+        if (a.z &lt; b.z)
+        {
+            return -1;
+        }
+        else
+        {
+            return 1;
+        }
+    }
+
+}
+
+/**
+* An internal helper function for the sort process.
+*
+* @method Phaser.Group#descendingSortHandler
+* @param {object} a - The first object being sorted.
+* @param {object} b - The second object being sorted.
+*/
+Phaser.Group.prototype.descendingSortHandler = function (a, b) {
+
+    if (a[this._sortProperty] &lt; b[this._sortProperty])
+    {
+        return 1;
+    }
+    else if (a[this._sortProperty] > b[this._sortProperty])
+    {
+        return -1;
+    }
+    else
+    {
+        return 0;
+    }
 
 }
 
@@ -1481,6 +1751,36 @@ Phaser.Group.prototype.getFirstDead = function () {
 }
 
 /**
+* Returns the child at the top of this Group. The top is the one being displayed (rendered) above every other child.
+*
+* @method Phaser.Group#getTop
+* @return {Any} The child at the top of the Group.
+*/
+Phaser.Group.prototype.getTop = function () {
+
+    if (this.children.length > 0)
+    {
+        return this.children[this.children.length - 1];
+    }
+
+}
+
+/**
+* Returns the child at the bottom of this Group. The bottom is the one being displayed (rendered) below every other child.
+*
+* @method Phaser.Group#getBottom
+* @return {Any} The child at the bottom of the Group.
+*/
+Phaser.Group.prototype.getBottom = function () {
+
+    if (this.children.length > 0)
+    {
+        return this.children[0];
+    }
+
+}
+
+/**
 * Call this function to find out how many members of the group are alive.
 *
 * @method Phaser.Group#countLiving
@@ -1547,6 +1847,8 @@ Phaser.Group.prototype.remove = function (child) {
 
     this.removeChild(child);
 
+    this.updateZ();
+
     if (this.cursor === child)
     {
         this.next();
@@ -1612,11 +1914,13 @@ Phaser.Group.prototype.removeBetween = function (startIndex, endIndex) {
 
         this.removeChild(this.children[i]);
 
-        if (this.cursor === child)
+        if (this.cursor === this.children[i])
         {
             this.cursor = null;
         }
     }
+
+    this.updateZ();
 
 }
 
@@ -1624,11 +1928,13 @@ Phaser.Group.prototype.removeBetween = function (startIndex, endIndex) {
 * Destroys this Group. Removes all children, then removes the container from the display list and nulls references.
 *
 * @method Phaser.Group#destroy
-* @param {boolean} [destroyChildren=false] - Should every child of this Group have its destroy method called?
+* @param {boolean} [destroyChildren=true] - Should every child of this Group have its destroy method called?
 */
 Phaser.Group.prototype.destroy = function (destroyChildren) {
 
-    if (typeof destroyChildren === 'undefined') { destroyChildren = false; }
+    if (this.game === null) { return; }
+
+    if (typeof destroyChildren === 'undefined') { destroyChildren = true; }
 
     if (destroyChildren)
     {
@@ -1638,7 +1944,7 @@ Phaser.Group.prototype.destroy = function (destroyChildren) {
             {
                 if (this.children[0].parent)
                 {
-                    this.children[0].destroy();
+                    this.children[0].destroy(destroyChildren);
                 }
             }
             while (this.children.length > 0);
@@ -1791,7 +2097,7 @@ Object.defineProperty(Phaser.Group.prototype, "fixedToCamera", {
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Mon Feb 24 2014 12:11:34 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Fri Mar 14 2014 06:34:17 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>
@@ -1818,6 +2124,9 @@ Object.defineProperty(Phaser.Group.prototype, "fixedToCamera", {
 	<script>
 		$( function () {
 			$( "#toc" ).toc( {
+			    anchorName  : function(i, heading, prefix) {
+					return $(heading).attr("id") || ( prefix + i );
+				},
 				selectors   : "h1,h2,h3,h4",
 				showAndHide : false,
 				scrollTo    : 60

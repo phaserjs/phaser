@@ -59,10 +59,6 @@
 						</li>
 						
 						<li>
-							<a href="Phaser.BitmapFont.html">BitmapFont</a>
-						</li>
-						
-						<li>
 							<a href="Phaser.BitmapText.html">BitmapText</a>
 						</li>
 						
@@ -259,35 +255,83 @@
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.Body.html">Body</a>
+							<a href="Phaser.Physics.Arcade.Body.html">Body</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.CollisionGroup.html">CollisionGroup</a>
+							<a href="Phaser.Physics.Ninja.html">Ninja</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.ContactMaterial.html">ContactMaterial</a>
+							<a href="Phaser.Physics.Ninja.AABB.html">AABB</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.InversePointProxy.html">InversePointProxy</a>
+							<a href="Phaser.Physics.Ninja.Body.html">Body</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.Material.html">Material</a>
+							<a href="Phaser.Physics.Ninja.Circle.html">Circle</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.PointProxy.html">PointProxy</a>
+							<a href="Phaser.Physics.Ninja.Tile.html">Tile</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.Spring.html">Spring</a>
+							<a href="Phaser.Physics.P2.html">P2</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.World.html">World</a>
+							<a href="Phaser.Physics.P2.Body.html">Body</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.BodyDebug.html">BodyDebug</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.CollisionGroup.html">CollisionGroup</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.ContactMaterial.html">ContactMaterial</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.DistanceConstraint.html">DistanceConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.GearConstraint.html">GearConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.InversePointProxy.html">InversePointProxy</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.LockConstraint.html">LockConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.Material.html">Material</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.PointProxy.html">PointProxy</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.PrismaticConstraint.html">PrismaticConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.RevoluteConstraint.html">RevoluteConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.Spring.html">Spring</a>
 						</li>
 						
 						<li>
@@ -311,6 +355,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.QuadTree.html">QuadTree</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.RandomDataGenerator.html">RandomDataGenerator</a>
 						</li>
 						
@@ -324,6 +372,14 @@
 						
 						<li>
 							<a href="Phaser.RequestAnimationFrame.html">RequestAnimationFrame</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.RetroFont.html">RetroFont</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.ScaleManager.html">ScaleManager</a>
 						</li>
 						
 						<li>
@@ -352,10 +408,6 @@
 						
 						<li>
 							<a href="Phaser.Stage.html">Stage</a>
-						</li>
-						
-						<li>
-							<a href="Phaser.StageScaleMode.html">StageScaleMode</a>
 						</li>
 						
 						<li>
@@ -438,40 +490,6 @@
 					</ul>
 				</li>
 				
-				<li class="dropdown">
-					<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b
-						class="caret"></b></a>
-
-					<ul class="dropdown-menu ">
-						
-						<li>
-							<a href="global.html#canUseNewCanvasBlendModes">canUseNewCanvasBlendModes</a>
-						</li>
-						
-						<li>
-							<a href="global.html#getBounds">getBounds</a>
-						</li>
-						
-						<li>
-							<a href="global.html#getNextPowerOfTwo">getNextPowerOfTwo</a>
-						</li>
-						
-						<li>
-							<a href="global.html#hex2rgb">hex2rgb</a>
-						</li>
-						
-						<li>
-							<a href="global.html#hitTest">hitTest</a>
-						</li>
-						
-						<li>
-							<a href="global.html#rgb2hex">rgb2hex</a>
-						</li>
-						
-
-					</ul>
-				</li>
-				
 			</ul>
 		</div>
 	</div>
@@ -507,9 +525,9 @@
 * @param {Phaser.FrameData} frameData - The FrameData object that contains all frames used by this Animation.
 * @param {(Array.&lt;number>|Array.&lt;string>)} frames - An array of numbers or strings indicating which frames to play in which order.
 * @param {number} delay - The time between each frame of the animation, given in ms.
-* @param {boolean} looped - Should this animation loop or play through once.
+* @param {boolean} loop - Should this animation loop when it reaches the end or play through once.
 */
-Phaser.Animation = function (game, parent, name, frameData, frames, delay, looped) {
+Phaser.Animation = function (game, parent, name, frameData, frames, delay, loop) {
 
     /**
     * @property {Phaser.Game} game - A reference to the currently running Game.
@@ -546,9 +564,14 @@ Phaser.Animation = function (game, parent, name, frameData, frames, delay, loope
     this.delay = 1000 / delay;
 
     /**
-    * @property {boolean} looped - The loop state of the Animation.
+    * @property {boolean} loop - The loop state of the Animation.
     */
-    this.looped = looped;
+    this.loop = loop;
+
+    /**
+    * @property {number} loopCount - The number of times the animation has looped since it was last started.
+    */
+    this.loopCount = 0;
 
     /**
     * @property {boolean} killOnComplete - Should the parent of this Animation be killed when the animation completes?
@@ -606,6 +629,25 @@ Phaser.Animation = function (game, parent, name, frameData, frames, delay, loope
     * @property {Phaser.Frame} currentFrame - The currently displayed frame of the Animation.
     */
     this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
+
+    /**
+    * @property {Phaser.Signal} onStart - This event is dispatched when this Animation starts playback.
+    */
+    this.onStart = new Phaser.Signal();
+
+    /**
+    * @property {Phaser.Signal} onComplete - This event is dispatched when this Animation completes playback. If the animation is set to loop this is never fired, listen for onAnimationLoop instead.
+    */
+    this.onComplete = new Phaser.Signal();
+
+    /**
+    * @property {Phaser.Signal} onLoop - This event is dispatched when this Animation loops.
+    */
+    this.onLoop = new Phaser.Signal();
+
+    //  Set-up some event listeners
+    this.game.onPause.add(this.onPause, this);
+    this.game.onResume.add(this.onResume, this);
     
 };
 
@@ -632,7 +674,7 @@ Phaser.Animation.prototype = {
         if (typeof loop === 'boolean')
         {
             //  If they set a new loop value then use it, otherwise use the one set on creation
-            this.looped = loop;
+            this.loop = loop;
         }
 
         if (typeof killOnComplete !== 'undefined')
@@ -644,6 +686,7 @@ Phaser.Animation.prototype = {
         this.isPlaying = true;
         this.isFinished = false;
         this.paused = false;
+        this.loopCount = 0;
 
         this._timeLastFrame = this.game.time.now;
         this._timeNextFrame = this.game.time.now + this.delay;
@@ -653,16 +696,15 @@ Phaser.Animation.prototype = {
         this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
         this._parent.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
 
+        //  TODO: Double check if required
         if (this._parent.__tilePattern)
         {
             this._parent.__tilePattern = false;
             this._parent.tilingTexture = false;
         }
 
-        if (this._parent.events)
-        {
-            this._parent.events.onAnimationStart.dispatch(this._parent, this);
-        }
+        this._parent.events.onAnimationStart.dispatch(this._parent, this);
+        this.onStart.dispatch(this._parent, this);
 
         return this;
 
@@ -679,6 +721,7 @@ Phaser.Animation.prototype = {
         this.isPlaying = true;
         this.isFinished = false;
         this.paused = false;
+        this.loopCount = 0;
 
         this._timeLastFrame = this.game.time.now;
         this._timeNextFrame = this.game.time.now + this.delay;
@@ -687,18 +730,23 @@ Phaser.Animation.prototype = {
 
         this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
 
+        this.onStart.dispatch(this._parent, this);
+
     },
 
     /**
     * Stops playback of this animation and set it to a finished state. If a resetFrame is provided it will stop playback and set frame to the first in the animation.
+    * If `dispatchComplete` is true it will dispatch the complete events, otherwise they'll be ignored.
     *
     * @method Phaser.Animation#stop
     * @memberof Phaser.Animation
     * @param {boolean} [resetFrame=false] - If true after the animation stops the currentFrame value will be set to the first frame in this animation.
+    * @param {boolean} [dispatchComplete=false] - Dispatch the Animation.onComplete and parent.onAnimationComplete events?
     */
-    stop: function (resetFrame) {
+    stop: function (resetFrame, dispatchComplete) {
 
         if (typeof resetFrame === 'undefined') { resetFrame = false; }
+        if (typeof dispatchComplete === 'undefined') { dispatchComplete = false; }
 
         this.isPlaying = false;
         this.isFinished = true;
@@ -707,6 +755,42 @@ Phaser.Animation.prototype = {
         if (resetFrame)
         {
             this.currentFrame = this._frameData.getFrame(this._frames[0]);
+        }
+
+        if (dispatchComplete)
+        {
+            this._parent.events.onAnimationComplete.dispatch(this._parent, this);
+            this.onComplete.dispatch(this._parent, this);
+        }
+
+    },
+
+    /**
+    * Called when the Game enters a paused state.
+    *
+    * @method Phaser.Animation#onPause
+    * @memberof Phaser.Animation
+    */
+    onPause: function () {
+
+        if (this.isPlaying)
+        {
+            this._frameDiff = this._timeNextFrame - this.game.time.now;
+        }
+
+    },
+
+    /**
+    * Called when the Game resumes from a paused state.
+    *
+    * @method Phaser.Animation#onResume
+    * @memberof Phaser.Animation
+    */
+    onResume: function () {
+
+        if (this.isPlaying)
+        {
+            this._timeNextFrame = this.game.time.now + this._frameDiff;
         }
 
     },
@@ -748,7 +832,7 @@ Phaser.Animation.prototype = {
 
             if (this._frameIndex >= this._frames.length)
             {
-                if (this.looped)
+                if (this.loop)
                 {
                     this._frameIndex %= this._frames.length;
                     this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
@@ -764,11 +848,13 @@ Phaser.Animation.prototype = {
                         }
                     }
                     
+                    this.loopCount++;
                     this._parent.events.onAnimationLoop.dispatch(this._parent, this);
+                    this.onLoop.dispatch(this._parent, this);
                 }
                 else
                 {
-                    this.onComplete();
+                    this.complete();
                 }
             }
             else
@@ -809,24 +895,31 @@ Phaser.Animation.prototype = {
         this.currentFrame = null;
         this.isPlaying = false;
 
+        this.onStart.destroy();
+        this.onLoop.destroy();
+        this.onComplete.destroy();
+
+        this.game.onPause.remove(this.onPause, this);
+        this.game.onResume.remove(this.onResume, this);
+
     },
 
     /**
-    * Called internally when the animation finishes playback. Sets the isPlaying and isFinished states and dispatches the onAnimationComplete event if it exists on the parent.
+    * Called internally when the animation finishes playback.
+    * Sets the isPlaying and isFinished states and dispatches the onAnimationComplete event if it exists on the parent and local onComplete event.
     *
-    * @method Phaser.Animation#onComplete
+    * @method Phaser.Animation#complete
     * @memberof Phaser.Animation
     */
-    onComplete: function () {
+    complete: function () {
 
         this.isPlaying = false;
         this.isFinished = true;
         this.paused = false;
 
-        if (this._parent.events)
-        {
-            this._parent.events.onAnimationComplete.dispatch(this._parent, this);
-        }
+        this._parent.events.onAnimationComplete.dispatch(this._parent, this);
+
+        this.onComplete.dispatch(this._parent, this);
 
         if (this.killOnComplete)
         {
@@ -920,6 +1013,29 @@ Object.defineProperty(Phaser.Animation.prototype, 'frame', {
 });
 
 /**
+* @name Phaser.Animation#speed
+* @property {number} speed - Gets or sets the current speed of the animation, the time between each frame of the animation, given in ms. Takes effect from the NEXT frame. Minimum value is 1.
+*/
+Object.defineProperty(Phaser.Animation.prototype, 'speed', {
+
+    get: function () {
+
+        return Math.round(1000 / this.delay);
+
+    },
+
+    set: function (value) {
+
+        if (value >= 1)
+        {
+            this.delay = 1000 / value;
+        }
+
+    }
+
+});
+
+/**
 * Really handy function for when you are creating arrays of animation data but it's using frame names and not numbers.
 * For example imagine you've got 30 frames named: 'explosion_0001-large' to 'explosion_0030-large'
 * You could use this function to generate those by doing: Phaser.Animation.generateFrameNames('explosion_', 1, 30, '-large', 4);
@@ -1001,7 +1117,7 @@ Phaser.Animation.generateFrameNames = function (prefix, start, stop, suffix, zer
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Mon Feb 24 2014 12:11:34 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Fri Mar 14 2014 06:34:17 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>
@@ -1028,6 +1144,9 @@ Phaser.Animation.generateFrameNames = function (prefix, start, stop, suffix, zer
 	<script>
 		$( function () {
 			$( "#toc" ).toc( {
+			    anchorName  : function(i, heading, prefix) {
+					return $(heading).attr("id") || ( prefix + i );
+				},
 				selectors   : "h1,h2,h3,h4",
 				showAndHide : false,
 				scrollTo    : 60

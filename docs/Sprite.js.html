@@ -59,10 +59,6 @@
 						</li>
 						
 						<li>
-							<a href="Phaser.BitmapFont.html">BitmapFont</a>
-						</li>
-						
-						<li>
 							<a href="Phaser.BitmapText.html">BitmapText</a>
 						</li>
 						
@@ -259,35 +255,83 @@
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.Body.html">Body</a>
+							<a href="Phaser.Physics.Arcade.Body.html">Body</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.CollisionGroup.html">CollisionGroup</a>
+							<a href="Phaser.Physics.Ninja.html">Ninja</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.ContactMaterial.html">ContactMaterial</a>
+							<a href="Phaser.Physics.Ninja.AABB.html">AABB</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.InversePointProxy.html">InversePointProxy</a>
+							<a href="Phaser.Physics.Ninja.Body.html">Body</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.Material.html">Material</a>
+							<a href="Phaser.Physics.Ninja.Circle.html">Circle</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.PointProxy.html">PointProxy</a>
+							<a href="Phaser.Physics.Ninja.Tile.html">Tile</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.Spring.html">Spring</a>
+							<a href="Phaser.Physics.P2.html">P2</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.World.html">World</a>
+							<a href="Phaser.Physics.P2.Body.html">Body</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.BodyDebug.html">BodyDebug</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.CollisionGroup.html">CollisionGroup</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.ContactMaterial.html">ContactMaterial</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.DistanceConstraint.html">DistanceConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.GearConstraint.html">GearConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.InversePointProxy.html">InversePointProxy</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.LockConstraint.html">LockConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.Material.html">Material</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.PointProxy.html">PointProxy</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.PrismaticConstraint.html">PrismaticConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.RevoluteConstraint.html">RevoluteConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.Spring.html">Spring</a>
 						</li>
 						
 						<li>
@@ -311,6 +355,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.QuadTree.html">QuadTree</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.RandomDataGenerator.html">RandomDataGenerator</a>
 						</li>
 						
@@ -324,6 +372,14 @@
 						
 						<li>
 							<a href="Phaser.RequestAnimationFrame.html">RequestAnimationFrame</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.RetroFont.html">RetroFont</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.ScaleManager.html">ScaleManager</a>
 						</li>
 						
 						<li>
@@ -352,10 +408,6 @@
 						
 						<li>
 							<a href="Phaser.Stage.html">Stage</a>
-						</li>
-						
-						<li>
-							<a href="Phaser.StageScaleMode.html">StageScaleMode</a>
 						</li>
 						
 						<li>
@@ -438,40 +490,6 @@
 					</ul>
 				</li>
 				
-				<li class="dropdown">
-					<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b
-						class="caret"></b></a>
-
-					<ul class="dropdown-menu ">
-						
-						<li>
-							<a href="global.html#canUseNewCanvasBlendModes">canUseNewCanvasBlendModes</a>
-						</li>
-						
-						<li>
-							<a href="global.html#getBounds">getBounds</a>
-						</li>
-						
-						<li>
-							<a href="global.html#getNextPowerOfTwo">getNextPowerOfTwo</a>
-						</li>
-						
-						<li>
-							<a href="global.html#hex2rgb">hex2rgb</a>
-						</li>
-						
-						<li>
-							<a href="global.html#hitTest">hitTest</a>
-						</li>
-						
-						<li>
-							<a href="global.html#rgb2hex">rgb2hex</a>
-						</li>
-						
-
-					</ul>
-				</li>
-				
 			</ul>
 		</div>
 	</div>
@@ -537,6 +555,11 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     this.type = Phaser.SPRITE;
 
     /**
+    * @property {number} z - The z-depth value of this object within its Group (remember the World is a Group as well). No two objects in a Group can have the same z value.
+    */
+    this.z = 0;
+
+    /**
     * @property {Phaser.Events} events - The Events you can subscribe to that are dispatched when certain things happen on this Sprite or its components.
     */
     this.events = new Phaser.Events(this);
@@ -590,7 +613,15 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     this.input = null;
 
     /**
-    * @property {Phaser.Physics.Body|null} body - The Sprites physics Body. Will be null unless physics has been enabled via `Sprite.physicsEnabled = true`.
+    * By default Sprites won't add themselves to any physics system and their physics body will be `null`.
+    * To enable them for physics you need to call `game.physics.enable(sprite, system)` where `sprite` is this object 
+    * and `system` is the Physics system you want to use to manage this body. Once enabled you can access all physics related properties via `Sprite.body`.
+    *
+    * Important: Enabling a Sprite for P2 or Ninja physics will automatically set `Sprite.anchor` to 0.5 so the physics body is centered on the Sprite.
+    * If you need a different result then adjust or re-create the Body shape offsets manually, and/or reset the anchor after enabling physics.
+    *
+    * @property {Phaser.Physics.Arcade.Body|Phaser.Physics.P2.Body|Phaser.Physics.Ninja.Body|null} body
+    * @default
     */
     this.body = null;
 
@@ -678,13 +709,10 @@ Phaser.Sprite.prototype.preUpdate = function() {
         this._cache[2] = this.rotation;
         this._cache[4] = 0;
 
-        // if (this.body)
-        // {
-        //     this.body.x = (this.world.x - (this.anchor.x * this.width)) + this.body.offset.x;
-        //     this.body.y = (this.world.y - (this.anchor.y * this.height)) + this.body.offset.y;
-        //     this.body.preX = this.body.x;
-        //     this.body.preY = this.body.y;
-        // }
+        if (this.exists && this.body)
+        {
+            this.body.preUpdate();
+        }
 
         return false;
     }
@@ -748,14 +776,20 @@ Phaser.Sprite.prototype.preUpdate = function() {
 
     if (this.visible)
     {
-        this._cache[3] = this.game.world.currentRenderOrderID++;
+        this._cache[3] = this.game.stage.currentRenderOrderID++;
     }
 
     this.animations.update();
 
     if (this.body)
     {
-        // this.body.preUpdate();
+        this.body.preUpdate();
+    }
+
+    //  Update any Children
+    for (var i = 0, len = this.children.length; i &lt; len; i++)
+    {
+        this.children[i].preUpdate();
     }
 
     return true;
@@ -764,6 +798,7 @@ Phaser.Sprite.prototype.preUpdate = function() {
 
 /**
 * Override and use this function in your own custom objects to handle any update requirements you may have.
+* Remember if this Sprite has any children you should call update on them too.
 *
 * @method Phaser.Sprite#update
 * @memberof Phaser.Sprite
@@ -785,19 +820,22 @@ Phaser.Sprite.prototype.postUpdate = function() {
         this.key.render();
     }
 
-    if (this.exists)
+    if (this.exists && this.body)
     {
-        if (this.body)
-        {
-            this.body.postUpdate();
-        }
+        this.body.postUpdate();
     }
 
     //  Fixed to Camera?
     if (this._cache[7] === 1)
     {
-        this.position.x = this.game.camera.view.x + this.cameraOffset.x;
-        this.position.y = this.game.camera.view.y + this.cameraOffset.y;
+        this.position.x = (this.game.camera.view.x + this.cameraOffset.x) / this.game.camera.scale.x;
+        this.position.y = (this.game.camera.view.y + this.cameraOffset.y) / this.game.camera.scale.y;
+    }
+
+    //  Update any Children
+    for (var i = 0, len = this.children.length; i &lt; len; i++)
+    {
+        this.children[i].postUpdate();
     }
 
 };
@@ -980,12 +1018,24 @@ Phaser.Sprite.prototype.kill = function() {
 * 
 * @method Phaser.Sprite#destroy
 * @memberof Phaser.Sprite
+* @param {boolean} [destroyChildren=true] - Should every child of this object have its destroy method called?
 */
-Phaser.Sprite.prototype.destroy = function() {
+Phaser.Sprite.prototype.destroy = function(destroyChildren) {
+
+    if (this.game === null) { return; }
+
+    if (typeof destroyChildren === 'undefined') { destroyChildren = true; }
 
     if (this.parent)
     {
-        this.parent.remove(this);
+        if (this.parent instanceof Phaser.Group)
+        {
+            this.parent.remove(this);
+        }
+        else
+        {
+            this.parent.removeChild(this);
+        }
     }
 
     if (this.input)
@@ -1010,9 +1060,19 @@ Phaser.Sprite.prototype.destroy = function() {
 
     var i = this.children.length;
 
-    while (i--)
+    if (destroyChildren)
     {
-        this.removeChild(this.children[i]);
+        while (i--)
+        {
+            this.children[i].destroy(destroyChildren);
+        }
+    }
+    else
+    {
+        while (i--)
+        {
+            this.removeChild(this.children[i]);
+        }
     }
 
     this.alive = false;
@@ -1027,7 +1087,7 @@ Phaser.Sprite.prototype.destroy = function() {
 
 /**
 * Damages the Sprite, this removes the given amount from the Sprites health property.
-* If health is then taken below zero Sprite.kill is called.
+* If health is then taken below or is equal to zero `Sprite.kill` is called.
 * 
 * @method Phaser.Sprite#damage
 * @memberof Phaser.Sprite
@@ -1040,7 +1100,7 @@ Phaser.Sprite.prototype.damage = function(amount) {
     {
         this.health -= amount;
 
-        if (this.health &lt; 0)
+        if (this.health &lt;= 0)
         {
             this.kill();
         }
@@ -1094,18 +1154,11 @@ Phaser.Sprite.prototype.reset = function(x, y, health) {
 * @memberof Phaser.Sprite
 * @return (Phaser.Sprite) This instance.
 */
-Phaser.Sprite.prototype.bringToTop = function(child) {
+Phaser.Sprite.prototype.bringToTop = function() {
 
-    if (typeof child === 'undefined')
+    if (this.parent)
     {
-        if (this.parent)
-        {
-            this.parent.bringToTop(this);
-        }
-    }
-    else
-    {
-
+        this.parent.bringToTop(this);
     }
 
     return this;
@@ -1326,46 +1379,6 @@ Object.defineProperty(Phaser.Sprite.prototype, "inputEnabled", {
 });
 
 /**
-* By default Sprites won't add themselves to the physics world. By setting physicsEnabled to true a Rectangle physics body is
-* attached to this Sprite matching its placement and dimensions, and will then start to process physics world updates.
-* You can access all physics related properties via Sprite.body.
-*
-* Important: Enabling a Sprite for physics will automatically set `Sprite.anchor` to 0.5 s0 the physics body is centered on the Sprite.
-* If you need a different result then adjust or re-create the Body shape offsets manually, and/or reset the anchor after enabling physics.
-*
-* @name Phaser.Sprite#physicsEnabled
-* @property {boolean} physicsEnabled - Set to true to add this Sprite to the physics world. Set to false to destroy the body and remove it from the physics world.
-*/
-Object.defineProperty(Phaser.Sprite.prototype, "physicsEnabled", {
-    
-    get: function () {
-
-        return (this.body !== null);
-
-    },
-
-    set: function (value) {
-
-        if (value)
-        {
-            if (this.body === null)
-            {
-                this.body = new Phaser.Physics.Body(this.game, this, this.x, this.y, 1);
-                this.anchor.set(0.5);
-            }
-        }
-        else
-        {
-            if (this.body)
-            {
-                this.body.destroy();
-            }
-        }
-    }
-
-});
-
-/**
 * Sprite.exists controls if the core game loop and physics update this Sprite or not.
 * When you set Sprite.exists to false it will remove its Body from the physics world (if it has one) and also set Sprite.visible to false.
 * Setting Sprite.exists to true will re-add the Body to the physics world (if it has a body) and set Sprite.visible to true.
@@ -1388,7 +1401,7 @@ Object.defineProperty(Phaser.Sprite.prototype, "exists", {
             //  exists = true
             this._cache[6] = 1;
 
-            if (this.body)
+            if (this.body && this.body.type === Phaser.Physics.P2JS)
             {
                 this.body.addToWorld();
             }
@@ -1400,7 +1413,7 @@ Object.defineProperty(Phaser.Sprite.prototype, "exists", {
             //  exists = false
             this._cache[6] = 0;
 
-            if (this.body)
+            if (this.body && this.body.type === Phaser.Physics.P2JS)
             {
                 this.body.removeFromWorld();
             }
@@ -1442,6 +1455,40 @@ Object.defineProperty(Phaser.Sprite.prototype, "fixedToCamera", {
     }
 
 });
+
+/**
+* Enable or disable texture smoothing for this Sprite. Only works for bitmap/image textures. Smoothing is enabled by default.
+*
+* @name Phaser.Sprite#smoothed
+* @property {boolean} smoothed - Set to true to smooth the texture of this Sprite, or false to disable smoothing (great for pixel art)
+*/
+Object.defineProperty(Phaser.Sprite.prototype, "smoothed", {
+    
+    get: function () {
+
+        return !this.texture.baseTexture.scaleMode;
+
+    },
+
+    set: function (value) {
+
+        if (value)
+        {
+            if (this.texture)
+            {
+                this.texture.baseTexture.scaleMode = 0;
+            }
+        }
+        else
+        {
+            if (this.texture)
+            {
+                this.texture.baseTexture.scaleMode = 1;
+            }
+        }
+    }
+
+});
 </pre>
         </article>
     </section>
@@ -1463,7 +1510,7 @@ Object.defineProperty(Phaser.Sprite.prototype, "fixedToCamera", {
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Mon Feb 24 2014 12:11:34 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Fri Mar 14 2014 06:34:18 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>
@@ -1490,6 +1537,9 @@ Object.defineProperty(Phaser.Sprite.prototype, "fixedToCamera", {
 	<script>
 		$( function () {
 			$( "#toc" ).toc( {
+			    anchorName  : function(i, heading, prefix) {
+					return $(heading).attr("id") || ( prefix + i );
+				},
 				selectors   : "h1,h2,h3,h4",
 				showAndHide : false,
 				scrollTo    : 60

@@ -673,20 +673,10 @@ Phaser.Physics.Ninja.Tile.prototype = {
 */
 Object.defineProperty(Phaser.Physics.Ninja.Tile.prototype, "x", {
     
-    /**
-    * The x position.
-    * @method x
-    * @return {number}
-    */
     get: function () {
         return this.pos.x - this.xw;
     },
 
-    /**
-    * The x position.
-    * @method x
-    * @param {number} value
-    */
     set: function (value) {
         this.pos.x = value;
     }
@@ -699,20 +689,10 @@ Object.defineProperty(Phaser.Physics.Ninja.Tile.prototype, "x", {
 */
 Object.defineProperty(Phaser.Physics.Ninja.Tile.prototype, "y", {
     
-    /**
-    * The y position.
-    * @method y
-    * @return {number}
-    */
     get: function () {
         return this.pos.y - this.yw;
     },
 
-    /**
-    * The y position.
-    * @method y
-    * @param {number} value
-    */
     set: function (value) {
         this.pos.y = value;
     }
@@ -726,12 +706,6 @@ Object.defineProperty(Phaser.Physics.Ninja.Tile.prototype, "y", {
 */
 Object.defineProperty(Phaser.Physics.Ninja.Tile.prototype, "bottom", {
     
-    /**
-    * The sum of the y and height properties.
-    * @method bottom
-    * @return {number}
-    * @readonly
-    */
     get: function () {
         return this.pos.y + this.yw;
     }
@@ -745,12 +719,6 @@ Object.defineProperty(Phaser.Physics.Ninja.Tile.prototype, "bottom", {
 */
 Object.defineProperty(Phaser.Physics.Ninja.Tile.prototype, "right", {
     
-    /**
-    * The sum of the x and width properties.
-    * @method right
-    * @return {number}
-    * @readonly
-    */
     get: function () {
         return this.pos.x + this.xw;
     }

@@ -22,7 +22,9 @@
             "../../src/tween/", 
             "../../src/utils/" 
         ],
-        "exclude": [],
+        "exclude": [
+            "../../src/physics/p2/p2.js"
+        ],
         "includePattern": ".+\\.js(doc)?$",
         "excludePattern": "(^|\\/|\\\\)_"
     },

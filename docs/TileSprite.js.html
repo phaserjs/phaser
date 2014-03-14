@@ -59,10 +59,6 @@
 						</li>
 						
 						<li>
-							<a href="Phaser.BitmapFont.html">BitmapFont</a>
-						</li>
-						
-						<li>
 							<a href="Phaser.BitmapText.html">BitmapText</a>
 						</li>
 						
@@ -259,35 +255,83 @@
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.Body.html">Body</a>
+							<a href="Phaser.Physics.Arcade.Body.html">Body</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.CollisionGroup.html">CollisionGroup</a>
+							<a href="Phaser.Physics.Ninja.html">Ninja</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.ContactMaterial.html">ContactMaterial</a>
+							<a href="Phaser.Physics.Ninja.AABB.html">AABB</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.InversePointProxy.html">InversePointProxy</a>
+							<a href="Phaser.Physics.Ninja.Body.html">Body</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.Material.html">Material</a>
+							<a href="Phaser.Physics.Ninja.Circle.html">Circle</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.PointProxy.html">PointProxy</a>
+							<a href="Phaser.Physics.Ninja.Tile.html">Tile</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.Spring.html">Spring</a>
+							<a href="Phaser.Physics.P2.html">P2</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.World.html">World</a>
+							<a href="Phaser.Physics.P2.Body.html">Body</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.BodyDebug.html">BodyDebug</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.CollisionGroup.html">CollisionGroup</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.ContactMaterial.html">ContactMaterial</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.DistanceConstraint.html">DistanceConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.GearConstraint.html">GearConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.InversePointProxy.html">InversePointProxy</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.LockConstraint.html">LockConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.Material.html">Material</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.PointProxy.html">PointProxy</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.PrismaticConstraint.html">PrismaticConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.RevoluteConstraint.html">RevoluteConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.Spring.html">Spring</a>
 						</li>
 						
 						<li>
@@ -311,6 +355,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.QuadTree.html">QuadTree</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.RandomDataGenerator.html">RandomDataGenerator</a>
 						</li>
 						
@@ -324,6 +372,14 @@
 						
 						<li>
 							<a href="Phaser.RequestAnimationFrame.html">RequestAnimationFrame</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.RetroFont.html">RetroFont</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.ScaleManager.html">ScaleManager</a>
 						</li>
 						
 						<li>
@@ -352,10 +408,6 @@
 						
 						<li>
 							<a href="Phaser.Stage.html">Stage</a>
-						</li>
-						
-						<li>
-							<a href="Phaser.StageScaleMode.html">StageScaleMode</a>
 						</li>
 						
 						<li>
@@ -438,40 +490,6 @@
 					</ul>
 				</li>
 				
-				<li class="dropdown">
-					<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b
-						class="caret"></b></a>
-
-					<ul class="dropdown-menu ">
-						
-						<li>
-							<a href="global.html#canUseNewCanvasBlendModes">canUseNewCanvasBlendModes</a>
-						</li>
-						
-						<li>
-							<a href="global.html#getBounds">getBounds</a>
-						</li>
-						
-						<li>
-							<a href="global.html#getNextPowerOfTwo">getNextPowerOfTwo</a>
-						</li>
-						
-						<li>
-							<a href="global.html#hex2rgb">hex2rgb</a>
-						</li>
-						
-						<li>
-							<a href="global.html#hitTest">hitTest</a>
-						</li>
-						
-						<li>
-							<a href="global.html#rgb2hex">rgb2hex</a>
-						</li>
-						
-
-					</ul>
-				</li>
-				
 			</ul>
 		</div>
 	</div>
@@ -497,7 +515,7 @@
 
 /**
 * A TileSprite is a Sprite that has a repeating texture. The texture can be scrolled and scaled and will automatically wrap on the edges as it does so.
-* Please note that TileSprites have no input handler or physics bodies.
+* Please note that TileSprites, as with normal Sprites, have no input handler or physics bodies by default. Both need enabling.
 *
 * @class Phaser.TileSprite
 * @constructor
@@ -534,6 +552,11 @@ Phaser.TileSprite = function (game, x, y, width, height, key, frame) {
     * @readonly
     */
     this.type = Phaser.TILESPRITE;
+
+    /**
+    * @property {number} z - The z-depth value of this object within its Group (remember the World is a Group as well). No two objects in a Group can have the same z value.
+    */
+    this.z = 0;
 
     /**
     * @property {Phaser.Events} events - The Events you can subscribe to that are dispatched when certain things happen on this Sprite or its components.
@@ -590,6 +613,19 @@ Phaser.TileSprite = function (game, x, y, width, height, key, frame) {
     this.cameraOffset = new Phaser.Point();
 
     /**
+    * By default Sprites won't add themselves to any physics system and their physics body will be `null`.
+    * To enable them for physics you need to call `game.physics.enable(sprite, system)` where `sprite` is this object 
+    * and `system` is the Physics system you want to use to manage this body. Once enabled you can access all physics related properties via `Sprite.body`.
+    *
+    * Important: Enabling a Sprite for P2 or Ninja physics will automatically set `Sprite.anchor` to 0.5 so the physics body is centered on the Sprite.
+    * If you need a different result then adjust or re-create the Body shape offsets manually, and/or reset the anchor after enabling physics.
+    *
+    * @property {Phaser.Physics.Arcade.Body|Phaser.Physics.P2.Body|Phaser.Physics.Ninja.Body|null} body
+    * @default
+    */
+    this.body = null;
+
+    /**
     * A small internal cache:
     * 0 = previous position.x
     * 1 = previous position.y
@@ -631,6 +667,22 @@ Phaser.TileSprite.prototype.preUpdate = function() {
         this.tilePosition.y += this._scroll.y * this.game.time.physicsElapsed;
     }
 
+    if (this.visible)
+    {
+        this._cache[3] = this.game.stage.currentRenderOrderID++;
+    }
+
+    if (this.exists && this.body)
+    {
+        this.body.preUpdate();
+    }
+
+    //  Update any Children
+    for (var i = 0, len = this.children.length; i &lt; len; i++)
+    {
+        this.children[i].preUpdate();
+    }
+
     return true;
 
 }
@@ -653,11 +705,22 @@ Phaser.TileSprite.prototype.update = function() {
 */
 Phaser.TileSprite.prototype.postUpdate = function() {
 
+    if (this.exists && this.body)
+    {
+        this.body.postUpdate();
+    }
+
     //  Fixed to Camera?
     if (this._cache[7] === 1)
     {
         this.position.x = this.game.camera.view.x + this.cameraOffset.x;
         this.position.y = this.game.camera.view.y + this.cameraOffset.y;
+    }
+
+    //  Update any Children
+    for (var i = 0, len = this.children.length; i &lt; len; i++)
+    {
+        this.children[i].postUpdate();
     }
 
 }
@@ -767,8 +830,13 @@ Phaser.TileSprite.prototype.loadTexture = function (key, frame) {
 * 
 * @method Phaser.TileSprite#destroy
 * @memberof Phaser.TileSprite
+* @param {boolean} [destroyChildren=true] - Should every child of this object have its destroy method called?
 */
-Phaser.TileSprite.prototype.destroy = function() {
+Phaser.TileSprite.prototype.destroy = function(destroyChildren) {
+
+    if (this.game === null) { return; }
+
+    if (typeof destroyChildren === 'undefined') { destroyChildren = true; }
 
     if (this.filters)
     {
@@ -777,7 +845,14 @@ Phaser.TileSprite.prototype.destroy = function() {
 
     if (this.parent)
     {
-        this.parent.remove(this);
+        if (this.parent instanceof Phaser.Group)
+        {
+            this.parent.remove(this);
+        }
+        else
+        {
+            this.parent.removeChild(this);
+        }
     }
 
     this.animations.destroy();
@@ -786,9 +861,19 @@ Phaser.TileSprite.prototype.destroy = function() {
 
     var i = this.children.length;
 
-    while (i--)
+    if (destroyChildren)
     {
-        this.removeChild(this.children[i]);
+        while (i--)
+        {
+            this.children[i].destroy(destroyChildren);
+        }
+    }
+    else
+    {
+        while (i--)
+        {
+            this.removeChild(this.children[i]);
+        }
     }
 
     this.exists = false;
@@ -916,6 +1001,53 @@ Object.defineProperty(Phaser.TileSprite.prototype, "fixedToCamera", {
 });
 
 /**
+* TileSprite.exists controls if the core game loop and physics update this TileSprite or not.
+* When you set TileSprite.exists to false it will remove its Body from the physics world (if it has one) and also set TileSprite.visible to false.
+* Setting TileSprite.exists to true will re-add the Body to the physics world (if it has a body) and set TileSprite.visible to true.
+*
+* @name Phaser.TileSprite#exists
+* @property {boolean} exists - If the TileSprite is processed by the core game update and physics.
+*/
+Object.defineProperty(Phaser.TileSprite.prototype, "exists", {
+    
+    get: function () {
+
+        return !!this._cache[6];
+
+    },
+
+    set: function (value) {
+
+        if (value)
+        {
+            //  exists = true
+            this._cache[6] = 1;
+
+            if (this.body && this.body.type === Phaser.Physics.P2JS)
+            {
+                this.body.addToWorld();
+            }
+
+            this.visible = true;
+        }
+        else
+        {
+            //  exists = false
+            this._cache[6] = 0;
+
+            if (this.body && this.body.type === Phaser.Physics.P2JS)
+            {
+                this.body.safeRemove = true;
+            }
+
+            this.visible = false;
+
+        }
+    }
+
+});
+
+/**
 * By default a TileSprite won't process any input events at all. By setting inputEnabled to true the Phaser.InputHandler is
 * activated for this object and it will then start to process click/touch events and more.
 *
@@ -971,7 +1103,7 @@ Object.defineProperty(Phaser.TileSprite.prototype, "inputEnabled", {
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Mon Feb 24 2014 12:11:34 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Fri Mar 14 2014 06:34:18 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>
@@ -998,6 +1130,9 @@ Object.defineProperty(Phaser.TileSprite.prototype, "inputEnabled", {
 	<script>
 		$( function () {
 			$( "#toc" ).toc( {
+			    anchorName  : function(i, heading, prefix) {
+					return $(heading).attr("id") || ( prefix + i );
+				},
 				selectors   : "h1,h2,h3,h4",
 				showAndHide : false,
 				scrollTo    : 60

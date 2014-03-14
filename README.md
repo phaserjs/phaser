@@ -29,7 +29,7 @@ Exactly 6 months ago we released Phaser 1.0 into the world. Suffice to say that 
 
 And we're also really pleased to have closed down over 550 issues reported on github. We literally went through every last bug reported to us, and fixed it. All kinds of little things that as a whole make the library that much more solid. With the 2.0 release we're now freezing the API. Before we have to admit that the API changed somewhat on a whim, and we moved things around and changed things without too much consideration for fellow developers. With 2.0 that stops - we've spent long enough on this release that we're now extremely happy with the organisation of classes and methods, and while we may still need to make small tweaks in the future, none of them will be API breaking without prior community approval first. This means if you're using Phaser to teach in classes, or writing a book / tutorials around it, this is the version to base off.
 
-If you want to port a Phaser 1.x game over to 2 then please see our [Migration Guide]() for help.
+If you want to port a Phaser 1.x game over to 2 then please see our [Migration Guide](https://github.com/photonstorm/phaser/blob/master/resources/Migration%20Guide.md) for help.
 
 So what's next? We do have a roadmap (which you can find at the bottom of this document), but we're going to sit back and take stock for a while, building up the tutorials and sample games. We will of course jump on bug fixes quickly, and we appreciate that our TypeScript definitions are now slightly out of date again (an eternal quest we appear to be on!), but this is definitely the best release of Phaser ever. The most features, the fastest, the most stable and just generally the most fun to use.
 
@@ -55,7 +55,7 @@ Change Log
 
 Version 2.0.0 - "Aes Sedai" - March 13th 2014
 
-There is an extensive Migration Guide available. In the guide we detail the API breaking changes and approach to our new physics system. The following is a list of all the other new features, updates and bug fixes present in this release.
+There is an extensive [Migration Guide](https://github.com/photonstorm/phaser/blob/master/resources/Migration%20Guide.md) available. In the guide we detail the API breaking changes and approach to our new physics system. The following is a list of all the other new features, updates and bug fixes present in this release.
 
 New features:
 
@@ -241,11 +241,11 @@ CDNJS
 
 Thanks to a community member Phaser is now available on [CDNJS](http://cdnjs.com). You can include the following in your html:
 
-`http://cdnjs.cloudflare.com/ajax/libs/phaser/1.1.3/phaser.min.js`
+`http://cdnjs.cloudflare.com/ajax/libs/phaser/2.0.0/phaser.min.js`
 
 Or if you prefer you can leave the protocol off, so it works via http and https:
 
-`//cdnjs.cloudflare.com/ajax/libs/phaser/1.1.3/phaser.min.js`
+`//cdnjs.cloudflare.com/ajax/libs/phaser/2.0.0/phaser.min.js`
 
 
 Requirements
@@ -255,7 +255,7 @@ Games created with Phaser require a modern web browser that supports the canvas 
 
 For developing with Phaser you can use either a plain-vanilla JavaScript approach or [TypeScript](https://typescript.codeplex.com/) using the provided TypeScript definitions file. We made no assumptions about how you like to code your games, and were careful not to impose any form of class/inheritance/structure upon you.
 
-Phaser is 576 KB minified (including all 3 physics engines, 311KB without) and 128 KB gzipped (67KB without).
+Phaser is 576 KB minified (including all 3 physics engines, 311 KB without) and 128 KB gzipped (67 KB without physics libs).
 
 
 Learn By Example

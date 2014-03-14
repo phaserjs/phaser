@@ -59,10 +59,6 @@
 						</li>
 						
 						<li>
-							<a href="Phaser.BitmapFont.html">BitmapFont</a>
-						</li>
-						
-						<li>
 							<a href="Phaser.BitmapText.html">BitmapText</a>
 						</li>
 						
@@ -259,35 +255,83 @@
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.Body.html">Body</a>
+							<a href="Phaser.Physics.Arcade.Body.html">Body</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.CollisionGroup.html">CollisionGroup</a>
+							<a href="Phaser.Physics.Ninja.html">Ninja</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.ContactMaterial.html">ContactMaterial</a>
+							<a href="Phaser.Physics.Ninja.AABB.html">AABB</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.InversePointProxy.html">InversePointProxy</a>
+							<a href="Phaser.Physics.Ninja.Body.html">Body</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.Material.html">Material</a>
+							<a href="Phaser.Physics.Ninja.Circle.html">Circle</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.PointProxy.html">PointProxy</a>
+							<a href="Phaser.Physics.Ninja.Tile.html">Tile</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.Spring.html">Spring</a>
+							<a href="Phaser.Physics.P2.html">P2</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.World.html">World</a>
+							<a href="Phaser.Physics.P2.Body.html">Body</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.BodyDebug.html">BodyDebug</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.CollisionGroup.html">CollisionGroup</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.ContactMaterial.html">ContactMaterial</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.DistanceConstraint.html">DistanceConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.GearConstraint.html">GearConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.InversePointProxy.html">InversePointProxy</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.LockConstraint.html">LockConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.Material.html">Material</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.PointProxy.html">PointProxy</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.PrismaticConstraint.html">PrismaticConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.RevoluteConstraint.html">RevoluteConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.Spring.html">Spring</a>
 						</li>
 						
 						<li>
@@ -311,6 +355,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.QuadTree.html">QuadTree</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.RandomDataGenerator.html">RandomDataGenerator</a>
 						</li>
 						
@@ -324,6 +372,14 @@
 						
 						<li>
 							<a href="Phaser.RequestAnimationFrame.html">RequestAnimationFrame</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.RetroFont.html">RetroFont</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.ScaleManager.html">ScaleManager</a>
 						</li>
 						
 						<li>
@@ -352,10 +408,6 @@
 						
 						<li>
 							<a href="Phaser.Stage.html">Stage</a>
-						</li>
-						
-						<li>
-							<a href="Phaser.StageScaleMode.html">StageScaleMode</a>
 						</li>
 						
 						<li>
@@ -438,40 +490,6 @@
 					</ul>
 				</li>
 				
-				<li class="dropdown">
-					<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b
-						class="caret"></b></a>
-
-					<ul class="dropdown-menu ">
-						
-						<li>
-							<a href="global.html#canUseNewCanvasBlendModes">canUseNewCanvasBlendModes</a>
-						</li>
-						
-						<li>
-							<a href="global.html#getBounds">getBounds</a>
-						</li>
-						
-						<li>
-							<a href="global.html#getNextPowerOfTwo">getNextPowerOfTwo</a>
-						</li>
-						
-						<li>
-							<a href="global.html#hex2rgb">hex2rgb</a>
-						</li>
-						
-						<li>
-							<a href="global.html#hitTest">hitTest</a>
-						</li>
-						
-						<li>
-							<a href="global.html#rgb2hex">rgb2hex</a>
-						</li>
-						
-
-					</ul>
-				</li>
-				
 			</ul>
 		</div>
 	</div>
@@ -495,6 +513,8 @@
     Physics
     </h2>
     
+        <div class="class-description"><p>Phaser.Physics</p></div>
+    
 </header>
 
 <article>
@@ -504,18 +524,130 @@
     
         
 <dt>
-    <h4 class="name" id="Physics"><span class="type-signature"></span>new Physics<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="Physics"><span class="type-signature"></span>new Physics<span class="signature">(game, <span class="optional">physicsConfig</span>)</span><span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
     
     
+    <div class="description">
+        <p>The Physics Manager is responsible for looking after all of the running physics systems.
+Phaser supports 3 physics systems: Arcade Physics, P2 and Ninja Physics (with Box2D and Chipmunk in development)
+Game Objects can belong to only 1 physics system, but you can have multiple systems active in a single game.</p>
+<p>For example you could have P2 managing a polygon-built terrain landscape that an vehicle drives over, while it could be firing bullets that use the
+faster (due to being much simpler) Arcade Physics system.</p>
+    </div>
+    
 
     
     
     
     
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+		<th>Default</th>
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>game</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Game.html">Phaser.Game</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>A reference to the currently running game.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>physicsConfig</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    null
+                
+                </td>
+            
+
+            <td class="description last"><p>A physics configuration object to pass to the Physics world on creation.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
     
     
     
@@ -541,7 +673,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ArcadePhysics.js.html">physics/arcade/ArcadePhysics.js</a>, <a href="ArcadePhysics.js.html#sunlight-1-line-3">line 3</a>
+        <a href="Physics.js.html">physics/Physics.js</a>, <a href="Physics.js.html#sunlight-1-line-21">line 21</a>
     </li></ul></dd>
     
 
@@ -582,28 +714,10 @@
             <dt><a href="Phaser.Physics.Arcade.html">Arcade</a></dt>
             <dd></dd>
         
-            <dt><a href="Phaser.Physics.Body.html">Body</a></dt>
+            <dt><a href="Phaser.Physics.Ninja.html">Ninja</a></dt>
             <dd></dd>
         
-            <dt><a href="Phaser.Physics.CollisionGroup.html">CollisionGroup</a></dt>
-            <dd></dd>
-        
-            <dt><a href="Phaser.Physics.ContactMaterial.html">ContactMaterial</a></dt>
-            <dd></dd>
-        
-            <dt><a href="Phaser.Physics.InversePointProxy.html">InversePointProxy</a></dt>
-            <dd></dd>
-        
-            <dt><a href="Phaser.Physics.Material.html">Material</a></dt>
-            <dd></dd>
-        
-            <dt><a href="Phaser.Physics.PointProxy.html">PointProxy</a></dt>
-            <dd></dd>
-        
-            <dt><a href="Phaser.Physics.Spring.html">Spring</a></dt>
-            <dd></dd>
-        
-            <dt><a href="Phaser.Physics.World.html">World</a></dt>
+            <dt><a href="Phaser.Physics.P2.html">P2</a></dt>
             <dd></dd>
         </dl>
     
@@ -616,7 +730,7 @@
         <dl>
             
 <dt>
-    <h4 class="name" id="LIME_CORONA_JSON"><span class="type-signature">&lt;static, constant> </span>LIME_CORONA_JSON<span class="type-signature"> :number</span></h4>
+    <h4 class="name" id="ARCADE"><span class="type-signature">&lt;static, constant> </span>ARCADE<span class="type-signature"> :number</span></h4>
     
     
 </dt>
@@ -658,7 +772,961 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/World.js</a>, <a href="World.js.html#sunlight-1-line-16">line 16</a>
+        <a href="Physics.js.html">physics/Physics.js</a>, <a href="Physics.js.html#sunlight-1-line-68">line 68</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="BOX2D"><span class="type-signature">&lt;static, constant> </span>BOX2D<span class="type-signature"> :number</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">number</span>
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Physics.js.html">physics/Physics.js</a>, <a href="Physics.js.html#sunlight-1-line-86">line 86</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="CHIPMUNK"><span class="type-signature">&lt;static, constant> </span>CHIPMUNK<span class="type-signature"> :number</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">number</span>
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Physics.js.html">physics/Physics.js</a>, <a href="Physics.js.html#sunlight-1-line-92">line 92</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="NINJA"><span class="type-signature">&lt;static, constant> </span>NINJA<span class="type-signature"> :number</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">number</span>
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Physics.js.html">physics/Physics.js</a>, <a href="Physics.js.html#sunlight-1-line-80">line 80</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="P2JS"><span class="type-signature">&lt;static, constant> </span>P2JS<span class="type-signature"> :number</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">number</span>
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Physics.js.html">physics/Physics.js</a>, <a href="Physics.js.html#sunlight-1-line-74">line 74</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="arcade"><span class="type-signature"></span>arcade<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>arcade</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Physics.Arcade.html">Phaser.Physics.Arcade</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The Arcade Physics system.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Physics.js.html">physics/Physics.js</a>, <a href="Physics.js.html#sunlight-1-line-38">line 38</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="box2d"><span class="type-signature"></span>box2d<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>box2d</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Phaser.Physics.Box2D</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The Box2D Physics system (to be done).</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Physics.js.html">physics/Physics.js</a>, <a href="Physics.js.html#sunlight-1-line-53">line 53</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="chipmunk"><span class="type-signature"></span>chipmunk<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>chipmunk</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Phaser.Physics.Chipmunk</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The Chipmunk Physics system (to be done).</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Physics.js.html">physics/Physics.js</a>, <a href="Physics.js.html#sunlight-1-line-58">line 58</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="config"><span class="type-signature"></span>config<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>config</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The physics configuration object as passed to the game on creation.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Physics.js.html">physics/Physics.js</a>, <a href="Physics.js.html#sunlight-1-line-33">line 33</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="game"><span class="type-signature"></span>game<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>game</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Game.html">Phaser.Game</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Local reference to game.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Physics.js.html">physics/Physics.js</a>, <a href="Physics.js.html#sunlight-1-line-28">line 28</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="ninja"><span class="type-signature"></span>ninja<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>ninja</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Physics.Ninja.html">Phaser.Physics.Ninja</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The N+ Ninja Physics System.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Physics.js.html">physics/Physics.js</a>, <a href="Physics.js.html#sunlight-1-line-48">line 48</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="p2"><span class="type-signature"></span>p2<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>p2</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Physics.P2.html">Phaser.Physics.P2</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The P2.JS Physics system.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Physics.js.html">physics/Physics.js</a>, <a href="Physics.js.html#sunlight-1-line-43">line 43</a>
     </li></ul></dd>
     
 
@@ -680,6 +1748,505 @@
         <h3 class="subsection-title">Methods</h3>
 
         <dl>
+            
+<dt>
+    <h4 class="name" id="clear"><span class="type-signature">&lt;protected> </span>clear<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Clears down all active physics systems. This doesn't destroy them, it just clears them of objects and is called when the State changes.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Physics.js.html">physics/Physics.js</a>, <a href="Physics.js.html#sunlight-1-line-249">line 249</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="destroy"><span class="type-signature"></span>destroy<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Destroys all active physics systems. Usually only called on a Game Shutdown, not on a State swap.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Physics.js.html">physics/Physics.js</a>, <a href="Physics.js.html#sunlight-1-line-264">line 264</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="enable"><span class="type-signature"></span>enable<span class="signature">(object, <span class="optional">system</span>, <span class="optional">debug</span>)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>This will create a default physics body on the given game object or array of objects.
+A game object can only have 1 physics body active at any one time, and it can't be changed until the object is destroyed.
+It can be for any of the physics systems that have been started:</p>
+<p>Phaser.Physics.Arcade - A light weight AABB based collision system with basic separation.
+Phaser.Physics.P2JS - A full-body advanced physics system supporting multiple object shapes, polygon loading, contact materials, springs and constraints.
+Phaser.Physics.NINJA - A port of Metanet Softwares N+ physics system. Advanced AABB and Circle vs. Tile collision.
+Phaser.Physics.BOX2D and Phaser.Physics.CHIPMUNK are still in development.</p>
+<p>If you require more control over what type of body is created, for example to create a Ninja Physics Circle instead of the default AABB, then see the
+individual physics systems <code>enable</code> methods instead of using this generic one.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+		<th>Default</th>
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>object</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+|
+
+<span class="param-type">array</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The game object to create the physics body on. Can also be an array of objects, a body will be created on every object in the array.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>system</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    Phaser.Physics.ARCADE
+                
+                </td>
+            
+
+            <td class="description last"><p>The physics system that will be used to create the body. Defaults to Arcade Physics.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>debug</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>Enable the debug drawing for this body. Defaults to false.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Physics.js.html">physics/Physics.js</a>, <a href="Physics.js.html#sunlight-1-line-157">line 157</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="parseConfig"><span class="type-signature"></span>parseConfig<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Parses the Physics Configuration object passed to the Game constructor and starts any physics systems specified within.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Physics.js.html">physics/Physics.js</a>, <a href="Physics.js.html#sunlight-1-line-96">line 96</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="preUpdate"><span class="type-signature">&lt;protected> </span>preUpdate<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>preUpdate checks.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Physics.js.html">physics/Physics.js</a>, <a href="Physics.js.html#sunlight-1-line-195">line 195</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
             
 <dt>
     <h4 class="name" id="setBoundsToWorld"><span class="type-signature"></span>setBoundsToWorld<span class="signature">(<span class="optional">left</span>, <span class="optional">right</span>, <span class="optional">top</span>, <span class="optional">bottom</span>, <span class="optional">setCollisionGroup</span>)</span><span class="type-signature"></span></h4>
@@ -949,7 +2516,76 @@ You can optionally set which 'walls' to create: left, right, top or bottom.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/World.js</a>, <a href="World.js.html#sunlight-1-line-284">line 284</a>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-448">line 448</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="setBoundsToWorld"><span class="type-signature">&lt;protected> </span>setBoundsToWorld<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Updates the physics bounds to match the world dimensions.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Physics.js.html">physics/Physics.js</a>, <a href="Physics.js.html#sunlight-1-line-229">line 229</a>
     </li></ul></dd>
     
 
@@ -1029,7 +2665,7 @@ You can optionally set which 'walls' to create: left, right, top or bottom.</p>
             <td class="type">
             
                 
-<span class="param-type"><a href="Phaser.Physics.Material.html">Phaser.Physics.Material</a></span>
+<span class="param-type"><a href="Phaser.Physics.P2.Material.html">Phaser.Physics.P2.Material</a></span>
 
 
             
@@ -1239,7 +2875,7 @@ You can optionally set which 'walls' to create: left, right, top or bottom.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/World.js</a>, <a href="World.js.html#sunlight-1-line-301">line 301</a>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-466">line 466</a>
     </li></ul></dd>
     
 
@@ -1264,453 +2900,73 @@ You can optionally set which 'walls' to create: left, right, top or bottom.</p>
     
 </dd>
 
-        </dl>
-    
-
-    
-
-    
-</article>
-
-</section>
-
-
-
-
-
-	<h1 class="page-title">Class: Physics</h1>
-<section>
-
-<header>
-    <h2>
-        <span class="ancestors"><a href="Phaser.html">Phaser</a>.</span>
-    
-    Physics
-    </h2>
-    
-</header>
-
-<article>
-    <div class="container-overview">
-    
-
-    
         
-<dt>
-    <h4 class="name" id="Physics"><span class="type-signature"></span>new Physics<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/World.js</a>, <a href="World.js.html#sunlight-1-line-3">line 3</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-    
-    </div>
-
-    
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Classes</h3>
-
-        <dl>
-            <dt><a href="Phaser.Physics.Arcade.html">Arcade</a></dt>
-            <dd></dd>
-        
-            <dt><a href="Phaser.Physics.Body.html">Body</a></dt>
-            <dd></dd>
-        
-            <dt><a href="Phaser.Physics.CollisionGroup.html">CollisionGroup</a></dt>
-            <dd></dd>
-        
-            <dt><a href="Phaser.Physics.ContactMaterial.html">ContactMaterial</a></dt>
-            <dd></dd>
-        
-            <dt><a href="Phaser.Physics.InversePointProxy.html">InversePointProxy</a></dt>
-            <dd></dd>
-        
-            <dt><a href="Phaser.Physics.Material.html">Material</a></dt>
-            <dd></dd>
-        
-            <dt><a href="Phaser.Physics.PointProxy.html">PointProxy</a></dt>
-            <dd></dd>
-        
-            <dt><a href="Phaser.Physics.Spring.html">Spring</a></dt>
-            <dd></dd>
-        
-            <dt><a href="Phaser.Physics.World.html">World</a></dt>
-            <dd></dd>
-        </dl>
-    
-
-    
-
-    
-        <h3 class="subsection-title">Members</h3>
-
-        <dl>
             
 <dt>
-    <h4 class="name" id="LIME_CORONA_JSON"><span class="type-signature">&lt;static, constant> </span>LIME_CORONA_JSON<span class="type-signature"> :number</span></h4>
+    <h4 class="name" id="startSystem"><span class="type-signature"></span>startSystem<span class="signature">(The)</span><span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
     
     
+    <div class="description">
+        <p>This will create an instance of the requested physics simulation.
+Phaser.Physics.Arcade is running by default, but all others need activating directly.
+You can start the following physics systems:
+Phaser.Physics.P2JS - A full-body advanced physics system by Stefan Hedman.
+Phaser.Physics.NINJA - A port of Metanet Softwares N+ physics system.
+Phaser.Physics.BOX2D and Phaser.Physics.CHIPMUNK are still in development.</p>
+    </div>
     
-        <h5>Type:</h5>
-        <ul>
-            <li>
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>The</code></td>
+            
+
+            <td class="type">
+            
                 
 <span class="param-type">number</span>
 
 
-            </li>
-        </ul>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/World.js</a>, <a href="World.js.html#sunlight-1-line-16">line 16</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        </dl>
-    
-
-    
-        <h3 class="subsection-title">Methods</h3>
-
-        <dl>
-            
-<dt>
-    <h4 class="name" id="setBoundsToWorld"><span class="type-signature"></span>setBoundsToWorld<span class="signature">(<span class="optional">left</span>, <span class="optional">right</span>, <span class="optional">top</span>, <span class="optional">bottom</span>, <span class="optional">setCollisionGroup</span>)</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Sets the bounds of the Physics world to match the Game.World dimensions.
-You can optionally set which 'walls' to create: left, right, top or bottom.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-		<th>Argument</th>
-		
-
-		
-		<th>Default</th>
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>left</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
             
             </td>
 
             
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
 
             
-                <td class="default">
-                
-                    true
-                
-                </td>
-            
 
-            <td class="description last"><p>If true will create the left bounds wall.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>right</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    true
-                
-                </td>
-            
-
-            <td class="description last"><p>If true will create the right bounds wall.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>top</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    true
-                
-                </td>
-            
-
-            <td class="description last"><p>If true will create the top bounds wall.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>bottom</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    true
-                
-                </td>
-            
-
-            <td class="description last"><p>If true will create the bottom bounds wall.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>setCollisionGroup</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    true
-                
-                </td>
-            
-
-            <td class="description last"><p>If true the Bounds will be set to use its own Collision Group.</p></td>
+            <td class="description last"><p>physics system to start.</p></td>
         </tr>
 
 	
@@ -1742,7 +2998,7 @@ You can optionally set which 'walls' to create: left, right, top or bottom.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/World.js</a>, <a href="World.js.html#sunlight-1-line-284">line 284</a>
+        <a href="Physics.js.html">physics/Physics.js</a>, <a href="Physics.js.html#sunlight-1-line-121">line 121</a>
     </li></ul></dd>
     
 
@@ -1770,7 +3026,7 @@ You can optionally set which 'walls' to create: left, right, top or bottom.</p>
         
             
 <dt>
-    <h4 class="name" id="setWorldMaterial"><span class="type-signature"></span>setWorldMaterial<span class="signature">(material, <span class="optional">left</span>, <span class="optional">right</span>, <span class="optional">top</span>, <span class="optional">bottom</span>)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="update"><span class="type-signature">&lt;protected> </span>update<span class="signature">()</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -1778,7 +3034,7 @@ You can optionally set which 'walls' to create: left, right, top or bottom.</p>
     
     
     <div class="description">
-        <p>Sets the given material against the 4 bounds of this World.</p>
+        <p>Updates all running physics systems.</p>
     </div>
     
 
@@ -1786,227 +3042,6 @@ You can optionally set which 'walls' to create: left, right, top or bottom.</p>
     
     
     
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-		<th>Argument</th>
-		
-
-		
-		<th>Default</th>
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>material</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Phaser.Physics.Material.html">Phaser.Physics.Material</a></span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last"><p>The material to set.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>left</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    true
-                
-                </td>
-            
-
-            <td class="description last"><p>If true will set the material on the left bounds wall.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>right</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    true
-                
-                </td>
-            
-
-            <td class="description last"><p>If true will set the material on the right bounds wall.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>top</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    true
-                
-                </td>
-            
-
-            <td class="description last"><p>If true will set the material on the top bounds wall.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>bottom</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    true
-                
-                </td>
-            
-
-            <td class="description last"><p>If true will set the material on the bottom bounds wall.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
     
     
     
@@ -2032,7 +3067,7 @@ You can optionally set which 'walls' to create: left, right, top or bottom.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/World.js</a>, <a href="World.js.html#sunlight-1-line-301">line 301</a>
+        <a href="Physics.js.html">physics/Physics.js</a>, <a href="Physics.js.html#sunlight-1-line-212">line 212</a>
     </li></ul></dd>
     
 
@@ -2083,7 +3118,7 @@ You can optionally set which 'walls' to create: left, right, top or bottom.</p>
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Mon Feb 24 2014 12:11:42 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Fri Mar 14 2014 06:34:27 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>
@@ -2114,6 +3149,9 @@ You can optionally set which 'walls' to create: left, right, top or bottom.</p>
 	<script>
 		$( function () {
 			$( "#toc" ).toc( {
+			    anchorName  : function(i, heading, prefix) {
+					return $(heading).attr("id") || ( prefix + i );
+				},
 				selectors   : "h1,h2,h3,h4",
 				showAndHide : false,
 				scrollTo    : 60

@@ -717,11 +717,13 @@ Phaser.Input.prototype = {
     },
 
     /**
-     * Tests if the current mouse coordinates hit a sprite
-     *
-     * @method hitTest
-     * @param displayObject {DisplayObject} The displayObject to test for a hit
-     */
+    * Tests if the pointer hits the given object.
+    *
+    * @method Phaser.Input#hitTest
+    * @param {DisplayObject} displayObject - The displayObject to test for a hit.
+    * @param {Phaser.Pointer} pointer - The pointer to use for the test.
+    * @param {Phaser.Point} localPoint - The local translated point.
+    */
     hitTest: function (displayObject, pointer, localPoint) {
 
         if (!displayObject.worldVisible)

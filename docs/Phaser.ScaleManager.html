@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>Phaser Class: StageScaleMode</title>
+	<title>Phaser Class: ScaleManager</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -56,10 +56,6 @@
 						
 						<li>
 							<a href="Phaser.BitmapData.html">BitmapData</a>
-						</li>
-						
-						<li>
-							<a href="Phaser.BitmapFont.html">BitmapFont</a>
 						</li>
 						
 						<li>
@@ -259,35 +255,83 @@
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.Body.html">Body</a>
+							<a href="Phaser.Physics.Arcade.Body.html">Body</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.CollisionGroup.html">CollisionGroup</a>
+							<a href="Phaser.Physics.Ninja.html">Ninja</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.ContactMaterial.html">ContactMaterial</a>
+							<a href="Phaser.Physics.Ninja.AABB.html">AABB</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.InversePointProxy.html">InversePointProxy</a>
+							<a href="Phaser.Physics.Ninja.Body.html">Body</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.Material.html">Material</a>
+							<a href="Phaser.Physics.Ninja.Circle.html">Circle</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.PointProxy.html">PointProxy</a>
+							<a href="Phaser.Physics.Ninja.Tile.html">Tile</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.Spring.html">Spring</a>
+							<a href="Phaser.Physics.P2.html">P2</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.World.html">World</a>
+							<a href="Phaser.Physics.P2.Body.html">Body</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.BodyDebug.html">BodyDebug</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.CollisionGroup.html">CollisionGroup</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.ContactMaterial.html">ContactMaterial</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.DistanceConstraint.html">DistanceConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.GearConstraint.html">GearConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.InversePointProxy.html">InversePointProxy</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.LockConstraint.html">LockConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.Material.html">Material</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.PointProxy.html">PointProxy</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.PrismaticConstraint.html">PrismaticConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.RevoluteConstraint.html">RevoluteConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.Spring.html">Spring</a>
 						</li>
 						
 						<li>
@@ -311,6 +355,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.QuadTree.html">QuadTree</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.RandomDataGenerator.html">RandomDataGenerator</a>
 						</li>
 						
@@ -324,6 +372,14 @@
 						
 						<li>
 							<a href="Phaser.RequestAnimationFrame.html">RequestAnimationFrame</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.RetroFont.html">RetroFont</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.ScaleManager.html">ScaleManager</a>
 						</li>
 						
 						<li>
@@ -352,10 +408,6 @@
 						
 						<li>
 							<a href="Phaser.Stage.html">Stage</a>
-						</li>
-						
-						<li>
-							<a href="Phaser.StageScaleMode.html">StageScaleMode</a>
 						</li>
 						
 						<li>
@@ -438,40 +490,6 @@
 					</ul>
 				</li>
 				
-				<li class="dropdown">
-					<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b
-						class="caret"></b></a>
-
-					<ul class="dropdown-menu ">
-						
-						<li>
-							<a href="global.html#canUseNewCanvasBlendModes">canUseNewCanvasBlendModes</a>
-						</li>
-						
-						<li>
-							<a href="global.html#getBounds">getBounds</a>
-						</li>
-						
-						<li>
-							<a href="global.html#getNextPowerOfTwo">getNextPowerOfTwo</a>
-						</li>
-						
-						<li>
-							<a href="global.html#hex2rgb">hex2rgb</a>
-						</li>
-						
-						<li>
-							<a href="global.html#hitTest">hitTest</a>
-						</li>
-						
-						<li>
-							<a href="global.html#rgb2hex">rgb2hex</a>
-						</li>
-						
-
-					</ul>
-				</li>
-				
 			</ul>
 		</div>
 	</div>
@@ -485,17 +503,17 @@
 					
 
 
-	<h1 class="page-title">Class: StageScaleMode</h1>
+	<h1 class="page-title">Class: ScaleManager</h1>
 <section>
 
 <header>
     <h2>
         <span class="ancestors"><a href="Phaser.html">Phaser</a>.</span>
     
-    StageScaleMode
+    ScaleManager
     </h2>
     
-        <div class="class-description"><p>Phaser.StageScaleMode</p></div>
+        <div class="class-description"><p>Phaser.ScaleManager</p></div>
     
 </header>
 
@@ -506,7 +524,7 @@
     
         
 <dt>
-    <h4 class="name" id="StageScaleMode"><span class="type-signature"></span>new StageScaleMode<span class="signature">(game, width, height)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="ScaleManager"><span class="type-signature"></span>new ScaleManager<span class="signature">(game, width, height)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -514,7 +532,7 @@
     
     
     <div class="description">
-        <p>The StageScaleMode object is responsible for helping you manage the scaling, resizing and alignment of your game within the browser.</p>
+        <p>The ScaleManager object is responsible for helping you manage the scaling, resizing and alignment of your game within the browser.</p>
     </div>
     
 
@@ -642,7 +660,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="StageScaleMode.js.html">system/StageScaleMode.js</a>, <a href="StageScaleMode.js.html#sunlight-1-line-16">line 16</a>
+        <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-16">line 16</a>
     </li></ul></dd>
     
 
@@ -728,7 +746,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="StageScaleMode.js.html">system/StageScaleMode.js</a>, <a href="StageScaleMode.js.html#sunlight-1-line-231">line 231</a>
+        <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-249">line 249</a>
     </li></ul></dd>
     
 
@@ -788,7 +806,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="StageScaleMode.js.html">system/StageScaleMode.js</a>, <a href="StageScaleMode.js.html#sunlight-1-line-237">line 237</a>
+        <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-255">line 255</a>
     </li></ul></dd>
     
 
@@ -848,7 +866,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="StageScaleMode.js.html">system/StageScaleMode.js</a>, <a href="StageScaleMode.js.html#sunlight-1-line-243">line 243</a>
+        <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-261">line 261</a>
     </li></ul></dd>
     
 
@@ -950,7 +968,109 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="StageScaleMode.js.html">system/StageScaleMode.js</a>, <a href="StageScaleMode.js.html#sunlight-1-line-162">line 162</a>
+        <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-180">line 180</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="enterFullScreen"><span class="type-signature"></span>enterFullScreen<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>enterFullScreen</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Signal.html">Phaser.Signal</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The event that is dispatched when the browser enters full screen mode (if it supports the FullScreen API).</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-134">line 134</a>
     </li></ul></dd>
     
 
@@ -1052,7 +1172,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="StageScaleMode.js.html">system/StageScaleMode.js</a>, <a href="StageScaleMode.js.html#sunlight-1-line-111">line 111</a>
+        <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-111">line 111</a>
     </li></ul></dd>
     
 
@@ -1154,7 +1274,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="StageScaleMode.js.html">system/StageScaleMode.js</a>, <a href="StageScaleMode.js.html#sunlight-1-line-101">line 101</a>
+        <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-101">line 101</a>
     </li></ul></dd>
     
 
@@ -1256,7 +1376,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="StageScaleMode.js.html">system/StageScaleMode.js</a>, <a href="StageScaleMode.js.html#sunlight-1-line-106">line 106</a>
+        <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-106">line 106</a>
     </li></ul></dd>
     
 
@@ -1358,7 +1478,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="StageScaleMode.js.html">system/StageScaleMode.js</a>, <a href="StageScaleMode.js.html#sunlight-1-line-173">line 173</a>
+        <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-191">line 191</a>
     </li></ul></dd>
     
 
@@ -1463,7 +1583,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="StageScaleMode.js.html">system/StageScaleMode.js</a>, <a href="StageScaleMode.js.html#sunlight-1-line-57">line 57</a>
+        <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-57">line 57</a>
     </li></ul></dd>
     
 
@@ -1568,7 +1688,115 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="StageScaleMode.js.html">system/StageScaleMode.js</a>, <a href="StageScaleMode.js.html#sunlight-1-line-63">line 63</a>
+        <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-63">line 63</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="fullScreenTarget"><span class="type-signature"></span>fullScreenTarget<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>This is the DOM element that will have the Full Screen mode called on it. It defaults to the game canvas, but can be retargetted to any valid DOM element.
+If you adjust this property it's up to you to see it has the correct CSS applied, and that you have contained the game canvas correctly.
+Note that if you use a scale property of EXACT_FIT then fullScreenTarget will have its width and height style set to 100%.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>fullScreenTarget</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">any</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-129">line 129</a>
     </li></ul></dd>
     
 
@@ -1670,7 +1898,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="StageScaleMode.js.html">system/StageScaleMode.js</a>, <a href="StageScaleMode.js.html#sunlight-1-line-21">line 21</a>
+        <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-21">line 21</a>
     </li></ul></dd>
     
 
@@ -1772,7 +2000,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="StageScaleMode.js.html">system/StageScaleMode.js</a>, <a href="StageScaleMode.js.html#sunlight-1-line-121">line 121</a>
+        <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-121">line 121</a>
     </li></ul></dd>
     
 
@@ -1874,7 +2102,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="StageScaleMode.js.html">system/StageScaleMode.js</a>, <a href="StageScaleMode.js.html#sunlight-1-line-31">line 31</a>
+        <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-31">line 31</a>
     </li></ul></dd>
     
 
@@ -1979,7 +2207,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="StageScaleMode.js.html">system/StageScaleMode.js</a>, <a href="StageScaleMode.js.html#sunlight-1-line-69">line 69</a>
+        <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-69">line 69</a>
     </li></ul></dd>
     
 
@@ -2081,7 +2309,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="StageScaleMode.js.html">system/StageScaleMode.js</a>, <a href="StageScaleMode.js.html#sunlight-1-line-744">line 744</a>
+        <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-750">line 750</a>
     </li></ul></dd>
     
 
@@ -2183,7 +2411,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="StageScaleMode.js.html">system/StageScaleMode.js</a>, <a href="StageScaleMode.js.html#sunlight-1-line-772">line 772</a>
+        <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-778">line 778</a>
     </li></ul></dd>
     
 
@@ -2285,7 +2513,109 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="StageScaleMode.js.html">system/StageScaleMode.js</a>, <a href="StageScaleMode.js.html#sunlight-1-line-759">line 759</a>
+        <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-765">line 765</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="leaveFullScreen"><span class="type-signature"></span>leaveFullScreen<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>leaveFullScreen</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Signal.html">Phaser.Signal</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The event that is dispatched when the browser leaves full screen mode (if it supports the FullScreen API).</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-139">line 139</a>
     </li></ul></dd>
     
 
@@ -2387,7 +2717,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="StageScaleMode.js.html">system/StageScaleMode.js</a>, <a href="StageScaleMode.js.html#sunlight-1-line-116">line 116</a>
+        <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-116">line 116</a>
     </li></ul></dd>
     
 
@@ -2489,7 +2819,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="StageScaleMode.js.html">system/StageScaleMode.js</a>, <a href="StageScaleMode.js.html#sunlight-1-line-156">line 156</a>
+        <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-174">line 174</a>
     </li></ul></dd>
     
 
@@ -2591,7 +2921,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="StageScaleMode.js.html">system/StageScaleMode.js</a>, <a href="StageScaleMode.js.html#sunlight-1-line-51">line 51</a>
+        <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-51">line 51</a>
     </li></ul></dd>
     
 
@@ -2696,7 +3026,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="StageScaleMode.js.html">system/StageScaleMode.js</a>, <a href="StageScaleMode.js.html#sunlight-1-line-91">line 91</a>
+        <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-91">line 91</a>
     </li></ul></dd>
     
 
@@ -2798,7 +3128,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="StageScaleMode.js.html">system/StageScaleMode.js</a>, <a href="StageScaleMode.js.html#sunlight-1-line-41">line 41</a>
+        <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-41">line 41</a>
     </li></ul></dd>
     
 
@@ -2900,7 +3230,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="StageScaleMode.js.html">system/StageScaleMode.js</a>, <a href="StageScaleMode.js.html#sunlight-1-line-46">line 46</a>
+        <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-46">line 46</a>
     </li></ul></dd>
     
 
@@ -3002,7 +3332,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="StageScaleMode.js.html">system/StageScaleMode.js</a>, <a href="StageScaleMode.js.html#sunlight-1-line-36">line 36</a>
+        <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-36">line 36</a>
     </li></ul></dd>
     
 
@@ -3104,7 +3434,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="StageScaleMode.js.html">system/StageScaleMode.js</a>, <a href="StageScaleMode.js.html#sunlight-1-line-126">line 126</a>
+        <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-144">line 144</a>
     </li></ul></dd>
     
 
@@ -3206,7 +3536,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="StageScaleMode.js.html">system/StageScaleMode.js</a>, <a href="StageScaleMode.js.html#sunlight-1-line-96">line 96</a>
+        <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-96">line 96</a>
     </li></ul></dd>
     
 
@@ -3313,7 +3643,7 @@ It doesn't care about any other DOM element that may be on the page, it literall
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="StageScaleMode.js.html">system/StageScaleMode.js</a>, <a href="StageScaleMode.js.html#sunlight-1-line-77">line 77</a>
+        <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-77">line 77</a>
     </li></ul></dd>
     
 
@@ -3420,7 +3750,7 @@ It doesn't care about any other DOM element that may be on the page, it literall
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="StageScaleMode.js.html">system/StageScaleMode.js</a>, <a href="StageScaleMode.js.html#sunlight-1-line-85">line 85</a>
+        <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-85">line 85</a>
     </li></ul></dd>
     
 
@@ -3522,7 +3852,7 @@ It doesn't care about any other DOM element that may be on the page, it literall
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="StageScaleMode.js.html">system/StageScaleMode.js</a>, <a href="StageScaleMode.js.html#sunlight-1-line-144">line 144</a>
+        <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-162">line 162</a>
     </li></ul></dd>
     
 
@@ -3624,7 +3954,7 @@ It doesn't care about any other DOM element that may be on the page, it literall
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="StageScaleMode.js.html">system/StageScaleMode.js</a>, <a href="StageScaleMode.js.html#sunlight-1-line-150">line 150</a>
+        <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-168">line 168</a>
     </li></ul></dd>
     
 
@@ -3726,7 +4056,7 @@ It doesn't care about any other DOM element that may be on the page, it literall
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="StageScaleMode.js.html">system/StageScaleMode.js</a>, <a href="StageScaleMode.js.html#sunlight-1-line-178">line 178</a>
+        <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-196">line 196</a>
     </li></ul></dd>
     
 
@@ -3828,7 +4158,7 @@ It doesn't care about any other DOM element that may be on the page, it literall
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="StageScaleMode.js.html">system/StageScaleMode.js</a>, <a href="StageScaleMode.js.html#sunlight-1-line-168">line 168</a>
+        <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-186">line 186</a>
     </li></ul></dd>
     
 
@@ -3930,7 +4260,7 @@ It doesn't care about any other DOM element that may be on the page, it literall
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="StageScaleMode.js.html">system/StageScaleMode.js</a>, <a href="StageScaleMode.js.html#sunlight-1-line-26">line 26</a>
+        <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-26">line 26</a>
     </li></ul></dd>
     
 
@@ -4044,7 +4374,7 @@ It doesn't care about any other DOM element that may be on the page, it literall
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="StageScaleMode.js.html">system/StageScaleMode.js</a>, <a href="StageScaleMode.js.html#sunlight-1-line-448">line 448</a>
+        <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-454">line 454</a>
     </li></ul></dd>
     
 
@@ -4113,7 +4443,7 @@ It doesn't care about any other DOM element that may be on the page, it literall
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="StageScaleMode.js.html">system/StageScaleMode.js</a>, <a href="StageScaleMode.js.html#sunlight-1-line-403">line 403</a>
+        <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-405">line 405</a>
     </li></ul></dd>
     
 
@@ -4231,7 +4561,7 @@ It doesn't care about any other DOM element that may be on the page, it literall
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="StageScaleMode.js.html">system/StageScaleMode.js</a>, <a href="StageScaleMode.js.html#sunlight-1-line-475">line 475</a>
+        <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-481">line 481</a>
     </li></ul></dd>
     
 
@@ -4444,7 +4774,7 @@ The optional orientationImage is displayed when the game is in the incorrect ori
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="StageScaleMode.js.html">system/StageScaleMode.js</a>, <a href="StageScaleMode.js.html#sunlight-1-line-357">line 357</a>
+        <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-362">line 362</a>
     </li></ul></dd>
     
 
@@ -4562,7 +4892,7 @@ The optional orientationImage is displayed when the game is in the incorrect ori
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="StageScaleMode.js.html">system/StageScaleMode.js</a>, <a href="StageScaleMode.js.html#sunlight-1-line-309">line 309</a>
+        <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-307">line 307</a>
     </li></ul></dd>
     
 
@@ -4631,7 +4961,7 @@ The optional orientationImage is displayed when the game is in the incorrect ori
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="StageScaleMode.js.html">system/StageScaleMode.js</a>, <a href="StageScaleMode.js.html#sunlight-1-line-511">line 511</a>
+        <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-517">line 517</a>
     </li></ul></dd>
     
 
@@ -4700,7 +5030,7 @@ The optional orientationImage is displayed when the game is in the incorrect ori
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="StageScaleMode.js.html">system/StageScaleMode.js</a>, <a href="StageScaleMode.js.html#sunlight-1-line-711">line 711</a>
+        <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-717">line 717</a>
     </li></ul></dd>
     
 
@@ -4769,7 +5099,7 @@ The optional orientationImage is displayed when the game is in the incorrect ori
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="StageScaleMode.js.html">system/StageScaleMode.js</a>, <a href="StageScaleMode.js.html#sunlight-1-line-687">line 687</a>
+        <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-693">line 693</a>
     </li></ul></dd>
     
 
@@ -4887,7 +5217,7 @@ The optional orientationImage is displayed when the game is in the incorrect ori
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="StageScaleMode.js.html">system/StageScaleMode.js</a>, <a href="StageScaleMode.js.html#sunlight-1-line-549">line 549</a>
+        <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-555">line 555</a>
     </li></ul></dd>
     
 
@@ -4956,7 +5286,7 @@ The optional orientationImage is displayed when the game is in the incorrect ori
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="StageScaleMode.js.html">system/StageScaleMode.js</a>, <a href="StageScaleMode.js.html#sunlight-1-line-698">line 698</a>
+        <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-704">line 704</a>
     </li></ul></dd>
     
 
@@ -5025,7 +5355,7 @@ The optional orientationImage is displayed when the game is in the incorrect ori
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="StageScaleMode.js.html">system/StageScaleMode.js</a>, <a href="StageScaleMode.js.html#sunlight-1-line-609">line 609</a>
+        <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-615">line 615</a>
     </li></ul></dd>
     
 
@@ -5144,7 +5474,7 @@ Please note that this needs to be supported by the web browser and isn't the sam
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="StageScaleMode.js.html">system/StageScaleMode.js</a>, <a href="StageScaleMode.js.html#sunlight-1-line-247">line 247</a>
+        <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-265">line 265</a>
     </li></ul></dd>
     
 
@@ -5213,7 +5543,7 @@ Please note that this needs to be supported by the web browser and isn't the sam
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="StageScaleMode.js.html">system/StageScaleMode.js</a>, <a href="StageScaleMode.js.html#sunlight-1-line-288">line 288</a>
+        <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-297">line 297</a>
     </li></ul></dd>
     
 
@@ -5264,7 +5594,7 @@ Please note that this needs to be supported by the web browser and isn't the sam
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Mon Feb 24 2014 12:11:46 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Fri Mar 14 2014 06:34:33 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>
@@ -5295,6 +5625,9 @@ Please note that this needs to be supported by the web browser and isn't the sam
 	<script>
 		$( function () {
 			$( "#toc" ).toc( {
+			    anchorName  : function(i, heading, prefix) {
+					return $(heading).attr("id") || ( prefix + i );
+				},
 				selectors   : "h1,h2,h3,h4",
 				showAndHide : false,
 				scrollTo    : 60

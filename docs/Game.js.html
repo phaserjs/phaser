@@ -59,10 +59,6 @@
 						</li>
 						
 						<li>
-							<a href="Phaser.BitmapFont.html">BitmapFont</a>
-						</li>
-						
-						<li>
 							<a href="Phaser.BitmapText.html">BitmapText</a>
 						</li>
 						
@@ -259,35 +255,83 @@
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.Body.html">Body</a>
+							<a href="Phaser.Physics.Arcade.Body.html">Body</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.CollisionGroup.html">CollisionGroup</a>
+							<a href="Phaser.Physics.Ninja.html">Ninja</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.ContactMaterial.html">ContactMaterial</a>
+							<a href="Phaser.Physics.Ninja.AABB.html">AABB</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.InversePointProxy.html">InversePointProxy</a>
+							<a href="Phaser.Physics.Ninja.Body.html">Body</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.Material.html">Material</a>
+							<a href="Phaser.Physics.Ninja.Circle.html">Circle</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.PointProxy.html">PointProxy</a>
+							<a href="Phaser.Physics.Ninja.Tile.html">Tile</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.Spring.html">Spring</a>
+							<a href="Phaser.Physics.P2.html">P2</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.World.html">World</a>
+							<a href="Phaser.Physics.P2.Body.html">Body</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.BodyDebug.html">BodyDebug</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.CollisionGroup.html">CollisionGroup</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.ContactMaterial.html">ContactMaterial</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.DistanceConstraint.html">DistanceConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.GearConstraint.html">GearConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.InversePointProxy.html">InversePointProxy</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.LockConstraint.html">LockConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.Material.html">Material</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.PointProxy.html">PointProxy</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.PrismaticConstraint.html">PrismaticConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.RevoluteConstraint.html">RevoluteConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.Spring.html">Spring</a>
 						</li>
 						
 						<li>
@@ -311,6 +355,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.QuadTree.html">QuadTree</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.RandomDataGenerator.html">RandomDataGenerator</a>
 						</li>
 						
@@ -324,6 +372,14 @@
 						
 						<li>
 							<a href="Phaser.RequestAnimationFrame.html">RequestAnimationFrame</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.RetroFont.html">RetroFont</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.ScaleManager.html">ScaleManager</a>
 						</li>
 						
 						<li>
@@ -352,10 +408,6 @@
 						
 						<li>
 							<a href="Phaser.Stage.html">Stage</a>
-						</li>
-						
-						<li>
-							<a href="Phaser.StageScaleMode.html">StageScaleMode</a>
 						</li>
 						
 						<li>
@@ -438,40 +490,6 @@
 					</ul>
 				</li>
 				
-				<li class="dropdown">
-					<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b
-						class="caret"></b></a>
-
-					<ul class="dropdown-menu ">
-						
-						<li>
-							<a href="global.html#canUseNewCanvasBlendModes">canUseNewCanvasBlendModes</a>
-						</li>
-						
-						<li>
-							<a href="global.html#getBounds">getBounds</a>
-						</li>
-						
-						<li>
-							<a href="global.html#getNextPowerOfTwo">getNextPowerOfTwo</a>
-						</li>
-						
-						<li>
-							<a href="global.html#hex2rgb">hex2rgb</a>
-						</li>
-						
-						<li>
-							<a href="global.html#hitTest">hitTest</a>
-						</li>
-						
-						<li>
-							<a href="global.html#rgb2hex">rgb2hex</a>
-						</li>
-						
-
-					</ul>
-				</li>
-				
 			</ul>
 		</div>
 	</div>
@@ -511,7 +529,7 @@
 * @param {string|HTMLElement} [parent=''] - The DOM element into which this games canvas will be injected. Either a DOM ID (string) or the element itself.
 * @param {object} [state=null] - The default state object. A object consisting of Phaser.State functions (preload, create, update, render) or null.
 * @param {boolean} [transparent=false] - Use a transparent canvas background or not.
-* @param  {boolean} [antialias=true] - Anti-alias graphics.
+* @param  {boolean} [antialias=true] - Draw all image textures anti-aliased or not. The default is for smooth textures, but disable if your game features pixel art.
 * @param {object} [physicsConfig=null] - A physics configuration object to pass to the Physics world on creation.
 */
 Phaser.Game = function (width, height, renderer, parent, state, transparent, antialias, physicsConfig) {
@@ -556,7 +574,7 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     this.transparent = false;
 
     /**
-    * @property {boolean} antialias - Anti-alias graphics (in WebGL this helps with edges, in Canvas2D it retains pixel-art quality).
+    * @property {boolean} antialias - Anti-alias graphics. By default scaled images are smoothed in Canvas and WebGL, set anti-alias to false to disable this globally.
     * @default
     */
     this.antialias = true;
@@ -576,20 +594,6 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     * @property {number} state - The StateManager.
     */
     this.state = null;
-
-    /**
-    * @property {boolean} _paused - Is game paused?
-    * @private
-    * @default
-    */
-    this._paused = false;
-
-    /**
-    * @property {boolean} _loadComplete - Whether load complete loading or not.
-    * @private
-    * @default
-    */
-    this._loadComplete = false;
 
     /**
     * @property {boolean} isBooted - Whether the game engine is booted, aka available.
@@ -647,7 +651,7 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     this.net = null;
 
     /**
-    * @property {Phaser.StageScaleMode} scale - The game scale manager.
+    * @property {Phaser.ScaleManager} scale - The game scale manager.
     */
     this.scale = null;
 
@@ -677,7 +681,7 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     this.world = null;
 
     /**
-    * @property {Phaser.Physics.World} physics - Reference to the physics world.
+    * @property {Phaser.Physics} physics - Reference to the physics manager.
     */
     this.physics = null;
 
@@ -702,7 +706,7 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     this.canvas = null;
 
     /**
-    * @property {Context} context - A handy reference to renderer.context (only set for CANVAS games, not WebGL)
+    * @property {CanvasRenderingContext2D} context - A handy reference to renderer.context (only set for CANVAS games, not WebGL)
     */
     this.context = null;
 
@@ -736,6 +740,40 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     * @readonly
     */
     this.stepCount = 0;
+
+    /**
+    * @property {Phaser.Signal} onPause - This event is fired when the game pauses.
+    */
+    this.onPause = null;
+
+    /**
+    * @property {Phaser.Signal} onResume - This event is fired when the game resumes from a paused state.
+    */
+    this.onResume = null;
+
+    /**
+    * @property {Phaser.Signal} onBlur - This event is fired when the game no longer has focus (typically on page hide).
+    */
+    this.onBlur = null;
+
+    /**
+    * @property {Phaser.Signal} onFocus - This event is fired when the game has focus (typically on page show).
+    */
+    this.onFocus = null;
+
+    /**
+    * @property {boolean} _paused - Is game paused?
+    * @private
+    * @default
+    */
+    this._paused = false;
+
+    /**
+    * @property {boolean} _codePaused - Was the game paused via code or a visibility change?
+    * @private
+    * @default
+    */
+    this._codePaused = false;
 
     //  Parse the configuration object (if any)
     if (arguments.length === 1 && typeof arguments[0] === 'object')
@@ -775,6 +813,8 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
             this.antialias = antialias;
         }
 
+        this.rnd = new Phaser.RandomDataGenerator([(Date.now() * Math.random()).toString()]);
+
         this.state = new Phaser.StateManager(this, state);
     }
 
@@ -812,12 +852,12 @@ Phaser.Game.prototype = {
 
         if (config['width'])
         {
-            this.width = this.parseDimension(config['width'], 0);
+            this.width = Phaser.Utils.parseDimension(config['width'], 0);
         }
 
         if (config['height'])
         {
-            this.height = this.parseDimension(config['height'], 1);
+            this.height = Phaser.Utils.parseDimension(config['height'], 1);
         }
 
         if (config['renderer'])
@@ -846,6 +886,11 @@ Phaser.Game.prototype = {
             this.physicsConfig = config['physicsConfig'];
         }
 
+        if (config['seed'])
+        {
+            this.rnd = new Phaser.RandomDataGenerator(config['seed']);
+        }
+
         var state = null;
 
         if (config['state'])
@@ -857,46 +902,6 @@ Phaser.Game.prototype = {
 
     },
 
-    /**
-    * Get dimension.
-    *
-    * @method Phaser.Game#parseDimension
-    * @protected
-    */
-    parseDimension: function (size, dimension) {
-
-        var f = 0;
-        var px = 0;
-
-        if (typeof size === 'string')
-        {
-            //  %?
-            if (size.substr(-1) === '%')
-            {
-                f = parseInt(size, 10) / 100;
-
-                if (dimension === 0)
-                {
-                    px = window.innerWidth * f;
-                }
-                else
-                {
-                    px = window.innerHeight * f;
-                }
-            }
-            else
-            {
-                px = parseInt(size, 10);
-            }
-        }
-        else
-        {
-            px = size;
-        }
-
-        return px;
-
-    },
 
     /**
     * Initialize engine sub modules and start the game.
@@ -922,17 +927,20 @@ Phaser.Game.prototype = {
 
             this.onPause = new Phaser.Signal();
             this.onResume = new Phaser.Signal();
+            this.onBlur = new Phaser.Signal();
+            this.onFocus = new Phaser.Signal();
 
             this.isBooted = true;
 
-            this.device = new Phaser.Device();
+            this.device = new Phaser.Device(this);
             this.math = Phaser.Math;
-            this.rnd = new Phaser.RandomDataGenerator([(Date.now() * Math.random()).toString()]);
 
             this.stage = new Phaser.Stage(this, this.width, this.height);
-            this.scale = new Phaser.StageScaleMode(this, this.width, this.height);
+            this.scale = new Phaser.ScaleManager(this, this.width, this.height);
 
             this.setUpRenderer();
+
+            this.device.checkFullScreenSupport();
 
             this.world = new Phaser.World(this);
             this.add = new Phaser.GameObjectFactory(this);
@@ -943,7 +951,7 @@ Phaser.Game.prototype = {
             this.tweens = new Phaser.TweenManager(this);
             this.input = new Phaser.Input(this);
             this.sound = new Phaser.SoundManager(this);
-            this.physics = new Phaser.Physics.World(this, this.physicsConfig);
+            this.physics = new Phaser.Physics(this, this.physicsConfig);
             this.particles = new Phaser.Particles(this);
             this.plugins = new Phaser.PluginManager(this, this);
             this.net = new Phaser.Net(this);
@@ -955,13 +963,11 @@ Phaser.Game.prototype = {
             this.input.boot();
             this.sound.boot();
             this.state.boot();
-
-            this.load.onLoadComplete.add(this.loadComplete, this);
+            this.debug.boot();
 
             this.showDebugHeader();
 
             this.isRunning = true;
-            this._loadComplete = false;
 
             if (this.config && this.config['forceSetTimeOut'])
             {
@@ -988,10 +994,12 @@ Phaser.Game.prototype = {
         var v = Phaser.DEV_VERSION;
         var r = 'Canvas';
         var a = 'HTML Audio';
+        var c = 1;
 
-        if (this.renderType == Phaser.WEBGL)
+        if (this.renderType === Phaser.WEBGL)
         {
             r = 'WebGL';
+            c++;
         }
         else if (this.renderType == Phaser.HEADLESS)
         {
@@ -1001,24 +1009,38 @@ Phaser.Game.prototype = {
         if (this.device.webAudio)
         {
             a = 'WebAudio';
+            c++;
         }
 
         if (this.device.chrome)
         {
             var args = [
-                '%c %c %c  Phaser v' + v + ' - Renderer: ' + r + ' - Audio: ' + a + '  %c %c ',
-                'background: #00bff3',
-                'background: #0072bc',
-                'color: #ffffff; background: #003471',
-                'background: #0072bc',
-                'background: #00bff3'
+                '%c %c %c Phaser v' + v + ' - ' + r + ' - ' + a + '  %c %c ' + ' http://phaser.io  %c %c ♥%c♥%c♥ ',
+                'background: #0cf300',
+                'background: #00bc17',
+                'color: #ffffff; background: #00711f;',
+                'background: #00bc17',
+                'background: #0cf300',
+                'background: #00bc17'
             ];
+
+            for (var i = 0; i &lt; 3; i++)
+            {
+                if (i &lt; c)
+                {
+                    args.push('color: #ff2424; background: #fff');
+                }
+                else
+                {
+                    args.push('color: #959595; background: #fff');
+                }
+            }
 
             console.log.apply(console, args);
         }
         else
         {
-            console.log('Phaser v' + v + ' - Renderer: ' + r + ' - Audio: ' + a);
+            console.log('Phaser v' + v + ' - Renderer: ' + r + ' - Audio: ' + a + ' - http://phaser.io');
         }
 
     },
@@ -1048,7 +1070,6 @@ Phaser.Game.prototype = {
                 }
 
                 this.renderer = new PIXI.CanvasRenderer(this.width, this.height, this.canvas, this.transparent);
-                Phaser.Canvas.setSmoothingEnabled(this.renderer.context, this.antialias);
                 this.context = this.renderer.context;
             }
             else
@@ -1064,27 +1085,18 @@ Phaser.Game.prototype = {
             this.context = null;
         }
 
-        Phaser.Canvas.addToDOM(this.canvas, this.parent, true);
-        Phaser.Canvas.setTouchAction(this.canvas);
+        if (this.renderType !== Phaser.HEADLESS)
+        {
+            this.stage.smoothed = this.antialias;
+
+            Phaser.Canvas.addToDOM(this.canvas, this.parent, true);
+            Phaser.Canvas.setTouchAction(this.canvas);
+        }
 
     },
 
     /**
-    * Called when the load has finished, after preload was run.
-    *
-    * @method Phaser.Game#loadComplete
-    * @protected
-    */
-    loadComplete: function () {
-
-        this._loadComplete = true;
-
-        this.state.loadComplete();
-
-    },
-
-    /**
-    * The core game loop.
+    * The core game loop when in a paused state.
     *
     * @method Phaser.Game#update
     * @protected
@@ -1094,52 +1106,49 @@ Phaser.Game.prototype = {
 
         this.time.update(time);
 
-        if (this._paused)
+        if (!this._paused && !this.pendingStep)
+        {
+            if (this.stepping)
+            {
+                this.pendingStep = true;
+            }
+
+            this.debug.preUpdate();
+            this.physics.preUpdate();
+            this.state.preUpdate();
+            this.plugins.preUpdate();
+            this.stage.preUpdate();
+
+            this.stage.update();
+            this.tweens.update();
+            this.sound.update();
+            this.input.update();
+            this.state.update();
+            this.physics.update();
+            this.particles.update();
+            this.plugins.update();
+
+            this.stage.postUpdate();
+            this.plugins.postUpdate();
+        }
+        else
+        {
+            this.debug.preUpdate();
+        }
+
+        if (this.renderType != Phaser.HEADLESS)
         {
             this.renderer.render(this.stage);
             this.plugins.render();
             this.state.render();
-        }
-        else
-        {
-            if (!this.pendingStep)
-            {
-                if (this.stepping)
-                {
-                    this.pendingStep = true;
-                }
-
-                this.plugins.preUpdate();
-                this.stage.preUpdate();
-
-                this.stage.update();
-                this.tweens.update();
-                this.sound.update();
-                this.input.update();
-                this.state.update();
-                this.physics.update();
-                this.particles.update();            
-                this.plugins.update();
-
-                this.stage.postUpdate();
-                this.plugins.postUpdate();
-            }
-
-            if (this.renderType !== Phaser.HEADLESS)
-            {
-                this.renderer.render(this.stage);
-                this.plugins.render();
-                this.state.render();
-
-                this.plugins.postRender();
-            }
+            this.plugins.postRender();
         }
 
     },
 
     /**
     * Enable core game loop stepping. When enabled you must call game.step() directly (perhaps via a DOM button?)
-    * Calling step will advance the game loop by one frame. This is extremely useful to hard to track down errors!
+    * Calling step will advance the game loop by one frame. This is extremely useful for hard to track down errors!
     *
     * @method Phaser.Game#enableStep
     */
@@ -1186,8 +1195,8 @@ Phaser.Game.prototype = {
         this.raf.stop();
 
         this.input.destroy();
-
         this.state.destroy();
+        this.physics.destroy();
 
         this.state = null;
         this.cache = null;
@@ -1198,6 +1207,77 @@ Phaser.Game.prototype = {
         this.time = null;
         this.world = null;
         this.isBooted = false;
+
+    },
+
+    /**
+    * Called by the Stage visibility handler.
+    *
+    * @method Phaser.Game#gamePaused
+    * @param {object} event - The DOM event that caused the game to pause, if any.
+    * @protected
+    */
+    gamePaused: function (event) {
+
+        //   If the game is already paused it was done via game code, so don't re-pause it
+        if (!this._paused)
+        {
+            this._paused = true;
+            this.time.gamePaused();
+            this.sound.setMute();
+            this.onPause.dispatch(event);
+        }
+
+    },
+
+    /**
+    * Called by the Stage visibility handler.
+    *
+    * @method Phaser.Game#gameResumed
+    * @param {object} event - The DOM event that caused the game to pause, if any.
+    * @protected
+    */
+    gameResumed: function (event) {
+
+        //  Game is paused, but wasn't paused via code, so resume it
+        if (this._paused && !this._codePaused)
+        {
+            this._paused = false;
+            this.time.gameResumed();
+            this.input.reset();
+            this.sound.unsetMute();
+            this.onResume.dispatch(event);
+        }
+
+    },
+
+    /**
+    * Called by the Stage visibility handler.
+    *
+    * @method Phaser.Game#focusLoss
+    * @param {object} event - The DOM event that caused the game to pause, if any.
+    * @protected
+    */
+    focusLoss: function (event) {
+
+        this.onBlur.dispatch(event);
+
+        this.gamePaused(event);
+
+    },
+
+    /**
+    * Called by the Stage visibility handler.
+    *
+    * @method Phaser.Game#focusGain
+    * @param {object} event - The DOM event that caused the game to pause, if any.
+    * @protected
+    */
+    focusGain: function (event) {
+
+        this.onFocus.dispatch(event);
+
+        this.gameResumed(event);
 
     }
 
@@ -1224,6 +1304,9 @@ Object.defineProperty(Phaser.Game.prototype, "paused", {
             if (this._paused === false)
             {
                 this._paused = true;
+                this._codePaused = true;
+                this.sound.mute = true;
+                this.time.gamePaused();
                 this.onPause.dispatch(this);
             }
         }
@@ -1232,6 +1315,10 @@ Object.defineProperty(Phaser.Game.prototype, "paused", {
             if (this._paused)
             {
                 this._paused = false;
+                this._codePaused = false;
+                this.input.reset();
+                this.sound.mute = false;
+                this.time.gameResumed();
                 this.onResume.dispatch(this);
             }
         }
@@ -1264,7 +1351,7 @@ Object.defineProperty(Phaser.Game.prototype, "paused", {
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Mon Feb 24 2014 12:11:34 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Fri Mar 14 2014 06:34:17 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>
@@ -1291,6 +1378,9 @@ Object.defineProperty(Phaser.Game.prototype, "paused", {
 	<script>
 		$( function () {
 			$( "#toc" ).toc( {
+			    anchorName  : function(i, heading, prefix) {
+					return $(heading).attr("id") || ( prefix + i );
+				},
 				selectors   : "h1,h2,h3,h4",
 				showAndHide : false,
 				scrollTo    : 60

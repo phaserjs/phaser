@@ -59,10 +59,6 @@
 						</li>
 						
 						<li>
-							<a href="Phaser.BitmapFont.html">BitmapFont</a>
-						</li>
-						
-						<li>
 							<a href="Phaser.BitmapText.html">BitmapText</a>
 						</li>
 						
@@ -259,35 +255,83 @@
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.Body.html">Body</a>
+							<a href="Phaser.Physics.Arcade.Body.html">Body</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.CollisionGroup.html">CollisionGroup</a>
+							<a href="Phaser.Physics.Ninja.html">Ninja</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.ContactMaterial.html">ContactMaterial</a>
+							<a href="Phaser.Physics.Ninja.AABB.html">AABB</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.InversePointProxy.html">InversePointProxy</a>
+							<a href="Phaser.Physics.Ninja.Body.html">Body</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.Material.html">Material</a>
+							<a href="Phaser.Physics.Ninja.Circle.html">Circle</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.PointProxy.html">PointProxy</a>
+							<a href="Phaser.Physics.Ninja.Tile.html">Tile</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.Spring.html">Spring</a>
+							<a href="Phaser.Physics.P2.html">P2</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.World.html">World</a>
+							<a href="Phaser.Physics.P2.Body.html">Body</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.BodyDebug.html">BodyDebug</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.CollisionGroup.html">CollisionGroup</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.ContactMaterial.html">ContactMaterial</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.DistanceConstraint.html">DistanceConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.GearConstraint.html">GearConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.InversePointProxy.html">InversePointProxy</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.LockConstraint.html">LockConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.Material.html">Material</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.PointProxy.html">PointProxy</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.PrismaticConstraint.html">PrismaticConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.RevoluteConstraint.html">RevoluteConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.Spring.html">Spring</a>
 						</li>
 						
 						<li>
@@ -311,6 +355,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.QuadTree.html">QuadTree</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.RandomDataGenerator.html">RandomDataGenerator</a>
 						</li>
 						
@@ -324,6 +372,14 @@
 						
 						<li>
 							<a href="Phaser.RequestAnimationFrame.html">RequestAnimationFrame</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.RetroFont.html">RetroFont</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.ScaleManager.html">ScaleManager</a>
 						</li>
 						
 						<li>
@@ -352,10 +408,6 @@
 						
 						<li>
 							<a href="Phaser.Stage.html">Stage</a>
-						</li>
-						
-						<li>
-							<a href="Phaser.StageScaleMode.html">StageScaleMode</a>
 						</li>
 						
 						<li>
@@ -438,40 +490,6 @@
 					</ul>
 				</li>
 				
-				<li class="dropdown">
-					<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b
-						class="caret"></b></a>
-
-					<ul class="dropdown-menu ">
-						
-						<li>
-							<a href="global.html#canUseNewCanvasBlendModes">canUseNewCanvasBlendModes</a>
-						</li>
-						
-						<li>
-							<a href="global.html#getBounds">getBounds</a>
-						</li>
-						
-						<li>
-							<a href="global.html#getNextPowerOfTwo">getNextPowerOfTwo</a>
-						</li>
-						
-						<li>
-							<a href="global.html#hex2rgb">hex2rgb</a>
-						</li>
-						
-						<li>
-							<a href="global.html#hitTest">hitTest</a>
-						</li>
-						
-						<li>
-							<a href="global.html#rgb2hex">rgb2hex</a>
-						</li>
-						
-
-					</ul>
-				</li>
-				
 			</ul>
 		</div>
 	</div>
@@ -547,6 +565,11 @@ Phaser.Stage = function (game, width, height) {
     this.exists = true;
 
     /**
+    * @property {number} currentRenderOrderID - Reset each frame, keeps a count of the total number of objects updated.
+    */
+    this.currentRenderOrderID = 0;
+
+    /**
     * @property {string} hiddenVar - The page visibility API event name.
     * @private
     */
@@ -562,7 +585,7 @@ Phaser.Stage = function (game, width, height) {
     * @property {number} _backgroundColor - Stage background color.
     * @private
     */
-    this._backgroundColor;
+    this._backgroundColor = 0x000000;
 
     if (game.config)
     {
@@ -589,9 +612,10 @@ Phaser.Stage.prototype.preUpdate = function () {
     
     this.currentRenderOrderID = 0;
 
-    var i = this.children.length;
+    //  This can't loop in reverse, we need the orderID to be in sequence
+    var len = this.children.length;
 
-    while (i--)
+    for (var i = 0; i &lt; len; i++)
     {
         this.children[i].preUpdate();
     }
@@ -649,6 +673,15 @@ Phaser.Stage.prototype.postUpdate = function () {
         while (i--)
         {
             this.children[i].postUpdate();
+        }
+    }
+
+    if (this.checkOffsetInterval !== false)
+    {
+        if (this.game.time.now > this._nextOffsetCheck)
+        {
+            Phaser.Canvas.getOffset(this.game.canvas, this.offset);
+            this._nextOffsetCheck = this.game.time.now + this.checkOffsetInterval;
         }
     }
 
@@ -737,49 +770,38 @@ Phaser.Stage.prototype.boot = function () {
 */
 Phaser.Stage.prototype.checkVisibility = function () {
 
-    var supportsVisibilityApi = false;
-    var prefixes = [ "", "moz", "ms", "webkit" ];
-
-    while (prefixes.length)
+    if (document.webkitHidden !== undefined)
     {
-        prefix = prefixes.pop();
-        this._hiddenVar = prefix ? prefix + "Hidden" : "hidden";
-
-        if (this._hiddenVar in document)
-        {
-            supportsVisibilityApi = true;
-            break;
-        }
+        this._hiddenVar = 'webkitvisibilitychange';
+    }
+    else if (document.mozHidden !== undefined)
+    {
+        this._hiddenVar = 'mozvisibilitychange';
+    }
+    else if (document.msHidden !== undefined)
+    {
+        this._hiddenVar = 'msvisibilitychange';
+    }
+    else if (document.hidden !== undefined)
+    {
+        this._hiddenVar = 'visibilitychange';
+    }
+    else
+    {
+        this._hiddenVar = null;
     }
 
     //  Does browser support it? If not (like in IE9 or old Android) we need to fall back to blur/focus
-    if (supportsVisibilityApi)
+    if (this._hiddenVar)
     {
         document.addEventListener(this._hiddenVar, this._onChange, false);
-        document.addEventListener('pagehide', this._onChange, false);
-        document.addEventListener('pageshow', this._onChange, false);
     }
+
+    window.onpagehide = this._onChange;
+    window.onpageshow = this._onChange;
 
     window.onblur = this._onChange;
     window.onfocus = this._onChange;
-
-}
-
-/**
-* Runs Stage processes that need periodic updates, such as the offset checks.
-* @method Phaser.Stage#update
-*/
-Phaser.Stage.prototype.update = function () {
-
-    if (this.checkOffsetInterval !== false)
-    {
-        if (this.game.time.now > this._nextOffsetCheck)
-        {
-            Phaser.Canvas.getOffset(this.game.canvas, this.offset);
-            this._nextOffsetCheck = this.game.time.now + this.checkOffsetInterval;
-        }
-
-    }
 
 }
 
@@ -795,13 +817,27 @@ Phaser.Stage.prototype.visibilityChange = function (event) {
         return;
     }
 
-    if (this.game.paused === false && (event.type === 'pagehide' || event.type === 'blur' || document[this._hiddenVar] === true))
+    if (event.type === 'pagehide' || event.type === 'blur' || event.type === 'pageshow' || event.type === 'focus')
     {
-        this.game.paused = true;
+        if (event.type === 'pagehide' || event.type === 'blur')
+        {
+            this.game.focusLoss(event);
+        }
+        else if (event.type === 'pageshow' || event.type === 'focus')
+        {
+            this.game.focusGain(event);
+        }
+
+        return;
+    }
+
+    if (document.hidden || document.mozHidden || document.msHidden || document.webkitHidden)
+    {
+        this.game.gamePaused(event);
     }
     else
     {
-        this.game.paused = false;
+        this.game.gameResumed(event);
     }
 
 }
@@ -848,6 +884,34 @@ Object.defineProperty(Phaser.Stage.prototype, "backgroundColor", {
     }
 
 });
+
+/**
+* Enable or disable texture smoothing for all objects on this Stage. Only works for bitmap/image textures. Smoothing is enabled by default.
+*
+* @name Phaser.Stage#smoothed
+* @property {boolean} smoothed - Set to true to smooth all sprites rendered on this Stage, or false to disable smoothing (great for pixel art)
+*/
+Object.defineProperty(Phaser.Stage.prototype, "smoothed", {
+    
+    get: function () {
+
+        return !PIXI.scaleModes.LINEAR;
+
+    },
+
+    set: function (value) {
+
+        if (value)
+        {
+            PIXI.scaleModes.LINEAR = 0;
+        }
+        else
+        {
+            PIXI.scaleModes.LINEAR = 1;
+        }
+    }
+
+});
 </pre>
         </article>
     </section>
@@ -869,7 +933,7 @@ Object.defineProperty(Phaser.Stage.prototype, "backgroundColor", {
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Mon Feb 24 2014 12:11:34 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Fri Mar 14 2014 06:34:18 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>
@@ -896,6 +960,9 @@ Object.defineProperty(Phaser.Stage.prototype, "backgroundColor", {
 	<script>
 		$( function () {
 			$( "#toc" ).toc( {
+			    anchorName  : function(i, heading, prefix) {
+					return $(heading).attr("id") || ( prefix + i );
+				},
 				selectors   : "h1,h2,h3,h4",
 				showAndHide : false,
 				scrollTo    : 60

@@ -59,10 +59,6 @@
 						</li>
 						
 						<li>
-							<a href="Phaser.BitmapFont.html">BitmapFont</a>
-						</li>
-						
-						<li>
 							<a href="Phaser.BitmapText.html">BitmapText</a>
 						</li>
 						
@@ -259,35 +255,83 @@
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.Body.html">Body</a>
+							<a href="Phaser.Physics.Arcade.Body.html">Body</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.CollisionGroup.html">CollisionGroup</a>
+							<a href="Phaser.Physics.Ninja.html">Ninja</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.ContactMaterial.html">ContactMaterial</a>
+							<a href="Phaser.Physics.Ninja.AABB.html">AABB</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.InversePointProxy.html">InversePointProxy</a>
+							<a href="Phaser.Physics.Ninja.Body.html">Body</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.Material.html">Material</a>
+							<a href="Phaser.Physics.Ninja.Circle.html">Circle</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.PointProxy.html">PointProxy</a>
+							<a href="Phaser.Physics.Ninja.Tile.html">Tile</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.Spring.html">Spring</a>
+							<a href="Phaser.Physics.P2.html">P2</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.World.html">World</a>
+							<a href="Phaser.Physics.P2.Body.html">Body</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.BodyDebug.html">BodyDebug</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.CollisionGroup.html">CollisionGroup</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.ContactMaterial.html">ContactMaterial</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.DistanceConstraint.html">DistanceConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.GearConstraint.html">GearConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.InversePointProxy.html">InversePointProxy</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.LockConstraint.html">LockConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.Material.html">Material</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.PointProxy.html">PointProxy</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.PrismaticConstraint.html">PrismaticConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.RevoluteConstraint.html">RevoluteConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.Spring.html">Spring</a>
 						</li>
 						
 						<li>
@@ -311,6 +355,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.QuadTree.html">QuadTree</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.RandomDataGenerator.html">RandomDataGenerator</a>
 						</li>
 						
@@ -324,6 +372,14 @@
 						
 						<li>
 							<a href="Phaser.RequestAnimationFrame.html">RequestAnimationFrame</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.RetroFont.html">RetroFont</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.ScaleManager.html">ScaleManager</a>
 						</li>
 						
 						<li>
@@ -352,10 +408,6 @@
 						
 						<li>
 							<a href="Phaser.Stage.html">Stage</a>
-						</li>
-						
-						<li>
-							<a href="Phaser.StageScaleMode.html">StageScaleMode</a>
 						</li>
 						
 						<li>
@@ -438,40 +490,6 @@
 					</ul>
 				</li>
 				
-				<li class="dropdown">
-					<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b
-						class="caret"></b></a>
-
-					<ul class="dropdown-menu ">
-						
-						<li>
-							<a href="global.html#canUseNewCanvasBlendModes">canUseNewCanvasBlendModes</a>
-						</li>
-						
-						<li>
-							<a href="global.html#getBounds">getBounds</a>
-						</li>
-						
-						<li>
-							<a href="global.html#getNextPowerOfTwo">getNextPowerOfTwo</a>
-						</li>
-						
-						<li>
-							<a href="global.html#hex2rgb">hex2rgb</a>
-						</li>
-						
-						<li>
-							<a href="global.html#hitTest">hitTest</a>
-						</li>
-						
-						<li>
-							<a href="global.html#rgb2hex">rgb2hex</a>
-						</li>
-						
-
-					</ul>
-				</li>
-				
 			</ul>
 		</div>
 	</div>
@@ -537,30 +555,6 @@ Phaser.Input = function (game) {
     * @default
     */
     this.pollRate = 0;
-    
-    /**
-    * @property {number} _pollCounter - Internal var holding the current poll counter.
-    * @private
-    */
-    this._pollCounter = 0;
-
-    /**
-    * @property {Phaser.Point} _oldPosition - A point object representing the previous position of the Pointer.
-    * @private
-    */
-    this._oldPosition = null;
-
-    /**
-    * @property {number} _x - x coordinate of the most recent Pointer event
-    * @private
-    */
-    this._x = 0;
-
-    /**
-    * @property {number} _y - Y coordinate of the most recent Pointer event
-    * @private
-    */
-    this._y = 0;
 
     /**
     * You can disable all Input by setting Input.disabled = true. While set all new input related events will be ignored.
@@ -595,7 +589,7 @@ Phaser.Input = function (game) {
     this.circle = null;
 
     /**
-    * @property {Phaser.Point} scale - The scale by which all input coordinates are multiplied; calculated by the StageScaleMode. In an un-scaled game the values will be x = 1 and y = 1.
+    * @property {Phaser.Point} scale - The scale by which all input coordinates are multiplied; calculated by the ScaleManager. In an un-scaled game the values will be x = 1 and y = 1.
     */
     this.scale = null;
 
@@ -752,6 +746,11 @@ Phaser.Input = function (game) {
     this.gamepad = null;
 
     /**
+    * @property {Phaser.Gestures} gestures - The Gestures manager.
+    */
+    // this.gestures = null;
+
+    /**
     * @property {Phaser.Signal} onDown - A Signal that is dispatched each time a pointer is pressed down.
     */
     this.onDown = null;
@@ -783,6 +782,30 @@ Phaser.Input = function (game) {
     */
     this._localPoint = new Phaser.Point();
     
+    /**
+    * @property {number} _pollCounter - Internal var holding the current poll counter.
+    * @private
+    */
+    this._pollCounter = 0;
+
+    /**
+    * @property {Phaser.Point} _oldPosition - A point object representing the previous position of the Pointer.
+    * @private
+    */
+    this._oldPosition = null;
+
+    /**
+    * @property {number} _x - x coordinate of the most recent Pointer event
+    * @private
+    */
+    this._x = 0;
+
+    /**
+    * @property {number} _y - Y coordinate of the most recent Pointer event
+    * @private
+    */
+    this._y = 0;
+
 };
 
 /**
@@ -821,6 +844,7 @@ Phaser.Input.prototype = {
         this.touch = new Phaser.Touch(this.game);
         this.mspointer = new Phaser.MSPointer(this.game);
         this.gamepad = new Phaser.Gamepad(this.game);
+        // this.gestures = new Phaser.Gestures(this.game);
 
         this.onDown = new Phaser.Signal();
         this.onUp = new Phaser.Signal();
@@ -861,6 +885,7 @@ Phaser.Input.prototype = {
         this.touch.stop();
         this.mspointer.stop();
         this.gamepad.stop();
+        // this.gestures.stop();
 
         this.moveCallback = null;
 
@@ -919,6 +944,8 @@ Phaser.Input.prototype = {
     */
     update: function () {
 
+        this.keyboard.update();
+
         if (this.pollRate > 0 && this._pollCounter &lt; this.pollRate)
         {
             this._pollCounter++;
@@ -946,6 +973,9 @@ Phaser.Input.prototype = {
         if (this.pointer10) { this.pointer10.update(); }
 
         this._pollCounter = 0;
+
+        // if (this.gestures.active) { this.gestures.update(); }
+
     },
 
     /**
@@ -1196,11 +1226,13 @@ Phaser.Input.prototype = {
     },
 
     /**
-     * Tests if the current mouse coordinates hit a sprite
-     *
-     * @method hitTest
-     * @param displayObject {DisplayObject} The displayObject to test for a hit
-     */
+    * Tests if the pointer hits the given object.
+    *
+    * @method Phaser.Input#hitTest
+    * @param {DisplayObject} displayObject - The displayObject to test for a hit.
+    * @param {Phaser.Pointer} pointer - The pointer to use for the test.
+    * @param {Phaser.Point} localPoint - The local translated point.
+    */
     hitTest: function (displayObject, pointer, localPoint) {
 
         if (!displayObject.worldVisible)
@@ -1402,7 +1434,7 @@ Object.defineProperty(Phaser.Input.prototype, "worldY", {
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Mon Feb 24 2014 12:11:34 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Fri Mar 14 2014 06:34:17 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>
@@ -1429,6 +1461,9 @@ Object.defineProperty(Phaser.Input.prototype, "worldY", {
 	<script>
 		$( function () {
 			$( "#toc" ).toc( {
+			    anchorName  : function(i, heading, prefix) {
+					return $(heading).attr("id") || ( prefix + i );
+				},
 				selectors   : "h1,h2,h3,h4",
 				showAndHide : false,
 				scrollTo    : 60

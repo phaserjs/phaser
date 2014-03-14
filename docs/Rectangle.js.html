@@ -59,10 +59,6 @@
 						</li>
 						
 						<li>
-							<a href="Phaser.BitmapFont.html">BitmapFont</a>
-						</li>
-						
-						<li>
 							<a href="Phaser.BitmapText.html">BitmapText</a>
 						</li>
 						
@@ -259,35 +255,83 @@
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.Body.html">Body</a>
+							<a href="Phaser.Physics.Arcade.Body.html">Body</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.CollisionGroup.html">CollisionGroup</a>
+							<a href="Phaser.Physics.Ninja.html">Ninja</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.ContactMaterial.html">ContactMaterial</a>
+							<a href="Phaser.Physics.Ninja.AABB.html">AABB</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.InversePointProxy.html">InversePointProxy</a>
+							<a href="Phaser.Physics.Ninja.Body.html">Body</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.Material.html">Material</a>
+							<a href="Phaser.Physics.Ninja.Circle.html">Circle</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.PointProxy.html">PointProxy</a>
+							<a href="Phaser.Physics.Ninja.Tile.html">Tile</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.Spring.html">Spring</a>
+							<a href="Phaser.Physics.P2.html">P2</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.World.html">World</a>
+							<a href="Phaser.Physics.P2.Body.html">Body</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.BodyDebug.html">BodyDebug</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.CollisionGroup.html">CollisionGroup</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.ContactMaterial.html">ContactMaterial</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.DistanceConstraint.html">DistanceConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.GearConstraint.html">GearConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.InversePointProxy.html">InversePointProxy</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.LockConstraint.html">LockConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.Material.html">Material</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.PointProxy.html">PointProxy</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.PrismaticConstraint.html">PrismaticConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.RevoluteConstraint.html">RevoluteConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.Spring.html">Spring</a>
 						</li>
 						
 						<li>
@@ -311,6 +355,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.QuadTree.html">QuadTree</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.RandomDataGenerator.html">RandomDataGenerator</a>
 						</li>
 						
@@ -324,6 +372,14 @@
 						
 						<li>
 							<a href="Phaser.RequestAnimationFrame.html">RequestAnimationFrame</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.RetroFont.html">RetroFont</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.ScaleManager.html">ScaleManager</a>
 						</li>
 						
 						<li>
@@ -352,10 +408,6 @@
 						
 						<li>
 							<a href="Phaser.Stage.html">Stage</a>
-						</li>
-						
-						<li>
-							<a href="Phaser.StageScaleMode.html">StageScaleMode</a>
 						</li>
 						
 						<li>
@@ -432,40 +484,6 @@
 						
 						<li>
 							<a href="SignalBinding.html">SignalBinding</a>
-						</li>
-						
-
-					</ul>
-				</li>
-				
-				<li class="dropdown">
-					<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b
-						class="caret"></b></a>
-
-					<ul class="dropdown-menu ">
-						
-						<li>
-							<a href="global.html#canUseNewCanvasBlendModes">canUseNewCanvasBlendModes</a>
-						</li>
-						
-						<li>
-							<a href="global.html#getBounds">getBounds</a>
-						</li>
-						
-						<li>
-							<a href="global.html#getNextPowerOfTwo">getNextPowerOfTwo</a>
-						</li>
-						
-						<li>
-							<a href="global.html#hex2rgb">hex2rgb</a>
-						</li>
-						
-						<li>
-							<a href="global.html#hitTest">hitTest</a>
-						</li>
-						
-						<li>
-							<a href="global.html#rgb2hex">rgb2hex</a>
 						</li>
 						
 
@@ -779,235 +797,234 @@ Phaser.Rectangle.prototype = {
 
         return "[{Rectangle (x=" + this.x + " y=" + this.y + " width=" + this.width + " height=" + this.height + " empty=" + this.empty + ")}]";
 
-    },
+    }
 
-    /**
-    * @name Phaser.Rectangle#halfWidth
-    * @property {number} halfWidth - Half of the width of the Rectangle.
-    * @readonly
-    */
-    get halfWidth() {
+};
 
+/**
+* @name Phaser.Rectangle#halfWidth
+* @property {number} halfWidth - Half of the width of the Rectangle.
+* @readonly
+*/
+Object.defineProperty(Phaser.Rectangle.prototype, "halfWidth", {
+
+    get: function () {
         return Math.round(this.width / 2);
+    }
 
-    },
+});
 
-    /**
-    * @name Phaser.Rectangle#halfHeight
-    * @property {number} halfHeight - Half of the height of the Rectangle.
-    * @readonly
-    */
-    get halfHeight() {
+/**
+* @name Phaser.Rectangle#halfHeight
+* @property {number} halfHeight - Half of the height of the Rectangle.
+* @readonly
+*/
+Object.defineProperty(Phaser.Rectangle.prototype, "halfHeight", {
 
+    get: function () {
         return Math.round(this.height / 2);
+    }
 
-    },
+});
 
-    /**
-    * The sum of the y and height properties. Changing the bottom property of a Rectangle object has no effect on the x, y and width properties, but does change the height property.
-    * @name Phaser.Rectangle#bottom
-    * @property {number} bottom - The sum of the y and height properties.
-    */
-    get bottom() {
-
+/**
+* The sum of the y and height properties. Changing the bottom property of a Rectangle object has no effect on the x, y and width properties, but does change the height property.
+* @name Phaser.Rectangle#bottom
+* @property {number} bottom - The sum of the y and height properties.
+*/
+Object.defineProperty(Phaser.Rectangle.prototype, "bottom", {
+    
+    get: function () {
         return this.y + this.height;
-
     },
   
-    set bottom(value) {
-
-        if (value &lt;= this.y)
-        {
+    set: function (value) {
+        if (value &lt;= this.y) {
             this.height = 0;
-        }
-        else
-        {
+        } else {
             this.height = (this.y - value);
         }
-    },
+    }
 
-    /**
-    * The location of the Rectangles bottom right corner as a Point object.
-    * @name Phaser.Rectangle#bottomRight
-    * @property {Phaser.Point} bottomRight - Gets or sets the location of the Rectangles bottom right corner as a Point object.
-    */
-    get bottomRight() {
+});
 
+/**
+* The location of the Rectangles bottom right corner as a Point object.
+* @name Phaser.Rectangle#bottom
+* @property {Phaser.Point} bottomRight - Gets or sets the location of the Rectangles bottom right corner as a Point object.
+*/
+Object.defineProperty(Phaser.Rectangle.prototype, "bottomRight", {
+    
+    get: function () {
         return new Phaser.Point(this.right, this.bottom);
     },
 
-
-    set bottomRight(value) {
-
+    set: function (value) {
         this.right = value.x;
         this.bottom = value.y;
+    }
 
-    },
+});
 
-    /**
-    * The x coordinate of the left of the Rectangle. Changing the left property of a Rectangle object has no effect on the y and height properties. However it does affect the width property, whereas changing the x value does not affect the width property.
-    * @name Phaser.Rectangle#left
-    * @property {number} left - The x coordinate of the left of the Rectangle.
-    */
-    get left() {
-
+/**
+* The x coordinate of the left of the Rectangle. Changing the left property of a Rectangle object has no effect on the y and height properties. However it does affect the width property, whereas changing the x value does not affect the width property.
+* @name Phaser.Rectangle#left
+* @property {number} left - The x coordinate of the left of the Rectangle.
+*/
+Object.defineProperty(Phaser.Rectangle.prototype, "left", {
+   
+    get: function () {
         return this.x;
-
     },
 
-    set left(value) {
-
-        if (value >= this.right)
-        {
+    set: function (value) {
+        if (value >= this.right) {
             this.width = 0;
-        }
-        else
-        {
+        } else {
             this.width = this.right - value;
         }
-
         this.x = value;
-    },
+    }
 
-    /**
-    * The sum of the x and width properties. Changing the right property of a Rectangle object has no effect on the x, y and height properties, however it does affect the width property.
-    * @name Phaser.Rectangle#right
-    * @property {number} right - The sum of the x and width properties.
-    */
-    get right() {
+});
 
+/**
+* The sum of the x and width properties. Changing the right property of a Rectangle object has no effect on the x, y and height properties, however it does affect the width property.
+* @name Phaser.Rectangle#right
+* @property {number} right - The sum of the x and width properties.
+*/
+Object.defineProperty(Phaser.Rectangle.prototype, "right", {
+       
+    get: function () {
         return this.x + this.width;
-
     },
 
-    set right(value) {
-
-        if (value &lt;= this.x)
-        {
+    set: function (value) {
+        if (value &lt;= this.x) {
             this.width = 0;
-        }
-        else
-        {
+        } else {
             this.width = this.x + value;
         }
+    }
 
-    },
+});
 
-    /**
-    * The volume of the Rectangle derived from width * height.
-    * @name Phaser.Rectangle#volume
-    * @property {number} volume - The volume of the Rectangle derived from width * height.
-    * @readonly
-    */
-    get volume() {
-
+/**
+* The volume of the Rectangle derived from width * height.
+* @name Phaser.Rectangle#volume
+* @property {number} volume - The volume of the Rectangle derived from width * height.
+* @readonly
+*/
+Object.defineProperty(Phaser.Rectangle.prototype, "volume", {
+    
+    get: function () {
         return this.width * this.height;
+    }
 
-    },
+});
 
-    /**
-    * The perimeter size of the Rectangle. This is the sum of all 4 sides.
-    * @name Phaser.Rectangle#perimeter
-    * @property {number} perimeter - The perimeter size of the Rectangle. This is the sum of all 4 sides.
-    * @readonly
-    */
-    get perimeter() {
-
+/**
+* The perimeter size of the Rectangle. This is the sum of all 4 sides.
+* @name Phaser.Rectangle#perimeter
+* @property {number} perimeter - The perimeter size of the Rectangle. This is the sum of all 4 sides.
+* @readonly
+*/
+Object.defineProperty(Phaser.Rectangle.prototype, "perimeter", {
+    
+    get: function () {
         return (this.width * 2) + (this.height * 2);
+    }
 
-    },
+});
 
-    /**
-    * The x coordinate of the center of the Rectangle.
-    * @name Phaser.Rectangle#centerX
-    * @property {number} centerX - The x coordinate of the center of the Rectangle.
-    */
-    get centerX() {
-
+/**
+* The x coordinate of the center of the Rectangle.
+* @name Phaser.Rectangle#centerX
+* @property {number} centerX - The x coordinate of the center of the Rectangle.
+*/
+Object.defineProperty(Phaser.Rectangle.prototype, "centerX", {
+    
+    get: function () {
         return this.x + this.halfWidth;
-
     },
 
-    set centerX(value) {
-
+    set: function (value) {
         this.x = value - this.halfWidth;
+    }
 
-    },
+});
 
-    /**
-    * The y coordinate of the center of the Rectangle.
-    * @name Phaser.Rectangle#centerY
-    * @property {number} centerY - The y coordinate of the center of the Rectangle.
-    */
-    get centerY() {
-
+/**
+* The y coordinate of the center of the Rectangle.
+* @name Phaser.Rectangle#centerY
+* @property {number} centerY - The y coordinate of the center of the Rectangle.
+*/
+Object.defineProperty(Phaser.Rectangle.prototype, "centerY", {
+    
+    get: function () {
         return this.y + this.halfHeight;
-
     },
 
-    set centerY(value) {
-
+    set: function (value) {
         this.y = value - this.halfHeight;
+    }
 
-    },
+});
 
-    /**
-    * The y coordinate of the top of the Rectangle. Changing the top property of a Rectangle object has no effect on the x and width properties.
-    * However it does affect the height property, whereas changing the y value does not affect the height property.
-    * @name Phaser.Rectangle#top
-    * @property {number} top - The y coordinate of the top of the Rectangle.
-    */
-    get top() {
-
+/**
+* The y coordinate of the top of the Rectangle. Changing the top property of a Rectangle object has no effect on the x and width properties.
+* However it does affect the height property, whereas changing the y value does not affect the height property.
+* @name Phaser.Rectangle#top
+* @property {number} top - The y coordinate of the top of the Rectangle.
+*/
+Object.defineProperty(Phaser.Rectangle.prototype, "top", {
+    
+    get: function () {
         return this.y;
-
     },
 
-    set top(value) {
-
-        if (value >= this.bottom)
-        {
+    set: function (value) {
+        if (value >= this.bottom) {
             this.height = 0;
             this.y = value;
-        }
-        else
-        {
+        } else {
             this.height = (this.bottom - value);
         }
+    }
 
-    },
+});
 
-    /**
-    * The location of the Rectangles top left corner as a Point object.
-    * @name Phaser.Rectangle#topLeft
-    * @property {Phaser.Point} topLeft - The location of the Rectangles top left corner as a Point object.
-    */
-    get topLeft() {
+/**
+* The location of the Rectangles top left corner as a Point object.
+* @name Phaser.Rectangle#topLeft
+* @property {Phaser.Point} topLeft - The location of the Rectangles top left corner as a Point object.
+*/
+Object.defineProperty(Phaser.Rectangle.prototype, "topLeft", {
 
+    get: function () {
         return new Phaser.Point(this.x, this.y);
-
     },
     
-    set topLeft(value) {
-
+    set: function (value) {
         this.x = value.x;
         this.y = value.y;
+    }
 
-    },
+});
 
-    /**
-    * Determines whether or not this Rectangle object is empty. A Rectangle object is empty if its width or height is less than or equal to 0.
-    * If set to true then all of the Rectangle properties are set to 0. 
-    * @name Phaser.Rectangle#empty
-    * @property {boolean} empty - Gets or sets the Rectangles empty state.
-    */
-    get empty() {
-
+/**
+* Determines whether or not this Rectangle object is empty. A Rectangle object is empty if its width or height is less than or equal to 0.
+* If set to true then all of the Rectangle properties are set to 0. 
+* @name Phaser.Rectangle#empty
+* @property {boolean} empty - Gets or sets the Rectangles empty state.
+*/
+Object.defineProperty(Phaser.Rectangle.prototype, "empty", {
+    
+    get: function () {
         return (!this.width || !this.height);
-
     },
 
-    set empty(value) {
+    set: function (value) {
 
         if (value === true)
         {
@@ -1016,7 +1033,7 @@ Phaser.Rectangle.prototype = {
         
     }
 
-};
+});
 
 Phaser.Rectangle.prototype.constructor = Phaser.Rectangle;
 
@@ -1286,7 +1303,7 @@ PIXI.EmptyRectangle = new Phaser.Rectangle(0, 0, 0, 0);
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Mon Feb 24 2014 12:11:34 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Fri Mar 14 2014 06:34:18 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>
@@ -1313,6 +1330,9 @@ PIXI.EmptyRectangle = new Phaser.Rectangle(0, 0, 0, 0);
 	<script>
 		$( function () {
 			$( "#toc" ).toc( {
+			    anchorName  : function(i, heading, prefix) {
+					return $(heading).attr("id") || ( prefix + i );
+				},
 				selectors   : "h1,h2,h3,h4",
 				showAndHide : false,
 				scrollTo    : 60

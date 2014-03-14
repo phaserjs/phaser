@@ -59,10 +59,6 @@
 						</li>
 						
 						<li>
-							<a href="Phaser.BitmapFont.html">BitmapFont</a>
-						</li>
-						
-						<li>
 							<a href="Phaser.BitmapText.html">BitmapText</a>
 						</li>
 						
@@ -259,35 +255,83 @@
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.Body.html">Body</a>
+							<a href="Phaser.Physics.Arcade.Body.html">Body</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.CollisionGroup.html">CollisionGroup</a>
+							<a href="Phaser.Physics.Ninja.html">Ninja</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.ContactMaterial.html">ContactMaterial</a>
+							<a href="Phaser.Physics.Ninja.AABB.html">AABB</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.InversePointProxy.html">InversePointProxy</a>
+							<a href="Phaser.Physics.Ninja.Body.html">Body</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.Material.html">Material</a>
+							<a href="Phaser.Physics.Ninja.Circle.html">Circle</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.PointProxy.html">PointProxy</a>
+							<a href="Phaser.Physics.Ninja.Tile.html">Tile</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.Spring.html">Spring</a>
+							<a href="Phaser.Physics.P2.html">P2</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.World.html">World</a>
+							<a href="Phaser.Physics.P2.Body.html">Body</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.BodyDebug.html">BodyDebug</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.CollisionGroup.html">CollisionGroup</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.ContactMaterial.html">ContactMaterial</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.DistanceConstraint.html">DistanceConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.GearConstraint.html">GearConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.InversePointProxy.html">InversePointProxy</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.LockConstraint.html">LockConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.Material.html">Material</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.PointProxy.html">PointProxy</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.PrismaticConstraint.html">PrismaticConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.RevoluteConstraint.html">RevoluteConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.Spring.html">Spring</a>
 						</li>
 						
 						<li>
@@ -311,6 +355,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.QuadTree.html">QuadTree</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.RandomDataGenerator.html">RandomDataGenerator</a>
 						</li>
 						
@@ -324,6 +372,14 @@
 						
 						<li>
 							<a href="Phaser.RequestAnimationFrame.html">RequestAnimationFrame</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.RetroFont.html">RetroFont</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.ScaleManager.html">ScaleManager</a>
 						</li>
 						
 						<li>
@@ -352,10 +408,6 @@
 						
 						<li>
 							<a href="Phaser.Stage.html">Stage</a>
-						</li>
-						
-						<li>
-							<a href="Phaser.StageScaleMode.html">StageScaleMode</a>
 						</li>
 						
 						<li>
@@ -438,40 +490,6 @@
 					</ul>
 				</li>
 				
-				<li class="dropdown">
-					<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b
-						class="caret"></b></a>
-
-					<ul class="dropdown-menu ">
-						
-						<li>
-							<a href="global.html#canUseNewCanvasBlendModes">canUseNewCanvasBlendModes</a>
-						</li>
-						
-						<li>
-							<a href="global.html#getBounds">getBounds</a>
-						</li>
-						
-						<li>
-							<a href="global.html#getNextPowerOfTwo">getNextPowerOfTwo</a>
-						</li>
-						
-						<li>
-							<a href="global.html#hex2rgb">hex2rgb</a>
-						</li>
-						
-						<li>
-							<a href="global.html#hitTest">hitTest</a>
-						</li>
-						
-						<li>
-							<a href="global.html#rgb2hex">rgb2hex</a>
-						</li>
-						
-
-					</ul>
-				</li>
-				
 			</ul>
 		</div>
 	</div>
@@ -490,7 +508,7 @@
 
 <header>
     <h2>
-        <span class="ancestors"><a href="Phaser.html">Phaser</a><a href="Phaser.Physics.html">.Physics</a>.</span>
+        <span class="ancestors"><a href="Phaser.html">Phaser</a><a href="Phaser.Physics.html">.Physics</a><a href="Phaser.Physics.P2.html">.P2</a>.</span>
     
     Body
     </h2>
@@ -517,7 +535,8 @@
         <p>The Physics Body is typically linked to a single Sprite and defines properties that determine how the physics body is simulated.
 These properties affect how the body reacts to forces, what forces it generates on itself (to simulate friction), and how it reacts to collisions in the scene.
 In most cases, the properties are used to simulate physical effects. Each body also has its own property values that determine exactly how it reacts to forces and collisions in the scene.
-By default a single Rectangle shape is added to the Body that matches the dimensions of the parent Sprite. See addShape, removeShape, clearShapes to add extra shapes around the Body.</p>
+By default a single Rectangle shape is added to the Body that matches the dimensions of the parent Sprite. See addShape, removeShape, clearShapes to add extra shapes around the Body.
+Note: When bound to a Sprite to avoid single-pixel jitters on mobile devices we strongly recommend using Sprite sizes that are even on both axis, i.e. 128x128 not 127x127.</p>
     </div>
     
 
@@ -769,7 +788,7 @@ By default a single Rectangle shape is added to the Body that matches the dimens
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-22">line 22</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-23">line 23</a>
     </li></ul></dd>
     
 
@@ -897,7 +916,7 @@ By default a single Rectangle shape is added to the Body that matches the dimens
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-1193">line 1193</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-1295">line 1295</a>
     </li></ul></dd>
     
 
@@ -1005,7 +1024,7 @@ If you wish to work in radians instead of degrees use the property Body.rotation
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-1216">line 1216</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-1318">line 1318</a>
     </li></ul></dd>
     
 
@@ -1111,7 +1130,7 @@ If you wish to work in radians instead of degrees use the property Body.rotation
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-1240">line 1240</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-1342">line 1342</a>
     </li></ul></dd>
     
 
@@ -1213,7 +1232,7 @@ If you wish to work in radians instead of degrees use the property Body.rotation
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-1261">line 1261</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-1363">line 1363</a>
     </li></ul></dd>
     
 
@@ -1315,7 +1334,7 @@ If you wish to work in radians instead of degrees use the property Body.rotation
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-1281">line 1281</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-1383">line 1383</a>
     </li></ul></dd>
     
 
@@ -1422,7 +1441,7 @@ Note that this only applies if your World has bounds! The response to the collis
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-71">line 71</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-1641">line 1641</a>
     </li></ul></dd>
     
 
@@ -1528,7 +1547,7 @@ Note that this only applies if your World has bounds! The response to the collis
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-1301">line 1301</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-1403">line 1403</a>
     </li></ul></dd>
     
 
@@ -1591,7 +1610,7 @@ Note that this only applies if your World has bounds! The response to the collis
             <td class="type">
             
                 
-<span class="param-type">p2.Body</span>
+<span class="param-type"><a href="p2.Body.html">p2.Body</a></span>
 
 
             
@@ -1630,7 +1649,211 @@ Note that this only applies if your World has bounds! The response to the collis
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-48">line 48</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-59">line 59</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="debug"><span class="type-signature"></span>debug<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>debug</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Enable or disable debug drawing of this body</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-1612">line 1612</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="debugBody"><span class="type-signature"></span>debugBody<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>debugBody</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Physics.P2.BodyDebug.html">Phaser.Physics.P2.BodyDebug</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Reference to the debug body.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-137">line 137</a>
     </li></ul></dd>
     
 
@@ -1732,7 +1955,7 @@ Note that this only applies if your World has bounds! The response to the collis
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-1131">line 1131</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-1233">line 1233</a>
     </li></ul></dd>
     
 
@@ -1834,7 +2057,7 @@ Note that this only applies if your World has bounds! The response to the collis
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-1322">line 1322</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-1424">line 1424</a>
     </li></ul></dd>
     
 
@@ -1936,7 +2159,7 @@ Note that this only applies if your World has bounds! The response to the collis
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-59">line 59</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-70">line 70</a>
     </li></ul></dd>
     
 
@@ -2038,7 +2261,7 @@ Note that this only applies if your World has bounds! The response to the collis
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-32">line 32</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-33">line 33</a>
     </li></ul></dd>
     
 
@@ -2140,7 +2363,109 @@ Note that this only applies if your World has bounds! The response to the collis
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-64">line 64</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-75">line 75</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="id"><span class="type-signature">&lt;readonly> </span>id<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>id</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The Body ID. Each Body that has been added to the World has a unique ID.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-1597">line 1597</a>
     </li></ul></dd>
     
 
@@ -2242,7 +2567,7 @@ Note that this only applies if your World has bounds! The response to the collis
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-1346">line 1346</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-1447">line 1447</a>
     </li></ul></dd>
     
 
@@ -2344,7 +2669,7 @@ Note that this only applies if your World has bounds! The response to the collis
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-1164">line 1164</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-1266">line 1266</a>
     </li></ul></dd>
     
 
@@ -2446,7 +2771,7 @@ Note that this only applies if your World has bounds! The response to the collis
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-1366">line 1366</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-1467">line 1467</a>
     </li></ul></dd>
     
 
@@ -2548,7 +2873,7 @@ Note that this only applies if your World has bounds! The response to the collis
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-1395">line 1395</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-1491">line 1491</a>
     </li></ul></dd>
     
 
@@ -2650,7 +2975,221 @@ Note that this only applies if your World has bounds! The response to the collis
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-42">line 42</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-53">line 53</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="onBeginContact"><span class="type-signature"></span>onBeginContact<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Dispatched when a first contact is created between shapes in two bodies. This event is fired during the step, so collision has already taken place.
+The event will be sent 4 parameters: The body it is in contact with, the shape from this body that caused the contact, the shape from the contact body and the contact equation data array.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>onBeginContact</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Signal.html">Phaser.Signal</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-88">line 88</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="onEndContact"><span class="type-signature"></span>onEndContact<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Dispatched when contact ends between shapes in two bodies. This event is fired during the step, so collision has already taken place.
+The event will be sent 3 parameters: The body it is in contact with, the shape from this body that caused the contact and the shape from the contact body.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>onEndContact</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Signal.html">Phaser.Signal</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-95">line 95</a>
     </li></ul></dd>
     
 
@@ -2673,6 +3212,10 @@ Note that this only applies if your World has bounds! The response to the collis
     
 </dt>
 <dd>
+    
+    <div class="description">
+        <p>Dispatched when the shape/s of this Body impact with another. The event will be sent 2 parameters, this Body and the impact Body.</p>
+    </div>
     
     
     
@@ -2723,7 +3266,7 @@ Note that this only applies if your World has bounds! The response to the collis
 
             
 
-            <td class="description last"><p>Dispatched when the shape/s of this Body impact with another. The event will be sent 2 parameters, this Body and the impact Body.</p></td>
+            <td class="description last"></td>
         </tr>
 
 	
@@ -2752,7 +3295,109 @@ Note that this only applies if your World has bounds! The response to the collis
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-76">line 76</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-81">line 81</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="removeNextStep"><span class="type-signature"></span>removeNextStep<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>removeNextStep</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>To avoid deleting this body during a physics step, and causing all kinds of problems, set removeNextStep to true to have it removed in the next preUpdate.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-106">line 106</a>
     </li></ul></dd>
     
 
@@ -2859,7 +3504,7 @@ If you wish to work in degrees instead of radians use the Body.angle property in
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-1419">line 1419</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-1514">line 1514</a>
     </li></ul></dd>
     
 
@@ -2961,7 +3606,7 @@ If you wish to work in degrees instead of radians use the Body.angle property in
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-1442">line 1442</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-1537">line 1537</a>
     </li></ul></dd>
     
 
@@ -3063,7 +3708,7 @@ If you wish to work in degrees instead of radians use the Body.angle property in
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-37">line 37</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-43">line 43</a>
     </li></ul></dd>
     
 
@@ -3165,7 +3810,109 @@ If you wish to work in degrees instead of radians use the Body.angle property in
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-1098">line 1098</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-1200">line 1200</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="type"><span class="type-signature"></span>type<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>type</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The type of physics system this body belongs to.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-48">line 48</a>
     </li></ul></dd>
     
 
@@ -3267,7 +4014,109 @@ If you wish to work in degrees instead of radians use the Body.angle property in
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-54">line 54</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-65">line 65</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="world"><span class="type-signature"></span>world<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>world</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Physics.P2.html">Phaser.Physics.P2</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Local reference to the P2 World.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-38">line 38</a>
     </li></ul></dd>
     
 
@@ -3369,7 +4218,7 @@ If you wish to work in degrees instead of radians use the Body.angle property in
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-1462">line 1462</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-1557">line 1557</a>
     </li></ul></dd>
     
 
@@ -3471,7 +4320,7 @@ If you wish to work in degrees instead of radians use the Body.angle property in
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-1482">line 1482</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-1577">line 1577</a>
     </li></ul></dd>
     
 
@@ -3754,7 +4603,7 @@ You can control the offset from the center of the body and the rotation.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-795">line 795</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-902">line 902</a>
     </li></ul></dd>
     
 
@@ -4028,7 +4877,7 @@ You can control the offset from the center of the body and the rotation.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-704">line 704</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-811">line 811</a>
     </li></ul></dd>
     
 
@@ -4304,7 +5153,7 @@ You can control the offset from the center of the body and the rotation.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-775">line 775</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-882">line 882</a>
     </li></ul></dd>
     
 
@@ -4543,7 +5392,7 @@ You can control the offset from the center of the body and the rotation.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-758">line 758</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-865">line 865</a>
     </li></ul></dd>
     
 
@@ -4782,7 +5631,7 @@ You can control the offset from the center of the body and the rotation.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-741">line 741</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-848">line 848</a>
     </li></ul></dd>
     
 
@@ -5102,7 +5951,7 @@ This function expects the x.y values to be given in pixels. If you want to provi
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-815">line 815</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-922">line 922</a>
     </li></ul></dd>
     
 
@@ -5411,7 +6260,7 @@ This function expects the x.y values to be given in pixels. If you want to provi
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-722">line 722</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-829">line 829</a>
     </li></ul></dd>
     
 
@@ -5686,7 +6535,7 @@ Will automatically update the mass properties and bounding radius.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-681">line 681</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-787">line 787</a>
     </li></ul></dd>
     
 
@@ -5790,7 +6639,7 @@ Will automatically update the mass properties and bounding radius.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-618">line 618</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-714">line 714</a>
     </li></ul></dd>
     
 
@@ -5859,7 +6708,7 @@ Will automatically update the mass properties and bounding radius.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-305">line 305</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-394">line 394</a>
     </li></ul></dd>
     
 
@@ -5977,7 +6826,7 @@ Will automatically update the mass properties and bounding radius.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-316">line 316</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-405">line 405</a>
     </li></ul></dd>
     
 
@@ -6141,7 +6990,7 @@ Will automatically update the mass properties and bounding radius.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-328">line 328</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-417">line 417</a>
     </li></ul></dd>
     
 
@@ -6355,7 +7204,7 @@ Will automatically update the mass properties and bounding radius.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-205">line 205</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-294">line 294</a>
     </li></ul></dd>
     
 
@@ -6424,7 +7273,7 @@ Will automatically update the mass properties and bounding radius.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-666">line 666</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-769">line 769</a>
     </li></ul></dd>
     
 
@@ -6502,7 +7351,7 @@ Will automatically update the mass properties and bounding radius.</p>
             <td class="type">
             
                 
-<span class="param-type"><a href="Phaser.Physics.CollisionGroup.html">Phaser.Physics.CollisionGroup</a></span>
+<span class="param-type">Phaser.Physics.CollisionGroup</span>
 |
 
 <span class="param-type">array</span>
@@ -6654,7 +7503,7 @@ Will automatically update the mass properties and bounding radius.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-250">line 250</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-339">line 339</a>
     </li></ul></dd>
     
 
@@ -6682,7 +7531,7 @@ Will automatically update the mass properties and bounding radius.</p>
         
             
 <dt>
-    <h4 class="name" id="createBodyCallback"><span class="type-signature"></span>createBodyCallback<span class="signature">(body, callback, callbackContext)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="createBodyCallback"><span class="type-signature"></span>createBodyCallback<span class="signature">(object, callback, callbackContext)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -6690,8 +7539,10 @@ Will automatically update the mass properties and bounding radius.</p>
     
     
     <div class="description">
-        <p>Sets a callback to be fired any time this Body impacts with the given Body. The impact test is performed against body.id values.
-The callback will be sent 4 parameters: This body, the body that impacted, the Shape in this body and the shape in the impacting body.</p>
+        <p>Sets a callback to be fired any time a shape in this Body impacts with a shape in the given Body. The impact test is performed against body.id values.
+The callback will be sent 4 parameters: This body, the body that impacted, the Shape in this body and the shape in the impacting body.
+Note that the impact event happens after collision resolution, so it cannot be used to prevent a collision from happening.
+It also happens mid-step. So do not destroy a Body during this callback, instead set safeDestroy to true so it will be killed on the next preUpdate.</p>
     </div>
     
 
@@ -6725,13 +7576,22 @@ The callback will be sent 4 parameters: This body, the body that impacted, the S
 
         <tr>
             
-                <td class="name"><code>body</code></td>
+                <td class="name"><code>object</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="Phaser.Physics.Body.html">Phaser.Physics.Body</a></span>
+<span class="param-type"><a href="Phaser.Sprite.html">Phaser.Sprite</a></span>
+|
+
+<span class="param-type"><a href="Phaser.TileSprite.html">Phaser.TileSprite</a></span>
+|
+
+<span class="param-type"><a href="Phaser.Physics.P2.Body.html">Phaser.Physics.P2.Body</a></span>
+|
+
+<span class="param-type"><a href="p2.Body.html">p2.Body</a></span>
 
 
             
@@ -6741,7 +7601,7 @@ The callback will be sent 4 parameters: This body, the body that impacted, the S
 
             
 
-            <td class="description last"><p>The Body to send impact events for.</p></td>
+            <td class="description last"><p>The object to send impact events for.</p></td>
         </tr>
 
 	
@@ -6819,7 +7679,7 @@ The callback will be sent 4 parameters: This body, the body that impacted, the S
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-120">line 120</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-151">line 151</a>
     </li></ul></dd>
     
 
@@ -6857,7 +7717,9 @@ The callback will be sent 4 parameters: This body, the body that impacted, the S
     <div class="description">
         <p>Sets a callback to be fired any time this Body impacts with the given Group. The impact test is performed against shape.collisionGroup values.
 The callback will be sent 4 parameters: This body, the body that impacted, the Shape in this body and the shape in the impacting body.
-This callback will only fire if this Body has been assigned a collision group.</p>
+This callback will only fire if this Body has been assigned a collision group.
+Note that the impact event happens after collision resolution, so it cannot be used to prevent a collision from happening.
+It also happens mid-step. So do not destroy a Body during this callback, instead set safeDestroy to true so it will be killed on the next preUpdate.</p>
     </div>
     
 
@@ -6897,7 +7759,7 @@ This callback will only fire if this Body has been assigned a collision group.</
             <td class="type">
             
                 
-<span class="param-type"><a href="Phaser.Physics.CollisionGroup.html">Phaser.Physics.CollisionGroup</a></span>
+<span class="param-type">Phaser.Physics.CollisionGroup</span>
 
 
             
@@ -6985,7 +7847,7 @@ This callback will only fire if this Body has been assigned a collision group.</
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-136">line 136</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-191">line 191</a>
     </li></ul></dd>
     
 
@@ -7054,7 +7916,7 @@ This callback will only fire if this Body has been assigned a collision group.</
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-646">line 646</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-742">line 742</a>
     </li></ul></dd>
     
 
@@ -7123,7 +7985,7 @@ This callback will only fire if this Body has been assigned a collision group.</
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-153">line 153</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-218">line 218</a>
     </li></ul></dd>
     
 
@@ -7278,7 +8140,7 @@ This callback will only fire if this Body has been assigned a collision group.</
 
             
 
-            <td class="description last"><p>An object containing the build options:</p>
+            <td class="description last"><p>An object containing the build options. Note that this isn't used if the data file contains multiple shapes.</p>
                 <h6>Properties</h6>
                 
 
@@ -7460,7 +8322,7 @@ This callback will only fire if this Body has been assigned a collision group.</
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-983">line 983</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-1095">line 1095</a>
     </li></ul></dd>
     
 
@@ -7798,7 +8660,7 @@ It will add the shape data to this Body, as well as set the density (mass), fric
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-1016">line 1016</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-1170">line 1170</a>
     </li></ul></dd>
     
 
@@ -7940,7 +8802,7 @@ The speed is represented in pixels per second. So a value of 100 would move 100 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-455">line 455</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-544">line 544</a>
     </li></ul></dd>
     
 
@@ -8059,7 +8921,7 @@ The speed is represented in pixels per second. So a value of 100 would move 100 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-545">line 545</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-634">line 634</a>
     </li></ul></dd>
     
 
@@ -8178,7 +9040,7 @@ The speed is represented in pixels per second. So a value of 100 would move 100 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-438">line 438</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-527">line 527</a>
     </li></ul></dd>
     
 
@@ -8297,7 +9159,7 @@ The speed is represented in pixels per second. So a value of 100 would move 100 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-506">line 506</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-595">line 595</a>
     </li></ul></dd>
     
 
@@ -8416,7 +9278,7 @@ The speed is represented in pixels per second. So a value of 100 would move 100 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-519">line 519</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-608">line 608</a>
     </li></ul></dd>
     
 
@@ -8535,7 +9397,7 @@ The speed is represented in pixels per second. So a value of 100 would move 100 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-532">line 532</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-621">line 621</a>
     </li></ul></dd>
     
 
@@ -8556,288 +9418,6 @@ The speed is represented in pixels per second. So a value of 100 would move 100 
     
     
     
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="p2px"><span class="type-signature"></span>p2px<span class="signature">(v)</span><span class="type-signature"> &rarr; {number}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Convert p2 physics value (meters) to pixel scale.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>v</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The value to convert.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-1042">line 1042</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>The scaled value.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type">number</span>
-
-
-	</dd>
-</dl>
-
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="p2pxi"><span class="type-signature"></span>p2pxi<span class="signature">(v)</span><span class="type-signature"> &rarr; {number}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Convert p2 physics value (meters) to pixel scale and inverses it.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>v</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The value to convert.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-1068">line 1068</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>The scaled value.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type">number</span>
-
-
-	</dd>
-</dl>
-
-
-        
     
     
 </dd>
@@ -8886,7 +9466,7 @@ The speed is represented in pixels per second. So a value of 100 would move 100 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-567">line 567</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-663">line 663</a>
     </li></ul></dd>
     
 
@@ -8955,7 +9535,7 @@ The speed is represented in pixels per second. So a value of 100 would move 100 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-558">line 558</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-647">line 647</a>
     </li></ul></dd>
     
 
@@ -8976,288 +9556,6 @@ The speed is represented in pixels per second. So a value of 100 would move 100 
     
     
     
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="px2p"><span class="type-signature"></span>px2p<span class="signature">(v)</span><span class="type-signature"> &rarr; {number}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Convert pixel value to p2 physics scale (meters).</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>v</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The value to convert.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-1055">line 1055</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>The scaled value.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type">number</span>
-
-
-	</dd>
-</dl>
-
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="px2pi"><span class="type-signature"></span>px2pi<span class="signature">(v)</span><span class="type-signature"> &rarr; {number}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Convert pixel value to p2 physics scale (meters) and inverses it.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>v</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The value to convert.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-1081">line 1081</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>The scaled value.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type">number</span>
-
-
-	</dd>
-</dl>
-
-
-        
     
     
 </dd>
@@ -9306,7 +9604,7 @@ The speed is represented in pixels per second. So a value of 100 would move 100 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-632">line 632</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-728">line 728</a>
     </li></ul></dd>
     
 
@@ -9436,7 +9734,7 @@ The speed is represented in pixels per second. So a value of 100 would move 100 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-887">line 887</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-985">line 985</a>
     </li></ul></dd>
     
 
@@ -9706,7 +10004,7 @@ The speed is represented in pixels per second. So a value of 100 would move 100 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-585">line 585</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-681">line 681</a>
     </li></ul></dd>
     
 
@@ -9825,7 +10123,7 @@ The speed is represented in pixels per second. So a value of 100 would move 100 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-489">line 489</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-578">line 578</a>
     </li></ul></dd>
     
 
@@ -9943,7 +10241,7 @@ The speed is represented in pixels per second. So a value of 100 would move 100 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-414">line 414</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-503">line 503</a>
     </li></ul></dd>
     
 
@@ -10061,7 +10359,7 @@ The speed is represented in pixels per second. So a value of 100 would move 100 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-426">line 426</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-515">line 515</a>
     </li></ul></dd>
     
 
@@ -10312,7 +10610,7 @@ The speed is represented in pixels per second. So a value of 100 would move 100 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-900">line 900</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-998">line 998</a>
     </li></ul></dd>
     
 
@@ -10391,10 +10689,7 @@ This also resets the collisionMask.</p>
             <td class="type">
             
                 
-<span class="param-type"><a href="Phaser.Physics.CollisionGroup.html">Phaser.Physics.CollisionGroup</a></span>
-|
-
-<span class="param-type">array</span>
+<span class="param-type">Phaser.Physics.CollisionGroup</span>
 
 
             
@@ -10477,7 +10772,7 @@ This also resets the collisionMask.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-177">line 177</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-266">line 266</a>
     </li></ul></dd>
     
 
@@ -10556,7 +10851,7 @@ If you only wish to apply it to a specific Shape in this Body then provide that 
             <td class="type">
             
                 
-<span class="param-type"><a href="Phaser.Physics.Material.html">Phaser.Physics.Material</a></span>
+<span class="param-type">Phaser.Physics.Material</span>
 
 
             
@@ -10639,7 +10934,7 @@ If you only wish to apply it to a specific Shape in this Body then provide that 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-959">line 959</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-1057">line 1057</a>
     </li></ul></dd>
     
 
@@ -10934,7 +11229,7 @@ If you wish to create a Rectangle to match the size of a Sprite or Image see Bod
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-917">line 917</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-1015">line 1015</a>
     </li></ul></dd>
     
 
@@ -11092,7 +11387,7 @@ If no Sprite is given it defaults to using the parent of this Body.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-940">line 940</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-1038">line 1038</a>
     </li></ul></dd>
     
 
@@ -11184,7 +11479,7 @@ If no Sprite is given it defaults to using the parent of this Body.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-376">line 376</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-465">line 465</a>
     </li></ul></dd>
     
 
@@ -11253,7 +11548,7 @@ If no Sprite is given it defaults to using the parent of this Body.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-342">line 342</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-431">line 431</a>
     </li></ul></dd>
     
 
@@ -11322,7 +11617,7 @@ If no Sprite is given it defaults to using the parent of this Body.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-353">line 353</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-442">line 442</a>
     </li></ul></dd>
     
 
@@ -11391,7 +11686,76 @@ If no Sprite is given it defaults to using the parent of this Body.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-364">line 364</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-453">line 453</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="shapeChanged"><span class="type-signature"></span>shapeChanged<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Updates the debug draw if any body shapes change.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-1081">line 1081</a>
     </li></ul></dd>
     
 
@@ -11510,7 +11874,7 @@ The speed is represented in pixels per second. So a value of 100 would move 100 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-472">line 472</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-561">line 561</a>
     </li></ul></dd>
     
 
@@ -11657,7 +12021,7 @@ The speed is represented in pixels per second. So a value of 100 would move 100 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-388">line 388</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-477">line 477</a>
     </li></ul></dd>
     
 
@@ -11798,7 +12162,137 @@ The speed is represented in pixels per second. So a value of 100 would move 100 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/Body.js</a>, <a href="Body.js.html#sunlight-1-line-401">line 401</a>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-490">line 490</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="updateCollisionMask"><span class="type-signature"></span>updateCollisionMask<span class="signature">(<span class="optional">shape</span>)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Updates the collisionMask.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>shape</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">p2.Shape</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>An optional Shape. If not provided the collision group will be added to all Shapes in this Body.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Body.js__.html">physics/p2/Body.js</a>, <a href="Body.js__.html#sunlight-1-line-242">line 242</a>
     </li></ul></dd>
     
 
@@ -11849,7 +12343,7 @@ The speed is represented in pixels per second. So a value of 100 would move 100 
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Mon Feb 24 2014 12:11:42 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Fri Mar 14 2014 06:34:29 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>
@@ -11880,6 +12374,9 @@ The speed is represented in pixels per second. So a value of 100 would move 100 
 	<script>
 		$( function () {
 			$( "#toc" ).toc( {
+			    anchorName  : function(i, heading, prefix) {
+					return $(heading).attr("id") || ( prefix + i );
+				},
 				selectors   : "h1,h2,h3,h4",
 				showAndHide : false,
 				scrollTo    : 60

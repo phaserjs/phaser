@@ -59,10 +59,6 @@
 						</li>
 						
 						<li>
-							<a href="Phaser.BitmapFont.html">BitmapFont</a>
-						</li>
-						
-						<li>
 							<a href="Phaser.BitmapText.html">BitmapText</a>
 						</li>
 						
@@ -259,35 +255,83 @@
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.Body.html">Body</a>
+							<a href="Phaser.Physics.Arcade.Body.html">Body</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.CollisionGroup.html">CollisionGroup</a>
+							<a href="Phaser.Physics.Ninja.html">Ninja</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.ContactMaterial.html">ContactMaterial</a>
+							<a href="Phaser.Physics.Ninja.AABB.html">AABB</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.InversePointProxy.html">InversePointProxy</a>
+							<a href="Phaser.Physics.Ninja.Body.html">Body</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.Material.html">Material</a>
+							<a href="Phaser.Physics.Ninja.Circle.html">Circle</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.PointProxy.html">PointProxy</a>
+							<a href="Phaser.Physics.Ninja.Tile.html">Tile</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.Spring.html">Spring</a>
+							<a href="Phaser.Physics.P2.html">P2</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.World.html">World</a>
+							<a href="Phaser.Physics.P2.Body.html">Body</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.BodyDebug.html">BodyDebug</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.CollisionGroup.html">CollisionGroup</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.ContactMaterial.html">ContactMaterial</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.DistanceConstraint.html">DistanceConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.GearConstraint.html">GearConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.InversePointProxy.html">InversePointProxy</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.LockConstraint.html">LockConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.Material.html">Material</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.PointProxy.html">PointProxy</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.PrismaticConstraint.html">PrismaticConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.RevoluteConstraint.html">RevoluteConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.Spring.html">Spring</a>
 						</li>
 						
 						<li>
@@ -311,6 +355,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.QuadTree.html">QuadTree</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.RandomDataGenerator.html">RandomDataGenerator</a>
 						</li>
 						
@@ -324,6 +372,14 @@
 						
 						<li>
 							<a href="Phaser.RequestAnimationFrame.html">RequestAnimationFrame</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.RetroFont.html">RetroFont</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.ScaleManager.html">ScaleManager</a>
 						</li>
 						
 						<li>
@@ -352,10 +408,6 @@
 						
 						<li>
 							<a href="Phaser.Stage.html">Stage</a>
-						</li>
-						
-						<li>
-							<a href="Phaser.StageScaleMode.html">StageScaleMode</a>
 						</li>
 						
 						<li>
@@ -438,40 +490,6 @@
 					</ul>
 				</li>
 				
-				<li class="dropdown">
-					<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b
-						class="caret"></b></a>
-
-					<ul class="dropdown-menu ">
-						
-						<li>
-							<a href="global.html#canUseNewCanvasBlendModes">canUseNewCanvasBlendModes</a>
-						</li>
-						
-						<li>
-							<a href="global.html#getBounds">getBounds</a>
-						</li>
-						
-						<li>
-							<a href="global.html#getNextPowerOfTwo">getNextPowerOfTwo</a>
-						</li>
-						
-						<li>
-							<a href="global.html#hex2rgb">hex2rgb</a>
-						</li>
-						
-						<li>
-							<a href="global.html#hitTest">hitTest</a>
-						</li>
-						
-						<li>
-							<a href="global.html#rgb2hex">rgb2hex</a>
-						</li>
-						
-
-					</ul>
-				</li>
-				
 			</ul>
 		</div>
 	</div>
@@ -531,7 +549,7 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
     /**
     * @property {HTMLCanvasElement} canvas - The canvas to which this TilemapLayer draws.
     */
-    this.canvas = Phaser.Canvas.create(width, height);
+    this.canvas = Phaser.Canvas.create(width, height, '', true);
     
     /**
     * @property {CanvasRenderingContext2D} context - The 2d context of the canvas.
@@ -553,7 +571,8 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
     */
     this.textureFrame = new Phaser.Frame(0, 0, 0, width, height, 'tilemapLayer', game.rnd.uuid());
 
-    Phaser.Sprite.call(this, this.game, 0, 0, this.texture, this.textureFrame);
+    // Phaser.Sprite.call(this, this.game, 0, 0, this.texture, this.textureFrame);
+    Phaser.Image.call(this, this.game, 0, 0, this.texture, this.textureFrame);
 
     /**
     * @property {string} name - The name of the layer.
@@ -640,6 +659,12 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
     * @property {boolean} dirty - Flag controlling when to re-render the layer.
     */
     this.dirty = true;
+
+    /**
+    * @property {number} rayStepRate - When ray-casting against tiles this is the number of steps it will jump. For larger tile sizes you can increase this to improve performance.
+    * @default
+    */
+    this.rayStepRate = 4;
 
     /**
     * @property {number} _cw - Local collision var.
@@ -771,8 +796,8 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
 
 };
 
-Phaser.TilemapLayer.prototype = Object.create(Phaser.Sprite.prototype);
-Phaser.TilemapLayer.prototype = Phaser.Utils.extend(true, Phaser.TilemapLayer.prototype, Phaser.Sprite.prototype, PIXI.Sprite.prototype);
+Phaser.TilemapLayer.prototype = Object.create(Phaser.Image.prototype);
+// Phaser.TilemapLayer.prototype = Phaser.Utils.extend(true, Phaser.TilemapLayer.prototype, Phaser.Sprite.prototype, PIXI.Sprite.prototype);
 Phaser.TilemapLayer.prototype.constructor = Phaser.TilemapLayer;
 
 /**
@@ -783,7 +808,8 @@ Phaser.TilemapLayer.prototype.constructor = Phaser.TilemapLayer;
 */
 Phaser.TilemapLayer.prototype.postUpdate = function () {
 
-	Phaser.Sprite.prototype.postUpdate.call(this);
+    // Phaser.Sprite.prototype.postUpdate.call(this);
+	Phaser.Image.prototype.postUpdate.call(this);
 	
     //  Stops you being able to auto-scroll the camera if it's not following a sprite
     this.scrollX = this.game.camera.x * this.scrollFactorX;
@@ -944,6 +970,52 @@ Phaser.TilemapLayer.prototype.getTileXY = function (x, y, point) {
 }
 
 /**
+* Gets all tiles that intersect with the given line.
+*
+* @method Phaser.TilemapLayer#getRayCastTiles
+* @memberof Phaser.TilemapLayer
+* @param {Phaser.Line} line - The line used to determine which tiles to return.
+* @param {number} [stepRate] - How many steps through the ray will we check? If undefined or null it uses TilemapLayer.rayStepRate.
+* @param {boolean} [collides=false] - If true only return tiles that collide on one or more faces.
+* @param {boolean} [interestingFace=false] - If true only return tiles that have interesting faces.
+* @return {array&lt;Phaser.Tile>} An array of Phaser.Tiles.
+*/
+Phaser.TilemapLayer.prototype.getRayCastTiles = function (line, stepRate, collides, interestingFace) {
+
+    if (typeof stepRate === 'undefined' || stepRate === null) { stepRate = this.rayStepRate; }
+    if (typeof collides === 'undefined') { collides = false; }
+    if (typeof interestingFace === 'undefined') { interestingFace = false; }
+
+    //  First get all tiles that touch the bounds of the line
+    var tiles = this.getTiles(line.x, line.y, line.width, line.height, collides, interestingFace);
+
+    if (tiles.length === 0)
+    {
+        return [];
+    }
+
+    //  Now we only want the tiles that intersect with the points on this line
+    var coords = line.coordinatesOnLine(stepRate);
+    var total = coords.length;
+    var results = [];
+
+    for (var i = 0; i &lt; tiles.length; i++)
+    {
+        for (var t = 0; t &lt; total; t++)
+        {
+            if (tiles[i].containsPoint(coords[t][0], coords[t][1]))
+            {
+                results.push(tiles[i]);
+                break;
+            }
+        }
+    }
+
+    return results;
+
+}
+
+/**
 * Get all tiles that exist within the given area, defined by the top-left corner, width and height. Values given are in pixels, not tiles.
 * @method Phaser.TilemapLayer#getTiles
 * @memberof Phaser.TilemapLayer
@@ -952,12 +1024,14 @@ Phaser.TilemapLayer.prototype.getTileXY = function (x, y, point) {
 * @param {number} width - Width of the area to get.
 * @param {number} height - Height of the area to get.
 * @param {boolean} [collides=false] - If true only return tiles that collide on one or more faces.
-* @return {array} Array with tiles informations (each contains x, y, and the tile).
+* @param {boolean} [interestingFace=false] - If true only return tiles that have interesting faces.
+* @return {array&lt;Phaser.Tile>} An array of Phaser.Tiles.
 */
-Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides) {
+Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides, interestingFace) {
 
     //  Should we only get tiles that have at least one of their collision flags set? (true = yes, false = no just get them all)
     if (typeof collides === 'undefined') { collides = false; }
+    if (typeof interestingFace === 'undefined') { interestingFace = false; }
 
     // adjust the x,y coordinates for scrollFactor
     x = this._fixX(x);
@@ -988,20 +1062,9 @@ Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides
         {
             if (this.layer.data[wy] && this.layer.data[wy][wx])
             {
-                if (collides === false || (collides && this.layer.data[wy][wx].canCollide))
+                if ((!collides && !interestingFace) || this.layer.data[wy][wx].isInteresting(collides, interestingFace))
                 {
-                    //  Convert tile coordinates back to camera space for return
-                    var _wx = this._unfixX(wx * this._cw) / this._cw;
-                    var _wy = this._unfixY(wy * this._ch) / this._ch;
-
-                    this._results.push({ 
-                        x: _wx * this._cw, 
-                        y: _wy * this._ch, 
-                        right: (_wx * this._cw) + this._cw, 
-                        bottom: (_wy * this._ch) + this._ch, 
-                        tile: this.layer.data[wy][wx],
-                        layer: this.layer.data[wy][wx].layer
-                    });
+                    this._results.push(this.layer.data[wy][wx]);
                 }
             }
         }
@@ -1045,7 +1108,7 @@ Phaser.TilemapLayer.prototype.updateMax = function () {
 */
 Phaser.TilemapLayer.prototype.render = function () {
 
-	if (this.layer.dirty)
+    if (this.layer.dirty)
     {
         this.dirty = true;
     }
@@ -1070,8 +1133,6 @@ Phaser.TilemapLayer.prototype.render = function () {
 
     var tile;
     var set;
-    var ox = 0;
-    var oy = 0;
 
     if (this.debug)
     {
@@ -1088,57 +1149,19 @@ Phaser.TilemapLayer.prototype.render = function () {
             {
                 tile = this._column[x];
 
-                if (this.map.tiles[tile.index])
+                set = this.map.tilesets[this.map.tiles[tile.index][2]]
+
+                if (this.debug === false && tile.alpha !== this.context.globalAlpha)
                 {
-                    set = this.map.tilesets[this.map.tiles[tile.index][2]]
+                    this.context.globalAlpha = tile.alpha;
+                }
 
-                    if (set.image)
-                    {
-                        if (this.debug === false && tile.alpha !== this.context.globalAlpha)
-                        {
-                            this.context.globalAlpha = tile.alpha;
-                        }
+                set.draw(this.context, Math.floor(this._tx), Math.floor(this._ty), tile.index);
 
-                        if (set.tileWidth !== this.map.tileWidth || set.tileHeight !== this.map.tileHeight)
-                        {
-                            //  TODO: Smaller sized tile check
-                            this.context.drawImage(
-                                this.map.tilesets[this.map.tiles[tile.index][2]].image,
-                                this.map.tiles[tile.index][0],
-                                this.map.tiles[tile.index][1],
-                                set.tileWidth,
-                                set.tileHeight,
-                                Math.floor(this._tx),
-                                Math.floor(this._ty) - (set.tileHeight - this.map.tileHeight),
-                                set.tileWidth,
-                                set.tileHeight
-                            );
-                        }
-                        else
-                        {
-                            this.context.drawImage(
-                                this.map.tilesets[this.map.tiles[tile.index][2]].image,
-                                this.map.tiles[tile.index][0],
-                                this.map.tiles[tile.index][1],
-                                this.map.tileWidth,
-                                this.map.tileHeight,
-                                Math.floor(this._tx),
-                                Math.floor(this._ty),
-                                this.map.tileWidth,
-                                this.map.tileHeight
-                            );
-                        }
-
-                        if (tile.debug)
-                        {
-                            this.context.fillStyle = 'rgba(0, 255, 0, 0.4)';
-                            this.context.fillRect(Math.floor(this._tx), Math.floor(this._ty), this.map.tileWidth, this.map.tileHeight);
-                        }
-                    }
-                    else
-                    {
-                        this.context.fillRect(Math.floor(this._tx), Math.floor(this._ty), this.map.tileWidth, this.map.tileHeight);
-                    }
+                if (tile.debug)
+                {
+                    this.context.fillStyle = 'rgba(0, 255, 0, 0.4)';
+                    this.context.fillRect(Math.floor(this._tx), Math.floor(this._ty), this.map.tileWidth, this.map.tileHeight);
                 }
             }
 
@@ -1157,10 +1180,10 @@ Phaser.TilemapLayer.prototype.render = function () {
         this.renderDebug();
     }
 
-    //  Only needed if running in WebGL, otherwise this array will never get cleared down I don't think!
     if (this.game.renderType === Phaser.WEBGL)
     {
-        PIXI.texturesToUpdate.push(this.baseTexture);
+        // PIXI.updateWebGLTexture(this.baseTexture, renderSession.gl);        
+        PIXI.updateWebGLTexture(this.baseTexture, this.game.renderer.gl);
     }
 
     this.dirty = false;
@@ -1227,14 +1250,6 @@ Phaser.TilemapLayer.prototype.renderDebug = function () {
                 }
 
                 this.context.stroke();
-            }
-
-            //  Collision callback
-            if (tile && (tile.collisionCallback || tile.layer.callbacks[tile.index]))
-            {
-                this.context.fillStyle = this.debugCallbackColor;
-                this.context.fillRect(this._tx, this._ty, this._cw, this._ch);
-                this.context.fillStyle = this.debugFillColor;
             }
 
             this._tx += this.map.tileWidth;
@@ -1390,7 +1405,7 @@ Object.defineProperty(Phaser.TilemapLayer.prototype, "collisionHeight", {
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Mon Feb 24 2014 12:11:34 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Fri Mar 14 2014 06:34:18 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>
@@ -1417,6 +1432,9 @@ Object.defineProperty(Phaser.TilemapLayer.prototype, "collisionHeight", {
 	<script>
 		$( function () {
 			$( "#toc" ).toc( {
+			    anchorName  : function(i, heading, prefix) {
+					return $(heading).attr("id") || ( prefix + i );
+				},
 				selectors   : "h1,h2,h3,h4",
 				showAndHide : false,
 				scrollTo    : 60

@@ -59,10 +59,6 @@
 						</li>
 						
 						<li>
-							<a href="Phaser.BitmapFont.html">BitmapFont</a>
-						</li>
-						
-						<li>
 							<a href="Phaser.BitmapText.html">BitmapText</a>
 						</li>
 						
@@ -259,35 +255,83 @@
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.Body.html">Body</a>
+							<a href="Phaser.Physics.Arcade.Body.html">Body</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.CollisionGroup.html">CollisionGroup</a>
+							<a href="Phaser.Physics.Ninja.html">Ninja</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.ContactMaterial.html">ContactMaterial</a>
+							<a href="Phaser.Physics.Ninja.AABB.html">AABB</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.InversePointProxy.html">InversePointProxy</a>
+							<a href="Phaser.Physics.Ninja.Body.html">Body</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.Material.html">Material</a>
+							<a href="Phaser.Physics.Ninja.Circle.html">Circle</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.PointProxy.html">PointProxy</a>
+							<a href="Phaser.Physics.Ninja.Tile.html">Tile</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.Spring.html">Spring</a>
+							<a href="Phaser.Physics.P2.html">P2</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.World.html">World</a>
+							<a href="Phaser.Physics.P2.Body.html">Body</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.BodyDebug.html">BodyDebug</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.CollisionGroup.html">CollisionGroup</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.ContactMaterial.html">ContactMaterial</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.DistanceConstraint.html">DistanceConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.GearConstraint.html">GearConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.InversePointProxy.html">InversePointProxy</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.LockConstraint.html">LockConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.Material.html">Material</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.PointProxy.html">PointProxy</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.PrismaticConstraint.html">PrismaticConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.RevoluteConstraint.html">RevoluteConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.Spring.html">Spring</a>
 						</li>
 						
 						<li>
@@ -311,6 +355,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.QuadTree.html">QuadTree</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.RandomDataGenerator.html">RandomDataGenerator</a>
 						</li>
 						
@@ -324,6 +372,14 @@
 						
 						<li>
 							<a href="Phaser.RequestAnimationFrame.html">RequestAnimationFrame</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.RetroFont.html">RetroFont</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.ScaleManager.html">ScaleManager</a>
 						</li>
 						
 						<li>
@@ -352,10 +408,6 @@
 						
 						<li>
 							<a href="Phaser.Stage.html">Stage</a>
-						</li>
-						
-						<li>
-							<a href="Phaser.StageScaleMode.html">StageScaleMode</a>
 						</li>
 						
 						<li>
@@ -438,40 +490,6 @@
 					</ul>
 				</li>
 				
-				<li class="dropdown">
-					<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b
-						class="caret"></b></a>
-
-					<ul class="dropdown-menu ">
-						
-						<li>
-							<a href="global.html#canUseNewCanvasBlendModes">canUseNewCanvasBlendModes</a>
-						</li>
-						
-						<li>
-							<a href="global.html#getBounds">getBounds</a>
-						</li>
-						
-						<li>
-							<a href="global.html#getNextPowerOfTwo">getNextPowerOfTwo</a>
-						</li>
-						
-						<li>
-							<a href="global.html#hex2rgb">hex2rgb</a>
-						</li>
-						
-						<li>
-							<a href="global.html#hitTest">hitTest</a>
-						</li>
-						
-						<li>
-							<a href="global.html#rgb2hex">rgb2hex</a>
-						</li>
-						
-
-					</ul>
-				</li>
-				
 			</ul>
 		</div>
 	</div>
@@ -503,6 +521,49 @@
 */
 Phaser.Utils = {
     
+    /**
+    * Get a unit dimension from a string.
+    *
+    * @method Phaser.Utils.parseDimension
+    * @param {string|number} size - The size to parse.
+    * @param {number} dimension - The window dimension to check.
+    * @return {number} The parsed dimension.
+    */
+    parseDimension: function (size, dimension) {
+
+        var f = 0;
+        var px = 0;
+
+        if (typeof size === 'string')
+        {
+            //  %?
+            if (size.substr(-1) === '%')
+            {
+                f = parseInt(size, 10) / 100;
+
+                if (dimension === 0)
+                {
+                    px = window.innerWidth * f;
+                }
+                else
+                {
+                    px = window.innerHeight * f;
+                }
+            }
+            else
+            {
+                px = parseInt(size, 10);
+            }
+        }
+        else
+        {
+            px = size;
+        }
+
+        return px;
+
+    },
+
     /**
     * A standard Fisher-Yates Array shuffle implementation.
     * @method Phaser.Utils.shuffle
@@ -689,66 +750,6 @@ Phaser.Utils = {
 };
 
 /**
- * Converts a hex color number to an [R, G, B] array
- *
- * @method hex2rgb
- * @param hex {Number}
- */
-PIXI.hex2rgb = function(hex) {
-    return [(hex >> 16 & 0xFF) / 255, ( hex >> 8 & 0xFF) / 255, (hex & 0xFF)/ 255];
-};
-
-/**
- * Converts a color as an [R, G, B] array to a hex number
- *
- * @method rgb2hex
- * @param rgb {Array}
- */
-PIXI.rgb2hex = function(rgb) {
-    return ((rgb[0]*255 &lt;&lt; 16) + (rgb[1]*255 &lt;&lt; 8) + rgb[2]*255);
-};
-
-/**
- * Checks whether the Canvas BlendModes are supported by the current browser
- *
- * @method canUseNewCanvasBlendModes
- * @return {Boolean} whether they are supported
- */
-PIXI.canUseNewCanvasBlendModes = function()
-{
-    var canvas = document.createElement('canvas');
-    canvas.width = 1;
-    canvas.height = 1;
-    var context = canvas.getContext('2d');
-    context.fillStyle = '#000';
-    context.fillRect(0,0,1,1);
-    context.globalCompositeOperation = 'multiply';
-    context.fillStyle = '#fff';
-    context.fillRect(0,0,1,1);
-    return context.getImageData(0,0,1,1).data[0] === 0;
-};
-
-/**
- * Given a number, this function returns the closest number that is a power of two
- * this function is taken from Starling Framework as its pretty neat ;)
- *
- * @method getNextPowerOfTwo
- * @param number {Number}
- * @return {Number} the closest number that is a power of two
- */
-PIXI.getNextPowerOfTwo = function(number)
-{
-    if (number > 0 && (number & (number - 1)) === 0) // see: http://goo.gl/D9kPj
-        return number;
-    else
-    {
-        var result = 1;
-        while (result &lt; number) result &lt;&lt;= 1;
-        return result;
-    }
-};
-
-/**
 * A polyfill for Function.prototype.bind
 */
 if (typeof Function.prototype.bind != 'function') {
@@ -788,12 +789,13 @@ if (typeof Function.prototype.bind != 'function') {
 /**
 * A polyfill for Array.isArray
 */
-if (!Array.isArray) {
-  Array.isArray = function (arg) {
-    return Object.prototype.toString.call(arg) == '[object Array]';
-  };
+if (!Array.isArray)
+{
+    Array.isArray = function (arg)
+    {
+        return Object.prototype.toString.call(arg) == '[object Array]';
+    }
 }
-
 </pre>
         </article>
     </section>
@@ -815,7 +817,7 @@ if (!Array.isArray) {
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Mon Feb 24 2014 12:11:33 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Fri Mar 14 2014 06:34:17 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>
@@ -842,6 +844,9 @@ if (!Array.isArray) {
 	<script>
 		$( function () {
 			$( "#toc" ).toc( {
+			    anchorName  : function(i, heading, prefix) {
+					return $(heading).attr("id") || ( prefix + i );
+				},
 				selectors   : "h1,h2,h3,h4",
 				showAndHide : false,
 				scrollTo    : 60
