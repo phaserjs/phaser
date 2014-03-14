@@ -13,7 +13,8 @@ BasicGame.Game = function (game) {
     this.sound;		//	the sound manager - add a sound, play one, set-up markers, etc
     this.stage;		//	the game stage
     this.time;		//	the clock
-    this.tweens;	//	the tween manager
+    this.tweens;    //  the tween manager
+    this.state;	    //	the state manager
     this.world;		//	the game world
     this.particles;	//	the particle manager
     this.physics;	//	the physics manager
@@ -44,7 +45,7 @@ BasicGame.Game.prototype = {
 		//	Stop music, delete sprites, purge caches, free resources, all that good stuff.
 
 		//	Then let's go back to the main menu.
-		this.game.state.start('MainMenu');
+		this.state.start('MainMenu');
 
 	}
 

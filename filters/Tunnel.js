@@ -42,6 +42,8 @@ Phaser.Filter.Tunnel.prototype.init = function (width, height, texture) {
     this.setResolution(width, height);
     this.uniforms.iChannel0.value = texture;
 
+    texture.baseTexture._powerOf2 = true;
+
 }
 
 Object.defineProperty(Phaser.Filter.Tunnel.prototype, 'alpha', {

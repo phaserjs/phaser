@@ -12,8 +12,9 @@
 * @constructor
 * @param {object} object - Target object will be affected by this tween.
 * @param {Phaser.Game} game - Current game instance.
+* @param {Phaser.TweenManager} manager - The TweenManager responsible for looking after this Tween.
 */
-Phaser.Tween = function (object, game) {
+Phaser.Tween = function (object, game, manager) {
 
     /**
     * Reference to the target object.
@@ -31,7 +32,7 @@ Phaser.Tween = function (object, game) {
     * @property {Phaser.TweenManager} _manager - Reference to the TweenManager.
     * @private
     */
-    this._manager = this.game.tweens;
+    this._manager = manager;
 
     /**
     * @property {object} _valuesStart - Private value object.
@@ -133,6 +134,13 @@ Phaser.Tween = function (object, game) {
     this._onUpdateCallbackContext = null;
 
     /**
+    * @property {boolean} _paused - Is this Tween paused or not?
+    * @private
+    * @default
+    */
+    this._paused = false;
+
+    /**
     * @property {number} _pausedTime - Private pause timer.
     * @private
     * @default
@@ -140,16 +148,22 @@ Phaser.Tween = function (object, game) {
     this._pausedTime = 0;
 
     /**
+    * @property {boolean} _codePaused - Was the Tween paused by code or by Game focus loss?
+    * @private
+    */
+    this._codePaused = false;
+
+    /**
     * @property {boolean} pendingDelete - If this tween is ready to be deleted by the TweenManager.
     * @default
     */
     this.pendingDelete = false;
 
-    // Set all starting values present on the target object
-    for (var field in object)
-    {
-        this._valuesStart[field] = parseFloat(object[field], 10);
-    }
+    // Set all starting values present on the target object - why? this will copy loads of properties we don't need - commenting out for now
+    // for (var field in object)
+    // {
+    //     this._valuesStart[field] = parseFloat(object[field], 10);
+    // }
     
     /**
     * @property {Phaser.Signal} onStart - The onStart event is fired when the Tween begins.
@@ -264,7 +278,7 @@ Phaser.Tween.prototype = {
         for (var property in this._valuesEnd)
         {
             // check if an Array was provided as property value
-            if (this._valuesEnd[property] instanceof Array)
+            if (Array.isArray(this._valuesEnd[property]))
             {
                 if (this._valuesEnd[property].length === 0)
                 {
@@ -277,7 +291,7 @@ Phaser.Tween.prototype = {
 
             this._valuesStart[property] = this._object[property];
 
-            if ((this._valuesStart[property] instanceof Array) === false)
+            if (!Array.isArray(this._valuesStart[property]))
             {
                 this._valuesStart[property] *= 1.0; // Ensures we're using numbers, not strings
             }
@@ -287,6 +301,116 @@ Phaser.Tween.prototype = {
         }
 
         return this;
+
+    },
+
+    /**
+    * This will generate an array populated with the tweened object values from start to end.
+    * It works by running the tween simulation at the given frame rate based on the values set-up in Tween.to and similar functions.
+    * It ignores delay and repeat counts and any chained tweens. Just one play through of tween data is returned, including yoyo if set.
+    *
+    * @method Phaser.Tween#generateData
+    * @param {number} [frameRate=60] - The speed in frames per second that the data should be generated at. The higher the value, the larger the array it creates.
+    * @param {array} [data] - If given the generated data will be appended to this array, otherwise a new array will be returned.
+    * @return {array} An array of tweened values.
+    */
+    generateData: function (frameRate, data) {
+
+        if (this.game === null || this._object === null)
+        {
+            return null;
+        }
+
+        this._startTime = 0;
+
+        for (var property in this._valuesEnd)
+        {
+            // Check if an Array was provided as property value
+            if (Array.isArray(this._valuesEnd[property]))
+            {
+                if (this._valuesEnd[property].length === 0)
+                {
+                    continue;
+                }
+
+                // create a local copy of the Array with the start value at the front
+                this._valuesEnd[property] = [this._object[property]].concat(this._valuesEnd[property]);
+            }
+
+            this._valuesStart[property] = this._object[property];
+
+            if (!Array.isArray(this._valuesStart[property]))
+            {
+                this._valuesStart[property] *= 1.0; // Ensures we're using numbers, not strings
+            }
+
+            this._valuesStartRepeat[property] = this._valuesStart[property] || 0;
+        }
+
+        //  Simulate the tween. We will run for frameRate * (this._duration / 1000) (ms)
+        var time = 0;
+        var total = frameRate * (this._duration / 1000);
+        var tick = this._duration / total;
+
+        var output = [];
+
+        while (total--)
+        {
+            var property;
+
+            var elapsed = (time - this._startTime) / this._duration;
+            elapsed = elapsed > 1 ? 1 : elapsed;
+
+            var value = this._easingFunction(elapsed);
+            var blob = {};
+
+            for (property in this._valuesEnd)
+            {
+                var start = this._valuesStart[property] || 0;
+                var end = this._valuesEnd[property];
+
+                if (end instanceof Array)
+                {
+                    blob[property] = this._interpolationFunction(end, value);
+                }
+                else
+                {
+                    // Parses relative end values with start as base (e.g.: +10, -3)
+                    if (typeof(end) === 'string')
+                    {
+                        end = start + parseFloat(end, 10);
+                    }
+
+                    // protect against non numeric properties.
+                    if (typeof(end) === 'number')
+                    {
+                        blob[property] = start + ( end - start ) * value;
+                    }
+                }
+            }
+
+            output.push(blob);
+
+            time += tick;
+        }
+
+        if (this._yoyo)
+        {
+            var reversed = output.slice();
+            reversed.reverse();
+            output = output.concat(reversed);
+        }
+
+        if (typeof data !== 'undefined')
+        {
+            data = data.concat(output);
+
+            return data;
+        }
+        else
+        {
+            return output;
+        }
 
     },
 
@@ -436,8 +560,24 @@ Phaser.Tween.prototype = {
     */
     pause: function () {
 
+        this._codePaused = true;
         this._paused = true;
         this._pausedTime = this.game.time.now;
+
+    },
+
+    /**
+    * This is called by the core Game loop. Do not call it directly, instead use Tween.pause.
+    * @method Phaser.Tween#_pause
+    * @private
+    */
+    _pause: function () {
+        
+        if (!this._codePaused)
+        {
+            this._paused = true;
+            this._pausedTime = this.game.time.now;
+        }
 
     },
 
@@ -448,8 +588,32 @@ Phaser.Tween.prototype = {
     */
     resume: function () {
 
-        this._paused = false;
-        this._startTime += (this.game.time.now - this._pausedTime);
+        if (this._paused)
+        {
+            this._paused = false;
+            this._codePaused = false;
+
+            this._startTime += (this.game.time.now - this._pausedTime);
+        }
+
+    },
+
+    /**
+    * This is called by the core Game loop. Do not call it directly, instead use Tween.pause.
+    * @method Phaser.Tween#_resume
+    * @private
+    */
+    _resume: function () {
+
+        if (this._codePaused)
+        {
+            return;
+        }
+        else
+        {
+            this._startTime += this.game.time.pauseDuration;
+            this._paused = false;
+        }
 
     },
 

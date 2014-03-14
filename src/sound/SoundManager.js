@@ -27,6 +27,13 @@ Phaser.SoundManager = function (game) {
     this.onSoundDecode = new Phaser.Signal();
     
     /**
+    * @property {boolean} _codeMuted - Internal mute tracking var.
+    * @private
+    * @default
+    */
+    this._codeMuted = false;
+
+    /**
     * @property {boolean} _muted - Internal mute tracking var.
     * @private
     * @default
@@ -352,18 +359,78 @@ Phaser.SoundManager.prototype = {
     * @param {string} key - Asset key for the sound.
     * @param {number} [volume=1] - Default value for the volume.
     * @param {boolean} [loop=false] - Whether or not the sound will loop.
-    * @param {boolean} [destroyOnComplete=false] - If true the Sound will destroy itself once it has finished playing, or is stopped.
     * @return {Phaser.Sound} The new sound instance.
     */
-    play: function (key, volume, loop, destroyOnComplete) {
-
-        if (typeof destroyOnComplete == 'undefined') { destroyOnComplete = false; }
+    play: function (key, volume, loop) {
 
         var sound = this.add(key, volume, loop);
 
         sound.play();
 
         return sound;
+
+    },
+
+    /**
+    * Internal mute handler called automatically by the Sound.mute setter.
+    *
+    * @method Phaser.SoundManager#setMute
+    * @private
+    */
+    setMute: function () {
+
+        if (this._muted)
+        {
+            return;
+        }
+
+        this._muted = true;
+
+        if (this.usingWebAudio)
+        {
+            this._muteVolume = this.masterGain.gain.value;
+            this.masterGain.gain.value = 0;
+        }
+
+        //  Loop through sounds
+        for (var i = 0; i < this._sounds.length; i++)
+        {
+            if (this._sounds[i].usingAudioTag)
+            {
+                this._sounds[i].mute = true;
+            }
+        }
+
+    },
+
+    /**
+    * Internal mute handler called automatically by the Sound.mute setter.
+    *
+    * @method Phaser.SoundManager#unsetMute
+    * @private
+    */
+    unsetMute: function () {
+
+        if (!this._muted || this._codeMuted)
+        {
+            return;
+        }
+
+        this._muted = false;
+
+        if (this.usingWebAudio)
+        {
+            this.masterGain.gain.value = this._muteVolume;
+        }
+
+        //  Loop through sounds
+        for (var i = 0; i < this._sounds.length; i++)
+        {
+            if (this._sounds[i].usingAudioTag)
+            {
+                this._sounds[i].mute = false;
+            }
+        }
 
     }
 
@@ -394,22 +461,8 @@ Object.defineProperty(Phaser.SoundManager.prototype, "mute", {
                 return;
             }
 
-            this._muted = true;
-            
-            if (this.usingWebAudio)
-            {
-                this._muteVolume = this.masterGain.gain.value;
-                this.masterGain.gain.value = 0;
-            }
-
-            //  Loop through sounds
-            for (var i = 0; i < this._sounds.length; i++)
-            {
-                if (this._sounds[i].usingAudioTag)
-                {
-                    this._sounds[i].mute = true;
-                }
-            }
+            this._codeMuted = true;
+            this.setMute();
         }
         else
         {
@@ -418,21 +471,8 @@ Object.defineProperty(Phaser.SoundManager.prototype, "mute", {
                 return;
             }
 
-            this._muted = false;
-
-            if (this.usingWebAudio)
-            {
-                this.masterGain.gain.value = this._muteVolume;
-            }
-
-            //  Loop through sounds
-            for (var i = 0; i < this._sounds.length; i++)
-            {
-                if (this._sounds[i].usingAudioTag)
-                {
-                    this._sounds[i].mute = false;
-                }
-            }
+            this._codeMuted = false;
+            this.unsetMute();
         }
     }
 
@@ -459,21 +499,21 @@ Object.defineProperty(Phaser.SoundManager.prototype, "volume", {
 
     set: function (value) {
 
-        value = this.game.math.clamp(value, 1, 0);
-
         this._volume = value;
 
         if (this.usingWebAudio)
         {
             this.masterGain.gain.value = value;
         }
-
-        //  Loop through the sound cache and change the volume of all html audio tags
-        for (var i = 0; i < this._sounds.length; i++)
+        else
         {
-            if (this._sounds[i].usingAudioTag)
+            //  Loop through the sound cache and change the volume of all html audio tags
+            for (var i = 0; i < this._sounds.length; i++)
             {
-                this._sounds[i].volume = this._sounds[i].volume * value;
+                if (this._sounds[i].usingAudioTag)
+                {
+                    this._sounds[i].volume = this._sounds[i].volume * value;
+                }
             }
         }
         

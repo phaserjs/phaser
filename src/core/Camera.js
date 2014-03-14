@@ -90,6 +90,11 @@ Phaser.Camera = function (game, id, x, y, width, height) {
     * @property {PIXI.DisplayObject} displayObject - The display object to which all game objects are added. Set by World.boot
     */
     this.displayObject = null;
+
+    /**
+    * @property {Phaser.Point} scale - The scale of the display object to which all game objects are added. Set by World.boot
+    */
+    this.scale = null;
     
 };
 
@@ -122,8 +127,8 @@ Phaser.Camera.prototype = {
     /**
     * Tells this camera which sprite to follow.
     * @method Phaser.Camera#follow
-    * @param {Phaser.Sprite} target - The object you want the camera to track. Set to null to not follow anything.
-    * @param {number} [style] Leverage one of the existing "deadzone" presets. If you use a custom deadzone, ignore this parameter and manually specify the deadzone after calling follow().
+    * @param {Phaser.Sprite|Phaser.Image|Phaser.Text} target - The object you want the camera to track. Set to null to not follow anything.
+    * @param {number} [style] - Leverage one of the existing "deadzone" presets. If you use a custom deadzone, ignore this parameter and manually specify the deadzone after calling follow().
     */
     follow: function (target, style) {
 
@@ -270,25 +275,25 @@ Phaser.Camera.prototype = {
         this.atLimit.y = false;
 
         //  Make sure we didn't go outside the cameras bounds
-        if (this.view.x < this.bounds.x)
+        if (this.view.x <= this.bounds.x)
         {
             this.atLimit.x = true;
             this.view.x = this.bounds.x;
         }
 
-        if (this.view.right > this.bounds.right)
+        if (this.view.right >= this.bounds.right)
         {
             this.atLimit.x = true;
             this.view.x = this.bounds.right - this.width;
         }
 
-        if (this.view.y < this.bounds.top)
+        if (this.view.y <= this.bounds.top)
         {
             this.atLimit.y = true;
             this.view.y = this.bounds.top;
         }
 
-        if (this.view.bottom > this.bounds.bottom)
+        if (this.view.bottom >= this.bounds.bottom)
         {
             this.atLimit.y = true;
             this.view.y = this.bounds.bottom - this.height;
@@ -329,6 +334,19 @@ Phaser.Camera.prototype = {
 
         this.view.width = width;
         this.view.height = height;
+
+    },
+
+    /**
+    * Resets the camera back to 0,0 and un-follows any object it may have been tracking.
+    * 
+    * @method Phaser.Camera#reset
+    */
+    reset: function () {
+
+        this.target = null;
+        this.view.x = 0;
+        this.view.y = 0;
 
     }
 

@@ -101,6 +101,7 @@ Phaser.AnimationManager.prototype = {
             return;
         }
 
+        frames = frames || [];
         frameRate = frameRate || 60;
 
         if (typeof loop === 'undefined') { loop = false; }
@@ -134,6 +135,12 @@ Phaser.AnimationManager.prototype = {
         this.currentAnim = this._anims[name];
         this.currentFrame = this.currentAnim.currentFrame;
         this.sprite.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
+
+        if (this.sprite.__tilePattern)
+        {
+            this.__tilePattern = false;
+            this.tilingTexture = false;
+        }
 
         return this._anims[name];
 
@@ -245,7 +252,7 @@ Phaser.AnimationManager.prototype = {
     */
     update: function () {
 
-        if (this.updateIfVisible && this.sprite.visible === false)
+        if (this.updateIfVisible && !this.sprite.visible)
         {
             return false;
         }
@@ -253,7 +260,6 @@ Phaser.AnimationManager.prototype = {
         if (this.currentAnim && this.currentAnim.update() === true)
         {
             this.currentFrame = this.currentAnim.currentFrame;
-            this.sprite.currentFrame = this.currentFrame;
             return true;
         }
 
@@ -270,7 +276,7 @@ Phaser.AnimationManager.prototype = {
     */
     getAnimation: function (name) {
 
-        if (typeof name == 'string')
+        if (typeof name === 'string')
         {
             if (this._anims[name])
             {
@@ -289,8 +295,13 @@ Phaser.AnimationManager.prototype = {
     */
     refreshFrame: function () {
 
-        this.sprite.currentFrame = this.currentFrame;
         this.sprite.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
+
+        if (this.sprite.__tilePattern)
+        {
+            this.__tilePattern = false;
+            this.tilingTexture = false;
+        }
 
     },
 
@@ -387,9 +398,18 @@ Object.defineProperty(Phaser.AnimationManager.prototype, 'frame', {
         if (typeof value === 'number' && this._frameData && this._frameData.getFrame(value) !== null)
         {
             this.currentFrame = this._frameData.getFrame(value);
-            this._frameIndex = value;
-            this.sprite.currentFrame = this.currentFrame;
-            this.sprite.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
+    
+            if (this.currentFrame)
+            {
+                this._frameIndex = value;
+                this.sprite.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
+        
+                if (this.sprite.__tilePattern)
+                {
+                    this.__tilePattern = false;
+                    this.tilingTexture = false;
+                }
+            }
         }
 
     }
@@ -416,9 +436,18 @@ Object.defineProperty(Phaser.AnimationManager.prototype, 'frameName', {
         if (typeof value === 'string' && this._frameData && this._frameData.getFrameByName(value) !== null)
         {
             this.currentFrame = this._frameData.getFrameByName(value);
-            this._frameIndex = this.currentFrame.index;
-            this.sprite.currentFrame = this.currentFrame;
-            this.sprite.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
+
+            if (this.currentFrame)
+            {
+                this._frameIndex = this.currentFrame.index;
+                this.sprite.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
+        
+                if (this.sprite.__tilePattern)
+                {
+                    this.__tilePattern = false;
+                    this.tilingTexture = false;
+                }
+            }
         }
         else
         {

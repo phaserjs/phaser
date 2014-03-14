@@ -91,10 +91,6 @@
 						</li>
 						
 						<li>
-							<a href="Phaser.DOMSprite.html">DOMSprite</a>
-						</li>
-						
-						<li>
 							<a href="Phaser.Easing.html">Easing</a>
 						</li>
 						
@@ -143,6 +139,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.Ellipse.html">Ellipse</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Events.html">Events</a>
 						</li>
 						
@@ -163,6 +163,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.GameObjectCreator.html">GameObjectCreator</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.GameObjectFactory.html">GameObjectFactory</a>
 						</li>
 						
@@ -180,6 +184,10 @@
 						
 						<li>
 							<a href="Phaser.Group.html">Group</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Image.html">Image</a>
 						</li>
 						
 						<li>
@@ -251,6 +259,82 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.Physics.Ninja.html">Ninja</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.Ninja.AABB.html">AABB</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.Ninja.Body.html">Body</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.Ninja.Circle.html">Circle</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.Ninja.Tile.html">Tile</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.html">P2</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.Body.html">Body</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.BodyDebug.html">BodyDebug</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.CollisionGroup.html">CollisionGroup</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.ContactMaterial.html">ContactMaterial</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.DistanceConstraint.html">DistanceConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.GearConstraint.html">GearConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.InversePointProxy.html">InversePointProxy</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.LockConstraint.html">LockConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.Material.html">Material</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.PointProxy.html">PointProxy</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.PrismaticConstraint.html">PrismaticConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.RevoluteConstraint.html">RevoluteConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.Spring.html">Spring</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Plugin.html">Plugin</a>
 						</li>
 						
@@ -291,6 +375,14 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.RetroFont.html">RetroFont</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.ScaleManager.html">ScaleManager</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Signal.html">Signal</a>
 						</li>
 						
@@ -311,11 +403,11 @@
 						</li>
 						
 						<li>
-							<a href="Phaser.Stage.html">Stage</a>
+							<a href="Phaser.SpriteBatch.html">SpriteBatch</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.StageScaleMode.html">StageScaleMode</a>
+							<a href="Phaser.Stage.html">Stage</a>
 						</li>
 						
 						<li>
@@ -392,20 +484,6 @@
 						
 						<li>
 							<a href="SignalBinding.html">SignalBinding</a>
-						</li>
-						
-
-					</ul>
-				</li>
-				
-				<li class="dropdown">
-					<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b
-						class="caret"></b></a>
-
-					<ul class="dropdown-menu ">
-						
-						<li>
-							<a href="global.html#SAT">SAT</a>
 						</li>
 						
 
@@ -767,7 +845,18 @@ Phaser.Math = {
     * @return {number}
     */
     angleBetween: function (x1, y1, x2, y2) {
-        return Math.atan2(y2 - y1, x2 - x1);
+        return Math.atan2(x2 - x1, y2 - y1);
+    },
+
+    /**
+    * Find the angle of a segment from (point1.x, point1.y) -> (point2.x, point2.y).
+    * @method Phaser.Math#angleBetweenPoints
+    * @param {Phaser.Point} point1
+    * @param {Phaser.Point} point2
+    * @return {number}
+    */
+    angleBetweenPoints: function (point1, point2) {
+        return Math.atan2(point2.x - point1.x, point2.y - point1.y);
     },
 
     /**
@@ -1006,7 +1095,7 @@ Phaser.Math = {
 
     /**
     * Adds value to amount and ensures that the result always stays between 0 and max, by wrapping the value around.
-    * &lt;p>Values must be positive integers, and are passed through Math.abs&lt;/p>
+    * Values must be positive integers, and are passed through Math.abs.
     *
     * @method Phaser.Math#wrapValue
     * @param {number} value - The value to add the amount to.
@@ -1066,27 +1155,6 @@ Phaser.Math = {
         {
             return true;
         }
-
-    },
-
-    /**
-    * Significantly faster version of Math.max
-    * See http://jsperf.com/math-s-min-max-vs-homemade/5
-    *
-    * @method Phaser.Math#max
-    * @return {number} The highest value from those given.
-    */
-    max: function () {
-
-        for (var i = 1, max = 0, len = arguments.length; i &lt; len; i++)
-        {
-            if (arguments[max] &lt; arguments[i])
-            {
-                max = i;
-            }
-        }
-        
-        return arguments[max];
 
     },
 
@@ -1230,7 +1298,6 @@ Phaser.Math = {
     * @param {number} angle - The angle value to check. Must be between -180 and +180.
     * @param {number} min - The minimum angle that is allowed (must be -180 or greater).
     * @param {number} max - The maximum angle that is allowed (must be 180 or less).
-    *
     * @return {number} The new angle value, returns the same as the input angle if it was within bounds
     */
     angleLimit: function (angle, min, max) {
@@ -1629,12 +1696,11 @@ Phaser.Math = {
     * Linear mapping from range &lt;a1, a2> to range &lt;b1, b2>
     * 
     * @method Phaser.Math#mapLinear
-    * @param {number} x
-    * @param {number} a1
-    * @param {number} a1
-    * @param {number} a2
-    * @param {number} b1
-    * @param {number} b2
+    * @param {number} x the value to map
+    * @param {number} a1 first endpoint of the range &lt;a1, a2>
+    * @param {number} a2 final endpoint of the range &lt;a1, a2>
+    * @param {number} b1 first endpoint of the range &lt;b1, b2>
+    * @param {number} b2 final endpoint of the range  &lt;b1, b2>
     * @return {number}
     */
     mapLinear: function ( x, a1, a2, b1, b2 ) {
@@ -1769,7 +1835,7 @@ Phaser.Math = {
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Mon Feb 24 2014 01:12:21 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Fri Mar 14 2014 06:34:17 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>
@@ -1796,6 +1862,9 @@ Phaser.Math = {
 	<script>
 		$( function () {
 			$( "#toc" ).toc( {
+			    anchorName  : function(i, heading, prefix) {
+					return $(heading).attr("id") || ( prefix + i );
+				},
 				selectors   : "h1,h2,h3,h4",
 				showAndHide : false,
 				scrollTo    : 60

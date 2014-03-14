@@ -46,9 +46,71 @@ $.fn.toc = function(options) {
     highlightOnScroll();
   }
 
+  //Perform search and hide unmatched elements
+  var tocList;
+  var treeObject = {};
+
+  //Create the tree
+  var createTree = function(ul) {
+    var prevLevel = {level: -1, index: -1, parent: -1, val: ''};
+    var levelParent = {0: -1};
+    tocList = ul.children("li");
+    tocList.each(function(i) {
+      var me = $(this).removeClass("toc-active");
+      var currentLevel = parseInt(me.attr('class').trim().slice(-1));
+      if (currentLevel > prevLevel.level) {
+        currentParent = prevLevel.index;
+      } else if (currentLevel == prevLevel.level) {
+        currentParent = prevLevel.parent;
+      } else if (currentLevel < prevLevel.level) {
+        currentParent = levelParent[currentLevel] || prevLevel.parent;
+      }
+      levelParent[currentLevel] = currentParent;
+      var currentVal = $('a', this).text().trim().toLowerCase();
+      treeObject[i] = {
+        val: currentVal,
+        level: currentLevel,
+        parent: currentParent
+      }
+      prevLevel = {index: i, val: currentVal, level: currentLevel, parent: currentParent};
+    });
+  }
+
+  //Show the parents recursively
+  var showParents = function(key) {
+    var me = treeObject[key];
+    if (me.parent > -1) {
+      $(tocList[me.parent]).show();
+      showParents(me.parent);
+    }
+  };
+
+  //Perform the search
+  var search = function(searchVal) {
+    searchVal = searchVal.trim().toLowerCase();
+    for (var key in treeObject) {
+      var me = treeObject[key];
+      if (me.val.indexOf(searchVal) !== -1 || searchVal.length == 0) {
+        $(tocList[key]).show();
+        if ($(tocList[me.parent]).is(":hidden")) {
+         showParents(key);
+        }
+      } else {
+        $(tocList[key]).hide();
+      }
+    }
+  }
+
   return this.each(function() {
     //build TOC
     var el = $(this);
+    var searchVal = '';
+    var searchForm = $("<form/>", {class: "form-search quick-search"})
+      .append($("<input/>", {type: "text", class: "input-medium search-query", placeholder: "Quick Search"}))
+      .append($("<i/>", {class: "icon icon-search search-icon"}));
+    searchForm.css({'position': 'fixed', 'top': '45px', 'padding-right': '20px'});
+    $(".search-icon", searchForm).css({'marginLeft': '-20px', 'marginTop': '3px'});
+
     var ul = $('<ul/>');
     headings.each(function(i, heading) {
       var $h = $(heading);
@@ -73,6 +135,53 @@ $.fn.toc = function(options) {
       ul.append(li);
     });
     el.html(ul);
+    el.parent().prepend(searchForm);
+    el.css({'top': '80px'});
+
+    //create the tree
+    createTree(ul)
+    //set intent timer
+    var intentTimer;
+    var accumulatedTime = 0;
+    //bind quick search
+    el.siblings('.quick-search').children('.search-query').bind('keyup', function(e) {
+      if (accumulatedTime < 1000) {
+        window.clearTimeout(intentTimer);
+      }
+      var me = $(this);
+
+      if (me.val().length > 0) {
+        $(".search-icon").removeClass("icon-search").addClass("icon-remove-circle").css('cursor', 'pointer');
+      } else {
+        $(".search-icon").removeClass("icon-remove-circle").addClass("icon-search").css('cursor', 'auto');
+      }
+
+      var intentTime = 500 - (me.val().length * 10);
+      accumulatedTime += intentTime;
+      intentTimer = window.setTimeout(function() {
+        if (searchVal == me.val()) {
+          return false;
+        }
+        searchVal = me.val();
+        search(me.val());
+        accumulatedTime = 0;
+      }, intentTime);
+    });
+
+    // Make text clear icon work
+    $(".search-icon").click(function(e) {
+      if($(this).hasClass('icon-remove-circle')) {
+        $('.search-query').val('').trigger('keyup');
+      } else {
+        $('.search-query').focus();
+      }
+    });
+
+    //set positions of search box and TOC
+    var navHeight = $(".navbar").height();
+    var searchHeight = $(".quick-search").height();
+    $(".quick-search").css({'top': navHeight + 10 + 'px', 'position': 'fixed'});
+    el.css('top', navHeight + searchHeight + 15 + 'px');
   });
 };
 

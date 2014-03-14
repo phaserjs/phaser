@@ -91,10 +91,6 @@
 						</li>
 						
 						<li>
-							<a href="Phaser.DOMSprite.html">DOMSprite</a>
-						</li>
-						
-						<li>
 							<a href="Phaser.Easing.html">Easing</a>
 						</li>
 						
@@ -143,6 +139,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.Ellipse.html">Ellipse</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Events.html">Events</a>
 						</li>
 						
@@ -163,6 +163,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.GameObjectCreator.html">GameObjectCreator</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.GameObjectFactory.html">GameObjectFactory</a>
 						</li>
 						
@@ -180,6 +184,10 @@
 						
 						<li>
 							<a href="Phaser.Group.html">Group</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Image.html">Image</a>
 						</li>
 						
 						<li>
@@ -251,6 +259,82 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.Physics.Ninja.html">Ninja</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.Ninja.AABB.html">AABB</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.Ninja.Body.html">Body</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.Ninja.Circle.html">Circle</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.Ninja.Tile.html">Tile</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.html">P2</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.Body.html">Body</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.BodyDebug.html">BodyDebug</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.CollisionGroup.html">CollisionGroup</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.ContactMaterial.html">ContactMaterial</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.DistanceConstraint.html">DistanceConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.GearConstraint.html">GearConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.InversePointProxy.html">InversePointProxy</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.LockConstraint.html">LockConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.Material.html">Material</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.PointProxy.html">PointProxy</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.PrismaticConstraint.html">PrismaticConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.RevoluteConstraint.html">RevoluteConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.Spring.html">Spring</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Plugin.html">Plugin</a>
 						</li>
 						
@@ -291,6 +375,14 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.RetroFont.html">RetroFont</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.ScaleManager.html">ScaleManager</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Signal.html">Signal</a>
 						</li>
 						
@@ -311,11 +403,11 @@
 						</li>
 						
 						<li>
-							<a href="Phaser.Stage.html">Stage</a>
+							<a href="Phaser.SpriteBatch.html">SpriteBatch</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.StageScaleMode.html">StageScaleMode</a>
+							<a href="Phaser.Stage.html">Stage</a>
 						</li>
 						
 						<li>
@@ -398,20 +490,6 @@
 					</ul>
 				</li>
 				
-				<li class="dropdown">
-					<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b
-						class="caret"></b></a>
-
-					<ul class="dropdown-menu ">
-						
-						<li>
-							<a href="global.html#SAT">SAT</a>
-						</li>
-						
-
-					</ul>
-				</li>
-				
 			</ul>
 		</div>
 	</div>
@@ -441,9 +519,12 @@
 * @class Phaser.RequestAnimationFrame 
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
+* @param {boolean} [forceSetTimeOut=false] - Tell Phaser to use setTimeOut even if raf is available.
 */
-Phaser.RequestAnimationFrame = function(game) {
+Phaser.RequestAnimationFrame = function(game, forceSetTimeOut) {
     
+    if (typeof forceSetTimeOut === 'undefined') { forceSetTimeOut = false; }
+
     /**
     * @property {Phaser.Game} game - The currently running game.
     */
@@ -454,6 +535,11 @@ Phaser.RequestAnimationFrame = function(game) {
     * @default
     */
     this.isRunning = false;
+
+    /**
+    * @property {boolean} forceSetTimeOut - Tell Phaser to use setTimeOut even if raf is available.
+    */
+    this.forceSetTimeOut = forceSetTimeOut;
 
     var vendors = [
         'ms',
@@ -500,7 +586,7 @@ Phaser.RequestAnimationFrame.prototype = {
 
         var _this = this;
 
-        if (!window.requestAnimationFrame)
+        if (!window.requestAnimationFrame || this.forceSetTimeOut)
         {
             this._isSetTimeOut = true;
 
@@ -526,11 +612,10 @@ Phaser.RequestAnimationFrame.prototype = {
     /**
     * The update method for the requestAnimationFrame
     * @method Phaser.RequestAnimationFrame#updateRAF    
-    * @param {number} time - A timestamp, either from RAF or setTimeOut
     */
-    updateRAF: function (time) {
+    updateRAF: function () {
 
-        this.game.update(time);
+        this.game.update(Date.now());
 
         this._timeOutID = window.requestAnimationFrame(this._onLoop);
 
@@ -609,7 +694,7 @@ Phaser.RequestAnimationFrame.prototype.constructor = Phaser.RequestAnimationFram
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Mon Feb 24 2014 01:12:21 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Fri Mar 14 2014 06:34:18 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>
@@ -636,6 +721,9 @@ Phaser.RequestAnimationFrame.prototype.constructor = Phaser.RequestAnimationFram
 	<script>
 		$( function () {
 			$( "#toc" ).toc( {
+			    anchorName  : function(i, heading, prefix) {
+					return $(heading).attr("id") || ( prefix + i );
+				},
 				selectors   : "h1,h2,h3,h4",
 				showAndHide : false,
 				scrollTo    : 60

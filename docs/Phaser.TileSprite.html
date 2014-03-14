@@ -91,10 +91,6 @@
 						</li>
 						
 						<li>
-							<a href="Phaser.DOMSprite.html">DOMSprite</a>
-						</li>
-						
-						<li>
 							<a href="Phaser.Easing.html">Easing</a>
 						</li>
 						
@@ -143,6 +139,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.Ellipse.html">Ellipse</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Events.html">Events</a>
 						</li>
 						
@@ -163,6 +163,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.GameObjectCreator.html">GameObjectCreator</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.GameObjectFactory.html">GameObjectFactory</a>
 						</li>
 						
@@ -180,6 +184,10 @@
 						
 						<li>
 							<a href="Phaser.Group.html">Group</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Image.html">Image</a>
 						</li>
 						
 						<li>
@@ -251,6 +259,82 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.Physics.Ninja.html">Ninja</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.Ninja.AABB.html">AABB</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.Ninja.Body.html">Body</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.Ninja.Circle.html">Circle</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.Ninja.Tile.html">Tile</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.html">P2</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.Body.html">Body</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.BodyDebug.html">BodyDebug</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.CollisionGroup.html">CollisionGroup</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.ContactMaterial.html">ContactMaterial</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.DistanceConstraint.html">DistanceConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.GearConstraint.html">GearConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.InversePointProxy.html">InversePointProxy</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.LockConstraint.html">LockConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.Material.html">Material</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.PointProxy.html">PointProxy</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.PrismaticConstraint.html">PrismaticConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.RevoluteConstraint.html">RevoluteConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.Spring.html">Spring</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Plugin.html">Plugin</a>
 						</li>
 						
@@ -291,6 +375,14 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.RetroFont.html">RetroFont</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.ScaleManager.html">ScaleManager</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Signal.html">Signal</a>
 						</li>
 						
@@ -311,11 +403,11 @@
 						</li>
 						
 						<li>
-							<a href="Phaser.Stage.html">Stage</a>
+							<a href="Phaser.SpriteBatch.html">SpriteBatch</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.StageScaleMode.html">StageScaleMode</a>
+							<a href="Phaser.Stage.html">Stage</a>
 						</li>
 						
 						<li>
@@ -398,20 +490,6 @@
 					</ul>
 				</li>
 				
-				<li class="dropdown">
-					<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b
-						class="caret"></b></a>
-
-					<ul class="dropdown-menu ">
-						
-						<li>
-							<a href="global.html#SAT">SAT</a>
-						</li>
-						
-
-					</ul>
-				</li>
-				
 			</ul>
 		</div>
 	</div>
@@ -435,7 +513,7 @@
     TileSprite
     </h2>
     
-        <div class="class-description"><p>Phaser.Tilemap</p></div>
+        <div class="class-description"><p>Phaser.TileSprite</p></div>
     
 </header>
 
@@ -446,7 +524,7 @@
     
         
 <dt>
-    <h4 class="name" id="TileSprite"><span class="type-signature"></span>new TileSprite<span class="signature">(game, x, y, width, height, key)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="TileSprite"><span class="type-signature"></span>new TileSprite<span class="signature">(game, x, y, width, height, key, frame)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -454,7 +532,8 @@
     
     
     <div class="description">
-        <p>A TileSprite is a Sprite whos texture is set to repeat and can be scrolled. As it scrolls the texture repeats (wraps) on the edges.</p>
+        <p>A TileSprite is a Sprite that has a repeating texture. The texture can be scrolled and scaled and will automatically wrap on the edges as it does so.
+Please note that TileSprites, as with normal Sprites, have no input handler or physics bodies by default. Both need enabling.</p>
     </div>
     
 
@@ -504,7 +583,7 @@
 
             
 
-            <td class="description last"><p>Current game instance.</p></td>
+            <td class="description last"><p>A reference to the currently running game.</p></td>
         </tr>
 
 	
@@ -527,7 +606,7 @@
 
             
 
-            <td class="description last"><p>X position of the new tileSprite.</p></td>
+            <td class="description last"><p>The x coordinate (in world space) to position the TileSprite at.</p></td>
         </tr>
 
 	
@@ -550,7 +629,7 @@
 
             
 
-            <td class="description last"><p>Y position of the new tileSprite.</p></td>
+            <td class="description last"><p>The y coordinate (in world space) to position the TileSprite at.</p></td>
         </tr>
 
 	
@@ -573,7 +652,7 @@
 
             
 
-            <td class="description last"><p>the width of the tilesprite.</p></td>
+            <td class="description last"><p>The width of the TileSprite.</p></td>
         </tr>
 
 	
@@ -596,7 +675,7 @@
 
             
 
-            <td class="description last"><p>the height of the tilesprite.</p></td>
+            <td class="description last"><p>The height of the TileSprite.</p></td>
         </tr>
 
 	
@@ -615,6 +694,9 @@
 <span class="param-type"><a href="Phaser.RenderTexture.html">Phaser.RenderTexture</a></span>
 |
 
+<span class="param-type"><a href="Phaser.BitmapData.html">Phaser.BitmapData</a></span>
+|
+
 <span class="param-type">PIXI.Texture</span>
 
 
@@ -625,7 +707,33 @@
 
             
 
-            <td class="description last"><p>This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.</p></td>
+            <td class="description last"><p>This is the image or texture used by the TileSprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>frame</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+|
+
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>If this TileSprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.</p></td>
         </tr>
 
 	
@@ -657,7 +765,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-19">line 19</a>
+        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-21">line 21</a>
     </li></ul></dd>
     
 
@@ -685,12 +793,6 @@
     
     </div>
 
-    
-        <h3 class="subsection-title">Extends</h3>
-
-        <ul>
-            <li><a href="Phaser.Sprite.html">Phaser.Sprite</a></li>
-        </ul>
     
 
     
@@ -707,230 +809,6 @@
         <dl>
             
 <dt>
-    <h4 class="name" id="alive"><span class="type-signature"></span>alive<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>alive</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>This is a handy little var your game can use to determine if a sprite is alive or not, it doesn't effect rendering.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Sprite.html#alive">Phaser.Sprite#alive</a>
-    </li></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>true</li></ul></dd>
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-45">line 45</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="anchor"><span class="type-signature"></span>anchor<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>The anchor sets the origin point of the texture.
-The default is 0,0 this means the textures origin is the top left 
-Setting than anchor to 0.5,0.5 means the textures origin is centered
-Setting the anchor to 1,1 would mean the textures origin points will be the bottom right</p>
-    </div>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>anchor</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Phaser.Point.html">Phaser.Point</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The anchor around which rotation and scaling takes place.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Sprite.html#anchor">Phaser.Sprite#anchor</a>
-    </li></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-172">line 172</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
     <h4 class="name" id="angle"><span class="type-signature"></span>angle<span class="type-signature"></span></h4>
     
     
@@ -940,7 +818,7 @@ Setting the anchor to 1,1 would mean the textures origin points will be the bott
     <div class="description">
         <p>Indicates the rotation of the Sprite, in degrees, from its original orientation. Values from 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation.
 Values outside this range are added to or subtracted from 360 to obtain a value within the range. For example, the statement player.angle = 450 is the same as player.angle = 90.
-If you wish to work in radians instead of degrees use the property Sprite.rotation instead.</p>
+If you wish to work in radians instead of degrees use the property Sprite.rotation instead. Working in radians is also a little faster as it doesn't have to convert the angle.</p>
     </div>
     
     
@@ -992,7 +870,7 @@ If you wish to work in radians instead of degrees use the property Sprite.rotati
 
             
 
-            <td class="description last"><p>Gets or sets the Sprites angle of rotation in degrees.</p></td>
+            <td class="description last"><p>The angle of this Sprite in degrees.</p></td>
         </tr>
 
 	
@@ -1021,7 +899,7 @@ If you wish to work in radians instead of degrees use the property Sprite.rotati
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-60">line 60</a>
+        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-397">line 397</a>
     </li></ul></dd>
     
 
@@ -1109,11 +987,6 @@ If you wish to work in radians instead of degrees use the property Sprite.rotati
     
 
     
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Sprite.html#animations">Phaser.Sprite#animations</a>
-    </li></dd>
-    
 
     
 
@@ -1128,122 +1001,7 @@ If you wish to work in radians instead of degrees use the property Sprite.rotati
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-86">line 86</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="autoCull"><span class="type-signature"></span>autoCull<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Should this Sprite be automatically culled if out of range of the camera?
-A culled sprite has its renderable property set to 'false'.</p>
-    </div>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>autoCull</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>A flag indicating if the Sprite should be automatically camera culled or not.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Sprite.html#autoCull">Phaser.Sprite#autoCull</a>
-    </li></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-199">line 199</a>
+        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-60">line 60</a>
     </li></ul></dd>
     
 
@@ -1266,6 +1024,14 @@ A culled sprite has its renderable property set to 'false'.</p>
     
 </dt>
 <dd>
+    
+    <div class="description">
+        <p>By default Sprites won't add themselves to any physics system and their physics body will be <code>null</code>.
+To enable them for physics you need to call <code>game.physics.enable(sprite, system)</code> where <code>sprite</code> is this object 
+and <code>system</code> is the Physics system you want to use to manage this body. Once enabled you can access all physics related properties via <code>Sprite.body</code>.</p>
+<p>Important: Enabling a Sprite for P2 or Ninja physics will automatically set <code>Sprite.anchor</code> to 0.5 so the physics body is centered on the Sprite.
+If you need a different result then adjust or re-create the Body shape offsets manually, and/or reset the anchor after enabling physics.</p>
+    </div>
     
     
     
@@ -1307,333 +1073,15 @@ A culled sprite has its renderable property set to 'false'.</p>
             
                 
 <span class="param-type"><a href="Phaser.Physics.Arcade.Body.html">Phaser.Physics.Arcade.Body</a></span>
+|
 
+<span class="param-type"><a href="Phaser.Physics.P2.Body.html">Phaser.Physics.P2.Body</a></span>
+|
 
-            
-            </td>
+<span class="param-type"><a href="Phaser.Physics.Ninja.Body.html">Phaser.Physics.Ninja.Body</a></span>
+|
 
-            
-
-            
-
-            <td class="description last"><p>By default Sprites have a Phaser.Physics Body attached to them. You can operate physics actions via this property, or null it to skip all physics updates.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Sprite.html#body">Phaser.Sprite#body</a>
-    </li></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-317">line 317</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="bottomLeft"><span class="type-signature"></span>bottomLeft<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>bottomLeft</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Phaser.Point.html">Phaser.Point</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>A Point containing the bottom left coordinate of the Sprite. Takes rotation and scale into account.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Sprite.html#bottomLeft">Phaser.Sprite#bottomLeft</a>
-    </li></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-304">line 304</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="bottomRight"><span class="type-signature"></span>bottomRight<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>bottomRight</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Phaser.Point.html">Phaser.Point</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>A Point containing the bottom right coordinate of the Sprite. Takes rotation and scale into account.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Sprite.html#bottomRight">Phaser.Sprite#bottomRight</a>
-    </li></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-299">line 299</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="bounds"><span class="type-signature"></span>bounds<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>This Rectangle object fully encompasses the Sprite and is updated in real-time.
-The bounds is the full bounding area after rotation and scale have been taken into account. It should not be modified directly.
-It's used for Camera culling and physics body alignment.</p>
-    </div>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>bounds</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Phaser.Rectangle.html">Phaser.Rectangle</a></span>
+<span class="param-type">null</span>
 
 
             
@@ -1658,11 +1106,6 @@ It's used for Camera culling and physics body alignment.</p>
     
 
     
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Sprite.html#bounds">Phaser.Sprite#bounds</a>
-    </li></dd>
-    
 
     
 
@@ -1672,12 +1115,15 @@ It's used for Camera culling and physics body alignment.</p>
 
     
 
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
     
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-312">line 312</a>
+        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-117">line 117</a>
     </li></ul></dd>
     
 
@@ -1750,7 +1196,7 @@ It's used for Camera culling and physics body alignment.</p>
 
             
 
-            <td class="description last"><p>If this Sprite is fixed to the camera then use this Point to specify how far away from the Camera x/y it's rendered.</p></td>
+            <td class="description last"><p>If this object is fixedToCamera then this stores the x/y offset that its drawn at, from the top-left of the camera view.</p></td>
         </tr>
 
 	
@@ -1764,11 +1210,6 @@ It's used for Camera culling and physics body alignment.</p>
 
     
 
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Sprite.html#cameraOffset">Phaser.Sprite#cameraOffset</a>
-    </li></dd>
     
 
     
@@ -1784,775 +1225,7 @@ It's used for Camera culling and physics body alignment.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-358">line 358</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="center"><span class="type-signature"></span>center<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>center</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Phaser.Point.html">Phaser.Point</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>A Point containing the center coordinate of the Sprite. Takes rotation and scale into account.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Sprite.html#center">Phaser.Sprite#center</a>
-    </li></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-284">line 284</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="crop"><span class="type-signature"></span>crop<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>You can crop the Sprites texture by modifying the crop properties. For example crop.width = 50 would set the Sprite to only render 50px wide.
-The crop is only applied if you have set Sprite.cropEnabled to true.</p>
-    </div>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>crop</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Phaser.Rectangle.html">Phaser.Rectangle</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The crop Rectangle applied to the Sprite texture before rendering.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Sprite.html#crop">Phaser.Sprite#crop</a>
-    </li></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-366">line 366</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="cropEnabled"><span class="type-signature"></span>cropEnabled<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>cropEnabled</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>If true the Sprite.crop property is used to crop the texture before render. Set to false to disable.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Sprite.html#cropEnabled">Phaser.Sprite#cropEnabled</a>
-    </li></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-372">line 372</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="currentFrame"><span class="type-signature"></span>currentFrame<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>currentFrame</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Phaser.Frame.html">Phaser.Frame</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>A reference to the currently displayed frame.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Sprite.html#currentFrame">Phaser.Sprite#currentFrame</a>
-    </li></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-101">line 101</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="debug"><span class="type-signature"></span>debug<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>debug</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Handy flag to use with Game.enableStep</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Sprite.html#debug">Phaser.Sprite#debug</a>
-    </li></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-378">line 378</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="deltaX"><span class="type-signature">&lt;readonly> </span>deltaX<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Returns the delta x value. The difference between Sprite.x now and in the previous step.</p>
-    </div>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>deltaX</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The delta value. Positive if the motion was to the right, negative if to the left.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Sprite.html#deltaX">Phaser.Sprite#deltaX</a>
-    </li></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-1014">line 1014</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="deltaY"><span class="type-signature">&lt;readonly> </span>deltaY<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Returns the delta x value. The difference between Sprite.y now and in the previous step.</p>
-    </div>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>deltaY</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The delta value. Positive if the motion was downwards, negative if upwards.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Sprite.html#deltaY">Phaser.Sprite#deltaY</a>
-    </li></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-1028">line 1028</a>
+        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-104">line 104</a>
     </li></ul></dd>
     
 
@@ -2640,11 +1313,6 @@ The crop is only applied if you have set Sprite.cropEnabled to true.</p>
     
 
     
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Sprite.html#events">Phaser.Sprite#events</a>
-    </li></dd>
-    
 
     
 
@@ -2659,7 +1327,7 @@ The crop is only applied if you have set Sprite.cropEnabled to true.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-81">line 81</a>
+        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-55">line 55</a>
     </li></ul></dd>
     
 
@@ -2682,6 +1350,12 @@ The crop is only applied if you have set Sprite.cropEnabled to true.</p>
     
 </dt>
 <dd>
+    
+    <div class="description">
+        <p>TileSprite.exists controls if the core game loop and physics update this TileSprite or not.
+When you set TileSprite.exists to false it will remove its Body from the physics world (if it has one) and also set TileSprite.visible to false.
+Setting TileSprite.exists to true will re-add the Body to the physics world (if it has a body) and set TileSprite.visible to true.</p>
+    </div>
     
     
     
@@ -2732,7 +1406,7 @@ The crop is only applied if you have set Sprite.cropEnabled to true.</p>
 
             
 
-            <td class="description last"><p>If exists = false then the Sprite isn't updated by the core game loop or physics subsystem at all.</p></td>
+            <td class="description last"><p>If the TileSprite is processed by the core game update and physics.</p></td>
         </tr>
 
 	
@@ -2747,11 +1421,6 @@ The crop is only applied if you have set Sprite.cropEnabled to true.</p>
     
 
     
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Sprite.html#exists">Phaser.Sprite#exists</a>
-    </li></dd>
-    
 
     
 
@@ -2761,15 +1430,12 @@ The crop is only applied if you have set Sprite.cropEnabled to true.</p>
 
     
 
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>true</li></ul></dd>
     
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-39">line 39</a>
+        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-494">line 494</a>
     </li></ul></dd>
     
 
@@ -2794,7 +1460,9 @@ The crop is only applied if you have set Sprite.cropEnabled to true.</p>
 <dd>
     
     <div class="description">
-        <p>A Sprite that is fixed to the camera ignores the position of any ancestors in the display list and uses its x/y coordinates as offsets from the top left of the camera.</p>
+        <p>An TileSprite that is fixed to the camera uses its x/y coordinates as offsets from the top left of the camera. These are stored in TileSprite.cameraOffset.
+Note that the cameraOffset values are in addition to any parent in the display list.
+So if this TileSprite was in a Group that has x: 200, then this will be added to the cameraOffset.x</p>
     </div>
     
     
@@ -2846,7 +1514,7 @@ The crop is only applied if you have set Sprite.cropEnabled to true.</p>
 
             
 
-            <td class="description last"><p>Fixes this Sprite to the Camera.</p></td>
+            <td class="description last"><p>Set to true to fix this TileSprite to the Camera at its current world coordinates.</p></td>
         </tr>
 
 	
@@ -2861,11 +1529,6 @@ The crop is only applied if you have set Sprite.cropEnabled to true.</p>
     
 
     
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Sprite.html#fixedToCamera">Phaser.Sprite#fixedToCamera</a>
-    </li></dd>
-    
 
     
 
@@ -2875,15 +1538,12 @@ The crop is only applied if you have set Sprite.cropEnabled to true.</p>
 
     
 
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
     
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-353">line 353</a>
+        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-463">line 463</a>
     </li></ul></dd>
     
 
@@ -2985,7 +1645,7 @@ The crop is only applied if you have set Sprite.cropEnabled to true.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-79">line 79</a>
+        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-421">line 421</a>
     </li></ul></dd>
     
 
@@ -3087,7 +1747,7 @@ The crop is only applied if you have set Sprite.cropEnabled to true.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-95">line 95</a>
+        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-442">line 442</a>
     </li></ul></dd>
     
 
@@ -3175,11 +1835,6 @@ The crop is only applied if you have set Sprite.cropEnabled to true.</p>
     
 
     
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Sprite.html#game">Phaser.Sprite#game</a>
-    </li></dd>
-    
 
     
 
@@ -3194,435 +1849,7 @@ The crop is only applied if you have set Sprite.cropEnabled to true.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-33">line 33</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="group"><span class="type-signature"></span>group<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>group</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Phaser.Group.html">Phaser.Group</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The parent Group of this Sprite. This is usually set after Sprite instantiation by the parent.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Sprite.html#group">Phaser.Sprite#group</a>
-    </li></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-50">line 50</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="health"><span class="type-signature"></span>health<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>health</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Health value. Used in combination with damage() to allow for quick killing of Sprites.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Sprite.html#health">Phaser.Sprite#health</a>
-    </li></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-322">line 322</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="height"><span class="type-signature"></span>height<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>The height of the sprite in pixels, setting this will actually modify the scale to acheive the value desired.
-If you wish to crop the Sprite instead see the Sprite.crop value.</p>
-    </div>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>height</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The height of the Sprite in pixels.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Sprite.html#height">Phaser.Sprite#height</a>
-    </li></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-1155">line 1155</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="inCamera"><span class="type-signature">&lt;readonly> </span>inCamera<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>inCamera</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Is this sprite visible to the camera or not?</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-111">line 111</a>
+        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-33">line 33</a>
     </li></ul></dd>
     
 
@@ -3686,6 +1913,9 @@ If you wish to crop the Sprite instead see the Sprite.crop value.</p>
             
                 
 <span class="param-type"><a href="Phaser.InputHandler.html">Phaser.InputHandler</a></span>
+|
+
+<span class="param-type">null</span>
 
 
             
@@ -3695,7 +1925,7 @@ If you wish to crop the Sprite instead see the Sprite.crop value.</p>
 
             
 
-            <td class="description last"><p>The Input Handler Component.</p></td>
+            <td class="description last"><p>The Input Handler for this object. Needs to be enabled with image.inputEnabled = true before you can use it.</p></td>
         </tr>
 
 	
@@ -3709,11 +1939,6 @@ If you wish to crop the Sprite instead see the Sprite.crop value.</p>
 
     
 
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Sprite.html#input">Phaser.Sprite#input</a>
-    </li></dd>
     
 
     
@@ -3729,7 +1954,7 @@ If you wish to crop the Sprite instead see the Sprite.crop value.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-91">line 91</a>
+        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-94">line 94</a>
     </li></ul></dd>
     
 
@@ -3754,8 +1979,8 @@ If you wish to crop the Sprite instead see the Sprite.crop value.</p>
 <dd>
     
     <div class="description">
-        <p>By default a Sprite won't process any input events at all. By setting inputEnabled to true the Phaser.InputHandler is
-activated for this Sprite instance and it will then start to process click/touch events and more.</p>
+        <p>By default a TileSprite won't process any input events at all. By setting inputEnabled to true the Phaser.InputHandler is
+activated for this object and it will then start to process click/touch events and more.</p>
     </div>
     
     
@@ -3807,7 +2032,7 @@ activated for this Sprite instance and it will then start to process click/touch
 
             
 
-            <td class="description last"><p>Set to true to allow this Sprite to receive input events, otherwise false.</p></td>
+            <td class="description last"><p>Set to true to allow this object to receive input events.</p></td>
         </tr>
 
 	
@@ -3836,224 +2061,7 @@ activated for this Sprite instance and it will then start to process click/touch
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-124">line 124</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="inWorld"><span class="type-signature"></span>inWorld<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>inWorld</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>This value is set to true if the Sprite is positioned within the World, otherwise false.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Sprite.html#inWorld">Phaser.Sprite#inWorld</a>
-    </li></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-327">line 327</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="inWorldThreshold"><span class="type-signature"></span>inWorldThreshold<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>inWorldThreshold</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>A threshold value applied to the inWorld check. If you don't want a Sprite to be considered &quot;out of the world&quot; until at least 100px away for example then set it to 100.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Sprite.html#inWorldThreshold">Phaser.Sprite#inWorldThreshold</a>
-    </li></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>0</li></ul></dd>
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-333">line 333</a>
+        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-541">line 541</a>
     </li></ul></dd>
     
 
@@ -4150,11 +2158,6 @@ activated for this Sprite instance and it will then start to process click/touch
     
 
     
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Sprite.html#key">Phaser.Sprite#key</a>
-    </li></dd>
-    
 
     
 
@@ -4169,122 +2172,7 @@ activated for this Sprite instance and it will then start to process click/touch
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-96">line 96</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="lifespan"><span class="type-signature"></span>lifespan<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>If you would like the Sprite to have a lifespan once 'born' you can set this to a positive value. Handy for particles, bullets, etc.
-The lifespan is decremented by game.time.elapsed each update, once it reaches zero the kill() function is called.</p>
-    </div>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>lifespan</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The lifespan of the Sprite (in ms) before it will be killed.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Sprite.html#lifespan">Phaser.Sprite#lifespan</a>
-    </li></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>0</li></ul></dd>
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-76">line 76</a>
+        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-65">line 65</a>
     </li></ul></dd>
     
 
@@ -4372,11 +2260,6 @@ The lifespan is decremented by game.time.elapsed each update, once it reaches ze
     
 
     
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Sprite.html#name">Phaser.Sprite#name</a>
-    </li></dd>
-    
 
     
 
@@ -4391,1069 +2274,7 @@ The lifespan is decremented by game.time.elapsed each update, once it reaches ze
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-56">line 56</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="offset"><span class="type-signature"></span>offset<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>offset</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Phaser.Point.html">Phaser.Point</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Corner point defaults. Should not typically be modified.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Sprite.html#offset">Phaser.Sprite#offset</a>
-    </li></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-279">line 279</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="outOfBoundsKill"><span class="type-signature"></span>outOfBoundsKill<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>outOfBoundsKill</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>If true the Sprite is killed as soon as Sprite.inWorld is false.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Sprite.html#outOfBoundsKill">Phaser.Sprite#outOfBoundsKill</a>
-    </li></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-339">line 339</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="renderOrderID"><span class="type-signature"></span>renderOrderID<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>renderOrderID</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Used by the Renderer and Input Manager to control picking order.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Sprite.html#renderOrderID">Phaser.Sprite#renderOrderID</a>
-    </li></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-68">line 68</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="scale"><span class="type-signature"></span>scale<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>scale</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Phaser.Point.html">Phaser.Point</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The scale of the Sprite when rendered. By default it's set to 1 (no scale). You can modify it via scale.x or scale.y or scale.setTo(x, y). A value of 1 means no change to the scale, 0.5 means &quot;half the size&quot;, 2 means &quot;twice the size&quot;, etc.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Sprite.html#scale">Phaser.Sprite#scale</a>
-    </li></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-204">line 204</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="texture"><span class="type-signature"></span>texture<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>texture</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">PIXI.Texture</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The texture that the sprite renders with.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-32">line 32</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="textureRegion"><span class="type-signature"></span>textureRegion<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>The rectangular area from the texture that will be rendered.</p>
-    </div>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>textureRegion</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Phaser.Rectangle.html">Phaser.Rectangle</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Sprite.html#textureRegion">Phaser.Sprite#textureRegion</a>
-    </li></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-162">line 162</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="tilePosition"><span class="type-signature"></span>tilePosition<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>tilePosition</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Phaser.Point.html">Phaser.Point</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The offset position of the image that is being tiled.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-50">line 50</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="tileScale"><span class="type-signature"></span>tileScale<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>tileScale</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Phaser.Point.html">Phaser.Point</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The scaling of the image that is being tiled.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-45">line 45</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="topLeft"><span class="type-signature"></span>topLeft<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>topLeft</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Phaser.Point.html">Phaser.Point</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>A Point containing the top left coordinate of the Sprite. Takes rotation and scale into account.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Sprite.html#topLeft">Phaser.Sprite#topLeft</a>
-    </li></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-289">line 289</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="topRight"><span class="type-signature"></span>topRight<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>topRight</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Phaser.Point.html">Phaser.Point</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>A Point containing the top right coordinate of the Sprite. Takes rotation and scale into account.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Sprite.html#topRight">Phaser.Sprite#topRight</a>
-    </li></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-294">line 294</a>
+        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-39">line 39</a>
     </li></ul></dd>
     
 
@@ -5555,119 +2376,7 @@ The lifespan is decremented by game.time.elapsed each update, once it reaches ze
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-40">line 40</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="width"><span class="type-signature"></span>width<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>The width of the sprite in pixels, setting this will actually modify the scale to acheive the value desired.
-If you wish to crop the Sprite instead see the Sprite.crop value.</p>
-    </div>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>width</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The width of the Sprite in pixels.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Sprite.html#width">Phaser.Sprite#width</a>
-    </li></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-1132">line 1132</a>
+        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-45">line 45</a>
     </li></ul></dd>
     
 
@@ -5755,11 +2464,6 @@ If you wish to crop the Sprite instead see the Sprite.crop value.</p>
     
 
     
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Sprite.html#world">Phaser.Sprite#world</a>
-    </li></dd>
-    
 
     
 
@@ -5774,7 +2478,7 @@ If you wish to crop the Sprite instead see the Sprite.crop value.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-190">line 190</a>
+        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-99">line 99</a>
     </li></ul></dd>
     
 
@@ -5792,7 +2496,7 @@ If you wish to crop the Sprite instead see the Sprite.crop value.</p>
         
             
 <dt>
-    <h4 class="name" id="worldCenterX"><span class="type-signature">&lt;readonly> </span>worldCenterX<span class="type-signature"></span></h4>
+    <h4 class="name" id="z"><span class="type-signature"></span>z<span class="type-signature"></span></h4>
     
     
 </dt>
@@ -5831,7 +2535,7 @@ If you wish to crop the Sprite instead see the Sprite.crop value.</p>
 
         <tr>
             
-                <td class="name"><code>worldCenterX</code></td>
+                <td class="name"><code>z</code></td>
             
 
             <td class="type">
@@ -5847,7 +2551,7 @@ If you wish to crop the Sprite instead see the Sprite.crop value.</p>
 
             
 
-            <td class="description last"><p>The center of the Sprite in world coordinates.</p></td>
+            <td class="description last"><p>The z-depth value of this object within its Group (remember the World is a Group as well). No two objects in a Group can have the same z value.</p></td>
         </tr>
 
 	
@@ -5861,11 +2565,6 @@ If you wish to crop the Sprite instead see the Sprite.crop value.</p>
 
     
 
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Sprite.html#worldCenterX">Phaser.Sprite#worldCenterX</a>
-    </li></dd>
     
 
     
@@ -5881,328 +2580,7 @@ If you wish to crop the Sprite instead see the Sprite.crop value.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-1106">line 1106</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="worldCenterY"><span class="type-signature">&lt;readonly> </span>worldCenterY<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>worldCenterY</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The center of the Sprite in world coordinates.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Sprite.html#worldCenterY">Phaser.Sprite#worldCenterY</a>
-    </li></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-1119">line 1119</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="x"><span class="type-signature"></span>x<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>x</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The x coordinate in world space of this Sprite.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Sprite.html#x">Phaser.Sprite#x</a>
-    </li></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-177">line 177</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="y"><span class="type-signature"></span>y<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>y</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The y coordinate in world space of this Sprite.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Sprite.html#y">Phaser.Sprite#y</a>
-    </li></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-182">line 182</a>
+        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-50">line 50</a>
     </li></ul></dd>
     
 
@@ -6226,7 +2604,7 @@ If you wish to crop the Sprite instead see the Sprite.crop value.</p>
         <dl>
             
 <dt>
-    <h4 class="name" id="bringToTop"><span class="type-signature"></span>bringToTop<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="autoScroll"><span class="type-signature"></span>autoScroll<span class="signature">()</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -6234,8 +2612,10 @@ If you wish to crop the Sprite instead see the Sprite.crop value.</p>
     
     
     <div class="description">
-        <p>Brings the Sprite to the top of the display list it is a child of. Sprites that are members of a Phaser.Group are only
-bought to the top of that Group, not the entire display list.</p>
+        <p>Sets this TileSprite to automatically scroll in the given direction until stopped via TileSprite.stopScroll().
+The scroll speed is specified in pixels per second.
+A negative x value will scroll to the left. A positive x value will scroll to the right.
+A negative y value will scroll up. A positive y value will scroll down.</p>
     </div>
     
 
@@ -6254,11 +2634,6 @@ bought to the top of that Group, not the entire display list.</p>
     
 
     
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Sprite.html#bringToTop">Phaser.Sprite#bringToTop</a>
-    </li></dd>
-    
 
     
 
@@ -6273,7 +2648,7 @@ bought to the top of that Group, not the entire display list.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-970">line 970</a>
+        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-219">line 219</a>
     </li></ul></dd>
     
 
@@ -6294,17 +2669,6 @@ bought to the top of that Group, not the entire display list.</p>
     
     
     
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>(Phaser.Sprite) This instance.</p>
-</div>
-
-
-
-
-        
     
     
 </dd>
@@ -6312,7 +2676,7 @@ bought to the top of that Group, not the entire display list.</p>
         
             
 <dt>
-    <h4 class="name" id="centerOn"><span class="type-signature"></span>centerOn<span class="signature">(x, y)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="destroy"><span class="type-signature"></span>destroy<span class="signature">(<span class="optional">destroyChildren</span>)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -6320,300 +2684,7 @@ bought to the top of that Group, not the entire display list.</p>
     
     
     <div class="description">
-        <p>Moves the sprite so its center is located on the given x and y coordinates.
-Doesn't change the anchor point of the sprite.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>x</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The x coordinate (in world space) to position the Sprite at.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>y</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The y coordinate (in world space) to position the Sprite at.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Sprite.html#centerOn">Phaser.Sprite#centerOn</a>
-    </li></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-780">line 780</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>(Phaser.Sprite) This instance.</p>
-</div>
-
-
-
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="damage"><span class="type-signature"></span>damage<span class="signature">(amount)</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Damages the Sprite, this removes the given amount from the Sprites health property.
-If health is then taken below zero Sprite.kill is called.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>amount</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The amount to subtract from the Sprite.health value.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Sprite.html#damage">Phaser.Sprite#damage</a>
-    </li></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-907">line 907</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>(Phaser.Sprite) This instance.</p>
-</div>
-
-
-
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="destroy"><span class="type-signature"></span>destroy<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Destroys the Sprite. This removes it from its parent group, destroys the input, event and animation handlers if present
+        <p>Destroys the TileSprite. This removes it from its parent group, destroys the event and animation handlers if present
 and nulls its reference to game, freeing it up for garbage collection.</p>
     </div>
     
@@ -6623,81 +2694,6 @@ and nulls its reference to game, freeing it up for garbage collection.</p>
     
     
     
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Sprite.html#destroy">Phaser.Sprite#destroy</a>
-    </li></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-860">line 860</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="getLocalPosition"><span class="type-signature"></span>getLocalPosition<span class="signature">(p, x, y)</span><span class="type-signature"> &rarr; {<a href="Phaser.Point.html">Phaser.Point</a>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Gets the local position of a coordinate relative to the Sprite, factoring in rotation and scale.
-Mostly only used internally.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
         <h5>Parameters:</h5>
         
 
@@ -6711,7 +2707,11 @@ Mostly only used internally.</p>
 		<th>Type</th>
 
 		
+		<th>Argument</th>
+		
 
+		
+		<th>Default</th>
 		
 
 		<th class="last">Description</th>
@@ -6723,69 +2723,39 @@ Mostly only used internally.</p>
 
         <tr>
             
-                <td class="name"><code>p</code></td>
+                <td class="name"><code>destroyChildren</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="Phaser.Point.html">Phaser.Point</a></span>
+<span class="param-type">boolean</span>
 
 
             
             </td>
 
             
-
-            
-
-            <td class="description last"><p>The Point object to store the results in.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>x</code></td>
-            
-
-            <td class="type">
-            
+                <td class="attributes">
                 
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>x coordinate within the Sprite to translate.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>y</code></td>
-            
-
-            <td class="type">
-            
+                    &lt;optional><br>
                 
-<span class="param-type">number</span>
 
+                
 
-            
-            </td>
-
-            
-
+                
+                </td>
             
 
-            <td class="description last"><p>y coordinate within the Sprite to translate.</p></td>
+            
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
+
+            <td class="description last"><p>Should every child of this object have its destroy method called?</p></td>
         </tr>
 
 	
@@ -6803,11 +2773,6 @@ Mostly only used internally.</p>
     
 
     
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Sprite.html#getLocalPosition">Phaser.Sprite#getLocalPosition</a>
-    </li></dd>
-    
 
     
 
@@ -6822,7 +2787,7 @@ Mostly only used internally.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-630">line 630</a>
+        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-318">line 318</a>
     </li></ul></dd>
     
 
@@ -6843,310 +2808,6 @@ Mostly only used internally.</p>
     
     
     
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>The translated point.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="Phaser.Point.html">Phaser.Point</a></span>
-
-
-	</dd>
-</dl>
-
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="getLocalUnmodifiedPosition"><span class="type-signature"></span>getLocalUnmodifiedPosition<span class="signature">(p, gx, gy)</span><span class="type-signature"> &rarr; {<a href="Phaser.Point.html">Phaser.Point</a>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Gets the local unmodified position of a coordinate relative to the Sprite, factoring in rotation and scale.
-Mostly only used internally by the Input Manager, but also useful for custom hit detection.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>p</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Phaser.Point.html">Phaser.Point</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The Point object to store the results in.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>gx</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>x coordinate within the Sprite to translate.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>gy</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>y coordinate within the Sprite to translate.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Sprite.html#getLocalUnmodifiedPosition">Phaser.Sprite#getLocalUnmodifiedPosition</a>
-    </li></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-650">line 650</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>The translated point.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="Phaser.Point.html">Phaser.Point</a></span>
-
-
-	</dd>
-</dl>
-
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="kill"><span class="type-signature"></span>kill<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Kills a Sprite. A killed Sprite has its alive, exists and visible properties all set to false.
-It will dispatch the onKilled event, you can listen to Sprite.events.onKilled for the signal.
-Note that killing a Sprite is a way for you to quickly recycle it in a Sprite pool, it doesn't free it up from memory.
-If you don't need this Sprite any more you should call Sprite.destroy instead.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Sprite.html#kill">Phaser.Sprite#kill</a>
-    </li></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-835">line 835</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>(Phaser.Sprite) This instance.</p>
-</div>
-
-
-
-
-        
     
     
 </dd>
@@ -7162,7 +2823,7 @@ If you don't need this Sprite any more you should call Sprite.destroy instead.</
     
     
     <div class="description">
-        <p>Changes the Texture the Sprite is using entirely. The old texture is removed and the new one is referenced or fetched from the Cache.
+        <p>Changes the Texture the TileSprite is using entirely. The old texture is removed and the new one is referenced or fetched from the Cache.
 This causes a WebGL texture update, so use sparingly or in low-intensity portions of your game.</p>
     </div>
     
@@ -7266,11 +2927,6 @@ This causes a WebGL texture update, so use sparingly or in low-intensity portion
     
 
     
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Sprite.html#loadTexture">Phaser.Sprite#loadTexture</a>
-    </li></dd>
-    
 
     
 
@@ -7285,7 +2941,7 @@ This causes a WebGL texture update, so use sparingly or in low-intensity portion
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-721">line 721</a>
+        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-246">line 246</a>
     </li></ul></dd>
     
 
@@ -7523,11 +3179,6 @@ If the requested animation is already playing this request will be ignored. If y
     
 
     
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Sprite.html#play">Phaser.Sprite#play</a>
-    </li></dd>
-    
 
     
 
@@ -7542,7 +3193,7 @@ If the requested animation is already playing this request will be ignored. If y
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-993">line 993</a>
+        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-379">line 379</a>
     </li></ul></dd>
     
 
@@ -7620,11 +3271,6 @@ If the requested animation is already playing this request will be ignored. If y
     
 
     
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Sprite.html#postUpdate">Phaser.Sprite#postUpdate</a>
-    </li></dd>
-    
 
     
 
@@ -7639,7 +3285,7 @@ If the requested animation is already playing this request will be ignored. If y
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-684">line 684</a>
+        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-191">line 191</a>
     </li></ul></dd>
     
 
@@ -7675,7 +3321,7 @@ If the requested animation is already playing this request will be ignored. If y
     
     
     <div class="description">
-        <p>Automatically called by World.preUpdate. Handles cache updates, lifespan checks, animation updates and physics updates.</p>
+        <p>Automatically called by World.preUpdate.</p>
     </div>
     
 
@@ -7694,11 +3340,6 @@ If the requested animation is already playing this request will be ignored. If y
     
 
     
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Sprite.html#preUpdate">Phaser.Sprite#preUpdate</a>
-    </li></dd>
-    
 
     
 
@@ -7713,7 +3354,7 @@ If the requested animation is already playing this request will be ignored. If y
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-393">line 393</a>
+        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-139">line 139</a>
     </li></ul></dd>
     
 
@@ -7741,7 +3382,7 @@ If the requested animation is already playing this request will be ignored. If y
         
             
 <dt>
-    <h4 class="name" id="reset"><span class="type-signature"></span>reset<span class="signature">(x, y, <span class="optional">health</span>)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="stopScroll"><span class="type-signature"></span>stopScroll<span class="signature">()</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -7749,233 +3390,7 @@ If the requested animation is already playing this request will be ignored. If y
     
     
     <div class="description">
-        <p>Resets the Sprite. This places the Sprite at the given x/y world coordinates and then
-sets alive, exists, visible and renderable all to true. Also resets the outOfBounds state and health values.
-If the Sprite has a physics body that too is reset.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-		<th>Argument</th>
-		
-
-		
-		<th>Default</th>
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>x</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last"><p>The x coordinate (in world space) to position the Sprite at.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>y</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last"><p>The y coordinate (in world space) to position the Sprite at.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>health</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    1
-                
-                </td>
-            
-
-            <td class="description last"><p>The health to give the Sprite.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Sprite.html#reset">Phaser.Sprite#reset</a>
-    </li></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-932">line 932</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>(Phaser.Sprite) This instance.</p>
-</div>
-
-
-
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="resetCrop"><span class="type-signature"></span>resetCrop<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Resets the Sprite.crop value back to the frame dimensions.</p>
+        <p>Stops an automatically scrolling TileSprite.</p>
     </div>
     
 
@@ -7994,11 +3409,6 @@ If the Sprite has a physics body that too is reset.</p>
     
 
     
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Sprite.html#resetCrop">Phaser.Sprite#resetCrop</a>
-    </li></dd>
-    
 
     
 
@@ -8013,7 +3423,7 @@ If the Sprite has a physics body that too is reset.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-670">line 670</a>
+        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-234">line 234</a>
     </li></ul></dd>
     
 
@@ -8041,7 +3451,7 @@ If the Sprite has a physics body that too is reset.</p>
         
             
 <dt>
-    <h4 class="name" id="revive"><span class="type-signature"></span>revive<span class="signature">(<span class="optional">health</span>)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="update"><span class="type-signature"></span>update<span class="signature">()</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -8049,163 +3459,7 @@ If the Sprite has a physics body that too is reset.</p>
     
     
     <div class="description">
-        <p>Brings a 'dead' Sprite back to life, optionally giving it the health value specified.
-A resurrected Sprite has its alive, exists and visible properties all set to true.
-It will dispatch the onRevived event, you can listen to Sprite.events.onRevived for the signal.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-		<th>Argument</th>
-		
-
-		
-		<th>Default</th>
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>health</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    1
-                
-                </td>
-            
-
-            <td class="description last"><p>The health to give the Sprite.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Sprite.html#revive">Phaser.Sprite#revive</a>
-    </li></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-807">line 807</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>(Phaser.Sprite) This instance.</p>
-</div>
-
-
-
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="updateAnimation"><span class="type-signature"></span>updateAnimation<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Internal function called by preUpdate.</p>
+        <p>Override and use this function in your own custom objects to handle any update requirements you may have.</p>
     </div>
     
 
@@ -8224,11 +3478,6 @@ It will dispatch the onRevived event, you can listen to Sprite.events.onRevived 
     
 
     
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Sprite.html#updateAnimation">Phaser.Sprite#updateAnimation</a>
-    </li></dd>
-    
 
     
 
@@ -8243,229 +3492,7 @@ It will dispatch the onRevived event, you can listen to Sprite.events.onRevived 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-512">line 512</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="updateBounds"><span class="type-signature"></span>updateBounds<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Internal function called by preUpdate.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Sprite.html#updateBounds">Phaser.Sprite#updateBounds</a>
-    </li></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-567">line 567</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="updateCache"><span class="type-signature"></span>updateCache<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Internal function called by preUpdate.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Sprite.html#updateCache">Phaser.Sprite#updateCache</a>
-    </li></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-466">line 466</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="updateCrop"><span class="type-signature"></span>updateCrop<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Internal function called by preUpdate.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Sprite.html#updateCrop">Phaser.Sprite#updateCrop</a>
-    </li></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-538">line 538</a>
+        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-181">line 181</a>
     </li></ul></dd>
     
 
@@ -8516,7 +3543,7 @@ It will dispatch the onRevived event, you can listen to Sprite.events.onRevived 
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Mon Feb 24 2014 01:12:32 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Fri Mar 14 2014 06:34:36 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>
@@ -8547,6 +3574,9 @@ It will dispatch the onRevived event, you can listen to Sprite.events.onRevived 
 	<script>
 		$( function () {
 			$( "#toc" ).toc( {
+			    anchorName  : function(i, heading, prefix) {
+					return $(heading).attr("id") || ( prefix + i );
+				},
 				selectors   : "h1,h2,h3,h4",
 				showAndHide : false,
 				scrollTo    : 60

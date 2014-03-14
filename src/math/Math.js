@@ -336,7 +336,18 @@ Phaser.Math = {
     * @return {number}
     */
     angleBetween: function (x1, y1, x2, y2) {
-        return Math.atan2(y2 - y1, x2 - x1);
+        return Math.atan2(x2 - x1, y2 - y1);
+    },
+
+    /**
+    * Find the angle of a segment from (point1.x, point1.y) -> (point2.x, point2.y).
+    * @method Phaser.Math#angleBetweenPoints
+    * @param {Phaser.Point} point1
+    * @param {Phaser.Point} point2
+    * @return {number}
+    */
+    angleBetweenPoints: function (point1, point2) {
+        return Math.atan2(point2.x - point1.x, point2.y - point1.y);
     },
 
     /**
@@ -575,7 +586,7 @@ Phaser.Math = {
 
     /**
     * Adds value to amount and ensures that the result always stays between 0 and max, by wrapping the value around.
-    * <p>Values must be positive integers, and are passed through Math.abs</p>
+    * Values must be positive integers, and are passed through Math.abs.
     *
     * @method Phaser.Math#wrapValue
     * @param {number} value - The value to add the amount to.
@@ -635,27 +646,6 @@ Phaser.Math = {
         {
             return true;
         }
-
-    },
-
-    /**
-    * Significantly faster version of Math.max
-    * See http://jsperf.com/math-s-min-max-vs-homemade/5
-    *
-    * @method Phaser.Math#max
-    * @return {number} The highest value from those given.
-    */
-    max: function () {
-
-        for (var i = 1, max = 0, len = arguments.length; i < len; i++)
-        {
-            if (arguments[max] < arguments[i])
-            {
-                max = i;
-            }
-        }
-        
-        return arguments[max];
 
     },
 
@@ -799,7 +789,6 @@ Phaser.Math = {
     * @param {number} angle - The angle value to check. Must be between -180 and +180.
     * @param {number} min - The minimum angle that is allowed (must be -180 or greater).
     * @param {number} max - The maximum angle that is allowed (must be 180 or less).
-    *
     * @return {number} The new angle value, returns the same as the input angle if it was within bounds
     */
     angleLimit: function (angle, min, max) {
@@ -1198,12 +1187,11 @@ Phaser.Math = {
     * Linear mapping from range <a1, a2> to range <b1, b2>
     * 
     * @method Phaser.Math#mapLinear
-    * @param {number} x
-    * @param {number} a1
-    * @param {number} a1
-    * @param {number} a2
-    * @param {number} b1
-    * @param {number} b2
+    * @param {number} x the value to map
+    * @param {number} a1 first endpoint of the range <a1, a2>
+    * @param {number} a2 final endpoint of the range <a1, a2>
+    * @param {number} b1 first endpoint of the range <b1, b2>
+    * @param {number} b2 final endpoint of the range  <b1, b2>
     * @return {number}
     */
     mapLinear: function ( x, a1, a2, b1, b2 ) {

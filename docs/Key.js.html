@@ -91,10 +91,6 @@
 						</li>
 						
 						<li>
-							<a href="Phaser.DOMSprite.html">DOMSprite</a>
-						</li>
-						
-						<li>
 							<a href="Phaser.Easing.html">Easing</a>
 						</li>
 						
@@ -143,6 +139,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.Ellipse.html">Ellipse</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Events.html">Events</a>
 						</li>
 						
@@ -163,6 +163,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.GameObjectCreator.html">GameObjectCreator</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.GameObjectFactory.html">GameObjectFactory</a>
 						</li>
 						
@@ -180,6 +184,10 @@
 						
 						<li>
 							<a href="Phaser.Group.html">Group</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Image.html">Image</a>
 						</li>
 						
 						<li>
@@ -251,6 +259,82 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.Physics.Ninja.html">Ninja</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.Ninja.AABB.html">AABB</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.Ninja.Body.html">Body</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.Ninja.Circle.html">Circle</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.Ninja.Tile.html">Tile</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.html">P2</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.Body.html">Body</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.BodyDebug.html">BodyDebug</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.CollisionGroup.html">CollisionGroup</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.ContactMaterial.html">ContactMaterial</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.DistanceConstraint.html">DistanceConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.GearConstraint.html">GearConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.InversePointProxy.html">InversePointProxy</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.LockConstraint.html">LockConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.Material.html">Material</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.PointProxy.html">PointProxy</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.PrismaticConstraint.html">PrismaticConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.RevoluteConstraint.html">RevoluteConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.Spring.html">Spring</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Plugin.html">Plugin</a>
 						</li>
 						
@@ -291,6 +375,14 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.RetroFont.html">RetroFont</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.ScaleManager.html">ScaleManager</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Signal.html">Signal</a>
 						</li>
 						
@@ -311,11 +403,11 @@
 						</li>
 						
 						<li>
-							<a href="Phaser.Stage.html">Stage</a>
+							<a href="Phaser.SpriteBatch.html">SpriteBatch</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.StageScaleMode.html">StageScaleMode</a>
+							<a href="Phaser.Stage.html">Stage</a>
 						</li>
 						
 						<li>
@@ -398,20 +490,6 @@
 					</ul>
 				</li>
 				
-				<li class="dropdown">
-					<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b
-						class="caret"></b></a>
-
-					<ul class="dropdown-menu ">
-						
-						<li>
-							<a href="global.html#SAT">SAT</a>
-						</li>
-						
-
-					</ul>
-				</li>
-				
 			</ul>
 		</div>
 	</div>
@@ -450,6 +528,12 @@ Phaser.Key = function (game, keycode) {
     this.game = game;
 
     /**
+    * @property {object} event - Stores the most recent DOM event.
+    * @readonly
+    */
+    this.event = null;
+
+    /**
     * @property {boolean} isDown - The "down" state of the key.
     * @default
     */
@@ -459,7 +543,7 @@ Phaser.Key = function (game, keycode) {
     * @property {boolean} isUp - The "up" state of the key.
     * @default
     */
-    this.isUp = false;
+    this.isUp = true;
 
     /**
     * @property {boolean} altKey - The down state of the ALT key, if pressed at the same time as this key.
@@ -480,8 +564,7 @@ Phaser.Key = function (game, keycode) {
     this.shiftKey = false;
 
     /**
-    * @property {number} timeDown - The timestamp when the key was last pressed down.
-    * @default
+    * @property {number} timeDown - The timestamp when the key was last pressed down. This is based on Game.time.now.
     */
     this.timeDown = 0;
 
@@ -494,10 +577,10 @@ Phaser.Key = function (game, keycode) {
     this.duration = 0;
 
     /**
-    * @property {number} timeUp - The timestamp when the key was last released.
+    * @property {number} timeUp - The timestamp when the key was last released. This is based on Game.time.now.
     * @default
     */
-    this.timeUp = 0;
+    this.timeUp = -2500;
 
     /**
     * @property {number} repeats - If a key is held down this holds down the number of times the key has 'repeated'.
@@ -516,6 +599,16 @@ Phaser.Key = function (game, keycode) {
     this.onDown = new Phaser.Signal();
 
     /**
+    * @property {function} onHoldCallback - A callback that is called while this Key is held down. Warning: Depending on refresh rate that could be 60+ times per second.
+    */
+    this.onHoldCallback = null;
+
+    /**
+    * @property {object} onHoldContext - The context under which the onHoldCallback will be called.
+    */
+    this.onHoldContext = null;
+
+    /**
     * @property {Phaser.Signal} onUp - This Signal is dispatched every time this Key is pressed down. It is only dispatched once (until the key is released again).
     */
     this.onUp = new Phaser.Signal();
@@ -523,6 +616,21 @@ Phaser.Key = function (game, keycode) {
 };
 
 Phaser.Key.prototype = {
+
+    update: function () {
+
+        if (this.isDown)
+        {
+            this.duration = this.game.time.now - this.timeDown;
+            this.repeats++;
+
+            if (this.onHoldCallback)
+            {
+                this.onHoldCallback.call(this.onHoldContext, this);
+            }
+        }
+
+    },
 
     /**
     * Called automatically by Phaser.Keyboard.
@@ -532,26 +640,24 @@ Phaser.Key.prototype = {
     */
     processKeyDown: function (event) {
 
+        this.event = event;
+
+        if (this.isDown)
+        {
+            return;
+        }
+
         this.altKey = event.altKey;
         this.ctrlKey = event.ctrlKey;
         this.shiftKey = event.shiftKey;
 
-        if (this.isDown)
-        {
-            //  Key was already held down, this must be a repeat rate based event
-            this.duration = event.timeStamp - this.timeDown;
-            this.repeats++;
-        }
-        else
-        {
-            this.isDown = true;
-            this.isUp = false;
-            this.timeDown = event.timeStamp;
-            this.duration = 0;
-            this.repeats = 0;
+        this.isDown = true;
+        this.isUp = false;
+        this.timeDown = this.game.time.now;
+        this.duration = 0;
+        this.repeats = 0;
 
-            this.onDown.dispatch(this);
-        }
+        this.onDown.dispatch(this);
 
     },
 
@@ -563,11 +669,33 @@ Phaser.Key.prototype = {
     */
     processKeyUp: function (event) {
 
+        this.event = event;
+
+        if (this.isUp)
+        {
+            return;
+        }
+
         this.isDown = false;
         this.isUp = true;
-        this.timeUp = event.timeStamp;
+        this.timeUp = this.game.time.now;
+        this.duration = this.game.time.now - this.timeDown;
 
         this.onUp.dispatch(this);
+
+    },
+
+    /**
+    * Resets the state of this Key.
+    *
+    * @method Phaser.Key#reset
+    */
+    reset: function () {
+
+        this.isDown = false;
+        this.isUp = true;
+        this.timeUp = this.game.time.now;
+        this.duration = this.game.time.now - this.timeDown;
 
     },
 
@@ -579,7 +707,7 @@ Phaser.Key.prototype = {
     */
     justPressed: function (duration) {
 
-        if (typeof duration === "undefined") { duration = 250; }
+        if (typeof duration === "undefined") { duration = 2500; }
 
         return (this.isDown && this.duration &lt; duration);
 
@@ -593,9 +721,9 @@ Phaser.Key.prototype = {
     */
     justReleased: function (duration) {
 
-        if (typeof duration === "undefined") { duration = 250; }
+        if (typeof duration === "undefined") { duration = 2500; }
 
-        return (this.isDown === false && (this.game.time.now - this.timeUp &lt; duration));
+        return (!this.isDown && ((this.game.time.now - this.timeUp) &lt; duration));
 
     }
 
@@ -623,7 +751,7 @@ Phaser.Key.prototype.constructor = Phaser.Key;
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Mon Feb 24 2014 01:12:21 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Fri Mar 14 2014 06:34:17 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>
@@ -650,6 +778,9 @@ Phaser.Key.prototype.constructor = Phaser.Key;
 	<script>
 		$( function () {
 			$( "#toc" ).toc( {
+			    anchorName  : function(i, heading, prefix) {
+					return $(heading).attr("id") || ( prefix + i );
+				},
 				selectors   : "h1,h2,h3,h4",
 				showAndHide : false,
 				scrollTo    : 60

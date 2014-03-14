@@ -11,7 +11,7 @@
 * @class Phaser.Tileset
 * @constructor
 * @param {string} name - The name of the tileset in the map data.
-* @param {number} firstgid - The Tiled firstgid value.
+* @param {number} firstgid - The Tiled firstgid value. In non-Tiled data this should be considered the starting index value of the first tile in this set.
 * @param {number} width - Width of each tile in pixels.
 * @param {number} height - Height of each tile in pixels.
 * @param {number} margin - The amount of margin around the tilesheet.
@@ -26,8 +26,7 @@ Phaser.Tileset = function (name, firstgid, width, height, margin, spacing, prope
     this.name = name;
 
     /**
-    * @property {number} firstgid - The Tiled firstgid value.
-    * @default
+    * @property {number} firstgid - The Tiled firstgid value. In non-Tiled data this should be considered the starting index value of the first tile in this set.
     */
     this.firstgid = firstgid;
 
@@ -42,12 +41,12 @@ Phaser.Tileset = function (name, firstgid, width, height, margin, spacing, prope
     this.tileHeight = height;
 
     /**
-    * @property {number} tileMargin - The margin around the tiles in the sheet.
+    * @property {number} tileMargin - The margin around the tiles in the tileset.
     */
     this.tileMargin = margin;
 
     /**
-    * @property {number} tileSpacing - The margin around the tiles in the sheet.
+    * @property {number} tileSpacing - The spacing in pixels between each tile in the tileset.
     */
     this.tileSpacing = spacing;
 
@@ -55,11 +54,6 @@ Phaser.Tileset = function (name, firstgid, width, height, margin, spacing, prope
     * @property {object} properties - Tileset specific properties (typically defined in the Tiled editor).
     */
     this.properties = properties;
-
-    /**
-    * @property {object} tilePproperties - Tile specific properties (typically defined in the Tiled editor).
-    */
-    // this.tileProperties = {};
 
     /**
     * @property {object} image - The image used for rendering. This is a reference to the image stored in Phaser.Cache.
@@ -81,48 +75,81 @@ Phaser.Tileset = function (name, firstgid, width, height, margin, spacing, prope
     */
     this.total = 0;
 
+    /**
+    * @property {array} draw - The tile drawImage look-up table
+    * @private
+    */
+    this.drawCoords = [];
+
 };
 
 Phaser.Tileset.prototype = {
 
     /**
-    * Gets a Tile from this set.
+    * Draws a tile from this Tileset at the given coordinates on the context.
     *
-    * @method Phaser.Tileset#getTile
-    * @param {number} index - The index of the tile within the set.
-    * @return {object} The tile object.
-    getTile: function (index) {
+    * @method Phaser.Tileset#draw
+    * @param {HTMLCanvasContext} context - The context to draw the tile onto.
+    * @param {number} x - The x coordinate to draw to.
+    * @param {number} y - The y coordinate to draw to.
+    * @param {number} index - The index of the tile within the set to draw.
+    */
+    draw: function (context, x, y, index) {
 
-        return this.tiles[index];
+        if (!this.image || !this.drawCoords[index])
+        {
+            return;
+        }
+
+        context.drawImage(
+            this.image,
+            this.drawCoords[index][0],
+            this.drawCoords[index][1],
+            this.tileWidth,
+            this.tileHeight,
+            x,
+            y,
+            this.tileWidth,
+            this.tileHeight
+        );
 
     },
-    */
 
     /**
-    * Gets a Tile from this set.
+    * Adds a reference from this Tileset to an Image stored in the Phaser.Cache.
     *
-    * @method Phaser.Tileset#getTileX
-    * @param {number} index - The index of the tile within the set.
-    * @return {object} The tile object.
-    getTileX: function (index) {
+    * @method Phaser.Tileset#setImage
+    * @param {Image} image - The image this tileset will use to draw with.
+    */
+    setImage: function (image) {
 
-        return this.tiles[index][0];
+        this.image = image;
+
+        this.rows = Math.round((image.height - this.tileMargin) / (this.tileHeight + this.tileSpacing));
+        this.columns = Math.round((image.width - this.tileMargin) / (this.tileWidth + this.tileSpacing));
+        this.total = this.rows * this.columns;
+
+        //  Create the index look-up
+        this.drawCoords.length = 0;
+
+        var tx = this.tileMargin;
+        var ty = this.tileMargin;
+        var i = this.firstgid;
+
+        for (var y = 0; y < this.rows; y++)
+        {
+            for (var x = 0; x < this.columns; x++)
+            {
+                this.drawCoords[i] = [ tx, ty ];
+                tx += this.tileWidth + this.tileSpacing;
+                i++;
+            }
+
+            tx = this.tileMargin;
+            ty += this.tileHeight + this.tileSpacing;
+        }
 
     },
-    */
-
-    /**
-    * Gets a Tile from this set.
-    *
-    * @method Phaser.Tileset#getTileY
-    * @param {number} index - The index of the tile within the set.
-    * @return {object} The tile object.
-    getTileY: function (index) {
-
-        return this.tiles[index][1];
-
-    },
-    */
 
     /**
     * Sets tile spacing and margins.
@@ -136,20 +163,9 @@ Phaser.Tileset.prototype = {
         this.tileMargin = margin;
         this.tileSpacing = spacing;
 
-    },
-
-    /**
-    * Checks if the tile at the given index exists.
-    *
-    * @method Phaser.Tileset#checkTileIndex
-    * @param {number} index - The index of the tile within the set.
-    * @return {boolean} True if a tile exists at the given index otherwise false.
-    checkTileIndex: function (index) {
-
-        return (this.tiles[index]);
+        this.setImage(this.image);
 
     }
-    */
 
 };
 

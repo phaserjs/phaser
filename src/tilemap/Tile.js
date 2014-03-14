@@ -40,6 +40,16 @@ Phaser.Tile = function (layer, index, x, y, width, height) {
     this.y = y;
 
     /**
+    * @property {number} x - The x map coordinate of this tile.
+    */
+    this.worldX = x * width;
+    
+    /**
+    * @property {number} y - The y map coordinate of this tile.
+    */
+    this.worldY = y * height;
+
+    /**
     * @property {number} width - The width of the tile in pixels.
     */
     this.width = width;
@@ -48,6 +58,16 @@ Phaser.Tile = function (layer, index, x, y, width, height) {
     * @property {number} height - The height of the tile in pixels.
     */
     this.height = height;
+
+    /**
+    * @property {number} width - The width of the tile in pixels.
+    */
+    this.centerX = Math.abs(width / 2);
+    
+    /**
+    * @property {number} height - The height of the tile in pixels.
+    */
+    this.centerY = Math.abs(height / 2);
 
     /**
     * @property {number} alpha - The alpha value at which this tile is drawn to the canvas.
@@ -85,17 +105,6 @@ Phaser.Tile = function (layer, index, x, y, width, height) {
     this.faceRight = false;
 
     /**
-    * @property {boolean} collides - Does this tile collide at all?
-    */
-    this.collides = false;
-
-    /**
-    * @property {boolean} collideNone - Indicating this Tile doesn't collide at all.
-    * @default
-    */
-    this.collideNone = true;
-
-    /**
     * @property {boolean} collideLeft - Indicating collide with any object on the left.
     * @default
     */
@@ -120,20 +129,69 @@ Phaser.Tile = function (layer, index, x, y, width, height) {
     this.collideDown = false;
 
     /**
-    * @property {function} callback - Tile collision callback.
+    * @property {function} collisionCallback - Tile collision callback.
     * @default
     */
-    this.callback = null;
+    this.collisionCallback = null;
 
     /**
-    * @property {object} callbackContext - The context in which the collision callback will be called.
+    * @property {object} collisionCallbackContext - The context in which the collision callback will be called.
     * @default
     */
-    this.callbackContext = this;
+    this.collisionCallbackContext = this;
 
 };
 
 Phaser.Tile.prototype = {
+
+    /**
+    * Check if the given x and y world coordinates are within this Tile.
+    *
+    * @method Phaser.Tile#containsPoint
+    * @param {number} x - The x coordinate to test.
+    * @param {number} y - The y coordinate to test.
+    * @return {boolean} True if the coordinates are within this Tile, otherwise false.
+    */
+    containsPoint: function (x, y) {
+
+        return !(x < this.worldX || y < this.worldY || x > this.right || y > this.bottom);
+
+    },
+
+    /**
+    * Check for intersection with this tile.
+    *
+    * @method Phaser.Tile#intersects
+    * @param {number} x - The x axis in pixels.
+    * @param {number} y - The y axis in pixels.
+    * @param {number} right - The right point.
+    * @param {number} bottom - The bottom point.
+    */
+    intersects: function (x, y, right, bottom) {
+
+        if (right <= this.worldX)
+        {
+            return false;
+        }
+
+        if (bottom <= this.worldY)
+        {
+            return false;
+        }
+
+        if (x >= this.worldX + this.width)
+        {
+            return false;
+        }
+
+        if (y >= this.worldY + this.height)
+        {
+            return false;
+        }
+
+        return true;
+
+    },
 
     /**
     * Set a callback to be called when this tile is hit by an object.
@@ -141,17 +199,18 @@ Phaser.Tile.prototype = {
     * 
     * @method Phaser.Tile#setCollisionCallback
     * @param {function} callback - Callback function.
-    * @param {object} context - Callback will be called with this context.
+    * @param {object} context - Callback will be called within this context.
     */
     setCollisionCallback: function (callback, context) {
 
-        this.collisionCallbackContext = context;
         this.collisionCallback = callback;
+        this.collisionCallbackContext = context;
 
     },
 
     /**
     * Clean up memory.
+    *
     * @method Phaser.Tile#destroy
     */
     destroy: function () {
@@ -164,6 +223,7 @@ Phaser.Tile.prototype = {
 
     /**
     * Set collision settings on this tile.
+    *
     * @method Phaser.Tile#setCollision
     * @param {boolean} left - Indicating collide with any object on the left.
     * @param {boolean} right - Indicating collide with any object on the right.
@@ -177,33 +237,60 @@ Phaser.Tile.prototype = {
         this.collideUp = up;
         this.collideDown = down;
 
-        if (left || right || up || down)
-        {
-            this.collideNone = false;
-        }
-        else
-        {
-            this.collideNone = true;
-        }
-
     },
 
     /**
     * Reset collision status flags.
+    *
     * @method Phaser.Tile#resetCollision
     */
     resetCollision: function () {
 
-        this.collideNone = true;
         this.collideLeft = false;
         this.collideRight = false;
         this.collideUp = false;
         this.collideDown = false;
 
+        this.faceTop = false;
+        this.faceBottom = false;
+        this.faceLeft = false;
+        this.faceRight = false;
+
+    },
+
+    /**
+    * Is this tile interesting?
+    *
+    * @method Phaser.Tile#isInteresting
+    * @param {boolean} collides - If true will check any collides value.
+    * @param {boolean} faces - If true will check any face value.
+    * @return {boolean} True if the Tile is interesting, otherwise false.
+    */
+    isInteresting: function (collides, faces) {
+
+        if (collides && faces)
+        {
+            //  Does this tile have any collide flags OR interesting face?
+            return (this.collideLeft || this.collideRight || this.collideUp || this.collideDown || this.faceTop || this.faceBottom || this.faceLeft || this.faceRight || this.collisionCallback || this.layer.callbacks[this.index]);
+        }
+        else if (collides)
+        {
+            //  Does this tile collide?
+            return (this.collideLeft || this.collideRight || this.collideUp || this.collideDown);
+        }
+        else if (faces)
+        {
+            //  Does this tile have an interesting face?
+            return (this.faceTop || this.faceBottom || this.faceLeft || this.faceRight);
+        }
+
+        return false;
+
     },
 
     /**
     * Copies the tile data and properties from the given tile to this tile.
+    *
     * @method Phaser.Tile#copy
     * @param {Phaser.Tile} tile - The tile to copy from.
     */
@@ -212,12 +299,12 @@ Phaser.Tile.prototype = {
         this.index = tile.index;
         this.alpha = tile.alpha;
         this.properties = tile.properties;
-        this.collides = tile.collides;
-        this.collideNone = tile.collideNone;
+
         this.collideUp = tile.collideUp;
         this.collideDown = tile.collideDown;
         this.collideLeft = tile.collideLeft;
         this.collideRight = tile.collideRight;
+
         this.collisionCallback = tile.collisionCallback;
         this.collisionCallbackContext = tile.collisionCallbackContext;
 
@@ -232,23 +319,36 @@ Phaser.Tile.prototype.constructor = Phaser.Tile;
 * @property {boolean} canCollide - True if this tile can collide or has a collision callback.
 * @readonly
 */
+Object.defineProperty(Phaser.Tile.prototype, "collides", {
+    
+    get: function () {
+        return (this.collideLeft || this.collideRight || this.collideUp || this.collideDown);
+    }
+
+});
+
+/**
+* @name Phaser.Tile#canCollide
+* @property {boolean} canCollide - True if this tile can collide or has a collision callback.
+* @readonly
+*/
 Object.defineProperty(Phaser.Tile.prototype, "canCollide", {
     
     get: function () {
-        return (this.collides || this.collisionCallback || this.layer.callbacks[this.index]);
+        return (this.collideLeft || this.collideRight || this.collideUp || this.collideDown || this.collisionCallback || this.layer.callbacks[this.index]);
     }
 
 });
 
 /**
 * @name Phaser.Tile#left
-* @property {number} left - The x value.
+* @property {number} left - The x value in pixels.
 * @readonly
 */
 Object.defineProperty(Phaser.Tile.prototype, "left", {
     
     get: function () {
-        return this.x;
+        return this.worldX;
     }
 
 });
@@ -261,7 +361,7 @@ Object.defineProperty(Phaser.Tile.prototype, "left", {
 Object.defineProperty(Phaser.Tile.prototype, "right", {
     
     get: function () {
-        return this.x + this.width;
+        return this.worldX + this.width;
     }
 
 });
@@ -274,7 +374,7 @@ Object.defineProperty(Phaser.Tile.prototype, "right", {
 Object.defineProperty(Phaser.Tile.prototype, "top", {
     
     get: function () {
-        return this.y;
+        return this.worldY;
     }
 
 });
@@ -287,7 +387,7 @@ Object.defineProperty(Phaser.Tile.prototype, "top", {
 Object.defineProperty(Phaser.Tile.prototype, "bottom", {
     
     get: function () {
-        return this.y + this.height;
+        return this.worldY + this.height;
     }
 
 });

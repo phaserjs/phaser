@@ -91,10 +91,6 @@
 						</li>
 						
 						<li>
-							<a href="Phaser.DOMSprite.html">DOMSprite</a>
-						</li>
-						
-						<li>
 							<a href="Phaser.Easing.html">Easing</a>
 						</li>
 						
@@ -143,6 +139,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.Ellipse.html">Ellipse</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Events.html">Events</a>
 						</li>
 						
@@ -163,6 +163,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.GameObjectCreator.html">GameObjectCreator</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.GameObjectFactory.html">GameObjectFactory</a>
 						</li>
 						
@@ -180,6 +184,10 @@
 						
 						<li>
 							<a href="Phaser.Group.html">Group</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Image.html">Image</a>
 						</li>
 						
 						<li>
@@ -251,6 +259,82 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.Physics.Ninja.html">Ninja</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.Ninja.AABB.html">AABB</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.Ninja.Body.html">Body</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.Ninja.Circle.html">Circle</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.Ninja.Tile.html">Tile</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.html">P2</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.Body.html">Body</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.BodyDebug.html">BodyDebug</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.CollisionGroup.html">CollisionGroup</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.ContactMaterial.html">ContactMaterial</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.DistanceConstraint.html">DistanceConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.GearConstraint.html">GearConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.InversePointProxy.html">InversePointProxy</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.LockConstraint.html">LockConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.Material.html">Material</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.PointProxy.html">PointProxy</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.PrismaticConstraint.html">PrismaticConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.RevoluteConstraint.html">RevoluteConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.Spring.html">Spring</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Plugin.html">Plugin</a>
 						</li>
 						
@@ -291,6 +375,14 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.RetroFont.html">RetroFont</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.ScaleManager.html">ScaleManager</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Signal.html">Signal</a>
 						</li>
 						
@@ -311,11 +403,11 @@
 						</li>
 						
 						<li>
-							<a href="Phaser.Stage.html">Stage</a>
+							<a href="Phaser.SpriteBatch.html">SpriteBatch</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.StageScaleMode.html">StageScaleMode</a>
+							<a href="Phaser.Stage.html">Stage</a>
 						</li>
 						
 						<li>
@@ -392,20 +484,6 @@
 						
 						<li>
 							<a href="SignalBinding.html">SignalBinding</a>
-						</li>
-						
-
-					</ul>
-				</li>
-				
-				<li class="dropdown">
-					<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b
-						class="caret"></b></a>
-
-					<ul class="dropdown-menu ">
-						
-						<li>
-							<a href="global.html#SAT">SAT</a>
 						</li>
 						
 
@@ -638,8 +716,8 @@ Phaser.SinglePad.prototype = {
 
     /**
     * Gamepad connect function, should be called by Phaser.Gamepad
-    * @param {Object} rawPad - The raw gamepad object
     * @method Phaser.SinglePad#connect
+    * @param {Object} rawPad - The raw gamepad object
     */
     connect: function (rawPad) {
 
@@ -691,8 +769,8 @@ Phaser.SinglePad.prototype = {
 
     /**
     * Handles changes in axis
-    * @param {Object} axisState - State of the relevant axis
     * @method Phaser.SinglePad#processAxisChange
+    * @param {Object} axisState - State of the relevant axis
     */
     processAxisChange: function (axisState) {
 
@@ -722,9 +800,9 @@ Phaser.SinglePad.prototype = {
 
     /**
     * Handles button down press
+    * @method Phaser.SinglePad#processButtonDown
     * @param {number} buttonCode - Which buttonCode of this button
     * @param {Object} value - Button value
-    * @method Phaser.SinglePad#processButtonDown
     */
     processButtonDown: function (buttonCode, value) {
 
@@ -780,9 +858,9 @@ Phaser.SinglePad.prototype = {
 
     /**
     * Handles button release
+    * @method Phaser.SinglePad#processButtonUp
     * @param {number} buttonCode - Which buttonCode of this button
     * @param {Object} value - Button value
-    * @method Phaser.SinglePad#processButtonUp
     */
     processButtonUp: function (buttonCode, value) {
 
@@ -828,9 +906,9 @@ Phaser.SinglePad.prototype = {
 
     /**
     * Handles buttons with floating values (like analog buttons that acts almost like an axis but still registers like a button)
+    * @method Phaser.SinglePad#processButtonFloat
     * @param {number} buttonCode - Which buttonCode of this button
     * @param {Object} value - Button value (will range somewhere between 0 and 1, but not specifically 0 or 1.
-    * @method Phaser.SinglePad#processButtonFloat
     */
     processButtonFloat: function (buttonCode, value) {
 
@@ -869,7 +947,7 @@ Phaser.SinglePad.prototype = {
 
     /**
     * Returns value of requested axis
-    * @method Phaser.SinglePad#isDown
+    * @method Phaser.SinglePad#axis
     * @param {number} axisCode - The index of the axis to check
     * @return {number} Axis value if available otherwise false
     */
@@ -903,7 +981,7 @@ Phaser.SinglePad.prototype = {
 
     /**
     * Returns the "just released" state of a button from this gamepad. Just released is considered as being true if the button was released within the duration given (default 250ms).
-    * @method Phaser.SinglePad#justPressed
+    * @method Phaser.SinglePad#justReleased
     * @param {number} buttonCode - The buttonCode of the button to check for.
     * @param {number} [duration=250] - The duration below which the button is considered as being just released.
     * @return {boolean} True if the button is just released otherwise false.
@@ -1019,7 +1097,7 @@ Object.defineProperty(Phaser.SinglePad.prototype, "index", {
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Mon Feb 24 2014 01:12:21 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Fri Mar 14 2014 06:34:18 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>
@@ -1046,6 +1124,9 @@ Object.defineProperty(Phaser.SinglePad.prototype, "index", {
 	<script>
 		$( function () {
 			$( "#toc" ).toc( {
+			    anchorName  : function(i, heading, prefix) {
+					return $(heading).attr("id") || ( prefix + i );
+				},
 				selectors   : "h1,h2,h3,h4",
 				showAndHide : false,
 				scrollTo    : 60

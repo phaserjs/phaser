@@ -365,11 +365,11 @@ Phaser.Easing = {
 
         /**
         * Circular ease-in/out.
-       *
+        *
         * @method Phaser.Easing.Circular#InOut
         * @param {number} k - The value to be tweened. 
         * @returns {number} The tweened value.
-       */
+        */
         InOut: function ( k ) {
 
             if ( ( k *= 2 ) < 1) return - 0.5 * ( Math.sqrt( 1 - k * k) - 1);
@@ -388,11 +388,11 @@ Phaser.Easing = {
 
         /**
         * Elastic ease-in.
-       *
+        *
         * @method Phaser.Easing.Elastic#In 
         * @param {number} k - The value to be tweened. 
         * @returns {number} The tweened value.
-       */
+        */
         In: function ( k ) {
 
             var s, a = 0.1, p = 0.4;
@@ -406,11 +406,11 @@ Phaser.Easing = {
 
         /**
         * Elastic ease-out.
-       *
+        *
         * @method Phaser.Easing.Elastic#Out
         * @param {number} k - The value to be tweened. 
         * @returns {number} The tweened value.
-       */
+        */
         Out: function ( k ) {
 
             var s, a = 0.1, p = 0.4;
@@ -424,11 +424,11 @@ Phaser.Easing = {
 
         /**
         * Elastic ease-in/out.
-       *
+        *
         * @method Phaser.Easing.Elastic#InOut
         * @param {number} k - The value to be tweened. 
         * @returns {number} The tweened value.
-       */
+        */
         InOut: function ( k ) {
 
             var s, a = 0.1, p = 0.4;
@@ -452,11 +452,11 @@ Phaser.Easing = {
 
         /**
         * Back ease-in.
-       *
+        *
         * @method Phaser.Easing.Back#In 
         * @param {number} k - The value to be tweened. 
         * @returns {number} The tweened value.
-       */
+        */
         In: function ( k ) {
 
             var s = 1.70158;
@@ -466,11 +466,11 @@ Phaser.Easing = {
 
         /**
         * Back ease-out.
-       *
+        *
         * @method Phaser.Easing.Back#Out
         * @param {number} k - The value to be tweened. 
         * @returns {number} The tweened value.
-       */
+        */
         Out: function ( k ) {
 
             var s = 1.70158;
@@ -480,11 +480,11 @@ Phaser.Easing = {
 
         /**
         * Back ease-in/out.
-       *
+        *
         * @method Phaser.Easing.Back#InOut
         * @param {number} k - The value to be tweened. 
         * @returns {number} The tweened value.
-       */
+        */
         InOut: function ( k ) {
 
             var s = 1.70158 * 1.525;
@@ -504,11 +504,11 @@ Phaser.Easing = {
 
         /**
         * Bounce ease-in.
-       *
+        *
         * @method Phaser.Easing.Bounce#In 
         * @param {number} k - The value to be tweened. 
         * @returns {number} The tweened value.
-       */
+        */
         In: function ( k ) {
 
             return 1 - Phaser.Easing.Bounce.Out( 1 - k );
@@ -517,11 +517,11 @@ Phaser.Easing = {
 
         /**
         * Bounce ease-out.
-       *
+        *
         * @method Phaser.Easing.Bounce#Out
         * @param {number} k - The value to be tweened. 
         * @returns {number} The tweened value.
-       */
+        */
         Out: function ( k ) {
 
             if ( k < ( 1 / 2.75 ) ) {
@@ -546,11 +546,11 @@ Phaser.Easing = {
 
         /**
         * Bounce ease-in/out.
-       *
+        *
         * @method Phaser.Easing.Bounce#InOut
         * @param {number} k - The value to be tweened. 
         * @returns {number} The tweened value.
-       */
+        */
         InOut: function ( k ) {
 
             if ( k < 0.5 ) return Phaser.Easing.Bounce.In( k * 2 ) * 0.5;

@@ -72,16 +72,17 @@ Phaser.Loader = function (game) {
 
     /**
     * You can optionally link a sprite to the preloader.
-    * If you do so the Sprite's width or height will be cropped based on the percentage loaded.
-    * @property {Phaser.Sprite} preloadSprite
+    * If you do so the Sprites width or height will be cropped based on the percentage loaded.
+    * @property {Phaser.Sprite|Phaser.Image} preloadSprite
     * @default
     */
     this.preloadSprite = null;
 
     /**
-    * @property {string} crossOrigin - The crossOrigin value applied to loaded images
+    * @property {boolean|string} crossOrigin - The crossOrigin value applied to loaded images.
+    * @default
     */
-    this.crossOrigin = '';
+    this.crossOrigin = false;
 
     /**
     * If you want to append a URL before the path of any asset you can set this here.
@@ -132,15 +133,21 @@ Phaser.Loader.TEXTURE_ATLAS_JSON_HASH = 1;
 */
 Phaser.Loader.TEXTURE_ATLAS_XML_STARLING = 2;
 
+/**
+* @constant
+* @type {number}
+*/
+Phaser.Loader.PHYSICS_LIME_CORONA = 3;
+
 Phaser.Loader.prototype = {
 
     /**
     * You can set a Sprite to be a "preload" sprite by passing it to this method.
     * A "preload" sprite will have its width or height crop adjusted based on the percentage of the loader in real-time.
-    * This allows you to easily make loading bars for games.
+    * This allows you to easily make loading bars for games. Note that Sprite.visible = true will be set when calling this.
     *
     * @method Phaser.Loader#setPreloadSprite
-    * @param {Phaser.Sprite} sprite - The sprite that will be cropped during the load.
+    * @param {Phaser.Sprite|Phaser.Image} sprite - The sprite that will be cropped during the load.
     * @param {number} [direction=0] - A value of zero means the sprite width will be cropped, a value of 1 means its height will be cropped.
     */
     setPreloadSprite: function (sprite, direction) {
@@ -160,8 +167,9 @@ Phaser.Loader.prototype = {
             this.preloadSprite.crop = new Phaser.Rectangle(0, 0, sprite.width, 1);
         }
 
-        sprite.crop = this.preloadSprite.crop;
-        sprite.cropEnabled = true;
+        sprite.crop(this.preloadSprite.crop);
+
+        sprite.visible = true;
 
     },
 
@@ -187,6 +195,31 @@ Phaser.Loader.prototype = {
         }
 
         return false;
+        
+    },
+
+    /**
+    * Gets the fileList index for the given key.
+    *
+    * @method Phaser.Loader#getAssetIndex
+    * @param {string} type - The type asset you want to check.
+    * @param {string} key - Key of the asset you want to check.
+    * @return {number} The index of this key in the filelist, or -1 if not found.
+    */
+    getAssetIndex: function (type, key) {
+
+        if (this._fileList.length > 0)
+        {
+            for (var i = 0; i < this._fileList.length; i++)
+            {
+                if (this._fileList[i].type === type && this._fileList[i].key === key)
+                {
+                    return i;
+                }
+            }
+        }
+
+        return -1;
         
     },
 
@@ -294,9 +327,15 @@ Phaser.Loader.prototype = {
             }
         }
 
-        if (this.checkKeyExists(type, key) === false)
+        var index = this.getAssetIndex(type, key);
+
+        if (index === -1)
         {
             this._fileList.push(entry);
+        }
+        else
+        {
+            this._fileList[index] = entry;
         }
 
     },
@@ -354,32 +393,48 @@ Phaser.Loader.prototype = {
     },
 
     /**
-    * Add a JavaScript file to the Loader. Once loaded the JavaScript file will be automatically turned into a script tag (and executed), so be careful what you load!
-    *
-    * @method Phaser.Loader#script
-    * @param {string} key - Unique asset key of the script file.
-    * @param {string} url - URL of the JavaScript file.
-    * @return {Phaser.Loader} This Loader instance.
-    */
-    script: function (key, url) {
-
-        this.addToFileList('script', key, url);
-
-        return this;
-
-    },
-    
-    /**
-    * Add a custom JSON file to the Loader.
+    * Add a json file to the Loader.
     *
     * @method Phaser.Loader#json
     * @param {string} key - Unique asset key of the json file.
     * @param {string} url - URL of the json file.
+    * @param {boolean} [overwrite=false] - If an unloaded file with a matching key already exists in the queue, this entry will overwrite it.
     * @return {Phaser.Loader} This Loader instance.
     */
-    json: function (key, url) {
+    json: function (key, url, overwrite) {
 
-        this.addToFileList('json', key, url);
+        if (typeof overwrite === "undefined") { overwrite = false; }
+
+        if (overwrite)
+        {
+            this.replaceInFileList('json', key, url);
+        }
+        else
+        {
+            this.addToFileList('json', key, url);
+        }
+
+        return this;
+
+    },
+
+    /**
+    * Add a JavaScript file to the Loader. Once loaded the JavaScript file will be automatically turned into a script tag (and executed), so be careful what you load!
+    * You can also specify a callback. This will be executed as soon as the script tag has been created.
+    *
+    * @method Phaser.Loader#script
+    * @param {string} key - Unique asset key of the script file.
+    * @param {string} url - URL of the JavaScript file.
+    * @param {function} [callback] - Optional callback that will be called after the script tag has loaded, so you can perform additional processing.
+    * @param {function} [callbackContext] - The context under which the callback will be applied. If not specified it will use the callback itself as the context.
+    * @return {Phaser.Loader} This Loader instance.
+    */
+    script: function (key, url, callback, callbackContext) {
+
+        if (typeof callback === 'undefined') { callback = false; }
+        if (callback !== false && typeof callbackContext === 'undefined') { callbackContext = callback; }
+
+        this.addToFileList('script', key, url, { callback: callback, callbackContext: callbackContext });
 
         return this;
 
@@ -459,7 +514,7 @@ Phaser.Loader.prototype = {
     * @param {string} key - Unique asset key of the tilemap data.
     * @param {string} [mapDataURL] - The url of the map data file (csv/json)
     * @param {object} [mapData] - An optional JSON data object. If given then the mapDataURL is ignored and this JSON object is used for map data instead.
-    * @param {string} [format=Phaser.Tilemap.CSV] - The format of the map data. Either Phaser.Tilemap.CSV or Phaser.Tilemap.TILED_JSON.
+    * @param {number} [format=Phaser.Tilemap.CSV] - The format of the map data. Either Phaser.Tilemap.CSV or Phaser.Tilemap.TILED_JSON.
     * @return {Phaser.Loader} This Loader instance.
     */
     tilemap: function (key, mapDataURL, mapData, format) {
@@ -506,6 +561,49 @@ Phaser.Loader.prototype = {
     },
 
     /**
+    * Add a new physics data object loading request.
+    * The data must be in Lime + Corona JSON format. Physics Editor by code'n'web exports in this format natively.
+    *
+    * @method Phaser.Loader#physics
+    * @param {string} key - Unique asset key of the physics json data.
+    * @param {string} [dataURL] - The url of the map data file (csv/json)
+    * @param {object} [jsonData] - An optional JSON data object. If given then the dataURL is ignored and this JSON object is used for physics data instead.
+    * @param {string} [format=Phaser.Physics.LIME_CORONA_JSON] - The format of the physics data.
+    * @return {Phaser.Loader} This Loader instance.
+    */
+    physics: function (key, dataURL, jsonData, format) {
+
+        if (typeof dataURL === "undefined") { dataURL = null; }
+        if (typeof jsonData === "undefined") { jsonData = null; }
+        if (typeof format === "undefined") { format = Phaser.Physics.LIME_CORONA_JSON; }
+
+        if (dataURL == null && jsonData == null)
+        {
+            console.warn('Phaser.Loader.physics - Both dataURL and jsonData are null. One must be set.');
+
+            return this;
+        }
+
+        //  A map data object has been given
+        if (jsonData)
+        {
+            if (typeof jsonData === 'string')
+            {
+                jsonData = JSON.parse(jsonData);
+            }
+
+            this.game.cache.addPhysicsData(key, null, jsonData, format);
+        }
+        else
+        {
+            this.addToFileList('physics', key, dataURL, { format: format });
+        }
+
+        return this;
+
+    },
+
+    /**
     * Add a new bitmap font loading request.
     *
     * @method Phaser.Loader#bitmapFont
@@ -513,17 +611,21 @@ Phaser.Loader.prototype = {
     * @param {string} textureURL - The url of the font image file.
     * @param {string} [xmlURL] - The url of the font data file (xml/fnt)
     * @param {object} [xmlData] - An optional XML data object.
+    * @param {number} [xSpacing=0] - If you'd like to add additional horizontal spacing between the characters then set the pixel value here.
+    * @param {number} [ySpacing=0] - If you'd like to add additional vertical spacing between the lines then set the pixel value here.
     * @return {Phaser.Loader} This Loader instance.
     */
-    bitmapFont: function (key, textureURL, xmlURL, xmlData) {
+    bitmapFont: function (key, textureURL, xmlURL, xmlData, xSpacing, ySpacing) {
 
         if (typeof xmlURL === "undefined") { xmlURL = null; }
         if (typeof xmlData === "undefined") { xmlData = null; }
+        if (typeof xSpacing === "undefined") { xSpacing = 0; }
+        if (typeof ySpacing === "undefined") { ySpacing = 0; }
 
         //  A URL to a json/xml file has been given
         if (xmlURL)
         {
-            this.addToFileList('bitmapfont', key, textureURL, { xmlURL: xmlURL });
+            this.addToFileList('bitmapfont', key, textureURL, { xmlURL: xmlURL, xSpacing: xSpacing, ySpacing: ySpacing });
         }
         else
         {
@@ -556,7 +658,7 @@ Phaser.Loader.prototype = {
                 }
                 else
                 {
-                    this.addToFileList('bitmapfont', key, textureURL, { xmlURL: null, xmlData: xml });
+                    this.addToFileList('bitmapfont', key, textureURL, { xmlURL: null, xmlData: xml, xSpacing: xSpacing, ySpacing: ySpacing });
                 }
             }
         }
@@ -789,7 +891,10 @@ Phaser.Loader.prototype = {
                 file.data.onerror = function () {
                     return _this.fileError(_this._fileIndex);
                 };
-                file.data.crossOrigin = this.crossOrigin;
+                if (this.crossOrigin)
+                {
+                    file.data.crossOrigin = this.crossOrigin;
+                }
                 file.data.src = this.baseURL + file.url;
                 break;
 
@@ -842,12 +947,21 @@ Phaser.Loader.prototype = {
                 }
 
                 break;
-            case 'tilemap':
+
             case 'json':
                 this._xhr.open("GET", this.baseURL + file.url, true);
                 this._xhr.responseType = "text";
+                this._xhr.onload = function () {
+                    return _this.jsonLoadComplete(_this._fileIndex);
+                };
+                this._xhr.send();
+                break;
 
-                if (!file.format || file.format === Phaser.Tilemap.TILED_JSON)
+            case 'tilemap':
+                this._xhr.open("GET", this.baseURL + file.url, true);
+                this._xhr.responseType = "text";
+
+                if (file.format === Phaser.Tilemap.TILED_JSON)
                 {
                     this._xhr.onload = function () {
                         return _this.jsonLoadComplete(_this._fileIndex);
@@ -869,8 +983,10 @@ Phaser.Loader.prototype = {
                 };
                 this._xhr.send();
                 break;
+
             case 'text':
             case 'script':
+            case 'physics':
                 this._xhr.open("GET", this.baseURL + file.url, true);
                 this._xhr.responseType = "text";
                 this._xhr.onload = function () {
@@ -1017,7 +1133,7 @@ Phaser.Loader.prototype = {
 
                 if (file.xmlURL == null)
                 {
-                    this.game.cache.addBitmapFont(file.key, file.url, file.data, file.xmlData);
+                    this.game.cache.addBitmapFont(file.key, file.url, file.data, file.xmlData, file.xSpacing, file.ySpacing);
                 }
                 else
                 {
@@ -1073,6 +1189,11 @@ Phaser.Loader.prototype = {
                 this.game.cache.addText(file.key, file.url, file.data);
                 break;
 
+            case 'physics':
+                var data = JSON.parse(this._xhr.responseText);
+                this.game.cache.addPhysicsData(file.key, file.url, data, file.format);
+                break;
+
             case 'script':
                 file.data = document.createElement('script');
                 file.data.language = 'javascript';
@@ -1080,6 +1201,10 @@ Phaser.Loader.prototype = {
                 file.data.defer = false;
                 file.data.text = this._xhr.responseText;
                 document.head.appendChild(file.data);
+                if (file.callback)
+                {
+                    file.data = file.callback.call(file.callbackContext, file.key, this._xhr.responseText);
+                }
                 break;
 
             case 'binary':
@@ -1129,7 +1254,7 @@ Phaser.Loader.prototype = {
         }
         else if (file.type === 'json')
         {
-             this.game.cache.addText(file.key, file.url, data);
+            this.game.cache.addJSON(file.key, file.url, data);
         }
         else
         {
@@ -1224,7 +1349,7 @@ Phaser.Loader.prototype = {
 
         if (file.type == 'bitmapfont')
         {
-            this.game.cache.addBitmapFont(file.key, file.url, file.data, xml);
+            this.game.cache.addBitmapFont(file.key, file.url, file.data, xml, file.xSpacing, file.ySpacing);
         }
         else if (file.type == 'textureatlas')
         {
@@ -1262,8 +1387,6 @@ Phaser.Loader.prototype = {
             {
                 this.preloadSprite.crop.height = Math.floor((this.preloadSprite.height / 100) * this.progress);
             }
-
-            this.preloadSprite.sprite.crop = this.preloadSprite.crop;
         }
 
         this.onFileComplete.dispatch(this.progress, this._fileList[previousIndex].key, success, this.totalLoadedFiles(), this._fileList.length);

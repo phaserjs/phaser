@@ -28,7 +28,7 @@ Phaser.GamepadButton = function (game, buttoncode) {
     * @property {boolean} isUp - The "up" state of the button.
     * @default
     */
-    this.isUp = false;
+    this.isUp = true;
 
     /**
     * @property {number} timeDown - The timestamp when the button was last pressed down.

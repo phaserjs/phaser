@@ -91,10 +91,6 @@
 						</li>
 						
 						<li>
-							<a href="Phaser.DOMSprite.html">DOMSprite</a>
-						</li>
-						
-						<li>
 							<a href="Phaser.Easing.html">Easing</a>
 						</li>
 						
@@ -143,6 +139,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.Ellipse.html">Ellipse</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Events.html">Events</a>
 						</li>
 						
@@ -163,6 +163,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.GameObjectCreator.html">GameObjectCreator</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.GameObjectFactory.html">GameObjectFactory</a>
 						</li>
 						
@@ -180,6 +184,10 @@
 						
 						<li>
 							<a href="Phaser.Group.html">Group</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Image.html">Image</a>
 						</li>
 						
 						<li>
@@ -251,6 +259,82 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.Physics.Ninja.html">Ninja</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.Ninja.AABB.html">AABB</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.Ninja.Body.html">Body</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.Ninja.Circle.html">Circle</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.Ninja.Tile.html">Tile</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.html">P2</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.Body.html">Body</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.BodyDebug.html">BodyDebug</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.CollisionGroup.html">CollisionGroup</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.ContactMaterial.html">ContactMaterial</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.DistanceConstraint.html">DistanceConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.GearConstraint.html">GearConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.InversePointProxy.html">InversePointProxy</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.LockConstraint.html">LockConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.Material.html">Material</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.PointProxy.html">PointProxy</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.PrismaticConstraint.html">PrismaticConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.RevoluteConstraint.html">RevoluteConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.Spring.html">Spring</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Plugin.html">Plugin</a>
 						</li>
 						
@@ -291,6 +375,14 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.RetroFont.html">RetroFont</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.ScaleManager.html">ScaleManager</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Signal.html">Signal</a>
 						</li>
 						
@@ -311,11 +403,11 @@
 						</li>
 						
 						<li>
-							<a href="Phaser.Stage.html">Stage</a>
+							<a href="Phaser.SpriteBatch.html">SpriteBatch</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.StageScaleMode.html">StageScaleMode</a>
+							<a href="Phaser.Stage.html">Stage</a>
 						</li>
 						
 						<li>
@@ -392,20 +484,6 @@
 						
 						<li>
 							<a href="SignalBinding.html">SignalBinding</a>
-						</li>
-						
-
-					</ul>
-				</li>
-				
-				<li class="dropdown">
-					<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b
-						class="caret"></b></a>
-
-					<ul class="dropdown-menu ">
-						
-						<li>
-							<a href="global.html#SAT">SAT</a>
 						</li>
 						
 
@@ -796,11 +874,11 @@ Phaser.Easing = {
 
         /**
         * Circular ease-in/out.
-       *
+        *
         * @method Phaser.Easing.Circular#InOut
         * @param {number} k - The value to be tweened. 
         * @returns {number} The tweened value.
-       */
+        */
         InOut: function ( k ) {
 
             if ( ( k *= 2 ) &lt; 1) return - 0.5 * ( Math.sqrt( 1 - k * k) - 1);
@@ -819,11 +897,11 @@ Phaser.Easing = {
 
         /**
         * Elastic ease-in.
-       *
+        *
         * @method Phaser.Easing.Elastic#In 
         * @param {number} k - The value to be tweened. 
         * @returns {number} The tweened value.
-       */
+        */
         In: function ( k ) {
 
             var s, a = 0.1, p = 0.4;
@@ -837,11 +915,11 @@ Phaser.Easing = {
 
         /**
         * Elastic ease-out.
-       *
+        *
         * @method Phaser.Easing.Elastic#Out
         * @param {number} k - The value to be tweened. 
         * @returns {number} The tweened value.
-       */
+        */
         Out: function ( k ) {
 
             var s, a = 0.1, p = 0.4;
@@ -855,11 +933,11 @@ Phaser.Easing = {
 
         /**
         * Elastic ease-in/out.
-       *
+        *
         * @method Phaser.Easing.Elastic#InOut
         * @param {number} k - The value to be tweened. 
         * @returns {number} The tweened value.
-       */
+        */
         InOut: function ( k ) {
 
             var s, a = 0.1, p = 0.4;
@@ -883,11 +961,11 @@ Phaser.Easing = {
 
         /**
         * Back ease-in.
-       *
+        *
         * @method Phaser.Easing.Back#In 
         * @param {number} k - The value to be tweened. 
         * @returns {number} The tweened value.
-       */
+        */
         In: function ( k ) {
 
             var s = 1.70158;
@@ -897,11 +975,11 @@ Phaser.Easing = {
 
         /**
         * Back ease-out.
-       *
+        *
         * @method Phaser.Easing.Back#Out
         * @param {number} k - The value to be tweened. 
         * @returns {number} The tweened value.
-       */
+        */
         Out: function ( k ) {
 
             var s = 1.70158;
@@ -911,11 +989,11 @@ Phaser.Easing = {
 
         /**
         * Back ease-in/out.
-       *
+        *
         * @method Phaser.Easing.Back#InOut
         * @param {number} k - The value to be tweened. 
         * @returns {number} The tweened value.
-       */
+        */
         InOut: function ( k ) {
 
             var s = 1.70158 * 1.525;
@@ -935,11 +1013,11 @@ Phaser.Easing = {
 
         /**
         * Bounce ease-in.
-       *
+        *
         * @method Phaser.Easing.Bounce#In 
         * @param {number} k - The value to be tweened. 
         * @returns {number} The tweened value.
-       */
+        */
         In: function ( k ) {
 
             return 1 - Phaser.Easing.Bounce.Out( 1 - k );
@@ -948,11 +1026,11 @@ Phaser.Easing = {
 
         /**
         * Bounce ease-out.
-       *
+        *
         * @method Phaser.Easing.Bounce#Out
         * @param {number} k - The value to be tweened. 
         * @returns {number} The tweened value.
-       */
+        */
         Out: function ( k ) {
 
             if ( k &lt; ( 1 / 2.75 ) ) {
@@ -977,11 +1055,11 @@ Phaser.Easing = {
 
         /**
         * Bounce ease-in/out.
-       *
+        *
         * @method Phaser.Easing.Bounce#InOut
         * @param {number} k - The value to be tweened. 
         * @returns {number} The tweened value.
-       */
+        */
         InOut: function ( k ) {
 
             if ( k &lt; 0.5 ) return Phaser.Easing.Bounce.In( k * 2 ) * 0.5;
@@ -1013,7 +1091,7 @@ Phaser.Easing = {
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Mon Feb 24 2014 01:12:21 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Fri Mar 14 2014 06:34:17 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>
@@ -1040,6 +1118,9 @@ Phaser.Easing = {
 	<script>
 		$( function () {
 			$( "#toc" ).toc( {
+			    anchorName  : function(i, heading, prefix) {
+					return $(heading).attr("id") || ( prefix + i );
+				},
 				selectors   : "h1,h2,h3,h4",
 				showAndHide : false,
 				scrollTo    : 60

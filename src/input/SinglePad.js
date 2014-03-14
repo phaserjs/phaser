@@ -207,8 +207,8 @@ Phaser.SinglePad.prototype = {
 
     /**
     * Gamepad connect function, should be called by Phaser.Gamepad
-    * @param {Object} rawPad - The raw gamepad object
     * @method Phaser.SinglePad#connect
+    * @param {Object} rawPad - The raw gamepad object
     */
     connect: function (rawPad) {
 
@@ -260,8 +260,8 @@ Phaser.SinglePad.prototype = {
 
     /**
     * Handles changes in axis
-    * @param {Object} axisState - State of the relevant axis
     * @method Phaser.SinglePad#processAxisChange
+    * @param {Object} axisState - State of the relevant axis
     */
     processAxisChange: function (axisState) {
 
@@ -291,9 +291,9 @@ Phaser.SinglePad.prototype = {
 
     /**
     * Handles button down press
+    * @method Phaser.SinglePad#processButtonDown
     * @param {number} buttonCode - Which buttonCode of this button
     * @param {Object} value - Button value
-    * @method Phaser.SinglePad#processButtonDown
     */
     processButtonDown: function (buttonCode, value) {
 
@@ -349,9 +349,9 @@ Phaser.SinglePad.prototype = {
 
     /**
     * Handles button release
+    * @method Phaser.SinglePad#processButtonUp
     * @param {number} buttonCode - Which buttonCode of this button
     * @param {Object} value - Button value
-    * @method Phaser.SinglePad#processButtonUp
     */
     processButtonUp: function (buttonCode, value) {
 
@@ -397,9 +397,9 @@ Phaser.SinglePad.prototype = {
 
     /**
     * Handles buttons with floating values (like analog buttons that acts almost like an axis but still registers like a button)
+    * @method Phaser.SinglePad#processButtonFloat
     * @param {number} buttonCode - Which buttonCode of this button
     * @param {Object} value - Button value (will range somewhere between 0 and 1, but not specifically 0 or 1.
-    * @method Phaser.SinglePad#processButtonFloat
     */
     processButtonFloat: function (buttonCode, value) {
 
@@ -438,7 +438,7 @@ Phaser.SinglePad.prototype = {
 
     /**
     * Returns value of requested axis
-    * @method Phaser.SinglePad#isDown
+    * @method Phaser.SinglePad#axis
     * @param {number} axisCode - The index of the axis to check
     * @return {number} Axis value if available otherwise false
     */
@@ -472,7 +472,7 @@ Phaser.SinglePad.prototype = {
 
     /**
     * Returns the "just released" state of a button from this gamepad. Just released is considered as being true if the button was released within the duration given (default 250ms).
-    * @method Phaser.SinglePad#justPressed
+    * @method Phaser.SinglePad#justReleased
     * @param {number} buttonCode - The buttonCode of the button to check for.
     * @param {number} [duration=250] - The duration below which the button is considered as being just released.
     * @return {boolean} True if the button is just released otherwise false.

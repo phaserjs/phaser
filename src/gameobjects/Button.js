@@ -17,6 +17,7 @@
 * You can set a unique texture frame and Sound for any of these states.
 *
 * @constructor
+* @extends Phaser.Image
 *
 * @param {Phaser.Game} game Current game instance.
 * @param {number} [x=0] - X position of the Button.
@@ -37,7 +38,7 @@ Phaser.Button = function (game, x, y, key, callback, callbackContext, overFrame,
     callback = callback || null;
     callbackContext = callbackContext || this;
 
-    Phaser.Sprite.call(this, game, x, y, key, outFrame);
+    Phaser.Image.call(this, game, x, y, key, outFrame);
 
     /** 
     * @property {number} type - The Phaser Object Type.
@@ -180,14 +181,16 @@ Phaser.Button = function (game, x, y, key, callback, callbackContext, overFrame,
     */
     this.forceOut = false;
 
+    this.inputEnabled = true;
+
+    this.input.start(0, true);
+
     this.setFrames(overFrame, outFrame, downFrame, upFrame);
 
     if (callback !== null)
     {
         this.onInputUp.add(callback, callbackContext);
     }
-
-    this.input.start(0, true);
 
     //  Redirect the input events to here so we can handle animation updates, etc
     this.events.onInputOver.add(this.onInputOverHandler, this);
@@ -197,8 +200,7 @@ Phaser.Button = function (game, x, y, key, callback, callbackContext, overFrame,
 
 };
 
-Phaser.Button.prototype = Object.create(Phaser.Sprite.prototype);
-Phaser.Button.prototype = Phaser.Utils.extend(true, Phaser.Button.prototype, Phaser.Sprite.prototype, PIXI.Sprite.prototype);
+Phaser.Button.prototype = Object.create(Phaser.Image.prototype);
 Phaser.Button.prototype.constructor = Phaser.Button;
 
 /**

@@ -91,10 +91,6 @@
 						</li>
 						
 						<li>
-							<a href="Phaser.DOMSprite.html">DOMSprite</a>
-						</li>
-						
-						<li>
 							<a href="Phaser.Easing.html">Easing</a>
 						</li>
 						
@@ -143,6 +139,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.Ellipse.html">Ellipse</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Events.html">Events</a>
 						</li>
 						
@@ -163,6 +163,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.GameObjectCreator.html">GameObjectCreator</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.GameObjectFactory.html">GameObjectFactory</a>
 						</li>
 						
@@ -180,6 +184,10 @@
 						
 						<li>
 							<a href="Phaser.Group.html">Group</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Image.html">Image</a>
 						</li>
 						
 						<li>
@@ -251,6 +259,82 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.Physics.Ninja.html">Ninja</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.Ninja.AABB.html">AABB</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.Ninja.Body.html">Body</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.Ninja.Circle.html">Circle</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.Ninja.Tile.html">Tile</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.html">P2</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.Body.html">Body</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.BodyDebug.html">BodyDebug</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.CollisionGroup.html">CollisionGroup</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.ContactMaterial.html">ContactMaterial</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.DistanceConstraint.html">DistanceConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.GearConstraint.html">GearConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.InversePointProxy.html">InversePointProxy</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.LockConstraint.html">LockConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.Material.html">Material</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.PointProxy.html">PointProxy</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.PrismaticConstraint.html">PrismaticConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.RevoluteConstraint.html">RevoluteConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.Spring.html">Spring</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Plugin.html">Plugin</a>
 						</li>
 						
@@ -291,6 +375,14 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.RetroFont.html">RetroFont</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.ScaleManager.html">ScaleManager</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Signal.html">Signal</a>
 						</li>
 						
@@ -311,11 +403,11 @@
 						</li>
 						
 						<li>
-							<a href="Phaser.Stage.html">Stage</a>
+							<a href="Phaser.SpriteBatch.html">SpriteBatch</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.StageScaleMode.html">StageScaleMode</a>
+							<a href="Phaser.Stage.html">Stage</a>
 						</li>
 						
 						<li>
@@ -398,20 +490,6 @@
 					</ul>
 				</li>
 				
-				<li class="dropdown">
-					<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b
-						class="caret"></b></a>
-
-					<ul class="dropdown-menu ">
-						
-						<li>
-							<a href="global.html#SAT">SAT</a>
-						</li>
-						
-
-					</ul>
-				</li>
-				
 			</ul>
 		</div>
 	</div>
@@ -435,10 +513,8 @@
     BitmapData
     </h2>
     
-        <div class="class-description"><p>Note: This object is still experimental and likely to change.</p>
-<p>A BitmapData object can be thought of as a blank canvas onto which you can perform graphics operations as you would on a normal canvas, 
-such as drawing lines, circles, arcs, fills and copying and setting blocks of pixel data. A single BitmapData can be used as the texture 
-for multiple Sprites. So if you need to dynamically create a Sprite texture then they are a good choice. It supports the EaselJS Tiny API.</p></div>
+        <div class="class-description"><p>A BitmapData object contains a Canvas element to which you can draw anything you like via normal Canvas context operations.
+A single BitmapData can be used as the texture one or many Images/Sprites. So if you need to dynamically create a Sprite texture then they are a good choice.</p></div>
     
 </header>
 
@@ -449,7 +525,7 @@ for multiple Sprites. So if you need to dynamically create a Sprite texture then
     
         
 <dt>
-    <h4 class="name" id="BitmapData"><span class="type-signature"></span>new BitmapData<span class="signature">(game, <span class="optional">width</span>, <span class="optional">height</span>)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="BitmapData"><span class="type-signature"></span>new BitmapData<span class="signature">(game, key, <span class="optional">width</span>, <span class="optional">height</span>)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -530,6 +606,41 @@ for multiple Sprites. So if you need to dynamically create a Sprite texture then
 
         <tr>
             
+                <td class="name"><code>key</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>Internal Phaser reference key for the render texture.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
                 <td class="name"><code>width</code></td>
             
 
@@ -557,7 +668,7 @@ for multiple Sprites. So if you need to dynamically create a Sprite texture then
             
                 <td class="default">
                 
-                    256
+                    100
                 
                 </td>
             
@@ -596,7 +707,7 @@ for multiple Sprites. So if you need to dynamically create a Sprite texture then
             
                 <td class="default">
                 
-                    256
+                    100
                 
                 </td>
             
@@ -633,7 +744,7 @@ for multiple Sprites. So if you need to dynamically create a Sprite texture then
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-23">line 23</a>
+        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-21">line 21</a>
     </li></ul></dd>
     
 
@@ -761,7 +872,7 @@ for multiple Sprites. So if you need to dynamically create a Sprite texture then
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-81">line 81</a>
+        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-84">line 84</a>
     </li></ul></dd>
     
 
@@ -863,7 +974,7 @@ for multiple Sprites. So if you need to dynamically create a Sprite texture then
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-52">line 52</a>
+        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-50">line 50</a>
     </li></ul></dd>
     
 
@@ -965,7 +1076,109 @@ for multiple Sprites. So if you need to dynamically create a Sprite texture then
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-58">line 58</a>
+        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-56">line 56</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="ctx"><span class="type-signature"></span>ctx<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>ctx</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">CanvasRenderingContext2D</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>A reference to BitmapData.context.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-61">line 61</a>
     </li></ul></dd>
     
 
@@ -1067,7 +1280,7 @@ for multiple Sprites. So if you need to dynamically create a Sprite texture then
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-31">line 31</a>
+        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-29">line 29</a>
     </li></ul></dd>
     
 
@@ -1169,7 +1382,7 @@ for multiple Sprites. So if you need to dynamically create a Sprite texture then
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-46">line 46</a>
+        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-44">line 44</a>
     </li></ul></dd>
     
 
@@ -1271,7 +1484,7 @@ for multiple Sprites. So if you need to dynamically create a Sprite texture then
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-63">line 63</a>
+        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-66">line 66</a>
     </li></ul></dd>
     
 
@@ -1289,7 +1502,7 @@ for multiple Sprites. So if you need to dynamically create a Sprite texture then
         
             
 <dt>
-    <h4 class="name" id="name"><span class="type-signature"></span>name<span class="type-signature"></span></h4>
+    <h4 class="name" id="key"><span class="type-signature"></span>key<span class="type-signature"></span></h4>
     
     
 </dt>
@@ -1328,7 +1541,7 @@ for multiple Sprites. So if you need to dynamically create a Sprite texture then
 
         <tr>
             
-                <td class="name"><code>name</code></td>
+                <td class="name"><code>key</code></td>
             
 
             <td class="type">
@@ -1344,7 +1557,7 @@ for multiple Sprites. So if you need to dynamically create a Sprite texture then
 
             
 
-            <td class="description last"><p>The name of the BitmapData.</p></td>
+            <td class="description last"><p>The key of the BitmapData in the Cache, if stored there.</p></td>
         </tr>
 
 	
@@ -1373,7 +1586,7 @@ for multiple Sprites. So if you need to dynamically create a Sprite texture then
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-36">line 36</a>
+        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-34">line 34</a>
     </li></ul></dd>
     
 
@@ -1475,7 +1688,7 @@ for multiple Sprites. So if you need to dynamically create a Sprite texture then
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-70">line 70</a>
+        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-73">line 73</a>
     </li></ul></dd>
     
 
@@ -1577,7 +1790,7 @@ for multiple Sprites. So if you need to dynamically create a Sprite texture then
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-87">line 87</a>
+        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-90">line 90</a>
     </li></ul></dd>
     
 
@@ -1679,7 +1892,7 @@ for multiple Sprites. So if you need to dynamically create a Sprite texture then
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-93">line 93</a>
+        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-96">line 96</a>
     </li></ul></dd>
     
 
@@ -1781,7 +1994,7 @@ for multiple Sprites. So if you need to dynamically create a Sprite texture then
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-99">line 99</a>
+        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-102">line 102</a>
     </li></ul></dd>
     
 
@@ -1883,7 +2096,7 @@ for multiple Sprites. So if you need to dynamically create a Sprite texture then
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-41">line 41</a>
+        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-39">line 39</a>
     </li></ul></dd>
     
 
@@ -1907,7 +2120,7 @@ for multiple Sprites. So if you need to dynamically create a Sprite texture then
         <dl>
             
 <dt>
-    <h4 class="name" id="a"><span class="type-signature"></span>a<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="add"><span class="type-signature"></span>add<span class="signature">(object)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -1915,76 +2128,7 @@ for multiple Sprites. So if you need to dynamically create a Sprite texture then
     
     
     <div class="description">
-        <p>Shortcut to arc.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-996">line 996</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="add"><span class="type-signature"></span>add<span class="signature">(sprite)</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Updates the given Sprite so that it uses this BitmapData as its texture.</p>
+        <p>Updates the given objects so that they use this BitmapData as their texture. This will replace any texture they will currently have set.</p>
     </div>
     
 
@@ -2018,13 +2162,22 @@ for multiple Sprites. So if you need to dynamically create a Sprite texture then
 
         <tr>
             
-                <td class="name"><code>sprite</code></td>
+                <td class="name"><code>object</code></td>
             
 
             <td class="type">
             
                 
 <span class="param-type"><a href="Phaser.Sprite.html">Phaser.Sprite</a></span>
+|
+
+<span class="param-type"><a href="Array.html">Array</a>.&lt;<a href="Phaser.Sprite.html">Phaser.Sprite</a>></span>
+|
+
+<span class="param-type"><a href="Phaser.Image.html">Phaser.Image</a></span>
+|
+
+<span class="param-type"><a href="Array.html">Array</a>.&lt;<a href="Phaser.Image.html">Phaser.Image</a>></span>
 
 
             
@@ -2034,7 +2187,7 @@ for multiple Sprites. So if you need to dynamically create a Sprite texture then
 
             
 
-            <td class="description last"><p>The sprite to apply this texture to.</p></td>
+            <td class="description last"><p>Either a single Sprite/Image or an Array of Sprites/Images.</p></td>
         </tr>
 
 	
@@ -2066,7 +2219,7 @@ for multiple Sprites. So if you need to dynamically create a Sprite texture then
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-107">line 107</a>
+        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-110">line 110</a>
     </li></ul></dd>
     
 
@@ -2094,7 +2247,7 @@ for multiple Sprites. So if you need to dynamically create a Sprite texture then
         
             
 <dt>
-    <h4 class="name" id="addTo"><span class="type-signature"></span>addTo<span class="signature">(sprites)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="alphaMask"><span class="type-signature"></span>alphaMask<span class="signature">(source, mask)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -2102,7 +2255,7 @@ for multiple Sprites. So if you need to dynamically create a Sprite texture then
     
     
     <div class="description">
-        <p>Given an array of Sprites it will update each of them so that their Textures reference this BitmapData.</p>
+        <p>Draws the given image onto this BitmapData using an image as an alpha mask.</p>
     </div>
     
 
@@ -2136,769 +2289,15 @@ for multiple Sprites. So if you need to dynamically create a Sprite texture then
 
         <tr>
             
-                <td class="name"><code>sprites</code></td>
+                <td class="name"><code>source</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Phaser.Sprite[]</span>
+<span class="param-type">HTMLImage</span>
+|
 
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>An array of Sprites to apply this texture to.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-118">line 118</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="arc"><span class="type-signature"></span>arc<span class="signature">(x, y, radius, startAngle, endAngle, <span class="optional">anticlockwise</span>)</span><span class="type-signature"> &rarr; {<a href="Phaser.BitmapData.html">Phaser.BitmapData</a>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Adds an arc to the path which is centered at (x, y) position with radius r starting at startAngle and ending at endAngle 
-going in the given direction by anticlockwise (defaulting to clockwise).</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-		<th>Argument</th>
-		
-
-		
-		<th>Default</th>
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>x</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last"><p>The x axis of the coordinate for the arc's center</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>y</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last"><p>The y axis of the coordinate for the arc's center</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>radius</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last"><p>The arc's radius</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>startAngle</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last"><p>The starting point, measured from the x axis, from which it will be drawn, expressed in radians.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>endAngle</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last"><p>The end arc's angle to which it will be drawn, expressed in radians.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>anticlockwise</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    true
-                
-                </td>
-            
-
-            <td class="description last"><p>true draws the arc anticlockwise, otherwise in a clockwise direction.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-249">line 249</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>The BitmapData instance this method was called on.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="Phaser.BitmapData.html">Phaser.BitmapData</a></span>
-
-
-	</dd>
-</dl>
-
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="arcTo"><span class="type-signature"></span>arcTo<span class="signature">(x1, y1, x2, y2, radius)</span><span class="type-signature"> &rarr; {<a href="Phaser.BitmapData.html">Phaser.BitmapData</a>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Adds an arc with the given control points and radius, connected to the previous point by a straight line.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>x1</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>y1</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>x2</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>y2</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>radius</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-271">line 271</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>The BitmapData instance this method was called on.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="Phaser.BitmapData.html">Phaser.BitmapData</a></span>
-
-
-	</dd>
-</dl>
-
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="at"><span class="type-signature"></span>at<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Shortcut to arcTo.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-978">line 978</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="beginFill"><span class="type-signature"></span>beginFill<span class="signature">(color)</span><span class="type-signature"> &rarr; {<a href="Phaser.BitmapData.html">Phaser.BitmapData</a>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Begins a fill with the specified color. This ends the current sub-path.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>color</code></td>
-            
-
-            <td class="type">
-            
-                
 <span class="param-type">string</span>
 
 
@@ -2909,7 +2308,33 @@ going in the given direction by anticlockwise (defaulting to clockwise).</p>
 
             
 
-            <td class="description last"><p>A CSS compatible color value (ex. &quot;red&quot;, &quot;#FF0000&quot;, or &quot;rgba(255,0,0,0.5)&quot;). Setting to null will result in no fill.</p></td>
+            <td class="description last"><p>The Image to draw. If you give a key it will try and find the Image in the Game.Cache.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>mask</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">HTMLImage</span>
+|
+
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The Image to use as the alpha mask. If you give a key it will try and find the Image in the Game.Cache.</p></td>
         </tr>
 
 	
@@ -2941,7 +2366,7 @@ going in the given direction by anticlockwise (defaulting to clockwise).</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-289">line 289</a>
+        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-326">line 326</a>
     </li></ul></dd>
     
 
@@ -2962,1804 +2387,6 @@ going in the given direction by anticlockwise (defaulting to clockwise).</p>
     
     
     
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>The BitmapData instance this method was called on.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="Phaser.BitmapData.html">Phaser.BitmapData</a></span>
-
-
-	</dd>
-</dl>
-
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="beginLinearGradientFill"><span class="type-signature"></span>beginLinearGradientFill<span class="signature">(colors, ratios, x0, y0, x1, y1)</span><span class="type-signature"> &rarr; {<a href="Phaser.BitmapData.html">Phaser.BitmapData</a>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Begins a linear gradient fill defined by the line (x0, y0) to (x1, y1). This ends the current sub-path. For
-example, the following code defines a black to white vertical gradient ranging from 20px to 120px, and draws a square to display it:</p>
-<pre><code> ```myGraphics.beginLinearGradientFill([&quot;#000&quot;,&quot;#FFF&quot;], [0, 1], 0, 20, 0, 120).rect(20, 20, 120, 120);```</code></pre>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>colors</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Array.html">Array</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>An array of CSS compatible color values. For example, [&quot;#F00&quot;,&quot;#00F&quot;] would define a gradient drawing from red to blue.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>ratios</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Array.html">Array</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>An array of gradient positions which correspond to the colors. For example, [0.1, 0.9] would draw the first color to 10% then interpolating to the second color at 90%.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>x0</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The position of the first point defining the line that defines the gradient direction and size.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>y0</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The position of the first point defining the line that defines the gradient direction and size.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>x1</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The position of the second point defining the line that defines the gradient direction and size.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>y1</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The position of the second point defining the line that defines the gradient direction and size.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-303">line 303</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>The BitmapData instance this method was called on.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="Phaser.BitmapData.html">Phaser.BitmapData</a></span>
-
-
-	</dd>
-</dl>
-
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="beginLinearGradientStroke"><span class="type-signature"></span>beginLinearGradientStroke<span class="signature">(colors, ratios, x0, y0, x1, y1)</span><span class="type-signature"> &rarr; {<a href="Phaser.BitmapData.html">Phaser.BitmapData</a>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Begins a linear gradient stroke defined by the line (x0, y0) to (x1, y1). This ends the current sub-path. For
-example, the following code defines a black to white vertical gradient ranging from 20px to 120px, and draws a
-square to display it:</p>
-<pre><code> ```myGraphics.setStrokeStyle(10).beginLinearGradientStroke([&quot;#000&quot;,&quot;#FFF&quot;], [0, 1], 0, 20, 0, 120).drawRect(20, 20, 120, 120);```</code></pre>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>colors</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Array.html">Array</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>An array of CSS compatible color values. For example, [&quot;#F00&quot;,&quot;#00F&quot;] would define a gradient drawing from red to blue.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>ratios</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Array.html">Array</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>An array of gradient positions which correspond to the colors. For example, [0.1, 0.9] would draw the first color to 10% then interpolating to the second color at 90%.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>x0</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The position of the first point defining the line that defines the gradient direction and size.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>y0</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The position of the first point defining the line that defines the gradient direction and size.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>x1</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The position of the second point defining the line that defines the gradient direction and size.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>y1</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The position of the second point defining the line that defines the gradient direction and size.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-333">line 333</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>The BitmapData instance this method was called on.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="Phaser.BitmapData.html">Phaser.BitmapData</a></span>
-
-
-	</dd>
-</dl>
-
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="beginPath"><span class="type-signature"></span>beginPath<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="Phaser.BitmapData.html">Phaser.BitmapData</a>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Starts a new path by resetting the list of sub-paths. Call this method when you want to create a new path.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-398">line 398</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>The BitmapData instance this method was called on.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="Phaser.BitmapData.html">Phaser.BitmapData</a></span>
-
-
-	</dd>
-</dl>
-
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="beginRadialGradientStroke"><span class="type-signature"></span>beginRadialGradientStroke<span class="signature">(colors, ratios, x0, y0, r0, x1, y1, r1)</span><span class="type-signature"> &rarr; {<a href="Phaser.BitmapData.html">Phaser.BitmapData</a>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Begins a radial gradient stroke. This ends the current sub-path. For example, the following code defines a red to
-blue radial gradient centered at (100, 100), with a radius of 50, and draws a rectangle to display it:</p>
-<pre><code> myGraphics.setStrokeStyle(10)
-     .beginRadialGradientStroke([&quot;#F00&quot;,&quot;#00F&quot;], [0, 1], 100, 100, 0, 100, 100, 50)
-     .drawRect(50, 90, 150, 110);</code></pre>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>colors</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Array.html">Array</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>An array of CSS compatible color values. For example, [&quot;#F00&quot;,&quot;#00F&quot;] would define a gradient drawing from red to blue.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>ratios</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Array.html">Array</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>An array of gradient positions which correspond to the colors. For example, [0.1, 0.9] would draw the first color to 10% then interpolating to the second color at 90%.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>x0</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Center position of the inner circle that defines the gradient.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>y0</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Center position of the inner circle that defines the gradient.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>r0</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Radius of the inner circle that defines the gradient.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>x1</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Center position of the outer circle that defines the gradient.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>y1</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Center position of the outer circle that defines the gradient.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>r1</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Radius of the outer circle that defines the gradient.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-364">line 364</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>The BitmapData instance this method was called on.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="Phaser.BitmapData.html">Phaser.BitmapData</a></span>
-
-
-	</dd>
-</dl>
-
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="beginStroke"><span class="type-signature"></span>beginStroke<span class="signature">(color)</span><span class="type-signature"> &rarr; {<a href="Phaser.BitmapData.html">Phaser.BitmapData</a>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Begins a stroke with the specified color. This ends the current sub-path.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>color</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>A CSS compatible color value (ex. &quot;#FF0000&quot;, &quot;red&quot;, or &quot;rgba(255,0,0,0.5)&quot;). Setting to null will result in no stroke.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-410">line 410</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>The BitmapData instance this method was called on.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="Phaser.BitmapData.html">Phaser.BitmapData</a></span>
-
-
-	</dd>
-</dl>
-
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="bezierCurveTo"><span class="type-signature"></span>bezierCurveTo<span class="signature">(cp1x, cp1y, cp2x, cp2y, x, y)</span><span class="type-signature"> &rarr; {<a href="Phaser.BitmapData.html">Phaser.BitmapData</a>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Adds a bezier curve from the current context point to (x, y) using the control points (cp1x, cp1y) and (cp2x, cp2y).</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>cp1x</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The x axis of control point 1.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>cp1y</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The y axis of control point 1.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>cp2x</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The x axis of control point 2.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>cp2y</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The y axis of control point 2.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>x</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The x axis of the ending point.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>y</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The y axis of the ending point.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-423">line 423</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>The BitmapData instance this method was called on.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="Phaser.BitmapData.html">Phaser.BitmapData</a></span>
-
-
-	</dd>
-</dl>
-
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="bf"><span class="type-signature"></span>bf<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Shortcut to beginBitmapFill.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-1038">line 1038</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="bs"><span class="type-signature"></span>bs<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Shortcut to beginBitmapStroke.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-1074">line 1074</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="bt"><span class="type-signature"></span>bt<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Shortcut to bezierCurveTo.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-984">line 984</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="c"><span class="type-signature"></span>c<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Shortcut to clear.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-1014">line 1014</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="circle"><span class="type-signature"></span>circle<span class="signature">(x, y, radius)</span><span class="type-signature"> &rarr; {<a href="Phaser.BitmapData.html">Phaser.BitmapData</a>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Draws a circle with the specified radius at (x, y).</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>x</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>x coordinate center point of circle.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>y</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>y coordinate center point of circle.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>radius</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Radius of circle in radians.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-442">line 442</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>The BitmapData instance this method was called on.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="Phaser.BitmapData.html">Phaser.BitmapData</a></span>
-
-
-	</dd>
-</dl>
-
-
-        
     
     
 </dd>
@@ -4836,7 +2463,7 @@ blue radial gradient centered at (100, 100), with a radius of 50, and draws a re
         
             
 <dt>
-    <h4 class="name" id="clearRect"><span class="type-signature"></span>clearRect<span class="signature">(x, y, width, height)</span><span class="type-signature"> &rarr; {<a href="Phaser.BitmapData.html">Phaser.BitmapData</a>}</span></h4>
+    <h4 class="name" id="copyPixels"><span class="type-signature"></span>copyPixels<span class="signature">(source, area, destX, destY)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -4844,7 +2471,7 @@ blue radial gradient centered at (100, 100), with a radius of 50, and draws a re
     
     
     <div class="description">
-        <p>Sets all pixels in the rectangle defined by starting point (x, y) and size (width, height) to transparent black.</p>
+        <p>Copies the pixels from the source image to this BitmapData based on the given area and destination.</p>
     </div>
     
 
@@ -4878,1937 +2505,15 @@ blue radial gradient centered at (100, 100), with a radius of 50, and draws a re
 
         <tr>
             
-                <td class="name"><code>x</code></td>
+                <td class="name"><code>source</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">HTMLImage</span>
+|
 
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The x axis of the coordinate for the rectangle starting point.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>y</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The y axis of the coordinate for the rectangle starting point.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>width</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The rectangles width.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>height</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The rectangles height.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-457">line 457</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>The BitmapData instance this method was called on.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="Phaser.BitmapData.html">Phaser.BitmapData</a></span>
-
-
-	</dd>
-</dl>
-
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="clip"><span class="type-signature"></span>clip<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="Phaser.BitmapData.html">Phaser.BitmapData</a>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Creates a clipping path from the current sub-paths. Everything drawn after clip() is called appears inside the clipping path only.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-474">line 474</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>The BitmapData instance this method was called on.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="Phaser.BitmapData.html">Phaser.BitmapData</a></span>
-
-
-	</dd>
-</dl>
-
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="closePath"><span class="type-signature"></span>closePath<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="Phaser.BitmapData.html">Phaser.BitmapData</a>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Tries to draw a straight line from the current point to the start. If the shape has already been closed or has only one point, this function does nothing.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-487">line 487</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>The BitmapData instance this method was called on.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="Phaser.BitmapData.html">Phaser.BitmapData</a></span>
-
-
-	</dd>
-</dl>
-
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="cp"><span class="type-signature"></span>cp<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Shortcut to closePath.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-1008">line 1008</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="createLinearGradient"><span class="type-signature"></span>createLinearGradient<span class="signature">(x, y, width, height)</span><span class="type-signature"> &rarr; {CanvasGradient}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Creates a linear gradient with defined by an imaginary line which implies the direction of the gradient.
-Once the gradient is created colors can be inserted using the addColorStop method.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>x</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The x axis of the coordinate for the gradients starting point.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>y</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The y axis of the coordinate for the gradients starting point.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>width</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The width of the gradient.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>height</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The height of the gradient.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-500">line 500</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>The Linear Gradient.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type">CanvasGradient</span>
-
-
-	</dd>
-</dl>
-
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="createRadialGradient"><span class="type-signature"></span>createRadialGradient<span class="signature">(x0, y0, r0, x1, y1, r1)</span><span class="type-signature"> &rarr; {CanvasGradient}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Creates a radial gradient.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>x0</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>y0</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>r0</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>x1</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>y1</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>r1</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-518">line 518</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>The Radial Gradient.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type">CanvasGradient</span>
-
-
-	</dd>
-</dl>
-
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="dc"><span class="type-signature"></span>dc<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Shortcut to drawCircle.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-1098">line 1098</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="de"><span class="type-signature"></span>de<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Shortcut to drawEllipse.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-1110">line 1110</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="dp"><span class="type-signature"></span>dp<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Shortcut to drawPolyStar.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-1116">line 1116</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="dr"><span class="type-signature"></span>dr<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Shortcut to rect.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-1080">line 1080</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="ef"><span class="type-signature"></span>ef<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Shortcut to endFill.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-1041">line 1041</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="ellipse"><span class="type-signature"></span>ellipse<span class="signature">(x, y, w, h)</span><span class="type-signature"> &rarr; {<a href="Phaser.BitmapData.html">Phaser.BitmapData</a>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Draws an ellipse (oval) with a specified width (w) and height (h).</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>x</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>x coordinate center point of ellipse.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>y</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>y coordinate center point of ellipse.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>w</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>height (horizontal diameter) of ellipse. The horizontal radius will be half of this number.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>h</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>width (vertical diameter) of ellipse. The vertical radius will be half of this number.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-538">line 538</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>The BitmapData instance this method was called on.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="Phaser.BitmapData.html">Phaser.BitmapData</a></span>
-
-
-	</dd>
-</dl>
-
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="es"><span class="type-signature"></span>es<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Shortcut to endStroke.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-1077">line 1077</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="f"><span class="type-signature"></span>f<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Shortcut to beginFill.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-1020">line 1020</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="fill"><span class="type-signature"></span>fill<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="Phaser.BitmapData.html">Phaser.BitmapData</a>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Fills the subpaths with the current fill style.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-567">line 567</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>The BitmapData instance this method was called on.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="Phaser.BitmapData.html">Phaser.BitmapData</a></span>
-
-
-	</dd>
-</dl>
-
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="fillRect"><span class="type-signature"></span>fillRect<span class="signature">(x, y, width, height)</span><span class="type-signature"> &rarr; {<a href="Phaser.BitmapData.html">Phaser.BitmapData</a>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Draws a filled rectangle at (x, y) position whose size is determined by width and height.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>x</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The x axis of the coordinate for the rectangle starting point.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>y</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The y axis of the coordinate for the rectangle starting point.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>width</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The rectangles width.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>height</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The rectangles height.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-580">line 580</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>The BitmapData instance this method was called on.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="Phaser.BitmapData.html">Phaser.BitmapData</a></span>
-
-
-	</dd>
-</dl>
-
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="fillStyle"><span class="type-signature"></span>fillStyle<span class="signature">(color)</span><span class="type-signature"> &rarr; {<a href="Phaser.BitmapData.html">Phaser.BitmapData</a>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Sets the fill style.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>color</code></td>
-            
-
-            <td class="type">
-            
-                
 <span class="param-type">string</span>
 
 
@@ -6819,7 +2524,76 @@ Once the gradient is created colors can be inserted using the addColorStop metho
 
             
 
-            <td class="description last"><p>The fill color value in CSS format: #RRGGBB or rgba(r,g,b,a)</p></td>
+            <td class="description last"><p>The Image to draw. If you give a key it will try and find the Image in the Game.Cache.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>area</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Rectangle.html">Phaser.Rectangle</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The Rectangle region to copy from the source image.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>destX</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The destination x coordinate to copy the image to.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>destY</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The destination y coordinate to copy the image to.</p></td>
         </tr>
 
 	
@@ -6851,7 +2625,7 @@ Once the gradient is created colors can be inserted using the addColorStop metho
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-597">line 597</a>
+        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-285">line 285</a>
     </li></ul></dd>
     
 
@@ -6872,29 +2646,6 @@ Once the gradient is created colors can be inserted using the addColorStop metho
     
     
     
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>The BitmapData instance this method was called on.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="Phaser.BitmapData.html">Phaser.BitmapData</a></span>
-
-
-	</dd>
-</dl>
-
-
-        
     
     
 </dd>
@@ -6902,7 +2653,7 @@ Once the gradient is created colors can be inserted using the addColorStop metho
         
             
 <dt>
-    <h4 class="name" id="font"><span class="type-signature"></span>font<span class="signature">(font)</span><span class="type-signature"> &rarr; {<a href="Phaser.BitmapData.html">Phaser.BitmapData</a>}</span></h4>
+    <h4 class="name" id="draw"><span class="type-signature"></span>draw<span class="signature">(source, destX, destY)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -6910,7 +2661,7 @@ Once the gradient is created colors can be inserted using the addColorStop metho
     
     
     <div class="description">
-        <p>Sets the font.</p>
+        <p>Draws the given image to this BitmapData at the coordinates specified. If you need to only draw a part of the image use BitmapData.copyPixels instead.</p>
     </div>
     
 
@@ -6944,13 +2695,16 @@ Once the gradient is created colors can be inserted using the addColorStop metho
 
         <tr>
             
-                <td class="name"><code>font</code></td>
+                <td class="name"><code>source</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">DOMString</span>
+<span class="param-type">HTMLImage</span>
+|
+
+<span class="param-type">string</span>
 
 
             
@@ -6960,7 +2714,53 @@ Once the gradient is created colors can be inserted using the addColorStop metho
 
             
 
-            <td class="description last"><p>The font to be used for any text rendering. Default value 10px sans-serif.</p></td>
+            <td class="description last"><p>The Image to draw. If you give a key it will try and find the Image in the Game.Cache.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>destX</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The destination x coordinate to draw the image to.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>destY</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The destination y coordinate to draw the image to.</p></td>
         </tr>
 
 	
@@ -6992,7 +2792,7 @@ Once the gradient is created colors can be inserted using the addColorStop metho
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-612">line 612</a>
+        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-306">line 306</a>
     </li></ul></dd>
     
 
@@ -7013,29 +2813,6 @@ Once the gradient is created colors can be inserted using the addColorStop metho
     
     
     
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>The BitmapData instance this method was called on.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="Phaser.BitmapData.html">Phaser.BitmapData</a></span>
-
-
-	</dd>
-</dl>
-
-
-        
     
     
 </dd>
@@ -7051,7 +2828,7 @@ Once the gradient is created colors can be inserted using the addColorStop metho
     
     
     <div class="description">
-        <p>Get a color of a specific pixel.</p>
+        <p>Get the color of a specific pixel.</p>
     </div>
     
 
@@ -7156,7 +2933,7 @@ Once the gradient is created colors can be inserted using the addColorStop metho
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-214">line 214</a>
+        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-240">line 240</a>
     </li></ul></dd>
     
 
@@ -7215,7 +2992,7 @@ Once the gradient is created colors can be inserted using the addColorStop metho
     
     
     <div class="description">
-        <p>Get a color of a specific pixel (including alpha value).</p>
+        <p>Get the color of a specific pixel including its alpha value.</p>
     </div>
     
 
@@ -7320,7 +3097,7 @@ Once the gradient is created colors can be inserted using the addColorStop metho
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-229">line 229</a>
+        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-256">line 256</a>
     </li></ul></dd>
     
 
@@ -7379,7 +3156,7 @@ Once the gradient is created colors can be inserted using the addColorStop metho
     
     
     <div class="description">
-        <p>Get pixels in array in a specific Rectangle.</p>
+        <p>Gets all the pixels from the region specified by the given Rectangle object.</p>
     </div>
     
 
@@ -7419,7 +3196,7 @@ Once the gradient is created colors can be inserted using the addColorStop metho
             <td class="type">
             
                 
-<span class="param-type">Rectangle</span>
+<span class="param-type"><a href="Phaser.Rectangle.html">Phaser.Rectangle</a></span>
 
 
             
@@ -7429,7 +3206,7 @@ Once the gradient is created colors can be inserted using the addColorStop metho
 
             
 
-            <td class="description last"><p>The specific Rectangle.</p></td>
+            <td class="description last"><p>The Rectangle region to get.</p></td>
         </tr>
 
 	
@@ -7461,7 +3238,7 @@ Once the gradient is created colors can be inserted using the addColorStop metho
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-243">line 243</a>
+        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-271">line 271</a>
     </li></ul></dd>
     
 
@@ -7512,299 +3289,12 @@ Once the gradient is created colors can be inserted using the addColorStop metho
         
             
 <dt>
-    <h4 class="name" id="globalAlpha"><span class="type-signature"></span>globalAlpha<span class="signature">(alpha)</span><span class="type-signature"> &rarr; {<a href="Phaser.BitmapData.html">Phaser.BitmapData</a>}</span></h4>
+    <h4 class="name" id="refreshBuffer"><span class="type-signature"></span>refreshBuffer<span class="signature">()</span><span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
     
-    
-    <div class="description">
-        <p>Alpha value that is applied to shapes and images before they are composited onto the canvas. Default 1.0 (opaque).</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>alpha</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Alpha value that is applied to shapes and images before they are composited onto the canvas. Default 1.0 (opaque).</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-625">line 625</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>The BitmapData instance this method was called on.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="Phaser.BitmapData.html">Phaser.BitmapData</a></span>
-
-
-	</dd>
-</dl>
-
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="globalCompositeOperation"><span class="type-signature"></span>globalCompositeOperation<span class="signature">(operation)</span><span class="type-signature"> &rarr; {<a href="Phaser.BitmapData.html">Phaser.BitmapData</a>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>With globalAlpha applied this sets how shapes and images are drawn onto the existing bitmap. Possible values: source-atop, source-in, source-out,
-source-over (default), destination-atop, destination-in, destination-out, destination-over, lighter, darker, copy and xor.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>operation</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">DOMString</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The composite operation to apply.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-638">line 638</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>The BitmapData instance this method was called on.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="Phaser.BitmapData.html">Phaser.BitmapData</a></span>
-
-
-	</dd>
-</dl>
-
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="lf"><span class="type-signature"></span>lf<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Shortcut to beginLinearGradientFill.</p>
-    </div>
     
 
     
@@ -7836,7 +3326,7 @@ source-over (default), destination-atop, destination-in, destination-out, destin
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-1026">line 1026</a>
+        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-168">line 168</a>
     </li></ul></dd>
     
 
@@ -7857,1873 +3347,6 @@ source-over (default), destination-atop, destination-in, destination-out, destin
     
     
     
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="lineCap"><span class="type-signature"></span>lineCap<span class="signature">(style)</span><span class="type-signature"> &rarr; {<a href="Phaser.BitmapData.html">Phaser.BitmapData</a>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Type of endings on the end of lines. Possible values: butt (default), round, square.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>style</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">DOMString</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Possible values: butt (default), round, square</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-652">line 652</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>The BitmapData instance this method was called on.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="Phaser.BitmapData.html">Phaser.BitmapData</a></span>
-
-
-	</dd>
-</dl>
-
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="lineDashOffset"><span class="type-signature"></span>lineDashOffset<span class="signature">(offset)</span><span class="type-signature"> &rarr; {<a href="Phaser.BitmapData.html">Phaser.BitmapData</a>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Specifies where to start a dasharray on a line.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>offset</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Specifies where to start a dasharray on a line.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-665">line 665</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>The BitmapData instance this method was called on.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="Phaser.BitmapData.html">Phaser.BitmapData</a></span>
-
-
-	</dd>
-</dl>
-
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="lineJoin"><span class="type-signature"></span>lineJoin<span class="signature">(join)</span><span class="type-signature"> &rarr; {<a href="Phaser.BitmapData.html">Phaser.BitmapData</a>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Defines the type of corners where two lines meet. Possible values: round, bevel, miter (default)</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>join</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">DOMString</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Possible values: round, bevel, miter (default)</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-678">line 678</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>The BitmapData instance this method was called on.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="Phaser.BitmapData.html">Phaser.BitmapData</a></span>
-
-
-	</dd>
-</dl>
-
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="lineTo"><span class="type-signature"></span>lineTo<span class="signature">(x, y)</span><span class="type-signature"> &rarr; {<a href="Phaser.BitmapData.html">Phaser.BitmapData</a>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Connects the last point in the subpath to the x, y coordinates with a straight line.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>x</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The x axis of the coordinate for the end of the line.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>y</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The y axis of the coordinate for the end of the line.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-722">line 722</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>The BitmapData instance this method was called on.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="Phaser.BitmapData.html">Phaser.BitmapData</a></span>
-
-
-	</dd>
-</dl>
-
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="lineWidth"><span class="type-signature"></span>lineWidth<span class="signature">(width)</span><span class="type-signature"> &rarr; {<a href="Phaser.BitmapData.html">Phaser.BitmapData</a>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Width of lines. Default 1.0</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>width</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Width of lines. Default 1.0</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-691">line 691</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>The BitmapData instance this method was called on.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="Phaser.BitmapData.html">Phaser.BitmapData</a></span>
-
-
-	</dd>
-</dl>
-
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="ls"><span class="type-signature"></span>ls<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Shortcut to beginLinearGradientStroke.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-1062">line 1062</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="miterLimit"><span class="type-signature"></span>miterLimit<span class="signature">(limit)</span><span class="type-signature"> &rarr; {<a href="Phaser.BitmapData.html">Phaser.BitmapData</a>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Default 10.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>limit</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Default 10.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-704">line 704</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>The BitmapData instance this method was called on.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="Phaser.BitmapData.html">Phaser.BitmapData</a></span>
-
-
-	</dd>
-</dl>
-
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="moveTo"><span class="type-signature"></span>moveTo<span class="signature">(x, y)</span><span class="type-signature"> &rarr; {<a href="Phaser.BitmapData.html">Phaser.BitmapData</a>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Moves the starting point of a new subpath to the (x, y) coordinates.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>x</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The x axis of the point.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>y</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The y axis of the point.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-739">line 739</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>The BitmapData instance this method was called on.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="Phaser.BitmapData.html">Phaser.BitmapData</a></span>
-
-
-	</dd>
-</dl>
-
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="mt"><span class="type-signature"></span>mt<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Shortcut to moveTo.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-966">line 966</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="mt"><span class="type-signature"></span>mt<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Shortcut to lineTo.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-972">line 972</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="qt"><span class="type-signature"></span>qt<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Shortcut to quadraticCurveTo.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-990">line 990</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="quadraticCurveTo"><span class="type-signature"></span>quadraticCurveTo<span class="signature">(cpx, cpy, x, y)</span><span class="type-signature"> &rarr; {<a href="Phaser.BitmapData.html">Phaser.BitmapData</a>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Draws a quadratic curve from the current drawing point to (x, y) using the control point (cpx, cpy).</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>cpx</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The x axis of the control point.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>cpy</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The y axis of the control point.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>x</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The x axis of the ending point.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>y</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The y axis of the ending point.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-755">line 755</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>The BitmapData instance this method was called on.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="Phaser.BitmapData.html">Phaser.BitmapData</a></span>
-
-
-	</dd>
-</dl>
-
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="r"><span class="type-signature"></span>r<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Shortcut to rect.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-1002">line 1002</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="rc"><span class="type-signature"></span>rc<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Shortcut to drawRoundRectComplex.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-1095">line 1095</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="rect"><span class="type-signature"></span>rect<span class="signature">(x, y, width, height)</span><span class="type-signature"> &rarr; {<a href="Phaser.BitmapData.html">Phaser.BitmapData</a>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Draws a rectangle at (x, y) position whose size is determined by width and height.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>x</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The x axis of the coordinate for the rectangle starting point.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>y</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The y axis of the coordinate for the rectangle starting point.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>width</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The rectangles width.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>height</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The rectangles height.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-772">line 772</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>The BitmapData instance this method was called on.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="Phaser.BitmapData.html">Phaser.BitmapData</a></span>
-
-
-	</dd>
-</dl>
-
-
-        
     
     
 </dd>
@@ -9773,7 +3396,7 @@ This is called automatically if the BitmapData is being used by a Sprite, otherw
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-940">line 940</a>
+        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-356">line 356</a>
     </li></ul></dd>
     
 
@@ -9801,7 +3424,7 @@ This is called automatically if the BitmapData is being used by a Sprite, otherw
         
             
 <dt>
-    <h4 class="name" id="restore"><span class="type-signature"></span>restore<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="Phaser.BitmapData.html">Phaser.BitmapData</a>}</span></h4>
+    <h4 class="name" id="resize"><span class="type-signature"></span>resize<span class="signature">()</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -9809,7 +3432,7 @@ This is called automatically if the BitmapData is being used by a Sprite, otherw
     
     
     <div class="description">
-        <p>Restores the drawing style state to the last element on the 'state stack' saved by save().</p>
+        <p>Resizes the BitmapData.</p>
     </div>
     
 
@@ -9842,7 +3465,7 @@ This is called automatically if the BitmapData is being used by a Sprite, otherw
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-789">line 789</a>
+        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-147">line 147</a>
     </li></ul></dd>
     
 
@@ -9863,790 +3486,6 @@ This is called automatically if the BitmapData is being used by a Sprite, otherw
     
     
     
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>The BitmapData instance this method was called on.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="Phaser.BitmapData.html">Phaser.BitmapData</a></span>
-
-
-	</dd>
-</dl>
-
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="rf"><span class="type-signature"></span>rf<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Shortcut to beginRadialGradientFill.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-1032">line 1032</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="rotate"><span class="type-signature"></span>rotate<span class="signature">(angle)</span><span class="type-signature"> &rarr; {<a href="Phaser.BitmapData.html">Phaser.BitmapData</a>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Rotates the drawing context values by r radians.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>angle</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The angle of rotation given in radians.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-802">line 802</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>The BitmapData instance this method was called on.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="Phaser.BitmapData.html">Phaser.BitmapData</a></span>
-
-
-	</dd>
-</dl>
-
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="rr"><span class="type-signature"></span>rr<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Shortcut to drawRoundRect.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-1092">line 1092</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="rs"><span class="type-signature"></span>rs<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Shortcut to beginRadialGradientStroke.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-1068">line 1068</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="s"><span class="type-signature"></span>s<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Shortcut to beginStroke.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-1056">line 1056</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="save"><span class="type-signature"></span>save<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="Phaser.BitmapData.html">Phaser.BitmapData</a>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Saves the current drawing style state using a stack so you can revert any change you make to it using restore().</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-849">line 849</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>The BitmapData instance this method was called on.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="Phaser.BitmapData.html">Phaser.BitmapData</a></span>
-
-
-	</dd>
-</dl>
-
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="scale"><span class="type-signature"></span>scale<span class="signature">(x, y)</span><span class="type-signature"> &rarr; {<a href="Phaser.BitmapData.html">Phaser.BitmapData</a>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Scales the current drawing context.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>x</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>y</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-862">line 862</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>The BitmapData instance this method was called on.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="Phaser.BitmapData.html">Phaser.BitmapData</a></span>
-
-
-	</dd>
-</dl>
-
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="scrollPathIntoView"><span class="type-signature"></span>scrollPathIntoView<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="Phaser.BitmapData.html">Phaser.BitmapData</a>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-877">line 877</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>The BitmapData instance this method was called on.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="Phaser.BitmapData.html">Phaser.BitmapData</a></span>
-
-
-	</dd>
-</dl>
-
-
-        
     
     
 </dd>
@@ -10836,7 +3675,7 @@ This is called automatically if the BitmapData is being used by a Sprite, otherw
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-193">line 193</a>
+        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-217">line 217</a>
     </li></ul></dd>
     
 
@@ -11069,7 +3908,7 @@ This is called automatically if the BitmapData is being used by a Sprite, otherw
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-157">line 157</a>
+        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-181">line 181</a>
     </li></ul></dd>
     
 
@@ -11090,839 +3929,6 @@ This is called automatically if the BitmapData is being used by a Sprite, otherw
     
     
     
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="setStrokeStyle"><span class="type-signature"></span>setStrokeStyle<span class="signature">(thickness, <span class="optional">caps</span>, <span class="optional">joints</span>, <span class="optional">miterLimit</span>, <span class="optional">ignoreScale</span>)</span><span class="type-signature"> &rarr; {<a href="Phaser.BitmapData.html">Phaser.BitmapData</a>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Sets the stroke style for the current sub-path. Like all drawing methods, this can be chained, so you can define
-the stroke style and color in a single line of code like so:</p>
-<pre><code> ```myGraphics.setStrokeStyle(8,&quot;round&quot;).beginStroke(&quot;#F00&quot;);```</code></pre>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-		<th>Argument</th>
-		
-
-		
-		<th>Default</th>
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>thickness</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last"><p>The width of the stroke.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>caps</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-|
-
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    0
-                
-                </td>
-            
-
-            <td class="description last"><p>Indicates the type of caps to use at the end of lines. One of butt, round, or square. Defaults to &quot;butt&quot;. Also accepts the values 0 (butt), 1 (round), and 2 (square) for use with he tiny API.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>joints</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-|
-
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    0
-                
-                </td>
-            
-
-            <td class="description last"><p>Specifies the type of joints that should be used where two lines meet. One of bevel, round, or miter. Defaults to &quot;miter&quot;. Also accepts the values 0 (miter), 1 (round), and 2 (bevel) for use with the tiny API.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>miterLimit</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    10
-                
-                </td>
-            
-
-            <td class="description last"><p>If joints is set to &quot;miter&quot;, then you can specify a miter limit ratio which controls at what point a mitered joint will be clipped.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>ignoreScale</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    false
-                
-                </td>
-            
-
-            <td class="description last"><p>If true, the stroke will be drawn at the specified thickness regardless of active transformations.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-816">line 816</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>The BitmapData instance this method was called on.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="Phaser.BitmapData.html">Phaser.BitmapData</a></span>
-
-
-	</dd>
-</dl>
-
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="ss"><span class="type-signature"></span>ss<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Shortcut to setStrokeStyle.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-1050">line 1050</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="stroke"><span class="type-signature"></span>stroke<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="Phaser.BitmapData.html">Phaser.BitmapData</a>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Strokes the subpaths with the current stroke style.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-893">line 893</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>The BitmapData instance this method was called on.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="Phaser.BitmapData.html">Phaser.BitmapData</a></span>
-
-
-	</dd>
-</dl>
-
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="strokeRect"><span class="type-signature"></span>strokeRect<span class="signature">(x, y, width, height)</span><span class="type-signature"> &rarr; {<a href="Phaser.BitmapData.html">Phaser.BitmapData</a>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Paints a rectangle which has a starting point at (x, y) and has a w width and an h height onto the canvas, using the current stroke style.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>x</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The x axis for the starting point of the rectangle.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>y</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The y axis for the starting point of the rectangle.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>width</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The rectangles width.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>height</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The rectangles height.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-906">line 906</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>The BitmapData instance this method was called on.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="Phaser.BitmapData.html">Phaser.BitmapData</a></span>
-
-
-	</dd>
-</dl>
-
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="strokeStyle"><span class="type-signature"></span>strokeStyle<span class="signature">(style)</span><span class="type-signature"> &rarr; {<a href="Phaser.BitmapData.html">Phaser.BitmapData</a>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Color or style to use for the lines around shapes. Default #000 (black).</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>style</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Color or style to use for the lines around shapes. Default #000 (black).</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-923">line 923</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>The BitmapData instance this method was called on.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="Phaser.BitmapData.html">Phaser.BitmapData</a></span>
-
-
-	</dd>
-</dl>
-
-
-        
     
     
 </dd>
@@ -11953,7 +3959,7 @@ the stroke style and color in a single line of code like so:</p>
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Mon Feb 24 2014 01:12:22 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Fri Mar 14 2014 06:34:19 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>
@@ -11984,6 +3990,9 @@ the stroke style and color in a single line of code like so:</p>
 	<script>
 		$( function () {
 			$( "#toc" ).toc( {
+			    anchorName  : function(i, heading, prefix) {
+					return $(heading).attr("id") || ( prefix + i );
+				},
 				selectors   : "h1,h2,h3,h4",
 				showAndHide : false,
 				scrollTo    : 60

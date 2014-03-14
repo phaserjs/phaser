@@ -42,7 +42,7 @@ PIXI.DisplacementFilter = function(texture)
     this.fragmentSrc = [
         'precision mediump float;',
         'varying vec2 vTextureCoord;',
-        'varying float vColor;',
+        'varying vec4 vColor;',
         'uniform sampler2D displacementMap;',
         'uniform sampler2D uSampler;',
         'uniform vec2 scale;',
@@ -66,7 +66,7 @@ PIXI.DisplacementFilter = function(texture)
         '   vec2 cord = vTextureCoord;',
 
         //'   gl_FragColor =  texture2D(displacementMap, cord);',
-        '   gl_FragColor = gl_FragColor * vColor;',
+     //   '   gl_FragColor = gl_FragColor;',
         '}'
     ];
 };

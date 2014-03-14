@@ -91,10 +91,6 @@
 						</li>
 						
 						<li>
-							<a href="Phaser.DOMSprite.html">DOMSprite</a>
-						</li>
-						
-						<li>
 							<a href="Phaser.Easing.html">Easing</a>
 						</li>
 						
@@ -143,6 +139,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.Ellipse.html">Ellipse</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Events.html">Events</a>
 						</li>
 						
@@ -163,6 +163,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.GameObjectCreator.html">GameObjectCreator</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.GameObjectFactory.html">GameObjectFactory</a>
 						</li>
 						
@@ -180,6 +184,10 @@
 						
 						<li>
 							<a href="Phaser.Group.html">Group</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Image.html">Image</a>
 						</li>
 						
 						<li>
@@ -251,6 +259,82 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.Physics.Ninja.html">Ninja</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.Ninja.AABB.html">AABB</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.Ninja.Body.html">Body</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.Ninja.Circle.html">Circle</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.Ninja.Tile.html">Tile</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.html">P2</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.Body.html">Body</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.BodyDebug.html">BodyDebug</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.CollisionGroup.html">CollisionGroup</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.ContactMaterial.html">ContactMaterial</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.DistanceConstraint.html">DistanceConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.GearConstraint.html">GearConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.InversePointProxy.html">InversePointProxy</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.LockConstraint.html">LockConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.Material.html">Material</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.PointProxy.html">PointProxy</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.PrismaticConstraint.html">PrismaticConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.RevoluteConstraint.html">RevoluteConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.Spring.html">Spring</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Plugin.html">Plugin</a>
 						</li>
 						
@@ -291,6 +375,14 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.RetroFont.html">RetroFont</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.ScaleManager.html">ScaleManager</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Signal.html">Signal</a>
 						</li>
 						
@@ -311,11 +403,11 @@
 						</li>
 						
 						<li>
-							<a href="Phaser.Stage.html">Stage</a>
+							<a href="Phaser.SpriteBatch.html">SpriteBatch</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.StageScaleMode.html">StageScaleMode</a>
+							<a href="Phaser.Stage.html">Stage</a>
 						</li>
 						
 						<li>
@@ -398,20 +490,6 @@
 					</ul>
 				</li>
 				
-				<li class="dropdown">
-					<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b
-						class="caret"></b></a>
-
-					<ul class="dropdown-menu ">
-						
-						<li>
-							<a href="global.html#SAT">SAT</a>
-						</li>
-						
-
-					</ul>
-				</li>
-				
 			</ul>
 		</div>
 	</div>
@@ -446,7 +524,7 @@
     
         
 <dt>
-    <h4 class="name" id="Animation"><span class="type-signature"></span>new Animation<span class="signature">(game, parent, name, frameData, frames, delay, looped)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="Animation"><span class="type-signature"></span>new Animation<span class="signature">(game, parent, name, frameData, frames, delay, loop)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -630,7 +708,7 @@ It is created by the AnimationManager, consists of Animation.Frame objects and b
 
         <tr>
             
-                <td class="name"><code>looped</code></td>
+                <td class="name"><code>loop</code></td>
             
 
             <td class="type">
@@ -646,7 +724,7 @@ It is created by the AnimationManager, consists of Animation.Frame objects and b
 
             
 
-            <td class="description last"><p>Should this animation loop or play through once.</p></td>
+            <td class="description last"><p>Should this animation loop when it reaches the end or play through once.</p></td>
         </tr>
 
 	
@@ -806,7 +884,7 @@ It is created by the AnimationManager, consists of Animation.Frame objects and b
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Animation.js.html">animation/Animation.js</a>, <a href="Animation.js.html#sunlight-1-line-117">line 117</a>
+        <a href="Animation.js.html">animation/Animation.js</a>, <a href="Animation.js.html#sunlight-1-line-122">line 122</a>
     </li></ul></dd>
     
 
@@ -1010,7 +1088,7 @@ It is created by the AnimationManager, consists of Animation.Frame objects and b
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Animation.js.html">animation/Animation.js</a>, <a href="Animation.js.html#sunlight-1-line-380">line 380</a>
+        <a href="Animation.js.html">animation/Animation.js</a>, <a href="Animation.js.html#sunlight-1-line-473">line 473</a>
     </li></ul></dd>
     
 
@@ -1112,7 +1190,7 @@ It is created by the AnimationManager, consists of Animation.Frame objects and b
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Animation.js.html">animation/Animation.js</a>, <a href="Animation.js.html#sunlight-1-line-367">line 367</a>
+        <a href="Animation.js.html">animation/Animation.js</a>, <a href="Animation.js.html#sunlight-1-line-460">line 460</a>
     </li></ul></dd>
     
 
@@ -1319,7 +1397,7 @@ It is created by the AnimationManager, consists of Animation.Frame objects and b
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Animation.js.html">animation/Animation.js</a>, <a href="Animation.js.html#sunlight-1-line-72">line 72</a>
+        <a href="Animation.js.html">animation/Animation.js</a>, <a href="Animation.js.html#sunlight-1-line-77">line 77</a>
     </li></ul></dd>
     
 
@@ -1424,7 +1502,7 @@ It is created by the AnimationManager, consists of Animation.Frame objects and b
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Animation.js.html">animation/Animation.js</a>, <a href="Animation.js.html#sunlight-1-line-84">line 84</a>
+        <a href="Animation.js.html">animation/Animation.js</a>, <a href="Animation.js.html#sunlight-1-line-89">line 89</a>
     </li></ul></dd>
     
 
@@ -1529,7 +1607,7 @@ It is created by the AnimationManager, consists of Animation.Frame objects and b
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Animation.js.html">animation/Animation.js</a>, <a href="Animation.js.html#sunlight-1-line-78">line 78</a>
+        <a href="Animation.js.html">animation/Animation.js</a>, <a href="Animation.js.html#sunlight-1-line-83">line 83</a>
     </li></ul></dd>
     
 
@@ -1634,7 +1712,7 @@ It is created by the AnimationManager, consists of Animation.Frame objects and b
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Animation.js.html">animation/Animation.js</a>, <a href="Animation.js.html#sunlight-1-line-66">line 66</a>
+        <a href="Animation.js.html">animation/Animation.js</a>, <a href="Animation.js.html#sunlight-1-line-71">line 71</a>
     </li></ul></dd>
     
 
@@ -1652,7 +1730,7 @@ It is created by the AnimationManager, consists of Animation.Frame objects and b
         
             
 <dt>
-    <h4 class="name" id="looped"><span class="type-signature"></span>looped<span class="type-signature"></span></h4>
+    <h4 class="name" id="loop"><span class="type-signature"></span>loop<span class="type-signature"></span></h4>
     
     
 </dt>
@@ -1691,7 +1769,7 @@ It is created by the AnimationManager, consists of Animation.Frame objects and b
 
         <tr>
             
-                <td class="name"><code>looped</code></td>
+                <td class="name"><code>loop</code></td>
             
 
             <td class="type">
@@ -1737,6 +1815,108 @@ It is created by the AnimationManager, consists of Animation.Frame objects and b
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
         <a href="Animation.js.html">animation/Animation.js</a>, <a href="Animation.js.html#sunlight-1-line-60">line 60</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="loopCount"><span class="type-signature"></span>loopCount<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>loopCount</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The number of times the animation has looped since it was last started.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Animation.js.html">animation/Animation.js</a>, <a href="Animation.js.html#sunlight-1-line-65">line 65</a>
     </li></ul></dd>
     
 
@@ -1856,6 +2036,312 @@ It is created by the AnimationManager, consists of Animation.Frame objects and b
         
             
 <dt>
+    <h4 class="name" id="onComplete"><span class="type-signature"></span>onComplete<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>onComplete</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Signal.html">Phaser.Signal</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>This event is dispatched when this Animation completes playback. If the animation is set to loop this is never fired, listen for onAnimationLoop instead.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Animation.js.html">animation/Animation.js</a>, <a href="Animation.js.html#sunlight-1-line-132">line 132</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="onLoop"><span class="type-signature"></span>onLoop<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>onLoop</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Signal.html">Phaser.Signal</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>This event is dispatched when this Animation loops.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Animation.js.html">animation/Animation.js</a>, <a href="Animation.js.html#sunlight-1-line-137">line 137</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="onStart"><span class="type-signature"></span>onStart<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>onStart</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Signal.html">Phaser.Signal</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>This event is dispatched when this Animation starts playback.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Animation.js.html">animation/Animation.js</a>, <a href="Animation.js.html#sunlight-1-line-127">line 127</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
     <h4 class="name" id="paused"><span class="type-signature"></span>paused<span class="type-signature"></span></h4>
     
     
@@ -1940,7 +2426,109 @@ It is created by the AnimationManager, consists of Animation.Frame objects and b
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Animation.js.html">animation/Animation.js</a>, <a href="Animation.js.html#sunlight-1-line-333">line 333</a>
+        <a href="Animation.js.html">animation/Animation.js</a>, <a href="Animation.js.html#sunlight-1-line-426">line 426</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="speed"><span class="type-signature"></span>speed<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>speed</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Gets or sets the current speed of the animation, the time between each frame of the animation, given in ms. Takes effect from the NEXT frame. Minimum value is 1.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Animation.js.html">animation/Animation.js</a>, <a href="Animation.js.html#sunlight-1-line-506">line 506</a>
     </li></ul></dd>
     
 
@@ -2220,7 +2808,77 @@ You could use this function to generate those by doing: Phaser.Animation.generat
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Animation.js.html">animation/Animation.js</a>, <a href="Animation.js.html#sunlight-1-line-413">line 413</a>
+        <a href="Animation.js.html">animation/Animation.js</a>, <a href="Animation.js.html#sunlight-1-line-529">line 529</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="complete"><span class="type-signature"></span>complete<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Called internally when the animation finishes playback.
+Sets the isPlaying and isFinished states and dispatches the onAnimationComplete event if it exists on the parent and local onComplete event.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Animation.js.html">animation/Animation.js</a>, <a href="Animation.js.html#sunlight-1-line-398">line 398</a>
     </li></ul></dd>
     
 
@@ -2289,7 +2947,7 @@ You could use this function to generate those by doing: Phaser.Animation.generat
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Animation.js.html">animation/Animation.js</a>, <a href="Animation.js.html#sunlight-1-line-288">line 288</a>
+        <a href="Animation.js.html">animation/Animation.js</a>, <a href="Animation.js.html#sunlight-1-line-374">line 374</a>
     </li></ul></dd>
     
 
@@ -2317,7 +2975,7 @@ You could use this function to generate those by doing: Phaser.Animation.generat
         
             
 <dt>
-    <h4 class="name" id="onComplete"><span class="type-signature"></span>onComplete<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="onPause"><span class="type-signature"></span>onPause<span class="signature">()</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -2325,7 +2983,7 @@ You could use this function to generate those by doing: Phaser.Animation.generat
     
     
     <div class="description">
-        <p>Called internally when the animation finishes playback. Sets the isPlaying and isFinished states and dispatches the onAnimationComplete event if it exists on the parent.</p>
+        <p>Called when the Game enters a paused state.</p>
     </div>
     
 
@@ -2358,7 +3016,76 @@ You could use this function to generate those by doing: Phaser.Animation.generat
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Animation.js.html">animation/Animation.js</a>, <a href="Animation.js.html#sunlight-1-line-305">line 305</a>
+        <a href="Animation.js.html">animation/Animation.js</a>, <a href="Animation.js.html#sunlight-1-line-259">line 259</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="onResume"><span class="type-signature"></span>onResume<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Called when the Game resumes from a paused state.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Animation.js.html">animation/Animation.js</a>, <a href="Animation.js.html#sunlight-1-line-274">line 274</a>
     </li></ul></dd>
     
 
@@ -2574,7 +3301,7 @@ You could use this function to generate those by doing: Phaser.Animation.generat
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Animation.js.html">animation/Animation.js</a>, <a href="Animation.js.html#sunlight-1-line-123">line 123</a>
+        <a href="Animation.js.html">animation/Animation.js</a>, <a href="Animation.js.html#sunlight-1-line-147">line 147</a>
     </li></ul></dd>
     
 
@@ -2668,7 +3395,7 @@ You could use this function to generate those by doing: Phaser.Animation.generat
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Animation.js.html">animation/Animation.js</a>, <a href="Animation.js.html#sunlight-1-line-174">line 174</a>
+        <a href="Animation.js.html">animation/Animation.js</a>, <a href="Animation.js.html#sunlight-1-line-204">line 204</a>
     </li></ul></dd>
     
 
@@ -2696,7 +3423,7 @@ You could use this function to generate those by doing: Phaser.Animation.generat
         
             
 <dt>
-    <h4 class="name" id="stop"><span class="type-signature"></span>stop<span class="signature">(<span class="optional">resetFrame</span>)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="stop"><span class="type-signature"></span>stop<span class="signature">(<span class="optional">resetFrame</span>, <span class="optional">dispatchComplete</span>)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -2704,7 +3431,8 @@ You could use this function to generate those by doing: Phaser.Animation.generat
     
     
     <div class="description">
-        <p>Stops playback of this animation and set it to a finished state. If a resetFrame is provided it will stop playback and set frame to the first in the animation.</p>
+        <p>Stops playback of this animation and set it to a finished state. If a resetFrame is provided it will stop playback and set frame to the first in the animation.
+If <code>dispatchComplete</code> is true it will dispatch the complete events, otherwise they'll be ignored.</p>
     </div>
     
 
@@ -2778,6 +3506,45 @@ You could use this function to generate those by doing: Phaser.Animation.generat
         </tr>
 
 	
+
+        <tr>
+            
+                <td class="name"><code>dispatchComplete</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>Dispatch the Animation.onComplete and parent.onAnimationComplete events?</p></td>
+        </tr>
+
+	
 	</tbody>
 </table>
 
@@ -2806,7 +3573,7 @@ You could use this function to generate those by doing: Phaser.Animation.generat
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Animation.js.html">animation/Animation.js</a>, <a href="Animation.js.html#sunlight-1-line-195">line 195</a>
+        <a href="Animation.js.html">animation/Animation.js</a>, <a href="Animation.js.html#sunlight-1-line-228">line 228</a>
     </li></ul></dd>
     
 
@@ -2875,7 +3642,7 @@ You could use this function to generate those by doing: Phaser.Animation.generat
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Animation.js.html">animation/Animation.js</a>, <a href="Animation.js.html#sunlight-1-line-217">line 217</a>
+        <a href="Animation.js.html">animation/Animation.js</a>, <a href="Animation.js.html#sunlight-1-line-289">line 289</a>
     </li></ul></dd>
     
 
@@ -2926,7 +3693,7 @@ You could use this function to generate those by doing: Phaser.Animation.generat
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Mon Feb 24 2014 01:12:22 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Fri Mar 14 2014 06:34:18 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>
@@ -2957,6 +3724,9 @@ You could use this function to generate those by doing: Phaser.Animation.generat
 	<script>
 		$( function () {
 			$( "#toc" ).toc( {
+			    anchorName  : function(i, heading, prefix) {
+					return $(heading).attr("id") || ( prefix + i );
+				},
 				selectors   : "h1,h2,h3,h4",
 				showAndHide : false,
 				scrollTo    : 60

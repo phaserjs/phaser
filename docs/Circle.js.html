@@ -91,10 +91,6 @@
 						</li>
 						
 						<li>
-							<a href="Phaser.DOMSprite.html">DOMSprite</a>
-						</li>
-						
-						<li>
 							<a href="Phaser.Easing.html">Easing</a>
 						</li>
 						
@@ -143,6 +139,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.Ellipse.html">Ellipse</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Events.html">Events</a>
 						</li>
 						
@@ -163,6 +163,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.GameObjectCreator.html">GameObjectCreator</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.GameObjectFactory.html">GameObjectFactory</a>
 						</li>
 						
@@ -180,6 +184,10 @@
 						
 						<li>
 							<a href="Phaser.Group.html">Group</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Image.html">Image</a>
 						</li>
 						
 						<li>
@@ -251,6 +259,82 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.Physics.Ninja.html">Ninja</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.Ninja.AABB.html">AABB</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.Ninja.Body.html">Body</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.Ninja.Circle.html">Circle</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.Ninja.Tile.html">Tile</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.html">P2</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.Body.html">Body</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.BodyDebug.html">BodyDebug</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.CollisionGroup.html">CollisionGroup</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.ContactMaterial.html">ContactMaterial</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.DistanceConstraint.html">DistanceConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.GearConstraint.html">GearConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.InversePointProxy.html">InversePointProxy</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.LockConstraint.html">LockConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.Material.html">Material</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.PointProxy.html">PointProxy</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.PrismaticConstraint.html">PrismaticConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.RevoluteConstraint.html">RevoluteConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.Spring.html">Spring</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Plugin.html">Plugin</a>
 						</li>
 						
@@ -291,6 +375,14 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.RetroFont.html">RetroFont</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.ScaleManager.html">ScaleManager</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Signal.html">Signal</a>
 						</li>
 						
@@ -311,11 +403,11 @@
 						</li>
 						
 						<li>
-							<a href="Phaser.Stage.html">Stage</a>
+							<a href="Phaser.SpriteBatch.html">SpriteBatch</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.StageScaleMode.html">StageScaleMode</a>
+							<a href="Phaser.Stage.html">Stage</a>
 						</li>
 						
 						<li>
@@ -392,20 +484,6 @@
 						
 						<li>
 							<a href="SignalBinding.html">SignalBinding</a>
-						</li>
-						
-
-					</ul>
-				</li>
-				
-				<li class="dropdown">
-					<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b
-						class="caret"></b></a>
-
-					<ul class="dropdown-menu ">
-						
-						<li>
-							<a href="global.html#SAT">SAT</a>
 						</li>
 						
 
@@ -502,11 +580,14 @@ Phaser.Circle.prototype = {
     * @return {Circle} This circle object.
     */
     setTo: function (x, y, diameter) {
+
         this.x = x;
         this.y = y;
         this._diameter = diameter;
         this._radius = diameter * 0.5;
+
         return this;
+
     },
 
     /**
@@ -516,7 +597,9 @@ Phaser.Circle.prototype = {
     * @return {Circle} This Circle object.
     */
     copyFrom: function (source) {
+
         return this.setTo(source.x, source.y, source.diameter);
+
     },
 
     /**
@@ -525,11 +608,14 @@ Phaser.Circle.prototype = {
     * @param {any} dest - The object to copy to.
     * @return {Object} This dest object.
     */
-    copyTo: function(dest) {
+    copyTo: function (dest) {
+
         dest.x = this.x;
         dest.y = this.y;
         dest.diameter = this._diameter;
+
         return dest;
+
     },
 
     /**
@@ -561,11 +647,18 @@ Phaser.Circle.prototype = {
     * @param {Phaser.Circle} out - Optional Circle object. If given the values will be set into the object, otherwise a brand new Circle object will be created and returned.
     * @return {Phaser.Circle} The cloned Circle object.
     */
-    clone: function(out) {
+    clone: function (out) {
 
-        if (typeof out === "undefined") { out = new Phaser.Circle(); }
+        if (typeof out === "undefined")
+        {
+            out = new Phaser.Circle(this.x, this.y, this.diameter);
+        }
+        else
+        {
+            out.setTo(this.x, this.y, this.diameter);
+        }
 
-        return out.setTo(this.x, this.y, this.diameter);
+        return out;
 
     },
 
@@ -577,7 +670,9 @@ Phaser.Circle.prototype = {
     * @return {boolean} True if the coordinates are within this circle, otherwise false.
     */
     contains: function (x, y) {
+
         return Phaser.Circle.contains(this, x, y);
+
     },
 
     /**
@@ -589,7 +684,9 @@ Phaser.Circle.prototype = {
     * @return {Phaser.Point} The Point object holding the result.
     */
     circumferencePoint: function (angle, asDegrees, out) {
+
         return Phaser.Circle.circumferencePoint(this, angle, asDegrees, out);
+
     },
 
     /**
@@ -600,9 +697,12 @@ Phaser.Circle.prototype = {
     * @return {Circle} This Circle object.
     */
     offset: function (dx, dy) {
+
         this.x += dx;
         this.y += dy;
+
         return this;
+
     },
 
     /**
@@ -640,7 +740,9 @@ Object.defineProperty(Phaser.Circle.prototype, "diameter", {
     },
 
     set: function (value) {
-        if (value > 0) {
+
+        if (value > 0)
+        {
             this._diameter = value;
             this._radius = value * 0.5;
         }
@@ -660,10 +762,13 @@ Object.defineProperty(Phaser.Circle.prototype, "radius", {
     },
 
     set: function (value) {
-        if (value > 0) {
+
+        if (value > 0)
+        {
             this._radius = value;
             this._diameter = value * 2;
         }
+
     }
 
 });
@@ -680,12 +785,17 @@ Object.defineProperty(Phaser.Circle.prototype, "left", {
     },
 
     set: function (value) {
-        if (value > this.x) {
+
+        if (value > this.x)
+        {
             this._radius = 0;
             this._diameter = 0;
-        } else {
+        }
+        else
+        {
             this.radius = this.x - value;
         }
+
     }
 
 });
@@ -702,12 +812,17 @@ Object.defineProperty(Phaser.Circle.prototype, "right", {
     },
 
     set: function (value) {
-        if (value &lt; this.x) {
+
+        if (value &lt; this.x)
+        {
             this._radius = 0;
             this._diameter = 0;
-        } else {
+        }
+        else
+        {
             this.radius = value - this.x;
         }
+
     }
 
 });
@@ -724,12 +839,17 @@ Object.defineProperty(Phaser.Circle.prototype, "top", {
     },
     
     set: function (value) {
-        if (value > this.y) {
+
+        if (value > this.y)
+        {
             this._radius = 0;
             this._diameter = 0;
-        } else {
+        }
+        else
+        {
             this.radius = this.y - value;
         }
+
     }
 
 });
@@ -747,12 +867,16 @@ Object.defineProperty(Phaser.Circle.prototype, "bottom", {
 
     set: function (value) {
 
-        if (value &lt; this.y) {
+        if (value &lt; this.y)
+        {
             this._radius = 0;
             this._diameter = 0;
-        } else {
+        }
+        else
+        {
             this.radius = value - this.y;
         }
+
     }
 
 });
@@ -766,11 +890,16 @@ Object.defineProperty(Phaser.Circle.prototype, "bottom", {
 Object.defineProperty(Phaser.Circle.prototype, "area", {
 
     get: function () {
-        if (this._radius > 0) {
+
+        if (this._radius > 0)
+        {
             return Math.PI * this._radius * this._radius;
-        } else {
+        }
+        else
+        {
             return 0;
         }
+
     }
 
 });
@@ -809,16 +938,17 @@ Object.defineProperty(Phaser.Circle.prototype, "empty", {
 Phaser.Circle.contains = function (a, x, y) {
 
     //  Check if x/y are within the bounds first
-    if (x >= a.left && x &lt;= a.right && y >= a.top && y &lt;= a.bottom) {
-
+    if (a.radius > 0 && x >= a.left && x &lt;= a.right && y >= a.top && y &lt;= a.bottom)
+    {
         var dx = (a.x - x) * (a.x - x);
         var dy = (a.y - y) * (a.y - y);
 
         return (dx + dy) &lt;= (a.radius * a.radius);
-
     }
-
-    return false;
+    else
+    {
+        return false;
+    }
 
 };
 
@@ -859,8 +989,9 @@ Phaser.Circle.circumferencePoint = function (a, angle, asDegrees, out) {
     if (typeof asDegrees === "undefined") { asDegrees = false; }
     if (typeof out === "undefined") { out = new Phaser.Point(); }
 
-    if (asDegrees === true) {
-        angle = Phaser.Math.radToDeg(angle);
+    if (asDegrees === true)
+    {
+        angle = Phaser.Math.degToRad(angle);
     }
 
     out.x = a.x + a.radius * Math.cos(angle);
@@ -882,18 +1013,21 @@ Phaser.Circle.intersectsRectangle = function (c, r) {
     var cx = Math.abs(c.x - r.x - r.halfWidth);
     var xDist = r.halfWidth + c.radius;
 
-    if (cx > xDist) {
+    if (cx > xDist)
+    {
         return false;
     }
 
     var cy = Math.abs(c.y - r.y - r.halfHeight);
     var yDist = r.halfHeight + c.radius;
 
-    if (cy > yDist) {
+    if (cy > yDist)
+    {
         return false;
     }
 
-    if (cx &lt;= r.halfWidth || cy &lt;= r.halfHeight) {
+    if (cx &lt;= r.halfWidth || cy &lt;= r.halfHeight)
+    {
         return true;
     }
 
@@ -906,6 +1040,9 @@ Phaser.Circle.intersectsRectangle = function (c, r) {
     return xCornerDistSq + yCornerDistSq &lt;= maxCornerDistSq;
 
 };
+
+//   Because PIXI uses its own Circle, we'll replace it with ours to avoid duplicating code or confusion.
+PIXI.Circle = Phaser.Circle;
 </pre>
         </article>
     </section>
@@ -927,7 +1064,7 @@ Phaser.Circle.intersectsRectangle = function (c, r) {
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Mon Feb 24 2014 01:12:21 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Fri Mar 14 2014 06:34:17 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>
@@ -954,6 +1091,9 @@ Phaser.Circle.intersectsRectangle = function (c, r) {
 	<script>
 		$( function () {
 			$( "#toc" ).toc( {
+			    anchorName  : function(i, heading, prefix) {
+					return $(heading).attr("id") || ( prefix + i );
+				},
 				selectors   : "h1,h2,h3,h4",
 				showAndHide : false,
 				scrollTo    : 60

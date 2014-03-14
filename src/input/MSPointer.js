@@ -155,13 +155,13 @@ Phaser.MSPointer.prototype = {
     */
     stop: function () {
 
-        this.game.stage.canvas.removeEventListener('MSPointerDown', this._onMSPointerDown);
-        this.game.stage.canvas.removeEventListener('MSPointerMove', this._onMSPointerMove);
-        this.game.stage.canvas.removeEventListener('MSPointerUp', this._onMSPointerUp);
+        this.game.canvas.removeEventListener('MSPointerDown', this._onMSPointerDown);
+        this.game.canvas.removeEventListener('MSPointerMove', this._onMSPointerMove);
+        this.game.canvas.removeEventListener('MSPointerUp', this._onMSPointerUp);
 
-        this.game.stage.canvas.removeEventListener('pointerDown', this._onMSPointerDown);
-        this.game.stage.canvas.removeEventListener('pointerMove', this._onMSPointerMove);
-        this.game.stage.canvas.removeEventListener('pointerUp', this._onMSPointerUp);
+        this.game.canvas.removeEventListener('pointerDown', this._onMSPointerDown);
+        this.game.canvas.removeEventListener('pointerMove', this._onMSPointerMove);
+        this.game.canvas.removeEventListener('pointerUp', this._onMSPointerUp);
 
     }
 

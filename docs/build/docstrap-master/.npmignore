@@ -1,6 +1,0 @@
-node_modules*
-components*
-*.map
-.idea*
-npm-debug.log
-

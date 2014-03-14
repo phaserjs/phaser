@@ -13,6 +13,49 @@
 Phaser.Utils = {
     
     /**
+    * Get a unit dimension from a string.
+    *
+    * @method Phaser.Utils.parseDimension
+    * @param {string|number} size - The size to parse.
+    * @param {number} dimension - The window dimension to check.
+    * @return {number} The parsed dimension.
+    */
+    parseDimension: function (size, dimension) {
+
+        var f = 0;
+        var px = 0;
+
+        if (typeof size === 'string')
+        {
+            //  %?
+            if (size.substr(-1) === '%')
+            {
+                f = parseInt(size, 10) / 100;
+
+                if (dimension === 0)
+                {
+                    px = window.innerWidth * f;
+                }
+                else
+                {
+                    px = window.innerHeight * f;
+                }
+            }
+            else
+            {
+                px = parseInt(size, 10);
+            }
+        }
+        else
+        {
+            px = size;
+        }
+
+        return px;
+
+    },
+
+    /**
     * A standard Fisher-Yates Array shuffle implementation.
     * @method Phaser.Utils.shuffle
     * @param {array} array - The array to shuffle.
@@ -197,14 +240,6 @@ Phaser.Utils = {
 
 };
 
-function HEXtoRGB(hex) {
-    return [(hex >> 16 & 0xFF) / 255, ( hex >> 8 & 0xFF) / 255, (hex & 0xFF)/ 255];
-}
-
-PIXI.hex2rgb = function hex2rgb(hex) {
-    return [(hex >> 16 & 0xFF) / 255, ( hex >> 8 & 0xFF) / 255, (hex & 0xFF)/ 255];
-};
-
 /**
 * A polyfill for Function.prototype.bind
 */
@@ -245,9 +280,10 @@ if (typeof Function.prototype.bind != 'function') {
 /**
 * A polyfill for Array.isArray
 */
-if (!Array.isArray) {
-  Array.isArray = function (arg) {
-    return Object.prototype.toString.call(arg) == '[object Array]';
-  };
+if (!Array.isArray)
+{
+    Array.isArray = function (arg)
+    {
+        return Object.prototype.toString.call(arg) == '[object Array]';
+    }
 }
-

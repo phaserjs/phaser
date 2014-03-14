@@ -6,6 +6,8 @@ PIXI.BaseTextureCache = {};
 PIXI.texturesToUpdate = [];
 PIXI.texturesToDestroy = [];
 
+PIXI.BaseTextureCacheIdGenerator = 0;
+
 /**
  * A texture stores the information that represents an image. All textures have a base texture
  *
@@ -13,6 +15,7 @@ PIXI.texturesToDestroy = [];
  * @uses EventTarget
  * @constructor
  * @param source {String} the source object (image or canvas)
+ * @param scaleMode {Number} Should be one of the PIXI.scaleMode consts
  */
 PIXI.BaseTexture = function(source, scaleMode)
 {
@@ -39,10 +42,10 @@ PIXI.BaseTexture = function(source, scaleMode)
     /**
      * The scale mode to apply when scaling this texture
      * @property scaleMode
-     * @type PIXI.BaseTexture.SCALE_MODE
-     * @default PIXI.BaseTexture.SCALE_MODE.LINEAR
+     * @type PIXI.scaleModes
+     * @default PIXI.scaleModes.LINEAR
      */
-    this.scaleMode = scaleMode || PIXI.BaseTexture.SCALE_MODE.DEFAULT;
+    this.scaleMode = scaleMode || PIXI.scaleModes.DEFAULT;
 
     /**
      * [read-only] Describes if the base texture has loaded or not
@@ -61,36 +64,15 @@ PIXI.BaseTexture = function(source, scaleMode)
      */
     this.source = source;
 
+    //TODO will be used for futer pixi 1.5...
+    this.id = PIXI.BaseTextureCacheIdGenerator++;
+
+    // used for webGL
+    this._glTextures = [];
+    
     if(!source)return;
 
-    if(this.source instanceof Image || this.source instanceof HTMLImageElement)
-    {
-        if(this.source.complete)
-        {
-            this.hasLoaded = true;
-            this.width = this.source.width;
-            this.height = this.source.height;
-
-            PIXI.texturesToUpdate.push(this);
-        }
-        else
-        {
-
-            var scope = this;
-            this.source.onload = function() {
-
-                scope.hasLoaded = true;
-                scope.width = scope.source.width;
-                scope.height = scope.source.height;
-
-                // add it to somewhere...
-                PIXI.texturesToUpdate.push(scope);
-                scope.dispatchEvent( { type: 'loaded', content: scope } );
-            };
-            //this.image.src = imageUrl;
-        }
-    }
-    else
+    if(this.source.complete || this.source.getContext)
     {
         this.hasLoaded = true;
         this.width = this.source.width;
@@ -98,9 +80,27 @@ PIXI.BaseTexture = function(source, scaleMode)
 
         PIXI.texturesToUpdate.push(this);
     }
+    else
+    {
+
+        var scope = this;
+        this.source.onload = function() {
+
+            scope.hasLoaded = true;
+            scope.width = scope.source.width;
+            scope.height = scope.source.height;
+
+            // add it to somewhere...
+            PIXI.texturesToUpdate.push(scope);
+            scope.dispatchEvent( { type: 'loaded', content: scope } );
+        };
+    }
 
     this.imageUrl = null;
     this._powerOf2 = false;
+
+    
+
 };
 
 PIXI.BaseTexture.prototype.constructor = PIXI.BaseTexture;
@@ -112,10 +112,9 @@ PIXI.BaseTexture.prototype.constructor = PIXI.BaseTexture;
  */
 PIXI.BaseTexture.prototype.destroy = function()
 {
-    if(this.source instanceof Image)
+    if(this.imageUrl)
     {
-        if (this.imageUrl in PIXI.BaseTextureCache)
-            delete PIXI.BaseTextureCache[this.imageUrl];
+        delete PIXI.BaseTextureCache[this.imageUrl];
         this.imageUrl = null;
         this.source.src = null;
     }
@@ -124,11 +123,11 @@ PIXI.BaseTexture.prototype.destroy = function()
 };
 
 /**
+ * Changes the source image of the texture
  *
- *
- * @method destroy
+ * @method updateSourceImage
+ * @param newSrc {String} the path of the image
  */
-
 PIXI.BaseTexture.prototype.updateSourceImage = function(newSrc)
 {
     this.hasLoaded = false;
@@ -138,16 +137,19 @@ PIXI.BaseTexture.prototype.updateSourceImage = function(newSrc)
 
 /**
  * Helper function that returns a base texture based on an image url
- * If the image is not in the base texture cache it will be  created and loaded
+ * If the image is not in the base texture cache it will be created and loaded
  *
  * @static
  * @method fromImage
  * @param imageUrl {String} The image url of the texture
+ * @param crossorigin {Boolean} 
+ * @param scaleMode {Number} Should be one of the PIXI.scaleMode consts
  * @return BaseTexture
  */
 PIXI.BaseTexture.fromImage = function(imageUrl, crossorigin, scaleMode)
 {
     var baseTexture = PIXI.BaseTextureCache[imageUrl];
+
     if(!baseTexture)
     {
         // new Image() breaks tex loading in some versions of Chrome.
@@ -166,8 +168,22 @@ PIXI.BaseTexture.fromImage = function(imageUrl, crossorigin, scaleMode)
     return baseTexture;
 };
 
-PIXI.BaseTexture.SCALE_MODE = {
-    DEFAULT: 0, //default to LINEAR
-    LINEAR: 0,
-    NEAREST: 1
+PIXI.BaseTexture.fromCanvas = function(canvas, scaleMode)
+{
+    if(!canvas._pixiId)
+    {
+        canvas._pixiId = 'canvas_' + PIXI.TextureCacheIdGenerator++;
+    }
+
+    var baseTexture = PIXI.BaseTextureCache[canvas._pixiId];
+
+    if(!baseTexture)
+    {
+        baseTexture = new PIXI.BaseTexture(canvas, scaleMode);
+        PIXI.BaseTextureCache[canvas._pixiId] = baseTexture;
+    }
+
+    return baseTexture;
 };
+
+

@@ -3,9 +3,9 @@
  */
 
 /**
- * The json file loader is used to load in JSON data and parsing it
+ * The json file loader is used to load in JSON data and parse it
  * When loaded this class will dispatch a 'loaded' event
- * If load failed this class will dispatch a 'error' event
+ * If loading fails this class will dispatch an 'error' event
  *
  * @class JsonLoader
  * @uses EventTarget
@@ -61,7 +61,7 @@ PIXI.JsonLoader.prototype.constructor = PIXI.JsonLoader;
  * @method load
  */
 PIXI.JsonLoader.prototype.load = function () {
-    this.ajaxRequest = new PIXI.AjaxRequest();
+    this.ajaxRequest = new PIXI.AjaxRequest(this.crossorigin);
     var scope = this;
     this.ajaxRequest.onreadystatechange = function () {
         scope.onJSONLoaded();
@@ -105,11 +105,16 @@ PIXI.JsonLoader.prototype.onJSONLoaded = function () {
                             width: rect.w,
                             height: rect.h
                         });
+
+                        // check to see ifthe sprite ha been trimmed..
                         if (frameData[i].trimmed) {
-                            //var realSize = frameData[i].spriteSourceSize;
-                            PIXI.TextureCache[i].realSize = frameData[i].spriteSourceSize;
-                            PIXI.TextureCache[i].trim.x = 0; // (realSize.x / rect.w)
-                            // calculate the offset!
+
+                            var texture =  PIXI.TextureCache[i];
+                            
+                            var actualSize = frameData[i].sourceSize;
+                            var realSize = frameData[i].spriteSourceSize;
+
+                            texture.trim = new PIXI.Rectangle(realSize.x, realSize.y, actualSize.w, actualSize.h);
                         }
                     }
                 }

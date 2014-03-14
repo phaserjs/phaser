@@ -9,7 +9,7 @@
 
 /**
  * The Spine loader is used to load in JSON spine data
- * To generate the data you need to use http://esotericsoftware.com/ and export the "JSON" format
+ * To generate the data you need to use http://esotericsoftware.com/ and export in the "JSON" format
  * Due to a clash of names  You will need to change the extension of the spine file from *.json to *.anim for it to load
  * See example 12 (http://www.goodboydigital.com/pixijs/examples/12/) to see a working example and check out the source
  * You will need to generate a sprite sheet to accompany the spine data
@@ -64,24 +64,9 @@ PIXI.SpineLoader.prototype.load = function () {
     var jsonLoader = new PIXI.JsonLoader(this.url, this.crossorigin);
     jsonLoader.addEventListener("loaded", function (event) {
         scope.json = event.content.json;
-        scope.onJSONLoaded();
+        scope.onLoaded();
     });
     jsonLoader.load();
-};
-
-/**
- * Invoke when JSON file is loaded
- *
- * @method onJSONLoaded
- * @private
- */
-PIXI.SpineLoader.prototype.onJSONLoaded = function () {
-    var spineJsonParser = new spine.SkeletonJson();
-    var skeletonData = spineJsonParser.readSkeletonData(this.json);
-
-    PIXI.AnimCache[this.url] = skeletonData;
-
-    this.onLoaded();
 };
 
 /**

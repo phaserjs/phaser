@@ -10,7 +10,7 @@
 var Phaser = Phaser || {
 
 	VERSION: '<%= version %>',
-	DEV_VERSION: '1.1.6',
+	DEV_VERSION: '2.0.0',
 	GAMES: [],
 
 	AUTO: 0,
@@ -18,9 +18,15 @@ var Phaser = Phaser || {
 	WEBGL: 2,
 	HEADLESS: 3,
 
+	NONE: 0,
+	LEFT: 1,
+	RIGHT: 2,
+	UP: 3,
+	DOWN: 4,
+
 	SPRITE: 0,
 	BUTTON: 1,
-	BULLET: 2,
+	IMAGE: 2,
 	GRAPHICS: 3,
 	TEXT: 4,
 	TILESPRITE: 5,
@@ -34,17 +40,39 @@ var Phaser = Phaser || {
 	BITMAPDATA: 13,
 	CANVAS_FILTER: 14,
 	WEBGL_FILTER: 15,
+	ELLIPSE: 16,
+	SPRITEBATCH: 17,
+	RETROFONT: 18,
 
-	NONE: 0,
-	LEFT: 1,
-	RIGHT: 2,
-	UP: 3,
-	DOWN: 4,
+	//	The various blend modes supported by pixi / phaser
+	blendModes: {
+	    NORMAL:0,
+	    ADD:1,
+	    MULTIPLY:2,
+	    SCREEN:3,
+	    OVERLAY:4,
+	    DARKEN:5,
+	    LIGHTEN:6,
+	    COLOR_DODGE:7,
+	    COLOR_BURN:8,
+	    HARD_LIGHT:9,
+	    SOFT_LIGHT:10,
+	    DIFFERENCE:11,
+	    EXCLUSION:12,
+	    HUE:13,
+	    SATURATION:14,
+	    COLOR:15,
+	    LUMINOSITY:16
+	},
 
-	CANVAS_PX_ROUND: false,
-	CANVAS_CLEAR_RECT: true
+	//	The scale modes
+	scaleModes: {
+	    DEFAULT:0,
+	    LINEAR:0,
+	    NEAREST:1
+	}
 
- };
+};
 
 PIXI.InteractionManager = function (dummy) {
 	//	We don't need this in Pixi, so we've removed it to save space

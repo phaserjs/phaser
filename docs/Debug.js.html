@@ -91,10 +91,6 @@
 						</li>
 						
 						<li>
-							<a href="Phaser.DOMSprite.html">DOMSprite</a>
-						</li>
-						
-						<li>
 							<a href="Phaser.Easing.html">Easing</a>
 						</li>
 						
@@ -143,6 +139,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.Ellipse.html">Ellipse</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Events.html">Events</a>
 						</li>
 						
@@ -163,6 +163,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.GameObjectCreator.html">GameObjectCreator</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.GameObjectFactory.html">GameObjectFactory</a>
 						</li>
 						
@@ -180,6 +184,10 @@
 						
 						<li>
 							<a href="Phaser.Group.html">Group</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Image.html">Image</a>
 						</li>
 						
 						<li>
@@ -251,6 +259,82 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.Physics.Ninja.html">Ninja</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.Ninja.AABB.html">AABB</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.Ninja.Body.html">Body</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.Ninja.Circle.html">Circle</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.Ninja.Tile.html">Tile</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.html">P2</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.Body.html">Body</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.BodyDebug.html">BodyDebug</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.CollisionGroup.html">CollisionGroup</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.ContactMaterial.html">ContactMaterial</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.DistanceConstraint.html">DistanceConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.GearConstraint.html">GearConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.InversePointProxy.html">InversePointProxy</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.LockConstraint.html">LockConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.Material.html">Material</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.PointProxy.html">PointProxy</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.PrismaticConstraint.html">PrismaticConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.RevoluteConstraint.html">RevoluteConstraint</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.P2.Spring.html">Spring</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Plugin.html">Plugin</a>
 						</li>
 						
@@ -291,6 +375,14 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.RetroFont.html">RetroFont</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.ScaleManager.html">ScaleManager</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Signal.html">Signal</a>
 						</li>
 						
@@ -311,11 +403,11 @@
 						</li>
 						
 						<li>
-							<a href="Phaser.Stage.html">Stage</a>
+							<a href="Phaser.SpriteBatch.html">SpriteBatch</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.StageScaleMode.html">StageScaleMode</a>
+							<a href="Phaser.Stage.html">Stage</a>
 						</li>
 						
 						<li>
@@ -398,20 +490,6 @@
 					</ul>
 				</li>
 				
-				<li class="dropdown">
-					<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b
-						class="caret"></b></a>
-
-					<ul class="dropdown-menu ">
-						
-						<li>
-							<a href="global.html#SAT">SAT</a>
-						</li>
-						
-
-					</ul>
-				</li>
-				
 			</ul>
 		</div>
 	</div>
@@ -436,8 +514,10 @@
 */
 
 /**
-* A collection of methods for displaying debug information about game objects. Phaser.Debug requires a CANVAS game type in order to render, so if you've got
-* your game set to use Phaser.AUTO then swap it for Phaser.CANVAS to ensure WebGL doesn't kick in, then the Debug functions will all display.
+* A collection of methods for displaying debug information about game objects.
+* If your game is running in WebGL then Debug will create a Sprite that is placed at the top of the Stage display list and bind a canvas texture
+* to it, which must be uploaded every frame. Be advised: this is expenive.
+* If your game is using a Canvas renderer then the debug information is literally drawn on the top of the active game canvas and no Sprite is used.
 *
 * @class Phaser.Utils.Debug
 * @constructor
@@ -451,9 +531,34 @@ Phaser.Utils.Debug = function (game) {
     this.game = game;
   
     /**
-    * @property {Context} context - The canvas context on which to render the debug information.
+    * @property {PIXI.Sprite} sprite - If debugging in WebGL mode we need this.
     */
-    this.context = game.context;
+    this.sprite = null;
+
+    /**
+    * @property {HTMLCanvasElement} canvas - The canvas to which this BitmapData draws.
+    */
+    this.canvas = null;
+
+    /**
+    * @property {PIXI.BaseTexture} baseTexture - Required Pixi var.
+    */
+    this.baseTexture = null;
+    
+    /**
+    * @property {PIXI.Texture} texture - Required Pixi var.
+    */
+    this.texture = null;
+
+    /**
+    * @property {Phaser.Frame} textureFrame - Dimensions of the renderable area.
+    */
+    this.textureFrame = null;
+
+    /**
+    * @property {CanvasRenderingContext2D} context - The 2d context of the canvas.
+    */
+    this.context = null;
 
     /**
     * @property {string} font - The font that the debug information is rendered in.
@@ -494,24 +599,66 @@ Phaser.Utils.Debug = function (game) {
     */
     this.currentAlpha = 1;
 
+    /**
+    * @property {boolean} dirty - Does the canvas need re-rendering?
+    */
+    this.dirty = false;
+
 };
 
 Phaser.Utils.Debug.prototype = {
 
     /**
+    * Internal method that boots the debug displayer.
+    *
+    * @method Phaser.Utils.Debug#boot
+    * @protected
+    */
+    boot: function () {
+
+        if (this.game.renderType === Phaser.CANVAS)
+        {
+            this.context = this.game.context;
+        }
+        else
+        {
+            this.canvas = Phaser.Canvas.create(this.game.width, this.game.height, '', true);
+            this.context = this.canvas.getContext('2d');
+            this.baseTexture = new PIXI.BaseTexture(this.canvas);
+            this.texture = new PIXI.Texture(this.baseTexture);
+            this.textureFrame = new Phaser.Frame(0, 0, 0, this.game.width, this.game.height, 'debug', this.game.rnd.uuid());
+            this.sprite = this.game.make.image(0, 0, this.texture, this.textureFrame);
+            this.game.stage.addChild(this.sprite);
+        }
+
+    },
+
+    /**
+    * Internal method that clears the canvas (if a Sprite) ready for a new debug session.
+    *
+    * @method Phaser.Utils.Debug#preUpdate
+    */
+    preUpdate: function () {
+
+        if (this.dirty && this.sprite)
+        {
+            this.context.clearRect(0, 0, this.game.width, this.game.height);
+            this.dirty = false;
+        }
+
+    },
+
+    /**
     * Internal method that resets and starts the debug output values.
+    *
     * @method Phaser.Utils.Debug#start
+    * @protected
     * @param {number} [x=0] - The X value the debug info will start from.
     * @param {number} [y=0] - The Y value the debug info will start from.
     * @param {string} [color='rgb(255,255,255)'] - The color the debug text will drawn in.
     * @param {number} [columnWidth=0] - The spacing between columns.
     */
     start: function (x, y, color, columnWidth) {
-
-        if (this.context == null)
-        {
-            return;
-        }
 
         if (typeof x !== 'number') { x = 0; }
         if (typeof y !== 'number') { y = 0; }
@@ -524,6 +671,11 @@ Phaser.Utils.Debug.prototype = {
         this.currentAlpha = this.context.globalAlpha;
         this.columnWidth = columnWidth;
 
+        if (this.sprite)
+        {
+            this.dirty = true;
+        }
+
         this.context.save();
         this.context.setTransform(1, 0, 0, 1, 0, 0);
         this.context.strokeStyle = color;
@@ -535,55 +687,29 @@ Phaser.Utils.Debug.prototype = {
 
     /**
     * Internal method that stops the debug output.
+    *
     * @method Phaser.Utils.Debug#stop
+    * @protected
     */
     stop: function () {
 
         this.context.restore();
         this.context.globalAlpha = this.currentAlpha;
 
-    },
-
-    /**
-    * Internal method that outputs a single line of text.
-    * @method Phaser.Utils.Debug#line
-    * @param {string} text - The line of text to draw.
-    * @param {number} [x] - The X value the debug info will start from.
-    * @param {number} [y] - The Y value the debug info will start from.
-    */
-    line: function (text, x, y) {
-
-        if (this.context == null)
+        if (this.sprite)
         {
-            return;
+            PIXI.updateWebGLTexture(this.baseTexture, this.game.renderer.gl);
         }
-
-        if (typeof x !== 'undefined') { this.currentX = x; }
-        if (typeof y !== 'undefined') { this.currentY = y; }
-
-        if (this.renderShadow)
-        {
-            this.context.fillStyle = 'rgb(0,0,0)';
-            this.context.fillText(text, this.currentX + 1, this.currentY + 1);
-            this.context.fillStyle = this.currentColor;
-        }
-
-        this.context.fillText(text, this.currentX, this.currentY);
-        this.currentY += this.lineHeight;
 
     },
 
     /**
     * Internal method that outputs a single line of text split over as many columns as needed, one per parameter.
-    * @method Phaser.Utils.Debug#splitline
-    * @param {string} text - The text to render. You can have as many columns of text as you want, just pass them as additional parameters.
+    *
+    * @method Phaser.Utils.Debug#line
+    * @protected
     */
-    splitline: function (text) {
-
-        if (this.context == null)
-        {
-            return;
-        }
+    line: function () {
 
         var x = this.currentX;
 
@@ -606,120 +732,15 @@ Phaser.Utils.Debug.prototype = {
     },
 
     /**
-    * Visually renders a QuadTree to the display.
-    * @method Phaser.Utils.Debug#renderQuadTree
-    * @param {Phaser.QuadTree} quadtree - The quadtree to render.
-    * @param {string} color - The color of the lines in the quadtree.
-    */
-    renderQuadTree: function (quadtree, color) {
-
-        color = color || 'rgba(255,0,0,0.3)';
-
-        this.start();
-
-        var bounds = quadtree.bounds;
-
-        if (quadtree.nodes.length === 0)
-        {
-            this.context.strokeStyle = color;
-            this.context.strokeRect(bounds.x, bounds.y, bounds.width, bounds.height);
-            this.renderText(quadtree.ID + ' / ' + quadtree.objects.length, bounds.x + 4, bounds.y + 16, 'rgb(0,200,0)', '12px Courier');
-
-            this.context.strokeStyle = 'rgb(0,255,0)';
-
-            // children
-            for (var i = 0; i &lt; quadtree.objects.length; i++)
-            {
-                this.context.strokeRect(quadtree.objects[i].x, quadtree.objects[i].y, quadtree.objects[i].width, quadtree.objects[i].height);
-            }
-        }
-        else
-        {
-            for (var i = 0; i &lt; quadtree.nodes.length; i++)
-            {
-                this.renderQuadTree(quadtree.nodes[i]);
-            }
-        }
-
-        this.stop();
-
-    },
-
-    /**
-    * Renders the corners and point information of the given Sprite.
-    * @method Phaser.Utils.Debug#renderSpriteCorners
-    * @param {Phaser.Sprite} sprite - The sprite to be rendered.
-    * @param {boolean} [showText=false] - If true the x/y coordinates of each point will be rendered.
-    * @param {boolean} [showBounds=false] - If true the bounds will be rendered over the top of the sprite.
-    * @param {string} [color='rgb(255,0,255)'] - The color the text is rendered in.
-    */
-    renderSpriteCorners: function (sprite, showText, showBounds, color) {
-
-        if (this.context == null)
-        {
-            return;
-        }
-
-        showText = showText || false;
-        showBounds = showBounds || false;
-        color = color || 'rgb(255,255,255)';
-
-        this.start(0, 0, color);
-
-        if (showBounds)
-        {
-            this.context.beginPath();
-            this.context.strokeStyle = 'rgba(0, 255, 0, 0.7)';
-            this.context.strokeRect(sprite.bounds.x, sprite.bounds.y, sprite.bounds.width, sprite.bounds.height);
-            this.context.closePath();
-            this.context.stroke();
-        }
-
-        this.context.beginPath();
-        this.context.moveTo(sprite.topLeft.x, sprite.topLeft.y);
-        this.context.lineTo(sprite.topRight.x, sprite.topRight.y);
-        this.context.lineTo(sprite.bottomRight.x, sprite.bottomRight.y);
-        this.context.lineTo(sprite.bottomLeft.x, sprite.bottomLeft.y);
-        this.context.closePath();
-        this.context.strokeStyle = 'rgba(255, 0, 255, 0.7)';
-        this.context.stroke();
-
-        this.renderPoint(sprite.offset);
-        this.renderPoint(sprite.center);
-        this.renderPoint(sprite.topLeft);
-        this.renderPoint(sprite.topRight);
-        this.renderPoint(sprite.bottomLeft);
-        this.renderPoint(sprite.bottomRight);
-
-        if (showText)
-        {
-            this.currentColor = color;
-            this.line('x: ' + Math.floor(sprite.topLeft.x) + ' y: ' + Math.floor(sprite.topLeft.y), sprite.topLeft.x, sprite.topLeft.y);
-            this.line('x: ' + Math.floor(sprite.topRight.x) + ' y: ' + Math.floor(sprite.topRight.y), sprite.topRight.x, sprite.topRight.y);
-            this.line('x: ' + Math.floor(sprite.bottomLeft.x) + ' y: ' + Math.floor(sprite.bottomLeft.y), sprite.bottomLeft.x, sprite.bottomLeft.y);
-            this.line('x: ' + Math.floor(sprite.bottomRight.x) + ' y: ' + Math.floor(sprite.bottomRight.y), sprite.bottomRight.x, sprite.bottomRight.y);
-        }
-
-        this.stop();
-
-    },
-
-    /**
     * Render Sound information, including decoded state, duration, volume and more.
-    * @method Phaser.Utils.Debug#renderSoundInfo
+    *
+    * @method Phaser.Utils.Debug#soundInfo
     * @param {Phaser.Sound} sound - The sound object to debug.
     * @param {number} x - X position of the debug info to be rendered.
     * @param {number} y - Y position of the debug info to be rendered.
     * @param {string} [color='rgb(255,255,255)'] - color of the debug info to be rendered. (format is css color string).
     */
-    renderSoundInfo: function (sound, x, y, color) {
-
-        if (this.context == null)
-        {
-            return;
-        }
-
-        color = color || 'rgb(255,255,255)';
+    soundInfo: function (sound, x, y, color) {
 
         this.start(x, y, color);
         this.line('Sound: ' + sound.key + ' Locked: ' + sound.game.sound.touchLocked);
@@ -743,20 +764,14 @@ Phaser.Utils.Debug.prototype = {
 
     /**
     * Render camera information including dimensions and location.
-    * @method Phaser.Utils.Debug#renderCameraInfo
-    * @param {Phaser.Camera} camera - Description.
+    *
+    * @method Phaser.Utils.Debug#cameraInfo
+    * @param {Phaser.Camera} camera - The Phaser.Camera to show the debug information for.
     * @param {number} x - X position of the debug info to be rendered.
     * @param {number} y - Y position of the debug info to be rendered.
     * @param {string} [color='rgb(255,255,255)'] - color of the debug info to be rendered. (format is css color string).
     */
-    renderCameraInfo: function (camera, x, y, color) {
-
-        if (this.context == null)
-        {
-            return;
-        }
-
-        color = color || 'rgb(255,255,255)';
+    cameraInfo: function (camera, x, y, color) {
 
         this.start(x, y, color);
         this.line('Camera (' + camera.width + ' x ' + camera.height + ')');
@@ -769,16 +784,17 @@ Phaser.Utils.Debug.prototype = {
 
     /**
     * Renders the Pointer.circle object onto the stage in green if down or red if up along with debug text.
-    * @method Phaser.Utils.Debug#renderPointer
-    * @param {Phaser.Pointer} pointer - Description.
+    *
+    * @method Phaser.Utils.Debug#pointer
+    * @param {Phaser.Pointer} pointer - The Pointer you wish to display.
     * @param {boolean} [hideIfUp=false] - Doesn't render the circle if the pointer is up.
     * @param {string} [downColor='rgba(0,255,0,0.5)'] - The color the circle is rendered in if down.
     * @param {string} [upColor='rgba(255,0,0,0.5)'] - The color the circle is rendered in if up (and hideIfUp is false).
     * @param {string} [color='rgb(255,255,255)'] - color of the debug info to be rendered. (format is css color string).
     */
-    renderPointer: function (pointer, hideIfUp, downColor, upColor, color) {
+    pointer: function (pointer, hideIfUp, downColor, upColor, color) {
 
-        if (this.context == null || pointer == null)
+        if (pointer == null)
         {
             return;
         }
@@ -786,7 +802,6 @@ Phaser.Utils.Debug.prototype = {
         if (typeof hideIfUp === 'undefined') { hideIfUp = false; }
         downColor = downColor || 'rgba(0,255,0,0.5)';
         upColor = upColor || 'rgba(255,0,0,0.5)';
-        color = color || 'rgb(255,255,255)';
 
         if (hideIfUp === true && pointer.isUp === true)
         {
@@ -818,26 +833,25 @@ Phaser.Utils.Debug.prototype = {
         this.context.closePath();
 
         //  Render the text
-        // this.start(pointer.x, pointer.y - 100, color);
         this.line('ID: ' + pointer.id + " Active: " + pointer.active);
         this.line('World X: ' + pointer.worldX + " World Y: " + pointer.worldY);
         this.line('Screen X: ' + pointer.x + " Screen Y: " + pointer.y);
         this.line('Duration: ' + pointer.duration + " ms");
+        this.line('is Down: ' + pointer.isDown + " is Up: " + pointer.isUp);
         this.stop();
 
     },
 
     /**
     * Render Sprite Input Debug information.
-    * @method Phaser.Utils.Debug#renderSpriteInputInfo
-    * @param {Phaser.Sprite} sprite - The sprite to be rendered.
+    *
+    * @method Phaser.Utils.Debug#spriteInputInfo
+    * @param {Phaser.Sprite|Phaser.Image} sprite - The sprite to display the input data for.
     * @param {number} x - X position of the debug info to be rendered.
     * @param {number} y - Y position of the debug info to be rendered.
     * @param {string} [color='rgb(255,255,255)'] - color of the debug info to be rendered. (format is css color string).
     */
-    renderSpriteInputInfo: function (sprite, x, y, color) {
-
-        color = color || 'rgb(255,255,255)';
+    spriteInputInfo: function (sprite, x, y, color) {
 
         this.start(x, y, color);
         this.line('Sprite Input: (' + sprite.width + ' x ' + sprite.height + ')');
@@ -850,46 +864,35 @@ Phaser.Utils.Debug.prototype = {
     },
 
     /**
-    * Render Sprite Body Physics Data as text.
-    * @method Phaser.Utils.Debug#renderBodyInfo
-    * @param {Phaser.Sprite} sprite - The sprite to be rendered.
+    * Renders Phaser.Key object information.
+    *
+    * @method Phaser.Utils.Debug#key
+    * @param {Phaser.Key} key - The Key to render the information for.
     * @param {number} x - X position of the debug info to be rendered.
     * @param {number} y - Y position of the debug info to be rendered.
     * @param {string} [color='rgb(255,255,255)'] - color of the debug info to be rendered. (format is css color string).
     */
-    renderBodyInfo: function (sprite, x, y, color) {
+    key: function (key, x, y, color) {
 
-        color = color || 'rgb(255,255,255)';
+        this.start(x, y, color, 150);
 
-        this.start(x, y, color, 210);
+        this.line('Key:', key.keyCode, 'isDown:', key.isDown);
+        this.line('justPressed:', key.justPressed(), 'justReleased:', key.justReleased());
+        this.line('Time Down:', key.timeDown.toFixed(0), 'duration:', key.duration.toFixed(0));
 
-        this.splitline('x: ' + sprite.body.x.toFixed(2), 'y: ' + sprite.body.y.toFixed(2), 'width: ' + sprite.width, 'height: ' + sprite.height);
-        this.splitline('speed: ' + sprite.body.speed.toFixed(2), 'angle: ' + sprite.body.angle.toFixed(2), 'linear damping: ' + sprite.body.linearDamping);
-        this.splitline('blocked left: ' + sprite.body.blocked.left, 'right: ' + sprite.body.blocked.right, 'up: ' + sprite.body.blocked.up, 'down: ' + sprite.body.blocked.down);
-        this.splitline('touching left: ' + sprite.body.touching.left, 'right: ' + sprite.body.touching.right, 'up: ' + sprite.body.touching.up, 'down: ' + sprite.body.touching.down);
-        this.splitline('gravity x: ' + sprite.body.gravity.x, 'y: ' + sprite.body.gravity.y, 'world gravity x: ' + this.game.physics.gravity.x, 'y: ' + this.game.physics.gravity.y);
-        this.splitline('acceleration x: ' + sprite.body.acceleration.x.toFixed(2), 'y: ' + sprite.body.acceleration.y.toFixed(2));
-        this.splitline('velocity x: ' + sprite.body.velocity.x.toFixed(2), 'y: ' + sprite.body.velocity.y.toFixed(2), 'deltaX: ' + sprite.body.deltaX().toFixed(2), 'deltaY: ' + sprite.body.deltaY().toFixed(2));
-        this.splitline('bounce x: ' + sprite.body.bounce.x.toFixed(2), 'y: ' + sprite.body.bounce.y.toFixed(2));
         this.stop();
 
     },
 
     /**
     * Render debug information about the Input object.
-    * @method Phaser.Utils.Debug#renderInputInfo
+    *
+    * @method Phaser.Utils.Debug#inputInfo
     * @param {number} x - X position of the debug info to be rendered.
     * @param {number} y - Y position of the debug info to be rendered.
     * @param {string} [color='rgb(255,255,255)'] - color of the debug info to be rendered. (format is css color string).
     */
-    renderInputInfo: function (x, y, color) {
-
-        if (this.context == null)
-        {
-            return;
-        }
-
-        color = color || 'rgb(255,255,0)';
+    inputInfo: function (x, y, color) {
 
         this.start(x, y, color);
         this.line('Input');
@@ -902,21 +905,31 @@ Phaser.Utils.Debug.prototype = {
     },
 
     /**
+    * Renders the Sprites bounds. Note: This is really expensive as it has to calculate the bounds every time you call it!
+    *
+    * @method Phaser.Utils.Debug#spriteBounds
+    * @param {Phaser.Sprite|Phaser.Image} sprite - The sprite to display the bounds of.
+    * @param {string} [color] - Color of the debug info to be rendered (format is css color string).
+    * @param {boolean} [filled=true] - Render the rectangle as a fillRect (default, true) or a strokeRect (false)
+    */
+    spriteBounds: function (sprite, color, filled) {
+
+        var bounds = sprite.getBounds();
+
+        this.rectangle(bounds, color, filled);
+
+    },
+
+    /**
     * Render debug infos (including name, bounds info, position and some other properties) about the Sprite.
-    * @method Phaser.Utils.Debug#renderSpriteInfo
-    * @param {Phaser.Sprite} sprite - Description.
+    *
+    * @method Phaser.Utils.Debug#spriteInfo
+    * @param {Phaser.Sprite} sprite - The Sprite to display the information of.
     * @param {number} x - X position of the debug info to be rendered.
     * @param {number} y - Y position of the debug info to be rendered.
     * @param {string} [color='rgb(255,255,255)'] - color of the debug info to be rendered. (format is css color string).
     */
-    renderSpriteInfo: function (sprite, x, y, color) {
-
-        if (this.context == null)
-        {
-            return;
-        }
-
-        color = color || 'rgb(255, 255, 255)';
+    spriteInfo: function (sprite, x, y, color) {
 
         this.start(x, y, color);
 
@@ -924,46 +937,21 @@ Phaser.Utils.Debug.prototype = {
         this.line('x: ' + sprite.x.toFixed(1) + ' y: ' + sprite.y.toFixed(1));
         this.line('angle: ' + sprite.angle.toFixed(1) + ' rotation: ' + sprite.rotation.toFixed(1));
         this.line('visible: ' + sprite.visible + ' in camera: ' + sprite.inCamera);
-        this.line('body x: ' + sprite.body.x.toFixed(1) + ' y: ' + sprite.body.y.toFixed(1));
 
-        //  0 = scaleX
-        //  1 = skewY
-        //  2 = translateX
-        //  3 = skewX
-        //  4 = scaleY
-        //  5 = translateY
-
-        this.line('id: ' + sprite._id);
-        this.line('scale x: ' + sprite.worldTransform[0]);
-        this.line('scale y: ' + sprite.worldTransform[4]);
-        this.line('tx: ' + sprite.worldTransform[2]);
-        this.line('ty: ' + sprite.worldTransform[5]);
-        this.line('skew x: ' + sprite.worldTransform[3]);
-        this.line('skew y: ' + sprite.worldTransform[1]);
-        this.line('sdx: ' + sprite.deltaX);
-        this.line('sdy: ' + sprite.deltaY);
-
-        // this.line('inCamera: ' + this.game.renderer.spriteRenderer.inCamera(this.game.camera, sprite));
         this.stop();
 
     },
 
     /**
     * Renders the sprite coordinates in local, positional and world space.
-    * @method Phaser.Utils.Debug#renderSpriteCoords
-    * @param {Phaser.Sprite} line - The sprite to inspect.
+    *
+    * @method Phaser.Utils.Debug#spriteCoords
+    * @param {Phaser.Sprite|Phaser.Image} sprite - The sprite to display the coordinates for.
     * @param {number} x - X position of the debug info to be rendered.
     * @param {number} y - Y position of the debug info to be rendered.
     * @param {string} [color='rgb(255,255,255)'] - color of the debug info to be rendered. (format is css color string).
     */
-    renderSpriteCoords: function (sprite, x, y, color) {
-
-        if (this.context == null)
-        {
-            return;
-        }
-
-        color = color || 'rgb(255, 255, 255)';
+    spriteCoords: function (sprite, x, y, color) {
 
         this.start(x, y, color, 100);
 
@@ -972,378 +960,263 @@ Phaser.Utils.Debug.prototype = {
             this.line(sprite.name);
         }
 
-        this.splitline('x:', sprite.x.toFixed(2), 'y:', sprite.y.toFixed(2));
-        this.splitline('pos x:', sprite.position.x.toFixed(2), 'pos y:', sprite.position.y.toFixed(2));
-        this.splitline('world x:', sprite.world.x.toFixed(2), 'world y:', sprite.world.y.toFixed(2));
+        this.line('x:', sprite.x.toFixed(2), 'y:', sprite.y.toFixed(2));
+        this.line('pos x:', sprite.position.x.toFixed(2), 'pos y:', sprite.position.y.toFixed(2));
+        this.line('world x:', sprite.world.x.toFixed(2), 'world y:', sprite.world.y.toFixed(2));
 
-        this.stop();
-
-    },
-
-    /**
-    * Renders a Line object in the given color.
-    * @method Phaser.Utils.Debug#renderLine
-    * @param {Phaser.Line} line - The Line to render.
-    * @param {string} [color='rgb(255,255,255)'] - color of the debug info to be rendered. (format is css color string).
-    */
-    renderLine: function (line, color) {
-
-        if (this.context == null)
-        {
-            return;
-        }
-
-        color = color || 'rgb(255, 255, 255)';
-
-        this.start(0, 0, color);
-        this.context.lineWidth = 1;
-        this.context.beginPath();
-        this.context.moveTo(line.start.x + 0.5, line.start.y + 0.5);
-        this.context.lineTo(line.end.x + 0.5, line.end.y + 0.5);
-        this.context.closePath();
-        this.context.stroke();
         this.stop();
 
     },
 
     /**
     * Renders Line information in the given color.
-    * @method Phaser.Utils.Debug#renderLineInfo
-    * @param {Phaser.Line} line - The Line to render.
+    *
+    * @method Phaser.Utils.Debug#lineInfo
+    * @param {Phaser.Line} line - The Line to display the data for.
     * @param {number} x - X position of the debug info to be rendered.
     * @param {number} y - Y position of the debug info to be rendered.
     * @param {string} [color='rgb(255,255,255)'] - color of the debug info to be rendered. (format is css color string).
     */
-    renderLineInfo: function (line, x, y, color) {
-
-        if (this.context == null)
-        {
-            return;
-        }
-
-        color = color || 'rgb(255, 255, 255)';
+    lineInfo: function (line, x, y, color) {
 
         this.start(x, y, color, 80);
-        this.splitline('start.x:', line.start.x.toFixed(2), 'start.y:', line.start.y.toFixed(2));
-        this.splitline('end.x:', line.end.x.toFixed(2), 'end.y:', line.end.y.toFixed(2));
-        this.splitline('length:', line.length.toFixed(2), 'angle:', line.angle);
+        this.line('start.x:', line.start.x.toFixed(2), 'start.y:', line.start.y.toFixed(2));
+        this.line('end.x:', line.end.x.toFixed(2), 'end.y:', line.end.y.toFixed(2));
+        this.line('length:', line.length.toFixed(2), 'angle:', line.angle);
         this.stop();
 
     },
 
     /**
-    * Renders Point coordinates in the given color.
-    * @method Phaser.Utils.Debug#renderPointInfo
-    * @param {Phaser.Point} sprite - Description.
-    * @param {number} x - X position of the debug info to be rendered.
-    * @param {number} y - Y position of the debug info to be rendered.
-    * @param {string} [color='rgb(255,255,255)'] - color of the debug info to be rendered. (format is css color string).
+    * Renders a single pixel at the given size.
+    *
+    * @method Phaser.Utils.Debug#pixel
+    * @param {number} x - X position of the pixel to be rendered.
+    * @param {number} y - Y position of the pixel to be rendered.
+    * @param {string} [color] - Color of the pixel (format is css color string).
+    * @param {number} [size=2] - The 'size' to render the pixel at.
     */
-    renderPointInfo: function (point, x, y, color) {
+    pixel: function (x, y, color, size) {
 
-        if (this.context == null)
-        {
-            return;
-        }
+        size = size || 2;
 
-        color = color || 'rgb(255, 255, 255)';
-
-        this.start(x, y, color);
-        this.line('px: ' + point.x.toFixed(1) + ' py: ' + point.y.toFixed(1));
+        this.start();
+        this.context.fillStyle = color;
+        this.context.fillRect(x, y, size, size);
         this.stop();
 
     },
 
     /**
-    * Renders just the full Sprite bounds.
-    * @method Phaser.Utils.Debug#renderSpriteBounds
-    * @param {Phaser.Sprite} sprite - Description.
+    * Renders a Phaser geometry object including Rectangle, Circle, Point or Line.
+    *
+    * @method Phaser.Utils.Debug#geom
+    * @param {Phaser.Rectangle|Phaser.Circle|Phaser.Point|Phaser.Line} object - The geometry object to render.
     * @param {string} [color] - Color of the debug info to be rendered (format is css color string).
-    * @param {boolean} [fill=false] - If false the bounds outline is rendered, if true the whole rectangle is rendered.
+    * @param {boolean} [filled=true] - Render the objected as a filled (default, true) or a stroked (false)
+    * @param {number} [forceType=0] - Force rendering of a specific type. If 0 no type will be forced, otherwise 1 = Rectangle, 2 = Circle, 3 = Point and 4 = Line.
     */
-    renderSpriteBody: function (sprite, color, fill) {
+    geom: function (object, color, filled, forceType) {
 
-        if (this.context == null)
+        if (typeof filled === 'undefined') { filled = true; }
+        if (typeof forceType === 'undefined') { forceType = 0; }
+
+        color = color || 'rgba(0,255,0,0.4)';
+
+        this.start();
+
+        this.context.fillStyle = color;
+        this.context.strokeStyle = color;
+
+        if (object instanceof Phaser.Rectangle || forceType === 1)
         {
-            return;
+            if (filled)
+            {
+                this.context.fillRect(object.x - this.game.camera.x, object.y - this.game.camera.y, object.width, object.height);
+            }
+            else
+            {
+                this.context.strokeRect(object.x - this.game.camera.x, object.y - this.game.camera.y, object.width, object.height);
+            }
         }
-
-        color = color || 'rgb(255,0,255)';
-
-        if (typeof fill === 'undefined') { fill = false; }
-
-        this.start(0, 0, color);
-
-        if (fill)
+        else if (object instanceof Phaser.Circle || forceType === 2)
         {
-            this.context.fillStyle = color;
-            this.context.fillRect(sprite.body.left, sprite.body.top, sprite.body.width, sprite.body.height);
+            this.context.beginPath();
+            this.context.arc(object.x - this.game.camera.x, object.y - this.game.camera.y, object.radius, 0, Math.PI * 2, false);
+            this.context.closePath();
+
+            if (filled)
+            {
+                this.context.fill();
+            }
+            else
+            {
+                this.context.stroke();
+            }
         }
-        else
+        else if (object instanceof Phaser.Point || forceType === 3)
         {
-            this.context.strokeStyle = color;
-            this.context.strokeRect(sprite.body.left, sprite.body.top, sprite.body.width, sprite.body.height);
+            this.context.fillRect(object.x - this.game.camera.x, object.y - this.game.camera.y, 4, 4);
+        }
+        else if (object instanceof Phaser.Line || forceType === 4)
+        {
+            this.context.lineWidth = 1;
+            this.context.beginPath();
+            this.context.moveTo((object.start.x + 0.5) - this.game.camera.x, (object.start.y + 0.5) - this.game.camera.y);
+            this.context.lineTo((object.end.x + 0.5) - this.game.camera.x, (object.end.y + 0.5) - this.game.camera.y);
+            this.context.closePath();
             this.context.stroke();
         }
 
-        this.stop();
-
-    },
-
-    /**
-    * Renders just the full Sprite bounds.
-    * @method Phaser.Utils.Debug#renderSpriteBounds
-    * @param {Phaser.Sprite} sprite - Description.
-    * @param {string} [color] - Color of the debug info to be rendered (format is css color string).
-    * @param {boolean} [fill=false] - If false the bounds outline is rendered, if true the whole rectangle is rendered.
-    */
-    renderSpriteBounds: function (sprite, color, fill) {
-
-        if (this.context == null)
-        {
-            return;
-        }
-
-        color = color || 'rgb(255,0,255)';
-
-        if (typeof fill === 'undefined') { fill = false; }
-
-        this.start(0, 0, color);
-
-        if (fill)
-        {
-            this.context.fillStyle = color;
-            this.context.fillRect(sprite.bounds.x, sprite.bounds.y, sprite.bounds.width, sprite.bounds.height);
-        }
-        else
-        {
-            this.context.strokeStyle = color;
-            this.context.strokeRect(sprite.bounds.x, sprite.bounds.y, sprite.bounds.width, sprite.bounds.height);
-            this.context.stroke();
-        }
-
-        this.stop();
-
-    },
-
-    /**
-    * Renders a single pixel.
-    * @method Phaser.Utils.Debug#renderPixel
-    * @param {number} x - X position of the debug info to be rendered.
-    * @param {number} y - Y position of the debug info to be rendered.
-    * @param {string} [color] - Color of the debug info to be rendered (format is css color string).
-    */
-    renderPixel: function (x, y, color) {
-
-        if (this.context == null)
-        {
-            return;
-        }
-
-        color = color || 'rgba(0,255,0,1)';
-
-        this.start();
-        this.context.fillStyle = color;
-        this.context.fillRect(x, y, 2, 2);
-        this.stop();
-
-    },
-
-    /**
-    * Renders a Point object.
-    * @method Phaser.Utils.Debug#renderPoint
-    * @param {Phaser.Point} point - The Point to render.
-    * @param {string} [color] - Color of the debug info to be rendered (format is css color string).
-    */
-    renderPoint: function (point, color) {
-
-        if (this.context == null)
-        {
-            return;
-        }
-
-        color = color || 'rgba(0,255,0,1)';
-
-        this.start();
-        this.context.fillStyle = color;
-        this.context.fillRect(point.x, point.y, 4, 4);
-        this.stop();
-
-    },
-
-    /**
-    * Renders a Rectangle.
-    * @method Phaser.Utils.Debug#renderRectangle
-    * @param {Phaser.Rectangle} rect - The Rectangle to render.
-    * @param {string} [color] - Color of the debug info to be rendered (format is css color string).
-    */
-    renderRectangle: function (rect, color) {
-
-        if (this.context == null)
-        {
-            return;
-        }
-
-        color = color || 'rgba(0,255,0,0.3)';
-
-        this.start();
-        this.context.fillStyle = color;
-        this.context.fillRect(rect.x, rect.y, rect.width, rect.height);
         this.stop();
         
     },
 
     /**
-    * Renders a Circle.
-    * @method Phaser.Utils.Debug#renderCircle
-    * @param {Phaser.Circle} circle - The Circle to render.
+    * Renders a Rectangle.
+    *
+    * @method Phaser.Utils.Debug#geom
+    * @param {Phaser.Rectangle|object} object - The geometry object to render.
     * @param {string} [color] - Color of the debug info to be rendered (format is css color string).
+    * @param {boolean} [filled=true] - Render the objected as a filled (default, true) or a stroked (false)
     */
-    renderCircle: function (circle, color) {
+    rectangle: function (object, color, filled) {
 
-        if (this.context == null)
-        {
-            return;
-        }
+        if (typeof filled === 'undefined') { filled = true; }
 
-        color = color || 'rgba(0,255,0,0.3)';
+        color = color || 'rgba(0, 255, 0, 0.4)';
 
         this.start();
-        this.context.beginPath();
-        this.context.fillStyle = color;
-        this.context.arc(circle.x, circle.y, circle.radius, 0, Math.PI * 2, false);
-        this.context.fill();
-        this.context.closePath();
+
+        if (filled)
+        {
+            this.context.fillStyle = color;
+            this.context.fillRect(object.x - this.game.camera.x, object.y - this.game.camera.y, object.width, object.height);
+        }
+        else
+        {
+            this.context.strokeStyle = color;
+            this.context.strokeRect(object.x - this.game.camera.x, object.y - this.game.camera.y, object.width, object.height);
+        }
+
         this.stop();
 
     },
 
     /**
-    * Render text.
-    * @method Phaser.Utils.Debug#renderText
+    * Render a string of text.
+    *
+    * @method Phaser.Utils.Debug#text
     * @param {string} text - The line of text to draw.
     * @param {number} x - X position of the debug info to be rendered.
     * @param {number} y - Y position of the debug info to be rendered.
     * @param {string} [color] - Color of the debug info to be rendered (format is css color string).
-    * @param {string} font - The font of text to draw.
+    * @param {string} [font] - The font of text to draw.
     */
-    renderText: function (text, x, y, color, font) {
-
-        if (this.context == null)
-        {
-            return;
-        }
+    text: function (text, x, y, color, font) {
 
         color = color || 'rgb(255,255,255)';
         font = font || '16px Courier';
 
         this.start();
         this.context.font = font;
+
+        if (this.renderShadow)
+        {
+            this.context.fillStyle = 'rgb(0,0,0)';
+            this.context.fillText(text, x + 1, y + 1);
+        }
+
         this.context.fillStyle = color;
         this.context.fillText(text, x, y);
+
         this.stop();
 
     },
 
     /**
-    * @method Phaser.Utils.Debug#renderPhysicsBody
-    * @param {array} body
-    * @param {string} [color='rgb(255,255,255)'] - The color the polygon is stroked in.
+    * Visually renders a QuadTree to the display.
+    *
+    * @method Phaser.Utils.Debug#quadTree
+    * @param {Phaser.QuadTree} quadtree - The quadtree to render.
+    * @param {string} color - The color of the lines in the quadtree.
     */
-    renderPhysicsBody: function (body, color, context) {
+    quadTree: function (quadtree, color) {
 
-        if (this.context === null && context === null)
+        color = color || 'rgba(255,0,0,0.3)';
+
+        this.start();
+
+        var bounds = quadtree.bounds;
+
+        if (quadtree.nodes.length === 0)
         {
-            return;
-        }
-
-        color = color || 'rgb(255,255,255)';
-
-        var x = body.x - this.game.camera.x;
-        var y = body.y - this.game.camera.y;
-
-        if (body.type === Phaser.Physics.Arcade.CIRCLE)
-        {
-            this.start(0, 0, color);
-            this.context.beginPath();
             this.context.strokeStyle = color;
-            this.context.arc(x, y, body.shape.r, 0, Math.PI * 2, false);
-            this.context.stroke();
-            this.context.closePath();
+            this.context.strokeRect(bounds.x, bounds.y, bounds.width, bounds.height);
+            this.text('size: ' + quadtree.objects.length, bounds.x + 4, bounds.y + 16, 'rgb(0,200,0)', '12px Courier');
 
-            // this.context.strokeStyle = 'rgb(0,0,255)';
-            // this.context.strokeRect(body.left, body.top, body.width, body.height);
+            this.context.strokeStyle = 'rgb(0,255,0)';
 
-            this.stop();
+            for (var i = 0; i &lt; quadtree.objects.length; i++)
+            {
+                this.context.strokeRect(quadtree.objects[i].x, quadtree.objects[i].y, quadtree.objects[i].width, quadtree.objects[i].height);
+            }
         }
         else
         {
-            var points = body.polygon.points;
-
-            this.start(0, 0, color);
-
-            this.context.beginPath();
-            this.context.moveTo(x + points[0].x, y + points[0].y);
-
-            for (var i = 1; i &lt; points.length; i++)
+            for (var i = 0; i &lt; quadtree.nodes.length; i++)
             {
-                this.context.lineTo(x + points[i].x, y + points[i].y);
+                this.quadTree(quadtree.nodes[i]);
             }
+        }
 
-            this.context.closePath();
-            this.context.strokeStyle = color;
-            this.context.stroke();
+        this.stop();
 
-            this.context.fillStyle = 'rgb(255,0,0)';
-            this.context.fillRect(x + points[0].x - 2, y + points[0].y - 2, 5, 5);
+    },
 
-            for (var i = 1; i &lt; points.length; i++)
+    /**
+    * Render a Sprites Physics body if it has one set. Note this only works for Arcade Physics.
+    * To display a P2 body you should enable debug mode on the body when creating it.
+    *
+    * @method Phaser.Utils.Debug#body
+    * @param {Phaser.Sprite} sprite - The sprite whos body will be rendered.
+    * @param {string} [color='rgb(255,255,255)'] - color of the debug info to be rendered. (format is css color string).
+    * @param {boolean} [filled=true] - Render the objected as a filled (default, true) or a stroked (false)
+    */
+    body: function (sprite, color, filled) {
+
+        if (sprite.body)
+        {
+            if (sprite.body.type === Phaser.Physics.ARCADE)
             {
-                this.context.fillStyle = 'rgb(255,' + (i * 40) + ',0)';
-                this.context.fillRect(x + points[i].x - 2, y + points[i].y - 2, 5, 5);
+                this.start();
+                Phaser.Physics.Arcade.Body.render(this.context, sprite.body, color, filled);
+                this.stop();
             }
-
-            // this.context.strokeStyle = 'rgb(0,255,255)';
-            // this.context.strokeRect(body.left, body.top, body.width, body.height);
-
-            this.stop();
         }
 
     },
 
     /**
-    * @method Phaser.Utils.Debug#renderPolygon
-    * @param {array} polygon
-    * @param {string} [color='rgb(255,255,255)'] - The color the polygon is stroked in.
+    * Render a Sprites Physic Body information.
+    *
+    * @method Phaser.Utils.Debug#bodyInfo
+    * @param {Phaser.Sprite} sprite - The sprite to be rendered.
+    * @param {number} x - X position of the debug info to be rendered.
+    * @param {number} y - Y position of the debug info to be rendered.
+    * @param {string} [color='rgb(255,255,255)'] - color of the debug info to be rendered. (format is css color string).
     */
-    renderPolygon: function (polygon, color, context) {
+    bodyInfo: function (sprite, x, y, color) {
 
-        if (this.context === null && context === null)
+        if (sprite.body)
         {
-            return;
+            if (sprite.body.type === Phaser.Physics.ARCADE)
+            {
+                this.start(x, y, color, 210);
+                Phaser.Physics.Arcade.Body.renderBodyInfo(this, sprite.body);
+                this.stop();
+            }
         }
-
-        color = color || 'rgb(255,255,255)';
-
-        var points = polygon.points;
-        var x = polygon.pos.x;
-        var y = polygon.pos.y;
-
-        this.start(0, 0, color);
-
-        this.context.beginPath();
-        this.context.moveTo(x + points[0].x, y + points[0].y);
-
-        for (var i = 1; i &lt; points.length; i++)
-        {
-            this.context.lineTo(x + points[i].x, y + points[i].y);
-        }
-
-        this.context.closePath();
-        this.context.strokeStyle = color;
-        this.context.stroke();
-
-        this.stop();
 
     }
 
@@ -1371,7 +1244,7 @@ Phaser.Utils.Debug.prototype.constructor = Phaser.Utils.Debug;
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Mon Feb 24 2014 01:12:21 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Fri Mar 14 2014 06:34:18 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>
@@ -1398,6 +1271,9 @@ Phaser.Utils.Debug.prototype.constructor = Phaser.Utils.Debug;
 	<script>
 		$( function () {
 			$( "#toc" ).toc( {
+			    anchorName  : function(i, heading, prefix) {
+					return $(heading).attr("id") || ( prefix + i );
+				},
 				selectors   : "h1,h2,h3,h4",
 				showAndHide : false,
 				scrollTo    : 60

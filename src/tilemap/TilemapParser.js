@@ -12,67 +12,33 @@
 Phaser.TilemapParser = {
 
     /**
-    * Creates a Tileset object.
-    * @method Phaser.TilemapParser.tileset
-    * @param {Phaser.Game} game - Game reference to the currently running game.
-    * @param {string} key - The Cache key of this tileset.
-    * @param {number} tileWidth - Width of each single tile in pixels.
-    * @param {number} tileHeight - Height of each single tile in pixels.
-    * @param {number} [tileMargin=0] - If the tiles have been drawn with a margin, specify the amount here.
-    * @param {number} [tileSpacing=0] - If the tiles have been drawn with spacing between them, specify the amount here.
-    * @param {number} [rows=-1] - How many tiles are placed horizontally in each row? If -1 it will calculate rows by dividing the image width by tileWidth.
-    * @param {number} [columns=-1] - How many tiles are placed vertically in each column? If -1 it will calculate columns by dividing the image height by tileHeight.
-    * @param {number} [total=-1] - The maximum number of tiles to extract from the image. If -1 it will extract `rows * columns` worth. You can also set a value lower than the actual number of tiles.
-    * @return {Phaser.Tileset} Generated Tileset object.
-    */
-    tileset: function (game, key, tileWidth, tileHeight, tileMargin, tileSpacing, rows, columns, total) {
-
-        //  How big is our image?
-        var img = game.cache.getTilesetImage(key);
-
-        if (img === null)
-        {
-            console.warn("Phaser.TilemapParser.tileSet: Invalid image key given");
-            return null;
-        }
-
-        var width = img.width;
-        var height = img.height;
-
-        if (rows === -1)
-        {
-            rows = Math.round(width / tileWidth);
-        }
-
-        if (columns === -1)
-        {
-            columns = Math.round(height / tileHeight);
-        }
-
-        if (total === -1)
-        {
-            total = rows * columns;
-        }
-        
-        //  Zero or smaller than tile sizes?
-        if (width === 0 || height === 0 || width < tileWidth || height < tileHeight || total === 0)
-        {
-            console.warn("Phaser.TilemapParser.tileSet: width/height zero or width/height < given tileWidth/tileHeight");
-            return null;
-        }
-
-        return new Phaser.Tileset(img, key, tileWidth, tileHeight, tileMargin, tileSpacing, rows, columns, total);
-
-    },
-
-    /**
-    * Parse tileset data from the cache and creates a Tileset object.
+    * Parse tilemap data from the cache and creates a Tilemap object.
+    *
     * @method Phaser.TilemapParser.parse
     * @param {Phaser.Game} game - Game reference to the currently running game.
     * @param {string} key - The key of the tilemap in the Cache.
+    * @param {number} [tileWidth=32] - The pixel width of a single map tile. If using CSV data you must specify this. Not required if using Tiled map data.
+    * @param {number} [tileHeight=32] - The pixel height of a single map tile. If using CSV data you must specify this. Not required if using Tiled map data.
+    * @param {number} [width=10] - The width of the map in tiles. If this map is created from Tiled or CSV data you don't need to specify this.
+    * @param {number} [height=10] - The height of the map in tiles. If this map is created from Tiled or CSV data you don't need to specify this.
     * @return {object} The parsed map object.
     */
-    parse: function (game, key) {
+    parse: function (game, key, tileWidth, tileHeight, width, height) {
+
+        if (typeof tileWidth === 'undefined') { tileWidth = 32; }
+        if (typeof tileHeight === 'undefined') { tileHeight = 32; }
+        if (typeof width === 'undefined') { width = 10; }
+        if (typeof height === 'undefined') { height = 10; }
+
+        if (typeof key === 'undefined')
+        {
+            return this.getEmptyData();
+        }
+
+        if (key === null)
+        {
+            return this.getEmptyData(tileWidth, tileHeight, width, height);
+        }
 
         var map = game.cache.getTilemapData(key);
 
@@ -80,27 +46,32 @@ Phaser.TilemapParser = {
         {
             if (map.format === Phaser.Tilemap.CSV)
             {
-                return this.parseCSV(map.data);
+                return this.parseCSV(key, map.data, tileWidth, tileHeight);
             }
-            else if (map.format === Phaser.Tilemap.TILED_JSON)
+            else if (!map.format || map.format === Phaser.Tilemap.TILED_JSON)
             {
                 return this.parseTiledJSON(map.data);
             }
         }
         else
         {
-            return { layers: [], objects: [], images: [], tilesets: [] };
+            console.warn('Phaser.TilemapParser.parse - No map data found for key ' + key);
         }
 
     },
 
     /**
     * Parses a CSV file into valid map data.
+    *
     * @method Phaser.TilemapParser.parseCSV
     * @param {string} data - The CSV file data.
+    * @param {number} [tileWidth=32] - The pixel width of a single map tile. If using CSV data you must specify this. Not required if using Tiled map data.
+    * @param {number} [tileHeight=32] - The pixel height of a single map tile. If using CSV data you must specify this. Not required if using Tiled map data.
     * @return {object} Generated map data.
     */
-    parseCSV: function (data) {
+    parseCSV: function (key, data, tileWidth, tileHeight) {
+
+        var map = this.getEmptyData();
 
         //  Trim any rogue whitespace from the data
         data = data.trim();
@@ -110,15 +81,15 @@ Phaser.TilemapParser = {
         var height = rows.length;
         var width = 0;
 
-        for (var i = 0; i < rows.length; i++)
+        for (var y = 0; y < rows.length; y++)
         {
-            output[i] = [];
+            output[y] = [];
 
-            var column = rows[i].split(",");
+            var column = rows[y].split(",");
 
-            for (var c = 0; c < column.length; c++)
+            for (var x = 0; x < column.length; x++)
             {
-                output[i][c] = parseInt(column[c], 10);
+                output[y][x] = new Phaser.Tile(0, parseInt(column[x], 10), x, y, tileWidth, tileHeight);
             }
 
             if (width === 0)
@@ -127,9 +98,81 @@ Phaser.TilemapParser = {
             }
         }
 
-        //  Build collision map
+        map.name = key;
+        map.width = width;
+        map.height = height;
+        map.tileWidth = tileWidth;
+        map.tileHeight = tileHeight;
+        map.widthInPixels = width * tileWidth;
+        map.heightInPixels = height * tileHeight;
 
-        return [{ name: 'csv', width: width, height: height, alpha: 1, visible: true, indexes: [], tileMargin: 0, tileSpacing: 0, data: output }];
+        map.layers[0].width = width;
+        map.layers[0].height = height;
+        map.layers[0].widthInPixels = map.widthInPixels;
+        map.layers[0].heightInPixels = map.heightInPixels;
+        map.layers[0].data = output;
+
+        return map;
+
+    },
+
+    /**
+    * Returns an empty map data object.
+    * @method Phaser.TilemapParser.getEmptyData
+    * @return {object} Generated map data.
+    */
+    getEmptyData: function (tileWidth, tileHeight, width, height) {
+
+        var map = {};
+
+        map.width = 0;
+        map.height = 0;
+        map.tileWidth = 0;
+        map.tileHeight = 0;
+
+        if (typeof tileWidth !== 'undefined' && tileWidth !== null) { map.tileWidth = tileWidth; }
+        if (typeof tileHeight !== 'undefined' && tileHeight !== null) { map.tileHeight = tileHeight; }
+        if (typeof width !== 'undefined' && width !== null) { map.width = width; }
+        if (typeof height !== 'undefined' && height !== null) { map.height = height; }
+
+        map.orientation = 'orthogonal';
+        map.version = '1';
+        map.properties = {};
+        map.widthInPixels = 0;
+        map.heightInPixels = 0;
+
+        var layers = [];
+
+        var layer = {
+
+            name: 'layer',
+            x: 0,
+            y: 0,
+            width: 0,
+            height: 0,
+            widthInPixels: 0,
+            heightInPixels: 0,
+            alpha: 1,
+            visible: true,
+            properties: {},
+            indexes: [],
+            callbacks: [],
+            data: []
+
+        };
+
+        //  fill with nulls?
+
+        layers.push(layer);
+
+        map.layers = layers;
+        map.images = [];
+        map.objects = {};
+        map.collision = {};
+        map.tilesets = [];
+        map.tiles = [];
+
+        return map;
 
     },
 
@@ -183,7 +226,8 @@ Phaser.TilemapParser = {
                 visible: json.layers[i].visible,
                 properties: {},
                 indexes: [],
-                callbacks: []
+                callbacks: [],
+                bodies: []
 
             };
 
@@ -198,7 +242,7 @@ Phaser.TilemapParser = {
 
             //  Loop through the data field in the JSON.
 
-            //  This is an array containing the tile indexes, one after the other. 0 = no tile, everything else = the tile index (starting at 1)
+            //  This is an array containing the tile indexes, one after the other. null = no tile, everything else = the tile index (starting at 1 for Tiled, 0 for CSV)
             //  If the map contains multiple tilesets then the indexes are relative to that which the set starts from.
             //  Need to set which tileset in the cache = which tileset in the JSON, if you do this manually it means you can use the same map data but a new tileset.
 
@@ -265,8 +309,9 @@ Phaser.TilemapParser = {
 
         map.images = images;
 
-        //  Objects
+        //  Objects & Collision Data (polylines, etc)
         var objects = {};
+        var collision = {};
 
         for (var i = 0; i < json.layers.length; i++)
         {
@@ -276,10 +321,11 @@ Phaser.TilemapParser = {
             }
 
             objects[json.layers[i].name] = [];
+            collision[json.layers[i].name] = [];
 
             for (var v = 0, len = json.layers[i].objects.length; v < len; v++)
             {
-                //  For now we'll just support object tiles
+                //  Object Tiles
                 if (json.layers[i].objects[v].gid)
                 {
                     var object = {
@@ -295,11 +341,37 @@ Phaser.TilemapParser = {
         
                     objects[json.layers[i].name].push(object);
                 }
+                else if (json.layers[i].objects[v].polyline)
+                {
+                    var object = {
+
+                        name: json.layers[i].objects[v].name,
+                        x: json.layers[i].objects[v].x,
+                        y: json.layers[i].objects[v].y,
+                        width: json.layers[i].objects[v].width,
+                        height: json.layers[i].objects[v].height,
+                        visible: json.layers[i].objects[v].visible,
+                        properties: json.layers[i].objects[v].properties
+
+                    };
+
+                    object.polyline = [];
+
+                    //  Parse the polyline into an array
+                    for (var p = 0; p < json.layers[i].objects[v].polyline.length; p++)
+                    {
+                        object.polyline.push([ json.layers[i].objects[v].polyline[p].x, json.layers[i].objects[v].polyline[p].y ]);
+                    }
+
+                    collision[json.layers[i].name].push(object);
+
+                }
 
             }
         }
 
         map.objects = objects;
+        map.collision = collision;
 
         //  Tilesets
         var tilesets = [];
@@ -315,15 +387,18 @@ Phaser.TilemapParser = {
                 newSet.tileProperties = set.tileproperties;
             }
 
-            newSet.rows = (set.imageheight - set.margin) / (set.tileheight + set.spacing);
-            newSet.columns = (set.imagewidth - set.margin) / (set.tilewidth + set.spacing);
+            newSet.rows = Math.round((set.imageheight - set.margin) / (set.tileheight + set.spacing));
+            newSet.columns = Math.round((set.imagewidth - set.margin) / (set.tilewidth + set.spacing));
             newSet.total = newSet.rows * newSet.columns;
 
-            if (newSet.rows % 1 !== 0 || newSet.columns % 1 !== 0) {
-                console.warn('TileSet image dimensions do not match expected dimensions.');
+            if (newSet.rows % 1 !== 0 || newSet.columns % 1 !== 0)
+            {
+                console.warn('TileSet image dimensions do not match expected dimensions. Tileset width/height must be evenly divisible by Tilemap tile width/height.');
             }
-
-            tilesets.push(newSet);
+            else
+            {
+                tilesets.push(newSet);
+            }
         }
 
         map.tilesets = tilesets;
