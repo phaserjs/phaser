@@ -227,6 +227,9 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.immovable = false;
 
     /**
+    * If you have a Body that is being moved around the world via a tween or a Group motion, but its local x/y position never
+    * actually changes, then you should set Body.moves = false. Otherwise it will most likely fly off the screen.
+    * If you want the physics system to move the body around, then set moves to true.
     * @property {boolean} moves - Set to true to allow the Physics system to move this Body, other false to move it manually.
     * @default
     */
@@ -382,6 +385,12 @@ Phaser.Physics.Arcade.Body.prototype = {
                 this.checkWorldBounds();
             }
         }
+        else
+        {
+            //  If the body doesn't move (i.e. is in a moving Group) then we need its position
+            this.position.x = (this.sprite.world.x - (this.sprite.anchor.x * this.width)) + this.offset.x;
+            this.position.y = (this.sprite.world.y - (this.sprite.anchor.y * this.height)) + this.offset.y;
+        }
 
     },
 
@@ -411,10 +420,12 @@ Phaser.Physics.Arcade.Body.prototype = {
             this.facing = Phaser.DOWN;
         }
 
-        this.sprite.x = this.position.x + this.offset.x;
-        this.sprite.y = this.position.y + this.offset.y;
-        // this.sprite.x += this.deltaX();
-        // this.sprite.y += this.deltaY();
+        if (this.moves)
+        {
+            this.sprite.x = this.position.x + this.offset.x;
+            this.sprite.y = this.position.y + this.offset.y;
+        }
+
         this.center.setTo(this.x + this.halfWidth, this.y + this.halfHeight);
 
         if (this.allowRotation)

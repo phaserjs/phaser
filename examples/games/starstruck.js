@@ -25,6 +25,8 @@ var bg;
 
 function create() {
 
+    game.physics.startSystem(Phaser.Physics.ARCADE);
+
     game.stage.backgroundColor = '#000000';
 
     bg = game.add.tileSprite(0, 0, 800, 600, 'background');
@@ -44,17 +46,13 @@ function create() {
     layer.resizeWorld();
 
     game.physics.arcade.gravity.y = 250;
-    game.physics.arcade.setBoundsToWorld();
 
     player = game.add.sprite(32, 32, 'dude');
     game.physics.enable(player, Phaser.Physics.ARCADE);
-    player.body.bounce.y = 0.2;
-    player.body.minVelocity.y = 5;
-    player.body.collideWorldBounds = true;
-    player.body.setRectangle(16, 32, 8, 16);
 
-    //  Un-comment this on to see the body collision areas / data
-    // player.debug = true;
+    player.body.bounce.y = 0.2;
+    player.body.collideWorldBounds = true;
+    player.body.setSize(20, 32, -5, -16);
 
     player.animations.add('left', [0, 1, 2, 3], 10, true);
     player.animations.add('turn', [4], 20, true);
@@ -122,10 +120,7 @@ function update() {
 
 function render () {
 
-    // if (player.debug)
-    // {
-    //     game.debug.physicsBody(player.body);
-    //     game.debug.bodyInfo(player, 16, 24);
-    // }
+    // game.debug.body(player);
+    // game.debug.bodyInfo(player, 16, 24);
 
 }

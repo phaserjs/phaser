@@ -373,6 +373,10 @@
       "title": "circle"
     },
     {
+      "file": "line+bounds.js",
+      "title": "line bounds"
+    },
+    {
       "file": "line+intersection.js",
       "title": "line intersection"
     },
@@ -701,6 +705,10 @@
       "title": "impact events"
     },
     {
+      "file": "kill+and+revive.js",
+      "title": "kill and revive"
+    },
+    {
       "file": "load+polygon+1.js",
       "title": "load polygon 1"
     },
@@ -919,20 +927,28 @@
   ],
   "tilemaps": [
     {
+      "file": "blank+tilemap.js",
+      "title": "blank tilemap"
+    },
+    {
       "file": "create+from+objects.js",
       "title": "create from objects"
+    },
+    {
+      "file": "csv+map.js",
+      "title": "csv map"
     },
     {
       "file": "fill+tiles.js",
       "title": "fill tiles"
     },
     {
-      "file": "mapcollide.js",
-      "title": "mapcollide"
+      "file": "map+bounce.js",
+      "title": "map bounce"
     },
     {
-      "file": "mario.js",
-      "title": "mario"
+      "file": "map+collide.js",
+      "title": "map collide"
     },
     {
       "file": "paint+tiles.js",
@@ -961,6 +977,10 @@
     {
       "file": "tile+callbacks.js",
       "title": "tile callbacks"
+    },
+    {
+      "file": "tilemap+ray+cast.js",
+      "title": "tilemap ray cast"
     }
   ],
   "time": [

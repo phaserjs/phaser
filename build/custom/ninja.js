@@ -220,13 +220,74 @@ Phaser.Physics.Ninja.prototype = {
     },
 
     /**
-    * Called automatically by a Physics body, it updates all motion related values on the Body.
+    * Clears all physics bodies from the given TilemapLayer that were created with `World.convertTilemap`.
     *
-    * @method Phaser.Physics.Ninja#updateMotion
-    * @param {Phaser.Physics.Ninja.Body} The Body object to be updated.
-    update: function () {
-    },
+    * @method Phaser.Physics.Ninja#clearTilemapLayerBodies
+    * @param {Phaser.Tilemap} map - The Tilemap to get the map data from.
+    * @param {number|string|Phaser.TilemapLayer} [layer] - The layer to operate on. If not given will default to map.currentLayer.
     */
+    clearTilemapLayerBodies: function (map, layer) {
+
+        layer = map.getLayer(layer);
+
+        var i = map.layers[layer].bodies.length;
+
+        while (i--)
+        {
+            map.layers[layer].bodies[i].destroy();
+        }
+
+        map.layers[layer].bodies.length = [];
+
+    },
+
+    /**
+    * Goes through all tiles in the given Tilemap and TilemapLayer and converts those set to collide into physics tiles.
+    * Only call this *after* you have specified all of the tiles you wish to collide with calls like Tilemap.setCollisionBetween, etc.
+    * Every time you call this method it will destroy any previously created bodies and remove them from the world.
+    * Therefore understand it's a very expensive operation and not to be done in a core game update loop.
+    *
+    * In Ninja the Tiles have an ID from 0 to 33, where 0 is 'empty', 1 is a full tile, 2 is a 45-degree slope, etc. You can find the ID
+    * list either at the very bottom of `Tile.js`, or in a handy visual reference in the `resources/Ninja Physics Debug Tiles` folder in the repository.
+    * The slopeMap parameter is an array that controls how the indexes of the tiles in your tilemap data will map to the Ninja Tile IDs.
+    * For example if you had 6 tiles in your tileset: Imagine the first 4 should be converted into fully solid Tiles and the other 2 are 45-degree slopes.
+    * Your slopeMap array would look like this: `[ 1, 1, 1, 1, 2, 3 ]`.
+    * Where each element of the array is a tile in your tilemap and the resulting Ninja Tile it should create.
+    *
+    * @method Phaser.Physics.Ninja#convertTilemap
+    * @param {Phaser.Tilemap} map - The Tilemap to get the map data from.
+    * @param {number|string|Phaser.TilemapLayer} [layer] - The layer to operate on. If not given will default to map.currentLayer.
+    * @param {object} [slopeMap] - The tilemap index to Tile ID map.
+    * @return {array} An array of the Phaser.Physics.Ninja.Tile objects that were created.
+    */
+    convertTilemap: function (map, layer, slopeMap) {
+
+        layer = map.getLayer(layer);
+
+        if (typeof addToWorld === 'undefined') { addToWorld = true; }
+        if (typeof optimize === 'undefined') { optimize = true; }
+
+        //  If the bodies array is already populated we need to nuke it
+        this.clearTilemapLayerBodies(map, layer);
+
+        for (var y = 0, h = map.layers[layer].height; y < h; y++)
+        {
+            for (var x = 0, w = map.layers[layer].width; x < w; x++)
+            {
+                var tile = map.layers[layer].data[y][x];
+
+                if (tile && slopeMap.hasOwnProperty(tile.index))
+                {
+                    var body = new Phaser.Physics.Ninja.Body(this, null, 3, slopeMap[tile.index], 0, tile.worldX + tile.centerX, tile.worldY + tile.centerY, tile.width, tile.height);
+
+                    map.layers[layer].bodies.push(body);
+                }
+            }
+        }
+
+        return map.layers[layer].bodies;
+
+    },
 
     /**
     * Checks for overlaps between two game objects. The objects can be Sprites, Groups or Emitters.
@@ -567,8 +628,14 @@ Phaser.Physics.Ninja.prototype = {
 * @param {number} [type=1] - The type of Ninja shape to create. 1 = AABB, 2 = Circle or 3 = Tile.
 * @param {number} [id=1] - If this body is using a Tile shape, you can set the Tile id here, i.e. Phaser.Physics.Ninja.Tile.SLOPE_45DEGpn, Phaser.Physics.Ninja.Tile.CONVEXpp, etc.
 * @param {number} [radius=16] - If this body is using a Circle shape this controls the radius.
+* @param {number} [x=0] - The x coordinate of this Body. This is only used if a sprite is not provided.
+* @param {number} [y=0] - The y coordinate of this Body. This is only used if a sprite is not provided.
+* @param {number} [width=0] - The width of this Body. This is only used if a sprite is not provided.
+* @param {number} [height=0] - The height of this Body. This is only used if a sprite is not provided.
 */
-Phaser.Physics.Ninja.Body = function (system, sprite, type, id, radius) {
+Phaser.Physics.Ninja.Body = function (system, sprite, type, id, radius, x, y, width, height) {
+
+    sprite = sprite || null;
 
     if (typeof type === 'undefined') { type = 1; }
     if (typeof id === 'undefined') { id = 1; }
@@ -582,7 +649,7 @@ Phaser.Physics.Ninja.Body = function (system, sprite, type, id, radius) {
     /**
     * @property {Phaser.Game} game - Local reference to game.
     */
-    this.game = sprite.game;
+    this.game = system.game;
 
     /**
     * @property {number} type - The type of physics system this body belongs to.
@@ -664,6 +731,13 @@ Phaser.Physics.Ninja.Body = function (system, sprite, type, id, radius) {
     this.collideWorldBounds = true;
 
     /**
+    * Set the checkCollision properties to control which directions collision is processed for this Body.
+    * For example checkCollision.up = false means it won't collide when the collision happened while moving up.
+    * @property {object} checkCollision - An object containing allowed collision.
+    */
+    this.checkCollision = { none: false, any: true, up: true, down: true, left: true, right: true };
+
+    /**
     * This object is populated with boolean values when the Body collides with another.
     * touching.up = true means the collision happened to the top of this Body for example.
     * @property {object} touching - An object containing touching results.
@@ -682,32 +756,37 @@ Phaser.Physics.Ninja.Body = function (system, sprite, type, id, radius) {
     */
     this.maxSpeed = 8;
 
-    var sx = sprite.x;
-    var sy = sprite.y;
-
-    if (sprite.anchor.x === 0)
+    if (sprite)
     {
-        sx += (sprite.width * 0.5);
-    }
+        x = sprite.x;
+        y = sprite.y;
+        width = sprite.width;
+        height = sprite.height;
 
-    if (sprite.anchor.y === 0)
-    {
-        sy += (sprite.height * 0.5);
+        if (sprite.anchor.x === 0)
+        {
+            x += (sprite.width * 0.5);
+        }
+
+        if (sprite.anchor.y === 0)
+        {
+            y += (sprite.height * 0.5);
+        }
     }
 
     if (type === 1)
     {
-        this.aabb = new Phaser.Physics.Ninja.AABB(this, sx, sy, sprite.width, sprite.height);
+        this.aabb = new Phaser.Physics.Ninja.AABB(this, x, y, width, height);
         this.shape = this.aabb;
     }
     else if (type === 2)
     {
-        this.circle = new Phaser.Physics.Ninja.Circle(this, sx, sy, radius);
+        this.circle = new Phaser.Physics.Ninja.Circle(this, x, y, radius);
         this.shape = this.circle;
     }
     else if (type === 3)
     {
-        this.tile = new Phaser.Physics.Ninja.Tile(this, sx, sy, sprite.width, sprite.height, id);
+        this.tile = new Phaser.Physics.Ninja.Tile(this, x, y, width, height, id);
         this.shape = this.tile;
     }
 
@@ -753,16 +832,19 @@ Phaser.Physics.Ninja.Body.prototype = {
     */
     postUpdate: function () {
 
-        if (this.sprite.type === Phaser.TILESPRITE)
+        if (this.sprite)
         {
-            //  TileSprites don't use their anchor property, so we need to adjust the coordinates
-            this.sprite.x = this.shape.pos.x - this.shape.xw;
-            this.sprite.y = this.shape.pos.y - this.shape.yw;
-        }
-        else
-        {
-            this.sprite.x = this.shape.pos.x;
-            this.sprite.y = this.shape.pos.y;
+            if (this.sprite.type === Phaser.TILESPRITE)
+            {
+                //  TileSprites don't use their anchor property, so we need to adjust the coordinates
+                this.sprite.x = this.shape.pos.x - this.shape.xw;
+                this.sprite.y = this.shape.pos.y - this.shape.yw;
+            }
+            else
+            {
+                this.sprite.x = this.shape.pos.x;
+                this.sprite.y = this.shape.pos.y;
+            }
         }
 
         if (this.velocity.x < 0)
@@ -907,6 +989,46 @@ Phaser.Physics.Ninja.Body.prototype = {
 
         this.shape.oldpos.copyFrom(this.shape.pos);
 
+    },
+
+    /**
+    * Returns the absolute delta x value.
+    *
+    * @method Phaser.Physics.Ninja.Body#deltaAbsX
+    * @return {number} The absolute delta value.
+    */
+    deltaAbsX: function () {
+        return (this.deltaX() > 0 ? this.deltaX() : -this.deltaX());
+    },
+
+    /**
+    * Returns the absolute delta y value.
+    *
+    * @method Phaser.Physics.Ninja.Body#deltaAbsY
+    * @return {number} The absolute delta value.
+    */
+    deltaAbsY: function () {
+        return (this.deltaY() > 0 ? this.deltaY() : -this.deltaY());
+    },
+
+    /**
+    * Returns the delta x value. The difference between Body.x now and in the previous step.
+    *
+    * @method Phaser.Physics.Ninja.Body#deltaX
+    * @return {number} The delta value. Positive if the motion was to the right, negative if to the left.
+    */
+    deltaX: function () {
+        return this.shape.pos.x - this.shape.oldpos.x;
+    },
+
+    /**
+    * Returns the delta y value. The difference between Body.y now and in the previous step.
+    *
+    * @method Phaser.Physics.Ninja.Body#deltaY
+    * @return {number} The delta value. Positive if the motion was downwards, negative if upwards.
+    */
+    deltaY: function () {
+        return this.shape.pos.y - this.shape.oldpos.y;
     }
 
 };
@@ -977,7 +1099,7 @@ Object.defineProperty(Phaser.Physics.Ninja.Body.prototype, "height", {
 Object.defineProperty(Phaser.Physics.Ninja.Body.prototype, "bottom", {
     
     get: function () {
-        return this.shape.pos.y + this.shape.height;
+        return this.shape.pos.y + this.shape.yw;
     }
 
 });
@@ -990,7 +1112,7 @@ Object.defineProperty(Phaser.Physics.Ninja.Body.prototype, "bottom", {
 Object.defineProperty(Phaser.Physics.Ninja.Body.prototype, "right", {
     
     get: function () {
-        return this.shape.pos.x + this.shape.width;
+        return this.shape.pos.x + this.shape.xw;
     }
 
 });
@@ -2333,6 +2455,18 @@ Phaser.Physics.Ninja.Tile.prototype = {
     },
 
     /**
+    * Destroys this Tiles reference to Body and System.
+    *
+    * @method Phaser.Physics.Ninja.Tile#destroy
+    */
+    destroy: function () {
+
+        this.body = null;
+        this.system = null;
+
+    },
+
+    /**
     * This converts a tile from implicitly-defined (via id), to explicit (via properties).
     * Don't call directly, instead of setType.
     *
@@ -2869,6 +3003,18 @@ Phaser.Physics.Ninja.Circle = function (body, x, y, radius) {
     this.radius = radius;
 
     /**
+    * @property {number} xw - Half the width.
+    * @readonly
+    */
+    this.xw = radius;
+
+    /**
+    * @property {number} xw - Half the height.
+    * @readonly
+    */
+    this.yw = radius;
+
+    /**
     * @property {number} width - The width.
     * @readonly
     */
@@ -3024,7 +3170,7 @@ Phaser.Physics.Ninja.Circle.prototype = {
     */
     collideWorldBounds: function () {
 
-        var dx = this.system.bounds.x - (this.pos.x - this.xw);
+        var dx = this.system.bounds.x - (this.pos.x - this.radius);
 
         if (0 < dx)
         {
@@ -3032,7 +3178,7 @@ Phaser.Physics.Ninja.Circle.prototype = {
         }
         else
         {
-            dx = (this.pos.x + this.xw) - this.system.bounds.width;
+            dx = (this.pos.x + this.radius) - this.system.bounds.width;
 
             if (0 < dx)
             {
@@ -3040,7 +3186,7 @@ Phaser.Physics.Ninja.Circle.prototype = {
             }
         }
 
-        var dy = this.system.bounds.y - (this.pos.y - this.yw);
+        var dy = this.system.bounds.y - (this.pos.y - this.radius);
 
         if (0 < dy)
         {
@@ -3048,7 +3194,7 @@ Phaser.Physics.Ninja.Circle.prototype = {
         }
         else
         {
-            dy = (this.pos.y + this.yw) - this.system.bounds.height;
+            dy = (this.pos.y + this.radius) - this.system.bounds.height;
 
             if (0 < dy)
             {
