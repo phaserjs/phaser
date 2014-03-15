@@ -59,7 +59,7 @@ Bug Fixes
 
 * The Static, Kinematic and Dynamic consts that P2.Body uses were incorrect (fixes #563)
 * Sprite.destroy would fail if it had an Arcade Physics body, now added.
-
+* Group.getAt comparison updated (fixes #578)
 
 
 

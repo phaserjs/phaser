@@ -258,7 +258,7 @@ Phaser.Group.prototype.addAt = function (child, index) {
 */
 Phaser.Group.prototype.getAt = function (index) {
 
-    if (index < 0 || index > this.children.length)
+    if (index < 0 || index >= this.children.length)
     {
         return -1;
     }
