@@ -439,6 +439,17 @@ Phaser.Physics.Arcade.Body.prototype = {
     },
 
     /**
+    * Removes this bodies reference to its parent sprite, freeing it up for gc.
+    *
+    * @method Phaser.Physics.Arcade#destroy
+    */
+    destroy: function () {
+
+        this.sprite = null;
+
+    },
+
+    /**
     * Internal method.
     *
     * @method Phaser.Physics.Arcade#checkWorldBounds
