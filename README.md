@@ -63,6 +63,7 @@ Bug Fixes
 * Fixed the IE11 version check (fixes #579)
 * Ninja world collision to check right and bottom bounds (thanks dreadhorse, fix #571)
 * Group enableBody parameter was incorrectly assigned to the debug var (thanks BurnedToast, fix #565)
+* Fixed Tile callback check in Arcade Physics (fix #562)
 
 
 Version 2.0.0 - "Aes Sedai" - March 13th 2014
