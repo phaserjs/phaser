@@ -174,20 +174,31 @@ Phaser.Physics.prototype = {
     */
     enable: function (object, system, debug) {
 
-        if (typeof system === 'undefined') { system = Phaser.Physics.ARCADE; }
-        if (typeof debug === 'undefined') { debug = false; }
+        if(object instanceof Phaser.Group)
+        {
+            // Recusrivelly enable all the children of the provided group
+            for(var i = 0, len = object.children.length; i < len; i++ ){
+                this.enable(object.children[i], system, debug);
+            }
+        }
+        else
+        {
 
-        if (system === Phaser.Physics.ARCADE)
-        {
-            this.arcade.enable(object);
-        }
-        else if (system === Phaser.Physics.P2JS && this.p2)
-        {
-            this.p2.enable(object, debug);
-        }
-        else if (system === Phaser.Physics.NINJA && this.ninja)
-        {
-            this.ninja.enableAABB(object);
+            if (typeof system === 'undefined') { system = Phaser.Physics.ARCADE; }
+            if (typeof debug === 'undefined') { debug = false; }
+
+            if (system === Phaser.Physics.ARCADE)
+            {
+                this.arcade.enable(object);
+            }
+            else if (system === Phaser.Physics.P2JS && this.p2)
+            {
+                this.p2.enable(object, debug);
+            }
+            else if (system === Phaser.Physics.NINJA && this.ninja)
+            {
+                this.ninja.enableAABB(object);
+            }
         }
 
     },
