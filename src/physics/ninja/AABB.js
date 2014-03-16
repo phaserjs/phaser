@@ -1002,6 +1002,16 @@ Phaser.Physics.Ninja.AABB.prototype = {
 
         return Phaser.Physics.Ninja.AABB.COL_NONE;
 		
+    },
+
+    /**
+    * Destroys this AABB's reference to Body and System
+    *
+    * @method Phaser.Physics.Ninja.AABB#destroy
+    */
+    destroy: function() {
+        this.body = null;
+        this.system = null;
     }
 
 }

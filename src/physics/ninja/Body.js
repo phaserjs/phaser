@@ -417,8 +417,23 @@ Phaser.Physics.Ninja.Body.prototype = {
     */
     deltaY: function () {
         return this.shape.pos.y - this.shape.oldpos.y;
-    }
+    },
 
+    /**
+    * Destroys this body's reference to the sprite and system, and destroys its shape.
+    *
+    * @method Phaser.Physics.Ninja.Body#destroy
+    */
+    destroy: function() {
+        this.sprite = null;
+        this.system = null;
+        this.aabb = null;
+        this.tile = null;
+        this.circle = null;
+
+        this.shape.destroy();
+        this.shape = null;
+    }
 };
 
 /**

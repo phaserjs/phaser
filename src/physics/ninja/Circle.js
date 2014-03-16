@@ -2606,6 +2606,16 @@ Phaser.Physics.Ninja.Circle.prototype = {
         }
         
         return Phaser.Physics.Ninja.Circle.COL_NONE;
+    },
+
+    /**
+    * Destroys this Circle's reference to Body and System
+    *
+    * @method Phaser.Physics.Ninja.Circle#destroy
+    */
+    destroy: function() {
+        this.body = null;
+        this.system = null;
     }
 
 }
