@@ -176,7 +176,7 @@ Phaser.Physics.prototype = {
 
         if(object instanceof Phaser.Group)
         {
-            // Recusrivelly enable all the children of the provided group
+            // Recusivelly enable all the children of the provided group
             for(var i = 0, len = object.children.length; i < len; i++ ){
                 this.enable(object.children[i], system, debug);
             }
