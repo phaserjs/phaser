@@ -579,12 +579,12 @@ Phaser.Device.prototype = {
         {
             this.silk = true;
         }
-        else if (/Trident\/(\d+\.\d+); rv:(\d+\.\d+)/.test(ua))
+        else if (/Trident\/(\d+\.\d+)(.*)rv:(\d+\.\d+)/.test(ua))
         {
             this.ie = true;
             this.trident = true;
             this.tridentVersion = parseInt(RegExp.$1, 10);
-            this.ieVersion = parseInt(RegExp.$2, 10);
+            this.ieVersion = parseInt(RegExp.$3, 10);
         }
 
         // WebApp mode in iOS
