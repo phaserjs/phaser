@@ -47928,7 +47928,7 @@ Phaser.Tilemap.prototype = {
         }
 
         var sprite;
-        
+
         for (var i = 0, len = this.objects[name].length; i < len; i++)
         {
             if (this.objects[name][i].gid === gid)
