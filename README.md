@@ -61,6 +61,8 @@ Bug Fixes
 * Sprite.destroy would fail if it had an Arcade Physics body, now added.
 * Group.getAt comparison updated (fixes #578)
 * Fixed the IE11 version check (fixes #579)
+* Ninja world collision to check right and bottom bounds (thanks dreadhorse, fix #571)
+* Group enableBody parameter was incorrectly assigned to the debug var (thanks BurnedToast, fix #565)
 
 
 Version 2.0.0 - "Aes Sedai" - March 13th 2014
