@@ -685,8 +685,6 @@ Phaser.Group.prototype.set = function (child, key, value, checkAlive, checkVisib
 */
 Phaser.Group.prototype.setAll = function (key, value, checkAlive, checkVisible, operation) {
 
-    key = key.split('.');
-
     if (typeof checkAlive === 'undefined') { checkAlive = false; }
     if (typeof checkVisible === 'undefined') { checkVisible = false; }
 
@@ -694,9 +692,13 @@ Phaser.Group.prototype.setAll = function (key, value, checkAlive, checkVisible, 
 
     for (var i = 0, len = this.children.length; i < len; i++)
     {
+        if(this.children[i] instanceof Phaser.Group){
+            this.children[i].setAll(key, value, checkAlive, checkVisible, operation);
+        }
+        else
         if ((!checkAlive || (checkAlive && this.children[i].alive)) && (!checkVisible || (checkVisible && this.children[i].visible)))
         {
-            this.setProperty(this.children[i], key, value, operation);
+            this.setProperty(this.children[i], key.split('.'), value, operation);
         }
     }
 
