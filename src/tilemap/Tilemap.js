@@ -318,7 +318,7 @@ Phaser.Tilemap.prototype = {
                     countX = 0;
                     countY++;
 
-                    if (countY === set.rows)
+                    if (countY === newSet.rows)
                     {
                         break;
                     }
