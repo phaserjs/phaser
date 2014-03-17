@@ -662,8 +662,9 @@ Phaser.Physics.P2.prototype = {
         this.world.off("beginContact", this.beginContactHandler, this);
         this.world.off("endContact", this.endContactHandler, this);
 
-        this.setPostBroadphaseCallback(null);
-        this.setImpactEvents(null);
+        this.postBroadphaseCallback = null;
+        this.callbackContext = null;
+        this.impactCallback = null;
 
         this.collisionGroups = [];
         this._toRemove = [];
