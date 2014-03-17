@@ -66,6 +66,8 @@ Bug Fixes
 * Fixed Tile callback check in Arcade Physics (fix #562)
 * Removed the examples build script from the Gruntfile (fix #592)
 * The P2 World wouldn't clear down fully on a State change, now properly clears out contacts, resets the bitmask, etc.
+* Button.onInputUpHandler wouldn't set an upFrame for a frame ID of zero, made the check more strict.
+
 
 Updated:
 
