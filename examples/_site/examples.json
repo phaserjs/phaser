@@ -207,10 +207,6 @@
       "title": "bitmapdata wobble"
     },
     {
-      "file": "fullscreen+buttons.js",
-      "title": "fullscreen buttons"
-    },
-    {
       "file": "fullscreen.js",
       "title": "fullscreen"
     },
@@ -253,10 +249,6 @@
       "title": "fire"
     },
     {
-      "file": "gray.js",
-      "title": "gray"
-    },
-    {
       "file": "lightbeams.js",
       "title": "lightbeams"
     },
@@ -277,6 +269,10 @@
     {
       "file": "breakout.js",
       "title": "breakout"
+    },
+    {
+      "file": "golf.js",
+      "title": "golf"
     },
     {
       "file": "invaders.js",
@@ -777,10 +773,6 @@
       "title": "bitmap fonts"
     },
     {
-      "file": "google+webfonts.js",
-      "title": "google webfonts"
-    },
-    {
       "file": "hello+arial.js",
       "title": "hello arial"
     },
@@ -937,6 +929,12 @@
     {
       "file": "move+around+world.js",
       "title": "move around world"
+    }
+  ],
+  "plugins": [
+    {
+      "file": "astar.js",
+      "title": "astar"
     }
   ]
 }
