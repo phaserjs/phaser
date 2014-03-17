@@ -64,6 +64,13 @@ Bug Fixes
 * Ninja world collision to check right and bottom bounds (thanks dreadhorse, fix #571)
 * Group enableBody parameter was incorrectly assigned to the debug var (thanks BurnedToast, fix #565)
 * Fixed Tile callback check in Arcade Physics (fix #562)
+* Removed the examples build script from the Gruntfile (fix #592)
+
+
+TODO:
+
+* Check Group.create exists = false, is body added to world on next step?
+http://www.html5gamedevs.com/topic/4786-how-to-avoid-physics-body-when-creating-a-new-sprite/#entry29313
 
 
 Version 2.0.0 - "Aes Sedai" - March 13th 2014

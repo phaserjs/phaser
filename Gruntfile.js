@@ -352,17 +352,6 @@ module.exports = function (grunt) {
             }
         },
 
-        examples: {
-            all: {
-            options: {
-                base: 'examples',
-                excludes: ['_site', 'assets', 'states', 'wip']
-            },
-            src: ['examples/**/*.js'],
-            dest: 'examples/_site/examples.json'
-            }
-        },
-
         connect: {
             root: {
                 options: {
@@ -374,7 +363,7 @@ module.exports = function (grunt) {
 
     });
 
-    grunt.registerTask('default', ['build', 'examples']);
+    grunt.registerTask('default', ['build']);
     grunt.registerTask('build', ['clean', 'concat', 'uglify']);
     grunt.registerTask('dist', ['clean', 'concat', 'uglify', 'copy']);
 
