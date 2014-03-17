@@ -608,6 +608,8 @@ Phaser.Utils.Debug.prototype.AStar = function(astar, x, y, color, showVisited)
             this.context.lineTo((node.x * astar._tilemap.tileWidth) + (astar._tilemap.tileWidth/2) - game.camera.view.x, (node.y * astar._tilemap.tileHeight) + (astar._tilemap.tileHeight/2) - game.camera.view.y);
         }
 
+        this.context.lineTo((astar._lastPath.start.x * astar._tilemap.tileWidth) + (astar._tilemap.tileWidth/2) - game.camera.view.x, (astar._lastPath.start.y * astar._tilemap.tileHeight) + (astar._tilemap.tileHeight/2) - game.camera.view.y);
+
         this.context.stroke(); 
 
         //Draw circles on visited nodes

@@ -29,11 +29,12 @@ function create() {
 
 
 	turtle = game.add.sprite(150, 150, 'turtle');
+	turtle.physicsEnabled = true
 	turtle.animations.add('walk-west', Phaser.Animation.generateFrameNames('frame_', 1, 16, '', 4), 60, true);
 	turtle.animations.add('walk-est', Phaser.Animation.generateFrameNames('frame_', 17, 32, '', 4), 60, true);
 	turtle.animations.add('walk-north', Phaser.Animation.generateFrameNames('frame_', 33, 48, '', 4), 60, true);
 	turtle.animations.add('walk-south', Phaser.Animation.generateFrameNames('frame_', 49, 64, '', 4), 60, true);
-	
+
 	cursors = game.input.keyboard.createCursorKeys();
 
 	game.input.onDown.add(find, this);
@@ -74,14 +75,14 @@ function update()
 
 function render() {
 	game.debug.AStar(astar, 20, 20, '#ff0000');
+	//game.debug.renderSpriteInfo(turtle, 20, 150);
+	//game.debug.renderSpriteBounds(turtle, '#00ff00')
 }
 
 //Find a path from the turtle to the click event position
 function find(e)
 {
-	var start = layer.getTileXY(turtle.center.x + game.camera.view.x, turtle.center.y + game.camera.view.y, {});
+	var start = layer.getTileXY(turtle.x, turtle.y, {});
 	var goal = layer.getTileXY(e.positionDown.x + game.camera.view.x, e.positionDown.y + game.camera.view.y, {});
-
-
 	var path = astar.findPath(start, goal);
 }
