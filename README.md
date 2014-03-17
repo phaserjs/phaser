@@ -70,6 +70,7 @@ Bug Fixes
 Updated:
 
 * Updated Device.isConsoleOpen as it no longer works in Chrome. Revised code and documentation accordingly (fix #593)
+* Removed State.destroy empty method and replaced with State.shutdown, as that is what the StateManager expects (fix #586)
 
 
 TODO:

@@ -162,10 +162,10 @@ Phaser.State.prototype = {
     },
 
     /**
-    * This method will be called when the state is destroyed.
-    * @method Phaser.State#destroy
+    * This method will be called when the state is shut down (i.e. you switch to another state from this one).
+    * @method Phaser.State#shutdown
     */
-    destroy: function () {
+    shutdown: function () {
     }
 
 };
