@@ -651,7 +651,7 @@ Phaser.Physics.P2.prototype = {
     },
 
     /**
-    * Clears all bodies from the simulation.
+    * Clears all bodies from the simulation, resets callbacks and resets the collision bitmask.
     *
     * @method Phaser.Physics.P2#clear
     */
@@ -662,13 +662,13 @@ Phaser.Physics.P2.prototype = {
         this.world.off("beginContact", this.beginContactHandler, this);
         this.world.off("endContact", this.endContactHandler, this);
 
+        this.setPostBroadphaseCallback(null);
+        this.setImpactEvents(null);
+
         this.collisionGroups = [];
         this._toRemove = [];
-        this.boundsCollidesWith = [];
         this._collisionGroupID = 2;
-        this.postBroadphaseCallback = null;
-        this.callbackContext = null;
-        this.impactCallback = null;
+        this.boundsCollidesWith = [];
 
     },
 
