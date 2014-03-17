@@ -65,6 +65,7 @@ Bug Fixes
 * Group enableBody parameter was incorrectly assigned to the debug var (thanks BurnedToast, fix #565)
 * Fixed Tile callback check in Arcade Physics (fix #562)
 * Removed the examples build script from the Gruntfile (fix #592)
+* The P2 World wouldn't clear down fully on a State change, now properly clears out contacts, resets the bitmask, etc.
 
 
 TODO:

@@ -659,6 +659,17 @@ Phaser.Physics.P2.prototype = {
 
         this.world.clear();
 
+        this.world.off("beginContact", this.beginContactHandler, this);
+        this.world.off("endContact", this.endContactHandler, this);
+
+        this.collisionGroups = [];
+        this._toRemove = [];
+        this.boundsCollidesWith = [];
+        this._collisionGroupID = 2;
+        this.postBroadphaseCallback = null;
+        this.callbackContext = null;
+        this.impactCallback = null;
+
     },
 
     /**
@@ -668,7 +679,7 @@ Phaser.Physics.P2.prototype = {
     */
     destroy: function () {
 
-        this.world.clear();
+        this.clear();
 
         this.game = null;
 
