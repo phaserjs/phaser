@@ -7,7 +7,7 @@
 *
 * Phaser - http://www.phaser.io
 *
-* v2.0.0 "Aes Sedai" - Built: Fri Mar 14 2014 04:24:06
+* v2.0.1 "Aes Sedai" - Built: Mon Mar 17 2014 21:17:39
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -49,7 +49,7 @@
 var Phaser = Phaser || {
 
 	VERSION: '<%= version %>',
-	DEV_VERSION: '2.0.0',
+	DEV_VERSION: '2.0.1',
 	GAMES: [],
 
 	AUTO: 0,
@@ -2893,7 +2893,7 @@ Phaser.Ellipse.contains = function (a, x, y) {
 /**
 * Returns the framing rectangle of the ellipse as a Phaser.Rectangle object.
 *
-* @method getBounds
+* @method Phaser.Ellipse.getBounds
 * @return {Phaser.Rectangle} The framing rectangle
 */
 Phaser.Ellipse.prototype.getBounds = function() {
@@ -3616,10 +3616,10 @@ Phaser.State.prototype = {
     },
 
     /**
-    * This method will be called when the state is destroyed.
-    * @method Phaser.State#destroy
+    * This method will be called when the state is shut down (i.e. you switch to another state from this one).
+    * @method Phaser.State#shutdown
     */
-    destroy: function () {
+    shutdown: function () {
     }
 
 };
@@ -5932,12 +5932,12 @@ Phaser.Group = function (game, parent, name, addToStage, enableBody, physicsBody
     * @property {boolean} enableBody - If true all Sprites created by, or added to this Group, will have a physics body enabled on them. Change the body type with `Group.physicsBodyType`.
     * @default
     */
-    this.enableBody = false;
+    this.enableBody = enableBody;
 
     /**
     * @property {boolean} enableBodyDebug - If true when a physics body is created (via Group.enableBody) it will create a physics debug object as well. Only works for P2 bodies.
     */
-    this.enableBodyDebug = enableBody;
+    this.enableBodyDebug = false;
 
     /**
     * @property {number} physicsBodyType - If Group.enableBody is true this is the type of physics body that is created on new Sprites. Phaser.Physics.ARCADE, Phaser.Physics.P2, Phaser.Physics.NINJA, etc.
@@ -6087,7 +6087,7 @@ Phaser.Group.prototype.addAt = function (child, index) {
 */
 Phaser.Group.prototype.getAt = function (index) {
 
-    if (index < 0 || index > this.children.length)
+    if (index < 0 || index >= this.children.length)
     {
         return -1;
     }
@@ -9940,11 +9940,13 @@ Phaser.Input.prototype = {
     },
 
     /**
-     * Tests if the current mouse coordinates hit a sprite
-     *
-     * @method hitTest
-     * @param displayObject {DisplayObject} The displayObject to test for a hit
-     */
+    * Tests if the pointer hits the given object.
+    *
+    * @method Phaser.Input#hitTest
+    * @param {DisplayObject} displayObject - The displayObject to test for a hit.
+    * @param {Phaser.Pointer} pointer - The pointer to use for the test.
+    * @param {Phaser.Point} localPoint - The local translated point.
+    */
     hitTest: function (displayObject, pointer, localPoint) {
 
         if (!displayObject.worldVisible)
@@ -22359,12 +22361,12 @@ Phaser.Device.prototype = {
         {
             this.silk = true;
         }
-        else if (/Trident\/(\d+\.\d+); rv:(\d+\.\d+)/.test(ua))
+        else if (/Trident\/(\d+\.\d+)(.*)rv:(\d+\.\d+)/.test(ua))
         {
             this.ie = true;
             this.trident = true;
             this.tridentVersion = parseInt(RegExp.$1, 10);
-            this.ieVersion = parseInt(RegExp.$2, 10);
+            this.ieVersion = parseInt(RegExp.$3, 10);
         }
 
         // WebApp mode in iOS
@@ -22533,6 +22535,9 @@ Phaser.Device.prototype = {
 
     /**
     * Check whether the console is open.
+    * Note that this only works in Firefox with Firebug and earlier versions of Chrome.
+    * It used to work in Chrome, but then they removed the ability: http://src.chromium.org/viewvc/blink?view=revision&revision=151136
+    * 
     * @method Phaser.Device#isConsoleOpen
     * @return {boolean} True if the browser dev console is open.
     */
@@ -22553,7 +22558,10 @@ Phaser.Device.prototype = {
                 console.clear();
             }
 
-            return console['profiles'].length > 0;
+            if (console['profiles'])
+            {
+                return console['profiles'].length > 0;
+            }
         }
 
         return false;
@@ -34422,15 +34430,15 @@ Phaser.Physics.prototype = {
     */
     startSystem: function (system) {
 
-        if (system === Phaser.Physics.ARCADE && this.arcade === null)
+        if (system === Phaser.Physics.ARCADE)
         {
             this.arcade = new Phaser.Physics.Arcade(this.game);
         }
-        else if (system === Phaser.Physics.P2JS && this.p2 === null)
+        else if (system === Phaser.Physics.P2JS)
         {
             this.p2 = new Phaser.Physics.P2(this.game, this.config);
         }
-        if (system === Phaser.Physics.NINJA && this.ninja === null)
+        if (system === Phaser.Physics.NINJA)
         {
             this.ninja = new Phaser.Physics.Ninja(this.game);
         }
@@ -35532,6 +35540,7 @@ Phaser.Physics.Arcade.prototype = {
         }
 
         //  They overlap. Any custom callbacks?
+        /*
         if (tile.collisionCallback || tile.layer.callbacks[tile.index])
         {
             //  A local callback takes priority over a global callback.
@@ -35543,6 +35552,17 @@ Phaser.Physics.Arcade.prototype = {
             else if (tile.layer.callbacks[tile.index] && tile.layer.callbacks[tile.index].callback.call(tile.layer.callbacks[tile.index].callbackContext, body.sprite, tile) === false)
             {
                 //  Is there a tile index collision callback? If it returns true then we can carry on, otherwise we should abort.
+                return false;
+            }
+        }
+        */
+
+        if (tile.collisionCallback)
+        {
+            //  A local callback takes priority over a global callback.
+            if (tile.collisionCallbackk && tile.collisionCallback.call(tile.collisionCallbackContext, body.sprite, tile) === false)
+            {
+                //  Is there a tile specific collision callback? If it returns true then we can carry on, otherwise we should abort.
                 return false;
             }
         }
@@ -36371,6 +36391,9 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.immovable = false;
 
     /**
+    * If you have a Body that is being moved around the world via a tween or a Group motion, but its local x/y position never
+    * actually changes, then you should set Body.moves = false. Otherwise it will most likely fly off the screen.
+    * If you want the physics system to move the body around, then set moves to true.
     * @property {boolean} moves - Set to true to allow the Physics system to move this Body, other false to move it manually.
     * @default
     */
@@ -36526,6 +36549,12 @@ Phaser.Physics.Arcade.Body.prototype = {
                 this.checkWorldBounds();
             }
         }
+        else
+        {
+            //  If the body doesn't move (i.e. is in a moving Group) then we need its position
+            this.position.x = (this.sprite.world.x - (this.sprite.anchor.x * this.width)) + this.offset.x;
+            this.position.y = (this.sprite.world.y - (this.sprite.anchor.y * this.height)) + this.offset.y;
+        }
 
     },
 
@@ -36555,10 +36584,12 @@ Phaser.Physics.Arcade.Body.prototype = {
             this.facing = Phaser.DOWN;
         }
 
-        this.sprite.x = this.position.x + this.offset.x;
-        this.sprite.y = this.position.y + this.offset.y;
-        // this.sprite.x += this.deltaX();
-        // this.sprite.y += this.deltaY();
+        if (this.moves)
+        {
+            this.sprite.x = this.position.x + this.offset.x;
+            this.sprite.y = this.position.y + this.offset.y;
+        }
+
         this.center.setTo(this.x + this.halfWidth, this.y + this.halfHeight);
 
         if (this.allowRotation)
@@ -36568,6 +36599,17 @@ Phaser.Physics.Arcade.Body.prototype = {
 
         this.prev.set(this.position.x, this.position.y);
         this.preRotation = this.rotation;
+
+    },
+
+    /**
+    * Removes this bodies reference to its parent sprite, freeing it up for gc.
+    *
+    * @method Phaser.Physics.Arcade#destroy
+    */
+    destroy: function () {
+
+        this.sprite = null;
 
     },
 
@@ -37848,7 +37890,7 @@ Phaser.Tile.prototype = {
         if (collides && faces)
         {
             //  Does this tile have any collide flags OR interesting face?
-            return (this.collideLeft || this.collideRight || this.collideUp || this.collideDown || this.faceTop || this.faceBottom || this.faceLeft || this.faceRight || this.collisionCallback || this.layer.callbacks[this.index]);
+            return (this.collideLeft || this.collideRight || this.collideUp || this.collideDown || this.faceTop || this.faceBottom || this.faceLeft || this.faceRight || this.collisionCallback);
         }
         else if (collides)
         {
@@ -37912,7 +37954,7 @@ Object.defineProperty(Phaser.Tile.prototype, "collides", {
 Object.defineProperty(Phaser.Tile.prototype, "canCollide", {
     
     get: function () {
-        return (this.collideLeft || this.collideRight || this.collideUp || this.collideDown || this.collisionCallback || this.layer.callbacks[this.index]);
+        return (this.collideLeft || this.collideRight || this.collideUp || this.collideDown || this.collisionCallback);
     }
 
 });
@@ -38137,22 +38179,31 @@ Phaser.Tilemap.TILED_JSON = 1;
 Phaser.Tilemap.prototype = {
 
     /**
-    * Creates an empty map of the given dimensions.
+    * Creates an empty map of the given dimensions and one blank layer. If layers already exist they are erased.
     *
     * @method Phaser.Tilemap#create
-    * @param {string} name - The name of the default layer of the map
+    * @param {string} name - The name of the default layer of the map.
     * @param {number} width - The width of the map in tiles.
     * @param {number} height - The height of the map in tiles.
     * @param {number} tileWidth - The width of the tiles the map uses for calculations.
     * @param {number} tileHeight - The height of the tiles the map uses for calculations.
+    * @param {Phaser.Group} [group] - Optional Group to add the layer to. If not specified it will be added to the World group.
+    * @return {Phaser.TilemapLayer} The TilemapLayer object. This is an extension of Phaser.Image and can be moved around the display list accordingly.
     */
     create: function (name, width, height, tileWidth, tileHeight) {
+
+        if (typeof group === 'undefined') { group = this.game.world; }
 
         this.width = width;
         this.height = height;
 
         this.setTileSize(tileWidth, tileHeight);
 
+        this.layers.length = 0;
+
+        return this.createBlankLayer(name, width, height, tileWidth, tileHeight, group);
+
+        /*
         var row;
         var output = [];
 
@@ -38188,6 +38239,7 @@ Phaser.Tilemap.prototype = {
         });
 
         this.currentLayer = this.layers.length - 1;
+        */
 
     },
 
@@ -38289,7 +38341,7 @@ Phaser.Tilemap.prototype = {
                     countX = 0;
                     countY++;
 
-                    if (countY === set.rows)
+                    if (countY === newSet.rows)
                     {
                         break;
                     }
@@ -38390,6 +38442,68 @@ Phaser.Tilemap.prototype = {
         }
 
         return group.add(new Phaser.TilemapLayer(this.game, this, index, width, height));
+
+    },
+
+    /**
+    * Creates a new and empty layer on this Tilemap. By default TilemapLayers are fixed to the camera.
+    *
+    * @method Phaser.Tilemap#createLayer
+    * @param {string} name - The name of this layer. Must be unique within the map.
+    * @param {number} width - The width of the layer in tiles.
+    * @param {number} height - The height of the layer in tiles.
+    * @param {number} tileWidth - The width of the tiles the layer uses for calculations.
+    * @param {number} tileHeight - The height of the tiles the layer uses for calculations.
+    * @param {Phaser.Group} [group] - Optional Group to add the layer to. If not specified it will be added to the World group.
+    * @return {Phaser.TilemapLayer} The TilemapLayer object. This is an extension of Phaser.Image and can be moved around the display list accordingly.
+    */
+    createBlankLayer: function (name, width, height, tileWidth, tileHeight, group) {
+
+        if (typeof group === 'undefined') { group = this.game.world; }
+
+        if (this.getLayerIndex(layer) !== null)
+        {
+            console.warn('Tilemap.createBlankLayer: Layer with matching name already exists');
+            return;
+        }
+
+        var row;
+        var output = [];
+
+        for (var y = 0; y < height; y++)
+        {
+            row = [];
+
+            for (var x = 0; x < width; x++)
+            {
+                row.push(null);
+            }
+
+            output.push(row);
+        }
+
+        this.layers.push({
+
+            name: name,
+            x: 0,
+            y: 0,
+            width: width,
+            height: height,
+            widthInPixels: width * tileWidth,
+            heightInPixels: height * tileHeight,
+            alpha: 1,
+            visible: true,
+            properties: {},
+            indexes: [],
+            callbacks: [],
+            bodies: [],
+            data: output
+
+        });
+
+        this.currentLayer = this.layers.length - 1;
+
+        return group.add(new Phaser.TilemapLayer(this.game, this, this.layers.length - 1, width, height));
 
     },
 
@@ -38909,7 +39023,9 @@ Phaser.Tilemap.prototype = {
     */
     putTile: function (tile, x, y, layer) {
 
+        console.log('putTile' ,layer);
         layer = this.getLayer(layer);
+        console.log('putTile2', layer);
 
         if (x >= 0 && x < this.layers[layer].width && y >= 0 && y < this.layers[layer].height)
         {
@@ -38938,7 +39054,7 @@ Phaser.Tilemap.prototype = {
                 }
                 else
                 {
-                    this.layers[layer].data[y][x] = new Phaser.Tile(layer, index, x, y, this.tileWidth, this.tileHeight);
+                    this.layers[layer].data[y][x] = new Phaser.Tile(this.layers[layer], index, x, y, this.tileWidth, this.tileHeight);
                 }
             }
 
@@ -38951,7 +39067,8 @@ Phaser.Tilemap.prototype = {
                 this.layers[layer].data[y][x].resetCollision();
             }
 
-			this.layers[layer].dirty = true;
+            this.layers[layer].dirty = true;
+			console.log(this.layers[layer]);
 
             this.calculateFaces(layer);
         }

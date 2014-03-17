@@ -9419,6 +9419,7 @@ PIXI.RenderTexture = function(width, height, renderer)
     }
     else
     {
+        console.log('renderer canvas');
         this.render = this.renderCanvas;
         this.textureBuffer = new PIXI.CanvasBuffer(this.width, this.height);
         this.baseTexture.source = this.textureBuffer.canvas;

@@ -11,14 +11,14 @@
 *
 * It does what it does very well, but is ripe for expansion and optimisation. Here are some features that I'd love to see the community add:
 *
-* AABB to AABB collision
-* AABB to Circle collision
-* AABB and Circle 'immovable' property support
-* n-way collision, so an AABB/Circle could pass through a tile from below and land upon it.
-* QuadTree or spatial grid for faster Body vs. Tile Group look-ups.
-* Optimise the internal vector math and reduce the quantity of temporary vars created.
-* Expand Gravity and Bounce to allow for separate x/y axis values.
-* Support Bodies linked to Sprites that don't have anchor set to 0.5
+* * AABB to AABB collision
+* * AABB to Circle collision
+* * AABB and Circle 'immovable' property support
+* * n-way collision, so an AABB/Circle could pass through a tile from below and land upon it.
+* * QuadTree or spatial grid for faster Body vs. Tile Group look-ups.
+* * Optimise the internal vector math and reduce the quantity of temporary vars created.
+* * Expand Gravity and Bounce to allow for separate x/y axis values.
+* * Support Bodies linked to Sprites that don't have anchor set to 0.5
 *
 * Feel free to attempt any of the above and submit a Pull Request with your code! Be sure to include test cases proving they work.
 *
@@ -1029,8 +1029,23 @@ Phaser.Physics.Ninja.Body.prototype = {
     */
     deltaY: function () {
         return this.shape.pos.y - this.shape.oldpos.y;
-    }
+    },
 
+    /**
+    * Destroys this body's reference to the sprite and system, and destroys its shape.
+    *
+    * @method Phaser.Physics.Ninja.Body#destroy
+    */
+    destroy: function() {
+        this.sprite = null;
+        this.system = null;
+        this.aabb = null;
+        this.tile = null;
+        this.circle = null;
+
+        this.shape.destroy();
+        this.shape = null;
+    }
 };
 
 /**
@@ -1467,7 +1482,7 @@ Phaser.Physics.Ninja.AABB.prototype = {
         }
         else
         {
-            dx = (this.pos.x + this.xw) - this.system.bounds.width;
+            dx = (this.pos.x + this.xw) - this.system.bounds.right;
 
             if (0 < dx)
             {
@@ -1483,7 +1498,7 @@ Phaser.Physics.Ninja.AABB.prototype = {
         }
         else
         {
-            dy = (this.pos.y + this.yw) - this.system.bounds.height;
+            dy = (this.pos.y + this.yw) - this.system.bounds.bottom;
 
             if (0 < dy)
             {
@@ -2148,6 +2163,16 @@ Phaser.Physics.Ninja.AABB.prototype = {
 
         return Phaser.Physics.Ninja.AABB.COL_NONE;
 		
+    },
+
+    /**
+    * Destroys this AABB's reference to Body and System
+    *
+    * @method Phaser.Physics.Ninja.AABB#destroy
+    */
+    destroy: function() {
+        this.body = null;
+        this.system = null;
     }
 
 }
@@ -2319,7 +2344,7 @@ Phaser.Physics.Ninja.Tile.prototype = {
         }
         else
         {
-            dx = (this.pos.x + this.xw) - this.system.bounds.width;
+            dx = (this.pos.x + this.xw) - this.system.bounds.right;
 
             if (0 < dx)
             {
@@ -2335,7 +2360,7 @@ Phaser.Physics.Ninja.Tile.prototype = {
         }
         else
         {
-            dy = (this.pos.y + this.yw) - this.system.bounds.height;
+            dy = (this.pos.y + this.yw) - this.system.bounds.bottom;
 
             if (0 < dy)
             {
@@ -2827,20 +2852,10 @@ Phaser.Physics.Ninja.Tile.prototype = {
 */
 Object.defineProperty(Phaser.Physics.Ninja.Tile.prototype, "x", {
     
-    /**
-    * The x position.
-    * @method x
-    * @return {number}
-    */
     get: function () {
         return this.pos.x - this.xw;
     },
 
-    /**
-    * The x position.
-    * @method x
-    * @param {number} value
-    */
     set: function (value) {
         this.pos.x = value;
     }
@@ -2853,20 +2868,10 @@ Object.defineProperty(Phaser.Physics.Ninja.Tile.prototype, "x", {
 */
 Object.defineProperty(Phaser.Physics.Ninja.Tile.prototype, "y", {
     
-    /**
-    * The y position.
-    * @method y
-    * @return {number}
-    */
     get: function () {
         return this.pos.y - this.yw;
     },
 
-    /**
-    * The y position.
-    * @method y
-    * @param {number} value
-    */
     set: function (value) {
         this.pos.y = value;
     }
@@ -2880,12 +2885,6 @@ Object.defineProperty(Phaser.Physics.Ninja.Tile.prototype, "y", {
 */
 Object.defineProperty(Phaser.Physics.Ninja.Tile.prototype, "bottom", {
     
-    /**
-    * The sum of the y and height properties.
-    * @method bottom
-    * @return {number}
-    * @readonly
-    */
     get: function () {
         return this.pos.y + this.yw;
     }
@@ -2899,12 +2898,6 @@ Object.defineProperty(Phaser.Physics.Ninja.Tile.prototype, "bottom", {
 */
 Object.defineProperty(Phaser.Physics.Ninja.Tile.prototype, "right", {
     
-    /**
-    * The sum of the x and width properties.
-    * @method right
-    * @return {number}
-    * @readonly
-    */
     get: function () {
         return this.pos.x + this.xw;
     }
@@ -3178,7 +3171,7 @@ Phaser.Physics.Ninja.Circle.prototype = {
         }
         else
         {
-            dx = (this.pos.x + this.radius) - this.system.bounds.width;
+            dx = (this.pos.x + this.radius) - this.system.bounds.right;
 
             if (0 < dx)
             {
@@ -3194,7 +3187,7 @@ Phaser.Physics.Ninja.Circle.prototype = {
         }
         else
         {
-            dy = (this.pos.y + this.radius) - this.system.bounds.height;
+            dy = (this.pos.y + this.radius) - this.system.bounds.bottom;
 
             if (0 < dy)
             {
@@ -5565,6 +5558,16 @@ Phaser.Physics.Ninja.Circle.prototype = {
         }
         
         return Phaser.Physics.Ninja.Circle.COL_NONE;
+    },
+
+    /**
+    * Destroys this Circle's reference to Body and System
+    *
+    * @method Phaser.Physics.Ninja.Circle#destroy
+    */
+    destroy: function() {
+        this.body = null;
+        this.system = null;
     }
 
 }

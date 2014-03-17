@@ -11368,13 +11368,25 @@ Phaser.Physics.P2.prototype = {
     },
 
     /**
-    * Clears all bodies from the simulation.
+    * Clears all bodies from the simulation, resets callbacks and resets the collision bitmask.
     *
     * @method Phaser.Physics.P2#clear
     */
     clear: function () {
 
         this.world.clear();
+
+        this.world.off("beginContact", this.beginContactHandler, this);
+        this.world.off("endContact", this.endContactHandler, this);
+
+        this.postBroadphaseCallback = null;
+        this.callbackContext = null;
+        this.impactCallback = null;
+
+        this.collisionGroups = [];
+        this._toRemove = [];
+        this._collisionGroupID = 2;
+        this.boundsCollidesWith = [];
 
     },
 
@@ -11385,7 +11397,7 @@ Phaser.Physics.P2.prototype = {
     */
     destroy: function () {
 
-        this.world.clear();
+        this.clear();
 
         this.game = null;
 
@@ -13819,6 +13831,30 @@ Phaser.Physics.P2.Body.prototype = {
 Phaser.Physics.P2.Body.prototype.constructor = Phaser.Physics.P2.Body;
 
 /**
+ * Dynamic body.
+ * @property DYNAMIC
+ * @type {Number}
+ * @static
+ */
+Phaser.Physics.P2.Body.DYNAMIC = 1;
+
+/**
+ * Static body.
+ * @property STATIC
+ * @type {Number}
+ * @static
+ */
+Phaser.Physics.P2.Body.STATIC = 2;
+
+/**
+ * Kinematic body.
+ * @property KINEMATIC
+ * @type {Number}
+ * @static
+ */
+Phaser.Physics.P2.Body.KINEMATIC = 4;
+
+/**
 * @name Phaser.Physics.P2.Body#static
 * @property {boolean} static - Returns true if the Body is static. Setting Body.static to 'false' will make it dynamic.
 */
@@ -13826,20 +13862,20 @@ Object.defineProperty(Phaser.Physics.P2.Body.prototype, "static", {
     
     get: function () {
 
-        return (this.data.motionState === Phaser.STATIC);
+        return (this.data.motionState === Phaser.Physics.P2.STATIC);
 
     },
 
     set: function (value) {
 
-        if (value && this.data.motionState !== Phaser.STATIC)
+        if (value && this.data.motionState !== Phaser.Physics.P2.STATIC)
         {
-            this.data.motionState = Phaser.STATIC;
+            this.data.motionState = Phaser.Physics.P2.STATIC;
             this.mass = 0;
         }
-        else if (!value && this.data.motionState === Phaser.STATIC)
+        else if (!value && this.data.motionState === Phaser.Physics.P2.STATIC)
         {
-            this.data.motionState = Phaser.DYNAMIC;
+            this.data.motionState = Phaser.Physics.P2.DYNAMIC;
 
             if (this.mass === 0)
             {
@@ -13859,24 +13895,24 @@ Object.defineProperty(Phaser.Physics.P2.Body.prototype, "dynamic", {
     
     get: function () {
 
-        return (this.data.motionState === Phaser.DYNAMIC);
+        return (this.data.motionState === Phaser.Physics.P2.DYNAMIC);
 
     },
 
     set: function (value) {
 
-        if (value && this.data.motionState !== Phaser.DYNAMIC)
+        if (value && this.data.motionState !== Phaser.Physics.P2.DYNAMIC)
         {
-            this.data.motionState = Phaser.DYNAMIC;
+            this.data.motionState = Phaser.Physics.P2.DYNAMIC;
 
             if (this.mass === 0)
             {
                 this.mass = 1;
             }
         }
-        else if (!value && this.data.motionState === Phaser.DYNAMIC)
+        else if (!value && this.data.motionState === Phaser.Physics.P2.DYNAMIC)
         {
-            this.data.motionState = Phaser.STATIC;
+            this.data.motionState = Phaser.Physics.P2.STATIC;
             this.mass = 0;
         }
 
@@ -13892,20 +13928,20 @@ Object.defineProperty(Phaser.Physics.P2.Body.prototype, "kinematic", {
     
     get: function () {
 
-        return (this.data.motionState === Phaser.KINEMATIC);
+        return (this.data.motionState === Phaser.Physics.P2.KINEMATIC);
 
     },
 
     set: function (value) {
 
-        if (value && this.data.motionState !== Phaser.KINEMATIC)
+        if (value && this.data.motionState !== Phaser.Physics.P2.KINEMATIC)
         {
-            this.data.motionState = Phaser.KINEMATIC;
+            this.data.motionState = Phaser.Physics.P2.KINEMATIC;
             this.mass = 4;
         }
-        else if (!value && this.data.motionState === Phaser.KINEMATIC)
+        else if (!value && this.data.motionState === Phaser.Physics.P2.KINEMATIC)
         {
-            this.data.motionState = Phaser.STATIC;
+            this.data.motionState = Phaser.Physics.P2.STATIC;
             this.mass = 0;
         }
 
