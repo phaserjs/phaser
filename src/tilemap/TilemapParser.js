@@ -312,9 +312,6 @@ Phaser.TilemapParser = {
         //  Tilesets
         var tilesets = [];
 
-        //  GID height look-up table
-        var gidHeight = [];
-
         for (var i = 0; i < json.tilesets.length; i++)
         {
             //  name, firstgid, width, height, margin, spacing, properties
@@ -337,12 +334,6 @@ Phaser.TilemapParser = {
             else
             {
                 tilesets.push(newSet);
-            }
-
-            //  GID to height look-up
-            for (var gd = set.firstgid; gd < set.firstgid + newSet.total; gd++)
-            {
-                gidHeight[gd] = set.tileheight;
             }
         }
 
@@ -372,7 +363,7 @@ Phaser.TilemapParser = {
                         gid: json.layers[i].objects[v].gid,
                         name: json.layers[i].objects[v].name,
                         x: json.layers[i].objects[v].x,
-                        y: json.layers[i].objects[v].y - gidHeight[json.layers[i].objects[v].gid],
+                        y: json.layers[i].objects[v].y,
                         visible: json.layers[i].objects[v].visible,
                         properties: json.layers[i].objects[v].properties
 

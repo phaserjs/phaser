@@ -72,7 +72,7 @@ Updated:
 * Updated Device.isConsoleOpen as it no longer works in Chrome. Revised code and documentation accordingly (fix #593)
 * Removed State.destroy empty method and replaced with State.shutdown, as that is what the StateManager expects (fix #586)
 * P2.removeBody will check if the body is part of the world before removing, this avoids a TypeError from the p2 layer.
-* Tilemap.createFromObjects used to set the Sprite anchor to 0,1 because Tiled uses a bottom-left coordinate system. It now calculates the offset in TilemapParser.
+* Tilemap.createFromObjects has a new parameter: adjustY, which is true by default. Because Tiled uses a bottom-left coordinate system Phaser used to set the Sprite anchor to 0,1 to compensate. If adjustY is true it now reduces the y value by the object height instead.
 
 
 TODO:
