@@ -309,6 +309,45 @@ Phaser.TilemapParser = {
 
         map.images = images;
 
+        //  Tilesets
+        var tilesets = [];
+
+        //  GID height look-up table
+        var gidHeight = [];
+
+        for (var i = 0; i < json.tilesets.length; i++)
+        {
+            //  name, firstgid, width, height, margin, spacing, properties
+            var set = json.tilesets[i];
+            var newSet = new Phaser.Tileset(set.name, set.firstgid, set.tilewidth, set.tileheight, set.margin, set.spacing, set.properties);
+
+            if (set.tileproperties)
+            {
+                newSet.tileProperties = set.tileproperties;
+            }
+
+            newSet.rows = Math.round((set.imageheight - set.margin) / (set.tileheight + set.spacing));
+            newSet.columns = Math.round((set.imagewidth - set.margin) / (set.tilewidth + set.spacing));
+            newSet.total = newSet.rows * newSet.columns;
+
+            if (newSet.rows % 1 !== 0 || newSet.columns % 1 !== 0)
+            {
+                console.warn('TileSet image dimensions do not match expected dimensions. Tileset width/height must be evenly divisible by Tilemap tile width/height.');
+            }
+            else
+            {
+                tilesets.push(newSet);
+            }
+
+            //  GID to height look-up
+            for (var gd = set.firstgid; gd < set.firstgid + newSet.total; gd++)
+            {
+                gidHeight[gd] = set.tileheight;
+            }
+        }
+
+        map.tilesets = tilesets;
+
         //  Objects & Collision Data (polylines, etc)
         var objects = {};
         var collision = {};
@@ -333,7 +372,7 @@ Phaser.TilemapParser = {
                         gid: json.layers[i].objects[v].gid,
                         name: json.layers[i].objects[v].name,
                         x: json.layers[i].objects[v].x,
-                        y: json.layers[i].objects[v].y,
+                        y: json.layers[i].objects[v].y - gidHeight[json.layers[i].objects[v].gid],
                         visible: json.layers[i].objects[v].visible,
                         properties: json.layers[i].objects[v].properties
 
@@ -372,36 +411,6 @@ Phaser.TilemapParser = {
 
         map.objects = objects;
         map.collision = collision;
-
-        //  Tilesets
-        var tilesets = [];
-
-        for (var i = 0; i < json.tilesets.length; i++)
-        {
-            //  name, firstgid, width, height, margin, spacing, properties
-            var set = json.tilesets[i];
-            var newSet = new Phaser.Tileset(set.name, set.firstgid, set.tilewidth, set.tileheight, set.margin, set.spacing, set.properties);
-
-            if (set.tileproperties)
-            {
-                newSet.tileProperties = set.tileproperties;
-            }
-
-            newSet.rows = Math.round((set.imageheight - set.margin) / (set.tileheight + set.spacing));
-            newSet.columns = Math.round((set.imagewidth - set.margin) / (set.tilewidth + set.spacing));
-            newSet.total = newSet.rows * newSet.columns;
-
-            if (newSet.rows % 1 !== 0 || newSet.columns % 1 !== 0)
-            {
-                console.warn('TileSet image dimensions do not match expected dimensions. Tileset width/height must be evenly divisible by Tilemap tile width/height.');
-            }
-            else
-            {
-                tilesets.push(newSet);
-            }
-        }
-
-        map.tilesets = tilesets;
 
         map.tiles = [];
 
