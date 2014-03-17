@@ -2603,6 +2603,168 @@ declare module Phaser {
     }
 
     module Physics {
+        
+        class Ninja {
+            //constructor
+            constructor(game: Phaser.Game);
+            //members
+            game: Phaser.Game
+            time: Phaser.Time;
+            gravity: number;
+            bounds: Phaser.Rectangle;
+            maxObjects: number;
+            maxLevels: number;
+            quadTree: Phaser.QuadTree;
+            //methods
+            enableAABB(object: any, children?: boolean): void;
+            enableCircle(object: any, radius: number, children?: boolean);
+            enableTile(object: any, id: number, children?: boolean): void;
+            enable(object: any, type?: number, id?: number, radius?: number, children?: boolean): void;
+            enableBody(object: any, type?: number, id?: number, radius?: number): void;
+            setBounds(x: number, y: number, width: number, height: number): void;
+            setBoundsToWorld(): void;
+            clearTilemapLayerBodies(map: Phaser.Tilemap, layer: any): void;
+            convertTilemap(map: Phaser.Tilemap, layer?: any, slopeMap?: Object): Phaser.Physics.Ninja.Tile[];
+            overlap(object1: any, object2: any, overlapCallback?: Function, processCallback?: Function, callbackContext?: Object): boolean;
+            collide(object1: any, object2: any, collideCallback?: Function, processCallback?: Function, callbackContext?: Object): boolean;
+            separate(body1: any, body2: any, processCallback?: Function, callbackContext?: Object, overlapOnly?: boolean): boolean;
+        }
+
+        module Ninja {
+
+            class Body {
+                //constructor
+                constructor(system: Phaser.Physics.Ninja, sprite: Phaser.Sprite, type?: number, id?: number, radius?: number, x?: number, y?: number, width?: number, height?: number);
+                //members
+                aabb: Phaser.Physics.Ninja.AABB;
+                angle: number;
+                bottom: number;
+                bounce: number;
+                circle: Phaser.Physics.Ninja.Circle;
+                checkCollision: Phaser.Physics.Arcade.FaceChoices;
+                collideWorldBounds: boolean;
+                drag: number;
+                facing: number;
+                friction: number;
+                game: Phaser.Game;
+                gravityScale: number;
+                height: number;
+                immovable: boolean;
+                maxSpeed: number;
+                right: number;
+                shape: Object;
+                speed: number;
+                sprite: Phaser.Sprite;
+                system: Phaser.Physics.Ninja;
+                tile: Phaser.Physics.Ninja.Tile;
+                touching: Phaser.Physics.Arcade.FaceChoices;
+                type: number;
+                velocity: Phaser.Point;
+                wasTouching: Phaser.Physics.Arcade.FaceChoices;
+                width: number;
+                x: number;
+                y: number;
+                //members
+                setZeroVelocity(): void;
+                moveTo(speed: number, angle: number): void;
+                moveFrom(speed: number, angle: number): void;
+                moveLeft(speed: number): void;
+                moveRight(speed: number): void;
+                moveUp(speed: number): void;
+                moveDown(speed: number): void;
+                reset(): void;
+                deltaAbsX(): number;
+                deltaAbsY(): number;
+                deltaX(): number;
+                deltaY(): number;
+            }
+
+            class AABB {
+                //constructor
+                constructor(body: Phaser.Physics.Ninja.Body, x: number, y: number, width: number, height: number);
+                //static members
+                static COL_NONE: number;
+                static COL_AXIS: number;
+                static COL_OTHER: number;
+                //members
+                aabbTileProjections: Object;
+                body: Phaser.Physics.Ninja.Body;
+                height: number;
+                oldPos: Phaser.Point;
+                pos: Phaser.Point;
+                system: Phaser.Physics.Ninja;
+                width: number;
+                velocity: Phaser.Point;
+                xw: number;
+                yw: number;
+                //members
+                collideWorldBounds(): void;
+                collideAABBVsAABB(aabb: Phaser.Physics.Ninja.AABB): boolean;
+                collideAABBVsTile(tile: Phaser.Physics.Ninja.Tile): boolean;
+                integrate(): void;
+                reportCollisionVsWorld(px: number, py: number, dx: number, dy: number, obj: Object): void;
+                reportCollisionVsBody(px: number, py: number, dx: number, dy: number, obj: Object): void;
+                resolveTile(x: number, y: number, body: Phaser.Physics.Ninja.AABB, tile: Phaser.Physics.Ninja.Tile): boolean;
+                reverse(): void;
+            }
+
+            class Circle {
+                //constructor
+                constructor(body: Phaser.Physics.Ninja.Body, x: number, y: number, radius: number);
+                //static members
+                COL_NONE: number;
+                COL_AXIS: number;
+                COL_OTHER: number;
+                //members
+                body: Phaser.Physics.Ninja.Body;
+                circleTileProjections: Object;
+                height: number;
+                pos: Phaser.Point;
+                oldPos: Phaser.Point;
+                radius: number;
+                system: Phaser.Physics.Ninja;
+                xw: number;
+                yw: number;
+                velocity: Phaser.Point;
+                width: number;
+                //methods
+                integrate(): void;
+                collideCircleVsTile(tile: Phaser.Physics.Ninja.Tile): boolean;
+                collideWorldBounds(): void;
+                reportCollisionVsWorld(px: number, py: number, dx: number, dy: number, obj: Object): void;
+                reportCollisionVsBody(px: number, py: number, dx: number, dy: number, obj: Object): void;
+                resolveCircleTile(x: number, y: number, oH: number, oV: number, obj: Phaser.Physics.Ninja.Circle, t: Phaser.Physics.Ninja.Tile): boolean;
+            }
+
+            class Tile {
+                //constructor
+                constructor(body: Phaser.Physics.Ninja.Body, x: number, y: number, width: number, height: number, type?: number);
+                //members
+                body: Phaser.Physics.Ninja.Body;
+                bottom: number;
+                right: number;
+                system: Phaser.Physics.Ninja;
+                id: number;
+                type: number;
+                pos: Phaser.Point;
+                oldpos: Phaser.Point;
+                xw: number;
+                yw: number;
+                width: number;
+                height: number;
+                velocity: Phaser.Point;
+                x: number;
+                y: number;
+                //methods
+                clear(): void;
+                collideWorldBounds(): void;
+                destroy(): void;
+                integrate(): void;
+                reportCollisionVsWorld(px: number, py: number, dx: number, dy: number, obj: Object);
+                setType(id: number): number;
+            }
+
+        }
 
         class Arcade {
             //constructor
