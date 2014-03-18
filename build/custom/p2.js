@@ -11428,7 +11428,7 @@ Phaser.Physics.P2.prototype = {
     },
 
     /**
-    * Removes a body from the world.
+    * Removes a body from the world. This will silently fail if the body wasn't part of the world to begin with.
     *
     * @method Phaser.Physics.P2#removeBody
     * @param {Phaser.Physics.P2.Body} body - The Body to remove from the World.
@@ -11436,9 +11436,12 @@ Phaser.Physics.P2.prototype = {
     */
     removeBody: function (body) {
 
-        this.world.removeBody(body.data);
+        if (body.data.world == this.world)
+        {
+            this.world.removeBody(body.data);
 
-        this.onBodyRemoved.dispatch(body);
+            this.onBodyRemoved.dispatch(body);
+        }
 
         return body;
 

@@ -7,7 +7,7 @@
 *
 * Phaser - http://www.phaser.io
 *
-* v2.0.1 "Aes Sedai" - Built: Mon Mar 17 2014 21:17:39
+* v2.0.1 "Aes Sedai" - Built: Tue Mar 18 2014 00:01:18
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -20457,7 +20457,7 @@ Phaser.Button.prototype.onInputUpHandler = function (sprite, pointer, isOver) {
     }
     else
     {
-        if (this._onUpFrameName || this._onUpFrameID)
+        if (this._onUpFrameName !== null || this._onUpFrameID !== null)
         {
             this.setState(4);
         }
@@ -38357,25 +38357,27 @@ Phaser.Tilemap.prototype = {
     /**
     * Creates a Sprite for every object matching the given gid in the map data. You can optionally specify the group that the Sprite will be created in. If none is
     * given it will be created in the World. All properties from the map data objectgroup are copied across to the Sprite, so you can use this as an easy way to
-    * configure Sprite properties from within the map editor. For example giving an object a property if alpha: 0.5 in the map editor will duplicate that when the
+    * configure Sprite properties from within the map editor. For example giving an object a property of alpha: 0.5 in the map editor will duplicate that when the
     * Sprite is created. You could also give it a value like: body.velocity.x: 100 to set it moving automatically.
     *
     * @method Phaser.Tilemap#createFromObjects
     * @param {string} name - The name of the Object Group to create Sprites from.
-    * @param {number} gid - The layer array index value, or if a string is given the layer name, within the map data that this TilemapLayer represents.
+    * @param {number} gid - The layer array index value, or if a string is given the layer name within the map data.
     * @param {string} key - The Game.cache key of the image that this Sprite will use.
     * @param {number|string} [frame] - If the Sprite image contains multiple frames you can specify which one to use here.
     * @param {boolean} [exists=true] - The default exists state of the Sprite.
     * @param {boolean} [autoCull=false] - The default autoCull state of the Sprite. Sprites that are autoCulled are culled from the camera if out of its range.
     * @param {Phaser.Group} [group=Phaser.World] - Group to add the Sprite to. If not specified it will be added to the World group.
     * @param {object} [CustomClass=Phaser.Sprite] - If you wish to create your own class, rather than Phaser.Sprite, pass the class here. Your class must extend Phaser.Sprite and have the same constructor parameters.
+    * @param {boolean} [adjustY=true] - By default the Tiled map editor uses a bottom-left coordinate system. Phaser uses top-left. So most objects will appear too low down. This parameter moves them up by their height.
     */
-    createFromObjects: function (name, gid, key, frame, exists, autoCull, group, CustomClass) {
+    createFromObjects: function (name, gid, key, frame, exists, autoCull, group, CustomClass, adjustY) {
 
         if (typeof exists === 'undefined') { exists = true; }
         if (typeof autoCull === 'undefined') { autoCull = false; }
         if (typeof group === 'undefined') { group = this.game.world; }
         if (typeof CustomClass === 'undefined') { CustomClass = Phaser.Sprite; }
+        if (typeof adjustY === 'undefined') { adjustY = true; }
 
         if (!this.objects[name])
         {
@@ -38391,11 +38393,15 @@ Phaser.Tilemap.prototype = {
             {
                 sprite = new CustomClass(this.game, this.objects[name][i].x, this.objects[name][i].y, key, frame);
 
-                sprite.anchor.setTo(0, 1);
                 sprite.name = this.objects[name][i].name;
                 sprite.visible = this.objects[name][i].visible;
                 sprite.autoCull = autoCull;
                 sprite.exists = exists;
+
+                if (adjustY)
+                {
+                    sprite.y -= sprite.height;
+                }
 
                 group.add(sprite);
 
@@ -40733,6 +40739,36 @@ Phaser.TilemapParser = {
 
         map.images = images;
 
+        //  Tilesets
+        var tilesets = [];
+
+        for (var i = 0; i < json.tilesets.length; i++)
+        {
+            //  name, firstgid, width, height, margin, spacing, properties
+            var set = json.tilesets[i];
+            var newSet = new Phaser.Tileset(set.name, set.firstgid, set.tilewidth, set.tileheight, set.margin, set.spacing, set.properties);
+
+            if (set.tileproperties)
+            {
+                newSet.tileProperties = set.tileproperties;
+            }
+
+            newSet.rows = Math.round((set.imageheight - set.margin) / (set.tileheight + set.spacing));
+            newSet.columns = Math.round((set.imagewidth - set.margin) / (set.tilewidth + set.spacing));
+            newSet.total = newSet.rows * newSet.columns;
+
+            if (newSet.rows % 1 !== 0 || newSet.columns % 1 !== 0)
+            {
+                console.warn('TileSet image dimensions do not match expected dimensions. Tileset width/height must be evenly divisible by Tilemap tile width/height.');
+            }
+            else
+            {
+                tilesets.push(newSet);
+            }
+        }
+
+        map.tilesets = tilesets;
+
         //  Objects & Collision Data (polylines, etc)
         var objects = {};
         var collision = {};
@@ -40796,36 +40832,6 @@ Phaser.TilemapParser = {
 
         map.objects = objects;
         map.collision = collision;
-
-        //  Tilesets
-        var tilesets = [];
-
-        for (var i = 0; i < json.tilesets.length; i++)
-        {
-            //  name, firstgid, width, height, margin, spacing, properties
-            var set = json.tilesets[i];
-            var newSet = new Phaser.Tileset(set.name, set.firstgid, set.tilewidth, set.tileheight, set.margin, set.spacing, set.properties);
-
-            if (set.tileproperties)
-            {
-                newSet.tileProperties = set.tileproperties;
-            }
-
-            newSet.rows = Math.round((set.imageheight - set.margin) / (set.tileheight + set.spacing));
-            newSet.columns = Math.round((set.imagewidth - set.margin) / (set.tilewidth + set.spacing));
-            newSet.total = newSet.rows * newSet.columns;
-
-            if (newSet.rows % 1 !== 0 || newSet.columns % 1 !== 0)
-            {
-                console.warn('TileSet image dimensions do not match expected dimensions. Tileset width/height must be evenly divisible by Tilemap tile width/height.');
-            }
-            else
-            {
-                tilesets.push(newSet);
-            }
-        }
-
-        map.tilesets = tilesets;
 
         map.tiles = [];
 
