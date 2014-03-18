@@ -7,7 +7,7 @@
 *
 * Phaser - http://www.phaser.io
 *
-* v2.0.1 "Aes Sedai" - Built: Tue Mar 18 2014 00:01:18
+* v2.0.1 "Aes Sedai" - Built: Tue Mar 18 2014 18:36:17
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -12597,7 +12597,7 @@ Phaser.Gamepad.prototype = {
     */
     _pollGamepads: function () {
 
-        var rawGamepads = (navigator.webkitGetGamepads && navigator.webkitGetGamepads()) || navigator.webkitGamepads || navigator.getGamepads;
+        var rawGamepads = navigator.getGamepads || (navigator.webkitGetGamepads && navigator.webkitGetGamepads()) || navigator.webkitGamepads;
 
         if (rawGamepads)
         {
@@ -21800,13 +21800,6 @@ Phaser.Device = function (game) {
     */
     this.game = game;
 
-    /**
-    * An optional 'fix' for the horrendous Android stock browser bug https://code.google.com/p/android/issues/detail?id=39247
-    * @property {boolean} patchAndroidClearRectBug - Description.
-    * @default
-    */
-    this.patchAndroidClearRectBug = false;
-
     //  Operating System
 
     /**
@@ -21942,6 +21935,12 @@ Phaser.Device = function (game) {
     * @default
     */
     this.vibration = false;
+
+    /**
+    * @property {boolean} getUserMedia - Does the device support the getUserMedia API?
+    * @default
+    */
+    this.getUserMedia = false;
 
     /**
     * @property {boolean} quirksMode - Is the browser running in strict mode (false) or quirks mode? (true)
@@ -22250,7 +22249,7 @@ Phaser.Device.prototype = {
 
         this.quirksMode = (document.compatMode === 'CSS1Compat') ? false : true;
 
-
+        this.getUserMedia = !!(navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
 
     },
 
@@ -23515,11 +23514,12 @@ Phaser.Math = {
     *
     * @method Phaser.Math#wrapAngle
     * @param {number} angle - The angle value to check
+    * @param {boolean} radians - True if angle sizes are expressed in radians.
     * @return {number} The new angle value, returns the same as the input angle if it was within bounds.
     */
-    wrapAngle: function (angle) {
-
-        return this.wrap(angle, -180, 180);
+    wrapAngle: function (angle, radians) {
+        var radianFactor = (radians) ? Math.PI / 180 : 1;
+        return this.wrap(angle, -180 * radianFactor, 180 * radianFactor);
 
     },
 
@@ -23714,6 +23714,42 @@ Phaser.Math = {
             if (l > 0)
             {
                 return objects[startIndex + Math.floor(Math.random() * l)];
+            }
+        }
+
+        return null;
+
+    },
+
+    /**
+    * Removes a random object from the given array and returns it.
+    * Will return null if random selection is missing, or array has no entries.
+    *
+    * @method Phaser.Math#removeRandom
+    * @param {array} objects - An array of objects.
+    * @param {number} startIndex - Optional offset off the front of the array. Default value is 0, or the beginning of the array.
+    * @param {number} length - Optional restriction on the number of values you want to randomly select from.
+    * @return {object} The random object that was removed.
+    */
+    removeRandom: function (objects, startIndex, length) {
+
+        if (typeof startIndex === "undefined") { startIndex = 0; }
+        if (typeof length === "undefined") { length = 0; }
+        
+        if (objects != null) {
+
+            var l = length;
+
+            if ((l === 0) || (l > objects.length - startIndex))
+            {
+                l = objects.length - startIndex;
+            }
+
+            if (l > 0)
+            {
+                var idx = startIndex + Math.floor(Math.random() * l);
+                var removed = objects.splice(idx, 1);
+                return removed[0];
             }
         }
 
@@ -30480,27 +30516,27 @@ Phaser.Loader.prototype = {
     * This allows you to easily make loading bars for games. Note that Sprite.visible = true will be set when calling this.
     *
     * @method Phaser.Loader#setPreloadSprite
-    * @param {Phaser.Sprite|Phaser.Image} sprite - The sprite that will be cropped during the load.
-    * @param {number} [direction=0] - A value of zero means the sprite width will be cropped, a value of 1 means its height will be cropped.
+    * @param {Phaser.Sprite|Phaser.Image} sprite - The sprite or image that will be cropped during the load.
+    * @param {number} [direction=0] - A value of zero means the sprite will be cropped horizontally, a value of 1 means its will be cropped vertically.
     */
     setPreloadSprite: function (sprite, direction) {
 
         direction = direction || 0;
 
-        this.preloadSprite = { sprite: sprite, direction: direction, width: sprite.width, height: sprite.height, crop: null };
+        this.preloadSprite = { sprite: sprite, direction: direction, width: sprite.width, height: sprite.height, rect: null };
 
         if (direction === 0)
         {
-            //  Horizontal crop
-            this.preloadSprite.crop = new Phaser.Rectangle(0, 0, 1, sprite.height);
+            //  Horizontal rect
+            this.preloadSprite.rect = new Phaser.Rectangle(0, 0, 1, sprite.height);
         }
         else
         {
-            //  Vertical crop
-            this.preloadSprite.crop = new Phaser.Rectangle(0, 0, sprite.width, 1);
+            //  Vertical rect
+            this.preloadSprite.rect = new Phaser.Rectangle(0, 0, sprite.width, 1);
         }
 
-        sprite.crop(this.preloadSprite.crop);
+        sprite.crop(this.preloadSprite.rect);
 
         sprite.visible = true;
 
@@ -31714,11 +31750,13 @@ Phaser.Loader.prototype = {
         {
             if (this.preloadSprite.direction === 0)
             {
-                this.preloadSprite.crop.width = Math.floor((this.preloadSprite.width / 100) * this.progress);
+                this.preloadSprite.rect.width = Math.floor((this.preloadSprite.width / 100) * this.progress);
+                this.preloadSprite.sprite.crop(this.preloadSprite.rect);
             }
             else
             {
-                this.preloadSprite.crop.height = Math.floor((this.preloadSprite.height / 100) * this.progress);
+                this.preloadSprite.rect.height = Math.floor((this.preloadSprite.height / 100) * this.progress);
+                this.preloadSprite.sprite.crop(this.preloadSprite.rect);
             }
         }
 

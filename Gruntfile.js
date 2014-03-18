@@ -207,11 +207,11 @@ module.exports = function (grunt) {
             'src/physics/p2/Material.js',
             'src/physics/p2/ContactMaterial.js',
             'src/physics/p2/CollisionGroup.js',
-            '/src/physics/p2/DistanceConstraint.js',
-            '/src/physics/p2/GearConstraint.js',
-            '/src/physics/p2/LockConstraint.js',
-            '/src/physics/p2/PrismaticConstraint.js',
-            '/src/physics/p2/RevoluteConstraint.js'
+            'src/physics/p2/DistanceConstraint.js',
+            'src/physics/p2/GearConstraint.js',
+            'src/physics/p2/LockConstraint.js',
+            'src/physics/p2/PrismaticConstraint.js',
+            'src/physics/p2/RevoluteConstraint.js'
         ],
 
         ninja: [
