@@ -4,9 +4,27 @@
         $path = '..';
     }
 
-    echo <<<EOL
+    if (!isset($p2))
+    {
+        $p2 = true;
+    }
 
-    <script src="$path/src/physics/p2/p2.js"></script>
+    if (!isset($ninja))
+    {
+        $ninja = true;
+    }
+
+    if (!isset($arcade))
+    {
+        $arcade = true;
+    }
+
+    if ($p2)
+    {
+        echo "    <script src=\"$path/src/physics/p2/p2.js\"></script>";
+    }
+
+    echo <<<EOL
 
     <script src="$path/src/pixi/Pixi.js"></script>
     <script src="$path/src/pixi/core/Point.js"></script>
@@ -137,14 +155,30 @@
 
     <script src="$path/src/physics/Physics.js"></script>
 
+    <script src="$path/src/particles/Particles.js"></script>
+    <script src="$path/src/particles/arcade/ArcadeParticles.js"></script>
+    <script src="$path/src/particles/arcade/Emitter.js"></script>
+
+    <script src="$path/src/tilemap/Tile.js"></script>
+    <script src="$path/src/tilemap/Tilemap.js"></script>
+    <script src="$path/src/tilemap/TilemapLayer.js"></script>
+    <script src="$path/src/tilemap/TilemapParser.js"></script>
+    <script src="$path/src/tilemap/Tileset.js"></script>
+EOL;
+
+    if ($arcade)
+    {
+        echo <<<EOL
+
     <script src="$path/src/physics/arcade/World.js"></script>
     <script src="$path/src/physics/arcade/Body.js"></script>
+EOL;
+    }
 
-    <script src="$path/src/physics/ninja/World.js"></script>
-    <script src="$path/src/physics/ninja/Body.js"></script>
-    <script src="$path/src/physics/ninja/AABB.js"></script>
-    <script src="$path/src/physics/ninja/Tile.js"></script>
-    <script src="$path/src/physics/ninja/Circle.js"></script>
+
+    if ($p2)
+    {
+        echo <<<EOL
 
     <script src="$path/src/physics/p2/World.js"></script>
     <script src="$path/src/physics/p2/PointProxy.js"></script>
@@ -160,20 +194,22 @@
     <script src="$path/src/physics/p2/LockConstraint.js"></script>
     <script src="$path/src/physics/p2/PrismaticConstraint.js"></script>
     <script src="$path/src/physics/p2/RevoluteConstraint.js"></script>
-
-    <script src="$path/src/particles/Particles.js"></script>
-    <script src="$path/src/particles/arcade/ArcadeParticles.js"></script>
-    <script src="$path/src/particles/arcade/Emitter.js"></script>
-
-    <script src="$path/src/tilemap/Tile.js"></script>
-    <script src="$path/src/tilemap/Tilemap.js"></script>
-    <script src="$path/src/tilemap/TilemapLayer.js"></script>
-    <script src="$path/src/tilemap/TilemapParser.js"></script>
-    <script src="$path/src/tilemap/Tileset.js"></script>
 EOL;
+    }
 
-/*
+    if ($ninja)
+    {
+        echo <<<EOL
 
-*/
+    <script src="$path/src/physics/arcade/World.js"></script>
+    <script src="$path/src/physics/arcade/Body.js"></script>
+
+    <script src="$path/src/physics/ninja/World.js"></script>
+    <script src="$path/src/physics/ninja/Body.js"></script>
+    <script src="$path/src/physics/ninja/AABB.js"></script>
+    <script src="$path/src/physics/ninja/Tile.js"></script>
+    <script src="$path/src/physics/ninja/Circle.js"></script>
+EOL;
+    }
 
 ?>

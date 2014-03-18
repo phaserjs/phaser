@@ -276,6 +276,15 @@ module.exports = function (grunt) {
                 dest: '<%= compile_dir %>/phaser-no-libs.js'
             },
 
+            //  Phaser with pixi but no physics libs
+            phaserNoPhysics: {
+                options: {
+                    banner: '<%= banner %>'
+                },
+                src: ['<%= compile_dir %>/pixi.js', '<%= compile_dir %>/phaser-no-libs.js'],
+                dest: '<%= compile_dir %>/phaser-no-physics.js'
+            },
+
             //  One ring to rule them all
             standalone: {
                 options: {
@@ -321,6 +330,14 @@ module.exports = function (grunt) {
                 dest: '<%= compile_dir %>/phaser-no-libs.min.js'
             },
 
+            phaserNoPhysics: {
+                options: {
+                    banner: '/* Phaser (no physics) v<%= pkg.version %> - http://phaser.io - @photonstorm - (c) 2014 Photon Storm Ltd. */\n'
+                },
+                src: ['<%= concat.phaserNoPhysics.dest %>'],
+                dest: '<%= compile_dir %>/phaser-no-physics.min.js'
+            },
+
             standalone: {
                 options: {
                     sourceMap: true,
@@ -347,7 +364,10 @@ module.exports = function (grunt) {
                     { src: ['dist/pixi.js'], dest: 'build/custom/pixi.js' },
                     { src: ['dist/pixi.min.js'], dest: 'build/custom/pixi.min.js' },
                     { src: ['dist/ninja.js'], dest: 'build/custom/ninja.js' },
-                    { src: ['dist/ninja.min.js'], dest: 'build/custom/ninja.min.js' }
+                    { src: ['dist/ninja.min.js'], dest: 'build/custom/ninja.min.js' },
+                    { src: ['dist/phaser-no-physics.js'], dest: 'build/custom/phaser-no-physics.js' },
+                    { src: ['dist/phaser-no-physics.min.js'], dest: 'build/custom/phaser-no-physics.min.js' }
+
                 ]
             }
         },

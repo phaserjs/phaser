@@ -18,13 +18,6 @@ Phaser.Device = function (game) {
     */
     this.game = game;
 
-    /**
-    * An optional 'fix' for the horrendous Android stock browser bug https://code.google.com/p/android/issues/detail?id=39247
-    * @property {boolean} patchAndroidClearRectBug - Description.
-    * @default
-    */
-    this.patchAndroidClearRectBug = false;
-
     //  Operating System
 
     /**
@@ -160,6 +153,12 @@ Phaser.Device = function (game) {
     * @default
     */
     this.vibration = false;
+
+    /**
+    * @property {boolean} getUserMedia - Does the device support the getUserMedia API?
+    * @default
+    */
+    this.getUserMedia = false;
 
     /**
     * @property {boolean} quirksMode - Is the browser running in strict mode (false) or quirks mode? (true)
@@ -468,7 +467,7 @@ Phaser.Device.prototype = {
 
         this.quirksMode = (document.compatMode === 'CSS1Compat') ? false : true;
 
-
+        this.getUserMedia = !!(navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
 
     },
 

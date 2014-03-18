@@ -76,6 +76,14 @@ Updated:
 * P2.removeBody will check if the body is part of the world before removing, this avoids a TypeError from the p2 layer.
 * Tilemap.createFromObjects has a new parameter: adjustY, which is true by default. Because Tiled uses a bottom-left coordinate system Phaser used to set the Sprite anchor to 0,1 to compensate. If adjustY is true it now reduces the y value by the object height instead.
 * Swapped the order of the _pollGamepads gamepads check, to stop the Chrome 'webkitGamepads is deprecated' error in the console.
+* Lots of TypeScript definitions updates (thanks as always to clark for these)
+* Removed Device.patchAndroidClearRectBug as it's no longer used internally.
+* Math.wrapAngle now supports radians (thanks Cryszon, #597)
+
+
+New Features:
+
+* Device.getUserMedia boolean added, useful if you need access to the webcam or microphone.
 
 
 TODO:
