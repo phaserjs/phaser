@@ -147,27 +147,27 @@ Phaser.Loader.prototype = {
     * This allows you to easily make loading bars for games. Note that Sprite.visible = true will be set when calling this.
     *
     * @method Phaser.Loader#setPreloadSprite
-    * @param {Phaser.Sprite|Phaser.Image} sprite - The sprite that will be cropped during the load.
-    * @param {number} [direction=0] - A value of zero means the sprite width will be cropped, a value of 1 means its height will be cropped.
+    * @param {Phaser.Sprite|Phaser.Image} sprite - The sprite or image that will be cropped during the load.
+    * @param {number} [direction=0] - A value of zero means the sprite will be cropped horizontally, a value of 1 means its will be cropped vertically.
     */
     setPreloadSprite: function (sprite, direction) {
 
         direction = direction || 0;
 
-        this.preloadSprite = { sprite: sprite, direction: direction, width: sprite.width, height: sprite.height, crop: null };
+        this.preloadSprite = { sprite: sprite, direction: direction, width: sprite.width, height: sprite.height, rect: null };
 
         if (direction === 0)
         {
-            //  Horizontal crop
-            this.preloadSprite.crop = new Phaser.Rectangle(0, 0, 1, sprite.height);
+            //  Horizontal rect
+            this.preloadSprite.rect = new Phaser.Rectangle(0, 0, 1, sprite.height);
         }
         else
         {
-            //  Vertical crop
-            this.preloadSprite.crop = new Phaser.Rectangle(0, 0, sprite.width, 1);
+            //  Vertical rect
+            this.preloadSprite.rect = new Phaser.Rectangle(0, 0, sprite.width, 1);
         }
 
-        sprite.crop(this.preloadSprite.crop);
+        sprite.crop(this.preloadSprite.rect);
 
         sprite.visible = true;
 
@@ -1381,11 +1381,13 @@ Phaser.Loader.prototype = {
         {
             if (this.preloadSprite.direction === 0)
             {
-                this.preloadSprite.crop.width = Math.floor((this.preloadSprite.width / 100) * this.progress);
+                this.preloadSprite.rect.width = Math.floor((this.preloadSprite.width / 100) * this.progress);
+                this.preloadSprite.sprite.crop(this.preloadSprite.rect);
             }
             else
             {
-                this.preloadSprite.crop.height = Math.floor((this.preloadSprite.height / 100) * this.progress);
+                this.preloadSprite.rect.height = Math.floor((this.preloadSprite.height / 100) * this.progress);
+                this.preloadSprite.sprite.crop(this.preloadSprite.rect);
             }
         }
 
