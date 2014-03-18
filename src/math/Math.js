@@ -774,11 +774,12 @@ Phaser.Math = {
     *
     * @method Phaser.Math#wrapAngle
     * @param {number} angle - The angle value to check
+    * @param {boolean} radians - True if angle sizes are expressed in radians.
     * @return {number} The new angle value, returns the same as the input angle if it was within bounds.
     */
-    wrapAngle: function (angle) {
-
-        return this.wrap(angle, -180, 180);
+    wrapAngle: function (angle, radians) {
+        var radianFactor = (radians) ? Math.PI / 180 : 1;
+        return this.wrap(angle, -180 * radianFactor, 180 * radianFactor);
 
     },
 
