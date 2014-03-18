@@ -75,6 +75,7 @@ Updated:
 * Removed State.destroy empty method and replaced with State.shutdown, as that is what the StateManager expects (fix #586)
 * P2.removeBody will check if the body is part of the world before removing, this avoids a TypeError from the p2 layer.
 * Tilemap.createFromObjects has a new parameter: adjustY, which is true by default. Because Tiled uses a bottom-left coordinate system Phaser used to set the Sprite anchor to 0,1 to compensate. If adjustY is true it now reduces the y value by the object height instead.
+* Swapped the order of the _pollGamepads gamepads check, to stop the Chrome 'webkitGamepads is deprecated' error in the console.
 
 
 TODO:
