@@ -2431,7 +2431,7 @@ declare module Phaser {
         static fuzzyFloor(val: number, epsilon?: number): boolean;
         static fuzzyGreaterThan(a: number, b: number, epsilon?: number): boolean;
         static fuzzyLessThan(a: number, b: number, epsilon?: number): boolean;
-        static getRandom(objects: Object[], startIndex?: number, length?: number): Object;
+        static getRandom<T>(objects: T[], startIndex?: number, length?: number): T;
         static interpolateAngles(a1: number, a2: number, weight: number, radians?: boolean, ease?: any): number;
         static interpolateFloat(a: number, b: number, weight: number): number;
         static isEven(n: number): boolean;
@@ -2454,6 +2454,7 @@ declare module Phaser {
         static PI2: number;
         static radToDeg(radians: number): number;
         static randomSign(): number;
+        static removeRandom<T>(objects: T[], startIndex?: number, length?: number): T;
         static reverseAngle(angleRed: number): number;
         static roundTo(value: number, place?: number, base?: number): number;
         static shear(n: number): number;

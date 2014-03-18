@@ -85,6 +85,7 @@ Updated:
 New Features:
 
 * Device.getUserMedia boolean added, useful if you need access to the webcam or microphone.
+* Math.removeRandom allows you to remove (and return) a random object from an array.
 
 
 TODO:

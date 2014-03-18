@@ -982,6 +982,42 @@ Phaser.Math = {
     },
 
     /**
+    * Removes a random object from the given array and returns it.
+    * Will return null if random selection is missing, or array has no entries.
+    *
+    * @method Phaser.Math#removeRandom
+    * @param {array} objects - An array of objects.
+    * @param {number} startIndex - Optional offset off the front of the array. Default value is 0, or the beginning of the array.
+    * @param {number} length - Optional restriction on the number of values you want to randomly select from.
+    * @return {object} The random object that was removed.
+    */
+    removeRandom: function (objects, startIndex, length) {
+
+        if (typeof startIndex === "undefined") { startIndex = 0; }
+        if (typeof length === "undefined") { length = 0; }
+        
+        if (objects != null) {
+
+            var l = length;
+
+            if ((l === 0) || (l > objects.length - startIndex))
+            {
+                l = objects.length - startIndex;
+            }
+
+            if (l > 0)
+            {
+                var idx = startIndex + Math.floor(Math.random() * l);
+                var removed = objects.splice(idx, 1);
+                return removed[0];
+            }
+        }
+
+        return null;
+
+    },
+
+    /**
     * Round down to the next whole number. E.g. floor(1.7) == 1, and floor(-2.7) == -2.
     *
     * @method Phaser.Math#floor
