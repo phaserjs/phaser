@@ -234,6 +234,11 @@ Phaser.Physics.prototype = {
     */
     setBoundsToWorld: function () {
 
+        if (this.arcade)
+        {
+            this.arcade.setBoundsToWorld();
+        }
+
         if (this.ninja)
         {
             this.ninja.setBoundsToWorld();

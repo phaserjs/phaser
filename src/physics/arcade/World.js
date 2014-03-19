@@ -57,18 +57,6 @@ Phaser.Physics.Arcade = function (game) {
     //  Avoid gc spikes by caching these values for re-use
 
     /**
-    * @property {Phaser.Rectangle} _bounds1 - Internal cache var.
-    * @private
-    */
-    this._bounds1 = new Phaser.Rectangle();
-
-    /**
-    * @property {Phaser.Rectangle} _bounds2 - Internal cache var.
-    * @private
-    */
-    this._bounds2 = new Phaser.Rectangle();
-
-    /**
     * @property {number} _overlap - Internal cache var.
     * @private
     */
@@ -117,12 +105,6 @@ Phaser.Physics.Arcade = function (game) {
     this._mapData = [];
 
     /**
-    * @property {number} _mapTiles - Internal cache var.
-    * @private
-    */
-    this._mapTiles = 0;
-
-    /**
     * @property {boolean} _result - Internal cache var.
     * @private
     */
@@ -152,18 +134,37 @@ Phaser.Physics.Arcade = function (game) {
     */
     this._dy = 0;
 
-    /**
-    * @property {number} _intersection - Internal cache var.
-    * @private
-    */
-    // this._intersection = [0,0,0,0];
-    this._intersection = new Phaser.Rectangle();
-
 };
 
 Phaser.Physics.Arcade.prototype.constructor = Phaser.Physics.Arcade;
 
 Phaser.Physics.Arcade.prototype = {
+
+    /**
+    * Updates the size of this physics world.
+    *
+    * @method Phaser.Physics.Arcade#setBounds
+    * @param {number} x - Top left most corner of the world.
+    * @param {number} y - Top left most corner of the world.
+    * @param {number} width - New width of the world. Can never be smaller than the Game.width.
+    * @param {number} height - New height of the world. Can never be smaller than the Game.height.
+    */
+    setBounds: function (x, y, width, height) {
+
+        this.bounds.setTo(x, y, width, height);
+
+    },
+
+    /**
+    * Updates the size of this physics world to match the size of the game world.
+    *
+    * @method Phaser.Physics.Arcade#setBoundsToWorld
+    */
+    setBoundsToWorld: function () {
+
+        this.bounds.setTo(this.game.world.bounds.x, this.game.world.bounds.y, this.game.world.bounds.width, this.game.world.bounds.height);
+
+    },
 
     /**
     * This will create an Arcade Physics body on the given game object or array of game objects.

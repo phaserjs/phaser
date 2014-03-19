@@ -90,6 +90,10 @@ Updated:
 * Group.replace will now return the old child, the one that was replaced in the Group.
 * Group.destroy has a new parameter: `soft`. A soft destruction won't remove the Group from its parent or null game references. Default is `false`.
 * InputHandler.validForInput is a new method that checks if the handler and its owner should be considered for Pointer input handling or not.
+* ArcadePhysics.Body now checks the ArcadePhysics.World bounds, not the game bounds.
+* ArcadePhysics.Body has reverted to the 1.1.3 method of preUpdate, so you can now position sprites with x/y, drag them, etc, regardless of the Body.moves flag (issue #606)
+* ArcadePhysics.World now has setBounds and setBoundsToWorld methods, which are called automatically on world resizing.
+* ArcadePhysics.Body no longer sets the offset to match the anchor.
 
 
 New Features:

@@ -35,16 +35,6 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     */
     this.offset = new Phaser.Point();
 
-    if (sprite.anchor.x !== 0)
-    {
-        this.offset.x = (sprite.anchor.x * sprite.width);
-    }
-
-    if (sprite.anchor.y !== 0)
-    {
-        this.offset.y = (sprite.anchor.y * sprite.height);
-    }
-
     /**
     * @property {Phaser.Point} position - The position of the physics body.
     * @readonly
@@ -329,7 +319,7 @@ Phaser.Physics.Arcade.Body.prototype = {
             this.halfHeight = Math.floor(this.height / 2);
             this._sx = scaleX;
             this._sy = scaleY;
-            this.center.setTo(this.x + this.halfWidth, this.y + this.halfHeight);
+            this.center.setTo(this.position.x + this.halfWidth, this.position.y + this.halfHeight);
         }
 
     },
@@ -362,6 +352,14 @@ Phaser.Physics.Arcade.Body.prototype = {
         this.blocked.left = false;
         this.blocked.right = false;
 
+        this.position.x = (this.sprite.world.x - (this.sprite.anchor.x * this.width)) + this.offset.x;
+        this.position.y = (this.sprite.world.y - (this.sprite.anchor.y * this.height)) + this.offset.y;
+        this.rotation = this.sprite.angle;
+
+        this.prev.x = this.position.x;
+        this.prev.y = this.position.y;
+        this.preRotation = this.rotation;
+
         if (this.moves)
         {
             this.game.physics.arcade.updateMotion(this);
@@ -384,12 +382,6 @@ Phaser.Physics.Arcade.Body.prototype = {
             {
                 this.checkWorldBounds();
             }
-        }
-        else
-        {
-            //  If the body doesn't move (i.e. is in a moving Group) then we need its position
-            this.position.x = (this.sprite.world.x - (this.sprite.anchor.x * this.width)) + this.offset.x;
-            this.position.y = (this.sprite.world.y - (this.sprite.anchor.y * this.height)) + this.offset.y;
         }
 
     },
@@ -422,19 +414,16 @@ Phaser.Physics.Arcade.Body.prototype = {
 
         if (this.moves)
         {
-            this.sprite.x = this.position.x + this.offset.x;
-            this.sprite.y = this.position.y + this.offset.y;
+            this.sprite.x += this.deltaX();
+            this.sprite.y += this.deltaY();
         }
 
-        this.center.setTo(this.x + this.halfWidth, this.y + this.halfHeight);
+        this.center.setTo(this.position.x + this.halfWidth, this.position.y + this.halfHeight);
 
         if (this.allowRotation)
         {
             this.sprite.angle += this.deltaZ();
         }
-
-        this.prev.set(this.position.x, this.position.y);
-        this.preRotation = this.rotation;
 
     },
 
@@ -457,28 +446,28 @@ Phaser.Physics.Arcade.Body.prototype = {
     */
     checkWorldBounds: function () {
 
-        if (this.x < this.game.world.bounds.x)
+        if (this.position.x < this.game.physics.arcade.bounds.x)
         {
-            this.x = this.game.world.bounds.x;
+            this.position.x = this.game.physics.arcade.bounds.x;
             this.velocity.x *= -this.bounce.x;
             this.blocked.left = true;
         }
-        else if (this.right > this.game.world.bounds.right)
+        else if (this.right > this.game.physics.arcade.bounds.right)
         {
-            this.x = this.game.world.bounds.right - this.width;
+            this.position.x = this.game.physics.arcade.bounds.right - this.width;
             this.velocity.x *= -this.bounce.x;
             this.blocked.right = true;
         }
 
-        if (this.y < this.game.world.bounds.y)
+        if (this.position.y < this.game.physics.arcade.bounds.y)
         {
-            this.y = this.game.world.bounds.y;
+            this.position.y = this.game.physics.arcade.bounds.y;
             this.velocity.y *= -this.bounce.y;
             this.blocked.up = true;
         }
-        else if (this.bottom > this.game.world.bounds.bottom)
+        else if (this.bottom > this.game.physics.arcade.bounds.bottom)
         {
-            this.y = this.game.world.bounds.bottom - this.height;
+            this.position.y = this.game.physics.arcade.bounds.bottom - this.height;
             this.velocity.y *= -this.bounce.y;
             this.blocked.down = true;
         }
@@ -509,7 +498,7 @@ Phaser.Physics.Arcade.Body.prototype = {
         this.halfHeight = Math.floor(this.height / 2);
         this.offset.setTo(offsetX, offsetY);
 
-        this.center.setTo(this.x + this.halfWidth, this.y + this.halfHeight);
+        this.center.setTo(this.position.x + this.halfWidth, this.position.y + this.halfHeight);
 
     },
 
@@ -533,7 +522,7 @@ Phaser.Physics.Arcade.Body.prototype = {
         this.rotation = this.sprite.rotation;
         this.preRotation = this.rotation;
         
-        this.center.setTo(this.x + this.halfWidth, this.y + this.halfHeight);
+        this.center.setTo(this.position.x + this.halfWidth, this.position.y + this.halfHeight);
 
     },
 
