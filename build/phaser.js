@@ -7,7 +7,7 @@
 *
 * Phaser - http://www.phaser.io
 *
-* v2.0.1 "Aes Sedai" - Built: Wed Mar 19 2014 13:21:46
+* v2.0.1 "Aes Sedai" - Built: Wed Mar 19 2014 13:23:28
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -9604,7 +9604,7 @@ PIXI.RenderTexture.tempMatrix = new PIXI.Matrix();
 *
 * Phaser - http://www.phaser.io
 *
-* v2.0.1 "Aes Sedai" - Built: Wed Mar 19 2014 13:21:46
+* v2.0.1 "Aes Sedai" - Built: Wed Mar 19 2014 13:23:27
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -13502,8 +13502,6 @@ Phaser.StateManager.prototype = {
             //  Already got a state running?
             if (this.current)
             {
-                console.log('state preUpdate current');
-
                 this.onShutDownCallback.call(this.callbackContext, this.game);
 
                 this.game.tweens.removeAll();

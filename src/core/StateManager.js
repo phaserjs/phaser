@@ -277,8 +277,6 @@ Phaser.StateManager.prototype = {
             //  Already got a state running?
             if (this.current)
             {
-                console.log('state preUpdate current');
-
                 this.onShutDownCallback.call(this.callbackContext, this.game);
 
                 this.game.tweens.removeAll();
