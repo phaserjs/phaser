@@ -98,6 +98,7 @@ Updated
 * ArcadePhysics.Body no longer sets the offset to match the anchor.
 * The StateManager is now responsible for clearing down input, timers, tweens, physics, camera and the World display list.
 * Removed the use of Int16Array from all Game Objects, swapped for standard Array. Phaser now runs on Android 2.x again (fix #590)
+* When creating a Sprite (via Group.create or directly) with exists = false and a P2 body, the body is not added to the world.
 
 
 New Features
@@ -107,13 +108,8 @@ New Features
 * ArcadePhysics.World now has a checkCollision object which can be used to toggle collision against the 4 walls of its bounds.
 * Sprite.events.onEnterBounds added. This is dispatched if the Sprite leaves the bounds but then returns. The opposite of onOutOfBounds.
 * Timer.removeAll will remove and clear down all events, but keeps the Timer running.
+* Group.setAllChildren recursively checks if its children are Groups, and if so recursively applies the value to their children as well (feature #589)
 
-
-
-TODO:
-
-* Check Group.create exists = false, is body added to world on next step?
-http://www.html5gamedevs.com/topic/4786-how-to-avoid-physics-body-when-creating-a-new-sprite/#entry29313
 
 
 Version 2.0.0 - "Aes Sedai" - March 13th 2014

@@ -141,7 +141,10 @@ Phaser.Physics.P2.Body = function (game, sprite, x, y, mass) {
     {
         this.setRectangleFromSprite(sprite);
 
-        this.game.physics.p2.addBody(this);
+        if (sprite.exists)
+        {
+            this.game.physics.p2.addBody(this);
+        }
     }
 
 };
