@@ -7,7 +7,7 @@
 *
 * Phaser - http://www.phaser.io
 *
-* v2.0.1 "Aes Sedai" - Built: Tue Mar 18 2014 18:36:17
+* v2.0.1 "Aes Sedai" - Built: Wed Mar 19 2014 00:56:48
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -9604,7 +9604,7 @@ PIXI.RenderTexture.tempMatrix = new PIXI.Matrix();
 *
 * Phaser - http://www.phaser.io
 *
-* v2.0.1 "Aes Sedai" - Built: Tue Mar 18 2014 18:36:17
+* v2.0.1 "Aes Sedai" - Built: Wed Mar 19 2014 00:56:48
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -13509,7 +13509,7 @@ Phaser.StateManager.prototype = {
             {
                 this.game.tweens.removeAll();
 
-                this.game.world.destroy();
+                this.game.world.shutdown();
 
                 this.game.physics.clear();
 
@@ -15987,6 +15987,7 @@ Phaser.Group.prototype.getIndex = function (child) {
 * @method Phaser.Group#replace
 * @param {*} oldChild - The child in this Group that will be replaced.
 * @param {*} newChild - The child to be inserted into this Group.
+* @return {*} Returns the oldChild that was replaced within this Group.
 */
 Phaser.Group.prototype.replace = function (oldChild, newChild) {
 
@@ -16005,9 +16006,13 @@ Phaser.Group.prototype.replace = function (oldChild, newChild) {
             }
         }
 
-        this.removeChild(oldChild);
+        var temp = oldChild;
+
+        this.remove(temp);
 
         this.addAt(newChild, index);
+
+        return temp;
     }
 
 }
@@ -16846,12 +16851,14 @@ Phaser.Group.prototype.removeBetween = function (startIndex, endIndex) {
 *
 * @method Phaser.Group#destroy
 * @param {boolean} [destroyChildren=true] - Should every child of this Group have its destroy method called?
+* @param {boolean} [soft=false] - A 'soft destroy' (set to true) doesn't remove this Group from its parent or null the game reference. Set to false and it does.
 */
-Phaser.Group.prototype.destroy = function (destroyChildren) {
+Phaser.Group.prototype.destroy = function (destroyChildren, soft) {
 
     if (this.game === null) { return; }
 
     if (typeof destroyChildren === 'undefined') { destroyChildren = true; }
+    if (typeof soft === 'undefined') { soft = false; }
 
     if (destroyChildren)
     {
@@ -16872,13 +16879,16 @@ Phaser.Group.prototype.destroy = function (destroyChildren) {
         this.removeAll();
     }
 
-    this.parent.removeChild(this);
-
-    this.game = null;
-
-    this.exists = false;
-
     this.cursor = null;
+
+    if (!soft)
+    {
+        this.parent.removeChild(this);
+
+        this.game = null;
+
+        this.exists = false;
+    }
 
 }
 
@@ -17090,15 +17100,16 @@ Phaser.World.prototype.setBounds = function (x, y, width, height) {
 
 /**
 * Destroyer of worlds.
-* @method Phaser.World#destroy
+* @method Phaser.World#shutdown
 */
-Phaser.World.prototype.destroy = function () {
+Phaser.World.prototype.shutdown = function () {
 
     this.camera.reset();
 
     this.game.input.reset(true);
 
-    this.removeAll();
+    //  World is a Group, so run a soft destruction on this and all children.
+    this.destroy(true, true);
 
 }
 
@@ -21329,7 +21340,7 @@ Phaser.Pointer.prototype = {
             do
             {
                 //  If the object is using pixelPerfect checks, or has a higher InputManager.PriorityID OR if the priority ID is the same as the current highest AND it has a higher renderOrderID, then set it to the top
-                if (currentNode.pixelPerfectClick || currentNode.pixelPerfectOver || currentNode.priorityID > this._highestInputPriorityID || (currentNode.priorityID === this._highestInputPriorityID && currentNode.sprite._cache[3] < this._highestRenderOrderID))
+                if (currentNode.validForInput(this._highestInputPriorityID, this._highestRenderOrderID))
                 {
                     if ((!fromClick && currentNode.checkPointerOver(this)) || (fromClick && currentNode.checkPointerDown(this)))
                     {
@@ -23340,6 +23351,12 @@ Phaser.InputHandler = function (sprite) {
     this.useHandCursor = false;
     
     /**
+    * @property {boolean} _setHandCursor - Did this Sprite trigger the hand cursor?
+    * @private
+    */
+    this._setHandCursor = false;
+
+    /**
     * @property {boolean} isDragged - true if the Sprite is being currently dragged.
     * @default
     */
@@ -23601,6 +23618,12 @@ Phaser.InputHandler.prototype = {
 
         if (this.enabled)
         {
+            if (this._setHandCursor)
+            {
+                this.game.canvas.style.cursor = "default";
+                this._setHandCursor = false;
+            }
+
             this.enabled = false;
 
             this.game.input.interactiveItems.remove(this);
@@ -23610,6 +23633,37 @@ Phaser.InputHandler.prototype = {
             this.boundsSprite = null;
             this.sprite = null;
         }
+
+    },
+
+    /**
+    * Checks if the object this InputHandler is bound to is valid for consideration in the Pointer move event.
+    * This is called by Phaser.Pointer and shouldn't typically be called directly.
+    *
+    * @method Phaser.InputHandler#validForInput
+    * @protected
+    * @param {number} highestID - The highest ID currently processed by the Pointer.
+    * @param {number} highestRenderID - The highest Render Order ID currently processed by the Pointer.
+    * @return {boolean} True if the object this InputHandler is bound to should be considered as valid for input detection.
+    */
+    validForInput: function (highestID, highestRenderID) {
+
+        if (this.sprite.scale.x === 0 || this.sprite.scale.y === 0)
+        {
+            return false;
+        }
+
+        if (this.pixelPerfectClick || this.pixelPerfectOver)
+        {
+            return true;
+        }
+
+        if (this.priorityID > highestID || (this.priorityID === highestID && this.sprite._cache[3] < highestRenderID))
+        {
+            return true;
+        }
+
+        return false;
 
     },
 
@@ -23978,6 +24032,7 @@ Phaser.InputHandler.prototype = {
             if (this.useHandCursor && this._pointerData[pointer.id].isDragged === false)
             {
                 this.game.canvas.style.cursor = "pointer";
+                this._setHandCursor = false;
             }
 
             this.sprite.events.onInputOver.dispatch(this.sprite, pointer);
@@ -24006,6 +24061,7 @@ Phaser.InputHandler.prototype = {
         if (this.useHandCursor && this._pointerData[pointer.id].isDragged === false)
         {
             this.game.canvas.style.cursor = "default";
+            this._setHandCursor = false;
         }
 
         if (this.sprite && this.sprite.events)
@@ -24095,6 +24151,7 @@ Phaser.InputHandler.prototype = {
                 if (this.useHandCursor)
                 {
                     this.game.canvas.style.cursor = "default";
+                    this._setHandCursor = false;
                 }
             }
 
@@ -28184,6 +28241,10 @@ Phaser.Text = function (game, x, y, text, style) {
     if (text.length === 0)
     {
         text = ' ';
+    }
+    else
+    {
+        text = text.toString();
     }
 
     /**
