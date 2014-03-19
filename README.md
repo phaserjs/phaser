@@ -102,6 +102,8 @@ New Features:
 * Device.getUserMedia boolean added, useful if you need access to the webcam or microphone.
 * Math.removeRandom allows you to remove (and return) a random object from an array.
 * ArcadePhysics.World now has a checkCollision object which can be used to toggle collision against the 4 walls of its bounds.
+* Sprite.events.onEnterBounds added. This is dispatched if the Sprite leaves the bounds but then returns. The opposite of onOutOfBounds.
+
 
 
 TODO:

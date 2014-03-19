@@ -7,7 +7,7 @@
 *
 * Phaser - http://www.phaser.io
 *
-* v2.0.1 "Aes Sedai" - Built: Wed Mar 19 2014 03:53:38
+* v2.0.1 "Aes Sedai" - Built: Wed Mar 19 2014 04:17:15
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -15073,6 +15073,7 @@ Phaser.Events = function (sprite) {
     this.onKilled = new Phaser.Signal();
     this.onRevived = new Phaser.Signal();
     this.onOutOfBounds = new Phaser.Signal();
+    this.onEnterBounds = new Phaser.Signal();
 
     this.onInputOver = null;
     this.onInputOut = null;
@@ -16538,6 +16539,7 @@ Phaser.Sprite.prototype.preUpdate = function() {
         if (this._cache[5] === 1 && this.game.world.bounds.intersects(this._bounds))
         {
             this._cache[5] = 0;
+            this.events.onEnterBounds.dispatch(this);
         }
         else if (this._cache[5] === 0 && !this.game.world.bounds.intersects(this._bounds))
         {
@@ -34721,6 +34723,13 @@ Phaser.Physics.Arcade = function (game) {
     this.bounds = new Phaser.Rectangle(0, 0, game.world.width, game.world.height);
 
     /**
+    * Set the checkCollision properties to control for which bounds collision is processed.
+    * For example checkCollision.down = false means Bodies cannot collide with the World.bounds.bottom.
+    * @property {object} checkCollision - An object containing allowed collision flags.
+    */
+    this.checkCollision = { up: true, down: true, left: true, right: true };
+
+    /**
     * @property {number} maxObjects - Used by the QuadTree to set the maximum number of objects per quad.
     */
     this.maxObjects = 10;
@@ -36767,26 +36776,26 @@ Phaser.Physics.Arcade.Body.prototype = {
     */
     checkWorldBounds: function () {
 
-        if (this.position.x < this.game.physics.arcade.bounds.x)
+        if (this.position.x < this.game.physics.arcade.bounds.x && this.game.physics.arcade.checkCollision.left)
         {
             this.position.x = this.game.physics.arcade.bounds.x;
             this.velocity.x *= -this.bounce.x;
             this.blocked.left = true;
         }
-        else if (this.right > this.game.physics.arcade.bounds.right)
+        else if (this.right > this.game.physics.arcade.bounds.right && this.game.physics.arcade.checkCollision.right)
         {
             this.position.x = this.game.physics.arcade.bounds.right - this.width;
             this.velocity.x *= -this.bounce.x;
             this.blocked.right = true;
         }
 
-        if (this.position.y < this.game.physics.arcade.bounds.y)
+        if (this.position.y < this.game.physics.arcade.bounds.y && this.game.physics.arcade.checkCollision.up)
         {
             this.position.y = this.game.physics.arcade.bounds.y;
             this.velocity.y *= -this.bounce.y;
             this.blocked.up = true;
         }
-        else if (this.bottom > this.game.physics.arcade.bounds.bottom)
+        else if (this.bottom > this.game.physics.arcade.bounds.bottom && this.game.physics.arcade.checkCollision.down)
         {
             this.position.y = this.game.physics.arcade.bounds.bottom - this.height;
             this.velocity.y *= -this.bounce.y;

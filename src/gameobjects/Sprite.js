@@ -248,6 +248,7 @@ Phaser.Sprite.prototype.preUpdate = function() {
         if (this._cache[5] === 1 && this.game.world.bounds.intersects(this._bounds))
         {
             this._cache[5] = 0;
+            this.events.onEnterBounds.dispatch(this);
         }
         else if (this._cache[5] === 0 && !this.game.world.bounds.intersects(this._bounds))
         {
