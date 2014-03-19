@@ -1219,7 +1219,6 @@ Phaser.Physics.Arcade.prototype = {
         }
 
         body.position.x -= x;
-        body.preX -= x;
 
         if (body.bounce.x === 0)
         {
@@ -1251,7 +1250,6 @@ Phaser.Physics.Arcade.prototype = {
         }
 
         body.position.y -= y;
-        body.preY -= y;
 
         if (body.bounce.y === 0)
         {

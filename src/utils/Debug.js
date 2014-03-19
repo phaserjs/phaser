@@ -407,8 +407,8 @@ Phaser.Utils.Debug.prototype = {
 
         var bounds = sprite.getBounds();
 
-        bounds.x -= this.game.camera.x;
-        bounds.y -= this.game.camera.y;
+        bounds.x += this.game.camera.x;
+        bounds.y += this.game.camera.y;
 
         this.rectangle(bounds, color, filled);
 
