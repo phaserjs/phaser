@@ -30,6 +30,13 @@ Phaser.Physics.Arcade = function (game) {
     this.bounds = new Phaser.Rectangle(0, 0, game.world.width, game.world.height);
 
     /**
+    * Set the checkCollision properties to control for which bounds collision is processed.
+    * For example checkCollision.down = false means Bodies cannot collide with the World.bounds.bottom.
+    * @property {object} checkCollision - An object containing allowed collision flags.
+    */
+    this.checkCollision = { up: true, down: true, left: true, right: true };
+
+    /**
     * @property {number} maxObjects - Used by the QuadTree to set the maximum number of objects per quad.
     */
     this.maxObjects = 10;
