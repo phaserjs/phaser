@@ -75,6 +75,7 @@ Bug Fixes
 * InputHandler will set the browser pointer back to default if destroyed while over (fix #602)
 * ArcadePhysics.separate doesn't pass over to seperateX/Y if overlapOnly is true (fix #604)
 * ArcadePhysics.collideSpriteVsSprite checks if both objects have bodies before processing.
+* Debug.spriteBounds will now take the position of the camera into consideration when rendering the bounds (fix #603)
 
 
 Updated:
