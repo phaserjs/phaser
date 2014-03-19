@@ -7,7 +7,7 @@
 *
 * Phaser - http://www.phaser.io
 *
-* v2.0.1 "Aes Sedai" - Built: Wed Mar 19 2014 05:20:52
+* v2.0.1 "Aes Sedai" - Built: Wed Mar 19 2014 12:12:33
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -9604,7 +9604,7 @@ PIXI.RenderTexture.tempMatrix = new PIXI.Matrix();
 *
 * Phaser - http://www.phaser.io
 *
-* v2.0.1 "Aes Sedai" - Built: Wed Mar 19 2014 05:20:52
+* v2.0.1 "Aes Sedai" - Built: Wed Mar 19 2014 12:12:33
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -13502,20 +13502,28 @@ Phaser.StateManager.prototype = {
             //  Already got a state running?
             if (this.current)
             {
-                this.onShutDownCallback.call(this.callbackContext, this.game);
-            }
+                console.log('state preUpdate current');
 
-            if (this._clearWorld)
-            {
+                this.onShutDownCallback.call(this.callbackContext, this.game);
+
                 this.game.tweens.removeAll();
 
-                this.game.world.shutdown();
+                this.game.camera.reset();
+
+                this.game.input.reset(true);
 
                 this.game.physics.clear();
 
-                if (this._clearCache === true)
+                this.game.time.removeAll();
+
+                if (this._clearWorld)
                 {
-                    this.game.cache.destroy();
+                    this.game.world.shutdown();
+
+                    if (this._clearCache === true)
+                    {
+                        this.game.cache.destroy();
+                    }
                 }
             }
 
@@ -15559,10 +15567,10 @@ Phaser.Group = function (game, parent, name, addToStage, enableBody, physicsBody
     * 7 = fixed to camera (0 = no, 1 = yes)
     * 8 = cursor index
     * 9 = sort order
-    * @property {Int16Array} _cache
+    * @property {Array} _cache
     * @private
     */
-    this._cache = new Int16Array([0, 0, 0, 0, 1, 0, 1, 0, 0, 0]);
+    this._cache = [ 0, 0, 0, 0, 1, 0, 1, 0, 0, 0 ];
 
 };
 
@@ -17100,13 +17108,10 @@ Phaser.World.prototype.setBounds = function (x, y, width, height) {
 
 /**
 * Destroyer of worlds.
+*
 * @method Phaser.World#shutdown
 */
 Phaser.World.prototype.shutdown = function () {
-
-    this.camera.reset();
-
-    this.game.input.reset(true);
 
     //  World is a Group, so run a soft destruction on this and all children.
     this.destroy(true, true);
@@ -26055,10 +26060,10 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     * 5 = outOfBoundsFired (0 = no, 1 = yes)
     * 6 = exists (0 = no, 1 = yes)
     * 7 = fixed to camera (0 = no, 1 = yes)
-    * @property {Int16Array} _cache
+    * @property {Array} _cache
     * @private
     */
-    this._cache = new Int16Array([0, 0, 0, 0, 1, 0, 1, 0]);
+    this._cache = [ 0, 0, 0, 0, 1, 0, 1, 0 ];
 
     /**
     * @property {Phaser.Rectangle} _bounds - Internal cache var.
@@ -26989,10 +26994,10 @@ Phaser.Image = function (game, x, y, key, frame) {
     * 5 = outOfBoundsFired (0 = no, 1 = yes)
     * 6 = exists (0 = no, 1 = yes)
     * 7 = fixed to camera (0 = no, 1 = yes)
-    * @property {Int16Array} _cache
+    * @property {Array} _cache
     * @private
     */
-    this._cache = new Int16Array([0, 0, 0, 0, 1, 0, 1, 0]);
+    this._cache = [ 0, 0, 0, 0, 1, 0, 1, 0 ];
 
 };
 
@@ -27767,10 +27772,10 @@ Phaser.TileSprite = function (game, x, y, width, height, key, frame) {
     * 5 = outOfBoundsFired (0 = no, 1 = yes)
     * 6 = exists (0 = no, 1 = yes)
     * 7 = fixed to camera (0 = no, 1 = yes)
-    * @property {Int16Array} _cache
+    * @property {Array} _cache
     * @private
     */
-    this._cache = new Int16Array([0, 0, 0, 0, 1, 0, 1, 0]);
+    this._cache = [ 0, 0, 0, 0, 1, 0, 1, 0 ];
 
 };
 
@@ -28345,10 +28350,10 @@ Phaser.Text = function (game, x, y, text, style) {
     * 5 = outOfBoundsFired (0 = no, 1 = yes)
     * 6 = exists (0 = no, 1 = yes)
     * 7 = fixed to camera (0 = no, 1 = yes)
-    * @property {Int16Array} _cache
+    * @property {Array} _cache
     * @private
     */
-    this._cache = new Int16Array([0, 0, 0, 0, 1, 0, 1, 0]);
+    this._cache = [ 0, 0, 0, 0, 1, 0, 1, 0 ];
 
 };
 
@@ -29223,10 +29228,10 @@ Phaser.BitmapText = function (game, x, y, font, text, size) {
     * 5 = outOfBoundsFired (0 = no, 1 = yes)
     * 6 = exists (0 = no, 1 = yes)
     * 7 = fixed to camera (0 = no, 1 = yes)
-    * @property {Int16Array} _cache
+    * @property {Array} _cache
     * @private
     */
-    this._cache = new Int16Array([0, 0, 0, 0, 1, 0, 1, 0]);
+    this._cache = [0, 0, 0, 0, 1, 0, 1, 0];
 
 };
 
@@ -30271,10 +30276,10 @@ Phaser.Graphics = function (game, x, y) {
     * 5 = outOfBoundsFired (0 = no, 1 = yes)
     * 6 = exists (0 = no, 1 = yes)
     * 7 = fixed to camera (0 = no, 1 = yes)
-    * @property {Int16Array} _cache
+    * @property {Array} _cache
     * @private
     */
-    this._cache = new Int16Array([0, 0, 0, 0, 1, 0, 1, 0]);
+    this._cache = [ 0, 0, 0, 0, 1, 0, 1, 0 ];
 
 };
 
@@ -36231,7 +36236,7 @@ Phaser.Time.prototype = {
     },
 
     /**
-    * Remove all Timer objects, regardless of their state.
+    * Remove all Timer objects, regardless of their state. Also clears all Timers from the Time.events timer.
     *
     * @method Phaser.Time#removeAll
     */
@@ -36243,6 +36248,8 @@ Phaser.Time.prototype = {
         }
 
         this._timers = [];
+
+        this.events.removeAll();
 
     },
 
@@ -36892,7 +36899,24 @@ Phaser.Timer.prototype = {
     },
 
     /**
+    * Removes all Events from this Timer and all callbacks linked to onComplete, but leaves the Timer running.
+    * The onComplete callbacks won't be called.
+    *
+    * @method Phaser.Timer#removeAll
+    */
+    removeAll: function () {
+
+        this.onComplete.removeAll();
+        this.events.length = 0;
+        this._len = 0;
+        this._i = 0;
+
+    },
+
+    /**
     * Destroys this Timer. Any pending Events are not dispatched.
+    * The onComplete callbacks won't be called.
+    *
     * @method Phaser.Timer#destroy
     */
     destroy: function () {
@@ -36900,7 +36924,8 @@ Phaser.Timer.prototype = {
         this.onComplete.removeAll();
         this.running = false;
         this.events = [];
-        this._i = this._len;
+        this._len = 0;
+        this._i = 0;
 
     }
 
