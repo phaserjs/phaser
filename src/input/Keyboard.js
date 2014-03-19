@@ -158,6 +158,12 @@ Phaser.Keyboard.prototype = {
     */
     start: function () {
 
+        if (this._onKeyDown !== null)
+        {
+            //  Avoid setting multiple listeners
+            return;
+        }
+
         var _this = this;
 
         this._onKeyDown = function (event) {

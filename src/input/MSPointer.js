@@ -60,6 +60,12 @@ Phaser.MSPointer.prototype = {
     */
     start: function () {
 
+        if (this._onMSPointerDown !== null)
+        {
+            //  Avoid setting multiple listeners
+            return;
+        }
+
         var _this = this;
 
         if (this.game.device.mspointer === true)

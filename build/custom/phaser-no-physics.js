@@ -7,7 +7,7 @@
 *
 * Phaser - http://www.phaser.io
 *
-* v2.0.1 "Aes Sedai" - Built: Wed Mar 19 2014 12:12:33
+* v2.0.1 "Aes Sedai" - Built: Wed Mar 19 2014 13:21:46
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -9604,7 +9604,7 @@ PIXI.RenderTexture.tempMatrix = new PIXI.Matrix();
 *
 * Phaser - http://www.phaser.io
 *
-* v2.0.1 "Aes Sedai" - Built: Wed Mar 19 2014 12:12:33
+* v2.0.1 "Aes Sedai" - Built: Wed Mar 19 2014 13:21:46
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -16113,13 +16113,16 @@ Phaser.Group.prototype.set = function (child, key, value, checkAlive, checkVisib
 
 /**
 * This function allows you to quickly set the same property across all children of this Group to a new value.
+* This call doesn't descend down children, so if you have a Group inside of this Group, the property will be set on the Group but not its children.
+* If you need that ability please see `Group.setAllChildren`.
+*
 * The operation parameter controls how the new value is assigned to the property, from simple replacement to addition and multiplication.
 *
 * @method Phaser.Group#setAll
 * @param {string} key - The property, as a string, to be set. For example: 'body.velocity.x'
 * @param {*} value - The value that will be set.
-* @param {boolean} [checkAlive=false] - If set then only children with alive=true will be updated.
-* @param {boolean} [checkVisible=false] - If set then only children with visible=true will be updated.
+* @param {boolean} [checkAlive=false] - If set then only children with alive=true will be updated. This includes any Groups that are children.
+* @param {boolean} [checkVisible=false] - If set then only children with visible=true will be updated. This includes any Groups that are children.
 * @param {number} [operation=0] - Controls how the value is assigned. A value of 0 replaces the value with the new one. A value of 1 adds it, 2 subtracts it, 3 multiplies it and 4 divides it.
 */
 Phaser.Group.prototype.setAll = function (key, value, checkAlive, checkVisible, operation) {
@@ -16136,6 +16139,45 @@ Phaser.Group.prototype.setAll = function (key, value, checkAlive, checkVisible, 
         if ((!checkAlive || (checkAlive && this.children[i].alive)) && (!checkVisible || (checkVisible && this.children[i].visible)))
         {
             this.setProperty(this.children[i], key, value, operation);
+        }
+    }
+
+}
+
+/**
+* This function allows you to quickly set the same property across all children of this Group, and any child Groups, to a new value.
+*
+* If this Group contains other Groups then the same property is set across their children as well, iterating down until it reaches the bottom.
+* Unlike with Group.setAll the property is NOT set on child Groups itself.
+*
+* The operation parameter controls how the new value is assigned to the property, from simple replacement to addition and multiplication.
+*
+* @method Phaser.Group#setAllChildren
+* @param {string} key - The property, as a string, to be set. For example: 'body.velocity.x'
+* @param {*} value - The value that will be set.
+* @param {boolean} [checkAlive=false] - If set then only children with alive=true will be updated. This includes any Groups that are children.
+* @param {boolean} [checkVisible=false] - If set then only children with visible=true will be updated. This includes any Groups that are children.
+* @param {number} [operation=0] - Controls how the value is assigned. A value of 0 replaces the value with the new one. A value of 1 adds it, 2 subtracts it, 3 multiplies it and 4 divides it.
+*/
+Phaser.Group.prototype.setAllChildren = function (key, value, checkAlive, checkVisible, operation) {
+
+    if (typeof checkAlive === 'undefined') { checkAlive = false; }
+    if (typeof checkVisible === 'undefined') { checkVisible = false; }
+
+    operation = operation || 0;
+
+    for (var i = 0, len = this.children.length; i < len; i++)
+    {
+        if ((!checkAlive || (checkAlive && this.children[i].alive)) && (!checkVisible || (checkVisible && this.children[i].visible)))
+        {
+            if (this.children[i] instanceof Phaser.Group)
+            {
+                this.children[i].setAllChildren(key, value, checkAlive, checkVisible, operation);
+            }
+            else
+            {
+                this.setProperty(this.children[i], key.split('.'), value, operation);
+            }
         }
     }
 
@@ -20125,6 +20167,12 @@ Phaser.Keyboard.prototype = {
     */
     start: function () {
 
+        if (this._onKeyDown !== null)
+        {
+            //  Avoid setting multiple listeners
+            return;
+        }
+
         var _this = this;
 
         this._onKeyDown = function (event) {
@@ -20600,13 +20648,19 @@ Phaser.Mouse.prototype = {
     */
     start: function () {
 
-        var _this = this;
-
         if (this.game.device.android && this.game.device.chrome === false)
         {
             //  Android stock browser fires mouse events even if you preventDefault on the touchStart, so ...
             return;
         }
+
+        if (this._onMouseDown !== null)
+        {
+            //  Avoid setting multiple listeners
+            return;
+        }
+
+        var _this = this;
 
         this._onMouseDown = function (event) {
             return _this.onMouseDown(event);
@@ -20866,6 +20920,12 @@ Phaser.MSPointer.prototype = {
     * @method Phaser.MSPointer#start
     */
     start: function () {
+
+        if (this._onMSPointerDown !== null)
+        {
+            //  Avoid setting multiple listeners
+            return;
+        }
 
         var _this = this;
 
@@ -21742,6 +21802,12 @@ Phaser.Touch.prototype = {
     */
     start: function () {
 
+        if (this._onTouchStart !== null)
+        {
+            //  Avoid setting multiple listeners
+            return;
+        }
+
         var _this = this;
 
         if (this.game.device.touch)
@@ -22154,7 +22220,14 @@ Phaser.Gamepad.prototype = {
     */
     start: function () {
 
+        if (this._active)
+        {
+            //  Avoid setting multiple listeners
+            return;
+        }
+
         this._active = true;
+
         var _this = this;
 
         this._ongamepadconnected = function(event) {

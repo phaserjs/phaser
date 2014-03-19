@@ -164,7 +164,14 @@ Phaser.Gamepad.prototype = {
     */
     start: function () {
 
+        if (this._active)
+        {
+            //  Avoid setting multiple listeners
+            return;
+        }
+
         this._active = true;
+
         var _this = this;
 
         this._ongamepadconnected = function(event) {

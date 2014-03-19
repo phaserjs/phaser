@@ -125,13 +125,19 @@ Phaser.Mouse.prototype = {
     */
     start: function () {
 
-        var _this = this;
-
         if (this.game.device.android && this.game.device.chrome === false)
         {
             //  Android stock browser fires mouse events even if you preventDefault on the touchStart, so ...
             return;
         }
+
+        if (this._onMouseDown !== null)
+        {
+            //  Avoid setting multiple listeners
+            return;
+        }
+
+        var _this = this;
 
         this._onMouseDown = function (event) {
             return _this.onMouseDown(event);

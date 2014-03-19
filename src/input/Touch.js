@@ -124,6 +124,12 @@ Phaser.Touch.prototype = {
     */
     start: function () {
 
+        if (this._onTouchStart !== null)
+        {
+            //  Avoid setting multiple listeners
+            return;
+        }
+
         var _this = this;
 
         if (this.game.device.touch)

@@ -99,6 +99,7 @@ Updated
 * The StateManager is now responsible for clearing down input, timers, tweens, physics, camera and the World display list.
 * Removed the use of Int16Array from all Game Objects, swapped for standard Array. Phaser now runs on Android 2.x again (fix #590)
 * When creating a Sprite (via Group.create or directly) with exists = false and a P2 body, the body is not added to the world.
+* Every Input class now checks to see if it has already been started. If so it doesn't add the listeners again unless they have been nulled.
 
 
 New Features
