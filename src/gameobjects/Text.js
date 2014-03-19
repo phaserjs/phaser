@@ -29,6 +29,10 @@ Phaser.Text = function (game, x, y, text, style) {
     {
         text = ' ';
     }
+    else
+    {
+        text = text.toString();
+    }
 
     /**
     * @property {Phaser.Game} game - A reference to the currently running Game.

@@ -41,6 +41,12 @@ Phaser.InputHandler = function (sprite) {
     this.useHandCursor = false;
     
     /**
+    * @property {boolean} _setHandCursor - Did this Sprite trigger the hand cursor?
+    * @private
+    */
+    this._setHandCursor = false;
+
+    /**
     * @property {boolean} isDragged - true if the Sprite is being currently dragged.
     * @default
     */
@@ -302,6 +308,12 @@ Phaser.InputHandler.prototype = {
 
         if (this.enabled)
         {
+            if (this._setHandCursor)
+            {
+                this.game.canvas.style.cursor = "default";
+                this._setHandCursor = false;
+            }
+
             this.enabled = false;
 
             this.game.input.interactiveItems.remove(this);
@@ -311,6 +323,37 @@ Phaser.InputHandler.prototype = {
             this.boundsSprite = null;
             this.sprite = null;
         }
+
+    },
+
+    /**
+    * Checks if the object this InputHandler is bound to is valid for consideration in the Pointer move event.
+    * This is called by Phaser.Pointer and shouldn't typically be called directly.
+    *
+    * @method Phaser.InputHandler#validForInput
+    * @protected
+    * @param {number} highestID - The highest ID currently processed by the Pointer.
+    * @param {number} highestRenderID - The highest Render Order ID currently processed by the Pointer.
+    * @return {boolean} True if the object this InputHandler is bound to should be considered as valid for input detection.
+    */
+    validForInput: function (highestID, highestRenderID) {
+
+        if (this.sprite.scale.x === 0 || this.sprite.scale.y === 0)
+        {
+            return false;
+        }
+
+        if (this.pixelPerfectClick || this.pixelPerfectOver)
+        {
+            return true;
+        }
+
+        if (this.priorityID > highestID || (this.priorityID === highestID && this.sprite._cache[3] < highestRenderID))
+        {
+            return true;
+        }
+
+        return false;
 
     },
 
@@ -679,6 +722,7 @@ Phaser.InputHandler.prototype = {
             if (this.useHandCursor && this._pointerData[pointer.id].isDragged === false)
             {
                 this.game.canvas.style.cursor = "pointer";
+                this._setHandCursor = false;
             }
 
             this.sprite.events.onInputOver.dispatch(this.sprite, pointer);
@@ -707,6 +751,7 @@ Phaser.InputHandler.prototype = {
         if (this.useHandCursor && this._pointerData[pointer.id].isDragged === false)
         {
             this.game.canvas.style.cursor = "default";
+            this._setHandCursor = false;
         }
 
         if (this.sprite && this.sprite.events)
@@ -796,6 +841,7 @@ Phaser.InputHandler.prototype = {
                 if (this.useHandCursor)
                 {
                     this.game.canvas.style.cursor = "default";
+                    this._setHandCursor = false;
                 }
             }
 

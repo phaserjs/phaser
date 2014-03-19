@@ -284,7 +284,7 @@ Phaser.StateManager.prototype = {
             {
                 this.game.tweens.removeAll();
 
-                this.game.world.destroy();
+                this.game.world.shutdown();
 
                 this.game.physics.clear();
 

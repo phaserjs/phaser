@@ -94,15 +94,16 @@ Phaser.World.prototype.setBounds = function (x, y, width, height) {
 
 /**
 * Destroyer of worlds.
-* @method Phaser.World#destroy
+* @method Phaser.World#shutdown
 */
-Phaser.World.prototype.destroy = function () {
+Phaser.World.prototype.shutdown = function () {
 
     this.camera.reset();
 
     this.game.input.reset(true);
 
-    this.removeAll();
+    //  World is a Group, so run a soft destruction on this and all children.
+    this.destroy(true, true);
 
 }
 

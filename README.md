@@ -69,6 +69,10 @@ Bug Fixes
 * Button.onInputUpHandler wouldn't set an upFrame for a frame ID of zero, made the check more strict.
 * Fixed the Loader.preloadSprite crop effect on WebGL.
 * Fixed Grunt script that stopped the P2 constraint classes from building properly.
+* World.destroy incorrectly clashed with the Group.destroy method it over-rode, renamed to World.shutdown and updated StateManager accordingly.
+* World.shutdown now removes all children iteratively, calling destroy on each one, ultimately performing a soft reset of the World.
+* Objects with a scale.x or y of 0 are no longer considered valid for input (fix #602)
+* InputHandler will set the browser pointer back to default if destroyed while over (fix #602)
 
 
 Updated:
@@ -81,6 +85,9 @@ Updated:
 * Lots of TypeScript definitions updates (thanks as always to clark for these)
 * Removed Device.patchAndroidClearRectBug as it's no longer used internally.
 * Math.wrapAngle now supports radians (thanks Cryszon, #597)
+* Group.replace will now return the old child, the one that was replaced in the Group.
+* Group.destroy has a new parameter: `soft`. A soft destruction won't remove the Group from its parent or null game references. Default is `false`.
+* InputHandler.validForInput is a new method that checks if the handler and its owner should be considered for Pointer input handling or not.
 
 
 New Features:

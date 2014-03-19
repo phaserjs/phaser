@@ -561,6 +561,7 @@ Phaser.Group.prototype.getIndex = function (child) {
 * @method Phaser.Group#replace
 * @param {*} oldChild - The child in this Group that will be replaced.
 * @param {*} newChild - The child to be inserted into this Group.
+* @return {*} Returns the oldChild that was replaced within this Group.
 */
 Phaser.Group.prototype.replace = function (oldChild, newChild) {
 
@@ -579,9 +580,13 @@ Phaser.Group.prototype.replace = function (oldChild, newChild) {
             }
         }
 
-        this.removeChild(oldChild);
+        var temp = oldChild;
+
+        this.remove(temp);
 
         this.addAt(newChild, index);
+
+        return temp;
     }
 
 }
@@ -1420,12 +1425,14 @@ Phaser.Group.prototype.removeBetween = function (startIndex, endIndex) {
 *
 * @method Phaser.Group#destroy
 * @param {boolean} [destroyChildren=true] - Should every child of this Group have its destroy method called?
+* @param {boolean} [soft=false] - A 'soft destroy' (set to true) doesn't remove this Group from its parent or null the game reference. Set to false and it does.
 */
-Phaser.Group.prototype.destroy = function (destroyChildren) {
+Phaser.Group.prototype.destroy = function (destroyChildren, soft) {
 
     if (this.game === null) { return; }
 
     if (typeof destroyChildren === 'undefined') { destroyChildren = true; }
+    if (typeof soft === 'undefined') { soft = false; }
 
     if (destroyChildren)
     {
@@ -1446,13 +1453,16 @@ Phaser.Group.prototype.destroy = function (destroyChildren) {
         this.removeAll();
     }
 
-    this.parent.removeChild(this);
-
-    this.game = null;
-
-    this.exists = false;
-
     this.cursor = null;
+
+    if (!soft)
+    {
+        this.parent.removeChild(this);
+
+        this.game = null;
+
+        this.exists = false;
+    }
 
 }
 
