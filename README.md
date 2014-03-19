@@ -76,10 +76,10 @@ Bug Fixes
 * ArcadePhysics.separate doesn't pass over to seperateX/Y if overlapOnly is true (fix #604)
 * ArcadePhysics.collideSpriteVsSprite checks if both objects have bodies before processing.
 * Debug.spriteBounds will now take the position of the camera into consideration when rendering the bounds (fix #603)
-* InputHandler.dragFromCenter will now work regardless of the anchor point of the Sprite.
+* InputHandler.dragFromCenter will now work regardless of the anchor point of the Sprite (fix #600)
 
 
-Updated:
+Updated
 
 * Updated Device.isConsoleOpen as it no longer works in Chrome. Revised code and documentation accordingly (fix #593)
 * Removed State.destroy empty method and replaced with State.shutdown, as that is what the StateManager expects (fix #586)
@@ -96,14 +96,17 @@ Updated:
 * ArcadePhysics.Body has reverted to the 1.1.3 method of preUpdate, so you can now position sprites with x/y, drag them, etc, regardless of the Body.moves flag (issue #606)
 * ArcadePhysics.World now has setBounds and setBoundsToWorld methods, which are called automatically on world resizing.
 * ArcadePhysics.Body no longer sets the offset to match the anchor.
+* The StateManager is now responsible for clearing down input, timers, tweens, physics, camera and the World display list.
+* Removed the use of Int16Array from all Game Objects, swapped for standard Array. Phaser now runs on Android 2.x again (fix #590)
 
 
-New Features:
+New Features
 
 * Device.getUserMedia boolean added, useful if you need access to the webcam or microphone.
 * Math.removeRandom allows you to remove (and return) a random object from an array.
 * ArcadePhysics.World now has a checkCollision object which can be used to toggle collision against the 4 walls of its bounds.
 * Sprite.events.onEnterBounds added. This is dispatched if the Sprite leaves the bounds but then returns. The opposite of onOutOfBounds.
+* Timer.removeAll will remove and clear down all events, but keeps the Timer running.
 
 
 

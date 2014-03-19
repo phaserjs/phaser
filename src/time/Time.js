@@ -185,7 +185,7 @@ Phaser.Time.prototype = {
     },
 
     /**
-    * Remove all Timer objects, regardless of their state.
+    * Remove all Timer objects, regardless of their state. Also clears all Timers from the Time.events timer.
     *
     * @method Phaser.Time#removeAll
     */
@@ -197,6 +197,8 @@ Phaser.Time.prototype = {
         }
 
         this._timers = [];
+
+        this.events.removeAll();
 
     },
 

@@ -482,7 +482,24 @@ Phaser.Timer.prototype = {
     },
 
     /**
+    * Removes all Events from this Timer and all callbacks linked to onComplete, but leaves the Timer running.
+    * The onComplete callbacks won't be called.
+    *
+    * @method Phaser.Timer#removeAll
+    */
+    removeAll: function () {
+
+        this.onComplete.removeAll();
+        this.events.length = 0;
+        this._len = 0;
+        this._i = 0;
+
+    },
+
+    /**
     * Destroys this Timer. Any pending Events are not dispatched.
+    * The onComplete callbacks won't be called.
+    *
     * @method Phaser.Timer#destroy
     */
     destroy: function () {
@@ -490,7 +507,8 @@ Phaser.Timer.prototype = {
         this.onComplete.removeAll();
         this.running = false;
         this.events = [];
-        this._i = this._len;
+        this._len = 0;
+        this._i = 0;
 
     }
 

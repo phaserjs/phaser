@@ -277,20 +277,28 @@ Phaser.StateManager.prototype = {
             //  Already got a state running?
             if (this.current)
             {
-                this.onShutDownCallback.call(this.callbackContext, this.game);
-            }
+                console.log('state preUpdate current');
 
-            if (this._clearWorld)
-            {
+                this.onShutDownCallback.call(this.callbackContext, this.game);
+
                 this.game.tweens.removeAll();
 
-                this.game.world.shutdown();
+                this.game.camera.reset();
+
+                this.game.input.reset(true);
 
                 this.game.physics.clear();
 
-                if (this._clearCache === true)
+                this.game.time.removeAll();
+
+                if (this._clearWorld)
                 {
-                    this.game.cache.destroy();
+                    this.game.world.shutdown();
+
+                    if (this._clearCache === true)
+                    {
+                        this.game.cache.destroy();
+                    }
                 }
             }
 
