@@ -487,8 +487,20 @@ Phaser.Physics.Arcade.prototype = {
     *
     * @method Phaser.Physics.Arcade#collideSpriteVsSprite
     * @private
+    * @param {Phaser.Sprite} sprite1 - The first sprite to check.
+    * @param {Phaser.Sprite} sprite2 - The second sprite to check.
+    * @param {function} collideCallback - An optional callback function that is called if the objects collide. The two objects will be passed to this function in the same order in which you specified them.
+    * @param {function} processCallback - A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then collision will only happen if processCallback returns true. The two objects will be passed to this function in the same order in which you specified them.
+    * @param {object} callbackContext - The context in which to run the callbacks.
+    * @param {boolean} overlapOnly - Just run an overlap or a full collision.
+    * @return {boolean} True if there was a collision, otherwise false.
     */
     collideSpriteVsSprite: function (sprite1, sprite2, collideCallback, processCallback, callbackContext, overlapOnly) {
+
+        if (!sprite1.body || !sprite2.body)
+        {
+            return false;
+        }
 
         if (this.separate(sprite1.body, sprite2.body, processCallback, callbackContext, overlapOnly))
         {
@@ -500,6 +512,8 @@ Phaser.Physics.Arcade.prototype = {
             this._total++;
         }
 
+        return true;
+
     },
 
     /**
@@ -507,6 +521,12 @@ Phaser.Physics.Arcade.prototype = {
     *
     * @method Phaser.Physics.Arcade#collideSpriteVsGroup
     * @private
+    * @param {Phaser.Sprite} sprite - The sprite to check.
+    * @param {Phaser.Group} group - The Group to check.
+    * @param {function} collideCallback - An optional callback function that is called if the objects collide. The two objects will be passed to this function in the same order in which you specified them.
+    * @param {function} processCallback - A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then collision will only happen if processCallback returns true. The two objects will be passed to this function in the same order in which you specified them.
+    * @param {object} callbackContext - The context in which to run the callbacks.
+    * @param {boolean} overlapOnly - Just run an overlap or a full collision.
     */
     collideSpriteVsGroup: function (sprite, group, collideCallback, processCallback, callbackContext, overlapOnly) {
 
@@ -545,6 +565,12 @@ Phaser.Physics.Arcade.prototype = {
     *
     * @method Phaser.Physics.Arcade#collideGroupVsSelf
     * @private
+    * @param {Phaser.Group} group - The Group to check.
+    * @param {function} collideCallback - An optional callback function that is called if the objects collide. The two objects will be passed to this function in the same order in which you specified them.
+    * @param {function} processCallback - A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then collision will only happen if processCallback returns true. The two objects will be passed to this function in the same order in which you specified them.
+    * @param {object} callbackContext - The context in which to run the callbacks.
+    * @param {boolean} overlapOnly - Just run an overlap or a full collision.
+    * @return {boolean} True if there was a collision, otherwise false.
     */
     collideGroupVsSelf: function (group, collideCallback, processCallback, callbackContext, overlapOnly) {
 
@@ -573,6 +599,12 @@ Phaser.Physics.Arcade.prototype = {
     *
     * @method Phaser.Physics.Arcade#collideGroupVsGroup
     * @private
+    * @param {Phaser.Group} group1 - The first Group to check.
+    * @param {Phaser.Group} group2 - The second Group to check.
+    * @param {function} collideCallback - An optional callback function that is called if the objects collide. The two objects will be passed to this function in the same order in which you specified them.
+    * @param {function} processCallback - A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then collision will only happen if processCallback returns true. The two objects will be passed to this function in the same order in which you specified them.
+    * @param {object} callbackContext - The context in which to run the callbacks.
+    * @param {boolean} overlapOnly - Just run an overlap or a full collision.
     */
     collideGroupVsGroup: function (group1, group2, collideCallback, processCallback, callbackContext, overlapOnly) {
 
@@ -596,6 +628,12 @@ Phaser.Physics.Arcade.prototype = {
     *
     * @method Phaser.Physics.Arcade#collideSpriteVsTilemapLayer
     * @private
+    * @param {Phaser.Sprite} sprite - The sprite to check.
+    * @param {Phaser.TilemapLayer} tilemapLayer - The layer to check.
+    * @param {function} collideCallback - An optional callback function that is called if the objects collide. The two objects will be passed to this function in the same order in which you specified them.
+    * @param {function} processCallback - A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then collision will only happen if processCallback returns true. The two objects will be passed to this function in the same order in which you specified them.
+    * @param {object} callbackContext - The context in which to run the callbacks.
+    * @param {boolean} overlapOnly - Just run an overlap or a full collision.
     */
     collideSpriteVsTilemapLayer: function (sprite, tilemapLayer, collideCallback, processCallback, callbackContext) {
 
@@ -647,6 +685,12 @@ Phaser.Physics.Arcade.prototype = {
     *
     * @method Phaser.Physics.Arcade#collideGroupVsTilemapLayer
     * @private
+    * @param {Phaser.Group} group - The Group to check.
+    * @param {Phaser.TilemapLayer} tilemapLayer - The layer to check.
+    * @param {function} collideCallback - An optional callback function that is called if the objects collide. The two objects will be passed to this function in the same order in which you specified them.
+    * @param {function} processCallback - A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then collision will only happen if processCallback returns true. The two objects will be passed to this function in the same order in which you specified them.
+    * @param {object} callbackContext - The context in which to run the callbacks.
+    * @param {boolean} overlapOnly - Just run an overlap or a full collision.
     */
     collideGroupVsTilemapLayer: function (group, tilemapLayer, collideCallback, processCallback, callbackContext) {
 
@@ -672,6 +716,7 @@ Phaser.Physics.Arcade.prototype = {
     * @param {Phaser.Physics.Arcade.Body} body2 - The Body object to separate.
     * @param {function} [processCallback=null] - A callback function that lets you perform additional checks against the two objects if they overlap. If this function is set then the sprites will only be collided if it returns true.
     * @param {object} [callbackContext] - The context in which to run the process callback.
+    * @param {boolean} overlapOnly - Just run an overlap or a full collision.
     * @returns {boolean} Returns true if the bodies collided, otherwise false.
     */
     separate: function (body1, body2, processCallback, callbackContext, overlapOnly) {
@@ -685,6 +730,12 @@ Phaser.Physics.Arcade.prototype = {
         if (processCallback && processCallback.call(callbackContext, body1.sprite, body2.sprite) === false)
         {
             return false;
+        }
+
+        if (overlapOnly)
+        {
+            //  We already know they intersect from the check above, and we don't need separation, so ...
+            return true;
         }
 
         if (this.separateX(body1, body2, overlapOnly) || this.separateY(body1, body2, overlapOnly))

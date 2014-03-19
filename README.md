@@ -73,6 +73,8 @@ Bug Fixes
 * World.shutdown now removes all children iteratively, calling destroy on each one, ultimately performing a soft reset of the World.
 * Objects with a scale.x or y of 0 are no longer considered valid for input (fix #602)
 * InputHandler will set the browser pointer back to default if destroyed while over (fix #602)
+* ArcadePhysics.separate doesn't pass over to seperateX/Y if overlapOnly is true (fix #604)
+* ArcadePhysics.collideSpriteVsSprite checks if both objects have bodies before processing.
 
 
 Updated:
