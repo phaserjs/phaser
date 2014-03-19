@@ -7,7 +7,7 @@
 *
 * Phaser - http://www.phaser.io
 *
-* v2.0.1 "Aes Sedai" - Built: Wed Mar 19 2014 04:17:15
+* v2.0.1 "Aes Sedai" - Built: Wed Mar 19 2014 05:20:52
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -9604,7 +9604,7 @@ PIXI.RenderTexture.tempMatrix = new PIXI.Matrix();
 *
 * Phaser - http://www.phaser.io
 *
-* v2.0.1 "Aes Sedai" - Built: Wed Mar 19 2014 04:17:15
+* v2.0.1 "Aes Sedai" - Built: Wed Mar 19 2014 05:20:52
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -24428,7 +24428,9 @@ Phaser.InputHandler.prototype = {
         {
             if (this.dragFromCenter)
             {
-                this.sprite.centerOn(pointer.x, pointer.y);
+                var bounds = this.sprite.getBounds();
+                this.sprite.x = pointer.x + (this.sprite.x - bounds.centerX);
+                this.sprite.y = pointer.y + (this.sprite.y - bounds.centerY);
                 this._dragPoint.setTo(this.sprite.x - pointer.x, this.sprite.y - pointer.y);
             }
             else

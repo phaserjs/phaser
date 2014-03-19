@@ -1118,7 +1118,9 @@ Phaser.InputHandler.prototype = {
         {
             if (this.dragFromCenter)
             {
-                this.sprite.centerOn(pointer.x, pointer.y);
+                var bounds = this.sprite.getBounds();
+                this.sprite.x = pointer.x + (this.sprite.x - bounds.centerX);
+                this.sprite.y = pointer.y + (this.sprite.y - bounds.centerY);
                 this._dragPoint.setTo(this.sprite.x - pointer.x, this.sprite.y - pointer.y);
             }
             else

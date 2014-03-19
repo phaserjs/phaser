@@ -76,6 +76,7 @@ Bug Fixes
 * ArcadePhysics.separate doesn't pass over to seperateX/Y if overlapOnly is true (fix #604)
 * ArcadePhysics.collideSpriteVsSprite checks if both objects have bodies before processing.
 * Debug.spriteBounds will now take the position of the camera into consideration when rendering the bounds (fix #603)
+* InputHandler.dragFromCenter will now work regardless of the anchor point of the Sprite.
 
 
 Updated:
