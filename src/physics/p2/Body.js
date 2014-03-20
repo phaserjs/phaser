@@ -1095,6 +1095,47 @@ Phaser.Physics.P2.Body.prototype = {
 
     },
 
+    loadPhaserPolygon: function (key, object, options) {
+        var data = this.game.cache.getPhysicsData(key, object);
+
+        if (data.length === 1)
+        {
+            var temp = [];
+
+            data = data.pop()
+            //  We've a list of numbers
+            for (var i = 0, len = data.shape.length; i < len; i += 2)
+            {
+                temp.push([data.shape[i], data.shape[i + 1]]);
+            }
+
+            return this.addPolygon(options, temp);
+        }
+        else
+        {
+
+            //  We've multiple Convex shapes, they should be CCW automatically
+            var cm = p2.vec2.create();
+
+            //cycle through the fixtures
+            for (var i = 0; i < data.length; i++)
+            {
+                var fixtureData = data[i]
+                this.addPolygonShape(fixtureData)
+            }
+
+            this.data.aabbNeedsUpdate = true;
+            this.shapeChanged();
+
+            return true;
+
+        }
+
+        return false;
+
+    },
+
+
     /**
     * Reads the shape data from a physics data file stored in the Game.Cache and adds it as a polygon to this Body.
     *
@@ -1107,8 +1148,84 @@ Phaser.Physics.P2.Body.prototype = {
     * @param {boolean|number} [options.removeCollinearPoints=false] - Set to a number (angle threshold value) to remove collinear points, or false to keep all points.
     * @return {boolean} True on success, else false.
     */
-    loadPolygon: function (key, object, options) {
+    
+    addPolygonShape: function(fixtureData){
+      fixtureData.density
+      fixtureData.filter
+      fixtureData.friction
+      polygons = fixtureData.polygons
 
+      var cm = p2.vec2.create();
+
+      for (var i = 0; i < polygons.length; i++){
+        shapes = polygons[i]
+
+        var vertices = [];
+        for (var s = 0; s < shapes.length; s += 2)
+        {
+            vertices.push([ this.world.pxmi(shapes[s]), this.world.pxmi(shapes[s + 1]) ]);
+        }
+
+        var c = new p2.Convex(vertices);
+
+        // Move all vertices so its center of mass is in the local center of the convex
+        for (var j = 0; j !== c.vertices.length; j++)
+        {
+            var v = c.vertices[j];
+            p2.vec2.sub(v, v, c.centerOfMass);
+        }
+
+        p2.vec2.scale(cm, c.centerOfMass, 1);
+
+        cm[0] -= this.world.pxmi(this.sprite.width / 2);
+        cm[1] -= this.world.pxmi(this.sprite.height / 2);
+
+        c.updateTriangles();
+        c.updateCenterOfMass();
+        c.updateBoundingRadius();
+
+        this.data.addShape(c, cm);
+      }
+
+      /*for (var i = 0; i < data.length; i++)
+        {
+            
+            polygons = fixtureData.polygons
+
+            for (var k = 0; k < polygons.length; k++)
+            {
+              polygon = polygons[k] //array of numbers
+              
+              var vertices = [];
+              for (var s = 0; s < polygon.length; s += 2)
+              {
+                  vertices.push([ this.world.pxmi(polygon[s]), this.world.pxmi(polygon[s + 1]) ]);
+              }
+
+              var c = new p2.Convex(vertices);
+
+              // Move all vertices so its center of mass is in the local center of the convex
+              for (var j = 0; j !== c.vertices.length; j++)
+              {
+                  var v = c.vertices[j];
+                  p2.vec2.sub(v, v, c.centerOfMass);
+              }
+
+              p2.vec2.scale(cm, c.centerOfMass, 1);
+
+              cm[0] -= this.world.pxmi(this.sprite.width / 2);
+              cm[1] -= this.world.pxmi(this.sprite.height / 2);
+
+              c.updateTriangles();
+              c.updateCenterOfMass();
+              c.updateBoundingRadius();
+
+              this.data.addShape(c, cm);
+            }
+        }*/
+    },
+
+    loadPolygon: function (key, object, options) {
         var data = this.game.cache.getPhysicsData(key, object);
 
         if (data.length === 1)
@@ -1132,7 +1249,7 @@ Phaser.Physics.P2.Body.prototype = {
             for (var i = 0; i < data.length; i++)
             {
                 var vertices = [];
-
+                console.log(data[i].filter.categoryBits)
                 for (var s = 0; s < data[i].shape.length; s += 2)
                 {
                     vertices.push([ this.world.pxmi(data[i].shape[s]), this.world.pxmi(data[i].shape[s + 1]) ]);
