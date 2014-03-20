@@ -198,12 +198,13 @@ Phaser.Sprite.prototype.preUpdate = function() {
         this._cache[0] = this.world.x;
         this._cache[1] = this.world.y;
         this._cache[2] = this.rotation;
-        this._cache[4] = 0;
 
         if (this.exists && this.body)
         {
             this.body.preUpdate();
         }
+
+        this._cache[4] = 0;
 
         return false;
     }

@@ -110,7 +110,9 @@ New Features
 * Sprite.events.onEnterBounds added. This is dispatched if the Sprite leaves the bounds but then returns. The opposite of onOutOfBounds.
 * Timer.removeAll will remove and clear down all events, but keeps the Timer running.
 * Group.setAllChildren recursively checks if its children are Groups, and if so recursively applies the value to their children as well (feature #589)
-
+* Time.deltaCap lets you set a cap for the delta timer. It defaults to zero (which is disabled). If you use ArcadePhysics it gets set to 0.2, but you can modify as needed.
+* ArcadePhysics.Body has a deltaMax object, which allows you to cap the delta applied to the position to +- this value.
+* ArcadePhysics.Body now checks the Sprite scale automatically and adjusts the body size accordingly (fix #608)
 
 
 Version 2.0.0 - "Aes Sedai" - March 13th 2014

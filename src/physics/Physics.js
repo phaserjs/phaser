@@ -104,6 +104,7 @@ Phaser.Physics.prototype = {
         {
             //  If Arcade isn't specified, we create it automatically if we can
             this.arcade = new Phaser.Physics.Arcade(this.game);
+            this.game.time.deltaCap = 0.2;
         }
 
         if (this.config.hasOwnProperty('ninja') && this.config['ninja'] === true && Phaser.Physics.hasOwnProperty('Ninja'))

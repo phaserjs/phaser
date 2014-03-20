@@ -7,7 +7,7 @@
 *
 * Phaser - http://www.phaser.io
 *
-* v2.0.1 "Aes Sedai" - Built: Wed Mar 19 2014 13:23:27
+* v2.0.1 "Aes Sedai" - Built: Thu Mar 20 2014 00:19:27
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -16567,12 +16567,13 @@ Phaser.Sprite.prototype.preUpdate = function() {
         this._cache[0] = this.world.x;
         this._cache[1] = this.world.y;
         this._cache[2] = this.rotation;
-        this._cache[4] = 0;
 
         if (this.exists && this.body)
         {
             this.body.preUpdate();
         }
+
+        this._cache[4] = 0;
 
         return false;
     }
@@ -18263,6 +18264,25 @@ Phaser.TileSprite.prototype.constructor = Phaser.TileSprite;
 * @memberof Phaser.TileSprite
 */
 Phaser.TileSprite.prototype.preUpdate = function() {
+
+    if (this._cache[4] === 1)
+    {
+        this.world.setTo(this.parent.position.x + this.position.x, this.parent.position.y + this.position.y);
+        this.worldTransform.tx = this.world.x;
+        this.worldTransform.ty = this.world.y;
+        this._cache[0] = this.world.x;
+        this._cache[1] = this.world.y;
+        this._cache[2] = this.rotation;
+
+        if (this.exists && this.body)
+        {
+            this.body.preUpdate();
+        }
+
+        this._cache[4] = 0;
+
+        return false;
+    }
 
     this.world.setTo(this.game.camera.x + this.worldTransform[2], this.game.camera.y + this.worldTransform[5]);
 
@@ -26607,6 +26627,11 @@ Phaser.Time = function (game) {
     this.physicsElapsed = 0;
 
     /**
+    * @property {number} deltaCap - If you need to cap the delta timer, set the value here.
+    */
+    this.deltaCap = 0;
+
+    /**
     * @property {number} frames - The number of frames record in the last second. Only calculated if Time.advancedTiming is true.
     */
     this.frames = 0;
@@ -26755,6 +26780,11 @@ Phaser.Time.prototype = {
 
         this.elapsed = this.now - this.time;
         this.physicsElapsed = this.elapsed / 1000;
+
+        if (this.deltaCap > 0 && this.physicsElapsed > this.deltaCap)
+        {
+            this.physicsElapsed = this.deltaCap;
+        }
 
         if (this.advancedTiming)
         {
@@ -34605,6 +34635,7 @@ Phaser.Physics.prototype = {
         {
             //  If Arcade isn't specified, we create it automatically if we can
             this.arcade = new Phaser.Physics.Arcade(this.game);
+            this.game.time.deltaCap = 0.2;
         }
 
         if (this.config.hasOwnProperty('ninja') && this.config['ninja'] === true && Phaser.Physics.hasOwnProperty('Ninja'))
@@ -35050,6 +35081,18 @@ Phaser.Physics.Arcade.prototype = {
 
         body.velocity.x = this.computeVelocity(1, body, body.velocity.x, body.acceleration.x, body.drag.x, body.maxVelocity.x);
         body.velocity.y = this.computeVelocity(2, body, body.velocity.y, body.acceleration.y, body.drag.y, body.maxVelocity.y);
+
+        //  Horizontal
+        // this._velocityDelta = (this.computeVelocity(1, body, body.velocity.x, body.acceleration.x, body.drag.x, body.maxVelocity.x) - body.velocity.x) * this.game.time.physicsElapsed * 0.5 * 60;
+        // body.velocity.x += this._velocityDelta;
+        // body.position.x += (body.velocity.x * this.game.time.physicsElapsed);
+        // body.velocity.x += this._velocityDelta;
+
+        //  Vertical
+        // this._velocityDelta = (this.computeVelocity(2, body, body.velocity.y, body.acceleration.y, body.drag.y, body.maxVelocity.y) - body.velocity.y) * this.game.time.physicsElapsed * 0.5 * 60;
+        // body.velocity.y += this._velocityDelta;
+        // body.position.y += (body.velocity.y * this.game.time.physicsElapsed);
+        // body.velocity.y += this._velocityDelta;
 
     },
 
@@ -36553,6 +36596,11 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.newVelocity = new Phaser.Point(0, 0);
 
     /**
+    * @property {Phaser.Point} deltaMax - The Sprite position is updated based on the delta x/y values. You can set a cap on those (both +-) using deltaMax.
+    */
+    this.deltaMax = new Phaser.Point(0, 0);
+
+    /**
     * @property {Phaser.Point} acceleration - The velocity in pixels per second sq. of the Body.
     */
     this.acceleration = new Phaser.Point();
@@ -36629,8 +36677,8 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     /**
     * @property {boolean} skipQuadTree - If the Body is an irregular shape you can set this to true to avoid it being added to any QuadTrees.
     * @default
-    */
     this.skipQuadTree = false;
+    */
 
     /**
     * @property {number} facing - A const reference to the direction the Body is traveling or facing.
@@ -36737,18 +36785,22 @@ Phaser.Physics.Arcade.Body.prototype = {
     * @method Phaser.Physics.Arcade#updateBounds
     * @protected
     */
-    updateBounds: function (scaleX, scaleY) {
+    updateBounds: function () {
 
-        if (scaleX != this._sx || scaleY != this._sy)
+        if (this.sprite.scale.x !== this._sx || this.sprite.scale.y !== this._sy)
         {
-            this.width = this.sourceWidth * scaleX;
-            this.height = this.sourceHeight * scaleY;
+            this.width = this.sourceWidth * this.sprite.scale.x;
+            this.height = this.sourceHeight * this.sprite.scale.y;
             this.halfWidth = Math.floor(this.width / 2);
             this.halfHeight = Math.floor(this.height / 2);
-            this._sx = scaleX;
-            this._sy = scaleY;
+            this._sx = this.sprite.scale.x;
+            this._sy = this.sprite.scale.y;
             this.center.setTo(this.position.x + this.halfWidth, this.position.y + this.halfHeight);
+
+            return true;
         }
+
+        return false;
 
     },
 
@@ -36784,9 +36836,12 @@ Phaser.Physics.Arcade.Body.prototype = {
         this.position.y = (this.sprite.world.y - (this.sprite.anchor.y * this.height)) + this.offset.y;
         this.rotation = this.sprite.angle;
 
-        this.prev.x = this.position.x;
-        this.prev.y = this.position.y;
-        this.preRotation = this.rotation;
+        if (this.updateBounds() || this.sprite._cache[4] === 1)
+        {
+            this.prev.x = this.position.x;
+            this.prev.y = this.position.y;
+            this.preRotation = this.rotation;
+        }
 
         if (this.moves)
         {
@@ -36842,8 +36897,35 @@ Phaser.Physics.Arcade.Body.prototype = {
 
         if (this.moves)
         {
-            this.sprite.x += this.deltaX();
-            this.sprite.y += this.deltaY();
+            var dx = this.deltaX();
+            var dy = this.deltaY();
+
+            if (this.deltaMax.x !== 0 && dx !== 0)
+            {
+                if (dx < 0 && dx < -this.deltaMax.x)
+                {
+                    dx = -this.deltaMax.x;
+                }
+                else if (dx > 0 && dx > this.deltaMax.x)
+                {
+                    dx = this.deltaMax.x;
+                }
+            }
+
+            if (this.deltaMax.y !== 0 && dy !== 0)
+            {
+                if (dy < 0 && dx < -this.deltaMax.y)
+                {
+                    dy = -this.deltaMax.y;
+                }
+                else if (dy > 0 && dy > this.deltaMax.y)
+                {
+                    dy = this.deltaMax.y;
+                }
+            }
+
+            this.sprite.x += dx;
+            this.sprite.y += dy;
         }
 
         this.center.setTo(this.position.x + this.halfWidth, this.position.y + this.halfHeight);
@@ -36852,6 +36934,10 @@ Phaser.Physics.Arcade.Body.prototype = {
         {
             this.sprite.angle += this.deltaZ();
         }
+
+        this.prev.x = this.position.x;
+        this.prev.y = this.position.y;
+        this.preRotation = this.rotation;
 
     },
 

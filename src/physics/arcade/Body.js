@@ -125,6 +125,11 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.newVelocity = new Phaser.Point(0, 0);
 
     /**
+    * @property {Phaser.Point} deltaMax - The Sprite position is updated based on the delta x/y values. You can set a cap on those (both +-) using deltaMax.
+    */
+    this.deltaMax = new Phaser.Point(0, 0);
+
+    /**
     * @property {Phaser.Point} acceleration - The velocity in pixels per second sq. of the Body.
     */
     this.acceleration = new Phaser.Point();
@@ -201,8 +206,8 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     /**
     * @property {boolean} skipQuadTree - If the Body is an irregular shape you can set this to true to avoid it being added to any QuadTrees.
     * @default
-    */
     this.skipQuadTree = false;
+    */
 
     /**
     * @property {number} facing - A const reference to the direction the Body is traveling or facing.
@@ -309,18 +314,22 @@ Phaser.Physics.Arcade.Body.prototype = {
     * @method Phaser.Physics.Arcade#updateBounds
     * @protected
     */
-    updateBounds: function (scaleX, scaleY) {
+    updateBounds: function () {
 
-        if (scaleX != this._sx || scaleY != this._sy)
+        if (this.sprite.scale.x !== this._sx || this.sprite.scale.y !== this._sy)
         {
-            this.width = this.sourceWidth * scaleX;
-            this.height = this.sourceHeight * scaleY;
+            this.width = this.sourceWidth * this.sprite.scale.x;
+            this.height = this.sourceHeight * this.sprite.scale.y;
             this.halfWidth = Math.floor(this.width / 2);
             this.halfHeight = Math.floor(this.height / 2);
-            this._sx = scaleX;
-            this._sy = scaleY;
+            this._sx = this.sprite.scale.x;
+            this._sy = this.sprite.scale.y;
             this.center.setTo(this.position.x + this.halfWidth, this.position.y + this.halfHeight);
+
+            return true;
         }
+
+        return false;
 
     },
 
@@ -356,9 +365,12 @@ Phaser.Physics.Arcade.Body.prototype = {
         this.position.y = (this.sprite.world.y - (this.sprite.anchor.y * this.height)) + this.offset.y;
         this.rotation = this.sprite.angle;
 
-        this.prev.x = this.position.x;
-        this.prev.y = this.position.y;
-        this.preRotation = this.rotation;
+        if (this.updateBounds() || this.sprite._cache[4] === 1)
+        {
+            this.prev.x = this.position.x;
+            this.prev.y = this.position.y;
+            this.preRotation = this.rotation;
+        }
 
         if (this.moves)
         {
@@ -414,8 +426,35 @@ Phaser.Physics.Arcade.Body.prototype = {
 
         if (this.moves)
         {
-            this.sprite.x += this.deltaX();
-            this.sprite.y += this.deltaY();
+            var dx = this.deltaX();
+            var dy = this.deltaY();
+
+            if (this.deltaMax.x !== 0 && dx !== 0)
+            {
+                if (dx < 0 && dx < -this.deltaMax.x)
+                {
+                    dx = -this.deltaMax.x;
+                }
+                else if (dx > 0 && dx > this.deltaMax.x)
+                {
+                    dx = this.deltaMax.x;
+                }
+            }
+
+            if (this.deltaMax.y !== 0 && dy !== 0)
+            {
+                if (dy < 0 && dx < -this.deltaMax.y)
+                {
+                    dy = -this.deltaMax.y;
+                }
+                else if (dy > 0 && dy > this.deltaMax.y)
+                {
+                    dy = this.deltaMax.y;
+                }
+            }
+
+            this.sprite.x += dx;
+            this.sprite.y += dy;
         }
 
         this.center.setTo(this.position.x + this.halfWidth, this.position.y + this.halfHeight);
@@ -424,6 +463,10 @@ Phaser.Physics.Arcade.Body.prototype = {
         {
             this.sprite.angle += this.deltaZ();
         }
+
+        this.prev.x = this.position.x;
+        this.prev.y = this.position.y;
+        this.preRotation = this.rotation;
 
     },
 

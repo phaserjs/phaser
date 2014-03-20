@@ -144,6 +144,25 @@ Phaser.TileSprite.prototype.constructor = Phaser.TileSprite;
 */
 Phaser.TileSprite.prototype.preUpdate = function() {
 
+    if (this._cache[4] === 1)
+    {
+        this.world.setTo(this.parent.position.x + this.position.x, this.parent.position.y + this.position.y);
+        this.worldTransform.tx = this.world.x;
+        this.worldTransform.ty = this.world.y;
+        this._cache[0] = this.world.x;
+        this._cache[1] = this.world.y;
+        this._cache[2] = this.rotation;
+
+        if (this.exists && this.body)
+        {
+            this.body.preUpdate();
+        }
+
+        this._cache[4] = 0;
+
+        return false;
+    }
+
     this.world.setTo(this.game.camera.x + this.worldTransform[2], this.game.camera.y + this.worldTransform[5]);
 
     this.animations.update();
