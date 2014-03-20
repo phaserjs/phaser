@@ -5,6 +5,7 @@
       {
         "isSensor": {{fixture.isSensor}},
         "filter": {
+          "group": {{fixture.filter_groupIndex}},
           "categoryBits": {{fixture.filter_categoryBits}},
           "maskBits": {{fixture.filter_maskBits}}
         },

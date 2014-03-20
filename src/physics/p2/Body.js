@@ -1097,24 +1097,27 @@ Phaser.Physics.P2.Body.prototype = {
 
     /**
     * Reads the shape data from a physics data file stored in the Game.Cache and adds it as a polygon to this Body.
-    * The shape data format is based on the custom phaser export in PhysicsEditor
+    * The shape data format is based on the custom phaser export in
     * @method Phaser.Physics.P2.Body#loadPhaserPolygon
     * @param {string} key - The key of the Physics Data file as stored in Game.Cache.
     * @param {string} object - The key of the object within the Physics data file that you wish to load the shape data from.
     */
-    loadPhaserPolygon: function (key, object) {
+    addPhaserPolygon: function (key, object) {
         var data = this.game.cache.getPhysicsData(key, object);
+        var createdFixtures = []
         //cycle through the fixtures
         for (var i = 0; i < data.length; i++)
         {
             var fixtureData = data[i]
-            this.addFixture(fixtureData)
+            var shapesOfFixture = this.addFixture(fixtureData)
+            createdFixtures[fixtureData.filter.group] = createdFixtures[fixtureData.filter.group] || []
+            createdFixtures[fixtureData.filter.group].push(shapesOfFixture)
         }
 
         this.data.aabbNeedsUpdate = true;
         this.shapeChanged();
 
-        return false;
+        return createdFixtures;
 
     },
     
@@ -1127,7 +1130,8 @@ Phaser.Physics.P2.Body.prototype = {
     */
     
     addFixture: function(fixtureData){
-      console.log('addPolygonFixture', fixtureData)
+      //console.log('addPolygonFixture', fixtureData)
+      var generatedShapes = []
 
       if (fixtureData.circle){
         //a circle has unfortunately no position in p2. pretty useless.
@@ -1137,6 +1141,7 @@ Phaser.Physics.P2.Body.prototype = {
         shape.sensor = fixtureData.isSensor
 
         this.data.addShape(shape);
+        generatedShapes.push(shape)
       }else{
         polygons = fixtureData.polygons
         var cm = p2.vec2.create();
@@ -1174,9 +1179,12 @@ Phaser.Physics.P2.Body.prototype = {
           shape.sensor = fixtureData.isSensor
 
           this.data.addShape(shape, cm);
+
+          generatedShapes.push(shape)
         }
       }
 
+      return generatedShapes
 
     },
 
