@@ -377,10 +377,18 @@ Phaser.Game.prototype = {
             this.physicsConfig = config['physicsConfig'];
         }
 
+        var seed = null;
+        
         if (config['seed'])
         {
-            this.rnd = new Phaser.RandomDataGenerator(config['seed']);
+            seed = config['seed'];
         }
+        else
+        {
+            seed = [(Date.now() * Math.random()).toString()];
+        }
+        
+        this.rnd = new Phaser.RandomDataGenerator(seed);
 
         var state = null;
 
