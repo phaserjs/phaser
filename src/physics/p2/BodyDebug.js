@@ -109,7 +109,7 @@ Phaser.Utils.extend(Phaser.Physics.P2.BodyDebug.prototype, {
             var l = obj.shapes.length
 
             i = 0;
-            console.log('shapes',l);
+            
             while (i !== l)
             {
                 child = obj.shapes[i];
