@@ -1095,7 +1095,14 @@ Phaser.Physics.P2.Body.prototype = {
 
     },
 
-    loadPhaserPolygon: function (key, object, options) {
+    /**
+    * Reads the shape data from a physics data file stored in the Game.Cache and adds it as a polygon to this Body.
+    * The shape data format is based on the custom phaser export in PhysicsEditor
+    * @method Phaser.Physics.P2.Body#loadPhaserPolygon
+    * @param {string} key - The key of the Physics Data file as stored in Game.Cache.
+    * @param {string} object - The key of the object within the Physics data file that you wish to load the shape data from.
+    */
+    loadPhaserPolygon: function (key, object) {
         var data = this.game.cache.getPhysicsData(key, object);
         //cycle through the fixtures
         for (var i = 0; i < data.length; i++)
@@ -1123,7 +1130,7 @@ Phaser.Physics.P2.Body.prototype = {
       console.log('addPolygonFixture', fixtureData)
 
       if (fixtureData.circle){
-        //a circle has unfortunately no position in p2
+        //a circle has unfortunately no position in p2. pretty useless.
         var shape = new p2.Circle(this.world.pxm(fixtureData.circle.radius))
         shape.collisionGroup = fixtureData.filter.categoryBits
         shape.collisionMask = fixtureData.filter.maskBits
@@ -1211,7 +1218,6 @@ Phaser.Physics.P2.Body.prototype = {
             for (var i = 0; i < data.length; i++)
             {
                 var vertices = [];
-                console.log(data[i].filter.categoryBits)
                 for (var s = 0; s < data[i].shape.length; s += 2)
                 {
                     vertices.push([ this.world.pxmi(data[i].shape[s]), this.world.pxmi(data[i].shape[s + 1]) ]);
