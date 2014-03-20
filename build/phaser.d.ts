@@ -1,76 +1,3 @@
-declare class SAT {
-
-    flattenPointsOn(points: Array<SAT.Vector>, normal: SAT.Vector, result: Array<number>): Array<number>;
-    isSeparatingAxis(aPos: SAT.Vector, bPos: SAT.Vector, aPoints: Array<SAT.Vector>, bPoints: Array<SAT.Vector>, axis: SAT.Vector, response: SAT.Response): boolean;
-    vornoiRegion(line: SAT.Vector, point: SAT.Vector): number;
-    testCircleCircle(a: SAT.Circle, b: SAT.Circle, response: SAT.Response): boolean;
-    testPolygonCircle(a: SAT.Polygon, b: SAT.Circle, response: SAT.Response): boolean;
-    testCirclePolygon(a: SAT.Circle, b: SAT.Polygon, response: SAT.Response): boolean;
-    testPolygonPolygon(a: SAT.Polygon, b: SAT.Polygon, response: SAT.Response): boolean;
-
-}
-
-declare module SAT {
-
-    class Vector {
-        constructor(x: number, y: number);
-        x: number;
-        y: number;
-        copy(other: SAT.Vector): SAT.Vector;
-        perp(): SAT.Vector;
-        rotate(angle: number): SAT.Vector;
-        rotatePrecalc(sin: number, cos: number): SAT.Vector;
-        reverse(): SAT.Vector;
-        normalize(): SAT.Vector;
-        add(other: SAT.Vector): SAT.Vector;
-        sub(other: SAT.Vector): SAT.Vector;
-        scale(x: number, y: number): SAT.Vector;
-        project(other: SAT.Vector): SAT.Vector;
-        projectN(other: SAT.Vector): SAT.Vector;
-        reflect(axis: SAT.Vector): SAT.Vector;
-        reflectN(axis: SAT.Vector): SAT.Vector;
-        dot(other: SAT.Vector): SAT.Vector;
-        len2(): SAT.Vector;
-        len(): SAT.Vector;
-    }
-
-    class Circle {
-        constructor(pos: SAT.Vector, radius: number);
-        pos: SAT.Vector;
-        r: number;
-    }
-
-    class Polygon {
-        constructor(pos: SAT.Vector, points: Array<SAT.Vector>);
-        pos: SAT.Vector;
-        points: Array<SAT.Vector>;
-        recalc(): SAT.Polygon;
-        rotate(angle: number): SAT.Polygon;
-        scale(x: number, y: number): SAT.Polygon;
-        translate(x: number, y: number): SAT.Polygon;
-    }
-
-    class Box {
-        constructor(pos: SAT.Vector, w: number, h: number);
-        pos: SAT.Vector;
-        w: number;
-        h: number;
-        toPolygon(): SAT.Polygon;
-    }
-
-    class Response {
-        constructor();
-        a: any;
-        b: any;
-        overlapN: SAT.Vector;
-        overlapV: SAT.Vector;
-        clear(): SAT.Response;
-        aInB: boolean;
-        bInA: boolean;
-        overlap: number;
-    }
-}
-
 // Type definitions for PIXI 1.5.2
 // Project: https://github.com/GoodBoyDigital/pixi.js/
 // Original 1.3 by: xperiments <http://github.com/xperiments> 
@@ -1724,7 +1651,7 @@ declare module Phaser {
         particles: Phaser.Particles;
         paused: boolean;
         pendingStep: boolean;
-        physics: Phaser.Physics.Arcade.World;
+        physics: Phaser.Physics;
         physicsConfig: Object;
         raf: Phaser.RequestAnimationFrame;
         renderer: number;
@@ -1930,7 +1857,7 @@ declare module Phaser {
         countLiving(): number;
         create(x: number, y: number, key: string, frame?: any, exists?: boolean): Phaser.Sprite;
         createMultiple(quantity: number, key: string, frame?: any, exists?: boolean): Phaser.Sprite;
-        destroy(destroyChildren?: boolean): void;
+        destroy(destroyChildren?: boolean, soft?:boolean): void;
         divideAll(property: string, amount: number, checkAlive?: boolean, checkVisible?: boolean): void;
         forEach(callback: Function, callbackContext: Object, checkExists: boolean): void;
         forEachAlive(callback: Function, callbackContext: Object): void;
@@ -1953,10 +1880,11 @@ declare module Phaser {
         remove(child: any): boolean;
         removeAll(): void;
         removeBetween(startIndex: number, endIndex: number): void;
-        replace(oldChild: any, newChild: any): void;
+        replace(oldChild: any, newChild: any): any;
         reverse(): void;
         set(child: Phaser.Sprite, key: string, value: any, checkAlive?: boolean, checkVisible?: boolean, operation?: number)
         setAll(key: string, value: any, checkAlive?: boolean, checkVisible?: boolean, operation?: number): void;
+        setAllChildren(key: string, value: any, checkAlive?: boolean, checkVisible?: boolean, operation?: boolean): void;
         setProperty(child: any, key: string[], value: any, operation?: number): void;
         sort(index?: string, order?: number): void;
         subAll(property: string, amount: number, checkAlive: boolean, checkVisible: boolean): void;
@@ -2151,6 +2079,7 @@ declare module Phaser {
         stopDrag(pointer: Phaser.Pointer): void;
         update(pointer: Phaser.Pointer): void;
         updateDrag(pointer: Phaser.Pointer): boolean;
+        validForInput(highestID: number, highestRenderID: number): boolean;
     }
 
     class Key {
@@ -2454,8 +2383,8 @@ declare module Phaser {
         static PI2: number;
         static radToDeg(radians: number): number;
         static randomSign(): number;
-        static removeRandom<T>(objects: T[], startIndex?: number, length?: number): T;
         static reverseAngle(angleRed: number): number;
+        static removeRandom<T>(objects: T[], startIndex?: number, length?: number): void;
         static roundTo(value: number, place?: number, base?: number): number;
         static shear(n: number): number;
         static shift(stack: any[]): any;
@@ -2471,7 +2400,7 @@ declare module Phaser {
         static truncate(n: number): number;
         static within(a: number, b: number, tolerance: number): boolean;
         static wrap(value: number, min: number, max: number): number;
-        static wrapAngle(angle: number): number;
+        static wrapAngle(angle: number, radians?:boolean): number;
         static wrapValue(value: number, amount: number, max: number): number;       
     }
 
@@ -2551,13 +2480,15 @@ declare module Phaser {
     }
 
     module Particles {
+
         module Arcade {
+
             class Emitter extends Phaser.Group {
+
                 //constructor
                 constructor(game: Phaser.Game, x?: number, y?: number, maxParticles?: number);
                 //members
                 angle: number;
-                alpha: number;
                 angularDrag: number;
                 bottom: number;
                 bounce: Phaser.Point;
@@ -2585,10 +2516,7 @@ declare module Phaser {
                 right: number;
                 top: number;
                 type: number;
-                visible: boolean;
                 width: number;
-                x: number;
-                y: number;
                 //methods
                 at(object: any): void;
                 emitParticle(): void;
@@ -2605,46 +2533,209 @@ declare module Phaser {
         }
     }
 
+    class Physics {
+
+        constructor(game: Phaser.Game, config?: Object);
+
+        static ARCADE: number;
+        static P2JS: number;
+        static NINJA: number;
+        static BOX2D: number;
+        static CHIPMUNK: number;
+
+        arcade: Phaser.Physics.Arcade;
+        config: Object;
+        game: Phaser.Game;
+        ninja: Phaser.Physics.Ninja;
+        p2: Phaser.Physics.P2;
+
+        clear(): void;
+        destroy(): void;
+        enable(object: any, system?: number, debug?: boolean): void;
+        parseConfig(): void;
+        preUpdate(): void;
+        setBoundsToWorld(): void;
+        startSystem(system: number): void;
+        update(): void;
+
+    }
+
     module Physics {
 
-        class Ninja {
-            //constructor
+        class Arcade {
+
+            static OVERLAP_BIAS: number;
+            static TILE_BIAS: number;
+
             constructor(game: Phaser.Game);
-            //members
+
+            bounds: Phaser.Rectangle;
+            checkCollision: { up?: boolean; down?: boolean; left?: boolean; right?: boolean; };
+            game: Phaser.Game;
+            gravity: Phaser.Point;
+            quadTree: Phaser.QuadTree;
+            maxObjects: number;
+            maxLevels: number;
+
+            accelerationFromRotation(rotation: number, speed?: number, point?: Phaser.Point): Phaser.Point;
+            accelerateToObject(displayObject: any, destination: any, speed?: number, xSpeedMax?: number, ySpeedMax?: number): number;
+            accelerateToPointer(displayObject: any, pointer?: Phaser.Pointer, speed?: number, xSpeedMax?: number, ySpeedMax?: number): number;
+            accelerateToXY(displayObject: any, x: number, y: number, speed?: number, xSpeedMax?: number, ySpeedMax?: number): number;
+            angleBetween(source: any, target: any): number;
+            angleToPointer(displayObject: any, pointer?: Phaser.Pointer): number;
+            angleToXY(displayObject: any, x: number, y: number): number;
+            collide(object1: Object, object2: Object, collideCallback?: Function, processCallback?: Function, callbackContext?: Object): boolean;
+            computeVelocity(axis: number, body: Phaser.Physics.Arcade.Body, velocity: number, acceleration: number, drag: number, max?: number): number;
+            distanceBetween(source: any, target: any): number;
+            distanceToPointer(displayObject: any, pointer?: Phaser.Pointer): number;
+            distanceToXY(displayObject: any, x: number, y: number): number;
+            enable(object: Object, children?: Boolean): void;
+            enableBody(object: Object): void;
+            moveToObject(displayObject: any, destination: any, speed?: number, maxTime?: number): number;
+            moveToPointer(displayObject: any, speed?: number, pointer?: Phaser.Pointer, maxTime?: number): number;
+            moveToXY(displayObject: any, x: number, y: number, speed?: number, maxTime?: number): number;
+            overlap(object1: Object, object2: Object, overlapCallback?: Function, processCallback?: Function, callbackContext?: Object): boolean;
+            processTileSeparationX(body: Phaser.Physics.Arcade.Body, x: number): boolean;
+            processTileSeparationY(body: Phaser.Physics.Arcade.Body, y: number): void;
+            setBounds(x: number, y: number, width: number, height: number): void;
+            setBoundsToWorld(): void;
+            separate(body1: Phaser.Physics.Arcade.Body, body2: Phaser.Physics.Arcade.Body, processCallback?: Function, callbackContext?: Object, overlapOnly?: boolean): boolean;
+            separateX(body1: Phaser.Physics.Arcade.Body, body2: Phaser.Physics.Arcade.Body, overlapOnly: boolean): boolean;
+            separateY(body1: Phaser.Physics.Arcade.Body, body2: Phaser.Physics.Arcade.Body, overlapOnly: boolean): boolean;
+            separateTile(i: number, body: Phaser.Physics.Arcade.Body, tile: Phaser.Tile): boolean;
+            tileCheckX(body: Phaser.Physics.Arcade.Body, tile: Phaser.Tile): number;
+            tileCheckY(body: Phaser.Physics.Arcade.Body, tile: Phaser.Tile): number;
+            updateMotion(body: Phaser.Physics.Arcade.Body): void;
+            velocityFromAngle(angle: number, speed?: number, point?: Phaser.Point): Phaser.Point;
+            velocityFromRotation(rotation: number, speed?: number, point?: Phaser.Point): Phaser.Point;
+
+        }
+
+        module Arcade {
+
+            class Body {
+
+                constructor(sprite: Phaser.Sprite);
+
+                acceleration: Phaser.Point;
+                allowGravity: boolean;
+                allowRotation: boolean;
+                angle: number;
+                angularAcceleration: number;
+                angularDrag: number;
+                angularVelocity: number;
+                blocked: FaceChoices;
+                bottom: number;
+                bounce: Phaser.Point;
+                center: Phaser.Point;
+                checkCollision: FaceChoices;
+                collideWorldBounds: boolean;
+                customSeparateX: boolean;
+                customSeparateY: boolean;
+                draw: Phaser.Point;
+                embedded: boolean;
+                facing: number;
+                game: Phaser.Game;
+                gravity: Phaser.Point;
+                halfWidth: number;
+                halfHeight: number;
+                immovable: boolean;
+                mass: number;
+                maxAngular: number;
+                maxVelocity: Phaser.Point;
+                moves: boolean;
+                newVelocity: Phaser.Point;
+                offset: Phaser.Point;
+                overlapX: number;
+                overlapY: number;
+                position: Phaser.Point;
+                preRotation: number;
+                prev: Phaser.Point;
+                right: number;
+                rotation: number;
+                skipQuadTree: boolean;
+                sourceWidth: number;
+                sourceHeight: number;
+                speed: number;
+                sprite: Phaser.Sprite;
+                tilePadding: Phaser.Point;
+                touching: FaceChoices;
+                type: number;
+                wasTouching: FaceChoices;
+                width: number;
+                velocity: Phaser.Point;
+                x: number;
+                y: number;
+
+                checkWorldBounds(): void;
+                deltaX(): number;
+                deltaY(): number;
+                deltaZ(): number;
+                deltaAbsX(): void;
+                deltaAbsY(): void;
+                destroy(): void;
+                onFloor(): void;
+                onWall(): void;
+                preUpdate(): void;
+                postUpdate(): void;
+                render(context: Object, body: Phaser.Physics.Arcade.Body, filled?: boolean, color?: string): void;
+                renderBodyInfo(debug: Phaser.Utils.Debug, body: Phaser.Physics.Arcade.Body): void;
+                reset(x: number, y: number): void;
+                setSize(width: number, height: number, offsetX: number, offsetY: number): void;
+                updateBounds(scaleX: number, scaleY: number);
+
+            }
+
+            class FaceChoices {
+
+                none: boolean;
+                any: boolean;
+                up: boolean;
+                down: boolean;
+                left: boolean;
+                right: boolean;
+
+            }
+        }
+
+        class Ninja {
+
+            constructor(game: Phaser.Game);
+
             game: Phaser.Game
-            time: Phaser.Time;
             gravity: number;
             bounds: Phaser.Rectangle;
             maxObjects: number;
             maxLevels: number;
             quadTree: Phaser.QuadTree;
-            //methods
+            time: Phaser.Time;
+           
+            clearTilemapLayerBodies(map: Phaser.Tilemap, layer: any): void;
+            collide(object1: any, object2: any, collideCallback?: Function, processCallback?: Function, callbackContext?: Object): boolean;
+            convertTilemap(map: Phaser.Tilemap, layer?: any, slopeMap?: Object): Phaser.Physics.Ninja.Tile[];
             enableAABB(object: any, children?: boolean): void;
             enableCircle(object: any, radius: number, children?: boolean);
             enableTile(object: any, id: number, children?: boolean): void;
             enable(object: any, type?: number, id?: number, radius?: number, children?: boolean): void;
             enableBody(object: any, type?: number, id?: number, radius?: number): void;
+            overlap(object1: any, object2: any, overlapCallback?: Function, processCallback?: Function, callbackContext?: Object): boolean;
+            separate(body1: Phaser.Physics.Ninja.Body, body2: Phaser.Physics.Ninja.Body, processCallback?: Function, callbackContext?: Object, overlapOnly?: boolean): boolean;
             setBounds(x: number, y: number, width: number, height: number): void;
             setBoundsToWorld(): void;
-            clearTilemapLayerBodies(map: Phaser.Tilemap, layer: any): void;
-            convertTilemap(map: Phaser.Tilemap, layer?: any, slopeMap?: Object): Phaser.Physics.Ninja.Tile[];
-            overlap(object1: any, object2: any, overlapCallback?: Function, processCallback?: Function, callbackContext?: Object): boolean;
-            collide(object1: any, object2: any, collideCallback?: Function, processCallback?: Function, callbackContext?: Object): boolean;
-            separate(body1: any, body2: any, processCallback?: Function, callbackContext?: Object, overlapOnly?: boolean): boolean;
         }
 
         module Ninja {
 
             class Body {
-                //constructor
+
                 constructor(system: Phaser.Physics.Ninja, sprite: Phaser.Sprite, type?: number, id?: number, radius?: number, x?: number, y?: number, width?: number, height?: number);
-                //members
+                
                 aabb: Phaser.Physics.Ninja.AABB;
                 angle: number;
                 bottom: number;
                 bounce: number;
-                circle: Phaser.Physics.Ninja.Circle;
                 checkCollision: Phaser.Physics.Arcade.FaceChoices;
+                circle: Phaser.Physics.Ninja.Circle;
                 collideWorldBounds: boolean;
                 drag: number;
                 facing: number;
@@ -2655,19 +2746,19 @@ declare module Phaser {
                 immovable: boolean;
                 maxSpeed: number;
                 right: number;
-                shape: Object;
-                speed: number;
                 sprite: Phaser.Sprite;
                 system: Phaser.Physics.Ninja;
                 tile: Phaser.Physics.Ninja.Tile;
                 touching: Phaser.Physics.Arcade.FaceChoices;
                 type: number;
+                shape: Object;
+                speed: number;
                 velocity: Phaser.Point;
                 wasTouching: Phaser.Physics.Arcade.FaceChoices;
                 width: number;
                 x: number;
                 y: number;
-                //members
+
                 deltaAbsX(): number;
                 deltaAbsY(): number;
                 deltaX(): number;
@@ -2680,17 +2771,20 @@ declare module Phaser {
                 moveRight(speed: number): void;
                 moveUp(speed: number): void;
                 moveDown(speed: number): void;
+                poseUpdate(): void;
+                preUpdate(): void;
                 reset(): void;
+
             }
 
             class AABB {
-                //constructor
+
                 constructor(body: Phaser.Physics.Ninja.Body, x: number, y: number, width: number, height: number);
-                //static members
+
                 static COL_NONE: number;
                 static COL_AXIS: number;
                 static COL_OTHER: number;
-                //members
+
                 aabbTileProjections: Object;
                 body: Phaser.Physics.Ninja.Body;
                 height: number;
@@ -2701,7 +2795,7 @@ declare module Phaser {
                 velocity: Phaser.Point;
                 xw: number;
                 yw: number;
-                //members
+
                 collideWorldBounds(): void;
                 collideAABBVsAABB(aabb: Phaser.Physics.Ninja.AABB): boolean;
                 collideAABBVsTile(tile: Phaser.Physics.Ninja.Tile): boolean;
@@ -2711,28 +2805,29 @@ declare module Phaser {
                 reportCollisionVsBody(px: number, py: number, dx: number, dy: number, obj: Object): void;
                 resolveTile(x: number, y: number, body: Phaser.Physics.Ninja.AABB, tile: Phaser.Physics.Ninja.Tile): boolean;
                 reverse(): void;
+
             }
 
             class Circle {
-                //constructor
+
                 constructor(body: Phaser.Physics.Ninja.Body, x: number, y: number, radius: number);
-                //static members
+ 
                 COL_NONE: number;
                 COL_AXIS: number;
                 COL_OTHER: number;
-                //members
+  
                 body: Phaser.Physics.Ninja.Body;
                 circleTileProjections: Object;
+                oldPos: Phaser.Point;
                 height: number;
                 pos: Phaser.Point;
-                oldPos: Phaser.Point;
                 radius: number;
                 system: Phaser.Physics.Ninja;
-                xw: number;
-                yw: number;
                 velocity: Phaser.Point;
                 width: number;
-                //methods
+                xw: number;
+                yw: number;
+
                 collideCircleVsTile(tile: Phaser.Physics.Ninja.Tile): boolean;
                 collideWorldBounds(): void;
                 destroy(): void;
@@ -2740,39 +2835,127 @@ declare module Phaser {
                 reportCollisionVsWorld(px: number, py: number, dx: number, dy: number, obj: Object): void;
                 reportCollisionVsBody(px: number, py: number, dx: number, dy: number, obj: Object): void;
                 resolveCircleTile(x: number, y: number, oH: number, oV: number, obj: Phaser.Physics.Ninja.Circle, t: Phaser.Physics.Ninja.Tile): boolean;
+
             }
 
             class Tile {
-                //constructor
+
                 constructor(body: Phaser.Physics.Ninja.Body, x: number, y: number, width: number, height: number, type?: number);
-                //members
+                
                 body: Phaser.Physics.Ninja.Body;
                 bottom: number;
+                height: number;
+                id: number;
+                oldpos: Phaser.Point;
+                pos: Phaser.Point;
                 right: number;
                 system: Phaser.Physics.Ninja;
-                id: number;
                 type: number;
-                pos: Phaser.Point;
-                oldpos: Phaser.Point;
+                velocity: Phaser.Point;
+                width: number;
                 xw: number;
                 yw: number;
-                width: number;
-                height: number;
-                velocity: Phaser.Point;
                 x: number;
                 y: number;
-                //methods
+
                 clear(): void;
                 collideWorldBounds(): void;
                 destroy(): void;
                 integrate(): void;
                 reportCollisionVsWorld(px: number, py: number, dx: number, dy: number, obj: Object);
                 setType(id: number): number;
+
             }
 
         }
 
-        module p2{
+        class P2 {
+
+            static LIME_CORONA_JSON: number;
+
+            constructor(game: Phaser.Game, config?: Object);
+
+            applyDamping: boolean;
+            applyGravity: boolean;
+            applySpringForced: boolean;
+            bounds: Phaser.Physics.P2.Body;
+            emitImpactEvent: boolean;
+            enableBodySleeping: boolean;
+            frameRate: number;
+            friction: number;
+            game: Phaser.Game;
+            gravity: Phaser.Physics.P2.InversePointProxy;
+            materials: Phaser.Physics.P2.Material[];
+            onBodyAdded: Phaser.Signal;
+            onBodyRemoved: Phaser.Signal;
+            onBeginContact: Phaser.Signal;
+            onConstraintAdded: Phaser.Signal;
+            onConstraintRemoved: Phaser.Signal;
+            onContactMaterialAdded: Phaser.Signal;
+            onContactMaterialRemoved: Phaser.Signal;
+            onEndContact: Phaser.Signal;
+            onSpringAdded: Phaser.Signal;
+            onSpringRemoved: Phaser.Signal;
+            restitution: number;
+            solveConstraints: boolean;
+            time: any;
+            total: number;
+            useElapsedTime: boolean;
+            world: Phaser.Physics.P2;
+
+            addBody(body: Phaser.Physics.P2.Body): boolean;
+            addContactMaterial(material: Phaser.Physics.P2.ContactMaterial): Phaser.Physics.P2.ContactMaterial;
+            addConstraint(constraint: any): any;
+            addSpring(spring: Phaser.Physics.P2.Spring): Phaser.Physics.P2.Spring;
+            beginContactHandler(event: Object): void;
+            clear(): void;
+            clearTilemapLayerBodies(map: Phaser.Tilemap, layer?: any): void;
+            convertCollisionObjects(map: Phaser.Tilemap, layer?: any, addToWorld?: boolean): Phaser.Physics.P2.Body[];
+            convertTilemap(map: Phaser.Tilemap, layer?: any, addToWorld?: Boolean, optimize?: boolean): Phaser.Physics.P2.Body[];
+            createBody(x: number, y: number, mass: number, addToWorld?: boolean, options?: Object, data?: Object): Phaser.Physics.P2.Body;
+            createContactMaterial(materialA: Phaser.Physics.P2.Material, materialB: Phaser.Physics.P2.Material, options?: number): Phaser.Physics.P2.ContactMaterial;
+            createDistanceConstraint(bodyA: any, bodyB: any, distance: number, maxForce?: number): Phaser.Physics.P2.DistanceConstraint;
+            createGearConstraint(bodyA: any, bodyB: any, angle?: number, ratio?: number): Phaser.Physics.P2.GearConstraint;
+            createLockConstraint(bodyA: any, bodyB: any, offset: Float32Array, angle?: number, maxForce?: number): Phaser.Physics.P2.LockConstraint;
+            createMaterial(name?: string, body?: Phaser.Physics.P2.Body): Phaser.Physics.P2.Material;
+            createParticle(x: number, y: number, mass: number, addToWorld?: Boolean, options?: Object, data?: Object): Phaser.Physics.P2.Body;
+            createPrismaticConstraint(body: any, bodyB: any, lock?: boolean, anchorA?: Float32Array, anchorB?: Float32Array, axis?: Float32Array, maxForce?: number): Phaser.Physics.P2.PrismaticConstraint;
+            createRevoluteConstraint(bodyA: any, pivotA: Float32Array, bodyB: any, pivotB: Float32Array, maxForce?: number): Phaser.Physics.P2.RevoluteContraint;
+            createSpring(bodyA: any, bodyB: any, restLength?: number, stiffness?: number, damping?: number, worldA?: Float32Array, worldB?: Float32Array, localA?: Float32Array, localB?: Float32Array): Phaser.Physics.P2.Spring;
+            destroy(): void;
+            enable(object: any, debug?: boolean, children?: boolean): void;
+            enableBody(object: Object, debug: boolean): void;
+            endContactHandler(event: Object): void;
+            getBodies(): Phaser.Physics.P2.Body[];
+            getBody(object: Object): Phaser.Physics.P2.Body;
+            getConstraints(): any[];
+            getSprings(): Phaser.Physics.P2.Spring[];
+            getContactMaterial(materialA: Phaser.Physics.P2.Material, materialB: Phaser.Physics.P2.Material): Phaser.Physics.P2.ContactMaterial;
+            hitTest(worldPoint: Phaser.Point, bodies?: any[], precision?: number, filterStatic?: boolean): Phaser.Physics.P2.Body[];
+            mpx(v: number): number;
+            mpxi(v: number): number;
+            pxm(v: number): number;
+            pxmi(v: number): number;
+            preUpdate(): void;
+            removeBody(body: Phaser.Physics.P2.Body): Phaser.Physics.P2.Body;
+            removeBodyNextStep(body: Phaser.Physics.P2.Body): void;
+            removeConstraint(constraint: any): any;
+            removeContactMaterial(material: Phaser.Physics.P2.ContactMaterial);
+            removeSpring(spring: Phaser.Physics.P2.Spring): Phaser.Physics.P2.Spring;
+            setBounds(x: number, y: number, width: number, height: number, left?: Boolean, right?: boolean, top?: boolean, bottom?: boolean, setCollisionGroup?: boolean): void;
+            setBoundsToWorld(left?: boolean, right?: boolean, top?: boolean, bottom?: boolean, setCollisionGroup?: boolean): void;
+            setCollisionGroup(object: Object, group: Phaser.Physics.P2.CollisionGroup): void;
+            setImpactEvents(state: boolean): void;
+            setMaterial(material: Phaser.Physics.P2.Material): Phaser.Physics.P2.Body[];
+            setPostBroadphaseCallback(callback: Function, context: Object): void;
+            setWorldMaterial(material: Phaser.Physics.P2.Material, left?: boolean, right?: boolean, top?: boolean, bottom?: boolean): void;
+            toJSON(): Object;
+            update(): void;
+            updateBoundsCollisionGroup(setCollisionGroup?: boolean): void;
+
+        }
+
+        module P2 {
 
             class Body {
 
@@ -2789,11 +2972,11 @@ declare module Phaser {
                 angularVelocity: number;
                 collideWorldBounds: boolean;
                 damping: number;
-                data: Phaser.Physics.p2.Body;
+                data: Phaser.Physics.P2.Body;
                 debug: boolean;
-                debugBody: Phaser.Physics.p2.BodyDebug;
+                debugBody: Phaser.Physics.P2.BodyDebug;
                 fixedRotation: boolean;
-                force: Phaser.Physics.p2.InversePointProxy;
+                force: Phaser.Physics.P2.InversePointProxy;
                 game: Phaser.Game;
                 gravity: Phaser.Point;
                 id: number;
@@ -2811,8 +2994,8 @@ declare module Phaser {
                 static: boolean;
                 dynamic: boolean;
                 type: number;
-                velocity: Phaser.Physics.p2.InversePointProxy;
-                world: Phaser.Physics.p2.World;
+                velocity: Phaser.Physics.P2.InversePointProxy;
+                world: Phaser.Physics.P2;
                 x: number;
                 y: number;
 
@@ -2832,7 +3015,7 @@ declare module Phaser {
                 clearShapes(): void;
                 collides(group: any, callback?: Function, callbackContext?: Object, shape?: any): void;
                 createBodyCallback(object: any, callback: Function, callbackContext: Object): void;
-                createGroupCallback(group: Phaser.Physics.p2.CollisionGroup, callback: Function, callbackContext: Object): void;
+                createGroupCallback(group: Phaser.Physics.P2.CollisionGroup, callback: Function, callbackContext: Object): void;
                 destroy(): void;
                 getCollisionMask(): number;
                 loadData(key: string, object: string, options?: { optimalDecomp?: boolean; skipSimpleCheck?: boolean; removeCollinearPoints?: boolean; }): boolean;
@@ -2853,10 +3036,10 @@ declare module Phaser {
                 reset(x: number, y: number, resetDamping?: boolean, resetMass?: boolean): void;
                 shapeChanged(): void;
                 setCircle(radius: number, offsetX?: number, offsetY?: number, rotation?: number): void;
-                setCollisionGroup(group: Phaser.Physics.p2.CollisionGroup, shape?: any): void;
+                setCollisionGroup(group: Phaser.Physics.P2.CollisionGroup, shape?: any): void;
                 setRectangle(width?: number, height?: number, offsetX?: number, offsetY?: number, rotation?: number): any;
                 setRectangleFromSprite(sprite: any): any;
-                setMaterial(material: Phaser.Physics.p2.Material, shape?: any): void;
+                setMaterial(material: Phaser.Physics.P2.Material, shape?: any): void;
                 setZeroDamping(): void;
                 setZeroForce(): void;
                 setZeroRotation(): void;
@@ -2870,7 +3053,7 @@ declare module Phaser {
 
             class BodyDebug extends Phaser.Group {
 
-                constructor(game: Phaser.Game, body: Phaser.Physics.p2.Body, settings: { pixelsPerLengthUnit?: number; debugPolygons?: boolean; lineWidth?: number; alpha?: number; });
+                constructor(game: Phaser.Game, body: Phaser.Physics.P2.Body, settings: { pixelsPerLengthUnit?: number; debugPolygons?: boolean; lineWidth?: number; alpha?: number; });
                 
             }
 
@@ -2884,12 +3067,12 @@ declare module Phaser {
 
             class ContactMaterial {
 
-                constructor(materialA: Phaser.Physics.p2.Material, materialB: Phaser.Physics.p2.Material, options?: Object);
+                constructor(materialA: Phaser.Physics.P2.Material, materialB: Phaser.Physics.P2.Material, options?: Object);
 
                 id: number;
                 friction: number;
-                materialA: Phaser.Physics.p2.Material;
-                materialB: Phaser.Physics.p2.Material;
+                materialA: Phaser.Physics.P2.Material;
+                materialB: Phaser.Physics.P2.Material;
                 restitution: number;
                 stiffness: number;
                 relaxation: number;
@@ -2900,25 +3083,25 @@ declare module Phaser {
 
             class DistanceConstraint {
 
-                constructor(world: Phaser.Physics.p2.World, bodyA: Phaser.Physics.p2.Body, bodyB: Phaser.Physics.p2.Body, distance: number, maxForce: number);
+                constructor(world: Phaser.Physics.P2, bodyA: Phaser.Physics.P2.Body, bodyB: Phaser.Physics.P2.Body, distance: number, maxForce: number);
 
                 game: Phaser.Game;
-                world: Phaser.Physics.p2.World;
+                world: Phaser.Physics.P2;
 
             }
 
             class GearConstraint {
 
-                constructor(world: Phaser.Physics.p2.World, bodyA: Phaser.Physics.p2.Body, bodyB: Phaser.Physics.p2.Body, angle?: number, ratio?: number);
+                constructor(world: Phaser.Physics.P2, bodyA: Phaser.Physics.P2.Body, bodyB: Phaser.Physics.P2.Body, angle?: number, ratio?: number);
 
                 game: Phaser.Game;
-                world: Phaser.Physics.p2.World;
+                world: Phaser.Physics.P2;
 
             }
 
             class InversePointProxy {
 
-                constructor(world: Phaser.Physics.p2.World, destination: any);
+                constructor(world: Phaser.Physics.P2, destination: any);
 
                 x: number;
                 y: number;
@@ -2927,10 +3110,10 @@ declare module Phaser {
 
             class LockConstraint {
 
-                constructor(world: Phaser.Physics.p2.World, bodyA: Phaser.Physics.p2.Body, bodyB: Phaser.Physics.p2.Body, offset?: number[], angle?: number, maxForce?: number);
+                constructor(world: Phaser.Physics.P2, bodyA: Phaser.Physics.P2.Body, bodyB: Phaser.Physics.P2.Body, offset?: number[], angle?: number, maxForce?: number);
 
                 game: Phaser.Game;
-                world: Phaser.Physics.p2.World;
+                world: Phaser.Physics.P2;
             }
 
             class Material {
@@ -2943,7 +3126,7 @@ declare module Phaser {
 
             class PointProxy {
 
-                constructor(world: Phaser.Physics.p2.World, destination: any);
+                constructor(world: Phaser.Physics.P2, destination: any);
 
                 x: number;
                 y: number;
@@ -2952,320 +3135,28 @@ declare module Phaser {
 
             class PrismaticConstraint {
 
-                constructor(world: Phaser.Physics.p2.World, bodyA?: Phaser.Physics.p2.Body, bodyB?: Phaser.Physics.p2.Body, lock?: boolean, anchorA?: Float32Array, anchorB?: Float32Array, axis?: Float32Array, maxForce?: number);
+                constructor(world: Phaser.Physics.P2, bodyA?: Phaser.Physics.P2.Body, bodyB?: Phaser.Physics.P2.Body, lock?: boolean, anchorA?: Float32Array, anchorB?: Float32Array, axis?: Float32Array, maxForce?: number);
 
                 game: Phaser.Game;
-                world: Phaser.Physics.p2.World;
+                world: Phaser.Physics.P2;
 
             }
 
             class RevoluteContraint {
 
-                constructor(world: Phaser.Physics.p2.World, bodyA: Phaser.Physics.p2.Body, pivotA: Float32Array, bodyB: Phaser.Physics.p2.Body, pivotB: Float32Array, maxForce?: number);
+                constructor(world: Phaser.Physics.P2, bodyA: Phaser.Physics.P2.Body, pivotA: Float32Array, bodyB: Phaser.Physics.P2.Body, pivotB: Float32Array, maxForce?: number);
 
                 game: Phaser.Game;
-                world: Phaser.Physics.p2.World;
+                world: Phaser.Physics.P2;
 
             }
 
             class Spring {
 
-                constructor(world: Phaser.Physics.p2.World, bodyA: Phaser.Physics.p2.Body, bodyB: Phaser.Physics.p2.Body, restLength?: number, stiffness?: number, damping?: number, worldA?: Float32Array, worldB?: Float32Array, localA?: Float32Array, localB?: Float32Array);
+                constructor(world: Phaser.Physics.P2, bodyA: Phaser.Physics.P2.Body, bodyB: Phaser.Physics.P2.Body, restLength?: number, stiffness?: number, damping?: number, worldA?: Float32Array, worldB?: Float32Array, localA?: Float32Array, localB?: Float32Array);
 
                 game: Phaser.Game;
-                world: Phaser.Physics.p2.World;
-
-            }
-
-            class World {
-
-                static LIME_CORONA_JSON: number;
-
-                constructor(game: Phaser.Game, config?: Object);
-
-                applyDamping: boolean;
-                applyGravity: boolean;
-                applySpringForced: boolean;
-                bounds: Phaser.Physics.p2.Body;
-                emitImpactEvent: boolean;
-                enableBodySleeping: boolean;
-                frameRate: number;
-                friction: number;
-                game: Phaser.Game;
-                gravity: Phaser.Physics.p2.InversePointProxy;
-                materials: Phaser.Physics.p2.Material[];
-                onBodyAdded: Phaser.Signal;
-                onBodyRemoved: Phaser.Signal;
-                onBeginContact: Phaser.Signal;
-                onEndContact: Phaser.Signal;
-                onSpringAdded: Phaser.Signal;
-                onSpringRemoved: Phaser.Signal;
-                onConstraintAdded: Phaser.Signal;
-                onContactMaterialAdded: Phaser.Signal;
-                onContactMaterialRemoved: Phaser.Signal;
-                restitution: number;
-                solveConstraints: boolean;
-                time: any;
-                total: number;
-                useElapsedTime: boolean;
-                world: Phaser.Physics.p2.World;
-
-                addBody(body: Phaser.Physics.p2.Body): boolean;
-                addContactMaterial(material: Phaser.Physics.p2.ContactMaterial): Phaser.Physics.p2.ContactMaterial;
-                addConstraint(constraint: any): any;
-                addSpring(spring: Phaser.Physics.p2.Spring): Phaser.Physics.p2.Spring;
-                beginContactHandler(event: Object): void;
-                clear(): void;
-                clearTilemapLayerBodies(map: Phaser.Tilemap, layer?: any): void;
-                convertCollisionObjects(map: Phaser.Tilemap, layer?: any, addToWorld?: boolean): Phaser.Physics.p2.Body[];
-                convertTilemap(map: Phaser.Tilemap, layer?: any, addToWorld?: Boolean, optimize?: boolean): Phaser.Physics.p2.Body[];
-                createBody(x: number, y: number, mass: number, addToWorld?: boolean, options?: Object, data?: Object): Phaser.Physics.p2.Body;
-                createContactMaterial(materialA: Phaser.Physics.p2.Material, materialB: Phaser.Physics.p2.Material, options?: number): Phaser.Physics.p2.ContactMaterial;
-                createDistanceConstraint(bodyA: any, bodyB: any, distance: number, maxForce?: number): Phaser.Physics.p2.DistanceConstraint;
-                createGearConstraint(bodyA: any, bodyB: any, angle?: number, ratio?: number): Phaser.Physics.p2.GearConstraint;
-                createLockConstraint(bodyA: any, bodyB: any, offset: Float32Array, angle?: number, maxForce?: number): Phaser.Physics.p2.LockConstraint;
-                createMaterial(name?: string, body?: Phaser.Physics.p2.Body): Phaser.Physics.p2.Material;
-                createParticle(x: number, y: number, mass: number, addToWorld?: Boolean, options?: Object, data?: Object): Phaser.Physics.p2.Body;
-                createPrismaticConstraint(body: any, bodyB: any, lock?: boolean, anchorA?: Float32Array, anchorB?: Float32Array, axis?: Float32Array, maxForce?: number): Phaser.Physics.p2.PrismaticConstraint;
-                createRevoluteConstraint(bodyA: any, pivotA: Float32Array, bodyB: any, pivotB: Float32Array, maxForce?: number): Phaser.Physics.p2.RevoluteContraint;
-                createSpring(bodyA: any, bodyB: any, restLength?: number, stiffness?: number, damping?: number, worldA?: Float32Array, worldB?: Float32Array, localA?: Float32Array, localB?: Float32Array): Phaser.Physics.p2.Spring;
-                destroy(): void;
-                enable(object: any, debug?: boolean, children?: boolean): void;
-                enableBody(object: Object, debug: boolean): void;
-                endContactHandler(event: Object): void;
-                getBodies(): Phaser.Physics.p2.Body[];
-                getBody(object: Object): Phaser.Physics.p2.Body;
-                getConstraints(): any[];
-                getSprings(): Phaser.Physics.p2.Spring[];
-                getContactMaterial(materialA: Phaser.Physics.p2.Material, materialB: Phaser.Physics.p2.Material): Phaser.Physics.p2.ContactMaterial;
-                hitTest(worldPoint: Phaser.Point, bodies?: any[], precision?: number, filterStatic?: boolean): Phaser.Physics.p2.Body[]; 
-                mpx(v: number): number;
-                mpxi(v: number): number;
-                pxm(v: number): number;
-                pxmi(v: number): number;
-                preUpdate(): void;
-                removeBody(body: Phaser.Physics.p2.Body): Phaser.Physics.p2.Body;
-                removeBodyNextStep(body: Phaser.Physics.p2.Body): void;
-                removeConstraint(constraint: any): any;
-                removeContactMaterial(material: Phaser.Physics.p2.ContactMaterial);
-                removeSpring(spring: Phaser.Physics.p2.Spring): Phaser.Physics.p2.Spring;
-                setBounds(x: number, y: number, width: number, height: number, left?: Boolean, right?: boolean, top?: boolean, bottom?: boolean, setCollisionGroup?: boolean): void;
-                setBoundsToWorld(left?: boolean, right?: boolean, top?: boolean, bottom?: boolean, setCollisionGroup?: boolean): void;
-                setCollisionGroup(object: Object, group: Phaser.Physics.p2.CollisionGroup): void;
-                setImpactEvents(state: boolean): void;
-                setMaterial(material: Phaser.Physics.p2.Material): Phaser.Physics.p2.Body[];
-                setPostBroadphaseCallback(callback: Function, context: Object): void;
-                setWorldMaterial(material: Phaser.Physics.p2.Material, left?: boolean, right?: boolean, top?: boolean, bottom?: boolean): void;
-                toJSON(): Object;
-                update(): void;
-                updateBoundsCollisionGroup(setCollisionGroup?: boolean): void;
-
-
-            }
-        }
-
-        class Arcade {
-            //constructor
-            constructor(game: Phaser.Game);
-            //members
-            bounds: Phaser.Rectangle;
-            game: Phaser.Game;
-            gravity: Phaser.Point;
-            maxLevels: number;
-            maxObjects: number;
-            quadTree: Phaser.QuadTree;
-            //methods
-            accelerateToObject(displayObject: any, destination: any, speed?: number, xSpeedMax?: number, ySpeedMax?: number): number;
-            accelerateToPointer(displayObject: any, pointer: any, speed?: number, xSpeedMax?: number, ySpeedMax?: number): number;
-            accelerateToXY(displayObject: any, x: number, y: number, speed?: number, xSpeedMax?: number, ySpeedMax?: number): number;
-            accelerateFromRotation(rotation: number, speed?: number, point?: Phaser.Point): Phaser.Point;
-            angleBetween(source: any, target: any): number;
-            angleToPointer(displayObject: any, pointer: number): number;
-            angleToXY(displayObject: any, x: number, y: number): number;
-            checkBounds(body: Phaser.Physics.Arcade.Body): boolean;
-            collide(object1: any, object2: any, collideCallback?: Function, processCallback?: Function, callbackContext?: any): boolean;
-            distanceBetween(source: any, target: any): number;
-            distanceToPointer(displayObject: any, pointer: Phaser.Pointer): number;
-            distanceToXY(displayObject: any, x: number, y: number): number;
-            intersects(a: Object, b: Object): boolean;
-            moveToObject(displayObject: any, destination: any, speed?: number, maxTime?: number): number;
-            moveToPointer(displayObject: any, speed?: number, pointer?: Phaser.Pointer, maxTime?: number): number;
-            moveToXY(displayObject: any, x: number, y: number, speed?: number, maxTime?: number): number;
-            overlap(object1: any, object2: any, overlapCallback?: Function, processCallback?: Function, callbackContext?: any): boolean;
-            processTileSeparation(body: Phaser.Physics.Arcade.Body): boolean;
-            separate(body: Phaser.Physics.Arcade.Body, body2: Phaser.Physics.Arcade.Body, processCallback?: Function, callbackContext?: any, overlapOnly?: boolean): boolean;
-            separateTile(body: Phaser.Physics.Arcade.Body, tile: Phaser.Tile): boolean;
-            separateTiles(body: Phaser.Physics.Arcade.Body, tiles: Phaser.Tile[]): boolean;
-            setBounds(x: number, y: number, width: number, height: number, left?: boolean, right?: boolean, top?: boolean, bottom?: boolean): void;
-            setBoundsToWorld(left?: boolean, right?: boolean, top?: boolean, bottom?: boolean): void;
-            tileIntersects(body: Phaser.Physics.Arcade.Body, tile: Phaser.Tile): boolean;
-            updateMotion(body: Phaser.Physics.Arcade.Body): Phaser.Point;
-            velocityFromAngle(angle: number, speed?: number, point?: any): Phaser.Point;
-            velocityFromRotation(rotation: number, speed?: number, point?: any): Phaser.Point;
-        }
-
-        module Arcade {
-
-            class FaceChoices {
-                none: boolean;
-                any: boolean;
-                up: boolean;
-                down: boolean;
-                left: boolean;
-                right: boolean;
-            }
-
-            interface IPolygonOptions {
-
-                optimalDecomp?: boolean;
-                skipSimpleCheck?: boolean;
-                removeCollinearPoints?: any;
-
-            }
-
-            class Body {
-                //constructor
-                constructor(game: Phaser.Game, sprite?: Phaser.Sprite, x?: number, y?: number, mass?: number);
-                //members
-                acceleration: Phaser.Point;
-                allowGravity: boolean;
-                allowRotation: boolean;
-                angle: number;
-                angularAcceleration: number;
-                angularDrag: number;
-                angularVelocity: number;
-                bottom: number;
-                bounce: Phaser.Point;
-                checkCollision: FaceChoices;
-                collideCallback: any;
-                collideCallbackContext: any;
-                collideWorldBounds: boolean;
-                customSeparateCallback: Function;
-                customSeparateContext: any;
-                drag: Phaser.Point;
-                facing: number;
-                game: Phaser.Game;
-                gravity: Phaser.Point;
-                height: number;
-                immovable: boolean;
-                left: number;
-                mass: number;
-                maxAngular: number;
-                maxVelocity: Phaser.Point;
-                minVelocity: Phaser.Point;
-                moves: boolean;
-                offset: Phaser.Point;
-                overlapX: number;
-                overlapY: number;
-                preRotation: number;
-                preX: number;
-                preY: number;
-                prev: Phaser.Point;
-                rebound: boolean;
-                right: number;
-                rotation: number;
-                speed: number;
-                sprite: Phaser.Sprite;
-                top: number;
-                touching: FaceChoices;
-                type: any;
-                velocity: Phaser.Point;
-                width: number;
-                x: number;
-                y: number;
-                //methods
-                checkWorldBounds(): void;
-                deltaX(): number;
-                deltaY(): number;
-                deltaZ(): number;
-                destroy(): void;
-                postUpdate(): void;
-                preUpdate(): void;
-                setSize(width: number, height: number, offsetX: number, offsetY: number): void;
-                reset(full: boolean): void;
-                update(): void;
-                updateBounds(): void;
-                updateScale(): void;
-            }
-
-            class CollisionGroup {
-
-                mask: number;
-
-            }
-
-            class ContactMaterial {
-
-                constructor(materialA: Phaser.Physics.Arcade.Material, materialB: Phaser.Physics.Arcade.Material, options?: any);
-
-            }
-
-            class InversePointProxy {
-
-                constructor(game: Phaser.Game, destination: any);
-                x: number;
-                y: number;
-
-            }
-
-            class Material {
-
-                name: string;
-
-            }
-
-            class PointProxy {
-
-                constructor(game: Phaser.Game, destination: any);
-
-                x: number;
-                y: number;
-
-            }
-
-            class Spring {
-
-                constructor(game: Phaser.Game, bodyA: any, bodyB: any, restLength?: number, stiffness?: number, damping?: number, worldA?: any[], worldB?: any[], localA?: any, localB?: any);
-
-                game: Phaser.Game;
-
-            }
-
-            class World {
-
-                constructor(game: Phaser.Game, config: Object);
-
-                applyDamping: boolean
-                applyGravity: boolean;
-                applySpringForces: boolean;
-                bounds: any;
-                collisionGroups: any[];
-                emitImpactEvent: boolean;
-                enableBodySleeping: boolean;
-                friction: number;
-                game: Phaser.Game;
-                gravity: Phaser.Physics.Arcade.InversePointProxy;
-                materials: Phaser.Physics.Arcade.Material[];
-                onBeginContact: Phaser.Signal;
-                onBodyRemoved: Phaser.Signal;
-                onConstraintAdded: Phaser.Signal;
-                onConstraintRemoved: Phaser.Signal;
-                onContactMaterialAdded: Phaser.Signal;
-                onContactMaterialRemoved: Phaser.Signal;
-                onEndContact: Phaser.Signal;
-                onImpact: Phaser.Signal;
-                onPostBroadphase: Phaser.Signal;
-                onPostStep: Phaser.Signal;
-                onSpringAdded: Phaser.Signal;
-                onSpringRemoved: Phaser.Signal;
-                restitution: number;
-                solveConstraints: boolean
-                time: boolean;
-                world: any;
-
-                addBody(body: Phaser.Physics.Arcade.Body): boolean;
-                addConstraint(constraint: any)
-
+                world: Phaser.Physics.P2;
 
             }
         }
@@ -3290,6 +3181,17 @@ declare module Phaser {
         preUpdate(): void;
         render(): void;
         update(): void;
+    }
+
+    module Plugin {
+
+        class Webcam {
+
+            constructor(game: Phaser.Game, parent: any);
+
+
+        }
+
     }
 
     class PluginManager extends StateCycle {
@@ -3881,12 +3783,12 @@ declare module Phaser {
         world: Phaser.World;
         //methods
         create(): void;
-        destroy(): void;
         loadRender(): void;
         loadUpdate(): void;
         paused(): void;
         preload(): void;
         render(): void;
+        shutdown(): void;
         update(): void;
     }
 
@@ -4064,9 +3966,10 @@ declare module Phaser {
         calculateFaces(layer: number): void;
         clearPhysicsBodies(layer?: any): void;
         copy(x: number, y: number, width: number, height: number, layer?: any): Phaser.Tile[];
-        create(name: string, width: number, height: number): void;
+        create(name: string, width: number, height: number, tileWidth:number, tileHeight:number, group?:Phaser.Group): Phaser.Tilemap;
+        createBlankLayer(name: string, width: number, height: number, tileWidth: number, tileHeight: number, group?: Phaser.Group): Phaser.TilemapLayer;
         createCollisionObjects(layer?: any, addToWorld?: boolean): Phaser.Physics.Arcade.Body[];
-        createFromObjects(name: string, gid: number, key: string, frame?: any, exists?: boolean, autoCull?: boolean, group?: Phaser.Group, objectClass?: Object): void;
+        createFromObjects(name: string, gid: any, key: string, frame?: any, exists?: boolean, autoCull?: boolean, group?: Phaser.Group, CustomClass?: Object, adjustY?:boolean): void;
         createLayer(layer: any, width?: number, height?: number, group?: Phaser.Group): Phaser.TilemapLayer;
         destroy(): void;
         dump(): void;
@@ -4275,6 +4178,7 @@ declare module Phaser {
         order(): void;
         pause(): void;
         remove(event: Phaser.TimerEvent): boolean;
+        removeAll(): void;
         repeat(delay: number, repeatCount: number, callback: Function, callbackContext: Object, ...args: any[]): Phaser.TimerEvent;
         resume(): void;
         sortHandler(): number;
@@ -4426,12 +4330,12 @@ declare module Phaser {
         width: number;
         //methods
         boot(): void;
-        destroy(): void;
         preUpdate(): void;
         postUpdate(): void;
         countDead(): number;
         countLiving(): number;
         setBounds(x: number, y: number, width: number, height: number): void;
+        shutdown(): void;
         update(): void;
     }
 }
