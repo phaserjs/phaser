@@ -107,16 +107,15 @@ Phaser.Particles.Arcade.Emitter = function (game, x, y, maxParticles) {
     this.gravity = 100;
 
     /**
-    * @property {any} particleClass - For emitting your own particle class types.
+    * @property {any} particleClass - For emitting your own particle class types. They must extend Phaser.Sprite.
     * @default
     */
-    this.particleClass = null;
+    this.particleClass = Phaser.Sprite;
 
     /**
-    * @property {number} particleFriction - The friction component of particles launched from the emitter.
-    * @default
+    * @property {Phaser.Point} particleDrag - The X and Y drag component of particles launched from the emitter.
     */
-    this.particleFriction = 0;
+    this.particleDrag = new Phaser.Point();
 
     /**
     * @property {number} angularDrag - The angular drag component of particles launched from the emitter if they are rotating.
@@ -198,7 +197,7 @@ Phaser.Particles.Arcade.Emitter = function (game, x, y, maxParticles) {
     * @property {boolean} emitY
     */
     this.emitY = y;
-    
+
 };
 
 Phaser.Particles.Arcade.Emitter.prototype = Object.create(Phaser.Group.prototype);
@@ -274,25 +273,19 @@ Phaser.Particles.Arcade.Emitter.prototype.makeParticles = function (keys, frames
 
     while (i < quantity)
     {
-        if (this.particleClass === null)
+        if (typeof keys === 'object')
         {
-            if (typeof keys === 'object')
-            {
-                rndKey = this.game.rnd.pick(keys);
-            }
-
-            if (typeof frames === 'object')
-            {
-                rndFrame = this.game.rnd.pick(frames);
-            }
-
-            particle = new Phaser.Sprite(this.game, 0, 0, rndKey, rndFrame);
-            this.game.physics.arcade.enable(particle, false);
+            rndKey = this.game.rnd.pick(keys);
         }
-        // else
-        // {
-            // particle = new this.particleClass(this.game);
-        // }
+
+        if (typeof frames === 'object')
+        {
+            rndFrame = this.game.rnd.pick(frames);
+        }
+
+        particle = new this.particleClass(this.game, 0, 0, rndKey, rndFrame);
+
+        game.physics.arcade.enable(particle, false);
 
         if (collide)
         {
@@ -310,7 +303,7 @@ Phaser.Particles.Arcade.Emitter.prototype.makeParticles = function (keys, frames
         particle.visible = false;
 
         //  Center the origin for rotation assistance
-        particle.anchor.setTo(0.5, 0.5);
+        particle.anchor.set(0.5);
 
         this.add(particle);
 
@@ -318,6 +311,7 @@ Phaser.Particles.Arcade.Emitter.prototype.makeParticles = function (keys, frames
     }
 
     return this;
+
 }
 
 /**
@@ -394,6 +388,14 @@ Phaser.Particles.Arcade.Emitter.prototype.emitParticle = function () {
         return;
     }
 
+    particle.angle = 0;
+    particle.bringToTop();
+
+    if (this.minParticleScale !== 1 || this.maxParticleScale !== 1)
+    {
+        particle.scale.set(this.game.rnd.realInRange(this.minParticleScale, this.maxParticleScale));
+    }
+
     if (this.width > 1 || this.height > 1)
     {
         particle.reset(this.game.rnd.integerInRange(this.left, this.right), this.game.rnd.integerInRange(this.top, this.bottom));
@@ -407,7 +409,7 @@ Phaser.Particles.Arcade.Emitter.prototype.emitParticle = function () {
 
     particle.body.bounce.setTo(this.bounce.x, this.bounce.y);
 
-    if (this.minParticleSpeed.x != this.maxParticleSpeed.x)
+    if (this.minParticleSpeed.x !== this.maxParticleSpeed.x)
     {
         particle.body.velocity.x = this.game.rnd.integerInRange(this.minParticleSpeed.x, this.maxParticleSpeed.x);
     }
@@ -416,7 +418,7 @@ Phaser.Particles.Arcade.Emitter.prototype.emitParticle = function () {
         particle.body.velocity.x = this.minParticleSpeed.x;
     }
 
-    if (this.minParticleSpeed.y != this.maxParticleSpeed.y)
+    if (this.minParticleSpeed.y !== this.maxParticleSpeed.y)
     {
         particle.body.velocity.y = this.game.rnd.integerInRange(this.minParticleSpeed.y, this.maxParticleSpeed.y);
     }
@@ -425,21 +427,13 @@ Phaser.Particles.Arcade.Emitter.prototype.emitParticle = function () {
         particle.body.velocity.y = this.minParticleSpeed.y;
     }
 
-    particle.body.gravity.y = this.gravity;
-
-    if (this.minRotation != this.maxRotation)
+    if (this.minRotation !== this.maxRotation)
     {
         particle.body.angularVelocity = this.game.rnd.integerInRange(this.minRotation, this.maxRotation);
     }
-    else
+    else if (this.minRotation !== 0)
     {
         particle.body.angularVelocity = this.minRotation;
-    }
-
-    if (this.minParticleScale !== 1 || this.maxParticleScale !== 1)
-    {
-        var scale = this.game.rnd.realInRange(this.minParticleScale, this.maxParticleScale);
-        particle.scale.setTo(scale, scale);
     }
 
     if (typeof this._frames === 'object')
@@ -451,7 +445,9 @@ Phaser.Particles.Arcade.Emitter.prototype.emitParticle = function () {
         particle.frame = this._frames;
     }
 
-    particle.body.friction = this.particleFriction;
+    particle.body.gravity.y = this.gravity;
+    particle.body.drag.x = this.particleDrag.x;
+    particle.body.drag.y = this.particleDrag.y;
     particle.body.angularDrag = this.angularDrag;
 
 }
@@ -531,40 +527,6 @@ Phaser.Particles.Arcade.Emitter.prototype.at = function (object) {
     }
 
 }
-
-/**
-* The emitters alpha value.
-* @name Phaser.Particles.Arcade.Emitter#alpha
-* @property {number} alpha - Gets or sets the alpha value of the Emitter.
-Object.defineProperty(Phaser.Particles.Arcade.Emitter.prototype, "alpha", {
-    
-    get: function () {
-        return this._container.alpha;
-    },
-
-    set: function (value) {
-        this._container.alpha = value;
-    }
-
-});
-*/
-
-/**
-* The emitter visible state.
-* @name Phaser.Particles.Arcade.Emitter#visible
-* @property {boolean} visible - Gets or sets the Emitter visible state.
-Object.defineProperty(Phaser.Particles.Arcade.Emitter.prototype, "visible", {
-    
-    get: function () {
-        return this._container.visible;
-    },
-
-    set: function (value) {
-        this._container.visible = value;
-    }
-
-});
-*/
 
 /**
 * @name Phaser.Particles.Arcade.Emitter#x

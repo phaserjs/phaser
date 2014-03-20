@@ -260,18 +260,6 @@ Phaser.Physics.Arcade.prototype = {
         body.velocity.x = this.computeVelocity(1, body, body.velocity.x, body.acceleration.x, body.drag.x, body.maxVelocity.x);
         body.velocity.y = this.computeVelocity(2, body, body.velocity.y, body.acceleration.y, body.drag.y, body.maxVelocity.y);
 
-        //  Horizontal
-        // this._velocityDelta = (this.computeVelocity(1, body, body.velocity.x, body.acceleration.x, body.drag.x, body.maxVelocity.x) - body.velocity.x) * this.game.time.physicsElapsed * 0.5 * 60;
-        // body.velocity.x += this._velocityDelta;
-        // body.position.x += (body.velocity.x * this.game.time.physicsElapsed);
-        // body.velocity.x += this._velocityDelta;
-
-        //  Vertical
-        // this._velocityDelta = (this.computeVelocity(2, body, body.velocity.y, body.acceleration.y, body.drag.y, body.maxVelocity.y) - body.velocity.y) * this.game.time.physicsElapsed * 0.5 * 60;
-        // body.velocity.y += this._velocityDelta;
-        // body.position.y += (body.velocity.y * this.game.time.physicsElapsed);
-        // body.velocity.y += this._velocityDelta;
-
     },
 
     /**

@@ -102,18 +102,6 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.center = new Phaser.Point(sprite.x + this.halfWidth, sprite.y + this.halfHeight);
 
     /**
-    * @property {number} _sx - Internal cache var.
-    * @private
-    */
-    this._sx = sprite.scale.x;
-
-    /**
-    * @property {number} _sy - Internal cache var.
-    * @private
-    */
-    this._sy = sprite.scale.y;
-
-    /**
     * @property {Phaser.Point} velocity - The velocity in pixels per second sq. of the Body.
     */
     this.velocity = new Phaser.Point();
@@ -304,6 +292,30 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     */
     this.tilePadding = new Phaser.Point();
 
+    /**
+    * @property {number} _sx - Internal cache var.
+    * @private
+    */
+    this._sx = sprite.scale.x;
+
+    /**
+    * @property {number} _sy - Internal cache var.
+    * @private
+    */
+    this._sy = sprite.scale.y;
+
+    /**
+    * @property {number} _dx - Internal cache var.
+    * @private
+    */
+    this._dx = 0;
+
+    /**
+    * @property {number} _dy - Internal cache var.
+    * @private
+    */
+    this._dy = 0;
+
 };
 
 Phaser.Physics.Arcade.Body.prototype = {
@@ -316,14 +328,17 @@ Phaser.Physics.Arcade.Body.prototype = {
     */
     updateBounds: function () {
 
-        if (this.sprite.scale.x !== this._sx || this.sprite.scale.y !== this._sy)
+        var asx = Math.abs(this.sprite.scale.x);
+        var asy = Math.abs(this.sprite.scale.y);
+
+        if (asx !== this._sx || asy !== this._sy)
         {
-            this.width = this.sourceWidth * this.sprite.scale.x;
-            this.height = this.sourceHeight * this.sprite.scale.y;
+            this.width = this.sourceWidth * asx;
+            this.height = this.sourceHeight * asy;
             this.halfWidth = Math.floor(this.width / 2);
             this.halfHeight = Math.floor(this.height / 2);
-            this._sx = this.sprite.scale.x;
-            this._sy = this.sprite.scale.y;
+            this._sx = asx;
+            this._sy = asy;
             this.center.setTo(this.position.x + this.halfWidth, this.position.y + this.halfHeight);
 
             return true;
@@ -365,11 +380,12 @@ Phaser.Physics.Arcade.Body.prototype = {
         this.position.y = (this.sprite.world.y - (this.sprite.anchor.y * this.height)) + this.offset.y;
         this.rotation = this.sprite.angle;
 
+        this.preRotation = this.rotation;
+
         if (this.updateBounds() || this.sprite._cache[4] === 1)
         {
             this.prev.x = this.position.x;
             this.prev.y = this.position.y;
-            this.preRotation = this.rotation;
         }
 
         if (this.moves)
@@ -426,35 +442,35 @@ Phaser.Physics.Arcade.Body.prototype = {
 
         if (this.moves)
         {
-            var dx = this.deltaX();
-            var dy = this.deltaY();
+            this._dx = this.deltaX();
+            this._dy = this.deltaY();
 
-            if (this.deltaMax.x !== 0 && dx !== 0)
+            if (this.deltaMax.x !== 0 && this._dx !== 0)
             {
-                if (dx < 0 && dx < -this.deltaMax.x)
+                if (this._dx < 0 && this._dx < -this.deltaMax.x)
                 {
-                    dx = -this.deltaMax.x;
+                    this._dx = -this.deltaMax.x;
                 }
-                else if (dx > 0 && dx > this.deltaMax.x)
+                else if (this._dx > 0 && this._dx > this.deltaMax.x)
                 {
-                    dx = this.deltaMax.x;
+                    this._dx = this.deltaMax.x;
                 }
             }
 
-            if (this.deltaMax.y !== 0 && dy !== 0)
+            if (this.deltaMax.y !== 0 && this._dy !== 0)
             {
-                if (dy < 0 && dx < -this.deltaMax.y)
+                if (this._dy < 0 && this._dx < -this.deltaMax.y)
                 {
-                    dy = -this.deltaMax.y;
+                    this._dy = -this.deltaMax.y;
                 }
-                else if (dy > 0 && dy > this.deltaMax.y)
+                else if (this._dy > 0 && this._dy > this.deltaMax.y)
                 {
-                    dy = this.deltaMax.y;
+                    this._dy = this.deltaMax.y;
                 }
             }
 
-            this.sprite.x += dx;
-            this.sprite.y += dy;
+            this.sprite.x += this._dx;
+            this.sprite.y += this._dy;
         }
 
         this.center.setTo(this.position.x + this.halfWidth, this.position.y + this.halfHeight);
@@ -466,7 +482,6 @@ Phaser.Physics.Arcade.Body.prototype = {
 
         this.prev.x = this.position.x;
         this.prev.y = this.position.y;
-        this.preRotation = this.rotation;
 
     },
 
@@ -554,16 +569,23 @@ Phaser.Physics.Arcade.Body.prototype = {
     */
     reset: function (x, y) {
 
-        this.velocity.setTo(0, 0);
-        this.acceleration.setTo(0, 0);
+        this.velocity.set(0);
+        this.acceleration.set(0);
 
         this.angularVelocity = 0;
         this.angularAcceleration = 0;
 
-        this.position.set(x, y);
-        this.prev.set(x, y);
-        this.rotation = this.sprite.rotation;
+        this.position.x = (x - (this.sprite.anchor.x * this.width)) + this.offset.x;
+        this.position.y = (y - (this.sprite.anchor.y * this.height)) + this.offset.y;
+
+        this.prev.x = this.position.x;
+        this.prev.y = this.position.y;
+
+        this.rotation = this.sprite.angle;
         this.preRotation = this.rotation;
+
+        this._sx = this.sprite.scale.x;
+        this._sy = this.sprite.scale.y;
         
         this.center.setTo(this.position.x + this.halfWidth, this.position.y + this.halfHeight);
 

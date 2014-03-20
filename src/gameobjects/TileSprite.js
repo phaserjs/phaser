@@ -144,7 +144,7 @@ Phaser.TileSprite.prototype.constructor = Phaser.TileSprite;
 */
 Phaser.TileSprite.prototype.preUpdate = function() {
 
-    if (this._cache[4] === 1)
+    if (this._cache[4] === 1 && this.exists)
     {
         this.world.setTo(this.parent.position.x + this.position.x, this.parent.position.y + this.position.y);
         this.worldTransform.tx = this.world.x;
@@ -153,7 +153,7 @@ Phaser.TileSprite.prototype.preUpdate = function() {
         this._cache[1] = this.world.y;
         this._cache[2] = this.rotation;
 
-        if (this.exists && this.body)
+        if (this.body)
         {
             this.body.preUpdate();
         }
@@ -412,6 +412,42 @@ Phaser.TileSprite.prototype.play = function (name, frameRate, loop, killOnComple
     return this.animations.play(name, frameRate, loop, killOnComplete);
 
 }
+
+/**
+* Resets the TileSprite. This places the TileSprite at the given x/y world coordinates, resets the tilePosition and then
+* sets alive, exists, visible and renderable all to true. Also resets the outOfBounds state.
+* If the TileSprite has a physics body that too is reset.
+* 
+* @method Phaser.TileSprite#reset
+* @memberof Phaser.TileSprite
+* @param {number} x - The x coordinate (in world space) to position the Sprite at.
+* @param {number} y - The y coordinate (in world space) to position the Sprite at.
+* @return (Phaser.TileSprite) This instance.
+*/
+Phaser.TileSprite.prototype.reset = function(x, y) {
+
+    this.world.setTo(x, y);
+    this.position.x = x;
+    this.position.y = y;
+    this.alive = true;
+    this.exists = true;
+    this.visible = true;
+    this.renderable = true;
+    this._outOfBoundsFired = false;
+
+    this.tilePosition.x = 0;
+    this.tilePosition.y = 0;
+
+    if (this.body)
+    {
+        this.body.reset(x, y, false, false);
+    }
+
+    this._cache[4] = 1;
+
+    return this;
+    
+};
 
 /**
 * Indicates the rotation of the Sprite, in degrees, from its original orientation. Values from 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation.

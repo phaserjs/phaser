@@ -7,7 +7,7 @@
 *
 * Phaser - http://www.phaser.io
 *
-* v2.0.1 "Aes Sedai" - Built: Thu Mar 20 2014 00:19:27
+* v2.0.1 "Aes Sedai" - Built: Thu Mar 20 2014 03:46:58
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -9604,7 +9604,7 @@ PIXI.RenderTexture.tempMatrix = new PIXI.Matrix();
 *
 * Phaser - http://www.phaser.io
 *
-* v2.0.1 "Aes Sedai" - Built: Thu Mar 20 2014 00:19:27
+* v2.0.1 "Aes Sedai" - Built: Thu Mar 20 2014 03:46:57
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -26156,7 +26156,7 @@ Phaser.Sprite.prototype.constructor = Phaser.Sprite;
 */
 Phaser.Sprite.prototype.preUpdate = function() {
 
-    if (this._cache[4] === 1)
+    if (this._cache[4] === 1 && this.exists)
     {
         this.world.setTo(this.parent.position.x + this.position.x, this.parent.position.y + this.position.y);
         this.worldTransform.tx = this.world.x;
@@ -26165,7 +26165,7 @@ Phaser.Sprite.prototype.preUpdate = function() {
         this._cache[1] = this.world.y;
         this._cache[2] = this.rotation;
 
-        if (this.exists && this.body)
+        if (this.body)
         {
             this.body.preUpdate();
         }
@@ -26600,6 +26600,8 @@ Phaser.Sprite.prototype.reset = function(x, y, health) {
     {
         this.body.reset(x, y, false, false);
     }
+
+    this._cache[4] = 1;
 
     return this;
     
@@ -27862,7 +27864,7 @@ Phaser.TileSprite.prototype.constructor = Phaser.TileSprite;
 */
 Phaser.TileSprite.prototype.preUpdate = function() {
 
-    if (this._cache[4] === 1)
+    if (this._cache[4] === 1 && this.exists)
     {
         this.world.setTo(this.parent.position.x + this.position.x, this.parent.position.y + this.position.y);
         this.worldTransform.tx = this.world.x;
@@ -27871,7 +27873,7 @@ Phaser.TileSprite.prototype.preUpdate = function() {
         this._cache[1] = this.world.y;
         this._cache[2] = this.rotation;
 
-        if (this.exists && this.body)
+        if (this.body)
         {
             this.body.preUpdate();
         }
@@ -28130,6 +28132,42 @@ Phaser.TileSprite.prototype.play = function (name, frameRate, loop, killOnComple
     return this.animations.play(name, frameRate, loop, killOnComplete);
 
 }
+
+/**
+* Resets the TileSprite. This places the TileSprite at the given x/y world coordinates, resets the tilePosition and then
+* sets alive, exists, visible and renderable all to true. Also resets the outOfBounds state.
+* If the TileSprite has a physics body that too is reset.
+* 
+* @method Phaser.TileSprite#reset
+* @memberof Phaser.TileSprite
+* @param {number} x - The x coordinate (in world space) to position the Sprite at.
+* @param {number} y - The y coordinate (in world space) to position the Sprite at.
+* @return (Phaser.TileSprite) This instance.
+*/
+Phaser.TileSprite.prototype.reset = function(x, y) {
+
+    this.world.setTo(x, y);
+    this.position.x = x;
+    this.position.y = y;
+    this.alive = true;
+    this.exists = true;
+    this.visible = true;
+    this.renderable = true;
+    this._outOfBoundsFired = false;
+
+    this.tilePosition.x = 0;
+    this.tilePosition.y = 0;
+
+    if (this.body)
+    {
+        this.body.reset(x, y, false, false);
+    }
+
+    this._cache[4] = 1;
+
+    return this;
+    
+};
 
 /**
 * Indicates the rotation of the Sprite, in degrees, from its original orientation. Values from 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation.
@@ -44679,18 +44717,6 @@ Phaser.Physics.Arcade.prototype = {
         body.velocity.x = this.computeVelocity(1, body, body.velocity.x, body.acceleration.x, body.drag.x, body.maxVelocity.x);
         body.velocity.y = this.computeVelocity(2, body, body.velocity.y, body.acceleration.y, body.drag.y, body.maxVelocity.y);
 
-        //  Horizontal
-        // this._velocityDelta = (this.computeVelocity(1, body, body.velocity.x, body.acceleration.x, body.drag.x, body.maxVelocity.x) - body.velocity.x) * this.game.time.physicsElapsed * 0.5 * 60;
-        // body.velocity.x += this._velocityDelta;
-        // body.position.x += (body.velocity.x * this.game.time.physicsElapsed);
-        // body.velocity.x += this._velocityDelta;
-
-        //  Vertical
-        // this._velocityDelta = (this.computeVelocity(2, body, body.velocity.y, body.acceleration.y, body.drag.y, body.maxVelocity.y) - body.velocity.y) * this.game.time.physicsElapsed * 0.5 * 60;
-        // body.velocity.y += this._velocityDelta;
-        // body.position.y += (body.velocity.y * this.game.time.physicsElapsed);
-        // body.velocity.y += this._velocityDelta;
-
     },
 
     /**
@@ -46170,18 +46196,6 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.center = new Phaser.Point(sprite.x + this.halfWidth, sprite.y + this.halfHeight);
 
     /**
-    * @property {number} _sx - Internal cache var.
-    * @private
-    */
-    this._sx = sprite.scale.x;
-
-    /**
-    * @property {number} _sy - Internal cache var.
-    * @private
-    */
-    this._sy = sprite.scale.y;
-
-    /**
     * @property {Phaser.Point} velocity - The velocity in pixels per second sq. of the Body.
     */
     this.velocity = new Phaser.Point();
@@ -46372,6 +46386,30 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     */
     this.tilePadding = new Phaser.Point();
 
+    /**
+    * @property {number} _sx - Internal cache var.
+    * @private
+    */
+    this._sx = sprite.scale.x;
+
+    /**
+    * @property {number} _sy - Internal cache var.
+    * @private
+    */
+    this._sy = sprite.scale.y;
+
+    /**
+    * @property {number} _dx - Internal cache var.
+    * @private
+    */
+    this._dx = 0;
+
+    /**
+    * @property {number} _dy - Internal cache var.
+    * @private
+    */
+    this._dy = 0;
+
 };
 
 Phaser.Physics.Arcade.Body.prototype = {
@@ -46384,14 +46422,17 @@ Phaser.Physics.Arcade.Body.prototype = {
     */
     updateBounds: function () {
 
-        if (this.sprite.scale.x !== this._sx || this.sprite.scale.y !== this._sy)
+        var asx = Math.abs(this.sprite.scale.x);
+        var asy = Math.abs(this.sprite.scale.y);
+
+        if (asx !== this._sx || asy !== this._sy)
         {
-            this.width = this.sourceWidth * this.sprite.scale.x;
-            this.height = this.sourceHeight * this.sprite.scale.y;
+            this.width = this.sourceWidth * asx;
+            this.height = this.sourceHeight * asy;
             this.halfWidth = Math.floor(this.width / 2);
             this.halfHeight = Math.floor(this.height / 2);
-            this._sx = this.sprite.scale.x;
-            this._sy = this.sprite.scale.y;
+            this._sx = asx;
+            this._sy = asy;
             this.center.setTo(this.position.x + this.halfWidth, this.position.y + this.halfHeight);
 
             return true;
@@ -46433,11 +46474,12 @@ Phaser.Physics.Arcade.Body.prototype = {
         this.position.y = (this.sprite.world.y - (this.sprite.anchor.y * this.height)) + this.offset.y;
         this.rotation = this.sprite.angle;
 
+        this.preRotation = this.rotation;
+
         if (this.updateBounds() || this.sprite._cache[4] === 1)
         {
             this.prev.x = this.position.x;
             this.prev.y = this.position.y;
-            this.preRotation = this.rotation;
         }
 
         if (this.moves)
@@ -46494,35 +46536,35 @@ Phaser.Physics.Arcade.Body.prototype = {
 
         if (this.moves)
         {
-            var dx = this.deltaX();
-            var dy = this.deltaY();
+            this._dx = this.deltaX();
+            this._dy = this.deltaY();
 
-            if (this.deltaMax.x !== 0 && dx !== 0)
+            if (this.deltaMax.x !== 0 && this._dx !== 0)
             {
-                if (dx < 0 && dx < -this.deltaMax.x)
+                if (this._dx < 0 && this._dx < -this.deltaMax.x)
                 {
-                    dx = -this.deltaMax.x;
+                    this._dx = -this.deltaMax.x;
                 }
-                else if (dx > 0 && dx > this.deltaMax.x)
+                else if (this._dx > 0 && this._dx > this.deltaMax.x)
                 {
-                    dx = this.deltaMax.x;
+                    this._dx = this.deltaMax.x;
                 }
             }
 
-            if (this.deltaMax.y !== 0 && dy !== 0)
+            if (this.deltaMax.y !== 0 && this._dy !== 0)
             {
-                if (dy < 0 && dx < -this.deltaMax.y)
+                if (this._dy < 0 && this._dx < -this.deltaMax.y)
                 {
-                    dy = -this.deltaMax.y;
+                    this._dy = -this.deltaMax.y;
                 }
-                else if (dy > 0 && dy > this.deltaMax.y)
+                else if (this._dy > 0 && this._dy > this.deltaMax.y)
                 {
-                    dy = this.deltaMax.y;
+                    this._dy = this.deltaMax.y;
                 }
             }
 
-            this.sprite.x += dx;
-            this.sprite.y += dy;
+            this.sprite.x += this._dx;
+            this.sprite.y += this._dy;
         }
 
         this.center.setTo(this.position.x + this.halfWidth, this.position.y + this.halfHeight);
@@ -46534,7 +46576,6 @@ Phaser.Physics.Arcade.Body.prototype = {
 
         this.prev.x = this.position.x;
         this.prev.y = this.position.y;
-        this.preRotation = this.rotation;
 
     },
 
@@ -46622,16 +46663,23 @@ Phaser.Physics.Arcade.Body.prototype = {
     */
     reset: function (x, y) {
 
-        this.velocity.setTo(0, 0);
-        this.acceleration.setTo(0, 0);
+        this.velocity.set(0);
+        this.acceleration.set(0);
 
         this.angularVelocity = 0;
         this.angularAcceleration = 0;
 
-        this.position.set(x, y);
-        this.prev.set(x, y);
-        this.rotation = this.sprite.rotation;
+        this.position.x = (x - (this.sprite.anchor.x * this.width)) + this.offset.x;
+        this.position.y = (y - (this.sprite.anchor.y * this.height)) + this.offset.y;
+
+        this.prev.x = this.position.x;
+        this.prev.y = this.position.y;
+
+        this.rotation = this.sprite.angle;
         this.preRotation = this.rotation;
+
+        this._sx = this.sprite.scale.x;
+        this._sy = this.sprite.scale.y;
         
         this.center.setTo(this.position.x + this.halfWidth, this.position.y + this.halfHeight);
 
@@ -47010,16 +47058,15 @@ Phaser.Particles.Arcade.Emitter = function (game, x, y, maxParticles) {
     this.gravity = 100;
 
     /**
-    * @property {any} particleClass - For emitting your own particle class types.
+    * @property {any} particleClass - For emitting your own particle class types. They must extend Phaser.Sprite.
     * @default
     */
-    this.particleClass = null;
+    this.particleClass = Phaser.Sprite;
 
     /**
-    * @property {number} particleFriction - The friction component of particles launched from the emitter.
-    * @default
+    * @property {Phaser.Point} particleDrag - The X and Y drag component of particles launched from the emitter.
     */
-    this.particleFriction = 0;
+    this.particleDrag = new Phaser.Point();
 
     /**
     * @property {number} angularDrag - The angular drag component of particles launched from the emitter if they are rotating.
@@ -47101,7 +47148,7 @@ Phaser.Particles.Arcade.Emitter = function (game, x, y, maxParticles) {
     * @property {boolean} emitY
     */
     this.emitY = y;
-    
+
 };
 
 Phaser.Particles.Arcade.Emitter.prototype = Object.create(Phaser.Group.prototype);
@@ -47177,25 +47224,19 @@ Phaser.Particles.Arcade.Emitter.prototype.makeParticles = function (keys, frames
 
     while (i < quantity)
     {
-        if (this.particleClass === null)
+        if (typeof keys === 'object')
         {
-            if (typeof keys === 'object')
-            {
-                rndKey = this.game.rnd.pick(keys);
-            }
-
-            if (typeof frames === 'object')
-            {
-                rndFrame = this.game.rnd.pick(frames);
-            }
-
-            particle = new Phaser.Sprite(this.game, 0, 0, rndKey, rndFrame);
-            this.game.physics.arcade.enable(particle, false);
+            rndKey = this.game.rnd.pick(keys);
         }
-        // else
-        // {
-            // particle = new this.particleClass(this.game);
-        // }
+
+        if (typeof frames === 'object')
+        {
+            rndFrame = this.game.rnd.pick(frames);
+        }
+
+        particle = new this.particleClass(this.game, 0, 0, rndKey, rndFrame);
+
+        game.physics.arcade.enable(particle, false);
 
         if (collide)
         {
@@ -47213,7 +47254,7 @@ Phaser.Particles.Arcade.Emitter.prototype.makeParticles = function (keys, frames
         particle.visible = false;
 
         //  Center the origin for rotation assistance
-        particle.anchor.setTo(0.5, 0.5);
+        particle.anchor.set(0.5);
 
         this.add(particle);
 
@@ -47221,6 +47262,7 @@ Phaser.Particles.Arcade.Emitter.prototype.makeParticles = function (keys, frames
     }
 
     return this;
+
 }
 
 /**
@@ -47297,6 +47339,14 @@ Phaser.Particles.Arcade.Emitter.prototype.emitParticle = function () {
         return;
     }
 
+    particle.angle = 0;
+    particle.bringToTop();
+
+    if (this.minParticleScale !== 1 || this.maxParticleScale !== 1)
+    {
+        particle.scale.set(this.game.rnd.realInRange(this.minParticleScale, this.maxParticleScale));
+    }
+
     if (this.width > 1 || this.height > 1)
     {
         particle.reset(this.game.rnd.integerInRange(this.left, this.right), this.game.rnd.integerInRange(this.top, this.bottom));
@@ -47310,7 +47360,7 @@ Phaser.Particles.Arcade.Emitter.prototype.emitParticle = function () {
 
     particle.body.bounce.setTo(this.bounce.x, this.bounce.y);
 
-    if (this.minParticleSpeed.x != this.maxParticleSpeed.x)
+    if (this.minParticleSpeed.x !== this.maxParticleSpeed.x)
     {
         particle.body.velocity.x = this.game.rnd.integerInRange(this.minParticleSpeed.x, this.maxParticleSpeed.x);
     }
@@ -47319,7 +47369,7 @@ Phaser.Particles.Arcade.Emitter.prototype.emitParticle = function () {
         particle.body.velocity.x = this.minParticleSpeed.x;
     }
 
-    if (this.minParticleSpeed.y != this.maxParticleSpeed.y)
+    if (this.minParticleSpeed.y !== this.maxParticleSpeed.y)
     {
         particle.body.velocity.y = this.game.rnd.integerInRange(this.minParticleSpeed.y, this.maxParticleSpeed.y);
     }
@@ -47328,21 +47378,13 @@ Phaser.Particles.Arcade.Emitter.prototype.emitParticle = function () {
         particle.body.velocity.y = this.minParticleSpeed.y;
     }
 
-    particle.body.gravity.y = this.gravity;
-
-    if (this.minRotation != this.maxRotation)
+    if (this.minRotation !== this.maxRotation)
     {
         particle.body.angularVelocity = this.game.rnd.integerInRange(this.minRotation, this.maxRotation);
     }
-    else
+    else if (this.minRotation !== 0)
     {
         particle.body.angularVelocity = this.minRotation;
-    }
-
-    if (this.minParticleScale !== 1 || this.maxParticleScale !== 1)
-    {
-        var scale = this.game.rnd.realInRange(this.minParticleScale, this.maxParticleScale);
-        particle.scale.setTo(scale, scale);
     }
 
     if (typeof this._frames === 'object')
@@ -47354,7 +47396,9 @@ Phaser.Particles.Arcade.Emitter.prototype.emitParticle = function () {
         particle.frame = this._frames;
     }
 
-    particle.body.friction = this.particleFriction;
+    particle.body.gravity.y = this.gravity;
+    particle.body.drag.x = this.particleDrag.x;
+    particle.body.drag.y = this.particleDrag.y;
     particle.body.angularDrag = this.angularDrag;
 
 }
@@ -47434,40 +47478,6 @@ Phaser.Particles.Arcade.Emitter.prototype.at = function (object) {
     }
 
 }
-
-/**
-* The emitters alpha value.
-* @name Phaser.Particles.Arcade.Emitter#alpha
-* @property {number} alpha - Gets or sets the alpha value of the Emitter.
-Object.defineProperty(Phaser.Particles.Arcade.Emitter.prototype, "alpha", {
-    
-    get: function () {
-        return this._container.alpha;
-    },
-
-    set: function (value) {
-        this._container.alpha = value;
-    }
-
-});
-*/
-
-/**
-* The emitter visible state.
-* @name Phaser.Particles.Arcade.Emitter#visible
-* @property {boolean} visible - Gets or sets the Emitter visible state.
-Object.defineProperty(Phaser.Particles.Arcade.Emitter.prototype, "visible", {
-    
-    get: function () {
-        return this._container.visible;
-    },
-
-    set: function (value) {
-        this._container.visible = value;
-    }
-
-});
-*/
 
 /**
 * @name Phaser.Particles.Arcade.Emitter#x

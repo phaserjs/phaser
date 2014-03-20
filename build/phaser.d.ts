@@ -2384,7 +2384,7 @@ declare module Phaser {
         static radToDeg(radians: number): number;
         static randomSign(): number;
         static reverseAngle(angleRed: number): number;
-        static removeRandom<T>(objects: T[], startIndex?: number, length?: number): void;
+        static removeRandom<T>(objects: T[], startIndex?: number, length?: number): T;
         static roundTo(value: number, place?: number, base?: number): number;
         static shear(n: number): number;
         static shift(stack: any[]): any;

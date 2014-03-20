@@ -77,6 +77,9 @@ Bug Fixes
 * ArcadePhysics.collideSpriteVsSprite checks if both objects have bodies before processing.
 * Debug.spriteBounds will now take the position of the camera into consideration when rendering the bounds (fix #603)
 * InputHandler.dragFromCenter will now work regardless of the anchor point of the Sprite (fix #600)
+* Emitter.friction property removed and replaced with Emitter.particleDrag, which is now correctly applied.
+* ArcadePhysics.Body.reset incorrectly set the Body.rotation to Sprite.rotation instead of angle.
+* Emitter.emitParticle resets the rotation on the particle to zero before emitting it.
 
 
 Updated
@@ -100,6 +103,9 @@ Updated
 * Removed the use of Int16Array from all Game Objects, swapped for standard Array. Phaser now runs on Android 2.x again (fix #590)
 * When creating a Sprite (via Group.create or directly) with exists = false and a P2 body, the body is not added to the world.
 * Every Input class now checks to see if it has already been started. If so it doesn't add the listeners again unless they have been nulled.
+* Lots of fixes to the TypeScript definitions file (thanks as always to clark-stevenson for his tireless work on these)
+* Emitters now bring the particle they are about to emit to the top of the Group before doing so. Avoids particles hidden behind others.
+* ArcadePhysics.Body.setSize corrected to take the parameters as positive, not negative values.
 
 
 New Features
@@ -113,6 +119,7 @@ New Features
 * Time.deltaCap lets you set a cap for the delta timer. It defaults to zero (which is disabled). If you use ArcadePhysics it gets set to 0.2, but you can modify as needed.
 * ArcadePhysics.Body has a deltaMax object, which allows you to cap the delta applied to the position to +- this value.
 * ArcadePhysics.Body now checks the Sprite scale automatically and adjusts the body size accordingly (fix #608)
+* Emitter.particleClass can now be set to any object that extends Phaser.Sprite, which will be emitted instead of a regular Sprite.
 
 
 Version 2.0.0 - "Aes Sedai" - March 13th 2014

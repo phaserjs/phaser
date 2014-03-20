@@ -190,7 +190,7 @@ Phaser.Sprite.prototype.constructor = Phaser.Sprite;
 */
 Phaser.Sprite.prototype.preUpdate = function() {
 
-    if (this._cache[4] === 1)
+    if (this._cache[4] === 1 && this.exists)
     {
         this.world.setTo(this.parent.position.x + this.position.x, this.parent.position.y + this.position.y);
         this.worldTransform.tx = this.world.x;
@@ -199,7 +199,7 @@ Phaser.Sprite.prototype.preUpdate = function() {
         this._cache[1] = this.world.y;
         this._cache[2] = this.rotation;
 
-        if (this.exists && this.body)
+        if (this.body)
         {
             this.body.preUpdate();
         }
@@ -634,6 +634,8 @@ Phaser.Sprite.prototype.reset = function(x, y, health) {
     {
         this.body.reset(x, y, false, false);
     }
+
+    this._cache[4] = 1;
 
     return this;
     
