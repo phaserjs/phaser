@@ -3,13 +3,27 @@
     "{{body.name}}": [
       {% for fixture in body.fixtures %}{% if not forloop.first %} ,{% endif %}
       {
-        "density": {{fixture.density}}, "friction": {{fixture.friction}}, "bounce": {{fixture.bounce}}, {% if fixture.isSensor %}"isSensor"=true, {% endif %}
-          "filter": { "categoryBits": {{fixture.filter_categoryBits}}, "maskBits": {{fixture.filter_maskBits}} },
-        "polygons":[ 
-          {% for polygon in fixture.polygons %}{% if not forloop.first %} ,{% endif %}
-          [ {% for point in polygon %} {% if not forloop.first %}, {% endif %} {{point.x}}, {{point.y}} {% endfor %} ]
-          {% endfor %}
-        ]
+        "isSensor": {{fixture.isSensor}},
+        "filter": {
+          "categoryBits": {{fixture.filter_categoryBits}},
+          "maskBits": {{fixture.filter_maskBits}}
+        },
+
+        {% if fixture.isCircle %}
+          "circle": {
+            "radius": {{fixture.radius|floatformat:3}},
+            "position": [
+              {{fixture.center.x|floatformat:3}},
+              {{fixture.center.y|floatformat:3}}
+            ]
+          }
+        {% else %}
+          "polygons":[ 
+            {% for polygon in fixture.polygons %}{% if not forloop.first %} ,{% endif %}
+            [ {% for point in polygon %} {% if not forloop.first %}, {% endif %} {{point.x}}, {{point.y}} {% endfor %} ]
+            {% endfor %}
+          ]
+        {% endif %}
       }
       {% endfor %}
     ]

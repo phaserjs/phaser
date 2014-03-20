@@ -11,44 +11,14 @@
 		<enabled>no</enabled>
 	</anchorPoint>
 	<origin>
-        <type>fixed</type>
-	    <relX>0.0</relX>
-		<relY>1.0</relY>
-    </origin>
-    <!-- Circle support does not work as with standard box2d - you can't change the center
-         or add more than one circle to a shape. This is why it is disabled for now -->
-    <supportsCircles>no</supportsCircles>
-	<body>
-	</body>
-	<global>
-	</global>
+    <type>fixed</type>
+    <relX>0.0</relX>
+	  <relY>1.0</relY>
+  </origin>
+    <supportsCircles>yes</supportsCircles>
 	<body>
 	</body>
 	<fixture>
-        <parameter>
-            <name>density</name>
-            <displayName>Density</displayName>
-            <type>float</type>
-            <min>-1000</min>
-            <max>1000</max>
-            <default>2.0</default>
-        </parameter>
-        <parameter>
-            <name>bounce</name>
-            <displayName>Bounce</displayName>
-            <type>float</type>
-            <min>0</min>
-            <max>1000</max>
-            <default>0.0</default>
-        </parameter>
-        <parameter>
-            <name>friction</name>
-            <displayName>Friction</displayName>
-            <type>float</type>
-            <min>0</min>
-            <max>1000</max>
-            <default>0.0</default>
-        </parameter>
         <parameter>
             <name>isSensor</name>
             <displayName>Is Sensor</displayName>
