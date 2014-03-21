@@ -93,6 +93,7 @@ Bug Fixes
 * If no seed was given in the Game config object, the RandomDataGenerator wouldn't be started (thank tylerjhutchison fix #619)
 * p2 revolute pivots were wrongly signed (thanks georgiee, fix #621)
 * P2.Body.loadPolygon no longer modifies the Cache array (fix #613)
+* The volume given in Sound.play now over-rides that set in Sound.addMarker if specified (fix #623)
 
 
 Updated
