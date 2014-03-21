@@ -1136,14 +1136,17 @@ Phaser.Physics.P2.Body.prototype = {
 
         if (fixtureData.circle)
         {
-            //  A circle has unfortunately no position in p2. pretty useless.
-            var shape = new p2.Circle(this.world.pxm(fixtureData.circle.radius));
-            shape.collisionGroup = fixtureData.filter.categoryBits;
-            shape.collisionMask = fixtureData.filter.maskBits;
-            shape.sensor = fixtureData.isSensor;
+            var shape = new p2.Circle(this.world.pxm(fixtureData.circle.radius))
+            shape.collisionGroup = fixtureData.filter.categoryBits
+            shape.collisionMask = fixtureData.filter.maskBits
+            shape.sensor = fixtureData.isSensor
 
-            this.data.addShape(shape);
-            generatedShapes.push(shape);
+            var offset = p2.vec2.create();
+            offset[0] = this.world.pxmi(fixtureData.circle.position[0] - this.sprite.width/2)
+            offset[1] = this.world.pxmi(fixtureData.circle.position[1] - this.sprite.height/2)
+            
+            this.data.addShape(shape, offset);
+            generatedShapes.push(shape)
         }
         else
         {
