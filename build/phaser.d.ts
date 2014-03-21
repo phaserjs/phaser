@@ -1117,6 +1117,7 @@ declare module Phaser {
         canvas: HTMLCanvasElement;
         context: CanvasRenderingContext2D;
         ctx: CanvasRenderingContext2D;
+        dirty: boolean;
         game: Phaser.Game;
         height: number;
         imageData: any[];
@@ -2703,6 +2704,7 @@ declare module Phaser {
 
             bounds: Phaser.Rectangle;
             checkCollision: { up?: boolean; down?: boolean; left?: boolean; right?: boolean; };
+            forceX: boolean;
             game: Phaser.Game;
             gravity: Phaser.Point;
             quadTree: Phaser.QuadTree;
@@ -2723,6 +2725,7 @@ declare module Phaser {
             distanceToXY(displayObject: any, x: number, y: number): number;
             enable(object: Object, children?: Boolean): void;
             enableBody(object: Object): void;
+            intersects(body1: Phaser.Physics.Arcade.Body, body2: Phaser.Physics.Arcade.Body): boolean;
             moveToObject(displayObject: any, destination: any, speed?: number, maxTime?: number): number;
             moveToPointer(displayObject: any, speed?: number, pointer?: Phaser.Pointer, maxTime?: number): number;
             moveToXY(displayObject: any, x: number, y: number, speed?: number, maxTime?: number): number;
@@ -3052,7 +3055,7 @@ declare module Phaser {
             createLockConstraint(bodyA: any, bodyB: any, offset: Float32Array, angle?: number, maxForce?: number): Phaser.Physics.P2.LockConstraint;
             createMaterial(name?: string, body?: Phaser.Physics.P2.Body): Phaser.Physics.P2.Material;
             createParticle(x: number, y: number, mass: number, addToWorld?: Boolean, options?: Object, data?: Object): Phaser.Physics.P2.Body;
-            createPrismaticConstraint(body: any, bodyB: any, lock?: boolean, anchorA?: Float32Array, anchorB?: Float32Array, axis?: Float32Array, maxForce?: number): Phaser.Physics.P2.PrismaticConstraint;
+            createPrismaticConstraint(body: any, bodyB: any, lockRotation?: boolean, anchorA?: Float32Array, anchorB?: Float32Array, axis?: Float32Array, maxForce?: number): Phaser.Physics.P2.PrismaticConstraint;
             createRevoluteConstraint(bodyA: any, pivotA: Float32Array, bodyB: any, pivotB: Float32Array, maxForce?: number): Phaser.Physics.P2.RevoluteContraint;
             createSpring(bodyA: any, bodyB: any, restLength?: number, stiffness?: number, damping?: number, worldA?: Float32Array, worldB?: Float32Array, localA?: Float32Array, localB?: Float32Array): Phaser.Physics.P2.Spring;
             destroy(): void;
@@ -3268,7 +3271,7 @@ declare module Phaser {
 
             class PrismaticConstraint {
 
-                constructor(world: Phaser.Physics.P2, bodyA?: Phaser.Physics.P2.Body, bodyB?: Phaser.Physics.P2.Body, lock?: boolean, anchorA?: Float32Array, anchorB?: Float32Array, axis?: Float32Array, maxForce?: number);
+                constructor(world: Phaser.Physics.P2, bodyA?: Phaser.Physics.P2.Body, bodyB?: Phaser.Physics.P2.Body, lockRotation?: boolean, anchorA?: Float32Array, anchorB?: Float32Array, axis?: Float32Array, maxForce?: number);
 
                 game: Phaser.Game;
                 world: Phaser.Physics.P2;
@@ -4119,7 +4122,7 @@ declare module Phaser {
         width: number;
         widthInPixels: number;
 
-        addTilesetImage(tileset: string, key?: string, tileWidth?: number, tileHeight?: number, tileMargin?: number, tileSpacing?: number, gid?: number): void;
+        addTilesetImage(tileset: string, key?: string, tileWidth?: number, tileHeight?: number, tileMargin?: number, tileSpacing?: number, gid?: number): Phaser.Tileset;
         calculateFaces(layer: number): void;
         copy(x: number, y: number, width: number, height: number, layer?: any): Phaser.Tile[];
         create(name: string, width: number, height: number, tileWidth:number, tileHeight:number): Phaser.Tilemap;
@@ -4144,7 +4147,7 @@ declare module Phaser {
         getTileWorldXY(x: number, y: number, tileWidth?: number, tileHeight?: number, layer?: any): Phaser.Tile;
         hasTile(x: number, y: number, layer: Phaser.TilemapLayer): boolean;
         paste(x: number, y: number, tileblock: Phaser.Tile[], layer?: any): void;
-        putTile(tile: any, x: number, y: number, layer?: any): void;
+        putTile(tile: any, x: number, y: number, layer?: any): Phaser.Tile;
         putTileWorldXY(tile: any, x: number, y: number, tileWidth: number, tileHeight: number, layer?: any): void;
         random(x: number, y: number, width: number, height: number, layer?: any): void;
         removeAllLayers(): void;
@@ -4245,8 +4248,10 @@ declare module Phaser {
 
         angle: number;
         animations: Phaser.AnimationManager;
+        autoCull: boolean;
         body: any;
         cameraOffset: Phaser.Point;
+        checkWorldBounds: boolean;
         events: Phaser.Events;
         exists: boolean;
         fixedToCamera: boolean;
