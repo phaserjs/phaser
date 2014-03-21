@@ -80,6 +80,7 @@ Bug Fixes
 * Emitter.friction property removed and replaced with Emitter.particleDrag, which is now correctly applied.
 * ArcadePhysics.Body.reset incorrectly set the Body.rotation to Sprite.rotation instead of angle.
 * Emitter.emitParticle resets the rotation on the particle to zero before emitting it.
+* If no seed was given in the Game config object, the RandomDataGenerator wouldn't be started (thank tylerjhutchison fix #619)
 
 
 Updated
