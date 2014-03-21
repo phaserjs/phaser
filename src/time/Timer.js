@@ -86,6 +86,12 @@ Phaser.Timer = function (game, autoDestroy) {
     this._pauseStarted = 0;
 
     /**
+    * @property {number} _pauseTotal - Total paused time.
+    * @private
+    */
+    this._pauseTotal = 0;
+
+    /**
     * @property {number} _now - The current start-time adjusted time.
     * @private
     */
@@ -450,6 +456,8 @@ Phaser.Timer.prototype = {
         {
             var pauseDuration = this.game.time.now - this._pauseStarted;
 
+            this._pauseTotal += pauseDuration;
+
             for (var i = 0; i < this.events.length; i++)
             {
                 this.events[i].tick += pauseDuration;
@@ -570,7 +578,7 @@ Object.defineProperty(Phaser.Timer.prototype, "length", {
 Object.defineProperty(Phaser.Timer.prototype, "ms", {
 
     get: function () {
-        return this._now - this._started;
+        return this._now - this._started - this._pauseTotal;
     }
 
 });

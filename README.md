@@ -94,6 +94,8 @@ Bug Fixes
 * p2 revolute pivots were wrongly signed (thanks georgiee, fix #621)
 * P2.Body.loadPolygon no longer modifies the Cache array (fix #613)
 * The volume given in Sound.play now over-rides that set in Sound.addMarker if specified (fix #623)
+* BitmapDatas when used as Game Object textures in WebGL now update themselves properly.
+* Timer.ms now correctly reports the ms time even if the Timer has been paused (thanks Nambew, fix #624)
 
 
 Updated

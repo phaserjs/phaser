@@ -225,7 +225,7 @@ Phaser.Image.prototype.loadTexture = function (key, frame) {
     }
     else if (key instanceof Phaser.BitmapData)
     {
-        this.key = key.key;
+        this.key = key;
         this.setTexture(key.texture);
         return;
     }

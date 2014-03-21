@@ -364,7 +364,6 @@ Phaser.BitmapData.prototype = {
     */
     render: function () {
 
-console.log('bmd dity');
         if (this.game.renderType === Phaser.WEBGL && this.dirty)
         {
             //  Only needed if running in WebGL, otherwise this array will never get cleared down
