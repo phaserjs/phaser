@@ -81,6 +81,7 @@ Bug Fixes
 * ArcadePhysics.Body.reset incorrectly set the Body.rotation to Sprite.rotation instead of angle.
 * Emitter.emitParticle resets the rotation on the particle to zero before emitting it.
 * If no seed was given in the Game config object, the RandomDataGenerator wouldn't be started (thank tylerjhutchison fix #619)
+* p2 revolute pivots were wrongly signed (thanks georgiee, fix #621)
 
 
 Updated
@@ -101,12 +102,13 @@ Updated
 * ArcadePhysics.World now has setBounds and setBoundsToWorld methods, which are called automatically on world resizing.
 * ArcadePhysics.Body no longer sets the offset to match the anchor.
 * The StateManager is now responsible for clearing down input, timers, tweens, physics, camera and the World display list.
-* Removed the use of Int16Array from all Game Objects, swapped for standard Array. Phaser now runs on Android 2.x again (fix #590)
+* Removed the use of Int16Array from all Game Objects, swapped for standard Array. Phaser now runs on Android 2.x and IE9 again (fix #590)
 * When creating a Sprite (via Group.create or directly) with exists = false and a P2 body, the body is not added to the world.
 * Every Input class now checks to see if it has already been started. If so it doesn't add the listeners again unless they have been nulled.
 * Lots of fixes to the TypeScript definitions file (thanks as always to clark-stevenson for his tireless work on these)
 * Emitters now bring the particle they are about to emit to the top of the Group before doing so. Avoids particles hidden behind others.
 * ArcadePhysics.Body.setSize corrected to take the parameters as positive, not negative values.
+* ArcadePhysics.World.seperate will now check gravity totals to determine separation order. You can set World.forceX to true to always separate on X first and skip this check.
 
 
 New Features

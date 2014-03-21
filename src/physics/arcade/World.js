@@ -57,6 +57,11 @@ Phaser.Physics.Arcade = function (game) {
     this.TILE_BIAS = 16;
 
     /**
+    * @property {boolean} forceX - If true World.separate will always separate on the X axis before Y. Otherwise it will check gravity totals first.
+    */
+    this.forceX = false;
+
+    /**
     * @property {Phaser.QuadTree} quadTree - The world QuadTree.
     */
     this.quadTree = new Phaser.QuadTree(this.game.world.bounds.x, this.game.world.bounds.y, this.game.world.bounds.width, this.game.world.bounds.height, this.maxObjects, this.maxLevels);
@@ -719,9 +724,10 @@ Phaser.Physics.Arcade.prototype = {
 
     /**
     * The core separation function to separate two physics bodies.
+    *
     * @method Phaser.Physics.Arcade#separate
-    * @param {Phaser.Physics.Arcade.Body} body1 - The Body object to separate.
-    * @param {Phaser.Physics.Arcade.Body} body2 - The Body object to separate.
+    * @param {Phaser.Physics.Arcade.Body} body1 - The first Body object to separate.
+    * @param {Phaser.Physics.Arcade.Body} body2 - The second Body object to separate.
     * @param {function} [processCallback=null] - A callback function that lets you perform additional checks against the two objects if they overlap. If this function is set then the sprites will only be collided if it returns true.
     * @param {object} [callbackContext] - The context in which to run the process callback.
     * @param {boolean} overlapOnly - Just run an overlap or a full collision.
@@ -729,7 +735,7 @@ Phaser.Physics.Arcade.prototype = {
     */
     separate: function (body1, body2, processCallback, callbackContext, overlapOnly) {
 
-        if (!Phaser.Rectangle.intersects(body1, body2))
+        if (!this.intersects(body1, body2))
         {
             return false;
         }
@@ -746,16 +752,52 @@ Phaser.Physics.Arcade.prototype = {
             return true;
         }
 
-        if (this.separateX(body1, body2, overlapOnly) || this.separateY(body1, body2, overlapOnly))
+        //  Do we separate on x or y first?
+        //  If we weren't having to carry around so much legacy baggage with us, we could do this properly. But alas ...
+        if (this.forceX || Math.abs(this.gravity.y + body1.gravity.y) < Math.abs(this.gravity.x + body1.gravity.x))
         {
-            this._result = true;
-
-            return true;
+            this._result = (this.separateX(body1, body2, overlapOnly) || this.separateY(body1, body2, overlapOnly));
         }
         else
         {
+            this._result = (this.separateY(body1, body2, overlapOnly) || this.separateX(body1, body2, overlapOnly));
+        }
+
+        return this._result;
+
+    },
+
+    /**
+    * Check for intersection against two bodies.
+    *
+    * @method Phaser.Physics.Arcade#intersects
+    * @param {Phaser.Physics.Arcade.Body} body1 - The Body object to check.
+    * @param {Phaser.Physics.Arcade.Body} body2 - The Body object to check.
+    * @return {boolean} True if they intersect, otherwise false.
+    */
+    intersects: function (body1, body2) {
+
+        if (body1.right <= body2.position.x)
+        {
             return false;
         }
+
+        if (body1.bottom <= body2.position.y)
+        {
+            return false;
+        }
+
+        if (body1.position.x >= body2.right)
+        {
+            return false;
+        }
+
+        if (body1.position.y >= body2.bottom)
+        {
+            return false;
+        }
+
+        return true;
 
     },
 
@@ -778,7 +820,7 @@ Phaser.Physics.Arcade.prototype = {
         this._overlap = 0;
 
         //  Check if the hulls actually overlap
-        if (Phaser.Rectangle.intersects(body1, body2))
+        if (this.intersects(body1, body2))
         {
             this._maxOverlap = body1.deltaAbsX() + body2.deltaAbsX() + this.OVERLAP_BIAS;
 
@@ -791,7 +833,7 @@ Phaser.Physics.Arcade.prototype = {
             else if (body1.deltaX() > body2.deltaX())
             {
                 //  Body1 is moving right and/or Body2 is moving left
-                this._overlap = body1.x + body1.width - body2.x;
+                this._overlap = body1.right - body2.x;
 
                 if ((this._overlap > this._maxOverlap) || body1.checkCollision.right === false || body2.checkCollision.left === false)
                 {
@@ -891,7 +933,7 @@ Phaser.Physics.Arcade.prototype = {
         this._overlap = 0;
 
         //  Check if the hulls actually overlap
-        if (Phaser.Rectangle.intersects(body1, body2))
+        if (this.intersects(body1, body2))
         {
             this._maxOverlap = body1.deltaAbsY() + body2.deltaAbsY() + this.OVERLAP_BIAS;
 
@@ -904,7 +946,7 @@ Phaser.Physics.Arcade.prototype = {
             else if (body1.deltaY() > body2.deltaY())
             {
                 //  Body1 is moving down and/or Body2 is moving up
-                this._overlap = body1.y + body1.height - body2.y;
+                this._overlap = body1.bottom - body2.y;
 
                 if ((this._overlap > this._maxOverlap) || body1.checkCollision.down === false || body2.checkCollision.up === false)
                 {
@@ -921,7 +963,7 @@ Phaser.Physics.Arcade.prototype = {
             else if (body1.deltaY() < body2.deltaY())
             {
                 //  Body1 is moving up and/or Body2 is moving down
-                this._overlap = body1.y - body2.height - body2.y;
+                this._overlap = body1.y - body2.bottom;
 
                 if ((-this._overlap > this._maxOverlap) || body1.checkCollision.up === false || body2.checkCollision.down === false)
                 {
