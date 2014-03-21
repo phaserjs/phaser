@@ -101,7 +101,10 @@ Phaser.BitmapData = function (game, key, width, height) {
     */
     this.type = Phaser.BITMAPDATA;
 
-    this._dirty = false;
+    /**
+    * @property {boolean} dirty - If dirty this BitmapData will be re-rendered.
+    */
+    this.dirty = false;
 
 }
 
@@ -140,7 +143,7 @@ Phaser.BitmapData.prototype = {
 
         this.context.clearRect(0, 0, this.width, this.height);
     
-        this._dirty = true;
+        this.dirty = true;
 
     },
 
@@ -161,7 +164,7 @@ Phaser.BitmapData.prototype = {
             this.imageData = this.context.getImageData(0, 0, width, height);
         }
     
-        this._dirty = true;
+        this.dirty = true;
 
     },
 
@@ -209,7 +212,7 @@ Phaser.BitmapData.prototype = {
 
             this.context.putImageData(this.imageData, 0, 0);
 
-            this._dirty = true;
+            this.dirty = true;
         }
 
     },
@@ -361,16 +364,14 @@ Phaser.BitmapData.prototype = {
     */
     render: function () {
 
-        if (this._dirty)
+console.log('bmd dity');
+        if (this.game.renderType === Phaser.WEBGL && this.dirty)
         {
             //  Only needed if running in WebGL, otherwise this array will never get cleared down
-            if (this.game.renderType === Phaser.WEBGL)
-            {
-                //  should use the rendersession
-                PIXI.updateWebGLTexture(this.baseTexture, this.game.renderer.gl);
-            }
+            //  should use the rendersession
+            PIXI.updateWebGLTexture(this.baseTexture, this.game.renderer.gl);
 
-            this._dirty = false;
+            this.dirty = false;
         }
 
     }

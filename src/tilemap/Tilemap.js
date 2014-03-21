@@ -190,44 +190,6 @@ Phaser.Tilemap.prototype = {
 
         return this.createBlankLayer(name, width, height, tileWidth, tileHeight, group);
 
-        /*
-        var row;
-        var output = [];
-
-        for (var y = 0; y < height; y++)
-        {
-            row = [];
-
-            for (var x = 0; x < width; x++)
-            {
-                row.push(null);
-            }
-
-            output.push(row);
-        }
-
-        this.layers.push({
-
-            name: name,
-            x: 0,
-            y: 0,
-            width: width,
-            height: height,
-            widthInPixels: this.widthInPixels,
-            heightInPixels: this.heightInPixels,
-            alpha: 1,
-            visible: true,
-            properties: {},
-            indexes: [],
-            callbacks: [],
-            bodies: [],
-            data: output
-
-        });
-
-        this.currentLayer = this.layers.length - 1;
-        */
-
     },
 
     /**
@@ -258,6 +220,7 @@ Phaser.Tilemap.prototype = {
     * @param {number} [tileMargin=0] - The width of the tiles in the Tileset Image. If not given it will default to the map.tileWidth value.
     * @param {number} [tileSpacing=0] - The height of the tiles in the Tileset Image. If not given it will default to the map.tileHeight value.
     * @param {number} [gid=0] - If adding multiple tilesets to a blank/dynamic map, specify the starting GID the set will use here.
+    * @return {Phaser.Tileset} Returns the Tileset object that was created or updated, or null if it failed.
     */
     addTilesetImage: function (tileset, key, tileWidth, tileHeight, tileMargin, tileSpacing, gid) {
 
@@ -275,7 +238,7 @@ Phaser.Tilemap.prototype = {
             }
             else
             {
-                return false;
+                return null;
             }
         }
 
@@ -287,7 +250,7 @@ Phaser.Tilemap.prototype = {
         if (this.tilesets[tileset])
         {
             this.tilesets[tileset].setImage(this.game.cache.getImage(key));
-            return true;
+            return this.tilesets[tileset];
         }
         else
         {
@@ -335,9 +298,11 @@ Phaser.Tilemap.prototype = {
                 }
             }
 
+            return newSet;
+
         }
 
-        return false;
+        return null;
 
     },
 
@@ -475,7 +440,7 @@ Phaser.Tilemap.prototype = {
             output.push(row);
         }
 
-        this.layers.push({
+        var layer = {
 
             name: name,
             x: 0,
@@ -492,11 +457,13 @@ Phaser.Tilemap.prototype = {
             bodies: [],
             data: output
 
-        });
+        };
+
+        this.layers.push(layer);
 
         this.currentLayer = this.layers.length - 1;
 
-        return group.add(new Phaser.TilemapLayer(this.game, this, this.layers.length - 1, width, height));
+        return group.add(new Phaser.TilemapLayer(this.game, this, this.layers.length - 1, layer.widthInPixels, layer.heightInPixels));
 
     },
 
@@ -1013,12 +980,11 @@ Phaser.Tilemap.prototype = {
     * @param {number} x - X position to place the tile (given in tile units, not pixels)
     * @param {number} y - Y position to place the tile (given in tile units, not pixels)
     * @param {number|string|Phaser.TilemapLayer} [layer] - The layer to modify.
+    * @return {Phaser.Tile} The Tile object that was created or added to this map.
     */
     putTile: function (tile, x, y, layer) {
 
-        console.log('putTile' ,layer);
         layer = this.getLayer(layer);
-        console.log('putTile2', layer);
 
         if (x >= 0 && x < this.layers[layer].width && y >= 0 && y < this.layers[layer].height)
         {
@@ -1061,10 +1027,13 @@ Phaser.Tilemap.prototype = {
             }
 
             this.layers[layer].dirty = true;
-			console.log(this.layers[layer]);
 
             this.calculateFaces(layer);
+            
+            return this.layers[layer].data[y][x];
         }
+
+        return null;
 
     },
 

@@ -121,6 +121,7 @@ Updated
 * Emitters now bring the particle they are about to emit to the top of the Group before doing so. Avoids particles hidden behind others.
 * ArcadePhysics.Body.setSize corrected to take the parameters as positive, not negative values.
 * ArcadePhysics.World.seperate will now check gravity totals to determine separation order. You can set World.forceX to true to always separate on X first and skip this check.
+* TileSprites now emit outOfBounds and enterBounds events accordingly.
 
 
 New Features

@@ -308,7 +308,7 @@ Phaser.Sprite.prototype.update = function() {
 */
 Phaser.Sprite.prototype.postUpdate = function() {
 
-    if (this.key instanceof Phaser.BitmapData && this.key._dirty)
+    if (this.key instanceof Phaser.BitmapData)
     {
         this.key.render();
     }

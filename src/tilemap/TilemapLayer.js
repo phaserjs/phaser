@@ -41,7 +41,7 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
     * @property {HTMLCanvasElement} canvas - The canvas to which this TilemapLayer draws.
     */
     this.canvas = Phaser.Canvas.create(width, height, '', true);
-    
+
     /**
     * @property {CanvasRenderingContext2D} context - The 2d context of the canvas.
     */
@@ -62,7 +62,6 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
     */
     this.textureFrame = new Phaser.Frame(0, 0, 0, width, height, 'tilemapLayer', game.rnd.uuid());
 
-    // Phaser.Sprite.call(this, this.game, 0, 0, this.texture, this.textureFrame);
     Phaser.Image.call(this, this.game, 0, 0, this.texture, this.textureFrame);
 
     /**
@@ -288,7 +287,6 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
 };
 
 Phaser.TilemapLayer.prototype = Object.create(Phaser.Image.prototype);
-// Phaser.TilemapLayer.prototype = Phaser.Utils.extend(true, Phaser.TilemapLayer.prototype, Phaser.Sprite.prototype, PIXI.Sprite.prototype);
 Phaser.TilemapLayer.prototype.constructor = Phaser.TilemapLayer;
 
 /**
@@ -299,14 +297,26 @@ Phaser.TilemapLayer.prototype.constructor = Phaser.TilemapLayer;
 */
 Phaser.TilemapLayer.prototype.postUpdate = function () {
 
-    // Phaser.Sprite.prototype.postUpdate.call(this);
-	Phaser.Image.prototype.postUpdate.call(this);
+	// Phaser.Image.prototype.postUpdate.call(this);
 	
     //  Stops you being able to auto-scroll the camera if it's not following a sprite
     this.scrollX = this.game.camera.x * this.scrollFactorX;
     this.scrollY = this.game.camera.y * this.scrollFactorY;
 
     this.render();
+
+    //  Fixed to Camera?
+    // if (this._cache[7] === 1)
+    // {
+        this.position.x = (this.game.camera.view.x + this.cameraOffset.x) / this.game.camera.scale.x;
+        this.position.y = (this.game.camera.view.y + this.cameraOffset.y) / this.game.camera.scale.y;
+    // }
+
+    //  Update any Children
+    // for (var i = 0, len = this.children.length; i < len; i++)
+    // {
+        // this.children[i].postUpdate();
+    // }
 
 }
 
@@ -640,7 +650,7 @@ Phaser.TilemapLayer.prototype.render = function () {
             {
                 tile = this._column[x];
 
-                set = this.map.tilesets[this.map.tiles[tile.index][2]]
+                set = this.map.tilesets[this.map.tiles[tile.index][2]];
 
                 if (this.debug === false && tile.alpha !== this.context.globalAlpha)
                 {
