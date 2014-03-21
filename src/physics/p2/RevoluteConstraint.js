@@ -32,8 +32,8 @@ Phaser.Physics.P2.RevoluteConstraint = function (world, bodyA, pivotA, bodyB, pi
     */
     this.world = world;
 
-    pivotA = [ world.pxm(pivotA[0]), world.pxm(pivotA[1]) ];
-    pivotB = [ world.pxm(pivotB[0]), world.pxm(pivotB[1]) ];
+    pivotA = [ world.pxmi(pivotA[0]), world.pxmi(pivotA[1]) ];
+    pivotB = [ world.pxmi(pivotB[0]), world.pxmi(pivotB[1]) ];
 
     p2.RevoluteConstraint.call(this, bodyA, pivotA, bodyB, pivotB, maxForce);
 
