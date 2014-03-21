@@ -103,6 +103,12 @@ Phaser.Timer = function (game, autoDestroy) {
     */
     this._i = 0;
 
+    /**
+    * @property {number} _totalPauseTime - The total time for all pause duration.
+    * @private
+    */
+    this._totalPauseTime = 0;
+
 };
 
 /**
@@ -233,6 +239,7 @@ Phaser.Timer.prototype = {
 
         this._started = this.game.time.now;
         this.running = true;
+        this._totalPauseTime = 0;
 
     },
 
@@ -456,6 +463,7 @@ Phaser.Timer.prototype = {
             }
 
             this.nextTick += pauseDuration;
+            this._totalPauseTime += pauseDuration;
 
             this.paused = false;
             this._codePaused = false;
@@ -570,7 +578,7 @@ Object.defineProperty(Phaser.Timer.prototype, "length", {
 Object.defineProperty(Phaser.Timer.prototype, "ms", {
 
     get: function () {
-        return this._now - this._started;
+        return this._now - this._started - this._totalPauseTime;
     }
 
 });
