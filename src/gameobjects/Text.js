@@ -355,14 +355,14 @@ Phaser.Text.prototype.updateText = function () {
     //calculate text height
     var lineHeight = this.determineFontHeight('font: ' + this.style.font  + ';') + this.style.strokeThickness + this._lineSpacing + this.style.shadowOffsetY;
 
-    this.canvas.height = lineHeight * lines.length;
-
     if (navigator.isCocoonJS)
     {
+        lineHeight = (this.determineFontHeightInPixels(this.style.font) * 1.2) + this.style.strokeThickness;
         this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
     }
     
     //set canvas text styles
+    this.canvas.height = lineHeight * lines.length;
     this.context.fillStyle = this.style.fill;
     this.context.font = this.style.font;
 
