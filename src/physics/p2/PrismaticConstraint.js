@@ -13,15 +13,15 @@
 * @param {Phaser.Physics.P2} world - A reference to the P2 World.
 * @param {p2.Body} bodyA - First connected body.
 * @param {p2.Body} bodyB - Second connected body.
-* @param {boolean} [lock=false] - If set to true, bodyB will be free to rotate around its anchor point.
+* @param {boolean} [lockRotation=true] - If set to false, bodyB will be free to rotate around its anchor point.
 * @param {Array} [anchorA] - Body A's anchor point, defined in its own local frame. The value is an array with 2 elements matching x and y, i.e: [32, 32].
 * @param {Array} [anchorB] - Body A's anchor point, defined in its own local frame. The value is an array with 2 elements matching x and y, i.e: [32, 32].
 * @param {Array} [axis] - An axis, defined in body A frame, that body B's anchor point may slide along. The value is an array with 2 elements matching x and y, i.e: [32, 32].
 * @param {number} [maxForce] - The maximum force that should be applied to constrain the bodies.
 */
-Phaser.Physics.P2.PrismaticConstraint = function (world, bodyA, bodyB, lock, anchorA, anchorB, axis, maxForce) {
+Phaser.Physics.P2.PrismaticConstraint = function (world, bodyA, bodyB, lockRotation, anchorA, anchorB, axis, maxForce) {
 
-    if (typeof lock === 'undefined') { lock = false; }
+    if (typeof lockRotation === 'undefined') { lockRotation = true; }
     if (typeof anchorA === 'undefined') { anchorA = [0, 0]; }
     if (typeof anchorB === 'undefined') { anchorB = [0, 0]; }
     if (typeof axis === 'undefined') { axis = [0, 0]; }
@@ -40,7 +40,7 @@ Phaser.Physics.P2.PrismaticConstraint = function (world, bodyA, bodyB, lock, anc
     anchorA = [ world.pxmi(anchorA[0]), world.pxmi(anchorA[1]) ];
     anchorB = [ world.pxmi(anchorB[0]), world.pxmi(anchorB[1]) ];
 
-    var options = { localAnchorA: anchorA, localAnchorB: anchorB, localAxisA: axis, maxForce: maxForce, disableRotationalLock: lock };
+    var options = { localAnchorA: anchorA, localAnchorB: anchorB, localAxisA: axis, maxForce: maxForce, disableRotationalLock: !lockRotation };
 
     p2.PrismaticConstraint.call(this, bodyA, bodyB, options);
 
