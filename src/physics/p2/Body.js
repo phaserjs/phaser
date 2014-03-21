@@ -1097,6 +1097,100 @@ Phaser.Physics.P2.Body.prototype = {
 
     /**
     * Reads the shape data from a physics data file stored in the Game.Cache and adds it as a polygon to this Body.
+    * The shape data format is based on the custom phaser export in
+    * @method Phaser.Physics.P2.Body#loadPhaserPolygon
+    * @param {string} key - The key of the Physics Data file as stored in Game.Cache.
+    * @param {string} object - The key of the object within the Physics data file that you wish to load the shape data from.
+    */
+    addPhaserPolygon: function (key, object) {
+        var data = this.game.cache.getPhysicsData(key, object);
+        var createdFixtures = []
+        //cycle through the fixtures
+        for (var i = 0; i < data.length; i++)
+        {
+            var fixtureData = data[i]
+            var shapesOfFixture = this.addFixture(fixtureData)
+            createdFixtures[fixtureData.filter.group] = createdFixtures[fixtureData.filter.group] || []
+            createdFixtures[fixtureData.filter.group].push(shapesOfFixture)
+        }
+
+        this.data.aabbNeedsUpdate = true;
+        this.shapeChanged();
+
+        return createdFixtures;
+
+    },
+    
+    /**
+    * Add a polygon fixture. This is used during #loadPhaserPolygon.
+    *
+    * @method Phaser.Physics.P2.Body#addPolygonFixture
+    * @param {string} fixtureData - The data for the fixture.
+    * It contains: isSensor, filter (collision) and the actual polygon shapes
+    */
+    
+    addFixture: function(fixtureData){
+      //console.log('addPolygonFixture', fixtureData)
+      var generatedShapes = []
+
+      if (fixtureData.circle){
+        //a circle has unfortunately no position in p2. pretty useless.
+        var shape = new p2.Circle(this.world.pxm(fixtureData.circle.radius))
+        shape.collisionGroup = fixtureData.filter.categoryBits
+        shape.collisionMask = fixtureData.filter.maskBits
+        shape.sensor = fixtureData.isSensor
+
+        this.data.addShape(shape);
+        generatedShapes.push(shape)
+      }else{
+        polygons = fixtureData.polygons
+        var cm = p2.vec2.create();
+        
+        for (var i = 0; i < polygons.length; i++){
+          shapes = polygons[i]
+
+          var vertices = [];
+          for (var s = 0; s < shapes.length; s += 2)
+          {
+              vertices.push([ this.world.pxmi(shapes[s]), this.world.pxmi(shapes[s + 1]) ]);
+          }
+
+          var shape = new p2.Convex(vertices);
+
+          // Move all vertices so its center of mass is in the local center of the convex
+          for (var j = 0; j !== shape.vertices.length; j++)
+          {
+              var v = shape.vertices[j];
+              p2.vec2.sub(v, v, shape.centerOfMass);
+          }
+
+          p2.vec2.scale(cm, shape.centerOfMass, 1);
+
+          cm[0] -= this.world.pxmi(this.sprite.width / 2);
+          cm[1] -= this.world.pxmi(this.sprite.height / 2);
+
+          shape.updateTriangles();
+          shape.updateCenterOfMass();
+          shape.updateBoundingRadius();
+          
+          
+          shape.collisionGroup = fixtureData.filter.categoryBits
+          shape.collisionMask = fixtureData.filter.maskBits
+          shape.sensor = fixtureData.isSensor
+
+          this.data.addShape(shape, cm);
+
+          generatedShapes.push(shape)
+        }
+      }
+
+      return generatedShapes
+
+    },
+
+
+    /**
+    * Reads the shape data from a physics data file stored in the Game.Cache and adds it as a polygon to this Body.
     *
     * @method Phaser.Physics.P2.Body#loadPolygon
     * @param {string} key - The key of the Physics Data file as stored in Game.Cache.
@@ -1107,8 +1201,8 @@ Phaser.Physics.P2.Body.prototype = {
     * @param {boolean|number} [options.removeCollinearPoints=false] - Set to a number (angle threshold value) to remove collinear points, or false to keep all points.
     * @return {boolean} True on success, else false.
     */
-    loadPolygon: function (key, object, options) {
 
+    loadPolygon: function (key, object, options) {
         var data = this.game.cache.getPhysicsData(key, object);
 
         if (data.length === 1)
@@ -1132,7 +1226,6 @@ Phaser.Physics.P2.Body.prototype = {
             for (var i = 0; i < data.length; i++)
             {
                 var vertices = [];
-
                 for (var s = 0; s < data[i].shape.length; s += 2)
                 {
                     vertices.push([ this.world.pxmi(data[i].shape[s]), this.world.pxmi(data[i].shape[s + 1]) ]);

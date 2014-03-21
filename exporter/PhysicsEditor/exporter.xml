@@ -1,0 +1,65 @@
+<exporter>
+	<name>lime-json</name>
+	<displayName>Phaser (JSON)</displayName>
+    <description>Exporter for Phaser, JSON</description>
+	<version>1.0</version>
+	<yAxisDirection>down</yAxisDirection>
+	<physicsEngine>box2d</physicsEngine>
+	<template>phaser.json</template>
+	<fileExtension>json</fileExtension>
+	<anchorPoint>
+		<enabled>no</enabled>
+	</anchorPoint>
+	<origin>
+    <type>fixed</type>
+    <relX>0.0</relX>
+	  <relY>1.0</relY>
+  </origin>
+    <supportsCircles>yes</supportsCircles>
+	<body>
+	</body>
+	<fixture>
+        <parameter>
+            <name>isSensor</name>
+            <displayName>Is Sensor</displayName>
+            <description>If set the physial </description>
+            <type>bool</type>
+            <default>false</default>
+        </parameter>
+
+        <parameter>
+            <name>filter_groupIndex</name>
+            <displayName>Group</displayName>
+            <description>Collision group.</description>
+            <shortDescription></shortDescription>
+            <type>int</type>
+            <default>0</default>
+        </parameter>
+
+        <parameter>
+            <name>filter_bitfield</name>
+            <type>bitfield</type>
+            <size>16</size>
+        </parameter>
+
+        <parameter>
+            <name>filter_categoryBits</name>
+            <displayName>Cat.</displayName>
+            <description>Collision category</description>
+            <shortDescription>Collision category</shortDescription>
+            <type>uint16</type>
+            <default>1</default>
+            <bitfield>yes</bitfield>
+        </parameter>
+        <parameter>
+            <name>filter_maskBits</name>
+            <displayName>Mask</displayName>
+            <description>Collision mask</description>
+            <shortDescription>Collision mask</shortDescription>
+            <type>uint16</type>
+            <default>65535</default>
+            <bitfield>yes</bitfield>
+        </parameter>
+    </fixture>
+</exporter>
+
