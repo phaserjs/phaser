@@ -1,6 +1,155 @@
 Change Log
 ==========
 
+Version 2.0.0 - "Aes Sedai" - March 13th 2014
+---------------------------------------------
+
+There is an extensive [Migration Guide](https://github.com/photonstorm/phaser/blob/master/resources/Migration%20Guide.md) available. In the guide we detail the API breaking changes and approach to our new physics system. The following is a list of all the other new features, updates and bug fixes present in this release.
+
+New features:
+
+* Phaser.Image is a brand new display object perfect for logos, backgrounds, etc. You can scale, rotate, tint, blend an get input events from an Image, but it has no animation or physics body.
+* You can now use the hitArea property on Sprites and Image objects. hitArea can be a geometry object (Rectangle, Circle, Polygon, Ellipse) and is used in pointerOver checks.
+* InputManager.getLocalPosition(displayObject, pointer, output) will return the local coordinates of the specified displayObject and pointer.
+* InputManager.hitTest will test for pointer hits against a Sprite/Image, its hitArea (if set) or any of its children.
+* Text has lots of new methods to help style it: Text.fill, Text.align, Text.stroke, etc.
+* Text now works happily with font names with spaces in them.
+* Text.setShadow applies a drop shadow to the Text being rendered. Control the x, y, color and blur.
+* Text.lineSpacing allows you to set additional spacing between each line that is rendered.
+* Text.inputEnabled allows you to enable all input events over Text objects: dragging, clicking, etc - anything that works on a Sprite works on Text now too.
+* Phaser.Ellipse added. A fully compatible port of the PIXI.Ellipse class, can be used in Sprite/Image hitArea tests.
+* Phaser.Polygon added. A fully compatible port of the PIXI.Polygon class, can be used in Sprite/Image hitArea tests.
+* InputHandler.pixelPerfectOver - performs a pixel perfect check to see if any pointer is over the current object (warning: very expensive!)
+* InputHandler.pixelPerfectClick - performs a pixel perfect check but only when the pointer touches/clicks on the current object.
+* TileSprite can now use a frame from a texture atlas or a sprite sheet.
+* TileSprites can now be animated. See new example :)
+* TileSprites have a new method: autoScroll(x, y) which sets an automatic scroll running (until stopped with TileSprite.stopScroll).
+* BitmapText now uses the new XML parser which should work under CocoonJS without clashes.
+* BitmapText signature changed so you can support fonts with spaces in their names.
+* Loader.bitmapFont now has 2 extra parameters: xSpacing and ySpacing. These allow you to add extra spacing to each letter or line of the font.
+* Added the new RetroFont class. This is for rendering fixed-width bitmap fonts into an Image object. It's a texture you can apply to a Sprite/Image.
+* Added Cache.updateFrameData which is really useful for swapping FrameData blocks in the cache.
+* Loader.physics now lets you load Lime + Corona JSON Physics data, which can be used with Body.loadPolygon and Body.loadData.
+* Cache.addPhysicsData and Cache.getPhysicsData allow you to store parsed JSON physics data in the cache, for sharing between Bodies.
+* fixedToCamera now works across all display objects. When enabled it will fix at its current x/y coordinate, but can be changed via cameraOffset.
+* fixedToCamrea now works for Groups as well :) You can fix a Group to the camera and it will influence its children.
+* Tilemap.createCollisionObjects will parse Tiled data for objectgroups and convert polyline instances into physics objects you can collide with in the world.
+* Loader can now load JSON files specifically (game.load.json) and they are parsed and stored in the Game.Cache. Retrieve with game.cache.getJSON(key).
+* TileSprites can now receive full Input events, dragging, etc and be positioned in-world and fixed to cameras.
+* The StateManager now looks for a function called 'resumed' which is called when a game un-pauses.
+* Key.onHold added. This event is dispatched every time the browser sends a keydown event and the key is already being held down.
+* Stage.smoothed allows you to set if sprites will be smoothed when rendered. Set to false if you're using pixel art in your game. Default is true. Works in Canvas and WebGL.
+* Sprite.smoothed and Image.smoothed allows you to set per-Sprite smoothing, perfect if you just want to keep a few sprites smoothed (or not)
+* StateManager.start can now have as many parameters as you like. The order is: start(key, clearWorld, clearCache, ...) - they are passed to State.init() (NOT create!)
+* Loader.script now has callback (and callbackContext) parameters, so you can specify a function to run once the JS has been injected into the body.
+* Phaser.Timer.stop has a new parameter: clearEvents (default true), if true all the events in Timer will be cleared, otherwise they will remain (fixes #383)
+* All GameObjects now have a 'destroyChildren' boolean as a parameter to their destroy method. It's default is true and the value propogates down its children.
+* Pixi GrayFilter ported over (thanks nickryall #404)
+* Animation.speed added. You can now change the animation speed on the fly, without re-starting the animation (feature request #458)
+* Brand new Grunt task - creates each core library as its own file and a combined phaser.js.
+* New build script now cleanly splits Phaser, Pixi and p2 so they are each UMD wrapped and each available in the global scope (now more requireJS friendly!).
+* phaser-no-libs.js allows you to use your own version of p2.js or pixi.js with Phaser. Warning: This is totally unsupported. If you hit bugs, you fix them yourself.
+* Group.sendToBottom(child) is the handy opposite of Group.bringToTop()
+* Group.moveUp(child) will move a child up the display list, swapping with the child above it.
+* Group.moveDown(child) will move a child down the display list, swapping with the child below it.
+* Device.windowsPhone is now tested for.
+* The Debug panel now works in WebGL mode. Pay attention to the warning at the top of the Debug docs (feature request #499)
+* You can now create blank Tilemaps and then populate them with data later.
+* A single Animation object now has 3 new events: onStart, onLoop and onComplete.
+* Animation.loopCount holds the number of times the animation has looped since it last started.
+* Tween.generateData(frameRate) allows you to generate tween data into an array, which can then be used however you wish (see new examples)
+* Group.xy(index, x, y) allows you to set the x and y coordinates of a Group child at the given index.
+* Group.reverse() reverses the display order of all children in the Group.
+* Tweens are now bound to their own TweenManager, not always the global game one. So you can create your own managers now (for you clark :)
+* ScaleManager.fullScreenTarget allows you to change the DOM element that the fullscreen API is called on (feature request #526)
+* Merged Georges p2 BodyDebug and reformatted for jshint pass. Looks awesome :)
+* ArcadePhysics.Body has a new gravityScale property, which is a modifier multiplied against the world gravity value on a Body.
+* Line.coordinatesOnLine will return all coordinates on the line using Bresenhams line algorithm.
+* Line now has x, y, width, height, top, bottom, left and right properties, so you can effectively get its bounds.
+* TilemapLayer.getRayCastTiles will let you get all tiles that hit the given line for further processing.
+
+Updates:
+
+* Massive thanks to clark-stevenson for doing an amazing job update the TypeScript definitions file.
+* Debug.renderRectangle has a new parameter: filled. If true it renders as with fillRect, if false strokeRect.
+* Phaser.AnimationParser now sets the trimmed data directly for Pixi Texture frames. Tested across JSON Hash, JSON Data, Sprite Sheet and XML.
+* Game.add.renderTexture now has the addToCache parameter. If set the texture will be stored in Game.Cache and can be retrieved with Cache.getTexture(key).
+* Game.add.bitmapData now has the addToCache parameter. If set the texture will be stored in Game.Cache and can be retrieved with Cache.getBitmapData(key).
+* The InputManager now sets the canvas style cursor to 'inherit' instead of 'default'.
+* World.reset now calls Camera.reset which sends the camera back to 0,0 and un-follows any object it may have been tracking.
+* Added hostname: '*' to the grunt-connect in Gruntfile.js (fixes #426)
+* Device, Canvas and GamePad classes all updated for better CocoonJS support (thanks Videlais)
+* BitmapData.alphaMask will draw the given image onto a BitmapData using an image as an alpha mask.
+* The new GameObjectCreator (which you access via game.make or State.make) lets you easily create an object but NOT add it to the display list.
+* TilemapParser will now throw a warning if the tileset image isn't the right size for the tile dimensions.
+* We now force IE11 into Canvas mode to avoid a Pixi bug with pre-multiplied alpha. Will remove once that is fixed, sorry, but it's better than no game at all, right? :(
+* Loader.setPreloadSprite() will now set sprite.visible = true once the crop has been applied. Should help avoid issues (#430) on super-slow connections.
+* Updated the way the page visibility is checked, should now be more compatible across more browsers.
+* Phaser.Input.Key.isUp now defaults to 'true', as does GamepadButton.isUp (#474)
+* Vastly improved visibility API support + pageshow/pagehide + focus/blur. Working across Chrome, IE, Firefox, iOS, Android (also fixes #161)
+* Pausing the game will now mute audio and resuming will un-mute, unless it was muted via the game (fixes #439)
+* ScaleManager has 2 new events: ScaleManager.enterFullScreen and ScaleManager.leaveFullScreen, so you can respond to fullscreen changes directly.
+* RandomDataGenerator.integerInRange(min, max) now includes both `min` and `max` within its range (#501)
+* Tween no longer copies all the object properties into the `_valuesStart` object on creation.
+* Completely empty Tilemaps can now be created. This allows for dynamic map generation at runtime.
+* Keyboard.event now stores the most recent DOM keyboard event.
+* Animation.stop has a new parameter: dispatchComplete. If true it'll dispatch an Animation.onComplete event.
+* TileSprites now have a physics body property and call it in the pre and post updates. As with all physics bodies it's null by default.
+* json is now the default tilemap format when not defined (thanks RyanDansie, #528)
+* The Particle Emitter now remembers the frames given to it and resets it when a new particle is emitted.
+* Game.focusLoss and focusGain methods and onBlur and onFocus Signals added, allowing for more fine-grained control over game pause vs. focus loss.
+* Keyboard.removeKey method added (thanks qdrj, #550)
+* Key.event now stores the most recent DOM event that triggered it.
+
+Bug Fixes:
+
+* Explicitly paused Timer continues if you un-focus and focus the browser window (thanks georgiee)
+* Added TimerEvent.pendingDelete and checks in Timer.update, so that removing an event in a callback no longer throws an exception (thanks georgiee)
+* Fixed TypeScript defs on lines 1741-1748 (thanks wombatbuddy)
+* Previously if you used Sprite.crop() it would crop all Sprites that shared the same base image. It now takes a local copy of the texture data and crops just that.
+* Tilemap had the wrong @method signatures so most were missing from the docs.
+* Fixed bug where changing State would cause the camera to not reset if it was following an object.
+* Tile had 2 properties (callback and callbackContext) that were never assigned, updated to use the proper names (thanks ratkingsimon)
+* Fixed an error that would occur if you used InputHandler.onInputUp and the Sprite destroys itself during the event.
+* IE11 didn't populate the Device.ieVersion value. Now extracted from Trident revision, but still use Device.trident instead for IE11+ checks.
+* Fixed bug in Math.angleBetween where it was using the coordinates in the wrong order.
+* Previously using a Pixel Perfect check didn't work if the Sprite was rotated or had a non-zero anchor point, now works under all conditions + atlas frames.
+* If pixelPerfect Input Sprites overlapped each other the pixel check wasn't taken into consieration in the Pointer move method.
+* Updated Input.Mouse to use event.button not event.which, so the const reference from input.mouse.button is correct (thanks grimor)
+* Text that was fixedToCamera would 'jitter' if the world scrolled. Now works as expected across all fixed objects.
+* Fixed a bug where Sound.play wouldn't pick-up the local loop setting if not specified in the parameter.
+* Active animations now monitor if the game pauses, and resume normally when the game un-pauses (fixes #179)
+* Swapping between tabs will now pause the game correctly on mobile browsers (iOS7+)
+* Swapping between tabs will pause and resume tweens correctly, allowing their onComplete events to still fire (fixes #292)
+* Fullscreen mode now uses window.outerWidth/Height when using EXACT_FIT as the scale mode, which fixes input coordinate errors (fixes #232)
+* Fullscreen mode now works in Internet Explorer and uses the new fullscreen non-prefix call.
+* Fixed TilemapParser - would spit out a tileset warning if margin/spacing were set (fix #485, thanks Cybolic)
+* AnimationParser.spriteSheet wasn't taking the margin or spacing into account when calculating the numbers of sprites per row/column, nor was it allowing for extra power-of-two padding at the end (fix #482, thanks yig)
+* AnimationManager.add documentation said that 'frames' could be null, but the code couldn't handle this so it defaults to an empty array if none given (thanks yig)
+* Fixed issue stopping SoundManager.volume from working correctly on a global volume basis (fixes #488)
+* Phaser.Timer will no longer create negative ticks during game boot, no matter how small the Timer delay is (fixes #366)
+* Phaser.Timer will no longer resume if it was previously paused and the game loses focus and then resumes (fixes #383)
+* Tweens now resume correctly if the game pauses (focus loss) while they are paused.
+* Tweens don't double pause if they were already paused and the game pauses.
+* Buttons are now cleanly destroyed if part of a Group without leaving their InputHandler running.
+* You can now safely destroy a Group and the 'destroyChildren' boolean will propogate fully down the display list.
+* Calling destroy on an already destroyed object would throw a run-time error. Now checked for and aborted.
+* Calling destroy while in an Input Event callback now works for either the parent Group or the calling object itself.
+* Loader.replaceInFileList wouldn't over-write the previous entry correctly, which caused the Loader.image overwrite parameter to fail (thanks basoko, fixes #493)
+* If the game was set to NO_SCALE and you swapped orientation, it would pause and resize, then fail to resize when you swapped back (thanks starnut, fixes #258)
+* Device no longer things a Windows Phone or Windows Tablet are desktop devices (thanks wombatbuddy, fixes #506)
+* Sound.onMarkerComplete event is now dispatched when a marker stops. See Sound.onLoop for a looping marker event (thanks registered99, fixes #500)
+* Events.onInputUp would be dispatched twice if the Sprite had drag enabled, now only dispatched once (thanks Overbryd, fixes #502)
+* You can now load in CSV Tilemaps again and they get created properly (fixes #391)
+* Tilemap.putTile can now insert a tile into a null/blank area of the map (before it could only replace existing tiles)
+* Tilemap.putTile now correctly re-calculates the collision data based on the new collideIndexes array (fixes #371)
+* Circle.circumferencePoint using the asDegrees parameter would apply degToRad instead of radToDeg (thanks Ziriax, fixes #509)
+* InputHandler.enableSnap now correctly assigns the snap offset parameters (fixes #515)
+* Objects that are 'fixedToCamera' are now still correctly placed even if the camera is scaled (#512)
+* Changed the define function calls to use named modules, allows pixi, phaser and p2 to reside in 1 file and still be located by requirejs (thanks brejep, #531)
+* Cache.destroy fixed to clear up properly (thanks Dumtard, #537)
+
+
 Version 1.1.5 - "Saldaea" - 12th February 2014
 ----------------------------------------------
 
