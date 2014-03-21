@@ -123,6 +123,7 @@ New Features
 * ArcadePhysics.Body has a deltaMax object, which allows you to cap the delta applied to the position to +- this value.
 * ArcadePhysics.Body now checks the Sprite scale automatically and adjusts the body size accordingly (fix #608)
 * Emitter.particleClass can now be set to any object that extends Phaser.Sprite, which will be emitted instead of a regular Sprite.
+* There is a brand new PhysicsEditor export script specifically for Phaser, and new p2 polygon parsing functions thanks to georgiee.
 
 
 Version 2.0.0 - "Aes Sedai" - March 13th 2014
