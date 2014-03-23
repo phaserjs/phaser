@@ -12,13 +12,18 @@
 * @constructor
 * @param {string} name - The name of the tileset in the map data.
 * @param {number} firstgid - The Tiled firstgid value. In non-Tiled data this should be considered the starting index value of the first tile in this set.
-* @param {number} width - Width of each tile in pixels.
-* @param {number} height - Height of each tile in pixels.
-* @param {number} margin - The amount of margin around the tilesheet.
-* @param {number} spacing - The amount of spacing between each tile in the sheet.
-* @param {object} properties - Tileset properties.
+* @param {number} [width=32] - Width of each tile in pixels.
+* @param {number} [height=32] - Height of each tile in pixels.
+* @param {number} [margin=0] - The amount of margin around the tilesheet.
+* @param {number} [spacing=0] - The amount of spacing between each tile in the sheet.
+* @param {object} [properties] - Tileset properties.
 */
 Phaser.Tileset = function (name, firstgid, width, height, margin, spacing, properties) {
+
+    if (typeof width === 'undefined' || width <= 0) { width = 32; }
+    if (typeof height === 'undefined' || height <= 0) { height = 32; }
+    if (typeof margin === 'undefined') { margin = 0; }
+    if (typeof spacing === 'undefined') { spacing = 0; }
 
     /**
     * @property {string} name - The name of the Tileset.

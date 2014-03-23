@@ -215,8 +215,8 @@ Phaser.Tilemap.prototype = {
     * @method Phaser.Tilemap#addTilesetImage
     * @param {string} tileset - The name of the tileset as specified in the map data.
     * @param {string} [key] - The key of the Phaser.Cache image used for this tileset. If not specified it will look for an image with a key matching the tileset parameter.
-    * @param {number} [tileWidth] - The width of the tiles in the Tileset Image. If not given it will default to the map.tileWidth value.
-    * @param {number} [tileHeight] - The height of the tiles in the Tileset Image. If not given it will default to the map.tileHeight value.
+    * @param {number} [tileWidth=32] - The width of the tiles in the Tileset Image. If not given it will default to the map.tileWidth value, if that isn't set then 32.
+    * @param {number} [tileHeight=32] - The height of the tiles in the Tileset Image. If not given it will default to the map.tileHeight value, if that isn't set then 32.
     * @param {number} [tileMargin=0] - The width of the tiles in the Tileset Image. If not given it will default to the map.tileWidth value.
     * @param {number} [tileSpacing=0] - The height of the tiles in the Tileset Image. If not given it will default to the map.tileHeight value.
     * @param {number} [gid=0] - If adding multiple tilesets to a blank/dynamic map, specify the starting GID the set will use here.
@@ -229,6 +229,17 @@ Phaser.Tilemap.prototype = {
         if (typeof tileMargin === 'undefined') { tileMargin = 0; }
         if (typeof tileSpacing === 'undefined') { tileSpacing = 0; }
         if (typeof gid === 'undefined') { gid = 0; }
+
+        //  In-case we're working from a blank map
+        if (tileWidth === 0)
+        {
+            tileWidth = 32;
+        }
+
+        if (tileHeight === 0)
+        {
+            tileHeight = 32;
+        }
 
         if (typeof key === 'undefined')
         {
@@ -370,6 +381,7 @@ Phaser.Tilemap.prototype = {
     * Creates a new TilemapLayer object. By default TilemapLayers are fixed to the camera.
     * The `layer` parameter is important. If you've created your map in Tiled then you can get this by looking in Tiled and looking at the Layer name.
     * Or you can open the JSON file it exports and look at the layers[].name value. Either way it must match.
+    * If you wish to create a blank layer to put your own tiles on then see Tilemap.createBlankLayer.
     *
     * @method Phaser.Tilemap#createLayer
     * @param {number|string} layer - The layer array index value, or if a string is given the layer name, within the map data that this TilemapLayer represents.
@@ -463,7 +475,23 @@ Phaser.Tilemap.prototype = {
 
         this.currentLayer = this.layers.length - 1;
 
-        return group.add(new Phaser.TilemapLayer(this.game, this, this.layers.length - 1, layer.widthInPixels, layer.heightInPixels));
+        var w = layer.widthInPixels;
+        var h = layer.heightInPixels;
+
+        if (w > this.game.width)
+        {
+            w = this.game.width;
+        }
+
+        if (h > this.game.height)
+        {
+            h = this.game.height;
+        }
+
+        var output = new Phaser.TilemapLayer(this.game, this, this.layers.length - 1, w, h);
+        output.name = name;
+
+        return group.add(output);
 
     },
 

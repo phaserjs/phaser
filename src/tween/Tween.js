@@ -199,7 +199,7 @@ Phaser.Tween.prototype = {
     * @param {function} [ease=null] - Easing function. If not set it will default to Phaser.Easing.Linear.None.
     * @param {boolean} [autoStart=false] - Whether this tween will start automatically or not.
     * @param {number} [delay=0] - Delay before this tween will start, defaults to 0 (no delay). Value given is in ms.
-    * @param {boolean} [repeat=0] - Should the tween automatically restart once complete? (ignores any chained tweens).
+    * @param {number} [repeat=0] - Should the tween automatically restart once complete? If you want it to run forever set as Number.MAX_VALUE. This ignores any chained tweens.
     * @param {boolean} [yoyo=false] - A tween that yoyos will reverse itself when it completes.
     * @return {Phaser.Tween} This Tween object.
     */

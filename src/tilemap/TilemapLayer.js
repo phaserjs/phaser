@@ -206,7 +206,9 @@ Phaser.TilemapLayer.prototype.constructor = Phaser.TilemapLayer;
 */
 Phaser.TilemapLayer.prototype.postUpdate = function () {
 
-	// Phaser.Image.prototype.postUpdate.call(this);
+// console.log('layer pu');
+
+	Phaser.Image.prototype.postUpdate.call(this);
 	
     //  Stops you being able to auto-scroll the camera if it's not following a sprite
     this.scrollX = this.game.camera.x * this.scrollFactorX;
@@ -685,7 +687,6 @@ Object.defineProperty(Phaser.TilemapLayer.prototype, "scrollX", {
 
     set: function (value) {
 
-        // if (value !== this.cache.x && value >= 0 && this.layer && this.layer.widthInPixels > this.width)
         if (value !== this.cache.x && value >= 0 && this.layer.widthInPixels > this.width)
         {
             this.cache.x = value;
@@ -726,7 +727,6 @@ Object.defineProperty(Phaser.TilemapLayer.prototype, "scrollY", {
 
     set: function (value) {
 
-        // if (value !== this.cache.y && value >= 0 && this.layer && this.heightInPixels > this.renderHeight)
         if (value !== this.cache.y && value >= 0 && this.layer.heightInPixels > this.height)
         {
             this.cache.y = value;

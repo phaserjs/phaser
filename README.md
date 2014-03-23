@@ -96,6 +96,7 @@ Bug Fixes
 * The volume given in Sound.play now over-rides that set in Sound.addMarker if specified (fix #623)
 * BitmapDatas when used as Game Object textures in WebGL now update themselves properly.
 * Timer.ms now correctly reports the ms time even if the Timer has been paused (thanks Nambew, fix #624)
+* If you added a Tileset to an empty map it would eventually throw an out of memory error.
 
 
 Updated
@@ -124,6 +125,7 @@ Updated
 * ArcadePhysics.Body.setSize corrected to take the parameters as positive, not negative values.
 * ArcadePhysics.World.seperate will now check gravity totals to determine separation order. You can set World.forceX to true to always separate on X first and skip this check.
 * TileSprites now emit outOfBounds and enterBounds events accordingly.
+* You can now create multiple blank layers in a Tilemap.
 
 
 New Features
