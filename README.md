@@ -1,7 +1,6 @@
 ![Phaser 2.0](http://www.phaser.io/images/phaser2-github.png)
 
-Phaser 2.0.2
-============
+# Phaser 2.0.2 [![Build Status](https://travis-ci.org/photonstorm/phaser.png?branch=dev)](https://travis-ci.org/photonstorm/phaser)
 
 Phaser is a fast, free and fun open source game framework for making desktop and mobile browser HTML5 games. It uses [Pixi.js](https://github.com/GoodBoyDigital/pixi.js/) internally for fast 2D Canvas and WebGL rendering.
 
