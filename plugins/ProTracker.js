@@ -1,12 +1,13 @@
+/* jshint asi:true,camelcase:false,curly:false,indent:2,unused:false */
 /*
   amiga protracker module player for web audio api
   (c) 2012-2013 firehawk/tda  (firehawk@haxor.fi)
-  
+
   originally hacked together in a weekend, so please excuse
   me for the spaghetti code. :)
 
   AMIGAAAAAAAAH!!
-  
+
   kinda sorta changelog:
   (apr 2013)
   - changed the logic for pattern break/jump. mod.pattern_skank now
@@ -55,7 +56,7 @@ function Protracker()
   this.separation=true;
 
   this.palclock=true;
-  
+
   this.autostart=false;
 
   this.onReady=function(){};
@@ -69,14 +70,14 @@ function Protracker()
     214,202,190,180,170,160,151,143,135,127,120,113);
 
   // finetune multipliers
-  this.finetunetable=new Array();
+  this.finetunetable=[];
   for(t=0;t<16;t++) this.finetunetable[t]=Math.pow(2, (t-8)/12/8);
-  
+
   // calc tables for vibrato waveforms
-  this.vibratotable=new Array();
+  this.vibratotable=[];
   for(t=0;t<4;t++) {
-    this.vibratotable[t]=new Array();
-    for(i=0;i<64;i++) {
+    this.vibratotable[t]=[];
+    for(var i=0;i<64;i++) {
       switch(t) {
         case 0:
           this.vibratotable[t][i]=127*Math.sin(Math.PI*2*(i/64));
@@ -118,9 +119,11 @@ function Protracker()
 // create the web audio context
 Protracker.prototype.createContext = function()
 {
+  /* global webkitAudioContext:false */
+  /* jshint newcap:false */
   this.context = new webkitAudioContext();
   this.samplerate=this.context.sampleRate;
-  this.bufferlen=(this.samplerate > 44100) ? 4096 : 2048; 
+  this.bufferlen=(this.samplerate > 44100) ? 4096 : 2048;
 
   // fixed filter at 6kHz
   this.filterNode=this.context.createBiquadFilter();
@@ -138,7 +141,7 @@ Protracker.prototype.createContext = function()
   // compressor for a bit of volume boost
   this.compressorNode=this.context.createDynamicsCompressor();
 
-  // patch up some cables :)  
+  // patch up some cables :)
   this.mixerNode.connect(this.filterNode);
   this.filterNode.connect(this.lowpassNode);
   this.lowpassNode.connect(this.compressorNode);
@@ -151,7 +154,7 @@ Protracker.prototype.createContext = function()
 Protracker.prototype.play = function()
 {
   if (this.context==null) this.createContext();
-  
+
   if (!this.ready) return false;
   if (this.paused) {
     this.paused=false;
@@ -194,7 +197,7 @@ Protracker.prototype.jump = function(step)
   this.tick=0;
   this.row=0;
   this.position+=step;
-  this.flags=1+2;  
+  this.flags=1+2;
   if (this.position<0) this.position=0;
   if (this.position >= this.songlen) this.stop();
 }
@@ -235,20 +238,20 @@ Protracker.prototype.setautostart = function(st)
 
 // clear song data
 Protracker.prototype.clearsong = function()
-{  
+{
   this.title="";
   this.signature="";
   this.songlen=1;
   this.repeatpos=0;
   this.patterntable=new ArrayBuffer(128);
-  for(i=0;i<128;i++) this.patterntable[i]=0;
+  for(var i=0;i<128;i++) this.patterntable[i]=0;
 
   this.channels=4;
 
-  this.sample=new Array();
+  this.sample=[];
   this.samples=31;
-  for(i=0;i<31;i++) {
-    this.sample[i]=new Object();
+  for(var i=0;i<31;i++) {
+    this.sample[i]={};
     this.sample[i].name="";
     this.sample[i].length=0;
     this.sample[i].finetune=0;
@@ -259,13 +262,13 @@ Protracker.prototype.clearsong = function()
   }
 
   this.patterns=0;
-  this.pattern=new Array();
-  this.note=new Array();
-  
+  this.pattern=[];
+  this.note=[];
+
   this.looprow=0;
   this.loopstart=0;
   this.loopcount=0;
-  
+
   this.patterndelay=0;
   this.patternwait=0;
 }
@@ -286,14 +289,14 @@ Protracker.prototype.initialize = function()
   this.patternjump=0;
   this.patterndelay=0;
   this.patternwait=0;
-  
-  this.channel=new Array();
-  for(i=0;i<this.channels;i++) {
-    this.channel[i]=new Object();
+
+  this.channel=[];
+  for(var i=0;i<this.channels;i++) {
+    this.channel[i]={};
     this.channel[i].sample=0;
     this.channel[i].period=214;
     this.channel[i].voiceperiod=214;
-    this.channel[i].note=24;    
+    this.channel[i].note=24;
     this.channel[i].volume=64;
     this.channel[i].command=0;
     this.channel[i].data=0;
@@ -312,7 +315,7 @@ Protracker.prototype.initialize = function()
     this.channel[i].vibratopos=0;
     this.channel[i].vibratowave=0;
   }
-  this.vu=new Array();
+  this.vu=[];
 }
 
 
@@ -320,21 +323,21 @@ Protracker.prototype.initialize = function()
 // load module from url into local buffer
 Protracker.prototype.load = function(url)
 {
-    this.url=url;
-    this.clearsong();
-    
-    var request = new XMLHttpRequest();
-    request.open("GET", this.url, true);
-    request.responseType = "arraybuffer";
-    this.request = request;
-    this.loading=true;
-    var asset = this;
-    request.onload = function() {
-        asset.buffer=new Uint8Array(request.response);
-        asset.parse();
-        if (asset.autostart) asset.play();
-    }
-    request.send();  
+  this.url=url;
+  this.clearsong();
+
+  var request = new XMLHttpRequest();
+  request.open("GET", this.url, true);
+  request.responseType = "arraybuffer";
+  this.request = request;
+  this.loading=true;
+  var asset = this;
+  request.onload = function() {
+    asset.buffer=new Uint8Array(request.response);
+    asset.parse();
+    if (asset.autostart) asset.play();
+  }
+  request.send();
 }
 
 
@@ -343,10 +346,10 @@ Protracker.prototype.load = function(url)
 Protracker.prototype.parse = function()
 {
   var i,j,c;
-  
+
   if (!this.buffer) return false;
-  
-  for(i=0;i<4;i++) this.signature+=String.fromCharCode(this.buffer[1080+i]);
+
+  for(var i=0;i<4;i++) this.signature+=String.fromCharCode(this.buffer[1080+i]);
   switch (this.signature) {
     case "M.K.":
     case "M!K!":
@@ -357,7 +360,7 @@ Protracker.prototype.parse = function()
     case "6CHN":
       this.channels=6;
       break;
-      
+
     case "8CHN":
     case "FLT8":
       this.channels=8;
@@ -366,23 +369,23 @@ Protracker.prototype.parse = function()
     case "28CH":
       this.channels=28;
       break;
-    
+
     default:
       return false;
   }
-  this.vu=new Array();
-  for(i=0;i<this.channels;i++) this.vu[i]=0.0;
-  
+  this.vu=[];
+  for(var i=0;i<this.channels;i++) this.vu[i]=0.0;
+
   i=0;
   while(this.buffer[i] && i<20)
     this.title=this.title+String.fromCharCode(this.buffer[i++]);
 
-  for(i=0;i<this.samples;i++) {
+  for(var i=0;i<this.samples;i++) {
     var st=20+i*30;
     j=0;
-    while(this.buffer[st+j] && j<22) { 
+    while(this.buffer[st+j] && j<22) {
       this.sample[i].name+=
-        ((this.buffer[st+j]>0x1f) && (this.buffer[st+j]<0x7f)) ? 
+        ((this.buffer[st+j]>0x1f) && (this.buffer[st+j]<0x7f)) ?
         (String.fromCharCode(this.buffer[st+j])) :
         (" ");
       j++;
@@ -402,29 +405,32 @@ Protracker.prototype.parse = function()
 
   this.songlen=this.buffer[950];
   if (this.buffer[951] != 127) this.repeatpos=this.buffer[951];
-  for(i=0;i<128;i++) {
+  for(var i=0;i<128;i++) {
     this.patterntable[i]=this.buffer[952+i];
     if (this.patterntable[i] > this.patterns) this.patterns=this.patterntable[i];
   }
   this.patterns+=1;
   var patlen=4*64*this.channels;
 
-  this.pattern=new Array();
-  this.note=new Array();
-  for(i=0;i<this.patterns;i++) {
+  this.pattern=[];
+  this.note=[];
+  for(var i=0;i<this.patterns;i++) {
     this.pattern[i]=new Uint8Array(patlen);
     this.note[i]=new Uint8Array(this.channels*64);
     for(j=0;j<patlen;j++) this.pattern[i][j]=this.buffer[1084+i*patlen+j];
-    for(j=0;j<64;j++) for(c=0;c<this.channels;c++) {
-      this.note[i][j*this.channels+c]=0;
-      var n=(this.pattern[i][j*4*this.channels+c*4]&0x0f)<<8 | this.pattern[i][j*4*this.channels+c*4+1];
-      for(var np=0; np<this.baseperiodtable.length; np++)
-        if (n==this.baseperiodtable[np]) this.note[i][j*this.channels+c]=np;
-    }        
+    for(j=0;j<64;j++) {
+      for(c=0;c<this.channels;c++) {
+        this.note[i][j*this.channels+c]=0;
+        var n=(this.pattern[i][j*4*this.channels+c*4]&0x0f)<<8 | this.pattern[i][j*4*this.channels+c*4+1];
+        for(var np=0; np<this.baseperiodtable.length; np++) {
+          if (n==this.baseperiodtable[np]) this.note[i][j*this.channels+c]=np;
+        }
+      }
+    }
   }
-  
+
   var sst=1084+this.patterns*patlen;
-  for(i=0;i<this.samples;i++) {
+  for(var i=0;i<this.samples;i++) {
     this.sample[i].data=new Float32Array(this.sample[i].length);
     for(j=0;j<this.sample[i].length;j++) {
       var q=this.buffer[sst+j];
@@ -433,7 +439,7 @@ Protracker.prototype.parse = function()
       } else {
         q=((q-128)/128.0)-1.0;
       }
-      
+
       this.sample[i].data[j]=q;
     }
     sst+=this.sample[i].length;
@@ -462,8 +468,10 @@ Protracker.prototype.advance=function(mod) {
       if (mod.tick < ((mod.patternwait+1)*mod.speed)) {
         mod.patternwait++;
       } else {
-        mod.row++; mod.tick=0; mod.flags|=2; mod.patterndelay=0;
-		
+        mod.row++;
+        mod.tick=0;
+        mod.flags|=2;
+        mod.patterndelay=0;
       }
     }
     else {
@@ -487,12 +495,18 @@ Protracker.prototype.advance=function(mod) {
         }
         mod.tick=0;
       } else {
-        mod.row++; mod.tick=0; mod.flags|=2;
+        mod.row++;
+        mod.tick=0;
+        mod.flags|=2;
       }
     }
   }
-  
-  if (mod.row>=64) { mod.position++; mod.row=0; mod.flags|=4; } 
+
+  if (mod.row>=64) {
+    mod.position++;
+    mod.row=0;
+    mod.flags|=4;
+  }
   if (mod.position>=mod.songlen) {
     if (mod.repeat) {
       mod.position=0;
@@ -510,7 +524,7 @@ Protracker.prototype.mix = function(ape) {
   var f;
   var p, pp, n, nn;
   var mod=ape.srcElement.module;
-  outp=new Array();
+  var outp=[];
 
   var bufs=new Array(ape.outputBuffer.getChannelData(0), ape.outputBuffer.getChannelData(1));
   var buflen=ape.outputBuffer.length;
@@ -530,7 +544,6 @@ Protracker.prototype.mix = function(ape) {
         p=mod.patterntable[mod.position];
         pp=mod.row*4*mod.channels + ch*4;
         if (mod.flags&2) { // new row
-			modrow = mod.row; // here
           mod.channel[ch].command=mod.pattern[p][pp+2]&0x0f;
           mod.channel[ch].data=mod.pattern[p][pp+3];
 
@@ -542,37 +555,37 @@ Protracker.prototype.mix = function(ape) {
               if ((mod.channel[ch].command != 0x03) && (mod.channel[ch].command != 0x05)) {
                 mod.channel[ch].period=n;
                 mod.channel[ch].samplepos=0;
-                if (mod.channel[ch].vibratowave>3) mod.channel[ch].vibratopos=0;				
+                if (mod.channel[ch].vibratowave>3) mod.channel[ch].vibratopos=0;
                 mod.channel[ch].flags|=3; // recalc speed
                 mod.channel[ch].noteon=1;
               } else {
                 mod.channel[ch].slideto=n;
-			
+
               }
             }
             nn=mod.pattern[p][pp+0]&0xf0 | mod.pattern[p][pp+2]>>4;
             if (nn) {
               mod.channel[ch].sample=nn-1;
-	  		 			  
+
               mod.channel[ch].volume=mod.sample[nn-1].volume;
               if (!n && (mod.channel[ch].samplepos > mod.sample[nn-1].length)) mod.channel[ch].samplepos=0;
             }
           }
         }
         mod.channel[ch].voiceperiod=mod.channel[ch].period;
-		if (mod.channel[ch].samplepos==0) modsample[ch]=mod.channel[ch].sample;
-		
-		
+		if (mod.channel[ch].samplepos===0) mod.sample[ch]=mod.channel[ch].sample;
+
+
         // kill empty samples
         if (!mod.sample[mod.channel[ch].sample].length) mod.channel[ch].noteon=0;
 
-        // effects        
+        // effects
         if (mod.flags&1) {
           if (!mod.tick) {
             // process only on tick 0
             mod.effects_t0[mod.channel[ch].command](mod, ch);
           } else {
-            mod.effects_t1[mod.channel[ch].command](mod, ch);    
+            mod.effects_t1[mod.channel[ch].command](mod, ch);
           }
         }
 
@@ -589,14 +602,14 @@ Protracker.prototype.mix = function(ape) {
         if ((mod.channel[ch].flags&1 || mod.flags&2) && mod.channel[ch].voiceperiod)
           mod.channel[ch].samplespeed=
             (mod.palclock ? 7093789.2 : 7159090.5)/(mod.channel[ch].voiceperiod*2) * mod.finetunetable[mod.sample[mod.channel[ch].sample].finetune+8] / mod.samplerate;
-        
+
         // advance vibrato on each new tick
         if (mod.flags&1) {
           mod.channel[ch].vibratopos+=mod.channel[ch].vibratospeed;
           mod.channel[ch].vibratopos&=0x3f;
         }
 
-        // mix channel to output        
+        // mix channel to output
         och=och^(ch&1);
         f=0.0;
         if (mod.channel[ch].noteon) {
@@ -606,7 +619,7 @@ Protracker.prototype.mix = function(ape) {
           outp[och]+=f;
           mod.channel[ch].samplepos+=mod.channel[ch].samplespeed;
         }
-        if (s==0) mod.vu[ch]=Math.abs(f);
+        if (s===0) mod.vu[ch]=Math.abs(f);
 
         // loop or end samples
         if (mod.channel[ch].noteon) {
@@ -623,14 +636,14 @@ Protracker.prototype.mix = function(ape) {
 
         // clear channel flags
         mod.channel[ch].flags=0;
-      } 
+      }
       mod.offset++;
-      mod.flags&=0x70;      
+      mod.flags&=0x70;
     }
-    
+
     // a more headphone-friendly stereo separation (aka. betterpaula)
     if (mod.separation) {
-      t=outp[0];
+      var t=outp[0];
       outp[0]=outp[0]*0.6 + outp[1]*0.4;
       outp[1]=outp[1]*0.6 + t*0.4;
     }
@@ -662,7 +675,7 @@ Protracker.prototype.effect_t0_4=function(mod, ch) { // 4 vibrato
     mod.channel[ch].vibratospeed=(mod.channel[ch].data&0xf0)>>4;
   }
   mod.channel[ch].voiceperiod+=
-    (mod.channel[ch].vibratodepth/32)*mod.channel[ch].semitone*(mod.vibratotable[mod.channel[ch].vibratowave&3][mod.channel[ch].vibratopos]/127);        
+    (mod.channel[ch].vibratodepth/32)*mod.channel[ch].semitone*(mod.vibratotable[mod.channel[ch].vibratowave&3][mod.channel[ch].vibratopos]/127);
   mod.channel[ch].flags|=1;
 }
 Protracker.prototype.effect_t0_5=function(mod, ch) { // 5
@@ -689,7 +702,7 @@ Protracker.prototype.effect_t0_c=function(mod, ch) { // c set volume
 Protracker.prototype.effect_t0_d=function(mod, ch) { // d pattern break
   mod.breakrow=((mod.channel[ch].data&0xf0)>>4)*10 + (mod.channel[ch].data&0x0f);
   if (!(mod.flags&16)) mod.patternjump=mod.position+1;
-  mod.flags|=16;  
+  mod.flags|=16;
 }
 Protracker.prototype.effect_t0_e=function(mod, ch) { // e
   var i=(mod.channel[ch].data&0xf0)>>4;
@@ -763,11 +776,11 @@ Protracker.prototype.effect_t0_ed=function(mod, ch) { // ed delay sample
   if (mod.tick==(mod.channel[ch].data&0x0f)) {
     // start note
     var p=mod.patterntable[mod.position];
-    var pp=mod.row*4*mod.channels + ch*4;            
-    n=(mod.pattern[p][pp]&0x0f)<<8 | mod.pattern[p][pp+1];
+    var pp=mod.row*4*mod.channels + ch*4;
+    var n=(mod.pattern[p][pp]&0x0f)<<8 | mod.pattern[p][pp+1];
     if (n) {
       mod.channel[ch].period=n;
-      mod.channel[ch].voiceperiod=mod.channel[ch].period;      
+      mod.channel[ch].voiceperiod=mod.channel[ch].period;
       mod.channel[ch].samplepos=0;
       if (mod.channel[ch].vibratowave>3) mod.channel[ch].vibratopos=0;
       mod.channel[ch].flags|=3; // recalc speed
@@ -810,7 +823,7 @@ Protracker.prototype.effect_t1_1=function(mod, ch) { // 1 slide up
 Protracker.prototype.effect_t1_2=function(mod, ch) { // 2 slide down
   mod.channel[ch].period+=mod.channel[ch].slidespeed;
   if (mod.channel[ch].period>856) mod.channel[ch].period=856;
-  mod.channel[ch].flags|=3; // recalc speed                
+  mod.channel[ch].flags|=3; // recalc speed
 }
 Protracker.prototype.effect_t1_3=function(mod, ch) { // 3 slide to note
   if (mod.channel[ch].period < mod.channel[ch].slideto) {
@@ -853,7 +866,7 @@ Protracker.prototype.effect_t1_a=function(mod, ch) { // a volume slide
   if (!(mod.channel[ch].data&0xf0)) {
     // x is zero, slide down
     mod.channel[ch].volume-=(mod.channel[ch].data&0x0f);
-    if (mod.channel[ch].volume<0) mod.channel[ch].volume=0;                  
+    if (mod.channel[ch].volume<0) mod.channel[ch].volume=0;
   }
 }
 Protracker.prototype.effect_t1_b=function(mod, ch) { // b pattern jump
@@ -893,7 +906,7 @@ Protracker.prototype.effect_t1_e7=function(mod, ch) { // e7
 Protracker.prototype.effect_t1_e8=function(mod, ch) { // e8
 }
 Protracker.prototype.effect_t1_e9=function(mod, ch) { // e9 retrig sample
-  if (mod.tick%(mod.channel[ch].data&0x0f)==0)
+  if (mod.tick%(mod.channel[ch].data&0x0f)===0)
     mod.channel[ch].samplepos=0;
 }
 Protracker.prototype.effect_t1_ea=function(mod, ch) { // ea

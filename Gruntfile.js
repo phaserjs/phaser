@@ -385,6 +385,7 @@ module.exports = function (grunt) {
         jshint: {
             src: {
                 src: [
+                    'plugins/**/*.js',
                     'src/**/*.js',
                     '!src/Intro.js',
                     '!src/Outro.js',
