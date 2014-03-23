@@ -229,7 +229,7 @@ Phaser.TilemapLayer.prototype.postUpdate = function () {
         // this.children[i].postUpdate();
     // }
 
-}
+};
 
 /**
 * Sets the world size to match the size of this layer.
@@ -241,7 +241,7 @@ Phaser.TilemapLayer.prototype.resizeWorld = function () {
 
     this.game.world.setBounds(0, 0, this.layer.widthInPixels, this.layer.heightInPixels);
 
-}
+};
 
 /**
 * Take an x coordinate that doesn't account for scrollFactorX and 'fix' it
@@ -266,7 +266,7 @@ Phaser.TilemapLayer.prototype._fixX = function(x) {
 
     return this._mc.x + (x - (this._mc.x / this.scrollFactorX));
 
-}
+};
 
 /**
 * Take an x coordinate that _does_ account for scrollFactorX and 'unfix' it
@@ -286,7 +286,7 @@ Phaser.TilemapLayer.prototype._unfixX = function(x) {
 
     return (this._mc.x / this.scrollFactorX) + (x - this._mc.x);
 
-}
+};
 
 /**
 * Take a y coordinate that doesn't account for scrollFactorY and 'fix' it
@@ -311,7 +311,7 @@ Phaser.TilemapLayer.prototype._fixY = function(y) {
 
     return this._mc.y + (y - (this._mc.y / this.scrollFactorY));
 
-}
+};
 
 /**
 * Take a y coordinate that _does_ account for scrollFactorY and 'unfix' it
@@ -331,7 +331,7 @@ Phaser.TilemapLayer.prototype._unfixY = function(y) {
 
     return (this._mc.y / this.scrollFactorY) + (y - this._mc.y);
 
-}
+};
 
 /**
 * Convert a pixel value to a tile coordinate.
@@ -346,7 +346,7 @@ Phaser.TilemapLayer.prototype.getTileX = function (x) {
 
     return this.game.math.snapToFloor(this._fixX(x), this.map.tileWidth) / this.map.tileWidth;
 
-}
+};
 
 /**
 * Convert a pixel value to a tile coordinate.
@@ -361,7 +361,7 @@ Phaser.TilemapLayer.prototype.getTileY = function (y) {
 
     return this.game.math.snapToFloor(this._fixY(y), this.map.tileHeight) / this.map.tileHeight;
 
-}
+};
 
 /**
 * Convert a pixel value to a tile coordinate.
@@ -379,7 +379,7 @@ Phaser.TilemapLayer.prototype.getTileXY = function (x, y, point) {
 
     return point;
 
-}
+};
 
 /**
 * Gets all tiles that intersect with the given line.
@@ -425,7 +425,7 @@ Phaser.TilemapLayer.prototype.getRayCastTiles = function (line, stepRate, collid
 
     return results;
 
-}
+};
 
 /**
 * Get all tiles that exist within the given area, defined by the top-left corner, width and height. Values given are in pixels, not tiles.
@@ -484,7 +484,7 @@ Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides
 
     return this._results;
 
-}
+};
 
 /**
 * Internal function to update maximum values.
@@ -511,7 +511,7 @@ Phaser.TilemapLayer.prototype.updateMax = function () {
 
     this.dirty = true;
 
-}
+};
 
 /**
 * Renders the tiles to the layer canvas and pushes to the display.
@@ -603,7 +603,7 @@ Phaser.TilemapLayer.prototype.render = function () {
 
     return true;
 
-}
+};
 
 /**
 * Renders a collision debug overlay on-top of the canvas. Called automatically by render when debug = true.
@@ -673,7 +673,7 @@ Phaser.TilemapLayer.prototype.renderDebug = function () {
 
     }
 
-}
+};
 
 /**
 * @name Phaser.TilemapLayer#scrollX

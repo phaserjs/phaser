@@ -177,7 +177,7 @@ Phaser.Tilemap.prototype = {
     * @param {Phaser.Group} [group] - Optional Group to add the layer to. If not specified it will be added to the World group.
     * @return {Phaser.TilemapLayer} The TilemapLayer object. This is an extension of Phaser.Image and can be moved around the display list accordingly.
     */
-    create: function (name, width, height, tileWidth, tileHeight) {
+    create: function (name, width, height, tileWidth, tileHeight, group) {
 
         if (typeof group === 'undefined') { group = this.game.world; }
 
@@ -758,7 +758,7 @@ Phaser.Tilemap.prototype = {
             }
         }
 
-        for (var y = 0; y < this.layers[layer].height ; y++)
+        for (var y = 0; y < this.layers[layer].height; y++)
         {
             for (var x = 0; x < this.layers[layer].width; x++)
             {
@@ -1057,7 +1057,7 @@ Phaser.Tilemap.prototype = {
             this.layers[layer].dirty = true;
 
             this.calculateFaces(layer);
-            
+
             return this.layers[layer].data[y][x];
         }
 
@@ -1180,7 +1180,7 @@ Phaser.Tilemap.prototype = {
 
         this._results.length = 0;
 
-        this._results.push( { x: x, y: y, width: width, height: height, layer: layer });
+        this._results.push({ x: x, y: y, width: width, height: height, layer: layer });
 
         for (var ty = y; ty < y + height; ty++)
         {

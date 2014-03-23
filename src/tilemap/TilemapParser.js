@@ -454,4 +454,4 @@ Phaser.TilemapParser = {
 
     }
 
-}
+};
