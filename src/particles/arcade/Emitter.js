@@ -285,7 +285,7 @@ Phaser.Particles.Arcade.Emitter.prototype.makeParticles = function (keys, frames
 
         particle = new this.particleClass(this.game, 0, 0, rndKey, rndFrame);
 
-        game.physics.arcade.enable(particle, false);
+        this.game.physics.arcade.enable(particle, false);
 
         if (collide)
         {

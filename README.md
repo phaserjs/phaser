@@ -143,7 +143,7 @@ New Features
 
 There is an extensive [Migration Guide](https://github.com/photonstorm/phaser/blob/master/resources/Migration%20Guide.md) available. In the guide we detail the API breaking changes and approach to our new physics system. For a list of all the other new features, updates and bug fixes present in 2.0 please see the Change Log.
 
-The Change Log for all previous versions is at https://github.com/photonstorm/phaser/changelog.md
+The Change Log for all previous versions is at https://github.com/photonstorm/phaser/blob/master/changelog.md
 
 
 How to Build

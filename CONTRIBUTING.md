@@ -9,11 +9,13 @@ It's important to us that you feel you can contribute towards the evolution of P
 
 1. **Search for existing issues.** Your bug may have already been fixed or addressed in a development branch version of Phaser, so be sure to search the issues first before putting in a duplicate issue.
 
-2. **Create an isolated and reproducible test case.** If you are reporting a bug, make sure you also have a minimal, runnable, code example that reproduces the problem you have.
+2. **Not sure if it's a bug?.** Then please ask on the forum. If something is blatantly wrong then post it to github. But if you feel it might just be because you're not sure of expected behaviour, then it might save us time, and get you a response faster, if you post it to the Phaser forum instead.
 
-3. **Include a live example.** After narrowing your code down to only the problem areas, make use of [jsFiddle][1], [jsBin][2], or a link to your live site so that we can view a live example of the problem.
+3. **Create an isolated and reproducible test case.** If you are reporting a bug, make sure you also have a minimal, runnable, code example that reproduces the problem you have.
 
-4. **Share as much information as possible.** Include browser version affected, your OS, version of the library, steps to reproduce, etc. "X isn't working!!!1!" will probably just be closed.
+4. **Include a live example.** After narrowing your code down to only the problem areas, make use of [jsFiddle][1], [jsBin][2], or a link to your live site so that we can view a live example of the problem.
+
+5. **Share as much information as possible.** Include browser version affected, your OS, version of the library, steps to reproduce, etc. "X isn't working!!!1!" will probably just be closed.
 
 
 ##Pixi and Phaser
@@ -35,7 +37,7 @@ The dev branch of Phaser is our 'current working' version. It is always ahead of
 
 To take advantage of our grunt build script and jshint config it will be easiest for you if you have node.js and grunt installed locally.
 
-You can download node.js from [nodejs.org][3]. After it has been installed open a console and run `npm i - g grunt - cli` to install the global `grunt` executable.
+You can download node.js from [nodejs.org][3]. After it has been installed open a console and run `npm i -g grunt -cli` to install the global `grunt` executable.
 
 After that you can clone the repository and run `npm i` inside the cloned folder. This will install dependencies necessary for building the project. Once that is ready,
 make your changes and submit a Pull Request:
@@ -60,7 +62,7 @@ That is fine too. While Pull Requests are the best thing in the world for us, th
 
 - No trailing whitespace, blank lines should have no whitespace.
 
-- Always favor strict equals` === `unless you * need * to use type coercion.
+- Always favor strict equals `===` unless you *need* to use type coercion.
 
 - Follow conventions already in the code, and listen to jshint. Our config is set-up for a reason.
 
