@@ -1280,7 +1280,7 @@ Phaser.Physics.Arcade.prototype = {
     * @param {Phaser.Physics.Arcade.Body} body - The Body object to separate.
     * @param {number} y - The y separation amount.
     */
-    processTileSeparationY: function (body, y, tile) {
+    processTileSeparationY: function (body, y) {
 
         if (y < 0)
         {

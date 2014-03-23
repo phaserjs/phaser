@@ -747,7 +747,7 @@ Phaser.Physics.Arcade.Body.render = function (context, body, filled, color) {
         context.strokeRect(body.position.x - body.game.camera.x, body.position.y - body.game.camera.y, body.width, body.height);
     }
 
-}
+};
 
 /**
 * Render Sprite Body Physics Data as text.
@@ -768,6 +768,6 @@ Phaser.Physics.Arcade.Body.renderBodyInfo = function (debug, body) {
     debug.line('touching left: ' + body.touching.left, 'right: ' + body.touching.right, 'up: ' + body.touching.up, 'down: ' + body.touching.down);
     debug.line('blocked left: ' + body.blocked.left, 'right: ' + body.blocked.right, 'up: ' + body.blocked.up, 'down: ' + body.blocked.down);
 
-}
+};
 
 Phaser.Physics.Arcade.Body.prototype.constructor = Phaser.Physics.Arcade.Body;
