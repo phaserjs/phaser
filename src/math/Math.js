@@ -995,7 +995,7 @@ Phaser.Math = {
 
         if (typeof startIndex === "undefined") { startIndex = 0; }
         if (typeof length === "undefined") { length = 0; }
-        
+
         if (objects != null) {
 
             var l = length;
@@ -1311,7 +1311,7 @@ Phaser.Math = {
     * @method Phaser.Math#degToRad
     * @return {function}
     */
-    degToRad: function() {
+    degToRad: (function() {
 
         var degreeToRadiansFactor = Math.PI / 180;
 
@@ -1321,7 +1321,7 @@ Phaser.Math = {
 
         };
 
-    }(),
+    }()),
 
     /**
     * Convert degrees to radians.
@@ -1329,7 +1329,7 @@ Phaser.Math = {
     * @method Phaser.Math#radToDeg
     * @return {function}
     */
-    radToDeg: function() {
+    radToDeg: (function() {
 
         var radianToDegreesFactor = 180 / Math.PI;
 
@@ -1339,6 +1339,6 @@ Phaser.Math = {
 
         };
 
-    }()
+    }())
 
 };

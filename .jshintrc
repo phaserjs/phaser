@@ -24,7 +24,7 @@
   "forin"       : false,  // Tolerate `for in` loops without `hasOwnPrototype`.
   "freeze"      : true,   // Prohibits overwriting prototypes of native objects such as Array and Date.
   "funcscope"   : true,   // This option suppresses warnings about declaring variables inside of control structures while accessing them later from the outside.
-  "immed"       : false,  // Require immediate invocations to be wrapped in parens e.g. `( function(){}() );`
+  "immed"       : true,   // Require immediate invocations to be wrapped in parens e.g. `( function(){}() );`
   "iterator"    : true,   // This option suppresses warnings about the __iterator__ property.
   "latedef"     : true,   // Prohibit variable use before definition.
   "laxbreak"    : false,  // Tolerate unsafe line breaks e.g. `return [\n] x` without semicolons.
