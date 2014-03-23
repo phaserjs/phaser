@@ -1,3 +1,4 @@
+/* jshint camelcase: false */
 /**
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2014 Photon Storm Ltd.
@@ -244,16 +245,6 @@ Phaser.Physics.Ninja.AABB.prototype = {
         var vx1 = this.pos.x - this.oldpos.x;   //  Calc velocity of this object
         var vy1 = this.pos.y - this.oldpos.y;
         var dp1 = (vx1 * dx + vy1 * dy);         //  Find component of velocity parallel to collision normal
-        var nx1 = dp1 * dx;                      //  Project velocity onto collision normal
-        var ny1 = dp1 * dy;                      //  nx, ny is normal velocity
-
-        var dx2 = dx * -1;
-        var dy2 = dy * -1;
-        var vx2 = obj.pos.x - obj.oldpos.x;      //  Calc velocity of colliding object
-        var vy2 = obj.pos.y - obj.oldpos.y;
-        var dp2 = (vx2 * dx2 + vy2 * dy2);         //  Find component of velocity parallel to collision normal
-        var nx2 = dp2 * dx2;                      //  Project velocity onto collision normal
-        var ny2 = dp2 * dy2;                      //  nx, ny is normal velocity
 
         //  We only want to apply collision response forces if the object is travelling into, and not out of, the collision
         if (this.body.immovable && obj.body.immovable)
@@ -1014,4 +1005,4 @@ Phaser.Physics.Ninja.AABB.prototype = {
         this.system = null;
     }
 
-}
+};

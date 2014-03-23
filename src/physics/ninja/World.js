@@ -136,7 +136,7 @@ Phaser.Physics.Ninja.prototype = {
 
         if (Array.isArray(object))
         {
-            i = object.length;
+            var i = object.length;
 
             while (i--)
             {
@@ -263,9 +263,6 @@ Phaser.Physics.Ninja.prototype = {
     convertTilemap: function (map, layer, slopeMap) {
 
         layer = map.getLayer(layer);
-
-        if (typeof addToWorld === 'undefined') { addToWorld = true; }
-        if (typeof optimize === 'undefined') { optimize = true; }
 
         //  If the bodies array is already populated we need to nuke it
         this.clearTilemapLayerBodies(map, layer);
@@ -570,11 +567,9 @@ Phaser.Physics.Ninja.prototype = {
     * @method Phaser.Physics.Ninja#separate
     * @param {Phaser.Physics.Ninja.Body} body1 - The Body object to separate.
     * @param {Phaser.Physics.Ninja.Body} body2 - The Body object to separate.
-    * @param {function} [processCallback=null] - UN-USED: A callback function that lets you perform additional checks against the two objects if they overlap. If this function is set then the sprites will only be collided if it returns true.
-    * @param {object} [callbackContext] - UN-USED: The context in which to run the process callback.
     * @returns {boolean} Returns true if the bodies collided, otherwise false.
     */
-    separate: function (body1, body2, processCallback, callbackContext, overlapOnly) {
+    separate: function (body1, body2) {
 
         if (body1.type !== Phaser.Physics.NINJA || body2.type !== Phaser.Physics.NINJA)
         {

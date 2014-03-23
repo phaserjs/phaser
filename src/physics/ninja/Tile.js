@@ -1,3 +1,4 @@
+/* jshint camelcase: false */
 /**
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2014 Photon Storm Ltd.
@@ -201,8 +202,7 @@ Phaser.Physics.Ninja.Tile.prototype = {
     * @param {number} dy - Collision normal
     * @param {number} obj - Object this Tile collided with
     */
-    reportCollisionVsWorld: function (px, py, dx, dy, obj) {
-
+    reportCollisionVsWorld: function (px, py, dx, dy) {
         var p = this.pos;
         var o = this.oldpos;
 
@@ -665,7 +665,7 @@ Phaser.Physics.Ninja.Tile.prototype = {
         }
     }
 
-}
+};
 
 /**
 * @name Phaser.Physics.Ninja.Tile#x
