@@ -411,7 +411,7 @@ Phaser.Point.equals = function (a, b) {
 */
 Phaser.Point.distance = function (a, b, round) {
 
-    if (typeof round === "undefined") { round = false }
+    if (typeof round === "undefined") { round = false; }
 
     if (round)
     {

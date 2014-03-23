@@ -119,7 +119,7 @@ Phaser.Circle.prototype = {
     */
     distance: function (dest, round) {
 
-        if (typeof round === "undefined") { round = false }
+        if (typeof round === "undefined") { round = false; }
 
         if (round)
         {
