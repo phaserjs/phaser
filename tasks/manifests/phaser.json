@@ -1,0 +1,105 @@
+[
+    "src/Intro.js",
+    "src/Phaser.js",
+    "src/utils/Utils.js",
+
+    "src/geom/Circle.js",
+    "src/geom/Point.js",
+    "src/geom/Rectangle.js",
+    "src/geom/Line.js",
+    "src/geom/Ellipse.js",
+    "src/geom/Polygon.js",
+
+    "src/core/Camera.js",
+    "src/core/State.js",
+    "src/core/StateManager.js",
+    "src/core/LinkedList.js",
+    "src/core/Signal.js",
+    "src/core/SignalBinding.js",
+    "src/core/Filter.js",
+    "src/core/Plugin.js",
+    "src/core/PluginManager.js",
+    "src/core/Stage.js",
+    "src/core/Group.js",
+    "src/core/World.js",
+    "src/core/ScaleManager.js",
+    "src/core/Game.js",
+
+    "src/input/Input.js",
+    "src/input/Key.js",
+    "src/input/Keyboard.js",
+    "src/input/Mouse.js",
+    "src/input/MSPointer.js",
+    "src/input/Pointer.js",
+    "src/input/Touch.js",
+    "src/input/Gamepad.js",
+    "src/input/SinglePad.js",
+    "src/input/GamepadButton.js",
+    "src/input/InputHandler.js",
+
+    "src/gameobjects/Events.js",
+    "src/gameobjects/GameObjectFactory.js",
+    "src/gameobjects/GameObjectCreator.js",
+    "src/gameobjects/BitmapData.js",
+    "src/gameobjects/Sprite.js",
+    "src/gameobjects/Image.js",
+    "src/gameobjects/TileSprite.js",
+    "src/gameobjects/Text.js",
+    "src/gameobjects/BitmapText.js",
+    "src/gameobjects/Button.js",
+    "src/gameobjects/Graphics.js",
+    "src/gameobjects/RenderTexture.js",
+    "src/gameobjects/SpriteBatch.js",
+    "src/gameobjects/RetroFont.js",
+
+    "src/system/Canvas.js",
+    "src/system/Device.js",
+    "src/system/RequestAnimationFrame.js",
+
+    "src/math/Math.js",
+    "src/math/RandomDataGenerator.js",
+    "src/math/QuadTree.js",
+
+    "src/net/Net.js",
+
+    "src/tween/TweenManager.js",
+    "src/tween/Tween.js",
+    "src/tween/Easing.js",
+
+    "src/time/Time.js",
+    "src/time/Timer.js",
+    "src/time/TimerEvent.js",
+
+    "src/animation/AnimationManager.js",
+    "src/animation/Animation.js",
+    "src/animation/Frame.js",
+    "src/animation/FrameData.js",
+    "src/animation/AnimationParser.js",
+
+    "src/loader/Cache.js",
+    "src/loader/Loader.js",
+    "src/loader/LoaderParser.js",
+
+    "src/sound/Sound.js",
+    "src/sound/SoundManager.js",
+
+    "src/utils/Debug.js",
+    "src/utils/Color.js",
+
+    "src/physics/Physics.js",
+
+    "src/physics/arcade/World.js",
+    "src/physics/arcade/Body.js",
+
+    "src/particles/Particles.js",
+    "src/particles/arcade/ArcadeParticles.js",
+    "src/particles/arcade/Emitter.js",
+
+    "src/tilemap/Tile.js",
+    "src/tilemap/Tilemap.js",
+    "src/tilemap/TilemapLayer.js",
+    "src/tilemap/TilemapParser.js",
+    "src/tilemap/Tileset.js",
+
+    "src/Outro.js"
+]
