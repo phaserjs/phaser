@@ -99,17 +99,17 @@ Phaser.Utils = {
             switch (dir)
             {
                 case 1:
-                    str = Array(len + 1 - str.length).join(pad) + str;
+                    str = new Array(len + 1 - str.length).join(pad) + str;
                     break;
 
                 case 3:
                     var right = Math.ceil((padlen = len - str.length) / 2);
                     var left = padlen - right;
-                    str = Array(left+1).join(pad) + str + Array(right+1).join(pad);
+                    str = new Array(left+1).join(pad) + str + new Array(right+1).join(pad);
                     break;
 
                 default:
-                    str = str + Array(len + 1 - str.length).join(pad);
+                    str = str + new Array(len + 1 - str.length).join(pad);
                     break;
             }
         }
@@ -140,7 +140,7 @@ Phaser.Utils = {
         // the "constructor" property of certain host objects, ie. |window.location|
         // https://bugzilla.mozilla.org/show_bug.cgi?id=814622
         try {
-            if (obj.constructor && !hasOwn.call(obj.constructor.prototype, "isPrototypeOf"))
+            if (obj.constructor && !({}).hasOwnProperty.call(obj.constructor.prototype, "isPrototypeOf"))
             {
                 return false;
             }
@@ -245,6 +245,7 @@ Phaser.Utils = {
 */
 if (typeof Function.prototype.bind != 'function') {
 
+    /* jshint freeze: false */
     Function.prototype.bind = (function () {
 
         var slice = Array.prototype.slice;
@@ -264,7 +265,10 @@ if (typeof Function.prototype.bind != 'function') {
             }
 
             bound.prototype = (function F(proto) {
-                proto && (F.prototype = proto);
+                if (proto)
+                {
+                    F.prototype = proto;
+                }
 
                 if (!(this instanceof F))
                 {
@@ -285,5 +289,5 @@ if (!Array.isArray)
     Array.isArray = function (arg)
     {
         return Object.prototype.toString.call(arg) == '[object Array]';
-    }
+    };
 }
