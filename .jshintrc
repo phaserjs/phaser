@@ -2,7 +2,6 @@
   "globals"     : { "Phaser": false, "PIXI": false, "p2": false },
   // Ignore Environment Globals
   "browser"     : true,   // Standard browser globals e.g. `window`, `document`.
-  "wsh"         : true,   // Windows Scripting Host.
 
   // Development
   "devel"       : true,   // Allow developments statements e.g. `console.log();`.
