@@ -203,7 +203,7 @@ Bug Fixes:
 * Cache.destroy fixed to clear up properly (thanks Dumtard, #537)
 
 
-You can view the Change Log for all previous versions at https://github.com/photonstorm/phaser/changelog.md
+You can view the Change Log for all previous versions at https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md
 
 
 How to Build
