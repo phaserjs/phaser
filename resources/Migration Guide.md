@@ -53,6 +53,7 @@ Changes to Phaser.Sprite
 * If you set Sprite.exists to true it will also set Sprite.visible to true and add its body back into the physics world (if it has one).
 * Phaser.Animation.frame now returns the frame of the current animation, rather than the global frame from the sprite sheet / atlas.
 * Sprite.damage will now kill the Sprite if health is less than or equal to 0 (before it would only kill if less than zero)
+* Sprite.worldCenterX and Sprite.worldCenterY are replaced by Sprite.world.x and Sprite.world.y
 
 Better Text Handling
 --------------------
