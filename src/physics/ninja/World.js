@@ -28,7 +28,7 @@
 * @param {Phaser.Game} game reference to the current game instance.
 */
 Phaser.Physics.Ninja = function (game) {
-    
+
     /**
     * @property {Phaser.Game} game - Local reference to game.
     */

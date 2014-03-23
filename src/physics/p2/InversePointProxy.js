@@ -27,7 +27,7 @@ Phaser.Physics.P2.InversePointProxy.prototype.constructor = Phaser.Physics.P2.In
 * @property {number} x - The x property of this InversePointProxy.
 */
 Object.defineProperty(Phaser.Physics.P2.InversePointProxy.prototype, "x", {
-    
+
     get: function () {
 
         return this.destination[0];
@@ -47,7 +47,7 @@ Object.defineProperty(Phaser.Physics.P2.InversePointProxy.prototype, "x", {
 * @property {number} y - The y property of this InversePointProxy.
 */
 Object.defineProperty(Phaser.Physics.P2.InversePointProxy.prototype, "y", {
-    
+
     get: function () {
 
         return this.destination[1];

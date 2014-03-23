@@ -21,7 +21,7 @@ Phaser.Point = function (x, y) {
     * @property {number} x - The x coordinate of the point.
     */
     this.x = x;
-    
+
     /**
     * @property {number} y - The y coordinate of the point.
     */
@@ -63,7 +63,7 @@ Phaser.Point.prototype = {
         this.y = y || ( (y !== 0) ? this.x : 0 );
 
         return this;
-        
+
     },
 
     /**
@@ -79,7 +79,7 @@ Phaser.Point.prototype = {
         this.y = y || ( (y !== 0) ? this.x : 0 );
 
         return this;
-        
+
     },
 
     /**
@@ -153,7 +153,7 @@ Phaser.Point.prototype = {
 
         this.x = Phaser.Math.clamp(this.x, min, max);
         return this;
-        
+
     },
 
     /**
@@ -167,7 +167,7 @@ Phaser.Point.prototype = {
 
         this.y = Phaser.Math.clamp(this.y, min, max);
         return this;
-        
+
     },
 
     /**

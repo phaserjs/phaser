@@ -67,8 +67,8 @@ Phaser.SignalBinding.prototype = {
 
     /**
     * Default parameters passed to listener during `Signal.dispatch` and `SignalBinding.execute` (curried parameters).
-    * @property {array|null} params 
-    * @default 
+    * @property {array|null} params
+    * @default
     */
     params: null,
 

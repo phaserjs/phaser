@@ -8,17 +8,17 @@
 
 /**
 * Phaser.RandomDataGenerator constructor.
-* 
+*
 * @class Phaser.RandomDataGenerator
 * @classdesc An extremely useful repeatable random data generator. Access it via Phaser.Game.rnd
 * Based on Nonsense by Josh Faul https://github.com/jocafa/Nonsense.
 * Random number generator from http://baagoe.org/en/wiki/Better_random_numbers_for_javascript
-* 
+*
 * @constructor
 * @param {array} seeds
 */
 Phaser.RandomDataGenerator = function (seeds) {
-    
+
     if (typeof seeds === "undefined") { seeds = []; }
 
     /**
@@ -71,7 +71,7 @@ Phaser.RandomDataGenerator.prototype = {
 
     /**
     * Reset the seed of the random data generator.
-    * 
+    *
     * @method Phaser.RandomDataGenerator#sow
     * @param {array} seeds
     */
@@ -95,7 +95,7 @@ Phaser.RandomDataGenerator.prototype = {
             this.s2 -= this.hash(seed);
             this.s2 += ~~(this.s2 < 0);
         }
-        
+
     },
 
     /**

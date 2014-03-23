@@ -97,17 +97,17 @@ Phaser.Loader = function (game) {
     * @property {Phaser.Signal} onFileComplete - Event signal.
     */
     this.onFileComplete = new Phaser.Signal();
-    
+
     /**
     * @property {Phaser.Signal} onFileError - Event signal.
     */
     this.onFileError = new Phaser.Signal();
-    
+
     /**
     * @property {Phaser.Signal} onLoadStart - Event signal.
     */
     this.onLoadStart = new Phaser.Signal();
-    
+
     /**
     * @property {Phaser.Signal} onLoadComplete - Event signal.
     */
@@ -195,7 +195,7 @@ Phaser.Loader.prototype = {
         }
 
         return false;
-        
+
     },
 
     /**
@@ -220,7 +220,7 @@ Phaser.Loader.prototype = {
         }
 
         return -1;
-        
+
     },
 
     /**
@@ -245,7 +245,7 @@ Phaser.Loader.prototype = {
         }
 
         return false;
-        
+
     },
 
     /**
@@ -1402,7 +1402,7 @@ Phaser.Loader.prototype = {
         {
             this.hasLoaded = true;
             this.isLoading = false;
-            
+
             this.removeAll();
 
             this.onLoadComplete.dispatch();

@@ -9,7 +9,7 @@ Phaser.Filter.Tunnel = function (game) {
     this.uniforms.alpha = { type: '1f', value: 1 }
     this.uniforms.origin = { type: '1f', value: 2.0 }
     this.uniforms.iChannel0 = { type: 'sampler2D', value: null, textureData: { repeat: true } }
-        
+
     this.fragmentSrc = [
 
         "precision mediump float;",
@@ -30,7 +30,7 @@ Phaser.Filter.Tunnel = function (game) {
             "gl_FragColor = vec4(c / (t.y + 0.5), alpha);",
         "}"
 
-    ];  
+    ];
 
 };
 

@@ -9,7 +9,7 @@
 * A Tile is defined by its width, height and type. It's type can include slope data, such as 45 degree slopes, or convex slopes.
 * Understand that for any type including a slope (types 2 to 29) the Tile must be SQUARE, i.e. have an equal width and height.
 * Also note that as Tiles are primarily used for levels they have gravity disabled and world bounds collision disabled by default.
-* 
+*
 * Note: This class could be massively optimised and reduced in size. I leave that challenge up to you.
 *
 * @class Phaser.Physics.Ninja.Tile
@@ -23,7 +23,7 @@
 * @param {number} [type=1] - The type of Ninja shape to create. 1 = AABB, 2 = Circle or 3 = Tile.
 */
 Phaser.Physics.Ninja.Tile = function (body, x, y, width, height, type) {
-    
+
     if (typeof type === 'undefined') { type = Phaser.Physics.Ninja.Tile.EMPTY; }
 
     /**
@@ -353,28 +353,28 @@ Phaser.Physics.Ninja.Tile.prototype = {
                 this.signx = 1;
                 this.signy = -1;
                 this.sx = this.signx / Math.SQRT2;//get slope _unit_ normal
-                this.sy = this.signy / Math.SQRT2;//since normal is (1,-1), length is sqrt(1*1 + -1*-1) = sqrt(2)               
+                this.sy = this.signy / Math.SQRT2;//since normal is (1,-1), length is sqrt(1*1 + -1*-1) = sqrt(2)
             }
             else if (this.id == Phaser.Physics.Ninja.Tile.SLOPE_45DEGnn)
             {
                 this.signx = -1;
                 this.signy = -1;
                 this.sx = this.signx / Math.SQRT2;//get slope _unit_ normal
-                this.sy = this.signy / Math.SQRT2;//since normal is (1,-1), length is sqrt(1*1 + -1*-1) = sqrt(2)               
+                this.sy = this.signy / Math.SQRT2;//since normal is (1,-1), length is sqrt(1*1 + -1*-1) = sqrt(2)
             }
             else if (this.id == Phaser.Physics.Ninja.Tile.SLOPE_45DEGnp)
             {
                 this.signx = -1;
                 this.signy = 1;
                 this.sx = this.signx / Math.SQRT2;//get slope _unit_ normal
-                this.sy = this.signy / Math.SQRT2;//since normal is (1,-1), length is sqrt(1*1 + -1*-1) = sqrt(2)               
+                this.sy = this.signy / Math.SQRT2;//since normal is (1,-1), length is sqrt(1*1 + -1*-1) = sqrt(2)
             }
             else if (this.id == Phaser.Physics.Ninja.Tile.SLOPE_45DEGpp)
             {
                 this.signx = 1;
                 this.signy = 1;
                 this.sx = this.signx / Math.SQRT2;//get slope _unit_ normal
-                this.sy = this.signy / Math.SQRT2;//since normal is (1,-1), length is sqrt(1*1 + -1*-1) = sqrt(2)               
+                this.sy = this.signy / Math.SQRT2;//since normal is (1,-1), length is sqrt(1*1 + -1*-1) = sqrt(2)
             }
             else
             {
@@ -672,7 +672,7 @@ Phaser.Physics.Ninja.Tile.prototype = {
 * @property {number} x - The x position.
 */
 Object.defineProperty(Phaser.Physics.Ninja.Tile.prototype, "x", {
-    
+
     get: function () {
         return this.pos.x - this.xw;
     },
@@ -688,7 +688,7 @@ Object.defineProperty(Phaser.Physics.Ninja.Tile.prototype, "x", {
 * @property {number} y - The y position.
 */
 Object.defineProperty(Phaser.Physics.Ninja.Tile.prototype, "y", {
-    
+
     get: function () {
         return this.pos.y - this.yw;
     },
@@ -705,7 +705,7 @@ Object.defineProperty(Phaser.Physics.Ninja.Tile.prototype, "y", {
 * @readonly
 */
 Object.defineProperty(Phaser.Physics.Ninja.Tile.prototype, "bottom", {
-    
+
     get: function () {
         return this.pos.y + this.yw;
     }
@@ -718,7 +718,7 @@ Object.defineProperty(Phaser.Physics.Ninja.Tile.prototype, "bottom", {
 * @readonly
 */
 Object.defineProperty(Phaser.Physics.Ninja.Tile.prototype, "right", {
-    
+
     get: function () {
         return this.pos.x + this.xw;
     }

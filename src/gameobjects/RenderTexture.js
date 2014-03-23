@@ -16,7 +16,7 @@
 Phaser.RenderTexture = function (game, width, height, key) {
 
     /**
-    * @property {Phaser.Game} game - A reference to the currently running game. 
+    * @property {Phaser.Game} game - A reference to the currently running game.
     */
     this.game = game;
 
@@ -26,7 +26,7 @@ Phaser.RenderTexture = function (game, width, height, key) {
     this.key = key;
 
     /**
-    * @property {number} type - Base Phaser object type. 
+    * @property {number} type - Base Phaser object type.
     */
     this.type = Phaser.RENDERTEXTURE;
 
@@ -37,7 +37,7 @@ Phaser.RenderTexture = function (game, width, height, key) {
     this._temp = new Phaser.Point();
 
     PIXI.RenderTexture.call(this, width, height);
-    
+
 };
 
 Phaser.RenderTexture.prototype = Object.create(PIXI.RenderTexture.prototype);

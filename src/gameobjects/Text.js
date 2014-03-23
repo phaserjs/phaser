@@ -38,7 +38,7 @@ Phaser.Text = function (game, x, y, text, style) {
     * @property {Phaser.Game} game - A reference to the currently running Game.
     */
     this.game = game;
- 
+
     /**
     * @property {boolean} exists - If exists = false then the Text isn't updated by the core game loop.
     * @default
@@ -361,7 +361,7 @@ Phaser.Text.prototype.updateText = function () {
     {
         this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
     }
-    
+
     //set canvas text styles
     this.context.fillStyle = this.style.fill;
     this.context.font = this.style.font;
@@ -822,7 +822,7 @@ Object.defineProperty(Phaser.Text.prototype, 'shadowBlur', {
 * @property {boolean} inputEnabled - Set to true to allow this object to receive input events.
 */
 Object.defineProperty(Phaser.Text.prototype, "inputEnabled", {
-    
+
     get: function () {
 
         return (this.input && this.input.enabled);
@@ -859,7 +859,7 @@ Object.defineProperty(Phaser.Text.prototype, "inputEnabled", {
 * @property {boolean} fixedToCamera - Set to true to fix this Text to the Camera at its current world coordinates.
 */
 Object.defineProperty(Phaser.Text.prototype, "fixedToCamera", {
-    
+
     get: function () {
 
         return !!this._cache[7];

@@ -3,14 +3,14 @@
  */
 
  /**
- * 
+ *
  * @class Strip
  * @extends DisplayObjectContainer
  * @constructor
  * @param texture {Texture} The texture to use
- * @param width {Number} the width 
+ * @param width {Number} the width
  * @param height {Number} the height
- * 
+ *
  */
 PIXI.Strip = function(texture, width, height)
 {
@@ -56,7 +56,7 @@ PIXI.Strip = function(texture, width, height)
     this.colors = new Float32Array()
     this.indices = new Uint16Array()
     */
-    
+
     this.width = width;
     this.height = height;
 
@@ -81,7 +81,7 @@ PIXI.Strip.prototype = Object.create(PIXI.DisplayObjectContainer.prototype);
 PIXI.Strip.prototype.constructor = PIXI.Strip;
 
 /*
- * Sets the texture that the Strip will use 
+ * Sets the texture that the Strip will use
  *
  * @method setTexture
  * @param texture {Texture} the texture that will be used

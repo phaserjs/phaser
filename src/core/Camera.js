@@ -18,7 +18,7 @@
 * @param {number} height - The height of the view rectangle
 */
 Phaser.Camera = function (game, id, x, y, width, height) {
-    
+
     /**
     * @property {Phaser.Game} game - A reference to the currently running Game.
     */
@@ -36,7 +36,7 @@ Phaser.Camera = function (game, id, x, y, width, height) {
     this.id = 0;
 
     /**
-    * Camera view. 
+    * Camera view.
     * The view into the world we wish to render (by default the game dimensions).
     * The x/y values are in world coordinates, not screen coordinates, the width/height is how many pixels to render.
     * Objects outside of this view are not rendered if set to camera cull.
@@ -95,7 +95,7 @@ Phaser.Camera = function (game, id, x, y, width, height) {
     * @property {Phaser.Point} scale - The scale of the display object to which all game objects are added. Set by World.boot
     */
     this.scale = null;
-    
+
 };
 
 /**
@@ -306,7 +306,7 @@ Phaser.Camera.prototype = {
     /**
     * A helper function to set both the X and Y properties of the camera at once
     * without having to use game.camera.x and game.camera.y.
-    * 
+    *
     * @method Phaser.Camera#setPosition
     * @param {number} x - X position.
     * @param {number} y - Y position.
@@ -325,7 +325,7 @@ Phaser.Camera.prototype = {
 
     /**
     * Sets the size of the view rectangle given the width and height in parameters.
-    * 
+    *
     * @method Phaser.Camera#setSize
     * @param {number} width - The desired width.
     * @param {number} height - The desired height.
@@ -339,7 +339,7 @@ Phaser.Camera.prototype = {
 
     /**
     * Resets the camera back to 0,0 and un-follows any object it may have been tracking.
-    * 
+    *
     * @method Phaser.Camera#reset
     */
     reset: function () {
@@ -364,7 +364,7 @@ Object.defineProperty(Phaser.Camera.prototype, "x", {
     get: function () {
         return this.view.x;
     },
- 
+
     set: function (value) {
 
         this.view.x = value;
@@ -383,7 +383,7 @@ Object.defineProperty(Phaser.Camera.prototype, "x", {
 * @property {number} y - Gets or sets the cameras y position.
 */
 Object.defineProperty(Phaser.Camera.prototype, "y", {
-    
+
     get: function () {
         return this.view.y;
     },

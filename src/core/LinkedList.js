@@ -35,7 +35,7 @@ Phaser.LinkedList = function () {
     * @default
     */
     this.last = null;
-    
+
     /**
     * @property {object} game - Number of elements in the list.
     * @default
@@ -48,7 +48,7 @@ Phaser.LinkedList.prototype = {
 
     /**
     * Adds a new element to this linked list.
-    * 
+    *
     * @method Phaser.LinkedList#add
     * @param {object} child - The element to add to this list. Can be a Phaser.Sprite or any other object you need to quickly iterate through.
     * @return {object} The child that was added.
@@ -81,7 +81,7 @@ Phaser.LinkedList.prototype = {
 
     /**
     * Removes the given element from this linked list if it exists.
-    * 
+    *
     * @method Phaser.LinkedList#remove
     * @param {object} child - The child to be removed from the list.
     */
@@ -124,7 +124,7 @@ Phaser.LinkedList.prototype = {
     /**
     * Calls a function on all members of this list, using the member as the context for the callback.
     * The function must exist on the member.
-    * 
+    *
     * @method Phaser.LinkedList#callAll
     * @param {function} callback - The function to call.
     */
@@ -136,7 +136,7 @@ Phaser.LinkedList.prototype = {
         }
 
         var entity = this.first;
-        
+
         do
         {
             if (entity && entity[callback])

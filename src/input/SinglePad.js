@@ -276,7 +276,7 @@ Phaser.SinglePad.prototype = {
         }
 
         this._axes[axisState.axis] = axisState.value;
-        
+
         if (this._padParent.onAxisCallback)
         {
             this._padParent.onAxisCallback.call(this._padParent.callbackContext, axisState, this._index);

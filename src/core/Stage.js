@@ -26,7 +26,7 @@ Phaser.Stage = function (game, width, height) {
     * @property {Phaser.Point} offset - Holds the offset coordinates of the Game.canvas from the top-left of the browser window (used by Input and other classes)
     */
     this.offset = new Phaser.Point();
-    
+
     PIXI.Stage.call(this, 0x000000, false);
 
     /**
@@ -96,11 +96,11 @@ Phaser.Stage.prototype.constructor = Phaser.Stage;
 /**
 * This is called automatically after the plugins preUpdate and before the State.update.
 * Most objects have preUpdate methods and it's where initial movement and positioning is done.
-* 
+*
 * @method Phaser.Stage#preUpdate
 */
 Phaser.Stage.prototype.preUpdate = function () {
-    
+
     this.currentRenderOrderID = 0;
 
     //  This can't loop in reverse, we need the orderID to be in sequence
@@ -115,7 +115,7 @@ Phaser.Stage.prototype.preUpdate = function () {
 
 /**
 * This is called automatically after the State.update, but before particles or plugins update.
-* 
+*
 * @method Phaser.Stage#update
 */
 Phaser.Stage.prototype.update = function () {
@@ -134,7 +134,7 @@ Phaser.Stage.prototype.update = function () {
 * In postUpdate this is where all the final physics calculatations and object positioning happens.
 * The objects are processed in the order of the display list.
 * The only exception to this is if the camera is following an object, in which case that is updated first.
-* 
+*
 * @method Phaser.Stage#postUpdate
 */
 Phaser.Stage.prototype.postUpdate = function () {
@@ -383,7 +383,7 @@ Object.defineProperty(Phaser.Stage.prototype, "backgroundColor", {
 * @property {boolean} smoothed - Set to true to smooth all sprites rendered on this Stage, or false to disable smoothing (great for pixel art)
 */
 Object.defineProperty(Phaser.Stage.prototype, "smoothed", {
-    
+
     get: function () {
 
         return !PIXI.scaleModes.LINEAR;

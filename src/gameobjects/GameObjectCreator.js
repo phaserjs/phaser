@@ -18,7 +18,7 @@ Phaser.GameObjectCreator = function (game) {
     * @property {Phaser.Game} game - A reference to the currently running Game.
     */
     this.game = game;
-    
+
     /**
     * @property {Phaser.World} world - A reference to the game world.
     */
@@ -121,7 +121,7 @@ Phaser.GameObjectCreator.prototype = {
     audio: function (key, volume, loop, connect) {
 
         return this.game.sound.add(key, volume, loop, connect);
-        
+
     },
 
     /**
@@ -137,7 +137,7 @@ Phaser.GameObjectCreator.prototype = {
     sound: function (key, volume, loop, connect) {
 
         return this.game.sound.add(key, volume, loop, connect);
-        
+
     },
 
     /**
@@ -231,7 +231,7 @@ Phaser.GameObjectCreator.prototype = {
     * A RetroFont uses a bitmap which contains fixed with characters for the font set. You use character spacing to define the set.
     * If you need variable width character support then use a BitmapText object instead. The main difference between a RetroFont and a BitmapText
     * is that a RetroFont creates a single texture that you can apply to a game object, where-as a BitmapText creates one Sprite object per letter of text.
-    * The texture can be asssigned or one or multiple images/sprites, but note that the text the RetroFont uses will be shared across them all, 
+    * The texture can be asssigned or one or multiple images/sprites, but note that the text the RetroFont uses will be shared across them all,
     * i.e. if you need each Image to have different text in it, then you need to create multiple RetroFont objects.
     *
     * @method Phaser.GameObjectCreator#retroFont

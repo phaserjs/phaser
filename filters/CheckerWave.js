@@ -10,7 +10,7 @@ Phaser.Filter.CheckerWave = function (game) {
     this.uniforms.vrp = { type: '3f', value: { x: 0.0, y: -5.0, z: 0.0 }};
     this.uniforms.color1 = { type: '3f', value: { x: 0, y: 1, z: 1 }};
     this.uniforms.color2 = { type: '3f', value: { x: 1, y: 1, z: 1 }};
-        
+
     this.fragmentSrc = [
 
         "precision mediump float;",

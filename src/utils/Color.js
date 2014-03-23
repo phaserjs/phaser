@@ -52,7 +52,7 @@ Phaser.Color = {
 
         var hex16 = (h.charAt(0) == "#") ? h.substring(1, 7) : h;
 
-        if (hex16.length==3)
+        if (hex16.length == 3)
         {
             hex16 = hex16.charAt(0) + hex16.charAt(0) + hex16.charAt(1) + hex16.charAt(1) + hex16.charAt(2) + hex16.charAt(2);
         }
@@ -62,7 +62,7 @@ Phaser.Color = {
         var blue = parseInt(hex16.substring(4, 6), 16);
 
         return red << 16 | green << 8 | blue;
-        
+
     },
 
     /**
@@ -78,13 +78,13 @@ Phaser.Color = {
 
         var argb = Phaser.Color.getRGB(color);
         var hsl = Phaser.Color.RGBtoHSV(color);
-        
+
         //  Hex format
         var result = Phaser.Color.RGBtoHexstring(color) + "\n";
-        
+
         //  RGB format
         result = result.concat("Alpha: " + argb.alpha + " Red: " + argb.red + " Green: " + argb.green + " Blue: " + argb.blue) + "\n";
-        
+
         //  HSL info
         result = result.concat("Hue: " + hsl.hue + " Saturation: " + hsl.saturation + " Lightnes: " + hsl.lightness);
 
@@ -285,7 +285,7 @@ Phaser.Color = {
         var blue = color & 0xFF;
 
         return 'rgba(' + red.toString() + ',' + green.toString() + ',' + blue.toString() + ',' + alpha.toString() + ')';
-        
+
     },
 
     /**
@@ -347,5 +347,5 @@ Phaser.Color = {
     getBlue: function (color) {
         return color & 0xFF;
     }
-    
+
 };

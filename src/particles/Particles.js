@@ -25,7 +25,7 @@ Phaser.Particles = function (game) {
     this.emitters = {};
 
     /**
-    * @property {number} ID - 
+    * @property {number} ID -
     * @default
     */
     this.ID = 0;

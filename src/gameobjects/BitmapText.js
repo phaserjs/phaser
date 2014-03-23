@@ -36,7 +36,7 @@ Phaser.BitmapText = function (game, x, y, font, text, size) {
     */
     this.game = game;
 
-    /** 
+    /**
     * @property {boolean} exists - If exists = false then the Sprite isn't updated by the core game loop or physics subsystem at all.
     * @default
     */
@@ -401,7 +401,7 @@ Object.defineProperty(Phaser.BitmapText.prototype, 'text', {
 * @property {boolean} inputEnabled - Set to true to allow this object to receive input events.
 */
 Object.defineProperty(Phaser.BitmapText.prototype, "inputEnabled", {
-    
+
     get: function () {
 
         return (this.input && this.input.enabled);
@@ -438,7 +438,7 @@ Object.defineProperty(Phaser.BitmapText.prototype, "inputEnabled", {
 * @property {boolean} fixedToCamera - Set to true to fix this BitmapText to the Camera at its current world coordinates.
 */
 Object.defineProperty(Phaser.BitmapText.prototype, "fixedToCamera", {
-    
+
     get: function () {
 
         return !!this._cache[7];

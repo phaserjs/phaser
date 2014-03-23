@@ -28,12 +28,12 @@ Phaser.Tile = function (layer, index, x, y, width, height) {
     * @property {number} index - The index of this tile within the map data corresponding to the tileset.
     */
     this.index = index;
-    
+
     /**
     * @property {number} x - The x map coordinate of this tile.
     */
     this.x = x;
-    
+
     /**
     * @property {number} y - The y map coordinate of this tile.
     */
@@ -43,7 +43,7 @@ Phaser.Tile = function (layer, index, x, y, width, height) {
     * @property {number} x - The x map coordinate of this tile.
     */
     this.worldX = x * width;
-    
+
     /**
     * @property {number} y - The y map coordinate of this tile.
     */
@@ -53,7 +53,7 @@ Phaser.Tile = function (layer, index, x, y, width, height) {
     * @property {number} width - The width of the tile in pixels.
     */
     this.width = width;
-    
+
     /**
     * @property {number} height - The height of the tile in pixels.
     */
@@ -63,7 +63,7 @@ Phaser.Tile = function (layer, index, x, y, width, height) {
     * @property {number} width - The width of the tile in pixels.
     */
     this.centerX = Math.abs(width / 2);
-    
+
     /**
     * @property {number} height - The height of the tile in pixels.
     */
@@ -196,7 +196,7 @@ Phaser.Tile.prototype = {
     /**
     * Set a callback to be called when this tile is hit by an object.
     * The callback must true true for collision processing to take place.
-    * 
+    *
     * @method Phaser.Tile#setCollisionCallback
     * @param {function} callback - Callback function.
     * @param {object} context - Callback will be called within this context.
@@ -218,7 +218,7 @@ Phaser.Tile.prototype = {
         this.collisionCallback = null;
         this.collisionCallbackContext = null;
         this.properties = null;
-        
+
     },
 
     /**
@@ -320,7 +320,7 @@ Phaser.Tile.prototype.constructor = Phaser.Tile;
 * @readonly
 */
 Object.defineProperty(Phaser.Tile.prototype, "collides", {
-    
+
     get: function () {
         return (this.collideLeft || this.collideRight || this.collideUp || this.collideDown);
     }
@@ -333,7 +333,7 @@ Object.defineProperty(Phaser.Tile.prototype, "collides", {
 * @readonly
 */
 Object.defineProperty(Phaser.Tile.prototype, "canCollide", {
-    
+
     get: function () {
         return (this.collideLeft || this.collideRight || this.collideUp || this.collideDown || this.collisionCallback);
     }
@@ -346,7 +346,7 @@ Object.defineProperty(Phaser.Tile.prototype, "canCollide", {
 * @readonly
 */
 Object.defineProperty(Phaser.Tile.prototype, "left", {
-    
+
     get: function () {
         return this.worldX;
     }
@@ -359,7 +359,7 @@ Object.defineProperty(Phaser.Tile.prototype, "left", {
 * @readonly
 */
 Object.defineProperty(Phaser.Tile.prototype, "right", {
-    
+
     get: function () {
         return this.worldX + this.width;
     }
@@ -372,7 +372,7 @@ Object.defineProperty(Phaser.Tile.prototype, "right", {
 * @readonly
 */
 Object.defineProperty(Phaser.Tile.prototype, "top", {
-    
+
     get: function () {
         return this.worldY;
     }
@@ -385,7 +385,7 @@ Object.defineProperty(Phaser.Tile.prototype, "top", {
 * @readonly
 */
 Object.defineProperty(Phaser.Tile.prototype, "bottom", {
-    
+
     get: function () {
         return this.worldY + this.height;
     }

@@ -15,7 +15,7 @@
 Phaser.Input = function (game) {
 
     /**
-    * @property {Phaser.Game} game - A reference to the currently running game. 
+    * @property {Phaser.Game} game - A reference to the currently running game.
     */
     this.game = game;
 
@@ -24,7 +24,7 @@ Phaser.Input = function (game) {
     * @default
     */
     this.hitCanvas = null;
-    
+
     /**
     * @property {CanvasRenderingContext2D} hitContext - The context of the pixel perfect hit canvas.
     * @default
@@ -57,13 +57,13 @@ Phaser.Input = function (game) {
 
     /**
     * @property {number} multiInputOverride - Controls the expected behaviour when using a mouse and touch together on a multi-input device.
-    * @default 
+    * @default
     */
     this.multiInputOverride = Phaser.Input.MOUSE_TOUCH_COMBINE;
 
     /**
     * @property {Phaser.Point} position - A point object representing the current position of the Pointer.
-    * @default 
+    * @default
     */
     this.position = null;
 
@@ -210,22 +210,22 @@ Phaser.Input = function (game) {
     * @property {Pointer} mousePointer - The mouse has its own unique Phaser.Pointer object which you can use if making a desktop specific game.
     */
     this.mousePointer = null;
-    
+
     /**
     * @property {Phaser.Mouse} mouse - The Mouse Input manager.
     */
     this.mouse = null;
-    
+
     /**
     * @property {Phaser.Keyboard} keyboard - The Keyboard Input manager.
     */
     this.keyboard = null;
-    
+
     /**
     * @property {Phaser.Touch} touch - the Touch Input manager.
     */
     this.touch = null;
-    
+
     /**
     * @property {Phaser.MSPointer} mspointer - The MSPointer Input manager.
     */
@@ -245,17 +245,17 @@ Phaser.Input = function (game) {
     * @property {Phaser.Signal} onDown - A Signal that is dispatched each time a pointer is pressed down.
     */
     this.onDown = null;
-    
+
     /**
     * @property {Phaser.Signal} onUp - A Signal that is dispatched each time a pointer is released.
     */
     this.onUp = null;
-    
+
     /**
     * @property {Phaser.Signal} onTap - A Signal that is dispatched each time a pointer is tapped.
     */
     this.onTap = null;
-    
+
     /**
     * @property {Phaser.Signal} onHold - A Signal that is dispatched each time a pointer is held down.
     */
@@ -272,7 +272,7 @@ Phaser.Input = function (game) {
     * @private
     */
     this._localPoint = new Phaser.Point();
-    
+
     /**
     * @property {number} _pollCounter - Internal var holding the current poll counter.
     * @private
@@ -713,7 +713,7 @@ Phaser.Input.prototype = {
             wt.d * id * pointer.x + -wt.b * id * pointer.y + (wt.ty * wt.b - wt.tx * wt.d) * id,
             wt.a * id * pointer.y + -wt.c * id * pointer.x + (-wt.ty * wt.a + wt.tx * wt.c) * id
         );
-        
+
     },
 
     /**
@@ -815,7 +815,7 @@ Object.defineProperty(Phaser.Input.prototype, "x", {
 * @property {number} y - The Y coordinate of the most recently active pointer.
 */
 Object.defineProperty(Phaser.Input.prototype, "y", {
-    
+
     get: function () {
         return this._y;
     },
@@ -860,7 +860,7 @@ Object.defineProperty(Phaser.Input.prototype, "totalInactivePointers", {
 * @readonly
 */
 Object.defineProperty(Phaser.Input.prototype, "totalActivePointers", {
-    
+
     get: function () {
 
         this.currentPointers = 0;

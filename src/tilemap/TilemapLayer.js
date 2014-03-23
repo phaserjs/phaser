@@ -46,17 +46,17 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
     * @property {CanvasRenderingContext2D} context - The 2d context of the canvas.
     */
     this.context = this.canvas.getContext('2d');
-    
+
     /**
     * @property {PIXI.BaseTexture} baseTexture - Required Pixi var.
     */
     this.baseTexture = new PIXI.BaseTexture(this.canvas);
-    
+
     /**
     * @property {PIXI.Texture} texture - Required Pixi var.
     */
     this.texture = new PIXI.Texture(this.baseTexture);
-    
+
     /**
     * @property {Phaser.Frame} textureFrame - Dimensions of the renderable area.
     */
@@ -158,7 +158,7 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
 
     /**
     * @property {object} _mc - Local map data and calculation cache.
-    * @private 
+    * @private
     */
     this._mc = {
 
@@ -187,7 +187,7 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
 
     /**
     * @property {array} _results - Local render loop var to help avoid gc spikes.
-    * @private 
+    * @private
     */
     this._results = [];
 
@@ -208,8 +208,8 @@ Phaser.TilemapLayer.prototype.postUpdate = function () {
 
 // console.log('layer pu');
 
-	Phaser.Image.prototype.postUpdate.call(this);
-	
+    Phaser.Image.prototype.postUpdate.call(this);
+
     //  Stops you being able to auto-scroll the camera if it's not following a sprite
     this.scrollX = this.game.camera.x * this.scrollFactorX;
     this.scrollY = this.game.camera.y * this.scrollFactorY;
@@ -244,7 +244,7 @@ Phaser.TilemapLayer.prototype.resizeWorld = function () {
 }
 
 /**
-* Take an x coordinate that doesn't account for scrollFactorX and 'fix' it 
+* Take an x coordinate that doesn't account for scrollFactorX and 'fix' it
 * into a scrolled local space. Used primarily internally
 * @method Phaser.TilemapLayer#_fixX
 * @memberof Phaser.TilemapLayer
@@ -269,7 +269,7 @@ Phaser.TilemapLayer.prototype._fixX = function(x) {
 }
 
 /**
-* Take an x coordinate that _does_ account for scrollFactorX and 'unfix' it 
+* Take an x coordinate that _does_ account for scrollFactorX and 'unfix' it
 * back to camera space. Used primarily internally
 * @method Phaser.TilemapLayer#_unfixX
 * @memberof Phaser.TilemapLayer
@@ -289,7 +289,7 @@ Phaser.TilemapLayer.prototype._unfixX = function(x) {
 }
 
 /**
-* Take a y coordinate that doesn't account for scrollFactorY and 'fix' it 
+* Take a y coordinate that doesn't account for scrollFactorY and 'fix' it
 * into a scrolled local space. Used primarily internally
 * @method Phaser.TilemapLayer#_fixY
 * @memberof Phaser.TilemapLayer
@@ -314,7 +314,7 @@ Phaser.TilemapLayer.prototype._fixY = function(y) {
 }
 
 /**
-* Take a y coordinate that _does_ account for scrollFactorY and 'unfix' it 
+* Take a y coordinate that _does_ account for scrollFactorY and 'unfix' it
 * back to camera space. Used primarily internally
 * @method Phaser.TilemapLayer#_unfixY
 * @memberof Phaser.TilemapLayer
@@ -594,7 +594,7 @@ Phaser.TilemapLayer.prototype.render = function () {
 
     if (this.game.renderType === Phaser.WEBGL)
     {
-        // PIXI.updateWebGLTexture(this.baseTexture, renderSession.gl);        
+        // PIXI.updateWebGLTexture(this.baseTexture, renderSession.gl);
         PIXI.updateWebGLTexture(this.baseTexture, this.game.renderer.gl);
     }
 
@@ -680,7 +680,7 @@ Phaser.TilemapLayer.prototype.renderDebug = function () {
 * @property {number} scrollX - Scrolls the map horizontally or returns the current x position.
 */
 Object.defineProperty(Phaser.TilemapLayer.prototype, "scrollX", {
-    
+
     get: function () {
         return this._mc.x;
     },
@@ -690,7 +690,7 @@ Object.defineProperty(Phaser.TilemapLayer.prototype, "scrollX", {
         if (value !== this._mc.x && value >= 0 && this.layer.widthInPixels > this.width)
         {
             this._mc.x = value;
-    
+
             if (this._mc.x > (this.layer.widthInPixels - this.width))
             {
                 this._mc.x = this.layer.widthInPixels - this.width;
@@ -720,7 +720,7 @@ Object.defineProperty(Phaser.TilemapLayer.prototype, "scrollX", {
 * @property {number} scrollY - Scrolls the map vertically or returns the current y position.
 */
 Object.defineProperty(Phaser.TilemapLayer.prototype, "scrollY", {
-    
+
     get: function () {
         return this._mc.y;
     },
@@ -760,7 +760,7 @@ Object.defineProperty(Phaser.TilemapLayer.prototype, "scrollY", {
 * @property {number} collisionWidth - The width of the collision tiles.
 */
 Object.defineProperty(Phaser.TilemapLayer.prototype, "collisionWidth", {
-    
+
     get: function () {
         return this._mc.cw;
     },
@@ -780,7 +780,7 @@ Object.defineProperty(Phaser.TilemapLayer.prototype, "collisionWidth", {
 * @property {number} collisionHeight - The height of the collision tiles.
 */
 Object.defineProperty(Phaser.TilemapLayer.prototype, "collisionHeight", {
-    
+
     get: function () {
         return this._mc.ch;
     },

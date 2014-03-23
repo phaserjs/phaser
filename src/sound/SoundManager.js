@@ -20,12 +20,12 @@ Phaser.SoundManager = function (game) {
     * @property {Phaser.Game} game - Local reference to game.
     */
     this.game = game;
-    
+
     /**
     * @property {Phaser.Signal} onSoundDecode - The event dispatched when a sound decodes (typically only for mp3 files)
     */
     this.onSoundDecode = new Phaser.Signal();
-    
+
     /**
     * @property {boolean} _codeMuted - Internal mute tracking var.
     * @private
@@ -39,7 +39,7 @@ Phaser.SoundManager = function (game) {
     * @default
     */
     this._muted = false;
-   
+
     /**
     * @property {Description} _unlockSource - Internal unlock tracking var.
     * @private
@@ -50,12 +50,12 @@ Phaser.SoundManager = function (game) {
     /**
     * @property {number} _volume - The global audio volume. A value between 0 (silence) and 1 (full volume).
     * @private
-    * @default 
+    * @default
     */
     this._volume = 1;
 
     /**
-    * @property {array} _sounds - An array containing all the sounds 
+    * @property {array} _sounds - An array containing all the sounds
     * @private
     * @default The empty array.
     */
@@ -66,19 +66,19 @@ Phaser.SoundManager = function (game) {
     * @default
     */
     this.context = null;
-    
+
     /**
     * @property {boolean} usingWebAudio - true if this sound is being played with Web Audio.
     * @readonly
     */
     this.usingWebAudio = true;
-    
+
     /**
     * @property {boolean} usingAudioTag - true if the sound is being played via the Audio tag.
     * @readonly
     */
     this.usingAudioTag = false;
-    
+
     /**
     * @property {boolean} noAudio - Has audio been disabled via the PhaserGlobal object? Useful if you need to use a 3rd party audio library instead.
     * @default
@@ -102,7 +102,7 @@ Phaser.SoundManager = function (game) {
     * @default
     */
     this.channels = 32;
-    
+
 };
 
 Phaser.SoundManager.prototype = {
@@ -268,7 +268,7 @@ Phaser.SoundManager.prototype = {
                 this._sounds[i].resume();
             }
         }
-   
+
     },
 
     /**
@@ -483,7 +483,7 @@ Object.defineProperty(Phaser.SoundManager.prototype, "mute", {
 * @property {number} volume - Gets or sets the global volume of the SoundManager, a value between 0 and 1.
 */
 Object.defineProperty(Phaser.SoundManager.prototype, "volume", {
-    
+
     get: function () {
 
         if (this.usingWebAudio)
@@ -516,7 +516,7 @@ Object.defineProperty(Phaser.SoundManager.prototype, "volume", {
                 }
             }
         }
-        
+
     }
 
 });

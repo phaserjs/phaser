@@ -33,7 +33,7 @@ Phaser.World = function (game) {
     * @property {Phaser.Camera} camera - Camera instance.
     */
     this.camera = null;
-    
+
 }
 
 Phaser.World.prototype = Object.create(Phaser.Group.prototype);

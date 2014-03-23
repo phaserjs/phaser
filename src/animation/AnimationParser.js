@@ -50,7 +50,7 @@ Phaser.AnimationParser = {
         var row = Math.floor((width - margin) / (frameWidth + spacing));
         var column = Math.floor((height - margin) / (frameHeight + spacing));
         var total = row * column;
-        
+
         if (frameMax !== -1)
         {
             total = frameMax;
@@ -115,11 +115,11 @@ Phaser.AnimationParser = {
 
         //  Let's create some frames then
         var data = new Phaser.FrameData();
-        
+
         //  By this stage frames is a fully parsed array
         var frames = json['frames'];
         var newFrame;
-        
+
         for (var i = 0; i < frames.length; i++)
         {
             var uuid = game.rnd.uuid();
@@ -180,7 +180,7 @@ Phaser.AnimationParser = {
             console.log(json);
             return;
         }
-            
+
         //  Let's create some frames then
         var data = new Phaser.FrameData();
 
@@ -188,7 +188,7 @@ Phaser.AnimationParser = {
         var frames = json['frames'];
         var newFrame;
         var i = 0;
-        
+
         for (var key in frames)
         {
             var uuid = game.rnd.uuid();
@@ -266,7 +266,7 @@ Phaser.AnimationParser = {
         var frameY;
         var frameWidth;
         var frameHeight;
-        
+
         for (var i = 0; i < frames.length; i++)
         {
             uuid = game.rnd.uuid();

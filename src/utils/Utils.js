@@ -11,7 +11,7 @@
 * @static
 */
 Phaser.Utils = {
-    
+
     /**
     * Get a unit dimension from a string.
     *
@@ -72,7 +72,7 @@ Phaser.Utils = {
         }
 
         return array;
-        
+
     },
 
     /**
@@ -80,7 +80,7 @@ Phaser.Utils = {
     * pad = the string to pad it out with (defaults to a space)
     * dir = 1 (left), 2 (right), 3 (both)
     * @method Phaser.Utils.pad
-    * @param {string} str - The target string. 
+    * @param {string} str - The target string.
     * @param {number} len - The number of characters to be added.
     * @param {number} pad - The string to pad it out with (defaults to a space).
     * @param {number} [dir=3] The direction dir = 1 (left), 2 (right), 3 (both).
@@ -191,7 +191,7 @@ Phaser.Utils = {
             --i;
         }
 
-        for ( ; i < length; i++ )
+        for (; i < length; i++)
         {
             // Only deal with non-null/undefined values
             if ((options = arguments[i]) != null)
@@ -252,17 +252,17 @@ if (typeof Function.prototype.bind != 'function') {
         return function (thisArg) {
 
             var target = this, boundArgs = slice.call(arguments, 1);
- 
+
             if (typeof target != 'function')
             {
                 throw new TypeError();
             }
- 
+
             function bound() {
                 var args = boundArgs.concat(slice.call(arguments));
                 target.apply(this instanceof bound ? this : thisArg, args);
             }
- 
+
             bound.prototype = (function F(proto) {
                 proto && (F.prototype = proto);
 
@@ -271,7 +271,7 @@ if (typeof Function.prototype.bind != 'function') {
                     return new F;
                 }
             })(target.prototype);
- 
+
             return bound;
         };
     })();

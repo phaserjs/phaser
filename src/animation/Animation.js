@@ -139,7 +139,7 @@ Phaser.Animation = function (game, parent, name, frameData, frames, delay, loop)
     //  Set-up some event listeners
     this.game.onPause.add(this.onPause, this);
     this.game.onResume.add(this.onResume, this);
-    
+
 };
 
 Phaser.Animation.prototype = {
@@ -338,7 +338,7 @@ Phaser.Animation.prototype = {
                             this._parent.tilingTexture = false;
                         }
                     }
-                    
+
                     this.loopCount++;
                     this._parent.events.onAnimationLoop.dispatch(this._parent, this);
                     this.onLoop.dispatch(this._parent, this);

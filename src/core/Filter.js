@@ -4,9 +4,9 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
-/** 
+/**
 * This is a base Filter template to use for any Phaser filter development.
-* 
+*
 * @class Phaser.Filter
 * @classdesc Phaser - Filter
 * @constructor
@@ -26,7 +26,7 @@ Phaser.Filter = function (game, uniforms, fragmentSrc) {
     * @default
     */
     this.type =  Phaser.WEBGL_FILTER;
-    
+
     /**
     * An array of passes - some filters contain a few steps this array simply stores the steps in a linear fashion.
     * For example the blur filter has two passes blurX and blurY.
@@ -34,7 +34,7 @@ Phaser.Filter = function (game, uniforms, fragmentSrc) {
     * @private
     */
     this.passes = [this];
-    
+
     /**
     * @property {array} shaders - Array an array of shaders.
     * @private
@@ -63,7 +63,7 @@ Phaser.Filter = function (game, uniforms, fragmentSrc) {
         mouse: { type: '2f', value: { x: 0.0, y: 0.0 }}
 
     };
-    
+
     /**
     * @property {array} fragmentSrc - The fragment shader code.
     */
@@ -125,7 +125,7 @@ Phaser.Filter.prototype = {
     destroy: function () {
 
         this.game = null;
-        
+
     }
 
 };

@@ -95,7 +95,7 @@ Phaser.Utils.extend(Phaser.Physics.P2.BodyDebug.prototype, {
     * @method Phaser.Physics.P2.BodyDebug#draw
     */
     draw: function() {
-    
+
         var angle, child, color, i, j, lineColor, lw, obj, offset, sprite, v, verts, vrot, _j, _ref1;
         obj = this.body;
         sprite = this.canvas;
@@ -109,7 +109,7 @@ Phaser.Utils.extend(Phaser.Physics.P2.BodyDebug.prototype, {
             var l = obj.shapes.length
 
             i = 0;
-            
+
             while (i !== l)
             {
                 child = obj.shapes[i];
@@ -117,7 +117,7 @@ Phaser.Utils.extend(Phaser.Physics.P2.BodyDebug.prototype, {
                 angle = obj.shapeAngles[i];
                 offset = offset || 0;
                 angle = angle || 0;
-        
+
                 if (child instanceof p2.Circle)
                 {
                     this.drawCircle(sprite, offset[0] * this.ppu, offset[1] * this.ppu, angle, child.radius * this.ppu, color, lw);
@@ -253,7 +253,7 @@ Phaser.Utils.extend(Phaser.Physics.P2.BodyDebug.prototype, {
         {
             colors = [0xff0000, 0x00ff00, 0x0000ff];
             i = 0;
-         
+
             while (i !== verts.length + 1)
             {
                 v0 = verts[i % verts.length];

@@ -371,7 +371,7 @@ Phaser.Cache.prototype = {
     * Add a new text data.
     *
     * @method Phaser.Cache#addText
-    * @param {string} key - Asset key for the text data. 
+    * @param {string} key - Asset key for the text data.
     * @param {string} url - URL of this text data file.
     * @param {object} data - Extra text data.
     */
@@ -385,7 +385,7 @@ Phaser.Cache.prototype = {
     * Add a new json object into the cache.
     *
     * @method Phaser.Cache#addJSON
-    * @param {string} key - Asset key for the text data. 
+    * @param {string} key - Asset key for the text data.
     * @param {string} url - URL of this text data file.
     * @param {object} data - Extra text data.
     */
@@ -485,7 +485,7 @@ Phaser.Cache.prototype = {
     * @param {string} key - Asset key for the sound.
     */
     updateSound: function (key, property, value) {
-        
+
         if (this._sounds[key])
         {
             this._sounds[key][property] = value;
@@ -601,7 +601,7 @@ Phaser.Cache.prototype = {
                 console.warn('Phaser.Cache.getPhysicsData: Invalid key/object: "' + key + ' / ' + object + '"');
             }
         }
-        
+
         return null;
 
     },
@@ -890,7 +890,7 @@ Phaser.Cache.prototype = {
         {
             console.warn('Phaser.Cache.getText: Invalid key: "' + key + '"');
         }
-        
+
     },
 
     /**
@@ -910,7 +910,7 @@ Phaser.Cache.prototype = {
         {
             console.warn('Phaser.Cache.getJSON: Invalid key: "' + key + '"');
         }
-        
+
     },
 
     /**
@@ -930,7 +930,7 @@ Phaser.Cache.prototype = {
         {
             console.warn('Phaser.Cache.getBinary: Invalid key: "' + key + '"');
         }
-        
+
     },
 
     /**

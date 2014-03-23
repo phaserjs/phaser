@@ -27,7 +27,7 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     y = y || 0;
     key = key || null;
     frame = frame || null;
-    
+
     /**
     * @property {Phaser.Game} game - A reference to the currently running Game.
     */
@@ -105,7 +105,7 @@ Phaser.Sprite = function (game, x, y, key, frame) {
 
     /**
     * By default Sprites won't add themselves to any physics system and their physics body will be `null`.
-    * To enable them for physics you need to call `game.physics.enable(sprite, system)` where `sprite` is this object 
+    * To enable them for physics you need to call `game.physics.enable(sprite, system)` where `sprite` is this object
     * and `system` is the Physics system you want to use to manage this body. Once enabled you can access all physics related properties via `Sprite.body`.
     *
     * Important: Enabling a Sprite for P2 or Ninja physics will automatically set `Sprite.anchor` to 0.5 so the physics body is centered on the Sprite.
@@ -456,7 +456,7 @@ Phaser.Sprite.prototype.crop = function(rect) {
 * Brings a 'dead' Sprite back to life, optionally giving it the health value specified.
 * A resurrected Sprite has its alive, exists and visible properties all set to true.
 * It will dispatch the onRevived event, you can listen to Sprite.events.onRevived for the signal.
-* 
+*
 * @method Phaser.Sprite#revive
 * @memberof Phaser.Sprite
 * @param {number} [health=1] - The health to give the Sprite.
@@ -485,7 +485,7 @@ Phaser.Sprite.prototype.revive = function(health) {
 * It will dispatch the onKilled event, you can listen to Sprite.events.onKilled for the signal.
 * Note that killing a Sprite is a way for you to quickly recycle it in a Sprite pool, it doesn't free it up from memory.
 * If you don't need this Sprite any more you should call Sprite.destroy instead.
-* 
+*
 * @method Phaser.Sprite#kill
 * @memberof Phaser.Sprite
 * @return (Phaser.Sprite) This instance.
@@ -508,7 +508,7 @@ Phaser.Sprite.prototype.kill = function() {
 /**
 * Destroys the Sprite. This removes it from its parent group, destroys the input, event and animation handlers if present
 * and nulls its reference to game, freeing it up for garbage collection.
-* 
+*
 * @method Phaser.Sprite#destroy
 * @memberof Phaser.Sprite
 * @param {boolean} [destroyChildren=true] - Should every child of this object have its destroy method called?
@@ -581,7 +581,7 @@ Phaser.Sprite.prototype.destroy = function(destroyChildren) {
 /**
 * Damages the Sprite, this removes the given amount from the Sprites health property.
 * If health is then taken below or is equal to zero `Sprite.kill` is called.
-* 
+*
 * @method Phaser.Sprite#damage
 * @memberof Phaser.Sprite
 * @param {number} amount - The amount to subtract from the Sprite.health value.
@@ -607,7 +607,7 @@ Phaser.Sprite.prototype.damage = function(amount) {
 * Resets the Sprite. This places the Sprite at the given x/y world coordinates and then
 * sets alive, exists, visible and renderable all to true. Also resets the outOfBounds state and health values.
 * If the Sprite has a physics body that too is reset.
-* 
+*
 * @method Phaser.Sprite#reset
 * @memberof Phaser.Sprite
 * @param {number} x - The x coordinate (in world space) to position the Sprite at.
@@ -638,13 +638,13 @@ Phaser.Sprite.prototype.reset = function(x, y, health) {
     this._cache[4] = 1;
 
     return this;
-    
+
 };
 
 /**
 * Brings the Sprite to the top of the display list it is a child of. Sprites that are members of a Phaser.Group are only
 * bought to the top of that Group, not the entire display list.
-* 
+*
 * @method Phaser.Sprite#bringToTop
 * @memberof Phaser.Sprite
 * @return (Phaser.Sprite) This instance.
@@ -663,7 +663,7 @@ Phaser.Sprite.prototype.bringToTop = function() {
 /**
 * Play an animation based on the given key. The animation should previously have been added via sprite.animations.add()
 * If the requested animation is already playing this request will be ignored. If you need to reset an already running animation do so directly on the Animation object itself.
-* 
+*
 * @method Phaser.Sprite#play
 * @memberof Phaser.Sprite
 * @param {string} name - The name of the animation to be played, e.g. "fire", "walk", "jump".
@@ -685,7 +685,7 @@ Phaser.Sprite.prototype.play = function (name, frameRate, loop, killOnComplete) 
 * Indicates the rotation of the Sprite, in degrees, from its original orientation. Values from 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation.
 * Values outside this range are added to or subtracted from 360 to obtain a value within the range. For example, the statement player.angle = 450 is the same as player.angle = 90.
 * If you wish to work in radians instead of degrees use the property Sprite.rotation instead. Working in radians is also a little faster as it doesn't have to convert the angle.
-* 
+*
 * @name Phaser.Sprite#angle
 * @property {number} angle - The angle of this Sprite in degrees.
 */
@@ -732,7 +732,7 @@ Object.defineProperty(Phaser.Sprite.prototype, "deltaX", {
 Object.defineProperty(Phaser.Sprite.prototype, "deltaY", {
 
     get: function() {
-    
+
         return this.world.y - this._cache[1];
 
     }
@@ -749,7 +749,7 @@ Object.defineProperty(Phaser.Sprite.prototype, "deltaY", {
 Object.defineProperty(Phaser.Sprite.prototype, "deltaZ", {
 
     get: function() {
-    
+
         return this.rotation - this._cache[2];
 
     }
@@ -783,7 +783,7 @@ Object.defineProperty(Phaser.Sprite.prototype, "inWorld", {
 Object.defineProperty(Phaser.Sprite.prototype, "inCamera", {
 
     get: function() {
-    
+
         return this.game.world.camera.screenView.intersects(this.getBounds());
 
     }
@@ -845,7 +845,7 @@ Object.defineProperty(Phaser.Sprite.prototype, "renderOrderID", {
 * @property {boolean} inputEnabled - Set to true to allow this object to receive input events.
 */
 Object.defineProperty(Phaser.Sprite.prototype, "inputEnabled", {
-    
+
     get: function () {
 
         return (this.input && this.input.enabled);
@@ -882,7 +882,7 @@ Object.defineProperty(Phaser.Sprite.prototype, "inputEnabled", {
 * @property {boolean} exists - If the Sprite is processed by the core game update and physics.
 */
 Object.defineProperty(Phaser.Sprite.prototype, "exists", {
-    
+
     get: function () {
 
         return !!this._cache[6];
@@ -929,7 +929,7 @@ Object.defineProperty(Phaser.Sprite.prototype, "exists", {
 * @property {boolean} fixedToCamera - Set to true to fix this Sprite to the Camera at its current world coordinates.
 */
 Object.defineProperty(Phaser.Sprite.prototype, "fixedToCamera", {
-    
+
     get: function () {
 
         return !!this._cache[7];
@@ -958,7 +958,7 @@ Object.defineProperty(Phaser.Sprite.prototype, "fixedToCamera", {
 * @property {boolean} smoothed - Set to true to smooth the texture of this Sprite, or false to disable smoothing (great for pixel art)
 */
 Object.defineProperty(Phaser.Sprite.prototype, "smoothed", {
-    
+
     get: function () {
 
         return !this.texture.baseTexture.scaleMode;

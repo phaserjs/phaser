@@ -6,7 +6,7 @@
 
 /**
 * Creates a new `Graphics` object.
-* 
+*
 * @class Phaser.Graphics
 * @constructor
 *
@@ -23,7 +23,7 @@ Phaser.Graphics = function (game, x, y) {
     * @property {Phaser.Game} game - A reference to the currently running Game.
     */
     this.game = game;
- 
+
     /**
     * @property {boolean} exists - If exists = false then the Text isn't updated by the core game loop.
     * @default
@@ -141,7 +141,7 @@ Phaser.Graphics.prototype.postUpdate = function () {
 
 /**
 * Destroy this Graphics instance.
-* 
+*
 * @method Phaser.Graphics.prototype.destroy
 * @param {boolean} [destroyChildren=true] - Should every child of this object have its destroy method called?
 */
@@ -189,7 +189,7 @@ Phaser.Graphics.prototype.destroy = function(destroyChildren) {
 
 /*
 * Draws a {Phaser.Polygon} or a {PIXI.Polygon} filled
-* 
+*
 * @method Phaser.Graphics.prototype.drawPolygon
 */
 Phaser.Graphics.prototype.drawPolygon = function (poly) {
@@ -202,7 +202,7 @@ Phaser.Graphics.prototype.drawPolygon = function (poly) {
     }
 
     this.lineTo(poly.points[0].x, poly.points[0].y);
-    
+
 }
 
 /**
@@ -233,7 +233,7 @@ Object.defineProperty(Phaser.Graphics.prototype, 'angle', {
 * @property {boolean} fixedToCamera - Set to true to fix this Graphics to the Camera at its current world coordinates.
 */
 Object.defineProperty(Phaser.Graphics.prototype, "fixedToCamera", {
-    
+
     get: function () {
 
         return !!this._cache[7];

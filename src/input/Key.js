@@ -14,7 +14,7 @@
 Phaser.Key = function (game, keycode) {
 
     /**
-    * @property {Phaser.Game} game - A reference to the currently running game. 
+    * @property {Phaser.Game} game - A reference to the currently running game.
     */
     this.game = game;
 
@@ -103,7 +103,7 @@ Phaser.Key = function (game, keycode) {
     * @property {Phaser.Signal} onUp - This Signal is dispatched every time this Key is pressed down. It is only dispatched once (until the key is released again).
     */
     this.onUp = new Phaser.Signal();
-    
+
 };
 
 Phaser.Key.prototype = {

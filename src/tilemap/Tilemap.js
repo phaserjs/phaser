@@ -1207,7 +1207,7 @@ Phaser.Tilemap.prototype = {
 
         if (typeof x === "undefined") { x = 0; }
         if (typeof y === "undefined") { y = 0; }
-        
+
         layer = this.getLayer(layer);
 
         if (!tileblock || tileblock.length < 2)

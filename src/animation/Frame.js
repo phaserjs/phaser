@@ -23,7 +23,7 @@ Phaser.Frame = function (index, x, y, width, height, name, uuid) {
     * @property {number} index - The index of this Frame within the FrameData set it is being added to.
     */
     this.index = index;
-    
+
     /**
     * @property {number} x - X position within the image to cut from.
     */

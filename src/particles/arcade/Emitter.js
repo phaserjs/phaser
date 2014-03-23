@@ -189,7 +189,7 @@ Phaser.Particles.Arcade.Emitter = function (game, x, y, maxParticles) {
     * @property {boolean} emitX
     */
     this.emitX = x;
-    
+
     /**
     * The point the particles are emitted from.
     * Emitter.x and Emitter.y control the containers location, which updates all current particles
@@ -229,7 +229,7 @@ Phaser.Particles.Arcade.Emitter.prototype.update = function () {
             if (this.game.time.now >= this._timer)
             {
                 this.emitParticle();
-                
+
                 this._counter++;
 
                 if (this._quantity > 0)
@@ -566,7 +566,7 @@ Object.defineProperty(Phaser.Particles.Arcade.Emitter.prototype, "y", {
 * @readonly
 */
 Object.defineProperty(Phaser.Particles.Arcade.Emitter.prototype, "left", {
-    
+
     get: function () {
         return Math.floor(this.x - (this.width / 2));
     }
@@ -579,7 +579,7 @@ Object.defineProperty(Phaser.Particles.Arcade.Emitter.prototype, "left", {
 * @readonly
 */
 Object.defineProperty(Phaser.Particles.Arcade.Emitter.prototype, "right", {
-    
+
     get: function () {
         return Math.floor(this.x + (this.width / 2));
     }
@@ -592,7 +592,7 @@ Object.defineProperty(Phaser.Particles.Arcade.Emitter.prototype, "right", {
 * @readonly
 */
 Object.defineProperty(Phaser.Particles.Arcade.Emitter.prototype, "top", {
-    
+
     get: function () {
         return Math.floor(this.y - (this.height / 2));
     }
@@ -605,7 +605,7 @@ Object.defineProperty(Phaser.Particles.Arcade.Emitter.prototype, "top", {
 * @readonly
 */
 Object.defineProperty(Phaser.Particles.Arcade.Emitter.prototype, "bottom", {
-    
+
     get: function () {
         return Math.floor(this.y + (this.height / 2));
     }

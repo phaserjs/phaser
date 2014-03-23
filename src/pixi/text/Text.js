@@ -3,7 +3,7 @@
  */
 
 /**
- * A Text Object will create a line(s) of text. To split a line you can use '\n' 
+ * A Text Object will create a line(s) of text. To split a line you can use '\n'
  * or add a wordWrap property set to true and and wordWrapWidth property with a value
  * in the style object
  *
@@ -125,7 +125,7 @@ PIXI.Text.prototype.updateText = function()
     this.canvas.height = lineHeight * lines.length;
 
     if(navigator.isCocoonJS) this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
-    
+
     //set canvas text styles
     this.context.fillStyle = this.style.fill;
     this.context.font = this.style.font;
@@ -186,7 +186,7 @@ PIXI.Text.prototype.updateTexture = function()
 * Renders the object using the WebGL renderer
 *
 * @method _renderWebGL
-* @param renderSession {RenderSession} 
+* @param renderSession {RenderSession}
 * @private
 */
 PIXI.Text.prototype._renderWebGL = function(renderSession)

@@ -9,7 +9,7 @@ Phaser.Filter.BinarySerpents = function (game) {
     this.uniforms.march = { type: '1i', value: 100 };
     this.uniforms.maxDistance = { type: '1f', value: 5.0 };
     this.uniforms.fog = { type: '1f', value: 5.0 };
-        
+
     this.fragmentSrc = [
 
         "precision mediump float;",
@@ -65,7 +65,7 @@ Phaser.Filter.BinarySerpents = function (game) {
             "float r = Texture3D(ray, 33.);",
             "gl_FragColor = result * (step(r, .3) + r * .2 + .1);",
         "}"
-    ];  
+    ];
 
 };
 

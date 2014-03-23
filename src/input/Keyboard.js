@@ -50,7 +50,7 @@ Phaser.Keyboard = function (game) {
     * @private
     */
     this._keys = [];
-    
+
     /**
     * @property {array} _capture - The array the key capture values are stored in.
     * @private
@@ -63,14 +63,14 @@ Phaser.Keyboard = function (game) {
     * @default
     */
     this._onKeyDown = null;
-    
+
     /**
     * @property {function} _onKeyUp
     * @private
     * @default
     */
     this._onKeyUp = null;
-    
+
 };
 
 Phaser.Keyboard.prototype = {
@@ -127,7 +127,7 @@ Phaser.Keyboard.prototype = {
         if (this._keys[keycode])
         {
             this._keys[keycode] = null;
-            
+
             this.removeKeyCapture(keycode);
         }
 
@@ -288,7 +288,7 @@ Phaser.Keyboard.prototype = {
         {
             this._keys[event.keyCode] = new Phaser.Key(this.game, event.keyCode);
         }
-        
+
         this._keys[event.keyCode].processKeyDown(event);
 
     },

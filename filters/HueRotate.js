@@ -9,7 +9,7 @@ Phaser.Filter.HueRotate = function (game) {
     this.uniforms.alpha = { type: '1f', value: 1.0 };
     this.uniforms.size = { type: '1f', value: 0.03 };
     this.uniforms.iChannel0 = { type: 'sampler2D', value: null, textureData: { repeat: true } }
-        
+
     this.fragmentSrc = [
 
         "precision mediump float;",

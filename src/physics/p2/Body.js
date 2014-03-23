@@ -927,12 +927,12 @@ Phaser.Physics.P2.Body.prototype = {
     * This function expects the x.y values to be given in pixels. If you want to provide them at p2 world scales then call Body.data.fromPolygon directly.
     *
     * @method Phaser.Physics.P2.Body#addPolygon
-    * @param {object} options - An object containing the build options: 
+    * @param {object} options - An object containing the build options:
     * @param {boolean} [options.optimalDecomp=false] - Set to true if you need optimal decomposition. Warning: very slow for polygons with more than 10 vertices.
     * @param {boolean} [options.skipSimpleCheck=false] - Set to true if you already know that the path is not intersecting itself.
     * @param {boolean|number} [options.removeCollinearPoints=false] - Set to a number (angle threshold value) to remove collinear points, or false to keep all points.
-    * @param {(number[]|...number)} points - An array of 2d vectors that form the convex or concave polygon. 
-    *                                       Either [[0,0], [0,1],...] or a flat array of numbers that will be interpreted as [x,y, x,y, ...], 
+    * @param {(number[]|...number)} points - An array of 2d vectors that form the convex or concave polygon.
+    *                                       Either [[0,0], [0,1],...] or a flat array of numbers that will be interpreted as [x,y, x,y, ...],
     *                                       or the arguments passed can be flat x,y values e.g. `setPolygon(options, x,y, x,y, x,y, ...)` where `x` and `y` are numbers.
     * @return {boolean} True on success, else false.
     */
@@ -1080,7 +1080,7 @@ Phaser.Physics.P2.Body.prototype = {
         }
 
     },
-      
+
     /**
     * Updates the debug draw if any body shapes change.
     *
@@ -1279,7 +1279,7 @@ Phaser.Physics.P2.Body.prototype = {
     * @method Phaser.Physics.P2.Body#loadPolygon
     * @param {string} key - The key of the Physics Data file as stored in Game.Cache.
     * @param {string} object - The key of the object within the Physics data file that you wish to load the shape data from.
-    * @param {object} options - An object containing the build options: 
+    * @param {object} options - An object containing the build options:
     * @param {boolean} [options.optimalDecomp=false] - Set to true if you need optimal decomposition. Warning: very slow for polygons with more than 10 vertices.
     * @param {boolean} [options.skipSimpleCheck=false] - Set to true if you already know that the path is not intersecting itself.
     * @param {boolean|number} [options.removeCollinearPoints=false] - Set to a number (angle threshold value) to remove collinear points, or false to keep all points.
@@ -1331,7 +1331,7 @@ Phaser.Physics.P2.Body.KINEMATIC = 4;
 * @property {boolean} static - Returns true if the Body is static. Setting Body.static to 'false' will make it dynamic.
 */
 Object.defineProperty(Phaser.Physics.P2.Body.prototype, "static", {
-    
+
     get: function () {
 
         return (this.data.motionState === Phaser.Physics.P2.Body.STATIC);
@@ -1364,7 +1364,7 @@ Object.defineProperty(Phaser.Physics.P2.Body.prototype, "static", {
 * @property {boolean} dynamic - Returns true if the Body is dynamic. Setting Body.dynamic to 'false' will make it static.
 */
 Object.defineProperty(Phaser.Physics.P2.Body.prototype, "dynamic", {
-    
+
     get: function () {
 
         return (this.data.motionState === Phaser.Physics.P2.Body.DYNAMIC);
@@ -1397,7 +1397,7 @@ Object.defineProperty(Phaser.Physics.P2.Body.prototype, "dynamic", {
 * @property {boolean} kinematic - Returns true if the Body is kinematic. Setting Body.kinematic to 'false' will make it static.
 */
 Object.defineProperty(Phaser.Physics.P2.Body.prototype, "kinematic", {
-    
+
     get: function () {
 
         return (this.data.motionState === Phaser.Physics.P2.Body.KINEMATIC);
@@ -1423,10 +1423,10 @@ Object.defineProperty(Phaser.Physics.P2.Body.prototype, "kinematic", {
 
 /**
 * @name Phaser.Physics.P2.Body#allowSleep
-* @property {boolean} allowSleep - 
+* @property {boolean} allowSleep -
 */
 Object.defineProperty(Phaser.Physics.P2.Body.prototype, "allowSleep", {
-    
+
     get: function () {
 
         return this.data.allowSleep;
@@ -1448,7 +1448,7 @@ Object.defineProperty(Phaser.Physics.P2.Body.prototype, "allowSleep", {
 * The angle of the Body in degrees from its original orientation. Values from 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation.
 * Values outside this range are added to or subtracted from 360 to obtain a value within the range. For example, the statement Body.angle = 450 is the same as Body.angle = 90.
 * If you wish to work in radians instead of degrees use the property Body.rotation instead. Working in radians is faster as it doesn't have to convert values.
-* 
+*
 * @name Phaser.Physics.P2.Body#angle
 * @property {number} angle - The angle of this Body in degrees.
 */
@@ -1474,7 +1474,7 @@ Object.defineProperty(Phaser.Physics.P2.Body.prototype, "angle", {
 * @property {number} angularDamping - The angular damping acting acting on the body.
 */
 Object.defineProperty(Phaser.Physics.P2.Body.prototype, "angularDamping", {
-    
+
     get: function () {
 
         return this.data.angularDamping;
@@ -1494,7 +1494,7 @@ Object.defineProperty(Phaser.Physics.P2.Body.prototype, "angularDamping", {
 * @property {number} angularForce - The angular force acting on the body.
 */
 Object.defineProperty(Phaser.Physics.P2.Body.prototype, "angularForce", {
-    
+
     get: function () {
 
         return this.data.angularForce;
@@ -1514,7 +1514,7 @@ Object.defineProperty(Phaser.Physics.P2.Body.prototype, "angularForce", {
 * @property {number} angularVelocity - The angular velocity of the body.
 */
 Object.defineProperty(Phaser.Physics.P2.Body.prototype, "angularVelocity", {
-    
+
     get: function () {
 
         return this.data.angularVelocity;
@@ -1535,7 +1535,7 @@ Object.defineProperty(Phaser.Physics.P2.Body.prototype, "angularVelocity", {
 * @property {number} damping - The linear damping acting on the body in the velocity direction.
 */
 Object.defineProperty(Phaser.Physics.P2.Body.prototype, "damping", {
-    
+
     get: function () {
 
         return this.data.damping;
@@ -1552,10 +1552,10 @@ Object.defineProperty(Phaser.Physics.P2.Body.prototype, "damping", {
 
 /**
 * @name Phaser.Physics.P2.Body#fixedRotation
-* @property {boolean} fixedRotation - 
+* @property {boolean} fixedRotation -
 */
 Object.defineProperty(Phaser.Physics.P2.Body.prototype, "fixedRotation", {
-    
+
     get: function () {
 
         return this.data.fixedRotation;
@@ -1578,7 +1578,7 @@ Object.defineProperty(Phaser.Physics.P2.Body.prototype, "fixedRotation", {
 * @property {number} inertia - The inertia of the body around the Z axis..
 */
 Object.defineProperty(Phaser.Physics.P2.Body.prototype, "inertia", {
-    
+
     get: function () {
 
         return this.data.inertia;
@@ -1595,10 +1595,10 @@ Object.defineProperty(Phaser.Physics.P2.Body.prototype, "inertia", {
 
 /**
 * @name Phaser.Physics.P2.Body#mass
-* @property {number} mass - 
+* @property {number} mass -
 */
 Object.defineProperty(Phaser.Physics.P2.Body.prototype, "mass", {
-    
+
     get: function () {
 
         return this.data.mass;
@@ -1622,7 +1622,7 @@ Object.defineProperty(Phaser.Physics.P2.Body.prototype, "mass", {
 * @property {number} motionState - The type of motion this body has. Should be one of: Body.STATIC (the body does not move), Body.DYNAMIC (body can move and respond to collisions) and Body.KINEMATIC (only moves according to its .velocity).
 */
 Object.defineProperty(Phaser.Physics.P2.Body.prototype, "motionState", {
-    
+
     get: function () {
 
         return this.data.motionState;
@@ -1643,7 +1643,7 @@ Object.defineProperty(Phaser.Physics.P2.Body.prototype, "motionState", {
 /**
 * The angle of the Body in radians.
 * If you wish to work in degrees instead of radians use the Body.angle property instead. Working in radians is faster as it doesn't have to convert values.
-* 
+*
 * @name Phaser.Physics.P2.Body#rotation
 * @property {number} rotation - The angle of this Body in radians.
 */
@@ -1668,7 +1668,7 @@ Object.defineProperty(Phaser.Physics.P2.Body.prototype, "rotation", {
 * @property {number} sleepSpeedLimit - .
 */
 Object.defineProperty(Phaser.Physics.P2.Body.prototype, "sleepSpeedLimit", {
-    
+
     get: function () {
 
         return this.data.sleepSpeedLimit;
@@ -1688,7 +1688,7 @@ Object.defineProperty(Phaser.Physics.P2.Body.prototype, "sleepSpeedLimit", {
 * @property {number} x - The x coordinate of this Body.
 */
 Object.defineProperty(Phaser.Physics.P2.Body.prototype, "x", {
-    
+
     get: function () {
 
         return this.world.mpxi(this.data.position[0]);
@@ -1708,7 +1708,7 @@ Object.defineProperty(Phaser.Physics.P2.Body.prototype, "x", {
 * @property {number} y - The y coordinate of this Body.
 */
 Object.defineProperty(Phaser.Physics.P2.Body.prototype, "y", {
-    
+
     get: function () {
 
         return this.world.mpxi(this.data.position[1]);
@@ -1729,7 +1729,7 @@ Object.defineProperty(Phaser.Physics.P2.Body.prototype, "y", {
 * @readonly
 */
 Object.defineProperty(Phaser.Physics.P2.Body.prototype, "id", {
-    
+
     get: function () {
 
         return this.data.id;
@@ -1743,7 +1743,7 @@ Object.defineProperty(Phaser.Physics.P2.Body.prototype, "id", {
 * @property {boolean} debug - Enable or disable debug drawing of this body
 */
 Object.defineProperty(Phaser.Physics.P2.Body.prototype, "debug", {
-    
+
     get: function () {
 
         return (!this.debugBody);
@@ -1774,7 +1774,7 @@ Object.defineProperty(Phaser.Physics.P2.Body.prototype, "debug", {
 * @property {boolean} collideWorldBounds - Should the Body collide with the World bounds?
 */
 Object.defineProperty(Phaser.Physics.P2.Body.prototype, "collideWorldBounds", {
-    
+
     get: function () {
 
         return this._collideWorldBounds;

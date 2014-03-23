@@ -2,12 +2,12 @@
  */
 
 /**
- * 
+ *
  * @class Rope
  * @constructor
  * @param texture {Texture} The texture to use
  * @param points {Array}
- * 
+ *
  */
 PIXI.Rope = function(texture, points)
 {
@@ -38,7 +38,7 @@ PIXI.Rope.prototype = Object.create( PIXI.Strip.prototype );
 PIXI.Rope.prototype.constructor = PIXI.Rope;
 
 /*
- * Refreshes 
+ * Refreshes
  *
  * @method refresh
  */
@@ -176,7 +176,7 @@ PIXI.Rope.prototype.updateTransform = function()
     PIXI.DisplayObjectContainer.prototype.updateTransform.call( this );
 };
 /*
- * Sets the texture that the Rope will use 
+ * Sets the texture that the Rope will use
  *
  * @method setTexture
  * @param texture {Texture} the texture that will be used

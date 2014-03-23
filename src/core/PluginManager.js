@@ -6,9 +6,9 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
-/** 
+/**
 * The Plugin Manager is responsible for the loading, running and unloading of Phaser Plugins.
-* 
+*
 * @class Phaser.PluginManager
 * @classdesc Phaser - PluginManager
 * @constructor
@@ -21,18 +21,18 @@ Phaser.PluginManager = function(game, parent) {
     * @property {Phaser.Game} game - A reference to the currently running game.
     */
     this.game = game;
-    
+
     /**
     * @property {Description} _parent - Description.
     * @private
     */
     this._parent = parent;
-    
+
     /**
     * @property {array} plugins - Description.
     */
     this.plugins = [];
-    
+
     /**
     * @property {array} _pluginsLength - Description.
     * @private
@@ -132,7 +132,7 @@ Phaser.PluginManager.prototype = {
     * @param {Phaser.Plugin} plugin - The plugin to be removed.
     */
     remove: function (plugin) {
-        
+
         if (this._pluginsLength === 0)
         {
             return;
@@ -155,7 +155,7 @@ Phaser.PluginManager.prototype = {
     * @method Phaser.PluginManager#removeAll
     */
     removeAll: function() {
-        
+
         for (this._p = 0; this._p < this._pluginsLength; this._p++)
         {
             this.plugins[this._p].destroy();
@@ -167,7 +167,7 @@ Phaser.PluginManager.prototype = {
     /**
     * Pre-update is called at the very start of the update cycle, before any other subsystems have been updated (including Physics).
     * It only calls plugins who have active=true.
-    * 
+    *
     * @method Phaser.PluginManager#preUpdate
     */
     preUpdate: function () {
@@ -190,11 +190,11 @@ Phaser.PluginManager.prototype = {
     /**
     * Update is called after all the core subsystems (Input, Tweens, Sound, etc) and the State have updated, but before the render.
     * It only calls plugins who have active=true.
-    * 
+    *
     * @method Phaser.PluginManager#update
     */
     update: function () {
-        
+
         if (this._pluginsLength === 0)
         {
             return;
@@ -214,11 +214,11 @@ Phaser.PluginManager.prototype = {
     * PostUpdate is the last thing to be called before the world render.
     * In particular, it is called after the world postUpdate, which means the camera has been adjusted.
     * It only calls plugins who have active=true.
-    * 
+    *
     * @method Phaser.PluginManager#postUpdate
     */
     postUpdate: function () {
-        
+
         if (this._pluginsLength === 0)
         {
             return;
@@ -237,7 +237,7 @@ Phaser.PluginManager.prototype = {
     /**
     * Render is called right after the Game Renderer completes, but before the State.render.
     * It only calls plugins who have visible=true.
-    * 
+    *
     * @method Phaser.PluginManager#render
     */
     render: function () {
@@ -260,7 +260,7 @@ Phaser.PluginManager.prototype = {
     /**
     * Post-render is called after the Game Renderer and State.render have run.
     * It only calls plugins who have visible=true.
-    * 
+    *
     * @method Phaser.PluginManager#postRender
     */
     postRender: function () {
@@ -282,7 +282,7 @@ Phaser.PluginManager.prototype = {
 
     /**
     * Clear down this PluginManager and null out references
-    * 
+    *
     * @method Phaser.PluginManager#destroy
     */
     destroy: function () {

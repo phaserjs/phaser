@@ -247,7 +247,7 @@ Object.defineProperty(Phaser.Circle.prototype, "diameter", {
 * @property {number} radius - Gets or sets the radius of the circle.
 */
 Object.defineProperty(Phaser.Circle.prototype, "radius", {
-    
+
     get: function () {
         return this._radius;
     },
@@ -270,7 +270,7 @@ Object.defineProperty(Phaser.Circle.prototype, "radius", {
 * @propety {number} left - Gets or sets the value of the leftmost point of the circle.
 */
 Object.defineProperty(Phaser.Circle.prototype, "left", {
-    
+
     get: function () {
         return this.x - this._radius;
     },
@@ -328,7 +328,7 @@ Object.defineProperty(Phaser.Circle.prototype, "top", {
     get: function () {
         return this.y - this._radius;
     },
-    
+
     set: function (value) {
 
         if (value > this.y)

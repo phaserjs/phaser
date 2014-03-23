@@ -12,7 +12,7 @@ Phaser.Filter.Marble = function (game) {
     this.uniforms.fluid_speed = { type: '1f', value: 10.0 }
 
     this.uniforms.color_intensity = { type: '1f', value: 0.30 }
-        
+
     //  The fragment shader source
     this.fragmentSrc = [
 

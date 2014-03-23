@@ -297,9 +297,9 @@ Phaser.Group.prototype.create = function (x, y, key, frame, exists) {
     child.alive = exists;
 
     this.addChild(child);
-    
+
     child.z = this.children.length;
-        
+
     if (child.events)
     {
         child.events.onAddedToGroup.dispatch(child, this);
@@ -419,7 +419,7 @@ Phaser.Group.prototype.swap = function (child1, child2) {
     }
 
     return result;
-    
+
 }
 
 /**
@@ -566,7 +566,7 @@ Phaser.Group.prototype.getIndex = function (child) {
 Phaser.Group.prototype.replace = function (oldChild, newChild) {
 
     var index = this.getIndex(oldChild);
-    
+
     if (index !== -1)
     {
         if (newChild.parent !== undefined)
@@ -816,7 +816,7 @@ Phaser.Group.prototype.divideAll = function (property, amount, checkAlive, check
 /**
 * Calls a function on all of the children that have exists=true in this Group.
 * After the existsValue parameter you can add as many parameters as you like, which will all be passed to the child callback.
-* 
+*
 * @method Phaser.Group#callAllExists
 * @param {function} callback - The function that exists on the children that will be called.
 * @param {boolean} existsValue - Only children with exists=existsValue will be called.
@@ -838,7 +838,7 @@ Phaser.Group.prototype.callAllExists = function (callback, existsValue) {
 
 /**
 * Returns a reference to a function that exists on a child of the Group based on the given callback array.
-* 
+*
 * @method Phaser.Group#callbackFromArray
 * @param {object} child - The object to inspect.
 * @param {array} callback - The array of function names.
@@ -892,7 +892,7 @@ Phaser.Group.prototype.callbackFromArray = function (child, callback, length) {
 /**
 * Calls a function on all of the children regardless if they are dead or alive (see callAllExists if you need control over that)
 * After the method parameter and context you can add as many extra parameters as you like, which will all be passed to the child.
-* 
+*
 * @method Phaser.Group#callAll
 * @param {string} method - A string containing the name of the function that will be called. The function must exist on the child.
 * @param {string} [context=null] - A string containing the context under which the method will be executed. Set to null to default to the child.
@@ -1017,7 +1017,7 @@ Phaser.Group.prototype.postUpdate = function () {
 * After the checkExists parameter you can add as many parameters as you like, which will all be passed to the callback along with the child.
 * For example: Group.forEach(awardBonusGold, this, true, 100, 500)
 * Note: Currently this will skip any children which are Groups themselves.
-* 
+*
 * @method Phaser.Group#forEach
 * @param {function} callback - The function that will be called. Each child of the Group will be passed to it as its first parameter.
 * @param {Object} callbackContext - The context in which the function should be called (usually 'this').
@@ -1048,7 +1048,7 @@ Phaser.Group.prototype.forEach = function (callback, callbackContext, checkExist
 * Allows you to call your own function on each member of this Group where child.exists=true. You must pass the callback and context in which it will run.
 * You can add as many parameters as you like, which will all be passed to the callback along with the child.
 * For example: Group.forEachExists(causeDamage, this, 500)
-* 
+*
 * @method Phaser.Group#forEachExists
 * @param {function} callback - The function that will be called. Each child of the Group will be passed to it as its first parameter.
 * @param {Object} callbackContext - The context in which the function should be called (usually 'this').
@@ -1066,7 +1066,7 @@ Phaser.Group.prototype.forEachExists = function (callback, callbackContext) {
 * Allows you to call your own function on each alive member of this Group (where child.alive=true). You must pass the callback and context in which it will run.
 * You can add as many parameters as you like, which will all be passed to the callback along with the child.
 * For example: Group.forEachAlive(causeDamage, this, 500)
-* 
+*
 * @method Phaser.Group#forEachAlive
 * @param {function} callback - The function that will be called. Each child of the Group will be passed to it as its first parameter.
 * @param {Object} callbackContext - The context in which the function should be called (usually 'this').
@@ -1084,7 +1084,7 @@ Phaser.Group.prototype.forEachAlive = function (callback, callbackContext) {
 * Allows you to call your own function on each dead member of this Group (where alive=false). You must pass the callback and context in which it will run.
 * You can add as many parameters as you like, which will all be passed to the callback along with the child.
 * For example: Group.forEachDead(bringToLife, this)
-* 
+*
 * @method Phaser.Group#forEachDead
 * @param {function} callback - The function that will be called. Each child of the Group will be passed to it as its first parameter.
 * @param {Object} callbackContext - The context in which the function should be called (usually 'this').
@@ -1191,7 +1191,7 @@ Phaser.Group.prototype.descendingSortHandler = function (a, b) {
 * Iterates over the children of the Group. When a child has a property matching key that equals the given value, it is considered as a match.
 * Matched children can be sent to the optional callback, or simply returned or counted.
 * You can add as many callback parameters as you like, which will all be passed to the callback along with the child, after the callbackContext parameter.
-* 
+*
 * @method Phaser.Group#iterate
 * @param {string} key - The child property to check, i.e. 'exists', 'alive', 'health'
 * @param {any} value - If child.key === this value it will be considered a match. Note that a strict comparison is used.
@@ -1565,7 +1565,7 @@ Object.defineProperty(Phaser.Group.prototype, "angle", {
 * @property {boolean} fixedToCamera - Set to true to fix this Group to the Camera at its current world coordinates.
 */
 Object.defineProperty(Phaser.Group.prototype, "fixedToCamera", {
-    
+
     get: function () {
 
         return !!this._cache[7];

@@ -7,13 +7,13 @@
 /**
 * Abstracts away the use of RAF or setTimeOut for the core game update loop.
 *
-* @class Phaser.RequestAnimationFrame 
+* @class Phaser.RequestAnimationFrame
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
 * @param {boolean} [forceSetTimeOut=false] - Tell Phaser to use setTimeOut even if raf is available.
 */
 Phaser.RequestAnimationFrame = function(game, forceSetTimeOut) {
-    
+
     if (typeof forceSetTimeOut === 'undefined') { forceSetTimeOut = false; }
 
     /**
@@ -102,7 +102,7 @@ Phaser.RequestAnimationFrame.prototype = {
 
     /**
     * The update method for the requestAnimationFrame
-    * @method Phaser.RequestAnimationFrame#updateRAF    
+    * @method Phaser.RequestAnimationFrame#updateRAF
     */
     updateRAF: function () {
 

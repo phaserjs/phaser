@@ -22,7 +22,7 @@
 * @param {Phaser.Sprite} sprite - A reference to Description.
 */
 Phaser.Events = function (sprite) {
-    
+
     this.parent = sprite;
 
     this.onAddedToGroup = new Phaser.Signal();

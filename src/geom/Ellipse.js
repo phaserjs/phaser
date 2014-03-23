@@ -151,7 +151,7 @@ Phaser.Ellipse.prototype.constructor = Phaser.Ellipse;
 * @propety {number} left - Gets or sets the value of the leftmost point of the ellipse.
 */
 Object.defineProperty(Phaser.Ellipse.prototype, "left", {
-    
+
     get: function () {
         return this.x;
     },
@@ -199,7 +199,7 @@ Object.defineProperty(Phaser.Ellipse.prototype, "top", {
     get: function () {
         return this.y;
     },
-    
+
     set: function (value) {
         this.y = value;
     }

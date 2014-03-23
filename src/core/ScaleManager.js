@@ -7,7 +7,7 @@
 /**
 * The ScaleManager object is responsible for helping you manage the scaling, resizing and alignment of your game within the browser.
 *
-* @class Phaser.ScaleManager 
+* @class Phaser.ScaleManager
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
 * @param {number} width - The native width of the game.
@@ -239,7 +239,7 @@ Phaser.ScaleManager = function (game, width, height) {
     document.addEventListener('fullscreenchange', function (event) {
         return _this.fullScreenChange(event);
     }, false);
-    
+
 };
 
 /**
@@ -558,7 +558,7 @@ Phaser.ScaleManager.prototype = {
         {
             force = false;
         }
-        
+
         if (this.game.device.iPad === false && this.game.device.webApp === false && this.game.device.desktop === false)
         {
             if (this.game.device.android && this.game.device.chrome === false)
@@ -577,7 +577,7 @@ Phaser.ScaleManager.prototype = {
         {
             // Set minimum height of content to new window height
             document.documentElement['style'].minHeight = window.innerHeight + 'px';
-        
+
             if (this.incorrectOrientation === true)
             {
                 this.setMaximum();
@@ -643,7 +643,7 @@ Phaser.ScaleManager.prototype = {
 
         this.game.canvas.style.width = this.width + 'px';
         this.game.canvas.style.height = this.height + 'px';
-        
+
         this.game.input.scale.setTo(this.game.width / this.width, this.game.height / this.height);
 
         if (this.pageAlignHorizontally)
@@ -675,9 +675,9 @@ Phaser.ScaleManager.prototype = {
         }
 
         Phaser.Canvas.getOffset(this.game.canvas, this.game.stage.offset);
-        
+
         this.aspectRatio = this.width / this.height;
-        
+
         this.scaleFactor.x = this.game.width / this.width;
         this.scaleFactor.y = this.game.height / this.height;
 

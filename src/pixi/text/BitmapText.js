@@ -82,7 +82,7 @@ PIXI.BitmapText.prototype.updateText = function()
     var lineWidths = [];
     var line = 0;
     var scale = this.fontSize / data.size;
-    
+
 
     for(var i = 0; i < this.text.length; i++)
     {

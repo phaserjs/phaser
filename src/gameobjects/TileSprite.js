@@ -124,7 +124,7 @@ Phaser.TileSprite = function (game, x, y, width, height, key, frame) {
 
     /**
     * By default Sprites won't add themselves to any physics system and their physics body will be `null`.
-    * To enable them for physics you need to call `game.physics.enable(sprite, system)` where `sprite` is this object 
+    * To enable them for physics you need to call `game.physics.enable(sprite, system)` where `sprite` is this object
     * and `system` is the Physics system you want to use to manage this body. Once enabled you can access all physics related properties via `Sprite.body`.
     *
     * Important: Enabling a Sprite for P2 or Ninja physics will automatically set `Sprite.anchor` to 0.5 so the physics body is centered on the Sprite.
@@ -395,7 +395,7 @@ Phaser.TileSprite.prototype.loadTexture = function (key, frame) {
 /**
 * Destroys the TileSprite. This removes it from its parent group, destroys the event and animation handlers if present
 * and nulls its reference to game, freeing it up for garbage collection.
-* 
+*
 * @method Phaser.TileSprite#destroy
 * @memberof Phaser.TileSprite
 * @param {boolean} [destroyChildren=true] - Should every child of this object have its destroy method called?
@@ -456,7 +456,7 @@ Phaser.TileSprite.prototype.destroy = function(destroyChildren) {
 /**
 * Play an animation based on the given key. The animation should previously have been added via sprite.animations.add()
 * If the requested animation is already playing this request will be ignored. If you need to reset an already running animation do so directly on the Animation object itself.
-* 
+*
 * @method Phaser.TileSprite#play
 * @memberof Phaser.TileSprite
 * @param {string} name - The name of the animation to be played, e.g. "fire", "walk", "jump".
@@ -511,7 +511,7 @@ Phaser.TileSprite.prototype.reset = function(x, y) {
 * Indicates the rotation of the Sprite, in degrees, from its original orientation. Values from 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation.
 * Values outside this range are added to or subtracted from 360 to obtain a value within the range. For example, the statement player.angle = 450 is the same as player.angle = 90.
 * If you wish to work in radians instead of degrees use the property Sprite.rotation instead. Working in radians is also a little faster as it doesn't have to convert the angle.
-* 
+*
 * @name Phaser.TileSprite#angle
 * @property {number} angle - The angle of this Sprite in degrees.
 */
@@ -582,7 +582,7 @@ Object.defineProperty(Phaser.TileSprite.prototype, "frameName", {
 * @property {boolean} fixedToCamera - Set to true to fix this TileSprite to the Camera at its current world coordinates.
 */
 Object.defineProperty(Phaser.TileSprite.prototype, "fixedToCamera", {
-    
+
     get: function () {
 
         return !!this._cache[7];
@@ -613,7 +613,7 @@ Object.defineProperty(Phaser.TileSprite.prototype, "fixedToCamera", {
 * @property {boolean} exists - If the TileSprite is processed by the core game update and physics.
 */
 Object.defineProperty(Phaser.TileSprite.prototype, "exists", {
-    
+
     get: function () {
 
         return !!this._cache[6];
@@ -659,7 +659,7 @@ Object.defineProperty(Phaser.TileSprite.prototype, "exists", {
 * @property {boolean} inputEnabled - Set to true to allow this object to receive input events.
 */
 Object.defineProperty(Phaser.TileSprite.prototype, "inputEnabled", {
-    
+
     get: function () {
 
         return (this.input && this.input.enabled);

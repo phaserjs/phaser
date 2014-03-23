@@ -53,15 +53,15 @@ PIXI.Texture = function(baseTexture, frame)
      * @type Rectangle
      */
     this.trim = null;
-  
+
     this.scope = this;
 
     this._uvs = null;
-    
+
     if(baseTexture.hasLoaded)
     {
         if(this.noFrame)frame = new PIXI.Rectangle(0,0, baseTexture.width, baseTexture.height);
-      
+
         this.setFrame(frame);
     }
     else
@@ -86,7 +86,7 @@ PIXI.Texture.prototype.onBaseTextureLoaded = function()
     baseTexture.removeEventListener( 'loaded', this.onLoaded );
 
     if(this.noFrame)this.frame = new PIXI.Rectangle(0,0, baseTexture.width, baseTexture.height);
-    
+
     this.setFrame(this.frame);
 
     this.scope.dispatchEvent( { type: 'update', content: this } );

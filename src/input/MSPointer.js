@@ -20,7 +20,7 @@ Phaser.MSPointer = function (game) {
     * @property {Phaser.Game} game - A reference to the currently running game.
     */
     this.game = game;
-    
+
     /**
     * @property {Object} callbackContext - The context under which callbacks are called (defaults to game).
     */
@@ -37,13 +37,13 @@ Phaser.MSPointer = function (game) {
     * @private
     */
     this._onMSPointerDown = null;
-    
+
     /**
     * @property {function} _onMSPointerMove - Internal function to handle MSPointer events.
     * @private
     */
     this._onMSPointerMove = null;
-    
+
     /**
     * @property {function} _onMSPointerUp - Internal function to handle MSPointer events.
     * @private

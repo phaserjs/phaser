@@ -427,7 +427,7 @@ Phaser.Timer.prototype = {
     * @method Phaser.Timer#pause
     */
     pause: function () {
-        
+
         if (this.running && !this.expired)
         {
             this._pauseStarted = this.game.time.now;
@@ -444,7 +444,7 @@ Phaser.Timer.prototype = {
     * @private
     */
     _pause: function () {
-        
+
         if (this.running && !this.expired)
         {
             this._pauseStarted = this.game.time.now;
@@ -551,7 +551,7 @@ Object.defineProperty(Phaser.Timer.prototype, "next", {
 Object.defineProperty(Phaser.Timer.prototype, "duration", {
 
     get: function () {
-        
+
         if (this.running && this.nextTick > this._now)
         {
             return this.nextTick - this._now;

@@ -299,7 +299,7 @@ Phaser.Gamepad.prototype = {
                         }
 
                         var rawPad = this._rawPads[m];
-                        
+
                         if (rawPad)
                         {
                             if (validConnections.rawIndices[rawPad.index])

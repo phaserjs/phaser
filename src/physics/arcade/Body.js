@@ -669,7 +669,7 @@ Phaser.Physics.Arcade.Body.prototype = {
 * @readonly
 */
 Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "bottom", {
-    
+
     get: function () {
         return this.position.y + this.height;
     }
@@ -682,7 +682,7 @@ Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "bottom", {
 * @readonly
 */
 Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "right", {
-    
+
     get: function () {
         return this.position.x + this.width;
     }
@@ -694,7 +694,7 @@ Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "right", {
 * @property {number} x - The x position.
 */
 Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "x", {
-    
+
     get: function () {
         return this.position.x;
     },
@@ -710,7 +710,7 @@ Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "x", {
 * @property {number} y - The y position.
 */
 Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "y", {
-    
+
     get: function () {
         return this.position.y;
     },

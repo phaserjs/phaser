@@ -20,7 +20,7 @@ Phaser.Utils.Debug = function (game) {
     * @property {Phaser.Game} game - A reference to the currently running Game.
     */
     this.game = game;
-  
+
     /**
     * @property {PIXI.Sprite} sprite - If debugging in WebGL mode we need this.
     */
@@ -35,7 +35,7 @@ Phaser.Utils.Debug = function (game) {
     * @property {PIXI.BaseTexture} baseTexture - Required Pixi var.
     */
     this.baseTexture = null;
-    
+
     /**
     * @property {PIXI.Texture} texture - Required Pixi var.
     */
@@ -56,7 +56,7 @@ Phaser.Utils.Debug = function (game) {
     * @default '14px Courier'
     */
     this.font = '14px Courier';
-   
+
     /**
     * @property {number} columnWidth - The spacing between columns.
     */
@@ -66,24 +66,24 @@ Phaser.Utils.Debug = function (game) {
     * @property {number} lineHeight - The line height between the debug text.
     */
     this.lineHeight = 16;
-    
+
     /**
     * @property {boolean} renderShadow - Should the text be rendered with a slight shadow? Makes it easier to read on different types of background.
     */
     this.renderShadow = true;
-    
+
     /**
     * @property {Context} currentX - The current X position the debug information will be rendered at.
     * @default
     */
     this.currentX = 0;
-    
+
     /**
     * @property {number} currentY - The current Y position the debug information will be rendered at.
     * @default
     */
     this.currentY = 0;
-    
+
     /**
     * @property {number} currentAlpha - The current alpha the debug information will be rendered at.
     * @default
@@ -270,7 +270,7 @@ Phaser.Utils.Debug.prototype = {
         this.line('Bounds x: ' + camera.bounds.x + ' Y: ' + camera.bounds.y + ' w: ' + camera.bounds.width + ' h: ' + camera.bounds.height);
         this.line('View x: ' + camera.view.x + ' Y: ' + camera.view.y + ' w: ' + camera.view.width + ' h: ' + camera.view.height);
         this.stop();
-        
+
     },
 
     /**
@@ -563,7 +563,7 @@ Phaser.Utils.Debug.prototype = {
         }
 
         this.stop();
-        
+
     },
 
     /**

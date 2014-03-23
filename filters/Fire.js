@@ -54,7 +54,7 @@ Phaser.Filter.Fire = function (game) {
             "vec3 c = mix(c1, c2, fbm(p + r)) + mix(c3, c4, r.x) - mix(c5, c6, r.y);",
             "gl_FragColor = vec4(c * cos(shift * gl_FragCoord.y / resolution.y), alpha);",
         "}"
-    ];  
+    ];
 
 };
 
@@ -65,11 +65,11 @@ Phaser.Filter.Fire.prototype.init = function (width, height, alpha, shift) {
 
     this.setResolution(width, height);
 
-    if (typeof alpha !== 'undefined') { 
+    if (typeof alpha !== 'undefined') {
         this.uniforms.alpha.value = alpha;
     }
 
-    if (typeof shift !== 'undefined') { 
+    if (typeof shift !== 'undefined') {
         this.uniforms.shift.value = shift;
     }
 
