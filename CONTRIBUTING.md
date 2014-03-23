@@ -60,7 +60,7 @@ That is fine too. While Pull Requests are the best thing in the world for us, th
 
 - No trailing whitespace, blank lines should have no whitespace.
 
-- Always favor strict equals` === `unless you * need * to use type coercion.
+- Always favor strict equals `===` unless you *need* to use type coercion.
 
 - Follow conventions already in the code, and listen to jshint. Our config is set-up for a reason.
 
