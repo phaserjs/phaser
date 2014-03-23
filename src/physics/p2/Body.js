@@ -134,7 +134,7 @@ Phaser.Physics.P2.Body = function (game, sprite, x, y, mass) {
     /**
     * @property {Phaser.Physics.P2.BodyDebug} debugBody - Reference to the debug body.
     */
-    this.debugBody = null
+    this.debugBody = null;
 
     //  Set-up the default shape
     if (sprite)
@@ -763,7 +763,7 @@ Phaser.Physics.P2.Body.prototype = {
             this.debugBody.destroy();
         }
 
-        this.debugBody = null
+        this.debugBody = null;
 
         this.sprite = null;
 
@@ -965,7 +965,7 @@ Phaser.Physics.P2.Body.prototype = {
         //  top and tail
         var idx = path.length - 1;
 
-        if ( path[idx][0] === path[0][0] && path[idx][1] === path[0][1] )
+        if (path[idx][0] === path[0][0] && path[idx][1] === path[0][1])
         {
             path.pop();
         }
@@ -1123,7 +1123,7 @@ Phaser.Physics.P2.Body.prototype = {
         return createdFixtures;
 
     },
-    
+
     /**
     * Add a polygon fixture. This is used during #loadPhaserPolygon.
     *
@@ -1136,28 +1136,26 @@ Phaser.Physics.P2.Body.prototype = {
 
         if (fixtureData.circle)
         {
-            var shape = new p2.Circle(this.world.pxm(fixtureData.circle.radius))
-            shape.collisionGroup = fixtureData.filter.categoryBits
-            shape.collisionMask = fixtureData.filter.maskBits
-            shape.sensor = fixtureData.isSensor
+            var shape = new p2.Circle(this.world.pxm(fixtureData.circle.radius));
+            shape.collisionGroup = fixtureData.filter.categoryBits;
+            shape.collisionMask = fixtureData.filter.maskBits;
+            shape.sensor = fixtureData.isSensor;
 
             var offset = p2.vec2.create();
-            offset[0] = this.world.pxmi(fixtureData.circle.position[0] - this.sprite.width/2)
-            offset[1] = this.world.pxmi(fixtureData.circle.position[1] - this.sprite.height/2)
-            
+            offset[0] = this.world.pxmi(fixtureData.circle.position[0] - this.sprite.width/2);
+            offset[1] = this.world.pxmi(fixtureData.circle.position[1] - this.sprite.height/2);
+
             this.data.addShape(shape, offset);
-            generatedShapes.push(shape)
+            generatedShapes.push(shape);
         }
         else
         {
-            polygons = fixtureData.polygons;
-
+            var polygons = fixtureData.polygons;
             var cm = p2.vec2.create();
 
             for (var i = 0; i < polygons.length; i++)
             {
-                shapes = polygons[i];
-
+                var shapes = polygons[i];
                 var vertices = [];
 
                 for (var s = 0; s < shapes.length; s += 2)
@@ -1755,7 +1753,7 @@ Object.defineProperty(Phaser.Physics.P2.Body.prototype, "debug", {
         if (value && !this.debugBody)
         {
             //  This will be added to the global space
-            this.debugBody = new Phaser.Physics.P2.BodyDebug(this.game, this.data)
+            this.debugBody = new Phaser.Physics.P2.BodyDebug(this.game, this.data);
         }
         else if (!value && this.debugBody)
         {

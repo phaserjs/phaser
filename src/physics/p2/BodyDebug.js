@@ -31,7 +31,7 @@ Phaser.Physics.P2.BodyDebug = function(game, body, settings) {
         debugPolygons: false,
         lineWidth: 1,
         alpha: 0.5
-    }
+    };
 
     this.settings = Phaser.Utils.extend(defaultSettings, settings);
 
@@ -51,16 +51,16 @@ Phaser.Physics.P2.BodyDebug = function(game, body, settings) {
     */
     this.canvas = new Phaser.Graphics(game);
 
-    this.canvas.alpha = this.settings.alpha
+    this.canvas.alpha = this.settings.alpha;
 
     this.add(this.canvas);
 
     this.draw();
 
-}
+};
 
-Phaser.Physics.P2.BodyDebug.prototype = Object.create(Phaser.Group.prototype)
-Phaser.Physics.P2.BodyDebug.prototype.constructor = Phaser.Physics.P2.BodyDebug
+Phaser.Physics.P2.BodyDebug.prototype = Object.create(Phaser.Group.prototype);
+Phaser.Physics.P2.BodyDebug.prototype.constructor = Phaser.Physics.P2.BodyDebug;
 
 Phaser.Utils.extend(Phaser.Physics.P2.BodyDebug.prototype, {
 
@@ -106,7 +106,7 @@ Phaser.Utils.extend(Phaser.Physics.P2.BodyDebug.prototype, {
 
         if (obj instanceof p2.Body && obj.shapes.length)
         {
-            var l = obj.shapes.length
+            var l = obj.shapes.length;
 
             i = 0;
 
@@ -149,7 +149,7 @@ Phaser.Utils.extend(Phaser.Physics.P2.BodyDebug.prototype, {
                     this.drawRectangle(sprite, offset[0] * this.ppu, -offset[1] * this.ppu, angle, child.width * this.ppu, child.height * this.ppu, lineColor, color, lw);
                 }
 
-                i++
+                i++;
             }
         }
 
@@ -424,4 +424,4 @@ Phaser.Utils.extend(Phaser.Physics.P2.BodyDebug.prototype, {
 
     }
 
-})
+});

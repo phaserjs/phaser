@@ -37,7 +37,7 @@ Phaser.Physics.P2 = function (game, config) {
     * @property {number} frameRate - The frame rate the world will be stepped at. Defaults to 1 / 60, but you can change here. Also see useElapsedTime property.
     * @default
     */
-    this.frameRate =  1 / 60;
+    this.frameRate = 1 / 60;
 
     /**
     * @property {boolean} useElapsedTime - If true the frameRate value will be ignored and instead p2 will step with the value of Game.Time.physicsElapsed, which is a delta time value.
@@ -279,7 +279,7 @@ Phaser.Physics.P2.prototype = {
         if (object.hasOwnProperty('body') && object.body === null)
         {
             object.body = new Phaser.Physics.P2.Body(this.game, object, object.x, object.y, 1);
-            object.body.debug = debug
+            object.body.debug = debug;
             object.anchor.set(0.5);
         }
 
@@ -579,7 +579,7 @@ Phaser.Physics.P2.prototype = {
         }
         else
         {
-            this.bounds = new p2.Body({ mass: 0, position:[this.pxmi(cx), this.pxmi(cy)] });
+            this.bounds = new p2.Body({ mass: 0, position: [this.pxmi(cx), this.pxmi(cy)] });
         }
 
         if (left)
@@ -591,7 +591,7 @@ Phaser.Physics.P2.prototype = {
                 this._wallShapes[0].collisionGroup = this.boundsCollisionGroup.mask;
             }
 
-            this.bounds.addShape(this._wallShapes[0], [this.pxmi(-hw), 0], 1.5707963267948966 );
+            this.bounds.addShape(this._wallShapes[0], [this.pxmi(-hw), 0], 1.5707963267948966);
         }
 
         if (right)
@@ -603,7 +603,7 @@ Phaser.Physics.P2.prototype = {
                 this._wallShapes[1].collisionGroup = this.boundsCollisionGroup.mask;
             }
 
-            this.bounds.addShape(this._wallShapes[1], [this.pxmi(hw), 0], -1.5707963267948966 );
+            this.bounds.addShape(this._wallShapes[1], [this.pxmi(hw), 0], -1.5707963267948966);
         }
 
         if (top)
@@ -615,7 +615,7 @@ Phaser.Physics.P2.prototype = {
                 this._wallShapes[2].collisionGroup = this.boundsCollisionGroup.mask;
             }
 
-            this.bounds.addShape(this._wallShapes[2], [0, this.pxmi(-hh)], -3.141592653589793 );
+            this.bounds.addShape(this._wallShapes[2], [0, this.pxmi(-hh)], -3.141592653589793);
         }
 
         if (bottom)
@@ -627,7 +627,7 @@ Phaser.Physics.P2.prototype = {
                 this._wallShapes[3].collisionGroup = this.boundsCollisionGroup.mask;
             }
 
-            this.bounds.addShape(this._wallShapes[3], [0, this.pxmi(hh)] );
+            this.bounds.addShape(this._wallShapes[3], [0, this.pxmi(hh)]);
         }
 
         this.world.addBody(this.bounds);

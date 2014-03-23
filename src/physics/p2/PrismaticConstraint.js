@@ -44,7 +44,7 @@ Phaser.Physics.P2.PrismaticConstraint = function (world, bodyA, bodyB, lockRotat
 
     p2.PrismaticConstraint.call(this, bodyA, bodyB, options);
 
-}
+};
 
 Phaser.Physics.P2.PrismaticConstraint.prototype = Object.create(p2.PrismaticConstraint.prototype);
 Phaser.Physics.P2.PrismaticConstraint.prototype.constructor = Phaser.Physics.P2.PrismaticConstraint;

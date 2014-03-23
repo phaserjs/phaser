@@ -35,7 +35,7 @@ Phaser.Physics.P2.GearConstraint = function (world, bodyA, bodyB, angle, ratio) 
 
     p2.GearConstraint.call(this, bodyA, bodyB, options);
 
-}
+};
 
 Phaser.Physics.P2.GearConstraint.prototype = Object.create(p2.GearConstraint.prototype);
 Phaser.Physics.P2.GearConstraint.prototype.constructor = Phaser.Physics.P2.GearConstraint;

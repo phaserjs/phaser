@@ -67,7 +67,7 @@ Phaser.Physics.P2.Spring = function (world, bodyA, bodyB, restLength, stiffness,
 
     p2.Spring.call(this, bodyA, bodyB, options);
 
-}
+};
 
 Phaser.Physics.P2.Spring.prototype = Object.create(p2.Spring.prototype);
 Phaser.Physics.P2.Spring.prototype.constructor = Phaser.Physics.P2.Spring;
