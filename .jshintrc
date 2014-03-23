@@ -25,22 +25,17 @@
   "freeze"      : true,   // Prohibits overwriting prototypes of native objects such as Array and Date.
   "funcscope"   : true,   // This option suppresses warnings about declaring variables inside of control structures while accessing them later from the outside.
   "immed"       : true,   // Require immediate invocations to be wrapped in parens e.g. `( function(){}() );`
-  "iterator"    : true,   // This option suppresses warnings about the __iterator__ property.
   "latedef"     : true,   // Prohibit variable use before definition.
   "laxbreak"    : false,  // Tolerate unsafe line breaks e.g. `return [\n] x` without semicolons.
   "laxcomma"    : false,  // This option suppresses warnings about comma-first coding style.
   "loopfunc"    : true,   // Allow functions to be defined within loops.
-  "multistr"    : true,   // This option suppresses warnings about multi-line strings.
   "noarg"       : true,   // Prohibit use of `arguments.caller` and `arguments.callee`.
   "notypeof"    : false,  // This option suppresses warnings about invalid typeof operator values.
-  "proto"       : true,   // This option suppresses warnings about the __proto__ property.
-  "scripturl"   : true,   // Tolerate script-targeted URLs.
   "shadow"      : true,   // Allows re-define variables later in code e.g. `var x=1; x=2;`.
   "smarttabs"   : false,  // This option suppresses warnings about mixed tabs and spaces when the latter are used for alignmnent only.
   "supernew"    : false,  // Tolerate `new function () { ... };` and `new Object;`.
   "undef"       : true,   // Require all non-global variables be declared before they are used.
   "unused"      : true,   // This option warns when you define and never use your variables.
-  "validthis"   : true,   // This option suppresses warnings about possible strict violations when the code is running in strict mode and you use this in a non-constructor function.
 
   // Styling
   "indent"      : 4,      // Specify indentation spacing
