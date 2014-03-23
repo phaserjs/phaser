@@ -106,7 +106,7 @@ Phaser.BitmapData = function (game, key, width, height) {
     */
     this.dirty = false;
 
-}
+};
 
 Phaser.BitmapData.prototype = {
 

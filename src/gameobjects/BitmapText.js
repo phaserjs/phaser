@@ -177,7 +177,7 @@ Phaser.BitmapText.prototype.preUpdate = function () {
 
     return true;
 
-}
+};
 
 /**
 * Override and use this function in your own custom objects to handle any update requirements you may have.
@@ -186,7 +186,7 @@ Phaser.BitmapText.prototype.preUpdate = function () {
 */
 Phaser.BitmapText.prototype.update = function() {
 
-}
+};
 
 /**
 * Automatically called by World.postUpdate.
@@ -201,7 +201,7 @@ Phaser.BitmapText.prototype.postUpdate = function () {
         this.position.y = (this.game.camera.view.y + this.cameraOffset.y) / this.game.camera.scale.y;
     }
 
-}
+};
 
 /**
 * Destroy this BitmapText instance. This will remove any filters and un-parent any children.
@@ -257,7 +257,7 @@ Phaser.BitmapText.prototype.destroy = function(destroyChildren) {
     this.mask = null;
     this.game = null;
 
-}
+};
 
 /**
 * @name Phaser.BitmapText#align

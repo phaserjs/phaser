@@ -222,7 +222,7 @@ Phaser.Button.prototype.clearFrames = function () {
     this._onUpFrameName = null;
     this._onUpFrameID = null;
 
-}
+};
 
 /**
 * Used to manually set the frames that will be used for the different states of the Button.
@@ -349,7 +349,7 @@ Phaser.Button.prototype.setSounds = function (overSound, overMarker, downSound, 
     this.setDownSound(downSound, downMarker);
     this.setUpSound(upSound, upMarker);
 
-}
+};
 
 /**
 * The Sound to be played when a Pointer moves over this Button.
@@ -373,7 +373,7 @@ Phaser.Button.prototype.setOverSound = function (sound, marker) {
         this.onOverSoundMarker = marker;
     }
 
-}
+};
 
 /**
 * The Sound to be played when a Pointer moves out of this Button.
@@ -397,7 +397,7 @@ Phaser.Button.prototype.setOutSound = function (sound, marker) {
         this.onOutSoundMarker = marker;
     }
 
-}
+};
 
 /**
 * The Sound to be played when a Pointer presses down on this Button.
@@ -421,7 +421,7 @@ Phaser.Button.prototype.setDownSound = function (sound, marker) {
         this.onDownSoundMarker = marker;
     }
 
-}
+};
 
 /**
 * The Sound to be played when a Pointer has pressed down and is released from this Button.
@@ -445,7 +445,7 @@ Phaser.Button.prototype.setUpSound = function (sound, marker) {
         this.onUpSoundMarker = marker;
     }
 
-}
+};
 
 /**
 * Internal function that handles input events.

@@ -164,7 +164,7 @@ Phaser.Image.prototype.preUpdate = function() {
 
     return true;
 
-}
+};
 
 /**
 * Override and use this function in your own custom objects to handle any update requirements you may have.
@@ -174,7 +174,7 @@ Phaser.Image.prototype.preUpdate = function() {
 */
 Phaser.Image.prototype.update = function() {
 
-}
+};
 
 /**
 * Internal function called by the World postUpdate cycle.
@@ -202,7 +202,7 @@ Phaser.Image.prototype.postUpdate = function() {
         this.children[i].postUpdate();
     }
 
-}
+};
 
 /**
 * Changes the Texture the Image is using entirely. The old texture is removed and the new one is referenced or fetched from the Cache.
@@ -279,7 +279,7 @@ Phaser.Image.prototype.loadTexture = function (key, frame) {
         }
     }
 
-}
+};
 
 /**
 * Crop allows you to crop the texture used to display this Image.
@@ -326,7 +326,7 @@ Phaser.Image.prototype.crop = function(rect) {
         }
     }
 
-}
+};
 
 /**
 * Brings a 'dead' Image back to life, optionally giving it the health value specified.
@@ -350,7 +350,7 @@ Phaser.Image.prototype.revive = function() {
 
     return this;
 
-}
+};
 
 /**
 * Kills a Image. A killed Image has its alive, exists and visible properties all set to false.
@@ -375,7 +375,7 @@ Phaser.Image.prototype.kill = function() {
 
     return this;
 
-}
+};
 
 /**
 * Destroys the Image. This removes it from its parent group, destroys the input, event and animation handlers if present
@@ -438,7 +438,7 @@ Phaser.Image.prototype.destroy = function(destroyChildren) {
     this.mask = null;
     this.game = null;
 
-}
+};
 
 /**
 * Resets the Image. This places the Image at the given x/y world coordinates and then sets alive, exists, visible and renderable all to true.
@@ -461,7 +461,7 @@ Phaser.Image.prototype.reset = function(x, y) {
 
     return this;
 
-}
+};
 
 /**
 * Brings the Image to the top of the display list it is a child of. Images that are members of a Phaser.Group are only
@@ -480,7 +480,7 @@ Phaser.Image.prototype.bringToTop = function() {
 
     return this;
 
-}
+};
 
 /**
 * Indicates the rotation of the Image, in degrees, from its original orientation. Values from 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation.

@@ -253,7 +253,7 @@ Phaser.TileSprite.prototype.preUpdate = function() {
 
     return true;
 
-}
+};
 
 /**
 * Override and use this function in your own custom objects to handle any update requirements you may have.
@@ -263,7 +263,7 @@ Phaser.TileSprite.prototype.preUpdate = function() {
 */
 Phaser.TileSprite.prototype.update = function() {
 
-}
+};
 
 /**
 * Internal function called by the World postUpdate cycle.
@@ -291,7 +291,7 @@ Phaser.TileSprite.prototype.postUpdate = function() {
         this.children[i].postUpdate();
     }
 
-}
+};
 
 /**
 * Sets this TileSprite to automatically scroll in the given direction until stopped via TileSprite.stopScroll().
@@ -306,7 +306,7 @@ Phaser.TileSprite.prototype.autoScroll = function(x, y) {
 
     this._scroll.set(x, y);
 
-}
+};
 
 /**
 * Stops an automatically scrolling TileSprite.
@@ -318,7 +318,7 @@ Phaser.TileSprite.prototype.stopScroll = function() {
 
     this._scroll.set(0, 0);
 
-}
+};
 
 /**
 * Changes the Texture the TileSprite is using entirely. The old texture is removed and the new one is referenced or fetched from the Cache.
@@ -390,7 +390,7 @@ Phaser.TileSprite.prototype.loadTexture = function (key, frame) {
         }
     }
 
-}
+};
 
 /**
 * Destroys the TileSprite. This removes it from its parent group, destroys the event and animation handlers if present
@@ -451,7 +451,7 @@ Phaser.TileSprite.prototype.destroy = function(destroyChildren) {
     this.mask = null;
     this.game = null;
 
-}
+};
 
 /**
 * Play an animation based on the given key. The animation should previously have been added via sprite.animations.add()
@@ -469,7 +469,7 @@ Phaser.TileSprite.prototype.play = function (name, frameRate, loop, killOnComple
 
     return this.animations.play(name, frameRate, loop, killOnComplete);
 
-}
+};
 
 /**
 * Resets the TileSprite. This places the TileSprite at the given x/y world coordinates, resets the tilePosition and then

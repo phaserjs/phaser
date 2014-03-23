@@ -58,7 +58,7 @@ Phaser.RenderTexture.prototype.renderXY = function (displayObject, x, y, clear) 
 
     this.render(displayObject, this._temp, clear);
 
-}
+};
 
 //  Documentation stubs
 

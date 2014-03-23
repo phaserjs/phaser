@@ -274,7 +274,7 @@ Phaser.RetroFont.prototype.setFixedWidth = function (width, lineAlignment) {
     this.fixedWidth = width;
     this.align = lineAlignment;
 
-}
+};
 
 /**
 * A helper function that quickly sets lots of variables at once, and then updates the text.
@@ -309,7 +309,7 @@ Phaser.RetroFont.prototype.setText = function (content, multiLine, characterSpac
         this.text = content;
     }
 
-}
+};
 
 /**
 * Over rides the default PIXI.RenderTexture resize event as we need our baseTexture resized as well.
@@ -335,7 +335,7 @@ Phaser.RetroFont.prototype.resize = function (width, height) {
 
         var gl = this.renderer.gl;
         gl.bindTexture(gl.TEXTURE_2D, this.baseTexture._glTextures[gl.id]);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA,  this.width,  this.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, this.width, this.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
     }
     else
     {
@@ -344,7 +344,7 @@ Phaser.RetroFont.prototype.resize = function (width, height) {
 
     PIXI.Texture.frameUpdates.push(this);
 
-}
+};
 
 /**
 * Updates the BitmapData of the Sprite with the text
@@ -435,7 +435,7 @@ Phaser.RetroFont.prototype.buildRetroFontText = function () {
         this.pasteLine(this._text, cx, 0, this.customSpacingX);
     }
 
-}
+};
 
 /**
 * Internal function that takes a single line of text (2nd parameter) and pastes it into the BitmapData at the given coordinates.
@@ -477,7 +477,7 @@ Phaser.RetroFont.prototype.pasteLine = function (line, x, y, customSpacingX) {
             }
         }
     }
-}
+};
 
 /**
 * Works out the longest line of text in _text and returns its length
@@ -504,7 +504,7 @@ Phaser.RetroFont.prototype.getLongestLine = function () {
     }
 
     return longestLine;
-}
+};
 
 /**
 * Internal helper function that removes all unsupported characters from the _text String, leaving only characters contained in the font set.
@@ -531,7 +531,7 @@ Phaser.RetroFont.prototype.removeUnsupportedCharacters = function (stripCR) {
     }
 
     return newString;
-}
+};
 
 /**
 * @name Phaser.BitmapText#text

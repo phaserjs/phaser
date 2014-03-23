@@ -112,7 +112,7 @@ Phaser.Graphics.prototype.preUpdate = function () {
 
     return true;
 
-}
+};
 
 /**
 * Override and use this function in your own custom objects to handle any update requirements you may have.
@@ -122,7 +122,7 @@ Phaser.Graphics.prototype.preUpdate = function () {
 */
 Phaser.Graphics.prototype.update = function() {
 
-}
+};
 
 /**
 * Automatically called by World.postUpdate.
@@ -137,7 +137,7 @@ Phaser.Graphics.prototype.postUpdate = function () {
         this.position.y = (this.game.camera.view.y + this.cameraOffset.y) / this.game.camera.scale.y;
     }
 
-}
+};
 
 /**
 * Destroy this Graphics instance.
@@ -185,7 +185,7 @@ Phaser.Graphics.prototype.destroy = function(destroyChildren) {
 
     this.game = null;
 
-}
+};
 
 /*
 * Draws a {Phaser.Polygon} or a {PIXI.Polygon} filled
@@ -203,7 +203,7 @@ Phaser.Graphics.prototype.drawPolygon = function (poly) {
 
     this.lineTo(poly.points[0].x, poly.points[0].y);
 
-}
+};
 
 /**
 * Indicates the rotation of the Graphics, in degrees, from its original orientation. Values from 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation.
