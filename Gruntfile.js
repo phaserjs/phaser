@@ -4,6 +4,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-text-replace');
     grunt.loadTasks('./tasks');
@@ -379,12 +380,37 @@ module.exports = function (grunt) {
                     hostname: '*'
                 }
             }
-        }
+        },
 
+        jshint: {
+            src: {
+                src: [
+                    'src/**/*.js',
+                    '!src/Intro.js',
+                    '!src/Outro.js',
+                    '!src/pixi/**/*',
+                    '!src/physics/p2/p2.js'
+                ],
+                options: { jshintrc: '.jshintrc' }
+            },
+
+            tooling: {
+                src: [
+                    'Gruntfile.js',
+                    'tasks/**/*.js'
+                ],
+                options: { jshintrc: 'tasks/.jshintrc' }
+            },
+
+            options: {
+                force: true
+            }
+        }
     });
 
     grunt.registerTask('default', ['build']);
-    grunt.registerTask('build', ['clean', 'concat', 'uglify']);
-    grunt.registerTask('dist', ['clean', 'concat', 'uglify', 'copy']);
+
+    grunt.registerTask('build', ['clean', 'jshint', 'concat', 'uglify']);
+    grunt.registerTask('dist', ['build', 'copy']);
 
 };
