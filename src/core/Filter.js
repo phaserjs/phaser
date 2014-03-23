@@ -25,7 +25,7 @@ Phaser.Filter = function (game, uniforms, fragmentSrc) {
     * @property {number} type - The const type of this object, either Phaser.WEBGL_FILTER or Phaser.CANVAS_FILTER.
     * @default
     */
-    this.type =  Phaser.WEBGL_FILTER;
+    this.type = Phaser.WEBGL_FILTER;
 
     /**
     * An array of passes - some filters contain a few steps this array simply stores the steps in a linear fashion.

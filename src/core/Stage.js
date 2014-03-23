@@ -111,7 +111,7 @@ Phaser.Stage.prototype.preUpdate = function () {
         this.children[i].preUpdate();
     }
 
-}
+};
 
 /**
 * This is called automatically after the State.update, but before particles or plugins update.
@@ -127,7 +127,7 @@ Phaser.Stage.prototype.update = function () {
         this.children[i].update();
     }
 
-}
+};
 
 /**
 * This is called automatically before the renderer runs and after the plugins have updated.
@@ -176,7 +176,7 @@ Phaser.Stage.prototype.postUpdate = function () {
         }
     }
 
-}
+};
 
 /**
 * Parses a Game configuration object.
@@ -229,7 +229,7 @@ Phaser.Stage.prototype.parseConfig = function (config) {
         this.backgroundColor = config['backgroundColor'];
     }
 
-}
+};
 
 /**
 * Initialises the stage and adds the event listeners.
@@ -246,14 +246,14 @@ Phaser.Stage.prototype.boot = function () {
 
     this._onChange = function (event) {
         return _this.visibilityChange(event);
-    }
+    };
 
     Phaser.Canvas.setUserSelect(this.game.canvas, 'none');
     Phaser.Canvas.setTouchAction(this.game.canvas, 'none');
 
     this.checkVisibility();
 
-}
+};
 
 /**
 * Starts a page visibility event listener running, or window.blur/focus if not supported by the browser.
@@ -294,7 +294,7 @@ Phaser.Stage.prototype.checkVisibility = function () {
     window.onblur = this._onChange;
     window.onfocus = this._onChange;
 
-}
+};
 
 /**
 * This method is called when the document visibility is changed.
@@ -331,7 +331,7 @@ Phaser.Stage.prototype.visibilityChange = function (event) {
         this.game.gameResumed(event);
     }
 
-}
+};
 
 /**
 * Sets the background color for the stage.
@@ -346,7 +346,7 @@ Phaser.Stage.prototype.setBackgroundColor = function(backgroundColor)
     var hex = this._backgroundColor.toString(16);
     hex = '000000'.substr(0, 6 - hex.length) + hex;
     this.backgroundColorString = '#' + hex;
-}
+};
 
 /**
 * @name Phaser.Stage#backgroundColor

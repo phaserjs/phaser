@@ -147,7 +147,7 @@ Phaser.LinkedList.prototype = {
             entity = entity.next;
 
         }
-        while(entity != this.last.next)
+        while(entity != this.last.next);
 
     }
 

@@ -313,7 +313,7 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
 
     this._onBoot = function () {
         return _this.boot();
-    }
+    };
 
     if (document.readyState === 'complete' || document.readyState === 'interactive')
     {

@@ -756,7 +756,7 @@ Object.defineProperty(Phaser.ScaleManager.prototype, "isFullScreen", {
 
     get: function () {
 
-        return (document['fullscreenElement'] || document['mozFullScreenElement'] || document['webkitFullscreenElement'])
+        return (document['fullscreenElement'] || document['mozFullScreenElement'] || document['webkitFullscreenElement']);
 
     }
 

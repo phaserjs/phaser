@@ -68,7 +68,7 @@ Phaser.Signal.prototype = {
     */
     validateListener: function (listener, fnName) {
         if (typeof listener !== 'function') {
-            throw new Error( 'listener is a required param of {fn}() and should be a Function.'.replace('{fn}', fnName) );
+            throw new Error('listener is a required param of {fn}() and should be a Function.'.replace('{fn}', fnName));
         }
     },
 
@@ -89,14 +89,14 @@ Phaser.Signal.prototype = {
         if (prevIndex !== -1) {
             binding = this._bindings[prevIndex];
             if (binding.isOnce() !== isOnce) {
-                throw new Error('You cannot add'+ (isOnce? '' : 'Once') +'() then add'+ (!isOnce? '' : 'Once') +'() the same listener without removing the relationship first.');
+                throw new Error('You cannot add' + (isOnce ? '' : 'Once') + '() then add' + (!isOnce ? '' : 'Once') + '() the same listener without removing the relationship first.');
             }
         } else {
             binding = new Phaser.SignalBinding(this, listener, isOnce, listenerContext, priority);
             this._addBinding(binding);
         }
 
-        if (this.memorize && this._prevParams){
+        if (this.memorize && this._prevParams) {
             binding.execute(this._prevParams);
         }
 
