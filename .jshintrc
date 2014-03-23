@@ -2,21 +2,9 @@
   "globals"     : { "Phaser": false, "PIXI": false, "p2": false },
   // Ignore Environment Globals
   "browser"     : true,   // Standard browser globals e.g. `window`, `document`.
-  "couch"       : false,
-  "dojo"        : false,
-  "jquery"      : true,
-  "mootools"    : false,
-  "node"        : false,
-  "nonstandard" : false,
-  "phantom"     : false,
-  "prototypejs" : false,
-  "rhino"       : false,
-  "worker"      : false,
   "wsh"         : true,   // Windows Scripting Host.
-  "yui"         : false,
 
   // Development
-  "debug"       : true,   // Allow debugger statements e.g. browser breakpoints.
   "devel"       : true,   // Allow developments statements e.g. `console.log();`.
 
   // ECMAScript Support
@@ -45,7 +33,6 @@
   "laxbreak"    : false,  // Tolerate unsafe line breaks e.g. `return [\n] x` without semicolons.
   "laxcomma"    : false,  // This option suppresses warnings about comma-first coding style.
   "loopfunc"    : true,   // Allow functions to be defined within loops.
-  "moz"         : false,  // This options tells JSHint that your code uses Mozilla JavaScript extensions.
   "multistr"    : true,   // This option suppresses warnings about multi-line strings.
   "noarg"       : true,   // Prohibit use of `arguments.caller` and `arguments.callee`.
   "notypeof"    : false,  // This option suppresses warnings about invalid typeof operator values.
