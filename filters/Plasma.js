@@ -60,7 +60,7 @@ Phaser.Filter.Plasma.prototype.init = function (width, height, alpha, size) {
         this.uniforms.size.value = size;
     }
 
-}
+};
 
 Object.defineProperty(Phaser.Filter.Plasma.prototype, 'alpha', {
 

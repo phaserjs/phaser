@@ -6,12 +6,12 @@ Phaser.Filter.Marble = function (game) {
 
     Phaser.Filter.call(this, game);
 
-    this.uniforms.alpha = { type: '1f', value: 1.0 }
+    this.uniforms.alpha = { type: '1f', value: 1.0 };
 
     // Drives speed, higher number will make it slower.
-    this.uniforms.fluid_speed = { type: '1f', value: 10.0 }
+    this.uniforms.fluid_speed = { type: '1f', value: 10.0 };
 
-    this.uniforms.color_intensity = { type: '1f', value: 0.30 }
+    this.uniforms.color_intensity = { type: '1f', value: 0.30 };
 
     //  The fragment shader source
     this.fragmentSrc = [
@@ -69,7 +69,7 @@ Phaser.Filter.Marble.prototype.init = function (width, height, speed, intensity)
     this.uniforms.fluid_speed.value = speed;
     this.uniforms.color_intensity.value = intensity;
 
-}
+};
 
 Object.defineProperty(Phaser.Filter.Marble.prototype, 'alpha', {
 

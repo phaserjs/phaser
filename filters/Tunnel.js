@@ -6,9 +6,9 @@ Phaser.Filter.Tunnel = function (game) {
 
     Phaser.Filter.call(this, game);
 
-    this.uniforms.alpha = { type: '1f', value: 1 }
-    this.uniforms.origin = { type: '1f', value: 2.0 }
-    this.uniforms.iChannel0 = { type: 'sampler2D', value: null, textureData: { repeat: true } }
+    this.uniforms.alpha = { type: '1f', value: 1 };
+    this.uniforms.origin = { type: '1f', value: 2.0 };
+    this.uniforms.iChannel0 = { type: 'sampler2D', value: null, textureData: { repeat: true } };
 
     this.fragmentSrc = [
 
@@ -44,7 +44,7 @@ Phaser.Filter.Tunnel.prototype.init = function (width, height, texture) {
 
     texture.baseTexture._powerOf2 = true;
 
-}
+};
 
 Object.defineProperty(Phaser.Filter.Tunnel.prototype, 'alpha', {
 

@@ -394,6 +394,11 @@ module.exports = function (grunt) {
                 options: { jshintrc: '.jshintrc' }
             },
 
+            filters: {
+                src: ['filters/**/*.js'],
+                options: { jshintrc: 'filters/.jshintrc', }
+            },
+
             tooling: {
                 src: [
                     'Gruntfile.js',

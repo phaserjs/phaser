@@ -6,8 +6,8 @@ Phaser.Filter.Fire = function (game) {
 
     Phaser.Filter.call(this, game);
 
-    this.uniforms.alpha = { type: '1f', value: 1.0 }
-    this.uniforms.shift = { type: '1f', value: 1.6 }
+    this.uniforms.alpha = { type: '1f', value: 1.0 };
+    this.uniforms.shift = { type: '1f', value: 1.6 };
     this.uniforms.speed = { type: '2f', value: { x: 0.7, y: 0.4 } };
 
     this.fragmentSrc = [
@@ -73,7 +73,7 @@ Phaser.Filter.Fire.prototype.init = function (width, height, alpha, shift) {
         this.uniforms.shift.value = shift;
     }
 
-}
+};
 
 Object.defineProperty(Phaser.Filter.Fire.prototype, 'alpha', {
 

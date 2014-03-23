@@ -91,7 +91,7 @@ Phaser.Filter.CheckerWave = function (game) {
                 "gl_FragColor=color;",
             "}",
             "else gl_FragColor=vec4(0,0,0.1,alpha); //background color",
-        "}",
+        "}"
 
     ];
 
@@ -104,7 +104,7 @@ Phaser.Filter.CheckerWave.prototype.init = function (width, height) {
 
     this.setResolution(width, height);
 
-}
+};
 
 Phaser.Filter.CheckerWave.prototype.setColor1 = function (red, green, blue) {
 
@@ -112,7 +112,7 @@ Phaser.Filter.CheckerWave.prototype.setColor1 = function (red, green, blue) {
     this.uniforms.color1.value.y = green;
     this.uniforms.color1.value.z = blue;
 
-}
+};
 
 Phaser.Filter.CheckerWave.prototype.setColor2 = function (red, green, blue) {
 
@@ -120,7 +120,7 @@ Phaser.Filter.CheckerWave.prototype.setColor2 = function (red, green, blue) {
     this.uniforms.color2.value.y = green;
     this.uniforms.color2.value.z = blue;
 
-}
+};
 
 Object.defineProperty(Phaser.Filter.CheckerWave.prototype, 'alpha', {
 

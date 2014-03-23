@@ -6,7 +6,7 @@ Phaser.Filter.SampleFilter = function (game) {
     Phaser.Filter.call(this, game);
 
     this.uniforms.divisor = { type: '1f', value: 0.5 };
-        
+
     //  The fragment shader source
     this.fragmentSrc = [
 
@@ -53,9 +53,9 @@ Phaser.Filter.SampleFilter.prototype.constructor = Phaser.Filter.SampleFilter;
 
 Phaser.Filter.SampleFilter.prototype.init = function (width, height, divisor) {
 
-    if (typeof divisor == 'undefined') { divisor = 0.5 };
+    if (typeof divisor == 'undefined') { divisor = 0.5; }
 
     this.setResolution(width, height);
     this.uniforms.divisor.value = divisor;
 
-}
+};

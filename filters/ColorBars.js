@@ -6,7 +6,7 @@ Phaser.Filter.ColorBars = function (game) {
 
     Phaser.Filter.call(this, game);
 
-    this.uniforms.alpha = { type: '1f', value: 1 }
+    this.uniforms.alpha = { type: '1f', value: 1 };
     // this.uniforms.origin = { type: '1f', value: 2.0 }
 
     this.fragmentSrc = [
@@ -70,7 +70,7 @@ Phaser.Filter.ColorBars.prototype.init = function (width, height) {
 
     this.setResolution(width, height);
 
-}
+};
 
 Object.defineProperty(Phaser.Filter.ColorBars.prototype, 'alpha', {
 

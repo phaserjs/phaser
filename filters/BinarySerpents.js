@@ -81,7 +81,7 @@ Phaser.Filter.BinarySerpents.prototype.init = function (width, height, march, ma
     this.uniforms.march.value = march;
     this.uniforms.maxDistance.value = maxDistance;
 
-}
+};
 
 Object.defineProperty(Phaser.Filter.BinarySerpents.prototype, 'fog', {
 
