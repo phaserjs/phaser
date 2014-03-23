@@ -1,1 +1,1 @@
-Phaser.Particles.Arcade = {}
+Phaser.Particles.Arcade = {};
