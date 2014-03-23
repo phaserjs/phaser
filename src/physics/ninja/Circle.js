@@ -140,7 +140,7 @@ Phaser.Physics.Ninja.Circle.prototype = {
     * @param {number} dy - Collision normal
     * @param {number} obj - Object this Circle collided with
     */
-    reportCollisionVsWorld: function (px, py, dx, dy, obj) {
+    reportCollisionVsWorld: function (px, py, dx, dy) {
 
         var p = this.pos;
         var o = this.oldpos;
