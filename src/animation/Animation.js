@@ -586,4 +586,4 @@ Phaser.Animation.generateFrameNames = function (prefix, start, stop, suffix, zer
 
     return output;
 
-}
+};
