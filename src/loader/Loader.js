@@ -1163,10 +1163,10 @@ Phaser.Loader.prototype = {
 
                     if (file.autoDecode)
                     {
-                        this.game.cache.updateSound(key, 'isDecoding', true);
-
                         var that = this;
                         var key = file.key;
+
+                        this.game.cache.updateSound(key, 'isDecoding', true);
 
                         this.game.sound.context.decodeAudioData(file.data, function (buffer) {
                             if (buffer)
