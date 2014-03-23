@@ -146,7 +146,7 @@ Phaser.Keyboard.prototype = {
             down: this.addKey(Phaser.Keyboard.DOWN),
             left: this.addKey(Phaser.Keyboard.LEFT),
             right: this.addKey(Phaser.Keyboard.RIGHT)
-        }
+        };
 
     },
 

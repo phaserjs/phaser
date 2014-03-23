@@ -378,7 +378,7 @@ Phaser.Pointer.prototype = {
                 }
                 currentNode = currentNode.next;
             }
-            while (currentNode != null)
+            while (currentNode != null);
         }
 
         if (this._highestRenderObject === null)
@@ -508,7 +508,7 @@ Phaser.Pointer.prototype = {
 
                 currentNode = currentNode.next;
             }
-            while (currentNode != null)
+            while (currentNode != null);
         }
 
         if (this.targetObject)
