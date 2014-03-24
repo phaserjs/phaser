@@ -29,11 +29,17 @@ var platforms;
 
 function create() {
 
+    //  We're going to be using physics, so enable the Arcade Physics system
+    game.physics.startSystem(Phaser.Physics.ARCADE);
+
     //  A simple background for our game
     game.add.sprite(0, 0, 'sky');
 
     //  The platforms group contains the ground and the 2 ledges we can jump on
     platforms = game.add.group();
+
+    //  We will enable physics for any object that is created in this group
+    platforms.enableBody = true;
 
     // Here we create the ground.
     var ground = platforms.create(0, game.world.height - 64, 'ground');
@@ -46,9 +52,11 @@ function create() {
 
     //  Now let's create two ledges
     var ledge = platforms.create(400, 400, 'ground');
+
     ledge.body.immovable = true;
 
     ledge = platforms.create(-150, 250, 'ground');
+
     ledge.body.immovable = true;
     
 }

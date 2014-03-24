@@ -327,6 +327,7 @@ Beyond version 2.2
 * DragonBones support.
 * Cache to localStorage using If-Modified-Since. [See github request](https://github.com/photonstorm/phaser/issues/495)
 * Allow for complex assets like Bitmap Fonts to be stored within a texture atlas.
+* Look at XDomainRequest for IE9 CORs issues.
 
 
 Nadion

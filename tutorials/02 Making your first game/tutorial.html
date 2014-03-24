@@ -1,5 +1,7 @@
 This article was written by <a href="https://twitter.com/alvinsight">Alvin Ourrad</a> and Richard Davey.
 
+Freshly updated for Phaser 2.0!
+
 Welcome to the our first tutorial on Making a Game with Phaser. Here we will learn how to create a small game involving a player running and jumping around platforms collecting stars. While going through this process we'll explain some of the core features of the framework.
 
 <h3>What is Phaser?</h3>
@@ -9,6 +11,7 @@ Welcome to the our first tutorial on Making a Game with Phaser. Here we will lea
 <h3>Requirements</h3>
 
 <ul>
+    <li><a href="http://gametest.mobi/phaser/tutorials/02%20Making%20your%20first%20game/phaser_tutorial_02.zip">Download the source files and assets</a> that go with this tutorial.</li>
 	<li>You need to have a very, very basic knowledge of JavaScript.</li>
 	<li>Also make sure you go through the <a href="http://phaser.io/getting-started-js.php">Getting Started Guide</a>, it will show you how to download the framework, set up a local development environment, and give you a glimpse of the structure of a Phaser project and its core functions.</li>
 </ul>
@@ -68,7 +71,7 @@ The order in which items are rendered in the display matches the order in which 
 
 <h3>World Building</h3> 
 
-Under the hood game.add.sprite is creating a new <a href="http://gametest.mobi/phaser/docs/Phaser.Sprite.html">Phaser.Sprite</a> object and adding the sprite to the “game world”. This world is where all your objects live, it can be compared to the Stage in Actionscript3.
+Under the hood game.add.sprite is creating a new <a href="http://docs.phaser.io/Phaser.Sprite.html">Phaser.Sprite</a> object and adding the sprite to the “game world”. This world is where all your objects live, it can be compared to the Stage in Actionscript3.
 
 <strong>Note:</strong> The game world has no fixed size and extends infinitely in all directions, with 0,0 being the center of it. For convenience Phaser places 0,0 at the top left of your game for you, but by using the built-in Camera you can move around as needed.
 
@@ -80,11 +83,17 @@ For now let's build up the scene by adding a background and platforms. Here is t
 
 function create() {
 
+    //  We're going to be using physics, so enable the Arcade Physics system
+    game.physics.startSystem(Phaser.Physics.ARCADE);
+
     //  A simple background for our game
     game.add.sprite(0, 0, 'sky');
 
     //  The platforms group contains the ground and the 2 ledges we can jump on
     platforms = game.add.group();
+
+    //  We will enable physics for any object that is created in this group
+    platforms.enableBody = true;
 
     // Here we create the ground.
     var ground = platforms.create(0, game.world.height - 64, 'ground');
@@ -97,9 +106,11 @@ function create() {
 
     //  Now let's create two ledges
     var ledge = platforms.create(400, 400, 'ground');
+
     ledge.body.immovable = true;
 
     ledge = platforms.create(-150, 250, 'ground');
+
     ledge.body.immovable = true;
     
 }
@@ -128,9 +139,12 @@ Create a new local variable called 'player' and add the following code to the cr
 <pre class="lang:js decode:true " >    // The player and its settings
     player = game.add.sprite(32, game.world.height - 150, 'dude');
 
+    //  We need to enable physics on the player
+    game.physics.arcade.enable(player);
+
     //  Player physics properties. Give the little guy a slight bounce.
     player.body.bounce.y = 0.2;
-    player.body.gravity.y = 6;
+    player.body.gravity.y = 300;
     player.body.collideWorldBounds = true;
 
     //  Our two animations, walking left and right.
@@ -146,9 +160,11 @@ You can see 9 frames in total, 4 for running left, 1 for facing the camera and 4
 
 <h3>The Body and Velocity: A world of physics</h3>
 
-In Phaser all sprites have a body property, which is an instance of <a href="http://gametest.mobi/phaser/docs/Phaser.Physics.Arcade.Body.html">ArcadePhysics.Body</a>. This represents the sprite as a physical body in Phasers built-in physics engine. The body object has itself a lot of properties that we can play with. To simulate the effects of gravity on a sprite, it's as simple as writing this:
+Phaser has support for a variety of different physics systems. It ships with Arcade Physics, Ninja Physics and P2.JS Full-Body Physics. For the sake of this tutorial we will be using the Arcade Physics system, which is simple and light-weight, perfect for mobile browsers. You'll notice in the code that we have to start the physics system running, and then for every sprite or Group that we wish to use physics on we enable them.
+
+Once done the sprites gain a new body property, which is an instance of <a href="http://docs.phaser.io/Phaser.Physics.Arcade.Body.html">ArcadePhysics.Body</a>. This represents the sprite as a physical body in Phasers Arcade Physics engine. The body object has itself a lot of properties that we can play with. To simulate the effects of gravity on a sprite, it's as simple as writing this:
     
-<pre class="lang:js decode:true">player.body.gravity.y = 6;</pre>
+<pre class="lang:js decode:true">player.body.gravity.y = 300;</pre>
 
 This is an arbitrary value, but logically, the higher the value, the heavier your object feels and the quicker it falls. If you add this to your code or run part5.html you will see that the player falls down without stopping, completely ignoring the ground we created earlier:
 
@@ -161,12 +177,12 @@ So to allow the player to collide and take advantage of the physics properties w
 <pre class="lang:js decode:true " >function update() {
 
     //  Collide the player and the stars with the platforms
-    game.physics.collide(player, platforms);
+    game.physics.arcade.collide(player, platforms);
 
 }
 </pre> 
 
-The update function is called by the core game loop every frame. The <a href="http://gametest.mobi/phaser/docs/Phaser.Physics.Arcade.html#toc22">Physics.collide</a> function is the one that performs the magic. It takes two objects and tests for collision and performs separation against them. In this case we're giving it the player sprite and the platforms Group. It's clever enough to run collision against all Group members, so this one call will collide against the ground and both ledges. The result is a firm platform:
+The update function is called by the core game loop every frame. The <a href="http://docs.phaser.io/Phaser.Physics.Arcade.html#toc22">Physics.collide</a> function is the one that performs the magic. It takes two objects and tests for collision and performs separation against them. In this case we're giving it the player sprite and the platforms Group. It's clever enough to run collision against all Group members, so this one call will collide against the ground and both ledges. The result is a firm platform:
 
 <img src="http://www.photonstorm.com/wp-content/uploads/2013/12/part6.png" alt="part6" width="800" height="600" class="alignnone size-full wp-image-13609" />
 
@@ -176,7 +192,7 @@ Colliding is all good and well, but we really need the player to move. You would
     
 <pre class="lang:js decode:true " >cursors = game.input.keyboard.createCursorKeys();</pre>
 
-This populates the cursors object with four properties: up, down, left, right, that are all instances of <a href="http://gametest.mobi/phaser/docs/Phaser.Key.html">Phaser.Key</a> objects. Then all we need to do is poll these in our update loop:
+This populates the cursors object with four properties: up, down, left, right, that are all instances of <a href="http://docs.phaser.io/Phaser.Key.html">Phaser.Key</a> objects. Then all we need to do is poll these in our update loop:
  
 <pre class="lang:js decode:true " >    //  Reset the players velocity (movement)
     player.body.velocity.x = 0;
@@ -242,11 +258,11 @@ It's time to give our little game a purpose. Let's drop a sprinkling of stars in
 
 The process is similar to when we created the platforms Group. Using a JavaScript 'for' loop we tell it to create 12 stars in our game. They have an x coordinate of i * 70, which means they will be evenly spaced out in the scene 70 pixels apart. As with the player we give them a gravity value so they'll fall down, and a bounce value so they'll bounce a little when they hit the platforms. Bounce is a value between 0 (no bounce at all) and 1 (a full bounce). Ours will bounce somewhere between 0.7 and 0.9. If we were to run the code like this the stars would fall through the bottom of the game. To stop that we need to check for their collision against the platforms in our update loop:
 
-<pre class="lang:js decode:true ">game.physics.collide(stars, platforms);</pre>
+<pre class="lang:js decode:true ">game.physics.arcade.collide(stars, platforms);</pre>
 
 As well as doing this we will also check to see if the player overlaps with a star or not:
 
-<pre class="lang:js decode:true ">game.physics.overlap(player, stars, collectStar, null, this);</pre>
+<pre class="lang:js decode:true ">game.physics.arcade.overlap(player, stars, collectStar, null, this);</pre>
 
 This tells Phaser to check for an overlap between the player and any star in the stars Group. If found then pass them to the 'collectStar' function:
 
@@ -264,7 +280,7 @@ Quite simply the star is killed, which removes it from display. Running the game
 
 <h3>Finishing touches</h3>
 
-The final tweak we'll make is to add a score. To do this we'll make use of a <a href="http://gametest.mobi/phaser/docs/Phaser.Text.html">Phaser.Text</a> object. Here we create two new variables, one to hold the actual score and the text object itself:
+The final tweak we'll make is to add a score. To do this we'll make use of a <a href="http://docs.phaser.io/Phaser.Text.html">Phaser.Text</a> object. Here we create two new variables, one to hold the actual score and the text object itself:
 
 <pre class="lang:js decode:true">var score = 0;
 var scoreText;</pre>
@@ -296,6 +312,6 @@ So 10 points are added for every star and the scoreText is updated to show this 
 You have now learnt how to create a sprite with physics properties, to control its motion and to make it interact with other objects in a small game world. There are lots more things you can do to enhance this, for example there is no sense of completion or jeopardy yet. Why not add some spikes you must avoid? You could create a new 'spikes' group and check for collision vs. the player, only instead of killing the spike sprite you kill the player instead. Or for a non-violent style game you could make it a speed-run and simply challenge them to collect the stars as quickly as possible. We've included a few 
 extra graphics in the zip file to help inspire you.
 
-With the help of what you have learnt in this tutorial and the <a href="http://www.gametest.mobi/phaser/examples">160+ examples</a> available to you, you should now have a solid foundation for a future project. But as always if you have questions, need advice or want to share what you've been working on then feel free to ask for help in the <a href="http://www.html5gamedevs.com/">Phaser forum</a>.
+With the help of what you have learnt in this tutorial and the <a href="http://examples.phaser.io">250+ examples</a> available to you, you should now have a solid foundation for a future project. But as always if you have questions, need advice or want to share what you've been working on then feel free to ask for help in the <a href="http://www.html5gamedevs.com/">Phaser forum</a>.
     
 More tutorials will follow, stay tuned :)
