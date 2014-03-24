@@ -25,9 +25,9 @@ By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 What's new in 2.0.1?
 --------------------
 
-The 2.0.1 release of Phaser is mostly a maintanence release. With 2.0 being such a significant upgrade there were bound to be some issues, and this release addresses them. One of the core things a lot of you kept telling us was that you need Arcade Physics to work pretty much *exactly* as it did in the past. So in 2.0.1 we've taken ArcadePhysics back another iteration, fixed a few of the most common complaints you had with it, and fixed every single physics example as well.
+The 2.0.1 release of Phaser is mostly a maintenance release. With 2.0 being such a significant upgrade there were bound to be some issues, and this release addresses them. One of the core things a lot of you kept telling us was that you need Arcade Physics to work pretty much *exactly* as it did in the past. So in 2.0.1 we've taken ArcadePhysics back another iteration, fixed a few of the most common complaints you had with it, and fixed every single physics example as well.
 
-2.0.1 also brings the TypeScript defintions virtually bang up to date, covering P2 and Ninja physics, Arcade updates and more. Our thanks to Clarke for his continued support of these.
+2.0.1 also brings the TypeScript definitions virtually bang up to date, covering P2 and Ninja physics, Arcade updates and more. Our thanks to Clarke for his continued support of these.
 
 There are a few new features as well including a Phaser export script for PhysicsEditor (found in the `resources` folder), updates to the Particle Emitter and device enhancements. As always if you find a bug that you can confirm with a test case, please report it to us via github. If you think you may have found a bug, but aren't quite sure, please post it to the forum first.
 
