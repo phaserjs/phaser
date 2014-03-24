@@ -153,16 +153,13 @@ Phaser.Timer.prototype = {
 
         var tick = delay;
 
-        if (this.running)
+        if (this._now === 0)
         {
-            if (this._now === 0)
-            {
-                tick += this.game.time.now;
-            }
-            else
-            {
-                tick += this._now;
-            }
+            tick += this.game.time.now;
+        }
+        else
+        {
+            tick += this._now;
         }
 
         var event = new Phaser.TimerEvent(this, delay, tick, repeatCount, loop, callback, callbackContext, args);

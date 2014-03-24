@@ -5,7 +5,7 @@ Phaser 2.0.1
 
 Phaser is a fast, free and fun open source game framework for making desktop and mobile browser HTML5 games. It uses [Pixi.js](https://github.com/GoodBoyDigital/pixi.js/) internally for fast 2D Canvas and WebGL rendering.
 
-Version: 2.0.1 "Lyrelle" - Released: 21st March 2014
+Version: 2.0.1 "Lyrelle" - Released: 24th March 2014
 
 By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 
@@ -63,7 +63,7 @@ There is also an [un-official Getting Started Guide](http://www.antonoffplus.com
 Change Log
 ----------
 
-Version 2.0.1 - "Lyrelle" - 21st March 2014
+Version 2.0.1 - "Lyrelle" - 24th March 2014
 
 Bug Fixes
 
@@ -97,6 +97,7 @@ Bug Fixes
 * BitmapDatas when used as Game Object textures in WebGL now update themselves properly.
 * Timer.ms now correctly reports the ms time even if the Timer has been paused (thanks Nambew, fix #624)
 * If you added a Tileset to an empty map it would eventually throw an out of memory error.
+* Timer objects incorrectly set the first tick value on events if you added the events prior to starting them.
 
 
 Updated
@@ -143,9 +144,9 @@ New Features
 * There is a brand new PhysicsEditor export script specifically for Phaser (in the resources folder), and new p2 polygon parsing functions thanks to georgiee.
 
 
-There is an extensive [Migration Guide](https://github.com/photonstorm/phaser/blob/master/resources/Migration%20Guide.md) available. In the guide we detail the API breaking changes and approach to our new physics system. For a list of all the other new features, updates and bug fixes present in 2.0 please see the Change Log.
+There is an extensive [Migration Guide](https://github.com/photonstorm/phaser/blob/master/resources/Migration%20Guide.md) available for those converting from Phaser 1.x to 2.x. In the guide we detail the API breaking changes and approach to our new physics system.
 
-The Change Log for all previous versions is at https://github.com/photonstorm/phaser/blob/master/changelog.md
+The full Change Log is at https://github.com/photonstorm/phaser/blob/master/changelog.md
 
 
 How to Build

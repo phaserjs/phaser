@@ -7,7 +7,7 @@
 *
 * Phaser - http://www.phaser.io
 *
-* v2.0.1 "Lyrelle" - Built: Mon Mar 24 2014 01:37:07
+* v2.0.1 "Lyrelle" - Built: Mon Mar 24 2014 02:25:16
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -9604,7 +9604,7 @@ PIXI.RenderTexture.tempMatrix = new PIXI.Matrix();
 *
 * Phaser - http://www.phaser.io
 *
-* v2.0.1 "Lyrelle" - Built: Mon Mar 24 2014 01:37:07
+* v2.0.1 "Lyrelle" - Built: Mon Mar 24 2014 02:25:16
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -36771,16 +36771,13 @@ Phaser.Timer.prototype = {
 
         var tick = delay;
 
-        if (this.running)
+        if (this._now === 0)
         {
-            if (this._now === 0)
-            {
-                tick += this.game.time.now;
-            }
-            else
-            {
-                tick += this._now;
-            }
+            tick += this.game.time.now;
+        }
+        else
+        {
+            tick += this._now;
         }
 
         var event = new Phaser.TimerEvent(this, delay, tick, repeatCount, loop, callback, callbackContext, args);

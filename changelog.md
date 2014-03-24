@@ -1,10 +1,92 @@
 Change Log
 ==========
 
+There is an extensive [Migration Guide](https://github.com/photonstorm/phaser/blob/master/resources/Migration%20Guide.md) available for those converting from Phaser 1.x to 2.x. In the guide we detail the API breaking changes and approach to our new physics system.
+
+
+Version 2.0.1 - "Lyrelle" - 24th March 2014
+-------------------------------------------
+
+Bug Fixes
+
+* The Static, Kinematic and Dynamic consts that P2.Body uses were incorrect (fixes #563)
+* Sprite.destroy would fail if it had an Arcade Physics body, now added.
+* Group.getAt comparison updated (fixes #578)
+* Fixed the IE11 version check (fixes #579)
+* Ninja world collision to check right and bottom bounds (thanks dreadhorse, fix #571)
+* Group enableBody parameter was incorrectly assigned to the debug var (thanks BurnedToast, fix #565)
+* Fixed Tile callback check in Arcade Physics (fix #562)
+* Removed the examples build script from the Gruntfile (fix #592)
+* The P2 World wouldn't clear down fully on a State change, now properly clears out contacts, resets the bitmask, etc.
+* Button.onInputUpHandler wouldn't set an upFrame for a frame ID of zero, made the check more strict.
+* Fixed the Loader.preloadSprite crop effect on WebGL.
+* Fixed Grunt script that stopped the P2 constraint classes from building properly.
+* World.destroy incorrectly clashed with the Group.destroy method it over-rode, renamed to World.shutdown and updated StateManager accordingly.
+* World.shutdown now removes all children iteratively, calling destroy on each one, ultimately performing a soft reset of the World.
+* Objects with a scale.x or y of 0 are no longer considered valid for input (fix #602)
+* InputHandler will set the browser pointer back to default if destroyed while over (fix #602)
+* ArcadePhysics.separate doesn't pass over to seperateX/Y if overlapOnly is true (fix #604)
+* ArcadePhysics.collideSpriteVsSprite checks if both objects have bodies before processing.
+* Debug.spriteBounds will now take the position of the camera into consideration when rendering the bounds (fix #603)
+* InputHandler.dragFromCenter will now work regardless of the anchor point of the Sprite (fix #600)
+* Emitter.friction property removed and replaced with Emitter.particleDrag, which is now correctly applied.
+* ArcadePhysics.Body.reset incorrectly set the Body.rotation to Sprite.rotation instead of angle.
+* Emitter.emitParticle resets the rotation on the particle to zero before emitting it.
+* If no seed was given in the Game config object, the RandomDataGenerator wouldn't be started (thank tylerjhutchison fix #619)
+* p2 revolute pivots were wrongly signed (thanks georgiee, fix #621)
+* P2.Body.loadPolygon no longer modifies the Cache array (fix #613)
+* The volume given in Sound.play now over-rides that set in Sound.addMarker if specified (fix #623)
+* BitmapDatas when used as Game Object textures in WebGL now update themselves properly.
+* Timer.ms now correctly reports the ms time even if the Timer has been paused (thanks Nambew, fix #624)
+* If you added a Tileset to an empty map it would eventually throw an out of memory error.
+
+
+Updated
+
+* Updated Device.isConsoleOpen as it no longer works in Chrome. Revised code and documentation accordingly (fix #593)
+* Removed State.destroy empty method and replaced with State.shutdown, as that is what the StateManager expects (fix #586)
+* P2.removeBody will check if the body is part of the world before removing, this avoids a TypeError from the p2 layer.
+* Tilemap.createFromObjects has a new parameter: adjustY, which is true by default. Because Tiled uses a bottom-left coordinate system Phaser used to set the Sprite anchor to 0,1 to compensate. If adjustY is true it now reduces the y value by the object height instead.
+* Swapped the order of the _pollGamepads gamepads check, to stop the Chrome 'webkitGamepads is deprecated' error in the console.
+* Lots of TypeScript definitions updates (thanks as always to clark for these)
+* Removed Device.patchAndroidClearRectBug as it's no longer used internally.
+* Math.wrapAngle now supports radians (thanks Cryszon, #597)
+* Group.replace will now return the old child, the one that was replaced in the Group.
+* Group.destroy has a new parameter: `soft`. A soft destruction won't remove the Group from its parent or null game references. Default is `false`.
+* InputHandler.validForInput is a new method that checks if the handler and its owner should be considered for Pointer input handling or not.
+* ArcadePhysics.Body now checks the ArcadePhysics.World bounds, not the game bounds.
+* ArcadePhysics.Body has reverted to the 1.1.3 method of preUpdate, so you can now position sprites with x/y, drag them, etc, regardless of the Body.moves flag (issue #606)
+* ArcadePhysics.World now has setBounds and setBoundsToWorld methods, which are called automatically on world resizing.
+* ArcadePhysics.Body no longer sets the offset to match the anchor.
+* The StateManager is now responsible for clearing down input, timers, tweens, physics, camera and the World display list.
+* Removed the use of Int16Array from all Game Objects, swapped for standard Array. Phaser now runs on Android 2.x and IE9 again (fix #590)
+* When creating a Sprite (via Group.create or directly) with exists = false and a P2 body, the body is not added to the world.
+* Every Input class now checks to see if it has already been started. If so it doesn't add the listeners again unless they have been nulled.
+* Lots of fixes to the TypeScript definitions file (thanks as always to clark-stevenson for his tireless work on these)
+* Emitters now bring the particle they are about to emit to the top of the Group before doing so. Avoids particles hidden behind others.
+* ArcadePhysics.Body.setSize corrected to take the parameters as positive, not negative values.
+* ArcadePhysics.World.seperate will now check gravity totals to determine separation order. You can set World.forceX to true to always separate on X first and skip this check.
+* TileSprites now emit outOfBounds and enterBounds events accordingly.
+* You can now create multiple blank layers in a Tilemap.
+
+
+New Features
+
+* Device.getUserMedia boolean added, useful if you need access to the webcam or microphone.
+* Math.removeRandom allows you to remove (and return) a random object from an array.
+* ArcadePhysics.World now has a checkCollision object which can be used to toggle collision against the 4 walls of its bounds.
+* Sprite.events.onEnterBounds added. This is dispatched if the Sprite leaves the bounds but then returns. The opposite of onOutOfBounds.
+* Timer.removeAll will remove and clear down all events, but keeps the Timer running.
+* Group.setAllChildren recursively checks if its children are Groups, and if so recursively applies the value to their children as well (feature #589)
+* Time.deltaCap lets you set a cap for the delta timer. It defaults to zero (which is disabled). If you use ArcadePhysics it gets set to 0.2, but you can modify as needed.
+* ArcadePhysics.Body has a deltaMax object, which allows you to cap the delta applied to the position to +- this value.
+* ArcadePhysics.Body now checks the Sprite scale automatically and adjusts the body size accordingly (fix #608)
+* Emitter.particleClass can now be set to any object that extends Phaser.Sprite, which will be emitted instead of a regular Sprite.
+* There is a brand new PhysicsEditor export script specifically for Phaser (in the resources folder), and new p2 polygon parsing functions thanks to georgiee.
+
+
 Version 2.0.0 - "Aes Sedai" - March 13th 2014
 ---------------------------------------------
-
-There is an extensive [Migration Guide](https://github.com/photonstorm/phaser/blob/master/resources/Migration%20Guide.md) available. In the guide we detail the API breaking changes and approach to our new physics system. The following is a list of all the other new features, updates and bug fixes present in this release.
 
 New features:
 
