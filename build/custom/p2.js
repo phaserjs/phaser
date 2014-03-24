@@ -11595,14 +11595,14 @@ Phaser.Physics.P2.prototype = {
     * @method Phaser.Physics.P2#createPrismaticConstraint
     * @param {Phaser.Sprite|Phaser.Physics.P2.Body|p2.Body} bodyA - First connected body.
     * @param {Phaser.Sprite|Phaser.Physics.P2.Body|p2.Body} bodyB - Second connected body.
-    * @param {boolean} [lock=false] - If set to true, bodyB will be free to rotate around its anchor point.
+    * @param {boolean} [lockRotation=true] - If set to false, bodyB will be free to rotate around its anchor point.
     * @param {Array} [anchorA] - Body A's anchor point, defined in its own local frame. The value is an array with 2 elements matching x and y, i.e: [32, 32].
     * @param {Array} [anchorB] - Body A's anchor point, defined in its own local frame. The value is an array with 2 elements matching x and y, i.e: [32, 32].
     * @param {Array} [axis] - An axis, defined in body A frame, that body B's anchor point may slide along. The value is an array with 2 elements matching x and y, i.e: [32, 32].
     * @param {number} [maxForce] - The maximum force that should be applied to constrain the bodies.
     * @return {Phaser.Physics.P2.PrismaticConstraint} The constraint
     */
-    createPrismaticConstraint: function (bodyA, bodyB, lock, anchorA, anchorB, axis, maxForce) {
+    createPrismaticConstraint: function (bodyA, bodyB, lockRotation, anchorA, anchorB, axis, maxForce) {
 
         bodyA = this.getBody(bodyA);
         bodyB = this.getBody(bodyB);
@@ -11613,7 +11613,7 @@ Phaser.Physics.P2.prototype = {
         }
         else
         {
-            return this.addConstraint(new Phaser.Physics.P2.PrismaticConstraint(this, bodyA, bodyB, lock, anchorA, anchorB, axis, maxForce));
+            return this.addConstraint(new Phaser.Physics.P2.PrismaticConstraint(this, bodyA, bodyB, lockRotation, anchorA, anchorB, axis, maxForce));
         }
 
     },
@@ -13733,6 +13733,108 @@ Phaser.Physics.P2.Body.prototype = {
 
     /**
     * Reads the shape data from a physics data file stored in the Game.Cache and adds it as a polygon to this Body.
+    * The shape data format is based on the custom phaser export in.
+    *
+    * @method Phaser.Physics.P2.Body#loadPhaserPolygon
+    * @param {string} key - The key of the Physics Data file as stored in Game.Cache.
+    * @param {string} object - The key of the object within the Physics data file that you wish to load the shape data from.
+    */
+    addPhaserPolygon: function (key, object) {
+
+        var data = this.game.cache.getPhysicsData(key, object);
+        var createdFixtures = [];
+
+        //  Cycle through the fixtures
+        for (var i = 0; i < data.length; i++)
+        {
+            var fixtureData = data[i];
+            var shapesOfFixture = this.addFixture(fixtureData);
+            createdFixtures[fixtureData.filter.group] = createdFixtures[fixtureData.filter.group] || [];
+            createdFixtures[fixtureData.filter.group].push(shapesOfFixture);
+        }
+
+        this.data.aabbNeedsUpdate = true;
+        this.shapeChanged();
+
+        return createdFixtures;
+
+    },
+    
+    /**
+    * Add a polygon fixture. This is used during #loadPhaserPolygon.
+    *
+    * @method Phaser.Physics.P2.Body#addPolygonFixture
+    * @param {string} fixtureData - The data for the fixture. It contains: isSensor, filter (collision) and the actual polygon shapes.
+    */
+    addFixture: function (fixtureData) {
+
+        var generatedShapes = [];
+
+        if (fixtureData.circle)
+        {
+            var shape = new p2.Circle(this.world.pxm(fixtureData.circle.radius))
+            shape.collisionGroup = fixtureData.filter.categoryBits
+            shape.collisionMask = fixtureData.filter.maskBits
+            shape.sensor = fixtureData.isSensor
+
+            var offset = p2.vec2.create();
+            offset[0] = this.world.pxmi(fixtureData.circle.position[0] - this.sprite.width/2)
+            offset[1] = this.world.pxmi(fixtureData.circle.position[1] - this.sprite.height/2)
+            
+            this.data.addShape(shape, offset);
+            generatedShapes.push(shape)
+        }
+        else
+        {
+            polygons = fixtureData.polygons;
+
+            var cm = p2.vec2.create();
+
+            for (var i = 0; i < polygons.length; i++)
+            {
+                shapes = polygons[i];
+
+                var vertices = [];
+
+                for (var s = 0; s < shapes.length; s += 2)
+                {
+                    vertices.push([ this.world.pxmi(shapes[s]), this.world.pxmi(shapes[s + 1]) ]);
+                }
+
+                var shape = new p2.Convex(vertices);
+
+                //  Move all vertices so its center of mass is in the local center of the convex
+                for (var j = 0; j !== shape.vertices.length; j++)
+                {
+                    var v = shape.vertices[j];
+                    p2.vec2.sub(v, v, shape.centerOfMass);
+                }
+
+                p2.vec2.scale(cm, shape.centerOfMass, 1);
+
+                cm[0] -= this.world.pxmi(this.sprite.width / 2);
+                cm[1] -= this.world.pxmi(this.sprite.height / 2);
+
+                shape.updateTriangles();
+                shape.updateCenterOfMass();
+                shape.updateBoundingRadius();
+
+                shape.collisionGroup = fixtureData.filter.categoryBits;
+                shape.collisionMask = fixtureData.filter.maskBits;
+                shape.sensor = fixtureData.isSensor;
+
+                this.data.addShape(shape, cm);
+
+                generatedShapes.push(shape);
+            }
+        }
+
+        return generatedShapes;
+
+    },
+
+    /**
+    * Reads the shape data from a physics data file stored in the Game.Cache and adds it as a polygon to this Body.
     *
     * @method Phaser.Physics.P2.Body#loadPolygon
     * @param {string} key - The key of the Physics Data file as stored in Game.Cache.
@@ -13750,12 +13852,12 @@ Phaser.Physics.P2.Body.prototype = {
         if (data.length === 1)
         {
             var temp = [];
+            var localData = data[data.length - 1];
 
-            data = data.pop()
             //  We've a list of numbers
-            for (var i = 0, len = data.shape.length; i < len; i += 2)
+            for (var i = 0, len = localData.shape.length; i < len; i += 2)
             {
-                temp.push([data.shape[i], data.shape[i + 1]]);
+                temp.push([localData.shape[i], localData.shape[i + 1]]);
             }
 
             return this.addPolygon(options, temp);
@@ -14454,7 +14556,7 @@ Phaser.Utils.extend(Phaser.Physics.P2.BodyDebug.prototype, {
         
                 if (child instanceof p2.Circle)
                 {
-                    this.drawCircle(sprite, offset[0] * this.ppu, -offset[1] * this.ppu, angle, child.radius * this.ppu, color, lw);
+                    this.drawCircle(sprite, offset[0] * this.ppu, offset[1] * this.ppu, angle, child.radius * this.ppu, color, lw);
                 }
                 else if (child instanceof p2.Convex)
                 {
@@ -15092,15 +15194,15 @@ Phaser.Physics.P2.LockConstraint.prototype.constructor = Phaser.Physics.P2.LockC
 * @param {Phaser.Physics.P2} world - A reference to the P2 World.
 * @param {p2.Body} bodyA - First connected body.
 * @param {p2.Body} bodyB - Second connected body.
-* @param {boolean} [lock=false] - If set to true, bodyB will be free to rotate around its anchor point.
+* @param {boolean} [lockRotation=true] - If set to false, bodyB will be free to rotate around its anchor point.
 * @param {Array} [anchorA] - Body A's anchor point, defined in its own local frame. The value is an array with 2 elements matching x and y, i.e: [32, 32].
 * @param {Array} [anchorB] - Body A's anchor point, defined in its own local frame. The value is an array with 2 elements matching x and y, i.e: [32, 32].
 * @param {Array} [axis] - An axis, defined in body A frame, that body B's anchor point may slide along. The value is an array with 2 elements matching x and y, i.e: [32, 32].
 * @param {number} [maxForce] - The maximum force that should be applied to constrain the bodies.
 */
-Phaser.Physics.P2.PrismaticConstraint = function (world, bodyA, bodyB, lock, anchorA, anchorB, axis, maxForce) {
+Phaser.Physics.P2.PrismaticConstraint = function (world, bodyA, bodyB, lockRotation, anchorA, anchorB, axis, maxForce) {
 
-    if (typeof lock === 'undefined') { lock = false; }
+    if (typeof lockRotation === 'undefined') { lockRotation = true; }
     if (typeof anchorA === 'undefined') { anchorA = [0, 0]; }
     if (typeof anchorB === 'undefined') { anchorB = [0, 0]; }
     if (typeof axis === 'undefined') { axis = [0, 0]; }
@@ -15119,7 +15221,7 @@ Phaser.Physics.P2.PrismaticConstraint = function (world, bodyA, bodyB, lock, anc
     anchorA = [ world.pxmi(anchorA[0]), world.pxmi(anchorA[1]) ];
     anchorB = [ world.pxmi(anchorB[0]), world.pxmi(anchorB[1]) ];
 
-    var options = { localAnchorA: anchorA, localAnchorB: anchorB, localAxisA: axis, maxForce: maxForce, disableRotationalLock: lock };
+    var options = { localAnchorA: anchorA, localAnchorB: anchorB, localAxisA: axis, maxForce: maxForce, disableRotationalLock: !lockRotation };
 
     p2.PrismaticConstraint.call(this, bodyA, bodyB, options);
 
@@ -15162,8 +15264,8 @@ Phaser.Physics.P2.RevoluteConstraint = function (world, bodyA, pivotA, bodyB, pi
     */
     this.world = world;
 
-    pivotA = [ world.pxm(pivotA[0]), world.pxm(pivotA[1]) ];
-    pivotB = [ world.pxm(pivotB[0]), world.pxm(pivotB[1]) ];
+    pivotA = [ world.pxmi(pivotA[0]), world.pxmi(pivotA[1]) ];
+    pivotB = [ world.pxmi(pivotB[0]), world.pxmi(pivotB[1]) ];
 
     p2.RevoluteConstraint.call(this, bodyA, pivotA, bodyB, pivotB, maxForce);
 

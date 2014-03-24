@@ -431,7 +431,7 @@ Phaser.Tilemap.prototype = {
 
         if (typeof group === 'undefined') { group = this.game.world; }
 
-        if (this.getLayerIndex(layer) !== null)
+        if (this.getLayerIndex(name) !== null)
         {
             console.warn('Tilemap.createBlankLayer: Layer with matching name already exists');
             return;
