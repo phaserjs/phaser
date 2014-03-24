@@ -528,9 +528,9 @@
 
     <section>
         <article><p><img src="http://www.phaser.io/images/phaser2-github.png" alt="Phaser 2.0"></p>
-<h1>Phaser 2.0.0</h1>
+<h1>Phaser 2.0.1</h1>
 <p>Phaser is a fast, free and fun open source game framework for making desktop and mobile browser HTML5 games. It uses <a href="https://github.com/GoodBoyDigital/pixi.js/">Pixi.js</a> internally for fast 2D Canvas and WebGL rendering.</p>
-<p>Version: 2.0.0 &quot;Aes Sedai&quot; - Released: March 13th 2014</p>
+<p>Version: 2.0.1 &quot;Lyrelle&quot; - Released: 24th March 2014</p>
 <p>By Richard Davey, <a href="http://www.photonstorm.com">Photon Storm</a></p>
 <ul>
 <li>View the <a href="http://phaser.io">Official Website</a></li>
@@ -543,11 +543,15 @@
 </ul>
 <p><a href="https://confirmsubscription.com/h/r/369DE48E3E86AF1E">Subscribe to our new Phaser Newsletter</a>. We'll email you when new versions are released as well as send you our regular Phaser game making magazine.</p>
 <p><a href="https://bitdeli.com/free" title="Bitdeli Badge"><img src="https://d2weczhvl823v0.cloudfront.net/photonstorm/phaser/trend.png" alt="Bitdeli Badge"></a></p>
+<h2>What's new in 2.0.1?</h2>
+<p>The 2.0.1 release of Phaser is mostly a maintenance release. With 2.0 being such a significant upgrade there were bound to be some issues, and this release addresses them. One of the core things a lot of you kept telling us was that you need Arcade Physics to work pretty much <em>exactly</em> as it did in the past. So in 2.0.1 we've taken ArcadePhysics back another iteration, fixed a few of the most common complaints you had with it, and fixed every single physics example as well.</p>
+<p>2.0.1 also brings the TypeScript definitions virtually bang up to date, covering P2 and Ninja physics, Arcade updates and more. Our thanks to Clarke for his continued support of these.</p>
+<p>There are a few new features as well including a Phaser export script for PhysicsEditor (found in the <code>resources</code> folder), updates to the Particle Emitter and device enhancements. As always if you find a bug that you can confirm with a test case, please report it to us via github. If you think you may have found a bug, but aren't quite sure, please post it to the forum first.</p>
 <h2>Welcome to Phaser</h2>
-<p>Exactly 6 months ago we released Phaser 1.0 into the world. Suffice to say that since then we've been overwhelmed at the huge surge of developers taking to it! Our github repository is consistently in the top JavaScript lists, we've over 3200 stars at the time of writing, and a wonderful, vibrant and friendly community. Phaser 2 is a natural evolution of what we started. We've focused specifically on performance and expansion with this release. Lots of developers have already reported to us considerably speed increases just by swapping to Phaser 2 (reports of 200% faster speeds on mobile aren't unheard of!). There's also a full-body physics system available now, in the form of the excellent p2.js. The upgrade to Pixi 1.5 under the hood bought lots of new visual effects in, including blend modes and tints.</p>
+<p>6 months ago we released Phaser 1.0 into the world. Suffice to say that since then we've been overwhelmed at the huge surge of developers taking to it! Our github repository is consistently in the top JavaScript lists, we've over 3200 stars at the time of writing, and a wonderful, vibrant and friendly community. Phaser 2 is a natural evolution of what we started. We've focused specifically on performance and expansion with this release. Lots of developers have already reported to us considerably speed increases just by swapping to Phaser 2 (reports of 200% faster speeds on mobile aren't unheard of!). There's also a full-body physics system available now, in the form of the excellent p2.js. The upgrade to Pixi 1.5 under the hood bought lots of new visual effects in, including blend modes and tints.</p>
 <p>And we're also really pleased to have closed down over 550 issues reported on github. We literally went through every last bug reported to us, and fixed it. All kinds of little things that as a whole make the library that much more solid. With the 2.0 release we're now freezing the API. Before we have to admit that the API changed somewhat on a whim, and we moved things around and changed things without too much consideration for fellow developers. With 2.0 that stops - we've spent long enough on this release that we're now extremely happy with the organisation of classes and methods, and while we may still need to make small tweaks in the future, none of them will be API breaking without prior community approval first. This means if you're using Phaser to teach in classes, or writing a book / tutorials around it, this is the version to base off.</p>
-<p>If you want to port a Phaser 1.x game over to 2 then please see our <a href="https://github.com/photonstorm/phaser/blob/master/resources/Migration%20Guide.md">Migration Guide</a> for help.</p>
-<p>So what's next? We do have a roadmap (which you can find at the bottom of this document), but we're going to sit back and take stock for a while, building up the tutorials and sample games. We will of course jump on bug fixes quickly, and we appreciate that our TypeScript definitions are now slightly out of date again (an eternal quest we appear to be on!), but this is definitely the best release of Phaser ever. The most features, the fastest, the most stable and just generally the most fun to use.</p>
+<p>If you want to port a Phaser 1.x game over to 2 then do read our <a href="https://github.com/photonstorm/phaser/blob/master/resources/Migration%20Guide.md">Migration Guide</a> first.</p>
+<p>So what's next? We have a roadmap (which you can find at the bottom of this document), but we're going to sit back and take stock for a while, building up the tutorials and sample games. We will of course jump on bug fixes quickly, but this is definitely the best release of Phaser ever. The most features, the fastest, the most stable and just generally the most fun to use.</p>
 <p>Happy coding everyone! See you on the forums.</p>
 <p><img src="http://www.phaser.io/images/spacedancer.gif" alt="boogie"></p>
 <h2>Getting Started Guides</h2>
@@ -556,152 +560,85 @@
 <p>There is also an <a href="http://www.antonoffplus.com/coding-an-html5-game-for-30-minutes-or-an-introduction-to-the-phaser-framework">un-official Getting Started Guide</a>.</p>
 <p><img src="http://www.photonstorm.com/wp-content/uploads/2013/09/phaser_10_release.jpg" alt="Phaser Logo"></p>
 <h2>Change Log</h2>
-<p>Version 2.0.0 - &quot;Aes Sedai&quot; - March 13th 2014</p>
-<p>There is an extensive <a href="https://github.com/photonstorm/phaser/blob/master/resources/Migration%20Guide.md">Migration Guide</a> available. In the guide we detail the API breaking changes and approach to our new physics system. The following is a list of all the other new features, updates and bug fixes present in this release.</p>
-<p>New features:</p>
+<p>Version 2.0.1 - &quot;Lyrelle&quot; - 24th March 2014</p>
+<p>Bug Fixes</p>
 <ul>
-<li>Phaser.Image is a brand new display object perfect for logos, backgrounds, etc. You can scale, rotate, tint, blend an get input events from an Image, but it has no animation or physics body.</li>
-<li>You can now use the hitArea property on Sprites and Image objects. hitArea can be a geometry object (Rectangle, Circle, Polygon, Ellipse) and is used in pointerOver checks.</li>
-<li>InputManager.getLocalPosition(displayObject, pointer, output) will return the local coordinates of the specified displayObject and pointer.</li>
-<li>InputManager.hitTest will test for pointer hits against a Sprite/Image, its hitArea (if set) or any of its children.</li>
-<li>Text has lots of new methods to help style it: Text.fill, Text.align, Text.stroke, etc.</li>
-<li>Text now works happily with font names with spaces in them.</li>
-<li>Text.setShadow applies a drop shadow to the Text being rendered. Control the x, y, color and blur.</li>
-<li>Text.lineSpacing allows you to set additional spacing between each line that is rendered.</li>
-<li>Text.inputEnabled allows you to enable all input events over Text objects: dragging, clicking, etc - anything that works on a Sprite works on Text now too.</li>
-<li>Phaser.Ellipse added. A fully compatible port of the PIXI.Ellipse class, can be used in Sprite/Image hitArea tests.</li>
-<li>Phaser.Polygon added. A fully compatible port of the PIXI.Polygon class, can be used in Sprite/Image hitArea tests.</li>
-<li>InputHandler.pixelPerfectOver - performs a pixel perfect check to see if any pointer is over the current object (warning: very expensive!)</li>
-<li>InputHandler.pixelPerfectClick - performs a pixel perfect check but only when the pointer touches/clicks on the current object.</li>
-<li>TileSprite can now use a frame from a texture atlas or a sprite sheet.</li>
-<li>TileSprites can now be animated. See new example :)</li>
-<li>TileSprites have a new method: autoScroll(x, y) which sets an automatic scroll running (until stopped with TileSprite.stopScroll).</li>
-<li>BitmapText now uses the new XML parser which should work under CocoonJS without clashes.</li>
-<li>BitmapText signature changed so you can support fonts with spaces in their names.</li>
-<li>Loader.bitmapFont now has 2 extra parameters: xSpacing and ySpacing. These allow you to add extra spacing to each letter or line of the font.</li>
-<li>Added the new RetroFont class. This is for rendering fixed-width bitmap fonts into an Image object. It's a texture you can apply to a Sprite/Image.</li>
-<li>Added Cache.updateFrameData which is really useful for swapping FrameData blocks in the cache.</li>
-<li>Loader.physics now lets you load Lime + Corona JSON Physics data, which can be used with Body.loadPolygon and Body.loadData.</li>
-<li>Cache.addPhysicsData and Cache.getPhysicsData allow you to store parsed JSON physics data in the cache, for sharing between Bodies.</li>
-<li>fixedToCamera now works across all display objects. When enabled it will fix at its current x/y coordinate, but can be changed via cameraOffset.</li>
-<li>fixedToCamrea now works for Groups as well :) You can fix a Group to the camera and it will influence its children.</li>
-<li>Tilemap.createCollisionObjects will parse Tiled data for objectgroups and convert polyline instances into physics objects you can collide with in the world.</li>
-<li>Loader can now load JSON files specifically (game.load.json) and they are parsed and stored in the Game.Cache. Retrieve with game.cache.getJSON(key).</li>
-<li>TileSprites can now receive full Input events, dragging, etc and be positioned in-world and fixed to cameras.</li>
-<li>The StateManager now looks for a function called 'resumed' which is called when a game un-pauses.</li>
-<li>Key.onHold added. This event is dispatched every time the browser sends a keydown event and the key is already being held down.</li>
-<li>Stage.smoothed allows you to set if sprites will be smoothed when rendered. Set to false if you're using pixel art in your game. Default is true. Works in Canvas and WebGL.</li>
-<li>Sprite.smoothed and Image.smoothed allows you to set per-Sprite smoothing, perfect if you just want to keep a few sprites smoothed (or not)</li>
-<li>StateManager.start can now have as many parameters as you like. The order is: start(key, clearWorld, clearCache, ...) - they are passed to State.init() (NOT create!)</li>
-<li>Loader.script now has callback (and callbackContext) parameters, so you can specify a function to run once the JS has been injected into the body.</li>
-<li>Phaser.Timer.stop has a new parameter: clearEvents (default true), if true all the events in Timer will be cleared, otherwise they will remain (fixes #383)</li>
-<li>All GameObjects now have a 'destroyChildren' boolean as a parameter to their destroy method. It's default is true and the value propogates down its children.</li>
-<li>Pixi GrayFilter ported over (thanks nickryall #404)</li>
-<li>Animation.speed added. You can now change the animation speed on the fly, without re-starting the animation (feature request #458)</li>
-<li>Brand new Grunt task - creates each core library as its own file and a combined phaser.js.</li>
-<li>New build script now cleanly splits Phaser, Pixi and p2 so they are each UMD wrapped and each available in the global scope (now more requireJS friendly!).</li>
-<li>phaser-no-libs.js allows you to use your own version of p2.js or pixi.js with Phaser. Warning: This is totally unsupported. If you hit bugs, you fix them yourself.</li>
-<li>Group.sendToBottom(child) is the handy opposite of Group.bringToTop()</li>
-<li>Group.moveUp(child) will move a child up the display list, swapping with the child above it.</li>
-<li>Group.moveDown(child) will move a child down the display list, swapping with the child below it.</li>
-<li>Device.windowsPhone is now tested for.</li>
-<li>The Debug panel now works in WebGL mode. Pay attention to the warning at the top of the Debug docs (feature request #499)</li>
-<li>You can now create blank Tilemaps and then populate them with data later.</li>
-<li>A single Animation object now has 3 new events: onStart, onLoop and onComplete.</li>
-<li>Animation.loopCount holds the number of times the animation has looped since it last started.</li>
-<li>Tween.generateData(frameRate) allows you to generate tween data into an array, which can then be used however you wish (see new examples)</li>
-<li>Group.xy(index, x, y) allows you to set the x and y coordinates of a Group child at the given index.</li>
-<li>Group.reverse() reverses the display order of all children in the Group.</li>
-<li>Tweens are now bound to their own TweenManager, not always the global game one. So you can create your own managers now (for you clark :)</li>
-<li>ScaleManager.fullScreenTarget allows you to change the DOM element that the fullscreen API is called on (feature request #526)</li>
-<li>Merged Georges p2 BodyDebug and reformatted for jshint pass. Looks awesome :)</li>
-<li>ArcadePhysics.Body has a new gravityScale property, which is a modifier multiplied against the world gravity value on a Body.</li>
-<li>Line.coordinatesOnLine will return all coordinates on the line using Bresenhams line algorithm.</li>
-<li>Line now has x, y, width, height, top, bottom, left and right properties, so you can effectively get its bounds.</li>
-<li>TilemapLayer.getRayCastTiles will let you get all tiles that hit the given line for further processing.</li>
+<li>The Static, Kinematic and Dynamic consts that P2.Body uses were incorrect (fixes #563)</li>
+<li>Sprite.destroy would fail if it had an Arcade Physics body, now added.</li>
+<li>Group.getAt comparison updated (fixes #578)</li>
+<li>Fixed the IE11 version check (fixes #579)</li>
+<li>Ninja world collision to check right and bottom bounds (thanks dreadhorse, fix #571)</li>
+<li>Group enableBody parameter was incorrectly assigned to the debug var (thanks BurnedToast, fix #565)</li>
+<li>Fixed Tile callback check in Arcade Physics (fix #562)</li>
+<li>Removed the examples build script from the Gruntfile (fix #592)</li>
+<li>The P2 World wouldn't clear down fully on a State change, now properly clears out contacts, resets the bitmask, etc.</li>
+<li>Button.onInputUpHandler wouldn't set an upFrame for a frame ID of zero, made the check more strict.</li>
+<li>Fixed the Loader.preloadSprite crop effect on WebGL.</li>
+<li>Fixed Grunt script that stopped the P2 constraint classes from building properly.</li>
+<li>World.destroy incorrectly clashed with the Group.destroy method it over-rode, renamed to World.shutdown and updated StateManager accordingly.</li>
+<li>World.shutdown now removes all children iteratively, calling destroy on each one, ultimately performing a soft reset of the World.</li>
+<li>Objects with a scale.x or y of 0 are no longer considered valid for input (fix #602)</li>
+<li>InputHandler will set the browser pointer back to default if destroyed while over (fix #602)</li>
+<li>ArcadePhysics.separate doesn't pass over to seperateX/Y if overlapOnly is true (fix #604)</li>
+<li>ArcadePhysics.collideSpriteVsSprite checks if both objects have bodies before processing.</li>
+<li>Debug.spriteBounds will now take the position of the camera into consideration when rendering the bounds (fix #603)</li>
+<li>InputHandler.dragFromCenter will now work regardless of the anchor point of the Sprite (fix #600)</li>
+<li>Emitter.friction property removed and replaced with Emitter.particleDrag, which is now correctly applied.</li>
+<li>ArcadePhysics.Body.reset incorrectly set the Body.rotation to Sprite.rotation instead of angle.</li>
+<li>Emitter.emitParticle resets the rotation on the particle to zero before emitting it.</li>
+<li>If no seed was given in the Game config object, the RandomDataGenerator wouldn't be started (thank tylerjhutchison fix #619)</li>
+<li>p2 revolute pivots were wrongly signed (thanks georgiee, fix #621)</li>
+<li>P2.Body.loadPolygon no longer modifies the Cache array (fix #613)</li>
+<li>The volume given in Sound.play now over-rides that set in Sound.addMarker if specified (fix #623)</li>
+<li>BitmapDatas when used as Game Object textures in WebGL now update themselves properly.</li>
+<li>Timer.ms now correctly reports the ms time even if the Timer has been paused (thanks Nambew, fix #624)</li>
+<li>If you added a Tileset to an empty map it would eventually throw an out of memory error.</li>
+<li>Timer objects incorrectly set the first tick value on events if you added the events prior to starting them.</li>
 </ul>
-<p>Updates:</p>
+<p>Updated</p>
 <ul>
-<li>Massive thanks to clark-stevenson for doing an amazing job update the TypeScript definitions file.</li>
-<li>Debug.renderRectangle has a new parameter: filled. If true it renders as with fillRect, if false strokeRect.</li>
-<li>Phaser.AnimationParser now sets the trimmed data directly for Pixi Texture frames. Tested across JSON Hash, JSON Data, Sprite Sheet and XML.</li>
-<li>Game.add.renderTexture now has the addToCache parameter. If set the texture will be stored in Game.Cache and can be retrieved with Cache.getTexture(key).</li>
-<li>Game.add.bitmapData now has the addToCache parameter. If set the texture will be stored in Game.Cache and can be retrieved with Cache.getBitmapData(key).</li>
-<li>The InputManager now sets the canvas style cursor to 'inherit' instead of 'default'.</li>
-<li>World.reset now calls Camera.reset which sends the camera back to 0,0 and un-follows any object it may have been tracking.</li>
-<li>Added hostname: '*' to the grunt-connect in Gruntfile.js (fixes #426)</li>
-<li>Device, Canvas and GamePad classes all updated for better CocoonJS support (thanks Videlais)</li>
-<li>BitmapData.alphaMask will draw the given image onto a BitmapData using an image as an alpha mask.</li>
-<li>The new GameObjectCreator (which you access via game.make or State.make) lets you easily create an object but NOT add it to the display list.</li>
-<li>TilemapParser will now throw a warning if the tileset image isn't the right size for the tile dimensions.</li>
-<li>We now force IE11 into Canvas mode to avoid a Pixi bug with pre-multiplied alpha. Will remove once that is fixed, sorry, but it's better than no game at all, right? :(</li>
-<li>Loader.setPreloadSprite() will now set sprite.visible = true once the crop has been applied. Should help avoid issues (#430) on super-slow connections.</li>
-<li>Updated the way the page visibility is checked, should now be more compatible across more browsers.</li>
-<li>Phaser.Input.Key.isUp now defaults to 'true', as does GamepadButton.isUp (#474)</li>
-<li>Vastly improved visibility API support + pageshow/pagehide + focus/blur. Working across Chrome, IE, Firefox, iOS, Android (also fixes #161)</li>
-<li>Pausing the game will now mute audio and resuming will un-mute, unless it was muted via the game (fixes #439)</li>
-<li>ScaleManager has 2 new events: ScaleManager.enterFullScreen and ScaleManager.leaveFullScreen, so you can respond to fullscreen changes directly.</li>
-<li>RandomDataGenerator.integerInRange(min, max) now includes both <code>min</code> and <code>max</code> within its range (#501)</li>
-<li>Tween no longer copies all the object properties into the <code>_valuesStart</code> object on creation.</li>
-<li>Completely empty Tilemaps can now be created. This allows for dynamic map generation at runtime.</li>
-<li>Keyboard.event now stores the most recent DOM keyboard event.</li>
-<li>Animation.stop has a new parameter: dispatchComplete. If true it'll dispatch an Animation.onComplete event.</li>
-<li>TileSprites now have a physics body property and call it in the pre and post updates. As with all physics bodies it's null by default.</li>
-<li>json is now the default tilemap format when not defined (thanks RyanDansie, #528)</li>
-<li>The Particle Emitter now remembers the frames given to it and resets it when a new particle is emitted.</li>
-<li>Game.focusLoss and focusGain methods and onBlur and onFocus Signals added, allowing for more fine-grained control over game pause vs. focus loss.</li>
-<li>Keyboard.removeKey method added (thanks qdrj, #550)</li>
-<li>Key.event now stores the most recent DOM event that triggered it.</li>
+<li>Updated Device.isConsoleOpen as it no longer works in Chrome. Revised code and documentation accordingly (fix #593)</li>
+<li>Removed State.destroy empty method and replaced with State.shutdown, as that is what the StateManager expects (fix #586)</li>
+<li>P2.removeBody will check if the body is part of the world before removing, this avoids a TypeError from the p2 layer.</li>
+<li>Tilemap.createFromObjects has a new parameter: adjustY, which is true by default. Because Tiled uses a bottom-left coordinate system Phaser used to set the Sprite anchor to 0,1 to compensate. If adjustY is true it now reduces the y value by the object height instead.</li>
+<li>Swapped the order of the _pollGamepads gamepads check, to stop the Chrome 'webkitGamepads is deprecated' error in the console.</li>
+<li>Lots of TypeScript definitions updates (thanks as always to clark for these)</li>
+<li>Removed Device.patchAndroidClearRectBug as it's no longer used internally.</li>
+<li>Math.wrapAngle now supports radians (thanks Cryszon, #597)</li>
+<li>Group.replace will now return the old child, the one that was replaced in the Group.</li>
+<li>Group.destroy has a new parameter: <code>soft</code>. A soft destruction won't remove the Group from its parent or null game references. Default is <code>false</code>.</li>
+<li>InputHandler.validForInput is a new method that checks if the handler and its owner should be considered for Pointer input handling or not.</li>
+<li>ArcadePhysics.Body now checks the ArcadePhysics.World bounds, not the game bounds.</li>
+<li>ArcadePhysics.Body has reverted to the 1.1.3 method of preUpdate, so you can now position sprites with x/y, drag them, etc, regardless of the Body.moves flag (issue #606)</li>
+<li>ArcadePhysics.World now has setBounds and setBoundsToWorld methods, which are called automatically on world resizing.</li>
+<li>ArcadePhysics.Body no longer sets the offset to match the anchor.</li>
+<li>The StateManager is now responsible for clearing down input, timers, tweens, physics, camera and the World display list.</li>
+<li>Removed the use of Int16Array from all Game Objects, swapped for standard Array. Phaser now runs on Android 2.x and IE9 again (fix #590)</li>
+<li>When creating a Sprite (via Group.create or directly) with exists = false and a P2 body, the body is not added to the world.</li>
+<li>Every Input class now checks to see if it has already been started. If so it doesn't add the listeners again unless they have been nulled.</li>
+<li>Lots of fixes to the TypeScript definitions file (thanks as always to clark-stevenson for his tireless work on these)</li>
+<li>Emitters now bring the particle they are about to emit to the top of the Group before doing so. Avoids particles hidden behind others.</li>
+<li>ArcadePhysics.Body.setSize corrected to take the parameters as positive, not negative values.</li>
+<li>ArcadePhysics.World.seperate will now check gravity totals to determine separation order. You can set World.forceX to true to always separate on X first and skip this check.</li>
+<li>TileSprites now emit outOfBounds and enterBounds events accordingly.</li>
+<li>You can now create multiple blank layers in a Tilemap.</li>
 </ul>
-<p>Bug Fixes:</p>
+<p>New Features</p>
 <ul>
-<li>Explicitly paused Timer continues if you un-focus and focus the browser window (thanks georgiee)</li>
-<li>Added TimerEvent.pendingDelete and checks in Timer.update, so that removing an event in a callback no longer throws an exception (thanks georgiee)</li>
-<li>Fixed TypeScript defs on lines 1741-1748 (thanks wombatbuddy)</li>
-<li>Previously if you used Sprite.crop() it would crop all Sprites that shared the same base image. It now takes a local copy of the texture data and crops just that.</li>
-<li>Tilemap had the wrong @method signatures so most were missing from the docs.</li>
-<li>Fixed bug where changing State would cause the camera to not reset if it was following an object.</li>
-<li>Tile had 2 properties (callback and callbackContext) that were never assigned, updated to use the proper names (thanks ratkingsimon)</li>
-<li>Fixed an error that would occur if you used InputHandler.onInputUp and the Sprite destroys itself during the event.</li>
-<li>IE11 didn't populate the Device.ieVersion value. Now extracted from Trident revision, but still use Device.trident instead for IE11+ checks.</li>
-<li>Fixed bug in Math.angleBetween where it was using the coordinates in the wrong order.</li>
-<li>Previously using a Pixel Perfect check didn't work if the Sprite was rotated or had a non-zero anchor point, now works under all conditions + atlas frames.</li>
-<li>If pixelPerfect Input Sprites overlapped each other the pixel check wasn't taken into consieration in the Pointer move method.</li>
-<li>Updated Input.Mouse to use event.button not event.which, so the const reference from input.mouse.button is correct (thanks grimor)</li>
-<li>Text that was fixedToCamera would 'jitter' if the world scrolled. Now works as expected across all fixed objects.</li>
-<li>Fixed a bug where Sound.play wouldn't pick-up the local loop setting if not specified in the parameter.</li>
-<li>Active animations now monitor if the game pauses, and resume normally when the game un-pauses (fixes #179)</li>
-<li>Swapping between tabs will now pause the game correctly on mobile browsers (iOS7+)</li>
-<li>Swapping between tabs will pause and resume tweens correctly, allowing their onComplete events to still fire (fixes #292)</li>
-<li>Fullscreen mode now uses window.outerWidth/Height when using EXACT_FIT as the scale mode, which fixes input coordinate errors (fixes #232)</li>
-<li>Fullscreen mode now works in Internet Explorer and uses the new fullscreen non-prefix call.</li>
-<li>Fixed TilemapParser - would spit out a tileset warning if margin/spacing were set (fix #485, thanks Cybolic)</li>
-<li>AnimationParser.spriteSheet wasn't taking the margin or spacing into account when calculating the numbers of sprites per row/column, nor was it allowing for extra power-of-two padding at the end (fix #482, thanks yig)</li>
-<li>AnimationManager.add documentation said that 'frames' could be null, but the code couldn't handle this so it defaults to an empty array if none given (thanks yig)</li>
-<li>Fixed issue stopping SoundManager.volume from working correctly on a global volume basis (fixes #488)</li>
-<li>Phaser.Timer will no longer create negative ticks during game boot, no matter how small the Timer delay is (fixes #366)</li>
-<li>Phaser.Timer will no longer resume if it was previously paused and the game loses focus and then resumes (fixes #383)</li>
-<li>Tweens now resume correctly if the game pauses (focus loss) while they are paused.</li>
-<li>Tweens don't double pause if they were already paused and the game pauses.</li>
-<li>Buttons are now cleanly destroyed if part of a Group without leaving their InputHandler running.</li>
-<li>You can now safely destroy a Group and the 'destroyChildren' boolean will propogate fully down the display list.</li>
-<li>Calling destroy on an already destroyed object would throw a run-time error. Now checked for and aborted.</li>
-<li>Calling destroy while in an Input Event callback now works for either the parent Group or the calling object itself.</li>
-<li>Loader.replaceInFileList wouldn't over-write the previous entry correctly, which caused the Loader.image overwrite parameter to fail (thanks basoko, fixes #493)</li>
-<li>If the game was set to NO_SCALE and you swapped orientation, it would pause and resize, then fail to resize when you swapped back (thanks starnut, fixes #258)</li>
-<li>Device no longer things a Windows Phone or Windows Tablet are desktop devices (thanks wombatbuddy, fixes #506)</li>
-<li>Sound.onMarkerComplete event is now dispatched when a marker stops. See Sound.onLoop for a looping marker event (thanks registered99, fixes #500)</li>
-<li>Events.onInputUp would be dispatched twice if the Sprite had drag enabled, now only dispatched once (thanks Overbryd, fixes #502)</li>
-<li>You can now load in CSV Tilemaps again and they get created properly (fixes #391)</li>
-<li>Tilemap.putTile can now insert a tile into a null/blank area of the map (before it could only replace existing tiles)</li>
-<li>Tilemap.putTile now correctly re-calculates the collision data based on the new collideIndexes array (fixes #371)</li>
-<li>Circle.circumferencePoint using the asDegrees parameter would apply degToRad instead of radToDeg (thanks Ziriax, fixes #509)</li>
-<li>InputHandler.enableSnap now correctly assigns the snap offset parameters (fixes #515)</li>
-<li>Objects that are 'fixedToCamera' are now still correctly placed even if the camera is scaled (#512)</li>
-<li>Changed the define function calls to use named modules, allows pixi, phaser and p2 to reside in 1 file and still be located by requirejs (thanks brejep, #531)</li>
-<li>Cache.destroy fixed to clear up properly (thanks Dumtard, #537)</li>
+<li>Device.getUserMedia boolean added, useful if you need access to the webcam or microphone.</li>
+<li>Math.removeRandom allows you to remove (and return) a random object from an array.</li>
+<li>ArcadePhysics.World now has a checkCollision object which can be used to toggle collision against the 4 walls of its bounds.</li>
+<li>Sprite.events.onEnterBounds added. This is dispatched if the Sprite leaves the bounds but then returns. The opposite of onOutOfBounds.</li>
+<li>Timer.removeAll will remove and clear down all events, but keeps the Timer running.</li>
+<li>Group.setAllChildren recursively checks if its children are Groups, and if so recursively applies the value to their children as well (feature #589)</li>
+<li>Time.deltaCap lets you set a cap for the delta timer. It defaults to zero (which is disabled). If you use ArcadePhysics it gets set to 0.2, but you can modify as needed.</li>
+<li>ArcadePhysics.Body has a deltaMax object, which allows you to cap the delta applied to the position to +- this value.</li>
+<li>ArcadePhysics.Body now checks the Sprite scale automatically and adjusts the body size accordingly (fix #608)</li>
+<li>Emitter.particleClass can now be set to any object that extends Phaser.Sprite, which will be emitted instead of a regular Sprite.</li>
+<li>There is a brand new PhysicsEditor export script specifically for Phaser (in the resources folder), and new p2 polygon parsing functions thanks to georgiee.</li>
 </ul>
-<p>You can view the Change Log for all previous versions at <a href="https://github.com/photonstorm/phaser/changelog.md">https://github.com/photonstorm/phaser/changelog.md</a></p>
+<p>There is an extensive <a href="https://github.com/photonstorm/phaser/blob/master/resources/Migration%20Guide.md">Migration Guide</a> available for those converting from Phaser 1.x to 2.x. In the guide we detail the API breaking changes and approach to our new physics system.</p>
+<p>The full Change Log is at <a href="https://github.com/photonstorm/phaser/blob/master/changelog.md">https://github.com/photonstorm/phaser/blob/master/changelog.md</a></p>
 <h2>How to Build</h2>
 <p>We provide a fully compiled version of Phaser in the <code>build</code> directory, in both plain and minified formats.</p>
 <p>We also provide a Grunt script that will build Phaser from source along with all the examples.</p>
@@ -716,11 +653,12 @@
 <p><img src="http://www.photonstorm.com/wp-content/uploads/2013/10/phaser_tanks-640x480.png" alt="Tanks"></p>
 <h2>CDNJS</h2>
 <p>Thanks to a community member Phaser is now available on <a href="http://cdnjs.com">CDNJS</a>. You can include the following in your html:</p>
-<p><code>http://cdnjs.cloudflare.com/ajax/libs/phaser/2.0.0/phaser.min.js</code></p>
+<p><code>http://cdnjs.cloudflare.com/ajax/libs/phaser/2.0.1/phaser.min.js</code></p>
 <p>Or if you prefer you can leave the protocol off, so it works via http and https:</p>
-<p><code>//cdnjs.cloudflare.com/ajax/libs/phaser/2.0.0/phaser.min.js</code></p>
+<p><code>//cdnjs.cloudflare.com/ajax/libs/phaser/2.0.1/phaser.min.js</code></p>
 <h2>Requirements</h2>
 <p>Games created with Phaser require a modern web browser that supports the canvas tag. This includes Internet Explorer 9+, Firefox, Chrome, Safari and Opera. It also works on mobile web browsers including stock Android 2.x browser and above and iOS5 Mobile Safari and above.</p>
+<p>If you need to support IE9 or Android 2.x then you must use a build of Phaser that doesn't include P2 physics. You'll find these in the <code>build/custom</code> folder.</p>
 <p>For developing with Phaser you can use either a plain-vanilla JavaScript approach or <a href="https://typescript.codeplex.com/">TypeScript</a> using the provided TypeScript definitions file. We made no assumptions about how you like to code your games, and were careful not to impose any form of class/inheritance/structure upon you.</p>
 <p>Phaser is 576 KB minified (including all 3 physics engines, 311 KB without) and 128 KB gzipped (67 KB without physics libs).</p>
 <h2>Learn By Example</h2>
@@ -838,7 +776,7 @@ Sprites also have full Input support: click them, touch them, drag them around, 
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Fri Mar 14 2014 06:34:18 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Mon Mar 24 2014 12:38:38 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

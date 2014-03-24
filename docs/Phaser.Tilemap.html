@@ -3039,7 +3039,7 @@ A map may have multiple layers. You can perform operations on the map data such 
         <dl>
             
 <dt>
-    <h4 class="name" id="addTilesetImage"><span class="type-signature"></span>addTilesetImage<span class="signature">(tileset, <span class="optional">key</span>, <span class="optional">tileWidth</span>, <span class="optional">tileHeight</span>, <span class="optional">tileMargin</span>, <span class="optional">tileSpacing</span>, <span class="optional">gid</span>)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="addTilesetImage"><span class="type-signature"></span>addTilesetImage<span class="signature">(tileset, <span class="optional">key</span>, <span class="optional">tileWidth</span>, <span class="optional">tileHeight</span>, <span class="optional">tileMargin</span>, <span class="optional">tileSpacing</span>, <span class="optional">gid</span>)</span><span class="type-signature"> &rarr; {<a href="Phaser.Tileset.html">Phaser.Tileset</a>}</span></h4>
     
     
 </dt>
@@ -3185,10 +3185,12 @@ Note that the tileset name can be found in the JSON file exported from Tiled, or
             
                 <td class="default">
                 
+                    32
+                
                 </td>
             
 
-            <td class="description last"><p>The width of the tiles in the Tileset Image. If not given it will default to the map.tileWidth value.</p></td>
+            <td class="description last"><p>The width of the tiles in the Tileset Image. If not given it will default to the map.tileWidth value, if that isn't set then 32.</p></td>
         </tr>
 
 	
@@ -3222,10 +3224,12 @@ Note that the tileset name can be found in the JSON file exported from Tiled, or
             
                 <td class="default">
                 
+                    32
+                
                 </td>
             
 
-            <td class="description last"><p>The height of the tiles in the Tileset Image. If not given it will default to the map.tileHeight value.</p></td>
+            <td class="description last"><p>The height of the tiles in the Tileset Image. If not given it will default to the map.tileHeight value, if that isn't set then 32.</p></td>
         </tr>
 
 	
@@ -3374,7 +3378,7 @@ Note that the tileset name can be found in the JSON file exported from Tiled, or
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-239">line 239</a>
+        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-211">line 211</a>
     </li></ul></dd>
     
 
@@ -3395,6 +3399,29 @@ Note that the tileset name can be found in the JSON file exported from Tiled, or
     
     
     
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>Returns the Tileset object that was created or updated, or null if it failed.</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type"><a href="Phaser.Tileset.html">Phaser.Tileset</a></span>
+
+
+	</dd>
+</dl>
+
+
+        
     
     
 </dd>
@@ -3492,7 +3519,7 @@ Note that the tileset name can be found in the JSON file exported from Tiled, or
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-754">line 754</a>
+        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-827">line 827</a>
     </li></ul></dd>
     
 
@@ -3752,7 +3779,7 @@ Note that the tileset name can be found in the JSON file exported from Tiled, or
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-1057">line 1057</a>
+        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-1135">line 1135</a>
     </li></ul></dd>
     
 
@@ -3803,7 +3830,7 @@ Note that the tileset name can be found in the JSON file exported from Tiled, or
         
             
 <dt>
-    <h4 class="name" id="create"><span class="type-signature"></span>create<span class="signature">(name, width, height, tileWidth, tileHeight)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="create"><span class="type-signature"></span>create<span class="signature">(name, width, height, tileWidth, tileHeight, <span class="optional">group</span>)</span><span class="type-signature"> &rarr; {<a href="Phaser.TilemapLayer.html">Phaser.TilemapLayer</a>}</span></h4>
     
     
 </dt>
@@ -3811,7 +3838,7 @@ Note that the tileset name can be found in the JSON file exported from Tiled, or
     
     
     <div class="description">
-        <p>Creates an empty map of the given dimensions.</p>
+        <p>Creates an empty map of the given dimensions and one blank layer. If layers already exist they are erased.</p>
     </div>
     
 
@@ -3832,6 +3859,8 @@ Note that the tileset name can be found in the JSON file exported from Tiled, or
 
 		<th>Type</th>
 
+		
+		<th>Argument</th>
 		
 
 		
@@ -3858,10 +3887,18 @@ Note that the tileset name can be found in the JSON file exported from Tiled, or
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
 
             
 
-            <td class="description last"><p>The name of the default layer of the map</p></td>
+            <td class="description last"><p>The name of the default layer of the map.</p></td>
         </tr>
 
 	
@@ -3880,6 +3917,14 @@ Note that the tileset name can be found in the JSON file exported from Tiled, or
             
             </td>
 
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
             
 
             
@@ -3904,6 +3949,14 @@ Note that the tileset name can be found in the JSON file exported from Tiled, or
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
 
             
 
@@ -3926,6 +3979,14 @@ Note that the tileset name can be found in the JSON file exported from Tiled, or
             
             </td>
 
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
             
 
             
@@ -3950,10 +4011,51 @@ Note that the tileset name can be found in the JSON file exported from Tiled, or
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
 
             
 
             <td class="description last"><p>The height of the tiles the map uses for calculations.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>group</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Group.html">Phaser.Group</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Optional Group to add the layer to. If not specified it will be added to the World group.</p></td>
         </tr>
 
 	
@@ -4006,6 +4108,29 @@ Note that the tileset name can be found in the JSON file exported from Tiled, or
     
     
     
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>The TilemapLayer object. This is an extension of Phaser.Image and can be moved around the display list accordingly.</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type"><a href="Phaser.TilemapLayer.html">Phaser.TilemapLayer</a></span>
+
+
+	</dd>
+</dl>
+
+
+        
     
     
 </dd>
@@ -4013,7 +4138,7 @@ Note that the tileset name can be found in the JSON file exported from Tiled, or
         
             
 <dt>
-    <h4 class="name" id="createFromObjects"><span class="type-signature"></span>createFromObjects<span class="signature">(name, gid, key, <span class="optional">frame</span>, <span class="optional">exists</span>, <span class="optional">autoCull</span>, <span class="optional">group</span>, <span class="optional">CustomClass</span>)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="createFromObjects"><span class="type-signature"></span>createFromObjects<span class="signature">(name, gid, key, <span class="optional">frame</span>, <span class="optional">exists</span>, <span class="optional">autoCull</span>, <span class="optional">group</span>, <span class="optional">CustomClass</span>, <span class="optional">adjustY</span>)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -4023,7 +4148,7 @@ Note that the tileset name can be found in the JSON file exported from Tiled, or
     <div class="description">
         <p>Creates a Sprite for every object matching the given gid in the map data. You can optionally specify the group that the Sprite will be created in. If none is
 given it will be created in the World. All properties from the map data objectgroup are copied across to the Sprite, so you can use this as an easy way to
-configure Sprite properties from within the map editor. For example giving an object a property if alpha: 0.5 in the map editor will duplicate that when the
+configure Sprite properties from within the map editor. For example giving an object a property of alpha: 0.5 in the map editor will duplicate that when the
 Sprite is created. You could also give it a value like: body.velocity.x: 100 to set it moving automatically.</p>
     </div>
     
@@ -4125,7 +4250,7 @@ Sprite is created. You could also give it a value like: body.velocity.x: 100 to 
                 </td>
             
 
-            <td class="description last"><p>The layer array index value, or if a string is given the layer name, within the map data that this TilemapLayer represents.</p></td>
+            <td class="description last"><p>The layer array index value, or if a string is given the layer name within the map data.</p></td>
         </tr>
 
 	
@@ -4360,6 +4485,45 @@ Sprite is created. You could also give it a value like: body.velocity.x: 100 to 
         </tr>
 
 	
+
+        <tr>
+            
+                <td class="name"><code>adjustY</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
+
+            <td class="description last"><p>By default the Tiled map editor uses a bottom-left coordinate system. Phaser uses top-left. So most objects will appear too low down. This parameter moves them up by their height.</p></td>
+        </tr>
+
+	
 	</tbody>
 </table>
 
@@ -4388,7 +4552,7 @@ Sprite is created. You could also give it a value like: body.velocity.x: 100 to 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-334">line 334</a>
+        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-320">line 320</a>
     </li></ul></dd>
     
 
@@ -4426,7 +4590,8 @@ Sprite is created. You could also give it a value like: body.velocity.x: 100 to 
     <div class="description">
         <p>Creates a new TilemapLayer object. By default TilemapLayers are fixed to the camera.
 The <code>layer</code> parameter is important. If you've created your map in Tiled then you can get this by looking in Tiled and looking at the Layer name.
-Or you can open the JSON file it exports and look at the layers[].name value. Either way it must match.</p>
+Or you can open the JSON file it exports and look at the layers[].name value. Either way it must match.
+If you wish to create a blank layer to put your own tiles on then see Tilemap.createBlankLayer.</p>
     </div>
     
 
@@ -4620,7 +4785,7 @@ Or you can open the JSON file it exports and look at the layers[].name value. Ei
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-388">line 388</a>
+        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-380">line 380</a>
     </li></ul></dd>
     
 
@@ -4646,6 +4811,314 @@ Or you can open the JSON file it exports and look at the layers[].name value. Ei
             
 <div class="param-desc">
     <p>The TilemapLayer object. This is an extension of Phaser.Sprite and can be moved around the display list accordingly.</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type"><a href="Phaser.TilemapLayer.html">Phaser.TilemapLayer</a></span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="createLayer"><span class="type-signature"></span>createLayer<span class="signature">(name, width, height, tileWidth, tileHeight, <span class="optional">group</span>)</span><span class="type-signature"> &rarr; {<a href="Phaser.TilemapLayer.html">Phaser.TilemapLayer</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Creates a new and empty layer on this Tilemap. By default TilemapLayers are fixed to the camera.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The name of this layer. Must be unique within the map.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>width</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The width of the layer in tiles.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>height</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The height of the layer in tiles.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>tileWidth</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The width of the tiles the layer uses for calculations.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>tileHeight</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The height of the tiles the layer uses for calculations.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>group</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Group.html">Phaser.Group</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Optional Group to add the layer to. If not specified it will be added to the World group.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-418">line 418</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>The TilemapLayer object. This is an extension of Phaser.Image and can be moved around the display list accordingly.</p>
 </div>
 
 
@@ -4712,7 +5185,7 @@ Or you can open the JSON file it exports and look at the layers[].name value. Ei
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-1442">line 1442</a>
+        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-1520">line 1520</a>
     </li></ul></dd>
     
 
@@ -4781,7 +5254,7 @@ Or you can open the JSON file it exports and look at the layers[].name value. Ei
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-1401">line 1401</a>
+        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-1479">line 1479</a>
     </li></ul></dd>
     
 
@@ -5072,7 +5545,7 @@ Or you can open the JSON file it exports and look at the layers[].name value. Ei
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-1358">line 1358</a>
+        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-1436">line 1436</a>
     </li></ul></dd>
     
 
@@ -5394,7 +5867,7 @@ Or you can open the JSON file it exports and look at the layers[].name value. Ei
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-1207">line 1207</a>
+        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-1285">line 1285</a>
     </li></ul></dd>
     
 
@@ -5512,7 +5985,7 @@ Or you can open the JSON file it exports and look at the layers[].name value. Ei
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-474">line 474</a>
+        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-547">line 547</a>
     </li></ul></dd>
     
 
@@ -5676,7 +6149,7 @@ Or you can open the JSON file it exports and look at the layers[].name value. Ei
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-425">line 425</a>
+        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-498">line 498</a>
     </li></ul></dd>
     
 
@@ -5823,7 +6296,7 @@ Or you can open the JSON file it exports and look at the layers[].name value. Ei
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-723">line 723</a>
+        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-796">line 796</a>
     </li></ul></dd>
     
 
@@ -5964,7 +6437,7 @@ Or you can open the JSON file it exports and look at the layers[].name value. Ei
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-448">line 448</a>
+        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-521">line 521</a>
     </li></ul></dd>
     
 
@@ -6105,7 +6578,7 @@ Or you can open the JSON file it exports and look at the layers[].name value. Ei
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-487">line 487</a>
+        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-560">line 560</a>
     </li></ul></dd>
     
 
@@ -6326,7 +6799,7 @@ Or you can open the JSON file it exports and look at the layers[].name value. Ei
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-1012">line 1012</a>
+        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-1090">line 1090</a>
     </li></ul></dd>
     
 
@@ -6514,7 +6987,7 @@ Mostly used as an internal function by calculateFaces.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-818">line 818</a>
+        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-891">line 891</a>
     </li></ul></dd>
     
 
@@ -6679,7 +7152,7 @@ Mostly used as an internal function by calculateFaces.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-838">line 838</a>
+        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-911">line 911</a>
     </li></ul></dd>
     
 
@@ -6844,7 +7317,7 @@ Mostly used as an internal function by calculateFaces.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-858">line 858</a>
+        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-931">line 931</a>
     </li></ul></dd>
     
 
@@ -7009,7 +7482,7 @@ Mostly used as an internal function by calculateFaces.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-878">line 878</a>
+        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-951">line 951</a>
     </li></ul></dd>
     
 
@@ -7127,7 +7600,7 @@ Mostly used as an internal function by calculateFaces.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-461">line 461</a>
+        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-534">line 534</a>
     </li></ul></dd>
     
 
@@ -7414,7 +7887,7 @@ Mostly used as an internal function by calculateFaces.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-1032">line 1032</a>
+        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-1110">line 1110</a>
     </li></ul></dd>
     
 
@@ -7607,7 +8080,7 @@ Mostly used as an internal function by calculateFaces.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-915">line 915</a>
+        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-988">line 988</a>
     </li></ul></dd>
     
 
@@ -7859,7 +8332,7 @@ Mostly used as an internal function by calculateFaces.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-1119">line 1119</a>
+        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-1197">line 1197</a>
     </li></ul></dd>
     
 
@@ -7887,7 +8360,7 @@ Mostly used as an internal function by calculateFaces.</p>
         
             
 <dt>
-    <h4 class="name" id="putTile"><span class="type-signature"></span>putTile<span class="signature">(tile, x, y, <span class="optional">layer</span>)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="putTile"><span class="type-signature"></span>putTile<span class="signature">(tile, x, y, <span class="optional">layer</span>)</span><span class="type-signature"> &rarr; {<a href="Phaser.Tile.html">Phaser.Tile</a>}</span></h4>
     
     
 </dt>
@@ -8091,7 +8564,7 @@ Mostly used as an internal function by calculateFaces.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-930">line 930</a>
+        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-1003">line 1003</a>
     </li></ul></dd>
     
 
@@ -8112,6 +8585,29 @@ Mostly used as an internal function by calculateFaces.</p>
     
     
     
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>The Tile object that was created or added to this map.</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type"><a href="Phaser.Tile.html">Phaser.Tile</a></span>
+
+
+	</dd>
+</dl>
+
+
+        
     
     
 </dd>
@@ -8385,7 +8881,7 @@ Mostly used as an internal function by calculateFaces.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-990">line 990</a>
+        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-1068">line 1068</a>
     </li></ul></dd>
     
 
@@ -8645,7 +9141,7 @@ Mostly used as an internal function by calculateFaces.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-1271">line 1271</a>
+        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-1349">line 1349</a>
     </li></ul></dd>
     
 
@@ -8714,7 +9210,7 @@ Mostly used as an internal function by calculateFaces.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-1389">line 1389</a>
+        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-1467">line 1467</a>
     </li></ul></dd>
     
 
@@ -9036,7 +9532,7 @@ Mostly used as an internal function by calculateFaces.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-1236">line 1236</a>
+        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-1314">line 1314</a>
     </li></ul></dd>
     
 
@@ -9256,7 +9752,7 @@ The <code>collides</code> parameter controls if collision will be enabled (true)
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-563">line 563</a>
+        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-636">line 636</a>
     </li></ul></dd>
     
 
@@ -9509,7 +10005,7 @@ The <code>collides</code> parameter controls if collision will be enabled (true)
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-596">line 596</a>
+        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-669">line 669</a>
     </li></ul></dd>
     
 
@@ -9726,7 +10222,7 @@ The <code>collides</code> parameter controls if collision will be enabled (true)
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-628">line 628</a>
+        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-701">line 701</a>
     </li></ul></dd>
     
 
@@ -9976,7 +10472,7 @@ You shouldn't usually call this method directly, instead use setCollision, setCo
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-657">line 657</a>
+        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-730">line 730</a>
     </li></ul></dd>
     
 
@@ -10100,7 +10596,7 @@ You shouldn't usually call this method directly, instead use setCollision, setCo
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-898">line 898</a>
+        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-971">line 971</a>
     </li></ul></dd>
     
 
@@ -10334,7 +10830,7 @@ If you want to set a callback for a tile at a specific location on the map then 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-500">line 500</a>
+        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-573">line 573</a>
     </li></ul></dd>
     
 
@@ -10658,7 +11154,7 @@ If you want to set a callback for a tile at a specific location on the map then 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-531">line 531</a>
+        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-604">line 604</a>
     </li></ul></dd>
     
 
@@ -10799,7 +11295,7 @@ If you want to set a callback for a tile at a specific location on the map then 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-223">line 223</a>
+        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-195">line 195</a>
     </li></ul></dd>
     
 
@@ -11059,7 +11555,7 @@ If you want to set a callback for a tile at a specific location on the map then 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-1316">line 1316</a>
+        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-1394">line 1394</a>
     </li></ul></dd>
     
 
@@ -11381,7 +11877,7 @@ If you want to set a callback for a tile at a specific location on the map then 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-1154">line 1154</a>
+        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-1232">line 1232</a>
     </li></ul></dd>
     
 
@@ -11432,7 +11928,7 @@ If you want to set a callback for a tile at a specific location on the map then 
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Fri Mar 14 2014 06:34:35 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Mon Mar 24 2014 12:38:55 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

@@ -899,7 +899,7 @@ If you wish to work in radians instead of degrees use the property Sprite.rotati
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-397">line 397</a>
+        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-510">line 510</a>
     </li></ul></dd>
     
 
@@ -1002,6 +1002,117 @@ If you wish to work in radians instead of degrees use the property Sprite.rotati
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
         <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-60">line 60</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="autoCull"><span class="type-signature"></span>autoCull<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Should this Sprite be automatically culled if out of range of the camera?
+A culled sprite has its renderable property set to 'false'.
+Be advised this is quite an expensive operation, as it has to calculate the bounds of the object every frame, so only enable it if you really need it.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>autoCull</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>A flag indicating if the Sprite should be automatically camera culled or not.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-109">line 109</a>
     </li></ul></dd>
     
 
@@ -1123,7 +1234,7 @@ If you need a different result then adjust or re-create the Body shape offsets m
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-117">line 117</a>
+        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-136">line 136</a>
     </li></ul></dd>
     
 
@@ -1225,7 +1336,118 @@ If you need a different result then adjust or re-create the Body shape offsets m
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-104">line 104</a>
+        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-123">line 123</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="checkWorldBounds"><span class="type-signature"></span>checkWorldBounds<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>If true the Sprite checks if it is still within the world each frame, when it leaves the world it dispatches Sprite.events.onOutOfBounds
+and optionally kills the sprite (if Sprite.outOfBoundsKill is true). By default this is disabled because the Sprite has to calculate its
+bounds every frame to support it, and not all games need it. Enable it by setting the value to true.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>checkWorldBounds</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-118">line 118</a>
     </li></ul></dd>
     
 
@@ -1435,7 +1657,7 @@ Setting TileSprite.exists to true will re-add the Body to the physics world (if 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-494">line 494</a>
+        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-607">line 607</a>
     </li></ul></dd>
     
 
@@ -1543,7 +1765,7 @@ So if this TileSprite was in a Group that has x: 200, then this will be added to
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-463">line 463</a>
+        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-576">line 576</a>
     </li></ul></dd>
     
 
@@ -1645,7 +1867,7 @@ So if this TileSprite was in a Group that has x: 200, then this will be added to
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-421">line 421</a>
+        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-534">line 534</a>
     </li></ul></dd>
     
 
@@ -1747,7 +1969,7 @@ So if this TileSprite was in a Group that has x: 200, then this will be added to
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-442">line 442</a>
+        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-555">line 555</a>
     </li></ul></dd>
     
 
@@ -2061,7 +2283,7 @@ activated for this object and it will then start to process click/touch events a
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-541">line 541</a>
+        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-654">line 654</a>
     </li></ul></dd>
     
 
@@ -2648,7 +2870,7 @@ A negative y value will scroll up. A positive y value will scroll down.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-219">line 219</a>
+        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-296">line 296</a>
     </li></ul></dd>
     
 
@@ -2787,7 +3009,7 @@ and nulls its reference to game, freeing it up for garbage collection.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-318">line 318</a>
+        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-395">line 395</a>
     </li></ul></dd>
     
 
@@ -2941,7 +3163,7 @@ This causes a WebGL texture update, so use sparingly or in low-intensity portion
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-246">line 246</a>
+        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-323">line 323</a>
     </li></ul></dd>
     
 
@@ -3193,7 +3415,7 @@ If the requested animation is already playing this request will be ignored. If y
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-379">line 379</a>
+        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-456">line 456</a>
     </li></ul></dd>
     
 
@@ -3285,7 +3507,7 @@ If the requested animation is already playing this request will be ignored. If y
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-191">line 191</a>
+        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-268">line 268</a>
     </li></ul></dd>
     
 
@@ -3354,7 +3576,7 @@ If the requested animation is already playing this request will be ignored. If y
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-139">line 139</a>
+        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-158">line 158</a>
     </li></ul></dd>
     
 
@@ -3375,6 +3597,160 @@ If the requested animation is already playing this request will be ignored. If y
     
     
     
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="reset"><span class="type-signature"></span>reset<span class="signature">(x, y)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Resets the TileSprite. This places the TileSprite at the given x/y world coordinates, resets the tilePosition and then
+sets alive, exists, visible and renderable all to true. Also resets the outOfBounds state.
+If the TileSprite has a physics body that too is reset.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>x</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The x coordinate (in world space) to position the Sprite at.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>y</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The y coordinate (in world space) to position the Sprite at.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-474">line 474</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>(Phaser.TileSprite) This instance.</p>
+</div>
+
+
+
+
+        
     
     
 </dd>
@@ -3423,7 +3799,7 @@ If the requested animation is already playing this request will be ignored. If y
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-234">line 234</a>
+        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-311">line 311</a>
     </li></ul></dd>
     
 
@@ -3492,7 +3868,7 @@ If the requested animation is already playing this request will be ignored. If y
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-181">line 181</a>
+        <a href="TileSprite.js.html">gameobjects/TileSprite.js</a>, <a href="TileSprite.js.html#sunlight-1-line-258">line 258</a>
     </li></ul></dd>
     
 
@@ -3543,7 +3919,7 @@ If the requested animation is already playing this request will be ignored. If y
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Fri Mar 14 2014 06:34:36 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Mon Mar 24 2014 12:38:55 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

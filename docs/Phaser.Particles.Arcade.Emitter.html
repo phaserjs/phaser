@@ -913,10 +913,6 @@ at set intervals, and fixes their positions and velocities accorindgly.</p></div
 </dt>
 <dd>
     
-    <div class="description">
-        <p>The emitters alpha value.</p>
-    </div>
-    
     
     
 
@@ -966,16 +962,7 @@ at set intervals, and fixes their positions and velocities accorindgly.</p></div
 
             
 
-            <td class="description last"><p>Gets or sets the alpha value of the Emitter.
-Object.defineProperty(Phaser.Particles.Arcade.Emitter.prototype, &quot;alpha&quot;, {</p>
-<pre><code>get: function () {
-    return this._container.alpha;
-},
-
-set: function (value) {
-    this._container.alpha = value;
-}</code></pre>
-<p>});</p></td>
+            <td class="description last"><p>The alpha value of the Group container.</p></td>
         </tr>
 
 	
@@ -989,6 +976,11 @@ set: function (value) {
 
     
 
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="Phaser.Group.html#alpha">Phaser.Group#alpha</a>
+    </li></dd>
     
 
     
@@ -1004,7 +996,7 @@ set: function (value) {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-535">line 535</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1600">line 1600</a>
     </li></ul></dd>
     
 
@@ -1116,7 +1108,7 @@ This will have no impact on the rotation value of its children, but it will upda
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1489">line 1489</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1541">line 1541</a>
     </li></ul></dd>
     
 
@@ -1221,7 +1213,7 @@ This will have no impact on the rotation value of its children, but it will upda
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-125">line 125</a>
+        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-124">line 124</a>
     </li></ul></dd>
     
 
@@ -1323,7 +1315,7 @@ This will have no impact on the rotation value of its children, but it will upda
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-640">line 640</a>
+        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-602">line 602</a>
     </li></ul></dd>
     
 
@@ -1425,7 +1417,7 @@ This will have no impact on the rotation value of its children, but it will upda
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-142">line 142</a>
+        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-141">line 141</a>
     </li></ul></dd>
     
 
@@ -1752,7 +1744,7 @@ Emitter.emitX and Emitter.emitY control the emission location relative to the x/
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-192">line 192</a>
+        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-191">line 191</a>
     </li></ul></dd>
     
 
@@ -1860,7 +1852,7 @@ Emitter.emitX and Emitter.emitY control the emission location relative to the x/
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-200">line 200</a>
+        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-199">line 199</a>
     </li></ul></dd>
     
 
@@ -1964,7 +1956,7 @@ Emitter.emitX and Emitter.emitY control the emission location relative to the x/
 
     
     <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
+    <dd class="tag-default"><ul class="dummy"><li>enableBody</li></ul></dd>
     
 
     
@@ -2182,7 +2174,7 @@ Emitter.emitX and Emitter.emitY control the emission location relative to the x/
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-184">line 184</a>
+        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-183">line 183</a>
     </li></ul></dd>
     
 
@@ -2295,7 +2287,7 @@ So if this Group was in a Group that has x: 200, then this will be added to the 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1507">line 1507</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1559">line 1559</a>
     </li></ul></dd>
     
 
@@ -2400,7 +2392,7 @@ So if this Group was in a Group that has x: 200, then this will be added to the 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-131">line 131</a>
+        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-130">line 130</a>
     </li></ul></dd>
     
 
@@ -2819,7 +2811,7 @@ So if this Group was in a Group that has x: 200, then this will be added to the 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-601">line 601</a>
+        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-563">line 563</a>
     </li></ul></dd>
     
 
@@ -2926,7 +2918,7 @@ So if this Group was in a Group that has x: 200, then this will be added to the 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1474">line 1474</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1526">line 1526</a>
     </li></ul></dd>
     
 
@@ -3031,7 +3023,7 @@ So if this Group was in a Group that has x: 200, then this will be added to the 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-137">line 137</a>
+        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-136">line 136</a>
     </li></ul></dd>
     
 
@@ -3961,7 +3953,7 @@ So if this Group was in a Group that has x: 200, then this will be added to the 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-178">line 178</a>
+        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-177">line 177</a>
     </li></ul></dd>
     
 
@@ -4034,7 +4026,7 @@ So if this Group was in a Group that has x: 200, then this will be added to the 
 
             
 
-            <td class="description last"><p>For emitting your own particle class types.</p></td>
+            <td class="description last"><p>For emitting your own particle class types. They must extend Phaser.Sprite.</p></td>
         </tr>
 
 	
@@ -4059,9 +4051,6 @@ So if this Group was in a Group that has x: 200, then this will be added to the 
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source:</dt>
@@ -4084,7 +4073,7 @@ So if this Group was in a Group that has x: 200, then this will be added to the 
         
             
 <dt>
-    <h4 class="name" id="particleFriction"><span class="type-signature"></span>particleFriction<span class="type-signature"></span></h4>
+    <h4 class="name" id="particleDrag"><span class="type-signature"></span>particleDrag<span class="type-signature"></span></h4>
     
     
 </dt>
@@ -4123,13 +4112,13 @@ So if this Group was in a Group that has x: 200, then this will be added to the 
 
         <tr>
             
-                <td class="name"><code>particleFriction</code></td>
+                <td class="name"><code>particleDrag</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type"><a href="Phaser.Point.html">Phaser.Point</a></span>
 
 
             
@@ -4139,7 +4128,7 @@ So if this Group was in a Group that has x: 200, then this will be added to the 
 
             
 
-            <td class="description last"><p>The friction component of particles launched from the emitter.</p></td>
+            <td class="description last"><p>The X and Y drag component of particles launched from the emitter.</p></td>
         </tr>
 
 	
@@ -4164,14 +4153,11 @@ So if this Group was in a Group that has x: 200, then this will be added to the 
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>0</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-119">line 119</a>
+        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-118">line 118</a>
     </li></ul></dd>
     
 
@@ -4380,7 +4366,7 @@ So if this Group was in a Group that has x: 200, then this will be added to the 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-614">line 614</a>
+        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-576">line 576</a>
     </li></ul></dd>
     
 
@@ -4492,7 +4478,7 @@ This will have no impact on the rotation value of its children, but it will upda
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1544">line 1544</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1596">line 1596</a>
     </li></ul></dd>
     
 
@@ -4701,7 +4687,7 @@ This will have no impact on the rotation value of its children, but it will upda
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-627">line 627</a>
+        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-589">line 589</a>
     </li></ul></dd>
     
 
@@ -4808,7 +4794,7 @@ This will have no impact on the rotation value of its children, but it will upda
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1459">line 1459</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1511">line 1511</a>
     </li></ul></dd>
     
 
@@ -4934,10 +4920,6 @@ This will have no impact on the rotation value of its children, but it will upda
 </dt>
 <dd>
     
-    <div class="description">
-        <p>The emitter visible state.</p>
-    </div>
-    
     
     
 
@@ -4987,16 +4969,7 @@ This will have no impact on the rotation value of its children, but it will upda
 
             
 
-            <td class="description last"><p>Gets or sets the Emitter visible state.
-Object.defineProperty(Phaser.Particles.Arcade.Emitter.prototype, &quot;visible&quot;, {</p>
-<pre><code>get: function () {
-    return this._container.visible;
-},
-
-set: function (value) {
-    this._container.visible = value;
-}</code></pre>
-<p>});</p></td>
+            <td class="description last"><p>The visible state of the Group. Non-visible Groups and all of their children are not rendered.</p></td>
         </tr>
 
 	
@@ -5010,6 +4983,11 @@ set: function (value) {
 
     
 
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="Phaser.Group.html#visible">Phaser.Group#visible</a>
+    </li></dd>
     
 
     
@@ -5025,7 +5003,7 @@ set: function (value) {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-537">line 537</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1598">line 1598</a>
     </li></ul></dd>
     
 
@@ -5232,7 +5210,7 @@ set: function (value) {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-539">line 539</a>
+        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-531">line 531</a>
     </li></ul></dd>
     
 
@@ -5439,7 +5417,7 @@ set: function (value) {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-585">line 585</a>
+        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-547">line 547</a>
     </li></ul></dd>
     
 
@@ -5997,7 +5975,7 @@ Group.addAll('x', 10) will add 10 to the child.x value.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-705">line 705</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-752">line 752</a>
     </li></ul></dd>
     
 
@@ -6313,7 +6291,7 @@ The child is added to the Group at the location specified by the index value, th
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1088">line 1088</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1135">line 1135</a>
     </li></ul></dd>
     
 
@@ -6434,7 +6412,7 @@ The child is added to the Group at the location specified by the index value, th
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-520">line 520</a>
+        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-516">line 516</a>
     </li></ul></dd>
     
 
@@ -6796,7 +6774,7 @@ After the method parameter and context you can add as many extra parameters as y
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-845">line 845</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-892">line 892</a>
     </li></ul></dd>
     
 
@@ -6994,7 +6972,7 @@ After the existsValue parameter you can add as many parameters as you like, whic
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-769">line 769</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-816">line 816</a>
     </li></ul></dd>
     
 
@@ -7163,7 +7141,7 @@ After the existsValue parameter you can add as many parameters as you like, whic
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-792">line 792</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-839">line 839</a>
     </li></ul></dd>
     
 
@@ -7237,7 +7215,7 @@ After the existsValue parameter you can add as many parameters as you like, whic
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1286">line 1286</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1333">line 1333</a>
     </li></ul></dd>
     
 
@@ -7334,7 +7312,7 @@ After the existsValue parameter you can add as many parameters as you like, whic
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1274">line 1274</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1321">line 1321</a>
     </li></ul></dd>
     
 
@@ -8070,7 +8048,7 @@ and will be positioned at 0, 0 (relative to the Group.x/y)</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1119">line 1119</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1166">line 1166</a>
     </li></ul></dd>
     
 
@@ -8098,7 +8076,7 @@ and will be positioned at 0, 0 (relative to the Group.x/y)</p>
         
             
 <dt>
-    <h4 class="name" id="destroy"><span class="type-signature"></span>destroy<span class="signature">(<span class="optional">destroyChildren</span>)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="destroy"><span class="type-signature"></span>destroy<span class="signature">(<span class="optional">destroyChildren</span>, <span class="optional">soft</span>)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -8180,6 +8158,45 @@ and will be positioned at 0, 0 (relative to the Group.x/y)</p>
         </tr>
 
 	
+
+        <tr>
+            
+                <td class="name"><code>soft</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>A 'soft destroy' (set to true) doesn't remove this Group from its parent or null the game reference. Set to false and it does.</p></td>
+        </tr>
+
+	
 	</tbody>
 </table>
 
@@ -8213,7 +8230,7 @@ and will be positioned at 0, 0 (relative to the Group.x/y)</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1418">line 1418</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1465">line 1465</a>
     </li></ul></dd>
     
 
@@ -8406,7 +8423,7 @@ Group.divideAll('x', 2) will half the child.x value.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-753">line 753</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-800">line 800</a>
     </li></ul></dd>
     
 
@@ -8475,7 +8492,7 @@ Group.divideAll('x', 2) will half the child.x value.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-384">line 384</a>
+        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-378">line 378</a>
     </li></ul></dd>
     
 
@@ -8647,7 +8664,7 @@ Note: Currently this will skip any children which are Groups themselves.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-968">line 968</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1015">line 1015</a>
     </li></ul></dd>
     
 
@@ -8795,7 +8812,7 @@ For example: Group.forEachAlive(causeDamage, this, 500)</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1018">line 1018</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1065">line 1065</a>
     </li></ul></dd>
     
 
@@ -8943,7 +8960,7 @@ For example: Group.forEachDead(bringToLife, this)</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1036">line 1036</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1083">line 1083</a>
     </li></ul></dd>
     
 
@@ -9091,7 +9108,7 @@ For example: Group.forEachExists(causeDamage, this, 500)</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1000">line 1000</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1047">line 1047</a>
     </li></ul></dd>
     
 
@@ -9311,7 +9328,7 @@ For example: Group.forEachExists(causeDamage, this, 500)</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1259">line 1259</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1306">line 1306</a>
     </li></ul></dd>
     
 
@@ -9409,7 +9426,7 @@ This is handy for checking if everything has been wiped out, or choosing a squad
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1218">line 1218</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1265">line 1265</a>
     </li></ul></dd>
     
 
@@ -9507,7 +9524,7 @@ This is handy for checking if everything has been wiped out, or choosing a squad
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1231">line 1231</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1278">line 1278</a>
     </li></ul></dd>
     
 
@@ -9653,7 +9670,7 @@ This is handy for checking if everything has been wiped out, or choosing a squad
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1200">line 1200</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1247">line 1247</a>
     </li></ul></dd>
     
 
@@ -9968,7 +9985,7 @@ This is handy for checking if everything has been wiped out, or choosing a squad
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1298">line 1298</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1345">line 1345</a>
     </li></ul></dd>
     
 
@@ -10065,7 +10082,7 @@ This is handy for checking if everything has been wiped out, or choosing a squad
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1244">line 1244</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1291">line 1291</a>
     </li></ul></dd>
     
 
@@ -10375,7 +10392,7 @@ You can add as many callback parameters as you like, which will all be passed to
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1143">line 1143</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1190">line 1190</a>
     </li></ul></dd>
     
 
@@ -10467,7 +10484,7 @@ You can add as many callback parameters as you like, which will all be passed to
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-323">line 323</a>
+        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-317">line 317</a>
     </li></ul></dd>
     
 
@@ -10755,7 +10772,7 @@ You can add as many callback parameters as you like, which will all be passed to
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-251">line 251</a>
+        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-250">line 250</a>
     </li></ul></dd>
     
 
@@ -11263,7 +11280,7 @@ Group.multiplyAll('x', 2) will x2 the child.x value.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-737">line 737</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-784">line 784</a>
     </li></ul></dd>
     
 
@@ -11411,7 +11428,7 @@ Group.multiplyAll('x', 2) will x2 the child.x value.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-945">line 945</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-992">line 992</a>
     </li></ul></dd>
     
 
@@ -11485,7 +11502,7 @@ Group.multiplyAll('x', 2) will x2 the child.x value.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-905">line 905</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-952">line 952</a>
     </li></ul></dd>
     
 
@@ -11682,7 +11699,7 @@ Group.multiplyAll('x', 2) will x2 the child.x value.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1320">line 1320</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1367">line 1367</a>
     </li></ul></dd>
     
 
@@ -11780,7 +11797,7 @@ The Group container remains on the display list.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1352">line 1352</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1399">line 1399</a>
     </li></ul></dd>
     
 
@@ -11926,7 +11943,7 @@ The Group container remains on the display list.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1380">line 1380</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1427">line 1427</a>
     </li></ul></dd>
     
 
@@ -11954,7 +11971,7 @@ The Group container remains on the display list.</p>
         
             
 <dt>
-    <h4 class="name" id="replace"><span class="type-signature"></span>replace<span class="signature">(oldChild, newChild)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="replace"><span class="type-signature"></span>replace<span class="signature">(oldChild, newChild)</span><span class="type-signature"> &rarr; {*}</span></h4>
     
     
 </dt>
@@ -12093,6 +12110,29 @@ The Group container remains on the display list.</p>
     
     
     
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>Returns the oldChild that was replaced within this Group.</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">*</span>
+
+
+	</dd>
+</dl>
+
+
+        
     
     
 </dd>
@@ -12215,7 +12255,7 @@ The Group container remains on the display list.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-335">line 335</a>
+        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-329">line 329</a>
     </li></ul></dd>
     
 
@@ -12688,7 +12728,7 @@ The operation parameter controls how the new value is assigned to the property, 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-649">line 649</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-654">line 654</a>
     </li></ul></dd>
     
 
@@ -12725,7 +12765,9 @@ The operation parameter controls how the new value is assigned to the property, 
     
     <div class="description">
         <p>This function allows you to quickly set the same property across all children of this Group to a new value.
-The operation parameter controls how the new value is assigned to the property, from simple replacement to addition and multiplication.</p>
+This call doesn't descend down children, so if you have a Group inside of this Group, the property will be set on the Group but not its children.
+If you need that ability please see <code>Group.setAllChildren</code>.</p>
+<p>The operation parameter controls how the new value is assigned to the property, from simple replacement to addition and multiplication.</p>
     </div>
     
 
@@ -12865,7 +12907,7 @@ The operation parameter controls how the new value is assigned to the property, 
                 </td>
             
 
-            <td class="description last"><p>If set then only children with alive=true will be updated.</p></td>
+            <td class="description last"><p>If set then only children with alive=true will be updated. This includes any Groups that are children.</p></td>
         </tr>
 
 	
@@ -12904,7 +12946,7 @@ The operation parameter controls how the new value is assigned to the property, 
                 </td>
             
 
-            <td class="description last"><p>If set then only children with visible=true will be updated.</p></td>
+            <td class="description last"><p>If set then only children with visible=true will be updated. This includes any Groups that are children.</p></td>
         </tr>
 
 	
@@ -12980,7 +13022,301 @@ The operation parameter controls how the new value is assigned to the property, 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-675">line 675</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-680">line 680</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="setAllChildren"><span class="type-signature"></span>setAllChildren<span class="signature">(key, value, <span class="optional">checkAlive</span>, <span class="optional">checkVisible</span>, <span class="optional">operation</span>)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>This function allows you to quickly set the same property across all children of this Group, and any child Groups, to a new value.</p>
+<p>If this Group contains other Groups then the same property is set across their children as well, iterating down until it reaches the bottom.
+Unlike with Group.setAll the property is NOT set on child Groups itself.</p>
+<p>The operation parameter controls how the new value is assigned to the property, from simple replacement to addition and multiplication.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+		<th>Default</th>
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>key</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The property, as a string, to be set. For example: 'body.velocity.x'</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>value</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">*</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The value that will be set.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>checkAlive</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>If set then only children with alive=true will be updated. This includes any Groups that are children.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>checkVisible</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>If set then only children with visible=true will be updated. This includes any Groups that are children.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>operation</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
+            
+
+            <td class="description last"><p>Controls how the value is assigned. A value of 0 replaces the value with the new one. A value of 1 adds it, 2 subtracts it, 3 multiplies it and 4 divides it.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="Phaser.Group.html#setAllChildren">Phaser.Group#setAllChildren</a>
+    </li></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-713">line 713</a>
     </li></ul></dd>
     
 
@@ -13228,7 +13564,7 @@ The operation parameter controls how the new value is assigned to the property, 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-589">line 589</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-594">line 594</a>
     </li></ul></dd>
     
 
@@ -13405,7 +13741,7 @@ The operation parameter controls how the new value is assigned to the property, 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-504">line 504</a>
+        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-500">line 500</a>
     </li></ul></dd>
     
 
@@ -13546,7 +13882,7 @@ The operation parameter controls how the new value is assigned to the property, 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-459">line 459</a>
+        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-455">line 455</a>
     </li></ul></dd>
     
 
@@ -13723,7 +14059,7 @@ The operation parameter controls how the new value is assigned to the property, 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-472">line 472</a>
+        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-468">line 468</a>
     </li></ul></dd>
     
 
@@ -13900,7 +14236,7 @@ The operation parameter controls how the new value is assigned to the property, 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-488">line 488</a>
+        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-484">line 484</a>
     </li></ul></dd>
     
 
@@ -14083,7 +14419,7 @@ For example to depth sort Sprites for Zelda-style game you might call <code>grou
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1054">line 1054</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1101">line 1101</a>
     </li></ul></dd>
     
 
@@ -14338,7 +14674,7 @@ For example to depth sort Sprites for Zelda-style game you might call <code>grou
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-346">line 346</a>
+        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-340">line 340</a>
     </li></ul></dd>
     
 
@@ -14531,7 +14867,7 @@ Group.subAll('x', 10) will minus 10 from the child.x value.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-721">line 721</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-768">line 768</a>
     </li></ul></dd>
     
 
@@ -14747,7 +15083,7 @@ You cannot swap a child with itself, or swap un-parented children, doing so will
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-207">line 207</a>
+        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-206">line 206</a>
     </li></ul></dd>
     
 
@@ -15041,7 +15377,7 @@ You cannot swap a child with itself, or swap un-parented children, doing so will
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Fri Mar 14 2014 06:34:27 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Mon Mar 24 2014 12:38:47 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>
