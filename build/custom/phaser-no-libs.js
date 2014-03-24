@@ -7,7 +7,7 @@
 *
 * Phaser - http://www.phaser.io
 *
-* v2.0.1 "Lyrelle" - Built: Mon Mar 24 2014 00:29:14
+* v2.0.1 "Lyrelle" - Built: Mon Mar 24 2014 01:37:07
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -35589,7 +35589,7 @@ Phaser.Physics.Arcade.prototype = {
             sprite.body.position.y - sprite.body.tilePadding.y, 
             sprite.body.width + sprite.body.tilePadding.x, 
             sprite.body.height + sprite.body.tilePadding.y, 
-            true, true);
+            false, false);
 
         if (this._mapData.length === 0)
         {
@@ -35991,31 +35991,24 @@ Phaser.Physics.Arcade.prototype = {
         }
 
         //  They overlap. Any custom callbacks?
-        /*
-        if (tile.collisionCallback || tile.layer.callbacks[tile.index])
-        {
-            //  A local callback takes priority over a global callback.
-            if (tile.collisionCallbackk && tile.collisionCallback.call(tile.collisionCallbackContext, body.sprite, tile) === false)
-            {
-                //  Is there a tile specific collision callback? If it returns true then we can carry on, otherwise we should abort.
-                return false;
-            }
-            else if (tile.layer.callbacks[tile.index] && tile.layer.callbacks[tile.index].callback.call(tile.layer.callbacks[tile.index].callbackContext, body.sprite, tile) === false)
-            {
-                //  Is there a tile index collision callback? If it returns true then we can carry on, otherwise we should abort.
-                return false;
-            }
-        }
-        */
 
-        if (tile.collisionCallback)
+        //  A local callback always takes priority over a layer level callback
+        if (tile.collisionCallback && !tile.collisionCallback.call(tile.collisionCallbackContext, body.sprite, tile))
         {
-            //  A local callback takes priority over a global callback.
-            if (tile.collisionCallbackk && tile.collisionCallback.call(tile.collisionCallbackContext, body.sprite, tile) === false)
-            {
-                //  Is there a tile specific collision callback? If it returns true then we can carry on, otherwise we should abort.
-                return false;
-            }
+            //  If it returns true then we can carry on, otherwise we should abort.
+            return false;
+        }
+        else if (tile.layer.callbacks[tile.index] && !tile.layer.callbacks[tile.index].callback.call(tile.layer.callbacks[tile.index].callbackContext, body.sprite, tile))
+        {
+            //  If it returns true then we can carry on, otherwise we should abort.
+            return false;
+        }
+
+        //  We don't need to go any further if this tile doesn't actually separate
+        if (!tile.faceLeft && !tile.faceRight && !tile.faceTop && !tile.faceBottom)
+        {
+            //   This could happen if the tile was meant to be collided with re: a callback, but otherwise isn't needed for separation
+            return false;
         }
 
         var ox = 0;
@@ -39066,7 +39059,7 @@ Phaser.Tilemap.prototype = {
         if (typeof indexes === 'number')
         {
             //  This may seem a bit wasteful, because it will cause empty array elements to be created, but the look-up cost is much
-            //  less than having to iterate through the callbacks array hunting down tile indexes each time, so I'll take the small memory hit.
+            //  less than having to iterate through the callbacks array hunting down tile indexes each frame, so I'll take the small memory hit.
             this.layers[layer].callbacks[indexes] = { callback: callback, callbackContext: callbackContext };
         }
         else
@@ -40171,10 +40164,10 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
     this.rayStepRate = 4;
 
     /**
-    * @property {array} _results - Local render loop var to help avoid gc spikes.
+    * @property {object} _mc - Local map data and calculation cache.
     * @private 
     */
-    this.cache = {
+    this._mc = {
 
         cw: tilemap.tileWidth,
         ch: tilemap.tileHeight,
@@ -40278,7 +40271,7 @@ Phaser.TilemapLayer.prototype._fixX = function(x) {
         return x;
     }
 
-    return this.cache.x + (x - (this.cache.x / this.scrollFactorX));
+    return this._mc.x + (x - (this._mc.x / this.scrollFactorX));
 
 }
 
@@ -40298,7 +40291,7 @@ Phaser.TilemapLayer.prototype._unfixX = function(x) {
         return x;
     }
 
-    return (this.cache.x / this.scrollFactorX) + (x - this.cache.x);
+    return (this._mc.x / this.scrollFactorX) + (x - this._mc.x);
 
 }
 
@@ -40323,7 +40316,7 @@ Phaser.TilemapLayer.prototype._fixY = function(y) {
         return y;
     }
 
-    return this.cache.y + (y - (this.cache.y / this.scrollFactorY));
+    return this._mc.y + (y - (this._mc.y / this.scrollFactorY));
 
 }
 
@@ -40343,7 +40336,7 @@ Phaser.TilemapLayer.prototype._unfixY = function(y) {
         return y;
     }
 
-    return (this.cache.y / this.scrollFactorY) + (y - this.cache.y);
+    return (this._mc.y / this.scrollFactorY) + (y - this._mc.y);
 
 }
 
@@ -40474,17 +40467,17 @@ Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides
     }
 
     //  Convert the pixel values into tile coordinates
-    this.cache.tx = this.game.math.snapToFloor(x, this.cache.cw) / this.cache.cw;
-    this.cache.ty = this.game.math.snapToFloor(y, this.cache.ch) / this.cache.ch;
-    this.cache.tw = (this.game.math.snapToCeil(width, this.cache.cw) + this.cache.cw) / this.cache.cw;
-    this.cache.th = (this.game.math.snapToCeil(height, this.cache.ch) + this.cache.ch) / this.cache.ch;
+    this._mc.tx = this.game.math.snapToFloor(x, this._mc.cw) / this._mc.cw;
+    this._mc.ty = this.game.math.snapToFloor(y, this._mc.ch) / this._mc.ch;
+    this._mc.tw = (this.game.math.snapToCeil(width, this._mc.cw) + this._mc.cw) / this._mc.cw;
+    this._mc.th = (this.game.math.snapToCeil(height, this._mc.ch) + this._mc.ch) / this._mc.ch;
 
     //  This should apply the layer x/y here
     this._results.length = 0;
 
-    for (var wy = this.cache.ty; wy < this.cache.ty + this.cache.th; wy++)
+    for (var wy = this._mc.ty; wy < this._mc.ty + this._mc.th; wy++)
     {
-        for (var wx = this.cache.tx; wx < this.cache.tx + this.cache.tw; wx++)
+        for (var wx = this._mc.tx; wx < this._mc.tx + this._mc.tw; wx++)
         {
             if (this.layer.data[wy] && this.layer.data[wy][wx])
             {
@@ -40507,19 +40500,19 @@ Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides
 */
 Phaser.TilemapLayer.prototype.updateMax = function () {
 
-    this.cache.maxX = this.game.math.ceil(this.canvas.width / this.map.tileWidth) + 1;
-    this.cache.maxY = this.game.math.ceil(this.canvas.height / this.map.tileHeight) + 1;
+    this._mc.maxX = this.game.math.ceil(this.canvas.width / this.map.tileWidth) + 1;
+    this._mc.maxY = this.game.math.ceil(this.canvas.height / this.map.tileHeight) + 1;
 
     if (this.layer)
     {
-        if (this.cache.maxX > this.layer.width)
+        if (this._mc.maxX > this.layer.width)
         {
-            this.cache.maxX = this.layer.width;
+            this._mc.maxX = this.layer.width;
         }
 
-        if (this.cache.maxY > this.layer.height)
+        if (this._mc.maxY > this.layer.height)
         {
-            this.cache.maxY = this.layer.height;
+            this._mc.maxY = this.layer.height;
         }
     }
 
@@ -40544,14 +40537,14 @@ Phaser.TilemapLayer.prototype.render = function () {
         return;
     }
 
-    this.cache.prevX = this.cache.dx;
-    this.cache.prevY = this.cache.dy;
+    this._mc.prevX = this._mc.dx;
+    this._mc.prevY = this._mc.dy;
 
-    this.cache.dx = -(this.cache.x - (this.cache.startX * this.map.tileWidth));
-    this.cache.dy = -(this.cache.y - (this.cache.startY * this.map.tileHeight));
+    this._mc.dx = -(this._mc.x - (this._mc.startX * this.map.tileWidth));
+    this._mc.dy = -(this._mc.y - (this._mc.startY * this.map.tileHeight));
 
-    this.cache.tx = this.cache.dx;
-    this.cache.ty = this.cache.dy;
+    this._mc.tx = this._mc.dx;
+    this._mc.ty = this._mc.dy;
 
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
@@ -40565,11 +40558,11 @@ Phaser.TilemapLayer.prototype.render = function () {
         this.context.globalAlpha = this.debugAlpha;
     }
 
-    for (var y = this.cache.startY, lenY = this.cache.startY + this.cache.maxY; y < lenY; y++)
+    for (var y = this._mc.startY, lenY = this._mc.startY + this._mc.maxY; y < lenY; y++)
     {
         this._column = this.layer.data[y];
 
-        for (var x = this.cache.startX, lenX = this.cache.startX + this.cache.maxX; x < lenX; x++)
+        for (var x = this._mc.startX, lenX = this._mc.startX + this._mc.maxX; x < lenX; x++)
         {
             if (this._column[x])
             {
@@ -40582,21 +40575,21 @@ Phaser.TilemapLayer.prototype.render = function () {
                     this.context.globalAlpha = tile.alpha;
                 }
 
-                set.draw(this.context, Math.floor(this.cache.tx), Math.floor(this.cache.ty), tile.index);
+                set.draw(this.context, Math.floor(this._mc.tx), Math.floor(this._mc.ty), tile.index);
 
                 if (tile.debug)
                 {
                     this.context.fillStyle = 'rgba(0, 255, 0, 0.4)';
-                    this.context.fillRect(Math.floor(this.cache.tx), Math.floor(this.cache.ty), this.map.tileWidth, this.map.tileHeight);
+                    this.context.fillRect(Math.floor(this._mc.tx), Math.floor(this._mc.ty), this.map.tileWidth, this.map.tileHeight);
                 }
             }
 
-            this.cache.tx += this.map.tileWidth;
+            this._mc.tx += this.map.tileWidth;
 
         }
 
-        this.cache.tx = this.cache.dx;
-        this.cache.ty += this.map.tileHeight;
+        this._mc.tx = this._mc.dx;
+        this._mc.ty += this.map.tileHeight;
 
     }
 
@@ -40626,64 +40619,64 @@ Phaser.TilemapLayer.prototype.render = function () {
 */
 Phaser.TilemapLayer.prototype.renderDebug = function () {
 
-    this.cache.tx = this.cache.dx;
-    this.cache.ty = this.cache.dy;
+    this._mc.tx = this._mc.dx;
+    this._mc.ty = this._mc.dy;
 
     this.context.strokeStyle = this.debugColor;
     this.context.fillStyle = this.debugFillColor;
 
-    for (var y = this.cache.startY, lenY = this.cache.startY + this.cache.maxY; y < lenY; y++)
+    for (var y = this._mc.startY, lenY = this._mc.startY + this._mc.maxY; y < lenY; y++)
     {
         this._column = this.layer.data[y];
 
-        for (var x = this.cache.startX, lenX = this.cache.startX + this.cache.maxX; x < lenX; x++)
+        for (var x = this._mc.startX, lenX = this._mc.startX + this._mc.maxX; x < lenX; x++)
         {
             var tile = this._column[x];
 
             if (tile && (tile.faceTop || tile.faceBottom || tile.faceLeft || tile.faceRight))
             {
-                this.cache.tx = Math.floor(this.cache.tx);
+                this._mc.tx = Math.floor(this._mc.tx);
 
                 if (this.debugFill)
                 {
-                    this.context.fillRect(this.cache.tx, this.cache.ty, this.cache.cw, this.cache.ch);
+                    this.context.fillRect(this._mc.tx, this._mc.ty, this._mc.cw, this._mc.ch);
                 }
 
                 this.context.beginPath();
 
                 if (tile.faceTop)
                 {
-                    this.context.moveTo(this.cache.tx, this.cache.ty);
-                    this.context.lineTo(this.cache.tx + this.cache.cw, this.cache.ty);
+                    this.context.moveTo(this._mc.tx, this._mc.ty);
+                    this.context.lineTo(this._mc.tx + this._mc.cw, this._mc.ty);
                 }
 
                 if (tile.faceBottom)
                 {
-                    this.context.moveTo(this.cache.tx, this.cache.ty + this.cache.ch);
-                    this.context.lineTo(this.cache.tx + this.cache.cw, this.cache.ty + this.cache.ch);
+                    this.context.moveTo(this._mc.tx, this._mc.ty + this._mc.ch);
+                    this.context.lineTo(this._mc.tx + this._mc.cw, this._mc.ty + this._mc.ch);
                 }
 
                 if (tile.faceLeft)
                 {
-                    this.context.moveTo(this.cache.tx, this.cache.ty);
-                    this.context.lineTo(this.cache.tx, this.cache.ty + this.cache.ch);
+                    this.context.moveTo(this._mc.tx, this._mc.ty);
+                    this.context.lineTo(this._mc.tx, this._mc.ty + this._mc.ch);
                 }
 
                 if (tile.faceRight)
                 {
-                    this.context.moveTo(this.cache.tx + this.cache.cw, this.cache.ty);
-                    this.context.lineTo(this.cache.tx + this.cache.cw, this.cache.ty + this.cache.ch);
+                    this.context.moveTo(this._mc.tx + this._mc.cw, this._mc.ty);
+                    this.context.lineTo(this._mc.tx + this._mc.cw, this._mc.ty + this._mc.ch);
                 }
 
                 this.context.stroke();
             }
 
-            this.cache.tx += this.map.tileWidth;
+            this._mc.tx += this.map.tileWidth;
 
         }
 
-        this.cache.tx = this.cache.dx;
-        this.cache.ty += this.map.tileHeight;
+        this._mc.tx = this._mc.dx;
+        this._mc.ty += this.map.tileHeight;
 
     }
 
@@ -40696,30 +40689,30 @@ Phaser.TilemapLayer.prototype.renderDebug = function () {
 Object.defineProperty(Phaser.TilemapLayer.prototype, "scrollX", {
     
     get: function () {
-        return this.cache.x;
+        return this._mc.x;
     },
 
     set: function (value) {
 
-        if (value !== this.cache.x && value >= 0 && this.layer.widthInPixels > this.width)
+        if (value !== this._mc.x && value >= 0 && this.layer.widthInPixels > this.width)
         {
-            this.cache.x = value;
+            this._mc.x = value;
     
-            if (this.cache.x > (this.layer.widthInPixels - this.width))
+            if (this._mc.x > (this.layer.widthInPixels - this.width))
             {
-                this.cache.x = this.layer.widthInPixels - this.width;
+                this._mc.x = this.layer.widthInPixels - this.width;
             }
 
-            this.cache.startX = this.game.math.floor(this.cache.x / this.map.tileWidth);
+            this._mc.startX = this.game.math.floor(this._mc.x / this.map.tileWidth);
 
-            if (this.cache.startX < 0)
+            if (this._mc.startX < 0)
             {
-                this.cache.startX = 0;
+                this._mc.startX = 0;
             }
 
-            if (this.cache.startX + this.cache.maxX > this.layer.width)
+            if (this._mc.startX + this._mc.maxX > this.layer.width)
             {
-                this.cache.startX = this.layer.width - this.cache.maxX;
+                this._mc.startX = this.layer.width - this._mc.maxX;
             }
 
             this.dirty = true;
@@ -40736,30 +40729,30 @@ Object.defineProperty(Phaser.TilemapLayer.prototype, "scrollX", {
 Object.defineProperty(Phaser.TilemapLayer.prototype, "scrollY", {
     
     get: function () {
-        return this.cache.y;
+        return this._mc.y;
     },
 
     set: function (value) {
 
-        if (value !== this.cache.y && value >= 0 && this.layer.heightInPixels > this.height)
+        if (value !== this._mc.y && value >= 0 && this.layer.heightInPixels > this.height)
         {
-            this.cache.y = value;
+            this._mc.y = value;
 
-            if (this.cache.y > (this.layer.heightInPixels - this.height))
+            if (this._mc.y > (this.layer.heightInPixels - this.height))
             {
-                this.cache.y = this.layer.heightInPixels - this.height;
+                this._mc.y = this.layer.heightInPixels - this.height;
             }
 
-            this.cache.startY = this.game.math.floor(this.cache.y / this.map.tileHeight);
+            this._mc.startY = this.game.math.floor(this._mc.y / this.map.tileHeight);
 
-            if (this.cache.startY < 0)
+            if (this._mc.startY < 0)
             {
-                this.cache.startY = 0;
+                this._mc.startY = 0;
             }
 
-            if (this.cache.startY + this.cache.maxY > this.layer.height)
+            if (this._mc.startY + this._mc.maxY > this.layer.height)
             {
-                this.cache.startY = this.layer.height - this.cache.maxY;
+                this._mc.startY = this.layer.height - this._mc.maxY;
             }
 
             this.dirty = true;
@@ -40776,12 +40769,12 @@ Object.defineProperty(Phaser.TilemapLayer.prototype, "scrollY", {
 Object.defineProperty(Phaser.TilemapLayer.prototype, "collisionWidth", {
     
     get: function () {
-        return this.cache.cw;
+        return this._mc.cw;
     },
 
     set: function (value) {
 
-        this.cache.cw = value;
+        this._mc.cw = value;
 
         this.dirty = true;
 
@@ -40796,12 +40789,12 @@ Object.defineProperty(Phaser.TilemapLayer.prototype, "collisionWidth", {
 Object.defineProperty(Phaser.TilemapLayer.prototype, "collisionHeight", {
     
     get: function () {
-        return this.cache.ch;
+        return this._mc.ch;
     },
 
     set: function (value) {
 
-        this.cache.ch = value;
+        this._mc.ch = value;
 
         this.dirty = true;
 

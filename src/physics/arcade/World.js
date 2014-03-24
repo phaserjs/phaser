@@ -655,7 +655,7 @@ Phaser.Physics.Arcade.prototype = {
             sprite.body.position.y - sprite.body.tilePadding.y, 
             sprite.body.width + sprite.body.tilePadding.x, 
             sprite.body.height + sprite.body.tilePadding.y, 
-            true, true);
+            false, false);
 
         if (this._mapData.length === 0)
         {
@@ -1057,31 +1057,24 @@ Phaser.Physics.Arcade.prototype = {
         }
 
         //  They overlap. Any custom callbacks?
-        /*
-        if (tile.collisionCallback || tile.layer.callbacks[tile.index])
-        {
-            //  A local callback takes priority over a global callback.
-            if (tile.collisionCallbackk && tile.collisionCallback.call(tile.collisionCallbackContext, body.sprite, tile) === false)
-            {
-                //  Is there a tile specific collision callback? If it returns true then we can carry on, otherwise we should abort.
-                return false;
-            }
-            else if (tile.layer.callbacks[tile.index] && tile.layer.callbacks[tile.index].callback.call(tile.layer.callbacks[tile.index].callbackContext, body.sprite, tile) === false)
-            {
-                //  Is there a tile index collision callback? If it returns true then we can carry on, otherwise we should abort.
-                return false;
-            }
-        }
-        */
 
-        if (tile.collisionCallback)
+        //  A local callback always takes priority over a layer level callback
+        if (tile.collisionCallback && !tile.collisionCallback.call(tile.collisionCallbackContext, body.sprite, tile))
         {
-            //  A local callback takes priority over a global callback.
-            if (tile.collisionCallbackk && tile.collisionCallback.call(tile.collisionCallbackContext, body.sprite, tile) === false)
-            {
-                //  Is there a tile specific collision callback? If it returns true then we can carry on, otherwise we should abort.
-                return false;
-            }
+            //  If it returns true then we can carry on, otherwise we should abort.
+            return false;
+        }
+        else if (tile.layer.callbacks[tile.index] && !tile.layer.callbacks[tile.index].callback.call(tile.layer.callbacks[tile.index].callbackContext, body.sprite, tile))
+        {
+            //  If it returns true then we can carry on, otherwise we should abort.
+            return false;
+        }
+
+        //  We don't need to go any further if this tile doesn't actually separate
+        if (!tile.faceLeft && !tile.faceRight && !tile.faceTop && !tile.faceBottom)
+        {
+            //   This could happen if the tile was meant to be collided with re: a callback, but otherwise isn't needed for separation
+            return false;
         }
 
         var ox = 0;
