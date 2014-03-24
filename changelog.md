@@ -39,6 +39,7 @@ Bug Fixes
 * BitmapDatas when used as Game Object textures in WebGL now update themselves properly.
 * Timer.ms now correctly reports the ms time even if the Timer has been paused (thanks Nambew, fix #624)
 * If you added a Tileset to an empty map it would eventually throw an out of memory error.
+* Timer objects incorrectly set the first tick value on events if you added the events prior to starting them.
 
 
 Updated

@@ -7,7 +7,7 @@
 *
 * Phaser - http://www.phaser.io
 *
-* v2.0.1 "Lyrelle" - Built: Mon Mar 24 2014 02:25:16
+* v2.0.1 "Lyrelle" - Built: Mon Mar 24 2014 12:12:46
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -27255,8 +27255,19 @@ Phaser.Timer.prototype = {
     */
     start: function () {
 
+        if (this.running)
+        {
+            return;
+        }
+
         this._started = this.game.time.now;
+
         this.running = true;
+
+        for (var i = 0; i < this.events.length; i++)
+        {
+            this.events[i].tick = this.events[i].delay + this._started;
+        }
 
     },
 

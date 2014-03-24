@@ -234,8 +234,19 @@ Phaser.Timer.prototype = {
     */
     start: function () {
 
+        if (this.running)
+        {
+            return;
+        }
+
         this._started = this.game.time.now;
+
         this.running = true;
+
+        for (var i = 0; i < this.events.length; i++)
+        {
+            this.events[i].tick = this.events[i].delay + this._started;
+        }
 
     },
 
