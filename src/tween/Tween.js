@@ -349,7 +349,7 @@ Phaser.Tween.prototype = {
 
         //  Simulate the tween. We will run for frameRate * (this._duration / 1000) (ms)
         var time = 0;
-        var total = frameRate * (this._duration / 1000);
+        var total = Math.floor(frameRate * (this._duration / 1000));
         var tick = this._duration / total;
 
         var output = [];
