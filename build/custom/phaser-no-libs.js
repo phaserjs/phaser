@@ -7,7 +7,7 @@
 *
 * Phaser - http://www.phaser.io
 *
-* v2.0.1 "Lyrelle" - Built: Mon Mar 24 2014 12:12:46
+* v2.0.2 "Ghealdan" - Built: Tue Mar 25 2014 05:24:26
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -49,7 +49,7 @@
 var Phaser = Phaser || {
 
 	VERSION: '<%= version %>',
-	DEV_VERSION: '2.0.1',
+	DEV_VERSION: '2.0.2',
 	GAMES: [],
 
 	AUTO: 0,
@@ -25686,7 +25686,7 @@ Phaser.Tween.prototype = {
 
         //  Simulate the tween. We will run for frameRate * (this._duration / 1000) (ms)
         var time = 0;
-        var total = frameRate * (this._duration / 1000);
+        var total = Math.floor(frameRate * (this._duration / 1000));
         var tick = this._duration / total;
 
         var output = [];

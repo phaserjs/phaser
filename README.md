@@ -68,6 +68,7 @@ Bug Fixes
 Updated
 
 * The Build your First Phaser Game Tutorial has been updated for Phaser 2.x
+* Line.fromSprite now sets "fromCenter" to false by default as Sprite.center is deprecated in 2.x. Documentation and Examples updated to reflect this.
 
 
 New Features
