@@ -293,6 +293,12 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.tilePadding = new Phaser.Point();
 
     /**
+    * @property {boolean} _reset - Internal cache var.
+    * @private
+    */
+    this._reset = true;
+
+    /**
     * @property {number} _sx - Internal cache var.
     * @private
     */
@@ -341,10 +347,8 @@ Phaser.Physics.Arcade.Body.prototype = {
             this._sy = asy;
             this.center.setTo(this.position.x + this.halfWidth, this.position.y + this.halfHeight);
 
-            return true;
+            this._reset = true;
         }
-
-        return false;
 
     },
 
@@ -376,13 +380,15 @@ Phaser.Physics.Arcade.Body.prototype = {
 
         this.embedded = false;
 
+        this.updateBounds();
+
         this.position.x = (this.sprite.world.x - (this.sprite.anchor.x * this.width)) + this.offset.x;
         this.position.y = (this.sprite.world.y - (this.sprite.anchor.y * this.height)) + this.offset.y;
         this.rotation = this.sprite.angle;
 
         this.preRotation = this.rotation;
 
-        if (this.updateBounds() || this.sprite._cache[4] === 1)
+        if (this._reset || this.sprite._cache[4] === 1)
         {
             this.prev.x = this.position.x;
             this.prev.y = this.position.y;
@@ -411,6 +417,8 @@ Phaser.Physics.Arcade.Body.prototype = {
                 this.checkWorldBounds();
             }
         }
+
+        this._reset = false;
 
     },
 

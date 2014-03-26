@@ -340,7 +340,7 @@ Phaser.Physics.Arcade.prototype = {
     * @param {function} [overlapCallback=null] - An optional callback function that is called if the objects overlap. The two objects will be passed to this function in the same order in which you specified them.
     * @param {function} [processCallback=null] - A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then overlapCallback will only be called if processCallback returns true.
     * @param {object} [callbackContext] - The context in which to run the callbacks.
-    * @returns {boolean} True if an overlap occured otherwise false.
+    * @return {boolean} True if an overlap occured otherwise false.
     */
     overlap: function (object1, object2, overlapCallback, processCallback, callbackContext) {
 
@@ -381,7 +381,7 @@ Phaser.Physics.Arcade.prototype = {
     * @param {function} [collideCallback=null] - An optional callback function that is called if the objects collide. The two objects will be passed to this function in the same order in which you specified them.
     * @param {function} [processCallback=null] - A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then collision will only happen if processCallback returns true. The two objects will be passed to this function in the same order in which you specified them.
     * @param {object} [callbackContext] - The context in which to run the callbacks.
-    * @returns {boolean} True if a collision occured otherwise false.
+    * @return {boolean} True if a collision occured otherwise false.
     */
     collide: function (object1, object2, collideCallback, processCallback, callbackContext) {
 
@@ -696,8 +696,8 @@ Phaser.Physics.Arcade.prototype = {
     /**
     * An internal function. Use Phaser.Physics.Arcade.collide instead.
     *
-    * @method Phaser.Physics.Arcade#collideGroupVsTilemapLayer
     * @private
+    * @method Phaser.Physics.Arcade#collideGroupVsTilemapLayer
     * @param {Phaser.Group} group - The Group to check.
     * @param {Phaser.TilemapLayer} tilemapLayer - The layer to check.
     * @param {function} collideCallback - An optional callback function that is called if the objects collide. The two objects will be passed to this function in the same order in which you specified them.
@@ -725,13 +725,14 @@ Phaser.Physics.Arcade.prototype = {
     /**
     * The core separation function to separate two physics bodies.
     *
+    * @private
     * @method Phaser.Physics.Arcade#separate
     * @param {Phaser.Physics.Arcade.Body} body1 - The first Body object to separate.
     * @param {Phaser.Physics.Arcade.Body} body2 - The second Body object to separate.
     * @param {function} [processCallback=null] - A callback function that lets you perform additional checks against the two objects if they overlap. If this function is set then the sprites will only be collided if it returns true.
     * @param {object} [callbackContext] - The context in which to run the process callback.
     * @param {boolean} overlapOnly - Just run an overlap or a full collision.
-    * @returns {boolean} Returns true if the bodies collided, otherwise false.
+    * @return {boolean} Returns true if the bodies collided, otherwise false.
     */
     separate: function (body1, body2, processCallback, callbackContext, overlapOnly) {
 
@@ -803,11 +804,13 @@ Phaser.Physics.Arcade.prototype = {
 
     /**
     * The core separation function to separate two physics bodies on the x axis.
+    *
+    * @private
     * @method Phaser.Physics.Arcade#separateX
     * @param {Phaser.Physics.Arcade.Body} body1 - The Body object to separate.
     * @param {Phaser.Physics.Arcade.Body} body2 - The Body object to separate.
     * @param {boolean} overlapOnly - If true the bodies will only have their overlap data set, no separation or exchange of velocity will take place.
-    * @returns {boolean} Returns true if the bodies were separated, otherwise false.
+    * @return {boolean} Returns true if the bodies were separated, otherwise false.
     */
     separateX: function (body1, body2, overlapOnly) {
 
@@ -916,11 +919,13 @@ Phaser.Physics.Arcade.prototype = {
 
     /**
     * The core separation function to separate two physics bodies on the y axis.
+    *
+    * @private
     * @method Phaser.Physics.Arcade#separateY
     * @param {Phaser.Physics.Arcade.Body} body1 - The Body object to separate.
     * @param {Phaser.Physics.Arcade.Body} body2 - The Body object to separate.
     * @param {boolean} overlapOnly - If true the bodies will only have their overlap data set, no separation or exchange of velocity will take place.
-    * @returns {boolean} Returns true if the bodies were separated, otherwise false.
+    * @return {boolean} Returns true if the bodies were separated, otherwise false.
     */
     separateY: function (body1, body2, overlapOnly) {
 
@@ -1042,10 +1047,12 @@ Phaser.Physics.Arcade.prototype = {
 
     /**
     * The core separation function to separate a physics body and a tile.
+    *
+    * @private
     * @method Phaser.Physics.Arcade#separateTile
     * @param {Phaser.Physics.Arcade.Body} body - The Body object to separate.
     * @param {Phaser.Tile} tile - The tile to collide against.
-    * @returns {boolean} Returns true if the body was separated, otherwise false.
+    * @return {boolean} Returns true if the body was separated, otherwise false.
     */
     separateTile: function (i, body, tile) {
 
@@ -1146,11 +1153,11 @@ Phaser.Physics.Arcade.prototype = {
     /**
     * Check the body against the given tile on the X axis.
     *
+    * @private
     * @method Phaser.Physics.Arcade#tileCheckX
-    * @protected
     * @param {Phaser.Physics.Arcade.Body} body - The Body object to separate.
     * @param {Phaser.Tile} tile - The tile to check.
-    * @returns {number} The amount of separation that occured.
+    * @return {number} The amount of separation that occured.
     */
     tileCheckX: function (body, tile) {
 
@@ -1195,11 +1202,11 @@ Phaser.Physics.Arcade.prototype = {
     /**
     * Check the body against the given tile on the Y axis.
     *
+    * @private
     * @method Phaser.Physics.Arcade#tileCheckY
-    * @protected
     * @param {Phaser.Physics.Arcade.Body} body - The Body object to separate.
     * @param {Phaser.Tile} tile - The tile to check.
-    * @returns {number} The amount of separation that occured.
+    * @return {number} The amount of separation that occured.
     */
     tileCheckY: function (body, tile) {
 
@@ -1243,11 +1250,12 @@ Phaser.Physics.Arcade.prototype = {
 
     /**
     * Internal function to process the separation of a physics body from a tile.
+    *
+    * @private
     * @method Phaser.Physics.Arcade#processTileSeparationX
-    * @protected
     * @param {Phaser.Physics.Arcade.Body} body - The Body object to separate.
     * @param {number} x - The x separation amount.
-    * @returns {boolean} Returns true as a pass-thru to the separateTile method.
+    * @return {boolean} Returns true as a pass-thru to the separateTile method.
     */
     processTileSeparationX: function (body, x) {
 
@@ -1275,8 +1283,9 @@ Phaser.Physics.Arcade.prototype = {
 
     /**
     * Internal function to process the separation of a physics body from a tile.
+    *
+    * @private
     * @method Phaser.Physics.Arcade#processTileSeparationY
-    * @protected
     * @param {Phaser.Physics.Arcade.Body} body - The Body object to separate.
     * @param {number} y - The y separation amount.
     */

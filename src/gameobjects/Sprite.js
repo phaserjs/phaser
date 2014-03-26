@@ -682,6 +682,22 @@ Phaser.Sprite.prototype.play = function (name, frameRate, loop, killOnComplete) 
 };
 
 /**
+* Checks to see if the bounds of this Sprite overlaps with the bounds of the given Display Object, which can be a Sprite, Image, TileSprite or anything that extends those such as a Button.
+* This check ignores the Sprites hitArea property and runs a Sprite.getBounds comparison on both objects to determine the result.
+* Therefore it's relatively expensive to use in large quantities (i.e. with lots of Sprites at a high frequency), but should be fine for low-volume testing where physics isn't required.
+* 
+* @method Phaser.Sprite#overlap
+* @memberof Phaser.Sprite
+* @param {Phaser.Sprite|Phaser.Image|Phaser.TileSprite|Phaser.Button|PIXI.DisplayObject} displayObject - The display object to check against.
+* @return {boolean} True if the bounds of this Sprite intersects at any point with the bounds of the given display object.
+*/
+Phaser.Sprite.prototype.overlap = function (displayObject) {
+
+    return Phaser.Rectangle.intersects(this.getBounds(), displayObject.getBounds());
+
+};
+
+/**
 * Indicates the rotation of the Sprite, in degrees, from its original orientation. Values from 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation.
 * Values outside this range are added to or subtracted from 360 to obtain a value within the range. For example, the statement player.angle = 450 is the same as player.angle = 90.
 * If you wish to work in radians instead of degrees use the property Sprite.rotation instead. Working in radians is also a little faster as it doesn't have to convert the angle.

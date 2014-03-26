@@ -63,17 +63,20 @@ Version 2.0.2 - "Ghealdan" - -in active development-
 Bug Fixes
 
 * Tween.generateData would enter an eternal loop if the total resulted in a float. Now wrapped in Math.floor.
+* ArcadePhysics.Body preUpdate has been modified to stop Sprites with non-1 scaling from gaining delta and moving off the screen (fix #644).
 
 
 Updated
 
-* The Build your First Phaser Game Tutorial has been updated for Phaser 2.x
+* The "Build your First Phaser Game" Tutorial has been updated for Phaser 2
 * Line.fromSprite now sets "fromCenter" to false by default as Sprite.center is deprecated in 2.x. Documentation and Examples updated to reflect this.
+* All the documentation has been re-published for 2.0.2.
+* Lots of ArcadePhysics.World methods have been marked as private where they shouldn't be called directly (separateX, etc)
 
 
 New Features
 
-* n/a
+* Sprite.overlap lets you quickly check to see if the bounds of two display objects are intersecting or not, without having to use a physics system.
 
 
 There is an extensive [Migration Guide](https://github.com/photonstorm/phaser/blob/master/resources/Migration%20Guide.md) available for those converting from Phaser 1.x to 2.x. In the guide we detail the API breaking changes and approach to our new physics system.
