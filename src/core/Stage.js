@@ -26,7 +26,7 @@ Phaser.Stage = function (game, width, height) {
     * @property {Phaser.Point} offset - Holds the offset coordinates of the Game.canvas from the top-left of the browser window (used by Input and other classes)
     */
     this.offset = new Phaser.Point();
-    
+
     PIXI.Stage.call(this, 0x000000, false);
 
     /**
@@ -96,11 +96,11 @@ Phaser.Stage.prototype.constructor = Phaser.Stage;
 /**
 * This is called automatically after the plugins preUpdate and before the State.update.
 * Most objects have preUpdate methods and it's where initial movement and positioning is done.
-* 
+*
 * @method Phaser.Stage#preUpdate
 */
 Phaser.Stage.prototype.preUpdate = function () {
-    
+
     this.currentRenderOrderID = 0;
 
     //  This can't loop in reverse, we need the orderID to be in sequence
@@ -111,11 +111,11 @@ Phaser.Stage.prototype.preUpdate = function () {
         this.children[i].preUpdate();
     }
 
-}
+};
 
 /**
 * This is called automatically after the State.update, but before particles or plugins update.
-* 
+*
 * @method Phaser.Stage#update
 */
 Phaser.Stage.prototype.update = function () {
@@ -127,14 +127,14 @@ Phaser.Stage.prototype.update = function () {
         this.children[i].update();
     }
 
-}
+};
 
 /**
 * This is called automatically before the renderer runs and after the plugins have updated.
 * In postUpdate this is where all the final physics calculatations and object positioning happens.
 * The objects are processed in the order of the display list.
 * The only exception to this is if the camera is following an object, in which case that is updated first.
-* 
+*
 * @method Phaser.Stage#postUpdate
 */
 Phaser.Stage.prototype.postUpdate = function () {
@@ -176,7 +176,7 @@ Phaser.Stage.prototype.postUpdate = function () {
         }
     }
 
-}
+};
 
 /**
 * Parses a Game configuration object.
@@ -229,7 +229,7 @@ Phaser.Stage.prototype.parseConfig = function (config) {
         this.backgroundColor = config['backgroundColor'];
     }
 
-}
+};
 
 /**
 * Initialises the stage and adds the event listeners.
@@ -246,14 +246,14 @@ Phaser.Stage.prototype.boot = function () {
 
     this._onChange = function (event) {
         return _this.visibilityChange(event);
-    }
+    };
 
     Phaser.Canvas.setUserSelect(this.game.canvas, 'none');
     Phaser.Canvas.setTouchAction(this.game.canvas, 'none');
 
     this.checkVisibility();
 
-}
+};
 
 /**
 * Starts a page visibility event listener running, or window.blur/focus if not supported by the browser.
@@ -294,7 +294,7 @@ Phaser.Stage.prototype.checkVisibility = function () {
     window.onblur = this._onChange;
     window.onfocus = this._onChange;
 
-}
+};
 
 /**
 * This method is called when the document visibility is changed.
@@ -331,7 +331,7 @@ Phaser.Stage.prototype.visibilityChange = function (event) {
         this.game.gameResumed(event);
     }
 
-}
+};
 
 /**
 * Sets the background color for the stage.
@@ -346,7 +346,7 @@ Phaser.Stage.prototype.setBackgroundColor = function(backgroundColor)
     var hex = this._backgroundColor.toString(16);
     hex = '000000'.substr(0, 6 - hex.length) + hex;
     this.backgroundColorString = '#' + hex;
-}
+};
 
 /**
 * @name Phaser.Stage#backgroundColor
@@ -383,7 +383,7 @@ Object.defineProperty(Phaser.Stage.prototype, "backgroundColor", {
 * @property {boolean} smoothed - Set to true to smooth all sprites rendered on this Stage, or false to disable smoothing (great for pixel art)
 */
 Object.defineProperty(Phaser.Stage.prototype, "smoothed", {
-    
+
     get: function () {
 
         return !PIXI.scaleModes.LINEAR;

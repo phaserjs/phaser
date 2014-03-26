@@ -38,7 +38,7 @@ Phaser.Text = function (game, x, y, text, style) {
     * @property {Phaser.Game} game - A reference to the currently running Game.
     */
     this.game = game;
- 
+
     /**
     * @property {boolean} exists - If exists = false then the Text isn't updated by the core game loop.
     * @default
@@ -175,7 +175,7 @@ Phaser.Text.prototype.preUpdate = function () {
 
     return true;
 
-}
+};
 
 /**
 * Override and use this function in your own custom objects to handle any update requirements you may have.
@@ -185,7 +185,7 @@ Phaser.Text.prototype.preUpdate = function () {
 */
 Phaser.Text.prototype.update = function() {
 
-}
+};
 
 /**
 * Automatically called by World.postUpdate.
@@ -205,7 +205,7 @@ Phaser.Text.prototype.postUpdate = function () {
         this.children[i].postUpdate();
     }
 
-}
+};
 
 /**
 * @method Phaser.Text.prototype.destroy
@@ -265,7 +265,7 @@ Phaser.Text.prototype.destroy = function (destroyChildren) {
     this.mask = null;
     this.game = null;
 
-}
+};
 
 /**
 * @method Phaser.Text.prototype.setShadow
@@ -282,7 +282,7 @@ Phaser.Text.prototype.setShadow = function (x, y, color, blur) {
     this.style.shadowBlur = blur || 0;
     this.dirty = true;
 
-}
+};
 
 /**
 * Set the style of the text by passing a single style object to it.
@@ -315,7 +315,7 @@ Phaser.Text.prototype.setStyle = function (style) {
     this.style = style;
     this.dirty = true;
 
-}
+};
 
 /**
 * Renders text. This replaces the Pixi.Text.updateText function as we need a few extra bits in here.
@@ -353,15 +353,15 @@ Phaser.Text.prototype.updateText = function () {
     this.canvas.width = maxLineWidth + this.style.strokeThickness;
 
     //calculate text height
-    var lineHeight = this.determineFontHeight('font: ' + this.style.font  + ';') + this.style.strokeThickness + this._lineSpacing + this.style.shadowOffsetY;
+    var lineHeight = this.determineFontHeight('font: ' + this.style.font + ';') + this.style.strokeThickness + this._lineSpacing + this.style.shadowOffsetY;
 
     this.canvas.height = lineHeight * lines.length;
 
     if (navigator.isCocoonJS)
     {
-        this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
-    
+
     //set canvas text styles
     this.context.fillStyle = this.style.fill;
     this.context.font = this.style.font;
@@ -381,30 +381,30 @@ Phaser.Text.prototype.updateText = function () {
     {
         var linePosition = new PIXI.Point(this.style.strokeThickness / 2, this.style.strokeThickness / 2 + i * lineHeight);
 
-        if(this.style.align === 'right')
+        if (this.style.align === 'right')
         {
             linePosition.x += maxLineWidth - lineWidths[i];
         }
-        else if(this.style.align === 'center')
+        else if (this.style.align === 'center')
         {
             linePosition.x += (maxLineWidth - lineWidths[i]) / 2;
         }
 
         linePosition.y += this._lineSpacing;
 
-        if(this.style.stroke && this.style.strokeThickness)
+        if (this.style.stroke && this.style.strokeThickness)
         {
             this.context.strokeText(lines[i], linePosition.x, linePosition.y);
         }
 
-        if(this.style.fill)
+        if (this.style.fill)
         {
             this.context.fillText(lines[i], linePosition.x, linePosition.y);
         }
     }
 
     this.updateTexture();
-}
+};
 
 /**
 * Greedy wrapping algorithm that will wrap words as the line grows longer than its horizontal bounds.
@@ -452,7 +452,7 @@ Phaser.Text.prototype.runWordWrap = function (text) {
 
     return result;
 
-}
+};
 
 /**
 * Indicates the rotation of the Text, in degrees, from its original orientation. Values from 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation.
@@ -822,7 +822,7 @@ Object.defineProperty(Phaser.Text.prototype, 'shadowBlur', {
 * @property {boolean} inputEnabled - Set to true to allow this object to receive input events.
 */
 Object.defineProperty(Phaser.Text.prototype, "inputEnabled", {
-    
+
     get: function () {
 
         return (this.input && this.input.enabled);
@@ -859,7 +859,7 @@ Object.defineProperty(Phaser.Text.prototype, "inputEnabled", {
 * @property {boolean} fixedToCamera - Set to true to fix this Text to the Camera at its current world coordinates.
 */
 Object.defineProperty(Phaser.Text.prototype, "fixedToCamera", {
-    
+
     get: function () {
 
         return !!this._cache[7];

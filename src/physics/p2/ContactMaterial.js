@@ -58,7 +58,7 @@ Phaser.Physics.P2.ContactMaterial = function (materialA, materialB, options) {
 
     p2.ContactMaterial.call(this, materialA, materialB, options);
 
-}
+};
 
 Phaser.Physics.P2.ContactMaterial.prototype = Object.create(p2.ContactMaterial.prototype);
 Phaser.Physics.P2.ContactMaterial.prototype.constructor = Phaser.Physics.P2.ContactMaterial;

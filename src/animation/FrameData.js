@@ -102,7 +102,7 @@ Phaser.FrameData.prototype = {
         }
 
         return true;
-        
+
     },
 
     /**
@@ -115,7 +115,7 @@ Phaser.FrameData.prototype = {
     * @return {Array} An array of Frames between the start and end index values, or an empty array if none were found.
     */
     getFrameRange: function (start, end, output) {
-        
+
         if (typeof output === "undefined") { output = []; }
 
         for (var i = start; i <= end; i++)

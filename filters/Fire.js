@@ -6,8 +6,8 @@ Phaser.Filter.Fire = function (game) {
 
     Phaser.Filter.call(this, game);
 
-    this.uniforms.alpha = { type: '1f', value: 1.0 }
-    this.uniforms.shift = { type: '1f', value: 1.6 }
+    this.uniforms.alpha = { type: '1f', value: 1.0 };
+    this.uniforms.shift = { type: '1f', value: 1.6 };
     this.uniforms.speed = { type: '2f', value: { x: 0.7, y: 0.4 } };
 
     this.fragmentSrc = [
@@ -54,7 +54,7 @@ Phaser.Filter.Fire = function (game) {
             "vec3 c = mix(c1, c2, fbm(p + r)) + mix(c3, c4, r.x) - mix(c5, c6, r.y);",
             "gl_FragColor = vec4(c * cos(shift * gl_FragCoord.y / resolution.y), alpha);",
         "}"
-    ];  
+    ];
 
 };
 
@@ -65,15 +65,15 @@ Phaser.Filter.Fire.prototype.init = function (width, height, alpha, shift) {
 
     this.setResolution(width, height);
 
-    if (typeof alpha !== 'undefined') { 
+    if (typeof alpha !== 'undefined') {
         this.uniforms.alpha.value = alpha;
     }
 
-    if (typeof shift !== 'undefined') { 
+    if (typeof shift !== 'undefined') {
         this.uniforms.shift.value = shift;
     }
 
-}
+};
 
 Object.defineProperty(Phaser.Filter.Fire.prototype, 'alpha', {
 

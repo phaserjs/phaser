@@ -677,7 +677,7 @@ Phaser.Physics.Arcade.Body.prototype = {
 * @readonly
 */
 Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "bottom", {
-    
+
     get: function () {
         return this.position.y + this.height;
     }
@@ -690,7 +690,7 @@ Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "bottom", {
 * @readonly
 */
 Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "right", {
-    
+
     get: function () {
         return this.position.x + this.width;
     }
@@ -702,7 +702,7 @@ Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "right", {
 * @property {number} x - The x position.
 */
 Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "x", {
-    
+
     get: function () {
         return this.position.x;
     },
@@ -718,7 +718,7 @@ Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "x", {
 * @property {number} y - The y position.
 */
 Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "y", {
-    
+
     get: function () {
         return this.position.y;
     },
@@ -755,7 +755,7 @@ Phaser.Physics.Arcade.Body.render = function (context, body, filled, color) {
         context.strokeRect(body.position.x - body.game.camera.x, body.position.y - body.game.camera.y, body.width, body.height);
     }
 
-}
+};
 
 /**
 * Render Sprite Body Physics Data as text.
@@ -776,6 +776,6 @@ Phaser.Physics.Arcade.Body.renderBodyInfo = function (debug, body) {
     debug.line('touching left: ' + body.touching.left, 'right: ' + body.touching.right, 'up: ' + body.touching.up, 'down: ' + body.touching.down);
     debug.line('blocked left: ' + body.blocked.left, 'right: ' + body.blocked.right, 'up: ' + body.blocked.up, 'down: ' + body.blocked.down);
 
-}
+};
 
 Phaser.Physics.Arcade.Body.prototype.constructor = Phaser.Physics.Arcade.Body;

@@ -17,7 +17,7 @@ Phaser.Signal = function () {
     * @private
     */
     this._bindings = [];
-    
+
     /**
     * @property {any} _prevParams - Internal variable.
     * @private
@@ -47,7 +47,7 @@ Phaser.Signal.prototype = {
     memorize: false,
 
     /**
-    * @property {boolean} _shouldPropagate 
+    * @property {boolean} _shouldPropagate
     * @private
     */
     _shouldPropagate: true,
@@ -68,7 +68,7 @@ Phaser.Signal.prototype = {
     */
     validateListener: function (listener, fnName) {
         if (typeof listener !== 'function') {
-            throw new Error( 'listener is a required param of {fn}() and should be a Function.'.replace('{fn}', fnName) );
+            throw new Error('listener is a required param of {fn}() and should be a Function.'.replace('{fn}', fnName));
         }
     },
 
@@ -89,14 +89,14 @@ Phaser.Signal.prototype = {
         if (prevIndex !== -1) {
             binding = this._bindings[prevIndex];
             if (binding.isOnce() !== isOnce) {
-                throw new Error('You cannot add'+ (isOnce? '' : 'Once') +'() then add'+ (!isOnce? '' : 'Once') +'() the same listener without removing the relationship first.');
+                throw new Error('You cannot add' + (isOnce ? '' : 'Once') + '() then add' + (!isOnce ? '' : 'Once') + '() the same listener without removing the relationship first.');
             }
         } else {
             binding = new Phaser.SignalBinding(this, listener, isOnce, listenerContext, priority);
             this._addBinding(binding);
         }
 
-        if (this.memorize && this._prevParams){
+        if (this.memorize && this._prevParams) {
             binding.execute(this._prevParams);
         }
 
@@ -104,7 +104,7 @@ Phaser.Signal.prototype = {
     },
 
     /**
-    * @method Phaser.Signal#_addBinding 
+    * @method Phaser.Signal#_addBinding
     * @param {Phaser.SignalBinding} binding - An Object representing the binding between the Signal and listener.
     * @private
     */
@@ -135,7 +135,7 @@ Phaser.Signal.prototype = {
 
     /**
     * Check if listener was attached to Signal.
-    * 
+    *
     * @method Phaser.Signal#has
     * @param {Function} listener - Signal handler function.
     * @param {Object} [context] - Context on which listener will be executed (object that should represent the `this` variable inside listener function).
@@ -147,7 +147,7 @@ Phaser.Signal.prototype = {
 
     /**
     * Add a listener to the signal.
-    * 
+    *
     * @method Phaser.Signal#add
     * @param {function} listener - Signal handler function.
     * @param {object} [listenerContext] Context on which listener will be executed (object that should represent the `this` variable inside listener function).
@@ -265,7 +265,7 @@ Phaser.Signal.prototype = {
         //execute all callbacks until end of the list or until a callback returns `false` or stops propagation
         //reverse loop since listeners with higher priority will be added at the end of the list
         do { n--; } while (bindings[n] && this._shouldPropagate && bindings[n].execute(paramsArr) !== false);
-        
+
     },
 
     /**

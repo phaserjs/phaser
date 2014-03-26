@@ -27,7 +27,7 @@ PIXI.AbstractFilter = function(fragmentSrc, uniforms)
     * @private
     */
     this.shaders = [];
-    
+
     this.dirty = true;
     this.padding = 0;
 

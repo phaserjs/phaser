@@ -1,7 +1,7 @@
 /**
  * @author Mat Groves
- * 
- * 
+ *
+ *
  */
 /**
  * A set of functions used to handle masking
@@ -10,7 +10,7 @@
  */
 PIXI.CanvasMaskManager = function()
 {
-    
+
 };
 
 /**
@@ -23,7 +23,7 @@ PIXI.CanvasMaskManager = function()
 PIXI.CanvasMaskManager.prototype.pushMask = function(maskData, context)
 {
     context.save();
-    
+
     var cacheAlpha = maskData.alpha;
     var transform = maskData.worldTransform;
 

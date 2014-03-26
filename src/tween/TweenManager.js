@@ -6,9 +6,9 @@
 
 /**
 * Phaser - TweenManager
-* 
+*
 * @class Phaser.TweenManager
-* @classdesc 
+* @classdesc
 * Phaser.Game has a single instance of the TweenManager through which all Tween objects are created and updated.
 * Tweens are hooked into the game clock and pause system, adjusting based on the game state.
 *
@@ -26,13 +26,13 @@ Phaser.TweenManager = function (game) {
     * @property {Phaser.Game} game - Local reference to game.
     */
     this.game = game;
-    
+
     /**
     * @property {array<Phaser.Tween>} _tweens - All of the currently running tweens.
     * @private
     */
     this._tweens = [];
-    
+
     /**
     * @property {array<Phaser.Tween>} _add - All of the tweens queued to be added in the next update.
     * @private
@@ -87,7 +87,7 @@ Phaser.TweenManager.prototype = {
     },
 
     /**
-    * Create a tween object for a specific object. The object can be any JavaScript object or Phaser object such as Sprite. 
+    * Create a tween object for a specific object. The object can be any JavaScript object or Phaser object such as Sprite.
     *
     * @method Phaser.TweenManager#create
     * @param {Object} object - Object the tween will be run on.

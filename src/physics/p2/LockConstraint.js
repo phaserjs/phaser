@@ -39,7 +39,7 @@ Phaser.Physics.P2.LockConstraint = function (world, bodyA, bodyB, offset, angle,
 
     p2.LockConstraint.call(this, bodyA, bodyB, options);
 
-}
+};
 
 Phaser.Physics.P2.LockConstraint.prototype = Object.create(p2.LockConstraint.prototype);
 Phaser.Physics.P2.LockConstraint.prototype.constructor = Phaser.Physics.P2.LockConstraint;

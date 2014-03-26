@@ -36,7 +36,7 @@ Phaser.BitmapText = function (game, x, y, font, text, size) {
     */
     this.game = game;
 
-    /** 
+    /**
     * @property {boolean} exists - If exists = false then the Sprite isn't updated by the core game loop or physics subsystem at all.
     * @default
     */
@@ -177,7 +177,7 @@ Phaser.BitmapText.prototype.preUpdate = function () {
 
     return true;
 
-}
+};
 
 /**
 * Override and use this function in your own custom objects to handle any update requirements you may have.
@@ -186,7 +186,7 @@ Phaser.BitmapText.prototype.preUpdate = function () {
 */
 Phaser.BitmapText.prototype.update = function() {
 
-}
+};
 
 /**
 * Automatically called by World.postUpdate.
@@ -201,7 +201,7 @@ Phaser.BitmapText.prototype.postUpdate = function () {
         this.position.y = (this.game.camera.view.y + this.cameraOffset.y) / this.game.camera.scale.y;
     }
 
-}
+};
 
 /**
 * Destroy this BitmapText instance. This will remove any filters and un-parent any children.
@@ -257,7 +257,7 @@ Phaser.BitmapText.prototype.destroy = function(destroyChildren) {
     this.mask = null;
     this.game = null;
 
-}
+};
 
 /**
 * @name Phaser.BitmapText#align
@@ -401,7 +401,7 @@ Object.defineProperty(Phaser.BitmapText.prototype, 'text', {
 * @property {boolean} inputEnabled - Set to true to allow this object to receive input events.
 */
 Object.defineProperty(Phaser.BitmapText.prototype, "inputEnabled", {
-    
+
     get: function () {
 
         return (this.input && this.input.enabled);
@@ -438,7 +438,7 @@ Object.defineProperty(Phaser.BitmapText.prototype, "inputEnabled", {
 * @property {boolean} fixedToCamera - Set to true to fix this BitmapText to the Camera at its current world coordinates.
 */
 Object.defineProperty(Phaser.BitmapText.prototype, "fixedToCamera", {
-    
+
     get: function () {
 
         return !!this._cache[7];

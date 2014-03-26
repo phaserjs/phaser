@@ -6,7 +6,7 @@ Phaser.Filter.BlurY = function (game) {
     Phaser.Filter.call(this, game);
 
     this.uniforms.blur = { type: '1f', value: 1 / 512 };
-        
+
     this.fragmentSrc = [
 
       "precision mediump float;",
@@ -27,7 +27,7 @@ Phaser.Filter.BlurY = function (game) {
         "sum += texture2D(uSampler, vec2(vTextureCoord.x, vTextureCoord.y + 2.0*blur)) * 0.12;",
         "sum += texture2D(uSampler, vec2(vTextureCoord.x, vTextureCoord.y + 3.0*blur)) * 0.09;",
         "sum += texture2D(uSampler, vec2(vTextureCoord.x, vTextureCoord.y + 4.0*blur)) * 0.05;",
-     
+
         "gl_FragColor = sum;",
 
       "}"

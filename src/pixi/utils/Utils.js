@@ -1,7 +1,7 @@
 /**
  * @author Mat Groves http://matgroves.com/ @Doormat23
  */
- 
+
 // http://paulirish.com/2011/requestanimationframe-for-smart-animating/
 // http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
 
@@ -11,7 +11,7 @@
 
 /**
  * A polyfill for requestAnimationFrame
- * You can actually use both requestAnimationFrame and requestAnimFrame, 
+ * You can actually use both requestAnimationFrame and requestAnimFrame,
  * you will still benefit from the polyfill
  *
  * @method requestAnimationFrame
@@ -138,7 +138,7 @@ PIXI.packColorRGBA = function(r, g, b, a)//r, g, b, a)
    // var g = (i / 4096.0)%64 / 64;
   //  var b = (i / 64.0)%64 / 64;
   //  var a = (i)%64 / 64;
-     
+
   //  console.log(r, g, b, a);
   //  return i;
 

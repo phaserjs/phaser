@@ -37,7 +37,7 @@ Phaser.Physics.P2 = function (game, config) {
     * @property {number} frameRate - The frame rate the world will be stepped at. Defaults to 1 / 60, but you can change here. Also see useElapsedTime property.
     * @default
     */
-    this.frameRate =  1 / 60;
+    this.frameRate = 1 / 60;
 
     /**
     * @property {boolean} useElapsedTime - If true the frameRate value will be ignored and instead p2 will step with the value of Game.Time.physicsElapsed, which is a delta time value.
@@ -147,7 +147,7 @@ Phaser.Physics.P2 = function (game, config) {
     * @property {array} _toRemove - Internal var used to hold references to bodies to remove from the world on the next step.
     */
     this._toRemove = [];
-    
+
     /**
     * @property {array} collisionGroups - Internal var.
     */
@@ -279,7 +279,7 @@ Phaser.Physics.P2.prototype = {
         if (object.hasOwnProperty('body') && object.body === null)
         {
             object.body = new Phaser.Physics.P2.Body(this.game, object, object.x, object.y, 1);
-            object.body.debug = debug
+            object.body.debug = debug;
             object.anchor.set(0.5);
         }
 
@@ -579,7 +579,7 @@ Phaser.Physics.P2.prototype = {
         }
         else
         {
-            this.bounds = new p2.Body({ mass: 0, position:[this.pxmi(cx), this.pxmi(cy)] });
+            this.bounds = new p2.Body({ mass: 0, position: [this.pxmi(cx), this.pxmi(cy)] });
         }
 
         if (left)
@@ -591,7 +591,7 @@ Phaser.Physics.P2.prototype = {
                 this._wallShapes[0].collisionGroup = this.boundsCollisionGroup.mask;
             }
 
-            this.bounds.addShape(this._wallShapes[0], [this.pxmi(-hw), 0], 1.5707963267948966 );
+            this.bounds.addShape(this._wallShapes[0], [this.pxmi(-hw), 0], 1.5707963267948966);
         }
 
         if (right)
@@ -603,7 +603,7 @@ Phaser.Physics.P2.prototype = {
                 this._wallShapes[1].collisionGroup = this.boundsCollisionGroup.mask;
             }
 
-            this.bounds.addShape(this._wallShapes[1], [this.pxmi(hw), 0], -1.5707963267948966 );
+            this.bounds.addShape(this._wallShapes[1], [this.pxmi(hw), 0], -1.5707963267948966);
         }
 
         if (top)
@@ -615,7 +615,7 @@ Phaser.Physics.P2.prototype = {
                 this._wallShapes[2].collisionGroup = this.boundsCollisionGroup.mask;
             }
 
-            this.bounds.addShape(this._wallShapes[2], [0, this.pxmi(-hh)], -3.141592653589793 );
+            this.bounds.addShape(this._wallShapes[2], [0, this.pxmi(-hh)], -3.141592653589793);
         }
 
         if (bottom)
@@ -627,7 +627,7 @@ Phaser.Physics.P2.prototype = {
                 this._wallShapes[3].collisionGroup = this.boundsCollisionGroup.mask;
             }
 
-            this.bounds.addShape(this._wallShapes[3], [0, this.pxmi(hh)] );
+            this.bounds.addShape(this._wallShapes[3], [0, this.pxmi(hh)]);
         }
 
         this.world.addBody(this.bounds);
@@ -1307,12 +1307,12 @@ Phaser.Physics.P2.prototype = {
     * @param {number} y - The y coordinate of Body.
     * @param {number} mass - The mass of the Body. A mass of 0 means a 'static' Body is created.
     * @param {boolean} [addToWorld=false] - Automatically add this Body to the world? (usually false as it won't have any shapes on construction).
-    * @param {object} options - An object containing the build options: 
+    * @param {object} options - An object containing the build options:
     * @param {boolean} [options.optimalDecomp=false] - Set to true if you need optimal decomposition. Warning: very slow for polygons with more than 10 vertices.
     * @param {boolean} [options.skipSimpleCheck=false] - Set to true if you already know that the path is not intersecting itself.
     * @param {boolean|number} [options.removeCollinearPoints=false] - Set to a number (angle threshold value) to remove collinear points, or false to keep all points.
-    * @param {(number[]|...number)} points - An array of 2d vectors that form the convex or concave polygon. 
-    *                                       Either [[0,0], [0,1],...] or a flat array of numbers that will be interpreted as [x,y, x,y, ...], 
+    * @param {(number[]|...number)} points - An array of 2d vectors that form the convex or concave polygon.
+    *                                       Either [[0,0], [0,1],...] or a flat array of numbers that will be interpreted as [x,y, x,y, ...],
     *                                       or the arguments passed can be flat x,y values e.g. `setPolygon(options, x,y, x,y, x,y, ...)` where `x` and `y` are numbers.
     * @return {Phaser.Physics.P2.Body} The body
     */
@@ -1349,12 +1349,12 @@ Phaser.Physics.P2.prototype = {
     * @param {number} y - The y coordinate of Body.
     * @param {number} mass - The mass of the Body. A mass of 0 means a 'static' Body is created.
     * @param {boolean} [addToWorld=false] - Automatically add this Body to the world? (usually false as it won't have any shapes on construction).
-    * @param {object} options - An object containing the build options: 
+    * @param {object} options - An object containing the build options:
     * @param {boolean} [options.optimalDecomp=false] - Set to true if you need optimal decomposition. Warning: very slow for polygons with more than 10 vertices.
     * @param {boolean} [options.skipSimpleCheck=false] - Set to true if you already know that the path is not intersecting itself.
     * @param {boolean|number} [options.removeCollinearPoints=false] - Set to a number (angle threshold value) to remove collinear points, or false to keep all points.
-    * @param {(number[]|...number)} points - An array of 2d vectors that form the convex or concave polygon. 
-    *                                       Either [[0,0], [0,1],...] or a flat array of numbers that will be interpreted as [x,y, x,y, ...], 
+    * @param {(number[]|...number)} points - An array of 2d vectors that form the convex or concave polygon.
+    *                                       Either [[0,0], [0,1],...] or a flat array of numbers that will be interpreted as [x,y, x,y, ...],
     *                                       or the arguments passed can be flat x,y values e.g. `setPolygon(options, x,y, x,y, x,y, ...)` where `x` and `y` are numbers.
     */
     createParticle: function (x, y, mass, addToWorld, options, data) {
@@ -1541,7 +1541,7 @@ Phaser.Physics.P2.prototype = {
     * Convert p2 physics value (meters) to pixel scale.
     * By default Phaser uses a scale of 20px per meter.
     * If you need to modify this you can over-ride these functions via the Physics Configuration object.
-    * 
+    *
     * @method Phaser.Physics.P2#mpx
     * @param {number} v - The value to convert.
     * @return {number} The scaled value.
@@ -1556,7 +1556,7 @@ Phaser.Physics.P2.prototype = {
     * Convert pixel value to p2 physics scale (meters).
     * By default Phaser uses a scale of 20px per meter.
     * If you need to modify this you can over-ride these functions via the Physics Configuration object.
-    * 
+    *
     * @method Phaser.Physics.P2#pxm
     * @param {number} v - The value to convert.
     * @return {number} The scaled value.
@@ -1571,7 +1571,7 @@ Phaser.Physics.P2.prototype = {
     * Convert p2 physics value (meters) to pixel scale and inverses it.
     * By default Phaser uses a scale of 20px per meter.
     * If you need to modify this you can over-ride these functions via the Physics Configuration object.
-    * 
+    *
     * @method Phaser.Physics.P2#mpxi
     * @param {number} v - The value to convert.
     * @return {number} The scaled value.
@@ -1586,7 +1586,7 @@ Phaser.Physics.P2.prototype = {
     * Convert pixel value to p2 physics scale (meters) and inverses it.
     * By default Phaser uses a scale of 20px per meter.
     * If you need to modify this you can over-ride these functions via the Physics Configuration object.
-    * 
+    *
     * @method Phaser.Physics.P2#pxmi
     * @param {number} v - The value to convert.
     * @return {number} The scaled value.
@@ -1604,7 +1604,7 @@ Phaser.Physics.P2.prototype = {
 * @property {number} friction - Friction between colliding bodies. This value is used if no matching ContactMaterial is found for a Material pair.
 */
 Object.defineProperty(Phaser.Physics.P2.prototype, "friction", {
-    
+
     get: function () {
 
         return this.world.defaultFriction;
@@ -1624,7 +1624,7 @@ Object.defineProperty(Phaser.Physics.P2.prototype, "friction", {
 * @property {number} restitution - Default coefficient of restitution between colliding bodies. This value is used if no matching ContactMaterial is found for a Material pair.
 */
 Object.defineProperty(Phaser.Physics.P2.prototype, "restituion", {
-    
+
     get: function () {
 
         return this.world.defaultRestitution;
@@ -1644,7 +1644,7 @@ Object.defineProperty(Phaser.Physics.P2.prototype, "restituion", {
 * @property {boolean} applySpringForces - Enable to automatically apply spring forces each step.
 */
 Object.defineProperty(Phaser.Physics.P2.prototype, "applySpringForces", {
-    
+
     get: function () {
 
         return this.world.applySpringForces;
@@ -1664,7 +1664,7 @@ Object.defineProperty(Phaser.Physics.P2.prototype, "applySpringForces", {
 * @property {boolean} applyDamping - Enable to automatically apply body damping each step.
 */
 Object.defineProperty(Phaser.Physics.P2.prototype, "applyDamping", {
-    
+
     get: function () {
 
         return this.world.applyDamping;
@@ -1684,7 +1684,7 @@ Object.defineProperty(Phaser.Physics.P2.prototype, "applyDamping", {
 * @property {boolean} applyGravity - Enable to automatically apply gravity each step.
 */
 Object.defineProperty(Phaser.Physics.P2.prototype, "applyGravity", {
-    
+
     get: function () {
 
         return this.world.applyGravity;
@@ -1704,7 +1704,7 @@ Object.defineProperty(Phaser.Physics.P2.prototype, "applyGravity", {
 * @property {boolean} solveConstraints - Enable/disable constraint solving in each step.
 */
 Object.defineProperty(Phaser.Physics.P2.prototype, "solveConstraints", {
-    
+
     get: function () {
 
         return this.world.solveConstraints;
@@ -1725,7 +1725,7 @@ Object.defineProperty(Phaser.Physics.P2.prototype, "solveConstraints", {
 * @readonly
 */
 Object.defineProperty(Phaser.Physics.P2.prototype, "time", {
-    
+
     get: function () {
 
         return this.world.time;
@@ -1739,7 +1739,7 @@ Object.defineProperty(Phaser.Physics.P2.prototype, "time", {
 * @property {boolean} emitImpactEvent - Set to true if you want to the world to emit the "impact" event. Turning this off could improve performance.
 */
 Object.defineProperty(Phaser.Physics.P2.prototype, "emitImpactEvent", {
-    
+
     get: function () {
 
         return this.world.emitImpactEvent;
@@ -1759,7 +1759,7 @@ Object.defineProperty(Phaser.Physics.P2.prototype, "emitImpactEvent", {
 * @property {boolean} enableBodySleeping - Enable / disable automatic body sleeping.
 */
 Object.defineProperty(Phaser.Physics.P2.prototype, "enableBodySleeping", {
-    
+
     get: function () {
 
         return this.world.enableBodySleeping;
@@ -1780,7 +1780,7 @@ Object.defineProperty(Phaser.Physics.P2.prototype, "enableBodySleeping", {
 * @readonly
 */
 Object.defineProperty(Phaser.Physics.P2.prototype, "total", {
-    
+
     get: function () {
 
         return this.world.bodies.length;

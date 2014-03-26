@@ -12,7 +12,7 @@ Phaser.Filter.Gray = function (game) {
     Phaser.Filter.call(this, game);
 
     this.uniforms.gray = { type: '1f', value: 1.0 };
-    
+
     this.fragmentSrc = [
 
         "precision mediump float;",

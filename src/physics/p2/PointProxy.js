@@ -27,7 +27,7 @@ Phaser.Physics.P2.PointProxy.prototype.constructor = Phaser.Physics.P2.PointProx
 * @property {number} x - The x property of this PointProxy.
 */
 Object.defineProperty(Phaser.Physics.P2.PointProxy.prototype, "x", {
-    
+
     get: function () {
 
         return this.destination[0];
@@ -47,7 +47,7 @@ Object.defineProperty(Phaser.Physics.P2.PointProxy.prototype, "x", {
 * @property {number} y - The y property of this PointProxy.
 */
 Object.defineProperty(Phaser.Physics.P2.PointProxy.prototype, "y", {
-    
+
     get: function () {
 
         return this.destination[1];

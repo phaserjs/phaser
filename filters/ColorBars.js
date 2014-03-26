@@ -6,11 +6,11 @@ Phaser.Filter.ColorBars = function (game) {
 
     Phaser.Filter.call(this, game);
 
-    this.uniforms.alpha = { type: '1f', value: 1 }
+    this.uniforms.alpha = { type: '1f', value: 1 };
     // this.uniforms.origin = { type: '1f', value: 2.0 }
-        
+
     this.fragmentSrc = [
-    
+
         "// bars - thygate@gmail.com",
         "// rotation and color mix modifications by malc (mlashley@gmail.com)",
         "// modified by @hintz 2013-04-30",
@@ -58,8 +58,8 @@ Phaser.Filter.ColorBars = function (game) {
             "color.a = alpha;",
             "gl_FragColor = color;",
         "}"
-    
-    ];  
+
+    ];
 
 };
 
@@ -70,7 +70,7 @@ Phaser.Filter.ColorBars.prototype.init = function (width, height) {
 
     this.setResolution(width, height);
 
-}
+};
 
 Object.defineProperty(Phaser.Filter.ColorBars.prototype, 'alpha', {
 

@@ -18,11 +18,11 @@ Phaser.Math = {
     PI2: Math.PI * 2,
 
     /**
-    * Two number are fuzzyEqual if their difference is less than &epsilon;. 
+    * Two number are fuzzyEqual if their difference is less than &epsilon;.
     * @method Phaser.Math#fuzzyEqual
     * @param {number} a
     * @param {number} b
-    * @param {number} epsilon 
+    * @param {number} epsilon
     * @return {boolean} True if |a-b|<&epsilon;
     */
     fuzzyEqual: function (a, b, epsilon) {
@@ -31,11 +31,11 @@ Phaser.Math = {
     },
 
     /**
-    * a is fuzzyLessThan b if it is less than b + &epsilon;. 
+    * a is fuzzyLessThan b if it is less than b + &epsilon;.
     * @method Phaser.Math#fuzzyLessThan
     * @param {number} a
     * @param {number} b
-    * @param {number} epsilon 
+    * @param {number} epsilon
     * @return {boolean} True if a<b+&epsilon;
     */
     fuzzyLessThan: function (a, b, epsilon) {
@@ -44,11 +44,11 @@ Phaser.Math = {
     },
 
     /**
-    * a is fuzzyGreaterThan b if it is more than b - &epsilon;.  
+    * a is fuzzyGreaterThan b if it is more than b - &epsilon;.
     * @method Phaser.Math#fuzzyGreaterThan
     * @param {number} a
     * @param {number} b
-    * @param {number} epsilon 
+    * @param {number} epsilon
     * @return {boolean} True if a>b+&epsilon;
     */
     fuzzyGreaterThan: function (a, b, epsilon) {
@@ -56,10 +56,10 @@ Phaser.Math = {
         return a > b - epsilon;
     },
 
-    /** 
+    /**
     * @method Phaser.Math#fuzzyCeil
     * @param {number} val
-    * @param {number} epsilon 
+    * @param {number} epsilon
     * @return {boolean} ceiling(val-&epsilon;)
     */
     fuzzyCeil: function (val, epsilon) {
@@ -67,10 +67,10 @@ Phaser.Math = {
         return Math.ceil(val - epsilon);
     },
 
-    /** 
+    /**
     * @method Phaser.Math#fuzzyFloor
     * @param {number} val
-    * @param {number} epsilon 
+    * @param {number} epsilon
     * @return {boolean} floor(val-&epsilon;)
     */
     fuzzyFloor: function (val, epsilon) {
@@ -78,7 +78,7 @@ Phaser.Math = {
         return Math.floor(val + epsilon);
     },
 
-    /** 
+    /**
     * Averages all values passed to the function and returns the result. You can pass as many parameters as you like.
     * @method Phaser.Math#average
     * @return {number} The average of all given values.
@@ -101,7 +101,7 @@ Phaser.Math = {
 
     },
 
-    /** 
+    /**
     * @method Phaser.Math#truncate
     * @param {number} n
     * @return {number}
@@ -110,7 +110,7 @@ Phaser.Math = {
         return (n > 0) ? Math.floor(n) : Math.ceil(n);
     },
 
-    /** 
+    /**
     * @method Phaser.Math#shear
     * @param {number} n
     * @return {number} n mod 1
@@ -202,7 +202,7 @@ Phaser.Math = {
     * Snaps a value to the nearest value in an array.
     * @method Phaser.Math#snapToInArray
     * @param {number} input
-    * @param {array} arr 
+    * @param {array} arr
     * @param {boolean} sort - True if the array needs to be sorted.
     * @return {number}
     */
@@ -219,14 +219,14 @@ Phaser.Math = {
         }
 
         var i = 1;
-        
+
         while (arr[i] < input) {
             i++;
         }
 
         var low = arr[i - 1];
         var high = (i < arr.length) ? arr[i] : Number.POSITIVE_INFINITY;
-        
+
         return ((high - input) <= (input - low)) ? high : low;
 
     },
@@ -260,7 +260,7 @@ Phaser.Math = {
     *
     * Note what occurs when we round to the 3rd space (8ths place), 100100000, this is to be assumed
     * because we are rounding 100011.1011011011011011 which rounds up.
-    * 
+    *
     * @method Phaser.Math#roundTo
     * @param {number} value - The value to round.
     * @param {number} place - The place to round to.
@@ -271,9 +271,9 @@ Phaser.Math = {
 
         if (typeof place === "undefined") { place = 0; }
         if (typeof base === "undefined") { base = 10; }
-        
+
         var p = Math.pow(base, -place);
-        
+
         return Math.round(value * p) / p;
 
     },
@@ -319,7 +319,7 @@ Phaser.Math = {
     * @method Phaser.Math#interpolateFloat
     * @param {number} a
     * @param {number} b
-    * @param {number} weight 
+    * @param {number} weight
     * @return {number}
     */
     interpolateFloat: function (a, b, weight) {
@@ -370,7 +370,7 @@ Phaser.Math = {
 
         angleRad = angleRad % (2 * Math.PI);
         return angleRad >= 0 ? angleRad : angleRad + 2 * Math.PI;
-        
+
     },
 
     /**
@@ -416,7 +416,7 @@ Phaser.Math = {
         var rd = (radians) ? Math.PI : 180;
         a1 = this.normalizeAngle(a1, radians);
         a2 = this.normalizeAngle(a2, radians);
-        
+
         if (a1 < -rd / 2 && a2 > rd / 2)
         {
             a1 += rd * 2;
@@ -466,7 +466,7 @@ Phaser.Math = {
     chanceRoll: function (chance) {
 
         if (typeof chance === "undefined") { chance = 50; }
-        
+
         if (chance <= 0)
         {
             return false;
@@ -544,7 +544,7 @@ Phaser.Math = {
     minSub: function (value, amount, min) {
 
         value -= amount;
-        
+
         if (value < min)
         {
             value = min;
@@ -579,7 +579,7 @@ Phaser.Math = {
         {
             result += range;
         }
-        
+
         return result + min;
 
     },
@@ -814,7 +814,7 @@ Phaser.Math = {
     * @method Phaser.Math#linearInterpolation
     * @param {number} v
     * @param {number} k
-    * @return {number} 
+    * @return {number}
     */
     linearInterpolation: function (v, k) {
 
@@ -927,7 +927,7 @@ Phaser.Math = {
     * @param {number} p2
     * @param {number} p3
     * @param {number} t
-    * @return {number} 
+    * @return {number}
     */
     catmullRom: function (p0, p1, p2, p3, t) {
 
@@ -961,7 +961,7 @@ Phaser.Math = {
 
         if (typeof startIndex === "undefined") { startIndex = 0; }
         if (typeof length === "undefined") { length = 0; }
-        
+
         if (objects != null) {
 
             var l = length;
@@ -995,7 +995,7 @@ Phaser.Math = {
 
         if (typeof startIndex === "undefined") { startIndex = 0; }
         if (typeof length === "undefined") { length = 0; }
-        
+
         if (objects != null) {
 
             var l = length;
@@ -1062,14 +1062,14 @@ Phaser.Math = {
         if (typeof sinAmplitude === "undefined") { sinAmplitude = 1.0; }
         if (typeof cosAmplitude === "undefined") { cosAmplitude = 1.0; }
         if (typeof frequency === "undefined") { frequency = 1.0; }
-        
+
         var sin = sinAmplitude;
         var cos = cosAmplitude;
         var frq = frequency * Math.PI / length;
-        
+
         var cosTable = [];
         var sinTable = [];
-        
+
         for (var c = 0; c < length; c++) {
 
             cos -= sin * frq;
@@ -1087,7 +1087,7 @@ Phaser.Math = {
     /**
     * Removes the top element from the stack and re-inserts it onto the bottom, then returns it.
     * The original stack is modified in the process. This effectively moves the position of the data from the start to the end of the table.
-    * 
+    *
     * @method Phaser.Math#shift
     * @param {array} stack - The array to shift.
     * @return {any} The shifted value.
@@ -1123,7 +1123,7 @@ Phaser.Math = {
 
     /**
     * Returns the distance between the two given set of coordinates.
-    * 
+    *
     * @method Phaser.Math#distance
     * @param {number} x1
     * @param {number} y1
@@ -1142,7 +1142,7 @@ Phaser.Math = {
 
     /**
     * Returns the distance between the two given set of coordinates at the power given.
-    * 
+    *
     * @method Phaser.Math#distancePow
     * @param {number} x1
     * @param {number} y1
@@ -1161,7 +1161,7 @@ Phaser.Math = {
 
     /**
     * Returns the rounded distance between the two given set of coordinates.
-    * 
+    *
     * @method Phaser.Math#distanceRounded
     * @param {number} x1
     * @param {number} y1
@@ -1178,7 +1178,7 @@ Phaser.Math = {
     /**
     * Force a value within the boundaries of two values.
     * Clamp value to range <a, b>
-    * 
+    *
     * @method Phaser.Math#clamp
     * @param {number} x
     * @param {number} a
@@ -1190,10 +1190,10 @@ Phaser.Math = {
         return ( x < a ) ? a : ( ( x > b ) ? b : x );
 
     },
- 
+
     /**
     * Clamp value to range <a, inf).
-    * 
+    *
     * @method Phaser.Math#clampBottom
     * @param {number} x
     * @param {number} a
@@ -1207,7 +1207,7 @@ Phaser.Math = {
 
     /**
     * Checks if two values are within the given tolerance of each other.
-    * 
+    *
     * @method Phaser.Math#within
     * @param {number} a - The first number to check
     * @param {number} b - The second number to check
@@ -1219,10 +1219,10 @@ Phaser.Math = {
         return (Math.abs(a - b) <= tolerance);
 
     },
- 
+
     /**
     * Linear mapping from range <a1, a2> to range <b1, b2>
-    * 
+    *
     * @method Phaser.Math#mapLinear
     * @param {number} x the value to map
     * @param {number} a1 first endpoint of the range <a1, a2>
@@ -1239,7 +1239,7 @@ Phaser.Math = {
 
     /**
     * Smoothstep function as detailed at http://en.wikipedia.org/wiki/Smoothstep
-    * 
+    *
     * @method Phaser.Math#smoothstep
     * @param {number} x
     * @param {number} min
@@ -1266,7 +1266,7 @@ Phaser.Math = {
 
     /**
     * Smootherstep function as detailed at http://en.wikipedia.org/wiki/Smoothstep
-    * 
+    *
     * @method Phaser.Math#smootherstep
     * @param {number} x
     * @param {number} min
@@ -1294,7 +1294,7 @@ Phaser.Math = {
     /**
     * A value representing the sign of the value.
     * -1 for negative, +1 for positive, 0 if value is 0
-    * 
+    *
     * @method Phaser.Math#sign
     * @param {number} x
     * @return {number}
@@ -1307,11 +1307,11 @@ Phaser.Math = {
 
     /**
     * Convert degrees to radians.
-    * 
+    *
     * @method Phaser.Math#degToRad
     * @return {function}
     */
-    degToRad: function() {
+    degToRad: (function() {
 
         var degreeToRadiansFactor = Math.PI / 180;
 
@@ -1321,15 +1321,15 @@ Phaser.Math = {
 
         };
 
-    }(),
+    }()),
 
     /**
     * Convert degrees to radians.
-    * 
+    *
     * @method Phaser.Math#radToDeg
     * @return {function}
     */
-    radToDeg: function() {
+    radToDeg: (function() {
 
         var radianToDegreesFactor = 180 / Math.PI;
 
@@ -1339,6 +1339,6 @@ Phaser.Math = {
 
         };
 
-    }()
+    }())
 
 };

@@ -41,7 +41,7 @@ PIXI.InteractionManager = function(stage)
     this.tempPoint = new PIXI.Point();
 
     /**
-     * 
+     *
      * @property mouseoverEnabled
      * @type Boolean
      * @default
@@ -50,7 +50,7 @@ PIXI.InteractionManager = function(stage)
 
     /**
      * tiny little interactiveData pool !
-     * 
+     *
      * @property pool
      * @type Array
      */
@@ -165,7 +165,7 @@ PIXI.InteractionManager.prototype.setTarget = function(target)
         this.setTargetDomElement( target.view );
     }
 
-    
+
 };
 
 
@@ -395,7 +395,7 @@ PIXI.InteractionManager.prototype.onMouseDown = function(event)
  *
  * @method onMouseOut
  * @param event {Event} The DOM event of a mouse button being moved out
- * @private 
+ * @private
  */
 PIXI.InteractionManager.prototype.onMouseOut = function()
 {
@@ -484,7 +484,7 @@ PIXI.InteractionManager.prototype.hitTest = function(item, interactionData)
     if( !item.worldVisible )return false;
 
     // temp fix for if the element is in a non visible
-   
+
     var isSprite = (item instanceof PIXI.Sprite),
         worldTransform = item.worldTransform,
         a00 = worldTransform.a, a01 = worldTransform.b, a02 = worldTransform.tx,
@@ -526,7 +526,7 @@ PIXI.InteractionManager.prototype.hitTest = function(item, interactionData)
             }
         }
     }
-    
+
     var length = item.children.length;
 
     for (var i = length-1; i >= 0; i--)
@@ -541,7 +541,7 @@ PIXI.InteractionManager.prototype.hitTest = function(item, interactionData)
         }
     }
 
-    
+
 
 
     return false;
@@ -597,7 +597,7 @@ PIXI.InteractionManager.prototype.onTouchStart = function(event)
     var rect = this.interactionDOMElement.getBoundingClientRect();
 
     if(PIXI.AUTO_PREVENT_DEFAULT)event.preventDefault();
-    
+
     var changedTouches = event.changedTouches;
     for (var i=0; i < changedTouches.length; i++)
     {

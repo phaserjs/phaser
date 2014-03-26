@@ -6,7 +6,7 @@
 
 /**
 * Creates a new `Graphics` object.
-* 
+*
 * @class Phaser.Graphics
 * @constructor
 *
@@ -23,7 +23,7 @@ Phaser.Graphics = function (game, x, y) {
     * @property {Phaser.Game} game - A reference to the currently running Game.
     */
     this.game = game;
- 
+
     /**
     * @property {boolean} exists - If exists = false then the Text isn't updated by the core game loop.
     * @default
@@ -112,7 +112,7 @@ Phaser.Graphics.prototype.preUpdate = function () {
 
     return true;
 
-}
+};
 
 /**
 * Override and use this function in your own custom objects to handle any update requirements you may have.
@@ -122,7 +122,7 @@ Phaser.Graphics.prototype.preUpdate = function () {
 */
 Phaser.Graphics.prototype.update = function() {
 
-}
+};
 
 /**
 * Automatically called by World.postUpdate.
@@ -137,11 +137,11 @@ Phaser.Graphics.prototype.postUpdate = function () {
         this.position.y = (this.game.camera.view.y + this.cameraOffset.y) / this.game.camera.scale.y;
     }
 
-}
+};
 
 /**
 * Destroy this Graphics instance.
-* 
+*
 * @method Phaser.Graphics.prototype.destroy
 * @param {boolean} [destroyChildren=true] - Should every child of this object have its destroy method called?
 */
@@ -185,11 +185,11 @@ Phaser.Graphics.prototype.destroy = function(destroyChildren) {
 
     this.game = null;
 
-}
+};
 
 /*
 * Draws a {Phaser.Polygon} or a {PIXI.Polygon} filled
-* 
+*
 * @method Phaser.Graphics.prototype.drawPolygon
 */
 Phaser.Graphics.prototype.drawPolygon = function (poly) {
@@ -202,8 +202,8 @@ Phaser.Graphics.prototype.drawPolygon = function (poly) {
     }
 
     this.lineTo(poly.points[0].x, poly.points[0].y);
-    
-}
+
+};
 
 /**
 * Indicates the rotation of the Graphics, in degrees, from its original orientation. Values from 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation.
@@ -233,7 +233,7 @@ Object.defineProperty(Phaser.Graphics.prototype, 'angle', {
 * @property {boolean} fixedToCamera - Set to true to fix this Graphics to the Camera at its current world coordinates.
 */
 Object.defineProperty(Phaser.Graphics.prototype, "fixedToCamera", {
-    
+
     get: function () {
 
         return !!this._cache[7];

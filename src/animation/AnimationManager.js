@@ -29,7 +29,7 @@ Phaser.AnimationManager = function (sprite) {
     * @default
     */
     this.currentFrame = null;
-    
+
     /**
     * @property {boolean} updateIfVisible - Should the animation data continue to update even if the Sprite.visible is set to false.
     * @default
@@ -183,7 +183,7 @@ Phaser.AnimationManager.prototype = {
     /**
     * Play an animation based on the given key. The animation should previously have been added via sprite.animations.add()
     * If the requested animation is already playing this request will be ignored. If you need to reset an already running animation do so directly on the Animation object itself.
-    * 
+    *
     * @method Phaser.AnimationManager#play
     * @param {string} name - The name of the animation to be played, e.g. "fire", "walk", "jump".
     * @param {number} [frameRate=null] - The framerate to play the animation at. The speed is given in frames per second. If not provided the previously set frameRate of the Animation is used.
@@ -245,7 +245,7 @@ Phaser.AnimationManager.prototype = {
 
     /**
     * The main update function is called by the Sprites update loop. It's responsible for updating animation frames and firing related events.
-    * 
+    *
     * @method Phaser.AnimationManager#update
     * @protected
     * @return {boolean} True if a new animation frame has been set, otherwise false.
@@ -343,7 +343,7 @@ Object.defineProperty(Phaser.AnimationManager.prototype, 'frameData', {
 * @readonly
 */
 Object.defineProperty(Phaser.AnimationManager.prototype, 'frameTotal', {
- 
+
     get: function () {
 
         if (this._frameData)
@@ -390,7 +390,7 @@ Object.defineProperty(Phaser.AnimationManager.prototype, 'frame', {
         {
             return this._frameIndex;
         }
-        
+
     },
 
     set: function (value) {
@@ -398,12 +398,12 @@ Object.defineProperty(Phaser.AnimationManager.prototype, 'frame', {
         if (typeof value === 'number' && this._frameData && this._frameData.getFrame(value) !== null)
         {
             this.currentFrame = this._frameData.getFrame(value);
-    
+
             if (this.currentFrame)
             {
                 this._frameIndex = value;
                 this.sprite.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
-        
+
                 if (this.sprite.__tilePattern)
                 {
                     this.__tilePattern = false;
@@ -441,7 +441,7 @@ Object.defineProperty(Phaser.AnimationManager.prototype, 'frameName', {
             {
                 this._frameIndex = this.currentFrame.index;
                 this.sprite.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
-        
+
                 if (this.sprite.__tilePattern)
                 {
                     this.__tilePattern = false;

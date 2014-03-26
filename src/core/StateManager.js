@@ -8,7 +8,7 @@
 
 /**
 * The State Manager is responsible for loading, setting up and switching game states.
-* 
+*
 * @class Phaser.StateManager
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
@@ -75,7 +75,7 @@ Phaser.StateManager = function (game, pendingState) {
     * @property {function} onPreloadCallback - This will be called when init states (loading assets...).
     */
     this.onPreloadCallback = null;
-    
+
     /**
     * @property {function} onCreateCallback - This will be called when create states (setup states...).
     */
@@ -256,7 +256,7 @@ Phaser.StateManager.prototype = {
         }
 
     },
-    
+
     /**
     * Used by onInit and onShutdown when those functions don't exist on the state
     * @method Phaser.StateManager#dummy

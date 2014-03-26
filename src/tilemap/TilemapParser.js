@@ -368,7 +368,7 @@ Phaser.TilemapParser = {
                         properties: json.layers[i].objects[v].properties
 
                     };
-        
+
                     objects[json.layers[i].name].push(object);
                 }
                 else if (json.layers[i].objects[v].polyline)
@@ -409,7 +409,7 @@ Phaser.TilemapParser = {
         for (var i = 0; i < map.tilesets.length; i++)
         {
             var set = map.tilesets[i];
-    
+
             var x = set.tileMargin;
             var y = set.tileMargin;
 
@@ -454,4 +454,4 @@ Phaser.TilemapParser = {
 
     }
 
-}
+};

@@ -18,4 +18,4 @@ Phaser.Physics.P2.CollisionGroup = function (bitmask) {
     */
     this.mask = bitmask;
 
-}
+};

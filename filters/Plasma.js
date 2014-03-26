@@ -11,7 +11,7 @@ Phaser.Filter.Plasma = function (game) {
     this.uniforms.redShift = { type: '1f', value: 0.5 };
     this.uniforms.greenShift = { type: '1f', value: 0.5 };
     this.uniforms.blueShift = { type: '1f', value: 0.9 };
-        
+
     this.fragmentSrc = [
 
         "precision mediump float;",
@@ -52,15 +52,15 @@ Phaser.Filter.Plasma.prototype.init = function (width, height, alpha, size) {
 
     this.setResolution(width, height);
 
-    if (typeof alpha !== 'undefined') { 
+    if (typeof alpha !== 'undefined') {
         this.uniforms.alpha.value = alpha;
     }
 
-    if (typeof size !== 'undefined') { 
+    if (typeof size !== 'undefined') {
         this.uniforms.size.value = size;
     }
 
-}
+};
 
 Object.defineProperty(Phaser.Filter.Plasma.prototype, 'alpha', {
 

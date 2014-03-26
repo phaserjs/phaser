@@ -9,8 +9,8 @@
  * @extends DisplayObjectContainer
  * @constructor
  * @param texture {Texture} The texture for this sprite
- * 
- * A sprite can be created directly from an image like this : 
+ *
+ * A sprite can be created directly from an image like this :
  * var sprite = nex PIXI.Sprite.FromImage('assets/image.png');
  * yourStage.addChild(sprite);
  * then obviously don't forget to add it to the stage you have already created
@@ -65,7 +65,7 @@ PIXI.Sprite = function(texture)
      * @default 0xFFFFFF
      */
     this.tint = 0xFFFFFF;// * Math.random();
-    
+
     /**
      * The blend mode to be applied to the sprite
      *
@@ -248,14 +248,14 @@ PIXI.Sprite.prototype.getBounds = function(matrix)
 * Renders the object using the WebGL renderer
 *
 * @method _renderWebGL
-* @param renderSession {RenderSession} 
+* @param renderSession {RenderSession}
 * @private
 */
 PIXI.Sprite.prototype._renderWebGL = function(renderSession)
 {
     // if the sprite is not visible or the alpha is 0 then no need to render this element
     if(!this.visible || this.alpha <= 0)return;
-    
+
     var i,j;
 
     // do a quick check to see if this element has a mask or a filter.
@@ -290,7 +290,7 @@ PIXI.Sprite.prototype._renderWebGL = function(renderSession)
 
         if(this._filters)renderSession.filterManager.popFilter();
         if(this._mask)renderSession.maskManager.popMask(renderSession);
-        
+
         spriteBatch.start();
     }
     else
@@ -304,22 +304,22 @@ PIXI.Sprite.prototype._renderWebGL = function(renderSession)
         }
     }
 
-   
-    //TODO check culling  
+
+    //TODO check culling
 };
 
 /**
 * Renders the object using the Canvas renderer
 *
 * @method _renderCanvas
-* @param renderSession {RenderSession} 
+* @param renderSession {RenderSession}
 * @private
 */
 PIXI.Sprite.prototype._renderCanvas = function(renderSession)
 {
     // if the sprite is not visible or the alpha is 0 then no need to render this element
     if(this.visible === false || this.alpha === 0)return;
-    
+
     var frame = this.texture.frame;
     var context = renderSession.context;
     var texture = this.texture;
@@ -335,7 +335,7 @@ PIXI.Sprite.prototype._renderCanvas = function(renderSession)
         renderSession.maskManager.pushMask(this._mask, renderSession.context);
     }
 
-    
+
 
     //ignore null sources
     if(frame && frame.width && frame.height && texture.baseTexture.source)
@@ -362,17 +362,17 @@ PIXI.Sprite.prototype._renderCanvas = function(renderSession)
 
         if(this.tint !== 0xFFFFFF)
         {
-            
+
             if(this.cachedTint !== this.tint)
             {
                 // no point tinting an image that has not loaded yet!
                 if(!texture.baseTexture.hasLoaded)return;
 
                 this.cachedTint = this.tint;
-                
+
                 //TODO clean up caching - how to clean up the caches?
                 this.tintedTexture = PIXI.CanvasTinter.getTintedTexture(this, this.tint);
-                
+
             }
 
             context.drawImage(this.tintedTexture,
@@ -388,7 +388,7 @@ PIXI.Sprite.prototype._renderCanvas = function(renderSession)
         else
         {
 
-           
+
 
             if(texture.trim)
             {
@@ -406,7 +406,7 @@ PIXI.Sprite.prototype._renderCanvas = function(renderSession)
             }
             else
             {
-               
+
                 context.drawImage(this.texture.baseTexture.source,
                                frame.x,
                                frame.y,
@@ -417,7 +417,7 @@ PIXI.Sprite.prototype._renderCanvas = function(renderSession)
                                frame.width,
                                frame.height);
             }
-            
+
         }
     }
 

@@ -7,8 +7,8 @@
  */
 var PIXI = PIXI || {};
 
-/* 
-* 
+/*
+*
 * This file contains a lot of pixi consts which are used across the rendering engine
 * @class Consts
 */
@@ -46,7 +46,7 @@ PIXI.scaleModes = {
     NEAREST:1
 };
 
-// interaction frequency 
+// interaction frequency
 PIXI.INTERACTION_FREQUENCY = 30;
 PIXI.AUTO_PREVENT_DEFAULT = true;
 

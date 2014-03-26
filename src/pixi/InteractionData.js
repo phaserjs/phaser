@@ -1,7 +1,7 @@
 /**
  * @author Mat Groves http://matgroves.com/ @Doormat23
  */
- 
+
 /**
  * Holds all information related to an Interaction event
  *

@@ -1,3 +1,4 @@
+/* jshint wsh:true */
 /**
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2014 Photon Storm Ltd.
@@ -97,17 +98,17 @@ Phaser.Loader = function (game) {
     * @property {Phaser.Signal} onFileComplete - Event signal.
     */
     this.onFileComplete = new Phaser.Signal();
-    
+
     /**
     * @property {Phaser.Signal} onFileError - Event signal.
     */
     this.onFileError = new Phaser.Signal();
-    
+
     /**
     * @property {Phaser.Signal} onLoadStart - Event signal.
     */
     this.onLoadStart = new Phaser.Signal();
-    
+
     /**
     * @property {Phaser.Signal} onLoadComplete - Event signal.
     */
@@ -195,7 +196,7 @@ Phaser.Loader.prototype = {
         }
 
         return false;
-        
+
     },
 
     /**
@@ -220,7 +221,7 @@ Phaser.Loader.prototype = {
         }
 
         return -1;
-        
+
     },
 
     /**
@@ -245,7 +246,7 @@ Phaser.Loader.prototype = {
         }
 
         return false;
-        
+
     },
 
     /**
@@ -1163,10 +1164,10 @@ Phaser.Loader.prototype = {
 
                     if (file.autoDecode)
                     {
-                        this.game.cache.updateSound(key, 'isDecoding', true);
-
                         var that = this;
                         var key = file.key;
+
+                        this.game.cache.updateSound(key, 'isDecoding', true);
 
                         this.game.sound.context.decodeAudioData(file.data, function (buffer) {
                             if (buffer)
@@ -1402,7 +1403,7 @@ Phaser.Loader.prototype = {
         {
             this.hasLoaded = true;
             this.isLoading = false;
-            
+
             this.removeAll();
 
             this.onLoadComplete.dispatch();

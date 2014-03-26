@@ -6,13 +6,13 @@ Phaser.Filter.LightBeam = function (game) {
 
     Phaser.Filter.call(this, game);
 
-    this.uniforms.alpha = { type: '1f', value: 1 }
-    this.uniforms.thickness = { type: '1f', value: 70.0 }
-    this.uniforms.speed = { type: '1f', value: 1.0 }
-    this.uniforms.red = { type: '1f', value: 2.0 }
-    this.uniforms.green = { type: '1f', value: 1.0 }
-    this.uniforms.blue = { type: '1f', value: 1.0 }
-        
+    this.uniforms.alpha = { type: '1f', value: 1 };
+    this.uniforms.thickness = { type: '1f', value: 70.0 };
+    this.uniforms.speed = { type: '1f', value: 1.0 };
+    this.uniforms.red = { type: '1f', value: 2.0 };
+    this.uniforms.green = { type: '1f', value: 1.0 };
+    this.uniforms.blue = { type: '1f', value: 1.0 };
+
     this.fragmentSrc = [
 
         "precision mediump float;",
@@ -28,9 +28,9 @@ Phaser.Filter.LightBeam = function (game) {
         "void main(void) {",
 
             "vec2 uPos = (gl_FragCoord.xy / resolution.xy);",
-    
+
             "uPos.y -= 0.50;",
-    
+
             "float vertColor = 0.0;",
 
             "for (float i = 0.0; i < 1.0; i++)",
@@ -40,11 +40,11 @@ Phaser.Filter.LightBeam = function (game) {
                 "float fTemp = abs(1.0 / uPos.y / thickness);",
                 "vertColor += fTemp;",
             "}",
-    
+
             "vec4 color = vec4(vertColor * red, vertColor * green, vertColor * blue, alpha);",
             "gl_FragColor = color;",
         "}"
-    ];  
+    ];
 
 };
 
@@ -55,7 +55,7 @@ Phaser.Filter.LightBeam.prototype.init = function (width, height) {
 
     this.setResolution(width, height);
 
-}
+};
 
 Object.defineProperty(Phaser.Filter.LightBeam.prototype, 'alpha', {
 

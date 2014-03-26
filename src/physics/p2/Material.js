@@ -21,7 +21,7 @@ Phaser.Physics.P2.Material = function (name) {
 
     p2.Material.call(this);
 
-}
+};
 
 Phaser.Physics.P2.Material.prototype = Object.create(p2.Material.prototype);
 Phaser.Physics.P2.Material.prototype.constructor = Phaser.Physics.P2.Material;

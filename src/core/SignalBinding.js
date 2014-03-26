@@ -67,8 +67,8 @@ Phaser.SignalBinding.prototype = {
 
     /**
     * Default parameters passed to listener during `Signal.dispatch` and `SignalBinding.execute` (curried parameters).
-    * @property {array|null} params 
-    * @default 
+    * @property {array|null} params
+    * @default
     */
     params: null,
 
@@ -79,13 +79,13 @@ Phaser.SignalBinding.prototype = {
     * @param {array} [paramsArr] - Array of parameters that should be passed to the listener.
     * @return {any} Value returned by the listener.
     */
-    execute: function (paramsArr) {
+    execute: function(paramsArr) {
 
         var handlerReturn, params;
 
         if (this.active && !!this._listener)
         {
-            params = this.params? this.params.concat(paramsArr) : paramsArr;
+            params = this.params ? this.params.concat(paramsArr) : paramsArr;
             handlerReturn = this._listener.apply(this.context, params);
 
             if (this._isOnce)

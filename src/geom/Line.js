@@ -158,7 +158,7 @@ Phaser.Line.prototype = {
         while (!((x1 == x2) && (y1 == y2)))
         {
             var e2 = err << 1;
-    
+
             if (e2 > -dy)
             {
                 err -= dy;
@@ -377,7 +377,7 @@ Phaser.Line.intersectsPoints = function (a, b, e, f, asSegment, result) {
 
     result.x = ((b1 * c2) - (b2 * c1)) / denom;
     result.y = ((a2 * c1) - (a1 * c2)) / denom;
- 
+
     if (asSegment)
     {
         if (Math.pow((result.x - b.x) + (result.y - b.y), 2) > Math.pow((a.x - b.x) + (a.y - b.y), 2))

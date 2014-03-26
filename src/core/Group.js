@@ -210,7 +210,7 @@ Phaser.Group.prototype.add = function (child) {
 
     return child;
 
-}
+};
 
 /**
 * Adds an existing object to this Group. The object can be an instance of Phaser.Sprite, Phaser.Button or any other display object.
@@ -247,7 +247,7 @@ Phaser.Group.prototype.addAt = function (child, index) {
 
     return child;
 
-}
+};
 
 /**
 * Returns the child found at the given index within this Group.
@@ -267,7 +267,7 @@ Phaser.Group.prototype.getAt = function (index) {
         return this.getChildAt(index);
     }
 
-}
+};
 
 /**
 * Automatically creates a new Phaser.Sprite object and adds it to the top of this Group.
@@ -297,9 +297,9 @@ Phaser.Group.prototype.create = function (x, y, key, frame, exists) {
     child.alive = exists;
 
     this.addChild(child);
-    
+
     child.z = this.children.length;
-        
+
     if (child.events)
     {
         child.events.onAddedToGroup.dispatch(child, this);
@@ -312,7 +312,7 @@ Phaser.Group.prototype.create = function (x, y, key, frame, exists) {
 
     return child;
 
-}
+};
 
 /**
 * Automatically creates multiple Phaser.Sprite objects and adds them to the top of this Group.
@@ -334,7 +334,7 @@ Phaser.Group.prototype.createMultiple = function (quantity, key, frame, exists) 
         this.create(0, 0, key, frame, exists);
     }
 
-}
+};
 
 /**
 * Internal method that re-applies all of the childrens Z values.
@@ -351,7 +351,7 @@ Phaser.Group.prototype.updateZ = function () {
         this.children[i].z = i;
     }
 
-}
+};
 
 /**
 * Advances the Group cursor to the next object in the Group. If it's at the end of the Group it wraps around to the first object.
@@ -375,7 +375,7 @@ Phaser.Group.prototype.next = function () {
         this.cursor = this.children[this._cache[8]];
     }
 
-}
+};
 
 /**
 * Moves the Group cursor to the previous object in the Group. If it's at the start of the Group it wraps around to the last object.
@@ -399,7 +399,7 @@ Phaser.Group.prototype.previous = function () {
         this.cursor = this.children[this._cache[8]];
     }
 
-}
+};
 
 /**
 * Swaps the position of two children in this Group. Both children must be in this Group.
@@ -419,8 +419,8 @@ Phaser.Group.prototype.swap = function (child1, child2) {
     }
 
     return result;
-    
-}
+
+};
 
 /**
 * Brings the given child to the top of this Group so it renders above all other children.
@@ -439,7 +439,7 @@ Phaser.Group.prototype.bringToTop = function (child) {
 
     return child;
 
-}
+};
 
 /**
 * Sends the given child to the bottom of this Group so it renders below all other children.
@@ -458,7 +458,7 @@ Phaser.Group.prototype.sendToBack = function (child) {
 
     return child;
 
-}
+};
 
 /**
 * Moves the given child up one place in this Group unless it's already at the top.
@@ -482,7 +482,7 @@ Phaser.Group.prototype.moveUp = function (child) {
 
     return child;
 
-}
+};
 
 /**
 * Moves the given child down one place in this Group unless it's already at the top.
@@ -506,7 +506,7 @@ Phaser.Group.prototype.moveDown = function (child) {
 
     return child;
 
-}
+};
 
 /**
 * Positions the child found at the given index within this Group to the given x and y coordinates.
@@ -528,7 +528,7 @@ Phaser.Group.prototype.xy = function (index, x, y) {
         this.getChildAt(index).y = y;
     }
 
-}
+};
 
 /**
 * Reverses all children in this Group. Note that this does not propagate, only direct children are re-ordered.
@@ -540,7 +540,7 @@ Phaser.Group.prototype.reverse = function () {
     this.children.reverse();
     this.updateZ();
 
-}
+};
 
 /**
 * Get the index position of the given child in this Group. This should always match the childs z property.
@@ -553,7 +553,7 @@ Phaser.Group.prototype.getIndex = function (child) {
 
     return this.children.indexOf(child);
 
-}
+};
 
 /**
 * Replaces a child of this Group with the given newChild. The newChild cannot be a member of this Group.
@@ -566,7 +566,7 @@ Phaser.Group.prototype.getIndex = function (child) {
 Phaser.Group.prototype.replace = function (oldChild, newChild) {
 
     var index = this.getIndex(oldChild);
-    
+
     if (index !== -1)
     {
         if (newChild.parent !== undefined)
@@ -589,7 +589,7 @@ Phaser.Group.prototype.replace = function (oldChild, newChild) {
         return temp;
     }
 
-}
+};
 
 /**
 * Sets the given property to the given value on the child. The operation controls the assignment of the value.
@@ -649,7 +649,7 @@ Phaser.Group.prototype.setProperty = function (child, key, value, operation) {
         else if (operation == 4) { child[key[0]][key[1]][key[2]][key[3]] /= value; }
     }
 
-}
+};
 
 /**
 * This function allows you to quickly set a property on a single child of this Group to a new value.
@@ -675,7 +675,7 @@ Phaser.Group.prototype.set = function (child, key, value, checkAlive, checkVisib
         this.setProperty(child, key, value, operation);
     }
 
-}
+};
 
 /**
 * This function allows you to quickly set the same property across all children of this Group to a new value.
@@ -708,7 +708,7 @@ Phaser.Group.prototype.setAll = function (key, value, checkAlive, checkVisible, 
         }
     }
 
-}
+};
 
 /**
 * This function allows you to quickly set the same property across all children of this Group, and any child Groups, to a new value.
@@ -747,7 +747,7 @@ Phaser.Group.prototype.setAllChildren = function (key, value, checkAlive, checkV
         }
     }
 
-}
+};
 
 /**
 * Adds the amount to the given property on all children in this Group.
@@ -763,7 +763,7 @@ Phaser.Group.prototype.addAll = function (property, amount, checkAlive, checkVis
 
     this.setAll(property, amount, checkAlive, checkVisible, 1);
 
-}
+};
 
 /**
 * Subtracts the amount from the given property on all children in this Group.
@@ -779,7 +779,7 @@ Phaser.Group.prototype.subAll = function (property, amount, checkAlive, checkVis
 
     this.setAll(property, amount, checkAlive, checkVisible, 2);
 
-}
+};
 
 /**
 * Multiplies the given property by the amount on all children in this Group.
@@ -795,7 +795,7 @@ Phaser.Group.prototype.multiplyAll = function (property, amount, checkAlive, che
 
     this.setAll(property, amount, checkAlive, checkVisible, 3);
 
-}
+};
 
 /**
 * Divides the given property by the amount on all children in this Group.
@@ -811,12 +811,12 @@ Phaser.Group.prototype.divideAll = function (property, amount, checkAlive, check
 
     this.setAll(property, amount, checkAlive, checkVisible, 4);
 
-}
+};
 
 /**
 * Calls a function on all of the children that have exists=true in this Group.
 * After the existsValue parameter you can add as many parameters as you like, which will all be passed to the child callback.
-* 
+*
 * @method Phaser.Group#callAllExists
 * @param {function} callback - The function that exists on the children that will be called.
 * @param {boolean} existsValue - Only children with exists=existsValue will be called.
@@ -834,11 +834,11 @@ Phaser.Group.prototype.callAllExists = function (callback, existsValue) {
         }
     }
 
-}
+};
 
 /**
 * Returns a reference to a function that exists on a child of the Group based on the given callback array.
-* 
+*
 * @method Phaser.Group#callbackFromArray
 * @param {object} child - The object to inspect.
 * @param {array} callback - The array of function names.
@@ -887,12 +887,12 @@ Phaser.Group.prototype.callbackFromArray = function (child, callback, length) {
 
     return false;
 
-}
+};
 
 /**
 * Calls a function on all of the children regardless if they are dead or alive (see callAllExists if you need control over that)
 * After the method parameter and context you can add as many extra parameters as you like, which will all be passed to the child.
-* 
+*
 * @method Phaser.Group#callAll
 * @param {string} method - A string containing the name of the function that will be called. The function must exist on the child.
 * @param {string} [context=null] - A string containing the context under which the method will be executed. Set to null to default to the child.
@@ -947,7 +947,7 @@ Phaser.Group.prototype.callAll = function (method, context) {
         }
     }
 
-}
+};
 
 /**
 * The core preUpdate - as called by World.
@@ -971,7 +971,7 @@ Phaser.Group.prototype.preUpdate = function () {
 
     return true;
 
-}
+};
 
 /**
 * The core update - as called by World.
@@ -987,7 +987,7 @@ Phaser.Group.prototype.update = function () {
         this.children[i].update();
     }
 
-}
+};
 
 /**
 * The core postUpdate - as called by World.
@@ -1010,14 +1010,14 @@ Phaser.Group.prototype.postUpdate = function () {
         this.children[i].postUpdate();
     }
 
-}
+};
 
 /**
 * Allows you to call your own function on each member of this Group. You must pass the callback and context in which it will run.
 * After the checkExists parameter you can add as many parameters as you like, which will all be passed to the callback along with the child.
 * For example: Group.forEach(awardBonusGold, this, true, 100, 500)
 * Note: Currently this will skip any children which are Groups themselves.
-* 
+*
 * @method Phaser.Group#forEach
 * @param {function} callback - The function that will be called. Each child of the Group will be passed to it as its first parameter.
 * @param {Object} callbackContext - The context in which the function should be called (usually 'this').
@@ -1039,13 +1039,13 @@ Phaser.Group.prototype.forEach = function (callback, callbackContext, checkExist
         }
     }
 
-}
+};
 
 /**
 * Allows you to call your own function on each member of this Group where child.exists=true. You must pass the callback and context in which it will run.
 * You can add as many parameters as you like, which will all be passed to the callback along with the child.
 * For example: Group.forEachExists(causeDamage, this, 500)
-* 
+*
 * @method Phaser.Group#forEachExists
 * @param {function} callback - The function that will be called. Each child of the Group will be passed to it as its first parameter.
 * @param {Object} callbackContext - The context in which the function should be called (usually 'this').
@@ -1057,13 +1057,13 @@ Phaser.Group.prototype.forEachExists = function (callback, callbackContext) {
 
     this.iterate('exists', true, Phaser.Group.RETURN_TOTAL, callback, callbackContext, args);
 
-}
+};
 
 /**
 * Allows you to call your own function on each alive member of this Group (where child.alive=true). You must pass the callback and context in which it will run.
 * You can add as many parameters as you like, which will all be passed to the callback along with the child.
 * For example: Group.forEachAlive(causeDamage, this, 500)
-* 
+*
 * @method Phaser.Group#forEachAlive
 * @param {function} callback - The function that will be called. Each child of the Group will be passed to it as its first parameter.
 * @param {Object} callbackContext - The context in which the function should be called (usually 'this').
@@ -1075,13 +1075,13 @@ Phaser.Group.prototype.forEachAlive = function (callback, callbackContext) {
 
     this.iterate('alive', true, Phaser.Group.RETURN_TOTAL, callback, callbackContext, args);
 
-}
+};
 
 /**
 * Allows you to call your own function on each dead member of this Group (where alive=false). You must pass the callback and context in which it will run.
 * You can add as many parameters as you like, which will all be passed to the callback along with the child.
 * For example: Group.forEachDead(bringToLife, this)
-* 
+*
 * @method Phaser.Group#forEachDead
 * @param {function} callback - The function that will be called. Each child of the Group will be passed to it as its first parameter.
 * @param {Object} callbackContext - The context in which the function should be called (usually 'this').
@@ -1093,7 +1093,7 @@ Phaser.Group.prototype.forEachDead = function (callback, callbackContext) {
 
     this.iterate('alive', false, Phaser.Group.RETURN_TOTAL, callback, callbackContext, args);
 
-}
+};
 
 /**
 * Call this function to sort the group according to a particular value and order.
@@ -1127,7 +1127,7 @@ Phaser.Group.prototype.sort = function (index, order) {
 
     this.updateZ();
 
-}
+};
 
 /**
 * An internal helper function for the sort process.
@@ -1158,7 +1158,7 @@ Phaser.Group.prototype.ascendingSortHandler = function (a, b) {
         }
     }
 
-}
+};
 
 /**
 * An internal helper function for the sort process.
@@ -1182,13 +1182,13 @@ Phaser.Group.prototype.descendingSortHandler = function (a, b) {
         return 0;
     }
 
-}
+};
 
 /**
 * Iterates over the children of the Group. When a child has a property matching key that equals the given value, it is considered as a match.
 * Matched children can be sent to the optional callback, or simply returned or counted.
 * You can add as many callback parameters as you like, which will all be passed to the callback along with the child, after the callbackContext parameter.
-* 
+*
 * @method Phaser.Group#iterate
 * @param {string} key - The child property to check, i.e. 'exists', 'alive', 'health'
 * @param {any} value - If child.key === this value it will be considered a match. Note that a strict comparison is used.
@@ -1239,7 +1239,7 @@ Phaser.Group.prototype.iterate = function (key, value, returnType, callback, cal
         return null;
     }
 
-}
+};
 
 /**
 * Call this function to retrieve the first object with exists == (the given state) in the Group.
@@ -1257,7 +1257,7 @@ Phaser.Group.prototype.getFirstExists = function (state) {
 
     return this.iterate('exists', state, Phaser.Group.RETURN_CHILD);
 
-}
+};
 
 /**
 * Call this function to retrieve the first object with alive === true in the group.
@@ -1270,7 +1270,7 @@ Phaser.Group.prototype.getFirstAlive = function () {
 
     return this.iterate('alive', true, Phaser.Group.RETURN_CHILD);
 
-}
+};
 
 /**
 * Call this function to retrieve the first object with alive === false in the group.
@@ -1283,7 +1283,7 @@ Phaser.Group.prototype.getFirstDead = function () {
 
     return this.iterate('alive', false, Phaser.Group.RETURN_CHILD);
 
-}
+};
 
 /**
 * Returns the child at the top of this Group. The top is the one being displayed (rendered) above every other child.
@@ -1298,7 +1298,7 @@ Phaser.Group.prototype.getTop = function () {
         return this.children[this.children.length - 1];
     }
 
-}
+};
 
 /**
 * Returns the child at the bottom of this Group. The bottom is the one being displayed (rendered) below every other child.
@@ -1313,7 +1313,7 @@ Phaser.Group.prototype.getBottom = function () {
         return this.children[0];
     }
 
-}
+};
 
 /**
 * Call this function to find out how many members of the group are alive.
@@ -1325,7 +1325,7 @@ Phaser.Group.prototype.countLiving = function () {
 
     return this.iterate('alive', true, Phaser.Group.RETURN_TOTAL);
 
-}
+};
 
 /**
 * Call this function to find out how many members of the group are dead.
@@ -1337,7 +1337,7 @@ Phaser.Group.prototype.countDead = function () {
 
     return this.iterate('alive', false, Phaser.Group.RETURN_TOTAL);
 
-}
+};
 
 /**
 * Returns a member at random from the group.
@@ -1359,7 +1359,7 @@ Phaser.Group.prototype.getRandom = function (startIndex, length) {
 
     return this.game.math.getRandom(this.children, startIndex, length);
 
-}
+};
 
 /**
 * Removes the given child from this Group and sets its group property to null.
@@ -1391,7 +1391,7 @@ Phaser.Group.prototype.remove = function (child) {
 
     return true;
 
-}
+};
 
 /**
 * Removes all children from this Group, setting all group properties to null.
@@ -1419,7 +1419,7 @@ Phaser.Group.prototype.removeAll = function () {
 
     this.cursor = null;
 
-}
+};
 
 /**
 * Removes all children from this Group whos index falls beteen the given startIndex and endIndex values.
@@ -1457,7 +1457,7 @@ Phaser.Group.prototype.removeBetween = function (startIndex, endIndex) {
 
     this.updateZ();
 
-}
+};
 
 /**
 * Destroys this Group. Removes all children, then removes the container from the display list and nulls references.
@@ -1503,7 +1503,7 @@ Phaser.Group.prototype.destroy = function (destroyChildren, soft) {
         this.exists = false;
     }
 
-}
+};
 
 /**
 * @name Phaser.Group#total
@@ -1562,7 +1562,7 @@ Object.defineProperty(Phaser.Group.prototype, "angle", {
 * @property {boolean} fixedToCamera - Set to true to fix this Group to the Camera at its current world coordinates.
 */
 Object.defineProperty(Phaser.Group.prototype, "fixedToCamera", {
-    
+
     get: function () {
 
         return !!this._cache[7];

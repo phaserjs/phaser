@@ -15,7 +15,7 @@
   // Functionality
   "bitwise"     : false,  // Prohibit bitwise operators (&, |, ^, etc.).
   "boss"        : true,   // Tolerate assignments inside if, for & while. Usually conditions & loops are for comparison, not assignments.
-  "camelcase"   : true,   // Force all variable names to use either camelCase style or UPPER_CASE with underscores.
+  "camelcase"   : false,  // Force all variable names to use either camelCase style or UPPER_CASE with underscores.
   "curly"       : true,   // Require {} for every new block or scope.
   "eqeqeq"      : false,  // Require triple equals i.e. `===`.
   "eqnull"      : true,   // Tolerate use of `== null`.
@@ -38,7 +38,7 @@
   "unused"      : true,   // This option warns when you define and never use your variables.
 
   // Styling
-  "indent"      : 4,      // Specify indentation spacing
+  "indent"      : false,  // Specify indentation spacing
   "newcap"      : true,   // Require capitalization of all constructor functions e.g. `new F()`.
   "noempty"     : true,   // Prohibit use of empty blocks.
   "nonew"       : true,   // Prohibit use of constructors for side-effects.

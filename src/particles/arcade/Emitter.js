@@ -189,7 +189,7 @@ Phaser.Particles.Arcade.Emitter = function (game, x, y, maxParticles) {
     * @property {boolean} emitX
     */
     this.emitX = x;
-    
+
     /**
     * The point the particles are emitted from.
     * Emitter.x and Emitter.y control the containers location, which updates all current particles
@@ -229,7 +229,7 @@ Phaser.Particles.Arcade.Emitter.prototype.update = function () {
             if (this.game.time.now >= this._timer)
             {
                 this.emitParticle();
-                
+
                 this._counter++;
 
                 if (this._quantity > 0)
@@ -245,7 +245,7 @@ Phaser.Particles.Arcade.Emitter.prototype.update = function () {
         }
     }
 
-}
+};
 
 /**
 * This function generates a new array of particle sprites to attach to the emitter.
@@ -312,7 +312,7 @@ Phaser.Particles.Arcade.Emitter.prototype.makeParticles = function (keys, frames
 
     return this;
 
-}
+};
 
 /**
 * Call this function to turn off all the particles and the emitter.
@@ -324,7 +324,7 @@ Phaser.Particles.Arcade.Emitter.prototype.kill = function () {
     this.alive = false;
     this.exists = false;
 
-}
+};
 
 /**
 * Handy for bringing game objects "back to life". Just sets alive and exists back to true.
@@ -335,7 +335,7 @@ Phaser.Particles.Arcade.Emitter.prototype.revive = function () {
     this.alive = true;
     this.exists = true;
 
-}
+};
 
 /**
 * Call this function to start emitting particles.
@@ -373,7 +373,7 @@ Phaser.Particles.Arcade.Emitter.prototype.start = function (explode, lifespan, f
     this._counter = 0;
     this._timer = this.game.time.now + frequency;
 
-}
+};
 
 /**
 * This function can be used both internally and externally to emit the next particle.
@@ -450,7 +450,7 @@ Phaser.Particles.Arcade.Emitter.prototype.emitParticle = function () {
     particle.body.drag.y = this.particleDrag.y;
     particle.body.angularDrag = this.angularDrag;
 
-}
+};
 
 /**
 * A more compact way of setting the width and height of the emitter.
@@ -463,7 +463,7 @@ Phaser.Particles.Arcade.Emitter.prototype.setSize = function (width, height) {
     this.width = width;
     this.height = height;
 
-}
+};
 
 /**
 * A more compact way of setting the X velocity range of the emitter.
@@ -479,7 +479,7 @@ Phaser.Particles.Arcade.Emitter.prototype.setXSpeed = function (min, max) {
     this.minParticleSpeed.x = min;
     this.maxParticleSpeed.x = max;
 
-}
+};
 
 /**
 * A more compact way of setting the Y velocity range of the emitter.
@@ -495,7 +495,7 @@ Phaser.Particles.Arcade.Emitter.prototype.setYSpeed = function (min, max) {
     this.minParticleSpeed.y = min;
     this.maxParticleSpeed.y = max;
 
-}
+};
 
 /**
 * A more compact way of setting the angular velocity constraints of the emitter.
@@ -511,7 +511,7 @@ Phaser.Particles.Arcade.Emitter.prototype.setRotation = function (min, max) {
     this.minRotation = min;
     this.maxRotation = max;
 
-}
+};
 
 /**
 * Change the emitters center to match the center of any object with a `center` property, such as a Sprite.
@@ -526,7 +526,7 @@ Phaser.Particles.Arcade.Emitter.prototype.at = function (object) {
         this.emitY = object.center.y;
     }
 
-}
+};
 
 /**
 * @name Phaser.Particles.Arcade.Emitter#x
@@ -566,7 +566,7 @@ Object.defineProperty(Phaser.Particles.Arcade.Emitter.prototype, "y", {
 * @readonly
 */
 Object.defineProperty(Phaser.Particles.Arcade.Emitter.prototype, "left", {
-    
+
     get: function () {
         return Math.floor(this.x - (this.width / 2));
     }
@@ -579,7 +579,7 @@ Object.defineProperty(Phaser.Particles.Arcade.Emitter.prototype, "left", {
 * @readonly
 */
 Object.defineProperty(Phaser.Particles.Arcade.Emitter.prototype, "right", {
-    
+
     get: function () {
         return Math.floor(this.x + (this.width / 2));
     }
@@ -592,7 +592,7 @@ Object.defineProperty(Phaser.Particles.Arcade.Emitter.prototype, "right", {
 * @readonly
 */
 Object.defineProperty(Phaser.Particles.Arcade.Emitter.prototype, "top", {
-    
+
     get: function () {
         return Math.floor(this.y - (this.height / 2));
     }
@@ -605,7 +605,7 @@ Object.defineProperty(Phaser.Particles.Arcade.Emitter.prototype, "top", {
 * @readonly
 */
 Object.defineProperty(Phaser.Particles.Arcade.Emitter.prototype, "bottom", {
-    
+
     get: function () {
         return Math.floor(this.y + (this.height / 2));
     }

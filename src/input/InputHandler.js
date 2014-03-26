@@ -18,7 +18,7 @@ Phaser.InputHandler = function (sprite) {
     this.sprite = sprite;
 
     /**
-    * @property {Phaser.Game} game - A reference to the currently running game. 
+    * @property {Phaser.Game} game - A reference to the currently running game.
     */
     this.game = sprite.game;
 
@@ -33,13 +33,13 @@ Phaser.InputHandler = function (sprite) {
     * @default
     */
     this.priorityID = 0;
-    
+
     /**
     * @property {boolean} useHandCursor - On a desktop browser you can set the 'hand' cursor to appear when moving over the Sprite.
     * @default
     */
     this.useHandCursor = false;
-    
+
     /**
     * @property {boolean} _setHandCursor - Did this Sprite trigger the hand cursor?
     * @private
@@ -51,19 +51,19 @@ Phaser.InputHandler = function (sprite) {
     * @default
     */
     this.isDragged = false;
-    
+
     /**
     * @property {boolean} allowHorizontalDrag - Controls if the Sprite is allowed to be dragged horizontally.
     * @default
     */
     this.allowHorizontalDrag = true;
-    
+
     /**
     * @property {boolean} allowVerticalDrag - Controls if the Sprite is allowed to be dragged vertically.
     * @default
     */
     this.allowVerticalDrag = true;
-    
+
     /**
     * @property {boolean} bringToTop - If true when this Sprite is clicked or dragged it will automatically be bought to the top of the Group it is within.
     * @default
@@ -75,25 +75,25 @@ Phaser.InputHandler = function (sprite) {
     * @default
     */
     this.snapOffset = null;
-    
+
     /**
     * @property {boolean} snapOnDrag - When the Sprite is dragged this controls if the center of the Sprite will snap to the pointer on drag or not.
     * @default
     */
     this.snapOnDrag = false;
-    
+
     /**
     * @property {boolean} snapOnRelease - When the Sprite is dragged this controls if the Sprite will be snapped on release.
     * @default
     */
     this.snapOnRelease = false;
-    
+
     /**
     * @property {number} snapX - When a Sprite has snapping enabled this holds the width of the snap grid.
     * @default
     */
     this.snapX = 0;
-    
+
     /**
     * @property {number} snapY - When a Sprite has snapping enabled this holds the height of the snap grid.
     * @default
@@ -105,7 +105,7 @@ Phaser.InputHandler = function (sprite) {
     * @default
     */
     this.snapOffsetX = 0;
-    
+
     /**
     * @property {number} snapOffsetY - This defines the top-left Y coordinate of the snap grid..
     * @default
@@ -138,13 +138,13 @@ Phaser.InputHandler = function (sprite) {
 
     /**
     * @property {boolean} draggable - Is this sprite allowed to be dragged by the mouse? true = yes, false = no
-    * @default 
+    * @default
     */
     this.draggable = false;
 
     /**
     * @property {Phaser.Rectangle} boundsRect - A region of the game world within which the sprite is restricted during drag.
-    * @default 
+    * @default
     */
     this.boundsRect = null;
 
@@ -644,7 +644,7 @@ Phaser.InputHandler.prototype = {
             y += this.sprite.texture.frame.y;
 
             this.game.input.hitContext.drawImage(this.sprite.texture.baseTexture.source, x, y, 1, 1, 0, 0, 1, 1);
-            
+
             var rgb = this.game.input.hitContext.getImageData(0, 0, 1, 1);
 
             if (rgb.data[3] >= this.pixelPerfectAlpha)
@@ -1130,7 +1130,7 @@ Phaser.InputHandler.prototype = {
         }
 
         this.updateDrag(pointer);
-        
+
         if (this.bringToTop)
         {
             this.sprite.bringToTop();
@@ -1150,7 +1150,7 @@ Phaser.InputHandler.prototype = {
         this.isDragged = false;
         this._draggedPointerID = -1;
         this._pointerData[pointer.id].isDragged = false;
-        
+
         if (this.snapOnRelease)
         {
             if (this.sprite.fixedToCamera)

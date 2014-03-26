@@ -146,11 +146,11 @@ Phaser.Physics.prototype = {
         }
         else if (system === Phaser.Physics.BOX2D && this.box2d === null)
         {
-            //  Coming soon
+            throw new Error('The Box2D physics system has not been implemented yet.');
         }
         else if (system === Phaser.Physics.CHIPMUNK && this.chipmunk === null)
         {
-            //  Coming soon
+            throw new Error('The Chipmunk physics system has not been implemented yet.');
         }
 
     },

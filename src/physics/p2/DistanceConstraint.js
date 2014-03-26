@@ -34,7 +34,7 @@ Phaser.Physics.P2.DistanceConstraint = function (world, bodyA, bodyB, distance, 
 
     p2.DistanceConstraint.call(this, bodyA, bodyB, distance, maxForce);
 
-}
+};
 
 Phaser.Physics.P2.DistanceConstraint.prototype = Object.create(p2.DistanceConstraint.prototype);
 Phaser.Physics.P2.DistanceConstraint.prototype.constructor = Phaser.Physics.P2.DistanceConstraint;
