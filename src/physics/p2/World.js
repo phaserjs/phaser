@@ -1396,8 +1396,6 @@ Phaser.Physics.P2.prototype = {
 
         if (typeof addToWorld === 'undefined') { addToWorld = true; }
 
-        layer = map.getLayer(layer);
-
         var output = [];
 
         for (var i = 0, len = map.collision[layer].length; i < len; i++)
