@@ -3346,7 +3346,7 @@ declare module Phaser {
         remove(plugin: Phaser.Plugin): void;
         removeAll(): void;
         render(): void;
-        update(); void;
+        update(): void;
 
     }
 
