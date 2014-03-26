@@ -1021,14 +1021,11 @@ Phaser.Group.prototype.postUpdate = function () {
 * @method Phaser.Group#forEach
 * @param {function} callback - The function that will be called. Each child of the Group will be passed to it as its first parameter.
 * @param {Object} callbackContext - The context in which the function should be called (usually 'this').
-* @param {boolean} checkExists - If set only children with exists=true will be passed to the callback, otherwise all children will be passed.
+* @param {boolean} [checkExists=false] - If set only children with exists=true will be passed to the callback, otherwise all children will be passed.
 */
 Phaser.Group.prototype.forEach = function (callback, callbackContext, checkExists) {
 
-    if (typeof checkExists === 'undefined')
-    {
-        checkExists = false;
-    }
+    if (typeof checkExists === 'undefined') { checkExists = false; }
 
     var args = Array.prototype.splice.call(arguments, 3);
     args.unshift(null);
