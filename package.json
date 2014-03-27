@@ -14,7 +14,7 @@
     "url": "https://photonstorm@github.com/photonstorm/phaser.git"
   },
   "scripts": {
-    "test": "grunt jshint"
+    "test": "NODE_ENV=test grunt jshint"
   },
   "keywords": [
     "HTML5",
