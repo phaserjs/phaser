@@ -199,8 +199,6 @@ Phaser.BitmapText.prototype.preUpdate = function () {
 */
 Phaser.BitmapText.prototype.update = function() {
 
-    console.log(this.pivot);
-
 };
 
 /**
