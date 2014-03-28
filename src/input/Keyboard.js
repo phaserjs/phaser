@@ -71,6 +71,12 @@ Phaser.Keyboard = function (game) {
     */
     this._onKeyUp = null;
 
+    /**
+    * @property {number} _i - Internal cache var
+    * @private
+    */
+    this._i = 0;
+
 };
 
 Phaser.Keyboard.prototype = {
@@ -151,7 +157,7 @@ Phaser.Keyboard.prototype = {
     },
 
     /**
-    * Starts the Keyboard event listeners running (keydown and keyup). They are attached to the document.body.
+    * Starts the Keyboard event listeners running (keydown and keyup). They are attached to the window.
     * This is called automatically by Phaser.Input and should not normally be invoked directly.
     *
     * @method Phaser.Keyboard#start
@@ -180,14 +186,34 @@ Phaser.Keyboard.prototype = {
     },
 
     /**
-    * Stops the Keyboard event listeners from running (keydown and keyup). They are removed from the document.body.
+    * Stops the Keyboard event listeners from running (keydown and keyup). They are removed from the window.
     *
     * @method Phaser.Keyboard#stop
     */
     stop: function () {
 
+        this._onKeyDown = null;
+        this._onKeyUp = null;
+
         window.removeEventListener('keydown', this._onKeyDown);
         window.removeEventListener('keyup', this._onKeyUp);
+
+    },
+
+    /**
+    * Stops the Keyboard event listeners from running (keydown and keyup). They are removed from the window.
+    * Also clears all key captures and currently created Key objects.
+    *
+    * @method Phaser.Keyboard#destroy
+    */
+    destroy: function () {
+
+        this.stop();
+
+        this.clearCaptures();
+
+        this._keys.length = 0;
+        this._i = 0;
 
     },
 
@@ -245,13 +271,13 @@ Phaser.Keyboard.prototype = {
     */
     update: function () {
 
-        var i = this._keys.length;
+        this._i = this._keys.length;
 
-        while (i--)
+        while (this._i--)
         {
-            if (this._keys[i])
+            if (this._keys[this._i])
             {
-                this._keys[i].update();
+                this._keys[this._i].update();
             }
         }
 

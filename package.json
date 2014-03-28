@@ -31,9 +31,10 @@
     "grunt-contrib-connect": "~0.5.0",
     "grunt-contrib-copy": "~0.5.0",
     "grunt-contrib-clean": "~0.5.0",
-    "grunt-contrib-jshint": "^0.9.2",
+    "grunt-contrib-jshint": "~0.9.2",
     "grunt-contrib-uglify": "~0.3.3",
     "lodash": "~2.2.1",
-    "grunt-text-replace": "~0.3.11"
+    "grunt-text-replace": "~0.3.11",
+    "jshint": "~2.4.4"
   }
 }

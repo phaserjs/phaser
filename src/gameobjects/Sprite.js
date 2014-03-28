@@ -408,6 +408,7 @@ Phaser.Sprite.prototype.loadTexture = function (key, frame) {
 /**
 * Crop allows you to crop the texture used to display this Sprite.
 * Cropping takes place from the top-left of the Sprite and can be modified in real-time by providing an updated rectangle object.
+* Note that cropping a Sprite will reset its animation to the first frame. You cannot currently crop an animated Sprite.
 *
 * @method Phaser.Sprite#crop
 * @memberof Phaser.Sprite
@@ -997,6 +998,60 @@ Object.defineProperty(Phaser.Sprite.prototype, "smoothed", {
                 this.texture.baseTexture.scaleMode = 1;
             }
         }
+    }
+
+});
+
+/**
+* The position of the Sprite on the x axis relative to the local coordinates of the parent.
+*
+* @name Phaser.Sprite#x
+* @property {number} x - The position of the Sprite on the x axis relative to the local coordinates of the parent.
+*/
+Object.defineProperty(Phaser.Sprite.prototype, "x", {
+
+    get: function () {
+
+        return this.position.x;
+
+    },
+
+    set: function (value) {
+
+        this.position.x = value;
+
+        if (this.body && this.body.type === Phaser.Physics.ARCADE && this.body.phase === 2)
+        {
+            this.body._reset = 1;
+        }
+
+    }
+
+});
+
+/**
+* The position of the Sprite on the y axis relative to the local coordinates of the parent.
+*
+* @name Phaser.Sprite#y
+* @property {number} y - The position of the Sprite on the y axis relative to the local coordinates of the parent.
+*/
+Object.defineProperty(Phaser.Sprite.prototype, "y", {
+
+    get: function () {
+
+        return this.position.y;
+
+    },
+
+    set: function (value) {
+
+        this.position.y = value;
+
+        if (this.body && this.body.type === Phaser.Physics.ARCADE && this.body.phase === 2)
+        {
+            this.body._reset = 1;
+        }
+
     }
 
 });

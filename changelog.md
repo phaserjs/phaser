@@ -4,6 +4,35 @@ Change Log
 There is an extensive [Migration Guide](https://github.com/photonstorm/phaser/blob/master/resources/Migration%20Guide.md) available for those converting from Phaser 1.x to 2.x. In the guide we detail the API breaking changes and approach to our new physics system.
 
 
+Version 2.0.2 - "Ghealdan" - 28th March 2014
+--------------------------------------------
+
+Bug Fixes
+
+* Sprite would glitch if it had an ArcadePhysics Body that was re-positioned out of loop.
+* Sprite would "fly off" if it had an ArcadePhysics Body that was re-positioned during an input handler.
+* Tween.generateData would enter an eternal loop if the total resulted in a float. Now wrapped in Math.floor.
+* ArcadePhysics.Body preUpdate has been modified to stop Sprites with non-1 scaling from gaining delta and moving off the screen (fix #644).
+* ArcadePhysics.Body deltaMaxY wasn't being correctly applied.
+* P2.World - Removing tilemap layer retrieval for object layers in convertCollisionObjects() (thanks bmceldowney, fix #653)
+* Calling Keyboard.stop() wouldn't let you call Keyboard.start() later on in the same game
+
+
+Updated
+
+* The "Build your First Phaser Game" Tutorial has been updated for Phaser 2
+* Line.fromSprite now sets "fromCenter" to false by default as Sprite.center is deprecated in 2.x. Documentation and Examples updated to reflect this.
+* All the documentation has been re-published for 2.0.2.
+* Lots of ArcadePhysics.World methods have been marked as private where they shouldn't be called directly (separateX, etc)
+* xtian jshint fixed nearly every single file in the repository!
+
+
+New Features
+
+* Sprite.overlap lets you quickly check to see if the bounds of two display objects are intersecting or not, without having to use a physics system.
+* Keyboard.destroy will now clear all event listeners and any custom set callbacks or Keys.
+
+
 Version 2.0.1 - "Lyrelle" - 24th March 2014
 -------------------------------------------
 

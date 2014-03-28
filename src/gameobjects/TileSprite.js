@@ -686,3 +686,57 @@ Object.defineProperty(Phaser.TileSprite.prototype, "inputEnabled", {
     }
 
 });
+
+/**
+* The position of the TileSprite on the x axis relative to the local coordinates of the parent.
+*
+* @name Phaser.TileSprite#x
+* @property {number} x - The position of the TileSprite on the x axis relative to the local coordinates of the parent.
+*/
+Object.defineProperty(Phaser.TileSprite.prototype, "x", {
+
+    get: function () {
+
+        return this.position.x;
+
+    },
+
+    set: function (value) {
+
+        this.position.x = value;
+
+        if (this.body && this.body.type === Phaser.Physics.ARCADE && this.body.phase === 2)
+        {
+            this.body._reset = 1;
+        }
+
+    }
+
+});
+
+/**
+* The position of the TileSprite on the y axis relative to the local coordinates of the parent.
+*
+* @name Phaser.TileSprite#y
+* @property {number} y - The position of the TileSprite on the y axis relative to the local coordinates of the parent.
+*/
+Object.defineProperty(Phaser.TileSprite.prototype, "y", {
+
+    get: function () {
+
+        return this.position.y;
+
+    },
+
+    set: function (value) {
+
+        this.position.y = value;
+
+        if (this.body && this.body.type === Phaser.Physics.ARCADE && this.body.phase === 2)
+        {
+            this.body._reset = 1;
+        }
+
+    }
+
+});
