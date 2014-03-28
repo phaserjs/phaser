@@ -1011,7 +1011,7 @@ Phaser.Physics.P2.Body.prototype = {
 
         this.clearShapes();
 
-        this.addCircle(radius, offsetX, offsetY, rotation);
+        return this.addCircle(radius, offsetX, offsetY, rotation);
 
     },
 
