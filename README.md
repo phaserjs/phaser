@@ -1,11 +1,11 @@
 ![Phaser 2.0](http://www.phaser.io/images/phaser2-github.png)
 
-Phaser 2.0.2
+Phaser 2.0.3
 ============
 
 Phaser is a fast, free and fun open source game framework for making desktop and mobile browser HTML5 games. It uses [Pixi.js](https://github.com/GoodBoyDigital/pixi.js/) internally for fast 2D Canvas and WebGL rendering.
 
-Version: 2.0.2 "Ghealdan" - Released: 28th March 2014
+Version: 2.0.3 "Allorallen" - Released: -in development-
 
 By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 
@@ -22,12 +22,9 @@ By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/photonstorm/phaser/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
 
-What's new in 2.0.2?
+What's new in 2.0.3?
 --------------------
 
-The great thing about running an open source project are all the awesome contributions from the community, and this release reflects that. Aside from a raft of small but important ArcadePhysics fixes we've also had the entirely library jshinted and tidied up by xtian. We have had jshint configs in place for a while now, but he's forced us to make them part of the build process and helped tidy-up a number of things that had crept in.
-
-We've also updated the included tutorial (and the web version) so it's now fully compatible with Phaser 2 and re-published and updated all of the API documentation, which you'll find in the docs folder in this release.
 
 
 Welcome to Phaser
@@ -61,32 +58,23 @@ There is also an [un-official Getting Started Guide](http://www.antonoffplus.com
 Change Log
 ----------
 
-Version 2.0.2 - "Ghealdan" - 28th March 2014
+Version 2.0.3 - "Allorallen" - -in development-
 
 Bug Fixes
 
-* Sprite would glitch if it had an ArcadePhysics Body that was re-positioned out of loop.
-* Sprite would "fly off" if it had an ArcadePhysics Body that was re-positioned during an input handler.
-* Tween.generateData would enter an eternal loop if the total resulted in a float. Now wrapped in Math.floor.
-* ArcadePhysics.Body preUpdate has been modified to stop Sprites with non-1 scaling from gaining delta and moving off the screen (fix #644).
-* ArcadePhysics.Body deltaMaxY wasn't being correctly applied.
-* P2.World - Removing tilemap layer retrieval for object layers in convertCollisionObjects() (thanks bmceldowney, fix #653)
-* Calling Keyboard.stop() wouldn't let you call Keyboard.start() later on in the same game
 
 
 Updated
 
-* The "Build your First Phaser Game" Tutorial has been updated for Phaser 2
-* Line.fromSprite now sets "fromCenter" to false by default as Sprite.center is deprecated in 2.x. Documentation and Examples updated to reflect this.
-* All the documentation has been re-published for 2.0.2.
-* Lots of ArcadePhysics.World methods have been marked as private where they shouldn't be called directly (separateX, etc)
-* xtian jshint fixed nearly every single file in the repository!
 
 
 New Features
 
-* Sprite.overlap lets you quickly check to see if the bounds of two display objects are intersecting or not, without having to use a physics system.
-* Keyboard.destroy will now clear all event listeners and any custom set callbacks or Keys.
+
+ToDo
+
+* Split P2 world bounds into different bodies to help the broad phase.
+
 
 
 There is an extensive [Migration Guide](https://github.com/photonstorm/phaser/blob/master/resources/Migration%20Guide.md) available for those converting from Phaser 1.x to 2.x. In the guide we detail the API breaking changes and approach to our new physics system.
