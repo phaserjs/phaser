@@ -66,6 +66,7 @@ Bug Fixes
 
 Updated
 
+* Return the result of P2.Body.setCircle for further chaining and manipulation (fix #659)
 
 
 New Features
