@@ -138,7 +138,13 @@ Phaser.Loader.TEXTURE_ATLAS_XML_STARLING = 2;
 * @constant
 * @type {number}
 */
-Phaser.Loader.PHYSICS_LIME_CORONA = 3;
+Phaser.Loader.PHYSICS_LIME_CORONA_JSON = 3;
+
+/**
+* @constant
+* @type {number}
+*/
+Phaser.Loader.PHYSICS_PHASER_JSON = 4;
 
 Phaser.Loader.prototype = {
 
@@ -576,7 +582,7 @@ Phaser.Loader.prototype = {
 
         if (typeof dataURL === "undefined") { dataURL = null; }
         if (typeof jsonData === "undefined") { jsonData = null; }
-        if (typeof format === "undefined") { format = Phaser.Physics.LIME_CORONA_JSON; }
+        if (typeof format === "undefined") { format = Phaser.Loader.PHYSICS_LIME_CORONA_JSON; }
 
         if (dataURL == null && jsonData == null)
         {

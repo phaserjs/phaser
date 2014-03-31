@@ -170,12 +170,6 @@ Phaser.Physics.P2 = function (game, config) {
 
 };
 
-/**
-* @const
-* @type {number}
-*/
-Phaser.Physics.P2.LIME_CORONA_JSON = 0;
-
 Phaser.Physics.P2.prototype = {
 
     /**
