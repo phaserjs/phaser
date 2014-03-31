@@ -67,6 +67,7 @@ Updated
 * Updated the PhysicsEditor plugin to maintain position, radius, mask bits, category bits and sensor flags (thanks @georgiee, #674)
 * Further TypeScript defs tweaks (thanks @clark-stevenson)
 * Lowered the default size of SpriteBatch from 10000 to 2000 as this yields faster results on mobile (pixi.js update)
+* Fix for 'jagged' strokes on custom fonts. (thanks @nickryall, #677)
 
 
 New Features
@@ -78,6 +79,7 @@ New Features
 * Added generateTexture function to display objects. Create a texture from the current object display hierarchy for use as a texture elsewhere.
 * Added optional FilterArea to display object (for optimisation)
 * Graphics chaining functions.
+* Added Pointer.positionUp which records the last point at which the pointer left the screen (thanks @Cryszon, #676)
 
 
 Bug Fixes
