@@ -3,6 +3,9 @@
     "{{body.name}}": [
       {% for fixture in body.fixtures %}{% if not forloop.first %} ,{% endif %}
       {
+        {% if fixture.fixtureKey %}
+        "fixtureKey": "{{fixture.fixtureKey}}",
+        {% endif %}
         "isSensor": {{fixture.isSensor}},
         "filter": {
           "group": {{fixture.filter_groupIndex}},
