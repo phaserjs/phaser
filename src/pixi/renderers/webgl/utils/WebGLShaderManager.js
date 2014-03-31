@@ -27,14 +27,14 @@ PIXI.WebGLShaderManager = function(gl)
 
 /**
 * Initialises the context and the properties
-* @method setContext
+* @method setContext 
 * @param gl {WebGLContext} the current WebGL drawing context
 * @param transparent {Boolean} Whether or not the drawing context should be transparent
 */
 PIXI.WebGLShaderManager.prototype.setContext = function(gl)
 {
     this.gl = gl;
-
+    
     // the next one is used for rendering primatives
     this.primitiveShader = new PIXI.PrimitiveShader(gl);
 
@@ -50,9 +50,9 @@ PIXI.WebGLShaderManager.prototype.setContext = function(gl)
 
 
 /**
-* Takes the attributes given in parameters
+* Takes the attributes given in parameters 
 * @method setAttribs
-* @param attribs {Array} attribs
+* @param attribs {Array} attribs 
 */
 PIXI.WebGLShaderManager.prototype.setAttribs = function(attribs)
 {
@@ -94,7 +94,7 @@ PIXI.WebGLShaderManager.prototype.setAttribs = function(attribs)
 };
 
 /**
-* Sets-up the given shader
+* Sets-up the given shader 
 *
 * @method activateShader
 * @param shader {Object} the shader that is going to be activated
@@ -107,7 +107,7 @@ PIXI.WebGLShaderManager.prototype.activateShader = function(shader)
 
     this.gl.useProgram(shader.program);
     this.setAttribs(shader.attributes);
-
+  
 };
 
 /**
@@ -121,7 +121,7 @@ PIXI.WebGLShaderManager.prototype.activatePrimitiveShader = function()
     gl.useProgram(this.primitiveShader.program);
 
     this.setAttribs(this.primitiveShader.attributes);
-
+    
 };
 
 /**

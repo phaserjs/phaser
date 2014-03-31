@@ -1,7 +1,7 @@
 /**
  * @author Mat Groves http://matgroves.com/ @Doormat23
  */
-
+ 
 
 /**
 * @class WebGLMaskManager
@@ -19,7 +19,7 @@ PIXI.WebGLMaskManager = function(gl)
 
 /**
 * Sets the drawing context to the one given in parameter
-* @method setContext
+* @method setContext 
 * @param gl {WebGLContext} the current WebGL drawing context
 */
 PIXI.WebGLMaskManager.prototype.setContext = function(gl)
@@ -42,11 +42,11 @@ PIXI.WebGLMaskManager.prototype.pushMask = function(maskData, renderSession)
         gl.enable(gl.STENCIL_TEST);
         gl.stencilFunc(gl.ALWAYS,1,1);
     }
-
+    
   //  maskData.visible = false;
 
     this.maskStack.push(maskData);
-
+    
     gl.colorMask(false, false, false, true);
     gl.stencilOp(gl.KEEP,gl.KEEP,gl.INCR);
 
@@ -82,7 +82,7 @@ PIXI.WebGLMaskManager.prototype.popMask = function(renderSession)
         gl.stencilFunc(gl.NOTEQUAL,0,this.maskStack.length);
         gl.stencilOp(gl.KEEP,gl.KEEP,gl.KEEP);
     }
-
+   
     if(this.maskStack.length === 0)gl.disable(gl.STENCIL_TEST);
 };
 

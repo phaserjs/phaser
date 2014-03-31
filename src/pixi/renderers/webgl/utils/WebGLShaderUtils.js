@@ -3,11 +3,11 @@
  */
 
 // TODO Alvin and Mat
-// Should we eventually create a Utils class ?
+// Should we eventually create a Utils class ? 
 // Or just move this file to the pixi.js file ?
 PIXI.initDefaultShaders = function()
 {
-
+   
   //  PIXI.stripShader = new PIXI.StripShader();
 //    PIXI.stripShader.init();
 

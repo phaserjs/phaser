@@ -1,5 +1,5 @@
 <exporter>
-	<name>lime-json</name>
+	<name>phaser-json</name>
 	<displayName>Phaser (JSON)</displayName>
     <description>Exporter for Phaser, JSON</description>
 	<version>1.0</version>
@@ -19,6 +19,14 @@
 	<body>
 	</body>
 	<fixture>
+        <parameter>
+            <name>fixtureKey</name>
+            <description>Give this fixture a unique KEY so you can retrieve it later in phaser</description>
+            <displayName>Fixture's Key</displayName>
+            <type>string</type>
+            <default></default>
+        </parameter>
+
         <parameter>
             <name>isSensor</name>
             <displayName>Is Sensor</displayName>
