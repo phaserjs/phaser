@@ -259,31 +259,6 @@ Phaser.Sound.prototype = {
     },
 
     /**
-     * Description.
-     * @method Phaser.Sound#addMarker
-     * @param {string} name - Description.
-     * @param {Description} start - Description.
-     * @param {Description} stop - Description.
-     * @param {Description} volume - Description.
-     * @param {Description} loop - Description.
-    addMarker: function (name, start, stop, volume, loop) {
-
-        volume = volume || 1;
-        if (typeof loop == 'undefined') { loop = false; }
-
-        this.markers[name] = {
-            name: name,
-            start: start,
-            stop: stop,
-            volume: volume,
-            duration: stop - start,
-            loop: loop
-        };
-
-    },
-    */
-
-    /**
     * Adds a marker into the current Sound. A marker is represented by a unique key and a start time and duration.
     * This allows you to bundle multiple sounds together into a single audio file and use markers to jump between them for playback.
     *
