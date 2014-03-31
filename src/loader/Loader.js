@@ -582,7 +582,7 @@ Phaser.Loader.prototype = {
 
         if (typeof dataURL === "undefined") { dataURL = null; }
         if (typeof jsonData === "undefined") { jsonData = null; }
-        if (typeof format === "undefined") { format = Phaser.Loader.PHYSICS_LIME_CORONA_JSON; }
+        if (typeof format === "undefined") { format = Phaser.Physics.LIME_CORONA_JSON; }
 
         if (dataURL == null && jsonData == null)
         {
