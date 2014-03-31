@@ -455,5 +455,40 @@ Phaser.Point.rotate = function (a, x, y, angle, asDegrees, distance) {
 
 };
 
+/**
+* Calculates centroid (or midpoint) from an array of points. If only one point is provided, that point is returned.
+* @method Phaser.Point.centroid
+* @param {Phaser.Point[]} points - The array of one or more points.
+* @param {Phaser.Point} [out] - Optional Point to store the value in, if not supplied a new Point object will be created.
+* @return {Phaser.Point} The new Point object.
+*/
+Phaser.Point.centroid = function (points, out) {
+
+    if (typeof out === "undefined") { out = new Phaser.Point(); }
+
+    if (Object.prototype.toString.call(points) !== '[object Array]') {
+        throw new Error("Phaser.Point. Parameter 'points' must be an array")
+    }
+
+    if (points.length < 1) {
+        throw new Error("Phaser.Point. Parameter 'points' array must not be empty")
+    }
+
+    if (points.length === 1) {
+        out.copyFrom(points[0]);
+        return out;
+    }
+
+    var totalpoints = Math.round(points.length / 2);
+
+    for (var i = 0; i < points.length; i++) {
+        Phaser.Point.add(out, points[i], out);
+    }
+
+    out.divide(totalpoints, totalpoints);
+
+    return out;
+};
+
 //   Because PIXI uses its own Point, we'll replace it with ours to avoid duplicating code or confusion.
 PIXI.Point = Phaser.Point;
