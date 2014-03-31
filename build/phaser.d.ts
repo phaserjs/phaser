@@ -2329,6 +2329,7 @@ declare module Phaser {
         addKeyCapture(keycode: any): void;
         createCursorKeys(): Phaser.CursorKeys;
         clearCaptures(): void;
+        destroy(): void;
         isDown(keycode: number): boolean;
         justPressed(keycode: number, duration?: number): boolean;
         justReleased(keycode: number, duration?: number): boolean;
@@ -2784,6 +2785,7 @@ declare module Phaser {
                 offset: Phaser.Point;
                 overlapX: number;
                 overlapY: number;
+                phase: number;
                 position: Phaser.Point;
                 preRotation: number;
                 prev: Phaser.Point;
@@ -3825,6 +3827,7 @@ declare module Phaser {
         drawPolygon(): void;
         kill(): Phaser.Sprite;
         loadTexture(key: any, frame: any): void;
+        overlap(displayObject: any): boolean;
         play(name: string, frameRate?: number, loop?: boolean, killOnComplete?: boolean): Phaser.Animation;
         postUpdate(): void;
         preUpdate(): void;
@@ -4222,7 +4225,7 @@ declare module Phaser {
 
     class Tileset {
 
-        constructor(name: string, firstgid: number, width: number, height: number, margin: number, spacing: number, properties: Object);
+        constructor(name: string, firstgid: number, width?: number, height?: number, margin?: number, spacing?: number, properties?: Object);
 
         columns: number;
         firstgid: number;
@@ -4418,7 +4421,7 @@ declare module Phaser {
         resume(): void;
         start(): Phaser.Tween;
         stop(): Phaser.Tween;
-        to(properties: Object, duration?: number, ease?: Function, autoStart?: boolean, delay?: number, repeat?: boolean, yoyo?: boolean): Phaser.Tween;
+        to(properties: Object, duration?: number, ease?: Function, autoStart?: boolean, delay?: number, repeat?: number, yoyo?: boolean): Phaser.Tween;
         update(time: number): boolean;
         yoyo(yoyo: boolean): Phaser.Tween;
 
