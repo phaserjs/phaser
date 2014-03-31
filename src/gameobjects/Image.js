@@ -683,7 +683,7 @@ Object.defineProperty(Phaser.Image.prototype, "inputEnabled", {
 
         if (value)
         {
-            if (this.input === null)
+            if (!this.input)
             {
                 this.input = new Phaser.InputHandler(this);
                 this.input.start();
