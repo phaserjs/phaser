@@ -878,6 +878,10 @@ Object.defineProperty(Phaser.Sprite.prototype, "inputEnabled", {
                 this.input = new Phaser.InputHandler(this);
                 this.input.start();
             }
+            else if (this.input && !this.input.enabled)
+            {
+                this.input.start();
+            }
         }
         else
         {
@@ -886,6 +890,7 @@ Object.defineProperty(Phaser.Sprite.prototype, "inputEnabled", {
                 this.input.stop();
             }
         }
+
     }
 
 });

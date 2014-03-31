@@ -62,14 +62,18 @@ Version 2.0.3 - "Allorallen" - -in development-
 
 Bug Fixes
 
+* If you inputEnable = false a gameobject you couldn't re-enable it again using inputEnable = true, only directly via the handler (thanks @nickrall, fix #673)
 
 
 Updated
 
 * Return the result of P2.Body.setCircle for further chaining and manipulation (fix #659)
+* Updated the PhysicsEditor plugin to maintain position, radius, mask bits, category bits and sensor flags (thanks @georgiee, #674)
 
 
 New Features
+
+* Added ability to retrieve a single p2 fixture from the cache (thanks @georgiee, #674)
 
 
 ToDo
