@@ -231,16 +231,16 @@ Phaser.Timer.prototype = {
     /**
     * Starts this Timer running.
     * @method Phaser.Timer#start
-    * @param {number} startDelay - The number of milliseconds that should elapse before the Timer will start.
+    * @param {number} [delay=0] - The number of milliseconds that should elapse before the Timer will start.
     */
-    start: function (startDelay) {
+    start: function (delay) {
 
         if (this.running)
         {
             return;
         }
 
-        this._started = this.game.time.now + (startDelay || 0);
+        this._started = this.game.time.now + (delay || 0);
 
         this.running = true;
 

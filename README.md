@@ -69,11 +69,13 @@ Updated
 
 * Return the result of P2.Body.setCircle for further chaining and manipulation (fix #659)
 * Updated the PhysicsEditor plugin to maintain position, radius, mask bits, category bits and sensor flags (thanks @georgiee, #674)
+* Further TypeScript defs tweaks (thanks @clark-stevenson)
 
 
 New Features
 
 * Added ability to retrieve a single p2 fixture from the cache (thanks @georgiee, #674)
+* Timers can now have a start delay value (thanks @georgiee, #660)
 
 
 ToDo
