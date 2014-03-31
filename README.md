@@ -92,6 +92,7 @@ Bug Fixes
 * Fixed issue where visibility was not being respected in sprite batch (pixi.js 1.5.2 bug fix)
 * Fixed bug in gl.bindTexture which tried to use an undefined private var. (@photonstorm) (pixi.js 1.5.2 bug fix)
 * Fixed the 'short cut' version of Math.floor in setTransform if roundPixels is true. (@photonstorm) (pixi.js 1.5.2 bug fix)
+* SoundManager.boot will check to see if the AudioContext was created before carrying on (thanks @keyle, fix #669)
 
 
 ToDo

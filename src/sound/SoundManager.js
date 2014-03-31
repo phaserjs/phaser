@@ -155,13 +155,24 @@ Phaser.SoundManager.prototype = {
 
         if (!!window['AudioContext'])
         {
-            this.context = new window['AudioContext']();
+            try {
+                this.context = new window['AudioContext']();
+            } catch (error) {
+                this.context = null;
+                this.usingWebAudio = false;
+            }
         }
         else if (!!window['webkitAudioContext'])
         {
-            this.context = new window['webkitAudioContext']();
+            try {
+                this.context = new window['webkitAudioContext']();
+            } catch (error) {
+                this.context = null;
+                this.usingWebAudio = false;
+            }
         }
-        else if (!!window['Audio'])
+
+        if (!!window['Audio'] && this.context === null)
         {
             this.usingWebAudio = false;
             this.usingAudioTag = true;
