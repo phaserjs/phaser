@@ -462,6 +462,13 @@ Phaser.Point.rotate = function (a, x, y, angle, asDegrees, distance) {
 * @param {Phaser.Point} [out] - Optional Point to store the value in, if not supplied a new Point object will be created.
 * @return {Phaser.Point} The new Point object.
 */
+/**
+* Calculates centroid (or midpoint) from an array of points. If only one point is provided, that point is returned.
+* @method Phaser.Point.centroid
+* @param {Phaser.Point[]} points - The array of one or more points.
+* @param {Phaser.Point} [out] - Optional Point to store the value in, if not supplied a new Point object will be created.
+* @return {Phaser.Point} The new Point object.
+*/
 Phaser.Point.centroid = function (points, out) {
 
     if (typeof out === "undefined") { out = new Phaser.Point(); }
@@ -479,13 +486,11 @@ Phaser.Point.centroid = function (points, out) {
         return out;
     }
 
-    var totalpoints = Math.round(points.length / 2);
-
     for (var i = 0; i < points.length; i++) {
         Phaser.Point.add(out, points[i], out);
     }
 
-    out.divide(totalpoints, totalpoints);
+    out.divide(points.length, points.length);
 
     return out;
 };
