@@ -60,22 +60,38 @@ Change Log
 
 Version 2.0.3 - "Allorallen" - -in development-
 
-Bug Fixes
-
-* If you inputEnable = false a gameobject you couldn't re-enable it again using inputEnable = true, only directly via the handler (thanks @nickrall, fix #673)
-
-
 Updated
 
+* Updated to [Pixi.js 1.5.2](https://github.com/GoodBoyDigital/pixi.js/releases/tag/v1.5.2)
 * Return the result of P2.Body.setCircle for further chaining and manipulation (fix #659)
 * Updated the PhysicsEditor plugin to maintain position, radius, mask bits, category bits and sensor flags (thanks @georgiee, #674)
 * Further TypeScript defs tweaks (thanks @clark-stevenson)
+* Lowered the default size of SpriteBatch from 10000 to 2000 as this yields faster results on mobile (pixi.js update)
 
 
 New Features
 
 * Added ability to retrieve a single p2 fixture from the cache (thanks @georgiee, #674)
 * Timers can now have a start delay value (thanks @georgiee, #660)
+* CacheAsBitmap added to Display Object, so works for Sprite, Image, Button. Allows you to cache complex display hierarchies for speed.
+* CacheAsBitmap added to Graphics Object. Allows you to cache complex graphics structures hierarchies for speed.
+* Added generateTexture function to display objects. Create a texture from the current object display hierarchy for use as a texture elsewhere.
+* Added optional FilterArea to display object (for optimisation)
+* Graphics chaining functions.
+
+
+Bug Fixes
+
+* If you inputEnable = false a gameobject you couldn't re-enable it again using inputEnable = true, only directly via the handler (thanks @nickrall, fix #673)
+* Fixed setTexture bug with TilingSprite (pixi.js 1.5.2 bug fix)
+* Fixed anchor point bug in canvas with TilingSprite (pixi.js 1.5.2 bug fix)
+* Fixed positionOffset not begin correct in TilingSprite (pixi.js 1.5.2 bug fix)
+* Fixed issue where filters were not being applied to TilingSprite (pixi.js 1.5.2 bug fix)
+* Fixed SpriteBatch canvas transform bug (pixi.js 1.5.2 bug fix)
+* Fixed Cached textures issue when using base64 encoded images (@cacheflowe) (pixi.js 1.5.2 bug fix)
+* Fixed issue where visibility was not being respected in sprite batch (pixi.js 1.5.2 bug fix)
+* Fixed bug in gl.bindTexture which tried to use an undefined private var. (@photonstorm) (pixi.js 1.5.2 bug fix)
+* Fixed the 'short cut' version of Math.floor in setTransform if roundPixels is true. (@photonstorm) (pixi.js 1.5.2 bug fix)
 
 
 ToDo

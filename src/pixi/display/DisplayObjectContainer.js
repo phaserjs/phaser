@@ -129,7 +129,7 @@ PIXI.DisplayObjectContainer.prototype.swapChildren = function(child, child2)
 
     this.children[index1] = child2;
     this.children[index2] = child;
-
+    
 };
 
 /**
@@ -146,7 +146,7 @@ PIXI.DisplayObjectContainer.prototype.getChildAt = function(index)
     }
     else
     {
-        throw new Error('The supplied DisplayObjects must be a child of the caller ' + this);
+        throw new Error('Supplied index does not exist in the child list, or the supplied DisplayObject must be a child of the caller');
     }
 };
 
@@ -158,39 +158,56 @@ PIXI.DisplayObjectContainer.prototype.getChildAt = function(index)
  */
 PIXI.DisplayObjectContainer.prototype.removeChild = function(child)
 {
-    var index = this.children.indexOf( child );
-    if ( index !== -1 )
-    {
-        // update the stage reference..
-        if(this.stage)child.removeStageReference();
+    return this.removeChildAt( this.children.indexOf( child ) );
+};
 
-        child.parent = undefined;
-        this.children.splice( index, 1 );
+/**
+ * Removes a child from the specified index position in the child list of the container.
+ *
+ * @method removeChildAt
+ * @param index {Number} The index to get the child from
+ */
+PIXI.DisplayObjectContainer.prototype.removeChildAt = function(index)
+{
+    var child = this.getChildAt( index );
+    if(this.stage)
+        child.removeStageReference();
+
+    child.parent = undefined;
+    this.children.splice( index, 1 );
+    return child;
+};
+
+/**
+* Removes all child instances from the child list of the container.
+*
+* @method removeChildren
+* @param beginIndex {Number} The beginning position. Predefined value is 0.
+* @param endIndex {Number} The ending position. Predefined value is children's array length.
+*/
+PIXI.DisplayObjectContainer.prototype.removeChildren = function(beginIndex, endIndex)
+{
+    var begin = beginIndex || 0;
+    var end = typeof endIndex === 'number' ? endIndex : this.children.length;
+    var range = end - begin;
+
+    if (range > 0 && range <= end)
+    {
+        var removed = this.children.splice(begin, range);
+        for (var i = 0; i < removed.length; i++) {
+            var child = removed[i];
+            if(this.stage)
+                child.removeStageReference();
+            child.parent = undefined;
+        }
+        return removed;
     }
     else
     {
-        throw new Error(child + ' The supplied DisplayObject must be a child of the caller ' + this);
+        throw new Error( 'Range Error, numeric values are outside the acceptable range' );
     }
 };
 
-
-/**
-* Removes all the children
-*
-* @method removeAll
-* NOT tested yet
-*/
-/* PIXI.DisplayObjectContainer.prototype.removeAll = function()
-{
-
-
-    for(var i = 0 , j = this.children.length; i < j; i++)
-    {
-        this.removeChild(this.children[i]);
-    }
-
-};
-*/
 /*
  * Updates the container's childrens transform for rendering
  *
@@ -247,13 +264,13 @@ PIXI.DisplayObjectContainer.prototype.getBounds = function(matrix)
     for(var i=0,j=this.children.length; i<j; i++)
     {
         var child = this.children[i];
-
+        
         if(!child.visible)continue;
 
         childVisible = true;
 
         childBounds = this.children[i].getBounds( matrix );
-
+     
         minX = minX < childBounds.x ? minX : childBounds.x;
         minY = minY < childBounds.y ? minY : childBounds.y;
 
@@ -276,7 +293,7 @@ PIXI.DisplayObjectContainer.prototype.getBounds = function(matrix)
 
     // TODO: store a reference so that if this function gets called again in the render cycle we do not have to recalculate
     //this._currentBounds = bounds;
-
+   
     return bounds;
 };
 
@@ -331,7 +348,7 @@ PIXI.DisplayObjectContainer.prototype.removeStageReference = function()
     }
 
     if(this._interactive)this.stage.dirty = true;
-
+    
     this.stage = null;
 };
 
@@ -339,19 +356,19 @@ PIXI.DisplayObjectContainer.prototype.removeStageReference = function()
 * Renders the object using the WebGL renderer
 *
 * @method _renderWebGL
-* @param renderSession {RenderSession}
+* @param renderSession {RenderSession} 
 * @private
 */
 PIXI.DisplayObjectContainer.prototype._renderWebGL = function(renderSession)
 {
     if(!this.visible || this.alpha <= 0)return;
-
+    
     if(this._cacheAsBitmap)
     {
         this._renderCachedSprite(renderSession);
         return;
     }
-
+    
     var i,j;
 
     if(this._mask || this._filters)
@@ -379,7 +396,7 @@ PIXI.DisplayObjectContainer.prototype._renderWebGL = function(renderSession)
 
         if(this._filters)renderSession.filterManager.popFilter();
         if(this._mask)renderSession.maskManager.popMask(renderSession);
-
+        
         renderSession.spriteBatch.start();
     }
     else
@@ -396,7 +413,7 @@ PIXI.DisplayObjectContainer.prototype._renderWebGL = function(renderSession)
 * Renders the object using the Canvas renderer
 *
 * @method _renderCanvas
-* @param renderSession {RenderSession}
+* @param renderSession {RenderSession} 
 * @private
 */
 PIXI.DisplayObjectContainer.prototype._renderCanvas = function(renderSession)

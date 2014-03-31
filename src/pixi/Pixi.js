@@ -7,8 +7,8 @@
  */
 var PIXI = PIXI || {};
 
-/*
-*
+/* 
+* 
 * This file contains a lot of pixi consts which are used across the rendering engine
 * @class Consts
 */
@@ -16,7 +16,7 @@ PIXI.WEBGL_RENDERER = 0;
 PIXI.CANVAS_RENDERER = 1;
 
 // useful for testing against if your lib is using pixi.
-PIXI.VERSION = "v1.5.0";
+PIXI.VERSION = "v1.5.2";
 
 // the various blend modes supported by pixi
 PIXI.blendModes = {
@@ -46,7 +46,7 @@ PIXI.scaleModes = {
     NEAREST:1
 };
 
-// interaction frequency
+// interaction frequency 
 PIXI.INTERACTION_FREQUENCY = 30;
 PIXI.AUTO_PREVENT_DEFAULT = true;
 
