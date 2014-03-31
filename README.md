@@ -80,6 +80,7 @@ New Features
 * Added optional FilterArea to display object (for optimisation)
 * Graphics chaining functions.
 * Added Pointer.positionUp which records the last point at which the pointer left the screen (thanks @Cryszon, #676)
+* Phaser.Point.centroid static function added to calculate the centroid or midpoint of an array of points (thanks @lewster32, #675)
 
 
 Bug Fixes
