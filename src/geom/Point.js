@@ -470,20 +470,22 @@ Phaser.Point.centroid = function (points, out) {
         throw new Error("Phaser.Point. Parameter 'points' must be an array")
     }
 
-    if (points.length < 1) {
+    var pointslength = points.length;
+
+    if (pointslength < 1) {
         throw new Error("Phaser.Point. Parameter 'points' array must not be empty")
     }
 
-    if (points.length === 1) {
+    if (pointslength === 1) {
         out.copyFrom(points[0]);
         return out;
     }
 
-    for (var i = 0; i < points.length; i++) {
+    for (var i = 0; i < pointslength; i++) {
         Phaser.Point.add(out, points[i], out);
     }
 
-    out.divide(points.length, points.length);
+    out.divide(pointslength, pointslength);
 
     return out;
 };
