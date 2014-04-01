@@ -68,6 +68,7 @@ Updated
 * Further TypeScript defs tweaks (thanks @clark-stevenson)
 * Lowered the default size of SpriteBatch from 10000 to 2000 as this yields faster results on mobile (pixi.js update)
 * Fix for 'jagged' strokes on custom fonts. (thanks @nickryall, #677)
+* The State.update function (and thus the update of any sub-classed Sprites or other objects) is now called before Stage, Tweens, Sound, Input, etc (#662)
 
 
 New Features
