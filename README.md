@@ -88,6 +88,7 @@ New Features
 * Phaser.Point.centroid static function added to calculate the centroid or midpoint of an array of points (thanks @lewster32, #675)
 * SoundManager.remove(sound) now lets you remove a sound from the SoundManager, destroying it in the process.
 * Sound.destroy will remove a sound and all local references it holds, optionally removing itself from the SoundManager as well.
+* SoundManager.removeByKey(key) will remove all sounds from the SoundManager that have a key matching the given value.
 
 
 Bug Fixes

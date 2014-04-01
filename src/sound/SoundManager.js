@@ -389,6 +389,33 @@ Phaser.SoundManager.prototype = {
     },
 
     /**
+    * Removes all Sounds from the SoundManager that have an asset key matching the given value.
+    * The removed Sounds are destroyed before removal.
+    *
+    * @method Phaser.SoundManager#removeByKey
+    * @param {string} key - The key to match when removing sound objects.
+    * @return {number} The number of matching sound objects that were removed.
+    */
+    removeByKey: function (key) {
+
+        var i = this._sounds.length;
+        var removed = 0;
+
+        while (i--)
+        {
+            if (this._sounds[i].key === key)
+            {
+                this._sounds[i].destroy(false);
+                this._sounds.splice(i, 1);
+                removed++;
+            }
+        }
+
+        return removed;
+
+    },
+
+    /**
     * Adds a new Sound into the SoundManager and starts it playing.
     *
     * @method Phaser.SoundManager#play
