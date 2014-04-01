@@ -38,6 +38,6 @@
     "grunt-contrib-uglify": "~0.3.3",
     "lodash": "~2.2.1",
     "grunt-text-replace": "~0.3.11",
-    "load-grunt-config": "^0.7.2"
+    "load-grunt-config": "~0.8.0-beta.1"
   }
 }

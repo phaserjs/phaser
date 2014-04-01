@@ -10888,12 +10888,6 @@ Phaser.Physics.P2 = function (game, config) {
 
 };
 
-/**
-* @const
-* @type {number}
-*/
-Phaser.Physics.P2.LIME_CORONA_JSON = 0;
-
 Phaser.Physics.P2.prototype = {
 
     /**
@@ -13646,7 +13640,7 @@ Phaser.Physics.P2.Body.prototype = {
 
         this.clearShapes();
 
-        this.addCircle(radius, offsetX, offsetY, rotation);
+        return this.addCircle(radius, offsetX, offsetY, rotation);
 
     },
 

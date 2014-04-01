@@ -1,5 +1,3 @@
-var banner = require('fs').readFileSync(__dirname + '/../banner.txt', 'utf8');
-
 module.exports = {
 
     //  Our custom version of p2
@@ -23,7 +21,7 @@ module.exports = {
     //  Phaser with no bundled libs
     phaser: {
         options: {
-            banner: banner
+            banner: '<%= banner %>'
         },
         src: require('../manifests/phaser'),
         dest: '<%= compile_dir %>/phaser-no-libs.js'
@@ -41,7 +39,7 @@ module.exports = {
     //  One ring to rule them all
     standalone: {
         options: {
-            banner: banner
+            banner: '<%= banner %>'
         },
         src: [
             '<%= compile_dir %>/pixi.js',

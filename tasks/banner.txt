@@ -5,7 +5,7 @@
 *
 * @overview
 *
-* Phaser - http://www.phaser.io
+* Phaser - http://phaser.io
 *
 * v<%= package.version %> "<%= package.release %>" - Built: <%= grunt.template.today() %>
 *
@@ -27,3 +27,4 @@
 * "If you want them to be more intelligent, read them more fairy tales."
 *                                                     -- Albert Einstein
 */
+

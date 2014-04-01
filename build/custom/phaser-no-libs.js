@@ -5,21 +5,21 @@
 *
 * @overview
 *
-* Phaser - http://www.phaser.io
+* Phaser - http://phaser.io
 *
-* v2.0.2 "Ghealdan" - Built: Fri Mar 28 2014 01:30:50
+* v2.0.3 "Allorallen" - Built: Tue Apr 01 2014 03:01:02
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
-* Phaser is a fun, free and fast 2D game framework for making HTML5 games 
-* for desktop and mobile web browsers, supporting Canvas and WebGL.
+* Phaser is a fun, free and fast 2D game framework for making HTML5 games
+* for desktop and mobile web browsers, supporting Canvas and WebGL rendering.
 *
 * Phaser uses Pixi.js for rendering, created by Mat Groves http://matgroves.com @Doormat23
 * Phaser uses p2.js for full-body physics, created by Stefan Hedman https://github.com/schteppe/p2.js @schteppe
 * Phaser contains a port of N+ Physics, converted by Richard Davey, original by http://www.metanetsoftware.com
 *
 * Many thanks to Adam Saltsman (@ADAMATOMIC) for releasing Flixel, from which both Phaser
-* and my love of framework development can be traced.
+* and my love of framework development originate.
 *
 * Follow development at http://phaser.io and on our forum
 *
@@ -27,6 +27,7 @@
 * "If you want them to be more intelligent, read them more fairy tales."
 *                                                     -- Albert Einstein
 */
+
 /**
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2014 Photon Storm Ltd.
@@ -50,7 +51,7 @@
 var Phaser = Phaser || {
 
 	VERSION: '<%= version %>',
-	DEV_VERSION: '2.0.2',
+	DEV_VERSION: '2.0.3',
 	GAMES: [],
 
     AUTO: 0,
@@ -1404,6 +1405,46 @@ Phaser.Point.rotate = function (a, x, y, angle, asDegrees, distance) {
     }
 
     return a.setTo(x + distance * Math.cos(angle), y + distance * Math.sin(angle));
+
+};
+
+/**
+* Calculates centroid (or midpoint) from an array of points. If only one point is provided, that point is returned.
+* @method Phaser.Point.centroid
+* @param {Phaser.Point[]} points - The array of one or more points.
+* @param {Phaser.Point} [out] - Optional Point to store the value in, if not supplied a new Point object will be created.
+* @return {Phaser.Point} The new Point object.
+*/
+Phaser.Point.centroid = function (points, out) {
+
+    if (typeof out === "undefined") { out = new Phaser.Point(); }
+
+    if (Object.prototype.toString.call(points) !== '[object Array]')
+    {
+        throw new Error("Phaser.Point. Parameter 'points' must be an array");
+    }
+
+    var pointslength = points.length;
+
+    if (pointslength < 1)
+    {
+        throw new Error("Phaser.Point. Parameter 'points' array must not be empty");
+    }
+
+    if (pointslength === 1)
+    {
+        out.copyFrom(points[0]);
+        return out;
+    }
+
+    for (var i = 0; i < pointslength; i++)
+    {
+        Phaser.Point.add(out, points[i], out);
+    }
+
+    out.divide(pointslength, pointslength);
+
+    return out;
 
 };
 
@@ -9071,11 +9112,11 @@ Phaser.Game.prototype = {
             this.plugins.preUpdate();
             this.stage.preUpdate();
 
+            this.state.update();
             this.stage.update();
             this.tweens.update();
             this.sound.update();
             this.input.update();
-            this.state.update();
             this.physics.update();
             this.particles.update();
             this.plugins.update();
@@ -11645,6 +11686,11 @@ Phaser.Pointer = function (game, id) {
     * @property {Phaser.Point} positionDown - A Phaser.Point object containing the x/y values of the pointer when it was last in a down state on the display.
     */
     this.positionDown = new Phaser.Point();
+    
+    /**
+    * @property {Phaser.Point} positionUp - A Phaser.Point object containing the x/y values of the pointer when it was last released.
+    */
+    this.positionUp = new Phaser.Point();
 
     /**
     * A Phaser.Circle that is centered on the x/y coordinates of this pointer, useful for hit detection.
@@ -11960,7 +12006,9 @@ Phaser.Pointer.prototype = {
         this.withinGame = false;
         this.isDown = false;
         this.isUp = true;
-
+        
+        this.positionUp.setTo(this.x, this.y);
+        
         if (this.isMouse === false)
         {
             this.game.input.currentPointers--;
@@ -17279,6 +17327,10 @@ Object.defineProperty(Phaser.Sprite.prototype, "inputEnabled", {
                 this.input = new Phaser.InputHandler(this);
                 this.input.start();
             }
+            else if (this.input && !this.input.enabled)
+            {
+                this.input.start();
+            }
         }
         else
         {
@@ -17287,6 +17339,7 @@ Object.defineProperty(Phaser.Sprite.prototype, "inputEnabled", {
                 this.input.stop();
             }
         }
+
     }
 
 });
@@ -18147,6 +18200,10 @@ Object.defineProperty(Phaser.Image.prototype, "inputEnabled", {
                 this.input = new Phaser.InputHandler(this);
                 this.input.start();
             }
+            else if (this.input && !this.input.enabled)
+            {
+                this.input.start();
+            }
         }
         else
         {
@@ -18901,6 +18958,10 @@ Object.defineProperty(Phaser.TileSprite.prototype, "inputEnabled", {
                 this.input = new Phaser.InputHandler(this);
                 this.input.start();
             }
+            else if (this.input && !this.input.enabled)
+            {
+                this.input.start();
+            }
         }
         else
         {
@@ -18909,6 +18970,7 @@ Object.defineProperty(Phaser.TileSprite.prototype, "inputEnabled", {
                 this.input.stop();
             }
         }
+
     }
 
 });
@@ -19344,6 +19406,7 @@ Phaser.Text.prototype.updateText = function () {
     this.context.shadowBlur = this.style.shadowBlur;
 
     this.context.textBaseline = 'top';
+    this.context.lineJoin = 'round';
 
     //draw lines line by line
     for (i = 0; i < lines.length; i++)
@@ -19807,6 +19870,10 @@ Object.defineProperty(Phaser.Text.prototype, "inputEnabled", {
                 this.input = new Phaser.InputHandler(this);
                 this.input.start();
             }
+            else if (this.input && !this.input.enabled)
+            {
+                this.input.start();
+            }
         }
         else
         {
@@ -19815,6 +19882,7 @@ Object.defineProperty(Phaser.Text.prototype, "inputEnabled", {
                 this.input.stop();
             }
         }
+
     }
 
 });
@@ -20269,6 +20337,10 @@ Object.defineProperty(Phaser.BitmapText.prototype, "inputEnabled", {
                 this.input = new Phaser.InputHandler(this);
                 this.input.start();
             }
+            else if (this.input && !this.input.enabled)
+            {
+                this.input.start();
+            }
         }
         else
         {
@@ -20277,6 +20349,7 @@ Object.defineProperty(Phaser.BitmapText.prototype, "inputEnabled", {
                 this.input.stop();
             }
         }
+
     }
 
 });
@@ -27405,15 +27478,16 @@ Phaser.Timer.prototype = {
     /**
     * Starts this Timer running.
     * @method Phaser.Timer#start
+    * @param {number} [delay=0] - The number of milliseconds that should elapse before the Timer will start.
     */
-    start: function () {
+    start: function (delay) {
 
         if (this.running)
         {
             return;
         }
 
-        this._started = this.game.time.now;
+        this._started = this.game.time.now + (delay || 0);
 
         this.running = true;
 
@@ -30215,14 +30289,15 @@ Phaser.Cache.prototype = {
     },
 
     /**
-    * Get a physics data object from the cache by its key. You can get either the entire data set or just a single object from it.
+    * Get a physics data object from the cache by its key. You can get either the entire data set, a single object or a single fixture of an object from it.
     *
     * @method Phaser.Cache#getPhysicsData
     * @param {string} key - Asset key of the physics data object to retrieve from the Cache.
     * @param {string} [object=null] - If specified it will return just the physics object that is part of the given key, if null it will return them all.
+    * @param {string} fixtureKey - Fixture key of fixture inside an object. This key can be set per fixture with the Phaser Exporter.
     * @return {object} The requested physics object data if found.
     */
-    getPhysicsData: function (key, object) {
+    getPhysicsData: function (key, object, fixtureKey) {
 
         if (typeof object === 'undefined' || object === null)
         {
@@ -30240,7 +30315,31 @@ Phaser.Cache.prototype = {
         {
             if (this._physics[key] && this._physics[key].data[object])
             {
-                return this._physics[key].data[object];
+                var fixtures = this._physics[key].data[object];
+
+                //try to find a fixture by it's fixture key if given
+                if (fixtures && fixtureKey)
+                {
+                    for (var fixture in fixtures)
+                    {
+                        //  This contains the fixture data of a polygon or a circle
+                        fixture = fixtures[fixture];
+
+                        //  Test the key
+                        if (fixture.fixtureKey === fixtureKey)
+                        {
+                            return fixture;
+                        }
+
+                    }
+                    
+                    //  We did not find the requested fixture
+                    console.warn('Phaser.Cache.getPhysicsData: Could not find given fixtureKey: "' + fixtureKey + ' in ' + key + '"');
+                }
+                else
+                {
+                    return fixtures;
+                }
             }
             else
             {
@@ -30967,7 +31066,13 @@ Phaser.Loader.TEXTURE_ATLAS_XML_STARLING = 2;
 * @constant
 * @type {number}
 */
-Phaser.Loader.PHYSICS_LIME_CORONA = 3;
+Phaser.Loader.PHYSICS_LIME_CORONA_JSON = 3;
+
+/**
+* @constant
+* @type {number}
+*/
+Phaser.Loader.PHYSICS_PHASER_JSON = 4;
 
 Phaser.Loader.prototype = {
 
@@ -32633,31 +32738,6 @@ Phaser.Sound.prototype = {
     },
 
     /**
-     * Description.
-     * @method Phaser.Sound#addMarker
-     * @param {string} name - Description.
-     * @param {Description} start - Description.
-     * @param {Description} stop - Description.
-     * @param {Description} volume - Description.
-     * @param {Description} loop - Description.
-    addMarker: function (name, start, stop, volume, loop) {
-
-        volume = volume || 1;
-        if (typeof loop == 'undefined') { loop = false; }
-
-        this.markers[name] = {
-            name: name,
-            start: start,
-            stop: stop,
-            volume: volume,
-            duration: stop - start,
-            loop: loop
-        };
-
-    },
-    */
-
-    /**
     * Adds a marker into the current Sound. A marker is represented by a unique key and a start time and duration.
     * This allows you to bundle multiple sounds together into a single audio file and use markers to jump between them for playback.
     *
@@ -33365,13 +33445,24 @@ Phaser.SoundManager.prototype = {
 
         if (!!window['AudioContext'])
         {
-            this.context = new window['AudioContext']();
+            try {
+                this.context = new window['AudioContext']();
+            } catch (error) {
+                this.context = null;
+                this.usingWebAudio = false;
+            }
         }
         else if (!!window['webkitAudioContext'])
         {
-            this.context = new window['webkitAudioContext']();
+            try {
+                this.context = new window['webkitAudioContext']();
+            } catch (error) {
+                this.context = null;
+                this.usingWebAudio = false;
+            }
         }
-        else if (!!window['Audio'])
+
+        if (!!window['Audio'] && this.context === null)
         {
             this.usingWebAudio = false;
             this.usingAudioTag = true;
@@ -35474,7 +35565,7 @@ Phaser.Physics.Arcade.prototype = {
     * @method Phaser.Physics.Arcade#collide
     * @param {Phaser.Sprite|Phaser.Group|Phaser.Particles.Emitter|Phaser.Tilemap} object1 - The first object to check. Can be an instance of Phaser.Sprite, Phaser.Group, Phaser.Particles.Emitter, or Phaser.Tilemap.
     * @param {Phaser.Sprite|Phaser.Group|Phaser.Particles.Emitter|Phaser.Tilemap|array} object2 - The second object or array of objects to check. Can be Phaser.Sprite, Phaser.Group, Phaser.Particles.Emitter or Phaser.Tilemap.
-    * @param {function} [collideCallback=null] - An optional callback function that is called if the objects collide. The two objects will be passed to this function in the same order in which you specified them.
+    * @param {function} [collideCallback=null] - An optional callback function that is called if the objects collide. The two objects will be passed to this function in the same order in which you specified them, unless you are colliding Group vs. Sprite, in which case Sprite will always be the first parameter.
     * @param {function} [processCallback=null] - A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then collision will only happen if processCallback returns true. The two objects will be passed to this function in the same order in which you specified them.
     * @param {object} [callbackContext] - The context in which to run the callbacks.
     * @return {boolean} True if a collision occured otherwise false.
