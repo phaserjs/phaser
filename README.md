@@ -74,6 +74,7 @@ Updated
 * The Phaser jshint process is now running on Travis (thanks @xtian, #656)
 * The Phaser Gruntfile is now split up into option tasks (thanks @xtian, #638)
 * Key.reset now clears any callbacks associated with the onDown and onUp events and nulls the onHoldCallback if set. Key.reset is called by Keyboard.reset when changing state.
+* If you pass `null` to Tilemap.putTile as the tile parameter it will pass the call over to Tilemap.removeTile.
 
 
 New Features
@@ -92,6 +93,8 @@ New Features
 * SoundManager.removeByKey(key) will remove all sounds from the SoundManager that have a key matching the given value.
 * ArcadePhysics.Body.hitTest(x, y) will return a boolean based on if the given world coordinate are within the Body or not.
 * StateManager.restart allows you to quickly restart the *current* state, optionally clearing the world and cache.
+* Tilemap.removeTile(x, y, layer) lets you remove the tile at the given coordinates and updates the collision data.
+* Tilemap.removeTileWorldXY lets you remove the tile at the given pixel value coordinates and updates the collision data.
 
 
 Bug Fixes
