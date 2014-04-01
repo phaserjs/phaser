@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.0.3 "Allorallen" - Built: Tue Apr 01 2014 03:01:02
+* v2.0.3 "Allorallen" - Built: Tue Apr 01 2014 16:12:36
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -9702,7 +9702,7 @@ PIXI.RenderTexture.tempMatrix = new PIXI.Matrix();
 *
 * Phaser - http://phaser.io
 *
-* v2.0.3 "Allorallen" - Built: Tue Apr 01 2014 03:01:02
+* v2.0.3 "Allorallen" - Built: Tue Apr 01 2014 16:12:36
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -13575,7 +13575,7 @@ Phaser.StateManager.prototype = {
     */
     remove: function (key) {
 
-        if (this.current == key)
+        if (this.current === key)
         {
             this.callbackContext = null;
 
@@ -13622,6 +13622,31 @@ Phaser.StateManager.prototype = {
             {
                 this._args = Array.prototype.splice.call(arguments, 3);
             }
+        }
+
+    },
+
+    /**
+    * Restarts the current State. State.shutDown will be called (if it exists) before the State is restarted.
+    *
+    * @method Phaser.StateManager#restart
+    * @param {boolean} [clearWorld=true] - Clear everything in the world? This clears the World display list fully (but not the Stage, so if you've added your own objects to the Stage they will need managing directly)
+    * @param {boolean} [clearCache=false] - Clear the Game.Cache? This purges out all loaded assets. The default is false and you must have clearWorld=true if you want to clearCache as well.
+    * @param {...*} parameter - Additional parameters that will be passed to the State.init function if it has one.
+    */
+    restart: function (clearWorld, clearCache) {
+
+        if (typeof clearWorld === "undefined") { clearWorld = true; }
+        if (typeof clearCache === "undefined") { clearCache = false; }
+
+        //  Place the state in the queue. It will be started the next time the game loop starts.
+        this._pendingState = this.current;
+        this._clearWorld = clearWorld;
+        this._clearCache = clearCache;
+
+        if (arguments.length > 3)
+        {
+            this._args = Array.prototype.splice.call(arguments, 3);
         }
 
     },
@@ -18812,6 +18837,7 @@ Phaser.Game.prototype = {
             this.tweens.update();
             this.sound.update();
             this.input.update();
+            // this.state.update();
             this.physics.update();
             this.particles.update();
             this.plugins.update();
@@ -20105,7 +20131,8 @@ Phaser.Key.prototype = {
     },
 
     /**
-    * Resets the state of this Key.
+    * Resets the state of this Key. This sets isDown to false, isUp to true, resets the time to be the current time and clears any callbacks
+    * associated with the onDown and onUp events and nulls the onHoldCallback if set.
     *
     * @method Phaser.Key#reset
     */
@@ -20115,6 +20142,11 @@ Phaser.Key.prototype = {
         this.isUp = true;
         this.timeUp = this.game.time.now;
         this.duration = this.game.time.now - this.timeDown;
+
+        this.onDown.removeAll();
+        this.onUp.removeAll();
+        this.onHoldCallback = null;
+        this.onHoldContext = null;
 
     },
 
@@ -42836,6 +42868,7 @@ Phaser.Sound.prototype = {
 
     /**
     * Stop playing this sound.
+    *
     * @method Phaser.Sound#stop
     */
     stop: function () {
@@ -42870,6 +42903,38 @@ Phaser.Sound.prototype = {
 
         this.currentMarker = '';
         this.onStop.dispatch(this, prevMarker);
+
+    },
+
+    /**
+    * Destroys this sound and all associated events and removes it from the SoundManager.
+    *
+    * @method Phaser.Sound#destroy
+    * @param {boolean} [remove=true] - If true this Sound is automatically removed from the SoundManager.
+    */
+    destroy: function (remove) {
+
+        if (typeof remove === 'undefined') { remove = true; }
+
+        this.stop();
+
+        if (remove)
+        {
+            this.game.sound.remove(this);
+        }
+
+        this.markers = {};
+        this.context = null;
+        this._buffer = null;
+        this.externalNode = null;
+        this.onDecoded.dispose();
+        this.onPlay.dispose();
+        this.onPause.dispose();
+        this.onResume.dispose();
+        this.onLoop.dispose();
+        this.onStop.dispose();
+        this.onMute.dispose();
+        this.onMarkerComplete.dispose();
 
     }
 
@@ -43042,7 +43107,6 @@ Phaser.SoundManager = function (game) {
     /**
     * @property {array} _sounds - An array containing all the sounds
     * @private
-    * @default The empty array.
     */
     this._sounds = [];
 
@@ -43350,7 +43414,60 @@ Phaser.SoundManager.prototype = {
     },
 
     /**
+    * Removes a Sound from the SoundManager. The removed Sound is destroyed before removal.
+    *
+    * @method Phaser.SoundManager#remove
+    * @param {Phaser.Sound} sound - The sound object to remove.
+    * @return {boolean} True if the sound was removed successfully, otherwise false.
+    */
+    remove: function (sound) {
+
+        var i = this._sounds.length;
+
+        while (i--)
+        {
+            if (this._sounds[i] === sound)
+            {
+                this._sounds[i].destroy(false);
+                this._sounds.splice(i, 1);
+                return true;
+            }
+        }
+
+        return false;
+
+    },
+
+    /**
+    * Removes all Sounds from the SoundManager that have an asset key matching the given value.
+    * The removed Sounds are destroyed before removal.
+    *
+    * @method Phaser.SoundManager#removeByKey
+    * @param {string} key - The key to match when removing sound objects.
+    * @return {number} The number of matching sound objects that were removed.
+    */
+    removeByKey: function (key) {
+
+        var i = this._sounds.length;
+        var removed = 0;
+
+        while (i--)
+        {
+            if (this._sounds[i].key === key)
+            {
+                this._sounds[i].destroy(false);
+                this._sounds.splice(i, 1);
+                removed++;
+            }
+        }
+
+        return removed;
+
+    },
+
+    /**
     * Adds a new Sound into the SoundManager and starts it playing.
+    *
     * @method Phaser.SoundManager#play
     * @param {string} key - Asset key for the sound.
     * @param {number} [volume=1] - Default value for the volume.
@@ -46891,7 +47008,7 @@ Phaser.Physics.Arcade.Body.prototype = {
     /**
     * Internal method.
     *
-    * @method Phaser.Physics.Arcade#updateBounds
+    * @method Phaser.Physics.Arcade.Body#updateBounds
     * @protected
     */
     updateBounds: function () {
@@ -46917,7 +47034,7 @@ Phaser.Physics.Arcade.Body.prototype = {
     /**
     * Internal method.
     *
-    * @method Phaser.Physics.Arcade#preUpdate
+    * @method Phaser.Physics.Arcade.Body#preUpdate
     * @protected
     */
     preUpdate: function () {
@@ -46992,7 +47109,7 @@ Phaser.Physics.Arcade.Body.prototype = {
     /**
     * Internal method.
     *
-    * @method Phaser.Physics.Arcade#postUpdate
+    * @method Phaser.Physics.Arcade.Body#postUpdate
     * @protected
     */
     postUpdate: function () {
@@ -47065,7 +47182,7 @@ Phaser.Physics.Arcade.Body.prototype = {
     /**
     * Removes this bodies reference to its parent sprite, freeing it up for gc.
     *
-    * @method Phaser.Physics.Arcade#destroy
+    * @method Phaser.Physics.Arcade.Body#destroy
     */
     destroy: function () {
 
@@ -47076,7 +47193,7 @@ Phaser.Physics.Arcade.Body.prototype = {
     /**
     * Internal method.
     *
-    * @method Phaser.Physics.Arcade#checkWorldBounds
+    * @method Phaser.Physics.Arcade.Body#checkWorldBounds
     * @protected
     */
     checkWorldBounds: function () {
@@ -47114,7 +47231,7 @@ Phaser.Physics.Arcade.Body.prototype = {
     * So it could be smaller or larger than the parent Sprite. You can also control the x and y offset, which
     * is the position of the Body relative to the top-left of the Sprite.
     *
-    * @method Phaser.Physics.Arcade#setSize
+    * @method Phaser.Physics.Arcade.Body#setSize
     * @param {number} width - The width of the Body.
     * @param {number} height - The height of the Body.
     * @param {number} offsetX - The X offset of the Body from the Sprite position.
@@ -47140,9 +47257,9 @@ Phaser.Physics.Arcade.Body.prototype = {
     /**
     * Resets all Body values (velocity, acceleration, rotation, etc)
     *
-    * @method Phaser.Physics.Arcade#reset
+    * @method Phaser.Physics.Arcade.Body#reset
     * @param {number} x - The new x position of the Body.
-    * @param {number} y - The new x position of the Body.
+    * @param {number} y - The new y position of the Body.
     */
     reset: function (x, y) {
 
@@ -47165,6 +47282,20 @@ Phaser.Physics.Arcade.Body.prototype = {
         this._sy = this.sprite.scale.y;
         
         this.center.setTo(this.position.x + this.halfWidth, this.position.y + this.halfHeight);
+
+    },
+
+    /**
+    * Tests if a world point lies within this Body.
+    *
+    * @method Phaser.Physics.Arcade.Body#hitTest
+    * @param {number} x - The world x coordinate to test.
+    * @param {number} y - The world y coordinate to test.
+    * @return {boolean} True if the given coordinates are inside this Body, otherwise false.
+    */
+    hitTest: function (x, y) {
+
+        return Phaser.Rectangle.contains(this, x, y);
 
     },
 
@@ -49446,16 +49577,75 @@ Phaser.Tilemap.prototype = {
     },
 
     /**
+    * Removes the tile located at the given coordinates and updates the collision data.
+    *
+    * @method Phaser.Tilemap#removeTile
+    * @param {number} x - X position to place the tile (given in tile units, not pixels)
+    * @param {number} y - Y position to place the tile (given in tile units, not pixels)
+    * @param {number|string|Phaser.TilemapLayer} [layer] - The layer to modify.
+    * @return {Phaser.Tile} The Tile object that was removed from this map.
+    */
+    removeTile: function (x, y, layer) {
+
+        layer = this.getLayer(layer);
+
+        if (x >= 0 && x < this.layers[layer].width && y >= 0 && y < this.layers[layer].height)
+        {
+            if (this.hasTile(x, y, layer))
+            {
+                var tile = this.layers[layer].data[y][x];
+
+                this.layers[layer].data[y][x] = null;
+
+                this.layers[layer].dirty = true;
+
+                this.calculateFaces(layer);
+
+                return tile;
+            }
+        }
+
+    },
+
+    /**
+    * Removes the tile located at the given coordinates and updates the collision data. The coordinates are given in pixel values.
+    *
+    * @method Phaser.Tilemap#removeTileWorldXY
+    * @param {number} x - X position to insert the tile (given in pixels)
+    * @param {number} y - Y position to insert the tile (given in pixels)
+    * @param {number} tileWidth - The width of the tile in pixels.
+    * @param {number} tileHeight - The height of the tile in pixels.
+    * @param {number|string|Phaser.TilemapLayer} [layer] - The layer to modify.
+    * @return {Phaser.Tile} The Tile object that was removed from this map.
+    */
+    removeTileWorldXY: function (x, y, tileWidth, tileHeight, layer) {
+
+        layer = this.getLayer(layer);
+
+        x = this.game.math.snapToFloor(x, tileWidth) / tileWidth;
+        y = this.game.math.snapToFloor(y, tileHeight) / tileHeight;
+
+        return this.removeTile(x, y, layer);
+
+    },
+
+    /**
     * Puts a tile of the given index value at the coordinate specified.
+    * If you pass `null` as the tile it will pass your call over to Tilemap.removeTile instead.
     *
     * @method Phaser.Tilemap#putTile
-    * @param {Phaser.Tile|number} tile - The index of this tile to set or a Phaser.Tile object.
+    * @param {Phaser.Tile|number|null} tile - The index of this tile to set or a Phaser.Tile object. If null the tile is removed from the map.
     * @param {number} x - X position to place the tile (given in tile units, not pixels)
     * @param {number} y - Y position to place the tile (given in tile units, not pixels)
     * @param {number|string|Phaser.TilemapLayer} [layer] - The layer to modify.
     * @return {Phaser.Tile} The Tile object that was created or added to this map.
     */
     putTile: function (tile, x, y, layer) {
+
+        if (tile === null)
+        {
+            return this.removeTile(x, y, layer);
+        }
 
         layer = this.getLayer(layer);
 
@@ -49520,6 +49710,7 @@ Phaser.Tilemap.prototype = {
     * @param {number} tileWidth - The width of the tile in pixels.
     * @param {number} tileHeight - The height of the tile in pixels.
     * @param {number|string|Phaser.TilemapLayer} [layer] - The layer to modify.
+    * @return {Phaser.Tile} The Tile object that was created or added to this map.
     */
     putTileWorldXY: function (tile, x, y, tileWidth, tileHeight, layer) {
 
@@ -49528,7 +49719,7 @@ Phaser.Tilemap.prototype = {
         x = this.game.math.snapToFloor(x, tileWidth) / tileWidth;
         y = this.game.math.snapToFloor(y, tileHeight) / tileHeight;
 
-        this.putTile(tile, x, y, layer);
+        return this.putTile(tile, x, y, layer);
 
     },
 
