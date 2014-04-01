@@ -91,6 +91,7 @@ New Features
 * Sound.destroy will remove a sound and all local references it holds, optionally removing itself from the SoundManager as well.
 * SoundManager.removeByKey(key) will remove all sounds from the SoundManager that have a key matching the given value.
 * ArcadePhysics.Body.hitTest(x, y) will return a boolean based on if the given world coordinate are within the Body or not.
+* StateManager.restart allows you to quickly restart the *current* state, optionally clearing the world and cache.
 
 
 Bug Fixes
