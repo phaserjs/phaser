@@ -13,6 +13,9 @@
     "type": "git",
     "url": "https://photonstorm@github.com/photonstorm/phaser.git"
   },
+  "scripts": {
+    "test": "NODE_ENV=test grunt jshint"
+  },
   "keywords": [
     "HTML5",
     "game",

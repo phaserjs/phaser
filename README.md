@@ -3,6 +3,8 @@
 Phaser 2.0.3
 ============
 
+# Phaser 2.0.3 [![Build Status](https://travis-ci.org/photonstorm/phaser.png?branch=dev)](https://travis-ci.org/photonstorm/phaser)
+
 Phaser is a fast, free and fun open source game framework for making desktop and mobile browser HTML5 games. It uses [Pixi.js](https://github.com/GoodBoyDigital/pixi.js/) internally for fast 2D Canvas and WebGL rendering.
 
 Version: 2.0.3 "Allorallen" - Released: -in development-
@@ -69,6 +71,7 @@ Updated
 * Lowered the default size of SpriteBatch from 10000 to 2000 as this yields faster results on mobile (pixi.js update)
 * Fix for 'jagged' strokes on custom fonts. (thanks @nickryall, #677)
 * The State.update function (and thus the update of any sub-classed Sprites or other objects) is now called before Stage, Tweens, Sound, Input, etc (#662)
+* The Phaser jshint process is now running on Travis (thanks @xtian, #656)
 
 
 New Features

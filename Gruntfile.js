@@ -410,7 +410,7 @@ module.exports = function (grunt) {
             },
 
             options: {
-                force: true
+                force: (process.env.NODE_ENV !== 'test')
             }
         }
     });
