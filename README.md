@@ -73,6 +73,7 @@ Updated
 * The State.update function (and thus the update of any sub-classed Sprites or other objects) is now called before Stage, Tweens, Sound, Input, etc (#662)
 * The Phaser jshint process is now running on Travis (thanks @xtian, #656)
 * The Phaser Gruntfile is now split up into option tasks (thanks @xtian, #638)
+* Key.reset now clears any callbacks associated with the onDown and onUp events and nulls the onHoldCallback if set. Key.reset is called by Keyboard.reset when changing state.
 
 
 New Features

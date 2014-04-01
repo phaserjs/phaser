@@ -177,7 +177,8 @@ Phaser.Key.prototype = {
     },
 
     /**
-    * Resets the state of this Key.
+    * Resets the state of this Key. This sets isDown to false, isUp to true, resets the time to be the current time and clears any callbacks
+    * associated with the onDown and onUp events and nulls the onHoldCallback if set.
     *
     * @method Phaser.Key#reset
     */
@@ -187,6 +188,11 @@ Phaser.Key.prototype = {
         this.isUp = true;
         this.timeUp = this.game.time.now;
         this.duration = this.game.time.now - this.timeDown;
+
+        this.onDown.removeAll();
+        this.onUp.removeAll();
+        this.onHoldCallback = null;
+        this.onHoldContext = null;
 
     },
 
