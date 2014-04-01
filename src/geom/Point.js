@@ -466,28 +466,33 @@ Phaser.Point.centroid = function (points, out) {
 
     if (typeof out === "undefined") { out = new Phaser.Point(); }
 
-    if (Object.prototype.toString.call(points) !== '[object Array]') {
-        throw new Error("Phaser.Point. Parameter 'points' must be an array")
+    if (Object.prototype.toString.call(points) !== '[object Array]')
+    {
+        throw new Error("Phaser.Point. Parameter 'points' must be an array");
     }
 
     var pointslength = points.length;
 
-    if (pointslength < 1) {
-        throw new Error("Phaser.Point. Parameter 'points' array must not be empty")
+    if (pointslength < 1)
+    {
+        throw new Error("Phaser.Point. Parameter 'points' array must not be empty");
     }
 
-    if (pointslength === 1) {
+    if (pointslength === 1)
+    {
         out.copyFrom(points[0]);
         return out;
     }
 
-    for (var i = 0; i < pointslength; i++) {
+    for (var i = 0; i < pointslength; i++)
+    {
         Phaser.Point.add(out, points[i], out);
     }
 
     out.divide(pointslength, pointslength);
 
     return out;
+
 };
 
 //   Because PIXI uses its own Point, we'll replace it with ours to avoid duplicating code or confusion.

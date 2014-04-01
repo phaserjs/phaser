@@ -595,28 +595,31 @@ Phaser.Cache.prototype = {
         {
             if (this._physics[key] && this._physics[key].data[object])
             {
-                fixtures = this._physics[key].data[object];
+                var fixtures = this._physics[key].data[object];
 
                 //try to find a fixture by it's fixture key if given
                 if (fixtures && fixtureKey)
                 {
-                    for(var fixture in fixtures)
+                    for (var fixture in fixtures)
                     {
-                        //this contains the fixture data of a polygon or a circle
-                        fixture = fixtures[fixture]
-                        //test the key
-                        if(fixture.fixtureKey === fixtureKey)
+                        //  This contains the fixture data of a polygon or a circle
+                        fixture = fixtures[fixture];
+
+                        //  Test the key
+                        if (fixture.fixtureKey === fixtureKey)
                         {
                             return fixture;
                         }
+
                     }
                     
-                    //we did not find the requested fixture
+                    //  We did not find the requested fixture
                     console.warn('Phaser.Cache.getPhysicsData: Could not find given fixtureKey: "' + fixtureKey + ' in ' + key + '"');
-                }else{
+                }
+                else
+                {
                     return fixtures;
                 }
-                
             }
             else
             {
