@@ -6,7 +6,8 @@ module.exports = {
             '!src/Intro.js',
             '!src/Outro.js',
             '!src/pixi/**/*',
-            '!src/physics/p2/p2.js'
+            '!src/physics/p2/p2.js',
+            '!plugins/AStar.js'
         ],
         options: { jshintrc: '.jshintrc' }
     },
@@ -25,6 +26,6 @@ module.exports = {
     },
 
     options: {
-        force: true
+        force: (process.env.NODE_ENV !== 'test')
     }
 };

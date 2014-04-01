@@ -72,6 +72,7 @@ Updated
 * Fix for 'jagged' strokes on custom fonts. (thanks @nickryall, #677)
 * The State.update function (and thus the update of any sub-classed Sprites or other objects) is now called before Stage, Tweens, Sound, Input, etc (#662)
 * The Phaser jshint process is now running on Travis (thanks @xtian, #656)
+* The Phaser Gruntfile is now split up into option tasks (thanks @xtian, #638)
 
 
 New Features
