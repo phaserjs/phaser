@@ -103,7 +103,7 @@ declare module PIXI {
 
     export interface ILoader {
 
-        constructor(url: string, crossorigin: boolean);
+        constructor(url: string, crossorigin: any);
 
         load();
     }
@@ -163,10 +163,10 @@ declare module PIXI {
     export class AssetLoader extends EventTarget {
 
         assetURLs: string[];
-        crossorigin: boolean;
+        crossorigin: any;
         loadersByType: { [key: string]: ILoader };
 
-        constructor(assetURLs: string[], crossorigin: boolean);
+        constructor(assetURLs: string[], crossorigin: any);
 
         load(): void;
 
@@ -176,10 +176,10 @@ declare module PIXI {
 
         url: string;
         baseUrl: string;
-        crossorigin: boolean;
+        crossorigin: any;
         loaded: boolean;
 
-        constructor(url: string, crossorigin: boolean);
+        constructor(url: string, crossorigin: any);
 
         load(): void;
 
@@ -200,7 +200,7 @@ declare module PIXI {
         destroy(): void;
         updateSourceImage(newSrc: string): void;
 
-        static fromImage(imageUrl: string, crossorigin: boolean, scaleMode: scaleModes): BaseTexture;
+        static fromImage(imageUrl: string, crossorigin: any, scaleMode: scaleModes): BaseTexture;
         static fromCanvas(canvas: HTMLCanvasElement, scaleMode: scaleModes): BaseTexture;
 
     }
@@ -208,11 +208,11 @@ declare module PIXI {
     export class BitmapFontLoader extends EventTarget {
 
         baseUrl: string;
-        crossorigin: boolean;
+        crossorigin: any;
         texture: Texture;
         url: string;
 
-        constructor(url: string, crossorigin: boolean);
+        constructor(url: string, crossorigin: any);
 
         load(): void;
 
@@ -487,7 +487,7 @@ declare module PIXI {
 
         texture: Texture;
 
-        constructor(url: string, crossorigin?: boolean);
+        constructor(url: string, crossorigin?: any);
         load(): void;
         loadFramedSpriteSheet(frameWidth: number, frameHeight: number, textureName: string): void;
 
@@ -527,11 +527,11 @@ declare module PIXI {
     export class JsonLoader extends EventTarget {
 
         baseUrl: string;
-        crossorigin: boolean;
+        crossorigin: any;
         loaded: boolean;
         url: string;
 
-        constructor(url: string, crossorigin?: boolean);
+        constructor(url: string, crossorigin?: any);
 
         load(): void;
 
@@ -707,7 +707,7 @@ declare module PIXI {
     export class Spine {
 
         url: string;
-        crossorigin: boolean;
+        crossorigin: any;
         loaded: boolean;
 
         constructor(url: string);
@@ -720,10 +720,10 @@ declare module PIXI {
     export class SpineLoader extends EventTarget {
 
         url: string;
-        crossorigin: boolean;
+        crossorigin: any;
         loaded: boolean;
 
-        constructor(url: string, crossorigin?: boolean);
+        constructor(url: string, crossorigin?: any);
 
         load(): void;
 
@@ -758,12 +758,12 @@ declare module PIXI {
     export class SpriteSheetLoader extends EventTarget {
 
         url: string;
-        crossorigin: boolean;
+        crossorigin: any;
         baseUrl: string;
         texture: Texture;
         frames: Object;
 
-        constructor(url: string, crossorigin?: boolean);
+        constructor(url: string, crossorigin?: any);
 
         load();
     }
@@ -825,7 +825,7 @@ declare module PIXI {
         setFrame(frame: Rectangle): void;
         render(displayObject: DisplayObject, position: Point, clear: boolean): void;
 
-        static fromImage(imageUrl: string, crossorigin: boolean, scaleMode: scaleModes): Texture;
+        static fromImage(imageUrl: string, crossorigin: any, scaleMode: scaleModes): Texture;
         static fromFrame(frameId: string): Texture;
         static fromCanvas(canvas: HTMLCanvasElement, scaleMode: scaleModes): Texture;
         static addTextureToCache(texture: Texture, id: string): void;
@@ -1256,7 +1256,7 @@ declare module Phaser {
         getImage(key: string): Object;
         getJSON(key:string): Object
         getKeys(array: string[]): string[];
-        getPhysicsData(key: string, object?: string): Object;
+        getPhysicsData(key: string, object?: string, fixtureKey?: string): Object;
         getSound(key: string): Phaser.Sound;
         getSoundData(key: string): Object;
         getText(key: string): Object;
@@ -2329,6 +2329,7 @@ declare module Phaser {
         addKeyCapture(keycode: any): void;
         createCursorKeys(): Phaser.CursorKeys;
         clearCaptures(): void;
+        destroy(): void;
         isDown(keycode: number): boolean;
         justPressed(keycode: number, duration?: number): boolean;
         justReleased(keycode: number, duration?: number): boolean;
@@ -2399,13 +2400,14 @@ declare module Phaser {
 
         constructor(game: Phaser.Game);
 
-        static PHYSICS_LIME_CORONA: number;
+        static PHYSICS_LIME_CORONA_JSON: number;
+        static PHYSICS_PHASER_JSON: number;
         static TEXTURE_ATLAS_JSON_ARRAY: number;
         static TEXTURE_ATLAS_JSON_HASH: number;
         static TEXTURE_ATLAS_XML_STARLING: number;
 
         baseURL: string;
-        crossOrigin: boolean;
+        crossOrigin: any;
         game: Phaser.Game;
         hasLoaded: boolean;
         isLoading: boolean;
@@ -2784,6 +2786,7 @@ declare module Phaser {
                 offset: Phaser.Point;
                 overlapX: number;
                 overlapY: number;
+                phase: number;
                 position: Phaser.Point;
                 preRotation: number;
                 prev: Phaser.Point;
@@ -2810,6 +2813,7 @@ declare module Phaser {
                 deltaAbsX(): void;
                 deltaAbsY(): void;
                 destroy(): void;
+                hitTest(x: number, y: number): boolean;
                 onFloor(): void;
                 onWall(): void;
                 preUpdate(): void;
@@ -3358,6 +3362,7 @@ declare module Phaser {
         y: number;
 
         static add(a: Phaser.Point, b: Phaser.Point, out?: Phaser.Point): Phaser.Point;
+        static centroid(points: Phaser.Point[], out?: Phaser.Point): Phaser.Point;
         static distance(a: Phaser.Point, b: Phaser.Point, round?: boolean): number;
         static divide(a: Phaser.Point, b: Phaser.Point, out?: Phaser.Point): Phaser.Point;
         static equals(a: Phaser.Point, b: Phaser.Point): boolean;
@@ -3409,6 +3414,7 @@ declare module Phaser {
         pageY: number;
         position: Phaser.Point;
         positionDown: Phaser.Point;
+        positionUp: Phaser.Point;
         previousTapTime: number;
         screenX: number;
         screenY: number;
@@ -3705,6 +3711,7 @@ declare module Phaser {
         context: any;
         currentMarker: string;
         currentTime: number;
+        destroy(remove?: boolean): void;
         duration: number;
         externalNode: Object;
         game: Phaser.Game;
@@ -3736,7 +3743,6 @@ declare module Phaser {
         usingWebAudio: boolean;
         volume: number;
 
-        addMarker(name: string, start: number, stop: number, volume?: number, loop?: boolean): void;
         pause(): void;
         play(marker?: string, position?: number, volume?: number, loop?: boolean, forceRestart?: boolean): Phaser.Sound;
         removeMarker(name: string): void;
@@ -3759,6 +3765,8 @@ declare module Phaser {
         mute: boolean;
         noAudio: boolean;
         onSoundDecode: Phaser.Signal;
+        remove(sound: Phaser.Sound): boolean;
+        removeByKey(key: string): number;
         touchLocked: boolean;
         usingAudioTag: boolean;
         usingWebAudio: boolean;
@@ -3825,6 +3833,7 @@ declare module Phaser {
         drawPolygon(): void;
         kill(): Phaser.Sprite;
         loadTexture(key: any, frame: any): void;
+        overlap(displayObject: any): boolean;
         play(name: string, frameRate?: number, loop?: boolean, killOnComplete?: boolean): Phaser.Animation;
         postUpdate(): void;
         preUpdate(): void;
@@ -4222,7 +4231,7 @@ declare module Phaser {
 
     class Tileset {
 
-        constructor(name: string, firstgid: number, width: number, height: number, margin: number, spacing: number, properties: Object);
+        constructor(name: string, firstgid: number, width?: number, height?: number, margin?: number, spacing?: number, properties?: Object);
 
         columns: number;
         firstgid: number;
@@ -4345,7 +4354,7 @@ declare module Phaser {
         repeat(delay: number, repeatCount: number, callback: Function, callbackContext: Object, ...args: any[]): Phaser.TimerEvent;
         resume(): void;
         sortHandler(a: any, b: any): number;
-        start(): void;
+        start(startDelay?: number): void;
         stop(): void;
         update(time: number): boolean;
 
@@ -4418,7 +4427,7 @@ declare module Phaser {
         resume(): void;
         start(): Phaser.Tween;
         stop(): Phaser.Tween;
-        to(properties: Object, duration?: number, ease?: Function, autoStart?: boolean, delay?: number, repeat?: boolean, yoyo?: boolean): Phaser.Tween;
+        to(properties: Object, duration?: number, ease?: Function, autoStart?: boolean, delay?: number, repeat?: number, yoyo?: boolean): Phaser.Tween;
         update(time: number): boolean;
         yoyo(yoyo: boolean): Phaser.Tween;
 
