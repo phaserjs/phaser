@@ -160,7 +160,7 @@ Phaser.SoundManager.prototype = {
                 this.context = null;
                 this.usingWebAudio = false;
                 this.noAudio = true;
-        }
+            }
         }
         else if (!!window['webkitAudioContext'])
         {
