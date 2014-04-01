@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.0.3 "Allorallen" - Built: Tue Apr 01 2014 16:12:36
+* v2.0.3 "Allorallen" - Built: Tue Apr 01 2014 19:51:08
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -9702,7 +9702,7 @@ PIXI.RenderTexture.tempMatrix = new PIXI.Matrix();
 *
 * Phaser - http://phaser.io
 *
-* v2.0.3 "Allorallen" - Built: Tue Apr 01 2014 16:12:36
+* v2.0.3 "Allorallen" - Built: Tue Apr 01 2014 19:51:08
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -43209,7 +43209,8 @@ Phaser.SoundManager.prototype = {
             } catch (error) {
                 this.context = null;
                 this.usingWebAudio = false;
-            }
+                this.noAudio = true;
+        }
         }
         else if (!!window['webkitAudioContext'])
         {
@@ -43218,6 +43219,7 @@ Phaser.SoundManager.prototype = {
             } catch (error) {
                 this.context = null;
                 this.usingWebAudio = false;
+                this.noAudio = true;
             }
         }
 
@@ -43225,11 +43227,7 @@ Phaser.SoundManager.prototype = {
         {
             this.usingWebAudio = false;
             this.usingAudioTag = true;
-        }
-        else
-        {
-            this.usingWebAudio = false;
-            this.noAudio = true;
+            this.noAudio = false;
         }
 
         if (this.context !== null)

@@ -159,7 +159,8 @@ Phaser.SoundManager.prototype = {
             } catch (error) {
                 this.context = null;
                 this.usingWebAudio = false;
-            }
+                this.noAudio = true;
+        }
         }
         else if (!!window['webkitAudioContext'])
         {
@@ -168,6 +169,7 @@ Phaser.SoundManager.prototype = {
             } catch (error) {
                 this.context = null;
                 this.usingWebAudio = false;
+                this.noAudio = true;
             }
         }
 
@@ -175,11 +177,7 @@ Phaser.SoundManager.prototype = {
         {
             this.usingWebAudio = false;
             this.usingAudioTag = true;
-        }
-        else
-        {
-            this.usingWebAudio = false;
-            this.noAudio = true;
+            this.noAudio = false;
         }
 
         if (this.context !== null)
