@@ -7,10 +7,10 @@ Phaser.Plugin.MouseSprite = function (game, parent) {
   Phaser.Plugin.call(this, game, parent);
   // sets the game element's cursor style to none
   document.getElementById(game.parent).style.cursor = 'none';
-  
+
   // setup the mouse listener
-  game.input.mouse.mouseMoveCallback = this.updateLocation;
-  game.input.mouse.callbackContext = this; 
+  this.game.input.mouse.mouseMoveCallback = this.updateLocation;
+  this.game.input.mouse.callbackContext = this;
 };
 
 //  Extends the Phaser.Plugin template, setting up values we need
@@ -30,6 +30,6 @@ Phaser.Plugin.MouseSprite.prototype.setSprite = function(sprite) {
 * This is run when a mouseMove event is detected
 */
 Phaser.Plugin.MouseSprite.prototype.updateLocation = function() {
-  this.sprite.x = game.input.mouse.x;
-  this.sprite.y = game.input.mouse.y;
+  this.sprite.x = this.game.input.mouse.x;
+  this.sprite.y = this.game.input.mouse.y;
 };
