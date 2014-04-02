@@ -70,7 +70,7 @@ Phaser.State = function () {
     this.stage = null;
 
     /**
-    * @property {Phaser.TimeManager} time - Reference to game clock.
+    * @property {Phaser.Time} time - Reference to the core game clock.
     */
     this.time = null;
 
@@ -90,7 +90,7 @@ Phaser.State = function () {
     this.particles = null;
 
     /**
-    * @property {Phaser.Physics.World} physics - Reference to the physics manager.
+    * @property {Phaser.Physics} physics - Reference to the physics manager.
     */
     this.physics = null;
 

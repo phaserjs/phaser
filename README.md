@@ -69,7 +69,7 @@ Updated
 * Updated the PhysicsEditor plugin to maintain position, radius, mask bits, category bits and sensor flags (thanks @georgiee, #674)
 * Further TypeScript defs tweaks (thanks @clark-stevenson)
 * Lowered the default size of SpriteBatch from 10000 to 2000 as this yields faster results on mobile (pixi.js update)
-* Fix for 'jagged' strokes on custom fonts. (thanks @nickryall, #677)
+* Fix for 'jagged' strokes on custom fonts (thanks @nickryall, #677)
 * The State.update function (and thus the update of any sub-classed Sprites or other objects) is now called before Stage, Tweens, Sound, Input, etc (#662)
 * The Phaser jshint process is now running on Travis (thanks @xtian, #656)
 * The Phaser Gruntfile is now split up into option tasks (thanks @xtian, #638)

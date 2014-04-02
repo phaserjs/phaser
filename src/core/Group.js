@@ -357,6 +357,7 @@ Phaser.Group.prototype.updateZ = function () {
 * Advances the Group cursor to the next object in the Group. If it's at the end of the Group it wraps around to the first object.
 *
 * @method Phaser.Group#next
+* @return {*} The child the cursor now points to.
 */
 Phaser.Group.prototype.next = function () {
 
@@ -373,6 +374,8 @@ Phaser.Group.prototype.next = function () {
         }
 
         this.cursor = this.children[this._cache[8]];
+
+        return this.cursor;
     }
 
 };
@@ -381,6 +384,7 @@ Phaser.Group.prototype.next = function () {
 * Moves the Group cursor to the previous object in the Group. If it's at the start of the Group it wraps around to the last object.
 *
 * @method Phaser.Group#previous
+* @return {*} The child the cursor now points to.
 */
 Phaser.Group.prototype.previous = function () {
 
@@ -397,6 +401,8 @@ Phaser.Group.prototype.previous = function () {
         }
 
         this.cursor = this.children[this._cache[8]];
+
+        return this.cursor;
     }
 
 };
