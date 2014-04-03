@@ -363,7 +363,7 @@ Phaser.Group.prototype.next = function () {
     if (this.cursor)
     {
         //  Wrap the cursor?
-        if (this._cache[8] === this.children.length)
+        if (this._cache[8] === this.children.length - 1)
         {
             this._cache[8] = 0;
         }
