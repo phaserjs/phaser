@@ -62,10 +62,9 @@ Phaser.Physics.P2 = function (game, config) {
     this.bounds = null;
 
     /**
-    * @property {array} _wallShapes - The wall bounds shapes.
-    * @private
+    * @property {object} walls - An object containing the 4 wall bodies that bound the physics world.
     */
-    this._wallShapes = [ null, null, null, null ];
+    this.walls = { left: null, right: null, top: null, bottom: null };
 
     /**
     * @property {Phaser.Signal} onBodyAdded - Dispatched when a new Body is added to the World.
@@ -474,24 +473,24 @@ Phaser.Physics.P2.prototype = {
         if (typeof top === 'undefined') { top = true; }
         if (typeof bottom === 'undefined') { bottom = true; }
 
-        if (left && this._wallShapes[0])
+        if (left && this.walls.left)
         {
-            this._wallShapes[0].material = material;
+            this.walls.left.material = material;
         }
 
-        if (right && this._wallShapes[1])
+        if (right && this.walls.right)
         {
-            this._wallShapes[1].material = material;
+            this.walls.right.material = material;
         }
 
-        if (top && this._wallShapes[2])
+        if (top && this.walls.top)
         {
-            this._wallShapes[2].material = material;
+            this.walls.top.material = material;
         }
 
-        if (bottom && this._wallShapes[3])
+        if (bottom && this.walls.bottom)
         {
-            this._wallShapes[3].material = material;
+            this.walls.bottom.material = material;
         }
 
     },
@@ -506,21 +505,28 @@ Phaser.Physics.P2.prototype = {
     */
     updateBoundsCollisionGroup: function (setCollisionGroup) {
 
-        if (typeof setCollisionGroup === 'undefined') { setCollisionGroup = true; }
+        var mask = this.everythingCollisionGroup.mask;
 
-        for (var i = 0; i < 4; i++)
+        if (typeof setCollisionGroup === 'undefined') { mask = this.boundsCollisionGroup.mask; }
+
+        if (this.walls.left)
         {
-            if (this._wallShapes[i])
-            {
-                if (setCollisionGroup)
-                {
-                    this._wallShapes[i].collisionGroup = this.boundsCollisionGroup.mask;
-                }
-                else
-                {
-                    this._wallShapes[i].collisionGroup = this.everythingCollisionGroup.mask;
-                }
-            }
+            this.walls.left.collisionGroup = mask;
+        }
+
+        if (this.walls.right)
+        {
+            this.walls.right.collisionGroup = mask;
+        }
+
+        if (this.walls.top)
+        {
+            this.walls.top.collisionGroup = mask;
+        }
+
+        if (this.walls.bottom)
+        {
+            this.walls.bottom.collisionGroup = mask;
         }
 
     },
@@ -553,6 +559,7 @@ Phaser.Physics.P2.prototype = {
         var cx = hw + x;
         var cy = hh + y;
 
+        /*
         if (this.bounds !== null)
         {
             if (this.bounds.world)
@@ -575,19 +582,81 @@ Phaser.Physics.P2.prototype = {
         {
             this.bounds = new p2.Body({ mass: 0, position: [this.pxmi(cx), this.pxmi(cy)] });
         }
+        */
+
+        if (this.walls.left)
+        {
+            this.world.removeBody(this.walls.left);
+        }
+
+        if (this.walls.right)
+        {
+            this.world.removeBody(this.walls.right);
+        }
+
+        if (this.walls.top)
+        {
+            this.world.removeBody(this.walls.top);
+        }
+
+        if (this.walls.bottom)
+        {
+            this.world.removeBody(this.walls.bottom);
+        }
 
         if (left)
         {
-            this._wallShapes[0] = new p2.Plane();
+            this.walls.left = new p2.Body({ mass: 0, position: [ this.pxmi(-hw), this.pxmi(0) ] });
+            this.walls.left.addShape(new p2.Plane(), 1.5707963267948966);
 
             if (setCollisionGroup)
             {
-                this._wallShapes[0].collisionGroup = this.boundsCollisionGroup.mask;
+                this.walls.left.collisionGroup = this.boundsCollisionGroup.mask;
             }
 
-            this.bounds.addShape(this._wallShapes[0], [this.pxmi(-hw), 0], 1.5707963267948966);
+            this.world.addBody(this.walls.left);
         }
 
+        if (right)
+        {
+            this.walls.right = new p2.Body({ mass: 0, position: [ this.pxmi(hw), this.pxmi(0) ] });
+            this.walls.right.addShape(new p2.Plane(), -1.5707963267948966);
+
+            if (setCollisionGroup)
+            {
+                this.walls.right.collisionGroup = this.boundsCollisionGroup.mask;
+            }
+
+            this.world.addBody(this.walls.right);
+        }
+
+        if (top)
+        {
+            this.walls.top = new p2.Body({ mass: 0, position: [ this.pxmi(0), this.pxmi(-hh) ] });
+            this.walls.top.addShape(new p2.Plane(), -3.141592653589793);
+
+            if (setCollisionGroup)
+            {
+                this.walls.top.collisionGroup = this.boundsCollisionGroup.mask;
+            }
+
+            this.world.addBody(this.walls.top);
+        }
+
+        if (bottom)
+        {
+            this.walls.bottom = new p2.Body({ mass: 0, position: [ this.pxmi(0), this.pxmi(hh) ] });
+            this.walls.bottom.addShape(new p2.Plane());
+
+            if (setCollisionGroup)
+            {
+                this.walls.bottom.collisionGroup = this.boundsCollisionGroup.mask;
+            }
+
+            this.world.addBody(this.walls.bottom);
+        }
+
+        /*
         if (right)
         {
             this._wallShapes[1] = new p2.Plane();
@@ -625,6 +694,7 @@ Phaser.Physics.P2.prototype = {
         }
 
         this.world.addBody(this.bounds);
+        */
 
     },
 
