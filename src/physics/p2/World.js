@@ -109,7 +109,6 @@ Phaser.Physics.P2 = function (game, config) {
     /**
     * @property {Phaser.Signal} onPostBroadphase - Dispatched after the Broadphase has collected collision pairs in the world.
     */
-    // this.onPostBroadphase = new Phaser.Signal();
     this.postBroadphaseCallback = null;
     this.callbackContext = null;
 
@@ -455,7 +454,6 @@ Phaser.Physics.P2.prototype = {
 
     },
 
-
     /**
     * Sets the given material against the 4 bounds of this World.
     *
@@ -554,10 +552,10 @@ Phaser.Physics.P2.prototype = {
         if (typeof bottom === 'undefined') { bottom = true; }
         if (typeof setCollisionGroup === 'undefined') { setCollisionGroup = true; }
 
-        var hw = (width / 2);
-        var hh = (height / 2);
-        var cx = hw + x;
-        var cy = hh + y;
+        // var hw = (width / 2);
+        // var hh = (height / 2);
+        // var cx = hw + x;
+        // var cy = hh + y;
 
         /*
         if (this.bounds !== null)
@@ -584,6 +582,7 @@ Phaser.Physics.P2.prototype = {
         }
         */
 
+        /*
         if (this.walls.left)
         {
             this.world.removeBody(this.walls.left);
@@ -655,6 +654,7 @@ Phaser.Physics.P2.prototype = {
 
             this.world.addBody(this.walls.bottom);
         }
+        */
 
         /*
         if (right)

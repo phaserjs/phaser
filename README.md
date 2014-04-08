@@ -3,13 +3,13 @@
 Phaser 2.0.3
 ============
 
-# Phaser 2.0.3 [![Build Status](https://travis-ci.org/photonstorm/phaser.png?branch=dev)](https://travis-ci.org/photonstorm/phaser)
-
 Phaser is a fast, free and fun open source game framework for making desktop and mobile browser HTML5 games. It uses [Pixi.js](https://github.com/GoodBoyDigital/pixi.js/) internally for fast 2D Canvas and WebGL rendering.
 
 Version: 2.0.3 "Allorallen" - Released: -in development-
 
 By Richard Davey, [Photon Storm](http://www.photonstorm.com)
+
+[![Build Status](https://travis-ci.org/photonstorm/phaser.png?branch=dev)](https://travis-ci.org/photonstorm/phaser)
 
 * View the [Official Website](http://phaser.io)
 * Follow on [Twitter](https://twitter.com/photonstorm)
@@ -78,6 +78,7 @@ Updated
 * If you pass `null` to Tilemap.putTile as the tile parameter it will pass the call over to Tilemap.removeTile.
 * TypeScript definitions updated for latest changes (thanks @clark-stevenson)
 * Keyboard.stop nulls the function references after removing the event listeners (thanks @bmceldowney, #691)
+* Tilemap.hasTile allows for multi-layer type parameter (thanks @Raeven0, #680)
 
 
 New Features
