@@ -116,6 +116,7 @@ Bug Fixes
 * SoundManager.boot will check to see if the AudioContext was created before carrying on (thanks @keyle, fix #669)
 * Fixed bug where move up and move down method in groups did not work (thanks @jonthulu, fix #684)
 * Fixed bug in Group.next when cursor is at the last child (thanks @jonthulu, fix #688)
+* Emitter.minParticleScale and maxParticleScale wasn't resetting the Body size correctly.
 
 
 ToDo
