@@ -79,6 +79,7 @@ Updated
 * TypeScript definitions updated for latest changes (thanks @clark-stevenson)
 * Keyboard.stop nulls the function references after removing the event listeners (thanks @bmceldowney, #691)
 * Tilemap.hasTile allows for multi-layer type parameter (thanks @Raeven0, #680)
+* Grunt update to dev dependencies (thanks @xtian, #695)
 
 
 New Features
