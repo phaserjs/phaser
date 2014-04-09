@@ -99,6 +99,7 @@ New Features
 * StateManager.restart allows you to quickly restart the *current* state, optionally clearing the world and cache.
 * Tilemap.removeTile(x, y, layer) lets you remove the tile at the given coordinates and updates the collision data.
 * Tilemap.removeTileWorldXY lets you remove the tile at the given pixel value coordinates and updates the collision data.
+* Key.enabled boolean allows you to toggle if a Key processes its update method or dispatches any events without deleting and re-creating it.
 
 
 Bug Fixes
