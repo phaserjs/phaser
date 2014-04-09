@@ -41,18 +41,6 @@ Phaser.Particles.Arcade.Emitter = function (game, x, y, maxParticles) {
     this.type = Phaser.EMITTER;
 
     /**
-    * @property {number} x - The X position of the top left corner of the emitter in world space.
-    * @default
-    */
-    // this.x = 0;
-
-    /**
-    * @property {number} y - The Y position of the top left corner of emitter in world space.
-    * @default
-    */
-    // this.y = 0;
-
-    /**
     * @property {number} width - The width of the emitter.  Particles can be randomly generated from anywhere within this box.
     * @default
     */
@@ -165,10 +153,10 @@ Phaser.Particles.Arcade.Emitter = function (game, x, y, maxParticles) {
     this.particleAnchor = new Phaser.Point(0.5, 0.5);
 
     /**
-    * @property {boolean} exists - Determines whether the emitter is being updated by the core game loop.
+    * @property {number} blendMode - The blendMode as set on the particle when emitted from the Emitter. Defaults to NORMAL. Needs browser capable of supporting canvas blend-modes (most not available in WebGL)
     * @default
     */
-    // this.exists = true;
+    this.blendMode = Phaser.blendModes.NORMAL;
 
     /**
     * The point the particles are emitted from.
@@ -479,6 +467,8 @@ Phaser.Particles.Arcade.Emitter.prototype.emitParticle = function () {
         particle.alpha = this.game.rnd.realInRange(this.minParticleAlpha, this.maxParticleAlpha);
     }
 
+    particle.blendMode = this.blendMode;
+
     particle.body.gravity.y = this.gravity;
     particle.body.drag.x = this.particleDrag.x;
     particle.body.drag.y = this.particleDrag.y;
@@ -532,7 +522,8 @@ Phaser.Particles.Arcade.Emitter.prototype.setYSpeed = function (min, max) {
 };
 
 /**
-* A more compact way of setting the angular velocity constraints of the emitter.
+* A more compact way of setting the angular velocity constraints of the particles.
+*
 * @method Phaser.Particles.Arcade.Emitter#setRotation
 * @param {number} [min=0] - The minimum value for this range.
 * @param {number} [max=0] - The maximum value for this range.
@@ -548,7 +539,7 @@ Phaser.Particles.Arcade.Emitter.prototype.setRotation = function (min, max) {
 };
 
 /**
-* A more compact way of setting the alpha constraints of the emitter.
+* A more compact way of setting the alpha constraints of the particles.
 *
 * @method Phaser.Particles.Arcade.Emitter#setAlpha
 * @param {number} [min=1] - The minimum value for this range.
@@ -561,6 +552,23 @@ Phaser.Particles.Arcade.Emitter.prototype.setAlpha = function (min, max) {
 
     this.minParticleAlpha = min;
     this.maxParticleAlpha = max;
+
+};
+
+/**
+* A more compact way of setting the scale constraints of the particles.
+*
+* @method Phaser.Particles.Arcade.Emitter#setScale
+* @param {number} [min=1] - The minimum value for this range.
+* @param {number} [max=1] - The maximum value for this range.
+*/
+Phaser.Particles.Arcade.Emitter.prototype.setScale = function (min, max) {
+
+    if (typeof min === 'undefined') { min = 1; }
+    if (typeof max === 'undefined') { max = 1; }
+
+    this.minParticleScale = min;
+    this.maxParticleScale = max;
 
 };
 

@@ -82,6 +82,7 @@ Updated
 * Grunt update to dev dependencies (thanks @xtian, #695)
 * Emitter now emits Phaser.Particle objects instead of Phaser.Sprites, which can be extended as required.
 * Emitter has had various local properties removed that were already declared in Phaser.Group which it extends.
+* PluginManager parent parameter removed as it's redundant. Also most core functions tidied up and jsdocs fixed.
 
 
 New Features
@@ -105,6 +106,9 @@ New Features
 * Key.enabled boolean allows you to toggle if a Key processes its update method or dispatches any events without deleting and re-creating it.
 * Emitter now has minParticleAlpha and maxParticleAlpha values for setting a random alpha on emitted particles.
 * Emitter.particleAnchor allows you to control the anchor of emitted Particles. Defaults to 0.5 (same as before) but now under your control.
+* Emitter.setAlpha allows you to quickly set the min and max alpha values.
+* Emitter.setScale allows you to quickly set the min and max scale values.
+* Emitter.blendMode lets you set the blendMode of any emitted Particle (needs a browser that supports canvas blend modes)
 
 
 Bug Fixes

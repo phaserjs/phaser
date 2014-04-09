@@ -13,9 +13,8 @@
 * @classdesc Phaser - PluginManager
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
-* @param {Description} parent - Description.
 */
-Phaser.PluginManager = function(game, parent) {
+Phaser.PluginManager = function(game) {
 
     /**
     * @property {Phaser.Game} game - A reference to the currently running game.
@@ -23,33 +22,33 @@ Phaser.PluginManager = function(game, parent) {
     this.game = game;
 
     /**
-    * @property {Description} _parent - Description.
-    * @private
-    */
-    this._parent = parent;
-
-    /**
-    * @property {array} plugins - Description.
+    * @property {array} plugins - An array of all the plugins being managed by this PluginManager.
     */
     this.plugins = [];
 
     /**
-    * @property {array} _pluginsLength - Description.
+    * @property {number} _len - Internal cache var.
     * @private
-    * @default
     */
-    this._pluginsLength = 0;
+    this._len = 0;
+
+    /**
+    * @property {number} _i - Internal cache var.
+    * @private
+    */
+    this._i = 0;
 
 };
 
 Phaser.PluginManager.prototype = {
 
     /**
-    * Add a new Plugin to the PluginManager.
-    * The plugin's game and parent reference are set to this game and pluginmanager parent.
+    * Add a new Plugin into the PluginManager.
+    * The Plugin must have 2 properties: game and parent. Plugin.game is set to ths game reference the PluginManager uses, and parent is set to the PluginManager.
+    *
     * @method Phaser.PluginManager#add
-    * @param {Phaser.Plugin} plugin - Description.
-    * @return {Phaser.Plugin} Description.
+    * @param {object|Phaser.Plugin} plugin - The Plugin to add into the PluginManager. This can be a function or an existing object.
+    * @return {Phaser.Plugin} The Plugin that was added to the manager.
     */
     add: function (plugin) {
 
@@ -63,7 +62,7 @@ Phaser.PluginManager.prototype = {
         else
         {
             plugin.game = this.game;
-            plugin.parent = this._parent;
+            plugin.parent = this;
         }
 
         //  Check for methods now to avoid having to do this every loop
@@ -110,7 +109,7 @@ Phaser.PluginManager.prototype = {
                 plugin.visible = true;
             }
 
-            this._pluginsLength = this.plugins.push(plugin);
+            this._len = this.plugins.push(plugin);
 
             // Allows plugins to run potentially destructive code outside of the constructor, and only if being added to the PluginManager
             if (typeof plugin['init'] === 'function')
@@ -127,41 +126,48 @@ Phaser.PluginManager.prototype = {
     },
 
     /**
-    * Remove a Plugin from the PluginManager.
+    * Remove a Plugin from the PluginManager. It calls Plugin.destroy on the plugin before removing it from the manager.
+    *
     * @method Phaser.PluginManager#remove
     * @param {Phaser.Plugin} plugin - The plugin to be removed.
     */
     remove: function (plugin) {
 
-        if (this._pluginsLength === 0)
-        {
-            return;
-        }
+        this._i = this._len;
 
-        for (this._p = 0; this._p < this._pluginsLength; this._p++)
+        while (this._i--)
         {
-            if (this.plugins[this._p] === plugin)
+            if (this.plugins[this._i] === plugin)
             {
                 plugin.destroy();
-                this.plugins.splice(this._p, 1);
-                this._pluginsLength--;
+                this.plugins.splice(this._i, 1);
+                this._len--;
                 return;
             }
         }
+
     },
 
     /**
-    * Removes all Plugins from the PluginManager.
+    * Remove all Plugins from the PluginManager. It calls Plugin.destroy on every plugin before removing it from the manager.
+    *
     * @method Phaser.PluginManager#removeAll
     */
     removeAll: function() {
 
-        for (this._p = 0; this._p < this._pluginsLength; this._p++)
+        this._i = this._len;
+
+        while (this._i--)
         {
-            this.plugins[this._p].destroy();
+            if (this.plugins[this._i] === plugin)
+            {
+                plugin.destroy();
+            }
         }
+
         this.plugins.length = 0;
-        this._pluginsLength = 0;
+        this._len = 0;
+
     },
 
     /**
@@ -172,16 +178,13 @@ Phaser.PluginManager.prototype = {
     */
     preUpdate: function () {
 
-        if (this._pluginsLength === 0)
-        {
-            return;
-        }
+        this._i = this._len;
 
-        for (this._p = 0; this._p < this._pluginsLength; this._p++)
+        while (this._i--)
         {
-            if (this.plugins[this._p].active && this.plugins[this._p].hasPreUpdate)
+            if (this.plugins[this._i].active && this.plugins[this._i].hasPreUpdate)
             {
-                this.plugins[this._p].preUpdate();
+                this.plugins[this._i].preUpdate();
             }
         }
 
@@ -195,16 +198,13 @@ Phaser.PluginManager.prototype = {
     */
     update: function () {
 
-        if (this._pluginsLength === 0)
-        {
-            return;
-        }
+        this._i = this._len;
 
-        for (this._p = 0; this._p < this._pluginsLength; this._p++)
+        while (this._i--)
         {
-            if (this.plugins[this._p].active && this.plugins[this._p].hasUpdate)
+            if (this.plugins[this._i].active && this.plugins[this._i].hasUpdate)
             {
-                this.plugins[this._p].update();
+                this.plugins[this._i].update();
             }
         }
 
@@ -219,16 +219,13 @@ Phaser.PluginManager.prototype = {
     */
     postUpdate: function () {
 
-        if (this._pluginsLength === 0)
-        {
-            return;
-        }
+        this._i = this._len;
 
-        for (this._p = 0; this._p < this._pluginsLength; this._p++)
+        while (this._i--)
         {
-            if (this.plugins[this._p].active && this.plugins[this._p].hasPostUpdate)
+            if (this.plugins[this._i].active && this.plugins[this._i].hasPostUpdate)
             {
-                this.plugins[this._p].postUpdate();
+                this.plugins[this._i].postUpdate();
             }
         }
 
@@ -242,16 +239,13 @@ Phaser.PluginManager.prototype = {
     */
     render: function () {
 
-        if (this._pluginsLength === 0)
-        {
-            return;
-        }
+        this._i = this._len;
 
-        for (this._p = 0; this._p < this._pluginsLength; this._p++)
+        while (this._i--)
         {
-            if (this.plugins[this._p].visible && this.plugins[this._p].hasRender)
+            if (this.plugins[this._i].visible && this.plugins[this._i].hasRender)
             {
-                this.plugins[this._p].render();
+                this.plugins[this._i].render();
             }
         }
 
@@ -265,32 +259,28 @@ Phaser.PluginManager.prototype = {
     */
     postRender: function () {
 
-        if (this._pluginsLength === 0)
-        {
-            return;
-        }
+        this._i = this._len;
 
-        for (this._p = 0; this._p < this._pluginsLength; this._p++)
+        while (this._i--)
         {
-            if (this.plugins[this._p].visible && this.plugins[this._p].hasPostRender)
+            if (this.plugins[this._i].visible && this.plugins[this._i].hasPostRender)
             {
-                this.plugins[this._p].postRender();
+                this.plugins[this._i].postRender();
             }
         }
 
     },
 
     /**
-    * Clear down this PluginManager and null out references
+    * Clear down this PluginManager, calls destroy on every plugin and nulls out references.
     *
     * @method Phaser.PluginManager#destroy
     */
     destroy: function () {
 
-        this.plugins.length = 0;
-        this._pluginsLength = 0;
+        this.removeAll();
+
         this.game = null;
-        this._parent = null;
 
     }
 
