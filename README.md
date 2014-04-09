@@ -109,6 +109,7 @@ New Features
 * Emitter.setAlpha allows you to quickly set the min and max alpha values.
 * Emitter.setScale allows you to quickly set the min and max scale values.
 * Emitter.blendMode lets you set the blendMode of any emitted Particle (needs a browser that supports canvas blend modes)
+* Group.customSort allows you to sort the Group children based on your own sort function.
 
 
 Bug Fixes

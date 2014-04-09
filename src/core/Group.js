@@ -1136,6 +1136,28 @@ Phaser.Group.prototype.sort = function (index, order) {
 };
 
 /**
+* This allows you to use your own sort handler function.
+* It will be sent two parameters: the two children involved in the comparison (a and b). It should return -1 if a > b, 1 if a < b or 0 if a === b.
+*
+* @method Phaser.Group#customSort
+* @param {function} sortHandler - Your sort handler function. It will be sent two parameters: the two children involved in the comparison. It must return -1, 1 or 0.
+* @param {object} context - The scope in which the sortHandler is called.
+*/
+Phaser.Group.prototype.customSort = function (sortHandler, context) {
+
+    if (this.children.length < 2)
+    {
+        //  Nothing to swap
+        return;
+    }
+
+    this.children.sort(sortHandler.bind(context));
+
+    this.updateZ();
+
+};
+
+/**
 * An internal helper function for the sort process.
 *
 * @method Phaser.Group#ascendingSortHandler
