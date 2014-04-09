@@ -1432,9 +1432,11 @@ Phaser.Group.prototype.removeAll = function () {
 *
 * @method Phaser.Group#removeBetween
 * @param {number} startIndex - The index to start removing children from.
-* @param {number} endIndex - The index to stop removing children from. Must be higher than startIndex and less than the length of the Group.
+* @param {number} [endIndex] - The index to stop removing children at. Must be higher than startIndex. If undefined this method will remove all children between startIndex and the end of the Group.
 */
 Phaser.Group.prototype.removeBetween = function (startIndex, endIndex) {
+
+    if (typeof endIndex === 'undefined') { endIndex = this.children.length; }
 
     if (this.children.length === 0)
     {
@@ -1446,7 +1448,9 @@ Phaser.Group.prototype.removeBetween = function (startIndex, endIndex) {
         return false;
     }
 
-    for (var i = startIndex; i < endIndex; i++)
+    var i = endIndex;
+
+    while (i >= startIndex)
     {
         if (this.children[i].events)
         {
@@ -1459,6 +1463,8 @@ Phaser.Group.prototype.removeBetween = function (startIndex, endIndex) {
         {
             this.cursor = null;
         }
+
+        i--;
     }
 
     this.updateZ();
