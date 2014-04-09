@@ -118,6 +118,7 @@
     <script src="$path/src/gameobjects/RenderTexture.js"></script>
     <script src="$path/src/gameobjects/SpriteBatch.js"></script>
     <script src="$path/src/gameobjects/RetroFont.js"></script>
+    <script src="$path/src/gameobjects/Particle.js"></script>
 
     <script src="$path/src/system/Canvas.js"></script>
     <script src="$path/src/system/Device.js"></script>

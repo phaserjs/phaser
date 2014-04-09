@@ -80,6 +80,8 @@ Updated
 * Keyboard.stop nulls the function references after removing the event listeners (thanks @bmceldowney, #691)
 * Tilemap.hasTile allows for multi-layer type parameter (thanks @Raeven0, #680)
 * Grunt update to dev dependencies (thanks @xtian, #695)
+* Emitter now emits Phaser.Particle objects instead of Phaser.Sprites, which can be extended as required.
+* Emitter has had various local properties removed that were already declared in Phaser.Group which it extends.
 
 
 New Features
@@ -101,6 +103,8 @@ New Features
 * Tilemap.removeTile(x, y, layer) lets you remove the tile at the given coordinates and updates the collision data.
 * Tilemap.removeTileWorldXY lets you remove the tile at the given pixel value coordinates and updates the collision data.
 * Key.enabled boolean allows you to toggle if a Key processes its update method or dispatches any events without deleting and re-creating it.
+* Emitter now has minParticleAlpha and maxParticleAlpha values for setting a random alpha on emitted particles.
+* Emitter.particleAnchor allows you to control the anchor of emitted Particles. Defaults to 0.5 (same as before) but now under your control.
 
 
 Bug Fixes

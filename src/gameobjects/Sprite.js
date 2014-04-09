@@ -280,10 +280,10 @@ Phaser.Sprite.prototype.preUpdate = function() {
     }
 
     //  Update any Children
-    // for (var i = 0, len = this.children.length; i < len; i++)
-    // {
-    //     this.children[i].preUpdate();
-    // }
+    for (var i = 0, len = this.children.length; i < len; i++)
+    {
+        this.children[i].preUpdate();
+    }
 
     return true;
 

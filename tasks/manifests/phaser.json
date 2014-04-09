@@ -51,6 +51,7 @@
     "src/gameobjects/RenderTexture.js",
     "src/gameobjects/SpriteBatch.js",
     "src/gameobjects/RetroFont.js",
+    "src/gameobjects/Particle.js",
 
     "src/system/Canvas.js",
     "src/system/Device.js",

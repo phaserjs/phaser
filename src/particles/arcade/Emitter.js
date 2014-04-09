@@ -44,13 +44,13 @@ Phaser.Particles.Arcade.Emitter = function (game, x, y, maxParticles) {
     * @property {number} x - The X position of the top left corner of the emitter in world space.
     * @default
     */
-    this.x = 0;
+    // this.x = 0;
 
     /**
     * @property {number} y - The Y position of the top left corner of emitter in world space.
     * @default
     */
-    this.y = 0;
+    // this.y = 0;
 
     /**
     * @property {number} width - The width of the emitter.  Particles can be randomly generated from anywhere within this box.
@@ -101,16 +101,28 @@ Phaser.Particles.Arcade.Emitter = function (game, x, y, maxParticles) {
     this.maxRotation = 360;
 
     /**
+    * @property {number} minParticleAlpha - The minimum possible alpha value of a particle.
+    * @default
+    */
+    this.minParticleAlpha = 1;
+
+    /**
+    * @property {number} maxParticleAlpha - The maximum possible alpha value of a particle.
+    * @default
+    */
+    this.maxParticleAlpha = 1;
+
+    /**
     * @property {number} gravity - Sets the `body.gravity.y` of each particle sprite to this value on launch.
     * @default
     */
     this.gravity = 100;
 
     /**
-    * @property {any} particleClass - For emitting your own particle class types. They must extend Phaser.Sprite.
+    * @property {any} particleClass - For emitting your own particle class types. They must extend Phaser.Particle.
     * @default
     */
-    this.particleClass = Phaser.Sprite;
+    this.particleClass = Phaser.Particle;
 
     /**
     * @property {Phaser.Point} particleDrag - The X and Y drag component of particles launched from the emitter.
@@ -136,9 +148,43 @@ Phaser.Particles.Arcade.Emitter = function (game, x, y, maxParticles) {
     this.lifespan = 2000;
 
     /**
-    * @property {Phaser.Point} bounce - How much each particle should bounce on each axis.  1 = full bounce, 0 = no bounce.
+    * @property {Phaser.Point} bounce - How much each particle should bounce on each axis. 1 = full bounce, 0 = no bounce.
     */
     this.bounce = new Phaser.Point();
+
+    /**
+    * @property {boolean} on - Determines whether the emitter is currently emitting particles. It is totally safe to directly toggle this.
+    * @default
+    */
+    this.on = false;
+
+    /**
+    * @property {Phaser.Point} particleAnchor - When a particle is created its anchor will be set to match this Point object (defaults to x/y: 0.5 to aid in rotation)
+    * @default
+    */
+    this.particleAnchor = new Phaser.Point(0.5, 0.5);
+
+    /**
+    * @property {boolean} exists - Determines whether the emitter is being updated by the core game loop.
+    * @default
+    */
+    // this.exists = true;
+
+    /**
+    * The point the particles are emitted from.
+    * Emitter.x and Emitter.y control the containers location, which updates all current particles
+    * Emitter.emitX and Emitter.emitY control the emission location relative to the x/y position.
+    * @property {number} emitX
+    */
+    this.emitX = x;
+
+    /**
+    * The point the particles are emitted from.
+    * Emitter.x and Emitter.y control the containers location, which updates all current particles
+    * Emitter.emitX and Emitter.emitY control the emission location relative to the x/y position.
+    * @property {number} emitY
+    */
+    this.emitY = y;
 
     /**
     * @property {number} _quantity - Internal helper for deciding how many particles to launch.
@@ -170,34 +216,6 @@ Phaser.Particles.Arcade.Emitter = function (game, x, y, maxParticles) {
     */
     this._frames = null;
 
-    /**
-    * @property {boolean} on - Determines whether the emitter is currently emitting particles. It is totally safe to directly toggle this.
-    * @default
-    */
-    this.on = false;
-
-    /**
-    * @property {boolean} exists - Determines whether the emitter is being updated by the core game loop.
-    * @default
-    */
-    this.exists = true;
-
-    /**
-    * The point the particles are emitted from.
-    * Emitter.x and Emitter.y control the containers location, which updates all current particles
-    * Emitter.emitX and Emitter.emitY control the emission location relative to the x/y position.
-    * @property {boolean} emitX
-    */
-    this.emitX = x;
-
-    /**
-    * The point the particles are emitted from.
-    * Emitter.x and Emitter.y control the containers location, which updates all current particles
-    * Emitter.emitX and Emitter.emitY control the emission location relative to the x/y position.
-    * @property {boolean} emitY
-    */
-    this.emitY = y;
-
 };
 
 Phaser.Particles.Arcade.Emitter.prototype = Object.create(Phaser.Group.prototype);
@@ -211,6 +229,13 @@ Phaser.Particles.Arcade.Emitter.prototype.update = function () {
 
     if (this.on)
     {
+        var i = this.children.length;
+
+        while (i--)
+        {
+            this.children[i].update();
+        }
+
         if (this._explode)
         {
             this._counter = 0;
@@ -248,13 +273,14 @@ Phaser.Particles.Arcade.Emitter.prototype.update = function () {
 };
 
 /**
-* This function generates a new array of particle sprites to attach to the emitter.
+* This function generates a new set of particles for use by this emitter.
+* The particles are stored internally waiting to be emitted via Emitter.start.
 *
 * @method Phaser.Particles.Arcade.Emitter#makeParticles
 * @param {array|string} keys - A string or an array of strings that the particle sprites will use as their texture. If an array one is picked at random.
-* @param {array|number} frames - A frame number, or array of frames that the sprite will use. If an array one is picked at random.
-* @param {number} quantity - The number of particles to generate.
-* @param {boolean} [collide=false] - Sets the checkCollision.none flag on the particle sprites body.
+* @param {array|number} [frames=0] - A frame number, or array of frames that the sprite will use. If an array one is picked at random.
+* @param {number} [quantity] - The number of particles to generate. If not given it will use the value of Emitter.maxParticles.
+* @param {boolean} [collide=false] - If you want the particles to be able to collide with other Arcade Physics bodies then set this to true.
 * @param {boolean} [collideWorldBounds=false] - A particle can be set to collide against the World bounds automatically and rebound back into the World if this is set to true. Otherwise it will leave the World.
 * @return {Phaser.Particles.Arcade.Emitter} This Emitter instance.
 */
@@ -301,9 +327,7 @@ Phaser.Particles.Arcade.Emitter.prototype.makeParticles = function (keys, frames
 
         particle.exists = false;
         particle.visible = false;
-
-        //  Center the origin for rotation assistance
-        particle.anchor.set(0.5);
+        particle.anchor.copyFrom(this.particleAnchor);
 
         this.add(particle);
 
@@ -316,6 +340,7 @@ Phaser.Particles.Arcade.Emitter.prototype.makeParticles = function (keys, frames
 
 /**
 * Call this function to turn off all the particles and the emitter.
+*
 * @method Phaser.Particles.Arcade.Emitter#kill
 */
 Phaser.Particles.Arcade.Emitter.prototype.kill = function () {
@@ -328,6 +353,7 @@ Phaser.Particles.Arcade.Emitter.prototype.kill = function () {
 
 /**
 * Handy for bringing game objects "back to life". Just sets alive and exists back to true.
+*
 * @method Phaser.Particles.Arcade.Emitter#revive
 */
 Phaser.Particles.Arcade.Emitter.prototype.revive = function () {
@@ -340,8 +366,8 @@ Phaser.Particles.Arcade.Emitter.prototype.revive = function () {
 /**
 * Call this function to start emitting particles.
 * @method Phaser.Particles.Arcade.Emitter#start
-* @param {boolean} [explode=true] - Whether the particles should all burst out at once.
-* @param {number} [lifespan=0] - How long each particle lives once emitted. 0 = forever.
+* @param {boolean} [explode=true] - Whether the particles should all burst out at once (true) or at the frequency given (false).
+* @param {number} [lifespan=0] - How long each particle lives once emitted in ms. 0 = forever.
 * @param {number} [frequency=250] - Ignored if Explode is set to true. Frequency is how often to emit a particle in ms.
 * @param {number} [quantity=0] - How many particles to launch. 0 = "all of the particles".
 */
@@ -349,7 +375,7 @@ Phaser.Particles.Arcade.Emitter.prototype.start = function (explode, lifespan, f
 
     if (typeof explode === 'undefined') { explode = true; }
     if (typeof lifespan === 'undefined') { lifespan = 0; }
-    if (typeof frequency === 'undefined') { frequency = 250; }
+    if (typeof frequency === 'undefined' || frequency === null) { frequency = 250; }
     if (typeof quantity === 'undefined') { quantity = 0; }
 
     this.revive();
@@ -376,7 +402,8 @@ Phaser.Particles.Arcade.Emitter.prototype.start = function (explode, lifespan, f
 };
 
 /**
-* This function can be used both internally and externally to emit the next particle.
+* This function can be used both internally and externally to emit the next particle in the queue.
+*
 * @method Phaser.Particles.Arcade.Emitter#emitParticle
 */
 Phaser.Particles.Arcade.Emitter.prototype.emitParticle = function () {
@@ -445,6 +472,11 @@ Phaser.Particles.Arcade.Emitter.prototype.emitParticle = function () {
     else
     {
         particle.frame = this._frames;
+    }
+
+    if (this.minParticleAlpha !== 1 || this.maxParticleAlpha !== 1)
+    {
+        particle.alpha = this.game.rnd.realInRange(this.minParticleAlpha, this.maxParticleAlpha);
     }
 
     particle.body.gravity.y = this.gravity;
@@ -516,9 +548,28 @@ Phaser.Particles.Arcade.Emitter.prototype.setRotation = function (min, max) {
 };
 
 /**
+* A more compact way of setting the alpha constraints of the emitter.
+*
+* @method Phaser.Particles.Arcade.Emitter#setAlpha
+* @param {number} [min=1] - The minimum value for this range.
+* @param {number} [max=1] - The maximum value for this range.
+*/
+Phaser.Particles.Arcade.Emitter.prototype.setAlpha = function (min, max) {
+
+    if (typeof min === 'undefined') { min = 1; }
+    if (typeof max === 'undefined') { max = 1; }
+
+    this.minParticleAlpha = min;
+    this.maxParticleAlpha = max;
+
+};
+
+/**
 * Change the emitters center to match the center of any object with a `center` property, such as a Sprite.
+* If the object doesn't have a center property it will be set to object.x + object.width / 2
+*
 * @method Phaser.Particles.Arcade.Emitter#at
-* @param {object|Phaser.Sprite} object - The object that you wish to match the center with.
+* @param {object|Phaser.Sprite|Phaser.Image|Phaser.TileSprite|Phaser.Text|PIXI.DisplayObject} object - The object that you wish to match the center with.
 */
 Phaser.Particles.Arcade.Emitter.prototype.at = function (object) {
 
@@ -526,6 +577,11 @@ Phaser.Particles.Arcade.Emitter.prototype.at = function (object) {
     {
         this.emitX = object.center.x;
         this.emitY = object.center.y;
+    }
+    else
+    {
+        this.emitX = object.world.x + (object.anchor.x * object.width);
+        this.emitY = object.world.y + (object.anchor.y * object.height);
     }
 
 };
