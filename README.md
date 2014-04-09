@@ -3,13 +3,13 @@
 Phaser 2.0.3
 ============
 
-# Phaser 2.0.3 [![Build Status](https://travis-ci.org/photonstorm/phaser.png?branch=dev)](https://travis-ci.org/photonstorm/phaser)
-
 Phaser is a fast, free and fun open source game framework for making desktop and mobile browser HTML5 games. It uses [Pixi.js](https://github.com/GoodBoyDigital/pixi.js/) internally for fast 2D Canvas and WebGL rendering.
 
 Version: 2.0.3 "Allorallen" - Released: -in development-
 
 By Richard Davey, [Photon Storm](http://www.photonstorm.com)
+
+[![Build Status](https://travis-ci.org/photonstorm/phaser.png?branch=dev)](https://travis-ci.org/photonstorm/phaser)
 
 * View the [Official Website](http://phaser.io)
 * Follow on [Twitter](https://twitter.com/photonstorm)
@@ -65,16 +65,23 @@ Version 2.0.3 - "Allorallen" - -in development-
 Updated
 
 * Updated to [Pixi.js 1.5.2](https://github.com/GoodBoyDigital/pixi.js/releases/tag/v1.5.2)
+* Updated to [p2.js 0.5.0](https://github.com/schteppe/p2.js/releases/tag/v0.5.0)
 * Return the result of P2.Body.setCircle for further chaining and manipulation (fix #659)
 * Updated the PhysicsEditor plugin to maintain position, radius, mask bits, category bits and sensor flags (thanks @georgiee, #674)
 * Further TypeScript defs tweaks (thanks @clark-stevenson)
 * Lowered the default size of SpriteBatch from 10000 to 2000 as this yields faster results on mobile (pixi.js update)
-* Fix for 'jagged' strokes on custom fonts. (thanks @nickryall, #677)
+* Fix for 'jagged' strokes on custom fonts (thanks @nickryall, #677)
 * The State.update function (and thus the update of any sub-classed Sprites or other objects) is now called before Stage, Tweens, Sound, Input, etc (#662)
 * The Phaser jshint process is now running on Travis (thanks @xtian, #656)
 * The Phaser Gruntfile is now split up into option tasks (thanks @xtian, #638)
 * Key.reset now clears any callbacks associated with the onDown and onUp events and nulls the onHoldCallback if set. Key.reset is called by Keyboard.reset when changing state.
 * If you pass `null` to Tilemap.putTile as the tile parameter it will pass the call over to Tilemap.removeTile.
+* TypeScript definitions updated for latest changes (thanks @clark-stevenson)
+* Keyboard.stop nulls the function references after removing the event listeners (thanks @bmceldowney, #691)
+* Tilemap.hasTile allows for multi-layer type parameter (thanks @Raeven0, #680)
+* Grunt update to dev dependencies (thanks @xtian, #695)
+* Emitter now emits Phaser.Particle objects instead of Phaser.Sprites, which can be extended as required.
+* Emitter has had various local properties removed that were already declared in Phaser.Group which it extends.
 
 
 New Features
@@ -95,6 +102,9 @@ New Features
 * StateManager.restart allows you to quickly restart the *current* state, optionally clearing the world and cache.
 * Tilemap.removeTile(x, y, layer) lets you remove the tile at the given coordinates and updates the collision data.
 * Tilemap.removeTileWorldXY lets you remove the tile at the given pixel value coordinates and updates the collision data.
+* Key.enabled boolean allows you to toggle if a Key processes its update method or dispatches any events without deleting and re-creating it.
+* Emitter now has minParticleAlpha and maxParticleAlpha values for setting a random alpha on emitted particles.
+* Emitter.particleAnchor allows you to control the anchor of emitted Particles. Defaults to 0.5 (same as before) but now under your control.
 
 
 Bug Fixes
@@ -110,12 +120,68 @@ Bug Fixes
 * Fixed bug in gl.bindTexture which tried to use an undefined private var. (@photonstorm) (pixi.js 1.5.2 bug fix)
 * Fixed the 'short cut' version of Math.floor in setTransform if roundPixels is true. (@photonstorm) (pixi.js 1.5.2 bug fix)
 * SoundManager.boot will check to see if the AudioContext was created before carrying on (thanks @keyle, fix #669)
+* Fixed bug where move up and move down method in groups did not work (thanks @jonthulu, fix #684)
+* Fixed bug in Group.next when cursor is at the last child (thanks @jonthulu, fix #688)
+* Emitter.minParticleScale and maxParticleScale wasn't resetting the Body size correctly.
+* Group.removeBetween now properly iterates through the children.
 
 
 ToDo
 
 * Split P2 world bounds into different bodies to help the broad phase.
 
+
+p2.js v0.5.0
+
+* Added property .enableIslandSleeping to World.
+* Added property .useFrictionGravityOnZeroGravity to World.
+* Renamed .useWorldGravityForFrictionApproximation in World to .useWorldGravityAsFrictionGravity to keep things more uniform.
+* Sleep improvements.
+* Added property .frictionIterations to GSSolver, and removed .skipFrictionIterations.
+* Upgraded to gl-matrix 2.1.0.
+* Removed QuadTree.
+* Removed mat2.
+* Added Utils.extend.
+* Added methods .setStiffness and .setRelaxation methods to Constraint.
+* Removed properties .stiffness, .relaxation and .useGlobalEquationParameters from GSSolver.
+* Added methods .setGlobalStiffness, .setGlobalRelaxation, .setGlobalEquationParameters to World.
+* Renamed property .eps to .epsilon for Equation.
+* Removed property .useBoundingBoxes from NaiveBroadphase in favor of the new property .boundingVolumeType in Broadphase.
+* Added methods .getMaxForce and .setMaxForce to LockConstraint.
+* Changed property names .bi, .bj, .ni, .ri, .rj to .bodyA, .bodyB, .normalA, .contactPointA, .contactPointB in Equation, ContactEquation and FrictionEquation classes.
+* Removed IslandSolver in favor of the new property World.islandSplit.
+* Changed constructors of the Constraints so they all take an options object as last parameter.
+* Added property .collideConnected to Constraint.
+* Added property .islandSplit to World.
+* Added methods .disableBodyCollision and .enableBodyCollision to World.
+* Added properties .useWorldGravityForFrictionApproximation and .frictionGravity to World.
+* Added Heightfield class.
+* Removed properties .defaultFriction and .defaultRestitution from World, in favor of .defaultContactMaterial.
+* Added property .enabled to Equation.
+* Added property .surfaceVelocity to ContactMaterial.
+* Added property .sensor to Shape.
+* World now emits events 'beginContact', 'endContact' and 'preSolve'.
+* Added property .gravityScale to Body.
+* Renamed class SAP1DBroadphase to SAPBroadphase.
+* Added property .interpolatedPosition to Body`.
+* Added method .internalStep to World.
+* Added property .applyGravity to World.
+* Renamed method .computeC to .computeInvC in Equation, and made it compute the inverse.
+* Added static method Utils.splice.
+* Added property .world to Body.
+* Added property .fixedRotation to Body.
+* Added class AABB.
+* Added properties .aabb and .aabbNeedsUpdate to Body, as well as a method .updateAABB.
+* Added property .useBoundingBoxes to NaiveBroadphase.
+* Added static method Broadphase.aabbCheck.
+* Added method .computeAABB to Shape.
+* Added static method Broadphase.canCollide.
+* Body now inherits from EventEmitter, and dispatches events 'sleep','sleepy' and 'wakeup'.
+* Added properties .allowSleep, .sleepState, .sleepSpeedLimit, .sleepTimeLimit, .lastTimeSleepy as well as methods .sleep, .wakeUp and .sleepTick to Body.
+* Added enums Body.AWAKE, Body.SLEEPY, Body.SLEEPING.
+* Added property .enableBodySleeping to World.
+* Added options .disableRotationalLock, .lowerLimit, .upperLimit to PrismaticConstraint constructor.
+* Added methods .enableMotor, .disableMotor to PrismaticConstraint as well as properties .motorEnabled, .motorSpeed, .motorEquation.
 
 
 There is an extensive [Migration Guide](https://github.com/photonstorm/phaser/blob/master/resources/Migration%20Guide.md) available for those converting from Phaser 1.x to 2.x. In the guide we detail the API breaking changes and approach to our new physics system.

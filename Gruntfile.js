@@ -5,7 +5,6 @@ module.exports = function (grunt) {
     loadConfig(grunt, {
         configPath: __dirname + '/tasks/options',
         config: {
-            package: grunt.file.readJSON('package.json'),
             release_dir: 'build',
             compile_dir: 'dist',
             banner: require('fs').readFileSync(__dirname + '/tasks/banner.txt', 'utf8')

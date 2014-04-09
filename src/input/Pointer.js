@@ -211,7 +211,7 @@ Phaser.Pointer.prototype = {
             this.button = event.button;
         }
 
-        this._history.length = 0;
+        this._history = [];
         this.active = true;
         this.withinGame = true;
         this.isDown = true;
