@@ -159,10 +159,7 @@ Phaser.PluginManager.prototype = {
 
         while (this._i--)
         {
-            if (this.plugins[this._i] === plugin)
-            {
-                plugin.destroy();
-            }
+            this.plugins[this._i].destroy();
         }
 
         this.plugins.length = 0;
