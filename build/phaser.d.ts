@@ -1064,7 +1064,7 @@ declare module Phaser {
 
         complete(): void;
         destroy(): void;
-        generateFrameNames(prefix: string, start: number, stop: number, suffix?: string, zeroPad?: number): string[];
+        static generateFrameNames(prefix: string, start: number, stop: number, suffix?: string, zeroPad?: number): string[];
         onPause(): void;
         onResume(): void;
         play(frameRate?: number, loop?: boolean, killOnComplete?: boolean): Phaser.Animation;
@@ -1635,7 +1635,7 @@ declare module Phaser {
         rotationDirection: string;
         sourceSizeH: number;
         sourceSizeW: number;
-        spriteSourcesizeH: number;
+        spriteSourceSizeH: number;
         spriteSourceSizeW: number;
         spriteSourceSizeX: number;
         spriteSourceSizeY: number;
