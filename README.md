@@ -113,6 +113,7 @@ New Features
 * Emitter.setScale has a new 'rate' parameter which allows particles to change in scale over time, using any Easing value or timescale.
 * Emitter.setAlpha has a new 'rate' parameter which allows particles to change alpha over time, using any Easing value or timescale.
 * Emitter.bringToTop and Emitter.sendToBack are booleans that let you optionally set the display order of the Particle when emitted.
+* Emitter now calls the Phaser.Particle.onEmit function, which is left empty for you to override and add in custom behaviours.
 
 
 Bug Fixes
