@@ -28,7 +28,7 @@ Phaser.Physics.P2 = function (game, config) {
     }
 
     /**
-    * @property {p2.World} game - The p2 World in which the simulation is run.
+    * @property {p2.World} world - The p2 World in which the simulation is run.
     * @protected
     */
     this.world = new p2.World(config);
@@ -52,7 +52,7 @@ Phaser.Physics.P2 = function (game, config) {
     this.materials = [];
 
     /**
-    * @property {Phaser.InversePointProxy} gravity - The gravity applied to all bodies each step.
+    * @property {Phaser.Physics.P2.InversePointProxy} gravity - The gravity applied to all bodies each step.
     */
     this.gravity = new Phaser.Physics.P2.InversePointProxy(this, this.world.gravity);
 
@@ -102,16 +102,14 @@ Phaser.Physics.P2 = function (game, config) {
     this.onContactMaterialRemoved = new Phaser.Signal();
 
     /**
-    * @property {Phaser.Signal} onPostBroadphase - Dispatched after the Broadphase has collected collision pairs in the world.
+    * @property {function} postBroadphaseCallback - A postBroadphase callback.
     */
     this.postBroadphaseCallback = null;
-    this.callbackContext = null;
 
     /**
-    * @property {Phaser.Signal} onImpact - Dispatched when a first contact is created between two bodies. This event is fired after the step has been done.
+    * @property {object} callbackContext - The context under which the callbacks are fired.
     */
-    // this.onImpact = new Phaser.Signal();
-    this.impactCallback = null;
+    this.callbackContext = null;
 
     /**
     * @property {Phaser.Signal} onBeginContact - Dispatched when a first contact is created between two bodies. This event is fired before the step has been done.
@@ -137,26 +135,41 @@ Phaser.Physics.P2 = function (game, config) {
     this.world.on("endContact", this.endContactHandler, this);
 
     /**
-    * @property {array} _toRemove - Internal var used to hold references to bodies to remove from the world on the next step.
-    */
-    this._toRemove = [];
-
-    /**
-    * @property {array} collisionGroups - Internal var.
+    * @property {array} collisionGroups - An array containing the collision groups that have been defined in the World.
     */
     this.collisionGroups = [];
+
+    /**
+    * @property {Phaser.Physics.P2.CollisionGroup} nothingCollisionGroup - A default collision group.
+    */
+    this.nothingCollisionGroup = new Phaser.Physics.P2.CollisionGroup(1);
+
+    /**
+    * @property {Phaser.Physics.P2.CollisionGroup} boundsCollisionGroup - A default collision group.
+    */
+    this.boundsCollisionGroup = new Phaser.Physics.P2.CollisionGroup(2);
+
+    /**
+    * @property {Phaser.Physics.P2.CollisionGroup} everythingCollisionGroup - A default collision group.
+    */
+    this.everythingCollisionGroup = new Phaser.Physics.P2.CollisionGroup(2147483648);
+
+    /**
+    * @property {array} boundsCollidesWith - An array of the bodies the world bounds collides with.
+    */
+    this.boundsCollidesWith = [];
+
+    /**
+    * @property {array} _toRemove - Internal var used to hold references to bodies to remove from the world on the next step.
+    * @private
+    */
+    this._toRemove = [];
 
     /**
     * @property {number} _collisionGroupID - Internal var.
     * @private
     */
     this._collisionGroupID = 2;
-
-    this.nothingCollisionGroup = new Phaser.Physics.P2.CollisionGroup(1);
-    this.boundsCollisionGroup = new Phaser.Physics.P2.CollisionGroup(2);
-    this.everythingCollisionGroup = new Phaser.Physics.P2.CollisionGroup(2147483648);
-
-    this.boundsCollidesWith = [];
 
     //  By default we want everything colliding with everything
     this.setBoundsToWorld(true, true, true, true, false);

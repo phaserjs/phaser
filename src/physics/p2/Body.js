@@ -57,6 +57,7 @@ Phaser.Physics.P2.Body = function (game, sprite, x, y, mass) {
     * @protected
     */
     this.data = new p2.Body({ position: [ this.world.pxmi(x), this.world.pxmi(y) ], mass: mass });
+
     this.data.parent = this;
 
     /**
@@ -75,12 +76,6 @@ Phaser.Physics.P2.Body = function (game, sprite, x, y, mass) {
     this.gravity = new Phaser.Point();
 
     /**
-    * Dispatched when the shape/s of this Body impact with another. The event will be sent 2 parameters, this Body and the impact Body.
-    * @property {Phaser.Signal} onImpact
-    */
-    this.onImpact = new Phaser.Signal();
-
-    /**
     * Dispatched when a first contact is created between shapes in two bodies. This event is fired during the step, so collision has already taken place.
     * The event will be sent 4 parameters: The body it is in contact with, the shape from this body that caused the contact, the shape from the contact body and the contact equation data array.
     * @property {Phaser.Signal} onBeginContact
@@ -96,7 +91,6 @@ Phaser.Physics.P2.Body = function (game, sprite, x, y, mass) {
 
     /**
     * @property {array} collidesWith - Array of CollisionGroups that this Bodies shapes collide with.
-    * @private
     */
     this.collidesWith = [];
 
@@ -105,6 +99,15 @@ Phaser.Physics.P2.Body = function (game, sprite, x, y, mass) {
     */
     this.removeNextStep = false;
 
+    /**
+    * @property {Phaser.Physics.P2.BodyDebug} debugBody - Reference to the debug body.
+    */
+    this.debugBody = null;
+
+    /**
+    * @property {boolean} _collideWorldBounds - Internal var that determines if this Body collides with the world bounds or not.
+    * @private
+    */
     this._collideWorldBounds = true;
 
     /**
@@ -130,11 +133,6 @@ Phaser.Physics.P2.Body = function (game, sprite, x, y, mass) {
     * @private
     */
     this._groupCallbackContext = {};
-
-    /**
-    * @property {Phaser.Physics.P2.BodyDebug} debugBody - Reference to the debug body.
-    */
-    this.debugBody = null;
 
     //  Set-up the default shape
     if (sprite)

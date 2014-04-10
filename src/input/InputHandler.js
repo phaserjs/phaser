@@ -163,6 +163,12 @@ Phaser.InputHandler = function (sprite) {
     this.consumePointerEvent = false;
 
     /**
+    * @property {boolean} _wasEnabled - Internal cache var.
+    * @private
+    */
+    this._wasEnabled = false;
+
+    /**
     * @property {Phaser.Point} _tempPoint - Internal cache var.
     * @private
     */
@@ -235,6 +241,7 @@ Phaser.InputHandler.prototype = {
 
             this.snapOffset = new Phaser.Point();
             this.enabled = true;
+            this._wasEnabled = true;
 
             //  Create the signals the Input component will emit
             if (this.sprite.events && this.sprite.events.onInputOver === null)
@@ -248,7 +255,45 @@ Phaser.InputHandler.prototype = {
             }
         }
 
+        this.sprite.events.onAddedToGroup.add(this.addedToGroup, this);
+        this.sprite.events.onRemovedFromGroup.add(this.removedFromGroup, this);
+
         return this.sprite;
+
+    },
+
+    /**
+    * Handles when the parent Sprite is added to a new Group.
+    *
+    * @method Phaser.InputHandler#addedToGroup
+    * @private
+    */
+    addedToGroup: function () {
+
+        if (this._wasEnabled && !this.enabled)
+        {
+            this.start();
+        }
+
+    },
+
+    /**
+    * Handles when the parent Sprite is removed from a Group.
+    *
+    * @method Phaser.InputHandler#removedFromGroup
+    * @private
+    */
+    removedFromGroup: function () {
+
+        if (this.enabled)
+        {
+            this._wasEnabled = true;
+            this.stop();
+        }
+        else
+        {
+            this._wasEnabled = false;
+        }
 
     },
 
@@ -553,7 +598,7 @@ Phaser.InputHandler.prototype = {
     */
     checkPointerDown: function (pointer) {
 
-        if (this.enabled === false || this.sprite.visible === false || this.sprite.parent.visible === false)
+        if (!this.enabled || !this.sprite || !this.sprite.parent || !this.sprite.visible || !this.sprite.parent.visible)
         {
             return false;
         }
@@ -583,7 +628,7 @@ Phaser.InputHandler.prototype = {
     */
     checkPointerOver: function (pointer) {
 
-        if (this.enabled === false || this.sprite.visible === false || this.sprite.parent.visible === false)
+        if (!this.enabled || !this.sprite || !this.sprite.parent || !this.sprite.visible || !this.sprite.parent.visible)
         {
             return false;
         }
@@ -665,7 +710,7 @@ Phaser.InputHandler.prototype = {
     */
     update: function (pointer) {
 
-        if (this.sprite === null)
+        if (this.sprite === null || this.sprite.parent === undefined)
         {
             //  Abort. We've been destroyed.
             return;

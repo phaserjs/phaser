@@ -1394,13 +1394,16 @@ Phaser.Group.prototype.getRandom = function (startIndex, length) {
 *
 * @method Phaser.Group#remove
 * @param {Any} child - The child to remove.
+* @param {boolean} [destroy=false] - You can optionally call destroy on the child that was removed.
 * @return {boolean} true if the child was removed from this Group, otherwise false.
 */
-Phaser.Group.prototype.remove = function (child) {
+Phaser.Group.prototype.remove = function (child, destroy) {
+
+    if (typeof destroy === 'undefined') { destroy = false; }
 
     if (this.children.length === 0)
     {
-        return;
+        return false;
     }
 
     if (child.events)
@@ -1417,6 +1420,11 @@ Phaser.Group.prototype.remove = function (child) {
         this.next();
     }
 
+    if (destroy)
+    {
+        child.destroy();
+    }
+
     return true;
 
 };
@@ -1426,8 +1434,11 @@ Phaser.Group.prototype.remove = function (child) {
 * The Group container remains on the display list.
 *
 * @method Phaser.Group#removeAll
+* @param {boolean} [destroy=false] - You can optionally call destroy on the child that was removed.
 */
-Phaser.Group.prototype.removeAll = function () {
+Phaser.Group.prototype.removeAll = function (destroy) {
+
+    if (typeof destroy === 'undefined') { destroy = false; }
 
     if (this.children.length === 0)
     {
@@ -1442,6 +1453,11 @@ Phaser.Group.prototype.removeAll = function () {
         }
 
         this.removeChild(this.children[0]);
+
+        if (destroy)
+        {
+            this.children[0].destroy();
+        }
     }
     while (this.children.length > 0);
 
@@ -1455,10 +1471,12 @@ Phaser.Group.prototype.removeAll = function () {
 * @method Phaser.Group#removeBetween
 * @param {number} startIndex - The index to start removing children from.
 * @param {number} [endIndex] - The index to stop removing children at. Must be higher than startIndex. If undefined this method will remove all children between startIndex and the end of the Group.
+* @param {boolean} [destroy=false] - You can optionally call destroy on the child that was removed.
 */
-Phaser.Group.prototype.removeBetween = function (startIndex, endIndex) {
+Phaser.Group.prototype.removeBetween = function (startIndex, endIndex, destroy) {
 
     if (typeof endIndex === 'undefined') { endIndex = this.children.length; }
+    if (typeof destroy === 'undefined') { destroy = false; }
 
     if (this.children.length === 0)
     {
@@ -1480,6 +1498,11 @@ Phaser.Group.prototype.removeBetween = function (startIndex, endIndex) {
         }
 
         this.removeChild(this.children[i]);
+
+        if (destroy)
+        {
+            this.children[i].destroy();
+        }
 
         if (this.cursor === this.children[i])
         {

@@ -120,6 +120,9 @@ New Features
 * Emitter.bringToTop and Emitter.sendToBack are booleans that let you optionally set the display order of the Particle when emitted.
 * Emitter now calls the Phaser.Particle.onEmit function, which is left empty for you to override and add in custom behaviours.
 * p2.World has a new contactMaterial property, which can be configured like a normal P2 Contact Material and is applied when two bodies hit that don't have defined materials.
+* Group.remove has a new 'destroy' parameter (false by default), which will optionally call destroy on the item removed from the Group.
+* Group.removeAll has a new 'destroy' parameter (false by default), which will optionally call destroy on the items removed from the Group.
+* Group.removeBetween has a new 'destroy' parameter (false by default), which will optionally call destroy on the items removed from the Group.
 
 
 Bug Fixes
@@ -140,6 +143,7 @@ Bug Fixes
 * Emitter.minParticleScale and maxParticleScale wasn't resetting the Body size correctly.
 * Group.removeBetween now properly iterates through the children.
 * P2.World had a type in the restitution method title. Now fixed.
+* Objects with an InputHandler now deactivate it when the object is removed from a Group but not destroyed (fix #672)
 
 
 p2.js v0.5.0
