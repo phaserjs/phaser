@@ -77,14 +77,24 @@
 
     <?js
         var classes = self.find({kind: 'class', memberof: doc.longname});
+
         if (doc.kind !== 'globalobj' && classes && classes.length) {
     ?>
         <h3 class="subsection-title">Classes</h3>
 
-        <dl><?js classes.forEach(function(c) { ?>
-            <dt><?js= self.linkto(c.longname, c.name) ?></dt>
-            <dd><?js if (c.summary) { ?><?js= c.summary ?><?js } ?></dd>
-        <?js }); ?></dl>
+        <dl>
+            <?js classes.forEach(function(c) { ?>
+                <?js var depth = c.memberof ? c.memberof.split('.').length : 0 ?>
+                <dt class="class-depth-<?js= depth ?>">
+                    <?js= self.linkto(c.longname, c.name) ?>
+                </dt>
+                <dd>
+                    <?js if (c.summary) { ?>
+                        <?js= c.summary ?>
+                    <?js } ?>
+                </dd>
+            <?js }); ?>
+        </dl>
     <?js } ?>
 
     <?js

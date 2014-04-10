@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<?js var that = this; ?>
+<?js var that = this;?>
 <html lang="en">
 <head>
 	<meta charset="utf-8">
@@ -31,8 +31,8 @@
 
 					<ul class="dropdown-menu <?js= that.navOptions.navType ==='inline' ? 'inline' : '' ?>">
 						<?js entry.members.forEach(function(member){ ?>
-						<li>
-							<?js= member ?>
+						<li class="class-depth-<?js= member.depth || 0 ?>">
+							<?js= member.link ?>
 						</li>
 						<?js	}); ?>
 
@@ -99,7 +99,7 @@
 	<script>
 		$( function () {
 			$( "#toc" ).toc( {
-			    anchorName  : function(i, heading, prefix) {
+				anchorName  : function(i, heading, prefix) {
 					return $(heading).attr("id") || ( prefix + i );
 				},
 				selectors   : "h1,h2,h3,h4",
