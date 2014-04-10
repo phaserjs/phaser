@@ -285,7 +285,10 @@ function buildNav( members ) {
 		members.classes.forEach( function ( c ) {
 			if ( !hasOwnProp.call( seen, c.longname ) ) {
 
-				nav.class.members.push( linkto( c.longname, c.name ) );
+				nav.class.members.push( {
+					link: linkto( c.longname, c.name ),
+					depth: c.longname.split('.').length - 1
+				} );
 			}
 			seen[c.longname] = true;
 		} );
@@ -309,7 +312,10 @@ function buildNav( members ) {
 		members.namespaces.forEach( function ( n ) {
 			if ( !hasOwnProp.call( seen, n.longname ) ) {
 
-				nav.namespace.members.push( linkto( n.longname, n.name ) );
+				nav.namespace.members.push( {
+					link: linkto( n.longname, n.name ),
+					depth: 0
+				} );
 			}
 			seen[n.longname] = true;
 		} );

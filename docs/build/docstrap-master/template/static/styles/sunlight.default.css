@@ -342,3 +342,23 @@
 .sunlight-erlang .sunlight-atom {
 	font-weight: bold !important;
 }
+
+dt.class-depth-0 a,
+.dropdown-menu > li.class-depth-0 > a {
+  padding-left: 0;
+}
+
+dt.class-depth-1 a,
+.dropdown-menu > li.class-depth-1 > a {
+  padding-left: 0;
+}
+
+dt.class-depth-2 a,
+.dropdown-menu > li.class-depth-2 > a {
+  padding-left: 20px;
+}
+
+dt.class-depth-3 a,
+.dropdown-menu > li.class-depth-3 > a {
+  padding-left: 40px;
+}
