@@ -77,6 +77,11 @@ Phaser.Particles.Arcade.Emitter = function (game, x, y, maxParticles) {
     this.maxParticleScale = 1;
 
     /**
+    * @property {array} scaleData - An array of the calculated scale easing data applied to particles with scaleRates > 0.
+    */
+    this.scaleData = null;
+
+    /**
     * @property {number} minRotation - The minimum possible angular velocity of a particle.
     * @default
     */
@@ -99,6 +104,11 @@ Phaser.Particles.Arcade.Emitter = function (game, x, y, maxParticles) {
     * @default
     */
     this.maxParticleAlpha = 1;
+
+    /**
+    * @property {array} alphaData - An array of the calculated alpha easing data applied to particles with alphaRates > 0.
+    */
+    this.alphaData = null;
 
     /**
     * @property {number} gravity - Sets the `body.gravity.y` of each particle sprite to this value on launch.
@@ -173,6 +183,28 @@ Phaser.Particles.Arcade.Emitter = function (game, x, y, maxParticles) {
     * @property {number} emitY
     */
     this.emitY = y;
+
+    /**
+    * @property {boolean} autoScale - When a new Particle is emitted this controls if it will automatically scale in size. Use Emitter.setScale to configure.
+    */
+    this.autoScale = false;
+
+    /**
+    * @property {boolean} autoAlpha - When a new Particle is emitted this controls if it will automatically change alpha. Use Emitter.setAlpha to configure.
+    */
+    this.autoAlpha = false;
+
+    /**
+    * @property {boolean} particleBringToTop - If this is `true` then when the Particle is emitted it will be bought to the top of the Emitters display list.
+    * @default
+    */
+    this.particleBringToTop = false;
+
+    /**
+    * @property {boolean} particleSendToBack - If this is `true` then when the Particle is emitted it will be sent to the back of the Emitters display list.
+    * @default
+    */
+    this.particleSendToBack = false;
 
     /**
     * @property {number} _quantity - Internal helper for deciding how many particles to launch.
@@ -398,20 +430,10 @@ Phaser.Particles.Arcade.Emitter.prototype.emitParticle = function () {
 
     var particle = this.getFirstExists(false);
 
-    if (particle == null)
+    if (particle === null)
     {
         return;
     }
-
-    particle.angle = 0;
-    particle.bringToTop();
-
-    if (this.minParticleScale !== 1 || this.maxParticleScale !== 1)
-    {
-        particle.scale.set(this.game.rnd.realInRange(this.minParticleScale, this.maxParticleScale));
-    }
-
-    particle.body.updateBounds();
 
     if (this.width > 1 || this.height > 1)
     {
@@ -422,38 +444,28 @@ Phaser.Particles.Arcade.Emitter.prototype.emitParticle = function () {
         particle.reset(this.emitX, this.emitY);
     }
 
+    particle.angle = 0;
     particle.lifespan = this.lifespan;
 
-    particle.body.bounce.setTo(this.bounce.x, this.bounce.y);
-
-    if (this.minParticleSpeed.x !== this.maxParticleSpeed.x)
+    if (this.particleBringToTop)
     {
-        particle.body.velocity.x = this.game.rnd.integerInRange(this.minParticleSpeed.x, this.maxParticleSpeed.x);
+        this.bringToTop(particle);
+    }
+    else if (this.particleSendToBack)
+    {
+        this.sendToBack(particle);
+    }
+
+    if (this.autoScale)
+    {
+        particle.setScaleData(this.scaleData);
     }
     else
     {
-        particle.body.velocity.x = this.minParticleSpeed.x;
+        particle.scale.set(this.game.rnd.realInRange(this.minParticleScale, this.maxParticleScale));
     }
 
-    if (this.minParticleSpeed.y !== this.maxParticleSpeed.y)
-    {
-        particle.body.velocity.y = this.game.rnd.integerInRange(this.minParticleSpeed.y, this.maxParticleSpeed.y);
-    }
-    else
-    {
-        particle.body.velocity.y = this.minParticleSpeed.y;
-    }
-
-    if (this.minRotation !== this.maxRotation)
-    {
-        particle.body.angularVelocity = this.game.rnd.integerInRange(this.minRotation, this.maxRotation);
-    }
-    else if (this.minRotation !== 0)
-    {
-        particle.body.angularVelocity = this.minRotation;
-    }
-
-    if (typeof this._frames === 'object')
+    if (Array.isArray(this._frames === 'object'))
     {
         particle.frame = this.game.rnd.pick(this._frames);
     }
@@ -462,17 +474,33 @@ Phaser.Particles.Arcade.Emitter.prototype.emitParticle = function () {
         particle.frame = this._frames;
     }
 
-    if (this.minParticleAlpha !== 1 || this.maxParticleAlpha !== 1)
+    if (this.autoAlpha)
+    {
+        particle.setAlphaData(this.alphaData);
+    }
+    else
     {
         particle.alpha = this.game.rnd.realInRange(this.minParticleAlpha, this.maxParticleAlpha);
     }
 
     particle.blendMode = this.blendMode;
 
+    particle.body.updateBounds();
+
+    particle.body.bounce.setTo(this.bounce.x, this.bounce.y);
+
+    particle.body.velocity.x = this.game.rnd.integerInRange(this.minParticleSpeed.x, this.maxParticleSpeed.x);
+    particle.body.velocity.y = this.game.rnd.integerInRange(this.minParticleSpeed.y, this.maxParticleSpeed.y);
+    particle.body.angularVelocity = this.game.rnd.integerInRange(this.minRotation, this.maxRotation);
+
     particle.body.gravity.y = this.gravity;
+
     particle.body.drag.x = this.particleDrag.x;
     particle.body.drag.y = this.particleDrag.y;
+
     particle.body.angularDrag = this.angularDrag;
+
+    particle.onEmit();
 
 };
 
@@ -540,35 +568,79 @@ Phaser.Particles.Arcade.Emitter.prototype.setRotation = function (min, max) {
 
 /**
 * A more compact way of setting the alpha constraints of the particles.
+* The rate parameter, if set to a value above zero, lets you set the speed at which the Particle change in alpha from min to max.
+* If rate is zero, which is the default, the particle won't change alpha - instead it will pick a random alpha between min and max on emit.
 *
 * @method Phaser.Particles.Arcade.Emitter#setAlpha
 * @param {number} [min=1] - The minimum value for this range.
 * @param {number} [max=1] - The maximum value for this range.
+* @param {number} [rate=0] - The rate (in ms) at which the particles will change in alpha from min to max, or set to zero to pick a random alpha between the two.
+* @param {number} [ease=Phaser.Easing.Linear.None] - If you've set a rate > 0 this is the easing formula applied between the min and max values.
+* @param {boolean} [yoyo=false] - If you've set a rate > 0 you can set if the ease will yoyo or not (i.e. ease back to its original values)
 */
-Phaser.Particles.Arcade.Emitter.prototype.setAlpha = function (min, max) {
+Phaser.Particles.Arcade.Emitter.prototype.setAlpha = function (min, max, rate, ease, yoyo) {
 
     if (typeof min === 'undefined') { min = 1; }
     if (typeof max === 'undefined') { max = 1; }
+    if (typeof rate === 'undefined') { rate = 0; }
+    if (typeof ease === 'undefined') { ease = Phaser.Easing.Linear.None; }
+    if (typeof yoyo === 'undefined') { yoyo = false; }
 
     this.minParticleAlpha = min;
     this.maxParticleAlpha = max;
+    this.autoAlpha = false;
+
+    if (rate > 0)
+    {
+        var tweenData = { v: min };
+        var tween = this.game.make.tween(tweenData).to( { v: max }, rate, ease);
+        tween.yoyo(yoyo);
+
+        this.alphaData = tween.generateData(60);
+
+        //  Inverse it so we don't have to do array length look-ups in Particle update loops
+        this.alphaData.reverse();
+        this.autoAlpha = true;
+    }
 
 };
 
 /**
 * A more compact way of setting the scale constraints of the particles.
+* The rate parameter, if set to a value above zero, lets you set the speed and ease which the Particle uses to change in scale from min to max.
+* If rate is zero, which is the default, the particle won't change scale - instead it will pick a random scale between min and max on emit.
 *
 * @method Phaser.Particles.Arcade.Emitter#setScale
 * @param {number} [min=1] - The minimum value for this range.
 * @param {number} [max=1] - The maximum value for this range.
+* @param {number} [rate=0] - The rate (in ms) at which the particles will change in scale from min to max, or set to zero to pick a random size between the two.
+* @param {number} [ease=Phaser.Easing.Linear.None] - If you've set a rate > 0 this is the easing formula applied between the min and max values.
+* @param {boolean} [yoyo=false] - If you've set a rate > 0 you can set if the ease will yoyo or not (i.e. ease back to its original values)
 */
-Phaser.Particles.Arcade.Emitter.prototype.setScale = function (min, max) {
+Phaser.Particles.Arcade.Emitter.prototype.setScale = function (min, max, rate, ease, yoyo) {
 
     if (typeof min === 'undefined') { min = 1; }
     if (typeof max === 'undefined') { max = 1; }
+    if (typeof rate === 'undefined') { rate = 0; }
+    if (typeof ease === 'undefined') { ease = Phaser.Easing.Linear.None; }
+    if (typeof yoyo === 'undefined') { yoyo = false; }
 
     this.minParticleScale = min;
     this.maxParticleScale = max;
+    this.autoScale = false;
+
+    if (rate > 0)
+    {
+        var tweenData = { v: min };
+        var tween = this.game.make.tween(tweenData).to( { v: max }, rate, ease);
+        tween.yoyo(yoyo);
+
+        this.scaleData = tween.generateData(60);
+
+        //  Inverse it so we don't have to do array length look-ups in Particle update loops
+        this.scaleData.reverse();
+        this.autoScale = true;
+    }
 
 };
 

@@ -110,6 +110,9 @@ New Features
 * Emitter.setScale allows you to quickly set the min and max scale values.
 * Emitter.blendMode lets you set the blendMode of any emitted Particle (needs a browser that supports canvas blend modes)
 * Group.customSort allows you to sort the Group children based on your own sort function.
+* Emitter.setScale has a new 'rate' parameter which allows particles to change in scale over time, using any Easing value or timescale.
+* Emitter.setAlpha has a new 'rate' parameter which allows particles to change alpha over time, using any Easing value or timescale.
+* Emitter.bringToTop and Emitter.sendToBack are booleans that let you optionally set the display order of the Particle when emitted.
 
 
 Bug Fixes
