@@ -462,6 +462,18 @@ Phaser.Pointer.prototype = {
 
         this.timeUp = this.game.time.now;
 
+        //  Mouse is always active
+        if (this.id > 0)
+        {
+            this.active = false;
+        }
+
+        this.withinGame = false;
+        this.isDown = false;
+        this.isUp = true;
+        
+        this.positionUp.setTo(this.x, this.y);
+        
         if (this.game.input.multiInputOverride == Phaser.Input.MOUSE_OVERRIDES_TOUCH || this.game.input.multiInputOverride == Phaser.Input.MOUSE_TOUCH_COMBINE || (this.game.input.multiInputOverride == Phaser.Input.TOUCH_OVERRIDES_MOUSE && this.game.input.currentPointers === 0))
         {
             this.game.input.onUp.dispatch(this, event);
@@ -484,18 +496,6 @@ Phaser.Pointer.prototype = {
                 this.previousTapTime = this.timeUp;
             }
         }
-
-        //  Mouse is always active
-        if (this.id > 0)
-        {
-            this.active = false;
-        }
-
-        this.withinGame = false;
-        this.isDown = false;
-        this.isUp = true;
-        
-        this.positionUp.setTo(this.x, this.y);
         
         if (this.isMouse === false)
         {
