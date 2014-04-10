@@ -1064,7 +1064,7 @@ declare module Phaser {
 
         complete(): void;
         destroy(): void;
-        generateFrameNames(prefix: string, start: number, stop: number, suffix?: string, zeroPad?: number): void;
+        generateFrameNames(prefix: string, start: number, stop: number, suffix?: string, zeroPad?: number): string[];
         onPause(): void;
         onResume(): void;
         play(frameRate?: number, loop?: boolean, killOnComplete?: boolean): Phaser.Animation;
