@@ -65,13 +65,13 @@ Phaser.Particles.Arcade.Emitter = function (game, x, y, maxParticles) {
     this.maxParticleSpeed = new Phaser.Point(100, 100);
 
     /**
-    * @property {number} minParticleScale - The minimum possible scale of a particle.
+    * @property {number} minParticleScale - The minimum possible scale of a particle. This is applied to the X and Y axis. If you need to control each axis see minParticleScaleX.
     * @default
     */
     this.minParticleScale = 1;
 
     /**
-    * @property {number} maxParticleScale - The maximum possible scale of a particle.
+    * @property {number} maxParticleScale - The maximum possible scale of a particle. This is applied to the X and Y axis. If you need to control each axis see maxParticleScaleX.
     * @default
     */
     this.maxParticleScale = 1;
@@ -205,6 +205,18 @@ Phaser.Particles.Arcade.Emitter = function (game, x, y, maxParticles) {
     * @default
     */
     this.particleSendToBack = false;
+
+    /**
+    * @property {Phaser.Point} _minParticleScale - Internal particle scale var.
+    * @private
+    */
+    this._minParticleScale = new Phaser.Point(1, 1);
+
+    /**
+    * @property {Phaser.Point} _maxParticleScale - Internal particle scale var.
+    * @private
+    */
+    this._maxParticleScale = new Phaser.Point(1, 1);
 
     /**
     * @property {number} _quantity - Internal helper for deciding how many particles to launch.
@@ -391,7 +403,7 @@ Phaser.Particles.Arcade.Emitter.prototype.revive = function () {
 * @method Phaser.Particles.Arcade.Emitter#start
 * @param {boolean} [explode=true] - Whether the particles should all burst out at once (true) or at the frequency given (false).
 * @param {number} [lifespan=0] - How long each particle lives once emitted in ms. 0 = forever.
-* @param {number} [frequency=250] - Ignored if Explode is set to true. Frequency is how often to emit a particle in ms.
+* @param {number} [frequency=250] - Ignored if Explode is set to true. Frequency is how often to emit 1 particle. Value given in ms.
 * @param {number} [quantity=0] - How many particles to launch. 0 = "all of the particles".
 */
 Phaser.Particles.Arcade.Emitter.prototype.start = function (explode, lifespan, frequency, quantity) {
@@ -463,9 +475,13 @@ Phaser.Particles.Arcade.Emitter.prototype.emitParticle = function () {
     {
         particle.setScaleData(this.scaleData);
     }
-    else
+    else if (this.minParticleScale !== this.maxParticleScale)
     {
         particle.scale.set(this.game.rnd.realInRange(this.minParticleScale, this.maxParticleScale));
+    }
+    else if ((this._minParticleScale.x !== this._maxParticleScale.x) || (this._minParticleScale.y !== this._maxParticleScale.y))
+    {
+        particle.scale.set(this.game.rnd.realInRange(this._minParticleScale.x, this._maxParticleScale.x), this.game.rnd.realInRange(this._minParticleScale.y, this._maxParticleScale.y));
     }
 
     if (Array.isArray(this._frames === 'object'))
@@ -610,32 +626,41 @@ Phaser.Particles.Arcade.Emitter.prototype.setAlpha = function (min, max, rate, e
 
 /**
 * A more compact way of setting the scale constraints of the particles.
-* The rate parameter, if set to a value above zero, lets you set the speed and ease which the Particle uses to change in scale from min to max.
-* If rate is zero, which is the default, the particle won't change scale - instead it will pick a random scale between min and max on emit.
+* The rate parameter, if set to a value above zero, lets you set the speed and ease which the Particle uses to change in scale from min to max across both axis.
+* If rate is zero, which is the default, the particle won't change scale during update, instead it will pick a random scale between min and max on emit.
 *
 * @method Phaser.Particles.Arcade.Emitter#setScale
-* @param {number} [min=1] - The minimum value for this range.
-* @param {number} [max=1] - The maximum value for this range.
+* @param {number} [minX=1] - The minimum value of Particle.scale.x.
+* @param {number} [maxX=1] - The maximum value of Particle.scale.x.
+* @param {number} [minY=1] - The minimum value of Particle.scale.y.
+* @param {number} [maxY=1] - The maximum value of Particle.scale.y.
 * @param {number} [rate=0] - The rate (in ms) at which the particles will change in scale from min to max, or set to zero to pick a random size between the two.
 * @param {number} [ease=Phaser.Easing.Linear.None] - If you've set a rate > 0 this is the easing formula applied between the min and max values.
 * @param {boolean} [yoyo=false] - If you've set a rate > 0 you can set if the ease will yoyo or not (i.e. ease back to its original values)
 */
-Phaser.Particles.Arcade.Emitter.prototype.setScale = function (min, max, rate, ease, yoyo) {
+Phaser.Particles.Arcade.Emitter.prototype.setScale = function (minX, maxX, minY, maxY, rate, ease, yoyo) {
 
-    if (typeof min === 'undefined') { min = 1; }
-    if (typeof max === 'undefined') { max = 1; }
+    if (typeof minX === 'undefined') { minX = 1; }
+    if (typeof maxX === 'undefined') { maxX = 1; }
+    if (typeof minY === 'undefined') { minY = 1; }
+    if (typeof maxY === 'undefined') { maxY = 1; }
     if (typeof rate === 'undefined') { rate = 0; }
     if (typeof ease === 'undefined') { ease = Phaser.Easing.Linear.None; }
     if (typeof yoyo === 'undefined') { yoyo = false; }
 
-    this.minParticleScale = min;
-    this.maxParticleScale = max;
+    //  Reset these
+    this.minParticleScale = 1;
+    this.maxParticleScale = 1;
+
+    this._minParticleScale.set(minX, minY);
+    this._maxParticleScale.set(maxX, maxY);
+
     this.autoScale = false;
 
-    if (rate > 0 && min !== max)
+    if (rate > 0 && (minX !== maxX) || (minY !== maxY))
     {
-        var tweenData = { v: min };
-        var tween = this.game.make.tween(tweenData).to( { v: max }, rate, ease);
+        var tweenData = { x: minX, y: minY };
+        var tween = this.game.make.tween(tweenData).to( { x: maxX, y: maxY }, rate, ease);
         tween.yoyo(yoyo);
 
         this.scaleData = tween.generateData(60);

@@ -111,6 +111,7 @@ New Features
 * Emitter.blendMode lets you set the blendMode of any emitted Particle (needs a browser that supports canvas blend modes)
 * Group.customSort allows you to sort the Group children based on your own sort function.
 * Emitter.setScale has a new 'rate' parameter which allows particles to change in scale over time, using any Easing value or timescale.
+* Emitter.setScale now allows you to scale the x and y axis of the particles independently.
 * Emitter.setAlpha has a new 'rate' parameter which allows particles to change alpha over time, using any Easing value or timescale.
 * Emitter.bringToTop and Emitter.sendToBack are booleans that let you optionally set the display order of the Particle when emitted.
 * Emitter now calls the Phaser.Particle.onEmit function, which is left empty for you to override and add in custom behaviours.

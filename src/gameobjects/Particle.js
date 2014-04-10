@@ -76,7 +76,7 @@ Phaser.Particle.prototype.update = function() {
 
         if (this._s)
         {
-            this.scale.set(this.scaleData[this._s].v);
+            this.scale.set(this.scaleData[this._s].x, this.scaleData[this._s].y);
         }
         else
         {
