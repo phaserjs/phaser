@@ -115,6 +115,7 @@ New Features
 * Emitter.setAlpha has a new 'rate' parameter which allows particles to change alpha over time, using any Easing value or timescale.
 * Emitter.bringToTop and Emitter.sendToBack are booleans that let you optionally set the display order of the Particle when emitted.
 * Emitter now calls the Phaser.Particle.onEmit function, which is left empty for you to override and add in custom behaviours.
+* P2.World has a new contactMaterial property, which can be configured like a normal P2 Contact Material and is applied when two bodies hit that don't have defined materials.
 
 
 Bug Fixes
@@ -134,6 +135,7 @@ Bug Fixes
 * Fixed bug in Group.next when cursor is at the last child (thanks @jonthulu, fix #688)
 * Emitter.minParticleScale and maxParticleScale wasn't resetting the Body size correctly.
 * Group.removeBetween now properly iterates through the children.
+* P2.World had a type in the restitution method title. Now fixed.
 
 
 ToDo

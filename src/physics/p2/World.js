@@ -577,8 +577,6 @@ Phaser.Physics.P2.prototype = {
             this.world.removeBody(this.walls.bottom);
         }
 
-            console.log('world bounds', x, y, width, height);
-
         if (left)
         {
             this.walls.left = new p2.Body({ mass: 0, position: [ this.pxmi(x), this.pxmi(y) ], angle: 1.5707963267948966 });
@@ -1631,6 +1629,26 @@ Object.defineProperty(Phaser.Physics.P2.prototype, "restitution", {
     set: function (value) {
 
         this.world.defaultContactMaterial.restitution = value;
+
+    }
+
+});
+
+/**
+* @name Phaser.Physics.P2#contactMaterial
+* @property {p2.ContactMaterial} contactMaterial - The default Contact Material being used by the World.
+*/
+Object.defineProperty(Phaser.Physics.P2.prototype, "contactMaterial", {
+
+    get: function () {
+
+        return this.world.defaultContactMaterial;
+
+    },
+
+    set: function (value) {
+
+        this.world.defaultContactMaterial = value;
 
     }
 
