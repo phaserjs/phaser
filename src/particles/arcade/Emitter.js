@@ -249,13 +249,6 @@ Phaser.Particles.Arcade.Emitter.prototype.update = function () {
 
     if (this.on)
     {
-        var i = this.children.length;
-
-        while (i--)
-        {
-            this.children[i].update();
-        }
-
         if (this._explode)
         {
             this._counter = 0;
@@ -287,6 +280,16 @@ Phaser.Particles.Arcade.Emitter.prototype.update = function () {
 
                 this._timer = this.game.time.now + this.frequency;
             }
+        }
+    }
+
+    var i = this.children.length;
+
+    while (i--)
+    {
+        if (this.children[i].exists)
+        {
+            this.children[i].update();
         }
     }
 
@@ -590,7 +593,7 @@ Phaser.Particles.Arcade.Emitter.prototype.setAlpha = function (min, max, rate, e
     this.maxParticleAlpha = max;
     this.autoAlpha = false;
 
-    if (rate > 0)
+    if (rate > 0 && min !== max)
     {
         var tweenData = { v: min };
         var tween = this.game.make.tween(tweenData).to( { v: max }, rate, ease);
@@ -629,7 +632,7 @@ Phaser.Particles.Arcade.Emitter.prototype.setScale = function (min, max, rate, e
     this.maxParticleScale = max;
     this.autoScale = false;
 
-    if (rate > 0)
+    if (rate > 0 && min !== max)
     {
         var tweenData = { v: min };
         var tween = this.game.make.tween(tweenData).to( { v: max }, rate, ease);
