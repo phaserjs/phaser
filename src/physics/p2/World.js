@@ -57,11 +57,6 @@ Phaser.Physics.P2 = function (game, config) {
     this.gravity = new Phaser.Physics.P2.InversePointProxy(this, this.world.gravity);
 
     /**
-    * @property {p2.Body} bounds - The bounds body contains the 4 walls that border the World. Define or disable with setBounds.
-    */
-    this.bounds = null;
-
-    /**
     * @property {object} walls - An object containing the 4 wall bodies that bound the physics world.
     */
     this.walls = { left: null, right: null, top: null, bottom: null };
@@ -334,12 +329,11 @@ Phaser.Physics.P2.prototype = {
 
         if (this.postBroadphaseCallback)
         {
-            //  Body.id 1 is always the World bounds object
             var i = event.pairs.length;
 
             while (i -= 2)
             {
-                if (event.pairs[i].id !== 1 && event.pairs[i+1].id !== 1 && !this.postBroadphaseCallback.call(this.callbackContext, event.pairs[i].parent, event.pairs[i+1].parent))
+                if (event.pairs[i].parent && event.pairs[i+1].parent && !this.postBroadphaseCallback.call(this.callbackContext, event.pairs[i].parent, event.pairs[i+1].parent))
                 {
                     event.pairs.splice(i, 2);
                 }
@@ -395,19 +389,16 @@ Phaser.Physics.P2.prototype = {
     */
     beginContactHandler: function (event) {
 
-        if (event.bodyA.id > 1 && event.bodyB.id > 1)
+        this.onBeginContact.dispatch(event.bodyA, event.bodyB, event.shapeA, event.shapeB, event.contactEquations);
+
+        if (event.bodyA.parent)
         {
-            this.onBeginContact.dispatch(event.bodyA, event.bodyB, event.shapeA, event.shapeB, event.contactEquations);
+            event.bodyA.parent.onBeginContact.dispatch(event.bodyB.parent, event.shapeA, event.shapeB, event.contactEquations);
+        }
 
-            if (event.bodyA.parent)
-            {
-                event.bodyA.parent.onBeginContact.dispatch(event.bodyB.parent, event.shapeA, event.shapeB, event.contactEquations);
-            }
-
-            if (event.bodyB.parent)
-            {
-                event.bodyB.parent.onBeginContact.dispatch(event.bodyA.parent, event.shapeB, event.shapeA, event.contactEquations);
-            }
+        if (event.bodyB.parent)
+        {
+            event.bodyB.parent.onBeginContact.dispatch(event.bodyA.parent, event.shapeB, event.shapeA, event.contactEquations);
         }
 
     },
@@ -420,19 +411,16 @@ Phaser.Physics.P2.prototype = {
     */
     endContactHandler: function (event) {
 
-        if (event.bodyA.id > 1 && event.bodyB.id > 1)
+        this.onEndContact.dispatch(event.bodyA, event.bodyB, event.shapeA, event.shapeB);
+
+        if (event.bodyA.parent)
         {
-            this.onEndContact.dispatch(event.bodyA, event.bodyB, event.shapeA, event.shapeB);
+            event.bodyA.parent.onEndContact.dispatch(event.bodyB.parent, event.shapeA, event.shapeB);
+        }
 
-            if (event.bodyA.parent)
-            {
-                event.bodyA.parent.onEndContact.dispatch(event.bodyB.parent, event.shapeA, event.shapeB);
-            }
-
-            if (event.bodyB.parent)
-            {
-                event.bodyB.parent.onEndContact.dispatch(event.bodyA.parent, event.shapeB, event.shapeA);
-            }
+        if (event.bodyB.parent)
+        {
+            event.bodyB.parent.onEndContact.dispatch(event.bodyA.parent, event.shapeB, event.shapeA);
         }
 
     },
@@ -473,22 +461,22 @@ Phaser.Physics.P2.prototype = {
 
         if (left && this.walls.left)
         {
-            this.walls.left.material = material;
+            this.walls.left.shapes[0].material = material;
         }
 
         if (right && this.walls.right)
         {
-            this.walls.right.material = material;
+            this.walls.right.shapes[0].material = material;
         }
 
         if (top && this.walls.top)
         {
-            this.walls.top.material = material;
+            this.walls.top.shapes[0].material = material;
         }
 
         if (bottom && this.walls.bottom)
         {
-            this.walls.bottom.material = material;
+            this.walls.bottom.shapes[0].material = material;
         }
 
     },
@@ -509,22 +497,22 @@ Phaser.Physics.P2.prototype = {
 
         if (this.walls.left)
         {
-            this.walls.left.collisionGroup = mask;
+            this.walls.left.shapes[0].collisionGroup = mask;
         }
 
         if (this.walls.right)
         {
-            this.walls.right.collisionGroup = mask;
+            this.walls.right.shapes[0].collisionGroup = mask;
         }
 
         if (this.walls.top)
         {
-            this.walls.top.collisionGroup = mask;
+            this.walls.top.shapes[0].collisionGroup = mask;
         }
 
         if (this.walls.bottom)
         {
-            this.walls.bottom.collisionGroup = mask;
+            this.walls.bottom.shapes[0].collisionGroup = mask;
         }
 
     },
@@ -584,7 +572,7 @@ Phaser.Physics.P2.prototype = {
 
             if (setCollisionGroup)
             {
-                this.walls.left.collisionGroup = this.boundsCollisionGroup.mask;
+                this.walls.left.shapes[0].collisionGroup = this.boundsCollisionGroup.mask;
             }
 
             this.world.addBody(this.walls.left);
@@ -597,7 +585,7 @@ Phaser.Physics.P2.prototype = {
 
             if (setCollisionGroup)
             {
-                this.walls.right.collisionGroup = this.boundsCollisionGroup.mask;
+                this.walls.right.shapes[0].collisionGroup = this.boundsCollisionGroup.mask;
             }
 
             this.world.addBody(this.walls.right);
@@ -610,7 +598,7 @@ Phaser.Physics.P2.prototype = {
 
             if (setCollisionGroup)
             {
-                this.walls.top.collisionGroup = this.boundsCollisionGroup.mask;
+                this.walls.top.shapes[0].collisionGroup = this.boundsCollisionGroup.mask;
             }
 
             this.world.addBody(this.walls.top);
@@ -623,7 +611,7 @@ Phaser.Physics.P2.prototype = {
 
             if (setCollisionGroup)
             {
-                this.walls.bottom.collisionGroup = this.boundsCollisionGroup.mask;
+                this.walls.bottom.shapes[0].collisionGroup = this.boundsCollisionGroup.mask;
             }
 
             this.world.addBody(this.walls.bottom);
@@ -1200,24 +1188,24 @@ Phaser.Physics.P2.prototype = {
 
         var bitmask = Math.pow(2, this._collisionGroupID);
 
-        if (this._wallShapes[0])
+        if (this.walls.left)
         {
-            this._wallShapes[0].collisionMask = this._wallShapes[0].collisionMask | bitmask;
+            this.walls.left.shapes[0].collisionMask = this.walls.left.shapes[0].collisionMask | bitmask;
         }
 
-        if (this._wallShapes[1])
+        if (this.walls.right)
         {
-            this._wallShapes[1].collisionMask = this._wallShapes[1].collisionMask | bitmask;
+            this.walls.right.shapes[0].collisionMask = this.walls.right.shapes[0].collisionMask | bitmask;
         }
 
-        if (this._wallShapes[2])
+        if (this.walls.top)
         {
-            this._wallShapes[2].collisionMask = this._wallShapes[2].collisionMask | bitmask;
+            this.walls.top.shapes[0].collisionMask = this.walls.top.shapes[0].collisionMask | bitmask;
         }
 
-        if (this._wallShapes[3])
+        if (this.walls.bottom)
         {
-            this._wallShapes[3].collisionMask = this._wallShapes[3].collisionMask | bitmask;
+            this.walls.bottom.shapes[0].collisionMask = this.walls.bottom.shapes[0].collisionMask | bitmask;
         }
 
         this._collisionGroupID++;
@@ -1615,10 +1603,50 @@ Object.defineProperty(Phaser.Physics.P2.prototype, "friction", {
 });
 
 /**
+* @name Phaser.Physics.P2#defaultFriction
+* @property {number} defaultFriction - DEPRECATED: Use World.friction instead.
+*/
+Object.defineProperty(Phaser.Physics.P2.prototype, "defaultFriction", {
+
+    get: function () {
+
+        return this.world.defaultContactMaterial.friction;
+
+    },
+
+    set: function (value) {
+
+        this.world.defaultContactMaterial.friction = value;
+
+    }
+
+});
+
+/**
 * @name Phaser.Physics.P2#restitution
 * @property {number} restitution - Default coefficient of restitution between colliding bodies. This value is used if no matching ContactMaterial is found for a Material pair.
 */
 Object.defineProperty(Phaser.Physics.P2.prototype, "restitution", {
+
+    get: function () {
+
+        return this.world.defaultContactMaterial.restitution;
+
+    },
+
+    set: function (value) {
+
+        this.world.defaultContactMaterial.restitution = value;
+
+    }
+
+});
+
+/**
+* @name Phaser.Physics.P2#defaultRestitution
+* @property {number} defaultRestitution - DEPRECATED: Use World.restitution instead.
+*/
+Object.defineProperty(Phaser.Physics.P2.prototype, "defaultRestitution", {
 
     get: function () {
 

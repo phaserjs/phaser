@@ -83,6 +83,10 @@ Updated
 * Emitter now emits Phaser.Particle objects instead of Phaser.Sprites, which can be extended as required.
 * Emitter has had various local properties removed that were already declared in Phaser.Group which it extends.
 * PluginManager parent parameter removed as it's redundant. Also most core functions tidied up and jsdocs fixed.
+* p2.World.defaultRestitution has been deprecated and is now p2.World.restitution.
+* p2.World.defaultFriction has been deprecated and is now p2.World.friction.
+* p2.World now uses 4 bodies for the world boundaries, rather than 1 body with 4 shapes. This helps the broadphase massively.
+* p2.World bounds are now included in the callback events such as beginContact and impact events.
 
 
 New Features
@@ -115,7 +119,7 @@ New Features
 * Emitter.setAlpha has a new 'rate' parameter which allows particles to change alpha over time, using any Easing value or timescale.
 * Emitter.bringToTop and Emitter.sendToBack are booleans that let you optionally set the display order of the Particle when emitted.
 * Emitter now calls the Phaser.Particle.onEmit function, which is left empty for you to override and add in custom behaviours.
-* P2.World has a new contactMaterial property, which can be configured like a normal P2 Contact Material and is applied when two bodies hit that don't have defined materials.
+* p2.World has a new contactMaterial property, which can be configured like a normal P2 Contact Material and is applied when two bodies hit that don't have defined materials.
 
 
 Bug Fixes
@@ -136,11 +140,6 @@ Bug Fixes
 * Emitter.minParticleScale and maxParticleScale wasn't resetting the Body size correctly.
 * Group.removeBetween now properly iterates through the children.
 * P2.World had a type in the restitution method title. Now fixed.
-
-
-ToDo
-
-* Split P2 world bounds into different bodies to help the broad phase.
 
 
 p2.js v0.5.0
