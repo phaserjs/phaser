@@ -62,7 +62,7 @@ Change Log
 
 Version 2.0.3 - "Allorallen" - -in development-
 
-Updated
+Updates
 
 * Updated to [Pixi.js 1.5.2](https://github.com/GoodBoyDigital/pixi.js/releases/tag/v1.5.2)
 * Updated to [p2.js 0.5.0](https://github.com/schteppe/p2.js/releases/tag/v0.5.0)
@@ -87,6 +87,7 @@ Updated
 * p2.World.defaultFriction has been deprecated and is now p2.World.friction.
 * p2.World now uses 4 bodies for the world boundaries, rather than 1 body with 4 shapes. This helps the broadphase massively.
 * p2.World bounds are now included in the callback events such as beginContact and impact events.
+* Thanks to @STuFF the Classes list in the API docs now indents sub-classes.
 
 
 New Features

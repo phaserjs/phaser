@@ -5,17 +5,13 @@
 */
 
 /**
-* Phaser.SignalBinding
-*
-* Object that represents a binding between a Signal and a listener function.
+* @class Phaser.SignalBinding
+* @classdesc Object that represents a binding between a Signal and a listener function.
 * This is an internal constructor and shouldn't be called by regular users.
 * Inspired by Joa Ebert AS3 SignalBinding and Robert Penner's Slot classes.
 *
-* @class Phaser.SignalBinding
-* @name SignalBinding
 * @author Miller Medeiros http://millermedeiros.github.com/js-signals/
 * @constructor
-* @inner
 * @param {Phaser.Signal} signal - Reference to Signal object that listener is currently bound to.
 * @param {function} listener - Handler function bound to the signal.
 * @param {boolean} isOnce - If binding should be executed just once.
@@ -38,7 +34,6 @@ Phaser.SignalBinding = function (signal, listener, isOnce, listenerContext, prio
 
     /**
     * @property {object|undefined|null} context - Context on which listener will be executed (object that should represent the `this` variable inside listener function).
-    * @memberof SignalBinding.prototype
     */
     this.context = listenerContext;
 
