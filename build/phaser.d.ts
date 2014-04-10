@@ -1043,6 +1043,7 @@ declare module Phaser {
     class Animation {
 
         constructor(game: Phaser.Game, parent: Phaser.Sprite, name: string, frameData: Phaser.FrameData, frames: any[], delay: number, loop: boolean);
+        static generateFrameNames(prefix: string, start: number, stop: number, suffix?: string, zeroPad?: number): string[];
 
         currentFrame: Phaser.Frame;
         delay: number;
@@ -1064,7 +1065,6 @@ declare module Phaser {
 
         complete(): void;
         destroy(): void;
-        generateFrameNames(prefix: string, start: number, stop: number, suffix?: string, zeroPad?: number): void;
         onPause(): void;
         onResume(): void;
         play(frameRate?: number, loop?: boolean, killOnComplete?: boolean): Phaser.Animation;
@@ -1635,7 +1635,7 @@ declare module Phaser {
         rotationDirection: string;
         sourceSizeH: number;
         sourceSizeW: number;
-        spriteSourcesizeH: number;
+        spriteSourceSizeH: number;
         spriteSourceSizeW: number;
         spriteSourceSizeX: number;
         spriteSourceSizeY: number;
