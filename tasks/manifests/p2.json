@@ -1,6 +1,7 @@
 [
     "src/physics/p2/p2.js",
     "src/physics/p2/World.js",
+    "src/physics/p2/FixtureList.js",
     "src/physics/p2/PointProxy.js",
     "src/physics/p2/InversePointProxy.js",
     "src/physics/p2/Body.js",

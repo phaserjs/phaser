@@ -1111,8 +1111,15 @@ Phaser.Physics.P2.Body.prototype = {
         {
             var fixtureData = data[i];
             var shapesOfFixture = this.addFixture(fixtureData);
-            createdFixtures[fixtureData.filter.group] = createdFixtures[fixtureData.filter.group] || [];
-            createdFixtures[fixtureData.filter.group].push(shapesOfFixture);
+            
+            //always add to a group
+            createdFixtures[fixtureData.filter.group] = createdFixtures[fixtureData.filter.group] || []
+            createdFixtures[fixtureData.filter.group] = createdFixtures[fixtureData.filter.group].concat(shapesOfFixture)
+
+            //if (unique) fixture key is provided
+            if(fixtureData.fixtureKey){
+              createdFixtures[fixtureData.fixtureKey] = shapesOfFixture
+            }
         }
 
         this.data.aabbNeedsUpdate = true;
