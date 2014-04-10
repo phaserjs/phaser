@@ -153,13 +153,6 @@ Phaser.Utils = {
         return true;
     },
 
-
-    //  deep, target, objects to copy to the target object
-    //  This is a slightly modified version of {@link http://api.jquery.com/jQuery.extend/|jQuery.extend}
-    //  deep (boolean)
-    //  target (object to add to)
-    //  objects ... (objects to recurse and copy from)
-
     /**
     * This is a slightly modified version of http://api.jquery.com/jQuery.extend/
     * @method Phaser.Utils.extend
@@ -292,30 +285,37 @@ if (!Array.isArray)
     };
 }
 
-
 /**
 * A polyfill for Array.forEach
-https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach
+* https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach
 */
 if (!Array.prototype.forEach)
 {
-  Array.prototype.forEach = function(fun /*, thisArg */)
-  {
-    "use strict";
-
-    if (this === void 0 || this === null)
-      throw new TypeError();
-
-    var t = Object(this);
-    var len = t.length >>> 0;
-    if (typeof fun !== "function")
-      throw new TypeError();
-
-    var thisArg = arguments.length >= 2 ? arguments[1] : void 0;
-    for (var i = 0; i < len; i++)
+    Array.prototype.forEach = function(fun /*, thisArg */)
     {
-      if (i in t)
-        fun.call(thisArg, t[i], i, t);
-    }
-  };
+        "use strict";
+
+        if (this === void 0 || this === null)
+        {
+            throw new TypeError();
+        }
+
+        var t = Object(this);
+        var len = t.length >>> 0;
+
+        if (typeof fun !== "function")
+        {
+            throw new TypeError();
+        }
+
+        var thisArg = arguments.length >= 2 ? arguments[1] : void 0;
+
+        for (var i = 0; i < len; i++)
+        {
+            if (i in t)
+            {
+                fun.call(thisArg, t[i], i, t);
+            }
+        }
+    };
 }
