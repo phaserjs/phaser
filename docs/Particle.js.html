@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>Phaser Source: geom/Line.js</title>
+	<title>Phaser Source: gameobjects/Particle.js</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -507,7 +507,7 @@
 					
 
 
-		<h1 class="page-title">Source: geom/Line.js</h1>
+		<h1 class="page-title">Source: gameobjects/Particle.js</h1>
     
     <section>
         <article>
@@ -518,423 +518,181 @@
 */
 
 /**
-* Creates a new Line object with a start and an end point.
-* @class Line
-* @classdesc Phaser - Line
+* @class Phaser.Particle
+*
+* @classdesc Create a new `Particle` object. Particles are extended Sprites that are emitted by a particle emitter such as Phaser.Particles.Arcade.Emitter.
+*
 * @constructor
-* @param {number} [x1=0] - The x coordinate of the start of the line.
-* @param {number} [y1=0] - The y coordinate of the start of the line.
-* @param {number} [x2=0] - The x coordinate of the end of the line.
-* @param {number} [y2=0] - The y coordinate of the end of the line.
-* @return {Phaser.Line} This line object
+* @extends Phaser.Sprite
+* @param {Phaser.Game} game - A reference to the currently running game.
+* @param {number} x - The x coordinate (in world space) to position the Particle at.
+* @param {number} y - The y coordinate (in world space) to position the Particle at.
+* @param {string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture} key - This is the image or texture used by the Particle during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.
+* @param {string|number} frame - If this Particle is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
 */
-Phaser.Line = function (x1, y1, x2, y2) {
+Phaser.Particle = function (game, x, y, key, frame) {
 
-    x1 = x1 || 0;
-    y1 = y1 || 0;
-    x2 = x2 || 0;
-    y2 = y2 || 0;
+    Phaser.Sprite.call(this, game, x, y, key, frame);
 
     /**
-    * @property {Phaser.Point} start - The start point of the line.
+    * @property {boolean} autoScale - If this Particle automatically scales this is set to true by Particle.setScaleData.
+    * @protected
     */
-    this.start = new Phaser.Point(x1, y1);
+    this.autoScale = false;
 
     /**
-    * @property {Phaser.Point} end - The end point of the line.
+    * @property {array} scaleData - A reference to the scaleData array owned by the Emitter that emitted this Particle.
+    * @protected
     */
-    this.end = new Phaser.Point(x2, y2);
+    this.scaleData = null;
+
+    /**
+    * @property {number} _s - Internal cache var for tracking auto scale.
+    * @private
+    */
+    this._s = 0;
+
+    /**
+    * @property {boolean} autoAlpha - If this Particle automatically changes alpha this is set to true by Particle.setAlphaData.
+    * @protected
+    */
+    this.autoAlpha = false;
+
+    /**
+    * @property {array} alphaData - A reference to the alphaData array owned by the Emitter that emitted this Particle.
+    * @protected
+    */
+    this.alphaData = null;
+
+    /**
+    * @property {number} _a - Internal cache var for tracking auto alpha.
+    * @private
+    */
+    this._a = 0;
 
 };
 
-Phaser.Line.prototype = {
+Phaser.Particle.prototype = Object.create(Phaser.Sprite.prototype);
+Phaser.Particle.prototype.constructor = Phaser.Particle;
 
-    /**
-    * Sets the components of the Line to the specified values.
-    * @method Phaser.Line#setTo
-    * @param {number} [x1=0] - The x coordinate of the start of the line.
-    * @param {number} [y1=0] - The y coordinate of the start of the line.
-    * @param {number} [x2=0] - The x coordinate of the end of the line.
-    * @param {number} [y2=0] - The y coordinate of the end of the line.
-    * @return {Phaser.Line} This line object
-    */
-    setTo: function (x1, y1, x2, y2) {
+/**
+* Updates the Particle scale or alpha if autoScale and autoAlpha are set.
+*
+* @method Phaser.Particle#update
+* @memberof Phaser.Particle
+*/
+Phaser.Particle.prototype.update = function() {
 
-        this.start.setTo(x1, y1);
-        this.end.setTo(x2, y2);
+    if (this.autoScale)
+    {
+        this._s--;
 
-        return this;
-
-    },
-
-    /**
-    * Sets the line to match the x/y coordinates of the two given sprites.
-    * Can optionally be calculated from their center coordinates.
-    * @method Phaser.Line#fromSprite
-    * @param {Phaser.Sprite} startSprite - The coordinates of this Sprite will be set to the Line.start point.
-    * @param {Phaser.Sprite} endSprite - The coordinates of this Sprite will be set to the Line.start point.
-    * @param {boolean} [useCenter=false] - If true it will use startSprite.center.x, if false startSprite.x. Note that Sprites don't have a center property by default, so only enable if you've over-ridden your Sprite with a custom class.
-    * @return {Phaser.Line} This line object
-    */
-    fromSprite: function (startSprite, endSprite, useCenter) {
-
-        if (typeof useCenter === 'undefined') { useCenter = false; }
-
-        if (useCenter)
+        if (this._s)
         {
-            return this.setTo(startSprite.center.x, startSprite.center.y, endSprite.center.x, endSprite.center.y);
+            this.scale.set(this.scaleData[this._s].x, this.scaleData[this._s].y);
         }
         else
         {
-            return this.setTo(startSprite.x, startSprite.y, endSprite.x, endSprite.y);
+            this.autoScale = false;
         }
+    }
 
-    },
+    if (this.autoAlpha)
+    {
+        this._a--;
 
-    /**
-    * Checks for intersection between this line and another Line.
-    * If asSegment is true it will check for segment intersection. If asSegment is false it will check for line intersection.
-    * Returns the intersection segment of AB and EF as a Point, or null if there is no intersection.
-    *
-    * @method Phaser.Line#intersects
-    * @param {Phaser.Line} line - The line to check against this one.
-    * @param {boolean} [asSegment=true] - If true it will check for segment intersection, otherwise full line intersection.
-    * @param {Phaser.Point} [result] - A Point object to store the result in, if not given a new one will be created.
-    * @return {Phaser.Point} The intersection segment of the two lines as a Point, or null if there is no intersection.
-    */
-    intersects: function (line, asSegment, result) {
-
-        return Phaser.Line.intersectsPoints(this.start, this.end, line.start, line.end, asSegment, result);
-
-    },
-
-    /**
-    * Tests if the given coordinates fall on this line. See pointOnSegment to test against just the line segment.
-    * @method Phaser.Line#pointOnLine
-    * @param {number} x - The line to check against this one.
-    * @param {number} y - The line to check against this one.
-    * @return {boolean} True if the point is on the line, false if not.
-    */
-    pointOnLine: function (x, y) {
-
-        return ((x - this.start.x) * (this.end.y - this.end.y) === (this.end.x - this.start.x) * (y - this.end.y));
-
-    },
-
-    /**
-    * Tests if the given coordinates fall on this line and within the segment. See pointOnLine to test against just the line.
-    * @method Phaser.Line#pointOnSegment
-    * @param {number} x - The line to check against this one.
-    * @param {number} y - The line to check against this one.
-    * @return {boolean} True if the point is on the line and segment, false if not.
-    */
-    pointOnSegment: function (x, y) {
-
-        var xMin = Math.min(this.start.x, this.end.x);
-        var xMax = Math.max(this.start.x, this.end.x);
-        var yMin = Math.min(this.start.y, this.end.y);
-        var yMax = Math.max(this.start.y, this.end.y);
-
-        return (this.pointOnLine(x, y) &amp;&amp; (x >= xMin &amp;&amp; x &lt;= xMax) &amp;&amp; (y >= yMin &amp;&amp; y &lt;= yMax));
-
-    },
-
-    /**
-    * Using Bresenham's line algorithm this will return an array of all coordinates on this line.
-    * The start and end points are rounded before this runs as the algorithm works on integers.
-    *
-    * @method Phaser.Line#coordinatesOnLine
-    * @param {number} [stepRate=1] - How many steps will we return? 1 = every coordinate on the line, 2 = every other coordinate, etc.
-    * @param {array} [results] - The array to store the results in. If not provided a new one will be generated.
-    * @return {array} An array of coordinates.
-    */
-    coordinatesOnLine: function (stepRate, results) {
-
-        if (typeof stepRate === 'undefined') { stepRate = 1; }
-        if (typeof results === 'undefined') { results = []; }
-
-        var x1 = Math.round(this.start.x);
-        var y1 = Math.round(this.start.y);
-        var x2 = Math.round(this.end.x);
-        var y2 = Math.round(this.end.y);
-
-        var dx = Math.abs(x2 - x1);
-        var dy = Math.abs(y2 - y1);
-        var sx = (x1 &lt; x2) ? 1 : -1;
-        var sy = (y1 &lt; y2) ? 1 : -1;
-        var err = dx - dy;
-
-        results.push([x1, y1]);
-
-        var i = 1;
-
-        while (!((x1 == x2) &amp;&amp; (y1 == y2)))
+        if (this._a)
         {
-            var e2 = err &lt;&lt; 1;
-
-            if (e2 > -dy)
-            {
-                err -= dy;
-                x1 += sx;
-            }
-
-            if (e2 &lt; dx)
-            {
-                err += dx;
-                y1 += sy;
-            }
-
-            if (i % stepRate === 0)
-            {
-                results.push([x1, y1]);
-            }
-
-            i++;
-
+            this.alpha = this.alphaData[this._a].v;
         }
-
-        return results;
-
+        else
+        {
+            this.autoAlpha = false;
+        }
     }
 
 };
 
 /**
-* @name Phaser.Line#length
-* @property {number} length - Gets the length of the line segment.
-* @readonly
-*/
-Object.defineProperty(Phaser.Line.prototype, "length", {
-
-    get: function () {
-        return Math.sqrt((this.end.x - this.start.x) * (this.end.x - this.start.x) + (this.end.y - this.start.y) * (this.end.y - this.start.y));
-    }
-
-});
-
-/**
-* @name Phaser.Line#angle
-* @property {number} angle - Gets the angle of the line.
-* @readonly
-*/
-Object.defineProperty(Phaser.Line.prototype, "angle", {
-
-    get: function () {
-        return Math.atan2(this.end.x - this.start.x, this.end.y - this.start.y);
-    }
-
-});
-
-/**
-* @name Phaser.Line#slope
-* @property {number} slope - Gets the slope of the line (y/x).
-* @readonly
-*/
-Object.defineProperty(Phaser.Line.prototype, "slope", {
-
-    get: function () {
-        return (this.end.y - this.start.y) / (this.end.x - this.start.x);
-    }
-
-});
-
-/**
-* @name Phaser.Line#perpSlope
-* @property {number} perpSlope - Gets the perpendicular slope of the line (x/y).
-* @readonly
-*/
-Object.defineProperty(Phaser.Line.prototype, "perpSlope", {
-
-    get: function () {
-        return -((this.end.x - this.start.x) / (this.end.y - this.start.y));
-    }
-
-});
-
-/**
-* @name Phaser.Line#x
-* @property {number} x - Gets the x coordinate of the top left of the bounds around this line.
-* @readonly
-*/
-Object.defineProperty(Phaser.Line.prototype, "x", {
-
-    get: function () {
-        return Math.min(this.start.x, this.end.x);
-    }
-
-});
-
-/**
-* @name Phaser.Line#y
-* @property {number} y - Gets the y coordinate of the top left of the bounds around this line.
-* @readonly
-*/
-Object.defineProperty(Phaser.Line.prototype, "y", {
-
-    get: function () {
-        return Math.min(this.start.y, this.end.y);
-    }
-
-});
-
-/**
-* @name Phaser.Line#left
-* @property {number} left - Gets the left-most point of this line.
-* @readonly
-*/
-Object.defineProperty(Phaser.Line.prototype, "left", {
-
-    get: function () {
-        return Math.min(this.start.x, this.end.x);
-    }
-
-});
-
-/**
-* @name Phaser.Line#right
-* @property {number} right - Gets the right-most point of this line.
-* @readonly
-*/
-Object.defineProperty(Phaser.Line.prototype, "right", {
-
-    get: function () {
-        return Math.max(this.start.x, this.end.x);
-    }
-
-});
-
-/**
-* @name Phaser.Line#top
-* @property {number} top - Gets the top-most point of this line.
-* @readonly
-*/
-Object.defineProperty(Phaser.Line.prototype, "top", {
-
-    get: function () {
-        return Math.min(this.start.y, this.end.y);
-    }
-
-});
-
-/**
-* @name Phaser.Line#bottom
-* @property {number} bottom - Gets the bottom-most point of this line.
-* @readonly
-*/
-Object.defineProperty(Phaser.Line.prototype, "bottom", {
-
-    get: function () {
-        return Math.max(this.start.y, this.end.y);
-    }
-
-});
-
-/**
-* @name Phaser.Line#width
-* @property {number} width - Gets the width of this bounds of this line.
-* @readonly
-*/
-Object.defineProperty(Phaser.Line.prototype, "width", {
-
-    get: function () {
-        return Math.abs(this.start.x - this.end.x);
-    }
-
-});
-
-/**
-* @name Phaser.Line#height
-* @property {number} height - Gets the height of this bounds of this line.
-* @readonly
-*/
-Object.defineProperty(Phaser.Line.prototype, "height", {
-
-    get: function () {
-        return Math.abs(this.start.y - this.end.y);
-    }
-
-});
-
-/**
-* Checks for intersection between two lines as defined by the given start and end points.
-* If asSegment is true it will check for line segment intersection. If asSegment is false it will check for line intersection.
-* Returns the intersection segment of AB and EF as a Point, or null if there is no intersection.
-* Adapted from code by Keith Hair
+* Called by the Emitter when this particle is emitted. Left empty for you to over-ride as required.
 *
-* @method Phaser.Line.intersectsPoints
-* @param {Phaser.Point} a - The start of the first Line to be checked.
-* @param {Phaser.Point} b - The end of the first line to be checked.
-* @param {Phaser.Point} e - The start of the second Line to be checked.
-* @param {Phaser.Point} f - The end of the second line to be checked.
-* @param {boolean} [asSegment=true] - If true it will check for segment intersection, otherwise full line intersection.
-* @param {Phaser.Point} [result] - A Point object to store the result in, if not given a new one will be created.
-* @return {Phaser.Point} The intersection segment of the two lines as a Point, or null if there is no intersection.
+* @method Phaser.Particle#onEmit
+* @memberof Phaser.Particle
 */
-Phaser.Line.intersectsPoints = function (a, b, e, f, asSegment, result) {
+Phaser.Particle.prototype.onEmit = function() {
+};
 
-    if (typeof asSegment === 'undefined') { asSegment = true; }
-    if (typeof result === 'undefined') { result = new Phaser.Point(); }
+/**
+* Called by the Emitter if autoAlpha has been enabled. Passes over the alpha ease data and resets the alpha counter.
+*
+* @method Phaser.Particle#setAlphaData
+* @memberof Phaser.Particle
+*/
+Phaser.Particle.prototype.setAlphaData = function(data) {
 
-    var a1 = b.y - a.y;
-    var a2 = f.y - e.y;
-    var b1 = a.x - b.x;
-    var b2 = e.x - f.x;
-    var c1 = (b.x * a.y) - (a.x * b.y);
-    var c2 = (f.x * e.y) - (e.x * f.y);
-    var denom = (a1 * b2) - (a2 * b1);
-
-    if (denom === 0)
-    {
-        return null;
-    }
-
-    result.x = ((b1 * c2) - (b2 * c1)) / denom;
-    result.y = ((a2 * c1) - (a1 * c2)) / denom;
-
-    if (asSegment)
-    {
-        if (Math.pow((result.x - b.x) + (result.y - b.y), 2) > Math.pow((a.x - b.x) + (a.y - b.y), 2))
-        {
-            return null;
-        }
-
-        if (Math.pow((result.x - a.x) + (result.y - a.y), 2) > Math.pow((a.x - b.x) + (a.y - b.y), 2))
-        {
-            return null;
-        }
-
-        if (Math.pow((result.x - f.x) + (result.y - f.y), 2) > Math.pow((e.x - f.x) + (e.y - f.y), 2))
-        {
-            return null;
-        }
-
-        if (Math.pow((result.x - e.x) + (result.y - e.y), 2) > Math.pow((e.x - f.x) + (e.y - f.y), 2))
-        {
-            return null;
-        }
-    }
-
-    return result;
+    this.alphaData = data;
+    this._a = data.length - 1;
+    this.alpha = this.alphaData[this._a].v;
+    this.autoAlpha = true;
 
 };
 
 /**
-* Checks for intersection between two lines.
-* If asSegment is true it will check for segment intersection.
-* If asSegment is false it will check for line intersection.
-* Returns the intersection segment of AB and EF as a Point, or null if there is no intersection.
-* Adapted from code by Keith Hair
+* Called by the Emitter if autoScale has been enabled. Passes over the scale ease data and resets the scale counter.
 *
-* @method Phaser.Line.intersects
-* @param {Phaser.Line} a - The first Line to be checked.
-* @param {Phaser.Line} b - The second Line to be checked.
-* @param {boolean} [asSegment=true] - If true it will check for segment intersection, otherwise full line intersection.
-* @param {Phaser.Point} [result] - A Point object to store the result in, if not given a new one will be created.
-* @return {Phaser.Point} The intersection segment of the two lines as a Point, or null if there is no intersection.
+* @method Phaser.Particle#setScaleData
+* @memberof Phaser.Particle
 */
-Phaser.Line.intersects = function (a, b, asSegment, result) {
+Phaser.Particle.prototype.setScaleData = function(data) {
 
-    return Phaser.Line.intersectsPoints(a.start, a.end, b.start, b.end, asSegment, result);
+    this.scaleData = data;
+    this._s = data.length - 1;
+    this.scale.set(this.scaleData[this._s].v);
+    this.autoScale = true;
+
+};
+
+/**
+* Resets the Particle. This places the Particle at the given x/y world coordinates and then
+* sets alive, exists, visible and renderable all to true. Also resets the outOfBounds state and health values.
+* If the Particle has a physics body that too is reset.
+*
+* @method Phaser.Particle#reset
+* @memberof Phaser.Particle
+* @param {number} x - The x coordinate (in world space) to position the Particle at.
+* @param {number} y - The y coordinate (in world space) to position the Particle at.
+* @param {number} [health=1] - The health to give the Particle.
+* @return (Phaser.Particle) This instance.
+*/
+Phaser.Particle.prototype.reset = function(x, y, health) {
+
+    if (typeof health === 'undefined') { health = 1; }
+
+    this.world.setTo(x, y);
+    this.position.x = x;
+    this.position.y = y;
+    this.alive = true;
+    this.exists = true;
+    this.visible = true;
+    this.renderable = true;
+    this._outOfBoundsFired = false;
+
+    this.health = health;
+
+    if (this.body)
+    {
+        this.body.reset(x, y, false, false);
+    }
+
+    this._cache[4] = 1;
+
+    this.alpha = 1;
+    this.scale.set(1);
+
+    this.autoScale = false;
+    this.autoAlpha = false;
+
+    return this;
 
 };
 </pre>
