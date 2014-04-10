@@ -32,12 +32,12 @@ module.exports = {
         dest: '<%= compile_dir %>/phaser-no-libs.min.js'
     },
 
-    phaserNoPhysics: {
+    phaserArcadePhysics: {
         options: {
-            banner: '/* Phaser (no physics) v<%= package.version %> - http://phaser.io - @photonstorm - (c) 2014 Photon Storm Ltd. */\n'
+            banner: '/* Phaser (AP) v<%= package.version %> - http://phaser.io - @photonstorm - (c) 2014 Photon Storm Ltd. */\n'
         },
-        src: ['<%= concat.phaserNoPhysics.dest %>'],
-        dest: '<%= compile_dir %>/phaser-no-physics.min.js'
+        src: ['<%= concat.phaserArcadePhysics.dest %>'],
+        dest: '<%= compile_dir %>/phaser-arcade-physics.min.js'
     },
 
     standalone: {

@@ -18,7 +18,7 @@ module.exports = {
         dest: '<%= compile_dir %>/ninja.js'
     },
 
-    //  Phaser with no bundled libs
+    //  Phaser without Pixi, P2 or Ninja Physics (does include Arcade Physics)
     phaser: {
         options: {
             banner: '<%= banner %>'
@@ -27,13 +27,13 @@ module.exports = {
         dest: '<%= compile_dir %>/phaser-no-libs.js'
     },
 
-    //  Phaser with pixi but no physics libs
-    phaserNoPhysics: {
+    //  Phaser with Pixi and Arcade Physics, but no Ninja or P2 libs
+    phaserArcadePhysics: {
         options: {
             banner: '<%= banner %>'
         },
         src: ['<%= compile_dir %>/pixi.js', '<%= compile_dir %>/phaser-no-libs.js'],
-        dest: '<%= compile_dir %>/phaser-no-physics.js'
+        dest: '<%= compile_dir %>/phaser-arcade-physics.js'
     },
 
     //  One ring to rule them all

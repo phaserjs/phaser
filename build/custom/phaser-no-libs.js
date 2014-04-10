@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.0.3 "Allorallen" - Built: Tue Apr 08 2014 03:28:03
+* v2.0.3 "Allorallen" - Built: Thu Apr 10 2014 01:53:26
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -5214,9 +5214,8 @@ Phaser.Plugin.prototype.constructor = Phaser.Plugin;
 * @classdesc Phaser - PluginManager
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
-* @param {Description} parent - Description.
 */
-Phaser.PluginManager = function(game, parent) {
+Phaser.PluginManager = function(game) {
 
     /**
     * @property {Phaser.Game} game - A reference to the currently running game.
@@ -5224,33 +5223,33 @@ Phaser.PluginManager = function(game, parent) {
     this.game = game;
 
     /**
-    * @property {Description} _parent - Description.
-    * @private
-    */
-    this._parent = parent;
-
-    /**
-    * @property {array} plugins - Description.
+    * @property {array} plugins - An array of all the plugins being managed by this PluginManager.
     */
     this.plugins = [];
 
     /**
-    * @property {array} _pluginsLength - Description.
+    * @property {number} _len - Internal cache var.
     * @private
-    * @default
     */
-    this._pluginsLength = 0;
+    this._len = 0;
+
+    /**
+    * @property {number} _i - Internal cache var.
+    * @private
+    */
+    this._i = 0;
 
 };
 
 Phaser.PluginManager.prototype = {
 
     /**
-    * Add a new Plugin to the PluginManager.
-    * The plugin's game and parent reference are set to this game and pluginmanager parent.
+    * Add a new Plugin into the PluginManager.
+    * The Plugin must have 2 properties: game and parent. Plugin.game is set to ths game reference the PluginManager uses, and parent is set to the PluginManager.
+    *
     * @method Phaser.PluginManager#add
-    * @param {Phaser.Plugin} plugin - Description.
-    * @return {Phaser.Plugin} Description.
+    * @param {object|Phaser.Plugin} plugin - The Plugin to add into the PluginManager. This can be a function or an existing object.
+    * @return {Phaser.Plugin} The Plugin that was added to the manager.
     */
     add: function (plugin) {
 
@@ -5264,7 +5263,7 @@ Phaser.PluginManager.prototype = {
         else
         {
             plugin.game = this.game;
-            plugin.parent = this._parent;
+            plugin.parent = this;
         }
 
         //  Check for methods now to avoid having to do this every loop
@@ -5311,7 +5310,7 @@ Phaser.PluginManager.prototype = {
                 plugin.visible = true;
             }
 
-            this._pluginsLength = this.plugins.push(plugin);
+            this._len = this.plugins.push(plugin);
 
             // Allows plugins to run potentially destructive code outside of the constructor, and only if being added to the PluginManager
             if (typeof plugin['init'] === 'function')
@@ -5328,41 +5327,45 @@ Phaser.PluginManager.prototype = {
     },
 
     /**
-    * Remove a Plugin from the PluginManager.
+    * Remove a Plugin from the PluginManager. It calls Plugin.destroy on the plugin before removing it from the manager.
+    *
     * @method Phaser.PluginManager#remove
     * @param {Phaser.Plugin} plugin - The plugin to be removed.
     */
     remove: function (plugin) {
 
-        if (this._pluginsLength === 0)
-        {
-            return;
-        }
+        this._i = this._len;
 
-        for (this._p = 0; this._p < this._pluginsLength; this._p++)
+        while (this._i--)
         {
-            if (this.plugins[this._p] === plugin)
+            if (this.plugins[this._i] === plugin)
             {
                 plugin.destroy();
-                this.plugins.splice(this._p, 1);
-                this._pluginsLength--;
+                this.plugins.splice(this._i, 1);
+                this._len--;
                 return;
             }
         }
+
     },
 
     /**
-    * Removes all Plugins from the PluginManager.
+    * Remove all Plugins from the PluginManager. It calls Plugin.destroy on every plugin before removing it from the manager.
+    *
     * @method Phaser.PluginManager#removeAll
     */
     removeAll: function() {
 
-        for (this._p = 0; this._p < this._pluginsLength; this._p++)
+        this._i = this._len;
+
+        while (this._i--)
         {
-            this.plugins[this._p].destroy();
+            this.plugins[this._i].destroy();
         }
+
         this.plugins.length = 0;
-        this._pluginsLength = 0;
+        this._len = 0;
+
     },
 
     /**
@@ -5373,16 +5376,13 @@ Phaser.PluginManager.prototype = {
     */
     preUpdate: function () {
 
-        if (this._pluginsLength === 0)
-        {
-            return;
-        }
+        this._i = this._len;
 
-        for (this._p = 0; this._p < this._pluginsLength; this._p++)
+        while (this._i--)
         {
-            if (this.plugins[this._p].active && this.plugins[this._p].hasPreUpdate)
+            if (this.plugins[this._i].active && this.plugins[this._i].hasPreUpdate)
             {
-                this.plugins[this._p].preUpdate();
+                this.plugins[this._i].preUpdate();
             }
         }
 
@@ -5396,16 +5396,13 @@ Phaser.PluginManager.prototype = {
     */
     update: function () {
 
-        if (this._pluginsLength === 0)
-        {
-            return;
-        }
+        this._i = this._len;
 
-        for (this._p = 0; this._p < this._pluginsLength; this._p++)
+        while (this._i--)
         {
-            if (this.plugins[this._p].active && this.plugins[this._p].hasUpdate)
+            if (this.plugins[this._i].active && this.plugins[this._i].hasUpdate)
             {
-                this.plugins[this._p].update();
+                this.plugins[this._i].update();
             }
         }
 
@@ -5420,16 +5417,13 @@ Phaser.PluginManager.prototype = {
     */
     postUpdate: function () {
 
-        if (this._pluginsLength === 0)
-        {
-            return;
-        }
+        this._i = this._len;
 
-        for (this._p = 0; this._p < this._pluginsLength; this._p++)
+        while (this._i--)
         {
-            if (this.plugins[this._p].active && this.plugins[this._p].hasPostUpdate)
+            if (this.plugins[this._i].active && this.plugins[this._i].hasPostUpdate)
             {
-                this.plugins[this._p].postUpdate();
+                this.plugins[this._i].postUpdate();
             }
         }
 
@@ -5443,16 +5437,13 @@ Phaser.PluginManager.prototype = {
     */
     render: function () {
 
-        if (this._pluginsLength === 0)
-        {
-            return;
-        }
+        this._i = this._len;
 
-        for (this._p = 0; this._p < this._pluginsLength; this._p++)
+        while (this._i--)
         {
-            if (this.plugins[this._p].visible && this.plugins[this._p].hasRender)
+            if (this.plugins[this._i].visible && this.plugins[this._i].hasRender)
             {
-                this.plugins[this._p].render();
+                this.plugins[this._i].render();
             }
         }
 
@@ -5466,32 +5457,28 @@ Phaser.PluginManager.prototype = {
     */
     postRender: function () {
 
-        if (this._pluginsLength === 0)
-        {
-            return;
-        }
+        this._i = this._len;
 
-        for (this._p = 0; this._p < this._pluginsLength; this._p++)
+        while (this._i--)
         {
-            if (this.plugins[this._p].visible && this.plugins[this._p].hasPostRender)
+            if (this.plugins[this._i].visible && this.plugins[this._i].hasPostRender)
             {
-                this.plugins[this._p].postRender();
+                this.plugins[this._i].postRender();
             }
         }
 
     },
 
     /**
-    * Clear down this PluginManager and null out references
+    * Clear down this PluginManager, calls destroy on every plugin and nulls out references.
     *
     * @method Phaser.PluginManager#destroy
     */
     destroy: function () {
 
-        this.plugins.length = 0;
-        this._pluginsLength = 0;
+        this.removeAll();
+
         this.game = null;
-        this._parent = null;
 
     }
 
@@ -7043,6 +7030,28 @@ Phaser.Group.prototype.sort = function (index, order) {
 };
 
 /**
+* This allows you to use your own sort handler function.
+* It will be sent two parameters: the two children involved in the comparison (a and b). It should return -1 if a > b, 1 if a < b or 0 if a === b.
+*
+* @method Phaser.Group#customSort
+* @param {function} sortHandler - Your sort handler function. It will be sent two parameters: the two children involved in the comparison. It must return -1, 1 or 0.
+* @param {object} context - The scope in which the sortHandler is called.
+*/
+Phaser.Group.prototype.customSort = function (sortHandler, context) {
+
+    if (this.children.length < 2)
+    {
+        //  Nothing to swap
+        return;
+    }
+
+    this.children.sort(sortHandler.bind(context));
+
+    this.updateZ();
+
+};
+
+/**
 * An internal helper function for the sort process.
 *
 * @method Phaser.Group#ascendingSortHandler
@@ -7339,9 +7348,11 @@ Phaser.Group.prototype.removeAll = function () {
 *
 * @method Phaser.Group#removeBetween
 * @param {number} startIndex - The index to start removing children from.
-* @param {number} endIndex - The index to stop removing children from. Must be higher than startIndex and less than the length of the Group.
+* @param {number} [endIndex] - The index to stop removing children at. Must be higher than startIndex. If undefined this method will remove all children between startIndex and the end of the Group.
 */
 Phaser.Group.prototype.removeBetween = function (startIndex, endIndex) {
+
+    if (typeof endIndex === 'undefined') { endIndex = this.children.length; }
 
     if (this.children.length === 0)
     {
@@ -7353,7 +7364,9 @@ Phaser.Group.prototype.removeBetween = function (startIndex, endIndex) {
         return false;
     }
 
-    for (var i = startIndex; i < endIndex; i++)
+    var i = endIndex;
+
+    while (i >= startIndex)
     {
         if (this.children[i].events)
         {
@@ -7366,6 +7379,8 @@ Phaser.Group.prototype.removeBetween = function (startIndex, endIndex) {
         {
             this.cursor = null;
         }
+
+        i--;
     }
 
     this.updateZ();
@@ -8972,7 +8987,7 @@ Phaser.Game.prototype = {
             this.sound = new Phaser.SoundManager(this);
             this.physics = new Phaser.Physics(this, this.physicsConfig);
             this.particles = new Phaser.Particles(this);
-            this.plugins = new Phaser.PluginManager(this, this);
+            this.plugins = new Phaser.PluginManager(this);
             this.net = new Phaser.Net(this);
             this.debug = new Phaser.Utils.Debug(this);
 
@@ -10279,6 +10294,12 @@ Phaser.Key = function (game, keycode) {
     this.game = game;
 
     /**
+    * @property {boolean} enabled - An enabled key processes its update and dispatches events. You can toggle this at run-time to disable a key without deleting it.
+    * @default
+    */
+    this.enabled = true;
+
+    /**
     * @property {object} event - Stores the most recent DOM event.
     * @readonly
     */
@@ -10370,6 +10391,8 @@ Phaser.Key.prototype = {
 
     update: function () {
 
+        if (!this.enabled) { return; }
+
         if (this.isDown)
         {
             this.duration = this.game.time.now - this.timeDown;
@@ -10390,6 +10413,8 @@ Phaser.Key.prototype = {
     * @protected
     */
     processKeyDown: function (event) {
+
+        if (!this.enabled) { return; }
 
         this.event = event;
 
@@ -10420,6 +10445,8 @@ Phaser.Key.prototype = {
     */
     processKeyUp: function (event) {
 
+        if (!this.enabled) { return; }
+
         this.event = event;
 
         if (this.isUp)
@@ -10448,6 +10475,7 @@ Phaser.Key.prototype = {
         this.isUp = true;
         this.timeUp = this.game.time.now;
         this.duration = this.game.time.now - this.timeDown;
+        this.enabled = true;
 
         this.onDown.removeAll();
         this.onUp.removeAll();
@@ -16762,10 +16790,10 @@ Phaser.Sprite.prototype.preUpdate = function() {
     }
 
     //  Update any Children
-    // for (var i = 0, len = this.children.length; i < len; i++)
-    // {
-    //     this.children[i].preUpdate();
-    // }
+    for (var i = 0, len = this.children.length; i < len; i++)
+    {
+        this.children[i].preUpdate();
+    }
 
     return true;
 
@@ -22010,6 +22038,188 @@ Object.defineProperty(Phaser.RetroFont.prototype, "text", {
 */
 
 /**
+* @class Phaser.Particle
+*
+* @classdesc Create a new `Particle` object. Particles are extended Sprites that are emitted by a particle emitter such as Phaser.Particles.Arcade.Emitter.
+*
+* @constructor
+* @extends Phaser.Sprite
+* @param {Phaser.Game} game - A reference to the currently running game.
+* @param {number} x - The x coordinate (in world space) to position the Particle at.
+* @param {number} y - The y coordinate (in world space) to position the Particle at.
+* @param {string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture} key - This is the image or texture used by the Particle during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.
+* @param {string|number} frame - If this Particle is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
+*/
+Phaser.Particle = function (game, x, y, key, frame) {
+
+    Phaser.Sprite.call(this, game, x, y, key, frame);
+
+    /**
+    * @property {boolean} autoScale - If this Particle automatically scales this is set to true by Particle.setScaleData.
+    * @protected
+    */
+    this.autoScale = false;
+
+    /**
+    * @property {array} scaleData - A reference to the scaleData array owned by the Emitter that emitted this Particle.
+    * @protected
+    */
+    this.scaleData = null;
+
+    /**
+    * @property {number} _s - Internal cache var for tracking auto scale.
+    * @private
+    */
+    this._s = 0;
+
+    /**
+    * @property {boolean} autoAlpha - If this Particle automatically changes alpha this is set to true by Particle.setAlphaData.
+    * @protected
+    */
+    this.autoAlpha = false;
+
+    /**
+    * @property {array} alphaData - A reference to the alphaData array owned by the Emitter that emitted this Particle.
+    * @protected
+    */
+    this.alphaData = null;
+
+    /**
+    * @property {number} _a - Internal cache var for tracking auto alpha.
+    * @private
+    */
+    this._a = 0;
+
+};
+
+Phaser.Particle.prototype = Object.create(Phaser.Sprite.prototype);
+Phaser.Particle.prototype.constructor = Phaser.Particle;
+
+/**
+* Updates the Particle scale or alpha if autoScale and autoAlpha are set.
+*
+* @method Phaser.Particle#update
+* @memberof Phaser.Particle
+*/
+Phaser.Particle.prototype.update = function() {
+
+    if (this.autoScale)
+    {
+        this._s--;
+
+        if (this._s)
+        {
+            this.scale.set(this.scaleData[this._s].v);
+        }
+        else
+        {
+            this.autoScale = false;
+        }
+    }
+
+    if (this.autoAlpha)
+    {
+        this._a--;
+
+        if (this._a)
+        {
+            this.alpha = this.alphaData[this._a].v;
+        }
+        else
+        {
+            this.autoAlpha = false;
+        }
+    }
+
+};
+
+/**
+* Called by the Emitter when this particle is emitted. Left empty for you to over-ride as required.
+*
+* @method Phaser.Particle#onEmit
+* @memberof Phaser.Particle
+*/
+Phaser.Particle.prototype.onEmit = function() {
+};
+
+/**
+* Called by the Emitter if autoAlpha has been enabled. Passes over the alpha ease data and resets the alpha counter.
+*
+* @method Phaser.Particle#setAlphaData
+* @memberof Phaser.Particle
+*/
+Phaser.Particle.prototype.setAlphaData = function(data) {
+
+    this.alphaData = data;
+    this._a = data.length - 1;
+    this.alpha = this.alphaData[this._a].v;
+    this.autoAlpha = true;
+
+};
+
+/**
+* Called by the Emitter if autoScale has been enabled. Passes over the scale ease data and resets the scale counter.
+*
+* @method Phaser.Particle#setScaleData
+* @memberof Phaser.Particle
+*/
+Phaser.Particle.prototype.setScaleData = function(data) {
+
+    this.scaleData = data;
+    this._s = data.length - 1;
+    this.scale.set(this.scaleData[this._s].v);
+    this.autoScale = true;
+
+};
+
+/**
+* Resets the Particle. This places the Particle at the given x/y world coordinates and then
+* sets alive, exists, visible and renderable all to true. Also resets the outOfBounds state and health values.
+* If the Particle has a physics body that too is reset.
+*
+* @method Phaser.Particle#reset
+* @memberof Phaser.Particle
+* @param {number} x - The x coordinate (in world space) to position the Particle at.
+* @param {number} y - The y coordinate (in world space) to position the Particle at.
+* @param {number} [health=1] - The health to give the Particle.
+* @return (Phaser.Particle) This instance.
+*/
+Phaser.Particle.prototype.reset = function(x, y, health) {
+
+    if (typeof health === 'undefined') { health = 1; }
+
+    this.world.setTo(x, y);
+    this.position.x = x;
+    this.position.y = y;
+    this.alive = true;
+    this.exists = true;
+    this.visible = true;
+    this.renderable = true;
+    this._outOfBoundsFired = false;
+
+    this.health = health;
+
+    if (this.body)
+    {
+        this.body.reset(x, y, false, false);
+    }
+
+    this._cache[4] = 1;
+
+    this.autoScale = false;
+    this.autoAlpha = false;
+
+    return this;
+
+};
+
+/**
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2014 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+*/
+
+/**
 * The Canvas class handles everything related to creating the `canvas` DOM tag that Phaser will use, including styles, offset and aspect ratio.
 *
 * @class Phaser.Canvas
@@ -25796,7 +26006,7 @@ Phaser.Tween.prototype = {
     * @param {boolean} [autoStart=false] - Whether this tween will start automatically or not.
     * @param {number} [delay=0] - Delay before this tween will start, defaults to 0 (no delay). Value given is in ms.
     * @param {number} [repeat=0] - Should the tween automatically restart once complete? If you want it to run forever set as Number.MAX_VALUE. This ignores any chained tweens.
-    * @param {boolean} [yoyo=false] - A tween that yoyos will reverse itself when it completes.
+    * @param {boolean} [yoyo=false] - A tween that yoyos will reverse itself and play backwards automatically. A yoyo'd tween doesn't fire the Tween.onComplete event, so listen for Tween.onLoop instead.
     * @return {Phaser.Tween} This Tween object.
     */
     to: function (properties, duration, ease, autoStart, delay, repeat, yoyo) {
@@ -26981,12 +27191,12 @@ Phaser.Time = function (game) {
     this.msMax = 0;
 
     /**
-    * @property {number} physicsElapsed - The elapsed time calculated for the physics motion updates.
+    * @property {number} physicsElapsed - The elapsed time calculated for the physics motion updates. In a stable 60fps system this will be 0.016 every frame.
     */
     this.physicsElapsed = 0;
 
     /**
-    * @property {number} deltaCap - If you need to cap the delta timer, set the value here.
+    * @property {number} deltaCap - If you need to cap the delta timer, set the value here. For 60fps the delta should be 0.016, so try variances just above this.
     */
     this.deltaCap = 0;
 
@@ -37902,7 +38112,7 @@ Phaser.Particles.Arcade.Emitter = function (game, x, y, maxParticles) {
     Phaser.Group.call(this, game);
 
     /**
-    * @property {string} name - Description.
+    * @property {string} name - A handy string name for this emitter. Can be set to anything.
     */
     this.name = 'emitter' + this.game.particles.ID++;
 
@@ -37911,18 +38121,6 @@ Phaser.Particles.Arcade.Emitter = function (game, x, y, maxParticles) {
     * @protected
     */
     this.type = Phaser.EMITTER;
-
-    /**
-    * @property {number} x - The X position of the top left corner of the emitter in world space.
-    * @default
-    */
-    this.x = 0;
-
-    /**
-    * @property {number} y - The Y position of the top left corner of emitter in world space.
-    * @default
-    */
-    this.y = 0;
 
     /**
     * @property {number} width - The width of the emitter.  Particles can be randomly generated from anywhere within this box.
@@ -37961,6 +38159,11 @@ Phaser.Particles.Arcade.Emitter = function (game, x, y, maxParticles) {
     this.maxParticleScale = 1;
 
     /**
+    * @property {array} scaleData - An array of the calculated scale easing data applied to particles with scaleRates > 0.
+    */
+    this.scaleData = null;
+
+    /**
     * @property {number} minRotation - The minimum possible angular velocity of a particle.
     * @default
     */
@@ -37973,16 +38176,33 @@ Phaser.Particles.Arcade.Emitter = function (game, x, y, maxParticles) {
     this.maxRotation = 360;
 
     /**
+    * @property {number} minParticleAlpha - The minimum possible alpha value of a particle.
+    * @default
+    */
+    this.minParticleAlpha = 1;
+
+    /**
+    * @property {number} maxParticleAlpha - The maximum possible alpha value of a particle.
+    * @default
+    */
+    this.maxParticleAlpha = 1;
+
+    /**
+    * @property {array} alphaData - An array of the calculated alpha easing data applied to particles with alphaRates > 0.
+    */
+    this.alphaData = null;
+
+    /**
     * @property {number} gravity - Sets the `body.gravity.y` of each particle sprite to this value on launch.
     * @default
     */
     this.gravity = 100;
 
     /**
-    * @property {any} particleClass - For emitting your own particle class types. They must extend Phaser.Sprite.
+    * @property {any} particleClass - For emitting your own particle class types. They must extend Phaser.Particle.
     * @default
     */
-    this.particleClass = Phaser.Sprite;
+    this.particleClass = Phaser.Particle;
 
     /**
     * @property {Phaser.Point} particleDrag - The X and Y drag component of particles launched from the emitter.
@@ -38008,9 +38228,65 @@ Phaser.Particles.Arcade.Emitter = function (game, x, y, maxParticles) {
     this.lifespan = 2000;
 
     /**
-    * @property {Phaser.Point} bounce - How much each particle should bounce on each axis.  1 = full bounce, 0 = no bounce.
+    * @property {Phaser.Point} bounce - How much each particle should bounce on each axis. 1 = full bounce, 0 = no bounce.
     */
     this.bounce = new Phaser.Point();
+
+    /**
+    * @property {boolean} on - Determines whether the emitter is currently emitting particles. It is totally safe to directly toggle this.
+    * @default
+    */
+    this.on = false;
+
+    /**
+    * @property {Phaser.Point} particleAnchor - When a particle is created its anchor will be set to match this Point object (defaults to x/y: 0.5 to aid in rotation)
+    * @default
+    */
+    this.particleAnchor = new Phaser.Point(0.5, 0.5);
+
+    /**
+    * @property {number} blendMode - The blendMode as set on the particle when emitted from the Emitter. Defaults to NORMAL. Needs browser capable of supporting canvas blend-modes (most not available in WebGL)
+    * @default
+    */
+    this.blendMode = Phaser.blendModes.NORMAL;
+
+    /**
+    * The point the particles are emitted from.
+    * Emitter.x and Emitter.y control the containers location, which updates all current particles
+    * Emitter.emitX and Emitter.emitY control the emission location relative to the x/y position.
+    * @property {number} emitX
+    */
+    this.emitX = x;
+
+    /**
+    * The point the particles are emitted from.
+    * Emitter.x and Emitter.y control the containers location, which updates all current particles
+    * Emitter.emitX and Emitter.emitY control the emission location relative to the x/y position.
+    * @property {number} emitY
+    */
+    this.emitY = y;
+
+    /**
+    * @property {boolean} autoScale - When a new Particle is emitted this controls if it will automatically scale in size. Use Emitter.setScale to configure.
+    */
+    this.autoScale = false;
+
+    /**
+    * @property {boolean} autoAlpha - When a new Particle is emitted this controls if it will automatically change alpha. Use Emitter.setAlpha to configure.
+    */
+    this.autoAlpha = false;
+
+    /**
+    * @property {boolean} particleBringToTop - If this is `true` then when the Particle is emitted it will be bought to the top of the Emitters display list.
+    * @default
+    */
+    this.particleBringToTop = false;
+
+    /**
+    * @property {boolean} particleSendToBack - If this is `true` then when the Particle is emitted it will be sent to the back of the Emitters display list.
+    * @default
+    */
+    this.particleSendToBack = false;
 
     /**
     * @property {number} _quantity - Internal helper for deciding how many particles to launch.
@@ -38042,34 +38318,6 @@ Phaser.Particles.Arcade.Emitter = function (game, x, y, maxParticles) {
     */
     this._frames = null;
 
-    /**
-    * @property {boolean} on - Determines whether the emitter is currently emitting particles. It is totally safe to directly toggle this.
-    * @default
-    */
-    this.on = false;
-
-    /**
-    * @property {boolean} exists - Determines whether the emitter is being updated by the core game loop.
-    * @default
-    */
-    this.exists = true;
-
-    /**
-    * The point the particles are emitted from.
-    * Emitter.x and Emitter.y control the containers location, which updates all current particles
-    * Emitter.emitX and Emitter.emitY control the emission location relative to the x/y position.
-    * @property {boolean} emitX
-    */
-    this.emitX = x;
-
-    /**
-    * The point the particles are emitted from.
-    * Emitter.x and Emitter.y control the containers location, which updates all current particles
-    * Emitter.emitX and Emitter.emitY control the emission location relative to the x/y position.
-    * @property {boolean} emitY
-    */
-    this.emitY = y;
-
 };
 
 Phaser.Particles.Arcade.Emitter.prototype = Object.create(Phaser.Group.prototype);
@@ -38083,6 +38331,13 @@ Phaser.Particles.Arcade.Emitter.prototype.update = function () {
 
     if (this.on)
     {
+        var i = this.children.length;
+
+        while (i--)
+        {
+            this.children[i].update();
+        }
+
         if (this._explode)
         {
             this._counter = 0;
@@ -38120,13 +38375,14 @@ Phaser.Particles.Arcade.Emitter.prototype.update = function () {
 };
 
 /**
-* This function generates a new array of particle sprites to attach to the emitter.
+* This function generates a new set of particles for use by this emitter.
+* The particles are stored internally waiting to be emitted via Emitter.start.
 *
 * @method Phaser.Particles.Arcade.Emitter#makeParticles
 * @param {array|string} keys - A string or an array of strings that the particle sprites will use as their texture. If an array one is picked at random.
-* @param {array|number} frames - A frame number, or array of frames that the sprite will use. If an array one is picked at random.
-* @param {number} quantity - The number of particles to generate.
-* @param {boolean} [collide=false] - Sets the checkCollision.none flag on the particle sprites body.
+* @param {array|number} [frames=0] - A frame number, or array of frames that the sprite will use. If an array one is picked at random.
+* @param {number} [quantity] - The number of particles to generate. If not given it will use the value of Emitter.maxParticles.
+* @param {boolean} [collide=false] - If you want the particles to be able to collide with other Arcade Physics bodies then set this to true.
 * @param {boolean} [collideWorldBounds=false] - A particle can be set to collide against the World bounds automatically and rebound back into the World if this is set to true. Otherwise it will leave the World.
 * @return {Phaser.Particles.Arcade.Emitter} This Emitter instance.
 */
@@ -38173,9 +38429,7 @@ Phaser.Particles.Arcade.Emitter.prototype.makeParticles = function (keys, frames
 
         particle.exists = false;
         particle.visible = false;
-
-        //  Center the origin for rotation assistance
-        particle.anchor.set(0.5);
+        particle.anchor.copyFrom(this.particleAnchor);
 
         this.add(particle);
 
@@ -38188,6 +38442,7 @@ Phaser.Particles.Arcade.Emitter.prototype.makeParticles = function (keys, frames
 
 /**
 * Call this function to turn off all the particles and the emitter.
+*
 * @method Phaser.Particles.Arcade.Emitter#kill
 */
 Phaser.Particles.Arcade.Emitter.prototype.kill = function () {
@@ -38200,6 +38455,7 @@ Phaser.Particles.Arcade.Emitter.prototype.kill = function () {
 
 /**
 * Handy for bringing game objects "back to life". Just sets alive and exists back to true.
+*
 * @method Phaser.Particles.Arcade.Emitter#revive
 */
 Phaser.Particles.Arcade.Emitter.prototype.revive = function () {
@@ -38212,8 +38468,8 @@ Phaser.Particles.Arcade.Emitter.prototype.revive = function () {
 /**
 * Call this function to start emitting particles.
 * @method Phaser.Particles.Arcade.Emitter#start
-* @param {boolean} [explode=true] - Whether the particles should all burst out at once.
-* @param {number} [lifespan=0] - How long each particle lives once emitted. 0 = forever.
+* @param {boolean} [explode=true] - Whether the particles should all burst out at once (true) or at the frequency given (false).
+* @param {number} [lifespan=0] - How long each particle lives once emitted in ms. 0 = forever.
 * @param {number} [frequency=250] - Ignored if Explode is set to true. Frequency is how often to emit a particle in ms.
 * @param {number} [quantity=0] - How many particles to launch. 0 = "all of the particles".
 */
@@ -38221,7 +38477,7 @@ Phaser.Particles.Arcade.Emitter.prototype.start = function (explode, lifespan, f
 
     if (typeof explode === 'undefined') { explode = true; }
     if (typeof lifespan === 'undefined') { lifespan = 0; }
-    if (typeof frequency === 'undefined') { frequency = 250; }
+    if (typeof frequency === 'undefined' || frequency === null) { frequency = 250; }
     if (typeof quantity === 'undefined') { quantity = 0; }
 
     this.revive();
@@ -38248,24 +38504,17 @@ Phaser.Particles.Arcade.Emitter.prototype.start = function (explode, lifespan, f
 };
 
 /**
-* This function can be used both internally and externally to emit the next particle.
+* This function can be used both internally and externally to emit the next particle in the queue.
+*
 * @method Phaser.Particles.Arcade.Emitter#emitParticle
 */
 Phaser.Particles.Arcade.Emitter.prototype.emitParticle = function () {
 
     var particle = this.getFirstExists(false);
 
-    if (particle == null)
+    if (particle === null)
     {
         return;
-    }
-
-    particle.angle = 0;
-    particle.bringToTop();
-
-    if (this.minParticleScale !== 1 || this.maxParticleScale !== 1)
-    {
-        particle.scale.set(this.game.rnd.realInRange(this.minParticleScale, this.maxParticleScale));
     }
 
     if (this.width > 1 || this.height > 1)
@@ -38277,38 +38526,28 @@ Phaser.Particles.Arcade.Emitter.prototype.emitParticle = function () {
         particle.reset(this.emitX, this.emitY);
     }
 
+    particle.angle = 0;
     particle.lifespan = this.lifespan;
 
-    particle.body.bounce.setTo(this.bounce.x, this.bounce.y);
-
-    if (this.minParticleSpeed.x !== this.maxParticleSpeed.x)
+    if (this.particleBringToTop)
     {
-        particle.body.velocity.x = this.game.rnd.integerInRange(this.minParticleSpeed.x, this.maxParticleSpeed.x);
+        this.bringToTop(particle);
+    }
+    else if (this.particleSendToBack)
+    {
+        this.sendToBack(particle);
+    }
+
+    if (this.autoScale)
+    {
+        particle.setScaleData(this.scaleData);
     }
     else
     {
-        particle.body.velocity.x = this.minParticleSpeed.x;
+        particle.scale.set(this.game.rnd.realInRange(this.minParticleScale, this.maxParticleScale));
     }
 
-    if (this.minParticleSpeed.y !== this.maxParticleSpeed.y)
-    {
-        particle.body.velocity.y = this.game.rnd.integerInRange(this.minParticleSpeed.y, this.maxParticleSpeed.y);
-    }
-    else
-    {
-        particle.body.velocity.y = this.minParticleSpeed.y;
-    }
-
-    if (this.minRotation !== this.maxRotation)
-    {
-        particle.body.angularVelocity = this.game.rnd.integerInRange(this.minRotation, this.maxRotation);
-    }
-    else if (this.minRotation !== 0)
-    {
-        particle.body.angularVelocity = this.minRotation;
-    }
-
-    if (typeof this._frames === 'object')
+    if (Array.isArray(this._frames === 'object'))
     {
         particle.frame = this.game.rnd.pick(this._frames);
     }
@@ -38317,10 +38556,33 @@ Phaser.Particles.Arcade.Emitter.prototype.emitParticle = function () {
         particle.frame = this._frames;
     }
 
+    if (this.autoAlpha)
+    {
+        particle.setAlphaData(this.alphaData);
+    }
+    else
+    {
+        particle.alpha = this.game.rnd.realInRange(this.minParticleAlpha, this.maxParticleAlpha);
+    }
+
+    particle.blendMode = this.blendMode;
+
+    particle.body.updateBounds();
+
+    particle.body.bounce.setTo(this.bounce.x, this.bounce.y);
+
+    particle.body.velocity.x = this.game.rnd.integerInRange(this.minParticleSpeed.x, this.maxParticleSpeed.x);
+    particle.body.velocity.y = this.game.rnd.integerInRange(this.minParticleSpeed.y, this.maxParticleSpeed.y);
+    particle.body.angularVelocity = this.game.rnd.integerInRange(this.minRotation, this.maxRotation);
+
     particle.body.gravity.y = this.gravity;
+
     particle.body.drag.x = this.particleDrag.x;
     particle.body.drag.y = this.particleDrag.y;
+
     particle.body.angularDrag = this.angularDrag;
+
+    particle.onEmit();
 
 };
 
@@ -38370,7 +38632,8 @@ Phaser.Particles.Arcade.Emitter.prototype.setYSpeed = function (min, max) {
 };
 
 /**
-* A more compact way of setting the angular velocity constraints of the emitter.
+* A more compact way of setting the angular velocity constraints of the particles.
+*
 * @method Phaser.Particles.Arcade.Emitter#setRotation
 * @param {number} [min=0] - The minimum value for this range.
 * @param {number} [max=0] - The maximum value for this range.
@@ -38386,9 +38649,89 @@ Phaser.Particles.Arcade.Emitter.prototype.setRotation = function (min, max) {
 };
 
 /**
+* A more compact way of setting the alpha constraints of the particles.
+* The rate parameter, if set to a value above zero, lets you set the speed at which the Particle change in alpha from min to max.
+* If rate is zero, which is the default, the particle won't change alpha - instead it will pick a random alpha between min and max on emit.
+*
+* @method Phaser.Particles.Arcade.Emitter#setAlpha
+* @param {number} [min=1] - The minimum value for this range.
+* @param {number} [max=1] - The maximum value for this range.
+* @param {number} [rate=0] - The rate (in ms) at which the particles will change in alpha from min to max, or set to zero to pick a random alpha between the two.
+* @param {number} [ease=Phaser.Easing.Linear.None] - If you've set a rate > 0 this is the easing formula applied between the min and max values.
+* @param {boolean} [yoyo=false] - If you've set a rate > 0 you can set if the ease will yoyo or not (i.e. ease back to its original values)
+*/
+Phaser.Particles.Arcade.Emitter.prototype.setAlpha = function (min, max, rate, ease, yoyo) {
+
+    if (typeof min === 'undefined') { min = 1; }
+    if (typeof max === 'undefined') { max = 1; }
+    if (typeof rate === 'undefined') { rate = 0; }
+    if (typeof ease === 'undefined') { ease = Phaser.Easing.Linear.None; }
+    if (typeof yoyo === 'undefined') { yoyo = false; }
+
+    this.minParticleAlpha = min;
+    this.maxParticleAlpha = max;
+    this.autoAlpha = false;
+
+    if (rate > 0)
+    {
+        var tweenData = { v: min };
+        var tween = this.game.make.tween(tweenData).to( { v: max }, rate, ease);
+        tween.yoyo(yoyo);
+
+        this.alphaData = tween.generateData(60);
+
+        //  Inverse it so we don't have to do array length look-ups in Particle update loops
+        this.alphaData.reverse();
+        this.autoAlpha = true;
+    }
+
+};
+
+/**
+* A more compact way of setting the scale constraints of the particles.
+* The rate parameter, if set to a value above zero, lets you set the speed and ease which the Particle uses to change in scale from min to max.
+* If rate is zero, which is the default, the particle won't change scale - instead it will pick a random scale between min and max on emit.
+*
+* @method Phaser.Particles.Arcade.Emitter#setScale
+* @param {number} [min=1] - The minimum value for this range.
+* @param {number} [max=1] - The maximum value for this range.
+* @param {number} [rate=0] - The rate (in ms) at which the particles will change in scale from min to max, or set to zero to pick a random size between the two.
+* @param {number} [ease=Phaser.Easing.Linear.None] - If you've set a rate > 0 this is the easing formula applied between the min and max values.
+* @param {boolean} [yoyo=false] - If you've set a rate > 0 you can set if the ease will yoyo or not (i.e. ease back to its original values)
+*/
+Phaser.Particles.Arcade.Emitter.prototype.setScale = function (min, max, rate, ease, yoyo) {
+
+    if (typeof min === 'undefined') { min = 1; }
+    if (typeof max === 'undefined') { max = 1; }
+    if (typeof rate === 'undefined') { rate = 0; }
+    if (typeof ease === 'undefined') { ease = Phaser.Easing.Linear.None; }
+    if (typeof yoyo === 'undefined') { yoyo = false; }
+
+    this.minParticleScale = min;
+    this.maxParticleScale = max;
+    this.autoScale = false;
+
+    if (rate > 0)
+    {
+        var tweenData = { v: min };
+        var tween = this.game.make.tween(tweenData).to( { v: max }, rate, ease);
+        tween.yoyo(yoyo);
+
+        this.scaleData = tween.generateData(60);
+
+        //  Inverse it so we don't have to do array length look-ups in Particle update loops
+        this.scaleData.reverse();
+        this.autoScale = true;
+    }
+
+};
+
+/**
 * Change the emitters center to match the center of any object with a `center` property, such as a Sprite.
+* If the object doesn't have a center property it will be set to object.x + object.width / 2
+*
 * @method Phaser.Particles.Arcade.Emitter#at
-* @param {object|Phaser.Sprite} object - The object that you wish to match the center with.
+* @param {object|Phaser.Sprite|Phaser.Image|Phaser.TileSprite|Phaser.Text|PIXI.DisplayObject} object - The object that you wish to match the center with.
 */
 Phaser.Particles.Arcade.Emitter.prototype.at = function (object) {
 
@@ -38396,6 +38739,11 @@ Phaser.Particles.Arcade.Emitter.prototype.at = function (object) {
     {
         this.emitX = object.center.x;
         this.emitY = object.center.y;
+    }
+    else
+    {
+        this.emitX = object.world.x + (object.anchor.x * object.width);
+        this.emitY = object.world.y + (object.anchor.y * object.height);
     }
 
 };
