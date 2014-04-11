@@ -1,7 +1,6 @@
 ![Phaser 2.0](http://www.phaser.io/images/phaser2-github.png)
 
-Phaser 2.0.3
-============
+# Phaser 2.0.3
 
 Phaser is a fast, free and fun open source game framework for making desktop and mobile browser HTML5 games. It uses [Pixi.js](https://github.com/GoodBoyDigital/pixi.js/) internally for fast 2D Canvas and WebGL rendering.
 
@@ -23,8 +22,7 @@ By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/photonstorm/phaser/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
 
-What's new in 2.0.3?
---------------------
+## What's new in 2.0.3?
 
 In this release we have upgraded both pixi.js to v1.5.2 and p2.js to v0.5.0. This improves features and stability across the whole framework, and as always you'll find the complete list of improvements below.
 
@@ -39,8 +37,7 @@ As promised with the 2.0.0 release we have done all of this without changing exi
 Some of you may not be aware, but the `phaser.min.js` file in the build folder contains all 3 physics systems bundled in. We've refined our build process so that it's easy for you to create custom builds now via grunt, but if you know you only need Arcade Physics (and not P2 or Ninja) then you can use `phaser-arcade-physics.min.js` which is found in the `build/custom` folder. This will save you 180KB from the minified file size, so please use it if you can.
 
 
-Welcome to Phaser
------------------
+## Welcome to Phaser
 
 6 months ago we released Phaser 1.0 into the world. Suffice to say that since then we've been overwhelmed at the huge surge of developers taking to it! Our github repository is consistently in the top JavaScript lists, we've over 3200 stars at the time of writing, and a wonderful, vibrant and friendly community. Phaser 2 is a natural evolution of what we started. We've focused specifically on performance and expansion with this release. Lots of developers have already reported to us considerably speed increases just by swapping to Phaser 2 (reports of 200% faster speeds on mobile aren't unheard of!). There's also a full-body physics system available now, in the form of the excellent p2.js. The upgrade to Pixi 1.5 under the hood bought lots of new visual effects in, including blend modes and tints.
 
@@ -55,8 +52,7 @@ Happy coding everyone! See you on the forums.
 ![boogie](http://www.phaser.io/images/spacedancer.gif)
 
 
-Getting Started Guides
-----------------------
+## Getting Started Guides
 
 We have a new [Getting Started Guide](http://phaser.io/getting-started-js.php) which covers all you need to begin developing games with Phaser. From setting up a web server to picking an IDE. If you're new to HTML5 game development, or are coming from another language like AS3, then we recommend starting there.
 
@@ -64,15 +60,14 @@ There is a comprehensive [How to Learn Phaser](http://gamedevelopment.tutsplus.c
 
 There is also an [un-official Getting Started Guide](http://www.antonoffplus.com/coding-an-html5-game-for-30-minutes-or-an-introduction-to-the-phaser-framework).
 
-
 ![Phaser Logo](http://www.photonstorm.com/wp-content/uploads/2013/09/phaser_10_release.jpg)
 
-Change Log
-----------
+
+## Change Log
 
 Version 2.0.3 - "Allorallen" - 11th April 2014
 
-Updates
+### Updates
 
 * Updated to [Pixi.js 1.5.2](https://github.com/GoodBoyDigital/pixi.js/releases/tag/v1.5.2)
 * Updated to [p2.js 0.5.0](https://github.com/schteppe/p2.js/releases/tag/v0.5.0)
@@ -99,8 +94,7 @@ Updates
 * p2.World bounds are now included in the callback events such as beginContact and impact events.
 * Thanks to @STuFF the Classes drop-down list in the API docs now indents the sub-classes.
 
-
-New Features
+### New Features
 
 * Added ability to retrieve a single p2 fixture from the cache (thanks @georgiee, #674)
 * Timers can now have a start delay value (thanks @georgiee, #660)
@@ -146,8 +140,7 @@ Use cases:
 * Place a sensor in your fixture and access this single fixture later (to disable temporarily)
 * Create a small body with threes fixtures (circle, circle + polygon/convex). Now you want that the polygon part to behave like rubber and assign a bouncing (restitution > 1) material. Assign a fixture key in PhysicsEditor and access the fixture like this. (see the image for the fixture I described)
 
-
-Bug Fixes
+### Bug Fixes
 
 * If you inputEnable = false a gameobject you couldn't re-enable it again using inputEnable = true, only directly via the handler (thanks @nickrall, fix #673)
 * Fixed setTexture bug with TilingSprite (pixi.js 1.5.2 bug fix)
@@ -168,8 +161,7 @@ Bug Fixes
 * Objects with an InputHandler now deactivate it when the object is removed from a Group but not destroyed (fix #672)
 * Fixed the vectors used in the BlurX and BlurY filters (thanks @nickryall, fix #668)
 
-
-p2.js v0.5.0
+### p2.js v0.5.0
 
 * Added property .enableIslandSleeping to World.
 * Added property .useFrictionGravityOnZeroGravity to World.
@@ -227,8 +219,7 @@ There is an extensive [Migration Guide](https://github.com/photonstorm/phaser/bl
 The full Change Log is at https://github.com/photonstorm/phaser/blob/master/changelog.md
 
 
-How to Build
-------------
+## How to Build
 
 We provide a fully compiled version of Phaser in the `build` folder, in both plain and minified formats.
 
@@ -243,14 +234,12 @@ If you replace Pixi or p2 then run `grunt replace` to patch their UMD strings so
 Note: Some of you may not be aware, but the `phaser.min.js` file in the build folder contains all 3 physics systems bundled in. If you only need Arcade Physics then you can use `build\custom\phaser-arcade-physics.min.js` instead. This will save you 180KB from the minified file size.
 
 
-Koding
-------
+## Koding
 
 You can [![clone the Phaser repo in Koding](http://learn.koding.com/btn/clone_d.png)][koding] and then start editing and previewing code right away using their web based VM development system.
 
 
-Bower
------
+## Bower
 
 If you use bowser you can install phaser with:
 
@@ -261,8 +250,7 @@ Nice and easy :)
 ![Tanks](http://www.photonstorm.com/wp-content/uploads/2013/10/phaser_tanks-640x480.png)
 
 
-CDNJS
------
+## CDNJS
 
 Thanks to a community member Phaser is now available on [CDNJS](http://cdnjs.com). You can include the following in your html:
 
@@ -273,8 +261,7 @@ Or if you prefer you can leave the protocol off, so it works via http and https:
 `//cdnjs.cloudflare.com/ajax/libs/phaser/2.0.3/phaser.min.js`
 
 
-Requirements
-------------
+## Requirements
 
 Games created with Phaser require a modern web browser that supports the canvas tag. This includes Internet Explorer 9+, Firefox, Chrome, Safari and Opera. It also works on mobile web browsers including stock Android 2.x browser and above and iOS5 Mobile Safari and above.
 
@@ -285,8 +272,7 @@ For developing with Phaser you can use either a plain-vanilla JavaScript approac
 Phaser is 576 KB minified (including all 3 physics engines, 311 KB without) and 128 KB gzipped (67 KB without physics libs).
 
 
-Learn By Example
-----------------
+## Learn By Example
 
 Ever since we started Phaser we've been growing and expanding our extensive set of Examples. Currently over 270 of them!
 
@@ -309,8 +295,7 @@ There is a new 'Side View' example viewer as well. This loads all the examples i
 You can also browse all [Phaser Examples](http://examples.phaser.io) online.
 
 
-Features
---------
+## Features
 
 **WebGL &amp; Canvas**
 
@@ -380,12 +365,11 @@ Phaser has been used to create hundreds of games, which receive millions of play
 ![FruitParty](http://www.photonstorm.com/wp-content/uploads/2013/10/phaser_fruit_particles-640x480.png)
 
 
-Road Map
---------
+## Road Map
 
 Beyond version 2.0 here are some of the features planned for the future:
 
-Version 2.1 ("Shienar")
+### Version 2.1 ("Shienar")
 
 * Enhance the State Management, so you can perform non-destructive State swaps and persistence.
 * A more advanced Particle system, one that can render to a single canvas (rather than spawn hundreds of Sprites), more advanced effects, etc.
@@ -393,14 +377,14 @@ Version 2.1 ("Shienar")
 * Touch Gestures.
 * Support for parallel asset loading.
 
-Version 2.2 ("Tarabon")
+### Version 2.2 ("Tarabon")
 
 * Comprehensive testing across Firefox OS devices, CocoonJS and Ejecta.
 * Integration with third party services like Google Play Game Services and Amazon JS SDK.
 * Flash CC HTML5 export integration.
 * Massively enhance the audio side of Phaser. Take more advantage of Web Audio: echo effects, positional sound, etc.
 
-Beyond version 2.2
+### Beyond version 2.2
 
 * Test out packaging with Node-webkit.
 * Game parameters stored in Google Docs.
@@ -412,14 +396,12 @@ Beyond version 2.2
 * Look at XDomainRequest for IE9 CORs issues.
 
 
-Nadion
-------
+## Nadion
 
 [Nadion](https://github.com/jcd-as/nadion) is a set of powerful enhancements for Phaser that makes level building even easier. It includes features such as Trigger, Area, Alarms and Emitters, debug panels, state machines, parallax layer scrolling, 'developer mode' short-cuts and more.
 
 
-Contributing
-------------
+## Contributing
 
 We now have a full [Contributors Guide][contribute] which goes into the process in more detail, but here are the headlines:
 
@@ -432,8 +414,7 @@ We now have a full [Contributors Guide][contribute] which goes into the process 
 - Before submitting a Pull Request please run your code through [JSHint](http://www.jshint.com/) to check for stylistic or formatting errors. To use JSHint, run `grunt jshint`. This isn't a strict requirement and we are happy to receive Pull Requests that haven't been JSHinted, so don't let it put you off contributing, but do know that we'll reformat your source before going live with it.
 
 
-Bugs?
------
+## Bugs?
 
 Please add them to the [Issue Tracker][issues] with as much info as possible, especially source code demonstrating the issue.
 
@@ -442,8 +423,7 @@ Please add them to the [Issue Tracker][issues] with as much info as possible, es
 "Being negative is not how we make progress" - Larry Page, Google
 
 
-License
--------
+## License
 
 Phaser is released under the [MIT License](http://opensource.org/licenses/MIT).
 
