@@ -2,6 +2,10 @@
 
 There is an extensive [Migration Guide](https://github.com/photonstorm/phaser/blob/master/resources/Migration%20Guide.md) available for those converting from Phaser 1.x to 2.x. In the guide we detail the API breaking changes and approach to our new physics system.
 
+## Version 2.0.4 - "Mos Shirare" - in development
+
+
+
 ## Version 2.0.3 - "Allorallen" - 11th April 2014
 
 ### Updates
