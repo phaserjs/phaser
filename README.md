@@ -5,11 +5,9 @@ Phaser 2.0.3
 
 Phaser is a fast, free and fun open source game framework for making desktop and mobile browser HTML5 games. It uses [Pixi.js](https://github.com/GoodBoyDigital/pixi.js/) internally for fast 2D Canvas and WebGL rendering.
 
-Version: 2.0.3 "Allorallen" - Released: -in development-
+Version: 2.0.3 "Allorallen" - Released: 11th April 2014
 
 By Richard Davey, [Photon Storm](http://www.photonstorm.com)
-
-[![Build Status](https://travis-ci.org/photonstorm/phaser.png?branch=dev)](https://travis-ci.org/photonstorm/phaser)
 
 * View the [Official Website](http://phaser.io)
 * Follow on [Twitter](https://twitter.com/photonstorm)
@@ -21,6 +19,7 @@ By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 
 [Subscribe to our new Phaser Newsletter](https://confirmsubscription.com/h/r/369DE48E3E86AF1E). We'll email you when new versions are released as well as send you our regular Phaser game making magazine.
 
+[![Build Status](https://travis-ci.org/photonstorm/phaser.png?branch=dev)](https://travis-ci.org/photonstorm/phaser)
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/photonstorm/phaser/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
 
@@ -60,7 +59,7 @@ There is also an [un-official Getting Started Guide](http://www.antonoffplus.com
 Change Log
 ----------
 
-Version 2.0.3 - "Allorallen" - -in development-
+Version 2.0.3 - "Allorallen" - 11th April 2014
 
 Updates
 
@@ -159,6 +158,7 @@ Bug Fixes
 * Group.removeBetween now properly iterates through the children.
 * P2.World had a type in the restitution method title. Now fixed.
 * Objects with an InputHandler now deactivate it when the object is removed from a Group but not destroyed (fix #672)
+* Fixed the vectors used in the BlurX and BlurY filters (thanks @nickryall, fix #668)
 
 
 p2.js v0.5.0
