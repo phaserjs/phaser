@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>Phaser Class: Particles</title>
+	<title>Phaser Class: FixtureList</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -511,17 +511,17 @@
 					
 
 
-	<h1 class="page-title">Class: Particles</h1>
+	<h1 class="page-title">Class: FixtureList</h1>
 <section>
 
 <header>
     <h2>
-        <span class="ancestors"><a href="Phaser.html">Phaser</a>.</span>
+        <span class="ancestors"><a href="Phaser.html">Phaser</a><a href="Phaser.Physics.html">.Physics</a><a href="Phaser.Physics.P2.html">.P2</a>.</span>
     
-    Particles
+    FixtureList
     </h2>
     
-        <div class="class-description"><p>Phaser Particles</p></div>
+        <div class="class-description"><p>Collection for generated P2 fixtures</p></div>
     
 </header>
 
@@ -532,7 +532,7 @@
     
         
 <dt>
-    <h4 class="name" id="Particles"><span class="type-signature"></span>new Particles<span class="signature">(game)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="FixtureList"><span class="type-signature"></span>new FixtureList<span class="signature">(list)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -540,7 +540,12 @@
     
     
     <div class="description">
-        <p>Phaser.Particles is the Particle Manager for the game. It is called during the game update loop and in turn updates any Emitters attached to it.</p>
+        <p>Allow to access a list of created fixture (coming from Body#addPhaserPolygon)
+which itself parse the input from PhysicsEditor with the custom phaser exporter.
+You can access fixtures of a Body by a group index or even by providing a fixture Key.
+You can set the fixture key and also the group index for a fixture in PhysicsEditor.
+This gives you the power to create a complex body built of many fixtures and modify them
+during runtime (to remove parts, set masks, categories &amp; sensor properties)</p>
     </div>
     
 
@@ -574,13 +579,13 @@
 
         <tr>
             
-                <td class="name"><code>game</code></td>
+                <td class="name"><code>list</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="Phaser.Game.html">Phaser.Game</a></span>
+<span class="param-type"><a href="Array.html">Array</a></span>
 
 
             
@@ -590,7 +595,7 @@
 
             
 
-            <td class="description last"><p>A reference to the currently running game.</p></td>
+            <td class="description last"><p>A list of fixtures (from Phaser.Physics.P2.Body#addPhaserPolygon)</p></td>
         </tr>
 
 	
@@ -622,7 +627,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Particles.js.html">particles/Particles.js</a>, <a href="Particles.js.html#sunlight-1-line-15">line 15</a>
+        <a href="FixtureList.js.html">physics/p2/FixtureList.js</a>, <a href="FixtureList.js.html#sunlight-1-line-24">line 24</a>
     </li></ul></dd>
     
 
@@ -661,29 +666,34 @@
     
 
     
-        <h3 class="subsection-title">Members</h3>
+
+    
+        <h3 class="subsection-title">Methods</h3>
 
         <dl>
             
 <dt>
-    <h4 class="name" id="emitters"><span class="type-signature"></span>emitters<span class="type-signature"></span></h4>
+    <h4 class="name" id="flatten"><span class="type-signature"></span>flatten<span class="signature">(array)</span><span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
     
     
+    <div class="description">
+        <p>A helper to flatten arrays. This is very useful as the fixtures are nested from time to time due to the way P2 creates and splits polygons.</p>
+    </div>
     
 
     
-<dl class="details">
     
+    
+    
+    
+        <h5>Parameters:</h5>
+        
 
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
+<table class="params table table-striped">
     <thead>
 	<tr>
 		
@@ -705,13 +715,13 @@
 
         <tr>
             
-                <td class="name"><code>emitters</code></td>
+                <td class="name"><code>array</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">object</span>
+<span class="param-type">array</span>
 
 
             
@@ -721,14 +731,17 @@
 
             
 
-            <td class="description last"><p>Internal emitters store.</p></td>
+            <td class="description last"><p>The array to flatten. Notice: This will happen recursive not shallow.</p></td>
         </tr>
 
 	
 	</tbody>
 </table>
-</dl>
 
+    
+    
+    
+<dl class="details">
     
 
     
@@ -750,7 +763,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Particles.js.html">particles/Particles.js</a>, <a href="Particles.js.html#sunlight-1-line-25">line 25</a>
+        <a href="FixtureList.js.html">physics/p2/FixtureList.js</a>, <a href="FixtureList.js.html#sunlight-1-line-213">line 213</a>
     </li></ul></dd>
     
 
@@ -763,29 +776,42 @@
 
     
     
+
+    
+
+    
+    
+    
+    
+    
+    
+    
 </dd>
 
         
             
 <dt>
-    <h4 class="name" id="game"><span class="type-signature"></span>game<span class="type-signature"></span></h4>
+    <h4 class="name" id="getFixtureByKey"><span class="type-signature"></span>getFixtureByKey<span class="signature">(key)</span><span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
     
     
+    <div class="description">
+        <p>Accessor to get either a single fixture by its key.</p>
+    </div>
     
 
     
-<dl class="details">
     
+    
+    
+    
+        <h5>Parameters:</h5>
+        
 
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
+<table class="params table table-striped">
     <thead>
 	<tr>
 		
@@ -807,13 +833,13 @@
 
         <tr>
             
-                <td class="name"><code>game</code></td>
+                <td class="name"><code>key</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="Phaser.Game.html">Phaser.Game</a></span>
+<span class="param-type">string</span>
 
 
             
@@ -823,14 +849,17 @@
 
             
 
-            <td class="description last"><p>A reference to the currently running Game.</p></td>
+            <td class="description last"><p>The key of the fixture.</p></td>
         </tr>
 
 	
 	</tbody>
 </table>
-</dl>
 
+    
+    
+    
+<dl class="details">
     
 
     
@@ -852,7 +881,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Particles.js.html">particles/Particles.js</a>, <a href="Particles.js.html#sunlight-1-line-20">line 20</a>
+        <a href="FixtureList.js.html">physics/p2/FixtureList.js</a>, <a href="FixtureList.js.html#sunlight-1-line-159">line 159</a>
     </li></ul></dd>
     
 
@@ -865,29 +894,42 @@
 
     
     
+
+    
+
+    
+    
+    
+    
+    
+    
+    
 </dd>
 
         
             
 <dt>
-    <h4 class="name" id="ID"><span class="type-signature"></span>ID<span class="type-signature"></span></h4>
+    <h4 class="name" id="getFixtures"><span class="type-signature"></span>getFixtures<span class="signature">(keys)</span><span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
     
     
+    <div class="description">
+        <p>Accessor to get either a list of specified fixtures by key or the whole fixture list</p>
+    </div>
     
 
     
-<dl class="details">
     
+    
+    
+    
+        <h5>Parameters:</h5>
+        
 
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
+<table class="params table table-striped">
     <thead>
 	<tr>
 		
@@ -909,7 +951,125 @@
 
         <tr>
             
-                <td class="name"><code>ID</code></td>
+                <td class="name"><code>keys</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">array</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>A list of fixture keys</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="FixtureList.js.html">physics/p2/FixtureList.js</a>, <a href="FixtureList.js.html#sunlight-1-line-124">line 124</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="getGroup"><span class="type-signature"></span>getGroup<span class="signature">(groupID)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Accessor to get a group of fixtures by its group index.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>groupID</code></td>
             
 
             <td class="type">
@@ -925,14 +1085,17 @@
 
             
 
-            <td class="description last"><p>-</p></td>
+            <td class="description last"><p>The group index.</p></td>
         </tr>
 
 	
 	</tbody>
 </table>
-</dl>
 
+    
+    
+    
+<dl class="details">
     
 
     
@@ -949,15 +1112,12 @@
 
     
 
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>0</li></ul></dd>
     
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Particles.js.html">particles/Particles.js</a>, <a href="Particles.js.html#sunlight-1-line-31">line 31</a>
+        <a href="FixtureList.js.html">physics/p2/FixtureList.js</a>, <a href="FixtureList.js.html#sunlight-1-line-171">line 171</a>
     </li></ul></dd>
     
 
@@ -970,18 +1130,87 @@
 
     
     
+
+    
+
+    
+    
+    
+    
+    
+    
+    
 </dd>
 
-        </dl>
-    
-
-    
-        <h3 class="subsection-title">Methods</h3>
-
-        <dl>
+        
             
 <dt>
-    <h4 class="name" id="add"><span class="type-signature"></span>add<span class="signature">(emitter)</span><span class="type-signature"> &rarr; {Phaser.Emitter}</span></h4>
+    <h4 class="name" id="init"><span class="type-signature"></span>init<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="FixtureList.js.html">physics/p2/FixtureList.js</a>, <a href="FixtureList.js.html#sunlight-1-line-39">line 39</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="parse"><span class="type-signature"></span>parse<span class="signature">()</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -989,8 +1218,73 @@
     
     
     <div class="description">
-        <p>Adds a new Particle Emitter to the Particle Manager.</p>
+        <p>Parser for the output of Phaser.Physics.P2.Body#addPhaserPolygon</p>
     </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="FixtureList.js.html">physics/p2/FixtureList.js</a>, <a href="FixtureList.js.html#sunlight-1-line-183">line 183</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="setCategory"><span class="type-signature"></span>setCategory<span class="signature">(bit, fixtureKey)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
     
 
     
@@ -1023,13 +1317,13 @@
 
         <tr>
             
-                <td class="name"><code>emitter</code></td>
+                <td class="name"><code>bit</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Phaser.Emitter</span>
+<span class="param-type">number</span>
 
 
             
@@ -1039,7 +1333,30 @@
 
             
 
-            <td class="description last"><p>The emitter to be added to the particle manager.</p></td>
+            <td class="description last"><p>The bit to set as the collision group.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>fixtureKey</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Only apply to the fixture with the given key.</p></td>
         </tr>
 
 	
@@ -1071,7 +1388,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Particles.js.html">particles/Particles.js</a>, <a href="Particles.js.html#sunlight-1-line-37">line 37</a>
+        <a href="FixtureList.js.html">physics/p2/FixtureList.js</a>, <a href="FixtureList.js.html#sunlight-1-line-64">line 64</a>
     </li></ul></dd>
     
 
@@ -1092,29 +1409,6 @@
     
     
     
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>The emitter that was added.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type">Phaser.Emitter</span>
-
-
-	</dd>
-</dl>
-
-
-        
     
     
 </dd>
@@ -1122,16 +1416,12 @@
         
             
 <dt>
-    <h4 class="name" id="remove"><span class="type-signature"></span>remove<span class="signature">(emitter)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="setMask"><span class="type-signature"></span>setMask<span class="signature">(bit, fixtureKey)</span><span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
     
-    
-    <div class="description">
-        <p>Removes an existing Particle Emitter from the Particle Manager.</p>
-    </div>
     
 
     
@@ -1164,13 +1454,13 @@
 
         <tr>
             
-                <td class="name"><code>emitter</code></td>
+                <td class="name"><code>bit</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Phaser.Emitter</span>
+<span class="param-type">number</span>
 
 
             
@@ -1180,7 +1470,30 @@
 
             
 
-            <td class="description last"><p>The emitter to remove.</p></td>
+            <td class="description last"><p>The bit to set as the collision mask</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>fixtureKey</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Only apply to the fixture with the given key</p></td>
         </tr>
 
 	
@@ -1212,7 +1525,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Particles.js.html">particles/Particles.js</a>, <a href="Particles.js.html#sunlight-1-line-51">line 51</a>
+        <a href="FixtureList.js.html">physics/p2/FixtureList.js</a>, <a href="FixtureList.js.html#sunlight-1-line-79">line 79</a>
     </li></ul></dd>
     
 
@@ -1240,22 +1553,90 @@
         
             
 <dt>
-    <h4 class="name" id="update"><span class="type-signature">&lt;protected> </span>update<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="setMaterial"><span class="type-signature"></span>setMaterial<span class="signature">(material, fixtureKey)</span><span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
     
     
-    <div class="description">
-        <p>Called by the core game loop. Updates all Emitters who have their exists value set to true.</p>
-    </div>
-    
 
     
     
     
     
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>material</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The contact material for a fixture</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>fixtureKey</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Only apply to the fixture with the given key</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
     
     
     
@@ -1281,7 +1662,144 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Particles.js.html">particles/Particles.js</a>, <a href="Particles.js.html#sunlight-1-line-62">line 62</a>
+        <a href="FixtureList.js.html">physics/p2/FixtureList.js</a>, <a href="FixtureList.js.html#sunlight-1-line-109">line 109</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="setSensor"><span class="type-signature"></span>setSensor<span class="signature">(value, fixtureKey)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>value</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>sensor true or false</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>fixtureKey</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Only apply to the fixture with the given key</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="FixtureList.js.html">physics/p2/FixtureList.js</a>, <a href="FixtureList.js.html#sunlight-1-line-94">line 94</a>
     </li></ul></dd>
     
 
@@ -1332,7 +1850,7 @@
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Fri Apr 11 2014 13:08:31 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Fri Apr 11 2014 13:08:35 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

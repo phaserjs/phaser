@@ -11133,7 +11133,7 @@ Phaser.Physics.P2 = function (game, config) {
     }
 
     /**
-    * @property {p2.World} game - The p2 World in which the simulation is run.
+    * @property {p2.World} world - The p2 World in which the simulation is run.
     * @protected
     */
     this.world = new p2.World(config);
@@ -11157,14 +11157,9 @@ Phaser.Physics.P2 = function (game, config) {
     this.materials = [];
 
     /**
-    * @property {Phaser.InversePointProxy} gravity - The gravity applied to all bodies each step.
+    * @property {Phaser.Physics.P2.InversePointProxy} gravity - The gravity applied to all bodies each step.
     */
     this.gravity = new Phaser.Physics.P2.InversePointProxy(this, this.world.gravity);
-
-    /**
-    * @property {p2.Body} bounds - The bounds body contains the 4 walls that border the World. Define or disable with setBounds.
-    */
-    this.bounds = null;
 
     /**
     * @property {object} walls - An object containing the 4 wall bodies that bound the physics world.
@@ -11212,16 +11207,14 @@ Phaser.Physics.P2 = function (game, config) {
     this.onContactMaterialRemoved = new Phaser.Signal();
 
     /**
-    * @property {Phaser.Signal} onPostBroadphase - Dispatched after the Broadphase has collected collision pairs in the world.
+    * @property {function} postBroadphaseCallback - A postBroadphase callback.
     */
     this.postBroadphaseCallback = null;
-    this.callbackContext = null;
 
     /**
-    * @property {Phaser.Signal} onImpact - Dispatched when a first contact is created between two bodies. This event is fired after the step has been done.
+    * @property {object} callbackContext - The context under which the callbacks are fired.
     */
-    // this.onImpact = new Phaser.Signal();
-    this.impactCallback = null;
+    this.callbackContext = null;
 
     /**
     * @property {Phaser.Signal} onBeginContact - Dispatched when a first contact is created between two bodies. This event is fired before the step has been done.
@@ -11247,26 +11240,41 @@ Phaser.Physics.P2 = function (game, config) {
     this.world.on("endContact", this.endContactHandler, this);
 
     /**
-    * @property {array} _toRemove - Internal var used to hold references to bodies to remove from the world on the next step.
-    */
-    this._toRemove = [];
-
-    /**
-    * @property {array} collisionGroups - Internal var.
+    * @property {array} collisionGroups - An array containing the collision groups that have been defined in the World.
     */
     this.collisionGroups = [];
+
+    /**
+    * @property {Phaser.Physics.P2.CollisionGroup} nothingCollisionGroup - A default collision group.
+    */
+    this.nothingCollisionGroup = new Phaser.Physics.P2.CollisionGroup(1);
+
+    /**
+    * @property {Phaser.Physics.P2.CollisionGroup} boundsCollisionGroup - A default collision group.
+    */
+    this.boundsCollisionGroup = new Phaser.Physics.P2.CollisionGroup(2);
+
+    /**
+    * @property {Phaser.Physics.P2.CollisionGroup} everythingCollisionGroup - A default collision group.
+    */
+    this.everythingCollisionGroup = new Phaser.Physics.P2.CollisionGroup(2147483648);
+
+    /**
+    * @property {array} boundsCollidesWith - An array of the bodies the world bounds collides with.
+    */
+    this.boundsCollidesWith = [];
+
+    /**
+    * @property {array} _toRemove - Internal var used to hold references to bodies to remove from the world on the next step.
+    * @private
+    */
+    this._toRemove = [];
 
     /**
     * @property {number} _collisionGroupID - Internal var.
     * @private
     */
     this._collisionGroupID = 2;
-
-    this.nothingCollisionGroup = new Phaser.Physics.P2.CollisionGroup(1);
-    this.boundsCollisionGroup = new Phaser.Physics.P2.CollisionGroup(2);
-    this.everythingCollisionGroup = new Phaser.Physics.P2.CollisionGroup(2147483648);
-
-    this.boundsCollidesWith = [];
 
     //  By default we want everything colliding with everything
     this.setBoundsToWorld(true, true, true, true, false);
@@ -11439,12 +11447,11 @@ Phaser.Physics.P2.prototype = {
 
         if (this.postBroadphaseCallback)
         {
-            //  Body.id 1 is always the World bounds object
             var i = event.pairs.length;
 
             while (i -= 2)
             {
-                if (event.pairs[i].id !== 1 && event.pairs[i+1].id !== 1 && !this.postBroadphaseCallback.call(this.callbackContext, event.pairs[i].parent, event.pairs[i+1].parent))
+                if (event.pairs[i].parent && event.pairs[i+1].parent && !this.postBroadphaseCallback.call(this.callbackContext, event.pairs[i].parent, event.pairs[i+1].parent))
                 {
                     event.pairs.splice(i, 2);
                 }
@@ -11500,19 +11507,16 @@ Phaser.Physics.P2.prototype = {
     */
     beginContactHandler: function (event) {
 
-        if (event.bodyA.id > 1 && event.bodyB.id > 1)
+        this.onBeginContact.dispatch(event.bodyA, event.bodyB, event.shapeA, event.shapeB, event.contactEquations);
+
+        if (event.bodyA.parent)
         {
-            this.onBeginContact.dispatch(event.bodyA, event.bodyB, event.shapeA, event.shapeB, event.contactEquations);
+            event.bodyA.parent.onBeginContact.dispatch(event.bodyB.parent, event.shapeA, event.shapeB, event.contactEquations);
+        }
 
-            if (event.bodyA.parent)
-            {
-                event.bodyA.parent.onBeginContact.dispatch(event.bodyB.parent, event.shapeA, event.shapeB, event.contactEquations);
-            }
-
-            if (event.bodyB.parent)
-            {
-                event.bodyB.parent.onBeginContact.dispatch(event.bodyA.parent, event.shapeB, event.shapeA, event.contactEquations);
-            }
+        if (event.bodyB.parent)
+        {
+            event.bodyB.parent.onBeginContact.dispatch(event.bodyA.parent, event.shapeB, event.shapeA, event.contactEquations);
         }
 
     },
@@ -11525,19 +11529,16 @@ Phaser.Physics.P2.prototype = {
     */
     endContactHandler: function (event) {
 
-        if (event.bodyA.id > 1 && event.bodyB.id > 1)
+        this.onEndContact.dispatch(event.bodyA, event.bodyB, event.shapeA, event.shapeB);
+
+        if (event.bodyA.parent)
         {
-            this.onEndContact.dispatch(event.bodyA, event.bodyB, event.shapeA, event.shapeB);
+            event.bodyA.parent.onEndContact.dispatch(event.bodyB.parent, event.shapeA, event.shapeB);
+        }
 
-            if (event.bodyA.parent)
-            {
-                event.bodyA.parent.onEndContact.dispatch(event.bodyB.parent, event.shapeA, event.shapeB);
-            }
-
-            if (event.bodyB.parent)
-            {
-                event.bodyB.parent.onEndContact.dispatch(event.bodyA.parent, event.shapeB, event.shapeA);
-            }
+        if (event.bodyB.parent)
+        {
+            event.bodyB.parent.onEndContact.dispatch(event.bodyA.parent, event.shapeB, event.shapeA);
         }
 
     },
@@ -11578,22 +11579,22 @@ Phaser.Physics.P2.prototype = {
 
         if (left && this.walls.left)
         {
-            this.walls.left.material = material;
+            this.walls.left.shapes[0].material = material;
         }
 
         if (right && this.walls.right)
         {
-            this.walls.right.material = material;
+            this.walls.right.shapes[0].material = material;
         }
 
         if (top && this.walls.top)
         {
-            this.walls.top.material = material;
+            this.walls.top.shapes[0].material = material;
         }
 
         if (bottom && this.walls.bottom)
         {
-            this.walls.bottom.material = material;
+            this.walls.bottom.shapes[0].material = material;
         }
 
     },
@@ -11614,22 +11615,22 @@ Phaser.Physics.P2.prototype = {
 
         if (this.walls.left)
         {
-            this.walls.left.collisionGroup = mask;
+            this.walls.left.shapes[0].collisionGroup = mask;
         }
 
         if (this.walls.right)
         {
-            this.walls.right.collisionGroup = mask;
+            this.walls.right.shapes[0].collisionGroup = mask;
         }
 
         if (this.walls.top)
         {
-            this.walls.top.collisionGroup = mask;
+            this.walls.top.shapes[0].collisionGroup = mask;
         }
 
         if (this.walls.bottom)
         {
-            this.walls.bottom.collisionGroup = mask;
+            this.walls.bottom.shapes[0].collisionGroup = mask;
         }
 
     },
@@ -11657,37 +11658,6 @@ Phaser.Physics.P2.prototype = {
         if (typeof bottom === 'undefined') { bottom = true; }
         if (typeof setCollisionGroup === 'undefined') { setCollisionGroup = true; }
 
-        // var hw = (width / 2);
-        // var hh = (height / 2);
-        // var cx = hw + x;
-        // var cy = hh + y;
-
-        /*
-        if (this.bounds !== null)
-        {
-            if (this.bounds.world)
-            {
-                this.world.removeBody(this.bounds);
-            }
-
-            var i = this.bounds.shapes.length;
-
-            while (i--)
-            {
-                var shape = this.bounds.shapes[i];
-                this.bounds.removeShape(shape);
-            }
-
-            this.bounds.position[0] = this.pxmi(cx);
-            this.bounds.position[1] = this.pxmi(cy);
-        }
-        else
-        {
-            this.bounds = new p2.Body({ mass: 0, position: [this.pxmi(cx), this.pxmi(cy)] });
-        }
-        */
-
-        /*
         if (this.walls.left)
         {
             this.world.removeBody(this.walls.left);
@@ -11710,12 +11680,12 @@ Phaser.Physics.P2.prototype = {
 
         if (left)
         {
-            this.walls.left = new p2.Body({ mass: 0, position: [ this.pxmi(-hw), this.pxmi(0) ] });
-            this.walls.left.addShape(new p2.Plane(), 1.5707963267948966);
+            this.walls.left = new p2.Body({ mass: 0, position: [ this.pxmi(x), this.pxmi(y) ], angle: 1.5707963267948966 });
+            this.walls.left.addShape(new p2.Plane());
 
             if (setCollisionGroup)
             {
-                this.walls.left.collisionGroup = this.boundsCollisionGroup.mask;
+                this.walls.left.shapes[0].collisionGroup = this.boundsCollisionGroup.mask;
             }
 
             this.world.addBody(this.walls.left);
@@ -11723,12 +11693,12 @@ Phaser.Physics.P2.prototype = {
 
         if (right)
         {
-            this.walls.right = new p2.Body({ mass: 0, position: [ this.pxmi(hw), this.pxmi(0) ] });
-            this.walls.right.addShape(new p2.Plane(), -1.5707963267948966);
+            this.walls.right = new p2.Body({ mass: 0, position: [ this.pxmi(x + width), this.pxmi(y) ], angle: -1.5707963267948966 });
+            this.walls.right.addShape(new p2.Plane());
 
             if (setCollisionGroup)
             {
-                this.walls.right.collisionGroup = this.boundsCollisionGroup.mask;
+                this.walls.right.shapes[0].collisionGroup = this.boundsCollisionGroup.mask;
             }
 
             this.world.addBody(this.walls.right);
@@ -11736,12 +11706,12 @@ Phaser.Physics.P2.prototype = {
 
         if (top)
         {
-            this.walls.top = new p2.Body({ mass: 0, position: [ this.pxmi(0), this.pxmi(-hh) ] });
-            this.walls.top.addShape(new p2.Plane(), -3.141592653589793);
+            this.walls.top = new p2.Body({ mass: 0, position: [ this.pxmi(x), this.pxmi(y) ], angle: -3.141592653589793 });
+            this.walls.top.addShape(new p2.Plane());
 
             if (setCollisionGroup)
             {
-                this.walls.top.collisionGroup = this.boundsCollisionGroup.mask;
+                this.walls.top.shapes[0].collisionGroup = this.boundsCollisionGroup.mask;
             }
 
             this.world.addBody(this.walls.top);
@@ -11749,57 +11719,16 @@ Phaser.Physics.P2.prototype = {
 
         if (bottom)
         {
-            this.walls.bottom = new p2.Body({ mass: 0, position: [ this.pxmi(0), this.pxmi(hh) ] });
+            this.walls.bottom = new p2.Body({ mass: 0, position: [ this.pxmi(x), this.pxmi(height) ] });
             this.walls.bottom.addShape(new p2.Plane());
 
             if (setCollisionGroup)
             {
-                this.walls.bottom.collisionGroup = this.boundsCollisionGroup.mask;
+                this.walls.bottom.shapes[0].collisionGroup = this.boundsCollisionGroup.mask;
             }
 
             this.world.addBody(this.walls.bottom);
         }
-        */
-
-        /*
-        if (right)
-        {
-            this._wallShapes[1] = new p2.Plane();
-
-            if (setCollisionGroup)
-            {
-                this._wallShapes[1].collisionGroup = this.boundsCollisionGroup.mask;
-            }
-
-            this.bounds.addShape(this._wallShapes[1], [this.pxmi(hw), 0], -1.5707963267948966);
-        }
-
-        if (top)
-        {
-            this._wallShapes[2] = new p2.Plane();
-
-            if (setCollisionGroup)
-            {
-                this._wallShapes[2].collisionGroup = this.boundsCollisionGroup.mask;
-            }
-
-            this.bounds.addShape(this._wallShapes[2], [0, this.pxmi(-hh)], -3.141592653589793);
-        }
-
-        if (bottom)
-        {
-            this._wallShapes[3] = new p2.Plane();
-
-            if (setCollisionGroup)
-            {
-                this._wallShapes[3].collisionGroup = this.boundsCollisionGroup.mask;
-            }
-
-            this.bounds.addShape(this._wallShapes[3], [0, this.pxmi(hh)]);
-        }
-
-        this.world.addBody(this.bounds);
-        */
 
     },
 
@@ -12372,24 +12301,24 @@ Phaser.Physics.P2.prototype = {
 
         var bitmask = Math.pow(2, this._collisionGroupID);
 
-        if (this._wallShapes[0])
+        if (this.walls.left)
         {
-            this._wallShapes[0].collisionMask = this._wallShapes[0].collisionMask | bitmask;
+            this.walls.left.shapes[0].collisionMask = this.walls.left.shapes[0].collisionMask | bitmask;
         }
 
-        if (this._wallShapes[1])
+        if (this.walls.right)
         {
-            this._wallShapes[1].collisionMask = this._wallShapes[1].collisionMask | bitmask;
+            this.walls.right.shapes[0].collisionMask = this.walls.right.shapes[0].collisionMask | bitmask;
         }
 
-        if (this._wallShapes[2])
+        if (this.walls.top)
         {
-            this._wallShapes[2].collisionMask = this._wallShapes[2].collisionMask | bitmask;
+            this.walls.top.shapes[0].collisionMask = this.walls.top.shapes[0].collisionMask | bitmask;
         }
 
-        if (this._wallShapes[3])
+        if (this.walls.bottom)
         {
-            this._wallShapes[3].collisionMask = this._wallShapes[3].collisionMask | bitmask;
+            this.walls.bottom.shapes[0].collisionMask = this.walls.bottom.shapes[0].collisionMask | bitmask;
         }
 
         this._collisionGroupID++;
@@ -12774,33 +12703,93 @@ Object.defineProperty(Phaser.Physics.P2.prototype, "friction", {
 
     get: function () {
 
-        return this.world.defaultFriction;
+        return this.world.defaultContactMaterial.friction;
 
     },
 
     set: function (value) {
 
-        this.world.defaultFriction = value;
+        this.world.defaultContactMaterial.friction = value;
 
     }
 
 });
 
 /**
-* @name Phaser.Physics.P2#restituion
-* @property {number} restitution - Default coefficient of restitution between colliding bodies. This value is used if no matching ContactMaterial is found for a Material pair.
+* @name Phaser.Physics.P2#defaultFriction
+* @property {number} defaultFriction - DEPRECATED: Use World.friction instead.
 */
-Object.defineProperty(Phaser.Physics.P2.prototype, "restituion", {
+Object.defineProperty(Phaser.Physics.P2.prototype, "defaultFriction", {
 
     get: function () {
 
-        return this.world.defaultRestitution;
+        return this.world.defaultContactMaterial.friction;
 
     },
 
     set: function (value) {
 
-        this.world.defaultRestitution = value;
+        this.world.defaultContactMaterial.friction = value;
+
+    }
+
+});
+
+/**
+* @name Phaser.Physics.P2#restitution
+* @property {number} restitution - Default coefficient of restitution between colliding bodies. This value is used if no matching ContactMaterial is found for a Material pair.
+*/
+Object.defineProperty(Phaser.Physics.P2.prototype, "restitution", {
+
+    get: function () {
+
+        return this.world.defaultContactMaterial.restitution;
+
+    },
+
+    set: function (value) {
+
+        this.world.defaultContactMaterial.restitution = value;
+
+    }
+
+});
+
+/**
+* @name Phaser.Physics.P2#defaultRestitution
+* @property {number} defaultRestitution - DEPRECATED: Use World.restitution instead.
+*/
+Object.defineProperty(Phaser.Physics.P2.prototype, "defaultRestitution", {
+
+    get: function () {
+
+        return this.world.defaultContactMaterial.restitution;
+
+    },
+
+    set: function (value) {
+
+        this.world.defaultContactMaterial.restitution = value;
+
+    }
+
+});
+
+/**
+* @name Phaser.Physics.P2#contactMaterial
+* @property {p2.ContactMaterial} contactMaterial - The default Contact Material being used by the World.
+*/
+Object.defineProperty(Phaser.Physics.P2.prototype, "contactMaterial", {
+
+    get: function () {
+
+        return this.world.defaultContactMaterial;
+
+    },
+
+    set: function (value) {
+
+        this.world.defaultContactMaterial = value;
 
     }
 
@@ -12956,6 +12945,239 @@ Object.defineProperty(Phaser.Physics.P2.prototype, "total", {
 
 });
 
+/* jshint noarg: false */
+
+/**
+* @author       Georgios Kaleadis https://github.com/georgiee
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2014 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+*/
+
+/**
+* Allow to access a list of created fixture (coming from Body#addPhaserPolygon)
+* which itself parse the input from PhysicsEditor with the custom phaser exporter.
+* You can access fixtures of a Body by a group index or even by providing a fixture Key.
+
+* You can set the fixture key and also the group index for a fixture in PhysicsEditor.
+* This gives you the power to create a complex body built of many fixtures and modify them
+* during runtime (to remove parts, set masks, categories & sensor properties)
+*
+* @class Phaser.Physics.P2.FixtureList
+* @classdesc Collection for generated P2 fixtures 
+* @constructor
+* @param {Array} list - A list of fixtures (from Phaser.Physics.P2.Body#addPhaserPolygon)
+*/
+Phaser.Physics.P2.FixtureList = function (list) {
+
+    if (!Array.isArray(list))
+    {
+        list = [list];
+    }
+
+    this.rawList = list;
+    this.init();
+    this.parse(this.rawList);
+
+};
+
+Phaser.Physics.P2.FixtureList.prototype = {
+  
+    /**
+    * @method Phaser.Physics.P2.FixtureList#init
+    */
+    init: function () {
+
+        /**
+        * @property {object} namedFixtures - Collect all fixtures with a key
+        * @private
+        */
+        this.namedFixtures = {};
+
+        /**
+        * @property {Array} groupedFixtures - Collect all given fixtures per group index. Notice: Every fixture with a key also belongs to a group
+        * @private
+        */
+        this.groupedFixtures = [];
+
+        /**
+        * @property {Array} allFixtures - This is a list of everything in this collection
+        * @private
+        */
+        this.allFixtures = [];
+
+    },
+
+    /**
+    * @method Phaser.Physics.P2.FixtureList#setCategory
+    * @param {number} bit - The bit to set as the collision group.
+    * @param {string} fixtureKey - Only apply to the fixture with the given key.
+    */
+    setCategory: function (bit, fixtureKey) {
+
+        var setter = function(fixture) {
+            fixture.collisionGroup = bit;
+        };
+
+        this.getFixtures(fixtureKey).forEach(setter);
+
+    },
+  
+    /**
+    * @method Phaser.Physics.P2.FixtureList#setMask
+    * @param {number} bit - The bit to set as the collision mask
+    * @param {string} fixtureKey - Only apply to the fixture with the given key
+    */
+    setMask: function (bit, fixtureKey) {
+
+        var setter = function(fixture) {
+            fixture.collisionMask = bit;
+        };
+
+        this.getFixtures(fixtureKey).forEach(setter);
+
+    },
+  
+    /**
+    * @method Phaser.Physics.P2.FixtureList#setSensor
+    * @param {boolean} value - sensor true or false
+    * @param {string} fixtureKey - Only apply to the fixture with the given key
+    */
+    setSensor: function (value, fixtureKey) {
+
+        var setter = function(fixture) {
+            fixture.sensor = value;
+        };
+
+        this.getFixtures(fixtureKey).forEach(setter);
+
+    },
+
+    /**
+    * @method Phaser.Physics.P2.FixtureList#setMaterial
+    * @param {Object} material - The contact material for a fixture
+    * @param {string} fixtureKey - Only apply to the fixture with the given key
+    */
+    setMaterial: function (material, fixtureKey) {
+
+        var setter = function(fixture) {
+            fixture.material = material;
+        };
+
+        this.getFixtures(fixtureKey).forEach(setter);
+
+    },
+
+    /**
+    * Accessor to get either a list of specified fixtures by key or the whole fixture list
+    * 
+    * @method Phaser.Physics.P2.FixtureList#getFixtures
+    * @param {array} keys - A list of fixture keys
+    */
+    getFixtures: function (keys) {
+
+        var fixtures = [];
+
+        if (keys)
+        {
+            if (!(keys instanceof Array))
+            {
+                keys = [keys];
+            }
+
+            var self = this;
+            keys.forEach(function(key) {
+                if (self.namedFixtures[key])
+                {
+                    fixtures.push(self.namedFixtures[key]);
+                }
+            });
+
+            return this.flatten(fixtures);
+
+        }
+        else
+        {
+            return this.allFixtures;
+        }
+
+    },
+
+    /**
+    * Accessor to get either a single fixture by its key.
+    * 
+    * @method Phaser.Physics.P2.FixtureList#getFixtureByKey
+    * @param {string} key - The key of the fixture.
+    */
+    getFixtureByKey: function (key) {
+
+        return this.namedFixtures[key];
+
+    },
+
+    /**
+    * Accessor to get a group of fixtures by its group index.
+    * 
+    * @method Phaser.Physics.P2.FixtureList#getGroup
+    * @param {number} groupID - The group index.
+    */
+    getGroup: function (groupID) {
+
+        return this.groupedFixtures[groupID];
+
+    },
+  
+    /**
+    * Parser for the output of Phaser.Physics.P2.Body#addPhaserPolygon
+    * 
+    * @method Phaser.Physics.P2.FixtureList#parse
+    */
+    parse: function () {
+
+        var key, value, _ref, _results;
+        _ref = this.rawList;
+        _results = [];
+
+        for (key in _ref)
+        {
+            value = _ref[key];
+
+            if (!isNaN(key - 0))
+            {
+                this.groupedFixtures[key] = this.groupedFixtures[key] || [];
+                this.groupedFixtures[key] = this.groupedFixtures[key].concat(value);
+            }
+            else
+            {
+                this.namedFixtures[key] = this.flatten(value);
+            }
+
+            _results.push(this.allFixtures = this.flatten(this.groupedFixtures));
+        }
+
+    },
+
+    /**
+    * A helper to flatten arrays. This is very useful as the fixtures are nested from time to time due to the way P2 creates and splits polygons.
+    * 
+    * @method Phaser.Physics.P2.FixtureList#flatten
+    * @param {array} array - The array to flatten. Notice: This will happen recursive not shallow.
+    */
+    flatten: function (array) {
+
+        var result, self;
+        result = [];
+        self = arguments.callee;
+        
+        array.forEach(function(item) {
+            return Array.prototype.push.apply(result, (Array.isArray(item) ? self(item) : [item]));
+        });
+
+        return result;
+
+    }
+
+};
 /**
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2014 Photon Storm Ltd.
@@ -13143,6 +13365,7 @@ Phaser.Physics.P2.Body = function (game, sprite, x, y, mass) {
     * @protected
     */
     this.data = new p2.Body({ position: [ this.world.pxmi(x), this.world.pxmi(y) ], mass: mass });
+
     this.data.parent = this;
 
     /**
@@ -13161,12 +13384,6 @@ Phaser.Physics.P2.Body = function (game, sprite, x, y, mass) {
     this.gravity = new Phaser.Point();
 
     /**
-    * Dispatched when the shape/s of this Body impact with another. The event will be sent 2 parameters, this Body and the impact Body.
-    * @property {Phaser.Signal} onImpact
-    */
-    this.onImpact = new Phaser.Signal();
-
-    /**
     * Dispatched when a first contact is created between shapes in two bodies. This event is fired during the step, so collision has already taken place.
     * The event will be sent 4 parameters: The body it is in contact with, the shape from this body that caused the contact, the shape from the contact body and the contact equation data array.
     * @property {Phaser.Signal} onBeginContact
@@ -13182,7 +13399,6 @@ Phaser.Physics.P2.Body = function (game, sprite, x, y, mass) {
 
     /**
     * @property {array} collidesWith - Array of CollisionGroups that this Bodies shapes collide with.
-    * @private
     */
     this.collidesWith = [];
 
@@ -13191,6 +13407,15 @@ Phaser.Physics.P2.Body = function (game, sprite, x, y, mass) {
     */
     this.removeNextStep = false;
 
+    /**
+    * @property {Phaser.Physics.P2.BodyDebug} debugBody - Reference to the debug body.
+    */
+    this.debugBody = null;
+
+    /**
+    * @property {boolean} _collideWorldBounds - Internal var that determines if this Body collides with the world bounds or not.
+    * @private
+    */
     this._collideWorldBounds = true;
 
     /**
@@ -13216,11 +13441,6 @@ Phaser.Physics.P2.Body = function (game, sprite, x, y, mass) {
     * @private
     */
     this._groupCallbackContext = {};
-
-    /**
-    * @property {Phaser.Physics.P2.BodyDebug} debugBody - Reference to the debug body.
-    */
-    this.debugBody = null;
 
     //  Set-up the default shape
     if (sprite)
@@ -13878,11 +14098,11 @@ Phaser.Physics.P2.Body.prototype = {
     * Will automatically update the mass properties and bounding radius.
     *
     * @method Phaser.Physics.P2.Body#addShape
-    * @param {*} shape - The shape to add to the body.
+    * @param {p2.Shape} shape - The shape to add to the body.
     * @param {number} [offsetX=0] - Local horizontal offset of the shape relative to the body center of mass.
     * @param {number} [offsetY=0] - Local vertical offset of the shape relative to the body center of mass.
     * @param {number} [rotation=0] - Local rotation of the shape relative to the body center of mass, specified in radians.
-    * @return {p2.Circle|p2.Rectangle|p2.Plane|p2.Line|p2.Particle} The shape that was added to the body.
+    * @return {p2.Shape} The shape that was added to the body.
     */
     addShape: function (shape, offsetX, offsetY, rotation) {
 
@@ -14148,7 +14368,7 @@ Phaser.Physics.P2.Body.prototype = {
     * If you only wish to apply it to a specific Shape in this Body then provide that as the 2nd parameter.
     *
     * @method Phaser.Physics.P2.Body#setMaterial
-    * @param {Phaser.Physics.Material} material - The Material that will be applied.
+    * @param {Phaser.Physics.P2.Material} material - The Material that will be applied.
     * @param {p2.Shape} [shape] - An optional Shape. If not provided the Material will be added to all Shapes in this Body.
     */
     setMaterial: function (material, shape) {
@@ -14185,7 +14405,7 @@ Phaser.Physics.P2.Body.prototype = {
     * Reads the shape data from a physics data file stored in the Game.Cache and adds it as a polygon to this Body.
     * The shape data format is based on the custom phaser export in.
     *
-    * @method Phaser.Physics.P2.Body#loadPhaserPolygon
+    * @method Phaser.Physics.P2.Body#addPhaserPolygon
     * @param {string} key - The key of the Physics Data file as stored in Game.Cache.
     * @param {string} object - The key of the object within the Physics data file that you wish to load the shape data from.
     */
@@ -14199,8 +14419,16 @@ Phaser.Physics.P2.Body.prototype = {
         {
             var fixtureData = data[i];
             var shapesOfFixture = this.addFixture(fixtureData);
+            
+            //  Always add to a group
             createdFixtures[fixtureData.filter.group] = createdFixtures[fixtureData.filter.group] || [];
-            createdFixtures[fixtureData.filter.group].push(shapesOfFixture);
+            createdFixtures[fixtureData.filter.group] = createdFixtures[fixtureData.filter.group].concat(shapesOfFixture);
+
+            //  if (unique) fixture key is provided
+            if (fixtureData.fixtureKey)
+            {
+                createdFixtures[fixtureData.fixtureKey] = shapesOfFixture;
+            }
         }
 
         this.data.aabbNeedsUpdate = true;
@@ -14213,8 +14441,9 @@ Phaser.Physics.P2.Body.prototype = {
     /**
     * Add a polygon fixture. This is used during #loadPhaserPolygon.
     *
-    * @method Phaser.Physics.P2.Body#addPolygonFixture
+    * @method Phaser.Physics.P2.Body#addFixture
     * @param {string} fixtureData - The data for the fixture. It contains: isSensor, filter (collision) and the actual polygon shapes.
+    * @return {array} An array containing the generated shapes for the given polygon.
     */
     addFixture: function (fixtureData) {
 

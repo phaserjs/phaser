@@ -307,6 +307,10 @@
 						</li>
 						
 						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.FixtureList.html">FixtureList</a>
+						</li>
+						
+						<li class="class-depth-3">
 							<a href="Phaser.Physics.P2.GearConstraint.html">GearConstraint</a>
 						</li>
 						
@@ -388,6 +392,10 @@
 						
 						<li class="class-depth-1">
 							<a href="Phaser.Signal.html">Signal</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.SignalBinding.html">SignalBinding</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -484,10 +492,6 @@
 						
 						<li class="class-depth-1">
 							<a href="Phaser.World.html">World</a>
-						</li>
-						
-						<li class="class-depth-0">
-							<a href="SignalBinding.html">SignalBinding</a>
 						</li>
 						
 
@@ -741,7 +745,7 @@ Phaser.Pointer.prototype = {
         // x and y are the old values here?
         this.positionDown.setTo(this.x, this.y);
 
-        if (this.game.input.multiInputOverride === Phaser.Input.MOUSE_OVERRIDES_TOUCH || this.game.input.multiInputOverride === Phaser.Input.MOUSE_TOUCH_COMBINE || (this.game.input.multiInputOverride === Phaser.Input.TOUCH_OVERRIDES_MOUSE &amp;&amp; this.game.input.currentPointers === 0))
+        if (this.game.input.multiInputOverride === Phaser.Input.MOUSE_OVERRIDES_TOUCH || this.game.input.multiInputOverride === Phaser.Input.MOUSE_TOUCH_COMBINE || (this.game.input.multiInputOverride === Phaser.Input.TOUCH_OVERRIDES_MOUSE && this.game.input.currentPointers === 0))
         {
             this.game.input.x = this.x;
             this.game.input.y = this.y;
@@ -775,9 +779,9 @@ Phaser.Pointer.prototype = {
 
         if (this.active)
         {
-            if (this._holdSent === false &amp;&amp; this.duration >= this.game.input.holdRate)
+            if (this._holdSent === false && this.duration >= this.game.input.holdRate)
             {
-                if (this.game.input.multiInputOverride == Phaser.Input.MOUSE_OVERRIDES_TOUCH || this.game.input.multiInputOverride == Phaser.Input.MOUSE_TOUCH_COMBINE || (this.game.input.multiInputOverride == Phaser.Input.TOUCH_OVERRIDES_MOUSE &amp;&amp; this.game.input.currentPointers === 0))
+                if (this.game.input.multiInputOverride == Phaser.Input.MOUSE_OVERRIDES_TOUCH || this.game.input.multiInputOverride == Phaser.Input.MOUSE_TOUCH_COMBINE || (this.game.input.multiInputOverride == Phaser.Input.TOUCH_OVERRIDES_MOUSE && this.game.input.currentPointers === 0))
                 {
                     this.game.input.onHold.dispatch(this);
                 }
@@ -786,7 +790,7 @@ Phaser.Pointer.prototype = {
             }
 
             //  Update the droppings history
-            if (this.game.input.recordPointerHistory &amp;&amp; this.game.time.now >= this._nextDrop)
+            if (this.game.input.recordPointerHistory && this.game.time.now >= this._nextDrop)
             {
                 this._nextDrop = this.game.time.now + this.game.input.recordRate;
 
@@ -840,7 +844,7 @@ Phaser.Pointer.prototype = {
         this.circle.x = this.x;
         this.circle.y = this.y;
 
-        if (this.game.input.multiInputOverride == Phaser.Input.MOUSE_OVERRIDES_TOUCH || this.game.input.multiInputOverride == Phaser.Input.MOUSE_TOUCH_COMBINE || (this.game.input.multiInputOverride == Phaser.Input.TOUCH_OVERRIDES_MOUSE &amp;&amp; this.game.input.currentPointers === 0))
+        if (this.game.input.multiInputOverride == Phaser.Input.MOUSE_OVERRIDES_TOUCH || this.game.input.multiInputOverride == Phaser.Input.MOUSE_TOUCH_COMBINE || (this.game.input.multiInputOverride == Phaser.Input.TOUCH_OVERRIDES_MOUSE && this.game.input.currentPointers === 0))
         {
             this.game.input.activePointer = this;
             this.game.input.x = this.x;
@@ -862,7 +866,7 @@ Phaser.Pointer.prototype = {
         }
 
         //  Easy out if we're dragging something and it still exists
-        if (this.targetObject !== null &amp;&amp; this.targetObject.isDragged === true)
+        if (this.targetObject !== null && this.targetObject.isDragged === true)
         {
             if (this.targetObject.update(this) === false)
             {
@@ -887,7 +891,7 @@ Phaser.Pointer.prototype = {
                 //  If the object is using pixelPerfect checks, or has a higher InputManager.PriorityID OR if the priority ID is the same as the current highest AND it has a higher renderOrderID, then set it to the top
                 if (currentNode.validForInput(this._highestInputPriorityID, this._highestRenderOrderID))
                 {
-                    if ((!fromClick &amp;&amp; currentNode.checkPointerOver(this)) || (fromClick &amp;&amp; currentNode.checkPointerDown(this)))
+                    if ((!fromClick && currentNode.checkPointerOver(this)) || (fromClick && currentNode.checkPointerDown(this)))
                     {
                         this._highestRenderOrderID = currentNode.sprite._cache[3]; // renderOrderID
                         this._highestInputPriorityID = currentNode.priorityID;
@@ -975,12 +979,12 @@ Phaser.Pointer.prototype = {
 
         this.timeUp = this.game.time.now;
 
-        if (this.game.input.multiInputOverride == Phaser.Input.MOUSE_OVERRIDES_TOUCH || this.game.input.multiInputOverride == Phaser.Input.MOUSE_TOUCH_COMBINE || (this.game.input.multiInputOverride == Phaser.Input.TOUCH_OVERRIDES_MOUSE &amp;&amp; this.game.input.currentPointers === 0))
+        if (this.game.input.multiInputOverride == Phaser.Input.MOUSE_OVERRIDES_TOUCH || this.game.input.multiInputOverride == Phaser.Input.MOUSE_TOUCH_COMBINE || (this.game.input.multiInputOverride == Phaser.Input.TOUCH_OVERRIDES_MOUSE && this.game.input.currentPointers === 0))
         {
             this.game.input.onUp.dispatch(this, event);
 
             //  Was it a tap?
-            if (this.duration >= 0 &amp;&amp; this.duration &lt;= this.game.input.tapRate)
+            if (this.duration >= 0 && this.duration &lt;= this.game.input.tapRate)
             {
                 //  Was it a double-tap?
                 if (this.timeUp - this.previousTapTime &lt; this.game.input.doubleTapRate)
@@ -1053,7 +1057,7 @@ Phaser.Pointer.prototype = {
 
         duration = duration || this.game.input.justPressedRate;
 
-        return (this.isDown === true &amp;&amp; (this.timeDown + duration) > this.game.time.now);
+        return (this.isDown === true && (this.timeDown + duration) > this.game.time.now);
 
     },
 
@@ -1069,7 +1073,7 @@ Phaser.Pointer.prototype = {
 
         duration = duration || this.game.input.justReleasedRate;
 
-        return (this.isUp === true &amp;&amp; (this.timeUp + duration) > this.game.time.now);
+        return (this.isUp === true && (this.timeUp + duration) > this.game.time.now);
 
     },
 
@@ -1177,8 +1181,8 @@ Object.defineProperty(Phaser.Pointer.prototype, "worldY", {
 					<br />
 					
 		<span class="jsdoc-message">
-		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha4</a>
-		on Fri Apr 11 2014 00:12:14 GMT+0200 (CEST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
+		on Fri Apr 11 2014 13:08:21 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

@@ -307,6 +307,10 @@
 						</li>
 						
 						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.FixtureList.html">FixtureList</a>
+						</li>
+						
+						<li class="class-depth-3">
 							<a href="Phaser.Physics.P2.GearConstraint.html">GearConstraint</a>
 						</li>
 						
@@ -388,6 +392,10 @@
 						
 						<li class="class-depth-1">
 							<a href="Phaser.Signal.html">Signal</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.SignalBinding.html">SignalBinding</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -484,10 +492,6 @@
 						
 						<li class="class-depth-1">
 							<a href="Phaser.World.html">World</a>
-						</li>
-						
-						<li class="class-depth-0">
-							<a href="SignalBinding.html">SignalBinding</a>
 						</li>
 						
 
@@ -923,13 +927,13 @@ Phaser.Device.prototype = {
             }
         }
 
-        if (this.windows || this.macOS || (this.linux &amp;&amp; this.silk === false))
+        if (this.windows || this.macOS || (this.linux && this.silk === false))
         {
             this.desktop = true;
         }
 
         //  Windows Phone / Table reset
-        if (this.windowsPhone || ((/Windows NT/i.test(ua)) &amp;&amp; (/Touch/i.test(ua))))
+        if (this.windowsPhone || ((/Windows NT/i.test(ua)) && (/Touch/i.test(ua))))
         {
             this.desktop = false;
         }
@@ -951,9 +955,9 @@ Phaser.Device.prototype = {
             this.localStorage = false;
         }
 
-        this.file = !!window['File'] &amp;&amp; !!window['FileReader'] &amp;&amp; !!window['FileList'] &amp;&amp; !!window['Blob'];
+        this.file = !!window['File'] && !!window['FileReader'] && !!window['FileList'] && !!window['Blob'];
         this.fileSystem = !!window['requestFileSystem'];
-        this.webGL = ( function () { try { var canvas = document.createElement( 'canvas' ); return !! window.WebGLRenderingContext &amp;&amp; ( canvas.getContext( 'webgl' ) || canvas.getContext( 'experimental-webgl' ) ); } catch( e ) { return false; } } )();
+        this.webGL = ( function () { try { var canvas = document.createElement( 'canvas' ); return !! window.WebGLRenderingContext && ( canvas.getContext( 'webgl' ) || canvas.getContext( 'experimental-webgl' ) ); } catch( e ) { return false; } } )();
 
         if (this.webGL === null || this.webGL === false)
         {
@@ -966,7 +970,7 @@ Phaser.Device.prototype = {
 
         this.worker = !!window['Worker'];
 
-        if ('ontouchstart' in document.documentElement || (window.navigator.maxTouchPoints &amp;&amp; window.navigator.maxTouchPoints > 1))
+        if ('ontouchstart' in document.documentElement || (window.navigator.maxTouchPoints && window.navigator.maxTouchPoints > 1))
         {
             this.touch = true;
         }
@@ -1034,7 +1038,7 @@ Phaser.Device.prototype = {
         }
 
         //  Keyboard Input?
-        if (window['Element'] &amp;&amp; Element['ALLOW_KEYBOARD_INPUT'])
+        if (window['Element'] && Element['ALLOW_KEYBOARD_INPUT'])
         {
             this.fullscreenKeyboard = true;
         }
@@ -1173,7 +1177,7 @@ Phaser.Device.prototype = {
 
         this.pixelRatio = window['devicePixelRatio'] || 1;
         this.iPhone = navigator.userAgent.toLowerCase().indexOf('iphone') != -1;
-        this.iPhone4 = (this.pixelRatio == 2 &amp;&amp; this.iPhone);
+        this.iPhone4 = (this.pixelRatio == 2 && this.iPhone);
         this.iPad = navigator.userAgent.toLowerCase().indexOf('ipad') != -1;
 
         if (typeof Int8Array !== 'undefined')
@@ -1226,7 +1230,7 @@ Phaser.Device.prototype = {
         }
 
         document.body.removeChild(el);
-        this.css3D = (has3d !== undefined &amp;&amp; has3d.length > 0 &amp;&amp; has3d !== "none");
+        this.css3D = (has3d !== undefined && has3d.length > 0 && has3d !== "none");
 
     },
 
@@ -1238,23 +1242,23 @@ Phaser.Device.prototype = {
     */
     canPlayAudio: function (type) {
 
-        if (type == 'mp3' &amp;&amp; this.mp3)
+        if (type == 'mp3' && this.mp3)
         {
             return true;
         }
-        else if (type == 'ogg' &amp;&amp; (this.ogg || this.opus))
+        else if (type == 'ogg' && (this.ogg || this.opus))
         {
             return true;
         }
-        else if (type == 'm4a' &amp;&amp; this.m4a)
+        else if (type == 'm4a' && this.m4a)
         {
             return true;
         }
-        else if (type == 'wav' &amp;&amp; this.wav)
+        else if (type == 'wav' && this.wav)
         {
             return true;
         }
-        else if (type == 'webm' &amp;&amp; this.webm)
+        else if (type == 'webm' && this.webm)
         {
             return true;
         }
@@ -1266,14 +1270,14 @@ Phaser.Device.prototype = {
     /**
     * Check whether the console is open.
     * Note that this only works in Firefox with Firebug and earlier versions of Chrome.
-    * It used to work in Chrome, but then they removed the ability: http://src.chromium.org/viewvc/blink?view=revision&amp;revision=151136
+    * It used to work in Chrome, but then they removed the ability: http://src.chromium.org/viewvc/blink?view=revision&revision=151136
     * 
     * @method Phaser.Device#isConsoleOpen
     * @return {boolean} True if the browser dev console is open.
     */
     isConsoleOpen: function () {
 
-        if (window.console &amp;&amp; window.console['firebug'])
+        if (window.console && window.console['firebug'])
         {
             return true;
         }
@@ -1321,8 +1325,8 @@ Phaser.Device.prototype.constructor = Phaser.Device;
 					<br />
 					
 		<span class="jsdoc-message">
-		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha4</a>
-		on Fri Apr 11 2014 00:12:13 GMT+0200 (CEST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
+		on Fri Apr 11 2014 13:08:20 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

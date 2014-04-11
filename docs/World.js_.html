@@ -307,6 +307,10 @@
 						</li>
 						
 						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.FixtureList.html">FixtureList</a>
+						</li>
+						
+						<li class="class-depth-3">
 							<a href="Phaser.Physics.P2.GearConstraint.html">GearConstraint</a>
 						</li>
 						
@@ -388,6 +392,10 @@
 						
 						<li class="class-depth-1">
 							<a href="Phaser.Signal.html">Signal</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.SignalBinding.html">SignalBinding</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -484,10 +492,6 @@
 						
 						<li class="class-depth-1">
 							<a href="Phaser.World.html">World</a>
-						</li>
-						
-						<li class="class-depth-0">
-							<a href="SignalBinding.html">SignalBinding</a>
 						</li>
 						
 
@@ -720,7 +724,7 @@ Phaser.Physics.Arcade.prototype = {
                 {
                     this.enableBody(object[i]);
 
-                    if (children &amp;&amp; object[i].hasOwnProperty('children') &amp;&amp; object[i].children.length > 0)
+                    if (children && object[i].hasOwnProperty('children') && object[i].children.length > 0)
                     {
                         this.enable(object[i], true);
                     }
@@ -738,7 +742,7 @@ Phaser.Physics.Arcade.prototype = {
             {
                 this.enableBody(object);
 
-                if (children &amp;&amp; object.hasOwnProperty('children') &amp;&amp; object.children.length > 0)
+                if (children && object.hasOwnProperty('children') && object.children.length > 0)
                 {
                     this.enable(object.children, true);
                 }
@@ -756,7 +760,7 @@ Phaser.Physics.Arcade.prototype = {
     */
     enableBody: function (object) {
 
-        if (object.hasOwnProperty('body') &amp;&amp; object.body === null)
+        if (object.hasOwnProperty('body') && object.body === null)
         {
             object.body = new Phaser.Physics.Arcade.Body(object);
         }
@@ -797,11 +801,11 @@ Phaser.Physics.Arcade.prototype = {
 
         max = max || 10000;
 
-        if (axis == 1 &amp;&amp; body.allowGravity)
+        if (axis == 1 && body.allowGravity)
         {
             velocity += (this.gravity.x + body.gravity.x) * this.game.time.physicsElapsed;
         }
-        else if (axis == 2 &amp;&amp; body.allowGravity)
+        else if (axis == 2 && body.allowGravity)
         {
             velocity += (this.gravity.y + body.gravity.y) * this.game.time.physicsElapsed;
         }
@@ -936,13 +940,13 @@ Phaser.Physics.Arcade.prototype = {
     collideHandler: function (object1, object2, collideCallback, processCallback, callbackContext, overlapOnly) {
 
         //  Only collide valid objects
-        if (typeof object2 === 'undefined' &amp;&amp; (object1.type === Phaser.GROUP || object1.type === Phaser.EMITTER))
+        if (typeof object2 === 'undefined' && (object1.type === Phaser.GROUP || object1.type === Phaser.EMITTER))
         {
             this.collideGroupVsSelf(object1, collideCallback, processCallback, callbackContext, overlapOnly);
             return;
         }
 
-        if (object1 &amp;&amp; object2 &amp;&amp; object1.exists &amp;&amp; object2.exists)
+        if (object1 && object2 && object1.exists && object2.exists)
         {
             //  SPRITES
             if (object1.type == Phaser.SPRITE || object1.type == Phaser.TILESPRITE)
@@ -1111,7 +1115,7 @@ Phaser.Physics.Arcade.prototype = {
         {
             for (var j = i + 1; j &lt;= len; j++)
             {
-                if (group.children[i] &amp;&amp; group.children[j] &amp;&amp; group.children[i].exists &amp;&amp; group.children[j].exists)
+                if (group.children[i] && group.children[j] && group.children[i].exists && group.children[j].exists)
                 {
                     this.collideSpriteVsSprite(group.children[i], group.children[j], collideCallback, processCallback, callbackContext, overlapOnly);
                 }
@@ -1255,7 +1259,7 @@ Phaser.Physics.Arcade.prototype = {
         }
 
         //  They overlap. Is there a custom process callback? If it returns true then we can carry on, otherwise we should abort.
-        if (processCallback &amp;&amp; processCallback.call(callbackContext, body1.sprite, body2.sprite) === false)
+        if (processCallback && processCallback.call(callbackContext, body1.sprite, body2.sprite) === false)
         {
             return false;
         }
@@ -1328,7 +1332,7 @@ Phaser.Physics.Arcade.prototype = {
     separateX: function (body1, body2, overlapOnly) {
 
         //  Can't separate two immovable bodies
-        if (body1.immovable &amp;&amp; body2.immovable)
+        if (body1.immovable && body2.immovable)
         {
             return false;
         }
@@ -1340,7 +1344,7 @@ Phaser.Physics.Arcade.prototype = {
         {
             this._maxOverlap = body1.deltaAbsX() + body2.deltaAbsX() + this.OVERLAP_BIAS;
 
-            if (body1.deltaX() === 0 &amp;&amp; body2.deltaX() === 0)
+            if (body1.deltaX() === 0 && body2.deltaX() === 0)
             {
                 //  They overlap but neither of them are moving
                 body1.embedded = true;
@@ -1395,7 +1399,7 @@ Phaser.Physics.Arcade.prototype = {
                 this._velocity1 = body1.velocity.x;
                 this._velocity2 = body2.velocity.x;
 
-                if (!body1.immovable &amp;&amp; !body2.immovable)
+                if (!body1.immovable && !body2.immovable)
                 {
                     this._overlap *= 0.5;
 
@@ -1443,7 +1447,7 @@ Phaser.Physics.Arcade.prototype = {
     separateY: function (body1, body2, overlapOnly) {
 
         //  Can't separate two immovable or non-existing bodys
-        if (body1.immovable &amp;&amp; body2.immovable)
+        if (body1.immovable && body2.immovable)
         {
             return false;
         }
@@ -1455,7 +1459,7 @@ Phaser.Physics.Arcade.prototype = {
         {
             this._maxOverlap = body1.deltaAbsY() + body2.deltaAbsY() + this.OVERLAP_BIAS;
 
-            if (body1.deltaY() === 0 &amp;&amp; body2.deltaY() === 0)
+            if (body1.deltaY() === 0 && body2.deltaY() === 0)
             {
                 //  They overlap but neither of them are moving
                 body1.embedded = true;
@@ -1510,7 +1514,7 @@ Phaser.Physics.Arcade.prototype = {
                 this._velocity1 = body1.velocity.y;
                 this._velocity2 = body2.velocity.y;
 
-                if (!body1.immovable &amp;&amp; !body2.immovable)
+                if (!body1.immovable && !body2.immovable)
                 {
                     this._overlap *= 0.5;
 
@@ -1579,19 +1583,19 @@ Phaser.Physics.Arcade.prototype = {
         //  They overlap. Any custom callbacks?
 
         //  A local callback always takes priority over a layer level callback
-        if (tile.collisionCallback &amp;&amp; !tile.collisionCallback.call(tile.collisionCallbackContext, body.sprite, tile))
+        if (tile.collisionCallback && !tile.collisionCallback.call(tile.collisionCallbackContext, body.sprite, tile))
         {
             //  If it returns true then we can carry on, otherwise we should abort.
             return false;
         }
-        else if (tile.layer.callbacks[tile.index] &amp;&amp; !tile.layer.callbacks[tile.index].callback.call(tile.layer.callbacks[tile.index].callbackContext, body.sprite, tile))
+        else if (tile.layer.callbacks[tile.index] && !tile.layer.callbacks[tile.index].callback.call(tile.layer.callbacks[tile.index].callbackContext, body.sprite, tile))
         {
             //  If it returns true then we can carry on, otherwise we should abort.
             return false;
         }
 
         //  We don't need to go any further if this tile doesn't actually separate
-        if (!tile.faceLeft &amp;&amp; !tile.faceRight &amp;&amp; !tile.faceTop &amp;&amp; !tile.faceBottom)
+        if (!tile.faceLeft && !tile.faceRight && !tile.faceTop && !tile.faceBottom)
         {
             //   This could happen if the tile was meant to be collided with re: a callback, but otherwise isn't needed for separation
             return false;
@@ -1613,7 +1617,7 @@ Phaser.Physics.Arcade.prototype = {
             minY = -1;
         }
 
-        if (body.deltaX() !== 0 &amp;&amp; body.deltaY() !== 0 &amp;&amp; (tile.faceLeft || tile.faceRight) &amp;&amp; (tile.faceTop || tile.faceBottom))
+        if (body.deltaX() !== 0 && body.deltaY() !== 0 && (tile.faceLeft || tile.faceRight) && (tile.faceTop || tile.faceBottom))
         {
             //  We only need do this if both axis have checking faces AND we're moving in both directions
             minX = Math.min(Math.abs(body.position.x - tile.right), Math.abs(body.right - tile.left));
@@ -1629,7 +1633,7 @@ Phaser.Physics.Arcade.prototype = {
                 ox = this.tileCheckX(body, tile);
 
                 //  That's horizontal done, check if we still intersects? If not then we can return now
-                if (ox !== 0 &amp;&amp; !tile.intersects(body.position.x, body.position.y, body.right, body.bottom))
+                if (ox !== 0 && !tile.intersects(body.position.x, body.position.y, body.right, body.bottom))
                 {
                     return true;
                 }
@@ -1647,7 +1651,7 @@ Phaser.Physics.Arcade.prototype = {
                 oy = this.tileCheckY(body, tile);
 
                 //  That's vertical done, check if we still intersects? If not then we can return now
-                if (oy !== 0 &amp;&amp; !tile.intersects(body.position.x, body.position.y, body.right, body.bottom))
+                if (oy !== 0 && !tile.intersects(body.position.x, body.position.y, body.right, body.bottom))
                 {
                     return true;
                 }
@@ -1676,10 +1680,10 @@ Phaser.Physics.Arcade.prototype = {
 
         var ox = 0;
 
-        if (body.deltaX() &lt; 0 &amp;&amp; !body.blocked.left &amp;&amp; tile.collideRight &amp;&amp; body.checkCollision.left)
+        if (body.deltaX() &lt; 0 && !body.blocked.left && tile.collideRight && body.checkCollision.left)
         {
             //  Body is moving LEFT
-            if (tile.faceRight &amp;&amp; body.x &lt; tile.right)
+            if (tile.faceRight && body.x &lt; tile.right)
             {
                 ox = body.x - tile.right;
 
@@ -1689,10 +1693,10 @@ Phaser.Physics.Arcade.prototype = {
                 }
             }
         }
-        else if (body.deltaX() > 0 &amp;&amp; !body.blocked.right &amp;&amp; tile.collideLeft &amp;&amp; body.checkCollision.right)
+        else if (body.deltaX() > 0 && !body.blocked.right && tile.collideLeft && body.checkCollision.right)
         {
             //  Body is moving RIGHT
-            if (tile.faceLeft &amp;&amp; body.right > tile.left)
+            if (tile.faceLeft && body.right > tile.left)
             {
                 ox = body.right - tile.left;
 
@@ -1725,10 +1729,10 @@ Phaser.Physics.Arcade.prototype = {
 
         var oy = 0;
 
-        if (body.deltaY() &lt; 0 &amp;&amp; !body.blocked.up &amp;&amp; tile.collideDown &amp;&amp; body.checkCollision.up)
+        if (body.deltaY() &lt; 0 && !body.blocked.up && tile.collideDown && body.checkCollision.up)
         {
             //  Body is moving UP
-            if (tile.faceBottom &amp;&amp; body.y &lt; tile.bottom)
+            if (tile.faceBottom && body.y &lt; tile.bottom)
             {
                 oy = body.y - tile.bottom;
 
@@ -1738,10 +1742,10 @@ Phaser.Physics.Arcade.prototype = {
                 }
             }
         }
-        else if (body.deltaY() > 0 &amp;&amp; !body.blocked.down &amp;&amp; tile.collideUp &amp;&amp; body.checkCollision.down)
+        else if (body.deltaY() > 0 && !body.blocked.down && tile.collideUp && body.checkCollision.down)
         {
             //  Body is moving DOWN
-            if (tile.faceTop &amp;&amp; body.bottom > tile.top)
+            if (tile.faceTop && body.bottom > tile.top)
             {
                 oy = body.bottom - tile.top;
 
@@ -2211,8 +2215,8 @@ Phaser.Physics.Arcade.prototype = {
 					<br />
 					
 		<span class="jsdoc-message">
-		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha4</a>
-		on Fri Apr 11 2014 00:12:14 GMT+0200 (CEST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
+		on Fri Apr 11 2014 13:08:21 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

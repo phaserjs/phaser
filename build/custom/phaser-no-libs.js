@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.0.3 "Allorallen" - Built: Thu Apr 10 2014 04:19:06
+* v2.0.3 "Allorallen" - Built: Fri Apr 11 2014 13:08:30
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -275,13 +275,6 @@ Phaser.Utils = {
         return true;
     },
 
-
-    //  deep, target, objects to copy to the target object
-    //  This is a slightly modified version of {@link http://api.jquery.com/jQuery.extend/|jQuery.extend}
-    //  deep (boolean)
-    //  target (object to add to)
-    //  objects ... (objects to recurse and copy from)
-
     /**
     * This is a slightly modified version of http://api.jquery.com/jQuery.extend/
     * @method Phaser.Utils.extend
@@ -414,6 +407,40 @@ if (!Array.isArray)
     };
 }
 
+/**
+* A polyfill for Array.forEach
+* https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach
+*/
+if (!Array.prototype.forEach)
+{
+    Array.prototype.forEach = function(fun /*, thisArg */)
+    {
+        "use strict";
+
+        if (this === void 0 || this === null)
+        {
+            throw new TypeError();
+        }
+
+        var t = Object(this);
+        var len = t.length >>> 0;
+
+        if (typeof fun !== "function")
+        {
+            throw new TypeError();
+        }
+
+        var thisArg = arguments.length >= 2 ? arguments[1] : void 0;
+
+        for (var i = 0; i < len; i++)
+        {
+            if (i in t)
+            {
+                fun.call(thisArg, t[i], i, t);
+            }
+        }
+    };
+}
 /**
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2014 Photon Storm Ltd.
@@ -4751,17 +4778,13 @@ Phaser.Signal.prototype.constructor = Phaser.Signal;
 */
 
 /**
-* Phaser.SignalBinding
-*
-* Object that represents a binding between a Signal and a listener function.
+* @class Phaser.SignalBinding
+* @classdesc Object that represents a binding between a Signal and a listener function.
 * This is an internal constructor and shouldn't be called by regular users.
 * Inspired by Joa Ebert AS3 SignalBinding and Robert Penner's Slot classes.
 *
-* @class Phaser.SignalBinding
-* @name SignalBinding
 * @author Miller Medeiros http://millermedeiros.github.com/js-signals/
 * @constructor
-* @inner
 * @param {Phaser.Signal} signal - Reference to Signal object that listener is currently bound to.
 * @param {function} listener - Handler function bound to the signal.
 * @param {boolean} isOnce - If binding should be executed just once.
@@ -4784,7 +4807,6 @@ Phaser.SignalBinding = function (signal, listener, isOnce, listenerContext, prio
 
     /**
     * @property {object|undefined|null} context - Context on which listener will be executed (object that should represent the `this` variable inside listener function).
-    * @memberof SignalBinding.prototype
     */
     this.context = listenerContext;
 
@@ -7288,13 +7310,16 @@ Phaser.Group.prototype.getRandom = function (startIndex, length) {
 *
 * @method Phaser.Group#remove
 * @param {Any} child - The child to remove.
+* @param {boolean} [destroy=false] - You can optionally call destroy on the child that was removed.
 * @return {boolean} true if the child was removed from this Group, otherwise false.
 */
-Phaser.Group.prototype.remove = function (child) {
+Phaser.Group.prototype.remove = function (child, destroy) {
+
+    if (typeof destroy === 'undefined') { destroy = false; }
 
     if (this.children.length === 0)
     {
-        return;
+        return false;
     }
 
     if (child.events)
@@ -7311,6 +7336,11 @@ Phaser.Group.prototype.remove = function (child) {
         this.next();
     }
 
+    if (destroy)
+    {
+        child.destroy();
+    }
+
     return true;
 
 };
@@ -7320,8 +7350,11 @@ Phaser.Group.prototype.remove = function (child) {
 * The Group container remains on the display list.
 *
 * @method Phaser.Group#removeAll
+* @param {boolean} [destroy=false] - You can optionally call destroy on the child that was removed.
 */
-Phaser.Group.prototype.removeAll = function () {
+Phaser.Group.prototype.removeAll = function (destroy) {
+
+    if (typeof destroy === 'undefined') { destroy = false; }
 
     if (this.children.length === 0)
     {
@@ -7336,6 +7369,11 @@ Phaser.Group.prototype.removeAll = function () {
         }
 
         this.removeChild(this.children[0]);
+
+        if (destroy)
+        {
+            this.children[0].destroy();
+        }
     }
     while (this.children.length > 0);
 
@@ -7349,10 +7387,12 @@ Phaser.Group.prototype.removeAll = function () {
 * @method Phaser.Group#removeBetween
 * @param {number} startIndex - The index to start removing children from.
 * @param {number} [endIndex] - The index to stop removing children at. Must be higher than startIndex. If undefined this method will remove all children between startIndex and the end of the Group.
+* @param {boolean} [destroy=false] - You can optionally call destroy on the child that was removed.
 */
-Phaser.Group.prototype.removeBetween = function (startIndex, endIndex) {
+Phaser.Group.prototype.removeBetween = function (startIndex, endIndex, destroy) {
 
     if (typeof endIndex === 'undefined') { endIndex = this.children.length; }
+    if (typeof destroy === 'undefined') { destroy = false; }
 
     if (this.children.length === 0)
     {
@@ -7374,6 +7414,11 @@ Phaser.Group.prototype.removeBetween = function (startIndex, endIndex) {
         }
 
         this.removeChild(this.children[i]);
+
+        if (destroy)
+        {
+            this.children[i].destroy();
+        }
 
         if (this.cursor === this.children[i])
         {
@@ -14093,6 +14138,12 @@ Phaser.InputHandler = function (sprite) {
     this.consumePointerEvent = false;
 
     /**
+    * @property {boolean} _wasEnabled - Internal cache var.
+    * @private
+    */
+    this._wasEnabled = false;
+
+    /**
     * @property {Phaser.Point} _tempPoint - Internal cache var.
     * @private
     */
@@ -14165,6 +14216,7 @@ Phaser.InputHandler.prototype = {
 
             this.snapOffset = new Phaser.Point();
             this.enabled = true;
+            this._wasEnabled = true;
 
             //  Create the signals the Input component will emit
             if (this.sprite.events && this.sprite.events.onInputOver === null)
@@ -14178,7 +14230,45 @@ Phaser.InputHandler.prototype = {
             }
         }
 
+        this.sprite.events.onAddedToGroup.add(this.addedToGroup, this);
+        this.sprite.events.onRemovedFromGroup.add(this.removedFromGroup, this);
+
         return this.sprite;
+
+    },
+
+    /**
+    * Handles when the parent Sprite is added to a new Group.
+    *
+    * @method Phaser.InputHandler#addedToGroup
+    * @private
+    */
+    addedToGroup: function () {
+
+        if (this._wasEnabled && !this.enabled)
+        {
+            this.start();
+        }
+
+    },
+
+    /**
+    * Handles when the parent Sprite is removed from a Group.
+    *
+    * @method Phaser.InputHandler#removedFromGroup
+    * @private
+    */
+    removedFromGroup: function () {
+
+        if (this.enabled)
+        {
+            this._wasEnabled = true;
+            this.stop();
+        }
+        else
+        {
+            this._wasEnabled = false;
+        }
 
     },
 
@@ -14483,7 +14573,7 @@ Phaser.InputHandler.prototype = {
     */
     checkPointerDown: function (pointer) {
 
-        if (this.enabled === false || this.sprite.visible === false || this.sprite.parent.visible === false)
+        if (!this.enabled || !this.sprite || !this.sprite.parent || !this.sprite.visible || !this.sprite.parent.visible)
         {
             return false;
         }
@@ -14513,7 +14603,7 @@ Phaser.InputHandler.prototype = {
     */
     checkPointerOver: function (pointer) {
 
-        if (this.enabled === false || this.sprite.visible === false || this.sprite.parent.visible === false)
+        if (!this.enabled || !this.sprite || !this.sprite.parent || !this.sprite.visible || !this.sprite.parent.visible)
         {
             return false;
         }
@@ -14595,7 +14685,7 @@ Phaser.InputHandler.prototype = {
     */
     update: function (pointer) {
 
-        if (this.sprite === null)
+        if (this.sprite === null || this.sprite.parent === undefined)
         {
             //  Abort. We've been destroyed.
             return;
@@ -22109,7 +22199,7 @@ Phaser.Particle.prototype.update = function() {
 
         if (this._s)
         {
-            this.scale.set(this.scaleData[this._s].v);
+            this.scale.set(this.scaleData[this._s].x, this.scaleData[this._s].y);
         }
         else
         {
@@ -22167,7 +22257,7 @@ Phaser.Particle.prototype.setScaleData = function(data) {
 
     this.scaleData = data;
     this._s = data.length - 1;
-    this.scale.set(this.scaleData[this._s].v);
+    this.scale.set(this.scaleData[this._s].x, this.scaleData[this._s].y);
     this.autoScale = true;
 
 };
@@ -38150,13 +38240,13 @@ Phaser.Particles.Arcade.Emitter = function (game, x, y, maxParticles) {
     this.maxParticleSpeed = new Phaser.Point(100, 100);
 
     /**
-    * @property {number} minParticleScale - The minimum possible scale of a particle.
+    * @property {number} minParticleScale - The minimum possible scale of a particle. This is applied to the X and Y axis. If you need to control each axis see minParticleScaleX.
     * @default
     */
     this.minParticleScale = 1;
 
     /**
-    * @property {number} maxParticleScale - The maximum possible scale of a particle.
+    * @property {number} maxParticleScale - The maximum possible scale of a particle. This is applied to the X and Y axis. If you need to control each axis see maxParticleScaleX.
     * @default
     */
     this.maxParticleScale = 1;
@@ -38290,6 +38380,18 @@ Phaser.Particles.Arcade.Emitter = function (game, x, y, maxParticles) {
     * @default
     */
     this.particleSendToBack = false;
+
+    /**
+    * @property {Phaser.Point} _minParticleScale - Internal particle scale var.
+    * @private
+    */
+    this._minParticleScale = new Phaser.Point(1, 1);
+
+    /**
+    * @property {Phaser.Point} _maxParticleScale - Internal particle scale var.
+    * @private
+    */
+    this._maxParticleScale = new Phaser.Point(1, 1);
 
     /**
     * @property {number} _quantity - Internal helper for deciding how many particles to launch.
@@ -38476,7 +38578,7 @@ Phaser.Particles.Arcade.Emitter.prototype.revive = function () {
 * @method Phaser.Particles.Arcade.Emitter#start
 * @param {boolean} [explode=true] - Whether the particles should all burst out at once (true) or at the frequency given (false).
 * @param {number} [lifespan=0] - How long each particle lives once emitted in ms. 0 = forever.
-* @param {number} [frequency=250] - Ignored if Explode is set to true. Frequency is how often to emit a particle in ms.
+* @param {number} [frequency=250] - Ignored if Explode is set to true. Frequency is how often to emit 1 particle. Value given in ms.
 * @param {number} [quantity=0] - How many particles to launch. 0 = "all of the particles".
 */
 Phaser.Particles.Arcade.Emitter.prototype.start = function (explode, lifespan, frequency, quantity) {
@@ -38548,9 +38650,13 @@ Phaser.Particles.Arcade.Emitter.prototype.emitParticle = function () {
     {
         particle.setScaleData(this.scaleData);
     }
-    else
+    else if (this.minParticleScale !== this.maxParticleScale)
     {
         particle.scale.set(this.game.rnd.realInRange(this.minParticleScale, this.maxParticleScale));
+    }
+    else if ((this._minParticleScale.x !== this._maxParticleScale.x) || (this._minParticleScale.y !== this._maxParticleScale.y))
+    {
+        particle.scale.set(this.game.rnd.realInRange(this._minParticleScale.x, this._maxParticleScale.x), this.game.rnd.realInRange(this._minParticleScale.y, this._maxParticleScale.y));
     }
 
     if (Array.isArray(this._frames === 'object'))
@@ -38695,32 +38801,41 @@ Phaser.Particles.Arcade.Emitter.prototype.setAlpha = function (min, max, rate, e
 
 /**
 * A more compact way of setting the scale constraints of the particles.
-* The rate parameter, if set to a value above zero, lets you set the speed and ease which the Particle uses to change in scale from min to max.
-* If rate is zero, which is the default, the particle won't change scale - instead it will pick a random scale between min and max on emit.
+* The rate parameter, if set to a value above zero, lets you set the speed and ease which the Particle uses to change in scale from min to max across both axis.
+* If rate is zero, which is the default, the particle won't change scale during update, instead it will pick a random scale between min and max on emit.
 *
 * @method Phaser.Particles.Arcade.Emitter#setScale
-* @param {number} [min=1] - The minimum value for this range.
-* @param {number} [max=1] - The maximum value for this range.
+* @param {number} [minX=1] - The minimum value of Particle.scale.x.
+* @param {number} [maxX=1] - The maximum value of Particle.scale.x.
+* @param {number} [minY=1] - The minimum value of Particle.scale.y.
+* @param {number} [maxY=1] - The maximum value of Particle.scale.y.
 * @param {number} [rate=0] - The rate (in ms) at which the particles will change in scale from min to max, or set to zero to pick a random size between the two.
 * @param {number} [ease=Phaser.Easing.Linear.None] - If you've set a rate > 0 this is the easing formula applied between the min and max values.
 * @param {boolean} [yoyo=false] - If you've set a rate > 0 you can set if the ease will yoyo or not (i.e. ease back to its original values)
 */
-Phaser.Particles.Arcade.Emitter.prototype.setScale = function (min, max, rate, ease, yoyo) {
+Phaser.Particles.Arcade.Emitter.prototype.setScale = function (minX, maxX, minY, maxY, rate, ease, yoyo) {
 
-    if (typeof min === 'undefined') { min = 1; }
-    if (typeof max === 'undefined') { max = 1; }
+    if (typeof minX === 'undefined') { minX = 1; }
+    if (typeof maxX === 'undefined') { maxX = 1; }
+    if (typeof minY === 'undefined') { minY = 1; }
+    if (typeof maxY === 'undefined') { maxY = 1; }
     if (typeof rate === 'undefined') { rate = 0; }
     if (typeof ease === 'undefined') { ease = Phaser.Easing.Linear.None; }
     if (typeof yoyo === 'undefined') { yoyo = false; }
 
-    this.minParticleScale = min;
-    this.maxParticleScale = max;
+    //  Reset these
+    this.minParticleScale = 1;
+    this.maxParticleScale = 1;
+
+    this._minParticleScale.set(minX, minY);
+    this._maxParticleScale.set(maxX, maxY);
+
     this.autoScale = false;
 
-    if (rate > 0 && min !== max)
+    if (rate > 0 && (minX !== maxX) || (minY !== maxY))
     {
-        var tweenData = { v: min };
-        var tween = this.game.make.tween(tweenData).to( { v: max }, rate, ease);
+        var tweenData = { x: minX, y: minY };
+        var tween = this.game.make.tween(tweenData).to( { x: maxX, y: maxY }, rate, ease);
         tween.yoyo(yoyo);
 
         this.scaleData = tween.generateData(60);

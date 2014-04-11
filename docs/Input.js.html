@@ -307,6 +307,10 @@
 						</li>
 						
 						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.FixtureList.html">FixtureList</a>
+						</li>
+						
+						<li class="class-depth-3">
 							<a href="Phaser.Physics.P2.GearConstraint.html">GearConstraint</a>
 						</li>
 						
@@ -388,6 +392,10 @@
 						
 						<li class="class-depth-1">
 							<a href="Phaser.Signal.html">Signal</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.SignalBinding.html">SignalBinding</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -484,10 +492,6 @@
 						
 						<li class="class-depth-1">
 							<a href="Phaser.World.html">World</a>
-						</li>
-						
-						<li class="class-depth-0">
-							<a href="SignalBinding.html">SignalBinding</a>
 						</li>
 						
 
@@ -950,7 +954,7 @@ Phaser.Input.prototype = {
 
         this.keyboard.update();
 
-        if (this.pollRate > 0 &amp;&amp; this._pollCounter &lt; this.pollRate)
+        if (this.pollRate > 0 && this._pollCounter &lt; this.pollRate)
         {
             this._pollCounter++;
             return;
@@ -1054,7 +1058,7 @@ Phaser.Input.prototype = {
     */
     startPointer: function (event) {
 
-        if (this.maxPointers &lt; 10 &amp;&amp; this.totalActivePointers == this.maxPointers)
+        if (this.maxPointers &lt; 10 && this.totalActivePointers == this.maxPointers)
         {
             return null;
         }
@@ -1071,7 +1075,7 @@ Phaser.Input.prototype = {
         {
             for (var i = 3; i &lt;= 10; i++)
             {
-                if (this['pointer' + i] &amp;&amp; this['pointer' + i].active === false)
+                if (this['pointer' + i] && this['pointer' + i].active === false)
                 {
                     return this['pointer' + i].start(event);
                 }
@@ -1090,11 +1094,11 @@ Phaser.Input.prototype = {
     */
     updatePointer: function (event) {
 
-        if (this.pointer1.active &amp;&amp; this.pointer1.identifier == event.identifier)
+        if (this.pointer1.active && this.pointer1.identifier == event.identifier)
         {
             return this.pointer1.move(event);
         }
-        else if (this.pointer2.active &amp;&amp; this.pointer2.identifier == event.identifier)
+        else if (this.pointer2.active && this.pointer2.identifier == event.identifier)
         {
             return this.pointer2.move(event);
         }
@@ -1102,7 +1106,7 @@ Phaser.Input.prototype = {
         {
             for (var i = 3; i &lt;= 10; i++)
             {
-                if (this['pointer' + i] &amp;&amp; this['pointer' + i].active &amp;&amp; this['pointer' + i].identifier == event.identifier)
+                if (this['pointer' + i] && this['pointer' + i].active && this['pointer' + i].identifier == event.identifier)
                 {
                     return this['pointer' + i].move(event);
                 }
@@ -1121,11 +1125,11 @@ Phaser.Input.prototype = {
     */
     stopPointer: function (event) {
 
-        if (this.pointer1.active &amp;&amp; this.pointer1.identifier == event.identifier)
+        if (this.pointer1.active && this.pointer1.identifier == event.identifier)
         {
             return this.pointer1.stop(event);
         }
-        else if (this.pointer2.active &amp;&amp; this.pointer2.identifier == event.identifier)
+        else if (this.pointer2.active && this.pointer2.identifier == event.identifier)
         {
             return this.pointer2.stop(event);
         }
@@ -1133,7 +1137,7 @@ Phaser.Input.prototype = {
         {
             for (var i = 3; i &lt;= 10; i++)
             {
-                if (this['pointer' + i] &amp;&amp; this['pointer' + i].active &amp;&amp; this['pointer' + i].identifier == event.identifier)
+                if (this['pointer' + i] && this['pointer' + i].active && this['pointer' + i].identifier == event.identifier)
                 {
                     return this['pointer' + i].stop(event);
                 }
@@ -1166,7 +1170,7 @@ Phaser.Input.prototype = {
         {
             for (var i = 3; i &lt;= 10; i++)
             {
-                if (this['pointer' + i] &amp;&amp; this['pointer' + i].active == state)
+                if (this['pointer' + i] && this['pointer' + i].active == state)
                 {
                     return this['pointer' + i];
                 }
@@ -1197,7 +1201,7 @@ Phaser.Input.prototype = {
         {
             for (var i = 3; i &lt;= 10; i++)
             {
-                if (this['pointer' + i] &amp;&amp; this['pointer' + i].identifier == identifier)
+                if (this['pointer' + i] && this['pointer' + i].identifier == identifier)
                 {
                     return this['pointer' + i];
                 }
@@ -1248,7 +1252,7 @@ Phaser.Input.prototype = {
 
         localPoint.copyFrom(this._localPoint);
 
-        if (displayObject.hitArea &amp;&amp; displayObject.hitArea.contains)
+        if (displayObject.hitArea && displayObject.hitArea.contains)
         {
             if (displayObject.hitArea.contains(this._localPoint.x, this._localPoint.y))
             {
@@ -1263,11 +1267,11 @@ Phaser.Input.prototype = {
             var height = displayObject.height;
             var x1 = -width * displayObject.anchor.x;
 
-            if (this._localPoint.x > x1 &amp;&amp; this._localPoint.x &lt; x1 + width)
+            if (this._localPoint.x > x1 && this._localPoint.x &lt; x1 + width)
             {
                 var y1 = -height * displayObject.anchor.y;
 
-                if (this._localPoint.y > y1 &amp;&amp; this._localPoint.y &lt; y1 + height)
+                if (this._localPoint.y > y1 && this._localPoint.y &lt; y1 + height)
                 {
                     return true;
                 }
@@ -1279,11 +1283,11 @@ Phaser.Input.prototype = {
             var height = displayObject.texture.frame.height;
             var x1 = -width * displayObject.anchor.x;
 
-            if (this._localPoint.x > x1 &amp;&amp; this._localPoint.x &lt; x1 + width)
+            if (this._localPoint.x > x1 && this._localPoint.x &lt; x1 + width)
             {
                 var y1 = -height * displayObject.anchor.y;
 
-                if (this._localPoint.y > y1 &amp;&amp; this._localPoint.y &lt; y1 + height)
+                if (this._localPoint.y > y1 && this._localPoint.y &lt; y1 + height)
                 {
                     return true;
                 }
@@ -1347,7 +1351,7 @@ Object.defineProperty(Phaser.Input.prototype, "y", {
 Object.defineProperty(Phaser.Input.prototype, "pollLocked", {
 
     get: function () {
-        return (this.pollRate > 0 &amp;&amp; this._pollCounter &lt; this.pollRate);
+        return (this.pollRate > 0 && this._pollCounter &lt; this.pollRate);
     }
 
 });
@@ -1380,7 +1384,7 @@ Object.defineProperty(Phaser.Input.prototype, "totalActivePointers", {
 
         for (var i = 1; i &lt;= 10; i++)
         {
-            if (this['pointer' + i] &amp;&amp; this['pointer' + i].active)
+            if (this['pointer' + i] && this['pointer' + i].active)
             {
                 this.currentPointers++;
             }
@@ -1437,8 +1441,8 @@ Object.defineProperty(Phaser.Input.prototype, "worldY", {
 					<br />
 					
 		<span class="jsdoc-message">
-		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha4</a>
-		on Fri Apr 11 2014 00:12:13 GMT+0200 (CEST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
+		on Fri Apr 11 2014 13:08:20 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

@@ -307,6 +307,10 @@
 						</li>
 						
 						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.FixtureList.html">FixtureList</a>
+						</li>
+						
+						<li class="class-depth-3">
 							<a href="Phaser.Physics.P2.GearConstraint.html">GearConstraint</a>
 						</li>
 						
@@ -388,6 +392,10 @@
 						
 						<li class="class-depth-1">
 							<a href="Phaser.Signal.html">Signal</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.SignalBinding.html">SignalBinding</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -484,10 +492,6 @@
 						
 						<li class="class-depth-1">
 							<a href="Phaser.World.html">World</a>
-						</li>
-						
-						<li class="class-depth-0">
-							<a href="SignalBinding.html">SignalBinding</a>
 						</li>
 						
 
@@ -662,7 +666,7 @@ Phaser.Physics.Ninja.prototype = {
                 {
                     this.enableBody(object[i], type, id, radius);
 
-                    if (children &amp;&amp; object[i].hasOwnProperty('children') &amp;&amp; object[i].children.length > 0)
+                    if (children && object[i].hasOwnProperty('children') && object[i].children.length > 0)
                     {
                         this.enable(object[i], type, id, radius, true);
                     }
@@ -680,7 +684,7 @@ Phaser.Physics.Ninja.prototype = {
             {
                 this.enableBody(object, type, id, radius);
 
-                if (children &amp;&amp; object.hasOwnProperty('children') &amp;&amp; object.children.length > 0)
+                if (children && object.hasOwnProperty('children') && object.children.length > 0)
                 {
                     this.enable(object.children, type, id, radius, true);
                 }
@@ -698,7 +702,7 @@ Phaser.Physics.Ninja.prototype = {
     */
     enableBody: function (object, type, id, radius) {
 
-        if (object.hasOwnProperty('body') &amp;&amp; object.body === null)
+        if (object.hasOwnProperty('body') && object.body === null)
         {
             object.body = new Phaser.Physics.Ninja.Body(this, object, type, id, radius);
             object.anchor.set(0.5);
@@ -786,7 +790,7 @@ Phaser.Physics.Ninja.prototype = {
             {
                 var tile = map.layers[layer].data[y][x];
 
-                if (tile &amp;&amp; slopeMap.hasOwnProperty(tile.index))
+                if (tile && slopeMap.hasOwnProperty(tile.index))
                 {
                     var body = new Phaser.Physics.Ninja.Body(this, null, 3, slopeMap[tile.index], 0, tile.worldX + tile.centerX, tile.worldY + tile.centerY, tile.width, tile.height);
 
@@ -894,13 +898,13 @@ Phaser.Physics.Ninja.prototype = {
     collideHandler: function (object1, object2, collideCallback, processCallback, callbackContext, overlapOnly) {
 
         //  Only collide valid objects
-        if (typeof object2 === 'undefined' &amp;&amp; (object1.type === Phaser.GROUP || object1.type === Phaser.EMITTER))
+        if (typeof object2 === 'undefined' && (object1.type === Phaser.GROUP || object1.type === Phaser.EMITTER))
         {
             this.collideGroupVsSelf(object1, collideCallback, processCallback, callbackContext, overlapOnly);
             return;
         }
 
-        if (object1 &amp;&amp; object2 &amp;&amp; object1.exists &amp;&amp; object2.exists)
+        if (object1 && object2 && object1.exists && object2.exists)
         {
             //  SPRITES
             if (object1.type == Phaser.SPRITE || object1.type == Phaser.TILESPRITE)
@@ -1011,7 +1015,7 @@ Phaser.Physics.Ninja.prototype = {
         for (var i = 0, len = group.children.length; i &lt; len; i++)
         {
             //  We have our potential suspects, are they in this group?
-            if (group.children[i].exists &amp;&amp; group.children[i].body &amp;&amp; this.separate(sprite.body, group.children[i].body, processCallback, callbackContext, overlapOnly))
+            if (group.children[i].exists && group.children[i].body && this.separate(sprite.body, group.children[i].body, processCallback, callbackContext, overlapOnly))
             {
                 if (collideCallback)
                 {
@@ -1043,7 +1047,7 @@ Phaser.Physics.Ninja.prototype = {
         {
             for (var j = i + 1; j &lt;= len; j++)
             {
-                if (group.children[i] &amp;&amp; group.children[j] &amp;&amp; group.children[i].exists &amp;&amp; group.children[j].exists)
+                if (group.children[i] && group.children[j] && group.children[i].exists && group.children[j].exists)
                 {
                     this.collideSpriteVsSprite(group.children[i], group.children[j], collideCallback, processCallback, callbackContext, overlapOnly);
                 }
@@ -1089,27 +1093,27 @@ Phaser.Physics.Ninja.prototype = {
             return false;
         }
 
-        if (body1.aabb &amp;&amp; body2.aabb)
+        if (body1.aabb && body2.aabb)
         {
             return body1.aabb.collideAABBVsAABB(body2.aabb);
         }
 
-        if (body1.aabb &amp;&amp; body2.tile)
+        if (body1.aabb && body2.tile)
         {
             return body1.aabb.collideAABBVsTile(body2.tile);
         }
 
-        if (body1.tile &amp;&amp; body2.aabb)
+        if (body1.tile && body2.aabb)
         {
             return body2.aabb.collideAABBVsTile(body1.tile);
         }
 
-        if (body1.circle &amp;&amp; body2.tile)
+        if (body1.circle && body2.tile)
         {
             return body1.circle.collideCircleVsTile(body2.tile);
         }
 
-        if (body1.tile &amp;&amp; body2.circle)
+        if (body1.tile && body2.circle)
         {
             return body2.circle.collideCircleVsTile(body1.tile);
         }
@@ -1137,8 +1141,8 @@ Phaser.Physics.Ninja.prototype = {
 					<br />
 					
 		<span class="jsdoc-message">
-		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha4</a>
-		on Fri Apr 11 2014 00:12:14 GMT+0200 (CEST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
+		on Fri Apr 11 2014 13:08:21 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

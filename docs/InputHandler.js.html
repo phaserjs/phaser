@@ -307,6 +307,10 @@
 						</li>
 						
 						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.FixtureList.html">FixtureList</a>
+						</li>
+						
+						<li class="class-depth-3">
 							<a href="Phaser.Physics.P2.GearConstraint.html">GearConstraint</a>
 						</li>
 						
@@ -388,6 +392,10 @@
 						
 						<li class="class-depth-1">
 							<a href="Phaser.Signal.html">Signal</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.SignalBinding.html">SignalBinding</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -484,10 +492,6 @@
 						
 						<li class="class-depth-1">
 							<a href="Phaser.World.html">World</a>
-						</li>
-						
-						<li class="class-depth-0">
-							<a href="SignalBinding.html">SignalBinding</a>
 						</li>
 						
 
@@ -676,6 +680,12 @@ Phaser.InputHandler = function (sprite) {
     this.consumePointerEvent = false;
 
     /**
+    * @property {boolean} _wasEnabled - Internal cache var.
+    * @private
+    */
+    this._wasEnabled = false;
+
+    /**
     * @property {Phaser.Point} _tempPoint - Internal cache var.
     * @private
     */
@@ -748,9 +758,10 @@ Phaser.InputHandler.prototype = {
 
             this.snapOffset = new Phaser.Point();
             this.enabled = true;
+            this._wasEnabled = true;
 
             //  Create the signals the Input component will emit
-            if (this.sprite.events &amp;&amp; this.sprite.events.onInputOver === null)
+            if (this.sprite.events && this.sprite.events.onInputOver === null)
             {
                 this.sprite.events.onInputOver = new Phaser.Signal();
                 this.sprite.events.onInputOut = new Phaser.Signal();
@@ -761,7 +772,45 @@ Phaser.InputHandler.prototype = {
             }
         }
 
+        this.sprite.events.onAddedToGroup.add(this.addedToGroup, this);
+        this.sprite.events.onRemovedFromGroup.add(this.removedFromGroup, this);
+
         return this.sprite;
+
+    },
+
+    /**
+    * Handles when the parent Sprite is added to a new Group.
+    *
+    * @method Phaser.InputHandler#addedToGroup
+    * @private
+    */
+    addedToGroup: function () {
+
+        if (this._wasEnabled && !this.enabled)
+        {
+            this.start();
+        }
+
+    },
+
+    /**
+    * Handles when the parent Sprite is removed from a Group.
+    *
+    * @method Phaser.InputHandler#removedFromGroup
+    * @private
+    */
+    removedFromGroup: function () {
+
+        if (this.enabled)
+        {
+            this._wasEnabled = true;
+            this.stop();
+        }
+        else
+        {
+            this._wasEnabled = false;
+        }
 
     },
 
@@ -861,7 +910,7 @@ Phaser.InputHandler.prototype = {
             return true;
         }
 
-        if (this.priorityID > highestID || (this.priorityID === highestID &amp;&amp; this.sprite._cache[3] &lt; highestRenderID))
+        if (this.priorityID > highestID || (this.priorityID === highestID && this.sprite._cache[3] &lt; highestRenderID))
         {
             return true;
         }
@@ -1066,7 +1115,7 @@ Phaser.InputHandler.prototype = {
     */
     checkPointerDown: function (pointer) {
 
-        if (this.enabled === false || this.sprite.visible === false || this.sprite.parent.visible === false)
+        if (!this.enabled || !this.sprite || !this.sprite.parent || !this.sprite.visible || !this.sprite.parent.visible)
         {
             return false;
         }
@@ -1096,7 +1145,7 @@ Phaser.InputHandler.prototype = {
     */
     checkPointerOver: function (pointer) {
 
-        if (this.enabled === false || this.sprite.visible === false || this.sprite.parent.visible === false)
+        if (!this.enabled || !this.sprite || !this.sprite.parent || !this.sprite.visible || !this.sprite.parent.visible)
         {
             return false;
         }
@@ -1134,7 +1183,7 @@ Phaser.InputHandler.prototype = {
         {
             this.game.input.hitContext.clearRect(0, 0, 1, 1);
 
-            if (x === null &amp;&amp; y === null)
+            if (x === null && y === null)
             {
                 //  Use the pointer parameter
                 this.game.input.getLocalPosition(this.sprite, pointer, this._tempPoint);
@@ -1178,7 +1227,7 @@ Phaser.InputHandler.prototype = {
     */
     update: function (pointer) {
 
-        if (this.sprite === null)
+        if (this.sprite === null || this.sprite.parent === undefined)
         {
             //  Abort. We've been destroyed.
             return;
@@ -1190,7 +1239,7 @@ Phaser.InputHandler.prototype = {
             return false;
         }
 
-        if (this.draggable &amp;&amp; this._draggedPointerID == pointer.id)
+        if (this.draggable && this._draggedPointerID == pointer.id)
         {
             return this.updateDrag(pointer);
         }
@@ -1232,7 +1281,7 @@ Phaser.InputHandler.prototype = {
             this._pointerData[pointer.id].x = pointer.x - this.sprite.x;
             this._pointerData[pointer.id].y = pointer.y - this.sprite.y;
 
-            if (this.useHandCursor &amp;&amp; this._pointerData[pointer.id].isDragged === false)
+            if (this.useHandCursor && this._pointerData[pointer.id].isDragged === false)
             {
                 this.game.canvas.style.cursor = "pointer";
                 this._setHandCursor = false;
@@ -1261,13 +1310,13 @@ Phaser.InputHandler.prototype = {
         this._pointerData[pointer.id].isOut = true;
         this._pointerData[pointer.id].timeOut = this.game.time.now;
 
-        if (this.useHandCursor &amp;&amp; this._pointerData[pointer.id].isDragged === false)
+        if (this.useHandCursor && this._pointerData[pointer.id].isDragged === false)
         {
             this.game.canvas.style.cursor = "default";
             this._setHandCursor = false;
         }
 
-        if (this.sprite &amp;&amp; this.sprite.events)
+        if (this.sprite && this.sprite.events)
         {
             this.sprite.events.onInputOut.dispatch(this.sprite, pointer);
         }
@@ -1288,9 +1337,9 @@ Phaser.InputHandler.prototype = {
             return;
         }
 
-        if (this._pointerData[pointer.id].isDown === false &amp;&amp; this._pointerData[pointer.id].isOver === true)
+        if (this._pointerData[pointer.id].isDown === false && this._pointerData[pointer.id].isOver === true)
         {
-            if (this.pixelPerfectClick &amp;&amp; !this.checkPixel(null, null, pointer))
+            if (this.pixelPerfectClick && !this.checkPixel(null, null, pointer))
             {
                 return;
             }
@@ -1301,7 +1350,7 @@ Phaser.InputHandler.prototype = {
             this.sprite.events.onInputDown.dispatch(this.sprite, pointer);
 
             //  Start drag
-            if (this.draggable &amp;&amp; this.isDragged === false)
+            if (this.draggable && this.isDragged === false)
             {
                 this.startDrag(pointer);
             }
@@ -1332,7 +1381,7 @@ Phaser.InputHandler.prototype = {
         }
 
         //  If was previously touched by this Pointer, check if still is AND still over this item
-        if (this._pointerData[pointer.id].isDown &amp;&amp; pointer.isUp)
+        if (this._pointerData[pointer.id].isDown && pointer.isUp)
         {
             this._pointerData[pointer.id].isDown = false;
             this._pointerData[pointer.id].isUp = true;
@@ -1359,7 +1408,7 @@ Phaser.InputHandler.prototype = {
             }
 
             //  Stop drag
-            if (this.draggable &amp;&amp; this.isDragged &amp;&amp; this._draggedPointerID == pointer.id)
+            if (this.draggable && this.isDragged && this._draggedPointerID == pointer.id)
             {
                 this.stopDrag(pointer);
             }
@@ -1454,7 +1503,7 @@ Phaser.InputHandler.prototype = {
         pointer = pointer || 0;
         delay = delay || 500;
 
-        return (this._pointerData[pointer].isOver &amp;&amp; this.overDuration(pointer) &lt; delay);
+        return (this._pointerData[pointer].isOver && this.overDuration(pointer) &lt; delay);
 
     },
 
@@ -1470,7 +1519,7 @@ Phaser.InputHandler.prototype = {
         pointer = pointer || 0;
         delay = delay || 500;
 
-        return (this._pointerData[pointer].isOut &amp;&amp; (this.game.time.now - this._pointerData[pointer].timeOut &lt; delay));
+        return (this._pointerData[pointer].isOut && (this.game.time.now - this._pointerData[pointer].timeOut &lt; delay));
 
     },
 
@@ -1486,7 +1535,7 @@ Phaser.InputHandler.prototype = {
         pointer = pointer || 0;
         delay = delay || 500;
 
-        return (this._pointerData[pointer].isDown &amp;&amp; this.downDuration(pointer) &lt; delay);
+        return (this._pointerData[pointer].isDown && this.downDuration(pointer) &lt; delay);
 
     },
 
@@ -1502,7 +1551,7 @@ Phaser.InputHandler.prototype = {
         pointer = pointer || 0;
         delay = delay || 500;
 
-        return (this._pointerData[pointer].isUp &amp;&amp; (this.game.time.now - this._pointerData[pointer].timeUp &lt; delay));
+        return (this._pointerData[pointer].isUp && (this.game.time.now - this._pointerData[pointer].timeUp &lt; delay));
 
     },
 
@@ -1796,7 +1845,7 @@ Phaser.InputHandler.prototype = {
     */
     checkBoundsSprite: function () {
 
-        if (this.sprite.fixedToCamera &amp;&amp; this.boundsSprite.fixedToCamera)
+        if (this.sprite.fixedToCamera && this.boundsSprite.fixedToCamera)
         {
             if (this.sprite.cameraOffset.x &lt; this.boundsSprite.camerOffset.x)
             {
@@ -1862,8 +1911,8 @@ Phaser.InputHandler.prototype.constructor = Phaser.InputHandler;
 					<br />
 					
 		<span class="jsdoc-message">
-		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha4</a>
-		on Fri Apr 11 2014 00:12:13 GMT+0200 (CEST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
+		on Fri Apr 11 2014 13:08:20 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

@@ -307,6 +307,10 @@
 						</li>
 						
 						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.FixtureList.html">FixtureList</a>
+						</li>
+						
+						<li class="class-depth-3">
 							<a href="Phaser.Physics.P2.GearConstraint.html">GearConstraint</a>
 						</li>
 						
@@ -388,6 +392,10 @@
 						
 						<li class="class-depth-1">
 							<a href="Phaser.Signal.html">Signal</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.SignalBinding.html">SignalBinding</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -486,10 +494,6 @@
 							<a href="Phaser.World.html">World</a>
 						</li>
 						
-						<li class="class-depth-0">
-							<a href="SignalBinding.html">SignalBinding</a>
-						</li>
-						
 
 					</ul>
 				</li>
@@ -541,7 +545,7 @@ Phaser.Physics.P2 = function (game, config) {
     }
 
     /**
-    * @property {p2.World} game - The p2 World in which the simulation is run.
+    * @property {p2.World} world - The p2 World in which the simulation is run.
     * @protected
     */
     this.world = new p2.World(config);
@@ -565,7 +569,7 @@ Phaser.Physics.P2 = function (game, config) {
     this.materials = [];
 
     /**
-    * @property {Phaser.InversePointProxy} gravity - The gravity applied to all bodies each step.
+    * @property {Phaser.Physics.P2.InversePointProxy} gravity - The gravity applied to all bodies each step.
     */
     this.gravity = new Phaser.Physics.P2.InversePointProxy(this, this.world.gravity);
 
@@ -615,16 +619,14 @@ Phaser.Physics.P2 = function (game, config) {
     this.onContactMaterialRemoved = new Phaser.Signal();
 
     /**
-    * @property {Phaser.Signal} onPostBroadphase - Dispatched after the Broadphase has collected collision pairs in the world.
+    * @property {function} postBroadphaseCallback - A postBroadphase callback.
     */
     this.postBroadphaseCallback = null;
-    this.callbackContext = null;
 
     /**
-    * @property {Phaser.Signal} onImpact - Dispatched when a first contact is created between two bodies. This event is fired after the step has been done.
+    * @property {object} callbackContext - The context under which the callbacks are fired.
     */
-    // this.onImpact = new Phaser.Signal();
-    this.impactCallback = null;
+    this.callbackContext = null;
 
     /**
     * @property {Phaser.Signal} onBeginContact - Dispatched when a first contact is created between two bodies. This event is fired before the step has been done.
@@ -637,7 +639,7 @@ Phaser.Physics.P2 = function (game, config) {
     this.onEndContact = new Phaser.Signal();
 
     //  Pixel to meter function overrides
-    if (config.hasOwnProperty('mpx') &amp;&amp; config.hasOwnProperty('pxm') &amp;&amp; config.hasOwnProperty('mpxi') &amp;&amp; config.hasOwnProperty('pxmi'))
+    if (config.hasOwnProperty('mpx') && config.hasOwnProperty('pxm') && config.hasOwnProperty('mpxi') && config.hasOwnProperty('pxmi'))
     {
         this.mpx = config.mpx;
         this.mpxi = config.mpxi;
@@ -650,26 +652,41 @@ Phaser.Physics.P2 = function (game, config) {
     this.world.on("endContact", this.endContactHandler, this);
 
     /**
-    * @property {array} _toRemove - Internal var used to hold references to bodies to remove from the world on the next step.
-    */
-    this._toRemove = [];
-
-    /**
-    * @property {array} collisionGroups - Internal var.
+    * @property {array} collisionGroups - An array containing the collision groups that have been defined in the World.
     */
     this.collisionGroups = [];
+
+    /**
+    * @property {Phaser.Physics.P2.CollisionGroup} nothingCollisionGroup - A default collision group.
+    */
+    this.nothingCollisionGroup = new Phaser.Physics.P2.CollisionGroup(1);
+
+    /**
+    * @property {Phaser.Physics.P2.CollisionGroup} boundsCollisionGroup - A default collision group.
+    */
+    this.boundsCollisionGroup = new Phaser.Physics.P2.CollisionGroup(2);
+
+    /**
+    * @property {Phaser.Physics.P2.CollisionGroup} everythingCollisionGroup - A default collision group.
+    */
+    this.everythingCollisionGroup = new Phaser.Physics.P2.CollisionGroup(2147483648);
+
+    /**
+    * @property {array} boundsCollidesWith - An array of the bodies the world bounds collides with.
+    */
+    this.boundsCollidesWith = [];
+
+    /**
+    * @property {array} _toRemove - Internal var used to hold references to bodies to remove from the world on the next step.
+    * @private
+    */
+    this._toRemove = [];
 
     /**
     * @property {number} _collisionGroupID - Internal var.
     * @private
     */
     this._collisionGroupID = 2;
-
-    this.nothingCollisionGroup = new Phaser.Physics.P2.CollisionGroup(1);
-    this.boundsCollisionGroup = new Phaser.Physics.P2.CollisionGroup(2);
-    this.everythingCollisionGroup = new Phaser.Physics.P2.CollisionGroup(2147483648);
-
-    this.boundsCollidesWith = [];
 
     //  By default we want everything colliding with everything
     this.setBoundsToWorld(true, true, true, true, false);
@@ -739,7 +756,7 @@ Phaser.Physics.P2.prototype = {
                 {
                     this.enableBody(object[i], debug);
 
-                    if (children &amp;&amp; object[i].hasOwnProperty('children') &amp;&amp; object[i].children.length > 0)
+                    if (children && object[i].hasOwnProperty('children') && object[i].children.length > 0)
                     {
                         this.enable(object[i], debug, true);
                     }
@@ -757,7 +774,7 @@ Phaser.Physics.P2.prototype = {
             {
                 this.enableBody(object, debug);
 
-                if (children &amp;&amp; object.hasOwnProperty('children') &amp;&amp; object.children.length > 0)
+                if (children && object.hasOwnProperty('children') && object.children.length > 0)
                 {
                     this.enable(object.children, debug, true);
                 }
@@ -776,7 +793,7 @@ Phaser.Physics.P2.prototype = {
     */
     enableBody: function (object, debug) {
 
-        if (object.hasOwnProperty('body') &amp;&amp; object.body === null)
+        if (object.hasOwnProperty('body') && object.body === null)
         {
             object.body = new Phaser.Physics.P2.Body(this.game, object, object.x, object.y, 1);
             object.body.debug = debug;
@@ -846,7 +863,7 @@ Phaser.Physics.P2.prototype = {
 
             while (i -= 2)
             {
-                if (event.pairs[i].parent &amp;&amp; event.pairs[i+1].parent &amp;&amp; !this.postBroadphaseCallback.call(this.callbackContext, event.pairs[i].parent, event.pairs[i+1].parent))
+                if (event.pairs[i].parent && event.pairs[i+1].parent && !this.postBroadphaseCallback.call(this.callbackContext, event.pairs[i].parent, event.pairs[i+1].parent))
                 {
                     event.pairs.splice(i, 2);
                 }
@@ -864,7 +881,7 @@ Phaser.Physics.P2.prototype = {
     */
     impactHandler: function (event) {
 
-        if (event.bodyA.parent &amp;&amp; event.bodyB.parent)
+        if (event.bodyA.parent && event.bodyB.parent)
         {
             //  Body vs. Body callbacks
             var a = event.bodyA.parent;
@@ -972,22 +989,22 @@ Phaser.Physics.P2.prototype = {
         if (typeof top === 'undefined') { top = true; }
         if (typeof bottom === 'undefined') { bottom = true; }
 
-        if (left &amp;&amp; this.walls.left)
+        if (left && this.walls.left)
         {
             this.walls.left.shapes[0].material = material;
         }
 
-        if (right &amp;&amp; this.walls.right)
+        if (right && this.walls.right)
         {
             this.walls.right.shapes[0].material = material;
         }
 
-        if (top &amp;&amp; this.walls.top)
+        if (top && this.walls.top)
         {
             this.walls.top.shapes[0].material = material;
         }
 
-        if (bottom &amp;&amp; this.walls.bottom)
+        if (bottom && this.walls.bottom)
         {
             this.walls.bottom.shapes[0].material = material;
         }
@@ -1580,7 +1597,7 @@ Phaser.Physics.P2.prototype = {
             //  Phaser P2 Body
             return object.data;
         }
-        else if (object['body'] &amp;&amp; object['body'].type === Phaser.Physics.P2JS)
+        else if (object['body'] && object['body'].type === Phaser.Physics.P2JS)
         {
             //  Sprite, TileSprite, etc
             return object.body.data;
@@ -1654,15 +1671,15 @@ Phaser.Physics.P2.prototype = {
 
         while (i--)
         {
-            if (bodies[i] instanceof Phaser.Physics.P2.Body &amp;&amp; !(filterStatic &amp;&amp; bodies[i].data.motionState === p2.Body.STATIC))
+            if (bodies[i] instanceof Phaser.Physics.P2.Body && !(filterStatic && bodies[i].data.motionState === p2.Body.STATIC))
             {
                 query.push(bodies[i].data);
             }
-            else if (bodies[i] instanceof p2.Body &amp;&amp; bodies[i].parent &amp;&amp; !(filterStatic &amp;&amp; bodies[i].motionState === p2.Body.STATIC))
+            else if (bodies[i] instanceof p2.Body && bodies[i].parent && !(filterStatic && bodies[i].motionState === p2.Body.STATIC))
             {
                 query.push(bodies[i]);
             }
-            else if (bodies[i] instanceof Phaser.Sprite &amp;&amp; bodies[i].hasOwnProperty('body') &amp;&amp; !(filterStatic &amp;&amp; bodies[i].body.data.motionState === p2.Body.STATIC))
+            else if (bodies[i] instanceof Phaser.Sprite && bodies[i].hasOwnProperty('body') && !(filterStatic && bodies[i].body.data.motionState === p2.Body.STATIC))
             {
                 query.push(bodies[i].body.data);
             }
@@ -1745,7 +1762,7 @@ Phaser.Physics.P2.prototype = {
         {
             for (var i = 0; i &lt; object.total; i++)
             {
-                if (object.children[i]['body'] &amp;&amp; object.children[i]['body'].type === Phaser.Physics.P2JS)
+                if (object.children[i]['body'] && object.children[i]['body'].type === Phaser.Physics.P2JS)
                 {
                     object.children[i].body.setCollisionGroup(group);
                 }
@@ -1987,7 +2004,7 @@ Phaser.Physics.P2.prototype = {
                             width = tile.width;
                         }
 
-                        if (right &amp;&amp; right.collides)
+                        if (right && right.collides)
                         {
                             width += tile.width;
                         }
@@ -2359,8 +2376,8 @@ Object.defineProperty(Phaser.Physics.P2.prototype, "total", {
 					<br />
 					
 		<span class="jsdoc-message">
-		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha4</a>
-		on Fri Apr 11 2014 00:12:13 GMT+0200 (CEST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
+		on Fri Apr 11 2014 13:08:20 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

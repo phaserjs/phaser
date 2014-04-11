@@ -307,6 +307,10 @@
 						</li>
 						
 						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.FixtureList.html">FixtureList</a>
+						</li>
+						
+						<li class="class-depth-3">
 							<a href="Phaser.Physics.P2.GearConstraint.html">GearConstraint</a>
 						</li>
 						
@@ -388,6 +392,10 @@
 						
 						<li class="class-depth-1">
 							<a href="Phaser.Signal.html">Signal</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.SignalBinding.html">SignalBinding</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -486,10 +494,6 @@
 							<a href="Phaser.World.html">World</a>
 						</li>
 						
-						<li class="class-depth-0">
-							<a href="SignalBinding.html">SignalBinding</a>
-						</li>
-						
 
 					</ul>
 				</li>
@@ -525,18 +529,18 @@
 Phaser.Math = {
 
     /**
-    * = 2 &amp;pi;
+    * = 2 &pi;
     * @method Phaser.Math#PI2
     */
     PI2: Math.PI * 2,
 
     /**
-    * Two number are fuzzyEqual if their difference is less than &amp;epsilon;.
+    * Two number are fuzzyEqual if their difference is less than &epsilon;.
     * @method Phaser.Math#fuzzyEqual
     * @param {number} a
     * @param {number} b
     * @param {number} epsilon
-    * @return {boolean} True if |a-b|&lt;&amp;epsilon;
+    * @return {boolean} True if |a-b|&lt;&epsilon;
     */
     fuzzyEqual: function (a, b, epsilon) {
         if (typeof epsilon === "undefined") { epsilon = 0.0001; }
@@ -544,12 +548,12 @@ Phaser.Math = {
     },
 
     /**
-    * a is fuzzyLessThan b if it is less than b + &amp;epsilon;.
+    * a is fuzzyLessThan b if it is less than b + &epsilon;.
     * @method Phaser.Math#fuzzyLessThan
     * @param {number} a
     * @param {number} b
     * @param {number} epsilon
-    * @return {boolean} True if a&lt;b+&amp;epsilon;
+    * @return {boolean} True if a&lt;b+&epsilon;
     */
     fuzzyLessThan: function (a, b, epsilon) {
         if (typeof epsilon === "undefined") { epsilon = 0.0001; }
@@ -557,12 +561,12 @@ Phaser.Math = {
     },
 
     /**
-    * a is fuzzyGreaterThan b if it is more than b - &amp;epsilon;.
+    * a is fuzzyGreaterThan b if it is more than b - &epsilon;.
     * @method Phaser.Math#fuzzyGreaterThan
     * @param {number} a
     * @param {number} b
     * @param {number} epsilon
-    * @return {boolean} True if a>b+&amp;epsilon;
+    * @return {boolean} True if a>b+&epsilon;
     */
     fuzzyGreaterThan: function (a, b, epsilon) {
         if (typeof epsilon === "undefined") { epsilon = 0.0001; }
@@ -573,7 +577,7 @@ Phaser.Math = {
     * @method Phaser.Math#fuzzyCeil
     * @param {number} val
     * @param {number} epsilon
-    * @return {boolean} ceiling(val-&amp;epsilon;)
+    * @return {boolean} ceiling(val-&epsilon;)
     */
     fuzzyCeil: function (val, epsilon) {
         if (typeof epsilon === "undefined") { epsilon = 0.0001; }
@@ -584,7 +588,7 @@ Phaser.Math = {
     * @method Phaser.Math#fuzzyFloor
     * @param {number} val
     * @param {number} epsilon
-    * @return {boolean} floor(val-&amp;epsilon;)
+    * @return {boolean} floor(val-&epsilon;)
     */
     fuzzyFloor: function (val, epsilon) {
         if (typeof epsilon === "undefined") { epsilon = 0.0001; }
@@ -930,12 +934,12 @@ Phaser.Math = {
         a1 = this.normalizeAngle(a1, radians);
         a2 = this.normalizeAngle(a2, radians);
 
-        if (a1 &lt; -rd / 2 &amp;&amp; a2 > rd / 2)
+        if (a1 &lt; -rd / 2 && a2 > rd / 2)
         {
             a1 += rd * 2;
         }
 
-        if (a2 &lt; -rd / 2 &amp;&amp; a1 > rd / 2)
+        if (a2 &lt; -rd / 2 && a1 > rd / 2)
         {
             a2 += rd * 2;
         }
@@ -1138,7 +1142,7 @@ Phaser.Math = {
     */
     isOdd: function (n) {
 
-        return (n &amp; 1);
+        return (n & 1);
 
     },
 
@@ -1151,7 +1155,7 @@ Phaser.Math = {
     */
     isEven: function (n) {
 
-        if (n &amp; 1)
+        if (n & 1)
         {
             return false;
         }
@@ -1171,7 +1175,7 @@ Phaser.Math = {
     */
     min: function () {
 
-        if (arguments.length === 1 &amp;&amp; typeof arguments[0] === 'object')
+        if (arguments.length === 1 && typeof arguments[0] === 'object')
         {
             var data = arguments[0];
         }
@@ -1200,7 +1204,7 @@ Phaser.Math = {
     */
     max: function () {
 
-        if (arguments.length === 1 &amp;&amp; typeof arguments[0] === 'object')
+        if (arguments.length === 1 && typeof arguments[0] === 'object')
         {
             var data = arguments[0];
         }
@@ -1230,7 +1234,7 @@ Phaser.Math = {
     */
     minProperty: function (property) {
 
-        if (arguments.length === 2 &amp;&amp; typeof arguments[1] === 'object')
+        if (arguments.length === 2 && typeof arguments[1] === 'object')
         {
             var data = arguments[1];
         }
@@ -1260,7 +1264,7 @@ Phaser.Math = {
     */
     maxProperty: function (property) {
 
-        if (arguments.length === 2 &amp;&amp; typeof arguments[1] === 'object')
+        if (arguments.length === 2 && typeof arguments[1] === 'object')
         {
             var data = arguments[1];
         }
@@ -1875,8 +1879,8 @@ Phaser.Math = {
 					<br />
 					
 		<span class="jsdoc-message">
-		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha4</a>
-		on Fri Apr 11 2014 00:12:14 GMT+0200 (CEST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
+		on Fri Apr 11 2014 13:08:20 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

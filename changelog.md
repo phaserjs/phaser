@@ -4,6 +4,159 @@ Change Log
 There is an extensive [Migration Guide](https://github.com/photonstorm/phaser/blob/master/resources/Migration%20Guide.md) available for those converting from Phaser 1.x to 2.x. In the guide we detail the API breaking changes and approach to our new physics system.
 
 
+Version 2.0.3 - "Allorallen" - 11th April 2014
+----------------------------------------------
+
+Updates
+
+* Updated to [Pixi.js 1.5.2](https://github.com/GoodBoyDigital/pixi.js/releases/tag/v1.5.2)
+* Updated to [p2.js 0.5.0](https://github.com/schteppe/p2.js/releases/tag/v0.5.0)
+* Return the result of P2.Body.setCircle for further chaining and manipulation (fix #659)
+* Updated the PhysicsEditor plugin to maintain position, radius, mask bits, category bits and sensor flags (thanks @georgiee, #674)
+* Further TypeScript defs tweaks (thanks @clark-stevenson)
+* Lowered the default size of SpriteBatch from 10000 to 2000 as this yields faster results on mobile (pixi.js update)
+* Fix for 'jagged' strokes on custom fonts (thanks @nickryall, #677)
+* The State.update function (and thus the update of any sub-classed Sprites or other objects) is now called before Stage, Tweens, Sound, Input, etc (#662)
+* The Phaser jshint process is now running on Travis (thanks @xtian, #656)
+* The Phaser Gruntfile is now split up into option tasks (thanks @xtian, #638)
+* Key.reset now clears any callbacks associated with the onDown and onUp events and nulls the onHoldCallback if set. Key.reset is called by Keyboard.reset when changing state.
+* If you pass `null` to Tilemap.putTile as the tile parameter it will pass the call over to Tilemap.removeTile.
+* TypeScript definitions updated for latest changes (thanks @clark-stevenson)
+* Keyboard.stop nulls the function references after removing the event listeners (thanks @bmceldowney, #691)
+* Tilemap.hasTile allows for multi-layer type parameter (thanks @Raeven0, #680)
+* Grunt update to dev dependencies (thanks @xtian, #695)
+* Emitter now emits Phaser.Particle objects instead of Phaser.Sprites, which can be extended as required.
+* Emitter has had various local properties removed that were already declared in Phaser.Group which it extends.
+* PluginManager parent parameter removed as it's redundant. Also most core functions tidied up and jsdocs fixed.
+* p2.World.defaultRestitution has been deprecated and is now p2.World.restitution.
+* p2.World.defaultFriction has been deprecated and is now p2.World.friction.
+* p2.World now uses 4 bodies for the world boundaries, rather than 1 body with 4 shapes. This stops the bounds triggering narrowphase with every single body in the world.
+* p2.World bounds are now included in the callback events such as beginContact and impact events.
+* Thanks to @STuFF the Classes drop-down list in the API docs now indents the sub-classes.
+
+
+New Features
+
+* Added ability to retrieve a single p2 fixture from the cache (thanks @georgiee, #674)
+* Timers can now have a start delay value (thanks @georgiee, #660)
+* CacheAsBitmap added to Display Object, so works for Sprite, Image, Button. Allows you to cache complex display hierarchies for speed.
+* CacheAsBitmap added to Graphics Object. Allows you to cache complex graphics structures hierarchies for speed.
+* Added generateTexture function to display objects. Create a texture from the current object display hierarchy for use as a texture elsewhere.
+* Added optional FilterArea to display object (for optimisation)
+* Graphics chaining functions.
+* Added Pointer.positionUp which records the last point at which the pointer left the screen (thanks @Cryszon, #676)
+* Phaser.Point.centroid static function added to calculate the centroid or midpoint of an array of points (thanks @lewster32, #675)
+* SoundManager.remove(sound) now lets you remove a sound from the SoundManager, destroying it in the process.
+* Sound.destroy will remove a sound and all local references it holds, optionally removing itself from the SoundManager as well.
+* SoundManager.removeByKey(key) will remove all sounds from the SoundManager that have a key matching the given value.
+* ArcadePhysics.Body.hitTest(x, y) will return a boolean based on if the given world coordinate are within the Body or not.
+* StateManager.restart allows you to quickly restart the *current* state, optionally clearing the world and cache.
+* Tilemap.removeTile(x, y, layer) lets you remove the tile at the given coordinates and updates the collision data.
+* Tilemap.removeTileWorldXY lets you remove the tile at the given pixel value coordinates and updates the collision data.
+* Key.enabled boolean allows you to toggle if a Key processes its update method or dispatches any events without deleting and re-creating it.
+* Emitter now has minParticleAlpha and maxParticleAlpha values for setting a random alpha on emitted particles.
+* Emitter.particleAnchor allows you to control the anchor of emitted Particles. Defaults to 0.5 (same as before) but now under your control.
+* Emitter.setAlpha allows you to quickly set the min and max alpha values.
+* Emitter.setScale allows you to quickly set the min and max scale values.
+* Emitter.blendMode lets you set the blendMode of any emitted Particle (needs a browser that supports canvas blend modes)
+* Group.customSort allows you to sort the Group children based on your own sort function.
+* Emitter.setScale has a new 'rate' parameter which allows particles to change in scale over time, using any Easing value or timescale.
+* Emitter.setScale now allows you to scale the x and y axis of the particles independently.
+* Emitter.setAlpha has a new 'rate' parameter which allows particles to change alpha over time, using any Easing value or timescale.
+* Emitter.bringToTop and Emitter.sendToBack are booleans that let you optionally set the display order of the Particle when emitted.
+* Emitter now calls the Phaser.Particle.onEmit function, which is left empty for you to override and add in custom behaviours.
+* p2.World has a new contactMaterial property, which can be configured like a normal P2 Contact Material and is applied when two bodies hit that don't have defined materials.
+* Group.remove has a new 'destroy' parameter (false by default), which will optionally call destroy on the item removed from the Group.
+* Group.removeAll has a new 'destroy' parameter (false by default), which will optionally call destroy on the items removed from the Group.
+* Group.removeBetween has a new 'destroy' parameter (false by default), which will optionally call destroy on the items removed from the Group.
+* @georgiee created a new P2.FixtureList class to allow easy access the fixtures of a created P2 Body:
+
+This is especially useful in combination with PhysicsEditor and P2.Body#addPhaserPolygon.
+
+You can configure your whole collision grouping in PhysicsEditor and then you can later change the mask bits easily with this class. You can also access parts (groups) and named fixtures by a group index or a fixture key - both properties can be set in PhysicsEditor with the custom phaser exporter.
+
+Use cases:
+
+* Configure collision bits in PhysicsEditor and you want to change them later.
+* Place a sensor in your fixture and access this single fixture later (to disable temporarily)
+* Create a small body with threes fixtures (circle, circle + polygon/convex). Now you want that the polygon part to behave like rubber and assign a bouncing (restitution > 1) material. Assign a fixture key in PhysicsEditor and access the fixture like this. (see the image for the fixture I described)
+
+
+Bug Fixes
+
+* If you inputEnable = false a gameobject you couldn't re-enable it again using inputEnable = true, only directly via the handler (thanks @nickrall, fix #673)
+* Fixed setTexture bug with TilingSprite (pixi.js 1.5.2 bug fix)
+* Fixed anchor point bug in canvas with TilingSprite (pixi.js 1.5.2 bug fix)
+* Fixed positionOffset not begin correct in TilingSprite (pixi.js 1.5.2 bug fix)
+* Fixed issue where filters were not being applied to TilingSprite (pixi.js 1.5.2 bug fix)
+* Fixed SpriteBatch canvas transform bug (pixi.js 1.5.2 bug fix)
+* Fixed Cached textures issue when using base64 encoded images (@cacheflowe) (pixi.js 1.5.2 bug fix)
+* Fixed issue where visibility was not being respected in sprite batch (pixi.js 1.5.2 bug fix)
+* Fixed bug in gl.bindTexture which tried to use an undefined private var. (@photonstorm) (pixi.js 1.5.2 bug fix)
+* Fixed the 'short cut' version of Math.floor in setTransform if roundPixels is true. (@photonstorm) (pixi.js 1.5.2 bug fix)
+* SoundManager.boot will check to see if the AudioContext was created before carrying on (thanks @keyle, fix #669)
+* Fixed bug where move up and move down method in groups did not work (thanks @jonthulu, fix #684)
+* Fixed bug in Group.next when cursor is at the last child (thanks @jonthulu, fix #688)
+* Emitter.minParticleScale and maxParticleScale wasn't resetting the Body size correctly.
+* Group.removeBetween now properly iterates through the children.
+* P2.World had a type in the restitution method title. Now fixed.
+* Objects with an InputHandler now deactivate it when the object is removed from a Group but not destroyed (fix #672)
+* Fixed the vectors used in the BlurX and BlurY filters (thanks @nickryall, fix #668)
+
+
+p2.js v0.5.0
+
+* Added property .enableIslandSleeping to World.
+* Added property .useFrictionGravityOnZeroGravity to World.
+* Renamed .useWorldGravityForFrictionApproximation in World to .useWorldGravityAsFrictionGravity to keep things more uniform.
+* Sleep improvements.
+* Added property .frictionIterations to GSSolver, and removed .skipFrictionIterations.
+* Upgraded to gl-matrix 2.1.0.
+* Removed QuadTree.
+* Removed mat2.
+* Added Utils.extend.
+* Added methods .setStiffness and .setRelaxation methods to Constraint.
+* Removed properties .stiffness, .relaxation and .useGlobalEquationParameters from GSSolver.
+* Added methods .setGlobalStiffness, .setGlobalRelaxation, .setGlobalEquationParameters to World.
+* Renamed property .eps to .epsilon for Equation.
+* Removed property .useBoundingBoxes from NaiveBroadphase in favor of the new property .boundingVolumeType in Broadphase.
+* Added methods .getMaxForce and .setMaxForce to LockConstraint.
+* Changed property names .bi, .bj, .ni, .ri, .rj to .bodyA, .bodyB, .normalA, .contactPointA, .contactPointB in Equation, ContactEquation and FrictionEquation classes.
+* Removed IslandSolver in favor of the new property World.islandSplit.
+* Changed constructors of the Constraints so they all take an options object as last parameter.
+* Added property .collideConnected to Constraint.
+* Added property .islandSplit to World.
+* Added methods .disableBodyCollision and .enableBodyCollision to World.
+* Added properties .useWorldGravityForFrictionApproximation and .frictionGravity to World.
+* Added Heightfield class.
+* Removed properties .defaultFriction and .defaultRestitution from World, in favor of .defaultContactMaterial.
+* Added property .enabled to Equation.
+* Added property .surfaceVelocity to ContactMaterial.
+* Added property .sensor to Shape.
+* World now emits events 'beginContact', 'endContact' and 'preSolve'.
+* Added property .gravityScale to Body.
+* Renamed class SAP1DBroadphase to SAPBroadphase.
+* Added property .interpolatedPosition to Body`.
+* Added method .internalStep to World.
+* Added property .applyGravity to World.
+* Renamed method .computeC to .computeInvC in Equation, and made it compute the inverse.
+* Added static method Utils.splice.
+* Added property .world to Body.
+* Added property .fixedRotation to Body.
+* Added class AABB.
+* Added properties .aabb and .aabbNeedsUpdate to Body, as well as a method .updateAABB.
+* Added property .useBoundingBoxes to NaiveBroadphase.
+* Added static method Broadphase.aabbCheck.
+* Added method .computeAABB to Shape.
+* Added static method Broadphase.canCollide.
+* Body now inherits from EventEmitter, and dispatches events 'sleep','sleepy' and 'wakeup'.
+* Added properties .allowSleep, .sleepState, .sleepSpeedLimit, .sleepTimeLimit, .lastTimeSleepy as well as methods .sleep, .wakeUp and .sleepTick to Body.
+* Added enums Body.AWAKE, Body.SLEEPY, Body.SLEEPING.
+* Added property .enableBodySleeping to World.
+* Added options .disableRotationalLock, .lowerLimit, .upperLimit to PrismaticConstraint constructor.
+* Added methods .enableMotor, .disableMotor to PrismaticConstraint as well as properties .motorEnabled, .motorSpeed, .motorEquation.
+
+
 Version 2.0.2 - "Ghealdan" - 28th March 2014
 --------------------------------------------
 

@@ -307,6 +307,10 @@
 						</li>
 						
 						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.FixtureList.html">FixtureList</a>
+						</li>
+						
+						<li class="class-depth-3">
 							<a href="Phaser.Physics.P2.GearConstraint.html">GearConstraint</a>
 						</li>
 						
@@ -388,6 +392,10 @@
 						
 						<li class="class-depth-1">
 							<a href="Phaser.Signal.html">Signal</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.SignalBinding.html">SignalBinding</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -484,10 +492,6 @@
 						
 						<li class="class-depth-1">
 							<a href="Phaser.World.html">World</a>
-						</li>
-						
-						<li class="class-depth-0">
-							<a href="SignalBinding.html">SignalBinding</a>
 						</li>
 						
 
@@ -738,6 +742,14 @@
             
                 
                 <dt class="class-depth-3">
+                    <a href="Phaser.Physics.P2.FixtureList.html">FixtureList</a>
+                </dt>
+                <dd>
+                    
+                </dd>
+            
+                
+                <dt class="class-depth-3">
                     <a href="Phaser.Physics.P2.GearConstraint.html">GearConstraint</a>
                 </dt>
                 <dd>
@@ -809,108 +821,6 @@
         <h3 class="subsection-title">Members</h3>
 
         <dl>
-            
-<dt>
-    <h4 class="name" id="_toRemove"><span class="type-signature"></span>_toRemove<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>_toRemove</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">array</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Internal var used to hold references to bodies to remove from the world on the next step.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-142">line 142</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
             
 <dt>
     <h4 class="name" id="applyDamping"><span class="type-signature"></span>applyDamping<span class="type-signature"></span></h4>
@@ -997,7 +907,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-1700">line 1700</a>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-1713">line 1713</a>
     </li></ul></dd>
     
 
@@ -1099,7 +1009,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-1720">line 1720</a>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-1733">line 1733</a>
     </li></ul></dd>
     
 
@@ -1201,7 +1111,313 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-1680">line 1680</a>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-1693">line 1693</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="boundsCollidesWith"><span class="type-signature"></span>boundsCollidesWith<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>boundsCollidesWith</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">array</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>An array of the bodies the world bounds collides with.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-160">line 160</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="boundsCollisionGroup"><span class="type-signature"></span>boundsCollisionGroup<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>boundsCollisionGroup</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Physics.P2.CollisionGroup.html">Phaser.Physics.P2.CollisionGroup</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>A default collision group.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-150">line 150</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="callbackContext"><span class="type-signature"></span>callbackContext<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>callbackContext</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The context under which the callbacks are fired.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-112">line 112</a>
     </li></ul></dd>
     
 
@@ -1274,7 +1490,7 @@
 
             
 
-            <td class="description last"><p>Internal var.</p></td>
+            <td class="description last"><p>An array containing the collision groups that have been defined in the World.</p></td>
         </tr>
 
 	
@@ -1303,7 +1519,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-147">line 147</a>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-140">line 140</a>
     </li></ul></dd>
     
 
@@ -1405,7 +1621,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-1660">line 1660</a>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-1673">line 1673</a>
     </li></ul></dd>
     
 
@@ -1507,7 +1723,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-1600">line 1600</a>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-1613">line 1613</a>
     </li></ul></dd>
     
 
@@ -1609,7 +1825,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-1640">line 1640</a>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-1653">line 1653</a>
     </li></ul></dd>
     
 
@@ -1711,7 +1927,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-1775">line 1775</a>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-1788">line 1788</a>
     </li></ul></dd>
     
 
@@ -1813,7 +2029,109 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-1795">line 1795</a>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-1808">line 1808</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="everythingCollisionGroup"><span class="type-signature"></span>everythingCollisionGroup<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>everythingCollisionGroup</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Physics.P2.CollisionGroup.html">Phaser.Physics.P2.CollisionGroup</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>A default collision group.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-155">line 155</a>
     </li></ul></dd>
     
 
@@ -2017,7 +2335,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-1580">line 1580</a>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-1593">line 1593</a>
     </li></ul></dd>
     
 
@@ -2182,7 +2500,7 @@
             <td class="type">
             
                 
-<span class="param-type">Phaser.InversePointProxy</span>
+<span class="param-type"><a href="Phaser.Physics.P2.InversePointProxy.html">Phaser.Physics.P2.InversePointProxy</a></span>
 
 
             
@@ -2222,108 +2540,6 @@
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
         <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-57">line 57</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="impactCallback"><span class="type-signature"></span>impactCallback<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>onImpact</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Phaser.Signal.html">Phaser.Signal</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Dispatched when a first contact is created between two bodies. This event is fired after the step has been done.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-114">line 114</a>
     </li></ul></dd>
     
 
@@ -2443,6 +2659,108 @@
         
             
 <dt>
+    <h4 class="name" id="nothingCollisionGroup"><span class="type-signature"></span>nothingCollisionGroup<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>nothingCollisionGroup</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Physics.P2.CollisionGroup.html">Phaser.Physics.P2.CollisionGroup</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>A default collision group.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-145">line 145</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
     <h4 class="name" id="onBeginContact"><span class="type-signature"></span>onBeginContact<span class="type-signature"></span></h4>
     
     
@@ -2527,7 +2845,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-119">line 119</a>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-117">line 117</a>
     </li></ul></dd>
     
 
@@ -3241,7 +3559,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-124">line 124</a>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-122">line 122</a>
     </li></ul></dd>
     
 
@@ -3502,13 +3820,13 @@
 
         <tr>
             
-                <td class="name"><code>onPostBroadphase</code></td>
+                <td class="name"><code>postBroadphaseCallback</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="Phaser.Signal.html">Phaser.Signal</a></span>
+<span class="param-type">function</span>
 
 
             
@@ -3518,7 +3836,7 @@
 
             
 
-            <td class="description last"><p>Dispatched after the Broadphase has collected collision pairs in the world.</p></td>
+            <td class="description last"><p>A postBroadphase callback.</p></td>
         </tr>
 
 	
@@ -3649,7 +3967,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-1620">line 1620</a>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-1633">line 1633</a>
     </li></ul></dd>
     
 
@@ -3751,7 +4069,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-1740">line 1740</a>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-1753">line 1753</a>
     </li></ul></dd>
     
 
@@ -3853,7 +4171,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-1760">line 1760</a>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-1773">line 1773</a>
     </li></ul></dd>
     
 
@@ -3955,7 +4273,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-1815">line 1815</a>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-1828">line 1828</a>
     </li></ul></dd>
     
 
@@ -4219,7 +4537,7 @@
 
         <tr>
             
-                <td class="name"><code>game</code></td>
+                <td class="name"><code>world</code></td>
             
 
             <td class="type">
@@ -4378,7 +4696,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-669">line 669</a>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-682">line 682</a>
     </li></ul></dd>
     
 
@@ -4519,7 +4837,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-884">line 884</a>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-897">line 897</a>
     </li></ul></dd>
     
 
@@ -4660,7 +4978,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-918">line 918</a>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-931">line 931</a>
     </li></ul></dd>
     
 
@@ -4801,7 +5119,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-713">line 713</a>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-726">line 726</a>
     </li></ul></dd>
     
 
@@ -4942,7 +5260,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-384">line 384</a>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-397">line 397</a>
     </li></ul></dd>
     
 
@@ -5011,7 +5329,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-633">line 633</a>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-646">line 646</a>
     </li></ul></dd>
     
 
@@ -5178,7 +5496,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-1407">line 1407</a>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-1420">line 1420</a>
     </li></ul></dd>
     
 
@@ -5395,7 +5713,7 @@ Note that the polylines must be created in such a way that they can withstand po
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-1365">line 1365</a>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-1378">line 1378</a>
     </li></ul></dd>
     
 
@@ -5676,7 +5994,7 @@ Therefore understand it's a very expensive operation and not to be done in a cor
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-1429">line 1429</a>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-1442">line 1442</a>
     </li></ul></dd>
     
 
@@ -6108,7 +6426,7 @@ Therefore understand it's a very expensive operation and not to be done in a cor
             <td class="type">
             
                 
-<span class="param-type">Array.&lt;number></span>
+<span class="param-type"><a href="Array.html">Array</a>.&lt;number></span>
 |
 
 <span class="param-type">number</span>
@@ -6167,7 +6485,7 @@ Therefore understand it's a very expensive operation and not to be done in a cor
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-1282">line 1282</a>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-1295">line 1295</a>
     </li></ul></dd>
     
 
@@ -6324,7 +6642,7 @@ Collision Groups are handled using bitmasks, therefore you have a fixed limit yo
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-1174">line 1174</a>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-1187">line 1187</a>
     </li></ul></dd>
     
 
@@ -6520,7 +6838,7 @@ Collision Groups are handled using bitmasks, therefore you have a fixed limit yo
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-1011">line 1011</a>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-1024">line 1024</a>
     </li></ul></dd>
     
 
@@ -6778,7 +7096,7 @@ Collision Groups are handled using bitmasks, therefore you have a fixed limit yo
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-747">line 747</a>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-760">line 760</a>
     </li></ul></dd>
     
 
@@ -7060,7 +7378,7 @@ Collision Groups are handled using bitmasks, therefore you have a fixed limit yo
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-773">line 773</a>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-786">line 786</a>
     </li></ul></dd>
     
 
@@ -7245,7 +7563,7 @@ Collision Groups are handled using bitmasks, therefore you have a fixed limit yo
             <td class="type">
             
                 
-<span class="param-type">Array</span>
+<span class="param-type"><a href="Array.html">Array</a></span>
 
 
             
@@ -7377,7 +7695,7 @@ Collision Groups are handled using bitmasks, therefore you have a fixed limit yo
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-827">line 827</a>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-840">line 840</a>
     </li></ul></dd>
     
 
@@ -7565,7 +7883,7 @@ Contact Materials have properties such as friction and restitution that allow fo
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-984">line 984</a>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-997">line 997</a>
     </li></ul></dd>
     
 
@@ -7997,7 +8315,7 @@ Contact Materials have properties such as friction and restitution that allow fo
             <td class="type">
             
                 
-<span class="param-type">Array.&lt;number></span>
+<span class="param-type"><a href="Array.html">Array</a>.&lt;number></span>
 |
 
 <span class="param-type">number</span>
@@ -8056,7 +8374,7 @@ Contact Materials have properties such as friction and restitution that allow fo
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-1324">line 1324</a>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-1337">line 1337</a>
     </li></ul></dd>
     
 
@@ -8093,7 +8411,7 @@ Contact Materials have properties such as friction and restitution that allow fo
     
     <div class="description">
         <p>Constraint that only allows bodies to move along a line, relative to each other.
-See http://www.iforce2d.net/b2dtut/joints-prismatic</p>
+See <a href="http://www.iforce2d.net/b2dtut/joints-prismatic">http://www.iforce2d.net/b2dtut/joints-prismatic</a></p>
     </div>
     
 
@@ -8258,7 +8576,7 @@ See http://www.iforce2d.net/b2dtut/joints-prismatic</p>
             <td class="type">
             
                 
-<span class="param-type">Array</span>
+<span class="param-type"><a href="Array.html">Array</a></span>
 
 
             
@@ -8295,7 +8613,7 @@ See http://www.iforce2d.net/b2dtut/joints-prismatic</p>
             <td class="type">
             
                 
-<span class="param-type">Array</span>
+<span class="param-type"><a href="Array.html">Array</a></span>
 
 
             
@@ -8332,7 +8650,7 @@ See http://www.iforce2d.net/b2dtut/joints-prismatic</p>
             <td class="type">
             
                 
-<span class="param-type">Array</span>
+<span class="param-type"><a href="Array.html">Array</a></span>
 
 
             
@@ -8425,7 +8743,7 @@ See http://www.iforce2d.net/b2dtut/joints-prismatic</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-854">line 854</a>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-867">line 867</a>
     </li></ul></dd>
     
 
@@ -8570,7 +8888,7 @@ The pivot points are given in world (pixel) coordinates.</p>
             <td class="type">
             
                 
-<span class="param-type">Array</span>
+<span class="param-type"><a href="Array.html">Array</a></span>
 
 
             
@@ -8646,7 +8964,7 @@ The pivot points are given in world (pixel) coordinates.</p>
             <td class="type">
             
                 
-<span class="param-type">Array</span>
+<span class="param-type"><a href="Array.html">Array</a></span>
 
 
             
@@ -8739,7 +9057,7 @@ The pivot points are given in world (pixel) coordinates.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-799">line 799</a>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-812">line 812</a>
     </li></ul></dd>
     
 
@@ -9158,7 +9476,7 @@ The pivot points are given in world (pixel) coordinates.</p>
             <td class="type">
             
                 
-<span class="param-type">Array</span>
+<span class="param-type"><a href="Array.html">Array</a></span>
 
 
             
@@ -9195,7 +9513,7 @@ The pivot points are given in world (pixel) coordinates.</p>
             <td class="type">
             
                 
-<span class="param-type">Array</span>
+<span class="param-type"><a href="Array.html">Array</a></span>
 
 
             
@@ -9232,7 +9550,7 @@ The pivot points are given in world (pixel) coordinates.</p>
             <td class="type">
             
                 
-<span class="param-type">Array</span>
+<span class="param-type"><a href="Array.html">Array</a></span>
 
 
             
@@ -9269,7 +9587,7 @@ The pivot points are given in world (pixel) coordinates.</p>
             <td class="type">
             
                 
-<span class="param-type">Array</span>
+<span class="param-type"><a href="Array.html">Array</a></span>
 
 
             
@@ -9325,7 +9643,7 @@ The pivot points are given in world (pixel) coordinates.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-1248">line 1248</a>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-1261">line 1261</a>
     </li></ul></dd>
     
 
@@ -9417,7 +9735,7 @@ The pivot points are given in world (pixel) coordinates.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-656">line 656</a>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-669">line 669</a>
     </li></ul></dd>
     
 
@@ -9636,7 +9954,7 @@ A game object can only have 1 physics body active at any one time, and it can't 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-198">line 198</a>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-211">line 211</a>
     </li></ul></dd>
     
 
@@ -9778,7 +10096,7 @@ A game object can only have 1 physics body active at any one time, and it can't 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-256">line 256</a>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-269">line 269</a>
     </li></ul></dd>
     
 
@@ -9896,7 +10214,7 @@ A game object can only have 1 physics body active at any one time, and it can't 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-406">line 406</a>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-419">line 419</a>
     </li></ul></dd>
     
 
@@ -9965,7 +10283,7 @@ A game object can only have 1 physics body active at any one time, and it can't 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-1031">line 1031</a>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-1044">line 1044</a>
     </li></ul></dd>
     
 
@@ -10106,7 +10424,7 @@ A game object can only have 1 physics body active at any one time, and it can't 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-1051">line 1051</a>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-1064">line 1064</a>
     </li></ul></dd>
     
 
@@ -10198,7 +10516,7 @@ A game object can only have 1 physics body active at any one time, and it can't 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-1100">line 1100</a>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-1113">line 1113</a>
     </li></ul></dd>
     
 
@@ -10362,7 +10680,7 @@ A game object can only have 1 physics body active at any one time, and it can't 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-952">line 952</a>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-965">line 965</a>
     </li></ul></dd>
     
 
@@ -10457,7 +10775,7 @@ A game object can only have 1 physics body active at any one time, and it can't 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-1080">line 1080</a>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-1093">line 1093</a>
     </li></ul></dd>
     
 
@@ -10508,7 +10826,7 @@ A game object can only have 1 physics body active at any one time, and it can't 
         
             
 <dt>
-    <h4 class="name" id="hitTest"><span class="type-signature"></span>hitTest<span class="signature">(worldPoint, <span class="optional">bodies</span>, <span class="optional">precision</span>, <span class="optional">filterStatic</span>)</span><span class="type-signature"> &rarr; {Array}</span></h4>
+    <h4 class="name" id="hitTest"><span class="type-signature"></span>hitTest<span class="signature">(worldPoint, <span class="optional">bodies</span>, <span class="optional">precision</span>, <span class="optional">filterStatic</span>)</span><span class="type-signature"> &rarr; {<a href="Array.html">Array</a>}</span></h4>
     
     
 </dt>
@@ -10596,7 +10914,7 @@ A game object can only have 1 physics body active at any one time, and it can't 
             <td class="type">
             
                 
-<span class="param-type">Array.&lt;(<a href="Phaser.Physics.P2.Body.html">Phaser.Physics.P2.Body</a>|<a href="Phaser.Sprite.html">Phaser.Sprite</a>|<a href="p2.Body.html">p2.Body</a>)></span>
+<span class="param-type"><a href="Array.html">Array</a>.&lt;(<a href="Phaser.Physics.P2.Body.html">Phaser.Physics.P2.Body</a>|<a href="Phaser.Sprite.html">Phaser.Sprite</a>|<a href="p2.Body.html">p2.Body</a>)></span>
 
 
             
@@ -10730,7 +11048,7 @@ A game object can only have 1 physics body active at any one time, and it can't 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-1120">line 1120</a>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-1133">line 1133</a>
     </li></ul></dd>
     
 
@@ -10766,7 +11084,7 @@ A game object can only have 1 physics body active at any one time, and it can't 
 	</dt>
 	<dd>
 		
-<span class="param-type">Array</span>
+<span class="param-type"><a href="Array.html">Array</a></span>
 
 
 	</dd>
@@ -10873,7 +11191,7 @@ If you need to modify this you can over-ride these functions via the Physics Con
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-1518">line 1518</a>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-1531">line 1531</a>
     </li></ul></dd>
     
 
@@ -11016,7 +11334,7 @@ If you need to modify this you can over-ride these functions via the Physics Con
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-1548">line 1548</a>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-1561">line 1561</a>
     </li></ul></dd>
     
 
@@ -11108,7 +11426,7 @@ If you need to modify this you can over-ride these functions via the Physics Con
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-180">line 180</a>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-193">line 193</a>
     </li></ul></dd>
     
 
@@ -11228,7 +11546,7 @@ If you need to modify this you can over-ride these functions via the Physics Con
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-1533">line 1533</a>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-1546">line 1546</a>
     </li></ul></dd>
     
 
@@ -11371,7 +11689,7 @@ If you need to modify this you can over-ride these functions via the Physics Con
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-1563">line 1563</a>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-1576">line 1576</a>
     </li></ul></dd>
     
 
@@ -11512,7 +11830,7 @@ If you need to modify this you can over-ride these functions via the Physics Con
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-693">line 693</a>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-706">line 706</a>
     </li></ul></dd>
     
 
@@ -11653,7 +11971,7 @@ If you need to modify this you can over-ride these functions via the Physics Con
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-168">line 168</a>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-181">line 181</a>
     </li></ul></dd>
     
 
@@ -11771,7 +12089,7 @@ If you need to modify this you can over-ride these functions via the Physics Con
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-901">line 901</a>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-914">line 914</a>
     </li></ul></dd>
     
 
@@ -11912,7 +12230,7 @@ If you need to modify this you can over-ride these functions via the Physics Con
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-935">line 935</a>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-948">line 948</a>
     </li></ul></dd>
     
 
@@ -12053,7 +12371,7 @@ If you need to modify this you can over-ride these functions via the Physics Con
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-730">line 730</a>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-743">line 743</a>
     </li></ul></dd>
     
 
@@ -12511,7 +12829,7 @@ You can optionally set which 'walls' to create: left, right, top or bottom.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-520">line 520</a>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-533">line 533</a>
     </li></ul></dd>
     
 
@@ -12630,7 +12948,7 @@ In a busy world hundreds of impact events can be generated every step, so only e
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-275">line 275</a>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-288">line 288</a>
     </li></ul></dd>
     
 
@@ -12771,7 +13089,7 @@ In a busy world hundreds of impact events can be generated every step, so only e
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-966">line 966</a>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-979">line 979</a>
     </li></ul></dd>
     
 
@@ -12915,7 +13233,7 @@ Returning <code>true</code> from the callback will ensure they are checked in th
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-295">line 295</a>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-308">line 308</a>
     </li></ul></dd>
     
 
@@ -12984,7 +13302,7 @@ Returning <code>true</code> from the callback will ensure they are checked in th
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-1162">line 1162</a>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-1175">line 1175</a>
     </li></ul></dd>
     
 
@@ -13072,7 +13390,7 @@ Returning <code>true</code> from the callback will ensure they are checked in th
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-617">line 617</a>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-630">line 630</a>
     </li></ul></dd>
     
 
@@ -13212,7 +13530,7 @@ To fix this you need to adjust the bounds to use its own collision group first B
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-484">line 484</a>
+        <a href="World.js.html">physics/p2/World.js</a>, <a href="World.js.html#sunlight-1-line-497">line 497</a>
     </li></ul></dd>
     
 
@@ -13262,8 +13580,8 @@ To fix this you need to adjust the bounds to use its own collision group first B
 					<br />
 					
 		<span class="jsdoc-message">
-		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha4</a>
-		on Fri Apr 11 2014 00:12:16 GMT+0200 (CEST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
+		on Fri Apr 11 2014 13:08:33 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

@@ -307,6 +307,10 @@
 						</li>
 						
 						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.FixtureList.html">FixtureList</a>
+						</li>
+						
+						<li class="class-depth-3">
 							<a href="Phaser.Physics.P2.GearConstraint.html">GearConstraint</a>
 						</li>
 						
@@ -388,6 +392,10 @@
 						
 						<li class="class-depth-1">
 							<a href="Phaser.Signal.html">Signal</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.SignalBinding.html">SignalBinding</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -484,10 +492,6 @@
 						
 						<li class="class-depth-1">
 							<a href="Phaser.World.html">World</a>
-						</li>
-						
-						<li class="class-depth-0">
-							<a href="SignalBinding.html">SignalBinding</a>
 						</li>
 						
 
@@ -694,7 +698,7 @@ Phaser.Sound = function (game, key, volume, loop, connect) {
     }
     else
     {
-        if (this.game.cache.getSound(key) &amp;&amp; this.game.cache.isSoundReady(key))
+        if (this.game.cache.getSound(key) && this.game.cache.isSoundReady(key))
         {
             this._sound = this.game.cache.getSoundData(key);
             this.totalDuration = 0;
@@ -817,7 +821,7 @@ Phaser.Sound.prototype = {
     */
     update: function () {
 
-        if (this.pendingPlayback &amp;&amp; this.game.cache.isSoundReady(this.key))
+        if (this.pendingPlayback && this.game.cache.isSoundReady(this.key))
         {
             this.pendingPlayback = false;
             this.play(this._tempMarker, this._tempPosition, this._tempVolume, this._tempLoop);
@@ -888,13 +892,13 @@ Phaser.Sound.prototype = {
         if (typeof marker === 'undefined') { marker = ''; }
         if (typeof forceRestart === 'undefined') { forceRestart = true; }
 
-        if (this.isPlaying === true &amp;&amp; forceRestart === false &amp;&amp; this.override === false)
+        if (this.isPlaying === true && forceRestart === false && this.override === false)
         {
             //  Use Restart instead
             return;
         }
 
-        if (this.isPlaying &amp;&amp; this.override)
+        if (this.isPlaying && this.override)
         {
             if (this.usingWebAudio)
             {
@@ -999,7 +1003,7 @@ Phaser.Sound.prototype = {
                     this.durationMS = this.totalDuration * 1000;
                 }
 
-                if (this.loop &amp;&amp; marker === '')
+                if (this.loop && marker === '')
                 {
                     this._sound.loop = true;
                 }
@@ -1027,7 +1031,7 @@ Phaser.Sound.prototype = {
             {
                 this.pendingPlayback = true;
 
-                if (this.game.cache.getSound(this.key) &amp;&amp; this.game.cache.getSound(this.key).isDecoding === false)
+                if (this.game.cache.getSound(this.key) && this.game.cache.getSound(this.key).isDecoding === false)
                 {
                     this.game.sound.decode(this.key, this);
                 }
@@ -1036,7 +1040,7 @@ Phaser.Sound.prototype = {
         else
         {
             // console.log('Sound play Audio');
-            if (this.game.cache.getSound(this.key) &amp;&amp; this.game.cache.getSound(this.key).locked)
+            if (this.game.cache.getSound(this.key) && this.game.cache.getSound(this.key).locked)
             {
                 // console.log('tried playing locked sound, pending set, reload started');
                 this.game.cache.reloadSound(this.key);
@@ -1045,7 +1049,7 @@ Phaser.Sound.prototype = {
             else
             {
                 // console.log('sound not locked, state?', this._sound.readyState);
-                if (this._sound &amp;&amp; (this.game.device.cocoonJS || this._sound.readyState === 4))
+                if (this._sound && (this.game.device.cocoonJS || this._sound.readyState === 4))
                 {
                     this._sound.play();
                     //  This doesn't become available until you call play(), wonderful ...
@@ -1109,7 +1113,7 @@ Phaser.Sound.prototype = {
     */
     pause: function () {
 
-        if (this.isPlaying &amp;&amp; this._sound)
+        if (this.isPlaying && this._sound)
         {
             this.stop();
             this.isPlaying = false;
@@ -1127,7 +1131,7 @@ Phaser.Sound.prototype = {
     */
     resume: function () {
 
-        if (this.paused &amp;&amp; this._sound)
+        if (this.paused && this._sound)
         {
             if (this.usingWebAudio)
             {
@@ -1180,7 +1184,7 @@ Phaser.Sound.prototype = {
     */
     stop: function () {
 
-        if (this.isPlaying &amp;&amp; this._sound)
+        if (this.isPlaying && this._sound)
         {
             if (this.usingWebAudio)
             {
@@ -1298,7 +1302,7 @@ Object.defineProperty(Phaser.Sound.prototype, "mute", {
                 this._muteVolume = this.gainNode.gain.value;
                 this.gainNode.gain.value = 0;
             }
-            else if (this.usingAudioTag &amp;&amp; this._sound)
+            else if (this.usingAudioTag && this._sound)
             {
                 this._muteVolume = this._sound.volume;
                 this._sound.volume = 0;
@@ -1312,7 +1316,7 @@ Object.defineProperty(Phaser.Sound.prototype, "mute", {
             {
                 this.gainNode.gain.value = this._muteVolume;
             }
-            else if (this.usingAudioTag &amp;&amp; this._sound)
+            else if (this.usingAudioTag && this._sound)
             {
                 this._sound.volume = this._muteVolume;
             }
@@ -1342,10 +1346,10 @@ Object.defineProperty(Phaser.Sound.prototype, "volume", {
             this._volume = value;
             this.gainNode.gain.value = value;
         }
-        else if (this.usingAudioTag &amp;&amp; this._sound)
+        else if (this.usingAudioTag && this._sound)
         {
             //  Causes an Index size error in Firefox if you don't clamp the value
-            if (value >= 0 &amp;&amp; value &lt;= 1)
+            if (value >= 0 && value &lt;= 1)
             {
                 this._volume = value;
                 this._sound.volume = value;
@@ -1374,8 +1378,8 @@ Object.defineProperty(Phaser.Sound.prototype, "volume", {
 					<br />
 					
 		<span class="jsdoc-message">
-		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha4</a>
-		on Fri Apr 11 2014 00:12:14 GMT+0200 (CEST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
+		on Fri Apr 11 2014 13:08:21 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

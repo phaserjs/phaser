@@ -26,6 +26,17 @@ By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 What's new in 2.0.3?
 --------------------
 
+In this release we have upgraded both pixi.js to v1.5.2 and p2.js to v0.5.0. This improves features and stability across the whole framework, and as always you'll find the complete list of improvements below.
+
+We've taken some time to enhance the Particle Emitter adding a few substantial features such as the ability for Particles to now change scale or alpha over time using any of the easing functions, or apply a blend mode. These small additions now allow you to create visually more impressive effects than before, and while we still have a complete overhaul of the particle system on our roadmap it's a welcome boost in the meantime.
+
+Along with the p2.js update we have also refined the Phaser P2 classes, making tweaks that help overall performance, such as splitting the world bounds into separate bodies. The World now has a default contact material, which allows for easier setting of responses when objects collide with no materials set. All in all it's a powerful update.
+
+What's interesting is that loads of the new features and bug fixes in this release have come direct from the community. Of course we've been busy and working hard on Phaser as well, but the volume of contributors now is fantastic. We've have always listed their names next to the issues they helped resolve, but now we're doing so with their github usernames directly so they appear on the revisions change log.
+
+As promised with the 2.0.0 release we have done all of this without changing existing API calls in the core Phaser classes. New features are introduced either via the creation of new optional parameters or by creating new methods. Where a feature has been deprecated we have flagged it as such in the docs, but left it in so as to not break existing code.
+
+Some of you may not be aware, but the `phaser.min.js` file in the build folder contains all 3 physics systems bundled in. We've refined our build process so that it's easy for you to create custom builds now via grunt, but if you know you only need Arcade Physics (and not P2 or Ninja) then you can use `phaser-arcade-physics.min.js` which is found in the `build/custom` folder. This will save you 180KB from the minified file size, so please use it if you can.
 
 
 Welcome to Phaser
@@ -84,7 +95,7 @@ Updates
 * PluginManager parent parameter removed as it's redundant. Also most core functions tidied up and jsdocs fixed.
 * p2.World.defaultRestitution has been deprecated and is now p2.World.restitution.
 * p2.World.defaultFriction has been deprecated and is now p2.World.friction.
-* p2.World now uses 4 bodies for the world boundaries, rather than 1 body with 4 shapes. This helps the broadphase massively.
+* p2.World now uses 4 bodies for the world boundaries, rather than 1 body with 4 shapes. This stops the bounds triggering narrowphase with every single body in the world.
 * p2.World bounds are now included in the callback events such as beginContact and impact events.
 * Thanks to @STuFF the Classes drop-down list in the API docs now indents the sub-classes.
 
@@ -219,13 +230,17 @@ The full Change Log is at https://github.com/photonstorm/phaser/blob/master/chan
 How to Build
 ------------
 
-We provide a fully compiled version of Phaser in the `build` directory, in both plain and minified formats.
+We provide a fully compiled version of Phaser in the `build` folder, in both plain and minified formats.
 
-We also provide a Grunt script that will build Phaser from source along with all the examples.
+You will also find custom builds in the `build\custom` folder, that split phaser up into components.
 
-Run `grunt` to perform a default build to the `dist` folder and update the examples.
+We also provide a Grunt script that will build Phaser from source.
+
+Run `grunt` to perform a default build to the `dist` folder.
 
 If you replace Pixi or p2 then run `grunt replace` to patch their UMD strings so they work properly with Phaser and requireJS.
+
+Note: Some of you may not be aware, but the `phaser.min.js` file in the build folder contains all 3 physics systems bundled in. If you only need Arcade Physics then you can use `build\custom\phaser-arcade-physics.min.js` instead. This will save you 180KB from the minified file size.
 
 
 Koding
@@ -251,11 +266,11 @@ CDNJS
 
 Thanks to a community member Phaser is now available on [CDNJS](http://cdnjs.com). You can include the following in your html:
 
-`http://cdnjs.cloudflare.com/ajax/libs/phaser/2.0.2/phaser.min.js`
+`http://cdnjs.cloudflare.com/ajax/libs/phaser/2.0.3/phaser.min.js`
 
 Or if you prefer you can leave the protocol off, so it works via http and https:
 
-`//cdnjs.cloudflare.com/ajax/libs/phaser/2.0.2/phaser.min.js`
+`//cdnjs.cloudflare.com/ajax/libs/phaser/2.0.3/phaser.min.js`
 
 
 Requirements
@@ -273,13 +288,13 @@ Phaser is 576 KB minified (including all 3 physics engines, 311 KB without) and 
 Learn By Example
 ----------------
 
-Ever since we started Phaser we've been growing and expanding our extensive set of Examples. Currently over 250 of them!
+Ever since we started Phaser we've been growing and expanding our extensive set of Examples. Currently over 270 of them!
 
 They used to be bundled in the main Phaser repo, but because they got so large and in order to help with versioning we've moved them to their own repo.
 
-Please go and checkout https://github.com/photonstorm/phaser-examples
+So please checkout https://github.com/photonstorm/phaser-examples
 
-Phaser comes with an ever growing suite of Examples. Personally I feel that we learn better by looking at small refined code examples, so we created over 250 of them and create new ones to test every new feature added. Inside the `examples` repo you'll find the current set. If you write a particularly good example then please send it to us.
+Here you'll find an ever growing suite of Examples. Personally I feel that developers tend to learn better by looking at small refined code examples, so we created hundreds of them, and create new ones to test new features and updates. Inside the `examples` repo you'll find the current set. If you write a particularly good example then please send it to us.
 
 The examples need to be run through a local web server (in order to avoid file access permission errors from your browser). You can use your own web server, or start the included web server using grunt.
 
@@ -289,7 +304,7 @@ Using a locally installed web server browse to the examples folder:
 
 Alternatively in order to start the included web server, after you've cloned the repo, run `npm install` to install all dependencies, then `grunt connect` to start a local server. After running this command you should be able to access your local webserver at `http://127.0.0.1:8000`. Then browse to the examples folder: `http://127.0.0.1:8000/examples/index.html`
 
-There is a new 'Side View' example viewer as well. This loads all the examples into a left-hand frame for faster navigation.
+There is a new 'Side View' example viewer as well. This loads all the examples into a left-hand frame for faster navigation. And if you've got php installed into your web server you may want to try `debug.php`, which provides a minimal examples list and debug interface.
 
 You can also browse all [Phaser Examples](http://examples.phaser.io) online.
 

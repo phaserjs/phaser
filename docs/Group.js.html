@@ -307,6 +307,10 @@
 						</li>
 						
 						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.FixtureList.html">FixtureList</a>
+						</li>
+						
+						<li class="class-depth-3">
 							<a href="Phaser.Physics.P2.GearConstraint.html">GearConstraint</a>
 						</li>
 						
@@ -388,6 +392,10 @@
 						
 						<li class="class-depth-1">
 							<a href="Phaser.Signal.html">Signal</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.SignalBinding.html">SignalBinding</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -484,10 +492,6 @@
 						
 						<li class="class-depth-1">
 							<a href="Phaser.World.html">World</a>
-						</li>
-						
-						<li class="class-depth-0">
-							<a href="SignalBinding.html">SignalBinding</a>
 						</li>
 						
 
@@ -950,7 +954,7 @@ Phaser.Group.prototype.swap = function (child1, child2) {
 */
 Phaser.Group.prototype.bringToTop = function (child) {
 
-    if (child.parent === this &amp;&amp; this.getIndex(child) &lt; this.children.length)
+    if (child.parent === this && this.getIndex(child) &lt; this.children.length)
     {
         this.remove(child);
         this.add(child);
@@ -969,7 +973,7 @@ Phaser.Group.prototype.bringToTop = function (child) {
 */
 Phaser.Group.prototype.sendToBack = function (child) {
 
-    if (child.parent === this &amp;&amp; this.getIndex(child) > 0)
+    if (child.parent === this && this.getIndex(child) > 0)
     {
         this.remove(child);
         this.addAt(child, 0);
@@ -988,7 +992,7 @@ Phaser.Group.prototype.sendToBack = function (child) {
 */
 Phaser.Group.prototype.moveUp = function (child) {
 
-    if (child.parent === this &amp;&amp; this.getIndex(child) &lt; this.children.length - 1)
+    if (child.parent === this && this.getIndex(child) &lt; this.children.length - 1)
     {
         var a = this.getIndex(child);
         var b = this.getAt(a + 1);
@@ -1012,7 +1016,7 @@ Phaser.Group.prototype.moveUp = function (child) {
 */
 Phaser.Group.prototype.moveDown = function (child) {
 
-    if (child.parent === this &amp;&amp; this.getIndex(child) > 0)
+    if (child.parent === this && this.getIndex(child) > 0)
     {
         var a = this.getIndex(child);
         var b = this.getAt(a - 1);
@@ -1189,7 +1193,7 @@ Phaser.Group.prototype.set = function (child, key, value, checkAlive, checkVisib
     if (typeof checkAlive === 'undefined') { checkAlive = false; }
     if (typeof checkVisible === 'undefined') { checkVisible = false; }
 
-    if ((checkAlive === false || (checkAlive &amp;&amp; child.alive)) &amp;&amp; (checkVisible === false || (checkVisible &amp;&amp; child.visible)))
+    if ((checkAlive === false || (checkAlive && child.alive)) && (checkVisible === false || (checkVisible && child.visible)))
     {
         this.setProperty(child, key, value, operation);
     }
@@ -1221,7 +1225,7 @@ Phaser.Group.prototype.setAll = function (key, value, checkAlive, checkVisible, 
 
     for (var i = 0, len = this.children.length; i &lt; len; i++)
     {
-        if ((!checkAlive || (checkAlive &amp;&amp; this.children[i].alive)) &amp;&amp; (!checkVisible || (checkVisible &amp;&amp; this.children[i].visible)))
+        if ((!checkAlive || (checkAlive && this.children[i].alive)) && (!checkVisible || (checkVisible && this.children[i].visible)))
         {
             this.setProperty(this.children[i], key, value, operation);
         }
@@ -1253,7 +1257,7 @@ Phaser.Group.prototype.setAllChildren = function (key, value, checkAlive, checkV
 
     for (var i = 0, len = this.children.length; i &lt; len; i++)
     {
-        if ((!checkAlive || (checkAlive &amp;&amp; this.children[i].alive)) &amp;&amp; (!checkVisible || (checkVisible &amp;&amp; this.children[i].visible)))
+        if ((!checkAlive || (checkAlive && this.children[i].alive)) && (!checkVisible || (checkVisible && this.children[i].visible)))
         {
             if (this.children[i] instanceof Phaser.Group)
             {
@@ -1347,7 +1351,7 @@ Phaser.Group.prototype.callAllExists = function (callback, existsValue) {
 
     for (var i = 0, len = this.children.length; i &lt; len; i++)
     {
-        if (this.children[i].exists === existsValue &amp;&amp; this.children[i][callback])
+        if (this.children[i].exists === existsValue && this.children[i][callback])
         {
             this.children[i][callback].apply(this.children[i], args);
         }
@@ -1451,7 +1455,7 @@ Phaser.Group.prototype.callAll = function (method, context) {
     {
         callback = this.callbackFromArray(this.children[i], method, methodLength);
 
-        if (context &amp;&amp; callback)
+        if (context && callback)
         {
             callbackContext = this.callbackFromArray(this.children[i], context, contextLength);
 
@@ -1551,7 +1555,7 @@ Phaser.Group.prototype.forEach = function (callback, callbackContext, checkExist
 
     for (var i = 0, len = this.children.length; i &lt; len; i++)
     {
-        if (!checkExists || (checkExists &amp;&amp; this.children[i].exists))
+        if (!checkExists || (checkExists && this.children[i].exists))
         {
             args[0] = this.children[i];
             callback.apply(callbackContext, args);
@@ -1740,7 +1744,7 @@ Phaser.Group.prototype.descendingSortHandler = function (a, b) {
 */
 Phaser.Group.prototype.iterate = function (key, value, returnType, callback, callbackContext, args) {
 
-    if (returnType === Phaser.Group.RETURN_TOTAL &amp;&amp; this.children.length === 0)
+    if (returnType === Phaser.Group.RETURN_TOTAL && this.children.length === 0)
     {
         return 0;
     }
@@ -1907,13 +1911,16 @@ Phaser.Group.prototype.getRandom = function (startIndex, length) {
 *
 * @method Phaser.Group#remove
 * @param {Any} child - The child to remove.
+* @param {boolean} [destroy=false] - You can optionally call destroy on the child that was removed.
 * @return {boolean} true if the child was removed from this Group, otherwise false.
 */
-Phaser.Group.prototype.remove = function (child) {
+Phaser.Group.prototype.remove = function (child, destroy) {
+
+    if (typeof destroy === 'undefined') { destroy = false; }
 
     if (this.children.length === 0)
     {
-        return;
+        return false;
     }
 
     if (child.events)
@@ -1930,6 +1937,11 @@ Phaser.Group.prototype.remove = function (child) {
         this.next();
     }
 
+    if (destroy)
+    {
+        child.destroy();
+    }
+
     return true;
 
 };
@@ -1939,8 +1951,11 @@ Phaser.Group.prototype.remove = function (child) {
 * The Group container remains on the display list.
 *
 * @method Phaser.Group#removeAll
+* @param {boolean} [destroy=false] - You can optionally call destroy on the child that was removed.
 */
-Phaser.Group.prototype.removeAll = function () {
+Phaser.Group.prototype.removeAll = function (destroy) {
+
+    if (typeof destroy === 'undefined') { destroy = false; }
 
     if (this.children.length === 0)
     {
@@ -1955,6 +1970,11 @@ Phaser.Group.prototype.removeAll = function () {
         }
 
         this.removeChild(this.children[0]);
+
+        if (destroy)
+        {
+            this.children[0].destroy();
+        }
     }
     while (this.children.length > 0);
 
@@ -1968,10 +1988,12 @@ Phaser.Group.prototype.removeAll = function () {
 * @method Phaser.Group#removeBetween
 * @param {number} startIndex - The index to start removing children from.
 * @param {number} [endIndex] - The index to stop removing children at. Must be higher than startIndex. If undefined this method will remove all children between startIndex and the end of the Group.
+* @param {boolean} [destroy=false] - You can optionally call destroy on the child that was removed.
 */
-Phaser.Group.prototype.removeBetween = function (startIndex, endIndex) {
+Phaser.Group.prototype.removeBetween = function (startIndex, endIndex, destroy) {
 
     if (typeof endIndex === 'undefined') { endIndex = this.children.length; }
+    if (typeof destroy === 'undefined') { destroy = false; }
 
     if (this.children.length === 0)
     {
@@ -1993,6 +2015,11 @@ Phaser.Group.prototype.removeBetween = function (startIndex, endIndex) {
         }
 
         this.removeChild(this.children[i]);
+
+        if (destroy)
+        {
+            this.children[i].destroy();
+        }
 
         if (this.cursor === this.children[i])
         {
@@ -2183,8 +2210,8 @@ Object.defineProperty(Phaser.Group.prototype, "fixedToCamera", {
 					<br />
 					
 		<span class="jsdoc-message">
-		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha4</a>
-		on Fri Apr 11 2014 00:12:13 GMT+0200 (CEST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
+		on Fri Apr 11 2014 13:08:20 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

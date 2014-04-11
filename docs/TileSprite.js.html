@@ -307,6 +307,10 @@
 						</li>
 						
 						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.FixtureList.html">FixtureList</a>
+						</li>
+						
+						<li class="class-depth-3">
 							<a href="Phaser.Physics.P2.GearConstraint.html">GearConstraint</a>
 						</li>
 						
@@ -388,6 +392,10 @@
 						
 						<li class="class-depth-1">
 							<a href="Phaser.Signal.html">Signal</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.SignalBinding.html">SignalBinding</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -484,10 +492,6 @@
 						
 						<li class="class-depth-1">
 							<a href="Phaser.World.html">World</a>
-						</li>
-						
-						<li class="class-depth-0">
-							<a href="SignalBinding.html">SignalBinding</a>
 						</li>
 						
 
@@ -676,7 +680,7 @@ Phaser.TileSprite.prototype.constructor = Phaser.TileSprite;
 */
 Phaser.TileSprite.prototype.preUpdate = function() {
 
-    if (this._cache[4] === 1 &amp;&amp; this.exists)
+    if (this._cache[4] === 1 && this.exists)
     {
         this.world.setTo(this.parent.position.x + this.position.x, this.parent.position.y + this.position.y);
         this.worldTransform.tx = this.world.x;
@@ -721,12 +725,12 @@ Phaser.TileSprite.prototype.preUpdate = function() {
     if (this.checkWorldBounds)
     {
         //  The Sprite is already out of the world bounds, so let's check to see if it has come back again
-        if (this._cache[5] === 1 &amp;&amp; this.game.world.bounds.intersects(this._bounds))
+        if (this._cache[5] === 1 && this.game.world.bounds.intersects(this._bounds))
         {
             this._cache[5] = 0;
             this.events.onEnterBounds.dispatch(this);
         }
-        else if (this._cache[5] === 0 &amp;&amp; !this.game.world.bounds.intersects(this._bounds))
+        else if (this._cache[5] === 0 && !this.game.world.bounds.intersects(this._bounds))
         {
             //  The Sprite WAS in the screen, but has now left.
             this._cache[5] = 1;
@@ -786,7 +790,7 @@ Phaser.TileSprite.prototype.update = function() {
 */
 Phaser.TileSprite.prototype.postUpdate = function() {
 
-    if (this.exists &amp;&amp; this.body)
+    if (this.exists && this.body)
     {
         this.body.postUpdate();
     }
@@ -872,7 +876,7 @@ Phaser.TileSprite.prototype.loadTexture = function (key, frame) {
             this.setTexture(PIXI.TextureCache[this.key]);
             return;
         }
-        else if (typeof key === 'string' &amp;&amp; !this.game.cache.checkImageKey(key))
+        else if (typeof key === 'string' && !this.game.cache.checkImageKey(key))
         {
             this.key = '__missing';
             this.setTexture(PIXI.TextureCache[this.key]);
@@ -1140,7 +1144,7 @@ Object.defineProperty(Phaser.TileSprite.prototype, "exists", {
             //  exists = true
             this._cache[6] = 1;
 
-            if (this.body &amp;&amp; this.body.type === Phaser.Physics.P2JS)
+            if (this.body && this.body.type === Phaser.Physics.P2JS)
             {
                 this.body.addToWorld();
             }
@@ -1152,7 +1156,7 @@ Object.defineProperty(Phaser.TileSprite.prototype, "exists", {
             //  exists = false
             this._cache[6] = 0;
 
-            if (this.body &amp;&amp; this.body.type === Phaser.Physics.P2JS)
+            if (this.body && this.body.type === Phaser.Physics.P2JS)
             {
                 this.body.safeRemove = true;
             }
@@ -1175,7 +1179,7 @@ Object.defineProperty(Phaser.TileSprite.prototype, "inputEnabled", {
 
     get: function () {
 
-        return (this.input &amp;&amp; this.input.enabled);
+        return (this.input && this.input.enabled);
 
     },
 
@@ -1188,14 +1192,14 @@ Object.defineProperty(Phaser.TileSprite.prototype, "inputEnabled", {
                 this.input = new Phaser.InputHandler(this);
                 this.input.start();
             }
-            else if (this.input &amp;&amp; !this.input.enabled)
+            else if (this.input && !this.input.enabled)
             {
                 this.input.start();
             }
         }
         else
         {
-            if (this.input &amp;&amp; this.input.enabled)
+            if (this.input && this.input.enabled)
             {
                 this.input.stop();
             }
@@ -1223,7 +1227,7 @@ Object.defineProperty(Phaser.TileSprite.prototype, "x", {
 
         this.position.x = value;
 
-        if (this.body &amp;&amp; this.body.type === Phaser.Physics.ARCADE &amp;&amp; this.body.phase === 2)
+        if (this.body && this.body.type === Phaser.Physics.ARCADE && this.body.phase === 2)
         {
             this.body._reset = 1;
         }
@@ -1250,7 +1254,7 @@ Object.defineProperty(Phaser.TileSprite.prototype, "y", {
 
         this.position.y = value;
 
-        if (this.body &amp;&amp; this.body.type === Phaser.Physics.ARCADE &amp;&amp; this.body.phase === 2)
+        if (this.body && this.body.type === Phaser.Physics.ARCADE && this.body.phase === 2)
         {
             this.body._reset = 1;
         }
@@ -1278,8 +1282,8 @@ Object.defineProperty(Phaser.TileSprite.prototype, "y", {
 					<br />
 					
 		<span class="jsdoc-message">
-		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha4</a>
-		on Fri Apr 11 2014 00:12:14 GMT+0200 (CEST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
+		on Fri Apr 11 2014 13:08:21 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>
