@@ -86,21 +86,7 @@ Updates
 * p2.World.defaultFriction has been deprecated and is now p2.World.friction.
 * p2.World now uses 4 bodies for the world boundaries, rather than 1 body with 4 shapes. This helps the broadphase massively.
 * p2.World bounds are now included in the callback events such as beginContact and impact events.
-* Thanks to @STuFF the Classes list in the API docs now indents sub-classes.
-
-I created a collection class to easily access the fixtures of a created P2 Body.
-This is especially useful in combination with PhysicsEditor and Body#addPhaserPolygon.
-
-You can configure your whole collision grouping in PhysicsEditor and then you can later change the mask bits easily with this class. You bypassed phaser's body wrapper so you cannot (or want to) simply activate the collision groups in phaser.
-
-You can also access parts (groups) and named fixtures by a group index or a fixture key - both properties can be set in PhysicsEditor with the custom phaser exporter.
-
-Use cases:
-
-Configure collision bits in PhysicsEditor and you want to change them later.
-Place a sensor in your fixture and access this single fixture later (to disable temporarily)
-Create a small body with threes fixtures (circle, circle + polygon/convex). Now you want that the polygon part to behave like rubber and assign a bouncing (restitution > 1) material. Assign a fixture key in PhysicsEditor and access the fixture like this. (see the image for the fixture I described)
-
+* Thanks to @STuFF the Classes drop-down list in the API docs now indents the sub-classes.
 
 
 New Features
@@ -137,6 +123,17 @@ New Features
 * Group.remove has a new 'destroy' parameter (false by default), which will optionally call destroy on the item removed from the Group.
 * Group.removeAll has a new 'destroy' parameter (false by default), which will optionally call destroy on the items removed from the Group.
 * Group.removeBetween has a new 'destroy' parameter (false by default), which will optionally call destroy on the items removed from the Group.
+* @georgiee created a new P2.FixtureList class to allow easy access the fixtures of a created P2 Body:
+
+This is especially useful in combination with PhysicsEditor and P2.Body#addPhaserPolygon.
+
+You can configure your whole collision grouping in PhysicsEditor and then you can later change the mask bits easily with this class. You can also access parts (groups) and named fixtures by a group index or a fixture key - both properties can be set in PhysicsEditor with the custom phaser exporter.
+
+Use cases:
+
+* Configure collision bits in PhysicsEditor and you want to change them later.
+* Place a sensor in your fixture and access this single fixture later (to disable temporarily)
+* Create a small body with threes fixtures (circle, circle + polygon/convex). Now you want that the polygon part to behave like rubber and assign a bouncing (restitution > 1) material. Assign a fixture key in PhysicsEditor and access the fixture like this. (see the image for the fixture I described)
 
 
 Bug Fixes

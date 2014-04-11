@@ -790,11 +790,11 @@ Phaser.Physics.P2.Body.prototype = {
     * Will automatically update the mass properties and bounding radius.
     *
     * @method Phaser.Physics.P2.Body#addShape
-    * @param {*} shape - The shape to add to the body.
+    * @param {p2.Shape} shape - The shape to add to the body.
     * @param {number} [offsetX=0] - Local horizontal offset of the shape relative to the body center of mass.
     * @param {number} [offsetY=0] - Local vertical offset of the shape relative to the body center of mass.
     * @param {number} [rotation=0] - Local rotation of the shape relative to the body center of mass, specified in radians.
-    * @return {p2.Circle|p2.Rectangle|p2.Plane|p2.Line|p2.Particle} The shape that was added to the body.
+    * @return {p2.Shape} The shape that was added to the body.
     */
     addShape: function (shape, offsetX, offsetY, rotation) {
 
@@ -1060,7 +1060,7 @@ Phaser.Physics.P2.Body.prototype = {
     * If you only wish to apply it to a specific Shape in this Body then provide that as the 2nd parameter.
     *
     * @method Phaser.Physics.P2.Body#setMaterial
-    * @param {Phaser.Physics.Material} material - The Material that will be applied.
+    * @param {Phaser.Physics.P2.Material} material - The Material that will be applied.
     * @param {p2.Shape} [shape] - An optional Shape. If not provided the Material will be added to all Shapes in this Body.
     */
     setMaterial: function (material, shape) {
@@ -1097,7 +1097,7 @@ Phaser.Physics.P2.Body.prototype = {
     * Reads the shape data from a physics data file stored in the Game.Cache and adds it as a polygon to this Body.
     * The shape data format is based on the custom phaser export in.
     *
-    * @method Phaser.Physics.P2.Body#loadPhaserPolygon
+    * @method Phaser.Physics.P2.Body#addPhaserPolygon
     * @param {string} key - The key of the Physics Data file as stored in Game.Cache.
     * @param {string} object - The key of the object within the Physics data file that you wish to load the shape data from.
     */
@@ -1133,8 +1133,9 @@ Phaser.Physics.P2.Body.prototype = {
     /**
     * Add a polygon fixture. This is used during #loadPhaserPolygon.
     *
-    * @method Phaser.Physics.P2.Body#addPolygonFixture
+    * @method Phaser.Physics.P2.Body#addFixture
     * @param {string} fixtureData - The data for the fixture. It contains: isSensor, filter (collision) and the actual polygon shapes.
+    * @return {array} An array containing the generated shapes for the given polygon.
     */
     addFixture: function (fixtureData) {
 

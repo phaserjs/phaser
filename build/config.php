@@ -182,6 +182,7 @@ EOL;
         echo <<<EOL
 
     <script src="$path/src/physics/p2/World.js"></script>
+    <script src="$path/src/physics/p2/FixtureList.js"></script>
     <script src="$path/src/physics/p2/PointProxy.js"></script>
     <script src="$path/src/physics/p2/InversePointProxy.js"></script>
     <script src="$path/src/physics/p2/Body.js"></script>

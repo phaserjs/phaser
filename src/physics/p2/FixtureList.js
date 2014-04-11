@@ -23,7 +23,7 @@
 */
 Phaser.Physics.P2.FixtureList = function (list) {
 
-    if (!(list instanceof Array))
+    if (!Array.isArray(list))
     {
         list = [list];
     }
@@ -74,9 +74,6 @@ Phaser.Physics.P2.FixtureList.prototype = {
 
         this.getFixtures(fixtureKey).forEach(setter);
 
-        // var fixtures = this.getFixtures(fixtureKey);
-        // fixtures.forEach(setter);
-
     },
   
     /**
@@ -91,9 +88,6 @@ Phaser.Physics.P2.FixtureList.prototype = {
         };
 
         this.getFixtures(fixtureKey).forEach(setter);
-
-        // fixtures = this.getFixtures(fixtureKey);
-        // fixtures.forEach(setter);
 
     },
   
@@ -110,9 +104,6 @@ Phaser.Physics.P2.FixtureList.prototype = {
 
         this.getFixtures(fixtureKey).forEach(setter);
 
-        // fixtures = this.getFixtures(fixtureKey);
-        // fixtures.forEach(setter);
-
     },
 
     /**
@@ -127,9 +118,6 @@ Phaser.Physics.P2.FixtureList.prototype = {
         };
 
         this.getFixtures(fixtureKey).forEach(setter);
-
-        // fixtures = this.getFixtures(fixtureKey);
-        // fixtures.forEach(setter);
 
     },
 
@@ -219,8 +207,6 @@ Phaser.Physics.P2.FixtureList.prototype = {
 
             _results.push(this.allFixtures = this.flatten(this.groupedFixtures));
         }
-
-        // _results;
 
     },
 
