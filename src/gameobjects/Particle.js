@@ -134,7 +134,7 @@ Phaser.Particle.prototype.setScaleData = function(data) {
 
     this.scaleData = data;
     this._s = data.length - 1;
-    this.scale.set(this.scaleData[this._s].v);
+    this.scale.set(this.scaleData[this._s].x, this.scaleData[this._s].y);
     this.autoScale = true;
 
 };
