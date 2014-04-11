@@ -1,13 +1,10 @@
-Change Log
-==========
+# Change Log
 
 There is an extensive [Migration Guide](https://github.com/photonstorm/phaser/blob/master/resources/Migration%20Guide.md) available for those converting from Phaser 1.x to 2.x. In the guide we detail the API breaking changes and approach to our new physics system.
 
+## Version 2.0.3 - "Allorallen" - 11th April 2014
 
-Version 2.0.3 - "Allorallen" - 11th April 2014
-----------------------------------------------
-
-Updates
+### Updates
 
 * Updated to [Pixi.js 1.5.2](https://github.com/GoodBoyDigital/pixi.js/releases/tag/v1.5.2)
 * Updated to [p2.js 0.5.0](https://github.com/schteppe/p2.js/releases/tag/v0.5.0)
@@ -34,8 +31,7 @@ Updates
 * p2.World bounds are now included in the callback events such as beginContact and impact events.
 * Thanks to @STuFF the Classes drop-down list in the API docs now indents the sub-classes.
 
-
-New Features
+### New Features
 
 * Added ability to retrieve a single p2 fixture from the cache (thanks @georgiee, #674)
 * Timers can now have a start delay value (thanks @georgiee, #660)
@@ -81,8 +77,7 @@ Use cases:
 * Place a sensor in your fixture and access this single fixture later (to disable temporarily)
 * Create a small body with threes fixtures (circle, circle + polygon/convex). Now you want that the polygon part to behave like rubber and assign a bouncing (restitution > 1) material. Assign a fixture key in PhysicsEditor and access the fixture like this. (see the image for the fixture I described)
 
-
-Bug Fixes
+### Bug Fixes
 
 * If you inputEnable = false a gameobject you couldn't re-enable it again using inputEnable = true, only directly via the handler (thanks @nickrall, fix #673)
 * Fixed setTexture bug with TilingSprite (pixi.js 1.5.2 bug fix)
@@ -103,8 +98,7 @@ Bug Fixes
 * Objects with an InputHandler now deactivate it when the object is removed from a Group but not destroyed (fix #672)
 * Fixed the vectors used in the BlurX and BlurY filters (thanks @nickryall, fix #668)
 
-
-p2.js v0.5.0
+### p2.js v0.5.0
 
 * Added property .enableIslandSleeping to World.
 * Added property .useFrictionGravityOnZeroGravity to World.
@@ -157,10 +151,10 @@ p2.js v0.5.0
 * Added methods .enableMotor, .disableMotor to PrismaticConstraint as well as properties .motorEnabled, .motorSpeed, .motorEquation.
 
 
-Version 2.0.2 - "Ghealdan" - 28th March 2014
---------------------------------------------
 
-Bug Fixes
+## Version 2.0.2 - "Ghealdan" - 28th March 2014
+
+### Bug Fixes
 
 * Sprite would glitch if it had an ArcadePhysics Body that was re-positioned out of loop.
 * Sprite would "fly off" if it had an ArcadePhysics Body that was re-positioned during an input handler.
@@ -170,8 +164,7 @@ Bug Fixes
 * P2.World - Removing tilemap layer retrieval for object layers in convertCollisionObjects() (thanks bmceldowney, fix #653)
 * Calling Keyboard.stop() wouldn't let you call Keyboard.start() later on in the same game
 
-
-Updated
+### Updated
 
 * The "Build your First Phaser Game" Tutorial has been updated for Phaser 2
 * Line.fromSprite now sets "fromCenter" to false by default as Sprite.center is deprecated in 2.x. Documentation and Examples updated to reflect this.
@@ -179,17 +172,16 @@ Updated
 * Lots of ArcadePhysics.World methods have been marked as private where they shouldn't be called directly (separateX, etc)
 * xtian jshint fixed nearly every single file in the repository!
 
-
-New Features
+### New Features
 
 * Sprite.overlap lets you quickly check to see if the bounds of two display objects are intersecting or not, without having to use a physics system.
 * Keyboard.destroy will now clear all event listeners and any custom set callbacks or Keys.
 
 
-Version 2.0.1 - "Lyrelle" - 24th March 2014
--------------------------------------------
 
-Bug Fixes
+## Version 2.0.1 - "Lyrelle" - 24th March 2014
+
+### Bug Fixes
 
 * The Static, Kinematic and Dynamic consts that P2.Body uses were incorrect (fixes #563)
 * Sprite.destroy would fail if it had an Arcade Physics body, now added.
@@ -223,8 +215,7 @@ Bug Fixes
 * If you added a Tileset to an empty map it would eventually throw an out of memory error.
 * Timer objects incorrectly set the first tick value on events if you added the events prior to starting them.
 
-
-Updated
+### Updated
 
 * Updated Device.isConsoleOpen as it no longer works in Chrome. Revised code and documentation accordingly (fix #593)
 * Removed State.destroy empty method and replaced with State.shutdown, as that is what the StateManager expects (fix #586)
@@ -252,8 +243,7 @@ Updated
 * TileSprites now emit outOfBounds and enterBounds events accordingly.
 * You can now create multiple blank layers in a Tilemap.
 
-
-New Features
+### New Features
 
 * Device.getUserMedia boolean added, useful if you need access to the webcam or microphone.
 * Math.removeRandom allows you to remove (and return) a random object from an array.
@@ -268,10 +258,10 @@ New Features
 * There is a brand new PhysicsEditor export script specifically for Phaser (in the resources folder), and new p2 polygon parsing functions thanks to georgiee.
 
 
-Version 2.0.0 - "Aes Sedai" - March 13th 2014
----------------------------------------------
 
-New features:
+## Version 2.0.0 - "Aes Sedai" - March 13th 2014
+
+### New Features
 
 * Phaser.Image is a brand new display object perfect for logos, backgrounds, etc. You can scale, rotate, tint, blend an get input events from an Image, but it has no animation or physics body.
 * You can now use the hitArea property on Sprites and Image objects. hitArea can be a geometry object (Rectangle, Circle, Polygon, Ellipse) and is used in pointerOver checks.
@@ -333,7 +323,7 @@ New features:
 * Line now has x, y, width, height, top, bottom, left and right properties, so you can effectively get its bounds.
 * TilemapLayer.getRayCastTiles will let you get all tiles that hit the given line for further processing.
 
-Updates:
+### Updates
 
 * Massive thanks to clark-stevenson for doing an amazing job update the TypeScript definitions file.
 * Debug.renderRectangle has a new parameter: filled. If true it renders as with fillRect, if false strokeRect.
@@ -366,7 +356,7 @@ Updates:
 * Keyboard.removeKey method added (thanks qdrj, #550)
 * Key.event now stores the most recent DOM event that triggered it.
 
-Bug Fixes:
+### Bug Fixes
 
 * Explicitly paused Timer continues if you un-focus and focus the browser window (thanks georgiee)
 * Added TimerEvent.pendingDelete and checks in Timer.update, so that removing an event in a callback no longer throws an exception (thanks georgiee)
@@ -376,7 +366,7 @@ Bug Fixes:
 * Fixed bug where changing State would cause the camera to not reset if it was following an object.
 * Tile had 2 properties (callback and callbackContext) that were never assigned, updated to use the proper names (thanks ratkingsimon)
 * Fixed an error that would occur if you used InputHandler.onInputUp and the Sprite destroys itself during the event.
-* IE11 didn't populate the Device.ieVersion value. Now extracted from Trident revision, but still use Device.trident instead for IE11+ checks.
+* IE11 didn't populate the Device.ie## Version value. Now extracted from Trident revision, but still use Device.trident instead for IE11+ checks.
 * Fixed bug in Math.angleBetween where it was using the coordinates in the wrong order.
 * Previously using a Pixel Perfect check didn't work if the Sprite was rotated or had a non-zero anchor point, now works under all conditions + atlas frames.
 * If pixelPerfect Input Sprites overlapped each other the pixel check wasn't taken into consieration in the Pointer move method.
@@ -415,10 +405,10 @@ Bug Fixes:
 * Cache.destroy fixed to clear up properly (thanks Dumtard, #537)
 
 
-Version 1.1.5 - "Saldaea" - 12th February 2014
-----------------------------------------------
 
-Bug Fixes:
+## Version 1.1.5 - "Saldaea" - 12th February 2014
+
+### Bug Fixes
 
 * Explicitly paused Timer continues if you un-focus and focus the browser window (thanks georgiee)
 * Added TimerEvent.pendingDelete and checks in Timer.update, so that removing an event in a callback no longer throws an exception (thanks georgiee)
@@ -433,10 +423,10 @@ Bug Fixes:
 * Fixed Tilemap docs (wrongly pointed to Tileset methods)
 
 
-Version 1.1.4 - "Kandor" - February 5th 2014
---------------------------------------------
 
-Significant API changes:
+## Version 1.1.4 - "Kandor" - February 5th 2014
+
+### Significant API changes
 
 * Loader.tileset has been removed as it's no longer required, this was as part of the Tilemap system overhaul.
 * TilemapLayers are now created via the Tilemap object itself: map.createLayer(x, y, width, height, tileset, layer, group) and no longer via the GameObjectFactory.
@@ -461,8 +451,7 @@ Significant API changes:
 * Removed: Debug.renderSpriteTouching, Debug.renderLocalTransformInfo, Debug.renderWorldTransformInfo, Debug.renderSpriteCollision and Debug.dumpLinkedList.
 * Body.setSize has been removed. Please use Body.setCircle, setRectangle or setPolygon instead.
 
-
-New features:
+### New Features
 
 * Phaser.Timer is now feature complete and fully documented. You can create Phaser.TimerEvents on a Timer and lots of new examples have been provided.
 * Gamepad API support has been added with lots of new examples (thanks Karl Macklin)
@@ -471,7 +460,7 @@ New features:
 * Added a stage.fullScreenScaleMode property to determine scaling when fullscreen (thanks oysterCrusher)
 * Added support for margin and spacing around a frame in Loader.spritesheet.
 * Added Device.vibration to check if the Vibration API is available or not.
-* Added Device.trident and Device.tridentVersion for testing IE11.
+* Added Device.trident and Device.trident## Version for testing IE11.
 * Added Device.silk for detecting a Kindle Fire and updated desktop OS check to exclude Kindles (thanks LuckieLordie)
 * TilemapLayers now have debug and debugAlpha values, this turns on the drawing of the collision edges (very handy for debugging, as the name implies!)
 * Tweens have a new event: onLoop.
@@ -510,8 +499,7 @@ New features:
 * Debug.renderBodyInfo(sprite, x, y, color) will display lots of Sprite body data.
 * Sprite.events.onBeginContact will be fired when a Body makes contact with another Body. Once contact is over an onEndContact event will be dispatched.
 
-
-New Examples:
+### New Examples
 
 * Physics - Bounce by Patrick OReilly.
 * Physics - Bounce with gravity by Patrick OReilly.
@@ -533,8 +521,7 @@ New Examples:
 * Groups - Nested Groups - showing how to embed one Group into another Group.
 * Time - Lots of new examples showing how to use the updated Phaser.Timer class.
 
-
-Updates:
+### Updates
 
 * Updated to latest Pixi.js dev branch build (pre 1.4 release)
 * When a Sprite is destroyed any active filters are removed at the same time.
@@ -580,8 +567,7 @@ Updates:
 * Added callback context parameter to Tween.onUpdateCallback(callback, context) to avoid having to bind or create anonymous functions.
 * Updated TweenManager.removeAll so it flags all tweens as pendingDelete rather than nuking the array, to avoid tween callback array size errors (thanks DarkDev)
 
-
-Bug Fixes:
+### Bug Fixes
 
 * Cache.getImageKeys returned __missing in the array, now excluded.
 * Fixed Group.scale so you can now scale a Group directly.
@@ -609,10 +595,10 @@ Bug Fixes:
 * 1px camera jitter issue fixed where map is same size, or smaller than the game size.
 
 
-Version 1.1.3 - "Arafel" - November 29th 2013
----------------------------------------------
 
-New features:
+## Version 1.1.3 - "Arafel" - November 29th 2013
+
+### New Features
 
 * Phaser.Filter. A new way to use the new WebGL shaders/filters that the new version of Pixi supports.
 * Phaser.BitmapData object. A Canvas you can freely draw to with lots of functions. Can be used as a texture for Sprites. See the new examples and docs for details.
@@ -642,7 +628,7 @@ New features:
 * Mouse.capture is a boolean. If set to true then DOM mouse events will have event.preventDefault() applied, if false they will propogate fully.
 * The object returned by Math.sinCosGenerator now contains a length property.
 
-Updates:
+### Updates
 
 * Lots of documentation fixes and updates across nearly all files. Tilemap now documented for example and lots of instances of 'Description' filled out.
 * ArcadePhysics.updateMotion applies the dt to the velocity calculations as well as position now (thanks jcs)
@@ -659,7 +645,7 @@ Updates:
 * Device.cocoonJS added to detect if the game is running under Cocoon or a native browser.
 * Loader now uses a new queue system internally, meaning you can have assets with the same key spread across different types.
 
-Bug Fixes:
+### Bug Fixes
 
 * Lots of fixes to the TypeScript definitions file (many thanks gltovar)
 * Tilemap commands use specified layer when one given (thanks Izzimach)
@@ -681,8 +667,8 @@ Bug Fixes:
 * Fix for 'jitter' in scrolling where tilemaps & sprites are one frame off (thanks jcs)
 
 
-Version 1.1.2 - November 1st 2013
----------------------------------
+
+## Version 1.1.2 - November 1st 2013
 
 * New: You'll now find a complete Basic project Template in the resources/Project Templates folder. Will add more complex ones soon.
 * New: Phaser.Button now has the ability to set over/out/up/down sound effects so they play automatically based on those events.
@@ -715,17 +701,17 @@ Version 1.1.2 - November 1st 2013
 * Fixed issue 143 - Entering full screen mode made the Input x/y coordinates go wrong.
 
 
-Version 1.1.1 - October 26th 2013
----------------------------------
+
+## Version 1.1.1 - October 26th 2013
 
 * Quick patch to get Phaser.AUTO working again on Firefox / Android.
 * Any key added via addKey now automatically adds it to the capture list.
 
 
-Version 1.1 - October 25th 2013
--------------------------------
 
-What's New:
+## Version 1.1 - October 25th 2013
+
+### What's New
 
 * JSDoc is go! We've added jsdoc3 blocks to every property and function, in every file and published the API docs to the docs folder.
 * Brand new Example system (no more php!) and over 150 examples to learn from too.
@@ -765,7 +751,7 @@ What's New:
 * On a busy page it's possible for the game to boot with an incorrect stage offset x/y which can cause input events to be calculated wrong. A new property has been added to Stage to combat this issue: Stage.checkOffsetInterval. By default it will check the canvas offset every 2500ms and adjust it accordingly. You can set the value to 'false' to disable the check entirely, or set a higher or lower value. We recommend that you get the value quite low during your games preloader, but once the game has fully loaded hopefully the containing page will have settled down, so it's probably safe to disable the check entirely.
 * Added Rectangle.floorAll to floor all values in a Rectangle (x, y, width and height).
 
-What's changed:
+### What's changed
 
 * Renamed Phaser.Text.text to Phaser.Text.content to avoid conflict and overwrite from Pixi local var.
 * Renamed Phaser.Text.style to Phaser.Text.font to avoid conflict and overwrite from Pixi local var.
@@ -785,7 +771,7 @@ What's changed:
 * The default Game.antialias value is now 'true', so graphics will be smoothed automatically in canvas. Disable it via the Game constructor or Canvas utils.
 * Phaser.Group now automatically calls updateTransform on any child added to it (avoids temp. frame glitches when new objects are rendered on their first frame).
 
-What has been updated:
+### What has been updated:
 
 * Complete overhaul of Physics.Arcade.Body - now significantly more stable and faster too.
 * Updated ArcadePhysics.separateX/Y to use new body system - much better results now.
@@ -817,7 +803,7 @@ What has been updated:
 * Sprite.loadTexture now works correctly with static images, RenderTextures and Animations.
 * Lots of fixes within Sprite.bounds. The bounds is now correct regardless of rotation, anchor or scale of the Sprite or any of its parent objects.
 
-What has been fixed:
+### What has been fixed:
 
 * QuadTree bug found in 1.0.5 now fixed. The QuadTree is updated properly now using localTransform values.
 * Fixed the Bounce.In and Bounce.InOut tweens (thanks XekeDeath)
@@ -850,8 +836,8 @@ What has been fixed:
 * Pixel Perfect click detection now works even if the Sprite is part of a texture atlas.
 
 
-Version 1.0.6 - September 24th 2013
------------------------------------
+
+## Version 1.0.6 - September 24th 2013
 
 * Added check into Pointer.move to always consider a Sprite that has pixelPerfect enabled, regardless of render ID.
 * BUG: The pixel perfect click check doesn't work if the sprite is part of a texture atlas yet.
@@ -868,8 +854,8 @@ Version 1.0.6 - September 24th 2013
 * Added frame skip to Animation.update. If it gets too far behind it will now skip frames to try and catch up.
 
 
-Version 1.0.5 - September 20th 2013
------------------------------------
+
+## Version 1.0.5 - September 20th 2013
 
 * Fixed issue in FrameData.getFrameIndexes where the input array was being ignored.
 * Added Math.numberArray - Returns an Array containing the numbers from min to max (inclusive), useful for animation frame construction.
@@ -889,8 +875,8 @@ Version 1.0.5 - September 20th 2013
 * BUG: There is a known issue where the wrong rect coordinates are given to the QuadTree if the Sprite is a child of a Group or another Sprite which has an x/y offset.
 
 
-Version 1.0.4 - September 18th 2013
------------------------------------
+
+## Version 1.0.4 - September 18th 2013
 
 * Small fix to Phaser.Canvas to stop it from setting overflow hidden if the parent DOM element doesn't exist.
 * Added Loader.setPreloadSprite(sprite, direction) - this will automatically apply a crop rect to the Sprite which is updated in line with the load progress.
@@ -902,8 +888,8 @@ Version 1.0.4 - September 18th 2013
 * For some reason there were 2 copies of the Canvas class in the build file - fixed, a few KB saved :)
 
 
-Version 1.0.3 - September 17th 2013
------------------------------------
+
+## Version 1.0.3 - September 17th 2013
 
 * FrameData.getFrameIndexes and getFrameIndexesByName refactored into a more versatile getFrames function.
 * Various fixes to looping parameters in the Sound system.
@@ -912,8 +898,8 @@ Version 1.0.3 - September 17th 2013
 * Fixed Phaser.Text and Phaser.BitmapText so they now render correctly and added several Text examples.
 
 
-Version 1.0.2 - September 16th 2013
------------------------------------
+
+## Version 1.0.2 - September 16th 2013
 
 * Added optional parameter to Animation.stop: resetFrame. If true the animation will be stopped and then the current frame reset to the first frame in the animation.
 * Fixed an issue causing 'explode' particle bursts to ignore the quantity parameter.
@@ -926,8 +912,8 @@ Version 1.0.2 - September 16th 2013
 * Added in the start of a Platformer game
 
 
-Version 1.0.1 - September 15th 2013
------------------------------------
+
+## Version 1.0.1 - September 15th 2013
 
 * Added checks into every Group function to ensure that the Group has children before running them.
 * Added optional flag to Group.create which allows you to set the default exists state of the Sprites.
@@ -936,8 +922,8 @@ Version 1.0.1 - September 15th 2013
 * Fixed a logic bug in the separateTileX function that would sometimes cause tunneling of big sprites through small tiles.
 
 
-Version 0.9.8
--------------
+
+## Version 0.9.8
 
 * Massive refactoring across the entire codebase.
 * Removed Basic and GameObject and put Sprite on a diet. 127 properties and methods cut down to 32.
@@ -1045,8 +1031,8 @@ Version 0.9.8
 * Added CanvasUtils class, including ability to set image rendering, add a canvas to the dom and other handy things.
 
 
-Version 0.9.6
--------------
+
+## Version 0.9.6
 
 * Virtually every class now has documentation - if you spot a typo or something missing please shout (thanks pixelpicosean).
 * Grunt file updated to produce the new Special FX JS file (thanks HackManiac).
@@ -1135,8 +1121,8 @@ Version 0.9.6
 * Added new format parameter to Loader.addTextureAtlas defining the format. Currently supported: JSON Array and Starling/Sparrow XML.
 
 
-Version 0.9.5
--------------
+
+## Version 0.9.5
 
 * Moved the BootScreen and PauseScreen out of Stage into their own classes (system/screens/BootScreen and PauseScreen).
 * Updated the PauseScreen to show a subtle animation effect, making it easier to create your own interesting pause screens.
@@ -1171,8 +1157,8 @@ Version 0.9.5
 * Changed SoundManager class to respect volume on first play (thanks initials and hackmaniac)
 
 
-Version 0.9.4
---------------
+
+## Version 0.9.4
 
 * Added Tilemap.getTile, getTileFromWorldXY, getTileFromInputXY
 * Added Tilemap.setCollisionByIndex and setCollisionByRange
@@ -1185,8 +1171,8 @@ Version 0.9.4
 * Updated Gruntfile to export new version of phaser.js wrapped in a UMD block for require.js/commonJS (thanks Hackmaniac)
 
 
-Version 0.9.3
--------------
+
+## Version 0.9.3
 
 * Added the new ScrollZone game object. Endlessly useful but especially for scrolling backdrops. Created 6 example tests.
 * Added GameObject.hideFromCamera(cameraID) to stop an object rendering to specific cameras (also showToCamera and clearCameraList)
@@ -1205,8 +1191,8 @@ Version 0.9.3
 * You can now pass an array or a single value to Input.Keyboard.addKeyCapture().
 
 
-Version 0.9.2
--------------
+
+## Version 0.9.2
 
 * Fixed issue with create not being called if there was an empty init method.
 * Added ability to flip a sprite (Sprite.flipped = true) + a test case for it.
@@ -1215,8 +1201,8 @@ Version 0.9.2
 * Added Stage.disablePauseScreen. Set to true to stop your game pausing when the tab loses focus.
 
 
-Version 0.9.1
--------------
+
+## Version 0.9.1
 
 * Added the new align property to GameObjects that controls placement when rendering.
 * Added an align example to the Sprites test group (click the mouse to change alignment position)
@@ -1226,8 +1212,9 @@ for new collision system.
 * Game.Input now has 2 signals you can subscribe to for down/up events, see the Sprite align example for use.
 * Updated the States examples to bring in-line with 0.9 release.
 
-Version 0.9
------------
+
+
+## Version 0.9
 
 * Large refactoring. Everything now lives inside the Phaser module, so all code and all tests have been updated to reflect this. Makes coding a tiny bit more verbose but stops the framework from globbing up the global namespace. Also should make code-insight work in WebStorm and similar editors.
 * Added the new GeomSprite object. This is a sprite that uses a geometry class for display (Circle, Rectangle, Point, Line). It's extremely flexible!
@@ -1239,8 +1226,8 @@ Version 0.9
 * Tween Manager added. You can now create tweens via Game.createTween (or for more control game.tweens). All the usual suspects are here: Bounce, * Elastic, Quintic, etc and it's hooked into the core game clock, so if your game pauses and resumes your tweens adjust accordingly.
 
 
-Version 0.8
------------
+
+## Version 0.8
 
 * Added ability to set Sprite frame by name (sprite.frameName), useful when you've loaded a Texture Atlas with filename values set rather than using frame indexes.
 * Updated texture atlas 4 demo to show this.
@@ -1248,8 +1235,8 @@ Version 0.8
 * Added in DynamicTexture support and a test case for it.
 
 
-Version 0.7
------------
+
+## Version 0.7
 
 * Renamed FullScreen to StageScaleMode as it's much more fitting. Tested across Android and iOS with the various scale modes.
 * Added in world x/y coordinates to the input class, and the ability to get world x/y input coordinates from any Camera.
@@ -1257,8 +1244,8 @@ Version 0.7
 * Setting the game world size now resizes the default camera (optional bool flag)
 
 
-Version 0.6
------------
+
+## Version 0.6
 
 * Added in Touch support for mobile devices (and desktops that enable it) and populated x/y coords in Input with common values from touch and mouse.
 * Added new Circle geometry class (used by Touch) and moved them into a Geom folder.
@@ -1266,7 +1253,7 @@ Version 0.6
 * Added FullScreen class to enable full-screen support on mobile devices (scrolls URL bar out of the way on iOS and Android)
 
 
-Version 0.5
------------
+
+## Version 0.5
 
 * Initial release

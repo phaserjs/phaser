@@ -216,7 +216,7 @@ Use cases:
 
 There is an extensive [Migration Guide](https://github.com/photonstorm/phaser/blob/master/resources/Migration%20Guide.md) available for those converting from Phaser 1.x to 2.x. In the guide we detail the API breaking changes and approach to our new physics system.
 
-The full Change Log is at https://github.com/photonstorm/phaser/blob/master/changelog.md
+The full Change Log is at https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md
 
 
 ## How to Build
