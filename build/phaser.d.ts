@@ -1069,6 +1069,7 @@ declare module Phaser {
         onResume(): void;
         play(frameRate?: number, loop?: boolean, killOnComplete?: boolean): Phaser.Animation;
         restart(): void;
+        setFrame(frameId: any, useLocalFrameIndex: boolean): void;
         stop(resetFrame?: boolean, dispatchComplete?:boolean): void;
         update(): boolean;
 
@@ -1079,6 +1080,7 @@ declare module Phaser {
         constructor(sprite: Phaser.Sprite);
 
         currentFrame: Phaser.Frame;
+        currentAnim: Phaser.Animation;
         frame: number;
         frameData: Phaser.FrameData;
         frameName: string;
