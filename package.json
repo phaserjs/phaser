@@ -37,6 +37,7 @@
     "grunt-contrib-jshint": "^0.9.2",
     "grunt-contrib-uglify": "^0.4.0",
     "grunt-text-replace": "^0.3.11",
+    "grunt-umd": "^1.7.3",
     "load-grunt-config": "~0.7.2"
   }
 }
