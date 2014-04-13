@@ -1957,7 +1957,8 @@ declare module Phaser {
         countLiving(): number;
         create(x: number, y: number, key: string, frame?: any, exists?: boolean): Phaser.Sprite;
         createMultiple(quantity: number, key: string, frame?: any, exists?: boolean): Phaser.Sprite;
-        destroy(destroyChildren?: boolean, soft?:boolean): void;
+        customSort(sortHandler: Function, context: Object): void;
+        destroy(destroyChildren?: boolean, soft?: boolean): void;
         divideAll(property: string, amount: number, checkAlive?: boolean, checkVisible?: boolean): void;
         forEach(callback: Function, callbackContext: Object, checkExists?: boolean): void;
         forEachAlive(callback: Function, callbackContext: Object): void;
@@ -1979,9 +1980,9 @@ declare module Phaser {
         postUpdate(): void;
         preUpdate(): void;
         previous(): void;
-        remove(child: any): boolean;
-        removeAll(): void;
-        removeBetween(startIndex: number, endIndex: number): void;
+        remove(child: any, destroy?: boolean): boolean;
+        removeAll(destroy?: boolean): void;
+        removeBetween(startIndex: number, endIndex?: number, destroy?: boolean): void;
         replace(oldChild: any, newChild: any): any;
         reverse(): void;
         sendToBack(child: any): any;
@@ -2598,6 +2599,18 @@ declare module Phaser {
 
     }
 
+    class Particle extends Phaser.Sprite {
+
+        constructor(game: Phaser.Game, x: number, y: number, key?: any, frame?: any);
+
+        onEmit(): void;
+        reset(x: number, y: number, health?: number): Phaser.Particle;
+        setAlphaData(data: any[]): void;
+        setScaleData(data: any[]): void;
+        update(): void;
+
+    }
+
     class Particles {
 
         constructor(game: Phaser.Game);
@@ -2619,7 +2632,10 @@ declare module Phaser {
             class Emitter extends Phaser.Group {
 
                 constructor(game: Phaser.Game, x?: number, y?: number, maxParticles?: number);
- 
+
+                alphaData: any[];
+                autoAlpha: boolean;
+                autoScale: boolean;
                 angle: number;
                 angularDrag: number;
                 bottom: number;
@@ -2633,7 +2649,7 @@ declare module Phaser {
                 height: number;
                 left: number;
                 lifespan: number;
-                maxParticles: number;//
+                maxParticles: number;
                 maxParticleScale: number;
                 maxParticleSpeed: Phaser.Point;
                 maxRotation: number;
@@ -2642,10 +2658,13 @@ declare module Phaser {
                 minRotation: number;
                 name: string;
                 on: boolean;
+                particleBringToTop: boolean;
+                particleSendToBack: boolean;
                 particleClass: Phaser.Sprite;
                 particleDrag: Phaser.Point;
                 position: Phaser.Point;
                 right: number;
+                scaleData: any[];
                 top: number;
                 type: number;
                 width: number;
@@ -2656,7 +2675,10 @@ declare module Phaser {
                 emitParticle(): void;
                 kill(): void;
                 makeParticles(keys: any, frames: any, quantity: number, collide?: boolean, collideWorldBounds?: boolean): Phaser.Particles.Arcade.Emitter;
+                reset(x: number, y: number, health?: number): Phaser.Particles;
+                setAlpha(min?: number, max?: number, rate?: number, ease?: number, yoyo?: boolean): void;
                 setRotation(min?: number, max?: number): void;
+                setScale(min?: number, max?: number, rate?: number, ease?: number, yoyo?: boolean): void;
                 setSize(width: number, height: number): void;
                 setXSpeed(min: number, max: number): void;
                 setYSpeed(min: number, max: number): void;
@@ -3019,8 +3041,11 @@ declare module Phaser {
             applyGravity: boolean;
             applySpringForced: boolean;
             bounds: Phaser.Physics.P2.Body;
+            boundsCollidesWith: Phaser.Physics.P2.Body[];
+            contactMaterial: Phaser.Physics.P2.ContactMaterial;
             emitImpactEvent: boolean;
             enableBodySleeping: boolean;
+            everythingCollisionGroup: Phaser.Physics.P2.CollisionGroup;
             frameRate: number;
             friction: number;
             game: Phaser.Game;
@@ -3227,6 +3252,23 @@ declare module Phaser {
 
                 game: Phaser.Game;
                 world: Phaser.Physics.P2;
+
+            }
+
+            class FixtureList {
+
+                constructor(list: any[]);
+
+                flatten(array: any[]): any[];
+                getFixtures(keys: string): any[];
+                getFixtureByKey(key: string): any[];
+                getGroup(groupID: number): any[];
+                init(): void;
+                parse(): void;
+                setCategory(bit: number, fictureKey: string): void;
+                setMask(bit: number, fixtureKey: string): void;
+                setMaterial(material: Object, fixtureKey: string): void;
+                setSensor(value: boolean, fixtureKey: string): void;
 
             }
 
