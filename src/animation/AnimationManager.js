@@ -207,7 +207,7 @@ Phaser.AnimationManager.prototype = {
             {
                 if (this.currentAnim)
                 {
-                    this.currentAnim.isPlaying = false
+                    this.currentAnim.isPlaying = false;
                 }
                 this.currentAnim = this._anims[name];
                 this.currentAnim.paused = false;
