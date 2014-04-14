@@ -67,6 +67,7 @@ Version 2.0.4 - "Mos Shirare" - in development
 
 * Loader now has an onFileStart event you can listen for (thanks @codevinsky, #705)
 * Timer.clearPendingEvents will purge any events marked for deletion, this is run automatically at the start of the update loop.
+* Device.crosswalk detects if your game is running under Intels Crosswalk XDK.
 
 
 ### Bug Fixes

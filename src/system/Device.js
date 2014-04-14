@@ -39,10 +39,16 @@ Phaser.Device = function (game) {
     this.cocoonJS = false;
 
     /**
-     * @property {boolean} ejecta - Is the game running under Ejecta?
-     * @default
-     */
+    * @property {boolean} ejecta - Is the game running under Ejecta?
+    * @default
+    */
     this.ejecta = false;
+
+    /**
+    * @property {boolean} crosswalk - Is the game running under the Intel Crosswalk XDK?
+    * @default
+    */
+    this.crosswalk = false;
 
     /**
     * @property {boolean} android - Is running on android?
@@ -600,6 +606,11 @@ Phaser.Device.prototype = {
         if (typeof window.ejecta !== "undefined")
         {
             this.ejecta = true;
+        }
+
+        if (/Crosswalk/.test(ua))
+        {
+            this.crosswalk = true;
         }
 
     },
