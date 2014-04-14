@@ -56,14 +56,22 @@ There is also an [un-official Getting Started Guide](http://www.antonoffplus.com
 
 Version 2.0.4 - "Mos Shirare" - in development
 
+
 ### Updates
+
+* TypeScript definitions fixes and updates (thanks @clark-stevenson)
+* Timer has removed all use of local temporary vars in the core update loop.
 
 
 ### New Features
 
+* Loader now has an onFileStart event you can listen for (thanks @codevinsky, #705)
+* Timer.clearPendingEvents will purge any events marked for deletion, this is run automatically at the start of the update loop.
+
 
 ### Bug Fixes
 
+* The main Timer loop could incorrectly remove TimeEvent if a new one was added specifically during an event callback (thanks @garyyeap, fix #710)
 
 
 There is an extensive [Migration Guide](https://github.com/photonstorm/phaser/blob/master/resources/Migration%20Guide.md) available for those converting from Phaser 1.x to 2.x. In the guide we detail the API breaking changes and approach to our new physics system.

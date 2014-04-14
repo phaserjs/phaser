@@ -109,6 +109,18 @@ Phaser.Timer = function (game, autoDestroy) {
     */
     this._i = 0;
 
+    /**
+    * @property {number} _diff - Internal cache var.
+    * @private
+    */
+    this._diff = 0;
+
+    /**
+    * @property {number} _newTick - Internal cache var.
+    * @private
+    */
+    this._newTick = 0;
+
 };
 
 /**
@@ -326,6 +338,28 @@ Phaser.Timer.prototype = {
     },
 
     /**
+    * Clears any events from the Timer which have pendingDelete set to true and then resets the private _len and _i values.
+    *
+    * @method Phaser.Timer#clearPendingEvents
+    */
+    clearPendingEvents: function () {
+
+        this._i = this.events.length;
+
+        while (this._i--)
+        {
+            if (this.events[this._i].pendingDelete)
+            {
+                this.events.splice(this._i, 1);
+            }
+        }
+
+        this._len = this.events.length;
+        this._i = 0;
+
+    },
+
+    /**
     * The main Timer update event, called automatically by the Game clock.
     * @method Phaser.Timer#update
     * @protected
@@ -341,55 +375,38 @@ Phaser.Timer.prototype = {
 
         this._now = time;
 
-        this._len = this.events.length;
-
-        this._i = 0;
-
-        while (this._i < this._len)
-        {
-            if (this.events[this._i].pendingDelete)
-            {
-                this.events.splice(this._i, 1);
-                this._len--;
-            }
-
-            this._i++;
-        }
-
-        this._len = this.events.length;
+        //  Clears events marked for deletion and resets _len and _i to 0.
+        this.clearPendingEvents();
 
         if (this.running && this._now >= this.nextTick && this._len > 0)
         {
-            this._i = 0;
-
             while (this._i < this._len && this.running)
             {
                 if (this._now >= this.events[this._i].tick)
                 {
-                    var diff = this._now - this.events[this._i].tick;
-                    var newTick = (this._now + this.events[this._i].delay) - diff;
+                    //  (now + delay) - (time difference from last tick to now)
+                    this._newTick = (this._now + this.events[this._i].delay) - (this._now - this.events[this._i].tick);
 
-                    if (newTick < 0)
+                    if (this._newTick < 0)
                     {
-                        newTick = this._now + this.events[this._i].delay;
+                        this._newTick = this._now + this.events[this._i].delay;
                     }
 
                     if (this.events[this._i].loop === true)
                     {
-                        this.events[this._i].tick = newTick;
+                        this.events[this._i].tick = this._newTick;
                         this.events[this._i].callback.apply(this.events[this._i].callbackContext, this.events[this._i].args);
                     }
                     else if (this.events[this._i].repeatCount > 0)
                     {
                         this.events[this._i].repeatCount--;
-                        this.events[this._i].tick = newTick;
+                        this.events[this._i].tick = this._newTick;
                         this.events[this._i].callback.apply(this.events[this._i].callbackContext, this.events[this._i].args);
                     }
                     else
                     {
                         this.events[this._i].callback.apply(this.events[this._i].callbackContext, this.events[this._i].args);
-                        this.events.splice(this._i, 1);
-                        this._len--;
+                        this.events[this._i].pendingDelete = true;
                     }
 
                     this._i++;
