@@ -195,7 +195,7 @@ Phaser.AnimationManager.prototype = {
 
         if (this._anims[name])
         {
-            if (this.currentAnim == this._anims[name])
+            if (this.currentAnim === this._anims[name])
             {
                 if (this.currentAnim.isPlaying === false)
                 {
@@ -205,6 +205,11 @@ Phaser.AnimationManager.prototype = {
             }
             else
             {
+                if (this.currentAnim && this.currentAnim.isPlaying)
+                {
+                    this.currentAnim.stop();
+                }
+
                 this.currentAnim = this._anims[name];
                 this.currentAnim.paused = false;
                 return this.currentAnim.play(frameRate, loop, killOnComplete);
