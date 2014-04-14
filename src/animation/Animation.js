@@ -386,9 +386,9 @@ Phaser.Animation.prototype = {
         this.currentFrame = null;
         this.isPlaying = false;
 
-        this.onStart.destroy();
-        this.onLoop.destroy();
-        this.onComplete.destroy();
+        this.onStart.dispose();
+        this.onLoop.dispose();
+        this.onComplete.dispose();
 
         this.game.onPause.remove(this.onPause, this);
         this.game.onResume.remove(this.onResume, this);

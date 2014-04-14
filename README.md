@@ -62,6 +62,7 @@ Version 2.0.4 - "Mos Shirare" - in development
 * TypeScript definitions fixes and updates (thanks @clark-stevenson)
 * Timer has removed all use of local temporary vars in the core update loop.
 * The Input.reset `hard` reset parameter is now passed down to the Keyboard and Key reset methods.
+* AnimationManager.destroy now iterates through child animations calling destroy on all of them, avoiding a memory leak (thanks stauzs)
 
 
 ### New Features
@@ -80,6 +81,8 @@ Version 2.0.4 - "Mos Shirare" - in development
 * The main Timer loop could incorrectly remove TimeEvent if a new one was added specifically during an event callback (thanks @garyyeap, fix #710)
 * Fixed the use of the destroy parameter in Group.removeAll and related functions (thanks @AnderbergE, fix #717)
 * P2.World.convertTilemap now correctly checks the collides parameter of the tiles as it converts them.
+* Animation.destroy didn't correctly clear the onStart, onLoop and onComplete signals.
+
 
 
 There is an extensive [Migration Guide](https://github.com/photonstorm/phaser/blob/master/resources/Migration%20Guide.md) available for those converting from Phaser 1.x to 2.x. In the guide we detail the API breaking changes and approach to our new physics system.

@@ -306,11 +306,22 @@ Phaser.AnimationManager.prototype = {
     },
 
     /**
-    * Destroys all references this AnimationManager contains. Sets the _anims to a new object and nulls the current animation.
+    * Destroys all references this AnimationManager contains.
+    * Iterates through the list of animations stored in this manager and calls destroy on each of them.
     *
     * @method Phaser.AnimationManager#destroy
     */
     destroy: function () {
+
+        var anim = null;
+
+        for (var anim in this._anims)
+        {
+            if (this._anims.hasOwnProperty(anim))
+            {
+                this._anims[anim].destroy();
+            }
+        }
 
         this._anims = {};
         this._frameData = null;
