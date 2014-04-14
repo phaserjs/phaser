@@ -94,6 +94,12 @@ Phaser.Loader = function (game) {
     */
     this.baseURL = '';
 
+
+    /**
+    * @property {Phaser.Signal} onFileStart - Event signal.
+    */
+    this.onFileStart = new Phaser.Signal();
+
     /**
     * @property {Phaser.Signal} onFileComplete - Event signal.
     */
@@ -879,6 +885,8 @@ Phaser.Loader.prototype = {
             console.warn('Phaser.Loader loadFile invalid index ' + this._fileIndex);
             return;
         }
+        
+        this.onFileStart.dispatch(this.progress, this._fileList[this._fileIndex]);
 
         var file = this._fileList[this._fileIndex];
         var _this = this;
