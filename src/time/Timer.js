@@ -387,9 +387,13 @@ Phaser.Timer.prototype = {
                     }
                     else
                     {
-                        this.events[this._i].callback.apply(this.events[this._i].callbackContext, this.events[this._i].args);
+                        var callback = this.events[this._i].callback;
+                        var context = this.events[this._i].callbackContext;
+                        var args = this.events[this._i].args;
+
                         this.events.splice(this._i, 1);
                         this._len--;
+                        callback.apply(context, args);
                     }
 
                     this._i++;
