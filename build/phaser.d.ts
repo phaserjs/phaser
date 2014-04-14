@@ -469,6 +469,7 @@ declare module PIXI {
         drawRect(x: number, y: number, width: number, height: number): void;
         endFill(): void;
         generateTexture(): Texture;
+        generateTexture(renderer: PIXI.IPixiRenderer): RenderTexture;
         getBounds(): Rectangle;
         lineStyle(lineWidth: number, color: number, alpha: number): void;
         lineTo(x: number, y: number): void;
@@ -2412,6 +2413,7 @@ declare module Phaser {
         game: Phaser.Game;
         hasLoaded: boolean;
         isLoading: boolean;
+        onFileStart: Phaser.Signal;
         onFileComplete: Phaser.Signal;
         onFileError: Phaser.Signal;
         onLoadComplete: Phaser.Signal;
