@@ -72,6 +72,8 @@ Version 2.0.4 - "Mos Shirare" - in development
 ### Bug Fixes
 
 * The main Timer loop could incorrectly remove TimeEvent if a new one was added specifically during an event callback (thanks @garyyeap, fix #710)
+* Fixed the use of the destroy parameter in Group.removeAll and related functions (thanks @AnderbergE, fix #717)
+
 
 
 There is an extensive [Migration Guide](https://github.com/photonstorm/phaser/blob/master/resources/Migration%20Guide.md) available for those converting from Phaser 1.x to 2.x. In the guide we detail the API breaking changes and approach to our new physics system.
