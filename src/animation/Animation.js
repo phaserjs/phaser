@@ -148,7 +148,6 @@ Phaser.Animation.prototype = {
     * Plays this animation.
     *
     * @method Phaser.Animation#play
-    * @memberof Phaser.Animation
     * @param {number} [frameRate=null] - The framerate to play the animation at. The speed is given in frames per second. If not provided the previously set frameRate of the Animation is used.
     * @param {boolean} [loop=false] - Should the animation be looped after playback. If not provided the previously set loop value of the Animation is used.
     * @param {boolean} [killOnComplete=false] - If set to true when the animation completes (only happens if loop=false) the parent Sprite will be killed.
@@ -205,7 +204,6 @@ Phaser.Animation.prototype = {
     * Sets this animation back to the first frame and restarts the animation.
     *
     * @method Phaser.Animation#restart
-    * @memberof Phaser.Animation
     */
     restart: function () {
 
@@ -230,7 +228,6 @@ Phaser.Animation.prototype = {
     * If `dispatchComplete` is true it will dispatch the complete events, otherwise they'll be ignored.
     *
     * @method Phaser.Animation#stop
-    * @memberof Phaser.Animation
     * @param {boolean} [resetFrame=false] - If true after the animation stops the currentFrame value will be set to the first frame in this animation.
     * @param {boolean} [dispatchComplete=false] - Dispatch the Animation.onComplete and parent.onAnimationComplete events?
     */
@@ -260,7 +257,6 @@ Phaser.Animation.prototype = {
     * Called when the Game enters a paused state.
     *
     * @method Phaser.Animation#onPause
-    * @memberof Phaser.Animation
     */
     onPause: function () {
 
@@ -275,7 +271,6 @@ Phaser.Animation.prototype = {
     * Called when the Game resumes from a paused state.
     *
     * @method Phaser.Animation#onResume
-    * @memberof Phaser.Animation
     */
     onResume: function () {
 
@@ -290,7 +285,6 @@ Phaser.Animation.prototype = {
     * Updates this animation. Called automatically by the AnimationManager.
     *
     * @method Phaser.Animation#update
-    * @memberof Phaser.Animation
     */
     update: function () {
 
@@ -375,7 +369,6 @@ Phaser.Animation.prototype = {
     * Cleans up this animation ready for deletion. Nulls all values and references.
     *
     * @method Phaser.Animation#destroy
-    * @memberof Phaser.Animation
     */
     destroy: function () {
 
@@ -400,7 +393,6 @@ Phaser.Animation.prototype = {
     * Sets the isPlaying and isFinished states and dispatches the onAnimationComplete event if it exists on the parent and local onComplete event.
     *
     * @method Phaser.Animation#complete
-    * @memberof Phaser.Animation
     */
     complete: function () {
 
