@@ -315,8 +315,8 @@ Phaser.Tile.prototype = {
 Phaser.Tile.prototype.constructor = Phaser.Tile;
 
 /**
-* @name Phaser.Tile#canCollide
-* @property {boolean} canCollide - True if this tile can collide or has a collision callback.
+* @name Phaser.Tile#collides
+* @property {boolean} collides - True if this tile can collide on any of its faces.
 * @readonly
 */
 Object.defineProperty(Phaser.Tile.prototype, "collides", {
@@ -329,7 +329,7 @@ Object.defineProperty(Phaser.Tile.prototype, "collides", {
 
 /**
 * @name Phaser.Tile#canCollide
-* @property {boolean} canCollide - True if this tile can collide or has a collision callback.
+* @property {boolean} canCollide - True if this tile can collide on any of its faces or has a collision callback set.
 * @readonly
 */
 Object.defineProperty(Phaser.Tile.prototype, "canCollide", {
