@@ -275,9 +275,9 @@ Phaser.StateManager.prototype = {
         this._clearWorld = clearWorld;
         this._clearCache = clearCache;
 
-        if (arguments.length > 3)
+        if (arguments.length > 2)
         {
-            this._args = Array.prototype.splice.call(arguments, 3);
+            this._args = Array.prototype.splice.call(arguments, 2);
         }
 
     },

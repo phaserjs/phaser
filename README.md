@@ -83,7 +83,7 @@ Version 2.0.4 - "Mos Shirare" - in development
 * Fixed the use of the destroy parameter in Group.removeAll and related functions (thanks @AnderbergE, fix #717)
 * P2.World.convertTilemap now correctly checks the collides parameter of the tiles as it converts them.
 * Animation.destroy didn't correctly clear the onStart, onLoop and onComplete signals.
-
+* StateManager.restart incorrectly skipped the first additional parameter after clearCache (thanks @mariusbrn, fix #722)
 
 
 There is an extensive [Migration Guide](https://github.com/photonstorm/phaser/blob/master/resources/Migration%20Guide.md) available for those converting from Phaser 1.x to 2.x. In the guide we detail the API breaking changes and approach to our new physics system.
