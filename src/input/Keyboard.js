@@ -358,8 +358,11 @@ Phaser.Keyboard.prototype = {
     * Resets all Keys.
     *
     * @method Phaser.Keyboard#reset
+    * @param {boolean} [hard=true] - A soft reset won't reset any events or callbacks that are bound to the Keys. A hard reset will.
     */
-    reset: function () {
+    reset: function (hard) {
+
+        if (typeof hard === 'undefined') { hard = true; }
 
         this.event = null;
 
@@ -369,7 +372,7 @@ Phaser.Keyboard.prototype = {
         {
             if (this._keys[i])
             {
-                this._keys[i].reset();
+                this._keys[i].reset(hard);
             }
         }
 

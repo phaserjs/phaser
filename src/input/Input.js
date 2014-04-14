@@ -242,6 +242,12 @@ Phaser.Input = function (game) {
     // this.gestures = null;
 
     /**
+    * @property {boolean} resetLocked - If the Input Manager has been reset locked then all calls made to InputManager.reset, such as from a State change, are ignored.
+    * @default
+    */
+    this.resetLocked = false;
+
+    /**
     * @property {Phaser.Signal} onDown - A Signal that is dispatched each time a pointer is pressed down.
     */
     this.onDown = null;
@@ -470,20 +476,23 @@ Phaser.Input.prototype = {
     },
 
     /**
-    * Reset all of the Pointers and Input states
+    * Reset all of the Pointers and Input states. The optional `hard` parameter will reset any events or callbacks that may be bound.
+    * Input.reset is called automatically during a State change or if a game loses focus / visibility. If you wish to control the reset
+    * directly yourself then set InputManager.resetLocked to `true`.
+    *
     * @method Phaser.Input#reset
-    * @param {boolean} hard - A soft reset (hard = false) won't reset any Signals that might be bound. A hard reset will.
+    * @param {boolean} [hard=false] - A soft reset won't reset any events or callbacks that are bound. A hard reset will.
     */
     reset: function (hard) {
 
-        if (this.game.isBooted === false)
+        if (!this.game.isBooted || this.resetLocked)
         {
             return;
         }
 
-        if (typeof hard == 'undefined') { hard = false; }
+        if (typeof hard === 'undefined') { hard = false; }
 
-        this.keyboard.reset();
+        this.keyboard.reset(hard);
         this.mousePointer.reset();
         this.gamepad.reset();
 
@@ -502,7 +511,7 @@ Phaser.Input.prototype = {
             this.game.canvas.style.cursor = 'inherit';
         }
 
-        if (hard === true)
+        if (hard)
         {
             this.onDown.dispose();
             this.onUp.dispose();

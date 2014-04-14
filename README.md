@@ -61,6 +61,7 @@ Version 2.0.4 - "Mos Shirare" - in development
 
 * TypeScript definitions fixes and updates (thanks @clark-stevenson)
 * Timer has removed all use of local temporary vars in the core update loop.
+* The Input.reset `hard` reset parameter is now passed down to the Keyboard and Key reset methods.
 
 
 ### New Features
@@ -68,6 +69,10 @@ Version 2.0.4 - "Mos Shirare" - in development
 * Loader now has an onFileStart event you can listen for (thanks @codevinsky, #705)
 * Timer.clearPendingEvents will purge any events marked for deletion, this is run automatically at the start of the update loop.
 * Device.crosswalk detects if your game is running under Intels Crosswalk XDK.
+* Keyboard.reset has a new `hard` parameter which controls the severity of the reset. A soft reset doesn't remove any callbacks or event listeners.
+* Key.reset has a new `hard` parameter which controls the severity of the reset. A soft reset doesn't remove any callbacks or event listeners.
+* InputManager.resetLocked - If the Input Manager has been reset locked then all calls made to InputManager.reset, such as from a State change, are ignored.
+
 
 
 ### Bug Fixes
