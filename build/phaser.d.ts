@@ -1419,6 +1419,7 @@ declare module Phaser {
         chrome: boolean;
         chromeOS: boolean;
         cocoonJS: boolean;
+        crosswalk: boolean;
         css3D: boolean;
         desktop: boolean;
         ejecta: boolean;
@@ -2091,6 +2092,7 @@ declare module Phaser {
         recordLimit: number;
         recordPointerHistory: boolean;
         recordRate: number;
+        resetLocked: boolean;
         scale: Phaser.Point;
         speed: Phaser.Point;
         tapRate: number;
@@ -2211,7 +2213,7 @@ declare module Phaser {
         justReleased(duration?: number): boolean;
         processKeyDown(event: KeyboardEvent): void;
         processKeyUp(event: KeyboardEvent): void;
-        reset(): void;
+        reset(hard?: boolean): void;
         update(): void;
 
     }
@@ -2339,7 +2341,7 @@ declare module Phaser {
         processKeyUp(event: KeyboardEvent): void;
         removeKey(keycode: number): void;
         removeKeyCapture(keycode: number): void;
-        reset(): void;
+        reset(hard?: boolean): void;
         start(): void;
         stop(): void;
         update(): void;
@@ -4051,6 +4053,7 @@ declare module Phaser {
         render(): void;
         remove(key: string): void;
         resume(): void;
+        restart(clearWorld?: boolean, clearCache?: boolean): void;
         start(key: string, clearWorld?: boolean, clearCache?: boolean, ...args:any[]): void;
         update(): void;
 
@@ -4391,6 +4394,7 @@ declare module Phaser {
         seconds: number;
 
         add(delay: number, callback: Function, callbackContext: Object, ...args: any[]): Phaser.TimerEvent;
+        clearPendingEvents(): void;
         destroy(): void;
         loop(delay: number, callback: Function, callbackContext: Object, ...args: any[]): Phaser.TimerEvent;
         order(): void;
