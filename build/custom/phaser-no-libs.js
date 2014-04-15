@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.0.3 "Allorallen" - Built: Fri Apr 11 2014 13:08:30
+* v2.0.4 "Mos Shirare" - Built: Tue Apr 15 2014 15:38:35
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -51,7 +51,7 @@
 var Phaser = Phaser || {
 
 	VERSION: '<%= version %>',
-	DEV_VERSION: '2.0.3',
+	DEV_VERSION: '2.0.4',
 	GAMES: [],
 
     AUTO: 0,
@@ -2463,7 +2463,7 @@ Object.defineProperty(Phaser.Line.prototype, "length", {
 Object.defineProperty(Phaser.Line.prototype, "angle", {
 
     get: function () {
-        return Math.atan2(this.end.x - this.start.x, this.end.y - this.start.y);
+        return Math.atan2(this.end.y - this.start.y, this.end.x - this.start.x);
     }
 
 });
@@ -3976,9 +3976,9 @@ Phaser.StateManager.prototype = {
         this._clearWorld = clearWorld;
         this._clearCache = clearCache;
 
-        if (arguments.length > 3)
+        if (arguments.length > 2)
         {
-            this._args = Array.prototype.splice.call(arguments, 3);
+            this._args = Array.prototype.splice.call(arguments, 2);
         }
 
     },
@@ -7327,7 +7327,7 @@ Phaser.Group.prototype.remove = function (child, destroy) {
         child.events.onRemovedFromGroup.dispatch(child, this);
     }
 
-    this.removeChild(child);
+    var removed = this.removeChild(child);
 
     this.updateZ();
 
@@ -7336,9 +7336,9 @@ Phaser.Group.prototype.remove = function (child, destroy) {
         this.next();
     }
 
-    if (destroy)
+    if (destroy && removed)
     {
-        child.destroy();
+        removed.destroy();
     }
 
     return true;
@@ -7368,11 +7368,11 @@ Phaser.Group.prototype.removeAll = function (destroy) {
             this.children[0].events.onRemovedFromGroup.dispatch(this.children[0], this);
         }
 
-        this.removeChild(this.children[0]);
+        var removed = this.removeChild(this.children[0]);
 
-        if (destroy)
+        if (destroy && removed)
         {
-            this.children[0].destroy();
+            removed.destroy();
         }
     }
     while (this.children.length > 0);
@@ -7413,11 +7413,11 @@ Phaser.Group.prototype.removeBetween = function (startIndex, endIndex, destroy) 
             this.children[i].events.onRemovedFromGroup.dispatch(this.children[i], this);
         }
 
-        this.removeChild(this.children[i]);
+        var removed = this.removeChild(this.children[i]);
 
-        if (destroy)
+        if (destroy && removed)
         {
-            this.children[i].destroy();
+            removed.destroy();
         }
 
         if (this.cursor === this.children[i])
@@ -7446,24 +7446,7 @@ Phaser.Group.prototype.destroy = function (destroyChildren, soft) {
     if (typeof destroyChildren === 'undefined') { destroyChildren = true; }
     if (typeof soft === 'undefined') { soft = false; }
 
-    if (destroyChildren)
-    {
-        if (this.children.length > 0)
-        {
-            do
-            {
-                if (this.children[0].parent)
-                {
-                    this.children[0].destroy(destroyChildren);
-                }
-            }
-            while (this.children.length > 0);
-        }
-    }
-    else
-    {
-        this.removeAll();
-    }
+    this.removeAll(destroyChildren);
 
     this.cursor = null;
 
@@ -9655,6 +9638,12 @@ Phaser.Input = function (game) {
     // this.gestures = null;
 
     /**
+    * @property {boolean} resetLocked - If the Input Manager has been reset locked then all calls made to InputManager.reset, such as from a State change, are ignored.
+    * @default
+    */
+    this.resetLocked = false;
+
+    /**
     * @property {Phaser.Signal} onDown - A Signal that is dispatched each time a pointer is pressed down.
     */
     this.onDown = null;
@@ -9883,20 +9872,23 @@ Phaser.Input.prototype = {
     },
 
     /**
-    * Reset all of the Pointers and Input states
+    * Reset all of the Pointers and Input states. The optional `hard` parameter will reset any events or callbacks that may be bound.
+    * Input.reset is called automatically during a State change or if a game loses focus / visibility. If you wish to control the reset
+    * directly yourself then set InputManager.resetLocked to `true`.
+    *
     * @method Phaser.Input#reset
-    * @param {boolean} hard - A soft reset (hard = false) won't reset any Signals that might be bound. A hard reset will.
+    * @param {boolean} [hard=false] - A soft reset won't reset any events or callbacks that are bound. A hard reset will.
     */
     reset: function (hard) {
 
-        if (this.game.isBooted === false)
+        if (!this.game.isBooted || this.resetLocked)
         {
             return;
         }
 
-        if (typeof hard == 'undefined') { hard = false; }
+        if (typeof hard === 'undefined') { hard = false; }
 
-        this.keyboard.reset();
+        this.keyboard.reset(hard);
         this.mousePointer.reset();
         this.gamepad.reset();
 
@@ -9915,7 +9907,7 @@ Phaser.Input.prototype = {
             this.game.canvas.style.cursor = 'inherit';
         }
 
-        if (hard === true)
+        if (hard)
         {
             this.onDown.dispose();
             this.onUp.dispose();
@@ -10513,8 +10505,11 @@ Phaser.Key.prototype = {
     * associated with the onDown and onUp events and nulls the onHoldCallback if set.
     *
     * @method Phaser.Key#reset
+    * @param {boolean} [hard=true] - A soft reset won't reset any events or callbacks that are bound to this Key. A hard reset will.
     */
-    reset: function () {
+    reset: function (hard) {
+
+        if (typeof hard === 'undefined') { hard = true; }
 
         this.isDown = false;
         this.isUp = true;
@@ -10522,10 +10517,13 @@ Phaser.Key.prototype = {
         this.duration = this.game.time.now - this.timeDown;
         this.enabled = true;
 
-        this.onDown.removeAll();
-        this.onUp.removeAll();
-        this.onHoldCallback = null;
-        this.onHoldContext = null;
+        if (hard)
+        {
+            this.onDown.removeAll();
+            this.onUp.removeAll();
+            this.onHoldCallback = null;
+            this.onHoldContext = null;
+        }
 
     },
 
@@ -10921,8 +10919,11 @@ Phaser.Keyboard.prototype = {
     * Resets all Keys.
     *
     * @method Phaser.Keyboard#reset
+    * @param {boolean} [hard=true] - A soft reset won't reset any events or callbacks that are bound to the Keys. A hard reset will.
     */
-    reset: function () {
+    reset: function (hard) {
+
+        if (typeof hard === 'undefined') { hard = true; }
 
         this.event = null;
 
@@ -10932,7 +10933,7 @@ Phaser.Keyboard.prototype = {
         {
             if (this._keys[i])
             {
-                this._keys[i].reset();
+                this._keys[i].reset(hard);
             }
         }
 
@@ -22644,10 +22645,16 @@ Phaser.Device = function (game) {
     this.cocoonJS = false;
 
     /**
-     * @property {boolean} ejecta - Is the game running under Ejecta?
-     * @default
-     */
+    * @property {boolean} ejecta - Is the game running under Ejecta?
+    * @default
+    */
     this.ejecta = false;
+
+    /**
+    * @property {boolean} crosswalk - Is the game running under the Intel Crosswalk XDK?
+    * @default
+    */
+    this.crosswalk = false;
 
     /**
     * @property {boolean} android - Is running on android?
@@ -23205,6 +23212,11 @@ Phaser.Device.prototype = {
         if (typeof window.ejecta !== "undefined")
         {
             this.ejecta = true;
+        }
+
+        if (/Crosswalk/.test(ua))
+        {
+            this.crosswalk = true;
         }
 
     },
@@ -23899,7 +23911,7 @@ Phaser.Math = {
     * @return {number}
     */
     angleBetween: function (x1, y1, x2, y2) {
-        return Math.atan2(x2 - x1, y2 - y1);
+        return Math.atan2(y2 - y1, x2 - x1);
     },
 
     /**
@@ -23910,7 +23922,7 @@ Phaser.Math = {
     * @return {number}
     */
     angleBetweenPoints: function (point1, point2) {
-        return Math.atan2(point2.x - point1.x, point2.y - point1.y);
+        return Math.atan2(point2.y - point1.y, point2.x - point1.x);
     },
 
     /**
@@ -27692,6 +27704,18 @@ Phaser.Timer = function (game, autoDestroy) {
     */
     this._i = 0;
 
+    /**
+    * @property {number} _diff - Internal cache var.
+    * @private
+    */
+    this._diff = 0;
+
+    /**
+    * @property {number} _newTick - Internal cache var.
+    * @private
+    */
+    this._newTick = 0;
+
 };
 
 /**
@@ -27761,6 +27785,7 @@ Phaser.Timer.prototype = {
     * Adds a new Event to this Timer. The event will fire after the given amount of 'delay' in milliseconds has passed, once the Timer has started running.
     * Call Timer.start() once you have added all of the Events you require for this Timer. The delay is in relation to when the Timer starts, not the time it was added.
     * If the Timer is already running the delay will be calculated based on the timers current time.
+    *
     * @method Phaser.Timer#add
     * @param {number} delay - The number of milliseconds that should elapse before the Timer will call the given callback.
     * @param {function} callback - The callback that will be called when the Timer event occurs.
@@ -27779,9 +27804,10 @@ Phaser.Timer.prototype = {
     * The event will fire after the given amount of 'delay' milliseconds has passed once the Timer has started running.
     * Call Timer.start() once you have added all of the Events you require for this Timer. The delay is in relation to when the Timer starts, not the time it was added.
     * If the Timer is already running the delay will be calculated based on the timers current time.
+    *
     * @method Phaser.Timer#repeat
     * @param {number} delay - The number of milliseconds that should elapse before the Timer will call the given callback.
-    * @param {number} repeatCount - The number of times the event will repeat.
+    * @param {number} repeatCount - The number of times the event will repeat once is has finished playback. A repeatCount of 1 means it will repeat itself once, playing the event twice in total.
     * @param {function} callback - The callback that will be called when the Timer event occurs.
     * @param {object} callbackContext - The context in which the callback will be called.
     * @param {...*} arguments - The values to be sent to your callback function when it is called.
@@ -27798,6 +27824,7 @@ Phaser.Timer.prototype = {
     * The event will fire after the given amount of 'delay' milliseconds has passed once the Timer has started running.
     * Call Timer.start() once you have added all of the Events you require for this Timer. The delay is in relation to when the Timer starts, not the time it was added.
     * If the Timer is already running the delay will be calculated based on the timers current time.
+    *
     * @method Phaser.Timer#loop
     * @param {number} delay - The number of milliseconds that should elapse before the Timer will call the given callback.
     * @param {function} callback - The callback that will be called when the Timer event occurs.
@@ -27909,6 +27936,28 @@ Phaser.Timer.prototype = {
     },
 
     /**
+    * Clears any events from the Timer which have pendingDelete set to true and then resets the private _len and _i values.
+    *
+    * @method Phaser.Timer#clearPendingEvents
+    */
+    clearPendingEvents: function () {
+
+        this._i = this.events.length;
+
+        while (this._i--)
+        {
+            if (this.events[this._i].pendingDelete)
+            {
+                this.events.splice(this._i, 1);
+            }
+        }
+
+        this._len = this.events.length;
+        this._i = 0;
+
+    },
+
+    /**
     * The main Timer update event, called automatically by the Game clock.
     * @method Phaser.Timer#update
     * @protected
@@ -27924,55 +27973,38 @@ Phaser.Timer.prototype = {
 
         this._now = time;
 
-        this._len = this.events.length;
-
-        this._i = 0;
-
-        while (this._i < this._len)
-        {
-            if (this.events[this._i].pendingDelete)
-            {
-                this.events.splice(this._i, 1);
-                this._len--;
-            }
-
-            this._i++;
-        }
-
-        this._len = this.events.length;
+        //  Clears events marked for deletion and resets _len and _i to 0.
+        this.clearPendingEvents();
 
         if (this.running && this._now >= this.nextTick && this._len > 0)
         {
-            this._i = 0;
-
             while (this._i < this._len && this.running)
             {
                 if (this._now >= this.events[this._i].tick)
                 {
-                    var diff = this._now - this.events[this._i].tick;
-                    var newTick = (this._now + this.events[this._i].delay) - diff;
+                    //  (now + delay) - (time difference from last tick to now)
+                    this._newTick = (this._now + this.events[this._i].delay) - (this._now - this.events[this._i].tick);
 
-                    if (newTick < 0)
+                    if (this._newTick < 0)
                     {
-                        newTick = this._now + this.events[this._i].delay;
+                        this._newTick = this._now + this.events[this._i].delay;
                     }
 
                     if (this.events[this._i].loop === true)
                     {
-                        this.events[this._i].tick = newTick;
+                        this.events[this._i].tick = this._newTick;
                         this.events[this._i].callback.apply(this.events[this._i].callbackContext, this.events[this._i].args);
                     }
                     else if (this.events[this._i].repeatCount > 0)
                     {
                         this.events[this._i].repeatCount--;
-                        this.events[this._i].tick = newTick;
+                        this.events[this._i].tick = this._newTick;
                         this.events[this._i].callback.apply(this.events[this._i].callbackContext, this.events[this._i].args);
                     }
                     else
                     {
                         this.events[this._i].callback.apply(this.events[this._i].callbackContext, this.events[this._i].args);
-                        this.events.splice(this._i, 1);
-                        this._len--;
+                        this.events[this._i].pendingDelete = true;
                     }
 
                     this._i++;
@@ -28461,7 +28493,7 @@ Phaser.AnimationManager.prototype = {
 
         if (this._anims[name])
         {
-            if (this.currentAnim == this._anims[name])
+            if (this.currentAnim === this._anims[name])
             {
                 if (this.currentAnim.isPlaying === false)
                 {
@@ -28471,6 +28503,11 @@ Phaser.AnimationManager.prototype = {
             }
             else
             {
+                if (this.currentAnim && this.currentAnim.isPlaying)
+                {
+                    this.currentAnim.stop();
+                }
+
                 this.currentAnim = this._anims[name];
                 this.currentAnim.paused = false;
                 return this.currentAnim.play(frameRate, loop, killOnComplete);
@@ -28572,11 +28609,22 @@ Phaser.AnimationManager.prototype = {
     },
 
     /**
-    * Destroys all references this AnimationManager contains. Sets the _anims to a new object and nulls the current animation.
+    * Destroys all references this AnimationManager contains.
+    * Iterates through the list of animations stored in this manager and calls destroy on each of them.
     *
     * @method Phaser.AnimationManager#destroy
     */
     destroy: function () {
+
+        var anim = null;
+
+        for (var anim in this._anims)
+        {
+            if (this._anims.hasOwnProperty(anim))
+            {
+                this._anims[anim].destroy();
+            }
+        }
 
         this._anims = {};
         this._frameData = null;
@@ -28873,7 +28921,6 @@ Phaser.Animation.prototype = {
     * Plays this animation.
     *
     * @method Phaser.Animation#play
-    * @memberof Phaser.Animation
     * @param {number} [frameRate=null] - The framerate to play the animation at. The speed is given in frames per second. If not provided the previously set frameRate of the Animation is used.
     * @param {boolean} [loop=false] - Should the animation be looped after playback. If not provided the previously set loop value of the Animation is used.
     * @param {boolean} [killOnComplete=false] - If set to true when the animation completes (only happens if loop=false) the parent Sprite will be killed.
@@ -28930,7 +28977,6 @@ Phaser.Animation.prototype = {
     * Sets this animation back to the first frame and restarts the animation.
     *
     * @method Phaser.Animation#restart
-    * @memberof Phaser.Animation
     */
     restart: function () {
 
@@ -28955,7 +29001,6 @@ Phaser.Animation.prototype = {
     * If `dispatchComplete` is true it will dispatch the complete events, otherwise they'll be ignored.
     *
     * @method Phaser.Animation#stop
-    * @memberof Phaser.Animation
     * @param {boolean} [resetFrame=false] - If true after the animation stops the currentFrame value will be set to the first frame in this animation.
     * @param {boolean} [dispatchComplete=false] - Dispatch the Animation.onComplete and parent.onAnimationComplete events?
     */
@@ -28985,7 +29030,6 @@ Phaser.Animation.prototype = {
     * Called when the Game enters a paused state.
     *
     * @method Phaser.Animation#onPause
-    * @memberof Phaser.Animation
     */
     onPause: function () {
 
@@ -29000,7 +29044,6 @@ Phaser.Animation.prototype = {
     * Called when the Game resumes from a paused state.
     *
     * @method Phaser.Animation#onResume
-    * @memberof Phaser.Animation
     */
     onResume: function () {
 
@@ -29015,7 +29058,6 @@ Phaser.Animation.prototype = {
     * Updates this animation. Called automatically by the AnimationManager.
     *
     * @method Phaser.Animation#update
-    * @memberof Phaser.Animation
     */
     update: function () {
 
@@ -29100,7 +29142,6 @@ Phaser.Animation.prototype = {
     * Cleans up this animation ready for deletion. Nulls all values and references.
     *
     * @method Phaser.Animation#destroy
-    * @memberof Phaser.Animation
     */
     destroy: function () {
 
@@ -29111,9 +29152,9 @@ Phaser.Animation.prototype = {
         this.currentFrame = null;
         this.isPlaying = false;
 
-        this.onStart.destroy();
-        this.onLoop.destroy();
-        this.onComplete.destroy();
+        this.onStart.dispose();
+        this.onLoop.dispose();
+        this.onComplete.dispose();
 
         this.game.onPause.remove(this.onPause, this);
         this.game.onResume.remove(this.onResume, this);
@@ -29125,7 +29166,6 @@ Phaser.Animation.prototype = {
     * Sets the isPlaying and isFinished states and dispatches the onAnimationComplete event if it exists on the parent and local onComplete event.
     *
     * @method Phaser.Animation#complete
-    * @memberof Phaser.Animation
     */
     complete: function () {
 
@@ -31359,22 +31399,27 @@ Phaser.Loader = function (game) {
     this.baseURL = '';
 
     /**
-    * @property {Phaser.Signal} onFileComplete - Event signal.
-    */
-    this.onFileComplete = new Phaser.Signal();
-
-    /**
-    * @property {Phaser.Signal} onFileError - Event signal.
-    */
-    this.onFileError = new Phaser.Signal();
-
-    /**
-    * @property {Phaser.Signal} onLoadStart - Event signal.
+    * @property {Phaser.Signal} onLoadStart - This event is dispatched when the loading process starts, before the first file has been requested.
     */
     this.onLoadStart = new Phaser.Signal();
 
     /**
-    * @property {Phaser.Signal} onLoadComplete - Event signal.
+    * @property {Phaser.Signal} onFileStart - This event is dispatched immediately before a file starts loading. It's possible the file may still error (404, etc) after this event is sent.
+    */
+    this.onFileStart = new Phaser.Signal();
+
+    /**
+    * @property {Phaser.Signal} onFileComplete - This event is dispatched when a file completes loading successfully.
+    */
+    this.onFileComplete = new Phaser.Signal();
+
+    /**
+    * @property {Phaser.Signal} onFileError - This event is dispatched when a file errors as a result of the load request.
+    */
+    this.onFileError = new Phaser.Signal();
+
+    /**
+    * @property {Phaser.Signal} onLoadComplete - This event is dispatched when the final file in the load queue has either loaded or failed.
     */
     this.onLoadComplete = new Phaser.Signal();
 
@@ -32143,9 +32188,11 @@ Phaser.Loader.prototype = {
             console.warn('Phaser.Loader loadFile invalid index ' + this._fileIndex);
             return;
         }
-
+        
         var file = this._fileList[this._fileIndex];
         var _this = this;
+
+        this.onFileStart.dispatch(this.progress, file.key);
 
         //  Image or Data?
         switch (file.type)
@@ -37574,7 +37621,7 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.tilePadding = new Phaser.Point();
 
     /**
-    * @property {number} phaser - Is this Body in a preUpdate or postUpdate state?
+    * @property {number} phaser - Is this Body in a preUpdate (1) or postUpdate (2) state?
     */
     this.phase = 0;
 
@@ -37720,6 +37767,12 @@ Phaser.Physics.Arcade.Body.prototype = {
     * @protected
     */
     postUpdate: function () {
+
+        //  Only allow postUpdate to be called once per frame
+        if (this.phase === 2)
+        {
+            return;
+        }
 
         this.phase = 2;
 
@@ -39270,8 +39323,8 @@ Phaser.Tile.prototype = {
 Phaser.Tile.prototype.constructor = Phaser.Tile;
 
 /**
-* @name Phaser.Tile#canCollide
-* @property {boolean} canCollide - True if this tile can collide or has a collision callback.
+* @name Phaser.Tile#collides
+* @property {boolean} collides - True if this tile can collide on any of its faces.
 * @readonly
 */
 Object.defineProperty(Phaser.Tile.prototype, "collides", {
@@ -39284,7 +39337,7 @@ Object.defineProperty(Phaser.Tile.prototype, "collides", {
 
 /**
 * @name Phaser.Tile#canCollide
-* @property {boolean} canCollide - True if this tile can collide or has a collision callback.
+* @property {boolean} canCollide - True if this tile can collide on any of its faces or has a collision callback set.
 * @readonly
 */
 Object.defineProperty(Phaser.Tile.prototype, "canCollide", {
