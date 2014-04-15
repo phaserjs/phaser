@@ -1781,7 +1781,7 @@ declare module Phaser {
         sprite(x: number, y: number, key?: any, frame?: any, group?: Phaser.Group): Phaser.Sprite;
         spriteBatch(parent: any, name?: string, addToStage?: boolean): Phaser.Group;
         text(x: number, y: number, text: string, style: any, group?: Phaser.Group): Phaser.Text;
-        tilemap(key: string, tileWidth?: number, tileHeight?: number, width?: number, height?: number): Phaser.Tilemap;
+        tilemap(key?: string, tileWidth?: number, tileHeight?: number, width?: number, height?: number): Phaser.Tilemap;
         tileSprite(x: number, y: number, width: number, height: number, key?: any, frame?: any, group?: Phaser.Group): Phaser.TileSprite;
         tween(obj: Object): Phaser.Tween;
 
@@ -4179,7 +4179,7 @@ declare module Phaser {
         addTilesetImage(tileset: string, key?: string, tileWidth?: number, tileHeight?: number, tileMargin?: number, tileSpacing?: number, gid?: number): Phaser.Tileset;
         calculateFaces(layer: number): void;
         copy(x: number, y: number, width: number, height: number, layer?: any): Phaser.Tile[];
-        create(name: string, width: number, height: number, tileWidth:number, tileHeight:number): Phaser.Tilemap;
+        create(name: string, width: number, height: number, tileWidth:number, tileHeight:number): Phaser.TilemapLayer;
         createBlankLayer(name: string, width: number, height: number, tileWidth: number, tileHeight: number, group?: Phaser.Group): Phaser.TilemapLayer;
         createFromObjects(name: string, gid: any, key: string, frame?: any, exists?: boolean, autoCull?: boolean, group?: Phaser.Group, CustomClass?: Object, adjustY?:boolean): void;
         createLayer(layer: any, width?: number, height?: number, group?: Phaser.Group): Phaser.TilemapLayer;

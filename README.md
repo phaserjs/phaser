@@ -88,6 +88,11 @@ Version 2.0.4 - "Mos Shirare" - in development
 * Line.angle and Math.angleBetween used Math.atan2 arguments in the wrong order (thanks @jotson, fix #724)
 
 
+### ToDo
+
+* Stage.postUpdate may update a camera tracked object twice if it's not on the root display level (which it rarely is)
+
+
 There is an extensive [Migration Guide](https://github.com/photonstorm/phaser/blob/master/resources/Migration%20Guide.md) available for those converting from Phaser 1.x to 2.x. In the guide we detail the API breaking changes and approach to our new physics system.
 
 The full Change Log is at https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md
