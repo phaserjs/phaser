@@ -45,9 +45,9 @@ Happy coding everyone! See you on the forums.
 
 We have a new [Getting Started Guide](http://phaser.io/getting-started-js.php) which covers all you need to begin developing games with Phaser. From setting up a web server to picking an IDE. If you're new to HTML5 game development, or are coming from another language like AS3, then we recommend starting there.
 
-There is a comprehensive [How to Learn Phaser](http://gamedevelopment.tutsplus.com/articles/how-to-learn-the-phaser-html5-game-engine--gamedev-13643) guide on the GameDevTuts+ site which is a great place to learn where to find tutorials, examples and support.
+We wrote a comprehensive [How to Learn Phaser](http://gamedevelopment.tutsplus.com/articles/how-to-learn-the-phaser-html5-game-engine--gamedev-13643) guide for GameDevTuts+  which covers finding tutorials, examples and support.
 
-There is also an [un-official Getting Started Guide](http://www.antonoffplus.com/coding-an-html5-game-for-30-minutes-or-an-introduction-to-the-phaser-framework).
+Finally the growing list of [community authored Phaser Tutorials](http://www.lessmilk.com/phaser-tutorial/) is growing fast!
 
 ![Phaser Logo](http://www.photonstorm.com/wp-content/uploads/2013/09/phaser_10_release.jpg)
 
@@ -64,6 +64,7 @@ Version 2.0.4 - "Mos Shirare" - in development
 * The Input.reset `hard` reset parameter is now passed down to the Keyboard and Key reset methods.
 * AnimationManager.destroy now iterates through child animations calling destroy on all of them, avoiding a memory leak (thanks stauzs)
 * AnimationManager.play will now call Animation.stop on the current animation before switching to the new one (thanks @nihakue, #713)
+* ArcadePhysics.Body.phase is checked in postUpdate to prevent it from being called multiple times in a single frame.
 
 
 ### New Features
