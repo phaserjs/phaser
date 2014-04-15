@@ -408,8 +408,8 @@ Phaser.Timer.prototype = {
                     }
                     else
                     {
-                        this.events[this._i].callback.apply(this.events[this._i].callbackContext, this.events[this._i].args);
                         this.events[this._i].pendingDelete = true;
+                        this.events[this._i].callback.apply(this.events[this._i].callbackContext, this.events[this._i].args);
                     }
 
                     this._i++;
