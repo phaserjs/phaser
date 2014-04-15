@@ -336,7 +336,7 @@ Phaser.Math = {
     * @return {number}
     */
     angleBetween: function (x1, y1, x2, y2) {
-        return Math.atan2(x2 - x1, y2 - y1);
+        return Math.atan2(y2 - y1, x2 - x1);
     },
 
     /**
@@ -347,7 +347,7 @@ Phaser.Math = {
     * @return {number}
     */
     angleBetweenPoints: function (point1, point2) {
-        return Math.atan2(point2.x - point1.x, point2.y - point1.y);
+        return Math.atan2(point2.y - point1.y, point2.x - point1.x);
     },
 
     /**
