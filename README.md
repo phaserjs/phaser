@@ -76,11 +76,12 @@ Version 2.0.4 - "Mos Shirare" - in development
 * Key.reset has a new `hard` parameter which controls the severity of the reset. A soft reset doesn't remove any callbacks or event listeners.
 * InputManager.resetLocked - If the Input Manager has been reset locked then all calls made to InputManager.reset, such as from a State change, are ignored.
 * Group.resetCursor will reset the Group cursor back to the start of the group, or to the given index value.
+* World.wrap will take a game object and if its x/y coordinates fall outside of the world bounds it will be repositioned on the opposite side, for a wrap-around effect.
 
 
 ### Bug Fixes
 
-* The main Timer loop could incorrectly remove TimeEvent if a new one was added specifically during an event callback (thanks @garyyeap, fix #710)
+* The main Timer loop could incorrectly remove a TimerEvent if a new one was added specifically during an event callback (thanks @garyyeap, fix #710)
 * Fixed the use of the destroy parameter in Group.removeAll and related functions (thanks @AnderbergE, fix #717)
 * P2.World.convertTilemap now correctly checks the collides parameter of the tiles as it converts them.
 * Animation.destroy didn't correctly clear the onStart, onLoop and onComplete signals.
