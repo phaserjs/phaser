@@ -769,15 +769,15 @@ Phaser.Math = {
     },
 
     /**
-    * Keeps an angle value between -180 and +180<br>
-    * Should be called whenever the angle is updated on the Sprite to stop it from going insane.
+    * Keeps an angle value between -180 and +180.
     *
     * @method Phaser.Math#wrapAngle
     * @param {number} angle - The angle value to check
-    * @param {boolean} radians - True if angle sizes are expressed in radians.
+    * @param {boolean} radians - True if angle is given in radians.
     * @return {number} The new angle value, returns the same as the input angle if it was within bounds.
     */
     wrapAngle: function (angle, radians) {
+
         var radianFactor = (radians) ? Math.PI / 180 : 1;
         return this.wrap(angle, -180 * radianFactor, 180 * radianFactor);
 

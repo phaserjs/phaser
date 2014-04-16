@@ -29,7 +29,10 @@ Phaser.InputHandler = function (sprite) {
     this.enabled = false;
 
     /**
-    * @property {number} priorityID - The PriorityID controls which Sprite receives an Input event first if they should overlap.
+    * The priorityID is used to determine which game objects should get priority when input events occur. For example if you have
+    * several Sprites that overlap, by default the one at the top of the display list is given priority for input events. You can
+    * stop this from happening by controlling the priorityID value. The higher the value, the more important they are considered to the Input events.
+    * @property {number} priorityID
     * @default
     */
     this.priorityID = 0;

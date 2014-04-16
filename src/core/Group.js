@@ -1422,7 +1422,7 @@ Phaser.Group.prototype.remove = function (child, destroy) {
 
     if (destroy && removed)
     {
-        removed.destroy();
+        removed.destroy(true);
     }
 
     return true;
@@ -1456,7 +1456,7 @@ Phaser.Group.prototype.removeAll = function (destroy) {
 
         if (destroy && removed)
         {
-            removed.destroy();
+            removed.destroy(true);
         }
     }
     while (this.children.length > 0);
@@ -1501,7 +1501,7 @@ Phaser.Group.prototype.removeBetween = function (startIndex, endIndex, destroy) 
 
         if (destroy && removed)
         {
-            removed.destroy();
+            removed.destroy(true);
         }
 
         if (this.cursor === this.children[i])

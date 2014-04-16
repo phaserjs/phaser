@@ -104,6 +104,12 @@ Phaser.Timer = function (game, autoDestroy) {
     this._len = 0;
 
     /**
+    * @property {number} _marked - Temp. counter variable.
+    * @private
+    */
+    this._marked = 0;
+
+    /**
     * @property {number} _i - Temp. array counter variable.
     * @private
     */
@@ -377,6 +383,7 @@ Phaser.Timer.prototype = {
         }
 
         this._now = time;
+        this._marked = 0;
 
         //  Clears events marked for deletion and resets _len and _i to 0.
         this.clearPendingEvents();
@@ -408,6 +415,7 @@ Phaser.Timer.prototype = {
                     }
                     else
                     {
+                        this._marked++;
                         this.events[this._i].pendingDelete = true;
                         this.events[this._i].callback.apply(this.events[this._i].callbackContext, this.events[this._i].args);
                     }
@@ -421,7 +429,7 @@ Phaser.Timer.prototype = {
             }
 
             //  Are there any events left?
-            if (this.events.length > 0)
+            if (this.events.length > this._marked)
             {
                 this.order();
             }
