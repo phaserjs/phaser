@@ -75,7 +75,7 @@ Version 2.0.4 - "Mos Shirare" - in development
 * Keyboard.reset has a new `hard` parameter which controls the severity of the reset. A soft reset doesn't remove any callbacks or event listeners.
 * Key.reset has a new `hard` parameter which controls the severity of the reset. A soft reset doesn't remove any callbacks or event listeners.
 * InputManager.resetLocked - If the Input Manager has been reset locked then all calls made to InputManager.reset, such as from a State change, are ignored.
-
+* Group.resetCursor will reset the Group cursor back to the start of the group, or to the given index value.
 
 
 ### Bug Fixes
