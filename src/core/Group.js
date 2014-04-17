@@ -1559,10 +1559,12 @@ Phaser.Group.prototype.destroy = function (destroyChildren, soft) {
 
     if (!soft)
     {
-        this.parent.removeChild(this);
+        if (this.parent)
+        {
+            this.parent.removeChild(this);
+        }
 
         this.game = null;
-
         this.exists = false;
     }
 
