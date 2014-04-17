@@ -1413,7 +1413,8 @@ Phaser.Group.prototype.getRandom = function (startIndex, length) {
 };
 
 /**
-* Removes the given child from this Group and sets its group property to null.
+* Removes the given child from this Group. This will dispatch an onRemovedFromGroup event from the child (if it has one),
+* reset the Group cursor and optionally destroy the child.
 *
 * @method Phaser.Group#remove
 * @param {Any} child - The child to remove.
@@ -1424,7 +1425,7 @@ Phaser.Group.prototype.remove = function (child, destroy) {
 
     if (typeof destroy === 'undefined') { destroy = false; }
 
-    if (this.children.length === 0)
+    if (this.children.length === 0 || this.children.indexOf(child) === -1)
     {
         return false;
     }
