@@ -91,6 +91,12 @@ Phaser.QuadTree = function(x, y, width, height, maxObjects, maxLevels, level) {
     */
     this.nodes = [];
 
+    /**
+    * @property {array} _empty - Internal empty array.
+    * @private
+    */
+    this._empty = [];
+
     this.reset(x, y, width, height, maxObjects, maxLevels, level);
 
 };
@@ -286,9 +292,13 @@ Phaser.QuadTree.prototype = {
     */
     retrieve: function (sprite) {
 
+        if (!sprite.body)
+        {
+            return this._empty;
+        }
+
         var returnObjects = this.objects;
 
-        // sprite.body.quadTreeIndex = this.getIndex(sprite.body);
         var index = this.getIndex(sprite.body);
 
         if (this.nodes[0])

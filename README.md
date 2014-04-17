@@ -66,6 +66,9 @@ Version 2.0.4 - "Mos Shirare" - in development
 * AnimationManager.play will now call Animation.stop on the current animation before switching to the new one (thanks @nihakue, #713)
 * ArcadePhysics.Body.phase is checked in postUpdate to prevent it from being called multiple times in a single frame.
 * Group.setProperty will now check if the property exists before setting it, this applies to Group.setAll and anything else using setProperty internally.
+* QuadTree.retrieve now checks to see if the given Sprite has a body before carrying on.
+* ArcadePhysics.collideSpriteVsGroup checks if Sprite has a body before carrying on, now safely skips sub-groups or other non-Sprite group children. 
+
 
 
 ### New Features

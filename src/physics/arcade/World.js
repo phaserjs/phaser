@@ -543,7 +543,7 @@ Phaser.Physics.Arcade.prototype = {
     */
     collideSpriteVsGroup: function (sprite, group, collideCallback, processCallback, callbackContext, overlapOnly) {
 
-        if (group.length === 0)
+        if (group.length === 0 || !sprite.body)
         {
             return;
         }
@@ -649,6 +649,11 @@ Phaser.Physics.Arcade.prototype = {
     * @param {boolean} overlapOnly - Just run an overlap or a full collision.
     */
     collideSpriteVsTilemapLayer: function (sprite, tilemapLayer, collideCallback, processCallback, callbackContext) {
+
+        if (!sprite.body)
+        {
+            return;
+        }
 
         this._mapData = tilemapLayer.getTiles(
             sprite.body.position.x - sprite.body.tilePadding.x,
