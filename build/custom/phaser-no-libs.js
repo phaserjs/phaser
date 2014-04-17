@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.0.4 "Mos Shirare" - Built: Tue Apr 15 2014 15:38:35
+* v2.0.4 "Mos Shirare" - Built: Thu Apr 17 2014 14:58:26
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -6270,6 +6270,31 @@ Phaser.Group.prototype.updateZ = function () {
 };
 
 /**
+* Sets the Group cursor to the first object in the Group. If the optional index parameter is given it sets the cursor to the object at that index instead.
+*
+* @method Phaser.Group#resetCursor
+* @param {number} [index=0] - Set the cursor to point to a specific index.
+* @return {*} The child the cursor now points to.
+*/
+Phaser.Group.prototype.resetCursor = function (index) {
+
+    if (typeof index === 'undefined') { index = 0; }
+
+    if (index > this.children.length - 1)
+    {
+        index = 0;
+    }
+
+    if (this.cursor)
+    {
+        this._cache[8] = index;
+        this.cursor = this.children[this._cache[8]];
+        return this.cursor;
+    }
+
+};
+
+/**
 * Advances the Group cursor to the next object in the Group. If it's at the end of the Group it wraps around to the first object.
 *
 * @method Phaser.Group#next
@@ -6526,9 +6551,7 @@ Phaser.Group.prototype.setProperty = function (child, key, value, operation) {
 
     operation = operation || 0;
 
-    //  As ugly as this approach looks, and although it's limited to a depth of only 4, it's extremely fast.
-    //  Much faster than a for loop or object iteration. There are no checks, so if the key isn't valid then it'll fail
-    //  but as you are likely to call this from inner loops that have to perform well, I'll take that trade off.
+    //  As ugly as this approach looks, and although it's limited to a depth of only 4, it's much faster than a for loop or object iteration.
 
     //  0 = Equals
     //  1 = Add
@@ -6538,7 +6561,7 @@ Phaser.Group.prototype.setProperty = function (child, key, value, operation) {
 
     var len = key.length;
 
-    if (len == 1)
+    if (len === 1 && child.hasOwnProperty(key[0]))
     {
         if (operation === 0) { child[key[0]] = value; }
         else if (operation == 1) { child[key[0]] += value; }
@@ -6546,7 +6569,7 @@ Phaser.Group.prototype.setProperty = function (child, key, value, operation) {
         else if (operation == 3) { child[key[0]] *= value; }
         else if (operation == 4) { child[key[0]] /= value; }
     }
-    else if (len == 2)
+    else if (len === 2 && child.hasOwnProperty(key[0]) && child[key[0]].hasOwnProperty(key[1]))
     {
         if (operation === 0) { child[key[0]][key[1]] = value; }
         else if (operation == 1) { child[key[0]][key[1]] += value; }
@@ -6554,7 +6577,7 @@ Phaser.Group.prototype.setProperty = function (child, key, value, operation) {
         else if (operation == 3) { child[key[0]][key[1]] *= value; }
         else if (operation == 4) { child[key[0]][key[1]] /= value; }
     }
-    else if (len == 3)
+    else if (len === 3 && child.hasOwnProperty(key[0]) && child[key[0]].hasOwnProperty(key[1]) && child[key[0]][key[1]].hasOwnProperty(key[2]))
     {
         if (operation === 0) { child[key[0]][key[1]][key[2]] = value; }
         else if (operation == 1) { child[key[0]][key[1]][key[2]] += value; }
@@ -6562,7 +6585,7 @@ Phaser.Group.prototype.setProperty = function (child, key, value, operation) {
         else if (operation == 3) { child[key[0]][key[1]][key[2]] *= value; }
         else if (operation == 4) { child[key[0]][key[1]][key[2]] /= value; }
     }
-    else if (len == 4)
+    else if (len === 4 && child.hasOwnProperty(key[0]) && child[key[0]].hasOwnProperty(key[1]) && child[key[0]][key[1]].hasOwnProperty(key[2]) && child[key[0]][key[1]][key[2]].hasOwnProperty(key[3]))
     {
         if (operation === 0) { child[key[0]][key[1]][key[2]][key[3]] = value; }
         else if (operation == 1) { child[key[0]][key[1]][key[2]][key[3]] += value; }
@@ -7306,7 +7329,8 @@ Phaser.Group.prototype.getRandom = function (startIndex, length) {
 };
 
 /**
-* Removes the given child from this Group and sets its group property to null.
+* Removes the given child from this Group. This will dispatch an onRemovedFromGroup event from the child (if it has one),
+* reset the Group cursor and optionally destroy the child.
 *
 * @method Phaser.Group#remove
 * @param {Any} child - The child to remove.
@@ -7317,7 +7341,7 @@ Phaser.Group.prototype.remove = function (child, destroy) {
 
     if (typeof destroy === 'undefined') { destroy = false; }
 
-    if (this.children.length === 0)
+    if (this.children.length === 0 || this.children.indexOf(child) === -1)
     {
         return false;
     }
@@ -7338,7 +7362,7 @@ Phaser.Group.prototype.remove = function (child, destroy) {
 
     if (destroy && removed)
     {
-        removed.destroy();
+        removed.destroy(true);
     }
 
     return true;
@@ -7372,7 +7396,7 @@ Phaser.Group.prototype.removeAll = function (destroy) {
 
         if (destroy && removed)
         {
-            removed.destroy();
+            removed.destroy(true);
         }
     }
     while (this.children.length > 0);
@@ -7417,7 +7441,7 @@ Phaser.Group.prototype.removeBetween = function (startIndex, endIndex, destroy) 
 
         if (destroy && removed)
         {
-            removed.destroy();
+            removed.destroy(true);
         }
 
         if (this.cursor === this.children[i])
@@ -7452,10 +7476,12 @@ Phaser.Group.prototype.destroy = function (destroyChildren, soft) {
 
     if (!soft)
     {
-        this.parent.removeChild(this);
+        if (this.parent)
+        {
+            this.parent.removeChild(this);
+        }
 
         this.game = null;
-
         this.exists = false;
     }
 
@@ -7676,6 +7702,65 @@ Phaser.World.prototype.shutdown = function () {
 
     //  World is a Group, so run a soft destruction on this and all children.
     this.destroy(true, true);
+
+};
+
+/**
+* This will take the given game object and check if its x/y coordinates fall outside of the world bounds.
+* If they do it will reposition the object to the opposite side of the world, creating a wrap-around effect.
+*
+* @method Phaser.World#wrap
+* @param {Phaser.Sprite|Phaser.Image|Phaser.TileSprite|Phaser.Text} sprite - The object you wish to wrap around the world bounds.
+* @param {number} [padding=0] - Extra padding added equally to the sprite.x and y coordinates before checking if within the world bounds. Ignored if useBounds is true.
+* @param {boolean} [useBounds=false] - If useBounds is false wrap checks the object.x/y coordinates. If true it does a more accurate bounds check, which is more expensive.
+*/
+Phaser.World.prototype.wrap = function (sprite, padding, useBounds) {
+
+    if (typeof padding === 'undefined') { padding = 0; }
+    if (typeof useBounds === 'undefined') { useBounds = false; }
+
+    if (!useBounds)
+    {
+        if (sprite.x + padding < this.bounds.x)
+        {
+            sprite.x = this.bounds.right + padding;
+        }
+        else if (sprite.x - padding > this.bounds.right)
+        {
+            sprite.x = this.bounds.left - padding;
+        }
+
+        if (sprite.y + padding < this.bounds.top)
+        {
+            sprite.y = this.bounds.bottom + padding;
+        }
+        else if (sprite.y - padding > this.bounds.bottom)
+        {
+            sprite.y = this.bounds.top - padding;
+        }
+    }
+    else
+    {
+        sprite.getBounds();
+
+        if (sprite._currentBounds.right < this.bounds.x)
+        {
+            sprite.x = this.bounds.right;
+        }
+        else if (sprite._currentBounds.x > this.bounds.right)
+        {
+            sprite.x = this.bounds.left;
+        }
+
+        if (sprite._currentBounds.bottom < this.bounds.top)
+        {
+            sprite.y = this.bounds.bottom;
+        }
+        else if (sprite._currentBounds.top > this.bounds.bottom)
+        {
+            sprite.y = this.bounds.top;
+        }
+    }
 
 };
 
@@ -14005,7 +14090,10 @@ Phaser.InputHandler = function (sprite) {
     this.enabled = false;
 
     /**
-    * @property {number} priorityID - The PriorityID controls which Sprite receives an Input event first if they should overlap.
+    * The priorityID is used to determine which game objects should get priority when input events occur. For example if you have
+    * several Sprites that overlap, by default the one at the top of the display list is given priority for input events. You can
+    * stop this from happening by controlling the priorityID value. The higher the value, the more important they are considered to the Input events.
+    * @property {number} priorityID
     * @default
     */
     this.priorityID = 0;
@@ -24344,15 +24432,15 @@ Phaser.Math = {
     },
 
     /**
-    * Keeps an angle value between -180 and +180<br>
-    * Should be called whenever the angle is updated on the Sprite to stop it from going insane.
+    * Keeps an angle value between -180 and +180.
     *
     * @method Phaser.Math#wrapAngle
     * @param {number} angle - The angle value to check
-    * @param {boolean} radians - True if angle sizes are expressed in radians.
+    * @param {boolean} radians - True if angle is given in radians.
     * @return {number} The new angle value, returns the same as the input angle if it was within bounds.
     */
     wrapAngle: function (angle, radians) {
+
         var radianFactor = (radians) ? Math.PI / 180 : 1;
         return this.wrap(angle, -180 * radianFactor, 180 * radianFactor);
 
@@ -25262,6 +25350,12 @@ Phaser.QuadTree = function(x, y, width, height, maxObjects, maxLevels, level) {
     */
     this.nodes = [];
 
+    /**
+    * @property {array} _empty - Internal empty array.
+    * @private
+    */
+    this._empty = [];
+
     this.reset(x, y, width, height, maxObjects, maxLevels, level);
 
 };
@@ -25457,9 +25551,13 @@ Phaser.QuadTree.prototype = {
     */
     retrieve: function (sprite) {
 
+        if (!sprite.body)
+        {
+            return this._empty;
+        }
+
         var returnObjects = this.objects;
 
-        // sprite.body.quadTreeIndex = this.getIndex(sprite.body);
         var index = this.getIndex(sprite.body);
 
         if (this.nodes[0])
@@ -27699,6 +27797,12 @@ Phaser.Timer = function (game, autoDestroy) {
     this._len = 0;
 
     /**
+    * @property {number} _marked - Temp. counter variable.
+    * @private
+    */
+    this._marked = 0;
+
+    /**
     * @property {number} _i - Temp. array counter variable.
     * @private
     */
@@ -27972,6 +28076,7 @@ Phaser.Timer.prototype = {
         }
 
         this._now = time;
+        this._marked = 0;
 
         //  Clears events marked for deletion and resets _len and _i to 0.
         this.clearPendingEvents();
@@ -28003,8 +28108,9 @@ Phaser.Timer.prototype = {
                     }
                     else
                     {
-                        this.events[this._i].callback.apply(this.events[this._i].callbackContext, this.events[this._i].args);
+                        this._marked++;
                         this.events[this._i].pendingDelete = true;
+                        this.events[this._i].callback.apply(this.events[this._i].callbackContext, this.events[this._i].args);
                     }
 
                     this._i++;
@@ -28016,7 +28122,7 @@ Phaser.Timer.prototype = {
             }
 
             //  Are there any events left?
-            if (this.events.length > 0)
+            if (this.events.length > this._marked)
             {
                 this.order();
             }
@@ -29144,7 +29250,9 @@ Phaser.Animation.prototype = {
     * @method Phaser.Animation#destroy
     */
     destroy: function () {
-
+        this.game.onPause.remove(this.onPause, this);
+        this.game.onResume.remove(this.onResume, this);
+        
         this.game = null;
         this._parent = null;
         this._frames = null;
@@ -29155,9 +29263,6 @@ Phaser.Animation.prototype = {
         this.onStart.dispose();
         this.onLoop.dispose();
         this.onComplete.dispose();
-
-        this.game.onPause.remove(this.onPause, this);
-        this.game.onResume.remove(this.onResume, this);
 
     },
 
@@ -36196,7 +36301,7 @@ Phaser.Physics.Arcade.prototype = {
     */
     collideSpriteVsGroup: function (sprite, group, collideCallback, processCallback, callbackContext, overlapOnly) {
 
-        if (group.length === 0)
+        if (group.length === 0 || !sprite.body)
         {
             return;
         }
@@ -36302,6 +36407,11 @@ Phaser.Physics.Arcade.prototype = {
     * @param {boolean} overlapOnly - Just run an overlap or a full collision.
     */
     collideSpriteVsTilemapLayer: function (sprite, tilemapLayer, collideCallback, processCallback, callbackContext) {
+
+        if (!sprite.body)
+        {
+            return;
+        }
 
         this._mapData = tilemapLayer.getTiles(
             sprite.body.position.x - sprite.body.tilePadding.x,
