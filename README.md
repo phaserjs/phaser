@@ -65,6 +65,7 @@ Version 2.0.4 - "Mos Shirare" - in development
 * AnimationManager.destroy now iterates through child animations calling destroy on all of them, avoiding a memory leak (thanks stauzs)
 * AnimationManager.play will now call Animation.stop on the current animation before switching to the new one (thanks @nihakue, #713)
 * ArcadePhysics.Body.phase is checked in postUpdate to prevent it from being called multiple times in a single frame.
+* Group.setProperty will now check if the property exists before setting it, this applies to Group.setAll and anything else using setProperty internally.
 
 
 ### New Features
