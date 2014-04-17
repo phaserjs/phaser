@@ -371,7 +371,9 @@ Phaser.Animation.prototype = {
     * @method Phaser.Animation#destroy
     */
     destroy: function () {
-
+        this.game.onPause.remove(this.onPause, this);
+        this.game.onResume.remove(this.onResume, this);
+        
         this.game = null;
         this._parent = null;
         this._frames = null;
@@ -382,9 +384,6 @@ Phaser.Animation.prototype = {
         this.onStart.dispose();
         this.onLoop.dispose();
         this.onComplete.dispose();
-
-        this.game.onPause.remove(this.onPause, this);
-        this.game.onResume.remove(this.onResume, this);
 
     },
 
