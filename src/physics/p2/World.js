@@ -989,7 +989,7 @@ Phaser.Physics.P2.prototype = {
 
         while (i--)
         {
-            bodies.setMaterial(material);
+            bodies[i].setMaterial(material);
         }
 
     },
