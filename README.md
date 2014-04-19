@@ -69,6 +69,7 @@ Version 2.0.4 - "Mos Shirare" - in development
 * QuadTree.retrieve now checks to see if the given Sprite has a body before carrying on.
 * ArcadePhysics.collideSpriteVsGroup checks if Sprite has a body before carrying on, now safely skips sub-groups or other non-Sprite group children. 
 * Group.remove now checks the child to see if it's a member of the root Group before removing it, otherwise Pixi throws an Error.
+* The Emitter no longer checks if minParticleScale = maxParticleScale for the scale check, allowing for fixed scale particles again.
 
 
 ### New Features
