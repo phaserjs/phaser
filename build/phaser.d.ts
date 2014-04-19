@@ -1130,7 +1130,7 @@ declare module Phaser {
         width: number;
 
         add(object: any): void;
-        alphaMask(source: any, mask: any): void
+        alphaMask(source: any, mask: any): void;
         clear(): void;
         copyPixels(source: any, area: Phaser.Rectangle, destX: number, destY: number): void;
         draw(source: any, destX: number, destY: number): void;
@@ -1255,7 +1255,7 @@ declare module Phaser {
         getFrameByName(key: string, frame: string): Phaser.Frame;
         getFrameData(key: string): Phaser.FrameData;
         getImage(key: string): Object;
-        getJSON(key:string): Object
+        getJSON(key:string): Object;
         getKeys(array: string[]): string[];
         getPhysicsData(key: string, object?: string, fixtureKey?: string): Object;
         getSound(key: string): Phaser.Sound;
@@ -1660,7 +1660,7 @@ declare module Phaser {
         checkFrameName(name: string): boolean;
         getFrame(index: number): Phaser.Frame;
         getFrameByName(name: string): Phaser.Frame;
-        getFrameIndexes(frames: number[], useNumericIndex?: boolean, output?: number[]): number[]
+        getFrameIndexes(frames: number[], useNumericIndex?: boolean, output?: number[]): number[];
         getFrameRange(start: number, end: number, output: Phaser.Frame[]): Phaser.Frame[];
         getFrames(frames: number[], useNumericIndex?: boolean, output?: Phaser.Frame[]): Phaser.Frame[];
 
@@ -2190,7 +2190,7 @@ declare module Phaser {
 
     class Key {
 
-        constructor(game: Phaser.Game, keycode: number)
+        constructor(game: Phaser.Game, keycode: number);
 
         altKey: boolean;
         ctrlKey: boolean;
@@ -2540,7 +2540,7 @@ declare module Phaser {
 
     class Mouse {
 
-        constructor(game: Phaser.Game)
+        constructor(game: Phaser.Game);
 
         static LEFT_BUTTON: number;
         static MIDDLE_BUTTON: number;
