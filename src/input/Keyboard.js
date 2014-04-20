@@ -5,7 +5,10 @@
 */
 
 /**
-* The Keyboard class handles looking after keyboard input for your game. It will recognise and respond to key presses and dispatch the required events.
+* The Keyboard class handles looking after keyboard input for your game.
+* It will recognise and respond to key presses and dispatch the required events.
+* Please be aware that lots of keyboards are unable to process certain combinations of keys due to hardware
+* limitations known as ghosting. Full details here: http://www.html5gamedevs.com/topic/4876-impossible-to-use-more-than-2-keyboard-input-buttons-at-the-same-time/
 *
 * @class Phaser.Keyboard
 * @constructor

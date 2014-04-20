@@ -93,6 +93,7 @@ Version 2.0.4 - "Mos Shirare" - in development
 * StateManager.restart incorrectly skipped the first additional parameter after clearCache (thanks @mariusbrn, fix #722)
 * Line.angle and Math.angleBetween used Math.atan2 arguments in the wrong order (thanks @jotson, fix #724)
 * Group.destroy checks parent before removing (thanks @clark-stevenson, fix #733)
+* Fixed typo in P2.World.setMaterial (thanks @OpherV, fix #739)
 
 
 ### ToDo
