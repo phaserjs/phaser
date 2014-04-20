@@ -323,6 +323,7 @@ Phaser.BitmapData.prototype = {
     /**
     * Draws the given image onto this BitmapData using an image as an alpha mask.
     *
+    * @method Phaser.BitmapData#alphaMask
     * @param {HTMLImage|string} source - The Image to draw. If you give a key it will try and find the Image in the Game.Cache.
     * @param {HTMLImage|string} mask - The Image to use as the alpha mask. If you give a key it will try and find the Image in the Game.Cache.
     */
@@ -353,6 +354,22 @@ Phaser.BitmapData.prototype = {
         }
 
         this.context.globalCompositeOperation = temp;
+
+    },
+
+    /**
+    * 
+    *
+    * @method Phaser.BitmapData#extractMask
+    * @param {HTMLImage|string} source - The Image to draw. If you give a key it will try and find the Image in the Game.Cache.
+    * @param {string} key - The Image to use as the alpha mask. If you give a key it will try and find the Image in the Game.Cache.
+    * @return {HTMLImage}
+    */
+    extractMask: function (source, color, alpha) {
+
+        if (typeof alpha === 'undefined') { alpha = 255; }
+
+
 
     },
 
