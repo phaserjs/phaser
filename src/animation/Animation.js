@@ -528,6 +528,7 @@ Object.defineProperty(Phaser.Animation.prototype, 'speed', {
 * @param {number} stop - The number to count to. If your frames are named 'explosion_0001' to 'explosion_0034' the stop value is 34.
 * @param {string} [suffix=''] - The end of the filename. If the filename was 'explosion_0001-large' the prefix would be '-large'.
 * @param {number} [zeroPad=0] - The number of zeroes to pad the min and max values with. If your frames are named 'explosion_0001' to 'explosion_0034' then the zeroPad is 4.
+* @return {array} An array of framenames.
 */
 Phaser.Animation.generateFrameNames = function (prefix, start, stop, suffix, zeroPad) {
 
