@@ -415,7 +415,7 @@ Phaser.Point.distance = function (a, b, round) {
 
     if (round)
     {
-        return Phaser.Math.distanceRound(a.x, a.y, b.x, b.y);
+        return Phaser.Math.distanceRounded(a.x, a.y, b.x, b.y);
     }
     else
     {
