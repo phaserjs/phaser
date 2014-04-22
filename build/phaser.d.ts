@@ -3434,8 +3434,8 @@ declare module Phaser {
         multiply(x: number, y: number): Phaser.Point;
         normalise(): Phaser.Point;
         rotate(x: number, y: number, angle: number, asDegrees: boolean, distance?: number): Phaser.Point;
-        set(x: number, y: number): Phaser.Point;
-        setTo(x: number, y: number): Phaser.Point;
+        set(x: number, y?: number): Phaser.Point;
+        setTo(x: number, y?: number): Phaser.Point;
         subtract(x: number, y: number): Phaser.Point;
         toString(): string;
 
