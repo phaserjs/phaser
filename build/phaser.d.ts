@@ -4324,7 +4324,7 @@ declare module Phaser {
         world: Phaser.Point;
         z: number;
 
-        autoScroll(): void;
+        autoScroll(x: number, y: number): void;
         destroy(destroyChildren: boolean): void;
         loadTexture(key: any, frame: any): void;
         play(name: string, frameRate?: number, loop?: boolean, killOnComplete?: boolean): Phaser.Animation;

@@ -1255,6 +1255,7 @@ Phaser.Physics.P2.Body.prototype = {
     },
 
     /**
+    * DEPRECATED: This method will soon be removed from the API. Please avoid using.
     * Reads the physics data from a physics data file stored in the Game.Cache.
     * It will add the shape data to this Body, as well as set the density (mass).
     *

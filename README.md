@@ -104,6 +104,7 @@ Version 2.0.4 - "Mos Shirare" - in development
 * Circle.distance used an incorrect Math call if you wanted a rounded distance value (thanks @OpherV, fix #745)
 * Point.distance used an incorrect Math call if you wanted a rounded distance value (thanks @OpherV, fix #745)
 * P2.Body.loadPolygon has been updated to correct center of mass issues (thanks @georgiee, fix #749)
+* Game checks if window.console exists before using it (should fix IE9 issues when dev tools are closed), however it is still used deeper in Pixi.
 
 
 ### ToDo
