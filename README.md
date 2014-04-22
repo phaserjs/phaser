@@ -47,7 +47,9 @@ We have a new [Getting Started Guide](http://phaser.io/getting-started-js.php) w
 
 We wrote a comprehensive [How to Learn Phaser](http://gamedevelopment.tutsplus.com/articles/how-to-learn-the-phaser-html5-game-engine--gamedev-13643) guide for GameDevTuts+  which covers finding tutorials, examples and support.
 
-Finally the growing list of [community authored Phaser Tutorials](http://www.lessmilk.com/phaser-tutorial/) is growing fast!
+The [Game Mechanic Explorer](http://gamemechanicexplorer.com) is a great interactive way to learn how to develop specific game mechanics in Phaser. Well worth exploring once you've got your dev environment set-up.
+
+Finally the list of [community authored Phaser Tutorials](http://www.lessmilk.com/phaser-tutorial/) is growing fast!
 
 ![Phaser Logo](http://www.photonstorm.com/wp-content/uploads/2013/09/phaser_10_release.jpg)
 
@@ -70,6 +72,8 @@ Version 2.0.4 - "Mos Shirare" - in development
 * ArcadePhysics.collideSpriteVsGroup checks if Sprite has a body before carrying on, now safely skips sub-groups or other non-Sprite group children. 
 * Group.remove now checks the child to see if it's a member of the root Group before removing it, otherwise Pixi throws an Error.
 * The Emitter no longer checks if minParticleScale = maxParticleScale for the scale check, allowing for fixed scale particles again.
+* The PIXI.AbstractFilter is now included in the Phaser Pixi build by default, allowing for easier use of external Pixi Filters.
+* All Game Objects have a new property: destroyPhase (boolean) which is true if the object is in the process of being destroyed, otherwise false.
 
 
 ### New Features
@@ -94,6 +98,8 @@ Version 2.0.4 - "Mos Shirare" - in development
 * Line.angle and Math.angleBetween used Math.atan2 arguments in the wrong order (thanks @jotson, fix #724)
 * Group.destroy checks parent before removing (thanks @clark-stevenson, fix #733)
 * Fixed typo in P2.World.setMaterial (thanks @OpherV, fix #739)
+* InputHandler._setHandCursor private var wasn't properly set, meaning the hand cursor could sometimes remain (during destroy sequence for example)
+* Destroying an object with an input handler during its onDown event would throw Signals dispatch errors (thanks @jflowers45, fix #746)
 
 
 ### ToDo

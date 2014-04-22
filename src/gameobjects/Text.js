@@ -128,10 +128,11 @@ Phaser.Text = function (game, x, y, text, style) {
     * 5 = outOfBoundsFired (0 = no, 1 = yes)
     * 6 = exists (0 = no, 1 = yes)
     * 7 = fixed to camera (0 = no, 1 = yes)
+    * 8 = destroy phase? (0 = no, 1 = yes)
     * @property {Array} _cache
     * @private
     */
-    this._cache = [ 0, 0, 0, 0, 1, 0, 1, 0 ];
+    this._cache = [ 0, 0, 0, 0, 1, 0, 1, 0, 0 ];
 
 };
 
@@ -213,9 +214,11 @@ Phaser.Text.prototype.postUpdate = function () {
 */
 Phaser.Text.prototype.destroy = function (destroyChildren) {
 
-    if (this.game === null) { return; }
+    if (this.game === null || this.destroyPhase) { return; }
 
     if (typeof destroyChildren === 'undefined') { destroyChildren = true; }
+
+    this._cache[8] = 1;
 
     if (this.parent)
     {
@@ -264,6 +267,8 @@ Phaser.Text.prototype.destroy = function (destroyChildren) {
     this.filters = null;
     this.mask = null;
     this.game = null;
+
+    this._cache[8] = 0;
 
 };
 
@@ -883,6 +888,20 @@ Object.defineProperty(Phaser.Text.prototype, "fixedToCamera", {
         {
             this._cache[7] = 0;
         }
+    }
+
+});
+
+/**
+* @name Phaser.Text#destroyPhase
+* @property {boolean} destroyPhase - True if this object is currently being destroyed.
+*/
+Object.defineProperty(Phaser.Text.prototype, "destroyPhase", {
+
+    get: function () {
+
+        return !!this._cache[8];
+
     }
 
 });

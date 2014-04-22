@@ -354,7 +354,7 @@ Phaser.InputHandler.prototype = {
     */
     destroy: function () {
 
-        if (this.enabled)
+        if (this.sprite)
         {
             if (this._setHandCursor)
             {
@@ -770,10 +770,13 @@ Phaser.InputHandler.prototype = {
             if (this.useHandCursor && this._pointerData[pointer.id].isDragged === false)
             {
                 this.game.canvas.style.cursor = "pointer";
-                this._setHandCursor = false;
+                this._setHandCursor = true;
             }
 
-            this.sprite.events.onInputOver.dispatch(this.sprite, pointer);
+            if (this.sprite && this.sprite.events)
+            {
+                this.sprite.events.onInputOver.dispatch(this.sprite, pointer);
+            }
         }
 
     },
@@ -833,7 +836,11 @@ Phaser.InputHandler.prototype = {
             this._pointerData[pointer.id].isDown = true;
             this._pointerData[pointer.id].isUp = false;
             this._pointerData[pointer.id].timeDown = this.game.time.now;
-            this.sprite.events.onInputDown.dispatch(this.sprite, pointer);
+    
+            if (this.sprite && this.sprite.events)
+            {
+                this.sprite.events.onInputDown.dispatch(this.sprite, pointer);
+            }
 
             //  Start drag
             if (this.draggable && this.isDragged === false)
@@ -878,12 +885,18 @@ Phaser.InputHandler.prototype = {
             if (this.checkPointerOver(pointer))
             {
                 //  Release the inputUp signal and provide optional parameter if pointer is still over the sprite or not
-                this.sprite.events.onInputUp.dispatch(this.sprite, pointer, true);
+                if (this.sprite && this.sprite.events)
+                {
+                    this.sprite.events.onInputUp.dispatch(this.sprite, pointer, true);
+                }
             }
             else
             {
                 //  Release the inputUp signal and provide optional parameter if pointer is still over the sprite or not
-                this.sprite.events.onInputUp.dispatch(this.sprite, pointer, false);
+                if (this.sprite && this.sprite.events)
+                {
+                    this.sprite.events.onInputUp.dispatch(this.sprite, pointer, false);
+                }
 
                 //  Pointer outside the sprite? Reset the cursor
                 if (this.useHandCursor)

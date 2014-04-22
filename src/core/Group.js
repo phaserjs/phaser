@@ -1430,7 +1430,7 @@ Phaser.Group.prototype.remove = function (child, destroy) {
         return false;
     }
 
-    if (child.events)
+    if (child.events && !child.destroyPhase)
     {
         child.events.onRemovedFromGroup.dispatch(child, this);
     }
