@@ -100,6 +100,8 @@ Version 2.0.4 - "Mos Shirare" - in development
 * Fixed typo in P2.World.setMaterial (thanks @OpherV, fix #739)
 * InputHandler._setHandCursor private var wasn't properly set, meaning the hand cursor could sometimes remain (during destroy sequence for example)
 * Destroying an object with an input handler during its onDown event would throw Signals dispatch errors (thanks @jflowers45, fix #746)
+* Circle.distance used an incorrect Math call if you wanted a rounded distance value (thanks @OpherV, fix #745)
+* Point.distance used an incorrect Math call if you wanted a rounded distance value (thanks @OpherV, fix #745)
 
 
 ### ToDo

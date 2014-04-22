@@ -123,7 +123,7 @@ Phaser.Circle.prototype = {
 
         if (round)
         {
-            return Phaser.Math.distanceRound(this.x, this.y, dest.x, dest.y);
+            return Phaser.Math.distanceRounded(this.x, this.y, dest.x, dest.y);
         }
         else
         {

@@ -398,7 +398,9 @@ Phaser.Point.divide = function (a, b, out) {
 * @return {boolean} A value of true if the Points are equal, otherwise false.
 */
 Phaser.Point.equals = function (a, b) {
-    return (a.x == b.x && a.y == b.y);
+
+    return (a.x === b.x && a.y === b.y);
+
 };
 
 /**
@@ -415,7 +417,7 @@ Phaser.Point.distance = function (a, b, round) {
 
     if (round)
     {
-        return Phaser.Math.distanceRound(a.x, a.y, b.x, b.y);
+        return Phaser.Math.distanceRounded(a.x, a.y, b.x, b.y);
     }
     else
     {
