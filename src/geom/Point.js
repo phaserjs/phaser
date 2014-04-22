@@ -5,7 +5,7 @@
 */
 
 /**
-* Creates a new Point. If you pass no parameters a Point is created set to (0,0).
+* Creates a new Point object. If you pass no parameters a Point is created set to (0, 0).
 * @class Phaser.Point
 * @classdesc The Point object represents a location in a two-dimensional coordinate system, where x represents the horizontal axis and y represents the vertical axis.
 * @constructor
@@ -18,12 +18,12 @@ Phaser.Point = function (x, y) {
     y = y || 0;
 
     /**
-    * @property {number} x - The x coordinate of the point.
+    * @property {number} x - The x value of the point.
     */
     this.x = x;
 
     /**
-    * @property {number} y - The y coordinate of the point.
+    * @property {number} y - The y value of the point.
     */
     this.y = y;
 
@@ -35,7 +35,7 @@ Phaser.Point.prototype = {
     * Copies the x and y properties from any given object to this Point.
     * @method Phaser.Point#copyFrom
     * @param {any} source - The object to copy from.
-    * @return {Point} This Point object.
+    * @return {Phaser.Point} This Point object.
     */
     copyFrom: function (source) {
         return this.setTo(source.x, source.y);
@@ -44,18 +44,21 @@ Phaser.Point.prototype = {
     /**
     * Inverts the x and y values of this Point
     * @method Phaser.Point#invert
-    * @return {Point} This Point object.
+    * @return {Phaser.Point} This Point object.
     */
     invert: function () {
         return this.setTo(this.y, this.x);
     },
 
     /**
-    * Sets the x and y values of this Point object to the given coordinates.
+    * Sets the `x` and `y` values of this Point object to the given values.
+    * If you omit the `y` value then the `x` value will be applied to both, for example:
+    * `Point.setTo(2)` is the same as `Point.setTo(2, 2)`
+    *
     * @method Phaser.Point#setTo
-    * @param {number} x - The horizontal position of this point.
-    * @param {number} y - The vertical position of this point.
-    * @return {Point} This Point object. Useful for chaining method calls.
+    * @param {number} x - The horizontal value of this point.
+    * @param {number} [y] - The vertical value of this point. If not given the x value will be used in its place.
+    * @return {Phaser.Point} This Point object. Useful for chaining method calls.
     */
     setTo: function (x, y) {
 
@@ -67,11 +70,14 @@ Phaser.Point.prototype = {
     },
 
     /**
-    * Sets the x and y values of this Point object to the given coordinates.
+    * Sets the `x` and `y` values of this Point object to the given values.
+    * If you omit the `y` value then the `x` value will be applied to both, for example:
+    * `Point.setTo(2)` is the same as `Point.setTo(2, 2)`
+    *
     * @method Phaser.Point#set
-    * @param {number} x - The horizontal position of this point.
-    * @param {number} y - The vertical position of this point.
-    * @return {Point} This Point object. Useful for chaining method calls.
+    * @param {number} x - The horizontal value of this point.
+    * @param {number} [y] - The vertical value of this point. If not given the x value will be used in its place.
+    * @return {Phaser.Point} This Point object. Useful for chaining method calls.
     */
     set: function (x, y) {
 
@@ -212,7 +218,7 @@ Phaser.Point.prototype = {
     * @param {any} dest - The object to copy to.
     * @return {Object} The dest object.
     */
-    copyTo: function(dest) {
+    copyTo: function (dest) {
 
         dest.x = this.x;
         dest.y = this.y;
@@ -261,7 +267,7 @@ Phaser.Point.prototype = {
     * @method Phaser.Point#getMagnitude
     * @return {number} the length of the vector
     */
-    getMagnitude: function() {
+    getMagnitude: function () {
         return Math.sqrt((this.x * this.x) + (this.y * this.y));
     },
 
@@ -271,7 +277,7 @@ Phaser.Point.prototype = {
     * @param {number} magnitude the desired magnitude of the resulting vector
     * @return {Phaser.Point} the modified original vector
     */
-    setMagnitude: function(magnitude) {
+    setMagnitude: function (magnitude) {
         return this.normalize().multiply(magnitude, magnitude);
     },
 
@@ -280,9 +286,10 @@ Phaser.Point.prototype = {
     * @method Phaser.Point#normalize
     * @return {Phaser.Point} the modified original vector
     */
-    normalize: function() {
+    normalize: function () {
 
-        if(!this.isZero()) {
+        if (!this.isZero())
+        {
             var m = this.getMagnitude();
             this.x /= m;
             this.y /= m;
@@ -297,8 +304,10 @@ Phaser.Point.prototype = {
     * @method Phaser.Point#isZero
     * @return {boolean} True if this Point is 0,0, otherwise false
     */
-    isZero: function() {
+    isZero: function () {
+
         return (this.x === 0 && this.y === 0);
+
     },
 
     /**
@@ -307,7 +316,9 @@ Phaser.Point.prototype = {
     * @return {string} A string representation of the instance.
     */
     toString: function () {
+
         return '[{Point (x=' + this.x + ' y=' + this.y + ')}]';
+
     }
 
 };

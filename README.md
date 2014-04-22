@@ -61,7 +61,7 @@ Version 2.0.4 - "Mos Shirare" - in development
 
 ### Updates
 
-* TypeScript definitions fixes and updates (thanks @clark-stevenson)
+* TypeScript definitions fixes and updates (thanks @clark-stevenson @metrofun)
 * Timer has removed all use of local temporary vars in the core update loop.
 * The Input.reset `hard` reset parameter is now passed down to the Keyboard and Key reset methods.
 * AnimationManager.destroy now iterates through child animations calling destroy on all of them, avoiding a memory leak (thanks stauzs)
