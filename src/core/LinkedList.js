@@ -56,7 +56,7 @@ Phaser.LinkedList.prototype = {
     add: function (child) {
 
         //  If the list is empty
-        if (this.total === 0 && this.first == null && this.last == null)
+        if (this.total === 0 && this.first === null && this.last === null)
         {
             this.first = child;
             this.last = child;
@@ -66,7 +66,7 @@ Phaser.LinkedList.prototype = {
             return child;
         }
 
-        //  Get gets appended to the end of the list, regardless of anything, and it won't have any children of its own (non-nested list)
+        //  Gets appended to the end of the list, regardless of anything, and it won't have any children of its own (non-nested list)
         this.last.next = child;
 
         child.prev = this.last;
@@ -80,6 +80,21 @@ Phaser.LinkedList.prototype = {
     },
 
     /**
+    * Resets the first, last, next and previous node pointers in this list.
+    *
+    * @method Phaser.LinkedList#reset
+    */
+    reset: function () {
+
+        this.first = null;
+        this.last = null;
+        this.next = null;
+        this.prev = null;
+        this.total = 0;
+
+    },
+
+    /**
     * Removes the given element from this linked list if it exists.
     *
     * @method Phaser.LinkedList#remove
@@ -87,12 +102,19 @@ Phaser.LinkedList.prototype = {
     */
     remove: function (child) {
 
-        if (child == this.first)
+        if (this.total === 1)
+        {
+            this.reset();
+            child.next = child.prev = null;
+            return;
+        }
+
+        if (child === this.first)
         {
             // It was 'first', make 'first' point to first.next
             this.first = this.first.next;
         }
-        else if (child == this.last)
+        else if (child === this.last)
         {
             // It was 'last', make 'last' point to last.prev
             this.last = this.last.prev;
@@ -112,7 +134,7 @@ Phaser.LinkedList.prototype = {
 
         child.next = child.prev = null;
 
-        if (this.first == null )
+        if (this.first === null )
         {
             this.last = null;
         }

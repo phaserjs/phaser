@@ -19,7 +19,6 @@ By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 [Subscribe to our new Phaser Newsletter](https://confirmsubscription.com/h/r/369DE48E3E86AF1E). We'll email you when new versions are released as well as send you our regular Phaser game making magazine.
 
 [![Build Status](https://travis-ci.org/photonstorm/phaser.png?branch=dev)](https://travis-ci.org/photonstorm/phaser)
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/photonstorm/phaser/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
 
 ## What's new in 2.0.4?
@@ -104,6 +103,7 @@ Version 2.0.4 - "Mos Shirare" - in development
 * Destroying an object with an input handler during its onDown event would throw Signals dispatch errors (thanks @jflowers45, fix #746)
 * Circle.distance used an incorrect Math call if you wanted a rounded distance value (thanks @OpherV, fix #745)
 * Point.distance used an incorrect Math call if you wanted a rounded distance value (thanks @OpherV, fix #745)
+* P2.Body.loadPolygon has been updated to correct center of mass issues (thanks @georgiee, fix #749)
 
 
 ### ToDo

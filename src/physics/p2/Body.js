@@ -1131,7 +1131,7 @@ Phaser.Physics.P2.Body.prototype = {
     },
 
     /**
-    * Add a polygon fixture. This is used during #loadPhaserPolygon.
+    * Add a polygon fixture. This is used during #loadPolygon.
     *
     * @method Phaser.Physics.P2.Body#addFixture
     * @param {string} fixtureData - The data for the fixture. It contains: isSensor, filter (collision) and the actual polygon shapes.
@@ -1208,13 +1208,9 @@ Phaser.Physics.P2.Body.prototype = {
     * @method Phaser.Physics.P2.Body#loadPolygon
     * @param {string} key - The key of the Physics Data file as stored in Game.Cache.
     * @param {string} object - The key of the object within the Physics data file that you wish to load the shape data from.
-    * @param {object} options - An object containing the build options. Note that this isn't used if the data file contains multiple shapes.
-    * @param {boolean} [options.optimalDecomp=false] - Set to true if you need optimal decomposition. Warning: very slow for polygons with more than 10 vertices.
-    * @param {boolean} [options.skipSimpleCheck=false] - Set to true if you already know that the path is not intersecting itself.
-    * @param {boolean|number} [options.removeCollinearPoints=false] - Set to a number (angle threshold value) to remove collinear points, or false to keep all points.
     * @return {boolean} True on success, else false.
     */
-    loadPolygon: function (key, object, options) {
+    loadPolygon: function (key, object) {
 
         var data = this.game.cache.getPhysicsData(key, object);
 
@@ -1260,26 +1256,21 @@ Phaser.Physics.P2.Body.prototype = {
 
     /**
     * Reads the physics data from a physics data file stored in the Game.Cache.
-    * It will add the shape data to this Body, as well as set the density (mass), friction and bounce (restitution) values.
+    * It will add the shape data to this Body, as well as set the density (mass).
     *
-    * @method Phaser.Physics.P2.Body#loadPolygon
+    * @method Phaser.Physics.P2.Body#loadData
     * @param {string} key - The key of the Physics Data file as stored in Game.Cache.
     * @param {string} object - The key of the object within the Physics data file that you wish to load the shape data from.
-    * @param {object} options - An object containing the build options:
-    * @param {boolean} [options.optimalDecomp=false] - Set to true if you need optimal decomposition. Warning: very slow for polygons with more than 10 vertices.
-    * @param {boolean} [options.skipSimpleCheck=false] - Set to true if you already know that the path is not intersecting itself.
-    * @param {boolean|number} [options.removeCollinearPoints=false] - Set to a number (angle threshold value) to remove collinear points, or false to keep all points.
     * @return {boolean} True on success, else false.
     */
-    loadData: function (key, object, options) {
+    loadData: function (key, object) {
 
         var data = this.game.cache.getPhysicsData(key, object);
 
         if (data && data.shape)
         {
             this.mass = data.density;
-            this.loadPolygon(key, object, options);
-            //  TODO set friction + bounce here
+            return this.loadPolygon(key, object);
         }
 
     }
