@@ -208,6 +208,11 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     this.particles = null;
 
     /**
+    * @property {Phaser.BitmapData} scratch - A handy BitmapData scratch-pad that can be used for off-screen bitmap manipulation.
+    */
+    this.scratch = null;
+
+    /**
     * @property {boolean} stepping - Enable core loop stepping with Game.enableStep().
     * @default
     * @readonly
@@ -445,6 +450,7 @@ Phaser.Game.prototype = {
             this.plugins = new Phaser.PluginManager(this);
             this.net = new Phaser.Net(this);
             this.debug = new Phaser.Utils.Debug(this);
+            this.scratch = new Phaser.BitmapData(this, '__root', this.width, this.height);
 
             this.time.boot();
             this.stage.boot();

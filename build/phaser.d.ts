@@ -1704,6 +1704,7 @@ declare module Phaser {
         renderType: number;
         rnd: Phaser.RandomDataGenerator;
         scale: Phaser.ScaleManager;
+        scratch: Phaser.BitmapData;
         sound: Phaser.SoundManager;
         stage: Phaser.Stage;
         state: Phaser.StateManager;
@@ -1935,6 +1936,7 @@ declare module Phaser {
         angle: number;
         alive: boolean;
         cameraOffset: Phaser.Point;
+        classType: any;
         cursor: any;
         enableBody: boolean;
         enableBodyDebug: boolean;
@@ -1959,8 +1961,8 @@ declare module Phaser {
         callbackFromArray(child: Object, callback: Function, length: number): void;
         countDead(): number;
         countLiving(): number;
-        create(x: number, y: number, key: string, frame?: any, exists?: boolean): Phaser.Sprite;
-        createMultiple(quantity: number, key: string, frame?: any, exists?: boolean): Phaser.Sprite;
+        create(x: number, y: number, key: string, frame?: any, exists?: boolean): any;
+        createMultiple(quantity: number, key: string, frame?: any, exists?: boolean): void;
         customSort(sortHandler: Function, context: Object): void;
         destroy(destroyChildren?: boolean, soft?: boolean): void;
         divideAll(property: string, amount: number, checkAlive?: boolean, checkVisible?: boolean): void;

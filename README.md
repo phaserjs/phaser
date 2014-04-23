@@ -88,6 +88,7 @@ Version 2.0.4 - "Mos Shirare" - in development
 * Group.resetCursor will reset the Group cursor back to the start of the group, or to the given index value.
 * World.wrap will take a game object and if its x/y coordinates fall outside of the world bounds it will be repositioned on the opposite side, for a wrap-around effect.
 * Group.classType allows you to change the type of object that Group.create or createMultiple makes to your own custom class.
+* Game.scratch is a single handy BitmapData instance that can be used as a visual scratch-pad, for off-screen bitmap manipulation (and is used as such by BitmapData itself).
 
 
 ### Bug Fixes
