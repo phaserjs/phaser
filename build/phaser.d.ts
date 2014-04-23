@@ -1152,6 +1152,7 @@ declare module Phaser {
         align: string;
         angle: number;
         cameraOffset: Phaser.Point;
+        destroyPhase: boolean;
         events: Phaser.Events;
         exists: boolean;
         fixedToCamera: boolean;
@@ -1902,6 +1903,7 @@ declare module Phaser {
 
         angle: number;
         cameraOffset: Phaser.Point;
+        destroyPhase: boolean;
         exists: boolean;
         fixedToCamera: boolean;
         game: Phaser.Game;
@@ -2011,6 +2013,7 @@ declare module Phaser {
         deltaX: number;
         deltaY: number;
         deltaZ: number;
+        destroyPhase: boolean;
         events: Phaser.Events;
         exists: boolean;
         fixedToCamera: boolean;
@@ -2397,6 +2400,7 @@ declare module Phaser {
         add(child: LinkedListItem): LinkedListItem;
         callAll(callback: Function): void;
         remove(child: LinkedListItem): void;
+        reset(): void;
 
     }
 
@@ -3187,8 +3191,8 @@ declare module Phaser {
                 createGroupCallback(group: Phaser.Physics.P2.CollisionGroup, callback: Function, callbackContext: Object): void;
                 destroy(): void;
                 getCollisionMask(): number;
-                loadData(key: string, object: string, options?: { optimalDecomp?: boolean; skipSimpleCheck?: boolean; removeCollinearPoints?: boolean; }): boolean;
-                loadPolygon(key: string, object: string, options?: { optimalDecomp?: boolean; skipSimpleCheck?: boolean; removeCollinearPoints?: boolean; }): boolean;
+                loadData(key: string, object: string): boolean;
+                loadPolygon(key: string, object: string): boolean;
                 moveBackward(speed: number): void;
                 moveDown(speed: number): void;
                 moveForward(speed: number): void;
@@ -3847,6 +3851,7 @@ declare module Phaser {
         deltaX: number;
         deltaY: number;
         deltaZ: number;
+        destroyPhase: boolean;
         events: Phaser.Events;
         exists: boolean;
         fixedToCamera: boolean;
@@ -4066,6 +4071,7 @@ declare module Phaser {
         align: string;
         angle: number;
         cameraOffset: Phaser.Point;
+        destroyPhase: boolean;
         events: Phaser.Events;
         exists: boolean;
         fill: Object;
@@ -4309,6 +4315,7 @@ declare module Phaser {
         body: any;
         cameraOffset: Phaser.Point;
         checkWorldBounds: boolean;
+        destroyPhase: boolean;
         events: Phaser.Events;
         exists: boolean;
         fixedToCamera: boolean;
