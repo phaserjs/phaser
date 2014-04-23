@@ -1132,6 +1132,7 @@ declare module Phaser {
         add(object: any): void;
         alphaMask(source: any, mask: any): void;
         clear(): void;
+        cls(): void;
         copyPixels(source: any, area: Phaser.Rectangle, destX: number, destY: number): void;
         draw(source: any, destX: number, destY: number): void;
         getPixel(x: number, y: number): number;

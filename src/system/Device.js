@@ -663,7 +663,7 @@ Phaser.Device.prototype = {
     },
 
     /**
-    * Check PixelRatio of devices.
+    * Check PixelRatio, iOS device, Vibration API, ArrayBuffers and endianess.
     * @method Phaser.Device#_checkDevice
     * @private
     */
@@ -676,13 +676,16 @@ Phaser.Device.prototype = {
 
         if (typeof Int8Array !== 'undefined')
         {
-            this.littleEndian = new Int8Array(new Int16Array([1]).buffer)[0] > 0;
             this.typedArray = true;
         }
         else
         {
-            this.littleEndian = false;
             this.typedArray = false;
+        }
+
+        if (typeof ArrayBuffer !== 'undefined' && typeof Uint8Array !== 'undefined' && typeof Uint32Array !== 'undefined')
+        {
+            this.littleEndian = this._checkIsLittleEndian();
         }
 
         navigator.vibrate = navigator.vibrate || navigator.webkitVibrate || navigator.mozVibrate || navigator.msVibrate;
@@ -690,6 +693,40 @@ Phaser.Device.prototype = {
         if (navigator.vibrate)
         {
             this.vibration = true;
+        }
+
+    },
+
+    /**
+    * Check Little or Big Endian system.
+    * @author Matt DesLauriers (@mattdesl)
+    * @method Phaser.Device#_checkIsLittleEndian
+    * @private
+    */
+    _checkIsLittleEndian: function () {
+
+        var a = new ArrayBuffer(4);
+        var b = new Uint8Array(a);
+        var c = new Uint32Array(a);
+
+        b[0] = 0xa1;
+        b[1] = 0xb2;
+        b[2] = 0xc3;
+        b[3] = 0xd4;
+
+        if (c[0] == 0xd4c3b2a1)
+        {
+            return true;
+        }
+
+        if (c[0] == 0xa1b2c3d4)
+        {
+            return false;
+        }
+        else
+        {
+            //  Could not determine endianness
+            return null;
         }
 
     },

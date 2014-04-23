@@ -106,6 +106,11 @@ Phaser.BitmapData = function (game, key, width, height) {
     */
     this.dirty = false;
 
+    /**
+    * @property {function} cls - Alias for BitmapData.clear.
+    */
+    this.cls = this.clear;
+
 };
 
 Phaser.BitmapData.prototype = {
@@ -183,6 +188,59 @@ Phaser.BitmapData.prototype = {
 
     /**
     * Sets the color of the given pixel to the specified red, green, blue and alpha values.
+    *
+    * @method Phaser.BitmapData#replaceRGB
+    * @param {number} x - The X coordinate of the pixel to be set.
+    * @param {number} y - The Y coordinate of the pixel to be set.
+    * @param {number} red - The red color value, between 0 and 0xFF (255).
+    * @param {number} green - The green color value, between 0 and 0xFF (255).
+    * @param {number} blue - The blue color value, between 0 and 0xFF (255).
+    * @param {number} alpha - The alpha color value, between 0 and 0xFF (255).
+    */
+    replaceRGB: function (sourceR, sourceG, sourceB, sourceA, destR, destG, destB, destA, region) {
+
+        var x = 0;
+        var y = 0;
+        var w = this.width;
+        var h = this.height;
+
+        if (region instanceof Phaser.Rectangle)
+        {
+            x = region.x;
+            y = region.y;
+            w = region.width;
+            h = region.height;
+        }
+
+
+
+        if (x >= 0 && x <= this.width && y >= 0 && y <= this.height)
+        {
+            this.pixels[y * this.width + x] = (alpha << 24) | (blue << 16) | (green << 8) | red;
+
+            /*
+            if (this.isLittleEndian)
+            {
+                this.data32[y * this.width + x] = (alpha << 24) | (blue << 16) | (green << 8) | red;
+            }
+            else
+            {
+                this.data32[y * this.width + x] = (red << 24) | (green << 16) | (blue << 8) | alpha;
+            }
+           */
+
+            // this.imageData.data.set(this.data8);
+
+            this.context.putImageData(this.imageData, 0, 0);
+
+            this.dirty = true;
+        }
+
+    },
+
+    /**
+    * Sets the color of the given pixel to the specified red, green, blue and alpha values.
+    *
     * @method Phaser.BitmapData#setPixel32
     * @param {number} x - The X coordinate of the pixel to be set.
     * @param {number} y - The Y coordinate of the pixel to be set.
@@ -252,6 +310,7 @@ Phaser.BitmapData.prototype = {
     /**
     * Get the color of a specific pixel including its alpha value.
     *
+    * @method Phaser.BitmapData#getPixel32
     * @param {number} x - The X coordinate of the pixel to get.
     * @param {number} y - The Y coordinate of the pixel to get.
     * @return {number} A native color value integer (format: 0xAARRGGBB)
@@ -268,6 +327,7 @@ Phaser.BitmapData.prototype = {
     /**
     * Gets all the pixels from the region specified by the given Rectangle object.
     *
+    * @method Phaser.BitmapData#getPixels
     * @param {Phaser.Rectangle} rect - The Rectangle region to get.
     * @return {array} CanvasPixelArray.
     */
@@ -280,6 +340,7 @@ Phaser.BitmapData.prototype = {
     /**
     * Copies the pixels from the source image to this BitmapData based on the given area and destination.
     *
+    * @method Phaser.BitmapData#copyPixels
     * @param {HTMLImage|string} source - The Image to draw. If you give a key it will try and find the Image in the Game.Cache.
     * @param {Phaser.Rectangle} area - The Rectangle region to copy from the source image.
     * @param {number} destX - The destination x coordinate to copy the image to.
@@ -302,11 +363,15 @@ Phaser.BitmapData.prototype = {
     /**
     * Draws the given image to this BitmapData at the coordinates specified. If you need to only draw a part of the image use BitmapData.copyPixels instead.
     *
-    * @param {HTMLImage|string} source - The Image to draw. If you give a key it will try and find the Image in the Game.Cache.
-    * @param {number} destX - The destination x coordinate to draw the image to.
-    * @param {number} destY - The destination y coordinate to draw the image to.
+    * @method Phaser.BitmapData#draw
+    * @param {HTMLImage|string} source - The Image to draw. If you give a string it will try and find the Image in the Game.Cache.
+    * @param {number} [x=0] - The x coordinate to draw the image to.
+    * @param {number} [y=0] - The y coordinate to draw the image to.
     */
-    draw: function (source, destX, destY) {
+    draw: function (source, x, y) {
+
+        if (typeof x === 'undefined') { x = 0; }
+        if (typeof y === 'undefined') { y = 0; }
 
         if (typeof source === 'string')
         {
@@ -315,8 +380,27 @@ Phaser.BitmapData.prototype = {
 
         if (source)
         {
-            this.context.drawImage(source, 0, 0, source.width, source.height, destX, destY, source.width, source.height);
+            this.context.drawImage(source, 0, 0, source.width, source.height, x, y, source.width, source.height);
         }
+
+    },
+
+    /**
+    * Draws the given image to this BitmapData at the coordinates specified. If you need to only draw a part of the image use BitmapData.copyPixels instead.
+    *
+    * @method Phaser.BitmapData#drawSprite
+    * @param {Phaser.Sprite|Phaser.Image} sprite - The Sprite to draw. Must have a loaded texture and frame.
+    * @param {number} [x=0] - The x coordinate to draw the Sprite to.
+    * @param {number} [y=0] - The y coordinate to draw the Sprite to.
+    */
+    drawSprite: function (sprite, x, y) {
+
+        if (typeof x === 'undefined') { x = 0; }
+        if (typeof y === 'undefined') { y = 0; }
+
+        var frame = sprite.texture.frame;
+
+        this.context.drawImage(sprite.texture.baseTexture.source, frame.x, frame.y, frame.width, frame.height, x, y, frame.width, frame.height);
 
     },
 

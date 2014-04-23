@@ -208,7 +208,7 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     this.particles = null;
 
     /**
-    * @property {Phaser.BitmapData} scratch - A handy BitmapData scratch-pad that can be used for off-screen bitmap manipulation.
+    * @property {Phaser.BitmapData} scratch - A handy BitmapData scratch-pad that can be used for off-screen bitmap manipulation. Defaults to 1024 x 1024 in size and doesn't upload to the GPU.
     */
     this.scratch = null;
 
@@ -450,7 +450,7 @@ Phaser.Game.prototype = {
             this.plugins = new Phaser.PluginManager(this);
             this.net = new Phaser.Net(this);
             this.debug = new Phaser.Utils.Debug(this);
-            this.scratch = new Phaser.BitmapData(this, '__root', this.width, this.height);
+            this.scratch = new Phaser.BitmapData(this, '__root', 1024, 1024);
 
             this.time.boot();
             this.stage.boot();
