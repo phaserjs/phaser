@@ -87,6 +87,7 @@ Version 2.0.4 - "Mos Shirare" - in development
 * InputManager.resetLocked - If the Input Manager has been reset locked then all calls made to InputManager.reset, such as from a State change, are ignored.
 * Group.resetCursor will reset the Group cursor back to the start of the group, or to the given index value.
 * World.wrap will take a game object and if its x/y coordinates fall outside of the world bounds it will be repositioned on the opposite side, for a wrap-around effect.
+* Group.classType allows you to change the type of object that Group.create or createMultiple makes to your own custom class.
 
 
 ### Bug Fixes
