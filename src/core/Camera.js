@@ -168,6 +168,16 @@ Phaser.Camera.prototype = {
     },
 
     /**
+    * Tells the camera to stop following whatever sprite it currently follows.
+    * @method Phaser.Camera#unfollow
+    */
+    unfollow : function () {
+
+        this.target = null;
+        
+    },
+
+    /**
     * Move the camera focus on a display object instantly.
     * @method Phaser.Camera#focusOn
     * @param {any} displayObject - The display object to focus the camera on. Must have visible x/y properties.
