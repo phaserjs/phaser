@@ -628,14 +628,14 @@ Phaser.Physics.P2.prototype = {
     },
 
     /**
-    * @method Phaser.Physics.P2#update
+    * @method Phaser.Physics.P2#pause
     */
     pause: function() {
         this.paused = true
     },
     
     /**
-    * @method Phaser.Physics.P2#update
+    * @method Phaser.Physics.P2#resume
     */
     resume: function() {
         this.paused = false
