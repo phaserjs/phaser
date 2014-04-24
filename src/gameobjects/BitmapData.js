@@ -754,6 +754,215 @@ Phaser.BitmapData.prototype = {
     },
 
     /**
+    * Converts an RGB color to HSL.
+    *
+    * @author http://mjijackson.com
+    * @method Phaser.BitmapData#rgbToHsl
+    * @param {number} r - The r color component (0 - 255)
+    * @param {number} g - The g color component (0 - 255)
+    * @param {number} b - The b color component (0 - 255)
+    * @return {object} An object containing 3 properties: h, s and l.
+    */
+    rgbToHsl: function (r, g, b) {
+
+        if (Array.isArray(r)) {
+            b = r[2];
+            g = r[1];
+            r = r[0];
+        }
+
+        r /= 255;
+        g /= 255;
+        b /= 255;
+
+        var max = Math.max(r, g, b);
+        var min = Math.min(r, g, b);
+        var h, s, l = (max + min) / 2;
+
+        if (max === min)
+        {
+            h = s = 0; // achromatic
+        }
+        else
+        {
+            var d = max - min;
+
+            s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+
+            switch (max) {
+                case r:
+                    h = (g - b) / d + (g < b ? 6 : 0);
+                    break;
+                case g:
+                    h = (b - r) / d + 2;
+                    break;
+                case b:
+                    h = (r - g) / d + 4;
+                    break;
+            }
+
+            h /= 6;
+
+        }
+
+        return { h: h, s: s, l: l };
+
+    },
+
+    /**
+    * Converts an RGB color to HSL.
+    *
+    * @author http://mjijackson.com
+    * @method Phaser.BitmapData#hslToRgb
+    * @param {number} h - The h color component (0 - 255)
+    * @param {number} s - The s color component (0 - 255)
+    * @param {number} l - The l color component (0 - 255)
+    * @return {object} A color object.
+    */
+    hslToRgb: function (h, s, l) {
+
+        var r, g, b;
+
+        if (s === 0)
+        {
+            r = g = b = l; // achromatic
+        }
+        else
+        {
+            var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+            var p = 2 * l - q;
+            r = this.hue2rgb(p, q, h + 1 / 3);
+            g = this.hue2rgb(p, q, h);
+            b = this.hue2rgb(p, q, h - 1 / 3);
+        }
+
+        return this.createColor(r * 255 | 0, g * 255 | 0, b * 255 | 0);
+
+    },
+
+    /**
+    * Converts a hue to an RGB color.
+    *
+    * @author http://mjijackson.com
+    * @method Phaser.BitmapData#hue2rgb
+    * @private
+    * @param {number} p
+    * @param {number} q
+    * @param {number} t
+    * @return {number} The color component value.
+    */
+    hue2rgb: function (p, q, t) {
+
+        if (t < 0) t += 1;
+        if (t > 1) t -= 1;
+        if (t < 1 / 6) return p + (q - p) * 6 * t;
+        if (t < 1 / 2) return q;
+        if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+
+        return p;
+
+    },
+
+    /**
+    * Converts an RGB color to HSV.
+    *
+    * @author http://mjijackson.com
+    * @method Phaser.BitmapData#rgbToHsv
+    * @param {number} r - The r color component (0 - 255)
+    * @param {number} g - The g color component (0 - 255)
+    * @param {number} b - The b color component (0 - 255)
+    * @return {object} An object containing 3 properties: h, s and v.
+    */
+    rgbToHsv: function (r, g, b) {
+
+        if (Array.isArray(r))
+        {
+            b = r[2];
+            g = r[1];
+            r = r[0];
+        }
+
+        r = r / 255, g = g / 255, b = b / 255;
+
+        var max = Math.max(r, g, b);
+        var min = Math.min(r, g, b);
+        var h, s, v = max;
+        var d = max - min;
+
+        s = max == 0 ? 0 : d / max;
+
+        if (max === min)
+        {
+            h = 0; // achromatic
+        }
+        else
+        {
+            switch (max) {
+                case r:
+                    h = (g - b) / d + (g < b ? 6 : 0);
+                    break;
+                case g:
+                    h = (b - r) / d + 2;
+                    break;
+                case b:
+                    h = (r - g) / d + 4;
+                    break;
+            }
+
+            h /= 6;
+        }
+
+        return { h: h, s: s, v: v };
+
+    },
+
+    /**
+    * Converts a HSV color to RGB.
+    *
+    * @author http://mjijackson.com
+    * @method Phaser.BitmapData#hsvToRgb
+    * @param {number} h - The h color component (0 - 255)
+    * @param {number} s - The s color component (0 - 255)
+    * @param {number} v - The v color component (0 - 255)
+    * @return {object} A color object.
+    */
+    hsvToRgb: function (h, s, v) {
+
+        var r, g, b;
+
+        var i = Math.floor(h * 6);
+        var f = h * 6 - i;
+        var p = v * (1 - s);
+        var q = v * (1 - f * s);
+        var t = v * (1 - (1 - f) * s);
+
+        switch (i % 6)
+        {
+            case 0:
+                r = v, g = t, b = p;
+                break;
+            case 1:
+                r = q, g = v, b = p;
+                break;
+            case 2:
+                r = p, g = v, b = t;
+                break;
+            case 3:
+                r = p, g = q, b = v;
+                break;
+            case 4:
+                r = t, g = p, b = v;
+                break;
+            case 5:
+                r = v, g = p, b = q;
+                break;
+        }
+
+        return this.createColor(r * 255 | 0, g * 255 | 0, b * 255 | 0);
+
+    },
+
+    /**
     * If the game is running in WebGL this will push the texture up to the GPU if it's dirty.
     * This is called automatically if the BitmapData is being used by a Sprite, otherwise you need to remember to call it in your render function.
     * If you wish to suppress this functionality set BitmapData.disableTextureUpload to `true`.
