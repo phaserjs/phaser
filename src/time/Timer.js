@@ -456,10 +456,12 @@ Phaser.Timer.prototype = {
     * @method Phaser.Timer#pause
     */
     pause: function () {
-
+        
+        this._pauseStarted = this.game.time.now;
+        
         if (this.running && !this.expired)
         {
-            this._pauseStarted = this.game.time.now;
+            
 
             this.paused = true;
             this._codePaused = true;
