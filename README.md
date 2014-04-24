@@ -90,6 +90,7 @@ Version 2.0.4 - "Mos Shirare" - in development
 * World.wrap will take a game object and if its x/y coordinates fall outside of the world bounds it will be repositioned on the opposite side, for a wrap-around effect.
 * Group.classType allows you to change the type of object that Group.create or createMultiple makes to your own custom class.
 * Game.scratch is a single handy BitmapData instance that can be used as a visual scratch-pad, for off-screen bitmap manipulation (and is used as such by BitmapData itself).
+* Device.support32bit is a new boolean that sets if the context supports 32bit pixel manipulation using array buffer views or not.
 
 
 ### Bug Fixes

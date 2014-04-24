@@ -233,11 +233,8 @@ Phaser.Color = {
         if (typeof alpha === "undefined") { alpha = 255; }
 
         //  Sanity checks
-        if (max > 255) {
-            return Phaser.Color.getColor(255, 255, 255);
-        }
-
-        if (min > max) {
+        if (max > 255 || min > max)
+        {
             return Phaser.Color.getColor(255, 255, 255);
         }
 

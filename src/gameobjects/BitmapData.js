@@ -61,21 +61,31 @@ Phaser.BitmapData = function (game, key, width, height) {
     this.ctx = this.context;
 
     /**
-    * @property {array} imageData - The canvas image data.
+    * @property {ImageData} imageData - The context image data.
     */
     this.imageData = this.context.getImageData(0, 0, width, height);
 
     /**
-    * @property {UInt8Clamped} pixels - A reference to the context imageData buffer.
+    * @property {ArrayBuffer} buffer - An ArrayBuffer the same size as the context ImageData.
     */
     if (this.imageData.data.buffer)
     {
-        this.pixels = this.imageData.data.buffer;
+        this.buffer = this.imageData.data.buffer;
     }
     else
     {
-        this.pixels = this.imageData.data;
+        this.buffer = new ArrayBuffer(this.imageData.data.length);
     }
+
+    /**
+    * @property {Uint8ClampedArray} data - A Uint8ClampedArray view into BitmapData.buffer.
+    */
+    this.data = this.imageData.data;
+
+    /**
+    * @property {Uint32Array} pixels - A Uint32Array view into BitmapData.buffer.
+    */
+    this.pixels = new Uint32Array(this.buffer);
 
     /**
     * @property {PIXI.BaseTexture} baseTexture - The PIXI.BaseTexture.
@@ -102,14 +112,23 @@ Phaser.BitmapData = function (game, key, width, height) {
     this.type = Phaser.BITMAPDATA;
 
     /**
+    * @property {boolean} disableTextureUpload - If disableTextureUpload is true this BitmapData will never send its image data to the GPU when its dirty flag is true.
+    */
+    this.disableTextureUpload = false;
+
+    /**
     * @property {boolean} dirty - If dirty this BitmapData will be re-rendered.
     */
     this.dirty = false;
 
     /**
-    * @property {function} cls - Alias for BitmapData.clear.
+    * @property {boolean} littleEndian - True if Little Endian, false if Big Endian.
     */
+    this.littleEndian = this.game.device.littleEndian;
+
+    //  Aliases
     this.cls = this.clear;
+    this.update = this.refreshBuffer;
 
 };
 
@@ -141,7 +160,14 @@ Phaser.BitmapData.prototype = {
     },
 
     /**
-    * Clears the BitmapData.
+    * Clears the BitmapData context using a clearRect.
+    *
+    * @method Phaser.BitmapData#cls
+    */
+
+    /**
+    * Clears the BitmapData context using a clearRect.
+    *
     * @method Phaser.BitmapData#clear
     */
     clear: function () {
@@ -153,7 +179,27 @@ Phaser.BitmapData.prototype = {
     },
 
     /**
-    * Resizes the BitmapData.
+    * Fills the BitmapData with the given color.
+    *
+    * @method Phaser.BitmapData#fill
+    * @param {number} r - The red color value, between 0 and 0xFF (255).
+    * @param {number} g - The green color value, between 0 and 0xFF (255).
+    * @param {number} b - The blue color value, between 0 and 0xFF (255).
+    * @param {number} [a=255] - The alpha color value, between 0 and 0xFF (255).
+    */
+    fill: function (r, g, b, a) {
+
+        if (typeof a === 'undefined') { a = 255; }
+
+        this.context.fillStyle = 'rgba(' + r + ',' + g + ',' + b + ',' + a + ')';
+        this.context.fillRect(0, 0, this.width, this.height);
+        this.dirty = true;
+
+    },
+
+    /**
+    * Resizes the BitmapData. This changes the size of the underlying canvas and refreshes the buffer.
+    *
     * @method Phaser.BitmapData#resize
     */
     resize: function (width, height) {
@@ -166,7 +212,7 @@ Phaser.BitmapData.prototype = {
             this.canvas.height = height;
             this.textureFrame.width = width;
             this.textureFrame.height = height;
-            this.imageData = this.context.getImageData(0, 0, width, height);
+            this.refreshBuffer();
         }
 
         this.dirty = true;
@@ -174,15 +220,48 @@ Phaser.BitmapData.prototype = {
     },
 
     /**
-    * @method Phaser.BitmapData#refreshBuffer
+    * This re-creates the BitmapData.imageData from the current context.
+    * It then re-builds the ArrayBuffer, the data Uint8ClampedArray reference and the pixels Uint32Array.
+    * If not given the dimensions defaults to the full size of the context.
+    *
+    * @method Phaser.BitmapData#update
+    * @param {number} [x=0] - The x coordinate of the top-left of the image data area to grab from.
+    * @param {number} [y=0] - The y coordinate of the top-left of the image data area to grab from.
+    * @param {number} [width] - The width of the image data area.
+    * @param {number} [height] - The height of the image data area.
     */
-    refreshBuffer: function () {
 
-        this.imageData = this.context.getImageData(0, 0, this.width, this.height);
-        this.pixels = new Int32Array(this.imageData.data.buffer);
+    /**
+    * This re-creates the BitmapData.imageData from the current context.
+    * It then re-builds the ArrayBuffer, the data Uint8ClampedArray reference and the pixels Uint32Array.
+    * If not given the dimensions defaults to the full size of the context.
+    *
+    * @method Phaser.BitmapData#refreshBuffer
+    * @param {number} [x=0] - The x coordinate of the top-left of the image data area to grab from.
+    * @param {number} [y=0] - The y coordinate of the top-left of the image data area to grab from.
+    * @param {number} [width] - The width of the image data area.
+    * @param {number} [height] - The height of the image data area.
+    */
+    refreshBuffer: function (x, y, width, height) {
 
-        // this.data8 = new Uint8ClampedArray(this.imageData.buffer);
-        // this.data32 = new Uint32Array(this.imageData.buffer);
+        if (typeof x === 'undefined') { x = 0; }
+        if (typeof y === 'undefined') { y = 0; }
+        if (typeof width === 'undefined') { width = this.width; }
+        if (typeof height === 'undefined') { height = this.height; }
+
+        this.imageData = this.context.getImageData(x, y, width, height);
+
+        if (this.imageData.data.buffer)
+        {
+            this.buffer = this.imageData.data.buffer;
+        }
+        else
+        {
+            this.buffer = new ArrayBuffer(this.imageData.data.length);
+        }
+
+        this.data = this.imageData.data;
+        this.pixels = new Uint32Array(this.buffer);
 
     },
 
@@ -199,35 +278,25 @@ Phaser.BitmapData.prototype = {
     */
     replaceRGB: function (sourceR, sourceG, sourceB, sourceA, destR, destG, destB, destA, region) {
 
-        var x = 0;
-        var y = 0;
+        var tx = 0;
+        var ty = 0;
         var w = this.width;
         var h = this.height;
 
         if (region instanceof Phaser.Rectangle)
         {
-            x = region.x;
-            y = region.y;
+            tx = region.x;
+            ty = region.y;
             w = region.width;
             h = region.height;
         }
 
-
+        // for (var x = tx; x < w)
 
         if (x >= 0 && x <= this.width && y >= 0 && y <= this.height)
         {
             this.pixels[y * this.width + x] = (alpha << 24) | (blue << 16) | (green << 8) | red;
 
-            /*
-            if (this.isLittleEndian)
-            {
-                this.data32[y * this.width + x] = (alpha << 24) | (blue << 16) | (green << 8) | red;
-            }
-            else
-            {
-                this.data32[y * this.width + x] = (red << 24) | (green << 16) | (blue << 8) | alpha;
-            }
-           */
 
             // this.imageData.data.set(this.data8);
 
@@ -253,20 +322,14 @@ Phaser.BitmapData.prototype = {
 
         if (x >= 0 && x <= this.width && y >= 0 && y <= this.height)
         {
-            this.pixels[y * this.width + x] = (alpha << 24) | (blue << 16) | (green << 8) | red;
-
-            /*
-            if (this.isLittleEndian)
+            if (this.littleEndian)
             {
-                this.data32[y * this.width + x] = (alpha << 24) | (blue << 16) | (green << 8) | red;
+                this.pixels[y * this.width + x] = (alpha << 24) | (blue << 16) | (green << 8) | red;
             }
             else
             {
-                this.data32[y * this.width + x] = (red << 24) | (green << 16) | (blue << 8) | alpha;
+                this.pixels[y * this.width + x] = (red << 24) | (green << 16) | (blue << 8) | alpha;
             }
-           */
-
-            // this.imageData.data.set(this.data8);
 
             this.context.putImageData(this.imageData, 0, 0);
 
@@ -293,22 +356,35 @@ Phaser.BitmapData.prototype = {
 
     /**
     * Get the color of a specific pixel.
+    * Note that on little-endian systems the format is 0xAABBGGRR and on big-endian the format is 0xRRGGBBAA.
     *
     * @param {number} x - The X coordinate of the pixel to get.
     * @param {number} y - The Y coordinate of the pixel to get.
     * @return {number} A native color value integer (format: 0xRRGGBB)
     */
-    getPixel: function (x, y) {
+    getPixel: function (x, y, out) {
 
-        if (x >= 0 && x <= this.width && y >= 0 && y <= this.height)
+        var index = ~~(x + (y * this.width));
+
+        index *= 4;
+
+        if (!out)
         {
-            return this.data32[y * this.width + x];
+            out = { r:0, g:0, b:0, a:0 };
         }
+
+        out.r = this.data[index];
+        out.g = this.data[++index];
+        out.b = this.data[++index];
+        out.a = this.data[++index];
+
+        return out;
 
     },
 
     /**
     * Get the color of a specific pixel including its alpha value.
+    * Note that on little-endian systems the format is 0xAABBGGRR and on big-endian the format is 0xRRGGBBAA.
     *
     * @method Phaser.BitmapData#getPixel32
     * @param {number} x - The X coordinate of the pixel to get.
@@ -319,7 +395,24 @@ Phaser.BitmapData.prototype = {
 
         if (x >= 0 && x <= this.width && y >= 0 && y <= this.height)
         {
-            return this.data32[y * this.width + x];
+            return this.pixels[y * this.width + x];
+        }
+
+    },
+
+    /**
+    * Get the color of a specific pixel including its alpha value as a color object containing r,g,b,a and rgba properties.
+    *
+    * @method Phaser.BitmapData#getPixelRGB
+    * @param {number} x - The X coordinate of the pixel to get.
+    * @param {number} y - The Y coordinate of the pixel to get.
+    * @return {object} The color object containing r, g, b, a and rgba properties.
+    */
+    getPixelRGB: function (x, y) {
+
+        if (x >= 0 && x <= this.width && y >= 0 && y <= this.height)
+        {
+            return this.unpackPixel(this.pixels[y * this.width + x]);
         }
 
     },
@@ -329,11 +422,149 @@ Phaser.BitmapData.prototype = {
     *
     * @method Phaser.BitmapData#getPixels
     * @param {Phaser.Rectangle} rect - The Rectangle region to get.
-    * @return {array} CanvasPixelArray.
+    * @return {ImageData} Returns a ImageData object containing a Uint8ClampedArray data property.
     */
     getPixels: function (rect) {
 
         return this.context.getImageData(rect.x, rect.y, rect.width, rect.height);
+
+    },
+
+    /**
+    * Packs the r, g, b, a components into a single integer, for use with Int32Array.
+    * If device is little endian then ABGR order is used. Otherwise RGBA order is used.
+    *
+    * @author Matt DesLauriers (@mattdesl)
+    * @method Phaser.BitmapData#packPixel
+    * @param {number} r - The red byte, 0-255
+    * @param {number} g - The green byte, 0-255
+    * @param {number} b - The blue byte, 0-255
+    * @param {number} a - The alpha byte, 0-255
+    * @return {number} The packed color
+    */
+    packPixel: function (r, g, b, a) {
+
+        if (this.littleEndian)
+        {
+            return (a << 24) | (b << 16) | (g <<  8) | r;
+        }
+        else
+        {
+            return (r << 24) | (g << 16) | (b <<  8) | a;
+        }
+
+    },
+
+    /**
+    * Unpacks the r, g, b, a components into the specified color object, or a new
+    * object, for use with Int32Array. If little endian, then ABGR order is used when 
+    * unpacking, otherwise, RGBA order is used. The resulting color object has the
+    * `r, g, b, a` properties which are unrelated to endianness.
+    *
+    * Note that the integer is assumed to be packed in the correct endianness. On little-endian
+    * the format is 0xAABBGGRR and on big-endian the format is 0xRRGGBBAA. If you want a
+    * endian-independent method, use fromRGBA(rgba) and toRGBA(r, g, b, a).
+    * 
+    * @author Matt DesLauriers (@mattdesl)
+    * @method Phaser.BitmapData#unpackPixel
+    * @param {number} rgba - The integer, packed in endian order by packPixel.
+    * @param {object} out - The color object with `r, g, b, a` properties, or null.
+    * @return {object} A color representing the pixel at that location.
+    */
+    unpackPixel: function (rgba, out) {
+
+        if (!out)
+        {
+            out = { r: 0, g: 0, b: 0, a: 0, rgba: '' };
+        }
+
+        if (this.littleEndian)
+        {
+            out.a = ((rgba & 0xff000000) >>> 24);
+            out.b = ((rgba & 0x00ff0000) >>> 16);
+            out.g = ((rgba & 0x0000ff00) >>> 8);
+            out.r = ((rgba & 0x000000ff));
+        }
+        else
+        {
+            out.r = ((rgba & 0xff000000) >>> 24);
+            out.g = ((rgba & 0x00ff0000) >>> 16);
+            out.b = ((rgba & 0x0000ff00) >>> 8);
+            out.a = ((rgba & 0x000000ff));
+        }
+        
+        out.rgba = 'rgba(' + out.r + ',' + out.g + ',' + out.b + ',' + out.a + ')';
+
+        return out;
+
+    },
+
+    /**
+    * A utility to convert an integer in 0xRRGGBBAA format to a color object.
+    * This does not rely on endianness.
+    *
+    * @author Matt DesLauriers (@mattdesl)
+    * @method Phaser.BitmapData#fromRGBA
+    * @param {number} rgba - An RGBA hex
+    * @param {object} [out] - The object to use, optional.
+    * @return {object} A color object.
+    */
+    fromRGBA: function (rgba, out) {
+
+        if (!out)
+        {
+            out = { r: 0, g: 0, b: 0, a: 0, rgba: '' };
+        }
+
+        out.r = ((rgba & 0xff000000) >>> 24);
+        out.g = ((rgba & 0x00ff0000) >>> 16);
+        out.b = ((rgba & 0x0000ff00) >>> 8);
+        out.a = ((rgba & 0x000000ff));
+
+        out.rgba = 'rgba(' + out.r + ',' + out.g + ',' + out.b + ',' + out.a + ')';
+
+        return out;
+
+    },
+
+    /**
+    * A utility to convert RGBA components to a 32 bit integer in RRGGBBAA format.
+    *
+    * @author Matt DesLauriers (@mattdesl)
+    * @method Phaser.BitmapData#toRGBA
+    * @param {number} r - The r color component (0 - 255)
+    * @param {number} g - The g color component (0 - 255)
+    * @param {number} b - The b color component (0 - 255)
+    * @param {number} a - The a color component (0 - 255)
+    * @return {number} A RGBA-packed 32 bit integer
+    */
+    toRGBA: function (r, g, b, a) {
+
+        return (r << 24) | (g << 16) | (b <<  8) | a;
+
+    },
+
+    /**
+    * A utility function to create a lightweight 'color' object with the default components.
+    * Any components that are not specified will default to zero.
+    *
+    * This is useful when you want to use a shared color object for the getPixel and getPixelAt methods.
+    *
+    * @author Matt DesLauriers (@mattdesl)
+    * @method Phaser.BitmapData#createColor
+    * @param {number} [r=0] - The r color component (0 - 255)
+    * @param {number} [g=0] - The g color component (0 - 255)
+    * @param {number} [b=0] - The b color component (0 - 255)
+    * @param {number} [a=0] - The a color component (0 - 255)
+    * @return {object} The resulting color object, with r, g, b, a properties
+    */
+    createColor: function (r, g, b, a) {
+
+        var out = { r: r||0, g: g||0, b: b||0, a: a||0 };
+
+        out.rgba = 'rgba(' + out.r + ',' + out.g + ',' + out.b + ',' + out.a + ')';
+
+        return out;
 
     },
 
@@ -460,12 +691,13 @@ Phaser.BitmapData.prototype = {
     /**
     * If the game is running in WebGL this will push the texture up to the GPU if it's dirty.
     * This is called automatically if the BitmapData is being used by a Sprite, otherwise you need to remember to call it in your render function.
+    * If you wish to suppress this functionality set BitmapData.disableTextureUpload to `true`.
     *
     * @method Phaser.BitmapData#render
     */
     render: function () {
 
-        if (this.game.renderType === Phaser.WEBGL && this.dirty)
+        if (!this.disableTextureUpload && this.game.renderType === Phaser.WEBGL && this.dirty)
         {
             //  Only needed if running in WebGL, otherwise this array will never get cleared down
             //  should use the rendersession

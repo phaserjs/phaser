@@ -342,6 +342,12 @@ Phaser.Device = function (game) {
     this.littleEndian = false;
 
     /**
+    * @property {boolean} support32bit - Does the device context support 32bit pixel manipulation using array buffer views?
+    * @default
+    */
+    this.support32bit = false;
+
+    /**
     * @property {boolean} fullscreen - Does the browser support the Full Screen API?
     * @default
     */
@@ -688,6 +694,8 @@ Phaser.Device.prototype = {
             this.littleEndian = this._checkIsLittleEndian();
         }
 
+        this.support32bit = (typeof ArrayBuffer !== "undefined" && typeof Uint8ClampedArray !== "undefined" && typeof Int32Array !== "undefined" && this.littleEndian !== null && this._checkIsUint8ClampedImageData());
+
         navigator.vibrate = navigator.vibrate || navigator.webkitVibrate || navigator.mozVibrate || navigator.msVibrate;
 
         if (navigator.vibrate)
@@ -728,6 +736,33 @@ Phaser.Device.prototype = {
             //  Could not determine endianness
             return null;
         }
+
+    },
+
+    /**
+    * Test to see if ImageData uses CanvasPixelArray or Uint8ClampedArray.
+    * @author Matt DesLauriers (@mattdesl)
+    * @method Phaser.Device#_checkIsUint8ClampedImageData
+    * @private
+    */
+    _checkIsUint8ClampedImageData: function () {
+
+        if (typeof Uint8ClampedArray === "undefined")
+        {
+            return false;
+        }
+
+        var elem = document.createElement('canvas');
+        var ctx = elem.getContext('2d');
+
+        if (!ctx)
+        {
+            return false;
+        }
+
+        var image = ctx.createImageData(1, 1);
+        
+        return image.data instanceof Uint8ClampedArray;
 
     },
 
