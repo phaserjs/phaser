@@ -83,9 +83,9 @@ Phaser.BitmapData = function (game, key, width, height) {
     this.data = this.imageData.data;
 
     /**
-    * @property {Uint32Array} pixels - A Uint32Array view into BitmapData.buffer.
+    * @property {Int32Array} pixels - An Int32Array view into BitmapData.buffer.
     */
-    this.pixels = new Uint32Array(this.buffer);
+    this.pixels = new Int32Array(this.buffer);
 
     /**
     * @property {PIXI.BaseTexture} baseTexture - The PIXI.BaseTexture.
@@ -221,7 +221,7 @@ Phaser.BitmapData.prototype = {
 
     /**
     * This re-creates the BitmapData.imageData from the current context.
-    * It then re-builds the ArrayBuffer, the data Uint8ClampedArray reference and the pixels Uint32Array.
+    * It then re-builds the ArrayBuffer, the data Uint8ClampedArray reference and the pixels Int32Array.
     * If not given the dimensions defaults to the full size of the context.
     *
     * @method Phaser.BitmapData#update
@@ -233,7 +233,7 @@ Phaser.BitmapData.prototype = {
 
     /**
     * This re-creates the BitmapData.imageData from the current context.
-    * It then re-builds the ArrayBuffer, the data Uint8ClampedArray reference and the pixels Uint32Array.
+    * It then re-builds the ArrayBuffer, the data Uint8ClampedArray reference and the pixels Int32Array.
     * If not given the dimensions defaults to the full size of the context.
     *
     * @method Phaser.BitmapData#refreshBuffer
@@ -261,49 +261,109 @@ Phaser.BitmapData.prototype = {
         }
 
         this.data = this.imageData.data;
-        this.pixels = new Uint32Array(this.buffer);
+        this.pixels = new Int32Array(this.buffer);
 
     },
 
     /**
-    * Sets the color of the given pixel to the specified red, green, blue and alpha values.
+    * Scans through the area specified in this BitmapData and sends a color object for every pixel to the given callback.
+    * The callback will be sent a single object with 6 properties: `{ r: number, g: number, b: number, a: number, color: number, rgba: string }`.
+    * Where r, g, b and a are integers between 0 and 255 representing the color component values for red, green, blue and alpha.
+    * The `color` property is an Int32 of the full color. Note the endianess of this will change per system.
+    * The `rgba` property is a CSS style rgba() string which can be used with context.fillStyle calls, among others.
+    * The callback must return either `false`, in which case no change will be made to the pixel, or a new color object.
+    * If a new color object is returned the pixel will be set to the r, g, b and a color values given within it.
+    *
+    * @method Phaser.BitmapData#processPixelRGB
+    * @param {function} callback - The callback that will be sent each pixel color object to be processed.
+    * @param {object} callbackContext - The context under which the callback will be called.
+    * @param {number} [x=0] - The x coordinate of the top-left of the region to process from.
+    * @param {number} [y=0] - The y coordinate of the top-left of the region to process from.
+    * @param {number} [width] - The width of the region to process.
+    * @param {number} [height] - The height of the region to process.
+    */
+    processPixelRGB: function (callback, callbackContext, x, y, width, height) {
+
+        if (typeof x === 'undefined') { x = 0; }
+        if (typeof y === 'undefined') { y = 0; }
+        if (typeof width === 'undefined') { width = this.width; }
+        if (typeof height === 'undefined') { height = this.height; }
+
+        var w = x + width;
+        var h = y + height;
+        var pixel = { r: 0, g: 0, b: 0, a: 0, rgba: '' };
+        var result = { r: 0, g: 0, b: 0, a: 0 };
+        var color = 0;
+        var dirty = false;
+
+        for (var ty = y; ty < h; ty++)
+        {
+            for (var tx = x; tx < w; tx++)
+            {
+                color = this.getPixel32(tx, ty);
+                this.unpackPixel(color, pixel);
+                result = callback.call(callbackContext, pixel, color);
+
+                if (result !== false && result !== null)
+                {
+                    this.setPixel32(tx, ty, result.r, result.g, result.b, result.a, false);
+                    dirty = true;
+                }
+            }
+        }
+
+        if (dirty)
+        {
+            this.context.putImageData(this.imageData, 0, 0);
+            this.dirty = true;
+        }
+
+    },
+
+    /**
+    * Replaces all pixels matching the given RGBA values with the new RGBA values in the given region, 
+    * or the whole BitmapData if no region provided.
     *
     * @method Phaser.BitmapData#replaceRGB
-    * @param {number} x - The X coordinate of the pixel to be set.
-    * @param {number} y - The Y coordinate of the pixel to be set.
-    * @param {number} red - The red color value, between 0 and 0xFF (255).
-    * @param {number} green - The green color value, between 0 and 0xFF (255).
-    * @param {number} blue - The blue color value, between 0 and 0xFF (255).
-    * @param {number} alpha - The alpha color value, between 0 and 0xFF (255).
+    * @param {number} r1 - The red color value to be replaced. Between 0 and 255.
+    * @param {number} g1 - The green color value to be replaced. Between 0 and 255.
+    * @param {number} b1 - The blue color value to be replaced. Between 0 and 255.
+    * @param {number} a1 - The alpha color value to be replaced. Between 0 and 255.
+    * @param {number} r2 - The red color value that is the replacement color. Between 0 and 255.
+    * @param {number} g2 - The green color value that is the replacement color. Between 0 and 255.
+    * @param {number} b2 - The blue color value that is the replacement color. Between 0 and 255.
+    * @param {number} a2 - The alpha color value that is the replacement color. Between 0 and 255.
+    * @param {Phaser.Rectangle} [region] - The area to perform the search over. If not given it will replace over the whole BitmapData.
     */
-    replaceRGB: function (sourceR, sourceG, sourceB, sourceA, destR, destG, destB, destA, region) {
+    replaceRGB: function (r1, g1, b1, a1, r2, g2, b2, a2, region) {
 
-        var tx = 0;
-        var ty = 0;
+        var sx = 0;
+        var sy = 0;
         var w = this.width;
         var h = this.height;
+        var source = this.packPixel(r1, g1, b1, a1);
 
-        if (region instanceof Phaser.Rectangle)
+        if (region !== undefined && region instanceof Phaser.Rectangle)
         {
-            tx = region.x;
-            ty = region.y;
+            sx = region.x;
+            sy = region.y;
             w = region.width;
             h = region.height;
         }
 
-        // for (var x = tx; x < w)
-
-        if (x >= 0 && x <= this.width && y >= 0 && y <= this.height)
+        for (var y = 0; y < h; y++)
         {
-            this.pixels[y * this.width + x] = (alpha << 24) | (blue << 16) | (green << 8) | red;
-
-
-            // this.imageData.data.set(this.data8);
-
-            this.context.putImageData(this.imageData, 0, 0);
-
-            this.dirty = true;
+            for (var x = 0; x < w; x++)
+            {
+                if (this.getPixel32(sx + x, sy + y) === source)
+                {
+                    this.setPixel32(sx + x, sy + y, r2, g2, b2, a2, false);
+                }
+            }
         }
+
+        this.context.putImageData(this.imageData, 0, 0);
+        this.dirty = true;
 
     },
 
@@ -311,14 +371,17 @@ Phaser.BitmapData.prototype = {
     * Sets the color of the given pixel to the specified red, green, blue and alpha values.
     *
     * @method Phaser.BitmapData#setPixel32
-    * @param {number} x - The X coordinate of the pixel to be set.
-    * @param {number} y - The Y coordinate of the pixel to be set.
+    * @param {number} x - The x coordinate of the pixel to be set. Must lay within the dimensions of this BitmapData.
+    * @param {number} y - The y coordinate of the pixel to be set. Must lay within the dimensions of this BitmapData.
     * @param {number} red - The red color value, between 0 and 0xFF (255).
     * @param {number} green - The green color value, between 0 and 0xFF (255).
     * @param {number} blue - The blue color value, between 0 and 0xFF (255).
     * @param {number} alpha - The alpha color value, between 0 and 0xFF (255).
+    * @param {boolean} [immediate=true] - If `true` the context.putImageData will be called and the dirty flag set.
     */
-    setPixel32: function (x, y, red, green, blue, alpha) {
+    setPixel32: function (x, y, red, green, blue, alpha, immediate) {
+
+        if (typeof immediate === 'undefined') { immediate = true; }
 
         if (x >= 0 && x <= this.width && y >= 0 && y <= this.height)
         {
@@ -331,9 +394,11 @@ Phaser.BitmapData.prototype = {
                 this.pixels[y * this.width + x] = (red << 24) | (green << 16) | (blue << 8) | alpha;
             }
 
-            this.context.putImageData(this.imageData, 0, 0);
-
-            this.dirty = true;
+            if (immediate)
+            {
+                this.context.putImageData(this.imageData, 0, 0);
+                this.dirty = true;
+            }
         }
 
     },
@@ -342,15 +407,17 @@ Phaser.BitmapData.prototype = {
     * Sets the color of the given pixel to the specified red, green and blue values.
     *
     * @method Phaser.BitmapData#setPixel
-    * @param {number} x - The X coordinate of the pixel to be set.
-    * @param {number} y - The Y coordinate of the pixel to be set.
-    * @param {number} red - The red color value (between 0 and 255)
-    * @param {number} green - The green color value (between 0 and 255)
-    * @param {number} blue - The blue color value (between 0 and 255)
+    * @param {number} x - The x coordinate of the pixel to be set. Must lay within the dimensions of this BitmapData.
+    * @param {number} y - The y coordinate of the pixel to be set. Must lay within the dimensions of this BitmapData.
+    * @param {number} red - The red color value, between 0 and 0xFF (255).
+    * @param {number} green - The green color value, between 0 and 0xFF (255).
+    * @param {number} blue - The blue color value, between 0 and 0xFF (255).
+    * @param {number} alpha - The alpha color value, between 0 and 0xFF (255).
+    * @param {boolean} [immediate=true] - If `true` the context.putImageData will be called and the dirty flag set.
     */
-    setPixel: function (x, y, red, green, blue) {
+    setPixel: function (x, y, red, green, blue, immediate) {
 
-        this.setPixel32(x, y, red, green, blue, 255);
+        this.setPixel32(x, y, red, green, blue, 255, immediate);
 
     },
 
@@ -410,10 +477,7 @@ Phaser.BitmapData.prototype = {
     */
     getPixelRGB: function (x, y) {
 
-        if (x >= 0 && x <= this.width && y >= 0 && y <= this.height)
-        {
-            return this.unpackPixel(this.pixels[y * this.width + x]);
-        }
+        return this.unpackPixel(this.getPixel32(x, y));
 
     },
 
@@ -468,14 +532,14 @@ Phaser.BitmapData.prototype = {
     * @author Matt DesLauriers (@mattdesl)
     * @method Phaser.BitmapData#unpackPixel
     * @param {number} rgba - The integer, packed in endian order by packPixel.
-    * @param {object} out - The color object with `r, g, b, a` properties, or null.
-    * @return {object} A color representing the pixel at that location.
+    * @param {object} out - The color object with `r, g, b, a, rgba and color` properties, or null.
+    * @return {object} A color object.
     */
     unpackPixel: function (rgba, out) {
 
         if (!out)
         {
-            out = { r: 0, g: 0, b: 0, a: 0, rgba: '' };
+            out = { r: 0, g: 0, b: 0, a: 0, color: 0, rgba: '' };
         }
 
         if (this.littleEndian)
@@ -493,6 +557,7 @@ Phaser.BitmapData.prototype = {
             out.a = ((rgba & 0x000000ff));
         }
         
+        out.color = rgba;
         out.rgba = 'rgba(' + out.r + ',' + out.g + ',' + out.b + ',' + out.a + ')';
 
         return out;
