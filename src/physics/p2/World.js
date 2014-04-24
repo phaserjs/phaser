@@ -630,7 +630,25 @@ Phaser.Physics.P2.prototype = {
     /**
     * @method Phaser.Physics.P2#update
     */
+    pause: function() {
+        this.paused = true
+    },
+    
+    /**
+    * @method Phaser.Physics.P2#update
+    */
+    resume: function() {
+        this.paused = false
+    },
+
+    /**
+    * @method Phaser.Physics.P2#update
+    */
     update: function () {
+        // do nothing when the pysics engine was paused before
+        if (this.paused){
+          return
+        }
 
         if (this.useElapsedTime)
         {
