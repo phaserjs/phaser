@@ -234,7 +234,9 @@ Phaser.Time.prototype = {
         this.timeToCall = this.game.math.max(0, 16 - (time - this.lastTime));
 
         this.elapsed = this.now - this.time;
-        this.physicsElapsed = this.elapsed / 1000;
+
+        //calculate physics elapsed, ensure it's > 0, use 1/60 as a fallback
+        this.physicsElapsed = this.elapsed / 1000 || 1/60;
 
         if (this.deltaCap > 0 && this.physicsElapsed > this.deltaCap)
         {
