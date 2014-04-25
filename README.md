@@ -60,6 +60,7 @@ Version 2.0.4 - "Mos Shirare" - in development
 
 ### Updates
 
+* Updated to [Pixi.js 1.5.3](https://github.com/GoodBoyDigital/pixi.js/releases/tag/v1.5.3)
 * TypeScript definitions fixes and updates (thanks @clark-stevenson @metrofun)
 * Timer has removed all use of local temporary vars in the core update loop.
 * The Input.reset `hard` reset parameter is now passed down to the Keyboard and Key reset methods.
@@ -97,7 +98,7 @@ Version 2.0.4 - "Mos Shirare" - in development
 * BitmapData.processPixelRGB lets you perform a custom callback on every pixel in the BitmapData.
 * P2.World now has its own pause and resume methods, so you can pause the physics simulation independent of your game (thanks @georgiee)
 * Phaser.ArrayList is a new iterative object, similar in principal to a linked list but operating on a single array without modifying the object structure.
-
+* Add scaleMode params to FilterTexture and RenderTexture (pixi.js update by @giraluna)
 
 
 ### Bug Fixes
@@ -116,6 +117,8 @@ Version 2.0.4 - "Mos Shirare" - in development
 * Point.distance used an incorrect Math call if you wanted a rounded distance value (thanks @OpherV, fix #745)
 * P2.Body.loadPolygon has been updated to correct center of mass issues (thanks @georgiee, fix #749)
 * Game checks if window.console exists before using it (should fix IE9 issues when dev tools are closed), however it is still used deeper in Pixi.
+* Masks now work when used in RenderTextures / CacheAsBitmap and Filters (pixi.js update)
+* Fixed bug where stroked text sometimes got clipped (pixi.js update)
 
 
 ### ToDo

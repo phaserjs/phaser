@@ -5,7 +5,7 @@
 */
 
 /**
-* A basic stack data structure. Allows items to add themselves to and remove themselves from the stack. Items can only exist once in the stack.
+* A set data structure. Allows items to add themselves to and remove themselves from the set. Items can only exist once in the set.
 *
 * @class Phaser.ArrayList
 * @constructor
