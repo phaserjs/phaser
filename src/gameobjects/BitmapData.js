@@ -83,9 +83,8 @@ Phaser.BitmapData = function (game, key, width, height) {
     this.data = this.imageData.data;
 
     /**
-    * @property {Int32Array} pixels - An Int32Array view into BitmapData.buffer.
+    * @property {Uint32Array} pixels - An Uint32Array view into BitmapData.buffer.
     */
-    // this.pixels = new Int32Array(this.buffer);
     this.pixels = new Uint32Array(this.buffer);
 
     /**
@@ -277,7 +276,6 @@ Phaser.BitmapData.prototype = {
         }
 
         this.data = this.imageData.data;
-        // this.pixels = new Int32Array(this.buffer);
         this.pixels = new Uint32Array(this.buffer);
 
     },
@@ -434,13 +432,13 @@ Phaser.BitmapData.prototype = {
     },
 
     /**
-    * Does hsl stuff.
+    * Sets any or all of the hue, saturation and lightness values on every pixel in the given region, or the whole BitmapData if no region was specified.
     *
     * @method Phaser.BitmapData#setHSL
-    * @param {number} [h=null] - 
-    * @param {number} [s=null] - 
-    * @param {number} [l=null] - 
-    * @param {Phaser.Rectangle} [region] - The area to perform the search over. If not given it will replace over the whole BitmapData.
+    * @param {number} [h=null] - The hue, in the range 0 - 1.
+    * @param {number} [s=null] - The saturation, in the range 0 - 1.
+    * @param {number} [l=null] - The lightness, in the range 0 - 1.
+    * @param {Phaser.Rectangle} [region] - The area to perform the operation on. If not given it will run over the whole BitmapData.
     */
     setHSL: function (h, s, l, region) {
 
@@ -453,26 +451,18 @@ Phaser.BitmapData.prototype = {
             return;
         }
 
-        //  need to find a smarter way to do this
-        var sx = 0;
-        var sy = 0;
-        var width = this.width;
-        var height = this.height;
-        var pixel = Phaser.Color.createColor();
-
-        if (region !== undefined && region instanceof Phaser.Rectangle)
+        if (typeof region === 'undefined')
         {
-            sx = region.x;
-            sy = region.y;
-            width = region.width;
-            height = region.height;
+            region = new Phaser.Rectangle(0, 0, this.width, this.height);
         }
 
-        for (var y = 0; y < height; y++)
+        var pixel = Phaser.Color.createColor();
+
+        for (var y = region.y; y < region.bottom; y++)
         {
-            for (var x = 0; x < width; x++)
+            for (var x = region.x; x < region.right; x++)
             {
-                Phaser.Color.unpackPixel(this.getPixel32(sx + x, sy + y), pixel, true);
+                Phaser.Color.unpackPixel(this.getPixel32(x, y), pixel, true);
 
                 if (h)
                 {
@@ -490,7 +480,7 @@ Phaser.BitmapData.prototype = {
                 }
 
                 Phaser.Color.HSLtoRGB(pixel.h, pixel.s, pixel.l, pixel);
-                this.setPixel32(sx + x, sy + y, pixel.r, pixel.g, pixel.b, pixel.a, false);
+                this.setPixel32(x, y, pixel.r, pixel.g, pixel.b, pixel.a, false);
             }
         }
 
@@ -499,7 +489,18 @@ Phaser.BitmapData.prototype = {
 
     },
 
-    shiftHSL: function(h, s, l, region) {
+    /**
+    * Shifts any or all of the hue, saturation and lightness values on every pixel in the given region, or the whole BitmapData if no region was specified.
+    * Shifting will add the given value onto the current h, s and l values, not replace them.
+    * The hue is wrapped to keep it within the range 0 to 1. Saturation and lightness are clamped to not exceed 1.
+    *
+    * @method Phaser.BitmapData#shiftHSL
+    * @param {number} [h=null] - The amount to shift the hue by.
+    * @param {number} [s=null] - The amount to shift the saturation by.
+    * @param {number} [l=null] - The amount to shift the lightness by.
+    * @param {Phaser.Rectangle} [region] - The area to perform the operation on. If not given it will run over the whole BitmapData.
+    */
+    shiftHSL: function (h, s, l, region) {
 
         if (typeof h === 'undefined' || h === null) { h = false; }
         if (typeof s === 'undefined' || s === null) { s = false; }
@@ -510,26 +511,18 @@ Phaser.BitmapData.prototype = {
             return;
         }
 
-        //  need to find a smarter way to do this
-        var sx = 0;
-        var sy = 0;
-        var width = this.width;
-        var height = this.height;
-        var pixel = Phaser.Color.createColor();
-
-        if (region !== undefined && region instanceof Phaser.Rectangle)
+        if (typeof region === 'undefined')
         {
-            sx = region.x;
-            sy = region.y;
-            width = region.width;
-            height = region.height;
+            region = new Phaser.Rectangle(0, 0, this.width, this.height);
         }
 
-        for (var y = 0; y < height; y++)
+        var pixel = Phaser.Color.createColor();
+
+        for (var y = region.y; y < region.bottom; y++)
         {
-            for (var x = 0; x < width; x++)
+            for (var x = region.x; x < region.right; x++)
             {
-                Phaser.Color.unpackPixel(this.getPixel32(sx + x, sy + y), pixel, true);
+                Phaser.Color.unpackPixel(this.getPixel32(x, y), pixel, true);
 
                 if (h)
                 {
@@ -547,7 +540,7 @@ Phaser.BitmapData.prototype = {
                 }
 
                 Phaser.Color.HSLtoRGB(pixel.h, pixel.s, pixel.l, pixel);
-                this.setPixel32(sx + x, sy + y, pixel.r, pixel.g, pixel.b, pixel.a, false);
+                this.setPixel32(x, y, pixel.r, pixel.g, pixel.b, pixel.a, false);
             }
         }
 
@@ -611,12 +604,13 @@ Phaser.BitmapData.prototype = {
     },
 
     /**
-    * Get the color of a specific pixel.
-    * Note that on little-endian systems the format is 0xAABBGGRR and on big-endian the format is 0xRRGGBBAA.
+    * Get the color of a specific pixel in the context into a color object.
     *
-    * @param {number} x - The X coordinate of the pixel to get.
-    * @param {number} y - The Y coordinate of the pixel to get.
-    * @return {number} A native color value integer (format: 0xRRGGBB)
+    * @method Phaser.BitmapData#getPixel
+    * @param {number} x - The x coordinate of the pixel to be set. Must lay within the dimensions of this BitmapData.
+    * @param {number} y - The y coordinate of the pixel to be set. Must lay within the dimensions of this BitmapData.
+    * @param {object} [out] - An object into which 4 properties will be created: r, g, b and a. If not provided a new object will be created.
+    * @return {object} An object with the red, green, blue and alpha values set in the r, g, b and a properties.
     */
     getPixel: function (x, y, out) {
 
@@ -629,10 +623,13 @@ Phaser.BitmapData.prototype = {
 
         index *= 4;
 
-        out.r = this.data[index];
-        out.g = this.data[++index];
-        out.b = this.data[++index];
-        out.a = this.data[++index];
+        if (this.data[index])
+        {
+            out.r = this.data[index];
+            out.g = this.data[++index];
+            out.b = this.data[++index];
+            out.a = this.data[++index];
+        }
 
         return out;
 
@@ -643,8 +640,8 @@ Phaser.BitmapData.prototype = {
     * Note that on little-endian systems the format is 0xAABBGGRR and on big-endian the format is 0xRRGGBBAA.
     *
     * @method Phaser.BitmapData#getPixel32
-    * @param {number} x - The X coordinate of the pixel to get.
-    * @param {number} y - The Y coordinate of the pixel to get.
+    * @param {number} x - The x coordinate of the pixel to be set. Must lay within the dimensions of this BitmapData.
+    * @param {number} y - The y coordinate of the pixel to be set. Must lay within the dimensions of this BitmapData.
     * @return {number} A native color value integer (format: 0xAARRGGBB)
     */
     getPixel32: function (x, y) {
@@ -660,13 +657,16 @@ Phaser.BitmapData.prototype = {
     * Get the color of a specific pixel including its alpha value as a color object containing r,g,b,a and rgba properties.
     *
     * @method Phaser.BitmapData#getPixelRGB
-    * @param {number} x - The X coordinate of the pixel to get.
-    * @param {number} y - The Y coordinate of the pixel to get.
-    * @return {object} The color object containing r, g, b, a and rgba properties.
+    * @param {number} x - The x coordinate of the pixel to be set. Must lay within the dimensions of this BitmapData.
+    * @param {number} y - The y coordinate of the pixel to be set. Must lay within the dimensions of this BitmapData.
+    * @param {object} [out] - An object into which 3 properties will be created: r, g and b. If not provided a new object will be created.
+    * @param {boolean} [hsl=false] - Also convert the rgb values into hsl?
+    * @param {boolean} [hsv=false] - Also convert the rgb values into hsv?
+    * @return {object} An object with the red, green and blue values set in the r, g and b properties.
     */
-    getPixelRGB: function (x, y) {
+    getPixelRGB: function (x, y, out, hsl, hsv) {
 
-        return Phaser.Color.unpackPixel(this.getPixel32(x, y));
+        return Phaser.Color.unpackPixel(this.getPixel32(x, y), out, hsl, hsv);
 
     },
 
@@ -704,6 +704,8 @@ Phaser.BitmapData.prototype = {
             this.context.drawImage(source, area.x, area.y, area.width, area.height, destX, destY, area.width, area.height);
         }
 
+        this.dirty = true;
+
     },
 
     /**
@@ -729,6 +731,8 @@ Phaser.BitmapData.prototype = {
             this.context.drawImage(source, 0, 0, source.width, source.height, x, y, source.width, source.height);
         }
 
+        this.dirty = true;
+
     },
 
     /**
@@ -747,6 +751,8 @@ Phaser.BitmapData.prototype = {
         var frame = sprite.texture.frame;
 
         this.context.drawImage(sprite.texture.baseTexture.source, frame.x, frame.y, frame.width, frame.height, x, y, frame.width, frame.height);
+
+        this.dirty = true;
 
     },
 
@@ -784,6 +790,8 @@ Phaser.BitmapData.prototype = {
         }
 
         this.context.globalCompositeOperation = temp;
+
+        this.dirty = true;
 
     },
 
