@@ -5,7 +5,7 @@
 */
 
 /**
-* A basic linked list data structure.
+* A basic stack data structure. Allows items to add themselves to and remove themselves from the stack. Items can only exist once in the stack.
 *
 * @class Phaser.ArrayList
 * @constructor
@@ -34,7 +34,7 @@ Phaser.ArrayList = function () {
 Phaser.ArrayList.prototype = {
 
     /**
-    * Adds a new element to this linked list.
+    * Adds a new element to this list. The item can only exist in the list once.
     *
     * @method Phaser.ArrayList#add
     * @param {object} child - The element to add to this list. Can be a Phaser.Sprite or any other object you need to quickly iterate through.
@@ -52,40 +52,34 @@ Phaser.ArrayList.prototype = {
 
     },
 
+    /**
+    * Gets the index of the child in the list, or -1 if it isn't in the list.
+    *
+    * @method Phaser.ArrayList#getIndex
+    * @param {object} child - The element to get the list index for.
+    * @return {number} The index of the child or -1 if not found.
+    */
     getIndex: function (child) {
 
-        var i = this.list.length;
-
-        while (i--)
-        {
-            if (this.list[i] === child)
-            {
-                return i;
-            }
-        }
-
-        return -1;
-
-    },
-
-    exists: function (child) {
-
-        var i = this.list.length;
-
-        while (i--)
-        {
-            if (this.list[i] === child)
-            {
-                return true;
-            }
-        }
-
-        return false;
+        return this.list.indexOf(child);
 
     },
 
     /**
-    * Resets the first, last, next and previous node pointers in this list.
+    * Checks for the child within this list.
+    *
+    * @method Phaser.ArrayList#exists
+    * @param {object} child - The element to get the list index for.
+    * @return {boolean} True if the child is found in the list, otherwise false.
+    */
+    exists: function (child) {
+
+        return (this.list.indexOf(child) > -1);
+
+    },
+
+    /**
+    * Resets the list length and drops all items in the list.
     *
     * @method Phaser.ArrayList#reset
     */
@@ -97,14 +91,15 @@ Phaser.ArrayList.prototype = {
     },
 
     /**
-    * Removes the given element from this linked list if it exists.
+    * Removes the given element from this list if it exists.
     *
     * @method Phaser.ArrayList#remove
     * @param {object} child - The child to be removed from the list.
+    * @return {object} child - The child that was removed.
     */
     remove: function (child) {
 
-        var idx = this.getIndex(child);
+        var idx = this.list.indexOf(child);
 
         if (idx > -1)
         {
@@ -139,7 +134,7 @@ Phaser.ArrayList.prototype = {
 };
 
 /**
-* 
+* Resets the cursor to the first item in the list and returns it.
 *
 * @name Phaser.ArrayList#first
 * @property {object} first - The first item in the list.
@@ -164,7 +159,7 @@ Object.defineProperty(Phaser.ArrayList.prototype, "first", {
 });
 
 /**
-* 
+* Gets the next item in the list and returns it, advancing the cursor.
 *
 * @name Phaser.ArrayList#next
 * @property {object} next - Advanced the cursor and return.
