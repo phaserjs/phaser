@@ -268,10 +268,10 @@ Phaser.Input = function (game) {
     this.onHold = null;
 
     /**
-    * A linked list of interactive objects; the InputHandler components (belonging to Sprites) register themselves with this.
-    * @property {Phaser.LinkedList} interactiveItems
+    * A list of interactive objects. Te InputHandler components add and remove themselves from this.
+    * @property {Phaser.ArrayList} interactiveItems
     */
-    this.interactiveItems = new Phaser.LinkedList();
+    this.interactiveItems = new Phaser.ArrayList();
 
     /**
     * @property {Phaser.Point} _localPoint - Internal cache var.
@@ -521,8 +521,6 @@ Phaser.Input.prototype = {
             this.onUp = new Phaser.Signal();
             this.onTap = new Phaser.Signal();
             this.onHold = new Phaser.Signal();
-
-            this.interactiveItems.callAll('reset');
         }
 
         this._pollCounter = 0;

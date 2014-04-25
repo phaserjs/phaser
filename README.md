@@ -77,6 +77,8 @@ Version 2.0.4 - "Mos Shirare" - in development
 * RandomDataGenerator.integerInRange uses a new method of rounding the value to an integer to avoid distribution probability issues (thanks PhaserFan)
 * Updated the Device little / big endianess check.
 * Time has been updated so that physicsElapsed can never be zero (falls back to 1/60), also fixes p2 elapsed time bug (thanks @georgiee, fix #758)
+* Input and Pointer now use the new ArrayList instead of a LinkedList, which resolve list item removable during callback issues.
+* Input.reset no longer resets every interactive item it knows of, because they are removed during the destroy phase and can now persist between States if needed.
 
 
 ### New Features
@@ -94,6 +96,8 @@ Version 2.0.4 - "Mos Shirare" - in development
 * Device.support32bit is a new boolean that sets if the context supports 32bit pixel manipulation using array buffer views or not.
 * BitmapData.processPixelRGB lets you perform a custom callback on every pixel in the BitmapData.
 * P2.World now has its own pause and resume methods, so you can pause the physics simulation independent of your game (thanks @georgiee)
+* Phaser.ArrayList is a new iterative object, similar in principal to a linked list but operating on a single array without modifying the object structure.
+
 
 
 ### Bug Fixes

@@ -80,6 +80,7 @@
     <script src="$path/src/core/Camera.js"></script>
     <script src="$path/src/core/State.js"></script>
     <script src="$path/src/core/StateManager.js"></script>
+    <script src="$path/src/core/ArrayList.js"></script>
     <script src="$path/src/core/LinkedList.js"></script>
     <script src="$path/src/core/Signal.js"></script>
     <script src="$path/src/core/SignalBinding.js"></script>

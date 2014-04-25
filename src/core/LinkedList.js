@@ -37,7 +37,7 @@ Phaser.LinkedList = function () {
     this.last = null;
 
     /**
-    * @property {object} game - Number of elements in the list.
+    * @property {number} total - Number of elements in the list.
     * @default
     */
     this.total = 0;

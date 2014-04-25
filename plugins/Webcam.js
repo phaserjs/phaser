@@ -25,7 +25,7 @@ Phaser.Plugin.Webcam.prototype.constructor = Phaser.Plugin.Webcam;
 
 Phaser.Plugin.Webcam.prototype.start = function (width, height, context) {
 
-    console.log('Webcam start', width, height);
+    // console.log('Webcam start', width, height);
 
     this.context = context;
 

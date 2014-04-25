@@ -198,11 +198,11 @@ Phaser.BitmapData.prototype = {
     * @param {number} r - The red color value, between 0 and 0xFF (255).
     * @param {number} g - The green color value, between 0 and 0xFF (255).
     * @param {number} b - The blue color value, between 0 and 0xFF (255).
-    * @param {number} [a=255] - The alpha color value, between 0 and 0xFF (255).
+    * @param {number} [a=1] - The alpha color value, between 0 and 1.
     */
     fill: function (r, g, b, a) {
 
-        if (typeof a === 'undefined') { a = 255; }
+        if (typeof a === 'undefined') { a = 1; }
 
         this.context.fillStyle = 'rgba(' + r + ',' + g + ',' + b + ',' + a + ')';
         this.context.fillRect(0, 0, this.width, this.height);
