@@ -85,7 +85,8 @@ Phaser.BitmapData = function (game, key, width, height) {
     /**
     * @property {Int32Array} pixels - An Int32Array view into BitmapData.buffer.
     */
-    this.pixels = new Int32Array(this.buffer);
+    // this.pixels = new Int32Array(this.buffer);
+    this.pixels = new Uint32Array(this.buffer);
 
     /**
     * @property {PIXI.BaseTexture} baseTexture - The PIXI.BaseTexture.
@@ -121,14 +122,27 @@ Phaser.BitmapData = function (game, key, width, height) {
     */
     this.dirty = false;
 
-    /**
-    * @property {boolean} littleEndian - True if Little Endian, false if Big Endian.
-    */
-    this.littleEndian = this.game.device.littleEndian;
-
     //  Aliases
     this.cls = this.clear;
     this.update = this.refreshBuffer;
+
+    /**
+    * @property {number} _tempR - Internal cache var.
+    * @private
+    */
+    this._tempR = 0;
+
+    /**
+    * @property {number} _tempG - Internal cache var.
+    * @private
+    */
+    this._tempG = 0;
+
+    /**
+    * @property {number} _tempB - Internal cache var.
+    * @private
+    */
+    this._tempB = 0;
 
 };
 
@@ -232,6 +246,8 @@ Phaser.BitmapData.prototype = {
     */
 
     /**
+    * DEPRECATED: This method will be removed in Phaser 2.1. Please use BitmapData.update instead.
+    *
     * This re-creates the BitmapData.imageData from the current context.
     * It then re-builds the ArrayBuffer, the data Uint8ClampedArray reference and the pixels Int32Array.
     * If not given the dimensions defaults to the full size of the context.
@@ -261,7 +277,8 @@ Phaser.BitmapData.prototype = {
         }
 
         this.data = this.imageData.data;
-        this.pixels = new Int32Array(this.buffer);
+        // this.pixels = new Int32Array(this.buffer);
+        this.pixels = new Uint32Array(this.buffer);
 
     },
 
@@ -291,18 +308,17 @@ Phaser.BitmapData.prototype = {
 
         var w = x + width;
         var h = y + height;
-        var pixel = { r: 0, g: 0, b: 0, a: 0, rgba: '' };
+        var pixel = Phaser.Color.createColor();
         var result = { r: 0, g: 0, b: 0, a: 0 };
-        var color = 0;
         var dirty = false;
 
         for (var ty = y; ty < h; ty++)
         {
             for (var tx = x; tx < w; tx++)
             {
-                color = this.getPixel32(tx, ty);
-                this.unpackPixel(color, pixel);
-                result = callback.call(callbackContext, pixel, color);
+                Phaser.Color.unpackPixel(this.getPixel32(tx, ty), pixel);
+
+                result = callback.call(callbackContext, pixel);
 
                 if (result !== false && result !== null)
                 {
@@ -321,8 +337,58 @@ Phaser.BitmapData.prototype = {
     },
 
     /**
-    * Replaces all pixels matching the given RGBA values with the new RGBA values in the given region, 
-    * or the whole BitmapData if no region provided.
+    * Scans through the area specified in this BitmapData and sends the color for every pixel to the given callback.
+    * Whatever value the callback returns is set as the new color for that pixel, unless it returns the same color, in which case it's skipped.
+    * Note that the format of the color received will be different depending on if the system is big or little endian.
+    * It is expected that your callback will deal with endianess. If you'd rather Phaser did it then use processPixelRGB instead.
+    *
+    * @method Phaser.BitmapData#processPixel
+    * @param {function} callback - The callback that will be sent each pixel color to be processed.
+    * @param {object} callbackContext - The context under which the callback will be called.
+    * @param {number} [x=0] - The x coordinate of the top-left of the region to process from.
+    * @param {number} [y=0] - The y coordinate of the top-left of the region to process from.
+    * @param {number} [width] - The width of the region to process.
+    * @param {number} [height] - The height of the region to process.
+    */
+    processPixel: function (callback, callbackContext, x, y, width, height) {
+
+        if (typeof x === 'undefined') { x = 0; }
+        if (typeof y === 'undefined') { y = 0; }
+        if (typeof width === 'undefined') { width = this.width; }
+        if (typeof height === 'undefined') { height = this.height; }
+
+        var w = x + width;
+        var h = y + height;
+        var pixel = 0;
+        var result = 0;
+        var dirty = false;
+
+        for (var ty = y; ty < h; ty++)
+        {
+            for (var tx = x; tx < w; tx++)
+            {
+                pixel = this.getPixel32(tx, ty);
+                result = callback.call(callbackContext, pixel);
+
+                if (result !== pixel)
+                {
+                    this.pixels[ty * this.width + tx] = result;
+                    dirty = true;
+                }
+            }
+        }
+
+        if (dirty)
+        {
+            this.context.putImageData(this.imageData, 0, 0);
+            this.dirty = true;
+        }
+
+    },
+
+    /**
+    * Replaces all pixels matching one color with another. The color values are given as two sets of RGBA values.
+    * An optional region parameter controls if the replacement happens in just a specific area of the BitmapData or the entire thing. 
     *
     * @method Phaser.BitmapData#replaceRGB
     * @param {number} r1 - The red color value to be replaced. Between 0 and 255.
@@ -341,7 +407,7 @@ Phaser.BitmapData.prototype = {
         var sy = 0;
         var w = this.width;
         var h = this.height;
-        var source = this.packPixel(r1, g1, b1, a1);
+        var source = Phaser.Color.packPixel(r1, g1, b1, a1);
 
         if (region !== undefined && region instanceof Phaser.Rectangle)
         {
@@ -368,6 +434,129 @@ Phaser.BitmapData.prototype = {
     },
 
     /**
+    * Does hsl stuff.
+    *
+    * @method Phaser.BitmapData#setHSL
+    * @param {number} [h=null] - 
+    * @param {number} [s=null] - 
+    * @param {number} [l=null] - 
+    * @param {Phaser.Rectangle} [region] - The area to perform the search over. If not given it will replace over the whole BitmapData.
+    */
+    setHSL: function (h, s, l, region) {
+
+        if (typeof h === 'undefined' || h === null) { h = false; }
+        if (typeof s === 'undefined' || s === null) { s = false; }
+        if (typeof l === 'undefined' || l === null) { l = false; }
+
+        if (!h && !s && !l)
+        {
+            return;
+        }
+
+        //  need to find a smarter way to do this
+        var sx = 0;
+        var sy = 0;
+        var width = this.width;
+        var height = this.height;
+        var pixel = Phaser.Color.createColor();
+
+        if (region !== undefined && region instanceof Phaser.Rectangle)
+        {
+            sx = region.x;
+            sy = region.y;
+            width = region.width;
+            height = region.height;
+        }
+
+        for (var y = 0; y < height; y++)
+        {
+            for (var x = 0; x < width; x++)
+            {
+                Phaser.Color.unpackPixel(this.getPixel32(sx + x, sy + y), pixel, true);
+
+                if (h)
+                {
+                    pixel.h = h;
+                }
+
+                if (s)
+                {
+                    pixel.s = s;
+                }
+
+                if (l)
+                {
+                    pixel.l = l;
+                }
+
+                Phaser.Color.HSLtoRGB(pixel.h, pixel.s, pixel.l, pixel);
+                this.setPixel32(sx + x, sy + y, pixel.r, pixel.g, pixel.b, pixel.a, false);
+            }
+        }
+
+        this.context.putImageData(this.imageData, 0, 0);
+        this.dirty = true;
+
+    },
+
+    shiftHSL: function(h, s, l, region) {
+
+        if (typeof h === 'undefined' || h === null) { h = false; }
+        if (typeof s === 'undefined' || s === null) { s = false; }
+        if (typeof l === 'undefined' || l === null) { l = false; }
+
+        if (!h && !s && !l)
+        {
+            return;
+        }
+
+        //  need to find a smarter way to do this
+        var sx = 0;
+        var sy = 0;
+        var width = this.width;
+        var height = this.height;
+        var pixel = Phaser.Color.createColor();
+
+        if (region !== undefined && region instanceof Phaser.Rectangle)
+        {
+            sx = region.x;
+            sy = region.y;
+            width = region.width;
+            height = region.height;
+        }
+
+        for (var y = 0; y < height; y++)
+        {
+            for (var x = 0; x < width; x++)
+            {
+                Phaser.Color.unpackPixel(this.getPixel32(sx + x, sy + y), pixel, true);
+
+                if (h)
+                {
+                    pixel.h = this.game.math.wrap(pixel.h + h, 0, 1);
+                }
+
+                if (s)
+                {
+                    pixel.s = this.game.math.limitValue(pixel.s + s, 0, 1);
+                }
+
+                if (l)
+                {
+                    pixel.l = this.game.math.limitValue(pixel.l + l, 0, 1);
+                }
+
+                Phaser.Color.HSLtoRGB(pixel.h, pixel.s, pixel.l, pixel);
+                this.setPixel32(sx + x, sy + y, pixel.r, pixel.g, pixel.b, pixel.a, false);
+            }
+        }
+
+        this.context.putImageData(this.imageData, 0, 0);
+        this.dirty = true;
+
+    },
+
+    /**
     * Sets the color of the given pixel to the specified red, green, blue and alpha values.
     *
     * @method Phaser.BitmapData#setPixel32
@@ -385,7 +574,7 @@ Phaser.BitmapData.prototype = {
 
         if (x >= 0 && x <= this.width && y >= 0 && y <= this.height)
         {
-            if (this.littleEndian)
+            if (Phaser.Device.LITTLE_ENDIAN)
             {
                 this.pixels[y * this.width + x] = (alpha << 24) | (blue << 16) | (green << 8) | red;
             }
@@ -431,14 +620,14 @@ Phaser.BitmapData.prototype = {
     */
     getPixel: function (x, y, out) {
 
+        if (!out)
+        {
+            out = Phaser.Color.createColor();
+        }
+
         var index = ~~(x + (y * this.width));
 
         index *= 4;
-
-        if (!out)
-        {
-            out = { r:0, g:0, b:0, a:0 };
-        }
 
         out.r = this.data[index];
         out.g = this.data[++index];
@@ -477,7 +666,7 @@ Phaser.BitmapData.prototype = {
     */
     getPixelRGB: function (x, y) {
 
-        return this.unpackPixel(this.getPixel32(x, y));
+        return Phaser.Color.unpackPixel(this.getPixel32(x, y));
 
     },
 
@@ -491,145 +680,6 @@ Phaser.BitmapData.prototype = {
     getPixels: function (rect) {
 
         return this.context.getImageData(rect.x, rect.y, rect.width, rect.height);
-
-    },
-
-    /**
-    * Packs the r, g, b, a components into a single integer, for use with Int32Array.
-    * If device is little endian then ABGR order is used. Otherwise RGBA order is used.
-    *
-    * @author Matt DesLauriers (@mattdesl)
-    * @method Phaser.BitmapData#packPixel
-    * @param {number} r - The red byte, 0-255
-    * @param {number} g - The green byte, 0-255
-    * @param {number} b - The blue byte, 0-255
-    * @param {number} a - The alpha byte, 0-255
-    * @return {number} The packed color
-    */
-    packPixel: function (r, g, b, a) {
-
-        if (this.littleEndian)
-        {
-            return (a << 24) | (b << 16) | (g <<  8) | r;
-        }
-        else
-        {
-            return (r << 24) | (g << 16) | (b <<  8) | a;
-        }
-
-    },
-
-    /**
-    * Unpacks the r, g, b, a components into the specified color object, or a new
-    * object, for use with Int32Array. If little endian, then ABGR order is used when 
-    * unpacking, otherwise, RGBA order is used. The resulting color object has the
-    * `r, g, b, a` properties which are unrelated to endianness.
-    *
-    * Note that the integer is assumed to be packed in the correct endianness. On little-endian
-    * the format is 0xAABBGGRR and on big-endian the format is 0xRRGGBBAA. If you want a
-    * endian-independent method, use fromRGBA(rgba) and toRGBA(r, g, b, a).
-    * 
-    * @author Matt DesLauriers (@mattdesl)
-    * @method Phaser.BitmapData#unpackPixel
-    * @param {number} rgba - The integer, packed in endian order by packPixel.
-    * @param {object} out - The color object with `r, g, b, a, rgba and color` properties, or null.
-    * @return {object} A color object.
-    */
-    unpackPixel: function (rgba, out) {
-
-        if (!out)
-        {
-            out = { r: 0, g: 0, b: 0, a: 0, color: 0, rgba: '' };
-        }
-
-        if (this.littleEndian)
-        {
-            out.a = ((rgba & 0xff000000) >>> 24);
-            out.b = ((rgba & 0x00ff0000) >>> 16);
-            out.g = ((rgba & 0x0000ff00) >>> 8);
-            out.r = ((rgba & 0x000000ff));
-        }
-        else
-        {
-            out.r = ((rgba & 0xff000000) >>> 24);
-            out.g = ((rgba & 0x00ff0000) >>> 16);
-            out.b = ((rgba & 0x0000ff00) >>> 8);
-            out.a = ((rgba & 0x000000ff));
-        }
-        
-        out.color = rgba;
-        out.rgba = 'rgba(' + out.r + ',' + out.g + ',' + out.b + ',' + out.a + ')';
-
-        return out;
-
-    },
-
-    /**
-    * A utility to convert an integer in 0xRRGGBBAA format to a color object.
-    * This does not rely on endianness.
-    *
-    * @author Matt DesLauriers (@mattdesl)
-    * @method Phaser.BitmapData#fromRGBA
-    * @param {number} rgba - An RGBA hex
-    * @param {object} [out] - The object to use, optional.
-    * @return {object} A color object.
-    */
-    fromRGBA: function (rgba, out) {
-
-        if (!out)
-        {
-            out = { r: 0, g: 0, b: 0, a: 0, rgba: '' };
-        }
-
-        out.r = ((rgba & 0xff000000) >>> 24);
-        out.g = ((rgba & 0x00ff0000) >>> 16);
-        out.b = ((rgba & 0x0000ff00) >>> 8);
-        out.a = ((rgba & 0x000000ff));
-
-        out.rgba = 'rgba(' + out.r + ',' + out.g + ',' + out.b + ',' + out.a + ')';
-
-        return out;
-
-    },
-
-    /**
-    * A utility to convert RGBA components to a 32 bit integer in RRGGBBAA format.
-    *
-    * @author Matt DesLauriers (@mattdesl)
-    * @method Phaser.BitmapData#toRGBA
-    * @param {number} r - The r color component (0 - 255)
-    * @param {number} g - The g color component (0 - 255)
-    * @param {number} b - The b color component (0 - 255)
-    * @param {number} a - The a color component (0 - 255)
-    * @return {number} A RGBA-packed 32 bit integer
-    */
-    toRGBA: function (r, g, b, a) {
-
-        return (r << 24) | (g << 16) | (b <<  8) | a;
-
-    },
-
-    /**
-    * A utility function to create a lightweight 'color' object with the default components.
-    * Any components that are not specified will default to zero.
-    *
-    * This is useful when you want to use a shared color object for the getPixel and getPixelAt methods.
-    *
-    * @author Matt DesLauriers (@mattdesl)
-    * @method Phaser.BitmapData#createColor
-    * @param {number} [r=0] - The r color component (0 - 255)
-    * @param {number} [g=0] - The g color component (0 - 255)
-    * @param {number} [b=0] - The b color component (0 - 255)
-    * @param {number} [a=0] - The a color component (0 - 255)
-    * @return {object} The resulting color object, with r, g, b, a properties
-    */
-    createColor: function (r, g, b, a) {
-
-        var out = { r: r||0, g: g||0, b: b||0, a: a||0 };
-
-        out.rgba = 'rgba(' + out.r + ',' + out.g + ',' + out.b + ',' + out.a + ')';
-
-        return out;
 
     },
 
@@ -750,215 +800,6 @@ Phaser.BitmapData.prototype = {
         if (typeof alpha === 'undefined') { alpha = 255; }
 
 
-
-    },
-
-    /**
-    * Converts an RGB color to HSL.
-    *
-    * @author http://mjijackson.com
-    * @method Phaser.BitmapData#rgbToHsl
-    * @param {number} r - The r color component (0 - 255)
-    * @param {number} g - The g color component (0 - 255)
-    * @param {number} b - The b color component (0 - 255)
-    * @return {object} An object containing 3 properties: h, s and l.
-    */
-    rgbToHsl: function (r, g, b) {
-
-        if (Array.isArray(r)) {
-            b = r[2];
-            g = r[1];
-            r = r[0];
-        }
-
-        r /= 255;
-        g /= 255;
-        b /= 255;
-
-        var max = Math.max(r, g, b);
-        var min = Math.min(r, g, b);
-        var h, s, l = (max + min) / 2;
-
-        if (max === min)
-        {
-            h = s = 0; // achromatic
-        }
-        else
-        {
-            var d = max - min;
-
-            s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-
-            switch (max) {
-                case r:
-                    h = (g - b) / d + (g < b ? 6 : 0);
-                    break;
-                case g:
-                    h = (b - r) / d + 2;
-                    break;
-                case b:
-                    h = (r - g) / d + 4;
-                    break;
-            }
-
-            h /= 6;
-
-        }
-
-        return { h: h, s: s, l: l };
-
-    },
-
-    /**
-    * Converts an RGB color to HSL.
-    *
-    * @author http://mjijackson.com
-    * @method Phaser.BitmapData#hslToRgb
-    * @param {number} h - The h color component (0 - 255)
-    * @param {number} s - The s color component (0 - 255)
-    * @param {number} l - The l color component (0 - 255)
-    * @return {object} A color object.
-    */
-    hslToRgb: function (h, s, l) {
-
-        var r, g, b;
-
-        if (s === 0)
-        {
-            r = g = b = l; // achromatic
-        }
-        else
-        {
-            var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-            var p = 2 * l - q;
-            r = this.hue2rgb(p, q, h + 1 / 3);
-            g = this.hue2rgb(p, q, h);
-            b = this.hue2rgb(p, q, h - 1 / 3);
-        }
-
-        return this.createColor(r * 255 | 0, g * 255 | 0, b * 255 | 0);
-
-    },
-
-    /**
-    * Converts a hue to an RGB color.
-    *
-    * @author http://mjijackson.com
-    * @method Phaser.BitmapData#hue2rgb
-    * @private
-    * @param {number} p
-    * @param {number} q
-    * @param {number} t
-    * @return {number} The color component value.
-    */
-    hue2rgb: function (p, q, t) {
-
-        if (t < 0) t += 1;
-        if (t > 1) t -= 1;
-        if (t < 1 / 6) return p + (q - p) * 6 * t;
-        if (t < 1 / 2) return q;
-        if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
-
-        return p;
-
-    },
-
-    /**
-    * Converts an RGB color to HSV.
-    *
-    * @author http://mjijackson.com
-    * @method Phaser.BitmapData#rgbToHsv
-    * @param {number} r - The r color component (0 - 255)
-    * @param {number} g - The g color component (0 - 255)
-    * @param {number} b - The b color component (0 - 255)
-    * @return {object} An object containing 3 properties: h, s and v.
-    */
-    rgbToHsv: function (r, g, b) {
-
-        if (Array.isArray(r))
-        {
-            b = r[2];
-            g = r[1];
-            r = r[0];
-        }
-
-        r = r / 255, g = g / 255, b = b / 255;
-
-        var max = Math.max(r, g, b);
-        var min = Math.min(r, g, b);
-        var h, s, v = max;
-        var d = max - min;
-
-        s = max == 0 ? 0 : d / max;
-
-        if (max === min)
-        {
-            h = 0; // achromatic
-        }
-        else
-        {
-            switch (max) {
-                case r:
-                    h = (g - b) / d + (g < b ? 6 : 0);
-                    break;
-                case g:
-                    h = (b - r) / d + 2;
-                    break;
-                case b:
-                    h = (r - g) / d + 4;
-                    break;
-            }
-
-            h /= 6;
-        }
-
-        return { h: h, s: s, v: v };
-
-    },
-
-    /**
-    * Converts a HSV color to RGB.
-    *
-    * @author http://mjijackson.com
-    * @method Phaser.BitmapData#hsvToRgb
-    * @param {number} h - The h color component (0 - 255)
-    * @param {number} s - The s color component (0 - 255)
-    * @param {number} v - The v color component (0 - 255)
-    * @return {object} A color object.
-    */
-    hsvToRgb: function (h, s, v) {
-
-        var r, g, b;
-
-        var i = Math.floor(h * 6);
-        var f = h * 6 - i;
-        var p = v * (1 - s);
-        var q = v * (1 - f * s);
-        var t = v * (1 - (1 - f) * s);
-
-        switch (i % 6)
-        {
-            case 0:
-                r = v, g = t, b = p;
-                break;
-            case 1:
-                r = q, g = v, b = p;
-                break;
-            case 2:
-                r = p, g = v, b = t;
-                break;
-            case 3:
-                r = p, g = q, b = v;
-                break;
-            case 4:
-                r = t, g = p, b = v;
-                break;
-            case 5:
-                r = v, g = p, b = q;
-                break;
-        }
-
-        return this.createColor(r * 255 | 0, g * 255 | 0, b * 255 | 0);
 
     },
 

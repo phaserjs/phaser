@@ -381,6 +381,8 @@ Phaser.Device = function (game) {
 
 };
 
+Phaser.Device.LITTLE_ENDIAN = false;
+
 Phaser.Device.prototype = {
 
     /**
@@ -692,6 +694,7 @@ Phaser.Device.prototype = {
         if (typeof ArrayBuffer !== 'undefined' && typeof Uint8Array !== 'undefined' && typeof Uint32Array !== 'undefined')
         {
             this.littleEndian = this._checkIsLittleEndian();
+            Phaser.Device.LITTLE_ENDIAN = this.littleEndian;
         }
 
         this.support32bit = (typeof ArrayBuffer !== "undefined" && typeof Uint8ClampedArray !== "undefined" && typeof Int32Array !== "undefined" && this.littleEndian !== null && this._checkIsUint8ClampedImageData());

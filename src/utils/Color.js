@@ -5,25 +5,427 @@
 */
 
 /**
-* A collection of methods useful for manipulating and comparing colors.
+* The Phaser.Color class is a set of static methods that assist in color manipulation and conversion.
 *
 * @class Phaser.Color
 */
 Phaser.Color = {
 
     /**
+    * Packs the r, g, b, a components into a single integer, for use with Int32Array.
+    * If device is little endian then ABGR order is used. Otherwise RGBA order is used.
+    *
+    * @author Matt DesLauriers (@mattdesl)
+    * @method Phaser.Color.packPixel
+    * @static
+    * @param {number} r - The red color component, in the range 0 - 255.
+    * @param {number} g - The green color component, in the range 0 - 255.
+    * @param {number} b - The blue color component, in the range 0 - 255.
+    * @param {number} a - The alpha color component, in the range 0 - 255.
+    * @return {number} The packed color
+    */
+    packPixel: function (r, g, b, a) {
+
+        if (Phaser.Device.LITTLE_ENDIAN)
+        {
+            return (a << 24) | (b << 16) | (g <<  8) | r;
+        }
+        else
+        {
+            return (r << 24) | (g << 16) | (b <<  8) | a;
+        }
+
+    },
+
+    /**
+    * Unpacks the r, g, b, a components into the specified color object, or a new
+    * object, for use with Int32Array. If little endian, then ABGR order is used when 
+    * unpacking, otherwise, RGBA order is used. The resulting color object has the
+    * `r, g, b, a` properties which are unrelated to endianness.
+    *
+    * Note that the integer is assumed to be packed in the correct endianness. On little-endian
+    * the format is 0xAABBGGRR and on big-endian the format is 0xRRGGBBAA. If you want a
+    * endian-independent method, use fromRGBA(rgba) and toRGBA(r, g, b, a).
+    * 
+    * @author Matt DesLauriers (@mattdesl)
+    * @method Phaser.Color.unpackPixel
+    * @static
+    * @param {number} rgba - The integer, packed in endian order by packPixel.
+    * @param {object} [out] - An object into which 3 properties will be created: r, g and b. If not provided a new object will be created.
+    * @param {boolean} [hsl=false] - Also convert the rgb values into hsl?
+    * @param {boolean} [hsv=false] - Also convert the rgb values into hsv?
+    * @return {object} An object with the red, green and blue values set in the r, g and b properties.
+    */
+    unpackPixel: function (rgba, out, hsl, hsv) {
+
+        if (typeof out === 'undefined' || out === null) { out = Phaser.Color.createColor(); }
+        if (typeof hsl === 'undefined' || hsl === null) { hsl = false; }
+        if (typeof hsv === 'undefined' || hsv === null) { hsv = false; }
+
+        if (Phaser.Device.LITTLE_ENDIAN)
+        {
+            out.a = ((rgba & 0xff000000) >>> 24);
+            out.b = ((rgba & 0x00ff0000) >>> 16);
+            out.g = ((rgba & 0x0000ff00) >>> 8);
+            out.r = ((rgba & 0x000000ff));
+        }
+        else
+        {
+            out.r = ((rgba & 0xff000000) >>> 24);
+            out.g = ((rgba & 0x00ff0000) >>> 16);
+            out.b = ((rgba & 0x0000ff00) >>> 8);
+            out.a = ((rgba & 0x000000ff));
+        }
+        
+        out.color = rgba;
+        out.rgba = 'rgba(' + out.r + ',' + out.g + ',' + out.b + ',' + (out.a / 255) + ')';
+
+        if (hsl)
+        {
+            Phaser.Color.RGBtoHSL(out.r, out.g, out.b, out);
+        }
+
+        if (hsv)
+        {
+            Phaser.Color.RGBtoHSV(out.r, out.g, out.b, out);
+        }
+
+        return out;
+
+    },
+
+    /**
+    * A utility to convert an integer in 0xRRGGBBAA format to a color object.
+    * This does not rely on endianness.
+    *
+    * @author Matt DesLauriers (@mattdesl)
+    * @method Phaser.Color.fromRGBA
+    * @static
+    * @param {number} rgba - An RGBA hex
+    * @param {object} [out] - The object to use, optional.
+    * @return {object} A color object.
+    */
+    fromRGBA: function (rgba, out) {
+
+        if (!out)
+        {
+            out = Phaser.Color.createColor();
+        }
+
+        out.r = ((rgba & 0xff000000) >>> 24);
+        out.g = ((rgba & 0x00ff0000) >>> 16);
+        out.b = ((rgba & 0x0000ff00) >>> 8);
+        out.a = ((rgba & 0x000000ff));
+
+        out.rgba = 'rgba(' + out.r + ',' + out.g + ',' + out.b + ',' + out.a + ')';
+
+        return out;
+
+    },
+
+    /**
+    * A utility to convert RGBA components to a 32 bit integer in RRGGBBAA format.
+    *
+    * @author Matt DesLauriers (@mattdesl)
+    * @method Phaser.Color.toRGBA
+    * @static
+    * @param {number} r - The red color component, in the range 0 - 255.
+    * @param {number} g - The green color component, in the range 0 - 255.
+    * @param {number} b - The blue color component, in the range 0 - 255.
+    * @param {number} a - The alpha color component, in the range 0 - 255.
+    * @return {number} A RGBA-packed 32 bit integer
+    */
+    toRGBA: function (r, g, b, a) {
+
+        return (r << 24) | (g << 16) | (b <<  8) | a;
+
+    },
+
+    /**
+    * Converts an RGB color value to HSL (hue, saturation and lightness).
+    * Conversion forumla from http://en.wikipedia.org/wiki/HSL_color_space.
+    * Assumes RGB values are contained in the set [0, 255] and returns h, s and l in the set [0, 1].
+    * Based on code by Michael Jackson (https://github.com/mjijackson)
+    *
+    * @method Phaser.Color.RGBtoHSL
+    * @static
+    * @param {number} r - The red color component, in the range 0 - 255.
+    * @param {number} g - The green color component, in the range 0 - 255.
+    * @param {number} b - The blue color component, in the range 0 - 255.
+    * @param {object} [out] - An object into which 3 properties will be created, h, s and l. If not provided a new object will be created.
+    * @return {object} An object with the hue, saturation and lightness values set in the h, s and l properties.
+    */
+    RGBtoHSL: function (r, g, b, out) {
+
+        if (!out)
+        {
+            out = Phaser.Color.createColor(r, g, b, 1);
+        }
+
+        r /= 255;
+        g /= 255;
+        b /= 255;
+
+        var min = Math.min(r, g, b);
+        var max = Math.max(r, g, b);
+
+        // achromatic by default
+        out.h = 0;
+        out.s = 0;
+        out.l = (max + min) / 2;
+
+        if (max !== min)
+        {
+            var d = max - min;
+
+            out.s = out.l > 0.5 ? d / (2 - max - min) : d / (max + min);
+
+            if (max === r)
+            {
+                out.h = (g - b) / d + (g < b ? 6 : 0);
+            }
+            else if (max === g)
+            {
+                out.h = (b - r) / d + 2;
+            }
+            else if (max === b)
+            {
+                out.h = (r - g) / d + 4;
+            }
+
+            out.h /= 6;
+        }
+
+        return out;
+
+    },
+
+    /**
+    * Converts an HSL (hue, saturation and lightness) color value to RGB.
+    * Conversion forumla from http://en.wikipedia.org/wiki/HSL_color_space.
+    * Assumes HSL values are contained in the set [0, 1] and returns r, g and b values in the set [0, 255].
+    * Based on code by Michael Jackson (https://github.com/mjijackson)
+    *
+    * @method Phaser.Color.HSLtoRGB
+    * @static
+    * @param {number} h - The hue, in the range 0 - 1.
+    * @param {number} s - The saturation, in the range 0 - 1.
+    * @param {number} l - The lightness, in the range 0 - 1.
+    * @param {object} [out] - An object into which 3 properties will be created: r, g and b. If not provided a new object will be created.
+    * @return {object} An object with the red, green and blue values set in the r, g and b properties.
+    */
+    HSLtoRGB: function (h, s, l, out) {
+
+        if (!out)
+        {
+            out = Phaser.Color.createColor(l, l, l);
+        }
+        else
+        {
+            // achromatic by default
+            out.r = l;
+            out.g = l;
+            out.b = l;
+        }
+
+        if (s !== 0)
+        {
+            var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+            var p = 2 * l - q;
+            out.r = Phaser.Color.hueToColor(p, q, h + 1 / 3);
+            out.g = Phaser.Color.hueToColor(p, q, h);
+            out.b = Phaser.Color.hueToColor(p, q, h - 1 / 3);
+        }
+
+        out.r = (out.r * 255 | 0);
+        out.g = (out.g * 255 | 0);
+        out.b = (out.b * 255 | 0);
+
+        return out;
+
+    },
+
+    /**
+    * Converts an RGB color value to HSV (hue, saturation and value).
+    * Conversion forumla from http://en.wikipedia.org/wiki/HSL_color_space.
+    * Assumes RGB values are contained in the set [0, 255] and returns h, s and v in the set [0, 1].
+    * Based on code by Michael Jackson (https://github.com/mjijackson)
+    *
+    * @method Phaser.Color.RGBtoHSV
+    * @static
+    * @param {number} r - The red color component, in the range 0 - 255.
+    * @param {number} g - The green color component, in the range 0 - 255.
+    * @param {number} b - The blue color component, in the range 0 - 255.
+    * @param {object} [out] - An object into which 3 properties will be created, h, s and v. If not provided a new object will be created.
+    * @return {object} An object with the hue, saturation and value set in the h, s and v properties.
+    */
+    RGBtoHSV: function (r, g, b, out) {
+
+        if (!out)
+        {
+            out = Phaser.Color.createColor(r, g, b, 255);
+        }
+
+        r /= 255;
+        g /= 255;
+        b /= 255;
+
+        var min = Math.min(r, g, b);
+        var max = Math.max(r, g, b);
+        var d = max - min;
+
+        // achromatic by default
+        out.h = 0;
+        out.s = max == 0 ? 0 : d / max;
+        out.v = max;
+
+        if (max !== min)
+        {
+            if (max === r)
+            {
+                out.h = (g - b) / d + (g < b ? 6 : 0);
+            }
+            else if (max === g)
+            {
+                out.h = (b - r) / d + 2;
+            }
+            else if (max === b)
+            {
+                out.h = (r - g) / d + 4;
+            }
+
+            out.h /= 6;
+        }
+
+        return out;
+
+    },
+
+    /**
+    * Converts an HSV (hue, saturation and value) color value to RGB.
+    * Conversion forumla from http://en.wikipedia.org/wiki/HSL_color_space.
+    * Assumes HSV values are contained in the set [0, 1] and returns r, g and b values in the set [0, 255].
+    * Based on code by Michael Jackson (https://github.com/mjijackson)
+    *
+    * @method Phaser.Color.HSVtoRGB
+    * @static
+    * @param {number} h - The hue, in the range 0 - 1.
+    * @param {number} s - The saturation, in the range 0 - 1.
+    * @param {number} v - The value, in the range 0 - 1.
+    * @param {object} [out] - An object into which 3 properties will be created: r, g and b. If not provided a new object will be created.
+    * @return {object} An object with the red, green and blue values set in the r, g and b properties.
+    */
+    HSVtoRGB: function (h, s, v, out) {
+
+        if (!out)
+        {
+            out = Phaser.Color.createColor(0, 0, 0, 0, h, s, 0, v);
+        }
+
+        var r, g, b;
+        var i = Math.floor(h * 6);
+        var f = h * 6 - i;
+        var p = v * (1 - s);
+        var q = v * (1 - f * s);
+        var t = v * (1 - (1 - f) * s);
+
+        switch (i % 6)
+        {
+            case 0:
+                r = v, g = t, b = p;
+                break;
+            case 1:
+                r = q, g = v, b = p;
+                break;
+            case 2:
+                r = p, g = v, b = t;
+                break;
+            case 3:
+                r = p, g = q, b = v;
+                break;
+            case 4:
+                r = t, g = p, b = v;
+                break;
+            case 5:
+                r = v, g = p, b = q;
+                break;
+        }
+
+        out.r = r * 255;
+        out.g = g * 255;
+        out.b = b * 255;
+
+        return out;
+
+    },
+
+    /**
+    * Converts a hue to an RGB color.
+    * Based on code by Michael Jackson (https://github.com/mjijackson)
+    *
+    * @method Phaser.Color.hueToColor
+    * @static
+    * @param {number} p
+    * @param {number} q
+    * @param {number} t
+    * @return {number} The color component value.
+    */
+    hueToColor: function (p, q, t) {
+
+        if (t < 0) t += 1;
+        if (t > 1) t -= 1;
+        if (t < 1 / 6) return p + (q - p) * 6 * t;
+        if (t < 1 / 2) return q;
+        if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+
+        return p;
+
+    },
+
+    /**
+    * A utility function to create a lightweight 'color' object with the default components.
+    * Any components that are not specified will default to zero.
+    *
+    * This is useful when you want to use a shared color object for the getPixel and getPixelAt methods.
+    *
+    * @author Matt DesLauriers (@mattdesl)
+    * @method Phaser.Color.createColor
+    * @static
+    * @param {number} [r=0] - The red color component, in the range 0 - 255.
+    * @param {number} [g=0] - The green color component, in the range 0 - 255.
+    * @param {number} [b=0] - The blue color component, in the range 0 - 255.
+    * @param {number} [a=0] - The alpha color component, in the range 0 - 1.
+    * @param {number} [h=0] - The hue, in the range 0 - 1.
+    * @param {number} [s=0] - The saturation, in the range 0 - 1.
+    * @param {number} [l=0] - The lightness, in the range 0 - 1.
+    * @param {number} [v=0] - The value, in the range 0 - 1.
+    * @return {object} The resulting object with r, g, b, a properties and h, s, l and v.
+    */
+    createColor: function (r, g, b, a, h, s, l, v) {
+
+        var out = { r: r || 0, g: g || 0, b: b || 0, a: a || 0, h: h || 0, s: s || 0, l: l || 0, v: v || 0, color: 0 };
+
+        out.rgba = 'rgba(' + out.r + ',' + out.g + ',' + out.b + ',' + out.a + ')';
+
+        return out;
+
+    },
+
+    /**
     * Given an alpha and 3 color values this will return an integer representation of it.
     *
     * @method Phaser.Color.getColor32
     * @static
-    * @param {number} alpha - The Alpha value (between 0 and 255).
-    * @param {number} red - The Red channel value (between 0 and 255).
-    * @param {number} green - The Green channel value (between 0 and 255).
-    * @param {number} blue - The Blue channel value (between 0 and 255).
+    * @param {number} a - The alpha color component, in the range 0 - 255.
+    * @param {number} r - The red color component, in the range 0 - 255.
+    * @param {number} g - The green color component, in the range 0 - 255.
+    * @param {number} b - The blue color component, in the range 0 - 255.
     * @returns {number} A native color value integer (format: 0xAARRGGBB).
     */
-    getColor32: function (alpha, red, green, blue) {
-        return alpha << 24 | red << 16 | green << 8 | blue;
+    getColor32: function (a, r, g, b) {
+
+        return a << 24 | r << 16 | g << 8 | b;
+
     },
 
     /**
@@ -31,114 +433,113 @@ Phaser.Color = {
     *
     * @method Phaser.Color.getColor
     * @static
-    * @param {number} red - The Red channel value (between 0 and 255).
-    * @param {number} green - The Green channel value (between 0 and 255).
-    * @param {number} blue - The Blue channel value (between 0 and 255).
+    * @param {number} r - The red color component, in the range 0 - 255.
+    * @param {number} g - The green color component, in the range 0 - 255.
+    * @param {number} b - The blue color component, in the range 0 - 255.
     * @returns {number} A native color value integer (format: 0xRRGGBB).
     */
-    getColor: function (red, green, blue) {
-        return red << 16 | green << 8 | blue;
+    getColor: function (r, g, b) {
+
+        return r << 16 | g << 8 | b;
+
     },
 
     /**
-    * Converts the given hex string into an integer color value.
+    * Converts the given color values into a string.
+    * If prefix was '#' it will be in the format `#RRGGBB` otherwise `0xAARRGGBB`.
+    *
+    * @method Phaser.Color.RGBtoString
+    * @static
+    * @param {number} r - The red color component, in the range 0 - 255.
+    * @param {number} g - The green color component, in the range 0 - 255.
+    * @param {number} b - The blue color component, in the range 0 - 255.
+    * @param {number} [a=255] - The alpha color component, in the range 0 - 255.
+    * @param {string} [prefix='#'] - The prefix used in the return string. If '#' it will return `#RRGGBB`, else `0xAARRGGBB`.
+    * @return {string} A string containing the color values. If prefix was '#' it will be in the format `#RRGGBB` otherwise `0xAARRGGBB`.
+    */
+    RGBtoString: function (r, g, b, a, prefix) {
+
+        if (typeof a === 'undefined') { a = 255 };
+        if (typeof prefix === 'undefined') { prefix = '#' };
+
+        if (prefix === '#')
+        {
+            return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+        }
+        else
+        {
+            return '0x' + Phaser.Color.componentToHex(a) + Phaser.Color.componentToHex(r) + Phaser.Color.componentToHex(g) + Phaser.Color.componentToHex(b);
+        }
+
+    },
+
+    /**
+    * Converts a hex string into an integer color value.
     *
     * @method Phaser.Color.hexToRGB
     * @static
-    * @param {string} h - The string hex color to convert.
-    * @returns {number} The rgb color value.
+    * @param {string} hex - The hex string to convert. Can be in the short-hand format `#03f` or `#0033ff`.
+    * @return {number} The rgb color value in the format 0xAARRGGBB.
     */
-    hexToRGB: function (h) {
+    hexToRGB: function (hex) {
 
-        var hex16 = (h.charAt(0) == "#") ? h.substring(1, 7) : h;
+        var rgb = Phaser.Color.hexToColor(hex);
 
-        if (hex16.length == 3)
+        if (rgb)
         {
-            hex16 = hex16.charAt(0) + hex16.charAt(0) + hex16.charAt(1) + hex16.charAt(1) + hex16.charAt(2) + hex16.charAt(2);
+            return Phaser.Color.getColor32(rgb.a, rgb.r, rgb.g, rgb.b);
         }
 
-        var red = parseInt(hex16.substring(0, 2), 16);
-        var green = parseInt(hex16.substring(2, 4), 16);
-        var blue = parseInt(hex16.substring(4, 6), 16);
+    },
 
-        return red << 16 | green << 8 | blue;
+    /**
+    * Converts a hex string into a Phaser Color object.
+    *
+    * @method Phaser.Color.hexToColor
+    * @static
+    * @param {string} hex - The hex string to convert. Can be in the short-hand format `#03f` or `#0033ff`.
+    * @param {object} [out] - An object into which 3 properties will be created: r, g and b. If not provided a new object will be created.
+    * @return {object} An object with the red, green and blue values set in the r, g and b properties.
+    */
+    hexToColor: function (hex, out) {
+
+        if (!out)
+        {
+            out = Phaser.Color.createColor();
+        }
+
+        // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
+        var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+
+        hex = hex.replace(shorthandRegex, function(m, r, g, b) {
+            return r + r + g + g + b + b;
+        });
+
+        var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+
+        if (result)
+        {
+            out.r = parseInt(result[1], 16);
+            out.g = parseInt(result[2], 16);
+            out.b = parseInt(result[3], 16);
+        }
+
+        return out;
 
     },
 
     /**
-    * Returns a string containing handy information about the given color including string hex value,
-    * RGB format information and HSL information. Each section starts on a newline, 3 lines in total.
+    * Return a string containing a hex representation of the given color component.
     *
-    * @method Phaser.Color.getColorInfo
+    * @method Phaser.Color.componentToHex
     * @static
-    * @param {number} color - A color value in the format 0xAARRGGBB.
-    * @returns {string} String containing the 3 lines of information.
+    * @param {number} color - The color channel to get the hex value for, must be a value between 0 and 255.
+    * @returns {string} A string of length 2 characters, i.e. 255 = ff, 100 = 64.
     */
-    getColorInfo: function (color) {
+    componentToHex: function (color) {
 
-        var argb = Phaser.Color.getRGB(color);
-        var hsl = Phaser.Color.RGBtoHSV(color);
-
-        //  Hex format
-        var result = Phaser.Color.RGBtoHexstring(color) + "\n";
-
-        //  RGB format
-        result = result.concat("Alpha: " + argb.alpha + " Red: " + argb.red + " Green: " + argb.green + " Blue: " + argb.blue) + "\n";
-
-        //  HSL info
-        result = result.concat("Hue: " + hsl.hue + " Saturation: " + hsl.saturation + " Lightnes: " + hsl.lightness);
-
-        return result;
-
-    },
-
-    /**
-    * Return a string representation of the color in the format 0xAARRGGBB.
-    *
-    * @method Phaser.Color.RGBtoHexstring
-    * @static
-    * @param {number} color - The color to get the string representation for
-    * @returns {string} A string of length 10 characters in the format 0xAARRGGBB
-    */
-    RGBtoHexstring: function (color) {
-
-        var argb = Phaser.Color.getRGB(color);
-
-        return "0x" + Phaser.Color.colorToHexstring(argb.alpha) + Phaser.Color.colorToHexstring(argb.red) + Phaser.Color.colorToHexstring(argb.green) + Phaser.Color.colorToHexstring(argb.blue);
-
-    },
-
-    /**
-    * Return a string representation of the color in the format #RRGGBB.
-    *
-    * @method Phaser.Color.RGBtoWebstring
-    * @static
-    * @param {number} color - The color to get the string representation for.
-    * @returns {string} A string of length 10 characters in the format 0xAARRGGBB.
-    */
-    RGBtoWebstring: function (color) {
-
-        var argb = Phaser.Color.getRGB(color);
-
-        return "#" + Phaser.Color.colorToHexstring(argb.red) + Phaser.Color.colorToHexstring(argb.green) + Phaser.Color.colorToHexstring(argb.blue);
-
-    },
-
-    /**
-    * Return a string containing a hex representation of the given color.
-    *
-    * @method Phaser.Color.colorToHexstring
-    * @static
-    * @param {number} color - The color channel to get the hex value for, must be a value between 0 and 255).
-    * @returns {string} A string of length 2 characters, i.e. 255 = FF, 0 = 00.
-    */
-    colorToHexstring: function (color) {
-
-        var digits = "0123456789ABCDEF";
-        var lsd = color % 16;
-        var msd = (color - lsd) / 16;
-        var hexified = digits.charAt(msd) + digits.charAt(lsd);
-        return hexified;
+        var hex = color.toString(16);
+        return hex.length == 1 ? "0" + hex : hex;
 
     },
 
@@ -343,6 +744,85 @@ Phaser.Color = {
     */
     getBlue: function (color) {
         return color & 0xFF;
+    },
+
+    //   The following are all DEPRECATED
+
+    /**
+    * DEPRECATED: This method will be removed in Phaser 2.1.
+    * Returns a string containing handy information about the given color including string hex value,
+    * RGB format information. Each section starts on a newline, 3 lines in total.
+    *
+    * @method Phaser.Color.getColorInfo
+    * @static
+    * @param {number} color - A color value in the format 0xAARRGGBB.
+    * @returns {string} String containing the 3 lines of information.
+    */
+    getColorInfo: function (color) {
+
+        var argb = Phaser.Color.getRGB(color);
+
+        //  Hex format
+        var result = Phaser.Color.RGBtoHexstring(color) + "\n";
+
+        //  RGB format
+        result = result.concat("Alpha: " + argb.alpha + " Red: " + argb.red + " Green: " + argb.green + " Blue: " + argb.blue) + "\n";
+
+        return result;
+
+    },
+
+    /**
+    * DEPRECATED: This method will be removed in Phaser 2.1. Please use Phaser.Color.RGBtoString instead.
+    * Return a string representation of the color in the format 0xAARRGGBB.
+    *
+    * @method Phaser.Color.RGBtoHexstring
+    * @static
+    * @param {number} color - The color to get the string representation for
+    * @returns {string} A string of length 10 characters in the format 0xAARRGGBB
+    */
+    RGBtoHexstring: function (color) {
+
+        var argb = Phaser.Color.getRGB(color);
+
+        return "0x" + Phaser.Color.colorToHexstring(argb.alpha) + Phaser.Color.colorToHexstring(argb.red) + Phaser.Color.colorToHexstring(argb.green) + Phaser.Color.colorToHexstring(argb.blue);
+
+    },
+
+    /**
+    * DEPRECATED: This method will be removed in Phaser 2.1. Please use Phaser.Color.RGBtoString instead.
+    * Return a string representation of the color in the format #RRGGBB.
+    *
+    * @method Phaser.Color.RGBtoWebstring
+    * @static
+    * @param {number} color - The color to get the string representation for.
+    * @returns {string} A string of length 10 characters in the format 0xAARRGGBB.
+    */
+    RGBtoWebstring: function (color) {
+
+        var argb = Phaser.Color.getRGB(color);
+
+        return "#" + Phaser.Color.colorToHexstring(argb.red) + Phaser.Color.colorToHexstring(argb.green) + Phaser.Color.colorToHexstring(argb.blue);
+
+    },
+
+    /**
+    * DEPRECATED: This method will be removed in Phaser 2.1. Please use Phaser.Color.componentToHex instead.
+    * Return a string containing a hex representation of the given color.
+    *
+    * @method Phaser.Color.colorToHexstring
+    * @static
+    * @param {number} color - The color channel to get the hex value for, must be a value between 0 and 255).
+    * @returns {string} A string of length 2 characters, i.e. 255 = FF, 0 = 00.
+    */
+    colorToHexstring: function (color) {
+
+        var digits = "0123456789ABCDEF";
+        var lsd = color % 16;
+        var msd = (color - lsd) / 16;
+        var hexified = digits.charAt(msd) + digits.charAt(lsd);
+        return hexified;
+
     }
 
 };
