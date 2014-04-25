@@ -276,7 +276,7 @@ Phaser.Color = {
 
         // achromatic by default
         out.h = 0;
-        out.s = max == 0 ? 0 : d / max;
+        out.s = max === 0 ? 0 : d / max;
         out.v = max;
 
         if (max !== min)
@@ -332,22 +332,34 @@ Phaser.Color = {
         switch (i % 6)
         {
             case 0:
-                r = v, g = t, b = p;
+                r = v;
+                g = t;
+                b = p;
                 break;
             case 1:
-                r = q, g = v, b = p;
+                r = q;
+                g = v;
+                b = p;
                 break;
             case 2:
-                r = p, g = v, b = t;
+                r = p;
+                g = v;
+                b = t;
                 break;
             case 3:
-                r = p, g = q, b = v;
+                r = p;
+                g = q;
+                b = v;
                 break;
             case 4:
-                r = t, g = p, b = v;
+                r = t;
+                g = p;
+                b = v;
                 break;
             case 5:
-                r = v, g = p, b = q;
+                r = v;
+                g = p;
+                b = q;
                 break;
         }
 
@@ -372,11 +384,30 @@ Phaser.Color = {
     */
     hueToColor: function (p, q, t) {
 
-        if (t < 0) t += 1;
-        if (t > 1) t -= 1;
-        if (t < 1 / 6) return p + (q - p) * 6 * t;
-        if (t < 1 / 2) return q;
-        if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+        if (t < 0)
+        {
+            t += 1;
+        }
+
+        if (t > 1)
+        {
+            t -= 1;
+        }
+
+        if (t < 1 / 6)
+        {
+            return p + (q - p) * 6 * t;
+        }
+
+        if (t < 1 / 2)
+        {
+            return q;
+        }
+
+        if (t < 2 / 3)
+        {
+            return p + (q - p) * (2 / 3 - t) * 6;
+        }
 
         return p;
 
@@ -459,8 +490,8 @@ Phaser.Color = {
     */
     RGBtoString: function (r, g, b, a, prefix) {
 
-        if (typeof a === 'undefined') { a = 255 };
-        if (typeof prefix === 'undefined') { prefix = '#' };
+        if (typeof a === 'undefined') { a = 255; }
+        if (typeof prefix === 'undefined') { prefix = '#'; }
 
         if (prefix === '#')
         {
