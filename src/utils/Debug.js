@@ -274,6 +274,25 @@ Phaser.Utils.Debug.prototype = {
     },
 
     /**
+    * Render Timer information.
+    *
+    * @method Phaser.Utils.Debug#timer
+    * @param {Phaser.Timer} timer - The Phaser.Timer to show the debug information for.
+    * @param {number} x - X position of the debug info to be rendered.
+    * @param {number} y - Y position of the debug info to be rendered.
+    * @param {string} [color='rgb(255,255,255)'] - color of the debug info to be rendered. (format is css color string).
+    */
+    timer: function (timer, x, y, color) {
+
+        this.start(x, y, color);
+        this.line('Timer (running: ' + timer.running + ' expired: ' + timer.expired + ')');
+        this.line('Next Tick: ' + timer.next + ' Duration: ' + timer.duration);
+        this.line('Paused: ' + timer.paused + ' Length: ' + timer.length);
+        this.stop();
+
+    },
+
+    /**
     * Renders the Pointer.circle object onto the stage in green if down or red if up along with debug text.
     *
     * @method Phaser.Utils.Debug#pointer

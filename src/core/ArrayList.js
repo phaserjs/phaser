@@ -126,7 +126,10 @@ Phaser.ArrayList.prototype = {
 
         while (i--)
         {
-            this.list[i][callback].apply(this.list[i], args);
+            if (this.list[i][callback])
+            {
+                this.list[i][callback].apply(this.list[i], args);
+            }
         }
 
     }
