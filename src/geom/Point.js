@@ -33,21 +33,27 @@ Phaser.Point.prototype = {
 
     /**
     * Copies the x and y properties from any given object to this Point.
+    *
     * @method Phaser.Point#copyFrom
     * @param {any} source - The object to copy from.
     * @return {Phaser.Point} This Point object.
     */
     copyFrom: function (source) {
+
         return this.setTo(source.x, source.y);
+
     },
 
     /**
     * Inverts the x and y values of this Point
+    *
     * @method Phaser.Point#invert
     * @return {Phaser.Point} This Point object.
     */
     invert: function () {
+
         return this.setTo(this.y, this.x);
+
     },
 
     /**
@@ -90,6 +96,7 @@ Phaser.Point.prototype = {
 
     /**
     * Adds the given x and y values to this Point.
+    *
     * @method Phaser.Point#add
     * @param {number} x - The value to add to Point.x.
     * @param {number} y - The value to add to Point.y.
@@ -105,6 +112,7 @@ Phaser.Point.prototype = {
 
     /**
     * Subtracts the given x and y values from this Point.
+    *
     * @method Phaser.Point#subtract
     * @param {number} x - The value to subtract from Point.x.
     * @param {number} y - The value to subtract from Point.y.
@@ -120,6 +128,7 @@ Phaser.Point.prototype = {
 
     /**
     * Multiplies Point.x and Point.y by the given x and y values.
+    *
     * @method Phaser.Point#multiply
     * @param {number} x - The value to multiply Point.x by.
     * @param {number} y - The value to multiply Point.x by.
@@ -135,6 +144,7 @@ Phaser.Point.prototype = {
 
     /**
     * Divides Point.x and Point.y by the given x and y values.
+    *
     * @method Phaser.Point#divide
     * @param {number} x - The value to divide Point.x by.
     * @param {number} y - The value to divide Point.x by.
@@ -150,6 +160,7 @@ Phaser.Point.prototype = {
 
     /**
     * Clamps the x value of this Point to be between the given min and max.
+    *
     * @method Phaser.Point#clampX
     * @param {number} min - The minimum value to clamp this Point to.
     * @param {number} max - The maximum value to clamp this Point to.
@@ -164,6 +175,7 @@ Phaser.Point.prototype = {
 
     /**
     * Clamps the y value of this Point to be between the given min and max
+    *
     * @method Phaser.Point#clampY
     * @param {number} min - The minimum value to clamp this Point to.
     * @param {number} max - The maximum value to clamp this Point to.
@@ -178,6 +190,7 @@ Phaser.Point.prototype = {
 
     /**
     * Clamps this Point object values to be between the given min and max.
+    *
     * @method Phaser.Point#clamp
     * @param {number} min - The minimum value to clamp this Point to.
     * @param {number} max - The maximum value to clamp this Point to.
@@ -193,6 +206,7 @@ Phaser.Point.prototype = {
 
     /**
     * Creates a copy of the given Point.
+    *
     * @method Phaser.Point#clone
     * @param {Phaser.Point} [output] Optional Point object. If given the values will be set into this object, otherwise a brand new Point object will be created and returned.
     * @return {Phaser.Point} The new Point object.
@@ -214,6 +228,7 @@ Phaser.Point.prototype = {
 
     /**
     * Copies the x and y properties from this Point to any given object.
+    *
     * @method Phaser.Point#copyTo
     * @param {any} dest - The object to copy to.
     * @return {Object} The dest object.
@@ -230,26 +245,33 @@ Phaser.Point.prototype = {
     /**
     * Returns the distance of this Point object to the given object (can be a Circle, Point or anything with x/y properties)
     * @method Phaser.Point#distance
+    *
     * @param {object} dest - The target object. Must have visible x and y properties that represent the center of the object.
     * @param {boolean} [round] - Round the distance to the nearest integer (default false).
     * @return {number} The distance between this Point object and the destination Point object.
     */
     distance: function (dest, round) {
+
         return Phaser.Point.distance(this, dest, round);
+
     },
 
     /**
     * Determines whether the given objects x/y values are equal to this Point object.
+    *
     * @method Phaser.Point#equals
     * @param {Phaser.Point} a - The first object to compare.
     * @return {boolean} A value of true if the Points are equal, otherwise false.
     */
     equals: function (a) {
-        return (a.x == this.x && a.y == this.y);
+
+        return (a.x === this.x && a.y === this.y);
+
     },
 
     /**
     * Rotates this Point around the x/y coordinates given to the desired angle.
+    *
     * @method Phaser.Point#rotate
     * @param {number} x - The x coordinate of the anchor point
     * @param {number} y - The y coordinate of the anchor point
@@ -259,32 +281,41 @@ Phaser.Point.prototype = {
     * @return {Phaser.Point} The modified point object.
     */
     rotate: function (x, y, angle, asDegrees, distance) {
+
         return Phaser.Point.rotate(this, x, y, angle, asDegrees, distance);
+
     },
 
     /**
-    * Calculates the length of the vector
+    * Calculates the length of the Point object.
+    *
     * @method Phaser.Point#getMagnitude
-    * @return {number} the length of the vector
+    * @return {number} The length of the Point.
     */
     getMagnitude: function () {
+
         return Math.sqrt((this.x * this.x) + (this.y * this.y));
+
     },
 
     /**
-    * Alters the length of the vector without changing the direction
+    * Alters the length of the Point without changing the direction.
+    *
     * @method Phaser.Point#setMagnitude
-    * @param {number} magnitude the desired magnitude of the resulting vector
-    * @return {Phaser.Point} the modified original vector
+    * @param {number} magnitude - The desired magnitude of the resulting Point.
+    * @return {Phaser.Point} This Point object.
     */
     setMagnitude: function (magnitude) {
+
         return this.normalize().multiply(magnitude, magnitude);
+
     },
 
     /**
-    * Alters the vector so that its length is 1, but it retains the same direction
+    * Alters the Point object so that its length is 1, but it retains the same direction.
+    *
     * @method Phaser.Point#normalize
-    * @return {Phaser.Point} the modified original vector
+    * @return {Phaser.Point} This Point object.
     */
     normalize: function () {
 
@@ -300,9 +331,10 @@ Phaser.Point.prototype = {
     },
 
     /**
-    * Determine if this point is at 0,0
+    * Determine if this point is at 0,0.
+    *
     * @method Phaser.Point#isZero
-    * @return {boolean} True if this Point is 0,0, otherwise false
+    * @return {boolean} True if this Point is 0,0, otherwise false.
     */
     isZero: function () {
 
@@ -311,7 +343,58 @@ Phaser.Point.prototype = {
     },
 
     /**
+    * The dot product of this and another Point object.
+    * 
+    * @method Phaser.Point#dot
+    * @param {Phaser.Point} a - The Point object to get the dot product combined with this Point.
+    * @return {number} The result.
+    */
+    dot: function (a) {
+
+        return ((this.x * a.x) + (this.y * a.y));
+
+    },
+
+    /**
+    * The cross product of this and another Point object.
+    * 
+    * @method Phaser.Point#cross
+    * @param {Phaser.Point} a - The Point object to get the cross product combined with this Point.
+    * @return {number} The result.
+    */
+    cross: function (a) {
+
+        return ((this.x * a.y) - (this.y * a.x));
+
+    },
+
+    /**
+    * Make this Point perpendicular (90 degrees rotation)
+    * 
+    * @method Phaser.Point#perp
+    * @return {Phaser.Point} This Point object.
+    */
+    perp: function () {
+
+        return this.setTo(-this.y, this.x);
+
+    },
+
+    /**
+    * Make this Point perpendicular (-90 degrees rotation)
+    * 
+    * @method Phaser.Point#rperp
+    * @return {Phaser.Point} This Point object.
+    */
+    rperp: function () {
+
+        return this.setTo(this.y, -this.x);
+
+    },
+
+    /**
     * Returns a string representation of this object.
+    *
     * @method Phaser.Point#toString
     * @return {string} A string representation of the instance.
     */
@@ -444,8 +527,8 @@ Phaser.Point.distance = function (a, b, round) {
 * @param {number} x - The x coordinate of the anchor point
 * @param {number} y - The y coordinate of the anchor point
 * @param {number} angle - The angle in radians (unless asDegrees is true) to rotate the Point to.
-* @param {boolean} asDegrees - Is the given rotation in radians (false) or degrees (true)?
-* @param {number} distance - An optional distance constraint between the Point and the anchor.
+* @param {boolean} [asDegrees=false] - Is the given rotation in radians (false) or degrees (true)?
+* @param {number} [distance] - An optional distance constraint between the Point and the anchor.
 * @return {Phaser.Point} The modified point object.
 */
 Phaser.Point.rotate = function (a, x, y, angle, asDegrees, distance) {

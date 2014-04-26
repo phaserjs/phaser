@@ -99,6 +99,11 @@ Version 2.0.4 - "Mos Shirare" - in development
 * P2.World now has its own pause and resume methods, so you can pause the physics simulation independent of your game (thanks @georgiee)
 * Phaser.ArrayList is a new iterative object, similar in principal to a linked list but operating on a single array without modifying the object structure.
 * Add scaleMode params to FilterTexture and RenderTexture (pixi.js update by @giraluna)
+* Point.dot - get the dot product of two Point objects.
+* Point.cross - get the cross product of two Point objects.
+* Point.cross - get the cross product of two Point objects.
+* Point.perp - make the Point perpendicular (90 degrees rotation)
+* Point.rperp - make the Point perpendicular (-90 degrees rotation)
 
 
 ### Bug Fixes
