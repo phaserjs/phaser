@@ -319,12 +319,22 @@ Phaser.Time.prototype = {
     */
     gameResumed: function () {
 
-        this.pauseDuration = Date.now() - this._pauseStarted;
-
         //  Level out the elapsed timer to avoid spikes
         this.time = Date.now();
 
+        this.pauseDuration = this.time - this._pauseStarted;
+
         this._justResumed = true;
+
+        this.events.resume();
+
+        // var i = this._timers.length;
+
+        // while (i--)
+        // {
+            // this._timers[i]._resume();
+        // }
+
 
     },
 

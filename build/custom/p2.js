@@ -11151,6 +11151,12 @@ Phaser.Physics.P2 = function (game, config) {
     this.useElapsedTime = false;
 
     /**
+    * @property {boolean} paused - The paused state of the P2 World.
+    * @default
+    */
+    this.paused = false;
+
+    /**
     * @property {array<Phaser.Physics.P2.Material>} materials - A local array of all created Materials.
     * @protected
     */
@@ -11733,9 +11739,39 @@ Phaser.Physics.P2.prototype = {
     },
 
     /**
+    * Pauses the P2 World independent of the game pause state.
+    *
+    * @method Phaser.Physics.P2#pause
+    */
+    pause: function() {
+
+        this.paused = true;
+
+    },
+    
+    /**
+    * Resumes a paused P2 World.
+    *
+    * @method Phaser.Physics.P2#resume
+    */
+    resume: function() {
+
+        this.paused = false;
+
+    },
+
+    /**
+    * Internal P2 update loop.
+    *
     * @method Phaser.Physics.P2#update
     */
     update: function () {
+
+        // Do nothing when the pysics engine was paused before
+        if (this.paused)
+        {
+            return;
+        }
 
         if (this.useElapsedTime)
         {
@@ -12094,7 +12130,7 @@ Phaser.Physics.P2.prototype = {
 
         while (i--)
         {
-            bodies.setMaterial(material);
+            bodies[i].setMaterial(material);
         }
 
     },
@@ -14439,7 +14475,7 @@ Phaser.Physics.P2.Body.prototype = {
     },
 
     /**
-    * Add a polygon fixture. This is used during #loadPhaserPolygon.
+    * Add a polygon fixture. This is used during #loadPolygon.
     *
     * @method Phaser.Physics.P2.Body#addFixture
     * @param {string} fixtureData - The data for the fixture. It contains: isSensor, filter (collision) and the actual polygon shapes.
@@ -14516,97 +14552,70 @@ Phaser.Physics.P2.Body.prototype = {
     * @method Phaser.Physics.P2.Body#loadPolygon
     * @param {string} key - The key of the Physics Data file as stored in Game.Cache.
     * @param {string} object - The key of the object within the Physics data file that you wish to load the shape data from.
-    * @param {object} options - An object containing the build options. Note that this isn't used if the data file contains multiple shapes.
-    * @param {boolean} [options.optimalDecomp=false] - Set to true if you need optimal decomposition. Warning: very slow for polygons with more than 10 vertices.
-    * @param {boolean} [options.skipSimpleCheck=false] - Set to true if you already know that the path is not intersecting itself.
-    * @param {boolean|number} [options.removeCollinearPoints=false] - Set to a number (angle threshold value) to remove collinear points, or false to keep all points.
     * @return {boolean} True on success, else false.
     */
-    loadPolygon: function (key, object, options) {
+    loadPolygon: function (key, object) {
 
         var data = this.game.cache.getPhysicsData(key, object);
 
-        if (data.length === 1)
-        {
-            var temp = [];
-            var localData = data[data.length - 1];
+        //  We've multiple Convex shapes, they should be CCW automatically
+        var cm = p2.vec2.create();
 
-            //  We've a list of numbers
-            for (var i = 0, len = localData.shape.length; i < len; i += 2)
+        for (var i = 0; i < data.length; i++)
+        {
+            var vertices = [];
+
+            for (var s = 0; s < data[i].shape.length; s += 2)
             {
-                temp.push([localData.shape[i], localData.shape[i + 1]]);
+                vertices.push([ this.world.pxmi(data[i].shape[s]), this.world.pxmi(data[i].shape[s + 1]) ]);
             }
 
-            return this.addPolygon(options, temp);
-        }
-        else
-        {
-            //  We've multiple Convex shapes, they should be CCW automatically
-            var cm = p2.vec2.create();
+            var c = new p2.Convex(vertices);
 
-            for (var i = 0; i < data.length; i++)
+            // Move all vertices so its center of mass is in the local center of the convex
+            for (var j = 0; j !== c.vertices.length; j++)
             {
-                var vertices = [];
-
-                for (var s = 0; s < data[i].shape.length; s += 2)
-                {
-                    vertices.push([ this.world.pxmi(data[i].shape[s]), this.world.pxmi(data[i].shape[s + 1]) ]);
-                }
-
-                var c = new p2.Convex(vertices);
-
-                // Move all vertices so its center of mass is in the local center of the convex
-                for (var j = 0; j !== c.vertices.length; j++)
-                {
-                    var v = c.vertices[j];
-                    p2.vec2.sub(v, v, c.centerOfMass);
-                }
-
-                p2.vec2.scale(cm, c.centerOfMass, 1);
-
-                cm[0] -= this.world.pxmi(this.sprite.width / 2);
-                cm[1] -= this.world.pxmi(this.sprite.height / 2);
-
-                c.updateTriangles();
-                c.updateCenterOfMass();
-                c.updateBoundingRadius();
-
-                this.data.addShape(c, cm);
+                var v = c.vertices[j];
+                p2.vec2.sub(v, v, c.centerOfMass);
             }
 
-            this.data.aabbNeedsUpdate = true;
-            this.shapeChanged();
+            p2.vec2.scale(cm, c.centerOfMass, 1);
 
-            return true;
+            cm[0] -= this.world.pxmi(this.sprite.width / 2);
+            cm[1] -= this.world.pxmi(this.sprite.height / 2);
 
+            c.updateTriangles();
+            c.updateCenterOfMass();
+            c.updateBoundingRadius();
+
+            this.data.addShape(c, cm);
         }
 
-        return false;
+        this.data.aabbNeedsUpdate = true;
+        this.shapeChanged();
+
+        return true;
 
     },
 
     /**
+    * DEPRECATED: This method will soon be removed from the API. Please avoid using.
     * Reads the physics data from a physics data file stored in the Game.Cache.
-    * It will add the shape data to this Body, as well as set the density (mass), friction and bounce (restitution) values.
+    * It will add the shape data to this Body, as well as set the density (mass).
     *
-    * @method Phaser.Physics.P2.Body#loadPolygon
+    * @method Phaser.Physics.P2.Body#loadData
     * @param {string} key - The key of the Physics Data file as stored in Game.Cache.
     * @param {string} object - The key of the object within the Physics data file that you wish to load the shape data from.
-    * @param {object} options - An object containing the build options:
-    * @param {boolean} [options.optimalDecomp=false] - Set to true if you need optimal decomposition. Warning: very slow for polygons with more than 10 vertices.
-    * @param {boolean} [options.skipSimpleCheck=false] - Set to true if you already know that the path is not intersecting itself.
-    * @param {boolean|number} [options.removeCollinearPoints=false] - Set to a number (angle threshold value) to remove collinear points, or false to keep all points.
     * @return {boolean} True on success, else false.
     */
-    loadData: function (key, object, options) {
+    loadData: function (key, object) {
 
         var data = this.game.cache.getPhysicsData(key, object);
 
         if (data && data.shape)
         {
             this.mass = data.density;
-            this.loadPolygon(key, object, options);
-            //  TODO set friction + bounce here
+            return this.loadPolygon(key, object);
         }
 
     }
