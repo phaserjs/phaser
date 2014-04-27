@@ -124,6 +124,7 @@ Version 2.0.4 - "Mos Shirare" - in development
 * Game checks if window.console exists before using it (should fix IE9 issues when dev tools are closed), however it is still used deeper in Pixi.
 * Masks now work when used in RenderTextures / CacheAsBitmap and Filters (pixi.js update)
 * Fixed bug where stroked text sometimes got clipped (pixi.js update)
+* Fixed Polygon.contains for coordinates to the left of the polygon (thanks @vilcans, fix #766)
 
 
 ### ToDo
