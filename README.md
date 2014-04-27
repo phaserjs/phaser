@@ -104,6 +104,14 @@ Version 2.0.4 - "Mos Shirare" - in development
 * Point.cross - get the cross product of two Point objects.
 * Point.perp - make the Point perpendicular (90 degrees rotation)
 * Point.rperp - make the Point perpendicular (-90 degrees rotation)
+* Point.normalRightHand - Right-hand normalize (make unit length) a Point.
+* Point.angle - Returns the angle between this Point object and another object with public x and y properties.
+* Point.angleSq - Returns the angle squared between this Point object and another object with public x and y properties.
+* Point.getMagnitudeSq - Calculates the length squared of the Point object.
+* Point.project - Project two Points onto another Point.
+* Point.projectUnit - Project two Points onto a Point of unit length.
+* Point.multiplyAdd - Adds two 2D Points together and multiplies the result by the given scalar.
+* Point.negative - Creates a negative Point.
 
 
 ### Bug Fixes

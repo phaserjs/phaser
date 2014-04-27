@@ -5,12 +5,21 @@
 */
 
 /**
-* Creates a new Point object. If you pass no parameters a Point is created set to (0, 0).
 * @class Phaser.Point
-* @classdesc The Point object represents a location in a two-dimensional coordinate system, where x represents the horizontal axis and y represents the vertical axis.
+* @classdesc
+* The Point object represents a location in a two-dimensional coordinate system, 
+* where x represents the horizontal axis and y represents the vertical axis.
+* The following code creates a point at (0,0):
+* `var myPoint = new Phaser.Point();`
+* You can also use them as 2D Vectors and you'll find different vector related methods in this class.
+*/
+
+/**
+* Creates a new Point object. If you pass no parameters a Point is created set to (0, 0).
+*
 * @constructor
-* @param {number} x The horizontal position of this Point (default 0)
-* @param {number} y The vertical position of this Point (default 0)
+* @param {number} [x=0] - The horizontal position of this Point.
+* @param {number} [y=0] - The vertical position of this Point.
 */
 Phaser.Point = function (x, y) {
 
@@ -127,7 +136,7 @@ Phaser.Point.prototype = {
     },
 
     /**
-    * Multiplies Point.x and Point.y by the given x and y values.
+    * Multiplies Point.x and Point.y by the given x and y values. Sometimes known as `Scale`.
     *
     * @method Phaser.Point#multiply
     * @param {number} x - The value to multiply Point.x by.
@@ -244,8 +253,8 @@ Phaser.Point.prototype = {
 
     /**
     * Returns the distance of this Point object to the given object (can be a Circle, Point or anything with x/y properties)
-    * @method Phaser.Point#distance
     *
+    * @method Phaser.Point#distance
     * @param {object} dest - The target object. Must have visible x and y properties that represent the center of the object.
     * @param {boolean} [round] - Round the distance to the nearest integer (default false).
     * @return {number} The distance between this Point object and the destination Point object.
@@ -260,8 +269,8 @@ Phaser.Point.prototype = {
     * Determines whether the given objects x/y values are equal to this Point object.
     *
     * @method Phaser.Point#equals
-    * @param {Phaser.Point} a - The first object to compare.
-    * @return {boolean} A value of true if the Points are equal, otherwise false.
+    * @param {Phaser.Point|any} a - The object to compare with this Point.
+    * @return {boolean} A value of true if the x and y points are equal, otherwise false.
     */
     equals: function (a) {
 
@@ -270,11 +279,37 @@ Phaser.Point.prototype = {
     },
 
     /**
+    * Returns the angle between this Point object and another object with public x and y properties.
+    *
+    * @method Phaser.Point#angle
+    * @param {Phaser.Point|any} a - The object to get the angle from this Point to.
+    * @return {number} The angle between the two objects.
+    */
+    angle: function (a) {
+
+        return Math.atan2(this.x * a.y - this.y * a.x, this.x * a.x + this.y * a.y);
+
+    },
+
+    /**
+    * Returns the angle squared between this Point object and another object with public x and y properties.
+    *
+    * @method Phaser.Point#angleSq
+    * @param {Phaser.Point|any} a - The object to get the angleSq from this Point to.
+    * @return {number} The angleSq between the two objects.
+    */
+    angleSq: function (a) {
+
+        return this.subtract(a).angle(a.subtract(this));
+
+    },
+
+    /**
     * Rotates this Point around the x/y coordinates given to the desired angle.
     *
     * @method Phaser.Point#rotate
-    * @param {number} x - The x coordinate of the anchor point
-    * @param {number} y - The y coordinate of the anchor point
+    * @param {number} x - The x coordinate of the anchor point.
+    * @param {number} y - The y coordinate of the anchor point.
     * @param {number} angle - The angle in radians (unless asDegrees is true) to rotate the Point to.
     * @param {boolean} asDegrees - Is the given rotation in radians (false) or degrees (true)?
     * @param {number} [distance] - An optional distance constraint between the Point and the anchor.
@@ -295,6 +330,18 @@ Phaser.Point.prototype = {
     getMagnitude: function () {
 
         return Math.sqrt((this.x * this.x) + (this.y * this.y));
+
+    },
+
+    /**
+    * Calculates the length squared of the Point object.
+    *
+    * @method Phaser.Point#getMagnitudeSq
+    * @return {number} The length ^ 2 of the Point.
+    */
+    getMagnitudeSq: function () {
+
+        return (this.x * this.x) + (this.y * this.y);
 
     },
 
@@ -393,6 +440,18 @@ Phaser.Point.prototype = {
     },
 
     /**
+    * Right-hand normalize (make unit length) this Point.
+    *
+    * @method Phaser.Point#normalRightHand
+    * @return {Phaser.Point} This Point object.
+    */
+    normalRightHand: function () {
+
+        return this.setTo(this.y * -1, this.x);
+
+    },
+
+    /**
     * Returns a string representation of this object.
     *
     * @method Phaser.Point#toString
@@ -410,6 +469,7 @@ Phaser.Point.prototype.constructor = Phaser.Point;
 
 /**
 * Adds the coordinates of two points together to create a new point.
+*
 * @method Phaser.Point.add
 * @param {Phaser.Point} a - The first Point object.
 * @param {Phaser.Point} b - The second Point object.
@@ -429,6 +489,7 @@ Phaser.Point.add = function (a, b, out) {
 
 /**
 * Subtracts the coordinates of two points to create a new point.
+*
 * @method Phaser.Point.subtract
 * @param {Phaser.Point} a - The first Point object.
 * @param {Phaser.Point} b - The second Point object.
@@ -448,6 +509,7 @@ Phaser.Point.subtract = function (a, b, out) {
 
 /**
 * Multiplies the coordinates of two points to create a new point.
+*
 * @method Phaser.Point.multiply
 * @param {Phaser.Point} a - The first Point object.
 * @param {Phaser.Point} b - The second Point object.
@@ -467,6 +529,7 @@ Phaser.Point.multiply = function (a, b, out) {
 
 /**
 * Divides the coordinates of two points to create a new point.
+*
 * @method Phaser.Point.divide
 * @param {Phaser.Point} a - The first Point object.
 * @param {Phaser.Point} b - The second Point object.
@@ -486,6 +549,7 @@ Phaser.Point.divide = function (a, b, out) {
 
 /**
 * Determines whether the two given Point objects are equal. They are considered equal if they have the same x and y values.
+*
 * @method Phaser.Point.equals
 * @param {Phaser.Point} a - The first Point object.
 * @param {Phaser.Point} b - The second Point object.
@@ -498,7 +562,102 @@ Phaser.Point.equals = function (a, b) {
 };
 
 /**
+* Returns the angle between two Point objects.
+*
+* @method Phaser.Point.angle
+* @param {Phaser.Point} a - The first Point object.
+* @param {Phaser.Point} b - The second Point object.
+* @return {number} The angle between the two Points.
+*/
+Phaser.Point.angle = function (a, b) {
+
+    return Math.atan2(a.x * b.y - a.y * b.x, a.x * b.x + a.y * b.y);
+
+};
+
+/**
+* Returns the angle squared between two Point objects.
+*
+* @method Phaser.Point.angleSq
+* @param {Phaser.Point} a - The first Point object.
+* @param {Phaser.Point} b - The second Point object.
+* @return {number} The angle squared between the two Points.
+*/
+Phaser.Point.angleSq = function (a, b) {
+
+    return a.subtract(b).angle(b.subtract(a));
+
+};
+
+/**
+* Creates a negative Point.
+*
+* @method Phaser.Point.negative
+* @param {Phaser.Point} a - The first Point object.
+* @param {Phaser.Point} [out] - Optional Point to store the value in, if not supplied a new Point object will be created.
+* @return {Phaser.Point} The new Point object.
+*/
+Phaser.Point.negative = function (a, out) {
+
+    if (typeof out === "undefined") { out = new Phaser.Point(); }
+
+    return out.setTo(-a.x, -a.y);
+
+};
+
+/**
+* Adds two 2D Points together and multiplies the result by the given scalar.
+* 
+* @method Phaser.Point.multiplyAdd
+* @param {Phaser.Point} a - The first Point object.
+* @param {Phaser.Point} b - The second Point object.
+* @param {number} s - The scaling value.
+* @param {Phaser.Point} [out] - Optional Point to store the value in, if not supplied a new Point object will be created.
+* @return {Phaser.Point} The new Point object.
+*/
+Phaser.Point.multiplyAdd = function (a, b, s, out) {
+
+    if (typeof out === "undefined") { out = new Phaser.Point(); }
+
+    return out.setTo(a.x + b.x * s, a.y + b.y * s);
+
+};
+
+/**
+* Return a perpendicular vector (90 degrees rotation)
+*
+* @method Phaser.Point.perp
+* @param {Phaser.Point} a - The Point object.
+* @param {Phaser.Point} [out] - Optional Point to store the value in, if not supplied a new Point object will be created.
+* @return {Phaser.Point} The new Point object.
+*/
+Phaser.Point.perp = function (a, out) {
+
+    if (typeof out === "undefined") { out = new Phaser.Point(); }
+
+    return out.setTo(-a.y, a.x);
+
+};
+
+/**
+* Return a perpendicular vector (-90 degrees rotation)
+*
+* @method Phaser.Point.rperp
+* @param {Phaser.Point} a - The Point object.
+* @param {Phaser.Point} [out] - Optional Point to store the value in, if not supplied a new Point object will be created.
+* @return {Phaser.Point} The new Point object.
+*/
+Phaser.Point.rperp = function (a, out) {
+
+    if (typeof out === "undefined") { out = new Phaser.Point(); }
+
+    return out.setTo(a.y, -a.x);
+
+};
+
+/**
 * Returns the distance of this Point object to the given object (can be a Circle, Point or anything with x/y properties).
+*
 * @method Phaser.Point.distance
 * @param {object} a - The target object. Must have visible x and y properties that represent the center of the object.
 * @param {object} b - The target object. Must have visible x and y properties that represent the center of the object.
@@ -521,7 +680,95 @@ Phaser.Point.distance = function (a, b, round) {
 };
 
 /**
+* Project two Points onto another Point.
+* 
+* @method Phaser.Point.project
+* @param {Phaser.Point} a - The first Point object.
+* @param {Phaser.Point} b - The second Point object.
+* @param {Phaser.Point} [out] - Optional Point to store the value in, if not supplied a new Point object will be created.
+* @return {Phaser.Point} The new Point object.
+*/
+Phaser.Point.project = function (a, b, out) {
+
+    if (typeof out === "undefined") { out = new Phaser.Point(); }
+
+    var amt = a.dot(b) / b.getMagnitudeSq();
+
+    if (amt != 0)
+    {
+        out.setTo(amt * b.x, amt * b.y);
+    }
+
+    return out;
+
+};
+
+/**
+* Project two Points onto a Point of unit length.
+* 
+* @method Phaser.Point.projectUnit
+* @param {Phaser.Point} a - The first Point object.
+* @param {Phaser.Point} b - The second Point object.
+* @param {Phaser.Point} [out] - Optional Point to store the value in, if not supplied a new Point object will be created.
+* @return {Phaser.Point} The new Point object.
+*/
+Phaser.Point.projectUnit = function (a, b, out) {
+
+    if (typeof out === "undefined") { out = new Phaser.Point(); }
+
+    var amt = a.dot(b);
+
+    if (amt != 0)
+    {
+        out.setTo(amt * b.x, amt * b.y);
+    }
+
+    return out;
+
+};
+
+/**
+* Right-hand normalize (make unit length) a Point.
+*
+* @method Phaser.Point.normalRightHand
+* @param {Phaser.Point} a - The Point object.
+* @param {Phaser.Point} [out] - Optional Point to store the value in, if not supplied a new Point object will be created.
+* @return {Phaser.Point} The new Point object.
+*/
+Phaser.Point.normalRightHand = function (a, out) {
+
+    if (typeof out === "undefined") { out = new Phaser.Point(); }
+
+    return out.setTo(a.y * -1, a.x);
+
+};
+
+/**
+* Normalize (make unit length) a Point.
+*
+* @method Phaser.Point.normalize
+* @param {Phaser.Point} a - The Point object.
+* @param {Phaser.Point} [out] - Optional Point to store the value in, if not supplied a new Point object will be created.
+* @return {Phaser.Point} The new Point object.
+*/
+Phaser.Point.normalize = function (a, out) {
+
+    if (typeof out === "undefined") { out = new Phaser.Point(); }
+
+    var m = a.getMagnitude();
+
+    if (m != 0)
+    {
+        out.setTo(a.x / m, a.y / m);
+    }
+
+    return out;
+
+};
+
+/**
 * Rotates a Point around the x/y coordinates given to the desired angle.
+*
 * @method Phaser.Point.rotate
 * @param {Phaser.Point} a - The Point object to rotate.
 * @param {number} x - The x coordinate of the anchor point
@@ -553,6 +800,7 @@ Phaser.Point.rotate = function (a, x, y, angle, asDegrees, distance) {
 
 /**
 * Calculates centroid (or midpoint) from an array of points. If only one point is provided, that point is returned.
+*
 * @method Phaser.Point.centroid
 * @param {Phaser.Point[]} points - The array of one or more points.
 * @param {Phaser.Point} [out] - Optional Point to store the value in, if not supplied a new Point object will be created.
