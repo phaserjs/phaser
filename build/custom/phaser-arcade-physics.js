@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.0.3 "Allorallen" - Built: Fri Apr 11 2014 13:08:30
+* v2.0.3 "Allorallen" - Built: Sun Apr 27 2014 08:45:19
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -9702,7 +9702,7 @@ PIXI.RenderTexture.tempMatrix = new PIXI.Matrix();
 *
 * Phaser - http://phaser.io
 *
-* v2.0.3 "Allorallen" - Built: Fri Apr 11 2014 13:08:30
+* v2.0.3 "Allorallen" - Built: Sun Apr 27 2014 08:45:19
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -12769,7 +12769,7 @@ Phaser.Polygon.prototype = {
 
             if (intersect)
             {
-                inside = true;
+                inside = !inside;
             }
         }
 
