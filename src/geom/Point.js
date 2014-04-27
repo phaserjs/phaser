@@ -624,6 +624,24 @@ Phaser.Point.multiplyAdd = function (a, b, s, out) {
 };
 
 /**
+* Interpolates the two given Points, based on the `f` value (between 0 and 1) and returns a new Point.
+* 
+* @method Phaser.Point.interpolate
+* @param {Phaser.Point} a - The first Point object.
+* @param {Phaser.Point} b - The second Point object.
+* @param {number} f - The level of interpolation between the two points. Indicates where the new point will be, along the line between pt1 and pt2. If f=1, pt1 is returned; if f=0, pt2 is returned.
+* @param {Phaser.Point} [out] - Optional Point to store the value in, if not supplied a new Point object will be created.
+* @return {Phaser.Point} The new Point object.
+*/
+Phaser.Point.interpolate = function (a, b, f, out) {
+
+    if (typeof out === "undefined") { out = new Phaser.Point(); }
+
+    return out.setTo(a.x + (b.x - a.x) * f, a.y + (b.y - a.y) * f);
+
+};
+
+/**
 * Return a perpendicular vector (90 degrees rotation)
 *
 * @method Phaser.Point.perp

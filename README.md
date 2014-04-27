@@ -112,6 +112,7 @@ Version 2.0.4 - "Mos Shirare" - in development
 * Point.projectUnit - Project two Points onto a Point of unit length.
 * Point.multiplyAdd - Adds two 2D Points together and multiplies the result by the given scalar.
 * Point.negative - Creates a negative Point.
+* Point.interpolate - Interpolates the two given Points, based on the `f` value (between 0 and 1) and returns a new Point.
 
 
 ### Bug Fixes
