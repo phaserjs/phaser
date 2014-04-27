@@ -712,7 +712,7 @@ Phaser.Point.project = function (a, b, out) {
 
     var amt = a.dot(b) / b.getMagnitudeSq();
 
-    if (amt != 0)
+    if (amt !== 0)
     {
         out.setTo(amt * b.x, amt * b.y);
     }
@@ -736,7 +736,7 @@ Phaser.Point.projectUnit = function (a, b, out) {
 
     var amt = a.dot(b);
 
-    if (amt != 0)
+    if (amt !== 0)
     {
         out.setTo(amt * b.x, amt * b.y);
     }
@@ -775,7 +775,7 @@ Phaser.Point.normalize = function (a, out) {
 
     var m = a.getMagnitude();
 
-    if (m != 0)
+    if (m !== 0)
     {
         out.setTo(a.x / m, a.y / m);
     }
