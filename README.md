@@ -113,6 +113,8 @@ Version 2.0.4 - "Mos Shirare" - in development
 * Point.multiplyAdd - Adds two 2D Points together and multiplies the result by the given scalar.
 * Point.negative - Creates a negative Point.
 * Point.interpolate - Interpolates the two given Points, based on the `f` value (between 0 and 1) and returns a new Point.
+* Your State can now have a pauseUpdate method, which is called constantly when the game is paused.
+* The Input system is now updated even while the game is paused.
 
 
 ### Bug Fixes

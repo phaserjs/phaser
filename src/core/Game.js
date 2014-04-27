@@ -619,7 +619,6 @@ Phaser.Game.prototype = {
             this.tweens.update();
             this.sound.update();
             this.input.update();
-            // this.state.update();
             this.physics.update();
             this.particles.update();
             this.plugins.update();
@@ -629,6 +628,8 @@ Phaser.Game.prototype = {
         }
         else
         {
+            this.state.pauseUpdate();
+            this.input.update();
             this.debug.preUpdate();
         }
 
