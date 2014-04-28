@@ -80,6 +80,7 @@ Version 2.0.4 - "Mos Shirare" - in development
 * Time has been updated so that physicsElapsed can never be zero (falls back to 1/60), also fixes p2 elapsed time bug (thanks @georgiee, fix #758)
 * Input and Pointer now use the new ArrayList instead of a LinkedList, which resolve list item removable during callback issues.
 * Input.reset no longer resets every interactive item it knows of, because they are removed during the destroy phase and can now persist between States if needed.
+* Blank Tilemaps no longer create `null` tiles, but instead create Tile objects with an index of -1 which can be replaced and updated like any other tile.
 
 
 ### New Features

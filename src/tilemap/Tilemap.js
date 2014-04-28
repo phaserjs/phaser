@@ -437,21 +437,6 @@ Phaser.Tilemap.prototype = {
             return;
         }
 
-        var row;
-        var output = [];
-
-        for (var y = 0; y < height; y++)
-        {
-            row = [];
-
-            for (var x = 0; x < width; x++)
-            {
-                row.push(null);
-            }
-
-            output.push(row);
-        }
-
         var layer = {
 
             name: name,
@@ -467,9 +452,27 @@ Phaser.Tilemap.prototype = {
             indexes: [],
             callbacks: [],
             bodies: [],
-            data: output
+            data: null
 
         };
+
+        var row;
+        var output = [];
+
+        for (var y = 0; y < height; y++)
+        {
+            row = [];
+
+            for (var x = 0; x < width; x++)
+            {
+                // row.push(null);
+                row.push(new Phaser.Tile(layer, -1, x, y, tileWidth, tileHeight));
+            }
+
+            output.push(row);
+        }
+
+        layer.data = output;
 
         this.layers.push(layer);
 
@@ -1519,10 +1522,7 @@ Phaser.Tilemap.prototype = {
 
         for (var i = 1; i < this._results.length; i++)
         {
-            if (this._results[i] !== null)
-            {
-                this._results[i].index = index;
-            }
+            this._results[i].index = index;
         }
 
         this.paste(x, y, this._results, layer);

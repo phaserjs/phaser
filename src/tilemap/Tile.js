@@ -25,7 +25,7 @@ Phaser.Tile = function (layer, index, x, y, width, height) {
     this.layer = layer;
 
     /**
-    * @property {number} index - The index of this tile within the map data corresponding to the tileset.
+    * @property {number} index - The index of this tile within the map data corresponding to the tileset, or -1 if this represents a blank/null tile.
     */
     this.index = index;
 
