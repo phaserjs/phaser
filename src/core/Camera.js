@@ -168,6 +168,17 @@ Phaser.Camera.prototype = {
     },
 
     /**
+    * Sets the Camera follow target to null, stopping it from following an object if it's doing so.
+    *
+    * @method Phaser.Camera#unfollow
+    */
+    unfollow: function () {
+
+        this.target = null;
+
+    },
+
+    /**
     * Move the camera focus on a display object instantly.
     * @method Phaser.Camera#focusOn
     * @param {any} displayObject - The display object to focus the camera on. Must have visible x/y properties.
