@@ -3477,7 +3477,6 @@ declare module Phaser {
         clampX(min: number, max: number): Phaser.Point;
         clampY(min: number, max: number): Phaser.Point;
         clone(output?: Phaser.Point): Phaser.Point;
-        clone(output: Phaser.Point): Phaser.Point;
         copyFrom(source: any): Phaser.Point;
         copyTo(dest: any): Object;
         distance(dest: Object, round?: boolean): number;
