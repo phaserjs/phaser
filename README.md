@@ -136,6 +136,8 @@ Version 2.0.4 - "Mos Shirare" - in development
 * Masks now work when used in RenderTextures / CacheAsBitmap and Filters (pixi.js update)
 * Fixed bug where stroked text sometimes got clipped (pixi.js update)
 * Fixed Polygon.contains for coordinates to the left of the polygon (thanks @vilcans, fix #766)
+* Fixed issue where game pause/resume could incorrectly increment paused Timers (thanks @georgiee, fix #759)
+* Fixed issue where Animations resuming from a pause would skip frames (thanks @merixstudio, fix #730)
 
 
 ### ToDo

@@ -500,7 +500,7 @@ Phaser.Timer.prototype = {
         }
 
         this._pauseTotal += this.game.time.pauseDuration;
-        this._now = this.game.time.time;
+        this._now = this.game.time.now;
 
         for (var i = 0; i < this.events.length; i++)
         {
