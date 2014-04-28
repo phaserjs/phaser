@@ -253,7 +253,7 @@ Phaser.SoundManager.prototype = {
     *
     * @method Phaser.SoundManager#pauseAll
     */
-    pauseAll: function (fromGame) {
+    pauseAll: function () {
 
         for (var i = 0; i < this._sounds.length; i++)
         {
