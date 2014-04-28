@@ -106,7 +106,7 @@ Phaser.Timer = function (game, autoDestroy) {
     * @property {number} _now - The current start-time adjusted time.
     * @private
     */
-    this._now = 0;
+    this._now = Date.now();
 
     /**
     * @property {number} _len - Temp. array length variable.
