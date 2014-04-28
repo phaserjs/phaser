@@ -155,6 +155,7 @@ Version 2.0.4 - "Mos Shirare" - in development
 * Fixed issue where game pause/resume could incorrectly increment paused Timers (thanks @georgiee, fix #759)
 * Fixed issue where Animations resuming from a pause would skip frames (thanks @merixstudio, fix #730)
 * Tilemap.fill would throw an error if called on a blank tilemap full of null values (thanks @DrHackenstein, fix #761)
+* LoaderParser.bitmapFont updated so xml parsing works properly on IE9 (thanks @georgiee)
 
 
 ### ToDo
