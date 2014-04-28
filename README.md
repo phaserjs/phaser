@@ -83,6 +83,7 @@ Version 2.0.4 - "Mos Shirare" - in development
 * Blank Tilemaps no longer create `null` tiles, but instead create Tile objects with an index of -1 which can be replaced and updated like any other tile.
 * Tilemap.addTilesetImage will now raise a console.warn if you specify an invalid tileset key and not create the tileset rather than pick the default set.
 * Math.smoothstep and Math.smootherstep have been updated to work regardless if a is > or < b (thanks @gre, fix #772)
+* Text.updateText now sets the lineCap to `round` to avoid occassional font glitching issues in Chrome.
 
 
 ### New Features

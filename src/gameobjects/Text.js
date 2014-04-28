@@ -380,6 +380,7 @@ Phaser.Text.prototype.updateText = function () {
     this.context.shadowBlur = this.style.shadowBlur;
 
     this.context.textBaseline = 'top';
+    this.context.lineCap = 'round';
     this.context.lineJoin = 'round';
 
     //draw lines line by line
