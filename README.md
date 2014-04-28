@@ -82,6 +82,7 @@ Version 2.0.4 - "Mos Shirare" - in development
 * Input.reset no longer resets every interactive item it knows of, because they are removed during the destroy phase and can now persist between States if needed.
 * Blank Tilemaps no longer create `null` tiles, but instead create Tile objects with an index of -1 which can be replaced and updated like any other tile.
 * Tilemap.addTilesetImage will now raise a console.warn if you specify an invalid tileset key and not create the tileset rather than pick the default set.
+* Math.smoothstep and Math.smootherstep have been updated to work regardless if a is > or < b (thanks @gre, fix #772)
 
 
 ### New Features
@@ -131,7 +132,7 @@ Version 2.0.4 - "Mos Shirare" - in development
 * Color.RGBtoString converts an rgba color into a # or 0x color string.
 * Color.HSVColorWheel will return an array with 360 color objects for each segment of an HSV color wheel, you can optionally set the saturation and value amounts.
 * Color.HSLColorWheel will return an array with 360 color objects for each segment of an HSL color wheel, you can optionally set the saturation and lightness amounts.
-* Timer.timeCap is a new setting allowing your Timers to protect against unexpectedly large delta timers.
+* Timer.timeCap is a new setting allowing your Timers to protect against unexpectedly large delta timers (such as raf de-vis or CPU grind).
 
 
 ### Bug Fixes

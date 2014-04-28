@@ -228,12 +228,12 @@ Phaser.Time.prototype = {
         this.elapsed = this.now - this.time;
 
         //  spike-dislike
-        if (this.game.stage.disableVisibilityChange && this.elapsed > this.timeCap)
+        if (this.elapsed > this.timeCap)
         {
             //  For some reason the time between now and the last time the game was updated was larger than our timeCap
             //  This can happen if the Stage.disableVisibilityChange is true and you swap tabs, which makes the raf pause.
             //  In this case we'll drop to some default values to stop the game timers going nuts.
-            this.elapsed = 1 / 30;
+            this.elapsed = 1 / 60;
         }
 
         //  Calculate physics elapsed, ensure it's > 0, use 1/60 as a fallback

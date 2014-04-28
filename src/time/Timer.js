@@ -398,9 +398,9 @@ Phaser.Timer.prototype = {
         this._now = time;
 
         //  spike-dislike
-        if (this.game.stage.disableVisibilityChange && this.elapsed > this.timeCap)
+        if (this.elapsed > this.timeCap)
         {
-            //  For some reason the time between now and the last time the game was updated was larger than our timeCap
+            //  For some reason the time between now and the last time the game was updated was larger than our timeCap.
             //  This can happen if the Stage.disableVisibilityChange is true and you swap tabs, which makes the raf pause.
             //  In this case we need to adjust the TimerEvents and nextTick.
             this.adjustEvents(time - this.elapsed);
