@@ -328,12 +328,12 @@ Phaser.Time.prototype = {
 
         this.events.resume();
 
-        // var i = this._timers.length;
+        var i = this._timers.length;
 
-        // while (i--)
-        // {
+        while (i--)
+        {
             // this._timers[i]._resume();
-        // }
+        }
 
 
     },

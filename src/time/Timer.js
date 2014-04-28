@@ -501,6 +501,7 @@ Phaser.Timer.prototype = {
 
     /**
     * Resumes the Timer and updates all pending events.
+    *
     * @method Phaser.Timer#resume
     */
     resume: function () {
@@ -513,9 +514,9 @@ Phaser.Timer.prototype = {
             return;
         }
 
-        var durationBeforePause = this.duration;
+        // var durationBeforePause = this.duration;
 
-        console.log('old duration', durationBeforePause);
+        // console.log('old duration', durationBeforePause);
 
         this._pauseTotal += this.game.time.pauseDuration;
         this._now = this.game.time.time;
@@ -526,27 +527,36 @@ Phaser.Timer.prototype = {
         {
             if (!this.events[i].pendingDelete)
             {
-                var t = 0;
-                var d = 0;
+                //  Work out how long there would have been from when the game paused until the events next tick
+                var t = this.events[i].tick - this._pauseStarted;
 
-                if (this.events[i].tick > this._now)
+                if (t < 0)
                 {
-                    //  event was going to tick in the future
-                    d = this.events[i].tick - this._now;
-                    t = d;
-                }
-                else
-                {
-                    //  event tick time has elapsed due to pause
-                    d = this._now - this.events[i].tick;
-                    t = this.game.time.pauseDuration - d;
+                    t = 0;
                 }
 
+                //  Add the difference on to the time now
                 this.events[i].tick = this._now + t;
+
+                console.log('event increased by', t);
             }
         }
 
-        this.nextTick = this._now + durationBeforePause;
+        // this.nextTick = this._now + durationBeforePause;
+
+        var d = this.nextTick - this._pauseStarted;
+
+        if (d < 0)
+        {
+            this.nextTick = this._now;
+        }
+        else
+        {
+            this.nextTick = this._now + d;
+        }
+
+        console.log('nextTick +', d);
+
 
         // if (this.nextTick > this._now)
         // {
