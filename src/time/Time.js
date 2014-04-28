@@ -218,25 +218,12 @@ Phaser.Time.prototype = {
 
         this.now = time;
 
-        if (this._justResumed)
-        {
-            this.time = this.now;
-            this._justResumed = false;
-
-            this.events.resume();
-
-            for (var i = 0; i < this._timers.length; i++)
-            {
-                this._timers[i]._resume();
-            }
-        }
-
         this.timeToCall = this.game.math.max(0, 16 - (time - this.lastTime));
 
         this.elapsed = this.now - this.time;
 
-        //calculate physics elapsed, ensure it's > 0, use 1/60 as a fallback
-        this.physicsElapsed = this.elapsed / 1000 || 1/60;
+        //  Calculate physics elapsed, ensure it's > 0, use 1/60 as a fallback
+        this.physicsElapsed = this.elapsed / 1000 || 1 / 60;
 
         if (this.deltaCap > 0 && this.physicsElapsed > this.deltaCap)
         {
@@ -324,17 +311,14 @@ Phaser.Time.prototype = {
 
         this.pauseDuration = this.time - this._pauseStarted;
 
-        this._justResumed = true;
-
         this.events.resume();
 
         var i = this._timers.length;
 
         while (i--)
         {
-            // this._timers[i]._resume();
+            this._timers[i]._resume();
         }
-
 
     },
 

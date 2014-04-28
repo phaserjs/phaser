@@ -382,10 +382,6 @@ Phaser.Timer.prototype = {
             return true;
         }
 
-        if (time < this._now)
-        {
-            console.log('time travel?', time, this._now = time);
-        }
         this._now = time;
         this._marked = 0;
 
@@ -461,17 +457,12 @@ Phaser.Timer.prototype = {
     */
     pause: function () {
 
-        console.log('Timer.pause called');
-
         if (this.paused)
         {
-            console.log('Already paused, aborting');
             return;
         }
 
         this._pauseStarted = this.game.time.now;
-
-        console.log('paused duration', this.duration);
 
         this.paused = true;
         this._codePaused = true;
@@ -485,11 +476,8 @@ Phaser.Timer.prototype = {
     */
     _pause: function () {
 
-        console.log('Timer._pause called');
-
         if (this.paused)
         {
-            console.log('Already paused, aborting');
             return;
         }
 
@@ -506,22 +494,13 @@ Phaser.Timer.prototype = {
     */
     resume: function () {
 
-        console.log('Timer.resume called');
-
         if (!this.paused)
         {
-            console.log('No longer paused, aborting');
             return;
         }
 
-        // var durationBeforePause = this.duration;
-
-        // console.log('old duration', durationBeforePause);
-
         this._pauseTotal += this.game.time.pauseDuration;
         this._now = this.game.time.time;
-
-        console.log('paused for', this.game.time.pauseDuration);
 
         for (var i = 0; i < this.events.length; i++)
         {
@@ -537,12 +516,8 @@ Phaser.Timer.prototype = {
 
                 //  Add the difference on to the time now
                 this.events[i].tick = this._now + t;
-
-                console.log('event increased by', t);
             }
         }
-
-        // this.nextTick = this._now + durationBeforePause;
 
         var d = this.nextTick - this._pauseStarted;
 
@@ -555,29 +530,6 @@ Phaser.Timer.prototype = {
             this.nextTick = this._now + d;
         }
 
-        console.log('nextTick +', d);
-
-
-        // if (this.nextTick > this._now)
-        // {
-        //     //  event was going to tick in the future, but we need to add the time it was paused to it
-        //     d = this.nextTick - this._now;
-        //     t = this.game.time.pauseDuration;
-        //     this.nextTick += t;
-        //     console.log('next tick was going to tick in the future', t);
-        // }
-        // else
-        // {
-        //     //  event tick time has elapsed due to pause
-        //     d = this._now - this.nextTick; //
-        //     // t = this.game.time.pauseDuration - d;
-        //     t = this.game.time.pauseDuration;
-        //     this.nextTick += t;
-        //     console.log('next tick has elapsed behind game time by', t);
-        // }
-
-        console.log('new duration', this.duration);
-        
         this.paused = false;
         this._codePaused = false;
 
@@ -590,16 +542,12 @@ Phaser.Timer.prototype = {
     */
     _resume: function () {
 
-        console.log('Timer._resume called');
-
         if (this._codePaused)
         {
-            console.log('code paused');
             return;
         }
         else
         {
-            console.log('normal resume');
             this.resume();
         }
 
