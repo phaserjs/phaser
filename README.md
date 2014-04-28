@@ -93,10 +93,11 @@ Version 2.0.4 - "Mos Shirare" - in development
 * InputManager.resetLocked - If the Input Manager has been reset locked then all calls made to InputManager.reset, such as from a State change, are ignored.
 * Group.resetCursor will reset the Group cursor back to the start of the group, or to the given index value.
 * World.wrap will take a game object and if its x/y coordinates fall outside of the world bounds it will be repositioned on the opposite side, for a wrap-around effect.
-* Group.classType allows you to change the type of object that Group.create or createMultiple makes to your own custom class.
+* Group.classType allows you to change the type of object that Group.create or createMultiple makes from Phaser.Sprite to your own custom class.
 * Game.scratch is a single handy BitmapData instance that can be used as a visual scratch-pad, for off-screen bitmap manipulation (and is used as such by BitmapData itself).
 * Device.support32bit is a new boolean that sets if the context supports 32bit pixel manipulation using array buffer views or not.
 * BitmapData.processPixelRGB lets you perform a custom callback on every pixel in the BitmapData.
+
 * P2.World now has its own pause and resume methods, so you can pause the physics simulation independent of your game (thanks @georgiee)
 * Phaser.ArrayList is a new iterative object, similar in principal to a linked list but operating on a single array without modifying the object structure.
 * Add scaleMode params to FilterTexture and RenderTexture (pixi.js update by @giraluna)
@@ -116,6 +117,17 @@ Version 2.0.4 - "Mos Shirare" - in development
 * Point.interpolate - Interpolates the two given Points, based on the `f` value (between 0 and 1) and returns a new Point.
 * Your State can now have a pauseUpdate method, which is called constantly when the game is paused.
 * The Input system is now updated even while the game is paused.
+* Color.packPixel packs an rgb component into a single integer.
+* Color.unpackPixel unpacks an integer into a color object.
+* Color.fromRGBA converts an integer in 0xRRGGBBAA format to a color object.
+* Color.toRGBA converts rgba components into a 32-bit integer.
+* Color.RGBtoHSL converts an rgb color into hsl (hue, saturation, lightness)
+* Color.HSLtoRGB converts hsl values into an rgb color object.
+* Color.RGBtoHSV converts an rgb color into hsv (hue, saturation, value)
+* Color.HSVtoRGB converts an hsv value into an rgb color object.
+* Color.createColor - creates the new light-weight color object used by most Color conversion methods.
+* Color.RGBtoString converts an rgba color into a # or 0x color string.
+* Color.HSVColorWheel will return an array with 360 color objects for each segment of an HSV color wheel.
 
 
 ### Bug Fixes

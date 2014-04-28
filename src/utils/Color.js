@@ -575,7 +575,28 @@ Phaser.Color = {
     },
 
     /**
+    * Get HSV color wheel values in an array which will be 360 elements in size.
+    *
+    * @method Phaser.Color.HSVColorWheel
+    * @static
+    * @return {array} An array containing 360 elements corresponding to the HSV color wheel.
+    */
+    HSVColorWheel: function () {
+
+        var colors = [];
+
+        for (var c = 0; c <= 359; c++)
+        {
+            colors[c] = Phaser.Color.HSVtoRGB(c, 1.0, 1.0);
+        }
+
+        return colors;
+
+    },
+
+    /**
     * Interpolates the two given colours based on the supplied step and currentStep properties.
+    *
     * @method Phaser.Color.interpolateColor
     * @static
     * @param {number} color1 - The first color value.
