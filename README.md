@@ -154,14 +154,14 @@ Version 2.0.4 - "Mos Shirare" - in development
 * P2.Body.loadPolygon has been updated to correct center of mass issues (thanks @georgiee, fix #749)
 * Game checks if window.console exists before using it (should fix IE9 issues when dev tools are closed), however it is still used deeper in Pixi.
 * Masks now work when used in RenderTextures / CacheAsBitmap and Filters (pixi.js update)
-* Fixed bug where stroked text sometimes got clipped (pixi.js update)
-* Fixed Polygon.contains for coordinates to the left of the polygon (thanks @vilcans, fix #766)
-* Fixed issue where game pause/resume could incorrectly increment paused Timers (thanks @georgiee, fix #759)
-* Fixed issue where Animations resuming from a pause would skip frames (thanks @merixstudio, fix #730)
+* Stroked text sometimes got clipped (pixi.js update)
+* Polygon.contains now works for coordinates to the left of the polygon (thanks @vilcans, fix #766)
+* Game pause/resume could incorrectly increment paused Timers (thanks @georgiee, fix #759)
+* Animations resuming from a pause no longer skip frames (thanks @merixstudio, fix #730)
 * Tilemap.fill would throw an error if called on a blank tilemap full of null values (thanks @DrHackenstein, fix #761)
 * LoaderParser.bitmapFont updated so xml parsing works properly on IE9 (thanks @georgiee)
-* Fixed an issue where Sounds that had been paused via game code would un-mute if the game paused and resumed.
-* Fixed Timer issue where pausing then restarting could add to the duration of running manual timers (fix #759)
+* Sounds that had been paused via game code would un-mute if the game paused and resumed.
+* CSV Tilemap tiles would incorrectly set the Tile layer reference, causing collision to fail (thanks @Chapelin, fix #692)
 
 
 ### ToDo

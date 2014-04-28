@@ -89,7 +89,7 @@ Phaser.TilemapParser = {
 
             for (var x = 0; x < column.length; x++)
             {
-                output[y][x] = new Phaser.Tile(0, parseInt(column[x], 10), x, y, tileWidth, tileHeight);
+                output[y][x] = new Phaser.Tile(map.layers[0], parseInt(column[x], 10), x, y, tileWidth, tileHeight);
             }
 
             if (width === 0)
@@ -98,6 +98,7 @@ Phaser.TilemapParser = {
             }
         }
 
+        map.format = Phaser.Tilemap.CSV;
         map.name = key;
         map.width = width;
         map.height = height;
@@ -118,6 +119,7 @@ Phaser.TilemapParser = {
 
     /**
     * Returns an empty map data object.
+    *
     * @method Phaser.TilemapParser.getEmptyData
     * @return {object} Generated map data.
     */
@@ -198,6 +200,7 @@ Phaser.TilemapParser = {
         map.tileWidth = json.tilewidth;
         map.tileHeight = json.tileheight;
         map.orientation = json.orientation;
+        map.format = Phaser.Tilemap.TILED_JSON;
         map.version = json.version;
         map.properties = json.properties;
         map.widthInPixels = map.width * map.tileWidth;
@@ -242,7 +245,7 @@ Phaser.TilemapParser = {
 
             //  Loop through the data field in the JSON.
 
-            //  This is an array containing the tile indexes, one after the other. null = no tile, everything else = the tile index (starting at 1 for Tiled, 0 for CSV)
+            //  This is an array containing the tile indexes, one after the other. -1 = no tile, everything else = the tile index (starting at 1 for Tiled, 0 for CSV)
             //  If the map contains multiple tilesets then the indexes are relative to that which the set starts from.
             //  Need to set which tileset in the cache = which tileset in the JSON, if you do this manually it means you can use the same map data but a new tileset.
 
@@ -255,7 +258,7 @@ Phaser.TilemapParser = {
                 }
                 else
                 {
-                    row.push(null);
+                    row.push(new Phaser.Tile(layer, -1, x, output.length, json.tilewidth, json.tileheight));
                 }
 
                 x++;

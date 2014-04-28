@@ -67,6 +67,11 @@ Phaser.Tilemap = function (game, key, tileWidth, tileHeight, width, height) {
     this.orientation = data.orientation;
 
     /**
+    * @property {number} format - The format of the map data, either Phaser.Tilemap.CSV or Phaser.Tilemap.TILED_JSON.
+    */
+    this.format = data.format;
+
+    /**
     * @property {number} version - The version of the map data (as specified in Tiled, usually 1).
     */
     this.version = data.version;
@@ -263,7 +268,7 @@ Phaser.Tilemap.prototype = {
         {
             tileset = this.getTilesetIndex(tileset);
 
-            if (tileset === null)
+            if (tileset === null && this.format === Phaser.Tilemap.TILED_JSON)
             {
                 console.warn('Phaser.Tilemap.addTilesetImage: No data found in the JSON matching the tileset name: "' + key + '"');
                 return null;
