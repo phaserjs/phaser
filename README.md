@@ -161,6 +161,7 @@ Version 2.0.4 - "Mos Shirare" - in development
 * Tilemap.fill would throw an error if called on a blank tilemap full of null values (thanks @DrHackenstein, fix #761)
 * LoaderParser.bitmapFont updated so xml parsing works properly on IE9 (thanks @georgiee)
 * Fixed an issue where Sounds that had been paused via game code would un-mute if the game paused and resumed.
+* Fixed Timer issue where pausing then restarting could add to the duration of running manual timers (fix #759)
 
 
 ### ToDo
