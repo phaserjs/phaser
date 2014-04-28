@@ -126,8 +126,10 @@ Version 2.0.4 - "Mos Shirare" - in development
 * Color.RGBtoHSV converts an rgb color into hsv (hue, saturation, value)
 * Color.HSVtoRGB converts an hsv value into an rgb color object.
 * Color.createColor - creates the new light-weight color object used by most Color conversion methods.
+* Color.updateColor - updates an existing color object to update the rgba property.
 * Color.RGBtoString converts an rgba color into a # or 0x color string.
-* Color.HSVColorWheel will return an array with 360 color objects for each segment of an HSV color wheel.
+* Color.HSVColorWheel will return an array with 360 color objects for each segment of an HSV color wheel, you can optionally set the saturation and value amounts.
+* Color.HSLColorWheel will return an array with 360 color objects for each segment of an HSL color wheel, you can optionally set the saturation and lightness amounts.
 
 
 ### Bug Fixes

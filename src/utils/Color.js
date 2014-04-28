@@ -237,9 +237,15 @@ Phaser.Color = {
             out.b = Phaser.Color.hueToColor(p, q, h - 1 / 3);
         }
 
-        out.r = (out.r * 255 | 0);
-        out.g = (out.g * 255 | 0);
-        out.b = (out.b * 255 | 0);
+        // out.r = (out.r * 255 | 0);
+        // out.g = (out.g * 255 | 0);
+        // out.b = (out.b * 255 | 0);
+
+        out.r = Math.floor((out.r * 255 | 0));
+        out.g = Math.floor((out.g * 255 | 0));
+        out.b = Math.floor((out.b * 255 | 0));
+
+        Phaser.Color.updateColor(out);
 
         return out;
 
@@ -317,10 +323,7 @@ Phaser.Color = {
     */
     HSVtoRGB: function (h, s, v, out) {
 
-        if (!out)
-        {
-            out = Phaser.Color.createColor(0, 0, 0, 0, h, s, 0, v);
-        }
+        if (typeof out === 'undefined') { out = Phaser.Color.createColor(0, 0, 0, 1, h, s, 0, v); }
 
         var r, g, b;
         var i = Math.floor(h * 6);
@@ -363,9 +366,11 @@ Phaser.Color = {
                 break;
         }
 
-        out.r = r * 255;
-        out.g = g * 255;
-        out.b = b * 255;
+        out.r = Math.floor(r * 255);
+        out.g = Math.floor(g * 255);
+        out.b = Math.floor(b * 255);
+
+        Phaser.Color.updateColor(out);
 
         return out;
 
@@ -425,7 +430,7 @@ Phaser.Color = {
     * @param {number} [r=0] - The red color component, in the range 0 - 255.
     * @param {number} [g=0] - The green color component, in the range 0 - 255.
     * @param {number} [b=0] - The blue color component, in the range 0 - 255.
-    * @param {number} [a=0] - The alpha color component, in the range 0 - 1.
+    * @param {number} [a=1] - The alpha color component, in the range 0 - 1.
     * @param {number} [h=0] - The hue, in the range 0 - 1.
     * @param {number} [s=0] - The saturation, in the range 0 - 1.
     * @param {number} [l=0] - The lightness, in the range 0 - 1.
@@ -434,7 +439,23 @@ Phaser.Color = {
     */
     createColor: function (r, g, b, a, h, s, l, v) {
 
-        var out = { r: r || 0, g: g || 0, b: b || 0, a: a || 0, h: h || 0, s: s || 0, l: l || 0, v: v || 0, color: 0 };
+        var out = { r: r || 0, g: g || 0, b: b || 0, a: a || 1, h: h || 0, s: s || 0, l: l || 0, v: v || 0, color: 0 };
+
+        out.rgba = 'rgba(' + out.r + ',' + out.g + ',' + out.b + ',' + out.a + ')';
+
+        return out;
+
+    },
+
+    /**
+    * Takes a color object and updates the rgba property.
+    *
+    * @method Phaser.Color.updateColor
+    * @static
+    * @param {object} out - The color object to update.
+    * @returns {number} A native color value integer (format: 0xAARRGGBB).
+    */
+    updateColor: function (out) {
 
         out.rgba = 'rgba(' + out.r + ',' + out.g + ',' + out.b + ',' + out.a + ')';
 
@@ -579,15 +600,45 @@ Phaser.Color = {
     *
     * @method Phaser.Color.HSVColorWheel
     * @static
+    * @param {number} [s=1] - The saturation, in the range 0 - 1.
+    * @param {number} [v=1] - The value, in the range 0 - 1.
     * @return {array} An array containing 360 elements corresponding to the HSV color wheel.
     */
-    HSVColorWheel: function () {
+    HSVColorWheel: function (s, v) {
+
+        if (typeof s === 'undefined') { s = 1.0; }
+        if (typeof v === 'undefined') { v = 1.0; }
 
         var colors = [];
 
         for (var c = 0; c <= 359; c++)
         {
-            colors[c] = Phaser.Color.HSVtoRGB(c, 1.0, 1.0);
+            colors.push(Phaser.Color.HSVtoRGB(c / 359, s, v));
+        }
+
+        return colors;
+
+    },
+
+    /**
+    * Get HSL color wheel values in an array which will be 360 elements in size.
+    *
+    * @method Phaser.Color.HSLColorWheel
+    * @static
+    * @param {number} [s=0.5] - The saturation, in the range 0 - 1.
+    * @param {number} [l=0.5] - The lightness, in the range 0 - 1.
+    * @return {array} An array containing 360 elements corresponding to the HSL color wheel.
+    */
+    HSLColorWheel: function (s, l) {
+
+        if (typeof s === 'undefined') { s = 0.5; }
+        if (typeof l === 'undefined') { l = 0.5; }
+
+        var colors = [];
+
+        for (var c = 0; c <= 359; c++)
+        {
+            colors.push(Phaser.Color.HSLtoRGB(c / 359, s, l));
         }
 
         return colors;

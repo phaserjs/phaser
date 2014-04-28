@@ -812,6 +812,30 @@ Phaser.BitmapData.prototype = {
     },
 
     /**
+    * Draws a filled Circle to the BitmapData at the given x, y coordinates and radius in size.
+    *
+    * @method Phaser.BitmapData#circle
+    * @param {number} x - The x coordinate to draw the Circle at.
+    * @param {number} y - The y coordinate to draw the Circle at.
+    * @param {number} radius - The radius of the Circle.
+    * @param {string} [fillStyle] - If set the context fillStyle will be set to this value before the circle is drawn.
+    */
+    circle: function (x, y, radius, fillStyle) {
+
+        if (typeof fillStyle !== 'undefined')
+        {
+            this.context.fillStyle = fillStyle;
+        }
+
+        this.context.beginPath();
+        this.context.arc(x, y, radius, 0, Math.PI * 2, false);
+        this.context.closePath();
+
+        this.context.fill();
+
+    },
+
+    /**
     * If the game is running in WebGL this will push the texture up to the GPU if it's dirty.
     * This is called automatically if the BitmapData is being used by a Sprite, otherwise you need to remember to call it in your render function.
     * If you wish to suppress this functionality set BitmapData.disableTextureUpload to `true`.
