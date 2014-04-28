@@ -822,8 +822,8 @@ Phaser.BitmapData.prototype = {
                     destination.setPixel32(x, y, r, g, b, a, false);
                 }
                 return false;
-            }
-            , this);
+            },
+            this);
 
         destination.context.putImageData(destination.imageData, 0, 0);
         destination.dirty = true;
