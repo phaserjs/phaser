@@ -1519,7 +1519,10 @@ Phaser.Tilemap.prototype = {
 
         for (var i = 1; i < this._results.length; i++)
         {
-            this._results[i].index = index;
+            if (this._results[i] !== null)
+            {
+                this._results[i].index = index;
+            }
         }
 
         this.paste(x, y, this._results, layer);
