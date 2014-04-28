@@ -1580,7 +1580,8 @@ Phaser.Tilemap.prototype = {
     },
 
     /**
-    * Removes all layers from this tile map and nulls the game reference.
+    * Removes all layer data from this tile map and nulls the game reference.
+    * Note: You are responsible for destroying any TilemapLayer objects you generated yourself, as Tilemap doesn't keep a reference to them.
     *
     * @method Phaser.Tilemap#destroy
     */
