@@ -43,6 +43,12 @@ Phaser.Timer = function (game, autoDestroy) {
     this.expired = false;
 
     /**
+    * @property {number} elapsed - Elapsed time since the last frame (in ms).
+    * @protected
+    */
+    this.elapsed = 0;
+
+    /**
     * @property {array<Phaser.TimerEvent>} events - An array holding all of this timers Phaser.TimerEvent objects. Use the methods add, repeat and loop to populate it.
     */
     this.events = [];
@@ -58,6 +64,11 @@ Phaser.Timer = function (game, autoDestroy) {
     * @protected
     */
     this.nextTick = 0;
+
+    /**
+    * @property {number} timeCap - If the difference in time between two frame updates exceeds this value, the event times are reset to avoid catch-up situations.
+    */
+    this.timeCap = 1000;
 
     /**
     * @property {boolean} paused - The paused state of the Timer. You can pause the timer by calling Timer.pause() and Timer.resume() or by the game pausing.
@@ -369,7 +380,8 @@ Phaser.Timer.prototype = {
     },
 
     /**
-    * The main Timer update event, called automatically by the Game clock.
+    * The main Timer update event, called automatically by Phaser.Time.update.
+    *
     * @method Phaser.Timer#update
     * @protected
     * @param {number} time - The time from the core game clock.
@@ -382,7 +394,18 @@ Phaser.Timer.prototype = {
             return true;
         }
 
+        this.elapsed = time - this._now;
         this._now = time;
+
+        //  spike-dislike
+        if (this.game.stage.disableVisibilityChange && this.elapsed > this.timeCap)
+        {
+            //  For some reason the time between now and the last time the game was updated was larger than our timeCap
+            //  This can happen if the Stage.disableVisibilityChange is true and you swap tabs, which makes the raf pause.
+            //  In this case we need to adjust the TimerEvents and nextTick.
+            this.adjustEvents(time - this.elapsed);
+        }
+
         this._marked = 0;
 
         //  Clears events marked for deletion and resets _len and _i to 0.
@@ -488,6 +511,43 @@ Phaser.Timer.prototype = {
     },
 
     /**
+    * Adjusts the time of all pending events and the nextTick by the given baseTime.
+    *
+    * @method Phaser.Timer#adjustEvents
+    */
+    adjustEvents: function (baseTime) {
+
+        for (var i = 0; i < this.events.length; i++)
+        {
+            if (!this.events[i].pendingDelete)
+            {
+                //  Work out how long there would have been from when the game paused until the events next tick
+                var t = this.events[i].tick - baseTime;
+
+                if (t < 0)
+                {
+                    t = 0;
+                }
+
+                //  Add the difference on to the time now
+                this.events[i].tick = this._now + t;
+            }
+        }
+
+        var d = this.nextTick - baseTime;
+
+        if (d < 0)
+        {
+            this.nextTick = this._now;
+        }
+        else
+        {
+            this.nextTick = this._now + d;
+        }
+
+    },
+
+    /**
     * Resumes the Timer and updates all pending events.
     *
     * @method Phaser.Timer#resume
@@ -502,33 +562,7 @@ Phaser.Timer.prototype = {
         this._pauseTotal += this.game.time.pauseDuration;
         this._now = this.game.time.now;
 
-        for (var i = 0; i < this.events.length; i++)
-        {
-            if (!this.events[i].pendingDelete)
-            {
-                //  Work out how long there would have been from when the game paused until the events next tick
-                var t = this.events[i].tick - this._pauseStarted;
-
-                if (t < 0)
-                {
-                    t = 0;
-                }
-
-                //  Add the difference on to the time now
-                this.events[i].tick = this._now + t;
-            }
-        }
-
-        var d = this.nextTick - this._pauseStarted;
-
-        if (d < 0)
-        {
-            this.nextTick = this._now;
-        }
-        else
-        {
-            this.nextTick = this._now + d;
-        }
+        this.adjustEvents(this._pauseStarted);
 
         this.paused = false;
         this._codePaused = false;

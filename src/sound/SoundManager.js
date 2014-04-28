@@ -233,6 +233,7 @@ Phaser.SoundManager.prototype = {
 
     /**
     * Stops all the sounds in the game.
+    *
     * @method Phaser.SoundManager#stopAll
     */
     stopAll: function () {
@@ -249,6 +250,7 @@ Phaser.SoundManager.prototype = {
 
     /**
     * Pauses all the sounds in the game.
+    *
     * @method Phaser.SoundManager#pauseAll
     */
     pauseAll: function () {
@@ -264,7 +266,8 @@ Phaser.SoundManager.prototype = {
     },
 
     /**
-    * resumes every sound in the game.
+    * Resumes every sound in the game.
+    *
     * @method Phaser.SoundManager#resumeAll
     */
     resumeAll: function () {
@@ -281,6 +284,7 @@ Phaser.SoundManager.prototype = {
 
     /**
     * Decode a sound by its assets key.
+    *
     * @method Phaser.SoundManager#decode
     * @param {string} key - Assets key of the sound to be decoded.
     * @param {Phaser.Sound} [sound] - Its buffer will be set to decoded data.
@@ -313,6 +317,7 @@ Phaser.SoundManager.prototype = {
 
     /**
     * Updates every sound in the game.
+    *
     * @method Phaser.SoundManager#update
     */
     update: function () {
@@ -340,6 +345,7 @@ Phaser.SoundManager.prototype = {
 
     /**
     * Adds a new Sound into the SoundManager.
+    *
     * @method Phaser.SoundManager#add
     * @param {string} key - Asset key for the sound.
     * @param {number} [volume=1] - Default value for the volume.

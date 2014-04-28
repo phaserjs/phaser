@@ -130,6 +130,7 @@ Version 2.0.4 - "Mos Shirare" - in development
 * Color.RGBtoString converts an rgba color into a # or 0x color string.
 * Color.HSVColorWheel will return an array with 360 color objects for each segment of an HSV color wheel, you can optionally set the saturation and value amounts.
 * Color.HSLColorWheel will return an array with 360 color objects for each segment of an HSL color wheel, you can optionally set the saturation and lightness amounts.
+* Timer.timeCap is a new setting allowing your Timers to protect against unexpectedly large delta timers.
 
 
 ### Bug Fixes
