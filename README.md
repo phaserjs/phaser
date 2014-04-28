@@ -61,7 +61,7 @@ Version 2.0.4 - "Mos Shirare" - in development
 ### Updates
 
 * Updated to [Pixi.js 1.5.3](https://github.com/GoodBoyDigital/pixi.js/releases/tag/v1.5.3)
-* TypeScript definitions fixes and updates (thanks @clark-stevenson @metrofun)
+* TypeScript definitions fixes and updates (thanks @clark-stevenson @metrofun @killalau)
 * Timer has removed all use of local temporary vars in the core update loop.
 * The Input.reset `hard` reset parameter is now passed down to the Keyboard and Key reset methods.
 * AnimationManager.destroy now iterates through child animations calling destroy on all of them, avoiding a memory leak (thanks stauzs)
@@ -160,6 +160,7 @@ Version 2.0.4 - "Mos Shirare" - in development
 * Fixed issue where Animations resuming from a pause would skip frames (thanks @merixstudio, fix #730)
 * Tilemap.fill would throw an error if called on a blank tilemap full of null values (thanks @DrHackenstein, fix #761)
 * LoaderParser.bitmapFont updated so xml parsing works properly on IE9 (thanks @georgiee)
+* Fixed an issue where Sounds that had been paused via game code would un-mute if the game paused and resumed.
 
 
 ### ToDo

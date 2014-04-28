@@ -285,6 +285,12 @@ Phaser.Sound = function (game, key, volume, loop, connect) {
     */
     this._tempLoop = 0;
 
+    /**
+    * @property {boolean} _paused - Was this sound paused via code or a game event?
+    * @private
+    */
+    this._paused = false;
+
 };
 
 Phaser.Sound.prototype = {
@@ -621,6 +627,7 @@ Phaser.Sound.prototype = {
 
     /**
     * Restart the sound, or a marked section of it.
+    *
     * @method Phaser.Sound#restart
     * @param {string} [marker=''] - If you want to play a marker then give the key here, otherwise leave blank to play the full sound.
     * @param {number} [position=0] - The starting position to play the sound from - this is ignored if you provide a marker.
@@ -639,7 +646,8 @@ Phaser.Sound.prototype = {
     },
 
     /**
-    * Pauses the sound
+    * Pauses the sound.
+    *
     * @method Phaser.Sound#pause
     */
     pause: function () {
@@ -657,7 +665,8 @@ Phaser.Sound.prototype = {
     },
 
     /**
-    * Resumes the sound
+    * Resumes the sound.
+    *
     * @method Phaser.Sound#resume
     */
     resume: function () {
@@ -817,7 +826,9 @@ Object.defineProperty(Phaser.Sound.prototype, "isDecoded", {
 Object.defineProperty(Phaser.Sound.prototype, "mute", {
 
     get: function () {
-        return this._muted;
+
+        return (this._muted || this.game.sound.mute);
+
     },
 
     set: function (value) {

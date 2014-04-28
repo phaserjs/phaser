@@ -629,7 +629,7 @@ Phaser.Game.prototype = {
         else
         {
             this.state.pauseUpdate();
-            this.input.update();
+            // this.input.update();
             this.debug.preUpdate();
         }
 
@@ -802,7 +802,7 @@ Object.defineProperty(Phaser.Game.prototype, "paused", {
             {
                 this._paused = true;
                 this._codePaused = true;
-                this.sound.mute = true;
+                this.sound.setMute();
                 this.time.gamePaused();
                 this.onPause.dispatch(this);
             }
@@ -814,7 +814,7 @@ Object.defineProperty(Phaser.Game.prototype, "paused", {
                 this._paused = false;
                 this._codePaused = false;
                 this.input.reset();
-                this.sound.mute = false;
+                this.sound.unsetMute();
                 this.time.gameResumed();
                 this.onResume.dispatch(this);
             }

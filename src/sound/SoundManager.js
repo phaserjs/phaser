@@ -253,7 +253,7 @@ Phaser.SoundManager.prototype = {
     *
     * @method Phaser.SoundManager#pauseAll
     */
-    pauseAll: function () {
+    pauseAll: function (fromGame) {
 
         for (var i = 0; i < this._sounds.length; i++)
         {
@@ -533,7 +533,7 @@ Object.defineProperty(Phaser.SoundManager.prototype, "mute", {
         }
         else
         {
-            if (this._muted === false)
+            if (!this._muted)
             {
                 return;
             }
