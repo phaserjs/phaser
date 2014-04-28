@@ -224,6 +224,64 @@ Phaser.Animation.prototype = {
     },
 
     /**
+    * Sets this animations playback to a given frame with the given ID.
+    *
+    * @method Phaser.Animation#setFrame
+    * @param {string|number} [frameId] - The identifier of the frame to set. Can be the name of the frame, the sprite index of the frame, or the animation-local frame index.
+    * @param {boolean} [useLocalFrameIndex=false] - If you provide a number for frameId, should it use the numeric indexes of the frameData, or the 0-indexed frame index local to the animation.
+    */
+    setFrame: function(frameId, useLocalFrameIndex) {
+
+        var frameIndex;
+
+        if (typeof useLocalFrameIndex === 'undefined')
+        {
+            useLocalFrameIndex = false;
+        }
+
+        //  Find the index to the desired frame.
+        if (typeof frameId === "string")
+        {
+            for (var i = 0; i < this._frames.length; i++)
+            {
+                if (this._frameData.getFrame(this._frames[i]).name === frameId)
+                {
+                    frameIndex = i;
+                }
+            }
+        }
+        else if (typeof frameId === "number")
+        {
+            if (useLocalFrameIndex)
+            {
+                frameIndex = frameId;
+            }
+            else
+            {
+                for (var i = 0; i < this._frames.length; i++)
+                {
+                    if (this.frames[i] === frameIndex)
+                    {
+                        frameIndex = i;
+                    }
+                }
+            }
+        }
+
+        if (frameIndex)
+        {
+            //  Set the current frame index to the found index. Subtract 1 so that it animates to the desired frame on update.
+            this._frameIndex = frameIndex - 1;
+
+            //  Make the animation update at next update
+            this._timeNextFrame = this.game.time.now;
+
+            this.update();
+        }
+
+    },
+
+    /**
     * Stops playback of this animation and set it to a finished state. If a resetFrame is provided it will stop playback and set frame to the first in the animation.
     * If `dispatchComplete` is true it will dispatch the complete events, otherwise they'll be ignored.
     *

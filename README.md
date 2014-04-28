@@ -135,6 +135,7 @@ Version 2.0.4 - "Mos Shirare" - in development
 * Color.HSLColorWheel will return an array with 360 color objects for each segment of an HSL color wheel, you can optionally set the saturation and lightness amounts.
 * Timer.timeCap is a new setting allowing your Timers to protect against unexpectedly large delta timers (such as raf de-vis or CPU grind).
 * Camera.unfollow allows you to easily unfollow a tracked object (thanks @alvinsight, #755)
+* Animation.setFrame allows you to set the animation to a specific frame (thanks @adamholdenyall, #706)
 
 
 ### Bug Fixes

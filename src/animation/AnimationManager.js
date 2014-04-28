@@ -31,6 +31,12 @@ Phaser.AnimationManager = function (sprite) {
     this.currentFrame = null;
 
     /**
+    * @property {Phaser.Animation} currentAnim - The currently displayed animation, if any.
+    * @default
+    */
+    this.currentAnim = null;
+
+    /**
     * @property {boolean} updateIfVisible - Should the animation data continue to update even if the Sprite.visible is set to false.
     * @default
     */
