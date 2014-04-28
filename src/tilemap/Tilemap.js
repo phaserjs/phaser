@@ -246,6 +246,12 @@ Phaser.Tilemap.prototype = {
             if (typeof tileset === 'string')
             {
                 key = tileset;
+
+                if (!this.game.cache.checkImageKey(key))
+                {
+                    console.warn('Phaser.Tilemap.addTilesetImage: Invalid image key given: "' + key + '"');
+                    return null;
+                }
             }
             else
             {
@@ -256,6 +262,12 @@ Phaser.Tilemap.prototype = {
         if (typeof tileset === 'string')
         {
             tileset = this.getTilesetIndex(tileset);
+
+            if (tileset === null)
+            {
+                console.warn('Phaser.Tilemap.addTilesetImage: No data found in the JSON matching the tileset name: "' + key + '"');
+                return null;
+            }
         }
 
         if (this.tilesets[tileset])

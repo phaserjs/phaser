@@ -81,6 +81,7 @@ Version 2.0.4 - "Mos Shirare" - in development
 * Input and Pointer now use the new ArrayList instead of a LinkedList, which resolve list item removable during callback issues.
 * Input.reset no longer resets every interactive item it knows of, because they are removed during the destroy phase and can now persist between States if needed.
 * Blank Tilemaps no longer create `null` tiles, but instead create Tile objects with an index of -1 which can be replaced and updated like any other tile.
+* Tilemap.addTilesetImage will now raise a console.warn if you specify an invalid tileset key and not create the tileset rather than pick the default set.
 
 
 ### New Features
