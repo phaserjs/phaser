@@ -2731,7 +2731,7 @@ declare module Phaser {
                 at(object: any): void;
                 emitParticle(): void;
                 kill(): void;
-                makeParticles(keys: any, frames: any, quantity: number, collide?: boolean, collideWorldBounds?: boolean): Phaser.Particles.Arcade.Emitter;
+                makeParticles(keys: any, frames?: any, quantity?: number, collide?: boolean, collideWorldBounds?: boolean): Phaser.Particles.Arcade.Emitter;
                 reset(x: number, y: number, health?: number): Phaser.Particles;
                 setAlpha(min?: number, max?: number, rate?: number, ease?: number, yoyo?: boolean): void;
                 setRotation(min?: number, max?: number): void;
