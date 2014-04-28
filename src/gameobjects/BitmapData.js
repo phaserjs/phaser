@@ -282,10 +282,11 @@ Phaser.BitmapData.prototype = {
 
     /**
     * Scans through the area specified in this BitmapData and sends a color object for every pixel to the given callback.
-    * The callback will be sent a single object with 6 properties: `{ r: number, g: number, b: number, a: number, color: number, rgba: string }`.
+    * The callback will be sent a color object with 6 properties: `{ r: number, g: number, b: number, a: number, color: number, rgba: string }`.
     * Where r, g, b and a are integers between 0 and 255 representing the color component values for red, green, blue and alpha.
     * The `color` property is an Int32 of the full color. Note the endianess of this will change per system.
     * The `rgba` property is a CSS style rgba() string which can be used with context.fillStyle calls, among others.
+    * The callback will also be sent the pixels x and y coordinates respectively.
     * The callback must return either `false`, in which case no change will be made to the pixel, or a new color object.
     * If a new color object is returned the pixel will be set to the r, g, b and a color values given within it.
     *
@@ -316,7 +317,7 @@ Phaser.BitmapData.prototype = {
             {
                 Phaser.Color.unpackPixel(this.getPixel32(tx, ty), pixel);
 
-                result = callback.call(callbackContext, pixel);
+                result = callback.call(callbackContext, pixel, tx, ty);
 
                 if (result !== false && result !== null)
                 {
@@ -335,10 +336,11 @@ Phaser.BitmapData.prototype = {
     },
 
     /**
-    * Scans through the area specified in this BitmapData and sends the color for every pixel to the given callback.
+    * Scans through the area specified in this BitmapData and sends the color for every pixel to the given callback along with its x and y coordinates.
     * Whatever value the callback returns is set as the new color for that pixel, unless it returns the same color, in which case it's skipped.
     * Note that the format of the color received will be different depending on if the system is big or little endian.
     * It is expected that your callback will deal with endianess. If you'd rather Phaser did it then use processPixelRGB instead.
+    * The callback will also be sent the pixels x and y coordinates respectively.
     *
     * @method Phaser.BitmapData#processPixel
     * @param {function} callback - The callback that will be sent each pixel color to be processed.
@@ -366,7 +368,7 @@ Phaser.BitmapData.prototype = {
             for (var tx = x; tx < w; tx++)
             {
                 pixel = this.getPixel32(tx, ty);
-                result = callback.call(callbackContext, pixel);
+                result = callback.call(callbackContext, pixel, tx, ty);
 
                 if (result !== pixel)
                 {
@@ -796,18 +798,37 @@ Phaser.BitmapData.prototype = {
     },
 
     /**
-    * 
+    * Scans this BitmapData for all pixels matching the given r,g,b values and then draws them into the given destination BitmapData.
+    * The destination BitmapData must be large enough to receive all of the pixels that are scanned.
+    * Although the destination BitmapData is returned from this method, it's actually modified directly in place, meaning this call is perfectly valid:
+    * `picture.extract(mask, r, g, b)`
     *
-    * @method Phaser.BitmapData#extractMask
-    * @param {HTMLImage|string} source - The Image to draw. If you give a key it will try and find the Image in the Game.Cache.
-    * @param {string} key - The Image to use as the alpha mask. If you give a key it will try and find the Image in the Game.Cache.
-    * @return {HTMLImage}
+    * @method Phaser.BitmapData#extract
+    * @param {Phaser.BitmapData} destination - The BitmapData that the extracts pixels will be drawn to.
+    * @param {number} r - The red color component, in the range 0 - 255.
+    * @param {number} g - The green color component, in the range 0 - 255.
+    * @param {number} b - The blue color component, in the range 0 - 255.
+    * @param {number} [a=255] - The alpha color component, in the range 0 - 255.
+    * @returns {Phaser.BitmapData} The BitmapData that the extract pixels were drawn on.
     */
-    extractMask: function (source, color, alpha) {
+    extract: function (destination, r, g, b, a) {
 
-        if (typeof alpha === 'undefined') { alpha = 255; }
+        if (typeof a === 'undefined') { a = 255; }
 
+        this.processPixelRGB(
+            function(pixel, x, y){
+                if (pixel.r === r && pixel.g === g && pixel.b === b)
+                {
+                    destination.setPixel32(x, y, r, g, b, a, false);
+                }
+                return false;
+            }
+            , this);
 
+        destination.context.putImageData(destination.imageData, 0, 0);
+        destination.dirty = true;
+
+        return destination;
 
     },
 
