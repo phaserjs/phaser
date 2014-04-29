@@ -55,6 +55,10 @@
 						</li>
 						
 						<li class="class-depth-1">
+							<a href="Phaser.ArrayList.html">ArrayList</a>
+						</li>
+						
+						<li class="class-depth-1">
 							<a href="Phaser.BitmapData.html">BitmapData</a>
 						</li>
 						
@@ -538,7 +542,7 @@
     
     
     <div class="description">
-        <p>A collection of methods useful for manipulating and comparing colors.</p>
+        <p>The Phaser.Color class is a set of static methods that assist in color manipulation and conversion.</p>
     </div>
     
 
@@ -625,7 +629,8 @@
     
     
     <div class="description">
-        <p>Return a string containing a hex representation of the given color.</p>
+        <p>DEPRECATED: This method will be removed in Phaser 2.1. Please use Phaser.Color.componentToHex instead.
+Return a string containing a hex representation of the given color.</p>
     </div>
     
 
@@ -707,7 +712,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-127">line 127</a>
+        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-912">line 912</a>
     </li></ul></dd>
     
 
@@ -744,6 +749,782 @@
 	<dd>
 		
 <span class="param-type">string</span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="componentToHex"><span class="type-signature">&lt;static> </span>componentToHex<span class="signature">(color)</span><span class="type-signature"> &rarr; {string}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Return a string containing a hex representation of the given color component.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>color</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The color channel to get the hex value for, must be a value between 0 and 255.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-583">line 583</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>A string of length 2 characters, i.e. 255 = ff, 100 = 64.</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">string</span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="createColor"><span class="type-signature">&lt;static> </span>createColor<span class="signature">(<span class="optional">r</span>, <span class="optional">g</span>, <span class="optional">b</span>, <span class="optional">a</span>, <span class="optional">h</span>, <span class="optional">s</span>, <span class="optional">l</span>, <span class="optional">v</span>)</span><span class="type-signature"> &rarr; {object}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>A utility function to create a lightweight 'color' object with the default components.
+Any components that are not specified will default to zero.</p>
+<p>This is useful when you want to use a shared color object for the getPixel and getPixelAt methods.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+		<th>Default</th>
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>r</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
+            
+
+            <td class="description last"><p>The red color component, in the range 0 - 255.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>g</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
+            
+
+            <td class="description last"><p>The green color component, in the range 0 - 255.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>b</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
+            
+
+            <td class="description last"><p>The blue color component, in the range 0 - 255.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>a</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    1
+                
+                </td>
+            
+
+            <td class="description last"><p>The alpha color component, in the range 0 - 1.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>h</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
+            
+
+            <td class="description last"><p>The hue, in the range 0 - 1.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>s</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
+            
+
+            <td class="description last"><p>The saturation, in the range 0 - 1.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>l</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
+            
+
+            <td class="description last"><p>The lightness, in the range 0 - 1.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>v</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
+            
+
+            <td class="description last"><p>The value, in the range 0 - 1.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-author">Author:</dt>
+    <dd class="tag-author">
+        <ul>
+            <li>Matt DesLauriers (@mattdesl)</li>
+        </ul>
+    </dd>
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-421">line 421</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>The resulting object with r, g, b, a properties and h, s, l and v.</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">object</span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="fromRGBA"><span class="type-signature">&lt;static> </span>fromRGBA<span class="signature">(rgba, <span class="optional">out</span>)</span><span class="type-signature"> &rarr; {object}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>A utility to convert an integer in 0xRRGGBBAA format to a color object.
+This does not rely on endianness.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>rgba</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>An RGBA hex</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>out</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The object to use, optional.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-author">Author:</dt>
+    <dd class="tag-author">
+        <ul>
+            <li>Matt DesLauriers (@mattdesl)</li>
+        </ul>
+    </dd>
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-97">line 97</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>A color object.</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">object</span>
 
 
 	</dd>
@@ -848,7 +1629,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-291">line 291</a>
+        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-792">line 792</a>
     </li></ul></dd>
     
 
@@ -989,7 +1770,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-303">line 303</a>
+        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-804">line 804</a>
     </li></ul></dd>
     
 
@@ -1130,7 +1911,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-339">line 339</a>
+        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-840">line 840</a>
     </li></ul></dd>
     
 
@@ -1181,7 +1962,7 @@
         
             
 <dt>
-    <h4 class="name" id="getColor"><span class="type-signature">&lt;static> </span>getColor<span class="signature">(red, green, blue)</span><span class="type-signature"> &rarr; {number}</span></h4>
+    <h4 class="name" id="getColor"><span class="type-signature">&lt;static> </span>getColor<span class="signature">(r, g, b)</span><span class="type-signature"> &rarr; {number}</span></h4>
     
     
 </dt>
@@ -1223,7 +2004,7 @@
 
         <tr>
             
-                <td class="name"><code>red</code></td>
+                <td class="name"><code>r</code></td>
             
 
             <td class="type">
@@ -1239,14 +2020,14 @@
 
             
 
-            <td class="description last"><p>The Red channel value (between 0 and 255).</p></td>
+            <td class="description last"><p>The red color component, in the range 0 - 255.</p></td>
         </tr>
 
 	
 
         <tr>
             
-                <td class="name"><code>green</code></td>
+                <td class="name"><code>g</code></td>
             
 
             <td class="type">
@@ -1262,14 +2043,14 @@
 
             
 
-            <td class="description last"><p>The Green channel value (between 0 and 255).</p></td>
+            <td class="description last"><p>The green color component, in the range 0 - 255.</p></td>
         </tr>
 
 	
 
         <tr>
             
-                <td class="name"><code>blue</code></td>
+                <td class="name"><code>b</code></td>
             
 
             <td class="type">
@@ -1285,7 +2066,7 @@
 
             
 
-            <td class="description last"><p>The Blue channel value (between 0 and 255).</p></td>
+            <td class="description last"><p>The blue color component, in the range 0 - 255.</p></td>
         </tr>
 
 	
@@ -1317,7 +2098,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-29">line 29</a>
+        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-483">line 483</a>
     </li></ul></dd>
     
 
@@ -1368,7 +2149,7 @@
         
             
 <dt>
-    <h4 class="name" id="getColor32"><span class="type-signature">&lt;static> </span>getColor32<span class="signature">(alpha, red, green, blue)</span><span class="type-signature"> &rarr; {number}</span></h4>
+    <h4 class="name" id="getColor32"><span class="type-signature">&lt;static> </span>getColor32<span class="signature">(a, r, g, b)</span><span class="type-signature"> &rarr; {number}</span></h4>
     
     
 </dt>
@@ -1410,7 +2191,7 @@
 
         <tr>
             
-                <td class="name"><code>alpha</code></td>
+                <td class="name"><code>a</code></td>
             
 
             <td class="type">
@@ -1426,14 +2207,14 @@
 
             
 
-            <td class="description last"><p>The Alpha value (between 0 and 255).</p></td>
+            <td class="description last"><p>The alpha color component, in the range 0 - 255.</p></td>
         </tr>
 
 	
 
         <tr>
             
-                <td class="name"><code>red</code></td>
+                <td class="name"><code>r</code></td>
             
 
             <td class="type">
@@ -1449,14 +2230,14 @@
 
             
 
-            <td class="description last"><p>The Red channel value (between 0 and 255).</p></td>
+            <td class="description last"><p>The red color component, in the range 0 - 255.</p></td>
         </tr>
 
 	
 
         <tr>
             
-                <td class="name"><code>green</code></td>
+                <td class="name"><code>g</code></td>
             
 
             <td class="type">
@@ -1472,14 +2253,14 @@
 
             
 
-            <td class="description last"><p>The Green channel value (between 0 and 255).</p></td>
+            <td class="description last"><p>The green color component, in the range 0 - 255.</p></td>
         </tr>
 
 	
 
         <tr>
             
-                <td class="name"><code>blue</code></td>
+                <td class="name"><code>b</code></td>
             
 
             <td class="type">
@@ -1495,7 +2276,7 @@
 
             
 
-            <td class="description last"><p>The Blue channel value (between 0 and 255).</p></td>
+            <td class="description last"><p>The blue color component, in the range 0 - 255.</p></td>
         </tr>
 
 	
@@ -1527,7 +2308,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-14">line 14</a>
+        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-466">line 466</a>
     </li></ul></dd>
     
 
@@ -1586,8 +2367,9 @@
     
     
     <div class="description">
-        <p>Returns a string containing handy information about the given color including string hex value,
-RGB format information and HSL information. Each section starts on a newline, 3 lines in total.</p>
+        <p>DEPRECATED: This method will be removed in Phaser 2.1.
+Returns a string containing handy information about the given color including string hex value,
+RGB format information. Each section starts on a newline, 3 lines in total.</p>
     </div>
     
 
@@ -1669,7 +2451,7 @@ RGB format information and HSL information. Each section starts on a newline, 3 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-68">line 68</a>
+        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-854">line 854</a>
     </li></ul></dd>
     
 
@@ -1810,7 +2592,7 @@ RGB format information and HSL information. Each section starts on a newline, 3 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-327">line 327</a>
+        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-828">line 828</a>
     </li></ul></dd>
     
 
@@ -1999,7 +2781,7 @@ Set the max value to restrict the maximum color used per channel.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-217">line 217</a>
+        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-721">line 721</a>
     </li></ul></dd>
     
 
@@ -2140,7 +2922,7 @@ Set the max value to restrict the maximum color used per channel.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-315">line 315</a>
+        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-816">line 816</a>
     </li></ul></dd>
     
 
@@ -2282,7 +3064,7 @@ Set the max value to restrict the maximum color used per channel.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-252">line 252</a>
+        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-753">line 753</a>
     </li></ul></dd>
     
 
@@ -2423,7 +3205,7 @@ Set the max value to restrict the maximum color used per channel.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-273">line 273</a>
+        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-774">line 774</a>
     </li></ul></dd>
     
 
@@ -2474,7 +3256,7 @@ Set the max value to restrict the maximum color used per channel.</p>
         
             
 <dt>
-    <h4 class="name" id="hexToRGB"><span class="type-signature">&lt;static> </span>hexToRGB<span class="signature">(h)</span><span class="type-signature"> &rarr; {number}</span></h4>
+    <h4 class="name" id="hexToColor"><span class="type-signature">&lt;static> </span>hexToColor<span class="signature">(hex, <span class="optional">out</span>)</span><span class="type-signature"> &rarr; {object}</span></h4>
     
     
 </dt>
@@ -2482,7 +3264,191 @@ Set the max value to restrict the maximum color used per channel.</p>
     
     
     <div class="description">
-        <p>Converts the given hex string into an integer color value.</p>
+        <p>Converts a hex string into a Phaser Color object.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>hex</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The hex string to convert. Can be in the short-hand format <code>#03f</code> or <code>#0033ff</code>.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>out</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>An object into which 3 properties will be created: r, g and b. If not provided a new object will be created.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-547">line 547</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>An object with the red, green and blue values set in the r, g and b properties.</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">object</span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="hexToRGB"><span class="type-signature">&lt;static> </span>hexToRGB<span class="signature">(hex)</span><span class="type-signature"> &rarr; {number}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Converts a hex string into an integer color value.</p>
     </div>
     
 
@@ -2516,7 +3482,7 @@ Set the max value to restrict the maximum color used per channel.</p>
 
         <tr>
             
-                <td class="name"><code>h</code></td>
+                <td class="name"><code>hex</code></td>
             
 
             <td class="type">
@@ -2532,7 +3498,7 @@ Set the max value to restrict the maximum color used per channel.</p>
 
             
 
-            <td class="description last"><p>The string hex color to convert.</p></td>
+            <td class="description last"><p>The hex string to convert. Can be in the short-hand format <code>#03f</code> or <code>#0033ff</code>.</p></td>
         </tr>
 
 	
@@ -2564,7 +3530,7 @@ Set the max value to restrict the maximum color used per channel.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-43">line 43</a>
+        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-528">line 528</a>
     </li></ul></dd>
     
 
@@ -2589,7 +3555,1093 @@ Set the max value to restrict the maximum color used per channel.</p>
     
             
 <div class="param-desc">
-    <p>The rgb color value.</p>
+    <p>The rgb color value in the format 0xAARRGGBB.</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">number</span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="HSLColorWheel"><span class="type-signature">&lt;static> </span>HSLColorWheel<span class="signature">(<span class="optional">s</span>, <span class="optional">l</span>)</span><span class="type-signature"> &rarr; {array}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Get HSL color wheel values in an array which will be 360 elements in size.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+		<th>Default</th>
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>s</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0.5
+                
+                </td>
+            
+
+            <td class="description last"><p>The saturation, in the range 0 - 1.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>l</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0.5
+                
+                </td>
+            
+
+            <td class="description last"><p>The lightness, in the range 0 - 1.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-623">line 623</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>An array containing 360 elements corresponding to the HSL color wheel.</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">array</span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="HSLtoRGB"><span class="type-signature">&lt;static> </span>HSLtoRGB<span class="signature">(h, s, l, <span class="optional">out</span>)</span><span class="type-signature"> &rarr; {object}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Converts an HSL (hue, saturation and lightness) color value to RGB.
+Conversion forumla from <a href="http://en.wikipedia.org/wiki/HSL_color_space">http://en.wikipedia.org/wiki/HSL_color_space</a>.
+Assumes HSL values are contained in the set [0, 1] and returns r, g and b values in the set [0, 255].
+Based on code by Michael Jackson (<a href="https://github.com/mjijackson">https://github.com/mjijackson</a>)</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>h</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The hue, in the range 0 - 1.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>s</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The saturation, in the range 0 - 1.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>l</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The lightness, in the range 0 - 1.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>out</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>An object into which 3 properties will be created: r, g and b. If not provided a new object will be created.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-203">line 203</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>An object with the red, green and blue values set in the r, g and b properties.</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">object</span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="HSVColorWheel"><span class="type-signature">&lt;static> </span>HSVColorWheel<span class="signature">(<span class="optional">s</span>, <span class="optional">v</span>)</span><span class="type-signature"> &rarr; {array}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Get HSV color wheel values in an array which will be 360 elements in size.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+		<th>Default</th>
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>s</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    1
+                
+                </td>
+            
+
+            <td class="description last"><p>The saturation, in the range 0 - 1.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>v</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    1
+                
+                </td>
+            
+
+            <td class="description last"><p>The value, in the range 0 - 1.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-598">line 598</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>An array containing 360 elements corresponding to the HSV color wheel.</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">array</span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="HSVtoRGB"><span class="type-signature">&lt;static> </span>HSVtoRGB<span class="signature">(h, s, v, <span class="optional">out</span>)</span><span class="type-signature"> &rarr; {object}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Converts an HSV (hue, saturation and value) color value to RGB.
+Conversion forumla from <a href="http://en.wikipedia.org/wiki/HSL_color_space">http://en.wikipedia.org/wiki/HSL_color_space</a>.
+Assumes HSV values are contained in the set [0, 1] and returns r, g and b values in the set [0, 255].
+Based on code by Michael Jackson (<a href="https://github.com/mjijackson">https://github.com/mjijackson</a>)</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>h</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The hue, in the range 0 - 1.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>s</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The saturation, in the range 0 - 1.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>v</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The value, in the range 0 - 1.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>out</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>An object into which 3 properties will be created: r, g and b. If not provided a new object will be created.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-310">line 310</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>An object with the red, green and blue values set in the r, g and b properties.</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">object</span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="hueToColor"><span class="type-signature">&lt;static> </span>hueToColor<span class="signature">(p, q, t)</span><span class="type-signature"> &rarr; {number}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Converts a hue to an RGB color.
+Based on code by Michael Jackson (<a href="https://github.com/mjijackson">https://github.com/mjijackson</a>)</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>p</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>q</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>t</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-379">line 379</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>The color component value.</p>
 </div>
 
 
@@ -2797,7 +4849,7 @@ Set the max value to restrict the maximum color used per channel.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-145">line 145</a>
+        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-648">line 648</a>
     </li></ul></dd>
     
 
@@ -3053,7 +5105,7 @@ Set the max value to restrict the maximum color used per channel.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-170">line 170</a>
+        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-674">line 674</a>
     </li></ul></dd>
     
 
@@ -3355,7 +5407,7 @@ Set the max value to restrict the maximum color used per channel.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-193">line 193</a>
+        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-697">line 697</a>
     </li></ul></dd>
     
 
@@ -3406,6 +5458,224 @@ Set the max value to restrict the maximum color used per channel.</p>
         
             
 <dt>
+    <h4 class="name" id="packPixel"><span class="type-signature">&lt;static> </span>packPixel<span class="signature">(r, g, b, a)</span><span class="type-signature"> &rarr; {number}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Packs the r, g, b, a components into a single integer, for use with Int32Array.
+If device is little endian then ABGR order is used. Otherwise RGBA order is used.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>r</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The red color component, in the range 0 - 255.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>g</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The green color component, in the range 0 - 255.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>b</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The blue color component, in the range 0 - 255.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>a</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The alpha color component, in the range 0 - 255.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-author">Author:</dt>
+    <dd class="tag-author">
+        <ul>
+            <li>Matt DesLauriers (@mattdesl)</li>
+        </ul>
+    </dd>
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-14">line 14</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>The packed color</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">number</span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
     <h4 class="name" id="RGBtoHexstring"><span class="type-signature">&lt;static> </span>RGBtoHexstring<span class="signature">(color)</span><span class="type-signature"> &rarr; {string}</span></h4>
     
     
@@ -3414,7 +5684,8 @@ Set the max value to restrict the maximum color used per channel.</p>
     
     
     <div class="description">
-        <p>Return a string representation of the color in the format 0xAARRGGBB.</p>
+        <p>DEPRECATED: This method will be removed in Phaser 2.1. Please use Phaser.Color.RGBtoString instead.
+Return a string representation of the color in the format 0xAARRGGBB.</p>
     </div>
     
 
@@ -3496,7 +5767,7 @@ Set the max value to restrict the maximum color used per channel.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-95">line 95</a>
+        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-878">line 878</a>
     </li></ul></dd>
     
 
@@ -3547,6 +5818,810 @@ Set the max value to restrict the maximum color used per channel.</p>
         
             
 <dt>
+    <h4 class="name" id="RGBtoHSL"><span class="type-signature">&lt;static> </span>RGBtoHSL<span class="signature">(r, g, b, <span class="optional">out</span>)</span><span class="type-signature"> &rarr; {object}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Converts an RGB color value to HSL (hue, saturation and lightness).
+Conversion forumla from <a href="http://en.wikipedia.org/wiki/HSL_color_space">http://en.wikipedia.org/wiki/HSL_color_space</a>.
+Assumes RGB values are contained in the set [0, 255] and returns h, s and l in the set [0, 1].
+Based on code by Michael Jackson (<a href="https://github.com/mjijackson">https://github.com/mjijackson</a>)</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>r</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The red color component, in the range 0 - 255.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>g</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The green color component, in the range 0 - 255.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>b</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The blue color component, in the range 0 - 255.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>out</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>An object into which 3 properties will be created, h, s and l. If not provided a new object will be created.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-144">line 144</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>An object with the hue, saturation and lightness values set in the h, s and l properties.</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">object</span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="RGBtoHSV"><span class="type-signature">&lt;static> </span>RGBtoHSV<span class="signature">(r, g, b, <span class="optional">out</span>)</span><span class="type-signature"> &rarr; {object}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Converts an RGB color value to HSV (hue, saturation and value).
+Conversion forumla from <a href="http://en.wikipedia.org/wiki/HSL_color_space">http://en.wikipedia.org/wiki/HSL_color_space</a>.
+Assumes RGB values are contained in the set [0, 255] and returns h, s and v in the set [0, 1].
+Based on code by Michael Jackson (<a href="https://github.com/mjijackson">https://github.com/mjijackson</a>)</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>r</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The red color component, in the range 0 - 255.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>g</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The green color component, in the range 0 - 255.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>b</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The blue color component, in the range 0 - 255.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>out</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>An object into which 3 properties will be created, h, s and v. If not provided a new object will be created.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-254">line 254</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>An object with the hue, saturation and value set in the h, s and v properties.</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">object</span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="RGBtoString"><span class="type-signature">&lt;static> </span>RGBtoString<span class="signature">(r, g, b, <span class="optional">a</span>, <span class="optional">prefix</span>)</span><span class="type-signature"> &rarr; {string}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Converts the given color values into a string.
+If prefix was '#' it will be in the format <code>#RRGGBB</code> otherwise <code>0xAARRGGBB</code>.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+		<th>Default</th>
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>r</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The red color component, in the range 0 - 255.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>g</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The green color component, in the range 0 - 255.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>b</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The blue color component, in the range 0 - 255.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>a</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    255
+                
+                </td>
+            
+
+            <td class="description last"><p>The alpha color component, in the range 0 - 255.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>prefix</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    '#'
+                
+                </td>
+            
+
+            <td class="description last"><p>The prefix used in the return string. If '#' it will return <code>#RRGGBB</code>, else <code>0xAARRGGBB</code>.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-499">line 499</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>A string containing the color values. If prefix was '#' it will be in the format <code>#RRGGBB</code> otherwise <code>0xAARRGGBB</code>.</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">string</span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
     <h4 class="name" id="RGBtoWebstring"><span class="type-signature">&lt;static> </span>RGBtoWebstring<span class="signature">(color)</span><span class="type-signature"> &rarr; {string}</span></h4>
     
     
@@ -3555,7 +6630,8 @@ Set the max value to restrict the maximum color used per channel.</p>
     
     
     <div class="description">
-        <p>Return a string representation of the color in the format #RRGGBB.</p>
+        <p>DEPRECATED: This method will be removed in Phaser 2.1. Please use Phaser.Color.RGBtoString instead.
+Return a string representation of the color in the format #RRGGBB.</p>
     </div>
     
 
@@ -3637,7 +6713,7 @@ Set the max value to restrict the maximum color used per channel.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-111">line 111</a>
+        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-895">line 895</a>
     </li></ul></dd>
     
 
@@ -3685,6 +6761,649 @@ Set the max value to restrict the maximum color used per channel.</p>
     
 </dd>
 
+        
+            
+<dt>
+    <h4 class="name" id="toRGBA"><span class="type-signature">&lt;static> </span>toRGBA<span class="signature">(r, g, b, a)</span><span class="type-signature"> &rarr; {number}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>A utility to convert RGBA components to a 32 bit integer in RRGGBBAA format.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>r</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The red color component, in the range 0 - 255.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>g</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The green color component, in the range 0 - 255.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>b</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The blue color component, in the range 0 - 255.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>a</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The alpha color component, in the range 0 - 255.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-author">Author:</dt>
+    <dd class="tag-author">
+        <ul>
+            <li>Matt DesLauriers (@mattdesl)</li>
+        </ul>
+    </dd>
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-126">line 126</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>A RGBA-packed 32 bit integer</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">number</span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="unpackPixel"><span class="type-signature">&lt;static> </span>unpackPixel<span class="signature">(rgba, <span class="optional">out</span>, <span class="optional">hsl</span>, <span class="optional">hsv</span>)</span><span class="type-signature"> &rarr; {object}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Unpacks the r, g, b, a components into the specified color object, or a new
+object, for use with Int32Array. If little endian, then ABGR order is used when 
+unpacking, otherwise, RGBA order is used. The resulting color object has the
+<code>r, g, b, a</code> properties which are unrelated to endianness.</p>
+<p>Note that the integer is assumed to be packed in the correct endianness. On little-endian
+the format is 0xAABBGGRR and on big-endian the format is 0xRRGGBBAA. If you want a
+endian-independent method, use fromRGBA(rgba) and toRGBA(r, g, b, a).</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+		<th>Default</th>
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>rgba</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The integer, packed in endian order by packPixel.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>out</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>An object into which 3 properties will be created: r, g and b. If not provided a new object will be created.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>hsl</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>Also convert the rgb values into hsl?</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>hsv</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>Also convert the rgb values into hsv?</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-author">Author:</dt>
+    <dd class="tag-author">
+        <ul>
+            <li>Matt DesLauriers (@mattdesl)</li>
+        </ul>
+    </dd>
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-40">line 40</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>An object with the red, green and blue values set in the r, g and b properties.</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">object</span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="updateColor"><span class="type-signature">&lt;static> </span>updateColor<span class="signature">(out)</span><span class="type-signature"> &rarr; {number}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Takes a color object and updates the rgba property.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>out</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The color object to update.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-450">line 450</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>A native color value integer (format: 0xAARRGGBB).</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">number</span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
         </dl>
     
 
@@ -3711,7 +7430,7 @@ Set the max value to restrict the maximum color used per channel.</p>
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Tue Apr 15 2014 02:52:24 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Tue Apr 29 2014 14:51:20 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

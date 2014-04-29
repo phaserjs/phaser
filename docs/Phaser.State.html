@@ -55,6 +55,10 @@
 						</li>
 						
 						<li class="class-depth-1">
+							<a href="Phaser.ArrayList.html">ArrayList</a>
+						</li>
+						
+						<li class="class-depth-1">
 							<a href="Phaser.BitmapData.html">BitmapData</a>
 						</li>
 						
@@ -673,7 +677,7 @@ It provides quick access to common functions such as the camera, cache, input, m
 
             
 
-            <td class="description last"><p>Reference to the GameObjectFactory.</p></td>
+            <td class="description last"><p>A reference to the GameObjectFactory which can be used to add new objects to the World.</p></td>
         </tr>
 
 	
@@ -775,7 +779,7 @@ It provides quick access to common functions such as the camera, cache, input, m
 
             
 
-            <td class="description last"><p>Reference to the assets cache.</p></td>
+            <td class="description last"><p>A reference to the game cache which contains any loaded or generated assets, such as images, sound and more.</p></td>
         </tr>
 
 	
@@ -877,7 +881,7 @@ It provides quick access to common functions such as the camera, cache, input, m
 
             
 
-            <td class="description last"><p>A handy reference to world.camera.</p></td>
+            <td class="description last"><p>A handy reference to World.camera.</p></td>
         </tr>
 
 	
@@ -979,7 +983,7 @@ It provides quick access to common functions such as the camera, cache, input, m
 
             
 
-            <td class="description last"><p>A reference to the currently running Game.</p></td>
+            <td class="description last"><p>This is a reference to the currently running Game.</p></td>
         </tr>
 
 	
@@ -1081,7 +1085,7 @@ It provides quick access to common functions such as the camera, cache, input, m
 
             
 
-            <td class="description last"><p>Reference to the input manager</p></td>
+            <td class="description last"><p>A reference to the Input Manager.</p></td>
         </tr>
 
 	
@@ -1183,7 +1187,7 @@ It provides quick access to common functions such as the camera, cache, input, m
 
             
 
-            <td class="description last"><p>Reference to the assets loader.</p></td>
+            <td class="description last"><p>A reference to the Loader, which you mostly use in the preload method of your state to load external assets.</p></td>
         </tr>
 
 	
@@ -1285,7 +1289,7 @@ It provides quick access to common functions such as the camera, cache, input, m
 
             
 
-            <td class="description last"><p>Reference to the GameObjectCreator.</p></td>
+            <td class="description last"><p>A reference to the GameObjectCreator which can be used to make new objects.</p></td>
         </tr>
 
 	
@@ -1387,7 +1391,7 @@ It provides quick access to common functions such as the camera, cache, input, m
 
             
 
-            <td class="description last"><p>Reference to the math helper.</p></td>
+            <td class="description last"><p>A reference to Math class with lots of helpful functions.</p></td>
         </tr>
 
 	
@@ -1489,7 +1493,7 @@ It provides quick access to common functions such as the camera, cache, input, m
 
             
 
-            <td class="description last"><p>The Particle Manager for the game. It is called during the game update loop and in turn updates any Emitters attached to it.</p></td>
+            <td class="description last"><p>The Particle Manager. It is called during the core gameloop and updates any Particle Emitters it has created.</p></td>
         </tr>
 
 	
@@ -1591,7 +1595,7 @@ It provides quick access to common functions such as the camera, cache, input, m
 
             
 
-            <td class="description last"><p>Reference to the physics manager.</p></td>
+            <td class="description last"><p>A reference to the physics manager which looks after the different physics systems available within Phaser.</p></td>
         </tr>
 
 	
@@ -1693,7 +1697,7 @@ It provides quick access to common functions such as the camera, cache, input, m
 
             
 
-            <td class="description last"><p>Reference to the random data generator.</p></td>
+            <td class="description last"><p>A reference to the seeded and repeatable random data generator.</p></td>
         </tr>
 
 	
@@ -1795,7 +1799,7 @@ It provides quick access to common functions such as the camera, cache, input, m
 
             
 
-            <td class="description last"><p>Reference to the game scale manager.</p></td>
+            <td class="description last"><p>A reference to the Scale Manager which controls the way the game scales on different displays.</p></td>
         </tr>
 
 	
@@ -1897,7 +1901,7 @@ It provides quick access to common functions such as the camera, cache, input, m
 
             
 
-            <td class="description last"><p>Reference to the sound manager.</p></td>
+            <td class="description last"><p>A reference to the Sound Manager which can create, play and stop sounds, as well as adjust global volume.</p></td>
         </tr>
 
 	
@@ -1999,7 +2003,7 @@ It provides quick access to common functions such as the camera, cache, input, m
 
             
 
-            <td class="description last"><p>Reference to the stage.</p></td>
+            <td class="description last"><p>A reference to the Stage.</p></td>
         </tr>
 
 	
@@ -2101,7 +2105,7 @@ It provides quick access to common functions such as the camera, cache, input, m
 
             
 
-            <td class="description last"><p>Reference to the core game clock.</p></td>
+            <td class="description last"><p>A reference to the game clock and timed events system.</p></td>
         </tr>
 
 	
@@ -2203,7 +2207,7 @@ It provides quick access to common functions such as the camera, cache, input, m
 
             
 
-            <td class="description last"><p>Reference to the tween manager.</p></td>
+            <td class="description last"><p>A reference to the tween manager.</p></td>
         </tr>
 
 	
@@ -2305,7 +2309,7 @@ It provides quick access to common functions such as the camera, cache, input, m
 
             
 
-            <td class="description last"><p>Reference to the world.</p></td>
+            <td class="description last"><p>A reference to the game world. All objects live in the Game World and its size is not bound by the display resolution.</p></td>
         </tr>
 
 	
@@ -2366,8 +2370,8 @@ It provides quick access to common functions such as the camera, cache, input, m
     
     
     <div class="description">
-        <p>This method is called after the game engine successfully switches states.
-Feel free to add any setup code here (do not load anything here, override preload() instead).</p>
+        <p>create is called once preload has completed, this includes the loading of any assets from the Loader.
+If you don't have a preload method then create is the first method called in your State.</p>
     </div>
     
 
@@ -2400,7 +2404,7 @@ Feel free to add any setup code here (do not load anything here, override preloa
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="State.js.html">core/State.js</a>, <a href="State.js.html#sunlight-1-line-131">line 131</a>
+        <a href="State.js.html">core/State.js</a>, <a href="State.js.html#sunlight-1-line-133">line 133</a>
     </li></ul></dd>
     
 
@@ -2436,7 +2440,8 @@ Feel free to add any setup code here (do not load anything here, override preloa
     
     
     <div class="description">
-        <p>Put render operations here.</p>
+        <p>loadRender is called during the Loader process. This only happens if you've set one or more assets to load in the preload method.
+The difference between loadRender and render is that any objects you render in this method you must be sure their assets exist.</p>
     </div>
     
 
@@ -2469,7 +2474,7 @@ Feel free to add any setup code here (do not load anything here, override preloa
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="State.js.html">core/State.js</a>, <a href="State.js.html#sunlight-1-line-123">line 123</a>
+        <a href="State.js.html">core/State.js</a>, <a href="State.js.html#sunlight-1-line-124">line 124</a>
     </li></ul></dd>
     
 
@@ -2505,7 +2510,7 @@ Feel free to add any setup code here (do not load anything here, override preloa
     
     
     <div class="description">
-        <p>Put update logic here.</p>
+        <p>loadUpdate is called during the Loader process. This only happens if you've set one or more assets to load in the preload method.</p>
     </div>
     
 
@@ -2538,7 +2543,7 @@ Feel free to add any setup code here (do not load anything here, override preloa
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="State.js.html">core/State.js</a>, <a href="State.js.html#sunlight-1-line-115">line 115</a>
+        <a href="State.js.html">core/State.js</a>, <a href="State.js.html#sunlight-1-line-116">line 116</a>
     </li></ul></dd>
     
 
@@ -2574,7 +2579,7 @@ Feel free to add any setup code here (do not load anything here, override preloa
     
     
     <div class="description">
-        <p>This method will be called when game paused.</p>
+        <p>This method will be called if the core game loop is paused.</p>
     </div>
     
 
@@ -2607,7 +2612,76 @@ Feel free to add any setup code here (do not load anything here, override preloa
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="State.js.html">core/State.js</a>, <a href="State.js.html#sunlight-1-line-156">line 156</a>
+        <a href="State.js.html">core/State.js</a>, <a href="State.js.html#sunlight-1-line-162">line 162</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="pauseUpdate"><span class="type-signature"></span>pauseUpdate<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>pauseUpdate is called while the game is paused instead of preUpdate, update and postUpdate.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="State.js.html">core/State.js</a>, <a href="State.js.html#sunlight-1-line-170">line 170</a>
     </li></ul></dd>
     
 
@@ -2643,8 +2717,9 @@ Feel free to add any setup code here (do not load anything here, override preloa
     
     
     <div class="description">
-        <p>Override this method to add some load operations.
-If you need to use the loader, you may need to use them here.</p>
+        <p>preload is called first. Normally you'd use this to load your game assets (or those needed for the current State)
+You shouldn't create any objects in this method that require assets that you're also loading in this method, as
+they won't yet be available.</p>
     </div>
     
 
@@ -2713,7 +2788,9 @@ If you need to use the loader, you may need to use them here.</p>
     
     
     <div class="description">
-        <p>Put render operations here.</p>
+        <p>Nearly all display objects in Phaser render automatically, you don't need to tell them to render.
+However the render method is called AFTER the game renderer and plugins have rendered, so you're able to do any
+final post-processing style effects here. Note that this happens before plugins postRender takes place.</p>
     </div>
     
 
@@ -2746,7 +2823,7 @@ If you need to use the loader, you may need to use them here.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="State.js.html">core/State.js</a>, <a href="State.js.html#sunlight-1-line-148">line 148</a>
+        <a href="State.js.html">core/State.js</a>, <a href="State.js.html#sunlight-1-line-152">line 152</a>
     </li></ul></dd>
     
 
@@ -2782,7 +2859,7 @@ If you need to use the loader, you may need to use them here.</p>
     
     
     <div class="description">
-        <p>This method will be called when the state is shut down (i.e. you switch to another state from this one).</p>
+        <p>This method will be called when the State is shutdown (i.e. you switch to another state from this one).</p>
     </div>
     
 
@@ -2815,7 +2892,7 @@ If you need to use the loader, you may need to use them here.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="State.js.html">core/State.js</a>, <a href="State.js.html#sunlight-1-line-164">line 164</a>
+        <a href="State.js.html">core/State.js</a>, <a href="State.js.html#sunlight-1-line-178">line 178</a>
     </li></ul></dd>
     
 
@@ -2851,7 +2928,9 @@ If you need to use the loader, you may need to use them here.</p>
     
     
     <div class="description">
-        <p>Put update logic here.</p>
+        <p>The update method is left empty for your own use.
+It is called during the core game loop AFTER debug, physics, plugins and the Stage have had their preUpdate methods called.
+If is called BEFORE Stage, Tweens, Sounds, Input, Physics, Particles and Plugins have had their postUpdate methods called.</p>
     </div>
     
 
@@ -2884,7 +2963,7 @@ If you need to use the loader, you may need to use them here.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="State.js.html">core/State.js</a>, <a href="State.js.html#sunlight-1-line-140">line 140</a>
+        <a href="State.js.html">core/State.js</a>, <a href="State.js.html#sunlight-1-line-142">line 142</a>
     </li></ul></dd>
     
 
@@ -2935,7 +3014,7 @@ If you need to use the loader, you may need to use them here.</p>
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Tue Apr 15 2014 02:52:38 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Tue Apr 29 2014 14:51:35 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>
