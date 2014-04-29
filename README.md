@@ -1,8 +1,8 @@
 ![Phaser 2.0](http://www.phaser.io/images/phaser2-github.png)
 
-![hr](http://phaser.io/images/ghdiv1.png)
-
 # Phaser 2.0.4
+
+![hr](http://phaser.io/images/ghdiv1.png)
 
 Phaser is a fast, free and fun open source game framework for making desktop and mobile browser HTML5 games. It uses [Pixi.js](https://github.com/GoodBoyDigital/pixi.js/) internally for fast 2D Canvas and WebGL rendering.
 
@@ -19,9 +19,10 @@ By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 * Subscribe to the [Phaser Newsletter](https://confirmsubscription.com/h/r/369DE48E3E86AF1E) and we'll email you when new versions are released.
 
 ![hr](http://phaser.io/images/ghdiv2.png)
-![hr](http://phaser.io/images/ghdiv1.png)
 
 ## Welcome to Phaser and What's new in 2.0.4?
+
+![hr](http://phaser.io/images/ghdiv1.png)
 
 We've had the vast majority of this version ready for a few days now, but held off releasing due to Ludum Dare 48. Ludum Dare contests are always peak times for Phaser, we see an influx of new devs downloading for the first time. So it's not the best day to release a new version :) Now that LD48 has finished we present Phaser 2.0.4. This is the latest version in our bi-weekly sprint release schedule, and the change log is (which you can see in full below) is significant to say the least.
 
@@ -38,9 +39,10 @@ Until then happy coding everyone! And we hope to see you on the forums.
 ![boogie](http://www.phaser.io/images/spacedancer.gif)
 
 ![hr](http://phaser.io/images/ghdiv2.png)
-![hr](http://phaser.io/images/ghdiv1.png)
 
 ## Getting Started Guides
+
+![hr](http://phaser.io/images/ghdiv1.png)
 
 We have a [Getting Started Guide](http://phaser.io/getting-started-js.php) which covers all you need to begin developing games with Phaser. From setting up a web server to picking an IDE. If you're new to HTML5 game development, or are coming from another language like AS3, then we recommend starting there.
 
