@@ -61,6 +61,7 @@ Version 2.0.4 - "Mos Shirare" - in development
 ### Updates
 
 * Updated to [Pixi.js 1.5.3](https://github.com/GoodBoyDigital/pixi.js/releases/tag/v1.5.3)
+* Updated to latest [p2.js](https://github.com/schteppe/p2.js/commits/master) - all commits from 0.5.0 to Apr 27th 2014.
 * TypeScript definitions fixes and updates (thanks @clark-stevenson @metrofun @killalau)
 * Timer has removed all use of local temporary vars in the core update loop.
 * The Input.reset `hard` reset parameter is now passed down to the Keyboard and Key reset methods.
@@ -88,7 +89,9 @@ Version 2.0.4 - "Mos Shirare" - in development
 
 ### New Features
 
+* New Phaser Project Template specifically for requireJS in the `resources/Project Templates` folder (many thanks @ashatch)
 * Loader now has an onFileStart event you can listen for (thanks @codevinsky, #705)
+* Group.classType allows you to change the type of object that Group.create or createMultiple makes from Phaser.Sprite to your own custom class.
 * Timer.clearPendingEvents will purge any events marked for deletion, this is run automatically at the start of the update loop.
 * Device.crosswalk detects if your game is running under Intels Crosswalk XDK.
 * Keyboard.reset has a new `hard` parameter which controls the severity of the reset. A soft reset doesn't remove any callbacks or event listeners.
@@ -96,14 +99,14 @@ Version 2.0.4 - "Mos Shirare" - in development
 * InputManager.resetLocked - If the Input Manager has been reset locked then all calls made to InputManager.reset, such as from a State change, are ignored.
 * Group.resetCursor will reset the Group cursor back to the start of the group, or to the given index value.
 * World.wrap will take a game object and if its x/y coordinates fall outside of the world bounds it will be repositioned on the opposite side, for a wrap-around effect.
-* Group.classType allows you to change the type of object that Group.create or createMultiple makes from Phaser.Sprite to your own custom class.
-* Game.scratch is a single handy BitmapData instance that can be used as a visual scratch-pad, for off-screen bitmap manipulation (and is used as such by BitmapData itself).
 * Device.support32bit is a new boolean that sets if the context supports 32bit pixel manipulation using array buffer views or not.
-* BitmapData.processPixelRGB lets you perform a custom callback on every pixel in the BitmapData.
-
 * P2.World now has its own pause and resume methods, so you can pause the physics simulation independent of your game (thanks @georgiee)
-* Phaser.ArrayList is a new iterative object, similar in principal to a linked list but operating on a single array without modifying the object structure.
+* Phaser.ArrayList is a new iterative object, similar in principal to a set data structure, but operating on a single array without modifying the object structure.
 * Add scaleMode params to FilterTexture and RenderTexture (pixi.js update by @giraluna)
+* Your State can now have a pauseUpdate method, which is called constantly when the game is paused.
+* Timer.timeCap is a new setting allowing your Timers to protect against unexpectedly large delta timers (such as raf de-vis or CPU grind).
+* Camera.unfollow allows you to easily unfollow a tracked object (thanks @alvinsight, #755)
+* Animation.setFrame allows you to set the animation to a specific frame (thanks @adamholdenyall, #706)
 * Point.dot - get the dot product of two Point objects.
 * Point.cross - get the cross product of two Point objects.
 * Point.cross - get the cross product of two Point objects.
@@ -118,8 +121,6 @@ Version 2.0.4 - "Mos Shirare" - in development
 * Point.multiplyAdd - Adds two 2D Points together and multiplies the result by the given scalar.
 * Point.negative - Creates a negative Point.
 * Point.interpolate - Interpolates the two given Points, based on the `f` value (between 0 and 1) and returns a new Point.
-* Your State can now have a pauseUpdate method, which is called constantly when the game is paused.
-* The Input system is now updated even while the game is paused.
 * Color.packPixel packs an rgb component into a single integer.
 * Color.unpackPixel unpacks an integer into a color object.
 * Color.fromRGBA converts an integer in 0xRRGGBBAA format to a color object.
@@ -133,10 +134,15 @@ Version 2.0.4 - "Mos Shirare" - in development
 * Color.RGBtoString converts an rgba color into a # or 0x color string.
 * Color.HSVColorWheel will return an array with 360 color objects for each segment of an HSV color wheel, you can optionally set the saturation and value amounts.
 * Color.HSLColorWheel will return an array with 360 color objects for each segment of an HSL color wheel, you can optionally set the saturation and lightness amounts.
-* Timer.timeCap is a new setting allowing your Timers to protect against unexpectedly large delta timers (such as raf de-vis or CPU grind).
-* Camera.unfollow allows you to easily unfollow a tracked object (thanks @alvinsight, #755)
-* Animation.setFrame allows you to set the animation to a specific frame (thanks @adamholdenyall, #706)
-* New Phaser Project Template specifically for requireJS in the `resources/Project Templates` folder (many thanks @ashatch)
+* BitmapData.cls clears the current context.
+* BitmapData.fill fills the context with the given color.
+* BitmapData.processPixelRGB lets you perform a custom callback on every pixel in the BitmapData by passing the pixels color object to your callback.
+* BitmapData.processPixel lets you perform a custom callback on every pixel in the BitmapData by passing the pixels color value to your callback.
+* BitmapData.replaceRGB will scan the bitmap for a specific color and replace it with the new given one.
+* BitmapData.setHSL sets the hue, saturation and lightness values on every pixel in the given region, or the whole BitmapData if no region was specified.
+* BitmapData.shiftHSL shifts the hue, saturation and lightness values on every pixel in the given region, or the whole BitmapData if no region was specified.
+* BitmapData.extract scans this BitmapData for all pixels matching the given r,g,b values and then draws them into the given destination BitmapData.
+* BitmapData.circle draws a filled Circle to the BitmapData at the given x, y coordinates and radius in size.
 
 
 ### Bug Fixes

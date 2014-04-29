@@ -434,7 +434,7 @@ Phaser.BitmapData.prototype = {
     },
 
     /**
-    * Sets any or all of the hue, saturation and lightness values on every pixel in the given region, or the whole BitmapData if no region was specified.
+    * Sets the hue, saturation and lightness values on every pixel in the given region, or the whole BitmapData if no region was specified.
     *
     * @method Phaser.BitmapData#setHSL
     * @param {number} [h=null] - The hue, in the range 0 - 1.
