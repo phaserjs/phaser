@@ -1,48 +1,45 @@
 ![Phaser 2.0](http://www.phaser.io/images/phaser2-github.png)
 
-# Phaser 2.0.4-dev
+# Phaser 2.0.4
 
 Phaser is a fast, free and fun open source game framework for making desktop and mobile browser HTML5 games. It uses [Pixi.js](https://github.com/GoodBoyDigital/pixi.js/) internally for fast 2D Canvas and WebGL rendering.
 
-Version: 2.0.4 "Mos Shirare" - Released: -in development-
+Version: 2.0.4 "Mos Shirare" - Released: 29th April 2014
 
 By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 
 * View the [Official Website](http://phaser.io)
 * Follow on [Twitter](https://twitter.com/photonstorm)
 * Join the [Forum](http://www.html5gamedevs.com/forum/14-phaser/)
-* Source code for 250+ [Phaser Examples](https://github.com/photonstorm/phaser-examples)
+* Source code for 300+ [Phaser Examples](https://github.com/photonstorm/phaser-examples) or [browse them online](http://examples.phaser.io)
 * Read the [documentation online](http://docs.phaser.io)
-* Browse the [Examples online](http://examples.phaser.io)
 * Join our [#phaserio IRC channel](http://www.html5gamedevs.com/topic/4470-official-phaserio-irc-channel-phaserio-on-freenode/) on freenode
 
-[Subscribe to our new Phaser Newsletter](https://confirmsubscription.com/h/r/369DE48E3E86AF1E). We'll email you when new versions are released as well as send you our regular Phaser game making magazine.
+[Subscribe to our new Phaser Newsletter](https://confirmsubscription.com/h/r/369DE48E3E86AF1E). We'll email you when new versions are released.
 
 [![Build Status](https://travis-ci.org/photonstorm/phaser.png?branch=dev)](https://travis-ci.org/photonstorm/phaser)
 
 
-## What's new in 2.0.4?
+## Welcome to Phaser and What's new in 2.0.4?
 
+We've had the vast majority of this version ready for a few days now, but held off releasing due to Ludum Dare 48. Ludum Dare contests are always peak times for Phaser, we see an influx of new devs downloading for the first time. So it's not the best day to release a new version :) Now that LD48 has finished we present Phaser 2.0.4. This is the latest version in our bi-weekly sprint release schedule, and the change log is (which you can see in full below) is significant to say the least.
 
+We've made some deep internal changes to how game pause and resume is handled, which means Phaser.Timers now behave themselves properly. Again with this version we've updated to the latet Pixi and P2 releases, bringing new features and enhancements with them. In terms of new features we've overhauled the Color, Point and BitmapData classes, with significant new features for each of them. From HSL palette shifting and color extraction, to Point dot products to proper endianess handling in Color, the new features are powerful additions to the library. We've also marked a bunch of methods as deprecated and will remove them in Phaser 2.1. Most have fully working replacements and you'll see them flagged as such in the API docs.
 
-## Welcome to Phaser
+Thanks to traffic from Ludume Dare and some [great new sites](http://gamemechanicexplorer.com), we've seen Phaser sky rocket on github; now clearing 4325 github stars and 1175 forks. In most cases issues are being resolved fast and we're closing over 97% of all those reported, which we're extremely proud about.
 
-6 months ago we released Phaser 1.0 into the world. Suffice to say that since then we've been overwhelmed at the huge surge of developers taking to it! Our github repository is consistently in the top JavaScript lists, we've over 3200 stars at the time of writing, and a wonderful, vibrant and friendly community. Phaser 2 is a natural evolution of what we started. We've focused specifically on performance and expansion with this release. Lots of developers have already reported to us considerably speed increases just by swapping to Phaser 2 (reports of 200% faster speeds on mobile aren't unheard of!). There's also a full-body physics system available now, in the form of the excellent p2.js. The upgrade to Pixi 1.5 under the hood bought lots of new visual effects in, including blend modes and tints.
+For the 2.0.5 release we're going to be looking carefully at CocoonJS support, there are some known issues with it currently and we want to ensure it works as flawlessly as possible. After this we'll start planning for 2.1.
 
-And we're also really pleased to have closed down over 550 issues reported on github. We literally went through every last bug reported to us, and fixed it. All kinds of little things that as a whole make the library that much more solid. With the 2.0 release we're now freezing the API. Before we have to admit that the API changed somewhat on a whim, and we moved things around and changed things without too much consideration for fellow developers. With 2.0 that stops - we've spent long enough on this release that we're now extremely happy with the organisation of classes and methods, and while we may still need to make small tweaks in the future, none of them will be API breaking without prior community approval first. This means if you're using Phaser to teach in classes, or writing a book / tutorials around it, this is the version to base off.
+We're also very close to releasing the brand new Phaser web site. The current single-page site has done us well for now, but it was only ever meant to be temporary while the full site was built. This is nearly done and we've got some exciting content to share and plenty of room for growth! Be sure to [subscribe to our monthly newsletter](https://confirmsubscription.com/h/r/369DE48E3E86AF1E) to be notified as soon as it's out.
 
-If you want to port a Phaser 1.x game over to 2 then do read our [Migration Guide](https://github.com/photonstorm/phaser/blob/master/resources/Migration%20Guide.md) first.
-
-So what's next? We have a roadmap (which you can find at the bottom of this document), but we're going to sit back and take stock for a while, building up the tutorials and sample games. We will of course jump on bug fixes quickly, but this is definitely the best release of Phaser ever. The most features, the fastest, the most stable and just generally the most fun to use.
-
-Happy coding everyone! See you on the forums.
+Until then happy coding everyone! And we hope to see you on the forums.
 
 ![boogie](http://www.phaser.io/images/spacedancer.gif)
 
 
 ## Getting Started Guides
 
-We have a new [Getting Started Guide](http://phaser.io/getting-started-js.php) which covers all you need to begin developing games with Phaser. From setting up a web server to picking an IDE. If you're new to HTML5 game development, or are coming from another language like AS3, then we recommend starting there.
+We have a [Getting Started Guide](http://phaser.io/getting-started-js.php) which covers all you need to begin developing games with Phaser. From setting up a web server to picking an IDE. If you're new to HTML5 game development, or are coming from another language like AS3, then we recommend starting there.
 
 We wrote a comprehensive [How to Learn Phaser](http://gamedevelopment.tutsplus.com/articles/how-to-learn-the-phaser-html5-game-engine--gamedev-13643) guide for GameDevTuts+  which covers finding tutorials, examples and support.
 
@@ -55,7 +52,7 @@ Finally the list of [community authored Phaser Tutorials](http://www.lessmilk.co
 
 ## Change Log
 
-Version 2.0.4 - "Mos Shirare" - in development
+Version 2.0.4 - "Mos Shirare" - 29th April 2014
 
 
 ### Updates
@@ -172,11 +169,6 @@ Version 2.0.4 - "Mos Shirare" - in development
 * CSV Tilemap tiles would incorrectly set the Tile layer reference, causing collision to fail (thanks @Chapelin, fix #692)
 
 
-### ToDo
-
-* Stage.postUpdate may update a camera tracked object twice if it's not on the root display level (which it rarely is)
-
-
 There is an extensive [Migration Guide](https://github.com/photonstorm/phaser/blob/master/resources/Migration%20Guide.md) available for those converting from Phaser 1.x to 2.x. In the guide we detail the API breaking changes and approach to our new physics system.
 
 The full Change Log is at https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md
@@ -228,11 +220,11 @@ Or if you prefer you can leave the protocol off, so it works via http and https:
 
 Games created with Phaser require a modern web browser that supports the canvas tag. This includes Internet Explorer 9+, Firefox, Chrome, Safari and Opera. It also works on mobile web browsers including stock Android 2.x browser and above and iOS5 Mobile Safari and above.
 
-If you need to support IE9 or Android 2.x then you must use a build of Phaser that doesn't include P2 physics. You'll find these in the `build/custom` folder.
+If you need to support IE9 or Android 2.x and want to use P2 physics then you must use the polyfill found in the `resources/IE9 Polyfill` folder. If you don't require P2 Physics then you don't need this polyfill.
 
 For developing with Phaser you can use either a plain-vanilla JavaScript approach or [TypeScript](https://typescript.codeplex.com/) using the provided TypeScript definitions file. We made no assumptions about how you like to code your games, and were careful not to impose any form of class/inheritance/structure upon you.
 
-Phaser is 576 KB minified (including all 3 physics engines, 311 KB without) and 128 KB gzipped (67 KB without physics libs).
+Phaser is 128 KB gzipped (576 KB minified) when including all 3 physics engines. Without the physics engines its 67 KB gzipped (311 KB minified)
 
 
 ## Learn By Example

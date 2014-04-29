@@ -2,8 +2,118 @@
 
 There is an extensive [Migration Guide](https://github.com/photonstorm/phaser/blob/master/resources/Migration%20Guide.md) available for those converting from Phaser 1.x to 2.x. In the guide we detail the API breaking changes and approach to our new physics system.
 
-## Version 2.0.4 - "Mos Shirare" - in development
+## Version 2.0.4 - "Mos Shirare" - 29th April 2014
 
+### Updates
+
+* Updated to [Pixi.js 1.5.3](https://github.com/GoodBoyDigital/pixi.js/releases/tag/v1.5.3)
+* Updated to latest [p2.js](https://github.com/schteppe/p2.js/commits/master) - all commits from 0.5.0 to Apr 27th 2014.
+* TypeScript definitions fixes and updates (thanks @clark-stevenson @metrofun @killalau)
+* Timer has removed all use of local temporary vars in the core update loop.
+* The Input.reset `hard` reset parameter is now passed down to the Keyboard and Key reset methods.
+* AnimationManager.destroy now iterates through child animations calling destroy on all of them, avoiding a memory leak (thanks stauzs)
+* AnimationManager.play will now call Animation.stop on the current animation before switching to the new one (thanks @nihakue, #713)
+* ArcadePhysics.Body.phase is checked in postUpdate to prevent it from being called multiple times in a single frame.
+* Group.setProperty will now check if the property exists before setting it, this applies to Group.setAll and anything else using setProperty internally.
+* QuadTree.retrieve now checks to see if the given Sprite has a body before carrying on.
+* ArcadePhysics.collideSpriteVsGroup checks if Sprite has a body before carrying on, now safely skips sub-groups or other non-Sprite group children. 
+* Group.remove now checks the child to see if it's a member of the root Group before removing it, otherwise Pixi throws an Error.
+* The Emitter no longer checks if minParticleScale = maxParticleScale for the scale check, allowing for fixed scale particles again.
+* The PIXI.AbstractFilter is now included in the Phaser Pixi build by default, allowing for easier use of external Pixi Filters.
+* All Game Objects have a new property: destroyPhase (boolean) which is true if the object is in the process of being destroyed, otherwise false.
+* If Tween.yoyo was true but repeat was 0 then it wouldn't yoyo. Now if yoyo is set, but not repeat, the repeat count gets set to 1 (thanks @hilts-vaughan, fix #744)
+* RandomDataGenerator.integerInRange uses a new method of rounding the value to an integer to avoid distribution probability issues (thanks PhaserFan)
+* Updated the Device little / big endianess check.
+* Time has been updated so that physicsElapsed can never be zero (falls back to 1/60), also fixes p2 elapsed time bug (thanks @georgiee, fix #758)
+* Input and Pointer now use the new ArrayList instead of a LinkedList, which resolve list item removable during callback issues.
+* Input.reset no longer resets every interactive item it knows of, because they are removed during the destroy phase and can now persist between States if needed.
+* Blank Tilemaps no longer create `null` tiles, but instead create Tile objects with an index of -1 which can be replaced and updated like any other tile.
+* Tilemap.addTilesetImage will now raise a console.warn if you specify an invalid tileset key and not create the tileset rather than pick the default set.
+* Math.smoothstep and Math.smootherstep have been updated to work regardless if a is > or < b (thanks @gre, fix #772)
+* Text.updateText now sets the lineCap to `round` to avoid occassional font glitching issues in Chrome.
+
+### New Features
+
+* New Phaser Project Template specifically for requireJS in the `resources/Project Templates` folder (many thanks @ashatch)
+* Loader now has an onFileStart event you can listen for (thanks @codevinsky, #705)
+* Group.classType allows you to change the type of object that Group.create or createMultiple makes from Phaser.Sprite to your own custom class.
+* Timer.clearPendingEvents will purge any events marked for deletion, this is run automatically at the start of the update loop.
+* Device.crosswalk detects if your game is running under Intels Crosswalk XDK.
+* Keyboard.reset has a new `hard` parameter which controls the severity of the reset. A soft reset doesn't remove any callbacks or event listeners.
+* Key.reset has a new `hard` parameter which controls the severity of the reset. A soft reset doesn't remove any callbacks or event listeners.
+* InputManager.resetLocked - If the Input Manager has been reset locked then all calls made to InputManager.reset, such as from a State change, are ignored.
+* Group.resetCursor will reset the Group cursor back to the start of the group, or to the given index value.
+* World.wrap will take a game object and if its x/y coordinates fall outside of the world bounds it will be repositioned on the opposite side, for a wrap-around effect.
+* Device.support32bit is a new boolean that sets if the context supports 32bit pixel manipulation using array buffer views or not.
+* P2.World now has its own pause and resume methods, so you can pause the physics simulation independent of your game (thanks @georgiee)
+* Phaser.ArrayList is a new iterative object, similar in principal to a set data structure, but operating on a single array without modifying the object structure.
+* Add scaleMode params to FilterTexture and RenderTexture (pixi.js update by @giraluna)
+* Your State can now have a pauseUpdate method, which is called constantly when the game is paused.
+* Timer.timeCap is a new setting allowing your Timers to protect against unexpectedly large delta timers (such as raf de-vis or CPU grind).
+* Camera.unfollow allows you to easily unfollow a tracked object (thanks @alvinsight, #755)
+* Animation.setFrame allows you to set the animation to a specific frame (thanks @adamholdenyall, #706)
+* Point.dot - get the dot product of two Point objects.
+* Point.cross - get the cross product of two Point objects.
+* Point.cross - get the cross product of two Point objects.
+* Point.perp - make the Point perpendicular (90 degrees rotation)
+* Point.rperp - make the Point perpendicular (-90 degrees rotation)
+* Point.normalRightHand - Right-hand normalize (make unit length) a Point.
+* Point.angle - Returns the angle between this Point object and another object with public x and y properties.
+* Point.angleSq - Returns the angle squared between this Point object and another object with public x and y properties.
+* Point.getMagnitudeSq - Calculates the length squared of the Point object.
+* Point.project - Project two Points onto another Point.
+* Point.projectUnit - Project two Points onto a Point of unit length.
+* Point.multiplyAdd - Adds two 2D Points together and multiplies the result by the given scalar.
+* Point.negative - Creates a negative Point.
+* Point.interpolate - Interpolates the two given Points, based on the `f` value (between 0 and 1) and returns a new Point.
+* Color.packPixel packs an rgb component into a single integer.
+* Color.unpackPixel unpacks an integer into a color object.
+* Color.fromRGBA converts an integer in 0xRRGGBBAA format to a color object.
+* Color.toRGBA converts rgba components into a 32-bit integer.
+* Color.RGBtoHSL converts an rgb color into hsl (hue, saturation, lightness)
+* Color.HSLtoRGB converts hsl values into an rgb color object.
+* Color.RGBtoHSV converts an rgb color into hsv (hue, saturation, value)
+* Color.HSVtoRGB converts an hsv value into an rgb color object.
+* Color.createColor - creates the new light-weight color object used by most Color conversion methods.
+* Color.updateColor - updates an existing color object to update the rgba property.
+* Color.RGBtoString converts an rgba color into a # or 0x color string.
+* Color.HSVColorWheel will return an array with 360 color objects for each segment of an HSV color wheel, you can optionally set the saturation and value amounts.
+* Color.HSLColorWheel will return an array with 360 color objects for each segment of an HSL color wheel, you can optionally set the saturation and lightness amounts.
+* BitmapData.cls clears the current context.
+* BitmapData.fill fills the context with the given color.
+* BitmapData.processPixelRGB lets you perform a custom callback on every pixel in the BitmapData by passing the pixels color object to your callback.
+* BitmapData.processPixel lets you perform a custom callback on every pixel in the BitmapData by passing the pixels color value to your callback.
+* BitmapData.replaceRGB will scan the bitmap for a specific color and replace it with the new given one.
+* BitmapData.setHSL sets the hue, saturation and lightness values on every pixel in the given region, or the whole BitmapData if no region was specified.
+* BitmapData.shiftHSL shifts the hue, saturation and lightness values on every pixel in the given region, or the whole BitmapData if no region was specified.
+* BitmapData.extract scans this BitmapData for all pixels matching the given r,g,b values and then draws them into the given destination BitmapData.
+* BitmapData.circle draws a filled Circle to the BitmapData at the given x, y coordinates and radius in size.
+
+### Bug Fixes
+
+* The main Timer loop could incorrectly remove a TimerEvent if a new one was added specifically during an event callback (thanks @garyyeap, fix #710)
+* Fixed the use of the destroy parameter in Group.removeAll and related functions (thanks @AnderbergE, fix #717)
+* P2.World.convertTilemap now correctly checks the collides parameter of the tiles as it converts them.
+* Animation.destroy didn't correctly clear the onStart, onLoop and onComplete signals.
+* StateManager.restart incorrectly skipped the first additional parameter after clearCache (thanks @mariusbrn, fix #722)
+* Line.angle and Math.angleBetween used Math.atan2 arguments in the wrong order (thanks @jotson, fix #724)
+* Group.destroy checks parent before removing (thanks @clark-stevenson, fix #733)
+* Fixed typo in P2.World.setMaterial (thanks @OpherV, fix #739)
+* InputHandler._setHandCursor private var wasn't properly set, meaning the hand cursor could sometimes remain (during destroy sequence for example)
+* Destroying an object with an input handler during its onDown event would throw Signals dispatch errors (thanks @jflowers45, fix #746)
+* Circle.distance used an incorrect Math call if you wanted a rounded distance value (thanks @OpherV, fix #745)
+* Point.distance used an incorrect Math call if you wanted a rounded distance value (thanks @OpherV, fix #745)
+* P2.Body.loadPolygon has been updated to correct center of mass issues (thanks @georgiee, fix #749)
+* Game checks if window.console exists before using it (should fix IE9 issues when dev tools are closed), however it is still used deeper in Pixi.
+* Masks now work when used in RenderTextures / CacheAsBitmap and Filters (pixi.js update)
+* Stroked text sometimes got clipped (pixi.js update)
+* Polygon.contains now works for coordinates to the left of the polygon (thanks @vilcans, fix #766)
+* Game pause/resume could incorrectly increment paused Timers (thanks @georgiee, fix #759)
+* Animations resuming from a pause no longer skip frames (thanks @merixstudio, fix #730)
+* Tilemap.fill would throw an error if called on a blank tilemap full of null values (thanks @DrHackenstein, fix #761)
+* LoaderParser.bitmapFont updated so xml parsing works properly on IE9 (thanks @georgiee)
+* Sounds that had been paused via game code would un-mute if the game paused and resumed.
+* CSV Tilemap tiles would incorrectly set the Tile layer reference, causing collision to fail (thanks @Chapelin, fix #692)
 
 
 ## Version 2.0.3 - "Allorallen" - 11th April 2014
