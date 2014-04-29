@@ -136,6 +136,7 @@ Version 2.0.4 - "Mos Shirare" - in development
 * Timer.timeCap is a new setting allowing your Timers to protect against unexpectedly large delta timers (such as raf de-vis or CPU grind).
 * Camera.unfollow allows you to easily unfollow a tracked object (thanks @alvinsight, #755)
 * Animation.setFrame allows you to set the animation to a specific frame (thanks @adamholdenyall, #706)
+* New Phaser Project Template specifically for requireJS in the `resources/Project Templates` folder (many thanks @ashatch)
 
 
 ### Bug Fixes
