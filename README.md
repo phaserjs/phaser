@@ -1,5 +1,7 @@
 ![Phaser 2.0](http://www.phaser.io/images/phaser2-github.png)
 
+![hr](http://phaser.io/images/ghdiv1.png)
+
 # Phaser 2.0.4
 
 Phaser is a fast, free and fun open source game framework for making desktop and mobile browser HTML5 games. It uses [Pixi.js](https://github.com/GoodBoyDigital/pixi.js/) internally for fast 2D Canvas and WebGL rendering.
@@ -14,11 +16,10 @@ By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 * Source code for 300+ [Phaser Examples](https://github.com/photonstorm/phaser-examples) or [browse them online](http://examples.phaser.io)
 * Read the [documentation online](http://docs.phaser.io)
 * Join our [#phaserio IRC channel](http://www.html5gamedevs.com/topic/4470-official-phaserio-irc-channel-phaserio-on-freenode/) on freenode
+* Subscribe to the [Phaser Newsletter](https://confirmsubscription.com/h/r/369DE48E3E86AF1E) and we'll email you when new versions are released.
 
-[Subscribe to our new Phaser Newsletter](https://confirmsubscription.com/h/r/369DE48E3E86AF1E). We'll email you when new versions are released.
-
-[![Build Status](https://travis-ci.org/photonstorm/phaser.png?branch=dev)](https://travis-ci.org/photonstorm/phaser)
-
+![hr](http://phaser.io/images/ghdiv2.png)
+![hr](http://phaser.io/images/ghdiv1.png)
 
 ## Welcome to Phaser and What's new in 2.0.4?
 
@@ -36,6 +37,8 @@ Until then happy coding everyone! And we hope to see you on the forums.
 
 ![boogie](http://www.phaser.io/images/spacedancer.gif)
 
+![hr](http://phaser.io/images/ghdiv2.png)
+![hr](http://phaser.io/images/ghdiv1.png)
 
 ## Getting Started Guides
 
@@ -375,6 +378,8 @@ We now have a full [Contributors Guide][contribute] which goes into the process 
 - If you issue a Pull Request for Phaser, please only do so againt the `dev` branch and *not* against the `master` branch.
 
 - Before submitting a Pull Request please run your code through [JSHint](http://www.jshint.com/) to check for stylistic or formatting errors. To use JSHint, run `grunt jshint`. This isn't a strict requirement and we are happy to receive Pull Requests that haven't been JSHinted, so don't let it put you off contributing, but do know that we'll reformat your source before going live with it.
+
+[![Build Status](https://travis-ci.org/photonstorm/phaser.png?branch=dev)](https://travis-ci.org/photonstorm/phaser)
 
 
 ## Bugs?
