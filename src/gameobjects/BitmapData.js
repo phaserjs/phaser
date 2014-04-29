@@ -66,18 +66,6 @@ Phaser.BitmapData = function (game, key, width, height) {
     this.imageData = this.context.getImageData(0, 0, width, height);
 
     /**
-    * @property {ArrayBuffer} buffer - An ArrayBuffer the same size as the context ImageData.
-    */
-    if (this.imageData.data.buffer)
-    {
-        this.buffer = this.imageData.data.buffer;
-    }
-    else
-    {
-        this.buffer = new ArrayBuffer(this.imageData.data.length);
-    }
-
-    /**
     * @property {Uint8ClampedArray} data - A Uint8ClampedArray view into BitmapData.buffer.
     */
     this.data = this.imageData.data;
@@ -85,7 +73,28 @@ Phaser.BitmapData = function (game, key, width, height) {
     /**
     * @property {Uint32Array} pixels - An Uint32Array view into BitmapData.buffer.
     */
-    this.pixels = new Uint32Array(this.buffer);
+    this.pixels = null;
+
+    /**
+    * @property {ArrayBuffer} buffer - An ArrayBuffer the same size as the context ImageData.
+    */
+    if (this.imageData.data.buffer)
+    {
+        this.buffer = this.imageData.data.buffer;
+        this.pixels = new Uint32Array(this.buffer);
+    }
+    else
+    {
+        if (window['ArrayBuffer'])
+        {
+            this.buffer = new ArrayBuffer(this.imageData.data.length);
+            this.pixels = new Uint32Array(this.buffer);
+        }
+        else
+        {
+            this.pixels = this.imageData.data;
+        }
+    }
 
     /**
     * @property {PIXI.BaseTexture} baseTexture - The PIXI.BaseTexture.
@@ -265,18 +274,25 @@ Phaser.BitmapData.prototype = {
         if (typeof height === 'undefined') { height = this.height; }
 
         this.imageData = this.context.getImageData(x, y, width, height);
+        this.data = this.imageData.data;
 
         if (this.imageData.data.buffer)
         {
             this.buffer = this.imageData.data.buffer;
+            this.pixels = new Uint32Array(this.buffer);
         }
         else
         {
-            this.buffer = new ArrayBuffer(this.imageData.data.length);
+            if (window['ArrayBuffer'])
+            {
+                this.buffer = new ArrayBuffer(this.imageData.data.length);
+                this.pixels = new Uint32Array(this.buffer);
+            }
+            else
+            {
+                this.pixels = this.imageData.data;
+            }
         }
-
-        this.data = this.imageData.data;
-        this.pixels = new Uint32Array(this.buffer);
 
     },
 
