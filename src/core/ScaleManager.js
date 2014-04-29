@@ -218,6 +218,8 @@ Phaser.ScaleManager = function (game, width, height) {
     */
     this._height = 0;
 
+    this._check=null;	//holds interval later for setScreenSize.  must be initialized to null to allow === null check later.
+
     var _this = this;
 
     window.addEventListener('orientationchange', function (event) {
