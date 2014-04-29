@@ -6,7 +6,7 @@ There is an extensive [Migration Guide](https://github.com/photonstorm/phaser/bl
 
 ### Updates
 
-* Updated to [Pixi.js 1.5.3](https://github.com/GoodBoyDigital/pixi.js/releases/tag/v1.5.3)
+* Updated to [Pixi.js 1.5.3](https://github.com/GoodBoyDigital/pixi.js/releases/tag/1.5.3)
 * Updated to latest [p2.js](https://github.com/schteppe/p2.js/commits/master) - all commits from 0.5.0 to Apr 27th 2014.
 * TypeScript definitions fixes and updates (thanks @clark-stevenson @metrofun @killalau)
 * Timer has removed all use of local temporary vars in the core update loop.

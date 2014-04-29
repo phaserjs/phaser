@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.0.4 "Mos Shirare" - Built: Tue Apr 29 2014 15:39:24
+* v2.0.5 "Tanchico" - Built: Tue Apr 29 2014 21:59:33
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -9764,7 +9764,7 @@ PIXI.RenderTexture.tempMatrix = new PIXI.Matrix();
 *
 * Phaser - http://phaser.io
 *
-* v2.0.4 "Mos Shirare" - Built: Tue Apr 29 2014 15:39:24
+* v2.0.5 "Tanchico" - Built: Tue Apr 29 2014 21:59:33
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -9807,7 +9807,7 @@ PIXI.RenderTexture.tempMatrix = new PIXI.Matrix();
 */
 var Phaser = Phaser || {
 
-	VERSION: '2.0.4',
+	VERSION: '2.0.5',
 	GAMES: [],
 
     AUTO: 0,
@@ -18533,6 +18533,12 @@ Phaser.ScaleManager = function (game, width, height) {
     * @private
     */
     this._height = 0;
+
+    /**
+    * @property {number} _check - Cached size interval var.
+    * @private
+    */
+    this._check = null;
 
     var _this = this;
 
@@ -52719,7 +52725,14 @@ Phaser.Tilemap.prototype = {
 
         if (x >= 0 && x < this.layers[layer].width && y >= 0 && y < this.layers[layer].height)
         {
-            return this.layers[layer].data[y][x];
+            if (this.layers[layer].data[y][x].index === -1)
+            {
+                return null;
+            }
+            else
+            {
+                return this.layers[layer].data[y][x];
+            }
         }
 
     },
@@ -74327,7 +74340,7 @@ Phaser.Physics.P2.Body.prototype = {
     */
     applyForce: function (force, worldX, worldY) {
 
-        this.data.applyForce(force, [this.world.pxm(worldX), this.world.pxm(worldY)]);
+        this.data.applyForce(force, [this.world.pxmi(worldX), this.world.pxmi(worldY)]);
 
     },
 
@@ -76512,7 +76525,7 @@ Phaser.Physics.P2.RevoluteConstraint = function (world, bodyA, pivotA, bodyB, pi
     pivotA = [ world.pxmi(pivotA[0]), world.pxmi(pivotA[1]) ];
     pivotB = [ world.pxmi(pivotB[0]), world.pxmi(pivotB[1]) ];
 
-    p2.RevoluteConstraint.call(this, bodyA, pivotA, bodyB, pivotB, maxForce);
+    p2.RevoluteConstraint.call(this, bodyA, pivotA, bodyB, pivotB, {maxForce: maxForce});
 
 };
 

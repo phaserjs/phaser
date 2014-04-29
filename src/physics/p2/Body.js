@@ -425,7 +425,7 @@ Phaser.Physics.P2.Body.prototype = {
     */
     applyForce: function (force, worldX, worldY) {
 
-        this.data.applyForce(force, [this.world.pxm(worldX), this.world.pxm(worldY)]);
+        this.data.applyForce(force, [this.world.pxmi(worldX), this.world.pxmi(worldY)]);
 
     },
 

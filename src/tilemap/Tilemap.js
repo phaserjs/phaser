@@ -1184,7 +1184,14 @@ Phaser.Tilemap.prototype = {
 
         if (x >= 0 && x < this.layers[layer].width && y >= 0 && y < this.layers[layer].height)
         {
-            return this.layers[layer].data[y][x];
+            if (this.layers[layer].data[y][x].index === -1)
+            {
+                return null;
+            }
+            else
+            {
+                return this.layers[layer].data[y][x];
+            }
         }
 
     },
