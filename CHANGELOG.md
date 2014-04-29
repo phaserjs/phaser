@@ -116,6 +116,14 @@ There is an extensive [Migration Guide](https://github.com/photonstorm/phaser/bl
 * Sounds that had been paused via game code would un-mute if the game paused and resumed.
 * CSV Tilemap tiles would incorrectly set the Tile layer reference, causing collision to fail (thanks @Chapelin, fix #692)
 
+### 2.0.4 - zero hour updates
+
+The following issues were fixed in 2.0.4 approx. 1 hour after official release:
+
+* ScaleManager seeds _check private var with null to avoid later comparison check (thanks @jflowers45, fix #782)
+* P2.Body.applyForce should have used pxmi instead of pxm (thanks @Trufi, fix #776)
+* P2 fixed creation of RevoluteConstraint by passing maxForce in the options (thanks @woutercommandeur, fix #783)
+* Tilemap.getTile and getTileXY used to return `null` in 2.0.3 but returned a Tile object in 2.0.4 (with an index of -1), they now return `null` again.
 
 ## Version 2.0.3 - "Allorallen" - 11th April 2014
 
