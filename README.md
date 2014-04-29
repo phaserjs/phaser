@@ -2,8 +2,6 @@
 
 # Phaser 2.0.4
 
-![hr](http://phaser.io/images/ghdiv1.png)
-
 Phaser is a fast, free and fun open source game framework for making desktop and mobile browser HTML5 games. It uses [Pixi.js](https://github.com/GoodBoyDigital/pixi.js/) internally for fast 2D Canvas and WebGL rendering.
 
 Version: 2.0.4 "Mos Shirare" - Released: 29th April 2014
@@ -18,11 +16,9 @@ By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 * Join our [#phaserio IRC channel](http://www.html5gamedevs.com/topic/4470-official-phaserio-irc-channel-phaserio-on-freenode/) on freenode
 * Subscribe to the [Phaser Newsletter](https://confirmsubscription.com/h/r/369DE48E3E86AF1E) and we'll email you when new versions are released.
 
-![hr](http://phaser.io/images/ghdiv2.png)
+![div](http://phaser.io/images/div4.png)
 
 ## Welcome to Phaser and What's new in 2.0.4?
-
-![hr](http://phaser.io/images/ghdiv1.png)
 
 We've had the vast majority of this version ready for a few days now, but held off releasing due to Ludum Dare 48. Ludum Dare contests are always peak times for Phaser, we see an influx of new devs downloading for the first time. So it's not the best day to release a new version :) Now that LD48 has finished we present Phaser 2.0.4. This is the latest version in our bi-weekly sprint release schedule, and the change log is (which you can see in full below) is significant to say the least.
 
@@ -38,11 +34,9 @@ Until then happy coding everyone! And we hope to see you on the forums.
 
 ![boogie](http://www.phaser.io/images/spacedancer.gif)
 
-![hr](http://phaser.io/images/ghdiv2.png)
+![div](http://phaser.io/images/div1.png)
 
 ## Getting Started Guides
-
-![hr](http://phaser.io/images/ghdiv1.png)
 
 We have a [Getting Started Guide](http://phaser.io/getting-started-js.php) which covers all you need to begin developing games with Phaser. From setting up a web server to picking an IDE. If you're new to HTML5 game development, or are coming from another language like AS3, then we recommend starting there.
 
@@ -54,11 +48,11 @@ Finally the list of [community authored Phaser Tutorials](http://www.lessmilk.co
 
 ![Phaser Logo](http://www.photonstorm.com/wp-content/uploads/2013/09/phaser_10_release.jpg)
 
+![div](http://phaser.io/images/div2.png)
 
 ## Change Log
 
 Version 2.0.4 - "Mos Shirare" - 29th April 2014
-
 
 ### Updates
 
@@ -87,7 +81,6 @@ Version 2.0.4 - "Mos Shirare" - 29th April 2014
 * Tilemap.addTilesetImage will now raise a console.warn if you specify an invalid tileset key and not create the tileset rather than pick the default set.
 * Math.smoothstep and Math.smootherstep have been updated to work regardless if a is > or < b (thanks @gre, fix #772)
 * Text.updateText now sets the lineCap to `round` to avoid occassional font glitching issues in Chrome.
-
 
 ### New Features
 
@@ -146,7 +139,6 @@ Version 2.0.4 - "Mos Shirare" - 29th April 2014
 * BitmapData.extract scans this BitmapData for all pixels matching the given r,g,b values and then draws them into the given destination BitmapData.
 * BitmapData.circle draws a filled Circle to the BitmapData at the given x, y coordinates and radius in size.
 
-
 ### Bug Fixes
 
 * The main Timer loop could incorrectly remove a TimerEvent if a new one was added specifically during an event callback (thanks @garyyeap, fix #710)
@@ -178,6 +170,7 @@ There is an extensive [Migration Guide](https://github.com/photonstorm/phaser/bl
 
 The full Change Log is at https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md
 
+![div](http://phaser.io/images/div3.png)
 
 ## How to Build
 
@@ -193,11 +186,13 @@ If you replace Pixi or p2 then run `grunt replace` to patch their UMD strings so
 
 Note: Some of you may not be aware, but the `phaser.min.js` file in the build folder contains all 3 physics systems bundled in. If you only need Arcade Physics then you can use `build\custom\phaser-arcade-physics.min.js` instead. This will save you 180KB from the minified file size.
 
+![div](http://phaser.io/images/div4.png)
 
 ## Koding
 
 You can [![clone the Phaser repo in Koding](http://learn.koding.com/btn/clone_d.png)][koding] and then start editing and previewing code right away using their web based VM development system.
 
+![div](http://phaser.io/images/div5.png)
 
 ## Bower
 
@@ -209,6 +204,7 @@ Nice and easy :)
 
 ![Tanks](http://www.photonstorm.com/wp-content/uploads/2013/10/phaser_tanks-640x480.png)
 
+![div](http://phaser.io/images/div6.png)
 
 ## CDNJS
 
@@ -220,6 +216,7 @@ Or if you prefer you can leave the protocol off, so it works via http and https:
 
 `//cdnjs.cloudflare.com/ajax/libs/phaser/2.0.4/phaser.min.js`
 
+![div](http://phaser.io/images/div1.png)
 
 ## Requirements
 
@@ -239,6 +236,7 @@ Phaser is 128 KB gzipped (576 KB minified) when including all 3 physics engines.
 
 Note: The `phaser.min.js` file in the build folder contains all 3 physics systems bundled in. If you only need Arcade Physics then you can use `build\custom\phaser-arcade-physics.min.js` instead. This will save you 180 KB from the minified file size.
 
+![div](http://phaser.io/images/div3.png)
 
 ## Learn By Example
 
@@ -262,6 +260,7 @@ There is a 'Side View' example viewer as well. This loads all the examples into 
 
 You can also browse all [Phaser Examples](http://examples.phaser.io) online.
 
+![div](http://phaser.io/images/div4.png)
 
 ## Features
 
@@ -332,6 +331,7 @@ Phaser has been used to create hundreds of games, which receive millions of play
 
 ![FruitParty](http://www.photonstorm.com/wp-content/uploads/2013/10/phaser_fruit_particles-640x480.png)
 
+![div](http://phaser.io/images/div6.png)
 
 ## Road Map
 
@@ -363,11 +363,13 @@ Beyond version 2.0 here are some of the features planned for the future:
 * Allow for complex assets like Bitmap Fonts to be stored within a texture atlas.
 * Look at XDomainRequest for IE9 CORs issues.
 
+![div](http://phaser.io/images/div1.png)
 
 ## Nadion
 
 [Nadion](https://github.com/jcd-as/nadion) is a set of powerful enhancements for Phaser that makes level building even easier. It includes features such as Trigger, Area, Alarms and Emitters, debug panels, state machines, parallax layer scrolling, 'developer mode' short-cuts and more.
 
+![div](http://phaser.io/images/div2.png)
 
 ## Contributing
 
@@ -383,6 +385,7 @@ We now have a full [Contributors Guide][contribute] which goes into the process 
 
 [![Build Status](https://travis-ci.org/photonstorm/phaser.png?branch=dev)](https://travis-ci.org/photonstorm/phaser)
 
+![div](http://phaser.io/images/div3.png)
 
 ## Bugs?
 
@@ -392,6 +395,7 @@ Please add them to the [Issue Tracker][issues] with as much info as possible, es
 
 "Being negative is not how we make progress" - Larry Page, Google
 
+![div](http://phaser.io/images/div4.png)
 
 ## License
 
