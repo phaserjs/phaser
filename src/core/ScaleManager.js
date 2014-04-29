@@ -218,6 +218,12 @@ Phaser.ScaleManager = function (game, width, height) {
     */
     this._height = 0;
 
+    /**
+    * @property {number} _check - Cached size interval var.
+    * @private
+    */
+    this._check = null;
+
     var _this = this;
 
     window.addEventListener('orientationchange', function (event) {
