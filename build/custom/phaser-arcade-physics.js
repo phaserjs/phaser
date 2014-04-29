@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.0.5 "Tanchico" - Built: Tue Apr 29 2014 21:59:33
+* v2.0.4 "Mos Shirare" - Built: Tue Apr 29 2014 22:39:37
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -9764,7 +9764,7 @@ PIXI.RenderTexture.tempMatrix = new PIXI.Matrix();
 *
 * Phaser - http://phaser.io
 *
-* v2.0.5 "Tanchico" - Built: Tue Apr 29 2014 21:59:33
+* v2.0.4 "Mos Shirare" - Built: Tue Apr 29 2014 22:39:37
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -9807,7 +9807,7 @@ PIXI.RenderTexture.tempMatrix = new PIXI.Matrix();
 */
 var Phaser = Phaser || {
 
-	VERSION: '2.0.5',
+	VERSION: '2.0.4',
 	GAMES: [],
 
     AUTO: 0,
