@@ -48,6 +48,12 @@ Phaser.Loader = function (game) {
     this._xhr = new XMLHttpRequest();
 
     /**
+    * @property {XDomainRequest} - An ajax request used specifically by IE9 for CORs loading issues.
+    * @private
+    */
+    this._ajax = null;
+
+    /**
     * @property {boolean} isLoading - True if the Loader is in the process of loading the queue.
     * @default
     */
@@ -963,12 +969,50 @@ Phaser.Loader.prototype = {
                 break;
 
             case 'json':
-                this._xhr.open("GET", this.baseURL + file.url, true);
-                this._xhr.responseType = "text";
-                this._xhr.onload = function () {
-                    return _this.jsonLoadComplete(_this._fileIndex);
-                };
-                this._xhr.send();
+
+                if (window.XDomainRequest)
+                {
+                    this._ajax = new window.XDomainRequest();
+
+                    // XDomainRequest has a few querks. Occasionally it will abort requests
+                    // A way to avoid this is to make sure ALL callbacks are set even if not used
+                    // More info here: http://stackoverflow.com/questions/15786966/xdomainrequest-aborts-post-on-ie-9
+                    this._ajax.timeout = 3000;
+
+                    this._ajax.onerror = function () {
+                        return _this.dataLoadError(_this._fileIndex);
+                    };
+                       
+                    this._ajax.ontimeout = function () {
+                        return _this.dataLoadError(_this._fileIndex);
+                    };
+
+                    this._ajax.onprogress = function() {};
+
+                    this._ajax.onload = function(){
+                        return _this.jsonLoadComplete(_this._fileIndex);
+                    };
+
+                    this._ajax.open('GET', this.baseURL + file.url, true);
+
+                    this._ajax.send();
+                }
+                else
+                {
+                    this._xhr.open("GET", this.baseURL + file.url, true);
+                    this._xhr.responseType = "text";
+    
+                    this._xhr.onload = function () {
+                        return _this.jsonLoadComplete(_this._fileIndex);
+                    };
+    
+                    this._xhr.onerror = function () {
+                        return _this.dataLoadError(_this._fileIndex);
+                    };
+    
+                    this._xhr.send();
+                }
+
                 break;
 
             case 'tilemap':
