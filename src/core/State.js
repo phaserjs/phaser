@@ -168,6 +168,14 @@ Phaser.State.prototype = {
     },
 
     /**
+    * pauseUpdate is called while the game is paused instead of preUpdate, update and postUpdate.
+    *
+    * @method Phaser.State#pauseUpdate
+    */
+    pauseUpdate: function () {
+    },
+
+    /**
     * This method will be called when the State is shutdown (i.e. you switch to another state from this one).
     *
     * @method Phaser.State#shutdown

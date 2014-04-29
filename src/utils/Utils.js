@@ -319,3 +319,61 @@ if (!Array.prototype.forEach)
         }
     };
 }
+
+(function(global, undefined) {
+ 
+    /**
+    * Low-budget Float32Array knock-off, suitable for use with P2.js in IE9
+    * Source: http://www.html5gamedevs.com/topic/5988-phaser-12-ie9/
+    * Cameron Foale (http://www.kibibu.com)
+    */
+    if (typeof global.Uint32Array !== "function")
+    {
+        var CheapArray = function(type)
+        {
+            var proto = new Array(); // jshint ignore:line
+ 
+            global[type] = function(arg) {
+ 
+                if (typeof(arg) === "number")
+                {
+                    Array.call(this, arg);
+                    this.length = arg;
+ 
+                    for (var i = 0; i < this.length; i++)
+                    {
+                        this[i] = 0;
+                    }
+                }
+                else
+                {
+                    Array.call(this, arg.length);
+
+                    this.length = arg.length;
+ 
+                    for (var i = 0; i < this.length; i++)
+                    {
+                        this[i] = arg[i];
+                    }
+                }
+            };
+ 
+            global[type].prototype = proto;
+            global[type].constructor = global[type];
+        };
+ 
+        CheapArray('Uint32Array'); // jshint ignore:line
+        CheapArray('Int16Array');  // jshint ignore:line
+    }
+ 
+    /**
+     * Also fix for the absent console in IE9
+     */
+    if (!window.console)
+    {
+        window.console = {};
+        window.console.log = window.console.assert = function(){};
+        window.console.warn = window.console.assert = function(){};
+    }
+ 
+})(this);
