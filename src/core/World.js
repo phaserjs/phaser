@@ -105,6 +105,65 @@ Phaser.World.prototype.shutdown = function () {
 };
 
 /**
+* This will take the given game object and check if its x/y coordinates fall outside of the world bounds.
+* If they do it will reposition the object to the opposite side of the world, creating a wrap-around effect.
+*
+* @method Phaser.World#wrap
+* @param {Phaser.Sprite|Phaser.Image|Phaser.TileSprite|Phaser.Text} sprite - The object you wish to wrap around the world bounds.
+* @param {number} [padding=0] - Extra padding added equally to the sprite.x and y coordinates before checking if within the world bounds. Ignored if useBounds is true.
+* @param {boolean} [useBounds=false] - If useBounds is false wrap checks the object.x/y coordinates. If true it does a more accurate bounds check, which is more expensive.
+*/
+Phaser.World.prototype.wrap = function (sprite, padding, useBounds) {
+
+    if (typeof padding === 'undefined') { padding = 0; }
+    if (typeof useBounds === 'undefined') { useBounds = false; }
+
+    if (!useBounds)
+    {
+        if (sprite.x + padding < this.bounds.x)
+        {
+            sprite.x = this.bounds.right + padding;
+        }
+        else if (sprite.x - padding > this.bounds.right)
+        {
+            sprite.x = this.bounds.left - padding;
+        }
+
+        if (sprite.y + padding < this.bounds.top)
+        {
+            sprite.y = this.bounds.bottom + padding;
+        }
+        else if (sprite.y - padding > this.bounds.bottom)
+        {
+            sprite.y = this.bounds.top - padding;
+        }
+    }
+    else
+    {
+        sprite.getBounds();
+
+        if (sprite._currentBounds.right < this.bounds.x)
+        {
+            sprite.x = this.bounds.right;
+        }
+        else if (sprite._currentBounds.x > this.bounds.right)
+        {
+            sprite.x = this.bounds.left;
+        }
+
+        if (sprite._currentBounds.bottom < this.bounds.top)
+        {
+            sprite.y = this.bounds.bottom;
+        }
+        else if (sprite._currentBounds.top > this.bounds.bottom)
+        {
+            sprite.y = this.bounds.top;
+        }
+    }
+
+};
+
+/**
 * @name Phaser.World#width
 * @property {number} width - Gets or sets the current width of the game world.
 */

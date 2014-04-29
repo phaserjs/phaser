@@ -46,6 +46,12 @@ Phaser.Physics.P2 = function (game, config) {
     this.useElapsedTime = false;
 
     /**
+    * @property {boolean} paused - The paused state of the P2 World.
+    * @default
+    */
+    this.paused = false;
+
+    /**
     * @property {array<Phaser.Physics.P2.Material>} materials - A local array of all created Materials.
     * @protected
     */
@@ -628,9 +634,39 @@ Phaser.Physics.P2.prototype = {
     },
 
     /**
+    * Pauses the P2 World independent of the game pause state.
+    *
+    * @method Phaser.Physics.P2#pause
+    */
+    pause: function() {
+
+        this.paused = true;
+
+    },
+    
+    /**
+    * Resumes a paused P2 World.
+    *
+    * @method Phaser.Physics.P2#resume
+    */
+    resume: function() {
+
+        this.paused = false;
+
+    },
+
+    /**
+    * Internal P2 update loop.
+    *
     * @method Phaser.Physics.P2#update
     */
     update: function () {
+
+        // Do nothing when the pysics engine was paused before
+        if (this.paused)
+        {
+            return;
+        }
 
         if (this.useElapsedTime)
         {
@@ -989,7 +1025,7 @@ Phaser.Physics.P2.prototype = {
 
         while (i--)
         {
-            bodies.setMaterial(material);
+            bodies[i].setMaterial(material);
         }
 
     },
@@ -1474,7 +1510,7 @@ Phaser.Physics.P2.prototype = {
             {
                 var tile = map.layers[layer].data[y][x];
 
-                if (tile)
+                if (tile && tile.collides)
                 {
                     if (optimize)
                     {

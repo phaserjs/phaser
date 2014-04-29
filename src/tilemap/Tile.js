@@ -25,7 +25,7 @@ Phaser.Tile = function (layer, index, x, y, width, height) {
     this.layer = layer;
 
     /**
-    * @property {number} index - The index of this tile within the map data corresponding to the tileset.
+    * @property {number} index - The index of this tile within the map data corresponding to the tileset, or -1 if this represents a blank/null tile.
     */
     this.index = index;
 
@@ -315,8 +315,8 @@ Phaser.Tile.prototype = {
 Phaser.Tile.prototype.constructor = Phaser.Tile;
 
 /**
-* @name Phaser.Tile#canCollide
-* @property {boolean} canCollide - True if this tile can collide or has a collision callback.
+* @name Phaser.Tile#collides
+* @property {boolean} collides - True if this tile can collide on any of its faces.
 * @readonly
 */
 Object.defineProperty(Phaser.Tile.prototype, "collides", {
@@ -329,7 +329,7 @@ Object.defineProperty(Phaser.Tile.prototype, "collides", {
 
 /**
 * @name Phaser.Tile#canCollide
-* @property {boolean} canCollide - True if this tile can collide or has a collision callback.
+* @property {boolean} canCollide - True if this tile can collide on any of its faces or has a collision callback set.
 * @readonly
 */
 Object.defineProperty(Phaser.Tile.prototype, "canCollide", {

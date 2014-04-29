@@ -212,6 +212,11 @@ Phaser.Tween.prototype = {
         repeat = repeat || 0;
         yoyo = yoyo || false;
 
+        if (yoyo && repeat === 0)
+        {
+            repeat = 1;
+        }
+
         var self;
 
         if (this._parent)
@@ -456,6 +461,7 @@ Phaser.Tween.prototype = {
     repeat: function (times) {
 
         this._repeat = times;
+
         return this;
 
     },
@@ -471,6 +477,12 @@ Phaser.Tween.prototype = {
     yoyo: function(yoyo) {
 
         this._yoyo = yoyo;
+
+        if (yoyo && this._repeat === 0)
+        {
+            this._repeat = 1;
+        }
+
         return this;
 
     },
@@ -717,7 +729,6 @@ Phaser.Tween.prototype = {
                 this.onLoop.dispatch(this._object);
 
                 return true;
-
             }
             else
             {

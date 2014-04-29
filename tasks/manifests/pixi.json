@@ -11,6 +11,7 @@
     "src/pixi/display/DisplayObjectContainer.js",
     "src/pixi/display/Sprite.js",
     "src/pixi/display/SpriteBatch.js",
+    "src/pixi/filters/AbstractFilter.js",
     "src/pixi/filters/FilterBlock.js",
     "src/pixi/text/Text.js",
     "src/pixi/text/BitmapText.js",

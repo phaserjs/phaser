@@ -168,7 +168,7 @@ Phaser.ScaleManager = function (game, width, height) {
     this.scaleFactorInversed = new Phaser.Point(1, 1);
 
     /**
-    * @property {Phaser.Point} margin - If the game canvas is seto to align by adjusting the margin, the margin calculation values are stored in this Point.
+    * @property {Phaser.Point} margin - If the game canvas is set to align by adjusting the margin, the margin calculation values are stored in this Point.
     * @readonly
     */
     this.margin = new Phaser.Point(0, 0);
@@ -376,7 +376,7 @@ Phaser.ScaleManager.prototype = {
 
         if (typeof orientationImage !== 'undefined')
         {
-            if (orientationImage == null || this.game.cache.checkImageKey(orientationImage) === false)
+            if (orientationImage === null || this.game.cache.checkImageKey(orientationImage) === false)
             {
                 orientationImage = '__default';
             }
@@ -521,9 +521,12 @@ Phaser.ScaleManager.prototype = {
     refresh: function () {
 
         //  We can't do anything about the status bars in iPads, web apps or desktops
-        if (this.game.device.iPad === false && this.game.device.webApp === false && this.game.device.desktop === false)
+        if (!this.game.device.iPad && !this.game.device.webApp && !this.game.device.desktop)
         {
-            if (this.game.device.android && this.game.device.chrome === false)
+            //  TODO - Test this
+            // this._startHeight = window.innerHeight;
+
+            if (this.game.device.android && !this.game.device.chrome)
             {
                 window.scrollTo(0, 1);
             }
@@ -533,7 +536,7 @@ Phaser.ScaleManager.prototype = {
             }
         }
 
-        if (this._check == null && this.maxIterations > 0)
+        if (this._check === null && this.maxIterations > 0)
         {
             this._iterations = this.maxIterations;
 
@@ -554,14 +557,14 @@ Phaser.ScaleManager.prototype = {
     */
     setScreenSize: function (force) {
 
-        if (typeof force == 'undefined')
+        if (typeof force === 'undefined')
         {
             force = false;
         }
 
-        if (this.game.device.iPad === false && this.game.device.webApp === false && this.game.device.desktop === false)
+        if (!this.game.device.iPad && !this.game.device.webApp && !this.game.device.desktop)
         {
-            if (this.game.device.android && this.game.device.chrome === false)
+            if (this.game.device.android && !this.game.device.chrome)
             {
                 window.scrollTo(0, 1);
             }
@@ -578,28 +581,28 @@ Phaser.ScaleManager.prototype = {
             // Set minimum height of content to new window height
             document.documentElement['style'].minHeight = window.innerHeight + 'px';
 
-            if (this.incorrectOrientation === true)
+            if (this.incorrectOrientation)
             {
                 this.setMaximum();
             }
             else if (!this.isFullScreen)
             {
-                if (this.scaleMode == Phaser.ScaleManager.EXACT_FIT)
+                if (this.scaleMode === Phaser.ScaleManager.EXACT_FIT)
                 {
                     this.setExactFit();
                 }
-                else if (this.scaleMode == Phaser.ScaleManager.SHOW_ALL)
+                else if (this.scaleMode === Phaser.ScaleManager.SHOW_ALL)
                 {
                     this.setShowAll();
                 }
             }
             else
             {
-                if (this.fullScreenScaleMode == Phaser.ScaleManager.EXACT_FIT)
+                if (this.fullScreenScaleMode === Phaser.ScaleManager.EXACT_FIT)
                 {
                     this.setExactFit();
                 }
-                else if (this.fullScreenScaleMode == Phaser.ScaleManager.SHOW_ALL)
+                else if (this.fullScreenScaleMode === Phaser.ScaleManager.SHOW_ALL)
                 {
                     this.setShowAll();
                 }
@@ -618,7 +621,7 @@ Phaser.ScaleManager.prototype = {
     */
     setSize: function () {
 
-        if (this.incorrectOrientation === false)
+        if (!this.incorrectOrientation)
         {
             if (this.maxWidth && this.width > this.maxWidth)
             {
@@ -648,7 +651,7 @@ Phaser.ScaleManager.prototype = {
 
         if (this.pageAlignHorizontally)
         {
-            if (this.width < window.innerWidth && this.incorrectOrientation === false)
+            if (this.width < window.innerWidth && !this.incorrectOrientation)
             {
                 this.margin.x = Math.round((window.innerWidth - this.width) / 2);
                 this.game.canvas.style.marginLeft = this.margin.x + 'px';
@@ -662,7 +665,7 @@ Phaser.ScaleManager.prototype = {
 
         if (this.pageAlignVertically)
         {
-            if (this.height < window.innerHeight && this.incorrectOrientation === false)
+            if (this.height < window.innerHeight && !this.incorrectOrientation)
             {
                 this.margin.y = Math.round((window.innerHeight - this.height) / 2);
                 this.game.canvas.style.marginTop = this.margin.y + 'px';
@@ -770,7 +773,7 @@ Object.defineProperty(Phaser.ScaleManager.prototype, "isFullScreen", {
 Object.defineProperty(Phaser.ScaleManager.prototype, "isPortrait", {
 
     get: function () {
-        return this.orientation === 0 || this.orientation == 180;
+        return (this.orientation === 0 || this.orientation === 180);
     }
 
 });
@@ -783,7 +786,7 @@ Object.defineProperty(Phaser.ScaleManager.prototype, "isPortrait", {
 Object.defineProperty(Phaser.ScaleManager.prototype, "isLandscape", {
 
     get: function () {
-        return this.orientation === 90 || this.orientation === -90;
+        return (this.orientation === 90 || this.orientation === -90);
     }
 
 });

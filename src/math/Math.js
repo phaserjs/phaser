@@ -336,7 +336,7 @@ Phaser.Math = {
     * @return {number}
     */
     angleBetween: function (x1, y1, x2, y2) {
-        return Math.atan2(x2 - x1, y2 - y1);
+        return Math.atan2(y2 - y1, x2 - x1);
     },
 
     /**
@@ -347,7 +347,7 @@ Phaser.Math = {
     * @return {number}
     */
     angleBetweenPoints: function (point1, point2) {
-        return Math.atan2(point2.x - point1.x, point2.y - point1.y);
+        return Math.atan2(point2.y - point1.y, point2.x - point1.x);
     },
 
     /**
@@ -607,13 +607,30 @@ Phaser.Math = {
     },
 
     /**
+    * Ensures the given value is between min and max inclusive.
+    *
+    * @method Phaser.Math#limitValue
+    * @param {number} value - The value to limit.
+    * @param {number} min - The minimum the value can be.
+    * @param {number} max - The maximum the value can be.
+    * @return {number} The limited value.
+    */
+    limitValue: function(value, min, max) {
+
+        return value < min ? min : value > max ? max : value;
+
+    },
+
+    /**
     * Randomly returns either a 1 or -1.
     *
     * @method Phaser.Math#randomSign
     * @return {number}  1 or -1
     */
     randomSign: function () {
+
         return (Math.random() > 0.5) ? 1 : -1;
+
     },
 
     /**
@@ -769,15 +786,15 @@ Phaser.Math = {
     },
 
     /**
-    * Keeps an angle value between -180 and +180<br>
-    * Should be called whenever the angle is updated on the Sprite to stop it from going insane.
+    * Keeps an angle value between -180 and +180.
     *
     * @method Phaser.Math#wrapAngle
     * @param {number} angle - The angle value to check
-    * @param {boolean} radians - True if angle sizes are expressed in radians.
+    * @param {boolean} radians - True if angle is given in radians.
     * @return {number} The new angle value, returns the same as the input angle if it was within bounds.
     */
     wrapAngle: function (angle, radians) {
+
         var radianFactor = (radians) ? Math.PI / 180 : 1;
         return this.wrap(angle, -180 * radianFactor, 180 * radianFactor);
 
@@ -1248,18 +1265,7 @@ Phaser.Math = {
     */
     smoothstep: function ( x, min, max ) {
 
-        if (x <= min)
-        {
-            return 0;
-        }
-
-        if (x >= max)
-        {
-            return 1;
-        }
-
-        x = (x - min) / (max - min);
-
+        x = Math.max(0, Math.min(1, (x - min) / (max - min)));
         return x * x * (3 - 2 * x);
 
     },
@@ -1275,18 +1281,7 @@ Phaser.Math = {
     */
     smootherstep: function ( x, min, max ) {
 
-        if (x <= min)
-        {
-            return 0;
-        }
-
-        if (x >= max)
-        {
-            return 1;
-        }
-
-        x = (x - min) / (max - min);
-
+        x = Math.max(0, Math.min(1, (x - min) / (max - min)));
         return x * x * x * (x * (x * 6 - 15) + 10);
 
     },

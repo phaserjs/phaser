@@ -48,6 +48,12 @@ Phaser.Loader = function (game) {
     this._xhr = new XMLHttpRequest();
 
     /**
+    * @property {XDomainRequest} - An ajax request used specifically by IE9 for CORs loading issues.
+    * @private
+    */
+    this._ajax = null;
+
+    /**
     * @property {boolean} isLoading - True if the Loader is in the process of loading the queue.
     * @default
     */
@@ -95,22 +101,27 @@ Phaser.Loader = function (game) {
     this.baseURL = '';
 
     /**
-    * @property {Phaser.Signal} onFileComplete - Event signal.
-    */
-    this.onFileComplete = new Phaser.Signal();
-
-    /**
-    * @property {Phaser.Signal} onFileError - Event signal.
-    */
-    this.onFileError = new Phaser.Signal();
-
-    /**
-    * @property {Phaser.Signal} onLoadStart - Event signal.
+    * @property {Phaser.Signal} onLoadStart - This event is dispatched when the loading process starts, before the first file has been requested.
     */
     this.onLoadStart = new Phaser.Signal();
 
     /**
-    * @property {Phaser.Signal} onLoadComplete - Event signal.
+    * @property {Phaser.Signal} onFileStart - This event is dispatched immediately before a file starts loading. It's possible the file may still error (404, etc) after this event is sent.
+    */
+    this.onFileStart = new Phaser.Signal();
+
+    /**
+    * @property {Phaser.Signal} onFileComplete - This event is dispatched when a file completes loading successfully.
+    */
+    this.onFileComplete = new Phaser.Signal();
+
+    /**
+    * @property {Phaser.Signal} onFileError - This event is dispatched when a file errors as a result of the load request.
+    */
+    this.onFileError = new Phaser.Signal();
+
+    /**
+    * @property {Phaser.Signal} onLoadComplete - This event is dispatched when the final file in the load queue has either loaded or failed.
     */
     this.onLoadComplete = new Phaser.Signal();
 
@@ -879,9 +890,11 @@ Phaser.Loader.prototype = {
             console.warn('Phaser.Loader loadFile invalid index ' + this._fileIndex);
             return;
         }
-
+        
         var file = this._fileList[this._fileIndex];
         var _this = this;
+
+        this.onFileStart.dispatch(this.progress, file.key);
 
         //  Image or Data?
         switch (file.type)
@@ -956,12 +969,50 @@ Phaser.Loader.prototype = {
                 break;
 
             case 'json':
-                this._xhr.open("GET", this.baseURL + file.url, true);
-                this._xhr.responseType = "text";
-                this._xhr.onload = function () {
-                    return _this.jsonLoadComplete(_this._fileIndex);
-                };
-                this._xhr.send();
+
+                if (window.XDomainRequest)
+                {
+                    this._ajax = new window.XDomainRequest();
+
+                    // XDomainRequest has a few querks. Occasionally it will abort requests
+                    // A way to avoid this is to make sure ALL callbacks are set even if not used
+                    // More info here: http://stackoverflow.com/questions/15786966/xdomainrequest-aborts-post-on-ie-9
+                    this._ajax.timeout = 3000;
+
+                    this._ajax.onerror = function () {
+                        return _this.dataLoadError(_this._fileIndex);
+                    };
+                       
+                    this._ajax.ontimeout = function () {
+                        return _this.dataLoadError(_this._fileIndex);
+                    };
+
+                    this._ajax.onprogress = function() {};
+
+                    this._ajax.onload = function(){
+                        return _this.jsonLoadComplete(_this._fileIndex);
+                    };
+
+                    this._ajax.open('GET', this.baseURL + file.url, true);
+
+                    this._ajax.send();
+                }
+                else
+                {
+                    this._xhr.open("GET", this.baseURL + file.url, true);
+                    this._xhr.responseType = "text";
+    
+                    this._xhr.onload = function () {
+                        return _this.jsonLoadComplete(_this._fileIndex);
+                    };
+    
+                    this._xhr.onerror = function () {
+                        return _this.dataLoadError(_this._fileIndex);
+                    };
+    
+                    this._xhr.send();
+                }
+
                 break;
 
             case 'tilemap':

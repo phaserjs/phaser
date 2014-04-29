@@ -561,19 +561,22 @@ Phaser.TilemapLayer.prototype.render = function () {
             {
                 tile = this._column[x];
 
-                set = this.map.tilesets[this.map.tiles[tile.index][2]];
-
-                if (this.debug === false && tile.alpha !== this.context.globalAlpha)
+                if (tile.index > -1)
                 {
-                    this.context.globalAlpha = tile.alpha;
-                }
+                    set = this.map.tilesets[this.map.tiles[tile.index][2]];
 
-                set.draw(this.context, Math.floor(this._mc.tx), Math.floor(this._mc.ty), tile.index);
+                    if (this.debug === false && tile.alpha !== this.context.globalAlpha)
+                    {
+                        this.context.globalAlpha = tile.alpha;
+                    }
 
-                if (tile.debug)
-                {
-                    this.context.fillStyle = 'rgba(0, 255, 0, 0.4)';
-                    this.context.fillRect(Math.floor(this._mc.tx), Math.floor(this._mc.ty), this.map.tileWidth, this.map.tileHeight);
+                    set.draw(this.context, Math.floor(this._mc.tx), Math.floor(this._mc.ty), tile.index);
+
+                    if (tile.debug)
+                    {
+                        this.context.fillStyle = 'rgba(0, 255, 0, 0.4)';
+                        this.context.fillRect(Math.floor(this._mc.tx), Math.floor(this._mc.ty), this.map.tileWidth, this.map.tileHeight);
+                    }
                 }
             }
 

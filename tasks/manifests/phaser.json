@@ -14,6 +14,7 @@
     "src/core/State.js",
     "src/core/StateManager.js",
     "src/core/LinkedList.js",
+    "src/core/ArrayList.js",
     "src/core/Signal.js",
     "src/core/SignalBinding.js",
     "src/core/Filter.js",

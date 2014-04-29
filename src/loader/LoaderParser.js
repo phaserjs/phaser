@@ -20,21 +20,6 @@ Phaser.LoaderParser = {
     */
     bitmapFont: function (game, xml, cacheKey, xSpacing, ySpacing) {
 
-        if (!xml || /MSIE 9/i.test(navigator.userAgent))
-        {
-            if (typeof(window.DOMParser) === 'function')
-            {
-                var domparser = new DOMParser();
-                xml = domparser.parseFromString(this.ajaxRequest.responseText, 'text/xml');
-            }
-            else
-            {
-                var div = document.createElement('div');
-                div.innerHTML = this.ajaxRequest.responseText;
-                xml = div;
-            }
-        }
-
         var data = {};
         var info = xml.getElementsByTagName('info')[0];
         var common = xml.getElementsByTagName('common')[0];

@@ -87,6 +87,11 @@ Phaser.Time = function (game) {
     this.deltaCap = 0;
 
     /**
+    * @property {number} timeCap - If the difference in time between two frame updates exceeds this value, the frame time is reset to avoid huge elapsed counts.
+    */
+    this.timeCap = 1000;
+
+    /**
     * @property {number} frames - The number of frames record in the last second. Only calculated if Time.advancedTiming is true.
     */
     this.frames = 0;
@@ -212,29 +217,27 @@ Phaser.Time.prototype = {
     *
     * @method Phaser.Time#update
     * @protected
-    * @param {number} time - The current timestamp, either performance.now or Date.now depending on the browser.
+    * @param {number} time - The current timestamp.
     */
     update: function (time) {
 
         this.now = time;
 
-        if (this._justResumed)
-        {
-            this.time = this.now;
-            this._justResumed = false;
-
-            this.events.resume();
-
-            for (var i = 0; i < this._timers.length; i++)
-            {
-                this._timers[i]._resume();
-            }
-        }
-
         this.timeToCall = this.game.math.max(0, 16 - (time - this.lastTime));
 
         this.elapsed = this.now - this.time;
-        this.physicsElapsed = this.elapsed / 1000;
+
+        //  spike-dislike
+        if (this.elapsed > this.timeCap)
+        {
+            //  For some reason the time between now and the last time the game was updated was larger than our timeCap
+            //  This can happen if the Stage.disableVisibilityChange is true and you swap tabs, which makes the raf pause.
+            //  In this case we'll drop to some default values to stop the game timers going nuts.
+            this.elapsed = 1 / 60;
+        }
+
+        //  Calculate physics elapsed, ensure it's > 0, use 1/60 as a fallback
+        this.physicsElapsed = this.elapsed / 1000 || 1 / 60;
 
         if (this.deltaCap > 0 && this.physicsElapsed > this.deltaCap)
         {
@@ -317,12 +320,19 @@ Phaser.Time.prototype = {
     */
     gameResumed: function () {
 
-        this.pauseDuration = Date.now() - this._pauseStarted;
-
         //  Level out the elapsed timer to avoid spikes
-        this.time = Date.now();
+        this.time = this.now = Date.now();
 
-        this._justResumed = true;
+        this.pauseDuration = this.time - this._pauseStarted;
+
+        this.events.resume();
+
+        var i = this._timers.length;
+
+        while (i--)
+        {
+            this._timers[i]._resume();
+        }
 
     },
 

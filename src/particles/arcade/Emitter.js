@@ -475,7 +475,7 @@ Phaser.Particles.Arcade.Emitter.prototype.emitParticle = function () {
     {
         particle.setScaleData(this.scaleData);
     }
-    else if (this.minParticleScale !== this.maxParticleScale)
+    else if (this.minParticleScale !== 1 || this.maxParticleScale !== 1)
     {
         particle.scale.set(this.game.rnd.realInRange(this.minParticleScale, this.maxParticleScale));
     }

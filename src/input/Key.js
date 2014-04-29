@@ -193,8 +193,11 @@ Phaser.Key.prototype = {
     * associated with the onDown and onUp events and nulls the onHoldCallback if set.
     *
     * @method Phaser.Key#reset
+    * @param {boolean} [hard=true] - A soft reset won't reset any events or callbacks that are bound to this Key. A hard reset will.
     */
-    reset: function () {
+    reset: function (hard) {
+
+        if (typeof hard === 'undefined') { hard = true; }
 
         this.isDown = false;
         this.isUp = true;
@@ -202,10 +205,13 @@ Phaser.Key.prototype = {
         this.duration = this.game.time.now - this.timeDown;
         this.enabled = true;
 
-        this.onDown.removeAll();
-        this.onUp.removeAll();
-        this.onHoldCallback = null;
-        this.onHoldContext = null;
+        if (hard)
+        {
+            this.onDown.removeAll();
+            this.onUp.removeAll();
+            this.onHoldCallback = null;
+            this.onHoldContext = null;
+        }
 
     },
 

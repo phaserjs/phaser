@@ -75,6 +75,14 @@ Phaser.Group = function (game, parent, name, addToStage, enableBody, physicsBody
     this.exists = true;
 
     /**
+    * The type of objects that will be created when you use Group.create or Group.createMultiple. Defaults to Phaser.Sprite.
+    * When a new object is created it is passed the following parameters to its constructor: game, x, y, key, frame.
+    * @property {object} classType
+    * @default
+    */
+    this.classType = Phaser.Sprite;
+
+    /**
     * @property {Phaser.Group|Phaser.Sprite} parent - The parent of this Group.
     */
 
@@ -271,7 +279,7 @@ Phaser.Group.prototype.getAt = function (index) {
 
 /**
 * Automatically creates a new Phaser.Sprite object and adds it to the top of this Group.
-* Useful if you don't need to create the Sprite instances before-hand.
+* You can change Group.classType to any object and this call will create an object of that type instead, but it should extend either Sprite or Image.
 *
 * @method Phaser.Group#create
 * @param {number} x - The x coordinate to display the newly created Sprite at. The value is in relation to the Group.x point.
@@ -279,13 +287,13 @@ Phaser.Group.prototype.getAt = function (index) {
 * @param {string} key - The Game.cache key of the image that this Sprite will use.
 * @param {number|string} [frame] - If the Sprite image contains multiple frames you can specify which one to use here.
 * @param {boolean} [exists=true] - The default exists state of the Sprite.
-* @return {Phaser.Sprite} The child that was created.
+* @return {Phaser.Sprite|object} The child that was created. Will be a Phaser.Sprite unless Group.classType has been changed.
 */
 Phaser.Group.prototype.create = function (x, y, key, frame, exists) {
 
     if (typeof exists === 'undefined') { exists = true; }
 
-    var child = new Phaser.Sprite(this.game, x, y, key, frame);
+    var child = new this.classType(this.game, x, y, key, frame);
 
     if (this.enableBody)
     {
@@ -318,6 +326,7 @@ Phaser.Group.prototype.create = function (x, y, key, frame, exists) {
 * Automatically creates multiple Phaser.Sprite objects and adds them to the top of this Group.
 * Useful if you need to quickly generate a pool of identical sprites, such as bullets. By default the sprites will be set to not exist
 * and will be positioned at 0, 0 (relative to the Group.x/y)
+* You can change Group.classType to any object and this call will create an object of that type instead, but it should extend either Sprite or Image.
 *
 * @method Phaser.Group#createMultiple
 * @param {number} quantity - The number of Sprites to create.
@@ -349,6 +358,31 @@ Phaser.Group.prototype.updateZ = function () {
     while (i--)
     {
         this.children[i].z = i;
+    }
+
+};
+
+/**
+* Sets the Group cursor to the first object in the Group. If the optional index parameter is given it sets the cursor to the object at that index instead.
+*
+* @method Phaser.Group#resetCursor
+* @param {number} [index=0] - Set the cursor to point to a specific index.
+* @return {*} The child the cursor now points to.
+*/
+Phaser.Group.prototype.resetCursor = function (index) {
+
+    if (typeof index === 'undefined') { index = 0; }
+
+    if (index > this.children.length - 1)
+    {
+        index = 0;
+    }
+
+    if (this.cursor)
+    {
+        this._cache[8] = index;
+        this.cursor = this.children[this._cache[8]];
+        return this.cursor;
     }
 
 };
@@ -610,9 +644,7 @@ Phaser.Group.prototype.setProperty = function (child, key, value, operation) {
 
     operation = operation || 0;
 
-    //  As ugly as this approach looks, and although it's limited to a depth of only 4, it's extremely fast.
-    //  Much faster than a for loop or object iteration. There are no checks, so if the key isn't valid then it'll fail
-    //  but as you are likely to call this from inner loops that have to perform well, I'll take that trade off.
+    //  As ugly as this approach looks, and although it's limited to a depth of only 4, it's much faster than a for loop or object iteration.
 
     //  0 = Equals
     //  1 = Add
@@ -622,7 +654,7 @@ Phaser.Group.prototype.setProperty = function (child, key, value, operation) {
 
     var len = key.length;
 
-    if (len == 1)
+    if (len === 1 && child.hasOwnProperty(key[0]))
     {
         if (operation === 0) { child[key[0]] = value; }
         else if (operation == 1) { child[key[0]] += value; }
@@ -630,7 +662,7 @@ Phaser.Group.prototype.setProperty = function (child, key, value, operation) {
         else if (operation == 3) { child[key[0]] *= value; }
         else if (operation == 4) { child[key[0]] /= value; }
     }
-    else if (len == 2)
+    else if (len === 2 && child.hasOwnProperty(key[0]) && child[key[0]].hasOwnProperty(key[1]))
     {
         if (operation === 0) { child[key[0]][key[1]] = value; }
         else if (operation == 1) { child[key[0]][key[1]] += value; }
@@ -638,7 +670,7 @@ Phaser.Group.prototype.setProperty = function (child, key, value, operation) {
         else if (operation == 3) { child[key[0]][key[1]] *= value; }
         else if (operation == 4) { child[key[0]][key[1]] /= value; }
     }
-    else if (len == 3)
+    else if (len === 3 && child.hasOwnProperty(key[0]) && child[key[0]].hasOwnProperty(key[1]) && child[key[0]][key[1]].hasOwnProperty(key[2]))
     {
         if (operation === 0) { child[key[0]][key[1]][key[2]] = value; }
         else if (operation == 1) { child[key[0]][key[1]][key[2]] += value; }
@@ -646,7 +678,7 @@ Phaser.Group.prototype.setProperty = function (child, key, value, operation) {
         else if (operation == 3) { child[key[0]][key[1]][key[2]] *= value; }
         else if (operation == 4) { child[key[0]][key[1]][key[2]] /= value; }
     }
-    else if (len == 4)
+    else if (len === 4 && child.hasOwnProperty(key[0]) && child[key[0]].hasOwnProperty(key[1]) && child[key[0]][key[1]].hasOwnProperty(key[2]) && child[key[0]][key[1]][key[2]].hasOwnProperty(key[3]))
     {
         if (operation === 0) { child[key[0]][key[1]][key[2]][key[3]] = value; }
         else if (operation == 1) { child[key[0]][key[1]][key[2]][key[3]] += value; }
@@ -1390,7 +1422,8 @@ Phaser.Group.prototype.getRandom = function (startIndex, length) {
 };
 
 /**
-* Removes the given child from this Group and sets its group property to null.
+* Removes the given child from this Group. This will dispatch an onRemovedFromGroup event from the child (if it has one),
+* reset the Group cursor and optionally destroy the child.
 *
 * @method Phaser.Group#remove
 * @param {Any} child - The child to remove.
@@ -1401,17 +1434,17 @@ Phaser.Group.prototype.remove = function (child, destroy) {
 
     if (typeof destroy === 'undefined') { destroy = false; }
 
-    if (this.children.length === 0)
+    if (this.children.length === 0 || this.children.indexOf(child) === -1)
     {
         return false;
     }
 
-    if (child.events)
+    if (child.events && !child.destroyPhase)
     {
         child.events.onRemovedFromGroup.dispatch(child, this);
     }
 
-    this.removeChild(child);
+    var removed = this.removeChild(child);
 
     this.updateZ();
 
@@ -1420,9 +1453,9 @@ Phaser.Group.prototype.remove = function (child, destroy) {
         this.next();
     }
 
-    if (destroy)
+    if (destroy && removed)
     {
-        child.destroy();
+        removed.destroy(true);
     }
 
     return true;
@@ -1452,11 +1485,11 @@ Phaser.Group.prototype.removeAll = function (destroy) {
             this.children[0].events.onRemovedFromGroup.dispatch(this.children[0], this);
         }
 
-        this.removeChild(this.children[0]);
+        var removed = this.removeChild(this.children[0]);
 
-        if (destroy)
+        if (destroy && removed)
         {
-            this.children[0].destroy();
+            removed.destroy(true);
         }
     }
     while (this.children.length > 0);
@@ -1497,11 +1530,11 @@ Phaser.Group.prototype.removeBetween = function (startIndex, endIndex, destroy) 
             this.children[i].events.onRemovedFromGroup.dispatch(this.children[i], this);
         }
 
-        this.removeChild(this.children[i]);
+        var removed = this.removeChild(this.children[i]);
 
-        if (destroy)
+        if (destroy && removed)
         {
-            this.children[i].destroy();
+            removed.destroy(true);
         }
 
         if (this.cursor === this.children[i])
@@ -1530,33 +1563,18 @@ Phaser.Group.prototype.destroy = function (destroyChildren, soft) {
     if (typeof destroyChildren === 'undefined') { destroyChildren = true; }
     if (typeof soft === 'undefined') { soft = false; }
 
-    if (destroyChildren)
-    {
-        if (this.children.length > 0)
-        {
-            do
-            {
-                if (this.children[0].parent)
-                {
-                    this.children[0].destroy(destroyChildren);
-                }
-            }
-            while (this.children.length > 0);
-        }
-    }
-    else
-    {
-        this.removeAll();
-    }
+    this.removeAll(destroyChildren);
 
     this.cursor = null;
 
     if (!soft)
     {
-        this.parent.removeChild(this);
+        if (this.parent)
+        {
+            this.parent.removeChild(this);
+        }
 
         this.game = null;
-
         this.exists = false;
     }
 

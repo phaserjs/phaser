@@ -1,223 +1,177 @@
 ![Phaser 2.0](http://www.phaser.io/images/phaser2-github.png)
 
-# Phaser 2.0.3
+# Phaser 2.0.4
 
 Phaser is a fast, free and fun open source game framework for making desktop and mobile browser HTML5 games. It uses [Pixi.js](https://github.com/GoodBoyDigital/pixi.js/) internally for fast 2D Canvas and WebGL rendering.
 
-Version: 2.0.3 "Allorallen" - Released: 11th April 2014
+Version: 2.0.4 "Mos Shirare" - Released: 29th April 2014
 
 By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 
 * View the [Official Website](http://phaser.io)
 * Follow on [Twitter](https://twitter.com/photonstorm)
 * Join the [Forum](http://www.html5gamedevs.com/forum/14-phaser/)
-* Source code for 250+ [Phaser Examples](https://github.com/photonstorm/phaser-examples)
+* Source code for 300+ [Phaser Examples](https://github.com/photonstorm/phaser-examples) or [browse them online](http://examples.phaser.io)
 * Read the [documentation online](http://docs.phaser.io)
-* Browse the [Examples online](http://examples.phaser.io)
 * Join our [#phaserio IRC channel](http://www.html5gamedevs.com/topic/4470-official-phaserio-irc-channel-phaserio-on-freenode/) on freenode
+* Subscribe to the [Phaser Newsletter](https://confirmsubscription.com/h/r/369DE48E3E86AF1E) and we'll email you when new versions are released.
 
-[Subscribe to our new Phaser Newsletter](https://confirmsubscription.com/h/r/369DE48E3E86AF1E). We'll email you when new versions are released as well as send you our regular Phaser game making magazine.
+![div](http://phaser.io/images/div4.png)
 
-[![Build Status](https://travis-ci.org/photonstorm/phaser.png?branch=dev)](https://travis-ci.org/photonstorm/phaser)
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/photonstorm/phaser/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+## Welcome to Phaser and What's new in 2.0.4?
 
+We've had the vast majority of this version ready for a few days now, but held off releasing due to Ludum Dare 48. Ludum Dare contests are always peak times for Phaser, we see an influx of new devs downloading for the first time. So it's not the best day to release a new version :) Now that LD48 has finished we present Phaser 2.0.4. This is the latest version in our bi-weekly sprint release schedule, and the change log is (which you can see in full below) is significant to say the least.
 
-## What's new in 2.0.3?
+We've made some deep internal changes to how game pause and resume is handled, which means Phaser.Timers now behave themselves properly. Again with this version we've updated to the latet Pixi and P2 releases, bringing new features and enhancements with them. In terms of new features we've overhauled the Color, Point and BitmapData classes, with significant new features for each of them. From HSL palette shifting and color extraction, to Point dot products to proper endianess handling in Color, the new features are powerful additions to the library. We've also marked a bunch of methods as deprecated and will remove them in Phaser 2.1. Most have fully working replacements and you'll see them flagged as such in the API docs.
 
-In this release we have upgraded both pixi.js to v1.5.2 and p2.js to v0.5.0. This improves features and stability across the whole framework, and as always you'll find the complete list of improvements below.
+Thanks to traffic from Ludume Dare and some [great new sites](http://gamemechanicexplorer.com), we've seen Phaser sky rocket on github; now clearing 4325 github stars and 1175 forks. In most cases issues are being resolved fast and we're closing over 97% of all those reported, which we're extremely proud about.
 
-We've taken some time to enhance the Particle Emitter adding a few substantial features such as the ability for Particles to now change scale or alpha over time using any of the easing functions, or apply a blend mode. These small additions now allow you to create visually more impressive effects than before, and while we still have a complete overhaul of the particle system on our roadmap it's a welcome boost in the meantime.
+For the 2.0.5 release we're going to be looking carefully at CocoonJS support, there are some known issues with it currently and we want to ensure it works as flawlessly as possible. After this we'll start planning for 2.1.
 
-Along with the p2.js update we have also refined the Phaser P2 classes, making tweaks that help overall performance, such as splitting the world bounds into separate bodies. The World now has a default contact material, which allows for easier setting of responses when objects collide with no materials set. All in all it's a powerful update.
+We're also very close to releasing the brand new Phaser web site. The current single-page site has done us well for now, but it was only ever meant to be temporary while the full site was built. This is nearly done and we've got some exciting content to share and plenty of room for growth! Be sure to [subscribe to our monthly newsletter](https://confirmsubscription.com/h/r/369DE48E3E86AF1E) to be notified as soon as it's out.
 
-What's interesting is that loads of the new features and bug fixes in this release have come direct from the community. Of course we've been busy and working hard on Phaser as well, but the volume of contributors now is fantastic. We've have always listed their names next to the issues they helped resolve, but now we're doing so with their github usernames directly so they appear on the revisions change log.
-
-As promised with the 2.0.0 release we have done all of this without changing existing API calls in the core Phaser classes. New features are introduced either via the creation of new optional parameters or by creating new methods. Where a feature has been deprecated we have flagged it as such in the docs, but left it in so as to not break existing code.
-
-Some of you may not be aware, but the `phaser.min.js` file in the build folder contains all 3 physics systems bundled in. We've refined our build process so that it's easy for you to create custom builds now via grunt, but if you know you only need Arcade Physics (and not P2 or Ninja) then you can use `phaser-arcade-physics.min.js` which is found in the `build/custom` folder. This will save you 180KB from the minified file size, so please use it if you can.
-
-
-## Welcome to Phaser
-
-6 months ago we released Phaser 1.0 into the world. Suffice to say that since then we've been overwhelmed at the huge surge of developers taking to it! Our github repository is consistently in the top JavaScript lists, we've over 3200 stars at the time of writing, and a wonderful, vibrant and friendly community. Phaser 2 is a natural evolution of what we started. We've focused specifically on performance and expansion with this release. Lots of developers have already reported to us considerably speed increases just by swapping to Phaser 2 (reports of 200% faster speeds on mobile aren't unheard of!). There's also a full-body physics system available now, in the form of the excellent p2.js. The upgrade to Pixi 1.5 under the hood bought lots of new visual effects in, including blend modes and tints.
-
-And we're also really pleased to have closed down over 550 issues reported on github. We literally went through every last bug reported to us, and fixed it. All kinds of little things that as a whole make the library that much more solid. With the 2.0 release we're now freezing the API. Before we have to admit that the API changed somewhat on a whim, and we moved things around and changed things without too much consideration for fellow developers. With 2.0 that stops - we've spent long enough on this release that we're now extremely happy with the organisation of classes and methods, and while we may still need to make small tweaks in the future, none of them will be API breaking without prior community approval first. This means if you're using Phaser to teach in classes, or writing a book / tutorials around it, this is the version to base off.
-
-If you want to port a Phaser 1.x game over to 2 then do read our [Migration Guide](https://github.com/photonstorm/phaser/blob/master/resources/Migration%20Guide.md) first.
-
-So what's next? We have a roadmap (which you can find at the bottom of this document), but we're going to sit back and take stock for a while, building up the tutorials and sample games. We will of course jump on bug fixes quickly, but this is definitely the best release of Phaser ever. The most features, the fastest, the most stable and just generally the most fun to use.
-
-Happy coding everyone! See you on the forums.
+Until then happy coding everyone! And we hope to see you on the forums.
 
 ![boogie](http://www.phaser.io/images/spacedancer.gif)
 
+![div](http://phaser.io/images/div1.png)
 
 ## Getting Started Guides
 
-We have a new [Getting Started Guide](http://phaser.io/getting-started-js.php) which covers all you need to begin developing games with Phaser. From setting up a web server to picking an IDE. If you're new to HTML5 game development, or are coming from another language like AS3, then we recommend starting there.
+We have a [Getting Started Guide](http://phaser.io/getting-started-js.php) which covers all you need to begin developing games with Phaser. From setting up a web server to picking an IDE. If you're new to HTML5 game development, or are coming from another language like AS3, then we recommend starting there.
 
-There is a comprehensive [How to Learn Phaser](http://gamedevelopment.tutsplus.com/articles/how-to-learn-the-phaser-html5-game-engine--gamedev-13643) guide on the GameDevTuts+ site which is a great place to learn where to find tutorials, examples and support.
+We wrote a comprehensive [How to Learn Phaser](http://gamedevelopment.tutsplus.com/articles/how-to-learn-the-phaser-html5-game-engine--gamedev-13643) guide for GameDevTuts+  which covers finding tutorials, examples and support.
 
-There is also an [un-official Getting Started Guide](http://www.antonoffplus.com/coding-an-html5-game-for-30-minutes-or-an-introduction-to-the-phaser-framework).
+The [Game Mechanic Explorer](http://gamemechanicexplorer.com) is a great interactive way to learn how to develop specific game mechanics in Phaser. Well worth exploring once you've got your dev environment set-up.
+
+Finally the list of [community authored Phaser Tutorials](http://www.lessmilk.com/phaser-tutorial/) is growing fast!
 
 ![Phaser Logo](http://www.photonstorm.com/wp-content/uploads/2013/09/phaser_10_release.jpg)
 
+![div](http://phaser.io/images/div2.png)
 
 ## Change Log
 
-Version 2.0.3 - "Allorallen" - 11th April 2014
+Version 2.0.4 - "Mos Shirare" - 29th April 2014
 
 ### Updates
 
-* Updated to [Pixi.js 1.5.2](https://github.com/GoodBoyDigital/pixi.js/releases/tag/v1.5.2)
-* Updated to [p2.js 0.5.0](https://github.com/schteppe/p2.js/releases/tag/v0.5.0)
-* Return the result of P2.Body.setCircle for further chaining and manipulation (fix #659)
-* Updated the PhysicsEditor plugin to maintain position, radius, mask bits, category bits and sensor flags (thanks @georgiee, #674)
-* Further TypeScript defs tweaks (thanks @clark-stevenson)
-* Lowered the default size of SpriteBatch from 10000 to 2000 as this yields faster results on mobile (pixi.js update)
-* Fix for 'jagged' strokes on custom fonts (thanks @nickryall, #677)
-* The State.update function (and thus the update of any sub-classed Sprites or other objects) is now called before Stage, Tweens, Sound, Input, etc (#662)
-* The Phaser jshint process is now running on Travis (thanks @xtian, #656)
-* The Phaser Gruntfile is now split up into option tasks (thanks @xtian, #638)
-* Key.reset now clears any callbacks associated with the onDown and onUp events and nulls the onHoldCallback if set. Key.reset is called by Keyboard.reset when changing state.
-* If you pass `null` to Tilemap.putTile as the tile parameter it will pass the call over to Tilemap.removeTile.
-* TypeScript definitions updated for latest changes (thanks @clark-stevenson)
-* Keyboard.stop nulls the function references after removing the event listeners (thanks @bmceldowney, #691)
-* Tilemap.hasTile allows for multi-layer type parameter (thanks @Raeven0, #680)
-* Grunt update to dev dependencies (thanks @xtian, #695)
-* Emitter now emits Phaser.Particle objects instead of Phaser.Sprites, which can be extended as required.
-* Emitter has had various local properties removed that were already declared in Phaser.Group which it extends.
-* PluginManager parent parameter removed as it's redundant. Also most core functions tidied up and jsdocs fixed.
-* p2.World.defaultRestitution has been deprecated and is now p2.World.restitution.
-* p2.World.defaultFriction has been deprecated and is now p2.World.friction.
-* p2.World now uses 4 bodies for the world boundaries, rather than 1 body with 4 shapes. This stops the bounds triggering narrowphase with every single body in the world.
-* p2.World bounds are now included in the callback events such as beginContact and impact events.
-* Thanks to @STuFF the Classes drop-down list in the API docs now indents the sub-classes.
+* Updated to [Pixi.js 1.5.3](https://github.com/GoodBoyDigital/pixi.js/releases/tag/v1.5.3)
+* Updated to latest [p2.js](https://github.com/schteppe/p2.js/commits/master) - all commits from 0.5.0 to Apr 27th 2014.
+* TypeScript definitions fixes and updates (thanks @clark-stevenson @metrofun @killalau)
+* Timer has removed all use of local temporary vars in the core update loop.
+* The Input.reset `hard` reset parameter is now passed down to the Keyboard and Key reset methods.
+* AnimationManager.destroy now iterates through child animations calling destroy on all of them, avoiding a memory leak (thanks stauzs)
+* AnimationManager.play will now call Animation.stop on the current animation before switching to the new one (thanks @nihakue, #713)
+* ArcadePhysics.Body.phase is checked in postUpdate to prevent it from being called multiple times in a single frame.
+* Group.setProperty will now check if the property exists before setting it, this applies to Group.setAll and anything else using setProperty internally.
+* QuadTree.retrieve now checks to see if the given Sprite has a body before carrying on.
+* ArcadePhysics.collideSpriteVsGroup checks if Sprite has a body before carrying on, now safely skips sub-groups or other non-Sprite group children. 
+* Group.remove now checks the child to see if it's a member of the root Group before removing it, otherwise Pixi throws an Error.
+* The Emitter no longer checks if minParticleScale = maxParticleScale for the scale check, allowing for fixed scale particles again.
+* The PIXI.AbstractFilter is now included in the Phaser Pixi build by default, allowing for easier use of external Pixi Filters.
+* All Game Objects have a new property: destroyPhase (boolean) which is true if the object is in the process of being destroyed, otherwise false.
+* If Tween.yoyo was true but repeat was 0 then it wouldn't yoyo. Now if yoyo is set, but not repeat, the repeat count gets set to 1 (thanks @hilts-vaughan, fix #744)
+* RandomDataGenerator.integerInRange uses a new method of rounding the value to an integer to avoid distribution probability issues (thanks PhaserFan)
+* Updated the Device little / big endianess check.
+* Time has been updated so that physicsElapsed can never be zero (falls back to 1/60), also fixes p2 elapsed time bug (thanks @georgiee, fix #758)
+* Input and Pointer now use the new ArrayList instead of a LinkedList, which resolve list item removable during callback issues.
+* Input.reset no longer resets every interactive item it knows of, because they are removed during the destroy phase and can now persist between States if needed.
+* Blank Tilemaps no longer create `null` tiles, but instead create Tile objects with an index of -1 which can be replaced and updated like any other tile.
+* Tilemap.addTilesetImage will now raise a console.warn if you specify an invalid tileset key and not create the tileset rather than pick the default set.
+* Math.smoothstep and Math.smootherstep have been updated to work regardless if a is > or < b (thanks @gre, fix #772)
+* Text.updateText now sets the lineCap to `round` to avoid occassional font glitching issues in Chrome.
+* Loader now uses XDomainRequest in IE9 to load JSON data to help with CORS issues.
 
 ### New Features
 
-* Added ability to retrieve a single p2 fixture from the cache (thanks @georgiee, #674)
-* Timers can now have a start delay value (thanks @georgiee, #660)
-* CacheAsBitmap added to Display Object, so works for Sprite, Image, Button. Allows you to cache complex display hierarchies for speed.
-* CacheAsBitmap added to Graphics Object. Allows you to cache complex graphics structures hierarchies for speed.
-* Added generateTexture function to display objects. Create a texture from the current object display hierarchy for use as a texture elsewhere.
-* Added optional FilterArea to display object (for optimisation)
-* Graphics chaining functions.
-* Added Pointer.positionUp which records the last point at which the pointer left the screen (thanks @Cryszon, #676)
-* Phaser.Point.centroid static function added to calculate the centroid or midpoint of an array of points (thanks @lewster32, #675)
-* SoundManager.remove(sound) now lets you remove a sound from the SoundManager, destroying it in the process.
-* Sound.destroy will remove a sound and all local references it holds, optionally removing itself from the SoundManager as well.
-* SoundManager.removeByKey(key) will remove all sounds from the SoundManager that have a key matching the given value.
-* ArcadePhysics.Body.hitTest(x, y) will return a boolean based on if the given world coordinate are within the Body or not.
-* StateManager.restart allows you to quickly restart the *current* state, optionally clearing the world and cache.
-* Tilemap.removeTile(x, y, layer) lets you remove the tile at the given coordinates and updates the collision data.
-* Tilemap.removeTileWorldXY lets you remove the tile at the given pixel value coordinates and updates the collision data.
-* Key.enabled boolean allows you to toggle if a Key processes its update method or dispatches any events without deleting and re-creating it.
-* Emitter now has minParticleAlpha and maxParticleAlpha values for setting a random alpha on emitted particles.
-* Emitter.particleAnchor allows you to control the anchor of emitted Particles. Defaults to 0.5 (same as before) but now under your control.
-* Emitter.setAlpha allows you to quickly set the min and max alpha values.
-* Emitter.setScale allows you to quickly set the min and max scale values.
-* Emitter.blendMode lets you set the blendMode of any emitted Particle (needs a browser that supports canvas blend modes)
-* Group.customSort allows you to sort the Group children based on your own sort function.
-* Emitter.setScale has a new 'rate' parameter which allows particles to change in scale over time, using any Easing value or timescale.
-* Emitter.setScale now allows you to scale the x and y axis of the particles independently.
-* Emitter.setAlpha has a new 'rate' parameter which allows particles to change alpha over time, using any Easing value or timescale.
-* Emitter.bringToTop and Emitter.sendToBack are booleans that let you optionally set the display order of the Particle when emitted.
-* Emitter now calls the Phaser.Particle.onEmit function, which is left empty for you to override and add in custom behaviours.
-* p2.World has a new contactMaterial property, which can be configured like a normal P2 Contact Material and is applied when two bodies hit that don't have defined materials.
-* Group.remove has a new 'destroy' parameter (false by default), which will optionally call destroy on the item removed from the Group.
-* Group.removeAll has a new 'destroy' parameter (false by default), which will optionally call destroy on the items removed from the Group.
-* Group.removeBetween has a new 'destroy' parameter (false by default), which will optionally call destroy on the items removed from the Group.
-* @georgiee created a new P2.FixtureList class to allow easy access the fixtures of a created P2 Body:
-
-This is especially useful in combination with PhysicsEditor and P2.Body#addPhaserPolygon.
-
-You can configure your whole collision grouping in PhysicsEditor and then you can later change the mask bits easily with this class. You can also access parts (groups) and named fixtures by a group index or a fixture key - both properties can be set in PhysicsEditor with the custom phaser exporter.
-
-Use cases:
-
-* Configure collision bits in PhysicsEditor and you want to change them later.
-* Place a sensor in your fixture and access this single fixture later (to disable temporarily)
-* Create a small body with threes fixtures (circle, circle + polygon/convex). Now you want that the polygon part to behave like rubber and assign a bouncing (restitution > 1) material. Assign a fixture key in PhysicsEditor and access the fixture like this. (see the image for the fixture I described)
+* New Phaser Project Template specifically for requireJS in the `resources/Project Templates` folder (many thanks @ashatch)
+* Loader now has an onFileStart event you can listen for (thanks @codevinsky, #705)
+* Group.classType allows you to change the type of object that Group.create or createMultiple makes from Phaser.Sprite to your own custom class.
+* Timer.clearPendingEvents will purge any events marked for deletion, this is run automatically at the start of the update loop.
+* Device.crosswalk detects if your game is running under Intels Crosswalk XDK.
+* Keyboard.reset has a new `hard` parameter which controls the severity of the reset. A soft reset doesn't remove any callbacks or event listeners.
+* Key.reset has a new `hard` parameter which controls the severity of the reset. A soft reset doesn't remove any callbacks or event listeners.
+* InputManager.resetLocked - If the Input Manager has been reset locked then all calls made to InputManager.reset, such as from a State change, are ignored.
+* Group.resetCursor will reset the Group cursor back to the start of the group, or to the given index value.
+* World.wrap will take a game object and if its x/y coordinates fall outside of the world bounds it will be repositioned on the opposite side, for a wrap-around effect.
+* Device.support32bit is a new boolean that sets if the context supports 32bit pixel manipulation using array buffer views or not.
+* P2.World now has its own pause and resume methods, so you can pause the physics simulation independent of your game (thanks @georgiee)
+* Phaser.ArrayList is a new iterative object, similar in principal to a set data structure, but operating on a single array without modifying the object structure.
+* Add scaleMode params to FilterTexture and RenderTexture (pixi.js update by @giraluna)
+* Your State can now have a pauseUpdate method, which is called constantly when the game is paused.
+* Timer.timeCap is a new setting allowing your Timers to protect against unexpectedly large delta timers (such as raf de-vis or CPU grind).
+* Camera.unfollow allows you to easily unfollow a tracked object (thanks @alvinsight, #755)
+* Animation.setFrame allows you to set the animation to a specific frame (thanks @adamholdenyall, #706)
+* Point.dot - get the dot product of two Point objects.
+* Point.cross - get the cross product of two Point objects.
+* Point.cross - get the cross product of two Point objects.
+* Point.perp - make the Point perpendicular (90 degrees rotation)
+* Point.rperp - make the Point perpendicular (-90 degrees rotation)
+* Point.normalRightHand - Right-hand normalize (make unit length) a Point.
+* Point.angle - Returns the angle between this Point object and another object with public x and y properties.
+* Point.angleSq - Returns the angle squared between this Point object and another object with public x and y properties.
+* Point.getMagnitudeSq - Calculates the length squared of the Point object.
+* Point.project - Project two Points onto another Point.
+* Point.projectUnit - Project two Points onto a Point of unit length.
+* Point.multiplyAdd - Adds two 2D Points together and multiplies the result by the given scalar.
+* Point.negative - Creates a negative Point.
+* Point.interpolate - Interpolates the two given Points, based on the `f` value (between 0 and 1) and returns a new Point.
+* Color.packPixel packs an rgb component into a single integer.
+* Color.unpackPixel unpacks an integer into a color object.
+* Color.fromRGBA converts an integer in 0xRRGGBBAA format to a color object.
+* Color.toRGBA converts rgba components into a 32-bit integer.
+* Color.RGBtoHSL converts an rgb color into hsl (hue, saturation, lightness)
+* Color.HSLtoRGB converts hsl values into an rgb color object.
+* Color.RGBtoHSV converts an rgb color into hsv (hue, saturation, value)
+* Color.HSVtoRGB converts an hsv value into an rgb color object.
+* Color.createColor - creates the new light-weight color object used by most Color conversion methods.
+* Color.updateColor - updates an existing color object to update the rgba property.
+* Color.RGBtoString converts an rgba color into a # or 0x color string.
+* Color.HSVColorWheel will return an array with 360 color objects for each segment of an HSV color wheel, you can optionally set the saturation and value amounts.
+* Color.HSLColorWheel will return an array with 360 color objects for each segment of an HSL color wheel, you can optionally set the saturation and lightness amounts.
+* BitmapData.cls clears the current context.
+* BitmapData.fill fills the context with the given color.
+* BitmapData.processPixelRGB lets you perform a custom callback on every pixel in the BitmapData by passing the pixels color object to your callback.
+* BitmapData.processPixel lets you perform a custom callback on every pixel in the BitmapData by passing the pixels color value to your callback.
+* BitmapData.replaceRGB will scan the bitmap for a specific color and replace it with the new given one.
+* BitmapData.setHSL sets the hue, saturation and lightness values on every pixel in the given region, or the whole BitmapData if no region was specified.
+* BitmapData.shiftHSL shifts the hue, saturation and lightness values on every pixel in the given region, or the whole BitmapData if no region was specified.
+* BitmapData.extract scans this BitmapData for all pixels matching the given r,g,b values and then draws them into the given destination BitmapData.
+* BitmapData.circle draws a filled Circle to the BitmapData at the given x, y coordinates and radius in size.
 
 ### Bug Fixes
 
-* If you inputEnable = false a gameobject you couldn't re-enable it again using inputEnable = true, only directly via the handler (thanks @nickrall, fix #673)
-* Fixed setTexture bug with TilingSprite (pixi.js 1.5.2 bug fix)
-* Fixed anchor point bug in canvas with TilingSprite (pixi.js 1.5.2 bug fix)
-* Fixed positionOffset not begin correct in TilingSprite (pixi.js 1.5.2 bug fix)
-* Fixed issue where filters were not being applied to TilingSprite (pixi.js 1.5.2 bug fix)
-* Fixed SpriteBatch canvas transform bug (pixi.js 1.5.2 bug fix)
-* Fixed Cached textures issue when using base64 encoded images (@cacheflowe) (pixi.js 1.5.2 bug fix)
-* Fixed issue where visibility was not being respected in sprite batch (pixi.js 1.5.2 bug fix)
-* Fixed bug in gl.bindTexture which tried to use an undefined private var. (@photonstorm) (pixi.js 1.5.2 bug fix)
-* Fixed the 'short cut' version of Math.floor in setTransform if roundPixels is true. (@photonstorm) (pixi.js 1.5.2 bug fix)
-* SoundManager.boot will check to see if the AudioContext was created before carrying on (thanks @keyle, fix #669)
-* Fixed bug where move up and move down method in groups did not work (thanks @jonthulu, fix #684)
-* Fixed bug in Group.next when cursor is at the last child (thanks @jonthulu, fix #688)
-* Emitter.minParticleScale and maxParticleScale wasn't resetting the Body size correctly.
-* Group.removeBetween now properly iterates through the children.
-* P2.World had a type in the restitution method title. Now fixed.
-* Objects with an InputHandler now deactivate it when the object is removed from a Group but not destroyed (fix #672)
-* Fixed the vectors used in the BlurX and BlurY filters (thanks @nickryall, fix #668)
-
-### p2.js v0.5.0
-
-* Added property .enableIslandSleeping to World.
-* Added property .useFrictionGravityOnZeroGravity to World.
-* Renamed .useWorldGravityForFrictionApproximation in World to .useWorldGravityAsFrictionGravity to keep things more uniform.
-* Sleep improvements.
-* Added property .frictionIterations to GSSolver, and removed .skipFrictionIterations.
-* Upgraded to gl-matrix 2.1.0.
-* Removed QuadTree.
-* Removed mat2.
-* Added Utils.extend.
-* Added methods .setStiffness and .setRelaxation methods to Constraint.
-* Removed properties .stiffness, .relaxation and .useGlobalEquationParameters from GSSolver.
-* Added methods .setGlobalStiffness, .setGlobalRelaxation, .setGlobalEquationParameters to World.
-* Renamed property .eps to .epsilon for Equation.
-* Removed property .useBoundingBoxes from NaiveBroadphase in favor of the new property .boundingVolumeType in Broadphase.
-* Added methods .getMaxForce and .setMaxForce to LockConstraint.
-* Changed property names .bi, .bj, .ni, .ri, .rj to .bodyA, .bodyB, .normalA, .contactPointA, .contactPointB in Equation, ContactEquation and FrictionEquation classes.
-* Removed IslandSolver in favor of the new property World.islandSplit.
-* Changed constructors of the Constraints so they all take an options object as last parameter.
-* Added property .collideConnected to Constraint.
-* Added property .islandSplit to World.
-* Added methods .disableBodyCollision and .enableBodyCollision to World.
-* Added properties .useWorldGravityForFrictionApproximation and .frictionGravity to World.
-* Added Heightfield class.
-* Removed properties .defaultFriction and .defaultRestitution from World, in favor of .defaultContactMaterial.
-* Added property .enabled to Equation.
-* Added property .surfaceVelocity to ContactMaterial.
-* Added property .sensor to Shape.
-* World now emits events 'beginContact', 'endContact' and 'preSolve'.
-* Added property .gravityScale to Body.
-* Renamed class SAP1DBroadphase to SAPBroadphase.
-* Added property .interpolatedPosition to Body`.
-* Added method .internalStep to World.
-* Added property .applyGravity to World.
-* Renamed method .computeC to .computeInvC in Equation, and made it compute the inverse.
-* Added static method Utils.splice.
-* Added property .world to Body.
-* Added property .fixedRotation to Body.
-* Added class AABB.
-* Added properties .aabb and .aabbNeedsUpdate to Body, as well as a method .updateAABB.
-* Added property .useBoundingBoxes to NaiveBroadphase.
-* Added static method Broadphase.aabbCheck.
-* Added method .computeAABB to Shape.
-* Added static method Broadphase.canCollide.
-* Body now inherits from EventEmitter, and dispatches events 'sleep','sleepy' and 'wakeup'.
-* Added properties .allowSleep, .sleepState, .sleepSpeedLimit, .sleepTimeLimit, .lastTimeSleepy as well as methods .sleep, .wakeUp and .sleepTick to Body.
-* Added enums Body.AWAKE, Body.SLEEPY, Body.SLEEPING.
-* Added property .enableBodySleeping to World.
-* Added options .disableRotationalLock, .lowerLimit, .upperLimit to PrismaticConstraint constructor.
-* Added methods .enableMotor, .disableMotor to PrismaticConstraint as well as properties .motorEnabled, .motorSpeed, .motorEquation.
+* The main Timer loop could incorrectly remove a TimerEvent if a new one was added specifically during an event callback (thanks @garyyeap, fix #710)
+* Fixed the use of the destroy parameter in Group.removeAll and related functions (thanks @AnderbergE, fix #717)
+* P2.World.convertTilemap now correctly checks the collides parameter of the tiles as it converts them.
+* Animation.destroy didn't correctly clear the onStart, onLoop and onComplete signals.
+* StateManager.restart incorrectly skipped the first additional parameter after clearCache (thanks @mariusbrn, fix #722)
+* Line.angle and Math.angleBetween used Math.atan2 arguments in the wrong order (thanks @jotson, fix #724)
+* Group.destroy checks parent before removing (thanks @clark-stevenson, fix #733)
+* Fixed typo in P2.World.setMaterial (thanks @OpherV, fix #739)
+* InputHandler._setHandCursor private var wasn't properly set, meaning the hand cursor could sometimes remain (during destroy sequence for example)
+* Destroying an object with an input handler during its onDown event would throw Signals dispatch errors (thanks @jflowers45, fix #746)
+* Circle.distance used an incorrect Math call if you wanted a rounded distance value (thanks @OpherV, fix #745)
+* Point.distance used an incorrect Math call if you wanted a rounded distance value (thanks @OpherV, fix #745)
+* P2.Body.loadPolygon has been updated to correct center of mass issues (thanks @georgiee, fix #749)
+* Game checks if window.console exists before using it (should fix IE9 issues when dev tools are closed), however it is still used deeper in Pixi.
+* Masks now work when used in RenderTextures / CacheAsBitmap and Filters (pixi.js update)
+* Stroked text sometimes got clipped (pixi.js update)
+* Polygon.contains now works for coordinates to the left of the polygon (thanks @vilcans, fix #766)
+* Game pause/resume could incorrectly increment paused Timers (thanks @georgiee, fix #759)
+* Animations resuming from a pause no longer skip frames (thanks @merixstudio, fix #730)
+* Tilemap.fill would throw an error if called on a blank tilemap full of null values (thanks @DrHackenstein, fix #761)
+* LoaderParser.bitmapFont updated so xml parsing works properly on IE9 (thanks @georgiee)
+* Sounds that had been paused via game code would un-mute if the game paused and resumed.
+* CSV Tilemap tiles would incorrectly set the Tile layer reference, causing collision to fail (thanks @Chapelin, fix #692)
 
 
 There is an extensive [Migration Guide](https://github.com/photonstorm/phaser/blob/master/resources/Migration%20Guide.md) available for those converting from Phaser 1.x to 2.x. In the guide we detail the API breaking changes and approach to our new physics system.
 
 The full Change Log is at https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md
 
+![div](http://phaser.io/images/div3.png)
 
 ## How to Build
 
@@ -233,11 +187,13 @@ If you replace Pixi or p2 then run `grunt replace` to patch their UMD strings so
 
 Note: Some of you may not be aware, but the `phaser.min.js` file in the build folder contains all 3 physics systems bundled in. If you only need Arcade Physics then you can use `build\custom\phaser-arcade-physics.min.js` instead. This will save you 180KB from the minified file size.
 
+![div](http://phaser.io/images/div4.png)
 
 ## Koding
 
 You can [![clone the Phaser repo in Koding](http://learn.koding.com/btn/clone_d.png)][koding] and then start editing and previewing code right away using their web based VM development system.
 
+![div](http://phaser.io/images/div5.png)
 
 ## Bower
 
@@ -249,28 +205,39 @@ Nice and easy :)
 
 ![Tanks](http://www.photonstorm.com/wp-content/uploads/2013/10/phaser_tanks-640x480.png)
 
+![div](http://phaser.io/images/div6.png)
 
 ## CDNJS
 
-Thanks to a community member Phaser is now available on [CDNJS](http://cdnjs.com). You can include the following in your html:
+Phaser is now available on [CDNJS](http://cdnjs.com). You can include the following in your html:
 
-`http://cdnjs.cloudflare.com/ajax/libs/phaser/2.0.3/phaser.min.js`
+`http://cdnjs.cloudflare.com/ajax/libs/phaser/2.0.4/phaser.min.js`
 
 Or if you prefer you can leave the protocol off, so it works via http and https:
 
-`//cdnjs.cloudflare.com/ajax/libs/phaser/2.0.3/phaser.min.js`
+`//cdnjs.cloudflare.com/ajax/libs/phaser/2.0.4/phaser.min.js`
 
+![div](http://phaser.io/images/div1.png)
 
 ## Requirements
 
-Games created with Phaser require a modern web browser that supports the canvas tag. This includes Internet Explorer 9+, Firefox, Chrome, Safari and Opera. It also works on mobile web browsers including stock Android 2.x browser and above and iOS5 Mobile Safari and above.
+Games created with Phaser require a modern web browser that supports the canvas tag. This includes Internet Explorer 9+, Firefox, Chrome, Safari and Opera. It also works on mobile web browsers including stock Android 2.x browser and above and iOS5 Mobile Safari and above. But as always be aware of browser limitations. Not all features of Phaser work on all browsers.
 
-If you need to support IE9 or Android 2.x then you must use a build of Phaser that doesn't include P2 physics. You'll find these in the `build/custom` folder.
+### IE9
 
-For developing with Phaser you can use either a plain-vanilla JavaScript approach or [TypeScript](https://typescript.codeplex.com/) using the provided TypeScript definitions file. We made no assumptions about how you like to code your games, and were careful not to impose any form of class/inheritance/structure upon you.
+If you need to support IE9 or Android 2.x and want to use P2 physics then you must use the polyfill found in the `resources/IE9 Polyfill` folder. If you don't require P2 Physics (or don't care about IE9!) then you don't need this polyfill.
 
-Phaser is 576 KB minified (including all 3 physics engines, 311 KB without) and 128 KB gzipped (67 KB without physics libs).
+### JavaScript and TypeScript
 
+Phaser is developed in JavaScript. We've made no assumptions about how you like to code your games, and were careful not to impose any form of class / inheritance / structure upon you. So you won't find it split into require modules or pull in 3rd party npm packages for example. That doesn't mean you can't, it just means we don't force you to do so. If you're a requireJS user you'll find a new template in the `resources\Project Templates` folder just for you.
+
+If you code with [TypeScript](https://typescript.codeplex.com/) you'll find a comprehensive definitions file inside the `build` folder and tutorials on getting started.
+
+Phaser is 128 KB gzipped (576 KB minified) when including all 3 physics engines. Without the physics engines its 67 KB gzipped (311 KB minified)
+
+Note: The `phaser.min.js` file in the build folder contains all 3 physics systems bundled in. If you only need Arcade Physics then you can use `build\custom\phaser-arcade-physics.min.js` instead. This will save you 180 KB from the minified file size.
+
+![div](http://phaser.io/images/div3.png)
 
 ## Learn By Example
 
@@ -290,10 +257,11 @@ Using a locally installed web server browse to the examples folder:
 
 Alternatively in order to start the included web server, after you've cloned the repo, run `npm install` to install all dependencies, then `grunt connect` to start a local server. After running this command you should be able to access your local webserver at `http://127.0.0.1:8000`. Then browse to the examples folder: `http://127.0.0.1:8000/examples/index.html`
 
-There is a new 'Side View' example viewer as well. This loads all the examples into a left-hand frame for faster navigation. And if you've got php installed into your web server you may want to try `debug.php`, which provides a minimal examples list and debug interface.
+There is a 'Side View' example viewer as well. This loads all the examples into a left-hand frame for faster navigation. And if you've got php installed into your web server you may want to try `debug.php`, which provides a minimal examples list and debug interface.
 
 You can also browse all [Phaser Examples](http://examples.phaser.io) online.
 
+![div](http://phaser.io/images/div4.png)
 
 ## Features
 
@@ -364,6 +332,7 @@ Phaser has been used to create hundreds of games, which receive millions of play
 
 ![FruitParty](http://www.photonstorm.com/wp-content/uploads/2013/10/phaser_fruit_particles-640x480.png)
 
+![div](http://phaser.io/images/div6.png)
 
 ## Road Map
 
@@ -395,11 +364,13 @@ Beyond version 2.0 here are some of the features planned for the future:
 * Allow for complex assets like Bitmap Fonts to be stored within a texture atlas.
 * Look at XDomainRequest for IE9 CORs issues.
 
+![div](http://phaser.io/images/div1.png)
 
 ## Nadion
 
 [Nadion](https://github.com/jcd-as/nadion) is a set of powerful enhancements for Phaser that makes level building even easier. It includes features such as Trigger, Area, Alarms and Emitters, debug panels, state machines, parallax layer scrolling, 'developer mode' short-cuts and more.
 
+![div](http://phaser.io/images/div2.png)
 
 ## Contributing
 
@@ -413,6 +384,9 @@ We now have a full [Contributors Guide][contribute] which goes into the process 
 
 - Before submitting a Pull Request please run your code through [JSHint](http://www.jshint.com/) to check for stylistic or formatting errors. To use JSHint, run `grunt jshint`. This isn't a strict requirement and we are happy to receive Pull Requests that haven't been JSHinted, so don't let it put you off contributing, but do know that we'll reformat your source before going live with it.
 
+[![Build Status](https://travis-ci.org/photonstorm/phaser.png?branch=dev)](https://travis-ci.org/photonstorm/phaser)
+
+![div](http://phaser.io/images/div3.png)
 
 ## Bugs?
 
@@ -422,6 +396,7 @@ Please add them to the [Issue Tracker][issues] with as much info as possible, es
 
 "Being negative is not how we make progress" - Larry Page, Google
 
+![div](http://phaser.io/images/div4.png)
 
 ## License
 
