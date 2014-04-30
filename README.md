@@ -60,19 +60,7 @@ Version 2.0.5 - "Tanchico" - in development
 
 ### Bug Fixes
 
-* ScaleManager seeds _check private var with null to avoid later comparison check (thanks @jflowers45, fix #782)
-* P2.Body.applyForce should have used pxmi instead of pxm (thanks @Trufi, fix #776)
-* P2 fixed creation of RevoluteConstraint by passing maxForce in the options (thanks @woutercommandeur, fix #783)
-* Tilemap.getTile and getTileXY used to return `null` in 2.0.3 but returned a Tile object in 2.0.4 (with an index of -1), they now return `null` again.
-
-### 2.0.4 - zero hour updates
-
-The following issues were fixed in 2.0.4 approx. 1 hour after official release:
-
-* ScaleManager seeds _check private var with null to avoid later comparison check (thanks @jflowers45, fix #782)
-* P2.Body.applyForce should have used pxmi instead of pxm (thanks @Trufi, fix #776)
-* P2 fixed creation of RevoluteConstraint by passing maxForce in the options (thanks @woutercommandeur, fix #783)
-* Tilemap.getTile and getTileXY used to return `null` in 2.0.3 but returned a Tile object in 2.0.4 (with an index of -1), they now return `null` again.
+* Line.pointOnLine corrected algorithm (thanks @woutercommandeur, fix #784)
 
 
 
