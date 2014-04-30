@@ -104,7 +104,7 @@ Phaser.Line.prototype = {
     */
     pointOnLine: function (x, y) {
 
-        return ((x - this.start.x) * (this.end.y - this.end.y) === (this.end.x - this.start.x) * (y - this.end.y));
+        return ((x - this.start.x) * (this.end.y - this.start.y) === (this.end.x - this.start.x) * (y - this.start.y));
 
     },
 
