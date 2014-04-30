@@ -736,7 +736,7 @@ Phaser.Game.prototype = {
         {
             this._paused = false;
             this.time.gameResumed();
-            this.input.reset();
+            this.input.reset(false);
             this.sound.unsetMute();
             this.onResume.dispatch(event);
         }
