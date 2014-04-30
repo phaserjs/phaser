@@ -2218,8 +2218,8 @@ declare module Phaser {
         overDuration(pointer: Phaser.Pointer): number;
         pointerDown(pointer: Phaser.Pointer): boolean;
         pointerDragged(pointer: Phaser.Pointer): boolean;
-        pointerOut(index: number): boolean;
-        pointerOver(index: number): boolean;
+        pointerOut(index?: number): boolean;
+        pointerOver(index?: number): boolean;
         pointerTimeDown(pointer: Phaser.Pointer): number;
         pointerTimeOut(pointer: Phaser.Pointer): number;
         pointerTimeOver(pointer: Phaser.Pointer): number;
