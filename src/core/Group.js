@@ -632,15 +632,57 @@ Phaser.Group.prototype.replace = function (oldChild, newChild) {
 };
 
 /**
-* Sets the given property to the given value on the child. The operation controls the assignment of the value.
+* Checks if the child has the given property. Will scan up to 4 levels deep only.
+*
+* @method Phaser.Group#hasProperty
+* @param {*} child - The child to check for the existance of the property on.
+* @param {array} key - An array of strings that make up the property.
+* @return {boolean} True if the child has the property, otherwise false.
+*/
+Phaser.Group.prototype.hasProperty = function (child, key) {
+
+    var len = key.length;
+
+    if (len === 1 && child.hasOwnProperty(key[0]))
+    {
+        return true;
+    }
+    else if (len === 2 && child.hasOwnProperty(key[0]) && child[key[0]].hasOwnProperty(key[1]))
+    {
+        return true;
+    }
+    else if (len === 3 && child.hasOwnProperty(key[0]) && child[key[0]].hasOwnProperty(key[1]) && child[key[0]][key[1]].hasOwnProperty(key[2]))
+    {
+        return true;
+    }
+    else if (len === 4 && child.hasOwnProperty(key[0]) && child[key[0]].hasOwnProperty(key[1]) && child[key[0]][key[1]].hasOwnProperty(key[2]) && child[key[0]][key[1]][key[2]].hasOwnProperty(key[3]))
+    {
+        return true;
+    }
+
+    return false;
+
+};
+
+/**
+* Sets a property to the given value on the child. The operation parameter controls how the value is set.
+* Operation 0 means set the existing value to the given value, or if force is `false` create a new property with the given value.
+* 1 will add the given value to the value already present.
+* 2 will subtract the given value from the value already present.
+* 3 will multiply the value already present by the given value.
+* 4 will divide the value already present by the given value.
 *
 * @method Phaser.Group#setProperty
 * @param {*} child - The child to set the property value on.
 * @param {array} key - An array of strings that make up the property that will be set.
 * @param {*} value - The value that will be set.
 * @param {number} [operation=0] - Controls how the value is assigned. A value of 0 replaces the value with the new one. A value of 1 adds it, 2 subtracts it, 3 multiplies it and 4 divides it.
+* @param {boolean} [force=false] - If `force` is true then the property will be set on the child regardless if it already exists or not. If false and the property doesn't exist, nothing will be set.
+* @return {boolean} True if the property was set, false if not.
 */
-Phaser.Group.prototype.setProperty = function (child, key, value, operation) {
+Phaser.Group.prototype.setProperty = function (child, key, value, operation, force) {
+
+    if (typeof force === 'undefined') { force = false; }
 
     operation = operation || 0;
 
@@ -652,9 +694,16 @@ Phaser.Group.prototype.setProperty = function (child, key, value, operation) {
     //  3 = Multiply
     //  4 = Divide
 
+    //  We can't force a property in and the child doesn't have it, so abort.
+    //  Equally we can't add, subtract, multiply or divide a property value if it doesn't exist, so abort in those cases too.
+    if (!this.hasProperty(child, key, value) && (!force || operation > 0))
+    {
+        return false;
+    }
+
     var len = key.length;
 
-    if (len === 1 && child.hasOwnProperty(key[0]))
+    if (len === 1)
     {
         if (operation === 0) { child[key[0]] = value; }
         else if (operation == 1) { child[key[0]] += value; }
@@ -662,7 +711,7 @@ Phaser.Group.prototype.setProperty = function (child, key, value, operation) {
         else if (operation == 3) { child[key[0]] *= value; }
         else if (operation == 4) { child[key[0]] /= value; }
     }
-    else if (len === 2 && child.hasOwnProperty(key[0]) && child[key[0]].hasOwnProperty(key[1]))
+    else if (len === 2)
     {
         if (operation === 0) { child[key[0]][key[1]] = value; }
         else if (operation == 1) { child[key[0]][key[1]] += value; }
@@ -670,7 +719,7 @@ Phaser.Group.prototype.setProperty = function (child, key, value, operation) {
         else if (operation == 3) { child[key[0]][key[1]] *= value; }
         else if (operation == 4) { child[key[0]][key[1]] /= value; }
     }
-    else if (len === 3 && child.hasOwnProperty(key[0]) && child[key[0]].hasOwnProperty(key[1]) && child[key[0]][key[1]].hasOwnProperty(key[2]))
+    else if (len === 3)
     {
         if (operation === 0) { child[key[0]][key[1]][key[2]] = value; }
         else if (operation == 1) { child[key[0]][key[1]][key[2]] += value; }
@@ -678,7 +727,7 @@ Phaser.Group.prototype.setProperty = function (child, key, value, operation) {
         else if (operation == 3) { child[key[0]][key[1]][key[2]] *= value; }
         else if (operation == 4) { child[key[0]][key[1]][key[2]] /= value; }
     }
-    else if (len === 4 && child.hasOwnProperty(key[0]) && child[key[0]].hasOwnProperty(key[1]) && child[key[0]][key[1]].hasOwnProperty(key[2]) && child[key[0]][key[1]][key[2]].hasOwnProperty(key[3]))
+    else if (len === 4)
     {
         if (operation === 0) { child[key[0]][key[1]][key[2]][key[3]] = value; }
         else if (operation == 1) { child[key[0]][key[1]][key[2]][key[3]] += value; }
@@ -686,6 +735,8 @@ Phaser.Group.prototype.setProperty = function (child, key, value, operation) {
         else if (operation == 3) { child[key[0]][key[1]][key[2]][key[3]] *= value; }
         else if (operation == 4) { child[key[0]][key[1]][key[2]][key[3]] /= value; }
     }
+
+    return true;
 
 };
 
@@ -700,8 +751,12 @@ Phaser.Group.prototype.setProperty = function (child, key, value, operation) {
 * @param {boolean} [checkAlive=false] - If set then the child will only be updated if alive=true.
 * @param {boolean} [checkVisible=false] - If set then the child will only be updated if visible=true.
 * @param {number} [operation=0] - Controls how the value is assigned. A value of 0 replaces the value with the new one. A value of 1 adds it, 2 subtracts it, 3 multiplies it and 4 divides it.
+* @param {boolean} [force=false] - If `force` is true then the property will be set on the child regardless if it already exists or not. If false and the property doesn't exist, nothing will be set.
+* @return {boolean} True if the property was set, false if not.
 */
-Phaser.Group.prototype.set = function (child, key, value, checkAlive, checkVisible, operation) {
+Phaser.Group.prototype.set = function (child, key, value, checkAlive, checkVisible, operation, force) {
+
+    if (typeof force === 'undefined') { force = false; }
 
     key = key.split('.');
 
@@ -710,7 +765,7 @@ Phaser.Group.prototype.set = function (child, key, value, checkAlive, checkVisib
 
     if ((checkAlive === false || (checkAlive && child.alive)) && (checkVisible === false || (checkVisible && child.visible)))
     {
-        this.setProperty(child, key, value, operation);
+        return this.setProperty(child, key, value, operation, force);
     }
 
 };
@@ -728,21 +783,22 @@ Phaser.Group.prototype.set = function (child, key, value, checkAlive, checkVisib
 * @param {boolean} [checkAlive=false] - If set then only children with alive=true will be updated. This includes any Groups that are children.
 * @param {boolean} [checkVisible=false] - If set then only children with visible=true will be updated. This includes any Groups that are children.
 * @param {number} [operation=0] - Controls how the value is assigned. A value of 0 replaces the value with the new one. A value of 1 adds it, 2 subtracts it, 3 multiplies it and 4 divides it.
+* @param {boolean} [force=false] - If `force` is true then the property will be set on the child regardless if it already exists or not. If false and the property doesn't exist, nothing will be set.
 */
-Phaser.Group.prototype.setAll = function (key, value, checkAlive, checkVisible, operation) {
-
-    key = key.split('.');
+Phaser.Group.prototype.setAll = function (key, value, checkAlive, checkVisible, operation, force) {
 
     if (typeof checkAlive === 'undefined') { checkAlive = false; }
     if (typeof checkVisible === 'undefined') { checkVisible = false; }
+    if (typeof force === 'undefined') { force = false; }
 
+    key = key.split('.');
     operation = operation || 0;
 
     for (var i = 0, len = this.children.length; i < len; i++)
     {
         if ((!checkAlive || (checkAlive && this.children[i].alive)) && (!checkVisible || (checkVisible && this.children[i].visible)))
         {
-            this.setProperty(this.children[i], key, value, operation);
+            this.setProperty(this.children[i], key, value, operation, force);
         }
     }
 
@@ -762,11 +818,13 @@ Phaser.Group.prototype.setAll = function (key, value, checkAlive, checkVisible, 
 * @param {boolean} [checkAlive=false] - If set then only children with alive=true will be updated. This includes any Groups that are children.
 * @param {boolean} [checkVisible=false] - If set then only children with visible=true will be updated. This includes any Groups that are children.
 * @param {number} [operation=0] - Controls how the value is assigned. A value of 0 replaces the value with the new one. A value of 1 adds it, 2 subtracts it, 3 multiplies it and 4 divides it.
+* @param {boolean} [force=false] - If `force` is true then the property will be set on the child regardless if it already exists or not. If false and the property doesn't exist, nothing will be set.
 */
-Phaser.Group.prototype.setAllChildren = function (key, value, checkAlive, checkVisible, operation) {
+Phaser.Group.prototype.setAllChildren = function (key, value, checkAlive, checkVisible, operation, force) {
 
     if (typeof checkAlive === 'undefined') { checkAlive = false; }
     if (typeof checkVisible === 'undefined') { checkVisible = false; }
+    if (typeof force === 'undefined') { force = false; }
 
     operation = operation || 0;
 
@@ -776,11 +834,11 @@ Phaser.Group.prototype.setAllChildren = function (key, value, checkAlive, checkV
         {
             if (this.children[i] instanceof Phaser.Group)
             {
-                this.children[i].setAllChildren(key, value, checkAlive, checkVisible, operation);
+                this.children[i].setAllChildren(key, value, checkAlive, checkVisible, operation, force);
             }
             else
             {
-                this.setProperty(this.children[i], key.split('.'), value, operation);
+                this.setProperty(this.children[i], key.split('.'), value, operation, force);
             }
         }
     }
