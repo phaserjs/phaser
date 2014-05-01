@@ -260,6 +260,30 @@ Phaser.Tween.prototype = {
     },
 
     /**
+    * Configure a Reverse Tween
+    *
+    * @method Phaser.Tween#from
+    * @param {object} properties - Properties you want to tween from.
+    * @param {number} [duration=1000] - Duration of this tween in ms.
+    * @param {function} [ease=null] - Easing function. If not set it will default to Phaser.Easing.Linear.None.
+    * @param {boolean} [autoStart=false] - Whether this tween will start automatically or not.
+    * @param {number} [delay=0] - Delay before this tween will start, defaults to 0 (no delay). Value given is in ms.
+    * @param {number} [repeat=0] - Should the tween automatically restart once complete? If you want it to run forever set as Number.MAX_VALUE. This ignores any chained tweens.
+    * @param {boolean} [yoyo=false] - A tween that yoyos will reverse itself and play backwards automatically. A yoyo'd tween doesn't fire the Tween.onComplete event, so listen for Tween.onLoop instead.
+    * @return {Phaser.Tween} This Tween object.
+    */
+    from: function(properties, duration, ease, autoStart, delay, repeat, yoyo) {
+        var _cache = {};
+        for(var prop in properties) {
+            if (properties.hasOwnProperty(prop)) {
+                _cache[prop] = this._object[prop];
+                this._object[prop] = properties[prop];
+            }
+        }
+        this.to(_cache, duration, ease, autoStart, delay, repeat, yoyo);
+    },
+
+    /**
     * Starts the tween running. Can also be called by the autoStart parameter of Tween.to.
     *
     * @method Phaser.Tween#start
