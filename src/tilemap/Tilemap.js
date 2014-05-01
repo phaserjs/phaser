@@ -387,7 +387,7 @@ Phaser.Tilemap.prototype = {
 
                 for (var property in this.objects[name][i].properties)
                 {
-                    group.set(sprite, property, this.objects[name][i].properties[property], false, false, 0);
+                    group.set(sprite, property, this.objects[name][i].properties[property], false, false, 0, true);
                 }
             }
         }
