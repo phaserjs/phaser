@@ -54,13 +54,28 @@ Finally the list of [community authored Phaser Tutorials](http://www.lessmilk.co
 
 Version 2.0.5 - "Tanchico" - in development
 
+
+
+
 ### Updates
 
+
+
 ### New Features
+
+
 
 ### Bug Fixes
 
 * Line.pointOnLine corrected algorithm (thanks @woutercommandeur, fix #784)
+* The P2 DistanceConstraint method signature has changed. Updated Phaser so maxForce is now passed as object (fix #788)
+* Moved the this._reversed flag outside of the property loop in Tween (as per tween.js issue 115)
+* Emitter.makeParticles updated to use Array.isArray() check on the key/frame values, so non-string objects can be passed in (thanks @AnderbergE, fix #786)
+
+
+
+
+
 
 
 
