@@ -1510,7 +1510,7 @@ Phaser.Physics.P2.prototype = {
             {
                 var tile = map.layers[layer].data[y][x];
 
-                if (tile && tile.collides)
+                if (tile && tile.index > -1 && tile.collides)
                 {
                     if (optimize)
                     {
