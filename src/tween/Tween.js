@@ -718,10 +718,14 @@ Phaser.Tween.prototype = {
                         var tmp = this._valuesStartRepeat[property];
                         this._valuesStartRepeat[property] = this._valuesEnd[property];
                         this._valuesEnd[property] = tmp;
-                        this._reversed = !this._reversed;
                     }
 
                     this._valuesStart[property] = this._valuesStartRepeat[property];
+                }
+
+                if (this._yoyo)
+                {
+                    this._reversed = !this._reversed;
                 }
 
                 this._startTime = time + this._delayTime;
