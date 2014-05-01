@@ -63,6 +63,8 @@ Version 2.0.5 - "Tanchico" - in development
 
 ### New Features
 
+* New `force` parameter added to Group.set, setAll, setAllChildren, setProperty which controls if a property is created even if it doesn't exist.
+* Group.hasProperty will check a child for the given property and return a boolean.
 
 
 ### Bug Fixes
@@ -71,7 +73,10 @@ Version 2.0.5 - "Tanchico" - in development
 * The P2 DistanceConstraint method signature has changed. Updated Phaser so maxForce is now passed as object (fix #788)
 * Moved the this._reversed flag outside of the property loop in Tween (as per tween.js issue 115)
 * Emitter.makeParticles updated to use Array.isArray() check on the key/frame values, so non-string objects can be passed in (thanks @AnderbergE, fix #786)
+* Tilemap.createFromObjects will now force the creation of the property again even if it doesn't exist (regression fix from 2.0.4)
 
+
+P2.Body.collideWorldBounds = true fails.
 
 
 
