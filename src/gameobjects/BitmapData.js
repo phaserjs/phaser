@@ -623,6 +623,8 @@ Phaser.BitmapData.prototype = {
 
     /**
     * Get the color of a specific pixel in the context into a color object.
+    * If you have drawn anything to the BitmapData since it was created you must call BitmapData.update to refresh the array buffer,
+    * otherwise this may return out of date color values, or worse - throw a run-time error as it tries to access an array element that doesn't exist.
     *
     * @method Phaser.BitmapData#getPixel
     * @param {number} x - The x coordinate of the pixel to be set. Must lay within the dimensions of this BitmapData.
@@ -655,6 +657,8 @@ Phaser.BitmapData.prototype = {
 
     /**
     * Get the color of a specific pixel including its alpha value.
+    * If you have drawn anything to the BitmapData since it was created you must call BitmapData.update to refresh the array buffer,
+    * otherwise this may return out of date color values, or worse - throw a run-time error as it tries to access an array element that doesn't exist.
     * Note that on little-endian systems the format is 0xAABBGGRR and on big-endian the format is 0xRRGGBBAA.
     *
     * @method Phaser.BitmapData#getPixel32
@@ -673,6 +677,8 @@ Phaser.BitmapData.prototype = {
 
     /**
     * Get the color of a specific pixel including its alpha value as a color object containing r,g,b,a and rgba properties.
+    * If you have drawn anything to the BitmapData since it was created you must call BitmapData.update to refresh the array buffer,
+    * otherwise this may return out of date color values, or worse - throw a run-time error as it tries to access an array element that doesn't exist.
     *
     * @method Phaser.BitmapData#getPixelRGB
     * @param {number} x - The x coordinate of the pixel to be set. Must lay within the dimensions of this BitmapData.
