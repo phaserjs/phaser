@@ -380,23 +380,10 @@ Phaser.Line.intersectsPoints = function (a, b, e, f, asSegment, result) {
 
     if (asSegment)
     {
-        if (Math.pow((result.x - b.x) + (result.y - b.y), 2) > Math.pow((a.x - b.x) + (a.y - b.y), 2))
-        {
-            return null;
-        }
-
-        if (Math.pow((result.x - a.x) + (result.y - a.y), 2) > Math.pow((a.x - b.x) + (a.y - b.y), 2))
-        {
-            return null;
-        }
-
-        if (Math.pow((result.x - f.x) + (result.y - f.y), 2) > Math.pow((e.x - f.x) + (e.y - f.y), 2))
-        {
-            return null;
-        }
-
-        if (Math.pow((result.x - e.x) + (result.y - e.y), 2) > Math.pow((e.x - f.x) + (e.y - f.y), 2))
-        {
+        if ( result.x < Math.min(a.x, b.x) || result.x > Math.max(a.x, b.x) ||
+             result.y < Math.min(a.y, b.y) || result.y > Math.max(a.y, b.y) ||
+             result.x < Math.min(e.x, f.x) || result.x > Math.max(e.x, f.x) ||
+             result.y < Math.min(e.y, f.y) || result.y > Math.max(e.y, f.y) ) {
             return null;
         }
     }
