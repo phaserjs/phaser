@@ -26,6 +26,24 @@ Phaser.Pointer = function (game, id) {
     this.id = id;
 
     /**
+    * @property {number} identifier - The identifier property of the Pointer as set by the DOM event when this Pointer is started.
+    * @default
+    */
+    this.identifier = 0;
+
+    /**
+    * @property {any} target - The target property of the Pointer as set by the DOM event when this Pointer is started.
+    * @default
+    */
+    this.target = null;
+
+    /**
+    * @property {any} button - The button property of the Pointer as set by the DOM event when this Pointer is started.
+    * @default
+    */
+    this.button = null;
+
+    /**
     * @property {boolean} _holdSent - Local private variable to store the status of dispatching a hold event.
     * @private
     * @default
@@ -39,7 +57,7 @@ Phaser.Pointer = function (game, id) {
     this._history = [];
 
     /**
-    * @property {number} _lastDrop - Local private variable storing the time at which the next history drop should occur.
+    * @property {number} _nextDrop - Local private variable storing the time at which the next history drop should occur.
     * @private
     * @default
     */

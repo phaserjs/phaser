@@ -59,6 +59,9 @@ Version 2.0.5 - "Tanchico" - in development
 
 ### Updates
 
+* TypeScript definitions fixes and updates (thanks @luispedrofonseca @clark-stevenson)
+* Input.getPointerFromIdentifier docs update to reflect where the identifier comes from. Pointer properties now set to give it fixed defaults (thanks @JirkaDellOro, #793)
+
 
 
 ### New Features
@@ -74,6 +77,8 @@ Version 2.0.5 - "Tanchico" - in development
 * Moved the this._reversed flag outside of the property loop in Tween (as per tween.js issue 115)
 * Emitter.makeParticles updated to use Array.isArray() check on the key/frame values, so non-string objects can be passed in (thanks @AnderbergE, fix #786)
 * Tilemap.createFromObjects will now force the creation of the property again even if it doesn't exist (regression fix from 2.0.4)
+* Phaser.Line.intersectsPoints fixed by properly checking the boundaries (thanks @woutercommandeur, fix #790)
+
 
 
 P2.Body.collideWorldBounds = true fails.

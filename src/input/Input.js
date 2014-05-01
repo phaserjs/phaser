@@ -672,18 +672,21 @@ Phaser.Input.prototype = {
     },
 
     /**
-    * Get the Pointer object whos identified property matches the given identifier value.
+    * Get the Pointer object whos `identifier` property matches the given identifier value.
+    * The identifier property is not set until the Pointer has been used at least once, as its populated by the DOM event.
+    * Also it can change every time you press the pointer down, and is not fixed once set.
+    *
     * @method Phaser.Input#getPointerFromIdentifier
     * @param {number} identifier - The Pointer.identifier value to search for.
     * @return {Phaser.Pointer} A Pointer object or null if no Pointer object matches the requested identifier.
     */
     getPointerFromIdentifier: function (identifier) {
 
-        if (this.pointer1.identifier == identifier)
+        if (this.pointer1.identifier === identifier)
         {
             return this.pointer1;
         }
-        else if (this.pointer2.identifier == identifier)
+        else if (this.pointer2.identifier === identifier)
         {
             return this.pointer2;
         }
@@ -691,7 +694,7 @@ Phaser.Input.prototype = {
         {
             for (var i = 3; i <= 10; i++)
             {
-                if (this['pointer' + i] && this['pointer' + i].identifier == identifier)
+                if (this['pointer' + i] && this['pointer' + i].identifier === identifier)
                 {
                     return this['pointer' + i];
                 }
