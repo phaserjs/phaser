@@ -61,7 +61,7 @@ Version 2.0.5 - "Tanchico" - in development
 
 * TypeScript definitions fixes and updates (thanks @luispedrofonseca @clark-stevenson)
 * Input.getPointerFromIdentifier docs update to reflect where the identifier comes from. Pointer properties now set to give it fixed defaults (thanks @JirkaDellOro, #793)
-
+* Pointer.pointerId added which is set by the DOM event (if present in the browser). Note that browsers can and do recycle pointer IDs.
 
 
 ### New Features

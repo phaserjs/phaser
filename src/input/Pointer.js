@@ -32,6 +32,12 @@ Phaser.Pointer = function (game, id) {
     this.identifier = 0;
 
     /**
+    * @property {number} pointerId - The pointerId property of the Pointer as set by the DOM event when this Pointer is started. The browser can and will recycle this value.
+    * @default
+    */
+    this.pointerId = null;
+
+    /**
     * @property {any} target - The target property of the Pointer as set by the DOM event when this Pointer is started.
     * @default
     */
@@ -217,9 +223,14 @@ Phaser.Pointer.prototype = {
     /**
     * Called when the Pointer is pressed onto the touchscreen.
     * @method Phaser.Pointer#start
-    * @param {Any} event
+    * @param {any} event - The DOM event from the browser.
     */
     start: function (event) {
+
+        if (event['pointerId'])
+        {
+            this.pointerId = event.pointerId;
+        }
 
         this.identifier = event.identifier;
         this.target = event.target;
@@ -571,6 +582,7 @@ Phaser.Pointer.prototype = {
             this.active = false;
         }
 
+        this.pointerId = null;
         this.identifier = null;
         this.isDown = false;
         this.isUp = true;
