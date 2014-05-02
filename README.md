@@ -69,6 +69,7 @@ Version 2.0.5 - "Tanchico" - in development
 * New `force` parameter added to Group.set, setAll, setAllChildren, setProperty which controls if a property is created even if it doesn't exist.
 * Group.hasProperty will check a child for the given property and return a boolean.
 * Phaser.Tween.from allows you to set tween properties that will end up where the current object is (thanks @codevinsky, #792)
+* Input.getPointerFromId will return a pointer with a matching pointerId value, if any. pointerId is a value set by the browser in the DOM event.
 
 
 ### Bug Fixes

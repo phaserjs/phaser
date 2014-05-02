@@ -466,6 +466,7 @@ Phaser.Pointer.prototype = {
 
     /**
     * Called when the Pointer leaves the target area.
+    *
     * @method Phaser.Pointer#leave
     * @param {MouseEvent|PointerEvent|TouchEvent} event - The event passed up from the input handler.
     */
@@ -478,6 +479,7 @@ Phaser.Pointer.prototype = {
 
     /**
     * Called when the Pointer leaves the touchscreen.
+    *
     * @method Phaser.Pointer#stop
     * @param {MouseEvent|PointerEvent|TouchEvent} event - The event passed up from the input handler.
     */
@@ -523,6 +525,8 @@ Phaser.Pointer.prototype = {
         this.withinGame = false;
         this.isDown = false;
         this.isUp = true;
+        this.pointerId = null;
+        this.identifier = null;
         
         this.positionUp.setTo(this.x, this.y);
         
