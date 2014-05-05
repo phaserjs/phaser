@@ -480,6 +480,13 @@ Phaser.Timer.prototype = {
     */
     pause: function () {
 
+        if (!this.running)
+        {
+            return;
+        }
+
+        this._codePaused = true;
+
         if (this.paused)
         {
             return;
@@ -488,7 +495,6 @@ Phaser.Timer.prototype = {
         this._pauseStarted = this.game.time.now;
 
         this.paused = true;
-        this._codePaused = true;
 
     },
 
@@ -499,7 +505,7 @@ Phaser.Timer.prototype = {
     */
     _pause: function () {
 
-        if (this.paused)
+        if (this.paused || !this.running)
         {
             return;
         }
