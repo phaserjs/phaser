@@ -193,7 +193,8 @@ Phaser.Loader.prototype = {
 
     /**
     * Check whether asset exists with a specific key.
-    *
+    * Use Phaser.Cache to access loaded assets, e.g. Phaser.Cache#checkImageKey
+    * 
     * @method Phaser.Loader#checkKeyExists
     * @param {string} type - The type asset you want to check.
     * @param {string} key - Key of the asset you want to check.
