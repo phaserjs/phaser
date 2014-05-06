@@ -64,6 +64,7 @@ Version 2.0.5 - "Tanchico" - in development
 * Pointer.pointerId added which is set by the DOM event (if present in the browser). Note that browsers can and do recycle pointer IDs.
 * Pointer.type and Pointer.exists properties added.
 * QuadTree.retrieve can now accept either a Sprite with a physics body or a Phaser.Rectangle as its parameter.
+* PluginManager.add now accepts additional parameters and if given a function it will pass them all to the Plugin constructor.
 
 
 ### New Features
@@ -73,6 +74,13 @@ Version 2.0.5 - "Tanchico" - in development
 * Phaser.Tween.from allows you to set tween properties that will end up where the current object is (thanks @codevinsky, #792)
 * Input.getPointerFromId will return a pointer with a matching pointerId value, if any. pointerId is a value set by the browser in the DOM event.
 * ArcadePhysics.getObjectsUnderPointer will return all children from a Group that overlap with the given Pointer.
+* InputManager.minPriorityID lets you set the minimum priority level an object needs to be to be checked by a Pointer. Useful for UI layer stacking.
+* New consts: Phaser.Tilemap.NORTH, SOUTH, EAST and WEST to use with the TileMapWalker Plugin.
+
+### New Plugins
+
+* TilemapWalker allows you to set a location marker into a tilemap. You can then move around with commands such as moveForward, turnLeft, etc.
+
 
 
 ### Bug Fixes
@@ -84,6 +92,7 @@ Version 2.0.5 - "Tanchico" - in development
 * Emitter.makeParticles updated to use Array.isArray() check on the key/frame values, so non-string objects can be passed in (thanks @AnderbergE, fix #786)
 * Tilemap.createFromObjects will now force the creation of the property again even if it doesn't exist (regression fix from 2.0.4)
 * Phaser.Line.intersectsPoints fixed by properly checking the boundaries (thanks @woutercommandeur, fix #790)
+* Group.set and setAll were changed in 2.0.4 to not create the property unless it existed. This broke backwards compatibility, so has been fixed.
 
 
 

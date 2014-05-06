@@ -168,6 +168,30 @@ Phaser.Tilemap.CSV = 0;
 */
 Phaser.Tilemap.TILED_JSON = 1;
 
+/**
+* @constant
+* @type {number}
+*/
+Phaser.Tilemap.NORTH = 0;
+
+/**
+* @constant
+* @type {number}
+*/
+Phaser.Tilemap.EAST = 1;
+
+/**
+* @constant
+* @type {number}
+*/
+Phaser.Tilemap.SOUTH = 2;
+
+/**
+* @constant
+* @type {number}
+*/
+Phaser.Tilemap.WEST = 3;
+
 Phaser.Tilemap.prototype = {
 
     /**
@@ -1176,7 +1200,7 @@ Phaser.Tilemap.prototype = {
     * @param {number} x - X position to get the tile from (given in tile units, not pixels)
     * @param {number} y - Y position to get the tile from (given in tile units, not pixels)
     * @param {number|string|Phaser.TilemapLayer} [layer] - The layer to get the tile from.
-    * @return {Phaser.Tile} The tile at the given coordinates.
+    * @return {Phaser.Tile} The tile at the given coordinates or null if no tile was found.
     */
     getTile: function (x, y, layer) {
 
@@ -1192,6 +1216,10 @@ Phaser.Tilemap.prototype = {
             {
                 return this.layers[layer].data[y][x];
             }
+        }
+        else
+        {
+            return null;
         }
 
     },
