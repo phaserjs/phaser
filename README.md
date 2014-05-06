@@ -93,6 +93,7 @@ Version 2.0.5 - "Tanchico" - in development
 * Tilemap.createFromObjects will now force the creation of the property again even if it doesn't exist (regression fix from 2.0.4)
 * Phaser.Line.intersectsPoints fixed by properly checking the boundaries (thanks @woutercommandeur, fix #790)
 * Group.set and setAll were changed in 2.0.4 to not create the property unless it existed. This broke backwards compatibility, so has been fixed.
+* Sound.play now returns the Sound object (thanks @AnderbergE, fix #802)
 
 
 
