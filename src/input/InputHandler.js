@@ -386,7 +386,7 @@ Phaser.InputHandler.prototype = {
     */
     validForInput: function (highestID, highestRenderID) {
 
-        if (this.sprite.scale.x === 0 || this.sprite.scale.y === 0)
+        if (this.sprite.scale.x === 0 || this.sprite.scale.y === 0 || this.priorityID < this.game.input.minPriorityID)
         {
             return false;
         }

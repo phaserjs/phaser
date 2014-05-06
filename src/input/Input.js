@@ -268,6 +268,12 @@ Phaser.Input = function (game) {
     this.onHold = null;
 
     /**
+    * @property {number} minPriorityID - You can tell all Pointers to ignore any object with a priorityID lower than the minPriorityID. Useful when stacking UI layers. Set to zero to disable.
+    * @default
+    */
+    this.minPriorityID = 0;
+
+    /**
     * A list of interactive objects. Te InputHandler components add and remove themselves from this.
     * @property {Phaser.ArrayList} interactiveItems
     */
