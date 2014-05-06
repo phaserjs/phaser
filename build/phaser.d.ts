@@ -32,11 +32,11 @@ declare module PIXI {
 
     }
 
-    export enum scaleModes {
+    export class scaleModes {
 
-        DEFAULT,
-        LINEAR,
-        NEAREST
+         public static DEFAULT: number;
+         public static LINEAR: number;
+         public static NEAREST: number;
 
     }
 
@@ -1045,6 +1045,7 @@ declare module Phaser {
 
         constructor(game: Phaser.Game, parent: Phaser.Sprite, name: string, frameData: Phaser.FrameData, frames: any[], delay: number, loop: boolean);
 
+        currentAnim: Phaser.Animation;
         currentFrame: Phaser.Frame;
         delay: number;
         frame: number;
@@ -1152,11 +1153,13 @@ declare module Phaser {
         
         add(object: any): void;
         alphaMask(source: any, mask: any): void;
+        circle(x: number, y: number, radius: number, fillStyle?: string): void;
         clear(): void;
         cls(): void;
         copyPixels(source: any, area: Phaser.Rectangle, destX: number, destY: number): void;
         draw(source: any, x: number, y: number): void;
         drawSprite(sprite: any, x?: number, y?: number): void;
+        extract(destination: Phaser.BitmapData, r: number, g: number, b: number, a?:number): Phaser.BitmapData;
         fill(r: number, g: number, b: number, a?: number): void;
         getPixel(x: number, y: number, out?: Object): number;
         getPixelRGB(x: number, y: number, out?: Object, hsl?: boolean, hsv?: boolean): Object;
@@ -1426,7 +1429,9 @@ declare module Phaser {
         static hexToRGB(h: string): number;
         static hexToColor(hex: string, out?: Object): Object;
         static HSLtoRGB(h: number, s: number, l: number, out?: Object): Object;
+        static HSLColorWheel(s?: number, l?: number): any[];
         static HSVtoRGB(h: number, s: number, v: number, out?: Object): Object;
+        static HSVColorWheel(s?: number, v?: number): any[];
         static hueToColor(p: number, q: number, t: number): number;
         static interpolateColor(color1: number, color2: number, steps: number, currentStep: number, alpha: number): number;
         static interpolateColorWithRGB(color: number, r: number, g: number, b: number, steps: number, currentStep: number): number;
@@ -1439,7 +1444,7 @@ declare module Phaser {
         static RGBtoWebstring(color: number): string;
         static toRGBA(r: number, g: number, b: number, a: number): number;
         static unpackPixel(rgba: number, out?: Object, hsl?: boolean, hsv?: boolean): Object;
-
+        static updateColor(out: any): number;
     }
 
     interface CursorKeys {
@@ -2024,6 +2029,7 @@ declare module Phaser {
         getIndex(child: any): number;
         getRandom(startIndex: number, length: number): any;
         getTop(): any;
+        hasProperty(child: any, key: string[]): boolean;
         iterate(key: string, value: any, returnType: number, callback?: Function, callbackContext?: Object, ...args: any[]): any;
         moveDown(child: any): any;
         moveUp(child: any): any;
@@ -2038,9 +2044,9 @@ declare module Phaser {
         replace(oldChild: any, newChild: any): any;
         reverse(): void;
         sendToBack(child: any): any;
-        set(child: Phaser.Sprite, key: string, value: any, checkAlive?: boolean, checkVisible?: boolean, operation?: number): void;
-        setAll(key: string, value: any, checkAlive?: boolean, checkVisible?: boolean, operation?: number): void;
-        setProperty(child: any, key: string[], value: any, operation?: number): void;
+        set(child: any, key: string[], value: any, operation?: number, force?: boolean): boolean;
+        setAll(key: string, value: any, checkAlive?: boolean, checkVisible?: boolean, operation?: number, force?:boolean): boolean;
+        setProperty(child: any, key: string[], value: any, operation?: number, force?: boolean): boolean;
         sort(index?: string, order?: number): void;
         subAll(property: string, amount: number, checkAlive: boolean, checkVisible: boolean): void;
         swap(child1: any, child2: any): boolean;
@@ -2160,6 +2166,7 @@ declare module Phaser {
         destroy(): void;
         getLocalPosition(displayObject: any, pointer: Phaser.Pointer): Phaser.Point;
         getPointer(state: boolean): Phaser.Pointer;
+        getPointerFromId(pointerID: number): Phaser.Pointer;
         getPointerFromIdentifier(identifier: number): Phaser.Pointer;
         hitTest(displayObject: any, pointer: Phaser.Pointer, localPoint: Phaser.Point): void;
         reset(hard?: boolean): void;
@@ -3473,23 +3480,36 @@ declare module Phaser {
         static subtract(a: Phaser.Point, b: Phaser.Point, out?: Phaser.Point): Phaser.Point;
 
         add(x: number, y: number): Phaser.Point;
+        angle(a: Phaser.Point, b: Phaser.Point): number;
+        angleSq(a: Phaser.Point, b: Phaser.Point): number;
         clamp(min: number, max: number): Phaser.Point;
         clampX(min: number, max: number): Phaser.Point;
         clampY(min: number, max: number): Phaser.Point;
         clone(output?: Phaser.Point): Phaser.Point;
         copyFrom(source: any): Phaser.Point;
         copyTo(dest: any): Object;
+        cross(a: Phaser.Point): number;
         distance(dest: Object, round?: boolean): number;
         divide(x: number, y: number): Phaser.Point;
+        dot(a: Phaser.Point): number;
         equals(a: Phaser.Point): boolean;
         getMagnitude(): number;
-        setMagnitude(magnitude: number): Phaser.Point;
+        getMagnitudeSq(): number;
+        interpolate(a: Phaser.Point, b: Phaser.Point, f: number, out?: Phaser.Point): Phaser.Point;
         invert(): Phaser.Point;
         isZero(): boolean;
         multiply(x: number, y: number): Phaser.Point;
-        normalise(): Phaser.Point;
-        rotate(x: number, y: number, angle: number, asDegrees: boolean, distance?: number): Phaser.Point;
+        multiplyAdd(a: Phaser.Point, b: Phaser.Point, s: number, out?: Phaser.Point): Phaser.Point;
+        negative(a: Phaser.Point, out?: Phaser.Point): Phaser.Point;
+        normalise(a: Phaser.Point, out?: Phaser.Point): Phaser.Point;
+        normalRightHand(a: Phaser.Point, out?: Phaser.Point): Phaser.Point;
+        perp(a: Phaser.Point, out?: Phaser.Point): Phaser.Point;
+        project(a: Phaser.Point, b: Phaser.Point, out?: Phaser.Point): Phaser.Point;
+        projectUnit(a: Phaser.Point, b: Phaser.Point, out?: Phaser.Point): Phaser.Point;
+        rotate(x: number, y: number, angle: number, asDegrees?: boolean, distance?: number): Phaser.Point;
+        rperp(a: Phaser.Point, out?: Phaser.Point): Phaser.Point;
         set(x: number, y?: number): Phaser.Point;
+        setMagnitude(magnitude: number): Phaser.Point;
         setTo(x: number, y?: number): Phaser.Point;
         subtract(x: number, y: number): Phaser.Point;
         toString(): string;
@@ -3501,24 +3521,28 @@ declare module Phaser {
         constructor(game: Phaser.Game, id: number);
 
         active: boolean;
+        button: any;
         circle: Phaser.Circle;
         clientX: number;
         clientY: number;
         duation: number;
         game: Phaser.Game;
         id: number;
+        identifier: number;
         isDown: boolean;
         isMouse: boolean;
         isUp: boolean;
         msSinceLastClick: number;
         pageX: number;
         pageY: number;
+        pointerId: number;
         position: Phaser.Point;
         positionDown: Phaser.Point;
         positionUp: Phaser.Point;
         previousTapTime: number;
         screenX: number;
         screenY: number;
+        target: any;
         targetObject: any;
         timeDown: number;
         timeUp: number;
@@ -3814,14 +3838,17 @@ declare module Phaser {
         currentTime: number;
         destroy(remove?: boolean): void;
         duration: number;
+        durationMS: number;
         externalNode: Object;
         game: Phaser.Game;
+        gainNode: Object;
         isDecoded: boolean;
         isDecoding: boolean;
         isPlaying: boolean;
         key: string;
         loop: boolean;
         markers: Object;
+        masterGainNode: Object;
         mute: boolean;
         name: string;
         onDecoded: Phaser.Signal;
@@ -3837,6 +3864,7 @@ declare module Phaser {
         pausedPosition: number;
         pausedTime: number;
         pendingPlayback: boolean;
+        position: number;
         startTime: number;
         stopTime: number;
         totalDuration: number;
@@ -4089,6 +4117,7 @@ declare module Phaser {
         onLoadRenderCallback: Function;
         onLoadUpdateCallback: Function;
         onPausedCallback: Function;
+        onPauseUpdateCallback: Function;
         onPreloadCallback: Function;
         onPreRenderCallback: Function;
         onRenderCallback: Function;
@@ -4525,6 +4554,7 @@ declare module Phaser {
         chain(): Phaser.Tween;
         delay(amount: number): Phaser.Tween;
         easing(easing: Function): Phaser.Tween;
+        from(properties: Object, duration?: number, ease?: Function, autoStart?: boolean, delay?: number, repeat?: number, yoyo?: boolean): Phaser.Tween;
         generateData(frameRate: number, data: Object): any[];
         interpolation(interpolation: Function): Phaser.Tween;
         loop(): Phaser.Tween;
