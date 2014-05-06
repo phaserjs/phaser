@@ -26,6 +26,18 @@ Phaser.Pointer = function (game, id) {
     this.id = id;
 
     /**
+    * @property {number} type - The const type of this object.
+    * @readonly
+    */
+    this.type = Phaser.POINTER;
+
+    /**
+    * @property {boolean} exists - A Pointer object that exists is allowed to be checked for physics collisions and overlaps.
+    * @default
+    */
+    this.exists = true;
+
+    /**
     * @property {number} identifier - The identifier property of the Pointer as set by the DOM event when this Pointer is started.
     * @default
     */

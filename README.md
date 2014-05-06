@@ -62,6 +62,8 @@ Version 2.0.5 - "Tanchico" - in development
 * TypeScript definitions fixes and updates (thanks @luispedrofonseca @clark-stevenson)
 * Input.getPointerFromIdentifier docs update to reflect where the identifier comes from. Pointer properties now set to give it fixed defaults (thanks @JirkaDellOro, #793)
 * Pointer.pointerId added which is set by the DOM event (if present in the browser). Note that browsers can and do recycle pointer IDs.
+* Pointer.type and Pointer.exists properties added.
+* QuadTree.retrieve can now accept either a Sprite with a physics body or a Phaser.Rectangle as its parameter.
 
 
 ### New Features
@@ -70,11 +72,13 @@ Version 2.0.5 - "Tanchico" - in development
 * Group.hasProperty will check a child for the given property and return a boolean.
 * Phaser.Tween.from allows you to set tween properties that will end up where the current object is (thanks @codevinsky, #792)
 * Input.getPointerFromId will return a pointer with a matching pointerId value, if any. pointerId is a value set by the browser in the DOM event.
+* ArcadePhysics.getObjectsUnderPointer will return all children from a Group that overlap with the given Pointer.
 
 
 ### Bug Fixes
 
 * Line.pointOnLine corrected algorithm (thanks @woutercommandeur, fix #784)
+* Line segment collision fails under certain cicumstances (thanks @woutercommandeur, fix #760)
 * The P2 DistanceConstraint method signature has changed. Updated Phaser so maxForce is now passed as object (fix #788)
 * Moved the this._reversed flag outside of the property loop in Tween (as per tween.js issue 115)
 * Emitter.makeParticles updated to use Array.isArray() check on the key/frame values, so non-string objects can be passed in (thanks @AnderbergE, fix #786)
