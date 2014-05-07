@@ -65,6 +65,7 @@ Version 2.0.5 - "Tanchico" - in development
 * Pointer.type and Pointer.exists properties added.
 * QuadTree.retrieve can now accept either a Sprite with a physics body or a Phaser.Rectangle as its parameter.
 * PluginManager.add now accepts additional parameters and if given a function it will pass them all to the Plugin constructor.
+* Tilemap.getTile has a new nonNull parameter. If true it won't return `null` for empty tiles, but will return the actual Tile in that location.
 
 
 ### New Features

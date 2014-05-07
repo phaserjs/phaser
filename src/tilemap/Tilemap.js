@@ -1200,9 +1200,12 @@ Phaser.Tilemap.prototype = {
     * @param {number} x - X position to get the tile from (given in tile units, not pixels)
     * @param {number} y - Y position to get the tile from (given in tile units, not pixels)
     * @param {number|string|Phaser.TilemapLayer} [layer] - The layer to get the tile from.
-    * @return {Phaser.Tile} The tile at the given coordinates or null if no tile was found.
+    * @param {boolean} [nonNull=false] - If true getTile won't return null for empty tiles, but a Tile object with an index of -1.
+    * @return {Phaser.Tile} The tile at the given coordinates or null if no tile was found or the coordinates were invalid.
     */
-    getTile: function (x, y, layer) {
+    getTile: function (x, y, layer, nonNull) {
+
+        if (typeof nonNull === 'undefined') { nonNull = false; }
 
         layer = this.getLayer(layer);
 
@@ -1210,7 +1213,14 @@ Phaser.Tilemap.prototype = {
         {
             if (this.layers[layer].data[y][x].index === -1)
             {
-                return null;
+                if (nonNull)
+                {
+                    return this.layers[layer].data[y][x];
+                }
+                else
+                {
+                    return null;
+                }
             }
             else
             {

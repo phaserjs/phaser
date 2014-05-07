@@ -256,7 +256,6 @@ Phaser.Plugin.TilemapWalker.prototype = {
 
     getTiles: function (width, height, center) {
 
-        var output = [];
         var startX;
         var startX;
         var endX;
@@ -299,7 +298,7 @@ Phaser.Plugin.TilemapWalker.prototype = {
 
             //  bottom middle align
             startY = this.location.y;
-            endY = this.location.y - (height - 1);
+            endY = this.location.y + (height - 1);
             incY = 1;
         }
         else if (this.facing === Phaser.Tilemap.WEST)
@@ -314,187 +313,360 @@ Phaser.Plugin.TilemapWalker.prototype = {
             incY = 1;
         }
 
-        // console.log('getTiles', startX, endX, startY, endY);
+        var output = [];
+        var row = [];
 
         for (var y = startY; y <= endY; y += incY)
         {
+            row = [];
+
             for (var x = startX; x <= endX; x += incX)
             {
-                output.push(this.map.getTile(x, y, this.locationLayer));
-                // console.log(x, y, this.map.getTile(x, y, this.locationLayer));
+                var tile = this.map.getTile(x, y, this.locationLayer, true);
+
+                if (tile)
+                {
+                    row.push(tile.index);
+                }
+                else
+                {
+                    //  out of bounds, so block it off
+                    row.push(2);
+                }
             }
+
+            output.push(row);
         }
+
+        // console.log(printMatrix(output));
+
+        if (this.facing === Phaser.Tilemap.EAST)
+        {
+            output = rotateMatrix(output, 90);
+        }
+        else if (this.facing === Phaser.Tilemap.SOUTH)
+        {
+            output = rotateMatrix(output, 180);
+        }
+        else if (this.facing === Phaser.Tilemap.WEST)
+        {
+            output = rotateMatrix(output, -90);
+        }
+
+        // console.log('rotate');
+        console.log(printMatrix(output));
 
         return output;
 
     },
 
-    getTileAhead: function () {
+    getTileAhead: function (distance) {
+
+        if (typeof distance === 'undefined') { distance = 1; }
 
         if (this.facing === Phaser.Tilemap.NORTH)
         {
-            return this.getTileFromLocation(0, -1);
+            return this.getTileFromLocation(0, -distance);
         }
         else if (this.facing === Phaser.Tilemap.EAST)
         {
-            return this.getTileFromLocation(1, 0);
+            return this.getTileFromLocation(distance, 0);
         }
         else if (this.facing === Phaser.Tilemap.SOUTH)
         {
-            return this.getTileFromLocation(0, 1);
+            return this.getTileFromLocation(0, distance);
         }
         else if (this.facing === Phaser.Tilemap.WEST)
         {
-            return this.getTileFromLocation(-1, 0);
+            return this.getTileFromLocation(-distance, 0);
         }
 
     },
 
-    getTileAheadLeft: function () {
+    getTileAheadLeft: function (distance) {
+
+        if (typeof distance === 'undefined') { distance = 1; }
 
         if (this.facing === Phaser.Tilemap.NORTH)
         {
-            return this.getTileFromLocation(-1, -1);
+            return this.getTileFromLocation(-distance, -distance);
         }
         else if (this.facing === Phaser.Tilemap.EAST)
         {
-            return this.getTileFromLocation(1, -1);
+            return this.getTileFromLocation(distance, -distance);
         }
         else if (this.facing === Phaser.Tilemap.SOUTH)
         {
-            return this.getTileFromLocation(1, 1);
+            return this.getTileFromLocation(distance, distance);
         }
         else if (this.facing === Phaser.Tilemap.WEST)
         {
-            return this.getTileFromLocation(-1, 1);
+            return this.getTileFromLocation(-distance, distance);
         }
 
     },
 
-    getTileAheadRight: function () {
+    getTileAheadRight: function (distance) {
+
+        if (typeof distance === 'undefined') { distance = 1; }
 
         if (this.facing === Phaser.Tilemap.NORTH)
         {
-            return this.getTileFromLocation(1, -1);
+            return this.getTileFromLocation(distance, -distance);
         }
         else if (this.facing === Phaser.Tilemap.EAST)
         {
-            return this.getTileFromLocation(1, 1);
+            return this.getTileFromLocation(distance, distance);
         }
         else if (this.facing === Phaser.Tilemap.SOUTH)
         {
-            return this.getTileFromLocation(-1, 1);
+            return this.getTileFromLocation(-distance, distance);
         }
         else if (this.facing === Phaser.Tilemap.WEST)
         {
-            return this.getTileFromLocation(-1, -1);
+            return this.getTileFromLocation(-distance, -distance);
         }
 
     },
 
-    getTileBehind: function () {
+    getTileBehind: function (distance) {
+
+        if (typeof distance === 'undefined') { distance = 1; }
 
         if (this.facing === Phaser.Tilemap.NORTH)
         {
-            return this.getTileFromLocation(0, 1);
+            return this.getTileFromLocation(0, distance);
         }
         else if (this.facing === Phaser.Tilemap.EAST)
         {
-            return this.getTileFromLocation(-1, 0);
+            return this.getTileFromLocation(-distance, 0);
         }
         else if (this.facing === Phaser.Tilemap.SOUTH)
         {
-            return this.getTileFromLocation(0, -1);
+            return this.getTileFromLocation(0, -distance);
         }
         else if (this.facing === Phaser.Tilemap.WEST)
         {
-            return this.getTileFromLocation(1, 0);
+            return this.getTileFromLocation(distance, 0);
         }
 
     },
 
-    getTileBehindLeft: function () {
+    getTileBehindLeft: function (distance) {
+
+        if (typeof distance === 'undefined') { distance = 1; }
 
         if (this.facing === Phaser.Tilemap.NORTH)
         {
-            return this.getTileFromLocation(-1, 1);
+            return this.getTileFromLocation(-distance, distance);
         }
         else if (this.facing === Phaser.Tilemap.EAST)
         {
-            return this.getTileFromLocation(-1, -1);
+            return this.getTileFromLocation(-distance, -distance);
         }
         else if (this.facing === Phaser.Tilemap.SOUTH)
         {
-            return this.getTileFromLocation(1, -1);
+            return this.getTileFromLocation(distance, -distance);
         }
         else if (this.facing === Phaser.Tilemap.WEST)
         {
-            return this.getTileFromLocation(1, 1);
+            return this.getTileFromLocation(distance, distance);
         }
 
     },
 
-    getTileBehindRight: function () {
+    getTileBehindRight: function (distance) {
+
+        if (typeof distance === 'undefined') { distance = 1; }
 
         if (this.facing === Phaser.Tilemap.NORTH)
         {
-            return this.getTileFromLocation(1, 1);
+            return this.getTileFromLocation(distance, distance);
         }
         else if (this.facing === Phaser.Tilemap.EAST)
         {
-            return this.getTileFromLocation(-1, 1);
+            return this.getTileFromLocation(-distance, distance);
         }
         else if (this.facing === Phaser.Tilemap.SOUTH)
         {
-            return this.getTileFromLocation(-1, -1);
+            return this.getTileFromLocation(-distance, -distance);
         }
         else if (this.facing === Phaser.Tilemap.WEST)
         {
-            return this.getTileFromLocation(1, -1);
+            return this.getTileFromLocation(distance, -distance);
         }
 
     },
 
-    getTileLeft: function () {
+    getTileLeft: function (distance) {
+
+        if (typeof distance === 'undefined') { distance = 1; }
 
         if (this.facing === Phaser.Tilemap.NORTH)
         {
-            return this.getTileFromLocation(-1, 0);
+            return this.getTileFromLocation(-distance, 0);
         }
         else if (this.facing === Phaser.Tilemap.EAST)
         {
-            return this.getTileFromLocation(0, -1);
+            return this.getTileFromLocation(0, -distance);
         }
         else if (this.facing === Phaser.Tilemap.SOUTH)
         {
-            return this.getTileFromLocation(1, 0);
+            return this.getTileFromLocation(distance, 0);
         }
         else if (this.facing === Phaser.Tilemap.WEST)
         {
-            return this.getTileFromLocation(0, 1);
+            return this.getTileFromLocation(0, distance);
         }
 
     },
 
-    getTileRight: function () {
+    getTileRight: function (distance) {
+
+        if (typeof distance === 'undefined') { distance = 1; }
 
         if (this.facing === Phaser.Tilemap.NORTH)
         {
-            return this.getTileFromLocation(1, 0);
+            return this.getTileFromLocation(distance, 0);
         }
         else if (this.facing === Phaser.Tilemap.EAST)
         {
-            return this.getTileFromLocation(0, 1);
+            return this.getTileFromLocation(0, distance);
         }
         else if (this.facing === Phaser.Tilemap.SOUTH)
         {
-            return this.getTileFromLocation(-1, 0);
+            return this.getTileFromLocation(-distance, 0);
         }
         else if (this.facing === Phaser.Tilemap.WEST)
         {
-            return this.getTileFromLocation(0, -1);
+            return this.getTileFromLocation(0, -distance);
         }
 
     },
 
 };
+
+var rotateMatrix = function (matrix, direction) {
+
+// Number.prototype.mod = function (n) {
+    direction = ((direction % 360) + 360) % 360;
+// }
+
+    // direction = direction.mod(360) || 0;
+
+    var deepCopy = function (obj) {
+        if (Object.prototype.toString.call(obj) === '[object Array]') {
+            var out = [],
+                i = 0,
+                len = obj.length;
+            for (; i < len; i++) {
+                out[i] = arguments.callee(obj[i]);
+            }
+            return out;
+        }
+        if (typeof obj === 'object') {
+            var out = {}, i;
+            for (i in obj) {
+                out[i] = arguments.callee(obj[i]);
+            }
+            return out;
+        }
+        return obj;
+    }
+
+    // var ret = deepCopy(matrix);
+    var ret = matrix;
+
+    var transpose = function (m) {
+        var result = new Array(m[0].length);
+        for (var i = 0; i < m[0].length; i++) {
+            result[i] = new Array(m.length - 1);
+            for (var j = m.length - 1; j > -1; j--) {
+                result[i][j] = m[j][i];
+            }
+        }
+        return result;
+    };
+
+    var reverseRows = function (m) {
+        return m.reverse();
+    };
+
+    var reverseCols = function (m) {
+        for (var i = 0; i < m.length; i++) {
+            m[i].reverse();
+        }
+        return m;
+    };
+
+    var rotate90Left = function (m) {
+        m = transpose(m);
+        m = reverseRows(m);
+        return m;
+    };
+
+    var rotate90Right = function (m) {
+        m = reverseRows(m);
+        m = transpose(m);
+        return m;
+    };
+
+    var rotate180 = function (m) {
+        m = reverseCols(m);
+        m = reverseRows(m);
+        return m;
+    };
+
+    if (direction == 90 || direction == -270) {
+        return rotate90Left(ret);
+    } else if (direction == -90 || direction == 270) {
+        return rotate90Right(ret);
+    } else if (Math.abs(direction) == 180) {
+        return rotate180(ret);
+    }
+
+    return matrix;
+};
+
+var pad = function (val, amt, ch) {
+    ch = typeof ch !== 'undefined' ? ch : ' ';
+    var str = val
+    var max = Math.abs(amt);
+    while (str.length < max) {
+        if (amt < 0) {
+            str += ch;
+        } else {
+            str = ch + str;
+        }
+    }
+    return str;
+};
+
+var printMatrix = function (matrix) {
+    var str = '';
+    for (var r = 0; r < matrix.length; r++) {
+        for (var c = 0; c < matrix[r].length; c++) {
+            var cell = matrix[r][c].toString();
+            if (cell != 'undefined') {
+                str += pad(cell, 2);
+            } else {
+                str += '?';
+            }
+            if (c < matrix[r].length - 1) {
+                str += ' |';
+            }
+        }
+        if (r < matrix.length - 1) {
+            str += '\n';
+            for (var i = 0; i < matrix[r].length; i++) {
+                str += '---'
+                if (i < matrix[r].length - 1) {
+                    str += '+';
+                }
+            }
+            str += '\n';
+        }
+    }
+    return str;
+};
+
