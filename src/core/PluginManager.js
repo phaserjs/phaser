@@ -48,7 +48,7 @@ Phaser.PluginManager.prototype = {
     *
     * @method Phaser.PluginManager#add
     * @param {object|Phaser.Plugin} plugin - The Plugin to add into the PluginManager. This can be a function or an existing object.
-    * @param {...*} parameter - Additional parameters that will be passed to the callback.
+    * @param {...*} parameter - Additional parameters that will be passed to the Plugin.init method.
     * @return {Phaser.Plugin} The Plugin that was added to the manager.
     */
     add: function (plugin) {
@@ -59,8 +59,7 @@ Phaser.PluginManager.prototype = {
         //  Prototype?
         if (typeof plugin === 'function')
         {
-            // plugin = new plugin(this.game, this._parent);
-            plugin = new plugin(this.game, this, args);
+            plugin = new plugin(this.game, this);
         }
         else
         {
@@ -117,7 +116,7 @@ Phaser.PluginManager.prototype = {
             // Allows plugins to run potentially destructive code outside of the constructor, and only if being added to the PluginManager
             if (typeof plugin['init'] === 'function')
             {
-                plugin.init();
+                plugin.init.apply(plugin, args);
             }
 
             return plugin;

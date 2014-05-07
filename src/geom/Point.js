@@ -287,7 +287,9 @@ Phaser.Point.prototype = {
     */
     angle: function (a) {
 
-        return Math.atan2(this.x * a.y - this.y * a.x, this.x * a.x + this.y * a.y);
+        return Math.atan2(a.y - this.y, a.x - this.x);
+
+        // return Math.atan2(this.x * a.y - this.y * a.x, this.x * a.x + this.y * a.y);
 
     },
 
@@ -571,7 +573,8 @@ Phaser.Point.equals = function (a, b) {
 */
 Phaser.Point.angle = function (a, b) {
 
-    return Math.atan2(a.x * b.y - a.y * b.x, a.x * b.x + a.y * b.y);
+    // return Math.atan2(a.x * b.y - a.y * b.x, a.x * b.x + a.y * b.y);
+    return Math.atan2(a.y - b.y, a.x - b.x);
 
 };
 

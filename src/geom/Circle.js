@@ -170,7 +170,7 @@ Phaser.Circle.prototype = {
     * Returns a Point object containing the coordinates of a point on the circumference of the Circle based on the given angle.
     * @method Phaser.Circle#circumferencePoint
     * @param {number} angle - The angle in radians (unless asDegrees is true) to return the point from.
-    * @param {boolean} asDegrees - Is the given angle in radians (false) or degrees (true)?
+    * @param {boolean} [asDegrees=false] - Is the given angle in radians (false) or degrees (true)?
     * @param {Phaser.Point} [out] - An optional Point object to put the result in to. If none specified a new Point object will be created.
     * @return {Phaser.Point} The Point object holding the result.
     */
@@ -471,7 +471,7 @@ Phaser.Circle.intersects = function (a, b) {
 * @method Phaser.Circle.circumferencePoint
 * @param {Phaser.Circle} a - The first Circle object.
 * @param {number} angle - The angle in radians (unless asDegrees is true) to return the point from.
-* @param {boolean} asDegrees - Is the given angle in radians (false) or degrees (true)?
+* @param {boolean} [asDegrees=false] - Is the given angle in radians (false) or degrees (true)?
 * @param {Phaser.Point} [out] - An optional Point object to put the result in to. If none specified a new Point object will be created.
 * @return {Phaser.Point} The Point object holding the result.
 */
