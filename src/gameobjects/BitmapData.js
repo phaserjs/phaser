@@ -858,9 +858,9 @@ Phaser.BitmapData.prototype = {
     * Draws a filled Circle to the BitmapData at the given x, y coordinates and radius in size.
     *
     * @method Phaser.BitmapData#circle
-    * @param {number} x - The x coordinate to draw the Circle at.
-    * @param {number} y - The y coordinate to draw the Circle at.
-    * @param {number} radius - The radius of the Circle.
+    * @param {number} x - The x coordinate to draw the Circle at. This is the center of the circle.
+    * @param {number} y - The y coordinate to draw the Circle at. This is the center of the circle.
+    * @param {number} radius - The radius of the Circle in pixels. The radius is half the diameter.
     * @param {string} [fillStyle] - If set the context fillStyle will be set to this value before the circle is drawn.
     */
     circle: function (x, y, radius, fillStyle) {
