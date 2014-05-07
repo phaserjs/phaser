@@ -335,7 +335,7 @@ Phaser.BitmapData.prototype = {
 
                 result = callback.call(callbackContext, pixel, tx, ty);
 
-                if (result !== false && result !== null)
+                if (result !== false && result !== null && result !== undefined)
                 {
                     this.setPixel32(tx, ty, result.r, result.g, result.b, result.a, false);
                     dirty = true;
