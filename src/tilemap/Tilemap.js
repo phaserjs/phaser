@@ -1063,15 +1063,16 @@ Phaser.Tilemap.prototype = {
         {
             if (this.hasTile(x, y, layer))
             {
-                var tile = this.layers[layer].data[y][x];
+                var tileCopy = new Phaser.Tile();
+                tileCopy.copy(this.layers[layer].data[y][x]);
 
-                this.layers[layer].data[y][x] = null;
+                this.layers[layer].data[y][x].index = -1;
 
                 this.layers[layer].dirty = true;
 
                 this.calculateFaces(layer);
 
-                return tile;
+                return tileCopy;
             }
         }
 
