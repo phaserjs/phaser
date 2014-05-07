@@ -241,16 +241,21 @@ Phaser.Plugin.TilemapWalker.prototype = {
 
     },
 
+    putTile: function (index) {
+
+        this.map.putTile(index, this.location.x, this.location.y, this.locationLayer);
+
+    },
+
     getTileFromLocation: function (x, y) {
 
-        return this.map.getTile(this.location.x + x, this.location.y + y, this.locationLayer);
+        return this.map.getTile(this.location.x + x, this.location.y + y, this.locationLayer, true);
 
     },
 
     getTile: function () {
 
-    	//	Get the current tile the walker is on
-    	return this.map.getTile(this.location.x, this.location.y, this.locationLayer);
+    	return this.map.getTile(this.location.x, this.location.y, this.locationLayer, true);
 
     },
 
@@ -266,7 +271,7 @@ Phaser.Plugin.TilemapWalker.prototype = {
         var hw = Math.floor(width / 2);
         var hh = Math.floor(height / 2);
 
-        //  For now we assume that center = bottom middle
+        //  For now we assume that center = bottom middle tile
 
         if (this.facing === Phaser.Tilemap.NORTH)
         {
@@ -546,35 +551,11 @@ Phaser.Plugin.TilemapWalker.prototype = {
 
 };
 
+//  Original from http://jsfiddle.net/MrPolywhirl/NH42z/ - tided up and de-globalised by Richard Davey
 var rotateMatrix = function (matrix, direction) {
 
-// Number.prototype.mod = function (n) {
     direction = ((direction % 360) + 360) % 360;
-// }
 
-    // direction = direction.mod(360) || 0;
-
-    var deepCopy = function (obj) {
-        if (Object.prototype.toString.call(obj) === '[object Array]') {
-            var out = [],
-                i = 0,
-                len = obj.length;
-            for (; i < len; i++) {
-                out[i] = arguments.callee(obj[i]);
-            }
-            return out;
-        }
-        if (typeof obj === 'object') {
-            var out = {}, i;
-            for (i in obj) {
-                out[i] = arguments.callee(obj[i]);
-            }
-            return out;
-        }
-        return obj;
-    }
-
-    // var ret = deepCopy(matrix);
     var ret = matrix;
 
     var transpose = function (m) {
