@@ -76,8 +76,14 @@ declare module PIXI {
     }
 
     export interface IPixiRenderer {
+        type: number;
+        transparent: boolean;
+        width: number; 
+        height: number; 
         view: HTMLCanvasElement;
+        
         render(stage: Stage): void;
+        resize(width: number, height: number): void;
     }
 
     export interface IBitmapTextStyle {
@@ -930,6 +936,7 @@ declare module PIXI {
         width: number;
         height: number;
         transparent: boolean;
+        type: number;
         view: HTMLCanvasElement;
 
         constructor(width: number, height: number, view?: HTMLCanvasElement, transparent?: boolean, antialias?: boolean);
