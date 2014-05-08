@@ -59,7 +59,7 @@ Version 2.0.5 - "Tanchico" - in development
 
 ### Updates
 
-* TypeScript definitions fixes and updates (thanks @luispedrofonseca @clark-stevenson)
+* TypeScript definitions fixes and updates (thanks @luispedrofonseca @clark-stevenson @Anahkiasen @adamholdenyall)
 * Input.getPointerFromIdentifier docs update to reflect where the identifier comes from. Pointer properties now set to give it fixed defaults (thanks @JirkaDellOro, #793)
 * Pointer.pointerId added which is set by the DOM event (if present in the browser). Note that browsers can and do recycle pointer IDs.
 * Pointer.type and Pointer.exists properties added.
@@ -77,6 +77,8 @@ Version 2.0.5 - "Tanchico" - in development
 * ArcadePhysics.getObjectsUnderPointer will return all children from a Group that overlap with the given Pointer.
 * InputManager.minPriorityID lets you set the minimum priority level an object needs to be to be checked by a Pointer. Useful for UI layer stacking.
 * New consts: Phaser.Tilemap.NORTH, SOUTH, EAST and WEST to use with the TileMapWalker Plugin.
+* BitmapData.processPixelRGB added undefined check (thanks @muclemente, fix #808)
+
 
 ### New Plugins
 

@@ -21,17 +21,17 @@ Phaser.Plugin.TilemapWalker = function (game, map, layer, x, y) {
     /**
     * @property {Phaser.Game} game - A reference to the currently running Game.
     */
-	this.game = game;
+    this.game = game;
 
     /**
     * @property {Phaser.Tilemap} map - A reference to the Tilemap this TilemapWalker belongs to.
     */
-	this.map = map;
+    this.map = map;
 
     /**
     * @property {number} locationLayer - The current layer of the location marker.
     */
-	this.locationLayer = map.getLayer(layer);
+    this.locationLayer = map.getLayer(layer);
 
     /**
     * @property {Phaser.Point} location - The current marker location. You can move the marker with the movement methods.
@@ -55,7 +55,7 @@ Phaser.Plugin.TilemapWalker = function (game, map, layer, x, y) {
     */
     this.history = [];
 
-    //	TODO: History limit, History scan, record how many times walker has been on a tile before
+    //  TODO: History limit, History scan, record how many times walker has been on a tile before
 
     if (typeof x !== 'undefined' && typeof y !== 'undefined')
     {
@@ -104,17 +104,17 @@ Phaser.Plugin.TilemapWalker.prototype = {
 
         if (this.map.hasTile(x, y, this.locationLayer))
         {
-        	if (this.collides)
-        	{
-        		var tile = this.map.getTile(x, y, this.locationLayer);
+            if (this.collides)
+            {
+                var tile = this.map.getTile(x, y, this.locationLayer);
 
-        		if (tile && tile.collides)
-        		{
-        			return false;
-        		}
-        	}
+                if (tile && tile.collides)
+                {
+                    return false;
+                }
+            }
 
-        	return true;
+            return true;
         }
 
         return false;
@@ -255,7 +255,7 @@ Phaser.Plugin.TilemapWalker.prototype = {
 
     getTile: function () {
 
-    	return this.map.getTile(this.location.x, this.location.y, this.locationLayer, true);
+        return this.map.getTile(this.location.x, this.location.y, this.locationLayer, true);
 
     },
 
@@ -547,7 +547,7 @@ Phaser.Plugin.TilemapWalker.prototype = {
             return this.getTileFromLocation(0, -distance);
         }
 
-    },
+    }
 
 };
 
