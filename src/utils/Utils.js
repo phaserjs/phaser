@@ -48,7 +48,7 @@ Phaser.Utils = {
      */
     rotateArray: function (matrix, direction) {
 
-        if (typeof direction !== 'String')
+        if (typeof direction !== 'string')
         {
             direction = ((direction % 360) + 360) % 360;
         }
