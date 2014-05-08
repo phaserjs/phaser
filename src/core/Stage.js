@@ -341,11 +341,16 @@ Phaser.Stage.prototype.visibilityChange = function (event) {
 */
 Phaser.Stage.prototype.setBackgroundColor = function(backgroundColor)
 {
+    // console.log('setBackgroundColor');
     this._backgroundColor = backgroundColor || 0x000000;
     this.backgroundColorSplit = PIXI.hex2rgb(this.backgroundColor);
     var hex = this._backgroundColor.toString(16);
     hex = '000000'.substr(0, 6 - hex.length) + hex;
     this.backgroundColorString = '#' + hex;
+    // console.log(this._backgroundColor);
+    // console.log(this.backgroundColorSplit);
+    // console.log(hex);
+    // console.log(this.backgroundColorString);
 };
 
 /**
@@ -366,7 +371,9 @@ Object.defineProperty(Phaser.Stage.prototype, "backgroundColor", {
         {
             if (typeof color === 'string')
             {
+                // console.log(color);
                 color = Phaser.Color.hexToRGB(color);
+                // console.log(color);
             }
 
             this.setBackgroundColor(color);
