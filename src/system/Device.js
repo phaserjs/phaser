@@ -588,16 +588,18 @@ Phaser.Device.prototype = {
         {
             this.safari = true;
         }
-        else if (/Silk/.test(ua))
-        {
-            this.silk = true;
-        }
         else if (/Trident\/(\d+\.\d+)(.*)rv:(\d+\.\d+)/.test(ua))
         {
             this.ie = true;
             this.trident = true;
             this.tridentVersion = parseInt(RegExp.$1, 10);
             this.ieVersion = parseInt(RegExp.$3, 10);
+        }
+
+        //Silk gets its own if clause because its ua also contains 'Safari'
+        if (/Silk/.test(ua))
+        {
+            this.silk = true;
         }
 
         // WebApp mode in iOS
