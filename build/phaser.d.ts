@@ -4275,7 +4275,7 @@ declare module Phaser {
         destroy(): void;
         dump(): void;
         fill(index: number, x: number, y: number, width: number, height: number, layer?: any): void;
-        forEach(callback: number, context: any, x: number, y: Number, width: number, height: number, layer?: any): void;
+        forEach(callback: Function, context: any, x: number, y: Number, width: number, height: number, layer?: any): void;
         getImageIndex(name: string): number;
         getIndex(location: any[], name: string): number;
         getLayer(layer: any): number;
