@@ -13,6 +13,71 @@
 Phaser.Utils = {
 
     /**
+     * Transposes the elements of the given Array.
+     *
+     * @method transposeArray
+     * @param {array} array - The array to transpose.
+     * @return {array} The transposed array.
+     */
+    transposeArray: function (array) {
+
+        var result = new Array(array[0].length);
+
+        for (var i = 0; i < array[0].length; i++)
+        {
+            result[i] = new Array(array.length - 1);
+
+            for (var j = array.length - 1; j > -1; j--)
+            {
+                result[i][j] = array[j][i];
+            }
+        }
+
+        return result;
+
+    },
+
+    /**
+     * Rotates the given array.
+     * Based on the routine from http://jsfiddle.net/MrPolywhirl/NH42z/
+     *
+     * @method Phaser.Utils.rotateArray
+     * @param {array} matrix - The array to rotate.
+     * @param {number|string} direction - The amount to rotate. Either a number: 90, -90, 270, -270, 180 or a string: 'rotateLeft', 'rotateRight' or 'rotate180'
+     * @return {array} The rotated array
+     */
+    rotateArray: function (matrix, direction) {
+
+        if (typeof direction !== 'String')
+        {
+            direction = ((direction % 360) + 360) % 360;
+        }
+
+        if (direction === 90 || direction === -270 || direction === 'rotateLeft')
+        {
+            matrix = Phaser.Utils.transposeArray(matrix);
+            matrix = matrix.reverse();
+        }
+        else if (direction === -90 || direction === 270 || direction === 'rotateRight')
+        {
+            matrix = matrix.reverse();
+            matrix = Phaser.Utils.transposeArray(matrix);
+        }
+        else if (Math.abs(direction) === 180 || direction === 'rotate180')
+        {
+            for (var i = 0; i < matrix.length; i++)
+            {
+                matrix[i].reverse();
+            }
+
+            matrix = matrix.reverse();
+        }
+
+        return matrix;
+
+    },
+
+    /**
     * Get a unit dimension from a string.
     *
     * @method Phaser.Utils.parseDimension

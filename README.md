@@ -79,6 +79,8 @@ Version 2.0.5 - "Tanchico" - in development
 * InputManager.minPriorityID lets you set the minimum priority level an object needs to be to be checked by a Pointer. Useful for UI layer stacking.
 * New consts: Phaser.Tilemap.NORTH, SOUTH, EAST and WEST to use with the TileMapWalker Plugin.
 * BitmapData.processPixelRGB added undefined check (thanks @muclemente, fix #808)
+* Phaser.Utils.transposeArray will transpose the given array and return it.
+* Phaser.Utils.rotateArray will rotate the given array by 90 or 180 degrees in either direction and return it.
 
 
 ### New Plugins
