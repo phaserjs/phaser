@@ -103,6 +103,8 @@ Version 2.0.5 - "Tanchico" - in development
 * Device Silk UA test updated to avoid Safari conflict (thanks @jflowers45, fix #810)
 * Sound.stop on Samsung S4 would randomly throw a DOM error. Wrapped the audio stop in a try/catch (thanks FSDaniel)
 * RandomDataGenerator.integerInRange would return a non-integer value if you passed in a float.
+* Timer class updated so that code-resumed pauses don't mess up the internal _pausedTotal value (thanks @joelrobichaud, fix #814)
+* Timer class when paused by code after a game-level pause wouldn't set the codepaused flag (thanks @joelrobichaud, fix #814)
 
 
 ### To Do
