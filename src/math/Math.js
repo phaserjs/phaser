@@ -408,7 +408,6 @@ Phaser.Math = {
     * @param {number} a2
     * @param {boolean} radians - True if angle sizes are expressed in radians.
     * @return {number}
-    */
     nearestAngleBetween: function (a1, a2, radians) {
 
         if (typeof radians === "undefined") { radians = true; }
@@ -430,6 +429,7 @@ Phaser.Math = {
         return a2 - a1;
 
     },
+    */
 
     /**
     * Interpolate across the shortest arc between two angles.
@@ -440,7 +440,6 @@ Phaser.Math = {
     * @param {boolean} radians - True if angle sizes are expressed in radians.
     * @param {Description} ease - Description.
     * @return {number}
-    */
     interpolateAngles: function (a1, a2, weight, radians, ease) {
 
         if (typeof radians === "undefined") { radians = true; }
@@ -452,6 +451,7 @@ Phaser.Math = {
         return (typeof ease === 'function') ? ease(weight, a1, a2 - a1, 1) : this.interpolateFloat(a1, a2, weight);
 
     },
+    */
 
     /**
     * Generate a random bool result based on the chance value.
