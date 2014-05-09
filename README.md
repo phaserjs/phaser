@@ -56,8 +56,6 @@ Finally the list of [community authored Phaser Tutorials](http://www.lessmilk.co
 Version 2.0.5 - "Tanchico" - in development
 
 
-
-
 ### Updates
 
 * TypeScript definitions fixes and updates (thanks @luispedrofonseca @clark-stevenson @Anahkiasen @adamholdenyall)
@@ -67,6 +65,7 @@ Version 2.0.5 - "Tanchico" - in development
 * QuadTree.retrieve can now accept either a Sprite with a physics body or a Phaser.Rectangle as its parameter.
 * PluginManager.add now accepts additional parameters and if given a function it will pass them all to the Plugin constructor.
 * Tilemap.getTile has a new nonNull parameter. If true it won't return `null` for empty tiles, but will return the actual Tile in that location.
+* Math.interpolateAngles and Math.nearestAngleBetween have been removed for the time being. They threw run-time errors previously.
 
 
 ### New Features
@@ -81,6 +80,7 @@ Version 2.0.5 - "Tanchico" - in development
 * BitmapData.processPixelRGB added undefined check (thanks @muclemente, fix #808)
 * Phaser.Utils.transposeArray will transpose the given array and return it.
 * Phaser.Utils.rotateArray will rotate the given array by 90 or 180 degrees in either direction and return it.
+* BitmapData.rect provides a quick way to draw a Rectangle to a BitmapData.
 
 
 ### New Plugins
@@ -100,8 +100,12 @@ Version 2.0.5 - "Tanchico" - in development
 * Phaser.Line.intersectsPoints fixed by properly checking the boundaries (thanks @woutercommandeur, fix #790)
 * Group.set and setAll were changed in 2.0.4 to not create the property unless it existed. This broke backwards compatibility, so has been fixed.
 * Sound.play now returns the Sound object (thanks @AnderbergE, fix #802)
+* Device Silk UA test updated to avoid Safari conflict (thanks @jflowers45, fix #810)
+* Sound.stop on Samsung S4 would randomly throw a DOM error. Wrapped the audio stop in a try/catch (thanks FSDaniel)
+* RandomDataGenerator.integerInRange would return a non-integer value if you passed in a float.
 
 
+### To Do
 
 P2.Body.collideWorldBounds = true fails.
 
