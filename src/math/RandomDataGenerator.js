@@ -174,7 +174,7 @@ Phaser.RandomDataGenerator.prototype = {
     */
     integerInRange: function (min, max) {
 
-        return Math.floor(this.realInRange(0, max - min + 1)) + min;
+        return Math.floor(this.realInRange(0, max - min + 1) + min);
 
     },
 
