@@ -559,6 +559,7 @@ Phaser.ScaleManager.prototype = {
 
     /**
     * Set screen size automatically based on the scaleMode.
+    * @method Phaser.ScaleManager#setScreenSize
     * @param {boolean} force - If force is true it will try to resize the game regardless of the document dimensions.
     */
     setScreenSize: function (force) {
