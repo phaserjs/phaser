@@ -685,11 +685,13 @@ Phaser.Tilemap.prototype = {
     * @param {number|array} indexes - Either a single tile index, or an array of tile IDs to be checked for collision.
     * @param {boolean} [collides=true] - If true it will enable collision. If false it will clear collision.
     * @param {number|string|Phaser.TilemapLayer} [layer] - The layer to operate on. If not given will default to this.currentLayer.
+    * @param {boolean} [recalculate=true] - Recalculates the tile faces after the update.
     */
-    setCollision: function (indexes, collides, layer) {
+    setCollision: function (indexes, collides, layer, recalculate) {
 
         if (typeof collides === 'undefined') { collides = true; }
-
+        if (typeof recalculate === 'undefined') { recalculate = true; }
+        
         layer = this.getLayer(layer);
 
         if (typeof indexes === 'number')
@@ -704,8 +706,11 @@ Phaser.Tilemap.prototype = {
                 this.setCollisionByIndex(indexes[i], collides, layer, false);
             }
 
-            //  Now re-calculate interesting faces
-            this.calculateFaces(layer);
+            if (recalculate)
+            {
+                //  Now re-calculate interesting faces
+                this.calculateFaces(layer);
+            }
         }
 
     },
@@ -720,11 +725,13 @@ Phaser.Tilemap.prototype = {
     * @param {number} stop - The last index of the tile to be set for collision.
     * @param {boolean} [collides=true] - If true it will enable collision. If false it will clear collision.
     * @param {number|string|Phaser.TilemapLayer} [layer] - The layer to operate on. If not given will default to this.currentLayer.
+    * @param {boolean} [recalculate=true] - Recalculates the tile faces after the update.
     */
-    setCollisionBetween: function (start, stop, collides, layer) {
+    setCollisionBetween: function (start, stop, collides, layer, recalculate) {
 
         if (typeof collides === 'undefined') { collides = true; }
-
+        if (typeof recalculate === 'undefined') { recalculate = true; }
+        
         layer = this.getLayer(layer);
 
         if (start > stop)
@@ -737,8 +744,11 @@ Phaser.Tilemap.prototype = {
             this.setCollisionByIndex(index, collides, layer, false);
         }
 
-        //  Now re-calculate interesting faces
-        this.calculateFaces(layer);
+        if (recalculate)
+        {
+            //  Now re-calculate interesting faces
+            this.calculateFaces(layer);
+        }
 
     },
 
@@ -750,11 +760,13 @@ Phaser.Tilemap.prototype = {
     * @param {array} indexes - An array of the tile IDs to not be counted for collision.
     * @param {boolean} [collides=true] - If true it will enable collision. If false it will clear collision.
     * @param {number|string|Phaser.TilemapLayer} [layer] - The layer to operate on. If not given will default to this.currentLayer.
+    * @param {boolean} [recalculate=true] - Recalculates the tile faces after the update.
     */
-    setCollisionByExclusion: function (indexes, collides, layer) {
+    setCollisionByExclusion: function (indexes, collides, layer, recalculate) {
 
         if (typeof collides === 'undefined') { collides = true; }
-
+        if (typeof recalculate === 'undefined') { recalculate = true; }
+        
         layer = this.getLayer(layer);
 
         //  Collide everything, except the IDs given in the indexes array
@@ -766,8 +778,11 @@ Phaser.Tilemap.prototype = {
             }
         }
 
-        //  Now re-calculate interesting faces
-        this.calculateFaces(layer);
+        if (recalculate)
+        {
+            //  Now re-calculate interesting faces
+            this.calculateFaces(layer);
+        }
 
     },
 
