@@ -89,6 +89,7 @@ Version 2.0.5 - "Tanchico" - in development
 * Tilemap.setCollisionByIndex has a new boolean parameter 'recalculate' which lets you control recalculation of the collision faces (thanks @max-m, #819)
 * Graphics.drawTriangles will draw an array of vertices to the Graphics object (thanks @codevinsky, #795)
 * Polygon.area will calculate the area of the Polygon (thanks @codevinsky, #795)
+* The Tiled JSON parser will now include Tiled polygons, ellipse and rectangle geometry objects in the resulting map data (thanks @tigermonkey, #791)
 
 
 ### New Plugins
