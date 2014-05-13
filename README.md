@@ -66,6 +66,7 @@ Version 2.0.5 - "Tanchico" - in development
 * PluginManager.add now accepts additional parameters and if given a function it will pass them all to the Plugin constructor.
 * Tilemap.getTile has a new nonNull parameter. If true it won't return `null` for empty tiles, but will return the actual Tile in that location.
 * Math.interpolateAngles and Math.nearestAngleBetween have been removed for the time being. They threw run-time errors previously.
+* PIXI.InteractionManager is no longer over-written if the object already exists (thanks @georgee, #818)
 
 
 ### New Features
@@ -82,6 +83,10 @@ Version 2.0.5 - "Tanchico" - in development
 * Phaser.Utils.rotateArray will rotate the given array by 90 or 180 degrees in either direction and return it.
 * BitmapData.rect provides a quick way to draw a Rectangle to a BitmapData.
 * Button.onOverMouseOnly is a boolean that causes onOver events to fire only if the pointer was a mouse (i.e. stops onOver sounds triggering on touch)
+* Tilemap.setCollision has a new boolean parameter 'recalculate' which lets you control recalculation of the collision faces (thanks @max-m, #819)
+* Tilemap.setCollisionBetween has a new boolean parameter 'recalculate' which lets you control recalculation of the collision faces (thanks @max-m, #819)
+* Tilemap.setCollisionByExclusion has a new boolean parameter 'recalculate' which lets you control recalculation of the collision faces (thanks @max-m, #819)
+* Tilemap.setCollisionByIndex has a new boolean parameter 'recalculate' which lets you control recalculation of the collision faces (thanks @max-m, #819)
 
 
 ### New Plugins
