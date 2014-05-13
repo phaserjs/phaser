@@ -81,6 +81,7 @@ Version 2.0.5 - "Tanchico" - in development
 * Phaser.Utils.transposeArray will transpose the given array and return it.
 * Phaser.Utils.rotateArray will rotate the given array by 90 or 180 degrees in either direction and return it.
 * BitmapData.rect provides a quick way to draw a Rectangle to a BitmapData.
+* Button.onOverMouseOnly is a boolean that causes onOver events to fire only if the pointer was a mouse (i.e. stops onOver sounds triggering on touch)
 
 
 ### New Plugins

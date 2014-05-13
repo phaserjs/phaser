@@ -102,6 +102,12 @@ Phaser.Button = function (game, x, y, key, callback, callbackContext, overFrame,
     this._onUpFrameID = null;
 
     /**
+    * @property {boolean} onOverMouseOnly - If true then onOver events (such as onOverSound) will only be triggered if the Pointer object causing them was the Mouse Pointer.
+    * @default
+    */
+    this.onOverMouseOnly = false;
+
+    /**
     * @property {Phaser.Sound} onOverSound - The Sound to be played when this Buttons Over state is activated.
     * @default
     */
@@ -462,6 +468,11 @@ Phaser.Button.prototype.onInputOverHandler = function (sprite, pointer) {
         this.setState(1);
     }
 
+    if (this.onOverMouseOnly && !pointer.isMouse)
+    {
+        return;
+    }
+
     if (this.onOverSound)
     {
         this.onOverSound.play(this.onOverSoundMarker);
@@ -471,6 +482,7 @@ Phaser.Button.prototype.onInputOverHandler = function (sprite, pointer) {
     {
         this.onInputOver.dispatch(this, pointer);
     }
+
 };
 
 /**
