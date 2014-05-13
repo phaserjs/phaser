@@ -346,6 +346,15 @@ Phaser.TilemapParser = {
         var objects = {};
         var collision = {};
 
+        function slice (obj, fields) {
+            var sliced = {};
+            for (var k in fields) {
+                var key = fields[k];
+                sliced[key] = obj[key];
+            }
+            return sliced;
+        }
+
         for (var i = 0; i < json.layers.length; i++)
         {
             if (json.layers[i].type !== 'objectgroup')
@@ -397,9 +406,37 @@ Phaser.TilemapParser = {
                     }
 
                     collision[json.layers[i].name].push(object);
+                }
+                // polygon
+                else if (json.layers[i].objects[v].polygon)
+                {
+                    var object = slice(json.layers[i].objects[v],
+                                       ["name", "x", "y", "visible", "properties" ]);
+
+                    //  Parse the polygon into an array
+                    object.polygon = [];
+                    for (var p = 0; p < json.layers[i].objects[v].polygon.length; p++)
+                    {
+                        object.polygon.push([ json.layers[i].objects[v].polygon[p].x, json.layers[i].objects[v].polygon[p].y ]);
+                    }
+                    objects[json.layers[i].name].push(object);
 
                 }
-
+                // ellipse
+                else if (json.layers[i].objects[v].ellipse)
+                {
+                    var object = slice(json.layers[i].objects[v],
+                                       ["name", "ellipse", "x", "y", "width", "height", "visible", "properties" ]);
+                    objects[json.layers[i].name].push(object);
+                }
+                // otherwise it's a rectangle
+                else
+                {
+                    var object = slice(json.layers[i].objects[v],
+                                       ["name", "x", "y", "width", "height", "visible", "properties" ]);
+                    object.rectangle = true;
+                    objects[json.layers[i].name].push(object);
+                }
             }
         }
 
