@@ -215,51 +215,66 @@ Phaser.Graphics.prototype.drawPolygon = function (poly) {
 /*
 * Draws a single {Phaser.Polygon} triangle from a {Phaser.Point} array
 *
+* @method Phaser.Graphics.prototype.drawTriangle
 * @param {Array<Phaser.Point>} points - An array of Phaser.Points that make up the three vertices of this triangle
 * @param {boolean} [cull=false] - Should we check if the triangle is back-facing
-* @method Phaser.Graphics.prototype.drawTriangle
 */
-
 Phaser.Graphics.prototype.drawTriangle = function(points, cull) {
+
+    if (typeof cull === 'undefined') { cull = false; }
+
     var triangle = new Phaser.Polygon(points);
-    if (cull) {
+
+    if (cull)
+    {
         var cameraToFace = new Phaser.Point(this.game.camera.x - points[0].x, this.game.camera.y - points[0].y);
         var ab = new Phaser.Point(points[1].x - points[0].x, points[1].y - points[0].y);
         var cb = new Phaser.Point(points[1].x - points[2].x, points[1].y - points[2].y);
         var faceNormal = cb.cross(ab);
-        if (cameraToFace.dot(faceNormal) > 0) {
+
+        if (cameraToFace.dot(faceNormal) > 0)
+        {
             this.drawPolygon(triangle);
         }
-    } else {
+    }
+    else
+    {
         this.drawPolygon(triangle);
     }
-    return;
+
 };
 
 /*
 * Draws {Phaser.Polygon} triangles 
 *
+* @method Phaser.Graphics.prototype.drawTriangles
 * @param {Array<Phaser.Point>|Array<number>} vertices - An array of Phaser.Points or numbers that make up the vertices of the triangles
 * @param {Array<number>} {indices=null} - An array of numbers that describe what order to draw the vertices in
 * @param {boolean} [cull=false] - Should we check if the triangle is back-facing
-* @method Phaser.Graphics.prototype.drawTriangles
 */
-
 Phaser.Graphics.prototype.drawTriangles = function(vertices, indices, cull) {
 
-    var point1 = new Phaser.Point(),
-        point2 = new Phaser.Point(),
-        point3 = new Phaser.Point(),
-        points = [],
-        i;
+    if (typeof cull === 'undefined') { cull = false; }
 
-    if (!indices) {
-        if(vertices[0] instanceof Phaser.Point) {
-            for(i = 0; i < vertices.length / 3; i++) {
+    var point1 = new Phaser.Point();
+    var point2 = new Phaser.Point();
+    var point3 = new Phaser.Point();
+    var points = [];
+    var i;
+
+    if (!indices)
+    {
+        if (vertices[0] instanceof Phaser.Point)
+        {
+            for (i = 0; i < vertices.length / 3; i++)
+            {
                 this.drawTriangle([vertices[i * 3], vertices[i * 3 + 1], vertices[i * 3 + 2]], cull);
             }
-        } else {
-            for (i = 0; i < vertices.length / 6; i++) {
+        }
+        else
+        {
+            for (i = 0; i < vertices.length / 6; i++)
+            {
                 point1.x = vertices[i * 6 + 0];
                 point1.y = vertices[i * 6 + 1];
                 point2.x = vertices[i * 6 + 2];
@@ -268,26 +283,35 @@ Phaser.Graphics.prototype.drawTriangles = function(vertices, indices, cull) {
                 point3.y = vertices[i * 6 + 5];
                 this.drawTriangle([point1, point2, point3], cull);
             }
-
         }
-    } else {
-        if(vertices[0] instanceof Phaser.Point) {
-            for(i = 0; i < indices.length /3; i++) {
+    }
+    else
+    {
+        if (vertices[0] instanceof Phaser.Point)
+        {
+            for (i = 0; i < indices.length /3; i++)
+            {
                 points.push(vertices[indices[i * 3 ]]);
                 points.push(vertices[indices[i * 3 + 1]]);
                 points.push(vertices[indices[i * 3 + 2]]);
-                if(points.length === 3) {
-                    this.drawTriangle(points, cull);    
+
+                if (points.length === 3)
+                {
+                    this.drawTriangle(points, cull);
                     points = [];
                 }
-                
             }
-        } else {
-            for (i = 0; i < indices.length; i++) {
+        }
+        else
+        {
+            for (i = 0; i < indices.length; i++)
+            {
                 point1.x = vertices[indices[i] * 2];
                 point1.y = vertices[indices[i] * 2 + 1];
                 points.push(point1.copyTo({}));
-                if (points.length === 3) {
+
+                if (points.length === 3)
+                {
                     this.drawTriangle(points, cull);
                     points = [];
                 }
@@ -296,12 +320,11 @@ Phaser.Graphics.prototype.drawTriangles = function(vertices, indices, cull) {
     }
 };
 
-
-
 /**
 * Indicates the rotation of the Graphics, in degrees, from its original orientation. Values from 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation.
 * Values outside this range are added to or subtracted from 360 to obtain a value within the range. For example, the statement player.angle = 450 is the same as player.angle = 90.
 * If you wish to work in radians instead of degrees use the property Sprite.rotation instead.
+*
 * @name Phaser.Graphics#angle
 * @property {number} angle - Gets or sets the angle of rotation in degrees.
 */

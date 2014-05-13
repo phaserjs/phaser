@@ -108,17 +108,19 @@ Phaser.Polygon.prototype = {
 Phaser.Polygon.prototype.constructor = Phaser.Polygon;
 
 /*
- * Sets and modifys the points of this polygon.
- *
- * @name Phaser.Graphics#fixedToCamera
- * @property {array<Phaser.Point>|array<number>} points - The array of vertex points
- */
-
+* Sets and modifies the points of this polygon.
+*
+* @name Phaser.Polygon#points
+* @property {array<Phaser.Point>|array<number>} points - The array of vertex points
+*/
 Object.defineProperty(Phaser.Polygon.prototype, 'points', {
+
     get: function() {
         return this._points;
     },
+
     set: function(points) {
+
         //if points isn't an array, use arguments as the array
         if (!(points instanceof Array))
         {
@@ -137,35 +139,49 @@ Object.defineProperty(Phaser.Polygon.prototype, 'points', {
 
             points = p;
         }
+
         this._points = points;
     }
+
 });
 
 /**
 * Returns the area of the polygon.
 *
-* @name Phaser.Polygon#area
+* @name Phaser.Circle#right
 * @readonly
 */
-
 Object.defineProperty(Phaser.Polygon.prototype, 'area', {
+
     get: function() {
-        var p1, p2, avgHeight, width,  i,
-            y0 = Number.MAX_VALUE,
-            area = 0;
+
+        var p1;
+        var p2;
+        var avgHeight;
+        var width;
+        var i;
+        var y0 = Number.MAX_VALUE;
+        var area = 0;
 
         // Find lowest boundary
-        for(i = 0; i< this.points.length; i++) {
-            if(this.points[i].y < y0) {
+        for (i = 0; i < this.points.length; i++)
+        {
+            if (this.points[i].y < y0)
+            {
                 y0 = this.points[i].y;
             }
         }
 
-        for(i = 0; i< this.points.length; i++) {
+        for (i = 0; i< this.points.length; i++)
+        {
             p1 = this.points[i];
-            if(i === this.points.length - 1) {
+
+            if (i === this.points.length - 1)
+            {
                 p2 = this.points[0];
-            } else {
+            }
+            else
+            {
                 p2 = this.points[i+1];
             }
 
@@ -175,9 +191,10 @@ Object.defineProperty(Phaser.Polygon.prototype, 'area', {
         }
 
         return area;
+
     }
+
 });
+
 //   Because PIXI uses its own Polygon, we'll replace it with ours to avoid duplicating code or confusion.
 PIXI.Polygon = Phaser.Polygon;
-
-
