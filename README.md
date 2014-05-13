@@ -66,7 +66,8 @@ Version 2.0.5 - "Tanchico" - in development
 * PluginManager.add now accepts additional parameters and if given a function it will pass them all to the Plugin constructor.
 * Tilemap.getTile has a new nonNull parameter. If true it won't return `null` for empty tiles, but will return the actual Tile in that location.
 * Math.interpolateAngles and Math.nearestAngleBetween have been removed for the time being. They threw run-time errors previously.
-* PIXI.InteractionManager is no longer over-written if the object already exists (thanks @georgee, #818)
+* PIXI.InteractionManager is no longer over-written if the object already exists (thanks @georgiee, #818)
+* Key.justPressed and justReleased incorrectly set the delay value to 2500ms. Now defaults to 50ms (thanks @draklaw, fix #797)
 
 
 ### New Features
