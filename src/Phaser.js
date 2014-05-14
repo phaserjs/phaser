@@ -77,6 +77,5 @@ var Phaser = Phaser || {
 
 // We don't need this in Pixi, so we've removed it to save space
 // however the Stage object expects a reference to it, so here is a dummy entry.
-// Ensure that an existing PIXI.InteractionManager is not overriden- in case you're using your own PIXI library.
-
-PIXI.InteractionManager = PIXI.InteractionManager || {};
+// Ensure that an existing PIXI.InteractionManager is not overriden - in case you're using your own PIXI library.
+PIXI.InteractionManager = PIXI.InteractionManager || function () {};

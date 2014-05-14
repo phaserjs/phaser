@@ -751,23 +751,42 @@ Phaser.Color = {
     },
 
     /**
-    * Return the component parts of a color as an Object with the properties alpha, red, green, blue
+    * Return the component parts of a color as an Object with the properties alpha, red, green, blue.
     *
     * Alpha will only be set if it exist in the given color (0xAARRGGBB)
     *
     * @method Phaser.Color.getRGB
     * @static
     * @param {number} color - Color in RGB (0xRRGGBB) or ARGB format (0xAARRGGBB).
-    * @returns {object} An Object with properties: alpha, red, green, blue.
+    * @returns {object} An Object with properties: alpha, red, green, blue (also r, g, b and a). Alpha will only be present if a color value > 16777215 was given.
     */
     getRGB: function (color) {
 
-        return {
-            alpha: color >>> 24,
-            red: color >> 16 & 0xFF,
-            green: color >> 8 & 0xFF,
-            blue: color & 0xFF
-        };
+        if (color > 16777215)
+        {
+            //  The color value has an alpha component
+            return {
+                alpha: color >>> 24,
+                red: color >> 16 & 0xFF,
+                green: color >> 8 & 0xFF,
+                blue: color & 0xFF,
+                a: color >>> 24,
+                r: color >> 16 & 0xFF,
+                g: color >> 8 & 0xFF,
+                b: color & 0xFF
+            };
+        }
+        else
+        {
+            return {
+                red: color >> 16 & 0xFF,
+                green: color >> 8 & 0xFF,
+                blue: color & 0xFF,
+                r: color >> 16 & 0xFF,
+                g: color >> 8 & 0xFF,
+                b: color & 0xFF
+            };
+        }
 
     },
 

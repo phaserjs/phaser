@@ -35,6 +35,11 @@ Phaser.Stage = function (game, width, height) {
     */
     this.name = '_stage_root';
 
+    /**
+    * @property {boolean} interactive - Pixi level var, ignored by Phaser.
+    * @default
+    * @private
+    */
     this.interactive = false;
 
     /**
@@ -334,23 +339,27 @@ Phaser.Stage.prototype.visibilityChange = function (event) {
 };
 
 /**
-* Sets the background color for the stage.
+* Sets the background color for the Stage. The color can be given as a hex value (#RRGGBB) or a numeric value (0xRRGGBB)
 *
 * @name Phaser.Stage#setBackgroundColor
-* @param {number} backgroundColor - The color of the background, easiest way to pass this in is in hex format like: 0xFFFFFF for white.
+* @param {number|string} backgroundColor - The color of the background.
 */
 Phaser.Stage.prototype.setBackgroundColor = function(backgroundColor)
 {
-    // console.log('setBackgroundColor');
-    this._backgroundColor = backgroundColor || 0x000000;
-    this.backgroundColorSplit = PIXI.hex2rgb(this.backgroundColor);
-    var hex = this._backgroundColor.toString(16);
-    hex = '000000'.substr(0, 6 - hex.length) + hex;
-    this.backgroundColorString = '#' + hex;
-    // console.log(this._backgroundColor);
-    // console.log(this.backgroundColorSplit);
-    // console.log(hex);
-    // console.log(this.backgroundColorString);
+    if (typeof backgroundColor === 'string')
+    {
+        var rgb = Phaser.Color.hexToColor(backgroundColor);
+        this._backgroundColor = Phaser.Color.getColor(rgb.r, rgb.g, rgb.b);
+    }
+    else
+    {
+        var rgb = Phaser.Color.getRGB(backgroundColor);
+        this._backgroundColor = backgroundColor;
+    }
+
+    this.backgroundColorSplit = [ rgb.r / 255, rgb.g / 255, rgb.b / 255 ];
+    this.backgroundColorString = Phaser.Color.RGBtoString(rgb.r, rgb.g, rgb.b, 255, '#');
+
 };
 
 /**
@@ -360,22 +369,15 @@ Phaser.Stage.prototype.setBackgroundColor = function(backgroundColor)
 Object.defineProperty(Phaser.Stage.prototype, "backgroundColor", {
 
     get: function () {
+
         return this._backgroundColor;
+
     },
 
     set: function (color) {
 
-        this._backgroundColor = color;
-
-        if (this.game.transparent === false)
+        if (!this.game.transparent)
         {
-            if (typeof color === 'string')
-            {
-                // console.log(color);
-                color = Phaser.Color.hexToRGB(color);
-                // console.log(color);
-            }
-
             this.setBackgroundColor(color);
         }
 

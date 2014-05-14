@@ -68,6 +68,7 @@ Version 2.0.5 - "Tanchico" - in development
 * Math.interpolateAngles and Math.nearestAngleBetween have been removed for the time being. They threw run-time errors previously.
 * PIXI.InteractionManager is no longer over-written if the object already exists (thanks @georgiee, #818)
 * Key.justPressed and justReleased incorrectly set the delay value to 2500ms. Now defaults to 50ms (thanks @draklaw, fix #797)
+* Stage.backgroundColor can now accept short-code hex values: `#222`, `#334`, etc.
 
 
 ### New Features
@@ -115,6 +116,7 @@ Version 2.0.5 - "Tanchico" - in development
 * RandomDataGenerator.integerInRange would return a non-integer value if you passed in a float.
 * Timer class updated so that code-resumed pauses don't mess up the internal _pausedTotal value (thanks @joelrobichaud, fix #814)
 * Timer class when paused by code after a game-level pause wouldn't set the codepaused flag (thanks @joelrobichaud, fix #814)
+* Stage.backgroundColor now properly accepts hex #RRGGBB and color values 0xRRGGBB again (fix #785)
 
 
 ### To Do
