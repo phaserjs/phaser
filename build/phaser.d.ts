@@ -1203,6 +1203,8 @@ declare module Phaser {
         postUpdate(): void;
         preUpdate(): void;
         update(): void;
+        updateText(): void;
+        updateTransform(): void;
 
     }
 
