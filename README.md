@@ -92,6 +92,8 @@ Version 2.0.5 - "Tanchico" - in development
 * Graphics.drawTriangles will draw an array of vertices to the Graphics object (thanks @codevinsky, #795)
 * Polygon.area will calculate the area of the Polygon (thanks @codevinsky, #795)
 * The Tiled JSON parser will now include Tiled polygons, ellipse and rectangle geometry objects in the resulting map data (thanks @tigermonkey, #791)
+* Input.addMoveCallback allows you to bind as many callbacks as you like to the DOM move events (Input.setMoveCallback is now flagged as deprecated)
+* Input.deleteMoveCallback will remove a previously set movement event callback.
 
 
 ### New Plugins
