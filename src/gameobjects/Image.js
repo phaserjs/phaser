@@ -285,10 +285,13 @@ Phaser.Image.prototype.loadTexture = function (key, frame) {
 /**
 * Crop allows you to crop the texture used to display this Image.
 * Cropping takes place from the top-left of the Image and can be modified in real-time by providing an updated rectangle object.
+* The rectangle object given to this method can be either a Phaser.Rectangle or any object so long as it has public x, y, width and height properties.
+* Please note that the rectangle object given is not duplicated by this method, but rather the Image uses a reference to the rectangle.
+* Keep this in mind if assigning a rectangle in a for-loop, or when cleaning up for garbage collection.
 *
 * @method Phaser.Image#crop
 * @memberof Phaser.Image
-* @param {Phaser.Rectangle} rect - The Rectangle to crop the Image to. Pass null or no parameters to clear a previously set crop rectangle.
+* @param {Phaser.Rectangle|object} rect - The Rectangle to crop the Image to. Pass null or no parameters to clear a previously set crop rectangle.
 */
 Phaser.Image.prototype.crop = function(rect) {
 
