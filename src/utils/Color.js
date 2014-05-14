@@ -779,9 +779,11 @@ Phaser.Color = {
         else
         {
             return {
+                alpha: 255,
                 red: color >> 16 & 0xFF,
                 green: color >> 8 & 0xFF,
                 blue: color & 0xFF,
+                a: 255,
                 r: color >> 16 & 0xFF,
                 g: color >> 8 & 0xFF,
                 b: color & 0xFF
@@ -792,19 +794,17 @@ Phaser.Color = {
 
     /**
     * Returns a CSS friendly string value from the given color.
+    *
     * @method Phaser.Color.getWebRGB
     * @static
-    * @param {number} color
-    * @returns {string}A string in the format: 'rgba(r,g,b,a)'
+    * @param {number} color - Color in RGB (0xRRGGBB) or ARGB format (0xAARRGGBB).
+    * @returns {string} A string in the format: 'rgba(r,g,b,a)'
     */
     getWebRGB: function (color) {
 
-        var alpha = (color >>> 24) / 255;
-        var red = color >> 16 & 0xFF;
-        var green = color >> 8 & 0xFF;
-        var blue = color & 0xFF;
+        var rgb = Phaser.Color.getRGB(color);
 
-        return 'rgba(' + red.toString() + ',' + green.toString() + ',' + blue.toString() + ',' + alpha.toString() + ')';
+        return 'rgba(' + rgb.r.toString() + ',' + rgb.g.toString() + ',' + rgb.b.toString() + ',' + rgb.a.toString() + ')';
 
     },
 
