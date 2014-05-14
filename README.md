@@ -58,7 +58,7 @@ Version 2.0.5 - "Tanchico" - in development
 
 ### Updates
 
-* TypeScript definitions fixes and updates (thanks @luispedrofonseca @clark-stevenson @Anahkiasen @adamholdenyall)
+* TypeScript definitions fixes and updates (thanks @luispedrofonseca @clark-stevenson @Anahkiasen @adamholdenyall @luispedrofonseca)
 * Input.getPointerFromIdentifier docs update to reflect where the identifier comes from. Pointer properties now set to give it fixed defaults (thanks @JirkaDellOro, #793)
 * Pointer.pointerId added which is set by the DOM event (if present in the browser). Note that browsers can and do recycle pointer IDs.
 * Pointer.type and Pointer.exists properties added.
@@ -94,6 +94,9 @@ Version 2.0.5 - "Tanchico" - in development
 * The Tiled JSON parser will now include Tiled polygons, ellipse and rectangle geometry objects in the resulting map data (thanks @tigermonkey, #791)
 * Input.addMoveCallback allows you to bind as many callbacks as you like to the DOM move events (Input.setMoveCallback is now flagged as deprecated)
 * Input.deleteMoveCallback will remove a previously set movement event callback.
+* Mouse will now check if it's over the game canvas or not and set Pointer.withinGame accordingly.
+* Mouse.mouseOutCallback callback added for when the mouse is no longer over the game canvas.
+* Mouse.stopOnGameOut boolean controls if Pointer.stop will be called if the mouse leaves the game canvas (defaults to false)
 
 
 ### New Plugins
