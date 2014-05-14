@@ -166,6 +166,12 @@ Phaser.InputHandler = function (sprite) {
     this.consumePointerEvent = false;
 
     /**
+    * @property {boolean} _dragPhase - Internal cache var.
+    * @private
+    */
+    this._dragPhase = false;
+
+    /**
     * @property {boolean} _wasEnabled - Internal cache var.
     * @private
     */
@@ -273,6 +279,11 @@ Phaser.InputHandler.prototype = {
     */
     addedToGroup: function () {
 
+        if (this._dragPhase)
+        {
+            return;
+        }
+
         if (this._wasEnabled && !this.enabled)
         {
             this.start();
@@ -287,6 +298,11 @@ Phaser.InputHandler.prototype = {
     * @private
     */
     removedFromGroup: function () {
+
+        if (this._dragPhase)
+        {
+            return;
+        }
 
         if (this.enabled)
         {
@@ -907,7 +923,7 @@ Phaser.InputHandler.prototype = {
             }
 
             //  Stop drag
-            if (this.draggable && this.isDragged && this._draggedPointerID == pointer.id)
+            if (this.draggable && this.isDragged && this._draggedPointerID === pointer.id)
             {
                 this.stopDrag(pointer);
             }
@@ -1194,6 +1210,7 @@ Phaser.InputHandler.prototype = {
 
         if (this.bringToTop)
         {
+            this._dragPhase = true;
             this.sprite.bringToTop();
         }
 
@@ -1211,6 +1228,7 @@ Phaser.InputHandler.prototype = {
         this.isDragged = false;
         this._draggedPointerID = -1;
         this._pointerData[pointer.id].isDragged = false;
+        this._dragPhase = false;
 
         if (this.snapOnRelease)
         {
