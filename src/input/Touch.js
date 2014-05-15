@@ -297,10 +297,10 @@ Phaser.Touch.prototype = {
             event.preventDefault();
         }
 
-        for (var i = 0; i < event.changedTouches.length; i++)
-        {
+        // for (var i = 0; i < event.changedTouches.length; i++)
+        // {
             //this.game.input.updatePointer(event.changedTouches[i]);
-        }
+        // }
 
     },
 
