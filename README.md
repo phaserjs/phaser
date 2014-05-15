@@ -98,6 +98,7 @@ Version 2.0.5 - "Tanchico" - in development
 * Mouse.mouseOutCallback callback added for when the mouse is no longer over the game canvas.
 * Mouse.stopOnGameOut boolean controls if Pointer.stop will be called if the mouse leaves the game canvas (defaults to false)
 * Tilemap.searchTileIndex allows you to search for the first tile matching the given index, with optional skip and reverse parameters.
+* Tilemap.layer is a getter/setter to the current layer object (which can be changed with Tilemap.setLayer)
 
 
 ### New Plugins
