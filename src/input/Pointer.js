@@ -130,31 +130,30 @@ Phaser.Pointer = function (game, id) {
     this.screenY = -1;
 
     /**
-     * @property {number} rawMovementX - The horizontal raw relative movement of pointer in pixels since last event.
-     * @default
-     */
+    * @property {number} rawMovementX - The horizontal raw relative movement of pointer in pixels since last event.
+    * @default
+    */
     this.rawMovementX = 0;
 
     /**
-     * @property {number} rawMovementY - The vertical raw relative movement of pointer in pixels since last event.
-     * @default
-     */
+    * @property {number} rawMovementY - The vertical raw relative movement of pointer in pixels since last event.
+    * @default
+    */
     this.rawMovementY = 0;
 
     /**
-     * @property {number} movementX - The horizontal processed relative movement of pointer in pixels since last event.
-     * @default
-     */
+    * @property {number} movementX - The horizontal processed relative movement of pointer in pixels since last event.
+    * @default
+    */
     this.movementX = 0;
 
     /**
-     * @property {number} movementY - The vertical processed relative movement of pointer in pixels since last event.
-     * @default
-     */
+    * @property {number} movementY - The vertical processed relative movement of pointer in pixels since last event.
+    * @default
+    */
     this.movementY = 0;
 
-
-  /**
+    /**
     * @property {number} x - The horizontal coordinate of point relative to the game element. This value is automatically scaled based on game size.
     * @default
     */
