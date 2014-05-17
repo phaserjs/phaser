@@ -130,6 +130,31 @@ Phaser.Pointer = function (game, id) {
     this.screenY = -1;
 
     /**
+     * @property {number} rawMovementX - The horizontal raw relative movement of pointer in pixels since last event.
+     * @default
+     */
+    this.rawMovementX = 0;
+
+    /**
+     * @property {number} rawMovementY - The vertical raw relative movement of pointer in pixels since last event.
+     * @default
+     */
+    this.rawMovementY = 0;
+
+    /**
+     * @property {number} movementX - The horizontal processed relative movement of pointer in pixels since last event.
+     * @default
+     */
+    this.movementX = 0;
+
+    /**
+     * @property {number} movementY - The vertical processed relative movement of pointer in pixels since last event.
+     * @default
+     */
+    this.movementY = 0;
+
+
+  /**
     * @property {number} x - The horizontal coordinate of point relative to the game element. This value is automatically scaled based on game size.
     * @default
     */
@@ -360,6 +385,15 @@ Phaser.Pointer.prototype = {
 
         this.screenX = event.screenX;
         this.screenY = event.screenY;
+
+        if (this.isMouse && !fromClick) {
+            this.rawMovementX = event.movementX || event.mozMovementX || event.webkitMovementX || 0;
+            this.rawMovementY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
+
+            this.movementX += this.rawMovementX;
+            this.movementY += this.rawMovementY;
+        }
+
 
         this.x = (this.pageX - this.game.stage.offset.x) * this.game.input.scale.x;
         this.y = (this.pageY - this.game.stage.offset.y) * this.game.input.scale.y;
@@ -622,6 +656,15 @@ Phaser.Pointer.prototype = {
 
         this.targetObject = null;
 
+    },
+
+    /**
+     * Resets the movementX and movementY properties. Use in your update handler after retrieving the values.
+     * @method Phaser.Pointer#resetMovement
+     */
+    resetMovement: function() {
+        this.movementX = 0;
+        this.movementY = 0;
     }
 
 };
