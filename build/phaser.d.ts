@@ -3725,6 +3725,8 @@ declare module Phaser {
         isDown: boolean;
         isMouse: boolean;
         isUp: boolean;
+        movementX: number;
+        movementY: number;
         msSinceLastClick: number;
         pageX: number;
         pageY: number;
@@ -3733,6 +3735,8 @@ declare module Phaser {
         positionDown: Phaser.Point;
         positionUp: Phaser.Point;
         previousTapTime: number;
+        rawMovementX: number;
+        rawMovementY: number;
         screenX: number;
         screenY: number;
         target: any;
@@ -3752,6 +3756,7 @@ declare module Phaser {
         leave(event: any): void;
         move(event: any, fromClick?: boolean): void;
         reset(): void;
+        resetMovement(): void;
         start(event: any): void;
         stop(event: any): void;
         update(): void;
