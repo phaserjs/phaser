@@ -674,7 +674,8 @@ declare module PIXI {
 
         constructor(width: number, height: number, renderer: IPixiRenderer);
 
-        resize(width: number, height: number): void;
+        clear(): void;
+        resize(width: number, height: number, updateBase: boolean): void;
 
     }
 
@@ -777,6 +778,7 @@ declare module PIXI {
 
     export class Stage extends DisplayObjectContainer {
 
+        bounds: Phaser.Rectangle;
         interactive: boolean;
         interactionManager: InteractionManager;
         worldTransform: IMatrix;
@@ -2646,11 +2648,16 @@ declare module Phaser {
         locked: boolean;
         mouseDownCallback: Function;
         mouseMoveCallback: Function;
+        mouseOutCallback: Function;
+        mouseOverCallback: Function;
         mouseUpCallback: Function;
         pointerLock: Phaser.Signal;
+        spotOnGameOut: boolean;
 
         onMouseDown(event: MouseEvent): void;
         onMouseMove(event: MouseEvent): void;
+        onMouseOut(event: MouseEvent): void;
+        onMouseOver(event: MouseEvent): void;
         onMouseUp(event: MouseEvent): void;
         pointerLockChange(event: MouseEvent): void;
         releasePointerLock(): void;
@@ -3885,7 +3892,7 @@ declare module Phaser {
 
     class RenderTexture extends PIXI.RenderTexture {
 
-        constructor(game: Phaser.Game, width?: number, height?: number, key?: string);
+        constructor(game: Phaser.Game, width?: number, height?: number, key?: string, scaleMode?: number);
 
         game: Phaser.Game;
         key: string;
@@ -3950,7 +3957,6 @@ declare module Phaser {
         getLongestLine(): number;
         pasteLine(line: string, x: number, y: number, customSpacingX: number): void;
         removeUnsupportedCharacters(stripCR?: boolean): string;
-        resize(width: number, height: number): void;
         setFixedWidth(width: number, lineAlignment?: string): void;
         setText(content: string, multiLine?: boolean, characterSpacing?: number, lineSpacing?: number, lineAlignment?: string, allowLowerCase?: boolean): void;
 
@@ -4460,6 +4466,7 @@ declare module Phaser {
         heightInPixels: number;
         images: any[];
         key: string;
+        layer: any;
         layers: Object[];
         objects: any[];
         orientation: string;
@@ -4502,6 +4509,7 @@ declare module Phaser {
         random(x: number, y: number, width: number, height: number, layer?: any): void;
         removeAllLayers(): void;
         replace(source: number, dest: number, x: number, y: number, width: number, height: number, layer?: any): void;
+        searchTileIndex(index: number, skip?: number, reverse?: boolean, layer?: any): Phaser.Tile;
         setCollision(indexes: any, collides?: boolean, layer?: any, recalculate?: boolean): void;
         setCollisionBetween(start: number, stop: number, collides?: boolean, layer?: any, recalculate?: boolean): void;
         setCollisionByExclusion(indexes: any[], collides?: boolean, layer?: any, recalculate?: boolean): void;
