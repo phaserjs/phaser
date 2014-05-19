@@ -1317,7 +1317,7 @@ declare module Phaser {
         getPhysicsData(key: string, object?: string, fixtureKey?: string): Object;
         getSound(key: string): Phaser.Sound;
         getSoundData(key: string): Object;
-        getText(key: string): Object;
+        getText(key: string): string;
         getTextKeys(): string[];
         getTexture(key: string): Phaser.RenderTexture;
         getTextureFrame(key: string): Phaser.Frame;
