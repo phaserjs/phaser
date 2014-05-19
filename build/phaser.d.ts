@@ -2652,7 +2652,7 @@ declare module Phaser {
         mouseOverCallback: Function;
         mouseUpCallback: Function;
         pointerLock: Phaser.Signal;
-        spotOnGameOut: boolean;
+        stopOnGameOut: boolean;
 
         onMouseDown(event: MouseEvent): void;
         onMouseMove(event: MouseEvent): void;
