@@ -1289,7 +1289,18 @@ declare module Phaser {
         addText(key: string, url: string, data: Object): void;
         addTextureAtlas(key: string, url: string, data: Object, atlasData: Object, format: number): void;
         addTilemap(key: string, url: string, mapData: Object, format: number): void;
+        checkKey(type: number, key: string): boolean;
+        checkCanvasKey(key: string): boolean;
         checkImageKey(key: string): boolean;
+        checkTextureKey(key: string): boolean;
+        checkSoundKey(key: string): boolean;
+        checkTextKey(key: string): boolean;
+        checkPhysicsKey(key: string): boolean;
+        checkTilemapKey(key: string): boolean;
+        checkBinaryKey(key: string): boolean;
+        checkBitmapDataKey(key: string): boolean;
+        checkBitmapFontKey(key: string): boolean;
+        checkJSONKey(key: string): boolean;
         decodedSound(key: string, data: Object): void;
         destroy(): void;
         getBinary(key: string): Object;
