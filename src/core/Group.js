@@ -643,19 +643,19 @@ Phaser.Group.prototype.hasProperty = function (child, key) {
 
     var len = key.length;
 
-    if (len === 1 && child.hasOwnProperty(key[0]))
+    if (len === 1 && key[0] in child)
     {
         return true;
     }
-    else if (len === 2 && child.hasOwnProperty(key[0]) && child[key[0]].hasOwnProperty(key[1]))
+    else if (len === 2 && key[0] in child && key[1] in child[key[0]])
     {
         return true;
     }
-    else if (len === 3 && child.hasOwnProperty(key[0]) && child[key[0]].hasOwnProperty(key[1]) && child[key[0]][key[1]].hasOwnProperty(key[2]))
+    else if (len === 3 && key[0] in child && key[1] in child[key[0]] && key[2] in child[key[0]][key[1]])
     {
         return true;
     }
-    else if (len === 4 && child.hasOwnProperty(key[0]) && child[key[0]].hasOwnProperty(key[1]) && child[key[0]][key[1]].hasOwnProperty(key[2]) && child[key[0]][key[1]][key[2]].hasOwnProperty(key[3]))
+    else if (len === 4 && key[0] in child && key[1] in child[key[0]] && key[2] in child[key[0]][key[1]] && key[3] in child[key[0]][key[1]][key[2]])
     {
         return true;
     }
@@ -696,7 +696,7 @@ Phaser.Group.prototype.setProperty = function (child, key, value, operation, for
 
     //  We can't force a property in and the child doesn't have it, so abort.
     //  Equally we can't add, subtract, multiply or divide a property value if it doesn't exist, so abort in those cases too.
-    if (!this.hasProperty(child, key, value) && (!force || operation > 0))
+    if (!this.hasProperty(child, key) && (!force || operation > 0))
     {
         return false;
     }

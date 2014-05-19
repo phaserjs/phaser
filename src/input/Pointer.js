@@ -385,14 +385,14 @@ Phaser.Pointer.prototype = {
         this.screenX = event.screenX;
         this.screenY = event.screenY;
 
-        if (this.isMouse && this.game.input.mouse.locked && !fromClick) {
+        if (this.isMouse && this.game.input.mouse.locked && !fromClick)
+        {
             this.rawMovementX = event.movementX || event.mozMovementX || event.webkitMovementX || 0;
             this.rawMovementY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
 
             this.movementX += this.rawMovementX;
             this.movementY += this.rawMovementY;
         }
-
 
         this.x = (this.pageX - this.game.stage.offset.x) * this.game.input.scale.x;
         this.y = (this.pageY - this.game.stage.offset.y) * this.game.input.scale.y;
@@ -662,8 +662,10 @@ Phaser.Pointer.prototype = {
      * @method Phaser.Pointer#resetMovement
      */
     resetMovement: function() {
+
         this.movementX = 0;
         this.movementY = 0;
+
     }
 
 };
