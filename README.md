@@ -58,7 +58,7 @@ Version 2.0.5 - "Tanchico" - in development
 
 ### Updates
 
-* TypeScript definitions fixes and updates (thanks @luispedrofonseca @clark-stevenson @Anahkiasen @adamholdenyall @luispedrofonseca)
+* TypeScript definitions fixes and updates (thanks @luispedrofonseca @clark-stevenson @Anahkiasen @adamholdenyall @luispedrofonseca @WillHuxtable)
 * Input.getPointerFromIdentifier docs update to reflect where the identifier comes from. Pointer properties now set to give it fixed defaults (thanks @JirkaDellOro, #793)
 * Pointer.pointerId added which is set by the DOM event (if present in the browser). Note that browsers can and do recycle pointer IDs.
 * Pointer.type and Pointer.exists properties added.
@@ -69,6 +69,8 @@ Version 2.0.5 - "Tanchico" - in development
 * PIXI.InteractionManager is no longer over-written if the object already exists (thanks @georgiee, #818)
 * Key.justPressed and justReleased incorrectly set the delay value to 2500ms. Now defaults to 50ms (thanks @draklaw, fix #797)
 * Stage.backgroundColor can now accept short-code hex values: `#222`, `#334`, etc.
+* Pointer.withinGame is now accurate based on game scale and updated as the Pointer moves.
+* Stage.bounds is now updated if the game canvas offset changes position. Note that it gives the un-scaled game dimensions.
 
 
 ### New Features
@@ -79,7 +81,7 @@ Version 2.0.5 - "Tanchico" - in development
 * Input.getPointerFromId will return a pointer with a matching pointerId value, if any. pointerId is a value set by the browser in the DOM event.
 * ArcadePhysics.getObjectsUnderPointer will return all children from a Group that overlap with the given Pointer.
 * InputManager.minPriorityID lets you set the minimum priority level an object needs to be to be checked by a Pointer. Useful for UI layer stacking.
-* New consts: Phaser.Tilemap.NORTH, SOUTH, EAST and WEST to use with the TileMapWalker Plugin.
+* New consts: Phaser.Tilemap.NORTH, SOUTH, EAST and WEST to use with the TileMapWalker Plugin but generally just handy to have anyway.
 * BitmapData.processPixelRGB added undefined check (thanks @muclemente, fix #808)
 * Phaser.Utils.transposeArray will transpose the given array and return it.
 * Phaser.Utils.rotateArray will rotate the given array by 90 or 180 degrees in either direction and return it.
@@ -111,6 +113,8 @@ Version 2.0.5 - "Tanchico" - in development
 * Cache.checkBitmapFontKey(key) - Check if a BitmapFont key exists in the cache (thanks to @delta11 for the proposal)
 * Cache.checkJSONKey(key) - Check if a JSON key exists in the cache (thanks to @delta11 for the proposal)
 * New movement data added for a Pointer Locked mouse (Pointer.movementX/Y) (thanks @woutercommandeur, #831)
+* ScaleManager.bounds is a Rectangle object that holds the exact size of the game canvas, taking DOM offset and game scale into account.
+
 
 
 ### New Plugins
@@ -178,7 +182,9 @@ Note: Some of you may not be aware, but the `phaser.min.js` file in the build fo
 
 ## Koding
 
-You can [![clone the Phaser repo in Koding](http://learn.koding.com/btn/clone_d.png)][koding] and then start editing and previewing code right away using their web based VM development system.
+![Koding](https://koding.com/Teamwork?import=https://github.com/photonstorm/phaser/archive/master.zip&c=git1)
+
+You can [clone the Phaser repo in Koding](http://learn.koding.com/btn/clone_d.png) and then start editing and previewing code right away using their web based VM development system.
 
 ![div](http://phaser.io/images/div5.png)
 
@@ -393,6 +399,5 @@ Phaser is released under the [MIT License](http://opensource.org/licenses/MIT).
 [contribute]: https://github.com/photonstorm/phaser/blob/master/CONTRIBUTING.md
 [phaser]: https://github.com/photonstorm/phaser
 [forum]: http://www.html5gamedevs.com/forum/14-phaser/
-[koding]: https://koding.com/Teamwork?import=https://github.com/photonstorm/phaser/archive/master.zip&c=git1
 
 [![Analytics](https://ga-beacon.appspot.com/UA-44006568-2/phaser/index)](https://github.com/igrigorik/ga-beacon)

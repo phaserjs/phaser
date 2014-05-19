@@ -258,6 +258,8 @@ Phaser.Touch.prototype = {
     */
     onTouchEnter: function (event) {
 
+        console.log('touch enter', event);
+
         this.event = event;
 
         if (this.touchEnterCallback)
@@ -296,11 +298,6 @@ Phaser.Touch.prototype = {
         {
             event.preventDefault();
         }
-
-        // for (var i = 0; i < event.changedTouches.length; i++)
-        // {
-            //this.game.input.updatePointer(event.changedTouches[i]);
-        // }
 
     },
 

@@ -4216,6 +4216,7 @@ declare module Phaser {
         static SHOW_ALL: number;
 
         aspectRatio: number;
+        bounds: Phaser.Rectangle;
         enterFullScreen: Phaser.Signal;
         enterIncorrectOrientation: Phaser.Signal;
         enterLandscape: Phaser.Signal;
