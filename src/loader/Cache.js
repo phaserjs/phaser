@@ -509,6 +509,20 @@ Phaser.Cache.prototype = {
     },
 
     /**
+    *   Checks if an canvas key exists
+    *
+    * @method Phaser.Cache#checkCnvasKey
+    * @param {string} key - Asset key of the canvas to check is in the Cache.
+    * @return {boolean} True if the key exists, otherwise false.
+    */
+    checkCanvasKey: function(key){
+        if(this._canvases[key]){
+            return true;
+        }
+        return false;
+    },
+
+    /**
     * Get a canvas object from the cache by its key.
     *
     * @method Phaser.Cache#getCanvas
@@ -526,6 +540,20 @@ Phaser.Cache.prototype = {
             console.warn('Phaser.Cache.getCanvas: Invalid key: "' + key + '"');
         }
 
+    },
+
+    /**
+    *   Checks if an BitmapData key exists
+    *
+    * @method Phaser.Cache#checkBitmapDataKey
+    * @param {string} key - Asset key of the BitmapData to check is in the Cache.
+    * @return {boolean} True if the key exists, otherwise false.
+    */
+    checkBitmapDataKey: function(key){
+        if(this._bitmapDatas[key]){
+            return true;
+        }
+        return false;
     },
 
     /**
@@ -549,6 +577,20 @@ Phaser.Cache.prototype = {
     },
 
     /**
+    *   Checks if an BitmapFont key exists
+    *
+    * @method Phaser.Cache#checkBitmapFontKey
+    * @param {string} key - Asset key of the BitmapFont to check is in the Cache.
+    * @return {boolean} True if the key exists, otherwise false.
+    */
+    checkBitmapFontKey: function(key){
+        if(this._bitmapFont[key]){
+            return true;
+        }
+        return false;
+    },
+
+    /**
     * Get a BitmapFont object from the cache by its key.
     *
     * @method Phaser.Cache#getBitmapFont
@@ -566,6 +608,20 @@ Phaser.Cache.prototype = {
             console.warn('Phaser.Cache.getBitmapFont: Invalid key: "' + key + '"');
         }
 
+    },
+
+    /**
+    *   Checks if an Physics key exists
+    *
+    * @method Phaser.Cache#checkPhysicsKey
+    * @param {string} key - Asset key of the Physics to check is in the Cache.
+    * @return {boolean} True if the key exists, otherwise false.
+    */
+    checkPhysicsKey: function(key){
+        if(this._physics[key]){
+            return true;
+        }
+        return false;
     },
 
     /**
@@ -667,6 +723,20 @@ Phaser.Cache.prototype = {
             console.warn('Phaser.Cache.getImage: Invalid key: "' + key + '"');
         }
 
+    },
+
+    /**
+    *   Checks if an Tilemap key exists
+    *
+    * @method Phaser.Cache#checkTilemapKey
+    * @param {string} key - Asset key of the Tilemap to check is in the Cache.
+    * @return {boolean} True if the key exists, otherwise false.
+    */
+    checkTilemapKey: function(key){
+        if(this._tilemaps[key]){
+            return true;
+        }
+        return false;
     },
 
     /**
@@ -775,6 +845,20 @@ Phaser.Cache.prototype = {
     },
 
     /**
+    *   Checks if an Texture key exists
+    *
+    * @method Phaser.Cache#checkTextureKey
+    * @param {string} key - Asset key of the Texture to check is in the Cache.
+    * @return {boolean} True if the key exists, otherwise false.
+    */
+    checkTextureKey: function(key){
+        if(this._textures[key]){
+            return true;
+        }
+        return false;
+    },
+
+    /**
     * Get a single texture frame by key. You'd only do this to get the default Frame created for a non-atlas/spritesheet image.
     *
     * @method Phaser.Cache#getTextureFrame
@@ -809,6 +893,20 @@ Phaser.Cache.prototype = {
             console.warn('Phaser.Cache.getTexture: Invalid key: "' + key + '"');
         }
 
+    },
+
+    /**
+    *   Checks if an Sound key exists
+    *
+    * @method Phaser.Cache#checkSoundKey
+    * @param {string} key - Asset key of the Sound to check is in the Cache.
+    * @return {boolean} True if the key exists, otherwise false.
+    */
+    checkSoundKey: function(key){
+        if(this._sounds[key]){
+            return true;
+        }
+        return false;
     },
 
     /**
@@ -899,6 +997,20 @@ Phaser.Cache.prototype = {
     },
 
     /**
+    *   Checks if an Text key exists
+    *
+    * @method Phaser.Cache#checkTextKey
+    * @param {string} key - Asset key of the Text to check is in the Cache.
+    * @return {boolean} True if the key exists, otherwise false.
+    */
+    checkTextKey: function(key){
+        if(this._text[key]){
+            return true;
+        }
+        return false;
+    },
+
+    /**
     * Get text data by key.
     *
     * @method Phaser.Cache#getText
@@ -919,6 +1031,20 @@ Phaser.Cache.prototype = {
     },
 
     /**
+    *   Checks if an JSON key exists
+    *
+    * @method Phaser.Cache#checkJSONKey
+    * @param {string} key - Asset key of the JSON to check is in the Cache.
+    * @return {boolean} True if the key exists, otherwise false.
+    */
+    checkJSONKey: function(key){
+        if(this._json[key]){
+            return true;
+        }
+        return false;
+    },
+
+    /**
     * Get a JSON object by key from the cache.
     *
     * @method Phaser.Cache#getJSON
@@ -936,6 +1062,20 @@ Phaser.Cache.prototype = {
             console.warn('Phaser.Cache.getJSON: Invalid key: "' + key + '"');
         }
 
+    },
+
+    /**
+    *   Checks if an Binary key exists
+    *
+    * @method Phaser.Cache#checkBinaryKey
+    * @param {string} key - Asset key of the Binary to check is in the Cache.
+    * @return {boolean} True if the key exists, otherwise false.
+    */
+    checkBinaryKey: function(key){
+        if(this._binary[key]){
+            return true;
+        }
+        return false;
     },
 
     /**
