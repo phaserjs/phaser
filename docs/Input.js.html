@@ -502,6 +502,7 @@
 					</ul>
 				</li>
 				
+				
 			</ul>
 		</div>
 	</div>
@@ -551,6 +552,11 @@ Phaser.Input = function (game) {
     * @default
     */
     this.hitContext = null;
+
+    /**
+    * @property {array} moveCallbacks - An array of callbacks that will be fired every time the activePointer receives a move event from the DOM.
+    */
+    this.moveCallbacks = [];
 
     /**
     * @property {function} moveCallback - An optional callback that will be fired every time the activePointer receives a move event from the DOM. Set to null to disable.
@@ -789,6 +795,12 @@ Phaser.Input = function (game) {
     this.onHold = null;
 
     /**
+    * @property {number} minPriorityID - You can tell all Pointers to ignore any object with a priorityID lower than the minPriorityID. Useful when stacking UI layers. Set to zero to disable.
+    * @default
+    */
+    this.minPriorityID = 0;
+
+    /**
     * A list of interactive objects. Te InputHandler components add and remove themselves from this.
     * @property {Phaser.ArrayList} interactiveItems
     */
@@ -905,14 +917,19 @@ Phaser.Input.prototype = {
         this.gamepad.stop();
         // this.gestures.stop();
 
+        this.moveCallbacks = [];
+        //  DEPRECATED
         this.moveCallback = null;
 
     },
 
     /**
+    * DEPRECATED: This method will be removed in a future major point release. Please use Input.addMoveCallback instead.
+    * 
     * Sets a callback that is fired every time the activePointer receives a DOM move event such as a mousemove or touchmove.
     * It will be called every time the activePointer moves, which in a multi-touch game can be a lot of times, so this is best
     * to only use if you've limited input to a single pointer (i.e. mouse or touch)
+    * 
     * @method Phaser.Input#setMoveCallback
     * @param {function} callback - The callback that will be called each time the activePointer receives a DOM move event.
     * @param {object} callbackContext - The context in which the callback will be called.
@@ -921,6 +938,41 @@ Phaser.Input.prototype = {
 
         this.moveCallback = callback;
         this.moveCallbackContext = callbackContext;
+
+    },
+
+    /**
+    * Adds a callback that is fired every time the activePointer receives a DOM move event such as a mousemove or touchmove.
+    * It will be called every time the activePointer moves, which in a multi-touch game can be a lot of times, so this is best
+    * to only use if you've limited input to a single pointer (i.e. mouse or touch).
+    * The callback is added to the Phaser.Input.moveCallbacks array and should be removed with Phaser.Input.deleteMoveCallback.
+    * 
+    * @method Phaser.Input#addMoveCallback
+    * @param {function} callback - The callback that will be called each time the activePointer receives a DOM move event.
+    * @param {object} callbackContext - The context in which the callback will be called.
+    * @return {number} The index of the callback entry. Use this index when calling Input.deleteMoveCallback.
+    */
+    addMoveCallback: function (callback, callbackContext) {
+
+        return this.moveCallbacks.push( { callback: callback, context: callbackContext }) - 1;
+
+    },
+
+    /**
+    * Adds a callback that is fired every time the activePointer receives a DOM move event such as a mousemove or touchmove.
+    * It will be called every time the activePointer moves, which in a multi-touch game can be a lot of times, so this is best
+    * to only use if you've limited input to a single pointer (i.e. mouse or touch).
+    * The callback is added to the Phaser.Input.moveCallbacks array and should be removed with Phaser.Input.deleteMoveCallback.
+    * 
+    * @method Phaser.Input#deleteMoveCallback
+    * @param {number} index - The index of the callback to remove.
+    */
+    deleteMoveCallback: function (index) {
+
+        if (this.moveCallbacks[index])
+        {
+            this.moveCallbacks.splice(index, 1);
+        }
 
     },
 
@@ -1042,6 +1094,7 @@ Phaser.Input.prototype = {
             this.onUp = new Phaser.Signal();
             this.onTap = new Phaser.Signal();
             this.onHold = new Phaser.Signal();
+            this.moveCallbacks = [];
         }
 
         this._pollCounter = 0;
@@ -1193,18 +1246,22 @@ Phaser.Input.prototype = {
     },
 
     /**
-    * Get the Pointer object whos identified property matches the given identifier value.
+    * Get the Pointer object whos `identifier` property matches the given identifier value.
+    * The identifier property is not set until the Pointer has been used at least once, as its populated by the DOM event.
+    * Also it can change every time you press the pointer down, and is not fixed once set.
+    * Note: Not all browsers set the identifier property and it's not part of the W3C spec, so you may need getPointerFromId instead.
+    *
     * @method Phaser.Input#getPointerFromIdentifier
     * @param {number} identifier - The Pointer.identifier value to search for.
     * @return {Phaser.Pointer} A Pointer object or null if no Pointer object matches the requested identifier.
     */
     getPointerFromIdentifier: function (identifier) {
 
-        if (this.pointer1.identifier == identifier)
+        if (this.pointer1.identifier === identifier)
         {
             return this.pointer1;
         }
-        else if (this.pointer2.identifier == identifier)
+        else if (this.pointer2.identifier === identifier)
         {
             return this.pointer2;
         }
@@ -1212,7 +1269,41 @@ Phaser.Input.prototype = {
         {
             for (var i = 3; i &lt;= 10; i++)
             {
-                if (this['pointer' + i] && this['pointer' + i].identifier == identifier)
+                if (this['pointer' + i] && this['pointer' + i].identifier === identifier)
+                {
+                    return this['pointer' + i];
+                }
+            }
+        }
+
+        return null;
+
+    },
+
+    /**
+    * Get the Pointer object whos `pointerId` property matches the given value.
+    * The pointerId property is not set until the Pointer has been used at least once, as its populated by the DOM event.
+    * Also it can change every time you press the pointer down if the browser recycles it.
+    *
+    * @method Phaser.Input#getPointerFromId
+    * @param {number} pointerId - The Pointer.pointerId value to search for.
+    * @return {Phaser.Pointer} A Pointer object or null if no Pointer object matches the requested identifier.
+    */
+    getPointerFromId: function (pointerId) {
+
+        if (this.pointer1.pointerId === pointerId)
+        {
+            return this.pointer1;
+        }
+        else if (this.pointer2.pointerId === pointerId)
+        {
+            return this.pointer2;
+        }
+        else
+        {
+            for (var i = 3; i &lt;= 10; i++)
+            {
+                if (this['pointer' + i] && this['pointer' + i].pointerId === pointerId)
                 {
                     return this['pointer' + i];
                 }
@@ -1453,7 +1544,7 @@ Object.defineProperty(Phaser.Input.prototype, "worldY", {
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Tue Apr 29 2014 14:51:16 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Tue May 20 2014 10:05:49 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

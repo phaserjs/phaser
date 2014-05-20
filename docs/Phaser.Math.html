@@ -502,6 +502,7 @@
 					</ul>
 				</li>
 				
+				
 			</ul>
 		</div>
 	</div>
@@ -2385,7 +2386,7 @@ of getting a bonus, call chanceRoll(30) - true means the chance passed, false me
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-456">line 456</a>
+        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-408">line 408</a>
     </li></ul></dd>
     
 
@@ -2821,7 +2822,7 @@ Clamp value to range &lt;a, b&gt;</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-1303">line 1303</a>
+        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-1331">line 1331</a>
     </li></ul></dd>
     
 
@@ -5316,7 +5317,7 @@ Will return null if random selection is missing, or array has no entries.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-434">line 434</a>
+        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-406">line 406</a>
     </li></ul></dd>
     
 
@@ -5340,6 +5341,19 @@ Will return null if random selection is missing, or array has no entries.</p>
     <h5>Returns:</h5>
     
             
+<div class="param-desc">
+    <p>interpolateAngles: function (a1, a2, weight, radians, ease) {</p>
+<pre><code>    if (typeof radians === &quot;undefined&quot;) { radians = true; }
+    if (typeof ease === &quot;undefined&quot;) { ease = null; }
+
+    a1 = this.normalizeAngle(a1, radians);
+    a2 = this.normalizeAngleToAnother(a2, a1, radians);
+
+    return (typeof ease === 'function') ? ease(weight, a1, a2 - a1, 1) : this.interpolateFloat(a1, a2, weight);
+
+},</code></pre>
+</div>
+
 
 
 <dl>
@@ -7488,6 +7502,29 @@ It will find the lowest matching property value from the given objects.</p>
     <h5>Returns:</h5>
     
             
+<div class="param-desc">
+    <p>nearestAngleBetween: function (a1, a2, radians) {</p>
+<pre><code>    if (typeof radians === &quot;undefined&quot;) { radians = true; }
+
+    var rd = (radians) ? Math.PI : 180;
+    a1 = this.normalizeAngle(a1, radians);
+    a2 = this.normalizeAngle(a2, radians);
+
+    if (a1 &lt; -rd / 2 &amp;&amp; a2 &gt; rd / 2)
+    {
+        a1 += rd * 2;
+    }
+
+    if (a2 &lt; -rd / 2 &amp;&amp; a1 &gt; rd / 2)
+    {
+        a2 += rd * 2;
+    }
+
+    return a2 - a1;
+
+},</code></pre>
+</div>
+
 
 
 <dl>
@@ -8098,6 +8135,237 @@ It will find the lowest matching property value from the given objects.</p>
         
             
 <dt>
+    <h4 class="name" id="percent"><span class="type-signature"></span>percent<span class="signature">(a, b, <span class="optional">base</span>)</span><span class="type-signature"> &rarr; {number}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Work out what percentage value a is of value b using the given base.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+		<th>Default</th>
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>a</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The value to work out the percentage for.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>b</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The value you wish to get the percentage of.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>base</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
+            
+
+            <td class="description last"><p>The base value.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-1303">line 1303</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>The percentage a is of b, between 0 and 1.</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">number</span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
     <h4 class="name" id="PI2"><span class="type-signature"></span>PI2<span class="signature">()</span><span class="type-signature"></span></h4>
     
     
@@ -8208,7 +8476,7 @@ It will find the lowest matching property value from the given objects.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-1321">line 1321</a>
+        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-1349">line 1349</a>
     </li></ul></dd>
     
 
@@ -11722,7 +11990,7 @@ Values must be positive integers, and are passed through Math.abs.</p>
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Tue Apr 29 2014 14:51:26 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Tue May 20 2014 10:05:59 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

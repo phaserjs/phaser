@@ -502,6 +502,7 @@
 					</ul>
 				</li>
 				
+				
 			</ul>
 		</div>
 	</div>
@@ -880,7 +881,7 @@
         <dl>
             
 <dt>
-    <h4 class="name" id="add"><span class="type-signature"></span>add<span class="signature">(plugin)</span><span class="type-signature"> &rarr; {<a href="Phaser.Plugin.html">Phaser.Plugin</a>}</span></h4>
+    <h4 class="name" id="add"><span class="type-signature"></span>add<span class="signature">(plugin, parameter)</span><span class="type-signature"> &rarr; {<a href="Phaser.Plugin.html">Phaser.Plugin</a>}</span></h4>
     
     
 </dt>
@@ -911,6 +912,8 @@ The Plugin must have 2 properties: game and parent. Plugin.game is set to ths ga
 		<th>Type</th>
 
 		
+		<th>Argument</th>
+		
 
 		
 
@@ -939,10 +942,51 @@ The Plugin must have 2 properties: game and parent. Plugin.game is set to ths ga
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
 
             
 
             <td class="description last"><p>The Plugin to add into the PluginManager. This can be a function or an existing object.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>parameter</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">*</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                    &lt;repeatable><br>
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Additional parameters that will be passed to the Plugin.init method.</p></td>
         </tr>
 
 	
@@ -1066,7 +1110,7 @@ The Plugin must have 2 properties: game and parent. Plugin.game is set to ths ga
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="PluginManager.js.html">core/PluginManager.js</a>, <a href="PluginManager.js.html#sunlight-1-line-271">line 271</a>
+        <a href="PluginManager.js.html">core/PluginManager.js</a>, <a href="PluginManager.js.html#sunlight-1-line-273">line 273</a>
     </li></ul></dd>
     
 
@@ -1136,7 +1180,7 @@ It only calls plugins who have visible=true.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="PluginManager.js.html">core/PluginManager.js</a>, <a href="PluginManager.js.html#sunlight-1-line-251">line 251</a>
+        <a href="PluginManager.js.html">core/PluginManager.js</a>, <a href="PluginManager.js.html#sunlight-1-line-253">line 253</a>
     </li></ul></dd>
     
 
@@ -1207,7 +1251,7 @@ It only calls plugins who have active=true.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="PluginManager.js.html">core/PluginManager.js</a>, <a href="PluginManager.js.html#sunlight-1-line-210">line 210</a>
+        <a href="PluginManager.js.html">core/PluginManager.js</a>, <a href="PluginManager.js.html#sunlight-1-line-212">line 212</a>
     </li></ul></dd>
     
 
@@ -1277,7 +1321,7 @@ It only calls plugins who have active=true.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="PluginManager.js.html">core/PluginManager.js</a>, <a href="PluginManager.js.html#sunlight-1-line-170">line 170</a>
+        <a href="PluginManager.js.html">core/PluginManager.js</a>, <a href="PluginManager.js.html#sunlight-1-line-172">line 172</a>
     </li></ul></dd>
     
 
@@ -1395,7 +1439,7 @@ It only calls plugins who have active=true.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="PluginManager.js.html">core/PluginManager.js</a>, <a href="PluginManager.js.html#sunlight-1-line-128">line 128</a>
+        <a href="PluginManager.js.html">core/PluginManager.js</a>, <a href="PluginManager.js.html#sunlight-1-line-130">line 130</a>
     </li></ul></dd>
     
 
@@ -1464,7 +1508,7 @@ It only calls plugins who have active=true.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="PluginManager.js.html">core/PluginManager.js</a>, <a href="PluginManager.js.html#sunlight-1-line-151">line 151</a>
+        <a href="PluginManager.js.html">core/PluginManager.js</a>, <a href="PluginManager.js.html#sunlight-1-line-153">line 153</a>
     </li></ul></dd>
     
 
@@ -1534,7 +1578,7 @@ It only calls plugins who have visible=true.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="PluginManager.js.html">core/PluginManager.js</a>, <a href="PluginManager.js.html#sunlight-1-line-231">line 231</a>
+        <a href="PluginManager.js.html">core/PluginManager.js</a>, <a href="PluginManager.js.html#sunlight-1-line-233">line 233</a>
     </li></ul></dd>
     
 
@@ -1604,7 +1648,7 @@ It only calls plugins who have active=true.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="PluginManager.js.html">core/PluginManager.js</a>, <a href="PluginManager.js.html#sunlight-1-line-190">line 190</a>
+        <a href="PluginManager.js.html">core/PluginManager.js</a>, <a href="PluginManager.js.html#sunlight-1-line-192">line 192</a>
     </li></ul></dd>
     
 
@@ -1655,7 +1699,7 @@ It only calls plugins who have active=true.</p>
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Tue Apr 29 2014 14:51:32 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Tue May 20 2014 10:06:05 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

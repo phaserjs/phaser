@@ -502,6 +502,7 @@
 					</ul>
 				</li>
 				
+				
 			</ul>
 		</div>
 	</div>
@@ -1482,6 +1483,60 @@ If set to true it will reset all of the Circle objects properties to 0. A Circle
         
             
 <dt>
+    <h4 class="name" id="right"><span class="type-signature">&lt;readonly> </span>right<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Returns the area of the polygon.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Polygon.js.html">geom/Polygon.js</a>, <a href="Polygon.js.html#sunlight-1-line-148">line 148</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
     <h4 class="name" id="top"><span class="type-signature"></span>top<span class="type-signature"></span></h4>
     
     
@@ -1798,7 +1853,7 @@ If set to true it will reset all of the Circle objects properties to 0. A Circle
         <dl>
             
 <dt>
-    <h4 class="name" id="circumferencePoint"><span class="type-signature">&lt;static> </span>circumferencePoint<span class="signature">(a, angle, asDegrees, <span class="optional">out</span>)</span><span class="type-signature"> &rarr; {<a href="Phaser.Point.html">Phaser.Point</a>}</span></h4>
+    <h4 class="name" id="circumferencePoint"><span class="type-signature">&lt;static> </span>circumferencePoint<span class="signature">(a, angle, <span class="optional">asDegrees</span>, <span class="optional">out</span>)</span><span class="type-signature"> &rarr; {<a href="Phaser.Point.html">Phaser.Point</a>}</span></h4>
     
     
 </dt>
@@ -1831,6 +1886,8 @@ If set to true it will reset all of the Circle objects properties to 0. A Circle
 		<th>Argument</th>
 		
 
+		
+		<th>Default</th>
 		
 
 		<th class="last">Description</th>
@@ -1865,6 +1922,10 @@ If set to true it will reset all of the Circle objects properties to 0. A Circle
             
 
             
+                <td class="default">
+                
+                </td>
+            
 
             <td class="description last"><p>The first Circle object.</p></td>
         </tr>
@@ -1896,6 +1957,10 @@ If set to true it will reset all of the Circle objects properties to 0. A Circle
             
 
             
+                <td class="default">
+                
+                </td>
+            
 
             <td class="description last"><p>The angle in radians (unless asDegrees is true) to return the point from.</p></td>
         </tr>
@@ -1919,6 +1984,8 @@ If set to true it will reset all of the Circle objects properties to 0. A Circle
             
                 <td class="attributes">
                 
+                    &lt;optional><br>
+                
 
                 
 
@@ -1926,6 +1993,12 @@ If set to true it will reset all of the Circle objects properties to 0. A Circle
                 </td>
             
 
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
             
 
             <td class="description last"><p>Is the given angle in radians (false) or degrees (true)?</p></td>
@@ -1959,6 +2032,10 @@ If set to true it will reset all of the Circle objects properties to 0. A Circle
                 </td>
             
 
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>An optional Point object to put the result in to. If none specified a new Point object will be created.</p></td>
@@ -2812,7 +2889,7 @@ This method checks the radius distances between the two Circle objects to see if
         
             
 <dt>
-    <h4 class="name" id="circumferencePoint"><span class="type-signature"></span>circumferencePoint<span class="signature">(angle, asDegrees, <span class="optional">out</span>)</span><span class="type-signature"> &rarr; {<a href="Phaser.Point.html">Phaser.Point</a>}</span></h4>
+    <h4 class="name" id="circumferencePoint"><span class="type-signature"></span>circumferencePoint<span class="signature">(angle, <span class="optional">asDegrees</span>, <span class="optional">out</span>)</span><span class="type-signature"> &rarr; {<a href="Phaser.Point.html">Phaser.Point</a>}</span></h4>
     
     
 </dt>
@@ -2845,6 +2922,8 @@ This method checks the radius distances between the two Circle objects to see if
 		<th>Argument</th>
 		
 
+		
+		<th>Default</th>
 		
 
 		<th class="last">Description</th>
@@ -2879,6 +2958,10 @@ This method checks the radius distances between the two Circle objects to see if
             
 
             
+                <td class="default">
+                
+                </td>
+            
 
             <td class="description last"><p>The angle in radians (unless asDegrees is true) to return the point from.</p></td>
         </tr>
@@ -2902,6 +2985,8 @@ This method checks the radius distances between the two Circle objects to see if
             
                 <td class="attributes">
                 
+                    &lt;optional><br>
+                
 
                 
 
@@ -2909,6 +2994,12 @@ This method checks the radius distances between the two Circle objects to see if
                 </td>
             
 
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
             
 
             <td class="description last"><p>Is the given angle in radians (false) or degrees (true)?</p></td>
@@ -2942,6 +3033,10 @@ This method checks the radius distances between the two Circle objects to see if
                 </td>
             
 
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>An optional Point object to put the result in to. If none specified a new Point object will be created.</p></td>
@@ -4406,7 +4501,7 @@ This method checks the radius distances between the two Circle objects to see if
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Tue Apr 29 2014 14:51:20 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Tue May 20 2014 10:05:53 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>
