@@ -12931,7 +12931,6 @@ Phaser.Physics.P2.prototype = {
             {
                 output.push(body);
             }
-
         }
 
         return output;
@@ -12956,7 +12955,7 @@ Phaser.Physics.P2.prototype = {
             map.layers[layer].bodies[i].destroy();
         }
 
-        map.layers[layer].bodies.length = [];
+        map.layers[layer].bodies.length = 0;
 
     },
 
@@ -12995,7 +12994,7 @@ Phaser.Physics.P2.prototype = {
             {
                 var tile = map.layers[layer].data[y][x];
 
-                if (tile && tile.collides)
+                if (tile && tile.index > -1 && tile.collides)
                 {
                     if (optimize)
                     {
@@ -15472,6 +15471,7 @@ Object.defineProperty(Phaser.Physics.P2.Body.prototype, "debug", {
 /**
 * A Body can be set to collide against the World bounds automatically if this is set to true. Otherwise it will leave the World.
 * Note that this only applies if your World has bounds! The response to the collision should be managed via CollisionMaterials.
+* 
 * @name Phaser.Physics.P2.Body#collideWorldBounds
 * @property {boolean} collideWorldBounds - Should the Body collide with the World bounds?
 */
@@ -16151,7 +16151,7 @@ Phaser.Physics.P2.DistanceConstraint = function (world, bodyA, bodyB, distance, 
 
     distance = world.pxm(distance);
 
-    p2.DistanceConstraint.call(this, bodyA, bodyB, distance, maxForce);
+    p2.DistanceConstraint.call(this, bodyA, bodyB, distance, {maxForce: maxForce});
 
 };
 
