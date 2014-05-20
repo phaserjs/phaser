@@ -1,10 +1,10 @@
 ![Phaser 2.0](http://www.phaser.io/images/phaser2-github.png)
 
-# Phaser 2.0.5-dev
+# Phaser 2.0.5
 
 Phaser is a fast, free and fun open source game framework for making desktop and mobile browser HTML5 games. It uses [Pixi.js](https://github.com/GoodBoyDigital/pixi.js/) internally for fast 2D Canvas and WebGL rendering.
 
-Version: 2.0.5 "Tanchico" - Released: -in development-
+Version: 2.0.5 "Tanchico" - Released: 20th May 2014
 
 By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 
@@ -21,13 +21,11 @@ By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 
 ## Welcome to Phaser and What's new in 2.0.5?
 
-We've had the vast majority of this version ready for a few days now, but held off releasing due to Ludum Dare 48. Ludum Dare contests are always peak times for Phaser, we see an influx of new devs downloading for the first time. So it's not the best day to release a new version :) Now that LD48 has finished we present Phaser 2.0.4. This is the latest version in our bi-weekly sprint release schedule, and the change log is (which you can see in full below) is significant to say the least.
+2.0.5 is our latest point release in our on-going series of updates to the core Phaser framework. As usual the full change log can be found below and you'll notice a raft of updates, new features and bug fixes. Most of the updates are to do with enhancing already existing features to make them more powerful, for example being able to pass a Rectangle object to the QuadTree class now. Or allowing you to control when a tilemap collision recalculation happens. It's small tweaks like this, the vast majority of which are based on community feedback, that help us go from strength to strength.
 
-We've made some deep internal changes to how game pause and resume is handled, which means Phaser.Timers now behave themselves properly. Again with this version we've updated to the latet Pixi and P2 releases, bringing new features and enhancements with them. In terms of new features we've overhauled the Color, Point and BitmapData classes, with significant new features for each of them. From HSL palette shifting and color extraction, to Point dot products to proper endianess handling in Color, the new features are powerful additions to the library. We've also marked a bunch of methods as deprecated and will remove them in Phaser 2.1. Most have fully working replacements and you'll see them flagged as such in the API docs.
+Another important change is that we've removed all of the Phaser Plugins from this repository. They now live in[their own repository](https://github.com/photonstorm/phaser-plugins) which makes it much easier for us and contributors to manage. You'll find some awesome new plugins in there too, so take a look :)
 
-Thanks to traffic from Ludume Dare and some [great new sites](http://gamemechanicexplorer.com), we've seen Phaser sky rocket on github; now clearing 4325 github stars and 1175 forks. In most cases issues are being resolved fast and we're closing over 97% of all those reported, which we're extremely proud about.
-
-For the 2.0.5 release we're going to be looking carefully at CocoonJS support, there are some known issues with it currently and we want to ensure it works as flawlessly as possible. After this we'll start planning for 2.1.
+The number of issues being reported is starting to drop as we squash more and more bugs. To that end we're going to do one last minor point release: 2.0.6 in approximately 2 weeks time. After this we'll wrap-up our current bi-weekly sprint schedule and focus on 2.1. We are aware there are some significant updates incoming on both the Pixi.js and p2.js fronts. GoodBoy Digital have been hard at work putting some incredible new features in Pixi (and restoring some long-lost ones such as Rope and Strip), so as soon as they leave dev we'll merge with Phaser.
 
 We're also very close to releasing the brand new Phaser web site. The current single-page site has done us well for now, but it was only ever meant to be temporary while the full site was built. This is nearly done and we've got some exciting content to share and plenty of room for growth! Be sure to [subscribe to our monthly newsletter](https://confirmsubscription.com/h/r/369DE48E3E86AF1E) to be notified as soon as it's out.
 
@@ -53,8 +51,7 @@ Finally the list of [community authored Phaser Tutorials](http://www.lessmilk.co
 
 ## Change Log
 
-Version 2.0.5 - "Tanchico" - in development
-
+Version 2.0.5 - "Tanchico" - 20th May 2014
 
 ### Updates
 
@@ -70,27 +67,26 @@ Version 2.0.5 - "Tanchico" - in development
 * Key.justPressed and justReleased incorrectly set the delay value to 2500ms. Now defaults to 50ms (thanks @draklaw, fix #797)
 * Stage.backgroundColor can now accept short-code hex values: `#222`, `#334`, etc.
 * Pointer.withinGame is now accurate based on game scale and updated as the Pointer moves.
-* Stage.bounds is now updated if the game canvas offset changes position. Note that it gives the un-scaled game dimensions.
-
+* Stage.bounds is now updated if the game canvas offset changes position. Note that it contains the un-scaled game dimensions.
 
 ### New Features
 
 * New `force` parameter added to Group.set, setAll, setAllChildren, setProperty which controls if a property is created even if it doesn't exist.
-* Group.hasProperty will check a child for the given property and return a boolean.
+* Group.hasProperty will check a child for the given property and return true if it exists, otherwise false.
 * Phaser.Tween.from allows you to set tween properties that will end up where the current object is (thanks @codevinsky, #792)
 * Input.getPointerFromId will return a pointer with a matching pointerId value, if any. pointerId is a value set by the browser in the DOM event.
 * ArcadePhysics.getObjectsUnderPointer will return all children from a Group that overlap with the given Pointer.
 * InputManager.minPriorityID lets you set the minimum priority level an object needs to be to be checked by a Pointer. Useful for UI layer stacking.
-* New consts: Phaser.Tilemap.NORTH, SOUTH, EAST and WEST to use with the TileMapWalker Plugin but generally just handy to have anyway.
+* New consts: Phaser.Tilemap.NORTH, SOUTH, EAST and WEST to use with plugins and generally just handy to have.
 * BitmapData.processPixelRGB added undefined check (thanks @muclemente, fix #808)
 * Phaser.Utils.transposeArray will transpose the given array and return it.
 * Phaser.Utils.rotateArray will rotate the given array by 90 or 180 degrees in either direction and return it.
 * BitmapData.rect provides a quick way to draw a Rectangle to a BitmapData.
 * Button.onOverMouseOnly is a boolean that causes onOver events to fire only if the pointer was a mouse (i.e. stops onOver sounds triggering on touch)
-* Tilemap.setCollision has a new boolean parameter 'recalculate' which lets you control recalculation of the collision faces (thanks @max-m, #819)
-* Tilemap.setCollisionBetween has a new boolean parameter 'recalculate' which lets you control recalculation of the collision faces (thanks @max-m, #819)
-* Tilemap.setCollisionByExclusion has a new boolean parameter 'recalculate' which lets you control recalculation of the collision faces (thanks @max-m, #819)
-* Tilemap.setCollisionByIndex has a new boolean parameter 'recalculate' which lets you control recalculation of the collision faces (thanks @max-m, #819)
+* Tilemap.setCollision has a new boolean parameter 'recalculate' which lets you control recalculation of collision faces (thanks @max-m, #819)
+* Tilemap.setCollisionBetween has a new boolean parameter 'recalculate' which lets you control recalculation of collision faces (thanks @max-m, #819)
+* Tilemap.setCollisionByExclusion has a new boolean parameter 'recalculate' which lets you control recalculation of collision faces (thanks @max-m, #819)
+* Tilemap.setCollisionByIndex has a new boolean parameter 'recalculate' which lets you control recalculation of collision faces (thanks @max-m, #819)
 * Graphics.drawTriangles will draw an array of vertices to the Graphics object (thanks @codevinsky, #795)
 * Polygon.area will calculate the area of the Polygon (thanks @codevinsky, #795)
 * The Tiled JSON parser will now include Tiled polygons, ellipse and rectangle geometry objects in the resulting map data (thanks @tigermonkey, #791)
@@ -115,13 +111,9 @@ Version 2.0.5 - "Tanchico" - in development
 * New movement data added for a Pointer Locked mouse (Pointer.movementX/Y) (thanks @woutercommandeur, #831)
 * ScaleManager.bounds is a Rectangle object that holds the exact size of the game canvas, taking DOM offset and game scale into account.
 
+### Plugins
 
-
-### New Plugins
-
-* TilemapWalker allows you to set a location marker into a tilemap. You can then move around with commands such as moveForward, turnLeft, etc.
-
-
+The Plugins have now all moved to [their own repository](https://github.com/photonstorm/phaser-plugins)
 
 ### Bug Fixes
 
@@ -146,17 +138,9 @@ Version 2.0.5 - "Tanchico" - in development
 * RetroFont.text would throw WebGL errors due to an issue with Pixi.RenderTexture. Fixed in Phaser and submitted code to Pixi.
 * RenderTexture.resize would throw WebGL errors due to an issue with Pixi.RenderTexture. Fixed in Phaser and submitted code to Pixi.
 * Group.hasProperty fixed to not use hasOwnProperty, but a series of `in` checks (thanks @mgiuffrida for the idea, #829)
+* Tilemap.removeTile sets tiles to null but should set to index of -1 (thanks @draklaw, fix #835)
 
-
-### To Do
-
-P2.Body.collideWorldBounds = true fails.
-
-
-
-
-
-
+### Migration Guide
 
 There is an extensive [Migration Guide](https://github.com/photonstorm/phaser/blob/master/resources/Migration%20Guide.md) available for those converting from Phaser 1.x to 2.x. In the guide we detail the API breaking changes and approach to our new physics system.
 
@@ -329,25 +313,25 @@ Phaser has been used to create hundreds of games, which receive millions of play
 
 ## Road Map
 
-Beyond version 2.0 here are some of the features planned for the future:
+Here are some of the features planned for future releases:
 
 ### Version 2.1 ("Shienar")
 
-* Enhance the State Management, so you can perform non-destructive State swaps and persistence.
-* A more advanced Particle system, one that can render to a single canvas (rather than spawn hundreds of Sprites), more advanced effects, etc.
+* Comprehensive testing across Firefox OS devices, CocoonJS and Ejecta.
 * Ability to control DOM elements from the core game and layer them into the game.
 * Touch Gestures.
-* Support for parallel asset loading.
 
 ### Version 2.2 ("Tarabon")
 
-* Comprehensive testing across Firefox OS devices, CocoonJS and Ejecta.
-* Integration with third party services like Google Play Game Services and Amazon JS SDK.
+* Enhance the State Management, so you can perform non-destructive State swaps and persistence.
+* Support for parallel asset loading.
 * Flash CC HTML5 export integration.
 * Massively enhance the audio side of Phaser. Take more advantage of Web Audio: echo effects, positional sound, etc.
 
 ### Beyond version 2.2
 
+* A more advanced Particle system, one that can render to a single canvas (rather than spawn hundreds of Sprites), more advanced effects, etc.
+* Integration with third party services like Google Play Game Services and Amazon JS SDK.
 * Test out packaging with Node-webkit.
 * Game parameters stored in Google Docs.
 * Look at HiDPI Canvas settings.
@@ -358,6 +342,10 @@ Beyond version 2.0 here are some of the features planned for the future:
 * Look at XDomainRequest for IE9 CORs issues.
 
 ![div](http://phaser.io/images/div1.png)
+
+## MightyEditor - A Visual Phaser Game Editor
+
+[MightyEditor](http://mightyfingers.com/) is a browser-based visual Phaser game editor. Create your maps with ease, position objects and share them in seconds. It also exports to native Phaser code. Excellent for quickly setting-up levels and scenes.
 
 ## Nadion
 

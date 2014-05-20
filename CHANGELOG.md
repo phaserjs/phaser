@@ -2,6 +2,95 @@
 
 There is an extensive [Migration Guide](https://github.com/photonstorm/phaser/blob/master/resources/Migration%20Guide.md) available for those converting from Phaser 1.x to 2.x. In the guide we detail the API breaking changes and approach to our new physics system.
 
+## Version 2.0.5 - "Tanchico" - 20th May 2014
+
+### Updates
+
+* TypeScript definitions fixes and updates (thanks @luispedrofonseca @clark-stevenson @Anahkiasen @adamholdenyall @luispedrofonseca @WillHuxtable)
+* Input.getPointerFromIdentifier docs update to reflect where the identifier comes from. Pointer properties now set to give it fixed defaults (thanks @JirkaDellOro, #793)
+* Pointer.pointerId added which is set by the DOM event (if present in the browser). Note that browsers can and do recycle pointer IDs.
+* Pointer.type and Pointer.exists properties added.
+* QuadTree.retrieve can now accept either a Sprite with a physics body or a Phaser.Rectangle as its parameter.
+* PluginManager.add now accepts additional parameters and if given a function it will pass them all to the Plugin constructor.
+* Tilemap.getTile has a new nonNull parameter. If true it won't return `null` for empty tiles, but will return the actual Tile in that location.
+* Math.interpolateAngles and Math.nearestAngleBetween have been removed for the time being. They threw run-time errors previously.
+* PIXI.InteractionManager is no longer over-written if the object already exists (thanks @georgiee, #818)
+* Key.justPressed and justReleased incorrectly set the delay value to 2500ms. Now defaults to 50ms (thanks @draklaw, fix #797)
+* Stage.backgroundColor can now accept short-code hex values: `#222`, `#334`, etc.
+* Pointer.withinGame is now accurate based on game scale and updated as the Pointer moves.
+* Stage.bounds is now updated if the game canvas offset changes position. Note that it contains the un-scaled game dimensions.
+
+### New Features
+
+* New `force` parameter added to Group.set, setAll, setAllChildren, setProperty which controls if a property is created even if it doesn't exist.
+* Group.hasProperty will check a child for the given property and return true if it exists, otherwise false.
+* Phaser.Tween.from allows you to set tween properties that will end up where the current object is (thanks @codevinsky, #792)
+* Input.getPointerFromId will return a pointer with a matching pointerId value, if any. pointerId is a value set by the browser in the DOM event.
+* ArcadePhysics.getObjectsUnderPointer will return all children from a Group that overlap with the given Pointer.
+* InputManager.minPriorityID lets you set the minimum priority level an object needs to be to be checked by a Pointer. Useful for UI layer stacking.
+* New consts: Phaser.Tilemap.NORTH, SOUTH, EAST and WEST to use with plugins and generally just handy to have.
+* BitmapData.processPixelRGB added undefined check (thanks @muclemente, fix #808)
+* Phaser.Utils.transposeArray will transpose the given array and return it.
+* Phaser.Utils.rotateArray will rotate the given array by 90 or 180 degrees in either direction and return it.
+* BitmapData.rect provides a quick way to draw a Rectangle to a BitmapData.
+* Button.onOverMouseOnly is a boolean that causes onOver events to fire only if the pointer was a mouse (i.e. stops onOver sounds triggering on touch)
+* Tilemap.setCollision has a new boolean parameter 'recalculate' which lets you control recalculation of collision faces (thanks @max-m, #819)
+* Tilemap.setCollisionBetween has a new boolean parameter 'recalculate' which lets you control recalculation of collision faces (thanks @max-m, #819)
+* Tilemap.setCollisionByExclusion has a new boolean parameter 'recalculate' which lets you control recalculation of collision faces (thanks @max-m, #819)
+* Tilemap.setCollisionByIndex has a new boolean parameter 'recalculate' which lets you control recalculation of collision faces (thanks @max-m, #819)
+* Graphics.drawTriangles will draw an array of vertices to the Graphics object (thanks @codevinsky, #795)
+* Polygon.area will calculate the area of the Polygon (thanks @codevinsky, #795)
+* The Tiled JSON parser will now include Tiled polygons, ellipse and rectangle geometry objects in the resulting map data (thanks @tigermonkey, #791)
+* Input.addMoveCallback allows you to bind as many callbacks as you like to the DOM move events (Input.setMoveCallback is now flagged as deprecated)
+* Input.deleteMoveCallback will remove a previously set movement event callback.
+* Mouse will now check if it's over the game canvas or not and set Pointer.withinGame accordingly.
+* Mouse.mouseOutCallback callback added for when the mouse is no longer over the game canvas.
+* Mouse.stopOnGameOut boolean controls if Pointer.stop will be called if the mouse leaves the game canvas (defaults to false)
+* Tilemap.searchTileIndex allows you to search for the first tile matching the given index, with optional skip and reverse parameters.
+* Tilemap.layer is a getter/setter to the current layer object (which can be changed with Tilemap.setLayer)
+* Cache.checkKey added - allows you to pass in a Cache type and a key and return a boolean.
+* Cache.checkCanvasKey(key) - Check if a Canvas key exists in the cache (thanks to @delta11 for the proposal)
+* Cache.checkTextureKey(key) - Check if a Texture key exists in the cache (thanks to @delta11 for the proposal)
+* Cache.checkSoundKey(key) - Check if a Sound key exists in the cache (thanks to @delta11 for the proposal)
+* Cache.checkTextKey(key) - Check if a Text key exists in the cache (thanks to @delta11 for the proposal)
+* Cache.checkPhysicsKey(key) - Check if a Physics key exists in the cache (thanks to @delta11 for the proposal)
+* Cache.checkTilemapKey(key) - Check if a Tilemap key exists in the cache (thanks to @delta11 for the proposal)
+* Cache.checkBinaryKey(key) - Check if a Binary key exists in the cache (thanks to @delta11 for the proposal)
+* Cache.checkBitmapDataKey(key) - Check if a BitmapData key exists in the cache (thanks to @delta11 for the proposal)
+* Cache.checkBitmapFontKey(key) - Check if a BitmapFont key exists in the cache (thanks to @delta11 for the proposal)
+* Cache.checkJSONKey(key) - Check if a JSON key exists in the cache (thanks to @delta11 for the proposal)
+* New movement data added for a Pointer Locked mouse (Pointer.movementX/Y) (thanks @woutercommandeur, #831)
+* ScaleManager.bounds is a Rectangle object that holds the exact size of the game canvas, taking DOM offset and game scale into account.
+
+### Plugins
+
+The Plugins have now all moved to [their own repository](https://github.com/photonstorm/phaser-plugins)
+
+### Bug Fixes
+
+* Line.pointOnLine corrected algorithm (thanks @woutercommandeur, fix #784)
+* Line segment collision fails under certain cicumstances (thanks @woutercommandeur, fix #760)
+* The P2 DistanceConstraint method signature has changed. Updated Phaser so maxForce is now passed as object (fix #788)
+* Moved the this._reversed flag outside of the property loop in Tween (as per tween.js issue 115)
+* Emitter.makeParticles updated to use Array.isArray() check on the key/frame values, so non-string objects can be passed in (thanks @AnderbergE, fix #786)
+* Tilemap.createFromObjects will now force the creation of the property again even if it doesn't exist (regression fix from 2.0.4)
+* Phaser.Line.intersectsPoints fixed by properly checking the boundaries (thanks @woutercommandeur, fix #790)
+* Group.set and setAll were changed in 2.0.4 to not create the property unless it existed. This broke backwards compatibility, so has been fixed.
+* Sound.play now returns the Sound object (thanks @AnderbergE, fix #802)
+* Device Silk UA test updated to avoid Safari conflict (thanks @jflowers45, fix #810)
+* Sound.stop on Samsung S4 would randomly throw a DOM error. Wrapped the audio stop in a try/catch (thanks FSDaniel)
+* RandomDataGenerator.integerInRange would return a non-integer value if you passed in a float.
+* Timer class updated so that code-resumed pauses don't mess up the internal _pausedTotal value (thanks @joelrobichaud, fix #814)
+* Timer class when paused by code after a game-level pause wouldn't set the codepaused flag (thanks @joelrobichaud, fix #814)
+* Stage.backgroundColor now properly accepts hex #RRGGBB and color values 0xRRGGBB again (fix #785)
+* Color.getRGB would return incorrect color components if a color value without alpha was given, now works with both 0xRRGGBB and 0xAARRGGBB.
+* Color.getWebRGB now works regardless if you give an 0xRRGGBB or 0xAARRGGBB color value.
+* If an object was drag enabled with bringToTop, the onDragStop event wouldn't fire until the mouse was next moved (thanks @alpera, fix #813)
+* RetroFont.text would throw WebGL errors due to an issue with Pixi.RenderTexture. Fixed in Phaser and submitted code to Pixi.
+* RenderTexture.resize would throw WebGL errors due to an issue with Pixi.RenderTexture. Fixed in Phaser and submitted code to Pixi.
+* Group.hasProperty fixed to not use hasOwnProperty, but a series of `in` checks (thanks @mgiuffrida for the idea, #829)
+* Tilemap.removeTile sets tiles to null but should set to index of -1 (thanks @draklaw, fix #835)
+
 ## Version 2.0.4 - "Mos Shirare" - 29th April 2014
 
 ### Updates
