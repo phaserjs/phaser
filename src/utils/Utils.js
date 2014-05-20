@@ -15,7 +15,7 @@ Phaser.Utils = {
     /**
      * Transposes the elements of the given Array.
      *
-     * @method transposeArray
+     * @method Phaser.Utils.transposeArray
      * @param {array} array - The array to transpose.
      * @return {array} The transposed array.
      */

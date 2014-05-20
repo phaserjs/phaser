@@ -11,7 +11,7 @@ By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 * View the [Official Website](http://phaser.io)
 * Follow on [Twitter](https://twitter.com/photonstorm)
 * Join the [Forum](http://www.html5gamedevs.com/forum/14-phaser/)
-* Source code for 300+ [Phaser Examples](https://github.com/photonstorm/phaser-examples) or [browse them online](http://examples.phaser.io)
+* Source code for 320+ [Phaser Examples](https://github.com/photonstorm/phaser-examples) or [browse them online](http://examples.phaser.io)
 * View the growing list of [Phaser Plugins](https://github.com/photonstorm/phaser-plugins)
 * Read the [documentation online](http://docs.phaser.io)
 * Join our [#phaserio IRC channel](http://www.html5gamedevs.com/topic/4470-official-phaserio-irc-channel-phaserio-on-freenode/) on freenode
@@ -218,7 +218,7 @@ Note: The `phaser.min.js` file in the build folder contains all 3 physics system
 
 ## Learn By Example
 
-Ever since we started Phaser we've been growing and expanding our extensive set of Examples. Currently over 270 of them!
+Ever since we started Phaser we've been growing and expanding our extensive set of Examples. Currently over 320 of them!
 
 They used to be bundled in the main Phaser repo, but because they got so large and in order to help with versioning we've moved them to their own repo.
 
