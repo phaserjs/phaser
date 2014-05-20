@@ -174,6 +174,12 @@ Phaser.ScaleManager = function (game, width, height) {
     this.margin = new Phaser.Point(0, 0);
 
     /**
+    * @property {Phaser.Rectangle} bounds - The bounds of the scaled game. The x/y will match the offset of the canvas element and the width/height the scaled width and height.
+    * @readonly
+    */
+    this.bounds = new Phaser.Rectangle(0, 0, width, height);
+
+    /**
     * @property {number} aspectRatio - The aspect ratio of the scaled game.
     * @readonly
     */
@@ -684,6 +690,8 @@ Phaser.ScaleManager.prototype = {
         }
 
         Phaser.Canvas.getOffset(this.game.canvas, this.game.stage.offset);
+
+        this.bounds.setTo(this.game.stage.offset.x, this.game.stage.offset.y, this.width, this.height);
 
         this.aspectRatio = this.width / this.height;
 

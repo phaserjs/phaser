@@ -502,6 +502,7 @@
 					</ul>
 				</li>
 				
+				
 			</ul>
 		</div>
 	</div>
@@ -712,7 +713,7 @@ Return a string containing a hex representation of the given color.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-912">line 912</a>
+        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-931">line 931</a>
     </li></ul></dd>
     
 
@@ -1629,7 +1630,7 @@ This does not rely on endianness.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-792">line 792</a>
+        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-811">line 811</a>
     </li></ul></dd>
     
 
@@ -1770,7 +1771,7 @@ This does not rely on endianness.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-804">line 804</a>
+        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-823">line 823</a>
     </li></ul></dd>
     
 
@@ -1911,7 +1912,7 @@ This does not rely on endianness.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-840">line 840</a>
+        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-859">line 859</a>
     </li></ul></dd>
     
 
@@ -2451,7 +2452,7 @@ RGB format information. Each section starts on a newline, 3 lines in total.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-854">line 854</a>
+        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-873">line 873</a>
     </li></ul></dd>
     
 
@@ -2592,7 +2593,7 @@ RGB format information. Each section starts on a newline, 3 lines in total.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-828">line 828</a>
+        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-847">line 847</a>
     </li></ul></dd>
     
 
@@ -2922,7 +2923,7 @@ Set the max value to restrict the maximum color used per channel.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-816">line 816</a>
+        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-835">line 835</a>
     </li></ul></dd>
     
 
@@ -2981,7 +2982,7 @@ Set the max value to restrict the maximum color used per channel.</p>
     
     
     <div class="description">
-        <p>Return the component parts of a color as an Object with the properties alpha, red, green, blue</p>
+        <p>Return the component parts of a color as an Object with the properties alpha, red, green, blue.</p>
 <p>Alpha will only be set if it exist in the given color (0xAARRGGBB)</p>
     </div>
     
@@ -3089,7 +3090,7 @@ Set the max value to restrict the maximum color used per channel.</p>
     
             
 <div class="param-desc">
-    <p>An Object with properties: alpha, red, green, blue.</p>
+    <p>An Object with properties: alpha, red, green, blue (also r, g, b and a). Alpha will only be present if a color value &gt; 16777215 was given.</p>
 </div>
 
 
@@ -3173,7 +3174,7 @@ Set the max value to restrict the maximum color used per channel.</p>
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>Color in RGB (0xRRGGBB) or ARGB format (0xAARRGGBB).</p></td>
         </tr>
 
 	
@@ -3205,7 +3206,7 @@ Set the max value to restrict the maximum color used per channel.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-774">line 774</a>
+        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-795">line 795</a>
     </li></ul></dd>
     
 
@@ -5767,7 +5768,7 @@ Return a string representation of the color in the format 0xAARRGGBB.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-878">line 878</a>
+        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-897">line 897</a>
     </li></ul></dd>
     
 
@@ -6713,7 +6714,7 @@ Return a string representation of the color in the format #RRGGBB.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-895">line 895</a>
+        <a href="Color.js.html">utils/Color.js</a>, <a href="Color.js.html#sunlight-1-line-914">line 914</a>
     </li></ul></dd>
     
 
@@ -7430,7 +7431,7 @@ endian-independent method, use fromRGBA(rgba) and toRGBA(r, g, b, a).</p>
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Tue Apr 29 2014 14:51:20 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Tue May 20 2014 10:05:53 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

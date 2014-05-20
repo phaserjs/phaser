@@ -283,11 +283,21 @@ Phaser.Point.prototype = {
     *
     * @method Phaser.Point#angle
     * @param {Phaser.Point|any} a - The object to get the angle from this Point to.
+    * @param {boolean} [asDegrees=false] - Is the given angle in radians (false) or degrees (true)?
     * @return {number} The angle between the two objects.
     */
-    angle: function (a) {
+    angle: function (a, asDegrees) {
 
-        return Math.atan2(this.x * a.y - this.y * a.x, this.x * a.x + this.y * a.y);
+        if (typeof asDegrees === 'undefined') { asDegrees = false; }
+
+        if (asDegrees)
+        {
+            return Phaser.Math.radToDeg(Math.atan2(a.y - this.y, a.x - this.x));
+        }
+        else
+        {
+            return Math.atan2(a.y - this.y, a.x - this.x);
+        }
 
     },
 
@@ -571,7 +581,8 @@ Phaser.Point.equals = function (a, b) {
 */
 Phaser.Point.angle = function (a, b) {
 
-    return Math.atan2(a.x * b.y - a.y * b.x, a.x * b.x + a.y * b.y);
+    // return Math.atan2(a.x * b.y - a.y * b.x, a.x * b.x + a.y * b.y);
+    return Math.atan2(a.y - b.y, a.x - b.x);
 
 };
 

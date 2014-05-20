@@ -312,41 +312,6 @@ Phaser.RetroFont.prototype.setText = function (content, multiLine, characterSpac
 };
 
 /**
-* Over rides the default PIXI.RenderTexture resize event as we need our baseTexture resized as well.
-*
-* @method Phaser.RetroFont#resize
-* @memberof Phaser.RetroFont
-*/
-Phaser.RetroFont.prototype.resize = function (width, height) {
-
-    this.width = width;
-    this.height = height;
-
-    this.frame.width = this.width;
-    this.frame.height = this.height;
-
-    this.baseTexture.width = this.width;
-    this.baseTexture.height = this.height;
-
-    if (this.renderer.type === PIXI.WEBGL_RENDERER)
-    {
-        this.projection.x = this.width / 2;
-        this.projection.y = -this.height / 2;
-
-        var gl = this.renderer.gl;
-        gl.bindTexture(gl.TEXTURE_2D, this.baseTexture._glTextures[gl.id]);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, this.width, this.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
-    }
-    else
-    {
-        this.textureBuffer.resize(this.width, this.height);
-    }
-
-    PIXI.Texture.frameUpdates.push(this);
-
-};
-
-/**
 * Updates the BitmapData of the Sprite with the text
 *
 * @method Phaser.RetroFont#buildRetroFontText
@@ -357,20 +322,20 @@ Phaser.RetroFont.prototype.buildRetroFontText = function () {
     var cx = 0;
     var cy = 0;
 
+    this.clear();
+
     if (this.multiLine)
     {
         var lines = this._text.split("\n");
 
         if (this.fixedWidth > 0)
         {
-            this.resize(this.fixedWidth, (lines.length * (this.characterHeight + this.customSpacingY)) - this.customSpacingY);
+            this.resize(this.fixedWidth, (lines.length * (this.characterHeight + this.customSpacingY)) - this.customSpacingY, true);
         }
         else
         {
-            this.resize(this.getLongestLine() * (this.characterWidth + this.customSpacingX), (lines.length * (this.characterHeight + this.customSpacingY)) - this.customSpacingY);
+            this.resize(this.getLongestLine() * (this.characterWidth + this.customSpacingX), (lines.length * (this.characterHeight + this.customSpacingY)) - this.customSpacingY, true);
         }
-
-        this.textureBuffer.clear();
 
         //  Loop through each line of text
         for (var i = 0; i < lines.length; i++)
@@ -407,14 +372,12 @@ Phaser.RetroFont.prototype.buildRetroFontText = function () {
     {
         if (this.fixedWidth > 0)
         {
-            this.resize(this.fixedWidth, this.characterHeight);
+            this.resize(this.fixedWidth, this.characterHeight, true);
         }
         else
         {
-            this.resize(this._text.length * (this.characterWidth + this.customSpacingX), this.characterHeight);
+            this.resize(this._text.length * (this.characterWidth + this.customSpacingX), this.characterHeight, true);
         }
-
-        this.textureBuffer.clear();
 
         switch (this.align)
         {
@@ -431,6 +394,8 @@ Phaser.RetroFont.prototype.buildRetroFontText = function () {
                 cx += this.customSpacingX / 2;
                 break;
         }
+
+        this.textureBuffer.clear();
 
         this.pasteLine(this._text, cx, 0, this.customSpacingX);
     }

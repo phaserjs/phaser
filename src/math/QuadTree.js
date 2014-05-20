@@ -284,37 +284,46 @@ Phaser.QuadTree.prototype = {
     },
 
     /**
-    * Return all objects that could collide with the given Sprite.
+    * Return all objects that could collide with the given Sprite or Rectangle.
     *
     * @method Phaser.QuadTree#retrieve
-    * @param {Phaser.Sprite} sprite - The sprite to check against.
+    * @param {Phaser.Sprite|Phaser.Rectangle} source - The source object to check the QuadTree against. Either a Sprite or Rectangle.
     * @return {array} - Array with all detected objects.
     */
-    retrieve: function (sprite) {
+    retrieve: function (source) {
 
-        if (!sprite.body)
+        if (source instanceof Phaser.Rectangle)
         {
-            return this._empty;
+            var returnObjects = this.objects;
+
+            var index = this.getIndex(source);
         }
+        else
+        {
+            if (!source.body)
+            {
+                return this._empty;
+            }
 
-        var returnObjects = this.objects;
+            var returnObjects = this.objects;
 
-        var index = this.getIndex(sprite.body);
+            var index = this.getIndex(source.body);
+        }
 
         if (this.nodes[0])
         {
             //  If rect fits into a subnode ..
             if (index !== -1)
             {
-                returnObjects = returnObjects.concat(this.nodes[index].retrieve(sprite));
+                returnObjects = returnObjects.concat(this.nodes[index].retrieve(source));
             }
             else
             {
                 //  If rect does not fit into a subnode, check it against all subnodes (unrolled for speed)
-                returnObjects = returnObjects.concat(this.nodes[0].retrieve(sprite));
-                returnObjects = returnObjects.concat(this.nodes[1].retrieve(sprite));
-                returnObjects = returnObjects.concat(this.nodes[2].retrieve(sprite));
-                returnObjects = returnObjects.concat(this.nodes[3].retrieve(sprite));
+                returnObjects = returnObjects.concat(this.nodes[0].retrieve(source));
+                returnObjects = returnObjects.concat(this.nodes[1].retrieve(source));
+                returnObjects = returnObjects.concat(this.nodes[2].retrieve(source));
+                returnObjects = returnObjects.concat(this.nodes[3].retrieve(source));
             }
         }
 

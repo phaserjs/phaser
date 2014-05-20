@@ -502,6 +502,7 @@
 					</ul>
 				</li>
 				
+				
 			</ul>
 		</div>
 	</div>
@@ -532,6 +533,71 @@
 * @static
 */
 Phaser.Utils = {
+
+    /**
+     * Transposes the elements of the given Array.
+     *
+     * @method transposeArray
+     * @param {array} array - The array to transpose.
+     * @return {array} The transposed array.
+     */
+    transposeArray: function (array) {
+
+        var result = new Array(array[0].length);
+
+        for (var i = 0; i &lt; array[0].length; i++)
+        {
+            result[i] = new Array(array.length - 1);
+
+            for (var j = array.length - 1; j > -1; j--)
+            {
+                result[i][j] = array[j][i];
+            }
+        }
+
+        return result;
+
+    },
+
+    /**
+     * Rotates the given array.
+     * Based on the routine from http://jsfiddle.net/MrPolywhirl/NH42z/
+     *
+     * @method Phaser.Utils.rotateArray
+     * @param {array} matrix - The array to rotate.
+     * @param {number|string} direction - The amount to rotate. Either a number: 90, -90, 270, -270, 180 or a string: 'rotateLeft', 'rotateRight' or 'rotate180'
+     * @return {array} The rotated array
+     */
+    rotateArray: function (matrix, direction) {
+
+        if (typeof direction !== 'string')
+        {
+            direction = ((direction % 360) + 360) % 360;
+        }
+
+        if (direction === 90 || direction === -270 || direction === 'rotateLeft')
+        {
+            matrix = Phaser.Utils.transposeArray(matrix);
+            matrix = matrix.reverse();
+        }
+        else if (direction === -90 || direction === 270 || direction === 'rotateRight')
+        {
+            matrix = matrix.reverse();
+            matrix = Phaser.Utils.transposeArray(matrix);
+        }
+        else if (Math.abs(direction) === 180 || direction === 'rotate180')
+        {
+            for (var i = 0; i &lt; matrix.length; i++)
+            {
+                matrix[i].reverse();
+            }
+
+            matrix = matrix.reverse();
+        }
+
+        return matrix;
+
+    },
 
     /**
     * Get a unit dimension from a string.
@@ -841,63 +907,59 @@ if (!Array.prototype.forEach)
     };
 }
 
-(function(global, undefined) {
- 
-    /**
-    * Low-budget Float32Array knock-off, suitable for use with P2.js in IE9
-    * Source: http://www.html5gamedevs.com/topic/5988-phaser-12-ie9/
-    * Cameron Foale (http://www.kibibu.com)
-    */
-    if (typeof global.Uint32Array !== "function")
+/**
+* Low-budget Float32Array knock-off, suitable for use with P2.js in IE9
+* Source: http://www.html5gamedevs.com/topic/5988-phaser-12-ie9/
+* Cameron Foale (http://www.kibibu.com)
+*/
+if (typeof window.Uint32Array !== "function")
+{
+    var CheapArray = function(type)
     {
-        var CheapArray = function(type)
-        {
-            var proto = new Array(); // jshint ignore:line
- 
-            global[type] = function(arg) {
- 
-                if (typeof(arg) === "number")
-                {
-                    Array.call(this, arg);
-                    this.length = arg;
- 
-                    for (var i = 0; i &lt; this.length; i++)
-                    {
-                        this[i] = 0;
-                    }
-                }
-                else
-                {
-                    Array.call(this, arg.length);
+        var proto = new Array(); // jshint ignore:line
 
-                    this.length = arg.length;
- 
-                    for (var i = 0; i &lt; this.length; i++)
-                    {
-                        this[i] = arg[i];
-                    }
+        window[type] = function(arg) {
+
+            if (typeof(arg) === "number")
+            {
+                Array.call(this, arg);
+                this.length = arg;
+
+                for (var i = 0; i &lt; this.length; i++)
+                {
+                    this[i] = 0;
                 }
-            };
- 
-            global[type].prototype = proto;
-            global[type].constructor = global[type];
+            }
+            else
+            {
+                Array.call(this, arg.length);
+
+                this.length = arg.length;
+
+                for (var i = 0; i &lt; this.length; i++)
+                {
+                    this[i] = arg[i];
+                }
+            }
         };
- 
-        CheapArray('Uint32Array'); // jshint ignore:line
-        CheapArray('Int16Array');  // jshint ignore:line
-    }
- 
-    /**
-     * Also fix for the absent console in IE9
-     */
-    if (!window.console)
-    {
-        window.console = {};
-        window.console.log = window.console.assert = function(){};
-        window.console.warn = window.console.assert = function(){};
-    }
- 
-})(this);
+
+        window[type].prototype = proto;
+        window[type].constructor = window[type];
+    };
+
+    CheapArray('Uint32Array'); // jshint ignore:line
+    CheapArray('Int16Array');  // jshint ignore:line
+}
+
+/**
+ * Also fix for the absent console in IE9
+ */
+if (!window.console)
+{
+    window.console = {};
+    window.console.log = window.console.assert = function(){};
+    window.console.warn = window.console.assert = function(){};
+}
 </pre>
         </article>
     </section>
@@ -919,7 +981,7 @@ if (!Array.prototype.forEach)
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Tue Apr 29 2014 14:51:16 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Tue May 20 2014 10:05:49 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

@@ -432,7 +432,7 @@ Phaser.Sound.prototype = {
         if (this.isPlaying === true && forceRestart === false && this.override === false)
         {
             //  Use Restart instead
-            return;
+            return this;
         }
 
         if (this.isPlaying && this.override)
@@ -486,7 +486,7 @@ Phaser.Sound.prototype = {
             else
             {
                 console.warn("Phaser.Sound.play: audio marker " + marker + " doesn't exist");
-                return;
+                return this;
             }
         }
         else
@@ -623,6 +623,9 @@ Phaser.Sound.prototype = {
                 }
             }
         }
+
+        return this;
+        
     },
 
     /**
@@ -734,7 +737,13 @@ Phaser.Sound.prototype = {
                 }
                 else
                 {
-                    this._sound.stop(0);
+                    try {
+                        this._sound.stop(0);
+                    }
+                    catch (e)
+                    {
+                        //  Thanks Android 4.4
+                    }
                 }
             }
             else if (this.usingAudioTag)

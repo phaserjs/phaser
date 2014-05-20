@@ -10,7 +10,7 @@
 */
 var Phaser = Phaser || {
 
-	VERSION: '2.0.4',
+	VERSION: '2.0.5',
 	GAMES: [],
 
     AUTO: 0,
@@ -43,6 +43,7 @@ var Phaser = Phaser || {
     ELLIPSE: 16,
     SPRITEBATCH: 17,
     RETROFONT: 18,
+    POINTER: 19,
 
     // The various blend modes supported by pixi / phaser
     blendModes: {
@@ -74,7 +75,7 @@ var Phaser = Phaser || {
 
 };
 
-PIXI.InteractionManager = function () {
-    // We don't need this in Pixi, so we've removed it to save space
-    // however the Stage object expects a reference to it, so here is a dummy entry.
-};
+// We don't need this in Pixi, so we've removed it to save space
+// however the Stage object expects a reference to it, so here is a dummy entry.
+// Ensure that an existing PIXI.InteractionManager is not overriden - in case you're using your own PIXI library.
+PIXI.InteractionManager = PIXI.InteractionManager || function () {};

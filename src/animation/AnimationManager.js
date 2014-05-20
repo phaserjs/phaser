@@ -101,7 +101,7 @@ Phaser.AnimationManager.prototype = {
     */
     add: function (name, frames, frameRate, loop, useNumericIndex) {
 
-        if (this._frameData == null)
+        if (this._frameData === null)
         {
             console.warn('No FrameData available for Phaser.Animation ' + name);
             return;
@@ -126,7 +126,7 @@ Phaser.AnimationManager.prototype = {
         }
 
         //  Create the signals the AnimationManager will emit
-        if (this.sprite.events.onAnimationStart == null)
+        if (this.sprite.events.onAnimationStart === null)
         {
             this.sprite.events.onAnimationStart = new Phaser.Signal();
             this.sprite.events.onAnimationComplete = new Phaser.Signal();

@@ -32,7 +32,7 @@ Phaser.Physics.P2.DistanceConstraint = function (world, bodyA, bodyB, distance, 
 
     distance = world.pxm(distance);
 
-    p2.DistanceConstraint.call(this, bodyA, bodyB, distance, maxForce);
+    p2.DistanceConstraint.call(this, bodyA, bodyB, distance, {maxForce: maxForce});
 
 };
 

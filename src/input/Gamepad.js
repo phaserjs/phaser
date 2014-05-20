@@ -11,8 +11,7 @@
 * HTML5 GAMEPAD API SUPPORT IS AT AN EXPERIMENTAL STAGE!
 * At moment of writing this (end of 2013) only Chrome supports parts of it out of the box. Firefox supports it
 * via prefs flags (about:config, search gamepad). The browsers map the same controllers differently.
-* This class has constans for Windows 7 Chrome mapping of
-* XBOX 360 controller.
+* This class has constants for Windows 7 Chrome mapping of XBOX 360 controller.
 *
 * @class Phaser.Gamepad
 * @constructor

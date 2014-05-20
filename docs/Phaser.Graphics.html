@@ -502,6 +502,7 @@
 					</ul>
 				</li>
 				
+				
 			</ul>
 		</div>
 	</div>
@@ -806,7 +807,7 @@ If you wish to work in radians instead of degrees use the property Sprite.rotati
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Graphics.js.html">gameobjects/Graphics.js</a>, <a href="Graphics.js.html#sunlight-1-line-215">line 215</a>
+        <a href="Graphics.js.html">gameobjects/Graphics.js</a>, <a href="Graphics.js.html#sunlight-1-line-323">line 323</a>
     </li></ul></dd>
     
 
@@ -1010,7 +1011,7 @@ If you wish to work in radians instead of degrees use the property Sprite.rotati
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Graphics.js.html">gameobjects/Graphics.js</a>, <a href="Graphics.js.html#sunlight-1-line-265">line 265</a>
+        <a href="Graphics.js.html">gameobjects/Graphics.js</a>, <a href="Graphics.js.html#sunlight-1-line-374">line 374</a>
     </li></ul></dd>
     
 
@@ -1223,7 +1224,7 @@ So if this Graphics was in a Group that has x: 200, then this will be added to t
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Graphics.js.html">gameobjects/Graphics.js</a>, <a href="Graphics.js.html#sunlight-1-line-234">line 234</a>
+        <a href="Graphics.js.html">gameobjects/Graphics.js</a>, <a href="Graphics.js.html#sunlight-1-line-343">line 343</a>
     </li></ul></dd>
     
 
@@ -1965,6 +1966,392 @@ Draws a {Phaser.Polygon} or a {PIXI.Polygon} filled</p>
         
             
 <dt>
+    <h4 class="name" id="drawTriangle"><span class="type-signature"></span>drawTriangle<span class="signature">(points, <span class="optional">cull</span>)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>/*
+Draws a single {Phaser.Polygon} triangle from a {Phaser.Point} array</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+		<th>Default</th>
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>points</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Array.html">Array</a>.&lt;<a href="Phaser.Point.html">Phaser.Point</a>></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>An array of Phaser.Points that make up the three vertices of this triangle</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>cull</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>Should we check if the triangle is back-facing</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Graphics.js.html">gameobjects/Graphics.js</a>, <a href="Graphics.js.html#sunlight-1-line-215">line 215</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="drawTriangles"><span class="type-signature"></span>drawTriangles<span class="signature">(vertices, {indices=null}, <span class="optional">cull</span>)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>/*
+Draws {Phaser.Polygon} triangles</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+		<th>Default</th>
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>vertices</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Array.html">Array</a>.&lt;<a href="Phaser.Point.html">Phaser.Point</a>></span>
+|
+
+<span class="param-type"><a href="Array.html">Array</a>.&lt;number></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>An array of Phaser.Points or numbers that make up the vertices of the triangles</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>{indices=null}</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Array.html">Array</a>.&lt;number></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>An array of numbers that describe what order to draw the vertices in</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>cull</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>Should we check if the triangle is back-facing</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Graphics.js.html">gameobjects/Graphics.js</a>, <a href="Graphics.js.html#sunlight-1-line-247">line 247</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
     <h4 class="name" id="postUpdate"><span class="type-signature"></span>postUpdate<span class="signature">()</span><span class="type-signature"></span></h4>
     
     
@@ -2195,7 +2582,7 @@ Draws a {Phaser.Polygon} or a {PIXI.Polygon} filled</p>
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Tue Apr 29 2014 14:51:24 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Tue May 20 2014 10:05:57 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

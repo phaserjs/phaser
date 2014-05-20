@@ -502,6 +502,7 @@
 					</ul>
 				</li>
 				
+				
 			</ul>
 		</div>
 	</div>
@@ -536,7 +537,7 @@
     
         
 <dt>
-    <h4 class="name" id="RenderTexture"><span class="type-signature"></span>new RenderTexture<span class="signature">(game, key, <span class="optional">width</span>, <span class="optional">height</span>)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="RenderTexture"><span class="type-signature"></span>new RenderTexture<span class="signature">(game, key, <span class="optional">width</span>, <span class="optional">height</span>, <span class="optional">key</span>, <span class="optional">scaleMode</span>)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -727,6 +728,84 @@
         </tr>
 
 	
+
+        <tr>
+            
+                <td class="name"><code>key</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    ''
+                
+                </td>
+            
+
+            <td class="description last"><p>The key of the RenderTexture in the Cache, if stored there.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>scaleMode</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    Phaser.scaleModes.DEFAULT
+                
+                </td>
+            
+
+            <td class="description last"><p>One of the Phaser.scaleModes consts.</p></td>
+        </tr>
+
+	
 	</tbody>
 </table>
 
@@ -755,7 +834,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="RenderTexture.js.html">gameobjects/RenderTexture.js</a>, <a href="RenderTexture.js.html#sunlight-1-line-16">line 16</a>
+        <a href="RenderTexture.js.html">gameobjects/RenderTexture.js</a>, <a href="RenderTexture.js.html#sunlight-1-line-18">line 18</a>
     </li></ul></dd>
     
 
@@ -883,7 +962,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="RenderTexture.js.html">gameobjects/RenderTexture.js</a>, <a href="RenderTexture.js.html#sunlight-1-line-21">line 21</a>
+        <a href="RenderTexture.js.html">gameobjects/RenderTexture.js</a>, <a href="RenderTexture.js.html#sunlight-1-line-26">line 26</a>
     </li></ul></dd>
     
 
@@ -985,7 +1064,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="RenderTexture.js.html">gameobjects/RenderTexture.js</a>, <a href="RenderTexture.js.html#sunlight-1-line-26">line 26</a>
+        <a href="RenderTexture.js.html">gameobjects/RenderTexture.js</a>, <a href="RenderTexture.js.html#sunlight-1-line-31">line 31</a>
     </li></ul></dd>
     
 
@@ -1087,7 +1166,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="RenderTexture.js.html">gameobjects/RenderTexture.js</a>, <a href="RenderTexture.js.html#sunlight-1-line-31">line 31</a>
+        <a href="RenderTexture.js.html">gameobjects/RenderTexture.js</a>, <a href="RenderTexture.js.html#sunlight-1-line-36">line 36</a>
     </li></ul></dd>
     
 
@@ -1259,7 +1338,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="RenderTexture.js.html">gameobjects/RenderTexture.js</a>, <a href="RenderTexture.js.html#sunlight-1-line-65">line 65</a>
+        <a href="RenderTexture.js.html">gameobjects/RenderTexture.js</a>, <a href="RenderTexture.js.html#sunlight-1-line-70">line 70</a>
     </li></ul></dd>
     
 
@@ -1458,7 +1537,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="RenderTexture.js.html">gameobjects/RenderTexture.js</a>, <a href="RenderTexture.js.html#sunlight-1-line-46">line 46</a>
+        <a href="RenderTexture.js.html">gameobjects/RenderTexture.js</a>, <a href="RenderTexture.js.html#sunlight-1-line-51">line 51</a>
     </li></ul></dd>
     
 
@@ -1599,7 +1678,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="RenderTexture.js.html">gameobjects/RenderTexture.js</a>, <a href="RenderTexture.js.html#sunlight-1-line-67">line 67</a>
+        <a href="RenderTexture.js.html">gameobjects/RenderTexture.js</a>, <a href="RenderTexture.js.html#sunlight-1-line-72">line 72</a>
     </li></ul></dd>
     
 
@@ -1650,7 +1729,7 @@
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Tue Apr 29 2014 14:51:33 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Tue May 20 2014 10:06:06 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

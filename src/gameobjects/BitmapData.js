@@ -335,7 +335,7 @@ Phaser.BitmapData.prototype = {
 
                 result = callback.call(callbackContext, pixel, tx, ty);
 
-                if (result !== false && result !== null)
+                if (result !== false && result !== null && result !== undefined)
                 {
                     this.setPixel32(tx, ty, result.r, result.g, result.b, result.a, false);
                     dirty = true;
@@ -623,6 +623,8 @@ Phaser.BitmapData.prototype = {
 
     /**
     * Get the color of a specific pixel in the context into a color object.
+    * If you have drawn anything to the BitmapData since it was created you must call BitmapData.update to refresh the array buffer,
+    * otherwise this may return out of date color values, or worse - throw a run-time error as it tries to access an array element that doesn't exist.
     *
     * @method Phaser.BitmapData#getPixel
     * @param {number} x - The x coordinate of the pixel to be set. Must lay within the dimensions of this BitmapData.
@@ -655,6 +657,8 @@ Phaser.BitmapData.prototype = {
 
     /**
     * Get the color of a specific pixel including its alpha value.
+    * If you have drawn anything to the BitmapData since it was created you must call BitmapData.update to refresh the array buffer,
+    * otherwise this may return out of date color values, or worse - throw a run-time error as it tries to access an array element that doesn't exist.
     * Note that on little-endian systems the format is 0xAABBGGRR and on big-endian the format is 0xRRGGBBAA.
     *
     * @method Phaser.BitmapData#getPixel32
@@ -673,6 +677,8 @@ Phaser.BitmapData.prototype = {
 
     /**
     * Get the color of a specific pixel including its alpha value as a color object containing r,g,b,a and rgba properties.
+    * If you have drawn anything to the BitmapData since it was created you must call BitmapData.update to refresh the array buffer,
+    * otherwise this may return out of date color values, or worse - throw a run-time error as it tries to access an array element that doesn't exist.
     *
     * @method Phaser.BitmapData#getPixelRGB
     * @param {number} x - The x coordinate of the pixel to be set. Must lay within the dimensions of this BitmapData.
@@ -849,12 +855,34 @@ Phaser.BitmapData.prototype = {
     },
 
     /**
+    * Draws a filled Rectangle to the BitmapData at the given x, y coordinates and width / height in size.
+    *
+    * @method Phaser.BitmapData#rect
+    * @param {number} x - The x coordinate of the top-left of the Rectangle.
+    * @param {number} y - The y coordinate of the top-left of the Rectangle.
+    * @param {number} width - The width of the Rectangle.
+    * @param {number} height - The height of the Rectangle.
+    * @param {string} [fillStyle] - If set the context fillStyle will be set to this value before the rect is drawn.
+    */
+    rect: function (x, y, width, height, fillStyle) {
+
+        if (typeof fillStyle !== 'undefined')
+        {
+            this.context.fillStyle = fillStyle;
+        }
+
+        this.context.fillRect(x, y, width, height);
+        this.context.fill();
+
+    },
+
+    /**
     * Draws a filled Circle to the BitmapData at the given x, y coordinates and radius in size.
     *
     * @method Phaser.BitmapData#circle
-    * @param {number} x - The x coordinate to draw the Circle at.
-    * @param {number} y - The y coordinate to draw the Circle at.
-    * @param {number} radius - The radius of the Circle.
+    * @param {number} x - The x coordinate to draw the Circle at. This is the center of the circle.
+    * @param {number} y - The y coordinate to draw the Circle at. This is the center of the circle.
+    * @param {number} radius - The radius of the Circle in pixels. The radius is half the diameter.
     * @param {string} [fillStyle] - If set the context fillStyle will be set to this value before the circle is drawn.
     */
     circle: function (x, y, radius, fillStyle) {

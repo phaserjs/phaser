@@ -502,6 +502,7 @@
 					</ul>
 				</li>
 				
+				
 			</ul>
 		</div>
 	</div>
@@ -1383,7 +1384,7 @@ You can pass as many tweens as you like to this function, they will each be chai
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tween.js.html">tween/Tween.js</a>, <a href="Tween.js.html#sunlight-1-line-519">line 519</a>
+        <a href="Tween.js.html">tween/Tween.js</a>, <a href="Tween.js.html#sunlight-1-line-543">line 543</a>
     </li></ul></dd>
     
 
@@ -1524,7 +1525,7 @@ You can pass as many tweens as you like to this function, they will each be chai
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tween.js.html">tween/Tween.js</a>, <a href="Tween.js.html#sunlight-1-line-440">line 440</a>
+        <a href="Tween.js.html">tween/Tween.js</a>, <a href="Tween.js.html#sunlight-1-line-464">line 464</a>
     </li></ul></dd>
     
 
@@ -1665,7 +1666,7 @@ You can pass as many tweens as you like to this function, they will each be chai
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tween.js.html">tween/Tween.js</a>, <a href="Tween.js.html#sunlight-1-line-490">line 490</a>
+        <a href="Tween.js.html">tween/Tween.js</a>, <a href="Tween.js.html#sunlight-1-line-514">line 514</a>
     </li></ul></dd>
     
 
@@ -1691,6 +1692,397 @@ You can pass as many tweens as you like to this function, they will each be chai
             
 <div class="param-desc">
     <p>Itself.</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type"><a href="Phaser.Tween.html">Phaser.Tween</a></span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="from"><span class="type-signature"></span>from<span class="signature">(properties, <span class="optional">duration</span>, <span class="optional">ease</span>, <span class="optional">autoStart</span>, <span class="optional">delay</span>, <span class="optional">repeat</span>, <span class="optional">yoyo</span>)</span><span class="type-signature"> &rarr; {<a href="Phaser.Tween.html">Phaser.Tween</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Configure a Reverse Tween</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+		<th>Default</th>
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>properties</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>Properties you want to tween from.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>duration</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    1000
+                
+                </td>
+            
+
+            <td class="description last"><p>Duration of this tween in ms.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>ease</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    null
+                
+                </td>
+            
+
+            <td class="description last"><p>Easing function. If not set it will default to Phaser.Easing.Linear.None.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>autoStart</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>Whether this tween will start automatically or not.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>delay</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
+            
+
+            <td class="description last"><p>Delay before this tween will start, defaults to 0 (no delay). Value given is in ms.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>repeat</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
+            
+
+            <td class="description last"><p>Should the tween automatically restart once complete? If you want it to run forever set as Number.MAX_VALUE. This ignores any chained tweens.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>yoyo</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>A tween that yoyos will reverse itself and play backwards automatically. A yoyo'd tween doesn't fire the Tween.onComplete event, so listen for Tween.onLoop instead.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Tween.js.html">tween/Tween.js</a>, <a href="Tween.js.html#sunlight-1-line-262">line 262</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>This Tween object.</p>
 </div>
 
 
@@ -1865,7 +2257,7 @@ It ignores delay and repeat counts and any chained tweens. Just one play through
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tween.js.html">tween/Tween.js</a>, <a href="Tween.js.html#sunlight-1-line-312">line 312</a>
+        <a href="Tween.js.html">tween/Tween.js</a>, <a href="Tween.js.html#sunlight-1-line-336">line 336</a>
     </li></ul></dd>
     
 
@@ -2007,7 +2399,7 @@ Also available: Phaser.Math.bezierInterpolation and Phaser.Math.catmullRomInterp
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tween.js.html">tween/Tween.js</a>, <a href="Tween.js.html#sunlight-1-line-504">line 504</a>
+        <a href="Tween.js.html">tween/Tween.js</a>, <a href="Tween.js.html#sunlight-1-line-528">line 528</a>
     </li></ul></dd>
     
 
@@ -2105,7 +2497,7 @@ game.add.tween(p).to({ x: 700 }, 1000, Phaser.Easing.Linear.None, true)
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tween.js.html">tween/Tween.js</a>, <a href="Tween.js.html#sunlight-1-line-533">line 533</a>
+        <a href="Tween.js.html">tween/Tween.js</a>, <a href="Tween.js.html#sunlight-1-line-557">line 557</a>
     </li></ul></dd>
     
 
@@ -2246,7 +2638,7 @@ game.add.tween(p).to({ x: 700 }, 1000, Phaser.Easing.Linear.None, true)
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tween.js.html">tween/Tween.js</a>, <a href="Tween.js.html#sunlight-1-line-552">line 552</a>
+        <a href="Tween.js.html">tween/Tween.js</a>, <a href="Tween.js.html#sunlight-1-line-576">line 576</a>
     </li></ul></dd>
     
 
@@ -2338,7 +2730,7 @@ game.add.tween(p).to({ x: 700 }, 1000, Phaser.Easing.Linear.None, true)
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tween.js.html">tween/Tween.js</a>, <a href="Tween.js.html#sunlight-1-line-568">line 568</a>
+        <a href="Tween.js.html">tween/Tween.js</a>, <a href="Tween.js.html#sunlight-1-line-592">line 592</a>
     </li></ul></dd>
     
 
@@ -2456,7 +2848,7 @@ game.add.tween(p).to({ x: 700 }, 1000, Phaser.Easing.Linear.None, true)
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tween.js.html">tween/Tween.js</a>, <a href="Tween.js.html#sunlight-1-line-454">line 454</a>
+        <a href="Tween.js.html">tween/Tween.js</a>, <a href="Tween.js.html#sunlight-1-line-478">line 478</a>
     </li></ul></dd>
     
 
@@ -2548,7 +2940,7 @@ game.add.tween(p).to({ x: 700 }, 1000, Phaser.Easing.Linear.None, true)
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tween.js.html">tween/Tween.js</a>, <a href="Tween.js.html#sunlight-1-line-596">line 596</a>
+        <a href="Tween.js.html">tween/Tween.js</a>, <a href="Tween.js.html#sunlight-1-line-620">line 620</a>
     </li></ul></dd>
     
 
@@ -2617,7 +3009,7 @@ game.add.tween(p).to({ x: 700 }, 1000, Phaser.Easing.Linear.None, true)
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tween.js.html">tween/Tween.js</a>, <a href="Tween.js.html#sunlight-1-line-262">line 262</a>
+        <a href="Tween.js.html">tween/Tween.js</a>, <a href="Tween.js.html#sunlight-1-line-286">line 286</a>
     </li></ul></dd>
     
 
@@ -2709,7 +3101,7 @@ game.add.tween(p).to({ x: 700 }, 1000, Phaser.Easing.Linear.None, true)
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tween.js.html">tween/Tween.js</a>, <a href="Tween.js.html#sunlight-1-line-422">line 422</a>
+        <a href="Tween.js.html">tween/Tween.js</a>, <a href="Tween.js.html#sunlight-1-line-446">line 446</a>
     </li></ul></dd>
     
 
@@ -3241,7 +3633,7 @@ game.add.tween(p).to({ x: 700 }, 1000, Phaser.Easing.Linear.None, true)
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tween.js.html">tween/Tween.js</a>, <a href="Tween.js.html#sunlight-1-line-632">line 632</a>
+        <a href="Tween.js.html">tween/Tween.js</a>, <a href="Tween.js.html#sunlight-1-line-656">line 656</a>
     </li></ul></dd>
     
 
@@ -3383,7 +3775,7 @@ Used in combination with repeat you can create endless loops.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tween.js.html">tween/Tween.js</a>, <a href="Tween.js.html#sunlight-1-line-469">line 469</a>
+        <a href="Tween.js.html">tween/Tween.js</a>, <a href="Tween.js.html#sunlight-1-line-493">line 493</a>
     </li></ul></dd>
     
 
@@ -3457,7 +3849,7 @@ Used in combination with repeat you can create endless loops.</p>
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Tue Apr 29 2014 14:51:37 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Tue May 20 2014 10:06:11 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

@@ -334,12 +334,12 @@ Phaser.Particles.Arcade.Emitter.prototype.makeParticles = function (keys, frames
 
     while (i < quantity)
     {
-        if (typeof keys === 'object')
+        if (Array.isArray(keys))
         {
             rndKey = this.game.rnd.pick(keys);
         }
 
-        if (typeof frames === 'object')
+        if (Array.isArray(frames))
         {
             rndFrame = this.game.rnd.pick(frames);
         }
