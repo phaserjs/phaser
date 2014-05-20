@@ -1446,7 +1446,6 @@ Phaser.Physics.P2.prototype = {
             {
                 output.push(body);
             }
-
         }
 
         return output;
@@ -1471,7 +1470,7 @@ Phaser.Physics.P2.prototype = {
             map.layers[layer].bodies[i].destroy();
         }
 
-        map.layers[layer].bodies.length = [];
+        map.layers[layer].bodies.length = 0;
 
     },
 
