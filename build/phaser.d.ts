@@ -3724,7 +3724,7 @@ declare module Phaser {
         circle: Phaser.Circle;
         clientX: number;
         clientY: number;
-        duation: number;
+        duration: number;
         exists: boolean;
         game: Phaser.Game;
         id: number;

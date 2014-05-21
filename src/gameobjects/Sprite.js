@@ -117,6 +117,12 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     this.body = null;
 
     /**
+    * @property {boolean} alive - A useful boolean to control if the Sprite is alive or dead (in terms of your gameplay, it doesn't effect rendering). Also linked to Sprite.health and Sprite.damage.
+    * @default
+    */
+    this.alive = true;
+
+    /**
     * @property {number} health - Health value. Used in combination with damage() to allow for quick killing of Sprites.
     */
     this.health = 1;

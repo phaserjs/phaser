@@ -52,6 +52,8 @@ Version 2.0.6 - "Jornhill" - -in development-
 
 ### Bug Fixes
 
+* Sprite.alive property now explicitly defined on the Sprite prototype (thanks @lewster32, #841)
+
 ### Migration Guide
 
 There is an extensive [Migration Guide](https://github.com/photonstorm/phaser/blob/master/resources/Migration%20Guide.md) available for those converting from Phaser 1.x to 2.x. In the guide we detail the API breaking changes and approach to our new physics system.
