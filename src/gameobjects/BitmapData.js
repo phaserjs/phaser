@@ -776,10 +776,11 @@ Phaser.BitmapData.prototype = {
     },
 
     /**
-    * Draws the given image to this BitmapData at the coordinates specified. If you need to only draw a part of the image use BitmapData.copyPixels instead.
+    * Draws the given image or Game Object to this BitmapData at the coordinates specified.
+    * If you need to only draw a part of the image use BitmapData.copyPixels instead.
     *
     * @method Phaser.BitmapData#draw
-    * @param {Phaser.BitmapData|HTMLImage|string} source - The Image to draw. If you give a string it will try and find the Image in the Game.Cache.
+    * @param {Phaser.Sprite|Phaser.Image|Phaser.BitmapData|HTMLImage|string} source - The Image to draw. If you give a string it will try and find the Image in the Game.Cache.
     * @param {number} [x=0] - The x coordinate to draw the image to.
     * @param {number} [y=0] - The y coordinate to draw the image to.
     */
@@ -797,6 +798,11 @@ Phaser.BitmapData.prototype = {
         {
             this.context.drawImage(source.canvas, 0, 0, source.width, source.height, x, y, source.width, source.height);
         }
+        else if (source instanceof Phaser.Image || source instanceof Phaser.Sprite)
+        {
+            var frame = sprite.texture.frame;
+            this.context.drawImage(sprite.texture.baseTexture.source, frame.x, frame.y, frame.width, frame.height, x, y, frame.width, frame.height);
+        }
         else
         {
             this.context.drawImage(source, 0, 0, source.width, source.height, x, y, source.width, source.height);
@@ -807,6 +813,8 @@ Phaser.BitmapData.prototype = {
     },
 
     /**
+    * DEPRECATED: Use BitmapData.draw instead.
+    * 
     * Draws the given image to this BitmapData at the coordinates specified.
     * If you need to only draw a part of the image use BitmapData.copyPixels instead.
     *
@@ -820,11 +828,7 @@ Phaser.BitmapData.prototype = {
         if (typeof x === 'undefined') { x = 0; }
         if (typeof y === 'undefined') { y = 0; }
 
-        var frame = sprite.texture.frame;
-
-        this.context.drawImage(sprite.texture.baseTexture.source, frame.x, frame.y, frame.width, frame.height, x, y, frame.width, frame.height);
-
-        this.dirty = true;
+        this.draw(sprite, x, y);
 
     },
 
@@ -832,34 +836,27 @@ Phaser.BitmapData.prototype = {
     * Draws the given image onto this BitmapData using an image as an alpha mask.
     *
     * @method Phaser.BitmapData#alphaMask
-    * @param {HTMLImage|string} source - The Image to draw. If you give a key it will try and find the Image in the Game.Cache.
-    * @param {HTMLImage|string} mask - The Image to use as the alpha mask. If you give a key it will try and find the Image in the Game.Cache.
+    * @param {Phaser.Sprite|Phaser.Image|Phaser.BitmapData|HTMLImage|string} source - The Image to draw. If you give a key it will try and find the Image in the Game.Cache.
+    * @param {Phaser.Sprite|Phaser.Image|Phaser.BitmapData|HTMLImage|string} mask - The Image to use as the alpha mask. If you give a key it will try and find the Image in the Game.Cache.
+    * @param {number} [x=0] - The x coordinate to draw the source image to.
+    * @param {number} [y=0] - The y coordinate to draw the source image to.
+    * @param {number} [x2=0] - The x coordinate to draw the mask image to.
+    * @param {number} [y2=0] - The y coordinate to draw the mask image to.
     */
-    alphaMask: function (source, mask) {
+    alphaMask: function (source, mask, x, y, x2, y2) {
+
+        if (typeof x === 'undefined') { x = 0; }
+        if (typeof y === 'undefined') { y = 0; }
+        if (typeof x2 === 'undefined') { x2 = 0; }
+        if (typeof y2 === 'undefined') { y2 = 0; }
 
         var temp = this.context.globalCompositeOperation;
 
-        if (typeof mask === 'string')
-        {
-            mask = this.game.cache.getImage(mask);
-        }
-
-        if (mask)
-        {
-            this.context.drawImage(mask, 0, 0);
-        }
+        this.draw(mask, x, y);
 
         this.context.globalCompositeOperation = 'source-atop';
 
-        if (typeof source === 'string')
-        {
-            source = this.game.cache.getImage(source);
-        }
-
-        if (source)
-        {
-            this.context.drawImage(source, 0, 0);
-        }
+        this.draw(source, x2, y2);
 
         this.context.globalCompositeOperation = temp;
 

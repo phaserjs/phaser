@@ -48,7 +48,9 @@ Version 2.0.6 - "Jornhill" - -in development-
 
 ### Updates
 
-* BitmapData.draw can now take a BitmapData object as a source type.
+* BitmapData.draw can now also take a Phaser.Sprite, Phaser.Image or BitmapData object as a source type. As a result BitmapData.drawSprite is now depcreated.
+* BitmapData.alphaMask can now also take a Phaser.Sprite, Phaser.Image or BitmapData object as a source type.
+* BitmapData.alphaMask has 4 new optional parameters: x, y, x2 and y2 to control exactly where the source and mask images are drawn.
 
 ### New Features
 
