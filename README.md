@@ -50,6 +50,11 @@ Version 2.0.6 - "Jornhill" - -in development-
 
 ### New Features
 
+* BitmapData.extract has 4 new parameters: r2, g2, b2, a2 which let you re-color the extract pixels as they are drawn to the new BitmapData.
+* BitmapData.load will take a game object or string and resize the BitmapData to match it and then draw the pixels in.
+
+
+
 ### Bug Fixes
 
 * Sprite.alive property now explicitly defined on the Sprite prototype (thanks @lewster32, #841)

@@ -182,6 +182,35 @@ Phaser.BitmapData.prototype = {
     },
 
     /**
+    * Takes the given Game Object, resizes this BitmapData to match it and then draws it into this BitmapDatas canvas, ready for further processing.
+    * The source game object is not modified by this operation.
+    * If the source object uses a texture as part of a Texture Atlas or Sprite Sheet, only the current frame will be used for sizing and draw.
+    * If a string is given it will assume it's a cache key and look in Phaser.Cache for an image key matching the string.
+    *
+    * @method Phaser.BitmapData#load
+    * @param {Phaser.Sprite|Phaser.Image|Phaser.BitmapData|string} source - The object that will be used to populate this BitmapData.
+    */
+    load: function (source) {
+
+        if (this.width !== source.width || this.height !== source.height)
+        {
+            this.resize(source.width, source.height);
+        }
+
+        this.cls();
+
+        if (source instanceof Phaser.BitmapData || typeof source === 'string')
+        {
+            this.draw(source, 0, 0);
+        }
+        else if (source instanceof Phaser.Image || source instanceof Phaser.Sprite)
+        {
+            this.drawSprite(source, 0, 0);
+        }
+
+    },
+
+    /**
     * Clears the BitmapData context using a clearRect.
     *
     * @method Phaser.BitmapData#cls
@@ -760,7 +789,8 @@ Phaser.BitmapData.prototype = {
     },
 
     /**
-    * Draws the given image to this BitmapData at the coordinates specified. If you need to only draw a part of the image use BitmapData.copyPixels instead.
+    * Draws the given image to this BitmapData at the coordinates specified.
+    * If you need to only draw a part of the image use BitmapData.copyPixels instead.
     *
     * @method Phaser.BitmapData#drawSprite
     * @param {Phaser.Sprite|Phaser.Image} sprite - The Sprite to draw. Must have a loaded texture and frame.
@@ -821,9 +851,13 @@ Phaser.BitmapData.prototype = {
 
     /**
     * Scans this BitmapData for all pixels matching the given r,g,b values and then draws them into the given destination BitmapData.
+    * The original BitmapData remains unchanged.
     * The destination BitmapData must be large enough to receive all of the pixels that are scanned.
     * Although the destination BitmapData is returned from this method, it's actually modified directly in place, meaning this call is perfectly valid:
     * `picture.extract(mask, r, g, b)`
+    * You can specify optional r2, g2, b2 color values. If given the pixel written to the destination bitmap will be of the r2, g2, b2 color.
+    * If not given it will be written as the same color it was extracted. You can provide one or more alternative colors, allowing you to tint
+    * the color during extraction.
     *
     * @method Phaser.BitmapData#extract
     * @param {Phaser.BitmapData} destination - The BitmapData that the extracts pixels will be drawn to.
@@ -831,17 +865,25 @@ Phaser.BitmapData.prototype = {
     * @param {number} g - The green color component, in the range 0 - 255.
     * @param {number} b - The blue color component, in the range 0 - 255.
     * @param {number} [a=255] - The alpha color component, in the range 0 - 255.
+    * @param {number} [r2] - An alternative red color component to be written to the destination, in the range 0 - 255.
+    * @param {number} [g2] - An alternative green color component to be written to the destination, in the range 0 - 255.
+    * @param {number} [b2] - An alternative blue color component to be written to the destination, in the range 0 - 255.
+    * @param {number} [a2] - An alternative alpha color component to be written to the destination, in the range 0 - 255.
     * @returns {Phaser.BitmapData} The BitmapData that the extract pixels were drawn on.
     */
-    extract: function (destination, r, g, b, a) {
+    extract: function (destination, r, g, b, a, r2, g2, b2, a2) {
 
         if (typeof a === 'undefined') { a = 255; }
+        if (typeof r2 === 'undefined') { r2 = r; }
+        if (typeof g2 === 'undefined') { g2 = g; }
+        if (typeof b2 === 'undefined') { b2 = b; }
+        if (typeof a2 === 'undefined') { a2 = a; }
 
         this.processPixelRGB(
             function(pixel, x, y){
                 if (pixel.r === r && pixel.g === g && pixel.b === b)
                 {
-                    destination.setPixel32(x, y, r, g, b, a, false);
+                    destination.setPixel32(x, y, r2, g2, b2, a2, false);
                 }
                 return false;
             },
