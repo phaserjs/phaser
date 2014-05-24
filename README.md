@@ -58,6 +58,7 @@ Version 2.0.6 - "Jornhill" - -in development-
 ### Bug Fixes
 
 * Sprite.alive property now explicitly defined on the Sprite prototype (thanks @lewster32, #841)
+* BitmapData.resize now properly updates the baseTexture and texture dimensions.
 
 ### Migration Guide
 

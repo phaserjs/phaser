@@ -114,6 +114,8 @@ Phaser.BitmapData = function (game, key, width, height) {
     */
     this.textureFrame = new Phaser.Frame(0, 0, 0, width, height, 'bitmapData', game.rnd.uuid());
 
+    this.texture.frame = this.textureFrame;
+
     /**
     * @property {number} type - The const type of this object.
     * @default
@@ -192,6 +194,11 @@ Phaser.BitmapData.prototype = {
     */
     load: function (source) {
 
+        if (typeof source === 'string')
+        {
+            source = this.game.cache.getImage(source);
+        }
+
         if (this.width !== source.width || this.height !== source.height)
         {
             this.resize(source.width, source.height);
@@ -199,13 +206,13 @@ Phaser.BitmapData.prototype = {
 
         this.cls();
 
-        if (source instanceof Phaser.BitmapData || typeof source === 'string')
-        {
-            this.draw(source, 0, 0);
-        }
-        else if (source instanceof Phaser.Image || source instanceof Phaser.Sprite)
+        if (source instanceof Phaser.Image || source instanceof Phaser.Sprite)
         {
             this.drawSprite(source, 0, 0);
+        }
+        else
+        {
+            this.draw(source, 0, 0);
         }
 
     },
@@ -261,8 +268,12 @@ Phaser.BitmapData.prototype = {
             this.height = height;
             this.canvas.width = width;
             this.canvas.height = height;
+            this.baseTexture.width = width;
+            this.baseTexture.height = height;
             this.textureFrame.width = width;
             this.textureFrame.height = height;
+            this.texture.width = width;
+            this.texture.height = height;
             this.refreshBuffer();
         }
 
@@ -781,6 +792,7 @@ Phaser.BitmapData.prototype = {
 
         if (source)
         {
+            console.log('draw', 0, 0, source.width, source.height, x, y, source.width, source.height);
             this.context.drawImage(source, 0, 0, source.width, source.height, x, y, source.width, source.height);
         }
 
