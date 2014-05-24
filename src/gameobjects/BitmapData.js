@@ -777,14 +777,16 @@ Phaser.BitmapData.prototype = {
 
     /**
     * Draws the given image or Game Object to this BitmapData at the coordinates specified.
-    * If you need to only draw a part of the image use BitmapData.copyPixels instead.
+    * You can use the optional width and height values to 'stretch' the image as it's drawn.
     *
     * @method Phaser.BitmapData#draw
     * @param {Phaser.Sprite|Phaser.Image|Phaser.BitmapData|HTMLImage|string} source - The Image to draw. If you give a string it will try and find the Image in the Game.Cache.
     * @param {number} [x=0] - The x coordinate to draw the image to.
     * @param {number} [y=0] - The y coordinate to draw the image to.
+    * @param {number} [width] - The width when drawing the image. You can use this to optionally stretch the drawn image horizontally.
+    * @param {number} [height] - The height when drawing the image. You can use this to optionally stretch the drawn image vertically.
     */
-    draw: function (source, x, y) {
+    draw: function (source, x, y, width, height) {
 
         if (typeof x === 'undefined') { x = 0; }
         if (typeof y === 'undefined') { y = 0; }
@@ -794,19 +796,39 @@ Phaser.BitmapData.prototype = {
             source = this.game.cache.getImage(source);
         }
 
-        if (source instanceof Phaser.BitmapData)
+        var src = source;
+        var sx = 0;
+        var sy = 0;
+        var sw = 0;
+        var sh = 0;
+
+        if (source instanceof Phaser.Image || source instanceof Phaser.Sprite)
         {
-            this.context.drawImage(source.canvas, 0, 0, source.width, source.height, x, y, source.width, source.height);
-        }
-        else if (source instanceof Phaser.Image || source instanceof Phaser.Sprite)
-        {
+            src = sprite.texture.baseTexture.source;
             var frame = sprite.texture.frame;
-            this.context.drawImage(sprite.texture.baseTexture.source, frame.x, frame.y, frame.width, frame.height, x, y, frame.width, frame.height);
+            sx = frame.x;
+            sy = frame.y;
+            sw = frame.width;
+            sh = frame.height;
+            // this.context.drawImage(sprite.texture.baseTexture.source, frame.x, frame.y, frame.width, frame.height, x, y, frame.width, frame.height);
         }
         else
         {
-            this.context.drawImage(source, 0, 0, source.width, source.height, x, y, source.width, source.height);
+            if (source instanceof Phaser.BitmapData)
+            {
+                src = source.canvas;
+                // this.context.drawImage(source.canvas, 0, 0, source.width, source.height, x, y, source.width, source.height);
+            }
+
+            sw = source.width;
+            sh = source.height;
+            // this.context.drawImage(source, 0, 0, source.width, source.height, x, y, source.width, source.height);
         }
+
+        if (typeof width === 'undefined') { width = sw; }
+        if (typeof height === 'undefined') { height = sh; }
+
+        this.context.drawImage(src, sx, sy, sw, sh, x, y, width, height);
 
         this.dirty = true;
 
@@ -837,27 +859,35 @@ Phaser.BitmapData.prototype = {
     *
     * @method Phaser.BitmapData#alphaMask
     * @param {Phaser.Sprite|Phaser.Image|Phaser.BitmapData|HTMLImage|string} source - The Image to draw. If you give a key it will try and find the Image in the Game.Cache.
-    * @param {Phaser.Sprite|Phaser.Image|Phaser.BitmapData|HTMLImage|string} mask - The Image to use as the alpha mask. If you give a key it will try and find the Image in the Game.Cache.
-    * @param {number} [x=0] - The x coordinate to draw the source image to.
-    * @param {number} [y=0] - The y coordinate to draw the source image to.
-    * @param {number} [x2=0] - The x coordinate to draw the mask image to.
-    * @param {number} [y2=0] - The y coordinate to draw the mask image to.
+    * @param {Phaser.Sprite|Phaser.Image|Phaser.BitmapData|HTMLImage|string|null} [mask] - The Image to use as the alpha mask. If you give a key it will try and find the Image in the Game.Cache. If you pass nothing or null it will use itself.
+    * @param {Phaser.Rectangle} [sourceRect] - A Rectangle where x/y define the coordinates to draw the Source image to and width/height define the size.
+    * @param {Phaser.Rectangle} [maskRect] - A Rectangle where x/y define the coordinates to draw the Mask image to and width/height define the size.
     */
-    alphaMask: function (source, mask, x, y, x2, y2) {
+    alphaMask: function (source, mask, sourceRect, maskRect) {
 
-        if (typeof mask === 'undefined') { mask = this; }
-        if (typeof x === 'undefined') { x = 0; }
-        if (typeof y === 'undefined') { y = 0; }
-        if (typeof x2 === 'undefined') { x2 = 0; }
-        if (typeof y2 === 'undefined') { y2 = 0; }
+        if (typeof mask === 'undefined' || mask === null) { mask = this; }
 
         var temp = this.context.globalCompositeOperation;
 
-        this.draw(mask, x, y);
+        if (typeof maskRect === 'undefined' || maskRect === null)
+        {
+            this.draw(mask);
+        }
+        else
+        {
+            this.draw(mask, maskRect.x, maskRect.y, maskRect.width, maskRect.height);
+        }
 
         this.context.globalCompositeOperation = 'source-atop';
 
-        this.draw(source, x2, y2);
+        if (typeof sourceRect === 'undefined' || sourceRect === null)
+        {
+            this.draw(source);
+        }
+        else
+        {
+            this.draw(source, sourceRect.x, sourceRect.y, sourceRect.width, sourceRect.height);
+        }
 
         this.context.globalCompositeOperation = temp;
 
