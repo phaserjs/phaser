@@ -199,10 +199,7 @@ Phaser.BitmapData.prototype = {
             source = this.game.cache.getImage(source);
         }
 
-        if (this.width !== source.width || this.height !== source.height)
-        {
-            this.resize(source.width, source.height);
-        }
+        this.resize(source.width, source.height);
 
         this.cls();
 
@@ -214,6 +211,8 @@ Phaser.BitmapData.prototype = {
         {
             this.draw(source, 0, 0);
         }
+
+        this.update();
 
     },
 
@@ -266,18 +265,22 @@ Phaser.BitmapData.prototype = {
         {
             this.width = width;
             this.height = height;
+
             this.canvas.width = width;
             this.canvas.height = height;
+
             this.baseTexture.width = width;
             this.baseTexture.height = height;
+
             this.textureFrame.width = width;
             this.textureFrame.height = height;
+
             this.texture.width = width;
             this.texture.height = height;
-            this.refreshBuffer();
-        }
 
-        this.dirty = true;
+            this.refreshBuffer();
+            this.dirty = true;
+        }
 
     },
 
@@ -776,7 +779,7 @@ Phaser.BitmapData.prototype = {
     * Draws the given image to this BitmapData at the coordinates specified. If you need to only draw a part of the image use BitmapData.copyPixels instead.
     *
     * @method Phaser.BitmapData#draw
-    * @param {HTMLImage|string} source - The Image to draw. If you give a string it will try and find the Image in the Game.Cache.
+    * @param {Phaser.BitmapData|HTMLImage|string} source - The Image to draw. If you give a string it will try and find the Image in the Game.Cache.
     * @param {number} [x=0] - The x coordinate to draw the image to.
     * @param {number} [y=0] - The y coordinate to draw the image to.
     */
@@ -790,9 +793,12 @@ Phaser.BitmapData.prototype = {
             source = this.game.cache.getImage(source);
         }
 
-        if (source)
+        if (source instanceof Phaser.BitmapData)
         {
-            console.log('draw', 0, 0, source.width, source.height, x, y, source.width, source.height);
+            this.context.drawImage(source.canvas, 0, 0, source.width, source.height, x, y, source.width, source.height);
+        }
+        else
+        {
             this.context.drawImage(source, 0, 0, source.width, source.height, x, y, source.width, source.height);
         }
 
@@ -864,7 +870,7 @@ Phaser.BitmapData.prototype = {
     /**
     * Scans this BitmapData for all pixels matching the given r,g,b values and then draws them into the given destination BitmapData.
     * The original BitmapData remains unchanged.
-    * The destination BitmapData must be large enough to receive all of the pixels that are scanned.
+    * The destination BitmapData must be large enough to receive all of the pixels that are scanned unless the 'resize' parameter is true.
     * Although the destination BitmapData is returned from this method, it's actually modified directly in place, meaning this call is perfectly valid:
     * `picture.extract(mask, r, g, b)`
     * You can specify optional r2, g2, b2 color values. If given the pixel written to the destination bitmap will be of the r2, g2, b2 color.
@@ -876,26 +882,32 @@ Phaser.BitmapData.prototype = {
     * @param {number} r - The red color component, in the range 0 - 255.
     * @param {number} g - The green color component, in the range 0 - 255.
     * @param {number} b - The blue color component, in the range 0 - 255.
-    * @param {number} [a=255] - The alpha color component, in the range 0 - 255.
+    * @param {number} [a=255] - The alpha color component, in the range 0 - 255 that the new pixel will be drawn at.
+    * @param {boolean} [resize=false] - Should the destination BitmapData be resized to match this one before the pixels are copied?
     * @param {number} [r2] - An alternative red color component to be written to the destination, in the range 0 - 255.
     * @param {number} [g2] - An alternative green color component to be written to the destination, in the range 0 - 255.
     * @param {number} [b2] - An alternative blue color component to be written to the destination, in the range 0 - 255.
-    * @param {number} [a2] - An alternative alpha color component to be written to the destination, in the range 0 - 255.
     * @returns {Phaser.BitmapData} The BitmapData that the extract pixels were drawn on.
     */
-    extract: function (destination, r, g, b, a, r2, g2, b2, a2) {
+    extract: function (destination, r, g, b, a, resize, r2, g2, b2, a2) {
 
         if (typeof a === 'undefined') { a = 255; }
+        if (typeof resize === 'undefined') { resize = false; }
         if (typeof r2 === 'undefined') { r2 = r; }
         if (typeof g2 === 'undefined') { g2 = g; }
         if (typeof b2 === 'undefined') { b2 = b; }
-        if (typeof a2 === 'undefined') { a2 = a; }
+
+        if (resize)
+        {
+            destination.resize(this.width, this.height);
+        }
 
         this.processPixelRGB(
-            function(pixel, x, y){
+            function (pixel, x, y)
+            {
                 if (pixel.r === r && pixel.g === g && pixel.b === b)
                 {
-                    destination.setPixel32(x, y, r2, g2, b2, a2, false);
+                    destination.setPixel32(x, y, r2, g2, b2, a, false);
                 }
                 return false;
             },
