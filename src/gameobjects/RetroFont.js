@@ -259,7 +259,7 @@ Phaser.RetroFont.TEXT_SET10 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 Phaser.RetroFont.TEXT_SET11 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ.,\"-+!?()':;0123456789";
 
 /**
-* If you need this FlxSprite to have a fixed width and custom alignment you can set the width here.<br>
+* If you need this RetroFont to have a fixed width and custom alignment you can set the width here.
 * If text is wider than the width specified it will be cropped off.
 *
 * @method Phaser.RetroFont#setFixedWidth
@@ -312,7 +312,7 @@ Phaser.RetroFont.prototype.setText = function (content, multiLine, characterSpac
 };
 
 /**
-* Updates the BitmapData of the Sprite with the text
+* Updates the texture with the new text.
 *
 * @method Phaser.RetroFont#buildRetroFontText
 * @memberof Phaser.RetroFont
@@ -406,7 +406,7 @@ Phaser.RetroFont.prototype.buildRetroFontText = function () {
 * Internal function that takes a single line of text (2nd parameter) and pastes it into the BitmapData at the given coordinates.
 * Used by getLine and getMultiLine
 *
-* @method Phaser.RetroFont#buildRetroFontText
+* @method Phaser.RetroFont#pasteLine
 * @memberof Phaser.RetroFont
 * @param {string} line - The single line of text to paste.
 * @param {number} x - The x coordinate.
