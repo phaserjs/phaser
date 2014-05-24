@@ -845,6 +845,7 @@ Phaser.BitmapData.prototype = {
     */
     alphaMask: function (source, mask, x, y, x2, y2) {
 
+        if (typeof mask === 'undefined') { mask = this; }
         if (typeof x === 'undefined') { x = 0; }
         if (typeof y === 'undefined') { y = 0; }
         if (typeof x2 === 'undefined') { x2 = 0; }
@@ -859,6 +860,8 @@ Phaser.BitmapData.prototype = {
         this.draw(source, x2, y2);
 
         this.context.globalCompositeOperation = temp;
+
+        this.update();
 
         this.dirty = true;
 
