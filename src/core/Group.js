@@ -1624,6 +1624,7 @@ Phaser.Group.prototype.destroy = function (destroyChildren, soft) {
     this.removeAll(destroyChildren);
 
     this.cursor = null;
+    this.filters = null;
 
     if (!soft)
     {

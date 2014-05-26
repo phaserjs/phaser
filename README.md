@@ -48,12 +48,14 @@ Version 2.0.6 - "Jornhill" - -in development-
 
 ### Updates
 
+* TypeScript definitions fixes and updates (thanks @clark-stevenson)
 * BitmapData.draw can now also take a Phaser.Sprite, Phaser.Image or BitmapData object as a source type. As a result BitmapData.drawSprite is now depcreated.
 * BitmapData.alphaMask can now also take a Phaser.Sprite, Phaser.Image or BitmapData object as a source type.
 * BitmapData.alphaMask has 2 new optional parameters: sourceRect and maskRect to give more fine-grained control over where the source and mask are drawn and their size
 * BitmapData.alphaMask 'mask' parameter is now optional, if not given it will use itself as the mask.
 * BitmapData.alphaMask now calls BitmapData.update after running.
 * BitmapData.draw now has two optional parameters: width and height, to let you stretch the image being drawn if needed.
+* Group.destroy now removes any set filters (thanks @Jmaharman fix #844)
 
 ### New Features
 
