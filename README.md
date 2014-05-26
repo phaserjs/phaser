@@ -69,6 +69,7 @@ Version 2.0.6 - "Jornhill" - -in development-
 
 * Sprite.alive property now explicitly defined on the Sprite prototype (thanks @lewster32, #841)
 * BitmapData.resize now properly updates the baseTexture and texture dimensions.
+* Fixed Gamepad issue that incorrectly checked non-webkit prefix gamepads.
 
 ### Migration Guide
 
