@@ -1162,19 +1162,20 @@ declare module Phaser {
         width: number;
         
         add(object: any): void;
-        alphaMask(source: any, mask: any): void;
+        alphaMask(source: any, mask: any, sourceRect?: Phaser.Rectangle, maskRect?: Phaser.Rectangle): void;
         circle(x: number, y: number, radius: number, fillStyle?: string): void;
         clear(): void;
         cls(): void;
         copyPixels(source: any, area: Phaser.Rectangle, destX: number, destY: number): void;
-        draw(source: any, x: number, y: number): void;
+        draw(source: any, x?: number, y?: number, width?: number, height?: number): void;
         drawSprite(sprite: any, x?: number, y?: number): void;
-        extract(destination: Phaser.BitmapData, r: number, g: number, b: number, a?:number): Phaser.BitmapData;
+        extract(destination: Phaser.BitmapData, r: number, g: number, b: number, a?: number, resize?: boolean, r2?: number, g2?: number, b2?: number): Phaser.BitmapData;
         fill(r: number, g: number, b: number, a?: number): void;
         getPixel(x: number, y: number, out?: Object): number;
         getPixelRGB(x: number, y: number, out?: Object, hsl?: boolean, hsv?: boolean): Object;
         getPixel32(x: number, y: number): number;
         getPixels(rect: Phaser.Rectangle): ImageData;
+        load(source: any): void;
         processPixel(callback: Function, callbackContext: Object, x?: number, y?: Number, width?: number, height?: number): void;
         processPixelRGB(callback: Function, callbackContext: Object, x?: number, y?: Number, width?: number, height?: number): void;
         rect(x: number, y: number, width: number, height: number, fillStyle?: string): void;
@@ -2537,7 +2538,7 @@ declare module Phaser {
         removeFile(key: string, type: string): void;
         replaceInFileList(type: string, key: string, url: string, properties: Object): void;
         reset(): void;
-        script(key: string, url: String, callback: Function, callbackContext: Object): Phaser.Loader;
+        script(key: string, url: String, callback?: Function, callbackContext?: Object): Phaser.Loader;
         setPreloadSprite(sprite: Phaser.Sprite, direction?: number): void;
         spritesheet(key: string, url: string, frameWidth: number, frameHeight: number, frameMax?: number, margin?: number, spacing?: number): Phaser.Loader;
         start(): void;
