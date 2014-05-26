@@ -804,8 +804,8 @@ Phaser.BitmapData.prototype = {
 
         if (source instanceof Phaser.Image || source instanceof Phaser.Sprite)
         {
-            src = sprite.texture.baseTexture.source;
-            var frame = sprite.texture.frame;
+            src = source.texture.baseTexture.source;
+            var frame = source.texture.frame;
             sx = frame.x;
             sy = frame.y;
             sw = frame.width;
