@@ -389,8 +389,6 @@ Phaser.Sprite.prototype.loadTexture = function (key, frame) {
         if (this.game.cache.isSpriteSheet(key))
         {
             this.key = key;
-
-            // var frameData = this.game.cache.getFrameData(key);
             this.animations.loadFrameData(this.game.cache.getFrameData(key));
 
             if (typeof frame === 'string')
@@ -406,6 +404,7 @@ Phaser.Sprite.prototype.loadTexture = function (key, frame) {
         {
             this.key = key;
             this.setTexture(PIXI.TextureCache[key]);
+            this.animations.loadFrameData(null);
             return;
         }
     }

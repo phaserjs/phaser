@@ -80,6 +80,7 @@ Version 2.0.6 - "Jornhill" - -in development-
 * BitmapData.resize now properly updates the baseTexture and texture dimensions.
 * Fixed Gamepad issue that incorrectly checked non-webkit prefix gamepads.
 * Phaser.RenderTexture incorrectly passed the scaleMode to Pixi.RenderTexture, causing the renderer to error.
+* Sprite animation data wasn't reset when going from a sprite sheet to a single frame in Sprite.loadTexture (thanks @lucbloom, fix #850)
 
 ### Migration Guide
 
