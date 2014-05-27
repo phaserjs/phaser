@@ -173,7 +173,7 @@ Phaser.TileSprite.prototype.preUpdate = function() {
         this._cache[1] = this.world.y;
         this._cache[2] = this.rotation;
 
-        if (this.body)
+        if (this.body && this.body.enable)
         {
             this.body.preUpdate();
         }
@@ -241,7 +241,7 @@ Phaser.TileSprite.prototype.preUpdate = function() {
         this.tilePosition.y += this._scroll.y * this.game.time.physicsElapsed;
     }
 
-    if (this.body)
+    if (this.body && this.body.enable)
     {
         this.body.preUpdate();
     }
@@ -274,7 +274,7 @@ Phaser.TileSprite.prototype.update = function() {
 */
 Phaser.TileSprite.prototype.postUpdate = function() {
 
-    if (this.exists && this.body)
+    if (this.exists && this.body && this.body.enable)
     {
         this.body.postUpdate();
     }

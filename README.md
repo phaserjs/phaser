@@ -70,6 +70,7 @@ Version 2.0.6 - "Jornhill" - -in development-
 * Phaser.Keyboard.lastChar will return the string value of the last key pressed.
 * Phaser.Keyboard.lastKey will return the most recently pressed Key object.
 * RetroFont.updateOffset allows you to modify the offsetX/Y values used by the font during rendering.
+* ArcadePhysics.Body has a new boolean property `enable`. If `false` the body won't be checked for any collision or overlaps, or have its pre or post update methods called. Use this for easy toggling of physics bodies without having to destroy or re-create the Body object itself.
 
 
 ### Bug Fixes

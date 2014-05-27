@@ -206,7 +206,7 @@ Phaser.Sprite.prototype.preUpdate = function() {
         this._cache[1] = this.world.y;
         this._cache[2] = this.rotation;
 
-        if (this.body)
+        if (this.body && this.body.enable)
         {
             this.body.preUpdate();
         }
@@ -281,7 +281,7 @@ Phaser.Sprite.prototype.preUpdate = function() {
 
     this.animations.update();
 
-    if (this.body)
+    if (this.body && this.body.enable)
     {
         this.body.preUpdate();
     }
@@ -320,7 +320,7 @@ Phaser.Sprite.prototype.postUpdate = function() {
         this.key.render();
     }
 
-    if (this.exists && this.body)
+    if (this.exists && this.body && this.body.enable)
     {
         this.body.postUpdate();
     }
