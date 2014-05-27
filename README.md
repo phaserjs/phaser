@@ -69,7 +69,7 @@ Version 2.0.6 - "Jornhill" - -in development-
 * Keyboard.processKeyUp now runs the callback after all the objects have been created and/or updated.
 * Phaser.Keyboard.lastChar will return the string value of the last key pressed.
 * Phaser.Keyboard.lastKey will return the most recently pressed Key object.
-
+* RetroFont.updateOffset allows you to modify the offsetX/Y values used by the font during rendering.
 
 
 ### Bug Fixes

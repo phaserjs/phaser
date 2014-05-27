@@ -58,11 +58,13 @@ Phaser.RetroFont = function (game, key, characterWidth, characterHeight, chars, 
 
     /**
     * @property {number} offsetX - If the font set doesn't start at the top left of the given image, specify the X coordinate offset here.
+    * @readonly
     */
     this.offsetX = xOffset || 0;
 
     /**
     * @property {number} offsetY - If the font set doesn't start at the top left of the given image, specify the Y coordinate offset here.
+    * @readonly
     */
     this.offsetY = yOffset || 0;
 
@@ -156,6 +158,10 @@ Phaser.RetroFont = function (game, key, characterWidth, characterHeight, chars, 
 
     game.cache.updateFrameData(key, data);
 
+    /**
+    * @property {Phaser.Image} stamp - The image that is stamped to the RenderTexture for each character in the font.
+    * @readonly
+    */
     this.stamp = new Phaser.Image(game, 0, 0, key, 0);
 
     Phaser.RenderTexture.call(this, game);
@@ -506,6 +512,40 @@ Phaser.RetroFont.prototype.removeUnsupportedCharacters = function (stripCR) {
     }
 
     return newString;
+
+};
+
+/**
+* Updates the x and/or y offset that the font is rendered from. This updates all of the texture frames, so be careful how often it is called.
+* Note that the values given for the x and y properties are either ADDED to or SUBTRACTED from (if negative) the existing offsetX/Y values of the characters.
+* So if the current offsetY is 8 and you want it to start rendering from y16 you would call updateOffset(0, 8) to add 8 to the current y offset.
+*
+* @method Phaser.RetroFont#updateOffset
+* @memberof Phaser.RetroFont
+* @param {number} [xOffset=0] - If the font set doesn't start at the top left of the given image, specify the X coordinate offset here.
+* @param {number} [yOffset=0] - If the font set doesn't start at the top left of the given image, specify the Y coordinate offset here.
+*/
+Phaser.RetroFont.prototype.updateOffset = function (x, y) {
+
+    if (this.offsetX === x && this.offsetY === y)
+    {
+        return;
+    }
+
+    var diffX = x - this.offsetX;
+    var diffY = y - this.offsetY;
+
+    var frames = this.game.cache.getFrameData(this.stamp.key).getFrames();
+    var i = frames.length;
+
+    while (i--)
+    {
+        frames[i].x += diffX;
+        frames[i].y += diffY;
+        PIXI.TextureCache[frames[i].uuid].frame.x = frames[i].x;
+        PIXI.TextureCache[frames[i].uuid].frame.y = frames[i].y;
+    }
+
 };
 
 /**
