@@ -13,13 +13,23 @@
 * @param {number} characterWidth - The width of each character in the font set.
 * @param {number} characterHeight - The height of each character in the font set.
 * @param {string} chars - The characters used in the font set, in display order. You can use the TEXT_SET consts for common font set arrangements.
-* @param {number} charsPerRow - The number of characters per row in the font set.
+* @param {number} [charsPerRow] - The number of characters per row in the font set. If not given charsPerRow will be the image width / characterWidth.
 * @param {number} [xSpacing=0] - If the characters in the font set have horizontal spacing between them set the required amount here.
 * @param {number} [ySpacing=0] - If the characters in the font set have vertical spacing between them set the required amount here.
 * @param {number} [xOffset=0] - If the font set doesn't start at the top left of the given image, specify the X coordinate offset here.
 * @param {number} [yOffset=0] - If the font set doesn't start at the top left of the given image, specify the Y coordinate offset here.
 */
 Phaser.RetroFont = function (game, key, characterWidth, characterHeight, chars, charsPerRow, xSpacing, ySpacing, xOffset, yOffset) {
+
+    if (!game.cache.checkImageKey(key))
+    {
+        return false;
+    }
+
+    if (typeof charsPerRow === 'undefined' || charsPerRow === null)
+    {
+        charsPerRow = game.cache.getImage(key).width / characterWidth;
+    }
 
     /**
     * @property {number} characterWidth - The width of each character in the font set.

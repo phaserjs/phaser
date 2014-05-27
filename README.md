@@ -56,6 +56,7 @@ Version 2.0.6 - "Jornhill" - -in development-
 * BitmapData.alphaMask now calls BitmapData.update after running.
 * BitmapData.draw now has two optional parameters: width and height, to let you stretch the image being drawn if needed.
 * Group.destroy now removes any set filters (thanks @Jmaharman fix #844)
+* RetroFont charsPerRow paramters is now optional. If not given it will take the image width and divide it by the characterWidth value.
 
 ### New Features
 
