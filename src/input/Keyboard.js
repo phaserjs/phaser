@@ -377,7 +377,7 @@ Phaser.Keyboard.prototype = {
 
         if (this.onPressCallback)
         {
-            this.onPressCallback.call(this.callbackContext, event, String.fromCharCode(event.charCode));
+            this.onPressCallback.call(this.callbackContext, String.fromCharCode(event.charCode), event);
         }
 
     },
