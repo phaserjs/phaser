@@ -75,6 +75,10 @@ declare module PIXI {
         (interactionData: InteractionData): void
     }
 
+    export interface IAbstractFilter {
+
+    }
+
     export interface IPixiRenderer {
         type: number;
         transparent: boolean;
@@ -145,7 +149,7 @@ declare module PIXI {
 
     /* CLASSES */
 
-    export class AbstractFilter {
+    export class AbstractFilter implements IAbstractFilter {
 
         passes: AbstractFilter[];
         shaders: PixiShader[];
@@ -362,7 +366,7 @@ declare module PIXI {
         buttonMode: boolean;
         defaultCursor: string;
         filterArea: Rectangle;
-        filters: AbstractFilter[];
+        filters: IAbstractFilter[];
         hitArea: IHitArea;
         interactive: boolean;
         mask: Graphics;
@@ -900,7 +904,7 @@ declare module PIXI {
 
     export class WebGLFilterManager {
 
-        filterStack: AbstractFilter[];
+        filterStack: IAbstractFilter[];
         transparent: boolean;
         offsetX: number;
         offsetY: number;
@@ -1681,9 +1685,153 @@ declare module Phaser {
 
     }
 
-    class Filter {
+    module Filter {
 
-        constructor(game: Phaser.Game, uniforms: Object, fragmentSrc: any[]);
+        class BinarySerpents extends Phaser.Filter {
+
+            constructor(game: Phaser.Game, width: number, height: number, march?: number, maxDistance?: number);
+
+            fog: number;
+
+        }
+
+        class BlurX extends Phaser.Filter {
+
+            blur: number;
+
+        }
+
+        class BlurY extends Phaser.Filter {
+
+            blur: number;
+
+        }
+
+        class CausticLight extends Phaser.Filter {
+
+            constructor(game: Phaser.Game, width: number, height: number, divisor?: number);
+
+            init(width: number, height: number, divisor?: number): void;
+
+        }
+
+        class CheckerWave extends Phaser.Filter {
+
+            constructor(game: Phaser.Game, width: number, height: number);
+
+            alpha: number;
+            cameraX: number;
+            cameraY: number;
+            cameraZ: number;
+
+            init(width: number, height: number): void;
+            setColor1(red: number, green: number, blue: number): void;
+            setColor2(red: number, green: number, blue: number): void;
+
+        }
+
+        class ColorBars extends Phaser.Filter {
+
+            constructor(game: Phaser.Game, width: number, height: number);
+
+            alpha: number;
+
+            init(width: number, height: number): void;
+
+        }
+
+        class Fire extends Phaser.Filter {
+
+            constructor(width: number, height: number, alpha?: number, shift?: number);
+
+            alpha: number;
+            shift: number;
+            speed: number;
+
+            init(width: number, height: number, alpha?: number, shift?: number): void;
+
+        }
+
+        class Gray extends Phaser.Filter {
+
+            gray: number;
+
+        }
+
+        class HueRotate extends Phaser.Filter {
+
+            constructor(game: Phaser.Game, width: number, height: number, texture: any);
+
+            alpha: number;
+
+            init(width: number, height: number, texture: any): void;
+
+        }
+
+        class LightBeam extends Phaser.Filter {
+
+            constructor(game: Phaser.Game, width: number, height: number);
+
+            alpha: number;
+            blue: number;
+            green: number;
+            red: number;
+            thickness: number;
+            speed: number;
+
+            init(width: number, height: number): void;
+
+        }
+
+        class Marble extends Phaser.Filter {
+
+            constructor(game: Phaser.Game, width: number, height: number, speed?: number, intensity?: number);
+
+            alpha: number;
+            intensity: number;
+            speed: number;
+
+            init(width: number, height: number, speed?: number, intensity?: number): void;
+
+        }
+
+        class Plasma extends Phaser.Filter {
+
+            constructor(game: Phaser.Game, width: number, height: number, alpha?: number, size?: number);
+
+            alpha: number;
+            blueShift: number;
+            greenShift: number;
+            redShift: number;
+            size: number;
+
+            init(width: number, height: number, alpha?: number, size?: number): void;
+
+        }
+
+        class SampleFilter extends Phaser.Filter {
+
+            constructor(game: Phaser.Game, width: number, height: number, divisor?: number);
+
+            init(width: number, height: number, divisor?: number): void;
+
+        }
+
+        class Tunnel extends Phaser.Filter {
+
+            constructor(game: Phaser.Game, width: number, height: number, texture: any);
+
+            alpha: number;
+            origin: number;
+
+            init(width: number, height: number, texture: any): void;
+
+        }
+    }
+
+    class Filter implements PIXI.IAbstractFilter {
+
+        constructor(game: Phaser.Game, ...args: any[]);
 
         dirty: boolean;
         game: Phaser.Game;
@@ -1695,7 +1843,7 @@ declare module Phaser {
         width: number;
 
         destroy(): void;
-        init(): void;
+        init(...args: any[]): void;
         setResolution(width: number, height: number);
         update(pointer?: Phaser.Pointer): void;
 
@@ -1821,7 +1969,7 @@ declare module Phaser {
         bitmapText(x: number, y: number, font: string, text?: string, size?: number): Phaser.BitmapText;
         button(x?: number, y?: number, key?: string, callback?: Function, callbackContext?: Object, overFrame?: any, outFrame?: any, downFrame?: any, upFrame?: any): Phaser.Button;
         emitter(x?: number, y?: number, maxParticles?: number): Phaser.Particles.Arcade.Emitter;
-        filter(filter: any, any: any): Phaser.Filter;
+        filter(filter: any, ...args: any[]): Phaser.Filter;
         graphics(x: number, y: number): Phaser.Graphics;
         group(parent?: any, name?: string, addToStage?: boolean, enableBody?: boolean, physicsBodyType?: number): Phaser.Group;
         image(x: number, y: number, key: any, frame?: any): Phaser.Sprite;
@@ -1850,7 +1998,7 @@ declare module Phaser {
         button(x?: number, y?: number, key?: string, callback?: Function, callbackContext?: Object, overFrame?: any, outFrame?: any, downFrame?: any, upFrame?: any, group?: Phaser.Group): Phaser.Button;
         emitter(x?: number, y?: number, maxParticles?: number): Phaser.Particles.Arcade.Emitter;
         existing(object: any): any;
-        filter(filter: string, args: any): Phaser.Filter;
+        filter(filter: string, ...args: any[]): Phaser.Filter;
         graphics(x: number, y: number, group?: Phaser.Group): Phaser.Graphics;
         group(parent?: any, name?: string, addToStage?: boolean, enableBody?: boolean, physicsBodyType?: number): Phaser.Group;
         image(x: number, y: number, key: any, frame?: any, group?: Phaser.Group): Phaser.Image;
@@ -2415,10 +2563,14 @@ declare module Phaser {
         disabled: boolean;
         event: Object;
         game: Phaser.Game;
+        lastChar: string;
+        lastKey: string;
         onDownCallback: Function;
+        onPressCallback: Function;
         onUpCallback: Function;
+        pressEvent: Object;
 
-        addCallbacks(context: Object, onDown: Function, onUp?: Function): void;
+        addCallbacks(context: Object, onDown?: Function, onUp?: Function, onPress?: Function): void;
         addKey(keycode: number): Phaser.Key;
         addKeyCapture(keycode: any): void;
         createCursorKeys(): Phaser.CursorKeys;
@@ -2428,6 +2580,7 @@ declare module Phaser {
         justPressed(keycode: number, duration?: number): boolean;
         justReleased(keycode: number, duration?: number): boolean;
         processKeyDown(event: KeyboardEvent): void;
+        processKeyPress(event: KeyboardEvent): void;
         processKeyUp(event: KeyboardEvent): void;
         removeKey(keycode: number): void;
         removeKeyCapture(keycode: number): void;
@@ -2896,6 +3049,7 @@ declare module Phaser {
                 deltaMax: Phaser.Point;
                 draw: Phaser.Point;
                 embedded: boolean;
+                enable: boolean;
                 facing: number;
                 game: Phaser.Game;
                 gravity: Phaser.Point;
@@ -3921,7 +4075,7 @@ declare module Phaser {
 
     class RetroFont extends Phaser.RenderTexture {
 
-        constructor(game: Phaser.Game, key: string, characterWidth: number, characterHeight: number, chars: string, charsPerRow: number, xSpacing?: number, ySpacing?: number, xOffset?: number, yOffset?: number);
+        constructor(game: Phaser.Game, key: string, characterWidth: number, characterHeight: number, chars: string, charsPerRow?: number, xSpacing?: number, ySpacing?: number, xOffset?: number, yOffset?: number);
 
         static ALIGN_CENTER: string;
         static ALIGN_LEFT: string;
@@ -3952,6 +4106,8 @@ declare module Phaser {
         multiLine: boolean;
         offsetX: number;
         offsetY: number;
+        smoothed: string;
+        stamp: Phaser.Image;
         text: string;
 
         buildRetroFontText(): void;
@@ -3960,6 +4116,7 @@ declare module Phaser {
         removeUnsupportedCharacters(stripCR?: boolean): string;
         setFixedWidth(width: number, lineAlignment?: string): void;
         setText(content: string, multiLine?: boolean, characterSpacing?: number, lineSpacing?: number, lineAlignment?: string, allowLowerCase?: boolean): void;
+        updateOffset(x?: number, y?: number): void;
 
     }
 
