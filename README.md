@@ -63,6 +63,12 @@ Version 2.0.6 - "Jornhill" - -in development-
 * BitmapData.extract has a new parameter that lets you control if the destination BitmapData is resized before the pixels are copied.
 * BitmapData.extract has 4 new parameters: r2, g2, b2, a2 which let you re-color the extract pixels as they are drawn to the new BitmapData.
 * BitmapData.load will take a game object or string and resize the BitmapData to match it and then draw the pixels in.
+* Keyboard.addCallbacks now has a new parameter for keypress event capture.
+* Keyboard.pressEvent stores the most recent DOM keypress event.
+* Keyboard.processKeyDown now runs the callback after all the objects have been created and/or updated.
+* Keyboard.processKeyUp now runs the callback after all the objects have been created and/or updated.
+* Phaser.Keyboard.lastChar will return the string value of the last key pressed.
+* Phaser.Keyboard.lastKey will return the most recently pressed Key object.
 
 
 
