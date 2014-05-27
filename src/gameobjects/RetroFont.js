@@ -164,7 +164,7 @@ Phaser.RetroFont = function (game, key, characterWidth, characterHeight, chars, 
     */
     this.stamp = new Phaser.Image(game, 0, 0, key, 0);
 
-    Phaser.RenderTexture.call(this, game);
+    Phaser.RenderTexture.call(this, game, 100, 100, '', Phaser.scaleModes.NEAREST);
 
     /**
     * @property {number} type - Base Phaser object type.
@@ -581,6 +581,27 @@ Object.defineProperty(Phaser.RetroFont.prototype, "text", {
 
             this.buildRetroFontText();
         }
+
+    }
+
+});
+
+/**
+* @name Phaser.BitmapText#smoothed
+* @property {string} text - Set this value to update the text in this sprite. Carriage returns are automatically stripped out if multiLine is false. Text is converted to upper case if autoUpperCase is true.
+*/
+Object.defineProperty(Phaser.RetroFont.prototype, "smoothed", {
+
+    get: function () {
+
+        return this.stamp.smoothed;
+
+    },
+
+    set: function (value) {
+
+        this.stamp.smoothed = value;
+        this.buildRetroFontText();
 
     }
 
