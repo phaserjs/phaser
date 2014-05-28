@@ -81,6 +81,8 @@ Version 2.0.6 - "Jornhill" - -in development-
 * Fixed Gamepad issue that incorrectly checked non-webkit prefix gamepads.
 * Phaser.RenderTexture incorrectly passed the scaleMode to Pixi.RenderTexture, causing the renderer to error.
 * Sprite animation data wasn't reset when going from a sprite sheet to a single frame in Sprite.loadTexture (thanks @lucbloom, fix #850)
+* Timer.ms would report the game time ms value if the Timer hadn't yet been started, instead of 0.
+* Timer.seconds would report the game time value if the Timer hadn't yet been started, instead of 0.
 
 ### Migration Guide
 
