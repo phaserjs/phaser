@@ -546,6 +546,8 @@ Phaser.RetroFont.prototype.updateOffset = function (x, y) {
         PIXI.TextureCache[frames[i].uuid].frame.y = frames[i].y;
     }
 
+    this.buildRetroFontText();
+
 };
 
 /**
