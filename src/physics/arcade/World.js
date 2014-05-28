@@ -667,8 +667,7 @@ Phaser.Physics.Arcade.prototype = {
             return;
         }
 
-        var _slope, slopeFunction;
-        for (var i = 0, tile; i < this._mapData.length; i++)
+        for (var i = 0, tile, _slope, slopeFunction; i < this._mapData.length; i++)
         {
             tile = this._mapData[i];
 
