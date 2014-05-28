@@ -667,9 +667,25 @@ Phaser.Physics.Arcade.prototype = {
             return;
         }
 
-        for (var i = 0; i < this._mapData.length; i++)
+        for (var i = 0, tile, _slope, slopeFunction; i < this._mapData.length; i++)
         {
-            if (this.separateTile(i, sprite.body, this._mapData[i]))
+            tile = this._mapData[i];
+
+            if (tile.hasOwnProperty('slopeFunction')) {
+                slopeFunction = tile.slopeFunction;
+            } else {
+                _slope = tile.hasOwnProperty('slope') ? tile.slope : Phaser.Physics.Arcade.FULL_SQUARE;
+                if (!Phaser.Physics.Arcade.SLOPEMAP.hasOwnProperty(_slope))
+                {
+                    _slope = 'FULL_SQUARE';
+
+                }
+                slopeFunction = Phaser.Physics.Arcade.SLOPEMAP[_slope];
+            }
+
+
+            //if (this.separateTile(i, sprite.body, tile))
+            if (slopeFunction.call(this, i, sprite.body, tile))
             {
                 //  They collided, is there a custom process callback?
                 if (processCallback)
@@ -1730,3 +1746,40 @@ Phaser.Physics.Arcade.prototype = {
     }
 
 };
+
+// Slope tile functions
+
+Phaser.Physics.Arcade._collisionFullSquare = function (i, body, tile) {
+    var collides = this.separateTile(i, body, tile);
+    if (collides) {
+        body.speedxPunish = 0;
+    }
+    return collides;
+};
+
+Phaser.Physics.Arcade._collisionHalfTriangleBottomLeft = function (i, body, tile) {
+    if (body.velocity.y > 0 && (body.position.y + body.height - tile.bottom) + (body.position.x - tile.right) <= 0){
+        body.y = (body.position.x - tile.right) - (body.height - tile.bottom);
+        body.blocked.down = true;
+        body.speedxPunish = body.gravity.y * Math.cos(45) * 0.1;
+        return false;
+    }
+    return true;
+};
+
+Phaser.Physics.Arcade._collisionHalfTriangleBottomRight = function (i, body, tile) {
+    if (body.velocity.y > 0 && (body.position.y + body.height - tile.top) - (body.position.x + body.width - tile.right) >= 0) {
+        body.y = tile.bottom + tile.left - (body.position.x + body.width) - body.height;
+        body.blocked.down = true;
+        body.speedxPunish = -body.gravity.y * Math.cos(45) * 0.1;
+        return false;
+    }
+
+    return true;
+};
+
+Phaser.Physics.Arcade.SLOPEMAP = {
+    'FULL_SQUARE': Phaser.Physics.Arcade._collisionFullSquare,
+    'HALF_TRIANGLE_BOTTOM_LEFT': Phaser.Physics.Arcade._collisionHalfTriangleBottomLeft,
+    'HALF_TRIANGLE_BOTTOM_RIGHT': Phaser.Physics.Arcade._collisionHalfTriangleBottomRight
+}
