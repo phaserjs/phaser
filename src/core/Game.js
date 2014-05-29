@@ -542,7 +542,7 @@ Phaser.Game.prototype = {
     */
     setUpRenderer: function () {
 
-        if (this.device.trident || this.device.cocoonJS)
+        if (this.device.trident)
         {
             //  Pixi WebGL renderer on IE11 doesn't work correctly at the moment, the pre-multiplied alpha gets all washed out.
             //  So we're forcing canvas for now until this is fixed, sorry. It's got to be better than no game appearing at all, right?
@@ -633,6 +633,12 @@ Phaser.Game.prototype = {
             this.plugins.render();
             this.state.render();
             this.plugins.postRender();
+
+            if (this.device.cocoonJS && this.renderType === Phaser.CANVAS && this.stage.currentRenderOrderID === 1)
+            {
+                //  Horrible hack! But without it Cocoon fails to render a scene with just a single drawImage call on it.
+                this.context.fillRect(0, 0, 0, 0);
+            }
         }
 
     },

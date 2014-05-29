@@ -64,8 +64,8 @@ Version 2.0.6 - "Jornhill" - -in development-
 ### CocoonJS Specific Updates
 
 * Wrapped all touch, keyboard, mouse and fulscreen events that CocoonJS doesn't support in conditional checks to avoid Warnings.
-* Forces use of a Canvas Renderer under CocoonJS automatically.
 * The SoundManager no longer requires a touch to unlock it, defaults to unlocked.
+* Resolved issue where Cocoon won't render a scene in Canvas mode if there is only one Sprite/Image on it.
 
 ### New Features
 
