@@ -209,7 +209,7 @@ Phaser.Stage.prototype.parseConfig = function (config) {
 
     if (config['canvasStyle'])
     {
-        this.game.canvas.stlye = config['canvasStyle'];
+        this.game.canvas.style = config['canvasStyle'];
     }
     else
     {
