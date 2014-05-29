@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.0.5 "Tanchico" - Built: Tue May 20 2014 10:00:53
+* v2.0.6 "Jornhill" - Built: Thu May 29 2014 17:25:34
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -50,7 +50,7 @@
 */
 var Phaser = Phaser || {
 
-	VERSION: '2.0.5',
+	VERSION: '2.0.6',
 	GAMES: [],
 
     AUTO: 0,
@@ -137,7 +137,7 @@ Phaser.Utils = {
     /**
      * Transposes the elements of the given Array.
      *
-     * @method transposeArray
+     * @method Phaser.Utils.transposeArray
      * @param {array} array - The array to transpose.
      * @return {array} The transposed array.
      */
@@ -4635,7 +4635,7 @@ Phaser.StateManager.prototype = {
                 this.onPreloadCallback.call(this.callbackContext, this.game);
 
                 //  Is the loader empty?
-                if (this.game.load.totalQueuedFiles() === 0)
+                if (this.game.load.totalQueuedFiles() === 0 && this.game.load.totalQueuedPacks() === 0)
                 {
                     this.loadComplete();
                 }
@@ -8394,6 +8394,7 @@ Phaser.Group.prototype.destroy = function (destroyChildren, soft) {
     this.removeAll(destroyChildren);
 
     this.cursor = null;
+    this.filters = null;
 
     if (!soft)
     {
@@ -11703,9 +11704,14 @@ Phaser.Keyboard = function (game) {
     this.disabled = false;
 
     /**
-    * @property {Object} event - The most recent DOM event. This is updated every time a new key is pressed or released.
+    * @property {Object} event - The most recent DOM event from keydown or keyup. This is updated every time a new key is pressed or released.
     */
     this.event = null;
+
+    /**
+    * @property {Object} pressEvent - The most recent DOM event from keypress.
+    */
+    this.pressEvent = null;
 
     /**
     * @property {Object} callbackContext - The context under which the callbacks are run.
@@ -11713,9 +11719,14 @@ Phaser.Keyboard = function (game) {
     this.callbackContext = this;
 
     /**
-    * @property {function} onDownCallback - This callback is invoked every time a key is pressed down.
+    * @property {function} onDownCallback - This callback is invoked every time a key is pressed down, including key repeats when a key is held down.
     */
     this.onDownCallback = null;
+
+    /**
+    * @property {function} onPressCallback - This callback is invoked every time a DOM onkeypress event is raised, which is only for printable keys.
+    */
+    this.onPressCallback = null;
 
     /**
     * @property {function} onUpCallback - This callback is invoked every time a key is released.
@@ -11742,6 +11753,13 @@ Phaser.Keyboard = function (game) {
     this._onKeyDown = null;
 
     /**
+    * @property {function} _onKeyPress
+    * @private
+    * @default
+    */
+    this._onKeyPress = null;
+
+    /**
     * @property {function} _onKeyUp
     * @private
     * @default
@@ -11754,6 +11772,12 @@ Phaser.Keyboard = function (game) {
     */
     this._i = 0;
 
+    /**
+    * @property {number} _k - Internal cache var
+    * @private
+    */
+    this._k = 0;
+
 };
 
 Phaser.Keyboard.prototype = {
@@ -11763,17 +11787,27 @@ Phaser.Keyboard.prototype = {
     *
     * @method Phaser.Keyboard#addCallbacks
     * @param {Object} context - The context under which the callbacks are run.
-    * @param {function} onDown - This callback is invoked every time a key is pressed down.
+    * @param {function} [onDown=null] - This callback is invoked every time a key is pressed down.
     * @param {function} [onUp=null] - This callback is invoked every time a key is released.
+    * @param {function} [onPress=null] - This callback is invoked every time the onkeypress event is raised.
     */
-    addCallbacks: function (context, onDown, onUp) {
+    addCallbacks: function (context, onDown, onUp, onPress) {
 
         this.callbackContext = context;
-        this.onDownCallback = onDown;
+
+        if (typeof onDown !== 'undefined')
+        {
+            this.onDownCallback = onDown;
+        }
 
         if (typeof onUp !== 'undefined')
         {
             this.onUpCallback = onUp;
+        }
+
+        if (typeof onPress !== 'undefined')
+        {
+            this.onPressCallback = onPress;
         }
 
     },
@@ -11857,13 +11891,18 @@ Phaser.Keyboard.prototype = {
             return _this.processKeyUp(event);
         };
 
+        this._onKeyPress = function (event) {
+            return _this.processKeyPress(event);
+        };
+
         window.addEventListener('keydown', this._onKeyDown, false);
         window.addEventListener('keyup', this._onKeyUp, false);
+        window.addEventListener('keypress', this._onKeyPress, false);
 
     },
 
     /**
-    * Stops the Keyboard event listeners from running (keydown and keyup). They are removed from the window.
+    * Stops the Keyboard event listeners from running (keydown, keyup and keypress). They are removed from the window.
     *
     * @method Phaser.Keyboard#stop
     */
@@ -11871,9 +11910,11 @@ Phaser.Keyboard.prototype = {
 
         window.removeEventListener('keydown', this._onKeyDown);
         window.removeEventListener('keyup', this._onKeyUp);
+        window.removeEventListener('keypress', this._onKeyPress);
 
         this._onKeyDown = null;
         this._onKeyUp = null;
+        this._onKeyPress = null;
 
     },
 
@@ -11901,7 +11942,7 @@ Phaser.Keyboard.prototype = {
     * Pass in either a single keycode or an array/hash of keycodes.
     *
     * @method Phaser.Keyboard#addKeyCapture
-    * @param {Any} keycode - Either a single numeric keycode or an array/hash of keycodes: [65, 67, 68].
+    * @param {number|array|object} keycode - Either a single numeric keycode or an array/hash of keycodes: [65, 67, 68].
     */
     addKeyCapture: function (keycode) {
 
@@ -11982,17 +12023,37 @@ Phaser.Keyboard.prototype = {
             event.preventDefault();
         }
 
-        if (this.onDownCallback)
-        {
-            this.onDownCallback.call(this.callbackContext, event);
-        }
-
         if (!this._keys[event.keyCode])
         {
             this._keys[event.keyCode] = new Phaser.Key(this.game, event.keyCode);
         }
 
         this._keys[event.keyCode].processKeyDown(event);
+
+        this._k = event.keyCode;
+
+        if (this.onDownCallback)
+        {
+            this.onDownCallback.call(this.callbackContext, event);
+        }
+
+    },
+
+    /**
+    * Process the keypress event.
+    *
+    * @method Phaser.Keyboard#processKeyPress
+    * @param {KeyboardEvent} event
+    * @protected
+    */
+    processKeyPress: function (event) {
+
+        this.pressEvent = event;
+
+        if (this.onPressCallback)
+        {
+            this.onPressCallback.call(this.callbackContext, String.fromCharCode(event.charCode), event);
+        }
 
     },
 
@@ -12017,17 +12078,17 @@ Phaser.Keyboard.prototype = {
             event.preventDefault();
         }
 
-        if (this.onUpCallback)
-        {
-            this.onUpCallback.call(this.callbackContext, event);
-        }
-
         if (!this._keys[event.keyCode])
         {
             this._keys[event.keyCode] = new Phaser.Key(this.game, event.keyCode);
         }
 
         this._keys[event.keyCode].processKeyUp(event);
+
+        if (this.onUpCallback)
+        {
+            this.onUpCallback.call(this.callbackContext, event);
+        }
 
     },
 
@@ -12120,6 +12181,45 @@ Phaser.Keyboard.prototype = {
     }
 
 };
+
+/**
+* Returns the string value of the most recently pressed key.
+* @name Phaser.Keyboard#lastChar
+* @property {string} lastChar - The string value of the most recently pressed key.
+* @readonly
+*/
+Object.defineProperty(Phaser.Keyboard.prototype, "lastChar", {
+
+    get: function () {
+
+        if (this.event.charCode === 32)
+        {
+            return '';
+        }
+        else
+        {
+            return String.fromCharCode(this.pressEvent.charCode);
+        }
+
+    }
+
+});
+
+/**
+* Returns the most recently pressed Key. This is a Phaser.Key object and it changes every time a key is pressed.
+* @name Phaser.Keyboard#lastKey
+* @property {Phaser.Key} lastKey - The most recently pressed Key.
+* @readonly
+*/
+Object.defineProperty(Phaser.Keyboard.prototype, "lastKey", {
+
+    get: function () {
+
+        return this._keys[this._k];
+
+    }
+
+});
 
 Phaser.Keyboard.prototype.constructor = Phaser.Keyboard;
 
@@ -14171,7 +14271,7 @@ Phaser.Gamepad.prototype = {
     */
     _pollGamepads: function () {
 
-        var rawGamepads = navigator.getGamepads || (navigator.webkitGetGamepads && navigator.webkitGetGamepads()) || navigator.webkitGamepads;
+        var rawGamepads = navigator.getGamepads() || (navigator.webkitGetGamepads && navigator.webkitGetGamepads()) || navigator.webkitGamepads;
 
         if (rawGamepads)
         {
@@ -17668,6 +17768,8 @@ Phaser.BitmapData = function (game, key, width, height) {
     */
     this.textureFrame = new Phaser.Frame(0, 0, 0, width, height, 'bitmapData', game.rnd.uuid());
 
+    this.texture.frame = this.textureFrame;
+
     /**
     * @property {number} type - The const type of this object.
     * @default
@@ -17736,6 +17838,39 @@ Phaser.BitmapData.prototype = {
     },
 
     /**
+    * Takes the given Game Object, resizes this BitmapData to match it and then draws it into this BitmapDatas canvas, ready for further processing.
+    * The source game object is not modified by this operation.
+    * If the source object uses a texture as part of a Texture Atlas or Sprite Sheet, only the current frame will be used for sizing and draw.
+    * If a string is given it will assume it's a cache key and look in Phaser.Cache for an image key matching the string.
+    *
+    * @method Phaser.BitmapData#load
+    * @param {Phaser.Sprite|Phaser.Image|Phaser.BitmapData|string} source - The object that will be used to populate this BitmapData.
+    */
+    load: function (source) {
+
+        if (typeof source === 'string')
+        {
+            source = this.game.cache.getImage(source);
+        }
+
+        this.resize(source.width, source.height);
+
+        this.cls();
+
+        if (source instanceof Phaser.Image || source instanceof Phaser.Sprite)
+        {
+            this.drawSprite(source, 0, 0);
+        }
+        else
+        {
+            this.draw(source, 0, 0);
+        }
+
+        this.update();
+
+    },
+
+    /**
     * Clears the BitmapData context using a clearRect.
     *
     * @method Phaser.BitmapData#cls
@@ -17784,14 +17919,22 @@ Phaser.BitmapData.prototype = {
         {
             this.width = width;
             this.height = height;
+
             this.canvas.width = width;
             this.canvas.height = height;
+
+            this.baseTexture.width = width;
+            this.baseTexture.height = height;
+
             this.textureFrame.width = width;
             this.textureFrame.height = height;
-            this.refreshBuffer();
-        }
 
-        this.dirty = true;
+            this.texture.width = width;
+            this.texture.height = height;
+
+            this.refreshBuffer();
+            this.dirty = true;
+        }
 
     },
 
@@ -18262,39 +18405,72 @@ Phaser.BitmapData.prototype = {
     },
 
     /**
+    * Creates a new Phaser.Image object, assigns this BitmapData to be its texture, adds it to the world then returns it.
+    *
+    * @method Phaser.BitmapData#addToWorld
+    * @param {number} [x=0] - The x coordinate to place the image at.
+    * @param {number} [y=0] - The y coordinate to place the image at.
+    * @return {Phaser.Image} The newly added Image object.
+    */
+    addToWorld: function (x, y) {
+
+        return this.game.add.image(x, y, this);
+
+    },
+
+    /**
     * Copies the pixels from the source image to this BitmapData based on the given area and destination.
     *
     * @method Phaser.BitmapData#copyPixels
-    * @param {HTMLImage|string} source - The Image to draw. If you give a key it will try and find the Image in the Game.Cache.
+    * @param {Phaser.Sprite|Phaser.Image|Phaser.BitmapData|HTMLImage|string} source - The Image to copy from. If you give a string it will try and find the Image in the Game.Cache.
     * @param {Phaser.Rectangle} area - The Rectangle region to copy from the source image.
-    * @param {number} destX - The destination x coordinate to copy the image to.
-    * @param {number} destY - The destination y coordinate to copy the image to.
+    * @param {number} x - The destination x coordinate to copy the image to.
+    * @param {number} y - The destination y coordinate to copy the image to.
     */
-    copyPixels: function (source, area, destX, destY) {
+    copyPixels: function (source, area, x, y) {
 
         if (typeof source === 'string')
         {
             source = this.game.cache.getImage(source);
         }
 
-        if (source)
+        var src = source;
+        var sx = 0;
+        var sy = 0;
+
+        if (source instanceof Phaser.Image || source instanceof Phaser.Sprite)
         {
-            this.context.drawImage(source, area.x, area.y, area.width, area.height, destX, destY, area.width, area.height);
+            src = source.texture.baseTexture.source;
+            var frame = source.texture.frame;
+            sx = frame.x;
+            sy = frame.y;
         }
+        else
+        {
+            if (source instanceof Phaser.BitmapData)
+            {
+                src = source.canvas;
+            }
+        }
+
+        this.context.drawImage(src, sx + area.x, sy + area.y, area.width, area.height, x, y, area.width, area.height);
 
         this.dirty = true;
 
     },
 
     /**
-    * Draws the given image to this BitmapData at the coordinates specified. If you need to only draw a part of the image use BitmapData.copyPixels instead.
+    * Draws the given image or Game Object to this BitmapData at the coordinates specified.
+    * You can use the optional width and height values to 'stretch' the image as it's drawn.
     *
     * @method Phaser.BitmapData#draw
-    * @param {HTMLImage|string} source - The Image to draw. If you give a string it will try and find the Image in the Game.Cache.
+    * @param {Phaser.Sprite|Phaser.Image|Phaser.BitmapData|HTMLImage|string} source - The Image to draw. If you give a string it will try and find the Image in the Game.Cache.
     * @param {number} [x=0] - The x coordinate to draw the image to.
     * @param {number} [y=0] - The y coordinate to draw the image to.
+    * @param {number} [width] - The width when drawing the image. You can use this to optionally stretch the drawn image horizontally.
+    * @param {number} [height] - The height when drawing the image. You can use this to optionally stretch the drawn image vertically.
     */
-    draw: function (source, x, y) {
+    draw: function (source, x, y, width, height) {
 
         if (typeof x === 'undefined') { x = 0; }
         if (typeof y === 'undefined') { y = 0; }
@@ -18304,17 +18480,49 @@ Phaser.BitmapData.prototype = {
             source = this.game.cache.getImage(source);
         }
 
-        if (source)
+        var src = source;
+        var sx = 0;
+        var sy = 0;
+        var sw = 0;
+        var sh = 0;
+
+        if (source instanceof Phaser.Image || source instanceof Phaser.Sprite)
         {
-            this.context.drawImage(source, 0, 0, source.width, source.height, x, y, source.width, source.height);
+            src = source.texture.baseTexture.source;
+            var frame = source.texture.frame;
+            sx = frame.x;
+            sy = frame.y;
+            sw = frame.width;
+            sh = frame.height;
+            // this.context.drawImage(sprite.texture.baseTexture.source, frame.x, frame.y, frame.width, frame.height, x, y, frame.width, frame.height);
         }
+        else
+        {
+            if (source instanceof Phaser.BitmapData)
+            {
+                src = source.canvas;
+                // this.context.drawImage(source.canvas, 0, 0, source.width, source.height, x, y, source.width, source.height);
+            }
+
+            sw = source.width;
+            sh = source.height;
+            // this.context.drawImage(source, 0, 0, source.width, source.height, x, y, source.width, source.height);
+        }
+
+        if (typeof width === 'undefined') { width = sw; }
+        if (typeof height === 'undefined') { height = sh; }
+
+        this.context.drawImage(src, sx, sy, sw, sh, x, y, width, height);
 
         this.dirty = true;
 
     },
 
     /**
-    * Draws the given image to this BitmapData at the coordinates specified. If you need to only draw a part of the image use BitmapData.copyPixels instead.
+    * DEPRECATED: Use BitmapData.draw instead.
+    * 
+    * Draws the given image to this BitmapData at the coordinates specified.
+    * If you need to only draw a part of the image use BitmapData.copyPixels instead.
     *
     * @method Phaser.BitmapData#drawSprite
     * @param {Phaser.Sprite|Phaser.Image} sprite - The Sprite to draw. Must have a loaded texture and frame.
@@ -18326,11 +18534,7 @@ Phaser.BitmapData.prototype = {
         if (typeof x === 'undefined') { x = 0; }
         if (typeof y === 'undefined') { y = 0; }
 
-        var frame = sprite.texture.frame;
-
-        this.context.drawImage(sprite.texture.baseTexture.source, frame.x, frame.y, frame.width, frame.height, x, y, frame.width, frame.height);
-
-        this.dirty = true;
+        this.draw(sprite, x, y);
 
     },
 
@@ -18338,36 +18542,40 @@ Phaser.BitmapData.prototype = {
     * Draws the given image onto this BitmapData using an image as an alpha mask.
     *
     * @method Phaser.BitmapData#alphaMask
-    * @param {HTMLImage|string} source - The Image to draw. If you give a key it will try and find the Image in the Game.Cache.
-    * @param {HTMLImage|string} mask - The Image to use as the alpha mask. If you give a key it will try and find the Image in the Game.Cache.
+    * @param {Phaser.Sprite|Phaser.Image|Phaser.BitmapData|HTMLImage|string} source - The Image to draw. If you give a key it will try and find the Image in the Game.Cache.
+    * @param {Phaser.Sprite|Phaser.Image|Phaser.BitmapData|HTMLImage|string|null} [mask] - The Image to use as the alpha mask. If you give a key it will try and find the Image in the Game.Cache. If you pass nothing or null it will use itself.
+    * @param {Phaser.Rectangle} [sourceRect] - A Rectangle where x/y define the coordinates to draw the Source image to and width/height define the size.
+    * @param {Phaser.Rectangle} [maskRect] - A Rectangle where x/y define the coordinates to draw the Mask image to and width/height define the size.
     */
-    alphaMask: function (source, mask) {
+    alphaMask: function (source, mask, sourceRect, maskRect) {
+
+        if (typeof mask === 'undefined' || mask === null) { mask = this; }
 
         var temp = this.context.globalCompositeOperation;
 
-        if (typeof mask === 'string')
+        if (typeof maskRect === 'undefined' || maskRect === null)
         {
-            mask = this.game.cache.getImage(mask);
+            this.draw(mask);
         }
-
-        if (mask)
+        else
         {
-            this.context.drawImage(mask, 0, 0);
+            this.draw(mask, maskRect.x, maskRect.y, maskRect.width, maskRect.height);
         }
 
         this.context.globalCompositeOperation = 'source-atop';
 
-        if (typeof source === 'string')
+        if (typeof sourceRect === 'undefined' || sourceRect === null)
         {
-            source = this.game.cache.getImage(source);
+            this.draw(source);
         }
-
-        if (source)
+        else
         {
-            this.context.drawImage(source, 0, 0);
+            this.draw(source, sourceRect.x, sourceRect.y, sourceRect.width, sourceRect.height);
         }
 
         this.context.globalCompositeOperation = temp;
+
+        this.update();
 
         this.dirty = true;
 
@@ -18375,27 +18583,45 @@ Phaser.BitmapData.prototype = {
 
     /**
     * Scans this BitmapData for all pixels matching the given r,g,b values and then draws them into the given destination BitmapData.
-    * The destination BitmapData must be large enough to receive all of the pixels that are scanned.
+    * The original BitmapData remains unchanged.
+    * The destination BitmapData must be large enough to receive all of the pixels that are scanned unless the 'resize' parameter is true.
     * Although the destination BitmapData is returned from this method, it's actually modified directly in place, meaning this call is perfectly valid:
     * `picture.extract(mask, r, g, b)`
+    * You can specify optional r2, g2, b2 color values. If given the pixel written to the destination bitmap will be of the r2, g2, b2 color.
+    * If not given it will be written as the same color it was extracted. You can provide one or more alternative colors, allowing you to tint
+    * the color during extraction.
     *
     * @method Phaser.BitmapData#extract
     * @param {Phaser.BitmapData} destination - The BitmapData that the extracts pixels will be drawn to.
     * @param {number} r - The red color component, in the range 0 - 255.
     * @param {number} g - The green color component, in the range 0 - 255.
     * @param {number} b - The blue color component, in the range 0 - 255.
-    * @param {number} [a=255] - The alpha color component, in the range 0 - 255.
+    * @param {number} [a=255] - The alpha color component, in the range 0 - 255 that the new pixel will be drawn at.
+    * @param {boolean} [resize=false] - Should the destination BitmapData be resized to match this one before the pixels are copied?
+    * @param {number} [r2] - An alternative red color component to be written to the destination, in the range 0 - 255.
+    * @param {number} [g2] - An alternative green color component to be written to the destination, in the range 0 - 255.
+    * @param {number} [b2] - An alternative blue color component to be written to the destination, in the range 0 - 255.
     * @returns {Phaser.BitmapData} The BitmapData that the extract pixels were drawn on.
     */
-    extract: function (destination, r, g, b, a) {
+    extract: function (destination, r, g, b, a, resize, r2, g2, b2) {
 
         if (typeof a === 'undefined') { a = 255; }
+        if (typeof resize === 'undefined') { resize = false; }
+        if (typeof r2 === 'undefined') { r2 = r; }
+        if (typeof g2 === 'undefined') { g2 = g; }
+        if (typeof b2 === 'undefined') { b2 = b; }
+
+        if (resize)
+        {
+            destination.resize(this.width, this.height);
+        }
 
         this.processPixelRGB(
-            function(pixel, x, y){
+            function (pixel, x, y)
+            {
                 if (pixel.r === r && pixel.g === g && pixel.b === b)
                 {
-                    destination.setPixel32(x, y, r, g, b, a, false);
+                    destination.setPixel32(x, y, r2, g2, b2, a, false);
                 }
                 return false;
             },
@@ -18597,6 +18823,12 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     this.body = null;
 
     /**
+    * @property {boolean} alive - A useful boolean to control if the Sprite is alive or dead (in terms of your gameplay, it doesn't effect rendering). Also linked to Sprite.health and Sprite.damage.
+    * @default
+    */
+    this.alive = true;
+
+    /**
     * @property {number} health - Health value. Used in combination with damage() to allow for quick killing of Sprites.
     */
     this.health = 1;
@@ -18680,7 +18912,7 @@ Phaser.Sprite.prototype.preUpdate = function() {
         this._cache[1] = this.world.y;
         this._cache[2] = this.rotation;
 
-        if (this.body)
+        if (this.body && this.body.enable)
         {
             this.body.preUpdate();
         }
@@ -18755,7 +18987,7 @@ Phaser.Sprite.prototype.preUpdate = function() {
 
     this.animations.update();
 
-    if (this.body)
+    if (this.body && this.body.enable)
     {
         this.body.preUpdate();
     }
@@ -18794,7 +19026,7 @@ Phaser.Sprite.prototype.postUpdate = function() {
         this.key.render();
     }
 
-    if (this.exists && this.body)
+    if (this.exists && this.body && this.body.enable)
     {
         this.body.postUpdate();
     }
@@ -18863,8 +19095,6 @@ Phaser.Sprite.prototype.loadTexture = function (key, frame) {
         if (this.game.cache.isSpriteSheet(key))
         {
             this.key = key;
-
-            // var frameData = this.game.cache.getFrameData(key);
             this.animations.loadFrameData(this.game.cache.getFrameData(key));
 
             if (typeof frame === 'string')
@@ -18880,6 +19110,7 @@ Phaser.Sprite.prototype.loadTexture = function (key, frame) {
         {
             this.key = key;
             this.setTexture(PIXI.TextureCache[key]);
+            this.animations.loadFrameData(null);
             return;
         }
     }
@@ -20531,7 +20762,7 @@ Phaser.TileSprite.prototype.preUpdate = function() {
         this._cache[1] = this.world.y;
         this._cache[2] = this.rotation;
 
-        if (this.body)
+        if (this.body && this.body.enable)
         {
             this.body.preUpdate();
         }
@@ -20599,7 +20830,7 @@ Phaser.TileSprite.prototype.preUpdate = function() {
         this.tilePosition.y += this._scroll.y * this.game.time.physicsElapsed;
     }
 
-    if (this.body)
+    if (this.body && this.body.enable)
     {
         this.body.preUpdate();
     }
@@ -20632,7 +20863,7 @@ Phaser.TileSprite.prototype.update = function() {
 */
 Phaser.TileSprite.prototype.postUpdate = function() {
 
-    if (this.exists && this.body)
+    if (this.exists && this.body && this.body.enable)
     {
         this.body.postUpdate();
     }
@@ -23598,7 +23829,7 @@ Phaser.RenderTexture = function (game, width, height, key, scaleMode) {
     */
     this._temp = new Phaser.Point();
 
-    PIXI.RenderTexture.call(this, width, height, scaleMode);
+    PIXI.RenderTexture.call(this, width, height, this.game.renderer, scaleMode);
 
 };
 
@@ -23692,13 +23923,23 @@ Phaser.SpriteBatch.prototype.constructor = Phaser.SpriteBatch;
 * @param {number} characterWidth - The width of each character in the font set.
 * @param {number} characterHeight - The height of each character in the font set.
 * @param {string} chars - The characters used in the font set, in display order. You can use the TEXT_SET consts for common font set arrangements.
-* @param {number} charsPerRow - The number of characters per row in the font set.
+* @param {number} [charsPerRow] - The number of characters per row in the font set. If not given charsPerRow will be the image width / characterWidth.
 * @param {number} [xSpacing=0] - If the characters in the font set have horizontal spacing between them set the required amount here.
 * @param {number} [ySpacing=0] - If the characters in the font set have vertical spacing between them set the required amount here.
 * @param {number} [xOffset=0] - If the font set doesn't start at the top left of the given image, specify the X coordinate offset here.
 * @param {number} [yOffset=0] - If the font set doesn't start at the top left of the given image, specify the Y coordinate offset here.
 */
 Phaser.RetroFont = function (game, key, characterWidth, characterHeight, chars, charsPerRow, xSpacing, ySpacing, xOffset, yOffset) {
+
+    if (!game.cache.checkImageKey(key))
+    {
+        return false;
+    }
+
+    if (typeof charsPerRow === 'undefined' || charsPerRow === null)
+    {
+        charsPerRow = game.cache.getImage(key).width / characterWidth;
+    }
 
     /**
     * @property {number} characterWidth - The width of each character in the font set.
@@ -23727,11 +23968,13 @@ Phaser.RetroFont = function (game, key, characterWidth, characterHeight, chars, 
 
     /**
     * @property {number} offsetX - If the font set doesn't start at the top left of the given image, specify the X coordinate offset here.
+    * @readonly
     */
     this.offsetX = xOffset || 0;
 
     /**
     * @property {number} offsetY - If the font set doesn't start at the top left of the given image, specify the Y coordinate offset here.
+    * @readonly
     */
     this.offsetY = yOffset || 0;
 
@@ -23825,9 +24068,13 @@ Phaser.RetroFont = function (game, key, characterWidth, characterHeight, chars, 
 
     game.cache.updateFrameData(key, data);
 
+    /**
+    * @property {Phaser.Image} stamp - The image that is stamped to the RenderTexture for each character in the font.
+    * @readonly
+    */
     this.stamp = new Phaser.Image(game, 0, 0, key, 0);
 
-    Phaser.RenderTexture.call(this, game);
+    Phaser.RenderTexture.call(this, game, 100, 100, '', Phaser.scaleModes.NEAREST);
 
     /**
     * @property {number} type - Base Phaser object type.
@@ -23938,7 +24185,7 @@ Phaser.RetroFont.TEXT_SET10 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 Phaser.RetroFont.TEXT_SET11 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ.,\"-+!?()':;0123456789";
 
 /**
-* If you need this FlxSprite to have a fixed width and custom alignment you can set the width here.<br>
+* If you need this RetroFont to have a fixed width and custom alignment you can set the width here.
 * If text is wider than the width specified it will be cropped off.
 *
 * @method Phaser.RetroFont#setFixedWidth
@@ -23991,7 +24238,7 @@ Phaser.RetroFont.prototype.setText = function (content, multiLine, characterSpac
 };
 
 /**
-* Updates the BitmapData of the Sprite with the text
+* Updates the texture with the new text.
 *
 * @method Phaser.RetroFont#buildRetroFontText
 * @memberof Phaser.RetroFont
@@ -24085,7 +24332,7 @@ Phaser.RetroFont.prototype.buildRetroFontText = function () {
 * Internal function that takes a single line of text (2nd parameter) and pastes it into the BitmapData at the given coordinates.
 * Used by getLine and getMultiLine
 *
-* @method Phaser.RetroFont#buildRetroFontText
+* @method Phaser.RetroFont#pasteLine
 * @memberof Phaser.RetroFont
 * @param {string} line - The single line of text to paste.
 * @param {number} x - The x coordinate.
@@ -24175,6 +24422,42 @@ Phaser.RetroFont.prototype.removeUnsupportedCharacters = function (stripCR) {
     }
 
     return newString;
+
+};
+
+/**
+* Updates the x and/or y offset that the font is rendered from. This updates all of the texture frames, so be careful how often it is called.
+* Note that the values given for the x and y properties are either ADDED to or SUBTRACTED from (if negative) the existing offsetX/Y values of the characters.
+* So if the current offsetY is 8 and you want it to start rendering from y16 you would call updateOffset(0, 8) to add 8 to the current y offset.
+*
+* @method Phaser.RetroFont#updateOffset
+* @memberof Phaser.RetroFont
+* @param {number} [xOffset=0] - If the font set doesn't start at the top left of the given image, specify the X coordinate offset here.
+* @param {number} [yOffset=0] - If the font set doesn't start at the top left of the given image, specify the Y coordinate offset here.
+*/
+Phaser.RetroFont.prototype.updateOffset = function (x, y) {
+
+    if (this.offsetX === x && this.offsetY === y)
+    {
+        return;
+    }
+
+    var diffX = x - this.offsetX;
+    var diffY = y - this.offsetY;
+
+    var frames = this.game.cache.getFrameData(this.stamp.key).getFrames();
+    var i = frames.length;
+
+    while (i--)
+    {
+        frames[i].x += diffX;
+        frames[i].y += diffY;
+        PIXI.TextureCache[frames[i].uuid].frame.x = frames[i].x;
+        PIXI.TextureCache[frames[i].uuid].frame.y = frames[i].y;
+    }
+
+    this.buildRetroFontText();
+
 };
 
 /**
@@ -24210,6 +24493,27 @@ Object.defineProperty(Phaser.RetroFont.prototype, "text", {
 
             this.buildRetroFontText();
         }
+
+    }
+
+});
+
+/**
+* @name Phaser.BitmapText#smoothed
+* @property {string} text - Set this value to update the text in this sprite. Carriage returns are automatically stripped out if multiLine is false. Text is converted to upper case if autoUpperCase is true.
+*/
+Object.defineProperty(Phaser.RetroFont.prototype, "smoothed", {
+
+    get: function () {
+
+        return this.stamp.smoothed;
+
+    },
+
+    set: function (value) {
+
+        this.stamp.smoothed = value;
+        this.buildRetroFontText();
 
     }
 
@@ -30569,7 +30873,16 @@ Object.defineProperty(Phaser.Timer.prototype, "length", {
 Object.defineProperty(Phaser.Timer.prototype, "ms", {
 
     get: function () {
-        return this._now - this._started - this._pauseTotal;
+
+        if (this.running)
+        {
+            return this._now - this._started - this._pauseTotal;
+        }
+        else
+        {
+            return 0;
+        }
+
     }
 
 });
@@ -30582,7 +30895,16 @@ Object.defineProperty(Phaser.Timer.prototype, "ms", {
 Object.defineProperty(Phaser.Timer.prototype, "seconds", {
 
     get: function () {
-        return this.ms * 0.001;
+
+        if (this.running)
+        {
+            return this.ms * 0.001;
+        }
+        else
+        {
+            return 0;
+        }
+
     }
 
 });
@@ -33919,37 +34241,6 @@ Phaser.Loader = function (game) {
     this.game = game;
 
     /**
-    * @property {array} _fileList - Contains all the assets file infos.
-    * @private
-    */
-    this._fileList = [];
-
-    /**
-    * @property {number} _fileIndex - The index of the current file being loaded.
-    * @private
-    */
-    this._fileIndex = 0;
-
-    /**
-    * @property {number} _progressChunk - Indicates the size of 1 file in terms of a percentage out of 100.
-    * @private
-    * @default
-    */
-    this._progressChunk = 0;
-
-    /**
-    * @property {XMLHttpRequest} - An XMLHttpRequest object used for loading text and audio data.
-    * @private
-    */
-    this._xhr = new XMLHttpRequest();
-
-    /**
-    * @property {XDomainRequest} - An ajax request used specifically by IE9 for CORs loading issues.
-    * @private
-    */
-    this._ajax = null;
-
-    /**
     * @property {boolean} isLoading - True if the Loader is in the process of loading the queue.
     * @default
     */
@@ -34020,6 +34311,49 @@ Phaser.Loader = function (game) {
     * @property {Phaser.Signal} onLoadComplete - This event is dispatched when the final file in the load queue has either loaded or failed.
     */
     this.onLoadComplete = new Phaser.Signal();
+
+    /**
+    * @property {array} _packList - Contains all the assets packs.
+    * @private
+    */
+    this._packList = [];
+
+    /**
+    * @property {number} _packIndex - The index of the current asset pack.
+    * @private
+    */
+    this._packIndex = 0;
+
+    /**
+    * @property {array} _fileList - Contains all the assets file infos.
+    * @private
+    */
+    this._fileList = [];
+
+    /**
+    * @property {number} _fileIndex - The index of the current file being loaded.
+    * @private
+    */
+    this._fileIndex = 0;
+
+    /**
+    * @property {number} _progressChunk - Indicates the size of 1 file in terms of a percentage out of 100.
+    * @private
+    * @default
+    */
+    this._progressChunk = 0;
+
+    /**
+    * @property {XMLHttpRequest} - An XMLHttpRequest object used for loading text and audio data.
+    * @private
+    */
+    this._xhr = new XMLHttpRequest();
+
+    /**
+    * @property {XDomainRequest} - An ajax request used specifically by IE9 for CORs loading issues.
+    * @private
+    */
+    this._ajax = null;
 
 };
 
@@ -34173,6 +34507,10 @@ Phaser.Loader.prototype = {
 
         this.preloadSprite = null;
         this.isLoading = false;
+
+        this._packList.length = 0;
+        this._packIndex = 0;
+
         this._fileList.length = 0;
         this._fileIndex = 0;
 
@@ -34182,11 +34520,11 @@ Phaser.Loader.prototype = {
     * Internal function that adds a new entry to the file list. Do not call directly.
     *
     * @method Phaser.Loader#addToFileList
+    * @protected
     * @param {string} type - The type of resource to add to the list (image, audio, xml, etc).
     * @param {string} key - The unique Cache ID key of this resource.
     * @param {string} url - The URL the asset will be loaded from.
     * @param {object} properties - Any additional properties needed to load the file.
-    * @protected
     */
     addToFileList: function (type, key, url, properties) {
 
@@ -34253,6 +34591,43 @@ Phaser.Loader.prototype = {
         {
             this._fileList[index] = entry;
         }
+
+    },
+
+    /**
+    * Add an image to the Loader.
+    *
+    * @method Phaser.Loader#pack
+    * @param {string} key - Unique asset key of this image file.
+    * @param {string} [url] - URL of the Asset Pack JSON file. If you wish to pass a json object instead set this to null and pass the object as the data parameter.
+    * @param {object} [data] - The Asset Pack JSON data. Use this to pass in a json data object rather than loading it from a URL. TODO
+    * @param {object} [callbackContext] - Some Loader operations, like Binary and Script require a context for their callbacks. Pass the context here.
+    * @return {Phaser.Loader} This Loader instance.
+    */
+    pack: function (key, url, data, callbackContext) {
+
+        if (typeof url === "undefined") { url = null; }
+        if (typeof data === "undefined") { data = null; }
+        if (typeof callbackContext === "undefined") { callbackContext = this; }
+
+        if (url === null && data === null)
+        {
+            console.warn('Phaser.Loader.pack - Both url and data are null. One must be set.');
+            return this;
+        }
+
+        //  A data object has been given
+        if (data)
+        {
+            if (typeof data === 'string')
+            {
+                data = JSON.parse(data);
+            }
+        }
+
+        this._packList.push( { key: key, url: url, data: data, loaded: false, error: false, callbackContext: callbackContext } );
+
+        return this;
 
     },
 
@@ -34428,26 +34803,26 @@ Phaser.Loader.prototype = {
     *
     * @method Phaser.Loader#tilemap
     * @param {string} key - Unique asset key of the tilemap data.
-    * @param {string} [mapDataURL] - The url of the map data file (csv/json)
-    * @param {object} [mapData] - An optional JSON data object. If given then the mapDataURL is ignored and this JSON object is used for map data instead.
+    * @param {string} [url] - The url of the map data file (csv/json)
+    * @param {object} [data] - An optional JSON data object. If given then the url is ignored and this JSON object is used for map data instead.
     * @param {number} [format=Phaser.Tilemap.CSV] - The format of the map data. Either Phaser.Tilemap.CSV or Phaser.Tilemap.TILED_JSON.
     * @return {Phaser.Loader} This Loader instance.
     */
-    tilemap: function (key, mapDataURL, mapData, format) {
+    tilemap: function (key, url, data, format) {
 
-        if (typeof mapDataURL === "undefined") { mapDataURL = null; }
-        if (typeof mapData === "undefined") { mapData = null; }
+        if (typeof url === "undefined") { url = null; }
+        if (typeof data === "undefined") { data = null; }
         if (typeof format === "undefined") { format = Phaser.Tilemap.CSV; }
 
-        if (mapDataURL == null && mapData == null)
+        if (url == null && data == null)
         {
-            console.warn('Phaser.Loader.tilemap - Both mapDataURL and mapData are null. One must be set.');
+            console.warn('Phaser.Loader.tilemap - Both url and data are null. One must be set.');
 
             return this;
         }
 
         //  A map data object has been given
-        if (mapData)
+        if (data)
         {
             switch (format)
             {
@@ -34458,18 +34833,18 @@ Phaser.Loader.prototype = {
                 //  An xml string or object has been given
                 case Phaser.Tilemap.TILED_JSON:
 
-                    if (typeof mapData === 'string')
+                    if (typeof data === 'string')
                     {
-                        mapData = JSON.parse(mapData);
+                        data = JSON.parse(data);
                     }
                     break;
             }
 
-            this.game.cache.addTilemap(key, null, mapData, format);
+            this.game.cache.addTilemap(key, null, data, format);
         }
         else
         {
-            this.addToFileList('tilemap', key, mapDataURL, { format: format });
+            this.addToFileList('tilemap', key, url, { format: format });
         }
 
         return this;
@@ -34482,37 +34857,37 @@ Phaser.Loader.prototype = {
     *
     * @method Phaser.Loader#physics
     * @param {string} key - Unique asset key of the physics json data.
-    * @param {string} [dataURL] - The url of the map data file (csv/json)
-    * @param {object} [jsonData] - An optional JSON data object. If given then the dataURL is ignored and this JSON object is used for physics data instead.
+    * @param {string} [url] - The url of the map data file (csv/json)
+    * @param {object} [data] - An optional JSON data object. If given then the url is ignored and this JSON object is used for physics data instead.
     * @param {string} [format=Phaser.Physics.LIME_CORONA_JSON] - The format of the physics data.
     * @return {Phaser.Loader} This Loader instance.
     */
-    physics: function (key, dataURL, jsonData, format) {
+    physics: function (key, url, data, format) {
 
-        if (typeof dataURL === "undefined") { dataURL = null; }
-        if (typeof jsonData === "undefined") { jsonData = null; }
+        if (typeof url === "undefined") { url = null; }
+        if (typeof data === "undefined") { data = null; }
         if (typeof format === "undefined") { format = Phaser.Physics.LIME_CORONA_JSON; }
 
-        if (dataURL == null && jsonData == null)
+        if (url == null && data == null)
         {
-            console.warn('Phaser.Loader.physics - Both dataURL and jsonData are null. One must be set.');
+            console.warn('Phaser.Loader.physics - Both url and data are null. One must be set.');
 
             return this;
         }
 
         //  A map data object has been given
-        if (jsonData)
+        if (data)
         {
-            if (typeof jsonData === 'string')
+            if (typeof data === 'string')
             {
-                jsonData = JSON.parse(jsonData);
+                data = JSON.parse(data);
             }
 
-            this.game.cache.addPhysicsData(key, null, jsonData, format);
+            this.game.cache.addPhysicsData(key, null, data, format);
         }
         else
         {
-            this.addToFileList('physics', key, dataURL, { format: format });
+            this.addToFileList('physics', key, url, { format: format });
         }
 
         return this;
@@ -34752,6 +35127,26 @@ Phaser.Loader.prototype = {
             return;
         }
 
+        if (this._packList.length > 0)
+        {
+            this._packIndex = 0;
+            this.loadPack();
+        }
+        else
+        {
+            this.beginLoad();
+        }
+
+    },
+
+    /**
+    * Starts off the actual loading process after the asset packs have been sorted out.
+    *
+    * @method Phaser.Loader#beginLoad
+    * @private
+    */
+    beginLoad: function () {
+
         this.progress = 0;
         this.progressFloat = 0;
         this.hasLoaded = false;
@@ -34771,6 +35166,181 @@ Phaser.Loader.prototype = {
             this.progressFloat = 100;
             this.hasLoaded = true;
             this.onLoadComplete.dispatch();
+        }
+
+    },
+
+    /**
+    * Loads the current asset pack in the queue.
+    *
+    * @method Phaser.Loader#loadPack
+    * @private
+    */
+    loadPack: function () {
+
+        if (!this._packList[this._packIndex])
+        {
+            console.warn('Phaser.Loader loadPackList invalid index ' + this._packIndex);
+            return;
+        }
+        
+        var pack = this._packList[this._packIndex];
+
+        if (pack.data !== null)
+        {
+            this.packLoadComplete(this._packIndex, false);
+        }
+        else
+        {
+            //  Load it
+            this.xhrLoad(this._packIndex, this.baseURL + pack.url, 'text', 'packLoadComplete', 'packLoadError');
+        }
+
+    },
+
+    /**
+    * Handle the successful loading of a JSON asset pack.
+    *
+    * @method Phaser.Loader#packLoadComplete
+    * @private
+    * @param {number} index - The index of the file in the file queue that loaded.
+    * @param {boolean} [parse=true] - Automatically parse the JSON data?
+    */
+    packLoadComplete: function (index, parse) {
+
+        if (typeof parse === 'undefined') { parse = true; }
+
+        if (!this._packList[index])
+        {
+            console.warn('Phaser.Loader packLoadComplete invalid index ' + index);
+            return;
+        }
+
+        var pack = this._packList[index];
+
+        pack.loaded = true;
+
+        if (parse)
+        {
+            var data = JSON.parse(this._xhr.responseText);
+        }
+        else
+        {
+            var data = this._packList[index].data;
+        }
+
+        if (data[pack.key])
+        {
+            var file;
+
+            for (var i = 0; i < data[pack.key].length; i++)
+            {
+                file = data[pack.key][i];
+
+                switch (file.type)
+                {
+                    case "image":
+                        this.image(file.key, file.url, file.overwrite);
+                        break;
+
+                    case "text":
+                        this.text(file.key, file.url, file.overwrite);
+                        break;
+
+                    case "json":
+                        this.json(file.key, file.url, file.overwrite);
+                        break;
+
+                    case "script":
+                        this.script(file.key, file.url, file.callback, pack.callbackContext);
+                        break;
+
+                    case "binary":
+                        this.binary(file.key, file.url, file.callback, pack.callbackContext);
+                        break;
+
+                    case "spritesheet":
+                        this.spritesheet(file.key, file.url, file.frameWidth, file.frameHeight, file.frameMax, file.margin, file.spacing);
+                        break;
+
+                    case "audio":
+                        this.audio(file.key, file.urls, file.autoDecode);
+                        break;
+
+                    case "tilemap":
+                        this.tilemap(file.key, file.url, file.data, Phaser.Tilemap[file.format]);
+                        break;
+
+                    case "physics":
+                        this.physics(file.key, file.url, file.data, Phaser.Loader[file.format]);
+                        break;
+
+                    case "bitmapFont":
+                        this.bitmapFont(file.key, file.textureURL, file.xmlURL, file.xmlData, file.xSpacing, file.ySpacing);
+                        break;
+
+                    case "atlasJSONArray":
+                        this.atlasJSONArray(file.key, file.textureURL, file.atlasURL, file.atlasData);
+                        break;
+
+                    case "atlasJSONHash":
+                        this.atlasJSONHash(file.key, file.textureURL, file.atlasURL, file.atlasData);
+                        break;
+
+                    case "atlasXML":
+                        this.atlasXML(file.key, file.textureURL, file.atlasURL, file.atlasData);
+                        break;
+
+                    case "atlas":
+                        this.atlas(file.key, file.textureURL, file.atlasURL, file.atlasData, Phaser.Loader[file.format]);
+                        break;
+                }
+            }
+        }
+
+        this.nextPack(index, true);
+
+    },
+
+    /**
+    * Error occured when loading an asset pack.
+    *
+    * @method Phaser.Loader#packError
+    * @private
+    * @param {number} index - The index of the file in the file queue that errored.
+    */
+    packError: function (index) {
+
+        this._packList[index].loaded = true;
+        this._packList[index].error = true;
+
+        this.onFileError.dispatch(this._packList[index].key, this._packList[index]);
+
+        console.warn("Phaser.Loader error loading pack file: " + this._packList[index].key + ' from URL ' + this._packList[index].url);
+
+        this.nextPack(index, true);
+
+    },
+
+    /**
+    * Handle loading the next asset pack.
+    *
+    * @method Phaser.Loader#nextPack
+    * @private
+    */
+    nextPack: function (index, success) {
+
+        this.onPackComplete.dispatch(this._packList[index].key, success, this.totalLoadedPacks(), this._packList.length);
+
+        this._packIndex++;
+
+        if (this._packIndex < this._packList.length)
+        {
+            this.loadPack();
+        }
+        else
+        {
+            this.beginLoad();
         }
 
     },
@@ -34824,15 +35394,7 @@ Phaser.Loader.prototype = {
                     //  WebAudio or Audio Tag?
                     if (this.game.sound.usingWebAudio)
                     {
-                        this._xhr.open("GET", this.baseURL + file.url, true);
-                        this._xhr.responseType = "arraybuffer";
-                        this._xhr.onload = function () {
-                            return _this.fileComplete(_this._fileIndex);
-                        };
-                        this._xhr.onerror = function () {
-                            return _this.fileError(_this._fileIndex);
-                        };
-                        this._xhr.send();
+                        this.xhrLoad(this._fileIndex, this.baseURL + file.url, 'arraybuffer', 'fileComplete', 'fileError');
                     }
                     else if (this.game.sound.usingAudioTag)
                     {
@@ -34897,83 +35459,78 @@ Phaser.Loader.prototype = {
                 }
                 else
                 {
-                    this._xhr.open("GET", this.baseURL + file.url, true);
-                    this._xhr.responseType = "text";
-    
-                    this._xhr.onload = function () {
-                        return _this.jsonLoadComplete(_this._fileIndex);
-                    };
-    
-                    this._xhr.onerror = function () {
-                        return _this.dataLoadError(_this._fileIndex);
-                    };
-    
-                    this._xhr.send();
+                    this.xhrLoad(this._fileIndex, this.baseURL + file.url, 'text', 'jsonLoadComplete', 'dataLoadError');
                 }
 
                 break;
 
             case 'tilemap':
-                this._xhr.open("GET", this.baseURL + file.url, true);
-                this._xhr.responseType = "text";
 
                 if (file.format === Phaser.Tilemap.TILED_JSON)
                 {
-                    this._xhr.onload = function () {
-                        return _this.jsonLoadComplete(_this._fileIndex);
-                    };
+                    this.xhrLoad(this._fileIndex, this.baseURL + file.url, 'text', 'jsonLoadComplete', 'dataLoadError');
                 }
                 else if (file.format === Phaser.Tilemap.CSV)
                 {
-                    this._xhr.onload = function () {
-                        return _this.csvLoadComplete(_this._fileIndex);
-                    };
+                    this.xhrLoad(this._fileIndex, this.baseURL + file.url, 'text', 'csvLoadComplete', 'dataLoadError');
                 }
                 else
                 {
                     throw new Error("Phaser.Loader. Invalid Tilemap format: " + file.format);
                 }
-
-                this._xhr.onerror = function () {
-                    return _this.dataLoadError(_this._fileIndex);
-                };
-                this._xhr.send();
                 break;
 
             case 'text':
             case 'script':
             case 'physics':
-                this._xhr.open("GET", this.baseURL + file.url, true);
-                this._xhr.responseType = "text";
-                this._xhr.onload = function () {
-                    return _this.fileComplete(_this._fileIndex);
-                };
-                this._xhr.onerror = function () {
-                    return _this.fileError(_this._fileIndex);
-                };
-                this._xhr.send();
+                this.xhrLoad(this._fileIndex, this.baseURL + file.url, 'text', 'fileComplete', 'fileError');
                 break;
 
             case 'binary':
-                this._xhr.open("GET", this.baseURL + file.url, true);
-                this._xhr.responseType = "arraybuffer";
-                this._xhr.onload = function () {
-                    return _this.fileComplete(_this._fileIndex);
-                };
-                this._xhr.onerror = function () {
-                    return _this.fileError(_this._fileIndex);
-                };
-                this._xhr.send();
+                this.xhrLoad(this._fileIndex, this.baseURL + file.url, 'arraybuffer', 'fileComplete', 'fileError');
                 break;
         }
 
     },
 
     /**
-    * Private method ONLY used by loader.
-    * @method Phaser.Loader#getAudioURL
-    * @param {array|string} urls - Either an array of audio file URLs or a string containing a single URL path.
+    * Starts the xhr loader.
+    * 
+    * @method Phaser.Loader#xhrLoad
     * @private
+    * @param {number} index - The index of the file to load from the file list.
+    * @param {string} url - The URL of the file.
+    * @param {string} type - The xhr responseType.
+    * @param {string} onload - A String of the name of the local function to be called on a successful file load.
+    * @param {string} onerror - A String of the name of the local function to be called on a file load error.
+    */
+    xhrLoad: function (index, url, type, onload, onerror) {
+
+        // console.log('xhrLoad', index, url, type, onload, onerror);
+
+        this._xhr.open("GET", url, true);
+        this._xhr.responseType = type;
+
+        var _this = this;
+
+        this._xhr.onload = function () {
+            return _this[onload](index);
+        };
+
+        this._xhr.onerror = function () {
+            return _this[onerror](index);
+        };
+
+        this._xhr.send();
+
+    },
+
+    /**
+    * Private method ONLY used by loader.
+    * 
+    * @method Phaser.Loader#getAudioURL
+    * @private
+    * @param {array|string} urls - Either an array of audio file URLs or a string containing a single URL path.
     */
     getAudioURL: function (urls) {
 
@@ -35034,7 +35591,6 @@ Phaser.Loader.prototype = {
         file.loaded = true;
 
         var loadNext = true;
-        var _this = this;
 
         switch (file.type)
         {
@@ -35058,30 +35614,19 @@ Phaser.Loader.prototype = {
                 {
                     //  Load the JSON or XML before carrying on with the next file
                     loadNext = false;
-                    this._xhr.open("GET", this.baseURL + file.atlasURL, true);
-                    this._xhr.responseType = "text";
 
                     if (file.format == Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY || file.format == Phaser.Loader.TEXTURE_ATLAS_JSON_HASH)
                     {
-                        this._xhr.onload = function () {
-                            return _this.jsonLoadComplete(index);
-                        };
+                        this.xhrLoad(this._fileIndex, this.baseURL + file.atlasURL, 'text', 'jsonLoadComplete', 'dataLoadError');
                     }
                     else if (file.format == Phaser.Loader.TEXTURE_ATLAS_XML_STARLING)
                     {
-                        this._xhr.onload = function () {
-                            return _this.xmlLoadComplete(index);
-                        };
+                        this.xhrLoad(this._fileIndex, this.baseURL + file.atlasURL, 'text', 'xmlLoadComplete', 'dataLoadError');
                     }
                     else
                     {
                         throw new Error("Phaser.Loader. Invalid Texture Atlas format: " + file.format);
                     }
-
-                    this._xhr.onerror = function () {
-                        return _this.dataLoadError(index);
-                    };
-                    this._xhr.send();
                 }
                 break;
 
@@ -35095,17 +35640,7 @@ Phaser.Loader.prototype = {
                 {
                     //  Load the XML before carrying on with the next file
                     loadNext = false;
-                    this._xhr.open("GET", this.baseURL + file.xmlURL, true);
-                    this._xhr.responseType = "text";
-
-                    this._xhr.onload = function () {
-                        return _this.xmlLoadComplete(index);
-                    };
-
-                    this._xhr.onerror = function () {
-                        return _this.dataLoadError(index);
-                    };
-                    this._xhr.send();
+                    this.xhrLoad(this._fileIndex, this.baseURL + file.xmlURL, 'text', 'xmlLoadComplete', 'dataLoadError');
                 }
                 break;
 
@@ -35319,9 +35854,10 @@ Phaser.Loader.prototype = {
     /**
     * Handle loading next file.
     *
+    * @method Phaser.Loader#nextFile
+    * @private
     * @param {number} previousIndex - Index of the previously loaded asset.
     * @param {boolean} success - Whether the previous asset loaded successfully or not.
-    * @private
     */
     nextFile: function (previousIndex, success) {
 
@@ -35369,6 +35905,7 @@ Phaser.Loader.prototype = {
     /**
     * Returns the number of files that have already been loaded, even if they errored.
     *
+    * @method Phaser.Loader#totalLoadedFiles
     * @return {number} The number of files that have already been loaded (even if they errored)
     */
     totalLoadedFiles: function () {
@@ -35388,8 +35925,9 @@ Phaser.Loader.prototype = {
     },
 
     /**
-    * Returns the number of files still waiting to be processed in the load queue. This value decreases as each file is in the queue is loaded.
+    * Returns the number of files still waiting to be processed in the load queue. This value decreases as each file in the queue is loaded.
     *
+    * @method Phaser.Loader#totalQueuedFiles
     * @return {number} The number of files that still remain in the load queue.
     */
     totalQueuedFiles: function () {
@@ -35399,6 +35937,50 @@ Phaser.Loader.prototype = {
         for (var i = 0; i < this._fileList.length; i++)
         {
             if (this._fileList[i].loaded === false)
+            {
+                total++;
+            }
+        }
+
+        return total;
+
+    },
+
+    /**
+    * Returns the number of asset packs that have already been loaded, even if they errored.
+    *
+    * @method Phaser.Loader#totalLoadedPacks
+    * @return {number} The number of asset packs that have already been loaded (even if they errored)
+    */
+    totalLoadedPacks: function () {
+
+        var total = 0;
+
+        for (var i = 0; i < this._packList.length; i++)
+        {
+            if (this._packList[i].loaded)
+            {
+                total++;
+            }
+        }
+
+        return total;
+
+    },
+
+    /**
+    * Returns the number of asset packs still waiting to be processed in the load queue. This value decreases as each pack in the queue is loaded.
+    *
+    * @method Phaser.Loader#totalQueuedPacks
+    * @return {number} The number of asset packs that still remain in the load queue.
+    */
+    totalQueuedPacks: function () {
+
+        var total = 0;
+
+        for (var i = 0; i < this._packList.length; i++)
+        {
+            if (this._packList[i].loaded === false)
             {
                 total++;
             }
@@ -39711,7 +40293,7 @@ Phaser.Physics.Arcade.prototype = {
     */
     separate: function (body1, body2, processCallback, callbackContext, overlapOnly) {
 
-        if (!this.intersects(body1, body2))
+        if (!body1.enable || !body2.enable || !this.intersects(body1, body2))
         {
             return false;
         }
@@ -40032,7 +40614,7 @@ Phaser.Physics.Arcade.prototype = {
     separateTile: function (i, body, tile) {
 
         //  We re-check for collision in case body was separated in a previous step
-        if (!tile.intersects(body.position.x, body.position.y, body.right, body.bottom))
+        if (!body.enable || !tile.intersects(body.position.x, body.position.y, body.right, body.bottom))
         {
             //  no collision so bail out (separted in a previous step)
             return false;
@@ -40732,6 +41314,12 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     * @property {number} type - The type of physics system this body belongs to.
     */
     this.type = Phaser.Physics.ARCADE;
+
+    /**
+    * @property {boolean} enable - A disabled body won't be checked for any form of collision or overlap or have its pre/post updates run.
+    * @default
+    */
+    this.enable = true;
 
     /**
     * @property {Phaser.Point} offset - The offset of the Physics Body from the Sprite x/y position.
@@ -43851,7 +44439,7 @@ Phaser.Tilemap.prototype = {
             {
                 var tile = this.layers[layer].data[y][x];
 
-                this.layers[layer].data[y][x] = null;
+                this.layers[layer].data[y][x] = new Phaser.Tile(this.layers[layer], -1, x, y, this.tileWidth, this.tileHeight);
 
                 this.layers[layer].dirty = true;
 
