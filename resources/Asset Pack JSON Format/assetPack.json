@@ -43,8 +43,8 @@
         },
         {
             "type": "audio",
-            "key": "soundFX",
-            "urls": [ "assets/audio/fx.mp3", "assets/audio/fx.ogg" ],
+            "key": "boden",
+            "urls": ["assets/audio/bodenstaendig_2000_in_rock_4bit.mp3", "assets/audio/bodenstaendig_2000_in_rock_4bit.ogg"],
             "autoDecode": true
         },
         {

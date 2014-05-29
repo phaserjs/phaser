@@ -23,37 +23,6 @@ Phaser.Loader = function (game) {
     this.game = game;
 
     /**
-    * @property {array} _fileList - Contains all the assets file infos.
-    * @private
-    */
-    this._fileList = [];
-
-    /**
-    * @property {number} _fileIndex - The index of the current file being loaded.
-    * @private
-    */
-    this._fileIndex = 0;
-
-    /**
-    * @property {number} _progressChunk - Indicates the size of 1 file in terms of a percentage out of 100.
-    * @private
-    * @default
-    */
-    this._progressChunk = 0;
-
-    /**
-    * @property {XMLHttpRequest} - An XMLHttpRequest object used for loading text and audio data.
-    * @private
-    */
-    this._xhr = new XMLHttpRequest();
-
-    /**
-    * @property {XDomainRequest} - An ajax request used specifically by IE9 for CORs loading issues.
-    * @private
-    */
-    this._ajax = null;
-
-    /**
     * @property {boolean} isLoading - True if the Loader is in the process of loading the queue.
     * @default
     */
@@ -124,6 +93,49 @@ Phaser.Loader = function (game) {
     * @property {Phaser.Signal} onLoadComplete - This event is dispatched when the final file in the load queue has either loaded or failed.
     */
     this.onLoadComplete = new Phaser.Signal();
+
+    /**
+    * @property {array} _packList - Contains all the assets packs.
+    * @private
+    */
+    this._packList = [];
+
+    /**
+    * @property {number} _packIndex - The index of the current asset pack.
+    * @private
+    */
+    this._packIndex = 0;
+
+    /**
+    * @property {array} _fileList - Contains all the assets file infos.
+    * @private
+    */
+    this._fileList = [];
+
+    /**
+    * @property {number} _fileIndex - The index of the current file being loaded.
+    * @private
+    */
+    this._fileIndex = 0;
+
+    /**
+    * @property {number} _progressChunk - Indicates the size of 1 file in terms of a percentage out of 100.
+    * @private
+    * @default
+    */
+    this._progressChunk = 0;
+
+    /**
+    * @property {XMLHttpRequest} - An XMLHttpRequest object used for loading text and audio data.
+    * @private
+    */
+    this._xhr = new XMLHttpRequest();
+
+    /**
+    * @property {XDomainRequest} - An ajax request used specifically by IE9 for CORs loading issues.
+    * @private
+    */
+    this._ajax = null;
 
 };
 
@@ -277,6 +289,10 @@ Phaser.Loader.prototype = {
 
         this.preloadSprite = null;
         this.isLoading = false;
+
+        this._packList.length = 0;
+        this._packIndex = 0;
+
         this._fileList.length = 0;
         this._fileIndex = 0;
 
@@ -286,11 +302,11 @@ Phaser.Loader.prototype = {
     * Internal function that adds a new entry to the file list. Do not call directly.
     *
     * @method Phaser.Loader#addToFileList
+    * @protected
     * @param {string} type - The type of resource to add to the list (image, audio, xml, etc).
     * @param {string} key - The unique Cache ID key of this resource.
     * @param {string} url - The URL the asset will be loaded from.
     * @param {object} properties - Any additional properties needed to load the file.
-    * @protected
     */
     addToFileList: function (type, key, url, properties) {
 
@@ -357,6 +373,43 @@ Phaser.Loader.prototype = {
         {
             this._fileList[index] = entry;
         }
+
+    },
+
+    /**
+    * Add an image to the Loader.
+    *
+    * @method Phaser.Loader#pack
+    * @param {string} key - Unique asset key of this image file.
+    * @param {string} [url] - URL of the Asset Pack JSON file. If you wish to pass a json object instead set this to null and pass the object as the data parameter.
+    * @param {object} [data] - The Asset Pack JSON data. Use this to pass in a json data object rather than loading it from a URL. TODO
+    * @param {object} [callbackContext] - Some Loader operations, like Binary and Script require a context for their callbacks. Pass the context here.
+    * @return {Phaser.Loader} This Loader instance.
+    */
+    pack: function (key, url, data, callbackContext) {
+
+        if (typeof url === "undefined") { url = null; }
+        if (typeof data === "undefined") { data = null; }
+        if (typeof callbackContext === "undefined") { callbackContext = this; }
+
+        if (url === null && data === null)
+        {
+            console.warn('Phaser.Loader.pack - Both url and data are null. One must be set.');
+            return this;
+        }
+
+        //  A data object has been given
+        if (data)
+        {
+            if (typeof data === 'string')
+            {
+                data = JSON.parse(data);
+            }
+        }
+
+        this._packList.push( { key: key, url: url, data: data, loaded: false, error: false, callbackContext: callbackContext } );
+
+        return this;
 
     },
 
@@ -856,6 +909,26 @@ Phaser.Loader.prototype = {
             return;
         }
 
+        if (this._packList.length > 0)
+        {
+            this._packIndex = 0;
+            this.loadPack();
+        }
+        else
+        {
+            this.beginLoad();
+        }
+
+    },
+
+    /**
+    * Starts off the actual loading process after the asset packs have been sorted out.
+    *
+    * @method Phaser.Loader#beginLoad
+    * @private
+    */
+    beginLoad: function () {
+
         this.progress = 0;
         this.progressFloat = 0;
         this.hasLoaded = false;
@@ -875,6 +948,181 @@ Phaser.Loader.prototype = {
             this.progressFloat = 100;
             this.hasLoaded = true;
             this.onLoadComplete.dispatch();
+        }
+
+    },
+
+    /**
+    * Loads the current asset pack in the queue.
+    *
+    * @method Phaser.Loader#loadPack
+    * @private
+    */
+    loadPack: function () {
+
+        if (!this._packList[this._packIndex])
+        {
+            console.warn('Phaser.Loader loadPackList invalid index ' + this._packIndex);
+            return;
+        }
+        
+        var pack = this._packList[this._packIndex];
+
+        if (pack.data !== null)
+        {
+            this.packLoadComplete(this._packIndex, false);
+        }
+        else
+        {
+            //  Load it
+            this.xhrLoad(this._packIndex, this.baseURL + pack.url, 'text', 'packLoadComplete', 'packLoadError');
+        }
+
+    },
+
+    /**
+    * Handle the successful loading of a JSON asset pack.
+    *
+    * @method Phaser.Loader#packLoadComplete
+    * @private
+    * @param {number} index - The index of the file in the file queue that loaded.
+    * @param {boolean} [parse=true] - Automatically parse the JSON data?
+    */
+    packLoadComplete: function (index, parse) {
+
+        if (typeof parse === 'undefined') { parse = true; }
+
+        if (!this._packList[index])
+        {
+            console.warn('Phaser.Loader packLoadComplete invalid index ' + index);
+            return;
+        }
+
+        var pack = this._packList[index];
+
+        pack.loaded = true;
+
+        if (parse)
+        {
+            var data = JSON.parse(this._xhr.responseText);
+        }
+        else
+        {
+            var data = this._packList[index].data;
+        }
+
+        if (data[pack.key])
+        {
+            var file;
+
+            for (var i = 0; i < data[pack.key].length; i++)
+            {
+                file = data[pack.key][i];
+
+                switch (file.type)
+                {
+                    case "image":
+                        this.image(file.key, file.url, file.overwrite);
+                        break;
+
+                    case "text":
+                        this.text(file.key, file.url, file.overwrite);
+                        break;
+
+                    case "json":
+                        this.json(file.key, file.url, file.overwrite);
+                        break;
+
+                    case "script":
+                        this.script(file.key, file.url, file.callback, pack.callbackContext);
+                        break;
+
+                    case "binary":
+                        this.binary(file.key, file.url, file.callback, pack.callbackContext);
+                        break;
+
+                    case "spritesheet":
+                        this.spritesheet(file.key, file.url, file.frameWidth, file.frameHeight, file.frameMax, file.margin, file.spacing);
+                        break;
+
+                    case "audio":
+                        this.audio(file.key, file.urls, file.autoDecode);
+                        break;
+
+                    case "tilemap":
+                        this.tilemap(file.key, file.url, file.data, Phaser.Tilemap[file.format]);
+                        break;
+
+                    case "physics":
+                        this.physics(file.key, file.url, file.data, Phaser.Loader[file.format]);
+                        break;
+
+                    case "bitmapFont":
+                        this.bitmapFont(file.key, file.textureURL, file.xmlURL, file.xmlData, file.xSpacing, file.ySpacing);
+                        break;
+
+                    case "atlasJSONArray":
+                        this.atlasJSONArray(file.key, file.textureURL, file.atlasURL, file.atlasData);
+                        break;
+
+                    case "atlasJSONHash":
+                        this.atlasJSONHash(file.key, file.textureURL, file.atlasURL, file.atlasData);
+                        break;
+
+                    case "atlasXML":
+                        this.atlasXML(file.key, file.textureURL, file.atlasURL, file.atlasData);
+                        break;
+
+                    case "atlas":
+                        this.atlas(file.key, file.textureURL, file.atlasURL, file.atlasData, Phaser.Loader[file.format]);
+                        break;
+                }
+            }
+        }
+
+        this.nextPack(index, true);
+
+    },
+
+    /**
+    * Error occured when loading an asset pack.
+    *
+    * @method Phaser.Loader#packError
+    * @private
+    * @param {number} index - The index of the file in the file queue that errored.
+    */
+    packError: function (index) {
+
+        this._packList[index].loaded = true;
+        this._packList[index].error = true;
+
+        this.onFileError.dispatch(this._packList[index].key, this._packList[index]);
+
+        console.warn("Phaser.Loader error loading pack file: " + this._packList[index].key + ' from URL ' + this._packList[index].url);
+
+        this.nextPack(index, true);
+
+    },
+
+    /**
+    * Handle loading the next asset pack.
+    *
+    * @method Phaser.Loader#nextPack
+    * @private
+    */
+    nextPack: function (index, success) {
+
+        this.onPackComplete.dispatch(this._packList[index].key, success, this.totalLoadedPacks(), this._packList.length);
+
+        this._packIndex++;
+
+        if (this._packIndex < this._packList.length)
+        {
+            this.loadPack();
+        }
+        else
+        {
+            this.beginLoad();
         }
 
     },
@@ -928,15 +1176,7 @@ Phaser.Loader.prototype = {
                     //  WebAudio or Audio Tag?
                     if (this.game.sound.usingWebAudio)
                     {
-                        this._xhr.open("GET", this.baseURL + file.url, true);
-                        this._xhr.responseType = "arraybuffer";
-                        this._xhr.onload = function () {
-                            return _this.fileComplete(_this._fileIndex);
-                        };
-                        this._xhr.onerror = function () {
-                            return _this.fileError(_this._fileIndex);
-                        };
-                        this._xhr.send();
+                        this.xhrLoad(this._fileIndex, this.baseURL + file.url, 'arraybuffer', 'fileComplete', 'fileError');
                     }
                     else if (this.game.sound.usingAudioTag)
                     {
@@ -1001,75 +1241,58 @@ Phaser.Loader.prototype = {
                 }
                 else
                 {
-                    this._xhr.open("GET", this.baseURL + file.url, true);
-                    this._xhr.responseType = "text";
-    
-                    this._xhr.onload = function () {
-                        return _this.jsonLoadComplete(_this._fileIndex);
-                    };
-    
-                    this._xhr.onerror = function () {
-                        return _this.dataLoadError(_this._fileIndex);
-                    };
-    
-                    this._xhr.send();
+                    this.xhrLoad(this._fileIndex, this.baseURL + file.url, 'text', 'jsonLoadComplete', 'dataLoadError');
                 }
 
                 break;
 
             case 'tilemap':
-                this._xhr.open("GET", this.baseURL + file.url, true);
-                this._xhr.responseType = "text";
 
                 if (file.format === Phaser.Tilemap.TILED_JSON)
                 {
-                    this._xhr.onload = function () {
-                        return _this.jsonLoadComplete(_this._fileIndex);
-                    };
+                    this.xhrLoad(this._fileIndex, this.baseURL + file.url, 'text', 'jsonLoadComplete', 'dataLoadError');
                 }
                 else if (file.format === Phaser.Tilemap.CSV)
                 {
-                    this._xhr.onload = function () {
-                        return _this.csvLoadComplete(_this._fileIndex);
-                    };
+                    this.xhrLoad(this._fileIndex, this.baseURL + file.url, 'text', 'csvLoadComplete', 'dataLoadError');
                 }
                 else
                 {
                     throw new Error("Phaser.Loader. Invalid Tilemap format: " + file.format);
                 }
-
-                this._xhr.onerror = function () {
-                    return _this.dataLoadError(_this._fileIndex);
-                };
-                this._xhr.send();
                 break;
 
             case 'text':
             case 'script':
             case 'physics':
-                this._xhr.open("GET", this.baseURL + file.url, true);
-                this._xhr.responseType = "text";
-                this._xhr.onload = function () {
-                    return _this.fileComplete(_this._fileIndex);
-                };
-                this._xhr.onerror = function () {
-                    return _this.fileError(_this._fileIndex);
-                };
-                this._xhr.send();
+                this.xhrLoad(this._fileIndex, this.baseURL + file.url, 'text', 'fileComplete', 'fileError');
                 break;
 
             case 'binary':
-                this._xhr.open("GET", this.baseURL + file.url, true);
-                this._xhr.responseType = "arraybuffer";
-                this._xhr.onload = function () {
-                    return _this.fileComplete(_this._fileIndex);
-                };
-                this._xhr.onerror = function () {
-                    return _this.fileError(_this._fileIndex);
-                };
-                this._xhr.send();
+                this.xhrLoad(this._fileIndex, this.baseURL + file.url, 'arraybuffer', 'fileComplete', 'fileError');
                 break;
         }
+
+    },
+
+    xhrLoad: function (index, url, type, onload, onerror) {
+
+        // console.log('xhrLoad', index, url, type, onload, onerror);
+
+        this._xhr.open("GET", url, true);
+        this._xhr.responseType = type;
+
+        var _this = this;
+
+        this._xhr.onload = function () {
+            return _this[onload](index);
+        };
+
+        this._xhr.onerror = function () {
+            return _this[onerror](index);
+        };
+
+        this._xhr.send();
 
     },
 
@@ -1138,7 +1361,6 @@ Phaser.Loader.prototype = {
         file.loaded = true;
 
         var loadNext = true;
-        var _this = this;
 
         switch (file.type)
         {
@@ -1162,30 +1384,19 @@ Phaser.Loader.prototype = {
                 {
                     //  Load the JSON or XML before carrying on with the next file
                     loadNext = false;
-                    this._xhr.open("GET", this.baseURL + file.atlasURL, true);
-                    this._xhr.responseType = "text";
 
                     if (file.format == Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY || file.format == Phaser.Loader.TEXTURE_ATLAS_JSON_HASH)
                     {
-                        this._xhr.onload = function () {
-                            return _this.jsonLoadComplete(index);
-                        };
+                        this.xhrLoad(this._fileIndex, this.baseURL + file.atlasURL, 'text', 'jsonLoadComplete', 'dataLoadError');
                     }
                     else if (file.format == Phaser.Loader.TEXTURE_ATLAS_XML_STARLING)
                     {
-                        this._xhr.onload = function () {
-                            return _this.xmlLoadComplete(index);
-                        };
+                        this.xhrLoad(this._fileIndex, this.baseURL + file.atlasURL, 'text', 'xmlLoadComplete', 'dataLoadError');
                     }
                     else
                     {
                         throw new Error("Phaser.Loader. Invalid Texture Atlas format: " + file.format);
                     }
-
-                    this._xhr.onerror = function () {
-                        return _this.dataLoadError(index);
-                    };
-                    this._xhr.send();
                 }
                 break;
 
@@ -1199,17 +1410,7 @@ Phaser.Loader.prototype = {
                 {
                     //  Load the XML before carrying on with the next file
                     loadNext = false;
-                    this._xhr.open("GET", this.baseURL + file.xmlURL, true);
-                    this._xhr.responseType = "text";
-
-                    this._xhr.onload = function () {
-                        return _this.xmlLoadComplete(index);
-                    };
-
-                    this._xhr.onerror = function () {
-                        return _this.dataLoadError(index);
-                    };
-                    this._xhr.send();
+                    this.xhrLoad(this._fileIndex, this.baseURL + file.xmlURL, 'text', 'xmlLoadComplete', 'dataLoadError');
                 }
                 break;
 
@@ -1492,7 +1693,7 @@ Phaser.Loader.prototype = {
     },
 
     /**
-    * Returns the number of files still waiting to be processed in the load queue. This value decreases as each file is in the queue is loaded.
+    * Returns the number of files still waiting to be processed in the load queue. This value decreases as each file in the queue is loaded.
     *
     * @return {number} The number of files that still remain in the load queue.
     */
@@ -1503,6 +1704,48 @@ Phaser.Loader.prototype = {
         for (var i = 0; i < this._fileList.length; i++)
         {
             if (this._fileList[i].loaded === false)
+            {
+                total++;
+            }
+        }
+
+        return total;
+
+    },
+
+    /**
+    * Returns the number of asset packs that have already been loaded, even if they errored.
+    *
+    * @return {number} The number of asset packs that have already been loaded (even if they errored)
+    */
+    totalLoadedPacks: function () {
+
+        var total = 0;
+
+        for (var i = 0; i < this._packList.length; i++)
+        {
+            if (this._packList[i].loaded)
+            {
+                total++;
+            }
+        }
+
+        return total;
+
+    },
+
+    /**
+    * Returns the number of asset packs still waiting to be processed in the load queue. This value decreases as each pack in the queue is loaded.
+    *
+    * @return {number} The number of asset packs that still remain in the load queue.
+    */
+    totalQueuedPacks: function () {
+
+        var total = 0;
+
+        for (var i = 0; i < this._packList.length; i++)
+        {
+            if (this._packList[i].loaded === false)
             {
                 total++;
             }
