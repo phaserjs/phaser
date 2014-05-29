@@ -751,25 +751,55 @@ Phaser.BitmapData.prototype = {
     },
 
     /**
+    * Creates a new Phaser.Image object, assigns this BitmapData to be its texture, adds it to the world then returns it.
+    *
+    * @method Phaser.BitmapData#addToWorld
+    * @param {number} [x=0] - The x coordinate to place the image at.
+    * @param {number} [y=0] - The y coordinate to place the image at.
+    * @return {Phaser.Image} The newly added Image object.
+    */
+    addToWorld: function (x, y) {
+
+        return this.game.add.image(x, y, this);
+
+    },
+
+    /**
     * Copies the pixels from the source image to this BitmapData based on the given area and destination.
     *
     * @method Phaser.BitmapData#copyPixels
-    * @param {HTMLImage|string} source - The Image to draw. If you give a key it will try and find the Image in the Game.Cache.
+    * @param {Phaser.Sprite|Phaser.Image|Phaser.BitmapData|HTMLImage|string} source - The Image to copy from. If you give a string it will try and find the Image in the Game.Cache.
     * @param {Phaser.Rectangle} area - The Rectangle region to copy from the source image.
-    * @param {number} destX - The destination x coordinate to copy the image to.
-    * @param {number} destY - The destination y coordinate to copy the image to.
+    * @param {number} x - The destination x coordinate to copy the image to.
+    * @param {number} y - The destination y coordinate to copy the image to.
     */
-    copyPixels: function (source, area, destX, destY) {
+    copyPixels: function (source, area, x, y) {
 
         if (typeof source === 'string')
         {
             source = this.game.cache.getImage(source);
         }
 
-        if (source)
+        var src = source;
+        var sx = 0;
+        var sy = 0;
+
+        if (source instanceof Phaser.Image || source instanceof Phaser.Sprite)
         {
-            this.context.drawImage(source, area.x, area.y, area.width, area.height, destX, destY, area.width, area.height);
+            src = source.texture.baseTexture.source;
+            var frame = source.texture.frame;
+            sx = frame.x;
+            sy = frame.y;
         }
+        else
+        {
+            if (source instanceof Phaser.BitmapData)
+            {
+                src = source.canvas;
+            }
+        }
+
+        this.context.drawImage(src, sx + area.x, sy + area.y, area.width, area.height, x, y, area.width, area.height);
 
         this.dirty = true;
 
