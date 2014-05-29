@@ -4622,12 +4622,12 @@ declare module Phaser {
         currentLayer: number;
         debugMap: any[];
         format: number;
-        game: Phaser.Game;
+        game: Phaser.Game; 
         height: number;
         heightInPixels: number;
         images: any[];
-        key: string;
-        layer: any;
+        key: string; 
+        layer: Phaser.TilemapLayer[];
         layers: Object[];
         objects: any[];
         orientation: string;
@@ -4643,9 +4643,9 @@ declare module Phaser {
         addTilesetImage(tileset: string, key?: string, tileWidth?: number, tileHeight?: number, tileMargin?: number, tileSpacing?: number, gid?: number): Phaser.Tileset;
         calculateFaces(layer: number): void;
         copy(x: number, y: number, width: number, height: number, layer?: any): Phaser.Tile[];
-        create(name: string, width: number, height: number, tileWidth: number, tileHeight: number): Phaser.TilemapLayer;
+        create(name: string, width: number, height: number, tileWidth: number, tileHeight: number, group?: Phaser.Group): Phaser.TilemapLayer;
         createBlankLayer(name: string, width: number, height: number, tileWidth: number, tileHeight: number, group?: Phaser.Group): Phaser.TilemapLayer;
-        createFromObjects(name: string, gid: any, key: string, frame?: any, exists?: boolean, autoCull?: boolean, group?: Phaser.Group, CustomClass?: Object, adjustY?: boolean): void;
+        createFromObjects(name: string, gid: number, key: string, frame?: any, exists?: boolean, autoCull?: boolean, group?: Phaser.Group, CustomClass?: Object, adjustY?: boolean): void;
         createLayer(layer: any, width?: number, height?: number, group?: Phaser.Group): Phaser.TilemapLayer;
         destroy(): void;
         dump(): void;
@@ -4669,6 +4669,8 @@ declare module Phaser {
         putTileWorldXY(tile: any, x: number, y: number, tileWidth: number, tileHeight: number, layer?: any): void;
         random(x: number, y: number, width: number, height: number, layer?: any): void;
         removeAllLayers(): void;
+        removeTile(x: number, y: number, layer?: any): Phaser.Tile;
+        removeTileWorldXY(x: number, y: number, tileWidth: number, tileHeight: number, layer?: any): Phaser.Tile;
         replace(source: number, dest: number, x: number, y: number, width: number, height: number, layer?: any): void;
         searchTileIndex(index: number, skip?: number, reverse?: boolean, layer?: any): Phaser.Tile;
         setCollision(indexes: any, collides?: boolean, layer?: any, recalculate?: boolean): void;
@@ -4676,7 +4678,7 @@ declare module Phaser {
         setCollisionByExclusion(indexes: any[], collides?: boolean, layer?: any, recalculate?: boolean): void;
         setCollisionByIndex(index: number, collides?: boolean, layer?: number, recalculate?: boolean): void;
         setLayer(layer: any): void;
-        setTileIndexCallback(indes: any, callback: Function, callbackContext: Object, layer?: any): void;
+        setTileIndexCallback(indexes: any, callback: Function, callbackContext: Object, layer?: any): void;
         setTileLocationCallback(x: number, y: number, width: number, height: number, callback: Function, callbackContext: Object, layer?: any): void;
         setTileSize(tileWidth: number, tileHeight: number): void;
         shuffle(x: number, y: number, width: number, height: number, layer: any): void;
