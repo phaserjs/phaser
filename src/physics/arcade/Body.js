@@ -198,6 +198,12 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.speed = 0;
 
     /**
+    * @property {number} speed - The speed punish of the Body used for the a inclined plane
+    * @readonly
+    */
+    this.velocityPunish = new Phaser.Point(0, 0);
+
+    /**
     * @property {number} facing - A const reference to the direction the Body is traveling or facing.
     * @default
     */

@@ -1752,7 +1752,7 @@ Phaser.Physics.Arcade.prototype = {
 Phaser.Physics.Arcade._collisionFullSquare = function (i, body, tile) {
     var collides = this.separateTile(i, body, tile);
     if (collides) {
-        body.speedxPunish = 0;
+        body.velocityPunish.x = 0;
     }
     return collides;
 };
@@ -1761,7 +1761,7 @@ Phaser.Physics.Arcade._collisionHalfTriangleBottomLeft = function (i, body, tile
     if (body.velocity.y > 0 && (body.position.y + body.height - tile.bottom) + (body.position.x - tile.right) <= 0){
         body.y = (body.position.x - tile.right) - (body.height - tile.bottom);
         body.blocked.down = true;
-        body.speedxPunish = body.gravity.y * Math.cos(45) * 0.1;
+        body.velocityPunish.x = body.gravity.y * Math.cos(45) * 0.1;
         return false;
     }
     return true;
@@ -1771,7 +1771,7 @@ Phaser.Physics.Arcade._collisionHalfTriangleBottomRight = function (i, body, til
     if (body.velocity.y > 0 && (body.position.y + body.height - tile.top) - (body.position.x + body.width - tile.right) >= 0) {
         body.y = tile.bottom + tile.left - (body.position.x + body.width) - body.height;
         body.blocked.down = true;
-        body.speedxPunish = -body.gravity.y * Math.cos(45) * 0.1;
+        body.velocityPunish.x = -body.gravity.y * Math.cos(45) * 0.1;
         return false;
     }
 
@@ -1782,4 +1782,4 @@ Phaser.Physics.Arcade.SLOPEMAP = {
     'FULL_SQUARE': Phaser.Physics.Arcade._collisionFullSquare,
     'HALF_TRIANGLE_BOTTOM_LEFT': Phaser.Physics.Arcade._collisionHalfTriangleBottomLeft,
     'HALF_TRIANGLE_BOTTOM_RIGHT': Phaser.Physics.Arcade._collisionHalfTriangleBottomRight
-}
+};
