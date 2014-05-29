@@ -1,0 +1,128 @@
+{ "PhaserAssetPack": {
+
+    "level1": [
+        {
+            "type": "image",
+            "key": "ball",
+            "url": "assets/sprites/shinyball.png",
+            "overwrite": false
+        },
+        {
+            "type": "text",
+            "key": "readme",
+            "url": "assets/sprites/readme.txt",
+            "overwrite": false
+        },
+        {
+            "type": "json",
+            "key": "levelData",
+            "url": "assets/level1.json",
+            "overwrite": false
+        },
+        {
+            "type": "script",
+            "key": "webfonts",
+            "url": "http://blah.com/font.js",
+            "callback": "parseFontLoader"
+        },
+        {
+            "type": "binary",
+            "key": "data",
+            "url": "assets/test/wibble.bmp",
+            "callback": "parseBinary"
+        },
+        {
+            "type": "spritesheet",
+            "key": "webfonts",
+            "url": "assets/sprites/mummy.png",
+            "frameWidth": 32,
+            "frameHeight": 64,
+            "frameMax": 10,
+            "margin": 0,
+            "spacing": 0
+        },
+        {
+            "type": "audio",
+            "key": "soundFX",
+            "urls": [ "assets/audio/fx.mp3", "assets/audio/fx.ogg" ],
+            "autoDecode": true
+        },
+        {
+            "type": "tilemap",
+            "key": "level1",
+            "url": "assets/tilemaps/level1.csv",
+            "data": null,
+            "format": "CSV"
+        },
+        {
+            "type": "tilemap",
+            "key": "level2",
+            "url": "assets/tilemaps/level2.json",
+            "data": null,
+            "format": "TILED_JSON"
+        },
+        {
+            "type": "physics",
+            "key": "ship",
+            "url": "assets/tilemaps/ship_physics.json",
+            "data": null,
+            "format": "LIME_CORONA_JSON"
+        },
+        {
+            "type": "bitmapFont",
+            "key": "ship",
+            "textureURL": "assets/tilemaps/ship_physics.json",
+            "xmlURL": "assets/tilemaps/ship_physics.json",
+            "xmlData": null,
+            "xSpacing": 0,
+            "ySpacing": 0
+        },
+        {
+            "type": "atlasJSONArray",
+            "key": "map",
+            "textureURL": "assets/sprites/map.png",
+            "atlasURL": "assets/sprites/map.json",
+            "atlasData": null
+        },
+        {
+            "type": "atlasJSONHash",
+            "key": "map",
+            "textureURL": "assets/sprites/map.png",
+            "atlasURL": "assets/sprites/map.json",
+            "atlasData": null
+        },
+        {
+            "type": "atlasXML",
+            "key": "map",
+            "textureURL": "assets/sprites/map.png",
+            "atlasURL": "assets/sprites/map.xml",
+            "atlasData": null
+        },
+        {
+            "type": "atlas",
+            "key": "map",
+            "textureURL": "assets/sprites/map.png",
+            "atlasURL": "assets/sprites/map.json",
+            "atlasData": null,
+            "format": "TEXTURE_ATLAS_JSON_ARRAY"
+        }
+    ],
+    "level2": [
+        {
+            "type": "image",
+            "key": "ball",
+            "url": "assets/sprites/shinyball.png",
+            "overwrite": false
+        }
+    ]
+},
+
+"meta": {
+    "generated": "04:42 May 29th 2014",
+    "app": "Phaser Asset Packer",
+    "url": "http://phaser.io",
+    "version": "1.0",
+    "copyright": "Photon Storm Ltd. 2014"
+}
+
+}
