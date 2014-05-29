@@ -1,7 +1,12 @@
-{ "PhaserAssetPack": {
-
+{
+    //  This is the key you use in the call to Phaser.Loader.pack
+    //  It's an Array of Loader types.
+    //  
+    //  Note that lots of parameters are optional.
+    //  See the API Documentation to find out which ones as they match the Loader calls exactly.
     "level1": [
         {
+            //   Loads an image.
             "type": "image",
             "key": "ball",
             "url": "assets/sprites/shinyball.png",
@@ -107,6 +112,7 @@
             "format": "TEXTURE_ATLAS_JSON_ARRAY"
         }
     ],
+    //  Here's an example of another section within the Asset Pack.
     "level2": [
         {
             "type": "image",
@@ -114,15 +120,21 @@
             "url": "assets/sprites/shinyball.png",
             "overwrite": false
         }
-    ]
-},
-
-"meta": {
-    "generated": "04:42 May 29th 2014",
-    "app": "Phaser Asset Packer",
-    "url": "http://phaser.io",
-    "version": "1.0",
-    "copyright": "Photon Storm Ltd. 2014"
-}
-
+    ],
+    //  The meta block allows you to define data specific to the Tool / app that created this JSON file.
+    //  
+    //  generated: Required - String - A Unix Timestamp (or Date.now() from JS) that signifies when this JSON file was created.
+    //  version: Required - String - Should be "1.0"
+    //  app: Required - String containing the name of the app (or web site) that generated this JSON file.
+    //  url: Optional - String containing the URL of the app (or web site) that generated this JSON file.
+    //  copyright: Optional - String - A copyright notice.
+    //  
+    //  You can add as many extra properties as your app requires, only the above are needed / reserved as of 1.0
+    "meta": {
+        "generated": "1401380327373",
+        "version": "1.0",
+        "app": "Phaser Asset Packer",
+        "url": "http://phaser.io",
+        "copyright": "Photon Storm Ltd. 2014"
+    }
 }
