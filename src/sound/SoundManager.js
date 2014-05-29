@@ -120,7 +120,7 @@ Phaser.SoundManager.prototype = {
             this.channels = 1;
         }
 
-        if (this.game.device.iOS || (window['PhaserGlobal'] && window['PhaserGlobal'].fakeiOSTouchLock))
+        if (!this.game.device.cocoonJS && this.game.device.iOS || (window['PhaserGlobal'] && window['PhaserGlobal'].fakeiOSTouchLock))
         {
             this.game.input.touch.callbackContext = this;
             this.game.input.touch.touchStartCallback = this.unlock;
@@ -130,7 +130,6 @@ Phaser.SoundManager.prototype = {
         }
         else
         {
-            //  What about iOS5?
             this.touchLocked = false;
         }
 

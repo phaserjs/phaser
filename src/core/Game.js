@@ -391,7 +391,6 @@ Phaser.Game.prototype = {
 
     },
 
-
     /**
     * Initialize engine sub modules and start the game.
     *
@@ -543,7 +542,7 @@ Phaser.Game.prototype = {
     */
     setUpRenderer: function () {
 
-        if (this.device.trident)
+        if (this.device.trident || this.device.cocoonJS)
         {
             //  Pixi WebGL renderer on IE11 doesn't work correctly at the moment, the pre-multiplied alpha gets all washed out.
             //  So we're forcing canvas for now until this is fixed, sorry. It's got to be better than no game appearing at all, right?
