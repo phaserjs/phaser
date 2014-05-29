@@ -532,26 +532,26 @@ Phaser.Loader.prototype = {
     *
     * @method Phaser.Loader#tilemap
     * @param {string} key - Unique asset key of the tilemap data.
-    * @param {string} [mapDataURL] - The url of the map data file (csv/json)
-    * @param {object} [mapData] - An optional JSON data object. If given then the mapDataURL is ignored and this JSON object is used for map data instead.
+    * @param {string} [url] - The url of the map data file (csv/json)
+    * @param {object} [data] - An optional JSON data object. If given then the url is ignored and this JSON object is used for map data instead.
     * @param {number} [format=Phaser.Tilemap.CSV] - The format of the map data. Either Phaser.Tilemap.CSV or Phaser.Tilemap.TILED_JSON.
     * @return {Phaser.Loader} This Loader instance.
     */
-    tilemap: function (key, mapDataURL, mapData, format) {
+    tilemap: function (key, url, data, format) {
 
-        if (typeof mapDataURL === "undefined") { mapDataURL = null; }
-        if (typeof mapData === "undefined") { mapData = null; }
+        if (typeof url === "undefined") { url = null; }
+        if (typeof data === "undefined") { data = null; }
         if (typeof format === "undefined") { format = Phaser.Tilemap.CSV; }
 
-        if (mapDataURL == null && mapData == null)
+        if (url == null && data == null)
         {
-            console.warn('Phaser.Loader.tilemap - Both mapDataURL and mapData are null. One must be set.');
+            console.warn('Phaser.Loader.tilemap - Both url and data are null. One must be set.');
 
             return this;
         }
 
         //  A map data object has been given
-        if (mapData)
+        if (data)
         {
             switch (format)
             {
@@ -562,18 +562,18 @@ Phaser.Loader.prototype = {
                 //  An xml string or object has been given
                 case Phaser.Tilemap.TILED_JSON:
 
-                    if (typeof mapData === 'string')
+                    if (typeof data === 'string')
                     {
-                        mapData = JSON.parse(mapData);
+                        data = JSON.parse(data);
                     }
                     break;
             }
 
-            this.game.cache.addTilemap(key, null, mapData, format);
+            this.game.cache.addTilemap(key, null, data, format);
         }
         else
         {
-            this.addToFileList('tilemap', key, mapDataURL, { format: format });
+            this.addToFileList('tilemap', key, url, { format: format });
         }
 
         return this;
@@ -586,37 +586,37 @@ Phaser.Loader.prototype = {
     *
     * @method Phaser.Loader#physics
     * @param {string} key - Unique asset key of the physics json data.
-    * @param {string} [dataURL] - The url of the map data file (csv/json)
-    * @param {object} [jsonData] - An optional JSON data object. If given then the dataURL is ignored and this JSON object is used for physics data instead.
+    * @param {string} [url] - The url of the map data file (csv/json)
+    * @param {object} [data] - An optional JSON data object. If given then the url is ignored and this JSON object is used for physics data instead.
     * @param {string} [format=Phaser.Physics.LIME_CORONA_JSON] - The format of the physics data.
     * @return {Phaser.Loader} This Loader instance.
     */
-    physics: function (key, dataURL, jsonData, format) {
+    physics: function (key, url, data, format) {
 
-        if (typeof dataURL === "undefined") { dataURL = null; }
-        if (typeof jsonData === "undefined") { jsonData = null; }
+        if (typeof url === "undefined") { url = null; }
+        if (typeof data === "undefined") { data = null; }
         if (typeof format === "undefined") { format = Phaser.Physics.LIME_CORONA_JSON; }
 
-        if (dataURL == null && jsonData == null)
+        if (url == null && data == null)
         {
-            console.warn('Phaser.Loader.physics - Both dataURL and jsonData are null. One must be set.');
+            console.warn('Phaser.Loader.physics - Both url and data are null. One must be set.');
 
             return this;
         }
 
         //  A map data object has been given
-        if (jsonData)
+        if (data)
         {
-            if (typeof jsonData === 'string')
+            if (typeof data === 'string')
             {
-                jsonData = JSON.parse(jsonData);
+                data = JSON.parse(data);
             }
 
-            this.game.cache.addPhysicsData(key, null, jsonData, format);
+            this.game.cache.addPhysicsData(key, null, data, format);
         }
         else
         {
-            this.addToFileList('physics', key, dataURL, { format: format });
+            this.addToFileList('physics', key, url, { format: format });
         }
 
         return this;
