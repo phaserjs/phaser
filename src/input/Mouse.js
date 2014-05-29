@@ -190,8 +190,12 @@ Phaser.Mouse.prototype = {
         this.game.canvas.addEventListener('mousedown', this._onMouseDown, true);
         this.game.canvas.addEventListener('mousemove', this._onMouseMove, true);
         this.game.canvas.addEventListener('mouseup', this._onMouseUp, true);
-        this.game.canvas.addEventListener('mouseover', this._onMouseOver, true);
-        this.game.canvas.addEventListener('mouseout', this._onMouseOut, true);
+
+        if (!this.game.device.cocoonJS)
+        {
+            this.game.canvas.addEventListener('mouseover', this._onMouseOver, true);
+            this.game.canvas.addEventListener('mouseout', this._onMouseOut, true);
+        }
 
     },
 

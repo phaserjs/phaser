@@ -61,6 +61,10 @@ Version 2.0.6 - "Jornhill" - -in development-
 * Loader.tilemap has renamed the `mapURL` parameter to `url` and `mapData` to `data` to keep it consistent with the other Loader methods.
 * Loader.physics has renamed the `dataURL` parameter to `url` and `jsonData` to `data` to keep it consistent with the other Loader methods.
 
+### CocoonJS Specific Updates
+
+* Wrapped all touch, keyboard, mouse and fulscreen events that CocoonJS doesn't support in conditional checks to avoid Warnings.
+
 ### New Features
 
 * BitmapData.extract has a new parameter that lets you control if the destination BitmapData is resized before the pixels are copied.
