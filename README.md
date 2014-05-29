@@ -76,6 +76,9 @@ Version 2.0.6 - "Jornhill" - -in development-
 * ArcadePhysics.Body has a new boolean property `enable`. If `false` the body won't be checked for any collision or overlaps, or have its pre or post update methods called. Use this for easy toggling of physics bodies without having to destroy or re-create the Body object itself.
 * BitmapData.addToWorld will create a new Phaser.Image object, assign the BitmapData to be its texture, add it to the world then return it.
 * BitmapData.copyPixels now accepts a Sprite, Image, BitmapData, HTMLImage or string as its source.
+* Loader.pack will allow you to load in a new Phaser Asset Pack JSON file. An Asset Pack is a specially structured file that allows you to define all assets for your game in an external file. The file can be split into sections, allowing you to control loading a specific set of files from it. An example JSON file can be found in the `resources` folder and examples of use in the Phaser Examples repository.
+* Loader.totalQueuedPacks returns the number of Asset Packs in the queue.
+* Loader.totalLoadedPacks returns the number of Asset Packs already loaded.
 
 
 ### Bug Fixes

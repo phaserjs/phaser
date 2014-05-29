@@ -1275,6 +1275,17 @@ Phaser.Loader.prototype = {
 
     },
 
+    /**
+    * Starts the xhr loader.
+    * 
+    * @method Phaser.Loader#xhrLoad
+    * @private
+    * @param {number} index - The index of the file to load from the file list.
+    * @param {string} url - The URL of the file.
+    * @param {string} type - The xhr responseType.
+    * @param {string} onload - A String of the name of the local function to be called on a successful file load.
+    * @param {string} onerror - A String of the name of the local function to be called on a file load error.
+    */
     xhrLoad: function (index, url, type, onload, onerror) {
 
         // console.log('xhrLoad', index, url, type, onload, onerror);
@@ -1298,9 +1309,10 @@ Phaser.Loader.prototype = {
 
     /**
     * Private method ONLY used by loader.
+    * 
     * @method Phaser.Loader#getAudioURL
-    * @param {array|string} urls - Either an array of audio file URLs or a string containing a single URL path.
     * @private
+    * @param {array|string} urls - Either an array of audio file URLs or a string containing a single URL path.
     */
     getAudioURL: function (urls) {
 
@@ -1624,9 +1636,10 @@ Phaser.Loader.prototype = {
     /**
     * Handle loading next file.
     *
+    * @method Phaser.Loader#nextFile
+    * @private
     * @param {number} previousIndex - Index of the previously loaded asset.
     * @param {boolean} success - Whether the previous asset loaded successfully or not.
-    * @private
     */
     nextFile: function (previousIndex, success) {
 
@@ -1674,6 +1687,7 @@ Phaser.Loader.prototype = {
     /**
     * Returns the number of files that have already been loaded, even if they errored.
     *
+    * @method Phaser.Loader#totalLoadedFiles
     * @return {number} The number of files that have already been loaded (even if they errored)
     */
     totalLoadedFiles: function () {
@@ -1695,6 +1709,7 @@ Phaser.Loader.prototype = {
     /**
     * Returns the number of files still waiting to be processed in the load queue. This value decreases as each file in the queue is loaded.
     *
+    * @method Phaser.Loader#totalQueuedFiles
     * @return {number} The number of files that still remain in the load queue.
     */
     totalQueuedFiles: function () {
@@ -1716,6 +1731,7 @@ Phaser.Loader.prototype = {
     /**
     * Returns the number of asset packs that have already been loaded, even if they errored.
     *
+    * @method Phaser.Loader#totalLoadedPacks
     * @return {number} The number of asset packs that have already been loaded (even if they errored)
     */
     totalLoadedPacks: function () {
@@ -1737,6 +1753,7 @@ Phaser.Loader.prototype = {
     /**
     * Returns the number of asset packs still waiting to be processed in the load queue. This value decreases as each pack in the queue is loaded.
     *
+    * @method Phaser.Loader#totalQueuedPacks
     * @return {number} The number of asset packs that still remain in the load queue.
     */
     totalQueuedPacks: function () {

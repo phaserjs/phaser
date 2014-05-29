@@ -2686,7 +2686,8 @@ declare module Phaser {
         image(key: string, url: string, overwrite?: boolean): Phaser.Loader;
         json(key: string, url: string, overwrite?: boolean): Phaser.Loader;
         jsonLoadComplete(index: number): void;
-        physics(key: string, dataURL?: string, jsonData?: Object, format?: string): Phaser.Loader;
+        pack(key: string, url?: string, data?: Object, callbackContext?: any): Phaser.Loader;
+        physics(key: string, url?: string, data?: Object, format?: string): Phaser.Loader;
         removeAll(): void;
         removeFile(key: string, type: string): void;
         replaceInFileList(type: string, key: string, url: string, properties: Object): void;
@@ -2696,9 +2697,11 @@ declare module Phaser {
         spritesheet(key: string, url: string, frameWidth: number, frameHeight: number, frameMax?: number, margin?: number, spacing?: number): Phaser.Loader;
         start(): void;
         text(key: string, url: string, overwrite?: boolean): Phaser.Loader;
-        tilemap(key: string, mapDataURL?: string, mapData?: Object, format?: number): Phaser.Loader;
+        tilemap(key: string, url?: string, data?: Object, format?: number): Phaser.Loader;
         totalLoadedFiles(): number;
+        totalLoadedPacks(): number;
         totalQueuedFiles(): number;
+        totalQueuedPacks(): number;
         xmlLoadComplete(index: number): void;
 
     }
