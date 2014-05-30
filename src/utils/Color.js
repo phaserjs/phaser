@@ -673,6 +673,7 @@ Phaser.Color = {
 
     /**
     * Interpolates the two given colours based on the supplied step and currentStep properties.
+    * 
     * @method Phaser.Color.interpolateColorWithRGB
     * @static
     * @param {number} color - The first color value.

@@ -998,7 +998,6 @@ Phaser.BitmapData.prototype = {
         }
 
         this.context.fillRect(x, y, width, height);
-        this.context.fill();
 
     },
 

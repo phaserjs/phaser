@@ -267,6 +267,8 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     }
     else
     {
+        this.config = {};
+
         if (typeof width !== 'undefined')
         {
             this.width = width;
