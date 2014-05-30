@@ -60,10 +60,11 @@ Version 2.0.6 - "Jornhill" - -in development-
 * RetroFont now uses Phaser.scaleModes.NEAREST by default for its RenderTexture to preserve scaling.
 * Loader.tilemap has renamed the `mapURL` parameter to `url` and `mapData` to `data` to keep it consistent with the other Loader methods.
 * Loader.physics has renamed the `dataURL` parameter to `url` and `jsonData` to `data` to keep it consistent with the other Loader methods.
+* Stage no longer creates the Phaser.Canvas object, but Game itself does in the setupRenderer method.
 
 ### CocoonJS Specific Updates
 
-* Wrapped all touch, keyboard, mouse and fulscreen events that CocoonJS doesn't support in conditional checks to avoid Warnings.
+* Wrapped all touch, keyboard, mouse and fullscreen events that CocoonJS doesn't support in conditional checks to avoid Warnings.
 * The SoundManager no longer requires a touch to unlock it, defaults to unlocked.
 * Resolved issue where Cocoon won't render a scene in Canvas mode if there is only one Sprite/Image on it.
 
@@ -96,6 +97,7 @@ Version 2.0.6 - "Jornhill" - -in development-
 * Sprite animation data wasn't reset when going from a sprite sheet to a single frame in Sprite.loadTexture (thanks @lucbloom, fix #850)
 * Timer.ms would report the game time ms value if the Timer hadn't yet been started, instead of 0.
 * Timer.seconds would report the game time value if the Timer hadn't yet been started, instead of 0.
+* A Canvas style set from a game config object used an incorrect property (thanks @TatumCreative, fix #861)
 
 ### Migration Guide
 
