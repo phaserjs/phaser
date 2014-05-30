@@ -61,6 +61,7 @@ Version 2.0.6 - "Jornhill" - -in development-
 * Loader.tilemap has renamed the `mapURL` parameter to `url` and `mapData` to `data` to keep it consistent with the other Loader methods.
 * Loader.physics has renamed the `dataURL` parameter to `url` and `jsonData` to `data` to keep it consistent with the other Loader methods.
 * Stage no longer creates the Phaser.Canvas object, but Game itself does in the setupRenderer method.
+* Canvas.create has deprecated the noCocoon parameter as it's no longer required. The parameter is still in the signature, but no longer used in the method.
 
 ### CocoonJS Specific Updates
 
