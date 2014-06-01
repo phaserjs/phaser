@@ -4824,6 +4824,7 @@ declare module Phaser {
         time: number;
         timeToCall: number;
 
+        add(timer: Phaser.Timer): Phaser.Timer;
         boot(): void;
         create(autoDestroy?: boolean): Phaser.Timer;
         elapsedSecondsSince(since: number): number;

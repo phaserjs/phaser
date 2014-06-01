@@ -62,6 +62,7 @@ Version 2.0.6 - "Jornhill" - -in development-
 * Loader.physics has renamed the `dataURL` parameter to `url` and `jsonData` to `data` to keep it consistent with the other Loader methods.
 * Stage no longer creates the Phaser.Canvas object, but Game itself does in the setupRenderer method.
 * Canvas.create has deprecated the noCocoon parameter as it's no longer required. The parameter is still in the signature, but no longer used in the method.
+* Time.add allows you to add an existing Phaser.Timer to the timer pool (request #864)
 
 ### CocoonJS Specific Updates
 
@@ -99,6 +100,7 @@ Version 2.0.6 - "Jornhill" - -in development-
 * Timer.ms would report the game time ms value if the Timer hadn't yet been started, instead of 0.
 * Timer.seconds would report the game time value if the Timer hadn't yet been started, instead of 0.
 * A Canvas style set from a game config object used an incorrect property (thanks @TatumCreative, fix #861)
+* Phaser.Line.intersectsPoints fixed for floating point inaccuracy (thanks @woutercommandeur, fix #865)
 
 ### Migration Guide
 
