@@ -226,7 +226,18 @@ Phaser.Gamepad.prototype = {
     */
     _pollGamepads: function () {
 
-        var rawGamepads = navigator.getGamepads() || (navigator.webkitGetGamepads && navigator.webkitGetGamepads()) || navigator.webkitGamepads;
+        if (navigator['getGamepads'])
+        {
+            var rawGamepads = navigator.getGamepads();
+        }
+        else if (navigator['webkitGetGamepads'])
+        {
+            var rawGamepads = navigator.webkitGetGamepads();
+        }
+        else if (navigator['webkitGamepads'])
+        {
+            var rawGamepads = navigator.webkitGamepads();
+        }
 
         if (rawGamepads)
         {
