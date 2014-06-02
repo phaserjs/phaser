@@ -63,6 +63,7 @@ Version 2.0.6 - "Jornhill" - -in development-
 * Stage no longer creates the Phaser.Canvas object, but Game itself does in the setupRenderer method.
 * Canvas.create has deprecated the noCocoon parameter as it's no longer required. The parameter is still in the signature, but no longer used in the method.
 * Time.add allows you to add an existing Phaser.Timer to the timer pool (request #864)
+* Emitter.start has a new parameter: forceQuantity which will force the quantity of a flow of particles to be the given value (request #853)
 
 ### CocoonJS Specific Updates
 
@@ -88,6 +89,8 @@ Version 2.0.6 - "Jornhill" - -in development-
 * Loader.pack will allow you to load in a new Phaser Asset Pack JSON file. An Asset Pack is a specially structured file that allows you to define all assets for your game in an external file. The file can be split into sections, allowing you to control loading a specific set of files from it. An example JSON file can be found in the `resources\Asset Pack JSON Format` folder and examples of use in the Phaser Examples repository.
 * Loader.totalQueuedPacks returns the number of Asset Packs in the queue.
 * Loader.totalLoadedPacks returns the number of Asset Packs already loaded.
+* Emitter.explode is a new short-cut for exploding a fixed quantity of particles at once.
+* Emitter.flow is a new short-cut for creating a flow of particles based on the given frequency.
 
 
 ### Bug Fixes

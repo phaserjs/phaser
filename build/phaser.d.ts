@@ -2931,6 +2931,8 @@ declare module Phaser {
 
                 at(object: any): void;
                 emitParticle(): void;
+                explode(lifespan?: number, quantity?: number): void;
+                flow(lifespan?: number, frequency?: number, quantity?: number): void;
                 kill(): void;
                 makeParticles(keys: any, frames?: any, quantity?: number, collide?: boolean, collideWorldBounds?: boolean): Phaser.Particles.Arcade.Emitter;
                 reset(x: number, y: number, health?: number): Phaser.Particles;
@@ -2940,7 +2942,7 @@ declare module Phaser {
                 setSize(width: number, height: number): void;
                 setXSpeed(min: number, max: number): void;
                 setYSpeed(min: number, max: number): void;
-                start(explode?: boolean, lifespan?: number, frequency?: number, quantity?: number): void;
+                start(explode?: boolean, lifespan?: number, frequency?: number, quantity?: number, forceQuantity?: boolean): void;
                 update(): void;
                 revive(): void;
 
