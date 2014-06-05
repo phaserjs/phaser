@@ -183,6 +183,18 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     */
     this._bounds = new Phaser.Rectangle();
 
+    /**
+    * @property {Phaser.Rectangle} _crop - Internal cache var.
+    * @private
+    */
+    this._crop = null;
+
+    /**
+    * @property {Phaser.Rectangle} _frame - Internal cache var.
+    * @private
+    */
+    this._frame = null;
+
 };
 
 Phaser.Sprite.prototype = Object.create(PIXI.Sprite.prototype);
@@ -279,7 +291,27 @@ Phaser.Sprite.prototype.preUpdate = function() {
         this._cache[3] = this.game.stage.currentRenderOrderID++;
     }
 
-    this.animations.update();
+    if (this.animations.update() && this._crop)
+    {
+        //  Reset?
+        this.texture.frame.x = this._frame.x;
+        this.texture.frame.y = this._frame.y;
+        this.texture.frame.width = this._frame.width;
+        this.texture.frame.height = this._frame.height;
+
+
+        this._frame.x = this.texture.frame.x;
+        this._frame.y = this.texture.frame.y;
+        this._frame.width = this.texture,frame.width;
+        this._frame.height = this.texture,frame.height;
+
+        this.texture.frame.x += this._crop.x;
+        this.texture.frame.y += this._crop.y;
+        this.texture.frame.width = this._crop.width;
+        this.texture.frame.height = this._crop.height;
+
+        // console.log('a2', this.texture.frame);
+    }
 
     if (this.body && this.body.enable)
     {
@@ -422,11 +454,16 @@ Phaser.Sprite.prototype.loadTexture = function (key, frame) {
 * @method Phaser.Sprite#crop
 * @memberof Phaser.Sprite
 * @param {Phaser.Rectangle} rect - The Rectangle to crop the Sprite to. Pass null or no parameters to clear a previously set crop rectangle.
+* @param {boolean} [copy=false] - Should the Sprite store a local copy of the Rectangle object?
 */
-Phaser.Sprite.prototype.crop = function(rect) {
+Phaser.Sprite.prototype.crop = function(rect, copy) {
+
+    this._frame = { x: 0, y: 0, width: 0, height: 0 };
 
     if (typeof rect === 'undefined' || rect === null)
     {
+        this._crop = null;
+
         //  Clear any crop that may be set
         if (this.texture.hasOwnProperty('sourceWidth'))
         {
@@ -438,6 +475,8 @@ Phaser.Sprite.prototype.crop = function(rect) {
         //  Do we need to clone the PIXI.Texture object?
         if (this.texture instanceof PIXI.Texture)
         {
+            this._crop = rect;
+
             //  Yup, let's rock it ...
             var local = {};
 
@@ -456,6 +495,7 @@ Phaser.Sprite.prototype.crop = function(rect) {
         }
         else
         {
+            this._crop = rect;
             this.texture.setFrame(rect);
         }
     }

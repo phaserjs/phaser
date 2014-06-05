@@ -378,20 +378,21 @@ Phaser.Animation.prototype = {
                 if (this.loop)
                 {
                     this._frameIndex %= this._frames.length;
-                    this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
+                    // this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
 
-                    if (this.currentFrame)
-                    {
-                        this._parent.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
+                    // if (this.currentFrame)
+                    // {
+                    //     this._parent.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
 
-                        if (this._parent.__tilePattern)
-                        {
-                            this._parent.__tilePattern = false;
-                            this._parent.tilingTexture = false;
-                        }
-                    }
+                    //     if (this._parent.__tilePattern)
+                    //     {
+                    //         this._parent.__tilePattern = false;
+                    //         this._parent.tilingTexture = false;
+                    //     }
+                    // }
 
                     this.loopCount++;
+                    // console.log('loop', this.loopCount);
                     this._parent.events.onAnimationLoop.dispatch(this._parent, this);
                     this.onLoop.dispatch(this._parent, this);
                 }
@@ -400,19 +401,22 @@ Phaser.Animation.prototype = {
                     this.complete();
                 }
             }
-            else
+            // else
+            // {
+            // }
+
+            this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
+
+            if (this.currentFrame)
             {
-                this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
+                this._parent.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
 
-                if (this.currentFrame)
+                // console.log('a1', this._parent.texture.frame, PIXI.TextureCache[this.currentFrame.uuid].frame);
+
+                if (this._parent.__tilePattern)
                 {
-                    this._parent.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
-
-                    if (this._parent.__tilePattern)
-                    {
-                        this._parent.__tilePattern = false;
-                        this._parent.tilingTexture = false;
-                    }
+                    this._parent.__tilePattern = false;
+                    this._parent.tilingTexture = false;
                 }
             }
 
@@ -429,6 +433,7 @@ Phaser.Animation.prototype = {
     * @method Phaser.Animation#destroy
     */
     destroy: function () {
+
         this.game.onPause.remove(this.onPause, this);
         this.game.onResume.remove(this.onResume, this);
         
