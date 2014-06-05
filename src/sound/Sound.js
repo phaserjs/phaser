@@ -657,7 +657,6 @@ Phaser.Sound.prototype = {
 
         if (this.isPlaying && this._sound)
         {
-            this.isPlaying = false;
             this.paused = true;
             this.pausedPosition = this.currentTime;
             this.pausedTime = this.game.time.now;
