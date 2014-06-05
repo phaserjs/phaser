@@ -32,7 +32,7 @@ Phaser.Stage = function (game, width, height) {
     */
     this.bounds = new Phaser.Rectangle(0, 0, width, height);
 
-    PIXI.Stage.call(this, 0x000000, false);
+    PIXI.Stage.call(this, 0x000000);
 
     /**
     * @property {string} name - The name of this object.
@@ -91,11 +91,6 @@ Phaser.Stage = function (game, width, height) {
     if (game.config)
     {
         this.parseConfig(game.config);
-    }
-    else
-    {
-        this.game.canvas = Phaser.Canvas.create(width, height);
-        this.game.canvas.style['-webkit-full-screen'] = 'width: 100%; height: 100%';
     }
 
 };
@@ -197,24 +192,6 @@ Phaser.Stage.prototype.postUpdate = function () {
 * @protected
 */
 Phaser.Stage.prototype.parseConfig = function (config) {
-
-    if (config['canvasID'])
-    {
-        this.game.canvas = Phaser.Canvas.create(this.game.width, this.game.height, config['canvasID']);
-    }
-    else
-    {
-        this.game.canvas = Phaser.Canvas.create(this.game.width, this.game.height);
-    }
-
-    if (config['canvasStyle'])
-    {
-        this.game.canvas.stlye = config['canvasStyle'];
-    }
-    else
-    {
-        this.game.canvas.style['-webkit-full-screen'] = 'width: 100%; height: 100%';
-    }
 
     if (config['checkOffsetInterval'])
     {

@@ -117,6 +117,12 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     this.body = null;
 
     /**
+    * @property {boolean} alive - A useful boolean to control if the Sprite is alive or dead (in terms of your gameplay, it doesn't effect rendering). Also linked to Sprite.health and Sprite.damage.
+    * @default
+    */
+    this.alive = true;
+
+    /**
     * @property {number} health - Health value. Used in combination with damage() to allow for quick killing of Sprites.
     */
     this.health = 1;
@@ -200,7 +206,7 @@ Phaser.Sprite.prototype.preUpdate = function() {
         this._cache[1] = this.world.y;
         this._cache[2] = this.rotation;
 
-        if (this.body)
+        if (this.body && this.body.enable)
         {
             this.body.preUpdate();
         }
@@ -275,7 +281,7 @@ Phaser.Sprite.prototype.preUpdate = function() {
 
     this.animations.update();
 
-    if (this.body)
+    if (this.body && this.body.enable)
     {
         this.body.preUpdate();
     }
@@ -314,7 +320,7 @@ Phaser.Sprite.prototype.postUpdate = function() {
         this.key.render();
     }
 
-    if (this.exists && this.body)
+    if (this.exists && this.body && this.body.enable)
     {
         this.body.postUpdate();
     }
@@ -383,8 +389,6 @@ Phaser.Sprite.prototype.loadTexture = function (key, frame) {
         if (this.game.cache.isSpriteSheet(key))
         {
             this.key = key;
-
-            // var frameData = this.game.cache.getFrameData(key);
             this.animations.loadFrameData(this.game.cache.getFrameData(key));
 
             if (typeof frame === 'string')
@@ -400,6 +404,7 @@ Phaser.Sprite.prototype.loadTexture = function (key, frame) {
         {
             this.key = key;
             this.setTexture(PIXI.TextureCache[key]);
+            this.animations.loadFrameData(null);
             return;
         }
     }

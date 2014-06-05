@@ -741,7 +741,7 @@ Phaser.Physics.Arcade.prototype = {
     */
     separate: function (body1, body2, processCallback, callbackContext, overlapOnly) {
 
-        if (!this.intersects(body1, body2))
+        if (!body1.enable || !body2.enable || !this.intersects(body1, body2))
         {
             return false;
         }
@@ -1062,7 +1062,7 @@ Phaser.Physics.Arcade.prototype = {
     separateTile: function (i, body, tile) {
 
         //  We re-check for collision in case body was separated in a previous step
-        if (!tile.intersects(body.position.x, body.position.y, body.right, body.bottom))
+        if (!body.enable || !tile.intersects(body.position.x, body.position.y, body.right, body.bottom))
         {
             //  no collision so bail out (separted in a previous step)
             return false;
