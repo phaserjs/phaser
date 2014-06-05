@@ -3860,7 +3860,7 @@ declare module Phaser {
         multiply(x: number, y: number): Phaser.Point;
         multiplyAdd(a: Phaser.Point, b: Phaser.Point, s: number, out?: Phaser.Point): Phaser.Point;
         negative(a: Phaser.Point, out?: Phaser.Point): Phaser.Point;
-        normalise(a: Phaser.Point, out?: Phaser.Point): Phaser.Point;
+        normalize(a: Phaser.Point, out?: Phaser.Point): Phaser.Point;
         normalRightHand(a: Phaser.Point, out?: Phaser.Point): Phaser.Point;
         perp(a: Phaser.Point, out?: Phaser.Point): Phaser.Point;
         project(a: Phaser.Point, b: Phaser.Point, out?: Phaser.Point): Phaser.Point;
