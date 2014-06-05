@@ -574,10 +574,11 @@ Phaser.Tween.prototype = {
     },
 
     /**
-    * Sets a callback to be fired each time this tween updates. Note: callback will be called in the context of the global scope.
+    * Sets a callback to be fired each time this tween updates.
     *
     * @method Phaser.Tween#onUpdateCallback
     * @param {function} callback - The callback to invoke each time this tween is updated.
+    * @param {object} callbackContext - The context in which to call the onUpdate callback.
     * @return {Phaser.Tween} Itself.
     */
     onUpdateCallback: function (callback, callbackContext) {
