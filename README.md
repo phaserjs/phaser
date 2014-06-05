@@ -104,6 +104,7 @@ Version 2.0.6 - "Jornhill" - -in development-
 * Timer.seconds would report the game time value if the Timer hadn't yet been started, instead of 0.
 * A Canvas style set from a game config object used an incorrect property (thanks @TatumCreative, fix #861)
 * Phaser.Line.intersectsPoints fixed for floating point inaccuracy (thanks @woutercommandeur, fix #865)
+* Sound.destroy(true) would call remove on the SoundManager, which in turn would throw a TypeError as it tried to remove the sound events twice (thanks @AnderbergE, fix #874)
 
 ### Migration Guide
 
