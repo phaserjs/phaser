@@ -64,6 +64,7 @@ Version 2.0.6 - "Jornhill" - -in development-
 * Canvas.create has deprecated the noCocoon parameter as it's no longer required. The parameter is still in the signature, but no longer used in the method.
 * Time.add allows you to add an existing Phaser.Timer to the timer pool (request #864)
 * Emitter.start has a new parameter: forceQuantity which will force the quantity of a flow of particles to be the given value (request #853)
+* Sound.pause will no longer fire a Sound.onStop signal, and the pause values are set before the onPause signal is dispatched (thanks @AnderbergE, fix #868)
 
 ### CocoonJS Specific Updates
 
