@@ -291,27 +291,7 @@ Phaser.Sprite.prototype.preUpdate = function() {
         this._cache[3] = this.game.stage.currentRenderOrderID++;
     }
 
-    if (this.animations.update() && this._crop)
-    {
-        //  Reset?
-        this.texture.frame.x = this._frame.x;
-        this.texture.frame.y = this._frame.y;
-        this.texture.frame.width = this._frame.width;
-        this.texture.frame.height = this._frame.height;
-
-
-        this._frame.x = this.texture.frame.x;
-        this._frame.y = this.texture.frame.y;
-        this._frame.width = this.texture,frame.width;
-        this._frame.height = this.texture,frame.height;
-
-        this.texture.frame.x += this._crop.x;
-        this.texture.frame.y += this._crop.y;
-        this.texture.frame.width = this._crop.width;
-        this.texture.frame.height = this._crop.height;
-
-        // console.log('a2', this.texture.frame);
-    }
+    this.animations.update();
 
     if (this.body && this.body.enable)
     {
@@ -420,8 +400,11 @@ Phaser.Sprite.prototype.loadTexture = function (key, frame) {
 
         if (this.game.cache.isSpriteSheet(key))
         {
+console.log('create animation', this.key);
             this.key = key;
+            this.setTexture(new PIXI.Texture(PIXI.BaseTextureCache[key]));
             this.animations.loadFrameData(this.game.cache.getFrameData(key));
+            this.textureChange = true;
 
             if (typeof frame === 'string')
             {
@@ -435,10 +418,121 @@ Phaser.Sprite.prototype.loadTexture = function (key, frame) {
         else
         {
             this.key = key;
-            this.setTexture(PIXI.TextureCache[key]);
+            this.setTexture(new PIXI.Texture(PIXI.BaseTextureCache[key]));
             this.animations.loadFrameData(null);
             return;
         }
+    }
+
+};
+
+
+Phaser.Sprite.prototype.setFrame = function(frame) {
+
+    if (frame.trimmed)
+    {
+        if (this._crop)
+        {
+            //  Works but doesn't take crop x/y into account
+            // this.texture.frame.x = frame.x;
+            // this.texture.frame.y = frame.y;
+            // this.texture.frame.width = this._crop.width - frame.spriteSourceSizeX;
+            // this.texture.frame.height = this._crop.height - frame.spriteSourceSizeY;
+            // this.texture.trim = new Phaser.Rectangle(frame.spriteSourceSizeX, frame.spriteSourceSizeY, frame.width, frame.height);
+
+            var fx = frame.x + this._crop.x - frame.spriteSourceSizeX;
+
+            if (fx < frame.x)
+            {
+                fx = frame.x;
+            }
+
+            var fy = frame.y + this._crop.y - frame.spriteSourceSizeY;
+
+            if (fy < frame.y)
+            {
+                fy = frame.y;
+            }
+
+            this.texture.frame.x = fx;
+            this.texture.frame.y = fy;
+
+            var tx = 0;
+            var ty = 0;
+
+            if (this._crop.x === 0)
+            {
+                tx = frame.spriteSourceSizeX;
+            }
+
+            if (this._crop.y === 0)
+            {
+                ty = frame.spriteSourceSizeY;
+            }
+
+            this.texture.frame.width = this._crop.width - tx;
+            this.texture.frame.height = this._crop.height - ty;
+
+            this.texture.trim = new Phaser.Rectangle(tx, ty, this._crop.width, this._crop.height);
+        }
+        else
+        {
+            this.texture.frame.x = frame.x;
+            this.texture.frame.y = frame.y;
+            this.texture.frame.width = frame.width;
+            this.texture.frame.height = frame.height;
+            this.texture.trim = new Phaser.Rectangle(frame.spriteSourceSizeX, frame.spriteSourceSizeY, frame.width, frame.height);
+        }
+    }
+    else
+    {
+        this.texture.frame.x = frame.x;
+        this.texture.frame.y = frame.y;
+        this.texture.frame.width = frame.width;
+        this.texture.frame.height = frame.height;
+
+        if (this._crop)
+        {
+            this.texture.frame.x += this._crop.x;
+            this.texture.frame.y += this._crop.y;
+            this.texture.frame.width = this._crop.width;
+            this.texture.frame.height = this._crop.height;
+        }
+    }
+
+    if (this.game.renderType === Phaser.WEBGL)
+    {
+        PIXI.WebGLRenderer.updateTextureFrame(this.texture);
+    }
+
+};
+
+
+Phaser.Sprite.prototype.XsetFrame = function(x, y, width, height) {
+
+    // console.log('setFrame', this.key, x, y);
+
+    this.texture.frame.x = x;
+    this.texture.frame.y = y;
+    this.texture.frame.width = width;
+    this.texture.frame.height = height;
+
+    //  Apply crop?
+
+    if (this._crop)
+    {
+        this.texture.frame.x += this._crop.x;
+        this.texture.frame.y += this._crop.y;
+        this.texture.frame.width = this._crop.width;
+        this.texture.frame.height = this._crop.height;
+    }
+
+    //  Needed?
+    // this.updateFrame = true;
+
+    if (this.game.renderType === Phaser.WEBGL)
+    {
+        PIXI.WebGLRenderer.updateTextureFrame(this.texture);
     }
 
 };
@@ -458,46 +552,25 @@ Phaser.Sprite.prototype.loadTexture = function (key, frame) {
 */
 Phaser.Sprite.prototype.crop = function(rect, copy) {
 
-    this._frame = { x: 0, y: 0, width: 0, height: 0 };
-
-    if (typeof rect === 'undefined' || rect === null)
+    if (rect)
     {
-        this._crop = null;
-
-        //  Clear any crop that may be set
-        if (this.texture.hasOwnProperty('sourceWidth'))
+        if (copy)
         {
-            this.texture.setFrame(new Phaser.Rectangle(0, 0, this.texture.sourceWidth, this.texture.sourceHeight));
-        }
-    }
-    else
-    {
-        //  Do we need to clone the PIXI.Texture object?
-        if (this.texture instanceof PIXI.Texture)
-        {
-            this._crop = rect;
-
-            //  Yup, let's rock it ...
-            var local = {};
-
-            Phaser.Utils.extend(true, local, this.texture);
-
-            local.sourceWidth = local.width;
-            local.sourceHeight = local.height;
-            local.frame = rect;
-            local.width = rect.width;
-            local.height = rect.height;
-
-            this.texture = local;
-
-            this.texture.updateFrame = true;
-            PIXI.Texture.frameUpdates.push(this.texture);
+            this._crop = new Phaser.Rectangle(rect.x, rect.y, rect.width, rect.height);
         }
         else
         {
             this._crop = rect;
-            this.texture.setFrame(rect);
         }
+
+        // this.setFrame(this.texture.frame.x, this.texture.frame.y, this.texture.frame.width, this.texture.frame.height);
+        this.setFrame(this.texture);
+    }
+    else
+    {
+        this._crop = null;
+        //  How to reset the frame
+        // this.setFrame(this.texture.frame.x, this.texture.frame.y, this.texture.frame.width, this.texture.frame.height);
     }
 
 };

@@ -184,7 +184,10 @@ Phaser.Animation.prototype = {
         this._frameIndex = 0;
 
         this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
-        this._parent.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
+
+        this._parent.setFrame(this.currentFrame.x, this.currentFrame.y, this.currentFrame.width, this.currentFrame.height);
+
+        // this._parent.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
 
         //  TODO: Double check if required
         if (this._parent.__tilePattern)
@@ -351,7 +354,7 @@ Phaser.Animation.prototype = {
             return false;
         }
 
-        if (this.isPlaying === true && this.game.time.now >= this._timeNextFrame)
+        if (this.isPlaying && this.game.time.now >= this._timeNextFrame)
         {
             this._frameSkip = 1;
 
@@ -378,11 +381,12 @@ Phaser.Animation.prototype = {
                 if (this.loop)
                 {
                     this._frameIndex %= this._frames.length;
-                    // this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
+                    this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
 
                     // if (this.currentFrame)
                     // {
-                    //     this._parent.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
+                        // this._parent.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
+                    //     this._parent.setFrame(this.currentFrame.x, this.currentFrame.y, this.currentFrame.width, this.currentFrame.height);
 
                     //     if (this._parent.__tilePattern)
                     //     {
@@ -409,7 +413,9 @@ Phaser.Animation.prototype = {
 
             if (this.currentFrame)
             {
-                this._parent.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
+                // this._parent.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
+                // this._parent.setFrame(this.currentFrame.x, this.currentFrame.y, this.currentFrame.width, this.currentFrame.height);
+                this._parent.setFrame(this.currentFrame);
 
                 // console.log('a1', this._parent.texture.frame, PIXI.TextureCache[this.currentFrame.uuid].frame);
 
@@ -550,7 +556,9 @@ Object.defineProperty(Phaser.Animation.prototype, 'frame', {
         if (this.currentFrame !== null)
         {
             this._frameIndex = value;
-            this._parent.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
+            // this._parent.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
+            this._parent.setFrame(this.currentFrame);
+            // this._parent.setFrame(this.currentFrame.x, this.currentFrame.y, this.currentFrame.width, this.currentFrame.height);
         }
 
     }

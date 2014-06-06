@@ -138,9 +138,13 @@ Phaser.AnimationManager.prototype = {
         this._frameData.getFrameIndexes(frames, useNumericIndex, this._outputFrames);
 
         this._anims[name] = new Phaser.Animation(this.game, this.sprite, name, this._frameData, this._outputFrames, frameRate, loop);
+
         this.currentAnim = this._anims[name];
         this.currentFrame = this.currentAnim.currentFrame;
-        this.sprite.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
+
+        this.sprite.setFrame(this.currentFrame);
+        // this.sprite.setFrame(this.currentFrame.x, this.currentFrame.y, this.currentFrame.width, this.currentFrame.height);
+        // this.sprite.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
 
         if (this.sprite.__tilePattern)
         {
@@ -424,7 +428,10 @@ Object.defineProperty(Phaser.AnimationManager.prototype, 'frame', {
             if (this.currentFrame)
             {
                 this._frameIndex = value;
-                this.sprite.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
+
+                this.sprite.setFrame(this.currentFrame);
+                // this.sprite.setFrame(this.currentFrame.x, this.currentFrame.y, this.currentFrame.width, this.currentFrame.height);
+                // this.sprite.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
 
                 if (this.sprite.__tilePattern)
                 {
@@ -462,7 +469,9 @@ Object.defineProperty(Phaser.AnimationManager.prototype, 'frameName', {
             if (this.currentFrame)
             {
                 this._frameIndex = this.currentFrame.index;
-                this.sprite.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
+                this.sprite.setFrame(this.currentFrame);
+                // this.sprite.setFrame(this.currentFrame.x, this.currentFrame.y, this.currentFrame.width, this.currentFrame.height);
+                // this.sprite.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
 
                 if (this.sprite.__tilePattern)
                 {
