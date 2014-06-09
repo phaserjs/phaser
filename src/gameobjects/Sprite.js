@@ -400,7 +400,6 @@ Phaser.Sprite.prototype.loadTexture = function (key, frame) {
 
         if (this.game.cache.isSpriteSheet(key))
         {
-console.log('create animation', this.key);
             this.key = key;
             this.setTexture(new PIXI.Texture(PIXI.BaseTextureCache[key]));
             this.animations.loadFrameData(this.game.cache.getFrameData(key));
