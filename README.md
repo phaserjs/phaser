@@ -65,6 +65,7 @@ Version 2.0.6 - "Jornhill" - -in development-
 * Time.add allows you to add an existing Phaser.Timer to the timer pool (request #864)
 * Emitter.start has a new parameter: forceQuantity which will force the quantity of a flow of particles to be the given value (request #853)
 * Sound.pause will no longer fire a Sound.onStop signal, and the pause values are set before the onPause signal is dispatched (thanks @AnderbergE, fix #868)
+* Swapped to using escaped Unicode characters for the console output.
 
 ### CocoonJS Specific Updates
 

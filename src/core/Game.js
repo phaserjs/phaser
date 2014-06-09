@@ -506,7 +506,7 @@ Phaser.Game.prototype = {
         if (this.device.chrome)
         {
             var args = [
-                '%c %c %c Phaser v' + v + ' - ' + r + ' - ' + a + '  %c %c ' + ' http://phaser.io  %c %c ♥%c♥%c♥ ',
+                '%c %c %c Phaser v' + v + ' - ' + r + ' - ' + a + '  %c %c ' + ' http://phaser.io  %c %c \u2665%c\u2665%c\u2665 ',
                 'background: #0cf300',
                 'background: #00bc17',
                 'color: #ffffff; background: #00711f;',
