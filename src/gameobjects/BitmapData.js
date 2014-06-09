@@ -686,13 +686,10 @@ Phaser.BitmapData.prototype = {
 
         index *= 4;
 
-        if (this.data[index])
-        {
-            out.r = this.data[index];
-            out.g = this.data[++index];
-            out.b = this.data[++index];
-            out.a = this.data[++index];
-        }
+        out.r = this.data[index];
+        out.g = this.data[++index];
+        out.b = this.data[++index];
+        out.a = this.data[++index];
 
         return out;
 
