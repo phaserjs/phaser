@@ -4727,6 +4727,7 @@ declare module Phaser {
         textureFrame: Phaser.Frame;
         tileColor: string;
         type: number;
+        wrap: boolean;
 
         getRayCastTiles(line: Phaser.Line, stepRate?: number, collides?: boolean, interestingFace?: boolean): Phaser.Tile[];
         getTiles(x: number, y: number, width: number, height: number, collides?: boolean, interestingFace?: boolean): Phaser.Tile[];

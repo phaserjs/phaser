@@ -157,6 +157,12 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
     this.rayStepRate = 4;
 
     /**
+    * @property {boolean} wrap - Flag controlling if the layer tiles wrap at the edges. Only works if the World size matches the Map size.
+    * @default false
+    */
+    this.wrap = false;
+
+    /**
     * @property {object} _mc - Local map data and calculation cache.
     * @private
     */
@@ -184,12 +190,6 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
         prevY: 0
 
     };
-
-    /**
-     * @property {boolean} wrap - Flag controlling whether the layer tiles wrap at the edges
-     * @default false
-     */
-    this.wrap = false;
 
     /**
     * @property {array} _results - Local render loop var to help avoid gc spikes.
