@@ -75,13 +75,6 @@ Phaser.AnimationParser = {
             //  uuid needed?
             data.addFrame(new Phaser.Frame(i, x, y, frameWidth, frameHeight, '', uuid));
 
-            // PIXI.TextureCache[uuid] = new PIXI.Texture(PIXI.BaseTextureCache[key], {
-            //     x: x,
-            //     y: y,
-            //     width: frameWidth,
-            //     height: frameHeight
-            // });
-
             x += frameWidth + spacing;
 
             if (x + frameWidth > width)
@@ -135,27 +128,8 @@ Phaser.AnimationParser = {
                 uuid
             ));
 
-            // PIXI.TextureCache[uuid] = new PIXI.Texture(PIXI.BaseTextureCache[cacheKey], {
-            //     x: frames[i].frame.x,
-            //     y: frames[i].frame.y,
-            //     width: frames[i].frame.w,
-            //     height: frames[i].frame.h
-            // });
-
-/*
-    "filename": "octopus0000",
-    "frame": {"x":888,"y":1399,"w":82,"h":88},
-    "rotated": false,
-    "trimmed": true,
-    "spriteSourceSize": {"x":0,"y":0,"w":82,"h":95},
-    "sourceSize": {"w":82,"h":95}
-
- */
-
             if (frames[i].trimmed)
             {
-                // setTrim: function (trimmed, actualWidth, actualHeight, destX, destY, destWidth, destHeight) {
-
                 newFrame.setTrim(
                     frames[i].trimmed,
                     frames[i].sourceSize.w,
@@ -165,11 +139,7 @@ Phaser.AnimationParser = {
                     frames[i].spriteSourceSize.w,
                     frames[i].spriteSourceSize.h
                 );
-
-
-                // PIXI.TextureCache[uuid].trim = new Phaser.Rectangle(frames[i].spriteSourceSize.x, frames[i].spriteSourceSize.y, frames[i].sourceSize.w, frames[i].sourceSize.h);
             }
-
         }
 
         return data;
@@ -217,13 +187,6 @@ Phaser.AnimationParser = {
                 uuid
             ));
 
-            PIXI.TextureCache[uuid] = new PIXI.Texture(PIXI.BaseTextureCache[cacheKey], {
-                x: frames[key].frame.x,
-                y: frames[key].frame.y,
-                width: frames[key].frame.w,
-                height: frames[key].frame.h
-            });
-
             if (frames[key].trimmed)
             {
                 newFrame.setTrim(
@@ -235,8 +198,6 @@ Phaser.AnimationParser = {
                     frames[key].spriteSourceSize.w,
                     frames[key].spriteSourceSize.h
                 );
-
-                PIXI.TextureCache[uuid].trim = new Phaser.Rectangle(frames[key].spriteSourceSize.x, frames[key].spriteSourceSize.y, frames[key].sourceSize.w, frames[key].sourceSize.h);
             }
 
             i++;
@@ -306,19 +267,10 @@ Phaser.AnimationParser = {
 
             newFrame = data.addFrame(new Phaser.Frame(i, x, y, width, height, name, uuid));
 
-            PIXI.TextureCache[uuid] = new PIXI.Texture(PIXI.BaseTextureCache[cacheKey], {
-                x: x,
-                y: y,
-                width: width,
-                height: height
-            });
-
             //  Trimmed?
             if (frameX !== null || frameY !== null)
             {
                 newFrame.setTrim(true, width, height, frameX, frameY, frameWidth, frameHeight);
-
-                PIXI.TextureCache[uuid].trim = new Phaser.Rectangle(frameX, frameY, width, height);
             }
         }
 

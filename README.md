@@ -16,6 +16,7 @@ By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 * Read the [documentation online](http://docs.phaser.io)
 * Join our [#phaserio IRC channel](http://www.html5gamedevs.com/topic/4470-official-phaserio-irc-channel-phaserio-on-freenode/) on freenode
 * Subscribe to the [Phaser Newsletter](https://confirmsubscription.com/h/r/369DE48E3E86AF1E) and we'll email you when new versions are released.
+* Please help support our work via [Gittip](https://www.gittip.com/photonstorm/)
 
 ![div](http://phaser.io/images/div4.png)
 
@@ -66,6 +67,8 @@ Version 2.0.6 - "Jornhill" - -in development-
 * Emitter.start has a new parameter: forceQuantity which will force the quantity of a flow of particles to be the given value (request #853)
 * Sound.pause will no longer fire a Sound.onStop signal, and the pause values are set before the onPause signal is dispatched (thanks @AnderbergE, fix #868)
 * Swapped to using escaped Unicode characters for the console output.
+* Frame.setTrim no longer modifies the Frame width and height values.
+* AnimationParser doesn't populate the Pixi.TextureCache for every frame any longer. Each display object has its own texture property instead.
 
 ### CocoonJS Specific Updates
 
@@ -93,6 +96,10 @@ Version 2.0.6 - "Jornhill" - -in development-
 * Loader.totalLoadedPacks returns the number of Asset Packs already loaded.
 * Emitter.explode is a new short-cut for exploding a fixed quantity of particles at once.
 * Emitter.flow is a new short-cut for creating a flow of particles based on the given frequency.
+* Sprite.crop (and Image.crop) has been completely overhauled. You can now crop animated sprites (sprite sheet and texture atlas), you can define the x/y crop offset and the crop rectangle is exposed in the Sprite.cropRect property.
+* Sprite.updateCrop is available if you wish to update an externally referenced crop rectangle.
+* Sprites and Images now have their own textures objects, they are no longer references to those stored in the global Pixi.TextureCache. This allows you to redefine the texture frame dynamically without messing up any other Sprites in your game, such as via cropping. They still share global Base Textures, so image references are kept to a minimum.
+* Sprite.resetFrame will revert the Sprites texture frame back to its defaults dimensions. This is called when you call Sprite.crop with no rectangle, to reset the crop effect, but can be userful in other situations so we've left it as a public method.
 
 
 ### Bug Fixes
@@ -284,14 +291,18 @@ Here are some of the features planned for future releases:
 
 ### Version 2.1 ("Shienar")
 
+* Scene Manager - json scene parser.
 * Comprehensive testing across Firefox OS devices, CocoonJS and Ejecta.
 * Ability to control DOM elements from the core game and layer them into the game.
 * Touch Gestures.
+* Optimised global Animation manager to cut down on object creation.
+* Swapping to using a RenderTexture for the Tilemaps and implementing Tilemap slicing.
+* Enhance the State Management, so you can perform non-destructive State swaps and persistence.
+* Support for parallel asset loading.
 
 ### Version 2.2 ("Tarabon")
 
-* Enhance the State Management, so you can perform non-destructive State swaps and persistence.
-* Support for parallel asset loading.
+* Look carefully at the internal structure of Phaser to avoid method repetition (such as Sprite.crop and Image.crop), investigate using mixins to help reduce overall codebase size.
 * Flash CC HTML5 export integration.
 * Massively enhance the audio side of Phaser. Take more advantage of Web Audio: echo effects, positional sound, etc.
 

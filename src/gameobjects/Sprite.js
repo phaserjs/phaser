@@ -65,21 +65,7 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     */
     this.key = key;
 
-    /**
-    * @property {number} _frame - Internal cache var.
-    * @private
-    */
-    this._frame = 0;
-
-    /**
-    * @property {string} _frameName - Internal cache var.
-    * @private
-    */
-    this._frameName = '';
-
     PIXI.Sprite.call(this, PIXI.TextureCache['__default']);
-
-    this.loadTexture(key, frame);
 
     this.position.set(x, y);
 
@@ -162,7 +148,14 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     this.cameraOffset = new Phaser.Point();
 
     /**
+    * @property {Phaser.Rectangle} cropRect - The Rectangle used to crop the texture. Set this via Sprite.crop. Any time you modify this property directly you must call Sprite.updateCrop.
+    * @default
+    */
+    this.cropRect = null;
+
+    /**
     * A small internal cache:
+    * 
     * 0 = previous position.x
     * 1 = previous position.y
     * 2 = previous rotation
@@ -172,10 +165,18 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     * 6 = exists (0 = no, 1 = yes)
     * 7 = fixed to camera (0 = no, 1 = yes)
     * 8 = destroy phase? (0 = no, 1 = yes)
+    * 9 = texture x
+    * 10 = texture y
+    * 11 = texture width
+    * 12 = texture height
+    * 13 = texture spriteSourceSizeX
+    * 14 = texture spriteSourceSizeY
+    * 15 = trim x
+    * 16 = trim y
     * @property {Array} _cache
     * @private
     */
-    this._cache = [ 0, 0, 0, 0, 1, 0, 1, 0, 0 ];
+    this._cache = [ 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ];
 
     /**
     * @property {Phaser.Rectangle} _bounds - Internal cache var.
@@ -183,17 +184,7 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     */
     this._bounds = new Phaser.Rectangle();
 
-    /**
-    * @property {Phaser.Rectangle} _crop - Internal cache var.
-    * @private
-    */
-    this._crop = null;
-
-    /**
-    * @property {Phaser.Rectangle} _frame - Internal cache var.
-    * @private
-    */
-    this._frame = null;
+    this.loadTexture(key, frame);
 
 };
 
@@ -359,29 +350,26 @@ Phaser.Sprite.prototype.postUpdate = function() {
 * @method Phaser.Sprite#loadTexture
 * @memberof Phaser.Sprite
 * @param {string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture} key - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture, BitmapData or PIXI.Texture.
-* @param {string|number} frame - If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
+* @param {string|number} [frame] - If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
 */
 Phaser.Sprite.prototype.loadTexture = function (key, frame) {
 
     frame = frame || 0;
+    
+    this.key = key;
 
     if (key instanceof Phaser.RenderTexture)
     {
         this.key = key.key;
         this.setTexture(key);
-        return;
     }
     else if (key instanceof Phaser.BitmapData)
     {
-        this.key = key;
         this.setTexture(key.texture);
-        return;
     }
     else if (key instanceof PIXI.Texture)
     {
-        this.key = key;
         this.setTexture(key);
-        return;
     }
     else
     {
@@ -389,114 +377,40 @@ Phaser.Sprite.prototype.loadTexture = function (key, frame) {
         {
             this.key = '__default';
             this.setTexture(PIXI.TextureCache[this.key]);
-            return;
         }
         else if (typeof key === 'string' && !this.game.cache.checkImageKey(key))
         {
             this.key = '__missing';
             this.setTexture(PIXI.TextureCache[this.key]);
-            return;
-        }
-
-        if (this.game.cache.isSpriteSheet(key))
-        {
-            this.key = key;
-            this.setTexture(new PIXI.Texture(PIXI.BaseTextureCache[key]));
-            this.animations.loadFrameData(this.game.cache.getFrameData(key));
-            this.textureChange = true;
-
-            if (typeof frame === 'string')
-            {
-                this.frameName = frame;
-            }
-            else
-            {
-                this.frame = frame;
-            }
         }
         else
         {
-            this.key = key;
             this.setTexture(new PIXI.Texture(PIXI.BaseTextureCache[key]));
-            this.animations.loadFrameData(null);
-            return;
+            this.animations.loadFrameData(this.game.cache.getFrameData(key), frame);
         }
     }
 
 };
 
+/**
+* Resets the Texture frame dimensions that the Sprite uses for rendering.
+*
+* @method Phaser.Sprite#resetFrame
+* @memberof Phaser.Sprite
+*/
+Phaser.Sprite.prototype.resetFrame = function() {
 
-Phaser.Sprite.prototype.setFrame = function(frame) {
+    this.texture.frame.x = this._cache[9];
+    this.texture.frame.y = this._cache[10];
+    this.texture.frame.width = this._cache[11];
+    this.texture.frame.height = this._cache[12];
 
-    if (frame.trimmed)
+    if (this.texture.trim)
     {
-        if (this._crop)
-        {
-            //  Works but doesn't take crop x/y into account
-            // this.texture.frame.x = frame.x;
-            // this.texture.frame.y = frame.y;
-            // this.texture.frame.width = this._crop.width - frame.spriteSourceSizeX;
-            // this.texture.frame.height = this._crop.height - frame.spriteSourceSizeY;
-            // this.texture.trim = new Phaser.Rectangle(frame.spriteSourceSizeX, frame.spriteSourceSizeY, frame.width, frame.height);
-
-            var fx = frame.x + this._crop.x - frame.spriteSourceSizeX;
-
-            if (fx < frame.x)
-            {
-                fx = frame.x;
-            }
-
-            var fy = frame.y + this._crop.y - frame.spriteSourceSizeY;
-
-            if (fy < frame.y)
-            {
-                fy = frame.y;
-            }
-
-            this.texture.frame.x = fx;
-            this.texture.frame.y = fy;
-
-            var tx = 0;
-            var ty = 0;
-
-            if (this._crop.x === 0)
-            {
-                tx = frame.spriteSourceSizeX;
-            }
-
-            if (this._crop.y === 0)
-            {
-                ty = frame.spriteSourceSizeY;
-            }
-
-            this.texture.frame.width = this._crop.width - tx;
-            this.texture.frame.height = this._crop.height - ty;
-
-            this.texture.trim = new Phaser.Rectangle(tx, ty, this._crop.width, this._crop.height);
-        }
-        else
-        {
-            this.texture.frame.x = frame.x;
-            this.texture.frame.y = frame.y;
-            this.texture.frame.width = frame.width;
-            this.texture.frame.height = frame.height;
-            this.texture.trim = new Phaser.Rectangle(frame.spriteSourceSizeX, frame.spriteSourceSizeY, frame.width, frame.height);
-        }
-    }
-    else
-    {
-        this.texture.frame.x = frame.x;
-        this.texture.frame.y = frame.y;
-        this.texture.frame.width = frame.width;
-        this.texture.frame.height = frame.height;
-
-        if (this._crop)
-        {
-            this.texture.frame.x += this._crop.x;
-            this.texture.frame.y += this._crop.y;
-            this.texture.frame.width = this._crop.width;
-            this.texture.frame.height = this._crop.height;
-        }
+        this.texture.trim.x = this._cache[13];
+        this.texture.trim.y = this._cache[14];
+        this.texture.trim.width = this.texture.frame.width;
+        this.texture.trim.height = this.texture.frame.height;
     }
 
     if (this.game.renderType === Phaser.WEBGL)
@@ -506,28 +420,106 @@ Phaser.Sprite.prototype.setFrame = function(frame) {
 
 };
 
+/**
+* Sets the Texture frame the Sprite uses for rendering.
+* This is primarily an internal method used by Sprite.loadTexture, although you may call it directly.
+*
+* @method Phaser.Sprite#setFrame
+* @memberof Phaser.Sprite
+* @param {Phaser.Frame} frame - The Frame to be used by the Sprite texture.
+*/
+Phaser.Sprite.prototype.setFrame = function(frame) {
 
-Phaser.Sprite.prototype.XsetFrame = function(x, y, width, height) {
+    this._cache[9] = frame.x;
+    this._cache[10] = frame.y;
+    this._cache[11] = frame.width;
+    this._cache[12] = frame.height;
+    this._cache[13] = frame.spriteSourceSizeX;
+    this._cache[14] = frame.spriteSourceSizeY;
 
-    // console.log('setFrame', this.key, x, y);
+    this.texture.frame.x = frame.x;
+    this.texture.frame.y = frame.y;
+    this.texture.frame.width = frame.width;
+    this.texture.frame.height = frame.height;
 
-    this.texture.frame.x = x;
-    this.texture.frame.y = y;
-    this.texture.frame.width = width;
-    this.texture.frame.height = height;
-
-    //  Apply crop?
-
-    if (this._crop)
+    if (frame.trimmed)
     {
-        this.texture.frame.x += this._crop.x;
-        this.texture.frame.y += this._crop.y;
-        this.texture.frame.width = this._crop.width;
-        this.texture.frame.height = this._crop.height;
+        this.texture.trim = { x: frame.spriteSourceSizeX, y: frame.spriteSourceSizeY, width: frame.width, height: frame.height };
     }
 
-    //  Needed?
-    // this.updateFrame = true;
+    if (this.game.renderType === Phaser.WEBGL)
+    {
+        PIXI.WebGLRenderer.updateTextureFrame(this.texture);
+    }
+
+    if (this.cropRect)
+    {
+        this.updateCrop();
+    }
+
+};
+
+/**
+* If you have set a crop rectangle on this Sprite via Sprite.crop and since modified the Sprite.cropRect property (or the rectangle it references)
+* then you need to update the crop frame by calling this method.
+*
+* @method Phaser.Sprite#updateCrop
+* @memberof Phaser.Sprite
+*/
+Phaser.Sprite.prototype.updateCrop = function() {
+
+    if (!this.cropRect)
+    {
+        return;
+    }
+
+    if (this.texture.trim)
+    {
+        this._cache[15] = this._cache[9] + this.cropRect.x - this._cache[13];
+
+        if (this._cache[15] < this._cache[9])
+        {
+            this._cache[15] = this._cache[9];
+        }
+
+        this._cache[16] = this._cache[10] + this.cropRect.y - this._cache[14];
+
+        if (this._cache[16] < this._cache[10])
+        {
+            this._cache[16] = this._cache[10];
+        }
+
+        this.texture.frame.x = this._cache[15];
+        this.texture.frame.y = this._cache[16];
+
+        this._cache[15] = 0;
+        this._cache[16] = 0;
+
+        if (this.cropRect.x === 0)
+        {
+            this._cache[15] = this._cache[13];
+        }
+
+        if (this.cropRect.y === 0)
+        {
+            this._cache[16] = this._cache[14];
+        }
+
+        this.texture.frame.width = this.cropRect.width - this._cache[15];
+        this.texture.frame.height = this.cropRect.height - this._cache[16];
+
+        this.texture.trim.x = this._cache[15];
+        this.texture.trim.y = this._cache[16];
+        this.texture.trim.width = this.cropRect.width;
+        this.texture.trim.height = this.cropRect.height;
+    }
+    else
+    {
+        this.texture.frame.x = this._cache[9] + this.cropRect.x;
+        this.texture.frame.y = this._cache[10] + this.cropRect.y;
+        this.texture.frame.width = this.cropRect.width;
+        this.texture.frame.height = this.cropRect.height;
+    }
 
     if (this.game.renderType === Phaser.WEBGL)
     {
@@ -538,38 +530,44 @@ Phaser.Sprite.prototype.XsetFrame = function(x, y, width, height) {
 
 /**
 * Crop allows you to crop the texture used to display this Sprite.
-* Cropping takes place from the top-left of the Sprite and can be modified in real-time by providing an updated rectangle object.
-* Note that cropping a Sprite will reset its animation to the first frame. You cannot currently crop an animated Sprite.
+* This modifies the core Sprite texture frame, so the Sprite width/height properties will adjust accordingly.
+* 
+* Cropping takes place from the top-left of the Sprite and can be modified in real-time by either providing an updated rectangle object to Sprite.crop,
+* or by modifying Sprite.cropRect (or a reference to it) and then calling Sprite.updateCrop.
+* 
 * The rectangle object given to this method can be either a Phaser.Rectangle or any object so long as it has public x, y, width and height properties.
-* Please note that the rectangle object given is not duplicated by this method, but rather the Image uses a reference to the rectangle.
-* Keep this in mind if assigning a rectangle in a for-loop, or when cleaning up for garbage collection.
+* A reference to the rectangle is stored in Sprite.cropRect unless the `copy` parameter is `true` in which case the values are duplicated to a local object.
 *
 * @method Phaser.Sprite#crop
 * @memberof Phaser.Sprite
-* @param {Phaser.Rectangle} rect - The Rectangle to crop the Sprite to. Pass null or no parameters to clear a previously set crop rectangle.
-* @param {boolean} [copy=false] - Should the Sprite store a local copy of the Rectangle object?
+* @param {Phaser.Rectangle} rect - The Rectangle used during cropping. Pass null or no parameters to clear a previously set crop rectangle.
+* @param {boolean} [copy=false] - If false Sprite.cropRect will be a reference to the given rect. If true it will copy the rect values into a local Sprite.cropRect object.
 */
 Phaser.Sprite.prototype.crop = function(rect, copy) {
 
+    if (typeof copy === 'undefined') { copy = false; }
+
     if (rect)
     {
-        if (copy)
+        if (copy && this.cropRect !== null)
         {
-            this._crop = new Phaser.Rectangle(rect.x, rect.y, rect.width, rect.height);
+            this.cropRect.setTo(rect.x, rect.y, rect.width, rect.height);
+        }
+        else if (copy && this.cropRect === null)
+        {
+            this.cropRect = new Phaser.Rectangle(rect.x, rect.y, rect.width, rect.height);
         }
         else
         {
-            this._crop = rect;
+            this.cropRect = rect;
         }
 
-        // this.setFrame(this.texture.frame.x, this.texture.frame.y, this.texture.frame.width, this.texture.frame.height);
-        this.setFrame(this.texture);
+        this.updateCrop();
     }
     else
     {
-        this._crop = null;
-        //  How to reset the frame
-        // this.setFrame(this.texture.frame.x, this.texture.frame.y, this.texture.frame.width, this.texture.frame.height);
+        this.cropRect = null;
+        this.resetFrame();
     }
 
 };

@@ -2240,6 +2240,7 @@ declare module Phaser {
         anchor: Phaser.Point;
         autoCull: boolean;
         cameraOffset: Phaser.Point;
+        cropRect: Phaser.Rectangle;
         deltaX: number;
         deltaY: number;
         deltaZ: number;
@@ -2264,16 +2265,18 @@ declare module Phaser {
         z: number;
 
         bringToTop(): Phaser.Image;
-        crop(rect: Phaser.Rectangle): void;
-        crop(rect: Object): void;
+        crop(rect: Phaser.Rectangle, copy: boolean): void;
         destroy(destroyChildren?: boolean): void;
         kill(): Phaser.Image;
         loadTexture(key: any, frame: any): void;
         postUpdate(): void;
         preUpdate(): void;
         reset(x: number, y: number): Phaser.Image;
+        resetFrame(): void;
         revive(): Phaser.Image;
+        setFrame(frame: Phaser.Frame): void;
         update(): void;
+        updateCrop(): void;
 
     }
 
@@ -4295,6 +4298,7 @@ declare module Phaser {
         body: any;
         cameraOffset: Phaser.Point;
         checkWorldBounds: boolean;
+        cropRect: Phaser.Rectangle;
         debug: boolean;
         deltaX: number;
         deltaY: number;
@@ -4327,7 +4331,7 @@ declare module Phaser {
         z: number;
 
         bringToTop(): Phaser.Sprite;
-        crop(rect: Phaser.Rectangle): void;
+        crop(rect: Phaser.Rectangle, copy: boolean): void;
         damage(amount: number): Phaser.Sprite;
         destroy(destroyChildren?: boolean): void;
         drawPolygon(): void;
@@ -4338,8 +4342,11 @@ declare module Phaser {
         postUpdate(): void;
         preUpdate(): void;
         reset(x: number, y: number, health?: number): Phaser.Sprite;
+        resetFrame(): void;
         revive(health?: number): Phaser.Sprite;
+        setFrame(frame: Phaser.Frame): void;
         update(): void;
+        updateCrop(): void;
 
     }
 

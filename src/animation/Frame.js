@@ -143,8 +143,6 @@ Phaser.Frame.prototype = {
 
         if (trimmed)
         {
-            // this.width = actualWidth;
-            // this.height = actualHeight;
             this.sourceSizeW = actualWidth;
             this.sourceSizeH = actualHeight;
             this.centerX = Math.floor(actualWidth / 2);

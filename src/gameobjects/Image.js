@@ -62,21 +62,7 @@ Phaser.Image = function (game, x, y, key, frame) {
     */
     this.key = key;
 
-    /**
-    * @property {number} _frame - Internal cache var.
-    * @private
-    */
-    this._frame = 0;
-
-    /**
-    * @property {string} _frameName - Internal cache var.
-    * @private
-    */
-    this._frameName = '';
-
     PIXI.Sprite.call(this, PIXI.TextureCache['__default']);
-
-    this.loadTexture(key, frame);
 
     this.position.set(x, y);
 
@@ -106,7 +92,14 @@ Phaser.Image = function (game, x, y, key, frame) {
     this.cameraOffset = new Phaser.Point();
 
     /**
+    * @property {Phaser.Rectangle} cropRect - The Rectangle used to crop the texture. Set this via Sprite.crop. Any time you modify this property directly you must call Sprite.updateCrop.
+    * @default
+    */
+    this.cropRect = null;
+
+    /**
     * A small internal cache:
+    * 
     * 0 = previous position.x
     * 1 = previous position.y
     * 2 = previous rotation
@@ -116,10 +109,38 @@ Phaser.Image = function (game, x, y, key, frame) {
     * 6 = exists (0 = no, 1 = yes)
     * 7 = fixed to camera (0 = no, 1 = yes)
     * 8 = destroy phase? (0 = no, 1 = yes)
+    * 9 = texture x
+    * 10 = texture y
+    * 11 = texture width
+    * 12 = texture height
+    * 13 = texture spriteSourceSizeX
+    * 14 = texture spriteSourceSizeY
+    * 15 = trim x
+    * 16 = trim y
     * @property {Array} _cache
     * @private
     */
-    this._cache = [ 0, 0, 0, 0, 1, 0, 1, 0, 0 ];
+    this._cache = [ 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ];
+
+    /**
+    * @property {Phaser.Rectangle} _bounds - Internal cache var.
+    * @private
+    */
+    this._bounds = new Phaser.Rectangle();
+
+    /**
+    * @property {number} _frame - Internal cache var.
+    * @private
+    */
+    this._frame = 0;
+
+    /**
+    * @property {string} _frameName - Internal cache var.
+    * @private
+    */
+    this._frameName = '';
+
+    this.loadTexture(key, frame);
 
 };
 
@@ -217,24 +238,24 @@ Phaser.Image.prototype.postUpdate = function() {
 Phaser.Image.prototype.loadTexture = function (key, frame) {
 
     frame = frame || 0;
+    
+    this.key = key;
+
+    this._frame = 0;
+    this._frameName = '';
 
     if (key instanceof Phaser.RenderTexture)
     {
         this.key = key.key;
         this.setTexture(key);
-        return;
     }
     else if (key instanceof Phaser.BitmapData)
     {
-        this.key = key;
         this.setTexture(key.texture);
-        return;
     }
     else if (key instanceof PIXI.Texture)
     {
-        this.key = key;
         this.setTexture(key);
-        return;
     }
     else
     {
@@ -242,92 +263,212 @@ Phaser.Image.prototype.loadTexture = function (key, frame) {
         {
             this.key = '__default';
             this.setTexture(PIXI.TextureCache[this.key]);
-            return;
         }
         else if (typeof key === 'string' && !this.game.cache.checkImageKey(key))
         {
             this.key = '__missing';
             this.setTexture(PIXI.TextureCache[this.key]);
-            return;
-        }
-
-        if (this.game.cache.isSpriteSheet(key))
-        {
-            this.key = key;
-
-            var frameData = this.game.cache.getFrameData(key);
-
-            if (typeof frame === 'string')
-            {
-                this._frame = 0;
-                this._frameName = frame;
-                this.setTexture(PIXI.TextureCache[frameData.getFrameByName(frame).uuid]);
-                return;
-            }
-            else
-            {
-                this._frame = frame;
-                this._frameName = '';
-                this.setTexture(PIXI.TextureCache[frameData.getFrame(frame).uuid]);
-                return;
-            }
         }
         else
         {
-            this.key = key;
-            this.setTexture(PIXI.TextureCache[key]);
-            return;
+            this.setTexture(new PIXI.Texture(PIXI.BaseTextureCache[this.key]));
+
+            var frameData = this.game.cache.getFrameData(this.key);
+
+            if (frameData)
+            {
+                if (typeof frame === 'string')
+                {
+                    this._frameName = frame;
+                    this.setFrame(frameData.getFrameByName(frame));
+                }
+                else
+                {
+                    this._frame = frame;
+                    this.setFrame(frameData.getFrame(frame));
+                }
+            }
         }
     }
 
 };
 
 /**
-* Crop allows you to crop the texture used to display this Image.
-* Cropping takes place from the top-left of the Image and can be modified in real-time by providing an updated rectangle object.
-* The rectangle object given to this method can be either a Phaser.Rectangle or any object so long as it has public x, y, width and height properties.
-* Please note that the rectangle object given is not duplicated by this method, but rather the Image uses a reference to the rectangle.
-* Keep this in mind if assigning a rectangle in a for-loop, or when cleaning up for garbage collection.
+* Resets the Texture frame dimensions that the Image uses for rendering.
 *
-* @method Phaser.Image#crop
+* @method Phaser.Image#resetFrame
 * @memberof Phaser.Image
-* @param {Phaser.Rectangle|object} rect - The Rectangle to crop the Image to. Pass null or no parameters to clear a previously set crop rectangle.
 */
-Phaser.Image.prototype.crop = function(rect) {
+Phaser.Image.prototype.resetFrame = function() {
 
-    if (typeof rect === 'undefined' || rect === null)
+    this.texture.frame.x = this._cache[9];
+    this.texture.frame.y = this._cache[10];
+    this.texture.frame.width = this._cache[11];
+    this.texture.frame.height = this._cache[12];
+
+    if (this.texture.trim)
     {
-        //  Clear any crop that may be set
-        if (this.texture.hasOwnProperty('sourceWidth'))
+        this.texture.trim.x = this._cache[13];
+        this.texture.trim.y = this._cache[14];
+        this.texture.trim.width = this.texture.frame.width;
+        this.texture.trim.height = this.texture.frame.height;
+    }
+
+    if (this.game.renderType === Phaser.WEBGL)
+    {
+        PIXI.WebGLRenderer.updateTextureFrame(this.texture);
+    }
+
+};
+
+/**
+* Sets the Texture frame the Image uses for rendering.
+* This is primarily an internal method used by Image.loadTexture, although you may call it directly.
+*
+* @method Phaser.Image#setFrame
+* @memberof Phaser.Image
+* @param {Phaser.Frame} frame - The Frame to be used by the Image texture.
+*/
+Phaser.Image.prototype.setFrame = function(frame) {
+
+    this._cache[9] = frame.x;
+    this._cache[10] = frame.y;
+    this._cache[11] = frame.width;
+    this._cache[12] = frame.height;
+    this._cache[13] = frame.spriteSourceSizeX;
+    this._cache[14] = frame.spriteSourceSizeY;
+
+    this.texture.frame.x = frame.x;
+    this.texture.frame.y = frame.y;
+    this.texture.frame.width = frame.width;
+    this.texture.frame.height = frame.height;
+
+    if (frame.trimmed)
+    {
+        this.texture.trim = { x: frame.spriteSourceSizeX, y: frame.spriteSourceSizeY, width: frame.width, height: frame.height };
+    }
+
+    if (this.game.renderType === Phaser.WEBGL)
+    {
+        PIXI.WebGLRenderer.updateTextureFrame(this.texture);
+    }
+
+    if (this.cropRect)
+    {
+        this.updateCrop();
+    }
+
+};
+
+/**
+* If you have set a crop rectangle on this Image via Image.crop and since modified the Image.cropRect property (or the rectangle it references)
+* then you need to update the crop frame by calling this method.
+*
+* @method Phaser.Image#updateCrop
+* @memberof Phaser.Image
+*/
+Phaser.Image.prototype.updateCrop = function() {
+
+    if (!this.cropRect)
+    {
+        return;
+    }
+
+    if (this.texture.trim)
+    {
+        this._cache[15] = this._cache[9] + this.cropRect.x - this._cache[13];
+
+        if (this._cache[15] < this._cache[9])
         {
-            this.texture.setFrame(new Phaser.Rectangle(0, 0, this.texture.sourceWidth, this.texture.sourceHeight));
+            this._cache[15] = this._cache[9];
         }
+
+        this._cache[16] = this._cache[10] + this.cropRect.y - this._cache[14];
+
+        if (this._cache[16] < this._cache[10])
+        {
+            this._cache[16] = this._cache[10];
+        }
+
+        this.texture.frame.x = this._cache[15];
+        this.texture.frame.y = this._cache[16];
+
+        this._cache[15] = 0;
+        this._cache[16] = 0;
+
+        if (this.cropRect.x === 0)
+        {
+            this._cache[15] = this._cache[13];
+        }
+
+        if (this.cropRect.y === 0)
+        {
+            this._cache[16] = this._cache[14];
+        }
+
+        this.texture.frame.width = this.cropRect.width - this._cache[15];
+        this.texture.frame.height = this.cropRect.height - this._cache[16];
+
+        this.texture.trim.x = this._cache[15];
+        this.texture.trim.y = this._cache[16];
+        this.texture.trim.width = this.cropRect.width;
+        this.texture.trim.height = this.cropRect.height;
     }
     else
     {
-        //  Do we need to clone the PIXI.Texture object?
-        if (this.texture instanceof PIXI.Texture)
+        this.texture.frame.x = this._cache[9] + this.cropRect.x;
+        this.texture.frame.y = this._cache[10] + this.cropRect.y;
+        this.texture.frame.width = this.cropRect.width;
+        this.texture.frame.height = this.cropRect.height;
+    }
+
+    if (this.game.renderType === Phaser.WEBGL)
+    {
+        PIXI.WebGLRenderer.updateTextureFrame(this.texture);
+    }
+
+};
+
+/**
+* Crop allows you to crop the texture used to display this Image.
+* This modifies the core Image texture frame, so the Image width/height properties will adjust accordingly.
+* 
+* Cropping takes place from the top-left of the Image and can be modified in real-time by either providing an updated rectangle object to Image.crop,
+* or by modifying Image.cropRect (or a reference to it) and then calling Image.updateCrop.
+* 
+* The rectangle object given to this method can be either a Phaser.Rectangle or any object so long as it has public x, y, width and height properties.
+* A reference to the rectangle is stored in Image.cropRect unless the `copy` parameter is `true` in which case the values are duplicated to a local object.
+*
+* @method Phaser.Image#crop
+* @memberof Phaser.Image
+* @param {Phaser.Rectangle} rect - The Rectangle used during cropping. Pass null or no parameters to clear a previously set crop rectangle.
+* @param {boolean} [copy=false] - If false Image.cropRect will be a reference to the given rect. If true it will copy the rect values into a local Image.cropRect object.
+*/
+Phaser.Image.prototype.crop = function(rect, copy) {
+
+    if (typeof copy === 'undefined') { copy = false; }
+
+    if (rect)
+    {
+        if (copy && this.cropRect !== null)
         {
-            //  Yup, let's rock it ...
-            var local = {};
-
-            Phaser.Utils.extend(true, local, this.texture);
-
-            local.sourceWidth = local.width;
-            local.sourceHeight = local.height;
-            local.frame = rect;
-            local.width = rect.width;
-            local.height = rect.height;
-
-            this.texture = local;
-
-            this.texture.updateFrame = true;
-            PIXI.Texture.frameUpdates.push(this.texture);
+            this.cropRect.setTo(rect.x, rect.y, rect.width, rect.height);
+        }
+        else if (copy && this.cropRect === null)
+        {
+            this.cropRect = new Phaser.Rectangle(rect.x, rect.y, rect.width, rect.height);
         }
         else
         {
-            this.texture.setFrame(rect);
+            this.cropRect = rect;
         }
+
+        this.updateCrop();
+    }
+    else
+    {
+        this.cropRect = null;
+        this.resetFrame();
     }
 
 };
@@ -619,8 +760,8 @@ Object.defineProperty(Phaser.Image.prototype, "frame", {
 
             if (frameData && value < frameData.total && frameData.getFrame(value))
             {
-                this.setTexture(PIXI.TextureCache[frameData.getFrame(value).uuid]);
                 this._frame = value;
+                this.setFrame(frameData.getFrame(value));
             }
         }
 
@@ -648,8 +789,8 @@ Object.defineProperty(Phaser.Image.prototype, "frameName", {
 
             if (frameData && frameData.getFrameByName(value))
             {
-                this.setTexture(PIXI.TextureCache[frameData.getFrameByName(value).uuid]);
                 this._frameName = value;
+                this.setFrame(frameData.getFrameByName(value));
             }
         }
 
