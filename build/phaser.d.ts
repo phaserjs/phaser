@@ -3107,7 +3107,7 @@ declare module Phaser {
                 render(context: Object, body: Phaser.Physics.Arcade.Body, filled?: boolean, color?: string): void;
                 renderBodyInfo(debug: Phaser.Utils.Debug, body: Phaser.Physics.Arcade.Body): void;
                 reset(x: number, y: number): void;
-                setSize(width: number, height: number, offsetX: number, offsetY: number): void;
+                setSize(width: number, height: number, offsetX?: number, offsetY?: number): void;
                 updateBounds(): boolean;
 
             }

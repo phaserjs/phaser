@@ -120,6 +120,7 @@ Version 2.0.6 - "Jornhill" - -in development-
 * When creating a Sprite or Image using a texture atlas it would set the frame twice, once in loadTexture and once when the initial frame is set. This has been reduced down to just a single setting now.
 * BitmapData.getPixel fix for pixels with zero red value (thanks @lstor fix #894)
 * If you call ArcadePhysics.collide on a Sprite vs. a Tilemap and provide a custom processCallback, the result was being ignored and the sprite was being separated regardless (thanks @aivins fix #891 #890)
+* ArcadePhysics.Body.setSize if you set offset x/y values previously and then passed zero values they would be ignored (thanks @casensiom fix #889)
 
 ### Migration Guide
 
