@@ -670,13 +670,12 @@ Phaser.Physics.Arcade.prototype = {
         }
 
         for (var i = 0; i < this._mapData.length; i++)
-        {
-            if (this.separateTile(i, sprite.body, this._mapData[i]))
+        {       
+            if (processCallback)
             {
-                //  They collided, is there a custom process callback?
-                if (processCallback)
+                if (processCallback.call(callbackContext, sprite, this._mapData[i]))
                 {
-                    if (processCallback.call(callbackContext, sprite, this._mapData[i]))
+                    if (this.separateTile(i, sprite.body, this._mapData[i]))
                     {
                         this._total++;
 
@@ -686,7 +685,10 @@ Phaser.Physics.Arcade.prototype = {
                         }
                     }
                 }
-                else
+            }
+            else
+            {   
+                if (this.separateTile(i, sprite.body, this._mapData[i]))
                 {
                     this._total++;
 
