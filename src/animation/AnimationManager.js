@@ -78,11 +78,28 @@ Phaser.AnimationManager.prototype = {
     * @method Phaser.AnimationManager#loadFrameData
     * @private
     * @param {Phaser.FrameData} frameData - The FrameData set to load.
+    * @param {string|number} frame - The frame to default to.
     */
-    loadFrameData: function (frameData) {
+    loadFrameData: function (frameData, frame) {
 
         this._frameData = frameData;
-        this.frame = 0;
+
+        if (typeof frame === 'undefined' || frame === null)
+        {
+            this.frame = 0;
+        }
+        else
+        {
+            if (typeof frame === 'string')
+            {
+                this.frameName = frame;
+            }
+            else
+            {
+                this.frame = frame;
+            }
+        }
+
         this.isLoaded = true;
 
     },
