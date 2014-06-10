@@ -69,6 +69,7 @@ Version 2.0.6 - "Jornhill" - -in development-
 * Swapped to using escaped Unicode characters for the console output.
 * Frame.setTrim no longer modifies the Frame width and height values.
 * AnimationParser doesn't populate the Pixi.TextureCache for every frame any longer. Each display object has its own texture property instead.
+* Removed the cacheKey parameters from the AnimationParser methods as they're no longer used.
 
 ### CocoonJS Specific Updates
 

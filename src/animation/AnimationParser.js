@@ -94,10 +94,9 @@ Phaser.AnimationParser = {
     * @method Phaser.AnimationParser.JSONData
     * @param {Phaser.Game} game - A reference to the currently running game.
     * @param {Object} json - The JSON data from the Texture Atlas. Must be in Array format.
-    * @param {string} cacheKey - The Game.Cache asset key of the texture image.
     * @return {Phaser.FrameData} A FrameData object containing the parsed frames.
     */
-    JSONData: function (game, json, cacheKey) {
+    JSONData: function (game, json) {
 
         //  Malformed?
         if (!json['frames'])
@@ -152,10 +151,9 @@ Phaser.AnimationParser = {
     * @method Phaser.AnimationParser.JSONDataHash
     * @param {Phaser.Game} game - A reference to the currently running game.
     * @param {Object} json - The JSON data from the Texture Atlas. Must be in JSON Hash format.
-    * @param {string} cacheKey - The Game.Cache asset key of the texture image.
     * @return {Phaser.FrameData} A FrameData object containing the parsed frames.
     */
-    JSONDataHash: function (game, json, cacheKey) {
+    JSONDataHash: function (game, json) {
 
         //  Malformed?
         if (!json['frames'])
@@ -213,10 +211,9 @@ Phaser.AnimationParser = {
     * @method Phaser.AnimationParser.XMLData
     * @param {Phaser.Game} game - A reference to the currently running game.
     * @param {Object} xml - The XML data from the Texture Atlas. Must be in Starling XML format.
-    * @param {string} cacheKey - The Game.Cache asset key of the texture image.
     * @return {Phaser.FrameData} A FrameData object containing the parsed frames.
     */
-    XMLData: function (game, xml, cacheKey) {
+    XMLData: function (game, xml) {
 
         //  Malformed?
         if (!xml.getElementsByTagName('TextureAtlas'))

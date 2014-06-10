@@ -1118,10 +1118,10 @@ declare module Phaser {
 
     class AnimationParser {
 
-        static JSONData(game: Phaser.Game, json: Object, cacheKey: string): Phaser.FrameData;
-        static JSONDataHash(game: Phaser.Game, json: Object, cacheKey: string): Phaser.FrameData;
+        static JSONData(game: Phaser.Game, json: Object): Phaser.FrameData;
+        static JSONDataHash(game: Phaser.Game, json: Object): Phaser.FrameData;
         static spriteSheet(game: Phaser.Game, key: string, frameWidth: number, frameHeight: number, frameMax?: number, margin?: number, spacing?: number): Phaser.FrameData;
-        static XMLData(game: Phaser.Game, xml: Object, cacheKey: string): Phaser.FrameData;
+        static XMLData(game: Phaser.Game, xml: Object): Phaser.FrameData;
 
     }
 
