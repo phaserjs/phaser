@@ -593,3 +593,26 @@ Phaser.Gamepad.XBOX360_STICK_LEFT_X = 0;
 Phaser.Gamepad.XBOX360_STICK_LEFT_Y = 1;
 Phaser.Gamepad.XBOX360_STICK_RIGHT_X = 2;
 Phaser.Gamepad.XBOX360_STICK_RIGHT_Y = 3;
+
+//  PlayStation 3 controller (masquerading as xbox360 controller) button mappings
+
+Phaser.Gamepad.PS3XC_X = 0;
+Phaser.Gamepad.PS3XC_CIRCLE = 1;
+Phaser.Gamepad.PS3XC_SQUARE = 2;
+Phaser.Gamepad.PS3XC_TRIANGLE = 3;
+Phaser.Gamepad.PS3XC_L1 = 4;
+Phaser.Gamepad.PS3XC_R1 = 5;
+Phaser.Gamepad.PS3XC_L2 = 6; // analog trigger, range 0..1
+Phaser.Gamepad.PS3XC_R2 = 7; // analog trigger, range 0..1
+Phaser.Gamepad.PS3XC_SELECT = 8;
+Phaser.Gamepad.PS3XC_START = 9;
+Phaser.Gamepad.PS3XC_STICK_LEFT_BUTTON = 10;
+Phaser.Gamepad.PS3XC_STICK_RIGHT_BUTTON = 11;
+Phaser.Gamepad.PS3CX_DPAD_UP = 12;
+Phaser.Gamepad.PS3CX_DPAD_DOWN = 13;
+Phaser.Gamepad.PS3CX_DPAD_LEFT = 14;
+Phaser.Gamepad.PS3CX_DPAD_RIGHT = 15;
+Phaser.Gamepad.PS3CX_STICK_LEFT_X = 0; // analog stick, range -1..1
+Phaser.Gamepad.PS3CX_STICK_LEFT_Y = 1; // analog stick, range -1..1
+Phaser.Gamepad.PS3CX_STICK_RIGHT_X = 2; // analog stick, range -1..1
+Phaser.Gamepad.PS3CX_STICK_RIGHT_Y = 3; // analog stick, range -1..1
