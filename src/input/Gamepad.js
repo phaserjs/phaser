@@ -202,25 +202,22 @@ Phaser.Gamepad.prototype = {
     /**
     * Main gamepad update loop. Should not be called manually.
     * @method Phaser.Gamepad#update
-    * @private
+    * @protected
     */
     update: function () {
 
         this._pollGamepads();
 
-        for (var i = 0; i < this._gamepads.length; i++)
-        {
-            if (this._gamepads[i]._connected)
-            {
-                this._gamepads[i].pollStatus();
-            }
-        }
+        this.pad1.pollStatus();
+        this.pad2.pollStatus();
+        this.pad3.pollStatus();
+        this.pad4.pollStatus();
 
     },
 
     /**
-    * Updating connected gamepads (for Google Chrome).
-    * Should not be called manually.
+    * Updating connected gamepads (for Google Chrome). Should not be called manually.
+    * 
     * @method Phaser.Gamepad#_pollGamepads
     * @private
     */

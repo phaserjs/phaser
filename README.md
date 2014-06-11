@@ -104,6 +104,7 @@ Version 2.0.6 - "Jornhill" - -in development-
 * TilemapLayers can now be used with an unbounded camera (a camera that can move beyond the world boundaries). Currently, when an unbounded camera moves outside of the world, tilemaps start acting weird because they only render themselves strictly within the world limits. With this change, the tilemap will continue scrolling and show empty space beyond its edge (thanks @jotson #851)
 * TilemapLayer.wrap property - if true the map is rendered as if it is on the surface of a toroid (donut) instead of a plane. This allows for games that seamlessly scroll from one edge to the opposite edge of the world without noticing the transition. Note that the World size must match the Map size (thanks @jotson #851)
 * Added PlayStation 3 controller button mappings to Phaser.Gamepad (thanks @wayfu)
+* GamepadButton.destroy method added. Called automatically by SinglePad when a controller is disconnected.
 
 
 ### Bug Fixes
@@ -306,6 +307,7 @@ Here are some of the features planned for future releases:
 * Swapping to using a RenderTexture for the Tilemaps and implementing Tilemap slicing.
 * Enhance the State Management, so you can perform non-destructive State swaps and persistence.
 * Support for parallel asset loading.
+* Optimise the Gamepad._pollGamepads method significantly.
 
 ### Version 2.2 ("Tarabon")
 
