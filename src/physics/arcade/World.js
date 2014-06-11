@@ -670,7 +670,7 @@ Phaser.Physics.Arcade.prototype = {
         }
 
         for (var i = 0; i < this._mapData.length; i++)
-        {       
+        {
             if (processCallback)
             {
                 if (processCallback.call(callbackContext, sprite, this._mapData[i]))
@@ -687,7 +687,7 @@ Phaser.Physics.Arcade.prototype = {
                 }
             }
             else
-            {   
+            {
                 if (this.separateTile(i, sprite.body, this._mapData[i]))
                 {
                     this._total++;

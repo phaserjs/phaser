@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.0.6 "Jornhill" - Built: Thu May 29 2014 17:25:34
+* v2.0.6 "Jornhill" - Built: Wed Jun 11 2014 12:46:18
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -9790,7 +9790,7 @@ PIXI.RenderTexture.tempMatrix = new PIXI.Matrix();
 *
 * Phaser - http://phaser.io
 *
-* v2.0.6 "Jornhill" - Built: Thu May 29 2014 17:25:34
+* v2.0.6 "Jornhill" - Built: Wed Jun 11 2014 12:46:18
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -12907,8 +12907,13 @@ Phaser.Line.intersectsPoints = function (a, b, e, f, asSegment, result) {
         return null;
     }
 
-    result.x = ((b1 * c2) - (b2 * c1)) / denom;
-    result.y = ((a2 * c1) - (a1 * c2)) / denom;
+    /*
+     Round to 3 decimals here, due to javascript floating point is 'broken'
+     http://stackoverflow.com/questions/11832914/round-to-at-most-2-decimal-places-in-javascript
+     See workaround explanation there in accepted answer there..
+     */
+    result.x = Math.round( ((((b1 * c2) - (b2 * c1)) / denom)+0.00001)*1000 ) / 1000;
+    result.y = Math.round( ((((a2 * c1) - (a1 * c2)) / denom)+0.00001)*1000 ) / 1000;
 
     if (asSegment)
     {
@@ -16163,7 +16168,7 @@ Phaser.Stage = function (game, width, height) {
     */
     this.bounds = new Phaser.Rectangle(0, 0, width, height);
 
-    PIXI.Stage.call(this, 0x000000, false);
+    PIXI.Stage.call(this, 0x000000);
 
     /**
     * @property {string} name - The name of this object.
@@ -16222,11 +16227,6 @@ Phaser.Stage = function (game, width, height) {
     if (game.config)
     {
         this.parseConfig(game.config);
-    }
-    else
-    {
-        this.game.canvas = Phaser.Canvas.create(width, height);
-        this.game.canvas.style['-webkit-full-screen'] = 'width: 100%; height: 100%';
     }
 
 };
@@ -16328,24 +16328,6 @@ Phaser.Stage.prototype.postUpdate = function () {
 * @protected
 */
 Phaser.Stage.prototype.parseConfig = function (config) {
-
-    if (config['canvasID'])
-    {
-        this.game.canvas = Phaser.Canvas.create(this.game.width, this.game.height, config['canvasID']);
-    }
-    else
-    {
-        this.game.canvas = Phaser.Canvas.create(this.game.width, this.game.height);
-    }
-
-    if (config['canvasStyle'])
-    {
-        this.game.canvas.stlye = config['canvasStyle'];
-    }
-    else
-    {
-        this.game.canvas.style['-webkit-full-screen'] = 'width: 100%; height: 100%';
-    }
 
     if (config['checkOffsetInterval'])
     {
@@ -18813,17 +18795,20 @@ Phaser.ScaleManager = function (game, width, height) {
         return _this.checkResize(event);
     }, false);
 
-    document.addEventListener('webkitfullscreenchange', function (event) {
-        return _this.fullScreenChange(event);
-    }, false);
+    if (!this.game.device.cocoonJS)
+    {
+        document.addEventListener('webkitfullscreenchange', function (event) {
+            return _this.fullScreenChange(event);
+        }, false);
 
-    document.addEventListener('mozfullscreenchange', function (event) {
-        return _this.fullScreenChange(event);
-    }, false);
+        document.addEventListener('mozfullscreenchange', function (event) {
+            return _this.fullScreenChange(event);
+        }, false);
 
-    document.addEventListener('fullscreenchange', function (event) {
-        return _this.fullScreenChange(event);
-    }, false);
+        document.addEventListener('fullscreenchange', function (event) {
+            return _this.fullScreenChange(event);
+        }, false);
+    }
 
 };
 
@@ -19647,6 +19632,8 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     }
     else
     {
+        this.config = {};
+
         if (typeof width !== 'undefined')
         {
             this.width = width;
@@ -19771,7 +19758,6 @@ Phaser.Game.prototype = {
 
     },
 
-
     /**
     * Initialize engine sub modules and start the game.
     *
@@ -19885,7 +19871,7 @@ Phaser.Game.prototype = {
         if (this.device.chrome)
         {
             var args = [
-                '%c %c %c Phaser v' + v + ' - ' + r + ' - ' + a + '  %c %c ' + ' http://phaser.io  %c %c ♥%c♥%c♥ ',
+                '%c %c %c Phaser v' + v + ' - ' + r + ' - ' + a + '  %c %c ' + ' http://phaser.io  %c %c \u2665%c\u2665%c\u2665 ',
                 'background: #0cf300',
                 'background: #00bc17',
                 'color: #ffffff; background: #00711f;',
@@ -19930,6 +19916,30 @@ Phaser.Game.prototype = {
             this.renderType = Phaser.CANVAS;
         }
 
+        if (this.config['canvasID'])
+        {
+            this.canvas = Phaser.Canvas.create(this.width, this.height, this.config['canvasID']);
+        }
+        else
+        {
+            this.canvas = Phaser.Canvas.create(this.width, this.height);
+        }
+
+        if (this.config['canvasStyle'])
+        {
+            this.canvas.style = this.config['canvasStyle'];
+        }
+        else
+        {
+            this.canvas.style['-webkit-full-screen'] = 'width: 100%; height: 100%';
+        }
+
+        if (this.device.cocoonJS)
+        {
+            //  Enable screencanvas for Cocoon on this Canvas object only
+            this.canvas.screencanvas = true;
+        }
+
         if (this.renderType === Phaser.HEADLESS || this.renderType === Phaser.CANVAS || (this.renderType === Phaser.AUTO && this.device.webGL === false))
         {
             if (this.device.canvas)
@@ -19959,7 +19969,7 @@ Phaser.Game.prototype = {
         {
             this.stage.smoothed = this.antialias;
 
-            Phaser.Canvas.addToDOM(this.canvas, this.parent, true);
+            Phaser.Canvas.addToDOM(this.canvas, this.parent, false);
             Phaser.Canvas.setTouchAction(this.canvas);
         }
 
@@ -20014,6 +20024,12 @@ Phaser.Game.prototype = {
             this.plugins.render();
             this.state.render();
             this.plugins.postRender();
+
+            if (this.device.cocoonJS && this.renderType === Phaser.CANVAS && this.stage.currentRenderOrderID === 1)
+            {
+                //  Horrible hack! But without it Cocoon fails to render a scene with just a single drawImage call on it.
+                this.context.fillRect(0, 0, 0, 0);
+            }
         }
 
     },
@@ -20642,10 +20658,7 @@ Phaser.Input.prototype = {
     },
 
     /**
-    * Adds a callback that is fired every time the activePointer receives a DOM move event such as a mousemove or touchmove.
-    * It will be called every time the activePointer moves, which in a multi-touch game can be a lot of times, so this is best
-    * to only use if you've limited input to a single pointer (i.e. mouse or touch).
-    * The callback is added to the Phaser.Input.moveCallbacks array and should be removed with Phaser.Input.deleteMoveCallback.
+    * Removes the callback at the defined index from the Phaser.Input.moveCallbacks array
     * 
     * @method Phaser.Input#deleteMoveCallback
     * @param {number} index - The index of the callback to remove.
@@ -21658,6 +21671,11 @@ Phaser.Keyboard.prototype = {
     */
     start: function () {
 
+        if (this.game.device.cocoonJS)
+        {
+            return;
+        }
+
         if (this._onKeyDown !== null)
         {
             //  Avoid setting multiple listeners
@@ -22297,8 +22315,12 @@ Phaser.Mouse.prototype = {
         this.game.canvas.addEventListener('mousedown', this._onMouseDown, true);
         this.game.canvas.addEventListener('mousemove', this._onMouseMove, true);
         this.game.canvas.addEventListener('mouseup', this._onMouseUp, true);
-        this.game.canvas.addEventListener('mouseover', this._onMouseOver, true);
-        this.game.canvas.addEventListener('mouseout', this._onMouseOut, true);
+
+        if (!this.game.device.cocoonJS)
+        {
+            this.game.canvas.addEventListener('mouseover', this._onMouseOver, true);
+            this.game.canvas.addEventListener('mouseout', this._onMouseOut, true);
+        }
 
     },
 
@@ -23609,9 +23631,13 @@ Phaser.Touch.prototype = {
             this.game.canvas.addEventListener('touchstart', this._onTouchStart, false);
             this.game.canvas.addEventListener('touchmove', this._onTouchMove, false);
             this.game.canvas.addEventListener('touchend', this._onTouchEnd, false);
-            this.game.canvas.addEventListener('touchenter', this._onTouchEnter, false);
-            this.game.canvas.addEventListener('touchleave', this._onTouchLeave, false);
             this.game.canvas.addEventListener('touchcancel', this._onTouchCancel, false);
+
+            if (!this.game.device.cocoonJS)
+            {
+                this.game.canvas.addEventListener('touchenter', this._onTouchEnter, false);
+                this.game.canvas.addEventListener('touchleave', this._onTouchLeave, false);
+            }
         }
 
     },
@@ -24030,31 +24056,39 @@ Phaser.Gamepad.prototype = {
     /**
     * Main gamepad update loop. Should not be called manually.
     * @method Phaser.Gamepad#update
-    * @private
+    * @protected
     */
     update: function () {
 
         this._pollGamepads();
 
-        for (var i = 0; i < this._gamepads.length; i++)
-        {
-            if (this._gamepads[i]._connected)
-            {
-                this._gamepads[i].pollStatus();
-            }
-        }
+        this.pad1.pollStatus();
+        this.pad2.pollStatus();
+        this.pad3.pollStatus();
+        this.pad4.pollStatus();
 
     },
 
     /**
-    * Updating connected gamepads (for Google Chrome).
-    * Should not be called manually.
+    * Updating connected gamepads (for Google Chrome). Should not be called manually.
+    * 
     * @method Phaser.Gamepad#_pollGamepads
     * @private
     */
     _pollGamepads: function () {
 
-        var rawGamepads = navigator.getGamepads() || (navigator.webkitGetGamepads && navigator.webkitGetGamepads()) || navigator.webkitGamepads;
+        if (navigator['getGamepads'])
+        {
+            var rawGamepads = navigator.getGamepads();
+        }
+        else if (navigator['webkitGetGamepads'])
+        {
+            var rawGamepads = navigator.webkitGetGamepads();
+        }
+        else if (navigator['webkitGamepads'])
+        {
+            var rawGamepads = navigator.webkitGamepads();
+        }
 
         if (rawGamepads)
         {
@@ -24411,8 +24445,32 @@ Phaser.Gamepad.XBOX360_STICK_LEFT_Y = 1;
 Phaser.Gamepad.XBOX360_STICK_RIGHT_X = 2;
 Phaser.Gamepad.XBOX360_STICK_RIGHT_Y = 3;
 
+//  PlayStation 3 controller (masquerading as xbox360 controller) button mappings
+
+Phaser.Gamepad.PS3XC_X = 0;
+Phaser.Gamepad.PS3XC_CIRCLE = 1;
+Phaser.Gamepad.PS3XC_SQUARE = 2;
+Phaser.Gamepad.PS3XC_TRIANGLE = 3;
+Phaser.Gamepad.PS3XC_L1 = 4;
+Phaser.Gamepad.PS3XC_R1 = 5;
+Phaser.Gamepad.PS3XC_L2 = 6; // analog trigger, range 0..1
+Phaser.Gamepad.PS3XC_R2 = 7; // analog trigger, range 0..1
+Phaser.Gamepad.PS3XC_SELECT = 8;
+Phaser.Gamepad.PS3XC_START = 9;
+Phaser.Gamepad.PS3XC_STICK_LEFT_BUTTON = 10;
+Phaser.Gamepad.PS3XC_STICK_RIGHT_BUTTON = 11;
+Phaser.Gamepad.PS3CX_DPAD_UP = 12;
+Phaser.Gamepad.PS3CX_DPAD_DOWN = 13;
+Phaser.Gamepad.PS3CX_DPAD_LEFT = 14;
+Phaser.Gamepad.PS3CX_DPAD_RIGHT = 15;
+Phaser.Gamepad.PS3CX_STICK_LEFT_X = 0; // analog stick, range -1..1
+Phaser.Gamepad.PS3CX_STICK_LEFT_Y = 1; // analog stick, range -1..1
+Phaser.Gamepad.PS3CX_STICK_RIGHT_X = 2; // analog stick, range -1..1
+Phaser.Gamepad.PS3CX_STICK_RIGHT_Y = 3; // analog stick, range -1..1
+
 /**
 * @author       @karlmacklin <tacklemcclean@gmail.com>
+* @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2014 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
@@ -24432,57 +24490,16 @@ Phaser.SinglePad = function (game, padParent) {
     this.game = game;
 
     /**
-    * @property {Phaser.Gamepad} padParent - Main Phaser Gamepad object
-    */
-    this._padParent = padParent;
-
-    /**
     * @property {number} index - The gamepad index as per browsers data
-    * @default
+    * @readonly
     */
-    this._index = null;
+    this.index = null;
 
     /**
-    * @property {Object} _rawPad - The 'raw' gamepad data.
-    * @private
+    * @property {boolean} connected - Whether or not this particular gamepad is connected or not.
+    * @readonly
     */
-    this._rawPad = null;
-
-    /**
-    * @property {boolean} _connected - Is this pad connected or not.
-    * @private
-    */
-    this._connected = false;
-
-    /**
-    * @property {number} _prevTimestamp - Used to check for differences between earlier polls and current state of gamepads.
-    * @private
-    */
-    this._prevTimestamp = null;
-
-    /**
-    * @property {Array} _rawButtons - The 'raw' button state.
-    * @private
-    */
-    this._rawButtons = [];
-
-    /**
-    * @property {Array} _buttons - Current Phaser state of the buttons.
-    * @private
-    */
-    this._buttons = [];
-
-    /**
-    * @property {Array} _axes - Current axes state.
-    * @private
-    */
-    this._axes = [];
-
-    /**
-    * @property {Array} _hotkeys - Hotkey buttons.
-    * @private
-    */
-    this._hotkeys = [];
+    this.connected = false;
 
     /**
     * @property {Object} callbackContext - The context under which the callbacks are run.
@@ -24524,12 +24541,55 @@ Phaser.SinglePad = function (game, padParent) {
     */
     this.deadZone = 0.26;
 
+    /**
+    * @property {Phaser.Gamepad} padParent - Main Phaser Gamepad object
+    * @private
+    */
+    this._padParent = padParent;
+
+    /**
+    * @property {Object} _rawPad - The 'raw' gamepad data.
+    * @private
+    */
+    this._rawPad = null;
+
+    /**
+    * @property {number} _prevTimestamp - Used to check for differences between earlier polls and current state of gamepads.
+    * @private
+    */
+    this._prevTimestamp = null;
+
+    /**
+    * @property {Array} _buttons - Array of Phaser.GamepadButton objects. This array is populated when the gamepad is connected.
+    * @private
+    */
+    this._buttons = [];
+
+    /**
+    * @property {number} _buttonsLen - Length of the _buttons array.
+    * @private
+    */
+    this._buttonsLen = 0;
+
+    /**
+    * @property {Array} _axes - Current axes state.
+    * @private
+    */
+    this._axes = [];
+
+    /**
+    * @property {number} _axesLen - Length of the _axes array.
+    * @private
+    */
+    this._axesLen = 0;
+
 };
 
 Phaser.SinglePad.prototype = {
 
     /**
-    * Add callbacks to the this Gamepad to handle connect/disconnect/button down/button up/axis change/float value buttons
+    * Add callbacks to the this Gamepad to handle connect / disconnect / button down / button up / axis change / float value buttons.
+    * 
     * @method Phaser.SinglePad#addCallbacks
     * @param {Object} context - The context under which the callbacks are run.
     * @param {Object} callbacks - Object that takes six different callbak methods:
@@ -24550,92 +24610,123 @@ Phaser.SinglePad.prototype = {
     },
 
     /**
-    * If you need more fine-grained control over a Key you can create a new Phaser.Key object via this method.
-    * The Key object can then be polled, have events attached to it, etc.
+    * DEPRECATED: Please see SinglePad.getButton for the same functionality.
+    * 
+    * If you need more fine-grained control over a gamepad button you can create a new Phaser.GamepadButton object via this method.
+    * The GamepadButton object can then be polled, have events attached to it, etc.
     *
     * @method Phaser.SinglePad#addButton
-    * @param {number} buttonCode - The buttonCode of the button, i.e. Phaser.Gamepad.BUTTON_0 or Phaser.Gamepad.BUTTON_1
+    * @param {number} buttonCode - The buttonCode of the button, i.e. Phaser.Gamepad.BUTTON_0, Phaser.Gamepad.XBOX360_A, etc.
     * @return {Phaser.GamepadButton} The GamepadButton object which you can store locally and reference directly.
     */
     addButton: function (buttonCode) {
 
-        this._hotkeys[buttonCode] = new Phaser.GamepadButton(this.game, buttonCode);
-        return this._hotkeys[buttonCode];
+        return this.getButton(buttonCode);
 
     },
 
     /**
-    * Main update function, should be called by Phaser.Gamepad
+    * Gets a GamepadButton object from this controller to be stored and referenced locally.
+    * The GamepadButton object can then be polled, have events attached to it, etc.
+    *
+    * @method Phaser.SinglePad#getButton
+    * @param {number} buttonCode - The buttonCode of the button, i.e. Phaser.Gamepad.BUTTON_0, Phaser.Gamepad.XBOX360_A, etc.
+    * @return {Phaser.GamepadButton} The GamepadButton object which you can store locally and reference directly.
+    */
+    getButton: function (buttonCode) {
+
+        if (this._buttons[buttonCode])
+        {
+            return this._buttons[buttonCode];
+        }
+        else
+        {
+            return null;
+        }
+
+    },
+
+    /**
+    * Main update function, should be called by Phaser.Gamepad.
+    * 
     * @method Phaser.SinglePad#pollStatus
     */
     pollStatus: function () {
 
-        if (this._rawPad.timestamp && (this._rawPad.timestamp == this._prevTimestamp))
+        if (!this.connected || this.game.input.disabled || this.game.input.gamepad.disabled || (this._rawPad.timestamp && (this._rawPad.timestamp === this._prevTimestamp)))
         {
             return;
         }
 
-        for (var i = 0; i < this._rawPad.buttons.length; i += 1)
+        for (var i = 0; i < this._buttonsLen; i++)
         {
-            var buttonValue = this._rawPad.buttons[i];
-
-            if (this._rawButtons[i] !== buttonValue)
+            if (this._rawPad.buttons[i].value !== this._buttons[i].value)
             {
-                if (buttonValue === 1)
+                if (this._rawPad.buttons[i].value === 1)
                 {
-                    this.processButtonDown(i, buttonValue);
+                    this.processButtonDown(i, this._rawPad.buttons[i].value);
                 }
-                else if (buttonValue === 0)
+                else if (this._rawPad.buttons[i].value === 0)
                 {
-                    this.processButtonUp(i, buttonValue);
+                    this.processButtonUp(i, this._rawPad.buttons[i].value);
                 }
                 else
                 {
-                    this.processButtonFloat(i, buttonValue);
+                    this.processButtonFloat(i, this._rawPad.buttons[i].value);
                 }
-
-                this._rawButtons[i] = buttonValue;
             }
         }
 
-        var axes = this._rawPad.axes;
-
-        for (var j = 0; j < axes.length; j += 1)
+        /*
+        for (var j = 0; j < this._axesLen; j++)
         {
-            var axis = axes[j];
+            var axis = this._rawPad.axes[j];
 
             if (axis > 0 && axis > this.deadZone || axis < 0 && axis < -this.deadZone)
             {
-                this.processAxisChange({axis: j, value: axis});
+                this.processAxisChange( { axis: j, value: axis } );
             }
             else
             {
-                this.processAxisChange({axis: j, value: 0});
+                this.processAxisChange( { axis: j, value: 0 } );
             }
         }
+        */
 
         this._prevTimestamp = this._rawPad.timestamp;
 
     },
 
     /**
-    * Gamepad connect function, should be called by Phaser.Gamepad
+    * Gamepad connect function, should be called by Phaser.Gamepad.
+    * 
     * @method Phaser.SinglePad#connect
     * @param {Object} rawPad - The raw gamepad object
     */
     connect: function (rawPad) {
 
-        var triggerCallback = !this._connected;
+        var triggerCallback = !this.connected;
 
-        this._index = rawPad.index;
-        this._connected = true;
+        this.connected = true;
+        this.index = rawPad.index;
+
         this._rawPad = rawPad;
-        this._rawButtons = rawPad.buttons;
+
+        this._buttons = [];
+        this._buttonsLen = rawPad.buttons.length;
+
         this._axes = rawPad.axes;
+        this._axesLen = rawPad.axes.length;
+
+        for (var buttonCode in rawPad.buttons)
+        {
+            buttonCode = parseInt(buttonCode, 10);
+            this._buttons[buttonCode] = new Phaser.GamepadButton(this, buttonCode);
+        }
 
         if (triggerCallback && this._padParent.onConnectCallback)
         {
-            this._padParent.onConnectCallback.call(this._padParent.callbackContext, this._index);
+            this._padParent.onConnectCallback.call(this._padParent.callbackContext, this.index);
         }
 
         if (triggerCallback && this.onConnectCallback)
@@ -24646,18 +24737,30 @@ Phaser.SinglePad.prototype = {
     },
 
     /**
-    * Gamepad disconnect function, should be called by Phaser.Gamepad
+    * Gamepad disconnect function, should be called by Phaser.Gamepad.
+    * 
     * @method Phaser.SinglePad#disconnect
     */
     disconnect: function () {
 
-        var triggerCallback = this._connected;
-        this._connected = false;
+        var triggerCallback = this.connected;
+        var disconnectingIndex = this.index;
+
+        this.connected = false;
+        this.index = null;
+
         this._rawPad = undefined;
-        this._rawButtons = [];
+
+        for (var i = 0; i < this._buttonsLen; i++)
+        {
+            this._buttons[i].destroy();
+        }
+
         this._buttons = [];
-        var disconnectingIndex = this._index;
-        this._index = null;
+        this._buttonsLen = 0;
+
+        this._axes = [];
+        this._axesLen = 0;
 
         if (triggerCallback && this._padParent.onDisconnectCallback)
         {
@@ -24672,16 +24775,12 @@ Phaser.SinglePad.prototype = {
     },
 
     /**
-    * Handles changes in axis
+    * Handles changes in axis.
+    * 
     * @method Phaser.SinglePad#processAxisChange
     * @param {Object} axisState - State of the relevant axis
     */
     processAxisChange: function (axisState) {
-
-        if (this.game.input.disabled || this.game.input.gamepad.disabled)
-        {
-            return;
-        }
 
         if (this._axes[axisState.axis] === axisState.value)
         {
@@ -24692,7 +24791,7 @@ Phaser.SinglePad.prototype = {
 
         if (this._padParent.onAxisCallback)
         {
-            this._padParent.onAxisCallback.call(this._padParent.callbackContext, axisState, this._index);
+            this._padParent.onAxisCallback.call(this._padParent.callbackContext, axisState, this.index);
         }
 
         if (this.onAxisCallback)
@@ -24703,21 +24802,17 @@ Phaser.SinglePad.prototype = {
     },
 
     /**
-    * Handles button down press
+    * Handles button down press.
+    * 
     * @method Phaser.SinglePad#processButtonDown
     * @param {number} buttonCode - Which buttonCode of this button
     * @param {Object} value - Button value
     */
     processButtonDown: function (buttonCode, value) {
 
-        if (this.game.input.disabled || this.game.input.gamepad.disabled)
-        {
-            return;
-        }
-
         if (this._padParent.onDownCallback)
         {
-            this._padParent.onDownCallback.call(this._padParent.callbackContext, buttonCode, value, this._index);
+            this._padParent.onDownCallback.call(this._padParent.callbackContext, buttonCode, value, this.index);
         }
 
         if (this.onDownCallback)
@@ -24725,57 +24820,25 @@ Phaser.SinglePad.prototype = {
             this.onDownCallback.call(this.callbackContext, buttonCode, value);
         }
 
-        if (this._buttons[buttonCode] && this._buttons[buttonCode].isDown)
+        if (this._buttons[buttonCode])
         {
-            //  Key already down and still down, so update
-            this._buttons[buttonCode].duration = this.game.time.now - this._buttons[buttonCode].timeDown;
-        }
-        else
-        {
-            if (!this._buttons[buttonCode])
-            {
-                //  Not used this button before, so register it
-                this._buttons[buttonCode] = {
-                    isDown: true,
-                    timeDown: this.game.time.now,
-                    timeUp: 0,
-                    duration: 0,
-                    value: value
-                };
-            }
-            else
-            {
-                //  Button used before but freshly down
-                this._buttons[buttonCode].isDown = true;
-                this._buttons[buttonCode].timeDown = this.game.time.now;
-                this._buttons[buttonCode].duration = 0;
-                this._buttons[buttonCode].value = value;
-            }
-        }
-
-        if (this._hotkeys[buttonCode])
-        {
-            this._hotkeys[buttonCode].processButtonDown(value);
+            this._buttons[buttonCode].processButtonDown(value);
         }
 
     },
 
     /**
-    * Handles button release
+    * Handles button release.
+    * 
     * @method Phaser.SinglePad#processButtonUp
     * @param {number} buttonCode - Which buttonCode of this button
     * @param {Object} value - Button value
     */
     processButtonUp: function (buttonCode, value) {
 
-        if (this.game.input.disabled || this.game.input.gamepad.disabled)
-        {
-            return;
-        }
-
         if (this._padParent.onUpCallback)
         {
-            this._padParent.onUpCallback.call(this._padParent.callbackContext, buttonCode, value, this._index);
+            this._padParent.onUpCallback.call(this._padParent.callbackContext, buttonCode, value, this.index);
         }
 
         if (this.onUpCallback)
@@ -24783,47 +24846,25 @@ Phaser.SinglePad.prototype = {
             this.onUpCallback.call(this.callbackContext, buttonCode, value);
         }
 
-        if (this._hotkeys[buttonCode])
-        {
-            this._hotkeys[buttonCode].processButtonUp(value);
-        }
-
         if (this._buttons[buttonCode])
         {
-            this._buttons[buttonCode].isDown = false;
-            this._buttons[buttonCode].timeUp = this.game.time.now;
-            this._buttons[buttonCode].value = value;
-        }
-        else
-        {
-            //  Not used this button before, so register it
-            this._buttons[buttonCode] = {
-                isDown: false,
-                timeDown: this.game.time.now,
-                timeUp: this.game.time.now,
-                duration: 0,
-                value: value
-            };
+            this._buttons[buttonCode].processButtonUp(value);
         }
 
     },
 
     /**
     * Handles buttons with floating values (like analog buttons that acts almost like an axis but still registers like a button)
+    * 
     * @method Phaser.SinglePad#processButtonFloat
     * @param {number} buttonCode - Which buttonCode of this button
     * @param {Object} value - Button value (will range somewhere between 0 and 1, but not specifically 0 or 1.
     */
     processButtonFloat: function (buttonCode, value) {
 
-        if (this.game.input.disabled || this.game.input.gamepad.disabled)
-        {
-            return;
-        }
-
         if (this._padParent.onFloatCallback)
         {
-            this._padParent.onFloatCallback.call(this._padParent.callbackContext, buttonCode, value, this._index);
+            this._padParent.onFloatCallback.call(this._padParent.callbackContext, buttonCode, value, this.index);
         }
 
         if (this.onFloatCallback)
@@ -24831,26 +24872,16 @@ Phaser.SinglePad.prototype = {
             this.onFloatCallback.call(this.callbackContext, buttonCode, value);
         }
 
-        if (!this._buttons[buttonCode])
+        if (this._buttons[buttonCode])
         {
-            //  Not used this button before, so register it
-            this._buttons[buttonCode] = { value: value };
-        }
-        else
-        {
-            //  Button used before but freshly down
-            this._buttons[buttonCode].value = value;
-        }
-
-        if (this._hotkeys[buttonCode])
-        {
-            this._hotkeys[buttonCode].processButtonFloat(value);
+            this._buttons[buttonCode].processButtonFloat(value);
         }
 
     },
 
     /**
-    * Returns value of requested axis
+    * Returns value of requested axis.
+    * 
     * @method Phaser.SinglePad#axis
     * @param {number} axisCode - The index of the axis to check
     * @return {number} Axis value if available otherwise false
@@ -24867,10 +24898,11 @@ Phaser.SinglePad.prototype = {
     },
 
     /**
-    * Returns true if the button is currently pressed down.
+    * Returns true if the button is pressed down.
+    * 
     * @method Phaser.SinglePad#isDown
-    * @param {number} buttonCode - The buttonCode of the key to check.
-    * @return {boolean} True if the key is currently down.
+    * @param {number} buttonCode - The buttonCode of the button to check.
+    * @return {boolean} True if the button is pressed down.
     */
     isDown: function (buttonCode) {
 
@@ -24884,7 +24916,26 @@ Phaser.SinglePad.prototype = {
     },
 
     /**
+    * Returns true if the button is not currently pressed.
+    * 
+    * @method Phaser.SinglePad#isUp
+    * @param {number} buttonCode - The buttonCode of the button to check.
+    * @return {boolean} True if the button is not currently pressed down.
+    */
+    isUp: function (buttonCode) {
+
+        if (this._buttons[buttonCode])
+        {
+            return this._buttons[buttonCode].isUp;
+        }
+
+        return false;
+
+    },
+
+    /**
     * Returns the "just released" state of a button from this gamepad. Just released is considered as being true if the button was released within the duration given (default 250ms).
+    * 
     * @method Phaser.SinglePad#justReleased
     * @param {number} buttonCode - The buttonCode of the button to check for.
     * @param {number} [duration=250] - The duration below which the button is considered as being just released.
@@ -24892,14 +24943,16 @@ Phaser.SinglePad.prototype = {
     */
     justReleased: function (buttonCode, duration) {
 
-        if (typeof duration === "undefined") { duration = 250; }
-
-        return (this._buttons[buttonCode] && this._buttons[buttonCode].isDown === false && (this.game.time.now - this._buttons[buttonCode].timeUp < duration));
+        if (this._buttons[buttonCode])
+        {
+            return this._buttons[buttonCode].justReleased(duration);
+        }
 
     },
 
     /**
     * Returns the "just pressed" state of a button from this gamepad. Just pressed is considered true if the button was pressed down within the duration given (default 250ms).
+    * 
     * @method Phaser.SinglePad#justPressed
     * @param {number} buttonCode - The buttonCode of the button to check for.
     * @param {number} [duration=250] - The duration below which the button is considered as being just pressed.
@@ -24907,18 +24960,20 @@ Phaser.SinglePad.prototype = {
     */
     justPressed: function (buttonCode, duration) {
 
-        if (typeof duration === "undefined") { duration = 250; }
-
-        return (this._buttons[buttonCode] && this._buttons[buttonCode].isDown && this._buttons[buttonCode].duration < duration);
+        if (this._buttons[buttonCode])
+        {
+            return this._buttons[buttonCode].justPressed(duration);
+        }
 
     },
 
     /**
     * Returns the value of a gamepad button. Intended mainly for cases when you have floating button values, for example
-    * analog trigger buttons on the XBOX 360 controller
+    * analog trigger buttons on the XBOX 360 controller.
+    * 
     * @method Phaser.SinglePad#buttonValue
     * @param {number} buttonCode - The buttonCode of the button to check.
-    * @return {boolean} Button value if available otherwise false.
+    * @return {number} Button value if available otherwise null. Be careful as this can incorrectly evaluate to 0.
     */
     buttonValue: function (buttonCode) {
 
@@ -24927,20 +24982,16 @@ Phaser.SinglePad.prototype = {
             return this._buttons[buttonCode].value;
         }
 
-        return false;
+        return null;
 
     },
 
     /**
-    * Reset all buttons/axes of this gamepad
+    * Reset all buttons/axes of this gamepad.
+    * 
     * @method Phaser.SinglePad#reset
     */
     reset: function () {
-
-        for (var i = 0; i < this._buttons.length; i++)
-        {
-            this._buttons[i] = 0;
-        }
 
         for (var j = 0; j < this._axes.length; j++)
         {
@@ -24954,35 +25005,8 @@ Phaser.SinglePad.prototype = {
 Phaser.SinglePad.prototype.constructor = Phaser.SinglePad;
 
 /**
- * Whether or not this particular gamepad is connected or not.
- * @name Phaser.SinglePad#connected
- * @property {boolean} connected - Whether or not this particular gamepad is connected or not.
- * @readonly
- */
-Object.defineProperty(Phaser.SinglePad.prototype, "connected", {
-
-    get: function () {
-        return this._connected;
-    }
-
-});
-
-/**
- * Gamepad index as per browser data
- * @name Phaser.SinglePad#index
- * @property {number} index - The gamepad index, used to identify specific gamepads in the browser
- * @readonly
- */
-Object.defineProperty(Phaser.SinglePad.prototype, "index", {
-
-    get: function () {
-        return this._index;
-    }
-
-});
-
-/**
 * @author       @karlmacklin <tacklemcclean@gmail.com>
+* @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2014 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
@@ -24991,15 +25015,20 @@ Object.defineProperty(Phaser.SinglePad.prototype, "index", {
 * @class Phaser.GamepadButton
 * @classdesc If you need more fine-grained control over the handling of specific buttons you can create and use Phaser.GamepadButton objects.
 * @constructor
-* @param {Phaser.Game} game - Current game instance.
-* @param {number} buttoncode - The button code this GamepadButton is responsible for.
+* @param {Phaser.SinglePad} pad - A reference to the gamepad that owns this button.
+* @param {number} buttonCode - The button code this GamepadButton is responsible for.
 */
-Phaser.GamepadButton = function (game, buttoncode) {
+Phaser.GamepadButton = function (pad, buttonCode) {
+
+    /**
+    * @property {Phaser.SinglePad} pad - A reference to the gamepad that owns this button.
+    */
+    this.pad = pad;
 
     /**
     * @property {Phaser.Game} game - A reference to the currently running game.
     */
-    this.game = game;
+    this.game = pad.game;
 
     /**
     * @property {boolean} isDown - The "down" state of the button.
@@ -25048,7 +25077,7 @@ Phaser.GamepadButton = function (game, buttoncode) {
     /**
     * @property {number} buttonCode - The buttoncode of this button.
     */
-    this.buttonCode = buttoncode;
+    this.buttonCode = buttonCode;
 
     /**
     * @property {Phaser.Signal} onDown - This Signal is dispatched every time this GamepadButton is pressed down. It is only dispatched once (until the button is released again).
@@ -25071,9 +25100,10 @@ Phaser.GamepadButton.prototype = {
 
     /**
     * Called automatically by Phaser.SinglePad.
+    * 
     * @method Phaser.GamepadButton#processButtonDown
-    * @param {Object} value - Button value
     * @protected
+    * @param {number} value - Button value
     */
     processButtonDown: function (value) {
 
@@ -25098,36 +25128,43 @@ Phaser.GamepadButton.prototype = {
 
     /**
     * Called automatically by Phaser.SinglePad.
+    * 
     * @method Phaser.GamepadButton#processButtonUp
-    * @param {Object} value - Button value
     * @protected
+    * @param {number} value - Button value
     */
     processButtonUp: function (value) {
 
-        this.isDown = false;
-        this.isUp = true;
-        this.timeUp = this.game.time.now;
-        this.value = value;
+        if (this.isDown)
+        {
+            this.isDown = false;
+            this.isUp = true;
+            this.timeUp = this.game.time.now;
+            this.value = value;
 
-        this.onUp.dispatch(this, value);
+            this.onUp.dispatch(this, value);
+        }
 
     },
 
     /**
-    * Called automatically by Phaser.Gamepad.
+    * Called automatically by Phaser.SinglePad.
+    * 
     * @method Phaser.GamepadButton#processButtonFloat
-    * @param {Object} value - Button value
     * @protected
+    * @param {number} value - Button value
     */
     processButtonFloat: function (value) {
 
         this.value = value;
+
         this.onFloat.dispatch(this, value);
 
     },
 
     /**
     * Returns the "just pressed" state of this button. Just pressed is considered true if the button was pressed down within the duration given (default 250ms).
+    * 
     * @method Phaser.GamepadButton#justPressed
     * @param {number} [duration=250] - The duration below which the button is considered as being just pressed.
     * @return {boolean} True if the button is just pressed otherwise false.
@@ -25142,6 +25179,7 @@ Phaser.GamepadButton.prototype = {
 
     /**
     * Returns the "just released" state of this button. Just released is considered as being true if the button was released within the duration given (default 250ms).
+    * 
     * @method Phaser.GamepadButton#justPressed
     * @param {number} [duration=250] - The duration below which the button is considered as being just released.
     * @return {boolean} True if the button is just pressed otherwise false.
@@ -25151,6 +25189,38 @@ Phaser.GamepadButton.prototype = {
         if (typeof duration === "undefined") { duration = 250; }
 
         return (this.isDown === false && (this.game.time.now - this.timeUp < duration));
+
+    },
+
+    /**
+    * Resets this GamepadButton, changing it to an isUp state and resetting the duration and repeats counters.
+    * 
+    * @method Phaser.GamepadButton#reset
+    */
+    reset: function () {
+
+        this.isDown = false;
+        this.isUp = true;
+        this.timeDown = this.game.time.now;
+        this.duration = 0;
+        this.repeats = 0;
+
+    },
+
+    /**
+    * Destroys this GamepadButton, this disposes of the onDown, onUp and onFloat signals and clears the pad and game references.
+    * 
+    * @method Phaser.GamepadButton#destroy
+    */
+    destroy: function () {
+
+        this.onDown.dispose();
+        this.onUp.dispose();
+        this.onFloat.dispose();
+
+        this.pad = null;
+        this.game = null;
+
     }
 
 };
@@ -28123,13 +28193,10 @@ Phaser.BitmapData.prototype = {
 
         index *= 4;
 
-        if (this.data[index])
-        {
-            out.r = this.data[index];
-            out.g = this.data[++index];
-            out.b = this.data[++index];
-            out.a = this.data[++index];
-        }
+        out.r = this.data[index];
+        out.g = this.data[++index];
+        out.b = this.data[++index];
+        out.a = this.data[++index];
 
         return out;
 
@@ -28435,7 +28502,6 @@ Phaser.BitmapData.prototype = {
         }
 
         this.context.fillRect(x, y, width, height);
-        this.context.fill();
 
     },
 
@@ -28554,21 +28620,7 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     */
     this.key = key;
 
-    /**
-    * @property {number} _frame - Internal cache var.
-    * @private
-    */
-    this._frame = 0;
-
-    /**
-    * @property {string} _frameName - Internal cache var.
-    * @private
-    */
-    this._frameName = '';
-
     PIXI.Sprite.call(this, PIXI.TextureCache['__default']);
-
-    this.loadTexture(key, frame);
 
     this.position.set(x, y);
 
@@ -28651,7 +28703,14 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     this.cameraOffset = new Phaser.Point();
 
     /**
+    * @property {Phaser.Rectangle} cropRect - The Rectangle used to crop the texture. Set this via Sprite.crop. Any time you modify this property directly you must call Sprite.updateCrop.
+    * @default
+    */
+    this.cropRect = null;
+
+    /**
     * A small internal cache:
+    * 
     * 0 = previous position.x
     * 1 = previous position.y
     * 2 = previous rotation
@@ -28661,16 +28720,26 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     * 6 = exists (0 = no, 1 = yes)
     * 7 = fixed to camera (0 = no, 1 = yes)
     * 8 = destroy phase? (0 = no, 1 = yes)
+    * 9 = texture x
+    * 10 = texture y
+    * 11 = texture width
+    * 12 = texture height
+    * 13 = texture spriteSourceSizeX
+    * 14 = texture spriteSourceSizeY
+    * 15 = trim x
+    * 16 = trim y
     * @property {Array} _cache
     * @private
     */
-    this._cache = [ 0, 0, 0, 0, 1, 0, 1, 0, 0 ];
+    this._cache = [ 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ];
 
     /**
     * @property {Phaser.Rectangle} _bounds - Internal cache var.
     * @private
     */
     this._bounds = new Phaser.Rectangle();
+
+    this.loadTexture(key, frame);
 
 };
 
@@ -28836,29 +28905,26 @@ Phaser.Sprite.prototype.postUpdate = function() {
 * @method Phaser.Sprite#loadTexture
 * @memberof Phaser.Sprite
 * @param {string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture} key - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture, BitmapData or PIXI.Texture.
-* @param {string|number} frame - If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
+* @param {string|number} [frame] - If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
 */
 Phaser.Sprite.prototype.loadTexture = function (key, frame) {
 
     frame = frame || 0;
+    
+    this.key = key;
 
     if (key instanceof Phaser.RenderTexture)
     {
         this.key = key.key;
         this.setTexture(key);
-        return;
     }
     else if (key instanceof Phaser.BitmapData)
     {
-        this.key = key;
         this.setTexture(key.texture);
-        return;
     }
     else if (key instanceof PIXI.Texture)
     {
-        this.key = key;
         this.setTexture(key);
-        return;
     }
     else
     {
@@ -28866,87 +28932,197 @@ Phaser.Sprite.prototype.loadTexture = function (key, frame) {
         {
             this.key = '__default';
             this.setTexture(PIXI.TextureCache[this.key]);
-            return;
         }
         else if (typeof key === 'string' && !this.game.cache.checkImageKey(key))
         {
             this.key = '__missing';
             this.setTexture(PIXI.TextureCache[this.key]);
-            return;
-        }
-
-        if (this.game.cache.isSpriteSheet(key))
-        {
-            this.key = key;
-            this.animations.loadFrameData(this.game.cache.getFrameData(key));
-
-            if (typeof frame === 'string')
-            {
-                this.frameName = frame;
-            }
-            else
-            {
-                this.frame = frame;
-            }
         }
         else
         {
-            this.key = key;
-            this.setTexture(PIXI.TextureCache[key]);
-            this.animations.loadFrameData(null);
-            return;
+            this.setTexture(new PIXI.Texture(PIXI.BaseTextureCache[key]));
+            this.animations.loadFrameData(this.game.cache.getFrameData(key), frame);
         }
     }
 
 };
 
 /**
-* Crop allows you to crop the texture used to display this Sprite.
-* Cropping takes place from the top-left of the Sprite and can be modified in real-time by providing an updated rectangle object.
-* Note that cropping a Sprite will reset its animation to the first frame. You cannot currently crop an animated Sprite.
-* The rectangle object given to this method can be either a Phaser.Rectangle or any object so long as it has public x, y, width and height properties.
-* Please note that the rectangle object given is not duplicated by this method, but rather the Image uses a reference to the rectangle.
-* Keep this in mind if assigning a rectangle in a for-loop, or when cleaning up for garbage collection.
+* Resets the Texture frame dimensions that the Sprite uses for rendering.
 *
-* @method Phaser.Sprite#crop
+* @method Phaser.Sprite#resetFrame
 * @memberof Phaser.Sprite
-* @param {Phaser.Rectangle} rect - The Rectangle to crop the Sprite to. Pass null or no parameters to clear a previously set crop rectangle.
 */
-Phaser.Sprite.prototype.crop = function(rect) {
+Phaser.Sprite.prototype.resetFrame = function() {
 
-    if (typeof rect === 'undefined' || rect === null)
+    this.texture.frame.x = this._cache[9];
+    this.texture.frame.y = this._cache[10];
+    this.texture.frame.width = this._cache[11];
+    this.texture.frame.height = this._cache[12];
+
+    if (this.texture.trim)
     {
-        //  Clear any crop that may be set
-        if (this.texture.hasOwnProperty('sourceWidth'))
+        this.texture.trim.x = this._cache[13];
+        this.texture.trim.y = this._cache[14];
+        this.texture.trim.width = this.texture.frame.width;
+        this.texture.trim.height = this.texture.frame.height;
+    }
+
+    if (this.game.renderType === Phaser.WEBGL)
+    {
+        PIXI.WebGLRenderer.updateTextureFrame(this.texture);
+    }
+
+};
+
+/**
+* Sets the Texture frame the Sprite uses for rendering.
+* This is primarily an internal method used by Sprite.loadTexture, although you may call it directly.
+*
+* @method Phaser.Sprite#setFrame
+* @memberof Phaser.Sprite
+* @param {Phaser.Frame} frame - The Frame to be used by the Sprite texture.
+*/
+Phaser.Sprite.prototype.setFrame = function(frame) {
+
+    this._cache[9] = frame.x;
+    this._cache[10] = frame.y;
+    this._cache[11] = frame.width;
+    this._cache[12] = frame.height;
+    this._cache[13] = frame.spriteSourceSizeX;
+    this._cache[14] = frame.spriteSourceSizeY;
+
+    this.texture.frame.x = frame.x;
+    this.texture.frame.y = frame.y;
+    this.texture.frame.width = frame.width;
+    this.texture.frame.height = frame.height;
+
+    if (frame.trimmed)
+    {
+        this.texture.trim = { x: frame.spriteSourceSizeX, y: frame.spriteSourceSizeY, width: frame.width, height: frame.height };
+    }
+
+    if (this.game.renderType === Phaser.WEBGL)
+    {
+        PIXI.WebGLRenderer.updateTextureFrame(this.texture);
+    }
+
+    if (this.cropRect)
+    {
+        this.updateCrop();
+    }
+
+};
+
+/**
+* If you have set a crop rectangle on this Sprite via Sprite.crop and since modified the Sprite.cropRect property (or the rectangle it references)
+* then you need to update the crop frame by calling this method.
+*
+* @method Phaser.Sprite#updateCrop
+* @memberof Phaser.Sprite
+*/
+Phaser.Sprite.prototype.updateCrop = function() {
+
+    if (!this.cropRect)
+    {
+        return;
+    }
+
+    if (this.texture.trim)
+    {
+        this._cache[15] = this._cache[9] + this.cropRect.x - this._cache[13];
+
+        if (this._cache[15] < this._cache[9])
         {
-            this.texture.setFrame(new Phaser.Rectangle(0, 0, this.texture.sourceWidth, this.texture.sourceHeight));
+            this._cache[15] = this._cache[9];
         }
+
+        this._cache[16] = this._cache[10] + this.cropRect.y - this._cache[14];
+
+        if (this._cache[16] < this._cache[10])
+        {
+            this._cache[16] = this._cache[10];
+        }
+
+        this.texture.frame.x = this._cache[15];
+        this.texture.frame.y = this._cache[16];
+
+        this._cache[15] = 0;
+        this._cache[16] = 0;
+
+        if (this.cropRect.x === 0)
+        {
+            this._cache[15] = this._cache[13];
+        }
+
+        if (this.cropRect.y === 0)
+        {
+            this._cache[16] = this._cache[14];
+        }
+
+        this.texture.frame.width = this.cropRect.width - this._cache[15];
+        this.texture.frame.height = this.cropRect.height - this._cache[16];
+
+        this.texture.trim.x = this._cache[15];
+        this.texture.trim.y = this._cache[16];
+        this.texture.trim.width = this.cropRect.width;
+        this.texture.trim.height = this.cropRect.height;
     }
     else
     {
-        //  Do we need to clone the PIXI.Texture object?
-        if (this.texture instanceof PIXI.Texture)
+        this.texture.frame.x = this._cache[9] + this.cropRect.x;
+        this.texture.frame.y = this._cache[10] + this.cropRect.y;
+        this.texture.frame.width = this.cropRect.width;
+        this.texture.frame.height = this.cropRect.height;
+    }
+
+    if (this.game.renderType === Phaser.WEBGL)
+    {
+        PIXI.WebGLRenderer.updateTextureFrame(this.texture);
+    }
+
+};
+
+/**
+* Crop allows you to crop the texture used to display this Sprite.
+* This modifies the core Sprite texture frame, so the Sprite width/height properties will adjust accordingly.
+* 
+* Cropping takes place from the top-left of the Sprite and can be modified in real-time by either providing an updated rectangle object to Sprite.crop,
+* or by modifying Sprite.cropRect (or a reference to it) and then calling Sprite.updateCrop.
+* 
+* The rectangle object given to this method can be either a Phaser.Rectangle or any object so long as it has public x, y, width and height properties.
+* A reference to the rectangle is stored in Sprite.cropRect unless the `copy` parameter is `true` in which case the values are duplicated to a local object.
+*
+* @method Phaser.Sprite#crop
+* @memberof Phaser.Sprite
+* @param {Phaser.Rectangle} rect - The Rectangle used during cropping. Pass null or no parameters to clear a previously set crop rectangle.
+* @param {boolean} [copy=false] - If false Sprite.cropRect will be a reference to the given rect. If true it will copy the rect values into a local Sprite.cropRect object.
+*/
+Phaser.Sprite.prototype.crop = function(rect, copy) {
+
+    if (typeof copy === 'undefined') { copy = false; }
+
+    if (rect)
+    {
+        if (copy && this.cropRect !== null)
         {
-            //  Yup, let's rock it ...
-            var local = {};
-
-            Phaser.Utils.extend(true, local, this.texture);
-
-            local.sourceWidth = local.width;
-            local.sourceHeight = local.height;
-            local.frame = rect;
-            local.width = rect.width;
-            local.height = rect.height;
-
-            this.texture = local;
-
-            this.texture.updateFrame = true;
-            PIXI.Texture.frameUpdates.push(this.texture);
+            this.cropRect.setTo(rect.x, rect.y, rect.width, rect.height);
+        }
+        else if (copy && this.cropRect === null)
+        {
+            this.cropRect = new Phaser.Rectangle(rect.x, rect.y, rect.width, rect.height);
         }
         else
         {
-            this.texture.setFrame(rect);
+            this.cropRect = rect;
         }
+
+        this.updateCrop();
+    }
+    else
+    {
+        this.cropRect = null;
+        this.resetFrame();
     }
 
 };
@@ -29641,21 +29817,7 @@ Phaser.Image = function (game, x, y, key, frame) {
     */
     this.key = key;
 
-    /**
-    * @property {number} _frame - Internal cache var.
-    * @private
-    */
-    this._frame = 0;
-
-    /**
-    * @property {string} _frameName - Internal cache var.
-    * @private
-    */
-    this._frameName = '';
-
     PIXI.Sprite.call(this, PIXI.TextureCache['__default']);
-
-    this.loadTexture(key, frame);
 
     this.position.set(x, y);
 
@@ -29685,7 +29847,14 @@ Phaser.Image = function (game, x, y, key, frame) {
     this.cameraOffset = new Phaser.Point();
 
     /**
+    * @property {Phaser.Rectangle} cropRect - The Rectangle used to crop the texture. Set this via Sprite.crop. Any time you modify this property directly you must call Sprite.updateCrop.
+    * @default
+    */
+    this.cropRect = null;
+
+    /**
     * A small internal cache:
+    * 
     * 0 = previous position.x
     * 1 = previous position.y
     * 2 = previous rotation
@@ -29695,10 +29864,38 @@ Phaser.Image = function (game, x, y, key, frame) {
     * 6 = exists (0 = no, 1 = yes)
     * 7 = fixed to camera (0 = no, 1 = yes)
     * 8 = destroy phase? (0 = no, 1 = yes)
+    * 9 = texture x
+    * 10 = texture y
+    * 11 = texture width
+    * 12 = texture height
+    * 13 = texture spriteSourceSizeX
+    * 14 = texture spriteSourceSizeY
+    * 15 = trim x
+    * 16 = trim y
     * @property {Array} _cache
     * @private
     */
-    this._cache = [ 0, 0, 0, 0, 1, 0, 1, 0, 0 ];
+    this._cache = [ 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ];
+
+    /**
+    * @property {Phaser.Rectangle} _bounds - Internal cache var.
+    * @private
+    */
+    this._bounds = new Phaser.Rectangle();
+
+    /**
+    * @property {number} _frame - Internal cache var.
+    * @private
+    */
+    this._frame = 0;
+
+    /**
+    * @property {string} _frameName - Internal cache var.
+    * @private
+    */
+    this._frameName = '';
+
+    this.loadTexture(key, frame);
 
 };
 
@@ -29796,24 +29993,24 @@ Phaser.Image.prototype.postUpdate = function() {
 Phaser.Image.prototype.loadTexture = function (key, frame) {
 
     frame = frame || 0;
+    
+    this.key = key;
+
+    this._frame = 0;
+    this._frameName = '';
 
     if (key instanceof Phaser.RenderTexture)
     {
         this.key = key.key;
         this.setTexture(key);
-        return;
     }
     else if (key instanceof Phaser.BitmapData)
     {
-        this.key = key;
         this.setTexture(key.texture);
-        return;
     }
     else if (key instanceof PIXI.Texture)
     {
-        this.key = key;
         this.setTexture(key);
-        return;
     }
     else
     {
@@ -29821,92 +30018,212 @@ Phaser.Image.prototype.loadTexture = function (key, frame) {
         {
             this.key = '__default';
             this.setTexture(PIXI.TextureCache[this.key]);
-            return;
         }
         else if (typeof key === 'string' && !this.game.cache.checkImageKey(key))
         {
             this.key = '__missing';
             this.setTexture(PIXI.TextureCache[this.key]);
-            return;
-        }
-
-        if (this.game.cache.isSpriteSheet(key))
-        {
-            this.key = key;
-
-            var frameData = this.game.cache.getFrameData(key);
-
-            if (typeof frame === 'string')
-            {
-                this._frame = 0;
-                this._frameName = frame;
-                this.setTexture(PIXI.TextureCache[frameData.getFrameByName(frame).uuid]);
-                return;
-            }
-            else
-            {
-                this._frame = frame;
-                this._frameName = '';
-                this.setTexture(PIXI.TextureCache[frameData.getFrame(frame).uuid]);
-                return;
-            }
         }
         else
         {
-            this.key = key;
-            this.setTexture(PIXI.TextureCache[key]);
-            return;
+            this.setTexture(new PIXI.Texture(PIXI.BaseTextureCache[this.key]));
+
+            var frameData = this.game.cache.getFrameData(this.key);
+
+            if (frameData)
+            {
+                if (typeof frame === 'string')
+                {
+                    this._frameName = frame;
+                    this.setFrame(frameData.getFrameByName(frame));
+                }
+                else
+                {
+                    this._frame = frame;
+                    this.setFrame(frameData.getFrame(frame));
+                }
+            }
         }
     }
 
 };
 
 /**
-* Crop allows you to crop the texture used to display this Image.
-* Cropping takes place from the top-left of the Image and can be modified in real-time by providing an updated rectangle object.
-* The rectangle object given to this method can be either a Phaser.Rectangle or any object so long as it has public x, y, width and height properties.
-* Please note that the rectangle object given is not duplicated by this method, but rather the Image uses a reference to the rectangle.
-* Keep this in mind if assigning a rectangle in a for-loop, or when cleaning up for garbage collection.
+* Resets the Texture frame dimensions that the Image uses for rendering.
 *
-* @method Phaser.Image#crop
+* @method Phaser.Image#resetFrame
 * @memberof Phaser.Image
-* @param {Phaser.Rectangle|object} rect - The Rectangle to crop the Image to. Pass null or no parameters to clear a previously set crop rectangle.
 */
-Phaser.Image.prototype.crop = function(rect) {
+Phaser.Image.prototype.resetFrame = function() {
 
-    if (typeof rect === 'undefined' || rect === null)
+    this.texture.frame.x = this._cache[9];
+    this.texture.frame.y = this._cache[10];
+    this.texture.frame.width = this._cache[11];
+    this.texture.frame.height = this._cache[12];
+
+    if (this.texture.trim)
     {
-        //  Clear any crop that may be set
-        if (this.texture.hasOwnProperty('sourceWidth'))
+        this.texture.trim.x = this._cache[13];
+        this.texture.trim.y = this._cache[14];
+        this.texture.trim.width = this.texture.frame.width;
+        this.texture.trim.height = this.texture.frame.height;
+    }
+
+    if (this.game.renderType === Phaser.WEBGL)
+    {
+        PIXI.WebGLRenderer.updateTextureFrame(this.texture);
+    }
+
+};
+
+/**
+* Sets the Texture frame the Image uses for rendering.
+* This is primarily an internal method used by Image.loadTexture, although you may call it directly.
+*
+* @method Phaser.Image#setFrame
+* @memberof Phaser.Image
+* @param {Phaser.Frame} frame - The Frame to be used by the Image texture.
+*/
+Phaser.Image.prototype.setFrame = function(frame) {
+
+    this._cache[9] = frame.x;
+    this._cache[10] = frame.y;
+    this._cache[11] = frame.width;
+    this._cache[12] = frame.height;
+    this._cache[13] = frame.spriteSourceSizeX;
+    this._cache[14] = frame.spriteSourceSizeY;
+
+    this.texture.frame.x = frame.x;
+    this.texture.frame.y = frame.y;
+    this.texture.frame.width = frame.width;
+    this.texture.frame.height = frame.height;
+
+    if (frame.trimmed)
+    {
+        this.texture.trim = { x: frame.spriteSourceSizeX, y: frame.spriteSourceSizeY, width: frame.width, height: frame.height };
+    }
+
+    if (this.game.renderType === Phaser.WEBGL)
+    {
+        PIXI.WebGLRenderer.updateTextureFrame(this.texture);
+    }
+
+    if (this.cropRect)
+    {
+        this.updateCrop();
+    }
+
+};
+
+/**
+* If you have set a crop rectangle on this Image via Image.crop and since modified the Image.cropRect property (or the rectangle it references)
+* then you need to update the crop frame by calling this method.
+*
+* @method Phaser.Image#updateCrop
+* @memberof Phaser.Image
+*/
+Phaser.Image.prototype.updateCrop = function() {
+
+    if (!this.cropRect)
+    {
+        return;
+    }
+
+    if (this.texture.trim)
+    {
+        this._cache[15] = this._cache[9] + this.cropRect.x - this._cache[13];
+
+        if (this._cache[15] < this._cache[9])
         {
-            this.texture.setFrame(new Phaser.Rectangle(0, 0, this.texture.sourceWidth, this.texture.sourceHeight));
+            this._cache[15] = this._cache[9];
         }
+
+        this._cache[16] = this._cache[10] + this.cropRect.y - this._cache[14];
+
+        if (this._cache[16] < this._cache[10])
+        {
+            this._cache[16] = this._cache[10];
+        }
+
+        this.texture.frame.x = this._cache[15];
+        this.texture.frame.y = this._cache[16];
+
+        this._cache[15] = 0;
+        this._cache[16] = 0;
+
+        if (this.cropRect.x === 0)
+        {
+            this._cache[15] = this._cache[13];
+        }
+
+        if (this.cropRect.y === 0)
+        {
+            this._cache[16] = this._cache[14];
+        }
+
+        this.texture.frame.width = this.cropRect.width - this._cache[15];
+        this.texture.frame.height = this.cropRect.height - this._cache[16];
+
+        this.texture.trim.x = this._cache[15];
+        this.texture.trim.y = this._cache[16];
+        this.texture.trim.width = this.cropRect.width;
+        this.texture.trim.height = this.cropRect.height;
     }
     else
     {
-        //  Do we need to clone the PIXI.Texture object?
-        if (this.texture instanceof PIXI.Texture)
+        this.texture.frame.x = this._cache[9] + this.cropRect.x;
+        this.texture.frame.y = this._cache[10] + this.cropRect.y;
+        this.texture.frame.width = this.cropRect.width;
+        this.texture.frame.height = this.cropRect.height;
+    }
+
+    if (this.game.renderType === Phaser.WEBGL)
+    {
+        PIXI.WebGLRenderer.updateTextureFrame(this.texture);
+    }
+
+};
+
+/**
+* Crop allows you to crop the texture used to display this Image.
+* This modifies the core Image texture frame, so the Image width/height properties will adjust accordingly.
+* 
+* Cropping takes place from the top-left of the Image and can be modified in real-time by either providing an updated rectangle object to Image.crop,
+* or by modifying Image.cropRect (or a reference to it) and then calling Image.updateCrop.
+* 
+* The rectangle object given to this method can be either a Phaser.Rectangle or any object so long as it has public x, y, width and height properties.
+* A reference to the rectangle is stored in Image.cropRect unless the `copy` parameter is `true` in which case the values are duplicated to a local object.
+*
+* @method Phaser.Image#crop
+* @memberof Phaser.Image
+* @param {Phaser.Rectangle} rect - The Rectangle used during cropping. Pass null or no parameters to clear a previously set crop rectangle.
+* @param {boolean} [copy=false] - If false Image.cropRect will be a reference to the given rect. If true it will copy the rect values into a local Image.cropRect object.
+*/
+Phaser.Image.prototype.crop = function(rect, copy) {
+
+    if (typeof copy === 'undefined') { copy = false; }
+
+    if (rect)
+    {
+        if (copy && this.cropRect !== null)
         {
-            //  Yup, let's rock it ...
-            var local = {};
-
-            Phaser.Utils.extend(true, local, this.texture);
-
-            local.sourceWidth = local.width;
-            local.sourceHeight = local.height;
-            local.frame = rect;
-            local.width = rect.width;
-            local.height = rect.height;
-
-            this.texture = local;
-
-            this.texture.updateFrame = true;
-            PIXI.Texture.frameUpdates.push(this.texture);
+            this.cropRect.setTo(rect.x, rect.y, rect.width, rect.height);
+        }
+        else if (copy && this.cropRect === null)
+        {
+            this.cropRect = new Phaser.Rectangle(rect.x, rect.y, rect.width, rect.height);
         }
         else
         {
-            this.texture.setFrame(rect);
+            this.cropRect = rect;
         }
+
+        this.updateCrop();
+    }
+    else
+    {
+        this.cropRect = null;
+        this.resetFrame();
     }
 
 };
@@ -30198,8 +30515,8 @@ Object.defineProperty(Phaser.Image.prototype, "frame", {
 
             if (frameData && value < frameData.total && frameData.getFrame(value))
             {
-                this.setTexture(PIXI.TextureCache[frameData.getFrame(value).uuid]);
                 this._frame = value;
+                this.setFrame(frameData.getFrame(value));
             }
         }
 
@@ -30227,8 +30544,8 @@ Object.defineProperty(Phaser.Image.prototype, "frameName", {
 
             if (frameData && frameData.getFrameByName(value))
             {
-                this.setTexture(PIXI.TextureCache[frameData.getFrameByName(value).uuid]);
                 this._frameName = value;
+                this.setFrame(frameData.getFrameByName(value));
             }
         }
 
@@ -34508,7 +34825,7 @@ Phaser.Canvas = {
     * @param {number} [width=256] - The width of the canvas element.
     * @param {number} [height=256] - The height of the canvas element..
     * @param {string} [id=''] - If given this will be set as the ID of the canvas element, otherwise no ID will be set.
-    * @param {boolean} [noCocoon=false] - CocoonJS only allows 1 screencanvas object, which should be your game. If you need to create another canvas (i.e. for a texture) set this to 'true'.
+    * @param {boolean} [noCocoon=false] - DEPRECATED: This parameter is no longer used.
     * @return {HTMLCanvasElement} The newly created canvas element.
     */
     create: function (width, height, id, noCocoon) {
@@ -34518,14 +34835,7 @@ Phaser.Canvas = {
         width = width || 256;
         height = height || 256;
 
-        if (noCocoon)
-        {
-            var canvas = document.createElement('canvas');
-        }
-        else
-        {
-            var canvas = document.createElement(navigator.isCocoonJS ? 'screencanvas' : 'canvas');
-        }
+        var canvas = document.createElement('canvas');
 
         if (typeof id === 'string' && id !== '')
         {
@@ -37379,6 +37689,21 @@ Phaser.RandomDataGenerator.prototype = {
     },
 
     /**
+    * Returns a random integer between and including min and max.
+    * This method is an alias for RandomDataGenerator.integerInRange.
+    *
+    * @method Phaser.RandomDataGenerator#between
+    * @param {number} min - The minimum value in the range.
+    * @param {number} max - The maximum value in the range.
+    * @return {number} A random number between min and max.
+    */
+    between: function (min, max) {
+
+        return this.integerInRange(min, max);
+
+    },
+
+    /**
     * Returns a random real number between min and max.
     *
     * @method Phaser.RandomDataGenerator#realInRange
@@ -38814,10 +39139,11 @@ Phaser.Tween.prototype = {
     },
 
     /**
-    * Sets a callback to be fired each time this tween updates. Note: callback will be called in the context of the global scope.
+    * Sets a callback to be fired each time this tween updates.
     *
     * @method Phaser.Tween#onUpdateCallback
     * @param {function} callback - The callback to invoke each time this tween is updated.
+    * @param {object} callbackContext - The context in which to call the onUpdate callback.
     * @return {Phaser.Tween} Itself.
     */
     onUpdateCallback: function (callback, callbackContext) {
@@ -39759,6 +40085,21 @@ Phaser.Time.prototype = {
 
         this._started = Date.now();
         this.events.start();
+
+    },
+
+    /**
+    * Adds an existing Phaser.Timer object to the Timer pool.
+    *
+    * @method Phaser.Time#add
+    * @param {Phaser.Timer} timer - An existing Phaser.Timer object.
+    * @return {Phaser.Timer} The given Phaser.Timer object.
+    */
+    add: function (timer) {
+
+        this._timers.push(timer);
+
+        return timer;
 
     },
 
@@ -40848,11 +41189,28 @@ Phaser.AnimationManager.prototype = {
     * @method Phaser.AnimationManager#loadFrameData
     * @private
     * @param {Phaser.FrameData} frameData - The FrameData set to load.
+    * @param {string|number} frame - The frame to default to.
     */
-    loadFrameData: function (frameData) {
+    loadFrameData: function (frameData, frame) {
 
         this._frameData = frameData;
-        this.frame = 0;
+
+        if (typeof frame === 'undefined' || frame === null)
+        {
+            this.frame = 0;
+        }
+        else
+        {
+            if (typeof frame === 'string')
+            {
+                this.frameName = frame;
+            }
+            else
+            {
+                this.frame = frame;
+            }
+        }
+
         this.isLoaded = true;
 
     },
@@ -40908,9 +41266,11 @@ Phaser.AnimationManager.prototype = {
         this._frameData.getFrameIndexes(frames, useNumericIndex, this._outputFrames);
 
         this._anims[name] = new Phaser.Animation(this.game, this.sprite, name, this._frameData, this._outputFrames, frameRate, loop);
+
         this.currentAnim = this._anims[name];
         this.currentFrame = this.currentAnim.currentFrame;
-        this.sprite.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
+
+        this.sprite.setFrame(this.currentFrame);
 
         if (this.sprite.__tilePattern)
         {
@@ -41194,7 +41554,8 @@ Object.defineProperty(Phaser.AnimationManager.prototype, 'frame', {
             if (this.currentFrame)
             {
                 this._frameIndex = value;
-                this.sprite.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
+
+                this.sprite.setFrame(this.currentFrame);
 
                 if (this.sprite.__tilePattern)
                 {
@@ -41232,7 +41593,8 @@ Object.defineProperty(Phaser.AnimationManager.prototype, 'frameName', {
             if (this.currentFrame)
             {
                 this._frameIndex = this.currentFrame.index;
-                this.sprite.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
+
+                this.sprite.setFrame(this.currentFrame);
 
                 if (this.sprite.__tilePattern)
                 {
@@ -41435,7 +41797,8 @@ Phaser.Animation.prototype = {
         this._frameIndex = 0;
 
         this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
-        this._parent.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
+
+        this._parent.setFrame(this.currentFrame);
 
         //  TODO: Double check if required
         if (this._parent.__tilePattern)
@@ -41445,6 +41808,7 @@ Phaser.Animation.prototype = {
         }
 
         this._parent.events.onAnimationStart.dispatch(this._parent, this);
+
         this.onStart.dispatch(this._parent, this);
 
         return this;
@@ -41469,6 +41833,8 @@ Phaser.Animation.prototype = {
         this._frameIndex = 0;
 
         this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
+
+        this._parent.setFrame(this.currentFrame);
 
         this.onStart.dispatch(this._parent, this);
 
@@ -41552,6 +41918,7 @@ Phaser.Animation.prototype = {
         if (resetFrame)
         {
             this.currentFrame = this._frameData.getFrame(this._frames[0]);
+            this._parent.setFrame(this.currentFrame);
         }
 
         if (dispatchComplete)
@@ -41602,7 +41969,7 @@ Phaser.Animation.prototype = {
             return false;
         }
 
-        if (this.isPlaying === true && this.game.time.now >= this._timeNextFrame)
+        if (this.isPlaying && this.game.time.now >= this._timeNextFrame)
         {
             this._frameSkip = 1;
 
@@ -41615,7 +41982,6 @@ Phaser.Animation.prototype = {
             {
                 //  We need to skip a frame, work out how many
                 this._frameSkip = Math.floor(this._frameDiff / this.delay);
-
                 this._frameDiff -= (this._frameSkip * this.delay);
             }
 
@@ -41630,18 +41996,6 @@ Phaser.Animation.prototype = {
                 {
                     this._frameIndex %= this._frames.length;
                     this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
-
-                    if (this.currentFrame)
-                    {
-                        this._parent.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
-
-                        if (this._parent.__tilePattern)
-                        {
-                            this._parent.__tilePattern = false;
-                            this._parent.tilingTexture = false;
-                        }
-                    }
-
                     this.loopCount++;
                     this._parent.events.onAnimationLoop.dispatch(this._parent, this);
                     this.onLoop.dispatch(this._parent, this);
@@ -41651,19 +42005,17 @@ Phaser.Animation.prototype = {
                     this.complete();
                 }
             }
-            else
+
+            this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
+
+            if (this.currentFrame)
             {
-                this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
+                this._parent.setFrame(this.currentFrame);
 
-                if (this.currentFrame)
+                if (this._parent.__tilePattern)
                 {
-                    this._parent.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
-
-                    if (this._parent.__tilePattern)
-                    {
-                        this._parent.__tilePattern = false;
-                        this._parent.tilingTexture = false;
-                    }
+                    this._parent.__tilePattern = false;
+                    this._parent.tilingTexture = false;
                 }
             }
 
@@ -41680,6 +42032,7 @@ Phaser.Animation.prototype = {
     * @method Phaser.Animation#destroy
     */
     destroy: function () {
+
         this.game.onPause.remove(this.onPause, this);
         this.game.onResume.remove(this.onResume, this);
         
@@ -41796,7 +42149,7 @@ Object.defineProperty(Phaser.Animation.prototype, 'frame', {
         if (this.currentFrame !== null)
         {
             this._frameIndex = value;
-            this._parent.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
+            this._parent.setFrame(this.currentFrame);
         }
 
     }
@@ -42034,8 +42387,6 @@ Phaser.Frame.prototype = {
 
         if (trimmed)
         {
-            this.width = actualWidth;
-            this.height = actualHeight;
             this.sourceSizeW = actualWidth;
             this.sourceSizeH = actualHeight;
             this.centerX = Math.floor(actualWidth / 2);
@@ -42388,14 +42739,8 @@ Phaser.AnimationParser = {
         {
             var uuid = game.rnd.uuid();
 
+            //  uuid needed?
             data.addFrame(new Phaser.Frame(i, x, y, frameWidth, frameHeight, '', uuid));
-
-            PIXI.TextureCache[uuid] = new PIXI.Texture(PIXI.BaseTextureCache[key], {
-                x: x,
-                y: y,
-                width: frameWidth,
-                height: frameHeight
-            });
 
             x += frameWidth + spacing;
 
@@ -42416,10 +42761,9 @@ Phaser.AnimationParser = {
     * @method Phaser.AnimationParser.JSONData
     * @param {Phaser.Game} game - A reference to the currently running game.
     * @param {Object} json - The JSON data from the Texture Atlas. Must be in Array format.
-    * @param {string} cacheKey - The Game.Cache asset key of the texture image.
     * @return {Phaser.FrameData} A FrameData object containing the parsed frames.
     */
-    JSONData: function (game, json, cacheKey) {
+    JSONData: function (game, json) {
 
         //  Malformed?
         if (!json['frames'])
@@ -42450,13 +42794,6 @@ Phaser.AnimationParser = {
                 uuid
             ));
 
-            PIXI.TextureCache[uuid] = new PIXI.Texture(PIXI.BaseTextureCache[cacheKey], {
-                x: frames[i].frame.x,
-                y: frames[i].frame.y,
-                width: frames[i].frame.w,
-                height: frames[i].frame.h
-            });
-
             if (frames[i].trimmed)
             {
                 newFrame.setTrim(
@@ -42468,10 +42805,7 @@ Phaser.AnimationParser = {
                     frames[i].spriteSourceSize.w,
                     frames[i].spriteSourceSize.h
                 );
-
-                PIXI.TextureCache[uuid].trim = new Phaser.Rectangle(frames[i].spriteSourceSize.x, frames[i].spriteSourceSize.y, frames[i].sourceSize.w, frames[i].sourceSize.h);
             }
-
         }
 
         return data;
@@ -42484,10 +42818,9 @@ Phaser.AnimationParser = {
     * @method Phaser.AnimationParser.JSONDataHash
     * @param {Phaser.Game} game - A reference to the currently running game.
     * @param {Object} json - The JSON data from the Texture Atlas. Must be in JSON Hash format.
-    * @param {string} cacheKey - The Game.Cache asset key of the texture image.
     * @return {Phaser.FrameData} A FrameData object containing the parsed frames.
     */
-    JSONDataHash: function (game, json, cacheKey) {
+    JSONDataHash: function (game, json) {
 
         //  Malformed?
         if (!json['frames'])
@@ -42519,13 +42852,6 @@ Phaser.AnimationParser = {
                 uuid
             ));
 
-            PIXI.TextureCache[uuid] = new PIXI.Texture(PIXI.BaseTextureCache[cacheKey], {
-                x: frames[key].frame.x,
-                y: frames[key].frame.y,
-                width: frames[key].frame.w,
-                height: frames[key].frame.h
-            });
-
             if (frames[key].trimmed)
             {
                 newFrame.setTrim(
@@ -42537,8 +42863,6 @@ Phaser.AnimationParser = {
                     frames[key].spriteSourceSize.w,
                     frames[key].spriteSourceSize.h
                 );
-
-                PIXI.TextureCache[uuid].trim = new Phaser.Rectangle(frames[key].spriteSourceSize.x, frames[key].spriteSourceSize.y, frames[key].sourceSize.w, frames[key].sourceSize.h);
             }
 
             i++;
@@ -42554,10 +42878,9 @@ Phaser.AnimationParser = {
     * @method Phaser.AnimationParser.XMLData
     * @param {Phaser.Game} game - A reference to the currently running game.
     * @param {Object} xml - The XML data from the Texture Atlas. Must be in Starling XML format.
-    * @param {string} cacheKey - The Game.Cache asset key of the texture image.
     * @return {Phaser.FrameData} A FrameData object containing the parsed frames.
     */
-    XMLData: function (game, xml, cacheKey) {
+    XMLData: function (game, xml) {
 
         //  Malformed?
         if (!xml.getElementsByTagName('TextureAtlas'))
@@ -42608,19 +42931,10 @@ Phaser.AnimationParser = {
 
             newFrame = data.addFrame(new Phaser.Frame(i, x, y, width, height, name, uuid));
 
-            PIXI.TextureCache[uuid] = new PIXI.Texture(PIXI.BaseTextureCache[cacheKey], {
-                x: x,
-                y: y,
-                width: width,
-                height: height
-            });
-
             //  Trimmed?
             if (frameX !== null || frameY !== null)
             {
                 newFrame.setTrim(true, width, height, frameX, frameY, frameWidth, frameHeight);
-
-                PIXI.TextureCache[uuid].trim = new Phaser.Rectangle(frameX, frameY, width, height);
             }
         }
 
@@ -42888,7 +43202,6 @@ Phaser.Cache.prototype = {
         this._images[key] = { url: url, data: data, spriteSheet: true, frameWidth: frameWidth, frameHeight: frameHeight, margin: margin, spacing: spacing };
 
         PIXI.BaseTextureCache[key] = new PIXI.BaseTexture(data);
-        PIXI.TextureCache[key] = new PIXI.Texture(PIXI.BaseTextureCache[key]);
 
         this._images[key].frameData = Phaser.AnimationParser.spriteSheet(this.game, key, frameWidth, frameHeight, frameMax, margin, spacing);
 
@@ -42924,7 +43237,6 @@ Phaser.Cache.prototype = {
         this._images[key] = { url: url, data: data, spriteSheet: true };
 
         PIXI.BaseTextureCache[key] = new PIXI.BaseTexture(data);
-        PIXI.TextureCache[key] = new PIXI.Texture(PIXI.BaseTextureCache[key]);
 
         if (format == Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY)
         {
@@ -42957,7 +43269,7 @@ Phaser.Cache.prototype = {
         this._images[key] = { url: url, data: data, spriteSheet: true };
 
         PIXI.BaseTextureCache[key] = new PIXI.BaseTexture(data);
-        PIXI.TextureCache[key] = new PIXI.Texture(PIXI.BaseTextureCache[key]);
+        // PIXI.TextureCache[key] = new PIXI.Texture(PIXI.BaseTextureCache[key]);
 
         Phaser.LoaderParser.bitmapFont(this.game, xmlData, key, xSpacing, ySpacing);
 
@@ -43059,7 +43371,6 @@ Phaser.Cache.prototype = {
         this._images[key].frame = new Phaser.Frame(0, 0, 0, data.width, data.height, key, this.game.rnd.uuid());
 
         PIXI.BaseTextureCache[key] = new PIXI.BaseTexture(data);
-        PIXI.TextureCache[key] = new PIXI.Texture(PIXI.BaseTextureCache[key]);
 
     },
 
@@ -46507,12 +46818,11 @@ Phaser.Sound.prototype = {
 
         if (this.isPlaying && this._sound)
         {
-            this.stop();
-            this.isPlaying = false;
             this.paused = true;
             this.pausedPosition = this.currentTime;
             this.pausedTime = this.game.time.now;
             this.onPause.dispatch(this);
+            this.stop();
         }
 
     },
@@ -46612,7 +46922,11 @@ Phaser.Sound.prototype = {
         }
 
         this.currentMarker = '';
-        this.onStop.dispatch(this, prevMarker);
+
+        if (!this.paused)
+        {
+            this.onStop.dispatch(this, prevMarker);
+        }
 
     },
 
@@ -46632,19 +46946,22 @@ Phaser.Sound.prototype = {
         {
             this.game.sound.remove(this);
         }
+        else
+        {
+            this.markers = {};
+            this.context = null;
+            this._buffer = null;
+            this.externalNode = null;
 
-        this.markers = {};
-        this.context = null;
-        this._buffer = null;
-        this.externalNode = null;
-        this.onDecoded.dispose();
-        this.onPlay.dispose();
-        this.onPause.dispose();
-        this.onResume.dispose();
-        this.onLoop.dispose();
-        this.onStop.dispose();
-        this.onMute.dispose();
-        this.onMarkerComplete.dispose();
+            this.onDecoded.dispose();
+            this.onPlay.dispose();
+            this.onPause.dispose();
+            this.onResume.dispose();
+            this.onLoop.dispose();
+            this.onStop.dispose();
+            this.onMute.dispose();
+            this.onMarkerComplete.dispose();
+        }
 
     }
 
@@ -46882,7 +47199,7 @@ Phaser.SoundManager.prototype = {
             this.channels = 1;
         }
 
-        if (this.game.device.iOS || (window['PhaserGlobal'] && window['PhaserGlobal'].fakeiOSTouchLock))
+        if (!this.game.device.cocoonJS && this.game.device.iOS || (window['PhaserGlobal'] && window['PhaserGlobal'].fakeiOSTouchLock))
         {
             this.game.input.touch.callbackContext = this;
             this.game.input.touch.touchStartCallback = this.unlock;
@@ -46892,7 +47209,6 @@ Phaser.SoundManager.prototype = {
         }
         else
         {
-            //  What about iOS5?
             this.touchLocked = false;
         }
 
@@ -48766,6 +49082,7 @@ Phaser.Color = {
 
     /**
     * Interpolates the two given colours based on the supplied step and currentStep properties.
+    * 
     * @method Phaser.Color.interpolateColorWithRGB
     * @static
     * @param {number} color - The first color value.
@@ -49668,6 +49985,7 @@ Phaser.Physics.Arcade.prototype = {
     * You can perform Sprite vs. Sprite, Sprite vs. Group and Group vs. Group overlap checks.
     * Unlike collide the objects are NOT automatically separated or have any physics applied, they merely test for overlap results.
     * The second parameter can be an array of objects, of differing types.
+    * NOTE: This function is not recursive, and will not test against children of objects passed (i.e. Groups within Groups).
     *
     * @method Phaser.Physics.Arcade#overlap
     * @param {Phaser.Sprite|Phaser.Group|Phaser.Particles.Emitter} object1 - The first object to check. Can be an instance of Phaser.Sprite, Phaser.Group or Phaser.Particles.Emitter.
@@ -49709,6 +50027,7 @@ Phaser.Physics.Arcade.prototype = {
     * An optional processCallback can be provided. If given this function will be called when two sprites are found to be colliding. It is called before any separation takes place,
     * giving you the chance to perform additional checks. If the function returns true then the collision and separation is carried out. If it returns false it is skipped.
     * The collideCallback is an optional function that is only called if two sprites collide. If a processCallback has been set then it needs to return true for collideCallback to be called.
+    * NOTE: This function is not recursive, and will not test against children of objects passed (i.e. Groups or Tilemaps within other Groups).
     *
     * @method Phaser.Physics.Arcade#collide
     * @param {Phaser.Sprite|Phaser.Group|Phaser.Particles.Emitter|Phaser.Tilemap} object1 - The first object to check. Can be an instance of Phaser.Sprite, Phaser.Group, Phaser.Particles.Emitter, or Phaser.Tilemap.
@@ -50004,12 +50323,11 @@ Phaser.Physics.Arcade.prototype = {
 
         for (var i = 0; i < this._mapData.length; i++)
         {
-            if (this.separateTile(i, sprite.body, this._mapData[i]))
+            if (processCallback)
             {
-                //  They collided, is there a custom process callback?
-                if (processCallback)
+                if (processCallback.call(callbackContext, sprite, this._mapData[i]))
                 {
-                    if (processCallback.call(callbackContext, sprite, this._mapData[i]))
+                    if (this.separateTile(i, sprite.body, this._mapData[i]))
                     {
                         this._total++;
 
@@ -50019,7 +50337,10 @@ Phaser.Physics.Arcade.prototype = {
                         }
                     }
                 }
-                else
+            }
+            else
+            {
+                if (this.separateTile(i, sprite.body, this._mapData[i]))
                 {
                     this._total++;
 
@@ -51634,13 +51955,13 @@ Phaser.Physics.Arcade.Body.prototype = {
     * @method Phaser.Physics.Arcade.Body#setSize
     * @param {number} width - The width of the Body.
     * @param {number} height - The height of the Body.
-    * @param {number} offsetX - The X offset of the Body from the Sprite position.
-    * @param {number} offsetY - The Y offset of the Body from the Sprite position.
+    * @param {number} [offsetX] - The X offset of the Body from the Sprite position.
+    * @param {number} [offsetY] - The Y offset of the Body from the Sprite position.
     */
     setSize: function (width, height, offsetX, offsetY) {
 
-        offsetX = offsetX || this.offset.x;
-        offsetY = offsetY || this.offset.y;
+        if (typeof offsetX === 'undefined') { offsetX = this.offset.x; }
+        if (typeof offsetY === 'undefined') { offsetY = this.offset.y; }
 
         this.sourceWidth = width;
         this.sourceHeight = height;
@@ -51973,24 +52294,24 @@ Phaser.Particles.Arcade = {};
 */
 
 /**
-* Phaser - ArcadeEmitter
-*
 * @class Phaser.Particles.Arcade.Emitter
-* @classdesc Emitter is a lightweight particle emitter. It can be used for one-time explosions or for
-* continuous effects like rain and fire. All it really does is launch Particle objects out
-* at set intervals, and fixes their positions and velocities accorindgly.
+* 
+* @classdesc Emitter is a lightweight particle emitter that uses Arcade Physics.
+* It can be used for one-time explosions or for continuous effects like rain and fire.
+* All it really does is launch Particle objects out at set intervals, and fixes their positions and velocities accorindgly.
+* 
 * @constructor
 * @extends Phaser.Group
 * @param {Phaser.Game} game - Current game instance.
 * @param {number} [x=0] - The x coordinate within the Emitter that the particles are emitted from.
 * @param {number} [y=0] - The y coordinate within the Emitter that the particles are emitted from.
-* @param {number} [maxParticles=50] - The total number of particles in this emitter..
+* @param {number} [maxParticles=50] - The total number of particles in this emitter.
 */
 
 Phaser.Particles.Arcade.Emitter = function (game, x, y, maxParticles) {
 
     /**
-    * @property {number} maxParticles - The total number of particles in this emitter..
+    * @property {number} maxParticles - The total number of particles in this emitter.
     * @default
     */
     this.maxParticles = maxParticles || 50;
@@ -52367,19 +52688,49 @@ Phaser.Particles.Arcade.Emitter.prototype.revive = function () {
 };
 
 /**
+* Call this function to emit the given quantity of particles at all once (an explosion)
+* 
+* @method Phaser.Particles.Arcade.Emitter#explode
+* @param {number} [lifespan=0] - How long each particle lives once emitted in ms. 0 = forever.
+* @param {number} [quantity=0] - How many particles to launch.
+*/
+Phaser.Particles.Arcade.Emitter.prototype.explode = function (lifespan, quantity) {
+
+    this.start(true, lifespan, 0, quantity, false);
+
+};
+
+/**
+* Call this function to start emitting a flow of particles at the given frequency.
+* 
+* @method Phaser.Particles.Arcade.Emitter#flow
+* @param {number} [lifespan=0] - How long each particle lives once emitted in ms. 0 = forever.
+* @param {number} [frequency=250] - Frequency is how often to emit a particle, given in ms.
+* @param {number} [quantity=0] - How many particles to launch.
+*/
+Phaser.Particles.Arcade.Emitter.prototype.flow = function (lifespan, frequency, quantity) {
+
+    this.start(false, lifespan, frequency, quantity, true);
+
+};
+
+/**
 * Call this function to start emitting particles.
+* 
 * @method Phaser.Particles.Arcade.Emitter#start
 * @param {boolean} [explode=true] - Whether the particles should all burst out at once (true) or at the frequency given (false).
 * @param {number} [lifespan=0] - How long each particle lives once emitted in ms. 0 = forever.
 * @param {number} [frequency=250] - Ignored if Explode is set to true. Frequency is how often to emit 1 particle. Value given in ms.
 * @param {number} [quantity=0] - How many particles to launch. 0 = "all of the particles".
+* @param {number} [forceQuantity=false] - If true and creating a particle flow, the quantity emitted will be forced to the be quantity given in this call.
 */
-Phaser.Particles.Arcade.Emitter.prototype.start = function (explode, lifespan, frequency, quantity) {
+Phaser.Particles.Arcade.Emitter.prototype.start = function (explode, lifespan, frequency, quantity, forceQuantity) {
 
     if (typeof explode === 'undefined') { explode = true; }
     if (typeof lifespan === 'undefined') { lifespan = 0; }
     if (typeof frequency === 'undefined' || frequency === null) { frequency = 250; }
     if (typeof quantity === 'undefined') { quantity = 0; }
+    if (typeof forceQuantity === 'undefined') { forceQuantity = false; }
 
     this.revive();
 
@@ -52390,7 +52741,7 @@ Phaser.Particles.Arcade.Emitter.prototype.start = function (explode, lifespan, f
     this.lifespan = lifespan;
     this.frequency = frequency;
 
-    if (explode)
+    if (explode || forceQuantity)
     {
         this._quantity = quantity;
     }
@@ -53601,7 +53952,7 @@ Phaser.Tilemap.prototype = {
     /**
     * Creates a new and empty layer on this Tilemap. By default TilemapLayers are fixed to the camera.
     *
-    * @method Phaser.Tilemap#createLayer
+    * @method Phaser.Tilemap#createBlankLayer
     * @param {string} name - The name of this layer. Must be unique within the map.
     * @param {number} width - The width of the layer in tiles.
     * @param {number} height - The height of the layer in tiles.
@@ -55068,6 +55419,12 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
     this.rayStepRate = 4;
 
     /**
+    * @property {boolean} wrap - Flag controlling if the layer tiles wrap at the edges. Only works if the World size matches the Map size.
+    * @default false
+    */
+    this.wrap = false;
+
+    /**
     * @property {object} _mc - Local map data and calculation cache.
     * @private
     */
@@ -55407,19 +55764,6 @@ Phaser.TilemapLayer.prototype.updateMax = function () {
     this._mc.maxX = this.game.math.ceil(this.canvas.width / this.map.tileWidth) + 1;
     this._mc.maxY = this.game.math.ceil(this.canvas.height / this.map.tileHeight) + 1;
 
-    if (this.layer)
-    {
-        if (this._mc.maxX > this.layer.width)
-        {
-            this._mc.maxX = this.layer.width;
-        }
-
-        if (this._mc.maxY > this.layer.height)
-        {
-            this._mc.maxY = this.layer.height;
-        }
-    }
-
     this.dirty = true;
 
 };
@@ -55464,15 +55808,41 @@ Phaser.TilemapLayer.prototype.render = function () {
 
     for (var y = this._mc.startY, lenY = this._mc.startY + this._mc.maxY; y < lenY; y++)
     {
-        this._column = this.layer.data[y];
+        this._column = null;
 
-        for (var x = this._mc.startX, lenX = this._mc.startX + this._mc.maxX; x < lenX; x++)
+        if (y < 0 && this.wrap)
         {
-            if (this._column[x])
-            {
-                tile = this._column[x];
+            this._column = this.layer.data[y + this.map.height];
+        }
+        else if (y >= this.map.height && this.wrap)
+        {
+            this._column = this.layer.data[y - this.map.height];
+        }
+        else if (this.layer.data[y])
+        {
+            this._column = this.layer.data[y];
+        }
 
-                if (tile.index > -1)
+        if (this._column)
+        {
+            for (var x = this._mc.startX, lenX = this._mc.startX + this._mc.maxX; x < lenX; x++)
+            {
+                var tile = null;
+
+                if (x < 0 && this.wrap)
+                {
+                    tile = this._column[x + this.map.width];
+                }
+                else if (x >= this.map.width && this.wrap)
+                {
+                    tile = this._column[x - this.map.width];
+                }
+                else if (this._column[x])
+                {
+                    tile = this._column[x];
+                }
+
+                if (tile && tile.index > -1)
                 {
                     set = this.map.tilesets[this.map.tiles[tile.index][2]];
 
@@ -55489,9 +55859,10 @@ Phaser.TilemapLayer.prototype.render = function () {
                         this.context.fillRect(Math.floor(this._mc.tx), Math.floor(this._mc.ty), this.map.tileWidth, this.map.tileHeight);
                     }
                 }
-            }
 
-            this._mc.tx += this.map.tileWidth;
+                this._mc.tx += this.map.tileWidth;
+
+            }
 
         }
 
@@ -55534,52 +55905,81 @@ Phaser.TilemapLayer.prototype.renderDebug = function () {
 
     for (var y = this._mc.startY, lenY = this._mc.startY + this._mc.maxY; y < lenY; y++)
     {
-        this._column = this.layer.data[y];
+        this._column = null;
 
-        for (var x = this._mc.startX, lenX = this._mc.startX + this._mc.maxX; x < lenX; x++)
+        if (y < 0 && this.wrap)
         {
-            var tile = this._column[x];
+            this._column = this.layer.data[y + this.map.height];
+        }
+        else if (y >= this.map.height && this.wrap)
+        {
+            this._column = this.layer.data[y - this.map.height];
+        }
+        else if (this.layer.data[y])
+        {
+            this._column = this.layer.data[y];
+        }
 
-            if (tile && (tile.faceTop || tile.faceBottom || tile.faceLeft || tile.faceRight))
+        if (this._column)
+        {
+            for (var x = this._mc.startX, lenX = this._mc.startX + this._mc.maxX; x < lenX; x++)
             {
-                this._mc.tx = Math.floor(this._mc.tx);
+                var tile = null;
 
-                if (this.debugFill)
+                if (x < 0 && this.wrap)
                 {
-                    this.context.fillRect(this._mc.tx, this._mc.ty, this._mc.cw, this._mc.ch);
+                    tile = this._column[x + this.map.width];
+                }
+                else if (x >= this.map.width && this.wrap)
+                {
+                    tile = this._column[x - this.map.width];
+                }
+                else if (this._column[x])
+                {
+                    tile = this._column[x];
                 }
 
-                this.context.beginPath();
-
-                if (tile.faceTop)
+                if (tile && (tile.faceTop || tile.faceBottom || tile.faceLeft || tile.faceRight))
                 {
-                    this.context.moveTo(this._mc.tx, this._mc.ty);
-                    this.context.lineTo(this._mc.tx + this._mc.cw, this._mc.ty);
+                    this._mc.tx = Math.floor(this._mc.tx);
+
+                    if (this.debugFill)
+                    {
+                        this.context.fillRect(this._mc.tx, this._mc.ty, this._mc.cw, this._mc.ch);
+                    }
+
+                    this.context.beginPath();
+
+                    if (tile.faceTop)
+                    {
+                        this.context.moveTo(this._mc.tx, this._mc.ty);
+                        this.context.lineTo(this._mc.tx + this._mc.cw, this._mc.ty);
+                    }
+
+                    if (tile.faceBottom)
+                    {
+                        this.context.moveTo(this._mc.tx, this._mc.ty + this._mc.ch);
+                        this.context.lineTo(this._mc.tx + this._mc.cw, this._mc.ty + this._mc.ch);
+                    }
+
+                    if (tile.faceLeft)
+                    {
+                        this.context.moveTo(this._mc.tx, this._mc.ty);
+                        this.context.lineTo(this._mc.tx, this._mc.ty + this._mc.ch);
+                    }
+
+                    if (tile.faceRight)
+                    {
+                        this.context.moveTo(this._mc.tx + this._mc.cw, this._mc.ty);
+                        this.context.lineTo(this._mc.tx + this._mc.cw, this._mc.ty + this._mc.ch);
+                    }
+
+                    this.context.stroke();
                 }
 
-                if (tile.faceBottom)
-                {
-                    this.context.moveTo(this._mc.tx, this._mc.ty + this._mc.ch);
-                    this.context.lineTo(this._mc.tx + this._mc.cw, this._mc.ty + this._mc.ch);
-                }
+                this._mc.tx += this.map.tileWidth;
 
-                if (tile.faceLeft)
-                {
-                    this.context.moveTo(this._mc.tx, this._mc.ty);
-                    this.context.lineTo(this._mc.tx, this._mc.ty + this._mc.ch);
-                }
-
-                if (tile.faceRight)
-                {
-                    this.context.moveTo(this._mc.tx + this._mc.cw, this._mc.ty);
-                    this.context.lineTo(this._mc.tx + this._mc.cw, this._mc.ty + this._mc.ch);
-                }
-
-                this.context.stroke();
             }
-
-            this._mc.tx += this.map.tileWidth;
-
         }
 
         this._mc.tx = this._mc.dx;
@@ -55601,27 +56001,10 @@ Object.defineProperty(Phaser.TilemapLayer.prototype, "scrollX", {
 
     set: function (value) {
 
-        if (value !== this._mc.x && value >= 0 && this.layer.widthInPixels > this.width)
+        if (value !== this._mc.x)
         {
             this._mc.x = value;
-
-            if (this._mc.x > (this.layer.widthInPixels - this.width))
-            {
-                this._mc.x = this.layer.widthInPixels - this.width;
-            }
-
             this._mc.startX = this.game.math.floor(this._mc.x / this.map.tileWidth);
-
-            if (this._mc.startX < 0)
-            {
-                this._mc.startX = 0;
-            }
-
-            if (this._mc.startX + this._mc.maxX > this.layer.width)
-            {
-                this._mc.startX = this.layer.width - this._mc.maxX;
-            }
-
             this.dirty = true;
         }
 
@@ -55641,27 +56024,10 @@ Object.defineProperty(Phaser.TilemapLayer.prototype, "scrollY", {
 
     set: function (value) {
 
-        if (value !== this._mc.y && value >= 0 && this.layer.heightInPixels > this.height)
+        if (value !== this._mc.y)
         {
             this._mc.y = value;
-
-            if (this._mc.y > (this.layer.heightInPixels - this.height))
-            {
-                this._mc.y = this.layer.heightInPixels - this.height;
-            }
-
             this._mc.startY = this.game.math.floor(this._mc.y / this.map.tileHeight);
-
-            if (this._mc.startY < 0)
-            {
-                this._mc.startY = 0;
-            }
-
-            if (this._mc.startY + this._mc.maxY > this.layer.height)
-            {
-                this._mc.startY = this.layer.height - this._mc.maxY;
-            }
-
             this.dirty = true;
         }
 

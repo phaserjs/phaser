@@ -525,7 +525,7 @@ Phaser.SinglePad.prototype = {
 
         for (var j = 0; j < this._axes.length; j++)
         {
-            // this._axes[j] = 0;
+            this._axes[j] = 0;
         }
 
     }
