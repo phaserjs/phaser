@@ -84,8 +84,6 @@ Phaser.TileSprite = function (game, x, y, width, height, key, frame) {
 
     PIXI.TilingSprite.call(this, PIXI.TextureCache['__default'], width, height);
 
-    this.loadTexture(key, frame);
-
     this.position.set(x, y);
 
     /**
@@ -150,6 +148,8 @@ Phaser.TileSprite = function (game, x, y, width, height, key, frame) {
     * @private
     */
     this._cache = [ 0, 0, 0, 0, 1, 0, 1, 0, 0 ];
+
+    this.loadTexture(key, frame);
 
 };
 
@@ -327,30 +327,27 @@ Phaser.TileSprite.prototype.stopScroll = function() {
 *
 * @method Phaser.TileSprite#loadTexture
 * @memberof Phaser.TileSprite
-* @param {string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture} key - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture, BitmapData or PIXI.Texture.
-* @param {string|number} frame - If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
+* @param {string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture} key - This is the image or texture used by the TileSprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture, BitmapData or PIXI.Texture.
+* @param {string|number} frame - If this TileSprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
 */
 Phaser.TileSprite.prototype.loadTexture = function (key, frame) {
 
     frame = frame || 0;
+    
+    this.key = key;
 
     if (key instanceof Phaser.RenderTexture)
     {
         this.key = key.key;
         this.setTexture(key);
-        return;
     }
     else if (key instanceof Phaser.BitmapData)
     {
-        this.key = key;
         this.setTexture(key.texture);
-        return;
     }
     else if (key instanceof PIXI.Texture)
     {
-        this.key = key;
         this.setTexture(key);
-        return;
     }
     else
     {
@@ -358,38 +355,57 @@ Phaser.TileSprite.prototype.loadTexture = function (key, frame) {
         {
             this.key = '__default';
             this.setTexture(PIXI.TextureCache[this.key]);
-            return;
         }
         else if (typeof key === 'string' && !this.game.cache.checkImageKey(key))
         {
             this.key = '__missing';
             this.setTexture(PIXI.TextureCache[this.key]);
-            return;
-        }
-
-        if (this.game.cache.isSpriteSheet(key))
-        {
-            this.key = key;
-
-            // var frameData = this.game.cache.getFrameData(key);
-            this.animations.loadFrameData(this.game.cache.getFrameData(key));
-
-            if (typeof frame === 'string')
-            {
-                this.frameName = frame;
-            }
-            else
-            {
-                this.frame = frame;
-            }
         }
         else
         {
-            this.key = key;
-            this.setTexture(PIXI.TextureCache[key]);
-            return;
+            this.setTexture(new PIXI.Texture(PIXI.BaseTextureCache[key]));
+            this.animations.loadFrameData(this.game.cache.getFrameData(key), frame);
         }
     }
+
+};
+
+/**
+* Sets the Texture frame the TileSprite uses for rendering.
+* This is primarily an internal method used by TileSprite.loadTexture, although you may call it directly.
+*
+* @method Phaser.TileSprite#setFrame
+* @memberof Phaser.TileSprite
+* @param {Phaser.Frame} frame - The Frame to be used by the TileSprite texture.
+*/
+Phaser.TileSprite.prototype.setFrame = function(frame) {
+
+    // this._cache[9] = frame.x;
+    // this._cache[10] = frame.y;
+    // this._cache[11] = frame.width;
+    // this._cache[12] = frame.height;
+    // this._cache[13] = frame.spriteSourceSizeX;
+    // this._cache[14] = frame.spriteSourceSizeY;
+
+    this.texture.frame.x = frame.x;
+    this.texture.frame.y = frame.y;
+    this.texture.frame.width = frame.width;
+    this.texture.frame.height = frame.height;
+
+    if (frame.trimmed)
+    {
+        this.texture.trim = { x: frame.spriteSourceSizeX, y: frame.spriteSourceSizeY, width: frame.width, height: frame.height };
+    }
+
+    if (this.game.renderType === Phaser.WEBGL)
+    {
+        PIXI.WebGLRenderer.updateTextureFrame(this.texture);
+    }
+
+    // if (this.cropRect)
+    // {
+    //     this.updateCrop();
+    // }
 
 };
 
