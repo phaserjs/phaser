@@ -2059,16 +2059,35 @@ declare module Phaser {
         static XBOX360_START: number;
         static XBOX360_STICK_LEFT_BUTTON: number;
         static XBOX360_STICK_RIGHT_BUTTON: number;
-
         static XBOX360_DPAD_LEFT: number;
         static XBOX360_DPAD_RIGHT: number;
         static XBOX360_DPAD_UP: number;
         static XBOX360_DPAD_DOWN: number;
-
         static XBOX360_STICK_LEFT_X: number;
         static XBOX360_STICK_LEFT_Y: number;
         static XBOX360_STICK_RIGHT_X: number;
         static XBOX360_STICK_RIGHT_Y: number;
+
+        static PS3XC_X: number;
+        static PS3XC_CIRCLE: number;
+        static PS3XC_SQUARE: number;
+        static PS3XC_TRIANGLE: number;
+        static PS3XC_L1: number;
+        static PS3XC_R1: number;
+        static PS3XC_L2: number;
+        static PS3XC_R2: number;
+        static PS3XC_SELECT: number;
+        static PS3XC_START: number;
+        static PS3XC_STICK_LEFT_BUTTON: number;
+        static PS3XC_STICK_RIGHT_BUTTON: number;
+        static PS3XC_DPAD_UP: number;
+        static PS3XC_DPAD_DOWN: number;
+        static PS3XC_DPAD_LEFT: number;
+        static PS3XC_DPAD_RIGHT: number;
+        static PS3XC_STICK_LEFT_X: number;
+        static PS3XC_STICK_LEFT_Y: number;
+        static PS3XC_STICK_RIGHT_X: number;
+        static PS3XC_STICK_RIGHT_Y: number;
 
         active: boolean;
         callbackContext: Object;
@@ -2095,12 +2114,13 @@ declare module Phaser {
         setDeadZones(value: any): void;
         start(): void;
         stop(): void;
+        update(): void;
 
     }
 
     class GamepadButton {
 
-        constructor(game: Phaser.Game, buttonCode: number);
+        constructor(pad: Phaser.SinglePad, buttonCode: number);
 
         buttonCode: number;
         duration: number;
@@ -2110,17 +2130,19 @@ declare module Phaser {
         onDown: Phaser.Signal;
         onFloat: Phaser.Signal;
         onUp: Phaser.Signal;
+        pad: Phaser.GamePad;
         repeats: number;
         timeDown: number;
         timeUp: number;
         value: number;
 
+        destroy(): void;
         justPressed(duration?: number): boolean;
         justReleased(duration?: number): boolean;
-        processButtonDown(value: Object): void;
-        processButtonFloat(value: Object): void;
-        processButtonUp(value: Object): void;
-
+        processButtonDown(value: number): void;
+        processButtonFloat(value: number): void;
+        processButtonUp(value: number): void;
+        reset();
     }
 
     class Graphics extends PIXI.Graphics {
@@ -3982,6 +4004,7 @@ declare module Phaser {
         constructor(seeds: number[]);
 
         angle(): number;
+        between(min: number, max: number): number;
         frac(): number;
         integer(): number;
         integerInRange(min: number, max: number): number;
@@ -4185,10 +4208,12 @@ declare module Phaser {
         axis(axisCode: number): number;
         addButton(buttonCode: number): Phaser.GamepadButton;
         addCallbacks(context: Object, callbacks: Object): void;
-        buttonValue(buttonCode: number): boolean;
+        buttonValue(buttonCode: number): number;
         connect(rawPad: Object): void;
         disconnect(): void;
+        getButton(buttonCode: number): Phaser.GamepadButton;
         isDown(buttonCode: number): boolean;
+        isUp(buttonCode: number): boolean;
         justPressed(buttonCode: number, duration?: number): boolean;
         justReleased(buttonCode: number, duration?: number): boolean;
         pollStatus(): void;
@@ -4806,6 +4831,7 @@ declare module Phaser {
         postUpdate(): void;
         preUpdate(): void;
         reset(x: number, y: number): Phaser.TileSprite;
+        setFrame(frame: Phaser.Frame): void;
         stopScroll(): void;
         update(): void;
 
