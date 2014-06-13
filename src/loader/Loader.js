@@ -137,6 +137,14 @@ Phaser.Loader = function (game) {
     */
     this._ajax = null;
 
+    /**
+     * If you supplied, you can provide a mapping between original URLs and their new location. This is useful when a game's assets are revved by a hash of their contents, to allow for browsers to cache non-changing assets between versions. The mapping should be from the original url to the new url i.e.
+     * revvingMapping['audio/music/default.mp3'] = 'revved/audio/music/default.abc123ef.mp3';
+     * When hosting games on third party distributor sites, they may request that your game supports revved assets, and provide you with a mapping of original files to their revved locations, and these can be set here.
+     * @property {object} revvingMapping - If defined, this mapping is used to convert any urls requested to a revved alternative. {@link http://stackoverflow.com/questions/15891855/what-are-the-advantages-of-revving-files-with-a-hash-over-a-version-or-date|Stack Overflow on revving by file hashes}
+     */
+    this.revvingMapping = {};
+
 };
 
 /**
@@ -1142,6 +1150,11 @@ Phaser.Loader.prototype = {
         }
         
         var file = this._fileList[this._fileIndex];
+        if (this.revvingMapping && this.revvingMapping[file.url]) {
+            file.mappedURL = this.revvingMapping[file.url];
+        } else {
+            file.mappedURL = file.url;
+        }
         var _this = this;
 
         this.onFileStart.dispatch(this.progress, file.key);
@@ -1165,18 +1178,18 @@ Phaser.Loader.prototype = {
                 {
                     file.data.crossOrigin = this.crossOrigin;
                 }
-                file.data.src = this.baseURL + file.url;
+                file.data.src = this.baseURL + file.mappedURL;
                 break;
 
             case 'audio':
-                file.url = this.getAudioURL(file.url);
+                file.mappedURL = this.getAudioURL(file.mappedURL);
 
-                if (file.url !== null)
+                if (file.mappedURL !== null)
                 {
                     //  WebAudio or Audio Tag?
                     if (this.game.sound.usingWebAudio)
                     {
-                        this.xhrLoad(this._fileIndex, this.baseURL + file.url, 'arraybuffer', 'fileComplete', 'fileError');
+                        this.xhrLoad(this._fileIndex, this.baseURL + file.mappedURL, 'arraybuffer', 'fileComplete', 'fileError');
                     }
                     else if (this.game.sound.usingAudioTag)
                     {
@@ -1186,7 +1199,7 @@ Phaser.Loader.prototype = {
                             file.data = new Audio();
                             file.data.name = file.key;
                             file.data.preload = 'auto';
-                            file.data.src = this.baseURL + file.url;
+                            file.data.src = this.baseURL + file.mappedURL;
                             this.fileComplete(this._fileIndex);
                         }
                         else
@@ -1197,7 +1210,7 @@ Phaser.Loader.prototype = {
                                 return _this.fileError(_this._fileIndex);
                             };
                             file.data.preload = 'auto';
-                            file.data.src = this.baseURL + file.url;
+                            file.data.src = this.baseURL + file.mappedURL;
                             file.data.addEventListener('canplaythrough', Phaser.GAMES[this.game.id].load.fileComplete(this._fileIndex), false);
                             file.data.load();
                         }
@@ -1235,13 +1248,13 @@ Phaser.Loader.prototype = {
                         return _this.jsonLoadComplete(_this._fileIndex);
                     };
 
-                    this._ajax.open('GET', this.baseURL + file.url, true);
+                    this._ajax.open('GET', this.baseURL + file.mappedURL, true);
 
                     this._ajax.send();
                 }
                 else
                 {
-                    this.xhrLoad(this._fileIndex, this.baseURL + file.url, 'text', 'jsonLoadComplete', 'dataLoadError');
+                    this.xhrLoad(this._fileIndex, this.baseURL + file.mappedURL, 'text', 'jsonLoadComplete', 'dataLoadError');
                 }
 
                 break;
@@ -1250,11 +1263,11 @@ Phaser.Loader.prototype = {
 
                 if (file.format === Phaser.Tilemap.TILED_JSON)
                 {
-                    this.xhrLoad(this._fileIndex, this.baseURL + file.url, 'text', 'jsonLoadComplete', 'dataLoadError');
+                    this.xhrLoad(this._fileIndex, this.baseURL + file.mappedURL, 'text', 'jsonLoadComplete', 'dataLoadError');
                 }
                 else if (file.format === Phaser.Tilemap.CSV)
                 {
-                    this.xhrLoad(this._fileIndex, this.baseURL + file.url, 'text', 'csvLoadComplete', 'dataLoadError');
+                    this.xhrLoad(this._fileIndex, this.baseURL + file.mappedURL, 'text', 'csvLoadComplete', 'dataLoadError');
                 }
                 else
                 {
@@ -1265,11 +1278,11 @@ Phaser.Loader.prototype = {
             case 'text':
             case 'script':
             case 'physics':
-                this.xhrLoad(this._fileIndex, this.baseURL + file.url, 'text', 'fileComplete', 'fileError');
+                this.xhrLoad(this._fileIndex, this.baseURL + file.mappedURL, 'text', 'fileComplete', 'fileError');
                 break;
 
             case 'binary':
-                this.xhrLoad(this._fileIndex, this.baseURL + file.url, 'arraybuffer', 'fileComplete', 'fileError');
+                this.xhrLoad(this._fileIndex, this.baseURL + file.mappedURL, 'arraybuffer', 'fileComplete', 'fileError');
                 break;
         }
 
