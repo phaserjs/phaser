@@ -161,9 +161,13 @@ Phaser.Touch.prototype = {
             this.game.canvas.addEventListener('touchstart', this._onTouchStart, false);
             this.game.canvas.addEventListener('touchmove', this._onTouchMove, false);
             this.game.canvas.addEventListener('touchend', this._onTouchEnd, false);
-            this.game.canvas.addEventListener('touchenter', this._onTouchEnter, false);
-            this.game.canvas.addEventListener('touchleave', this._onTouchLeave, false);
             this.game.canvas.addEventListener('touchcancel', this._onTouchCancel, false);
+
+            if (!this.game.device.cocoonJS)
+            {
+                this.game.canvas.addEventListener('touchenter', this._onTouchEnter, false);
+                this.game.canvas.addEventListener('touchleave', this._onTouchLeave, false);
+            }
         }
 
     },

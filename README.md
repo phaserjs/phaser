@@ -1,10 +1,10 @@
 ![Phaser 2.0](http://www.phaser.io/images/phaser2-github.png)
 
-# Phaser 2.0.5
+# Phaser 2.0.6-dev
 
 Phaser is a fast, free and fun open source game framework for making desktop and mobile browser HTML5 games. It uses [Pixi.js](https://github.com/GoodBoyDigital/pixi.js/) internally for fast 2D Canvas and WebGL rendering.
 
-Version: 2.0.5 "Tanchico" - Released: 20th May 2014
+Version: 2.0.6 "Jornhill" - Released: -in development-
 
 By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 
@@ -16,18 +16,12 @@ By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 * Read the [documentation online](http://docs.phaser.io)
 * Join our [#phaserio IRC channel](http://www.html5gamedevs.com/topic/4470-official-phaserio-irc-channel-phaserio-on-freenode/) on freenode
 * Subscribe to the [Phaser Newsletter](https://confirmsubscription.com/h/r/369DE48E3E86AF1E) and we'll email you when new versions are released.
+* Please help support our work via [Gittip](https://www.gittip.com/photonstorm/)
 
 ![div](http://phaser.io/images/div4.png)
 
-## Welcome to Phaser and What's new in 2.0.5?
+## Welcome to Phaser and What's new in 2.0.6?
 
-2.0.5 is our latest point release in our on-going series of updates to the core Phaser framework. As usual the full change log can be found below and you'll notice a raft of updates, new features and bug fixes. Most of the updates are to do with enhancing already existing features to make them more powerful, for example being able to pass a Rectangle object to the QuadTree class now. Or allowing you to control when a tilemap collision recalculation happens. It's small tweaks like this, the vast majority of which are based on community feedback, that help us go from strength to strength.
-
-Another important change is that we've removed all of the Phaser Plugins from this repository. They now live in [their own repository](https://github.com/photonstorm/phaser-plugins) which makes it much easier for us and contributors to manage. You'll find some awesome new plugins in there too, so take a look :)
-
-The number of issues being reported is starting to drop as we squash more and more bugs. To that end we're going to do one last minor point release: 2.0.6 in approximately 2 weeks time. After this we'll wrap-up our current bi-weekly sprint schedule and focus on 2.1. We are aware there are some significant updates incoming on both the Pixi.js and p2.js fronts. GoodBoy Digital have been hard at work putting some incredible new features in Pixi (and restoring some long-lost ones such as Rope and Strip), so as soon as they leave dev we'll merge with Phaser.
-
-We're also very close to releasing the brand new Phaser web site. The current single-page site has done us well for now, but it was only ever meant to be temporary while the full site was built. This is nearly done and we've got some exciting content to share and plenty of room for growth! Be sure to [subscribe to our monthly newsletter](https://confirmsubscription.com/h/r/369DE48E3E86AF1E) to be notified as soon as it's out.
 
 Until then happy coding everyone! And we hope to see you on the forums.
 
@@ -51,94 +45,84 @@ Finally the list of [community authored Phaser Tutorials](http://www.lessmilk.co
 
 ## Change Log
 
-Version 2.0.5 - "Tanchico" - 20th May 2014
+Version 2.0.6 - "Jornhill" - -in development-
 
 ### Updates
 
-* TypeScript definitions fixes and updates (thanks @luispedrofonseca @clark-stevenson @Anahkiasen @adamholdenyall @luispedrofonseca @WillHuxtable)
-* Input.getPointerFromIdentifier docs update to reflect where the identifier comes from. Pointer properties now set to give it fixed defaults (thanks @JirkaDellOro, #793)
-* Pointer.pointerId added which is set by the DOM event (if present in the browser). Note that browsers can and do recycle pointer IDs.
-* Pointer.type and Pointer.exists properties added.
-* QuadTree.retrieve can now accept either a Sprite with a physics body or a Phaser.Rectangle as its parameter.
-* PluginManager.add now accepts additional parameters and if given a function it will pass them all to the Plugin constructor.
-* Tilemap.getTile has a new nonNull parameter. If true it won't return `null` for empty tiles, but will return the actual Tile in that location.
-* Math.interpolateAngles and Math.nearestAngleBetween have been removed for the time being. They threw run-time errors previously.
-* PIXI.InteractionManager is no longer over-written if the object already exists (thanks @georgiee, #818)
-* Key.justPressed and justReleased incorrectly set the delay value to 2500ms. Now defaults to 50ms (thanks @draklaw, fix #797)
-* Stage.backgroundColor can now accept short-code hex values: `#222`, `#334`, etc.
-* Pointer.withinGame is now accurate based on game scale and updated as the Pointer moves.
-* Stage.bounds is now updated if the game canvas offset changes position. Note that it contains the un-scaled game dimensions.
+* TypeScript definitions fixes and updates (thanks @clark-stevenson)
+* BitmapData.draw can now also take a Phaser.Sprite, Phaser.Image or BitmapData object as a source type. As a result BitmapData.drawSprite is now depcreated.
+* BitmapData.alphaMask can now also take a Phaser.Sprite, Phaser.Image or BitmapData object as a source type.
+* BitmapData.alphaMask has 2 new optional parameters: sourceRect and maskRect to give more fine-grained control over where the source and mask are drawn and their size
+* BitmapData.alphaMask 'mask' parameter is now optional, if not given it will use itself as the mask.
+* BitmapData.alphaMask now calls BitmapData.update after running.
+* BitmapData.draw now has two optional parameters: width and height, to let you stretch the image being drawn if needed.
+* Group.destroy now removes any set filters (thanks @Jmaharman fix #844)
+* RetroFont charsPerRow paramters is now optional. If not given it will take the image width and divide it by the characterWidth value.
+* RetroFont now uses Phaser.scaleModes.NEAREST by default for its RenderTexture to preserve scaling.
+* Loader.tilemap has renamed the `mapURL` parameter to `url` and `mapData` to `data` to keep it consistent with the other Loader methods.
+* Loader.physics has renamed the `dataURL` parameter to `url` and `jsonData` to `data` to keep it consistent with the other Loader methods.
+* Stage no longer creates the Phaser.Canvas object, but Game itself does in the setupRenderer method.
+* Canvas.create has deprecated the noCocoon parameter as it's no longer required. The parameter is still in the signature, but no longer used in the method.
+* Time.add allows you to add an existing Phaser.Timer to the timer pool (request #864)
+* Emitter.start has a new parameter: forceQuantity which will force the quantity of a flow of particles to be the given value (request #853)
+* Sound.pause will no longer fire a Sound.onStop signal, and the pause values are set before the onPause signal is dispatched (thanks @AnderbergE, fix #868)
+* Swapped to using escaped Unicode characters for the console output.
+* Frame.setTrim no longer modifies the Frame width and height values.
+* AnimationParser doesn't populate the Pixi.TextureCache for every frame any longer. Each display object has its own texture property instead.
+* Removed the cacheKey parameters from the AnimationParser methods as they're no longer used.
+
+### CocoonJS Specific Updates
+
+* Wrapped all touch, keyboard, mouse and fullscreen events that CocoonJS doesn't support in conditional checks to avoid Warnings.
+* The SoundManager no longer requires a touch to unlock it, defaults to unlocked.
+* Resolved issue where Cocoon won't render a scene in Canvas mode if there is only one Sprite/Image on it.
 
 ### New Features
 
-* New `force` parameter added to Group.set, setAll, setAllChildren, setProperty which controls if a property is created even if it doesn't exist.
-* Group.hasProperty will check a child for the given property and return true if it exists, otherwise false.
-* Phaser.Tween.from allows you to set tween properties that will end up where the current object is (thanks @codevinsky, #792)
-* Input.getPointerFromId will return a pointer with a matching pointerId value, if any. pointerId is a value set by the browser in the DOM event.
-* ArcadePhysics.getObjectsUnderPointer will return all children from a Group that overlap with the given Pointer.
-* InputManager.minPriorityID lets you set the minimum priority level an object needs to be to be checked by a Pointer. Useful for UI layer stacking.
-* New consts: Phaser.Tilemap.NORTH, SOUTH, EAST and WEST to use with plugins and generally just handy to have.
-* BitmapData.processPixelRGB added undefined check (thanks @muclemente, fix #808)
-* Phaser.Utils.transposeArray will transpose the given array and return it.
-* Phaser.Utils.rotateArray will rotate the given array by 90 or 180 degrees in either direction and return it.
-* BitmapData.rect provides a quick way to draw a Rectangle to a BitmapData.
-* Button.onOverMouseOnly is a boolean that causes onOver events to fire only if the pointer was a mouse (i.e. stops onOver sounds triggering on touch)
-* Tilemap.setCollision has a new boolean parameter 'recalculate' which lets you control recalculation of collision faces (thanks @max-m, #819)
-* Tilemap.setCollisionBetween has a new boolean parameter 'recalculate' which lets you control recalculation of collision faces (thanks @max-m, #819)
-* Tilemap.setCollisionByExclusion has a new boolean parameter 'recalculate' which lets you control recalculation of collision faces (thanks @max-m, #819)
-* Tilemap.setCollisionByIndex has a new boolean parameter 'recalculate' which lets you control recalculation of collision faces (thanks @max-m, #819)
-* Graphics.drawTriangles will draw an array of vertices to the Graphics object (thanks @codevinsky, #795)
-* Polygon.area will calculate the area of the Polygon (thanks @codevinsky, #795)
-* The Tiled JSON parser will now include Tiled polygons, ellipse and rectangle geometry objects in the resulting map data (thanks @tigermonkey, #791)
-* Input.addMoveCallback allows you to bind as many callbacks as you like to the DOM move events (Input.setMoveCallback is now flagged as deprecated)
-* Input.deleteMoveCallback will remove a previously set movement event callback.
-* Mouse will now check if it's over the game canvas or not and set Pointer.withinGame accordingly.
-* Mouse.mouseOutCallback callback added for when the mouse is no longer over the game canvas.
-* Mouse.stopOnGameOut boolean controls if Pointer.stop will be called if the mouse leaves the game canvas (defaults to false)
-* Tilemap.searchTileIndex allows you to search for the first tile matching the given index, with optional skip and reverse parameters.
-* Tilemap.layer is a getter/setter to the current layer object (which can be changed with Tilemap.setLayer)
-* Cache.checkKey added - allows you to pass in a Cache type and a key and return a boolean.
-* Cache.checkCanvasKey(key) - Check if a Canvas key exists in the cache (thanks to @delta11 for the proposal)
-* Cache.checkTextureKey(key) - Check if a Texture key exists in the cache (thanks to @delta11 for the proposal)
-* Cache.checkSoundKey(key) - Check if a Sound key exists in the cache (thanks to @delta11 for the proposal)
-* Cache.checkTextKey(key) - Check if a Text key exists in the cache (thanks to @delta11 for the proposal)
-* Cache.checkPhysicsKey(key) - Check if a Physics key exists in the cache (thanks to @delta11 for the proposal)
-* Cache.checkTilemapKey(key) - Check if a Tilemap key exists in the cache (thanks to @delta11 for the proposal)
-* Cache.checkBinaryKey(key) - Check if a Binary key exists in the cache (thanks to @delta11 for the proposal)
-* Cache.checkBitmapDataKey(key) - Check if a BitmapData key exists in the cache (thanks to @delta11 for the proposal)
-* Cache.checkBitmapFontKey(key) - Check if a BitmapFont key exists in the cache (thanks to @delta11 for the proposal)
-* Cache.checkJSONKey(key) - Check if a JSON key exists in the cache (thanks to @delta11 for the proposal)
-* New movement data added for a Pointer Locked mouse (Pointer.movementX/Y) (thanks @woutercommandeur, #831)
-* ScaleManager.bounds is a Rectangle object that holds the exact size of the game canvas, taking DOM offset and game scale into account.
+* BitmapData.extract has a new parameter that lets you control if the destination BitmapData is resized before the pixels are copied.
+* BitmapData.extract has 4 new parameters: r2, g2, b2, a2 which let you re-color the extract pixels as they are drawn to the new BitmapData.
+* BitmapData.load will take a game object or string and resize the BitmapData to match it and then draw the pixels in.
+* Keyboard.addCallbacks now has a new parameter for keypress event capture.
+* Keyboard.pressEvent stores the most recent DOM keypress event.
+* Keyboard.processKeyDown now runs the callback after all the objects have been created and/or updated.
+* Keyboard.processKeyUp now runs the callback after all the objects have been created and/or updated.
+* Phaser.Keyboard.lastChar will return the string value of the last key pressed.
+* Phaser.Keyboard.lastKey will return the most recently pressed Key object.
+* RetroFont.updateOffset allows you to modify the offsetX/Y values used by the font during rendering.
+* ArcadePhysics.Body has a new boolean property `enable`. If `false` the body won't be checked for any collision or overlaps, or have its pre or post update methods called. Use this for easy toggling of physics bodies without having to destroy or re-create the Body object itself.
+* BitmapData.addToWorld will create a new Phaser.Image object, assign the BitmapData to be its texture, add it to the world then return it.
+* BitmapData.copyPixels now accepts a Sprite, Image, BitmapData, HTMLImage or string as its source.
+* Loader.pack will allow you to load in a new Phaser Asset Pack JSON file. An Asset Pack is a specially structured file that allows you to define all assets for your game in an external file. The file can be split into sections, allowing you to control loading a specific set of files from it. An example JSON file can be found in the `resources\Asset Pack JSON Format` folder and examples of use in the Phaser Examples repository.
+* Loader.totalQueuedPacks returns the number of Asset Packs in the queue.
+* Loader.totalLoadedPacks returns the number of Asset Packs already loaded.
+* Emitter.explode is a new short-cut for exploding a fixed quantity of particles at once.
+* Emitter.flow is a new short-cut for creating a flow of particles based on the given frequency.
+* Sprite.crop (and Image.crop) has been completely overhauled. You can now crop animated sprites (sprite sheet and texture atlas), you can define the x/y crop offset and the crop rectangle is exposed in the Sprite.cropRect property.
+* Sprite.updateCrop is available if you wish to update an externally referenced crop rectangle.
+* Sprites and Images now have their own textures objects, they are no longer references to those stored in the global Pixi.TextureCache. This allows you to redefine the texture frame dynamically without messing up any other Sprites in your game, such as via cropping. They still share global Base Textures, so image references are kept to a minimum.
+* Sprite.resetFrame will revert the Sprites texture frame back to its defaults dimensions. This is called when you call Sprite.crop with no rectangle, to reset the crop effect, but can be userful in other situations so we've left it as a public method.
+* TilemapLayers can now be used with an unbounded camera (a camera that can move beyond the world boundaries). Currently, when an unbounded camera moves outside of the world, tilemaps start acting weird because they only render themselves strictly within the world limits. With this change, the tilemap will continue scrolling and show empty space beyond its edge (thanks @jotson #851)
+* TilemapLayer.wrap property - if true the map is rendered as if it is on the surface of a toroid (donut) instead of a plane. This allows for games that seamlessly scroll from one edge to the opposite edge of the world without noticing the transition. Note that the World size must match the Map size (thanks @jotson #851)
+* Added PlayStation 3 controller button mappings to Phaser.Gamepad (thanks @wayfu)
+* GamepadButton.destroy method added. Called automatically by SinglePad when a controller is disconnected.
 
-### Plugins
-
-The Plugins have now all moved to [their own repository](https://github.com/photonstorm/phaser-plugins)
 
 ### Bug Fixes
 
-* Line.pointOnLine corrected algorithm (thanks @woutercommandeur, fix #784)
-* Line segment collision fails under certain cicumstances (thanks @woutercommandeur, fix #760)
-* The P2 DistanceConstraint method signature has changed. Updated Phaser so maxForce is now passed as object (fix #788)
-* Moved the this._reversed flag outside of the property loop in Tween (as per tween.js issue 115)
-* Emitter.makeParticles updated to use Array.isArray() check on the key/frame values, so non-string objects can be passed in (thanks @AnderbergE, fix #786)
-* Tilemap.createFromObjects will now force the creation of the property again even if it doesn't exist (regression fix from 2.0.4)
-* Phaser.Line.intersectsPoints fixed by properly checking the boundaries (thanks @woutercommandeur, fix #790)
-* Group.set and setAll were changed in 2.0.4 to not create the property unless it existed. This broke backwards compatibility, so has been fixed.
-* Sound.play now returns the Sound object (thanks @AnderbergE, fix #802)
-* Device Silk UA test updated to avoid Safari conflict (thanks @jflowers45, fix #810)
-* Sound.stop on Samsung S4 would randomly throw a DOM error. Wrapped the audio stop in a try/catch (thanks FSDaniel)
-* RandomDataGenerator.integerInRange would return a non-integer value if you passed in a float.
-* Timer class updated so that code-resumed pauses don't mess up the internal _pausedTotal value (thanks @joelrobichaud, fix #814)
-* Timer class when paused by code after a game-level pause wouldn't set the codepaused flag (thanks @joelrobichaud, fix #814)
-* Stage.backgroundColor now properly accepts hex #RRGGBB and color values 0xRRGGBB again (fix #785)
-* Color.getRGB would return incorrect color components if a color value without alpha was given, now works with both 0xRRGGBB and 0xAARRGGBB.
-* Color.getWebRGB now works regardless if you give an 0xRRGGBB or 0xAARRGGBB color value.
-* If an object was drag enabled with bringToTop, the onDragStop event wouldn't fire until the mouse was next moved (thanks @alpera, fix #813)
-* RetroFont.text would throw WebGL errors due to an issue with Pixi.RenderTexture. Fixed in Phaser and submitted code to Pixi.
-* RenderTexture.resize would throw WebGL errors due to an issue with Pixi.RenderTexture. Fixed in Phaser and submitted code to Pixi.
-* Group.hasProperty fixed to not use hasOwnProperty, but a series of `in` checks (thanks @mgiuffrida for the idea, #829)
-* Tilemap.removeTile sets tiles to null but should set to index of -1 (thanks @draklaw, fix #835)
+* Sprite.alive property now explicitly defined on the Sprite prototype (thanks @lewster32, #841)
+* BitmapData.resize now properly updates the baseTexture and texture dimensions.
+* Fixed Gamepad issue that incorrectly checked non-webkit prefix gamepads.
+* Phaser.RenderTexture incorrectly passed the scaleMode to Pixi.RenderTexture, causing the renderer to error.
+* Sprite animation data wasn't reset when going from a sprite sheet to a single frame in Sprite.loadTexture (thanks @lucbloom, fix #850)
+* Timer.ms would report the game time ms value if the Timer hadn't yet been started, instead of 0.
+* Timer.seconds would report the game time value if the Timer hadn't yet been started, instead of 0.
+* A Canvas style set from a game config object used an incorrect property (thanks @TatumCreative, fix #861)
+* Phaser.Line.intersectsPoints fixed for floating point inaccuracy (thanks @woutercommandeur, fix #865)
+* Sound.destroy(true) would call remove on the SoundManager, which in turn would throw a TypeError as it tried to remove the sound events twice (thanks @AnderbergE, fix #874)
+* When creating a Sprite or Image using a texture atlas it would set the frame twice, once in loadTexture and once when the initial frame is set. This has been reduced down to just a single setting now.
+* BitmapData.getPixel fix for pixels with zero red value (thanks @lstor fix #894)
+* If you call ArcadePhysics.collide on a Sprite vs. a Tilemap and provide a custom processCallback, the result was being ignored and the sprite was being separated regardless (thanks @aivins fix #891 #890)
+* ArcadePhysics.Body.setSize if you set offset x/y values previously and then passed zero values they would be ignored (thanks @casensiom fix #889)
 
 ### Migration Guide
 
@@ -186,11 +170,11 @@ Nice and easy :)
 
 Phaser is now available on [CDNJS](http://cdnjs.com). You can include the following in your html:
 
-`http://cdnjs.cloudflare.com/ajax/libs/phaser/2.0.5/phaser.min.js`
+`http://cdnjs.cloudflare.com/ajax/libs/phaser/2.0.6/phaser.min.js`
 
 Or if you prefer you can leave the protocol off, so it works via http and https:
 
-`//cdnjs.cloudflare.com/ajax/libs/phaser/2.0.5/phaser.min.js`
+`//cdnjs.cloudflare.com/ajax/libs/phaser/2.0.6/phaser.min.js`
 
 ![div](http://phaser.io/images/div1.png)
 
@@ -315,14 +299,19 @@ Here are some of the features planned for future releases:
 
 ### Version 2.1 ("Shienar")
 
+* Scene Manager - json scene parser.
 * Comprehensive testing across Firefox OS devices, CocoonJS and Ejecta.
 * Ability to control DOM elements from the core game and layer them into the game.
 * Touch Gestures.
+* Optimised global Animation manager to cut down on object creation.
+* Swapping to using a RenderTexture for the Tilemaps and implementing Tilemap slicing.
+* Enhance the State Management, so you can perform non-destructive State swaps and persistence.
+* Support for parallel asset loading.
+* Optimise the Gamepad._pollGamepads method significantly.
 
 ### Version 2.2 ("Tarabon")
 
-* Enhance the State Management, so you can perform non-destructive State swaps and persistence.
-* Support for parallel asset loading.
+* Look carefully at the internal structure of Phaser to avoid method repetition (such as Sprite.crop and Image.crop), investigate using mixins to help reduce overall codebase size.
 * Flash CC HTML5 export integration.
 * Massively enhance the audio side of Phaser. Take more advantage of Web Audio: echo effects, positional sound, etc.
 

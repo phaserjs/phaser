@@ -19,7 +19,7 @@ Phaser.Canvas = {
     * @param {number} [width=256] - The width of the canvas element.
     * @param {number} [height=256] - The height of the canvas element..
     * @param {string} [id=''] - If given this will be set as the ID of the canvas element, otherwise no ID will be set.
-    * @param {boolean} [noCocoon=false] - CocoonJS only allows 1 screencanvas object, which should be your game. If you need to create another canvas (i.e. for a texture) set this to 'true'.
+    * @param {boolean} [noCocoon=false] - DEPRECATED: This parameter is no longer used.
     * @return {HTMLCanvasElement} The newly created canvas element.
     */
     create: function (width, height, id, noCocoon) {
@@ -29,14 +29,7 @@ Phaser.Canvas = {
         width = width || 256;
         height = height || 256;
 
-        if (noCocoon)
-        {
-            var canvas = document.createElement('canvas');
-        }
-        else
-        {
-            var canvas = document.createElement(navigator.isCocoonJS ? 'screencanvas' : 'canvas');
-        }
+        var canvas = document.createElement('canvas');
 
         if (typeof id === 'string' && id !== '')
         {

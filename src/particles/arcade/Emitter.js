@@ -5,24 +5,24 @@
 */
 
 /**
-* Phaser - ArcadeEmitter
-*
 * @class Phaser.Particles.Arcade.Emitter
-* @classdesc Emitter is a lightweight particle emitter. It can be used for one-time explosions or for
-* continuous effects like rain and fire. All it really does is launch Particle objects out
-* at set intervals, and fixes their positions and velocities accorindgly.
+* 
+* @classdesc Emitter is a lightweight particle emitter that uses Arcade Physics.
+* It can be used for one-time explosions or for continuous effects like rain and fire.
+* All it really does is launch Particle objects out at set intervals, and fixes their positions and velocities accorindgly.
+* 
 * @constructor
 * @extends Phaser.Group
 * @param {Phaser.Game} game - Current game instance.
 * @param {number} [x=0] - The x coordinate within the Emitter that the particles are emitted from.
 * @param {number} [y=0] - The y coordinate within the Emitter that the particles are emitted from.
-* @param {number} [maxParticles=50] - The total number of particles in this emitter..
+* @param {number} [maxParticles=50] - The total number of particles in this emitter.
 */
 
 Phaser.Particles.Arcade.Emitter = function (game, x, y, maxParticles) {
 
     /**
-    * @property {number} maxParticles - The total number of particles in this emitter..
+    * @property {number} maxParticles - The total number of particles in this emitter.
     * @default
     */
     this.maxParticles = maxParticles || 50;
@@ -399,19 +399,49 @@ Phaser.Particles.Arcade.Emitter.prototype.revive = function () {
 };
 
 /**
+* Call this function to emit the given quantity of particles at all once (an explosion)
+* 
+* @method Phaser.Particles.Arcade.Emitter#explode
+* @param {number} [lifespan=0] - How long each particle lives once emitted in ms. 0 = forever.
+* @param {number} [quantity=0] - How many particles to launch.
+*/
+Phaser.Particles.Arcade.Emitter.prototype.explode = function (lifespan, quantity) {
+
+    this.start(true, lifespan, 0, quantity, false);
+
+};
+
+/**
+* Call this function to start emitting a flow of particles at the given frequency.
+* 
+* @method Phaser.Particles.Arcade.Emitter#flow
+* @param {number} [lifespan=0] - How long each particle lives once emitted in ms. 0 = forever.
+* @param {number} [frequency=250] - Frequency is how often to emit a particle, given in ms.
+* @param {number} [quantity=0] - How many particles to launch.
+*/
+Phaser.Particles.Arcade.Emitter.prototype.flow = function (lifespan, frequency, quantity) {
+
+    this.start(false, lifespan, frequency, quantity, true);
+
+};
+
+/**
 * Call this function to start emitting particles.
+* 
 * @method Phaser.Particles.Arcade.Emitter#start
 * @param {boolean} [explode=true] - Whether the particles should all burst out at once (true) or at the frequency given (false).
 * @param {number} [lifespan=0] - How long each particle lives once emitted in ms. 0 = forever.
 * @param {number} [frequency=250] - Ignored if Explode is set to true. Frequency is how often to emit 1 particle. Value given in ms.
 * @param {number} [quantity=0] - How many particles to launch. 0 = "all of the particles".
+* @param {number} [forceQuantity=false] - If true and creating a particle flow, the quantity emitted will be forced to the be quantity given in this call.
 */
-Phaser.Particles.Arcade.Emitter.prototype.start = function (explode, lifespan, frequency, quantity) {
+Phaser.Particles.Arcade.Emitter.prototype.start = function (explode, lifespan, frequency, quantity, forceQuantity) {
 
     if (typeof explode === 'undefined') { explode = true; }
     if (typeof lifespan === 'undefined') { lifespan = 0; }
     if (typeof frequency === 'undefined' || frequency === null) { frequency = 250; }
     if (typeof quantity === 'undefined') { quantity = 0; }
+    if (typeof forceQuantity === 'undefined') { forceQuantity = false; }
 
     this.revive();
 
@@ -422,7 +452,7 @@ Phaser.Particles.Arcade.Emitter.prototype.start = function (explode, lifespan, f
     this.lifespan = lifespan;
     this.frequency = frequency;
 
-    if (explode)
+    if (explode || forceQuantity)
     {
         this._quantity = quantity;
     }

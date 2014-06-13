@@ -31,6 +31,12 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.type = Phaser.Physics.ARCADE;
 
     /**
+    * @property {boolean} enable - A disabled body won't be checked for any form of collision or overlap or have its pre/post updates run.
+    * @default
+    */
+    this.enable = true;
+
+    /**
     * @property {Phaser.Point} offset - The offset of the Physics Body from the Sprite x/y position.
     */
     this.offset = new Phaser.Point();
@@ -560,13 +566,13 @@ Phaser.Physics.Arcade.Body.prototype = {
     * @method Phaser.Physics.Arcade.Body#setSize
     * @param {number} width - The width of the Body.
     * @param {number} height - The height of the Body.
-    * @param {number} offsetX - The X offset of the Body from the Sprite position.
-    * @param {number} offsetY - The Y offset of the Body from the Sprite position.
+    * @param {number} [offsetX] - The X offset of the Body from the Sprite position.
+    * @param {number} [offsetY] - The Y offset of the Body from the Sprite position.
     */
     setSize: function (width, height, offsetX, offsetY) {
 
-        offsetX = offsetX || this.offset.x;
-        offsetY = offsetY || this.offset.y;
+        if (typeof offsetX === 'undefined') { offsetX = this.offset.x; }
+        if (typeof offsetY === 'undefined') { offsetY = this.offset.y; }
 
         this.sourceWidth = width;
         this.sourceHeight = height;

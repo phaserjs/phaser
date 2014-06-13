@@ -657,12 +657,11 @@ Phaser.Sound.prototype = {
 
         if (this.isPlaying && this._sound)
         {
-            this.stop();
-            this.isPlaying = false;
             this.paused = true;
             this.pausedPosition = this.currentTime;
             this.pausedTime = this.game.time.now;
             this.onPause.dispatch(this);
+            this.stop();
         }
 
     },
@@ -762,7 +761,11 @@ Phaser.Sound.prototype = {
         }
 
         this.currentMarker = '';
-        this.onStop.dispatch(this, prevMarker);
+
+        if (!this.paused)
+        {
+            this.onStop.dispatch(this, prevMarker);
+        }
 
     },
 
@@ -782,19 +785,22 @@ Phaser.Sound.prototype = {
         {
             this.game.sound.remove(this);
         }
+        else
+        {
+            this.markers = {};
+            this.context = null;
+            this._buffer = null;
+            this.externalNode = null;
 
-        this.markers = {};
-        this.context = null;
-        this._buffer = null;
-        this.externalNode = null;
-        this.onDecoded.dispose();
-        this.onPlay.dispose();
-        this.onPause.dispose();
-        this.onResume.dispose();
-        this.onLoop.dispose();
-        this.onStop.dispose();
-        this.onMute.dispose();
-        this.onMarkerComplete.dispose();
+            this.onDecoded.dispose();
+            this.onPlay.dispose();
+            this.onPause.dispose();
+            this.onResume.dispose();
+            this.onLoop.dispose();
+            this.onStop.dispose();
+            this.onMute.dispose();
+            this.onMarkerComplete.dispose();
+        }
 
     }
 

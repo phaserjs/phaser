@@ -179,6 +179,21 @@ Phaser.RandomDataGenerator.prototype = {
     },
 
     /**
+    * Returns a random integer between and including min and max.
+    * This method is an alias for RandomDataGenerator.integerInRange.
+    *
+    * @method Phaser.RandomDataGenerator#between
+    * @param {number} min - The minimum value in the range.
+    * @param {number} max - The maximum value in the range.
+    * @return {number} A random number between min and max.
+    */
+    between: function (min, max) {
+
+        return this.integerInRange(min, max);
+
+    },
+
+    /**
     * Returns a random real number between min and max.
     *
     * @method Phaser.RandomDataGenerator#realInRange

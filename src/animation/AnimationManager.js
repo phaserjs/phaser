@@ -78,11 +78,28 @@ Phaser.AnimationManager.prototype = {
     * @method Phaser.AnimationManager#loadFrameData
     * @private
     * @param {Phaser.FrameData} frameData - The FrameData set to load.
+    * @param {string|number} frame - The frame to default to.
     */
-    loadFrameData: function (frameData) {
+    loadFrameData: function (frameData, frame) {
 
         this._frameData = frameData;
-        this.frame = 0;
+
+        if (typeof frame === 'undefined' || frame === null)
+        {
+            this.frame = 0;
+        }
+        else
+        {
+            if (typeof frame === 'string')
+            {
+                this.frameName = frame;
+            }
+            else
+            {
+                this.frame = frame;
+            }
+        }
+
         this.isLoaded = true;
 
     },
@@ -138,9 +155,11 @@ Phaser.AnimationManager.prototype = {
         this._frameData.getFrameIndexes(frames, useNumericIndex, this._outputFrames);
 
         this._anims[name] = new Phaser.Animation(this.game, this.sprite, name, this._frameData, this._outputFrames, frameRate, loop);
+
         this.currentAnim = this._anims[name];
         this.currentFrame = this.currentAnim.currentFrame;
-        this.sprite.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
+
+        this.sprite.setFrame(this.currentFrame);
 
         if (this.sprite.__tilePattern)
         {
@@ -424,7 +443,8 @@ Object.defineProperty(Phaser.AnimationManager.prototype, 'frame', {
             if (this.currentFrame)
             {
                 this._frameIndex = value;
-                this.sprite.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
+
+                this.sprite.setFrame(this.currentFrame);
 
                 if (this.sprite.__tilePattern)
                 {
@@ -462,7 +482,8 @@ Object.defineProperty(Phaser.AnimationManager.prototype, 'frameName', {
             if (this.currentFrame)
             {
                 this._frameIndex = this.currentFrame.index;
-                this.sprite.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
+
+                this.sprite.setFrame(this.currentFrame);
 
                 if (this.sprite.__tilePattern)
                 {

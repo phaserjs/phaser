@@ -683,7 +683,16 @@ Object.defineProperty(Phaser.Timer.prototype, "length", {
 Object.defineProperty(Phaser.Timer.prototype, "ms", {
 
     get: function () {
-        return this._now - this._started - this._pauseTotal;
+
+        if (this.running)
+        {
+            return this._now - this._started - this._pauseTotal;
+        }
+        else
+        {
+            return 0;
+        }
+
     }
 
 });
@@ -696,7 +705,16 @@ Object.defineProperty(Phaser.Timer.prototype, "ms", {
 Object.defineProperty(Phaser.Timer.prototype, "seconds", {
 
     get: function () {
-        return this.ms * 0.001;
+
+        if (this.running)
+        {
+            return this.ms * 0.001;
+        }
+        else
+        {
+            return 0;
+        }
+
     }
 
 });

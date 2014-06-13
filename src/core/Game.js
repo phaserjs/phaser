@@ -267,6 +267,8 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     }
     else
     {
+        this.config = {};
+
         if (typeof width !== 'undefined')
         {
             this.width = width;
@@ -391,7 +393,6 @@ Phaser.Game.prototype = {
 
     },
 
-
     /**
     * Initialize engine sub modules and start the game.
     *
@@ -505,7 +506,7 @@ Phaser.Game.prototype = {
         if (this.device.chrome)
         {
             var args = [
-                '%c %c %c Phaser v' + v + ' - ' + r + ' - ' + a + '  %c %c ' + ' http://phaser.io  %c %c ♥%c♥%c♥ ',
+                '%c %c %c Phaser v' + v + ' - ' + r + ' - ' + a + '  %c %c ' + ' http://phaser.io  %c %c \u2665%c\u2665%c\u2665 ',
                 'background: #0cf300',
                 'background: #00bc17',
                 'color: #ffffff; background: #00711f;',
@@ -550,6 +551,30 @@ Phaser.Game.prototype = {
             this.renderType = Phaser.CANVAS;
         }
 
+        if (this.config['canvasID'])
+        {
+            this.canvas = Phaser.Canvas.create(this.width, this.height, this.config['canvasID']);
+        }
+        else
+        {
+            this.canvas = Phaser.Canvas.create(this.width, this.height);
+        }
+
+        if (this.config['canvasStyle'])
+        {
+            this.canvas.style = this.config['canvasStyle'];
+        }
+        else
+        {
+            this.canvas.style['-webkit-full-screen'] = 'width: 100%; height: 100%';
+        }
+
+        if (this.device.cocoonJS)
+        {
+            //  Enable screencanvas for Cocoon on this Canvas object only
+            this.canvas.screencanvas = true;
+        }
+
         if (this.renderType === Phaser.HEADLESS || this.renderType === Phaser.CANVAS || (this.renderType === Phaser.AUTO && this.device.webGL === false))
         {
             if (this.device.canvas)
@@ -579,7 +604,7 @@ Phaser.Game.prototype = {
         {
             this.stage.smoothed = this.antialias;
 
-            Phaser.Canvas.addToDOM(this.canvas, this.parent, true);
+            Phaser.Canvas.addToDOM(this.canvas, this.parent, false);
             Phaser.Canvas.setTouchAction(this.canvas);
         }
 
@@ -634,6 +659,12 @@ Phaser.Game.prototype = {
             this.plugins.render();
             this.state.render();
             this.plugins.postRender();
+
+            if (this.device.cocoonJS && this.renderType === Phaser.CANVAS && this.stage.currentRenderOrderID === 1)
+            {
+                //  Horrible hack! But without it Cocoon fails to render a scene with just a single drawImage call on it.
+                this.context.fillRect(0, 0, 0, 0);
+            }
         }
 
     },

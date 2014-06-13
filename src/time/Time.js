@@ -176,6 +176,21 @@ Phaser.Time.prototype = {
     },
 
     /**
+    * Adds an existing Phaser.Timer object to the Timer pool.
+    *
+    * @method Phaser.Time#add
+    * @param {Phaser.Timer} timer - An existing Phaser.Timer object.
+    * @return {Phaser.Timer} The given Phaser.Timer object.
+    */
+    add: function (timer) {
+
+        this._timers.push(timer);
+
+        return timer;
+
+    },
+
+    /**
     * Creates a new stand-alone Phaser.Timer object.
     *
     * @method Phaser.Time#create
