@@ -138,7 +138,7 @@ Phaser.Loader = function (game) {
     this._ajax = null;
 
     /**
-     * If you supplied, you can provide a mapping between original URLs and their new location. This is useful when a game's assets are revved by a hash of their contents, to allow for browsers to cache non-changing assets between versions. The mapping should be from the original url to the new url i.e.
+     * If supplied, you can provide a mapping between original URLs and their new location. This is useful when a game's assets are revved by a hash of their contents, to allow for browsers to cache non-changing assets between versions. The mapping should be from the original url to the new url i.e.
      * revvingMapping['audio/music/default.mp3'] = 'revved/audio/music/default.abc123ef.mp3';
      * When hosting games on third party distributor sites, they may request that your game supports revved assets, and provide you with a mapping of original files to their revved locations, and these can be set here.
      * @property {object} revvingMapping - If defined, this mapping is used to convert any urls requested to a revved alternative. {@link http://stackoverflow.com/questions/15891855/what-are-the-advantages-of-revving-files-with-a-hash-over-a-version-or-date|Stack Overflow on revving by file hashes}
