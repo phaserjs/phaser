@@ -362,7 +362,7 @@ Phaser.Sound.prototype = {
 
             this.onDecoded.dispatch(this);
 
-        };
+        }
 
         if (this.pendingPlayback && this.game.cache.isSoundReady(this.key))
         {
