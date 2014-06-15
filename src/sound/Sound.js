@@ -357,6 +357,12 @@ Phaser.Sound.prototype = {
     * @protected
     */
     update: function () {
+        
+        if (this.isDecoded) {
+
+            this.onDecoded.dispatch(this);
+
+        };
 
         if (this.pendingPlayback && this.game.cache.isSoundReady(this.key))
         {
