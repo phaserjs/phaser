@@ -992,8 +992,11 @@ Phaser.Physics.P2.Body.prototype = {
     */
     removeShape: function (shape) {
 
-        return this.data.removeShape(shape);
-
+		var result = this.data.removeShape(shape);
+	
+		this.shapeChanged();
+	
+        return result;
     },
 
     /**
