@@ -618,6 +618,28 @@ Use cases:
 
 
 
+## Version 1.1.6 - "Shienar" - 24th February 2014
+
+### New Examples
+
+* Added lovely new little mini golf game by jpcloud.
+
+### Updates
+
+* Loader can now load JSON files natively (thanks lucas)
+* TilemapParser now errors if the tileset isn't the right size
+
+### Bug Fixes
+
+* Updated Physics.Body.applyDamping so that velocity is reduced down to zero properly (thanks caezs)
+* ArcadePhysics.collideSpriteVsTilemapLayer wouldn't call the process or collide callbacks if only 1 tile was involved in the check (thanks mandarinx)
+* Lots of documentation fixes (thanks nhowell)
+* Fix for PixiPatch so it renders masks again (thanks georgios)
+* Modified ArcadePhysics.intersects so it returns a value as well as asigns (thanks bunnyhero)
+* Lots of TypeScript defs fixes (thanks clark)
+
+
+
 ## Version 1.1.5 - "Saldaea" - 12th February 2014
 
 ### Bug Fixes
@@ -1135,7 +1157,7 @@ Use cases:
 
 
 
-## Version 0.9.8
+## Version 0.9.7
 
 * Massive refactoring across the entire codebase.
 * Removed Basic and GameObject and put Sprite on a diet. 127 properties and methods cut down to 32.
