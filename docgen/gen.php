@@ -19,9 +19,8 @@
     </head>
     <body>
 
-    <textarea spellcheck="false">
+    <pre spellcheck="false">
 <?php
-
     class Block
     {
         public $start = 0;
@@ -71,9 +70,9 @@
             }
         }
 
-        public function getContentIndex($scan)
+        public function getContentIndex($scan, $offset = 0)
         {
-            for ($i = 0; $i < count($this->content); $i++)
+            for ($i = $offset; $i < count($this->content); $i++)
             {
                 preg_match("/(@\w*)/", $this->content[$i], $output);
 
@@ -86,6 +85,148 @@
             return -1;
         }
 
+        public function getLines($scan)
+        {
+            $output = [];
+
+            for ($i = 0; $i < count($this->content); $i++)
+            {
+                preg_match("/(@\w*)/", $this->content[$i], $line);
+
+                if ($line && $line[0] === $scan)
+                {
+                    $output[] = $this->content[$i];
+                }
+            }
+
+            return $output;
+        }
+
+        public function cleanContent()
+        {
+            $output = [];
+
+            for ($i = 0; $i < count($this->content); $i++)
+            {
+                $line = trim($this->content[$i]);
+
+                //  remove * from the start
+                if (substr($line, 0, 1) === '*')
+                {
+                    $line = substr($line, 1);
+                    $line = trim($line);
+                }
+
+                //  Have we got a @ next?
+                if (substr($line, 0, 1) !== '@')
+                {
+                    $output[] = $line;
+                }
+            }
+
+            //  Trim off the final element if empty
+            if (count($output) > 0 && $output[count($output) - 1] === '')
+            {
+                array_pop($output);
+            }
+
+            return $output;
+        }
+
+
+    }
+
+    class Parameter
+    {
+        public $name; // rect, copy, etc
+        public $types = []; // an array containing all possible types it can be: string, number, etc
+        public $help = [];
+        public $optional = false;
+        public $default = false; // assigned value is the default value
+
+        public function __construct($line)
+        {
+            preg_match("/.*(@param)\s?{(\S*)} (\S*)( - ?)?(.*)/", $line, $output);
+
+            $this->types = explode('|', $output[2]);
+            $this->help = $output[5];
+
+            $name = $output[3];
+
+            if ($name[0] === '[')
+            {
+                $this->optional = true;
+                $name = substr($name, 1, -1);
+
+                //  Default?
+                $equals = strpos($name, '=');
+
+                if ($equals > 0)
+                {
+                    $name = substr($name, 0, $equals - 1);
+                    $this->default = substr($name, $equals + 1);
+                }
+            }
+
+            $this->name = $name;
+        }
+
+    }
+
+    class Method
+    {
+        public $line; // number, line number in the source file this is found on?
+        public $name; // bringToTop, kill, etc
+        public $parameters = []; // an array containing the parameters
+        public $help = [];
+        public $returnType = '';
+        public $returnHelp = '';
+
+        public $isPublic = true;
+        public $isProtected = false;
+        public $isPrivate = false;
+
+        public function __construct($block)
+        {
+            //  Because zero offset + allowing for final line
+            $this->line = $block->end + 2;
+
+            $name = $block->getLine('@method');
+
+            $equals = strpos($name, '#');
+
+            if ($equals > 0)
+            {
+                $name = substr($name, $equals + 1);
+            }
+
+            $this->name = $name;
+
+            $params = $block->getLines('@param');
+
+            for ($i = 0; $i < count($params); $i++)
+            {
+                $this->parameters[] = new Parameter($params[$i]);
+            }
+
+            //  parameter match
+            // preg_match("/.*(@param)\s?{(\S*)} (\S*)( - ?)?(.*)/", $block->getLine('@property'), $output);
+
+            if ($block->getTypeBoolean('@protected'))
+            {
+                $this->isPublic = false;
+                $this->isProtected = true;
+            }
+            else if ($block->getTypeBoolean('@private'))
+            {
+                $this->isPublic = false;
+                $this->isPrivate = true;
+            }
+
+            $this->help = $block->cleanContent();
+
+        }
+
     }
 
     class Property
@@ -94,7 +235,7 @@
         public $name; // visible, name, parent
         public $types = []; // an array containing all possible types it can be: string, number, etc
         public $default = false; // assigned value is the default value
-        public $help = '';
+        public $help = [];
         public $inlineHelp = '';
 
         public $isPublic = true;
@@ -133,57 +274,16 @@
                 }
             }
 
+            $this->help = $block->cleanContent();
+
         }
 
     }
 
-    function createProperty($block)
-    {
-        global $properties;
-
-        /**
-        * @property {number} type - The const type of this object.
-        * @readonly
-        */
-    
-        /**
-        * @property {number} z - The z-depth value of this object within its Group (remember the World is a Group as well). No two objects in a Group can have the same z value.
-        */
-    
-        /**
-        *  @property {string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture} key - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture, BitmapData or PIXI.Texture.
-        */
-
-        /**
-        * Should this Sprite be automatically culled if out of range of the camera?
-        * A culled sprite has its renderable property set to 'false'.
-        * Be advised this is quite an expensive operation, as it has to calculate the bounds of the object every frame, so only enable it if you really need it.
-        *
-        * @property {boolean} autoCull - A flag indicating if the Sprite should be automatically camera culled or not.
-        * @default
-        */
-       
-        /**
-        * By default Sprites won't add themselves to any physics system and their physics body will be `null`.
-        * To enable them for physics you need to call `game.physics.enable(sprite, system)` where `sprite` is this object
-        * and `system` is the Physics system you want to use to manage this body. Once enabled you can access all physics related properties via `Sprite.body`.
-        *
-        * Important: Enabling a Sprite for P2 or Ninja physics will automatically set `Sprite.anchor` to 0.5 so the physics body is centered on the Sprite.
-        * If you need a different result then adjust or re-create the Body shape offsets manually, and/or reset the anchor after enabling physics.
-        *
-        * @property {Phaser.Physics.Arcade.Body|Phaser.Physics.P2.Body|Phaser.Physics.Ninja.Body|null} body
-        * @default
-        */
-
-        $p = new Property();
-
-        $valueLine = $block[isProperty($block)];
-
-
-
-    }
 
     $blocks = [];
+
+    $consts = [];
     $properties = [];
     $methods = [];
 
@@ -230,8 +330,23 @@
     //  That's the whole file scanned, how many blocks did we get out of it?
     echo count($blocks) . " blocks found\n\n";
 
-    echo "Properties:\n\n";
+    echo "\nMethods:\n\n";
 
+    for ($i = 0; $i < count($blocks); $i++)
+    {
+        if ($blocks[$i]->isMethod)
+        {
+            $method = new Method($blocks[$i]);
+
+            echo $method->name . "\n";
+            echo "Help: " . "\n";
+            // print_r($method->help);
+            print_r($method->parameters);
+        }
+    }
+
+
+    echo "\nProperties:\n\n";
 
     for ($i = 0; $i < count($blocks); $i++)
     {
@@ -249,26 +364,16 @@
 
             echo "Source code line " . $property->line . "\n";
             echo "Default: " . $property->default . "\n";
+            echo "Help: " . "\n";
+            print_r($property->help);
 
             echo "\n\n";
 
             // echo $blocks[$i]->start . "\n";
         }
     }
-
-    /*
-    echo "\nMethods:\n\n";
-
-    for ($i = 0; $i < count($blocks); $i++)
-    {
-        if ($blocks[$i]->isMethod)
-        {
-            echo $blocks[$i]->start . "\n";
-        }
-    }
-    */
 ?>
-    </textarea>
+    </pre>
 
 </body>
 </html>
