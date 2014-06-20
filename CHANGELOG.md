@@ -1157,7 +1157,7 @@ Use cases:
 
 
 
-## Version 0.9.7
+## Version 1.0 - September 13th 2013
 
 * Massive refactoring across the entire codebase.
 * Removed Basic and GameObject and put Sprite on a diet. 127 properties and methods cut down to 32.
@@ -1266,7 +1266,7 @@ Use cases:
 
 
 
-## Version 0.9.6
+## Version 0.9.6 - 24th May 2013
 
 * Virtually every class now has documentation - if you spot a typo or something missing please shout (thanks pixelpicosean).
 * Grunt file updated to produce the new Special FX JS file (thanks HackManiac).
@@ -1356,7 +1356,7 @@ Use cases:
 
 
 
-## Version 0.9.5
+## Version 0.9.5 - 28th April 2013
 
 * Moved the BootScreen and PauseScreen out of Stage into their own classes (system/screens/BootScreen and PauseScreen).
 * Updated the PauseScreen to show a subtle animation effect, making it easier to create your own interesting pause screens.
@@ -1392,7 +1392,7 @@ Use cases:
 
 
 
-## Version 0.9.4
+## Version 0.9.4 - 28th April 2013
 
 * Added Tilemap.getTile, getTileFromWorldXY, getTileFromInputXY
 * Added Tilemap.setCollisionByIndex and setCollisionByRange
@@ -1406,7 +1406,7 @@ Use cases:
 
 
 
-## Version 0.9.3
+## Version 0.9.3 - 24th April 2013
 
 * Added the new ScrollZone game object. Endlessly useful but especially for scrolling backdrops. Created 6 example tests.
 * Added GameObject.hideFromCamera(cameraID) to stop an object rendering to specific cameras (also showToCamera and clearCameraList)
@@ -1426,7 +1426,7 @@ Use cases:
 
 
 
-## Version 0.9.2
+## Version 0.9.2 - 20th April 2013
 
 * Fixed issue with create not being called if there was an empty init method.
 * Added ability to flip a sprite (Sprite.flipped = true) + a test case for it.
@@ -1436,7 +1436,7 @@ Use cases:
 
 
 
-## Version 0.9.1
+## Version 0.9.1 - 19th April 2013
 
 * Added the new align property to GameObjects that controls placement when rendering.
 * Added an align example to the Sprites test group (click the mouse to change alignment position)
@@ -1448,7 +1448,7 @@ for new collision system.
 
 
 
-## Version 0.9
+## Version 0.9 - 18th April 2013
 
 * Large refactoring. Everything now lives inside the Phaser module, so all code and all tests have been updated to reflect this. Makes coding a tiny bit more verbose but stops the framework from globbing up the global namespace. Also should make code-insight work in WebStorm and similar editors.
 * Added the new GeomSprite object. This is a sprite that uses a geometry class for display (Circle, Rectangle, Point, Line). It's extremely flexible!
@@ -1461,7 +1461,7 @@ for new collision system.
 
 
 
-## Version 0.8
+## Version 0.8 - 15th April 2013
 
 * Added ability to set Sprite frame by name (sprite.frameName), useful when you've loaded a Texture Atlas with filename values set rather than using frame indexes.
 * Updated texture atlas 4 demo to show this.
@@ -1470,7 +1470,7 @@ for new collision system.
 
 
 
-## Version 0.7
+## Version 0.7 - 14th April 2013
 
 * Renamed FullScreen to StageScaleMode as it's much more fitting. Tested across Android and iOS with the various scale modes.
 * Added in world x/y coordinates to the input class, and the ability to get world x/y input coordinates from any Camera.
@@ -1479,7 +1479,7 @@ for new collision system.
 
 
 
-## Version 0.6
+## Version 0.6 - 13th April 2013
 
 * Added in Touch support for mobile devices (and desktops that enable it) and populated x/y coords in Input with common values from touch and mouse.
 * Added new Circle geometry class (used by Touch) and moved them into a Geom folder.
@@ -1488,6 +1488,6 @@ for new collision system.
 
 
 
-## Version 0.5
+## Version 0.5 - 12th April 2013
 
 * Initial release
