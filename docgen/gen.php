@@ -30,6 +30,7 @@
 
         public $isProperty = false;
         public $isMethod = false;
+        public $isConst = false;
 
         public function __construct($start, $end, $code, $content)
         {
@@ -43,6 +44,7 @@
 
             $this->isProperty = $this->getTypeBoolean('@property');
             $this->isMethod = $this->getTypeBoolean('@method');
+            $this->isConst = $this->getTypeBoolean('@constant');
         }
 
         public function getTypeBoolean($scan)
@@ -173,14 +175,33 @@
 
     }
 
+    class ReturnType
+    {
+        public $types = []; // an array containing all possible types it can be: string, number, etc
+        public $help = [];
+
+        public function __construct($line)
+        {
+// echo "rt: $line \n";
+            if (preg_match("/.*@return\s?{(\S*)} ?(.*)/", $line, $output))
+            {
+                $this->types = explode('|', $output[1]);
+                $this->help = $output[2];
+// echo "rt2: " . $this->help . "\n";
+// echo "rt3: ";
+// print_r($this->types);
+            }
+        }
+
+    }
+
     class Method
     {
         public $line; // number, line number in the source file this is found on?
         public $name; // bringToTop, kill, etc
         public $parameters = []; // an array containing the parameters
         public $help = [];
-        public $returnType = '';
-        public $returnHelp = '';
+        public $returns = false;
 
         public $isPublic = true;
         public $isProtected = false;
@@ -209,9 +230,6 @@
                 $this->parameters[] = new Parameter($params[$i]);
             }
 
-            //  parameter match
-            // preg_match("/.*(@param)\s?{(\S*)} (\S*)( - ?)?(.*)/", $block->getLine('@property'), $output);
-
             if ($block->getTypeBoolean('@protected'))
             {
                 $this->isPublic = false;
@@ -224,6 +242,11 @@
             }
 
             $this->help = $block->cleanContent();
+
+            if ($block->getTypeBoolean('@return'))
+            {
+                $this->returns = new ReturnType($block->getLine('@return'));
+            }
 
         }
 
@@ -241,6 +264,8 @@
         public $isPublic = true;
         public $isProtected = false;
         public $isPrivate = false;
+
+        public $isReadOnly = false;
 
         public function __construct($block)
         {
@@ -275,6 +300,11 @@
             }
 
             $this->help = $block->cleanContent();
+
+            if ($block->getTypeBoolean('@readonly'))
+            {
+                $this->isReadOnly = true;
+            }
 
         }
 
@@ -338,10 +368,12 @@
         {
             $method = new Method($blocks[$i]);
 
-            echo $method->name . "\n";
-            echo "Help: " . "\n";
-            // print_r($method->help);
+            echo "\n\n";
+            echo $method->name;
+            echo "\n";
+            print_r($method->help);
             print_r($method->parameters);
+            print_r($method->returns);
         }
     }
 
