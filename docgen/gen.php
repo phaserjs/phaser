@@ -70,6 +70,10 @@
             {
                 return $this->content[$i];
             }
+            else
+            {
+                return false;
+            }
         }
 
         public function getContentIndex($scan, $offset = 0)
@@ -175,6 +179,45 @@
 
     }
 
+    class Constant
+    {
+        public $name; // TEXTURE_ATLAS_JSON_ARRAY, PHYSICS_PHASER_JSON, etc
+        public $types = []; // an array containing the one single type the const can be
+        public $help = [];
+        public $line; // number, line number in the source file this is found on?
+
+        public function __construct($block)
+        {
+            //  Because zero offset + allowing for final line
+            $this->line = $block->end + 2;
+
+            //  Phaser.Cache.TEXTURE = 3;
+            $name = $block->code;
+            $period = strrpos($name, '.');
+            $equals = strrpos($name, '=');
+
+            if ($period > 0 && $equals > 0)
+            {
+                $len = $equals - $period - 1;
+                $name = substr($name, $period + 1, $len);
+            }
+            else if ($period > 0)
+            {
+                $name = substr($name, $period + 1, -1);
+            }
+
+            $this->name = trim($name);
+
+            $line = $block->getLine('@type');
+
+            if ($line && preg_match("/.*@type\s?{(\S*)}/", $line, $output))
+            {
+                $this->types = explode('|', $output[1]);
+            }
+        }
+
+    }
+
     class ReturnType
     {
         public $types = []; // an array containing all possible types it can be: string, number, etc
@@ -182,14 +225,10 @@
 
         public function __construct($line)
         {
-// echo "rt: $line \n";
             if (preg_match("/.*@return\s?{(\S*)} ?(.*)/", $line, $output))
             {
                 $this->types = explode('|', $output[1]);
                 $this->help = $output[2];
-// echo "rt2: " . $this->help . "\n";
-// echo "rt3: ";
-// print_r($this->types);
             }
         }
 
@@ -317,7 +356,8 @@
     $properties = [];
     $methods = [];
 
-    $file = "../src/gameobjects/Sprite.js";
+    // $file = "../src/gameobjects/Sprite.js";
+    $file = "../src/loader/Cache.js";
 
     $js = file($file);
 
@@ -359,6 +399,22 @@
 
     //  That's the whole file scanned, how many blocks did we get out of it?
     echo count($blocks) . " blocks found\n\n";
+
+    echo "\nConstants:\n\n";
+
+    for ($i = 0; $i < count($blocks); $i++)
+    {
+        if ($blocks[$i]->isConst)
+        {
+            $const = new Constant($blocks[$i]);
+
+            echo "\n\n";
+            echo $const->name;
+            echo "\n";
+            print_r($const->types);
+            // print_r($method->help);
+        }
+    }
 
     echo "\nMethods:\n\n";
 
