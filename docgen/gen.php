@@ -31,6 +31,7 @@
         public $isProperty = false;
         public $isMethod = false;
         public $isConst = false;
+        public $isClass = false;
 
         public function __construct($start, $end, $code, $content)
         {
@@ -45,6 +46,7 @@
             $this->isProperty = $this->getTypeBoolean('@property');
             $this->isMethod = $this->getTypeBoolean('@method');
             $this->isConst = $this->getTypeBoolean('@constant');
+            $this->isClass = $this->getTypeBoolean('@class');
         }
 
         public function getTypeBoolean($scan)
@@ -60,6 +62,26 @@
             }
 
             return false;
+        }
+
+        public function getLineContent($scan)
+        {
+            $line = $this->getLine($scan);
+
+            if ($line !== false)
+            {
+                $pattern = '/.*' . $scan . ' (.*)/';
+
+                preg_match($pattern, $line, $output);
+
+                if ($output)
+                {
+                    return trim($output[1]);
+                }
+            }
+
+            return false;
+
         }
 
         public function getLine($scan)
@@ -175,6 +197,51 @@
             }
 
             $this->name = $name;
+        }
+
+    }
+
+    class Class
+    {
+        public $name; // Phaser.Sprite
+        public $parameters = []; // an array containing the parameters
+        public $help = [];
+        public $extends = '';
+
+        public $hasConstructor = false;
+        public $isStatic = false;
+
+        public function __construct($block)
+        {
+            $this->name = $block->getLineContent('@class');
+
+            $params = $block->getLines('@param');
+
+            for ($i = 0; $i < count($params); $i++)
+            {
+                $this->parameters[] = new Parameter($params[$i]);
+            }
+
+            if ($block->getTypeBoolean('@extends'))
+            {
+                $this->extends = $block->getLineContent('@extends');
+            }
+
+            if ($block->getTypeBoolean('@constructor'))
+            {
+                $this->hasConstructor = true;
+            }
+            else
+            {
+                //  Like Phaser.Math
+                $this->isStatic = true;
+            }
+
+            //  This is a problem because the @classdesc block is often multi-line, but repeated in the clear content too.
+            //  So all the classes probably need tidying up before this part will work correctly.
+
+            // $this->help = $block->cleanContent();
+
         }
 
     }
