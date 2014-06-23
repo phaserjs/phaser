@@ -117,12 +117,14 @@ Version 2.0.6 - "Jornhill" - -in development-
 * Timer.ms would report the game time ms value if the Timer hadn't yet been started, instead of 0.
 * Timer.seconds would report the game time value if the Timer hadn't yet been started, instead of 0.
 * A Canvas style set from a game config object used an incorrect property (thanks @TatumCreative, fix #861)
-* Phaser.Line.intersectsPoints fixed for floating point inaccuracy (thanks @woutercommandeur, fix #865)
+* Phaser.Line.intersectsPoints fixed for floating point inaccuracy (thanks @woutercommandeur, fix #865 and #937)
 * Sound.destroy(true) would call remove on the SoundManager, which in turn would throw a TypeError as it tried to remove the sound events twice (thanks @AnderbergE, fix #874)
 * When creating a Sprite or Image using a texture atlas it would set the frame twice, once in loadTexture and once when the initial frame is set. This has been reduced down to just a single setting now.
 * BitmapData.getPixel fix for pixels with zero red value (thanks @lstor fix #894)
 * If you call ArcadePhysics.collide on a Sprite vs. a Tilemap and provide a custom processCallback, the result was being ignored and the sprite was being separated regardless (thanks @aivins fix #891 #890)
 * ArcadePhysics.Body.setSize if you set offset x/y values previously and then passed zero values they would be ignored (thanks @casensiom fix #889)
+* InputHandler.checkPointerDown checks and docs updated (thanks @lewster32, fix method #936)
+
 
 ### Migration Guide
 
