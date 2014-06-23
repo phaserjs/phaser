@@ -375,20 +375,17 @@ Phaser.Line.intersectsPoints = function (a, b, e, f, asSegment, result) {
         return null;
     }
 
-    /*
-     Round to 3 decimals here, due to javascript floating point is 'broken'
-     http://stackoverflow.com/questions/11832914/round-to-at-most-2-decimal-places-in-javascript
-     See workaround explanation there in accepted answer there..
-     */
-    result.x = Math.round( ((((b1 * c2) - (b2 * c1)) / denom)+0.00001)*1000 ) / 1000;
-    result.y = Math.round( ((((a2 * c1) - (a1 * c2)) / denom)+0.00001)*1000 ) / 1000;
+    result.x = ((b1 * c2) - (b2 * c1)) / denom;
+    result.y = ((a2 * c1) - (a1 * c2)) / denom;
 
     if (asSegment)
     {
-        if ( result.x < Math.min(a.x, b.x) || result.x > Math.max(a.x, b.x) ||
-             result.y < Math.min(a.y, b.y) || result.y > Math.max(a.y, b.y) ||
-             result.x < Math.min(e.x, f.x) || result.x > Math.max(e.x, f.x) ||
-             result.y < Math.min(e.y, f.y) || result.y > Math.max(e.y, f.y) ) {
+        var uc = ((f.y-e.y)*(b.x-a.x) - (f.x-e.x)*(b.y- a.y));
+        var ua = (((f.x-e.x)*(a.y-e.y)) - (f.y-e.y)*(a.x-e.x)) / uc;
+        var ub = (((b.x- a.x)*(a.y- e.y)) - ((b.y-a.y)*(a.x- e.x))) / uc;
+        if (ua >=0 && ua<=1 && ub >=0 && ub <=1) {
+            return result;
+        } else {
             return null;
         }
     }
