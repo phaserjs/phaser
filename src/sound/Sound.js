@@ -290,7 +290,12 @@ Phaser.Sound = function (game, key, volume, loop, connect) {
     * @private
     */
     this._paused = false;
-
+    
+    /**
+    * @property {boolean} _onDecodedEventDispatched - Was the onDecoded event dispatched?
+    * @private
+    */
+    this._onDecodedEventDispatched = false;
 };
 
 Phaser.Sound.prototype = {
@@ -358,9 +363,10 @@ Phaser.Sound.prototype = {
     */
     update: function () {
         
-        if (this.isDecoded) {
+        if (this.isDecoded && !this._onDecodedEventDispatched) {
 
             this.onDecoded.dispatch(this);
+            this._onDecodedEventDispatched=true;
 
         }
 
