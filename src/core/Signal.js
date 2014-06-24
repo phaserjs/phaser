@@ -110,9 +110,19 @@ Phaser.Signal.prototype = {
     */
     _addBinding: function (binding) {
         //simplified insertion sort
-        var n = this._bindings.length;
-        do { --n; } while (this._bindings[n] && binding._priority <= this._bindings[n]._priority);
-        this._bindings.splice(n + 1, 0, binding);
+        //create new array in case add/remove items during dispatch
+        var old_bindings = this._bindings;
+        var new_bindings = [];
+        var n = old_bindings.length;
+        var i = 0;
+        while (i<n && old_bindings[i]._priority < binding._priority) {
+            new_bindings.push(old_bindings[i++])
+        }
+        new_bindings.push(binding)
+        while (i<n) {
+            new_bindings.push(old_bindings[i++])
+        }
+        this._bindings = new_bindings;
     },
 
     /**
@@ -186,11 +196,10 @@ Phaser.Signal.prototype = {
         this.validateListener(listener, 'remove');
 
         var i = this._indexOfListener(listener, context);
-
         if (i !== -1)
         {
             this._bindings[i]._destroy(); //no reason to a Phaser.SignalBinding exist if it isn't attached to a signal
-            this._bindings.splice(i, 1);
+            this._bindings = this._bindings.slice().splice(i, 1); //clone array in case add/remove items during dispatch
         }
 
         return listener;
@@ -207,7 +216,7 @@ Phaser.Signal.prototype = {
         while (n--) {
             this._bindings[n]._destroy();
         }
-        this._bindings.length = 0;
+        this._bindings = []
     },
 
     /**
@@ -246,7 +255,7 @@ Phaser.Signal.prototype = {
 
         var paramsArr = Array.prototype.slice.call(arguments);
         var n = this._bindings.length;
-        var bindings;
+        var bindings = this._bindings;
 
         if (this.memorize)
         {
@@ -259,7 +268,6 @@ Phaser.Signal.prototype = {
             return;
         }
 
-        bindings = this._bindings.slice(); //clone array in case add/remove items during dispatch
         this._shouldPropagate = true; //in case `halt` was called before dispatch or during the previous dispatch.
 
         //execute all callbacks until end of the list or until a callback returns `false` or stops propagation
