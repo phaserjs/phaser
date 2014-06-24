@@ -829,7 +829,7 @@ Phaser.Math = {
     /**
     * A Linear Interpolation Method, mostly used by Phaser.Tween.
     * @method Phaser.Math#linearInterpolation
-    * @param {number} v
+    * @param {Array} v
     * @param {number} k
     * @return {number}
     */
@@ -942,13 +942,17 @@ Phaser.Math = {
     * @return {number}
     */
     factorial : function( value ){
-        if(value == 0) return 1;
+
+        if(value === 0)
+        {
+            return 1;
+        }
                         
         var res = value;
                         
         while( --value )
         {
-                res *= value;
+            res *= value;
         }
         
         return res;
