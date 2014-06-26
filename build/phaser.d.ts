@@ -1321,7 +1321,7 @@ declare module Phaser {
         getImage(key: string): Object;
         getJSON(key: string): Object;
         getKeys(array: string[]): string[];
-        getPhysicsData(key: string, object?: string, fixtureKey?: string): Object;
+        getPhysicsData(key: string, object?: string, fixtureKey?: string): Object[];
         getSound(key: string): Phaser.Sound;
         getSoundData(key: string): Object;
         getText(key: string): string;
