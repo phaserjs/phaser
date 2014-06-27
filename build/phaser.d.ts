@@ -3470,6 +3470,8 @@ declare module Phaser {
                 clearShapes(): void;
                 collides(group: any, callback?: Function, callbackContext?: Object, shape?: any): void;
                 createBodyCallback(object: any, callback: Function, callbackContext: Object): void;
+                createCollisionGroup(group?: Phaser.Group): Phaser.Physics.P2.CollisionGroup;
+                createCollisionGroup(group?: Phaser.Sprite): Phaser.Physics.P2.CollisionGroup;
                 createGroupCallback(group: Phaser.Physics.P2.CollisionGroup, callback: Function, callbackContext: Object): void;
                 destroy(): void;
                 getCollisionMask(): number;

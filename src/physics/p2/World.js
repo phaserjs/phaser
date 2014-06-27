@@ -1227,7 +1227,6 @@ Phaser.Physics.P2.prototype = {
     *
     * @method Phaser.Physics.P2#createCollisionGroup
     * @param {Phaser.Group|Phaser.Sprite} [object] - An optional Sprite or Group to apply the Collision Group to. If a Group is given it will be applied to all top-level children.
-    * @protected
     */
     createCollisionGroup: function (object) {
 
