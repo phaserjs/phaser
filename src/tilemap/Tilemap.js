@@ -903,7 +903,7 @@ Phaser.Tilemap.prototype = {
             }
             this.needToRecalculate = false;
         }
-    }
+    },
 
     /**
     * Internal function.
