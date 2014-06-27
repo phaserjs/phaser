@@ -892,7 +892,7 @@ Phaser.Tilemap.prototype = {
     * @param {boolean} if true it will put the recalculation on hold.
     */
     setPreventRecalculate: function (value) {
-        if((value===true)&&(this.preventingRecalculate===false)){
+        if((value===true)&&(this.preventingRecalculate!==true)){
             this.preventingRecalculate = true;
             this.needToRecalculate = {};
         }
