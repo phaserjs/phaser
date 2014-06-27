@@ -164,7 +164,7 @@ Phaser.SinglePad.prototype = {
 
         for (var i = 0; i < this._rawPad.buttons.length; i += 1)
         {
-            var buttonValue = this._rawPad.buttons[i];
+            var buttonValue = this._rawPad.buttons[i].value;
 
             if (this._rawButtons[i] !== buttonValue)
             {
