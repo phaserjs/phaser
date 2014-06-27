@@ -621,7 +621,7 @@ Phaser.Physics.P2.prototype = {
 
         if (bottom)
         {
-            this.walls.bottom = new p2.Body({ mass: 0, position: [ this.pxmi(x), this.pxmi(height) ] });
+            this.walls.bottom = new p2.Body({ mass: 0, position: [ this.pxmi(x), this.pxmi(y + height) ] });
             this.walls.bottom.addShape(new p2.Plane());
 
             if (setCollisionGroup)
