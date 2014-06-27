@@ -896,7 +896,7 @@ Phaser.Tilemap.prototype = {
             this.preventingRecalculate = true;
             this.needToRecalculate = {};
         }
-        if((value===false)&&(this.preventRecalculate===true)){
+        if((value===false)&&(this.preventingRecalculate===true)){
             this.preventingRecalculate = false;
             for(var i in this.needToRecalculate){
                 this.calculateFaces(i);
