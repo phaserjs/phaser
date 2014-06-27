@@ -883,6 +883,28 @@ Phaser.Tilemap.prototype = {
 
     },
 
+   /**
+    * Turn off/on the recalculation of faces for tile or collission updates. 
+    * preventRecalculate(true) puts recalculation on hold while
+    * preventRecalculate(false) recalculates all the changed layers.
+    *
+    * @method Phaser.Tilemap#preventRecalculate
+    * @param {boolean} if true it will put the recalculation on hold.
+    */
+    preventRecalculate: function (doPrevent) {
+        if((doPrevent===true)&&(this.preventingRecalculate===false)){
+            this.preventingRecalculate = true;
+            this.needToRecalculate = {};
+        }
+        if((doPrevent===false)&&(this.preventRecalculate===true)){
+            this.preventingRecalculate = false;
+            for(var i in this.needToRecalculate){
+                this.calculateFaces(i);
+            }
+            this.needToRecalculate = false;
+        }
+    }
+
     /**
     * Internal function.
     *
@@ -891,6 +913,12 @@ Phaser.Tilemap.prototype = {
     * @param {number} layer - The index of the TilemapLayer to operate on.
     */
     calculateFaces: function (layer) {
+
+        if(this.preventingRecalculate===true){
+            this.needToRecalculate[layer] = true;
+            return;
+        }
+        
 
         var above = null;
         var below = null;
