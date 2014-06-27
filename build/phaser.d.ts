@@ -3366,6 +3366,8 @@ declare module Phaser {
             convertCollisionObjects(map: Phaser.Tilemap, layer?: any, addToWorld?: boolean): Phaser.Physics.P2.Body[];
             convertTilemap(map: Phaser.Tilemap, layer?: any, addToWorld?: Boolean, optimize?: boolean): Phaser.Physics.P2.Body[];
             createBody(x: number, y: number, mass: number, addToWorld?: boolean, options?: Object, data?: Object): Phaser.Physics.P2.Body;
+            createCollisionGroup(group?: Phaser.Group): Phaser.Physics.P2.CollisionGroup;
+            createCollisionGroup(group?: Phaser.Sprite): Phaser.Physics.P2.CollisionGroup;
             createContactMaterial(materialA: Phaser.Physics.P2.Material, materialB: Phaser.Physics.P2.Material, options?: number): Phaser.Physics.P2.ContactMaterial;
             createDistanceConstraint(bodyA: any, bodyB: any, distance: number, maxForce?: number): Phaser.Physics.P2.DistanceConstraint;
             createGearConstraint(bodyA: any, bodyB: any, angle?: number, ratio?: number): Phaser.Physics.P2.GearConstraint;
@@ -3470,8 +3472,6 @@ declare module Phaser {
                 clearShapes(): void;
                 collides(group: any, callback?: Function, callbackContext?: Object, shape?: any): void;
                 createBodyCallback(object: any, callback: Function, callbackContext: Object): void;
-                createCollisionGroup(group?: Phaser.Group): Phaser.Physics.P2.CollisionGroup;
-                createCollisionGroup(group?: Phaser.Sprite): Phaser.Physics.P2.CollisionGroup;
                 createGroupCallback(group: Phaser.Physics.P2.CollisionGroup, callback: Function, callbackContext: Object): void;
                 destroy(): void;
                 getCollisionMask(): number;
