@@ -1725,7 +1725,7 @@ Object.defineProperty(Phaser.Physics.P2.Body.prototype, "debug", {
 
     get: function () {
 
-        return (!this.debugBody);
+        return (!this.debugBody) == false;
 
     },
 
