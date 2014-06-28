@@ -3329,6 +3329,7 @@ declare module Phaser {
             applySpringForced: boolean;
             bounds: Phaser.Physics.P2.Body;
             boundsCollidesWith: Phaser.Physics.P2.Body[];
+            boundsCollisionGroup: Phaser.Physics.P2.CollisionGroup;
             contactMaterial: Phaser.Physics.P2.ContactMaterial;
             emitImpactEvent: boolean;
             enableBodySleeping: boolean;
@@ -3338,6 +3339,7 @@ declare module Phaser {
             game: Phaser.Game;
             gravity: Phaser.Physics.P2.InversePointProxy;
             materials: Phaser.Physics.P2.Material[];
+            nothingCollisionGroup: Phaser.Physics.P2.CollisionGroup;
             onBodyAdded: Phaser.Signal;
             onBodyRemoved: Phaser.Signal;
             onBeginContact: Phaser.Signal;
