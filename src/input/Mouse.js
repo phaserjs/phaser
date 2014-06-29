@@ -161,6 +161,18 @@ Phaser.Mouse.MIDDLE_BUTTON = 1;
 */
 Phaser.Mouse.RIGHT_BUTTON = 2;
 
+/**
+ * @constant
+ * @type {number}
+ */
+Phaser.Mouse.WHEEL_UP = 1;
+
+/**
+ * @constant
+ * @type {number}
+ */
+Phaser.Mouse.WHEEL_DOWN = -1;
+
 Phaser.Mouse.prototype = {
 
     /**
