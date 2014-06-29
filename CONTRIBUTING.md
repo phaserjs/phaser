@@ -7,15 +7,15 @@ It's important to us that you feel you can contribute towards the evolution of P
 
 [GitHub Issues][0] is the place to report bugs you may have found in either the core library or any of the examples that are part of the repository. When submitting a bug please do the following:
 
-1. **Search for existing issues.** Your bug may have already been fixed or addressed in a development branch version of Phaser, so be sure to search the issues first before putting in a duplicate issue.
+**1. Search for existing issues.** Your bug may have already been fixed or addressed in a development branch version of Phaser, so be sure to search the issues first before putting in a duplicate issue.
 
-2. **Not sure if it's a bug?.** Then please ask on the forum. If something is blatantly wrong then post it to github. But if you feel it might just be because you're not sure of expected behaviour, then it might save us time, and get you a response faster, if you post it to the Phaser forum instead.
+**2. Not sure if it's a bug?.** Then please ask on the forum. If something is blatantly wrong then post it to github. But if you feel it might just be because you're not sure of expected behaviour, then it might save us time, and get you a response faster, if you post it to the Phaser forum instead.
 
-3. **Create an isolated and reproducible test case.** If you are reporting a bug, make sure you also have a minimal, runnable, code example that reproduces the problem you have.
+**3. Create an isolated and reproducible test case.** If you are reporting a bug, make sure you also have a minimal, runnable, code example that reproduces the problem you have.
 
-4. **Include a live example.** After narrowing your code down to only the problem areas, make use of [jsFiddle][1], [jsBin][2], or a link to your live site so that we can view a live example of the problem.
+**4. Include a live example.** After narrowing your code down to only the problem areas, make use of [jsFiddle][1], [jsBin][2], or a link to your live site so that we can view a live example of the problem.
 
-5. **Share as much information as possible.** Include browser version affected, your OS, version of the library, steps to reproduce, etc. "X isn't working!!!1!" will probably just be closed.
+**5. Share as much information as possible.** Include browser version affected, your OS, version of the library, steps to reproduce, etc. "X isn't working!!!1!" will probably just be closed.
 
 
 ##Pixi and Phaser
