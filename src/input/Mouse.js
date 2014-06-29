@@ -204,7 +204,7 @@ Phaser.Mouse.prototype = {
         };
 
         this._onMouseWheel = function (event) {
-          return _this.onMouseWheel(event);
+            return _this.onMouseWheel(event);
         };
 
         this.game.canvas.addEventListener('mousedown', this._onMouseDown, true);
