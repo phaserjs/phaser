@@ -72,6 +72,7 @@ Version 2.0.6 - "Jornhill" - -in development-
 * Frame.setTrim no longer modifies the Frame width and height values.
 * AnimationParser doesn't populate the Pixi.TextureCache for every frame any longer. Each display object has its own texture property instead.
 * Removed the cacheKey parameters from the AnimationParser methods as they're no longer used.
+* Loader.isLoading is set to false if the filelist size is zero.
 
 ### CocoonJS Specific Updates
 

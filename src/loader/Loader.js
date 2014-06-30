@@ -947,6 +947,7 @@ Phaser.Loader.prototype = {
             this.progress = 100;
             this.progressFloat = 100;
             this.hasLoaded = true;
+            this.isLoading = false;
             this.onLoadComplete.dispatch();
         }
 
