@@ -24,7 +24,7 @@ PIXI.WEBGL_RENDERER = 0;
 PIXI.CANVAS_RENDERER = 1;
 
 // useful for testing against if your lib is using pixi.
-PIXI.VERSION = "v1.5.2";
+PIXI.VERSION = 'v1.5.4';
 
 // the various blend modes supported by pixi
 PIXI.blendModes = {
@@ -54,12 +54,47 @@ PIXI.scaleModes = {
     NEAREST:1
 };
 
+// used to create uids for various pixi objects..
+PIXI._UID = 0;
+
+PIXI.Float32Array = Float32Array || Array;
+PIXI.Uint16Array = Uint16Array || Array;
+
 // interaction frequency 
 PIXI.INTERACTION_FREQUENCY = 30;
 PIXI.AUTO_PREVENT_DEFAULT = true;
 
 PIXI.RAD_TO_DEG = 180 / Math.PI;
 PIXI.DEG_TO_RAD = Math.PI / 180;
+
+PIXI.sayHello = function () 
+{
+    if ( navigator.userAgent.toLowerCase().indexOf('chrome') > -1 )
+    {
+        var args = [
+            '%c %c %c Pixi.js ' + PIXI.VERSION + '  %c %c ' + ' http://pixjs.com  %c %c ♥%c♥%c♥ ',
+            'background: #ed2577',
+            'background: #ed2577',
+            'color: #ed2577; background: #0a0c1a;',
+            'background: #ed2577',
+            'background: #0a0c1a',
+            'background: #ed2577',
+            'color: #ff2424; background: #fff',
+            'color: #ff2424; background: #fff',
+            'color: #ff2424; background: #fff'
+        ];
+
+       
+
+        console.log.apply(console, args);
+    }
+    else if (window['console'])
+    {
+        console.log('Pixi.js ' + PIXI.VERSION + ' - http://pixjs.com');
+    }
+};
+
+PIXI.sayHello();
 /**
  * @author Mat Groves http://matgroves.com/ @Doormat23
  */
@@ -100,16 +135,22 @@ PIXI.Point.prototype.clone = function()
     return new PIXI.Point(this.x, this.y);
 };
 
-// constructor
-PIXI.Point.prototype.constructor = PIXI.Point;
-
+/**
+ * Sets the point to a new x and y position.
+ * If y is ommited, both x and y will be set to x.
+ * 
+ * @method set
+ * @param [x=0] {Number} position of the point on the x axis
+ * @param [y=0] {Number} position of the point on the y axis
+ */
 PIXI.Point.prototype.set = function(x, y)
 {
     this.x = x || 0;
     this.y = y || ( (y !== 0) ? this.x : 0 ) ;
 };
 
-
+// constructor
+PIXI.Point.prototype.constructor = PIXI.Point;
 /**
  * @author Mat Groves http://matgroves.com/
  */
@@ -447,27 +488,16 @@ PIXI.Ellipse.prototype.constructor = PIXI.Ellipse;
  * @author Mat Groves http://matgroves.com/ @Doormat23
  */
 
-PIXI.determineMatrixArrayType = function() {
-    return (typeof Float32Array !== 'undefined') ? Float32Array : Array;
-};
-
-/*
-* @class Matrix2
-* The Matrix2 class will choose the best type of array to use between
-* a regular javascript Array and a Float32Array if the latter is available
-*
-*/
-PIXI.Matrix2 = PIXI.determineMatrixArrayType();
-
-/*
-* @class Matrix
-* The Matrix class is now an object, which makes it a lot faster, 
-* here is a representation of it : 
-* | a | b | tx|
-* | c | c | ty|
-* | 0 | 0 | 1 |
-*
-*/
+/**
+ * The Matrix class is now an object, which makes it a lot faster, 
+ * here is a representation of it : 
+ * | a | b | tx|
+ * | c | c | ty|
+ * | 0 | 0 | 1 |
+ *
+ * @class Matrix
+ * @constructor
+ */
 PIXI.Matrix = function()
 {
     this.a = 1;
@@ -499,7 +529,7 @@ PIXI.Matrix.prototype.fromArray = function(array)
  *
  * @method toArray
  * @param transpose {Boolean} Whether we need to transpose the matrix or not
- * @return array {Array} the newly created array which contains the matrix
+ * @return {Array} the newly created array which contains the matrix
  */
 PIXI.Matrix.prototype.toArray = function(transpose)
 {
@@ -508,33 +538,47 @@ PIXI.Matrix.prototype.toArray = function(transpose)
 
     if(transpose)
     {
-        this.array[0] = this.a;
-        this.array[1] = this.c;
-        this.array[2] = 0;
-        this.array[3] = this.b;
-        this.array[4] = this.d;
-        this.array[5] = 0;
-        this.array[6] = this.tx;
-        this.array[7] = this.ty;
-        this.array[8] = 1;
+        array[0] = this.a;
+        array[1] = this.c;
+        array[2] = 0;
+        array[3] = this.b;
+        array[4] = this.d;
+        array[5] = 0;
+        array[6] = this.tx;
+        array[7] = this.ty;
+        array[8] = 1;
     }
     else
     {
-        this.array[0] = this.a;
-        this.array[1] = this.b;
-        this.array[2] = this.tx;
-        this.array[3] = this.c;
-        this.array[4] = this.d;
-        this.array[5] = this.ty;
-        this.array[6] = 0;
-        this.array[7] = 0;
-        this.array[8] = 1;
+        array[0] = this.a;
+        array[1] = this.b;
+        array[2] = this.tx;
+        array[3] = this.c;
+        array[4] = this.d;
+        array[5] = this.ty;
+        array[6] = 0;
+        array[7] = 0;
+        array[8] = 1;
     }
 
-    return array;//[this.a, this.b, this.tx, this.c, this.d, this.ty, 0, 0, 1];
+    return array;
 };
 
 PIXI.identityMatrix = new PIXI.Matrix();
+
+PIXI.determineMatrixArrayType = function() {
+    return (typeof Float32Array !== 'undefined') ? Float32Array : Array;
+};
+
+/**
+ * The Matrix2 class will choose the best type of array to use between
+ * a regular javascript Array and a Float32Array if the latter is available
+ *
+ * @class Matrix2
+ * @constructor
+ */
+PIXI.Matrix2 = PIXI.determineMatrixArrayType();
+
 /**
  * @author Mat Groves http://matgroves.com/ @Doormat23
  */
@@ -1048,6 +1092,8 @@ PIXI.DisplayObject.prototype.updateCache = function()
 
 PIXI.DisplayObject.prototype._renderCachedSprite = function(renderSession)
 {
+    this._cachedSprite.worldAlpha = this.worldAlpha;
+   
     if(renderSession.gl)
     {
         PIXI.Sprite.prototype._renderWebGL.call(this._cachedSprite, renderSession);
@@ -1199,7 +1245,7 @@ PIXI.DisplayObjectContainer.prototype.constructor = PIXI.DisplayObjectContainer;
  * @type Number
  */
 
- /*
+ 
 Object.defineProperty(PIXI.DisplayObjectContainer.prototype, 'width', {
     get: function() {
         return this.scale.x * this.getLocalBounds().width;
@@ -1209,7 +1255,7 @@ Object.defineProperty(PIXI.DisplayObjectContainer.prototype, 'width', {
         this._width = value;
     }
 });
-*/
+
 
 /**
  * The height of the displayObjectContainer, setting this will actually modify the scale to achieve the value set
@@ -1218,7 +1264,6 @@ Object.defineProperty(PIXI.DisplayObjectContainer.prototype, 'width', {
  * @type Number
  */
 
-/*
 Object.defineProperty(PIXI.DisplayObjectContainer.prototype, 'height', {
     get: function() {
         return  this.scale.y * this.getLocalBounds().height;
@@ -1228,7 +1273,7 @@ Object.defineProperty(PIXI.DisplayObjectContainer.prototype, 'height', {
         this._height = value;
     }
 });
-*/
+
 
 /**
  * Adds a child to the container.
@@ -1536,17 +1581,19 @@ PIXI.DisplayObjectContainer.prototype._renderWebGL = function(renderSession)
 
     if(this._mask || this._filters)
     {
+        
+        // push filter first as we need to ensure the stencil buffer is correct for any masking
+        if(this._filters)
+        {
+            renderSession.spriteBatch.flush();
+            renderSession.filterManager.pushFilter(this._filterBlock);
+        }
+
         if(this._mask)
         {
             renderSession.spriteBatch.stop();
             renderSession.maskManager.pushMask(this.mask, renderSession);
             renderSession.spriteBatch.start();
-        }
-
-        if(this._filters)
-        {
-            renderSession.spriteBatch.flush();
-            renderSession.filterManager.pushFilter(this._filterBlock);
         }
 
         // simple render children!
@@ -1557,8 +1604,8 @@ PIXI.DisplayObjectContainer.prototype._renderWebGL = function(renderSession)
 
         renderSession.spriteBatch.stop();
 
+        if(this._mask)renderSession.maskManager.popMask(this._mask, renderSession);
         if(this._filters)renderSession.filterManager.popFilter();
-        if(this._mask)renderSession.maskManager.popMask(renderSession);
         
         renderSession.spriteBatch.start();
     }
@@ -1620,7 +1667,7 @@ PIXI.DisplayObjectContainer.prototype._renderCanvas = function(renderSession)
  * @param texture {Texture} The texture for this sprite
  * 
  * A sprite can be created directly from an image like this : 
- * var sprite = nex PIXI.Sprite.FromImage('assets/image.png');
+ * var sprite = new PIXI.Sprite.fromImage('assets/image.png');
  * yourStage.addChild(sprite);
  * then obviously don't forget to add it to the stage you have already created
  */
@@ -1753,7 +1800,6 @@ PIXI.Sprite.prototype.setTexture = function(texture)
     }
 
     this.cachedTint = 0xFFFFFF;
-    this.updateFrame = true;
 };
 
 /**
@@ -1872,17 +1918,18 @@ PIXI.Sprite.prototype._renderWebGL = function(renderSession)
     {
         var spriteBatch =  renderSession.spriteBatch;
 
+        // push filter first as we need to ensure the stencil buffer is correct for any masking
+        if(this._filters)
+        {
+            spriteBatch.flush();
+            renderSession.filterManager.pushFilter(this._filterBlock);
+        }
+
         if(this._mask)
         {
             spriteBatch.stop();
             renderSession.maskManager.pushMask(this.mask, renderSession);
             spriteBatch.start();
-        }
-
-        if(this._filters)
-        {
-            spriteBatch.flush();
-            renderSession.filterManager.pushFilter(this._filterBlock);
         }
 
         // add this sprite to the batch
@@ -1897,8 +1944,8 @@ PIXI.Sprite.prototype._renderWebGL = function(renderSession)
         // time to stop the sprite batch as either a mask element or a filter draw will happen next
         spriteBatch.stop();
 
+        if(this._mask)renderSession.maskManager.popMask(this._mask, renderSession);
         if(this._filters)renderSession.filterManager.popFilter();
-        if(this._mask)renderSession.maskManager.popMask(renderSession);
         
         spriteBatch.start();
     }
@@ -1947,7 +1994,7 @@ PIXI.Sprite.prototype._renderCanvas = function(renderSession)
     
 
     //ignore null sources
-    if(frame && frame.width && frame.height && texture.baseTexture.source)
+    if(texture.valid)
     {
         context.globalAlpha = this.worldAlpha;
 
@@ -2157,12 +2204,10 @@ PIXI.SpriteBatch.prototype._renderWebGL = function(renderSession)
     
     renderSession.spriteBatch.stop();
     
-    renderSession.shaderManager.activateShader(renderSession.shaderManager.fastShader);
+    renderSession.shaderManager.setShader(renderSession.shaderManager.fastShader);
     
     this.fastSpriteBatch.begin(this, renderSession);
     this.fastSpriteBatch.render(this);
-
-    renderSession.shaderManager.activateShader(renderSession.shaderManager.defaultShader);
 
     renderSession.spriteBatch.start();
  
@@ -2677,15 +2722,15 @@ PIXI.Text.prototype.wordWrap = function(text)
  * Destroys this text object
  *
  * @method destroy
- * @param destroyTexture {Boolean}
+ * @param destroyBaseTexture {Boolean} whether to destroy the base texture as well
  */
-PIXI.Text.prototype.destroy = function(destroyTexture)
+PIXI.Text.prototype.destroy = function(destroyBaseTexture)
 {
-    if(destroyTexture)
-    {
-        this.texture.destroy();
-    }
+    // make sure to reset the the context and canvas.. dont want this hanging around in memory!
+    this.context = null;
+    this.canvas = null;
 
+    this.texture.destroy(destroyBaseTexture === undefined ? true : destroyBaseTexture);
 };
 
 PIXI.Text.heightCache = {};
@@ -3270,7 +3315,7 @@ PIXI.EventTarget = function () {
 
         if ( listeners[ type ].indexOf( listener ) === - 1 ) {
 
-            listeners[ type ].push( listener );
+            listeners[ type ].unshift( listener );
         }
 
     };
@@ -3289,7 +3334,10 @@ PIXI.EventTarget = function () {
 
         }
 
-        for(var i = 0, l = listeners[ event.type ].length; i < l; i++) {
+
+        for(var i = listeners[ event.type ].length-1; i >= 0; i--) {
+//        for(var i = 0, l=listeners[ event.type ].length; i < l; i++) {
+
 
             listeners[ event.type ][ i ]( event );
 
@@ -3568,6 +3616,8 @@ PIXI.compileProgram = function(gl, vertexSrc, fragmentSrc)
 */
 PIXI.PixiShader = function(gl)
 {
+    this._UID = PIXI._UID++;
+    
     /**
      * @property gl
      * @type WebGLContext
@@ -3910,7 +3960,8 @@ PIXI.PixiShader.defaultVertexSrc = [
 */
 PIXI.PixiFastShader = function(gl)
 {
-
+    this._UID = PIXI._UID++;
+    
     /**
      * @property gl
      * @type WebGLContext
@@ -4050,8 +4101,12 @@ PIXI.PixiFastShader.prototype.destroy = function()
  */
 
 
-PIXI.StripShader = function()
+PIXI.StripShader = function(gl)
 {
+    this._UID = PIXI._UID++;
+    
+    this.gl = gl;
+
     /**
     * @property {any} program - The WebGL program.
     */
@@ -4063,37 +4118,40 @@ PIXI.StripShader = function()
     this.fragmentSrc = [
         'precision mediump float;',
         'varying vec2 vTextureCoord;',
-        'varying float vColor;',
+     //   'varying float vColor;',
         'uniform float alpha;',
         'uniform sampler2D uSampler;',
 
         'void main(void) {',
         '   gl_FragColor = texture2D(uSampler, vec2(vTextureCoord.x, vTextureCoord.y));',
-        '   gl_FragColor = gl_FragColor * alpha;',
+      //  '   gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);',//gl_FragColor * alpha;',
         '}'
     ];
 
-    /**
+     /**
     * @property {array} fragmentSrc - The fragment shader.
     */
-    this.vertexSrc = [
+    this.vertexSrc  = [
         'attribute vec2 aVertexPosition;',
         'attribute vec2 aTextureCoord;',
-        'attribute float aColor;',
         'uniform mat3 translationMatrix;',
         'uniform vec2 projectionVector;',
-        'varying vec2 vTextureCoord;',
         'uniform vec2 offsetVector;',
-        'varying float vColor;',
+      //  'uniform float alpha;',
+       // 'uniform vec3 tint;',
+        'varying vec2 vTextureCoord;',
+      //  'varying vec4 vColor;',
 
         'void main(void) {',
-        '   vec3 v = translationMatrix * vec3(aVertexPosition, 1.0);',
+        '   vec3 v = translationMatrix * vec3(aVertexPosition , 1.0);',
         '   v -= offsetVector.xyx;',
-        '   gl_Position = vec4( v.x / projectionVector.x -1.0, v.y / projectionVector.y + 1.0 , 0.0, 1.0);',
+        '   gl_Position = vec4( v.x / projectionVector.x -1.0, v.y / -projectionVector.y + 1.0 , 0.0, 1.0);',
         '   vTextureCoord = aTextureCoord;',
-        '   vColor = aColor;',
+       // '   vColor = aColor * vec4(tint * alpha, alpha);',
         '}'
     ];
+
+    this.init();
 };
 
 /**
@@ -4103,8 +4161,7 @@ PIXI.StripShader = function()
 */
 PIXI.StripShader.prototype.init = function()
 {
-
-    var gl = PIXI.gl;
+    var gl = this.gl;
 
     var program = PIXI.compileProgram(gl, this.vertexSrc, this.fragmentSrc);
     gl.useProgram(program);
@@ -4119,6 +4176,8 @@ PIXI.StripShader.prototype.init = function()
     // get and store the attributes
     this.aVertexPosition = gl.getAttribLocation(program, 'aVertexPosition');
     this.aTextureCoord = gl.getAttribLocation(program, 'aTextureCoord');
+
+    this.attributes = [this.aVertexPosition, this.aTextureCoord];
 
     this.translationMatrix = gl.getUniformLocation(program, 'translationMatrix');
     this.alpha = gl.getUniformLocation(program, 'alpha');
@@ -4137,6 +4196,8 @@ PIXI.StripShader.prototype.init = function()
 */
 PIXI.PrimitiveShader = function(gl)
 {
+    this._UID = PIXI._UID++;
+ 
     /**
      * @property gl
      * @type WebGLContext
@@ -4236,6 +4297,119 @@ PIXI.PrimitiveShader.prototype.destroy = function()
  */
 
 /**
+* @class ComplexPrimitiveShader
+* @constructor
+* @param gl {WebGLContext} the current WebGL drawing context
+*/
+PIXI.ComplexPrimitiveShader = function(gl)
+{
+    this._UID = PIXI._UID++;
+    /**
+     * @property gl
+     * @type WebGLContext
+     */
+    this.gl = gl;
+
+    /**
+    * @property {any} program - The WebGL program.
+    */
+    this.program = null;
+
+    /**
+     * @property fragmentSrc
+     * @type Array
+     */
+    this.fragmentSrc = [
+        'precision mediump float;',
+        
+
+
+        'varying vec4 vColor;',
+
+        'void main(void) {',
+        '   gl_FragColor = vColor;',
+        '}'
+    ];
+
+    /**
+     * @property vertexSrc
+     * @type Array
+     */
+    this.vertexSrc  = [
+        'attribute vec2 aVertexPosition;',
+        //'attribute vec4 aColor;',
+        'uniform mat3 translationMatrix;',
+        'uniform vec2 projectionVector;',
+        'uniform vec2 offsetVector;',
+        
+        'uniform vec3 tint;',
+        'uniform float alpha;',
+        'uniform vec3 color;',
+
+        'varying vec4 vColor;',
+
+        'void main(void) {',
+        '   vec3 v = translationMatrix * vec3(aVertexPosition , 1.0);',
+        '   v -= offsetVector.xyx;',
+        '   gl_Position = vec4( v.x / projectionVector.x -1.0, v.y / -projectionVector.y + 1.0 , 0.0, 1.0);',
+        '   vColor = vec4(color * alpha * tint, alpha);',//" * vec4(tint * alpha, alpha);',
+        '}'
+    ];
+
+    this.init();
+};
+
+/**
+* Initialises the shader
+* @method init
+*
+*/
+PIXI.ComplexPrimitiveShader.prototype.init = function()
+{
+
+    var gl = this.gl;
+
+    var program = PIXI.compileProgram(gl, this.vertexSrc, this.fragmentSrc);
+    gl.useProgram(program);
+
+    // get and store the uniforms for the shader
+    this.projectionVector = gl.getUniformLocation(program, 'projectionVector');
+    this.offsetVector = gl.getUniformLocation(program, 'offsetVector');
+    this.tintColor = gl.getUniformLocation(program, 'tint');
+    this.color = gl.getUniformLocation(program, 'color');
+
+
+    // get and store the attributes
+    this.aVertexPosition = gl.getAttribLocation(program, 'aVertexPosition');
+   // this.colorAttribute = gl.getAttribLocation(program, 'aColor');
+
+    this.attributes = [this.aVertexPosition, this.colorAttribute];
+
+    this.translationMatrix = gl.getUniformLocation(program, 'translationMatrix');
+    this.alpha = gl.getUniformLocation(program, 'alpha');
+
+    this.program = program;
+};
+
+/**
+* Destroys the shader
+* @method destroy
+*
+*/
+PIXI.ComplexPrimitiveShader.prototype.destroy = function()
+{
+    this.gl.deleteProgram( this.program );
+    this.uniforms = null;
+    this.gl = null;
+
+    this.attribute = null;
+};
+
+/**
+ * @author Mat Groves http://matgroves.com/ @Doormat23
+ */
+
+/**
  * A set of functions used by the webGL renderer to draw the primitive graphics data
  *
  * @class WebGLGraphics
@@ -4261,60 +4435,67 @@ PIXI.WebGLGraphics.renderGraphics = function(graphics, renderSession)//projectio
     var gl = renderSession.gl;
     var projection = renderSession.projection,
         offset = renderSession.offset,
-        shader = renderSession.shaderManager.primitiveShader;
-
-    if(!graphics._webGL[gl.id])graphics._webGL[gl.id] = {points:[], indices:[], lastIndex:0,
-                                           buffer:gl.createBuffer(),
-                                           indexBuffer:gl.createBuffer()};
-
-    var webGL = graphics._webGL[gl.id];
+        shader = renderSession.shaderManager.primitiveShader,
+        webGLData;
 
     if(graphics.dirty)
     {
-        graphics.dirty = false;
-
-        if(graphics.clearDirty)
-        {
-            graphics.clearDirty = false;
-
-            webGL.lastIndex = 0;
-            webGL.points = [];
-            webGL.indices = [];
-
-        }
-
         PIXI.WebGLGraphics.updateGraphics(graphics, gl);
     }
 
-    renderSession.shaderManager.activatePrimitiveShader();
+    var webGL = graphics._webGL[gl.id];
 
     // This  could be speeded up for sure!
 
-    // set the matrix transform
-    gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+    // TODO blend mode needs to be broken out into its own manager..
+    if(graphics.blendMode !== renderSession.spriteBatch.currentBlendMode)
+    {
+        renderSession.spriteBatch.setBlendMode(graphics.blendMode);
+    }
+    
+    for (var i = 0; i < webGL.data.length; i++)
+    {
+        if(webGL.data[i].mode === 1)
+        {
+            webGLData = webGL.data[i];
 
-    gl.uniformMatrix3fv(shader.translationMatrix, false, graphics.worldTransform.toArray(true));
+            renderSession.stencilManager.pushStencil(graphics, webGLData, renderSession);
 
-    gl.uniform2f(shader.projectionVector, projection.x, -projection.y);
-    gl.uniform2f(shader.offsetVector, -offset.x, -offset.y);
+            // render quad..
+            gl.drawElements(gl.TRIANGLE_FAN, 4, gl.UNSIGNED_SHORT, ( webGLData.indices.length - 4 ) * 2 );
+            
+            renderSession.stencilManager.popStencil(graphics, webGLData, renderSession);
+        }
+        else
+        {
+            renderSession.shaderManager.setShader( shader );//activatePrimitiveShader();
+            shader = renderSession.shaderManager.primitiveShader;
+            gl.uniformMatrix3fv(shader.translationMatrix, false, graphics.worldTransform.toArray(true));
 
-    gl.uniform3fv(shader.tintColor, PIXI.hex2rgb(graphics.tint));
+            gl.uniform2f(shader.projectionVector, projection.x, -projection.y);
+            gl.uniform2f(shader.offsetVector, -offset.x, -offset.y);
 
-    gl.uniform1f(shader.alpha, graphics.worldAlpha);
-    gl.bindBuffer(gl.ARRAY_BUFFER, webGL.buffer);
+            gl.uniform3fv(shader.tintColor, PIXI.hex2rgb(graphics.tint));
 
-    gl.vertexAttribPointer(shader.aVertexPosition, 2, gl.FLOAT, false, 4 * 6, 0);
-    gl.vertexAttribPointer(shader.colorAttribute, 4, gl.FLOAT, false,4 * 6, 2 * 4);
+            gl.uniform1f(shader.alpha, graphics.worldAlpha);
+            
+            webGLData = webGL.data[i];
 
-    // set the index buffer!
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, webGL.indexBuffer);
+            gl.bindBuffer(gl.ARRAY_BUFFER, webGLData.buffer);
 
-    gl.drawElements(gl.TRIANGLE_STRIP,  webGL.indices.length, gl.UNSIGNED_SHORT, 0 );
+            gl.vertexAttribPointer(shader.aVertexPosition, 2, gl.FLOAT, false, 4 * 6, 0);
+            gl.vertexAttribPointer(shader.colorAttribute, 4, gl.FLOAT, false,4 * 6, 2 * 4);
 
-    renderSession.shaderManager.deactivatePrimitiveShader();
+            // set the index buffer!
+            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, webGLData.indexBuffer);
+            gl.drawElements(gl.TRIANGLE_STRIP,  webGLData.indices.length, gl.UNSIGNED_SHORT, 0 );
+
+         //   renderSession.shaderManager.deactivatePrimitiveShader();
+        }
+    }
 
     // return to default shader...
-//  PIXI.activateShader(PIXI.defaultShader);
+    //  PIXI.activateShader(PIXI.defaultShader);
 };
 
 /**
@@ -4328,48 +4509,127 @@ PIXI.WebGLGraphics.renderGraphics = function(graphics, renderSession)//projectio
  */
 PIXI.WebGLGraphics.updateGraphics = function(graphics, gl)
 {
+    // get the contexts graphics object
     var webGL = graphics._webGL[gl.id];
+    // if the graphics object does not exist in the webGL context time to create it!
+    if(!webGL)webGL = graphics._webGL[gl.id] = {lastIndex:0, data:[], gl:gl};
+
+    // flag the graphics as not dirty as we are about to update it...
+    graphics.dirty = false;
+
+    var i;
+
+    // if the user cleared the graphics object we will need to clear every object
+    if(graphics.clearDirty)
+    {
+        graphics.clearDirty = false;
+
+        // lop through and return all the webGLDatas to the object pool so than can be reused later on
+        for (i = 0; i < webGL.data.length; i++)
+        {
+            var graphicsData = webGL.data[i];
+            graphicsData.reset();
+            PIXI.WebGLGraphics.graphicsDataPool.push( graphicsData );
+        }
+
+        // clear the array and reset the index.. 
+        webGL.data = [];
+        webGL.lastIndex = 0;
+    }
+
     
-    for (var i = webGL.lastIndex; i < graphics.graphicsData.length; i++)
+    var webGLData;
+    
+    // loop through the graphics datas and construct each one..
+    // if the object is a complex fill then the new stencil buffer technique will be used
+    // other wise graphics objects will be pushed into a batch..
+    for (i = webGL.lastIndex; i < graphics.graphicsData.length; i++)
     {
         var data = graphics.graphicsData[i];
 
         if(data.type === PIXI.Graphics.POLY)
         {
+            // MAKE SURE WE HAVE THE CORRECT TYPE..
             if(data.fill)
             {
-                if(data.points.length>3)
-                    PIXI.WebGLGraphics.buildPoly(data, webGL);
+                if(data.points.length > 6)
+                {
+                    if(data.points.length > 5 * 2)
+                    {
+                        webGLData = PIXI.WebGLGraphics.switchMode(webGL, 1);
+                        PIXI.WebGLGraphics.buildComplexPoly(data, webGLData);
+                    }
+                    else
+                    {
+                        webGLData = PIXI.WebGLGraphics.switchMode(webGL, 0);
+                        PIXI.WebGLGraphics.buildPoly(data, webGLData);
+                    }
+                }
             }
 
             if(data.lineWidth > 0)
             {
-                PIXI.WebGLGraphics.buildLine(data, webGL);
+                webGLData = PIXI.WebGLGraphics.switchMode(webGL, 0);
+                PIXI.WebGLGraphics.buildLine(data, webGLData);
+
             }
         }
-        else if(data.type === PIXI.Graphics.RECT)
+        else
         {
-            PIXI.WebGLGraphics.buildRectangle(data, webGL);
+            webGLData = PIXI.WebGLGraphics.switchMode(webGL, 0);
+            
+            if(data.type === PIXI.Graphics.RECT)
+            {
+                PIXI.WebGLGraphics.buildRectangle(data, webGLData);
+            }
+            else if(data.type === PIXI.Graphics.CIRC || data.type === PIXI.Graphics.ELIP)
+            {
+                PIXI.WebGLGraphics.buildCircle(data, webGLData);
+            }
+            else if(data.type === PIXI.Graphics.RREC)
+            {
+                PIXI.WebGLGraphics.buildRoundedRectangle(data, webGL);
+            }
         }
-        else if(data.type === PIXI.Graphics.CIRC || data.type === PIXI.Graphics.ELIP)
+
+
+        webGL.lastIndex++;
+    }
+
+    // upload all the dirty data...
+    for (i = 0; i < webGL.data.length; i++)
+    {
+        webGLData = webGL.data[i];
+        if(webGLData.dirty)webGLData.upload();
+    }
+};
+
+
+PIXI.WebGLGraphics.switchMode = function(webGL, type)
+{
+    var webGLData;
+
+    if(!webGL.data.length)
+    {
+        webGLData = PIXI.WebGLGraphics.graphicsDataPool.pop() || new PIXI.WebGLGraphicsData(webGL.gl);
+        webGLData.mode = type;
+        webGL.data.push(webGLData);
+    }
+    else
+    {
+        webGLData = webGL.data[webGL.data.length-1];
+
+        if(webGLData.mode !== type || type === 1)
         {
-            PIXI.WebGLGraphics.buildCircle(data, webGL);
+            webGLData = PIXI.WebGLGraphics.graphicsDataPool.pop() || new PIXI.WebGLGraphicsData(webGL.gl);
+            webGLData.mode = type;
+            webGL.data.push(webGLData);
         }
     }
 
-    webGL.lastIndex = graphics.graphicsData.length;
+    webGLData.dirty = true;
 
-   
-
-    webGL.glPoints = new Float32Array(webGL.points);
-
-    gl.bindBuffer(gl.ARRAY_BUFFER, webGL.buffer);
-    gl.bufferData(gl.ARRAY_BUFFER, webGL.glPoints, gl.STATIC_DRAW);
-
-    webGL.glIndicies = new Uint16Array(webGL.indices);
-
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, webGL.indexBuffer);
-    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, webGL.glIndicies, gl.STATIC_DRAW);
+    return webGLData;
 };
 
 /**
@@ -4440,6 +4700,124 @@ PIXI.WebGLGraphics.buildRectangle = function(graphicsData, webGLData)
         graphicsData.points = tempPoints;
     }
 };
+
+/**
+ * Builds a rounded rectangle to draw
+ *
+ * @static
+ * @private
+ * @method buildRoundedRectangle
+ * @param graphicsData {Graphics} The graphics object containing all the necessary properties
+ * @param webGLData {Object}
+ */
+PIXI.WebGLGraphics.buildRoundedRectangle = function(graphicsData, webGLData)
+{
+    /**
+     * Calcul the points for a quadratic bezier curve.
+     * Based on : https://stackoverflow.com/questions/785097/how-do-i-implement-a-bezier-curve-in-c
+     *
+     * @param  {number}   fromX Origin point x
+     * @param  {number}   fromY Origin point x
+     * @param  {number}   cpX   Control point x
+     * @param  {number}   cpY   Control point y
+     * @param  {number}   toX   Destination point x
+     * @param  {number}   toY   Destination point y
+     * @return {number[]}
+     */
+    function quadraticBezierCurve(fromX, fromY, cpX, cpY, toX, toY) {
+        var xa,
+            ya,
+            xb,
+            yb,
+            x,
+            y,
+            n = 20,
+            points = [];
+
+        function getPt(n1 , n2, perc) {
+            var diff = n2 - n1;
+
+            return n1 + ( diff * perc );
+        }
+
+        var j = 0;
+        for (var i = 0; i <= n; i++ )
+        {
+            j = i / n;
+
+            // The Green Line
+            xa = getPt( fromX , cpX , j );
+            ya = getPt( fromY , cpY , j );
+            xb = getPt( cpX , toX , j );
+            yb = getPt( cpY , toY , j );
+
+            // The Black Dot
+            x = getPt( xa , xb , j );
+            y = getPt( ya , yb , j );
+
+            points.push(x, y);
+        }
+        return points;
+    }
+
+    var points = graphicsData.points;
+    var x = points[0];
+    var y = points[1];
+    var width = points[2];
+    var height = points[3];
+    var radius = points[4];
+
+
+    var recPoints = [];
+    recPoints.push(x, y + radius);
+    recPoints = recPoints.concat(quadraticBezierCurve(x, y + height - radius, x, y + height, x + radius, y + height));
+    recPoints = recPoints.concat(quadraticBezierCurve(x + width - radius, y + height, x + width, y + height, x + width, y + height - radius));
+    recPoints = recPoints.concat(quadraticBezierCurve(x + width, y + radius, x + width, y, x + width - radius, y));
+    recPoints = recPoints.concat(quadraticBezierCurve(x + radius, y, x, y, x, y + radius));
+
+
+    if (graphicsData.fill) {
+        var color = PIXI.hex2rgb(graphicsData.fillColor);
+        var alpha = graphicsData.fillAlpha;
+
+        var r = color[0] * alpha;
+        var g = color[1] * alpha;
+        var b = color[2] * alpha;
+
+        var verts = webGLData.points;
+        var indices = webGLData.indices;
+
+        var vecPos = verts.length/6;
+
+        var triangles = PIXI.PolyK.Triangulate(recPoints);
+
+        var i = 0;
+        for (i = 0; i < triangles.length; i+=3)
+        {
+            indices.push(triangles[i] + vecPos);
+            indices.push(triangles[i] + vecPos);
+            indices.push(triangles[i+1] + vecPos);
+            indices.push(triangles[i+2] + vecPos);
+            indices.push(triangles[i+2] + vecPos);
+        }
+
+        for (i = 0; i < recPoints.length; i++)
+        {
+            verts.push(recPoints[i], recPoints[++i], r, g, b, alpha);
+        }
+    }
+
+    if (graphicsData.lineWidth) {
+        var tempPoints = graphicsData.points;
+
+        graphicsData.points = recPoints;
+
+        PIXI.WebGLGraphics.buildLine(graphicsData, webGLData);
+
+        graphicsData.points = tempPoints;
+    }
+};
+
 
 /**
  * Builds a circle to draw
@@ -4545,6 +4923,9 @@ PIXI.WebGLGraphics.buildLine = function(graphicsData, webGLData)
     // if the first point is the last point - gonna have issues :)
     if(firstPoint.x === lastPoint.x && firstPoint.y === lastPoint.y)
     {
+        // need to clone as we are going to slightly modify the shape..
+        points = points.slice();
+
         points.pop();
         points.pop();
 
@@ -4724,7 +5105,7 @@ PIXI.WebGLGraphics.buildLine = function(graphicsData, webGLData)
 };
 
 /**
- * Builds a polygon to draw
+ * Builds a complex polygon to draw
  *
  * @static
  * @private
@@ -4732,6 +5113,60 @@ PIXI.WebGLGraphics.buildLine = function(graphicsData, webGLData)
  * @param graphicsData {Graphics} The graphics object containing all the necessary properties
  * @param webGLData {Object}
  */
+PIXI.WebGLGraphics.buildComplexPoly = function(graphicsData, webGLData)
+{
+
+    //TODO - no need to copy this as it gets turned into a FLoat32Array anyways..
+    var points = graphicsData.points.slice();
+    if(points.length < 6)return;
+
+    // get first and last point.. figure out the middle!
+    var indices = webGLData.indices;
+    webGLData.points = points;
+    webGLData.alpha = graphicsData.fillAlpha;
+    webGLData.color = PIXI.hex2rgb(graphicsData.fillColor);
+
+    /*
+        calclate the bounds..
+    */
+    var minX = Infinity;
+    var maxX = -Infinity;
+
+    var minY = Infinity;
+    var maxY = -Infinity;
+
+    var x,y;
+
+    // get size..
+    for (var i = 0; i < points.length; i+=2)
+    {
+        x = points[i];
+        y = points[i+1];
+
+        minX = x < minX ? x : minX;
+        maxX = x > maxX ? x : maxX;
+
+        minY = y < minY ? y : minY;
+        maxY = y > maxY ? y : maxY;
+    }
+
+    // add a quad to the end cos there is no point making another buffer!
+    points.push(minX, minY,
+                maxX, minY,
+                maxX, maxY,
+                minX, maxY);
+
+    // push a quad onto the end.. 
+    
+    //TODO - this aint needed!
+    var length = points.length / 2;
+    for (i = 0; i < length; i++)
+    {
+        indices.push( i );
+    }
+
+};
+
 PIXI.WebGLGraphics.buildPoly = function(graphicsData, webGLData)
 {
     var points = graphicsData.points;
@@ -4751,7 +5186,6 @@ PIXI.WebGLGraphics.buildPoly = function(graphicsData, webGLData)
     var b = color[2] * alpha;
 
     var triangles = PIXI.PolyK.Triangulate(points);
-
     var vertPos = verts.length / 6;
 
     var i = 0;
@@ -4770,6 +5204,50 @@ PIXI.WebGLGraphics.buildPoly = function(graphicsData, webGLData)
         verts.push(points[i * 2], points[i * 2 + 1],
                    r, g, b, alpha);
     }
+
+};
+
+PIXI.WebGLGraphics.graphicsDataPool = [];
+
+PIXI.WebGLGraphicsData = function(gl)
+{
+    this.gl = gl;
+
+    //TODO does this need to be split before uploding??
+    this.color = [0,0,0]; // color split!
+    this.points = [];
+    this.indices = [];
+    this.lastIndex = 0;
+    this.buffer = gl.createBuffer();
+    this.indexBuffer = gl.createBuffer();
+    this.mode = 1;
+    this.alpha = 1;
+    this.dirty = true;
+};
+
+PIXI.WebGLGraphicsData.prototype.reset = function()
+{
+    this.points = [];
+    this.indices = [];
+    this.lastIndex = 0;
+};
+
+PIXI.WebGLGraphicsData.prototype.upload = function()
+{
+    var gl = this.gl;
+
+//    this.lastIndex = graphics.graphicsData.length;
+    this.glPoints = new Float32Array(this.points);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.buffer);
+    gl.bufferData(gl.ARRAY_BUFFER, this.glPoints, gl.STATIC_DRAW);
+
+    this.glIndicies = new Uint16Array(this.indices);
+
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, this.glIndicies, gl.STATIC_DRAW);
+
+    this.dirty = false;
 };
 
 /**
@@ -4850,20 +5328,20 @@ PIXI.WebGLRenderer = function(width, height, view, transparent, antialias)
         stencil:true
     };
 
-    //try 'experimental-webgl'
-    try {
-        this.gl = this.view.getContext('experimental-webgl',  this.options);
-    } catch (e) {
-        //try 'webgl'
+    var gl = null;
+
+    ['experimental-webgl', 'webgl'].forEach(function(name) {
         try {
-            this.gl = this.view.getContext('webgl',  this.options);
-        } catch (e2) {
-            // fail, not able to get a context
-            throw new Error(' This browser does not support webGL. Try using the canvas renderer' + this);
-        }
+            gl = gl || this.view.getContext(name,  this.options);
+        } catch(e) {}
+    }, this);
+
+    if (!gl) {
+        // fail, not able to get a context
+        throw new Error('This browser does not support webGL. Try using the canvas renderer' + this);
     }
 
-    var gl = this.gl;
+    this.gl = gl;
     this.glContextId = gl.id = PIXI.WebGLRenderer.glContextId ++;
 
     PIXI.glContexts[this.glContextId] = gl;
@@ -4906,8 +5384,10 @@ PIXI.WebGLRenderer = function(width, height, view, transparent, antialias)
     // time to create the render managers! each one focuses on managine a state in webGL
     this.shaderManager = new PIXI.WebGLShaderManager(gl);                   // deals with managing the shader programs and their attribs
     this.spriteBatch = new PIXI.WebGLSpriteBatch(gl);                       // manages the rendering of sprites
+    //this.primitiveBatch = new PIXI.WebGLPrimitiveBatch(gl);               // primitive batch renderer
     this.maskManager = new PIXI.WebGLMaskManager(gl);                       // manages the masks using the stencil buffer
     this.filterManager = new PIXI.WebGLFilterManager(gl, this.transparent); // manages the filters
+    this.stencilManager = new PIXI.WebGLStencilManager(gl);
 
     this.renderSession = {};
     this.renderSession.gl = this.gl;
@@ -4915,7 +5395,9 @@ PIXI.WebGLRenderer = function(width, height, view, transparent, antialias)
     this.renderSession.shaderManager = this.shaderManager;
     this.renderSession.maskManager = this.maskManager;
     this.renderSession.filterManager = this.filterManager;
+   // this.renderSession.primitiveBatch = this.primitiveBatch;
     this.renderSession.spriteBatch = this.spriteBatch;
+    this.renderSession.stencilManager = this.stencilManager;
     this.renderSession.renderer = this;
 
     gl.useProgram(this.shaderManager.defaultShader.program);
@@ -5053,6 +5535,8 @@ PIXI.WebGLRenderer.prototype.renderDisplayObject = function(displayObject, proje
     // start the sprite batch
     this.spriteBatch.begin(this.renderSession);
 
+//    this.primitiveBatch.begin(this.renderSession);
+
     // start the filter manager
     this.filterManager.begin(this.renderSession, buffer);
 
@@ -5061,6 +5545,8 @@ PIXI.WebGLRenderer.prototype.renderDisplayObject = function(displayObject, proje
 
     // finish the sprite batch
     this.spriteBatch.end();
+
+//    this.primitiveBatch.end();
 };
 
 /**
@@ -5075,8 +5561,8 @@ PIXI.WebGLRenderer.updateTextures = function()
     var i = 0;
 
     //TODO break this out into a texture manager...
-    //for (i = 0; i < PIXI.texturesToUpdate.length; i++)
-    //    PIXI.WebGLRenderer.updateTexture(PIXI.texturesToUpdate[i]);
+  //  for (i = 0; i < PIXI.texturesToUpdate.length; i++)
+  //      PIXI..updateWebGLTexture(PIXI.texturesToUpdate[i], this.gl);
 
 
     for (i=0; i < PIXI.Texture.frameUpdates.length; i++)
@@ -5168,7 +5654,7 @@ PIXI.createWebGLTexture = function(texture, gl)
         texture._glTextures[gl.id] = gl.createTexture();
 
         gl.bindTexture(gl.TEXTURE_2D, texture._glTextures[gl.id]);
-        gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
+        gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, texture.premultipliedAlpha);
 
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture.source);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, texture.scaleMode === PIXI.scaleModes.LINEAR ? gl.LINEAR : gl.NEAREST);
@@ -5188,6 +5674,8 @@ PIXI.createWebGLTexture = function(texture, gl)
         }
 
         gl.bindTexture(gl.TEXTURE_2D, null);
+
+        texture._dirty[gl.id] = false;
     }
 
     return  texture._glTextures[gl.id];
@@ -5206,7 +5694,7 @@ PIXI.updateWebGLTexture = function(texture, gl)
     if( texture._glTextures[gl.id] )
     {
         gl.bindTexture(gl.TEXTURE_2D, texture._glTextures[gl.id]);
-        gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
+        gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, texture.premultipliedAlpha);
 
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture.source);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, texture.scaleMode === PIXI.scaleModes.LINEAR ? gl.LINEAR : gl.NEAREST);
@@ -5225,7 +5713,7 @@ PIXI.updateWebGLTexture = function(texture, gl)
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
         }
 
-        gl.bindTexture(gl.TEXTURE_2D, null);
+        texture._dirty[gl.id] = false;
     }
     
 };
@@ -5274,6 +5762,7 @@ PIXI.WebGLRenderer.prototype.handleContextRestored = function()
     // need to set the context...
     this.shaderManager.setContext(gl);
     this.spriteBatch.setContext(gl);
+    this.primitiveBatch.setContext(gl);
     this.maskManager.setContext(gl);
     this.filterManager.setContext(gl);
 
@@ -5325,6 +5814,7 @@ PIXI.WebGLRenderer.prototype.destroy = function()
     // time to create the render managers! each one focuses on managine a state in webGL
     this.shaderManager.destroy();
     this.spriteBatch.destroy();
+    this.primitiveBatch.destroy();
     this.maskManager.destroy();
     this.filterManager.destroy();
 
@@ -5344,7 +5834,6 @@ PIXI.WebGLRenderer.glContextId = 0;
 /**
  * @author Mat Groves http://matgroves.com/ @Doormat23
  */
- 
 
 /**
 * @class WebGLMaskManager
@@ -5358,6 +5847,9 @@ PIXI.WebGLMaskManager = function(gl)
     this.maskPosition = 0;
 
     this.setContext(gl);
+
+    this.reverse = false;
+    this.count = 0;
 };
 
 /**
@@ -5378,26 +5870,16 @@ PIXI.WebGLMaskManager.prototype.setContext = function(gl)
 */
 PIXI.WebGLMaskManager.prototype.pushMask = function(maskData, renderSession)
 {
-    var gl = this.gl;
+    var gl = renderSession.gl;
 
-    if(this.maskStack.length === 0)
+    if(maskData.dirty)
     {
-        gl.enable(gl.STENCIL_TEST);
-        gl.stencilFunc(gl.ALWAYS,1,1);
+        PIXI.WebGLGraphics.updateGraphics(maskData, gl);
     }
-    
-  //  maskData.visible = false;
 
-    this.maskStack.push(maskData);
-    
-    gl.colorMask(false, false, false, false);
-    gl.stencilOp(gl.KEEP,gl.KEEP,gl.INCR);
+    if(!maskData._webGL[gl.id].data.length)return;
 
-    PIXI.WebGLGraphics.renderGraphics(maskData, renderSession);
-
-    gl.colorMask(true, true, true, true);
-    gl.stencilFunc(gl.NOTEQUAL,0, this.maskStack.length);
-    gl.stencilOp(gl.KEEP,gl.KEEP,gl.KEEP);
+    renderSession.stencilManager.pushStencil(maskData, maskData._webGL[gl.id].data[0], renderSession);
 };
 
 /**
@@ -5406,34 +5888,306 @@ PIXI.WebGLMaskManager.prototype.pushMask = function(maskData, renderSession)
 *
 * @param renderSession {RenderSession} an object containing all the useful parameters
 */
-PIXI.WebGLMaskManager.prototype.popMask = function(renderSession)
+PIXI.WebGLMaskManager.prototype.popMask = function(maskData, renderSession)
 {
     var gl = this.gl;
-
-    var maskData = this.maskStack.pop();
-
-    if(maskData)
-    {
-        gl.colorMask(false, false, false, false);
-
-        //gl.stencilFunc(gl.ALWAYS,1,1);
-        gl.stencilOp(gl.KEEP,gl.KEEP,gl.DECR);
-
-        PIXI.WebGLGraphics.renderGraphics(maskData, renderSession);
-
-        gl.colorMask(true, true, true, true);
-        gl.stencilFunc(gl.NOTEQUAL,0,this.maskStack.length);
-        gl.stencilOp(gl.KEEP,gl.KEEP,gl.KEEP);
-    }
-   
-    if(this.maskStack.length === 0)gl.disable(gl.STENCIL_TEST);
+    renderSession.stencilManager.popStencil(maskData, maskData._webGL[gl.id].data[0], renderSession);
 };
+
 
 /**
 * Destroys the mask stack
 * @method destroy
 */
 PIXI.WebGLMaskManager.prototype.destroy = function()
+{
+    this.maskStack = null;
+    this.gl = null;
+};
+/**
+ * @author Mat Groves http://matgroves.com/ @Doormat23
+ */
+ 
+//BA0285
+//Intercontinental Hotel, 888 Howard Street
+//San Francisco
+
+/**
+* @class WebGLStencilManager
+* @constructor
+* @param gl {WebGLContext} the current WebGL drawing context
+* @private
+*/
+PIXI.WebGLStencilManager = function(gl)
+{
+   
+    this.stencilStack = [];
+    this.setContext(gl);
+    this.reverse = true;
+    this.count = 0;
+
+};
+
+/**
+* Sets the drawing context to the one given in parameter
+* @method setContext 
+* @param gl {WebGLContext} the current WebGL drawing context
+*/
+PIXI.WebGLStencilManager.prototype.setContext = function(gl)
+{
+    this.gl = gl;
+};
+
+/**
+* Applies the Mask and adds it to the current filter stack
+* @method pushMask
+* @param maskData {Array}
+* @param renderSession {RenderSession}
+*/
+PIXI.WebGLStencilManager.prototype.pushStencil = function(graphics, webGLData, renderSession)
+{
+    var gl = this.gl;
+    this.bindGraphics(graphics, webGLData, renderSession);
+
+    if(this.stencilStack.length === 0)
+    {
+        gl.enable(gl.STENCIL_TEST);
+        gl.clear(gl.STENCIL_BUFFER_BIT);
+        this.reverse = true;
+        this.count = 0;
+    }
+
+    this.stencilStack.push(webGLData);
+
+    var level = this.count;
+
+    gl.colorMask(false, false, false, false);
+
+    gl.stencilFunc(gl.ALWAYS,0,0xFF);
+    gl.stencilOp(gl.KEEP,gl.KEEP,gl.INVERT);
+
+    // draw the triangle strip!
+
+    if(webGLData.mode === 1)
+    {
+
+        gl.drawElements(gl.TRIANGLE_FAN,  webGLData.indices.length - 4, gl.UNSIGNED_SHORT, 0 );
+       
+        if(this.reverse)
+        {
+            gl.stencilFunc(gl.EQUAL, 0xFF - level, 0xFF);
+            gl.stencilOp(gl.KEEP,gl.KEEP,gl.DECR);
+        }
+        else
+        {
+            gl.stencilFunc(gl.EQUAL,level, 0xFF);
+            gl.stencilOp(gl.KEEP,gl.KEEP,gl.INCR);
+        }
+
+        // draw a quad to increment..
+        gl.drawElements(gl.TRIANGLE_FAN, 4, gl.UNSIGNED_SHORT, ( webGLData.indices.length - 4 ) * 2 );
+               
+        if(this.reverse)
+        {
+            gl.stencilFunc(gl.EQUAL,0xFF-(level+1), 0xFF);
+        }
+        else
+        {
+            gl.stencilFunc(gl.EQUAL,level+1, 0xFF);
+        }
+
+        this.reverse = !this.reverse;
+    }
+    else
+    {
+        if(!this.reverse)
+        {
+            gl.stencilFunc(gl.EQUAL, 0xFF - level, 0xFF);
+            gl.stencilOp(gl.KEEP,gl.KEEP,gl.DECR);
+        }
+        else
+        {
+            gl.stencilFunc(gl.EQUAL,level, 0xFF);
+            gl.stencilOp(gl.KEEP,gl.KEEP,gl.INCR);
+        }
+
+        gl.drawElements(gl.TRIANGLE_STRIP,  webGLData.indices.length, gl.UNSIGNED_SHORT, 0 );
+
+        if(!this.reverse)
+        {
+            gl.stencilFunc(gl.EQUAL,0xFF-(level+1), 0xFF);
+        }
+        else
+        {
+            gl.stencilFunc(gl.EQUAL,level+1, 0xFF);
+        }
+    }
+
+    gl.colorMask(true, true, true, true);
+    gl.stencilOp(gl.KEEP,gl.KEEP,gl.KEEP);
+
+    this.count++;
+};
+
+//TODO this does not belong here!
+PIXI.WebGLStencilManager.prototype.bindGraphics = function(graphics, webGLData, renderSession)
+{
+    //if(this._currentGraphics === graphics)return;
+    this._currentGraphics = graphics;
+
+    var gl = this.gl;
+
+     // bind the graphics object..
+    var projection = renderSession.projection,
+        offset = renderSession.offset,
+        shader;// = renderSession.shaderManager.primitiveShader;
+
+    if(webGLData.mode === 1)
+    {
+        shader = renderSession.shaderManager.complexPrimativeShader;
+
+        renderSession.shaderManager.setShader( shader );
+
+        gl.uniformMatrix3fv(shader.translationMatrix, false, graphics.worldTransform.toArray(true));
+
+        gl.uniform2f(shader.projectionVector, projection.x, -projection.y);
+        gl.uniform2f(shader.offsetVector, -offset.x, -offset.y);
+
+        gl.uniform3fv(shader.tintColor, PIXI.hex2rgb(graphics.tint));
+        gl.uniform3fv(shader.color, webGLData.color);
+
+        gl.uniform1f(shader.alpha, graphics.worldAlpha * webGLData.alpha);
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, webGLData.buffer);
+
+        gl.vertexAttribPointer(shader.aVertexPosition, 2, gl.FLOAT, false, 4 * 2, 0);
+
+
+        // now do the rest..
+        // set the index buffer!
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, webGLData.indexBuffer);
+    }
+    else
+    {
+        //renderSession.shaderManager.activatePrimitiveShader();
+        shader = renderSession.shaderManager.primitiveShader;
+        renderSession.shaderManager.setShader( shader );
+
+        gl.uniformMatrix3fv(shader.translationMatrix, false, graphics.worldTransform.toArray(true));
+
+        gl.uniform2f(shader.projectionVector, projection.x, -projection.y);
+        gl.uniform2f(shader.offsetVector, -offset.x, -offset.y);
+
+        gl.uniform3fv(shader.tintColor, PIXI.hex2rgb(graphics.tint));
+
+        gl.uniform1f(shader.alpha, graphics.worldAlpha);
+        
+        gl.bindBuffer(gl.ARRAY_BUFFER, webGLData.buffer);
+
+        gl.vertexAttribPointer(shader.aVertexPosition, 2, gl.FLOAT, false, 4 * 6, 0);
+        gl.vertexAttribPointer(shader.colorAttribute, 4, gl.FLOAT, false,4 * 6, 2 * 4);
+
+        // set the index buffer!
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, webGLData.indexBuffer);
+    }
+};
+
+PIXI.WebGLStencilManager.prototype.popStencil = function(graphics, webGLData, renderSession)
+{
+	var gl = this.gl;
+    this.stencilStack.pop();
+   
+    this.count--;
+
+    if(this.stencilStack.length === 0)
+    {
+        // the stack is empty!
+        gl.disable(gl.STENCIL_TEST);
+
+    }
+    else
+    {
+
+        var level = this.count;
+
+        this.bindGraphics(graphics, webGLData, renderSession);
+
+        gl.colorMask(false, false, false, false);
+    
+        if(webGLData.mode === 1)
+        {
+            this.reverse = !this.reverse;
+
+            if(this.reverse)
+            {
+                gl.stencilFunc(gl.EQUAL, 0xFF - (level+1), 0xFF);
+                gl.stencilOp(gl.KEEP,gl.KEEP,gl.INCR);
+            }
+            else
+            {
+                gl.stencilFunc(gl.EQUAL,level+1, 0xFF);
+                gl.stencilOp(gl.KEEP,gl.KEEP,gl.DECR);
+            }
+
+            // draw a quad to increment..
+            gl.drawElements(gl.TRIANGLE_FAN, 4, gl.UNSIGNED_SHORT, ( webGLData.indices.length - 4 ) * 2 );
+            
+            gl.stencilFunc(gl.ALWAYS,0,0xFF);
+            gl.stencilOp(gl.KEEP,gl.KEEP,gl.INVERT);
+
+            // draw the triangle strip!
+            gl.drawElements(gl.TRIANGLE_FAN,  webGLData.indices.length - 4, gl.UNSIGNED_SHORT, 0 );
+           
+            if(!this.reverse)
+            {
+                gl.stencilFunc(gl.EQUAL,0xFF-(level), 0xFF);
+            }
+            else
+            {
+                gl.stencilFunc(gl.EQUAL,level, 0xFF);
+            }
+
+        }
+        else
+        {
+          //  console.log("<<>>")
+            if(!this.reverse)
+            {
+                gl.stencilFunc(gl.EQUAL, 0xFF - (level+1), 0xFF);
+                gl.stencilOp(gl.KEEP,gl.KEEP,gl.INCR);
+            }
+            else
+            {
+                gl.stencilFunc(gl.EQUAL,level+1, 0xFF);
+                gl.stencilOp(gl.KEEP,gl.KEEP,gl.DECR);
+            }
+
+            gl.drawElements(gl.TRIANGLE_STRIP,  webGLData.indices.length, gl.UNSIGNED_SHORT, 0 );
+
+            if(!this.reverse)
+            {
+                gl.stencilFunc(gl.EQUAL,0xFF-(level), 0xFF);
+            }
+            else
+            {
+                gl.stencilFunc(gl.EQUAL,level, 0xFF);
+            }
+        }
+
+        gl.colorMask(true, true, true, true);
+        gl.stencilOp(gl.KEEP,gl.KEEP,gl.KEEP);
+
+
+    }
+
+    //renderSession.shaderManager.deactivatePrimitiveShader();
+};
+
+/**
+* Destroys the mask stack
+* @method destroy
+*/
+PIXI.WebGLStencilManager.prototype.destroy = function()
 {
     this.maskStack = null;
     this.gl = null;
@@ -5454,6 +6208,7 @@ PIXI.WebGLShaderManager = function(gl)
     this.maxAttibs = 10;
     this.attribState = [];
     this.tempAttribState = [];
+    this.shaderMap = [];
 
     for (var i = 0; i < this.maxAttibs; i++) {
         this.attribState[i] = false;
@@ -5461,7 +6216,6 @@ PIXI.WebGLShaderManager = function(gl)
 
     this.setContext(gl);
     // the final one is used for the rendering strips
-    //this.stripShader = new PIXI.StripShader(gl);
 };
 
 
@@ -5478,14 +6232,18 @@ PIXI.WebGLShaderManager.prototype.setContext = function(gl)
     // the next one is used for rendering primatives
     this.primitiveShader = new PIXI.PrimitiveShader(gl);
 
+    // the next one is used for rendering triangle strips
+    this.complexPrimativeShader = new PIXI.ComplexPrimitiveShader(gl);
+
     // this shader is used for the default sprite rendering
     this.defaultShader = new PIXI.PixiShader(gl);
 
     // this shader is used for the fast sprite rendering
     this.fastShader = new PIXI.PixiFastShader(gl);
 
-
-    this.activateShader(this.defaultShader);
+    // the next one is used for rendering triangle strips
+    this.stripShader = new PIXI.StripShader(gl);
+    this.setShader(this.defaultShader);
 };
 
 
@@ -5516,7 +6274,6 @@ PIXI.WebGLShaderManager.prototype.setAttribs = function(attribs)
 
     for (i = 0; i < this.attribState.length; i++)
     {
-
         if(this.attribState[i] !== this.tempAttribState[i])
         {
             this.attribState[i] = this.tempAttribState[i];
@@ -5533,48 +6290,16 @@ PIXI.WebGLShaderManager.prototype.setAttribs = function(attribs)
     }
 };
 
-/**
-* Sets-up the given shader 
-*
-* @method activateShader
-* @param shader {Object} the shader that is going to be activated
-*/
-PIXI.WebGLShaderManager.prototype.activateShader = function(shader)
+PIXI.WebGLShaderManager.prototype.setShader = function(shader)
 {
-    //if(this.currentShader == shader)return;
+    if(this._currentId === shader._UID)return;
+    
+    this._currentId = shader._UID;
 
     this.currentShader = shader;
 
     this.gl.useProgram(shader.program);
     this.setAttribs(shader.attributes);
-  
-};
-
-/**
-* Triggers the primitive shader
-* @method activatePrimitiveShader
-*/
-PIXI.WebGLShaderManager.prototype.activatePrimitiveShader = function()
-{
-    var gl = this.gl;
-
-    gl.useProgram(this.primitiveShader.program);
-
-    this.setAttribs(this.primitiveShader.attributes);
-    
-};
-
-/**
-* Disable the primitive shader
-* @method deactivatePrimitiveShader
-*/
-PIXI.WebGLShaderManager.prototype.deactivatePrimitiveShader = function()
-{
-    var gl = this.gl;
-
-    gl.useProgram(this.defaultShader.program);
-
-    this.setAttribs(this.defaultShader.attributes);
 };
 
 /**
@@ -5592,6 +6317,8 @@ PIXI.WebGLShaderManager.prototype.destroy = function()
     this.defaultShader.destroy();
 
     this.fastShader.destroy();
+
+    this.stripShader.destroy();
 
     this.gl = null;
 };
@@ -5985,11 +6712,19 @@ PIXI.WebGLSpriteBatch.prototype.flush = function()
 
     var gl = this.gl;
     
+    // 
+    this.renderSession.shaderManager.setShader(this.renderSession.shaderManager.defaultShader);
+
     // bind the current texture
     gl.bindTexture(gl.TEXTURE_2D, this.currentBaseTexture._glTextures[gl.id] || PIXI.createWebGLTexture(this.currentBaseTexture, gl));
 
-    // upload the verts to the buffer
-    
+    // check if a texture is dirty..
+    if(this.currentBaseTexture._dirty[gl.id])
+    {
+        PIXI.updateWebGLTexture(this.currentBaseTexture, gl);
+    }
+
+    // upload the verts to the buffer  
     if(this.currentBatchSize > ( this.size * 0.5 ) )
     {
         gl.bufferSubData(gl.ARRAY_BUFFER, 0, this.vertices);
@@ -6032,6 +6767,8 @@ PIXI.WebGLSpriteBatch.prototype.stop = function()
 PIXI.WebGLSpriteBatch.prototype.start = function()
 {
     var gl = this.gl;
+
+    this.renderSession.shaderManager.setShader(this.renderSession.shaderManager.defaultShader);
 
     // bind the main texture
     gl.activeTexture(gl.TEXTURE0);
@@ -6746,7 +7483,7 @@ PIXI.WebGLFilterManager.prototype.popFilter = function()
     this.applyFilterPass(filter, filterArea, sizeX, sizeY);
 
     // now restore the regular shader..
-    gl.useProgram(this.defaultShader.program);
+    this.renderSession.shaderManager.setShader(this.defaultShader);
     gl.uniform2f(this.defaultShader.projectionVector, sizeX/2, -sizeY/2);
     gl.uniform2f(this.defaultShader.offsetVector, -offsetX, -offsetY);
 
@@ -6782,7 +7519,9 @@ PIXI.WebGLFilterManager.prototype.applyFilterPass = function(filter, filterArea,
     }
 
     // set the shader
-    gl.useProgram(shader.program);
+    this.renderSession.shaderManager.setShader(shader);
+
+//    gl.useProgram(shader.program);
 
     gl.uniform2f(shader.projectionVector, width/2, -height/2);
     gl.uniform2f(shader.offsetVector, 0,0);
@@ -7342,7 +8081,7 @@ PIXI.CanvasRenderer = function(width, height, view, transparent)
     if(!PIXI.blendModesCanvas)
     {
         PIXI.blendModesCanvas = [];
-        
+
         if(PIXI.canUseNewCanvasBlendModes())
         {
             PIXI.blendModesCanvas[PIXI.blendModes.NORMAL]   = "source-over";
@@ -7475,6 +8214,11 @@ PIXI.CanvasRenderer.prototype.render = function(stage)
 
     this.context.setTransform(1,0,0,1,0,0);
     this.context.globalAlpha = 1;
+
+    if (navigator.isCocoonJS && this.view.screencanvas) {
+        this.context.fillStyle = "black";
+        this.context.clear();
+    }
 
     if (!this.transparent && this.clearBeforeRender)
     {
@@ -7825,6 +8569,42 @@ PIXI.CanvasGraphics.renderGraphics = function(graphics, context)
                 context.stroke();
             }
         }
+        else if (data.type === PIXI.Graphics.RREC)
+        {
+            var rx = points[0];
+            var ry = points[1];
+            var width = points[2];
+            var height = points[3];
+            var radius = points[4];
+
+            var maxRadius = Math.min(width, height) / 2 | 0;
+            radius = radius > maxRadius ? maxRadius : radius;
+
+            context.beginPath();
+            context.moveTo(rx, ry + radius);
+            context.lineTo(rx, ry + height - radius);
+            context.quadraticCurveTo(rx, ry + height, rx + radius, ry + height);
+            context.lineTo(rx + width - radius, ry + height);
+            context.quadraticCurveTo(rx + width, ry + height, rx + width, ry + height - radius);
+            context.lineTo(rx + width, ry + radius);
+            context.quadraticCurveTo(rx + width, ry, rx + width - radius, ry);
+            context.lineTo(rx + radius, ry);
+            context.quadraticCurveTo(rx, ry, rx, ry + radius);
+            context.closePath();
+
+            if(data.fillColor || data.fillColor === 0)
+            {
+                context.globalAlpha = data.fillAlpha * worldAlpha;
+                context.fillStyle = color = '#' + ('00000' + ( data.fillColor | 0).toString(16)).substr(-6);
+                context.fill();
+
+            }
+            if(data.lineWidth)
+            {
+                context.globalAlpha = data.lineAlpha * worldAlpha;
+                context.stroke();
+            }
+        }
     }
 };
 
@@ -7911,6 +8691,29 @@ PIXI.CanvasGraphics.renderGraphicsMask = function(graphics, context)
             context.bezierCurveTo(xm + ox, y, xe, ym - oy, xe, ym);
             context.bezierCurveTo(xe, ym + oy, xm + ox, ye, xm, ye);
             context.bezierCurveTo(xm - ox, ye, x, ym + oy, x, ym);
+            context.closePath();
+        }
+        else if (data.type === PIXI.Graphics.RREC)
+        {
+            var rx = points[0];
+            var ry = points[1];
+            var width = points[2];
+            var height = points[3];
+            var radius = points[4];
+
+            var maxRadius = Math.min(width, height) / 2 | 0;
+            radius = radius > maxRadius ? maxRadius : radius;
+
+            context.beginPath();
+            context.moveTo(rx, ry + radius);
+            context.lineTo(rx, ry + height - radius);
+            context.quadraticCurveTo(rx, ry + height, rx + radius, ry + height);
+            context.lineTo(rx + width - radius, ry + height);
+            context.quadraticCurveTo(rx + width, ry + height, rx + width, ry + height - radius);
+            context.lineTo(rx + width, ry + radius);
+            context.quadraticCurveTo(rx + width, ry, rx + width - radius, ry);
+            context.lineTo(rx + radius, ry);
+            context.quadraticCurveTo(rx, ry, rx, ry + radius);
             context.closePath();
         }
     }
@@ -8029,6 +8832,13 @@ PIXI.Graphics = function()
      * @type Number
      */
     this.boundsPadding = 10;
+
+    /**
+     * Used to detect if the graphics object has changed if this is set to true then the graphics object will be recalculated
+     * 
+     * @type {Boolean}
+     */
+    this.dirty = true;
 };
 
 // constructor
@@ -8129,6 +8939,231 @@ PIXI.Graphics.prototype.lineTo = function(x, y)
 };
 
 /**
+ * Calculate the points for a quadratic bezier curve.
+ * Based on : https://stackoverflow.com/questions/785097/how-do-i-implement-a-bezier-curve-in-c
+ *
+ * @param  {number}   cpX   Control point x
+ * @param  {number}   cpY   Control point y
+ * @param  {number}   toX   Destination point x
+ * @param  {number}   toY   Destination point y
+ * @return {PIXI.Graphics}
+ */
+PIXI.Graphics.prototype.quadraticCurveTo = function(cpX, cpY, toX, toY)
+{
+   // this.currentPath.points.push(toX, toY)
+    //return;
+    var xa,
+    ya,
+    n = 20,
+    points = this.currentPath.points;
+    
+    var fromX = points[points.length-2];
+    var fromY = points[points.length-1];
+
+    var j = 0;
+    for (var i = 1; i <= n; i++ )
+    {
+        j = i / n;
+
+        xa = fromX + ( (cpX - fromX) * j );
+        ya = fromY + ( (cpY - fromY) * j );
+
+        points.push( xa + ( ((cpX + ( (toX - cpX) * j )) - xa) * j ),
+                     ya + ( ((cpY + ( (toY - cpY) * j )) - ya) * j ) );
+    }
+
+
+    this.dirty = true;
+
+    return this;
+};
+
+/**
+ * Calculate the points for a bezier curve.
+ *
+ * @param  {number}   cpX    Control point x
+ * @param  {number}   cpY    Control point y
+ * @param  {number}   cpX2   Second Control point x
+ * @param  {number}   cpY2   Second Control point y
+ * @param  {number}   toX    Destination point x
+ * @param  {number}   toY    Destination point y
+ * @return {PIXI.Graphics}
+ */
+PIXI.Graphics.prototype.bezierCurveTo = function(cpX, cpY, cpX2, cpY2, toX, toY)
+{
+    var n = 20,
+    dt,
+    dt2,
+    dt3,
+    t2,
+    t3,
+    points = this.currentPath.points;
+
+    var fromX = points[points.length-2];
+    var fromY = points[points.length-1];
+    
+    var j = 0;
+
+    for (var i=1; i<n; i++)
+    {
+        j = i / n;
+
+        dt = (1 - j);
+        dt2 = dt * dt;
+        dt3 = dt2 * dt;
+
+        t2 = j * j;
+        t3 = t2 * j;
+        
+        points.push( dt3 * fromX + 3 * dt2 * j * cpX + 3 * dt * t2 * cpX2 + t3 * toX,
+                     dt3 * fromY + 3 * dt2 * j * cpY + 3 * dt * t2 * cpY2 + t3 * toY);
+        
+    }
+    
+    this.dirty = true;
+
+    return this;
+};
+
+/*
+ * arcTo() 
+ *
+ * "borrowed" from https://code.google.com/p/fxcanvas/ - thanks google!
+ */
+PIXI.Graphics.prototype.arcTo = function(x1, y1, x2, y2, radius)
+{
+    // check that path contains subpaths
+    //if (path.commands.length == 0)
+//        moveTo(x1, y1);
+    var points = this.currentPath.points;
+
+    var fromX = points[points.length-2];
+    var fromY = points[points.length-1];
+
+//    points.push( x1,  y1);
+
+    var a1 = fromY - y1;
+    var b1 = fromX - x1;
+    var a2 = y2   - y1;
+    var b2 = x2   - x1;
+    var mm = Math.abs(a1 * b2 - b1 * a2);
+
+    if (mm < 1.0e-8 || radius === 0)
+    {
+        points.push(x1, y1);
+    }
+    else
+    {
+        var dd = a1 * a1 + b1 * b1;
+        var cc = a2 * a2 + b2 * b2;
+        var tt = a1 * a2 + b1 * b2;
+        var k1 = radius * Math.sqrt(dd) / mm;
+        var k2 = radius * Math.sqrt(cc) / mm;
+        var j1 = k1 * tt / dd;
+        var j2 = k2 * tt / cc;
+        var cx = k1 * b2 + k2 * b1;
+        var cy = k1 * a2 + k2 * a1;
+        var px = b1 * (k2 + j1);
+        var py = a1 * (k2 + j1);
+        var qx = b2 * (k1 + j2);
+        var qy = a2 * (k1 + j2);
+        var startAngle = Math.atan2(py - cy, px - cx);
+        var endAngle   = Math.atan2(qy - cy, qx - cx);
+        // not required?
+     //   points.push(px + x1 , py + y1);
+        this.arc(cx + x1, cy + y1, radius, startAngle, endAngle, b1 * a2 > b2 * a1);
+    }
+
+    this.dirty = true;
+
+    return this;
+};
+
+/*
+ * Arc init! TODO add docs
+ */
+PIXI.Graphics.prototype.arc = function(cx, cy, radius, startAngle, endAngle, anticlockwise)
+{
+    var startX = cx + Math.cos(startAngle) * radius;
+    var startY = cy + Math.sin(startAngle) * radius;
+
+    // check that path contains subpaths
+   // if (path.commands.length == 0)
+     //   this.moveTo(startX, startY);
+   // else
+    var points = this.currentPath.points;
+    
+    var fromX = points[points.length-2];
+    var fromY = points[points.length-1];
+
+    if(fromX !== startX || fromY !== startY) points.push(startX, startY);
+
+    if (startAngle === endAngle)return this;
+
+    if( !anticlockwise && endAngle <= startAngle )
+    {
+        endAngle += Math.PI * 2;
+    }
+    else if( anticlockwise && startAngle <= endAngle )
+    {
+        startAngle += Math.PI * 2;
+    }
+
+    var sweep = anticlockwise ? (startAngle - endAngle) *-1 : (endAngle - startAngle);
+    var segs =  ( Math.abs(sweep)/ (Math.PI * 2) ) * 40;
+
+    if( sweep === 0 ) return this;
+
+    var theta = sweep/(segs*2);
+    var theta2 = theta*2;
+
+    var cTheta = Math.cos(theta);
+    var sTheta = Math.sin(theta);
+    
+    var remainder = ( segs % 1 ) / segs;
+
+    for(var i=0; i<=segs; i++)
+    {
+        var real =  i + remainder * i;
+
+        var angle = ((theta) + startAngle + (theta2 * real));
+
+        var c = Math.cos(angle);
+        var s = -Math.sin(angle);
+
+        points.push(( (cTheta *  c) + (sTheta * s) ) * radius + cx,
+                    ( (cTheta * -s) + (sTheta * c) ) * radius + cy);
+    }
+
+    this.dirty = true;
+
+    return this;
+};
+
+/**
+ * Draws a line using the current line style from the current drawing position to (x, y);
+ * the current drawing position is then set to (x, y).
+ *
+ * @method lineTo
+ * @param x {Number} the X coordinate to draw to
+ * @param y {Number} the Y coordinate to draw to
+ */
+PIXI.Graphics.prototype.drawPath = function(path)
+{
+    if (!this.currentPath.points.length) this.graphicsData.pop();
+
+    this.currentPath = this.currentPath = {lineWidth:this.lineWidth, lineColor:this.lineColor, lineAlpha:this.lineAlpha,
+                        fillColor:this.fillColor, fillAlpha:this.fillAlpha, fill:this.filling, points:[], type:PIXI.Graphics.POLY};
+
+    this.graphicsData.push(this.currentPath);
+
+    this.currentPath.points = this.currentPath.points.concat(path);
+    this.dirty = true;
+
+    return this;
+};
+
+/**
  * Specifies a simple one-color fill that subsequent calls to other Graphics methods
  * (such as lineTo() or drawCircle()) use when drawing.
  *
@@ -8175,6 +9210,29 @@ PIXI.Graphics.prototype.drawRect = function( x, y, width, height )
     this.currentPath = {lineWidth:this.lineWidth, lineColor:this.lineColor, lineAlpha:this.lineAlpha,
                         fillColor:this.fillColor, fillAlpha:this.fillAlpha, fill:this.filling,
                         points:[x, y, width, height], type:PIXI.Graphics.RECT};
+
+    this.graphicsData.push(this.currentPath);
+    this.dirty = true;
+
+    return this;
+};
+
+/**
+ * @method drawRoundedRect
+ *
+ * @param x {Number} The X coord of the top-left of the rectangle
+ * @param y {Number} The Y coord of the top-left of the rectangle
+ * @param width {Number} The width of the rectangle
+ * @param height {Number} The height of the rectangle
+ * @param radius {Number} Radius of the rectangle corners
+ */
+PIXI.Graphics.prototype.drawRoundedRect = function( x, y, width, height, radius )
+{
+    if (!this.currentPath.points.length) this.graphicsData.pop();
+
+    this.currentPath = {lineWidth:this.lineWidth, lineColor:this.lineColor, lineAlpha:this.lineAlpha,
+                        fillColor:this.fillColor, fillAlpha:this.fillAlpha, fill:this.filling,
+                        points:[x, y, width, height, radius], type:PIXI.Graphics.RREC};
 
     this.graphicsData.push(this.currentPath);
     this.dirty = true;
@@ -8302,7 +9360,7 @@ PIXI.Graphics.prototype._renderWebGL = function(renderSession)
     {
         renderSession.spriteBatch.stop();
 
-        if(this._mask)renderSession.maskManager.pushMask(this.mask, renderSession);
+        if(this._mask)renderSession.maskManager.pushMask(this._mask, renderSession);
         if(this._filters)renderSession.filterManager.pushFilter(this._filterBlock);
       
         // check blend mode
@@ -8312,7 +9370,12 @@ PIXI.Graphics.prototype._renderWebGL = function(renderSession)
             var blendModeWebGL = PIXI.blendModesWebGL[renderSession.spriteBatch.currentBlendMode];
             renderSession.spriteBatch.gl.blendFunc(blendModeWebGL[0], blendModeWebGL[1]);
         }
-     
+        
+      //  for (var i = this.graphicsData.length - 1; i >= 0; i--) {
+        //    this.graphicsData[i]
+            
+//        };
+
         PIXI.WebGLGraphics.renderGraphics(this, renderSession);
         
         // only render if it has children!
@@ -8330,7 +9393,7 @@ PIXI.Graphics.prototype._renderWebGL = function(renderSession)
         }
 
         if(this._filters)renderSession.filterManager.popFilter();
-        if(this._mask)renderSession.maskManager.popMask(renderSession);
+        if(this._mask)renderSession.maskManager.popMask(this.mask, renderSession);
           
         renderSession.drawCount++;
 
@@ -8359,6 +9422,11 @@ PIXI.Graphics.prototype._renderCanvas = function(renderSession)
         context.globalCompositeOperation = PIXI.blendModesCanvas[renderSession.currentBlendMode];
     }
 
+    if(this._mask)
+    {
+        renderSession.maskManager.pushMask(this._mask, renderSession.context);
+    }
+
     context.setTransform(transform.a, transform.c, transform.b, transform.d, transform.tx, transform.ty);
     PIXI.CanvasGraphics.renderGraphics(this, context);
 
@@ -8366,6 +9434,11 @@ PIXI.Graphics.prototype._renderCanvas = function(renderSession)
     for(var i=0, j=this.children.length; i<j; i++)
     {
         this.children[i]._renderCanvas(renderSession);
+    }
+
+    if(this._mask)
+    {
+        renderSession.maskManager.popMask(renderSession.context);
     }
 };
 
@@ -8563,6 +9636,465 @@ PIXI.Graphics.POLY = 0;
 PIXI.Graphics.RECT = 1;
 PIXI.Graphics.CIRC = 2;
 PIXI.Graphics.ELIP = 3;
+PIXI.Graphics.RREC = 4;
+
+
+/**
+ * @author Mat Groves http://matgroves.com/
+ */
+
+ /**
+ * 
+ * @class Strip
+ * @extends DisplayObjectContainer
+ * @constructor
+ * @param texture {Texture} The texture to use
+ * @param width {Number} the width 
+ * @param height {Number} the height
+ * 
+ */
+PIXI.Strip = function(texture)
+{
+    PIXI.DisplayObjectContainer.call( this );
+    
+    this.texture = texture;
+
+    // set up the main bits..
+    this.uvs = new PIXI.Float32Array([0, 1,
+                                    1, 1,
+                                    1, 0,
+                                    0,1]);
+
+    this.verticies = new PIXI.Float32Array([0, 0,
+                      100,0,
+                      100,100,
+                      0, 100]);
+
+    this.colors = new PIXI.Float32Array([1, 1, 1, 1]);
+
+    this.indices = new PIXI.Uint16Array([0, 1, 2, 3]);
+    
+
+    this.dirty = true;
+};
+
+// constructor
+PIXI.Strip.prototype = Object.create(PIXI.DisplayObjectContainer.prototype);
+PIXI.Strip.prototype.constructor = PIXI.Strip;
+
+PIXI.Strip.prototype._renderWebGL = function(renderSession)
+{
+    // if the sprite is not visible or the alpha is 0 then no need to render this element
+    if(!this.visible || this.alpha <= 0)return;
+    // render triangle strip..
+
+    renderSession.spriteBatch.stop();
+
+    // init! init!
+    if(!this._vertexBuffer)this._initWebGL(renderSession);
+    
+    renderSession.shaderManager.setShader(renderSession.shaderManager.stripShader);
+
+    this._renderStrip(renderSession);
+
+    ///renderSession.shaderManager.activateDefaultShader();
+
+    renderSession.spriteBatch.start();
+
+    //TODO check culling  
+};
+
+PIXI.Strip.prototype._initWebGL = function(renderSession)
+{
+    // build the strip!
+    var gl = renderSession.gl;
+    
+    this._vertexBuffer = gl.createBuffer();
+    this._indexBuffer = gl.createBuffer();
+    this._uvBuffer = gl.createBuffer();
+    this._colorBuffer = gl.createBuffer();
+    
+    gl.bindBuffer(gl.ARRAY_BUFFER, this._vertexBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, this.verticies, gl.DYNAMIC_DRAW);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, this._uvBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER,  this.uvs, gl.STATIC_DRAW);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, this._colorBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, this.colors, gl.STATIC_DRAW);
+ 
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this._indexBuffer);
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, this.indices, gl.STATIC_DRAW);
+};
+
+PIXI.Strip.prototype._renderStrip = function(renderSession)
+{
+    var gl = renderSession.gl;
+    var projection = renderSession.projection,
+        offset = renderSession.offset,
+        shader = renderSession.shaderManager.stripShader;
+
+
+    // gl.uniformMatrix4fv(shaderProgram.mvMatrixUniform, false, mat4Real);
+
+    gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+
+    // set uniforms
+    gl.uniformMatrix3fv(shader.translationMatrix, false, this.worldTransform.toArray(true));
+    gl.uniform2f(shader.projectionVector, projection.x, -projection.y);
+    gl.uniform2f(shader.offsetVector, -offset.x, -offset.y);
+    gl.uniform1f(shader.alpha, 1);
+
+    if(!this.dirty)
+    {
+        
+        gl.bindBuffer(gl.ARRAY_BUFFER, this._vertexBuffer);
+        gl.bufferSubData(gl.ARRAY_BUFFER, 0, this.verticies);
+        gl.vertexAttribPointer(shader.aVertexPosition, 2, gl.FLOAT, false, 0, 0);
+        
+        // update the uvs
+        gl.bindBuffer(gl.ARRAY_BUFFER, this._uvBuffer);
+        gl.vertexAttribPointer(shader.aTextureCoord, 2, gl.FLOAT, false, 0, 0);
+            
+        gl.activeTexture(gl.TEXTURE0);
+         // bind the current texture
+        gl.bindTexture(gl.TEXTURE_2D, this.texture.baseTexture._glTextures[gl.id] || PIXI.createWebGLTexture(this.texture.baseTexture, gl));
+    
+        // dont need to upload!
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this._indexBuffer);
+    
+    
+    }
+    else
+    {
+
+        this.dirty = false;
+        gl.bindBuffer(gl.ARRAY_BUFFER, this._vertexBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, this.verticies, gl.STATIC_DRAW);
+        gl.vertexAttribPointer(shader.aVertexPosition, 2, gl.FLOAT, false, 0, 0);
+        
+        // update the uvs
+        gl.bindBuffer(gl.ARRAY_BUFFER, this._uvBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, this.uvs, gl.STATIC_DRAW);
+        gl.vertexAttribPointer(shader.aTextureCoord, 2, gl.FLOAT, false, 0, 0);
+            
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, this.texture.baseTexture._glTextures[gl.id] || PIXI.createWebGLTexture(this.texture.baseTexture, gl));
+    
+        // dont need to upload!
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this._indexBuffer);
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, this.indices, gl.STATIC_DRAW);
+        
+    }
+    //console.log(gl.TRIANGLE_STRIP)
+    //
+    //
+    gl.drawElements(gl.TRIANGLE_STRIP, this.indices.length, gl.UNSIGNED_SHORT, 0);
+    
+  
+};
+
+PIXI.Strip.prototype._renderCanvas = function(renderSession)
+{
+    var context = renderSession.context;
+    
+    var transform = this.worldTransform;
+
+    if (renderSession.roundPixels)
+    {
+        context.setTransform(transform.a, transform.c, transform.b, transform.d, transform.tx | 0, transform.ty | 0);
+    }
+    else
+    {
+        context.setTransform(transform.a, transform.c, transform.b, transform.d, transform.tx, transform.ty);
+    }
+        
+    var strip = this;
+    // draw triangles!!
+    var verticies = strip.verticies;
+    var uvs = strip.uvs;
+
+    var length = verticies.length/2;
+    this.count++;
+
+    for (var i = 0; i < length-2; i++)
+    {
+        // draw some triangles!
+        var index = i*2;
+
+        var x0 = verticies[index],   x1 = verticies[index+2], x2 = verticies[index+4];
+        var y0 = verticies[index+1], y1 = verticies[index+3], y2 = verticies[index+5];
+
+        if(true)
+        {
+
+            //expand();
+            var centerX = (x0 + x1 + x2)/3;
+            var centerY = (y0 + y1 + y2)/3;
+
+            var normX = x0 - centerX;
+            var normY = y0 - centerY;
+
+            var dist = Math.sqrt( normX * normX + normY * normY );
+            x0 = centerX + (normX / dist) * (dist + 3);
+            y0 = centerY + (normY / dist) * (dist + 3);
+
+            // 
+            
+            normX = x1 - centerX;
+            normY = y1 - centerY;
+
+            dist = Math.sqrt( normX * normX + normY * normY );
+            x1 = centerX + (normX / dist) * (dist + 3);
+            y1 = centerY + (normY / dist) * (dist + 3);
+
+            normX = x2 - centerX;
+            normY = y2 - centerY;
+
+            dist = Math.sqrt( normX * normX + normY * normY );
+            x2 = centerX + (normX / dist) * (dist + 3);
+            y2 = centerY + (normY / dist) * (dist + 3);
+
+        }
+
+        var u0 = uvs[index] * strip.texture.width,   u1 = uvs[index+2] * strip.texture.width, u2 = uvs[index+4]* strip.texture.width;
+        var v0 = uvs[index+1]* strip.texture.height, v1 = uvs[index+3] * strip.texture.height, v2 = uvs[index+5]* strip.texture.height;
+
+        context.save();
+        context.beginPath();
+
+
+        context.moveTo(x0, y0);
+        context.lineTo(x1, y1);
+        context.lineTo(x2, y2);
+
+        context.closePath();
+
+        context.clip();
+
+        // Compute matrix transform
+        var delta = u0*v1 + v0*u2 + u1*v2 - v1*u2 - v0*u1 - u0*v2;
+        var deltaA = x0*v1 + v0*x2 + x1*v2 - v1*x2 - v0*x1 - x0*v2;
+        var deltaB = u0*x1 + x0*u2 + u1*x2 - x1*u2 - x0*u1 - u0*x2;
+        var deltaC = u0*v1*x2 + v0*x1*u2 + x0*u1*v2 - x0*v1*u2 - v0*u1*x2 - u0*x1*v2;
+        var deltaD = y0*v1 + v0*y2 + y1*v2 - v1*y2 - v0*y1 - y0*v2;
+        var deltaE = u0*y1 + y0*u2 + u1*y2 - y1*u2 - y0*u1 - u0*y2;
+        var deltaF = u0*v1*y2 + v0*y1*u2 + y0*u1*v2 - y0*v1*u2 - v0*u1*y2 - u0*y1*v2;
+
+        context.transform(deltaA / delta, deltaD / delta,
+                            deltaB / delta, deltaE / delta,
+                            deltaC / delta, deltaF / delta);
+
+        context.drawImage(strip.texture.baseTexture.source, 0, 0);
+        context.restore();
+    }
+};
+
+/*
+ * Sets the texture that the Strip will use 
+ *
+ * @method setTexture
+ * @param texture {Texture} the texture that will be used
+ * @private
+ */
+
+/*
+PIXI.Strip.prototype.setTexture = function(texture)
+{
+    //TODO SET THE TEXTURES
+    //TODO VISIBILITY
+
+    // stop current texture
+    this.texture = texture;
+    this.width   = texture.frame.width;
+    this.height  = texture.frame.height;
+    this.updateFrame = true;
+};
+*/
+
+/**
+ * When the texture is updated, this event will fire to update the scale and frame
+ *
+ * @method onTextureUpdate
+ * @param event
+ * @private
+ */
+
+PIXI.Strip.prototype.onTextureUpdate = function()
+{
+    this.updateFrame = true;
+};
+/* @author Mat Groves http://matgroves.com/ @Doormat23
+ */
+
+/**
+ * 
+ * @class Rope
+ * @constructor
+ * @param texture {Texture} The texture to use
+ * @param points {Array}
+ * 
+ */
+PIXI.Rope = function(texture, points)
+{
+    PIXI.Strip.call( this, texture );
+    this.points = points;
+
+    this.verticies = new PIXI.Float32Array(points.length * 4);
+    this.uvs = new PIXI.Float32Array(points.length * 4);
+    this.colors = new PIXI.Float32Array(points.length * 2);
+    this.indices = new PIXI.Uint16Array(points.length * 2);
+   
+
+    this.refresh();
+};
+
+
+// constructor
+PIXI.Rope.prototype = Object.create( PIXI.Strip.prototype );
+PIXI.Rope.prototype.constructor = PIXI.Rope;
+
+/*
+ * Refreshes 
+ *
+ * @method refresh
+ */
+PIXI.Rope.prototype.refresh = function()
+{
+    var points = this.points;
+    if(points.length < 1) return;
+
+    var uvs = this.uvs;
+
+    var lastPoint = points[0];
+    var indices = this.indices;
+    var colors = this.colors;
+
+    this.count-=0.2;
+
+    uvs[0] = 0;
+    uvs[1] = 0;
+    uvs[2] = 0;
+    uvs[3] = 1;
+
+    colors[0] = 1;
+    colors[1] = 1;
+
+    indices[0] = 0;
+    indices[1] = 1;
+
+    var total = points.length,
+        point, index, amount;
+
+    for (var i = 1; i < total; i++)
+    {
+        point = points[i];
+        index = i * 4;
+        // time to do some smart drawing!
+        amount = i / (total-1);
+
+        if(i%2)
+        {
+            uvs[index] = amount;
+            uvs[index+1] = 0;
+
+            uvs[index+2] = amount;
+            uvs[index+3] = 1;
+        }
+        else
+        {
+            uvs[index] = amount;
+            uvs[index+1] = 0;
+
+            uvs[index+2] = amount;
+            uvs[index+3] = 1;
+        }
+
+        index = i * 2;
+        colors[index] = 1;
+        colors[index+1] = 1;
+
+        index = i * 2;
+        indices[index] = index;
+        indices[index + 1] = index + 1;
+
+        lastPoint = point;
+    }
+};
+
+/*
+ * Updates the object transform for rendering
+ *
+ * @method updateTransform
+ * @private
+ */
+PIXI.Rope.prototype.updateTransform = function()
+{
+
+    var points = this.points;
+    if(points.length < 1)return;
+
+    var lastPoint = points[0];
+    var nextPoint;
+    var perp = {x:0, y:0};
+
+    this.count-=0.2;
+
+    var verticies = this.verticies;
+    var total = points.length,
+        point, index, ratio, perpLength, num;
+
+    for (var i = 0; i < total; i++)
+    {
+        point = points[i];
+        index = i * 4;
+
+        if(i < points.length-1)
+        {
+            nextPoint = points[i+1];
+        }
+        else
+        {
+            nextPoint = point;
+        }
+
+        perp.y = -(nextPoint.x - lastPoint.x);
+        perp.x = nextPoint.y - lastPoint.y;
+
+        ratio = (1 - (i / (total-1))) * 10;
+
+        if(ratio > 1) ratio = 1;
+
+        perpLength = Math.sqrt(perp.x * perp.x + perp.y * perp.y);
+        num = this.texture.height / 2; //(20 + Math.abs(Math.sin((i + this.count) * 0.3) * 50) )* ratio;
+        perp.x /= perpLength;
+        perp.y /= perpLength;
+
+        perp.x *= num;
+        perp.y *= num;
+
+        verticies[index] = point.x + perp.x;
+        verticies[index+1] = point.y + perp.y;
+        verticies[index+2] = point.x - perp.x;
+        verticies[index+3] = point.y - perp.y;
+
+        lastPoint = point;
+    }
+
+    PIXI.DisplayObjectContainer.prototype.updateTransform.call( this );
+};
+/*
+ * Sets the texture that the Rope will use 
+ *
+ * @method setTexture
+ * @param texture {Texture} the texture that will be used
+ */
+PIXI.Rope.prototype.setTexture = function(texture)
+{
+    // stop current texture
+    this.texture = texture;
+    this.updateFrame = true;
+};
 
 /**
  * @author Mat Groves http://matgroves.com/
@@ -8808,6 +10340,8 @@ PIXI.TilingSprite.prototype._renderCanvas = function(renderSession)
     
     var transform = this.worldTransform;
 
+    var i,j;
+
     // allow for trimming
 //(this.anchor.x) * -frame.width,
 //                               (this.anchor.y) * -frame.height,
@@ -8863,6 +10397,11 @@ PIXI.TilingSprite.prototype._renderCanvas = function(renderSession)
     if(this._mask)
     {
         renderSession.maskManager.popMask(renderSession.context);
+    }
+
+    for(i=0,j=this.children.length; i<j; i++)
+    {
+        this.children[i]._renderCanvas(renderSession);
     }
 };
 
@@ -8967,7 +10506,6 @@ PIXI.TilingSprite.prototype.generateTilingTexture = function(forcePowerOfTwo)
     var isFrame = frame.width !== baseTexture.width || frame.height !== baseTexture.height;
 
     var newTextureRequired = false;
-
     if(!forcePowerOfTwo)
     {
         if(isFrame)
@@ -8983,7 +10521,9 @@ PIXI.TilingSprite.prototype.generateTilingTexture = function(forcePowerOfTwo)
     {
         targetWidth = PIXI.getNextPowerOfTwo(frame.width);
         targetHeight = PIXI.getNextPowerOfTwo(frame.height);
-        if(frame.width !== targetWidth && frame.height !== targetHeight)newTextureRequired = true;
+
+        if(frame.width !== targetWidth || frame.height !== targetHeight)newTextureRequired = true;
+
     }
 
     if(newTextureRequired)
@@ -9108,8 +10648,20 @@ PIXI.BaseTexture = function(source, scaleMode)
     //TODO will be used for futer pixi 1.5...
     this.id = PIXI.BaseTextureCacheIdGenerator++;
 
+    /**
+     * Controls if RGB channels should be premultiplied by Alpha  (WebGL only)
+     *
+     * @property
+     * @type Boolean
+     * @default TRUE
+    */
+    this.premultipliedAlpha = true;
+
     // used for webGL
     this._glTextures = [];
+    
+    // used for webGL teture updateing...
+    this._dirty = [];
     
     if(!source)return;
 
@@ -9131,9 +10683,16 @@ PIXI.BaseTexture = function(source, scaleMode)
             scope.width = scope.source.width;
             scope.height = scope.source.height;
 
+            for (var i = 0; i < scope._glTextures.length; i++)
+            {
+                scope._dirty[i] = true;
+            }
+
             // add it to somewhere...
-            PIXI.texturesToUpdate.push(scope);
             scope.dispatchEvent( { type: 'loaded', content: scope } );
+        };
+        this.source.onerror = function() {
+            scope.dispatchEvent( { type: 'error', content: scope } );
         };
     }
 
@@ -9156,8 +10715,13 @@ PIXI.BaseTexture.prototype.destroy = function()
     if(this.imageUrl)
     {
         delete PIXI.BaseTextureCache[this.imageUrl];
+        delete PIXI.TextureCache[this.imageUrl];
         this.imageUrl = null;
         this.source.src = null;
+    }
+    else if (this.source && this.source._pixiId)
+    {
+        delete PIXI.BaseTextureCache[this.source._pixiId];
     }
     this.source = null;
     PIXI.texturesToDestroy.push(this);
@@ -9286,7 +10850,15 @@ PIXI.Texture = function(baseTexture, frame)
      * @type Rectangle
      */
     this.trim = null;
-  
+    
+    /**
+     * This will let the renderer know if the texture is valid. If its not then it cannot be rendered
+     *
+     * @property valid
+     * @type Boolean
+     */
+    this.valid = false;
+
     this.scope = this;
 
     this._uvs = null;
@@ -9334,6 +10906,7 @@ PIXI.Texture.prototype.onBaseTextureLoaded = function()
 PIXI.Texture.prototype.destroy = function(destroyBase)
 {
     if(destroyBase) this.baseTexture.destroy();
+    this.valid = false;
 };
 
 /**
@@ -9353,13 +10926,12 @@ PIXI.Texture.prototype.setFrame = function(frame)
         throw new Error('Texture Error: frame does not fit inside the base Texture dimensions ' + this);
     }
 
-    this.updateFrame = true;
+    this.valid = frame && frame.width && frame.height && this.baseTexture.source && this.baseTexture.hasLoaded;
 
-    PIXI.Texture.frameUpdates.push(this);
+    if(this.valid)PIXI.Texture.frameUpdates.push(this);
 
-
-    //this.dispatchEvent( { type: 'update', content: this } );
 };
+
 
 PIXI.Texture.prototype._updateWebGLuvs = function()
 {
@@ -9710,11 +11282,16 @@ PIXI.RenderTexture.prototype.renderCanvas = function(displayObject, position, cl
     var originalWorldTransform = displayObject.worldTransform;
 
     displayObject.worldTransform = PIXI.RenderTexture.tempMatrix;
-
+    
     if(position)
     {
         displayObject.worldTransform.tx = position.x;
         displayObject.worldTransform.ty = position.y;
+    }
+    else
+    {
+        displayObject.worldTransform.tx = 0;
+        displayObject.worldTransform.ty = 0;
     }
 
     for(var i = 0, j = children.length; i < j; i++)
@@ -9746,7 +11323,7 @@ PIXI.RenderTexture.tempMatrix = new PIXI.Matrix();
         }
         exports.PIXI = PIXI;
     } else if (typeof define !== 'undefined' && define.amd) {
-        define('PIXI', (function() { return root.PIXI = PIXI; })() );
+        define(PIXI);
     } else {
         root.PIXI = PIXI;
     }

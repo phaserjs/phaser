@@ -11702,6 +11702,7 @@ Phaser.Physics.P2.prototype = {
     /**
     * This will create a P2 Physics body on the given game object or array of game objects.
     * A game object can only have 1 physics body active at any one time, and it can't be changed until the object is destroyed.
+    * Note: When the game object is enabled for P2 physics it has its anchor x/y set to 0.5 so it becomes centered.
     *
     * @method Phaser.Physics.P2#enable
     * @param {object|array|Phaser.Group} object - The game object to create the physics body on. Can also be an array or Group of objects, a body will be created on every child that has a `body` property.
@@ -13733,6 +13734,7 @@ Object.defineProperty(Phaser.Physics.P2.InversePointProxy.prototype, "y", {
 * In most cases, the properties are used to simulate physical effects. Each body also has its own property values that determine exactly how it reacts to forces and collisions in the scene.
 * By default a single Rectangle shape is added to the Body that matches the dimensions of the parent Sprite. See addShape, removeShape, clearShapes to add extra shapes around the Body.
 * Note: When bound to a Sprite to avoid single-pixel jitters on mobile devices we strongly recommend using Sprite sizes that are even on both axis, i.e. 128x128 not 127x127.
+* Note: When a game object is given a P2 body it has its anchor x/y set to 0.5, so it becomes centered.
 *
 * @class Phaser.Physics.P2.Body
 * @classdesc Physics Body Constructor
@@ -14303,7 +14305,7 @@ Phaser.Physics.P2.Body.prototype = {
     * Applies a force to the Body that causes it to 'thrust' backwards (in reverse), based on its current angle and the given speed.
     * The speed is represented in pixels per second. So a value of 100 would move 100 pixels in 1 second (1000ms).
     *
-    * @method Phaser.Physics.P2.Body#rever
+    * @method Phaser.Physics.P2.Body#reverse
     * @param {number} speed - The speed at which it should reverse.
     */
     reverse: function (speed) {

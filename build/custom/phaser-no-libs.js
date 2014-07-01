@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.0.6 "Jornhill" - Built: Wed Jun 11 2014 14:38:21
+* v2.0.6 "Jornhill" - Built: Tue Jul 01 2014 15:02:12
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -3124,20 +3124,17 @@ Phaser.Line.intersectsPoints = function (a, b, e, f, asSegment, result) {
         return null;
     }
 
-    /*
-     Round to 3 decimals here, due to javascript floating point is 'broken'
-     http://stackoverflow.com/questions/11832914/round-to-at-most-2-decimal-places-in-javascript
-     See workaround explanation there in accepted answer there..
-     */
-    result.x = Math.round( ((((b1 * c2) - (b2 * c1)) / denom)+0.00001)*1000 ) / 1000;
-    result.y = Math.round( ((((a2 * c1) - (a1 * c2)) / denom)+0.00001)*1000 ) / 1000;
+    result.x = ((b1 * c2) - (b2 * c1)) / denom;
+    result.y = ((a2 * c1) - (a1 * c2)) / denom;
 
     if (asSegment)
     {
-        if ( result.x < Math.min(a.x, b.x) || result.x > Math.max(a.x, b.x) ||
-             result.y < Math.min(a.y, b.y) || result.y > Math.max(a.y, b.y) ||
-             result.x < Math.min(e.x, f.x) || result.x > Math.max(e.x, f.x) ||
-             result.y < Math.min(e.y, f.y) || result.y > Math.max(e.y, f.y) ) {
+        var uc = ((f.y-e.y)*(b.x-a.x) - (f.x-e.x)*(b.y- a.y));
+        var ua = (((f.x-e.x)*(a.y-e.y)) - (f.y-e.y)*(a.x-e.x)) / uc;
+        var ub = (((b.x- a.x)*(a.y- e.y)) - ((b.y-a.y)*(a.x- e.x))) / uc;
+        if (ua >=0 && ua<=1 && ub >=0 && ub <=1) {
+            return result;
+        } else {
             return null;
         }
     }
@@ -16056,14 +16053,14 @@ Phaser.InputHandler.prototype = {
     },
 
     /**
-    * Checks if the given pointer is over this Sprite and can click it.
+    * Checks if the given pointer is both down and over this Sprite.
     * @method Phaser.InputHandler#checkPointerDown
     * @param {Phaser.Pointer} pointer
     * @return {boolean} True if the pointer is down, otherwise false.
     */
     checkPointerDown: function (pointer) {
 
-        if (!this.enabled || !this.sprite || !this.sprite.parent || !this.sprite.visible || !this.sprite.parent.visible)
+        if (!pointer.isDown || !this.enabled || !this.sprite || !this.sprite.parent || !this.sprite.visible || !this.sprite.parent.visible)
         {
             return false;
         }
@@ -34009,7 +34006,7 @@ Phaser.Cache.prototype = {
     /**
     * Get tilemap data by key.
     *
-    * @method Phaser.Cache#getTilemap
+    * @method Phaser.Cache#getTilemapData
     * @param {string} key - Asset key of the tilemap data to retrieve from the Cache.
     * @return {Object} The raw tilemap data in CSV or JSON format.
     */
@@ -35492,6 +35489,7 @@ Phaser.Loader.prototype = {
             this.progress = 100;
             this.progressFloat = 100;
             this.hasLoaded = true;
+            this.isLoading = false;
             this.onLoadComplete.dispatch();
         }
 
@@ -47003,5 +47001,5 @@ Phaser.Tileset.prototype.constructor = Phaser.Tileset;
 }).call(this);
 
 /*
-* "Don't follow strange women who lure you into woods with beautiful poetry." - @djfood
+* "What matters in this life is not what we do but what we do for others, the legacy we leave and the imprint we make." - Eric Meyer
 */
