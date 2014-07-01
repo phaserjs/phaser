@@ -74,6 +74,7 @@ Version 2.0.6 - "Jornhill" - -in development-
 * AnimationParser doesn't populate the Pixi.TextureCache for every frame any longer. Each display object has its own texture property instead.
 * Removed the cacheKey parameters from the AnimationParser methods as they're no longer used.
 * Loader.isLoading is set to false if the filelist size is zero.
+* Sound.externalNode has had the `input` property dropped from it, bringing it back in line with the AudioNode spec (thanks @villetou, #840)
 
 ### CocoonJS Specific Updates
 
@@ -111,6 +112,8 @@ Version 2.0.6 - "Jornhill" - -in development-
 * GamepadButton.destroy method added. Called automatically by SinglePad when a controller is disconnected.
 * Added Math.factorial (thanks @alvinsight, #940)
 * Full Mouse Wheel support added, with new constants and callbacks for mouse wheel movement (thanks @woutercommandeur, #959)
+* A Phaser version of the Pixi PixelateFilter was added by @paperkettle #939)
+* TileMap.setPreventRecalculate allows you to turn on / off the recalculation of tile faces for tile collision, which is handy when modifying large portions of a map to avoid slow-down (thanks @sivael, #951)
 
 
 ### Bug Fixes
@@ -137,6 +140,10 @@ Version 2.0.6 - "Jornhill" - -in development-
 * P2.Body.removeShape didn't call shapeChanged (thanks @TatumCreative, #910)
 * Sound.onDecoded signal was never dispatched (thanks @j0hnskot, #906)
 * stopFullScreen has been changed to run against document instead of the canvas since the cancelFullScreen method is created on the document (thanks @j0hnskot, #863)
+* Calling reset on Sprite with a P2 body can result in body.data.world == null.
+Calling addToWorld() would previously not check the _toRemove array, which could, if the timing were right, result in a Sprite being revived but then removed from the P2 World -- the result of this being the Sprites data would be in a mixed state causing it to appear visually but not function in the world (thanks @jonkelling, fix #917 #925)
+* Input.SinglePad was fixed so that the rawpad button array supports Windows and Linux (thank @renatodarrigo, fix #958)
+
 
 ### ToDo
 
