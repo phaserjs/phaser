@@ -49,9 +49,11 @@
     <script src="$path/src/pixi/renderers/webgl/shaders/PixiFastShader.js"></script>
     <script src="$path/src/pixi/renderers/webgl/shaders/StripShader.js"></script>
     <script src="$path/src/pixi/renderers/webgl/shaders/PrimitiveShader.js"></script>
+    <script src="$path/src/pixi/renderers/webgl/shaders/ComplexPrimitiveShader.js"></script>
     <script src="$path/src/pixi/renderers/webgl/utils/WebGLGraphics.js"></script>
     <script src="$path/src/pixi/renderers/webgl/WebGLRenderer.js"></script>
     <script src="$path/src/pixi/renderers/webgl/utils/WebGLMaskManager.js"></script>
+    <script src="$path/src/pixi/renderers/webgl/utils/WebGLStencilManager.js"></script>
     <script src="$path/src/pixi/renderers/webgl/utils/WebGLShaderManager.js"></script>
     <script src="$path/src/pixi/renderers/webgl/utils/WebGLSpriteBatch.js"></script>
     <script src="$path/src/pixi/renderers/webgl/utils/WebGLFastSpriteBatch.js"></script>
@@ -62,6 +64,8 @@
     <script src="$path/src/pixi/renderers/canvas/CanvasRenderer.js"></script>
     <script src="$path/src/pixi/renderers/canvas/CanvasGraphics.js"></script>
     <script src="$path/src/pixi/primitives/Graphics.js"></script>
+    <script src="$path/src/pixi/extras/Strip.js"></script>
+    <script src="$path/src/pixi/extras/Rope.js"></script>
     <script src="$path/src/pixi/extras/TilingSprite.js"></script>
     <script src="$path/src/pixi/textures/BaseTexture.js"></script>
     <script src="$path/src/pixi/textures/Texture.js"></script>

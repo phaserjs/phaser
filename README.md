@@ -50,6 +50,7 @@ Version 2.0.6 - "Jornhill" - -in development-
 
 ### Updates
 
+* Merged Pixi 1.5.4 with Phaser - all of the lovely new Pixi features are in, like complex Graphics objects and masking.
 * TypeScript definitions fixes and updates (thanks @clark-stevenson and @Phaiax)
 * Documentation fixes (thanks @kay-is #941)
 * BitmapData.draw can now also take a Phaser.Sprite, Phaser.Image or BitmapData object as a source type. As a result BitmapData.drawSprite is now depcreated.
@@ -127,6 +128,12 @@ Version 2.0.6 - "Jornhill" - -in development-
 * If you call ArcadePhysics.collide on a Sprite vs. a Tilemap and provide a custom processCallback, the result was being ignored and the sprite was being separated regardless (thanks @aivins fix #891 #890)
 * ArcadePhysics.Body.setSize if you set offset x/y values previously and then passed zero values they would be ignored (thanks @casensiom fix #889)
 * InputHandler.checkPointerDown checks and docs updated (thanks @lewster32, fix method #936)
+
+### ToDo
+
+When you add an animation it over-rides the default set frame to the first frame of the animation.
+
+
 
 
 ### Migration Guide
