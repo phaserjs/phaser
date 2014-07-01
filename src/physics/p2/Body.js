@@ -720,6 +720,17 @@ Phaser.Physics.P2.Body.prototype = {
     */
     addToWorld: function () {
 
+        if (this.game.physics.p2._toRemove)
+        {
+            for (var i = 0; i < this.game.physics.p2._toRemove.length; i++)
+            {
+                if (this.game.physics.p2._toRemove[i] === this)
+                {
+                    this.game.physics.p2._toRemove.splice(i, 1);
+                }
+            }
+        }
+        
         if (this.data.world !== this.game.physics.p2.world)
         {
             this.game.physics.p2.addBody(this);
