@@ -1,4 +1,4 @@
-// Type definitions for PIXI 1.5.2
+// Type definitions for PIXI 1.5.4
 // Project: https://github.com/GoodBoyDigital/pixi.js/
 // Original 1.3 by: xperiments <http://github.com/xperiments> 
 // Definitions: https://github.com/borisyankov/DefinitelyTyped
@@ -52,6 +52,7 @@ declare module PIXI {
     export function getNextPowerOfTwo(): number;
     export function rgb2hex(rgb: any): number;
     export function hex2rgb(hex: number): any;
+    export function sayHello(): void;
 
     /*INTERFACES*/
     export interface IBasicCallback {
@@ -198,11 +199,12 @@ declare module PIXI {
     export class BaseTexture extends EventTarget {
 
         id: number;
+        hasLoaded: boolean;
         height: number;
-        width: number;
+        premultipliedAlpha: boolean;
         source: HTMLImageElement;
         scaleMode: scaleModes;
-        hasLoaded: boolean;
+        width: number;
 
         constructor(source: HTMLImageElement, scaleMode: scaleModes);
         constructor(source: HTMLCanvasElement, scaleMode: scaleModes);
@@ -465,6 +467,7 @@ declare module PIXI {
         blendMode: blendModes;
         bounds: Rectangle;
         boundsPadding: number;
+        dirty: boolean;
         fillAlpha: number;
         isMask: boolean;
         lineColor: string;
@@ -472,10 +475,15 @@ declare module PIXI {
         renderable: boolean;
         tint: number;
 
+        arc(cx: number, cy: number, radius: number, startAngule: number, endAngle: number, anticlockwise: boolean): PIXI.Graphics;
+        arcTo(x1: number, y1: number, x2: number, y2: number, radius: number): PIXI.Graphics;
         beginFill(color: number, alpha: number): void;
+        bezierCurveTo(cpX: number, cpY: number, cpX2: number, cpY2: number, toX: number, toY: number): PIXI.Graphics;
         clear(): void;
         drawCircle(x: number, y: number, radius: number): void;
         drawEllipse(x: number, y: number, width: number, height: number): void;
+        drawPath(x: number, y: number): PIXI.Graphics;
+        drawRoundedRect(x: number, y: number, width: number, height: number, radius: number): PIXI.Graphics;
         drawRect(x: number, y: number, width: number, height: number): void;
         endFill(): void;
         generateTexture(): Texture;
@@ -484,6 +492,7 @@ declare module PIXI {
         lineStyle(lineWidth: number, color: number, alpha: number): void;
         lineTo(x: number, y: number): void;
         moveTo(x: number, y: number): void;
+        quadraticCurveTo(cpX: number, cpY: number, toX: number, toY: number): PIXI.Graphics;
         updateBounds(): void;
 
     }
@@ -549,6 +558,9 @@ declare module PIXI {
     }
 
     export class MovieClip extends Sprite {
+
+        static fromFrames(frames: any[]): MovieClip;
+        static fromImages(images: any[]): MovieClip;
 
         animationSpeed: number;
         currentFrame: number;
@@ -718,6 +730,7 @@ declare module PIXI {
 
     export class Spine {
 
+        animationSpeed: number;
         url: string;
         crossorigin: any;
         loaded: boolean;
@@ -797,17 +810,21 @@ declare module PIXI {
 
     export class Strip extends DisplayObjectContainer {
 
-        constructor(texture: Texture, width: number, height: number);
+        constructor(texture: Texture);
 
     }
 
     export class StripShader {
 
+        //where is WebGLContext in TypeScript? "any" is used
+        constructor(gl:any)
+
         program: any;
-        fragmentSrc: string[];
-        vertexSrc: string[];
+        fragmentSrc: any[];
+        vertexSrc: any[];
 
         init(): void;
+        destroy(): void;
 
     }
 
@@ -818,7 +835,7 @@ declare module PIXI {
 
         constructor(text: string, style: ITextStyle);
 
-        destroy(destroyTexture: boolean): void;
+        destroy(destroyBaseTexture: boolean): void;
         setText(text: string): void;
         setStyle(style: ITextStyle): void;
 
@@ -831,6 +848,7 @@ declare module PIXI {
         trim: Point;
         width: number;
         height: number;
+        valid: boolean;
 
         constructor(baseTexture: BaseTexture, frame?: Rectangle);
 
@@ -869,6 +887,10 @@ declare module PIXI {
         size: Point;
         angle: number;
         radius: number;
+
+    }
+
+    export class WebGLComplexGraphics {
 
     }
 
@@ -936,6 +958,10 @@ declare module PIXI {
 
     }
 
+    export class WebGLPrimitiveBatch {
+
+    }
+
     export class WebGLRenderer implements IPixiRenderer {
 
         contextLost: boolean;
@@ -964,6 +990,10 @@ declare module PIXI {
         destroy(): void;
         setAttribs(attribs: IShaderAttribute[]): void;
         setContext(gl: any, transparent: boolean);
+
+    }
+
+    export class WebGLStencilManager {
 
     }
 
@@ -1478,6 +1508,21 @@ declare module Phaser {
         static updateColor(out: any): number;
     }
 
+    class ComplexPrimitiveShader {
+
+        //where is WebGLContext in TypeScript? "any" is used
+        constructor(gl: any);
+
+        gl: any;
+        program: any;
+        fragmentSrc: any[];
+        vertexSrc: any[];
+
+        destroy(): void;
+        init(): void;
+
+    }
+
     interface CursorKeys {
 
         up: Phaser.Key;
@@ -1793,6 +1838,12 @@ declare module Phaser {
             speed: number;
 
             init(width: number, height: number, speed?: number, intensity?: number): void;
+
+        }
+
+        class Pixelate extends Phaser.Filter {
+
+            size: number;
 
         }
 
@@ -2758,6 +2809,7 @@ declare module Phaser {
         static distance(x1: number, y1: number, x2: number, y2: number): number;
         static distancePow(xy: number, y1: number, x2: number, y2: number, pow?: number): number;
         static distanceRounded(x1: number, y1: number, x2: number, y2: number): number;
+        static factorial(value: number): number;
         static floor(value: number): number;
         static floorTo(value: number, place: number, base: number): number;
         static fuzzyCeil(val: number, epsilon?: number): boolean;
@@ -2821,6 +2873,8 @@ declare module Phaser {
         static MIDDLE_BUTTON: number;
         static NO_BUTTON: number;
         static RIGHT_BUTTON: number;
+        static WHEEL_DOWN: number;
+        static WHEEL_UP: number;
 
         button: number;
         callbackContext: Object;
@@ -2834,14 +2888,17 @@ declare module Phaser {
         mouseOutCallback: Function;
         mouseOverCallback: Function;
         mouseUpCallback: Function;
+        mouseWheelCallback: Function;
         pointerLock: Phaser.Signal;
         stopOnGameOut: boolean;
+        wheelDelta: number;
 
         onMouseDown(event: MouseEvent): void;
         onMouseMove(event: MouseEvent): void;
         onMouseOut(event: MouseEvent): void;
         onMouseOver(event: MouseEvent): void;
         onMouseUp(event: MouseEvent): void;
+        onMouseWheel(event: MouseEvent): void;
         pointerLockChange(event: MouseEvent): void;
         releasePointerLock(): void;
         requestPointerLock(): void;
@@ -4717,6 +4774,7 @@ declare module Phaser {
         setCollisionByExclusion(indexes: any[], collides?: boolean, layer?: any, recalculate?: boolean): void;
         setCollisionByIndex(index: number, collides?: boolean, layer?: number, recalculate?: boolean): void;
         setLayer(layer: any): void;
+        setPreventRecalculate(value: boolean): void;
         setTileIndexCallback(indexes: any, callback: Function, callbackContext: Object, layer?: any): void;
         setTileLocationCallback(x: number, y: number, width: number, height: number, callback: Function, callbackContext: Object, layer?: any): void;
         setTileSize(tileWidth: number, tileHeight: number): void;
