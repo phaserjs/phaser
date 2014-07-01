@@ -190,24 +190,26 @@ Phaser.SinglePad.prototype = {
 
         for (var i = 0; i < this._buttonsLen; i++)
         {
-            if (this._rawPad.buttons[i].value !== this._buttons[i].value)
+            var rawButtonVal = isNaN(this._rawPad.buttons[i]) ? this._rawPad.buttons[i].value : this._rawPad.buttons[i];
+
+            if (rawButtonVal !== this._buttons[i].value)
             {
-                if (this._rawPad.buttons[i].value === 1)
+                if (rawButtonVal === 1)
                 {
-                    this.processButtonDown(i, this._rawPad.buttons[i].value);
+                    this.processButtonDown(i, rawButtonVal);
                 }
-                else if (this._rawPad.buttons[i].value === 0)
+                else if (rawButtonVal === 0)
                 {
-                    this.processButtonUp(i, this._rawPad.buttons[i].value);
+                    this.processButtonUp(i, rawButtonVal);
                 }
                 else
                 {
-                    this.processButtonFloat(i, this._rawPad.buttons[i].value);
+                    this.processButtonFloat(i, rawButtonVal);
                 }
             }
         }
 
-        /*
+        
         for (var j = 0; j < this._axesLen; j++)
         {
             var axis = this._rawPad.axes[j];
@@ -221,7 +223,6 @@ Phaser.SinglePad.prototype = {
                 this.processAxisChange( { axis: j, value: 0 } );
             }
         }
-        */
 
         this._prevTimestamp = this._rawPad.timestamp;
 
