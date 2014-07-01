@@ -110,6 +110,7 @@ Version 2.0.6 - "Jornhill" - -in development-
 * Added PlayStation 3 controller button mappings to Phaser.Gamepad (thanks @wayfu)
 * GamepadButton.destroy method added. Called automatically by SinglePad when a controller is disconnected.
 * Added Math.factorial (thanks @alvinsight, #940)
+* Full Mouse Wheel support added, with new constants and callbacks for mouse wheel movement (thanks @woutercommandeur, #959)
 
 
 ### Bug Fixes
@@ -130,6 +131,12 @@ Version 2.0.6 - "Jornhill" - -in development-
 * ArcadePhysics.Body.setSize if you set offset x/y values previously and then passed zero values they would be ignored (thanks @casensiom fix #889)
 * InputHandler.checkPointerDown checks and docs updated (thanks @lewster32, fix method #936)
 * Body.enable only exists in Arcade physics, so moved conditions concerning checking that into the Body (thanks @Phaiax, fix #961)
+* Forces packPixel result into a uint32 (thanks @Phaiax, fix #960)
+* The Bottom Wall in non 0,0 aligned P2 world was incorrectly set (thanks @Phaiax, fix #952)
+* AnimationManager could sometimes return null (thanks @TatumCreative, #910)
+* P2.Body.removeShape didn't call shapeChanged (thanks @TatumCreative, #910)
+* Sound.onDecoded signal was never dispatched (thanks @j0hnskot, #906)
+* stopFullScreen has been changed to run against document instead of the canvas since the cancelFullScreen method is created on the document (thanks @j0hnskot, #863)
 
 ### ToDo
 
