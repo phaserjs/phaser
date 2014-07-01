@@ -3329,6 +3329,7 @@ declare module Phaser {
             applySpringForced: boolean;
             bounds: Phaser.Physics.P2.Body;
             boundsCollidesWith: Phaser.Physics.P2.Body[];
+            boundsCollisionGroup: Phaser.Physics.P2.CollisionGroup;
             contactMaterial: Phaser.Physics.P2.ContactMaterial;
             emitImpactEvent: boolean;
             enableBodySleeping: boolean;
@@ -3338,6 +3339,7 @@ declare module Phaser {
             game: Phaser.Game;
             gravity: Phaser.Physics.P2.InversePointProxy;
             materials: Phaser.Physics.P2.Material[];
+            nothingCollisionGroup: Phaser.Physics.P2.CollisionGroup;
             onBodyAdded: Phaser.Signal;
             onBodyRemoved: Phaser.Signal;
             onBeginContact: Phaser.Signal;
@@ -3366,6 +3368,8 @@ declare module Phaser {
             convertCollisionObjects(map: Phaser.Tilemap, layer?: any, addToWorld?: boolean): Phaser.Physics.P2.Body[];
             convertTilemap(map: Phaser.Tilemap, layer?: any, addToWorld?: Boolean, optimize?: boolean): Phaser.Physics.P2.Body[];
             createBody(x: number, y: number, mass: number, addToWorld?: boolean, options?: Object, data?: Object): Phaser.Physics.P2.Body;
+            createCollisionGroup(group?: Phaser.Group): Phaser.Physics.P2.CollisionGroup;
+            createCollisionGroup(group?: Phaser.Sprite): Phaser.Physics.P2.CollisionGroup;
             createContactMaterial(materialA: Phaser.Physics.P2.Material, materialB: Phaser.Physics.P2.Material, options?: number): Phaser.Physics.P2.ContactMaterial;
             createDistanceConstraint(bodyA: any, bodyB: any, distance: number, maxForce?: number): Phaser.Physics.P2.DistanceConstraint;
             createGearConstraint(bodyA: any, bodyB: any, angle?: number, ratio?: number): Phaser.Physics.P2.GearConstraint;
