@@ -109,6 +109,7 @@ Version 2.0.6 - "Jornhill" - -in development-
 * TilemapLayer.wrap property - if true the map is rendered as if it is on the surface of a toroid (donut) instead of a plane. This allows for games that seamlessly scroll from one edge to the opposite edge of the world without noticing the transition. Note that the World size must match the Map size (thanks @jotson #851)
 * Added PlayStation 3 controller button mappings to Phaser.Gamepad (thanks @wayfu)
 * GamepadButton.destroy method added. Called automatically by SinglePad when a controller is disconnected.
+* Added Math.factorial (thanks @alvinsight, #940)
 
 
 ### Bug Fixes
