@@ -144,6 +144,7 @@ Version 2.0.6 - "Jornhill" - -in development-
 Calling addToWorld() would previously not check the _toRemove array, which could, if the timing were right, result in a Sprite being revived but then removed from the P2 World -- the result of this being the Sprites data would be in a mixed state causing it to appear visually but not function in the world (thanks @jonkelling, fix #917 #925)
 * Input.SinglePad was fixed so that the rawpad button array supports Windows and Linux (thank @renatodarrigo, fix #958)
 * Key.duration wasn't set to zero after a Key.reset (thanks @DrHackenstein, #932)
+* Device.mobileSafari was no longer detecting Mobile Safari, now fixed (thanks @Zammy, #927)
 
 
 ### ToDo
