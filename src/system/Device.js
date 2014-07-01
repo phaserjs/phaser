@@ -527,7 +527,7 @@ Phaser.Device.prototype = {
         {
             for (var i = 0; i < cfs.length; i++)
             {
-                if (this.game.canvas[cfs[i]])
+                if (document[cfs[i]])
                 {
                     this.cancelFullscreen = cfs[i];
                 }

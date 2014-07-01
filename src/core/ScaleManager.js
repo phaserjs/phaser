@@ -315,7 +315,7 @@ Phaser.ScaleManager.prototype = {
     */
     stopFullScreen: function () {
 
-        this.fullScreenTarget[this.game.device.cancelFullscreen]();
+        document[this.game.device.cancelFullscreen]();
 
     },
 
