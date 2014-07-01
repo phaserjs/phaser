@@ -202,7 +202,7 @@ Phaser.Key.prototype = {
         this.isDown = false;
         this.isUp = true;
         this.timeUp = this.game.time.now;
-        this.duration = this.game.time.now - this.timeDown;
+        this.duration = 0;
         this.enabled = true;
 
         if (hard)
