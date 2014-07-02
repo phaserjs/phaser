@@ -228,40 +228,25 @@ Phaser.Camera.prototype = {
     * @private
     */
     updateTarget: function () {
+        if (this.deadzone) {
 
-        if (this.deadzone)
-        {
-            this._edge = this.target.x - this.deadzone.x;
-
-            if (this.view.x > this._edge)
-            {
-                this.view.x = this._edge;
+            this._edge = this.target.x - this.view.x;
+            if (this._edge < this.deadzone.left) {
+                this.view.x = this.target.x - this.deadzone.left;
+            } else if (this._edge > this.deadzone.right) {
+                this.view.x = this.target.x - this.deadzone.right;
             }
 
-            this._edge = this.target.x + this.target.width - this.deadzone.x - this.deadzone.width;
-
-            if (this.view.x < this._edge)
-            {
-                this.view.x = this._edge;
+            this._edge = this.target.y - this.view.y;
+            if (this._edge < this.deadzone.top) {
+                this.view.y = this.target.y - this.deadzone.top;
+            } else if (this._edge > this.deadzone.bottom) {
+                this.view.y = this.target.y - this.deadzone.bottom;
             }
 
-            this._edge = this.target.y - this.deadzone.y;
-
-            if (this.view.y > this._edge)
-            {
-                this.view.y = this._edge;
-            }
-
-            this._edge = this.target.y + this.target.height - this.deadzone.y - this.deadzone.height;
-
-            if (this.view.y < this._edge)
-            {
-                this.view.y = this._edge;
-            }
-        }
-        else
-        {
-            this.focusOnXY(this.target.x, this.target.y);
+        } else {
+            this.view.x = this.target.x - this.view.halfWidth;
+            this.view.y = this.target.y - this.view.halfHeight;
         }
 
     },
