@@ -75,6 +75,7 @@ Version 2.0.6 - "Jornhill" - -in development-
 * Removed the cacheKey parameters from the AnimationParser methods as they're no longer used.
 * Loader.isLoading is set to false if the filelist size is zero.
 * Sound.externalNode has had the `input` property dropped from it, bringing it back in line with the AudioNode spec (thanks @villetou, #840)
+* The StateManager has a preRenderCallback option, which checks for a preRender function existing on the State, but it was never called. Have decided to add this in, so the core Game loop now calls state.preRender right before the renderer runs (thanks @AnderbergE #869)
 
 ### CocoonJS Specific Updates
 

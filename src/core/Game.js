@@ -656,6 +656,7 @@ Phaser.Game.prototype = {
 
         if (this.renderType != Phaser.HEADLESS)
         {
+            this.state.preRender();
             this.renderer.render(this.stage);
             this.plugins.render();
             this.state.render();
