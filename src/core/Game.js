@@ -787,7 +787,10 @@ Phaser.Game.prototype = {
 
         this.onBlur.dispatch(event);
 
-        this.gamePaused(event);
+        if (!this.stage.disableVisibilityChange)
+        {
+            this.gamePaused(event);
+        }
 
     },
 
@@ -802,7 +805,10 @@ Phaser.Game.prototype = {
 
         this.onFocus.dispatch(event);
 
-        this.gameResumed(event);
+        if (!this.stage.disableVisibilityChange)
+        {
+            this.gameResumed(event);
+        }
 
     }
 
