@@ -12106,7 +12106,7 @@ Phaser.Physics.P2.prototype = {
 
         if (bottom)
         {
-            this.walls.bottom = new p2.Body({ mass: 0, position: [ this.pxmi(x), this.pxmi(height) ] });
+            this.walls.bottom = new p2.Body({ mass: 0, position: [ this.pxmi(x), this.pxmi(y + height) ] });
             this.walls.bottom.addShape(new p2.Plane());
 
             if (setCollisionGroup)
@@ -12712,7 +12712,6 @@ Phaser.Physics.P2.prototype = {
     *
     * @method Phaser.Physics.P2#createCollisionGroup
     * @param {Phaser.Group|Phaser.Sprite} [object] - An optional Sprite or Group to apply the Collision Group to. If a Group is given it will be applied to all top-level children.
-    * @protected
     */
     createCollisionGroup: function (object) {
 
@@ -14144,7 +14143,7 @@ Phaser.Physics.P2.Body.prototype = {
     * Apply force to a world point. This could for example be a point on the RigidBody surface. Applying force this way will add to Body.force and Body.angularForce.
     *
     * @method Phaser.Physics.P2.Body#applyForce
-    * @param {number} force - The force to add.
+    * @param {Float32Array|Array} force - The force vector to add.
     * @param {number} worldX - The world x point to apply the force on.
     * @param {number} worldY - The world y point to apply the force on.
     */
@@ -14444,6 +14443,17 @@ Phaser.Physics.P2.Body.prototype = {
     */
     addToWorld: function () {
 
+        if (this.game.physics.p2._toRemove)
+        {
+            for (var i = 0; i < this.game.physics.p2._toRemove.length; i++)
+            {
+                if (this.game.physics.p2._toRemove[i] === this)
+                {
+                    this.game.physics.p2._toRemove.splice(i, 1);
+                }
+            }
+        }
+        
         if (this.data.world !== this.game.physics.p2.world)
         {
             this.game.physics.p2.addBody(this);
@@ -14717,8 +14727,11 @@ Phaser.Physics.P2.Body.prototype = {
     */
     removeShape: function (shape) {
 
-        return this.data.removeShape(shape);
-
+		var result = this.data.removeShape(shape);
+	
+		this.shapeChanged();
+	
+        return result;
     },
 
     /**
@@ -14836,7 +14849,7 @@ Phaser.Physics.P2.Body.prototype = {
         {
             var fixtureData = data[i];
             var shapesOfFixture = this.addFixture(fixtureData);
-            
+
             //  Always add to a group
             createdFixtures[fixtureData.filter.group] = createdFixtures[fixtureData.filter.group] || [];
             createdFixtures[fixtureData.filter.group] = createdFixtures[fixtureData.filter.group].concat(shapesOfFixture);
@@ -15449,7 +15462,7 @@ Object.defineProperty(Phaser.Physics.P2.Body.prototype, "debug", {
 
     get: function () {
 
-        return (!this.debugBody);
+        return (this.debugBody !== null);
 
     },
 
@@ -15473,7 +15486,7 @@ Object.defineProperty(Phaser.Physics.P2.Body.prototype, "debug", {
 /**
 * A Body can be set to collide against the World bounds automatically if this is set to true. Otherwise it will leave the World.
 * Note that this only applies if your World has bounds! The response to the collision should be managed via CollisionMaterials.
-* 
+*
 * @name Phaser.Physics.P2.Body#collideWorldBounds
 * @property {boolean} collideWorldBounds - Should the Body collide with the World bounds?
 */
