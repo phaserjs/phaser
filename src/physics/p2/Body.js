@@ -420,7 +420,7 @@ Phaser.Physics.P2.Body.prototype = {
     * Apply force to a world point. This could for example be a point on the RigidBody surface. Applying force this way will add to Body.force and Body.angularForce.
     *
     * @method Phaser.Physics.P2.Body#applyForce
-    * @param {number} force - The force to add.
+    * @param {Float32Array|Array} force - The force vector to add.
     * @param {number} worldX - The world x point to apply the force on.
     * @param {number} worldY - The world y point to apply the force on.
     */
