@@ -2253,10 +2253,10 @@ declare module Phaser {
         type: number;
         z: number;
 
-        add(child: any): any;
+        add(child: any, silent?: boolean): any;
         addAll(property: string, amount: number, checkAlive: boolean, checkVisible: boolean): void;
+        addAt(child: any, index: number, silent?: boolean): any;
         bringToTop(child: any): any;
-        addAt(child: any, index: number): any;
         callAll(method: string, context: any, ...parameters: any[]): void;
         callAllExists(callback: Function, existsValue: boolean, ...parameters: any[]): void;
         callbackFromArray(child: Object, callback: Function, length: number): void;
@@ -2288,9 +2288,9 @@ declare module Phaser {
         postUpdate(): void;
         preUpdate(): void;
         previous(): void;
-        remove(child: any, destroy?: boolean): boolean;
-        removeAll(destroy?: boolean): void;
-        removeBetween(startIndex: number, endIndex?: number, destroy?: boolean): void;
+        remove(child: any, destroy?: boolean, silent?: boolean): boolean;
+        removeAll(destroy?: boolean, silent?: boolean): void;
+        removeBetween(startIndex: number, endIndex?: number, destroy?: boolean, silent?: boolean): void;
         replace(oldChild: any, newChild: any): any;
         reverse(): void;
         sendToBack(child: any): any;
