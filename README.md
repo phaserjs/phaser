@@ -147,6 +147,7 @@ Calling addToWorld() would previously not check the _toRemove array, which could
 * Key.duration wasn't set to zero after a Key.reset (thanks @DrHackenstein, #932)
 * Device.mobileSafari was no longer detecting Mobile Safari, now fixed (thanks @Zammy, #927)
 * Rectangle.right when set would set the new width to be Rectangle.x + the value given. However the value given should be a new Right coordinate, so the width calculation has been adjusted to compensate (thanks @cryptonomicon, #849)
+* Calling Tween.stop from inside a Tween update callback would still cause the tween onComplete event to fire (thanks @eguneys, #924)
 
 
 ### ToDo
