@@ -48,6 +48,10 @@ Finally the list of [community authored Phaser Tutorials](http://www.lessmilk.co
 
 Version 2.0.6 - "Jornhill" - -in development-
 
+### Significant Internal Change
+
+* The PIXI.TextureCache global array is no longer used internally for storing Pixi Texture files. It's not actually a requirement of Pixi to use this and we were running into various issues with texture conflicts in DragonBones tests and issues with shared texture frames between Sprites - meaning we couldn't crop a sprite without cropping all instances, without creating a new texture frame at run-time - which as you can imagine is a huge overhead if you then want to crop an animated Sprite. After talking with Mat at GoodBoyDigital about the issue it was his idea to just not use the TextureCache at all, and let each Sprite have its own frame, so this is the direction we've taken. We didn't save this for the 2.1 release as it doesn't actually alter the Phaser API at all, but it does change how things are working internally - so if you've got game code hooked directly into the TextureCache you need to be aware of this change.
+
 ### Updates
 
 * Merged Pixi 1.5.4 with Phaser - all of the lovely new Pixi features are in, like complex Graphics objects and masking.
