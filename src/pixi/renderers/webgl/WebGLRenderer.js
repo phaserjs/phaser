@@ -21,7 +21,11 @@ PIXI.glContexts = []; // this is where we store the webGL contexts for easy acce
  */
 PIXI.WebGLRenderer = function(width, height, view, transparent, antialias)
 {
-    if(!PIXI.defaultRenderer)PIXI.defaultRenderer = this;
+    if(!PIXI.defaultRenderer)
+    {
+        PIXI.sayHello('webGL');
+        PIXI.defaultRenderer = this;
+    }
 
     this.type = PIXI.WEBGL_RENDERER;
 
@@ -357,7 +361,7 @@ PIXI.WebGLRenderer.destroyTexture = function(texture)
  */
 PIXI.WebGLRenderer.updateTextureFrame = function(texture)
 {
-    texture.updateFrame = false;
+    //texture.updateFrame = false;
 
     // now set the uvs. Figured that the uv data sits with a texture rather than a sprite.
     // so uv data is stored on the texture itself

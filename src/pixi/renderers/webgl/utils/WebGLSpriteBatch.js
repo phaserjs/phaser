@@ -76,6 +76,8 @@ PIXI.WebGLSpriteBatch = function(gl)
     this.currentBaseTexture = null;
     
     this.setContext(gl);
+
+    this.dirty = true;
 };
 
 /**
@@ -154,7 +156,7 @@ PIXI.WebGLSpriteBatch.prototype.render = function(sprite)
     }
 
     // get the uvs for the texture
-    var uvs = sprite._uvs || sprite.texture._uvs;
+    var uvs = texture._uvs;
     // if the uvs have not updated then no point rendering just yet!
     if(!uvs)return;
 
@@ -171,10 +173,10 @@ PIXI.WebGLSpriteBatch.prototype.render = function(sprite)
 
     var w0, w1, h0, h1;
         
-    if (sprite.texture.trim)
+    if (texture.trim)
     {
         // if the sprite is trimmed then we need to add the extra space before transforming the sprite coords..
-        var trim = sprite.texture.trim;
+        var trim = texture.trim;
 
         w1 = trim.x - aX * trim.width;
         w0 = w1 + texture.frame.width;
@@ -386,8 +388,37 @@ PIXI.WebGLSpriteBatch.prototype.flush = function()
 
     var gl = this.gl;
     
-    // 
     this.renderSession.shaderManager.setShader(this.renderSession.shaderManager.defaultShader);
+
+    //TODO - im usre this can be done better - will look to tweak this for 1.7..
+    if(this.dirty)
+    {
+        this.dirty = false;
+        // bind the main texture
+        gl.activeTexture(gl.TEXTURE0);
+
+        // bind the buffers
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
+
+        // set the projection
+        var projection = this.renderSession.projection;
+        gl.uniform2f(this.shader.projectionVector, projection.x, projection.y);
+
+        // set the pointers
+        var stride =  this.vertSize * 4;
+        gl.vertexAttribPointer(this.shader.aVertexPosition, 2, gl.FLOAT, false, stride, 0);
+        gl.vertexAttribPointer(this.shader.aTextureCoord, 2, gl.FLOAT, false, stride, 2 * 4);
+        gl.vertexAttribPointer(this.shader.colorAttribute, 2, gl.FLOAT, false, stride, 4 * 4);
+
+    }
+
+    // set the blend mode..
+    if(this.currentBlendMode !== PIXI.blendModes.NORMAL)
+    {
+        this.setBlendMode(PIXI.blendModes.NORMAL);
+    }
+
 
     // bind the current texture
     gl.bindTexture(gl.TEXTURE_2D, this.currentBaseTexture._glTextures[gl.id] || PIXI.createWebGLTexture(this.currentBaseTexture, gl));
@@ -440,32 +471,9 @@ PIXI.WebGLSpriteBatch.prototype.stop = function()
 */
 PIXI.WebGLSpriteBatch.prototype.start = function()
 {
-    var gl = this.gl;
+    this.dirty = true;
 
-    this.renderSession.shaderManager.setShader(this.renderSession.shaderManager.defaultShader);
-
-    // bind the main texture
-    gl.activeTexture(gl.TEXTURE0);
-
-    // bind the buffers
-    gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
-
-    // set the projection
-    var projection = this.renderSession.projection;
-    gl.uniform2f(this.shader.projectionVector, projection.x, projection.y);
-
-    // set the pointers
-    var stride =  this.vertSize * 4;
-    gl.vertexAttribPointer(this.shader.aVertexPosition, 2, gl.FLOAT, false, stride, 0);
-    gl.vertexAttribPointer(this.shader.aTextureCoord, 2, gl.FLOAT, false, stride, 2 * 4);
-    gl.vertexAttribPointer(this.shader.colorAttribute, 2, gl.FLOAT, false, stride, 4 * 4);
-
-    // set the blend mode..
-    if(this.currentBlendMode !== PIXI.blendModes.NORMAL)
-    {
-        this.setBlendMode(PIXI.blendModes.NORMAL);
-    }
+   
 };
 
 /**
