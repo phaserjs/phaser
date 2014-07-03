@@ -247,7 +247,7 @@ Phaser.Signal.prototype = {
             {
                 if (this._bindings[n].context === context)
                 {
-                    this._bindings[n].destroy();
+                    this._bindings[n]._destroy();
                     this._bindings.splice(n, 1);
                 }
             }
