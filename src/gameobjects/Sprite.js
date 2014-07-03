@@ -442,9 +442,27 @@ Phaser.Sprite.prototype.setFrame = function(frame) {
     this.texture.frame.width = frame.width;
     this.texture.frame.height = frame.height;
 
+    //  frame x/y/w/h = the exact rect to copy out of the image
+    //  spriteSourceSize w/h always = frame.w/h but spriteSourceSize.x/y = where it should be placed on rendering (offset from top left of sourceSize)
+    //  sourceSize = the actual frame size width and height
+
+    // "filename": "razor_rain_vertical_10",
+    // "frame": {"x":367,"y":656,"w":50,"h":28},
+    // "rotated": false,
+    // "trimmed": true,
+    // "spriteSourceSize": {"x":62,"y":0,"w":50,"h":28},
+    // "sourceSize": {"w":174,"h":360}
+
+  // 152                      var actualSize = frameData[i].sourceSize;
+  // 153:                     var realSize = frameData[i].spriteSourceSize;
+  // 154  
+  // 155:                     texture.trim = new PIXI.Rectangle(realSize.x, realSize.y, actualSize.w, actualSize.h);
+
+
     if (frame.trimmed)
     {
-        this.texture.trim = { x: frame.spriteSourceSizeX, y: frame.spriteSourceSizeY, width: frame.width, height: frame.height };
+        // this.texture.trim = { x: frame.spriteSourceSizeX, y: frame.spriteSourceSizeY, width: frame.width, height: frame.height };
+        this.texture.trim = { x: frame.spriteSourceSizeX, y: frame.spriteSourceSizeY, width: frame.sourceSizeW, height: frame.sourceSizeH };
     }
 
     if (this.game.renderType === Phaser.WEBGL)
