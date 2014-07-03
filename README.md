@@ -165,12 +165,7 @@ Calling addToWorld() would previously not check the _toRemove array, which could
 * Calling Tween.stop from inside a Tween update callback would still cause the tween onComplete event to fire (thanks @eguneys, #924)
 * Group.bringToTop (and consequently Sprite.bringToTop) no longer removes the child from the InputManager if enabled (thanks @BinaryMoon, fix #928)
 * Group.sendToBack (and consequently Sprite.sendToBack) no longer removes the child from the InputManager if enabled.
-
-
-### ToDo
-
-When you add an animation it over-rides the default set frame to the first frame of the animation.
-
+* When adding a new Animation to a Sprite it would incorrectly reset the current Sprite frame to the first frame of the animation sequence, it is now left un-touched until you call `play` on the animation.
 
 
 
