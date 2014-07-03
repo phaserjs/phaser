@@ -190,6 +190,7 @@ Phaser.Stage.prototype.postUpdate = function () {
 *
 * @method Phaser.Stage#parseConfig
 * @protected
+* @param {object} config -The configuration object to parse.
 */
 Phaser.Stage.prototype.parseConfig = function (config) {
 

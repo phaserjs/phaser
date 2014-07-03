@@ -77,12 +77,12 @@ Phaser.Signal.prototype = {
 
     /**
     * @method Phaser.Signal#_registerListener
+    * @private
     * @param {function} listener - Signal handler function.
-    * @param {boolean} isOnce - Description.
-    * @param {object} [listenerContext] - Description.
+    * @param {boolean} isOnce - Should the listener only be called once?
+    * @param {object} [listenerContext] - The context under which the listener is invoked.
     * @param {number} [priority] - The priority level of the event listener. Listeners with higher priority will be executed before listeners with lower priority. Listeners with same priority level will be executed at the same order as they were added. (default = 0).
     * @return {Phaser.SignalBinding} An Object representing the binding between the Signal and listener.
-    * @private
     */
     _registerListener: function (listener, isOnce, listenerContext, priority) {
 
@@ -115,8 +115,8 @@ Phaser.Signal.prototype = {
 
     /**
     * @method Phaser.Signal#_addBinding
-    * @param {Phaser.SignalBinding} binding - An Object representing the binding between the Signal and listener.
     * @private
+    * @param {Phaser.SignalBinding} binding - An Object representing the binding between the Signal and listener.
     */
     _addBinding: function (binding) {
 
@@ -134,9 +134,9 @@ Phaser.Signal.prototype = {
 
     /**
     * @method Phaser.Signal#_indexOfListener
-    * @param {function} listener - Signal handler function.
-    * @return {number} Description.
     * @private
+    * @param {function} listener - Signal handler function.
+    * @return {number} The index of the listener within the private bindings array.
     */
     _indexOfListener: function (listener, context) {
 
@@ -161,8 +161,8 @@ Phaser.Signal.prototype = {
     * Check if listener was attached to Signal.
     *
     * @method Phaser.Signal#has
-    * @param {Function} listener - Signal handler function.
-    * @param {Object} [context] - Context on which listener will be executed (object that should represent the `this` variable inside listener function).
+    * @param {function} listener - Signal handler function.
+    * @param {object} [context] - Context on which listener will be executed (object that should represent the `this` variable inside listener function).
     * @return {boolean} If Signal has the specified listener.
     */
     has: function (listener, context) {
@@ -175,9 +175,9 @@ Phaser.Signal.prototype = {
     * Add a listener to the signal.
     *
     * @method Phaser.Signal#add
-    * @param {function} listener - Signal handler function.
-    * @param {object} [listenerContext] Context on which listener will be executed (object that should represent the `this` variable inside listener function).
-    * @param {number} [priority] The priority level of the event listener. Listeners with higher priority will be executed before listeners with lower priority. Listeners with same priority level will be executed at the same order as they were added. (default = 0).
+    * @param {function} listener - The function to call when this Signal is dispatched.
+    * @param {object} [listenerContext] - The context under which the listener will be executed (i.e. the object that should represent the `this` variable).
+    * @param {number} [priority] - The priority level of the event listener. Listeners with higher priority will be executed before listeners with lower priority. Listeners with same priority level will be executed at the same order as they were added (default = 0)
     * @return {Phaser.SignalBinding} An Object representing the binding between the Signal and listener.
     */
     add: function (listener, listenerContext, priority) {
@@ -192,9 +192,9 @@ Phaser.Signal.prototype = {
     * Add listener to the signal that should be removed after first execution (will be executed only once).
     *
     * @method Phaser.Signal#addOnce
-    * @param {function} listener Signal handler function.
-    * @param {object} [listenerContext] Context on which listener will be executed (object that should represent the `this` variable inside listener function).
-    * @param {number} [priority] The priority level of the event listener. Listeners with higher priority will be executed before listeners with lower priority. Listeners with same priority level will be executed at the same order as they were added. (default = 0)
+    * @param {function} listener - The function to call when this Signal is dispatched.
+    * @param {object} [listenerContext] - The context under which the listener will be executed (i.e. the object that should represent the `this` variable).
+    * @param {number} [priority] - The priority level of the event listener. Listeners with higher priority will be executed before listeners with lower priority. Listeners with same priority level will be executed at the same order as they were added (default = 0)
     * @return {Phaser.SignalBinding} An Object representing the binding between the Signal and listener.
     */
     addOnce: function (listener, listenerContext, priority) {
@@ -209,8 +209,8 @@ Phaser.Signal.prototype = {
     * Remove a single listener from the dispatch queue.
     *
     * @method Phaser.Signal#remove
-    * @param {function} listener Handler function that should be removed.
-    * @param {object} [context] Execution context (since you can add the same handler multiple times if executing in a different context).
+    * @param {function} listener - Handler function that should be removed.
+    * @param {object} [context] - Execution context (since you can add the same handler multiple times if executing in a different context).
     * @return {function} Listener handler function.
     */
     remove: function (listener, context) {
@@ -233,14 +233,28 @@ Phaser.Signal.prototype = {
     * Remove all listeners from the Signal.
     *
     * @method Phaser.Signal#removeAll
+    * @param {object} [context=null] - If specified only listeners for the given context will be removed.
     */
-    removeAll: function () {
+    removeAll: function (context) {
+
+        if (typeof context === 'undefined') { context = null; }
 
         var n = this._bindings.length;
 
         while (n--)
         {
-            this._bindings[n]._destroy();
+            if (context)
+            {
+                if (this._bindings[n].context === context)
+                {
+                    this._bindings[n].destroy();
+                    this._bindings.splice(n, 1);
+                }
+            }
+            else
+            {
+                this._bindings[n]._destroy();
+            }
         }
 
         this._bindings.length = 0;
