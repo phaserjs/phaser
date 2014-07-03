@@ -4227,7 +4227,7 @@ declare module Phaser {
         halt(): void;
         has(listener: Function, context?: any): boolean;
         remove(listener: Function, context?: any): Function;
-        removeAll(): void;
+        removeAll(context?: any): void;
         toString(): string;
         validateListener(listener: Function, fnName: string): void;
 
