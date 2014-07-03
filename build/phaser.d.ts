@@ -4331,6 +4331,7 @@ declare module Phaser {
         usingWebAudio: boolean;
         volume: number;
 
+        addMarker(name: string, start: number, duration: number, volume?: number, loop?: boolean): void;
         destroy(): void;
         pause(): void;
         play(marker?: string, position?: number, volume?: number, loop?: boolean, forceRestart?: boolean): Phaser.Sound;
