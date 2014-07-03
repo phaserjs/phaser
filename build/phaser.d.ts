@@ -1111,9 +1111,11 @@ declare module Phaser {
         complete(): void;
         destroy(): void;
         static generateFrameNames(prefix: string, start: number, stop: number, suffix?: string, zeroPad?: number): string[];
+        next(quantity?: number): void;
         onPause(): void;
         onResume(): void;
         play(frameRate?: number, loop?: boolean, killOnComplete?: boolean): Phaser.Animation;
+        previous(quantity?: number): void;
         restart(): void;
         setFrame(frameId?: any, useLocalFrameIndex?: boolean): void;
         stop(resetFrame?: boolean, dispatchComplete?: boolean): void;
@@ -1139,7 +1141,9 @@ declare module Phaser {
         add(name: string, frames?: any[], frameRate?: number, loop?: boolean, useNumericIndex?: boolean): Phaser.Animation;
         destroy(): void;
         getAnimation(name: string): Phaser.Animation;
+        next(quantity?: number): void;
         play(name: string, frameRate?: number, loop?: boolean, killOnComplete?: boolean): Phaser.Animation;
+        previous(quantity?: number): void;
         refreshFrame();
         stop(name?: string, resetFrame?: boolean): void;
         update(): boolean;

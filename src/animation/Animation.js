@@ -414,6 +414,94 @@ Phaser.Animation.prototype = {
     },
 
     /**
+    * Advances by the given number of frames in the Animation, taking the loop value into consideration.
+    *
+    * @method Phaser.Animation#next
+    * @param {number} [quantity=1] - The number of frames to advance.
+    */
+    next: function (quantity) {
+
+        if (typeof quantity === 'undefined') { quantity = 1; }
+
+        var frame = this._frameIndex + quantity;
+
+        if (frame >= this._frames.length)
+        {
+            if (this.loop)
+            {
+                frame %= this._frames.length;
+            }
+            else
+            {
+                frame = this._frames.length - 1;
+            }
+        }
+
+        if (frame !== this._frameIndex)
+        {
+            this._frameIndex = frame;
+
+            this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
+
+            if (this.currentFrame)
+            {
+                this._parent.setFrame(this.currentFrame);
+
+                if (this._parent.__tilePattern)
+                {
+                    this._parent.__tilePattern = false;
+                    this._parent.tilingTexture = false;
+                }
+            }
+        }
+
+    },
+
+    /**
+    * Moves backwards the given number of frames in the Animation, taking the loop value into consideration.
+    *
+    * @method Phaser.Animation#previous
+    * @param {number} [quantity=1] - The number of frames to move back.
+    */
+    previous: function (quantity) {
+
+        if (typeof quantity === 'undefined') { quantity = 1; }
+
+        var frame = this._frameIndex - quantity;
+
+        if (frame < 0)
+        {
+            if (this.loop)
+            {
+                frame = this._frames.length + frame;
+            }
+            else
+            {
+                frame++;
+            }
+        }
+
+        if (frame !== this._frameIndex)
+        {
+            this._frameIndex = frame;
+
+            this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
+
+            if (this.currentFrame)
+            {
+                this._parent.setFrame(this.currentFrame);
+
+                if (this._parent.__tilePattern)
+                {
+                    this._parent.__tilePattern = false;
+                    this._parent.tilingTexture = false;
+                }
+            }
+        }
+
+    },
+
+    /**
     * Cleans up this animation ready for deletion. Nulls all values and references.
     *
     * @method Phaser.Animation#destroy
