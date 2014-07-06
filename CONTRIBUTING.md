@@ -9,7 +9,7 @@ It's important to us that you feel you can contribute towards the evolution of P
 
 **1. Search for existing issues.** Your bug may have already been fixed or addressed in a development branch version of Phaser, so be sure to search the issues first before putting in a duplicate issue.
 
-**2. Not sure if it's a bug?.** Then please ask on the forum. If something is blatantly wrong then post it to github. But if you feel it might just be because you're not sure of expected behaviour, then it might save us time, and get you a response faster, if you post it to the Phaser forum instead.
+**2. Not sure if it's a bug?.** Then please ask on the [forum][4]. If something is blatantly wrong then post it to github. But if you feel it might just be because you're not sure of expected behaviour, then it might save us time, and get you a response faster, if you post it to the Phaser forum instead.
 
 **3. Create an isolated and reproducible test case.** If you are reporting a bug, make sure you also have a minimal, runnable, code example that reproduces the problem you have.
 
@@ -25,7 +25,7 @@ It's important to understand that internally Phaser uses [Pixi.js](https://githu
 
 ##Support Forum
 
-We have a very active [Phaser Support Forum](http://www.html5gamedevs.com/forum/14-phaser/). If you need general support, or are struggling to understand how to do something or need your code checked over, then we would urge you to post it to our forum. There are a lot of friendly devs in there who can help, as well as the core Phaser and Pixi teams, so it's a great place to get support from. You're welcome to report bugs directly on GitHub, but for general support we'd always recommend using the forum first.
+We have a very active [Phaser Support Forum][4]. If you need general support, or are struggling to understand how to do something or need your code checked over, then we would urge you to post it to our forum. There are a lot of friendly devs in there who can help, as well as the core Phaser and Pixi teams, so it's a great place to get support from. You're welcome to report bugs directly on GitHub, but for general support we'd always recommend using the forum first.
 
 
 ##Dev vs. Master
@@ -72,3 +72,4 @@ Thanks to Chad for creating the original Pixi.js Contributing file which we adap
 [1]: http://jsfiddle.net
 [2]: http://jsbin.com/
 [3]: http://nodejs.org
+[4]: http://www.html5gamedevs.com/forum/14-phaser/
