@@ -563,12 +563,8 @@ Phaser.Physics.Ninja.Body.render = function(context, body, color, filled) {
         filled = true;
     }
 
-    if (body.aabb)
+    if (body.aabb || body.circle)
     {
-        body.aabb.render(context, body.game.camera.x, body.game.camera.y, color, filled);
-    }
-    else if (body.circle)
-    {
-        body.circle.render(context, body.game.camera.x, body.game.camera.y, color, filled);
+        body.shape.render(context, body.game.camera.x, body.game.camera.y, color, filled);
     }
 };
