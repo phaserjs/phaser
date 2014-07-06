@@ -546,3 +546,56 @@ Object.defineProperty(Phaser.Physics.Ninja.Body.prototype, "angle", {
 
 });
 
+/**
+* Render Sprite's Body.
+*
+* @method Phaser.Physics.Ninja.Body#render
+* @param {object} context - The context to render to.
+* @param {Phaser.Physics.Ninja.Body} body - The Body to render.
+* @param {string} [color='rgba(0,255,0,0.4)'] - color of the debug shape to be rendered. (format is css color string).
+* @param {boolean} [filled=true] - Render the shape as a filled (default, true) or a stroked (false)
+*/
+Phaser.Physics.Ninja.Body.render = function(context, body, color, filled) {
+    color = color || 'rgba(0,255,0,0.4)';
+
+    if (typeof filled === 'undefined')
+    {
+        filled = true;
+    }
+
+    if (body.aabb)
+    {
+        var left = body.x - (body.width / 2) - body.game.camera.x;
+        var top = body.y - (body.height / 2) - body.game.camera.y;
+
+        if (filled)
+        {
+            context.fillStyle = color;
+            context.fillRect(left, top, body.width, body.height);
+        }
+        else
+        {
+            context.strokeStyle = color;
+            context.strokeRect(left, top, body.width, body.height);
+        }
+    }
+    else if (body.circle)
+    {
+        var x = body.x - body.game.camera.x;
+        var y = body.y - body.game.camera.y;
+
+        context.beginPath();
+        context.arc(x, y, body.circle.radius, 0, 2 * Math.PI, false);
+
+        if (filled)
+        {
+            context.fillStyle = color;
+            context.fill();
+        }
+        else
+        {
+            context.strokeStyle = color;
+            context.stroke();
+        }
+    }
+};
