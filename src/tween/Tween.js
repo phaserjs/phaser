@@ -280,7 +280,7 @@ Phaser.Tween.prototype = {
                 this._object[prop] = properties[prop];
             }
         }
-        this.to(_cache, duration, ease, autoStart, delay, repeat, yoyo);
+        return this.to(_cache, duration, ease, autoStart, delay, repeat, yoyo);
     },
 
     /**
