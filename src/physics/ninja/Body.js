@@ -565,37 +565,10 @@ Phaser.Physics.Ninja.Body.render = function(context, body, color, filled) {
 
     if (body.aabb)
     {
-        var left = body.x - (body.width / 2) - body.game.camera.x;
-        var top = body.y - (body.height / 2) - body.game.camera.y;
-
-        if (filled)
-        {
-            context.fillStyle = color;
-            context.fillRect(left, top, body.width, body.height);
-        }
-        else
-        {
-            context.strokeStyle = color;
-            context.strokeRect(left, top, body.width, body.height);
-        }
+        body.aabb.render(context, body.game.camera.x, body.game.camera.y, color, filled);
     }
     else if (body.circle)
     {
-        var x = body.x - body.game.camera.x;
-        var y = body.y - body.game.camera.y;
-
-        context.beginPath();
-        context.arc(x, y, body.circle.radius, 0, 2 * Math.PI, false);
-
-        if (filled)
-        {
-            context.fillStyle = color;
-            context.fill();
-        }
-        else
-        {
-            context.strokeStyle = color;
-            context.stroke();
-        }
+        body.circle.render(context, body.game.camera.x, body.game.camera.y, color, filled);
     }
 };

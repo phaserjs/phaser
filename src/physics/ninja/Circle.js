@@ -2619,6 +2619,34 @@ Phaser.Physics.Ninja.Circle.prototype = {
     destroy: function() {
         this.body = null;
         this.system = null;
-    }
+    },
 
+    /**
+    * Render this circle for debugging purposes.
+    *
+    * @method Phaser.Physics.Ninja.Circle#render
+    * @param {object} context - The context to render to.
+    * @param {number} xOffset - X offset from circle's position to render at.
+    * @param {number} yOffset - Y offset from circle's position to render at.
+    * @param {string} color - color of the debug shape to be rendered. (format is css color string).
+    * @param {boolean} filled - Render the shape as solid (true) or hollow (false).
+    */
+    render: function(context, xOffset, yOffset, color, filled) {
+        var x = this.pos.x - xOffset;
+        var y = this.pos.y - yOffset;
+
+        context.beginPath();
+        context.arc(x, y, this.radius, 0, 2 * Math.PI, false);
+
+        if (filled)
+        {
+            context.fillStyle = color;
+            context.fill();
+        }
+        else
+        {
+            context.strokeStyle = color;
+            context.stroke();
+        }
+    }
 };
