@@ -89,7 +89,6 @@
     "src/utils/Color.js",
 
     "src/physics/Physics.js",
-
     "src/physics/arcade/World.js",
     "src/physics/arcade/Body.js",
 

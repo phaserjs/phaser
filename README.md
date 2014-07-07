@@ -166,6 +166,7 @@ Calling addToWorld() would previously not check the _toRemove array, which could
 * Group.bringToTop (and consequently Sprite.bringToTop) no longer removes the child from the InputManager if enabled (thanks @BinaryMoon, fix #928)
 * Group.sendToBack (and consequently Sprite.sendToBack) no longer removes the child from the InputManager if enabled.
 * When adding a new Animation to a Sprite it would incorrectly reset the current Sprite frame to the first frame of the animation sequence, it is now left un-touched until you call `play` on the animation.
+* Tween.from now returns a reference to the tweened object in the same way that Tween.to does (thanks @b-ely, fix #976)
 
 
 

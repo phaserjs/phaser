@@ -171,12 +171,17 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     * 12 = texture height
     * 13 = texture spriteSourceSizeX
     * 14 = texture spriteSourceSizeY
-    * 15 = trim x
-    * 16 = trim y
+    * 15 = calculated trim x
+    * 16 = calculated trim y
+    * 17 = trim actualWidth
+    * 18 = trim actualHeight
     * @property {Array} _cache
     * @private
     */
-    this._cache = [ 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ];
+    this._cache = [ 0, 0, 0, 0, 1, 
+                    0, 1, 0, 0, 0, 
+                    0, 0, 0, 0, 0, 
+                    0, 0, 0, 0 ];
 
     /**
     * @property {Phaser.Rectangle} _bounds - Internal cache var.
@@ -409,8 +414,8 @@ Phaser.Sprite.prototype.resetFrame = function() {
     {
         this.texture.trim.x = this._cache[13];
         this.texture.trim.y = this._cache[14];
-        this.texture.trim.width = this.texture.frame.width;
-        this.texture.trim.height = this.texture.frame.height;
+        this.texture.trim.width = this._cache[17];
+        this.texture.trim.height = this._cache[18];
     }
 
     if (this.game.renderType === Phaser.WEBGL)
@@ -436,33 +441,27 @@ Phaser.Sprite.prototype.setFrame = function(frame) {
     this._cache[12] = frame.height;
     this._cache[13] = frame.spriteSourceSizeX;
     this._cache[14] = frame.spriteSourceSizeY;
+    this._cache[17] = frame.sourceSizeW;
+    this._cache[18] = frame.sourceSizeH;
 
     this.texture.frame.x = frame.x;
     this.texture.frame.y = frame.y;
     this.texture.frame.width = frame.width;
     this.texture.frame.height = frame.height;
 
-    //  frame x/y/w/h = the exact rect to copy out of the image
-    //  spriteSourceSize w/h always = frame.w/h but spriteSourceSize.x/y = where it should be placed on rendering (offset from top left of sourceSize)
-    //  sourceSize = the actual frame size width and height
-
-    // "filename": "razor_rain_vertical_10",
-    // "frame": {"x":367,"y":656,"w":50,"h":28},
-    // "rotated": false,
-    // "trimmed": true,
-    // "spriteSourceSize": {"x":62,"y":0,"w":50,"h":28},
-    // "sourceSize": {"w":174,"h":360}
-
-  // 152                      var actualSize = frameData[i].sourceSize;
-  // 153:                     var realSize = frameData[i].spriteSourceSize;
-  // 154  
-  // 155:                     texture.trim = new PIXI.Rectangle(realSize.x, realSize.y, actualSize.w, actualSize.h);
-
-
     if (frame.trimmed)
     {
-        // this.texture.trim = { x: frame.spriteSourceSizeX, y: frame.spriteSourceSizeY, width: frame.width, height: frame.height };
-        this.texture.trim = { x: frame.spriteSourceSizeX, y: frame.spriteSourceSizeY, width: frame.sourceSizeW, height: frame.sourceSizeH };
+        if (this.texture.trim)
+        {
+            this.texture.trim.x = frame.spriteSourceSizeX;
+            this.texture.trim.y = frame.spriteSourceSizeY;
+            this.texture.trim.width = frame.sourceSizeW;
+            this.texture.trim.height = frame.sourceSizeH;
+        }
+        else
+        {
+            this.texture.trim = { x: frame.spriteSourceSizeX, y: frame.spriteSourceSizeY, width: frame.sourceSizeW, height: frame.sourceSizeH };
+        }
     }
 
     if (this.game.renderType === Phaser.WEBGL)
@@ -493,6 +492,111 @@ Phaser.Sprite.prototype.updateCrop = function() {
 
     if (this.texture.trim)
     {
+/*
+    var frame = this.texture.frame;
+
+                var trim =  texture.trim;
+
+                RENDER NON-TRIMMED FRAME, only difference is the x/y coords it renders at
+
+                context.drawImage(this.texture.baseTexture.source,
+                               frame.x,
+                               frame.y,
+                               frame.width,
+                               frame.height,
+                               (this.anchor.x) * -frame.width,
+                               (this.anchor.y) * -frame.height,
+                               frame.width,
+                               frame.height);
+
+    "filename": "razor_rain_vertical_23",
+    "frame": {"x":175,"y":1444,"w":174,"h":360},            <- the actual area of the PNG to cut
+    "trimmed": false,
+    "spriteSourceSize": {"x":0,"y":0,"w":174,"h":360},      <- the offset applied to the Sprite x/y coords to draw the frame to
+    "sourceSize": {"w":174,"h":360}                         <- the frame size
+
+    This frame will render at:
+
+    (this.anchor.x) * -frame.width
+    0               * -174          = 0
+
+    Remember - the setTransform has already offset the render by the Sprite.x/y value inherited from the display list
+
+                RENDER A TRIMMED FRAME
+
+                context.drawImage(this.texture.baseTexture.source,
+                               frame.x,
+                               frame.y,
+                               frame.width,
+                               frame.height,
+                               trim.x - this.anchor.x * trim.width,
+                               trim.y - this.anchor.y * trim.height,
+                               frame.width,
+                               frame.height);
+
+    "filename": "razor_rain_vertical_23",               
+    "frame": {"x":445,"y":245,"w":94,"h":282},          <- the actual area of the PNG to cut
+    "trimmed": true,
+    "spriteSourceSize": {"x":45,"y":0,"w":94,"h":282},  <- the offset applied to the Sprite x/y coords to draw the frame to AND the frame width/height
+    "sourceSize": {"w":174,"h":360}                     <- the frame size
+
+    This frame will render at:
+
+    trim.x - this.anchor.x * trim.width             spriteSourceSize.x - this.anchor.x * sourceSize.w
+    45     - 0             * 174        = 45
+
+    trim.y - this.anchor.y * trim.height            spriteSourceSize.y - this.anchor.y * sourceSize.h
+    0      - 0             * 360        = 0
+
+    worldTransform uses texture.frame.width / height to work out offset from x/y
+
+*/
+
+        //  
+
+        var tx = this._cache[9] - this._cache[13];
+        var ty = this._cache[10] - this._cache[14];
+
+        var r1 = new Phaser.Rectangle(this._cache[13], this._cache[14], this._cache[17], this._cache[18]);
+        var r2 = new Phaser.Rectangle(this.cropRect.x + tx, this.cropRect.y + ty, this.cropRect.width, this.cropRect.height);
+        var area = Phaser.Rectangle.intersection(r1, r2);
+
+        //  This will cut the cropped area instead of the whole frame
+
+        this.texture.frame.x = this._cache[9] + area.x;
+        this.texture.frame.y = this._cache[10] + area.y;
+        this.texture.frame.width = area.width;
+        this.texture.frame.height = area.height;
+
+        this.texture.trim.width = area.width;
+        this.texture.trim.height = area.height;
+
+        //  But we still need to adjust the trim values
+
+
+
+        // this.texture.frame.x = this._cache[9] + this.cropRect.x;
+        // this.texture.frame.y = this._cache[10] + this.cropRect.y;
+        // this.texture.frame.width = this.cropRect.width;
+        // this.texture.frame.height = this.cropRect.height;
+
+        // this.texture.trim.width = this.cropRect.width;
+        // this.texture.trim.height = this.cropRect.height;
+
+
+        // this._cache[9] = frame.x;
+        // this._cache[10] = frame.y;
+        // this._cache[11] = frame.width;
+        // this._cache[12] = frame.height;
+        // this._cache[13] = frame.spriteSourceSizeX;
+        // this._cache[14] = frame.spriteSourceSizeY;
+        // this._cache[15] = trim calc x
+        // this._cache[16] = trim calc y
+        // this._cache[17] = frame.sourceSizeW;
+        // this._cache[18] = frame.sourceSizeH;
+
+
+        /*
         this._cache[15] = this._cache[9] + this.cropRect.x - this._cache[13];
 
         if (this._cache[15] < this._cache[9])
@@ -526,10 +630,12 @@ Phaser.Sprite.prototype.updateCrop = function() {
         this.texture.frame.width = this.cropRect.width - this._cache[15];
         this.texture.frame.height = this.cropRect.height - this._cache[16];
 
-        this.texture.trim.x = this._cache[15];
-        this.texture.trim.y = this._cache[16];
+        this.texture.trim.x = this._cache[13];
+        this.texture.trim.y = this._cache[14];
+        //  Double-check we need this
         this.texture.trim.width = this.cropRect.width;
         this.texture.trim.height = this.cropRect.height;
+        */
     }
     else
     {
