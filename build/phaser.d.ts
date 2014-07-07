@@ -324,6 +324,7 @@ declare module PIXI {
 
         clone(): Circle;
         contains(x: number, y: number): boolean;
+        getBounds(): PIXI.Rectangle;
 
     }
 
@@ -3188,7 +3189,7 @@ declare module Phaser {
                 onWall(): void;
                 preUpdate(): void;
                 postUpdate(): void;
-                render(context: Object, body: Phaser.Physics.Arcade.Body, filled?: boolean, color?: string): void;
+                render(context: Object, body: Phaser.Physics.Arcade.Body, color?: string, filled?: boolean): void;
                 renderBodyInfo(debug: Phaser.Utils.Debug, body: Phaser.Physics.Arcade.Body): void;
                 reset(x: number, y: number): void;
                 setSize(width: number, height: number, offsetX?: number, offsetY?: number): void;
@@ -3283,6 +3284,7 @@ declare module Phaser {
                 moveDown(speed: number): void;
                 poseUpdate(): void;
                 preUpdate(): void;
+                render(context: any, body: Phaser.Physics.Ninja.Body, color?: string, filled?: boolean): void;
                 reset(): void;
 
             }
@@ -3311,6 +3313,7 @@ declare module Phaser {
                 collideAABBVsTile(tile: Phaser.Physics.Ninja.Tile): boolean;
                 destroy(): void;
                 integrate(): void;
+                render(context: any, xOffset: number, yOffset: number, color: string, filled: boolean): void; 
                 reportCollisionVsWorld(px: number, py: number, dx: number, dy: number, obj: Object): void;
                 reportCollisionVsBody(px: number, py: number, dx: number, dy: number, obj: Object): void;
                 resolveTile(x: number, y: number, body: Phaser.Physics.Ninja.AABB, tile: Phaser.Physics.Ninja.Tile): boolean;
@@ -3342,6 +3345,7 @@ declare module Phaser {
                 collideWorldBounds(): void;
                 destroy(): void;
                 integrate(): void;
+                render(context: any, xOffset: number, yOffset: number, color: string, filled: boolean): void;
                 reportCollisionVsWorld(px: number, py: number, dx: number, dy: number, obj: Object): void;
                 reportCollisionVsBody(px: number, py: number, dx: number, dy: number, obj: Object): void;
                 resolveCircleTile(x: number, y: number, oH: number, oV: number, obj: Phaser.Physics.Ninja.Circle, t: Phaser.Physics.Ninja.Tile): boolean;
