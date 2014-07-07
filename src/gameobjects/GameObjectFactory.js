@@ -411,7 +411,24 @@ Phaser.GameObjectFactory.prototype = {
 
         return filter;
 
+    },
+
+    /**
+    * Add a new Plugin into the PluginManager.
+    * The Plugin must have 2 properties: game and parent. Plugin.game is set to the game reference the PluginManager uses, and parent is set to the PluginManager.
+    *
+    * @method Phaser.GameObjectFactory#plugin
+    * @param {object|Phaser.Plugin} plugin - The Plugin to add into the PluginManager. This can be a function or an existing object.
+    * @param {...*} parameter - Additional parameters that will be passed to the Plugin.init method.
+    * @return {Phaser.Plugin} The Plugin that was added to the manager.
+    */
+    plugin: function (plugin) {
+
+        return this.game.plugins.add(plugin);
+
     }
+
+
 
 };
 
