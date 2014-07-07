@@ -1003,6 +1003,31 @@ Phaser.Physics.Ninja.AABB.prototype = {
     destroy: function() {
         this.body = null;
         this.system = null;
-    }
+    },
 
+    /**
+    * Render this AABB for debugging purposes.
+    *
+    * @method Phaser.Physics.Ninja.AABB#render
+    * @param {object} context - The context to render to.
+    * @param {number} xOffset - X offset from AABB's position to render at.
+    * @param {number} yOffset - Y offset from AABB's position to render at.
+    * @param {string} color - color of the debug shape to be rendered. (format is css color string).
+    * @param {boolean} filled - Render the shape as solid (true) or hollow (false).
+    */
+    render: function(context, xOffset, yOffset, color, filled) {
+        var left = this.pos.x - this.xw - xOffset;
+        var top = this.pos.y - this.yw - yOffset;
+
+        if (filled)
+        {
+            context.fillStyle = color;
+            context.fillRect(left, top, this.width, this.height);
+        }
+        else
+        {
+            context.strokeStyle = color;
+            context.strokeRect(left, top, this.width, this.height);
+        }
+    }
 };

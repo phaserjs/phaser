@@ -688,7 +688,8 @@ Phaser.Utils.Debug.prototype = {
     },
 
     /**
-    * Render a Sprites Physics body if it has one set. Note this only works for Arcade Physics.
+    * Render a Sprites Physics body if it has one set. Note this only works for Arcade and
+    * Ninja (AABB, circle only) Physics.
     * To display a P2 body you should enable debug mode on the body when creating it.
     *
     * @method Phaser.Utils.Debug#body
@@ -704,6 +705,12 @@ Phaser.Utils.Debug.prototype = {
             {
                 this.start();
                 Phaser.Physics.Arcade.Body.render(this.context, sprite.body, color, filled);
+                this.stop();
+            }
+            else if (sprite.body.type === Phaser.Physics.NINJA)
+            {
+                this.start();
+                Phaser.Physics.Ninja.Body.render(this.context, sprite.body, color, filled);
                 this.stop();
             }
         }
