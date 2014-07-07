@@ -280,11 +280,8 @@ Phaser.Tween.prototype = {
 
         for (var prop in properties)
         {
-            if (properties.hasOwnProperty(prop))
-            {
-                _cache[prop] = this._object[prop];
-                this._object[prop] = properties[prop];
-            }
+            _cache[prop] = this._object[prop];
+            this._object[prop] = properties[prop];
         }
 
         return this.to(_cache, duration, ease, autoStart, delay, repeat, yoyo);

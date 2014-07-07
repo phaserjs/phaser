@@ -169,6 +169,7 @@ Calling addToWorld() would previously not check the _toRemove array, which could
 * When adding a new Animation to a Sprite it would incorrectly reset the current Sprite frame to the first frame of the animation sequence, it is now left un-touched until you call `play` on the animation.
 * Tween.from now returns a reference to the tweened object in the same way that Tween.to does (thanks @b-ely, fix #976)
 * Re-ordered the parameters of Phaser.Physics.Arcade.Body.render which is used by Debug.body so it matches correctly (thanks @psalaets, #971 #970)
+* Removed hasOwnProperty check from Tween.from because it breaks on extended or inherited Game Objects.
 
 
 
