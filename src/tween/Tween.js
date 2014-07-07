@@ -191,10 +191,11 @@ Phaser.Tween = function (object, game, manager) {
 Phaser.Tween.prototype = {
 
     /**
-    * Configure the Tween
+    * Sets this tween to be a `to` tween on the properties given. A `to` tween starts at the current value and tweens to the destination value given.
+    * For example a Sprite with an `x` coordinate of 100 could be tweened to `x` 200 by giving a properties object of `{ x: 200 }`.
     *
     * @method Phaser.Tween#to
-    * @param {object} properties - Properties you want to tween.
+    * @param {object} properties - The properties you want to tween, such as `Sprite.x` or `Sound.volume`. Given as a JavaScript object.
     * @param {number} [duration=1000] - Duration of this tween in ms.
     * @param {function} [ease=null] - Easing function. If not set it will default to Phaser.Easing.Linear.None.
     * @param {boolean} [autoStart=false] - Whether this tween will start automatically or not.
@@ -260,7 +261,8 @@ Phaser.Tween.prototype = {
     },
 
     /**
-    * Configure a Reverse Tween
+    * Sets this tween to be a `from` tween on the properties given. A `from` tween starts at the given value and tweens to the current values.
+    * For example a Sprite with an `x` coordinate of 100 could be tweened from `x: 200` by giving a properties object of `{ x: 200 }`.
     *
     * @method Phaser.Tween#from
     * @param {object} properties - Properties you want to tween from.
@@ -273,14 +275,20 @@ Phaser.Tween.prototype = {
     * @return {Phaser.Tween} This Tween object.
     */
     from: function(properties, duration, ease, autoStart, delay, repeat, yoyo) {
+
         var _cache = {};
-        for(var prop in properties) {
-            if (properties.hasOwnProperty(prop)) {
+
+        for (var prop in properties)
+        {
+            if (properties.hasOwnProperty(prop))
+            {
                 _cache[prop] = this._object[prop];
                 this._object[prop] = properties[prop];
             }
         }
+
         return this.to(_cache, duration, ease, autoStart, delay, repeat, yoyo);
+
     },
 
     /**

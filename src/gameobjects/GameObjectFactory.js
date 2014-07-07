@@ -79,7 +79,7 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
-    * Create a tween object for a specific object. The object can be any JavaScript object or Phaser object such as Sprite.
+    * Create a tween on a specific object. The object can be any JavaScript object or Phaser object such as Sprite.
     *
     * @method Phaser.GameObjectFactory#tween
     * @param {object} obj - Object the tween will be run on.

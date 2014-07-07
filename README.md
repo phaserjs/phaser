@@ -130,6 +130,7 @@ Version 2.0.6 - "Jornhill" - -in development-
 * Signal.removeAll now has a new `context` parameter. If specified only listeners matching the given context are removed (thanks @lucbloom for the idea, #880)
 * Animation.next will advance to the next frame in the animation, even if it's not currently playing. You can optionally define the number of frames to advance, but the default is 1. This is also aliased from the AnimationManager, so you can do `Sprite.animations.next()`.
 * Animation.previous will rewind to the previous frame in the animation, even if it's not currently playing. You can optionally define the number of frames to rewind, but the default is 1. This is also aliased from the AnimationManager, so you can do `Sprite.animations.previous()`.
+* You can now debug render Ninja Physics AABB and Circle objects (thanks @psalaets, #972)
 
 
 ### Bug Fixes
@@ -167,6 +168,7 @@ Calling addToWorld() would previously not check the _toRemove array, which could
 * Group.sendToBack (and consequently Sprite.sendToBack) no longer removes the child from the InputManager if enabled.
 * When adding a new Animation to a Sprite it would incorrectly reset the current Sprite frame to the first frame of the animation sequence, it is now left un-touched until you call `play` on the animation.
 * Tween.from now returns a reference to the tweened object in the same way that Tween.to does (thanks @b-ely, fix #976)
+* Re-ordered the parameters of Phaser.Physics.Arcade.Body.render which is used by Debug.body so it matches correctly (thanks @psalaets, #971 #970)
 
 
 
