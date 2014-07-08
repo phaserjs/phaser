@@ -464,14 +464,16 @@ Phaser.Sprite.prototype.setFrame = function(frame) {
         }
     }
 
-    if (this.game.renderType === Phaser.WEBGL)
-    {
-        PIXI.WebGLRenderer.updateTextureFrame(this.texture);
-    }
-
     if (this.cropRect)
     {
         this.updateCrop();
+    }
+    else
+    {
+        if (this.game.renderType === Phaser.WEBGL)
+        {
+            PIXI.WebGLRenderer.updateTextureFrame(this.texture);
+        }
     }
 
 };
@@ -483,6 +485,69 @@ Phaser.Sprite.prototype.setFrame = function(frame) {
 * @method Phaser.Sprite#updateCrop
 * @memberof Phaser.Sprite
 */
+Phaser.Sprite.prototype.PREupdateCrop = function() {
+
+    if (!this.cropRect)
+    {
+        return;
+    }
+
+    if (this.texture.trim)
+    {
+        this._cache[15] = this._cache[9] + this.cropRect.x - this._cache[13];
+
+        if (this._cache[15] < this._cache[9])
+        {
+            this._cache[15] = this._cache[9];
+        }
+
+        this._cache[16] = this._cache[10] + this.cropRect.y - this._cache[14];
+
+        if (this._cache[16] < this._cache[10])
+        {
+            this._cache[16] = this._cache[10];
+        }
+
+        this.texture.frame.x = this._cache[15];
+        this.texture.frame.y = this._cache[16];
+
+        this._cache[15] = 0;
+        this._cache[16] = 0;
+
+        if (this.cropRect.x === 0)
+        {
+            this._cache[15] = this._cache[13];
+        }
+
+        if (this.cropRect.y === 0)
+        {
+            this._cache[16] = this._cache[14];
+        }
+
+        this.texture.frame.width = this.cropRect.width - this._cache[15];
+        this.texture.frame.height = this.cropRect.height - this._cache[16];
+
+        this.texture.trim.x = this._cache[15];
+        this.texture.trim.y = this._cache[16];
+        this.texture.trim.width = this.cropRect.width;
+        this.texture.trim.height = this.cropRect.height;
+    }
+    else
+    {
+        this.texture.frame.x = this._cache[9] + this.cropRect.x;
+        this.texture.frame.y = this._cache[10] + this.cropRect.y;
+        this.texture.frame.width = this.cropRect.width;
+        this.texture.frame.height = this.cropRect.height;
+    }
+
+    if (this.game.renderType === Phaser.WEBGL)
+    {
+        PIXI.WebGLRenderer.updateTextureFrame(this.texture);
+    }
+
+};
+
+
 Phaser.Sprite.prototype.updateCrop = function() {
 
     if (!this.cropRect)
@@ -493,7 +558,7 @@ Phaser.Sprite.prototype.updateCrop = function() {
     if (this.texture.trim)
     {
 /*
-    var frame = this.texture.frame;
+                var frame = this.texture.frame;
 
                 var trim =  texture.trim;
 
@@ -550,9 +615,17 @@ Phaser.Sprite.prototype.updateCrop = function() {
 
     worldTransform uses texture.frame.width / height to work out offset from x/y
 
+        this._cache[9] = frame.x;
+        this._cache[10] = frame.y;
+        this._cache[11] = frame.width;
+        this._cache[12] = frame.height;
+        this._cache[13] = frame.spriteSourceSizeX;
+        this._cache[14] = frame.spriteSourceSizeY;
+        this._cache[15] = trim calc x
+        this._cache[16] = trim calc y
+        this._cache[17] = frame.sourceSizeW;
+        this._cache[18] = frame.sourceSizeH;
 */
-
-        //  
 
         var tx = this._cache[9] - this._cache[13];
         var ty = this._cache[10] - this._cache[14];
@@ -573,69 +646,6 @@ Phaser.Sprite.prototype.updateCrop = function() {
 
         //  But we still need to adjust the trim values
 
-
-
-        // this.texture.frame.x = this._cache[9] + this.cropRect.x;
-        // this.texture.frame.y = this._cache[10] + this.cropRect.y;
-        // this.texture.frame.width = this.cropRect.width;
-        // this.texture.frame.height = this.cropRect.height;
-
-        // this.texture.trim.width = this.cropRect.width;
-        // this.texture.trim.height = this.cropRect.height;
-
-
-        // this._cache[9] = frame.x;
-        // this._cache[10] = frame.y;
-        // this._cache[11] = frame.width;
-        // this._cache[12] = frame.height;
-        // this._cache[13] = frame.spriteSourceSizeX;
-        // this._cache[14] = frame.spriteSourceSizeY;
-        // this._cache[15] = trim calc x
-        // this._cache[16] = trim calc y
-        // this._cache[17] = frame.sourceSizeW;
-        // this._cache[18] = frame.sourceSizeH;
-
-
-        /*
-        this._cache[15] = this._cache[9] + this.cropRect.x - this._cache[13];
-
-        if (this._cache[15] < this._cache[9])
-        {
-            this._cache[15] = this._cache[9];
-        }
-
-        this._cache[16] = this._cache[10] + this.cropRect.y - this._cache[14];
-
-        if (this._cache[16] < this._cache[10])
-        {
-            this._cache[16] = this._cache[10];
-        }
-
-        this.texture.frame.x = this._cache[15];
-        this.texture.frame.y = this._cache[16];
-
-        this._cache[15] = 0;
-        this._cache[16] = 0;
-
-        if (this.cropRect.x === 0)
-        {
-            this._cache[15] = this._cache[13];
-        }
-
-        if (this.cropRect.y === 0)
-        {
-            this._cache[16] = this._cache[14];
-        }
-
-        this.texture.frame.width = this.cropRect.width - this._cache[15];
-        this.texture.frame.height = this.cropRect.height - this._cache[16];
-
-        this.texture.trim.x = this._cache[13];
-        this.texture.trim.y = this._cache[14];
-        //  Double-check we need this
-        this.texture.trim.width = this.cropRect.width;
-        this.texture.trim.height = this.cropRect.height;
-        */
     }
     else
     {
@@ -644,6 +654,7 @@ Phaser.Sprite.prototype.updateCrop = function() {
         this.texture.frame.width = this.cropRect.width;
         this.texture.frame.height = this.cropRect.height;
     }
+
 
     if (this.game.renderType === Phaser.WEBGL)
     {
