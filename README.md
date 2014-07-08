@@ -131,6 +131,8 @@ Version 2.0.6 - "Jornhill" - -in development-
 * Animation.next will advance to the next frame in the animation, even if it's not currently playing. You can optionally define the number of frames to advance, but the default is 1. This is also aliased from the AnimationManager, so you can do `Sprite.animations.next()`.
 * Animation.previous will rewind to the previous frame in the animation, even if it's not currently playing. You can optionally define the number of frames to rewind, but the default is 1. This is also aliased from the AnimationManager, so you can do `Sprite.animations.previous()`.
 * You can now debug render Ninja Physics AABB and Circle objects (thanks @psalaets, #972)
+* Phaser.Utils.mixin will mix the source object into the destination object, returning the newly modified destination object.
+* You can now use `game.add.plugin` from the GameObjectFactory (thanks @alvinsight, #978)
 
 
 ### Bug Fixes
