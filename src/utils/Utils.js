@@ -294,6 +294,50 @@ Phaser.Utils = {
 
         // Return the modified object
         return target;
+
+    },
+
+    /**
+    * Mixes the source object into the destination object, returning the newly modified destination object.
+    * Based on original code by @mudcube
+    * 
+    * @method Phaser.Utils.mixin
+    * @param {object} from - The object to copy (the source object).
+    * @param {object} to - The object to copy to (the destination object).
+    * @return {object} The modified destination object.
+    */
+    mixin: function (from, to) {
+
+        if (!from || typeof (from) !== "object") return to;
+
+        for (var key in from)
+        {
+            var o = from[key];
+
+            if (o.childNodes || o.cloneNode) continue;
+
+            var type = typeof (from[key]);
+
+            if (!from[key] || type !== "object")
+            {
+                to[key] = from[key];
+            }
+            else
+            {
+                //  Clone sub-object
+                if (typeof (to[key]) === type)
+                {
+                    to[key] = Phaser.Utils.mixin(from[key], to[key]);
+                }
+                else
+                {
+                    to[key] = Phaser.Utils.mixin(from[key], new o.constructor());
+                }
+            }
+        }
+
+        return to;
+
     }
 
 };
