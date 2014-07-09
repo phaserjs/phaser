@@ -323,7 +323,6 @@ Phaser.Cache.prototype = {
         this._images[key] = { url: url, data: data, spriteSheet: true };
 
         PIXI.BaseTextureCache[key] = new PIXI.BaseTexture(data);
-        // PIXI.TextureCache[key] = new PIXI.Texture(PIXI.BaseTextureCache[key]);
 
         Phaser.LoaderParser.bitmapFont(this.game, xmlData, key, xSpacing, ySpacing);
 
