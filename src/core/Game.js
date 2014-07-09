@@ -612,7 +612,7 @@ Phaser.Game.prototype = {
     },
 
     /**
-    * The core game loop when in a paused state.
+    * The core game loop.
     *
     * @method Phaser.Game#update
     * @protected
@@ -658,6 +658,7 @@ Phaser.Game.prototype = {
         {
             this.state.preRender();
             this.renderer.render(this.stage);
+
             this.plugins.render();
             this.state.render();
             this.plugins.postRender();
