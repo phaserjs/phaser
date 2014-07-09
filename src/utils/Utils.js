@@ -308,13 +308,19 @@ Phaser.Utils = {
     */
     mixin: function (from, to) {
 
-        if (!from || typeof (from) !== "object") return to;
+        if (!from || typeof (from) !== "object")
+        {
+            return to;
+        }
 
         for (var key in from)
         {
             var o = from[key];
 
-            if (o.childNodes || o.cloneNode) continue;
+            if (o.childNodes || o.cloneNode)
+            {
+                continue;
+            }
 
             var type = typeof (from[key]);
 

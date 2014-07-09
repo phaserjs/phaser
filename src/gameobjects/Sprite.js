@@ -178,10 +178,7 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     * @property {Array} _cache
     * @private
     */
-    this._cache = [ 0, 0, 0, 0, 1, 
-                    0, 1, 0, 0, 0, 
-                    0, 0, 0, 0, 0, 
-                    0, 0, 0, 0 ];
+    this._cache = [ 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ];
 
     /**
     * @property {Phaser.Rectangle} _bounds - Internal cache var.
