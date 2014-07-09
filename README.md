@@ -133,6 +133,7 @@ Version 2.0.6 - "Jornhill" - -in development-
 * You can now debug render Ninja Physics AABB and Circle objects (thanks @psalaets, #972)
 * Phaser.Utils.mixin will mix the source object into the destination object, returning the newly modified destination object.
 * You can now use `game.add.plugin` from the GameObjectFactory (thanks @alvinsight, #978)
+* Color.getWebRGB will now accept either an Object or numeric color value.
 
 
 ### Bug Fixes

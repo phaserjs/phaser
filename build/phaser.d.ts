@@ -1492,7 +1492,7 @@ declare module Phaser {
         static getRandomColor(min?: number, max?: number, alpha?: number): number;
         static getRed(color: number): number;
         static getRGB(color: number): Object;
-        static getWebRGB(color: number): string;
+        static getWebRGB(color: any): string;
         static hexToRGB(h: string): number;
         static hexToColor(hex: string, out?: Object): Object;
         static HSLtoRGB(h: number, s: number, l: number, out?: Object): Object;
