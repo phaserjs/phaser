@@ -201,7 +201,8 @@
 
     }
 
-    class Class
+    //  Because we can't have a class called "Class", grrr...
+    class PhaserClass
     {
         public $name; // Phaser.Sprite
         public $parameters = []; // an array containing the parameters
@@ -416,16 +417,77 @@
 
     }
 
+    class ScanFile
+    {
+        public $filename = '';
+        public $js = '';
 
-    $blocks = [];
+        public $blocks;
 
-    $consts = [];
-    $properties = [];
-    $methods = [];
+        public $consts = [];
+        public $properties = [];
+        public $methods = [];
+
+        public function __construct($file)
+        {
+            $this->filename = $file;
+            $js = file($file);
+
+            $scanningForOpen = true;
+            $scanningForClose = false;
+
+            $openLine = 0;
+            $closeLine = 0;
+            $chunk = [];
+
+            for ($i = 0; $i < count($js); $i++)
+            {
+                $line = trim($js[$i]);
+
+                if ($scanningForOpen && $line === "/**")
+                {
+                    $scanningForOpen = false;
+                    $scanningForClose = true;
+                    $chunk = [];
+                    $openLine = $i;
+                }
+
+                if ($scanningForClose && $line === "*/")
+                {
+                    $scanningForOpen = true;
+                    $scanningForClose = false;
+                    $closeLine = $i;
+
+                    //  The first element is always the opening /** so remove it
+                    array_shift($chunk);
+
+                    $this->blocks[] = new Block($openLine, $closeLine, $js[$i + 1], $chunk);
+                }
+                else
+                {
+                    $chunk[] = $line;
+                }
+            }
+        }
+
+        public function total()
+        {
+            return count($this->blocks);
+        }
+
+    }
+
+
+    // $blocks = [];
+
+    // $consts = [];
+    // $properties = [];
+    // $methods = [];
 
     // $file = "../src/gameobjects/Sprite.js";
     $file = "../src/loader/Cache.js";
 
+/*
     $js = file($file);
 
     $scanningForOpen = true;
@@ -463,8 +525,10 @@
             $chunk[] = $line;
         }
     }
+*/
 
     //  That's the whole file scanned, how many blocks did we get out of it?
+
     echo count($blocks) . " blocks found\n\n";
 
     echo "\nConstants:\n\n";
