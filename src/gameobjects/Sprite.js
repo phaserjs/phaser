@@ -495,7 +495,7 @@ Phaser.Sprite.prototype.setFrame = function(frame) {
 * @method Phaser.Sprite#updateCrop
 * @memberof Phaser.Sprite
 */
-Phaser.Sprite.prototype.PREupdateCrop = function() {
+Phaser.Sprite.prototype.updateCrop = function() {
 
     if (!this.cropRect)
     {
@@ -558,7 +558,7 @@ Phaser.Sprite.prototype.PREupdateCrop = function() {
 };
 
 
-Phaser.Sprite.prototype.updateCrop = function() {
+Phaser.Sprite.prototype.XupdateCrop = function() {
 
     if (!this.cropRect)
     {
