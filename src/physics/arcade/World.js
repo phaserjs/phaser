@@ -1114,8 +1114,6 @@ Phaser.Physics.Arcade.prototype = {
             //  We only need do this if both axis have checking faces AND we're moving in both directions
             minX = Math.min(Math.abs(body.position.x - tile.right), Math.abs(body.right - tile.left));
             minY = Math.min(Math.abs(body.position.y - tile.bottom), Math.abs(body.bottom - tile.top));
-
-            // console.log('checking faces', minX, minY);
         }
 
         if (minX < minY)

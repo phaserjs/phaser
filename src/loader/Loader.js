@@ -1289,8 +1289,6 @@ Phaser.Loader.prototype = {
     */
     xhrLoad: function (index, url, type, onload, onerror) {
 
-        // console.log('xhrLoad', index, url, type, onload, onerror);
-
         this._xhr.open("GET", url, true);
         this._xhr.responseType = type;
 

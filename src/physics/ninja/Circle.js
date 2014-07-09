@@ -328,7 +328,6 @@ Phaser.Physics.Ninja.Circle.prototype = {
         }
         else
         {
-            // console.log("ResolveCircleTile() was called with an empty (or unknown) tile!: ID=" + t.id + ")");
             return false;
         }
 

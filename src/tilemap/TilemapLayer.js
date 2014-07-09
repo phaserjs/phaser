@@ -212,8 +212,6 @@ Phaser.TilemapLayer.prototype.constructor = Phaser.TilemapLayer;
 */
 Phaser.TilemapLayer.prototype.postUpdate = function () {
 
-// console.log('layer pu');
-
     Phaser.Image.prototype.postUpdate.call(this);
 
     //  Stops you being able to auto-scroll the camera if it's not following a sprite

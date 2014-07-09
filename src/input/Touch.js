@@ -262,8 +262,6 @@ Phaser.Touch.prototype = {
     */
     onTouchEnter: function (event) {
 
-        console.log('touch enter', event);
-
         this.event = event;
 
         if (this.touchEnterCallback)
