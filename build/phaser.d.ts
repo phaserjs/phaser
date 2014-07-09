@@ -4104,6 +4104,8 @@ declare module Phaser {
         height: number;
         left: number;
         perimeter: number;
+        randomX: number;
+        randomY: number;
         right: number;
         top: number;
         topLeft: Phaser.Point;

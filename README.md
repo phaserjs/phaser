@@ -134,6 +134,8 @@ Version 2.0.6 - "Jornhill" - -in development-
 * Phaser.Utils.mixin will mix the source object into the destination object, returning the newly modified destination object.
 * You can now use `game.add.plugin` from the GameObjectFactory (thanks @alvinsight, #978)
 * Color.getWebRGB will now accept either an Object or numeric color value.
+* Rectangle.randomX will return a random value located within the horizontal bounds of the Rectangle.
+* Rectangle.randomY will return a random value located within the vertical bounds of the Rectangle.
 
 
 ### Bug Fixes

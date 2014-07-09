@@ -464,6 +464,38 @@ Object.defineProperty(Phaser.Rectangle.prototype, "centerY", {
 });
 
 /**
+* A random value between the left and right values (inclusive) of the Rectangle.
+* 
+* @name Phaser.Rectangle#randomX
+* @property {number} randomX - A random value between the left and right values (inclusive) of the Rectangle.
+*/
+Object.defineProperty(Phaser.Rectangle.prototype, "randomX", {
+
+    get: function () {
+
+        return this.x + (Math.random() * this.width);
+
+    }
+
+});
+
+/**
+* A random value between the top and bottom values (inclusive) of the Rectangle.
+* 
+* @name Phaser.Rectangle#randomY
+* @property {number} randomY - A random value between the top and bottom values (inclusive) of the Rectangle.
+*/
+Object.defineProperty(Phaser.Rectangle.prototype, "randomY", {
+
+    get: function () {
+
+        return this.y + (Math.random() * this.height);
+
+    }
+
+});
+
+/**
 * The y coordinate of the top of the Rectangle. Changing the top property of a Rectangle object has no effect on the x and width properties.
 * However it does affect the height property, whereas changing the y value does not affect the height property.
 * @name Phaser.Rectangle#top
