@@ -449,6 +449,11 @@ Phaser.Sprite.prototype.setFrame = function(frame) {
     this.texture.frame.width = frame.width;
     this.texture.frame.height = frame.height;
 
+    this.texture.crop.x = frame.x;
+    this.texture.crop.y = frame.y;
+    this.texture.crop.width = frame.width;
+    this.texture.crop.height = frame.height;
+
     if (frame.trimmed)
     {
         if (this.texture.trim)
@@ -462,6 +467,11 @@ Phaser.Sprite.prototype.setFrame = function(frame) {
         {
             this.texture.trim = { x: frame.spriteSourceSizeX, y: frame.spriteSourceSizeY, width: frame.sourceSizeW, height: frame.sourceSizeH };
         }
+
+        this.texture.width = frame.sourceSizeW;
+        this.texture.height = frame.sourceSizeH;
+        this.texture.frame.width = frame.sourceSizeW;
+        this.texture.frame.height = frame.sourceSizeH;
     }
 
     if (this.cropRect)

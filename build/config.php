@@ -52,6 +52,7 @@
     <script src="$path/src/pixi/renderers/webgl/shaders/ComplexPrimitiveShader.js"></script>
     <script src="$path/src/pixi/renderers/webgl/utils/WebGLGraphics.js"></script>
     <script src="$path/src/pixi/renderers/webgl/WebGLRenderer.js"></script>
+    <script src="$path/src/pixi/renderers/webgl/utils/WebGLBlendModeManager.js"></script>
     <script src="$path/src/pixi/renderers/webgl/utils/WebGLMaskManager.js"></script>
     <script src="$path/src/pixi/renderers/webgl/utils/WebGLStencilManager.js"></script>
     <script src="$path/src/pixi/renderers/webgl/utils/WebGLShaderManager.js"></script>

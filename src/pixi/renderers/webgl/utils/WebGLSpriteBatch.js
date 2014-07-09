@@ -141,18 +141,14 @@ PIXI.WebGLSpriteBatch.prototype.render = function(sprite)
 {
     var texture = sprite.texture;
 
+    var blendChange = this.renderSession.blendModeManager.currentBlendMode !== sprite.blendMode;
+
     // check texture..
-    if(texture.baseTexture !== this.currentBaseTexture || this.currentBatchSize >= this.size)
+    if(texture.baseTexture !== this.currentBaseTexture || this.currentBatchSize >= this.size || blendChange)
     {
         this.flush();
         this.currentBaseTexture = texture.baseTexture;
-    }
-
-
-    // check blend mode
-    if(sprite.blendMode !== this.currentBlendMode)
-    {
-        this.setBlendMode(sprite.blendMode);
+        this.renderSession.blendModeManager.setBlendMode(sprite.blendMode);
     }
 
     // get the uvs for the texture
@@ -179,10 +175,10 @@ PIXI.WebGLSpriteBatch.prototype.render = function(sprite)
         var trim = texture.trim;
 
         w1 = trim.x - aX * trim.width;
-        w0 = w1 + texture.frame.width;
+        w0 = w1 + texture.crop.width;
 
         h1 = trim.y - aY * trim.height;
-        h0 = h1 + texture.frame.height;
+        h0 = h1 + texture.crop.height;
 
     }
     else
@@ -261,16 +257,14 @@ PIXI.WebGLSpriteBatch.prototype.renderTilingSprite = function(tilingSprite)
 {
     var texture = tilingSprite.tilingTexture;
 
-    if(texture.baseTexture !== this.currentBaseTexture || this.currentBatchSize >= this.size)
+    var blendChange = this.renderSession.blendModeManager.currentBlendMode !== tilingSprite.blendMode;
+
+    // check texture..
+    if(texture.baseTexture !== this.currentBaseTexture || this.currentBatchSize >= this.size || blendChange)
     {
         this.flush();
         this.currentBaseTexture = texture.baseTexture;
-    }
-
-     // check blend mode
-    if(tilingSprite.blendMode !== this.currentBlendMode)
-    {
-        this.setBlendMode(tilingSprite.blendMode);
+        this.renderSession.blendModeManager.setBlendMode(tilingSprite.blendMode);
     }
 
      // set the textures uvs temporarily
@@ -413,13 +407,6 @@ PIXI.WebGLSpriteBatch.prototype.flush = function()
 
     }
 
-    // set the blend mode..
-    if(this.currentBlendMode !== PIXI.blendModes.NORMAL)
-    {
-        this.setBlendMode(PIXI.blendModes.NORMAL);
-    }
-
-
     // bind the current texture
     gl.bindTexture(gl.TEXTURE_2D, this.currentBaseTexture._glTextures[gl.id] || PIXI.createWebGLTexture(this.currentBaseTexture, gl));
 
@@ -472,24 +459,6 @@ PIXI.WebGLSpriteBatch.prototype.stop = function()
 PIXI.WebGLSpriteBatch.prototype.start = function()
 {
     this.dirty = true;
-
-   
-};
-
-/**
-* Sets-up the given blendMode from WebGL's point of view
-* @method setBlendMode 
-*
-* @param blendMode {Number} the blendMode, should be a Pixi const, such as PIXI.BlendModes.ADD
-*/
-PIXI.WebGLSpriteBatch.prototype.setBlendMode = function(blendMode)
-{
-    this.flush();
-
-    this.currentBlendMode = blendMode;
-    
-    var blendModeWebGL = PIXI.blendModesWebGL[this.currentBlendMode];
-    this.gl.blendFunc(blendModeWebGL[0], blendModeWebGL[1]);
 };
 
 /**

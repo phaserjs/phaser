@@ -31,6 +31,7 @@
     "src/pixi/renderers/webgl/utils/WebGLGraphics.js",
 
     "src/pixi/renderers/webgl/WebGLRenderer.js",
+    "src/pixi/renderers/webgl/utils/WebGLBlendModeManager.js",
     "src/pixi/renderers/webgl/utils/WebGLMaskManager.js",
     "src/pixi/renderers/webgl/utils/WebGLStencilManager.js",
     "src/pixi/renderers/webgl/utils/WebGLShaderManager.js",

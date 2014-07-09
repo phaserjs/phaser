@@ -386,26 +386,43 @@ Phaser.TileSprite.prototype.setFrame = function(frame) {
     // this._cache[12] = frame.height;
     // this._cache[13] = frame.spriteSourceSizeX;
     // this._cache[14] = frame.spriteSourceSizeY;
+    // this._cache[17] = frame.sourceSizeW;
+    // this._cache[18] = frame.sourceSizeH;
 
     this.texture.frame.x = frame.x;
     this.texture.frame.y = frame.y;
     this.texture.frame.width = frame.width;
     this.texture.frame.height = frame.height;
 
+    this.texture.crop.x = frame.x;
+    this.texture.crop.y = frame.y;
+    this.texture.crop.width = frame.width;
+    this.texture.crop.height = frame.height;
+
     if (frame.trimmed)
     {
-        this.texture.trim = { x: frame.spriteSourceSizeX, y: frame.spriteSourceSizeY, width: frame.width, height: frame.height };
+        if (this.texture.trim)
+        {
+            this.texture.trim.x = frame.spriteSourceSizeX;
+            this.texture.trim.y = frame.spriteSourceSizeY;
+            this.texture.trim.width = frame.sourceSizeW;
+            this.texture.trim.height = frame.sourceSizeH;
+        }
+        else
+        {
+            this.texture.trim = { x: frame.spriteSourceSizeX, y: frame.spriteSourceSizeY, width: frame.sourceSizeW, height: frame.sourceSizeH };
+        }
+
+        this.texture.width = frame.sourceSizeW;
+        this.texture.height = frame.sourceSizeH;
+        this.texture.frame.width = frame.sourceSizeW;
+        this.texture.frame.height = frame.sourceSizeH;
     }
 
     if (this.game.renderType === Phaser.WEBGL)
     {
         PIXI.WebGLRenderer.updateTextureFrame(this.texture);
     }
-
-    // if (this.cropRect)
-    // {
-    //     this.updateCrop();
-    // }
 
 };
 

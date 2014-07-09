@@ -41,16 +41,10 @@ Phaser.Particles.Arcade.Emitter = function (game, x, y, maxParticles) {
     this.type = Phaser.EMITTER;
 
     /**
-    * @property {number} width - The width of the emitter.  Particles can be randomly generated from anywhere within this box.
+    * @property {Phaser.Rectangle} area - The area of the emitter. Particles can be randomly generated from anywhere within this rectangle.
     * @default
     */
-    this.width = 1;
-
-    /**
-    * @property {number} height - The height of the emitter.  Particles can be randomly generated from anywhere within this box.
-    * @default
-    */
-    this.height = 1;
+    this.area = new Phaser.Rectangle(x, y, 1, 1);
 
     /**
     * @property {Phaser.Point} minParticleSpeed - The minimum possible velocity of a particle.
@@ -555,14 +549,15 @@ Phaser.Particles.Arcade.Emitter.prototype.emitParticle = function () {
 
 /**
 * A more compact way of setting the width and height of the emitter.
+* 
 * @method Phaser.Particles.Arcade.Emitter#setSize
 * @param {number} width - The desired width of the emitter (particles are spawned randomly within these dimensions).
 * @param {number} height - The desired height of the emitter.
 */
 Phaser.Particles.Arcade.Emitter.prototype.setSize = function (width, height) {
 
-    this.width = width;
-    this.height = height;
+    this.area.width = width;
+    this.area.height = height;
 
 };
 
@@ -764,7 +759,7 @@ Object.defineProperty(Phaser.Particles.Arcade.Emitter.prototype, "y", {
 Object.defineProperty(Phaser.Particles.Arcade.Emitter.prototype, "left", {
 
     get: function () {
-        return Math.floor(this.x - (this.width / 2));
+        return Math.floor(this.x - (this.area.width / 2));
     }
 
 });
@@ -777,7 +772,7 @@ Object.defineProperty(Phaser.Particles.Arcade.Emitter.prototype, "left", {
 Object.defineProperty(Phaser.Particles.Arcade.Emitter.prototype, "right", {
 
     get: function () {
-        return Math.floor(this.x + (this.width / 2));
+        return Math.floor(this.x + (this.area.width / 2));
     }
 
 });
@@ -790,7 +785,7 @@ Object.defineProperty(Phaser.Particles.Arcade.Emitter.prototype, "right", {
 Object.defineProperty(Phaser.Particles.Arcade.Emitter.prototype, "top", {
 
     get: function () {
-        return Math.floor(this.y - (this.height / 2));
+        return Math.floor(this.y - (this.area.height / 2));
     }
 
 });
@@ -803,7 +798,7 @@ Object.defineProperty(Phaser.Particles.Arcade.Emitter.prototype, "top", {
 Object.defineProperty(Phaser.Particles.Arcade.Emitter.prototype, "bottom", {
 
     get: function () {
-        return Math.floor(this.y + (this.height / 2));
+        return Math.floor(this.y + (this.area.height / 2));
     }
 
 });
