@@ -136,6 +136,7 @@ Version 2.0.6 - "Jornhill" - -in development-
 * Color.getWebRGB will now accept either an Object or numeric color value.
 * Rectangle.randomX will return a random value located within the horizontal bounds of the Rectangle.
 * Rectangle.randomY will return a random value located within the vertical bounds of the Rectangle.
+* Using a Game configuration object you can now specify the value of the  `preserveDrawingBuffer` flag for the WebGL renderer. By default this is disabled for performance reasons. But if you need to be able to take screen shots of your WebGL games using toDataUrl on the game canvas then you'll need to set this to `true` (#987)
 
 
 ### Bug Fixes
