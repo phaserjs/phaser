@@ -99,7 +99,7 @@ Phaser.Image = function (game, x, y, key, frame) {
 
     /**
     * A small internal cache:
-    * 
+    *
     * 0 = previous position.x
     * 1 = previous position.y
     * 2 = previous rotation
@@ -109,30 +109,29 @@ Phaser.Image = function (game, x, y, key, frame) {
     * 6 = exists (0 = no, 1 = yes)
     * 7 = fixed to camera (0 = no, 1 = yes)
     * 8 = destroy phase? (0 = no, 1 = yes)
-    * 9 = texture x
-    * 10 = texture y
-    * 11 = texture width
-    * 12 = texture height
-    * 13 = texture spriteSourceSizeX
-    * 14 = texture spriteSourceSizeY
-    * 15 = trim x
-    * 16 = trim y
+    * 9 = frame index
     * @property {Array} _cache
     * @private
     */
-    this._cache = [ 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ];
+    this._cache = [ 0, 0, 0, 0, 1, 0, 1, 0, 0 ];
+
+    /**
+    * @property {Phaser.Rectangle} _crop - Internal cache var.
+    * @private
+    */
+    this._crop = null;
+
+    /**
+    * @property {Phaser.Rectangle} _frame - Internal cache var.
+    * @private
+    */
+    this._frame = null;
 
     /**
     * @property {Phaser.Rectangle} _bounds - Internal cache var.
     * @private
     */
     this._bounds = new Phaser.Rectangle();
-
-    /**
-    * @property {number} _frame - Internal cache var.
-    * @private
-    */
-    this._frame = 0;
 
     /**
     * @property {string} _frameName - Internal cache var.
@@ -235,63 +234,7 @@ Phaser.Image.prototype.postUpdate = function() {
 * @param {string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture} key - This is the image or texture used by the Image during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture, BitmapData or PIXI.Texture.
 * @param {string|number} frame - If this Image is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
 */
-Phaser.Image.prototype.loadTexture = function (key, frame) {
-
-    frame = frame || 0;
-    
-    this.key = key;
-
-    this._frame = 0;
-    this._frameName = '';
-
-    if (key instanceof Phaser.RenderTexture)
-    {
-        this.key = key.key;
-        this.setTexture(key);
-    }
-    else if (key instanceof Phaser.BitmapData)
-    {
-        this.setTexture(key.texture);
-    }
-    else if (key instanceof PIXI.Texture)
-    {
-        this.setTexture(key);
-    }
-    else
-    {
-        if (key === null || typeof key === 'undefined')
-        {
-            this.key = '__default';
-            this.setTexture(PIXI.TextureCache[this.key]);
-        }
-        else if (typeof key === 'string' && !this.game.cache.checkImageKey(key))
-        {
-            this.key = '__missing';
-            this.setTexture(PIXI.TextureCache[this.key]);
-        }
-        else
-        {
-            this.setTexture(new PIXI.Texture(PIXI.BaseTextureCache[this.key]));
-
-            var frameData = this.game.cache.getFrameData(this.key);
-
-            if (frameData)
-            {
-                if (typeof frame === 'string')
-                {
-                    this._frameName = frame;
-                    this.setFrame(frameData.getFrameByName(frame));
-                }
-                else
-                {
-                    this._frame = frame;
-                    this.setFrame(frameData.getFrame(frame));
-                }
-            }
-        }
-    }
-
-};
+Phaser.Image.prototype.loadTexture = Phaser.Sprite.prototype.loadTexture;
 
 /**
 * Resets the Texture frame dimensions that the Image uses for rendering.
@@ -299,27 +242,7 @@ Phaser.Image.prototype.loadTexture = function (key, frame) {
 * @method Phaser.Image#resetFrame
 * @memberof Phaser.Image
 */
-Phaser.Image.prototype.resetFrame = function() {
-
-    this.texture.frame.x = this._cache[9];
-    this.texture.frame.y = this._cache[10];
-    this.texture.frame.width = this._cache[11];
-    this.texture.frame.height = this._cache[12];
-
-    if (this.texture.trim)
-    {
-        this.texture.trim.x = this._cache[13];
-        this.texture.trim.y = this._cache[14];
-        this.texture.trim.width = this.texture.frame.width;
-        this.texture.trim.height = this.texture.frame.height;
-    }
-
-    if (this.game.renderType === Phaser.WEBGL)
-    {
-        PIXI.WebGLRenderer.updateTextureFrame(this.texture);
-    }
-
-};
+Phaser.Image.prototype.resetFrame = Phaser.Sprite.prototype.resetFrame;
 
 /**
 * Sets the Texture frame the Image uses for rendering.
@@ -329,36 +252,7 @@ Phaser.Image.prototype.resetFrame = function() {
 * @memberof Phaser.Image
 * @param {Phaser.Frame} frame - The Frame to be used by the Image texture.
 */
-Phaser.Image.prototype.setFrame = function(frame) {
-
-    this._cache[9] = frame.x;
-    this._cache[10] = frame.y;
-    this._cache[11] = frame.width;
-    this._cache[12] = frame.height;
-    this._cache[13] = frame.spriteSourceSizeX;
-    this._cache[14] = frame.spriteSourceSizeY;
-
-    this.texture.frame.x = frame.x;
-    this.texture.frame.y = frame.y;
-    this.texture.frame.width = frame.width;
-    this.texture.frame.height = frame.height;
-
-    if (frame.trimmed)
-    {
-        this.texture.trim = { x: frame.spriteSourceSizeX, y: frame.spriteSourceSizeY, width: frame.width, height: frame.height };
-    }
-
-    if (this.game.renderType === Phaser.WEBGL)
-    {
-        PIXI.WebGLRenderer.updateTextureFrame(this.texture);
-    }
-
-    if (this.cropRect)
-    {
-        this.updateCrop();
-    }
-
-};
+Phaser.Image.prototype.setFrame = Phaser.Sprite.prototype.setFrame;
 
 /**
 * If you have set a crop rectangle on this Image via Image.crop and since modified the Image.cropRect property (or the rectangle it references)
@@ -367,67 +261,7 @@ Phaser.Image.prototype.setFrame = function(frame) {
 * @method Phaser.Image#updateCrop
 * @memberof Phaser.Image
 */
-Phaser.Image.prototype.updateCrop = function() {
-
-    if (!this.cropRect)
-    {
-        return;
-    }
-
-    if (this.texture.trim)
-    {
-        this._cache[15] = this._cache[9] + this.cropRect.x - this._cache[13];
-
-        if (this._cache[15] < this._cache[9])
-        {
-            this._cache[15] = this._cache[9];
-        }
-
-        this._cache[16] = this._cache[10] + this.cropRect.y - this._cache[14];
-
-        if (this._cache[16] < this._cache[10])
-        {
-            this._cache[16] = this._cache[10];
-        }
-
-        this.texture.frame.x = this._cache[15];
-        this.texture.frame.y = this._cache[16];
-
-        this._cache[15] = 0;
-        this._cache[16] = 0;
-
-        if (this.cropRect.x === 0)
-        {
-            this._cache[15] = this._cache[13];
-        }
-
-        if (this.cropRect.y === 0)
-        {
-            this._cache[16] = this._cache[14];
-        }
-
-        this.texture.frame.width = this.cropRect.width - this._cache[15];
-        this.texture.frame.height = this.cropRect.height - this._cache[16];
-
-        this.texture.trim.x = this._cache[15];
-        this.texture.trim.y = this._cache[16];
-        this.texture.trim.width = this.cropRect.width;
-        this.texture.trim.height = this.cropRect.height;
-    }
-    else
-    {
-        this.texture.frame.x = this._cache[9] + this.cropRect.x;
-        this.texture.frame.y = this._cache[10] + this.cropRect.y;
-        this.texture.frame.width = this.cropRect.width;
-        this.texture.frame.height = this.cropRect.height;
-    }
-
-    if (this.game.renderType === Phaser.WEBGL)
-    {
-        PIXI.WebGLRenderer.updateTextureFrame(this.texture);
-    }
-
-};
+Phaser.Image.prototype.updateCrop = Phaser.Sprite.prototype.updateCrop;
 
 /**
 * Crop allows you to crop the texture used to display this Image.
@@ -444,34 +278,7 @@ Phaser.Image.prototype.updateCrop = function() {
 * @param {Phaser.Rectangle} rect - The Rectangle used during cropping. Pass null or no parameters to clear a previously set crop rectangle.
 * @param {boolean} [copy=false] - If false Image.cropRect will be a reference to the given rect. If true it will copy the rect values into a local Image.cropRect object.
 */
-Phaser.Image.prototype.crop = function(rect, copy) {
-
-    if (typeof copy === 'undefined') { copy = false; }
-
-    if (rect)
-    {
-        if (copy && this.cropRect !== null)
-        {
-            this.cropRect.setTo(rect.x, rect.y, rect.width, rect.height);
-        }
-        else if (copy && this.cropRect === null)
-        {
-            this.cropRect = new Phaser.Rectangle(rect.x, rect.y, rect.width, rect.height);
-        }
-        else
-        {
-            this.cropRect = rect;
-        }
-
-        this.updateCrop();
-    }
-    else
-    {
-        this.cropRect = null;
-        this.resetFrame();
-    }
-
-};
+Phaser.Image.prototype.crop = Phaser.Sprite.prototype.crop;
 
 /**
 * Brings a 'dead' Image back to life, optionally giving it the health value specified.
@@ -507,20 +314,7 @@ Phaser.Image.prototype.revive = function() {
 * @memberof Phaser.Image
 * @return {Phaser.Image} This instance.
 */
-Phaser.Image.prototype.kill = function() {
-
-    this.alive = false;
-    this.exists = false;
-    this.visible = false;
-
-    if (this.events)
-    {
-        this.events.onKilled.dispatch(this);
-    }
-
-    return this;
-
-};
+Phaser.Image.prototype.kill = Phaser.Sprite.prototype.kill;
 
 /**
 * Destroys the Image. This removes it from its parent group, destroys the input, event and animation handlers if present
@@ -530,64 +324,7 @@ Phaser.Image.prototype.kill = function() {
 * @memberof Phaser.Image
 * @param {boolean} [destroyChildren=true] - Should every child of this object have its destroy method called?
 */
-Phaser.Image.prototype.destroy = function(destroyChildren) {
-
-    if (this.game === null || this.destroyPhase) { return; }
-
-    if (typeof destroyChildren === 'undefined') { destroyChildren = true; }
-
-    this._cache[8] = 1;
-
-    if (this.parent)
-    {
-        if (this.parent instanceof Phaser.Group)
-        {
-            this.parent.remove(this);
-        }
-        else
-        {
-            this.parent.removeChild(this);
-        }
-    }
-
-    if (this.events)
-    {
-        this.events.destroy();
-    }
-
-    if (this.input)
-    {
-        this.input.destroy();
-    }
-
-    var i = this.children.length;
-
-    if (destroyChildren)
-    {
-        while (i--)
-        {
-            this.children[i].destroy(destroyChildren);
-        }
-    }
-    else
-    {
-        while (i--)
-        {
-            this.removeChild(this.children[i]);
-        }
-    }
-
-    this.alive = false;
-    this.exists = false;
-    this.visible = false;
-
-    this.filters = null;
-    this.mask = null;
-    this.game = null;
-
-    this._cache[8] = 0;
-
-};
+Phaser.Image.prototype.destroy = Phaser.Sprite.prototype.destroy;
 
 /**
 * Resets the Image. This places the Image at the given x/y world coordinates and then sets alive, exists, visible and renderable all to true.
@@ -620,16 +357,7 @@ Phaser.Image.prototype.reset = function(x, y) {
 * @memberof Phaser.Image
 * @return {Phaser.Image} This instance.
 */
-Phaser.Image.prototype.bringToTop = function() {
-
-    if (this.parent)
-    {
-        this.parent.bringToTop(this);
-    }
-
-    return this;
-
-};
+Phaser.Image.prototype.bringToTop = Phaser.Sprite.prototype.bringToTop;
 
 /**
 * Indicates the rotation of the Image, in degrees, from its original orientation. Values from 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation.
@@ -734,7 +462,7 @@ Object.defineProperty(Phaser.Image.prototype, "inCamera", {
 
     get: function() {
 
-        return this.game.world.camera.screenView.intersects(this.getBounds());
+        return this.game.world.camera.view.intersects(this.getBounds());
 
     }
 
@@ -748,7 +476,7 @@ Object.defineProperty(Phaser.Image.prototype, "frame", {
 
     get: function() {
 
-        return this._frame;
+        return this._cache[9];
 
     },
 
@@ -760,7 +488,7 @@ Object.defineProperty(Phaser.Image.prototype, "frame", {
 
             if (frameData && value < frameData.total && frameData.getFrame(value))
             {
-                this._frame = value;
+                this._cache[9] = value;
                 this.setFrame(frameData.getFrame(value));
             }
         }
