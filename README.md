@@ -25,13 +25,13 @@ By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 
 We're very pleased to bring you the latest version of Phaser. We were hanging back waiting for the 1.6 release of Pixi, and sure enough it landed today, so we're pleased to incorporate that into this release. Pixi 1.6 itself brings in a number of powerful new features, not least of which are the awesome updates to the Graphics class - now allowing for significantly more complex shapes and masks and a host of new methods such as drawPath, arcTo and quadratic curves.
 
-There are also masses of updates across Phaser as well. The Change Log below will give you the full details, but there are substantial new updates, features and bug fixes across most of the library.
+There are also masses of updates across Phaser as well. The Change Log below will give you the full details, but there are substantial new updates, features and bug fixes across most of the library. Also a big shout out to the guys at Ludei for helping get to the bottom of some strange CocoonJS issues and submit their code into Phaser.
 
 Just as we were preparing for release the 0.6 version of p2.js landed as well. As much as we'd have loved to include it this time we just didn't want to hold back any longer. So we've updated our roadmap and will push out 2.1 very soon, which will focus specifically on integration of the new version of p2.js. We're moving to 2.1 as it has a number of API breaking changes inside.
 
 You may have noticed that we also now have a [Gittip](https://www.gittip.com/photonstorm/) account set-up. Everything we raise from this will go towards helping Phaser development, one way or another. To those of who you have already contributed, thank you!
 
-We're also working extremely hard on the new web site. We're really happy with the new features we've been adding recently and are pushing to get it done as soon as possible.
+We're also working extremely hard on the new web site. We're really happy with the new features we've been adding recently and are pushing to get it done as soon as possible. There's also a brand new documentation generator nearly done - see our Roadmap for more details.
 
 Until then happy coding everyone! And we hope to see you on the forums.
 
@@ -424,6 +424,12 @@ Here are some of the features planned for future releases:
 
 ### Version 2.1 ("Shienar")
 
+* Upgrade to p2.js 0.6.0 and all of Phasers P2 functions to match.
+* Continued exploration of preloader and scene generation via JSON scripts.
+* New documentation formats using our custom doc generator.
+
+### Version 2.2 ("Tarabon")
+
 * Scene Manager - json scene parser.
 * Comprehensive testing across Firefox OS devices, CocoonJS and Ejecta.
 * Ability to control DOM elements from the core game and layer them into the game.
@@ -432,15 +438,14 @@ Here are some of the features planned for future releases:
 * Swapping to using a RenderTexture for the Tilemaps and implementing Tilemap slicing.
 * Enhance the State Management, so you can perform non-destructive State swaps and persistence.
 * Support for parallel asset loading.
-* Optimise the Gamepad._pollGamepads method significantly.
 
-### Version 2.2 ("Tarabon")
+### Version 2.3
 
 * Look carefully at the internal structure of Phaser to avoid method repetition (such as Sprite.crop and Image.crop), investigate using mixins to help reduce overall codebase size.
 * Flash CC HTML5 export integration.
 * Massively enhance the audio side of Phaser. Take more advantage of Web Audio: echo effects, positional sound, etc.
 
-### Beyond version 2.2
+### Beyond version 2.3
 
 * A more advanced Particle system, one that can render to a single canvas (rather than spawn hundreds of Sprites), more advanced effects, etc.
 * Integration with third party services like Google Play Game Services and Amazon JS SDK.
@@ -451,7 +456,6 @@ Here are some of the features planned for future releases:
 * DragonBones support.
 * Cache to localStorage using If-Modified-Since. [See github request](https://github.com/photonstorm/phaser/issues/495)
 * Allow for complex assets like Bitmap Fonts to be stored within a texture atlas.
-* Look at XDomainRequest for IE9 CORs issues.
 
 ![div](http://phaser.io/images/div1.png)
 
