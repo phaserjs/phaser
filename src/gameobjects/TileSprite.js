@@ -380,15 +380,6 @@ Phaser.TileSprite.prototype.loadTexture = function (key, frame) {
 */
 Phaser.TileSprite.prototype.setFrame = function(frame) {
 
-    // this._cache[9] = frame.x;
-    // this._cache[10] = frame.y;
-    // this._cache[11] = frame.width;
-    // this._cache[12] = frame.height;
-    // this._cache[13] = frame.spriteSourceSizeX;
-    // this._cache[14] = frame.spriteSourceSizeY;
-    // this._cache[17] = frame.sourceSizeW;
-    // this._cache[18] = frame.sourceSizeH;
-
     this.texture.frame.x = frame.x;
     this.texture.frame.y = frame.y;
     this.texture.frame.width = frame.width;

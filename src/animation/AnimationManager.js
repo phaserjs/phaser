@@ -481,11 +481,6 @@ Object.defineProperty(Phaser.AnimationManager.prototype, 'frame', {
 
     set: function (value) {
 
-console.log('AnimationManager.frame');
-console.log(typeof value);
-console.log(this._frameData);
-// console.log(this._frameData.getFrame(value));
-
         if (typeof value === 'number' && this._frameData && this._frameData.getFrame(value) !== null)
         {
             this.currentFrame = this._frameData.getFrame(value);
