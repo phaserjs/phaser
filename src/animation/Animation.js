@@ -394,6 +394,10 @@ Phaser.Animation.prototype = {
                         this.onLoop.dispatch(this._parent, this);
                     }
                 }
+                else
+                {
+                    this.complete();
+                }
             }
 
             this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
