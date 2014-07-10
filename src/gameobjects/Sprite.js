@@ -165,20 +165,26 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     * 6 = exists (0 = no, 1 = yes)
     * 7 = fixed to camera (0 = no, 1 = yes)
     * 8 = destroy phase? (0 = no, 1 = yes)
-    * 9 = texture x
-    * 10 = texture y
-    * 11 = texture width
-    * 12 = texture height
-    * 13 = texture spriteSourceSizeX
-    * 14 = texture spriteSourceSizeY
-    * 15 = calculated trim x
-    * 16 = calculated trim y
-    * 17 = trim actualWidth
-    * 18 = trim actualHeight
+    * 9 = crop.x
+    * 10 = crop.y
+    * 11 = crop.width
+    * 12 = crop.height
     * @property {Array} _cache
     * @private
     */
     this._cache = [ 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ];
+
+    // * 9 = texture x
+    // * 10 = texture y
+    // * 11 = texture width
+    // * 12 = texture height
+    // * 13 = texture spriteSourceSizeX
+    // * 14 = texture spriteSourceSizeY
+    // * 15 = calculated trim x
+    // * 16 = calculated trim y
+    // * 17 = trim actualWidth
+    // * 18 = trim actualHeight
+
 
     /**
     * @property {Phaser.Rectangle} _bounds - Internal cache var.
@@ -388,7 +394,11 @@ Phaser.Sprite.prototype.loadTexture = function (key, frame) {
         else
         {
             this.setTexture(new PIXI.Texture(PIXI.BaseTextureCache[key]));
-            this.animations.loadFrameData(this.game.cache.getFrameData(key), frame);
+
+            if (!this.animations.loadFrameData(this.game.cache.getFrameData(key), frame))
+            {
+                this._cache[9] = this.texture.frame;
+            }
         }
     }
 
@@ -402,17 +412,25 @@ Phaser.Sprite.prototype.loadTexture = function (key, frame) {
 */
 Phaser.Sprite.prototype.resetFrame = function() {
 
-    this.texture.frame.x = this._cache[9];
-    this.texture.frame.y = this._cache[10];
-    this.texture.frame.width = this._cache[11];
-    this.texture.frame.height = this._cache[12];
+console.log('resetFrame');
+    this.setFrame(this._cache[9]);
+
+    // this.texture.frame.x = this._cache[9];
+    // this.texture.frame.y = this._cache[10];
+    // this.texture.frame.width = this._cache[11];
+    // this.texture.frame.height = this._cache[12];
+
+    // this.texture.crop.x = this._cache[9];
+    // this.texture.crop.y = this._cache[10];
+    // this.texture.crop.width = this._cache[11];
+    // this.texture.crop.height = this._cache[12];
 
     if (this.texture.trim)
     {
-        this.texture.trim.x = this._cache[13];
-        this.texture.trim.y = this._cache[14];
-        this.texture.trim.width = this._cache[17];
-        this.texture.trim.height = this._cache[18];
+        // this.texture.trim.x = this._cache[13];
+        // this.texture.trim.y = this._cache[14];
+        // this.texture.trim.width = this._cache[17];
+        // this.texture.trim.height = this._cache[18];
     }
 
     if (this.game.renderType === Phaser.WEBGL)
@@ -432,14 +450,19 @@ Phaser.Sprite.prototype.resetFrame = function() {
 */
 Phaser.Sprite.prototype.setFrame = function(frame) {
 
-    this._cache[9] = frame.x;
-    this._cache[10] = frame.y;
-    this._cache[11] = frame.width;
-    this._cache[12] = frame.height;
-    this._cache[13] = frame.spriteSourceSizeX;
-    this._cache[14] = frame.spriteSourceSizeY;
-    this._cache[17] = frame.sourceSizeW;
-    this._cache[18] = frame.sourceSizeH;
+console.log('setFrame');
+    this._cache[9] = frame;
+    // this._cache[10] = frame.y;
+    // this._cache[11] = frame.width;
+    // this._cache[12] = frame.height;
+    // this._cache[9] = frame.x;
+    // this._cache[10] = frame.y;
+    // this._cache[11] = frame.width;
+    // this._cache[12] = frame.height;
+    // this._cache[13] = frame.spriteSourceSizeX;
+    // this._cache[14] = frame.spriteSourceSizeY;
+    // this._cache[17] = frame.sourceSizeW;
+    // this._cache[18] = frame.sourceSizeH;
 
     this.texture.frame.x = frame.x;
     this.texture.frame.y = frame.y;
@@ -492,7 +515,7 @@ Phaser.Sprite.prototype.setFrame = function(frame) {
 * @method Phaser.Sprite#updateCrop
 * @memberof Phaser.Sprite
 */
-Phaser.Sprite.prototype.updateCrop = function() {
+Phaser.Sprite.prototype.OLDupdateCrop = function() {
 
     if (!this.cropRect)
     {
@@ -669,6 +692,67 @@ Phaser.Sprite.prototype.XupdateCrop = function() {
     }
 
 };
+
+Phaser.Sprite.prototype.updateCrop = function() {
+
+    if (!this.cropRect)
+    {
+        return;
+    }
+
+    // var r1 = new Phaser.Rectangle(this._cache[13], this._cache[14], this._cache[17], this._cache[18]);
+    // var r2 = new Phaser.Rectangle(this.cropRect.x + tx, this.cropRect.y + ty, this.cropRect.width, this.cropRect.height);
+    // var area = Phaser.Rectangle.intersection(r1, r2);
+
+    //  This will ONLY work if it's a non-trimmed image and not part of a texture atlas!
+    // var area = Phaser.Rectangle.intersection(this._cache[9], this.cropRect);
+
+// console.log(this._cache[9]);
+// console.log(area);
+
+    var x = 
+
+    this.texture.crop.x = area.x;
+    this.texture.crop.y = area.y;
+    this.texture.crop.width = area.width;
+    this.texture.crop.height = area.height;
+
+    // this.texture.frame.x = this._cache[9].x + this.cropRect.x;
+    // this.texture.frame.y = this._cache[10].y + this.cropRect.y;
+    // this.texture.frame.width = this.cropRect.width;
+    // this.texture.frame.height = this.cropRect.height;
+
+
+    // this.texture.frame.x = this._cache[9] + this.cropRect.x;
+    // this.texture.frame.y = this._cache[10] + this.cropRect.y;
+    // this.texture.frame.width = area.width;
+    // this.texture.frame.height = area.height;
+    // this.texture.width = area.width;
+    // this.texture.height = area.height;
+
+
+    // if (this.texture.trim)
+    // {
+    //     this.texture.crop.x = this._cache[9].spriteSourceSizeX;
+    //     this.texture.crop.y = this._cache[9].spriteSourceSizeY;
+    //     this.texture.crop.width = this._cache[9].spriteSourceSizeW;
+    //     this.texture.crop.height = this._cache[9].spriteSourceSizeH;
+    // }
+    // else
+    // {
+    //     this.texture.crop.x = this.cropRect.x;
+    //     this.texture.crop.y = this.cropRect.y;
+    //     this.texture.crop.width = this.cropRect.width;
+    //     this.texture.crop.height = this.cropRect.height;
+    // }
+
+    if (this.game.renderType === Phaser.WEBGL)
+    {
+        PIXI.WebGLRenderer.updateTextureFrame(this.texture);
+    }
+
+}
+
 
 /**
 * Crop allows you to crop the texture used to display this Sprite.

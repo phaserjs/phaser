@@ -82,6 +82,7 @@ Phaser.AnimationManager.prototype = {
     */
     loadFrameData: function (frameData, frame) {
 
+console.log('loadFrameData', this._frameData);
         this._frameData = frameData;
 
         if (typeof frame === 'undefined' || frame === null)
@@ -101,6 +102,15 @@ Phaser.AnimationManager.prototype = {
         }
 
         this.isLoaded = true;
+
+        if (this._frameData)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
 
     },
 
@@ -470,6 +480,11 @@ Object.defineProperty(Phaser.AnimationManager.prototype, 'frame', {
     },
 
     set: function (value) {
+
+console.log('AnimationManager.frame');
+console.log(typeof value);
+console.log(this._frameData);
+// console.log(this._frameData.getFrame(value));
 
         if (typeof value === 'number' && this._frameData && this._frameData.getFrame(value) !== null)
         {
