@@ -392,7 +392,11 @@ Phaser.Sprite.prototype.loadTexture = function (key, frame) {
         else
         {
             this.setTexture(new PIXI.Texture(PIXI.BaseTextureCache[key]));
-            setFrame = !this.animations.loadFrameData(this.game.cache.getFrameData(key), frame);
+
+            if (this.animations)
+            {
+                setFrame = !this.animations.loadFrameData(this.game.cache.getFrameData(key), frame);
+            }
         }
     }
 
