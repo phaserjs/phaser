@@ -879,3 +879,16 @@ Phaser.Device.prototype = {
 };
 
 Phaser.Device.prototype.constructor = Phaser.Device;
+
+/**
+* A class-static function to check wether we’re running on an Android Stock browser.
+* Autors might want to scale down on effects and switch to the CANVAS rendering method on those devices.
+* Usage: var defaultRenderingMode = Phaser.Device.isAndroidStockBrowser() ? Phaser.CANVAS : Phaser.AUTO;
+* 
+* @function Phaser.Device#isAndroidStockBrowser
+*/
+Phaser.Device.isAndroidStockBrowser = function()
+{
+    var matches = window.navigator.userAgent.match(/Android.*AppleWebKit\/([\d.]+)/);
+    return matches && matches[1] < 537;
+};
