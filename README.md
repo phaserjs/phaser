@@ -137,6 +137,8 @@ Version 2.0.6 - "Jornhill" - -in development-
 * Rectangle.randomX will return a random value located within the horizontal bounds of the Rectangle.
 * Rectangle.randomY will return a random value located within the vertical bounds of the Rectangle.
 * Using a Game configuration object you can now specify the value of the  `preserveDrawingBuffer` flag for the WebGL renderer. By default this is disabled for performance reasons. But if you need to be able to take screen shots of your WebGL games using toDataUrl on the game canvas then you'll need to set this to `true` (#987)
+* Added options to disable horizontal and vertical world wrapping individually (thanks @jackrugile, #988)
+* You can now prevent the Debug class from being created or booted by using the Game configuration setting: `enableDebug`. By default it is `true`, set to `false` to prevent the class from being created. Please note you are responsible for checking if this class exists before calling it, but you can do that via `if (game.debug) { ... }` (request #984)
 
 
 ### Bug Fixes

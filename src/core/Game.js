@@ -273,7 +273,7 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     }
     else
     {
-        this.config = {};
+        this.config = { enableDebug: true };
 
         if (typeof width !== 'undefined')
         {
@@ -457,8 +457,6 @@ Phaser.Game.prototype = {
             this.particles = new Phaser.Particles(this);
             this.plugins = new Phaser.PluginManager(this);
             this.net = new Phaser.Net(this);
-            this.debug = new Phaser.Utils.Debug(this);
-            this.scratch = new Phaser.BitmapData(this, '__root', 1024, 1024);
 
             this.time.boot();
             this.stage.boot();
@@ -466,7 +464,12 @@ Phaser.Game.prototype = {
             this.input.boot();
             this.sound.boot();
             this.state.boot();
-            this.debug.boot();
+
+            if (this.config['enableDebug'])
+            {
+                this.debug = new Phaser.Utils.Debug(this);
+                this.debug.boot();
+            }
 
             this.showDebugHeader();
 
