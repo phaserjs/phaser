@@ -165,26 +165,22 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     * 6 = exists (0 = no, 1 = yes)
     * 7 = fixed to camera (0 = no, 1 = yes)
     * 8 = destroy phase? (0 = no, 1 = yes)
-    * 9 = crop.x
-    * 10 = crop.y
-    * 11 = crop.width
-    * 12 = crop.height
     * @property {Array} _cache
     * @private
     */
-    this._cache = [ 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ];
+    this._cache = [ 0, 0, 0, 0, 1, 0, 1, 0 ];
 
-    // * 9 = texture x
-    // * 10 = texture y
-    // * 11 = texture width
-    // * 12 = texture height
-    // * 13 = texture spriteSourceSizeX
-    // * 14 = texture spriteSourceSizeY
-    // * 15 = calculated trim x
-    // * 16 = calculated trim y
-    // * 17 = trim actualWidth
-    // * 18 = trim actualHeight
+    /**
+    * @property {Phaser.Rectangle} _crop - Internal cache var.
+    * @private
+    */
+    this._crop = null;
 
+    /**
+    * @property {Phaser.Rectangle} _frame - Internal cache var.
+    * @private
+    */
+    this._frame = null;
 
     /**
     * @property {Phaser.Rectangle} _bounds - Internal cache var.
@@ -366,6 +362,8 @@ Phaser.Sprite.prototype.loadTexture = function (key, frame) {
 
     this.key = key;
 
+    var setFrame = true;
+
     if (key instanceof Phaser.RenderTexture)
     {
         this.key = key.key;
@@ -394,48 +392,13 @@ Phaser.Sprite.prototype.loadTexture = function (key, frame) {
         else
         {
             this.setTexture(new PIXI.Texture(PIXI.BaseTextureCache[key]));
-
-            if (!this.animations.loadFrameData(this.game.cache.getFrameData(key), frame))
-            {
-                this._cache[9] = this.texture.frame;
-            }
+            setFrame = !this.animations.loadFrameData(this.game.cache.getFrameData(key), frame);
         }
     }
 
-};
-
-/**
-* Resets the Texture frame dimensions that the Sprite uses for rendering.
-*
-* @method Phaser.Sprite#resetFrame
-* @memberof Phaser.Sprite
-*/
-Phaser.Sprite.prototype.resetFrame = function() {
-
-console.log('resetFrame');
-    this.setFrame(this._cache[9]);
-
-    // this.texture.frame.x = this._cache[9];
-    // this.texture.frame.y = this._cache[10];
-    // this.texture.frame.width = this._cache[11];
-    // this.texture.frame.height = this._cache[12];
-
-    // this.texture.crop.x = this._cache[9];
-    // this.texture.crop.y = this._cache[10];
-    // this.texture.crop.width = this._cache[11];
-    // this.texture.crop.height = this._cache[12];
-
-    if (this.texture.trim)
+    if (setFrame)
     {
-        // this.texture.trim.x = this._cache[13];
-        // this.texture.trim.y = this._cache[14];
-        // this.texture.trim.width = this._cache[17];
-        // this.texture.trim.height = this._cache[18];
-    }
-
-    if (this.game.renderType === Phaser.WEBGL)
-    {
-        PIXI.WebGLRenderer.updateTextureFrame(this.texture);
+        this._frame = Phaser.Rectangle.clone(this.texture.frame);
     }
 
 };
@@ -450,19 +413,7 @@ console.log('resetFrame');
 */
 Phaser.Sprite.prototype.setFrame = function(frame) {
 
-console.log('setFrame');
-    this._cache[9] = frame;
-    // this._cache[10] = frame.y;
-    // this._cache[11] = frame.width;
-    // this._cache[12] = frame.height;
-    // this._cache[9] = frame.x;
-    // this._cache[10] = frame.y;
-    // this._cache[11] = frame.width;
-    // this._cache[12] = frame.height;
-    // this._cache[13] = frame.spriteSourceSizeX;
-    // this._cache[14] = frame.spriteSourceSizeY;
-    // this._cache[17] = frame.sourceSizeW;
-    // this._cache[18] = frame.sourceSizeH;
+    this._frame = frame;
 
     this.texture.frame.x = frame.x;
     this.texture.frame.y = frame.y;
@@ -509,250 +460,19 @@ console.log('setFrame');
 };
 
 /**
-* If you have set a crop rectangle on this Sprite via Sprite.crop and since modified the Sprite.cropRect property (or the rectangle it references)
-* then you need to update the crop frame by calling this method.
+* Resets the Texture frame dimensions that the Sprite uses for rendering.
 *
-* @method Phaser.Sprite#updateCrop
+* @method Phaser.Sprite#resetFrame
 * @memberof Phaser.Sprite
 */
-Phaser.Sprite.prototype.OLDupdateCrop = function() {
+Phaser.Sprite.prototype.resetFrame = function() {
 
-    if (!this.cropRect)
+    if (this._frame)
     {
-        return;
-    }
-
-    if (this.texture.trim)
-    {
-        this._cache[15] = this._cache[9] + this.cropRect.x - this._cache[13];
-
-        if (this._cache[15] < this._cache[9])
-        {
-            this._cache[15] = this._cache[9];
-        }
-
-        this._cache[16] = this._cache[10] + this.cropRect.y - this._cache[14];
-
-        if (this._cache[16] < this._cache[10])
-        {
-            this._cache[16] = this._cache[10];
-        }
-
-        this.texture.frame.x = this._cache[15];
-        this.texture.frame.y = this._cache[16];
-
-        this._cache[15] = 0;
-        this._cache[16] = 0;
-
-        if (this.cropRect.x === 0)
-        {
-            this._cache[15] = this._cache[13];
-        }
-
-        if (this.cropRect.y === 0)
-        {
-            this._cache[16] = this._cache[14];
-        }
-
-        this.texture.frame.width = this.cropRect.width - this._cache[15];
-        this.texture.frame.height = this.cropRect.height - this._cache[16];
-
-        this.texture.trim.x = this._cache[15];
-        this.texture.trim.y = this._cache[16];
-        this.texture.trim.width = this.cropRect.width;
-        this.texture.trim.height = this.cropRect.height;
-    }
-    else
-    {
-        this.texture.frame.x = this._cache[9] + this.cropRect.x;
-        this.texture.frame.y = this._cache[10] + this.cropRect.y;
-        this.texture.frame.width = this.cropRect.width;
-        this.texture.frame.height = this.cropRect.height;
-    }
-
-    if (this.game.renderType === Phaser.WEBGL)
-    {
-        PIXI.WebGLRenderer.updateTextureFrame(this.texture);
+        this.setFrame(this._frame);
     }
 
 };
-
-
-Phaser.Sprite.prototype.XupdateCrop = function() {
-
-    if (!this.cropRect)
-    {
-        return;
-    }
-
-    if (this.texture.trim)
-    {
-/*
-                var frame = this.texture.frame;
-
-                var trim =  texture.trim;
-
-                RENDER NON-TRIMMED FRAME, only difference is the x/y coords it renders at
-
-                context.drawImage(this.texture.baseTexture.source,
-                               frame.x,
-                               frame.y,
-                               frame.width,
-                               frame.height,
-                               (this.anchor.x) * -frame.width,
-                               (this.anchor.y) * -frame.height,
-                               frame.width,
-                               frame.height);
-
-    "filename": "razor_rain_vertical_23",
-    "frame": {"x":175,"y":1444,"w":174,"h":360},            <- the actual area of the PNG to cut
-    "trimmed": false,
-    "spriteSourceSize": {"x":0,"y":0,"w":174,"h":360},      <- the offset applied to the Sprite x/y coords to draw the frame to
-    "sourceSize": {"w":174,"h":360}                         <- the frame size
-
-    This frame will render at:
-
-    (this.anchor.x) * -frame.width
-    0               * -174          = 0
-
-    Remember - the setTransform has already offset the render by the Sprite.x/y value inherited from the display list
-
-                RENDER A TRIMMED FRAME
-
-                context.drawImage(this.texture.baseTexture.source,
-                               frame.x,
-                               frame.y,
-                               frame.width,
-                               frame.height,
-                               trim.x - this.anchor.x * trim.width,
-                               trim.y - this.anchor.y * trim.height,
-                               frame.width,
-                               frame.height);
-
-    "filename": "razor_rain_vertical_23",               
-    "frame": {"x":445,"y":245,"w":94,"h":282},          <- the actual area of the PNG to cut
-    "trimmed": true,
-    "spriteSourceSize": {"x":45,"y":0,"w":94,"h":282},  <- the offset applied to the Sprite x/y coords to draw the frame to AND the frame width/height
-    "sourceSize": {"w":174,"h":360}                     <- the frame size
-
-    This frame will render at:
-
-    trim.x - this.anchor.x * trim.width             spriteSourceSize.x - this.anchor.x * sourceSize.w
-    45     - 0             * 174        = 45
-
-    trim.y - this.anchor.y * trim.height            spriteSourceSize.y - this.anchor.y * sourceSize.h
-    0      - 0             * 360        = 0
-
-    worldTransform uses texture.frame.width / height to work out offset from x/y
-
-        this._cache[9] = frame.x;
-        this._cache[10] = frame.y;
-        this._cache[11] = frame.width;
-        this._cache[12] = frame.height;
-        this._cache[13] = frame.spriteSourceSizeX;
-        this._cache[14] = frame.spriteSourceSizeY;
-        this._cache[15] = trim calc x
-        this._cache[16] = trim calc y
-        this._cache[17] = frame.sourceSizeW;
-        this._cache[18] = frame.sourceSizeH;
-*/
-
-        var tx = this._cache[9] - this._cache[13];
-        var ty = this._cache[10] - this._cache[14];
-
-        var r1 = new Phaser.Rectangle(this._cache[13], this._cache[14], this._cache[17], this._cache[18]);
-        var r2 = new Phaser.Rectangle(this.cropRect.x + tx, this.cropRect.y + ty, this.cropRect.width, this.cropRect.height);
-        var area = Phaser.Rectangle.intersection(r1, r2);
-
-        //  This will cut the cropped area instead of the whole frame
-
-        this.texture.frame.x = this._cache[9] + area.x;
-        this.texture.frame.y = this._cache[10] + area.y;
-        this.texture.frame.width = area.width;
-        this.texture.frame.height = area.height;
-
-        this.texture.trim.width = area.width;
-        this.texture.trim.height = area.height;
-
-        //  But we still need to adjust the trim values
-
-    }
-    else
-    {
-        this.texture.frame.x = this._cache[9] + this.cropRect.x;
-        this.texture.frame.y = this._cache[10] + this.cropRect.y;
-        this.texture.frame.width = this.cropRect.width;
-        this.texture.frame.height = this.cropRect.height;
-    }
-
-
-    if (this.game.renderType === Phaser.WEBGL)
-    {
-        PIXI.WebGLRenderer.updateTextureFrame(this.texture);
-    }
-
-};
-
-Phaser.Sprite.prototype.updateCrop = function() {
-
-    if (!this.cropRect)
-    {
-        return;
-    }
-
-    // var r1 = new Phaser.Rectangle(this._cache[13], this._cache[14], this._cache[17], this._cache[18]);
-    // var r2 = new Phaser.Rectangle(this.cropRect.x + tx, this.cropRect.y + ty, this.cropRect.width, this.cropRect.height);
-    // var area = Phaser.Rectangle.intersection(r1, r2);
-
-    //  This will ONLY work if it's a non-trimmed image and not part of a texture atlas!
-    // var area = Phaser.Rectangle.intersection(this._cache[9], this.cropRect);
-
-// console.log(this._cache[9]);
-// console.log(area);
-
-    var x = 
-
-    this.texture.crop.x = area.x;
-    this.texture.crop.y = area.y;
-    this.texture.crop.width = area.width;
-    this.texture.crop.height = area.height;
-
-    // this.texture.frame.x = this._cache[9].x + this.cropRect.x;
-    // this.texture.frame.y = this._cache[10].y + this.cropRect.y;
-    // this.texture.frame.width = this.cropRect.width;
-    // this.texture.frame.height = this.cropRect.height;
-
-
-    // this.texture.frame.x = this._cache[9] + this.cropRect.x;
-    // this.texture.frame.y = this._cache[10] + this.cropRect.y;
-    // this.texture.frame.width = area.width;
-    // this.texture.frame.height = area.height;
-    // this.texture.width = area.width;
-    // this.texture.height = area.height;
-
-
-    // if (this.texture.trim)
-    // {
-    //     this.texture.crop.x = this._cache[9].spriteSourceSizeX;
-    //     this.texture.crop.y = this._cache[9].spriteSourceSizeY;
-    //     this.texture.crop.width = this._cache[9].spriteSourceSizeW;
-    //     this.texture.crop.height = this._cache[9].spriteSourceSizeH;
-    // }
-    // else
-    // {
-    //     this.texture.crop.x = this.cropRect.x;
-    //     this.texture.crop.y = this.cropRect.y;
-    //     this.texture.crop.width = this.cropRect.width;
-    //     this.texture.crop.height = this.cropRect.height;
-    // }
-
-    if (this.game.renderType === Phaser.WEBGL)
-    {
-        PIXI.WebGLRenderer.updateTextureFrame(this.texture);
-    }
-
-}
-
 
 /**
 * Crop allows you to crop the texture used to display this Sprite.
@@ -792,11 +512,54 @@ Phaser.Sprite.prototype.crop = function(rect, copy) {
     }
     else
     {
+        this._crop = null;
         this.cropRect = null;
+
         this.resetFrame();
     }
 
 };
+
+/**
+* If you have set a crop rectangle on this Sprite via Sprite.crop and since modified the Sprite.cropRect property (or the rectangle it references)
+* then you need to update the crop frame by calling this method.
+*
+* @method Phaser.Sprite#updateCrop
+* @memberof Phaser.Sprite
+*/
+Phaser.Sprite.prototype.updateCrop = function() {
+
+    if (!this.cropRect)
+    {
+        return;
+    }
+
+    this._crop = Phaser.Rectangle.clone(this.cropRect, this._crop);
+    this._crop.x += this._frame.x;
+    this._crop.y += this._frame.y;
+
+    var cx = Math.max(this._frame.x, this._crop.x);
+    var cy = Math.max(this._frame.y, this._crop.y);
+    var cw = Math.min(this._frame.right, this._crop.right) - cx;
+    var ch = Math.min(this._frame.bottom, this._crop.bottom) - cy;
+
+    this.texture.crop.x = cx;
+    this.texture.crop.y = cy;
+    this.texture.crop.width = cw;
+    this.texture.crop.height = ch;
+
+    this.texture.frame.width = Math.min(cw, this.cropRect.width);
+    this.texture.frame.height = Math.min(ch, this.cropRect.height);
+
+    this.texture.width = this.texture.frame.width;
+    this.texture.height = this.texture.frame.height;
+
+    if (this.game.renderType === Phaser.WEBGL)
+    {
+        PIXI.WebGLRenderer.updateTextureFrame(this.texture);
+    }
+
+}
 
 /**
 * Brings a 'dead' Sprite back to life, optionally giving it the health value specified.
@@ -914,6 +677,16 @@ Phaser.Sprite.prototype.destroy = function(destroyChildren) {
         {
             this.removeChild(this.children[i]);
         }
+    }
+
+    if (this._crop)
+    {
+        this._crop = null;
+    }
+
+    if (this._frame)
+    {
+        this._frame = null;
     }
 
     this.alive = false;
@@ -1150,7 +923,7 @@ Object.defineProperty(Phaser.Sprite.prototype, "inCamera", {
 
     get: function() {
 
-        return this.game.world.camera.screenView.intersects(this.getBounds());
+        return this.game.world.camera.view.intersects(this.getBounds());
 
     }
 
