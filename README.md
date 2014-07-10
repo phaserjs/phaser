@@ -1,10 +1,10 @@
 ![Phaser 2.0](http://www.phaser.io/images/phaser2-github.png)
 
-# Phaser 2.0.6-dev
+# Phaser 2.0.6
 
 Phaser is a fast, free and fun open source game framework for making desktop and mobile browser HTML5 games. It uses [Pixi.js](https://github.com/GoodBoyDigital/pixi.js/) internally for fast 2D Canvas and WebGL rendering.
 
-Version: 2.0.6 "Jornhill" - Released: -in development-
+Version: 2.0.6 "Jornhill" - Released: 10th July 2014
 
 By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 
@@ -23,6 +23,15 @@ By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 
 ## Welcome to Phaser and What's new in 2.0.6?
 
+We're very pleased to bring you the latest version of Phaser. We were hanging back waiting for the 1.6 release of Pixi, and sure enough it landed today, so we're pleased to incorporate that into this release. Pixi 1.6 itself brings in a number of powerful new features, not least of which are the awesome updates to the Graphics class - now allowing for significantly more complex shapes and masks and a host of new methods such as drawPath, arcTo and quadratic curves.
+
+There are also masses of updates across Phaser as well. The Change Log below will give you the full details, but there are substantial new updates, features and bug fixes across most of the library.
+
+Just as we were preparing for release the 0.6 version of p2.js landed as well. As much as we'd have loved to include it this time we just didn't want to hold back any longer. So we've updated our roadmap and will push out 2.1 very soon, which will focus specifically on integration of the new version of p2.js. We're moving to 2.1 as it has a number of API breaking changes inside.
+
+You may have noticed that we also now have a [Gittip](https://www.gittip.com/photonstorm/) account set-up. Everything we raise from this will go towards helping Phaser development, one way or another. To those of who you have already contributed, thank you!
+
+We're also working extremely hard on the new web site. We're really happy with the new features we've been adding recently and are pushing to get it done as soon as possible.
 
 Until then happy coding everyone! And we hope to see you on the forums.
 
@@ -46,15 +55,19 @@ Finally the list of [community authored Phaser Tutorials](http://www.lessmilk.co
 
 ## Change Log
 
-Version 2.0.6 - "Jornhill" - -in development-
+Version 2.0.6 - "Jornhill" - 10th July 2014
 
-### Significant Internal Change
+### Significant Internal Changes
 
-* The PIXI.TextureCache global array is no longer used internally for storing Pixi Texture files. It's not actually a requirement of Pixi to use this and we were running into various issues with texture conflicts in DragonBones tests and issues with shared texture frames between Sprites - meaning we couldn't crop a sprite without cropping all instances, without creating a new texture frame at run-time - which as you can imagine is a huge overhead if you then want to crop an animated Sprite. After talking with Mat at GoodBoyDigital about the issue it was his idea to just not use the TextureCache at all, and let each Sprite have its own frame, so this is the direction we've taken. We didn't save this for the 2.1 release as it doesn't actually alter the Phaser API at all, but it does change how things are working internally - so if you've got game code hooked directly into the TextureCache you need to be aware of this change.
+* The PIXI.TextureCache global array is no longer used internally for storing Pixi Texture files. It's not actually a requirement of Pixi to use this and we were running into various issues with texture conflicts in DragonBones tests and issues with shared texture frames between Sprites. It meant we couldn't crop a sprite without cropping all instances unless we created a new texture frame at run-time, which as you can imagine is a huge overhead if you then want to crop an animated Sprite.
+ 
+After talking with Mat at GoodBoyDigital about the issue it was his idea to just not use the TextureCache at all, and let each Sprite have its own frame. So this is the direction we've taken. We didn't save this for the 2.1 release as it doesn't actually alter the Phaser API at all, but it does change how things are working internally. So if you've got game code hooked directly into the `TextureCache` you need to be aware of this change before updating to 2.0.6.
+
+* The way in which Sprite.crop works has been changed. It will now adjust the dimensions of the sprite itself, remaining at the sprites previous x/y coordinates. Please be aware of this if you use cropped sprites in your game. The change was worth it though as it's significantly more powerful as a result.
 
 ### Updates
 
-* Merged Pixi 1.5.4 with Phaser - all of the lovely new Pixi features are in, like complex Graphics objects and masking.
+* Merged Pixi 1.6.0 with Phaser - all of the lovely new Pixi features are in, like complex Graphics objects and masking.
 * TypeScript definitions fixes and updates (thanks @clark-stevenson and @Phaiax)
 * Documentation fixes (thanks @kay-is #941)
 * BitmapData.draw can now also take a Phaser.Sprite, Phaser.Image or BitmapData object as a source type. As a result BitmapData.drawSprite is now depcreated.
@@ -81,6 +94,8 @@ Version 2.0.6 - "Jornhill" - -in development-
 * Sound.externalNode has had the `input` property dropped from it, bringing it back in line with the AudioNode spec (thanks @villetou, #840)
 * The StateManager has a preRenderCallback option, which checks for a preRender function existing on the State, but it was never called. Have decided to add this in, so the core Game loop now calls state.preRender right before the renderer runs (thanks @AnderbergE #869)
 * Game.onBlur and Game.onFocus events are now dispatched regardless if Stage.disableVisibilityChange is true or false, so you can respond to these events without your game automatically pausing or resuming (#911)
+* Image has been heavily refactored to make use of common code in Phaser.Sprite, cutting the file size down significantly.
+* When using the non-minified version of Phaser it will throw a console.warn if you give an invalid texture key to a Sprite, Image or TileSprite (thanks @lucbloom, #990)
 
 ### CocoonJS Specific Updates
 
@@ -140,7 +155,6 @@ Version 2.0.6 - "Jornhill" - -in development-
 * Added options to disable horizontal and vertical world wrapping individually (thanks @jackrugile, #988)
 * You can now prevent the Debug class from being created or booted by using the Game configuration setting: `enableDebug`. By default it is `true`, set to `false` to prevent the class from being created. Please note you are responsible for checking if this class exists before calling it, but you can do that via `if (game.debug) { ... }` (request #984)
 
-
 ### Bug Fixes
 
 * Sprite.alive property now explicitly defined on the Sprite prototype (thanks @lewster32, #841)
@@ -179,7 +193,61 @@ Calling addToWorld() would previously not check the _toRemove array, which could
 * Re-ordered the parameters of Phaser.Physics.Arcade.Body.render which is used by Debug.body so it matches correctly (thanks @psalaets, #971 #970)
 * Removed hasOwnProperty check from Tween.from because it breaks on extended or inherited Game Objects.
 
+## Pixi 1.6.0
 
+The following changes were part of the Pixi 1.6.0 release:
+
+### New features
+
+* Big graphics update!
+* Complex polys now supported in Pixi in webGL.
+* Nested masking and complex poly masking supported in webGL.
+* quadraticCurveTo added to PIXI.Graphics.
+* bezierCurveTo added to PIXI.Graphics.
+* arcTo added to PIXI.Graphics.
+* arc added to PIXI.Graphics.
+* drawPath added to PIXI.Graphics.
+* roundedRectangle added to PIXI.Graphics.
+* PIXI.Strip and PIXI.Rope added to library along with a new example.
+* addChild / addChildAt functions now return the child.
+* Add scaleMode params to PIXI.FilterTexture and PIXI.RenderTexture.
+* fromFrames and fromImages static helper methods added to PIXI.MovieClip.
+* updateSourceImage added to PIXI.BaseTexture.
+* Added multitouch support.
+* new valid property added to PIXI.Texture.
+* Option to control premultiplied alpha on textures.
+* Pixi logs current version in the console.
+* webp image support.
+* clear function added to PIXI.RenderTexture
+
+### Bug Fixes
+
+* Fix to roundPixels property in PIXI.CanvasRenderer.
+* Fixed interactive bug when mousemove being called on removed objects.
+* Fix bug touch move event handling.
+* Various CocoonJS Fixs.
+* Masks now work when used in PIXI.RenderTextures / cacheAsBitmap and PIXI.Filters.
+* Fixed bug where stroked PIXI.Text sometimes got clipped.
+* Removed the trailing whitespace when wordwrapping a PIXI.Text.
+* Fixed texture loading on IE11.
+* Fixed Data URI loading.
+* Fixed issue so now loader only uses XDomainRequest in IE, if a crossorigin request is needed.
+* Fixed issue where alpha not being respected if cacheAsBitmap is true
+* Fixed PIXI.RendeTexture resize bug.
+* Fixed PIXI.TilingSprite not render children on canvas.
+* Fixes issue where if both mask and filter are applied to one object the object did not render.
+* If the texture is destroyed, it should be removed from PIXI.TextureCache too.
+* PIXI.Graphics blendMode property now works in webGL.
+* Trimmed sprites now behave the same as non trimmed sprites.
+
+### Misc
+
+* Doc tweaks / typo corrections.
+* Added Spine license to src.
+* Removed this.local in InteractionData.
+* Shader manager Simplified.
+* Sprite._renderCanvas streamlined and optimized.
+* WebGL drawCalls optimized.
 
 ### Migration Guide
 
