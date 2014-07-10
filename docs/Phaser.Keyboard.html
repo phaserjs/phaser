@@ -758,7 +758,7 @@ limitations known as ghosting. Full details here: <a href="http://www.html5gamed
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Keyboard.js.html">input/Keyboard.js</a>, <a href="Keyboard.js.html#sunlight-1-line-39">line 39</a>
+        <a href="Keyboard.js.html">input/Keyboard.js</a>, <a href="Keyboard.js.html#sunlight-1-line-44">line 44</a>
     </li></ul></dd>
     
 
@@ -940,7 +940,7 @@ limitations known as ghosting. Full details here: <a href="http://www.html5gamed
 
             
 
-            <td class="description last"><p>The most recent DOM event. This is updated every time a new key is pressed or released.</p></td>
+            <td class="description last"><p>The most recent DOM event from keydown or keyup. This is updated every time a new key is pressed or released.</p></td>
         </tr>
 
 	
@@ -1089,6 +1089,218 @@ limitations known as ghosting. Full details here: <a href="http://www.html5gamed
         
             
 <dt>
+    <h4 class="name" id="lastChar"><span class="type-signature">&lt;readonly> </span>lastChar<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Returns the string value of the most recently pressed key.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>lastChar</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The string value of the most recently pressed key.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Keyboard.js.html">input/Keyboard.js</a>, <a href="Keyboard.js.html#sunlight-1-line-515">line 515</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="lastKey"><span class="type-signature">&lt;readonly> </span>lastKey<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Returns the most recently pressed Key. This is a Phaser.Key object and it changes every time a key is pressed.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>lastKey</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Key.html">Phaser.Key</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The most recently pressed Key.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Keyboard.js.html">input/Keyboard.js</a>, <a href="Keyboard.js.html#sunlight-1-line-538">line 538</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
     <h4 class="name" id="onDownCallback"><span class="type-signature"></span>onDownCallback<span class="type-signature"></span></h4>
     
     
@@ -1144,7 +1356,7 @@ limitations known as ghosting. Full details here: <a href="http://www.html5gamed
 
             
 
-            <td class="description last"><p>This callback is invoked every time a key is pressed down.</p></td>
+            <td class="description last"><p>This callback is invoked every time a key is pressed down, including key repeats when a key is held down.</p></td>
         </tr>
 
 	
@@ -1173,7 +1385,109 @@ limitations known as ghosting. Full details here: <a href="http://www.html5gamed
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Keyboard.js.html">input/Keyboard.js</a>, <a href="Keyboard.js.html#sunlight-1-line-44">line 44</a>
+        <a href="Keyboard.js.html">input/Keyboard.js</a>, <a href="Keyboard.js.html#sunlight-1-line-49">line 49</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="onPressCallback"><span class="type-signature"></span>onPressCallback<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>onPressCallback</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>This callback is invoked every time a DOM onkeypress event is raised, which is only for printable keys.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Keyboard.js.html">input/Keyboard.js</a>, <a href="Keyboard.js.html#sunlight-1-line-54">line 54</a>
     </li></ul></dd>
     
 
@@ -1275,7 +1589,109 @@ limitations known as ghosting. Full details here: <a href="http://www.html5gamed
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Keyboard.js.html">input/Keyboard.js</a>, <a href="Keyboard.js.html#sunlight-1-line-49">line 49</a>
+        <a href="Keyboard.js.html">input/Keyboard.js</a>, <a href="Keyboard.js.html#sunlight-1-line-59">line 59</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="pressEvent"><span class="type-signature"></span>pressEvent<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>pressEvent</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The most recent DOM event from keypress.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Keyboard.js.html">input/Keyboard.js</a>, <a href="Keyboard.js.html#sunlight-1-line-39">line 39</a>
     </li></ul></dd>
     
 
@@ -1299,7 +1715,7 @@ limitations known as ghosting. Full details here: <a href="http://www.html5gamed
         <dl>
             
 <dt>
-    <h4 class="name" id="addCallbacks"><span class="type-signature"></span>addCallbacks<span class="signature">(context, onDown, <span class="optional">onUp</span>)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="addCallbacks"><span class="type-signature"></span>addCallbacks<span class="signature">(context, <span class="optional">onDown</span>, <span class="optional">onUp</span>, <span class="optional">onPress</span>)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -1395,6 +1811,8 @@ limitations known as ghosting. Full details here: <a href="http://www.html5gamed
             
                 <td class="attributes">
                 
+                    &lt;optional><br>
+                
 
                 
 
@@ -1404,6 +1822,8 @@ limitations known as ghosting. Full details here: <a href="http://www.html5gamed
 
             
                 <td class="default">
+                
+                    null
                 
                 </td>
             
@@ -1451,6 +1871,45 @@ limitations known as ghosting. Full details here: <a href="http://www.html5gamed
         </tr>
 
 	
+
+        <tr>
+            
+                <td class="name"><code>onPress</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    null
+                
+                </td>
+            
+
+            <td class="description last"><p>This callback is invoked every time the onkeypress event is raised.</p></td>
+        </tr>
+
+	
 	</tbody>
 </table>
 
@@ -1479,7 +1938,7 @@ limitations known as ghosting. Full details here: <a href="http://www.html5gamed
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Keyboard.js.html">input/Keyboard.js</a>, <a href="Keyboard.js.html#sunlight-1-line-87">line 87</a>
+        <a href="Keyboard.js.html">input/Keyboard.js</a>, <a href="Keyboard.js.html#sunlight-1-line-110">line 110</a>
     </li></ul></dd>
     
 
@@ -1598,7 +2057,7 @@ The Key object can then be polled, have events attached to it, etc.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Keyboard.js.html">input/Keyboard.js</a>, <a href="Keyboard.js.html#sunlight-1-line-107">line 107</a>
+        <a href="Keyboard.js.html">input/Keyboard.js</a>, <a href="Keyboard.js.html#sunlight-1-line-140">line 140</a>
     </li></ul></dd>
     
 
@@ -1700,7 +2159,13 @@ Pass in either a single keycode or an array/hash of keycodes.</p>
             <td class="type">
             
                 
-<span class="param-type">Any</span>
+<span class="param-type">number</span>
+|
+
+<span class="param-type">array</span>
+|
+
+<span class="param-type">object</span>
 
 
             
@@ -1742,7 +2207,7 @@ Pass in either a single keycode or an array/hash of keycodes.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Keyboard.js.html">input/Keyboard.js</a>, <a href="Keyboard.js.html#sunlight-1-line-223">line 223</a>
+        <a href="Keyboard.js.html">input/Keyboard.js</a>, <a href="Keyboard.js.html#sunlight-1-line-268">line 268</a>
     </li></ul></dd>
     
 
@@ -1811,7 +2276,7 @@ Pass in either a single keycode or an array/hash of keycodes.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Keyboard.js.html">input/Keyboard.js</a>, <a href="Keyboard.js.html#sunlight-1-line-259">line 259</a>
+        <a href="Keyboard.js.html">input/Keyboard.js</a>, <a href="Keyboard.js.html#sunlight-1-line-304">line 304</a>
     </li></ul></dd>
     
 
@@ -1880,7 +2345,7 @@ Pass in either a single keycode or an array/hash of keycodes.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Keyboard.js.html">input/Keyboard.js</a>, <a href="Keyboard.js.html#sunlight-1-line-145">line 145</a>
+        <a href="Keyboard.js.html">input/Keyboard.js</a>, <a href="Keyboard.js.html#sunlight-1-line-178">line 178</a>
     </li></ul></dd>
     
 
@@ -1973,7 +2438,7 @@ Also clears all key captures and currently created Key objects.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Keyboard.js.html">input/Keyboard.js</a>, <a href="Keyboard.js.html#sunlight-1-line-206">line 206</a>
+        <a href="Keyboard.js.html">input/Keyboard.js</a>, <a href="Keyboard.js.html#sunlight-1-line-251">line 251</a>
     </li></ul></dd>
     
 
@@ -2091,7 +2556,7 @@ Also clears all key captures and currently created Key objects.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Keyboard.js.html">input/Keyboard.js</a>, <a href="Keyboard.js.html#sunlight-1-line-430">line 430</a>
+        <a href="Keyboard.js.html">input/Keyboard.js</a>, <a href="Keyboard.js.html#sunlight-1-line-495">line 495</a>
     </li></ul></dd>
     
 
@@ -2287,7 +2752,7 @@ Also clears all key captures and currently created Key objects.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Keyboard.js.html">input/Keyboard.js</a>, <a href="Keyboard.js.html#sunlight-1-line-384">line 384</a>
+        <a href="Keyboard.js.html">input/Keyboard.js</a>, <a href="Keyboard.js.html#sunlight-1-line-449">line 449</a>
     </li></ul></dd>
     
 
@@ -2483,7 +2948,7 @@ Also clears all key captures and currently created Key objects.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Keyboard.js.html">input/Keyboard.js</a>, <a href="Keyboard.js.html#sunlight-1-line-407">line 407</a>
+        <a href="Keyboard.js.html">input/Keyboard.js</a>, <a href="Keyboard.js.html#sunlight-1-line-472">line 472</a>
     </li></ul></dd>
     
 
@@ -2624,7 +3089,125 @@ Also clears all key captures and currently created Key objects.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Keyboard.js.html">input/Keyboard.js</a>, <a href="Keyboard.js.html#sunlight-1-line-289">line 289</a>
+        <a href="Keyboard.js.html">input/Keyboard.js</a>, <a href="Keyboard.js.html#sunlight-1-line-334">line 334</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="processKeyPress"><span class="type-signature">&lt;protected> </span>processKeyPress<span class="signature">(event)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Process the keypress event.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>event</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">KeyboardEvent</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Keyboard.js.html">input/Keyboard.js</a>, <a href="Keyboard.js.html#sunlight-1-line-372">line 372</a>
     </li></ul></dd>
     
 
@@ -2742,7 +3325,7 @@ Also clears all key captures and currently created Key objects.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Keyboard.js.html">input/Keyboard.js</a>, <a href="Keyboard.js.html#sunlight-1-line-325">line 325</a>
+        <a href="Keyboard.js.html">input/Keyboard.js</a>, <a href="Keyboard.js.html#sunlight-1-line-390">line 390</a>
     </li></ul></dd>
     
 
@@ -2860,7 +3443,7 @@ Also clears all key captures and currently created Key objects.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Keyboard.js.html">input/Keyboard.js</a>, <a href="Keyboard.js.html#sunlight-1-line-128">line 128</a>
+        <a href="Keyboard.js.html">input/Keyboard.js</a>, <a href="Keyboard.js.html#sunlight-1-line-161">line 161</a>
     </li></ul></dd>
     
 
@@ -2978,7 +3561,7 @@ Also clears all key captures and currently created Key objects.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Keyboard.js.html">input/Keyboard.js</a>, <a href="Keyboard.js.html#sunlight-1-line-247">line 247</a>
+        <a href="Keyboard.js.html">input/Keyboard.js</a>, <a href="Keyboard.js.html#sunlight-1-line-292">line 292</a>
     </li></ul></dd>
     
 
@@ -3116,7 +3699,7 @@ Also clears all key captures and currently created Key objects.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Keyboard.js.html">input/Keyboard.js</a>, <a href="Keyboard.js.html#sunlight-1-line-360">line 360</a>
+        <a href="Keyboard.js.html">input/Keyboard.js</a>, <a href="Keyboard.js.html#sunlight-1-line-425">line 425</a>
     </li></ul></dd>
     
 
@@ -3186,7 +3769,7 @@ This is called automatically by Phaser.Input and should not normally be invoked 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Keyboard.js.html">input/Keyboard.js</a>, <a href="Keyboard.js.html#sunlight-1-line-162">line 162</a>
+        <a href="Keyboard.js.html">input/Keyboard.js</a>, <a href="Keyboard.js.html#sunlight-1-line-195">line 195</a>
     </li></ul></dd>
     
 
@@ -3222,7 +3805,7 @@ This is called automatically by Phaser.Input and should not normally be invoked 
     
     
     <div class="description">
-        <p>Stops the Keyboard event listeners from running (keydown and keyup). They are removed from the window.</p>
+        <p>Stops the Keyboard event listeners from running (keydown, keyup and keypress). They are removed from the window.</p>
     </div>
     
 
@@ -3255,7 +3838,7 @@ This is called automatically by Phaser.Input and should not normally be invoked 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Keyboard.js.html">input/Keyboard.js</a>, <a href="Keyboard.js.html#sunlight-1-line-191">line 191</a>
+        <a href="Keyboard.js.html">input/Keyboard.js</a>, <a href="Keyboard.js.html#sunlight-1-line-234">line 234</a>
     </li></ul></dd>
     
 
@@ -3324,7 +3907,7 @@ This is called automatically by Phaser.Input and should not normally be invoked 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Keyboard.js.html">input/Keyboard.js</a>, <a href="Keyboard.js.html#sunlight-1-line-270">line 270</a>
+        <a href="Keyboard.js.html">input/Keyboard.js</a>, <a href="Keyboard.js.html#sunlight-1-line-315">line 315</a>
     </li></ul></dd>
     
 
@@ -3375,7 +3958,7 @@ This is called automatically by Phaser.Input and should not normally be invoked 
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Tue May 20 2014 10:05:58 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Thu Jul 10 2014 20:19:04 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

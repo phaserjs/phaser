@@ -780,6 +780,111 @@ events (via Sprite.events), animation (via Sprite.animations), camera culling an
         <dl>
             
 <dt>
+    <h4 class="name" id="alive"><span class="type-signature"></span>alive<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>alive</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>A useful boolean to control if the Sprite is alive or dead (in terms of your gameplay, it doesn't effect rendering). Also linked to Sprite.health and Sprite.damage.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>true</li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-109">line 109</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
     <h4 class="name" id="angle"><span class="type-signature"></span>angle<span class="type-signature"></span></h4>
     
     
@@ -870,7 +975,7 @@ If you wish to work in radians instead of degrees use the property Sprite.rotati
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-709">line 709</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-827">line 827</a>
     </li></ul></dd>
     
 
@@ -1083,7 +1188,7 @@ Be advised this is quite an expensive operation, as it has to calculate the boun
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-99">line 99</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-85">line 85</a>
     </li></ul></dd>
     
 
@@ -1205,7 +1310,7 @@ If you need a different result then adjust or re-create the Body shape offsets m
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-117">line 117</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-103">line 103</a>
     </li></ul></dd>
     
 
@@ -1307,7 +1412,7 @@ If you need a different result then adjust or re-create the Body shape offsets m
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-156">line 156</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-148">line 148</a>
     </li></ul></dd>
     
 
@@ -1418,7 +1523,112 @@ bounds every frame to support it, and not all games need it. Enable it by settin
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-139">line 139</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-131">line 131</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="cropRect"><span class="type-signature"></span>cropRect<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>cropRect</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Rectangle.html">Phaser.Rectangle</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The Rectangle used to crop the texture. Set this via Sprite.crop. Any time you modify this property directly you must call Sprite.updateCrop.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-154">line 154</a>
     </li></ul></dd>
     
 
@@ -1523,7 +1733,7 @@ bounds every frame to support it, and not all games need it. Enable it by settin
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-151">line 151</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-143">line 143</a>
     </li></ul></dd>
     
 
@@ -1629,7 +1839,7 @@ bounds every frame to support it, and not all games need it. Enable it by settin
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-733">line 733</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-851">line 851</a>
     </li></ul></dd>
     
 
@@ -1735,7 +1945,7 @@ bounds every frame to support it, and not all games need it. Enable it by settin
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-750">line 750</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-868">line 868</a>
     </li></ul></dd>
     
 
@@ -1841,7 +2051,7 @@ bounds every frame to support it, and not all games need it. Enable it by settin
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-767">line 767</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-885">line 885</a>
     </li></ul></dd>
     
 
@@ -1943,7 +2153,7 @@ bounds every frame to support it, and not all games need it. Enable it by settin
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-1072">line 1072</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-1190">line 1190</a>
     </li></ul></dd>
     
 
@@ -2153,7 +2363,7 @@ Setting Sprite.exists to true will re-add the Body to the physics world (if it h
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-906">line 906</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-1024">line 1024</a>
     </li></ul></dd>
     
 
@@ -2261,7 +2471,7 @@ So if this Sprite was in a Group that has x: 200, then this will be added to the
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-953">line 953</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-1071">line 1071</a>
     </li></ul></dd>
     
 
@@ -2363,7 +2573,7 @@ So if this Sprite was in a Group that has x: 200, then this will be added to the
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-818">line 818</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-936">line 936</a>
     </li></ul></dd>
     
 
@@ -2465,7 +2675,7 @@ So if this Sprite was in a Group that has x: 200, then this will be added to the
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-834">line 834</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-952">line 952</a>
     </li></ul></dd>
     
 
@@ -2669,7 +2879,7 @@ So if this Sprite was in a Group that has x: 200, then this will be added to the
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-122">line 122</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-114">line 114</a>
     </li></ul></dd>
     
 
@@ -2775,7 +2985,7 @@ So if this Sprite was in a Group that has x: 200, then this will be added to the
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-801">line 801</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-919">line 919</a>
     </li></ul></dd>
     
 
@@ -2880,7 +3090,7 @@ So if this Sprite was in a Group that has x: 200, then this will be added to the
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-104">line 104</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-90">line 90</a>
     </li></ul></dd>
     
 
@@ -2987,7 +3197,7 @@ activated for this object and it will then start to process click/touch events a
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-865">line 865</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-983">line 983</a>
     </li></ul></dd>
     
 
@@ -3093,7 +3303,7 @@ activated for this object and it will then start to process click/touch events a
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-784">line 784</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-902">line 902</a>
     </li></ul></dd>
     
 
@@ -3314,7 +3524,7 @@ The lifespan is decremented by game.time.elapsed each update, once it reaches ze
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-130">line 130</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-122">line 122</a>
     </li></ul></dd>
     
 
@@ -3521,7 +3731,7 @@ The lifespan is decremented by game.time.elapsed each update, once it reaches ze
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-145">line 145</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-137">line 137</a>
     </li></ul></dd>
     
 
@@ -3623,7 +3833,7 @@ The lifespan is decremented by game.time.elapsed each update, once it reaches ze
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-850">line 850</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-968">line 968</a>
     </li></ul></dd>
     
 
@@ -3729,7 +3939,7 @@ The lifespan is decremented by game.time.elapsed each update, once it reaches ze
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-984">line 984</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-1102">line 1102</a>
     </li></ul></dd>
     
 
@@ -3933,7 +4143,7 @@ The lifespan is decremented by game.time.elapsed each update, once it reaches ze
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-89">line 89</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-75">line 75</a>
     </li></ul></dd>
     
 
@@ -4039,7 +4249,7 @@ The lifespan is decremented by game.time.elapsed each update, once it reaches ze
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-1018">line 1018</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-1136">line 1136</a>
     </li></ul></dd>
     
 
@@ -4145,7 +4355,7 @@ The lifespan is decremented by game.time.elapsed each update, once it reaches ze
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-1045">line 1045</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-1163">line 1163</a>
     </li></ul></dd>
     
 
@@ -4313,7 +4523,7 @@ bought to the top of that Group, not the entire display list.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-653">line 653</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-771">line 771</a>
     </li></ul></dd>
     
 
@@ -4352,7 +4562,7 @@ bought to the top of that Group, not the entire display list.</p>
         
             
 <dt>
-    <h4 class="name" id="crop"><span class="type-signature"></span>crop<span class="signature">(rect)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="crop"><span class="type-signature"></span>crop<span class="signature">(rect, <span class="optional">copy</span>)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -4361,11 +4571,11 @@ bought to the top of that Group, not the entire display list.</p>
     
     <div class="description">
         <p>Crop allows you to crop the texture used to display this Sprite.
-Cropping takes place from the top-left of the Sprite and can be modified in real-time by providing an updated rectangle object.
-Note that cropping a Sprite will reset its animation to the first frame. You cannot currently crop an animated Sprite.
-The rectangle object given to this method can be either a Phaser.Rectangle or any object so long as it has public x, y, width and height properties.
-Please note that the rectangle object given is not duplicated by this method, but rather the Image uses a reference to the rectangle.
-Keep this in mind if assigning a rectangle in a for-loop, or when cleaning up for garbage collection.</p>
+This modifies the core Sprite texture frame, so the Sprite width/height properties will adjust accordingly.</p>
+<p>Cropping takes place from the top-left of the Sprite and can be modified in real-time by either providing an updated rectangle object to Sprite.crop,
+or by modifying Sprite.cropRect (or a reference to it) and then calling Sprite.updateCrop.</p>
+<p>The rectangle object given to this method can be either a Phaser.Rectangle or any object so long as it has public x, y, width and height properties.
+A reference to the rectangle is stored in Sprite.cropRect unless the <code>copy</code> parameter is <code>true</code> in which case the values are duplicated to a local object.</p>
     </div>
     
 
@@ -4387,7 +4597,11 @@ Keep this in mind if assigning a rectangle in a for-loop, or when cleaning up fo
 		<th>Type</th>
 
 		
+		<th>Argument</th>
+		
 
+		
+		<th>Default</th>
 		
 
 		<th class="last">Description</th>
@@ -4412,10 +4626,61 @@ Keep this in mind if assigning a rectangle in a for-loop, or when cleaning up fo
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
             
 
-            <td class="description last"><p>The Rectangle to crop the Sprite to. Pass null or no parameters to clear a previously set crop rectangle.</p></td>
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The Rectangle used during cropping. Pass null or no parameters to clear a previously set crop rectangle.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>copy</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>If false Sprite.cropRect will be a reference to the given rect. If true it will copy the rect values into a local Sprite.cropRect object.</p></td>
         </tr>
 
 	
@@ -4447,7 +4712,7 @@ Keep this in mind if assigning a rectangle in a for-loop, or when cleaning up fo
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-409">line 409</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-481">line 481</a>
     </li></ul></dd>
     
 
@@ -4566,7 +4831,7 @@ If health is then taken below or is equal to zero <code>Sprite.kill</code> is ca
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-590">line 590</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-708">line 708</a>
     </li></ul></dd>
     
 
@@ -4716,7 +4981,7 @@ and nulls its reference to game, freeing it up for garbage collection.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-513">line 513</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-621">line 621</a>
     </li></ul></dd>
     
 
@@ -4788,7 +5053,7 @@ If you don't need this Sprite any more you should call Sprite.destroy instead.</
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-488">line 488</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-596">line 596</a>
     </li></ul></dd>
     
 
@@ -4827,7 +5092,7 @@ If you don't need this Sprite any more you should call Sprite.destroy instead.</
         
             
 <dt>
-    <h4 class="name" id="loadTexture"><span class="type-signature"></span>loadTexture<span class="signature">(key, frame)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="loadTexture"><span class="type-signature"></span>loadTexture<span class="signature">(key, <span class="optional">frame</span>)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -4857,6 +5122,8 @@ This causes a WebGL texture update, so use sparingly or in low-intensity portion
 
 		<th>Type</th>
 
+		
+		<th>Argument</th>
 		
 
 		
@@ -4892,6 +5159,14 @@ This causes a WebGL texture update, so use sparingly or in low-intensity portion
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
 
             
 
@@ -4917,6 +5192,16 @@ This causes a WebGL texture update, so use sparingly or in low-intensity portion
             
             </td>
 
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
             
 
             
@@ -4953,7 +5238,7 @@ This causes a WebGL texture update, so use sparingly or in low-intensity portion
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-337">line 337</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-350">line 350</a>
     </li></ul></dd>
     
 
@@ -5085,7 +5370,7 @@ Therefore it's relatively expensive to use in large quantities (i.e. with lots o
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-693">line 693</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-811">line 811</a>
     </li></ul></dd>
     
 
@@ -5360,7 +5645,7 @@ If the requested animation is already playing this request will be ignored. If y
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-672">line 672</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-790">line 790</a>
     </li></ul></dd>
     
 
@@ -5452,7 +5737,7 @@ If the requested animation is already playing this request will be ignored. If y
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-304">line 304</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-317">line 317</a>
     </li></ul></dd>
     
 
@@ -5521,7 +5806,7 @@ If the requested animation is already playing this request will be ignored. If y
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-185">line 185</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-198">line 198</a>
     </li></ul></dd>
     
 
@@ -5754,7 +6039,7 @@ If the Sprite has a physics body that too is reset.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-615">line 615</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-733">line 733</a>
     </li></ul></dd>
     
 
@@ -5786,6 +6071,75 @@ If the Sprite has a physics body that too is reset.</p>
 
 
         
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="resetFrame"><span class="type-signature"></span>resetFrame<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Resets the Texture frame dimensions that the Sprite uses for rendering.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-466">line 466</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
     
     
 </dd>
@@ -5905,7 +6259,7 @@ It will dispatch the onRevived event, you can listen to Sprite.events.onRevived 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-460">line 460</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-568">line 568</a>
     </li></ul></dd>
     
 
@@ -5937,6 +6291,125 @@ It will dispatch the onRevived event, you can listen to Sprite.events.onRevived 
 
 
         
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="setFrame"><span class="type-signature"></span>setFrame<span class="signature">(frame)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Sets the Texture frame the Sprite uses for rendering.
+This is primarily an internal method used by Sprite.loadTexture, although you may call it directly.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>frame</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Frame.html">Phaser.Frame</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The Frame to be used by the Sprite texture.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-410">line 410</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
     
     
 </dd>
@@ -5986,7 +6459,77 @@ Remember if this Sprite has any children you should call update on them too.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-293">line 293</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-306">line 306</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="updateCrop"><span class="type-signature"></span>updateCrop<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>If you have set a crop rectangle on this Sprite via Sprite.crop and since modified the Sprite.cropRect property (or the rectangle it references)
+then you need to update the crop frame by calling this method.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-527">line 527</a>
     </li></ul></dd>
     
 
@@ -6037,7 +6580,7 @@ Remember if this Sprite has any children you should call update on them too.</p>
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Tue May 20 2014 10:06:08 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Thu Jul 10 2014 20:19:13 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

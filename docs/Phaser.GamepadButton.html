@@ -537,7 +537,7 @@
     
         
 <dt>
-    <h4 class="name" id="GamepadButton"><span class="type-signature"></span>new GamepadButton<span class="signature">(game, buttoncode)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="GamepadButton"><span class="type-signature"></span>new GamepadButton<span class="signature">(pad, buttonCode)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -575,13 +575,13 @@
 
         <tr>
             
-                <td class="name"><code>game</code></td>
+                <td class="name"><code>pad</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="Phaser.Game.html">Phaser.Game</a></span>
+<span class="param-type"><a href="Phaser.SinglePad.html">Phaser.SinglePad</a></span>
 
 
             
@@ -591,14 +591,14 @@
 
             
 
-            <td class="description last"><p>Current game instance.</p></td>
+            <td class="description last"><p>A reference to the gamepad that owns this button.</p></td>
         </tr>
 
 	
 
         <tr>
             
-                <td class="name"><code>buttoncode</code></td>
+                <td class="name"><code>buttonCode</code></td>
             
 
             <td class="type">
@@ -646,7 +646,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="GamepadButton.js.html">input/GamepadButton.js</a>, <a href="GamepadButton.js.html#sunlight-1-line-14">line 14</a>
+        <a href="GamepadButton.js.html">input/GamepadButton.js</a>, <a href="GamepadButton.js.html#sunlight-1-line-15">line 15</a>
     </li></ul></dd>
     
 
@@ -774,7 +774,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="GamepadButton.js.html">input/GamepadButton.js</a>, <a href="GamepadButton.js.html#sunlight-1-line-68">line 68</a>
+        <a href="GamepadButton.js.html">input/GamepadButton.js</a>, <a href="GamepadButton.js.html#sunlight-1-line-74">line 74</a>
     </li></ul></dd>
     
 
@@ -884,7 +884,7 @@ If the button is up it holds the duration of the previous down session.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="GamepadButton.js.html">input/GamepadButton.js</a>, <a href="GamepadButton.js.html#sunlight-1-line-45">line 45</a>
+        <a href="GamepadButton.js.html">input/GamepadButton.js</a>, <a href="GamepadButton.js.html#sunlight-1-line-51">line 51</a>
     </li></ul></dd>
     
 
@@ -986,7 +986,7 @@ If the button is up it holds the duration of the previous down session.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="GamepadButton.js.html">input/GamepadButton.js</a>, <a href="GamepadButton.js.html#sunlight-1-line-19">line 19</a>
+        <a href="GamepadButton.js.html">input/GamepadButton.js</a>, <a href="GamepadButton.js.html#sunlight-1-line-25">line 25</a>
     </li></ul></dd>
     
 
@@ -1091,7 +1091,7 @@ If the button is up it holds the duration of the previous down session.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="GamepadButton.js.html">input/GamepadButton.js</a>, <a href="GamepadButton.js.html#sunlight-1-line-25">line 25</a>
+        <a href="GamepadButton.js.html">input/GamepadButton.js</a>, <a href="GamepadButton.js.html#sunlight-1-line-31">line 31</a>
     </li></ul></dd>
     
 
@@ -1196,7 +1196,7 @@ If the button is up it holds the duration of the previous down session.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="GamepadButton.js.html">input/GamepadButton.js</a>, <a href="GamepadButton.js.html#sunlight-1-line-31">line 31</a>
+        <a href="GamepadButton.js.html">input/GamepadButton.js</a>, <a href="GamepadButton.js.html#sunlight-1-line-37">line 37</a>
     </li></ul></dd>
     
 
@@ -1298,7 +1298,7 @@ If the button is up it holds the duration of the previous down session.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="GamepadButton.js.html">input/GamepadButton.js</a>, <a href="GamepadButton.js.html#sunlight-1-line-73">line 73</a>
+        <a href="GamepadButton.js.html">input/GamepadButton.js</a>, <a href="GamepadButton.js.html#sunlight-1-line-79">line 79</a>
     </li></ul></dd>
     
 
@@ -1400,7 +1400,7 @@ If the button is up it holds the duration of the previous down session.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="GamepadButton.js.html">input/GamepadButton.js</a>, <a href="GamepadButton.js.html#sunlight-1-line-83">line 83</a>
+        <a href="GamepadButton.js.html">input/GamepadButton.js</a>, <a href="GamepadButton.js.html#sunlight-1-line-89">line 89</a>
     </li></ul></dd>
     
 
@@ -1502,7 +1502,109 @@ If the button is up it holds the duration of the previous down session.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="GamepadButton.js.html">input/GamepadButton.js</a>, <a href="GamepadButton.js.html#sunlight-1-line-78">line 78</a>
+        <a href="GamepadButton.js.html">input/GamepadButton.js</a>, <a href="GamepadButton.js.html#sunlight-1-line-84">line 84</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="pad"><span class="type-signature"></span>pad<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>pad</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.SinglePad.html">Phaser.SinglePad</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>A reference to the gamepad that owns this button.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="GamepadButton.js.html">input/GamepadButton.js</a>, <a href="GamepadButton.js.html#sunlight-1-line-20">line 20</a>
     </li></ul></dd>
     
 
@@ -1607,7 +1709,7 @@ If the button is up it holds the duration of the previous down session.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="GamepadButton.js.html">input/GamepadButton.js</a>, <a href="GamepadButton.js.html#sunlight-1-line-57">line 57</a>
+        <a href="GamepadButton.js.html">input/GamepadButton.js</a>, <a href="GamepadButton.js.html#sunlight-1-line-63">line 63</a>
     </li></ul></dd>
     
 
@@ -1712,7 +1814,7 @@ If the button is up it holds the duration of the previous down session.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="GamepadButton.js.html">input/GamepadButton.js</a>, <a href="GamepadButton.js.html#sunlight-1-line-37">line 37</a>
+        <a href="GamepadButton.js.html">input/GamepadButton.js</a>, <a href="GamepadButton.js.html#sunlight-1-line-43">line 43</a>
     </li></ul></dd>
     
 
@@ -1817,7 +1919,7 @@ If the button is up it holds the duration of the previous down session.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="GamepadButton.js.html">input/GamepadButton.js</a>, <a href="GamepadButton.js.html#sunlight-1-line-51">line 51</a>
+        <a href="GamepadButton.js.html">input/GamepadButton.js</a>, <a href="GamepadButton.js.html#sunlight-1-line-57">line 57</a>
     </li></ul></dd>
     
 
@@ -1922,7 +2024,7 @@ If the button is up it holds the duration of the previous down session.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="GamepadButton.js.html">input/GamepadButton.js</a>, <a href="GamepadButton.js.html#sunlight-1-line-63">line 63</a>
+        <a href="GamepadButton.js.html">input/GamepadButton.js</a>, <a href="GamepadButton.js.html#sunlight-1-line-69">line 69</a>
     </li></ul></dd>
     
 
@@ -1944,6 +2046,75 @@ If the button is up it holds the duration of the previous down session.</p>
         <h3 class="subsection-title">Methods</h3>
 
         <dl>
+            
+<dt>
+    <h4 class="name" id="destroy"><span class="type-signature"></span>destroy<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Destroys this GamepadButton, this disposes of the onDown, onUp and onFloat signals and clears the pad and game references.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="GamepadButton.js.html">input/GamepadButton.js</a>, <a href="GamepadButton.js.html#sunlight-1-line-204">line 204</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
             
 <dt>
     <h4 class="name" id="justPressed"><span class="type-signature"></span>justPressed<span class="signature">(<span class="optional">duration</span>)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
@@ -2056,7 +2227,7 @@ If the button is up it holds the duration of the previous down session.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="GamepadButton.js.html">input/GamepadButton.js</a>, <a href="GamepadButton.js.html#sunlight-1-line-146">line 146</a>
+        <a href="GamepadButton.js.html">input/GamepadButton.js</a>, <a href="GamepadButton.js.html#sunlight-1-line-159">line 159</a>
     </li></ul></dd>
     
 
@@ -2217,7 +2388,7 @@ If the button is up it holds the duration of the previous down session.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="GamepadButton.js.html">input/GamepadButton.js</a>, <a href="GamepadButton.js.html#sunlight-1-line-160">line 160</a>
+        <a href="GamepadButton.js.html">input/GamepadButton.js</a>, <a href="GamepadButton.js.html#sunlight-1-line-174">line 174</a>
     </li></ul></dd>
     
 
@@ -2316,7 +2487,7 @@ If the button is up it holds the duration of the previous down session.</p>
             <td class="type">
             
                 
-<span class="param-type">Object</span>
+<span class="param-type">number</span>
 
 
             
@@ -2358,7 +2529,7 @@ If the button is up it holds the duration of the previous down session.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="GamepadButton.js.html">input/GamepadButton.js</a>, <a href="GamepadButton.js.html#sunlight-1-line-89">line 89</a>
+        <a href="GamepadButton.js.html">input/GamepadButton.js</a>, <a href="GamepadButton.js.html#sunlight-1-line-95">line 95</a>
     </li></ul></dd>
     
 
@@ -2394,7 +2565,7 @@ If the button is up it holds the duration of the previous down session.</p>
     
     
     <div class="description">
-        <p>Called automatically by Phaser.Gamepad.</p>
+        <p>Called automatically by Phaser.SinglePad.</p>
     </div>
     
 
@@ -2434,7 +2605,7 @@ If the button is up it holds the duration of the previous down session.</p>
             <td class="type">
             
                 
-<span class="param-type">Object</span>
+<span class="param-type">number</span>
 
 
             
@@ -2476,7 +2647,7 @@ If the button is up it holds the duration of the previous down session.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="GamepadButton.js.html">input/GamepadButton.js</a>, <a href="GamepadButton.js.html#sunlight-1-line-133">line 133</a>
+        <a href="GamepadButton.js.html">input/GamepadButton.js</a>, <a href="GamepadButton.js.html#sunlight-1-line-144">line 144</a>
     </li></ul></dd>
     
 
@@ -2552,7 +2723,7 @@ If the button is up it holds the duration of the previous down session.</p>
             <td class="type">
             
                 
-<span class="param-type">Object</span>
+<span class="param-type">number</span>
 
 
             
@@ -2594,7 +2765,76 @@ If the button is up it holds the duration of the previous down session.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="GamepadButton.js.html">input/GamepadButton.js</a>, <a href="GamepadButton.js.html#sunlight-1-line-116">line 116</a>
+        <a href="GamepadButton.js.html">input/GamepadButton.js</a>, <a href="GamepadButton.js.html#sunlight-1-line-123">line 123</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="reset"><span class="type-signature"></span>reset<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Resets this GamepadButton, changing it to an isUp state and resetting the duration and repeats counters.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="GamepadButton.js.html">input/GamepadButton.js</a>, <a href="GamepadButton.js.html#sunlight-1-line-189">line 189</a>
     </li></ul></dd>
     
 
@@ -2645,7 +2885,7 @@ If the button is up it holds the duration of the previous down session.</p>
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Tue May 20 2014 10:05:57 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Thu Jul 10 2014 20:19:03 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

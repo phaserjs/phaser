@@ -636,6 +636,8 @@ Phaser.BitmapData = function (game, key, width, height) {
     */
     this.textureFrame = new Phaser.Frame(0, 0, 0, width, height, 'bitmapData', game.rnd.uuid());
 
+    this.texture.frame = this.textureFrame;
+
     /**
     * @property {number} type - The const type of this object.
     * @default
@@ -704,6 +706,39 @@ Phaser.BitmapData.prototype = {
     },
 
     /**
+    * Takes the given Game Object, resizes this BitmapData to match it and then draws it into this BitmapDatas canvas, ready for further processing.
+    * The source game object is not modified by this operation.
+    * If the source object uses a texture as part of a Texture Atlas or Sprite Sheet, only the current frame will be used for sizing and draw.
+    * If a string is given it will assume it's a cache key and look in Phaser.Cache for an image key matching the string.
+    *
+    * @method Phaser.BitmapData#load
+    * @param {Phaser.Sprite|Phaser.Image|Phaser.BitmapData|string} source - The object that will be used to populate this BitmapData.
+    */
+    load: function (source) {
+
+        if (typeof source === 'string')
+        {
+            source = this.game.cache.getImage(source);
+        }
+
+        this.resize(source.width, source.height);
+
+        this.cls();
+
+        if (source instanceof Phaser.Image || source instanceof Phaser.Sprite)
+        {
+            this.drawSprite(source, 0, 0);
+        }
+        else
+        {
+            this.draw(source, 0, 0);
+        }
+
+        this.update();
+
+    },
+
+    /**
     * Clears the BitmapData context using a clearRect.
     *
     * @method Phaser.BitmapData#cls
@@ -752,14 +787,22 @@ Phaser.BitmapData.prototype = {
         {
             this.width = width;
             this.height = height;
+
             this.canvas.width = width;
             this.canvas.height = height;
+
+            this.baseTexture.width = width;
+            this.baseTexture.height = height;
+
             this.textureFrame.width = width;
             this.textureFrame.height = height;
-            this.refreshBuffer();
-        }
 
-        this.dirty = true;
+            this.texture.width = width;
+            this.texture.height = height;
+
+            this.refreshBuffer();
+            this.dirty = true;
+        }
 
     },
 
@@ -1165,13 +1208,10 @@ Phaser.BitmapData.prototype = {
 
         index *= 4;
 
-        if (this.data[index])
-        {
-            out.r = this.data[index];
-            out.g = this.data[++index];
-            out.b = this.data[++index];
-            out.a = this.data[++index];
-        }
+        out.r = this.data[index];
+        out.g = this.data[++index];
+        out.b = this.data[++index];
+        out.a = this.data[++index];
 
         return out;
 
@@ -1230,39 +1270,72 @@ Phaser.BitmapData.prototype = {
     },
 
     /**
+    * Creates a new Phaser.Image object, assigns this BitmapData to be its texture, adds it to the world then returns it.
+    *
+    * @method Phaser.BitmapData#addToWorld
+    * @param {number} [x=0] - The x coordinate to place the image at.
+    * @param {number} [y=0] - The y coordinate to place the image at.
+    * @return {Phaser.Image} The newly added Image object.
+    */
+    addToWorld: function (x, y) {
+
+        return this.game.add.image(x, y, this);
+
+    },
+
+    /**
     * Copies the pixels from the source image to this BitmapData based on the given area and destination.
     *
     * @method Phaser.BitmapData#copyPixels
-    * @param {HTMLImage|string} source - The Image to draw. If you give a key it will try and find the Image in the Game.Cache.
+    * @param {Phaser.Sprite|Phaser.Image|Phaser.BitmapData|HTMLImage|string} source - The Image to copy from. If you give a string it will try and find the Image in the Game.Cache.
     * @param {Phaser.Rectangle} area - The Rectangle region to copy from the source image.
-    * @param {number} destX - The destination x coordinate to copy the image to.
-    * @param {number} destY - The destination y coordinate to copy the image to.
+    * @param {number} x - The destination x coordinate to copy the image to.
+    * @param {number} y - The destination y coordinate to copy the image to.
     */
-    copyPixels: function (source, area, destX, destY) {
+    copyPixels: function (source, area, x, y) {
 
         if (typeof source === 'string')
         {
             source = this.game.cache.getImage(source);
         }
 
-        if (source)
+        var src = source;
+        var sx = 0;
+        var sy = 0;
+
+        if (source instanceof Phaser.Image || source instanceof Phaser.Sprite)
         {
-            this.context.drawImage(source, area.x, area.y, area.width, area.height, destX, destY, area.width, area.height);
+            src = source.texture.baseTexture.source;
+            var frame = source.texture.frame;
+            sx = frame.x;
+            sy = frame.y;
         }
+        else
+        {
+            if (source instanceof Phaser.BitmapData)
+            {
+                src = source.canvas;
+            }
+        }
+
+        this.context.drawImage(src, sx + area.x, sy + area.y, area.width, area.height, x, y, area.width, area.height);
 
         this.dirty = true;
 
     },
 
     /**
-    * Draws the given image to this BitmapData at the coordinates specified. If you need to only draw a part of the image use BitmapData.copyPixels instead.
+    * Draws the given image or Game Object to this BitmapData at the coordinates specified.
+    * You can use the optional width and height values to 'stretch' the image as it's drawn.
     *
     * @method Phaser.BitmapData#draw
-    * @param {HTMLImage|string} source - The Image to draw. If you give a string it will try and find the Image in the Game.Cache.
+    * @param {Phaser.Sprite|Phaser.Image|Phaser.BitmapData|HTMLImage|string} source - The Image to draw. If you give a string it will try and find the Image in the Game.Cache.
     * @param {number} [x=0] - The x coordinate to draw the image to.
     * @param {number} [y=0] - The y coordinate to draw the image to.
+    * @param {number} [width] - The width when drawing the image. You can use this to optionally stretch the drawn image horizontally.
+    * @param {number} [height] - The height when drawing the image. You can use this to optionally stretch the drawn image vertically.
     */
-    draw: function (source, x, y) {
+    draw: function (source, x, y, width, height) {
 
         if (typeof x === 'undefined') { x = 0; }
         if (typeof y === 'undefined') { y = 0; }
@@ -1272,17 +1345,49 @@ Phaser.BitmapData.prototype = {
             source = this.game.cache.getImage(source);
         }
 
-        if (source)
+        var src = source;
+        var sx = 0;
+        var sy = 0;
+        var sw = 0;
+        var sh = 0;
+
+        if (source instanceof Phaser.Image || source instanceof Phaser.Sprite)
         {
-            this.context.drawImage(source, 0, 0, source.width, source.height, x, y, source.width, source.height);
+            src = source.texture.baseTexture.source;
+            var frame = source.texture.frame;
+            sx = frame.x;
+            sy = frame.y;
+            sw = frame.width;
+            sh = frame.height;
+            // this.context.drawImage(sprite.texture.baseTexture.source, frame.x, frame.y, frame.width, frame.height, x, y, frame.width, frame.height);
         }
+        else
+        {
+            if (source instanceof Phaser.BitmapData)
+            {
+                src = source.canvas;
+                // this.context.drawImage(source.canvas, 0, 0, source.width, source.height, x, y, source.width, source.height);
+            }
+
+            sw = source.width;
+            sh = source.height;
+            // this.context.drawImage(source, 0, 0, source.width, source.height, x, y, source.width, source.height);
+        }
+
+        if (typeof width === 'undefined') { width = sw; }
+        if (typeof height === 'undefined') { height = sh; }
+
+        this.context.drawImage(src, sx, sy, sw, sh, x, y, width, height);
 
         this.dirty = true;
 
     },
 
     /**
-    * Draws the given image to this BitmapData at the coordinates specified. If you need to only draw a part of the image use BitmapData.copyPixels instead.
+    * DEPRECATED: Use BitmapData.draw instead.
+    * 
+    * Draws the given image to this BitmapData at the coordinates specified.
+    * If you need to only draw a part of the image use BitmapData.copyPixels instead.
     *
     * @method Phaser.BitmapData#drawSprite
     * @param {Phaser.Sprite|Phaser.Image} sprite - The Sprite to draw. Must have a loaded texture and frame.
@@ -1294,11 +1399,7 @@ Phaser.BitmapData.prototype = {
         if (typeof x === 'undefined') { x = 0; }
         if (typeof y === 'undefined') { y = 0; }
 
-        var frame = sprite.texture.frame;
-
-        this.context.drawImage(sprite.texture.baseTexture.source, frame.x, frame.y, frame.width, frame.height, x, y, frame.width, frame.height);
-
-        this.dirty = true;
+        this.draw(sprite, x, y);
 
     },
 
@@ -1306,36 +1407,40 @@ Phaser.BitmapData.prototype = {
     * Draws the given image onto this BitmapData using an image as an alpha mask.
     *
     * @method Phaser.BitmapData#alphaMask
-    * @param {HTMLImage|string} source - The Image to draw. If you give a key it will try and find the Image in the Game.Cache.
-    * @param {HTMLImage|string} mask - The Image to use as the alpha mask. If you give a key it will try and find the Image in the Game.Cache.
+    * @param {Phaser.Sprite|Phaser.Image|Phaser.BitmapData|HTMLImage|string} source - The Image to draw. If you give a key it will try and find the Image in the Game.Cache.
+    * @param {Phaser.Sprite|Phaser.Image|Phaser.BitmapData|HTMLImage|string|null} [mask] - The Image to use as the alpha mask. If you give a key it will try and find the Image in the Game.Cache. If you pass nothing or null it will use itself.
+    * @param {Phaser.Rectangle} [sourceRect] - A Rectangle where x/y define the coordinates to draw the Source image to and width/height define the size.
+    * @param {Phaser.Rectangle} [maskRect] - A Rectangle where x/y define the coordinates to draw the Mask image to and width/height define the size.
     */
-    alphaMask: function (source, mask) {
+    alphaMask: function (source, mask, sourceRect, maskRect) {
+
+        if (typeof mask === 'undefined' || mask === null) { mask = this; }
 
         var temp = this.context.globalCompositeOperation;
 
-        if (typeof mask === 'string')
+        if (typeof maskRect === 'undefined' || maskRect === null)
         {
-            mask = this.game.cache.getImage(mask);
+            this.draw(mask);
         }
-
-        if (mask)
+        else
         {
-            this.context.drawImage(mask, 0, 0);
+            this.draw(mask, maskRect.x, maskRect.y, maskRect.width, maskRect.height);
         }
 
         this.context.globalCompositeOperation = 'source-atop';
 
-        if (typeof source === 'string')
+        if (typeof sourceRect === 'undefined' || sourceRect === null)
         {
-            source = this.game.cache.getImage(source);
+            this.draw(source);
         }
-
-        if (source)
+        else
         {
-            this.context.drawImage(source, 0, 0);
+            this.draw(source, sourceRect.x, sourceRect.y, sourceRect.width, sourceRect.height);
         }
 
         this.context.globalCompositeOperation = temp;
+
+        this.update();
 
         this.dirty = true;
 
@@ -1343,27 +1448,45 @@ Phaser.BitmapData.prototype = {
 
     /**
     * Scans this BitmapData for all pixels matching the given r,g,b values and then draws them into the given destination BitmapData.
-    * The destination BitmapData must be large enough to receive all of the pixels that are scanned.
+    * The original BitmapData remains unchanged.
+    * The destination BitmapData must be large enough to receive all of the pixels that are scanned unless the 'resize' parameter is true.
     * Although the destination BitmapData is returned from this method, it's actually modified directly in place, meaning this call is perfectly valid:
     * `picture.extract(mask, r, g, b)`
+    * You can specify optional r2, g2, b2 color values. If given the pixel written to the destination bitmap will be of the r2, g2, b2 color.
+    * If not given it will be written as the same color it was extracted. You can provide one or more alternative colors, allowing you to tint
+    * the color during extraction.
     *
     * @method Phaser.BitmapData#extract
     * @param {Phaser.BitmapData} destination - The BitmapData that the extracts pixels will be drawn to.
     * @param {number} r - The red color component, in the range 0 - 255.
     * @param {number} g - The green color component, in the range 0 - 255.
     * @param {number} b - The blue color component, in the range 0 - 255.
-    * @param {number} [a=255] - The alpha color component, in the range 0 - 255.
+    * @param {number} [a=255] - The alpha color component, in the range 0 - 255 that the new pixel will be drawn at.
+    * @param {boolean} [resize=false] - Should the destination BitmapData be resized to match this one before the pixels are copied?
+    * @param {number} [r2] - An alternative red color component to be written to the destination, in the range 0 - 255.
+    * @param {number} [g2] - An alternative green color component to be written to the destination, in the range 0 - 255.
+    * @param {number} [b2] - An alternative blue color component to be written to the destination, in the range 0 - 255.
     * @returns {Phaser.BitmapData} The BitmapData that the extract pixels were drawn on.
     */
-    extract: function (destination, r, g, b, a) {
+    extract: function (destination, r, g, b, a, resize, r2, g2, b2) {
 
         if (typeof a === 'undefined') { a = 255; }
+        if (typeof resize === 'undefined') { resize = false; }
+        if (typeof r2 === 'undefined') { r2 = r; }
+        if (typeof g2 === 'undefined') { g2 = g; }
+        if (typeof b2 === 'undefined') { b2 = b; }
+
+        if (resize)
+        {
+            destination.resize(this.width, this.height);
+        }
 
         this.processPixelRGB(
-            function(pixel, x, y){
+            function (pixel, x, y)
+            {
                 if (pixel.r === r && pixel.g === g && pixel.b === b)
                 {
-                    destination.setPixel32(x, y, r, g, b, a, false);
+                    destination.setPixel32(x, y, r2, g2, b2, a, false);
                 }
                 return false;
             },
@@ -1394,7 +1517,6 @@ Phaser.BitmapData.prototype = {
         }
 
         this.context.fillRect(x, y, width, height);
-        this.context.fill();
 
     },
 
@@ -1466,7 +1588,7 @@ Phaser.BitmapData.prototype.constructor = Phaser.BitmapData;
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Tue May 20 2014 10:05:49 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Thu Jul 10 2014 20:18:55 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

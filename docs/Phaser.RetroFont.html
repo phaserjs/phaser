@@ -537,7 +537,7 @@
     
         
 <dt>
-    <h4 class="name" id="RetroFont"><span class="type-signature"></span>new RetroFont<span class="signature">(game, key, characterWidth, characterHeight, chars, charsPerRow, <span class="optional">xSpacing</span>, <span class="optional">ySpacing</span>, <span class="optional">xOffset</span>, <span class="optional">yOffset</span>)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="RetroFont"><span class="type-signature"></span>new RetroFont<span class="signature">(game, key, characterWidth, characterHeight, chars, <span class="optional">charsPerRow</span>, <span class="optional">xSpacing</span>, <span class="optional">ySpacing</span>, <span class="optional">xOffset</span>, <span class="optional">yOffset</span>)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -769,6 +769,8 @@
             
                 <td class="attributes">
                 
+                    &lt;optional><br>
+                
 
                 
 
@@ -782,7 +784,7 @@
                 </td>
             
 
-            <td class="description last"><p>The number of characters per row in the font set.</p></td>
+            <td class="description last"><p>The number of characters per row in the font set. If not given charsPerRow will be the image width / characterWidth.</p></td>
         </tr>
 
 	
@@ -1066,7 +1068,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-182">line 182</a>
+        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-198">line 198</a>
     </li></ul></dd>
     
 
@@ -1130,7 +1132,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-168">line 168</a>
+        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-184">line 184</a>
     </li></ul></dd>
     
 
@@ -1194,7 +1196,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-175">line 175</a>
+        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-191">line 191</a>
     </li></ul></dd>
     
 
@@ -1258,7 +1260,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-189">line 189</a>
+        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-205">line 205</a>
     </li></ul></dd>
     
 
@@ -1322,7 +1324,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-196">line 196</a>
+        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-212">line 212</a>
     </li></ul></dd>
     
 
@@ -1386,7 +1388,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-203">line 203</a>
+        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-219">line 219</a>
     </li></ul></dd>
     
 
@@ -1450,7 +1452,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-210">line 210</a>
+        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-226">line 226</a>
     </li></ul></dd>
     
 
@@ -1514,7 +1516,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-217">line 217</a>
+        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-233">line 233</a>
     </li></ul></dd>
     
 
@@ -1578,7 +1580,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-224">line 224</a>
+        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-240">line 240</a>
     </li></ul></dd>
     
 
@@ -1642,7 +1644,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-231">line 231</a>
+        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-247">line 247</a>
     </li></ul></dd>
     
 
@@ -1706,7 +1708,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-238">line 238</a>
+        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-254">line 254</a>
     </li></ul></dd>
     
 
@@ -1770,7 +1772,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-245">line 245</a>
+        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-261">line 261</a>
     </li></ul></dd>
     
 
@@ -1834,7 +1836,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-252">line 252</a>
+        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-268">line 268</a>
     </li></ul></dd>
     
 
@@ -1898,7 +1900,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-259">line 259</a>
+        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-275">line 275</a>
     </li></ul></dd>
     
 
@@ -2000,7 +2002,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-62">line 62</a>
+        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-74">line 74</a>
     </li></ul></dd>
     
 
@@ -2105,7 +2107,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-74">line 74</a>
+        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-86">line 86</a>
     </li></ul></dd>
     
 
@@ -2207,7 +2209,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-32">line 32</a>
+        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-42">line 42</a>
     </li></ul></dd>
     
 
@@ -2309,7 +2311,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-47">line 47</a>
+        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-57">line 57</a>
     </li></ul></dd>
     
 
@@ -2411,7 +2413,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-37">line 37</a>
+        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-47">line 47</a>
     </li></ul></dd>
     
 
@@ -2513,7 +2515,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-42">line 42</a>
+        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-52">line 52</a>
     </li></ul></dd>
     
 
@@ -2615,7 +2617,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-27">line 27</a>
+        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-37">line 37</a>
     </li></ul></dd>
     
 
@@ -2720,7 +2722,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-80">line 80</a>
+        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-92">line 92</a>
     </li></ul></dd>
     
 
@@ -2825,7 +2827,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-86">line 86</a>
+        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-98">line 98</a>
     </li></ul></dd>
     
 
@@ -2932,7 +2934,7 @@ If text is wider than the width specified it will be cropped off.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-93">line 93</a>
+        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-105">line 105</a>
     </li></ul></dd>
     
 
@@ -3034,7 +3036,7 @@ If text is wider than the width specified it will be cropped off.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-98">line 98</a>
+        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-110">line 110</a>
     </li></ul></dd>
     
 
@@ -3353,7 +3355,7 @@ If text is wider than the width specified it will be cropped off.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-68">line 68</a>
+        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-80">line 80</a>
     </li></ul></dd>
     
 
@@ -3371,7 +3373,7 @@ If text is wider than the width specified it will be cropped off.</p>
         
             
 <dt>
-    <h4 class="name" id="offsetX"><span class="type-signature"></span>offsetX<span class="type-signature"></span></h4>
+    <h4 class="name" id="offsetX"><span class="type-signature">&lt;readonly> </span>offsetX<span class="type-signature"></span></h4>
     
     
 </dt>
@@ -3455,7 +3457,7 @@ If text is wider than the width specified it will be cropped off.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-52">line 52</a>
+        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-63">line 63</a>
     </li></ul></dd>
     
 
@@ -3473,7 +3475,7 @@ If text is wider than the width specified it will be cropped off.</p>
         
             
 <dt>
-    <h4 class="name" id="offsetY"><span class="type-signature"></span>offsetY<span class="type-signature"></span></h4>
+    <h4 class="name" id="offsetY"><span class="type-signature">&lt;readonly> </span>offsetY<span class="type-signature"></span></h4>
     
     
 </dt>
@@ -3557,7 +3559,109 @@ If text is wider than the width specified it will be cropped off.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-57">line 57</a>
+        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-69">line 69</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="stamp"><span class="type-signature">&lt;readonly> </span>stamp<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>stamp</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Image.html">Phaser.Image</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The image that is stamped to the RenderTexture for each character in the font.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-165">line 165</a>
     </li></ul></dd>
     
 
@@ -3659,7 +3763,7 @@ If text is wider than the width specified it will be cropped off.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-156">line 156</a>
+        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-172">line 172</a>
     </li></ul></dd>
     
 
@@ -3691,7 +3795,7 @@ If text is wider than the width specified it will be cropped off.</p>
     
     
     <div class="description">
-        <p>Updates the BitmapData of the Sprite with the text</p>
+        <p>Updates the texture with the new text.</p>
     </div>
     
 
@@ -3724,7 +3828,7 @@ If text is wider than the width specified it will be cropped off.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-314">line 314</a>
+        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-330">line 330</a>
     </li></ul></dd>
     
 
@@ -3752,7 +3856,99 @@ If text is wider than the width specified it will be cropped off.</p>
         
             
 <dt>
-    <h4 class="name" id="buildRetroFontText"><span class="type-signature"></span>buildRetroFontText<span class="signature">(line, x, y, customSpacingX)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="getLongestLine"><span class="type-signature"></span>getLongestLine<span class="signature">()</span><span class="type-signature"> &rarr; {number}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Works out the longest line of text in _text and returns its length</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-463">line 463</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>The length of the longest line of text.</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">number</span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="pasteLine"><span class="type-signature"></span>pasteLine<span class="signature">(line, x, y, customSpacingX)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -3912,7 +4108,7 @@ Used by getLine and getMultiLine</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-405">line 405</a>
+        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-421">line 421</a>
     </li></ul></dd>
     
 
@@ -3933,98 +4129,6 @@ Used by getLine and getMultiLine</p>
     
     
     
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="getLongestLine"><span class="type-signature"></span>getLongestLine<span class="signature">()</span><span class="type-signature"> &rarr; {number}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Works out the longest line of text in _text and returns its length</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-447">line 447</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>The length of the longest line of text.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type">number</span>
-
-
-	</dd>
-</dl>
-
-
-        
     
     
 </dd>
@@ -4142,7 +4246,7 @@ Used by getLine and getMultiLine</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-474">line 474</a>
+        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-490">line 490</a>
     </li></ul></dd>
     
 
@@ -4732,7 +4836,7 @@ Used by getLine and getMultiLine</p>
     
     
     <div class="description">
-        <p>If you need this FlxSprite to have a fixed width and custom alignment you can set the width here.&lt;br&gt;
+        <p>If you need this RetroFont to have a fixed width and custom alignment you can set the width here.
 If text is wider than the width specified it will be cropped off.</p>
     </div>
     
@@ -4870,7 +4974,7 @@ If text is wider than the width specified it will be cropped off.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-261">line 261</a>
+        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-277">line 277</a>
     </li></ul></dd>
     
 
@@ -5199,7 +5303,186 @@ If text is wider than the width specified it will be cropped off.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-279">line 279</a>
+        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-295">line 295</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="updateOffset"><span class="type-signature"></span>updateOffset<span class="signature">(<span class="optional">xOffset</span>, <span class="optional">yOffset</span>)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Updates the x and/or y offset that the font is rendered from. This updates all of the texture frames, so be careful how often it is called.
+Note that the values given for the x and y properties are either ADDED to or SUBTRACTED from (if negative) the existing offsetX/Y values of the characters.
+So if the current offsetY is 8 and you want it to start rendering from y16 you would call updateOffset(0, 8) to add 8 to the current y offset.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+		<th>Default</th>
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>xOffset</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
+            
+
+            <td class="description last"><p>If the font set doesn't start at the top left of the given image, specify the X coordinate offset here.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>yOffset</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
+            
+
+            <td class="description last"><p>If the font set doesn't start at the top left of the given image, specify the Y coordinate offset here.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="RetroFont.js.html">gameobjects/RetroFont.js</a>, <a href="RetroFont.js.html#sunlight-1-line-518">line 518</a>
     </li></ul></dd>
     
 
@@ -5250,7 +5533,7 @@ If text is wider than the width specified it will be cropped off.</p>
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Tue May 20 2014 10:06:06 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Thu Jul 10 2014 20:19:12 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

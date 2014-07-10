@@ -1384,7 +1384,7 @@ You can pass as many tweens as you like to this function, they will each be chai
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tween.js.html">tween/Tween.js</a>, <a href="Tween.js.html#sunlight-1-line-543">line 543</a>
+        <a href="Tween.js.html">tween/Tween.js</a>, <a href="Tween.js.html#sunlight-1-line-548">line 548</a>
     </li></ul></dd>
     
 
@@ -1525,7 +1525,7 @@ You can pass as many tweens as you like to this function, they will each be chai
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tween.js.html">tween/Tween.js</a>, <a href="Tween.js.html#sunlight-1-line-464">line 464</a>
+        <a href="Tween.js.html">tween/Tween.js</a>, <a href="Tween.js.html#sunlight-1-line-469">line 469</a>
     </li></ul></dd>
     
 
@@ -1666,7 +1666,7 @@ You can pass as many tweens as you like to this function, they will each be chai
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tween.js.html">tween/Tween.js</a>, <a href="Tween.js.html#sunlight-1-line-514">line 514</a>
+        <a href="Tween.js.html">tween/Tween.js</a>, <a href="Tween.js.html#sunlight-1-line-519">line 519</a>
     </li></ul></dd>
     
 
@@ -1725,7 +1725,8 @@ You can pass as many tweens as you like to this function, they will each be chai
     
     
     <div class="description">
-        <p>Configure a Reverse Tween</p>
+        <p>Sets this tween to be a <code>from</code> tween on the properties given. A <code>from</code> tween starts at the given value and tweens to the current values.
+For example a Sprite with an <code>x</code> coordinate of 100 could be tweened from <code>x: 200</code> by giving a properties object of <code>{ x: 200 }</code>.</p>
     </div>
     
 
@@ -2057,7 +2058,7 @@ You can pass as many tweens as you like to this function, they will each be chai
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tween.js.html">tween/Tween.js</a>, <a href="Tween.js.html#sunlight-1-line-262">line 262</a>
+        <a href="Tween.js.html">tween/Tween.js</a>, <a href="Tween.js.html#sunlight-1-line-263">line 263</a>
     </li></ul></dd>
     
 
@@ -2257,7 +2258,7 @@ It ignores delay and repeat counts and any chained tweens. Just one play through
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tween.js.html">tween/Tween.js</a>, <a href="Tween.js.html#sunlight-1-line-336">line 336</a>
+        <a href="Tween.js.html">tween/Tween.js</a>, <a href="Tween.js.html#sunlight-1-line-341">line 341</a>
     </li></ul></dd>
     
 
@@ -2399,7 +2400,7 @@ Also available: Phaser.Math.bezierInterpolation and Phaser.Math.catmullRomInterp
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tween.js.html">tween/Tween.js</a>, <a href="Tween.js.html#sunlight-1-line-528">line 528</a>
+        <a href="Tween.js.html">tween/Tween.js</a>, <a href="Tween.js.html#sunlight-1-line-533">line 533</a>
     </li></ul></dd>
     
 
@@ -2497,7 +2498,7 @@ game.add.tween(p).to({ x: 700 }, 1000, Phaser.Easing.Linear.None, true)
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tween.js.html">tween/Tween.js</a>, <a href="Tween.js.html#sunlight-1-line-557">line 557</a>
+        <a href="Tween.js.html">tween/Tween.js</a>, <a href="Tween.js.html#sunlight-1-line-562">line 562</a>
     </li></ul></dd>
     
 
@@ -2548,7 +2549,7 @@ game.add.tween(p).to({ x: 700 }, 1000, Phaser.Easing.Linear.None, true)
         
             
 <dt>
-    <h4 class="name" id="onUpdateCallback"><span class="type-signature"></span>onUpdateCallback<span class="signature">(callback)</span><span class="type-signature"> &rarr; {<a href="Phaser.Tween.html">Phaser.Tween</a>}</span></h4>
+    <h4 class="name" id="onUpdateCallback"><span class="type-signature"></span>onUpdateCallback<span class="signature">(callback, callbackContext)</span><span class="type-signature"> &rarr; {<a href="Phaser.Tween.html">Phaser.Tween</a>}</span></h4>
     
     
 </dt>
@@ -2556,7 +2557,7 @@ game.add.tween(p).to({ x: 700 }, 1000, Phaser.Easing.Linear.None, true)
     
     
     <div class="description">
-        <p>Sets a callback to be fired each time this tween updates. Note: callback will be called in the context of the global scope.</p>
+        <p>Sets a callback to be fired each time this tween updates.</p>
     </div>
     
 
@@ -2610,6 +2611,29 @@ game.add.tween(p).to({ x: 700 }, 1000, Phaser.Easing.Linear.None, true)
         </tr>
 
 	
+
+        <tr>
+            
+                <td class="name"><code>callbackContext</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The context in which to call the onUpdate callback.</p></td>
+        </tr>
+
+	
 	</tbody>
 </table>
 
@@ -2638,7 +2662,7 @@ game.add.tween(p).to({ x: 700 }, 1000, Phaser.Easing.Linear.None, true)
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tween.js.html">tween/Tween.js</a>, <a href="Tween.js.html#sunlight-1-line-576">line 576</a>
+        <a href="Tween.js.html">tween/Tween.js</a>, <a href="Tween.js.html#sunlight-1-line-581">line 581</a>
     </li></ul></dd>
     
 
@@ -2730,7 +2754,7 @@ game.add.tween(p).to({ x: 700 }, 1000, Phaser.Easing.Linear.None, true)
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tween.js.html">tween/Tween.js</a>, <a href="Tween.js.html#sunlight-1-line-592">line 592</a>
+        <a href="Tween.js.html">tween/Tween.js</a>, <a href="Tween.js.html#sunlight-1-line-598">line 598</a>
     </li></ul></dd>
     
 
@@ -2848,7 +2872,7 @@ game.add.tween(p).to({ x: 700 }, 1000, Phaser.Easing.Linear.None, true)
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tween.js.html">tween/Tween.js</a>, <a href="Tween.js.html#sunlight-1-line-478">line 478</a>
+        <a href="Tween.js.html">tween/Tween.js</a>, <a href="Tween.js.html#sunlight-1-line-483">line 483</a>
     </li></ul></dd>
     
 
@@ -2940,7 +2964,7 @@ game.add.tween(p).to({ x: 700 }, 1000, Phaser.Easing.Linear.None, true)
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tween.js.html">tween/Tween.js</a>, <a href="Tween.js.html#sunlight-1-line-620">line 620</a>
+        <a href="Tween.js.html">tween/Tween.js</a>, <a href="Tween.js.html#sunlight-1-line-626">line 626</a>
     </li></ul></dd>
     
 
@@ -3009,7 +3033,7 @@ game.add.tween(p).to({ x: 700 }, 1000, Phaser.Easing.Linear.None, true)
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tween.js.html">tween/Tween.js</a>, <a href="Tween.js.html#sunlight-1-line-286">line 286</a>
+        <a href="Tween.js.html">tween/Tween.js</a>, <a href="Tween.js.html#sunlight-1-line-291">line 291</a>
     </li></ul></dd>
     
 
@@ -3101,7 +3125,7 @@ game.add.tween(p).to({ x: 700 }, 1000, Phaser.Easing.Linear.None, true)
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tween.js.html">tween/Tween.js</a>, <a href="Tween.js.html#sunlight-1-line-446">line 446</a>
+        <a href="Tween.js.html">tween/Tween.js</a>, <a href="Tween.js.html#sunlight-1-line-451">line 451</a>
     </li></ul></dd>
     
 
@@ -3160,7 +3184,8 @@ game.add.tween(p).to({ x: 700 }, 1000, Phaser.Easing.Linear.None, true)
     
     
     <div class="description">
-        <p>Configure the Tween</p>
+        <p>Sets this tween to be a <code>to</code> tween on the properties given. A <code>to</code> tween starts at the current value and tweens to the destination value given.
+For example a Sprite with an <code>x</code> coordinate of 100 could be tweened to <code>x</code> 200 by giving a properties object of <code>{ x: 200 }</code>.</p>
     </div>
     
 
@@ -3226,7 +3251,7 @@ game.add.tween(p).to({ x: 700 }, 1000, Phaser.Easing.Linear.None, true)
                 </td>
             
 
-            <td class="description last"><p>Properties you want to tween.</p></td>
+            <td class="description last"><p>The properties you want to tween, such as <code>Sprite.x</code> or <code>Sound.volume</code>. Given as a JavaScript object.</p></td>
         </tr>
 
 	
@@ -3633,7 +3658,7 @@ game.add.tween(p).to({ x: 700 }, 1000, Phaser.Easing.Linear.None, true)
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tween.js.html">tween/Tween.js</a>, <a href="Tween.js.html#sunlight-1-line-656">line 656</a>
+        <a href="Tween.js.html">tween/Tween.js</a>, <a href="Tween.js.html#sunlight-1-line-662">line 662</a>
     </li></ul></dd>
     
 
@@ -3775,7 +3800,7 @@ Used in combination with repeat you can create endless loops.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tween.js.html">tween/Tween.js</a>, <a href="Tween.js.html#sunlight-1-line-493">line 493</a>
+        <a href="Tween.js.html">tween/Tween.js</a>, <a href="Tween.js.html#sunlight-1-line-498">line 498</a>
     </li></ul></dd>
     
 
@@ -3849,7 +3874,7 @@ Used in combination with repeat you can create endless loops.</p>
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Tue May 20 2014 10:06:11 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Thu Jul 10 2014 20:19:16 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>
