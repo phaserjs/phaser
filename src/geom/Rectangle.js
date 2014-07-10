@@ -602,7 +602,7 @@ Phaser.Rectangle.inflatePoint = function (a, point) {
 */
 Phaser.Rectangle.size = function (a, output) {
 
-    if (typeof output === "undefined")
+    if (typeof output === "undefined" || output === null)
     {
         output = new Phaser.Point(a.width, a.height);
     }
@@ -624,7 +624,7 @@ Phaser.Rectangle.size = function (a, output) {
 */
 Phaser.Rectangle.clone = function (a, output) {
 
-    if (typeof output === "undefined")
+    if (typeof output === "undefined" || output === null)
     {
         output = new Phaser.Rectangle(a.x, a.y, a.width, a.height);
     }
