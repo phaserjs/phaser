@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.0.6 "Jornhill" - Built: Thu Jul 10 2014 19:12:49
+* v2.0.6 "Jornhill" - Built: Thu Jul 10 2014 20:17:38
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -54,7 +54,8 @@ PIXI.WEBGL_RENDERER = 0;
 PIXI.CANVAS_RENDERER = 1;
 
 // useful for testing against if your lib is using pixi.
-PIXI.VERSION = 'v1.5.4';
+PIXI.VERSION = "v1.6";
+
 
 // the various blend modes supported by pixi
 PIXI.blendModes = {
@@ -539,7 +540,7 @@ PIXI.Ellipse.prototype.constructor = PIXI.Ellipse;
  * The Matrix class is now an object, which makes it a lot faster, 
  * here is a representation of it : 
  * | a | b | tx|
- * | c | c | ty|
+ * | c | d | ty|
  * | 0 | 0 | 1 |
  *
  * @class Matrix
@@ -1053,6 +1054,7 @@ PIXI.DisplayObject.prototype.updateTransform = function()
     // TODO OPTIMIZE THIS!! with dirty
     if(this.rotation !== this.rotationCache)
     {
+
         this.rotationCache = this.rotation;
         this._sr =  Math.sin(this.rotation);
         this._cr =  Math.cos(this.rotation);
@@ -1176,7 +1178,6 @@ PIXI.DisplayObject.prototype._generateCachedSprite = function()//renderSession)
 
     this._cachedSprite.anchor.x = -( bounds.x / bounds.width );
     this._cachedSprite.anchor.y = -( bounds.y / bounds.height );
-
 
     this._filters = tempFilters;
 
@@ -1876,6 +1877,7 @@ PIXI.Sprite.prototype.onTextureUpdate = function()
 */
 PIXI.Sprite.prototype.getBounds = function(matrix)
 {
+
     var width = this.texture.frame.width;
     var height = this.texture.frame.height;
 
@@ -7342,6 +7344,8 @@ PIXI.WebGLFilterManager.prototype.pushFilter = function(filterBlock)
     offset.y = -filterArea.y;
 
     // update projection
+    // now restore the regular shader..
+    this.renderSession.shaderManager.setShader(this.defaultShader);
     gl.uniform2f(this.defaultShader.projectionVector, filterArea.width/2, -filterArea.height/2);
     gl.uniform2f(this.defaultShader.offsetVector, -filterArea.x, -filterArea.y);
 
@@ -10395,7 +10399,7 @@ PIXI.TilingSprite.prototype._renderCanvas = function(renderSession)
     // make sure to account for the anchor point..
     context.fillRect(-tilePosition.x + (this.anchor.x * -this._width),
                     -tilePosition.y + (this.anchor.y * -this._height),
-                    this._width / tileScale.x, 
+                    this._width / tileScale.x,
                     this._height / tileScale.y);
 
     context.scale(1 / tileScale.x, 1 / tileScale.y);
@@ -10776,6 +10780,16 @@ PIXI.BaseTexture.fromImage = function(imageUrl, crossorigin, scaleMode)
     return baseTexture;
 };
 
+/**
+ * Helper function that returns a base texture based on a canvas element
+ * If the image is not in the base texture cache it will be created and loaded
+ *
+ * @static
+ * @method fromCanvas
+ * @param canvas {Canvas} The canvas element source of the texture
+ * @param scaleMode {Number} Should be one of the PIXI.scaleMode consts
+ * @return BaseTexture
+ */
 PIXI.BaseTexture.fromCanvas = function(canvas, scaleMode)
 {
     if(!canvas._pixiId)
@@ -11032,6 +11046,7 @@ PIXI.Texture.prototype._updateWebGLuvs = function()
  * @method fromImage
  * @param imageUrl {String} The image url of the texture
  * @param crossorigin {Boolean} Whether requests should be treated as crossorigin
+ * @param scaleMode {Number} Should be one of the PIXI.scaleMode consts
  * @return Texture
  */
 PIXI.Texture.fromImage = function(imageUrl, crossorigin, scaleMode)
@@ -11070,6 +11085,7 @@ PIXI.Texture.fromFrame = function(frameId)
  * @static
  * @method fromCanvas
  * @param canvas {Canvas} The canvas element source of the texture
+ * @param scaleMode {Number} Should be one of the PIXI.scaleMode consts
  * @return Texture
  */
 PIXI.Texture.fromCanvas = function(canvas, scaleMode)
@@ -11419,7 +11435,7 @@ PIXI.RenderTexture.tempMatrix = new PIXI.Matrix();
 *
 * Phaser - http://phaser.io
 *
-* v2.0.6 "Jornhill" - Built: Thu Jul 10 2014 19:12:49
+* v2.0.6 "Jornhill" - Built: Thu Jul 10 2014 20:17:38
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *

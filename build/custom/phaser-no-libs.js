@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.0.6 "Jornhill" - Built: Thu Jul 10 2014 19:12:49
+* v2.0.6 "Jornhill" - Built: Thu Jul 10 2014 20:17:38
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
