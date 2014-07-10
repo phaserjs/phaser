@@ -172,6 +172,7 @@ PIXI.Sprite.prototype.onTextureUpdate = function()
 */
 PIXI.Sprite.prototype.getBounds = function(matrix)
 {
+
     var width = this.texture.frame.width;
     var height = this.texture.frame.height;
 
