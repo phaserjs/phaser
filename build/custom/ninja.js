@@ -1153,6 +1153,28 @@ Object.defineProperty(Phaser.Physics.Ninja.Body.prototype, "angle", {
 
 });
 
+/**
+* Render Sprite's Body.
+*
+* @method Phaser.Physics.Ninja.Body#render
+* @param {object} context - The context to render to.
+* @param {Phaser.Physics.Ninja.Body} body - The Body to render.
+* @param {string} [color='rgba(0,255,0,0.4)'] - color of the debug shape to be rendered. (format is css color string).
+* @param {boolean} [filled=true] - Render the shape as a filled (default, true) or a stroked (false)
+*/
+Phaser.Physics.Ninja.Body.render = function(context, body, color, filled) {
+    color = color || 'rgba(0,255,0,0.4)';
+
+    if (typeof filled === 'undefined')
+    {
+        filled = true;
+    }
+
+    if (body.aabb || body.circle)
+    {
+        body.shape.render(context, body.game.camera.x, body.game.camera.y, color, filled);
+    }
+};
 
 /* jshint camelcase: false */
 /**
@@ -2159,8 +2181,33 @@ Phaser.Physics.Ninja.AABB.prototype = {
     destroy: function() {
         this.body = null;
         this.system = null;
-    }
+    },
 
+    /**
+    * Render this AABB for debugging purposes.
+    *
+    * @method Phaser.Physics.Ninja.AABB#render
+    * @param {object} context - The context to render to.
+    * @param {number} xOffset - X offset from AABB's position to render at.
+    * @param {number} yOffset - Y offset from AABB's position to render at.
+    * @param {string} color - color of the debug shape to be rendered. (format is css color string).
+    * @param {boolean} filled - Render the shape as solid (true) or hollow (false).
+    */
+    render: function(context, xOffset, yOffset, color, filled) {
+        var left = this.pos.x - this.xw - xOffset;
+        var top = this.pos.y - this.yw - yOffset;
+
+        if (filled)
+        {
+            context.fillStyle = color;
+            context.fillRect(left, top, this.width, this.height);
+        }
+        else
+        {
+            context.strokeStyle = color;
+            context.strokeRect(left, top, this.width, this.height);
+        }
+    }
 };
 
 /* jshint camelcase: false */
@@ -3266,7 +3313,6 @@ Phaser.Physics.Ninja.Circle.prototype = {
         }
         else
         {
-            // console.log("ResolveCircleTile() was called with an empty (or unknown) tile!: ID=" + t.id + ")");
             return false;
         }
 
@@ -5557,6 +5603,34 @@ Phaser.Physics.Ninja.Circle.prototype = {
     destroy: function() {
         this.body = null;
         this.system = null;
-    }
+    },
 
+    /**
+    * Render this circle for debugging purposes.
+    *
+    * @method Phaser.Physics.Ninja.Circle#render
+    * @param {object} context - The context to render to.
+    * @param {number} xOffset - X offset from circle's position to render at.
+    * @param {number} yOffset - Y offset from circle's position to render at.
+    * @param {string} color - color of the debug shape to be rendered. (format is css color string).
+    * @param {boolean} filled - Render the shape as solid (true) or hollow (false).
+    */
+    render: function(context, xOffset, yOffset, color, filled) {
+        var x = this.pos.x - xOffset;
+        var y = this.pos.y - yOffset;
+
+        context.beginPath();
+        context.arc(x, y, this.radius, 0, 2 * Math.PI, false);
+
+        if (filled)
+        {
+            context.fillStyle = color;
+            context.fill();
+        }
+        else
+        {
+            context.strokeStyle = color;
+            context.stroke();
+        }
+    }
 };
