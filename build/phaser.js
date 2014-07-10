@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.0.6 "Jornhill" - Built: Thu Jul 10 2014 19:02:31
+* v2.0.6 "Jornhill" - Built: Thu Jul 10 2014 19:12:50
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -11419,7 +11419,7 @@ PIXI.RenderTexture.tempMatrix = new PIXI.Matrix();
 *
 * Phaser - http://phaser.io
 *
-* v2.0.6 "Jornhill" - Built: Thu Jul 10 2014 19:02:31
+* v2.0.6 "Jornhill" - Built: Thu Jul 10 2014 19:12:49
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -31882,8 +31882,6 @@ Phaser.Image.prototype.loadTexture = function (key, frame) {
 
     this.key = key;
 
-    var setFrame = true;
-
     if (key instanceof Phaser.RenderTexture)
     {
         this.key = key.key;
@@ -31926,7 +31924,7 @@ Phaser.Image.prototype.loadTexture = function (key, frame) {
             }
             else
             {
-                this.setTexture(new PIXI.Texture(PIXI.BaseTextureCache[key], frameData.getFrameByName(frame)));
+                this.setTexture(new PIXI.Texture(PIXI.BaseTextureCache[key]));
             }
         }
     }
@@ -31960,7 +31958,7 @@ Phaser.Image.prototype.setFrame = Phaser.Sprite.prototype.setFrame;
 * @method Phaser.Image#updateCrop
 * @memberof Phaser.Image
 */
-Phaser.Image.prototype.updateCrop = Phaser.Sprite.prototype.updateCrop
+Phaser.Image.prototype.updateCrop = Phaser.Sprite.prototype.updateCrop;
 
 /**
 * Crop allows you to crop the texture used to display this Image.
