@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.0.6 "Jornhill" - Built: Thu Jul 10 2014 16:22:48
+* v2.0.6 "Jornhill" - Built: Thu Jul 10 2014 19:02:31
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -11419,7 +11419,7 @@ PIXI.RenderTexture.tempMatrix = new PIXI.Matrix();
 *
 * Phaser - http://phaser.io
 *
-* v2.0.6 "Jornhill" - Built: Thu Jul 10 2014 16:22:48
+* v2.0.6 "Jornhill" - Built: Thu Jul 10 2014 19:02:31
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -31366,7 +31366,7 @@ Object.defineProperty(Phaser.Sprite.prototype, "inCamera", {
 
     get: function() {
 
-        return this.game.world.camera.view.intersects(this.getBounds());
+        return this.game.world.camera.screenView.intersects(this.getBounds());
 
     }
 
@@ -31876,7 +31876,64 @@ Phaser.Image.prototype.postUpdate = function() {
 * @param {string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture} key - This is the image or texture used by the Image during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture, BitmapData or PIXI.Texture.
 * @param {string|number} frame - If this Image is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
 */
-Phaser.Image.prototype.loadTexture = Phaser.Sprite.prototype.loadTexture;
+Phaser.Image.prototype.loadTexture = function (key, frame) {
+
+    frame = frame || 0;
+
+    this.key = key;
+
+    var setFrame = true;
+
+    if (key instanceof Phaser.RenderTexture)
+    {
+        this.key = key.key;
+        this.setTexture(key);
+    }
+    else if (key instanceof Phaser.BitmapData)
+    {
+        this.setTexture(key.texture);
+    }
+    else if (key instanceof PIXI.Texture)
+    {
+        this.setTexture(key);
+    }
+    else
+    {
+        if (key === null || typeof key === 'undefined')
+        {
+            this.key = '__default';
+            this.setTexture(PIXI.TextureCache[this.key]);
+        }
+        else if (typeof key === 'string' && !this.game.cache.checkImageKey(key))
+        {
+            this.key = '__missing';
+            this.setTexture(PIXI.TextureCache[this.key]);
+        }
+        else
+        {
+            if (this.game.cache.isSpriteSheet(key))
+            {
+                var frameData = this.game.cache.getFrameData(key);
+
+                if (typeof frame === 'string')
+                {
+                    this.setTexture(new PIXI.Texture(PIXI.BaseTextureCache[key], frameData.getFrameByName(frame)));
+                }
+                else
+                {
+                    this.setTexture(new PIXI.Texture(PIXI.BaseTextureCache[key], frameData.getFrame(frame)));
+                }
+            }
+            else
+            {
+                this.setTexture(new PIXI.Texture(PIXI.BaseTextureCache[key], frameData.getFrameByName(frame)));
+            }
+        }
+    }
+
+    this._frame = Phaser.Rectangle.clone(this.texture.frame);
+
+};
 
 /**
 * Resets the Texture frame dimensions that the Image uses for rendering.
@@ -31903,7 +31960,7 @@ Phaser.Image.prototype.setFrame = Phaser.Sprite.prototype.setFrame;
 * @method Phaser.Image#updateCrop
 * @memberof Phaser.Image
 */
-Phaser.Image.prototype.updateCrop = Phaser.Sprite.prototype.updateCrop;
+Phaser.Image.prototype.updateCrop = Phaser.Sprite.prototype.updateCrop
 
 /**
 * Crop allows you to crop the texture used to display this Image.
@@ -32104,7 +32161,7 @@ Object.defineProperty(Phaser.Image.prototype, "inCamera", {
 
     get: function() {
 
-        return this.game.world.camera.view.intersects(this.getBounds());
+        return this.game.world.camera.screenView.intersects(this.getBounds());
 
     }
 
