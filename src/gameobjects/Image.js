@@ -462,7 +462,7 @@ Object.defineProperty(Phaser.Image.prototype, "inCamera", {
 
     get: function() {
 
-        return this.game.world.camera.view.intersects(this.getBounds());
+        return this.game.world.camera.screenView.intersects(this.getBounds());
 
     }
 
