@@ -17,7 +17,7 @@
 * You can set a unique texture frame and Sound for any of these states.
 *
 * @constructor
-* @extends Phaser.Image
+* @extends Phaser.Sprite
 *
 * @param {Phaser.Game} game Current game instance.
 * @param {number} [x=0] - X position of the Button.
@@ -38,7 +38,7 @@ Phaser.Button = function (game, x, y, key, callback, callbackContext, overFrame,
     callback = callback || null;
     callbackContext = callbackContext || this;
 
-    Phaser.Image.call(this, game, x, y, key, outFrame);
+    Phaser.Sprite.call(this, game, x, y, key, outFrame);
 
     /**
     * @property {number} type - The Phaser Object Type.
@@ -206,7 +206,7 @@ Phaser.Button = function (game, x, y, key, callback, callbackContext, overFrame,
 
 };
 
-Phaser.Button.prototype = Object.create(Phaser.Image.prototype);
+Phaser.Button.prototype = Object.create(Phaser.Sprite.prototype);
 Phaser.Button.prototype.constructor = Phaser.Button;
 
 /**
