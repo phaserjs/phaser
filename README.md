@@ -47,10 +47,9 @@ Finally the list of [community authored Phaser Tutorials](http://www.lessmilk.co
 
 Version 2.0.7 - "Shienar" - -in development-
 
-### Significant Internal Changes
-
 ### Updates
 
+* Updated to Pixi.js 1.6r2 which fixes various issues such as IE9 Float32 defs and RenderTexture resizing and rendering.
 * TypeScript definitions fixes and updates (thanks @clark-stevenson and @alvinsight)
 
 ### New Features
