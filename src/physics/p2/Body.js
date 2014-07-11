@@ -730,7 +730,7 @@ Phaser.Physics.P2.Body.prototype = {
                 }
             }
         }
-        
+
         if (this.data.world !== this.game.physics.p2.world)
         {
             this.game.physics.p2.addBody(this);
@@ -950,18 +950,17 @@ Phaser.Physics.P2.Body.prototype = {
 
         options = options || {};
 
-        points = Array.prototype.slice.call(arguments, 1);
-
         var path = [];
 
         //  Did they pass in a single array of points?
-        if (points.length === 1 && Array.isArray(points[0]))
+        if (!Array.isArray(points) && arguments.length > 2)
         {
-            path = points[0].slice(0);
-        }
-        else if (Array.isArray(points[0]))
-        {
-            path = points[0].slice(0);
+            var i = arguments.length - 2;
+            points = new Array(i);
+            while (i--)
+            {
+                points[i] = arguments[i + 2];
+            }
         }
         else if (typeof points[0] === 'number')
         {
@@ -1005,9 +1004,9 @@ Phaser.Physics.P2.Body.prototype = {
     removeShape: function (shape) {
 
 		var result = this.data.removeShape(shape);
-	
+
 		this.shapeChanged();
-	
+
         return result;
     },
 

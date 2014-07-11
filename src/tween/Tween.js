@@ -549,7 +549,12 @@ Phaser.Tween.prototype = {
     */
     chain: function () {
 
-        this._chainedTweens = arguments;
+        var i = arguments.length;
+        this._chainedTweens = new Array(i);
+        while (i--)
+        {
+            this._chainedTweens[i] = arguments[i];
+        }
         return this;
 
     },

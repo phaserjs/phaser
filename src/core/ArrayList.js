@@ -120,9 +120,18 @@ Phaser.ArrayList.prototype = {
     */
     callAll: function (callback) {
 
-        var args = Array.prototype.splice.call(arguments, 1);
+        var args = [];
+        var i = arguments.length - 1;
+        if (i > 0)
+        {
+            args.length = i;
+            while (i--)
+            {
+                args[i] = arguments[i + 1];
+            }
+        }
 
-        var i = this.list.length;
+        i = this.list.length;
 
         while (i--)
         {
