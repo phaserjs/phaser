@@ -1,8 +1,11 @@
-[PHPEdWorkspace]
+﻿[PHPEdWorkspace]
+Unloaded0=0
+Drv_LastDir=D:\wamp\www\phaser\docgen
+Drv_LastLocalDir=D:\wamp\www\phaser\docgen
 Project0=D:\wamp\www\phaser\docgen\project\Phaser Doc Gen.ppj
-ProjectCount=1
+Drv_LastFilterIndex=-1
+Drv_LastFilter=
 ActiveProject=D:\wamp\www\phaser\docgen\project\Phaser Doc Gen.ppj
-[Expanded]
-Phaser Doc Gen=1
-Phaser Doc Gen:Phaser Doc Gen=1
-Phaser Doc Gen:Phaser Doc Gen:src=1
+Drv_LastDrv=
+ProjectCount=1
+
