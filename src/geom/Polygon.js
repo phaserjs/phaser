@@ -26,7 +26,12 @@ Phaser.Polygon = function (points) {
     //if points isn't an array, use arguments as the array
     if (!(points instanceof Array))
     {
-        points = Array.prototype.slice.call(arguments);
+        var i = arguments.length;
+        points = new Array(i);
+        while (i--)
+        {
+            points[i] = arguments[i];
+        }
     }
 
     //if this is a flat array of numbers, convert it to points
@@ -124,7 +129,12 @@ Object.defineProperty(Phaser.Polygon.prototype, 'points', {
         //if points isn't an array, use arguments as the array
         if (!(points instanceof Array))
         {
-            points = Array.prototype.slice.call(arguments);
+            var i = arguments.length;
+            points = new Array(i);
+            while (i--)
+            {
+                points[i] = arguments[i];
+            }
         }
 
         //if this is a flat array of numbers, convert it to points

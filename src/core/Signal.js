@@ -299,7 +299,13 @@ Phaser.Signal.prototype = {
             return;
         }
 
-        var paramsArr = Array.prototype.slice.call(arguments);
+        var i = arguments.length;
+        var paramsArr = new Array(i);
+        while (i--)
+        {
+            paramsArr[i] = arguments[i];
+        }
+
         var n = this._bindings.length;
         var bindings;
 

@@ -403,7 +403,16 @@ Phaser.GameObjectFactory.prototype = {
     */
     filter: function (filter) {
 
-        var args = Array.prototype.splice.call(arguments, 1);
+        var args = [];
+        var i = arguments.length - 1;
+        if (i > 0)
+        {
+            args.length = i;
+            while (i--)
+            {
+                args[i] = arguments[i + 1];
+            }
+        }
 
         var filter = new Phaser.Filter[filter](this.game);
 

@@ -356,11 +356,20 @@ if (typeof Function.prototype.bind != 'function') {
     /* jshint freeze: false */
     Function.prototype.bind = (function () {
 
-        var slice = Array.prototype.slice;
-
         return function (thisArg) {
 
-            var target = this, boundArgs = slice.call(arguments, 1);
+            var target = this;
+
+            var boundArgs = [];
+            var i = arguments.length - 1;
+            if (i > 0)
+            {
+                boundArgs.length = i;
+                while (i--)
+                {
+                    boundArgs[i] = arguments[i + 1];
+                }
+            }
 
             if (typeof target != 'function')
             {
@@ -368,7 +377,13 @@ if (typeof Function.prototype.bind != 'function') {
             }
 
             function bound() {
-                var args = boundArgs.concat(slice.call(arguments));
+                var i = arguments.length;
+                var args = new Array(i);
+                while (i--)
+                {
+                    args[i] = arguments[i];
+                }
+                args = boundArgs.concat(args);
                 target.apply(this instanceof bound ? this : thisArg, args);
             }
 

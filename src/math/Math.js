@@ -85,15 +85,17 @@ Phaser.Math = {
     */
     average: function () {
 
-        var args = [];
-
-        for (var _i = 0; _i < (arguments.length - 0); _i++) {
-            args[_i] = arguments[_i + 0];
+        var i = arguments.length;
+        var args = new Array(i);
+        while (i--)
+        {
+            args[i] = arguments[i];
         }
 
         var avg = 0;
 
-        for (var i = 0; i < args.length; i++) {
+        i = args.length;
+        while (i--) {
             avg += args[i];
         }
 
@@ -740,7 +742,12 @@ Phaser.Math = {
         }
         else
         {
-            var data = arguments.slice(1);
+            var i = arguments.length - 1;
+            var data = new Array(i);
+            while (i--)
+            {
+                data[i] = arguments[i + 1];
+            }
         }
 
         for (var i = 1, min = 0, len = data.length; i < len; i++)
@@ -770,7 +777,12 @@ Phaser.Math = {
         }
         else
         {
-            var data = arguments.slice(1);
+            var i = arguments.length - 1;
+            var data = new Array(i);
+            while (i--)
+            {
+                data[i] = arguments[i + 1];
+            }
         }
 
         for (var i = 1, max = 0, len = data.length; i < len; i++)
@@ -947,14 +959,14 @@ Phaser.Math = {
         {
             return 1;
         }
-                        
+
         var res = value;
-                        
+
         while( --value )
         {
             res *= value;
         }
-        
+
         return res;
     },
 

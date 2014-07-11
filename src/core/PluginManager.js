@@ -53,7 +53,16 @@ Phaser.PluginManager.prototype = {
     */
     add: function (plugin) {
 
-        var args = Array.prototype.splice.call(arguments, 1);
+        var args = [];
+        var i = arguments.length - 1;
+        if (i > 0)
+        {
+            args.length = i;
+            while (i--)
+            {
+                args[i] = arguments[i + 1];
+            }
+        }
         var result = false;
 
         //  Prototype?

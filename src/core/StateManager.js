@@ -256,7 +256,12 @@ Phaser.StateManager.prototype = {
 
             if (arguments.length > 3)
             {
-                this._args = Array.prototype.splice.call(arguments, 3);
+                var i = arguments.length - 3;
+                this._args = new Array(i);
+                while (i--)
+                {
+                    this._args[i] = arguments[i + 3];
+                }
             }
         }
 
@@ -282,7 +287,12 @@ Phaser.StateManager.prototype = {
 
         if (arguments.length > 2)
         {
-            this._args = Array.prototype.splice.call(arguments, 2);
+            var i = arguments.length - 2;
+            this._args = new Array(i);
+            while (i--)
+            {
+                this._args[i] = arguments[i + 2];
+            }
         }
 
     },
