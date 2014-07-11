@@ -55,6 +55,9 @@ Version 2.1.0 - "Shienar" - -in development-
 
 ### Bug Fixes
 
+* Fixed pixel perfect dragging (thanks @jeroenverfallie, fix #996)
+* Debug.preUpdate was still being called in the Game Loop even if enableDebug was set to false (thanks @qdrj, #995)
+
 ### Migration Guide
 
 There is an extensive [Migration Guide](https://github.com/photonstorm/phaser/blob/master/resources/Migration%20Guide.md) available for those converting from Phaser 1.x to 2.x. In the guide we detail the API breaking changes and approach to our new physics system.
