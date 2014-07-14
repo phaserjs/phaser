@@ -407,6 +407,30 @@ Object.defineProperty(Phaser.Camera.prototype, "y", {
 });
 
 /**
+* The Cameras position. This value is automatically clamped if it falls outside of the World bounds.
+* @name Phaser.Camera#position
+* @property {Phaser.Point} position - Gets or sets the cameras xy position using Phaser.Point object.
+*/
+Object.defineProperty(Phaser.Camera.prototype, "position", {
+
+    get: function () {
+        return new Phaser.Point(this.view.centerX, this.view.centerY);
+    },
+
+    set: function (value) {
+
+        this.view.x = value.x;
+        this.view.y = value.y;
+
+        if (this.bounds)
+        {
+            this.checkBounds();
+        }
+    }
+
+});
+
+/**
 * The Cameras width. By default this is the same as the Game size and should not be adjusted for now.
 * @name Phaser.Camera#width
 * @property {number} width - Gets or sets the cameras width.
