@@ -845,11 +845,14 @@ declare module PIXI {
     export class Texture extends EventTarget {
 
         baseTexture: BaseTexture;
+        crop: Rectangle;
         frame: Rectangle;
-        trim: Point;
-        width: number;
         height: number;
+        noFrame: boolean;
+        scope: Object;
+        trim: Point;
         valid: boolean;
+        width: number;
 
         constructor(baseTexture: BaseTexture, frame?: Rectangle);
 
@@ -955,6 +958,7 @@ declare module PIXI {
         destroy(): void;
         pushMask(maskData: any[], renderSession: IRenderSession): void;
         popMask(renderSession: IRenderSession): void;
+        setBlendMode(blendMode: number): void;
         setContext(gl: any);
 
     }
@@ -968,11 +972,12 @@ declare module PIXI {
         contextLost: boolean;
         width: number;
         height: number;
+        preserveDrawingBuffer: boolean;
         transparent: boolean;
         type: number;
         view: HTMLCanvasElement;
 
-        constructor(width: number, height: number, view?: HTMLCanvasElement, transparent?: boolean, antialias?: boolean);
+        constructor(width: number, height: number, view?: HTMLCanvasElement, transparent?: boolean, antialias?: boolean, preserveDrawingBuffer?: boolean);
 
         destroy(): void;
         render(stage: Stage): void;
@@ -1911,12 +1916,14 @@ declare module Phaser {
 
         constructor(index: number, x: number, y: number, width: number, height: number, name: string, uuid: string);
 
+        bottom: number;
         centerX: number;
         centerY: number;
         distance: number;
         height: number;
         index: number;
         name: string;
+        right: number;
         rotated: boolean;
         rotationDirection: string;
         sourceSizeH: number;
@@ -1950,6 +1957,12 @@ declare module Phaser {
 
     }
 
+    interface IGameConfig {
+
+        enableDebug?: boolean;
+
+    }
+
     class Game {
 
         constructor(width?: number, height?: number, renderer?: number, parent?: any, state?: Object, transparent?: boolean, antialias?: boolean, physicsConfig?: Object);
@@ -1959,7 +1972,7 @@ declare module Phaser {
         cache: Phaser.Cache;
         camera: Phaser.Camera;
         canvas: HTMLCanvasElement;
-        config: Object;
+        config: IGameConfig;
         context: Object;
         debug: Phaser.Utils.Debug;
         device: Phaser.Device;
@@ -1982,6 +1995,7 @@ declare module Phaser {
         pendingStep: boolean;
         physics: Phaser.Physics;
         physicsConfig: Object;
+        preserveDrawingBuffer: Boolean;
         raf: Phaser.RequestAnimationFrame;
         renderer: number;
         renderType: number;
@@ -2074,7 +2088,7 @@ declare module Phaser {
 
     }
 
-    class GamePad {
+    class Gamepad {
 
         constructor(game: Phaser.Game);
 
@@ -2158,11 +2172,11 @@ declare module Phaser {
         onDownCallback: Function;
         onFloatCallback: Function;
         onUpCallback: Function;
-        pad1: boolean;
-        pad2: boolean;
-        pad3: boolean;
-        pad4: boolean;
-        padsConnected: boolean;
+        pad1: Phaser.SinglePad;
+        pad2: Phaser.SinglePad;
+        pad3: Phaser.SinglePad;
+        pad4: Phaser.SinglePad;
+        padsConnected: number;
         supported: boolean;
 
         addCallbacks(context: Object, callbacks: Object): void;
@@ -2189,7 +2203,7 @@ declare module Phaser {
         onDown: Phaser.Signal;
         onFloat: Phaser.Signal;
         onUp: Phaser.Signal;
-        pad: Phaser.GamePad;
+        pad: Phaser.Gamepad;
         repeats: number;
         timeDown: number;
         timeUp: number;
@@ -2375,7 +2389,7 @@ declare module Phaser {
         disabled: boolean;
         doubleTapRate: number;
         game: Phaser.Game;
-        gamepad: Phaser.GamePad;
+        gamepad: Phaser.Gamepad;
         hitCanvas: HTMLCanvasElement;
         hitContext: CanvasRenderingContext2D;
         holdRate: number;
@@ -4154,6 +4168,7 @@ declare module Phaser {
 
         constructor(game: Phaser.Game, width?: number, height?: number, key?: string, scaleMode?: number);
 
+        crop: PIXI.Rectangle;
         game: Phaser.Game;
         key: string;
         type: number;
@@ -5083,11 +5098,13 @@ declare module Phaser {
 
         static extend(deep: boolean, target: Object): Object;
         static isPlainObject(object: Object): boolean;
+        static mixin(from: Object, to: Object): Object;
         static pad(str: string, len: number, pad: number, dir?: number): string;
         static parseDimension(size: any, dimension: number): number;
         static rotateArray<T>(array: T[], direction: any): T;
         static shuffle<T>(array: T[]): T;
         static transposeArray<T>(array: T[]): T;
+
     }
 
     module Utils {
@@ -5159,6 +5176,7 @@ declare module Phaser {
         getObjectsUnderPointer(pointer: Phaser.Pointer, group: Phaser.Group, callback?: Function, callbackContext?: Object): Phaser.Sprite;
         setBounds(x: number, y: number, width: number, height: number): void;
         shutdown(): void;
+        wrap(sprite: any, padding?: number, useBounds?: boolean, horizontal?: boolean, vertical?: boolean): void;
 
     }
 }
