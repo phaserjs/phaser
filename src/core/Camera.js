@@ -419,8 +419,8 @@ Object.defineProperty(Phaser.Camera.prototype, "position", {
 
     set: function (value) {
 
-        this.view.x = value.x;
-        this.view.y = value.y;
+        if (typeof value.x !== "undefined") { this.view.x = value.x; }
+        if (typeof value.y !== "undefined") { this.view.y = value.y; }
 
         if (this.bounds)
         {
