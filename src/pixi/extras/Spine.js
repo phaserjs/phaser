@@ -411,9 +411,9 @@ spine.ColorTimeline = function (frameCount) {
 spine.ColorTimeline.prototype = {
     slotIndex: 0,
     getFrameCount: function () {
-        return this.frames.length / 2;
+        return this.frames.length / 5;
     },
-    setFrame: function (frameIndex, time, x, y) {
+    setFrame: function (frameIndex, time, r, g, b, a) {
         frameIndex *= 5;
         this.frames[frameIndex] = time;
         this.frames[frameIndex + 1] = r;
@@ -791,6 +791,7 @@ spine.AnimationState = function (stateData) {
     this.queue = [];
 };
 spine.AnimationState.prototype = {
+    animationSpeed: 1,
     current: null,
     previous: null,
     currentTime: 0,
@@ -800,7 +801,7 @@ spine.AnimationState.prototype = {
     mixTime: 0,
     mixDuration: 0,
     update: function (delta) {
-        this.currentTime += delta;
+        this.currentTime += (delta * this.animationSpeed); //timeScale: Multiply delta by the speed of animation required.
         this.previousTime += delta;
         this.mixTime += delta;
 
@@ -1110,7 +1111,7 @@ spine.SkeletonJson.readCurve = function (timeline, frameIndex, valueMap) {
 };
 spine.SkeletonJson.toColor = function (hexString, colorIndex) {
     if (hexString.length != 8) throw "Color hexidecimal length must be 8, recieved: " + hexString;
-    return parseInt(hexString.substring(colorIndex * 2, 2), 16) / 255;
+    return parseInt(hexString.substr(colorIndex * 2, 2), 16) / 255;
 };
 
 spine.Atlas = function (atlasText, textureLoader) {
@@ -1451,6 +1452,9 @@ PIXI.Spine.prototype.updateTransform = function () {
         slotContainer.scale.y = bone.worldScaleY;
 
         slotContainer.rotation = -(slot.bone.worldRotation * Math.PI / 180);
+
+        slotContainer.alpha = slot.a;
+        slot.currentSprite.tint = PIXI.rgb2hex([slot.r,slot.g,slot.b]);
     }
 
     PIXI.DisplayObjectContainer.prototype.updateTransform.call(this);

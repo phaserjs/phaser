@@ -10,6 +10,7 @@
 * In most cases, the properties are used to simulate physical effects. Each body also has its own property values that determine exactly how it reacts to forces and collisions in the scene.
 * By default a single Rectangle shape is added to the Body that matches the dimensions of the parent Sprite. See addShape, removeShape, clearShapes to add extra shapes around the Body.
 * Note: When bound to a Sprite to avoid single-pixel jitters on mobile devices we strongly recommend using Sprite sizes that are even on both axis, i.e. 128x128 not 127x127.
+* Note: When a game object is given a P2 body it has its anchor x/y set to 0.5, so it becomes centered.
 *
 * @class Phaser.Physics.P2.Body
 * @classdesc Physics Body Constructor
@@ -419,7 +420,7 @@ Phaser.Physics.P2.Body.prototype = {
     * Apply force to a world point. This could for example be a point on the RigidBody surface. Applying force this way will add to Body.force and Body.angularForce.
     *
     * @method Phaser.Physics.P2.Body#applyForce
-    * @param {number} force - The force to add.
+    * @param {Float32Array|Array} force - The force vector to add.
     * @param {number} worldX - The world x point to apply the force on.
     * @param {number} worldY - The world y point to apply the force on.
     */
@@ -580,7 +581,7 @@ Phaser.Physics.P2.Body.prototype = {
     * Applies a force to the Body that causes it to 'thrust' backwards (in reverse), based on its current angle and the given speed.
     * The speed is represented in pixels per second. So a value of 100 would move 100 pixels in 1 second (1000ms).
     *
-    * @method Phaser.Physics.P2.Body#rever
+    * @method Phaser.Physics.P2.Body#reverse
     * @param {number} speed - The speed at which it should reverse.
     */
     reverse: function (speed) {
@@ -719,6 +720,17 @@ Phaser.Physics.P2.Body.prototype = {
     */
     addToWorld: function () {
 
+        if (this.game.physics.p2._toRemove)
+        {
+            for (var i = 0; i < this.game.physics.p2._toRemove.length; i++)
+            {
+                if (this.game.physics.p2._toRemove[i] === this)
+                {
+                    this.game.physics.p2._toRemove.splice(i, 1);
+                }
+            }
+        }
+        
         if (this.data.world !== this.game.physics.p2.world)
         {
             this.game.physics.p2.addBody(this);
@@ -992,8 +1004,11 @@ Phaser.Physics.P2.Body.prototype = {
     */
     removeShape: function (shape) {
 
-        return this.data.removeShape(shape);
-
+		var result = this.data.removeShape(shape);
+	
+		this.shapeChanged();
+	
+        return result;
     },
 
     /**
@@ -1111,7 +1126,7 @@ Phaser.Physics.P2.Body.prototype = {
         {
             var fixtureData = data[i];
             var shapesOfFixture = this.addFixture(fixtureData);
-            
+
             //  Always add to a group
             createdFixtures[fixtureData.filter.group] = createdFixtures[fixtureData.filter.group] || [];
             createdFixtures[fixtureData.filter.group] = createdFixtures[fixtureData.filter.group].concat(shapesOfFixture);
@@ -1724,7 +1739,7 @@ Object.defineProperty(Phaser.Physics.P2.Body.prototype, "debug", {
 
     get: function () {
 
-        return (!this.debugBody);
+        return (this.debugBody !== null);
 
     },
 
@@ -1748,7 +1763,7 @@ Object.defineProperty(Phaser.Physics.P2.Body.prototype, "debug", {
 /**
 * A Body can be set to collide against the World bounds automatically if this is set to true. Otherwise it will leave the World.
 * Note that this only applies if your World has bounds! The response to the collision should be managed via CollisionMaterials.
-* 
+*
 * @name Phaser.Physics.P2.Body#collideWorldBounds
 * @property {boolean} collideWorldBounds - Should the Body collide with the World bounds?
 */

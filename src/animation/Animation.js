@@ -184,7 +184,8 @@ Phaser.Animation.prototype = {
         this._frameIndex = 0;
 
         this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
-        this._parent.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
+
+        this._parent.setFrame(this.currentFrame);
 
         //  TODO: Double check if required
         if (this._parent.__tilePattern)
@@ -194,6 +195,7 @@ Phaser.Animation.prototype = {
         }
 
         this._parent.events.onAnimationStart.dispatch(this._parent, this);
+
         this.onStart.dispatch(this._parent, this);
 
         return this;
@@ -218,6 +220,8 @@ Phaser.Animation.prototype = {
         this._frameIndex = 0;
 
         this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
+
+        this._parent.setFrame(this.currentFrame);
 
         this.onStart.dispatch(this._parent, this);
 
@@ -301,6 +305,7 @@ Phaser.Animation.prototype = {
         if (resetFrame)
         {
             this.currentFrame = this._frameData.getFrame(this._frames[0]);
+            this._parent.setFrame(this.currentFrame);
         }
 
         if (dispatchComplete)
@@ -351,7 +356,7 @@ Phaser.Animation.prototype = {
             return false;
         }
 
-        if (this.isPlaying === true && this.game.time.now >= this._timeNextFrame)
+        if (this.isPlaying && this.game.time.now >= this._timeNextFrame)
         {
             this._frameSkip = 1;
 
@@ -364,7 +369,6 @@ Phaser.Animation.prototype = {
             {
                 //  We need to skip a frame, work out how many
                 this._frameSkip = Math.floor(this._frameDiff / this.delay);
-
                 this._frameDiff -= (this._frameSkip * this.delay);
             }
 
@@ -379,18 +383,6 @@ Phaser.Animation.prototype = {
                 {
                     this._frameIndex %= this._frames.length;
                     this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
-
-                    if (this.currentFrame)
-                    {
-                        this._parent.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
-
-                        if (this._parent.__tilePattern)
-                        {
-                            this._parent.__tilePattern = false;
-                            this._parent.tilingTexture = false;
-                        }
-                    }
-
                     this.loopCount++;
                     this._parent.events.onAnimationLoop.dispatch(this._parent, this);
                     this.onLoop.dispatch(this._parent, this);
@@ -400,19 +392,17 @@ Phaser.Animation.prototype = {
                     this.complete();
                 }
             }
-            else
+
+            this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
+
+            if (this.currentFrame)
             {
-                this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
+                this._parent.setFrame(this.currentFrame);
 
-                if (this.currentFrame)
+                if (this._parent.__tilePattern)
                 {
-                    this._parent.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
-
-                    if (this._parent.__tilePattern)
-                    {
-                        this._parent.__tilePattern = false;
-                        this._parent.tilingTexture = false;
-                    }
+                    this._parent.__tilePattern = false;
+                    this._parent.tilingTexture = false;
                 }
             }
 
@@ -424,11 +414,100 @@ Phaser.Animation.prototype = {
     },
 
     /**
+    * Advances by the given number of frames in the Animation, taking the loop value into consideration.
+    *
+    * @method Phaser.Animation#next
+    * @param {number} [quantity=1] - The number of frames to advance.
+    */
+    next: function (quantity) {
+
+        if (typeof quantity === 'undefined') { quantity = 1; }
+
+        var frame = this._frameIndex + quantity;
+
+        if (frame >= this._frames.length)
+        {
+            if (this.loop)
+            {
+                frame %= this._frames.length;
+            }
+            else
+            {
+                frame = this._frames.length - 1;
+            }
+        }
+
+        if (frame !== this._frameIndex)
+        {
+            this._frameIndex = frame;
+
+            this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
+
+            if (this.currentFrame)
+            {
+                this._parent.setFrame(this.currentFrame);
+
+                if (this._parent.__tilePattern)
+                {
+                    this._parent.__tilePattern = false;
+                    this._parent.tilingTexture = false;
+                }
+            }
+        }
+
+    },
+
+    /**
+    * Moves backwards the given number of frames in the Animation, taking the loop value into consideration.
+    *
+    * @method Phaser.Animation#previous
+    * @param {number} [quantity=1] - The number of frames to move back.
+    */
+    previous: function (quantity) {
+
+        if (typeof quantity === 'undefined') { quantity = 1; }
+
+        var frame = this._frameIndex - quantity;
+
+        if (frame < 0)
+        {
+            if (this.loop)
+            {
+                frame = this._frames.length + frame;
+            }
+            else
+            {
+                frame++;
+            }
+        }
+
+        if (frame !== this._frameIndex)
+        {
+            this._frameIndex = frame;
+
+            this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
+
+            if (this.currentFrame)
+            {
+                this._parent.setFrame(this.currentFrame);
+
+                if (this._parent.__tilePattern)
+                {
+                    this._parent.__tilePattern = false;
+                    this._parent.tilingTexture = false;
+                }
+            }
+        }
+
+    },
+
+    /**
     * Cleans up this animation ready for deletion. Nulls all values and references.
     *
     * @method Phaser.Animation#destroy
     */
     destroy: function () {
+
         this.game.onPause.remove(this.onPause, this);
         this.game.onResume.remove(this.onResume, this);
         
@@ -545,7 +624,7 @@ Object.defineProperty(Phaser.Animation.prototype, 'frame', {
         if (this.currentFrame !== null)
         {
             this._frameIndex = value;
-            this._parent.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
+            this._parent.setFrame(this.currentFrame);
         }
 
     }

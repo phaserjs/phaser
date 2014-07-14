@@ -202,31 +202,39 @@ Phaser.Gamepad.prototype = {
     /**
     * Main gamepad update loop. Should not be called manually.
     * @method Phaser.Gamepad#update
-    * @private
+    * @protected
     */
     update: function () {
 
         this._pollGamepads();
 
-        for (var i = 0; i < this._gamepads.length; i++)
-        {
-            if (this._gamepads[i]._connected)
-            {
-                this._gamepads[i].pollStatus();
-            }
-        }
+        this.pad1.pollStatus();
+        this.pad2.pollStatus();
+        this.pad3.pollStatus();
+        this.pad4.pollStatus();
 
     },
 
     /**
-    * Updating connected gamepads (for Google Chrome).
-    * Should not be called manually.
+    * Updating connected gamepads (for Google Chrome). Should not be called manually.
+    * 
     * @method Phaser.Gamepad#_pollGamepads
     * @private
     */
     _pollGamepads: function () {
 
-        var rawGamepads = navigator.getGamepads || (navigator.webkitGetGamepads && navigator.webkitGetGamepads()) || navigator.webkitGamepads;
+        if (navigator['getGamepads'])
+        {
+            var rawGamepads = navigator.getGamepads();
+        }
+        else if (navigator['webkitGetGamepads'])
+        {
+            var rawGamepads = navigator.webkitGetGamepads();
+        }
+        else if (navigator['webkitGamepads'])
+        {
+            var rawGamepads = navigator.webkitGamepads();
+        }
 
         if (rawGamepads)
         {
@@ -582,3 +590,26 @@ Phaser.Gamepad.XBOX360_STICK_LEFT_X = 0;
 Phaser.Gamepad.XBOX360_STICK_LEFT_Y = 1;
 Phaser.Gamepad.XBOX360_STICK_RIGHT_X = 2;
 Phaser.Gamepad.XBOX360_STICK_RIGHT_Y = 3;
+
+//  PlayStation 3 controller (masquerading as xbox360 controller) button mappings
+
+Phaser.Gamepad.PS3XC_X = 0;
+Phaser.Gamepad.PS3XC_CIRCLE = 1;
+Phaser.Gamepad.PS3XC_SQUARE = 2;
+Phaser.Gamepad.PS3XC_TRIANGLE = 3;
+Phaser.Gamepad.PS3XC_L1 = 4;
+Phaser.Gamepad.PS3XC_R1 = 5;
+Phaser.Gamepad.PS3XC_L2 = 6; // analog trigger, range 0..1
+Phaser.Gamepad.PS3XC_R2 = 7; // analog trigger, range 0..1
+Phaser.Gamepad.PS3XC_SELECT = 8;
+Phaser.Gamepad.PS3XC_START = 9;
+Phaser.Gamepad.PS3XC_STICK_LEFT_BUTTON = 10;
+Phaser.Gamepad.PS3XC_STICK_RIGHT_BUTTON = 11;
+Phaser.Gamepad.PS3XC_DPAD_UP = 12;
+Phaser.Gamepad.PS3XC_DPAD_DOWN = 13;
+Phaser.Gamepad.PS3XC_DPAD_LEFT = 14;
+Phaser.Gamepad.PS3XC_DPAD_RIGHT = 15;
+Phaser.Gamepad.PS3XC_STICK_LEFT_X = 0; // analog stick, range -1..1
+Phaser.Gamepad.PS3XC_STICK_LEFT_Y = 1; // analog stick, range -1..1
+Phaser.Gamepad.PS3XC_STICK_RIGHT_X = 2; // analog stick, range -1..1
+Phaser.Gamepad.PS3XC_STICK_RIGHT_Y = 3; // analog stick, range -1..1

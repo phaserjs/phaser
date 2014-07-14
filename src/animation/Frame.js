@@ -50,7 +50,7 @@ Phaser.Frame = function (index, x, y, width, height, name, uuid) {
     this.name = name;
 
     /**
-    * @property {string} uuid - A link to the PIXI.TextureCache entry.
+    * @property {string} uuid - DEPRECATED: A link to the PIXI.TextureCache entry.
     */
     this.uuid = uuid;
 
@@ -121,6 +121,16 @@ Phaser.Frame = function (index, x, y, width, height, name, uuid) {
     */
     this.spriteSourceSizeH = 0;
 
+    /**
+    * @property {number} right - The right of the Frame (x + width).
+    */
+    this.right = this.x + this.width;
+
+    /**
+    * @property {number} bottom - The bottom of the frame (y + height).
+    */
+    this.bottom = this.y + this.height;
+
 };
 
 Phaser.Frame.prototype = {
@@ -143,8 +153,6 @@ Phaser.Frame.prototype = {
 
         if (trimmed)
         {
-            this.width = actualWidth;
-            this.height = actualHeight;
             this.sourceSizeW = actualWidth;
             this.sourceSizeH = actualHeight;
             this.centerX = Math.floor(actualWidth / 2);

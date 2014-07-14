@@ -32,7 +32,7 @@ Phaser.Stage = function (game, width, height) {
     */
     this.bounds = new Phaser.Rectangle(0, 0, width, height);
 
-    PIXI.Stage.call(this, 0x000000, false);
+    PIXI.Stage.call(this, 0x000000);
 
     /**
     * @property {string} name - The name of this object.
@@ -91,11 +91,6 @@ Phaser.Stage = function (game, width, height) {
     if (game.config)
     {
         this.parseConfig(game.config);
-    }
-    else
-    {
-        this.game.canvas = Phaser.Canvas.create(width, height);
-        this.game.canvas.style['-webkit-full-screen'] = 'width: 100%; height: 100%';
     }
 
 };
@@ -195,26 +190,9 @@ Phaser.Stage.prototype.postUpdate = function () {
 *
 * @method Phaser.Stage#parseConfig
 * @protected
+* @param {object} config -The configuration object to parse.
 */
 Phaser.Stage.prototype.parseConfig = function (config) {
-
-    if (config['canvasID'])
-    {
-        this.game.canvas = Phaser.Canvas.create(this.game.width, this.game.height, config['canvasID']);
-    }
-    else
-    {
-        this.game.canvas = Phaser.Canvas.create(this.game.width, this.game.height);
-    }
-
-    if (config['canvasStyle'])
-    {
-        this.game.canvas.stlye = config['canvasStyle'];
-    }
-    else
-    {
-        this.game.canvas.style['-webkit-full-screen'] = 'width: 100%; height: 100%';
-    }
 
     if (config['checkOffsetInterval'])
     {
@@ -310,15 +288,11 @@ Phaser.Stage.prototype.checkVisibility = function () {
 
 /**
 * This method is called when the document visibility is changed.
+* 
 * @method Phaser.Stage#visibilityChange
 * @param {Event} event - Its type will be used to decide whether the game should be paused or not.
 */
 Phaser.Stage.prototype.visibilityChange = function (event) {
-
-    if (this.disableVisibilityChange)
-    {
-        return;
-    }
 
     if (event.type === 'pagehide' || event.type === 'blur' || event.type === 'pageshow' || event.type === 'focus')
     {
@@ -331,6 +305,11 @@ Phaser.Stage.prototype.visibilityChange = function (event) {
             this.game.focusGain(event);
         }
 
+        return;
+    }
+
+    if (this.disableVisibilityChange)
+    {
         return;
     }
 

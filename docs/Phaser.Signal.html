@@ -632,8 +632,8 @@
 <dd>
     
     <div class="description">
-        <p>If Signal is active and should broadcast events.</p>
-<p>&lt;p&gt;&lt;strong&gt;IMPORTANT:&lt;/strong&gt; Setting this property during a dispatch will only affect the next dispatch, if you want to stop the propagation of a signal use <code>halt()</code> instead.&lt;/p&gt;</p>
+        <p>If Signal is active and should broadcast events.
+IMPORTANT: Setting this property during a dispatch will only affect the next dispatch, if you want to stop the propagation of a signal use <code>halt()</code> instead.</p>
     </div>
     
     
@@ -917,7 +917,7 @@ already dispatched before.</p>
 
             
 
-            <td class="description last"><p>Signal handler function.</p></td>
+            <td class="description last"><p>The function to call when this Signal is dispatched.</p></td>
         </tr>
 
 	
@@ -950,7 +950,7 @@ already dispatched before.</p>
 
             
 
-            <td class="description last"><p>Context on which listener will be executed (object that should represent the <code>this</code> variable inside listener function).</p></td>
+            <td class="description last"><p>The context under which the listener will be executed (i.e. the object that should represent the <code>this</code> variable).</p></td>
         </tr>
 
 	
@@ -983,7 +983,7 @@ already dispatched before.</p>
 
             
 
-            <td class="description last"><p>The priority level of the event listener. Listeners with higher priority will be executed before listeners with lower priority. Listeners with same priority level will be executed at the same order as they were added. (default = 0).</p></td>
+            <td class="description last"><p>The priority level of the event listener. Listeners with higher priority will be executed before listeners with lower priority. Listeners with same priority level will be executed at the same order as they were added (default = 0)</p></td>
         </tr>
 
 	
@@ -1015,7 +1015,7 @@ already dispatched before.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Signal.js.html">core/Signal.js</a>, <a href="Signal.js.html#sunlight-1-line-148">line 148</a>
+        <a href="Signal.js.html">core/Signal.js</a>, <a href="Signal.js.html#sunlight-1-line-174">line 174</a>
     </li></ul></dd>
     
 
@@ -1134,7 +1134,7 @@ already dispatched before.</p>
 
             
 
-            <td class="description last"><p>Signal handler function.</p></td>
+            <td class="description last"><p>The function to call when this Signal is dispatched.</p></td>
         </tr>
 
 	
@@ -1167,7 +1167,7 @@ already dispatched before.</p>
 
             
 
-            <td class="description last"><p>Context on which listener will be executed (object that should represent the <code>this</code> variable inside listener function).</p></td>
+            <td class="description last"><p>The context under which the listener will be executed (i.e. the object that should represent the <code>this</code> variable).</p></td>
         </tr>
 
 	
@@ -1200,7 +1200,7 @@ already dispatched before.</p>
 
             
 
-            <td class="description last"><p>The priority level of the event listener. Listeners with higher priority will be executed before listeners with lower priority. Listeners with same priority level will be executed at the same order as they were added. (default = 0)</p></td>
+            <td class="description last"><p>The priority level of the event listener. Listeners with higher priority will be executed before listeners with lower priority. Listeners with same priority level will be executed at the same order as they were added (default = 0)</p></td>
         </tr>
 
 	
@@ -1232,7 +1232,7 @@ already dispatched before.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Signal.js.html">core/Signal.js</a>, <a href="Signal.js.html#sunlight-1-line-162">line 162</a>
+        <a href="Signal.js.html">core/Signal.js</a>, <a href="Signal.js.html#sunlight-1-line-191">line 191</a>
     </li></ul></dd>
     
 
@@ -1385,7 +1385,7 @@ already dispatched before.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Signal.js.html">core/Signal.js</a>, <a href="Signal.js.html#sunlight-1-line-234">line 234</a>
+        <a href="Signal.js.html">core/Signal.js</a>, <a href="Signal.js.html#sunlight-1-line-289">line 289</a>
     </li></ul></dd>
     
 
@@ -1572,7 +1572,7 @@ IMPORTANT: calling any method on the signal instance after calling dispose will 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Signal.js.html">core/Signal.js</a>, <a href="Signal.js.html#sunlight-1-line-281">line 281</a>
+        <a href="Signal.js.html">core/Signal.js</a>, <a href="Signal.js.html#sunlight-1-line-341">line 341</a>
     </li></ul></dd>
     
 
@@ -1641,7 +1641,7 @@ IMPORTANT: calling any method on the signal instance after calling dispose will 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Signal.js.html">core/Signal.js</a>, <a href="Signal.js.html#sunlight-1-line-271">line 271</a>
+        <a href="Signal.js.html">core/Signal.js</a>, <a href="Signal.js.html#sunlight-1-line-329">line 329</a>
     </li></ul></dd>
     
 
@@ -1717,7 +1717,7 @@ IMPORTANT: calling any method on the signal instance after calling dispose will 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Signal.js.html">core/Signal.js</a>, <a href="Signal.js.html#sunlight-1-line-213">line 213</a>
+        <a href="Signal.js.html">core/Signal.js</a>, <a href="Signal.js.html#sunlight-1-line-264">line 264</a>
     </li></ul></dd>
     
 
@@ -1810,7 +1810,7 @@ IMPORTANT: should be called only during signal dispatch, calling it before/after
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Signal.js.html">core/Signal.js</a>, <a href="Signal.js.html#sunlight-1-line-223">line 223</a>
+        <a href="Signal.js.html">core/Signal.js</a>, <a href="Signal.js.html#sunlight-1-line-276">line 276</a>
     </li></ul></dd>
     
 
@@ -1926,7 +1926,7 @@ IMPORTANT: should be called only during signal dispatch, calling it before/after
             <td class="type">
             
                 
-<span class="param-type">Object</span>
+<span class="param-type">object</span>
 
 
             
@@ -1978,7 +1978,7 @@ IMPORTANT: should be called only during signal dispatch, calling it before/after
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Signal.js.html">core/Signal.js</a>, <a href="Signal.js.html#sunlight-1-line-136">line 136</a>
+        <a href="Signal.js.html">core/Signal.js</a>, <a href="Signal.js.html#sunlight-1-line-160">line 160</a>
     </li></ul></dd>
     
 
@@ -2162,7 +2162,7 @@ IMPORTANT: should be called only during signal dispatch, calling it before/after
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Signal.js.html">core/Signal.js</a>, <a href="Signal.js.html#sunlight-1-line-176">line 176</a>
+        <a href="Signal.js.html">core/Signal.js</a>, <a href="Signal.js.html#sunlight-1-line-208">line 208</a>
     </li></ul></dd>
     
 
@@ -2213,7 +2213,7 @@ IMPORTANT: should be called only during signal dispatch, calling it before/after
         
             
 <dt>
-    <h4 class="name" id="removeAll"><span class="type-signature"></span>removeAll<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="removeAll"><span class="type-signature"></span>removeAll<span class="signature">(<span class="optional">context</span>)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -2229,6 +2229,75 @@ IMPORTANT: should be called only during signal dispatch, calling it before/after
     
     
     
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+		<th>Default</th>
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>context</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    null
+                
+                </td>
+            
+
+            <td class="description last"><p>If specified only listeners for the given context will be removed.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
     
     
     
@@ -2254,7 +2323,7 @@ IMPORTANT: should be called only during signal dispatch, calling it before/after
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Signal.js.html">core/Signal.js</a>, <a href="Signal.js.html#sunlight-1-line-200">line 200</a>
+        <a href="Signal.js.html">core/Signal.js</a>, <a href="Signal.js.html#sunlight-1-line-232">line 232</a>
     </li></ul></dd>
     
 
@@ -2319,7 +2388,7 @@ IMPORTANT: should be called only during signal dispatch, calling it before/after
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Signal.js.html">core/Signal.js</a>, <a href="Signal.js.html#sunlight-1-line-293">line 293</a>
+        <a href="Signal.js.html">core/Signal.js</a>, <a href="Signal.js.html#sunlight-1-line-356">line 356</a>
     </li></ul></dd>
     
 
@@ -2393,7 +2462,7 @@ IMPORTANT: should be called only during signal dispatch, calling it before/after
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Tue May 20 2014 10:06:07 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Thu Jul 10 2014 20:19:12 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

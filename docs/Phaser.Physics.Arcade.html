@@ -1977,7 +1977,7 @@ Note: The display object doesn't stop moving once it reaches the destination coo
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js_.html">physics/arcade/World.js</a>, <a href="World.js_.html#sunlight-1-line-1531">line 1531</a>
+        <a href="World.js_.html">physics/arcade/World.js</a>, <a href="World.js_.html#sunlight-1-line-1533">line 1533</a>
     </li></ul></dd>
     
 
@@ -2291,7 +2291,7 @@ Note: The display object doesn't stop moving once it reaches the destination coo
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js_.html">physics/arcade/World.js</a>, <a href="World.js_.html#sunlight-1-line-1560">line 1560</a>
+        <a href="World.js_.html">physics/arcade/World.js</a>, <a href="World.js_.html#sunlight-1-line-1562">line 1562</a>
     </li></ul></dd>
     
 
@@ -2638,7 +2638,7 @@ Note: The display object doesn't stop moving once it reaches the destination coo
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js_.html">physics/arcade/World.js</a>, <a href="World.js_.html#sunlight-1-line-1590">line 1590</a>
+        <a href="World.js_.html">physics/arcade/World.js</a>, <a href="World.js_.html#sunlight-1-line-1592">line 1592</a>
     </li></ul></dd>
     
 
@@ -2875,7 +2875,7 @@ One way to use this is: accelerationFromRotation(rotation, 200, sprite.accelerat
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js_.html">physics/arcade/World.js</a>, <a href="World.js_.html#sunlight-1-line-1512">line 1512</a>
+        <a href="World.js_.html">physics/arcade/World.js</a>, <a href="World.js_.html#sunlight-1-line-1514">line 1514</a>
     </li></ul></dd>
     
 
@@ -3041,7 +3041,7 @@ One way to use this is: accelerationFromRotation(rotation, 200, sprite.accelerat
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js_.html">physics/arcade/World.js</a>, <a href="World.js_.html#sunlight-1-line-1678">line 1678</a>
+        <a href="World.js_.html">physics/arcade/World.js</a>, <a href="World.js_.html#sunlight-1-line-1680">line 1680</a>
     </li></ul></dd>
     
 
@@ -3225,7 +3225,7 @@ One way to use this is: accelerationFromRotation(rotation, 200, sprite.accelerat
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js_.html">physics/arcade/World.js</a>, <a href="World.js_.html#sunlight-1-line-1713">line 1713</a>
+        <a href="World.js_.html">physics/arcade/World.js</a>, <a href="World.js_.html#sunlight-1-line-1715">line 1715</a>
     </li></ul></dd>
     
 
@@ -3412,7 +3412,7 @@ One way to use this is: accelerationFromRotation(rotation, 200, sprite.accelerat
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js_.html">physics/arcade/World.js</a>, <a href="World.js_.html#sunlight-1-line-1695">line 1695</a>
+        <a href="World.js_.html">physics/arcade/World.js</a>, <a href="World.js_.html#sunlight-1-line-1697">line 1697</a>
     </li></ul></dd>
     
 
@@ -3476,7 +3476,8 @@ The second parameter can be an array of objects, of differing types.
 The objects are also automatically separated. If you don't require separation then use ArcadePhysics.overlap instead.
 An optional processCallback can be provided. If given this function will be called when two sprites are found to be colliding. It is called before any separation takes place,
 giving you the chance to perform additional checks. If the function returns true then the collision and separation is carried out. If it returns false it is skipped.
-The collideCallback is an optional function that is only called if two sprites collide. If a processCallback has been set then it needs to return true for collideCallback to be called.</p>
+The collideCallback is an optional function that is only called if two sprites collide. If a processCallback has been set then it needs to return true for collideCallback to be called.
+NOTE: This function is not recursive, and will not test against children of objects passed (i.e. Groups or Tilemaps within other Groups).</p>
     </div>
     
 
@@ -3745,7 +3746,7 @@ The collideCallback is an optional function that is only called if two sprites c
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js_.html">physics/arcade/World.js</a>, <a href="World.js_.html#sunlight-1-line-370">line 370</a>
+        <a href="World.js_.html">physics/arcade/World.js</a>, <a href="World.js_.html#sunlight-1-line-371">line 371</a>
     </li></ul></dd>
     
 
@@ -4246,7 +4247,7 @@ Based on a function in Flixel by @ADAMATOMIC</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js_.html">physics/arcade/World.js</a>, <a href="World.js_.html#sunlight-1-line-1620">line 1620</a>
+        <a href="World.js_.html">physics/arcade/World.js</a>, <a href="World.js_.html#sunlight-1-line-1622">line 1622</a>
     </li></ul></dd>
     
 
@@ -4432,7 +4433,7 @@ If you need to calculate from the center of a display object instead use the met
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js_.html">physics/arcade/World.js</a>, <a href="World.js_.html#sunlight-1-line-1657">line 1657</a>
+        <a href="World.js_.html">physics/arcade/World.js</a>, <a href="World.js_.html#sunlight-1-line-1659">line 1659</a>
     </li></ul></dd>
     
 
@@ -4621,7 +4622,7 @@ If you need to calculate from the center of a display object instead use the met
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js_.html">physics/arcade/World.js</a>, <a href="World.js_.html#sunlight-1-line-1637">line 1637</a>
+        <a href="World.js_.html">physics/arcade/World.js</a>, <a href="World.js_.html#sunlight-1-line-1639">line 1639</a>
     </li></ul></dd>
     
 
@@ -5170,7 +5171,7 @@ Note that the children are not checked for depth order, but simply if they overl
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js_.html">physics/arcade/World.js</a>, <a href="World.js_.html#sunlight-1-line-1321">line 1321</a>
+        <a href="World.js_.html">physics/arcade/World.js</a>, <a href="World.js_.html#sunlight-1-line-1323">line 1323</a>
     </li></ul></dd>
     
 
@@ -5334,7 +5335,7 @@ Note that the children are not checked for depth order, but simply if they overl
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js_.html">physics/arcade/World.js</a>, <a href="World.js_.html#sunlight-1-line-776">line 776</a>
+        <a href="World.js_.html">physics/arcade/World.js</a>, <a href="World.js_.html#sunlight-1-line-780">line 780</a>
     </li></ul></dd>
     
 
@@ -5609,7 +5610,7 @@ Note: Doesn't take into account acceleration, maxVelocity or drag (if you've set
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js_.html">physics/arcade/World.js</a>, <a href="World.js_.html#sunlight-1-line-1368">line 1368</a>
+        <a href="World.js_.html">physics/arcade/World.js</a>, <a href="World.js_.html#sunlight-1-line-1370">line 1370</a>
     </li></ul></dd>
     
 
@@ -5885,7 +5886,7 @@ Note: The display object doesn't stop moving once it reaches the destination coo
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js_.html">physics/arcade/World.js</a>, <a href="World.js_.html#sunlight-1-line-1403">line 1403</a>
+        <a href="World.js_.html">physics/arcade/World.js</a>, <a href="World.js_.html#sunlight-1-line-1405">line 1405</a>
     </li></ul></dd>
     
 
@@ -6195,7 +6196,7 @@ Note: Doesn't take into account acceleration, maxVelocity or drag (if you've set
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js_.html">physics/arcade/World.js</a>, <a href="World.js_.html#sunlight-1-line-1438">line 1438</a>
+        <a href="World.js_.html">physics/arcade/World.js</a>, <a href="World.js_.html#sunlight-1-line-1440">line 1440</a>
     </li></ul></dd>
     
 
@@ -6257,7 +6258,8 @@ Note: Doesn't take into account acceleration, maxVelocity or drag (if you've set
         <p>Checks for overlaps between two game objects. The objects can be Sprites, Groups or Emitters.
 You can perform Sprite vs. Sprite, Sprite vs. Group and Group vs. Group overlap checks.
 Unlike collide the objects are NOT automatically separated or have any physics applied, they merely test for overlap results.
-The second parameter can be an array of objects, of differing types.</p>
+The second parameter can be an array of objects, of differing types.
+NOTE: This function is not recursive, and will not test against children of objects passed (i.e. Groups within Groups).</p>
     </div>
     
 
@@ -7131,7 +7133,7 @@ One way to use this is: velocityFromAngle(angle, 200, sprite.velocity) which wil
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js_.html">physics/arcade/World.js</a>, <a href="World.js_.html#sunlight-1-line-1474">line 1474</a>
+        <a href="World.js_.html">physics/arcade/World.js</a>, <a href="World.js_.html#sunlight-1-line-1476">line 1476</a>
     </li></ul></dd>
     
 
@@ -7370,7 +7372,7 @@ One way to use this is: velocityFromRotation(rotation, 200, sprite.velocity) whi
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="World.js_.html">physics/arcade/World.js</a>, <a href="World.js_.html#sunlight-1-line-1493">line 1493</a>
+        <a href="World.js_.html">physics/arcade/World.js</a>, <a href="World.js_.html#sunlight-1-line-1495">line 1495</a>
     </li></ul></dd>
     
 
@@ -7446,7 +7448,7 @@ One way to use this is: velocityFromRotation(rotation, 200, sprite.velocity) whi
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Tue May 20 2014 10:06:01 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Thu Jul 10 2014 20:19:06 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

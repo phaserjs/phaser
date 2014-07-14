@@ -41,7 +41,7 @@ Phaser.RenderTexture = function (game, width, height, key, scaleMode) {
     */
     this._temp = new Phaser.Point();
 
-    PIXI.RenderTexture.call(this, width, height, scaleMode);
+    PIXI.RenderTexture.call(this, width, height, this.game.renderer, scaleMode);
 
 };
 

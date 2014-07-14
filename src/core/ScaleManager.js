@@ -240,17 +240,20 @@ Phaser.ScaleManager = function (game, width, height) {
         return _this.checkResize(event);
     }, false);
 
-    document.addEventListener('webkitfullscreenchange', function (event) {
-        return _this.fullScreenChange(event);
-    }, false);
+    if (!this.game.device.cocoonJS)
+    {
+        document.addEventListener('webkitfullscreenchange', function (event) {
+            return _this.fullScreenChange(event);
+        }, false);
 
-    document.addEventListener('mozfullscreenchange', function (event) {
-        return _this.fullScreenChange(event);
-    }, false);
+        document.addEventListener('mozfullscreenchange', function (event) {
+            return _this.fullScreenChange(event);
+        }, false);
 
-    document.addEventListener('fullscreenchange', function (event) {
-        return _this.fullScreenChange(event);
-    }, false);
+        document.addEventListener('fullscreenchange', function (event) {
+            return _this.fullScreenChange(event);
+        }, false);
+    }
 
 };
 
@@ -312,7 +315,7 @@ Phaser.ScaleManager.prototype = {
     */
     stopFullScreen: function () {
 
-        this.fullScreenTarget[this.game.device.cancelFullscreen]();
+        document[this.game.device.cancelFullscreen]();
 
     },
 

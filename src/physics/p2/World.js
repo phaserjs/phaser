@@ -217,6 +217,7 @@ Phaser.Physics.P2.prototype = {
     /**
     * This will create a P2 Physics body on the given game object or array of game objects.
     * A game object can only have 1 physics body active at any one time, and it can't be changed until the object is destroyed.
+    * Note: When the game object is enabled for P2 physics it has its anchor x/y set to 0.5 so it becomes centered.
     *
     * @method Phaser.Physics.P2#enable
     * @param {object|array|Phaser.Group} object - The game object to create the physics body on. Can also be an array or Group of objects, a body will be created on every child that has a `body` property.
@@ -620,7 +621,7 @@ Phaser.Physics.P2.prototype = {
 
         if (bottom)
         {
-            this.walls.bottom = new p2.Body({ mass: 0, position: [ this.pxmi(x), this.pxmi(height) ] });
+            this.walls.bottom = new p2.Body({ mass: 0, position: [ this.pxmi(x), this.pxmi(y + height) ] });
             this.walls.bottom.addShape(new p2.Plane());
 
             if (setCollisionGroup)
@@ -1226,7 +1227,6 @@ Phaser.Physics.P2.prototype = {
     *
     * @method Phaser.Physics.P2#createCollisionGroup
     * @param {Phaser.Group|Phaser.Sprite} [object] - An optional Sprite or Group to apply the Collision Group to. If a Group is given it will be applied to all top-level children.
-    * @protected
     */
     createCollisionGroup: function (object) {
 

@@ -1,5 +1,6 @@
 /**
 * @author       @karlmacklin <tacklemcclean@gmail.com>
+* @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2014 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
@@ -8,15 +9,20 @@
 * @class Phaser.GamepadButton
 * @classdesc If you need more fine-grained control over the handling of specific buttons you can create and use Phaser.GamepadButton objects.
 * @constructor
-* @param {Phaser.Game} game - Current game instance.
-* @param {number} buttoncode - The button code this GamepadButton is responsible for.
+* @param {Phaser.SinglePad} pad - A reference to the gamepad that owns this button.
+* @param {number} buttonCode - The button code this GamepadButton is responsible for.
 */
-Phaser.GamepadButton = function (game, buttoncode) {
+Phaser.GamepadButton = function (pad, buttonCode) {
+
+    /**
+    * @property {Phaser.SinglePad} pad - A reference to the gamepad that owns this button.
+    */
+    this.pad = pad;
 
     /**
     * @property {Phaser.Game} game - A reference to the currently running game.
     */
-    this.game = game;
+    this.game = pad.game;
 
     /**
     * @property {boolean} isDown - The "down" state of the button.
@@ -65,7 +71,7 @@ Phaser.GamepadButton = function (game, buttoncode) {
     /**
     * @property {number} buttonCode - The buttoncode of this button.
     */
-    this.buttonCode = buttoncode;
+    this.buttonCode = buttonCode;
 
     /**
     * @property {Phaser.Signal} onDown - This Signal is dispatched every time this GamepadButton is pressed down. It is only dispatched once (until the button is released again).
@@ -88,9 +94,10 @@ Phaser.GamepadButton.prototype = {
 
     /**
     * Called automatically by Phaser.SinglePad.
+    * 
     * @method Phaser.GamepadButton#processButtonDown
-    * @param {Object} value - Button value
     * @protected
+    * @param {number} value - Button value
     */
     processButtonDown: function (value) {
 
@@ -115,36 +122,43 @@ Phaser.GamepadButton.prototype = {
 
     /**
     * Called automatically by Phaser.SinglePad.
+    * 
     * @method Phaser.GamepadButton#processButtonUp
-    * @param {Object} value - Button value
     * @protected
+    * @param {number} value - Button value
     */
     processButtonUp: function (value) {
 
-        this.isDown = false;
-        this.isUp = true;
-        this.timeUp = this.game.time.now;
-        this.value = value;
+        if (this.isDown)
+        {
+            this.isDown = false;
+            this.isUp = true;
+            this.timeUp = this.game.time.now;
+            this.value = value;
 
-        this.onUp.dispatch(this, value);
+            this.onUp.dispatch(this, value);
+        }
 
     },
 
     /**
-    * Called automatically by Phaser.Gamepad.
+    * Called automatically by Phaser.SinglePad.
+    * 
     * @method Phaser.GamepadButton#processButtonFloat
-    * @param {Object} value - Button value
     * @protected
+    * @param {number} value - Button value
     */
     processButtonFloat: function (value) {
 
         this.value = value;
+
         this.onFloat.dispatch(this, value);
 
     },
 
     /**
     * Returns the "just pressed" state of this button. Just pressed is considered true if the button was pressed down within the duration given (default 250ms).
+    * 
     * @method Phaser.GamepadButton#justPressed
     * @param {number} [duration=250] - The duration below which the button is considered as being just pressed.
     * @return {boolean} True if the button is just pressed otherwise false.
@@ -159,6 +173,7 @@ Phaser.GamepadButton.prototype = {
 
     /**
     * Returns the "just released" state of this button. Just released is considered as being true if the button was released within the duration given (default 250ms).
+    * 
     * @method Phaser.GamepadButton#justPressed
     * @param {number} [duration=250] - The duration below which the button is considered as being just released.
     * @return {boolean} True if the button is just pressed otherwise false.
@@ -168,6 +183,38 @@ Phaser.GamepadButton.prototype = {
         if (typeof duration === "undefined") { duration = 250; }
 
         return (this.isDown === false && (this.game.time.now - this.timeUp < duration));
+
+    },
+
+    /**
+    * Resets this GamepadButton, changing it to an isUp state and resetting the duration and repeats counters.
+    * 
+    * @method Phaser.GamepadButton#reset
+    */
+    reset: function () {
+
+        this.isDown = false;
+        this.isUp = true;
+        this.timeDown = this.game.time.now;
+        this.duration = 0;
+        this.repeats = 0;
+
+    },
+
+    /**
+    * Destroys this GamepadButton, this disposes of the onDown, onUp and onFloat signals and clears the pad and game references.
+    * 
+    * @method Phaser.GamepadButton#destroy
+    */
+    destroy: function () {
+
+        this.onDown.dispose();
+        this.onUp.dispose();
+        this.onFloat.dispose();
+
+        this.pad = null;
+        this.game = null;
+
     }
 
 };
