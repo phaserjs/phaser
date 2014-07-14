@@ -4,7 +4,7 @@
 
 Phaser is a fast, free and fun open source game framework for making desktop and mobile browser HTML5 games. It uses [Pixi.js](https://github.com/GoodBoyDigital/pixi.js/) internally for fast 2D Canvas and WebGL rendering.
 
-Version: 2.0.7 "Shienar" - Released: -in development-
+Version: 2.0.7 "Amadicia" - Released: -in development-
 
 By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 
@@ -45,7 +45,7 @@ Finally the list of [community authored Phaser Tutorials](http://www.lessmilk.co
 
 ## Change Log
 
-Version 2.0.7 - "Shienar" - -in development-
+Version 2.0.7 - "Amadicia" - -in development-
 
 ### Updates
 
@@ -243,7 +243,7 @@ Here are some of the features planned for future releases:
 * Enhance the State Management, so you can perform non-destructive State swaps and persistence.
 * Support for parallel asset loading.
 
-### Version 2.3
+### Version 2.3 ("Illian")
 
 * Look carefully at the internal structure of Phaser to avoid method repetition (such as Sprite.crop and Image.crop), investigate using mixins to help reduce overall codebase size.
 * Flash CC HTML5 export integration.
