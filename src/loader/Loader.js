@@ -95,6 +95,11 @@ Phaser.Loader = function (game) {
     this.onLoadComplete = new Phaser.Signal();
 
     /**
+    * @property {Phaser.Signal} onPackComplete - This event is dispatched when an asset pack has either loaded or failed. 
+    */
+    this.onPackComplete = new Phaser.Signal();
+    
+    /**
     * @property {array} _packList - Contains all the assets packs.
     * @private
     */
@@ -1101,7 +1106,7 @@ Phaser.Loader.prototype = {
 
         console.warn("Phaser.Loader error loading pack file: " + this._packList[index].key + ' from URL ' + this._packList[index].url);
 
-        this.nextPack(index, true);
+        this.nextPack(index, false);
 
     },
 
