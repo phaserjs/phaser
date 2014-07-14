@@ -51,6 +51,7 @@ Version 2.0.7 - "Amadicia" - -in development-
 
 * Updated to Pixi.js 1.6r2 which fixes various issues such as IE9 Float32 defs and RenderTexture resizing and rendering.
 * TypeScript definitions fixes and updates (thanks @clark-stevenson and @alvinsight)
+* GameObjectFactory.spriteBatch now lets you specify `null` as a parameter for the parent and automatically adds the batch to `game.world` as a result. Also fixed jsdocs issues (@petarov #1000)
 
 ### New Features
 
@@ -58,6 +59,8 @@ Version 2.0.7 - "Amadicia" - -in development-
 
 * Fixed pixel perfect dragging (thanks @jeroenverfallie, fix #996)
 * Debug.preUpdate was still being called in the Game Loop even if enableDebug was set to false (thanks @qdrj, #995)
+* Phaser.Physics.P2.Body.addPolygon didn't work with a flat array of numbers for the coordinates (thanks @petarov, fix #883)
+* Added missing Loader.onPackComplete Signal (thanks @mjeffery fix #1007)
 
 ### Migration Guide
 

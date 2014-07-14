@@ -10,7 +10,7 @@
 * @classdesc A Group is a container for display objects that allows for fast pooling and object recycling. Groups can be nested within other Groups and have their own local transforms.
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
-* @param {Phaser.Group|Phaser.Sprite|null} parent - The parent Group, DisplayObject or DisplayObjectContainer that this Group will be added to. If undefined it will use game.world. If null it won't be added to anything.
+* @param {Phaser.Group|Phaser.Sprite|null} parent - The parent Group, DisplayObject or DisplayObjectContainer that this Group will be added to. If `undefined` it will use game.world. If null it won't be added to anything.
 * @param {string} [name=group] - A name for this Group. Not used internally but useful for debugging.
 * @param {boolean} [addToStage=false] - If set to true this Group will be added directly to the Game.Stage instead of Game.World.
 * @param {boolean} [enableBody=false] - If true all Sprites created with `Group.create` or `Group.createMulitple` will have a physics body created on them. Change the body type with physicsBodyType.

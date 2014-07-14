@@ -127,16 +127,19 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
-    * A Group is a container for display objects that allows for fast pooling, recycling and collision checks.
+    * A SpriteBatch is a really fast version of a Phaser Group built solely for speed.
+    * Use when you need a lot of sprites or particles all sharing the same texture.
+    * The speed gains are specifically for WebGL. In Canvas mode you won't see any real difference.
     *
     * @method Phaser.GameObjectFactory#spriteBatch
-    * @param {any} parent - The parent Group or DisplayObjectContainer that will hold this group, if any.
-    * @param {string} [name='group'] - A name for this Group. Not used internally but useful for debugging.
-    * @param {boolean} [addToStage=false] - If set to true this Group will be added directly to the Game.Stage instead of Game.World.
+    * @param {Phaser.Group|null} parent - The parent Group that will hold this Sprite Batch. Set to `undefined` or `null` to add directly to game.world.
+    * @param {string} [name='group'] - A name for this Sprite Batch. Not used internally but useful for debugging.
+    * @param {boolean} [addToStage=false] - If set to true this Sprite Batch will be added directly to the Game.Stage instead of the parent.
     * @return {Phaser.Group} The newly created group.
     */
     spriteBatch: function (parent, name, addToStage) {
 
+        if (typeof parent === 'undefined') { parent = null; }
         if (typeof name === 'undefined') { name = 'group'; }
         if (typeof addToStage === 'undefined') { addToStage = false; }
 
