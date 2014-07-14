@@ -303,7 +303,7 @@ Phaser.Group.prototype.create = function (x, y, key, frame, exists) {
 
     if (this.enableBody)
     {
-        this.game.physics.enable(child, this.physicsBodyType);
+        this.game.physics.enable(child, this.physicsBodyType, this.enableBodyDebug);
     }
 
     child.exists = exists;
