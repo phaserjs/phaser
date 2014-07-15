@@ -279,7 +279,7 @@ Phaser.Input = function (game) {
     this.minPriorityID = 0;
 
     /**
-    * A list of interactive objects. Te InputHandler components add and remove themselves from this.
+    * A list of interactive objects. The InputHandler components add and remove themselves from this list.
     * @property {Phaser.ArrayList} interactiveItems
     */
     this.interactiveItems = new Phaser.ArrayList();
@@ -484,6 +484,7 @@ Phaser.Input.prototype = {
 
     /**
     * Updates the Input Manager. Called by the core Game loop.
+    * 
     * @method Phaser.Input#update
     * @protected
     */

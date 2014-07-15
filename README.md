@@ -49,18 +49,37 @@ Version 2.0.7 - "Amadicia" - -in development-
 
 ### Updates
 
-* Updated to Pixi.js 1.6r2 which fixes various issues such as IE9 Float32 defs and RenderTexture resizing and rendering.
+* Updated to Pixi.js 1.6.1 which fixes various issues such as IE9 Float32 defs and RenderTexture resizing and rendering.
 * TypeScript definitions fixes and updates (thanks @clark-stevenson and @alvinsight)
 * GameObjectFactory.spriteBatch now lets you specify `null` as a parameter for the parent and automatically adds the batch to `game.world` as a result. Also fixed jsdocs issues (@petarov #1000)
+* Rebuilt the way items are polled for Pointer events (drag, click, move). Now faster and more efficient, especially when some items in the stack require pixel perfect checks.
 
 ### New Features
 
+* ArrayList.setAll - sets the property to the given value on all members of the list.
+
 ### Bug Fixes
 
-* Fixed pixel perfect dragging (thanks @jeroenverfallie, fix #996)
-* Debug.preUpdate was still being called in the Game Loop even if enableDebug was set to false (thanks @qdrj, #995)
+* Fixed pixel perfect dragging (thanks @jeroenverfallie #996)
+* Debug.preUpdate was still being called in the Game Loop even if enableDebug was set to false (thanks @qdrj #995)
 * Phaser.Physics.P2.Body.addPolygon didn't work with a flat array of numbers for the coordinates (thanks @petarov, fix #883)
-* Added missing Loader.onPackComplete Signal (thanks @mjeffery fix #1007)
+* Added missing Loader.onPackComplete Signal (thanks @mjeffery #1007)
+* QuadTree leveling - Rather than level++ which changes the current nodes level, the subnodes should get the current nodes level+1 (thanks @devinb83 #1018)
+* Prevented objects with pixel perfect checks from over-riding other higher priority ID items (#983)
+
+### TODO
+
+Adjust how Pointers and Interactive Objects work. Allow an IO to be flagged as "on click only", so it doesn't ever get processed during normal Pointer move events (unless being dragged)
+
+Allow multiple drag items - no longer bind just 1 to a Pointer
+
+Sweep and Prune objects to filter priority IDs.
+
+Allow Groups to have Priority IDs too and input disable entire Groups and all children (let it flow down the chain)
+
+Allow Groups to be InputEnabled? Dragging a Group would be really useful.
+
+
 
 ### Migration Guide
 

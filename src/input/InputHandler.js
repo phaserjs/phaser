@@ -29,6 +29,12 @@ Phaser.InputHandler = function (sprite) {
     this.enabled = false;
 
     /**
+    * @property {boolean} checked - A disposable flag used by the Pointer class when performing priority checks.
+    * @protected
+    */
+    this.checked = false;
+
+    /**
     * The priorityID is used to determine which game objects should get priority when input events occur. For example if you have
     * several Sprites that overlap, by default the one at the top of the display list is given priority for input events. You can
     * stop this from happening by controlling the priorityID value. The higher the value, the more important they are considered to the Input events.
@@ -267,6 +273,8 @@ Phaser.InputHandler.prototype = {
         this.sprite.events.onAddedToGroup.add(this.addedToGroup, this);
         this.sprite.events.onRemovedFromGroup.add(this.removedFromGroup, this);
 
+        this.flagged = false;
+
         return this.sprite;
 
     },
@@ -323,6 +331,7 @@ Phaser.InputHandler.prototype = {
     reset: function () {
 
         this.enabled = false;
+        this.flagged = false;
 
         for (var i = 0; i < 10; i++)
         {
@@ -398,18 +407,22 @@ Phaser.InputHandler.prototype = {
     * @protected
     * @param {number} highestID - The highest ID currently processed by the Pointer.
     * @param {number} highestRenderID - The highest Render Order ID currently processed by the Pointer.
+    * @param {boolean} [includePixelPerfect=true] - If this object has `pixelPerfectClick` or `pixelPerfectOver` set should it be considered as valid?
     * @return {boolean} True if the object this InputHandler is bound to should be considered as valid for input detection.
     */
-    validForInput: function (highestID, highestRenderID) {
+    validForInput: function (highestID, highestRenderID, includePixelPerfect) {
+
+        if (typeof includePixelPerfect === 'undefined') { includePixelPerfect = true; }
 
         if (this.sprite.scale.x === 0 || this.sprite.scale.y === 0 || this.priorityID < this.game.input.minPriorityID)
         {
             return false;
         }
 
-        if (this.pixelPerfectClick || this.pixelPerfectOver)
+        //   If we're trying to specifically IGNORE pixel perfect objects, then set includePixelPerfect to false and skip it
+        if (!includePixelPerfect && (this.pixelPerfectClick || this.pixelPerfectOver))
         {
-            return true;
+            return false;
         }
 
         if (this.priorityID > highestID || (this.priorityID === highestID && this.sprite._cache[3] < highestRenderID))
@@ -418,6 +431,18 @@ Phaser.InputHandler.prototype = {
         }
 
         return false;
+
+    },
+
+    /**
+    * Is this object using pixel perfect checking?
+    *
+    * @method Phaser.InputHandler#isPixelPerfect
+    * @return {boolean} True if the this InputHandler has either `pixelPerfectClick` or `pixelPerfectOver` set to `true`.
+    */
+    isPixelPerfect: function () {
+
+        return (this.pixelPerfectClick || this.pixelPerfectOver);
 
     },
 
@@ -610,12 +635,15 @@ Phaser.InputHandler.prototype = {
     },
 
     /**
-    * Checks if the given pointer is both down and over this Sprite.
+    * Checks if the given pointer is both down and over the Sprite this InputHandler belongs to.
+    * Use the `fastTest` flag is to quickly check just the bounding hit area even if `InputHandler.pixelPerfectOver` is `true`.
+    * 
     * @method Phaser.InputHandler#checkPointerDown
     * @param {Phaser.Pointer} pointer
+    * @param {boolean} [fastTest=false] - Force a simple hit area check even if `pixelPerfectOver` is true for this object?
     * @return {boolean} True if the pointer is down, otherwise false.
     */
-    checkPointerDown: function (pointer) {
+    checkPointerDown: function (pointer, fastTest) {
 
         if (!pointer.isDown || !this.enabled || !this.sprite || !this.sprite.parent || !this.sprite.visible || !this.sprite.parent.visible)
         {
@@ -625,7 +653,9 @@ Phaser.InputHandler.prototype = {
         //  Need to pass it a temp point, in case we need it again for the pixel check
         if (this.game.input.hitTest(this.sprite, pointer, this._tempPoint))
         {
-            if (this.pixelPerfectClick)
+            if (typeof fastTest === 'undefined') { fastTest = false; }
+
+            if (fastTest && this.pixelPerfectClick)
             {
                 return this.checkPixel(this._tempPoint.x, this._tempPoint.y);
             }
@@ -640,12 +670,15 @@ Phaser.InputHandler.prototype = {
     },
 
     /**
-    * Checks if the given pointer is over this Sprite.
+    * Checks if the given pointer is over the Sprite this InputHandler belongs to.
+    * Use the `fastTest` flag is to quickly check just the bounding hit area even if `InputHandler.pixelPerfectOver` is `true`.
+    * 
     * @method Phaser.InputHandler#checkPointerOver
     * @param {Phaser.Pointer} pointer
+    * @param {boolean} [fastTest=false] - Force a simple hit area check even if `pixelPerfectOver` is true for this object?
     * @return {boolean}
     */
-    checkPointerOver: function (pointer) {
+    checkPointerOver: function (pointer, fastTest) {
 
         if (!this.enabled || !this.sprite || !this.sprite.parent || !this.sprite.visible || !this.sprite.parent.visible)
         {
@@ -655,7 +688,9 @@ Phaser.InputHandler.prototype = {
         //  Need to pass it a temp point, in case we need it again for the pixel check
         if (this.game.input.hitTest(this.sprite, pointer, this._tempPoint))
         {
-            if (this.pixelPerfectOver)
+            if (typeof fastTest === 'undefined') { fastTest = false; }
+
+            if (fastTest && this.pixelPerfectOver)
             {
                 return this.checkPixel(this._tempPoint.x, this._tempPoint.y);
             }

@@ -2488,14 +2488,15 @@ declare module Phaser {
         checkBoundsRect(): void;
         checkBoundsSprite(): void;
         checkPixel(x: number, y: number, pointer?: Phaser.Pointer): boolean;
-        checkPointerDown(pointer: Phaser.Pointer): boolean;
-        checkPointerOver(pointer: Phaser.Pointer): boolean;
+        checkPointerDown(pointer: Phaser.Pointer, fastTest?: boolean): boolean;
+        checkPointerOver(pointer: Phaser.Pointer, fastTest?: boolean): boolean;
         destroy(): void;
         disableDrag(): void;
         disableSnap(): void;
         downDuration(pointer: Phaser.Pointer): number;
         enableDrag(lockCenter?: boolean, bringToTop?: boolean, pixelPerfect?: boolean, alphaThreshold?: number, boundsRect?: Phaser.Rectangle, boundsSprite?: Phaser.Rectangle): void;
         enableSnap(snapX: number, snapY: number, onDrag?: boolean, onRelease?: boolean, snapOffsetX?: number, snapOffsetY?: number): void;
+        isPixelPerfect(): boolean;
         justOut(pointer: number, delay: number): boolean;
         justOver(pointer: number, delay: number): boolean;
         justPressed(pointer: number, delay: number): boolean;

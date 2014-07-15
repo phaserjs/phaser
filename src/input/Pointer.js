@@ -350,6 +350,7 @@ Phaser.Pointer.prototype = {
 
     /**
     * Called when the Pointer is moved.
+    * 
     * @method Phaser.Pointer#move
     * @param {MouseEvent|PointerEvent|TouchEvent} event - The event passed up from the input handler.
     * @param {boolean} [fromClick=false] - Was this called from the click event?
@@ -434,33 +435,75 @@ Phaser.Pointer.prototype = {
 
             return this;
         }
+        else if (this.game.input.interactiveItems.total > 0)
+        {
+            this.processInteractiveObjects(fromClick);
+        }
+
+        return this;
+
+    },
+
+    /**
+    * Process all interactive objects to find out which ones were updated in the recent Pointer move.
+    * 
+    * @method Phaser.Pointer#processInteractiveObjects
+    * @protected
+    * @param {boolean} [fromClick=false] - Was this called from the click event?
+    */
+    processInteractiveObjects: function (fromClick) {
+
+        this.game.input.interactiveItems.setAll('checked', false);
 
         //  Work out which object is on the top
         this._highestRenderOrderID = Number.MAX_SAFE_INTEGER;
         this._highestRenderObject = null;
         this._highestInputPriorityID = -1;
 
-        //  Run through the list
-        if (this.game.input.interactiveItems.total > 0)
-        {
-            var currentNode = this.game.input.interactiveItems.first;
+        //  First pass gets all objects that the pointer is over that DON'T use pixelPerfect checks and get the highest ID
+        //  We know they'll be valid for input detection but not which is the top just yet
 
-            do
+        var currentNode = this.game.input.interactiveItems.first;
+
+        do
+        {
+            if (currentNode && currentNode.validForInput(this._highestInputPriorityID, this._highestRenderOrderID, false))
             {
-                //  If the object is using pixelPerfect checks, or has a higher InputManager.PriorityID OR if the priority ID is the same as the current highest AND it has a higher renderOrderID, then set it to the top
-                if (currentNode && currentNode.validForInput(this._highestInputPriorityID, this._highestRenderOrderID))
+                //  Flag it as checked so we don't re-scan it on the next phase
+                currentNode.checked = true;
+
+                if ((!fromClick && currentNode.checkPointerOver(this, true)) || (fromClick && currentNode.checkPointerDown(this, true)))
                 {
-                    if ((!fromClick && currentNode.checkPointerOver(this)) || (fromClick && currentNode.checkPointerDown(this)))
-                    {
-                        this._highestRenderOrderID = currentNode.sprite._cache[3]; // renderOrderID
-                        this._highestInputPriorityID = currentNode.priorityID;
-                        this._highestRenderObject = currentNode;
-                    }
+                    this._highestRenderOrderID = currentNode.sprite._cache[3]; // renderOrderID
+                    this._highestInputPriorityID = currentNode.priorityID;
+                    this._highestRenderObject = currentNode;
                 }
-                currentNode = this.game.input.interactiveItems.next;
             }
-            while (currentNode !== null);
+            currentNode = this.game.input.interactiveItems.next;
         }
+        while (currentNode !== null);
+
+        //  Then in the second sweep we process ONLY the pixel perfect ones that are checked and who have a higher ID
+        //  because if their ID is lower anyway then we can just automatically discount them
+
+        var currentNode = this.game.input.interactiveItems.first;
+
+        do
+        {
+            if (currentNode && !currentNode.checked && currentNode.validForInput(this._highestInputPriorityID, this._highestRenderOrderID, true))
+            {
+                if ((!fromClick && currentNode.checkPointerOver(this, false)) || (fromClick && currentNode.checkPointerDown(this, false)))
+                {
+                    this._highestRenderOrderID = currentNode.sprite._cache[3]; // renderOrderID
+                    this._highestInputPriorityID = currentNode.priorityID;
+                    this._highestRenderObject = currentNode;
+                }
+            }
+            currentNode = this.game.input.interactiveItems.next;
+        }
+        while (currentNode !== null);
+
+        //  Now we know the top-most item (if any) we can process it
 
         if (this._highestRenderObject === null)
         {
@@ -501,8 +544,6 @@ Phaser.Pointer.prototype = {
                 }
             }
         }
-
-        return this;
 
     },
 

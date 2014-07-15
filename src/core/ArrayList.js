@@ -111,6 +111,27 @@ Phaser.ArrayList.prototype = {
     },
 
     /**
+    * Sets the property `key` to the given value on all members of this list.
+    *
+    * @method Phaser.ArrayList#setAll
+    * @param {object} key - The object on the child to set.
+    * @param {*} value - The value to set the property to.
+    */
+    setAll: function (key, value) {
+
+        var i = this.list.length;
+
+        while (i--)
+        {
+            if (this.list[i] && this.list[i][key])
+            {
+                this.list[i][key] = value;
+            }
+        }
+
+    },
+
+    /**
     * Calls a function on all members of this list, using the member as the context for the callback.
     * The function must exist on the member.
     *
