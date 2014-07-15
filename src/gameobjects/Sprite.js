@@ -401,6 +401,7 @@ Phaser.Sprite.prototype.loadTexture = function (key, frame) {
         this._frame = Phaser.Rectangle.clone(this.texture.frame);
     }
 
+    this.animations.currentAnim = undefined;
 };
 
 /**
@@ -559,7 +560,7 @@ Phaser.Sprite.prototype.updateCrop = function() {
         PIXI.WebGLRenderer.updateTextureFrame(this.texture);
     }
 
-}
+};
 
 /**
 * Brings a 'dead' Sprite back to life, optionally giving it the health value specified.
