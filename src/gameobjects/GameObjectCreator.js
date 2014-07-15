@@ -170,9 +170,9 @@ Phaser.GameObjectCreator.prototype = {
     * @param {string|number} frame - If this Rope is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
     * @return {Phaser.Rope} The newly created rope object.
     */
-    rope: function (x, y, width, height, key, frame) {
+    rope: function (x, y, key, frame, points) {
 
-        return new Phaser.Rope(this.game, x, y, width, height, key, frame);
+        return new Phaser.Rope(this.game, x, y, key, frame, points);
 
     },
 

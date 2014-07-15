@@ -18,15 +18,12 @@
 * @param {string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture} key - This is the image or texture used by the Rope during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.
 * @param {string|number} frame - If this Rope is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
 */
-Phaser.Rope = function (game, x, y, key, frame) {
+Phaser.Rope = function (game, x, y, key, frame, points) {
 
     this.points = [];
-    this.count = 0;
-    var length = 918/20;
-    for (var i = 0; i < 20; i++) {
-        this.points.push(new Phaser.Point(i * length, 0));
-    }
-    console.log('points:', this.points);
+    this.points = points;
+    this._hasUpdateAnimation = false;
+    this._updateAnimationCallback = null;
     x = x || 0;
     y = y || 0;
     key = key || null;
@@ -266,13 +263,8 @@ Phaser.Rope.prototype.preUpdate = function() {
 * @memberof Phaser.Rope
 */
 Phaser.Rope.prototype.update = function() {
-
-    this.count += 0.1;
-    for (var i = 0; i < this.points.length; i++) {
-
-        this.points[i].y = Math.sin(i * 0.5  + this.count) * 20;
-        //this.points[i].x = i * length + Math.cos(i *0.3  + this.count) * 20;
-
+    if(this._hasUpdateAnimation) {
+        this.updateAnimation.call(this);
     }
 
 };
@@ -303,20 +295,6 @@ Phaser.Rope.prototype.postUpdate = function() {
     }
 };
 
-/**
-* Sets this Rope to automatically scroll in the given direction until stopped via Rope.stopScroll().
-* The scroll speed is specified in pixels per second.
-* A negative x value will scroll to the left. A positive x value will scroll to the right.
-* A negative y value will scroll up. A positive y value will scroll down.
-*
-* @method Phaser.Rope#autoScroll
-* @memberof Phaser.Rope
-*/
-Phaser.Rope.prototype.autoScroll = function(x, y) {
-
-    this._scroll.set(x, y);
-
-};
 
 
 
@@ -603,7 +581,7 @@ Object.defineProperty(Phaser.Rope.prototype, "frameName", {
 });
 
 /**
-* An Rope that is fixed to the camera uses its x/y coordinates as offsets from the top left of the camera. These are stored in Rope.cameraOffset.
+* A Rope that is fixed to the camera uses its x/y coordinates as offsets from the top left of the camera. These are stored in Rope.cameraOffset.
 * Note that the cameraOffset values are in addition to any parent in the display list.
 * So if this Rope was in a Group that has x: 200, then this will be added to the cameraOffset.x
 *
@@ -773,6 +751,60 @@ Object.defineProperty(Phaser.Rope.prototype, "y", {
 
     }
 
+});
+
+/**
+* A Rope will call it's updateAnimation function on each update loop if it has one
+*
+* @name Phaser.Rope#updateAnimation
+* @property {function} updateAnimation - Set to a function if you'd like the rope to animate during the update phase. Set to false or null to remove it.
+*/
+Object.defineProperty(Phaser.Rope.prototype, "updateAnimation", {
+
+    get: function () {
+
+        return this._updateAnimation;
+
+    },
+
+    set: function (value) {
+        if(value && typeof value === 'function') {
+            this._hasUpdateAnimation = true;
+            this._updateAnimation = value;
+        } else {
+            this._hasUpdateAnimation = false;
+            this._updateAnimation = null;
+        }
+
+    }
+
+});
+
+/**
+* The segments that make up the rope body as an array of Phaser.Rectangles
+*
+* @name Phaser.Rope#segments
+* @property {array} updateAnimation - Returns an array of Phaser.Rectangles that represent the segments of the given rope
+*/
+Object.defineProperty(Phaser.Rope.prototype, "segments", {
+    get: function() {
+        var segments = [];
+        var index, x1, y1, x2, y2, width, height, rect;
+        for(var i = 0; i < this.points.length; i++) {
+            index = i * 4;
+            x1 = this.verticies[index];
+            y1 = this.verticies[index + 1];
+            x2 = this.verticies[index + 4];
+            y2 = this.verticies[index + 3];
+            width = Phaser.Math.difference(x1,x2);
+            height = Phaser.Math.difference(y1,y2);
+            x1 += this.world.x;
+            y1 += this.world.y;
+            rect = new Phaser.Rectangle(x1,y1, width, height);
+            segments.push(rect);
+        }
+        return segments;
+    }
 });
 
 /**

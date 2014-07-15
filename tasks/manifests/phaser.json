@@ -45,6 +45,7 @@
     "src/gameobjects/Sprite.js",
     "src/gameobjects/Image.js",
     "src/gameobjects/TileSprite.js",
+    "src/gameobjects/Rope.js",
     "src/gameobjects/Text.js",
     "src/gameobjects/BitmapText.js",
     "src/gameobjects/Button.js",
