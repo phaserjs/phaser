@@ -472,7 +472,7 @@ Phaser.Pointer.prototype = {
                 //  Flag it as checked so we don't re-scan it on the next phase
                 currentNode.checked = true;
 
-                if ((!fromClick && currentNode.checkPointerOver(this, true)) || (fromClick && currentNode.checkPointerDown(this, true)))
+                if ((fromClick && currentNode.checkPointerDown(this, true)) || (!fromClick && currentNode.checkPointerOver(this, true)))
                 {
                     this._highestRenderOrderID = currentNode.sprite._cache[3]; // renderOrderID
                     this._highestInputPriorityID = currentNode.priorityID;
@@ -492,7 +492,7 @@ Phaser.Pointer.prototype = {
         {
             if (currentNode && !currentNode.checked && currentNode.validForInput(this._highestInputPriorityID, this._highestRenderOrderID, true))
             {
-                if ((!fromClick && currentNode.checkPointerOver(this, false)) || (fromClick && currentNode.checkPointerDown(this, false)))
+                if ((fromClick && currentNode.checkPointerDown(this, false)) || (!fromClick && currentNode.checkPointerOver(this, false)))
                 {
                     this._highestRenderOrderID = currentNode.sprite._cache[3]; // renderOrderID
                     this._highestInputPriorityID = currentNode.priorityID;

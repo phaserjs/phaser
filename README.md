@@ -53,6 +53,8 @@ Version 2.0.7 - "Amadicia" - -in development-
 * TypeScript definitions fixes and updates (thanks @clark-stevenson and @alvinsight)
 * GameObjectFactory.spriteBatch now lets you specify `null` as a parameter for the parent and automatically adds the batch to `game.world` as a result. Also fixed jsdocs issues (@petarov #1000)
 * Rebuilt the way items are polled for Pointer events (drag, click, move). Now faster and more efficient, especially when some items in the stack require pixel perfect checks.
+* InputHandler.checkPointerOver now has a new `fastTest` parameter that forces a skips a pixel perfect check even if enabled.
+* InputHandler.checkPointerDown now has a new `fastTest` parameter that forces a skips a pixel perfect check even if enabled.
 
 ### New Features
 
@@ -66,18 +68,9 @@ Version 2.0.7 - "Amadicia" - -in development-
 * Added missing Loader.onPackComplete Signal (thanks @mjeffery #1007)
 * QuadTree leveling - Rather than level++ which changes the current nodes level, the subnodes should get the current nodes level+1 (thanks @devinb83 #1018)
 * Prevented objects with pixel perfect checks from over-riding other higher priority ID items (#983)
+* Group.create was not creating with p2 debug flag (thanks @Dumtard #1014)
+* World.wrap when using the bounds of the object wouldn't adjust the bounds correctly, meaning wrapping outside the camera failed (thanks @jackrugile #1020)
 
-### TODO
-
-Adjust how Pointers and Interactive Objects work. Allow an IO to be flagged as "on click only", so it doesn't ever get processed during normal Pointer move events (unless being dragged)
-
-Allow multiple drag items - no longer bind just 1 to a Pointer
-
-Sweep and Prune objects to filter priority IDs.
-
-Allow Groups to have Priority IDs too and input disable entire Groups and all children (let it flow down the chain)
-
-Allow Groups to be InputEnabled? Dragging a Group would be really useful.
 
 
 
@@ -256,6 +249,10 @@ Here are some of the features planned for future releases:
 
 ### Version 2.2 ("Tarabon")
 
+* Adjust how Pointers and Interactive Objects work. Allow an IO to be flagged as "on click only", so it doesn't ever get processed during normal Pointer move events (unless being dragged)
+* Allow multiple drag items - no longer bind just 1 to a Pointer
+* Allow Groups to have Priority IDs too and input disable entire Groups and all children (let it flow down the chain)
+* Allow Groups to be InputEnabled? Dragging a Group would be really useful.
 * Scene Manager - json scene parser.
 * Comprehensive testing across Firefox OS devices, CocoonJS and Ejecta.
 * Ability to control DOM elements from the core game and layer them into the game.
