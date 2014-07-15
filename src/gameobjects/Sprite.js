@@ -406,6 +406,7 @@ Phaser.Sprite.prototype.loadTexture = function (key, frame) {
         this._frame = Phaser.Rectangle.clone(this.texture.frame);
     }
 
+    this.animations.currentAnim = undefined;
 };
 
 /**
