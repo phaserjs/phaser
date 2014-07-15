@@ -58,6 +58,7 @@ Version 2.0.7 - "Amadicia" - -in development-
 * The key is now reported when failing to parse a Sprite Sheet (thanks @lucbloom #1026)
 * An editorconfig has been added to the core repo. See http://editorconfig.org (thanks @codevinksy #1027)
 * Keyboard.processKeyPress now checks if the Keyboard Input handler is disabled or not before processing the key callbacks.
+* Physics.bounds now correctly matches World.bounds on system start (thanks @Dumtard #1028)
 
 ### New Features
 
