@@ -87,6 +87,13 @@ Phaser.Camera = function (game, id, x, y, width, height) {
     this._edge = 0;
 
     /**
+    * @property {Phaser.Point} position - Current position of the camera in world.
+    * @private
+    * @default
+    */
+    this._position = new Phaser.Point();
+
+    /**
     * @property {PIXI.DisplayObject} displayObject - The display object to which all game objects are added. Set by World.boot
     */
     this.displayObject = null;
@@ -414,7 +421,8 @@ Object.defineProperty(Phaser.Camera.prototype, "y", {
 Object.defineProperty(Phaser.Camera.prototype, "position", {
 
     get: function () {
-        return new Phaser.Point(this.view.centerX, this.view.centerY);
+        this._position.set(this.view.centerX, this.view.centerY);
+        return this._position;
     },
 
     set: function (value) {
