@@ -63,6 +63,7 @@ Version 2.0.7 - "Amadicia" - -in development-
 ### New Features
 
 * ArrayList.setAll - sets the property to the given value on all members of the list.
+* Sprite.loadTexture has a new optional `stopAnimation` boolean parameter which will halt the currently running animation (if any) after changing the texture (based on #1029).
 
 ### Bug Fixes
 
