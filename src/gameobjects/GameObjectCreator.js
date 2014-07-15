@@ -159,6 +159,24 @@ Phaser.GameObjectCreator.prototype = {
     },
 
     /**
+    * Creates a new Rope object.
+    *
+    * @method Phaser.GameObjectCreator#rope
+    * @param {number} x - The x coordinate (in world space) to position the Rope at.
+    * @param {number} y - The y coordinate (in world space) to position the Rope at.
+    * @param {number} width - The width of the Rope.
+    * @param {number} height - The height of the Rope.
+    * @param {string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture} key - This is the image or texture used by the TileSprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.
+    * @param {string|number} frame - If this Rope is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
+    * @return {Phaser.Rope} The newly created rope object.
+    */
+    rope: function (x, y, width, height, key, frame) {
+
+        return new Phaser.Rope(this.game, x, y, width, height, key, frame);
+
+    },
+
+    /**
     * Creates a new Text object.
     *
     * @method Phaser.GameObjectCreator#text
