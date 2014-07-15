@@ -84,7 +84,7 @@ Phaser.Rope = function (game, x, y, key, frame, points) {
     */
     this._scroll = new Phaser.Point();
 
-    PIXI.Rope.call(this, 'snake', this.points);
+    PIXI.Rope.call(this, key, this.points);
 
     this.position.set(x,y);
 
