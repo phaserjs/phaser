@@ -655,7 +655,7 @@ Phaser.InputHandler.prototype = {
         {
             if (typeof fastTest === 'undefined') { fastTest = false; }
 
-            if (fastTest && this.pixelPerfectClick)
+            if (!fastTest && this.pixelPerfectClick)
             {
                 return this.checkPixel(this._tempPoint.x, this._tempPoint.y);
             }
@@ -690,7 +690,7 @@ Phaser.InputHandler.prototype = {
         {
             if (typeof fastTest === 'undefined') { fastTest = false; }
 
-            if (fastTest && this.pixelPerfectOver)
+            if (!fastTest && this.pixelPerfectOver)
             {
                 return this.checkPixel(this._tempPoint.x, this._tempPoint.y);
             }
