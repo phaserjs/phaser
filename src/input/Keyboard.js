@@ -380,6 +380,11 @@ Phaser.Keyboard.prototype = {
 
         this.pressEvent = event;
 
+        if (this.game.input.disabled || this.disabled)
+        {
+            return;
+        }
+
         if (this.onPressCallback)
         {
             this.onPressCallback.call(this.callbackContext, String.fromCharCode(event.charCode), event);

@@ -57,6 +57,7 @@ Version 2.0.7 - "Amadicia" - -in development-
 * InputHandler.checkPointerDown now has a new `fastTest` parameter that forces a skips a pixel perfect check even if enabled.
 * The key is now reported when failing to parse a Sprite Sheet (thanks @lucbloom #1026)
 * An editorconfig has been added to the core repo. See http://editorconfig.org (thanks @codevinksy #1027)
+* Keyboard.processKeyPress now checks if the Keyboard Input handler is disabled or not before processing the key callbacks.
 
 ### New Features
 
