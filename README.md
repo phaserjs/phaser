@@ -55,6 +55,8 @@ Version 2.0.7 - "Amadicia" - -in development-
 * Rebuilt the way items are polled for Pointer events (drag, click, move). Now faster and more efficient, especially when some items in the stack require pixel perfect checks.
 * InputHandler.checkPointerOver now has a new `fastTest` parameter that forces a skips a pixel perfect check even if enabled.
 * InputHandler.checkPointerDown now has a new `fastTest` parameter that forces a skips a pixel perfect check even if enabled.
+* The key is now reported when failing to parse a Sprite Sheet (thanks @lucbloom #1026)
+* An editorconfig has been added to the core repo. See http://editorconfig.org (thanks @codevinksy #1027)
 
 ### New Features
 
@@ -70,6 +72,7 @@ Version 2.0.7 - "Amadicia" - -in development-
 * Prevented objects with pixel perfect checks from over-riding other higher priority ID items (#983)
 * Group.create was not creating with p2 debug flag (thanks @Dumtard #1014)
 * World.wrap when using the bounds of the object wouldn't adjust the bounds correctly, meaning wrapping outside the camera failed (thanks @jackrugile #1020)
+* Pixi updated worldTransform from an Array to an Object and Phaser Image, BitmapText, Text and Graphics were still using array access to populate the world property, giving it incorrect results (thanks @alvinsight)
 
 
 

@@ -150,7 +150,7 @@ Phaser.Image.prototype.preUpdate = function() {
         this.renderable = this.game.world.camera.screenView.intersects(this.getBounds());
     }
 
-    this.world.setTo(this.game.camera.x + this.worldTransform[2], this.game.camera.y + this.worldTransform[5]);
+    this.world.setTo(this.game.camera.x + this.worldTransform.tx, this.game.camera.y + this.worldTransform.ty);
 
     if (this.visible)
     {
