@@ -64,6 +64,9 @@ Version 2.0.7 - "Amadicia" - -in development-
 
 * ArrayList.setAll - sets the property to the given value on all members of the list.
 * Sprite.loadTexture has a new optional `stopAnimation` boolean parameter which will halt the currently running animation (if any) after changing the texture (based on #1029).
+* Animation.updateFrameData allows you to load a new FrameData object into an existing animation, even if currently running (based on #1029)
+* AnimationManager.loadFrameData will now update all existing Animations to use the newly loaded FrameData (based on #1029)
+* Sprite.loadTexture will store the `smoothed` property of the Sprite and re-apply it once the new texture is loaded.
 
 ### Bug Fixes
 
