@@ -361,9 +361,15 @@ Phaser.Sprite.prototype.loadTexture = function (key, frame, stopAnimation) {
 
     frame = frame || 0;
 
+    if (stopAnimation || typeof stopAnimation === 'undefined')
+    {
+        this.animations.stop();
+    }
+
     this.key = key;
 
     var setFrame = true;
+    var smoothed = this.smoothed;
 
     if (key instanceof Phaser.RenderTexture)
     {
@@ -395,10 +401,7 @@ Phaser.Sprite.prototype.loadTexture = function (key, frame, stopAnimation) {
         {
             this.setTexture(new PIXI.Texture(PIXI.BaseTextureCache[key]));
 
-            if (this.animations)
-            {
-                setFrame = !this.animations.loadFrameData(this.game.cache.getFrameData(key), frame);
-            }
+            setFrame = !this.animations.loadFrameData(this.game.cache.getFrameData(key), frame);
         }
     }
 
@@ -407,9 +410,9 @@ Phaser.Sprite.prototype.loadTexture = function (key, frame, stopAnimation) {
         this._frame = Phaser.Rectangle.clone(this.texture.frame);
     }
 
-    if (stopAnimation || typeof stopAnimation === 'undefined')
+    if (!smoothed)
     {
-        this.animations.stop();
+        this.smoothed = false;
     }
 
 };

@@ -1126,6 +1126,7 @@ declare module Phaser {
         setFrame(frameId?: any, useLocalFrameIndex?: boolean): void;
         stop(resetFrame?: boolean, dispatchComplete?: boolean): void;
         update(): boolean;
+        updateFrameData(frameData: Phaser.FrameData): void;
 
     }
 
