@@ -1,4 +1,4 @@
-// Type definitions for PIXI 1.5.4
+// Type definitions for PIXI 1.6.1
 // Project: https://github.com/GoodBoyDigital/pixi.js/
 // Original 1.3 by: xperiments <http://github.com/xperiments> 
 // Definitions: https://github.com/borisyankov/DefinitelyTyped
@@ -1126,7 +1126,6 @@ declare module Phaser {
         setFrame(frameId?: any, useLocalFrameIndex?: boolean): void;
         stop(resetFrame?: boolean, dispatchComplete?: boolean): void;
         update(): boolean;
-        updateFrameData(frameData: Phaser.FrameData): void;
 
     }
 
@@ -1161,10 +1160,10 @@ declare module Phaser {
 
     class AnimationParser {
 
-        static JSONData(game: Phaser.Game, json: Object): Phaser.FrameData;
-        static JSONDataHash(game: Phaser.Game, json: Object): Phaser.FrameData;
+        static JSONData(game: Phaser.Game, json: Object, cacheKey: string): Phaser.FrameData;
+        static JSONDataHash(game: Phaser.Game, json: Object, cacheKey: string): Phaser.FrameData;
         static spriteSheet(game: Phaser.Game, key: string, frameWidth: number, frameHeight: number, frameMax?: number, margin?: number, spacing?: number): Phaser.FrameData;
-        static XMLData(game: Phaser.Game, xml: Object): Phaser.FrameData;
+        static XMLData(game: Phaser.Game, xml: Object, cacheKey: string): Phaser.FrameData;
 
     }
 
@@ -1182,6 +1181,7 @@ declare module Phaser {
         getIndex(child: Object): number;
         remove(child: Object): Object;
         reset(): void;
+        setAll(key: Object, value: any): void;
 
 
     }
@@ -2764,6 +2764,7 @@ declare module Phaser {
         onFileError: Phaser.Signal;
         onLoadComplete: Phaser.Signal;
         onLoadStart: Phaser.Signal;
+        onPackComplete: Phaser.Signal;
         preloadSprite: any;
         progress: number;
         progressFloat: number;
@@ -4453,7 +4454,7 @@ declare module Phaser {
         destroy(destroyChildren?: boolean): void;
         drawPolygon(): void;
         kill(): Phaser.Sprite;
-        loadTexture(key: any, frame: any, stopAnimation?: boolean): void;
+        loadTexture(key: any, frame: any): void;
         overlap(displayObject: any): boolean;
         play(name: string, frameRate?: number, loop?: boolean, killOnComplete?: boolean): Phaser.Animation;
         postUpdate(): void;
