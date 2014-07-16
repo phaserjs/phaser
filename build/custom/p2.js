@@ -14673,7 +14673,9 @@ Phaser.Physics.P2.Body.prototype = {
 
         options = options || {};
 
-        points = Array.prototype.slice.call(arguments, 1);
+        if (!Array.isArray(points)) {
+            points = Array.prototype.slice.call(arguments, 1);
+        }
 
         var path = [];
 
