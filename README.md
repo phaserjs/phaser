@@ -79,6 +79,7 @@ Version 2.0.7 - "Amadicia" - -in development-
 * Group.create was not creating with p2 debug flag (thanks @Dumtard #1014)
 * World.wrap when using the bounds of the object wouldn't adjust the bounds correctly, meaning wrapping outside the camera failed (thanks @jackrugile #1020)
 * Pixi updated worldTransform from an Array to an Object and Phaser Image, BitmapText, Text and Graphics were still using array access to populate the world property, giving it incorrect results (thanks @alvinsight)
+* If you add a Tween to the TweenManager and then immediately stop it, it will still exist in the TweenManager (thanks @gilangcp #1032)
 
 
 
