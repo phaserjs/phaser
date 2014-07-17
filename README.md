@@ -80,6 +80,9 @@ Version 2.0.7 - "Amadicia" - -in development-
 * World.wrap when using the bounds of the object wouldn't adjust the bounds correctly, meaning wrapping outside the camera failed (thanks @jackrugile #1020)
 * Pixi updated worldTransform from an Array to an Object and Phaser Image, BitmapText, Text and Graphics were still using array access to populate the world property, giving it incorrect results (thanks @alvinsight)
 * If you add a Tween to the TweenManager and then immediately stop it, it will still exist in the TweenManager (thanks @gilangcp #1032)
+* AnimationManager does not update currentFrame on play until second frame (thanks @Dumtard #1041)
+* Animation now guards against _frameData being null (thanks @lucbloom #1033)
+* Tilemap.swap now accurately swaps from A to B and from B to A (thanks @noidexe #1034)
 
 
 
@@ -116,7 +119,7 @@ You can [clone the Phaser repo in Koding](https://koding.com/Teamwork?import=htt
 
 ## Bower
 
-If you use bowser you can install phaser with:
+If you use bower you can install phaser with:
 
 `bower install phaser`
 
