@@ -510,7 +510,7 @@ Phaser.Animation.prototype = {
     updateFrameData: function (frameData) {
 
         this._frameData = frameData;
-        this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
+        this.currentFrame = this._frameData ? this._frameData.getFrame(this._frames[this._frameIndex % this._frames.length]) : null;
 
     },
 
