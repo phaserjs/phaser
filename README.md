@@ -1,10 +1,10 @@
 ![Phaser 2.0](http://www.phaser.io/images/phaser2-github.png)
 
-# Phaser 2.1-dev
+# Phaser 2.1.0-dev
 
 Phaser is a fast, free and fun open source game framework for making desktop and mobile browser HTML5 games. It uses [Pixi.js](https://github.com/GoodBoyDigital/pixi.js/) internally for fast 2D Canvas and WebGL rendering.
 
-Version: 2.1 "Cairhien" - Released: -in development-
+Version: 2.1.0 "Cairhien" - Released: -in development-
 
 By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 
@@ -21,7 +21,7 @@ By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 
 ![div](http://phaser.io/images/div4.png)
 
-## Welcome to Phaser and What's new in 2.1?
+## Welcome to Phaser and What's new in 2.1.0?
 
 Until then happy coding everyone! And we hope to see you on the forums.
 
@@ -45,7 +45,7 @@ Finally the list of [community authored Phaser Tutorials](http://www.lessmilk.co
 
 ## Change Log
 
-Version 2.1 - "Cairhien" - -in development-
+Version 2.1.0 - "Cairhien" - -in development-
 
 ### Updates
 
