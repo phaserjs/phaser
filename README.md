@@ -54,7 +54,7 @@ Hopefully we can now focus on the 2.1 release and enjoying some of this warm wea
 
 ![div](http://phaser.io/images/div1.png)
 
-## Getting Started Guides
+## Getting Started Guides <a name="getting-started"></a>
 
 We have a [Getting Started Guide](http://phaser.io/getting-started-js.php) which covers all you need to begin developing games with Phaser. From setting up a web server to picking an IDE. If you're new to HTML5 game development, or are coming from another language like AS3, then we recommend starting there.
 
