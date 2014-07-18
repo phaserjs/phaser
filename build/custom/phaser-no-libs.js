@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.0.7 "Amadicia" - Built: Fri Jul 18 2014 11:49:42
+* v2.0.7 "Amadicia" - Built: Fri Jul 18 2014 12:35:30
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -50,7 +50,7 @@
 */
 var Phaser = Phaser || {
 
-	VERSION: '2.0.7-dev',
+	VERSION: '2.0.7',
 	GAMES: [],
 
     AUTO: 0,
@@ -10754,23 +10754,23 @@ Object.defineProperty(Phaser.Game.prototype, "paused", {
             if (this._paused === false)
             {
                 this._paused = true;
-                this._codePaused = true;
                 this.sound.setMute();
                 this.time.gamePaused();
                 this.onPause.dispatch(this);
             }
+            this._codePaused = true;
         }
         else
         {
             if (this._paused)
             {
                 this._paused = false;
-                this._codePaused = false;
                 this.input.reset();
                 this.sound.unsetMute();
                 this.time.gameResumed();
                 this.onResume.dispatch(this);
             }
+            this._codePaused = false;
         }
 
     }
