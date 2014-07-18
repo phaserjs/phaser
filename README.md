@@ -83,6 +83,7 @@ Version 2.0.7 - "Amadicia" - -in development-
 * AnimationManager does not update currentFrame on play until second frame (thanks @Dumtard #1041)
 * Animation now guards against _frameData being null (thanks @lucbloom #1033)
 * Tilemap.swap now accurately swaps from A to B and from B to A (thanks @noidexe #1034)
+* BitmapData.resize fixed to update the crop property too, resolves issues with images getting cut off with BitmapData.load.
 
 
 
