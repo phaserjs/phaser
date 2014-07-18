@@ -1,10 +1,10 @@
 ![Phaser 2.0](http://www.phaser.io/images/phaser2-github.png)
 
-# Phaser 2.0.7-dev
+# Phaser 2.0.7
 
 Phaser is a fast, free and fun open source game framework for making desktop and mobile browser HTML5 games. It uses [Pixi.js](https://github.com/GoodBoyDigital/pixi.js/) internally for fast 2D Canvas and WebGL rendering.
 
-Version: 2.0.7 "Amadicia" - Released: -in development-
+Version: 2.0.7 "Amadicia" - Released: 18th July 2014
 
 By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 
@@ -21,9 +21,15 @@ By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 
 ![div](http://phaser.io/images/div4.png)
 
-## Welcome to Phaser and What's new in 2.07?
+## Welcome to Phaser and What's new in 2.0.7?
 
-Until then happy coding everyone! And we hope to see you on the forums.
+We're pleased to announce the release of Phaser 2.0.7. This release comes just a week after 2.0.6 but includes some important fixes. Internally we've updated to Pixi 1.6.1 as lots of the fixes come directly from that upgrade, which in turns restores functionality of things like RenderTextures and Retro Fonts.
+
+There's also a vastly improved SpriteBatch included, which has seen batching speed increases of up to 400% in some cases, which is extremely fun to play with (note: batching is a WebGL feature). Plus we've continued to roll in pull requests from the community and fix issues as quickly as we can. You'll notice a number of input related updates in this release, tidying up the handling of Priority IDs and optimising when pixel perfect checks are run. So if you now use a combination of IDs and pixel perfect checks you can easily speed-up the input loop dramatically.
+
+Again thanks to everyone who helped work on this release. The community for reporting issues and pull requests, the team at Goodboy for responding to major Pixi issues quickly and the team here for rolling out another important upgrade.
+
+Hopefully we can now focus on the 2.1 release and enjoying some of this warm weather outside :) But until then happy coding everyone! And we hope to see you on the forums.
 
 ![boogie](http://www.phaser.io/images/spacedancer.gif)
 
@@ -45,7 +51,7 @@ Finally the list of [community authored Phaser Tutorials](http://www.lessmilk.co
 
 ## Change Log
 
-Version 2.0.7 - "Amadicia" - -in development-
+Version 2.0.7 - "Amadicia" - 18th July 2014
 
 ### Updates
 
@@ -59,6 +65,7 @@ Version 2.0.7 - "Amadicia" - -in development-
 * An editorconfig has been added to the core repo. See http://editorconfig.org (thanks @codevinksy #1027)
 * Keyboard.processKeyPress now checks if the Keyboard Input handler is disabled or not before processing the key callbacks.
 * Physics.bounds now correctly matches World.bounds on system start (thanks @Dumtard #1028)
+* Game._codePaused is now set if the Game is manually paused. See discussion: http://www.html5gamedevs.com/topic/6719-codepaused-property/ (thanks @devinb83 #1017)
 
 ### New Features
 
