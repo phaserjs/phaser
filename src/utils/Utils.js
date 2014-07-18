@@ -13,6 +13,56 @@
 Phaser.Utils = {
 
     /**
+     * Gets an object's property by string.
+     *
+     * @method Phaser.Utils.getProperty
+     * @param {object} obj - The object to traverse
+     * @param {string} prop - The property whose value will be returned
+     * @return {*} the value of the property or null if property isn't found 
+     */
+    getProperty: function(obj, prop) {
+        var parts = prop.split('.'),
+            last = parts.pop(),
+            l = parts.length,
+            i = 1,
+            current = parts[0];
+            
+        while(i < l && (obj = obj[current]) ) {
+            current = parts[i];
+            i++;
+        }
+
+        if(obj) {
+            return obj[last];
+        } else {
+            return null;
+        }
+    },
+    /**
+     * Sets an object's property by string.
+     *
+     * @method Phaser.Utils.setProperty
+     * @param {object} obj - The object to traverse
+     * @param {string} prop - The property whose value will be changed
+    
+     */
+    setProperty: function(obj, prop, value) {
+        var parts = prop.split('.'),
+            last = parts.pop(),
+            l = parts.length,
+            i = 1,
+            current = parts[0];
+            
+        while(i < l && (obj = obj[current]) ) {
+            current = parts[i];
+            i++;
+        }
+
+        if(obj) {
+            obj[last] = value;
+        }
+    },
+    /**
      * Transposes the elements of the given Array.
      *
      * @method Phaser.Utils.transposeArray
