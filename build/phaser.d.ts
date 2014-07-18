@@ -2282,6 +2282,8 @@ declare module Phaser {
         callAll(method: string, context: any, ...parameters: any[]): void;
         callAllExists(callback: Function, existsValue: boolean, ...parameters: any[]): void;
         callbackFromArray(child: Object, callback: Function, length: number): void;
+        checkAll(key: string[], value: any, checkAlive?: boolean, checkVisible?: boolean, force?: boolean): boolean;
+        checkProperty(child: Object, key: string[], value: any, force?: boolean): boolean;
         countDead(): number;
         countLiving(): number;
         create(x: number, y: number, key: string, frame?: any, exists?: boolean): any;
@@ -5100,11 +5102,13 @@ declare module Phaser {
     class Utils {
 
         static extend(deep: boolean, target: Object): Object;
+        static getProperty(obj: Object, prop: string): any;
         static isPlainObject(object: Object): boolean;
         static mixin(from: Object, to: Object): Object;
         static pad(str: string, len: number, pad: number, dir?: number): string;
         static parseDimension(size: any, dimension: number): number;
         static rotateArray<T>(array: T[], direction: any): T;
+        static setProperty(obj: Object, prop: string, value: any): Object;
         static shuffle<T>(array: T[]): T;
         static transposeArray<T>(array: T[]): T;
 

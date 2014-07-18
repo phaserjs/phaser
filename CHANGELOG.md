@@ -2,6 +2,53 @@
 
 There is an extensive [Migration Guide](https://github.com/photonstorm/phaser/blob/master/resources/Migration%20Guide.md) available for those converting from Phaser 1.x to 2.x. In the guide we detail the API breaking changes and approach to our new physics system.
 
+## Version 2.0.7 - "Amadicia" - 18th July 2014
+
+### Updates
+
+* Updated to Pixi.js 1.6.1 which fixes various issues such as IE9 Float32 defs and RenderTexture resizing and rendering.
+* TypeScript definitions fixes and updates (thanks @clark-stevenson and @alvinsight)
+* GameObjectFactory.spriteBatch now lets you specify `null` as a parameter for the parent and automatically adds the batch to `game.world` as a result. Also fixed jsdocs issues (@petarov #1000)
+* Rebuilt the way items are polled for Pointer events (drag, click, move). Now faster and more efficient, especially when some items in the stack require pixel perfect checks.
+* InputHandler.checkPointerOver now has a new `fastTest` parameter that forces a skips a pixel perfect check even if enabled.
+* InputHandler.checkPointerDown now has a new `fastTest` parameter that forces a skips a pixel perfect check even if enabled.
+* The key is now reported when failing to parse a Sprite Sheet (thanks @lucbloom #1026)
+* An editorconfig has been added to the core repo. See http://editorconfig.org (thanks @codevinksy #1027)
+* Keyboard.processKeyPress now checks if the Keyboard Input handler is disabled or not before processing the key callbacks.
+* Physics.bounds now correctly matches World.bounds on system start (thanks @Dumtard #1028)
+* Game._codePaused is now set if the Game is manually paused. See discussion: http://www.html5gamedevs.com/topic/6719-codepaused-property/ (thanks @devinb83 #1017)
+
+### New Features
+
+* ArrayList.setAll - sets the property to the given value on all members of the list.
+* Sprite.loadTexture has a new optional `stopAnimation` boolean parameter which will halt the currently running animation (if any) after changing the texture (based on #1029).
+* Animation.updateFrameData allows you to load a new FrameData object into an existing animation, even if currently running (based on #1029)
+* AnimationManager.loadFrameData will now update all existing Animations to use the newly loaded FrameData (based on #1029)
+* Sprite.loadTexture will store the `smoothed` property of the Sprite and re-apply it once the new texture is loaded.
+* Group.checkAll allows you to check if the same property exists across all children of the Group and is set to the given value (thanks @codevinsky #1013)
+* Group.checkProperty allows you to check if the property exists on the given child of the Group and is set to the value specified (thanks @codevinsky #1013)
+* Phaser.Utils.setProperty will set an Objects property regardless of depth (thanks @codevinsky #1013)
+* Phaser.Utils.setProperty will set an Objects property regardless of depth (thanks @codevinsky #1013)
+* Phaser.Utils.getProperty will get an Objects property regardless of depth (thanks @codevinsky #1013)
+
+### Bug Fixes
+
+* Fixed pixel perfect dragging (thanks @jeroenverfallie #996)
+* Debug.preUpdate was still being called in the Game Loop even if enableDebug was set to false (thanks @qdrj #995)
+* Phaser.Physics.P2.Body.addPolygon didn't work with a flat array of numbers for the coordinates (thanks @petarov, fix #883)
+* Added missing Loader.onPackComplete Signal (thanks @mjeffery #1007)
+* QuadTree leveling - Rather than level++ which changes the current nodes level, the subnodes should get the current nodes level+1 (thanks @devinb83 #1018)
+* Prevented objects with pixel perfect checks from over-riding other higher priority ID items (#983)
+* Group.create was not creating with p2 debug flag (thanks @Dumtard #1014)
+* World.wrap when using the bounds of the object wouldn't adjust the bounds correctly, meaning wrapping outside the camera failed (thanks @jackrugile #1020)
+* Pixi updated worldTransform from an Array to an Object and Phaser Image, BitmapText, Text and Graphics were still using array access to populate the world property, giving it incorrect results (thanks @alvinsight)
+* If you add a Tween to the TweenManager and then immediately stop it, it will still exist in the TweenManager (thanks @gilangcp #1032)
+* AnimationManager does not update currentFrame on play until second frame (thanks @Dumtard #1041)
+* Animation now guards against _frameData being null (thanks @lucbloom #1033)
+* Tilemap.swap now accurately swaps from A to B and from B to A (thanks @noidexe #1034)
+* BitmapData.resize fixed to update the crop property too, resolves issues with images getting cut off with BitmapData.load.
+* OrientationSprite fix as it's not using PIXI.TextureCache anymore (thanks @DarkDev- #1036)
+
 ## Version 2.0.6 - "Jornhill" - 10th July 2014
 
 ### Significant Internal Changes

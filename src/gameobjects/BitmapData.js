@@ -278,6 +278,9 @@ Phaser.BitmapData.prototype = {
             this.texture.width = width;
             this.texture.height = height;
 
+            this.texture.crop.width = width;
+            this.texture.crop.height = height;
+
             this.refreshBuffer();
             this.dirty = true;
         }
