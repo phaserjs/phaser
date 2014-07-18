@@ -67,6 +67,11 @@ Version 2.0.7 - "Amadicia" - -in development-
 * Animation.updateFrameData allows you to load a new FrameData object into an existing animation, even if currently running (based on #1029)
 * AnimationManager.loadFrameData will now update all existing Animations to use the newly loaded FrameData (based on #1029)
 * Sprite.loadTexture will store the `smoothed` property of the Sprite and re-apply it once the new texture is loaded.
+* Group.checkAll allows you to check if the same property exists across all children of the Group and is set to the given value (thanks @codevinsky #1013)
+* Group.checkProperty allows you to check if the property exists on the given child of the Group and is set to the value specified (thanks @codevinsky #1013)
+* Phaser.Utils.setProperty will set an Objects property regardless of depth (thanks @codevinsky #1013)
+* Phaser.Utils.setProperty will set an Objects property regardless of depth (thanks @codevinsky #1013)
+* Phaser.Utils.getProperty will get an Objects property regardless of depth (thanks @codevinsky #1013)
 
 ### Bug Fixes
 
@@ -84,8 +89,7 @@ Version 2.0.7 - "Amadicia" - -in development-
 * Animation now guards against _frameData being null (thanks @lucbloom #1033)
 * Tilemap.swap now accurately swaps from A to B and from B to A (thanks @noidexe #1034)
 * BitmapData.resize fixed to update the crop property too, resolves issues with images getting cut off with BitmapData.load.
-
-
+* OrientationSprite fix as it's not using PIXI.TextureCache anymore (thanks @DarkDev- #1036)
 
 
 ### Migration Guide
@@ -122,7 +126,7 @@ You can [clone the Phaser repo in Koding](https://koding.com/Teamwork?import=htt
 
 If you use bower you can install phaser with:
 
-`bower install phaser`
+`bower install phaser-official`
 
 Nice and easy :)
 

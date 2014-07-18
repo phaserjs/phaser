@@ -760,24 +760,14 @@ Phaser.Group.prototype.checkProperty = function (child, key, value, force) {
 
     if (typeof force === 'undefined') { force = false; }
 
-
-    //  As ugly as this approach looks, and although it's limited to a depth of only 4, it's much faster than a for loop or object iteration.
-
-    //  0 = Equals
-    //  1 = Add
-    //  2 = Subtract
-    //  3 = Multiply
-    //  4 = Divide
-
     //  We can't force a property in and the child doesn't have it, so abort.
-    //  Equally we can't add, subtract, multiply or divide a property value if it doesn't exist, so abort in those cases too.
     if (!Phaser.Utils.getProperty(child, key) && force)
     {
         return false;
     }
-
     
-    if(Phaser.Utils.getProperty(child,key) !== value) {
+    if (Phaser.Utils.getProperty(child, key) !== value)
+    {
         return false;
     }
 
@@ -891,9 +881,8 @@ Phaser.Group.prototype.setAllChildren = function (key, value, checkAlive, checkV
 };
 
 /**
-* This function allows you to quickly check that the same property across all children of this Group is equal to the given value
+* This function allows you to quickly check that the same property across all children of this Group is equal to the given value.
 * This call doesn't descend down children, so if you have a Group inside of this Group, the property will be checked on the Group but not its children.
-*
 *
 * @method Phaser.Group#checkAll
 * @param {string} key - The property, as a string, to be set. For example: 'body.velocity.x'
@@ -903,6 +892,7 @@ Phaser.Group.prototype.setAllChildren = function (key, value, checkAlive, checkV
 * @param {boolean} [force=false] - If `force` is true then the property will be checked on the child regardless if it already exists or not. If true and the property doesn't exist, false will be returned.
 */
 Phaser.Group.prototype.checkAll = function (key, value, checkAlive, checkVisible, force) {
+
     if (typeof checkAlive === 'undefined') { checkAlive = false; }
     if (typeof checkVisible === 'undefined') { checkVisible = false; }
     if (typeof force === 'undefined') { force = false; }
@@ -911,7 +901,8 @@ Phaser.Group.prototype.checkAll = function (key, value, checkAlive, checkVisible
     {
         if ((!checkAlive || (checkAlive && this.children[i].alive)) && (!checkVisible || (checkVisible && this.children[i].visible)))
         {
-            if(!this.checkProperty(this.children[i], key, value, force)) {
+            if (!this.checkProperty(this.children[i], key, value, force))
+            {
                 return false;
             }
         }
