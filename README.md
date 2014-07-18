@@ -283,7 +283,7 @@ You can [clone the Phaser repo in Koding](https://koding.com/Teamwork?import=htt
 
 If you use bowser you can install phaser with:
 
-`bower install phaser`
+`bower install phaser-official`
 
 Nice and easy :)
 
