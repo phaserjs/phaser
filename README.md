@@ -1,6 +1,25 @@
 ![Phaser 2.0](http://www.phaser.io/images/phaser2-github.png)
 
-# Phaser 2.0.7
+# Index
+
+- [About](#about)
+- [What's new?](#whats-new)
+- [Getting Started](#getting-started)
+- [Change Log](#change-log)
+- [How to Build](#how-to-build)
+- [Koding](#koding)
+- [Bower](#bower)
+- [CDNJS](#cdnjs)
+- [Requirements](#requirements)
+- [Learn By Example](#example)
+- [Features](#features)
+- [Road Map](#road-map)
+- [Nadion](#nadion)
+- [Contributing](#contributing)
+- [Bugs?](#bugs)
+- [License](#license)
+
+# Phaser 2.0.7 <a name="about"></a>
 
 Phaser is a fast, free and fun open source game framework for making desktop and mobile browser HTML5 games. It uses [Pixi.js](https://github.com/GoodBoyDigital/pixi.js/) internally for fast 2D Canvas and WebGL rendering.
 
@@ -21,7 +40,7 @@ By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 
 ![div](http://phaser.io/images/div4.png)
 
-## Welcome to Phaser and What's new in 2.0.7?
+## Welcome to Phaser and What's new in 2.0.7? <a name="whats-new"></a>
 
 We're pleased to announce the release of Phaser 2.0.7. This release comes just a week after 2.0.6 but includes some important fixes. Internally we've updated to Pixi 1.6.1 as lots of the fixes come directly from that upgrade, which in turns restores functionality of things like RenderTextures and Retro Fonts.
 
@@ -35,7 +54,7 @@ Hopefully we can now focus on the 2.1 release and enjoying some of this warm wea
 
 ![div](http://phaser.io/images/div1.png)
 
-## Getting Started Guides
+## Getting Started Guides <a name="getting-started"></a>
 
 We have a [Getting Started Guide](http://phaser.io/getting-started-js.php) which covers all you need to begin developing games with Phaser. From setting up a web server to picking an IDE. If you're new to HTML5 game development, or are coming from another language like AS3, then we recommend starting there.
 
@@ -49,7 +68,7 @@ Finally the list of [community authored Phaser Tutorials](http://www.lessmilk.co
 
 ![div](http://phaser.io/images/div2.png)
 
-## Change Log
+## Change Log <a name="change-log"></a>
 
 Version 2.0.7 - "Amadicia" - 18th July 2014
 
@@ -107,7 +126,7 @@ The full Change Log is at https://github.com/photonstorm/phaser/blob/master/CHAN
 
 ![div](http://phaser.io/images/div3.png)
 
-## How to Build
+## How to Build <a name="how-to-build"></a>
 
 We provide a fully compiled version of Phaser in the `build` folder, in both plain and minified formats.
 
@@ -173,7 +192,7 @@ Note: The `phaser.min.js` file in the build folder contains all 3 physics system
 
 ![div](http://phaser.io/images/div3.png)
 
-## Learn By Example
+## Learn By Example <a name="example"></a>
 
 Ever since we started Phaser we've been growing and expanding our extensive set of Examples. Currently over 320 of them!
 
@@ -307,7 +326,7 @@ Here are some of the features planned for future releases:
 
 ![div](http://phaser.io/images/div1.png)
 
-## MightyEditor - A Visual Phaser Game Editor
+## MightyEditor - A Visual Phaser Game Editor <a name="mighty-editor"></a>
 
 [MightyEditor](http://mightyfingers.com/) is a browser-based visual Phaser game editor. Create your maps with ease, position objects and share them in seconds. It also exports to native Phaser code. Excellent for quickly setting-up levels and scenes.
 
