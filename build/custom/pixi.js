@@ -86,7 +86,7 @@ PIXI.sayHello = function (type)
     if ( navigator.userAgent.toLowerCase().indexOf('chrome') > -1 )
     {
         var args = [
-            '%c %c %c Pixi.js ' + PIXI.VERSION + ' - ' + type + '  %c ' + ' %c ' + ' http://pixijs.com  %c %c ♥%c♥%c♥ ',
+            '%c %c %c Pixi.js ' + PIXI.VERSION + ' - ' + type + '  %c ' + ' %c ' + ' http://www.pixijs.com/  %c %c ♥%c♥%c♥ ',
             'background: #ff66a5',
             'background: #ff66a5',
             'color: #ff66a5; background: #030307;',
@@ -104,7 +104,7 @@ PIXI.sayHello = function (type)
     }
     else if (window['console'])
     {
-        console.log('Pixi.js ' + PIXI.VERSION + ' - http://pixjs.com');
+        console.log('Pixi.js ' + PIXI.VERSION + ' - http://www.pixijs.com/');
     }
 
     PIXI.dontSayHello = true;
@@ -1276,8 +1276,19 @@ Object.defineProperty(PIXI.DisplayObjectContainer.prototype, 'width', {
         return this.scale.x * this.getLocalBounds().width;
     },
     set: function(value) {
-    
-        this.scale.x = value / (this.getLocalBounds().width/this.scale.x);
+        
+        var width = this.getLocalBounds().width;
+
+        if(width !== 0)
+        {
+            this.scale.x = value / ( width/this.scale.x );
+        }
+        else
+        {
+            this.scale.x = 1;
+        }
+
+        
         this._width = value;
     }
 });
@@ -1295,7 +1306,18 @@ Object.defineProperty(PIXI.DisplayObjectContainer.prototype, 'height', {
         return  this.scale.y * this.getLocalBounds().height;
     },
     set: function(value) {
-        this.scale.y = value / (this.getLocalBounds().height/this.scale.y);
+
+        var height = this.getLocalBounds().height;
+
+        if(height !== 0)
+        {
+            this.scale.y = value / ( height/this.scale.y );
+        }
+        else
+        {
+            this.scale.y = 1;
+        }
+
         this._height = value;
     }
 });
@@ -4630,7 +4652,7 @@ PIXI.WebGLGraphics.updateGraphics = function(graphics, gl)
             }
             else if(data.type === PIXI.Graphics.RREC)
             {
-                PIXI.WebGLGraphics.buildRoundedRectangle(data, webGL);
+                PIXI.WebGLGraphics.buildRoundedRectangle(data, webGLData);
             }
         }
 
@@ -4754,53 +4776,6 @@ PIXI.WebGLGraphics.buildRectangle = function(graphicsData, webGLData)
  */
 PIXI.WebGLGraphics.buildRoundedRectangle = function(graphicsData, webGLData)
 {
-    /**
-     * Calcul the points for a quadratic bezier curve.
-     * Based on : https://stackoverflow.com/questions/785097/how-do-i-implement-a-bezier-curve-in-c
-     *
-     * @param  {number}   fromX Origin point x
-     * @param  {number}   fromY Origin point x
-     * @param  {number}   cpX   Control point x
-     * @param  {number}   cpY   Control point y
-     * @param  {number}   toX   Destination point x
-     * @param  {number}   toY   Destination point y
-     * @return {number[]}
-     */
-    function quadraticBezierCurve(fromX, fromY, cpX, cpY, toX, toY) {
-        var xa,
-            ya,
-            xb,
-            yb,
-            x,
-            y,
-            n = 20,
-            points = [];
-
-        function getPt(n1 , n2, perc) {
-            var diff = n2 - n1;
-
-            return n1 + ( diff * perc );
-        }
-
-        var j = 0;
-        for (var i = 0; i <= n; i++ )
-        {
-            j = i / n;
-
-            // The Green Line
-            xa = getPt( fromX , cpX , j );
-            ya = getPt( fromY , cpY , j );
-            xb = getPt( cpX , toX , j );
-            yb = getPt( cpY , toY , j );
-
-            // The Black Dot
-            x = getPt( xa , xb , j );
-            y = getPt( ya , yb , j );
-
-            points.push(x, y);
-        }
-        return points;
-    }
 
     var points = graphicsData.points;
     var x = points[0];
@@ -4812,10 +4787,10 @@ PIXI.WebGLGraphics.buildRoundedRectangle = function(graphicsData, webGLData)
 
     var recPoints = [];
     recPoints.push(x, y + radius);
-    recPoints = recPoints.concat(quadraticBezierCurve(x, y + height - radius, x, y + height, x + radius, y + height));
-    recPoints = recPoints.concat(quadraticBezierCurve(x + width - radius, y + height, x + width, y + height, x + width, y + height - radius));
-    recPoints = recPoints.concat(quadraticBezierCurve(x + width, y + radius, x + width, y, x + width - radius, y));
-    recPoints = recPoints.concat(quadraticBezierCurve(x + radius, y, x, y, x, y + radius));
+    recPoints = recPoints.concat(PIXI.WebGLGraphics.quadraticBezierCurve(x, y + height - radius, x, y + height, x + radius, y + height));
+    recPoints = recPoints.concat(PIXI.WebGLGraphics.quadraticBezierCurve(x + width - radius, y + height, x + width, y + height, x + width, y + height - radius));
+    recPoints = recPoints.concat(PIXI.WebGLGraphics.quadraticBezierCurve(x + width, y + radius, x + width, y, x + width - radius, y));
+    recPoints = recPoints.concat(PIXI.WebGLGraphics.quadraticBezierCurve(x + radius, y, x, y, x, y + radius));
 
 
     if (graphicsData.fill) {
@@ -4860,6 +4835,53 @@ PIXI.WebGLGraphics.buildRoundedRectangle = function(graphicsData, webGLData)
     }
 };
 
+/**
+ * Calcul the points for a quadratic bezier curve. (helper function..)
+ * Based on : https://stackoverflow.com/questions/785097/how-do-i-implement-a-bezier-curve-in-c
+ *
+ * @param  {number}   fromX Origin point x
+ * @param  {number}   fromY Origin point x
+ * @param  {number}   cpX   Control point x
+ * @param  {number}   cpY   Control point y
+ * @param  {number}   toX   Destination point x
+ * @param  {number}   toY   Destination point y
+ * @return {number[]}
+ */
+PIXI.WebGLGraphics.quadraticBezierCurve = function(fromX, fromY, cpX, cpY, toX, toY) {
+    var xa,
+        ya,
+        xb,
+        yb,
+        x,
+        y,
+        n = 20,
+        points = [];
+
+    function getPt(n1 , n2, perc) {
+        var diff = n2 - n1;
+
+        return n1 + ( diff * perc );
+    }
+
+    var j = 0;
+    for (var i = 0; i <= n; i++ )
+    {
+        j = i / n;
+
+        // The Green Line
+        xa = getPt( fromX , cpX , j );
+        ya = getPt( fromY , cpY , j );
+        xb = getPt( cpX , toX , j );
+        yb = getPt( cpY , toY , j );
+
+        // The Black Dot
+        x = getPt( xa , xb , j );
+        y = getPt( ya , yb , j );
+
+        points.push(x, y);
+    }
+    return points;
+};
 
 /**
  * Builds a circle to draw
