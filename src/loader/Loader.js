@@ -1521,7 +1521,15 @@ Phaser.Loader.prototype = {
         }
 
         var file = this._fileList[index];
-        var data = JSON.parse(this._xhr.responseText);
+
+        if (this._ajax && this._ajax.responseText)
+        {
+            var data = JSON.parse(this._ajax.responseText);
+        }
+        else
+        {
+            var data = JSON.parse(this._xhr.responseText);
+        }
 
         file.loaded = true;
 

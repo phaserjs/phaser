@@ -55,6 +55,9 @@ Version 2.1.0 - "Cairhien" - -in development-
 
 ### Bug Fixes
 
+* Remove escaping backslashes from RetroFont text set documentation (thanks @jackrugile #1051)
+* Phaser.Loader was incorrectly getting the responseText from _xhr instead of _ajax on IE9 xDomainRequests (thanks @lardratboy #1050)
+
 
 ### Migration Guide
 
