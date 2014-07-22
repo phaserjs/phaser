@@ -1053,7 +1053,7 @@ Phaser.Cache.prototype = {
 
         if (this._images[key])
         {
-            return this._images[key].frameData._frames.length;
+            return this._images[key].frameData.total;
         }
 
         return 0;
