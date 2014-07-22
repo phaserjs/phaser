@@ -3103,7 +3103,7 @@ declare module Phaser {
                 customSeparateX: boolean;
                 customSeparateY: boolean;
                 deltaMax: Phaser.Point;
-                draw: Phaser.Point;
+                drag: Phaser.Point;
                 embedded: boolean;
                 enable: boolean;
                 facing: number;
