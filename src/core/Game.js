@@ -586,8 +586,9 @@ Phaser.Game.prototype = {
 
         if (this.device.cocoonJS)
         {
-            //  Enable screencanvas for Cocoon on this Canvas object only
-            this.canvas.screencanvas = true;
+            // Some issue related to scaling arise with Cocoon using screencanvas and webgl renderer.
+            // Disabling by default
+            this.canvas.screencanvas = false;
         }
 
         if (this.renderType === Phaser.HEADLESS || this.renderType === Phaser.CANVAS || (this.renderType === Phaser.AUTO && this.device.webGL === false))
