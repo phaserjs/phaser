@@ -68,7 +68,7 @@ The order in which items are rendered in the display matches the order in which 
 
 <h3>World Building</h3> 
 
-Under the hood game.add.sprite is creating a new <a href="http://gametest.mobi/phaser/docs/Phaser.Sprite.html">Phaser.Sprite</a> object and adding the sprite to the “game world”. This world is where all your objects live, it can be compared to the Stage in Actionscript3.
+Under the hood game.add.sprite is creating a new <a href="http://gametest.mobi/phaser/docs/Phaser.Sprite.html">Phaser.Sprite</a> object and adding the sprite to the ï¿½game worldï¿½. This world is where all your objects live, it can be compared to the Stage in Actionscript3.
 
 <strong>Note:</strong> The game world has no fixed size and extends infinitely in all directions, with 0,0 being the center of it. For convenience Phaser places 0,0 at the top left of your game for you, but by using the built-in Camera you can move around as needed.
 
@@ -282,7 +282,7 @@ The scoreText is set-up in the create function:
 
     //  Add and update the score
     score += 10;
-    scoreText.content = 'Score: ' + score;
+    scoreText.text = 'Score: ' + score;
 
 }
 </pre>
