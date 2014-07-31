@@ -146,6 +146,9 @@ Phaser.Physics.Arcade = function (game) {
     */
     this._dy = 0;
 
+    // By default we want the bounds the same size as the world bounds
+    this.setBoundsToWorld();
+
 };
 
 Phaser.Physics.Arcade.prototype.constructor = Phaser.Physics.Arcade;

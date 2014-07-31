@@ -153,8 +153,6 @@ Phaser.Physics.prototype = {
             throw new Error('The Chipmunk physics system has not been implemented yet.');
         }
 
-        this.setBoundsToWorld();
-
     },
 
     /**
