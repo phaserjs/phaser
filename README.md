@@ -57,6 +57,7 @@ Version 2.1.0 - "Cairhien" - -in development-
 
 * Remove escaping backslashes from RetroFont text set documentation (thanks @jackrugile #1051)
 * Phaser.Loader was incorrectly getting the responseText from _xhr instead of _ajax on IE9 xDomainRequests (thanks @lardratboy #1050)
+* Phaser.Physics.P2.addPolygon now takes a nested array again (thanks @wayfu #1060)
 
 
 ### Migration Guide

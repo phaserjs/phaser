@@ -6,6 +6,10 @@
 
 /**
 * Phaser SpriteBatch constructor.
+* The SpriteBatch class is a really fast version of the DisplayObjectContainer built purely for speed, so use when you need a lot of sprites or particles.
+* It's worth mentioning that by default sprite batches are used through-out the renderer, so you only really need to use a SpriteBatch if you have over
+* 1000 sprites that all share the same texture (or texture atlas). It's also useful if running in Canvas mode and you have a lot of un-rotated or un-scaled
+* Sprites as it skips all of the Canvas setTransform calls, which helps performance, especially on mobile devices.
 *
 * @classdesc The SpriteBatch class is a really fast version of the DisplayObjectContainer built solely for speed, so use when you need a lot of sprites or particles.
 * @class Phaser.SpriteBatch

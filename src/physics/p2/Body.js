@@ -950,7 +950,8 @@ Phaser.Physics.P2.Body.prototype = {
 
         options = options || {};
 
-        if (!Array.isArray(points)) {
+        if (!Array.isArray(points))
+        {
             points = Array.prototype.slice.call(arguments, 1);
         }
 
@@ -963,7 +964,7 @@ Phaser.Physics.P2.Body.prototype = {
         }
         else if (Array.isArray(points[0]))
         {
-            path = points[0].slice(0);
+            path = points.slice();
         }
         else if (typeof points[0] === 'number')
         {
