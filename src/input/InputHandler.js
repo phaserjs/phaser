@@ -718,8 +718,6 @@ Phaser.InputHandler.prototype = {
         //  Grab a pixel from our image into the hitCanvas and then test it
         if (this.sprite.texture.baseTexture.source)
         {
-            this.game.input.hitContext.clearRect(0, 0, 1, 1);
-
             if (x === null && y === null)
             {
                 //  Use the pointer parameter
@@ -742,6 +740,24 @@ Phaser.InputHandler.prototype = {
             x += this.sprite.texture.frame.x;
             y += this.sprite.texture.frame.y;
 
+            if (this.sprite.texture.trim)
+            {
+                x -= this.sprite.texture.trim.x;
+                y -= this.sprite.texture.trim.y;
+
+                //  If the coordinates are outside the trim area we return false immediately, to save doing a draw call
+                if (x < this.sprite.texture.crop.x || x > this.sprite.texture.crop.right || y < this.sprite.texture.crop.y || y > this.sprite.texture.crop.bottom)
+                {
+                    this._dx = x;
+                    this._dy = y;
+                    return false;
+                }
+            }
+
+            this._dx = x;
+            this._dy = y;
+
+            this.game.input.hitContext.clearRect(0, 0, 1, 1);
             this.game.input.hitContext.drawImage(this.sprite.texture.baseTexture.source, x, y, 1, 1, 0, 0, 1, 1);
 
             var rgb = this.game.input.hitContext.getImageData(0, 0, 1, 1);

@@ -58,6 +58,9 @@ Version 2.1.0 - "Cairhien" - -in development-
 * Remove escaping backslashes from RetroFont text set documentation (thanks @jackrugile #1051)
 * Phaser.Loader was incorrectly getting the responseText from _xhr instead of _ajax on IE9 xDomainRequests (thanks @lardratboy #1050)
 * Phaser.Physics.P2.addPolygon now takes a nested array again (thanks @wayfu #1060)
+* Fix for previous PR #1028 where the P2.setBoundsToWorld call was overriding setBoundsToWorld in the P2 constructor (thanks @Dumtard #1028)
+* Fix for scale issues in CocoonJS using webgl renderer and screencanvas (thanks @txusinho #1064)
+* Resolves issue with pixel perfect click / over detection on Sprites that used trimmed image atlases for animations or frames > 0.
 
 
 ### Migration Guide
