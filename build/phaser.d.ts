@@ -114,7 +114,7 @@ declare module PIXI {
 
     export interface ILoader {
 
-        constructor(url: string, crossorigin: any);
+        constructor(url: string, crossorigin: any): any;
 
         load();
     }
