@@ -52,6 +52,7 @@ Version 2.1.0 - "Cairhien" - -in development-
 
 ### New Features
 
+* Device will now detect for Kindle and PS Vita (thanks @lucbloom)
 
 ### Bug Fixes
 
