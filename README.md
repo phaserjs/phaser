@@ -53,6 +53,8 @@ Version 2.1.0 - "Cairhien" - -in development-
 ### New Features
 
 * Device will now detect for Kindle and PS Vita (thanks @lucbloom)
+* Arcade Physics Body.skipQuadTree is a new boolean that if set to `true` when you collide the Sprite against a Group it will tell Phaser to skip using a QuadTree for that collision. This is handy if this Body is especially large.
+* Arcade Physics World.skipQuadTree will disable the use of all QuadTrees in collision methods, which can help performance in tightly packed scenes.
 
 ### Bug Fixes
 
@@ -98,7 +100,7 @@ You can [clone the Phaser repo in Koding](https://koding.com/Teamwork?import=htt
 
 If you use bower you can install phaser with:
 
-`bower install phaser-official`
+`bower install phaser`
 
 Nice and easy :)
 
