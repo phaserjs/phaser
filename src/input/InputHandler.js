@@ -637,7 +637,7 @@ Phaser.InputHandler.prototype = {
     /**
     * Checks if the given pointer is both down and over the Sprite this InputHandler belongs to.
     * Use the `fastTest` flag is to quickly check just the bounding hit area even if `InputHandler.pixelPerfectOver` is `true`.
-    * 
+    *
     * @method Phaser.InputHandler#checkPointerDown
     * @param {Phaser.Pointer} pointer
     * @param {boolean} [fastTest=false] - Force a simple hit area check even if `pixelPerfectOver` is true for this object?
@@ -672,7 +672,7 @@ Phaser.InputHandler.prototype = {
     /**
     * Checks if the given pointer is over the Sprite this InputHandler belongs to.
     * Use the `fastTest` flag is to quickly check just the bounding hit area even if `InputHandler.pixelPerfectOver` is `true`.
-    * 
+    *
     * @method Phaser.InputHandler#checkPointerOver
     * @param {Phaser.Pointer} pointer
     * @param {boolean} [fastTest=false] - Force a simple hit area check even if `pixelPerfectOver` is true for this object?
@@ -887,7 +887,7 @@ Phaser.InputHandler.prototype = {
             this._pointerData[pointer.id].isDown = true;
             this._pointerData[pointer.id].isUp = false;
             this._pointerData[pointer.id].timeDown = this.game.time.now;
-    
+
             if (this.sprite && this.sprite.events)
             {
                 this.sprite.events.onInputDown.dispatch(this.sprite, pointer);
@@ -1352,7 +1352,7 @@ Phaser.InputHandler.prototype = {
         {
             if (this.sprite.cameraOffset.x < this.boundsRect.left)
             {
-                this.sprite.cameraOffset.x = this.boundsRect.cameraOffset.x;
+                this.sprite.cameraOffset.x = this.boundsRect.left;
             }
             else if ((this.sprite.cameraOffset.x + this.sprite.width) > this.boundsRect.right)
             {
