@@ -434,7 +434,7 @@ Phaser.Device.prototype = {
             }
         }
 
-        if (this.windows || this.macOS || (this.linux && this.silk === false))
+        if (this.windows || this.macOS || (this.linux && this.silk === false) || this.chromeOS)
         {
             this.desktop = true;
         }
