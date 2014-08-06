@@ -1093,7 +1093,7 @@ declare module Phaser {
         next(quantity?: number): void;
         play(name: string, frameRate?: number, loop?: boolean, killOnComplete?: boolean): Phaser.Animation;
         previous(quantity?: number): void;
-        refreshFrame();
+        refreshFrame(): any;
         stop(name?: string, resetFrame?: boolean): void;
         update(): boolean;
         validateFrames(frames: Phaser.Frame[], useNumericIndex?: boolean): boolean;
@@ -1118,7 +1118,7 @@ declare module Phaser {
         total: number;
 
         add(child: Object): Object;
-        callAll(callback: Function, ...parameters: any[]);
+        callAll(callback: Function, ...parameters: any[]): any;
         exists(child: Object): boolean;
         getIndex(child: Object): number;
         remove(child: Object): Object;
@@ -1850,7 +1850,7 @@ declare module Phaser {
 
         destroy(): void;
         init(...args: any[]): void;
-        setResolution(width: number, height: number);
+        setResolution(width: number, height: number): any;
         update(pointer?: Phaser.Pointer): void;
 
     }
@@ -2158,7 +2158,7 @@ declare module Phaser {
         processButtonDown(value: number): void;
         processButtonFloat(value: number): void;
         processButtonUp(value: number): void;
-        reset();
+        reset(): any;
     }
 
     class Graphics extends PIXI.Graphics {
@@ -3188,7 +3188,7 @@ declare module Phaser {
             collide(object1: any, object2: any, collideCallback?: Function, processCallback?: Function, callbackContext?: Object): boolean;
             convertTilemap(map: Phaser.Tilemap, layer?: any, slopeMap?: Object): Phaser.Physics.Ninja.Tile[];
             enableAABB(object: any, children?: boolean): void;
-            enableCircle(object: any, radius: number, children?: boolean);
+            enableCircle(object: any, radius: number, children?: boolean): any;
             enableTile(object: any, id: number, children?: boolean): void;
             enable(object: any, type?: number, id?: number, radius?: number, children?: boolean): void;
             enableBody(object: any, type?: number, id?: number, radius?: number): void;
@@ -3339,7 +3339,7 @@ declare module Phaser {
                 collideWorldBounds(): void;
                 destroy(): void;
                 integrate(): void;
-                reportCollisionVsWorld(px: number, py: number, dx: number, dy: number, obj: Object);
+                reportCollisionVsWorld(px: number, py: number, dx: number, dy: number, obj: Object): void;
                 setType(id: number): number;
 
             }
@@ -3426,7 +3426,7 @@ declare module Phaser {
             removeBody(body: Phaser.Physics.P2.Body): Phaser.Physics.P2.Body;
             removeBodyNextStep(body: Phaser.Physics.P2.Body): void;
             removeConstraint(constraint: any): any;
-            removeContactMaterial(material: Phaser.Physics.P2.ContactMaterial);
+            removeContactMaterial(material: Phaser.Physics.P2.ContactMaterial): any;
             removeSpring(spring: Phaser.Physics.P2.Spring): Phaser.Physics.P2.Spring;
             resume(): void;
             setBounds(x: number, y: number, width: number, height: number, left?: Boolean, right?: boolean, top?: boolean, bottom?: boolean, setCollisionGroup?: boolean): void;
@@ -3803,7 +3803,7 @@ declare module Phaser {
 
             constructor(game: Phaser.Game, parent: any);
 
-            addSprite(sprite: Phaser.Sprite);
+            addSprite(sprite: Phaser.Sprite): any;
             update(): void;
 
         }
@@ -4666,7 +4666,7 @@ declare module Phaser {
         x: number;
         y: number;
 
-        copy(tile): Phaser.Tile;
+        copy(tile: Phaser.Tile): Phaser.Tile;
         containsPoint(x: number, y: number): boolean;
         destroy(): void;
         intersects(x: number, y: number, right: number, bottom: number): boolean;
@@ -4951,7 +4951,7 @@ declare module Phaser {
 
     class TimerEvent {
 
-        constructor(timer: Phaser.Timer, delay: number, tick: number, repeatCount: number, loop: boolean, callback: Function, callbackContext, Object, args: any[]);
+        constructor(timer: Phaser.Timer, delay: number, tick: number, repeatCount: number, loop: boolean, callback: Function, callbackContext: any, Object: any, args: any[]);
 
         args: any[];
         callback: Function;
@@ -5086,7 +5086,7 @@ declare module Phaser {
             geom(object: any, color?: string, fiiled?: boolean, forceType?: number): void;
             inputInfo(x: number, y: number, color?: string): void;
             lineInfo(line: Phaser.Line, x: number, y: number, color?: string): void;
-            key(key: Phaser.Key, x?: number, y?: number, color?: string);
+            key(key: Phaser.Key, x?: number, y?: number, color?: string): any;
             line(): void;
             preUpdate(): void;
             pixel(x: number, y: number, color?: string, size?: number): void;

@@ -220,4 +220,11 @@ EOL;
 EOL;
     }
 
+    if ($custom)
+    {
+        for ($i = 0; $i < count($custom); $i++)
+        {
+            echo '    <script src="' . $custom[$i] . '"></script>' . "\n";
+        }
+    }
 ?>

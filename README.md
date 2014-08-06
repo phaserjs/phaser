@@ -3,7 +3,7 @@
 # Index
 
 - [About](#about)
-- [What's new?](#whats-new)
+- [What's New?](#whats-new)
 - [Getting Started](#getting-started)
 - [Change Log](#change-log)
 - [How to Build](#how-to-build)
@@ -69,6 +69,7 @@ Version 2.1.0 - "Cairhien" - -in development-
 
 ### Updates
 
+* TypeScript definition updates to help fix for the `noimplicitany` option (thanks @Waog #1088)
 
 ### New Features
 
@@ -84,11 +85,8 @@ Version 2.1.0 - "Cairhien" - -in development-
 * Fix for previous PR #1028 where the P2.setBoundsToWorld call was overriding setBoundsToWorld in the P2 constructor (thanks @Dumtard #1028)
 * Fix for scale issues in CocoonJS using webgl renderer and screencanvas (thanks @txusinho #1064)
 * Resolves issue with pixel perfect click / over detection on Sprites that used trimmed image atlases for animations or frames > 0.
-
-
-### Migration Guide
-
-There is an extensive [Migration Guide](https://github.com/photonstorm/phaser/blob/master/resources/Migration%20Guide.md) available for those converting from Phaser 1.x to 2.x. In the guide we detail the API breaking changes and approach to our new physics system.
+* Group.swap() updates the Z index values properly (thanks @Blank101 #1090)
+* Device now recognises ChromeOS as a desktop (thanks @alvinsight #1091)
 
 The full Change Log is at https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md
 
