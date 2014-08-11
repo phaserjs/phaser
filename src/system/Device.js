@@ -37,6 +37,12 @@ Phaser.Device = function (game) {
     * @default
     */
     this.cocoonJS = false;
+    
+    /**
+    * @property {boolean} cordova - Is the game running under Apache Cordova?
+    * @default
+    */
+    this.cordova = false;
 
     /**
     * @property {boolean} ejecta - Is the game running under Ejecta?
@@ -619,6 +625,11 @@ Phaser.Device.prototype = {
         if (navigator['standalone'])
         {
             this.webApp = true;
+        }
+        
+        if (typeof window.cordova !== "undefined")
+        {
+            this.cordova = true;
         }
 
         if (navigator['isCocoonJS'])
