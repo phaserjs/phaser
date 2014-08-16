@@ -388,6 +388,7 @@ Phaser.TilemapParser = {
                     var object = {
 
                         name: json.layers[i].objects[v].name,
+                        type: json.layers[i].objects[v].type,
                         x: json.layers[i].objects[v].x,
                         y: json.layers[i].objects[v].y,
                         width: json.layers[i].objects[v].width,
@@ -411,7 +412,7 @@ Phaser.TilemapParser = {
                 else if (json.layers[i].objects[v].polygon)
                 {
                     var object = slice(json.layers[i].objects[v],
-                                       ["name", "x", "y", "visible", "properties" ]);
+                                       ["name", "type", "x", "y", "visible", "properties" ]);
 
                     //  Parse the polygon into an array
                     object.polygon = [];
@@ -426,14 +427,14 @@ Phaser.TilemapParser = {
                 else if (json.layers[i].objects[v].ellipse)
                 {
                     var object = slice(json.layers[i].objects[v],
-                                       ["name", "ellipse", "x", "y", "width", "height", "visible", "properties" ]);
+                                       ["name", "type", "ellipse", "x", "y", "width", "height", "visible", "properties" ]);
                     objects[json.layers[i].name].push(object);
                 }
                 // otherwise it's a rectangle
                 else
                 {
                     var object = slice(json.layers[i].objects[v],
-                                       ["name", "x", "y", "width", "height", "visible", "properties" ]);
+                                       ["name", "type", "x", "y", "width", "height", "visible", "properties" ]);
                     object.rectangle = true;
                     objects[json.layers[i].name].push(object);
                 }
