@@ -106,7 +106,7 @@ Phaser.Ellipse.prototype = {
     */
     clone: function(output) {
 
-        if (typeof output === "undefined")
+        if (typeof output === "undefined" || output === null)
         {
             output = new Phaser.Ellipse(this.x, this.y, this.width, this.height);
         }

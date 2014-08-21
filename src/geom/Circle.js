@@ -140,7 +140,7 @@ Phaser.Circle.prototype = {
     */
     clone: function (output) {
 
-        if (typeof output === "undefined")
+        if (typeof output === "undefined" || output === null)
         {
             output = new Phaser.Circle(this.x, this.y, this.diameter);
         }
