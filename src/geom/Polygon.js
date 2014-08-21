@@ -92,7 +92,7 @@ Phaser.Polygon.prototype = {
 
     setTo : function(points) {
 
-        this.points = point;
+        this.points = points;
 
         return this;
 
