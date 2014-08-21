@@ -206,7 +206,7 @@ Phaser.Rectangle.prototype = {
     */
     containsRect: function (b) {
 
-        return Phaser.Rectangle.containsRect(this, b);
+        return Phaser.Rectangle.containsRect(b, this);
 
     },
 
