@@ -43,7 +43,13 @@ Phaser.Device = function (game) {
     * @default
     */
     this.cordova = false;
-
+    
+    /**
+    * @property {boolean} nodeWebkit - Is the game running under Node-Webkit?
+    * @default
+    */ 
+    this.nodeWebkit = false;
+    
     /**
     * @property {boolean} ejecta - Is the game running under Ejecta?
     * @default
@@ -631,7 +637,12 @@ Phaser.Device.prototype = {
         {
             this.cordova = true;
         }
-
+        
+        if(typeof process !== "undefined" && typeof require !== "undefined")
+        {
+            this.nodeWebkit = true;
+        }
+        
         if (navigator['isCocoonJS'])
         {
             this.cocoonJS = true;
