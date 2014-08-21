@@ -490,6 +490,41 @@ Phaser.TilemapParser = {
 
         }
 
+        // assign tile properties
+
+        var i,j,k;
+        var layer, tile, sid, set;
+
+        // go through each of the map layers
+        for (i = 0; i < map.layers.length; i++)
+        {
+            layer = map.layers[i];
+
+            // rows of tiles
+            for (j = 0; j < layer.data.length; j++)
+            {
+                row = layer.data[j];
+
+                // individual tiles
+                for (k = 0; k < row.length; k++)
+                {
+                    tile = row[k];
+
+                    if(tile.index < 0) { continue; }
+
+                    // find the relevant tileset
+                    sid = map.tiles[tile.index][2];
+                    set = map.tilesets[sid];
+
+                    // if that tile type has any properties, add them to the tile object
+                    if(set.tileProperties && set.tileProperties[tile.index - set.firstgid]) {
+                        tile.properties = set.tileProperties[tile.index - set.firstgid];
+                    }
+                }
+            }
+        }
+
+
         return map;
 
     }
