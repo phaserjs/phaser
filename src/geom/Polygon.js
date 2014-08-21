@@ -53,12 +53,14 @@ Phaser.Polygon = function (points) {
 Phaser.Polygon.prototype = {
 
     /**
-    * Creates a clone of this polygon.
-    *
-    * @method Phaser.Polygon#clone
-    * @return {Phaser.Polygon} A copy of the polygon.
-    */
-    clone: function () {
+     * Creates a copy of the given Polygon.
+     * This is a deep clone, the resulting copy contains new Phaser.Point objects
+     *
+     * @method Phaser.Polygon#clone
+     * @param {Phaser.Polygon} [output] Optional Polygon object. If given the values will be set into this object, otherwise a brand new Polygon object will be created and returned.
+     * @return {Phaser.Polygon} The new Polygon object.
+     */
+    clone: function (output) {
 
         var points = [];
 
@@ -67,7 +69,16 @@ Phaser.Polygon.prototype = {
             points.push(this.points[i].clone());
         }
 
-        return new Phaser.Polygon(points);
+        if (typeof output === "undefined" || output === null)
+        {
+            output = new Phaser.Polygon(points);
+        }
+        else
+        {
+            output.setTo(points);
+        }
+
+        return output;
 
     },
 
@@ -100,6 +111,14 @@ Phaser.Polygon.prototype = {
         }
 
         return inside;
+
+    },
+
+    setTo : function(points) {
+
+        this.points = point;
+
+        return this;
 
     }
 
