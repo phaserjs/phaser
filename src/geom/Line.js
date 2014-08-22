@@ -198,7 +198,7 @@ Phaser.Line.prototype = {
         }
         else
         {
-            output.setTo(this.start.x, this.start.y, this.start.x, this.start.y);
+            output.setTo(this.start.x, this.start.y, this.end.x, this.end.y);
         }
 
         return output;
