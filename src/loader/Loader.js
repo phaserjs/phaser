@@ -136,12 +136,6 @@ Phaser.Loader = function (game) {
     */
     this._xhr = new XMLHttpRequest();
 
-    /**
-    * @property {XDomainRequest} - An ajax request used specifically by IE9 for CORs loading issues.
-    * @private
-    */
-    this._ajax = null;
-
 };
 
 /**
@@ -1218,37 +1212,8 @@ Phaser.Loader.prototype = {
 
             case 'json':
 
-                if (window.XDomainRequest)
-                {
-                    this._ajax = new window.XDomainRequest();
-
-                    // XDomainRequest has a few querks. Occasionally it will abort requests
-                    // A way to avoid this is to make sure ALL callbacks are set even if not used
-                    // More info here: http://stackoverflow.com/questions/15786966/xdomainrequest-aborts-post-on-ie-9
-                    this._ajax.timeout = 3000;
-
-                    this._ajax.onerror = function () {
-                        return _this.dataLoadError(_this._fileIndex);
-                    };
-                       
-                    this._ajax.ontimeout = function () {
-                        return _this.dataLoadError(_this._fileIndex);
-                    };
-
-                    this._ajax.onprogress = function() {};
-
-                    this._ajax.onload = function(){
-                        return _this.jsonLoadComplete(_this._fileIndex);
-                    };
-
-                    this._ajax.open('GET', this.baseURL + file.url, true);
-
-                    this._ajax.send();
-                }
-                else
-                {
-                    this.xhrLoad(this._fileIndex, this.baseURL + file.url, 'text', 'jsonLoadComplete', 'dataLoadError');
-                }
+                
+                this.xhrLoad(this._fileIndex, this.baseURL + file.url, 'text', 'jsonLoadComplete', 'dataLoadError');
 
                 break;
 
@@ -1522,14 +1487,7 @@ Phaser.Loader.prototype = {
 
         var file = this._fileList[index];
 
-        if (this._ajax && this._ajax.responseText)
-        {
-            var data = JSON.parse(this._ajax.responseText);
-        }
-        else
-        {
-            var data = JSON.parse(this._xhr.responseText);
-        }
+        var data = JSON.parse(this._xhr.responseText);
 
         file.loaded = true;
 
