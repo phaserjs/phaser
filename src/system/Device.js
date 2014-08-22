@@ -47,7 +47,7 @@ Phaser.Device = function (game) {
     /**
     * @property {boolean} nodeWebkit - Is the game running under Node-Webkit?
     * @default
-    */ 
+    */
     this.nodeWebkit = false;
     
     /**
