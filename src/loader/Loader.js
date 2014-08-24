@@ -1218,7 +1218,7 @@ Phaser.Loader.prototype = {
 
             case 'json':
 
-                if (window.XDomainRequest)
+                if (!"withCredentials" in this._xhr && window.XDomainRequest)
                 {
                     this._ajax = new window.XDomainRequest();
 
