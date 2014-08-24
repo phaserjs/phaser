@@ -16,6 +16,7 @@
   "scripts": {
     "test": "NODE_ENV=test grunt jshint"
   },
+  "main": "build/phaser.js",
   "keywords": [
     "HTML5",
     "game",
