@@ -1,0 +1,28 @@
+# Dev files
+/docgen/
+/docs/
+/examples/
+/filters/
+/plugins/
+/resources/
+/src/
+/tasks/
+
+
+# System and IDE files
+Thumbs.db
+.DS_Store
+.idea
+Phaser OSX.sublime-project
+Phaser OSX.sublime-workspace
+Phaser.sublime-project
+Phaser.sublime-workspace
+*.suo
+*.sublime-project
+*.sublime-workspace
+
+# Vendors
+node_modules/
+
+# Build
+dist/

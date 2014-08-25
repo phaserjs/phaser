@@ -1,5 +1,5 @@
 {
-  "name": "Phaser",
+  "name": "phaser",
   "version": "2.0.7",
   "release": "Amadicia",
   "description": "A fast, free and fun HTML5 Game Framework for Desktop and Mobile web browsers.",
@@ -16,6 +16,7 @@
   "scripts": {
     "test": "NODE_ENV=test grunt jshint"
   },
+  "main": "build/phaser.js",
   "keywords": [
     "HTML5",
     "game",
