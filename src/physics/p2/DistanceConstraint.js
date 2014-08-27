@@ -14,11 +14,16 @@
 * @param {p2.Body} bodyA - First connected body.
 * @param {p2.Body} bodyB - Second connected body.
 * @param {number} distance - The distance to keep between the bodies.
-* @param {number} [maxForce] - The maximum force that should be applied to constrain the bodies.
+* @param {Array} [localAnchorA] - The anchor point for bodyA, defined locally in bodyA frame. Defaults to [0,0].
+* @param {Array} [localAnchorB] - The anchor point for bodyB, defined locally in bodyB frame. Defaults to [0,0].
+* @param {object} [maxForce=Number.MAX_VALUE] - Maximum force to apply.
 */
-Phaser.Physics.P2.DistanceConstraint = function (world, bodyA, bodyB, distance, maxForce) {
+Phaser.Physics.P2.DistanceConstraint = function (world, bodyA, bodyB, distance, localAnchorA, localAnchorB, maxForce) {
 
     if (typeof distance === 'undefined') { distance = 100; }
+    if (typeof localAnchorA === 'undefined') { localAnchorA = [0, 0]; }
+    if (typeof localAnchorB === 'undefined') { localAnchorB = [0, 0]; }
+    if (typeof maxForce === 'undefined') { maxForce = Number.MAX_VALUE; }
 
     /**
     * @property {Phaser.Game} game - Local reference to game.
@@ -32,7 +37,12 @@ Phaser.Physics.P2.DistanceConstraint = function (world, bodyA, bodyB, distance, 
 
     distance = world.pxm(distance);
 
-    p2.DistanceConstraint.call(this, bodyA, bodyB, distance, {maxForce: maxForce});
+    localAnchorA = [ world.pxmi(localAnchorA[0]), world.pxmi(localAnchorA[1]) ];
+    localAnchorB = [ world.pxmi(localAnchorB[0]), world.pxmi(localAnchorB[1]) ];
+
+    var options = { distance: distance, localAnchorA: localAnchorA, localAnchorB: localAnchorB, maxForce: maxForce };
+
+    p2.DistanceConstraint.call(this, bodyA, bodyB, options);
 
 };
 

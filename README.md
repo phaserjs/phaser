@@ -69,8 +69,14 @@ Version 2.1.0 - "Cairhien" - -in development-
 
 ### Updates
 
+* Updated to the latest build of [p2.js](https://github.com/schteppe/p2.js/commit/d1c7a340c42e4d5d1d939fba5fd13c5e49d6abd2)
 * TypeScript definition updates to help fix for the `noimplicitany` option (thanks @Waog #1088)
 * All of the Pixi geom classes have been removed from the build file as they aren't needed (the Phaser.Geom classes overwrite them), saving some space in the process.
+
+### p2.js changes
+
+* DistanceConstraint signature changed to take the new localAnchors.
+* 
 
 ### New Features
 
