@@ -96,6 +96,7 @@ Version 2.1.0 - "Cairhien" - -in development-
 * DistanceConstraint signature changed to take the new localAnchors.
 * RevoluteConstraint signature changed to include worldPivot
 * P2.Body now uses the new Body.type value instead of Body.motionState, however as P2.Body already have a property called `type` we have left the `motionState` getter/setter in for now.
+* World.enableBodySleeping has been removed and replaced with World.sleepMode.
 
 #### Breaking changes
 
@@ -124,7 +125,6 @@ Version 2.1.0 - "Cairhien" - -in development-
 * Added property .overlapKeeper to World.
 * EventEmitter.prototype.has can now check if any listeners were added to a given topic.
 * Added Utils.defaults.
-
 
 The full Change Log is at https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md
 

@@ -1191,15 +1191,15 @@ Phaser.Physics.P2.prototype = {
 
         while (i--)
         {
-            if (bodies[i] instanceof Phaser.Physics.P2.Body && !(filterStatic && bodies[i].data.motionState === p2.Body.STATIC))
+            if (bodies[i] instanceof Phaser.Physics.P2.Body && !(filterStatic && bodies[i].data.type === p2.Body.STATIC))
             {
                 query.push(bodies[i].data);
             }
-            else if (bodies[i] instanceof p2.Body && bodies[i].parent && !(filterStatic && bodies[i].motionState === p2.Body.STATIC))
+            else if (bodies[i] instanceof p2.Body && bodies[i].parent && !(filterStatic && bodies[i].type === p2.Body.STATIC))
             {
                 query.push(bodies[i]);
             }
-            else if (bodies[i] instanceof Phaser.Sprite && bodies[i].hasOwnProperty('body') && !(filterStatic && bodies[i].body.data.motionState === p2.Body.STATIC))
+            else if (bodies[i] instanceof Phaser.Sprite && bodies[i].hasOwnProperty('body') && !(filterStatic && bodies[i].body.data.type === p2.Body.STATIC))
             {
                 query.push(bodies[i].body.data);
             }
@@ -1841,20 +1841,22 @@ Object.defineProperty(Phaser.Physics.P2.prototype, "emitImpactEvent", {
 });
 
 /**
-* @name Phaser.Physics.P2#enableBodySleeping
-* @property {boolean} enableBodySleeping - Enable / disable automatic body sleeping.
+* How to deactivate bodies during simulation. Possible modes are: World.NO_SLEEPING, World.BODY_SLEEPING and World.ISLAND_SLEEPING.
+* If sleeping is enabled, you might need to wake up the bodies if they fall asleep when they shouldn't. If you want to enable sleeping in the world, but want to disable it for a particular body, see Body.allowSleep.
+* @name Phaser.Physics.P2#sleepMode
+* @property {number} sleepMode
 */
-Object.defineProperty(Phaser.Physics.P2.prototype, "enableBodySleeping", {
+Object.defineProperty(Phaser.Physics.P2.prototype, "sleepMode", {
 
     get: function () {
 
-        return this.world.enableBodySleeping;
+        return this.world.sleepMode;
 
     },
 
     set: function (value) {
 
-        this.world.enableBodySleeping = value;
+        this.world.sleepMode = value;
 
     }
 
