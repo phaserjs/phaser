@@ -24,18 +24,6 @@
         echo "    <script src=\"$path/src/physics/p2/p2.js\"></script>";
     }
 
-    //  Testing a build without these - pretty sure we're safe to ignore them (as we over-write them)
-    // <script src="$path/src/pixi/core/Point.js"></script>
-    // <script src="$path/src/pixi/core/Rectangle.js"></script>
-    // <script src="$path/src/pixi/core/Polygon.js"></script>
-    // <script src="$path/src/pixi/core/Circle.js"></script>
-    // <script src="$path/src/pixi/core/Ellipse.js"></script>
-    // "src/pixi/core/Point.js",
-    // "src/pixi/core/Rectangle.js",
-    // "src/pixi/core/Polygon.js",
-    // "src/pixi/core/Circle.js",
-    // "src/pixi/core/Ellipse.js",
-
     echo <<<EOL
 
     <script src="$path/src/pixi/Pixi.js"></script>
@@ -201,6 +189,7 @@ EOL;
     <script src="$path/src/physics/p2/Body.js"></script>
     <script src="$path/src/physics/p2/BodyDebug.js"></script>
     <script src="$path/src/physics/p2/Spring.js"></script>
+    <script src="$path/src/physics/p2/RotationalSpring.js"></script>
     <script src="$path/src/physics/p2/Material.js"></script>
     <script src="$path/src/physics/p2/ContactMaterial.js"></script>
     <script src="$path/src/physics/p2/CollisionGroup.js"></script>

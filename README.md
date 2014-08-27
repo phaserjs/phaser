@@ -69,7 +69,7 @@ Version 2.1.0 - "Cairhien" - -in development-
 
 ### Updates
 
-* Updated to the latest build of [p2.js](https://github.com/schteppe/p2.js/commit/d1c7a340c42e4d5d1d939fba5fd13c5e49d6abd2)
+* Updated to [p2.js 0.6.0](https://github.com/schteppe/p2.js/commit/d1c7a340c42e4d5d1d939fba5fd13c5e49d6abd2) - this was an API breaking change, so please see the p2.js section of this change log specifically if you're using p2 in your game.
 * TypeScript definition updates to help fix for the `noimplicitany` option (thanks @Waog #1088)
 * All of the Pixi geom classes have been removed from the build file as they aren't needed (the Phaser.Geom classes overwrite them), saving some space in the process.
 
@@ -91,12 +91,14 @@ Version 2.1.0 - "Cairhien" - -in development-
 * Group.swap() updates the Z index values properly (thanks @Blank101 #1090)
 * Device now recognises ChromeOS as a desktop (thanks @alvinsight @hilts-vaughan #1091)
 
-### p2.js 0.6.0 Changes
+### p2.js 0.6.0 Changes and New Features
 
 * DistanceConstraint signature changed to take the new localAnchors.
 * RevoluteConstraint signature changed to include worldPivot
 * P2.Body now uses the new Body.type value instead of Body.motionState, however as P2.Body already have a property called `type` we have left the `motionState` getter/setter in for now.
 * World.enableBodySleeping has been removed and replaced with World.sleepMode.
+* Phaser P2.Springs are now LinearSprings by default.
+* World.createRotationalSpring will now let you create rotational springs.
 
 #### Breaking changes
 

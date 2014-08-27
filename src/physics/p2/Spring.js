@@ -5,7 +5,7 @@
 */
 
 /**
-* Creates a spring, connecting two bodies. A spring can have a resting length, a stiffness and damping.
+* Creates a linear spring, connecting two bodies. A spring can have a resting length, a stiffness and damping.
 *
 * @class Phaser.Physics.P2.Spring
 * @classdesc Physics Spring Constructor
@@ -65,9 +65,9 @@ Phaser.Physics.P2.Spring = function (world, bodyA, bodyB, restLength, stiffness,
         options.localAnchorB = [ world.pxm(localB[0]), world.pxm(localB[1]) ];
     }
 
-    p2.Spring.call(this, bodyA, bodyB, options);
+    p2.LinearSpring.call(this, bodyA, bodyB, options);
 
 };
 
-Phaser.Physics.P2.Spring.prototype = Object.create(p2.Spring.prototype);
+Phaser.Physics.P2.Spring.prototype = Object.create(p2.LinearSpring.prototype);
 Phaser.Physics.P2.Spring.prototype.constructor = Phaser.Physics.P2.Spring;
