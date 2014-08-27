@@ -1,4 +1,4 @@
-f![Phaser 2.0](http://www.phaser.io/images/phaser2-github.png)
+![Phaser 2.0](http://www.phaser.io/images/phaser2-github.png)
 
 # Phaser 2.0.7
 
