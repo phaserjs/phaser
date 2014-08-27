@@ -1,11 +1,6 @@
 [
     "src/pixi/Intro.js",
     "src/pixi/Pixi.js",
-    "src/pixi/core/Point.js",
-    "src/pixi/core/Rectangle.js",
-    "src/pixi/core/Polygon.js",
-    "src/pixi/core/Circle.js",
-    "src/pixi/core/Ellipse.js",
     "src/pixi/core/Matrix.js",
 
     "src/pixi/display/DisplayObject.js",

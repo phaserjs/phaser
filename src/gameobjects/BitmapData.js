@@ -772,12 +772,28 @@ Phaser.BitmapData.prototype = {
     * @param {Phaser.Rectangle} area - The Rectangle region to copy from the source image.
     * @param {number} x - The destination x coordinate to copy the image to.
     * @param {number} y - The destination y coordinate to copy the image to.
+    * @param {number} [alpha] - An optional alpha value. If given the BitmapData.context.globalAlpha will be set to this before drawing and reset after.
     */
-    copyPixels: function (source, area, x, y) {
+    copyPixels: function (source, area, x, y, alpha) {
 
         if (typeof source === 'string')
         {
             source = this.game.cache.getImage(source);
+        }
+
+        if (typeof alpha === 'undefined')
+        {
+            alpha = null;
+        }
+        else if (alpha <= 0)
+        {
+            //  No point doing anything if alpha is zero
+            return;
+        }
+        else if (alpha > 1)
+        {
+            //  Sanity cap
+            alpha = 1;
         }
 
         var src = source;
@@ -799,7 +815,18 @@ Phaser.BitmapData.prototype = {
             }
         }
 
+        if (alpha)
+        {
+            var prevAlpha = this.context.globalAlpha;
+            this.context.globalAlpha = alpha;
+        }
+
         this.context.drawImage(src, sx + area.x, sy + area.y, area.width, area.height, x, y, area.width, area.height);
+
+        if (alpha)
+        {
+            this.context.globalAlpha = prevAlpha;
+        }
 
         this.dirty = true;
 

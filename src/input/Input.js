@@ -352,6 +352,7 @@ Phaser.Input.prototype = {
         this.touch = new Phaser.Touch(this.game);
         this.mspointer = new Phaser.MSPointer(this.game);
         this.gamepad = new Phaser.Gamepad(this.game);
+
         // this.gestures = new Phaser.Gestures(this.game);
 
         this.onDown = new Phaser.Signal();
@@ -392,7 +393,10 @@ Phaser.Input.prototype = {
         this.keyboard.stop();
         this.touch.stop();
         this.mspointer.stop();
+
+
         this.gamepad.stop();
+
         // this.gestures.stop();
 
         this.moveCallbacks = [];

@@ -70,10 +70,12 @@ Version 2.1.0 - "Cairhien" - -in development-
 ### Updates
 
 * TypeScript definition updates to help fix for the `noimplicitany` option (thanks @Waog #1088)
+* All of the Pixi geom classes have been removed from the build file as they aren't needed (the Phaser.Geom classes overwrite them), saving some space in the process.
 
 ### New Features
 
 * Device will now detect for Kindle and PS Vita (thanks @lucbloom)
+* Device will now detect for Cordova (thanks @videlais #1102)
 * Arcade Physics Body.skipQuadTree is a new boolean that if set to `true` when you collide the Sprite against a Group it will tell Phaser to skip using a QuadTree for that collision. This is handy if this Body is especially large.
 * Arcade Physics World.skipQuadTree will disable the use of all QuadTrees in collision methods, which can help performance in tightly packed scenes.
 
@@ -86,7 +88,7 @@ Version 2.1.0 - "Cairhien" - -in development-
 * Fix for scale issues in CocoonJS using webgl renderer and screencanvas (thanks @txusinho #1064)
 * Resolves issue with pixel perfect click / over detection on Sprites that used trimmed image atlases for animations or frames > 0.
 * Group.swap() updates the Z index values properly (thanks @Blank101 #1090)
-* Device now recognises ChromeOS as a desktop (thanks @alvinsight #1091)
+* Device now recognises ChromeOS as a desktop (thanks @alvinsight @hilts-vaughan #1091)
 
 The full Change Log is at https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md
 
