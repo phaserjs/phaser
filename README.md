@@ -76,7 +76,7 @@ Version 2.1.0 - "Cairhien" - -in development-
 ### p2.js changes
 
 * DistanceConstraint signature changed to take the new localAnchors.
-* 
+* RevoluteConstraint signature changed to include worldPivot
 
 ### New Features
 

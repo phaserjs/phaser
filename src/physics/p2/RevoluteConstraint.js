@@ -16,10 +16,12 @@
 * @param {Float32Array} pivotA - The point relative to the center of mass of bodyA which bodyA is constrained to. The value is an array with 2 elements matching x and y, i.e: [32, 32].
 * @param {p2.Body} bodyB - Second connected body.
 * @param {Float32Array} pivotB - The point relative to the center of mass of bodyB which bodyB is constrained to. The value is an array with 2 elements matching x and y, i.e: [32, 32].
+* @param {Float32Array} [worldPivot] - A pivot point given in world coordinates. If specified, localPivotA and localPivotB are automatically computed from this value.
 * @param {number} [maxForce=0] - The maximum force that should be applied to constrain the bodies.
 */
-Phaser.Physics.P2.RevoluteConstraint = function (world, bodyA, pivotA, bodyB, pivotB, maxForce) {
+Phaser.Physics.P2.RevoluteConstraint = function (world, bodyA, pivotA, bodyB, pivotB, worldPivot, maxForce) {
 
+    if (typeof worldPivot === 'undefined') { worldPivot = null; }
     if (typeof maxForce === 'undefined') { maxForce = Number.MAX_VALUE; }
 
     /**
@@ -35,7 +37,9 @@ Phaser.Physics.P2.RevoluteConstraint = function (world, bodyA, pivotA, bodyB, pi
     pivotA = [ world.pxmi(pivotA[0]), world.pxmi(pivotA[1]) ];
     pivotB = [ world.pxmi(pivotB[0]), world.pxmi(pivotB[1]) ];
 
-    p2.RevoluteConstraint.call(this, bodyA, pivotA, bodyB, pivotB, {maxForce: maxForce});
+    var options = { worldPivot: worldPivot, localPivotA: pivotA, localPivotB: pivotB, maxForce: maxForce };
+
+    p2.RevoluteConstraint.call(this, bodyA, bodyB, options);
 
 };
 
