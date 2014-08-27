@@ -73,11 +73,6 @@ Version 2.1.0 - "Cairhien" - -in development-
 * TypeScript definition updates to help fix for the `noimplicitany` option (thanks @Waog #1088)
 * All of the Pixi geom classes have been removed from the build file as they aren't needed (the Phaser.Geom classes overwrite them), saving some space in the process.
 
-### p2.js changes
-
-* DistanceConstraint signature changed to take the new localAnchors.
-* RevoluteConstraint signature changed to include worldPivot
-
 ### New Features
 
 * Device will now detect for Kindle and PS Vita (thanks @lucbloom)
@@ -95,6 +90,41 @@ Version 2.1.0 - "Cairhien" - -in development-
 * Resolves issue with pixel perfect click / over detection on Sprites that used trimmed image atlases for animations or frames > 0.
 * Group.swap() updates the Z index values properly (thanks @Blank101 #1090)
 * Device now recognises ChromeOS as a desktop (thanks @alvinsight @hilts-vaughan #1091)
+
+### p2.js 0.6.0 Changes
+
+* DistanceConstraint signature changed to take the new localAnchors.
+* RevoluteConstraint signature changed to include worldPivot
+* P2.Body now uses the new Body.type value instead of Body.motionState, however as P2.Body already have a property called `type` we have left the `motionState` getter/setter in for now.
+
+#### Breaking changes
+
+* Renamed property .motionState to .type in class Body.
+* Changed constructor of RevoluteConstraint. Now the local pivots are passed as options instead of direct arguments. See the constraints demo.
+* Removed World.prototype.toJSON and .fromJSON.
+* Removed properties .enableBodySleeping and .enableIslandSleeping from World instances. The enum .sleepMode can be used instead. See the sleep demo.
+* Converted Spring to a base class for the new LinearSpring and RotationalSpring classes. LinearSpring can be used as the old Spring.
+* Utils.ARRAY_TYPE can now be overridden by injecting a global called P2_ARRAY_TYPE. Support for GLMAT_ARRAY_TYPE has been removed.
+
+#### Other changes
+
+* Added flag .enableFrictionReduction to Narrowphase.
+* Added RevoluteConstraint.prototype.setLimits.
+* Added PrismaticConstraint.prototype.setLimits.
+* LockConstraint, DistanceConstraint, and GearConstraint can now be constructed from current body transforms.
+* RevoluteConstraint can now be constructed from the current body transforms and a world point.
+* Material id can now be passed via constructor.
+* ContactMaterial instances now have a property .contactSkinSize.
+* Added method Body.prototype.getAABB.
+* Limits for DistanceConstraint. See the DistanceConstraint demo.
+* Added Body.prototype.overlaps.
+* Added class OverlapKeeper.
+* If substepping is used in World.prototype.step, the substeps are aborted if slower than real time.
+* Added Heightfield/Convex and Heightfield/Circle collision support.
+* Added property .overlapKeeper to World.
+* EventEmitter.prototype.has can now check if any listeners were added to a given topic.
+* Added Utils.defaults.
+
 
 The full Change Log is at https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md
 

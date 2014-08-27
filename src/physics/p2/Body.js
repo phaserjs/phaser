@@ -1299,7 +1299,7 @@ Phaser.Physics.P2.Body.prototype = {
 Phaser.Physics.P2.Body.prototype.constructor = Phaser.Physics.P2.Body;
 
 /**
- * Dynamic body.
+ * Dynamic body. Dynamic bodies body can move and respond to collisions and forces.
  * @property DYNAMIC
  * @type {Number}
  * @static
@@ -1307,7 +1307,7 @@ Phaser.Physics.P2.Body.prototype.constructor = Phaser.Physics.P2.Body;
 Phaser.Physics.P2.Body.DYNAMIC = 1;
 
 /**
- * Static body.
+ * Static body. Static bodies do not move, and they do not respond to forces or collision.
  * @property STATIC
  * @type {Number}
  * @static
@@ -1315,7 +1315,7 @@ Phaser.Physics.P2.Body.DYNAMIC = 1;
 Phaser.Physics.P2.Body.STATIC = 2;
 
 /**
- * Kinematic body.
+ * Kinematic body. Kinematic bodies only moves according to its .velocity, and does not respond to collisions or force.
  * @property KINEMATIC
  * @type {Number}
  * @static
@@ -1330,20 +1330,20 @@ Object.defineProperty(Phaser.Physics.P2.Body.prototype, "static", {
 
     get: function () {
 
-        return (this.data.motionState === Phaser.Physics.P2.Body.STATIC);
+        return (this.data.type === Phaser.Physics.P2.Body.STATIC);
 
     },
 
     set: function (value) {
 
-        if (value && this.data.motionState !== Phaser.Physics.P2.Body.STATIC)
+        if (value && this.data.type !== Phaser.Physics.P2.Body.STATIC)
         {
-            this.data.motionState = Phaser.Physics.P2.Body.STATIC;
+            this.data.type = Phaser.Physics.P2.Body.STATIC;
             this.mass = 0;
         }
-        else if (!value && this.data.motionState === Phaser.Physics.P2.Body.STATIC)
+        else if (!value && this.data.type === Phaser.Physics.P2.Body.STATIC)
         {
-            this.data.motionState = Phaser.Physics.P2.Body.DYNAMIC;
+            this.data.type = Phaser.Physics.P2.Body.DYNAMIC;
 
             if (this.mass === 0)
             {
@@ -1363,24 +1363,24 @@ Object.defineProperty(Phaser.Physics.P2.Body.prototype, "dynamic", {
 
     get: function () {
 
-        return (this.data.motionState === Phaser.Physics.P2.Body.DYNAMIC);
+        return (this.data.type === Phaser.Physics.P2.Body.DYNAMIC);
 
     },
 
     set: function (value) {
 
-        if (value && this.data.motionState !== Phaser.Physics.P2.Body.DYNAMIC)
+        if (value && this.data.type !== Phaser.Physics.P2.Body.DYNAMIC)
         {
-            this.data.motionState = Phaser.Physics.P2.Body.DYNAMIC;
+            this.data.type = Phaser.Physics.P2.Body.DYNAMIC;
 
             if (this.mass === 0)
             {
                 this.mass = 1;
             }
         }
-        else if (!value && this.data.motionState === Phaser.Physics.P2.Body.DYNAMIC)
+        else if (!value && this.data.type === Phaser.Physics.P2.Body.DYNAMIC)
         {
-            this.data.motionState = Phaser.Physics.P2.Body.STATIC;
+            this.data.type = Phaser.Physics.P2.Body.STATIC;
             this.mass = 0;
         }
 
@@ -1396,20 +1396,20 @@ Object.defineProperty(Phaser.Physics.P2.Body.prototype, "kinematic", {
 
     get: function () {
 
-        return (this.data.motionState === Phaser.Physics.P2.Body.KINEMATIC);
+        return (this.data.type === Phaser.Physics.P2.Body.KINEMATIC);
 
     },
 
     set: function (value) {
 
-        if (value && this.data.motionState !== Phaser.Physics.P2.Body.KINEMATIC)
+        if (value && this.data.type !== Phaser.Physics.P2.Body.KINEMATIC)
         {
-            this.data.motionState = Phaser.Physics.P2.Body.KINEMATIC;
+            this.data.type = Phaser.Physics.P2.Body.KINEMATIC;
             this.mass = 4;
         }
-        else if (!value && this.data.motionState === Phaser.Physics.P2.Body.KINEMATIC)
+        else if (!value && this.data.type === Phaser.Physics.P2.Body.KINEMATIC)
         {
-            this.data.motionState = Phaser.Physics.P2.Body.STATIC;
+            this.data.type = Phaser.Physics.P2.Body.STATIC;
             this.mass = 0;
         }
 
@@ -1621,15 +1621,15 @@ Object.defineProperty(Phaser.Physics.P2.Body.prototype, "motionState", {
 
     get: function () {
 
-        return this.data.motionState;
+        return this.data.type;
 
     },
 
     set: function (value) {
 
-        if (value !== this.data.motionState)
+        if (value !== this.data.type)
         {
-            this.data.motionState = value;
+            this.data.type = value;
         }
 
     }
