@@ -72,6 +72,12 @@ Phaser.Image = function (game, x, y, key, frame) {
     this.world = new Phaser.Point(x, y);
 
     /**
+    * @property {boolean} alive - A useful boolean to control if the Image is alive or dead (in terms of your gameplay, it doesn't effect rendering).
+    * @default
+    */
+    this.alive = true;
+
+    /**
     * Should this Image be automatically culled if out of range of the camera?
     * A culled sprite has its renderable property set to 'false'.
     * Be advised this is quite an expensive operation, as it has to calculate the bounds of the object every frame, so only enable it if you really need it.
@@ -284,12 +290,12 @@ Phaser.Image.prototype.loadTexture = function (key, frame) {
 };
 
 /**
-* Sets the Texture frame the Sprite uses for rendering.
-* This is primarily an internal method used by Sprite.loadTexture, although you may call it directly.
+* Sets the Texture frame the Image uses for rendering.
+* This is primarily an internal method used by Image.loadTexture, although you may call it directly.
 *
-* @method Phaser.Sprite#setFrame
-* @memberof Phaser.Sprite
-* @param {Phaser.Frame} frame - The Frame to be used by the Sprite texture.
+* @method Phaser.Image#setFrame
+* @memberof Phaser.Image
+* @param {Phaser.Frame} frame - The Frame to be used by the Image texture.
 */
 Phaser.Image.prototype.setFrame = function(frame) {
 
@@ -340,10 +346,10 @@ Phaser.Image.prototype.setFrame = function(frame) {
 };
 
 /**
-* Resets the Texture frame dimensions that the Sprite uses for rendering.
+* Resets the Texture frame dimensions that the Image uses for rendering.
 *
-* @method Phaser.Sprite#resetFrame
-* @memberof Phaser.Sprite
+* @method Phaser.Image#resetFrame
+* @memberof Phaser.Image
 */
 Phaser.Image.prototype.resetFrame = function() {
 
@@ -397,11 +403,11 @@ Phaser.Image.prototype.crop = function(rect) {
 };
 
 /**
-* If you have set a crop rectangle on this Sprite via Sprite.crop and since modified the Sprite.cropRect property (or the rectangle it references)
+* If you have set a crop rectangle on this Image via Image.crop and since modified the Image.cropRect property (or the rectangle it references)
 * then you need to update the crop frame by calling this method.
 *
-* @method Phaser.Sprite#updateCrop
-* @memberof Phaser.Sprite
+* @method Phaser.Image#updateCrop
+* @memberof Phaser.Image
 */
 Phaser.Image.prototype.updateCrop = function() {
 
