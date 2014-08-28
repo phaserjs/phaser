@@ -93,6 +93,7 @@ Version 2.1.0 - "Cairhien" - -in development-
 * Group.swap() updates the Z index values properly (thanks @Blank101 #1090)
 * Device now recognises ChromeOS as a desktop (thanks @alvinsight @hilts-vaughan #1091)
 * Fixed Point.rotate bug (thanks @gamedolphin #1107)
+* InputHandler.checkBoundsRect was incorrectly assigning a property in Sprites fixed to the camera being dragged left (thanks @CraigBeswetherick #1093)
 
 ### p2.js 0.6.0 Changes and New Features
 
