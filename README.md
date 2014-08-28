@@ -128,6 +128,7 @@ Version 2.1.0 - "Cairhien" - -in development-
 * Calling P2.Body.destroy or ArcadePhysics.Body.destroy wouldn't null the parent sprite body, causing it to error in the next update (thanks @jonathanhooker #1077)
 * BitmapFonts are now correctly added to the Cache._bitmapFont array and returned via Cache.getBitmapFont (thanks @prudolfs #1076)
 * InputHandler docs updated to avoid Pointer data-type confusion (#1097)
+* If you used a single Game configuration object and didn't specify the enableDebug property it would crash on Debug.preUpdate (thanks @luizbills #1053)
 
 ### p2.js 0.6.0 Changes and New Features
 

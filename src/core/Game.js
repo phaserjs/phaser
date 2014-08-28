@@ -346,6 +346,11 @@ Phaser.Game.prototype = {
 
         this.config = config;
 
+        if (typeof config['enableDebug'] === 'undefined')
+        {
+            this.config.enableDebug = true;
+        }
+
         if (config['width'])
         {
             this.width = Phaser.Utils.parseDimension(config['width'], 0);
