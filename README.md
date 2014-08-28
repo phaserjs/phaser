@@ -67,20 +67,24 @@ Finally the list of [community authored Phaser Tutorials](http://www.lessmilk.co
 
 Version 2.1.0 - "Cairhien" - -in development-
 
-### Updates
-
-* Updated to [p2.js 0.6.0](https://github.com/schteppe/p2.js/commit/d1c7a340c42e4d5d1d939fba5fd13c5e49d6abd2) - this was an API breaking change, so please see the p2.js section of this change log specifically if you're using p2 in your game.
-* TypeScript definition updates to help fix for the `noimplicitany` option (thanks @Waog #1088)
-* All of the Pixi geom classes have been removed from the build file as they aren't needed (the Phaser.Geom classes overwrite them), saving some space in the process.
-
 ### New Features
 
+* Updated to [p2.js 0.6.0](https://github.com/schteppe/p2.js/commit/d1c7a340c42e4d5d1d939fba5fd13c5e49d6abd2) - this was an API breaking change, so please see the p2.js section of this change log specifically if you're using p2 in your game.
 * Device will now detect for Kindle and PS Vita (thanks @lucbloom)
 * Device will now detect for Cordova (thanks @videlais #1102)
 * Arcade Physics Body.skipQuadTree is a new boolean that if set to `true` when you collide the Sprite against a Group it will tell Phaser to skip using a QuadTree for that collision. This is handy if this Body is especially large.
 * Arcade Physics World.skipQuadTree will disable the use of all QuadTrees in collision methods, which can help performance in tightly packed scenes.
 * Cordova 'deviceready' event check added (thanks @videlais #1120)
 * Loader.useXDomainRequest boolean added. If `true` (the default is `false`) it will use XDomainRequest when loading JSON files instead of xhr. In rare IE edge-cases this may be required. You'll know if you need it (#1131 #1116)
+* Added support for Tiled objects type field (thanks @rex64 #1111)
+* Tile properties are now copied from the Tiled JSON data to the Phaser.Tile objects when parsed (thanks @beeglebug #1126)
+
+### Updates
+
+* TypeScript definition updates to help fix for the `noimplicitany` option (thanks @Waog #1088)
+* TypeScript definitions fixes and updates (thanks @clark-stevenson and @rhmoller)
+* All of the Pixi geom classes have been removed from the build file as they aren't needed (the Phaser.Geom classes overwrite them), saving some space in the process.
+* Improved consistency of clone methods on geometry classes (thanks @beeglebug #1130)
 
 ### Bug Fixes
 
@@ -94,6 +98,9 @@ Version 2.1.0 - "Cairhien" - -in development-
 * Device now recognises ChromeOS as a desktop (thanks @alvinsight @hilts-vaughan #1091)
 * Fixed Point.rotate bug (thanks @gamedolphin #1107)
 * InputHandler.checkBoundsRect was incorrectly assigning a property in Sprites fixed to the camera being dragged left (thanks @CraigBeswetherick #1093)
+* Swapped argument order of Rectangle.containsRect (thanks @beeglebug #1095 #1125)
+* The Game configuration object "renderer" property was being wrongly assigned to Game.renderer instead of renderType (thanks @FedeOmoto #1127)
+* Fixed Group.removeBetweens default endIndex (thanks @darfux #1142)
 
 ### p2.js 0.6.0 Changes and New Features
 
