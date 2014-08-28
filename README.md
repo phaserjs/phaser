@@ -88,6 +88,7 @@ Version 2.1.0 - "Cairhien" - -in development-
 * ScaleManager.destroy now removes the window and document event listeners, which are no longer created anonymously (thanks @eguneys #1092)
 * Input.Gamepad.destroy now destroys all connected SinglePads and clears event listeners.
 * SinglePad.destroy now clears all associated GamepadButton objects and signals.
+* Device.node and Device.nodeWebKit are two new properties (thanks @videlais #1129)
 
 ### Updates
 
