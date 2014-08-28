@@ -94,7 +94,7 @@ Version 2.1.0 - "Cairhien" - -in development-
 ### p2.js 0.6.0 Changes and New Features
 
 * DistanceConstraint signature changed to take the new localAnchors.
-* RevoluteConstraint signature changed to include worldPivot
+* RevoluteConstraint signature changed to include worldPivot.
 * P2.Body now uses the new Body.type value instead of Body.motionState, however as P2.Body already have a property called `type` we have left the `motionState` getter/setter in for now.
 * World.enableBodySleeping has been removed and replaced with World.sleepMode.
 * Phaser P2.Springs are now LinearSprings by default.

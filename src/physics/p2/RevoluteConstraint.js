@@ -16,13 +16,13 @@
 * @param {Float32Array} pivotA - The point relative to the center of mass of bodyA which bodyA is constrained to. The value is an array with 2 elements matching x and y, i.e: [32, 32].
 * @param {p2.Body} bodyB - Second connected body.
 * @param {Float32Array} pivotB - The point relative to the center of mass of bodyB which bodyB is constrained to. The value is an array with 2 elements matching x and y, i.e: [32, 32].
-* @param {Float32Array} [worldPivot] - A pivot point given in world coordinates. If specified, localPivotA and localPivotB are automatically computed from this value.
 * @param {number} [maxForce=0] - The maximum force that should be applied to constrain the bodies.
+* @param {Float32Array} [worldPivot=null] - A pivot point given in world coordinates. If specified, localPivotA and localPivotB are automatically computed from this value.
 */
-Phaser.Physics.P2.RevoluteConstraint = function (world, bodyA, pivotA, bodyB, pivotB, worldPivot, maxForce) {
+Phaser.Physics.P2.RevoluteConstraint = function (world, bodyA, pivotA, bodyB, pivotB, maxForce, worldPivot) {
 
-    if (typeof worldPivot === 'undefined') { worldPivot = null; }
     if (typeof maxForce === 'undefined') { maxForce = Number.MAX_VALUE; }
+    if (typeof worldPivot === 'undefined') { worldPivot = null; }
 
     /**
     * @property {Phaser.Game} game - Local reference to game.
@@ -36,6 +36,11 @@ Phaser.Physics.P2.RevoluteConstraint = function (world, bodyA, pivotA, bodyB, pi
 
     pivotA = [ world.pxmi(pivotA[0]), world.pxmi(pivotA[1]) ];
     pivotB = [ world.pxmi(pivotB[0]), world.pxmi(pivotB[1]) ];
+
+    if (worldPivot)
+    {
+        worldPivot = [ world.pxmi(worldPivot[0]), world.pxmi(worldPivot[1]) ];
+    }
 
     var options = { worldPivot: worldPivot, localPivotA: pivotA, localPivotB: pivotB, maxForce: maxForce };
 
