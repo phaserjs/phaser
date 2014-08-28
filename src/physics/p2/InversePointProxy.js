@@ -24,9 +24,49 @@ Phaser.Physics.P2.InversePointProxy.prototype.constructor = Phaser.Physics.P2.In
 
 /**
 * @name Phaser.Physics.P2.InversePointProxy#x
-* @property {number} x - The x property of this InversePointProxy.
+* @property {number} x - The x property of this InversePointProxy get and set in pixels.
 */
 Object.defineProperty(Phaser.Physics.P2.InversePointProxy.prototype, "x", {
+
+    get: function () {
+
+        return this.world.mpxi(this.destination[0]);
+
+    },
+
+    set: function (value) {
+
+        this.destination[0] = this.world.pxmi(value);
+
+    }
+
+});
+
+/**
+* @name Phaser.Physics.P2.InversePointProxy#y
+* @property {number} y - The y property of this InversePointProxy get and set in pixels.
+*/
+Object.defineProperty(Phaser.Physics.P2.InversePointProxy.prototype, "y", {
+
+    get: function () {
+
+        return this.world.mpxi(this.destination[1]);
+
+    },
+
+    set: function (value) {
+
+        this.destination[1] = this.world.pxmi(value);
+
+    }
+
+});
+
+/**
+* @name Phaser.Physics.P2.InversePointProxy#mx
+* @property {number} mx - The x property of this InversePointProxy get and set in meters.
+*/
+Object.defineProperty(Phaser.Physics.P2.InversePointProxy.prototype, "mx", {
 
     get: function () {
 
@@ -36,17 +76,17 @@ Object.defineProperty(Phaser.Physics.P2.InversePointProxy.prototype, "x", {
 
     set: function (value) {
 
-        this.destination[0] = this.world.pxm(-value);
+        this.destination[0] = -value;
 
     }
 
 });
 
 /**
-* @name Phaser.Physics.P2.InversePointProxy#y
-* @property {number} y - The y property of this InversePointProxy.
+* @name Phaser.Physics.P2.InversePointProxy#my
+* @property {number} my - The y property of this InversePointProxy get and set in meters.
 */
-Object.defineProperty(Phaser.Physics.P2.InversePointProxy.prototype, "y", {
+Object.defineProperty(Phaser.Physics.P2.InversePointProxy.prototype, "my", {
 
     get: function () {
 
@@ -56,7 +96,7 @@ Object.defineProperty(Phaser.Physics.P2.InversePointProxy.prototype, "y", {
 
     set: function (value) {
 
-        this.destination[1] = this.world.pxm(-value);
+        this.destination[1] = -value;
 
     }
 

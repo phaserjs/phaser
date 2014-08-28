@@ -90,11 +90,13 @@ Version 2.1.0 - "Cairhien" - -in development-
 * Input.Gamepad.destroy now destroys all connected SinglePads and clears event listeners.
 * SinglePad.destroy now clears all associated GamepadButton objects and signals.
 * Device.node and Device.nodeWebKit are two new properties (thanks @videlais #1129)
+* P2.PointProxy.mx and my values are get and set in meters with no pixel conversion taking place.
+* P2.InversePointProxy.mx and my values are get and set in meters with no pixel conversion taking place.
 
 ### Updates
 
 * TypeScript definition updates to help fix for the `noimplicitany` option (thanks @Waog #1088)
-* TypeScript definitions fixes and updates (thanks @clark-stevenson and @rhmoller)
+* TypeScript definitions fixes and updates (thanks @clark-stevenson @englercj and @rhmoller)
 * All of the Pixi geom classes have been removed from the build file as they aren't needed (the Phaser.Geom classes overwrite them), saving some space in the process.
 * Improved consistency of clone methods on geometry classes (thanks @beeglebug #1130)
 * Removed Cache.isSpriteSheet method as no longer required (see #1059)
@@ -108,6 +110,8 @@ Version 2.1.0 - "Cairhien" - -in development-
 * P2.World.defaultFriction and defaultRestitution have been removed due to deprecation.
 * Canvas.create noCocoon parameter has been removed due to deprecation.
 * Color.getColorInfo, RGBtoHexstring, RGBtoWebstring and colorToHexstring has been removed due to deprecation.
+* P2.PointProxy.x and y values are now returned in pixels (previously they were returned in meters). See PointProxy.mx/my for meter values.
+* P2.InversePointProxy.x and y values are now returned in pixels (previously they were returned in meters). See PointProxy.mx/my for meter values.
 
 ### Bug Fixes
 
