@@ -306,6 +306,35 @@ Phaser.SinglePad.prototype = {
     },
 
     /**
+     * Destroys this object and associated callback references.
+     *
+     * @method destroy
+     */
+    destroy: function () {
+
+        this._rawPad = undefined;
+
+        for (var i = 0; i < this._buttonsLen; i++)
+        {
+            this._buttons[i].destroy();
+        }
+
+        this._buttons = [];
+        this._buttonsLen = 0;
+
+        this._axes = [];
+        this._axesLen = 0;
+
+        this.onConnectCallback = null;
+        this.onDisconnectCallback = null;
+        this.onDownCallback = null;
+        this.onUpCallback = null;
+        this.onAxisCallback = null;
+        this.onFloatCallback = null;
+
+    },
+
+    /**
     * Handles changes in axis.
     * 
     * @method Phaser.SinglePad#processAxisChange

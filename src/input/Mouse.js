@@ -500,6 +500,10 @@ Phaser.Mouse.prototype = {
         this.game.canvas.removeEventListener('mousewheel', this._onMouseWheel, true);
         this.game.canvas.removeEventListener('DOMMouseScroll', this._onMouseWheel, true);
 
+        document.removeEventListener('pointerlockchange', this._pointerLockChange, true);
+        document.removeEventListener('mozpointerlockchange', this._pointerLockChange, true);
+        document.removeEventListener('webkitpointerlockchange', this._pointerLockChange, true);
+
     }
 
 };

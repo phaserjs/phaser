@@ -85,6 +85,9 @@ Version 2.1.0 - "Cairhien" - -in development-
 * TileSprite now has the `alive` property, which should help with some Group operations (thanks @jonkelling #1085)
 * Events.onDestroy is a new signal that is dispatched whenever the parent is being destroyed. It's dispatched at the start of the destroy process, allowing you to perform any additional house cleaning needed (thanks @jonkelling #1084)
 * Group.onDestroy is a new signal that is dispatched whenever the Group is being destroyed. It's dispatched at the start of the destroy process, allowing you to perform any additional house cleaning needed (thanks @jonkelling #1084)
+* ScaleManager.destroy now removes the window and document event listeners, which are no longer created anonymously (thanks @eguneys #1092)
+* Input.Gamepad.destroy now destroys all connected SinglePads and clears event listeners.
+* SinglePad.destroy now clears all associated GamepadButton objects and signals.
 
 ### Updates
 

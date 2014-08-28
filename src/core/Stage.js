@@ -134,6 +134,21 @@ Phaser.Stage.prototype.update = function () {
 
 };
 
+Phaser.Stage.prototype.destroy  = function () {
+
+    if (this._hiddenVar)
+    {
+        document.removeEventListener(this._hiddenVar, this._onChange, false);
+    }
+
+    window.onpagehide = null;
+    window.onpageshow = null;
+
+    window.onblur = null;
+    window.onfocus = null;
+
+};
+
 /**
 * This is called automatically before the renderer runs and after the plugins have updated.
 * In postUpdate this is where all the final physics calculatations and object positioning happens.

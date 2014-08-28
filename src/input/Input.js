@@ -393,15 +393,10 @@ Phaser.Input.prototype = {
         this.keyboard.stop();
         this.touch.stop();
         this.mspointer.stop();
-
-
         this.gamepad.stop();
-
         // this.gestures.stop();
 
         this.moveCallbacks = [];
-        //  DEPRECATED
-        this.moveCallback = null;
 
     },
 

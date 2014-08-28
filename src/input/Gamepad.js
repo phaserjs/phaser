@@ -130,6 +130,7 @@ Phaser.Gamepad = function (game) {
     * @private
     */
     this._gamepaddisconnected = null;
+
 };
 
 Phaser.Gamepad.prototype = {
@@ -171,31 +172,47 @@ Phaser.Gamepad.prototype = {
 
         this._active = true;
 
-        var _this = this;
+        window.addEventListener('gamepadconnected', this._onGamepadConnected, false);
+        window.addEventListener('gamepaddisconnected', this._onGamepadDisconnected, false);
 
-        this._ongamepadconnected = function(event) {
-            var newPad = event.gamepad;
-            _this._rawPads.push(newPad);
-            _this._gamepads[newPad.index].connect(newPad);
-        };
+    },
 
-        window.addEventListener('gamepadconnected', this._ongamepadconnected, false);
+    /**
+     * Handles the connection of a Gamepad.
+     *
+     * @method _onGamepadConnected
+     * @private
+     * @param {object} event - The DOM event.
+     */
+    _onGamepadConnected: function (event) {
 
-        this._ongamepaddisconnected = function(event) {
+        var newPad = event.gamepad;
 
-            var removedPad = event.gamepad;
+        this._rawPads.push(newPad);
+        this._gamepads[newPad.index].connect(newPad);
 
-            for (var i in _this._rawPads)
+    },
+
+    /**
+     * Handles the disconnection of a Gamepad.
+     *
+     * @method _onGamepadDisconnected
+     * @private
+     * @param {object} event - The DOM event.
+     */
+    _onGamepadDisconnected: function (event) {
+
+        var removedPad = event.gamepad;
+
+        for (var i in this._rawPads)
+        {
+            if (this._rawPads[i].index === removedPad.index)
             {
-                if (_this._rawPads[i].index === removedPad.index)
-                {
-                    _this._rawPads.splice(i,1);
-                }
+                this._rawPads.splice(i,1);
             }
-            _this._gamepads[removedPad.index].disconnect();
-        };
+        }
 
-        window.addEventListener('gamepaddisconnected', this._ongamepaddisconnected, false);
+        this._gamepads[removedPad.index].disconnect();
 
     },
 
@@ -353,8 +370,8 @@ Phaser.Gamepad.prototype = {
 
         this._active = false;
 
-        window.removeEventListener('gamepadconnected', this._ongamepadconnected);
-        window.removeEventListener('gamepaddisconnected', this._ongamepaddisconnected);
+        window.removeEventListener('gamepadconnected', this._onGamepadConnected);
+        window.removeEventListener('gamepaddisconnected', this._onGamepadDisconnected);
 
     },
 
@@ -432,6 +449,22 @@ Phaser.Gamepad.prototype = {
         }
 
         return false;
+    },
+
+    /**
+     * Destroys this object and the associated event listeners.
+     *
+     * @method destroy
+     */
+    destroy: function () {
+
+        this.stop();
+
+        for (var i = 0; i < this._gamepads.length; i++)
+        {
+            this._gamepads[i].destroy();
+        }
+
     }
 
 };

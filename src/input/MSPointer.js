@@ -68,7 +68,7 @@ Phaser.MSPointer.prototype = {
 
         var _this = this;
 
-        if (this.game.device.mspointer === true)
+        if (this.game.device.mspointer)
         {
             this._onMSPointerDown = function (event) {
                 return _this.onPointerDown(event);
@@ -82,18 +82,17 @@ Phaser.MSPointer.prototype = {
                 return _this.onPointerUp(event);
             };
 
-            this.game.renderer.view.addEventListener('MSPointerDown', this._onMSPointerDown, false);
-            this.game.renderer.view.addEventListener('MSPointerMove', this._onMSPointerMove, false);
-            this.game.renderer.view.addEventListener('MSPointerUp', this._onMSPointerUp, false);
+            this.game.canvas.addEventListener('MSPointerDown', this._onMSPointerDown, false);
+            this.game.canvas.addEventListener('MSPointerMove', this._onMSPointerMove, false);
+            this.game.canvas.addEventListener('MSPointerUp', this._onMSPointerUp, false);
 
             //  IE11+ uses non-prefix events
-            this.game.renderer.view.addEventListener('pointerDown', this._onMSPointerDown, false);
-            this.game.renderer.view.addEventListener('pointerMove', this._onMSPointerMove, false);
-            this.game.renderer.view.addEventListener('pointerUp', this._onMSPointerUp, false);
+            this.game.canvas.addEventListener('pointerDown', this._onMSPointerDown, false);
+            this.game.canvas.addEventListener('pointerMove', this._onMSPointerMove, false);
+            this.game.canvas.addEventListener('pointerUp', this._onMSPointerUp, false);
 
-            this.game.renderer.view.style['-ms-content-zooming'] = 'none';
-            this.game.renderer.view.style['-ms-touch-action'] = 'none';
-
+            this.game.canvas.style['-ms-content-zooming'] = 'none';
+            this.game.canvas.style['-ms-touch-action'] = 'none';
         }
 
     },

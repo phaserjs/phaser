@@ -232,6 +232,17 @@ Phaser.ScaleManager = function (game, width, height) {
 
     var _this = this;
 
+    window.addEventListener('orientationchange', _this.checkOrientation, false);
+    window.addEventListener('resize', _this.checkResize, false);
+
+    if (!this.game.device.cocoonJS)
+    {
+        document.addEventListener('webkitfullscreenchange', _this.fullScreenChange, false);
+        document.addEventListener('mozfullscreenchange', _this.fullScreenChange, false);
+        document.addEventListener('fullscreenchange', _this.fullScreenChange, false);
+    }
+
+    /*
     window.addEventListener('orientationchange', function (event) {
         return _this.checkOrientation(event);
     }, false);
@@ -254,6 +265,7 @@ Phaser.ScaleManager = function (game, width, height) {
             return _this.fullScreenChange(event);
         }, false);
     }
+    */
 
 };
 
@@ -759,6 +771,27 @@ Phaser.ScaleManager.prototype = {
         else
         {
             this.height = availableHeight;
+        }
+
+    },
+
+    /**
+     * Destroys the ScaleManager and removes any event listeners.
+     *
+     * @method destroy
+     */
+    destroy: function () {
+
+        var _this = this;
+
+        window.removeEventListener('orientationchange', _this.checkOrientation, false);
+        window.removeEventListener('resize', _this.checkResize, false);
+
+        if (!this.game.device.cocoonJS)
+        {
+            document.removeEventListener('webkitfullscreenchange', _this.fullScreenChange, false);
+            document.removeEventListener('mozfullscreenchange', _this.fullScreenChange, false);
+            document.removeEventListener('fullscreenchange', _this.fullScreenChange, false);
         }
 
     }
