@@ -287,7 +287,6 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
 
         if (typeof renderer !== 'undefined')
         {
-            this.renderer = renderer;
             this.renderType = renderer;
         }
 
@@ -359,7 +358,6 @@ Phaser.Game.prototype = {
 
         if (config['renderer'])
         {
-            this.renderer = config['renderer'];
             this.renderType = config['renderer'];
         }
 
