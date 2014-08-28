@@ -79,6 +79,7 @@ Version 2.1.0 - "Cairhien" - -in development-
 * Added support for Tiled objects type field (thanks @rex64 #1111)
 * Tile properties are now copied from the Tiled JSON data to the Phaser.Tile objects when parsed (thanks @beeglebug #1126)
 * All Images now have a frameData value, even if it's only one frame. This removes lots of engine code needed to check if images are sprite sheets or not, and simplifies game code too (thanks @lucbloom #1059)
+* Added a new Phaser.Rope object. This allows for a series of 'chained' Sprites and extends the Rope support built into Pixi. Access it via game.add.rope (thanks @codevinsky #1030)
 
 ### Updates
 
