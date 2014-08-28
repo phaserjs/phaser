@@ -329,6 +329,8 @@ Phaser.Cache.prototype = {
 
         Phaser.LoaderParser.bitmapFont(this.game, xmlData, key, xSpacing, ySpacing);
 
+        this._bitmapFont[key] = PIXI.BitmapText.fonts[key];
+
     },
 
     /**

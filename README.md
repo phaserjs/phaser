@@ -126,6 +126,7 @@ Version 2.1.0 - "Cairhien" - -in development-
 * Camera.setBoundsToWorld no longer crashes if the camera bounds are nulled (thanks @wayfu #1143)
 * Fixed the resolution uniform type in the SampleFilter (thanks @VictoryRice #1137)
 * Calling P2.Body.destroy or ArcadePhysics.Body.destroy wouldn't null the parent sprite body, causing it to error in the next update (thanks @jonathanhooker #1077)
+* BitmapFonts are now correctly added to the Cache._bitmapFont array and returned via Cache.getBitmapFont (thanks @prudolfs #1076)
 
 ### p2.js 0.6.0 Changes and New Features
 
