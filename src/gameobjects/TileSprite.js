@@ -134,6 +134,12 @@ Phaser.TileSprite = function (game, x, y, width, height, key, frame) {
     this.body = null;
 
     /**
+    * @property {boolean} alive - A useful boolean to control if the TileSprite is alive or dead (in terms of your gameplay, it doesn't effect rendering).
+    * @default
+    */
+    this.alive = true;
+
+    /**
     * A small internal cache:
     * 0 = previous position.x
     * 1 = previous position.y
@@ -476,6 +482,7 @@ Phaser.TileSprite.prototype.destroy = function(destroyChildren) {
 
     this.exists = false;
     this.visible = false;
+    this.alive = false;
 
     this.filters = null;
     this.mask = null;
