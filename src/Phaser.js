@@ -44,6 +44,7 @@ var Phaser = Phaser || {
     SPRITEBATCH: 17,
     RETROFONT: 18,
     POINTER: 19,
+    ROPE: 20,
 
     // The various blend modes supported by pixi / phaser
     blendModes: {
