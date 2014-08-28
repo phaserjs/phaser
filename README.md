@@ -78,6 +78,7 @@ Version 2.1.0 - "Cairhien" - -in development-
 * Loader.useXDomainRequest boolean added. If `true` (the default is `false`) it will use XDomainRequest when loading JSON files instead of xhr. In rare IE edge-cases this may be required. You'll know if you need it (#1131 #1116)
 * Added support for Tiled objects type field (thanks @rex64 #1111)
 * Tile properties are now copied from the Tiled JSON data to the Phaser.Tile objects when parsed (thanks @beeglebug #1126)
+* All Images now have a frameData value, even if it's only one frame. This removes lots of engine code needed to check if images are sprite sheets or not, and simplifies game code too (thanks @lucbloom #1059)
 
 ### Updates
 
@@ -85,6 +86,8 @@ Version 2.1.0 - "Cairhien" - -in development-
 * TypeScript definitions fixes and updates (thanks @clark-stevenson and @rhmoller)
 * All of the Pixi geom classes have been removed from the build file as they aren't needed (the Phaser.Geom classes overwrite them), saving some space in the process.
 * Improved consistency of clone methods on geometry classes (thanks @beeglebug #1130)
+* Removed Cache.isSpriteSheet method as no longer required (see #1059)
+* Added Cache.getFrameCount to return the number of frames in a FrameData.
 
 ### Bug Fixes
 
