@@ -79,6 +79,8 @@ Version 2.1.0 - "Cairhien" - -in development-
 * Device will now detect for Cordova (thanks @videlais #1102)
 * Arcade Physics Body.skipQuadTree is a new boolean that if set to `true` when you collide the Sprite against a Group it will tell Phaser to skip using a QuadTree for that collision. This is handy if this Body is especially large.
 * Arcade Physics World.skipQuadTree will disable the use of all QuadTrees in collision methods, which can help performance in tightly packed scenes.
+* Cordova 'deviceready' event check added (thanks @videlais #1120)
+* Loader.useXDomainRequest boolean added. If `true` (the default is `false`) it will use XDomainRequest when loading JSON files instead of xhr. In rare IE edge-cases this may be required. You'll know if you need it (#1131 #1116)
 
 ### Bug Fixes
 
@@ -90,6 +92,7 @@ Version 2.1.0 - "Cairhien" - -in development-
 * Resolves issue with pixel perfect click / over detection on Sprites that used trimmed image atlases for animations or frames > 0.
 * Group.swap() updates the Z index values properly (thanks @Blank101 #1090)
 * Device now recognises ChromeOS as a desktop (thanks @alvinsight @hilts-vaughan #1091)
+* Fixed Point.rotate bug (thanks @gamedolphin #1107)
 
 ### p2.js 0.6.0 Changes and New Features
 

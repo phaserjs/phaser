@@ -100,6 +100,12 @@ Phaser.Loader = function (game) {
     this.onPackComplete = new Phaser.Signal();
     
     /**
+    * @property {boolean} useXDomainRequest - If true and if the browser supports XDomainRequest, it will be used in preference for xhr. You'll know if you need this or not.
+    * @default
+    */
+    this.useXDomainRequest = false;
+
+    /**
     * @property {array} _packList - Contains all the assets packs.
     * @private
     */
@@ -1218,7 +1224,7 @@ Phaser.Loader.prototype = {
 
             case 'json':
 
-                if (window.XDomainRequest)
+                if (this.useXDomainRequest && window.XDomainRequest)
                 {
                     this._ajax = new window.XDomainRequest();
 
