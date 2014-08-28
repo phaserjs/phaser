@@ -140,22 +140,6 @@ Phaser.SinglePad.prototype = {
     },
 
     /**
-    * DEPRECATED: Please see SinglePad.getButton for the same functionality.
-    * 
-    * If you need more fine-grained control over a gamepad button you can create a new Phaser.GamepadButton object via this method.
-    * The GamepadButton object can then be polled, have events attached to it, etc.
-    *
-    * @method Phaser.SinglePad#addButton
-    * @param {number} buttonCode - The buttonCode of the button, i.e. Phaser.Gamepad.BUTTON_0, Phaser.Gamepad.XBOX360_A, etc.
-    * @return {Phaser.GamepadButton} The GamepadButton object which you can store locally and reference directly.
-    */
-    addButton: function (buttonCode) {
-
-        return this.getButton(buttonCode);
-
-    },
-
-    /**
     * Gets a GamepadButton object from this controller to be stored and referenced locally.
     * The GamepadButton object can then be polled, have events attached to it, etc.
     *

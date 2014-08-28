@@ -97,6 +97,15 @@ Version 2.1.0 - "Cairhien" - -in development-
 * Improved consistency of clone methods on geometry classes (thanks @beeglebug #1130)
 * Removed Cache.isSpriteSheet method as no longer required (see #1059)
 * Added Cache.getFrameCount to return the number of frames in a FrameData.
+* Input.setMoveCallback has been removed due to deprecation.
+* BitmapData.refreshBuffer has been removed and replaced with BitmapData.update.
+* BitmapData.drawSprite has been removed due to deprecation. Use BitmapData.draw instead.
+* Pointer.moveCallback has been removed due to deprecation.
+* SinglePad.addButton has been removed due to deprecation.
+* P2.Body.loadData has been removed due to deprecation.
+* P2.World.defaultFriction and defaultRestitution have been removed due to deprecation.
+* Canvas.create noCocoon parameter has been removed due to deprecation.
+* Color.getColorInfo, RGBtoHexstring, RGBtoWebstring and colorToHexstring has been removed due to deprecation.
 
 ### Bug Fixes
 

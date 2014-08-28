@@ -19,12 +19,9 @@ Phaser.Canvas = {
     * @param {number} [width=256] - The width of the canvas element.
     * @param {number} [height=256] - The height of the canvas element..
     * @param {string} [id=''] - If given this will be set as the ID of the canvas element, otherwise no ID will be set.
-    * @param {boolean} [noCocoon=false] - DEPRECATED: This parameter is no longer used.
     * @return {HTMLCanvasElement} The newly created canvas element.
     */
-    create: function (width, height, id, noCocoon) {
-
-        if (typeof noCocoon === 'undefined') { noCocoon = false; }
+    create: function (width, height, id) {
 
         width = width || 256;
         height = height || 256;

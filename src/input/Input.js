@@ -401,24 +401,6 @@ Phaser.Input.prototype = {
     },
 
     /**
-    * DEPRECATED: This method will be removed in a future major point release. Please use Input.addMoveCallback instead.
-    * 
-    * Sets a callback that is fired every time the activePointer receives a DOM move event such as a mousemove or touchmove.
-    * It will be called every time the activePointer moves, which in a multi-touch game can be a lot of times, so this is best
-    * to only use if you've limited input to a single pointer (i.e. mouse or touch)
-    * 
-    * @method Phaser.Input#setMoveCallback
-    * @param {function} callback - The callback that will be called each time the activePointer receives a DOM move event.
-    * @param {object} callbackContext - The context in which the callback will be called.
-    */
-    setMoveCallback: function (callback, callbackContext) {
-
-        this.moveCallback = callback;
-        this.moveCallbackContext = callbackContext;
-
-    },
-
-    /**
     * Adds a callback that is fired every time the activePointer receives a DOM move event such as a mousemove or touchmove.
     * It will be called every time the activePointer moves, which in a multi-touch game can be a lot of times, so this is best
     * to only use if you've limited input to a single pointer (i.e. mouse or touch).

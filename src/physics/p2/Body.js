@@ -1270,28 +1270,6 @@ Phaser.Physics.P2.Body.prototype = {
 
         return true;
 
-    },
-
-    /**
-    * DEPRECATED: This method will soon be removed from the API. Please avoid using.
-    * Reads the physics data from a physics data file stored in the Game.Cache.
-    * It will add the shape data to this Body, as well as set the density (mass).
-    *
-    * @method Phaser.Physics.P2.Body#loadData
-    * @param {string} key - The key of the Physics Data file as stored in Game.Cache.
-    * @param {string} object - The key of the object within the Physics data file that you wish to load the shape data from.
-    * @return {boolean} True on success, else false.
-    */
-    loadData: function (key, object) {
-
-        var data = this.game.cache.getPhysicsData(key, object);
-
-        if (data && data.shape)
-        {
-            this.mass = data.density;
-            return this.loadPolygon(key, object);
-        }
-
     }
 
 };

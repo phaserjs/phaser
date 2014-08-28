@@ -134,7 +134,6 @@ Phaser.BitmapData = function (game, key, width, height) {
 
     //  Aliases
     this.cls = this.clear;
-    this.update = this.refreshBuffer;
 
     /**
     * @property {number} _tempR - Internal cache var.
@@ -281,7 +280,7 @@ Phaser.BitmapData.prototype = {
             this.texture.crop.width = width;
             this.texture.crop.height = height;
 
-            this.refreshBuffer();
+            this.update();
             this.dirty = true;
         }
 
@@ -298,21 +297,7 @@ Phaser.BitmapData.prototype = {
     * @param {number} [width] - The width of the image data area.
     * @param {number} [height] - The height of the image data area.
     */
-
-    /**
-    * DEPRECATED: This method will be removed in Phaser 2.1. Please use BitmapData.update instead.
-    *
-    * This re-creates the BitmapData.imageData from the current context.
-    * It then re-builds the ArrayBuffer, the data Uint8ClampedArray reference and the pixels Int32Array.
-    * If not given the dimensions defaults to the full size of the context.
-    *
-    * @method Phaser.BitmapData#refreshBuffer
-    * @param {number} [x=0] - The x coordinate of the top-left of the image data area to grab from.
-    * @param {number} [y=0] - The y coordinate of the top-left of the image data area to grab from.
-    * @param {number} [width] - The width of the image data area.
-    * @param {number} [height] - The height of the image data area.
-    */
-    refreshBuffer: function (x, y, width, height) {
+    update: function (x, y, width, height) {
 
         if (typeof x === 'undefined') { x = 0; }
         if (typeof y === 'undefined') { y = 0; }
@@ -888,26 +873,6 @@ Phaser.BitmapData.prototype = {
         this.context.drawImage(src, sx, sy, sw, sh, x, y, width, height);
 
         this.dirty = true;
-
-    },
-
-    /**
-    * DEPRECATED: Use BitmapData.draw instead.
-    * 
-    * Draws the given image to this BitmapData at the coordinates specified.
-    * If you need to only draw a part of the image use BitmapData.copyPixels instead.
-    *
-    * @method Phaser.BitmapData#drawSprite
-    * @param {Phaser.Sprite|Phaser.Image} sprite - The Sprite to draw. Must have a loaded texture and frame.
-    * @param {number} [x=0] - The x coordinate to draw the Sprite to.
-    * @param {number} [y=0] - The y coordinate to draw the Sprite to.
-    */
-    drawSprite: function (sprite, x, y) {
-
-        if (typeof x === 'undefined') { x = 0; }
-        if (typeof y === 'undefined') { y = 0; }
-
-        this.draw(sprite, x, y);
 
     },
 

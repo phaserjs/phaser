@@ -1671,50 +1671,10 @@ Object.defineProperty(Phaser.Physics.P2.prototype, "friction", {
 });
 
 /**
-* @name Phaser.Physics.P2#defaultFriction
-* @property {number} defaultFriction - DEPRECATED: Use World.friction instead.
-*/
-Object.defineProperty(Phaser.Physics.P2.prototype, "defaultFriction", {
-
-    get: function () {
-
-        return this.world.defaultContactMaterial.friction;
-
-    },
-
-    set: function (value) {
-
-        this.world.defaultContactMaterial.friction = value;
-
-    }
-
-});
-
-/**
 * @name Phaser.Physics.P2#restitution
 * @property {number} restitution - Default coefficient of restitution between colliding bodies. This value is used if no matching ContactMaterial is found for a Material pair.
 */
 Object.defineProperty(Phaser.Physics.P2.prototype, "restitution", {
-
-    get: function () {
-
-        return this.world.defaultContactMaterial.restitution;
-
-    },
-
-    set: function (value) {
-
-        this.world.defaultContactMaterial.restitution = value;
-
-    }
-
-});
-
-/**
-* @name Phaser.Physics.P2#defaultRestitution
-* @property {number} defaultRestitution - DEPRECATED: Use World.restitution instead.
-*/
-Object.defineProperty(Phaser.Physics.P2.prototype, "defaultRestitution", {
 
     get: function () {
 
