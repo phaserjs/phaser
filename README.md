@@ -109,6 +109,7 @@ Version 2.1.0 - "Cairhien" - -in development-
 * Fixed Group.removeBetweens default endIndex (thanks @darfux #1142)
 * Debug.cameraInfo no longer crashes if the camera bounds are nulled (thanks @wayfu #1143)
 * Camera.setBoundsToWorld no longer crashes if the camera bounds are nulled (thanks @wayfu #1143)
+* Fixed the resolution uniform type in the SampleFilter (thanks @VictoryRice #1137)
 
 ### p2.js 0.6.0 Changes and New Features
 
