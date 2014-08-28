@@ -42,6 +42,9 @@ declare module PIXI {
     export var RAD_TO_DEG: number;
     export var DEG_TO_RAD: number;
 
+    export var BaseTextureCache: Map<string, BaseTexture>;
+    export var TextureCache: Map<string, Texture>;
+
     export function rgb2hex(rgb: number[]): string;
     export function hex2rgb(hex: string): number[];
 
@@ -233,6 +236,8 @@ declare module PIXI {
         textHeight: number;
         tint: number;
         style: BitmapTextStyle;
+
+        static fonts: any;
 
         setText(text: string): void;
         setStyle(style: BitmapTextStyle): void;
@@ -972,6 +977,7 @@ declare module PIXI {
 
         clear(): void;
         resize(width: number, height: number, updateBase: boolean): void;
+        render(displayObject, position, clear): void;
 
     }
 
@@ -1149,7 +1155,7 @@ declare module Phaser {
         textureFrame: Phaser.Frame;
         type: number;
         width: number;
-        
+
         add(object: any): void;
         alphaMask(source: any, mask: any, sourceRect?: Phaser.Rectangle, maskRect?: Phaser.Rectangle): void;
         circle(x: number, y: number, radius: number, fillStyle?: string): void;
@@ -1176,7 +1182,7 @@ declare module Phaser {
         setHSL(h?: number, s?: number, l?: number, region?: Phaser.Rectangle): void;
         setPixel(x: number, y: number, red: number, green: number, blue: number, immediate?: boolean): void;
         setPixel32(x: number, y: number, red: number, green: number, blue: number, alpha: number, immediate?: boolean): void;
-        
+
     }
 
     class BitmapText extends PIXI.BitmapText {
@@ -3276,7 +3282,7 @@ declare module Phaser {
                 collideAABBVsTile(tile: Phaser.Physics.Ninja.Tile): boolean;
                 destroy(): void;
                 integrate(): void;
-                render(context: any, xOffset: number, yOffset: number, color: string, filled: boolean): void; 
+                render(context: any, xOffset: number, yOffset: number, color: string, filled: boolean): void;
                 reportCollisionVsWorld(px: number, py: number, dx: number, dy: number, obj: Object): void;
                 reportCollisionVsBody(px: number, py: number, dx: number, dy: number, obj: Object): void;
                 resolveTile(x: number, y: number, body: Phaser.Physics.Ninja.AABB, tile: Phaser.Physics.Ninja.Tile): boolean;
@@ -3706,7 +3712,7 @@ declare module Phaser {
             findPath(startPoint: Phaser.Point, goalPoint: Phaser.Point): Phaser.Plugin.AStar.AStarPath;
             isWalkable(x: number, y: number): boolean;
             setAStarMap(map: Phaser.Tilemap, layerName: string, tilesetName: string): Phaser.Plugin.AStar;
-           
+
         }
 
         module AStar {
@@ -4497,7 +4503,7 @@ declare module Phaser {
         refresh(): void;
         setExactFit(): void;
         setMaximum(): void;
-        setScreenSize(force: boolean): void;
+        setScreenSize(force?: boolean): void;
         setShowAll(): void;
         setSize(): void;
         startFullScreen(antialias: boolean): void;
@@ -4693,11 +4699,11 @@ declare module Phaser {
         currentLayer: number;
         debugMap: any[];
         format: number;
-        game: Phaser.Game; 
+        game: Phaser.Game;
         height: number;
         heightInPixels: number;
         images: any[];
-        key: string; 
+        key: string;
         layer: Phaser.TilemapLayer[];
         layers: Object[];
         objects: any[];
