@@ -832,7 +832,7 @@ Phaser.InputHandler.prototype = {
             return;
         }
 
-        if (this._pointerData[pointer.id].isOver === false)
+        if (this._pointerData[pointer.id].isOver === false || pointer.dirty)
         {
             this._pointerData[pointer.id].isOver = true;
             this._pointerData[pointer.id].isOut = false;
@@ -915,6 +915,9 @@ Phaser.InputHandler.prototype = {
                 this.sprite.events.onInputDown.dispatch(this.sprite, pointer);
             }
 
+            //  It's possible the onInputDown event created a new Sprite that is on-top of this one, so we ought to force a Pointer update
+            pointer.dirty = true;
+
             //  Start drag
             if (this.draggable && this.isDragged === false)
             {
@@ -978,6 +981,9 @@ Phaser.InputHandler.prototype = {
                     this._setHandCursor = false;
                 }
             }
+
+            //  It's possible the onInputUp event created a new Sprite that is on-top of this one, so we ought to force a Pointer update
+            pointer.dirty = true;
 
             //  Stop drag
             if (this.draggable && this.isDragged && this._draggedPointerID === pointer.id)

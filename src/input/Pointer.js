@@ -218,6 +218,12 @@ Phaser.Pointer = function (game, id) {
     this.active = false;
 
     /**
+    * @property {boolean} dirty - A dirty pointer needs to re-poll any interactive objects it may have been over, regardless if it has moved or not.
+    * @default
+    */
+    this.dirty = false;
+
+    /**
     * @property {Phaser.Point} position - A Phaser.Point object containing the current x/y values of the pointer on the display.
     */
     this.position = new Phaser.Point();
@@ -273,6 +279,7 @@ Phaser.Pointer.prototype = {
         this.withinGame = true;
         this.isDown = true;
         this.isUp = false;
+        this.dirty = false;
 
         //  Work out how long it has been since the last click
         this.msSinceLastClick = this.game.time.now - this.timeDown;
@@ -319,6 +326,17 @@ Phaser.Pointer.prototype = {
 
         if (this.active)
         {
+            //  Force a check?
+            if (this.dirty)
+            {
+                if (this.game.input.interactiveItems.total > 0)
+                {
+                    this.processInteractiveObjects(true);
+                }
+
+                this.dirty = false;
+            }
+
             if (this._holdSent === false && this.duration >= this.game.input.holdRate)
             {
                 if (this.game.input.multiInputOverride == Phaser.Input.MOUSE_OVERRIDES_TOUCH || this.game.input.multiInputOverride == Phaser.Input.MOUSE_TOUCH_COMBINE || (this.game.input.multiInputOverride == Phaser.Input.TOUCH_OVERRIDES_MOUSE && this.game.input.currentPointers === 0))
@@ -497,7 +515,6 @@ Phaser.Pointer.prototype = {
         while (currentNode !== null);
 
         //  Now we know the top-most item (if any) we can process it
-
         if (this._highestRenderObject === null)
         {
             //  The pointer isn't currently over anything, check if we've got a lingering previous target
@@ -666,6 +683,7 @@ Phaser.Pointer.prototype = {
 
         this.pointerId = null;
         this.identifier = null;
+        this.dirty = false;
         this.isDown = false;
         this.isUp = true;
         this.totalTouches = 0;
