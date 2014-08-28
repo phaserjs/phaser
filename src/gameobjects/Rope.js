@@ -411,6 +411,11 @@ Phaser.Rope.prototype.destroy = function(destroyChildren) {
 
     this._cache[8] = 1;
 
+    if (this.events)
+    {
+        this.events.onDestroy.dispatch(this);
+    }
+
     if (this.filters)
     {
         this.filters = null;

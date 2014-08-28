@@ -124,6 +124,11 @@ Phaser.Group = function (game, parent, name, addToStage, enableBody, physicsBody
     this.physicsBodyType = physicsBodyType;
 
     /**
+    * @property {Phaser.Signal} onDestroy - This signal is dispatched when the parent is destoyed.
+    */
+    this.onDestroy = new Phaser.Signal();
+
+    /**
     * @property {string} _sortProperty - The property on which children are sorted.
     * @private
     */
@@ -1687,6 +1692,8 @@ Phaser.Group.prototype.destroy = function (destroyChildren, soft) {
 
     if (typeof destroyChildren === 'undefined') { destroyChildren = true; }
     if (typeof soft === 'undefined') { soft = false; }
+
+    this.onDestroy.dispatch(this, destroyChildren, soft);
 
     this.removeAll(destroyChildren);
 
