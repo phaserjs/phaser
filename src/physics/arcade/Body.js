@@ -533,6 +533,7 @@ Phaser.Physics.Arcade.Body.prototype = {
     */
     destroy: function () {
 
+        this.sprite.body = null;
         this.sprite = null;
 
     },
