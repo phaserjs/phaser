@@ -7,6 +7,7 @@
     "src/physics/p2/Body.js",
     "src/physics/p2/BodyDebug.js",
     "src/physics/p2/Spring.js",
+    "src/physics/p2/RotationalSpring.js",
     "src/physics/p2/Material.js",
     "src/physics/p2/ContactMaterial.js",
     "src/physics/p2/CollisionGroup.js",
