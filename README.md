@@ -107,6 +107,8 @@ Version 2.1.0 - "Cairhien" - -in development-
 * Swapped argument order of Rectangle.containsRect (thanks @beeglebug #1095 #1125)
 * The Game configuration object "renderer" property was being wrongly assigned to Game.renderer instead of renderType (thanks @FedeOmoto #1127)
 * Fixed Group.removeBetweens default endIndex (thanks @darfux #1142)
+* Debug.cameraInfo no longer crashes if the camera bounds are nulled (thanks @wayfu #1143)
+* Camera.setBoundsToWorld no longer crashes if the camera bounds are nulled (thanks @wayfu #1143)
 
 ### p2.js 0.6.0 Changes and New Features
 
