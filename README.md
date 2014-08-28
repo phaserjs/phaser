@@ -129,6 +129,7 @@ Version 2.1.0 - "Cairhien" - -in development-
 * BitmapFonts are now correctly added to the Cache._bitmapFont array and returned via Cache.getBitmapFont (thanks @prudolfs #1076)
 * InputHandler docs updated to avoid Pointer data-type confusion (#1097)
 * If you used a single Game configuration object and didn't specify the enableDebug property it would crash on Debug.preUpdate (thanks @luizbills #1053)
+* The P2.World.postBroadphaseHandler now checks if the returned pairs array is empty or not before processing it (thanks @wayfu #934)
 
 ### p2.js 0.6.0 Changes and New Features
 

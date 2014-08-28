@@ -347,10 +347,10 @@ Phaser.Physics.P2.prototype = {
     */
     postBroadphaseHandler: function (event) {
 
-        if (this.postBroadphaseCallback)
-        {
-            var i = event.pairs.length;
+        var i = event.pairs.length;
 
+        if (this.postBroadphaseCallback && i > 0)
+        {
             while (i -= 2)
             {
                 if (event.pairs[i].parent && event.pairs[i+1].parent && !this.postBroadphaseCallback.call(this.callbackContext, event.pairs[i].parent, event.pairs[i+1].parent))
