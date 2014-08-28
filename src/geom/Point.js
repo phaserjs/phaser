@@ -222,7 +222,7 @@ Phaser.Point.prototype = {
     */
     clone: function (output) {
 
-        if (typeof output === "undefined")
+        if (typeof output === "undefined" || output === null)
         {
             output = new Phaser.Point(this.x, this.y);
         }
