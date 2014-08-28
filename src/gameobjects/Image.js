@@ -369,9 +369,10 @@ Phaser.Image.prototype.resetFrame = function() {
 *
 * @method Phaser.Image#crop
 * @memberof Phaser.Image
-* @param {Phaser.Rectangle|object} rect - The Rectangle to crop the Image to. Pass null or no parameters to clear a previously set crop rectangle.
+* @param {Phaser.Rectangle} rect - The Rectangle used during cropping. Pass null or no parameters to clear a previously set crop rectangle.
+* @param {boolean} [copy=false] - If false Sprite.cropRect will be a reference to the given rect. If true it will copy the rect values into a local Sprite.cropRect object.
 */
-Phaser.Image.prototype.crop = function(rect) {
+Phaser.Image.prototype.crop = function(rect, copy) {
 
     if (typeof copy === 'undefined') { copy = false; }
 
