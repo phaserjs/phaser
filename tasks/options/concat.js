@@ -36,7 +36,8 @@ module.exports = {
         dest: '<%= compile_dir %>/phaser-arcade-physics.js'
     },
 
-    //  One ring to rule them all
+    //  One ring to rule them all, with ninja physics
+    /*
     standalone: {
         options: {
             banner: '<%= banner %>'
@@ -45,6 +46,20 @@ module.exports = {
             '<%= compile_dir %>/pixi.js',
             '<%= compile_dir %>/phaser-no-libs.js',
             '<%= compile_dir %>/ninja.js',
+            '<%= compile_dir %>/p2.js'
+        ],
+        dest: '<%= compile_dir %>/phaser.js'
+    }
+    */
+
+    //  One ring to rule them all
+    standalone: {
+        options: {
+            banner: '<%= banner %>'
+        },
+        src: [
+            '<%= compile_dir %>/pixi.js',
+            '<%= compile_dir %>/phaser-no-libs.js',
             '<%= compile_dir %>/p2.js'
         ],
         dest: '<%= compile_dir %>/phaser.js'

@@ -64,6 +64,9 @@ Phaser.Physics.Ninja = function (game) {
     */
     this.quadTree = new Phaser.QuadTree(this.game.world.bounds.x, this.game.world.bounds.y, this.game.world.bounds.width, this.game.world.bounds.height, this.maxObjects, this.maxLevels);
 
+    // By default we want the bounds the same size as the world bounds
+    this.setBoundsToWorld();
+
 };
 
 Phaser.Physics.Ninja.prototype.constructor = Phaser.Physics.Ninja;
