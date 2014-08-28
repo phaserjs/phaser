@@ -253,7 +253,7 @@ Phaser.Cache.prototype = {
     */
     addSpriteSheet: function (key, url, data, frameWidth, frameHeight, frameMax, margin, spacing) {
 
-        this._images[key] = { url: url, data: data, spriteSheet: true, frameWidth: frameWidth, frameHeight: frameHeight, margin: margin, spacing: spacing };
+        this._images[key] = { url: url, data: data, frameWidth: frameWidth, frameHeight: frameHeight, margin: margin, spacing: spacing };
 
         PIXI.BaseTextureCache[key] = new PIXI.BaseTexture(data);
         PIXI.TextureCache[key] = new PIXI.Texture(PIXI.BaseTextureCache[key]);
@@ -289,7 +289,7 @@ Phaser.Cache.prototype = {
     */
     addTextureAtlas: function (key, url, data, atlasData, format) {
 
-        this._images[key] = { url: url, data: data, spriteSheet: true };
+        this._images[key] = { url: url, data: data };
 
         PIXI.BaseTextureCache[key] = new PIXI.BaseTexture(data);
         PIXI.TextureCache[key] = new PIXI.Texture(PIXI.BaseTextureCache[key]);
@@ -322,7 +322,7 @@ Phaser.Cache.prototype = {
     */
     addBitmapFont: function (key, url, data, xmlData, xSpacing, ySpacing) {
 
-        this._images[key] = { url: url, data: data, spriteSheet: true };
+        this._images[key] = { url: url, data: data };
 
         PIXI.BaseTextureCache[key] = new PIXI.BaseTexture(data);
         PIXI.TextureCache[key] = new PIXI.Texture(PIXI.BaseTextureCache[key]);
@@ -422,9 +422,11 @@ Phaser.Cache.prototype = {
     */
     addImage: function (key, url, data) {
 
-        this._images[key] = { url: url, data: data, spriteSheet: false };
+        this._images[key] = { url: url, data: data };
 
         this._images[key].frame = new Phaser.Frame(0, 0, 0, data.width, data.height, key, this.game.rnd.uuid());
+        this._images[key].frameData = new Phaser.FrameData();
+        this._images[key].frameData.addFrame(new Phaser.Frame(0, 0, 0, data.width, data.height, url, this.game.rnd.uuid()));
 
         PIXI.BaseTextureCache[key] = new PIXI.BaseTexture(data);
         PIXI.TextureCache[key] = new PIXI.Texture(PIXI.BaseTextureCache[key]);
@@ -859,7 +861,7 @@ Phaser.Cache.prototype = {
     */
     getFrameData: function (key) {
 
-        if (this._images[key] && this._images[key].frameData)
+        if (this._images[key])
         {
             return this._images[key].frameData;
         }
@@ -878,7 +880,6 @@ Phaser.Cache.prototype = {
 
         if (this._images[key])
         {
-            this._images[key].spriteSheet = true;
             this._images[key].frameData = frameData;
         }
 
@@ -893,7 +894,7 @@ Phaser.Cache.prototype = {
     */
     getFrameByIndex: function (key, frame) {
 
-        if (this._images[key] && this._images[key].frameData)
+        if (this._images[key])
         {
             return this._images[key].frameData.getFrame(frame);
         }
@@ -910,7 +911,7 @@ Phaser.Cache.prototype = {
     */
     getFrameByName: function (key, frame) {
 
-        if (this._images[key] && this._images[key].frameData)
+        if (this._images[key])
         {
             return this._images[key].frameData.getFrameByName(frame);
         }
@@ -927,7 +928,7 @@ Phaser.Cache.prototype = {
     */
     getFrame: function (key) {
 
-        if (this._images[key] && this._images[key].spriteSheet === false)
+        if (this._images[key])
         {
             return this._images[key].frame;
         }
@@ -1042,20 +1043,20 @@ Phaser.Cache.prototype = {
     },
 
     /**
-    * Check whether an image asset is sprite sheet or not.
+    * Get the number of frames in this image.
     *
-    * @method Phaser.Cache#isSpriteSheet
-    * @param {string} key - Asset key of the sprite sheet you want.
-    * @return {boolean} True if the image is a sprite sheet.
+    * @method Phaser.Cache#getFrameCount
+    * @param {string} key - Asset key of the image you want.
+    * @return {integer} Then number of frames. 0 if the image is not found.
     */
-    isSpriteSheet: function (key) {
+    getFrameCount: function (key) {
 
         if (this._images[key])
         {
-            return this._images[key].spriteSheet;
+            return this._images[key].frameData.total;
         }
 
-        return false;
+        return 0;
 
     },
 
