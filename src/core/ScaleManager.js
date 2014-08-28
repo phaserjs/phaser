@@ -232,40 +232,27 @@ Phaser.ScaleManager = function (game, width, height) {
 
     var _this = this;
 
-    window.addEventListener('orientationchange', _this.checkOrientation, false);
-    window.addEventListener('resize', _this.checkResize, false);
-
-    if (!this.game.device.cocoonJS)
-    {
-        document.addEventListener('webkitfullscreenchange', _this.fullScreenChange, false);
-        document.addEventListener('mozfullscreenchange', _this.fullScreenChange, false);
-        document.addEventListener('fullscreenchange', _this.fullScreenChange, false);
-    }
-
-    /*
-    window.addEventListener('orientationchange', function (event) {
+    this._checkOrientation = function(event) {
         return _this.checkOrientation(event);
-    }, false);
+    };
 
-    window.addEventListener('resize', function (event) {
+    this._checkResize = function(event) {
         return _this.checkResize(event);
-    }, false);
+    };
+
+    this._fullScreenChange = function(event) {
+        return _this.fullScreenChange(event);
+    };
+
+    window.addEventListener('orientationchange', this._checkOrientation, false);
+    window.addEventListener('resize', this._checkResize, false);
 
     if (!this.game.device.cocoonJS)
     {
-        document.addEventListener('webkitfullscreenchange', function (event) {
-            return _this.fullScreenChange(event);
-        }, false);
-
-        document.addEventListener('mozfullscreenchange', function (event) {
-            return _this.fullScreenChange(event);
-        }, false);
-
-        document.addEventListener('fullscreenchange', function (event) {
-            return _this.fullScreenChange(event);
-        }, false);
+        document.addEventListener('webkitfullscreenchange', this._fullScreenChange, false);
+        document.addEventListener('mozfullscreenchange', this._fullScreenChange, false);
+        document.addEventListener('fullscreenchange', this._fullScreenChange, false);
     }
-    */
 
 };
 
@@ -782,16 +769,14 @@ Phaser.ScaleManager.prototype = {
      */
     destroy: function () {
 
-        var _this = this;
-
-        window.removeEventListener('orientationchange', _this.checkOrientation, false);
-        window.removeEventListener('resize', _this.checkResize, false);
+        window.removeEventListener('orientationchange', this._checkOrientation, false);
+        window.removeEventListener('resize', this._checkResize, false);
 
         if (!this.game.device.cocoonJS)
         {
-            document.removeEventListener('webkitfullscreenchange', _this.fullScreenChange, false);
-            document.removeEventListener('mozfullscreenchange', _this.fullScreenChange, false);
-            document.removeEventListener('fullscreenchange', _this.fullScreenChange, false);
+            document.removeEventListener('webkitfullscreenchange', this._fullScreenChange, false);
+            document.removeEventListener('mozfullscreenchange', this._fullScreenChange, false);
+            document.removeEventListener('fullscreenchange', this._fullScreenChange, false);
         }
 
     }
