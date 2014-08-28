@@ -1084,7 +1084,7 @@ Phaser.Tilemap.prototype = {
 
         layer = this.getLayer(layer);
 
-        return (this.layers[layer].data[y] !== null && this.layers[layer].data[y][x] !== null);
+        return (this.layers[layer].data[y][x].index > -1);
 
     },
 
