@@ -434,7 +434,7 @@ Phaser.Pointer.prototype = {
 
         while (i--)
         {
-            this.game.input.moveCallbacks[i].callback.call(this.game.input.moveCallbacks[i].context, this, this.x, this.y);
+            this.game.input.moveCallbacks[i].callback.call(this.game.input.moveCallbacks[i].context, this, this.x, this.y, fromClick);
         }
 
         //  Easy out if we're dragging something and it still exists
