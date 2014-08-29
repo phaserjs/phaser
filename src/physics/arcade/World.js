@@ -653,10 +653,12 @@ Phaser.Physics.Arcade.prototype = {
         {
             if (group1.children[i].exists)
             {
-                if (group1.children[i].type == Phaser.GROUP)
+                if (group1.children[i].type === Phaser.GROUP)
                 {
                     this.collideGroupVsGroup(group1.children[i], group2, collideCallback, processCallback, callbackContext, overlapOnly);
-                } else {
+                }
+                else
+                {
                     this.collideSpriteVsGroup(group1.children[i], group2, collideCallback, processCallback, callbackContext, overlapOnly);
                 }
             }
