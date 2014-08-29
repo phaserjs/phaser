@@ -161,7 +161,7 @@ Phaser.SinglePad.prototype = {
     },
 
     /**
-    * Main update function, should be called by Phaser.Gamepad.
+    * Main update function called by Phaser.Gamepad.
     * 
     * @method Phaser.SinglePad#pollStatus
     */
@@ -192,19 +192,18 @@ Phaser.SinglePad.prototype = {
                 }
             }
         }
-
         
-        for (var j = 0; j < this._axesLen; j++)
+        for (var index = 0; index < this._axesLen; index++)
         {
-            var axis = this._rawPad.axes[j];
+            var value = this._rawPad.axes[index];
 
-            if (axis > 0 && axis > this.deadZone || axis < 0 && axis < -this.deadZone)
+            if ((value > 0 && value > this.deadZone) || (value < 0 && value < -this.deadZone))
             {
-                this.processAxisChange( { axis: j, value: axis } );
+                this.processAxisChange(index, value);
             }
             else
             {
-                this.processAxisChange( { axis: j, value: 0 } );
+                this.processAxisChange(index, 0);
             }
         }
 
@@ -230,8 +229,13 @@ Phaser.SinglePad.prototype = {
         this._buttons = [];
         this._buttonsLen = rawPad.buttons.length;
 
-        this._axes = rawPad.axes;
+        this._axes = [];
         this._axesLen = rawPad.axes.length;
+
+        for (var a = 0; a < this._axesLen; a++)
+        {
+            this._axes[a] = rawPad.axes[a];
+        }
 
         for (var buttonCode in rawPad.buttons)
         {
@@ -324,23 +328,23 @@ Phaser.SinglePad.prototype = {
     * @method Phaser.SinglePad#processAxisChange
     * @param {Object} axisState - State of the relevant axis
     */
-    processAxisChange: function (axisState) {
+    processAxisChange: function (index, value) {
 
-        if (this._axes[axisState.axis] === axisState.value)
+        if (this._axes[index] === value)
         {
             return;
         }
 
-        this._axes[axisState.axis] = axisState.value;
+        this._axes[index] = value;
 
         if (this._padParent.onAxisCallback)
         {
-            this._padParent.onAxisCallback.call(this._padParent.callbackContext, axisState, this.index);
+            this._padParent.onAxisCallback.call(this._padParent.callbackContext, this, index, value);
         }
 
         if (this.onAxisCallback)
         {
-            this.onAxisCallback.call(this.callbackContext, axisState);
+            this.onAxisCallback.call(this.callbackContext, this, index, value);
         }
 
     },

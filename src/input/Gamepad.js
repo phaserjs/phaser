@@ -25,17 +25,6 @@ Phaser.Gamepad = function (game) {
     this.game = game;
 
     /**
-    * @property {Array<Phaser.SinglePad>} _gamepads - The four Phaser Gamepads.
-    * @private
-    */
-    this._gamepads = [
-        new Phaser.SinglePad(game, this),
-        new Phaser.SinglePad(game, this),
-        new Phaser.SinglePad(game, this),
-        new Phaser.SinglePad(game, this)
-    ];
-
-    /**
     * @property {Object} _gamepadIndexMap - Maps the browsers gamepad indices to our Phaser Gamepads
     * @private
     */
@@ -131,6 +120,17 @@ Phaser.Gamepad = function (game) {
     */
     this._gamepaddisconnected = null;
 
+    /**
+    * @property {Array<Phaser.SinglePad>} _gamepads - The four Phaser Gamepads.
+    * @private
+    */
+    this._gamepads = [
+        new Phaser.SinglePad(game, this),
+        new Phaser.SinglePad(game, this),
+        new Phaser.SinglePad(game, this),
+        new Phaser.SinglePad(game, this)
+    ];
+
 };
 
 Phaser.Gamepad.prototype = {
@@ -172,6 +172,16 @@ Phaser.Gamepad.prototype = {
 
         this._active = true;
 
+        var _this = this;
+
+        this._onGamepadConnected = function (event) {
+            return _this.onGamepadConnected(event);
+        };
+
+        this._onGamepadDisconnected = function (event) {
+            return _this.onGamepadDisconnected(event);
+        };
+
         window.addEventListener('gamepadconnected', this._onGamepadConnected, false);
         window.addEventListener('gamepaddisconnected', this._onGamepadDisconnected, false);
 
@@ -180,14 +190,13 @@ Phaser.Gamepad.prototype = {
     /**
      * Handles the connection of a Gamepad.
      *
-     * @method _onGamepadConnected
+     * @method onGamepadConnected
      * @private
      * @param {object} event - The DOM event.
      */
-    _onGamepadConnected: function (event) {
+    onGamepadConnected: function (event) {
 
         var newPad = event.gamepad;
-
         this._rawPads.push(newPad);
         this._gamepads[newPad.index].connect(newPad);
 
@@ -196,11 +205,11 @@ Phaser.Gamepad.prototype = {
     /**
      * Handles the disconnection of a Gamepad.
      *
-     * @method _onGamepadDisconnected
+     * @method onGamepadDisconnected
      * @private
      * @param {object} event - The DOM event.
      */
-    _onGamepadDisconnected: function (event) {
+    onGamepadDisconnected: function (event) {
 
         var removedPad = event.gamepad;
 
@@ -619,6 +628,7 @@ Phaser.Gamepad.XBOX360_DPAD_RIGHT = 15;
 Phaser.Gamepad.XBOX360_DPAD_UP = 12;
 Phaser.Gamepad.XBOX360_DPAD_DOWN = 13;
 
+//  On FF 0 = Y, 1 = X, 2 = Y, 3 = X, 4 = left bumper, 5 = dpad left, 6 = dpad right
 Phaser.Gamepad.XBOX360_STICK_LEFT_X = 0;
 Phaser.Gamepad.XBOX360_STICK_LEFT_Y = 1;
 Phaser.Gamepad.XBOX360_STICK_RIGHT_X = 2;
