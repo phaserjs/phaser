@@ -914,7 +914,8 @@ Phaser.Tilemap.prototype = {
     */
     calculateFaces: function (layer) {
 
-        if(this.preventingRecalculate===true){
+        if (this.preventingRecalculate)
+        {
             this.needToRecalculate[layer] = true;
             return;
         }
