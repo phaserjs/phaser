@@ -120,6 +120,7 @@ Version 2.1.0 - "Cairhien" - -in development-
 * Arcade.overlap and collide are now more consistent about allowing a Group vs. Group or Group vs. Array of Groups set (thanks @pyromanfo #877 #1147)
 * The Pointer move callbacks are now sent an extra parameter: `fromClick` allowing your callbacks to distinguish between the Pointer just moving, or moving as a result of being pressed down (thanks @iforce2d #1055)
 * GamePad and SinglePad onAxisCallback parameters have changed. You are now sent: this (a reference to the SinglePad that caused the callback), the axis index and the axis value in that order.
+* If Time.elapsed was > Time.timeCap it would reset the elapsed value to be 1 / 60. It's now set to Time.timeCap and Time.timeCap defaults to `1 / 60 * 1000` as it's a ms value (thanks @casensiom #899)
 
 ### Bug Fixes
 
