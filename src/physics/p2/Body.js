@@ -1744,6 +1744,8 @@ Object.defineProperty(Phaser.Physics.P2.Body.prototype, "debug", {
 /**
 * A Body can be set to collide against the World bounds automatically if this is set to true. Otherwise it will leave the World.
 * Note that this only applies if your World has bounds! The response to the collision should be managed via CollisionMaterials.
+* Also note that when you set this it will only effect Body shapes that already exist. If you then add further shapes to your Body
+* after setting this it will *not* proactively set them to collide with the bounds.
 *
 * @name Phaser.Physics.P2.Body#collideWorldBounds
 * @property {boolean} collideWorldBounds - Should the Body collide with the World bounds?
