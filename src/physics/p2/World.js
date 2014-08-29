@@ -764,12 +764,19 @@ Phaser.Physics.P2.prototype = {
     * Adds a Spring to the world.
     *
     * @method Phaser.Physics.P2#addSpring
-    * @param {Phaser.Physics.P2.Spring} spring - The Spring to add to the World.
+    * @param {Phaser.Physics.P2.Spring|p2.LinearSpring|p2.RotationalSpring} spring - The Spring to add to the World.
     * @return {Phaser.Physics.P2.Spring} The Spring that was added.
     */
     addSpring: function (spring) {
 
-        this.world.addSpring(spring);
+        if (spring instanceof Phaser.Physics.P2.Spring || spring instanceof Phaser.Physics.P2.RotationalSpring)
+        {
+            this.world.addSpring(spring.data);
+        }
+        else
+        {
+            this.world.addSpring(spring);
+        }
 
         this.onSpringAdded.dispatch(spring);
 
@@ -786,7 +793,14 @@ Phaser.Physics.P2.prototype = {
     */
     removeSpring: function (spring) {
 
-        this.world.removeSpring(spring);
+        if (spring instanceof Phaser.Physics.P2.Spring || spring instanceof Phaser.Physics.P2.RotationalSpring)
+        {
+            this.world.removeSpring(spring.data);
+        }
+        else
+        {
+            this.world.removeSpring(spring);
+        }
 
         this.onSpringRemoved.dispatch(spring);
 

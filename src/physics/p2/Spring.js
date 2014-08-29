@@ -65,9 +65,11 @@ Phaser.Physics.P2.Spring = function (world, bodyA, bodyB, restLength, stiffness,
         options.localAnchorB = [ world.pxm(localB[0]), world.pxm(localB[1]) ];
     }
 
-    p2.LinearSpring.call(this, bodyA, bodyB, options);
+    /**
+    * @property {p2.LinearSpring} data - The actual p2 spring object.
+    */
+    this.data = new p2.LinearSpring(bodyA, bodyB, options);
 
 };
 
-Phaser.Physics.P2.Spring.prototype = Object.create(p2.LinearSpring.prototype);
 Phaser.Physics.P2.Spring.prototype.constructor = Phaser.Physics.P2.Spring;

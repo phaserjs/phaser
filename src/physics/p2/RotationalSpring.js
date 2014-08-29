@@ -44,9 +44,11 @@ Phaser.Physics.P2.RotationalSpring = function (world, bodyA, bodyB, restAngle, s
         damping: damping
     };
 
-    p2.RotationalSpring.call(this, bodyA, bodyB, options);
+    /**
+    * @property {p2.RotationalSpring} data - The actual p2 spring object.
+    */
+    this.data = new p2.RotationalSpring(bodyA, bodyB, options);
 
 };
 
-Phaser.Physics.P2.Spring.prototype = Object.create(p2.RotationalSpring.prototype);
 Phaser.Physics.P2.Spring.prototype.constructor = Phaser.Physics.P2.Spring;
