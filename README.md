@@ -148,6 +148,7 @@ Version 2.1.0 - "Cairhien" - -in development-
 * Sound.restart used to cause the Sound to double-up if it was already playing when called. Now correctly stops the sound before restarting it (thanks @wombatbuddy #1136)
 * GamePad axis detection now works again properly in Firefox (#1035)
 * GamepadButton.justPressed and justReleased now correctly report if the button has just been pressed or released (thanks @padpadpad #1019)
+* TilemapParser.getEmptyData now correct adds an empty bodies array into layers. This fixes an issue where p2 couldn't convert a csv map into collision tiles (thanks @sru #845)
 
 ### p2.js 0.6.0 Changes and New Features
 
