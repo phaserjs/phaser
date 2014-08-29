@@ -408,6 +408,7 @@ Phaser.TilemapParser = {
                     }
 
                     collision[json.layers[i].name].push(object);
+                    objects[json.layers[i].name].push(object);
                 }
                 // polygon
                 else if (json.layers[i].objects[v].polygon)
