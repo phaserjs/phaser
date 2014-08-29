@@ -500,6 +500,28 @@ Phaser.SoundManager.prototype = {
             }
         }
 
+    },
+
+    /**
+    * Stops all the sounds in the game, then destroys them and finally clears up any callbacks.
+    *
+    * @method Phaser.SoundManager#destroy
+    */
+    destroy: function () {
+
+        this.stopAll();
+
+        for (var i = 0; i < this._sounds.length; i++)
+        {
+            if (this._sounds[i])
+            {
+                this._sounds[i].destroy();
+            }
+        }
+
+        this._sounds = [];
+        this.onSoundDecode.dispose();
+
     }
 
 };

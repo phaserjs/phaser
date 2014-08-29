@@ -305,33 +305,7 @@ Phaser.StateManager.prototype = {
         if (this._pendingState && this.game.isBooted)
         {
             //  Already got a state running?
-            if (this.current)
-            {
-                if (this.onShutDownCallback)
-                {
-                    this.onShutDownCallback.call(this.callbackContext, this.game);
-                }
-
-                this.game.tweens.removeAll();
-
-                this.game.camera.reset();
-
-                this.game.input.reset(true);
-
-                this.game.physics.clear();
-
-                this.game.time.removeAll();
-
-                if (this._clearWorld)
-                {
-                    this.game.world.shutdown();
-
-                    if (this._clearCache === true)
-                    {
-                        this.game.cache.destroy();
-                    }
-                }
-            }
+            this.clearCurrentState();
 
             this.setCurrentState(this._pendingState);
 
@@ -360,6 +334,44 @@ Phaser.StateManager.prototype = {
             if (this.current === this._pendingState)
             {
                 this._pendingState = null;
+            }
+        }
+
+    },
+
+    /**
+    * This method clears the current State, calling its shutdown callback. The process also removes any active tweens,
+    * resets the camera, resets input, clears physics, removes timers and if set clears the world and cache too.
+    *
+    * @method Phaser.StateManager#clearCurrentState
+    */
+    clearCurrentState: function () {
+
+        if (this.current)
+        {
+            if (this.onShutDownCallback)
+            {
+                this.onShutDownCallback.call(this.callbackContext, this.game);
+            }
+
+            this.game.tweens.removeAll();
+
+            this.game.camera.reset();
+
+            this.game.input.reset(true);
+
+            this.game.physics.clear();
+
+            this.game.time.removeAll();
+
+            if (this._clearWorld)
+            {
+                this.game.world.shutdown();
+
+                if (this._clearCache === true)
+                {
+                    this.game.cache.destroy();
+                }
             }
         }
 
@@ -613,6 +625,8 @@ Phaser.StateManager.prototype = {
     * @method Phaser.StateManager#destroy
     */
     destroy: function () {
+
+        this.clearCurrentState();
 
         this.callbackContext = null;
 

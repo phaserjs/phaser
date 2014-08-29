@@ -741,7 +741,7 @@ Phaser.Game.prototype = {
     },
 
     /**
-    * Nuke the entire game from orbit
+    * Nukes the entire game from orbit.
     *
     * @method Phaser.Game#destroy
     */
@@ -749,10 +749,12 @@ Phaser.Game.prototype = {
 
         this.raf.stop();
 
+        this.state.destroy();
+        this.sound.destroy();
+
         this.scale.destroy();
         this.stage.destroy();
         this.input.destroy();
-        this.state.destroy();
         this.physics.destroy();
 
         this.state = null;

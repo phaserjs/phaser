@@ -93,6 +93,9 @@ Version 2.1.0 - "Cairhien" - -in development-
 * P2.PointProxy.mx and my values are get and set in meters with no pixel conversion taking place.
 * P2.InversePointProxy.mx and my values are get and set in meters with no pixel conversion taking place.
 * Pointer.dirty is a new boolean that is set by the InputHandler. It tells the Pointer to re-check all interactive objects it may be over on the next update, regardless if it has moved position or not. This helps solve issues where you may have a Button that on click generates a pop-up window that now obscures the Button (thanks @jflowers45 #882)
+* SoundManager.destroy is a new method that will destroy all current sounds and reset any callbacks.
+* StateManager.clearCurrentState now handles the process of clearing down the current state and is now called if the Game is destroyed.
+* Game.destroy now clears the current state, activating its shutdown callback if it had one. It also now destroys the SoundManager, stopping any currently running sounds (#1092)
 
 ### Updates
 
