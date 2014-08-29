@@ -308,7 +308,7 @@ Phaser.Sound.prototype = {
     */
     soundHasUnlocked: function (key) {
 
-        if (key == this.key)
+        if (key === this.key)
         {
             this._sound = this.game.cache.getSoundData(this.key);
             this.totalDuration = this._sound.duration;
@@ -362,11 +362,10 @@ Phaser.Sound.prototype = {
     */
     update: function () {
         
-        if (this.isDecoded && !this._onDecodedEventDispatched) {
-
+        if (this.isDecoded && !this._onDecodedEventDispatched)
+        {
             this.onDecoded.dispatch(this);
-            this._onDecodedEventDispatched=true;
-
+            this._onDecodedEventDispatched = true;
         }
 
         if (this.pendingPlayback && this.game.cache.isSoundReady(this.key))
@@ -435,13 +434,13 @@ Phaser.Sound.prototype = {
         if (typeof marker === 'undefined') { marker = ''; }
         if (typeof forceRestart === 'undefined') { forceRestart = true; }
 
-        if (this.isPlaying === true && forceRestart === false && this.override === false)
+        if (this.isPlaying && !forceRestart && !this.override)
         {
             //  Use Restart instead
             return this;
         }
 
-        if (this.isPlaying && this.override)
+        if (this.isPlaying && (this.override || forceRestart))
         {
             if (this.usingWebAudio)
             {
@@ -520,7 +519,7 @@ Phaser.Sound.prototype = {
             if (this.game.cache.isSoundDecoded(this.key))
             {
                 //  Do we need to do this every time we play? How about just if the buffer is empty?
-                if (this._buffer == null)
+                if (this._buffer === null)
                 {
                     this._buffer = this.game.cache.getSoundData(this.key);
                 }
