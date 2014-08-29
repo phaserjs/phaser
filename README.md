@@ -147,6 +147,7 @@ Version 2.1.0 - "Cairhien" - -in development-
 * Tilemap.hasTile now checks the Tile.index value and will return false if the index is -1 (i.e. a non-active tile) (thanks @elgansayer #859)
 * Sound.restart used to cause the Sound to double-up if it was already playing when called. Now correctly stops the sound before restarting it (thanks @wombatbuddy #1136)
 * GamePad axis detection now works again properly in Firefox (#1035)
+* GamepadButton.justPressed and justReleased now correctly report if the button has just been pressed or released (thanks @padpadpad #1019)
 
 ### p2.js 0.6.0 Changes and New Features
 
