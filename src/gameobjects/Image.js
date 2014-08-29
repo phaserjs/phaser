@@ -58,6 +58,11 @@ Phaser.Image = function (game, x, y, key, frame) {
     this.events = new Phaser.Events(this);
 
     /**
+    * @property {Phaser.AnimationManager} animations - This manages animations of the sprite. You can modify animations through it (see Phaser.AnimationManager)
+    */
+    this.animations = new Phaser.AnimationManager(this);
+
+    /**
     *  @property {string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture} key - This is the image or texture used by the Image during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture, BitmapData or PIXI.Texture.
     */
     this.key = key;
@@ -246,6 +251,7 @@ Phaser.Image.prototype.loadTexture = function (key, frame) {
 
     this.key = key;
 
+    var setFrame = true;
     var smoothed = this.smoothed;
 
     if (key instanceof Phaser.RenderTexture)
@@ -277,10 +283,15 @@ Phaser.Image.prototype.loadTexture = function (key, frame) {
         else
         {
             this.setTexture(new PIXI.Texture(PIXI.BaseTextureCache[key]));
+
+            setFrame = !this.animations.loadFrameData(this.game.cache.getFrameData(key), frame);
         }
     }
 
-    this._frame = Phaser.Rectangle.clone(this.texture.frame);
+    if (setFrame)
+    {
+        this._frame = Phaser.Rectangle.clone(this.texture.frame);
+    }
 
     if (!smoothed)
     {
@@ -534,6 +545,11 @@ Phaser.Image.prototype.destroy = function(destroyChildren) {
     if (this.input)
     {
         this.input.destroy();
+    }
+
+    if (this.animations)
+    {
+        this.animations.destroy();
     }
 
     var i = this.children.length;
