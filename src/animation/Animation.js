@@ -127,6 +127,12 @@ Phaser.Animation = function (game, parent, name, frameData, frames, delay, loop)
     this.onStart = new Phaser.Signal();
 
     /**
+    * @property {Phaser.Signal|null} onUpdate - This event is dispatched when the Animation changes frame. By default this event is disabled due to its intensive nature. Enable it with: `Animation.enableUpdate = true`.
+    * @default
+    */
+    this.onUpdate = null;
+
+    /**
     * @property {Phaser.Signal} onComplete - This event is dispatched when this Animation completes playback. If the animation is set to loop this is never fired, listen for onAnimationLoop instead.
     */
     this.onComplete = new Phaser.Signal();
@@ -404,6 +410,11 @@ Phaser.Animation.prototype = {
                     this._parent.__tilePattern = false;
                     this._parent.tilingTexture = false;
                 }
+    
+                if (this.onUpdate)
+                {
+                    this.onUpdate.dispatch(this, this.currentFrame);
+                }
             }
 
             return true;
@@ -453,6 +464,11 @@ Phaser.Animation.prototype = {
                     this._parent.tilingTexture = false;
                 }
             }
+
+            if (this.onUpdate)
+            {
+                this.onUpdate.dispatch(this, this.currentFrame);
+            }
         }
 
     },
@@ -497,6 +513,11 @@ Phaser.Animation.prototype = {
                     this._parent.tilingTexture = false;
                 }
             }
+
+            if (this.onUpdate)
+            {
+                this.onUpdate.dispatch(this, this.currentFrame);
+            }
         }
 
     },
@@ -534,6 +555,11 @@ Phaser.Animation.prototype = {
         this.onStart.dispose();
         this.onLoop.dispose();
         this.onComplete.dispose();
+
+        if (this.onUpdate)
+        {
+            this.onUpdate.dispose();
+        }
 
     },
 
@@ -638,6 +664,11 @@ Object.defineProperty(Phaser.Animation.prototype, 'frame', {
         {
             this._frameIndex = value;
             this._parent.setFrame(this.currentFrame);
+
+            if (this.onUpdate)
+            {
+                this.onUpdate.dispatch(this, this.currentFrame);
+            }
         }
 
     }
@@ -661,6 +692,34 @@ Object.defineProperty(Phaser.Animation.prototype, 'speed', {
         if (value >= 1)
         {
             this.delay = 1000 / value;
+        }
+
+    }
+
+});
+
+/**
+* @name Phaser.Animation#enableUpdate
+* @property {boolean} enableUpdate - Gets or sets if this animation will dispatch the onUpdate events upon changing frame.
+*/
+Object.defineProperty(Phaser.Animation.prototype, 'enableUpdate', {
+
+    get: function () {
+
+        return (this.onUpdate !== null);
+
+    },
+
+    set: function (value) {
+
+        if (value && this.onUpdate === null)
+        {
+            this.onUpdate = new Phaser.Signal();
+        }
+        else if (!value && this.onUpdate !== null)
+        {
+            this.onUpdate.dispose();
+            this.onUpdate = null;
         }
 
     }

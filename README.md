@@ -96,6 +96,7 @@ Version 2.1.0 - "Cairhien" - -in development-
 * SoundManager.destroy is a new method that will destroy all current sounds and reset any callbacks.
 * StateManager.clearCurrentState now handles the process of clearing down the current state and is now called if the Game is destroyed.
 * Game.destroy now clears the current state, activating its shutdown callback if it had one. It also now destroys the SoundManager, stopping any currently running sounds (#1092)
+* Animation.onUpdate is a new event that is dispatched each time the animation frame changes. Due to its intensive nature it is disabled by default. Enable it with `Animation.enableUpdate = true` (#902)
 
 ### Updates
 
