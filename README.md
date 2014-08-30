@@ -97,11 +97,13 @@ Version 2.1.0 - "Cairhien" - -in development-
 * StateManager.clearCurrentState now handles the process of clearing down the current state and is now called if the Game is destroyed.
 * Game.destroy now clears the current state, activating its shutdown callback if it had one. It also now destroys the SoundManager, stopping any currently running sounds (#1092)
 * Animation.onUpdate is a new event that is dispatched each time the animation frame changes. Due to its intensive nature it is disabled by default. Enable it with `Animation.enableUpdate = true` (#902)
+* Device now has new features to support detection of running inside a  CocoonJS.App (thanks @videlais #1150)
+* Support for CocoonJS.App's 'onSuspended' and 'onActivated' events, making it so that the timers and sounds are stopped/started and muted/unmuted when the user swaps an app from the background to the fore or the reverse (thanks @videlais #1152)
 
 ### Updates
 
 * TypeScript definition updates to help fix for the `noimplicitany` option (thanks @Waog #1088)
-* TypeScript definitions fixes and updates (thanks @clark-stevenson @englercj and @rhmoller)
+* TypeScript definitions fixes and updates (thanks @clark-stevenson @englercj @saikobee and @rhmoller)
 * All of the Pixi geom classes have been removed from the build file as they aren't needed (the Phaser.Geom classes overwrite them), saving some space in the process.
 * Improved consistency of clone methods on geometry classes (thanks @beeglebug #1130)
 * Removed Cache.isSpriteSheet method as no longer required (see #1059)
@@ -152,6 +154,7 @@ Version 2.1.0 - "Cairhien" - -in development-
 * GamePad axis detection now works again properly in Firefox (#1035)
 * GamepadButton.justPressed and justReleased now correctly report if the button has just been pressed or released (thanks @padpadpad #1019)
 * TilemapParser.getEmptyData now correct adds an empty bodies array into layers. This fixes an issue where p2 couldn't convert a csv map into collision tiles (thanks @sru #845)
+* CocoonJS doesn't support mouse wheel events so they've been moved into a conditional check (thanks @videlais #1151)
 
 ### p2.js 0.6.0 Changes and New Features
 
