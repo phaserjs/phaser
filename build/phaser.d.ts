@@ -2614,7 +2614,7 @@ declare module Phaser {
         event: Object;
         game: Phaser.Game;
         lastChar: string;
-        lastKey: string;
+        lastKey: Phaser.Key;
         onDownCallback: Function;
         onPressCallback: Function;
         onUpCallback: Function;
