@@ -672,7 +672,7 @@ Phaser.Device.prototype = {
         if(this.cocoonJS)
         {
             try {
-                this.cocoonJSApp = (typeof CocoonJS.App !== "undefined");
+                this.cocoonJSApp = (typeof CocoonJS !== "undefined");
             } catch(error) {
                 this.cocoonJSApp = false;
             }
