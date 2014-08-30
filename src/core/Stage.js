@@ -298,6 +298,18 @@ Phaser.Stage.prototype.checkVisibility = function () {
 
     window.onblur = this._onChange;
     window.onfocus = this._onChange;
+    
+    var _this = this;
+	
+    if(this.game.device.cocoonJSApp)
+    {
+        CocoonJS.App.onSuspended.addEventListener(function () {
+            Phaser.Stage.prototype.visibilityChange.call(_this, {type: "pause"});
+        });
+        CocoonJS.App.onActivated.addEventListener(function () {
+            Phaser.Stage.prototype.visibilityChange.call(_this, {type: "resume"});
+        });
+    }
 
 };
 
@@ -328,7 +340,7 @@ Phaser.Stage.prototype.visibilityChange = function (event) {
         return;
     }
 
-    if (document.hidden || document.mozHidden || document.msHidden || document.webkitHidden)
+    if (document.hidden || document.mozHidden || document.msHidden || document.webkitHidden || event.type === "pause")
     {
         this.game.gamePaused(event);
     }
