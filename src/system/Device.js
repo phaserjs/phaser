@@ -39,6 +39,12 @@ Phaser.Device = function (game) {
     this.cocoonJS = false;
     
     /**
+    * @property {boolean} cocoonJSApp - Is this game running with CocoonJS.App?
+    * @default
+    */
+    this.cocoonJSApp = false;
+    
+    /**
     * @property {boolean} cordova - Is the game running under Apache Cordova?
     * @default
     */
@@ -661,6 +667,15 @@ Phaser.Device.prototype = {
         if (navigator['isCocoonJS'])
         {
             this.cocoonJS = true;
+        }
+        
+        if(this.cocoonJS)
+        {
+            try {
+                this.cocoonJSApp = (typeof CocoonJS !== "undefined");
+            } catch(error) {
+                this.cocoonJSApp = false;
+            }
         }
 
         if (typeof window.ejecta !== "undefined")
