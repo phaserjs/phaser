@@ -51,6 +51,11 @@ Phaser.ScaleManager = function (game, width, height) {
     this.maxHeight = null;
 
     /**
+    * @property {Phaser.Point} offset - Holds the offset coordinates of the Game.canvas from the top-left of the browser window (used by Input and other classes)
+    */
+    this.offset = new Phaser.Point();
+
+    /**
     * @property {boolean} forceLandscape - If the game should be forced to use Landscape mode, this is set to true by Game.Stage
     * @default
     */
@@ -220,6 +225,12 @@ Phaser.ScaleManager = function (game, width, height) {
     this.parentScaleFactor = new Phaser.Point(1, 1);
 
     /**
+    * @property {number} trackParentInterval - The interval (in ms) upon which the ScaleManager checks if the parent has changed dimensions. Only applies if scaleMode = RESIZE and the game is contained within another html element.
+    * @default
+    */
+    this.trackParentInterval = 2500;
+
+    /**
     * @property {number} scaleMode - The current scaling method being used.
     * @private
     */
@@ -248,6 +259,12 @@ Phaser.ScaleManager = function (game, width, height) {
     * @private
     */
     this._check = null;
+
+    /**
+    * @property {number} _nextParentCheck - The time to run the next parent bounds check.
+    * @private
+    */
+    this._nextParentCheck = 0;
 
     var _this = this;
 
@@ -302,6 +319,30 @@ Phaser.ScaleManager.SHOW_ALL = 2;
 Phaser.ScaleManager.RESIZE_CANVAS = 3;
 
 Phaser.ScaleManager.prototype = {
+
+    update: function () {
+
+        if (this._scaleMode === Phaser.ScaleManager.RESIZE_CANVAS && this.parentIsWindow === false && this.game.time.now > this._nextParentCheck)
+        {
+            var bounds = this.parentNode.getBoundingClientRect();
+
+            if (bounds.left !== this.offset.x || bounds.top !== this.offset.y)
+            {
+                //  The parent has changed position (but maybe not size), we need to update regardless
+                //  Update the Stage bounds, otherwise the Input tracking fails OR we just adjust Pointer#408 to check here instead of the Stage
+                this.offset.set(bounds.left, bounds.top);
+            }
+
+            if (bounds.width !== this.width || bounds.height !== this.height)
+            {
+                //  The parent has changed size, so we need to adapt
+                this.updateDimensions(bounds.width, bounds.height);
+            }
+
+            this._nextParentCheck = this.game.time.now + this.trackParentInterval;
+        }
+
+    },
 
     /**
     * Calculates and sets the game dimensions based on the given width and height.
@@ -358,38 +399,52 @@ Phaser.ScaleManager.prototype = {
             rect.height = target.getBoundingClientRect().height;
         }
 
+        var newWidth = 0;
+        var newHeight = 0;
+
         if (typeof width === 'number')
         {
-            this.width = width;
+            newWidth = width;
         }
         else
         {
             //  Percentage based
             this.parentScaleFactor.x = parseInt(width, 10) / 100;
-            this.width = rect.width * this.parentScaleFactor.x;
+            newWidth = rect.width * this.parentScaleFactor.x;
         }
 
         if (typeof height === 'number')
         {
-            this.height = height;
+            newHeight = height;
         }
         else
         {
             //  Percentage based
             this.parentScaleFactor.y = parseInt(height, 10) / 100;
-            this.height = rect.height * this.parentScaleFactor.y;
+            newHeight = rect.height * this.parentScaleFactor.y;
         }
+
+        console.log(rect);
+        console.log('source', width, height);
+
+        this.updateDimensions(newWidth, newHeight);
+
+    },
+
+    updateDimensions: function (newWidth, newHeight) {
+
+        this.width = newWidth * this.parentScaleFactor.x;
+        this.height = newHeight * this.parentScaleFactor.y;
 
         this.game.width = this.width;
         this.game.height = this.height;
+
         this.sourceAspectRatio = this.width / this.height;
 
         this.bounds.width = this.width;
         this.bounds.height = this.height;
 
-        console.log(rect);
-        console.log('source', width, height);
-        console.log('calc', this.width, this.height);
+        console.log('updateDimensions', this.width, this.height);
 
     },
 
@@ -919,8 +974,12 @@ Object.defineProperty(Phaser.ScaleManager.prototype, "scaleMode", {
         if (value !== this._scaleMode)
         {
             console.log('new scale mode set', value);
+
             this._scaleMode = value;
+
             //  Do stuff here like set-up tracking, etc
+
+
         }
 
     }

@@ -21,6 +21,7 @@ Phaser.Stage = function (game) {
     this.game = game;
 
     /**
+    * @deprecated 
     * @property {Phaser.Point} offset - Holds the offset coordinates of the Game.canvas from the top-left of the browser window (used by Input and other classes)
     */
     this.offset = new Phaser.Point();
@@ -104,6 +105,20 @@ Phaser.Stage.prototype.constructor = Phaser.Stage;
 */
 Phaser.Stage.prototype.preUpdate = function () {
 
+    //  Consider moving all of this into the ScaleManager
+    /*
+    if (this.checkOffsetInterval !== false)
+    {
+        if (this.game.time.now > this._nextOffsetCheck)
+        {
+            Phaser.Canvas.getOffset(this.game.canvas, this.offset);
+            this.bounds.x = this.offset.x;
+            this.bounds.y = this.offset.y;
+            this._nextOffsetCheck = this.game.time.now + this.checkOffsetInterval;
+        }
+    }
+    */
+
     this.currentRenderOrderID = 0;
 
     //  This can't loop in reverse, we need the orderID to be in sequence
@@ -182,17 +197,6 @@ Phaser.Stage.prototype.postUpdate = function () {
         while (i--)
         {
             this.children[i].postUpdate();
-        }
-    }
-
-    if (this.checkOffsetInterval !== false)
-    {
-        if (this.game.time.now > this._nextOffsetCheck)
-        {
-            Phaser.Canvas.getOffset(this.game.canvas, this.offset);
-            this.bounds.x = this.offset.x;
-            this.bounds.y = this.offset.y;
-            this._nextOffsetCheck = this.game.time.now + this.checkOffsetInterval;
         }
     }
 
