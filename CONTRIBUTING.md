@@ -37,7 +37,7 @@ The dev branch of Phaser is our 'current working' version. It is always ahead of
 
 To take advantage of our grunt build script and jshint config it will be easiest for you if you have node.js and grunt installed locally.
 
-You can download node.js from [nodejs.org][3]. After it has been installed open a console and run `npm i -g grunt -cli` to install the global `grunt` executable.
+You can download node.js from [nodejs.org][3]. After it has been installed open a console and run `npm i -g grunt-cli` to install the global `grunt` executable.
 
 After that you can clone the repository and run `npm i` inside the cloned folder. This will install dependencies necessary for building the project. Once that is ready,
 make your changes and submit a Pull Request:
