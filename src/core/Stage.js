@@ -299,11 +299,12 @@ Phaser.Stage.prototype.checkVisibility = function () {
     
     var _this = this;
 	
-    if(this.game.device.cocoonJSApp)
+    if (this.game.device.cocoonJSApp)
     {
         CocoonJS.App.onSuspended.addEventListener(function () {
             Phaser.Stage.prototype.visibilityChange.call(_this, {type: "pause"});
         });
+
         CocoonJS.App.onActivated.addEventListener(function () {
             Phaser.Stage.prototype.visibilityChange.call(_this, {type: "resume"});
         });

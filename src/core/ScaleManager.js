@@ -281,7 +281,7 @@ Phaser.ScaleManager.SHOW_ALL = 2;
 * @constant
 * @type {number}
 */
-// Phaser.ScaleManager.FULL_CANVAS = 3;
+Phaser.ScaleManager.RESIZE_CANVAS = 3;
 
 Phaser.ScaleManager.prototype = {
 

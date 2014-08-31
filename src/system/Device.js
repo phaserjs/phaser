@@ -650,16 +650,18 @@ Phaser.Device.prototype = {
             this.cordova = true;
         }
         
-        if(typeof process !== "undefined" && typeof require !== "undefined")
+        if (typeof process !== "undefined" && typeof require !== "undefined")
         {
             this.node = true;
         }
         
-        if(this.node)
+        if (this.node)
         {
             try {
                 this.nodeWebkit = (typeof require('nw.gui') !== "undefined");
-            } catch(error) {
+            }
+            catch(error)
+            {
                 this.nodeWebkit = false;
             }
         }
@@ -669,11 +671,13 @@ Phaser.Device.prototype = {
             this.cocoonJS = true;
         }
         
-        if(this.cocoonJS)
+        if (this.cocoonJS)
         {
             try {
                 this.cocoonJSApp = (typeof CocoonJS !== "undefined");
-            } catch(error) {
+            }
+            catch(error)
+            {
                 this.cocoonJSApp = false;
             }
         }
