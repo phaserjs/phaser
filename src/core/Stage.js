@@ -12,10 +12,8 @@
 * @extends PIXI.Stage
 * @constructor
 * @param {Phaser.Game} game - Game reference to the currently running game.
-* @param {number} width - Width of the canvas element.
-* @param {number} height - Height of the canvas element.
  */
-Phaser.Stage = function (game, width, height) {
+Phaser.Stage = function (game) {
 
     /**
     * @property {Phaser.Game} game - A reference to the currently running Game.
@@ -30,7 +28,7 @@ Phaser.Stage = function (game, width, height) {
     /**
     * @property {Phaser.Rectangle} bounds - The bounds of the Stage. Typically x/y = Stage.offset.x/y and the width/height match the game width and height.
     */
-    this.bounds = new Phaser.Rectangle(0, 0, width, height);
+    this.bounds = new Phaser.Rectangle(0, 0, this.game.width, this.game.height);
 
     PIXI.Stage.call(this, 0x000000);
 

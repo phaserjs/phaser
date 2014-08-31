@@ -23,12 +23,12 @@ Phaser.ScaleManager = function (game, width, height) {
     /**
     * @property {number} width - Width of the stage after calculation.
     */
-    this.width = width;
+    this.width = 0;
 
     /**
     * @property {number} height - Height of the stage after calculation.
     */
-    this.height = height;
+    this.height = 0;
 
     /**
     * @property {number} minWidth - Minimum width the canvas should be scaled to (in pixels).
@@ -177,7 +177,7 @@ Phaser.ScaleManager = function (game, width, height) {
     * @property {Phaser.Rectangle} bounds - The bounds of the scaled game. The x/y will match the offset of the canvas element and the width/height the scaled width and height.
     * @readonly
     */
-    this.bounds = new Phaser.Rectangle(0, 0, width, height);
+    this.bounds = new Phaser.Rectangle();
 
     /**
     * @property {number} aspectRatio - The aspect ratio of the scaled game.
@@ -189,7 +189,8 @@ Phaser.ScaleManager = function (game, width, height) {
     * @property {number} sourceAspectRatio - The aspect ratio (width / height) of the original game dimensions.
     * @readonly
     */
-    this.sourceAspectRatio = width / height;
+    // this.sourceAspectRatio = width / height;
+    this.sourceAspectRatio = 0;
 
     /**
     * @property {any} event- The native browser events from full screen API changes.
@@ -254,6 +255,8 @@ Phaser.ScaleManager = function (game, width, height) {
         document.addEventListener('fullscreenchange', this._fullScreenChange, false);
     }
 
+    this.calculateDimensions(width, height);
+
 };
 
 /**
@@ -274,7 +277,93 @@ Phaser.ScaleManager.NO_SCALE = 1;
 */
 Phaser.ScaleManager.SHOW_ALL = 2;
 
+/**
+* @constant
+* @type {number}
+*/
+// Phaser.ScaleManager.FULL_CANVAS = 3;
+
 Phaser.ScaleManager.prototype = {
+
+    /**
+    * Calculates and sets the game dimensions based on the given width and height.
+    * 
+    * @method Phaser.ScaleManager#calculateDimensions
+    * @param {number|string} width - The width of the game.
+    * @param {number|string} height - The height of the game.
+    */
+    calculateDimensions: function (width, height) {
+
+        console.log('ScaleManager calculateDimensions');
+        console.log('parent', this.game.parent);
+
+        var target;
+        var rect = new Phaser.Rectangle();
+
+        if (this.game.parent !== '')
+        {
+            if (typeof this.game.parent === 'string')
+            {
+                // hopefully an element ID
+                console.log('parent element ID');
+                target = document.getElementById(this.game.parent);
+            }
+            else if (typeof this.game.parent === 'object' && this.game.parent.nodeType === 1)
+            {
+                // quick test for a HTMLelement
+                console.log('parent html element');
+                target = this.game.parent;
+            }
+        }
+
+        // Fallback, covers an invalid ID and a non HTMLelement object
+        if (!target)
+        {
+            //  Use the full window
+            console.log('target failed, using window');
+            rect.width = window.innerWidth;
+            rect.height = window.innerHeight;
+        }
+        else
+        {
+            console.log('target found, getting rect');
+            console.log(target.getBoundingClientRect());
+            rect.width = target.getBoundingClientRect().width;
+            rect.height = target.getBoundingClientRect().height;
+        }
+
+        if (typeof width === 'number')
+        {
+            this.width = width;
+        }
+        else
+        {
+            //  Percentage based
+            this.width = rect.width * (parseInt(width, 10) / 100);
+        }
+
+        if (typeof height === 'number')
+        {
+            this.height = height;
+        }
+        else
+        {
+            //  Percentage based
+            this.height = rect.height * (parseInt(height, 10) / 100);
+        }
+
+        this.game.width = this.width;
+        this.game.height = this.height;
+        this.sourceAspectRatio = this.width / this.height;
+
+        this.bounds.width = this.width;
+        this.bounds.height = this.height;
+
+        console.log(rect);
+        console.log('source', width, height);
+        console.log('calc', this.width, this.height);
+
+    },
 
     /**
     * Tries to enter the browser into full screen mode.
