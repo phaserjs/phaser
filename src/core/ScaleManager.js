@@ -189,7 +189,6 @@ Phaser.ScaleManager = function (game, width, height) {
     * @property {number} sourceAspectRatio - The aspect ratio (width / height) of the original game dimensions.
     * @readonly
     */
-    // this.sourceAspectRatio = width / height;
     this.sourceAspectRatio = 0;
 
     /**
@@ -197,15 +196,34 @@ Phaser.ScaleManager = function (game, width, height) {
     */
     this.event = null;
 
-    /**
-    * @property {number} scaleMode - The current scaleMode.
-    */
-    this.scaleMode = Phaser.ScaleManager.NO_SCALE;
-
     /*
     * @property {number} fullScreenScaleMode - Scale mode to be used in fullScreen
     */
     this.fullScreenScaleMode = Phaser.ScaleManager.NO_SCALE;
+
+    /**
+    * @property {boolean} parentIsWindow - If the parent container of the game is the browser window, rather than a div, this is set to `true`.
+    * @readonly
+    */
+    this.parentIsWindow = false;
+
+    /**
+    * @property {object} parentNode - The fully parsed parent container of the game. If the parent is the browser window this will be `null`.
+    * @readonly
+    */
+    this.parentNode = null;
+
+    /**
+    * @property {Phaser.Point} parentScaleFactor - The scale of the game in relation to its parent container.
+    * @readonly
+    */
+    this.parentScaleFactor = new Phaser.Point(1, 1);
+
+    /**
+    * @property {number} scaleMode - The current scaling method being used.
+    * @private
+    */
+    this._scaleMode = Phaser.ScaleManager.NO_SCALE;
 
     /**
     * @property {number} _startHeight - Internal cache var. Stage height when starting the game.
@@ -321,6 +339,10 @@ Phaser.ScaleManager.prototype = {
         {
             //  Use the full window
             console.log('target failed, using window');
+
+            this.parentNode = null;
+            this.parentIsWindow = true;
+
             rect.width = window.innerWidth;
             rect.height = window.innerHeight;
         }
@@ -328,6 +350,10 @@ Phaser.ScaleManager.prototype = {
         {
             console.log('target found, getting rect');
             console.log(target.getBoundingClientRect());
+
+            this.parentNode = target;
+            this.parentIsWindow = false;
+
             rect.width = target.getBoundingClientRect().width;
             rect.height = target.getBoundingClientRect().height;
         }
@@ -339,7 +365,8 @@ Phaser.ScaleManager.prototype = {
         else
         {
             //  Percentage based
-            this.width = rect.width * (parseInt(width, 10) / 100);
+            this.parentScaleFactor.x = parseInt(width, 10) / 100;
+            this.width = rect.width * this.parentScaleFactor.x;
         }
 
         if (typeof height === 'number')
@@ -349,7 +376,8 @@ Phaser.ScaleManager.prototype = {
         else
         {
             //  Percentage based
-            this.height = rect.height * (parseInt(height, 10) / 100);
+            this.parentScaleFactor.y = parseInt(height, 10) / 100;
+            this.height = rect.height * this.parentScaleFactor.y;
         }
 
         this.game.width = this.width;
@@ -873,6 +901,31 @@ Phaser.ScaleManager.prototype = {
 };
 
 Phaser.ScaleManager.prototype.constructor = Phaser.ScaleManager;
+
+/**
+* @name Phaser.ScaleManager#scaleMode
+* @property {number} scaleMode - The scaling method used by the ScaleManager.
+*/
+Object.defineProperty(Phaser.ScaleManager.prototype, "scaleMode", {
+
+    get: function () {
+
+        return this._scaleMode;
+
+    },
+
+    set: function (value) {
+
+        if (value !== this._scaleMode)
+        {
+            console.log('new scale mode set', value);
+            this._scaleMode = value;
+            //  Do stuff here like set-up tracking, etc
+        }
+
+    }
+
+});
 
 /**
 * @name Phaser.ScaleManager#isFullScreen
