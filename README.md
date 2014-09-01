@@ -19,7 +19,6 @@
 - [Bugs?](#bugs)
 - [License](#license)
 
-
 # Phaser 2.1.0-dev <a name="about"></a>
 
 Phaser is a fast, free and fun open source game framework for making desktop and mobile browser HTML5 games. It uses [Pixi.js](https://github.com/GoodBoyDigital/pixi.js/) internally for fast 2D Canvas and WebGL rendering.
@@ -101,6 +100,8 @@ Version 2.1.0 - "Cairhien" - -in development-
 * Animation.onUpdate is a new event that is dispatched each time the animation frame changes. Due to its intensive nature it is disabled by default. Enable it with `Animation.enableUpdate = true` (#902)
 * Device now has new features to support detection of running inside a  CocoonJS.App (thanks @videlais #1150)
 * Support for CocoonJS.App's 'onSuspended' and 'onActivated' events, making it so that the timers and sounds are stopped/started and muted/unmuted when the user swaps an app from the background to the fore or the reverse (thanks @videlais #1152)
+* Canvas.removeFromDOM(canvas) will remove a canvas element from the DOM.
+* Game.destroy now removes the games canvas element from the DOM.
 
 ### Updates
 

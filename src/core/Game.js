@@ -774,6 +774,8 @@ Phaser.Game.prototype = {
         this.world = null;
         this.isBooted = false;
 
+        Phaser.Canvas.removeFromDOM(this.canvas);
+
     },
 
     /**
