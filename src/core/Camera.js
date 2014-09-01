@@ -227,6 +227,8 @@ Phaser.Camera.prototype = {
         this.displayObject.position.x = -this.view.x;
         this.displayObject.position.y = -this.view.y;
 
+        this.view.floor();
+
     },
 
     /**
@@ -314,8 +316,6 @@ Phaser.Camera.prototype = {
             this.atLimit.y = true;
             this.view.y = this.bounds.bottom - this.height;
         }
-
-        this.view.floor();
 
     },
 
