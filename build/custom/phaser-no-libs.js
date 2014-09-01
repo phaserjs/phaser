@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.1.0 "Cairhien" - Built: Mon Sep 01 2014 03:56:15
+* v2.1.0 "Cairhien" - Built: Mon Sep 01 2014 08:21:15
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -9204,8 +9204,8 @@ Object.defineProperty(Phaser.World.prototype, "randomY", {
 * @class Phaser.ScaleManager
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
-* @param {number} width - The native width of the game.
-* @param {number} height - The native height of the game.
+* @param {number|string} width - The width of the game.
+* @param {number|string} height - The height of the game.
 */
 Phaser.ScaleManager = function (game, width, height) {
 
@@ -9215,12 +9215,12 @@ Phaser.ScaleManager = function (game, width, height) {
     this.game = game;
 
     /**
-    * @property {number} width - Width of the stage after calculation.
+    * @property {number} width - Width of the game after calculation.
     */
     this.width = 0;
 
     /**
-    * @property {number} height - Height of the stage after calculation.
+    * @property {number} height - Height of the game after calculation.
     */
     this.height = 0;
 
@@ -9412,7 +9412,7 @@ Phaser.ScaleManager = function (game, width, height) {
     * @property {number} trackParentInterval - The interval (in ms) upon which the ScaleManager checks if the parent has changed dimensions. Only applies if scaleMode = RESIZE and the game is contained within another html element.
     * @default
     */
-    this.trackParentInterval = 50;
+    this.trackParentInterval = 2000;
 
     /**
     * @property {function} onResize - The callback that will be called each time a window.resize event happens or if set, the parent container resizes.
@@ -9433,13 +9433,13 @@ Phaser.ScaleManager = function (game, width, height) {
     this._scaleMode = Phaser.ScaleManager.NO_SCALE;
 
     /**
-    * @property {number} _width - Cached stage width for full screen mode.
+    * @property {number} _width - Cached game width for full screen mode.
     * @private
     */
     this._width = 0;
 
     /**
-    * @property {number} _height - Cached stage height for full screen mode.
+    * @property {number} _height - Cached game height for full screen mode.
     * @private
     */
     this._height = 0;
@@ -9467,31 +9467,7 @@ Phaser.ScaleManager = function (game, width, height) {
         this.parseConfig(game.config);
     }
 
-    var _this = this;
-
-    this._checkOrientation = function(event) {
-        return _this.checkOrientation(event);
-    };
-
-    this._checkResize = function(event) {
-        return _this.checkResize(event);
-    };
-
-    this._fullScreenChange = function(event) {
-        return _this.fullScreenChange(event);
-    };
-
-    window.addEventListener('orientationchange', this._checkOrientation, false);
-    window.addEventListener('resize', this._checkResize, false);
-
-    if (!this.game.device.cocoonJS)
-    {
-        document.addEventListener('webkitfullscreenchange', this._fullScreenChange, false);
-        document.addEventListener('mozfullscreenchange', this._fullScreenChange, false);
-        document.addEventListener('fullscreenchange', this._fullScreenChange, false);
-    }
-
-    this.boot(width, height);
+    this.setupScale(width, height);
 
 };
 
@@ -9549,11 +9525,11 @@ Phaser.ScaleManager.prototype = {
     /**
     * Calculates and sets the game dimensions based on the given width and height.
     * 
-    * @method Phaser.ScaleManager#boot
+    * @method Phaser.ScaleManager#setupScale
     * @param {number|string} width - The width of the game.
     * @param {number|string} height - The height of the game.
     */
-    boot: function (width, height) {
+    setupScale: function (width, height) {
 
         var target;
         var rect = new Phaser.Rectangle();
@@ -9587,8 +9563,12 @@ Phaser.ScaleManager.prototype = {
             this.parentNode = target;
             this.parentIsWindow = false;
 
-            rect.width = target.getBoundingClientRect().width;
-            rect.height = target.getBoundingClientRect().height;
+            this._parentBounds = this.parentNode.getBoundingClientRect();
+
+            rect.width = this._parentBounds.width;
+            rect.height = this._parentBounds.height;
+
+            this.offset.set(this._parentBounds.left, this._parentBounds.top);
         }
 
         var newWidth = 0;
@@ -9617,6 +9597,45 @@ Phaser.ScaleManager.prototype = {
         }
 
         this.updateDimensions(newWidth, newHeight, false);
+
+    },
+
+    /**
+    * Calculates and sets the game dimensions based on the given width and height.
+    * 
+    * @method Phaser.ScaleManager#boot
+    */
+    boot: function () {
+
+        var _this = this;
+
+        this._checkOrientation = function(event) {
+            return _this.checkOrientation(event);
+        };
+
+        this._checkResize = function(event) {
+            return _this.checkResize(event);
+        };
+
+        this._fullScreenChange = function(event) {
+            return _this.fullScreenChange(event);
+        };
+
+        window.addEventListener('orientationchange', this._checkOrientation, false);
+        window.addEventListener('resize', this._checkResize, false);
+
+        if (!this.game.device.cocoonJS)
+        {
+            document.addEventListener('webkitfullscreenchange', this._fullScreenChange, false);
+            document.addEventListener('mozfullscreenchange', this._fullScreenChange, false);
+            document.addEventListener('fullscreenchange', this._fullScreenChange, false);
+        }
+
+        this.updateDimensions(this.width, this.height, true);
+
+        Phaser.Canvas.getOffset(this.game.canvas, this.offset);
+
+        this.bounds.setTo(this.offset.x, this.offset.y, this.width, this.height);
 
     },
 
@@ -9677,13 +9696,13 @@ Phaser.ScaleManager.prototype = {
 
         if (!this.parentIsWindow)
         {
-            this._parentBounds = this.parentNode.getBoundingClientRect();
-            
-            //  Faster to just set the new values here than double-compare them to the old ones
-            this.offset.set(this._parentBounds.left, this._parentBounds.top);
+            Phaser.Canvas.getOffset(this.game.canvas, this.offset);
 
+           
             if (this._scaleMode === Phaser.ScaleManager.RESIZE)
             {
+                this._parentBounds = this.parentNode.getBoundingClientRect();
+
                 if (this._parentBounds.width !== this.width || this._parentBounds.height !== this.height)
                 {
                     //  The parent has changed size, so we need to adapt
@@ -10048,9 +10067,8 @@ Phaser.ScaleManager.prototype = {
             }
         }
 
-        Phaser.Canvas.getOffset(this.game.canvas, this.game.stage.offset);
-
-        this.bounds.setTo(this.game.stage.offset.x, this.game.stage.offset.y, this.width, this.height);
+        Phaser.Canvas.getOffset(this.game.canvas, this.offset);
+        this.bounds.setTo(this.offset.x, this.offset.y, this.width, this.height);
 
         this.aspectRatio = this.width / this.height;
 
@@ -10753,8 +10771,6 @@ Phaser.Game.prototype = {
             this.math = Phaser.Math;
 
             this.scale = new Phaser.ScaleManager(this, this._width, this._height);
-
-            // this.stage = new Phaser.Stage(this, this.width, this.height);
             this.stage = new Phaser.Stage(this);
 
             this.setUpRenderer();
@@ -10778,6 +10794,7 @@ Phaser.Game.prototype = {
             this.time.boot();
             this.stage.boot();
             this.world.boot();
+            this.scale.boot();
             this.input.boot();
             this.sound.boot();
             this.state.boot();
