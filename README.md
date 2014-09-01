@@ -103,6 +103,7 @@ Version 2.1.0 - "Cairhien" - -in development-
 * Canvas.removeFromDOM(canvas) will remove a canvas element from the DOM.
 * Game.destroy now removes the games canvas element from the DOM.
 * ScaleManager.setMinMax(minWidth, minHeight, maxWidth, maxHeight) is a handy function to allow you to set all the min/max dimensions in one call.
+* ArcadePhysics.collide and overlap can now accept 2 Arrays of objects to be used in the collision checks (thanks @ctmartinez1992 #1158)
 
 ### Updates
 
