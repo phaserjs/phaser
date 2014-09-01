@@ -660,7 +660,7 @@ Phaser.Game.prototype = {
 
             if (this.config['enableDebug'])
             {
-                // this.debug.preUpdate();
+                this.debug.preUpdate();
             }
 
             this.physics.preUpdate();
@@ -686,7 +686,7 @@ Phaser.Game.prototype = {
 
             if (this.config['enableDebug'])
             {
-                // this.debug.preUpdate();
+                this.debug.preUpdate();
             }
         }
 

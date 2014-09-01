@@ -372,9 +372,6 @@ Phaser.ScaleManager.prototype = {
     */
     boot: function (width, height) {
 
-        console.log('ScaleManager boot');
-        console.log('parent', this.game.parent);
-
         var target;
         var rect = new Phaser.Rectangle();
 
@@ -383,13 +380,11 @@ Phaser.ScaleManager.prototype = {
             if (typeof this.game.parent === 'string')
             {
                 // hopefully an element ID
-                console.log('parent element ID');
                 target = document.getElementById(this.game.parent);
             }
             else if (typeof this.game.parent === 'object' && this.game.parent.nodeType === 1)
             {
                 // quick test for a HTMLelement
-                console.log('parent html element');
                 target = this.game.parent;
             }
         }
@@ -398,8 +393,6 @@ Phaser.ScaleManager.prototype = {
         if (!target)
         {
             //  Use the full window
-            console.log('target failed, using window');
-
             this.parentNode = null;
             this.parentIsWindow = true;
 
@@ -408,9 +401,6 @@ Phaser.ScaleManager.prototype = {
         }
         else
         {
-            console.log('target found, getting rect');
-            console.log(target.getBoundingClientRect());
-
             this.parentNode = target;
             this.parentIsWindow = false;
 
@@ -442,9 +432,6 @@ Phaser.ScaleManager.prototype = {
             this.parentScaleFactor.y = parseInt(height, 10) / 100;
             newHeight = rect.height * this.parentScaleFactor.y;
         }
-
-        console.log(rect);
-        console.log('source', width, height);
 
         this.updateDimensions(newWidth, newHeight, false);
 
