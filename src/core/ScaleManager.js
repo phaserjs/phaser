@@ -244,12 +244,6 @@ Phaser.ScaleManager = function (game, width, height) {
     this._scaleMode = Phaser.ScaleManager.NO_SCALE;
 
     /**
-    * @property {number} _startHeight - Internal cache var. Stage height when starting the game.
-    * @private
-    */
-    this._startHeight = 0;
-
-    /**
     * @property {number} _width - Cached stage width for full screen mode.
     * @private
     */
@@ -719,9 +713,6 @@ Phaser.ScaleManager.prototype = {
         //  We can't do anything about the status bars in iPads, web apps or desktops
         if (!this.game.device.iPad && !this.game.device.webApp && !this.game.device.desktop)
         {
-            //  TODO - Test this
-            // this._startHeight = window.innerHeight;
-
             if (this.game.device.android && !this.game.device.chrome)
             {
                 window.scrollTo(0, 1);
@@ -773,7 +764,7 @@ Phaser.ScaleManager.prototype = {
 
         this._iterations--;
 
-        if (force || window.innerHeight > this._startHeight || this._iterations < 0)
+        if (force || this._iterations < 0)
         {
             // Set minimum height of content to new window height
             document.documentElement['style'].minHeight = window.innerHeight + 'px';
