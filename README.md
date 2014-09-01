@@ -132,6 +132,7 @@ Version 2.1.0 - "Cairhien" - -in development-
 * Stage.bounds has been removed, you can access it via Stage.getBounds.
 * Stage.checkOffsetInterval has been moved to ScaleManager.trackParentInterval
 * ScaleManager.hasResized signal has been removed. Use ScaleManager.setResizeCallback instead.
+* The World bounds can now be set to any size, including smaller than the game dimensions. Before it was locked to a minimum size of the game canvas, but it can now be anything.
 
 ### Bug Fixes
 

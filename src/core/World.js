@@ -35,6 +35,12 @@ Phaser.World = function (game) {
     this.camera = null;
 
     /**
+    * @property {boolean} _definedSize - True if the World has been given a specifically defined size (i.e. from a Tilemap or direct in code) or false if it's just matched to the Game dimensions.
+    * @readonly
+    */
+    this._definedSize = false;
+
+    /**
     * @property {number} width - The defined width of the World. Sometimes the bounds needs to grow larger than this (if you resize the game) but this retains the original requested dimension.
     */
     this._width = game.width;
@@ -71,51 +77,47 @@ Phaser.World.prototype.boot = function () {
 
 /**
 * Updates the size of this world. Note that this doesn't modify the world x/y coordinates, just the width and height.
+* The Camera bounds and Physics bounds (if set) are also updated to match the new World bounds.
 *
 * @method Phaser.World#setBounds
 * @param {number} x - Top left most corner of the world.
 * @param {number} y - Top left most corner of the world.
-* @param {number} width - New width of the world. Can never be smaller than the Game.width.
-* @param {number} height - New height of the world. Can never be smaller than the Game.height.
+* @param {number} width - New width of the game world in pixels.
+* @param {number} height - New height of the game world in pixels.
 */
 Phaser.World.prototype.setBounds = function (x, y, width, height) {
 
-    if (width < this.game.width)
-    {
-        width = this.game.width;
-    }
-
-    if (height < this.game.height)
-    {
-        height = this.game.height;
-    }
+    this._definedSize = true;
+    this._width = width;
+    this._height = height;
 
     this.bounds.setTo(x, y, width, height);
 
     if (this.camera.bounds)
     {
         //  The Camera can never be smaller than the game size
-        this.camera.bounds.setTo(x, y, width, height);
+        this.camera.bounds.setTo(x, y, Math.max(width, this.game.width), Math.max(height, this.game.height));
     }
 
     this.game.physics.setBoundsToWorld();
-
-    this._width = width;
-    this._height = height;
 
 };
 
 Phaser.World.prototype.resize = function (width, height) {
 
-    //  Don't ever scale the World bounds lower than the original requested dimensions
-    if (width < this._width)
-    {
-        width = this._width;
-    }
+    //  Don't ever scale the World bounds lower than the original requested dimensions if it's a defined world size
 
-    if (height < this._height)
+    if (this._definedSize)
     {
-        height = this._height;
+        if (width < this._width)
+        {
+            width = this._width;
+        }
+
+        if (height < this._height)
+        {
+            height = this._height;
+        }
     }
 
     this.bounds.width = width;
@@ -228,6 +230,7 @@ Object.defineProperty(Phaser.World.prototype, "width", {
 
         this.bounds.width = value;
         this._width = value;
+        this._definedSize = true;
 
     }
 
@@ -251,7 +254,8 @@ Object.defineProperty(Phaser.World.prototype, "height", {
         }
 
         this.bounds.height = value;
-        this._width = value;
+        this._height = value;
+        this._definedSize = true;
 
     }
 
