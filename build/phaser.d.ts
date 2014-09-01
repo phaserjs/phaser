@@ -3405,7 +3405,7 @@ declare module Phaser {
             createBody(x: number, y: number, mass: number, addToWorld?: boolean, options?: any, data?: any): Phaser.Physics.P2.Body;
             createCollisionGroup(group?: Phaser.Group): Phaser.Physics.P2.CollisionGroup;
             createCollisionGroup(group?: Phaser.Sprite): Phaser.Physics.P2.CollisionGroup;
-            createContactMaterial(materialA: Phaser.Physics.P2.Material, materialB: Phaser.Physics.P2.Material, options?: object): Phaser.Physics.P2.ContactMaterial;
+            createContactMaterial(materialA: Phaser.Physics.P2.Material, materialB: Phaser.Physics.P2.Material, options?: any): Phaser.Physics.P2.ContactMaterial;
             createDistanceConstraint(bodyA: any, bodyB: any, distance: number, maxForce?: number): Phaser.Physics.P2.DistanceConstraint;
             createGearConstraint(bodyA: any, bodyB: any, angle?: number, ratio?: number): Phaser.Physics.P2.GearConstraint;
             createLockConstraint(bodyA: any, bodyB: any, offset: Float32Array, angle?: number, maxForce?: number): Phaser.Physics.P2.LockConstraint;
