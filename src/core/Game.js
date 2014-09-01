@@ -448,8 +448,6 @@ Phaser.Game.prototype = {
             this.math = Phaser.Math;
 
             this.scale = new Phaser.ScaleManager(this, this._width, this._height);
-
-            // this.stage = new Phaser.Stage(this, this.width, this.height);
             this.stage = new Phaser.Stage(this);
 
             this.setUpRenderer();
@@ -473,6 +471,7 @@ Phaser.Game.prototype = {
             this.time.boot();
             this.stage.boot();
             this.world.boot();
+            this.scale.boot();
             this.input.boot();
             this.sound.boot();
             this.state.boot();
