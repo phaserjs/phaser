@@ -4458,6 +4458,10 @@ declare module Phaser {
 
     }
 
+    interface ResizeCallback {
+        (width: number, height: number): any;
+    }
+
     class ScaleManager {
 
         constructor(game: Phaser.Game, width: number, height: number);
@@ -4493,7 +4497,7 @@ declare module Phaser {
         minHeight: number;
         minWidth: number;
         offset: Phaser.Point;
-        onResize: function;
+        onResize: ResizeCallback;
         onResizeContext: any;
         orientation: number;
         pageAlignHorizontally: boolean;
@@ -4521,7 +4525,7 @@ declare module Phaser {
         setExactFit(): void;
         setMaximum(): void;
         setMinMax(minWidth: number, minHeight: number, maxWidth?: number, maxHeight?: number): void;
-        setResizeCallback(callback: function, context: any): void;
+        setResizeCallback(callback: ResizeCallback, context: any): void;
         setScreenSize(force?: boolean): void;
         setShowAll(): void;
         setSize(): void;
