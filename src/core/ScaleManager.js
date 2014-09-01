@@ -448,6 +448,32 @@ Phaser.ScaleManager.prototype = {
     },
 
     /**
+     * Set the ScaleManager min and max dimensions in one single callback.
+     *
+     * @method setMinMax
+     * @param {number} minWidth - The minimum width the game is allowed to scale down to.
+     * @param {number} minHeight - The minimum height the game is allowed to scale down to.
+     * @param {number} maxWidth - The maximum width the game is allowed to scale up to.
+     * @param {number} maxHeight - The maximum height the game is allowed to scale up to.
+     */
+    setMinMax: function (minWidth, minHeight, maxWidth, maxHeight) {
+
+        this.minWidth = minWidth;
+        this.minHeight = minHeight;
+
+        if (typeof maxWidth !== 'undefined')
+        {
+            this.maxWidth = maxWidth;
+        }
+
+        if (typeof maxHeight !== 'undefined')
+        {
+            this.maxHeight = maxHeight;
+        }
+
+    },
+
+    /**
     * The ScaleManager.preUpdate is called automatically by the core Game loop.
     * 
     * @method Phaser.ScaleManager#preUpdate

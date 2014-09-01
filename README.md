@@ -102,6 +102,7 @@ Version 2.1.0 - "Cairhien" - -in development-
 * Support for CocoonJS.App's 'onSuspended' and 'onActivated' events, making it so that the timers and sounds are stopped/started and muted/unmuted when the user swaps an app from the background to the fore or the reverse (thanks @videlais #1152)
 * Canvas.removeFromDOM(canvas) will remove a canvas element from the DOM.
 * Game.destroy now removes the games canvas element from the DOM.
+* ScaleManager.setMinMax(minWidth, minHeight, maxWidth, maxHeight) is a handy function to allow you to set all the min/max dimensions in one call.
 
 ### Updates
 
