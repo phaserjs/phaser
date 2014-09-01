@@ -784,13 +784,8 @@ Phaser.Physics.Arcade.prototype = {
             return false;
         }
 
-        if (overlapOnly)
-        {
-            //  We already know they intersect from the check above, and we don't need separation, so ...
-            return true;
-        }
-
         //  Do we separate on x or y first?
+
         //  If we weren't having to carry around so much legacy baggage with us, we could do this properly. But alas ...
         if (this.forceX || Math.abs(this.gravity.y + body1.gravity.y) < Math.abs(this.gravity.x + body1.gravity.x))
         {
@@ -801,7 +796,15 @@ Phaser.Physics.Arcade.prototype = {
             this._result = (this.separateY(body1, body2, overlapOnly) || this.separateX(body1, body2, overlapOnly));
         }
 
-        return this._result;
+        if (overlapOnly)
+        {
+            //  We already know they intersect from the check above, but by this point we know they've now had their overlapX/Y values populated
+            return true;
+        }
+        else
+        {
+            return this._result;
+        }
 
     },
 
@@ -905,12 +908,13 @@ Phaser.Physics.Arcade.prototype = {
                 }
             }
 
+            //  Resets the overlapX to zero if there is no overlap, or to the actual pixel value if there is
+            body1.overlapX = this._overlap;
+            body2.overlapX = this._overlap;
+
             //  Then adjust their positions and velocities accordingly (if there was any overlap)
             if (this._overlap !== 0)
             {
-                body1.overlapX = this._overlap;
-                body2.overlapX = this._overlap;
-
                 if (overlapOnly || body1.customSeparateX || body2.customSeparateX)
                 {
                     return true;
@@ -1020,12 +1024,13 @@ Phaser.Physics.Arcade.prototype = {
                 }
             }
 
+            //  Resets the overlapY to zero if there is no overlap, or to the actual pixel value if there is
+            body1.overlapY = this._overlap;
+            body2.overlapY = this._overlap;
+
             //  Then adjust their positions and velocities accordingly (if there was any overlap)
             if (this._overlap !== 0)
             {
-                body1.overlapY = this._overlap;
-                body2.overlapY = this._overlap;
-
                 if (overlapOnly || body1.customSeparateY || body2.customSeparateY)
                 {
                     return true;
