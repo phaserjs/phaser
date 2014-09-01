@@ -379,7 +379,7 @@ Phaser.Physics.Arcade.prototype = {
         {
             for (var i = 0,  len = object1.length; i < len; i++)
             {
-			    for (var j = 0,  len2 = object2.length; j < len2; j++)
+                for (var j = 0,  len2 = object2.length; j < len2; j++)
                 {
                     this.collideHandler(object1[i], object2[j], overlapCallback, processCallback, callbackContext, true);
                 }
