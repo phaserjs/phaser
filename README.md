@@ -134,6 +134,7 @@ Version 2.1.0 - "Cairhien" - -in development-
 * Stage.checkOffsetInterval has been moved to ScaleManager.trackParentInterval
 * ScaleManager.hasResized signal has been removed. Use ScaleManager.setResizeCallback instead.
 * The World bounds can now be set to any size, including smaller than the game dimensions. Before it was locked to a minimum size of the game canvas, but it can now be anything.
+* ScaleManager.orientationSprite has been removed because it never displayed correctly anyway (it would be distorted by the game scale), it will be bought back in a future version by way of a custom orientation state.
 
 ### Bug Fixes
 

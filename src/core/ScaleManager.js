@@ -96,11 +96,6 @@ Phaser.ScaleManager = function (game, width, height) {
     this.maxIterations = 5;
 
     /**
-    * @property {PIXI.Sprite} orientationSprite - The Sprite that is optionally displayed if the browser enters an unsupported orientation.
-    */
-    this.orientationSprite = null;
-
-    /**
     * @property {Phaser.Signal} enterLandscape - The event that is dispatched when the browser enters landscape orientation having been in portrait.
     */
     this.enterLandscape = new Phaser.Signal();
@@ -548,49 +543,23 @@ Phaser.ScaleManager.prototype = {
 
     /**
     * If you need your game to run in only one orientation you can force that to happen.
-    * The optional orientationImage is displayed when the game is in the incorrect orientation.
+    * 
     * @method Phaser.ScaleManager#forceOrientation
     * @param {boolean} forceLandscape - true if the game should run in landscape mode only.
     * @param {boolean} [forcePortrait=false] - true if the game should run in portrait mode only.
-    * @param {string} [orientationImage=''] - The string of an image in the Phaser.Cache to display when this game is in the incorrect orientation.
     */
-    forceOrientation: function (forceLandscape, forcePortrait, orientationImage) {
+    forceOrientation: function (forceLandscape, forcePortrait) {
 
         if (typeof forcePortrait === 'undefined') { forcePortrait = false; }
 
         this.forceLandscape = forceLandscape;
         this.forcePortrait = forcePortrait;
 
-        if (typeof orientationImage !== 'undefined')
-        {
-            if (orientationImage === null || this.game.cache.checkImageKey(orientationImage) === false)
-            {
-                orientationImage = '__default';
-            }
-
-            this.orientationSprite = new Phaser.Image(this.game, this.game.width / 2, this.game.height / 2, orientationImage);
-            this.orientationSprite.anchor.set(0.5);
-
-            this.checkOrientationState();
-
-            if (this.incorrectOrientation)
-            {
-                this.orientationSprite.visible = true;
-                this.game.world.visible = false;
-            }
-            else
-            {
-                this.orientationSprite.visible = false;
-                this.game.world.visible = true;
-            }
-
-            this.game.stage.addChild(this.orientationSprite);
-        }
-
     },
 
     /**
     * Checks if the browser is in the correct orientation for your game (if forceLandscape or forcePortrait have been set)
+    * 
     * @method Phaser.ScaleManager#checkOrientationState
     */
     checkOrientationState: function () {
@@ -603,12 +572,6 @@ Phaser.ScaleManager.prototype = {
                 //  Back to normal
                 this.incorrectOrientation = false;
                 this.leaveIncorrectOrientation.dispatch();
-
-                if (this.orientationSprite)
-                {
-                    this.orientationSprite.visible = false;
-                    this.game.world.visible = true;
-                }
 
                 if (this.scaleMode !== Phaser.ScaleManager.NO_SCALE)
                 {
@@ -623,12 +586,6 @@ Phaser.ScaleManager.prototype = {
                 //  Show orientation screen
                 this.incorrectOrientation = true;
                 this.enterIncorrectOrientation.dispatch();
-
-                if (this.orientationSprite && this.orientationSprite.visible === false)
-                {
-                    this.orientationSprite.visible = true;
-                    this.game.world.visible = false;
-                }
 
                 if (this.scaleMode !== Phaser.ScaleManager.NO_SCALE)
                 {
