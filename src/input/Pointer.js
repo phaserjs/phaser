@@ -405,8 +405,6 @@ Phaser.Pointer.prototype = {
             this.movementY += this.rawMovementY;
         }
 
-        // this.x = (this.pageX - this.game.stage.offset.x) * this.game.input.scale.x;
-        // this.y = (this.pageY - this.game.stage.offset.y) * this.game.input.scale.y;
         this.x = (this.pageX - this.game.scale.offset.x) * this.game.input.scale.x;
         this.y = (this.pageY - this.game.scale.offset.y) * this.game.input.scale.y;
 

@@ -125,6 +125,10 @@ Version 2.1.0 - "Cairhien" - -in development-
 * If Time.elapsed was > Time.timeCap it would reset the elapsed value to be 1 / 60. It's now set to Time.timeCap and Time.timeCap defaults to `1 / 60 * 1000` as it's a ms value (thanks @casensiom #899)
 * Tiled polylines are now imported into the map objects property as well as map collision (#1117)
 * Tile.setCollision now adjusts the tiles interesting faces list as well, this allows you to create one-way jump tiles without using custom callbacks on a specific tile basis (thanks @RafaelOliveira #886)
+* Stage.offset has been moved to ScaleManager.offset
+* Stage.bounds has been removed, you can access it via Stage.getBounds.
+* Stage.checkOffsetInterval has been moved to ScaleManager.trackParentInterval
+* ScaleManager.hasResized signal has been removed. Use ScaleManager.setResizeCallback instead.
 
 ### Bug Fixes
 
@@ -155,6 +159,7 @@ Version 2.1.0 - "Cairhien" - -in development-
 * GamepadButton.justPressed and justReleased now correctly report if the button has just been pressed or released (thanks @padpadpad #1019)
 * TilemapParser.getEmptyData now correct adds an empty bodies array into layers. This fixes an issue where p2 couldn't convert a csv map into collision tiles (thanks @sru #845)
 * CocoonJS doesn't support mouse wheel events so they've been moved into a conditional check (thanks @videlais #1151)
+* ScaleManager window.resize handler would constantly dispatch enterPortrait and enterLandscape events on window resizing, regardless if it actually entered that orientation or not.
 
 ### p2.js 0.6.0 Changes and New Features
 

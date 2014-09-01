@@ -34,6 +34,16 @@ Phaser.World = function (game) {
     */
     this.camera = null;
 
+    /**
+    * @property {number} width - The defined width of the World. Sometimes the bounds needs to grow larger than this (if you resize the game) but this retains the original requested dimension.
+    */
+    this._width = game.width;
+
+    /**
+    * @property {number} height - The defined height of the World. Sometimes the bounds needs to grow larger than this (if you resize the game) but this retains the original requested dimension.
+    */
+    this._height = game.height;
+
 };
 
 Phaser.World.prototype = Object.create(Phaser.Group.prototype);
@@ -87,6 +97,31 @@ Phaser.World.prototype.setBounds = function (x, y, width, height) {
         //  The Camera can never be smaller than the game size
         this.camera.bounds.setTo(x, y, width, height);
     }
+
+    this.game.physics.setBoundsToWorld();
+
+    this._width = width;
+    this._height = height;
+
+};
+
+Phaser.World.prototype.resize = function (width, height) {
+
+    //  Don't ever scale the World bounds lower than the original requested dimensions
+    if (width < this._width)
+    {
+        width = this._width;
+    }
+
+    if (height < this._height)
+    {
+        height = this._height;
+    }
+
+    this.bounds.width = width;
+    this.bounds.height = height;
+
+    this.game.camera.setBoundsToWorld();
 
     this.game.physics.setBoundsToWorld();
 
@@ -176,7 +211,7 @@ Phaser.World.prototype.wrap = function (sprite, padding, useBounds, horizontal, 
 
 /**
 * @name Phaser.World#width
-* @property {number} width - Gets or sets the current width of the game world.
+* @property {number} width - Gets or sets the current width of the game world. The world can never be smaller than the game (canvas) dimensions.
 */
 Object.defineProperty(Phaser.World.prototype, "width", {
 
@@ -185,14 +220,22 @@ Object.defineProperty(Phaser.World.prototype, "width", {
     },
 
     set: function (value) {
+
+        if (value < this.game.width)
+        {
+            value = this.game.width;
+        }
+
         this.bounds.width = value;
+        this._width = value;
+
     }
 
 });
 
 /**
 * @name Phaser.World#height
-* @property {number} height - Gets or sets the current height of the game world.
+* @property {number} height - Gets or sets the current height of the game world. The world can never be smaller than the game (canvas) dimensions.
 */
 Object.defineProperty(Phaser.World.prototype, "height", {
 
@@ -201,7 +244,15 @@ Object.defineProperty(Phaser.World.prototype, "height", {
     },
 
     set: function (value) {
+
+        if (value < this.game.height)
+        {
+            value = this.game.height;
+        }
+
         this.bounds.height = value;
+        this._width = value;
+
     }
 
 });
