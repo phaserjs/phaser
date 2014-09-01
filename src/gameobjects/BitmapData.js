@@ -752,6 +752,89 @@ Phaser.BitmapData.prototype = {
     /**
     * Copies the pixels from the source image to this BitmapData based on the given area and destination.
     *
+    * @method Phaser.BitmapData#blit
+    * @param {Phaser.Sprite|Phaser.Image|Phaser.BitmapData|HTMLImage|string} image - The Image to copy from. If you give a string it will try and find the Image in the Game.Cache.
+    * @param {Phaser.Rectangle} source - The Rectangle region to copy from the source image.
+    * @param {Phaser.Rectangle} dest - The Rectangle region to copy to the source image.
+    * @param {number} [alpha] - An optional alpha value. If given the BitmapData.context.globalAlpha will be set to this before drawing and reset after.
+    * @param {object} [transform] - A transform object containing the properties scaleX, scaleY, skewX, skewY, translateX and translateY.
+    * @param {string} [blendMode] - ?
+    */
+    blit: function (image, source, dest, alpha, transform, blendMode) {
+
+        if (typeof image === 'string')
+        {
+            image = this.game.cache.getImage(image);
+        }
+
+        if (typeof transform === 'undefined')
+        {
+            var transform = { scaleX: 1, skewX: 0, skewY: 0, scaleY: 1, translateX: 0, translateY: 0 };
+        }
+
+        if (typeof alpha === 'undefined')
+        {
+            alpha = null;
+        }
+        else if (alpha <= 0)
+        {
+            //  No point doing anything if alpha is zero
+            return;
+        }
+        else if (alpha > 1)
+        {
+            //  Sanity cap
+            alpha = 1;
+        }
+
+        if (typeof blendMode === 'undefined')
+        {
+            blendMode = 'source-atop';
+        }
+
+        var src = image;
+        var sx = 0;
+        var sy = 0;
+
+        if (image instanceof Phaser.Image || image instanceof Phaser.Sprite)
+        {
+            src = image.texture.baseTexture.image;
+            var frame = image.texture.frame;
+            sx = frame.x;
+            sy = frame.y;
+        }
+        else
+        {
+            if (image instanceof Phaser.BitmapData)
+            {
+                src = image.canvas;
+            }
+        }
+
+        if (alpha)
+        {
+            var prevAlpha = this.context.globalAlpha;
+            this.context.globalAlpha = alpha;
+        }
+
+        // this.context.globalCompositeOperation = blendMode;
+
+        this.context.setTransform(transform.scaleX, transform.skewX, transform.skewY, transform.scaleY, transform.translateX, transform.translateY);
+
+        this.context.drawImage(src, sx + source.x, sy + source.y, source.width, source.height, dest.x, dest.y, dest.width, dest.height);
+
+        if (alpha)
+        {
+            this.context.globalAlpha = prevAlpha;
+        }
+
+        this.dirty = true;
+
+    },
+
+    /**
+    * Copies the pixels from the source image to this BitmapData based on the given area and destination.
+    *
     * @method Phaser.BitmapData#copyPixels
     * @param {Phaser.Sprite|Phaser.Image|Phaser.BitmapData|HTMLImage|string} source - The Image to copy from. If you give a string it will try and find the Image in the Game.Cache.
     * @param {Phaser.Rectangle} area - The Rectangle region to copy from the source image.
