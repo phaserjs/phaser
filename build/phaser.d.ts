@@ -1385,6 +1385,7 @@ declare module Phaser {
         static create(width?: number, height?: number, id?: string, noCocoon?: boolean): HTMLCanvasElement;
         static getAspectRatio(canvas: HTMLCanvasElement): number;
         static getOffset(element: HTMLElement, point?: Phaser.Point): Phaser.Point;
+        static removeFromDOM(canvas: HTMLCanvasElement): void;
         static setBackgroundColor(canvas: HTMLCanvasElement, color: string): HTMLCanvasElement;
         static setImageRenderingBicubic(canvas: HTMLCanvasElement): HTMLCanvasElement;
         static setImageRenderingCrisp(canvas: HTMLCanvasElement): HTMLCanvasElement;
@@ -4434,19 +4435,19 @@ declare module Phaser {
 
     class Stage extends PIXI.Stage {
 
-        constructor(game: Phaser.Game, width: number, height: number);
+        constructor(game: Phaser.Game);
 
         backgroundColor: any;
-        checkOffsetInterval: any;
         currentRenderOrderID: number;
         disableVisibilityChange: boolean;
         exists: boolean;
         game: Phaser.Game;
         name: string;
-        offset: Phaser.Point;
         smoothed: boolean;
 
+        boot(): void;
         checkVisiblity(): void;
+        destroy(): void;
         parseConfig(config: Object): void;
         postUpdate(): void;
         preUpdate(): void;
@@ -4464,6 +4465,7 @@ declare module Phaser {
         static EXACT_FIT: number;
         static NO_SCALE: number;
         static SHOW_ALL: number;
+        static RESIZE: number;
 
         aspectRatio: number;
         bounds: Phaser.Rectangle;
@@ -4478,7 +4480,6 @@ declare module Phaser {
         fullScreenTarget: any;
         fullScreenScaleMode: number;
         game: Phaser.Game;
-        hasResized: Phaser.Signal;
         incorrectOrientation: boolean;
         leaveFullScreen: Phaser.Signal;
         leaveIncorrectOrientation: Phaser.Signal;
@@ -4491,29 +4492,42 @@ declare module Phaser {
         maxWidth: number;
         minHeight: number;
         minWidth: number;
+        offset: Phaser.Point;
+        onResize: function;
+        onResizeContext: any;
         orientation: number;
-        orientationSprite: any;
         pageAlignHorizontally: boolean;
         pageAlignVertically: boolean;
+        parentIsWindow: boolean;
+        parentNode: any;
+        parentScaleFactor: Phaser.Point;
         scaleFactor: Phaser.Point;
         scaleFactorInversed: Phaser.Point;
         scaleMode: number;
         sourceAspectRatio: number;
+        trackParentInterval: number;
         width: number;
 
+        boot(width: number, height: number): void;
         checkOrientation(event: any): void;
         checkOrientationState(): void;
         checkResize(event: any): void;
+        destroy(): void;
         forceOrientation(forceLandscape: boolean, forcePortrait?: boolean, orientationImage?: string): void;
         fullScreenChange(event: any): void;
+        parseConfig(config: Object): void;
+        preUpdate(): void;
         refresh(): void;
         setExactFit(): void;
         setMaximum(): void;
+        setMinMax(minWidth: number, minHeight: number, maxWidth?: number, maxHeight?: number): void;
+        setResizeCallback(callback: function, context: any): void;
         setScreenSize(force?: boolean): void;
         setShowAll(): void;
         setSize(): void;
-        startFullScreen(antialias: boolean): void;
+        startFullScreen(antialias?: boolean): void;
         stopFullScreen(): void;
+        updateDimensions(width: number, height: number, resize: boolean): void;
 
     }
 

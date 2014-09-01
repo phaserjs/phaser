@@ -67,62 +67,62 @@ Phaser.StateManager = function (game, pendingState) {
     this.current = '';
 
     /**
-    * @property {function} onInitCallback - This will be called when the state is started (i.e. set as the current active state).
+    * @property {function} onInitCallback - This is called when the state is set as the active state.
     */
     this.onInitCallback = null;
 
     /**
-    * @property {function} onPreloadCallback - This will be called when init states (loading assets...).
+    * @property {function} onPreloadCallback - This is called when the state starts to load assets.
     */
     this.onPreloadCallback = null;
 
     /**
-    * @property {function} onCreateCallback - This will be called when create states (setup states...).
+    * @property {function} onCreateCallback - This is called when the state preload has finished and creation begins.
     */
     this.onCreateCallback = null;
 
     /**
-    * @property {function} onUpdateCallback - This will be called when State is updated, this doesn't happen during load (@see onLoadUpdateCallback).
+    * @property {function} onUpdateCallback - This is called when the state is updated, every game loop. It doesn't happen during preload (@see onLoadUpdateCallback).
     */
     this.onUpdateCallback = null;
 
     /**
-    * @property {function} onRenderCallback - This will be called when the State is rendered, this doesn't happen during load (see onLoadRenderCallback).
+    * @property {function} onRenderCallback - This is called post-render. It doesn't happen during preload (see onLoadRenderCallback).
     */
     this.onRenderCallback = null;
 
     /**
-    * @property {function} onPreRenderCallback - This will be called before the State is rendered and before the stage is cleared.
+    * @property {function} onPreRenderCallback - This is called before the state is rendered and before the stage is cleared.
     */
     this.onPreRenderCallback = null;
 
     /**
-    * @property {function} onLoadUpdateCallback - This will be called when the State is updated but only during the load process.
+    * @property {function} onLoadUpdateCallback - This is called when the State is updated during the preload phase.
     */
     this.onLoadUpdateCallback = null;
 
     /**
-    * @property {function} onLoadRenderCallback - This will be called when the State is rendered but only during the load process.
+    * @property {function} onLoadRenderCallback - This is called when the State is rendered during the preload phase.
     */
     this.onLoadRenderCallback = null;
 
     /**
-    * @property {function} onPausedCallback - This will be called once each time the game is paused.
+    * @property {function} onPausedCallback - This is called when the game is paused.
     */
     this.onPausedCallback = null;
 
     /**
-    * @property {function} onResumedCallback - This will be called once each time the game is resumed from a paused state.
+    * @property {function} onResumedCallback - This is called when the game is resumed from a paused state.
     */
     this.onResumedCallback = null;
 
     /**
-    * @property {function} onPauseUpdateCallback - This will be called every frame while the game is paused.
+    * @property {function} onPauseUpdateCallback - This is called every frame while the game is paused.
     */
     this.onPauseUpdateCallback = null;
 
     /**
-    * @property {function} onShutDownCallback - This will be called when the state is shut down (i.e. swapped to another state).
+    * @property {function} onShutDownCallback - This is called when the state is shut down (i.e. swapped to another state).
     */
     this.onShutDownCallback = null;
 

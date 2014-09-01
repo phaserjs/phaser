@@ -408,12 +408,12 @@ Phaser.Input.prototype = {
     * 
     * @method Phaser.Input#addMoveCallback
     * @param {function} callback - The callback that will be called each time the activePointer receives a DOM move event.
-    * @param {object} callbackContext - The context in which the callback will be called.
+    * @param {object} context - The context in which the callback will be called.
     * @return {number} The index of the callback entry. Use this index when calling Input.deleteMoveCallback.
     */
-    addMoveCallback: function (callback, callbackContext) {
+    addMoveCallback: function (callback, context) {
 
-        return this.moveCallbacks.push( { callback: callback, context: callbackContext }) - 1;
+        return this.moveCallbacks.push( { callback: callback, context: context }) - 1;
 
     },
 

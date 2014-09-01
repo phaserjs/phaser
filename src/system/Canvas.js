@@ -201,6 +201,21 @@ Phaser.Canvas = {
     },
 
     /**
+    * Removes the given canvas element from the DOM.
+    *
+    * @method Phaser.Canvas.removeFromDOM
+    * @param {HTMLCanvasElement} canvas - The canvas to be removed from the DOM.
+    */
+    removeFromDOM: function (canvas) {
+
+        if (canvas.parentNode)
+        {
+            canvas.parentNode.removeChild(canvas);
+        }
+
+    },
+
+    /**
     * Sets the transform of the given canvas to the matrix values provided.
     *
     * @method Phaser.Canvas.setTransform
