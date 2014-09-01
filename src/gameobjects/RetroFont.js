@@ -121,17 +121,21 @@ Phaser.RetroFont = function (game, key, characterWidth, characterHeight, chars, 
     */
     this.grabData = [];
 
+    /**
+    * @property {Phaser.FrameData} frameData - The FrameData representing this Retro Font.
+    */
+    this.frameData = new Phaser.FrameData();
+
     //  Now generate our rects for faster copying later on
     var currentX = this.offsetX;
     var currentY = this.offsetY;
     var r = 0;
-    var data = new Phaser.FrameData();
 
     for (var c = 0; c < chars.length; c++)
     {
         var uuid = game.rnd.uuid();
 
-        var frame = data.addFrame(new Phaser.Frame(c, currentX, currentY, this.characterWidth, this.characterHeight, '', uuid));
+        var frame = this.frameData.addFrame(new Phaser.Frame(c, currentX, currentY, this.characterWidth, this.characterHeight, '', uuid));
 
         this.grabData[chars.charCodeAt(c)] = frame.index;
 
@@ -156,7 +160,7 @@ Phaser.RetroFont = function (game, key, characterWidth, characterHeight, chars, 
         }
     }
 
-    game.cache.updateFrameData(key, data);
+    game.cache.updateFrameData(key, this.frameData);
 
     /**
     * @property {Phaser.Image} stamp - The image that is stamped to the RenderTexture for each character in the font.
