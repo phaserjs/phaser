@@ -481,24 +481,29 @@ Phaser.ScaleManager.prototype = {
     */
     preUpdate: function () {
 
-        if (this._scaleMode === Phaser.ScaleManager.RESIZE && this.parentIsWindow === false && this.game.time.now > this._nextParentCheck)
+        if (this.game.time.now < this._nextParentCheck)
+        {
+            return;
+        }
+
+        if (!this.parentIsWindow)
         {
             this._parentBounds = this.parentNode.getBoundingClientRect();
+            
+            //  Faster to just set the new values here than double-compare them to the old ones
+            this.offset.set(this._parentBounds.left, this._parentBounds.top);
 
-            if (this._parentBounds.left !== this.offset.x || this._parentBounds.top !== this.offset.y)
+            if (this._scaleMode === Phaser.ScaleManager.RESIZE)
             {
-                //  The parent has changed position (but maybe not size), we need to update regardless
-                this.offset.set(this._parentBounds.left, this._parentBounds.top);
+                if (this._parentBounds.width !== this.width || this._parentBounds.height !== this.height)
+                {
+                    //  The parent has changed size, so we need to adapt
+                    this.updateDimensions(this._parentBounds.width, this._parentBounds.height, true);
+                }
             }
-
-            if (this._parentBounds.width !== this.width || this._parentBounds.height !== this.height)
-            {
-                //  The parent has changed size, so we need to adapt
-                this.updateDimensions(this._parentBounds.width, this._parentBounds.height, true);
-            }
-
-            this._nextParentCheck = this.game.time.now + this.trackParentInterval;
         }
+        
+        this._nextParentCheck = this.game.time.now + this.trackParentInterval;
 
     },
 
