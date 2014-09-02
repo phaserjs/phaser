@@ -132,6 +132,9 @@ Phaser.BitmapData = function (game, key, width, height) {
     */
     this.dirty = false;
 
+    this.copyCallback = null;
+    this.copyCallbackContext = null;
+
     //  Aliases
     this.cls = this.clear;
 
@@ -749,6 +752,67 @@ Phaser.BitmapData.prototype = {
 
     },
 
+
+    fastCopy: function (source, from, x, y, rotate, scaleX, scaleY, alpha, blendMode) {
+
+        x = x || 0;
+        y = y || 0;
+        rotate = rotate || 0;
+        scaleX = scaleX || 1;
+        scaleY = scaleY || 1;
+        alpha = alpha || 1;
+        blendMode = blendMode || 'source-atop';
+
+        //  To keep this fast we're not going to do any look-ups or parameter validation
+
+        if (alpha <= 0)
+        {
+            //  Because why bother wasting CPU cycles drawing something you can't see?
+            return;
+        }
+
+        var sx = 0;
+        var sy = 0;
+
+        if (source instanceof Phaser.Image || source instanceof Phaser.Sprite)
+        {
+            sx = source.texture.frame.x;
+            sy = source.texture.frame.y;
+            source = source.texture.baseTexture.image;
+        }
+        else if (source instanceof Phaser.BitmapData)
+        {
+            source = source.canvas;
+        }
+
+        var prevAlpha = this.context.globalAlpha;
+
+        this.context.save();
+
+        this.context.globalAlpha = alpha;
+
+        this.context.globalCompositeOperation = blendMode;
+
+        this.context.scale(scaleX, scaleY);
+
+        this.context.translate(x, y);
+
+        this.context.rotate(rotate * Math.PI / 180);
+
+        var w = from.width;
+        var h = from.height;
+
+        // this.context.drawImage(source, sx + from.x, sy + from.y, from.width, from.height, to.x, to.y, to.width, to.height);
+        this.context.drawImage(source, sx + from.x, sy + from.y, w, h, -from.width/2, -from.height/2, w, h);
+
+        this.context.restore();
+
+        this.context.globalAlpha = prevAlpha;
+
+        this.dirty = true;
+
+    },
+
     /**
     * Copies the pixels from the source image to this BitmapData based on the given area and destination.
     *
@@ -760,6 +824,8 @@ Phaser.BitmapData.prototype = {
     * @param {object} [transform] - A transform object containing the properties scaleX, scaleY, skewX, skewY, translateX and translateY.
     * @param {string} [blendMode] - ?
     */
+
+
     blit: function (image, source, dest, alpha, transform, blendMode) {
 
         var setAlpha = false;
