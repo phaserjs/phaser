@@ -762,29 +762,32 @@ Phaser.BitmapData.prototype = {
     */
     blit: function (image, source, dest, alpha, transform, blendMode) {
 
+        var setAlpha = false;
+
         if (typeof image === 'string')
         {
             image = this.game.cache.getImage(image);
         }
 
-        if (typeof transform === 'undefined')
+        if (typeof alpha === 'number')
         {
-            var transform = { scaleX: 1, skewX: 0, skewY: 0, scaleY: 1, translateX: 0, translateY: 0 };
+            if (alpha <= 0)
+            {
+                //  No point doing anything if alpha is zero
+                return;
+            }
+            else if (alpha > 1)
+            {
+                //  Sanity cap
+                alpha = 1;
+            }
+
+            setAlpha = true;
         }
 
-        if (typeof alpha === 'undefined')
+        if (typeof transform === 'undefined' || transform === null)
         {
-            alpha = null;
-        }
-        else if (alpha <= 0)
-        {
-            //  No point doing anything if alpha is zero
-            return;
-        }
-        else if (alpha > 1)
-        {
-            //  Sanity cap
-            alpha = 1;
+            var transform = Phaser.BitmapData.getTransform();
         }
 
         if (typeof blendMode === 'undefined')
@@ -811,22 +814,29 @@ Phaser.BitmapData.prototype = {
             }
         }
 
-        if (alpha)
+        this.context.save();
+
+        if (setAlpha)
         {
             var prevAlpha = this.context.globalAlpha;
             this.context.globalAlpha = alpha;
         }
 
-        // this.context.globalCompositeOperation = blendMode;
+        var comp = this.context.globalCompositeOperation;
+        this.context.globalCompositeOperation = blendMode;
 
         this.context.setTransform(transform.scaleX, transform.skewX, transform.skewY, transform.scaleY, transform.translateX, transform.translateY);
 
         this.context.drawImage(src, sx + source.x, sy + source.y, source.width, source.height, dest.x, dest.y, dest.width, dest.height);
 
-        if (alpha)
+        this.context.restore();
+
+        if (setAlpha)
         {
             this.context.globalAlpha = prevAlpha;
         }
+
+        this.context.globalCompositeOperation = comp;
 
         this.dirty = true;
 
@@ -1119,6 +1129,31 @@ Phaser.BitmapData.prototype = {
         }
 
     }
+
+};
+
+/**
+ * Gets a JavaScript object that has 6 properties set that are used by BitmapData in a transform.
+ *
+ * @method Phaser.BitmapData.getTransform
+ * @param {number} translateX - The x translate value.
+ * @param {number} translateY - The y translate value.
+ * @param {number} scaleX - The scale x value.
+ * @param {number} scaleY - The scale y value.
+ * @param {number} skewX - The skew x value.
+ * @param {number} skewY - The skew y value.
+ * @return {Object} A JavaScript object containing all of the properties BitmapData needs for transforms.
+ */
+Phaser.BitmapData.getTransform = function (translateX, translateY, scaleX, scaleY, skewX, skewY) {
+
+    if (typeof translateX !== 'number') { translateX = 0; }
+    if (typeof translateY !== 'number') { translateY = 0; }
+    if (typeof scaleX !== 'number') { scaleX = 1; }
+    if (typeof scaleY !== 'number') { scaleY = 1; }
+    if (typeof skewX !== 'number') { skewX = 0; }
+    if (typeof skewY !== 'number') { skewY = 0; }
+
+    return { sx: scaleX, sy: scaleY, scaleX: scaleX, scaleY: scaleY, skewX: skewX, skewY: skewY, translateX: translateX, translateY: translateY, tx: translateX, ty: translateY };
 
 };
 

@@ -378,6 +378,7 @@ Phaser.Sprite.prototype.loadTexture = function (key, frame, stopAnimation) {
     }
     else if (key instanceof Phaser.BitmapData)
     {
+        //  This works from a reference, which probably isn't what we need here
         this.setTexture(key.texture);
     }
     else if (key instanceof PIXI.Texture)

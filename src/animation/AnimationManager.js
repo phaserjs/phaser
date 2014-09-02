@@ -116,6 +116,50 @@ Phaser.AnimationManager.prototype = {
     },
 
     /**
+    * Loads FrameData into the internal temporary vars and resets the frame index to zero.
+    * This is called automatically when a new Sprite is created.
+    *
+    * @method Phaser.AnimationManager#copyFrameData
+    * @private
+    * @param {Phaser.FrameData} frameData - The FrameData set to load.
+    * @param {string|number} frame - The frame to default to.
+    * @return {boolean} Returns `true` if the frame data was loaded successfully, otherwise `false`
+    */
+    copyFrameData: function (frameData, frame) {
+
+        this._frameData = frameData.clone();
+
+        if (this.isLoaded)
+        {
+            //   We need to update the frameData that the animations are using
+            for (var anim in this._anims)
+            {
+                this._anims[anim].updateFrameData(this._frameData);
+            }
+        }
+
+        if (typeof frame === 'undefined' || frame === null)
+        {
+            this.frame = 0;
+        }
+        else
+        {
+            if (typeof frame === 'string')
+            {
+                this.frameName = frame;
+            }
+            else
+            {
+                this.frame = frame;
+            }
+        }
+
+        this.isLoaded = true;
+
+        return true;
+    },
+
+    /**
     * Adds a new animation under the given key. Optionally set the frames, frame rate and loop.
     * Animations added in this way are played back with the play function.
     *

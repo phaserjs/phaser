@@ -166,6 +166,29 @@ Phaser.Frame.prototype = {
     },
 
     /**
+     * Clones this Frame into a new Phaser.Frame object and returns it.
+     * Note that all properties are cloned, including the name, index and UUID.
+     *
+     * @method clone
+     * @return {Phaser.Frame} An exact copy of this Frame object.
+     */
+    clone: function () {
+
+        var output = new Phaser.Frame(this.index, this.x, this.y, this.width, this.height, this.name, this.uuid);
+
+        for (var prop in this)
+        {
+            if (this.hasOwnProperty(prop))
+            {
+                output[prop] = this[prop];
+            }
+        }
+
+        return output;
+
+    },
+
+    /**
     * Returns a Rectangle set to the dimensions of this Frame.
     *
     * @method Phaser.Frame#getRect

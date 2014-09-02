@@ -106,6 +106,31 @@ Phaser.FrameData.prototype = {
     },
 
     /**
+     * Makes a copy of this FrameData including copies (not references) to all of the Frames it contains.
+     *
+     * @method clone
+     * @return {Phaser.FrameData} A clone of this object, including clones of the Frame objects it contains.
+     */
+    clone: function () {
+
+        var output = new Phaser.FrameData();
+
+        //  No input array, so we loop through all frames
+        for (var i = 0; i < this._frames.length; i++)
+        {
+            output._frames.push(this._frames[i].clone());
+        }
+
+        for (var i = 0; i < this._frameNames.length; i++)
+        {
+            output._frameNames.push(this._frameNames[i]);
+        }
+
+        return output;
+
+    },
+
+    /**
     * Returns a range of frames based on the given start and end frame indexes and returns them in an Array.
     *
     * @method Phaser.FrameData#getFrameRange
