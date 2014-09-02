@@ -70,6 +70,8 @@ Phaser.Physics.P2.Spring = function (world, bodyA, bodyB, restLength, stiffness,
     */
     this.data = new p2.LinearSpring(bodyA, bodyB, options);
 
+    this.data.parent = this;
+
 };
 
 Phaser.Physics.P2.Spring.prototype.constructor = Phaser.Physics.P2.Spring;

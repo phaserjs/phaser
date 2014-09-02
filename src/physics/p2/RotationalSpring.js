@@ -49,6 +49,8 @@ Phaser.Physics.P2.RotationalSpring = function (world, bodyA, bodyB, restAngle, s
     */
     this.data = new p2.RotationalSpring(bodyA, bodyB, options);
 
+    this.data.parent = this;
+
 };
 
 Phaser.Physics.P2.Spring.prototype.constructor = Phaser.Physics.P2.Spring;

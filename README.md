@@ -170,6 +170,7 @@ Version 2.1.0 - "Cairhien" - -in development-
 * CocoonJS doesn't support mouse wheel events so they've been moved into a conditional check (thanks @videlais #1151)
 * ScaleManager window.resize handler would constantly dispatch enterPortrait and enterLandscape events on window resizing, regardless if it actually entered that orientation or not.
 * Added Sound._muteVolume which stops Firefox and IE9 crashing if you try to unmute a sound that hasn't yet been muted, which can also happen as a result of a game visibility change (thanks @osmanzeki #1108 #1123)
+* P2.World.getSprings used to return an empty array, but now returns all the Springs in the world (#1134)
 
 ### p2.js 0.6.0 Changes and New Features
 
