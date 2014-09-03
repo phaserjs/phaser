@@ -839,8 +839,8 @@ Phaser.BitmapData.prototype = {
      * @param {number} [newWidth] - The new width of the block being copied. If not specified it will default to the `width` parameter.
      * @param {number} [newHeight] - The new height of the block being copied. If not specified it will default to the `height` parameter.
      * @param {number} [rotate=0] - The angle in radians to rotate the block to before drawing. Rotation takes place around the center by default, but can be changed with the `anchor` parameters.
-     * @param {number} [anchorX=0.5] - The anchor point around which the block is rotated and scaled. A value between 0 and 1, where 0 is the top-left and 1 is bottom-right.
-     * @param {number} [anchorY=0.5] - The anchor point around which the block is rotated and scaled. A value between 0 and 1, where 0 is the top-left and 1 is bottom-right.
+     * @param {number} [anchorX=0] - The anchor point around which the block is rotated and scaled. A value between 0 and 1, where 0 is the top-left and 1 is bottom-right.
+     * @param {number} [anchorY=0] - The anchor point around which the block is rotated and scaled. A value between 0 and 1, where 0 is the top-left and 1 is bottom-right.
      * @param {number} [scaleX=1] - The horizontal scale factor of the block. A value of 1 means no scaling. 2 would be twice the size, and so on.
      * @param {number} [scaleY=1] - The vertical scale factor of the block. A value of 1 means no scaling. 2 would be twice the size, and so on.
      * @param {number} [alpha=1] - The alpha that will be set on the context before drawing. A value between 0 (fully transparent) and 1, opaque.
@@ -867,7 +867,7 @@ Phaser.BitmapData.prototype = {
             //  Reset
             this._pos.set(0);
             this._scale.set(1);
-            this._anchor.set(0.5);
+            this._anchor.set(0);
             this._rotate = 0;
             this._alpha.current = 1;
 
@@ -893,8 +893,10 @@ Phaser.BitmapData.prototype = {
         //  The source region to copy from
         if (typeof x === 'undefined' || x === null) { x = 0; }
         if (typeof y === 'undefined' || y === null) { y = 0; }
-        if (typeof width === 'undefined' || width === null) { width = source.width; }
-        if (typeof height === 'undefined' || height === null) { height = source.height; }
+
+        //  With a Sprite, if it's scaled the source.width = the scaled width, not the source image width
+        if (typeof width === 'undefined' || width === null) { width = this._image.width; }
+        if (typeof height === 'undefined' || height === null) { height = this._image.height; }
 
         //  The destination region to copy to
         if (typeof tx === 'undefined' || tx === null) { tx = x; }
@@ -995,13 +997,13 @@ Phaser.BitmapData.prototype = {
     */
     copyPixels: function (source, area, x, y, alpha) {
 
-        return this.copy(source, area.x, area.y, area.width, area.height, x, y, area.width, area.height, 0, 0.5, 0.5, 1, 1, alpha);
+        return this.copy(source, area.x, area.y, area.width, area.height, x, y, area.width, area.height, 0, 0.5, 0.5, 1, 1, alpha, blendMode, roundPx);
 
     },
 
     /**
     * Draws the given Phaser.Sprite or Phaser.Image to this BitmapData at the coordinates specified.
-    * You can use the optional width and height values to 'stretch' the sprite as it's drawn.
+    * You can use the optional width and height values to 'stretch' the sprite as it's drawn. This uses drawImage stretching, not scaling.
     * When drawing it will take into account the Sprites rotation, scale and alpha values.
     *
     * @method Phaser.BitmapData#draw
@@ -1016,8 +1018,8 @@ Phaser.BitmapData.prototype = {
     */
     draw: function (source, x, y, width, height, blendMode, roundPx) {
 
-        //          copy(source, x, y, width, height, tx, ty, newWidth, newHeight, rotate, anchorX, anchorY, scaleX, scaleY, alpha, blendMode, roundPx) {
-        return this.copy(source, 0, 0, source.width, source.height, x, y, width, height, source.rotation, source.anchor.x, source.anchor.y, source.scale.x, source.scale.y, source.alpha, blendMode, roundPx);
+        //  By specifying null for most parameters it will tell `copy` to use the Sprite values instead, which is what we want here
+        return this.copy(source, null, null, null, null, x, y, width, height, null, null, null, null, null, null, blendMode, roundPx);
 
     },
 
@@ -1315,9 +1317,29 @@ Phaser.BitmapData.prototype = {
         this.context.globalCompositeOperation = 'luminosity';
         return this;
 
-    },
+    }
 
 };
+
+/**
+* @name Phaser.Sprite#smoothed
+* @property {boolean} smoothed - Gets or sets this BitmapData.contexts smoothing enabled value.
+*/
+Object.defineProperty(Phaser.BitmapData.prototype, "smoothed", {
+
+    get: function () {
+
+        Phaser.Canvas.getSmoothingEnabled(this.context);
+
+    },
+
+    set: function (value) {
+
+        Phaser.Canvas.setSmoothingEnabled(this.context, value);
+
+    }
+
+});
 
 /**
  * Gets a JavaScript object that has 6 properties set that are used by BitmapData in a transform.
