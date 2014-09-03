@@ -177,6 +177,7 @@ Version 2.1.0 - "Cairhien" - -in development-
 * Added Sound._muteVolume which stops Firefox and IE9 crashing if you try to unmute a sound that hasn't yet been muted, which can also happen as a result of a game visibility change (thanks @osmanzeki #1108 #1123)
 * P2.World.getSprings used to return an empty array, but now returns all the Springs in the world (#1134)
 * Tween.generateData would skip the end values in the data array. They are now included as the object in the final array element.
+* Rectangle.bottom setter swapped the order of the calculation (thanks @JakeCoxon #1165)
 
 ### p2.js 0.6.0 Changes and New Features
 

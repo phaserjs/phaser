@@ -334,7 +334,7 @@ Object.defineProperty(Phaser.Rectangle.prototype, "bottom", {
         if (value <= this.y) {
             this.height = 0;
         } else {
-            this.height = (this.y - value);
+            this.height = value - this.y;
         }
     }
 
