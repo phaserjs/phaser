@@ -995,7 +995,7 @@ Phaser.BitmapData.prototype = {
     * @param {boolean} [roundPx=false] - Should the x and y values be rounded to integers before drawing? This prevents anti-aliasing in some instances.
     * @return {Phaser.BitmapData} This BitmapData object for method chaining.
     */
-    copyPixels: function (source, area, x, y, alpha) {
+    copyPixels: function (source, area, x, y, alpha, blendMode, roundPx) {
 
         return this.copy(source, area.x, area.y, area.width, area.height, x, y, area.width, area.height, 0, 0.5, 0.5, 1, 1, alpha, blendMode, roundPx);
 
