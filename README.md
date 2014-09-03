@@ -387,24 +387,24 @@ Here are some of the features planned for future releases:
 
 ### Version 2.2 ("Tarabon")
 
+* Enhance the State Management, so you can perform non-destructive State swaps and persistence.
+* Scene Manager - json scene parser.
 * Adjust how Pointers and Interactive Objects work. Allow an IO to be flagged as "on click only", so it doesn't ever get processed during normal Pointer move events (unless being dragged)
 * Allow multiple drag items - no longer bind just 1 to a Pointer
 * Allow Groups to have Priority IDs too and input disable entire Groups and all children (let it flow down the chain)
 * Allow Groups to be InputEnabled? Dragging a Group would be really useful.
-* Scene Manager - json scene parser.
-* Comprehensive testing across Firefox OS devices, CocoonJS and Ejecta.
 * Ability to control DOM elements from the core game and layer them into the game.
 * Touch Gestures.
 * Optimised global Animation manager to cut down on object creation.
 * Swapping to using a RenderTexture for the Tilemaps and implementing Tilemap slicing.
-* Enhance the State Management, so you can perform non-destructive State swaps and persistence.
-* Support for parallel asset loading.
 
 ### Version 2.3 ("Illian")
 
 * Look carefully at the internal structure of Phaser to avoid method repetition (such as Sprite.crop and Image.crop), investigate using mixins to help reduce overall codebase size.
 * Flash CC HTML5 export integration.
 * Massively enhance the audio side of Phaser. Take more advantage of Web Audio: echo effects, positional sound, etc.
+* Comprehensive testing across Firefox OS devices, CocoonJS and Ejecta.
+* Support for parallel asset loading.
 
 ### Beyond version 2.3
 
