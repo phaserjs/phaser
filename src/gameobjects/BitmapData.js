@@ -15,13 +15,13 @@
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
 * @param {string} key - Internal Phaser reference key for the render texture.
-* @param {number} [width=100] - The width of the BitmapData in pixels.
-* @param {number} [height=100] - The height of the BitmapData in pixels.
+* @param {number} [width=256] - The width of the BitmapData in pixels.
+* @param {number} [height=256] - The height of the BitmapData in pixels.
 */
 Phaser.BitmapData = function (game, key, width, height) {
 
-    if (typeof width === 'undefined') { width = 100; }
-    if (typeof height === 'undefined') { height = 100; }
+    if (typeof width === 'undefined') { width = 256; }
+    if (typeof height === 'undefined') { height = 256; }
 
     /**
     * @property {Phaser.Game} game - A reference to the currently running game.
@@ -137,6 +137,42 @@ Phaser.BitmapData = function (game, key, width, height) {
 
     //  Aliases
     this.cls = this.clear;
+
+    /**
+    * @property {number} _image - Internal cache var.
+    * @private
+    */
+    this._image = null;
+
+    /**
+    * @property {Phaser.Point} _pos - Internal cache var.
+    * @private
+    */
+    this._pos = new Phaser.Point();
+
+    /**
+    * @property {Phaser.Point} _scale - Internal cache var.
+    * @private
+    */
+    this._scale = new Phaser.Point();
+
+    /**
+    * @property {number} _rotate - Internal cache var.
+    * @private
+    */
+    this._rotate = 0;
+
+    /**
+    * @property {Object} _alpha - Internal cache var.
+    * @private
+    */
+    this._alpha = { prev: 1, current: 1 };
+
+    /**
+    * @property {Phaser.Point} _anchor - Internal cache var.
+    * @private
+    */
+    this._anchor = new Phaser.Point();
 
     /**
     * @property {number} _tempR - Internal cache var.
@@ -784,15 +820,16 @@ Phaser.BitmapData.prototype = {
     },
 
     /**
-     * Copies a rectangular region from the source image to this BitmapData.
-     * You can optionally resize, translate, rotate, scale, alpha or blend the block as it's drawn.
-     * All rotation, scaling and drawing takes place around the blocks center point by default, but can be changed with the anchor parameters.
+     * Copies a rectangular area from the source image to this BitmapData.
+     * You can optionally resize, translate, rotate, scale, alpha or blend as it's drawn.
+     * All rotation, scaling and drawing takes place around the regions center point by default, but can be changed with the anchor parameters.
      * Note that the source image can also be this BitmapData, which can create some interesting effects.
      * 
-     * This method has a lot of parameters for maximum control. You can use the more friendly methods like `draw` to avoid having to remember them all.
+     * This method has a lot of parameters for maximum control.
+     * You can use the more friendly methods like `copyPixels` and `draw` to avoid having to remember them all.
      *
      * @method Phaser.BitmapData#copy
-     * @param {Phaser.Sprite|Phaser.Image|Phaser.BitmapData|HTMLImage|string} source - The source to copy from. If you give a string it will try and find the Image in the Game.Cache first. This is quite expensie so try to provide the image itself.
+     * @param {Phaser.Sprite|Phaser.Image|Phaser.BitmapData|HTMLImage|HTMLCanvas|string} source - The source to copy from. If you give a string it will try and find the Image in the Game.Cache first. This is quite expensie so try to provide the image itself.
      * @param {number} [x=0] - The x coordinate representing the top-left of the region to copy from the source image.
      * @param {number} [y=0] - The y coordinate representing the top-left of the region to copy from the source image.
      * @param {number} [width] - The width of the region to copy from the source image. If not specified it will use the full source image width.
@@ -801,38 +838,55 @@ Phaser.BitmapData.prototype = {
      * @param {number} [ty] - The y coordinate to translate to before drawing. If not specified it will default to the `y` parameter.
      * @param {number} [newWidth] - The new width of the block being copied. If not specified it will default to the `width` parameter.
      * @param {number} [newHeight] - The new height of the block being copied. If not specified it will default to the `height` parameter.
-     * @param {number} [rotate=0] - The angle in degrees to rotate the block to before drawing. Rotation takes place around the center by default, but can be changed with the `anchor` parameters.
-     * @param {number} [anchorX=0.5] - The anchor point around with the block is rotated and scaled. A value between 0 and 1, where 0 is the top-left and 1 is bottom-right.
-     * @param {number} [anchorY=0.5] - The anchor point around with the block is rotated and scaled. A value between 0 and 1, where 0 is the top-left and 1 is bottom-right.
+     * @param {number} [rotate=0] - The angle in radians to rotate the block to before drawing. Rotation takes place around the center by default, but can be changed with the `anchor` parameters.
+     * @param {number} [anchorX=0.5] - The anchor point around which the block is rotated and scaled. A value between 0 and 1, where 0 is the top-left and 1 is bottom-right.
+     * @param {number} [anchorY=0.5] - The anchor point around which the block is rotated and scaled. A value between 0 and 1, where 0 is the top-left and 1 is bottom-right.
      * @param {number} [scaleX=1] - The horizontal scale factor of the block. A value of 1 means no scaling. 2 would be twice the size, and so on.
      * @param {number} [scaleY=1] - The vertical scale factor of the block. A value of 1 means no scaling. 2 would be twice the size, and so on.
-     * @param {number} [alpha=1] - The alpha that will be set on the context before the block is drawn. A value between 0 (fully transparent) and 1, opaque.
-     * @param {number} [blendMode=null] - The composite blend mode that will be used when drawing the block. The default is no blend mode at all.
+     * @param {number} [alpha=1] - The alpha that will be set on the context before drawing. A value between 0 (fully transparent) and 1, opaque.
+     * @param {number} [blendMode=null] - The composite blend mode that will be used when drawing. The default is no blend mode at all.
      * @param {boolean} [roundPx=false] - Should the x and y values be rounded to integers before drawing? This prevents anti-aliasing in some instances.
      * @return {Phaser.BitmapData} This BitmapData object for method chaining.
      */
     copy: function (source, x, y, width, height, tx, ty, newWidth, newHeight, rotate, anchorX, anchorY, scaleX, scaleY, alpha, blendMode, roundPx) {
 
-        var sx = 0;
-        var sy = 0;
+        this._image = source;
 
         if (source instanceof Phaser.Sprite || source instanceof Phaser.Image)
         {
-            sx = source.texture.frame.x;
-            sy = source.texture.frame.y;
-            source = source.texture.baseTexture.image;
+            //  Copy over sprite values
+            this._pos.set(source.texture.frame.x, source.texture.frame.y);
+            this._scale.set(source.scale.x, source.scale.y);
+            this._anchor.set(source.anchor.x, source.anchor.y);
+            this._rotate = source.rotation;
+            this._alpha.current = source.alpha;
+            this._image = source.texture.baseTexture.source;
         }
-        else if (source instanceof Phaser.BitmapData)
+        else
         {
-            source = source.canvas;
-        }
-        else if (typeof source === 'string')
-        {
-            source = this.game.cache.getImage(source);
+            //  Reset
+            this._pos.set(0);
+            this._scale.set(1);
+            this._anchor.set(0.5);
+            this._rotate = 0;
+            this._alpha.current = 1;
 
-            if (source === null)
+            if (source instanceof Phaser.BitmapData)
             {
-                return;
+                this._image = source.canvas;
+            }
+            else if (typeof source === 'string')
+            {
+                source = this.game.cache.getImage(source);
+
+                if (source === null)
+                {
+                    return;
+                }
+                else
+                {
+                    this._image = source;
+                }
             }
         }
 
@@ -848,31 +902,54 @@ Phaser.BitmapData.prototype = {
         if (typeof newWidth === 'undefined' || newWidth === null) { newWidth = width; }
         if (typeof newHeight === 'undefined' || newHeight === null) { newHeight = width; }
 
-        //  Rotation
-        if (typeof rotate === 'undefined' || rotate === null) { rotate = 0; }
-        if (typeof anchorX === 'undefined' || anchorX === null) { anchorX = 0.5; }
-        if (typeof anchorY === 'undefined' || anchorY === null) { anchorY = 0.5; }
+        //  Rotation - if set this will override any potential Sprite value
+        if (typeof rotate === 'number')
+        {
+            this._rotate = rotate;
+        }
 
-        //  Scaling
-        if (typeof scaleX === 'undefined' || scaleX === null) { scaleX = 1; }
-        if (typeof scaleY === 'undefined' || scaleY === null) { scaleY = 1; }
+        //  Anchor - if set this will override any potential Sprite value
+        if (typeof anchorX === 'number')
+        {
+            this._anchor.x = anchorX;
+        }
+
+        if (typeof anchorY === 'number')
+        {
+            this._anchor.y = anchorY;
+        }
+
+        //  Scaling - if set this will override any potential Sprite value
+        if (typeof scaleX === 'number')
+        {
+            this._scale.x = scaleX;
+        }
+
+        if (typeof scaleY === 'number')
+        {
+            this._scale.y = scaleY;
+        }
 
         //  Effects
-        if (typeof alpha === 'undefined' || alpha === null) { alpha = 1; }
+        if (typeof alpha === 'number')
+        {
+            this._alpha.current = alpha;
+        }
+
         if (typeof blendMode === 'undefined') { blendMode = null; }
         if (typeof roundPx === 'undefined') { roundPx = false; }
 
-        if (alpha <= 0 || scaleX === 0 || scaleY === 0)
+        if (this._alpha.current <= 0 || this._scale.x === 0 || this._scale.y === 0)
         {
-            //  Because why bother wasting CPU cycles drawing something you can't see?
+            //  Why bother wasting CPU cycles drawing something you can't see?
             return;
         }
 
-        var prevAlpha = this.context.globalAlpha;
+        this._alpha.prev = this.context.globalAlpha;
 
         this.context.save();
 
-        this.context.globalAlpha = alpha;
+        this.context.globalAlpha = this._alpha.current;
 
         if (blendMode)
         {
@@ -887,15 +964,15 @@ Phaser.BitmapData.prototype = {
 
         this.context.translate(tx, ty);
 
-        this.context.scale(scaleX, scaleY);
+        this.context.scale(this._scale.x, this._scale.y);
 
-        this.context.rotate(rotate * Math.PI / 180);
+        this.context.rotate(this._rotate);
 
-        this.context.drawImage(source, sx + x, sy + y, width, height, -newWidth * anchorX, -newHeight * anchorY, newWidth, newHeight);
+        this.context.drawImage(this._image, this._pos.x + x, this._pos.y + y, width, height, -newWidth * this._anchor.x, -newHeight * this._anchor.y, newWidth, newHeight);
 
         this.context.restore();
 
-        this.context.globalAlpha = prevAlpha;
+        this.context.globalAlpha = this._alpha.prev;
 
         this.dirty = true;
 
@@ -911,128 +988,36 @@ Phaser.BitmapData.prototype = {
     * @param {Phaser.Rectangle} area - The Rectangle region to copy from the source image.
     * @param {number} x - The destination x coordinate to copy the image to.
     * @param {number} y - The destination y coordinate to copy the image to.
-    * @param {number} [alpha] - An optional alpha value. If given the BitmapData.context.globalAlpha will be set to this before drawing and reset after.
+    * @param {number} [alpha=1] - The alpha that will be set on the context before drawing. A value between 0 (fully transparent) and 1, opaque.
+    * @param {number} [blendMode=null] - The composite blend mode that will be used when drawing. The default is no blend mode at all.
+    * @param {boolean} [roundPx=false] - Should the x and y values be rounded to integers before drawing? This prevents anti-aliasing in some instances.
     * @return {Phaser.BitmapData} This BitmapData object for method chaining.
     */
     copyPixels: function (source, area, x, y, alpha) {
 
-        if (typeof source === 'string')
-        {
-            source = this.game.cache.getImage(source);
-        }
-
-        if (typeof alpha === 'undefined')
-        {
-            alpha = null;
-        }
-        else if (alpha <= 0)
-        {
-            //  No point doing anything if alpha is zero
-            return;
-        }
-        else if (alpha > 1)
-        {
-            //  Sanity cap
-            alpha = 1;
-        }
-
-        var src = source;
-        var sx = 0;
-        var sy = 0;
-
-        if (source instanceof Phaser.Image || source instanceof Phaser.Sprite)
-        {
-            src = source.texture.baseTexture.source;
-            var frame = source.texture.frame;
-            sx = frame.x;
-            sy = frame.y;
-        }
-        else
-        {
-            if (source instanceof Phaser.BitmapData)
-            {
-                src = source.canvas;
-            }
-        }
-
-        if (alpha)
-        {
-            var prevAlpha = this.context.globalAlpha;
-            this.context.globalAlpha = alpha;
-        }
-
-        this.context.drawImage(src, sx + area.x, sy + area.y, area.width, area.height, x, y, area.width, area.height);
-
-        if (alpha)
-        {
-            this.context.globalAlpha = prevAlpha;
-        }
-
-        this.dirty = true;
-
-        return this;
+        return this.copy(source, area.x, area.y, area.width, area.height, x, y, area.width, area.height, 0, 0.5, 0.5, 1, 1, alpha);
 
     },
 
     /**
-    * Draws the given image or Game Object to this BitmapData at the coordinates specified.
-    * You can use the optional width and height values to 'stretch' the image as it's drawn.
+    * Draws the given Phaser.Sprite or Phaser.Image to this BitmapData at the coordinates specified.
+    * You can use the optional width and height values to 'stretch' the sprite as it's drawn.
+    * When drawing it will take into account the Sprites rotation, scale and alpha values.
     *
     * @method Phaser.BitmapData#draw
-    * @param {Phaser.Sprite|Phaser.Image|Phaser.BitmapData|HTMLImage|string} source - The Image to draw. If you give a string it will try and find the Image in the Game.Cache.
-    * @param {number} [x=0] - The x coordinate to draw the image to.
-    * @param {number} [y=0] - The y coordinate to draw the image to.
-    * @param {number} [width] - The width when drawing the image. You can use this to optionally stretch the drawn image horizontally.
-    * @param {number} [height] - The height when drawing the image. You can use this to optionally stretch the drawn image vertically.
+    * @param {Phaser.Sprite|Phaser.Image} source - The Sprite or Image to draw.
+    * @param {number} [x=0] - The x coordinate to translate to before drawing. If not specified it will default to `source.x`.
+    * @param {number} [y=0] - The y coordinate to translate to before drawing. If not specified it will default to `source.y`.
+    * @param {number} [width] - The new width of the Sprite being copied. If not specified it will default to `source.width`.
+    * @param {number} [height] - The new height of the Sprite being copied. If not specified it will default to `source.height`.
+    * @param {number} [blendMode=null] - The composite blend mode that will be used when drawing the Sprite. The default is no blend mode at all.
+    * @param {boolean} [roundPx=false] - Should the x and y values be rounded to integers before drawing? This prevents anti-aliasing in some instances.
     * @return {Phaser.BitmapData} This BitmapData object for method chaining.
     */
-    draw: function (source, x, y, width, height) {
+    draw: function (source, x, y, width, height, blendMode, roundPx) {
 
-        if (typeof x === 'undefined') { x = 0; }
-        if (typeof y === 'undefined') { y = 0; }
-
-        if (typeof source === 'string')
-        {
-            source = this.game.cache.getImage(source);
-        }
-
-        var src = source;
-        var sx = 0;
-        var sy = 0;
-        var sw = 0;
-        var sh = 0;
-
-        if (source instanceof Phaser.Image || source instanceof Phaser.Sprite)
-        {
-            src = source.texture.baseTexture.source;
-            var frame = source.texture.frame;
-            sx = frame.x;
-            sy = frame.y;
-            sw = frame.width;
-            sh = frame.height;
-            // this.context.drawImage(sprite.texture.baseTexture.source, frame.x, frame.y, frame.width, frame.height, x, y, frame.width, frame.height);
-        }
-        else
-        {
-            if (source instanceof Phaser.BitmapData)
-            {
-                src = source.canvas;
-                // this.context.drawImage(source.canvas, 0, 0, source.width, source.height, x, y, source.width, source.height);
-            }
-
-            sw = source.width;
-            sh = source.height;
-            // this.context.drawImage(source, 0, 0, source.width, source.height, x, y, source.width, source.height);
-        }
-
-        if (typeof width === 'undefined') { width = sw; }
-        if (typeof height === 'undefined') { height = sh; }
-
-        this.context.drawImage(src, sx, sy, sw, sh, x, y, width, height);
-
-        this.dirty = true;
-
-        return this;
+        //          copy(source, x, y, width, height, tx, ty, newWidth, newHeight, rotate, anchorX, anchorY, scaleX, scaleY, alpha, blendMode, roundPx) {
+        return this.copy(source, 0, 0, source.width, source.height, x, y, width, height, source.rotation, source.anchor.x, source.anchor.y, source.scale.x, source.scale.y, source.alpha, blendMode, roundPx);
 
     },
 

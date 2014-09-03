@@ -395,8 +395,8 @@ Phaser.GameObjectFactory.prototype = {
     * A BitmapData object which can be manipulated and drawn to like a traditional Canvas object and used to texture Sprites.
     *
     * @method Phaser.GameObjectFactory#bitmapData
-    * @param {number} [width=100] - The width of the BitmapData in pixels.
-    * @param {number} [height=100] - The height of the BitmapData in pixels.
+    * @param {number} [width=256] - The width of the BitmapData in pixels.
+    * @param {number} [height=256] - The height of the BitmapData in pixels.
     * @param {string} [key=''] - Asset key for the BitmapData when stored in the Cache (see addToCache parameter).
     * @param {boolean} [addToCache=false] - Should this BitmapData be added to the Game.Cache? If so you can retrieve it with Cache.getBitmapData(key)
     * @return {Phaser.BitmapData} The newly created BitmapData object.
