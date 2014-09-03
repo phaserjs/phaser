@@ -142,6 +142,7 @@ Version 2.1.0 - "Cairhien" - -in development-
 * Cache.getImage now returns `null` if the requested image wasn't found.
 * BitmapData now returns a reference to itself from all of its drawing related methods, allowing for easy function chaining.
 * The default size of a BitmapData if no width/height is given has been changed from 100x100 to 256x256.
+* Phaser.Text.destroy will now destroy the base texture by default (#1162)
 
 ### Bug Fixes
 

@@ -237,7 +237,7 @@ Phaser.Text.prototype.destroy = function (destroyChildren) {
         }
     }
 
-    this.texture.destroy();
+    this.texture.destroy(true);
 
     if (this.canvas.parentNode)
     {
