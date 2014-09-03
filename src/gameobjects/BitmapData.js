@@ -752,20 +752,39 @@ Phaser.BitmapData.prototype = {
 
     },
 
+    /**
+     * Copies a rectangular block, defined by the `from` parameter, from the source image to this BitmapData.
+     * You can optionally translate, rotate, scale, alpha or blend the block as it's drawn.
+     * All rotation, scaling and drawing takes place around the blocks center point by default, but can be changed with the anchor parameters.
+     *
+     * @method Phaser.BitmapData#fastCopy
+     * @param {Phaser.Sprite|Phaser.Image|Phaser.BitmapData|HTMLImage} source - The Image to copy from.
+     * @param {Phaser.Rectangle} from - The area to copy from the source image.
+     * @param {number} [x] - The x coordinate to translate to before drawing. If not specified it will default to `from.x`.
+     * @param {number} [y] - The y coordinate to translate to before drawing. If not specified it will default to `from.y`.
+     * @param {number} [rotate=0] - The angle in degrees to rotate the block to before drawing. Rotation takes place around the center by default, but can be changed with the `anchor` parameters.
+     * @param {number} [anchorX=0.5] - The anchor point around with the block is rotated and scaled. A value between 0 and 1, where 0 is the top-left and 1 is bottom-right.
+     * @param {number} [anchorY=0.5] - The anchor point around with the block is rotated and scaled. A value between 0 and 1, where 0 is the top-left and 1 is bottom-right.
+     * @param {number} [scaleX=1] - The horizontal scale factor of the block. A value of 1 means no scaling. 2 would be twice the size, and so on.
+     * @param {number} [scaleY=1] - The vertical scale factor of the block. A value of 1 means no scaling. 2 would be twice the size, and so on.
+     * @param {number} [alpha=1] - The alpha that will be set on the context before the block is drawn. A value between 0 (fully transparent) and 1, opaque.
+     * @param {number} [blendMode='source-over'] - The composite blend mode that will be used when drawing the block. The default is no blend mode at all.
+     * @param {boolean} [roundPx=false] - Should the x and y values be rounded to integers before drawing? This prevents anti-aliasing in some instances.
+     */
+    fastCopy: function (source, from, x, y, rotate, anchorX, anchorY, scaleX, scaleY, alpha, blendMode, roundPx) {
 
-    fastCopy: function (source, from, x, y, rotate, scaleX, scaleY, alpha, blendMode) {
+        if (typeof x === 'undefined' || x === null) { x = from.x; }
+        if (typeof y === 'undefined' || y === null) { y = from.y; }
+        if (typeof rotate === 'undefined' || rotate === null) { rotate = 0; }
+        if (typeof anchorX === 'undefined' || anchorX === null) { anchorX = 0.5; }
+        if (typeof anchorY === 'undefined' || anchorY === null) { anchorY = 0.5; }
+        if (typeof scaleX === 'undefined' || scaleX === null) { scaleX = 1; }
+        if (typeof scaleY === 'undefined' || scaleY === null) { scaleY = 1; }
+        if (typeof alpha === 'undefined' || alpha === null) { alpha = 1; }
+        if (typeof blendMode === 'undefined' || blendMode === null) { blendMode = 'source-over'; }
+        if (typeof roundPx === 'undefined') { roundPx = false; }
 
-        x = x || 0;
-        y = y || 0;
-        rotate = rotate || 0;
-        scaleX = scaleX || 1;
-        scaleY = scaleY || 1;
-        alpha = alpha || 1;
-        blendMode = blendMode || 'source-atop';
-
-        //  To keep this fast we're not going to do any look-ups or parameter validation
-
-        if (alpha <= 0)
+        if (alpha <= 0 || scaleX === 0 || scaleY === 0)
         {
             //  Because why bother wasting CPU cycles drawing something you can't see?
             return;
@@ -790,20 +809,21 @@ Phaser.BitmapData.prototype = {
         this.context.save();
 
         this.context.globalAlpha = alpha;
-
         this.context.globalCompositeOperation = blendMode;
 
-        this.context.scale(scaleX, scaleY);
+        if (roundPx)
+        {
+            x |= 0;
+            y |= 0;
+        }
 
         this.context.translate(x, y);
 
+        this.context.scale(scaleX, scaleY);
+
         this.context.rotate(rotate * Math.PI / 180);
 
-        var w = from.width;
-        var h = from.height;
-
-        // this.context.drawImage(source, sx + from.x, sy + from.y, from.width, from.height, to.x, to.y, to.width, to.height);
-        this.context.drawImage(source, sx + from.x, sy + from.y, w, h, -from.width/2, -from.height/2, w, h);
+        this.context.drawImage(source, sx + from.x, sy + from.y, from.width, from.height, -from.width * anchorX, -from.height * anchorY, from.width, from.height);
 
         this.context.restore();
 
@@ -824,8 +844,6 @@ Phaser.BitmapData.prototype = {
     * @param {object} [transform] - A transform object containing the properties scaleX, scaleY, skewX, skewY, translateX and translateY.
     * @param {string} [blendMode] - ?
     */
-
-
     blit: function (image, source, dest, alpha, transform, blendMode) {
 
         var setAlpha = false;
@@ -858,7 +876,7 @@ Phaser.BitmapData.prototype = {
 
         if (typeof blendMode === 'undefined')
         {
-            blendMode = 'source-atop';
+            blendMode = 'source-over';
         }
 
         var src = image;
