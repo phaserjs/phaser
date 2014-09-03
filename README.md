@@ -105,6 +105,7 @@ Version 2.1.0 - "Cairhien" - -in development-
 * ScaleManager.setMinMax(minWidth, minHeight, maxWidth, maxHeight) is a handy function to allow you to set all the min/max dimensions in one call.
 * ArcadePhysics.collide and overlap can now accept 2 Arrays of objects to be used in the collision checks (thanks @ctmartinez1992 #1158)
 * RetroFont has a new property called frameData which contains the Frame objects for each of the letters in the font, which can be used by Sprites.
+* Phaser.Canvas.setImageRenderingCrisp now sets image-rendering: pixelated, perfect for pixel art and which is now supported in Chrome 38.
 
 ### Updates
 
