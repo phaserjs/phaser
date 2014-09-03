@@ -823,7 +823,7 @@ Phaser.Cache.prototype = {
     *
     * @method Phaser.Cache#getImage
     * @param {string} key - Asset key of the image to retrieve from the Cache.
-    * @return {object} The image data.
+    * @return {object} The image data if found in the Cache, otherwise `null`.
     */
     getImage: function (key) {
 
@@ -834,6 +834,7 @@ Phaser.Cache.prototype = {
         else
         {
             console.warn('Phaser.Cache.getImage: Invalid key: "' + key + '"');
+            return null;
         }
 
     },
