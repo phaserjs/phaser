@@ -309,8 +309,6 @@ Phaser.Mouse.prototype = {
     */
     onMouseUp: function (event) {
 
-        console.log('onMouseUp', event);
-
         this.event = event;
 
         if (this.capture)
