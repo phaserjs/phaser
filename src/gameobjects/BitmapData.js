@@ -1070,7 +1070,7 @@ Phaser.BitmapData.prototype = {
     * @param {Phaser.Sprite|Phaser.Image|Phaser.Text|Phaser.BitmapData|HTMLImage|HTMLCanvasElement|string} [mask] - The object to be used as the mask. If you give a string it will try and find the Image in the Game.Cache first. This is quite expensive so try to provide the image itself. If you don't provide a mask it will use this BitmapData as the mask.
     * @return {Phaser.BitmapData} This BitmapData object for method chaining.
     */
-    alphaMask: function (source, mask, sourceRect, maskRect) {
+    alphaMask: function (source, mask) {
 
         return this.draw(mask).blendSourceAtop().draw(source).blendReset();
 

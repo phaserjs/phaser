@@ -1161,7 +1161,7 @@ declare module Phaser {
 
         add(object: any): Phaser.BitmapData;
         addToWorld(x?: number, y?: number, anchorX?: number, anchorY?: number, scaleX?: number, scaleY?: number): Phaser.Image;
-        alphaMask(source: any, mask: any, sourceRect?: Phaser.Rectangle, maskRect?: Phaser.Rectangle): Phaser.BitmapData;
+        alphaMask(source: any, mask: any): Phaser.BitmapData;
         blendAdd(): Phaser.BitmapData;
         blendColor(): Phaser.BitmapData;
         blendColorBurn(): Phaser.BitmapData;
