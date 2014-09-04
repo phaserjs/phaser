@@ -5,7 +5,9 @@
 */
 
 /**
-* Phaser.Mouse is responsible for handling all aspects of mouse interaction with the browser. It captures and processes mouse events.
+* Phaser.Mouse is responsible for handling all aspects of mouse interaction with the browser.
+* It captures and processes mouse events that happen on the game canvas object. It also adds a single `mouseup` listener to `window` which
+* is used to capture the mouse being released when not over the game.
 *
 * @class Phaser.Mouse
 * @constructor
@@ -207,6 +209,10 @@ Phaser.Mouse.prototype = {
             return _this.onMouseUp(event);
         };
 
+        this._onMouseUpGlobal = function (event) {
+            return _this.onMouseUpGlobal(event);
+        };
+
         this._onMouseOut = function (event) {
             return _this.onMouseOut(event);
         };
@@ -225,6 +231,7 @@ Phaser.Mouse.prototype = {
 
         if (!this.game.device.cocoonJS)
         {
+            window.addEventListener('mouseup', this._onMouseUpGlobal, true);
             this.game.canvas.addEventListener('mouseover', this._onMouseOver, true);
             this.game.canvas.addEventListener('mouseout', this._onMouseOut, true);
             this.game.canvas.addEventListener('mousewheel', this._onMouseWheel, true);
@@ -302,6 +309,8 @@ Phaser.Mouse.prototype = {
     */
     onMouseUp: function (event) {
 
+        console.log('onMouseUp', event);
+
         this.event = event;
 
         if (this.capture)
@@ -328,6 +337,30 @@ Phaser.Mouse.prototype = {
     },
 
     /**
+    * The internal method that handles the mouse up event from the window.
+    * 
+    * @method Phaser.Mouse#onMouseUpGlobal
+    * @param {MouseEvent} event - The native event from the browser. This gets stored in Mouse.event.
+    */
+    onMouseUpGlobal: function (event) {
+
+        if (!this.game.input.mousePointer.withinGame)
+        {
+            this.button = Phaser.Mouse.NO_BUTTON;
+
+            if (this.mouseUpCallback)
+            {
+                this.mouseUpCallback.call(this.callbackContext, event);
+            }
+
+            event['identifier'] = 0;
+
+            this.game.input.mousePointer.stop(event);
+        }
+
+    },
+
+    /**
     * The internal method that handles the mouse out event from the browser.
     *
     * @method Phaser.Mouse#onMouseOut
@@ -342,6 +375,8 @@ Phaser.Mouse.prototype = {
             event.preventDefault();
         }
 
+        this.game.input.mousePointer.withinGame = false;
+
         if (this.mouseOutCallback)
         {
             this.mouseOutCallback.call(this.callbackContext, event);
@@ -351,8 +386,6 @@ Phaser.Mouse.prototype = {
         {
             return;
         }
-
-        this.game.input.mousePointer.withinGame = false;
 
         if (this.stopOnGameOut)
         {
@@ -403,6 +436,8 @@ Phaser.Mouse.prototype = {
             event.preventDefault();
         }
 
+        this.game.input.mousePointer.withinGame = true;
+
         if (this.mouseOverCallback)
         {
             this.mouseOverCallback.call(this.callbackContext, event);
@@ -412,8 +447,6 @@ Phaser.Mouse.prototype = {
         {
             return;
         }
-
-        this.game.input.mousePointer.withinGame = true;
 
     },
 
@@ -499,6 +532,8 @@ Phaser.Mouse.prototype = {
         this.game.canvas.removeEventListener('mouseout', this._onMouseOut, true);
         this.game.canvas.removeEventListener('mousewheel', this._onMouseWheel, true);
         this.game.canvas.removeEventListener('DOMMouseScroll', this._onMouseWheel, true);
+
+        window.removeEventListener('mouseup', this._onMouseUpGlobal, true);
 
         document.removeEventListener('pointerlockchange', this._pointerLockChange, true);
         document.removeEventListener('mozpointerlockchange', this._pointerLockChange, true);
