@@ -260,6 +260,13 @@ Phaser.Canvas = {
 
     },
 
+    /**
+     * Returns `true` if the given context has image smoothing enabled, otherwise returns `false`.
+     *
+     * @method Phaser.Canvas.getSmoothingEnabled
+     * @param {CanvasRenderingContext2D} context - The context to check for smoothing on.
+     * @return {boolean} True if the given context has image smoothing enabled, otherwise false.
+     */
     getSmoothingEnabled: function (context) {
 
         return (context['imageSmoothingEnabled'] || context['mozImageSmoothingEnabled'] || context['oImageSmoothingEnabled'] || context['webkitImageSmoothingEnabled'] || context['msImageSmoothingEnabled']);
