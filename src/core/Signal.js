@@ -257,7 +257,10 @@ Phaser.Signal.prototype = {
             }
         }
 
-        this._bindings.length = 0;
+        if (!context)
+        {
+            this._bindings.length = 0;
+        }
 
     },
 
