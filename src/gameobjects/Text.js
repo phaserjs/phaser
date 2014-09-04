@@ -134,6 +134,11 @@ Phaser.Text = function (game, x, y, text, style) {
     */
     this._cache = [ 0, 0, 0, 0, 1, 0, 1, 0, 0 ];
 
+    if (text !== ' ')
+    {
+        this.updateText();
+    }
+
 };
 
 Phaser.Text.prototype = Object.create(PIXI.Text.prototype);

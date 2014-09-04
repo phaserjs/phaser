@@ -143,6 +143,8 @@ Version 2.1.0 - "Cairhien" - -in development-
 * BitmapData now returns a reference to itself from all of its drawing related methods, allowing for easy function chaining.
 * The default size of a BitmapData if no width/height is given has been changed from 100x100 to 256x256.
 * Phaser.Text.destroy will now destroy the base texture by default (#1162)
+* BitmapData.copyPixels is now called BitmapData.copyRect and the method signature has changed.
+* BitmapData.draw method signature has changed significantly.
 
 ### Bug Fixes
 
@@ -178,6 +180,7 @@ Version 2.1.0 - "Cairhien" - -in development-
 * P2.World.getSprings used to return an empty array, but now returns all the Springs in the world (#1134)
 * Tween.generateData would skip the end values in the data array. They are now included as the object in the final array element.
 * Rectangle.bottom setter swapped the order of the calculation (thanks @JakeCoxon #1165)
+* Phaser.Text wouldn't render the text to its local canvas if you passed the text on the constructor and didn't add it to the display list. If a string is given it now updates the local canvas on creation.
 
 ### p2.js 0.6.0 Changes and New Features
 
