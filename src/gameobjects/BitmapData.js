@@ -10,7 +10,7 @@
 * @class Phaser.BitmapData
 *
 * @classdesc A BitmapData object contains a Canvas element to which you can draw anything you like via normal Canvas context operations.
-* A single BitmapData can be used as the texture one or many Images/Sprites. So if you need to dynamically create a Sprite texture then they are a good choice.
+* A single BitmapData can be used as the texture for one or many Images/Sprites. So if you need to dynamically create a Sprite texture then they are a good choice.
 *
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
@@ -151,6 +151,12 @@ Phaser.BitmapData = function (game, key, width, height) {
     this._pos = new Phaser.Point();
 
     /**
+    * @property {Phaser.Point} _size - Internal cache var.
+    * @private
+    */
+    this._size = new Phaser.Point();
+
+    /**
     * @property {Phaser.Point} _scale - Internal cache var.
     * @private
     */
@@ -227,11 +233,11 @@ Phaser.BitmapData.prototype = {
     /**
     * Takes the given Game Object, resizes this BitmapData to match it and then draws it into this BitmapDatas canvas, ready for further processing.
     * The source game object is not modified by this operation.
-    * If the source object uses a texture as part of a Texture Atlas or Sprite Sheet, only the current frame will be used for sizing and draw.
+    * If the source object uses a texture as part of a Texture Atlas or Sprite Sheet, only the current frame will be used for sizing.
     * If a string is given it will assume it's a cache key and look in Phaser.Cache for an image key matching the string.
     *
     * @method Phaser.BitmapData#load
-    * @param {Phaser.Sprite|Phaser.Image|Phaser.BitmapData|string} source - The object that will be used to populate this BitmapData.
+    * @param {Phaser.Sprite|Phaser.Image|Phaser.Text|Phaser.BitmapData|HTMLImage|HTMLCanvasElement|string} source - The object that will be used to populate this BitmapData. If you give a string it will try and find the Image in the Game.Cache first.
     * @return {Phaser.BitmapData} This BitmapData object for method chaining.
     */
     load: function (source) {
@@ -241,18 +247,17 @@ Phaser.BitmapData.prototype = {
             source = this.game.cache.getImage(source);
         }
 
-        this.resize(source.width, source.height);
-
-        this.cls();
-
-        if (source instanceof Phaser.Image || source instanceof Phaser.Sprite)
+        if (source)
         {
-            this.drawSprite(source, 0, 0);
+            this.resize(source.width, source.height);
+            this.cls();
         }
         else
         {
-            this.draw(source, 0, 0);
+            return;
         }
+
+        this.draw(source);
 
         this.update();
 
@@ -809,27 +814,39 @@ Phaser.BitmapData.prototype = {
     * Creates a new Phaser.Image object, assigns this BitmapData to be its texture, adds it to the world then returns it.
     *
     * @method Phaser.BitmapData#addToWorld
-    * @param {number} [x=0] - The x coordinate to place the image at.
-    * @param {number} [y=0] - The y coordinate to place the image at.
+    * @param {number} [x=0] - The x coordinate to place the Image at.
+    * @param {number} [y=0] - The y coordinate to place the Image at.
+    * @param {number} [anchorX=0] - Set the x anchor point of the Image. A value between 0 and 1, where 0 is the top-left and 1 is bottom-right.
+    * @param {number} [anchorY=0] - Set the y anchor point of the Image. A value between 0 and 1, where 0 is the top-left and 1 is bottom-right.
+    * @param {number} [scaleX=1] - The horizontal scale factor of the Image. A value of 1 means no scaling. 2 would be twice the size, and so on.
+    * @param {number} [scaleY=1] - The vertical scale factor of the Image. A value of 1 means no scaling. 2 would be twice the size, and so on.
     * @return {Phaser.Image} The newly added Image object.
     */
-    addToWorld: function (x, y) {
+    addToWorld: function (x, y, anchorX, anchorY, scaleX, scaleY) {
 
-        return this.game.add.image(x, y, this);
+        scaleX = scaleX || 1;
+        scaleY = scaleY || 1;
+
+        var image = this.game.add.image(x, y, this);
+
+        image.anchor.set(anchorX, anchorY);
+        image.scale.set(scaleX, scaleY);
+
+        return image;
 
     },
 
     /**
-     * Copies a rectangular area from the source image to this BitmapData.
+     * Copies a rectangular area from the source object to this BitmapData. If you give `null` as the source it will copy from itself.
      * You can optionally resize, translate, rotate, scale, alpha or blend as it's drawn.
      * All rotation, scaling and drawing takes place around the regions center point by default, but can be changed with the anchor parameters.
      * Note that the source image can also be this BitmapData, which can create some interesting effects.
      * 
      * This method has a lot of parameters for maximum control.
-     * You can use the more friendly methods like `copyPixels` and `draw` to avoid having to remember them all.
+     * You can use the more friendly methods like `copyRect` and `draw` to avoid having to remember them all.
      *
      * @method Phaser.BitmapData#copy
-     * @param {Phaser.Sprite|Phaser.Image|Phaser.BitmapData|HTMLImage|HTMLCanvas|string} source - The source to copy from. If you give a string it will try and find the Image in the Game.Cache first. This is quite expensie so try to provide the image itself.
+     * @param {Phaser.Sprite|Phaser.Image|Phaser.Text|Phaser.BitmapData|HTMLImage|HTMLCanvasElement|string} [source] - The source to copy from. If you give a string it will try and find the Image in the Game.Cache first. This is quite expensive so try to provide the image itself.
      * @param {number} [x=0] - The x coordinate representing the top-left of the region to copy from the source image.
      * @param {number} [y=0] - The y coordinate representing the top-left of the region to copy from the source image.
      * @param {number} [width] - The width of the region to copy from the source image. If not specified it will use the full source image width.
@@ -850,17 +867,27 @@ Phaser.BitmapData.prototype = {
      */
     copy: function (source, x, y, width, height, tx, ty, newWidth, newHeight, rotate, anchorX, anchorY, scaleX, scaleY, alpha, blendMode, roundPx) {
 
+        if (typeof source === 'undefined' || source === null) { source = this; }
+
         this._image = source;
 
-        if (source instanceof Phaser.Sprite || source instanceof Phaser.Image)
+        if (source instanceof Phaser.Sprite || source instanceof Phaser.Image || source instanceof Phaser.Text)
         {
             //  Copy over sprite values
-            this._pos.set(source.texture.frame.x, source.texture.frame.y);
+            this._pos.set(source.texture.crop.x, source.texture.crop.y);
+            this._size.set(source.texture.crop.width, source.texture.crop.height);
             this._scale.set(source.scale.x, source.scale.y);
             this._anchor.set(source.anchor.x, source.anchor.y);
             this._rotate = source.rotation;
             this._alpha.current = source.alpha;
             this._image = source.texture.baseTexture.source;
+
+            if (source.texture.trim)
+            {
+                //  Offset the translation coordinates by the trim amount
+                tx += source.texture.trim.x - source.anchor.x * source.texture.trim.width;
+                ty += source.texture.trim.y - source.anchor.y * source.texture.trim.height;
+            }
         }
         else
         {
@@ -888,21 +915,30 @@ Phaser.BitmapData.prototype = {
                     this._image = source;
                 }
             }
+
+            this._size.set(this._image.width, this._image.height);
         }
 
         //  The source region to copy from
         if (typeof x === 'undefined' || x === null) { x = 0; }
         if (typeof y === 'undefined' || y === null) { y = 0; }
 
-        //  With a Sprite, if it's scaled the source.width = the scaled width, not the source image width
-        if (typeof width === 'undefined' || width === null) { width = this._image.width; }
-        if (typeof height === 'undefined' || height === null) { height = this._image.height; }
+        //  If they set a width/height then we override the frame values with them
+        if (width)
+        {
+            this._size.x = width;
+        }
+
+        if (height)
+        {
+            this._size.y = height;
+        }
 
         //  The destination region to copy to
         if (typeof tx === 'undefined' || tx === null) { tx = x; }
         if (typeof ty === 'undefined' || ty === null) { ty = y; }
-        if (typeof newWidth === 'undefined' || newWidth === null) { newWidth = width; }
-        if (typeof newHeight === 'undefined' || newHeight === null) { newHeight = width; }
+        if (typeof newWidth === 'undefined' || newWidth === null) { newWidth = this._size.x; }
+        if (typeof newHeight === 'undefined' || newHeight === null) { newHeight = this._size.y; }
 
         //  Rotation - if set this will override any potential Sprite value
         if (typeof rotate === 'number')
@@ -941,7 +977,7 @@ Phaser.BitmapData.prototype = {
         if (typeof blendMode === 'undefined') { blendMode = null; }
         if (typeof roundPx === 'undefined') { roundPx = false; }
 
-        if (this._alpha.current <= 0 || this._scale.x === 0 || this._scale.y === 0)
+        if (this._alpha.current <= 0 || this._scale.x === 0 || this._scale.y === 0 || this._size.x === 0 || this._size.y === 0)
         {
             //  Why bother wasting CPU cycles drawing something you can't see?
             return;
@@ -960,8 +996,8 @@ Phaser.BitmapData.prototype = {
 
         if (roundPx)
         {
-            x |= 0;
-            y |= 0;
+            tx |= 0;
+            ty |= 0;
         }
 
         this.context.translate(tx, ty);
@@ -970,7 +1006,7 @@ Phaser.BitmapData.prototype = {
 
         this.context.rotate(this._rotate);
 
-        this.context.drawImage(this._image, this._pos.x + x, this._pos.y + y, width, height, -newWidth * this._anchor.x, -newHeight * this._anchor.y, newWidth, newHeight);
+        this.context.drawImage(this._image, this._pos.x + x, this._pos.y + y, this._size.x, this._size.y, -newWidth * this._anchor.x, -newHeight * this._anchor.y, newWidth, newHeight);
 
         this.context.restore();
 
@@ -983,10 +1019,10 @@ Phaser.BitmapData.prototype = {
     },
 
     /**
-    * Copies the pixels from the source image to this BitmapData based on the given area and destination.
+    * Copies the area defined by the Rectangle parameter from the source image to this BitmapData at the given location.
     *
-    * @method Phaser.BitmapData#copyPixels
-    * @param {Phaser.Sprite|Phaser.Image|Phaser.BitmapData|HTMLImage|string} source - The Image to copy from. If you give a string it will try and find the Image in the Game.Cache.
+    * @method Phaser.BitmapData#copyRect
+    * @param {Phaser.Sprite|Phaser.Image|Phaser.Text|Phaser.BitmapData|HTMLImage|string} source - The Image to copy from. If you give a string it will try and find the Image in the Game.Cache.
     * @param {Phaser.Rectangle} area - The Rectangle region to copy from the source image.
     * @param {number} x - The destination x coordinate to copy the image to.
     * @param {number} y - The destination y coordinate to copy the image to.
@@ -995,19 +1031,19 @@ Phaser.BitmapData.prototype = {
     * @param {boolean} [roundPx=false] - Should the x and y values be rounded to integers before drawing? This prevents anti-aliasing in some instances.
     * @return {Phaser.BitmapData} This BitmapData object for method chaining.
     */
-    copyPixels: function (source, area, x, y, alpha, blendMode, roundPx) {
+    copyRect: function (source, area, x, y, alpha, blendMode, roundPx) {
 
-        return this.copy(source, area.x, area.y, area.width, area.height, x, y, area.width, area.height, 0, 0.5, 0.5, 1, 1, alpha, blendMode, roundPx);
+        return this.copy(source, area.x, area.y, area.width, area.height, x, y, area.width, area.height, 0, 0, 0, 1, 1, alpha, blendMode, roundPx);
 
     },
 
     /**
-    * Draws the given Phaser.Sprite or Phaser.Image to this BitmapData at the coordinates specified.
-    * You can use the optional width and height values to 'stretch' the sprite as it's drawn. This uses drawImage stretching, not scaling.
+    * Draws the given Phaser.Sprite, Phaser.Image or Phaser.Text to this BitmapData at the coordinates specified.
+    * You can use the optional width and height values to 'stretch' the sprite as it is drawn. This uses drawImage stretching, not scaling.
     * When drawing it will take into account the Sprites rotation, scale and alpha values.
     *
     * @method Phaser.BitmapData#draw
-    * @param {Phaser.Sprite|Phaser.Image} source - The Sprite or Image to draw.
+    * @param {Phaser.Sprite|Phaser.Image|Phaser.Text} source - The Sprite, Image or Text object to draw onto this BitmapData.
     * @param {number} [x=0] - The x coordinate to translate to before drawing. If not specified it will default to `source.x`.
     * @param {number} [y=0] - The y coordinate to translate to before drawing. If not specified it will default to `source.y`.
     * @param {number} [width] - The new width of the Sprite being copied. If not specified it will default to `source.width`.
@@ -1024,48 +1060,16 @@ Phaser.BitmapData.prototype = {
     },
 
     /**
-    * Draws the given image onto this BitmapData using an image as an alpha mask.
+    * Draws the image onto this BitmapData using an image as an alpha mask.
     *
     * @method Phaser.BitmapData#alphaMask
-    * @param {Phaser.Sprite|Phaser.Image|Phaser.BitmapData|HTMLImage|string} source - The Image to draw. If you give a key it will try and find the Image in the Game.Cache.
-    * @param {Phaser.Sprite|Phaser.Image|Phaser.BitmapData|HTMLImage|string|null} [mask] - The Image to use as the alpha mask. If you give a key it will try and find the Image in the Game.Cache. If you pass nothing or null it will use itself.
-    * @param {Phaser.Rectangle} [sourceRect] - A Rectangle where x/y define the coordinates to draw the Source image to and width/height define the size.
-    * @param {Phaser.Rectangle} [maskRect] - A Rectangle where x/y define the coordinates to draw the Mask image to and width/height define the size.
+    * @param {Phaser.Sprite|Phaser.Image|Phaser.Text|Phaser.BitmapData|HTMLImage|HTMLCanvasElement|string} source - The source to copy from. If you give a string it will try and find the Image in the Game.Cache first. This is quite expensive so try to provide the image itself.
+    * @param {Phaser.Sprite|Phaser.Image|Phaser.Text|Phaser.BitmapData|HTMLImage|HTMLCanvasElement|string} [mask] - The object to be used as the mask. If you give a string it will try and find the Image in the Game.Cache first. This is quite expensive so try to provide the image itself. If you don't provide a mask it will use this BitmapData as the mask.
     * @return {Phaser.BitmapData} This BitmapData object for method chaining.
     */
     alphaMask: function (source, mask, sourceRect, maskRect) {
 
-        if (typeof mask === 'undefined' || mask === null) { mask = this; }
-
-        var temp = this.context.globalCompositeOperation;
-
-        if (typeof maskRect === 'undefined' || maskRect === null)
-        {
-            this.draw(mask);
-        }
-        else
-        {
-            this.draw(mask, maskRect.x, maskRect.y, maskRect.width, maskRect.height);
-        }
-
-        this.context.globalCompositeOperation = 'source-atop';
-
-        if (typeof sourceRect === 'undefined' || sourceRect === null)
-        {
-            this.draw(source);
-        }
-        else
-        {
-            this.draw(source, sourceRect.x, sourceRect.y, sourceRect.width, sourceRect.height);
-        }
-
-        this.context.globalCompositeOperation = temp;
-
-        this.update();
-
-        this.dirty = true;
-
-        return this;
+        return this.draw(mask).blendSourceAtop().draw(source).blendReset();
 
     },
 
@@ -1193,6 +1197,12 @@ Phaser.BitmapData.prototype = {
 
     },
 
+    /**
+    * Resets the blend mode (effectively sets it to 'source-over')
+    *
+    * @method Phaser.BitmapData#blendReset
+    * @return {Phaser.BitmapData} This BitmapData object for method chaining.
+    */
     blendReset: function () {
 
         this.context.globalCompositeOperation = 'source-over';
@@ -1200,6 +1210,12 @@ Phaser.BitmapData.prototype = {
 
     },
 
+    /**
+    * Sets the blend mode to 'source-over'
+    *
+    * @method Phaser.BitmapData#blendSourceOver
+    * @return {Phaser.BitmapData} This BitmapData object for method chaining.
+    */
     blendSourceOver: function () {
 
         this.context.globalCompositeOperation = 'source-over';
@@ -1207,6 +1223,116 @@ Phaser.BitmapData.prototype = {
 
     },
 
+    /**
+    * Sets the blend mode to 'source-in'
+    *
+    * @method Phaser.BitmapData#blendSourceIn
+    * @return {Phaser.BitmapData} This BitmapData object for method chaining.
+    */
+    blendSourceIn: function () {
+
+        this.context.globalCompositeOperation = 'source-in';
+        return this;
+
+    },
+
+    /**
+    * Sets the blend mode to 'source-out'
+    *
+    * @method Phaser.BitmapData#blendSourceOut
+    * @return {Phaser.BitmapData} This BitmapData object for method chaining.
+    */
+    blendSourceOut: function () {
+
+        this.context.globalCompositeOperation = 'source-out';
+        return this;
+
+    },
+
+    /**
+    * Sets the blend mode to 'source-atop'
+    *
+    * @method Phaser.BitmapData#blendSourceAtop
+    * @return {Phaser.BitmapData} This BitmapData object for method chaining.
+    */
+    blendSourceAtop: function () {
+
+        this.context.globalCompositeOperation = 'source-atop';
+        return this;
+
+    },
+
+    /**
+    * Sets the blend mode to 'destination-over'
+    *
+    * @method Phaser.BitmapData#blendDestinationOver
+    * @return {Phaser.BitmapData} This BitmapData object for method chaining.
+    */
+    blendDestinationOver: function () {
+
+        this.context.globalCompositeOperation = 'destination-over';
+        return this;
+
+    },
+
+    /**
+    * Sets the blend mode to 'destination-in'
+    *
+    * @method Phaser.BitmapData#blendDestinationIn
+    * @return {Phaser.BitmapData} This BitmapData object for method chaining.
+    */
+    blendDestinationIn: function () {
+
+        this.context.globalCompositeOperation = 'destination-in';
+        return this;
+
+    },
+
+    /**
+    * Sets the blend mode to 'destination-out'
+    *
+    * @method Phaser.BitmapData#blendDestinationOut
+    * @return {Phaser.BitmapData} This BitmapData object for method chaining.
+    */
+    blendDestinationOut: function () {
+
+        this.context.globalCompositeOperation = 'destination-out';
+        return this;
+
+    },
+
+    /**
+    * Sets the blend mode to 'destination-atop'
+    *
+    * @method Phaser.BitmapData#blendDestinationAtop
+    * @return {Phaser.BitmapData} This BitmapData object for method chaining.
+    */
+    blendDestinationAtop: function () {
+
+        this.context.globalCompositeOperation = 'destination-atop';
+        return this;
+
+    },
+
+    /**
+    * Sets the blend mode to 'xor'
+    *
+    * @method Phaser.BitmapData#blendXor
+    * @return {Phaser.BitmapData} This BitmapData object for method chaining.
+    */
+    blendXor: function () {
+
+        this.context.globalCompositeOperation = 'xor';
+        return this;
+
+    },
+
+    /**
+    * Sets the blend mode to 'lighter'
+    *
+    * @method Phaser.BitmapData#blendAdd
+    * @return {Phaser.BitmapData} This BitmapData object for method chaining.
+    */
     blendAdd: function () {
 
         this.context.globalCompositeOperation = 'lighter';
@@ -1214,6 +1340,12 @@ Phaser.BitmapData.prototype = {
 
     },
 
+    /**
+    * Sets the blend mode to 'multiply'
+    *
+    * @method Phaser.BitmapData#blendMultiply
+    * @return {Phaser.BitmapData} This BitmapData object for method chaining.
+    */
     blendMultiply: function () {
 
         this.context.globalCompositeOperation = 'multiply';
@@ -1221,6 +1353,12 @@ Phaser.BitmapData.prototype = {
 
     },
 
+    /**
+    * Sets the blend mode to 'screen'
+    *
+    * @method Phaser.BitmapData#blendScreen
+    * @return {Phaser.BitmapData} This BitmapData object for method chaining.
+    */
     blendScreen: function () {
 
         this.context.globalCompositeOperation = 'screen';
@@ -1228,6 +1366,12 @@ Phaser.BitmapData.prototype = {
 
     },
 
+    /**
+    * Sets the blend mode to 'overlay'
+    *
+    * @method Phaser.BitmapData#blendOverlay
+    * @return {Phaser.BitmapData} This BitmapData object for method chaining.
+    */
     blendOverlay: function () {
 
         this.context.globalCompositeOperation = 'overlay';
@@ -1235,6 +1379,12 @@ Phaser.BitmapData.prototype = {
 
     },
 
+    /**
+    * Sets the blend mode to 'darken'
+    *
+    * @method Phaser.BitmapData#blendDarken
+    * @return {Phaser.BitmapData} This BitmapData object for method chaining.
+    */
     blendDarken: function () {
 
         this.context.globalCompositeOperation = 'darken';
@@ -1242,6 +1392,12 @@ Phaser.BitmapData.prototype = {
 
     },
 
+    /**
+    * Sets the blend mode to 'lighten'
+    *
+    * @method Phaser.BitmapData#blendLighten
+    * @return {Phaser.BitmapData} This BitmapData object for method chaining.
+    */
     blendLighten: function () {
 
         this.context.globalCompositeOperation = 'lighten';
@@ -1249,6 +1405,12 @@ Phaser.BitmapData.prototype = {
 
     },
 
+    /**
+    * Sets the blend mode to 'color-dodge'
+    *
+    * @method Phaser.BitmapData#blendColorDodge
+    * @return {Phaser.BitmapData} This BitmapData object for method chaining.
+    */
     blendColorDodge: function () {
 
         this.context.globalCompositeOperation = 'color-dodge';
@@ -1256,6 +1418,12 @@ Phaser.BitmapData.prototype = {
 
     },
 
+    /**
+    * Sets the blend mode to 'color-burn'
+    *
+    * @method Phaser.BitmapData#blendColorBurn
+    * @return {Phaser.BitmapData} This BitmapData object for method chaining.
+    */
     blendColorBurn: function () {
 
         this.context.globalCompositeOperation = 'color-burn';
@@ -1263,6 +1431,12 @@ Phaser.BitmapData.prototype = {
 
     },
 
+    /**
+    * Sets the blend mode to 'hard-light'
+    *
+    * @method Phaser.BitmapData#blendHardLight
+    * @return {Phaser.BitmapData} This BitmapData object for method chaining.
+    */
     blendHardLight: function () {
 
         this.context.globalCompositeOperation = 'hard-light';
@@ -1270,6 +1444,12 @@ Phaser.BitmapData.prototype = {
 
     },
 
+    /**
+    * Sets the blend mode to 'soft-light'
+    *
+    * @method Phaser.BitmapData#blendSoftLight
+    * @return {Phaser.BitmapData} This BitmapData object for method chaining.
+    */
     blendSoftLight: function () {
 
         this.context.globalCompositeOperation = 'soft-light';
@@ -1277,6 +1457,12 @@ Phaser.BitmapData.prototype = {
 
     },
 
+    /**
+    * Sets the blend mode to 'difference'
+    *
+    * @method Phaser.BitmapData#blendDifference
+    * @return {Phaser.BitmapData} This BitmapData object for method chaining.
+    */
     blendDifference: function () {
 
         this.context.globalCompositeOperation = 'difference';
@@ -1284,6 +1470,12 @@ Phaser.BitmapData.prototype = {
 
     },
 
+    /**
+    * Sets the blend mode to 'exclusion'
+    *
+    * @method Phaser.BitmapData#blendExclusion
+    * @return {Phaser.BitmapData} This BitmapData object for method chaining.
+    */
     blendExclusion: function () {
 
         this.context.globalCompositeOperation = 'exclusion';
@@ -1291,6 +1483,12 @@ Phaser.BitmapData.prototype = {
 
     },
 
+    /**
+    * Sets the blend mode to 'hue'
+    *
+    * @method Phaser.BitmapData#blendHue
+    * @return {Phaser.BitmapData} This BitmapData object for method chaining.
+    */
     blendHue: function () {
 
         this.context.globalCompositeOperation = 'hue';
@@ -1298,6 +1496,12 @@ Phaser.BitmapData.prototype = {
 
     },
 
+    /**
+    * Sets the blend mode to 'saturation'
+    *
+    * @method Phaser.BitmapData#blendSaturation
+    * @return {Phaser.BitmapData} This BitmapData object for method chaining.
+    */
     blendSaturation: function () {
 
         this.context.globalCompositeOperation = 'saturation';
@@ -1305,6 +1509,12 @@ Phaser.BitmapData.prototype = {
 
     },
 
+    /**
+    * Sets the blend mode to 'color'
+    *
+    * @method Phaser.BitmapData#blendColor
+    * @return {Phaser.BitmapData} This BitmapData object for method chaining.
+    */
     blendColor: function () {
 
         this.context.globalCompositeOperation = 'color';
@@ -1312,6 +1522,12 @@ Phaser.BitmapData.prototype = {
 
     },
 
+    /**
+    * Sets the blend mode to 'luminosity'
+    *
+    * @method Phaser.BitmapData#blendLuminosity
+    * @return {Phaser.BitmapData} This BitmapData object for method chaining.
+    */
     blendLuminosity: function () {
 
         this.context.globalCompositeOperation = 'luminosity';
