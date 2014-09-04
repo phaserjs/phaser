@@ -132,9 +132,6 @@ Phaser.BitmapData = function (game, key, width, height) {
     */
     this.dirty = false;
 
-    this.copyCallback = null;
-    this.copyCallbackContext = null;
-
     //  Aliases
     this.cls = this.clear;
 
@@ -406,6 +403,7 @@ Phaser.BitmapData.prototype = {
     * @param {number} [y=0] - The y coordinate of the top-left of the region to process from.
     * @param {number} [width] - The width of the region to process.
     * @param {number} [height] - The height of the region to process.
+    * @return {Phaser.BitmapData} This BitmapData object for method chaining.
     */
     processPixelRGB: function (callback, callbackContext, x, y, width, height) {
 
@@ -442,6 +440,8 @@ Phaser.BitmapData.prototype = {
             this.dirty = true;
         }
 
+        return this;
+
     },
 
     /**
@@ -458,6 +458,7 @@ Phaser.BitmapData.prototype = {
     * @param {number} [y=0] - The y coordinate of the top-left of the region to process from.
     * @param {number} [width] - The width of the region to process.
     * @param {number} [height] - The height of the region to process.
+    * @return {Phaser.BitmapData} This BitmapData object for method chaining.
     */
     processPixel: function (callback, callbackContext, x, y, width, height) {
 
@@ -492,6 +493,8 @@ Phaser.BitmapData.prototype = {
             this.context.putImageData(this.imageData, 0, 0);
             this.dirty = true;
         }
+
+        return this;
 
     },
 
@@ -1084,7 +1087,7 @@ Phaser.BitmapData.prototype = {
     * the color during extraction.
     *
     * @method Phaser.BitmapData#extract
-    * @param {Phaser.BitmapData} destination - The BitmapData that the extracts pixels will be drawn to.
+    * @param {Phaser.BitmapData} destination - The BitmapData that the extracted pixels will be drawn to.
     * @param {number} r - The red color component, in the range 0 - 255.
     * @param {number} g - The green color component, in the range 0 - 255.
     * @param {number} b - The blue color component, in the range 0 - 255.
@@ -1183,6 +1186,7 @@ Phaser.BitmapData.prototype = {
     * If you wish to suppress this functionality set BitmapData.disableTextureUpload to `true`.
     *
     * @method Phaser.BitmapData#render
+    * @return {Phaser.BitmapData} This BitmapData object for method chaining.
     */
     render: function () {
 
@@ -1194,6 +1198,8 @@ Phaser.BitmapData.prototype = {
 
             this.dirty = false;
         }
+
+        return this;
 
     },
 
