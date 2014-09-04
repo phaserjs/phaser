@@ -18213,6 +18213,8 @@ Phaser.Physics.P2.Spring = function (world, bodyA, bodyB, restLength, stiffness,
     */
     this.data = new p2.LinearSpring(bodyA, bodyB, options);
 
+    this.data.parent = this;
+
 };
 
 Phaser.Physics.P2.Spring.prototype.constructor = Phaser.Physics.P2.Spring;
@@ -18267,6 +18269,8 @@ Phaser.Physics.P2.RotationalSpring = function (world, bodyA, bodyB, restAngle, s
     * @property {p2.RotationalSpring} data - The actual p2 spring object.
     */
     this.data = new p2.RotationalSpring(bodyA, bodyB, options);
+
+    this.data.parent = this;
 
 };
 
