@@ -27,7 +27,7 @@ Phaser.Utils = {
             l = parts.length,
             i = 1,
             current = parts[0];
-            
+
         while (i < l && (obj = obj[current]))
         {
             current = parts[i];
@@ -60,7 +60,7 @@ Phaser.Utils = {
             l = parts.length,
             i = 1,
             current = parts[0];
-            
+
         while (i < l && (obj = obj[current]))
         {
             current = parts[i];
@@ -364,7 +364,7 @@ Phaser.Utils = {
     /**
     * Mixes the source object into the destination object, returning the newly modified destination object.
     * Based on original code by @mudcube
-    * 
+    *
     * @method Phaser.Utils.mixin
     * @param {object} from - The object to copy (the source object).
     * @param {object} to - The object to copy to (the destination object).

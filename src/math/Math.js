@@ -490,24 +490,63 @@ Phaser.Math = {
     },
 
     /**
-    * Returns an Array containing the numbers from min to max (inclusive).
-    *
-    * @method Phaser.Math#numberArray
-    * @param {number} min - The minimum value the array starts with.
-    * @param {number} max - The maximum value the array contains.
-    * @return {array} The array of number values.
-    */
-    numberArray: function (min, max) {
+     * Creates an array of numbers (positive and/or negative) progressing from
+     * `start` up to but not including `end`. If `start` is less than `stop` a
+     * zero-length range is created unless a negative `step` is specified.
+     *
+     * @static
+     * @method Phaser.Math.numberArray
+     * @param {number} [start=0] The start of the range.
+     * @param {number} end The end of the range.
+     * @param {number} [step=1] The value to increment or decrement by.
+     * @returns {Array} Returns the new array of numbers.
+     * @example
+     *
+     * Phaser.Math.numberArray(4);
+     * // => [0, 1, 2, 3]
+     *
+     * Phaser.Math.numberArray(1, 5);
+     * // => [1, 2, 3, 4]
+     *
+     * Phaser.Math.numberArray(0, 20, 5);
+     * // => [0, 5, 10, 15]
+     *
+     * Phaser.Math.numberArray(0, -4, -1);
+     * // => [0, -1, -2, -3]
+     *
+     * Phaser.Math.numberArray(1, 4, 0);
+     * // => [1, 1, 1]
+     *
+     * Phaser.Math.numberArray(0);
+     * // => []
+     */
+    numberArray: function(start, end, step) {
+        start = +start || 0;
 
-        var result = [];
-
-        for (var i = min; i <= max; i++)
-        {
-            result.push(i);
+        // enables use as a callback for functions like `_.map`
+        var type = typeof end;
+        if ((type == 'number' || type == 'string') && step && step[end] === start) {
+            end = step = null;
         }
+        step = step == null ? 1 : (+step || 0);
 
+        if (end == null) {
+            end = start;
+            start = 0;
+        } else {
+            end = +end || 0;
+        }
+        // use `Array(length)` so engines like Chakra and V8 avoid slower modes
+        // http://youtu.be/XAqIpGU8ZZk#t=17m25s
+        var index = -1,
+            length = Phaser.Math.max(Phaser.Math.ceil((end - start) / (step || 1)), 0),
+            result = new Array(length);
+
+        while (++index < length) {
+            result[index] = start;
+            start += step;
+        }
         return result;
-
     },
 
     /**
@@ -947,14 +986,14 @@ Phaser.Math = {
         {
             return 1;
         }
-                        
+
         var res = value;
-                        
+
         while( --value )
         {
             res *= value;
         }
-        
+
         return res;
     },
 
