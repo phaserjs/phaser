@@ -14,7 +14,9 @@ module.exports = {
             { src: ['dist/ninja.js'], dest: 'build/custom/ninja.js' },
             { src: ['dist/ninja.min.js'], dest: 'build/custom/ninja.min.js' },
             { src: ['dist/phaser-arcade-physics.js'], dest: 'build/custom/phaser-arcade-physics.js' },
-            { src: ['dist/phaser-arcade-physics.min.js'], dest: 'build/custom/phaser-arcade-physics.min.js' }
+            { src: ['dist/phaser-arcade-physics.min.js'], dest: 'build/custom/phaser-arcade-physics.min.js' },
+            { src: ['dist/phaser-no-physics.js'], dest: 'build/custom/phaser-no-physics.js' },
+            { src: ['dist/phaser-no-physics.js'], dest: 'build/custom/phaser-no-physics.min.js' }
         ]
     }
 };

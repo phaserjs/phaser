@@ -36,6 +36,14 @@ module.exports = {
         dest: '<%= compile_dir %>/phaser-arcade-physics.js'
     },
 
+    phaserNoPhysics: {
+        options: {
+            banner: '<%= banner %>'
+        },
+        src: ['<%= compile_dir %>/pixi.js', require('../manifests/phaser-nophysics')],
+        dest: '<%= compile_dir %>/phaser-no-physics.js'
+    },
+
     //  One ring to rule them all, with ninja physics
     /*
     standalone: {
