@@ -91,6 +91,7 @@
     <script src="$path/src/core/Group.js"></script>
     <script src="$path/src/core/World.js"></script>
     <script src="$path/src/core/Game.js"></script>
+    <script src="$path/src/core/FlexGrid.js"></script>
     <script src="$path/src/core/ScaleManager.js"></script>
 
     <script src="$path/src/input/Input.js"></script>
