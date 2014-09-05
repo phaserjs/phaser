@@ -121,7 +121,7 @@ Phaser.ScaleManager = function (game, width, height) {
     * Note that if you use a scale property of EXACT_FIT then fullScreenTarget will have its width and height style set to 100%.
     * @property {any} fullScreenTarget
     */
-    this.fullScreenTarget = this.game.canvas;
+    this.fullScreenTarget = null;
 
     /**
     * @property {Phaser.Signal} enterFullScreen - The event that is dispatched when the browser enters full screen mode (if it supports the FullScreen API).
@@ -412,6 +412,9 @@ Phaser.ScaleManager.prototype = {
     * @method Phaser.ScaleManager#boot
     */
     boot: function () {
+
+        //  Now the canvas has been created we can target it
+        this.fullScreenTarget = this.game.canvas;
 
         var _this = this;
 
