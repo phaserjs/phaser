@@ -188,6 +188,7 @@ Version 2.1.0 - "Cairhien" - -in development-
 * Rectangle.bottom setter swapped the order of the calculation (thanks @JakeCoxon #1165)
 * Phaser.Text wouldn't render the text to its local canvas if you passed the text on the constructor and didn't add it to the display list. If a string is given it now updates the local canvas on creation.
 * Signal.removeAll would ignore the context parameter and remove all bindings regardless (thanks @alect #1168)
+* P2.Body.addCapsule didn't use to pass the radius value through pxm, but now does so you have to specify it in pixels, not meters.
 
 ### p2.js 0.6.0 Changes and New Features
 
