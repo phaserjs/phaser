@@ -152,6 +152,8 @@ Version 2.1.0 - "Cairhien" - -in development-
 * BitmapData.copyPixels is now called BitmapData.copyRect and the method signature has changed.
 * BitmapData.draw method signature has changed significantly.
 * Phaser.Canvas.getSmoothingEnabled will return `true` if the given context has image smoothing enabled, otherwise `false`.
+* Math.numberArray used to include the `max` value in the output but no longer does. Please take this into account if you use it in your code anywhere.
+* Math.numberArray has been updated to now include a `step` parameter. It will create arrays of values between min/max (excluding max) with an optional step value (thanks @codevinsky #1170)
 
 ### Bug Fixes
 
