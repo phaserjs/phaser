@@ -92,6 +92,11 @@ Phaser.StateManager = function (game, pendingState) {
     this.onRenderCallback = null;
 
     /**
+    * @property {function} onResizeCallback - This is called if ScaleManager.scalemode is RESIZE and a resize event occurs. It's passed the new width and height.
+    */
+    this.onResizeCallback = null;
+
+    /**
     * @property {function} onPreRenderCallback - This is called before the state is rendered and before the stage is cleared.
     */
     this.onPreRenderCallback = null;
@@ -224,6 +229,7 @@ Phaser.StateManager.prototype = {
             this.onCreateCallback = null;
             this.onUpdateCallback = null;
             this.onRenderCallback = null;
+            this.onResizeCallback = null;
             this.onPausedCallback = null;
             this.onResumedCallback = null;
             this.onPauseUpdateCallback = null;
@@ -364,6 +370,8 @@ Phaser.StateManager.prototype = {
 
             this.game.time.removeAll();
 
+            this.game.scale.reset(this._clearWorld);
+
             if (this._clearWorld)
             {
                 this.game.world.shutdown();
@@ -464,6 +472,7 @@ Phaser.StateManager.prototype = {
         this.onUpdateCallback = this.states[key]['update'] || null;
         this.onPreRenderCallback = this.states[key]['preRender'] || null;
         this.onRenderCallback = this.states[key]['render'] || null;
+        this.onResizeCallback = this.states[key]['resize'] || null;
         this.onPausedCallback = this.states[key]['paused'] || null;
         this.onResumedCallback = this.states[key]['resumed'] || null;
         this.onPauseUpdateCallback = this.states[key]['pauseUpdate'] || null;
@@ -584,6 +593,19 @@ Phaser.StateManager.prototype = {
         if (this.onPreRenderCallback)
         {
             this.onPreRenderCallback.call(this.callbackContext, this.game);
+        }
+
+    },
+
+    /**
+    * @method Phaser.StateManager#resize
+    * @protected
+    */
+    resize: function (width, height) {
+
+        if (this.onResizeCallback)
+        {
+            this.onResizeCallback.call(this.callbackContext, width, height);
         }
 
     },

@@ -569,6 +569,8 @@ Phaser.ScaleManager.prototype = {
             this.onResize.call(this.onResizeContext, this.width, this.height);
         }
 
+        this.game.state.resize(width, height);
+
     },
 
     /**
@@ -896,6 +898,15 @@ Phaser.ScaleManager.prototype = {
         this.scaleFactorInversed.y = this.height / this.game.height;
 
         this.checkOrientationState();
+
+    },
+
+    reset: function (clearWorld) {
+
+        if (clearWorld)
+        {
+            this.grid.reset();
+        }
 
     },
 
