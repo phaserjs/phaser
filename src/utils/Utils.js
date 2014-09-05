@@ -235,32 +235,32 @@ Phaser.Utils = {
      * // => []
      */
     range: function(start, end, step) {
-      start = +start || 0;
+        start = +start || 0;
 
-      // enables use as a callback for functions like `_.map`
-      var type = typeof end;
-      if ((type == 'number' || type == 'string') && step && step[end] === start) {
-        end = step = null;
-      }
-      step = step == null ? 1 : (+step || 0);
+        // enables use as a callback for functions like `_.map`
+        var type = typeof end;
+        if ((type == 'number' || type == 'string') && step && step[end] === start) {
+            end = step = null;
+        }
+        step = step == null ? 1 : (+step || 0);
 
-      if (end == null) {
-        end = start;
-        start = 0;
-      } else {
-        end = +end || 0;
-      }
-      // use `Array(length)` so engines like Chakra and V8 avoid slower modes
-      // http://youtu.be/XAqIpGU8ZZk#t=17m25s
-      var index = -1,
-          length = Phaser.Math.max(Phaser.Math.ceil((end - start) / (step || 1)), 0),
-          result = Array(length);
+        if (end == null) {
+            end = start;
+            start = 0;
+        } else {
+            end = +end || 0;
+        }
+        // use `Array(length)` so engines like Chakra and V8 avoid slower modes
+        // http://youtu.be/XAqIpGU8ZZk#t=17m25s
+        var index = -1,
+            length = Phaser.Math.max(Phaser.Math.ceil((end - start) / (step || 1)), 0),
+            result = new Array(length);
 
-      while (++index < length) {
-        result[index] = start;
-        start += step;
-      }
-      return result;
+        while (++index < length) {
+            result[index] = start;
+            start += step;
+        }
+        return result;
     },
 
     /**
