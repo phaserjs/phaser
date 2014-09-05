@@ -107,6 +107,7 @@ Version 2.1.0 - "Cairhien" - -in development-
 * RetroFont has a new property called frameData which contains the Frame objects for each of the letters in the font, which can be used by Sprites.
 * Phaser.Canvas.setImageRenderingCrisp now sets `image-rendering: pixelated`, perfect for pixel art, which is now supported in Chrome 38.
 * Phaser.Mouse will now add a listener to the `window` to detect `mouseup` events. This is used to detect if the player releases the mouse while outside of the game canvas. Previously Pointer objects incorrectly thought they were still pressed when you returned the mouse over the canvas (#1167)
+* Rectangle.centerOn(x,y) allows you to quickly center a Rectangle on the given coordinates.
 
 ### Updates
 
