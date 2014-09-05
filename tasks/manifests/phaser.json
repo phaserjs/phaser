@@ -24,6 +24,7 @@
     "src/core/Group.js",
     "src/core/World.js",
     "src/core/FlexGrid.js",
+    "src/core/FlexLayer.js",
     "src/core/ScaleManager.js",
     "src/core/Game.js",
 
