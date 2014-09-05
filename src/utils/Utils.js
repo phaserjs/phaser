@@ -27,7 +27,7 @@ Phaser.Utils = {
             l = parts.length,
             i = 1,
             current = parts[0];
-            
+
         while (i < l && (obj = obj[current]))
         {
             current = parts[i];
@@ -60,7 +60,7 @@ Phaser.Utils = {
             l = parts.length,
             i = 1,
             current = parts[0];
-            
+
         while (i < l && (obj = obj[current]))
         {
             current = parts[i];
@@ -202,6 +202,65 @@ Phaser.Utils = {
 
         return array;
 
+    },
+    /**
+     * Creates an array of numbers (positive and/or negative) progressing from
+     * `start` up to but not including `end`. If `start` is less than `stop` a
+     * zero-length range is created unless a negative `step` is specified.
+     *
+     * @static
+     * @method Phaser.Utils.range
+     * @param {number} [start=0] The start of the range.
+     * @param {number} end The end of the range.
+     * @param {number} [step=1] The value to increment or decrement by.
+     * @returns {Array} Returns the new array of numbers.
+     * @example
+     *
+     * Phaser.Utils.range(4);
+     * // => [0, 1, 2, 3]
+     *
+     * Phaser.Utils.range(1, 5);
+     * // => [1, 2, 3, 4]
+     *
+     * Phaser.Utils.range(0, 20, 5);
+     * // => [0, 5, 10, 15]
+     *
+     * Phaser.Utils.range(0, -4, -1);
+     * // => [0, -1, -2, -3]
+     *
+     * Phaser.Utils.range(1, 4, 0);
+     * // => [1, 1, 1]
+     *
+     * Phaser.Utils.range(0);
+     * // => []
+     */
+    range: function(start, end, step) {
+      start = +start || 0;
+
+      // enables use as a callback for functions like `_.map`
+      var type = typeof end;
+      if ((type == 'number' || type == 'string') && step && step[end] === start) {
+        end = step = null;
+      }
+      step = step == null ? 1 : (+step || 0);
+
+      if (end == null) {
+        end = start;
+        start = 0;
+      } else {
+        end = +end || 0;
+      }
+      // use `Array(length)` so engines like Chakra and V8 avoid slower modes
+      // http://youtu.be/XAqIpGU8ZZk#t=17m25s
+      var index = -1,
+          length = Phaser.Math.max(Phaser.Math.ceil((end - start) / (step || 1)), 0),
+          result = Array(length);
+
+      while (++index < length) {
+        result[index] = start;
+        start += step;
+      }
+      return result;
     },
 
     /**
@@ -364,7 +423,7 @@ Phaser.Utils = {
     /**
     * Mixes the source object into the destination object, returning the newly modified destination object.
     * Based on original code by @mudcube
-    * 
+    *
     * @method Phaser.Utils.mixin
     * @param {object} from - The object to copy (the source object).
     * @param {object} to - The object to copy to (the destination object).
