@@ -111,6 +111,7 @@ Version 2.1.0 - "Cairhien" - -in development-
 * Group.addMultiple allows you to pass an array of game objects and they'll all be added to the Group in turn.
 * The StateManager will now check if a State has a method called `resize`. If it does, and if the game is running in the RESIZE Scale Mode then this method will be called whenever the game resizes. It will be passed two parameters: `width` and `height` that will match the games new dimensions. Resizing can happen as a result of either the parent container changing shape, or the browser window resizing.
 * Rectangle.topRight returns a Point object that represents the top-right coordinate of the Rectangle.
+* The grunt script now builds a new version of Phaser without any physics (including Arcade Physics), Tilemaps or Particles. This build is called `phaser-no-physics.js` and works stand-alone. Please note that things like the GameObjectFactory aren't changed, so they will still try and create a Tilemap for example should you ask them to (thanks @eguneys #1172)
 
 ### Updates
 
@@ -228,7 +229,7 @@ Version 2.1.0 - "Cairhien" - -in development-
 * EventEmitter.prototype.has can now check if any listeners were added to a given topic.
 * Added Utils.defaults.
 
-The full Change Log is at https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md
+For details about changes made in previous versions of Phaser see the full Change Log at https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md
 
 ![div](http://phaser.io/images/div3.png)
 
