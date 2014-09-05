@@ -110,6 +110,7 @@ Version 2.1.0 - "Cairhien" - -in development-
 * Rectangle.centerOn(x,y) allows you to quickly center a Rectangle on the given coordinates.
 * Group.addMultiple allows you to pass an array of game objects and they'll all be added to the Group in turn.
 * The StateManager will now check if a State has a method called `resize`. If it does, and if the game is running in the RESIZE Scale Mode then this method will be called whenever the game resizes. It will be passed two parameters: `width` and `height` that will match the games new dimensions. Resizing can happen as a result of either the parent container changing shape, or the browser window resizing.
+* Rectangle.topRight returns a Point object that represents the top-right coordinate of the Rectangle.
 
 ### Updates
 

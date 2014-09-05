@@ -554,6 +554,24 @@ Object.defineProperty(Phaser.Rectangle.prototype, "topLeft", {
 });
 
 /**
+* The location of the Rectangles top right corner as a Point object.
+* @name Phaser.Rectangle#topRight
+* @property {Phaser.Point} topRight - The location of the Rectangles top left corner as a Point object.
+*/
+Object.defineProperty(Phaser.Rectangle.prototype, "topRight", {
+
+    get: function () {
+        return new Phaser.Point(this.x + this.width, this.y);
+    },
+
+    set: function (value) {
+        this.right = value.x;
+        this.y = value.y;
+    }
+
+});
+
+/**
 * Determines whether or not this Rectangle object is empty. A Rectangle object is empty if its width or height is less than or equal to 0.
 * If set to true then all of the Rectangle properties are set to 0.
 * @name Phaser.Rectangle#empty
