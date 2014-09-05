@@ -27,33 +27,30 @@ Phaser.FlexGrid = function (manager, width, height) {
     this.width = width;
     this.height = height;
 
-    this.bounds = new Phaser.Rectangle(0, 0, width, height);
+    this.boundsFluid = new Phaser.Rectangle(0, 0, width, height);
+    this.boundsFull = manager.bounds;
+    this.boundsNone = new Phaser.Rectangle(0, 0, width, height);
 
     /**
     * @property {Phaser.Point} position - 
     * @readonly
     */
-    this.position = new Phaser.Point(0, 0);
+    this.positionFluid = new Phaser.Point(0, 0);
+    this.positionFull = new Phaser.Point(0, 0);
+    this.positionNone = new Phaser.Point(0, 0);
 
     /**
     * @property {Phaser.Point} scaleFactor - The scale factor based on the game dimensions vs. the scaled dimensions.
     * @readonly
     */
-    this.scaleFactor = new Phaser.Point(1, 1);
-
-    /**
-    * @property {Phaser.Point} scaleFactorInversed - The inversed scale factor. The displayed dimensions divided by the game dimensions.
-    * @readonly
-    */
-    this.scaleFactorInversed = new Phaser.Point(1, 1);
+    this.scaleFluid = new Phaser.Point(1, 1);
+    this.scaleFull = new Phaser.Point(1, 1);
+    this.scaleNone = new Phaser.Point(1, 1);
 
     this.ratioH = width / height;
     this.ratioV = height / width;
 
     this.multiplier = 0;
-
-    this.fitHorizontally = false;
-    this.fitVertically = false;
 
     this.layers = [];
 
@@ -70,17 +67,24 @@ Phaser.FlexGrid.prototype = {
         this.ratioH = width / height;
         this.ratioV = height / width;
 
+        this.scaleNone = new Phaser.Point(1, 1);
+
+        this.boundsNone.width = this.width;
+        this.boundsNone.height = this.height;
+
         this.refresh();
 
     },
 
-    createLayer: function () {
+    //  Need ability to create your own layers with custom scaling, etc.
+
+    createFluidLayer: function () {
 
         var layer = this.game.add.group();
 
         //  Override the position and scale so they point to our objects instead, this will keep them matched
-        layer.position = this.position;
-        layer.scale = this.scaleFactor;
+        layer.position = this.positionFluid;
+        layer.scale = this.scaleFluid;
 
         this.layers.push(layer);
 
@@ -88,40 +92,80 @@ Phaser.FlexGrid.prototype = {
 
     },
 
+    createFullLayer: function () {
+
+        var layer = this.game.add.group();
+
+        //  Override the position and scale so they point to our objects instead, this will keep them matched
+        layer.position = this.positionFull;
+        layer.scale = this.scaleFull;
+
+        this.layers.push(layer);
+
+        return layer;
+
+    },
+
+    createFixedLayer: function () {
+
+        var layer = this.game.add.group();
+
+        //  Override the position and scale so they point to our objects instead, this will keep them matched
+        layer.position = this.positionNone;
+        layer.scale = this.scaleNone;
+
+        this.layers.push(layer);
+
+        return layer;
+
+    },
+
+    reset: function () {
+
+        for (var i = 0; i < this.layers.length; i++)
+        {
+            //  Remove references to this class
+            this.layers[i].position = null;
+            this.layers[i].scale = null;
+        }
+
+        this.layers.length = 0;
+
+    },
+
     onResize: function (width, height) {
 
-        this.refresh();
+        this.refresh(width, height);
 
     },
 
     refresh: function () {
 
-        //  Now let's scale it
-
         this.multiplier = Math.min((this.manager.height / this.height), (this.manager.width / this.width));
 
-        this.bounds.width = Math.round(this.width * this.multiplier);
-        this.bounds.height = Math.round(this.height * this.multiplier);
+        this.boundsFluid.width = Math.round(this.width * this.multiplier);
+        this.boundsFluid.height = Math.round(this.height * this.multiplier);
 
-        //  Max checks?
+        this.scaleFluid.set(this.boundsFluid.width / this.width, this.boundsFluid.height / this.height);
+        this.scaleFull.set(this.boundsFull.width / this.width, this.boundsFull.height / this.height);
 
-        this.scaleFactor.set(this.bounds.width / this.width, this.bounds.height / this.height);
-        this.scaleFactorInversed.set(this.width / this.bounds.width, this.height / this.bounds.height);
+        this.boundsFluid.centerOn(this.manager.bounds.centerX, this.manager.bounds.centerY);
+        this.boundsNone.centerOn(this.manager.bounds.centerX, this.manager.bounds.centerY);
 
-        this.bounds.centerOn(this.manager.bounds.centerX, this.manager.bounds.centerY);
-
-        this.position.set(this.bounds.x, this.bounds.y);
+        this.positionFluid.set(this.boundsFluid.x, this.boundsFluid.y);
+        this.positionNone.set(this.boundsNone.x, this.boundsNone.y);
 
     },
 
     debug: function () {
 
-        this.game.debug.text("h: " + this.ratioH + " v: " + this.ratioV, 32, 32);
-        this.game.debug.text(this.scaleFactor, 32, 64);
-        // this.game.debug.text(this.scaleFactorInversed, 32, 64+32);
-        // this.game.debug.geom(this.bounds);
+        this.game.debug.text(this.boundsFluid.width + ' x ' + this.boundsFluid.height, this.boundsFluid.x + 4, this.boundsFluid.y + 16);
+        this.game.debug.geom(this.boundsFluid, 'rgba(255,0,0,0.9', false);
 
-    },
+        this.game.debug.text(this.boundsNone.width + ' x ' + this.boundsNone.height, this.boundsNone.x + 4, this.boundsNone.y + 16);
+        this.game.debug.geom(this.boundsNone, 'rgba(0,255,0,0.9', false);
+
+    }
 
 };
 
