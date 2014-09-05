@@ -337,10 +337,7 @@ Phaser.StateManager.prototype = {
                 this.loadComplete();
             }
 
-            if (this.current === this._pendingState)
-            {
-                this._pendingState = null;
-            }
+            this._pendingState = null;
         }
 
     },
