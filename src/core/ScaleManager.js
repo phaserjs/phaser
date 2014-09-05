@@ -21,6 +21,11 @@ Phaser.ScaleManager = function (game, width, height) {
     this.game = game;
 
     /**
+    * @property {Phaser.FlexGrid} grid - A responsive grid on which you can align game objects.
+    */
+    this.grid = null;
+
+    /**
     * @property {number} width - Width of the game after calculation.
     */
     this.width = 0;
@@ -402,6 +407,8 @@ Phaser.ScaleManager.prototype = {
             newHeight = rect.height * this.parentScaleFactor.y;
         }
 
+        this.grid = new Phaser.FlexGrid(this, newWidth, newHeight);
+
         this.updateDimensions(newWidth, newHeight, false);
 
     },
@@ -506,7 +513,6 @@ Phaser.ScaleManager.prototype = {
         if (!this.parentIsWindow)
         {
             Phaser.Canvas.getOffset(this.game.canvas, this.offset);
-
            
             if (this._scaleMode === Phaser.ScaleManager.RESIZE)
             {
@@ -555,6 +561,8 @@ Phaser.ScaleManager.prototype = {
             //  This should only happen if the world is smaller than the new canvas size
             this.game.world.resize(this.width, this.height);
         }
+
+        this.grid.onResize(width, height);
 
         if (this.onResize)
         {
