@@ -28,7 +28,7 @@ Phaser.FlexGrid = function (manager, width, height) {
     this.height = height;
 
     this.boundsFluid = new Phaser.Rectangle(0, 0, width, height);
-    this.boundsFull = manager.bounds;
+    this.boundsFull = new Phaser.Rectangle(0, 0, width, height);
     this.boundsNone = new Phaser.Rectangle(0, 0, width, height);
 
     /**
@@ -44,6 +44,7 @@ Phaser.FlexGrid = function (manager, width, height) {
     * @readonly
     */
     this.scaleFluid = new Phaser.Point(1, 1);
+    this.scaleFluidInversed = new Phaser.Point(1, 1);
     this.scaleFull = new Phaser.Point(1, 1);
     this.scaleNone = new Phaser.Point(1, 1);
 
@@ -168,17 +169,18 @@ Phaser.FlexGrid.prototype = {
 
     refresh: function () {
 
-        // console.log(this.manager.bounds);
-
-        this.boundsFull = this.manager.bounds;
-
         this.multiplier = Math.min((this.manager.height / this.height), (this.manager.width / this.width));
 
         this.boundsFluid.width = Math.round(this.width * this.multiplier);
         this.boundsFluid.height = Math.round(this.height * this.multiplier);
 
         this.scaleFluid.set(this.boundsFluid.width / this.width, this.boundsFluid.height / this.height);
-        // this.scaleFull.set(this.boundsFull.width / this.width, this.boundsFull.height / this.height);
+        this.scaleFluidInversed.set(this.width / this.boundsFluid.width, this.height / this.boundsFluid.height);
+
+        this.scaleFull.set(this.boundsFull.width / this.width, this.boundsFull.height / this.height);
+
+        this.boundsFull.width = this.manager.width * this.scaleFluidInversed.x;
+        this.boundsFull.height = this.manager.height * this.scaleFluidInversed.y;
 
         this.boundsFluid.centerOn(this.manager.bounds.centerX, this.manager.bounds.centerY);
         this.boundsNone.centerOn(this.manager.bounds.centerX, this.manager.bounds.centerY);
