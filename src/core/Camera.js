@@ -224,10 +224,10 @@ Phaser.Camera.prototype = {
             this.checkBounds();
         }
 
+        this.view.floor();
+
         this.displayObject.position.x = -this.view.x;
         this.displayObject.position.y = -this.view.y;
-
-        this.view.floor();
 
     },
 
