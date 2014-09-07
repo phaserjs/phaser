@@ -6,6 +6,7 @@
         public $help = [];
         public $optional = false;
         public $default = false; // assigned value is the default value
+        public $debug = '';
 
         public function __construct($line)
         {
@@ -16,18 +17,23 @@
 
             $name = $output[3];
 
+            // $this->debug = $name . " -- ";
+
             if ($name[0] === '[')
             {
                 $this->optional = true;
                 $name = substr($name, 1, -1);
+
+                // $this->debug .= $name . " -- ";
 
                 //  Default?
                 $equals = strpos($name, '=');
 
                 if ($equals > 0)
                 {
-                    $name = substr($name, 0, $equals - 1);
-                    $this->default = substr($name, $equals + 1);
+                    $this->default = (string) substr($name, $equals + 1);
+                    $name = substr($name, 0, $equals);
+                    // $this->debug .= $name . " -eq- " . $equals . " -def- " . $this->default;
                 }
             }
 

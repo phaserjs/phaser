@@ -37,32 +37,38 @@
     
     echo $data->total() . " blocks found\n\n";
 
+/*
     echo "\nConstants:\n\n";
 
     for ($i = 0; $i < count($data->consts); $i++)
     {
-        print_r($data->consts[$i]->getJSON());
-//        $const = $data->consts[$i];
-//        echo "\n\n";
-//        echo $const->name;
-//        echo "\n";
-//        print_r($const->types);
+        // print_r($data->consts[$i]->getJSON());
+       $const = $data->consts[$i];
+       echo "\n\n";
+       echo $const->name;
+       echo "\n";
+       print_r($const->types);
     }
+*/
 
-/*
     echo "\nMethods:\n\n";
 
     for ($i = 0; $i < count($data->methods); $i++)
     {
         $method = $data->methods[$i];
-        echo "\n\n";
-        echo $method->name;
-        echo "\n";
-        print_r($method->help);
-        print_r($method->parameters);
-        print_r($method->returns);
+
+        if ($method->name === 'addMissingImage')
+        {
+            echo "\n\n";
+            print_r($method->title);
+            print_r($method->help);
+            print_r($method->parameters);
+            print_r($method->returns);
+        }
+
     }
 
+/*
     echo "\nProperties:\n\n";
 
     for ($i = 0; $i < count($data->properties); $i++)
