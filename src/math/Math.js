@@ -340,6 +340,22 @@ Phaser.Math = {
     },
 
     /**
+    * Find the angle of a segment from (x1, y1) -> (x2, y2).
+    * Note that the difference between this method and Math.angleBetween is that this assumes the y coordinate travels
+    * down the screen.
+    * 
+    * @method Phaser.Math#angleBetweenY
+    * @param {number} x1
+    * @param {number} y1
+    * @param {number} x2
+    * @param {number} y2
+    * @return {number}
+    */
+    angleBetweenY: function (x1, y1, x2, y2) {
+        return Math.atan2(x2 - x1, y2 - y1);
+    },
+
+    /**
     * Find the angle of a segment from (point1.x, point1.y) -> (point2.x, point2.y).
     * @method Phaser.Math#angleBetweenPoints
     * @param {Phaser.Point} point1
@@ -348,6 +364,17 @@ Phaser.Math = {
     */
     angleBetweenPoints: function (point1, point2) {
         return Math.atan2(point2.y - point1.y, point2.x - point1.x);
+    },
+
+    /**
+    * Find the angle of a segment from (point1.x, point1.y) -> (point2.x, point2.y).
+    * @method Phaser.Math#angleBetweenPointsY
+    * @param {Phaser.Point} point1
+    * @param {Phaser.Point} point2
+    * @return {number}
+    */
+    angleBetweenPointsY: function (point1, point2) {
+        return Math.atan2(point2.x - point1.x, point2.y - point1.y);
     },
 
     /**

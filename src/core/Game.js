@@ -597,9 +597,15 @@ Phaser.Game.prototype = {
 
         if (this.device.cocoonJS)
         {
-            // Some issue related to scaling arise with Cocoon using screencanvas and webgl renderer.
-            // Disabling by default
-            this.canvas.screencanvas = false;
+            if (this.renderType === Phaser.CANVAS)
+            {
+                this.canvas.screencanvas = true;
+            }
+            else
+            {
+                // Some issue related to scaling arise with Cocoon using screencanvas and webgl renderer.
+                this.canvas.screencanvas = false;
+            }
         }
 
         if (this.renderType === Phaser.HEADLESS || this.renderType === Phaser.CANVAS || (this.renderType === Phaser.AUTO && this.device.webGL === false))
@@ -630,7 +636,7 @@ Phaser.Game.prototype = {
         if (this.renderType !== Phaser.HEADLESS)
         {
             this.stage.smoothed = this.antialias;
-
+            
             Phaser.Canvas.addToDOM(this.canvas, this.parent, false);
             Phaser.Canvas.setTouchAction(this.canvas);
         }
