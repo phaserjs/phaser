@@ -517,63 +517,96 @@ Phaser.Math = {
     },
 
     /**
+    * Returns an Array containing the numbers from min to max and inclusive of both values.
+    * If you need exclusive of max then see Phaser.Math.numberArrayEx.
+    *
+    * @method Phaser.Math#numberArray
+    * @param {number} min - The minimum value the array starts with.
+    * @param {number} max - The maximum value the array contains.
+    * @return {array} The array of number values.
+    */
+    numberArray: function (min, max) {
+
+        var result = [];
+
+        for (var i = min; i <= max; i++)
+        {
+            result.push(i);
+        }
+
+        return result;
+
+    },
+
+    /**
      * Creates an array of numbers (positive and/or negative) progressing from
      * `start` up to but not including `end`. If `start` is less than `stop` a
      * zero-length range is created unless a negative `step` is specified.
      *
      * @static
-     * @method Phaser.Math.numberArray
-     * @param {number} [start=0] The start of the range.
-     * @param {number} end The end of the range.
-     * @param {number} [step=1] The value to increment or decrement by.
+     * @method Phaser.Math#numberArrayStep
+     * @param {number} [start=0] - The start of the range.
+     * @param {number} end - The end of the range.
+     * @param {number} [step=1] - The value to increment or decrement by.
      * @returns {Array} Returns the new array of numbers.
      * @example
      *
-     * Phaser.Math.numberArray(4);
+     * Phaser.Math.numberArrayStep(4);
      * // => [0, 1, 2, 3]
      *
-     * Phaser.Math.numberArray(1, 5);
+     * Phaser.Math.numberArrayStep(1, 5);
      * // => [1, 2, 3, 4]
      *
-     * Phaser.Math.numberArray(0, 20, 5);
+     * Phaser.Math.numberArrayStep(0, 20, 5);
      * // => [0, 5, 10, 15]
      *
-     * Phaser.Math.numberArray(0, -4, -1);
+     * Phaser.Math.numberArrayStep(0, -4, -1);
      * // => [0, -1, -2, -3]
      *
-     * Phaser.Math.numberArray(1, 4, 0);
+     * Phaser.Math.numberArrayStep(1, 4, 0);
      * // => [1, 1, 1]
      *
-     * Phaser.Math.numberArray(0);
+     * Phaser.Math.numberArrayStep(0);
      * // => []
      */
-    numberArray: function(start, end, step) {
+    numberArrayStep: function(start, end, step) {
+
         start = +start || 0;
 
         // enables use as a callback for functions like `_.map`
         var type = typeof end;
-        if ((type == 'number' || type == 'string') && step && step[end] === start) {
+
+        if ((type === 'number' || type === 'string') && step && step[end] === start)
+        {
             end = step = null;
         }
+
         step = step == null ? 1 : (+step || 0);
 
-        if (end == null) {
+        if (end === null)
+        {
             end = start;
             start = 0;
-        } else {
+        }
+        else
+        {
             end = +end || 0;
         }
+
         // use `Array(length)` so engines like Chakra and V8 avoid slower modes
         // http://youtu.be/XAqIpGU8ZZk#t=17m25s
-        var index = -1,
-            length = Phaser.Math.max(Phaser.Math.ceil((end - start) / (step || 1)), 0),
-            result = new Array(length);
+        var index = -1;
+        var length = Phaser.Math.max(Phaser.Math.ceil((end - start) / (step || 1)), 0);
+        var result = new Array(length);
 
-        while (++index < length) {
+        while (++index < length)
+        {
             result[index] = start;
             start += step;
         }
+
         return result;
+
     },
 
     /**
