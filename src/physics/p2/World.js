@@ -28,10 +28,16 @@ Phaser.Physics.P2 = function (game, config) {
     }
 
     /**
+    * @property {object} config - The p2 World configuration object.
+    * @protected
+    */
+    this.config = config;
+
+    /**
     * @property {p2.World} world - The p2 World in which the simulation is run.
     * @protected
     */
-    this.world = new p2.World(config);
+    this.world = new p2.World(this.config);
 
     /**
     * @property {number} frameRate - The frame rate the world will be stepped at. Defaults to 1 / 60, but you can change here. Also see useElapsedTime property.
