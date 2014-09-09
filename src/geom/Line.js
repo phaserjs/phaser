@@ -71,10 +71,8 @@ Phaser.Line.prototype = {
         {
             return this.setTo(startSprite.center.x, startSprite.center.y, endSprite.center.x, endSprite.center.y);
         }
-        else
-        {
-            return this.setTo(startSprite.x, startSprite.y, endSprite.x, endSprite.y);
-        }
+
+        return this.setTo(startSprite.x, startSprite.y, endSprite.x, endSprite.y);
 
     },
 
