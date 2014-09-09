@@ -24,7 +24,7 @@ module.exports = {
             { src: ['dist/phaser-ninja-physics.min.js'], dest: 'build/custom/phaser-ninja-physics.min.js' },
 
             { src: ['dist/phaser-no-physics.js'], dest: 'build/custom/phaser-no-physics.js' },
-            { src: ['dist/phaser-no-physics.js'], dest: 'build/custom/phaser-no-physics.min.js' }
+            { src: ['dist/phaser-no-physics.min.js'], dest: 'build/custom/phaser-no-physics.min.js' }
         ]
     }
 };

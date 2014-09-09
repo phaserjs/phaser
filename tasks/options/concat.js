@@ -45,6 +45,7 @@ module.exports = {
         dest: '<%= compile_dir %>/phaser-ninja-physics.js'
     },
 
+    //  Phaser without P2, Ninja Physics or Arcade Physics. Does include Pixi. This is a stand-alone build.
     phaserNoPhysics: {
         options: {
             banner: '<%= banner %>'

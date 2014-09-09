@@ -50,7 +50,7 @@ module.exports = {
 
     phaserNoPhysics: {
         options: {
-            banner: '/* Phaser v<%= package.version %> - http://phaser.io - @photonstorm - (c) 2014 Photon Storm Ltd. */\n'
+            banner: '/* Phaser (NP) v<%= package.version %> - http://phaser.io - @photonstorm - (c) 2014 Photon Storm Ltd. */\n'
         },
         src: ['<%= concat.phaserNoPhysics.dest %>'],
         dest: '<%= compile_dir %>/phaser-no-physics.min.js'
