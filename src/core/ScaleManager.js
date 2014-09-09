@@ -21,7 +21,7 @@ Phaser.ScaleManager = function (game, width, height) {
     this.game = game;
 
     /**
-    * @property {Phaser.FlexGrid} grid - A responsive grid on which you can align game objects.
+    * @property {Phaser.FlexGrid} grid - EXPERIMENTAL: A responsive grid on which you can align game objects.
     */
     this.grid = null;
 
@@ -724,11 +724,17 @@ Phaser.ScaleManager.prototype = {
     },
 
     /**
-    * Re-calculate scale mode and update screen size.
+    * Re-calculate scale mode and update screen size. This only applies if ScaleMode is not set to RESIZE.
     * 
     * @method Phaser.ScaleManager#refresh
     */
     refresh: function () {
+
+        //  Not needed for RESIZE
+        if (this.scaleMode === Phaser.ScaleManager.RESIZE)
+        {
+            return;
+        }
 
         //  We can't do anything about the status bars in iPads, web apps or desktops
         if (!this.game.device.iPad && !this.game.device.webApp && !this.game.device.desktop)
@@ -759,11 +765,16 @@ Phaser.ScaleManager.prototype = {
     },
 
     /**
-    * Set screen size automatically based on the scaleMode.
+    * Set screen size automatically based on the scaleMode. This is only needed if ScaleMode is not set to RESIZE.
     * 
     * @param {boolean} force - If force is true it will try to resize the game regardless of the document dimensions.
     */
     setScreenSize: function (force) {
+
+        if (this.scaleMode === Phaser.ScaleManager.RESIZE)
+        {
+            return;
+        }
 
         if (typeof force === 'undefined')
         {
