@@ -3,7 +3,7 @@
   "version": "2.1.0",
   "release": "Cairhien",
   "description": "A fast, free and fun HTML5 Game Framework for Desktop and Mobile web browsers.",
-  "author": "Richard Davey <rdavey@gmail.com>",
+  "author": "Richard Davey <rdavey@gmail.com> (http://www.photonstorm.com)",
   "logo": "https://raw.github.com/photonstorm/phaser/master/phaser-logo-small.png",
   "homepage": "http://phaser.io",
   "bugs": "https://github.com/photonstorm/phaser/issues",
