@@ -20,7 +20,8 @@
 - [Bugs?](#bugs)
 - [License](#license)
 
-# Phaser 2.1.0 <a name="about"></a>
+<a name="about"></a>
+# Phaser 2.1.0
 
 Phaser is a fast, free and fun open source game framework for making desktop and mobile browser HTML5 games. It uses [Pixi.js](https://github.com/GoodBoyDigital/pixi.js/) internally for fast 2D Canvas and WebGL rendering.
 
@@ -41,7 +42,8 @@ By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 
 ![div](http://phaser.io/images/div4.png)
 
-## Welcome to Phaser and What's new in 2.1.0? <a name="whats-new"></a>
+<a name="whats-new"></a>
+## Welcome to Phaser and What's new in 2.1.0?
 
 Phaser 2.1 is a significant update, bringing literally hundreds of features, fixes and updates to the core framework. It's the result of months of hard work from both the Phaser team and the wonderful community on github and the forums.
 
@@ -59,7 +61,8 @@ Until then happy coding everyone! And we hope to see you on the forums.
 
 ![div](http://phaser.io/images/div1.png)
 
-## Getting Started Guides <a name="getting-started"></a>
+<a name="getting-started"></a>
+## Getting Started Guides
 
 We have a [Getting Started Guide](http://phaser.io/getting-started-js.php) which covers all you need to begin developing games with Phaser. From setting up a web server to picking an IDE. If you're new to HTML5 game development, or are coming from another language like AS3, then we recommend starting there.
 
@@ -73,7 +76,8 @@ Finally the list of [community authored Phaser Tutorials](http://www.lessmilk.co
 
 ![div](http://phaser.io/images/div2.png)
 
-## Change Log <a name="change-log"></a>
+<a name="change-log"></a>
+## Change Log
 
 Version 2.1.0 - "Cairhien" - 9th September 2014
 
@@ -206,6 +210,7 @@ Version 2.1.0 - "Cairhien" - 9th September 2014
 * Phaser.Text wouldn't render the text to its local canvas if you passed the text on the constructor and didn't add it to the display list. If a string is given it now updates the local canvas on creation.
 * Signal.removeAll would ignore the context parameter and remove all bindings regardless (thanks @alect #1168)
 * P2.Body.addCapsule didn't use to pass the radius value through pxm, but now does so you have to specify it in pixels, not meters.
+* The Debug canvas is now cleared on State swap.
 
 ### p2.js 0.6.0 Changes and New Features
 
@@ -249,7 +254,8 @@ For details about changes made in previous versions of Phaser see the full Chang
 
 ![div](http://phaser.io/images/div3.png)
 
-## How to Build <a name="how-to-build"></a>
+<a name="how-to-build"></a>
+## How to Build
 
 We provide a fully compiled version of Phaser in the `build` folder, in both plain and minified formats.
 
@@ -265,13 +271,15 @@ Note: Some of you may not be aware, but the `phaser.min.js` file in the build fo
 
 ![div](http://phaser.io/images/div4.png)
 
-## Koding <a name="koding"></a>
+<a name="koding"></a>
+## Koding
 
 You can [clone the Phaser repo in Koding](https://koding.com/Teamwork?import=https://github.com/photonstorm/phaser/archive/master.zip&c=git1) and then start editing and previewing code right away using their web based VM development system.
 
 ![div](http://phaser.io/images/div5.png)
 
-## Bower / NPM <a name="bower"></a>
+<a name="bower"></a>
+## Bower / NPM
 
 If you use bower you can install phaser with:
 
@@ -287,7 +295,8 @@ Nice and easy :)
 
 ![div](http://phaser.io/images/div6.png)
 
-## CDNJS <a name="cdnjs"></a>
+<a name="cdnjs"></a>
+## CDNJS
 
 Phaser is now available on [CDNJS](http://cdnjs.com). You can include the following in your html:
 
@@ -299,7 +308,8 @@ Or if you prefer you can leave the protocol off, so it works via http and https:
 
 ![div](http://phaser.io/images/div1.png)
 
-## Requirements <a name="requirements"></a>
+<a name="requirements"></a>
+## Requirements
 
 Games created with Phaser require a modern web browser that supports the canvas tag. This includes Internet Explorer 9+, Firefox, Chrome, Safari and Opera. It also works on mobile web browsers including stock Android 2.x browser and above and iOS5 Mobile Safari and above. But as always be aware of browser limitations. Not all features of Phaser work on all browsers.
 
@@ -313,7 +323,8 @@ Phaser is developed in JavaScript. We've made no assumptions about how you like 
 
 If you code with [TypeScript](http://www.typescriptlang.org/) you'll find a comprehensive definitions file inside the `build` folder and tutorials on getting started.
 
-### Build Files and Custom Builds <a name="build-files"></a>
+<a name="build-files"></a>
+### Build Files and Custom Builds
 
 The `build` folder contains the pre-built packaged versions of Phaser.
 
@@ -327,7 +338,8 @@ You can create your own custom build of Phaser by looking at the grunt options a
 
 ![div](http://phaser.io/images/div3.png)
 
-## Learn By Example <a name="example"></a>
+<a name="example"></a>
+## Learn By Example
 
 Ever since we started Phaser we've been growing and expanding our extensive set of Examples. Currently over 320 of them!
 
@@ -351,7 +363,8 @@ You can also browse all [Phaser Examples](http://examples.phaser.io) online.
 
 ![div](http://phaser.io/images/div4.png)
 
-## Features <a name="features"></a>
+<a name="features"></a>
+## Features
 
 **WebGL &amp; Canvas**
 
@@ -422,7 +435,8 @@ Phaser has been used to create hundreds of games, which receive millions of play
 
 ![div](http://phaser.io/images/div6.png)
 
-## Road Map <a name="road-map"></a>
+<a name="road-map"></a>
+## Road Map
 
 Here are some of the features planned for future releases:
 
@@ -461,13 +475,15 @@ Phaser 3 has entered the planning stages. Development will not begin until early
 
 ![div](http://phaser.io/images/div1.png)
 
-## Mighty Editor - A Visual Phaser Game Editor <a name="mighty-editor"></a>
+<a name="mighty-editor"></a>
+## Mighty Editor - A Visual Phaser Game Editor
 
 [MightyEditor](http://mightyfingers.com/) is a browser-based visual Phaser game editor. Create your maps with ease, position objects and share them in seconds. It also exports to native Phaser code. Excellent for quickly setting-up levels and scenes.
 
 ![div](http://phaser.io/images/div2.png)
 
-## Contributing <a name="contributing"></a>
+<a name="contributing"></a>
+## Contributing
 
 We now have a full [Contributors Guide][contribute] which goes into the process in more detail, but here are the headlines:
 
@@ -483,7 +499,8 @@ We now have a full [Contributors Guide][contribute] which goes into the process 
 
 ![div](http://phaser.io/images/div3.png)
 
-## Bugs? <a name="bugs"></a>
+<a name="bugs"></a>
+## Bugs?
 
 Please add them to the [Issue Tracker][issues] with as much info as possible, especially source code demonstrating the issue.
 
@@ -493,7 +510,8 @@ Please add them to the [Issue Tracker][issues] with as much info as possible, es
 
 ![div](http://phaser.io/images/div4.png)
 
-## License <a name="license"></a>
+<a name="license"></a>
+## License
 
 Phaser is released under the [MIT License](http://opensource.org/licenses/MIT).
 
