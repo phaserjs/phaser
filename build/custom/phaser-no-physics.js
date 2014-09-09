@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.1.0 "Cairhien" - Built: Tue Sep 09 2014 14:40:44
+* v2.1.0 "Cairhien" - Built: Tue Sep 09 2014 15:35:44
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -16263,6 +16263,11 @@ Phaser.StateManager.prototype = {
             this.game.time.removeAll();
 
             this.game.scale.reset(this._clearWorld);
+
+            if (this.game.debug)
+            {
+                this.game.debug.reset();
+            }
 
             if (this._clearWorld)
             {
@@ -53076,6 +53081,25 @@ Phaser.Utils.Debug.prototype = {
         {
             this.context.clearRect(0, 0, this.game.width, this.game.height);
             this.dirty = false;
+        }
+
+    },
+
+    /**
+    * Clears the Debug canvas.
+    *
+    * @method Phaser.Utils.Debug#reset
+    */
+    reset: function () {
+
+        if (this.context)
+        {
+            this.context.clearRect(0, 0, this.game.width, this.game.height);
+        }
+
+        if (this.sprite)
+        {
+            PIXI.updateWebGLTexture(this.baseTexture, this.game.renderer.gl);
         }
 
     },
