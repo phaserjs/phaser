@@ -13647,10 +13647,16 @@ Phaser.Physics.P2 = function (game, config) {
     }
 
     /**
+    * @property {object} config - The p2 World configuration object.
+    * @protected
+    */
+    this.config = config;
+
+    /**
     * @property {p2.World} world - The p2 World in which the simulation is run.
     * @protected
     */
-    this.world = new p2.World(config);
+    this.world = new p2.World(this.config);
 
     /**
     * @property {number} frameRate - The frame rate the world will be stepped at. Defaults to 1 / 60, but you can change here. Also see useElapsedTime property.
@@ -14434,10 +14440,12 @@ Phaser.Physics.P2.prototype = {
     * @param {Phaser.Sprite|Phaser.Physics.P2.Body|p2.Body} bodyA - First connected body.
     * @param {Phaser.Sprite|Phaser.Physics.P2.Body|p2.Body} bodyB - Second connected body.
     * @param {number} distance - The distance to keep between the bodies.
+    * @param {Array} [localAnchorA] - The anchor point for bodyA, defined locally in bodyA frame. Defaults to [0,0].
+    * @param {Array} [localAnchorB] - The anchor point for bodyB, defined locally in bodyB frame. Defaults to [0,0].
     * @param {number} [maxForce] - The maximum force that should be applied to constrain the bodies.
     * @return {Phaser.Physics.P2.DistanceConstraint} The constraint
     */
-    createDistanceConstraint: function (bodyA, bodyB, distance, maxForce) {
+    createDistanceConstraint: function (bodyA, bodyB, distance, localAnchorA, localAnchorB, maxForce) {
 
         bodyA = this.getBody(bodyA);
         bodyB = this.getBody(bodyB);
@@ -14448,7 +14456,7 @@ Phaser.Physics.P2.prototype = {
         }
         else
         {
-            return this.addConstraint(new Phaser.Physics.P2.DistanceConstraint(this, bodyA, bodyB, distance, maxForce));
+            return this.addConstraint(new Phaser.Physics.P2.DistanceConstraint(this, bodyA, bodyB, distance, localAnchorA, localAnchorB, maxForce));
         }
 
     },
@@ -16856,7 +16864,7 @@ Phaser.Physics.P2.Body.prototype = {
     *
     * @method Phaser.Physics.P2.Body#addCapsule
     * @param {number} length - The distance between the end points in pixels.
-    * @param {number} radius - Radius of the capsule in radians.
+    * @param {number} radius - Radius of the capsule in pixels.
     * @param {number} [offsetX=0] - Local horizontal offset of the shape relative to the body center of mass.
     * @param {number} [offsetY=0] - Local vertical offset of the shape relative to the body center of mass.
     * @param {number} [rotation=0] - Local rotation of the shape relative to the body center of mass, specified in radians.
@@ -16864,7 +16872,7 @@ Phaser.Physics.P2.Body.prototype = {
     */
     addCapsule: function (length, radius, offsetX, offsetY, rotation) {
 
-        var shape = new p2.Capsule(this.world.pxm(length), radius);
+        var shape = new p2.Capsule(this.world.pxm(length), this.world.pxm(radius));
 
         return this.addShape(shape, offsetX, offsetY, rotation);
 
