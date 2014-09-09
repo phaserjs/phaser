@@ -8,22 +8,23 @@
 - [Change Log](#change-log)
 - [How to Build](#how-to-build)
 - [Koding](#koding)
-- [Bower](#bower)
+- [Bower / NPM](#bower)
 - [CDNJS](#cdnjs)
 - [Requirements](#requirements)
+- [Build Files](#build-files)
 - [Learn By Example](#example)
 - [Features](#features)
 - [Road Map](#road-map)
-- [Nadion](#nadion)
+- [Mighty Editor](#mighty-editor)
 - [Contributing](#contributing)
 - [Bugs?](#bugs)
 - [License](#license)
 
-# Phaser 2.1.0-dev <a name="about"></a>
+# Phaser 2.1.0 <a name="about"></a>
 
 Phaser is a fast, free and fun open source game framework for making desktop and mobile browser HTML5 games. It uses [Pixi.js](https://github.com/GoodBoyDigital/pixi.js/) internally for fast 2D Canvas and WebGL rendering.
 
-Version: 2.1.0 "Cairhien" - Released: -in development-
+Version: 2.1.0 "Cairhien" - Released: 9th September 2014
 
 By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 
@@ -41,6 +42,16 @@ By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 ![div](http://phaser.io/images/div4.png)
 
 ## Welcome to Phaser and What's new in 2.1.0? <a name="whats-new"></a>
+
+Phaser 2.1 is a significant update, bringing literally hundreds of features, fixes and updates to the core framework. It's the result of months of hard work from both the Phaser team and the wonderful community on github and the forums.
+
+We jumped to 2.1 because there are some API breaking changes from the 2.0.x range, especially with regard to P2 physics. P2 itself has undergone lots of changes recently, streamlining the API, adding enhancements like rotational springs and squashing bugs. This update of Phaser brings us fully up to date with P2.
+
+We've also seen a shift in client requirements for truly responsive games. And that has lead to the introduction of a new Phaser scale mode: RESIZE. Combined with powerful new ways of setting game dimensions, and advanced parent container support, you can now have your Phaser game resize the actual renderer to fill the browser (or parent) and adjust accordingly as they resize. A new state level `resize` function is called with every change, allowing you to easily re-position sprites that need to be locked into fixed locations, regardless of resolution. We'll be enhancing the reponsive features of Phaser over the coming versions, but the core ground-work is in place and useable today.
+
+We also took the decision with 2.1 to remove Ninja Physics from the core build. We had hoped it would get more traction and support from contributors, but sadly that wasn't the case. In light of this it's no longer bundled into the main library, saving some space. You can however find a build of Phaser with it in the `build\custom` folder called `phaser-ninja-physics.js`.
+
+We'll move back to point updates now, with 2.1.1 being the next - and will keep a close eye on github issues and the forum. If you want to contribute, be it code, examples or just ideas, please do so. Phaser was born from and thrives on its community, and we're always looking for new members.
 
 Until then happy coding everyone! And we hope to see you on the forums.
 
@@ -254,17 +265,21 @@ Note: Some of you may not be aware, but the `phaser.min.js` file in the build fo
 
 ![div](http://phaser.io/images/div4.png)
 
-## Koding
+## Koding <a name="koding"></a>
 
 You can [clone the Phaser repo in Koding](https://koding.com/Teamwork?import=https://github.com/photonstorm/phaser/archive/master.zip&c=git1) and then start editing and previewing code right away using their web based VM development system.
 
 ![div](http://phaser.io/images/div5.png)
 
-## Bower
+## Bower / NPM <a name="bower"></a>
 
 If you use bower you can install phaser with:
 
 `bower install phaser`
+
+If you use NPM you can install phaser with:
+
+`npm install phaser`
 
 Nice and easy :)
 
@@ -272,7 +287,7 @@ Nice and easy :)
 
 ![div](http://phaser.io/images/div6.png)
 
-## CDNJS
+## CDNJS <a name="cdnjs"></a>
 
 Phaser is now available on [CDNJS](http://cdnjs.com). You can include the following in your html:
 
@@ -284,7 +299,7 @@ Or if you prefer you can leave the protocol off, so it works via http and https:
 
 ![div](http://phaser.io/images/div1.png)
 
-## Requirements
+## Requirements <a name="requirements"></a>
 
 Games created with Phaser require a modern web browser that supports the canvas tag. This includes Internet Explorer 9+, Firefox, Chrome, Safari and Opera. It also works on mobile web browsers including stock Android 2.x browser and above and iOS5 Mobile Safari and above. But as always be aware of browser limitations. Not all features of Phaser work on all browsers.
 
@@ -298,9 +313,17 @@ Phaser is developed in JavaScript. We've made no assumptions about how you like 
 
 If you code with [TypeScript](http://www.typescriptlang.org/) you'll find a comprehensive definitions file inside the `build` folder and tutorials on getting started.
 
-Phaser is 128 KB gzipped (576 KB minified) when including all 3 physics engines. Without the physics engines its 67 KB gzipped (311 KB minified)
+### Build Files and Custom Builds <a name="build-files"></a>
 
-Note: The `phaser.min.js` file in the build folder contains all 3 physics systems bundled in. If you only need Arcade Physics then you can use `build\custom\phaser-arcade-physics.min.js` instead. This will save you 180 KB from the minified file size.
+The `build` folder contains the pre-built packaged versions of Phaser.
+
+Phaser is 143 KB gzipped (675 KB minified) when including *both* Arcade Physics and the full P2 Physics engine.
+
+If you don't require P2 you can save yourself nearly 200 KB from the minified size and instead use the `phaser-arcade-physics.min.js` file found inside the `build/custom` folder. This version is only 109 KB gzipped (504 KB minified).
+
+If you don't need any physics system at all, or are implementing your own, there is an even smaller build: `phaser-no-physics.min.js` in the `custom` folder that is only 95 KB gzipped (443 KB minified). Please note that this build doesn't include Tilemaps or Particle Emitter support either, as both rely on Arcade Physics.
+
+You can create your own custom build of Phaser by looking at the grunt options and manifests in the tasks folder.
 
 ![div](http://phaser.io/images/div3.png)
 
@@ -328,7 +351,7 @@ You can also browse all [Phaser Examples](http://examples.phaser.io) online.
 
 ![div](http://phaser.io/images/div4.png)
 
-## Features
+## Features <a name="features"></a>
 
 **WebGL &amp; Canvas**
 
@@ -399,12 +422,13 @@ Phaser has been used to create hundreds of games, which receive millions of play
 
 ![div](http://phaser.io/images/div6.png)
 
-## Road Map
+## Road Map <a name="road-map"></a>
 
 Here are some of the features planned for future releases:
 
 ### Version 2.2 ("Tarabon")
 
+* Look at HiDPI Canvas settings.
 * Enhance the State Management, so you can perform non-destructive State swaps and persistence.
 * Scene Manager - json scene parser.
 * Adjust how Pointers and Interactive Objects work. Allow an IO to be flagged as "on click only", so it doesn't ever get processed during normal Pointer move events (unless being dragged)
@@ -416,39 +440,34 @@ Here are some of the features planned for future releases:
 * Optimised global Animation manager to cut down on object creation.
 * Swapping to using a RenderTexture for the Tilemaps and implementing Tilemap slicing.
 
-### Version 2.3 ("Illian")
+### Version 2.3 ("Illian") and Beyond
 
 * Look carefully at the internal structure of Phaser to avoid method repetition (such as Sprite.crop and Image.crop), investigate using mixins to help reduce overall codebase size.
 * Flash CC HTML5 export integration.
 * Massively enhance the audio side of Phaser. Take more advantage of Web Audio: echo effects, positional sound, etc.
 * Comprehensive testing across Firefox OS devices, CocoonJS and Ejecta.
 * Support for parallel asset loading.
-
-### Beyond version 2.3
-
-* A more advanced Particle system, one that can render to a single canvas (rather than spawn hundreds of Sprites), more advanced effects, etc.
+* DragonBones support.
 * Integration with third party services like Google Play Game Services and Amazon JS SDK.
 * Test out packaging with Node-webkit.
 * Game parameters stored in Google Docs.
-* Look at HiDPI Canvas settings.
 * Multiple Camera support.
-* DragonBones support.
 * Cache to localStorage using If-Modified-Since. [See github request](https://github.com/photonstorm/phaser/issues/495)
 * Allow for complex assets like Bitmap Fonts to be stored within a texture atlas.
 
+### Phaser 3
+
+Phaser 3 has entered the planning stages. Development will not begin until early 2015, but we are already asking for suggestions and feedback in [this forum thread](http://www.html5gamedevs.com/topic/7949-the-phaser-3-wishlist-thread/). We are currently experimenting with a fully ES6 based module system and we're keen for Phaser 3 to use as many native ES6 features as possible and where sensible. It will be a significant refactoring of the code base, but not at the expense of features or ease-of-use.
+
 ![div](http://phaser.io/images/div1.png)
 
-## MightyEditor - A Visual Phaser Game Editor <a name="mighty-editor"></a>
+## Mighty Editor - A Visual Phaser Game Editor <a name="mighty-editor"></a>
 
 [MightyEditor](http://mightyfingers.com/) is a browser-based visual Phaser game editor. Create your maps with ease, position objects and share them in seconds. It also exports to native Phaser code. Excellent for quickly setting-up levels and scenes.
 
-## Nadion
-
-[Nadion](https://github.com/jcd-as/nadion) is a set of powerful enhancements for Phaser that makes level building even easier. It includes features such as Trigger, Area, Alarms and Emitters, debug panels, state machines, parallax layer scrolling, 'developer mode' short-cuts and more.
-
 ![div](http://phaser.io/images/div2.png)
 
-## Contributing
+## Contributing <a name="contributing"></a>
 
 We now have a full [Contributors Guide][contribute] which goes into the process in more detail, but here are the headlines:
 
@@ -464,7 +483,7 @@ We now have a full [Contributors Guide][contribute] which goes into the process 
 
 ![div](http://phaser.io/images/div3.png)
 
-## Bugs?
+## Bugs? <a name="bugs"></a>
 
 Please add them to the [Issue Tracker][issues] with as much info as possible, especially source code demonstrating the issue.
 
@@ -474,7 +493,7 @@ Please add them to the [Issue Tracker][issues] with as much info as possible, es
 
 ![div](http://phaser.io/images/div4.png)
 
-## License
+## License <a name="license"></a>
 
 Phaser is released under the [MIT License](http://opensource.org/licenses/MIT).
 
