@@ -155,6 +155,14 @@
 						</li>
 						
 						<li class="class-depth-1">
+							<a href="Phaser.FlexGrid.html">FlexGrid</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.FlexLayer.html">FlexLayer</a>
+						</li>
+						
+						<li class="class-depth-1">
 							<a href="Phaser.Frame.html">Frame</a>
 						</li>
 						
@@ -343,6 +351,10 @@
 						</li>
 						
 						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.RotationalSpring.html">RotationalSpring</a>
+						</li>
+						
+						<li class="class-depth-3">
 							<a href="Phaser.Physics.P2.Spring.html">Spring</a>
 						</li>
 						
@@ -388,6 +400,10 @@
 						
 						<li class="class-depth-1">
 							<a href="Phaser.RetroFont.html">RetroFont</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Rope.html">Rope</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -502,7 +518,7 @@
 					</ul>
 				</li>
 				
-</strong>				
+				
 			</ul>
 		</div>
 	</div>
@@ -594,6 +610,9 @@ providing quick access to common functions and handling the boot process.
             
                 
 <span class="param-type">number</span>
+|
+
+<span class="param-type">string</span>
 
 
             
@@ -619,7 +638,7 @@ providing quick access to common functions and handling the boot process.
                 </td>
             
 
-            <td class="description last"><p>The width of your game in game pixels.</p></td>
+            <td class="description last"><p>The width of your game in game pixels. If given as a string the value must be between 0 and 100 and will be used as the percentage width of the parent container, or the browser window if no parent is given.</p></td>
         </tr>
 
 	
@@ -633,6 +652,9 @@ providing quick access to common functions and handling the boot process.
             
                 
 <span class="param-type">number</span>
+|
+
+<span class="param-type">string</span>
 
 
             
@@ -658,7 +680,7 @@ providing quick access to common functions and handling the boot process.
                 </td>
             
 
-            <td class="description last"><p>The height of your game in game pixels.</p></td>
+            <td class="description last"><p>The height of your game in game pixels. If given as a string the value must be between 0 and 100 and will be used as the percentage height of the parent container, or the browser window if no parent is given.</p></td>
         </tr>
 
 	
@@ -1947,7 +1969,7 @@ providing quick access to common functions and handling the boot process.
 
             
 
-            <td class="description last"><p>The Game height (in pixels).</p></td>
+            <td class="description last"><p>The calculated game height in pixels.</p></td>
         </tr>
 
 	
@@ -3523,7 +3545,7 @@ When a game is paused the onPause event is dispatched. When it is resumed the on
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-841">line 841</a>
+        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-867">line 867</a>
     </li></ul></dd>
     
 
@@ -5348,7 +5370,7 @@ When a game is paused the onPause event is dispatched. When it is resumed the on
 
             
 
-            <td class="description last"><p>The Game width (in pixels).</p></td>
+            <td class="description last"><p>The calculated game width in pixels.</p></td>
         </tr>
 
 	
@@ -5547,7 +5569,7 @@ When a game is paused the onPause event is dispatched. When it is resumed the on
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-407">line 407</a>
+        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-417">line 417</a>
     </li></ul></dd>
     
 
@@ -5583,7 +5605,7 @@ When a game is paused the onPause event is dispatched. When it is resumed the on
     
     
     <div class="description">
-        <p>Nuke the entire game from orbit</p>
+        <p>Nukes the entire game from orbit.</p>
     </div>
     
 
@@ -5616,7 +5638,7 @@ When a game is paused the onPause event is dispatched. When it is resumed the on
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-735">line 735</a>
+        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-755">line 755</a>
     </li></ul></dd>
     
 
@@ -5685,7 +5707,7 @@ When a game is paused the onPause event is dispatched. When it is resumed the on
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-710">line 710</a>
+        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-730">line 730</a>
     </li></ul></dd>
     
 
@@ -5755,7 +5777,7 @@ Calling step will advance the game loop by one frame. This is extremely useful f
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-696">line 696</a>
+        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-716">line 716</a>
     </li></ul></dd>
     
 
@@ -5873,7 +5895,7 @@ Calling step will advance the game loop by one frame. This is extremely useful f
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-819">line 819</a>
+        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-845">line 845</a>
     </li></ul></dd>
     
 
@@ -5991,7 +6013,7 @@ Calling step will advance the game loop by one frame. This is extremely useful f
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-801">line 801</a>
+        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-827">line 827</a>
     </li></ul></dd>
     
 
@@ -6109,7 +6131,7 @@ Calling step will advance the game loop by one frame. This is extremely useful f
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-760">line 760</a>
+        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-786">line 786</a>
     </li></ul></dd>
     
 
@@ -6227,7 +6249,7 @@ Calling step will advance the game loop by one frame. This is extremely useful f
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-780">line 780</a>
+        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-806">line 806</a>
     </li></ul></dd>
     
 
@@ -6296,7 +6318,7 @@ Calling step will advance the game loop by one frame. This is extremely useful f
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-336">line 336</a>
+        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-342">line 342</a>
     </li></ul></dd>
     
 
@@ -6365,7 +6387,7 @@ Calling step will advance the game loop by one frame. This is extremely useful f
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-554">line 554</a>
+        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-565">line 565</a>
     </li></ul></dd>
     
 
@@ -6434,7 +6456,7 @@ Calling step will advance the game loop by one frame. This is extremely useful f
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-492">line 492</a>
+        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-503">line 503</a>
     </li></ul></dd>
     
 
@@ -6504,7 +6526,7 @@ This is extremely useful to hard to track down errors! Use the internal stepCoun
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-722">line 722</a>
+        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-742">line 742</a>
     </li></ul></dd>
     
 
@@ -6622,7 +6644,7 @@ This is extremely useful to hard to track down errors! Use the internal stepCoun
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-628">line 628</a>
+        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-646">line 646</a>
     </li></ul></dd>
     
 
@@ -6673,7 +6695,7 @@ This is extremely useful to hard to track down errors! Use the internal stepCoun
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Fri Jul 18 2014 12:36:43 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Tue Sep 09 2014 15:29:25 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

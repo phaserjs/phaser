@@ -155,6 +155,14 @@
 						</li>
 						
 						<li class="class-depth-1">
+							<a href="Phaser.FlexGrid.html">FlexGrid</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.FlexLayer.html">FlexLayer</a>
+						</li>
+						
+						<li class="class-depth-1">
 							<a href="Phaser.Frame.html">Frame</a>
 						</li>
 						
@@ -343,6 +351,10 @@
 						</li>
 						
 						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.RotationalSpring.html">RotationalSpring</a>
+						</li>
+						
+						<li class="class-depth-3">
 							<a href="Phaser.Physics.P2.Spring.html">Spring</a>
 						</li>
 						
@@ -388,6 +400,10 @@
 						
 						<li class="class-depth-1">
 							<a href="Phaser.RetroFont.html">RetroFont</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Rope.html">Rope</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -502,7 +518,7 @@
 					</ul>
 				</li>
 				
-</strong>				
+				
 			</ul>
 		</div>
 	</div>
@@ -1296,7 +1312,7 @@ Phaser.Physics.P2.Body.prototype = {
         }
 
         this.debugBody = null;
-
+        this.sprite.body = null;
         this.sprite = null;
 
     },
@@ -1440,7 +1456,7 @@ Phaser.Physics.P2.Body.prototype = {
     *
     * @method Phaser.Physics.P2.Body#addCapsule
     * @param {number} length - The distance between the end points in pixels.
-    * @param {number} radius - Radius of the capsule in radians.
+    * @param {number} radius - Radius of the capsule in pixels.
     * @param {number} [offsetX=0] - Local horizontal offset of the shape relative to the body center of mass.
     * @param {number} [offsetY=0] - Local vertical offset of the shape relative to the body center of mass.
     * @param {number} [rotation=0] - Local rotation of the shape relative to the body center of mass, specified in radians.
@@ -1448,7 +1464,7 @@ Phaser.Physics.P2.Body.prototype = {
     */
     addCapsule: function (length, radius, offsetX, offsetY, rotation) {
 
-        var shape = new p2.Capsule(this.world.pxm(length), radius);
+        var shape = new p2.Capsule(this.world.pxm(length), this.world.pxm(radius));
 
         return this.addShape(shape, offsetX, offsetY, rotation);
 
@@ -1472,7 +1488,8 @@ Phaser.Physics.P2.Body.prototype = {
 
         options = options || {};
 
-        if (!Array.isArray(points)) {
+        if (!Array.isArray(points))
+        {
             points = Array.prototype.slice.call(arguments, 1);
         }
 
@@ -1485,7 +1502,7 @@ Phaser.Physics.P2.Body.prototype = {
         }
         else if (Array.isArray(points[0]))
         {
-            path = points[0].slice(0);
+            path = points.slice();
         }
         else if (typeof points[0] === 'number')
         {
@@ -1791,28 +1808,6 @@ Phaser.Physics.P2.Body.prototype = {
 
         return true;
 
-    },
-
-    /**
-    * DEPRECATED: This method will soon be removed from the API. Please avoid using.
-    * Reads the physics data from a physics data file stored in the Game.Cache.
-    * It will add the shape data to this Body, as well as set the density (mass).
-    *
-    * @method Phaser.Physics.P2.Body#loadData
-    * @param {string} key - The key of the Physics Data file as stored in Game.Cache.
-    * @param {string} object - The key of the object within the Physics data file that you wish to load the shape data from.
-    * @return {boolean} True on success, else false.
-    */
-    loadData: function (key, object) {
-
-        var data = this.game.cache.getPhysicsData(key, object);
-
-        if (data && data.shape)
-        {
-            this.mass = data.density;
-            return this.loadPolygon(key, object);
-        }
-
     }
 
 };
@@ -1820,7 +1815,7 @@ Phaser.Physics.P2.Body.prototype = {
 Phaser.Physics.P2.Body.prototype.constructor = Phaser.Physics.P2.Body;
 
 /**
- * Dynamic body.
+ * Dynamic body. Dynamic bodies body can move and respond to collisions and forces.
  * @property DYNAMIC
  * @type {Number}
  * @static
@@ -1828,7 +1823,7 @@ Phaser.Physics.P2.Body.prototype.constructor = Phaser.Physics.P2.Body;
 Phaser.Physics.P2.Body.DYNAMIC = 1;
 
 /**
- * Static body.
+ * Static body. Static bodies do not move, and they do not respond to forces or collision.
  * @property STATIC
  * @type {Number}
  * @static
@@ -1836,7 +1831,7 @@ Phaser.Physics.P2.Body.DYNAMIC = 1;
 Phaser.Physics.P2.Body.STATIC = 2;
 
 /**
- * Kinematic body.
+ * Kinematic body. Kinematic bodies only moves according to its .velocity, and does not respond to collisions or force.
  * @property KINEMATIC
  * @type {Number}
  * @static
@@ -1851,20 +1846,20 @@ Object.defineProperty(Phaser.Physics.P2.Body.prototype, "static", {
 
     get: function () {
 
-        return (this.data.motionState === Phaser.Physics.P2.Body.STATIC);
+        return (this.data.type === Phaser.Physics.P2.Body.STATIC);
 
     },
 
     set: function (value) {
 
-        if (value && this.data.motionState !== Phaser.Physics.P2.Body.STATIC)
+        if (value && this.data.type !== Phaser.Physics.P2.Body.STATIC)
         {
-            this.data.motionState = Phaser.Physics.P2.Body.STATIC;
+            this.data.type = Phaser.Physics.P2.Body.STATIC;
             this.mass = 0;
         }
-        else if (!value && this.data.motionState === Phaser.Physics.P2.Body.STATIC)
+        else if (!value && this.data.type === Phaser.Physics.P2.Body.STATIC)
         {
-            this.data.motionState = Phaser.Physics.P2.Body.DYNAMIC;
+            this.data.type = Phaser.Physics.P2.Body.DYNAMIC;
 
             if (this.mass === 0)
             {
@@ -1884,24 +1879,24 @@ Object.defineProperty(Phaser.Physics.P2.Body.prototype, "dynamic", {
 
     get: function () {
 
-        return (this.data.motionState === Phaser.Physics.P2.Body.DYNAMIC);
+        return (this.data.type === Phaser.Physics.P2.Body.DYNAMIC);
 
     },
 
     set: function (value) {
 
-        if (value && this.data.motionState !== Phaser.Physics.P2.Body.DYNAMIC)
+        if (value && this.data.type !== Phaser.Physics.P2.Body.DYNAMIC)
         {
-            this.data.motionState = Phaser.Physics.P2.Body.DYNAMIC;
+            this.data.type = Phaser.Physics.P2.Body.DYNAMIC;
 
             if (this.mass === 0)
             {
                 this.mass = 1;
             }
         }
-        else if (!value && this.data.motionState === Phaser.Physics.P2.Body.DYNAMIC)
+        else if (!value && this.data.type === Phaser.Physics.P2.Body.DYNAMIC)
         {
-            this.data.motionState = Phaser.Physics.P2.Body.STATIC;
+            this.data.type = Phaser.Physics.P2.Body.STATIC;
             this.mass = 0;
         }
 
@@ -1917,20 +1912,20 @@ Object.defineProperty(Phaser.Physics.P2.Body.prototype, "kinematic", {
 
     get: function () {
 
-        return (this.data.motionState === Phaser.Physics.P2.Body.KINEMATIC);
+        return (this.data.type === Phaser.Physics.P2.Body.KINEMATIC);
 
     },
 
     set: function (value) {
 
-        if (value && this.data.motionState !== Phaser.Physics.P2.Body.KINEMATIC)
+        if (value && this.data.type !== Phaser.Physics.P2.Body.KINEMATIC)
         {
-            this.data.motionState = Phaser.Physics.P2.Body.KINEMATIC;
+            this.data.type = Phaser.Physics.P2.Body.KINEMATIC;
             this.mass = 4;
         }
-        else if (!value && this.data.motionState === Phaser.Physics.P2.Body.KINEMATIC)
+        else if (!value && this.data.type === Phaser.Physics.P2.Body.KINEMATIC)
         {
-            this.data.motionState = Phaser.Physics.P2.Body.STATIC;
+            this.data.type = Phaser.Physics.P2.Body.STATIC;
             this.mass = 0;
         }
 
@@ -2142,15 +2137,15 @@ Object.defineProperty(Phaser.Physics.P2.Body.prototype, "motionState", {
 
     get: function () {
 
-        return this.data.motionState;
+        return this.data.type;
 
     },
 
     set: function (value) {
 
-        if (value !== this.data.motionState)
+        if (value !== this.data.type)
         {
-            this.data.motionState = value;
+            this.data.type = value;
         }
 
     }
@@ -2287,6 +2282,8 @@ Object.defineProperty(Phaser.Physics.P2.Body.prototype, "debug", {
 /**
 * A Body can be set to collide against the World bounds automatically if this is set to true. Otherwise it will leave the World.
 * Note that this only applies if your World has bounds! The response to the collision should be managed via CollisionMaterials.
+* Also note that when you set this it will only effect Body shapes that already exist. If you then add further shapes to your Body
+* after setting this it will *not* proactively set them to collide with the bounds.
 *
 * @name Phaser.Physics.P2.Body#collideWorldBounds
 * @property {boolean} collideWorldBounds - Should the Body collide with the World bounds?
@@ -2336,7 +2333,7 @@ Object.defineProperty(Phaser.Physics.P2.Body.prototype, "collideWorldBounds", {
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Fri Jul 18 2014 12:36:36 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Tue Sep 09 2014 15:29:17 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

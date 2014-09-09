@@ -155,6 +155,14 @@
 						</li>
 						
 						<li class="class-depth-1">
+							<a href="Phaser.FlexGrid.html">FlexGrid</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.FlexLayer.html">FlexLayer</a>
+						</li>
+						
+						<li class="class-depth-1">
 							<a href="Phaser.Frame.html">Frame</a>
 						</li>
 						
@@ -343,6 +351,10 @@
 						</li>
 						
 						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.RotationalSpring.html">RotationalSpring</a>
+						</li>
+						
+						<li class="class-depth-3">
 							<a href="Phaser.Physics.P2.Spring.html">Spring</a>
 						</li>
 						
@@ -388,6 +400,10 @@
 						
 						<li class="class-depth-1">
 							<a href="Phaser.RetroFont.html">RetroFont</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Rope.html">Rope</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -502,7 +518,7 @@
 					</ul>
 				</li>
 				
-</strong>				
+				
 			</ul>
 		</div>
 	</div>
@@ -537,7 +553,7 @@
     
         
 <dt>
-    <h4 class="name" id="DistanceConstraint"><span class="type-signature"></span>new DistanceConstraint<span class="signature">(world, bodyA, bodyB, distance, <span class="optional">maxForce</span>)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="DistanceConstraint"><span class="type-signature"></span>new DistanceConstraint<span class="signature">(world, bodyA, bodyB, distance, <span class="optional">localAnchorA</span>, <span class="optional">localAnchorB</span>, <span class="optional">maxForce</span>)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -570,6 +586,8 @@
 		<th>Argument</th>
 		
 
+		
+		<th>Default</th>
 		
 
 		<th class="last">Description</th>
@@ -604,6 +622,10 @@
             
 
             
+                <td class="default">
+                
+                </td>
+            
 
             <td class="description last"><p>A reference to the P2 World.</p></td>
         </tr>
@@ -634,6 +656,10 @@
                 </td>
             
 
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>First connected body.</p></td>
@@ -666,6 +692,10 @@
             
 
             
+                <td class="default">
+                
+                </td>
+            
 
             <td class="description last"><p>Second connected body.</p></td>
         </tr>
@@ -697,6 +727,10 @@
             
 
             
+                <td class="default">
+                
+                </td>
+            
 
             <td class="description last"><p>The distance to keep between the bodies.</p></td>
         </tr>
@@ -705,13 +739,13 @@
 
         <tr>
             
-                <td class="name"><code>maxForce</code></td>
+                <td class="name"><code>localAnchorA</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type"><a href="Array.html">Array</a></span>
 
 
             
@@ -730,8 +764,88 @@
             
 
             
+                <td class="default">
+                
+                </td>
+            
 
-            <td class="description last"><p>The maximum force that should be applied to constrain the bodies.</p></td>
+            <td class="description last"><p>The anchor point for bodyA, defined locally in bodyA frame. Defaults to [0,0].</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>localAnchorB</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Array.html">Array</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The anchor point for bodyB, defined locally in bodyB frame. Defaults to [0,0].</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>maxForce</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    Number.MAX_VALUE
+                
+                </td>
+            
+
+            <td class="description last"><p>Maximum force to apply.</p></td>
         </tr>
 
 	
@@ -763,7 +877,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="DistanceConstraint.js.html">physics/p2/DistanceConstraint.js</a>, <a href="DistanceConstraint.js.html#sunlight-1-line-19">line 19</a>
+        <a href="DistanceConstraint.js.html">physics/p2/DistanceConstraint.js</a>, <a href="DistanceConstraint.js.html#sunlight-1-line-21">line 21</a>
     </li></ul></dd>
     
 
@@ -891,7 +1005,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="DistanceConstraint.js.html">physics/p2/DistanceConstraint.js</a>, <a href="DistanceConstraint.js.html#sunlight-1-line-26">line 26</a>
+        <a href="DistanceConstraint.js.html">physics/p2/DistanceConstraint.js</a>, <a href="DistanceConstraint.js.html#sunlight-1-line-31">line 31</a>
     </li></ul></dd>
     
 
@@ -993,7 +1107,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="DistanceConstraint.js.html">physics/p2/DistanceConstraint.js</a>, <a href="DistanceConstraint.js.html#sunlight-1-line-31">line 31</a>
+        <a href="DistanceConstraint.js.html">physics/p2/DistanceConstraint.js</a>, <a href="DistanceConstraint.js.html#sunlight-1-line-36">line 36</a>
     </li></ul></dd>
     
 
@@ -1036,7 +1150,7 @@
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Fri Jul 18 2014 12:36:50 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Tue Sep 09 2014 15:29:34 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

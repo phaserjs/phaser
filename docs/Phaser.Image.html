@@ -155,6 +155,14 @@
 						</li>
 						
 						<li class="class-depth-1">
+							<a href="Phaser.FlexGrid.html">FlexGrid</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.FlexLayer.html">FlexLayer</a>
+						</li>
+						
+						<li class="class-depth-1">
 							<a href="Phaser.Frame.html">Frame</a>
 						</li>
 						
@@ -343,6 +351,10 @@
 						</li>
 						
 						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.RotationalSpring.html">RotationalSpring</a>
+						</li>
+						
+						<li class="class-depth-3">
 							<a href="Phaser.Physics.P2.Spring.html">Spring</a>
 						</li>
 						
@@ -388,6 +400,10 @@
 						
 						<li class="class-depth-1">
 							<a href="Phaser.RetroFont.html">RetroFont</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Rope.html">Rope</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -502,7 +518,7 @@
 					</ul>
 				</li>
 				
-</strong>				
+				
 			</ul>
 		</div>
 	</div>
@@ -772,6 +788,111 @@ It can still rotate, scale, crop and receive input events. This makes it perfect
         <dl>
             
 <dt>
+    <h4 class="name" id="alive"><span class="type-signature"></span>alive<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>alive</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>A useful boolean to control if the Image is alive or dead (in terms of your gameplay, it doesn't effect rendering).</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>true</li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Image.js.html">gameobjects/Image.js</a>, <a href="Image.js.html#sunlight-1-line-83">line 83</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
     <h4 class="name" id="angle"><span class="type-signature"></span>angle<span class="type-signature"></span></h4>
     
     
@@ -862,7 +983,109 @@ If you wish to work in radians instead of degrees use the property Image.rotatio
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Image.js.html">gameobjects/Image.js</a>, <a href="Image.js.html#sunlight-1-line-493">line 493</a>
+        <a href="Image.js.html">gameobjects/Image.js</a>, <a href="Image.js.html#sunlight-1-line-626">line 626</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="animations"><span class="type-signature"></span>animations<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>animations</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.AnimationManager.html">Phaser.AnimationManager</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>This manages animations of the sprite. You can modify animations through it (see Phaser.AnimationManager)</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Image.js.html">gameobjects/Image.js</a>, <a href="Image.js.html#sunlight-1-line-63">line 63</a>
     </li></ul></dd>
     
 
@@ -973,7 +1196,7 @@ Be advised this is quite an expensive operation, as it has to calculate the boun
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Image.js.html">gameobjects/Image.js</a>, <a href="Image.js.html#sunlight-1-line-96">line 96</a>
+        <a href="Image.js.html">gameobjects/Image.js</a>, <a href="Image.js.html#sunlight-1-line-93">line 93</a>
     </li></ul></dd>
     
 
@@ -1075,7 +1298,217 @@ Be advised this is quite an expensive operation, as it has to calculate the boun
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Image.js.html">gameobjects/Image.js</a>, <a href="Image.js.html#sunlight-1-line-106">line 106</a>
+        <a href="Image.js.html">gameobjects/Image.js</a>, <a href="Image.js.html#sunlight-1-line-109">line 109</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="cropRect"><span class="type-signature"></span>cropRect<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>cropRect</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Rectangle.html">Phaser.Rectangle</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The Rectangle used to crop the texture. Set this via Sprite.crop. Any time you modify this property directly you must call Sprite.updateCrop.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Image.js.html">gameobjects/Image.js</a>, <a href="Image.js.html#sunlight-1-line-115">line 115</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="debug"><span class="type-signature"></span>debug<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>debug</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Handy flag to use with Game.enableStep</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Image.js.html">gameobjects/Image.js</a>, <a href="Image.js.html#sunlight-1-line-104">line 104</a>
     </li></ul></dd>
     
 
@@ -1181,7 +1614,7 @@ Be advised this is quite an expensive operation, as it has to calculate the boun
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Image.js.html">gameobjects/Image.js</a>, <a href="Image.js.html#sunlight-1-line-517">line 517</a>
+        <a href="Image.js.html">gameobjects/Image.js</a>, <a href="Image.js.html#sunlight-1-line-650">line 650</a>
     </li></ul></dd>
     
 
@@ -1287,7 +1720,7 @@ Be advised this is quite an expensive operation, as it has to calculate the boun
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Image.js.html">gameobjects/Image.js</a>, <a href="Image.js.html#sunlight-1-line-534">line 534</a>
+        <a href="Image.js.html">gameobjects/Image.js</a>, <a href="Image.js.html#sunlight-1-line-667">line 667</a>
     </li></ul></dd>
     
 
@@ -1393,7 +1826,7 @@ Be advised this is quite an expensive operation, as it has to calculate the boun
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Image.js.html">gameobjects/Image.js</a>, <a href="Image.js.html#sunlight-1-line-551">line 551</a>
+        <a href="Image.js.html">gameobjects/Image.js</a>, <a href="Image.js.html#sunlight-1-line-684">line 684</a>
     </li></ul></dd>
     
 
@@ -1495,7 +1928,7 @@ Be advised this is quite an expensive operation, as it has to calculate the boun
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Image.js.html">gameobjects/Image.js</a>, <a href="Image.js.html#sunlight-1-line-780">line 780</a>
+        <a href="Image.js.html">gameobjects/Image.js</a>, <a href="Image.js.html#sunlight-1-line-913">line 913</a>
     </li></ul></dd>
     
 
@@ -1810,7 +2243,7 @@ So if this Image was in a Group that has x: 200, then this will be added to the 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Image.js.html">gameobjects/Image.js</a>, <a href="Image.js.html#sunlight-1-line-715">line 715</a>
+        <a href="Image.js.html">gameobjects/Image.js</a>, <a href="Image.js.html#sunlight-1-line-848">line 848</a>
     </li></ul></dd>
     
 
@@ -1912,7 +2345,7 @@ So if this Image was in a Group that has x: 200, then this will be added to the 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Image.js.html">gameobjects/Image.js</a>, <a href="Image.js.html#sunlight-1-line-602">line 602</a>
+        <a href="Image.js.html">gameobjects/Image.js</a>, <a href="Image.js.html#sunlight-1-line-735">line 735</a>
     </li></ul></dd>
     
 
@@ -2014,7 +2447,7 @@ So if this Image was in a Group that has x: 200, then this will be added to the 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Image.js.html">gameobjects/Image.js</a>, <a href="Image.js.html#sunlight-1-line-631">line 631</a>
+        <a href="Image.js.html">gameobjects/Image.js</a>, <a href="Image.js.html#sunlight-1-line-764">line 764</a>
     </li></ul></dd>
     
 
@@ -2222,7 +2655,7 @@ So if this Image was in a Group that has x: 200, then this will be added to the 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Image.js.html">gameobjects/Image.js</a>, <a href="Image.js.html#sunlight-1-line-585">line 585</a>
+        <a href="Image.js.html">gameobjects/Image.js</a>, <a href="Image.js.html#sunlight-1-line-718">line 718</a>
     </li></ul></dd>
     
 
@@ -2327,7 +2760,7 @@ So if this Image was in a Group that has x: 200, then this will be added to the 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Image.js.html">gameobjects/Image.js</a>, <a href="Image.js.html#sunlight-1-line-101">line 101</a>
+        <a href="Image.js.html">gameobjects/Image.js</a>, <a href="Image.js.html#sunlight-1-line-98">line 98</a>
     </li></ul></dd>
     
 
@@ -2434,7 +2867,7 @@ activated for this object and it will then start to process click/touch events a
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Image.js.html">gameobjects/Image.js</a>, <a href="Image.js.html#sunlight-1-line-675">line 675</a>
+        <a href="Image.js.html">gameobjects/Image.js</a>, <a href="Image.js.html#sunlight-1-line-808">line 808</a>
     </li></ul></dd>
     
 
@@ -2540,7 +2973,7 @@ activated for this object and it will then start to process click/touch events a
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Image.js.html">gameobjects/Image.js</a>, <a href="Image.js.html#sunlight-1-line-568">line 568</a>
+        <a href="Image.js.html">gameobjects/Image.js</a>, <a href="Image.js.html#sunlight-1-line-701">line 701</a>
     </li></ul></dd>
     
 
@@ -2651,7 +3084,7 @@ activated for this object and it will then start to process click/touch events a
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Image.js.html">gameobjects/Image.js</a>, <a href="Image.js.html#sunlight-1-line-63">line 63</a>
+        <a href="Image.js.html">gameobjects/Image.js</a>, <a href="Image.js.html#sunlight-1-line-68">line 68</a>
     </li></ul></dd>
     
 
@@ -2855,7 +3288,7 @@ activated for this object and it will then start to process click/touch events a
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Image.js.html">gameobjects/Image.js</a>, <a href="Image.js.html#sunlight-1-line-660">line 660</a>
+        <a href="Image.js.html">gameobjects/Image.js</a>, <a href="Image.js.html#sunlight-1-line-793">line 793</a>
     </li></ul></dd>
     
 
@@ -2961,7 +3394,7 @@ activated for this object and it will then start to process click/touch events a
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Image.js.html">gameobjects/Image.js</a>, <a href="Image.js.html#sunlight-1-line-746">line 746</a>
+        <a href="Image.js.html">gameobjects/Image.js</a>, <a href="Image.js.html#sunlight-1-line-879">line 879</a>
     </li></ul></dd>
     
 
@@ -3165,7 +3598,7 @@ activated for this object and it will then start to process click/touch events a
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Image.js.html">gameobjects/Image.js</a>, <a href="Image.js.html#sunlight-1-line-86">line 86</a>
+        <a href="Image.js.html">gameobjects/Image.js</a>, <a href="Image.js.html#sunlight-1-line-77">line 77</a>
     </li></ul></dd>
     
 
@@ -3333,7 +3766,7 @@ bought to the top of that Group, not the entire display list.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Image.js.html">gameobjects/Image.js</a>, <a href="Image.js.html#sunlight-1-line-474">line 474</a>
+        <a href="Image.js.html">gameobjects/Image.js</a>, <a href="Image.js.html#sunlight-1-line-607">line 607</a>
     </li></ul></dd>
     
 
@@ -3384,7 +3817,7 @@ bought to the top of that Group, not the entire display list.</p>
         
             
 <dt>
-    <h4 class="name" id="crop"><span class="type-signature"></span>crop<span class="signature">(rect)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="crop"><span class="type-signature"></span>crop<span class="signature">(rect, <span class="optional">copy</span>)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -3418,7 +3851,11 @@ Keep this in mind if assigning a rectangle in a for-loop, or when cleaning up fo
 		<th>Type</th>
 
 		
+		<th>Argument</th>
+		
 
+		
+		<th>Default</th>
 		
 
 		<th class="last">Description</th>
@@ -3437,19 +3874,67 @@ Keep this in mind if assigning a rectangle in a for-loop, or when cleaning up fo
             
                 
 <span class="param-type"><a href="Phaser.Rectangle.html">Phaser.Rectangle</a></span>
-|
-
-<span class="param-type">object</span>
 
 
             
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
             
 
-            <td class="description last"><p>The Rectangle to crop the Image to. Pass null or no parameters to clear a previously set crop rectangle.</p></td>
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The Rectangle used during cropping. Pass null or no parameters to clear a previously set crop rectangle.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>copy</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>If false Sprite.cropRect will be a reference to the given rect. If true it will copy the rect values into a local Sprite.cropRect object.</p></td>
         </tr>
 
 	
@@ -3481,7 +3966,7 @@ Keep this in mind if assigning a rectangle in a for-loop, or when cleaning up fo
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Image.js.html">gameobjects/Image.js</a>, <a href="Image.js.html#sunlight-1-line-285">line 285</a>
+        <a href="Image.js.html">gameobjects/Image.js</a>, <a href="Image.js.html#sunlight-1-line-374">line 374</a>
     </li></ul></dd>
     
 
@@ -3620,7 +4105,7 @@ and nulls its reference to game, freeing it up for garbage collection.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Image.js.html">gameobjects/Image.js</a>, <a href="Image.js.html#sunlight-1-line-384">line 384</a>
+        <a href="Image.js.html">gameobjects/Image.js</a>, <a href="Image.js.html#sunlight-1-line-507">line 507</a>
     </li></ul></dd>
     
 
@@ -3692,7 +4177,7 @@ If you don't need this Image any more you should call Image.destroy instead.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Image.js.html">gameobjects/Image.js</a>, <a href="Image.js.html#sunlight-1-line-359">line 359</a>
+        <a href="Image.js.html">gameobjects/Image.js</a>, <a href="Image.js.html#sunlight-1-line-482">line 482</a>
     </li></ul></dd>
     
 
@@ -3869,7 +4354,7 @@ This causes a WebGL texture update, so use sparingly or in low-intensity portion
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Image.js.html">gameobjects/Image.js</a>, <a href="Image.js.html#sunlight-1-line-208">line 208</a>
+        <a href="Image.js.html">gameobjects/Image.js</a>, <a href="Image.js.html#sunlight-1-line-239">line 239</a>
     </li></ul></dd>
     
 
@@ -3938,7 +4423,7 @@ This causes a WebGL texture update, so use sparingly or in low-intensity portion
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Image.js.html">gameobjects/Image.js</a>, <a href="Image.js.html#sunlight-1-line-180">line 180</a>
+        <a href="Image.js.html">gameobjects/Image.js</a>, <a href="Image.js.html#sunlight-1-line-211">line 211</a>
     </li></ul></dd>
     
 
@@ -4007,7 +4492,7 @@ This causes a WebGL texture update, so use sparingly or in low-intensity portion
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Image.js.html">gameobjects/Image.js</a>, <a href="Image.js.html#sunlight-1-line-129">line 129</a>
+        <a href="Image.js.html">gameobjects/Image.js</a>, <a href="Image.js.html#sunlight-1-line-158">line 158</a>
     </li></ul></dd>
     
 
@@ -4148,7 +4633,7 @@ This causes a WebGL texture update, so use sparingly or in low-intensity portion
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Image.js.html">gameobjects/Image.js</a>, <a href="Image.js.html#sunlight-1-line-451">line 451</a>
+        <a href="Image.js.html">gameobjects/Image.js</a>, <a href="Image.js.html#sunlight-1-line-584">line 584</a>
     </li></ul></dd>
     
 
@@ -4192,6 +4677,75 @@ This causes a WebGL texture update, so use sparingly or in low-intensity portion
 
 
         
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="resetFrame"><span class="type-signature"></span>resetFrame<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Resets the Texture frame dimensions that the Image uses for rendering.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Image.js.html">gameobjects/Image.js</a>, <a href="Image.js.html#sunlight-1-line-359">line 359</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
     
     
 </dd>
@@ -4242,7 +4796,7 @@ It will dispatch the onRevived event, you can listen to Image.events.onRevived f
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Image.js.html">gameobjects/Image.js</a>, <a href="Image.js.html#sunlight-1-line-335">line 335</a>
+        <a href="Image.js.html">gameobjects/Image.js</a>, <a href="Image.js.html#sunlight-1-line-458">line 458</a>
     </li></ul></dd>
     
 
@@ -4293,6 +4847,125 @@ It will dispatch the onRevived event, you can listen to Image.events.onRevived f
         
             
 <dt>
+    <h4 class="name" id="setFrame"><span class="type-signature"></span>setFrame<span class="signature">(frame)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Sets the Texture frame the Image uses for rendering.
+This is primarily an internal method used by Image.loadTexture, although you may call it directly.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>frame</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Frame.html">Phaser.Frame</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The Frame to be used by the Image texture.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Image.js.html">gameobjects/Image.js</a>, <a href="Image.js.html#sunlight-1-line-303">line 303</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
     <h4 class="name" id="update"><span class="type-signature"></span>update<span class="signature">()</span><span class="type-signature"></span></h4>
     
     
@@ -4334,7 +5007,77 @@ It will dispatch the onRevived event, you can listen to Image.events.onRevived f
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Image.js.html">gameobjects/Image.js</a>, <a href="Image.js.html#sunlight-1-line-170">line 170</a>
+        <a href="Image.js.html">gameobjects/Image.js</a>, <a href="Image.js.html#sunlight-1-line-201">line 201</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="updateCrop"><span class="type-signature"></span>updateCrop<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>If you have set a crop rectangle on this Image via Image.crop and since modified the Image.cropRect property (or the rectangle it references)
+then you need to update the crop frame by calling this method.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Image.js.html">gameobjects/Image.js</a>, <a href="Image.js.html#sunlight-1-line-417">line 417</a>
     </li></ul></dd>
     
 
@@ -4385,7 +5128,7 @@ It will dispatch the onRevived event, you can listen to Image.events.onRevived f
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Fri Jul 18 2014 12:36:44 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Tue Sep 09 2014 15:29:27 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

@@ -155,6 +155,14 @@
 						</li>
 						
 						<li class="class-depth-1">
+							<a href="Phaser.FlexGrid.html">FlexGrid</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.FlexLayer.html">FlexLayer</a>
+						</li>
+						
+						<li class="class-depth-1">
 							<a href="Phaser.Frame.html">Frame</a>
 						</li>
 						
@@ -343,6 +351,10 @@
 						</li>
 						
 						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.RotationalSpring.html">RotationalSpring</a>
+						</li>
+						
+						<li class="class-depth-3">
 							<a href="Phaser.Physics.P2.Spring.html">Spring</a>
 						</li>
 						
@@ -388,6 +400,10 @@
 						
 						<li class="class-depth-1">
 							<a href="Phaser.RetroFont.html">RetroFont</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Rope.html">Rope</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -502,7 +518,7 @@
 					</ul>
 				</li>
 				
-</strong>				
+				
 			</ul>
 		</div>
 	</div>
@@ -537,7 +553,7 @@
     
         
 <dt>
-    <h4 class="name" id="Stage"><span class="type-signature"></span>new Stage<span class="signature">(game, width, height)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="Stage"><span class="type-signature"></span>new Stage<span class="signature">(game)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -545,8 +561,8 @@
     
     
     <div class="description">
-        <p>The Stage controls the canvas on which everything is displayed. It handles display within the browser,
-focus handling, game resizing, scaling and the pause, boot and orientation screens.</p>
+        <p>The Stage controls root level display objects upon which everything is displayed.
+ It also handles browser visibility handling and the pausing due to loss of focus.</p>
     </div>
     
 
@@ -600,52 +616,6 @@ focus handling, game resizing, scaling and the pause, boot and orientation scree
         </tr>
 
 	
-
-        <tr>
-            
-                <td class="name"><code>width</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Width of the canvas element.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>height</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Height of the canvas element.</p></td>
-        </tr>
-
-	
 	</tbody>
 </table>
 
@@ -674,7 +644,7 @@ focus handling, game resizing, scaling and the pause, boot and orientation scree
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Stage.js.html">core/Stage.js</a>, <a href="Stage.js.html#sunlight-1-line-18">line 18</a>
+        <a href="Stage.js.html">core/Stage.js</a>, <a href="Stage.js.html#sunlight-1-line-16">line 16</a>
     </li></ul></dd>
     
 
@@ -811,217 +781,7 @@ focus handling, game resizing, scaling and the pause, boot and orientation scree
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Stage.js.html">core/Stage.js</a>, <a href="Stage.js.html#sunlight-1-line-351">line 351</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="bounds"><span class="type-signature"></span>bounds<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>bounds</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Phaser.Rectangle.html">Phaser.Rectangle</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The bounds of the Stage. Typically x/y = Stage.offset.x/y and the width/height match the game width and height.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Stage.js.html">core/Stage.js</a>, <a href="Stage.js.html#sunlight-1-line-33">line 33</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="checkOffsetInterval"><span class="type-signature"></span>checkOffsetInterval<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>checkOffsetInterval</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-|
-
-<span class="param-type">false</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The time (in ms) between which the stage should check to see if it has moved.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>2500</li></ul></dd>
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Stage.js.html">core/Stage.js</a>, <a href="Stage.js.html#sunlight-1-line-60">line 60</a>
+        <a href="Stage.js.html">core/Stage.js</a>, <a href="Stage.js.html#sunlight-1-line-332">line 332</a>
     </li></ul></dd>
     
 
@@ -1123,7 +883,61 @@ focus handling, game resizing, scaling and the pause, boot and orientation scree
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Stage.js.html">core/Stage.js</a>, <a href="Stage.js.html#sunlight-1-line-71">line 71</a>
+        <a href="Stage.js.html">core/Stage.js</a>, <a href="Stage.js.html#sunlight-1-line-53">line 53</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="destroy"><span class="type-signature"></span>destroy<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Destroys the Stage and removes event listeners.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Stage.js.html">core/Stage.js</a>, <a href="Stage.js.html#sunlight-1-line-312">line 312</a>
     </li></ul></dd>
     
 
@@ -1228,7 +1042,7 @@ focus handling, game resizing, scaling and the pause, boot and orientation scree
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Stage.js.html">core/Stage.js</a>, <a href="Stage.js.html#sunlight-1-line-54">line 54</a>
+        <a href="Stage.js.html">core/Stage.js</a>, <a href="Stage.js.html#sunlight-1-line-42">line 42</a>
     </li></ul></dd>
     
 
@@ -1333,7 +1147,7 @@ focus handling, game resizing, scaling and the pause, boot and orientation scree
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Stage.js.html">core/Stage.js</a>, <a href="Stage.js.html#sunlight-1-line-66">line 66</a>
+        <a href="Stage.js.html">core/Stage.js</a>, <a href="Stage.js.html#sunlight-1-line-48">line 48</a>
     </li></ul></dd>
     
 
@@ -1435,7 +1249,7 @@ focus handling, game resizing, scaling and the pause, boot and orientation scree
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Stage.js.html">core/Stage.js</a>, <a href="Stage.js.html#sunlight-1-line-23">line 23</a>
+        <a href="Stage.js.html">core/Stage.js</a>, <a href="Stage.js.html#sunlight-1-line-21">line 21</a>
     </li></ul></dd>
     
 
@@ -1540,109 +1354,7 @@ focus handling, game resizing, scaling and the pause, boot and orientation scree
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Stage.js.html">core/Stage.js</a>, <a href="Stage.js.html#sunlight-1-line-41">line 41</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="offset"><span class="type-signature"></span>offset<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>offset</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Phaser.Point.html">Phaser.Point</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Holds the offset coordinates of the Game.canvas from the top-left of the browser window (used by Input and other classes)</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Stage.js.html">core/Stage.js</a>, <a href="Stage.js.html#sunlight-1-line-28">line 28</a>
+        <a href="Stage.js.html">core/Stage.js</a>, <a href="Stage.js.html#sunlight-1-line-29">line 29</a>
     </li></ul></dd>
     
 
@@ -1696,7 +1408,7 @@ focus handling, game resizing, scaling and the pause, boot and orientation scree
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Stage.js.html">core/Stage.js</a>, <a href="Stage.js.html#sunlight-1-line-327">line 327</a>
+        <a href="Stage.js.html">core/Stage.js</a>, <a href="Stage.js.html#sunlight-1-line-288">line 288</a>
     </li></ul></dd>
     
 
@@ -1802,7 +1514,7 @@ focus handling, game resizing, scaling and the pause, boot and orientation scree
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Stage.js.html">core/Stage.js</a>, <a href="Stage.js.html#sunlight-1-line-374">line 374</a>
+        <a href="Stage.js.html">core/Stage.js</a>, <a href="Stage.js.html#sunlight-1-line-355">line 355</a>
     </li></ul></dd>
     
 
@@ -1867,7 +1579,7 @@ focus handling, game resizing, scaling and the pause, boot and orientation scree
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Stage.js.html">core/Stage.js</a>, <a href="Stage.js.html#sunlight-1-line-248">line 248</a>
+        <a href="Stage.js.html">core/Stage.js</a>, <a href="Stage.js.html#sunlight-1-line-196">line 196</a>
     </li></ul></dd>
     
 
@@ -1985,7 +1697,7 @@ focus handling, game resizing, scaling and the pause, boot and orientation scree
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Stage.js.html">core/Stage.js</a>, <a href="Stage.js.html#sunlight-1-line-188">line 188</a>
+        <a href="Stage.js.html">core/Stage.js</a>, <a href="Stage.js.html#sunlight-1-line-77">line 77</a>
     </li></ul></dd>
     
 
@@ -2057,7 +1769,7 @@ The only exception to this is if the camera is following an object, in which cas
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Stage.js.html">core/Stage.js</a>, <a href="Stage.js.html#sunlight-1-line-137">line 137</a>
+        <a href="Stage.js.html">core/Stage.js</a>, <a href="Stage.js.html#sunlight-1-line-156">line 156</a>
     </li></ul></dd>
     
 
@@ -2127,7 +1839,7 @@ Most objects have preUpdate methods and it's where initial movement and position
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Stage.js.html">core/Stage.js</a>, <a href="Stage.js.html#sunlight-1-line-101">line 101</a>
+        <a href="Stage.js.html">core/Stage.js</a>, <a href="Stage.js.html#sunlight-1-line-120">line 120</a>
     </li></ul></dd>
     
 
@@ -2196,7 +1908,7 @@ Most objects have preUpdate methods and it's where initial movement and position
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Stage.js.html">core/Stage.js</a>, <a href="Stage.js.html#sunlight-1-line-121">line 121</a>
+        <a href="Stage.js.html">core/Stage.js</a>, <a href="Stage.js.html#sunlight-1-line-140">line 140</a>
     </li></ul></dd>
     
 
@@ -2314,7 +2026,7 @@ Most objects have preUpdate methods and it's where initial movement and position
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Stage.js.html">core/Stage.js</a>, <a href="Stage.js.html#sunlight-1-line-289">line 289</a>
+        <a href="Stage.js.html">core/Stage.js</a>, <a href="Stage.js.html#sunlight-1-line-250">line 250</a>
     </li></ul></dd>
     
 
@@ -2365,7 +2077,7 @@ Most objects have preUpdate methods and it's where initial movement and position
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Fri Jul 18 2014 12:36:55 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Tue Sep 09 2014 15:29:40 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

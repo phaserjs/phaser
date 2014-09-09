@@ -155,6 +155,14 @@
 						</li>
 						
 						<li class="class-depth-1">
+							<a href="Phaser.FlexGrid.html">FlexGrid</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.FlexLayer.html">FlexLayer</a>
+						</li>
+						
+						<li class="class-depth-1">
 							<a href="Phaser.Frame.html">Frame</a>
 						</li>
 						
@@ -343,6 +351,10 @@
 						</li>
 						
 						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.RotationalSpring.html">RotationalSpring</a>
+						</li>
+						
+						<li class="class-depth-3">
 							<a href="Phaser.Physics.P2.Spring.html">Spring</a>
 						</li>
 						
@@ -388,6 +400,10 @@
 						
 						<li class="class-depth-1">
 							<a href="Phaser.RetroFont.html">RetroFont</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Rope.html">Rope</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -502,7 +518,7 @@
 					</ul>
 				</li>
 				
-</strong>				
+				
 			</ul>
 		</div>
 	</div>
@@ -697,7 +713,7 @@ If no parent is given it will be added as a child of the document.body.</p>
                 </td>
             
 
-            <td class="description last"><p>The canvas to set the touch action on.</p></td>
+            <td class="description last"><p>The canvas to be added to the DOM.</p></td>
         </tr>
 
 	
@@ -806,7 +822,7 @@ If no parent is given it will be added as a child of the document.body.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Canvas.js.html">system/Canvas.js</a>, <a href="Canvas.js.html#sunlight-1-line-159">line 159</a>
+        <a href="Canvas.js.html">system/Canvas.js</a>, <a href="Canvas.js.html#sunlight-1-line-156">line 156</a>
     </li></ul></dd>
     
 
@@ -857,7 +873,7 @@ If no parent is given it will be added as a child of the document.body.</p>
         
             
 <dt>
-    <h4 class="name" id="create"><span class="type-signature">&lt;static> </span>create<span class="signature">(<span class="optional">width</span>, <span class="optional">height</span>, <span class="optional">id</span>, <span class="optional">noCocoon</span>)</span><span class="type-signature"> &rarr; {HTMLCanvasElement}</span></h4>
+    <h4 class="name" id="create"><span class="type-signature">&lt;static> </span>create<span class="signature">(<span class="optional">width</span>, <span class="optional">height</span>, <span class="optional">id</span>)</span><span class="type-signature"> &rarr; {HTMLCanvasElement}</span></h4>
     
     
 </dt>
@@ -1014,45 +1030,6 @@ If no parent is given it will be added as a child of the document.body.</p>
             
 
             <td class="description last"><p>If given this will be set as the ID of the canvas element, otherwise no ID will be set.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>noCocoon</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    false
-                
-                </td>
-            
-
-            <td class="description last"><p>DEPRECATED: This parameter is no longer used.</p></td>
         </tr>
 
 	
@@ -1225,7 +1202,7 @@ If no parent is given it will be added as a child of the document.body.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Canvas.js.html">system/Canvas.js</a>, <a href="Canvas.js.html#sunlight-1-line-86">line 86</a>
+        <a href="Canvas.js.html">system/Canvas.js</a>, <a href="Canvas.js.html#sunlight-1-line-83">line 83</a>
     </li></ul></dd>
     
 
@@ -1409,7 +1386,7 @@ If no parent is given it will be added as a child of the document.body.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Canvas.js.html">system/Canvas.js</a>, <a href="Canvas.js.html#sunlight-1-line-48">line 48</a>
+        <a href="Canvas.js.html">system/Canvas.js</a>, <a href="Canvas.js.html#sunlight-1-line-45">line 45</a>
     </li></ul></dd>
     
 
@@ -1455,6 +1432,265 @@ If no parent is given it will be added as a child of the document.body.</p>
 
 
         
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="getSmoothingEnabled"><span class="type-signature">&lt;static> </span>getSmoothingEnabled<span class="signature">(context)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Returns <code>true</code> if the given context has image smoothing enabled, otherwise returns <code>false</code>.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>context</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">CanvasRenderingContext2D</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The context to check for smoothing on.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Canvas.js.html">system/Canvas.js</a>, <a href="Canvas.js.html#sunlight-1-line-263">line 263</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>True if the given context has image smoothing enabled, otherwise false.</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">boolean</span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="removeFromDOM"><span class="type-signature">&lt;static> </span>removeFromDOM<span class="signature">(canvas)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Removes the given canvas element from the DOM.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>canvas</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">HTMLCanvasElement</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The canvas to be removed from the DOM.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Canvas.js.html">system/Canvas.js</a>, <a href="Canvas.js.html#sunlight-1-line-203">line 203</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
     
     
 </dd>
@@ -1595,7 +1831,7 @@ If no parent is given it will be added as a child of the document.body.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Canvas.js.html">system/Canvas.js</a>, <a href="Canvas.js.html#sunlight-1-line-97">line 97</a>
+        <a href="Canvas.js.html">system/Canvas.js</a>, <a href="Canvas.js.html#sunlight-1-line-94">line 94</a>
     </li></ul></dd>
     
 
@@ -1737,7 +1973,7 @@ Note that if this doesn't given the desired result then see the CanvasUtils.setS
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Canvas.js.html">system/Canvas.js</a>, <a href="Canvas.js.html#sunlight-1-line-272">line 272</a>
+        <a href="Canvas.js.html">system/Canvas.js</a>, <a href="Canvas.js.html#sunlight-1-line-298">line 298</a>
     </li></ul></dd>
     
 
@@ -1796,7 +2032,7 @@ Note that if this doesn't given the desired result then see the CanvasUtils.setS
     
     
     <div class="description">
-        <p>Sets the CSS image-rendering property on the given canvas to be 'crisp' (aka 'optimize contrast on webkit').
+        <p>Sets the CSS image-rendering property on the given canvas to be 'crisp' (aka 'optimize contrast' on webkit).
 Note that if this doesn't given the desired result then see the setSmoothingEnabled.</p>
     </div>
     
@@ -1879,7 +2115,7 @@ Note that if this doesn't given the desired result then see the setSmoothingEnab
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Canvas.js.html">system/Canvas.js</a>, <a href="Canvas.js.html#sunlight-1-line-251">line 251</a>
+        <a href="Canvas.js.html">system/Canvas.js</a>, <a href="Canvas.js.html#sunlight-1-line-276">line 276</a>
     </li></ul></dd>
     
 
@@ -2047,7 +2283,7 @@ patchy on earlier browsers, especially on mobile.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Canvas.js.html">system/Canvas.js</a>, <a href="Canvas.js.html#sunlight-1-line-227">line 227</a>
+        <a href="Canvas.js.html">system/Canvas.js</a>, <a href="Canvas.js.html#sunlight-1-line-239">line 239</a>
     </li></ul></dd>
     
 
@@ -2231,7 +2467,7 @@ patchy on earlier browsers, especially on mobile.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Canvas.js.html">system/Canvas.js</a>, <a href="Canvas.js.html#sunlight-1-line-115">line 115</a>
+        <a href="Canvas.js.html">system/Canvas.js</a>, <a href="Canvas.js.html#sunlight-1-line-112">line 112</a>
     </li></ul></dd>
     
 
@@ -2510,7 +2746,7 @@ patchy on earlier browsers, especially on mobile.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Canvas.js.html">system/Canvas.js</a>, <a href="Canvas.js.html#sunlight-1-line-206">line 206</a>
+        <a href="Canvas.js.html">system/Canvas.js</a>, <a href="Canvas.js.html#sunlight-1-line-218">line 218</a>
     </li></ul></dd>
     
 
@@ -2694,7 +2930,7 @@ patchy on earlier browsers, especially on mobile.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Canvas.js.html">system/Canvas.js</a>, <a href="Canvas.js.html#sunlight-1-line-135">line 135</a>
+        <a href="Canvas.js.html">system/Canvas.js</a>, <a href="Canvas.js.html#sunlight-1-line-132">line 132</a>
     </li></ul></dd>
     
 
@@ -2768,7 +3004,7 @@ patchy on earlier browsers, especially on mobile.</p>
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Fri Jul 18 2014 12:36:39 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Tue Sep 09 2014 15:29:21 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

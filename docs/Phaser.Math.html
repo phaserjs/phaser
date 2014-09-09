@@ -155,6 +155,14 @@
 						</li>
 						
 						<li class="class-depth-1">
+							<a href="Phaser.FlexGrid.html">FlexGrid</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.FlexLayer.html">FlexLayer</a>
+						</li>
+						
+						<li class="class-depth-1">
 							<a href="Phaser.Frame.html">Frame</a>
 						</li>
 						
@@ -343,6 +351,10 @@
 						</li>
 						
 						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.RotationalSpring.html">RotationalSpring</a>
+						</li>
+						
+						<li class="class-depth-3">
 							<a href="Phaser.Physics.P2.Spring.html">Spring</a>
 						</li>
 						
@@ -388,6 +400,10 @@
 						
 						<li class="class-depth-1">
 							<a href="Phaser.RetroFont.html">RetroFont</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Rope.html">Rope</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -502,7 +518,7 @@
 					</ul>
 				</li>
 				
-</strong>				
+				
 			</ul>
 		</div>
 	</div>
@@ -941,6 +957,374 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-358">line 358</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">number</span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="angleBetweenPointsY"><span class="type-signature"></span>angleBetweenPointsY<span class="signature">(point1, point2)</span><span class="type-signature"> &rarr; {number}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Find the angle of a segment from (point1.x, point1.y) -&gt; (point2.x, point2.y).</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>point1</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Point.html">Phaser.Point</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>point2</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Point.html">Phaser.Point</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-369">line 369</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">number</span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="angleBetweenY"><span class="type-signature"></span>angleBetweenY<span class="signature">(x1, y1, x2, y2)</span><span class="type-signature"> &rarr; {number}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Find the angle of a segment from (x1, y1) -&gt; (x2, y2).
+Note that the difference between this method and Math.angleBetween is that this assumes the y coordinate travels
+down the screen.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>x1</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>y1</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>x2</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>y2</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
         <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-342">line 342</a>
     </li></ul></dd>
     
@@ -1124,7 +1508,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-803">line 803</a>
+        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-902">line 902</a>
     </li></ul></dd>
     
 
@@ -1376,7 +1760,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-929">line 929</a>
+        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-1028">line 1028</a>
     </li></ul></dd>
     
 
@@ -1536,7 +1920,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-856">line 856</a>
+        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-955">line 955</a>
     </li></ul></dd>
     
 
@@ -1765,7 +2149,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-961">line 961</a>
+        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-1060">line 1060</a>
     </li></ul></dd>
     
 
@@ -1925,7 +2309,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-877">line 877</a>
+        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-976">line 976</a>
     </li></ul></dd>
     
 
@@ -2062,7 +2446,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-1074">line 1074</a>
+        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-1173">line 1173</a>
     </li></ul></dd>
     
 
@@ -2386,7 +2770,7 @@ of getting a bonus, call chanceRoll(30) - true means the chance passed, false me
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-408">line 408</a>
+        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-435">line 435</a>
     </li></ul></dd>
     
 
@@ -2574,7 +2958,7 @@ Clamp value to range &lt;a, b&gt;</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-1217">line 1217</a>
+        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-1316">line 1316</a>
     </li></ul></dd>
     
 
@@ -2734,7 +3118,7 @@ Clamp value to range &lt;a, b&gt;</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-1233">line 1233</a>
+        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-1332">line 1332</a>
     </li></ul></dd>
     
 
@@ -2822,7 +3206,7 @@ Clamp value to range &lt;a, b&gt;</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-1353">line 1353</a>
+        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-1452">line 1452</a>
     </li></ul></dd>
     
 
@@ -2978,7 +3362,7 @@ Clamp value to range &lt;a, b&gt;</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-979">line 979</a>
+        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-1078">line 1078</a>
     </li></ul></dd>
     
 
@@ -3184,7 +3568,7 @@ Clamp value to range &lt;a, b&gt;</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-1163">line 1163</a>
+        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-1262">line 1262</a>
     </li></ul></dd>
     
 
@@ -3485,7 +3869,7 @@ Clamp value to range &lt;a, b&gt;</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-1182">line 1182</a>
+        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-1281">line 1281</a>
     </li></ul></dd>
     
 
@@ -3695,7 +4079,7 @@ Clamp value to range &lt;a, b&gt;</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-1201">line 1201</a>
+        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-1300">line 1300</a>
     </li></ul></dd>
     
 
@@ -3832,7 +4216,7 @@ Clamp value to range &lt;a, b&gt;</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-939">line 939</a>
+        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-1038">line 1038</a>
     </li></ul></dd>
     
 
@@ -3969,7 +4353,7 @@ Clamp value to range &lt;a, b&gt;</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-1059">line 1059</a>
+        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-1158">line 1158</a>
     </li></ul></dd>
     
 
@@ -5217,7 +5601,7 @@ Will return null if random selection is missing, or array has no entries.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-989">line 989</a>
+        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-1088">line 1088</a>
     </li></ul></dd>
     
 
@@ -5450,7 +5834,7 @@ Will return null if random selection is missing, or array has no entries.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-406">line 406</a>
+        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-433">line 433</a>
     </li></ul></dd>
     
 
@@ -5783,7 +6167,7 @@ Will return null if random selection is missing, or array has no entries.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-649">line 649</a>
+        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-748">line 748</a>
     </li></ul></dd>
     
 
@@ -5924,7 +6308,7 @@ Will return null if random selection is missing, or array has no entries.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-636">line 636</a>
+        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-735">line 735</a>
     </li></ul></dd>
     
 
@@ -6111,7 +6495,7 @@ Will return null if random selection is missing, or array has no entries.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-609">line 609</a>
+        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-708">line 708</a>
     </li></ul></dd>
     
 
@@ -6298,7 +6682,7 @@ Will return null if random selection is missing, or array has no entries.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-917">line 917</a>
+        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-1016">line 1016</a>
     </li></ul></dd>
     
 
@@ -6458,7 +6842,7 @@ Will return null if random selection is missing, or array has no entries.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-829">line 829</a>
+        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-928">line 928</a>
     </li></ul></dd>
     
 
@@ -6687,7 +7071,7 @@ Will return null if random selection is missing, or array has no entries.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-1262">line 1262</a>
+        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-1361">line 1361</a>
     </li></ul></dd>
     
 
@@ -6775,7 +7159,7 @@ Will return null if random selection is missing, or array has no entries.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-699">line 699</a>
+        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-798">line 798</a>
     </li></ul></dd>
     
 
@@ -6962,7 +7346,7 @@ Will return null if random selection is missing, or array has no entries.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-513">line 513</a>
+        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-612">line 612</a>
     </li></ul></dd>
     
 
@@ -7051,7 +7435,7 @@ It will find the largest matching property value from the given objects.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-758">line 758</a>
+        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-857">line 857</a>
     </li></ul></dd>
     
 
@@ -7144,7 +7528,7 @@ See <a href="http://jsperf.com/math-s-min-max-vs-homemade/5">http://jsperf.com/m
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-669">line 669</a>
+        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-768">line 768</a>
     </li></ul></dd>
     
 
@@ -7237,7 +7621,7 @@ It will find the lowest matching property value from the given objects.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-728">line 728</a>
+        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-827">line 827</a>
     </li></ul></dd>
     
 
@@ -7424,7 +7808,7 @@ It will find the lowest matching property value from the given objects.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-535">line 535</a>
+        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-634">line 634</a>
     </li></ul></dd>
     
 
@@ -7611,7 +7995,7 @@ It will find the lowest matching property value from the given objects.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-404">line 404</a>
+        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-431">line 431</a>
     </li></ul></dd>
     
 
@@ -7771,7 +8155,7 @@ It will find the lowest matching property value from the given objects.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-363">line 363</a>
+        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-390">line 390</a>
     </li></ul></dd>
     
 
@@ -7912,7 +8296,7 @@ It will find the lowest matching property value from the given objects.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-376">line 376</a>
+        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-403">line 403</a>
     </li></ul></dd>
     
 
@@ -8053,7 +8437,7 @@ It will find the lowest matching property value from the given objects.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-386">line 386</a>
+        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-413">line 413</a>
     </li></ul></dd>
     
 
@@ -8112,7 +8496,8 @@ It will find the lowest matching property value from the given objects.</p>
     
     
     <div class="description">
-        <p>Returns an Array containing the numbers from min to max (inclusive).</p>
+        <p>Returns an Array containing the numbers from min to max and inclusive of both values.
+If you need exclusive of max then see Phaser.Math.numberArrayEx.</p>
     </div>
     
 
@@ -8217,7 +8602,7 @@ It will find the lowest matching property value from the given objects.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-492">line 492</a>
+        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-519">line 519</a>
     </li></ul></dd>
     
 
@@ -8262,6 +8647,265 @@ It will find the lowest matching property value from the given objects.</p>
 
         
     
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="numberArrayStep"><span class="type-signature"></span>numberArrayStep<span class="signature">(<span class="optional">start</span>, end, <span class="optional">step</span>)</span><span class="type-signature"> &rarr; {<a href="Array.html">Array</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Creates an array of numbers (positive and/or negative) progressing from
+<code>start</code> up to but not including <code>end</code>. If <code>start</code> is less than <code>stop</code> a
+zero-length range is created unless a negative <code>step</code> is specified.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+		<th>Default</th>
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>start</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
+            
+
+            <td class="description last"><p>The start of the range.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>end</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The end of the range.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>step</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    1
+                
+                </td>
+            
+
+            <td class="description last"><p>The value to increment or decrement by.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-541">line 541</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>Returns the new array of numbers.</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type"><a href="Array.html">Array</a></span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">Phaser.Math.numberArrayStep(4);
+// => [0, 1, 2, 3]
+
+Phaser.Math.numberArrayStep(1, 5);
+// => [1, 2, 3, 4]
+
+Phaser.Math.numberArrayStep(0, 20, 5);
+// => [0, 5, 10, 15]
+
+Phaser.Math.numberArrayStep(0, -4, -1);
+// => [0, -1, -2, -3]
+
+Phaser.Math.numberArrayStep(1, 4, 0);
+// => [1, 1, 1]
+
+Phaser.Math.numberArrayStep(0);
+// => []</pre>
+
+
     
 </dd>
 
@@ -8448,7 +9092,7 @@ It will find the lowest matching property value from the given objects.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-1325">line 1325</a>
+        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-1424">line 1424</a>
     </li></ul></dd>
     
 
@@ -8609,7 +9253,7 @@ It will find the lowest matching property value from the given objects.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-1371">line 1371</a>
+        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-1470">line 1470</a>
     </li></ul></dd>
     
 
@@ -8697,7 +9341,7 @@ It will find the lowest matching property value from the given objects.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-624">line 624</a>
+        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-723">line 723</a>
     </li></ul></dd>
     
 
@@ -8885,7 +9529,7 @@ Will return null if random selection is missing, or array has no entries.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-1023">line 1023</a>
+        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-1122">line 1122</a>
     </li></ul></dd>
     
 
@@ -9026,7 +9670,7 @@ Will return null if random selection is missing, or array has no entries.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-353">line 353</a>
+        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-380">line 380</a>
     </li></ul></dd>
     
 
@@ -9511,7 +10155,7 @@ The original stack is modified in the process. This effectively moves the positi
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-1126">line 1126</a>
+        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-1225">line 1225</a>
     </li></ul></dd>
     
 
@@ -9652,7 +10296,7 @@ The original stack is modified in the process. This effectively moves the positi
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-1143">line 1143</a>
+        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-1242">line 1242</a>
     </li></ul></dd>
     
 
@@ -9794,7 +10438,7 @@ The original stack is modified in the process. This effectively moves the positi
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-1311">line 1311</a>
+        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-1410">line 1410</a>
     </li></ul></dd>
     
 
@@ -10004,7 +10648,7 @@ you should get the results via getSinTable() and getCosTable(). This generator i
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-1086">line 1086</a>
+        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-1185">line 1185</a>
     </li></ul></dd>
     
 
@@ -10191,7 +10835,7 @@ you should get the results via getSinTable() and getCosTable(). This generator i
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-1295">line 1295</a>
+        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-1394">line 1394</a>
     </li></ul></dd>
     
 
@@ -10374,7 +11018,7 @@ you should get the results via getSinTable() and getCosTable(). This generator i
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-1279">line 1279</a>
+        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-1378">line 1378</a>
     </li></ul></dd>
     
 
@@ -11509,7 +12153,7 @@ you should get the results via getSinTable() and getCosTable(). This generator i
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-1247">line 1247</a>
+        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-1346">line 1346</a>
     </li></ul></dd>
     
 
@@ -11697,7 +12341,7 @@ max should be larger than min, or the function will return 0.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-557">line 557</a>
+        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-656">line 656</a>
     </li></ul></dd>
     
 
@@ -11861,7 +12505,7 @@ max should be larger than min, or the function will return 0.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-788">line 788</a>
+        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-887">line 887</a>
     </li></ul></dd>
     
 
@@ -12049,7 +12693,7 @@ Values must be positive integers, and are passed through Math.abs.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-587">line 587</a>
+        <a href="Math.js.html">math/Math.js</a>, <a href="Math.js.html#sunlight-1-line-686">line 686</a>
     </li></ul></dd>
     
 
@@ -12123,7 +12767,7 @@ Values must be positive integers, and are passed through Math.abs.</p>
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Fri Jul 18 2014 12:36:46 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Tue Sep 09 2014 15:29:29 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

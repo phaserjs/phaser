@@ -155,6 +155,14 @@
 						</li>
 						
 						<li class="class-depth-1">
+							<a href="Phaser.FlexGrid.html">FlexGrid</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.FlexLayer.html">FlexLayer</a>
+						</li>
+						
+						<li class="class-depth-1">
 							<a href="Phaser.Frame.html">Frame</a>
 						</li>
 						
@@ -343,6 +351,10 @@
 						</li>
 						
 						<li class="class-depth-3">
+							<a href="Phaser.Physics.P2.RotationalSpring.html">RotationalSpring</a>
+						</li>
+						
+						<li class="class-depth-3">
 							<a href="Phaser.Physics.P2.Spring.html">Spring</a>
 						</li>
 						
@@ -388,6 +400,10 @@
 						
 						<li class="class-depth-1">
 							<a href="Phaser.RetroFont.html">RetroFont</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.Rope.html">Rope</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -502,7 +518,7 @@
 					</ul>
 				</li>
 				
-</strong>				
+				
 			</ul>
 		</div>
 	</div>
@@ -550,10 +566,16 @@ Phaser.Physics.P2 = function (game, config) {
     }
 
     /**
+    * @property {object} config - The p2 World configuration object.
+    * @protected
+    */
+    this.config = config;
+
+    /**
     * @property {p2.World} world - The p2 World in which the simulation is run.
     * @protected
     */
-    this.world = new p2.World(config);
+    this.world = new p2.World(this.config);
 
     /**
     * @property {number} frameRate - The frame rate the world will be stepped at. Defaults to 1 / 60, but you can change here. Also see useElapsedTime property.
@@ -869,10 +891,10 @@ Phaser.Physics.P2.prototype = {
     */
     postBroadphaseHandler: function (event) {
 
-        if (this.postBroadphaseCallback)
-        {
-            var i = event.pairs.length;
+        var i = event.pairs.length;
 
+        if (this.postBroadphaseCallback && i > 0)
+        {
             while (i -= 2)
             {
                 if (event.pairs[i].parent && event.pairs[i+1].parent && !this.postBroadphaseCallback.call(this.callbackContext, event.pairs[i].parent, event.pairs[i+1].parent))
@@ -1286,12 +1308,19 @@ Phaser.Physics.P2.prototype = {
     * Adds a Spring to the world.
     *
     * @method Phaser.Physics.P2#addSpring
-    * @param {Phaser.Physics.P2.Spring} spring - The Spring to add to the World.
+    * @param {Phaser.Physics.P2.Spring|p2.LinearSpring|p2.RotationalSpring} spring - The Spring to add to the World.
     * @return {Phaser.Physics.P2.Spring} The Spring that was added.
     */
     addSpring: function (spring) {
 
-        this.world.addSpring(spring);
+        if (spring instanceof Phaser.Physics.P2.Spring || spring instanceof Phaser.Physics.P2.RotationalSpring)
+        {
+            this.world.addSpring(spring.data);
+        }
+        else
+        {
+            this.world.addSpring(spring);
+        }
 
         this.onSpringAdded.dispatch(spring);
 
@@ -1308,7 +1337,14 @@ Phaser.Physics.P2.prototype = {
     */
     removeSpring: function (spring) {
 
-        this.world.removeSpring(spring);
+        if (spring instanceof Phaser.Physics.P2.Spring || spring instanceof Phaser.Physics.P2.RotationalSpring)
+        {
+            this.world.removeSpring(spring.data);
+        }
+        else
+        {
+            this.world.removeSpring(spring);
+        }
 
         this.onSpringRemoved.dispatch(spring);
 
@@ -1323,10 +1359,12 @@ Phaser.Physics.P2.prototype = {
     * @param {Phaser.Sprite|Phaser.Physics.P2.Body|p2.Body} bodyA - First connected body.
     * @param {Phaser.Sprite|Phaser.Physics.P2.Body|p2.Body} bodyB - Second connected body.
     * @param {number} distance - The distance to keep between the bodies.
+    * @param {Array} [localAnchorA] - The anchor point for bodyA, defined locally in bodyA frame. Defaults to [0,0].
+    * @param {Array} [localAnchorB] - The anchor point for bodyB, defined locally in bodyB frame. Defaults to [0,0].
     * @param {number} [maxForce] - The maximum force that should be applied to constrain the bodies.
     * @return {Phaser.Physics.P2.DistanceConstraint} The constraint
     */
-    createDistanceConstraint: function (bodyA, bodyB, distance, maxForce) {
+    createDistanceConstraint: function (bodyA, bodyB, distance, localAnchorA, localAnchorB, maxForce) {
 
         bodyA = this.getBody(bodyA);
         bodyB = this.getBody(bodyB);
@@ -1337,7 +1375,7 @@ Phaser.Physics.P2.prototype = {
         }
         else
         {
-            return this.addConstraint(new Phaser.Physics.P2.DistanceConstraint(this, bodyA, bodyB, distance, maxForce));
+            return this.addConstraint(new Phaser.Physics.P2.DistanceConstraint(this, bodyA, bodyB, distance, localAnchorA, localAnchorB, maxForce));
         }
 
     },
@@ -1378,9 +1416,10 @@ Phaser.Physics.P2.prototype = {
     * @param {Phaser.Sprite|Phaser.Physics.P2.Body|p2.Body} bodyB - Second connected body.
     * @param {Array} pivotB - The point relative to the center of mass of bodyB which bodyB is constrained to. The value is an array with 2 elements matching x and y, i.e: [32, 32].
     * @param {number} [maxForce=0] - The maximum force that should be applied to constrain the bodies.
+    * @param {Float32Array} [worldPivot=null] - A pivot point given in world coordinates. If specified, localPivotA and localPivotB are automatically computed from this value.
     * @return {Phaser.Physics.P2.RevoluteConstraint} The constraint
     */
-    createRevoluteConstraint: function (bodyA, pivotA, bodyB, pivotB, maxForce) {
+    createRevoluteConstraint: function (bodyA, pivotA, bodyB, pivotB, maxForce, worldPivot) {
 
         bodyA = this.getBody(bodyA);
         bodyB = this.getBody(bodyB);
@@ -1391,7 +1430,7 @@ Phaser.Physics.P2.prototype = {
         }
         else
         {
-            return this.addConstraint(new Phaser.Physics.P2.RevoluteConstraint(this, bodyA, pivotA, bodyB, pivotB, maxForce));
+            return this.addConstraint(new Phaser.Physics.P2.RevoluteConstraint(this, bodyA, pivotA, bodyB, pivotB, maxForce, worldPivot));
         }
 
     },
@@ -1713,15 +1752,15 @@ Phaser.Physics.P2.prototype = {
 
         while (i--)
         {
-            if (bodies[i] instanceof Phaser.Physics.P2.Body && !(filterStatic && bodies[i].data.motionState === p2.Body.STATIC))
+            if (bodies[i] instanceof Phaser.Physics.P2.Body && !(filterStatic && bodies[i].data.type === p2.Body.STATIC))
             {
                 query.push(bodies[i].data);
             }
-            else if (bodies[i] instanceof p2.Body && bodies[i].parent && !(filterStatic && bodies[i].motionState === p2.Body.STATIC))
+            else if (bodies[i] instanceof p2.Body && bodies[i].parent && !(filterStatic && bodies[i].type === p2.Body.STATIC))
             {
                 query.push(bodies[i]);
             }
-            else if (bodies[i] instanceof Phaser.Sprite && bodies[i].hasOwnProperty('body') && !(filterStatic && bodies[i].body.data.motionState === p2.Body.STATIC))
+            else if (bodies[i] instanceof Phaser.Sprite && bodies[i].hasOwnProperty('body') && !(filterStatic && bodies[i].body.data.type === p2.Body.STATIC))
             {
                 query.push(bodies[i].body.data);
             }
@@ -1817,14 +1856,11 @@ Phaser.Physics.P2.prototype = {
     },
 
     /**
-    * Creates a spring, connecting two bodies. A spring can have a resting length, a stiffness and damping.
+    * Creates a linear spring, connecting two bodies. A spring can have a resting length, a stiffness and damping.
     *
     * @method Phaser.Physics.P2#createSpring
     * @param {Phaser.Sprite|Phaser.Physics.P2.Body|p2.Body} bodyA - First connected body.
     * @param {Phaser.Sprite|Phaser.Physics.P2.Body|p2.Body} bodyB - Second connected body.
-    * @param {number} [restLength=1] - Rest length of the spring. A number > 0.
-    * @param {number} [stiffness=100] - Stiffness of the spring. A number >= 0.
-    * @param {number} [damping=1] - Damping of the spring. A number >= 0.
     * @param {number} [restLength=1] - Rest length of the spring. A number > 0.
     * @param {number} [stiffness=100] - Stiffness of the spring. A number >= 0.
     * @param {number} [damping=1] - Damping of the spring. A number >= 0.
@@ -1846,6 +1882,33 @@ Phaser.Physics.P2.prototype = {
         else
         {
             return this.addSpring(new Phaser.Physics.P2.Spring(this, bodyA, bodyB, restLength, stiffness, damping, worldA, worldB, localA, localB));
+        }
+
+    },
+
+    /**
+    * Creates a rotational spring, connecting two bodies. A spring can have a resting length, a stiffness and damping.
+    *
+    * @method Phaser.Physics.P2#createRotationalSpring
+    * @param {Phaser.Sprite|Phaser.Physics.P2.Body|p2.Body} bodyA - First connected body.
+    * @param {Phaser.Sprite|Phaser.Physics.P2.Body|p2.Body} bodyB - Second connected body.
+    * @param {number} [restAngle] - The relative angle of bodies at which the spring is at rest. If not given, it's set to the current relative angle between the bodies.
+    * @param {number} [stiffness=100] - Stiffness of the spring. A number >= 0.
+    * @param {number} [damping=1] - Damping of the spring. A number >= 0.
+    * @return {Phaser.Physics.P2.RotationalSpring} The spring
+    */
+    createRotationalSpring: function (bodyA, bodyB, restAngle, stiffness, damping) {
+
+        bodyA = this.getBody(bodyA);
+        bodyB = this.getBody(bodyB);
+
+        if (!bodyA || !bodyB)
+        {
+            console.warn('Cannot create Rotational Spring, invalid body objects given');
+        }
+        else
+        {
+            return this.addSpring(new Phaser.Physics.P2.RotationalSpring(this, bodyA, bodyB, restAngle, stiffness, damping));
         }
 
     },
@@ -2168,50 +2231,10 @@ Object.defineProperty(Phaser.Physics.P2.prototype, "friction", {
 });
 
 /**
-* @name Phaser.Physics.P2#defaultFriction
-* @property {number} defaultFriction - DEPRECATED: Use World.friction instead.
-*/
-Object.defineProperty(Phaser.Physics.P2.prototype, "defaultFriction", {
-
-    get: function () {
-
-        return this.world.defaultContactMaterial.friction;
-
-    },
-
-    set: function (value) {
-
-        this.world.defaultContactMaterial.friction = value;
-
-    }
-
-});
-
-/**
 * @name Phaser.Physics.P2#restitution
 * @property {number} restitution - Default coefficient of restitution between colliding bodies. This value is used if no matching ContactMaterial is found for a Material pair.
 */
 Object.defineProperty(Phaser.Physics.P2.prototype, "restitution", {
-
-    get: function () {
-
-        return this.world.defaultContactMaterial.restitution;
-
-    },
-
-    set: function (value) {
-
-        this.world.defaultContactMaterial.restitution = value;
-
-    }
-
-});
-
-/**
-* @name Phaser.Physics.P2#defaultRestitution
-* @property {number} defaultRestitution - DEPRECATED: Use World.restitution instead.
-*/
-Object.defineProperty(Phaser.Physics.P2.prototype, "defaultRestitution", {
 
     get: function () {
 
@@ -2363,20 +2386,22 @@ Object.defineProperty(Phaser.Physics.P2.prototype, "emitImpactEvent", {
 });
 
 /**
-* @name Phaser.Physics.P2#enableBodySleeping
-* @property {boolean} enableBodySleeping - Enable / disable automatic body sleeping.
+* How to deactivate bodies during simulation. Possible modes are: World.NO_SLEEPING, World.BODY_SLEEPING and World.ISLAND_SLEEPING.
+* If sleeping is enabled, you might need to wake up the bodies if they fall asleep when they shouldn't. If you want to enable sleeping in the world, but want to disable it for a particular body, see Body.allowSleep.
+* @name Phaser.Physics.P2#sleepMode
+* @property {number} sleepMode
 */
-Object.defineProperty(Phaser.Physics.P2.prototype, "enableBodySleeping", {
+Object.defineProperty(Phaser.Physics.P2.prototype, "sleepMode", {
 
     get: function () {
 
-        return this.world.enableBodySleeping;
+        return this.world.sleepMode;
 
     },
 
     set: function (value) {
 
-        this.world.enableBodySleeping = value;
+        this.world.sleepMode = value;
 
     }
 
@@ -2417,7 +2442,7 @@ Object.defineProperty(Phaser.Physics.P2.prototype, "total", {
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Fri Jul 18 2014 12:36:36 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Tue Sep 09 2014 15:29:17 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>
