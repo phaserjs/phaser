@@ -5,12 +5,19 @@
 */
 
 /**
+* WARNING: This is an EXPERIMENTAL class. The API will change significantly in the coming versions and is incomplete.
+* Please try to avoid using in production games with a long time to build.
+* This is also why the documentation is incomplete.
+* 
 * A responsive grid layer.
 *
 * @class Phaser.FlexLayer
 * @extends Phaser.Group
 * @constructor
 * @param {Phaser.ScaleManager} manager - The ScaleManager.
+* @param {Phaser.Point} position - A reference to the Point object used for positioning.
+* @param {Phaser.Rectangle} bounds - A reference to the Rectangle used for the layer bounds.
+* @param {Phaser.Point} scale - A reference to the Point object used for layer scaling.
 */
 Phaser.FlexLayer = function (manager, position, bounds, scale) {
 
@@ -45,7 +52,6 @@ Phaser.FlexLayer.prototype = Object.create(Phaser.Group.prototype);
 Phaser.FlexLayer.prototype.constructor = Phaser.FlexLayer;
 
 Phaser.FlexLayer.prototype.resize = function () {
-
 };
 
 Phaser.FlexLayer.prototype.debug = function () {
@@ -59,4 +65,3 @@ Phaser.FlexLayer.prototype.debug = function () {
 
 
 };
-

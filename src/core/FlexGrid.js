@@ -5,11 +5,18 @@
 */
 
 /**
-* A responsive grid manager.
+* WARNING: This is an EXPERIMENTAL class. The API will change significantly in the coming versions and is incomplete.
+* Please try to avoid using in production games with a long time to build.
+* This is also why the documentation is incomplete.
+* 
+* FlexGrid is a a responsive grid manager that works in conjunction with the ScaleManager RESIZE scaling mode and FlexLayers
+* to provide for game object positioning in a responsive manner.
 *
 * @class Phaser.FlexGrid
 * @constructor
 * @param {Phaser.ScaleManager} manager - The ScaleManager.
+* @param {number} width - The width of the game.
+* @param {number} height - The height of the game.
 */
 Phaser.FlexGrid = function (manager, width, height) {
 
@@ -59,6 +66,13 @@ Phaser.FlexGrid = function (manager, width, height) {
 
 Phaser.FlexGrid.prototype = {
 
+    /**
+     * Sets the core game size. This resets the w/h parameters and bounds.
+     *
+     * @method setSize
+     * @param {number} width - The new dimensions.
+     * @param {number} height - The new dimensions.
+     */
     setSize: function (width, height) {
 
         //  These are locked and don't change until setSize is called again
@@ -83,6 +97,7 @@ Phaser.FlexGrid.prototype = {
      * A fluid layer is centered on the game and maintains its aspect ratio as it scales up and down.
      *
      * @method createFluidLayer
+     * @param {array} [children] - An array of children that are used to populate the FlexLayer.
      * @return {Phaser.FlexLayer} The Layer object.
      */
     createFluidLayer: function (children) {
@@ -106,6 +121,7 @@ Phaser.FlexGrid.prototype = {
      * A full layer is placed at 0,0 and extends to the full size of the game. Children are scaled according to the fluid ratios.
      *
      * @method createFullLayer
+     * @param {array} [children] - An array of children that are used to populate the FlexLayer.
      * @return {Phaser.FlexLayer} The Layer object.
      */
     createFullLayer: function (children) {
@@ -129,6 +145,7 @@ Phaser.FlexGrid.prototype = {
      * A fixed layer is centered on the game and is the size of the required dimensions and is never scaled.
      *
      * @method createFixedLayer
+     * @param {array} [children] - An array of children that are used to populate the FlexLayer.
      * @return {Phaser.FlexLayer} The Layer object.
      */
     createFixedLayer: function (children) {
@@ -148,6 +165,11 @@ Phaser.FlexGrid.prototype = {
 
     },
 
+    /**
+     * Resets the layer children references
+     *
+     * @method reset
+     */
     reset: function () {
 
         for (var i = 0; i < this.layers.length; i++)
@@ -161,12 +183,24 @@ Phaser.FlexGrid.prototype = {
 
     },
 
+    /**
+     * Called when the game container changes dimensions.
+     *
+     * @method onResize
+     * @param {number} width - The new width of the game container.
+     * @param {number} height - The new height of the game container.
+     */
     onResize: function (width, height) {
 
         this.refresh(width, height);
 
     },
 
+    /**
+     * Updates all internal vars such as the bounds and scale values.
+     *
+     * @method refresh
+     */
     refresh: function () {
 
         this.multiplier = Math.min((this.manager.height / this.height), (this.manager.width / this.width));
@@ -190,6 +224,11 @@ Phaser.FlexGrid.prototype = {
 
     },
 
+    /**
+     * Call in the render function to output the bounds rects.
+     *
+     * @method debug
+     */
     debug: function () {
 
         // for (var i = 0; i < this.layers.length; i++)
@@ -197,15 +236,14 @@ Phaser.FlexGrid.prototype = {
         //     this.layers[i].debug();
         // }
 
-        // this.game.debug.text(this.boundsFull.width + ' x ' + this.boundsFull.height, this.boundsFull.x + 4, this.boundsFull.y + 16);
-        // this.game.debug.geom(this.boundsFull, 'rgba(0,0,255,0.9', false);
+        this.game.debug.text(this.boundsFull.width + ' x ' + this.boundsFull.height, this.boundsFull.x + 4, this.boundsFull.y + 16);
+        this.game.debug.geom(this.boundsFull, 'rgba(0,0,255,0.9', false);
 
         this.game.debug.text(this.boundsFluid.width + ' x ' + this.boundsFluid.height, this.boundsFluid.x + 4, this.boundsFluid.y + 16);
         this.game.debug.geom(this.boundsFluid, 'rgba(255,0,0,0.9', false);
 
-        // this.game.debug.text(this.boundsNone.width + ' x ' + this.boundsNone.height, this.boundsNone.x + 4, this.boundsNone.y + 16);
-        // this.game.debug.geom(this.boundsNone, 'rgba(0,255,0,0.9', false);
-        // this.game.debug.text(this.scaleFluid.x + ' x ' + this.scaleFluid.y, this.boundsFluid.x + 4, this.boundsFluid.y + 16);
+        this.game.debug.text(this.boundsNone.width + ' x ' + this.boundsNone.height, this.boundsNone.x + 4, this.boundsNone.y + 16);
+        this.game.debug.geom(this.boundsNone, 'rgba(0,255,0,0.9', false);
 
     }
 
