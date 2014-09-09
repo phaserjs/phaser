@@ -49,8 +49,9 @@ Phaser.Loader = function (game) {
     /**
     * You can optionally link a sprite to the preloader.
     * If you do so the Sprites width or height will be cropped based on the percentage loaded.
-    * @property {Phaser.Sprite|Phaser.Image} preloadSprite
-    * @default
+    * This property is an object containing: sprite, rect, direction, width and height
+    * 
+    * @property {object} preloadSprite
     */
     this.preloadSprite = null;
 
@@ -185,7 +186,6 @@ Phaser.Loader.prototype = {
     * You can set a Sprite to be a "preload" sprite by passing it to this method.
     * A "preload" sprite will have its width or height crop adjusted based on the percentage of the loader in real-time.
     * This allows you to easily make loading bars for games. Note that Sprite.visible = true will be set when calling this.
-    * Note: The Sprite should use a single image and not use a texture that is part of a Texture Atlas or Sprite Sheet.
     *
     * @method Phaser.Loader#setPreloadSprite
     * @param {Phaser.Sprite|Phaser.Image} sprite - The sprite or image that will be cropped during the load.
@@ -1677,13 +1677,13 @@ Phaser.Loader.prototype = {
             if (this.preloadSprite.direction === 0)
             {
                 this.preloadSprite.rect.width = Math.floor((this.preloadSprite.width / 100) * this.progress);
-                this.preloadSprite.sprite.crop(this.preloadSprite.rect);
             }
             else
             {
                 this.preloadSprite.rect.height = Math.floor((this.preloadSprite.height / 100) * this.progress);
-                this.preloadSprite.sprite.crop(this.preloadSprite.rect);
             }
+
+            this.preloadSprite.sprite.updateCrop();
         }
 
         this.onFileComplete.dispatch(this.progress, this._fileList[previousIndex].key, success, this.totalLoadedFiles(), this._fileList.length);
