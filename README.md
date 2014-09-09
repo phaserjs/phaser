@@ -64,7 +64,7 @@ Finally the list of [community authored Phaser Tutorials](http://www.lessmilk.co
 
 ## Change Log <a name="change-log"></a>
 
-Version 2.1.0 - "Cairhien" - -in development-
+Version 2.1.0 - "Cairhien" - 9th September 2014
 
 ### New Features
 
@@ -113,6 +113,7 @@ Version 2.1.0 - "Cairhien" - -in development-
 * The StateManager will now check if a State has a method called `resize`. If it does, and if the game is running in the RESIZE Scale Mode then this method will be called whenever the game resizes. It will be passed two parameters: `width` and `height` that will match the games new dimensions. Resizing can happen as a result of either the parent container changing shape, or the browser window resizing.
 * Rectangle.topRight returns a Point object that represents the top-right coordinate of the Rectangle.
 * The grunt script now builds a new version of Phaser without any physics (including Arcade Physics), Tilemaps or Particles. This build is called `phaser-no-physics.js` and works stand-alone. Please note that things like the GameObjectFactory aren't changed, so they will still try and create a Tilemap for example should you ask them to (thanks @eguneys #1172)
+* Camera.roundPx is a new boolean. If set to `true` it will call `view.floor` as part of its update loop, keeping its boundary to integer values. Set to `false` to disable this from happening (#1141)
 
 ### Updates
 
@@ -153,8 +154,8 @@ Version 2.1.0 - "Cairhien" - -in development-
 * BitmapData.copyPixels is now called BitmapData.copyRect and the method signature has changed.
 * BitmapData.draw method signature has changed significantly.
 * Phaser.Canvas.getSmoothingEnabled will return `true` if the given context has image smoothing enabled, otherwise `false`.
-* Math.numberArray used to include the `max` value in the output but no longer does. Please take this into account if you use it in your code anywhere.
-* Math.numberArray has been updated to now include a `step` parameter. It will create arrays of values between min/max (excluding max) with an optional step value (thanks @codevinsky #1170)
+* Math.numberArrayStep is a new method that allows you to return an array of numbers from `min` to `max` including an optional `step` parameter (thanks @codevinsky #1170)
+* Removed redundant `if` check from StateManager.preUpdate (thanks @FedeOmoto #1173)
 
 ### Bug Fixes
 

@@ -1388,6 +1388,7 @@ declare module Phaser {
         id: number;
         game: Phaser.Game;
         height: number;
+        roundPx: boolean;
         scale: Phaser.Point;
         screenView: Phaser.Rectangle;
         target: Phaser.Sprite;
@@ -3396,6 +3397,7 @@ declare module Phaser {
             bounds: Phaser.Physics.P2.Body;
             boundsCollidesWith: Phaser.Physics.P2.Body[];
             boundsCollisionGroup: Phaser.Physics.P2.CollisionGroup;
+            config: any;
             contactMaterial: Phaser.Physics.P2.ContactMaterial;
             emitImpactEvent: boolean;
             enableBodySleeping: boolean;
