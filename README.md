@@ -80,6 +80,7 @@ Version 2.1.1 - "Whitebridge" - in development
 ### Updates
 
 * TypeScript definitions fixes and updates (thanks )
+* Code tidying up in various places (thanks @FedeOmoto #1179 #1180)
 
 ### Bug Fixes
 
