@@ -314,6 +314,7 @@ Phaser.StateManager.prototype = {
             this.clearCurrentState();
 
             this.setCurrentState(this._pendingState);
+            this._pendingState = null;
 
             if (this.onPreloadCallback)
             {
@@ -337,7 +338,7 @@ Phaser.StateManager.prototype = {
                 this.loadComplete();
             }
 
-            this._pendingState = null;
+
         }
 
     },
