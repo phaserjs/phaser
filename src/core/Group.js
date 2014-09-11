@@ -1203,15 +1203,14 @@ Phaser.Group.prototype.postUpdate = function () {
 * Allows you to obtain a Phaser.ArrayList of children that return true for the given predicate
 * For example:
 *     var healthyList = Group.filter(function(child, index, children) {
-*         if(child.exists && child.health > 10) {
-*             return true;
-*         }
-*     });
+*         return child.health > 10 ? true : false;
+*     }, true);
 *     healthyList.callAll('attack');
 * Note: Currently this will skip any children which are Groups themselves.
 * @method Phaser.Group#filter
 * @param {function} predicate - The function that each child will be evaluated against. Each child of the Group will be passed to it as its first parameter, the index as the second, and the entire child array as the third
 * @param {boolean} [checkExists=false] - If set only children with exists=true will be passed to the callback, otherwise all children will be passed.
+* @return {Phaser.ArrayList} Returns an array list containing all the children that the predicate returned true for
 */
 Phaser.Group.prototype.filter = function(predicate, checkExists) {
     var index = -1,
