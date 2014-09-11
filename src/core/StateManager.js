@@ -452,6 +452,39 @@ Phaser.StateManager.prototype = {
     },
 
     /**
+    * Nulls all State level Phaser properties, including a reference to Game.
+    *
+    * @method Phaser.StateManager#unlink
+    * @param {string} key - State key.
+    * @protected
+    */
+    unlink: function (key) {
+
+        if (this.states[key])
+        {
+            this.states[key].game = null;
+            this.states[key].add = null;
+            this.states[key].make = null;
+            this.states[key].camera = null;
+            this.states[key].cache = null;
+            this.states[key].input = null;
+            this.states[key].load = null;
+            this.states[key].math = null;
+            this.states[key].sound = null;
+            this.states[key].scale = null;
+            this.states[key].state = null;
+            this.states[key].stage = null;
+            this.states[key].time = null;
+            this.states[key].tweens = null;
+            this.states[key].world = null;
+            this.states[key].particles = null;
+            this.states[key].rnd = null;
+            this.states[key].physics = null;
+        }
+
+    },
+
+    /**
     * Sets the current State. Should not be called directly (use StateManager.start)
     *
     * @method Phaser.StateManager#setCurrentState

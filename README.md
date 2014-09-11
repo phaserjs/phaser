@@ -75,6 +75,7 @@ Version 2.1.2 - "Whitebridge" - in development
 
 ### New Features
 
+* StateManager.unlink will null all State-level Phaser properties, such as `game`, `add`, etc. Useful if you never need to return to the State again.
 
 
 ### Updates
