@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.1.0 "Cairhien" - Built: Tue Sep 09 2014 15:35:44
+* v2.1.1 "Eianrod" - Built: Thu Sep 11 2014 10:37:16
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -50,7 +50,7 @@
 */
 var Phaser = Phaser || {
 
-	VERSION: '2.1.0',
+	VERSION: '2.1.1',
 	GAMES: [],
 
     AUTO: 0,
@@ -4865,6 +4865,8 @@ Phaser.StateManager.prototype = {
 
             this.setCurrentState(this._pendingState);
 
+            this._pendingState = null;
+
             if (this.onPreloadCallback)
             {
                 this.game.load.reset();
@@ -4886,8 +4888,6 @@ Phaser.StateManager.prototype = {
                 //  No init? Then there was nothing to load either
                 this.loadComplete();
             }
-
-            this._pendingState = null;
         }
 
     },
@@ -9397,15 +9397,20 @@ Phaser.FlexGrid.prototype = {
      * @param {array} [children] - An array of children that are used to populate the FlexLayer.
      * @return {Phaser.FlexLayer} The Layer object.
      */
-    createFluidLayer: function (children) {
+    createFluidLayer: function (children, addToWorld) {
+
+        if (typeof addToWorld === 'undefined') { addToWorld = true; }
 
         var layer = new Phaser.FlexLayer(this, this.positionFluid, this.boundsFluid, this.scaleFluid);
 
-        this.game.world.add(layer);
+        if (addToWorld)
+        {
+            this.game.world.add(layer);
+        }
 
         this.layers.push(layer);
 
-        if (typeof children !== 'undefined')
+        if (typeof children !== 'undefined' && typeof children !== null)
         {
             layer.addMultiple(children);
         }
@@ -9469,14 +9474,18 @@ Phaser.FlexGrid.prototype = {
      */
     reset: function () {
 
-        for (var i = 0; i < this.layers.length; i++)
-        {
-            //  Remove references to this class
-            this.layers[i].position = null;
-            this.layers[i].scale = null;
-        }
+        var i = this.layers.length;
 
-        this.layers.length = 0;
+        while (i--)
+        {
+            if (!this.layers[i].persist)
+            {
+                //  Remove references to this class
+                this.layers[i].position = null;
+                this.layers[i].scale = null;
+                this.layers.slice(i, 1);
+            }
+        }
 
     },
 
@@ -9576,12 +9585,19 @@ Phaser.FlexLayer = function (manager, position, bounds, scale) {
     /**
     * @property {Phaser.ScaleManager} scale - A reference to the ScaleManager.
     */
-    this.manager = manager;
+    this.manager = manager.manager;
 
     /**
     * @property {Phaser.FlexGrid} grid - A reference to the FlexGrid that owns this layer.
     */
-    this.grid = manager.grid;
+    this.grid = manager;
+
+    /**
+     * Should the FlexLayer remain through a State swap?
+     *
+     * @type {boolean}
+     */
+    this.persist = false;
 
     //  Bound to the grid
     this.position = position;

@@ -26,12 +26,19 @@ Phaser.FlexLayer = function (manager, position, bounds, scale) {
     /**
     * @property {Phaser.ScaleManager} scale - A reference to the ScaleManager.
     */
-    this.manager = manager;
+    this.manager = manager.manager;
 
     /**
     * @property {Phaser.FlexGrid} grid - A reference to the FlexGrid that owns this layer.
     */
-    this.grid = manager.grid;
+    this.grid = manager;
+
+    /**
+     * Should the FlexLayer remain through a State swap?
+     *
+     * @type {boolean}
+     */
+    this.persist = false;
 
     //  Bound to the grid
     this.position = position;

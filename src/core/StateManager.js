@@ -315,6 +315,8 @@ Phaser.StateManager.prototype = {
 
             this.setCurrentState(this._pendingState);
 
+            this._pendingState = null;
+
             if (this.onPreloadCallback)
             {
                 this.game.load.reset();
@@ -336,8 +338,6 @@ Phaser.StateManager.prototype = {
                 //  No init? Then there was nothing to load either
                 this.loadComplete();
             }
-
-            this._pendingState = null;
         }
 
     },

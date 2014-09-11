@@ -100,15 +100,20 @@ Phaser.FlexGrid.prototype = {
      * @param {array} [children] - An array of children that are used to populate the FlexLayer.
      * @return {Phaser.FlexLayer} The Layer object.
      */
-    createFluidLayer: function (children) {
+    createFluidLayer: function (children, addToWorld) {
+
+        if (typeof addToWorld === 'undefined') { addToWorld = true; }
 
         var layer = new Phaser.FlexLayer(this, this.positionFluid, this.boundsFluid, this.scaleFluid);
 
-        this.game.world.add(layer);
+        if (addToWorld)
+        {
+            this.game.world.add(layer);
+        }
 
         this.layers.push(layer);
 
-        if (typeof children !== 'undefined')
+        if (typeof children !== 'undefined' && typeof children !== null)
         {
             layer.addMultiple(children);
         }
@@ -172,14 +177,18 @@ Phaser.FlexGrid.prototype = {
      */
     reset: function () {
 
-        for (var i = 0; i < this.layers.length; i++)
-        {
-            //  Remove references to this class
-            this.layers[i].position = null;
-            this.layers[i].scale = null;
-        }
+        var i = this.layers.length;
 
-        this.layers.length = 0;
+        while (i--)
+        {
+            if (!this.layers[i].persist)
+            {
+                //  Remove references to this class
+                this.layers[i].position = null;
+                this.layers[i].scale = null;
+                this.layers.slice(i, 1);
+            }
+        }
 
     },
 
