@@ -418,6 +418,10 @@ Phaser.TileSprite.prototype.setFrame = function(frame) {
         this.texture.frame.width = frame.sourceSizeW;
         this.texture.frame.height = frame.sourceSizeH;
     }
+    else if (!frame.trimmed && this.texture.trim)
+    {
+        this.texture.trim = null;
+    }
 
     if (this.game.renderType === Phaser.WEBGL)
     {

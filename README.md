@@ -71,11 +71,22 @@ Finally the list of [community authored Phaser Tutorials](http://www.lessmilk.co
 
 Version 2.1.2 - "Whitebridge" - in development
 
+
+
 ### New Features
+
+
 
 ### Updates
 
+* TypeScript definitions fixes and updates (thanks @clark-stevenson @englercj)
+
+
+
 ### Bug Fixes
+
+* If Game Objects change their frame, such as with an animated Sprite, and the change goes from a previously trimmed frame to a non-trimmed (full size) one, then the previous trim values were still left active, causing it to glitch (thanks stupot)
+
 
 For details about changes made in previous versions of Phaser see the full Change Log at https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md
 
@@ -127,11 +138,11 @@ Nice and easy :)
 
 Phaser is now available on [CDNJS](http://cdnjs.com). You can include the following in your html:
 
-`http://cdnjs.cloudflare.com/ajax/libs/phaser/2.1.0/phaser.min.js`
+`http://cdnjs.cloudflare.com/ajax/libs/phaser/2.1.2/phaser.min.js`
 
 Or if you prefer you can leave the protocol off, so it works via http and https:
 
-`//cdnjs.cloudflare.com/ajax/libs/phaser/2.1.0/phaser.min.js`
+`//cdnjs.cloudflare.com/ajax/libs/phaser/2.1.2/phaser.min.js`
 
 ![div](http://phaser.io/images/div1.png)
 
