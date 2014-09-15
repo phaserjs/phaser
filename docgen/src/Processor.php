@@ -73,7 +73,8 @@
             {
                 if ($this->blocks[$i]->isConst)
                 {
-                    $this->consts[] = new Constant($this->blocks[$i]);
+                    $tempConst = new Constant($this->blocks[$i]);
+                    $this->consts[$tempConst->name] = $tempConst;
                 }
                 else if ($this->blocks[$i]->isMethod)
                 {
@@ -88,7 +89,9 @@
             }
 
             //  Alphabetically sort the arrays based on the key
+            ksort($this->consts);
             ksort($this->methods);
+            ksort($this->properties);
 
         }
         

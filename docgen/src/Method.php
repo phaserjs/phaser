@@ -75,7 +75,7 @@
 
         public function getArray()
         {
-            $a = array(
+            return array(
                 'title' => $this->title,
                 'returns' => $this->returns,
                 'help' => implode('\n', $this->help),
@@ -83,9 +83,8 @@
                 'public' => $this->isPublic,
                 'protected' => $this->isProtected,
                 'private' => $this->isPrivate,
+                'parameters' => $this->parameters
             );
-            
-            return $a;
             
         }
         

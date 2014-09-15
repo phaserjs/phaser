@@ -55,5 +55,27 @@
 
         }
 
+        public function getArray()
+        {
+            return array(
+                'name' => $this->name,
+                'type' => $this->types,
+                'help' => implode('\n', $this->help),
+                'inlineHelp' => $this->inlineHelp,
+                'line' => $this->line,
+                'default' => $this->default,
+                'public' => $this->isPublic,
+                'protected' => $this->isProtected,
+                'private' => $this->isPrivate,
+                'readOnly' => $this->isReadOnly
+            );
+            
+        }
+        
+        public function getJSON()
+        {
+            return json_encode($this->getArray());
+        }
+
     }
 ?>

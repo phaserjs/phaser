@@ -34,7 +34,7 @@
 <html>
     <head>
         <meta charset="UTF-8" />
-        <title>Phaser Documentation Viewer: <?php echo $srcfile ?></title>
+        <title>Phaser Documentation Viewer: <?php echo $src ?></title>
         <style type="text/css">
             body {
                 font-family: Arial;
@@ -54,10 +54,21 @@
     <h1><?php echo $src ?></h1>
 
 <?php
+    // echo "<pre>";
+    // print_r($data->methods[$method]->getArray());
+    // echo "</pre>";
+
     if ($method)
     {
         echo "<pre>";
         print_r($data->methods[$method]->getArray());
+        echo "</pre>";
+    }
+
+    if ($property)
+    {
+        echo "<pre>";
+        print_r($data->properties[$property]->getArray());
         echo "</pre>";
     }
 ?>
@@ -66,9 +77,8 @@
 
     <ul>
 <?php
-    for ($i = 0; $i < count($data->consts); $i++)
+    foreach ($data->consts as $constName => $const)
     {
-       $const = $data->consts[$i];
        echo "<li>{$const->name}</li>";
     }
 ?>
@@ -89,11 +99,10 @@
 
     <ul>
 <?php
-    // for ($i = 0; $i < count($data->properties); $i++)
-    // {
-    //     $property = $data->properties[$i];
-    //     echo "<li><a href=\"view.php?src=$src&amp;property={$property->name}\">{$property->name}</a></li>";
-    // }
+    foreach ($data->properties as $propertyName => $property)
+    {
+        echo "<li><a href=\"view.php?src=$src&amp;property={$property->name}\">{$property->name}</a></li>";
+    }
 ?>
     </ul>
 

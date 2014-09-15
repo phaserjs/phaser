@@ -42,5 +42,23 @@
 
         }
 
+        public function getArray()
+        {
+            return array(
+                'name' => $this->name,
+                'parameters' => $this->parameters,
+                'help' => implode('\n', $this->help),
+                'extends' => $this->extends,
+                'static' => $this->isStatic,
+                'constructor' => $this->hasConstructor
+            );
+            
+        }
+        
+        public function getJSON()
+        {
+            return json_encode($this->getArray());
+        }
+
     }
 ?>

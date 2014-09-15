@@ -38,7 +38,7 @@
         
         public function getArray()
         {
-            $a = array(
+            return array(
                 'name' => $this->name,
                 'type' => $this->types[0],
                 'help' => implode('\n', $this->help),
