@@ -12,6 +12,8 @@
         public $isProtected = false;
         public $isPrivate = false;
 
+        public $isStatic = false;
+
         public function __construct($block)
         {
             //  Because zero offset + allowing for final line
@@ -24,6 +26,25 @@
             if ($equals > 0)
             {
                 $name = substr($name, $equals + 1);
+            }
+            else
+            {
+                $equals = strrpos($name, '.');
+
+                if ($equals > 0)
+                {
+                    $name = substr($name, $equals + 1);
+                }
+                else
+                {
+                    //  No # and no . so we'll assume "@method name" format
+                    $equals = strrpos($name, ' ');
+
+                    if ($equals > 0)
+                    {
+                        $name = substr($name, $equals + 1);
+                    }
+                }
             }
 
             $this->name = $name;
@@ -44,6 +65,11 @@
             {
                 $this->isPublic = false;
                 $this->isPrivate = true;
+            }
+
+            if ($block->getTypeBoolean('@static'))
+            {
+                $this->isStatic = true;
             }
 
             $this->title = array("name" => $this->name, "visibility" => $this->getVisibility());
@@ -77,6 +103,7 @@
         {
             return array(
                 'title' => $this->title,
+                'static' => $this->isStatic,
                 'returns' => $this->returns,
                 'help' => implode('\n', $this->help),
                 'line' => $this->line,

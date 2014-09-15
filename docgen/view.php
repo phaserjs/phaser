@@ -51,6 +51,8 @@
     </head>
     <body>
 
+    <a href="index.php">Index</a>
+
     <h1><?php echo $src ?></h1>
 
 <?php

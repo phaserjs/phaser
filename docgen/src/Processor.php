@@ -60,7 +60,10 @@
                     //  The first element is always the opening /** so remove it
                     array_shift($chunk);
 
-                    $this->blocks[] = new Block($openLine, $closeLine, $js[$i + 1], $chunk);
+                    if (isset($js[$i + 1]))
+                    {
+                        $this->blocks[] = new Block($openLine, $closeLine, $js[$i + 1], $chunk);
+                    }
                 }
                 else
                 {

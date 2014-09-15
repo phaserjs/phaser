@@ -24,7 +24,8 @@
 
     function dirToArray($dir) { 
 
-        $ignore = array('.', '..', 'pixi');
+        // $ignore = array('.', '..', 'pixi');
+        $ignore = array('.', '..');
         $fileIgnore = array('p2.js');
         $result = array(); 
         $root = scandir($dir); 
@@ -51,20 +52,35 @@
         return $result; 
     }
 
-    function displaySection($title, $files) {
+    function displaySection($title, $files, $parent = "") {
 
-        echo "<h2>$title</h2>";
+        if ($title === "")
+        {
+            echo "<h1>Phaser v2.1.1</h1>";
+        }
+        else
+        {
+            echo "<h2>$title</h2>";
+        }
+
         echo "<ul>";
 
         foreach ($files as $key => $file)
         {
             if (is_array($file))
             {
-                displaySection($key, $file);
+                displaySection($key, $file, $title);
             }
             else
             {
-                echo "<li><a href=\"view.php?src=$title/$file\">$file</a></li>";
+                $src = $title . "/" . $file;
+
+                if ($parent !== "")
+                {
+                    $src = $parent . "/" . $src;
+                }
+
+                echo "<li><a href=\"view.php?src=$src\">$file</a></li>";
             }
         }
 
@@ -75,7 +91,7 @@
     $path = realpath('../src');
     $files = dirToArray($path);
 
-    displaySection("Phaser v2.1.1", $files);
+    displaySection("", $files, "");
 
     // echo "<pre>";
     // print_r($files);
