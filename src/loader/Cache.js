@@ -20,7 +20,7 @@ Phaser.Cache = function (game) {
     this.game = game;
 
     /**
-    * @property {object} game - Canvas key-value container.
+    * @property {object} _canvases - Canvas key-value container.
     * @private
     */
     this._canvases = {};
@@ -50,7 +50,7 @@ Phaser.Cache = function (game) {
     this._text = {};
 
     /**
-    * @property {object} _text - Text key-value container.
+    * @property {object} _json - JSOIN key-value container.
     * @private
     */
     this._json = {};
