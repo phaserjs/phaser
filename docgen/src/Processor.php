@@ -77,13 +77,18 @@
                 }
                 else if ($this->blocks[$i]->isMethod)
                 {
-                    $this->methods[] = new Method($this->blocks[$i]);
+                    $tempMethod = new Method($this->blocks[$i]);
+                    $this->methods[$tempMethod->name] = $tempMethod;
                 }
                 else if ($this->blocks[$i]->isProperty)
                 {
-                    $this->properties[] = new Property($this->blocks[$i]);
+                    $tempProperty = new Property($this->blocks[$i]);
+                    $this->properties[$tempProperty->name] = $tempProperty;
                 }
             }
+
+            //  Alphabetically sort the arrays based on the key
+            ksort($this->methods);
 
         }
         

@@ -1,11 +1,22 @@
 <?php
+
+    $src = "loader/Cache";
+    $method = null;
+    $property = null;
+
     if (isset($_GET['src']))
     {
-        $srcfile = $_GET['src'];
+        $src = $_GET['src'];
     }
-    else
+
+    if (isset($_GET['method']))
     {
-        $srcfile = "loader/Cache";
+        $method = $_GET['method'];
+    }
+
+    if (isset($_GET['property']))
+    {
+        $property = $_GET['property'];
     }
 
     require 'src/Block.php';
@@ -17,7 +28,7 @@
     require 'src/ReturnType.php';
     require 'src/Processor.php';
 
-    $data = new Processor("../src/" . $srcfile . ".js");
+    $data = new Processor("../src/" . $src . ".js");
 ?>
 <!doctype html>
 <html>
@@ -40,7 +51,16 @@
     </head>
     <body>
 
-    <h1><?php echo $srcfile ?></h1>
+    <h1><?php echo $src ?></h1>
+
+<?php
+    if ($method)
+    {
+        echo "<pre>";
+        print_r($data->methods[$method]->getArray());
+        echo "</pre>";
+    }
+?>
 
     <h2>Constants</h2>
 
@@ -58,10 +78,9 @@
 
     <ul>
 <?php
-    for ($i = 0; $i < count($data->methods); $i++)
+    foreach ($data->methods as $methodName => $method)
     {
-        $method = $data->methods[$i];
-        echo "<li>{$method->name}</li>";
+        echo "<li><a href=\"view.php?src=$src&amp;method={$method->name}\">{$method->name}</a></li>";
     }
 ?>
     </ul>
@@ -70,11 +89,11 @@
 
     <ul>
 <?php
-    for ($i = 0; $i < count($data->properties); $i++)
-    {
-        $property = $data->properties[$i];
-        echo "<li>{$property->name}</li>";
-    }
+    // for ($i = 0; $i < count($data->properties); $i++)
+    // {
+    //     $property = $data->properties[$i];
+    //     echo "<li><a href=\"view.php?src=$src&amp;property={$property->name}\">{$property->name}</a></li>";
+    // }
 ?>
     </ul>
 
