@@ -732,6 +732,7 @@ Object.defineProperty(Phaser.Animation.prototype, 'enableUpdate', {
 * You could use this function to generate those by doing: Phaser.Animation.generateFrameNames('explosion_', 1, 30, '-large', 4);
 *
 * @method Phaser.Animation.generateFrameNames
+* @static
 * @param {string} prefix - The start of the filename. If the filename was 'explosion_0001-large' the prefix would be 'explosion_'.
 * @param {number} start - The number to start sequentially counting from. If your frames are named 'explosion_0001' to 'explosion_0034' the start is 1.
 * @param {number} stop - The number to count to. If your frames are named 'explosion_0001' to 'explosion_0034' the stop value is 34.
