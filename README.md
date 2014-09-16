@@ -76,6 +76,7 @@ Version 2.1.2 - "Whitebridge" - in development
 ### New Features
 
 * StateManager.unlink will null all State-level Phaser properties, such as `game`, `add`, etc. Useful if you never need to return to the State again.
+* Cache.removeImage has a new parameter: `removeFromPixi` which is `true` by default. It will remove the image from the Pixi BaseTextureCache as well as from the Phaser Cache. Set to false if you don't want the Pixi cache touched.
 
 
 ### Updates
