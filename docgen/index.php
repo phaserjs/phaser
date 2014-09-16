@@ -24,7 +24,8 @@
 
     function dirToArray($dir) { 
 
-        // $ignore = array('.', '..', 'pixi');
+        global $src;
+
         $ignore = array('.', '..');
         $fileIgnore = array('p2.js');
         $result = array(); 
@@ -33,9 +34,11 @@
 
         foreach ($dirs as $key => $value) 
         { 
-            if (is_dir($dir . DIRECTORY_SEPARATOR . $value)) 
-            { 
-                $result[$value] = dirToArray($dir . DIRECTORY_SEPARATOR . $value); 
+            $path = realpath($dir . DIRECTORY_SEPARATOR . $value);
+
+            if (is_dir($path)) 
+            {
+                $result[$value] = dirToArray($path); 
             } 
             else 
             {
@@ -43,7 +46,20 @@
                 {
                     if (!in_array($value, $fileIgnore))
                     {
-                        $result[] = substr($value, 0, -3);
+                        $index = str_replace($src, "", $path);
+                        $index = substr($index, 1);
+
+                        // $slash = strrpos($index, DIRECTORY_SEPARATOR);
+
+                        // if ($slash > 0)
+                        // {
+                        //     // $index = substr($index, 0, $slash);
+                        // }
+
+                        $result[substr($value, 0, -3)] = $index;
+
+                        // $result[$index] = substr($value, 0, -3);
+                        // $result[] = [ substr($value, 0, -3), $index ];
                     }
                 }
             } 
@@ -52,7 +68,7 @@
         return $result; 
     }
 
-    function displaySection($title, $files, $parent = "") {
+    function displaySection($title, $files) {
 
         if ($title === "")
         {
@@ -65,22 +81,15 @@
 
         echo "<ul>";
 
-        foreach ($files as $key => $file)
+        foreach ($files as $name => $file)
         {
             if (is_array($file))
             {
-                displaySection($key, $file, $title);
+                displaySection($name, $file);
             }
             else
             {
-                $src = $title . "/" . $file;
-
-                if ($parent !== "")
-                {
-                    $src = $parent . "/" . $src;
-                }
-
-                echo "<li><a href=\"view.php?src=$src\">$file</a></li>";
+                echo "<li><a href=\"view.php?src=$file\">$name</a></li>";
             }
         }
 
@@ -88,12 +97,14 @@
 
     }
 
-    $path = realpath('../src');
-    $files = dirToArray($path);
+    $src = realpath('../src');
 
-    displaySection("", $files, "");
+    $files = dirToArray($src);
+
+    displaySection("", $files);
 
     // echo "<pre>";
+    // var_dump($src);
     // print_r($files);
     // echo "</pre>";
 

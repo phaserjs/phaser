@@ -1,6 +1,6 @@
 <?php
 
-    $src = "loader/Cache";
+    $src = "loader/Cache.js";
     $method = null;
     $property = null;
 
@@ -28,7 +28,7 @@
     require 'src/ReturnType.php';
     require 'src/Processor.php';
 
-    $data = new Processor("../src/" . $src . ".js");
+    $data = new Processor("../src/$src");
 ?>
 <!doctype html>
 <html>
