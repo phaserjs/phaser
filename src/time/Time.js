@@ -5,10 +5,10 @@
 */
 
 /**
-* Time constructor.
+* This is the core internal game clock.
+* It manages the elapsed time and calculation of elapsed values, used for game object motion and tweens.
 *
 * @class Phaser.Time
-* @classdesc This is the core internal game clock. It manages the elapsed time and calculation of elapsed values, used for game object motion and tweens.
 * @constructor
 * @param {Phaser.Game} game A reference to the currently running game.
 */

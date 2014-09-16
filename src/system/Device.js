@@ -10,7 +10,6 @@
 * @class Phaser.Device
 * @constructor
 */
-
 Phaser.Device = function (game) {
 
     /**

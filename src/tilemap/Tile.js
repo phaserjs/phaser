@@ -5,10 +5,9 @@
 */
 
 /**
-* Create a new `Tile` object.
+* A Tile is a representation of a single tile within the Tilemap.
 *
 * @class Phaser.Tile
-* @classdesc A Tile is a representation of a single tile within the Tilemap.
 * @constructor
 * @param {object} layer - The layer in the Tilemap data that this tile belongs to.
 * @param {number} index - The index of this tile type in the core map data.

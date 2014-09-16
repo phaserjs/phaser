@@ -5,11 +5,11 @@
 */
 
 /**
-* A TimerEvent is a single event that is processed by a Phaser.Timer. It consists of a delay, which is a value in milliseconds after which the event will fire.
+* A TimerEvent is a single event that is processed by a Phaser.Timer.
+* It consists of a delay, which is a value in milliseconds after which the event will fire.
 * It can call a specific callback, passing in optional parameters.
 *
 * @class Phaser.TimerEvent
-* @classdesc A TimerEvent is a single event that is processed by a Phaser.Timer. It consists of a delay, which is a value in milliseconds after which the event will fire.
 * @constructor
 * @param {Phaser.Timer} timer - The Timer object that this TimerEvent belongs to.
 * @param {number} delay - The delay in ms at which this TimerEvent fires.

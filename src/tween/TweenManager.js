@@ -5,10 +5,6 @@
 */
 
 /**
-* Phaser - TweenManager
-*
-* @class Phaser.TweenManager
-* @classdesc
 * Phaser.Game has a single instance of the TweenManager through which all Tween objects are created and updated.
 * Tweens are hooked into the game clock and pause system, adjusting based on the game state.
 *
@@ -16,8 +12,9 @@
 * The difference being that tweens belong to a games instance of TweenManager, rather than to a global TWEEN object.
 * It also has callbacks swapped for Signals and a few issues patched with regard to properties and completion errors.
 * Please see https://github.com/sole/tween.js for a full list of contributors.
+* 
+* @class Phaser.TweenManager
 * @constructor
-*
 * @param {Phaser.Game} game - A reference to the currently running game.
 */
 Phaser.TweenManager = function (game) {

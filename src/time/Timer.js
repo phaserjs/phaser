@@ -10,7 +10,6 @@
 * So if you want to fire an event every quarter of a second you'd need to set the delay to 250.
 *
 * @class Phaser.Timer
-* @classdesc A Timer is a way to create small re-usable or disposable objects that do nothing but wait for a specific moment in time, and then dispatch an event.
 * @constructor
 * @param {Phaser.Game} game A reference to the currently running game.
 * @param {boolean} [autoDestroy=true] - A Timer that is set to automatically destroy itself will do so after all of its events have been dispatched (assuming no looping events).
