@@ -23,9 +23,8 @@
 * Feel free to attempt any of the above and submit a Pull Request with your code! Be sure to include test cases proving they work.
 *
 * @class Phaser.Physics.Ninja
-* @classdesc Ninja Physics Constructor
 * @constructor
-* @param {Phaser.Game} game reference to the current game instance.
+* @param {Phaser.Game} game - reference to the current game instance.
 */
 Phaser.Physics.Ninja = function (game) {
 

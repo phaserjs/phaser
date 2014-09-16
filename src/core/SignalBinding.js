@@ -1,16 +1,16 @@
 /**
+* @author       Miller Medeiros http://millermedeiros.github.com/js-signals/
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2014 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
 /**
-* @class Phaser.SignalBinding
-* @classdesc Object that represents a binding between a Signal and a listener function.
+* Object that represents a binding between a Signal and a listener function.
 * This is an internal constructor and shouldn't be created directly.
 * Inspired by Joa Ebert AS3 SignalBinding and Robert Penner's Slot classes.
-*
-* @author Miller Medeiros http://millermedeiros.github.com/js-signals/
+* 
+* @class Phaser.SignalBinding
 * @constructor
 * @param {Phaser.Signal} signal - Reference to Signal object that listener is currently bound to.
 * @param {function} listener - Handler function bound to the signal.

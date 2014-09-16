@@ -9,7 +9,6 @@
 * the Sprite itself. For example you can set the velocity, acceleration, bounce values etc all on the Body.
 *
 * @class Phaser.Physics.Arcade.Body
-* @classdesc Arcade Physics Body Constructor
 * @constructor
 * @param {Phaser.Sprite} sprite - The Sprite object this physics body belongs to.
 */

@@ -5,13 +5,11 @@
 */
 
 /**
-* Creates a new BitmapData object.
+* A BitmapData object contains a Canvas element to which you can draw anything you like via normal Canvas context operations.
+* A single BitmapData can be used as the texture for one or many Images/Sprites. 
+* So if you need to dynamically create a Sprite texture then they are a good choice.
 *
 * @class Phaser.BitmapData
-*
-* @classdesc A BitmapData object contains a Canvas element to which you can draw anything you like via normal Canvas context operations.
-* A single BitmapData can be used as the texture for one or many Images/Sprites. So if you need to dynamically create a Sprite texture then they are a good choice.
-*
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
 * @param {string} key - Internal Phaser reference key for the render texture.

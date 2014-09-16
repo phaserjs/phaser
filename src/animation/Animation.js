@@ -14,7 +14,7 @@
 * @param {Phaser.Sprite} parent - A reference to the owner of this Animation.
 * @param {string} name - The unique name for this animation, used in playback commands.
 * @param {Phaser.FrameData} frameData - The FrameData object that contains all frames used by this Animation.
-* @param {(Array.<number>|Array.<string>)} frames - An array of numbers or strings indicating which frames to play in which order.
+* @param {number[]|string[]} frames - An array of numbers or strings indicating which frames to play in which order.
 * @param {number} delay - The time between each frame of the animation, given in ms.
 * @param {boolean} loop - Should this animation loop when it reaches the end or play through once.
 */

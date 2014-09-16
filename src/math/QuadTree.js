@@ -1,53 +1,16 @@
 /**
+ * @author       Timo Hausmann
  * @author       Richard Davey <rich@photonstorm.com>
  * @copyright    2014 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
 /**
-* Javascript QuadTree
-* @version 1.0
-* @author Timo Hausmann
-*
-* @version 1.3, March 11th 2014
-* @author Richard Davey
-* The original code was a conversion of the Java code posted to GameDevTuts. However I've tweaked
-* it massively to add node indexing, removed lots of temp. var creation and significantly
-* increased performance as a result.
-*
-* Original version at https://github.com/timohausmann/quadtree-js/
-*/
-
-/**
-* @copyright © 2012 Timo Hausmann
-*
-* Permission is hereby granted, free of charge, to any person obtaining
-* a copy of this software and associated documentation files (the
-* "Software"), to deal in the Software without restriction, including
-* without limitation the rights to use, copy, modify, merge, publish,
-* distribute, sublicense, and/or sell copies of the Software, and to
-* permit persons to whom the Software is furnished to do so, subject to
-* the following conditions:
-*
-* The above copyright notice and this permission notice shall be
-* included in all copies or substantial portions of the Software.
-*
-* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-* NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-* LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-* OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-* WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-*/
-
-/**
-* QuadTree Constructor
-*
-* @class Phaser.QuadTree
-* @classdesc A QuadTree implementation. The original code was a conversion of the Java code posted to GameDevTuts.
+* A QuadTree implementation. The original code was a conversion of the Java code posted to GameDevTuts.
 * However I've tweaked it massively to add node indexing, removed lots of temp. var creation and significantly increased performance as a result.
 * Original version at https://github.com/timohausmann/quadtree-js/
+*
+* @class Phaser.QuadTree
 * @constructor
 * @param {number} x - The top left coordinate of the quadtree.
 * @param {number} y - The top left coordinate of the quadtree.
@@ -351,3 +314,39 @@ Phaser.QuadTree.prototype = {
 };
 
 Phaser.QuadTree.prototype.constructor = Phaser.QuadTree;
+
+/**
+* Javascript QuadTree
+* @version 1.0
+*
+* @version 1.3, March 11th 2014
+* @author Richard Davey
+* The original code was a conversion of the Java code posted to GameDevTuts. However I've tweaked
+* it massively to add node indexing, removed lots of temp. var creation and significantly
+* increased performance as a result.
+*
+* Original version at https://github.com/timohausmann/quadtree-js/
+*/
+
+/**
+* @copyright © 2012 Timo Hausmann
+*
+* Permission is hereby granted, free of charge, to any person obtaining
+* a copy of this software and associated documentation files (the
+* "Software"), to deal in the Software without restriction, including
+* without limitation the rights to use, copy, modify, merge, publish,
+* distribute, sublicense, and/or sell copies of the Software, and to
+* permit persons to whom the Software is furnished to do so, subject to
+* the following conditions:
+*
+* The above copyright notice and this permission notice shall be
+* included in all copies or substantial portions of the Software.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+* NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+* LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+* OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+* WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*/

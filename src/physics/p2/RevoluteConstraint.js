@@ -9,7 +9,6 @@
 * The pivot points are given in world (pixel) coordinates.
 *
 * @class Phaser.Physics.P2.RevoluteConstraint
-* @classdesc Physics RevoluteConstraint Constructor
 * @constructor
 * @param {Phaser.Physics.P2} world - A reference to the P2 World.
 * @param {p2.Body} bodyA - First connected body.

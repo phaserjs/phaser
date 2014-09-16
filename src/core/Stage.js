@@ -6,7 +6,7 @@
 
 /**
 * The Stage controls root level display objects upon which everything is displayed.
-*  It also handles browser visibility handling and the pausing due to loss of focus.
+* It also handles browser visibility handling and the pausing due to loss of focus.
 *
 * @class Phaser.Stage
 * @extends PIXI.Stage

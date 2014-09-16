@@ -6,14 +6,13 @@
 
 /**
 * Creates a new Line object with a start and an end point.
+* 
 * @class Line
-* @classdesc Phaser - Line
 * @constructor
 * @param {number} [x1=0] - The x coordinate of the start of the line.
 * @param {number} [y1=0] - The y coordinate of the start of the line.
 * @param {number} [x2=0] - The x coordinate of the end of the line.
 * @param {number} [y2=0] - The y coordinate of the end of the line.
-* @return {Phaser.Line} This line object
 */
 Phaser.Line = function (x1, y1, x2, y2) {
 

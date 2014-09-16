@@ -6,8 +6,9 @@
 */
 
 /**
+* A single Phaser Gamepad
+* 
 * @class Phaser.SinglePad
-* @classdesc A single Phaser Gamepad
 * @constructor
 * @param {Phaser.Game} game - Current game instance.
 * @param {Object} padParent - The parent Phaser.Gamepad object (all gamepads reside under this)

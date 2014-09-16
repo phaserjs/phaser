@@ -5,10 +5,9 @@
 */
 
 /**
-* Phaser - Pointer constructor.
+* A Pointer object is used by the Mouse, Touch and MSPoint managers and represents a single finger on the touch screen.
 *
 * @class Phaser.Pointer
-* @classdesc A Pointer object is used by the Mouse, Touch and MSPoint managers and represents a single finger on the touch screen.
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
 * @param {number} id - The ID of the Pointer object within the game. Each game can have up to 10 active pointers.

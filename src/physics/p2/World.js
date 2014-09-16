@@ -9,8 +9,10 @@ p2.Body.prototype.parent = null;
 p2.Spring.prototype.parent = null;
 
 /**
+* This is your main access to the P2 Physics World.
+* From here you can create materials, listen for events and add bodies into the physics simulation.
+* 
 * @class Phaser.Physics.P2
-* @classdesc Physics World Constructor
 * @constructor
 * @param {Phaser.Game} game - Reference to the current game instance.
 * @param {object} [config] - Physics configuration object passed in from the game constructor.

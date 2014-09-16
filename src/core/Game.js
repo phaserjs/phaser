@@ -5,14 +5,12 @@
 */
 
 /**
-* Game constructor
-*
-* Instantiate a new <code>Phaser.Game</code> object.
-* @class Phaser.Game
-* @classdesc This is where the magic happens. The Game object is the heart of your game,
+* This is where the magic happens. The Game object is the heart of your game,
 * providing quick access to common functions and handling the boot process.
 * "Hell, there are no rules here - we're trying to accomplish something."
 *                                                       Thomas A. Edison
+*
+* @class Phaser.Game
 * @constructor
 * @param {number|string} [width=800] - The width of your game in game pixels. If given as a string the value must be between 0 and 100 and will be used as the percentage width of the parent container, or the browser window if no parent is given.
 * @param {number|string} [height=600] - The height of your game in game pixels. If given as a string the value must be between 0 and 100 and will be used as the percentage height of the parent container, or the browser window if no parent is given.
@@ -20,7 +18,7 @@
 * @param {string|HTMLElement} [parent=''] - The DOM element into which this games canvas will be injected. Either a DOM ID (string) or the element itself.
 * @param {object} [state=null] - The default state object. A object consisting of Phaser.State functions (preload, create, update, render) or null.
 * @param {boolean} [transparent=false] - Use a transparent canvas background or not.
-* @param  {boolean} [antialias=true] - Draw all image textures anti-aliased or not. The default is for smooth textures, but disable if your game features pixel art.
+* @param {boolean} [antialias=true] - Draw all image textures anti-aliased or not. The default is for smooth textures, but disable if your game features pixel art.
 * @param {object} [physicsConfig=null] - A physics configuration object to pass to the Physics world on creation.
 */
 Phaser.Game = function (width, height, renderer, parent, state, transparent, antialias, physicsConfig) {

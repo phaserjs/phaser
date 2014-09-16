@@ -5,12 +5,11 @@
 */
 
 /**
-* Arcade Physics constructor.
+* The Arcade Physics world. Contains Arcade Physics related collision, overlap and motion methods.
 *
 * @class Phaser.Physics.Arcade
-* @classdesc Arcade Physics Constructor
 * @constructor
-* @param {Phaser.Game} game reference to the current game instance.
+* @param {Phaser.Game} game - reference to the current game instance.
 */
 Phaser.Physics.Arcade = function (game) {
 

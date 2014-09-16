@@ -7,15 +7,13 @@
 */
 
 /**
-* Phaser.RandomDataGenerator constructor.
-*
-* @class Phaser.RandomDataGenerator
-* @classdesc An extremely useful repeatable random data generator. Access it via Phaser.Game.rnd
+* An extremely useful repeatable random data generator.
 * Based on Nonsense by Josh Faul https://github.com/jocafa/Nonsense.
 * Random number generator from http://baagoe.org/en/wiki/Better_random_numbers_for_javascript
 *
+* @class Phaser.RandomDataGenerator
 * @constructor
-* @param {array} seeds
+* @param {array} [seeds] - An array of values to use as the seed.
 */
 Phaser.RandomDataGenerator = function (seeds) {
 

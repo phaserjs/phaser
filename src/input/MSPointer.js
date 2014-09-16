@@ -5,12 +5,11 @@
 */
 
 /**
-* Phaser - MSPointer constructor.
-*
-* @class Phaser.MSPointer
-* @classdesc The MSPointer class handles touch interactions with the game and the resulting Pointer objects.
+* The MSPointer class handles touch interactions with the game and the resulting Pointer objects.
 * It will work only in Internet Explorer 10 and Windows Store or Windows Phone 8 apps using JavaScript.
 * http://msdn.microsoft.com/en-us/library/ie/hh673557(v=vs.85).aspx
+*
+* @class Phaser.MSPointer
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
 */

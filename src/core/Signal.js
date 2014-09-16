@@ -1,13 +1,14 @@
 /**
+* @author       Miller Medeiros http://millermedeiros.github.com/js-signals/
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2014 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
 /**
+* A Signal is used for object communication via a custom broadcaster instead of Events.
+* 
 * @class Phaser.Signal
-* @classdesc A Signal is used for object communication via a custom broadcaster instead of Events.
-* @author Miller Medeiros http://millermedeiros.github.com/js-signals/
 * @constructor
 */
 Phaser.Signal = function () {

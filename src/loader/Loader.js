@@ -6,12 +6,10 @@
 */
 
 /**
-* Phaser loader constructor.
 * The Loader handles loading all external content such as Images, Sounds, Texture Atlases and data files.
 * It uses a combination of Image() loading and xhr and provides progress and completion callbacks.
+* 
 * @class Phaser.Loader
-* @classdesc  The Loader handles loading all external content such as Images, Sounds, Texture Atlases and data files.
-* It uses a combination of Image() loading and xhr and provides progress and completion callbacks.
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
 */

@@ -10,6 +10,7 @@
 * 
 * @class Phaser.RenderTexture
 * @constructor
+* @extends PIXI.RenderTexture
 * @param {Phaser.Game} game - Current game instance.
 * @param {string} key - Internal Phaser reference key for the render texture.
 * @param {number} [width=100] - The width of the render texture.

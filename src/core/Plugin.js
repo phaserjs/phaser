@@ -8,7 +8,6 @@
 * This is a base Plugin template to use for any Phaser plugin development.
 *
 * @class Phaser.Plugin
-* @classdesc Phaser - Plugin
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
 * @param {Any} parent - The object that owns this plugin, usually Phaser.PluginManager.

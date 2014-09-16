@@ -9,7 +9,6 @@
 * the Sprite itself. For example you can set the velocity, bounce values etc all on the Body.
 *
 * @class Phaser.Physics.Ninja.Body
-* @classdesc Ninja Physics Body Constructor
 * @constructor
 * @param {Phaser.Physics.Ninja} system - The physics system this Body belongs to.
 * @param {Phaser.Sprite} sprite - The Sprite object this physics body belongs to.

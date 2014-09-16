@@ -8,7 +8,6 @@
 * Locks the relative position between two bodies.
 *
 * @class Phaser.Physics.P2.LockConstraint
-* @classdesc Physics LockConstraint Constructor
 * @constructor
 * @param {Phaser.Physics.P2} world - A reference to the P2 World.
 * @param {p2.Body} bodyA - First connected body.

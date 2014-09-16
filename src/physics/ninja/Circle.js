@@ -10,7 +10,6 @@
 * Note: This class could be massively optimised and reduced in size. I leave that challenge up to you.
 *
 * @class Phaser.Physics.Ninja.Circle
-* @classdesc Arcade Physics Constructor
 * @constructor
 * @param {Phaser.Physics.Ninja.Body} body - The body that owns this shape.
 * @param {number} x - The x coordinate to create this shape at.

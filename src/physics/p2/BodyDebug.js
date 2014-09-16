@@ -11,7 +11,6 @@
 * So use sparingly and rarely (if ever) in production code.
 *
 * @class Phaser.Physics.P2.BodyDebug
-* @classdesc Physics Body Debug Constructor
 * @constructor
 * @extends Phaser.Group
 * @param {Phaser.Game} game - Game reference to the currently running game.

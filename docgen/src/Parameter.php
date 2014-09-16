@@ -26,9 +26,6 @@
 
         public function parsePhaser($output)
         {
-            $this->types = explode('|', $output[2]);
-            $this->help = $output[5];
-
             $name = $output[3];
 
             // $this->debug = $name . " -- ";
@@ -52,6 +49,29 @@
             }
 
             $this->name = $name;
+
+            //  Remove optional braces
+            if (substr($output[2], 0, 1) === "(")
+            {
+                $output[2] = substr($output[2], 1, -1);
+            }
+
+            $this->types = explode('|', $output[2]);
+
+            //  @param {number[]|string[]} frames - An array of numbers or strings indicating which frames to play in which order.
+            //  @param {(number[]|...number)} points - An array of 2d vectors that form the convex or concave polygon.
+            //      Either [[0,0], [0,1],...] or a flat array of numbers that will be interpreted as [x,y, x,y, ...],
+            //      or the arguments passed can be flat x,y values e.g. `setPolygon(options, x,y, x,y, x,y, ...)` where `x` and `y` are numbers.
+
+            foreach ($this->types as $key => $type)
+            {
+                if (substr($type, -2) === "[]")
+                {
+                    $this->types[$key] = "Array " . substr($type, 0, -2);
+                }
+            }
+
+            $this->help = $output[5];
 
         }
 

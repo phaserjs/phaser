@@ -10,7 +10,6 @@
 * The Plugin Manager is responsible for the loading, running and unloading of Phaser Plugins.
 *
 * @class Phaser.PluginManager
-* @classdesc Phaser - PluginManager
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
 */

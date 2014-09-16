@@ -5,11 +5,11 @@
 */
 
 /**
-* @class Phaser.Image
-*
-* @classdesc Create a new `Image` object. An Image is a light-weight object you can use to display anything that doesn't need physics or animation.
+* An Image is a light-weight object you can use to display anything that doesn't need physics or animation.
 * It can still rotate, scale, crop and receive input events. This makes it perfect for logos, backgrounds, simple buttons and other non-Sprite graphics.
 *
+* @class Phaser.Image
+* @extends PIXI.Sprite
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
 * @param {number} x - The x coordinate of the Image. The coordinate is relative to any parent container this Image may be in.

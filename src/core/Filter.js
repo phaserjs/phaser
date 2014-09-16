@@ -8,7 +8,6 @@
 * This is a base Filter template to use for any Phaser filter development.
 *
 * @class Phaser.Filter
-* @classdesc Phaser - Filter
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
 * @param {Object} uniforms - Uniform mappings object

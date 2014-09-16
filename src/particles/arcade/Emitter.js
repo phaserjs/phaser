@@ -5,12 +5,11 @@
 */
 
 /**
-* @class Phaser.Particles.Arcade.Emitter
-* 
-* @classdesc Emitter is a lightweight particle emitter that uses Arcade Physics.
+* Emitter is a lightweight particle emitter that uses Arcade Physics.
 * It can be used for one-time explosions or for continuous effects like rain and fire.
-* All it really does is launch Particle objects out at set intervals, and fixes their positions and velocities accorindgly.
+* All it really does is launch Particle objects out at set intervals, and fixes their positions and velocities accordingly.
 * 
+* @class Phaser.Particles.Arcade.Emitter
 * @constructor
 * @extends Phaser.Group
 * @param {Phaser.Game} game - Current game instance.
@@ -18,7 +17,6 @@
 * @param {number} [y=0] - The y coordinate within the Emitter that the particles are emitted from.
 * @param {number} [maxParticles=50] - The total number of particles in this emitter.
 */
-
 Phaser.Particles.Arcade.Emitter = function (game, x, y, maxParticles) {
 
     /**

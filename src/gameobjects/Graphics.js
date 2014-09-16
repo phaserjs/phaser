@@ -9,7 +9,7 @@
 *
 * @class Phaser.Graphics
 * @constructor
-*
+* @extends PIXI.Graphics
 * @param {Phaser.Game} game Current game instance.
 * @param {number} x - X position of the new graphics object.
 * @param {number} y - Y position of the new graphics object.

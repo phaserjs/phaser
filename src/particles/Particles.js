@@ -8,7 +8,6 @@
 * Phaser.Particles is the Particle Manager for the game. It is called during the game update loop and in turn updates any Emitters attached to it.
 *
 * @class Phaser.Particles
-* @classdesc Phaser Particles
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
 */

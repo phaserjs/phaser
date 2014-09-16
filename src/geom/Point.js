@@ -5,18 +5,12 @@
 */
 
 /**
-* @class Phaser.Point
-* @classdesc
-* The Point object represents a location in a two-dimensional coordinate system, 
-* where x represents the horizontal axis and y represents the vertical axis.
+* A Point object represents a location in a two-dimensional coordinate system, where x represents the horizontal axis and y represents the vertical axis.
 * The following code creates a point at (0,0):
 * `var myPoint = new Phaser.Point();`
 * You can also use them as 2D Vectors and you'll find different vector related methods in this class.
-*/
-
-/**
-* Creates a new Point object. If you pass no parameters a Point is created set to (0, 0).
-*
+* 
+* @class Phaser.Point
 * @constructor
 * @param {number} [x=0] - The horizontal position of this Point.
 * @param {number} [y=0] - The vertical position of this Point.

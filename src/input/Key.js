@@ -5,8 +5,9 @@
 */
 
 /**
+* If you need more fine-grained control over the handling of specific keys you can create and use Phaser.Key objects.
+* 
 * @class Phaser.Key
-* @classdesc If you need more fine-grained control over the handling of specific keys you can create and use Phaser.Key objects.
 * @constructor
 * @param {Phaser.Game} game - Current game instance.
 * @param {number} keycode - The key code this Key is responsible for.

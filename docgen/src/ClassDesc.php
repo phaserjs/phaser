@@ -38,7 +38,7 @@
             //  This is a problem because the @classdesc block is often multi-line, but repeated in the clear content too.
             //  So all the classes probably need tidying up before this part will work correctly.
 
-            // $this->help = $block->cleanContent();
+            $this->help = $block->cleanContent();
 
         }
 
@@ -46,11 +46,11 @@
         {
             return array(
                 'name' => $this->name,
-                'parameters' => $this->parameters,
-                'help' => implode('\n', $this->help),
                 'extends' => $this->extends,
                 'static' => $this->isStatic,
-                'constructor' => $this->hasConstructor
+                'constructor' => $this->hasConstructor,
+                'parameters' => $this->parameters,
+                'help' => implode('\n', $this->help)
             );
             
         }

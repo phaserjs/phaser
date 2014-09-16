@@ -8,7 +8,6 @@
 * A PointProxy is an internal class that allows for direct getter/setter style property access to Arrays and TypedArrays.
 *
 * @class Phaser.Physics.P2.PointProxy
-* @classdesc PointProxy
 * @constructor
 * @param {Phaser.Physics.P2} world - A reference to the P2 World.
 * @param {any} destination - The object to bind to.

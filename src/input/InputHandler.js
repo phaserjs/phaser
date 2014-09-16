@@ -6,6 +6,7 @@
 
 /**
 * The Input Handler is bound to a specific Sprite and is responsible for managing all Input events on that Sprite.
+* 
 * @class Phaser.InputHandler
 * @constructor
 * @param {Phaser.Sprite} sprite - The Sprite object to which this Input Handler belongs.

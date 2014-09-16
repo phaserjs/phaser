@@ -14,7 +14,6 @@
 * Note: This class could be massively optimised and reduced in size. I leave that challenge up to you.
 *
 * @class Phaser.Physics.Ninja.Tile
-* @classdesc The Ninja Physics Tile class. Based on code by Metanet Software.
 * @constructor
 * @param {Phaser.Physics.Ninja.Body} body - The body that owns this shape.
 * @param {number} x - The x coordinate to create this shape at.

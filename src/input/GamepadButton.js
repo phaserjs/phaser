@@ -6,8 +6,9 @@
 */
 
 /**
+* If you need more fine-grained control over the handling of specific buttons you can create and use Phaser.GamepadButton objects.
+* 
 * @class Phaser.GamepadButton
-* @classdesc If you need more fine-grained control over the handling of specific buttons you can create and use Phaser.GamepadButton objects.
 * @constructor
 * @param {Phaser.SinglePad} pad - A reference to the gamepad that owns this button.
 * @param {number} buttonCode - The button code this GamepadButton is responsible for.

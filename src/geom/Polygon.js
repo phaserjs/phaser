@@ -12,9 +12,8 @@
 * arguments passed can be flat x,y values e.g. `new Phaser.Polygon(x,y, x,y, x,y, ...)` where `x` and `y` are numbers.
 *
 * @class Phaser.Polygon
-* @classdesc The polygon represents a list of orderded points in space
 * @constructor
-* @param {Array<Phaser.Point>|Array<number>} points - The array of Points.
+* @param {Phaser.Point[]|number[]} points - The array of Points.
 */
 Phaser.Polygon = function (points) {
 

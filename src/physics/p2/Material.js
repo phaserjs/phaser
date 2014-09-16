@@ -5,11 +5,13 @@
 */
 
 /**
+* A P2 Material.
+* 
 * \o/ ~ "Because I'm a Material girl"
 *
 * @class Phaser.Physics.P2.Material
-* @classdesc Physics Material Constructor
 * @constructor
+* @param {string} name - The user defined name given to this Material.
 */
 Phaser.Physics.P2.Material = function (name) {
 

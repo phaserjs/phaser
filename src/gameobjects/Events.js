@@ -5,9 +5,7 @@
 */
 
 /**
-* @class Phaser.Events
-*
-* @classdesc The Events component is a collection of events fired by the parent game object.
+* The Events component is a collection of events fired by the parent game object.
 *
 * For example to tell when a Sprite has been added to a new group:
 *
@@ -17,8 +15,8 @@
 *
 * Note that the Input related events only exist if the Sprite has had `inputEnabled` set to `true`.
 *
+* @class Phaser.Events
 * @constructor
-*
 * @param {Phaser.Sprite} sprite - A reference to Description.
 */
 Phaser.Events = function (sprite) {

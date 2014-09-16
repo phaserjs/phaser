@@ -8,7 +8,6 @@
 * The Sound class constructor.
 *
 * @class Phaser.Sound
-* @classdesc The Sound class
 * @constructor
 * @param {Phaser.Game} game - Reference to the current game instance.
 * @param {string} key - Asset key for the sound.

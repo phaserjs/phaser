@@ -8,7 +8,6 @@
 * A constraint that tries to keep the distance between two bodies constant.
 *
 * @class Phaser.Physics.P2.DistanceConstraint
-* @classdesc Physics DistanceConstraint Constructor
 * @constructor
 * @param {Phaser.Physics.P2} world - A reference to the P2 World.
 * @param {p2.Body} bodyA - First connected body.

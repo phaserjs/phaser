@@ -8,11 +8,10 @@
 * Defines a physics material
 *
 * @class Phaser.Physics.P2.ContactMaterial
-* @classdesc Physics ContactMaterial Constructor
 * @constructor
-* @param {Phaser.Physics.P2.Material} materialA
-* @param {Phaser.Physics.P2.Material} materialB
-* @param {object} [options]
+* @param {Phaser.Physics.P2.Material} materialA - First material participating in the contact material.
+* @param {Phaser.Physics.P2.Material} materialB - Second material participating in the contact material.
+* @param {object} [options] - Additional configuration options.
 */
 Phaser.Physics.P2.ContactMaterial = function (materialA, materialB, options) {
 
@@ -25,7 +24,7 @@ Phaser.Physics.P2.ContactMaterial = function (materialA, materialB, options) {
 	*/
 
 	/**
-	* @property {Phaser.Physics.P2.Material} materialB - First second participating in the contact material.
+	* @property {Phaser.Physics.P2.Material} materialB - Second material participating in the contact material.
 	*/
 
 	/**

@@ -8,7 +8,6 @@
 * Connects two bodies at given offset points, letting them rotate relative to each other around this point.
 *
 * @class Phaser.Physics.P2.PrismaticConstraint
-* @classdesc Physics PrismaticConstraint Constructor
 * @constructor
 * @param {Phaser.Physics.P2} world - A reference to the P2 World.
 * @param {p2.Body} bodyA - First connected body.

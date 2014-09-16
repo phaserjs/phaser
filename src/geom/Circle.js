@@ -5,14 +5,14 @@
 */
 
 /**
-* Creates a new Circle object with the center coordinate specified by the x and y parameters and the diameter specified by the diameter parameter. If you call this function without parameters, a circle with x, y, diameter and radius properties set to 0 is created.
+* Creates a new Circle object with the center coordinate specified by the x and y parameters and the diameter specified by the diameter parameter.
+* If you call this function without parameters, a circle with x, y, diameter and radius properties set to 0 is created.
+* 
 * @class Circle
-* @classdesc Phaser - Circle
 * @constructor
 * @param {number} [x=0] - The x coordinate of the center of the circle.
 * @param {number} [y=0] - The y coordinate of the center of the circle.
 * @param {number} [diameter=0] - The diameter of the circle.
-* @return {Phaser.Circle} This circle object
 */
 Phaser.Circle = function (x, y, diameter) {
 

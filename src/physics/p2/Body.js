@@ -13,7 +13,6 @@
 * Note: When a game object is given a P2 body it has its anchor x/y set to 0.5, so it becomes centered.
 *
 * @class Phaser.Physics.P2.Body
-* @classdesc Physics Body Constructor
 * @constructor
 * @param {Phaser.Game} game - Game reference to the currently running game.
 * @param {Phaser.Sprite} [sprite] - The Sprite object this physics body belongs to.

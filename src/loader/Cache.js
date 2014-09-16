@@ -5,10 +5,10 @@
 */
 
 /**
-* Phaser.Cache constructor.
-*
+* A game only has one instance of a Cache and it is used to store all externally loaded assets such as images, sounds 
+* and data files as a result of Loader calls. Cached items use string based keys for look-up.
+* 
 * @class Phaser.Cache
-* @classdesc A game only has one instance of a Cache and it is used to store all externally loaded assets such as images, sounds and data files as a result of Loader calls. Cached items use string based keys for look-up.
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
 */

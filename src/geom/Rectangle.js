@@ -5,7 +5,8 @@
 */
 
 /**
-* Creates a new Rectangle object with the top-left corner specified by the x and y parameters and with the specified width and height parameters. If you call this function without parameters, a Rectangle with x, y, width, and height properties set to 0 is created.
+* Creates a new Rectangle object with the top-left corner specified by the x and y parameters and with the specified width and height parameters.
+* If you call this function without parameters, a Rectangle with x, y, width, and height properties set to 0 is created.
 *
 * @class Phaser.Rectangle
 * @constructor
@@ -13,7 +14,6 @@
 * @param {number} y - The y coordinate of the top-left corner of the Rectangle.
 * @param {number} width - The width of the Rectangle. Should always be either zero or a positive value.
 * @param {number} height - The height of the Rectangle. Should always be either zero or a positive value.
-* @return {Phaser.Rectangle} This Rectangle object.
 */
 Phaser.Rectangle = function (x, y, width, height) {
 
