@@ -21,9 +21,15 @@
 
             preg_match("/(@.*){(\S*)} (\S*)( - ?)?(.*)/", $block->getLine('@property'), $output);
 
-            $this->types = explode('|', $output[2]);
-            $this->name = $output[3];
-            $this->inlineHelp = $output[5];
+            if (count($output) > 3)
+            {
+                $this->parsePhaser($output, $block);
+            }
+            else
+            {
+                preg_match("/(@.*) (.*)/", $block->getLine('@property'), $output);
+                $this->parsePixi($output, $block);
+            }
 
             if ($block->getTypeBoolean('@protected'))
             {
@@ -36,21 +42,46 @@
                 $this->isPrivate = true;
             }
 
+            if ($block->getTypeBoolean('@readonly'))
+            {
+                $this->isReadOnly = true;
+            }
+
+            $this->help = $block->cleanContent();
+
+        }
+
+        public function parsePhaser($output, $block)
+        {
+            $this->types = explode('|', $output[2]);
+            $this->name = $output[3];
+            $this->inlineHelp = $output[5];
+
             //  Default?
             if ($block->getTypeBoolean('@default'))
             {
                 preg_match("/= (.*);/", $block->code, $defaultType);
+
                 if ($defaultType && isset($defaultType[1]))
                 {
                     $this->default = $defaultType[1];
                 }
             }
 
-            $this->help = $block->cleanContent();
+        }
 
-            if ($block->getTypeBoolean('@readonly'))
+        public function parsePixi($output, $block)
+        {
+            $this->name = $output[2];
+
+            if ($block->getTypeBoolean('@type'))
             {
-                $this->isReadOnly = true;
+                $this->types[] = $block->getTag('@type');
+            }
+
+            if ($block->getTypeBoolean('@default'))
+            {
+                $this->default = $block->getTag('@default');
             }
 
         }

@@ -62,6 +62,24 @@
 
         }
 
+        public function getTag($tag)
+        {
+            $line = $this->getLine($tag);
+
+            if ($line !== false)
+            {
+                preg_match("/(@\w*) (.*)/", $line, $output);
+
+                if ($output)
+                {
+                    return trim($output[2]);
+                }
+            }
+
+            return false;
+            
+        }
+
         public function getLine($scan)
         {
             $i = $this->getContentIndex($scan);

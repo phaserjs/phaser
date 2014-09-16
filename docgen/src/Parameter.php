@@ -12,6 +12,20 @@
         {
             preg_match("/.*(@param)\s?{(\S*)} (\S*)( - ?)?(.*)/", $line, $output);
 
+            if (count($output) > 2)
+            {
+                $this->parsePhaser($output);
+            }
+            else
+            {
+                preg_match("/(@param)\s(\S*)\s{(\S*)}\s?(.*)?/", $line, $output);
+                $this->parsePixi($output);
+            }
+
+        }
+
+        public function parsePhaser($output)
+        {
             $this->types = explode('|', $output[2]);
             $this->help = $output[5];
 
@@ -38,6 +52,19 @@
             }
 
             $this->name = $name;
+
+        }
+
+        public function parsePixi($output)
+        {
+            $this->name = $output[2];
+            $this->types[] = $output[3];
+
+            if (isset($output[4]))
+            {
+                $this->help = $output[4];
+
+            }
         }
 
     }
