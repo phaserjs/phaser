@@ -4,6 +4,7 @@
         public $file;
         public $blocks;
 
+        public $class;
         public $consts;
         public $methods;
         public $properties;
@@ -74,7 +75,11 @@
             //  Process the data into our documentation types
             for ($i = 0; $i < $this->total(); $i++)
             {
-                if ($this->blocks[$i]->isConst)
+                if ($this->blocks[$i]->isClass)
+                {
+                    $this->class = new ClassDesc($this->blocks[$i]);
+                }
+                else if ($this->blocks[$i]->isConst)
                 {
                     $tempConst = new Constant($this->blocks[$i]);
                     $this->consts[$tempConst->name] = $tempConst;

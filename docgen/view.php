@@ -56,9 +56,9 @@
     <h1><?php echo $src ?></h1>
 
 <?php
-    // echo "<pre>";
-    // print_r($data->methods[$method]->getArray());
-    // echo "</pre>";
+    echo "<pre>";
+    print_r($data->class->getArray());
+    echo "</pre>";
 
     if ($method)
     {
