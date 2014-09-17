@@ -18,7 +18,7 @@
         public function __construct($file)
         {
             $this->consts = [];
-            $this->methhods = [];
+            $this->methods = [];
             $this->properties = [];
             $this->file = $file;
 
@@ -92,7 +92,11 @@
                 else if ($this->blocks[$i]->isProperty)
                 {
                     $tempProperty = new Property($this->blocks[$i]);
-                    $this->properties[$tempProperty->name] = $tempProperty;
+
+                    if ($tempProperty->corrupted === false)
+                    {
+                        $this->properties[$tempProperty->name] = $tempProperty;
+                    }
                 }
             }
 
@@ -103,6 +107,41 @@
 
         }
         
+        public function getArray()
+        {
+            $consts = [];
+            $methods = [];
+            $properties = [];
+
+            foreach ($this->consts as $key => $value)
+            {
+                $consts[] = $value->getArray();
+            }
+
+            foreach ($this->methods as $key => $value)
+            {
+                $methods[] = $value->getArray();
+            }
+
+            foreach ($this->properties as $key => $value)
+            {
+                $properties[] = $value->getArray();
+            }
+
+            return array(
+                'class' => $this->class->getArray(),
+                'consts' => $consts,
+                'methods' => $methods,
+                'properties' => $properties
+            );
+            
+        }
+        
+        public function getJSON()
+        {
+            return json_encode($this->getArray());
+        }
+
         public function getConstsArray()
         {
             $out = [];

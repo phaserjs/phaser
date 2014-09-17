@@ -1,18 +1,19 @@
 <?php
     class Property
     {
-        public $line; // number, line number in the source file this is found on?
-        public $name; // visible, name, parent
-        public $types = []; // an array containing all possible types it can be: string, number, etc
-        public $default = false; // assigned value is the default value
+        public $line;               // number, line number in the source file this is found on
+        public $name;               // visible, name, parent
+        public $types = [];         // an array containing all possible types it can be: string, number, etc
+        public $default = null;     // assigned value is the default value
         public $help = [];
         public $inlineHelp = '';
 
         public $isPublic = true;
         public $isProtected = false;
         public $isPrivate = false;
-
         public $isReadOnly = false;
+
+        public $corrupted = false;
 
         public function __construct($block)
         {
@@ -23,12 +24,19 @@
 
             if (count($output) > 3)
             {
-                $this->parsePhaser($output, $block);
+                $result = $this->parsePhaser($output, $block);
             }
             else
             {
                 preg_match("/(@.*) (.*)/", $block->getLine('@property'), $output);
-                $this->parsePixi($output, $block);
+                $result = $this->parsePixi($output, $block);
+            }
+
+            if ($result === false)
+            {
+                //  Bail out, tell the Process we've a duff Property here
+                $this->corrupted = true;
+                return false;
             }
 
             if ($block->getTypeBoolean('@protected'))
@@ -42,12 +50,14 @@
                 $this->isPrivate = true;
             }
 
-            if ($block->getTypeBoolean('@readonly'))
+            if ($block->getTypeBoolean('@readonly') || $block->getTypeBoolean('@readOnly'))
             {
                 $this->isReadOnly = true;
             }
 
             $this->help = $block->cleanContent();
+
+            return true;
 
         }
 
@@ -68,11 +78,20 @@
                 }
             }
 
+            return true;
+
         }
 
         public function parsePixi($output, $block)
         {
-            $this->name = $output[2];
+            if (isset($output[2]))
+            {
+                $this->name = $output[2];
+            }
+            else
+            {
+                return false;
+            }
 
             if ($block->getTypeBoolean('@type'))
             {
@@ -83,6 +102,8 @@
             {
                 $this->default = $block->getTag('@default');
             }
+
+            return true;
 
         }
 

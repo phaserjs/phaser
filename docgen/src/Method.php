@@ -6,7 +6,7 @@
         public $title = [];
         public $parameters = []; // an array containing the parameters
         public $help = [];
-        public $returns = false;
+        public $returns = null;
 
         public $isPublic = true;
         public $isProtected = false;
@@ -101,8 +101,15 @@
 
         public function getArray()
         {
+            $params = [];
+
+            foreach ($this->parameters as $key => $value)
+            {
+                $params[] = $value->getArray();
+            }
+
             return array(
-                'title' => $this->title,
+                'name' => $this->title['name'],
                 'static' => $this->isStatic,
                 'returns' => $this->returns,
                 'help' => implode('\n', $this->help),
@@ -110,7 +117,7 @@
                 'public' => $this->isPublic,
                 'protected' => $this->isProtected,
                 'private' => $this->isPrivate,
-                'parameters' => $this->parameters
+                'parameters' => $params
             );
             
         }

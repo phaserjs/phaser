@@ -49,17 +49,7 @@
                         $index = str_replace($src, "", $path);
                         $index = substr($index, 1);
 
-                        // $slash = strrpos($index, DIRECTORY_SEPARATOR);
-
-                        // if ($slash > 0)
-                        // {
-                        //     // $index = substr($index, 0, $slash);
-                        // }
-
                         $result[substr($value, 0, -3)] = $index;
-
-                        // $result[$index] = substr($value, 0, -3);
-                        // $result[] = [ substr($value, 0, -3), $index ];
                     }
                 }
             } 
@@ -89,7 +79,8 @@
             }
             else
             {
-                echo "<li><a href=\"view.php?src=$file\">$name</a></li>";
+                echo "<li><a href=\"view.php?src=$file\">$name</a>";
+                echo " &nbsp;&nbsp; [ <a href=\"export.php?src=$file\">json</a> ]</li>";
             }
         }
 

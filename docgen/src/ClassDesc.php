@@ -44,12 +44,19 @@
 
         public function getArray()
         {
+            $params = [];
+
+            for ($i = 0; $i < count($this->parameters); $i++)
+            {
+                $params[] = $this->parameters[$i]->getArray();
+            }
+
             return array(
                 'name' => $this->name,
                 'extends' => $this->extends,
                 'static' => $this->isStatic,
                 'constructor' => $this->hasConstructor,
-                'parameters' => $this->parameters,
+                'parameters' => $params,
                 'help' => implode('\n', $this->help)
             );
             
