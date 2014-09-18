@@ -150,13 +150,7 @@ Phaser.StateManager.prototype = {
 
         if (this._pendingState !== null)
         {
-            if (typeof this._pendingState === 'string')
-            {
-                //  State was already added, so just start it
-                // console.log('StateManager boot => waiting for preUpdate', this._pendingState);
-                // this.start(this._pendingState, false, false);
-            }
-            else
+            if (typeof this._pendingState !== 'string')
             {
                 this.add('default', this._pendingState, true);
             }
@@ -559,12 +553,7 @@ Phaser.StateManager.prototype = {
         this.onInitCallback.apply(this.callbackContext, this._args);
 
         //  If they no longer do then the init callback hit StateManager.start
-        if (key !== this._pendingState)
-        {
-            // // console.log('-> init called StateManager.start(', this._pendingState, ')');
-            // this.onPreloadCallback = null;
-        }
-        else
+        if (key === this._pendingState)
         {
             this._args = [];
         }

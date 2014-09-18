@@ -90,6 +90,7 @@ Version 2.1.2 - "Whitebridge" - in development
 
 * If Game Objects change their frame, such as with an animated Sprite, and the change goes from a previously trimmed frame to a non-trimmed (full size) one, then the previous trim values were still left active, causing it to glitch (thanks stupot)
 * If you called StateManager.start from within a states `init` method which also had a `preload` method it would fail to start the next State.
+* StateManager.boot would call start on a State twice if it was added to the game and started before the DOM load had completed. This didn't cause an error but was duplicating function calls needlessly.
 
 
 For details about changes made in previous versions of Phaser see the full Change Log at https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md
