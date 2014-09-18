@@ -26,8 +26,12 @@
             {
                 preg_match("/(@param)\s(\S*)\s{(\S*)}\s?(.*)?/", $line, $output);
 
-                // $this->processor->log("parsePixi parameter");
-                $this->parsePixi($output);
+                $this->processor->log("parsePixi parameter - " . count($output));
+    
+                if (count($output) > 0)
+                {
+                    $this->parsePixi($output);
+                }
             }
 
         }
