@@ -76,6 +76,12 @@ Phaser.Group = function (game, parent, name, addToStage, enableBody, physicsBody
     this.exists = true;
 
     /**
+    * @property {boolean} ignoreDestroy - A Group with `ignoreDestroy` set to `true` ignores all calls to its `destroy` method.
+    * @default
+    */
+    this.ignoreDestroy = false;
+
+    /**
     * The type of objects that will be created when you use Group.create or Group.createMultiple. Defaults to Phaser.Sprite.
     * When a new object is created it is passed the following parameters to its constructor: game, x, y, key, frame.
     * @property {object} classType
@@ -1713,7 +1719,7 @@ Phaser.Group.prototype.removeBetween = function (startIndex, endIndex, destroy, 
 */
 Phaser.Group.prototype.destroy = function (destroyChildren, soft) {
 
-    if (this.game === null) { return; }
+    if (this.game === null || this.ignoreDestroy) { return; }
 
     if (typeof destroyChildren === 'undefined') { destroyChildren = true; }
     if (typeof soft === 'undefined') { soft = false; }
