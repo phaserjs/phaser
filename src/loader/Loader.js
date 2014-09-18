@@ -500,6 +500,32 @@ Phaser.Loader.prototype = {
     },
 
     /**
+    * Add an XML file to the Loader.
+    *
+    * @method Phaser.Loader#xml
+    * @param {string} key - Unique asset key of the xml file.
+    * @param {string} url - URL of the xml file.
+    * @param {boolean} [overwrite=false] - If an unloaded file with a matching key already exists in the queue, this entry will overwrite it.
+    * @return {Phaser.Loader} This Loader instance.
+    */
+    xml: function (key, url, overwrite) {
+
+        if (typeof overwrite === "undefined") { overwrite = false; }
+
+        if (overwrite)
+        {
+            this.replaceInFileList('xml', key, url);
+        }
+        else
+        {
+            this.addToFileList('xml', key, url);
+        }
+
+        return this;
+
+    },
+
+    /**
     * Add a JavaScript file to the Loader. Once loaded the JavaScript file will be automatically turned into a script tag (and executed), so be careful what you load!
     * You can also specify a callback. This will be executed as soon as the script tag has been created.
     *
@@ -1042,6 +1068,10 @@ Phaser.Loader.prototype = {
                         this.json(file.key, file.url, file.overwrite);
                         break;
 
+                    case "xml":
+                        this.xml(file.key, file.url, file.overwrite);
+                        break;
+
                     case "script":
                         this.script(file.key, file.url, file.callback, pack.callbackContext);
                         break;
@@ -1153,7 +1183,7 @@ Phaser.Loader.prototype = {
         var file = this._fileList[this._fileIndex];
         var _this = this;
 
-        this.onFileStart.dispatch(this.progress, file.key);
+        this.onFileStart.dispatch(this.progress, file.key, file.url);
 
         //  Image or Data?
         switch (file.type)
@@ -1257,6 +1287,11 @@ Phaser.Loader.prototype = {
                     this.xhrLoad(this._fileIndex, this.baseURL + file.url, 'text', 'jsonLoadComplete', 'dataLoadError');
                 }
 
+                break;
+
+            case 'xml':
+
+                this.xhrLoad(this._fileIndex, this.baseURL + file.url, 'text', 'xmlLoadComplete', 'dataLoadError');
                 break;
 
             case 'tilemap':
@@ -1609,6 +1644,12 @@ Phaser.Loader.prototype = {
     */
     xmlLoadComplete: function (index) {
 
+        if (this._xhr.responseType !== '' && this._xhr.responseType !== 'text')
+        {
+            console.warn('Invalid XML Response Type', this._fileList[index]);
+            console.warn(this._xhr);
+        }
+
         var data = this._xhr.responseText;
         var xml;
 
@@ -1639,13 +1680,17 @@ Phaser.Loader.prototype = {
         var file = this._fileList[index];
         file.loaded = true;
 
-        if (file.type == 'bitmapfont')
+        if (file.type === 'bitmapfont')
         {
             this.game.cache.addBitmapFont(file.key, file.url, file.data, xml, file.xSpacing, file.ySpacing);
         }
-        else if (file.type == 'textureatlas')
+        else if (file.type === 'textureatlas')
         {
             this.game.cache.addTextureAtlas(file.key, file.url, file.data, xml, file.format);
+        }
+        else if (file.type === 'xml')
+        {
+            this.game.cache.addXML(file.key, file.url, xml);
         }
 
         this.nextFile(index, true);

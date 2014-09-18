@@ -56,6 +56,12 @@ Phaser.Cache = function (game) {
     this._json = {};
 
     /**
+    * @property {object} _xml - XML key-value container.
+    * @private
+    */
+    this._xml = {};
+
+    /**
     * @property {object} _physics - Physics data key-value container.
     * @private
     */
@@ -109,6 +115,7 @@ Phaser.Cache = function (game) {
     this._cacheMap[Phaser.Cache.BITMAPDATA] = this._bitmapDatas;
     this._cacheMap[Phaser.Cache.BITMAPFONT] = this._bitmapFont;
     this._cacheMap[Phaser.Cache.JSON] = this._json;
+    this._cacheMap[Phaser.Cache.XML] = this._xml;
 
 };
 
@@ -177,6 +184,12 @@ Phaser.Cache.BITMAPFONT = 10;
 * @type {number}
 */
 Phaser.Cache.JSON = 11;
+
+/**
+* @constant
+* @type {number}
+*/
+Phaser.Cache.XML = 12;
 
 Phaser.Cache.prototype = {
 
@@ -408,13 +421,27 @@ Phaser.Cache.prototype = {
     * Add a new json object into the cache.
     *
     * @method Phaser.Cache#addJSON
-    * @param {string} key - Asset key for the text data.
-    * @param {string} url - URL of this text data file.
-    * @param {object} data - Extra text data.
+    * @param {string} key - Asset key for the json data.
+    * @param {string} url - URL of this json data file.
+    * @param {object} data - Extra json data.
     */
     addJSON: function (key, url, data) {
 
         this._json[key] = { url: url, data: data };
+
+    },
+
+    /**
+    * Add a new xml object into the cache.
+    *
+    * @method Phaser.Cache#addXML
+    * @param {string} key - Asset key for the xml file.
+    * @param {string} url - URL of this xml file.
+    * @param {object} data - Extra text data.
+    */
+    addXML: function (key, url, data) {
+
+        this._xml[key] = { url: url, data: data };
 
     },
 
@@ -679,7 +706,7 @@ Phaser.Cache.prototype = {
     * Checks if the given key exists in the Canvas Cache.
     *
     * @method Phaser.Cache#checkCanvasKey
-    * @param {string} key - Asset key of the image to check is in the Cache.
+    * @param {string} key - Asset key of the canvas to check is in the Cache.
     * @return {boolean} True if the key exists, otherwise false.
     */
     checkCanvasKey: function (key) {
@@ -718,7 +745,7 @@ Phaser.Cache.prototype = {
     * Checks if the given key exists in the Sound Cache.
     *
     * @method Phaser.Cache#checkSoundKey
-    * @param {string} key - Asset key of the image to check is in the Cache.
+    * @param {string} key - Asset key of the sound file to check is in the Cache.
     * @return {boolean} True if the key exists, otherwise false.
     */
     checkSoundKey: function (key) {
@@ -731,7 +758,7 @@ Phaser.Cache.prototype = {
     * Checks if the given key exists in the Text Cache.
     *
     * @method Phaser.Cache#checkTextKey
-    * @param {string} key - Asset key of the image to check is in the Cache.
+    * @param {string} key - Asset key of the text file to check is in the Cache.
     * @return {boolean} True if the key exists, otherwise false.
     */
     checkTextKey: function (key) {
@@ -744,7 +771,7 @@ Phaser.Cache.prototype = {
     * Checks if the given key exists in the Physics Cache.
     *
     * @method Phaser.Cache#checkPhysicsKey
-    * @param {string} key - Asset key of the image to check is in the Cache.
+    * @param {string} key - Asset key of the physics data file to check is in the Cache.
     * @return {boolean} True if the key exists, otherwise false.
     */
     checkPhysicsKey: function (key) {
@@ -757,7 +784,7 @@ Phaser.Cache.prototype = {
     * Checks if the given key exists in the Tilemap Cache.
     *
     * @method Phaser.Cache#checkTilemapKey
-    * @param {string} key - Asset key of the image to check is in the Cache.
+    * @param {string} key - Asset key of the Tilemap to check is in the Cache.
     * @return {boolean} True if the key exists, otherwise false.
     */
     checkTilemapKey: function (key) {
@@ -770,7 +797,7 @@ Phaser.Cache.prototype = {
     * Checks if the given key exists in the Binary Cache.
     *
     * @method Phaser.Cache#checkBinaryKey
-    * @param {string} key - Asset key of the image to check is in the Cache.
+    * @param {string} key - Asset key of the binary file to check is in the Cache.
     * @return {boolean} True if the key exists, otherwise false.
     */
     checkBinaryKey: function (key) {
@@ -783,7 +810,7 @@ Phaser.Cache.prototype = {
     * Checks if the given key exists in the BitmapData Cache.
     *
     * @method Phaser.Cache#checkBitmapDataKey
-    * @param {string} key - Asset key of the image to check is in the Cache.
+    * @param {string} key - Asset key of the BitmapData to check is in the Cache.
     * @return {boolean} True if the key exists, otherwise false.
     */
     checkBitmapDataKey: function (key) {
@@ -796,7 +823,7 @@ Phaser.Cache.prototype = {
     * Checks if the given key exists in the BitmapFont Cache.
     *
     * @method Phaser.Cache#checkBitmapFontKey
-    * @param {string} key - Asset key of the image to check is in the Cache.
+    * @param {string} key - Asset key of the BitmapFont to check is in the Cache.
     * @return {boolean} True if the key exists, otherwise false.
     */
     checkBitmapFontKey: function (key) {
@@ -809,12 +836,25 @@ Phaser.Cache.prototype = {
     * Checks if the given key exists in the JSON Cache.
     *
     * @method Phaser.Cache#checkJSONKey
-    * @param {string} key - Asset key of the image to check is in the Cache.
+    * @param {string} key - Asset key of the JSON file to check is in the Cache.
     * @return {boolean} True if the key exists, otherwise false.
     */
     checkJSONKey: function (key) {
 
         return this.checkKey(Phaser.Cache.JSON, key);
+
+    },
+
+    /**
+    * Checks if the given key exists in the XML Cache.
+    *
+    * @method Phaser.Cache#checkXMLKey
+    * @param {string} key - Asset key of the XML file to check is in the Cache.
+    * @return {boolean} True if the key exists, otherwise false.
+    */
+    checkXMLKey: function (key) {
+
+        return this.checkKey(Phaser.Cache.XML, key);
 
     },
 
@@ -1108,6 +1148,26 @@ Phaser.Cache.prototype = {
     },
 
     /**
+    * Get a XML object by key from the cache.
+    *
+    * @method Phaser.Cache#getXML
+    * @param {string} key - Asset key of the XML object to retrieve from the Cache.
+    * @return {object} The XML object.
+    */
+    getXML: function (key) {
+
+        if (this._xml[key])
+        {
+            return this._xml[key].data;
+        }
+        else
+        {
+            console.warn('Phaser.Cache.getXML: Invalid key: "' + key + '"');
+        }
+
+    },
+
+    /**
     * Get binary data by key.
     *
     * @method Phaser.Cache#getBinary
@@ -1182,6 +1242,10 @@ Phaser.Cache.prototype = {
 
             case Phaser.Cache.JSON:
                 array = this._json;
+                break;
+
+            case Phaser.Cache.XML:
+                array = this._xml;
                 break;
         }
 
@@ -1262,6 +1326,16 @@ Phaser.Cache.prototype = {
     */
     removeJSON: function (key) {
         delete this._json[key];
+    },
+
+    /**
+    * Removes a xml object from the cache.
+    *
+    * @method Phaser.Cache#removeXML
+    * @param {string} key - Key of the asset you want to remove.
+    */
+    removeXML: function (key) {
+        delete this._xml[key];
     },
 
     /**
@@ -1347,6 +1421,11 @@ Phaser.Cache.prototype = {
         for (var item in this._json)
         {
             delete this._json[item];
+        }
+
+        for (var item in this._xml)
+        {
+            delete this._xml[item];
         }
 
         for (var item in this._textures)
