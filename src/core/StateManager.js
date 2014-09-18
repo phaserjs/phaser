@@ -142,7 +142,7 @@ Phaser.StateManager.prototype = {
     */
     boot: function () {
 
-        console.log('StateManager boot');
+        // console.log('StateManager boot');
 
         this.game.onPause.add(this.pause, this);
         this.game.onResume.add(this.resume, this);
@@ -153,7 +153,7 @@ Phaser.StateManager.prototype = {
             if (typeof this._pendingState === 'string')
             {
                 //  State was already added, so just start it
-                console.log('StateManager boot => waiting for preUpdate', this._pendingState);
+                // console.log('StateManager boot => waiting for preUpdate', this._pendingState);
                 // this.start(this._pendingState, false, false);
             }
             else
@@ -253,8 +253,8 @@ Phaser.StateManager.prototype = {
     */
     start: function (key, clearWorld, clearCache) {
 
-        console.log('-----------------------------------------------------------------------------------------');
-        console.log('START:', key);
+        // console.log('-----------------------------------------------------------------------------------------');
+        // console.log('START:', key);
 
         if (typeof clearWorld === "undefined") { clearWorld = true; }
         if (typeof clearCache === "undefined") { clearCache = false; }
@@ -262,7 +262,7 @@ Phaser.StateManager.prototype = {
         if (this.checkState(key))
         {
             //  Place the state in the queue. It will be started the next time the game loop starts.
-            console.log('set to pending', key);
+            // console.log('set to pending', key);
 
             this._pendingState = key;
             this._clearWorld = clearWorld;
@@ -318,7 +318,7 @@ Phaser.StateManager.prototype = {
 
         if (this._pendingState && this.game.isBooted)
         {
-            console.log('preUpdate - has pending:', this._pendingState, 'current:', this.current);
+            // console.log('preUpdate - has pending:', this._pendingState, 'current:', this.current);
 
             //  Already got a state running?
             this.clearCurrentState();
@@ -327,20 +327,20 @@ Phaser.StateManager.prototype = {
 
             if (this.current !== this._pendingState)
             {
-                console.log('-> init called StateManager.start(', this._pendingState, ') so bail out');
+                // console.log('-> init called StateManager.start(', this._pendingState, ') so bail out');
                 return;
             }
             else
             {
                 this._pendingState = null;
-                console.log('pending nulled');
+                // console.log('pending nulled');
             }
 
             //  If StateManager.start has been called from the init of a State that ALSO has a preload, then
             //  onPreloadCallback will be set, but must be ignored
             if (this.onPreloadCallback)
             {
-                console.log('-> preload (', this.current, ')');
+                // console.log('-> preload (', this.current, ')');
 
                 this.game.load.reset();
                 this.onPreloadCallback.call(this.callbackContext, this.game);
@@ -348,20 +348,20 @@ Phaser.StateManager.prototype = {
                 //  Is the loader empty?
                 if (this.game.load.totalQueuedFiles() === 0 && this.game.load.totalQueuedPacks() === 0)
                 {
-                    console.log('loadComplete from empty preloader', this.current);
+                    // console.log('loadComplete from empty preloader', this.current);
                     this.loadComplete();
                 }
                 else
                 {
                     //  Start the loader going as we have something in the queue
-                    console.log('load start', this.current);
+                    // console.log('load start', this.current);
                     this.game.load.start();
                 }
             }
             else
             {
                 //  No init? Then there was nothing to load either
-                console.log('loadComplete from no preloader', this.current);
+                // console.log('loadComplete from no preloader', this.current);
                 this.loadComplete();
             }
         }
@@ -376,15 +376,15 @@ Phaser.StateManager.prototype = {
     */
     clearCurrentState: function () {
 
-        console.log('clearCurrentState', this.current);
+        // console.log('clearCurrentState', this.current);
 
         if (this.current)
         {
-            console.log('removing all', this.current);
+            // console.log('removing all', this.current);
 
             if (this.onShutDownCallback)
             {
-                console.log('-> shutdown (', this.current, ')');
+                // console.log('-> shutdown (', this.current, ')');
                 this.onShutDownCallback.call(this.callbackContext, this.game);
             }
 
@@ -427,7 +427,7 @@ Phaser.StateManager.prototype = {
     */
     checkState: function (key) {
 
-        console.log('checking', key);
+        // console.log('checking', key);
 
         if (this.states[key])
         {
@@ -526,7 +526,7 @@ Phaser.StateManager.prototype = {
     */
     setCurrentState: function (key) {
 
-        console.log('setCurrentState', key);
+        // console.log('setCurrentState', key);
 
         this.callbackContext = this.states[key];
 
@@ -554,14 +554,14 @@ Phaser.StateManager.prototype = {
         this._created = false;
 
         //  At this point key and pendingState should equal each other
-        console.log('-> init (', key, ')', this._pendingState);
+        // console.log('-> init (', key, ')', this._pendingState);
 
         this.onInitCallback.apply(this.callbackContext, this._args);
 
         //  If they no longer do then the init callback hit StateManager.start
         if (key !== this._pendingState)
         {
-            // console.log('-> init called StateManager.start(', this._pendingState, ')');
+            // // console.log('-> init called StateManager.start(', this._pendingState, ')');
             // this.onPreloadCallback = null;
         }
         else
@@ -588,11 +588,11 @@ Phaser.StateManager.prototype = {
     */
     loadComplete: function () {
 
-        console.log('loadComplete');
+        // console.log('loadComplete');
 
         if (this._created === false && this.onCreateCallback)
         {
-            console.log('-> create (', this.current, ')');
+            // console.log('-> create (', this.current, ')');
             this._created = true;
             this.onCreateCallback.call(this.callbackContext, this.game);
         }
