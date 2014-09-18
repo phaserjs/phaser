@@ -9,6 +9,7 @@
         public $methods;
         public $properties;
 
+        public $docgen;
         public $processLog;
 
         /**
@@ -17,27 +18,16 @@
         * @param mixed $file
         * @return Processor
         */
-        public function __construct($file)
+        public function __construct($docgen, $file)
         {
+            $this->docgen = $docgen;
+
             $this->consts = [];
             $this->methods = [];
             $this->properties = [];
             $this->file = $file;
 
             $this->scanFile();
-        }
-
-        public function log($text) {
-
-            $this->processLog[] = $text;
-
-        }
-
-        public function getLog() {
-
-            return $this->processLog;
-            // return array_reverse($this->processLog);
-
         }
 
         /**
@@ -171,12 +161,30 @@
             return $out;
         }
 
+        public function extend()
+        {
+
+        }
+
         /**
         * The total number of blocks scanned.
         */
         public function total()
         {
             return count($this->blocks);
+        }
+
+        public function log($text) {
+
+            $this->processLog[] = $text;
+
+        }
+
+        public function getLog() {
+
+            return $this->processLog;
+            // return array_reverse($this->processLog);
+
         }
 
     }

@@ -8,8 +8,6 @@
     require 'src/ReturnType.php';
     require 'src/Processor.php';
     require 'src/PhaserDocGen.php';
-
-    $gen = new PhaserDocGen();
 ?>
 <!doctype html>
 <html>
@@ -34,7 +32,17 @@
 
     <pre>
 <?php
+    $gen = new PhaserDocGen();
     $gen->start();
+
+    foreach ($gen->classes as $key => $processor)
+    {
+        echo $key . "\n";
+    }
+
+    // print_r($gen->classes);
+
+    // $gen->extend();
 ?>
     </pre>
 

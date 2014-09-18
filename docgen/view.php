@@ -28,7 +28,7 @@
     require 'src/ReturnType.php';
     require 'src/Processor.php';
 
-    $data = new Processor("../src/$src");
+    $data = new Processor(null, "../src/$src");
 ?>
 <!doctype html>
 <html>

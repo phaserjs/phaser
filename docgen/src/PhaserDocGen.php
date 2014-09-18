@@ -31,9 +31,20 @@
             ob_end_flush();
         }
 
+        public function extend()
+        {
+            //  This will go through each class and add in inherited properties, etc
+            foreach ($this->classes as $key => $processor)
+            {
+                $processor->extend();
+
+                echo "Extended $key\n";
+                ob_flush();
+            }
+        }
+
         private function dirToArray($dir)
         {
-            //  set timeout
             set_time_limit(60);
 
             $result = [];
@@ -56,15 +67,18 @@
                         {
                             $index = str_replace($this->src, "", $path);
                             $index = substr($index, 1);
-                            $result[substr($value, 0, -3)] = $index;
+                            $tempProcessor = new Processor($this, "../src/$index");
 
-                            $this->classes[substr($value, 0, -3)] = new Processor("../src/$index");
+                            $classKey = $tempProcessor->class->name;
+
+                            // $classKey = substr($value, 0, -3);
+                            // $classKey = str_replace(DIRECTORY_SEPARATOR, ".", $index);
+                            $result[$classKey] = $index;
+                            $this->classes[$classKey] = $tempProcessor;
 
                             //  Dump to log
-                            echo $index . "\n";
-
+                            // echo $index . "\n";
                             ob_flush();
-                            // $this->log[] = $value;
                         }
                     }
                 } 
