@@ -98,8 +98,9 @@ Phaser.MSPointer.prototype = {
 
     /**
     * The function that handles the PointerDown event.
+    * 
     * @method Phaser.MSPointer#onPointerDown
-    * @param {PointerEvent} event
+    * @param {PointerEvent} event - The native DOM event.
     */
     onPointerDown: function (event) {
 
@@ -118,7 +119,7 @@ Phaser.MSPointer.prototype = {
     /**
     * The function that handles the PointerMove event.
     * @method Phaser.MSPointer#onPointerMove
-    * @param {PointerEvent } event
+    * @param {PointerEvent} event - The native DOM event.
     */
     onPointerMove: function (event) {
 
@@ -137,7 +138,7 @@ Phaser.MSPointer.prototype = {
     /**
     * The function that handles the PointerUp event.
     * @method Phaser.MSPointer#onPointerUp
-    * @param {PointerEvent} event
+    * @param {PointerEvent} event - The native DOM event.
     */
     onPointerUp: function (event) {
 
