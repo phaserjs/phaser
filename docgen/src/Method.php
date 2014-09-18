@@ -1,6 +1,7 @@
 <?php
     class Method
     {
+        public $processor;
         public $line; // number, line number in the source file this is found on?
         public $name; // bringToTop, kill, etc
         public $title = [];
@@ -14,8 +15,10 @@
 
         public $isStatic = false;
 
-        public function __construct($block)
+        public function __construct($processor, $block)
         {
+            $this->processor = $processor;
+
             //  Because zero offset + allowing for final line
             $this->line = $block->end + 2;
 
@@ -47,13 +50,17 @@
                 }
             }
 
+            $this->processor->log("vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv");
+            $this->processor->log("Method: $name");
+            $this->processor->log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+
             $this->name = $name;
 
             $params = $block->getLines('@param');
 
             for ($i = 0; $i < count($params); $i++)
             {
-                $this->parameters[] = new Parameter($params[$i]);
+                $this->parameters[] = new Parameter($this->processor, $params[$i]);
             }
 
             if ($block->getTypeBoolean('@protected'))

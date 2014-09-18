@@ -9,6 +9,8 @@
         public $methods;
         public $properties;
 
+        public $processLog;
+
         /**
         * Processes the given JS source file.
         * 
@@ -23,6 +25,19 @@
             $this->file = $file;
 
             $this->scanFile();
+        }
+
+        public function log($text) {
+
+            $this->processLog[] = $text;
+
+        }
+
+        public function getLog() {
+
+            return $this->processLog;
+            // return array_reverse($this->processLog);
+
         }
 
         /**
@@ -77,21 +92,23 @@
             {
                 if ($this->blocks[$i]->isClass)
                 {
-                    $this->class = new ClassDesc($this->blocks[$i]);
+                    $this->class = new ClassDesc($this, $this->blocks[$i]);
                 }
                 else if ($this->blocks[$i]->isConst)
                 {
-                    $tempConst = new Constant($this->blocks[$i]);
+                    $tempConst = new Constant($this, $this->blocks[$i]);
+
                     $this->consts[$tempConst->name] = $tempConst;
                 }
                 else if ($this->blocks[$i]->isMethod)
                 {
-                    $tempMethod = new Method($this->blocks[$i]);
+                    $tempMethod = new Method($this, $this->blocks[$i]);
+
                     $this->methods[$tempMethod->name] = $tempMethod;
                 }
                 else if ($this->blocks[$i]->isProperty)
                 {
-                    $tempProperty = new Property($this->blocks[$i]);
+                    $tempProperty = new Property($this, $this->blocks[$i]);
 
                     if ($tempProperty->corrupted === false)
                     {

@@ -1,6 +1,7 @@
 <?php
     class Parameter
     {
+        public $processor;
         public $name; // rect, copy, etc
         public $types = []; // an array containing all possible types it can be: string, number, etc
         public $help = [];
@@ -8,17 +9,24 @@
         public $default = null; // assigned value is the default value
         public $debug = '';
 
-        public function __construct($line)
+        public function __construct($processor, $line)
         {
+            $this->processor = $processor;
+
             preg_match("/.*(@param)\s?{(\S*)} (\S*)( - ?)?(.*)/", $line, $output);
+
+            // $this->processor->log("Parameter count: " . count($output));
 
             if (count($output) > 2)
             {
+                // $this->processor->log("parsePhaser parameter");
                 $this->parsePhaser($output);
             }
             else
             {
                 preg_match("/(@param)\s(\S*)\s{(\S*)}\s?(.*)?/", $line, $output);
+
+                // $this->processor->log("parsePixi parameter");
                 $this->parsePixi($output);
             }
 
@@ -27,6 +35,8 @@
         public function parsePhaser($output)
         {
             $name = $output[3];
+            
+            $this->processor->log("parameter: $name");
 
             if ($name[0] === '[')
             {
@@ -74,6 +84,8 @@
         {
             $this->name = $output[2];
             $this->types[] = $output[3];
+
+            $this->processor->log("parameter: $this->name");
 
             if (isset($output[4]))
             {

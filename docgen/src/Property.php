@@ -1,6 +1,7 @@
 <?php
     class Property
     {
+        public $processor;
         public $line;               // number, line number in the source file this is found on
         public $name;               // visible, name, parent
         public $types = [];         // an array containing all possible types it can be: string, number, etc
@@ -15,8 +16,10 @@
 
         public $corrupted = false;
 
-        public function __construct($block)
+        public function __construct($processor, $block)
         {
+            $this->processor = $processor;
+
             //  Because zero offset + allowing for final line
             $this->line = $block->end + 2;
 

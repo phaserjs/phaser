@@ -1,13 +1,16 @@
 <?php
     class Constant
     {
+        public $processor;
         public $name; // TEXTURE_ATLAS_JSON_ARRAY, PHYSICS_PHASER_JSON, etc
         public $types = []; // an array containing the one single type the const can be
         public $help = [];
         public $line; // number, line number in the source file this is found on?
 
-        public function __construct($block)
+        public function __construct($processor, $block)
         {
+            $this->processor = $processor;
+
             //  Because zero offset + allowing for final line
             $this->line = $block->end + 2;
 

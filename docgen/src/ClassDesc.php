@@ -1,6 +1,7 @@
 <?php
     class ClassDesc
     {
+        public $processor;
         public $name; // Phaser.Sprite
         public $parameters = []; // an array containing the parameters
         public $help = [];
@@ -9,15 +10,21 @@
         public $hasConstructor = false;
         public $isStatic = false;
 
-        public function __construct($block)
+        public function __construct($processor, $block)
         {
+            $this->processor = $processor;
+
             $this->name = $block->getLineContent('@class');
+
+            $this->processor->log("vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv");
+            $this->processor->log("Class: $this->name");
+            $this->processor->log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
 
             $params = $block->getLines('@param');
 
             for ($i = 0; $i < count($params); $i++)
             {
-                $this->parameters[] = new Parameter($params[$i]);
+                $this->parameters[] = new Parameter($this->processor, $params[$i]);
             }
 
             if ($block->getTypeBoolean('@extends'))

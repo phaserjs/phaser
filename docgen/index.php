@@ -19,6 +19,8 @@
     </head>
     <body>
 
+    <a href="export.php">Export</a>
+
 <?php
     // http://uk1.php.net/manual/en/class.splfileinfo.php
 

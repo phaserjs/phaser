@@ -57,6 +57,10 @@
 
 <?php
     echo "<pre>";
+    print_r($data->getLog());
+    echo "</pre>";
+
+    echo "<pre>";
     print_r($data->class->getArray());
     echo "</pre>";
 

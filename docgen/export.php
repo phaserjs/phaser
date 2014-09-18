@@ -1,11 +1,4 @@
 <?php
-    $src = "loader/Cache.js";
-
-    if (isset($_GET['src']))
-    {
-        $src = $_GET['src'];
-    }
-
     require 'src/Block.php';
     require 'src/ClassDesc.php';
     require 'src/Constant.php';
@@ -14,10 +7,36 @@
     require 'src/Property.php';
     require 'src/ReturnType.php';
     require 'src/Processor.php';
+    require 'src/PhaserDocGen.php';
 
-    $data = new Processor("../src/$src");
-
-    header('Content-Type: application/json');
-
-    echo $data->getJSON();
+    $gen = new PhaserDocGen();
 ?>
+<!doctype html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>Phaser Documentation Generator</title>
+        <style type="text/css">
+            body {
+                font-family: Arial;
+                font-size: 14px;
+                background-color: #fff;
+                color: #000;
+            }
+
+            textarea {
+                width: 100%;
+                height: 1000px;
+            }
+        </style>
+    </head>
+    <body>
+
+    <pre>
+<?php
+    $gen->start();
+?>
+    </pre>
+
+</body>
+</html>
