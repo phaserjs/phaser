@@ -96,7 +96,7 @@ Phaser.Rectangle.prototype = {
 
     /**
     * Centers this Rectangle so that the center coordinates match the given x and y values.
-    * 
+    *
     * @method Phaser.Rectangle#centerOn
     * @param {number} x - The x coordinate to place the center of the Rectangle at.
     * @param {number} y - The y coordinate to place the center of the Rectangle at.
@@ -269,7 +269,7 @@ Phaser.Rectangle.prototype = {
 
     /**
     * Determines whether the coordinates given intersects (overlaps) with this Rectangle.
-    * 
+    *
     * @method Phaser.Rectangle#intersectsRaw
     * @param {number} left - The x coordinate of the left of the area.
     * @param {number} right - The right coordinate of the area.
@@ -482,7 +482,7 @@ Object.defineProperty(Phaser.Rectangle.prototype, "centerY", {
 
 /**
 * A random value between the left and right values (inclusive) of the Rectangle.
-* 
+*
 * @name Phaser.Rectangle#randomX
 * @property {number} randomX - A random value between the left and right values (inclusive) of the Rectangle.
 */
@@ -498,7 +498,7 @@ Object.defineProperty(Phaser.Rectangle.prototype, "randomX", {
 
 /**
 * A random value between the top and bottom values (inclusive) of the Rectangle.
-* 
+*
 * @name Phaser.Rectangle#randomY
 * @property {number} randomY - A random value between the top and bottom values (inclusive) of the Rectangle.
 */
@@ -836,6 +836,47 @@ Phaser.Rectangle.union = function (a, b, output) {
 
     return output.setTo(Math.min(a.x, b.x), Math.min(a.y, b.y), Math.max(a.right, b.right) - Math.min(a.left, b.left), Math.max(a.bottom, b.bottom) - Math.min(a.top, b.top));
 
+};
+
+/**
+* Calculates the Axis Aligned Bounding Box (or aabb) from an array of points.
+*
+* @method Phaser.Rectangle#aabb
+* @param {Phaser.Point[]} points - The array of one or more points.
+* @param {Phaser.Rectangle} [out] - Optional Rectangle to store the value in, if not supplied a new Rectangle object will be created.
+* @return {Phaser.Rectangle} The new Rectangle object.
+* @static
+*/
+Phaser.Rectangle.aabb = function(points, out) {
+
+    if (typeof out === "undefined") {
+        out = new Phaser.Rectangle();
+    }
+
+    var xMax = Number.MIN_VALUE,
+        xMin = Number.MAX_VALUE,
+        yMax = Number.MIN_VALUE,
+        yMin = Number.MAX_VALUE;
+
+    points.forEach(function(point) {
+        if (point.x > xMax) {
+            xMax = point.x;
+        }
+        if (point.x < xMin) {
+            xMin = point.x;
+        }
+
+        if (point.y > yMax) {
+            yMax = point.y;
+        }
+        if (point.y < yMin) {
+            yMin = point.y;
+        }
+    });
+
+    out.setTo(xMin, yMin, xMax - xMin, yMax - yMin);
+
+    return out;
 };
 
 //   Because PIXI uses its own Rectangle, we'll replace it with ours to avoid duplicating code or confusion.
