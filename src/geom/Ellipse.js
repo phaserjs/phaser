@@ -8,7 +8,7 @@
 /**
 * Creates a Ellipse object. A curve on a plane surrounding two focal points.
 * 
-* @class Ellipse
+* @class Phaser.Ellipse
 * @constructor
 * @param {number} [x=0] - The X coordinate of the upper-left corner of the framing rectangle of this ellipse.
 * @param {number} [y=0] - The Y coordinate of the upper-left corner of the framing rectangle of this ellipse.

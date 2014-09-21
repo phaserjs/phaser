@@ -7,7 +7,7 @@
 /**
 * Creates a new Line object with a start and an end point.
 * 
-* @class Line
+* @class Phaser.Line
 * @constructor
 * @param {number} [x1=0] - The x coordinate of the start of the line.
 * @param {number} [y1=0] - The y coordinate of the start of the line.
