@@ -69,12 +69,26 @@
                             $index = substr($index, 1);
                             $tempProcessor = new Processor($this, "../src/$index");
 
-                            $classKey = $tempProcessor->class->name;
+                            if ($tempProcessor->corrupted === false)
+                            {
+                                if ($tempProcessor->class)
+                                {
+                                    $classKey = $tempProcessor->class->name;
+                                }
+                                else
+                                {
+                                    $classKey = 'wtf' . rand();
+                                }
 
-                            // $classKey = substr($value, 0, -3);
-                            // $classKey = str_replace(DIRECTORY_SEPARATOR, ".", $index);
-                            $result[$classKey] = $index;
-                            $this->classes[$classKey] = $tempProcessor;
+                                // $classKey = substr($value, 0, -3);
+                                // $classKey = str_replace(DIRECTORY_SEPARATOR, ".", $index);
+                                $result[$classKey] = $index;
+                                $this->classes[$classKey] = $tempProcessor;
+                            }
+                            else
+                            {
+                                $this->classes[$index] = 'corrupted';
+                            }
 
                             //  Dump to log
                             // echo $index . "\n";

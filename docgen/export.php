@@ -37,6 +37,7 @@
 
     foreach ($gen->classes as $key => $processor)
     {
+        // echo $key . " = " . $processor . "\n";
         echo $key . "\n";
     }
 

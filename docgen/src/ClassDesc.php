@@ -10,9 +10,17 @@
         public $hasConstructor = false;
         public $isStatic = false;
 
+        public $corrupted = false;
+
         public function __construct($processor, $block)
         {
             $this->processor = $processor;
+
+            if ($block->getTypeBoolean('@class') === false)
+            {
+                $this->corrupted = true;
+                return;
+            }
 
             $this->name = $block->getLineContent('@class');
 

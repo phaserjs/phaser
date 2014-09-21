@@ -12,6 +12,8 @@
         public $docgen;
         public $processLog;
 
+        public $corrupted;
+
         /**
         * Processes the given JS source file.
         * 
@@ -22,10 +24,13 @@
         {
             $this->docgen = $docgen;
 
+            $this->class = null;
             $this->consts = [];
             $this->methods = [];
             $this->properties = [];
             $this->file = $file;
+
+            $this->corrupted = false;
 
             $this->methods['private'] = [];
             $this->methods['protected'] = [];
@@ -91,7 +96,13 @@
             {
                 if ($this->blocks[$i]->isClass)
                 {
-                    $this->class = new ClassDesc($this, $this->blocks[$i]);
+                    $tempClass = new ClassDesc($this, $this->blocks[$i]);
+                    $this->class = $tempClass;
+
+                    if ($tempClass->corrupted)
+                    {
+                        $this->corrupted = true;
+                    }
                 }
                 else if ($this->blocks[$i]->isConst)
                 {
@@ -142,6 +153,11 @@
                 }
             }
 
+            if ($this->class === null)
+            {
+                $this->corrupted = true;
+            }
+
             //  Alphabetically sort the arrays based on the key
             ksort($this->consts);
 
@@ -154,6 +170,18 @@
             ksort($this->properties['protected']);
             ksort($this->properties['private']);
 
+        }
+
+        public function __toString()
+        {
+            if ($this->corrupted)
+            {
+                return "JSDoc Corrupted Class";
+            }
+            else
+            {
+                return "Class: " . $this->class->name . ", Methods: " . count($this->methods['public']);
+            }
         }
         
         public function getArray()
