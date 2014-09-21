@@ -16,6 +16,11 @@
 
             $this->name = $block->getLineContent('@class');
 
+            if (substr($this->name, 0, 6) !== 'Phaser')
+            {
+                $this->name = 'PIXI.' . $this->name;
+            }
+
             $this->processor->log("vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv");
             $this->processor->log("Class: $this->name");
             $this->processor->log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
@@ -30,6 +35,11 @@
             if ($block->getTypeBoolean('@extends'))
             {
                 $this->extends = $block->getLineContent('@extends');
+
+                if (substr($this->extends, 0, 6) !== 'Phaser')
+                {
+                    $this->extends = 'PIXI.' . $this->extends;
+                }
             }
 
             if ($block->getTypeBoolean('@constructor'))
