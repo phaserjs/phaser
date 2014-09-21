@@ -92,9 +92,40 @@
 
     <h2>Methods</h2>
 
+    <h3>Public</h3>
     <ul>
 <?php
-    foreach ($data->methods as $methodName => $method)
+    foreach ($data->methods['public'] as $methodName => $method)
+    {
+        echo "<li><a href=\"view.php?src=$src&amp;method={$method->name}\">{$method->name}</a></li>";
+    }
+?>
+    </ul>
+
+    <h3>Protected</h3>
+    <ul>
+<?php
+    foreach ($data->methods['protected'] as $methodName => $method)
+    {
+        echo "<li><a href=\"view.php?src=$src&amp;method={$method->name}\">{$method->name}</a></li>";
+    }
+?>
+    </ul>
+
+    <h3>Private</h3>
+    <ul>
+<?php
+    foreach ($data->methods['private'] as $methodName => $method)
+    {
+        echo "<li><a href=\"view.php?src=$src&amp;method={$method->name}\">{$method->name}</a></li>";
+    }
+?>
+    </ul>
+
+    <h3>Static</h3>
+    <ul>
+<?php
+    foreach ($data->methods['static'] as $methodName => $method)
     {
         echo "<li><a href=\"view.php?src=$src&amp;method={$method->name}\">{$method->name}</a></li>";
     }
@@ -103,14 +134,36 @@
 
     <h2>Properties</h2>
 
+    <h3>Public</h3>
     <ul>
 <?php
-    foreach ($data->properties as $propertyName => $property)
+    foreach ($data->properties['public'] as $propertyName => $property)
     {
         echo "<li><a href=\"view.php?src=$src&amp;property={$property->name}\">{$property->name}</a></li>";
     }
 ?>
     </ul>
+
+    <h3>Protected</h3>
+    <ul>
+<?php
+    foreach ($data->properties['protected'] as $propertyName => $property)
+    {
+        echo "<li><a href=\"view.php?src=$src&amp;property={$property->name}\">{$property->name}</a></li>";
+    }
+?>
+    </ul>
+
+    <h3>Private</h3>
+    <ul>
+<?php
+    foreach ($data->properties['private'] as $propertyName => $property)
+    {
+        echo "<li><a href=\"view.php?src=$src&amp;property={$property->name}\">{$property->name}</a></li>";
+    }
+?>
+    </ul>
+
 
 </body>
 </html>

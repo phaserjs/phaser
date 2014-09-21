@@ -27,6 +27,15 @@
             $this->properties = [];
             $this->file = $file;
 
+            $this->methods['private'] = [];
+            $this->methods['protected'] = [];
+            $this->methods['public'] = [];
+            $this->methods['static'] = [];
+
+            $this->properties['private'] = [];
+            $this->properties['protected'] = [];
+            $this->properties['public'] = [];
+
             $this->scanFile();
         }
 
@@ -94,7 +103,22 @@
                 {
                     $tempMethod = new Method($this, $this->blocks[$i]);
 
-                    $this->methods[$tempMethod->name] = $tempMethod;
+                    if ($tempMethod->isPublic)
+                    {
+                        $this->methods['public'][$tempMethod->name] = $tempMethod;
+                    }
+                    else if ($tempMethod->isProtected)
+                    {
+                        $this->methods['protected'][$tempMethod->name] = $tempMethod;
+                    }
+                    else if ($tempMethod->isPrivate)
+                    {
+                        $this->methods['private'][$tempMethod->name] = $tempMethod;
+                    }
+                    else if ($tempMethod->isStatic)
+                    {
+                        $this->methods['static'][$tempMethod->name] = $tempMethod;
+                    }
                 }
                 else if ($this->blocks[$i]->isProperty)
                 {
@@ -102,15 +126,33 @@
 
                     if ($tempProperty->corrupted === false)
                     {
-                        $this->properties[$tempProperty->name] = $tempProperty;
+                        if ($tempProperty->isPublic)
+                        {
+                            $this->properties['public'][$tempProperty->name] = $tempProperty;
+                        }
+                        else if ($tempProperty->isProtected)
+                        {
+                            $this->properties['protected'][$tempProperty->name] = $tempProperty;
+                        }
+                        else if ($tempProperty->isPrivate)
+                        {
+                            $this->properties['private'][$tempProperty->name] = $tempProperty;
+                        }
                     }
                 }
             }
 
             //  Alphabetically sort the arrays based on the key
             ksort($this->consts);
-            ksort($this->methods);
-            ksort($this->properties);
+
+            ksort($this->methods['public']);
+            ksort($this->methods['protected']);
+            ksort($this->methods['private']);
+            ksort($this->methods['static']);
+
+            ksort($this->properties['public']);
+            ksort($this->properties['protected']);
+            ksort($this->properties['private']);
 
         }
         
