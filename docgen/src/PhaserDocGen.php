@@ -31,16 +31,25 @@
             ob_end_flush();
         }
 
-        public function extend()
+        public function extend($classKey = '')
         {
-            //  This will go through each class and add in inherited properties, etc
-            foreach ($this->classes as $key => $processor)
+            if ($classKey !== '')
             {
-                $processor->extend();
-
-                echo "Extended $key\n";
-                ob_flush();
+                echo "Extending $classKey\n";
+                $this->classes[classKey]->extend();
             }
+            else
+            {
+                //  This will go through each class and add in inherited properties, etc
+                foreach ($this->classes as $key => $processor)
+                {
+                    $processor->extend();
+
+                    echo "Extended $key\n";
+                    ob_flush();
+                }
+            }
+
         }
 
         private function dirToArray($dir)

@@ -67,6 +67,18 @@
 
         }
 
+        public function extendsFrom()
+        {
+            if ($this->extends !== '')
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         public function getArray()
         {
             $params = [];

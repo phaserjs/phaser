@@ -34,16 +34,18 @@
 <?php
     $gen = new PhaserDocGen();
     $gen->start();
+    $gen->extend('Phaser.Sprite');
 
-    foreach ($gen->classes as $key => $processor)
-    {
+
+
+    // foreach ($gen->classes as $key => $processor)
+    // {
         // echo $key . " = " . $processor . "\n";
-        echo $key . "\n";
-    }
+        // echo $key . "\n";
+    // }
 
     // print_r($gen->classes);
 
-    // $gen->extend();
 ?>
     </pre>
 

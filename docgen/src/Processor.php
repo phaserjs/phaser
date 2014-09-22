@@ -233,7 +233,23 @@
 
         public function extend()
         {
+            //  Need to iterate through all of the classes this may extend from, in order, and build it up
 
+            $proc = $this;
+            $parents = [];
+
+            // while ($proc->class->extendsFrom)
+            // {
+            //     $parents[$proc->class->name] = $proc->getArray();
+            //     $proc = $this->docgen->get();
+
+            // }
+
+            //  Is there anything to extend anyway?
+            if ($this->class->extendsFrom)
+            {
+
+            }
         }
 
         /**
