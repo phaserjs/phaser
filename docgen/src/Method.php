@@ -8,6 +8,7 @@
         public $parameters = []; // an array containing the parameters
         public $help = [];
         public $returns = null;
+        public $inherited = false;
 
         public $isPublic = true;
         public $isProtected = false;

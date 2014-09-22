@@ -34,7 +34,14 @@
 <?php
     $gen = new PhaserDocGen();
     $gen->start();
+
+    $sprite = $gen->get('Phaser.Sprite');
+
+    echo $sprite;
+
     $gen->extend('Phaser.Sprite');
+
+    echo $sprite;
 
 
 

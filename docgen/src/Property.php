@@ -8,6 +8,7 @@
         public $default = null;     // assigned value is the default value
         public $help = [];
         public $inlineHelp = '';
+        public $inherited = false;
 
         public $isPublic = true;
         public $isProtected = false;

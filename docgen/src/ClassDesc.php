@@ -44,7 +44,7 @@
             {
                 $this->extends = $block->getLineContent('@extends');
 
-                if (substr($this->extends, 0, 6) !== 'Phaser')
+                if (substr($this->extends, 0, 6) !== 'Phaser' && substr($this->extends, 0, 4) !== 'PIXI')
                 {
                     $this->extends = 'PIXI.' . $this->extends;
                 }

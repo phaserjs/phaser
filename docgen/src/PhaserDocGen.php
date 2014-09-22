@@ -19,16 +19,11 @@
             $this->src = realpath('../src');
 
             $this->classes = [];
-
         }
 
         public function start()
         {
-            ob_start();
-
             $this->files = $this->dirToArray($this->src);
-
-            ob_end_flush();
         }
 
         public function extend($classKey = '')
@@ -36,7 +31,7 @@
             if ($classKey !== '')
             {
                 echo "Extending $classKey\n";
-                $this->classes[classKey]->extend();
+                $this->classes[$classKey]->extend();
             }
             else
             {
@@ -46,10 +41,19 @@
                     $processor->extend();
 
                     echo "Extended $key\n";
-                    ob_flush();
                 }
             }
 
+        }
+
+        public function get($classKey)
+        {
+            if (array_key_exists($classKey, $this->classes))
+            {
+                return $this->classes[$classKey];
+            }
+
+            return null;
         }
 
         private function dirToArray($dir)
@@ -101,7 +105,6 @@
 
                             //  Dump to log
                             // echo $index . "\n";
-                            ob_flush();
                         }
                     }
                 } 

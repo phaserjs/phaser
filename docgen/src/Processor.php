@@ -172,18 +172,16 @@
 
         }
 
-        public function __toString()
+        public function getPublicProperties()
         {
-            if ($this->corrupted)
-            {
-                return "JSDoc Corrupted Class";
-            }
-            else
-            {
-                return "Class: " . $this->class->name . ", Methods: " . count($this->methods['public']);
-            }
+            return $this->properties['public'];
         }
-        
+
+        public function getPublicMethods()
+        {
+            return $this->methods['public'];
+        }
+       
         public function getArray()
         {
             $consts = [];
@@ -233,23 +231,63 @@
 
         public function extend()
         {
-            //  Need to iterate through all of the classes this may extend from, in order, and build it up
+            //  Quick bailout
+            if (!$this->class->extendsFrom())
+            {
+                echo "quick bailout\n";
+                return;
+            }
 
             $proc = $this;
-            $parents = [];
 
-            // while ($proc->class->extendsFrom)
-            // {
-            //     $parents[$proc->class->name] = $proc->getArray();
-            //     $proc = $this->docgen->get();
-
-            // }
-
-            //  Is there anything to extend anyway?
-            if ($this->class->extendsFrom)
+            do
             {
+                $extends = $proc->class->extends;
+                $proc = $this->docgen->get($extends);
+                echo "\n\nextend found: " . $proc->getName() . "\n";
 
+                $this->merge($proc);
             }
+            while ($proc->class->extendsFrom());
+
+        }
+
+        public function merge($processor)
+        {
+            echo "Merging ...\n\n";
+
+            //  We only want to merge in public methods and properties.
+            //  Technically JavaScript merges in bloody everything, but for the sake of docs we'll keep them #public# only.
+
+            echo "Methods\n";
+            echo "-------\n";
+
+            $inheritedMethods = $processor->getPublicMethods();
+
+            //  Flag them as inherited!
+            foreach ($inheritedMethods as $key => $method)
+            {
+                echo $method->name . "\n";
+                $method->inherited = true;
+            }
+
+            $this->methods['public'] = array_merge($this->methods['public'], $inheritedMethods);
+
+            echo "\n";
+            echo "Properties\n";
+            echo "----------\n";
+
+            $inheritedProperties = $processor->getPublicProperties();
+
+            //  Flag them as inherited!
+            foreach ($inheritedProperties as $key => $property)
+            {
+                echo $property->name . "\n";
+                $property->inherited = true;
+            }
+
+            $this->properties['public'] = array_merge($this->properties['public'], $inheritedProperties);
+
         }
 
         /**
@@ -271,6 +309,24 @@
             return $this->processLog;
             // return array_reverse($this->processLog);
 
+        }
+
+        public function getName() {
+
+            return $this->class->name;
+
+        }
+
+        public function __toString()
+        {
+            if ($this->corrupted)
+            {
+                return "JSDoc Corrupted Class";
+            }
+            else
+            {
+                return "Class: " . $this->class->name . ", Methods: " . count($this->methods['public']) . ", Properties: " . count($this->properties['public']) . "\n";
+            }
         }
 
     }
