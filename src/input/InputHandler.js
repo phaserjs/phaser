@@ -1041,12 +1041,12 @@ Phaser.InputHandler.prototype = {
         {
             if (this.allowHorizontalDrag)
             {
-                this.sprite.x = pointer.x + this._dragPoint.x + this.dragOffset.x;
+                this.sprite.x = pointer.x + this._dragPoint.x + this.game.camera.x + this.dragOffset.x;
             }
 
             if (this.allowVerticalDrag)
             {
-                this.sprite.y = pointer.y + this._dragPoint.y + this.dragOffset.y;
+                this.sprite.y = pointer.y + this._dragPoint.y + this.game.camera.y + this.dragOffset.y;
             }
 
             if (this.boundsRect)
@@ -1262,11 +1262,11 @@ Phaser.InputHandler.prototype = {
                 var bounds = this.sprite.getBounds();
                 this.sprite.x = pointer.x + (this.sprite.x - bounds.centerX);
                 this.sprite.y = pointer.y + (this.sprite.y - bounds.centerY);
-                this._dragPoint.setTo(this.sprite.x - pointer.x, this.sprite.y - pointer.y);
+                this._dragPoint.setTo(this.sprite.x - pointer.x - this.game.camera.x, this.sprite.y - pointer.y - this.game.camera.y);
             }
             else
             {
-                this._dragPoint.setTo(this.sprite.x - pointer.x, this.sprite.y - pointer.y);
+                this._dragPoint.setTo(this.sprite.x - pointer.x - this.game.camera.x, this.sprite.y - pointer.y - this.game.camera.y);
             }
         }
 
