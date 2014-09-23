@@ -67,7 +67,7 @@ Phaser.AudioSprite = function (game, key) {
             sound.addMarker(k, marker.start, (marker.end - marker.start), null, false);
         }
 
-        this.sounds[k] = s;
+        this.sounds[k] = sound;
     }
 
     if (this.config.autoplay)
