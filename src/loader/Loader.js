@@ -615,17 +615,17 @@ Phaser.Loader.prototype = {
     },
 
     /**
-    * Add a new audiosprite file to the loader.
-    *
-    * @method Phaser.Loader#audiosprite
-    * @param {string} key - Unique asset key of the audio file.
-    * @param {Array|string} urls - An array containing the URLs of the audio files, i.e.: [ 'audiosprite.mp3', 'audiosprite.ogg', 'audiosprite.m4a' ] or a single string containing just one URL.
-    * @param {string} atlasurl - the url containing the audiosprite configuration json
-    * @return {Phaser.Loader} This Loader instance.
-    */
-    audiosprite: function (key, urls, atlasurl) {
-        this.audio(key,urls);
-        this.json(key+'-audioatlas', atlasurl);
+     * Add a new audiosprite file to the loader.
+     *
+     * @method Phaser.Loader#audiosprite
+     * @param {string} key - Unique asset key of the audio file.
+     * @param {Array|string} urls - An array containing the URLs of the audio files, i.e.: [ 'audiosprite.mp3', 'audiosprite.ogg', 'audiosprite.m4a' ] or a single string containing just one URL.
+     * @param {string} atlasurl - the url containing the audiosprite configuration json
+     * @return {Phaser.Loader} This Loader instance.
+     */
+    audiosprite: function(key, urls, atlasurl) {
+        this.audio(key, urls);
+        this.json(key + '-audioatlas', atlasurl);
         return this;
     },
 

@@ -125,14 +125,14 @@ Phaser.GameObjectCreator.prototype = {
 
     },
     /**
-    * Creates a new AudioSprite object.
-    *
-    * @method Phaser.GameObjectCreator#audioSrpite
-    * @param {string} key - The Game.cache key of the sound that this object will use.
-    * @return {Phaser.AudioSprite} The newly created audioSprite object.
-    */
-    audiosprite = function(key) {
-      return this.game.sound.addSprite(key);
+     * Creates a new AudioSprite object.
+     *
+     * @method Phaser.GameObjectCreator#audioSrpite
+     * @param {string} key - The Game.cache key of the sound that this object will use.
+     * @return {Phaser.AudioSprite} The newly created audioSprite object.
+     */
+    audiosprite: function(key) {
+        return this.game.sound.addSprite(key);
     },
 
     /**
