@@ -369,13 +369,16 @@ Phaser.SoundManager.prototype = {
     /**
      * Adds a new AudioSprite into the SoundManager.
      *
-     * @method Phaser.SoundManager#add
+     * @method Phaser.SoundManager#addSprite
      * @param {string} key - Asset key for the sound.
      * @return {Phaser.AudioSprite} The new AudioSprite instance.
      */
     addSprite: function(key) {
+
         var audioSprite = new Phaser.AudioSprite(this.game, key);
+
         return audioSprite;
+
     },
 
     /**

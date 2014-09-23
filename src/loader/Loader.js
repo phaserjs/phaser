@@ -615,18 +615,23 @@ Phaser.Loader.prototype = {
     },
 
     /**
-     * Add a new audiosprite file to the loader.
+     * Add a new audiosprite file to the loader. Audio Sprites are a combination of audio files and a JSON configuration.
+     * The JSON follows the format of that created by https://github.com/tonistiigi/audiosprite
      *
      * @method Phaser.Loader#audiosprite
      * @param {string} key - Unique asset key of the audio file.
      * @param {Array|string} urls - An array containing the URLs of the audio files, i.e.: [ 'audiosprite.mp3', 'audiosprite.ogg', 'audiosprite.m4a' ] or a single string containing just one URL.
-     * @param {string} atlasurl - the url containing the audiosprite configuration json
+     * @param {string} atlasURL - The URL of the audiosprite configuration json.
      * @return {Phaser.Loader} This Loader instance.
      */
-    audiosprite: function(key, urls, atlasurl) {
+    audiosprite: function(key, urls, atlasURL) {
+
         this.audio(key, urls);
-        this.json(key + '-audioatlas', atlasurl);
+
+        this.json(key + '-audioatlas', atlasURL);
+
         return this;
+
     },
 
     /**
