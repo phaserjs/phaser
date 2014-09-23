@@ -176,7 +176,7 @@ Phaser.GameObjectFactory.prototype = {
     sound: function (key, volume, loop, connect) {
 
         return this.game.sound.add(key, volume, loop, connect);
-
+    
     },
 
     /**

@@ -865,24 +865,35 @@ Phaser.Point.centroid = function (points, out) {
 };
 
 /**
-* Parses an object for x & y properties and returns a new Phaser.Point
+* Parses an object for x and/or y properties and returns a new Phaser.Point with matching values.
+* If the object doesn't contain those properties a Point with x/y of zero will be returned.
 *
-* @method Phaser.Point#parse
-* @param {Object} obj - The object to parse
-* @param {string} [xProp='x'] - Optional x property name. Defaults to 'x'
-* @param {string} [yProp='y'] - Optional y property name. Defaults to 'y'
-* @return {Phaser.Point} The new Point object.
+* @method Phaser.Point.parse
 * @static
+* @param {Object} obj - The object to parse.
+* @param {string} [xProp='x'] - The property used to set the Point.x value.
+* @param {string} [yProp='y'] - The property used to set the Point.y value.
+* @return {Phaser.Point} The new Point object.
 */
-
 Phaser.Point.parse = function(obj, xProp, yProp) {
+
     xProp = xProp || 'x';
     yProp = yProp || 'y';
 
-    if(obj.hasOwnProperty(xProp) && obj.hasOwnProperty(yProp)) {
-        return new Phaser.Point(obj[xProp], obj[yProp]);
+    var point = new Phaser.Point();
+
+    if (obj[xProp])
+    {
+        point.x = parseInt(obj[xProp], 10);
     }
-    throw new Error('Object does not contain ' + xProp + ' and ' + yProp + ' properties.');
+
+    if (obj[yProp])
+    {
+        point.y = parseInt(obj[yProp], 10);
+    }
+
+    return point;
+
 };
 
 //   Because PIXI uses its own Point, we'll replace it with ours to avoid duplicating code or confusion.
