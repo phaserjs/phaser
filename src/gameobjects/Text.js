@@ -508,7 +508,11 @@ Object.defineProperty(Phaser.Text.prototype, 'text', {
         {
             this._text = value.toString() || ' ';
             this.dirty = true;
-            this.updateTransform();
+
+            if (this.parent)
+            {
+                this.updateTransform();
+            }
         }
 
     }
@@ -532,7 +536,11 @@ Object.defineProperty(Phaser.Text.prototype, 'font', {
             this._font = value.trim();
             this.style.font = this._fontWeight + ' ' + this._fontSize + "px '" + this._font + "'";
             this.dirty = true;
-            this.updateTransform();
+
+            if (this.parent)
+            {
+                this.updateTransform();
+            }
         }
 
     }
@@ -558,7 +566,11 @@ Object.defineProperty(Phaser.Text.prototype, 'fontSize', {
             this._fontSize = value;
             this.style.font = this._fontWeight + ' ' + this._fontSize + "px '" + this._font + "'";
             this.dirty = true;
-            this.updateTransform();
+
+            if (this.parent)
+            {
+                this.updateTransform();
+            }
         }
 
     }
@@ -582,7 +594,11 @@ Object.defineProperty(Phaser.Text.prototype, 'fontWeight', {
             this._fontWeight = value;
             this.style.font = this._fontWeight + ' ' + this._fontSize + "px '" + this._font + "'";
             this.dirty = true;
-            this.updateTransform();
+
+            if (this.parent)
+            {
+                this.updateTransform();
+            }
         }
 
     }
@@ -737,7 +753,11 @@ Object.defineProperty(Phaser.Text.prototype, 'lineSpacing', {
         {
             this._lineSpacing = parseFloat(value);
             this.dirty = true;
-            this.updateTransform();
+
+            if (this.parent)
+            {
+                this.updateTransform();
+            }
         }
 
     }
