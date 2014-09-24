@@ -85,6 +85,7 @@
     "src/loader/Loader.js",
     "src/loader/LoaderParser.js",
 
+    "src/sound/AudioSprite.js",
     "src/sound/Sound.js",
     "src/sound/SoundManager.js",
 

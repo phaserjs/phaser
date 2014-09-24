@@ -152,6 +152,7 @@
     <script src="$path/src/loader/Loader.js"></script>
     <script src="$path/src/loader/LoaderParser.js"></script>
 
+    <script src="$path/src/sound/AudioSprite.js"></script>
     <script src="$path/src/sound/Sound.js"></script>
     <script src="$path/src/sound/SoundManager.js"></script>
 
