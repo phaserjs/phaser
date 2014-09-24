@@ -98,6 +98,12 @@ Phaser.Text = function (game, x, y, text, style) {
     this._lineSpacing = 0;
 
     /**
+    * @property {number} _charCount - Internal character counter used by the text coloring.
+    * @private
+    */
+    this._charCount = 0;
+
+    /**
     * @property {Phaser.Events} events - The Events you can subscribe to that are dispatched when certain things happen on this Sprite or its components.
     */
     this.events = new Phaser.Events(this);
@@ -111,6 +117,11 @@ Phaser.Text = function (game, x, y, text, style) {
     * @property {Phaser.Point} cameraOffset - If this object is fixedToCamera then this stores the x/y offset that its drawn at, from the top-left of the camera view.
     */
     this.cameraOffset = new Phaser.Point();
+
+    /**
+    * @property {array} colors - An array of the color values as specified by `Text.addColor`.
+    */
+    this.colors = [];
 
     this.setStyle(style);
 
@@ -393,6 +404,8 @@ Phaser.Text.prototype.updateText = function () {
     this.context.lineCap = 'round';
     this.context.lineJoin = 'round';
 
+    this._charCount = 0;
+
     //draw lines line by line
     for (i = 0; i < lines.length; i++)
     {
@@ -409,18 +422,84 @@ Phaser.Text.prototype.updateText = function () {
 
         linePosition.y += this._lineSpacing;
 
-        if (this.style.stroke && this.style.strokeThickness)
+        if (this.colors.length > 0)
         {
-            this.context.strokeText(lines[i], linePosition.x, linePosition.y);
+            this.updateLine(lines[i], linePosition.x, linePosition.y);
         }
-
-        if (this.style.fill)
+        else
         {
-            this.context.fillText(lines[i], linePosition.x, linePosition.y);
+            if (this.style.stroke && this.style.strokeThickness)
+            {
+                this.context.strokeText(lines[i], linePosition.x, linePosition.y);
+            }
+
+            if (this.style.fill)
+            {
+                this.context.fillText(lines[i], linePosition.x, linePosition.y);
+            }
         }
     }
 
     this.updateTexture();
+};
+
+Phaser.Text.prototype.updateLine = function (line, x, y) {
+
+    for (var i = 0; i < line.length; i++)
+    {
+        var letter = line[i];
+
+        if (this.colors[this._charCount])
+        {
+            this.context.fillStyle = this.colors[this._charCount];
+            this.context.strokeStyle = this.colors[this._charCount];
+        }
+
+        if (this.style.stroke && this.style.strokeThickness)
+        {
+            this.context.strokeText(letter, x, y);
+        }
+
+        if (this.style.fill)
+        {
+            this.context.fillText(letter, x, y);
+        }
+
+        x += this.context.measureText(letter).width;
+
+        this._charCount++;
+    }
+
+};
+
+/**
+* Clears any previously set color stops.
+*
+* @method Phaser.Text.prototype.clearColors
+*/
+Phaser.Text.prototype.clearColors = function () {
+
+    this.colors = [];
+    this.dirty = true;
+
+};
+
+/**
+* This method allows you to set specific colors within the Text.
+* It works by taking a color value, which is a typical HTML string such as `#ff0000` or `rgb(255,0,0)` and a position.
+* The position value is the index of the character in the Text string to start applying this color to.
+* Once set the color remains in use until either another color or the end of the string is encountered.
+* For example if the Text was `Photon Storm` and you did `Text.addColor('#ffff00', 6)` it would color in the word `Storm` in yellow.
+*
+* @method Phaser.Text.prototype.addColor
+* @param {string} color - A canvas fillstyle that will be used on the text eg `red`, `#00FF00`, `rgba()`.
+* @param {number} position - The index of the character in the string to start applying this color value from.
+*/
+Phaser.Text.prototype.addColor = function (color, position) {
+
+    this.colors[position] = color;
+    this.dirty = true;
+
 };
 
 /**
