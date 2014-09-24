@@ -44,7 +44,6 @@
     echo $sprite;
 
 
-
     // foreach ($gen->classes as $key => $processor)
     // {
         // echo $key . " = " . $processor . "\n";
