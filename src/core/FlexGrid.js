@@ -34,6 +34,7 @@ Phaser.FlexGrid = function (manager, width, height) {
     this.width = width;
     this.height = height;
 
+    this.boundsCustom = new Phaser.Rectangle(0, 0, width, height);
     this.boundsFluid = new Phaser.Rectangle(0, 0, width, height);
     this.boundsFull = new Phaser.Rectangle(0, 0, width, height);
     this.boundsNone = new Phaser.Rectangle(0, 0, width, height);
@@ -42,6 +43,7 @@ Phaser.FlexGrid = function (manager, width, height) {
     * @property {Phaser.Point} position - 
     * @readonly
     */
+    this.positionCustom = new Phaser.Point(0, 0);
     this.positionFluid = new Phaser.Point(0, 0);
     this.positionFull = new Phaser.Point(0, 0);
     this.positionNone = new Phaser.Point(0, 0);
@@ -50,10 +52,16 @@ Phaser.FlexGrid = function (manager, width, height) {
     * @property {Phaser.Point} scaleFactor - The scale factor based on the game dimensions vs. the scaled dimensions.
     * @readonly
     */
+    this.scaleCustom = new Phaser.Point(1, 1);
     this.scaleFluid = new Phaser.Point(1, 1);
     this.scaleFluidInversed = new Phaser.Point(1, 1);
     this.scaleFull = new Phaser.Point(1, 1);
     this.scaleNone = new Phaser.Point(1, 1);
+
+    this.customWidth = 0;
+    this.customHeight = 0;
+    this.customOffsetX = 0;
+    this.customOffsetY = 0;
 
     this.ratioH = width / height;
     this.ratioV = height / width;
@@ -92,6 +100,43 @@ Phaser.FlexGrid.prototype = {
     },
 
     //  Need ability to create your own layers with custom scaling, etc.
+
+    /**
+     * A custom layer is centered on the game and maintains its aspect ratio as it scales up and down.
+     *
+     * @method createCustomLayer
+     * @param {number} width - Width of this layer in pixels.
+     * @param {number} height - Height of this layer in pixels.
+     * @param {array} [children] - An array of children that are used to populate the FlexLayer.
+     * @return {Phaser.FlexLayer} The Layer object.
+     */
+    createCustomLayer: function (width, height, children, addToWorld) {
+
+        if (typeof addToWorld === 'undefined') { addToWorld = true; }
+
+        this.customWidth = width;
+        this.customHeight = height;
+
+        this.boundsCustom.width = width;
+        this.boundsCustom.height = height;
+
+        var layer = new Phaser.FlexLayer(this, this.positionCustom, this.boundsCustom, this.scaleCustom);
+
+        if (addToWorld)
+        {
+            this.game.world.add(layer);
+        }
+
+        this.layers.push(layer);
+
+        if (typeof children !== 'undefined' && typeof children !== null)
+        {
+            layer.addMultiple(children);
+        }
+
+        return layer;
+
+    },
 
     /**
      * A fluid layer is centered on the game and maintains its aspect ratio as it scales up and down.
@@ -231,6 +276,24 @@ Phaser.FlexGrid.prototype = {
         this.positionFluid.set(this.boundsFluid.x, this.boundsFluid.y);
         this.positionNone.set(this.boundsNone.x, this.boundsNone.y);
 
+        //  Custom Layer
+
+        /*
+        if (this.customWidth > 0)
+        {
+            var customMultiplier = Math.min((this.manager.height / this.customHeight), (this.manager.width / this.customWidth));
+
+            this.boundsCustom.width = Math.round(this.customWidth * customMultiplier);
+            this.boundsCustom.height = Math.round(this.customHeight * customMultiplier);
+
+            this.boundsCustom.centerOn(this.manager.bounds.centerX, this.manager.bounds.centerY);
+
+            this.scaleCustom.set(this.boundsCustom.width / this.width, this.boundsCustom.height / this.height);
+
+            this.positionCustom.set(this.boundsCustom.x, this.boundsCustom.y);
+        }
+        */
+
     },
 
     /**
@@ -245,14 +308,17 @@ Phaser.FlexGrid.prototype = {
         //     this.layers[i].debug();
         // }
 
-        this.game.debug.text(this.boundsFull.width + ' x ' + this.boundsFull.height, this.boundsFull.x + 4, this.boundsFull.y + 16);
-        this.game.debug.geom(this.boundsFull, 'rgba(0,0,255,0.9', false);
+        // this.game.debug.text(this.boundsFull.width + ' x ' + this.boundsFull.height, this.boundsFull.x + 4, this.boundsFull.y + 16);
+        // this.game.debug.geom(this.boundsFull, 'rgba(0,0,255,0.9', false);
 
         this.game.debug.text(this.boundsFluid.width + ' x ' + this.boundsFluid.height, this.boundsFluid.x + 4, this.boundsFluid.y + 16);
         this.game.debug.geom(this.boundsFluid, 'rgba(255,0,0,0.9', false);
 
         this.game.debug.text(this.boundsNone.width + ' x ' + this.boundsNone.height, this.boundsNone.x + 4, this.boundsNone.y + 16);
         this.game.debug.geom(this.boundsNone, 'rgba(0,255,0,0.9', false);
+
+        // this.game.debug.text(this.boundsCustom.width + ' x ' + this.boundsCustom.height, this.boundsCustom.x + 4, this.boundsCustom.y + 16);
+        // this.game.debug.geom(this.boundsCustom, 'rgba(255,255,0,0.9', false);
 
     }
 
