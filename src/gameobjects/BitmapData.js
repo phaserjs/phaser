@@ -1066,11 +1066,31 @@ Phaser.BitmapData.prototype = {
     * @method Phaser.BitmapData#alphaMask
     * @param {Phaser.Sprite|Phaser.Image|Phaser.Text|Phaser.BitmapData|HTMLImage|HTMLCanvasElement|string} source - The source to copy from. If you give a string it will try and find the Image in the Game.Cache first. This is quite expensive so try to provide the image itself.
     * @param {Phaser.Sprite|Phaser.Image|Phaser.Text|Phaser.BitmapData|HTMLImage|HTMLCanvasElement|string} [mask] - The object to be used as the mask. If you give a string it will try and find the Image in the Game.Cache first. This is quite expensive so try to provide the image itself. If you don't provide a mask it will use this BitmapData as the mask.
+    * @param {Phaser.Rectangle} [sourceRect] - A Rectangle where x/y define the coordinates to draw the Source image to and width/height define the size.
+    * @param {Phaser.Rectangle} [maskRect] - A Rectangle where x/y define the coordinates to draw the Mask image to and width/height define the size.
     * @return {Phaser.BitmapData} This BitmapData object for method chaining.
     */
-    alphaMask: function (source, mask) {
+    alphaMask: function (source, mask, sourceRect, maskRect) {
 
-        return this.draw(mask).blendSourceAtop().draw(source).blendReset();
+        if (typeof maskRect === 'undefined' || maskRect === null)
+        {
+            this.draw(mask).blendSourceAtop();
+        }
+        else
+        {
+            this.draw(mask, maskRect.x, maskRect.y, maskRect.width, maskRect.height).blendSourceAtop();
+        }
+
+        if (typeof sourceRect === 'undefined' || sourceRect === null)
+        {
+            this.draw(source).blendReset();
+        }
+        else
+        {
+            this.draw(source, sourceRect.x, sourceRect.y, sourceRect.width, sourceRect.height).blendReset();
+        }
+
+        return this;
 
     },
 
