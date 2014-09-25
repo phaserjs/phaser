@@ -25,7 +25,7 @@ declare module PIXI {
         HUE,
         SATURATION,
         COLOR,
-        LUMINOSITY,
+        LUMINOSITY
 
     }
 
@@ -37,11 +37,15 @@ declare module PIXI {
 
     }
 
-    export var INTERACTION_FREQUENCY: number;
+    export var defaultRenderOptions: PixiRendererOptions;
+
+    export var INTERACTION_REQUENCY: number;
     export var AUTO_PREVENT_DEFAULT: boolean;
 
     export var RAD_TO_DEG: number;
     export var DEG_TO_RAD: number;
+
+    export var RETINA_PREFIX: string;
 
     export var BaseTextureCache: { [key: string]: BaseTexture }
     export var TextureCache: { [key: string]: Texture }
@@ -49,8 +53,8 @@ declare module PIXI {
     export function rgb2hex(rgb: number[]): string;
     export function hex2rgb(hex: string): number[];
 
-    export function autoDetectRenderer(width?: number, height?: number, view?: HTMLCanvasElement, transparent?: boolean, antialias?: boolean): PixiRenderer;
-    export function autoDetectRecommendedRenderer(width?: number, height?: number, view?: HTMLCanvasElement, transparent?: boolean, antialias?: boolean): PixiRenderer;
+    export function autoDetectRenderer(width?: number, height?: number, options?: PixiRendererOptions): PixiRenderer;
+    export function autoDetectRecommendedRenderer(width?: number, height?: number, options?: PixiRendererOptions): PixiRenderer;
 
     export function canUseNewCanvasBlendModes(): boolean;
     export function getNextPowerOfTwo(number: number): number;
@@ -85,6 +89,17 @@ declare module PIXI {
 
         render(stage: Stage): void;
         resize(width: number, height: number): void;
+
+    }
+
+    export interface PixiRendererOptions {
+
+        antialias: boolean;
+        clearBeforeRender: boolean;
+        preserveDrawingBuffer: boolean;
+        resolution: number;
+        transparent: boolean;
+        view: HTMLCanvasElement;
 
     }
 
@@ -165,6 +180,12 @@ declare module PIXI {
 
     }
 
+    export class AsciiFilter extends AbstractFilter {
+
+        size: number;
+
+    }
+
     export class AssetLoader extends EventTarget {
 
         constructor(assetURLs: string[], crossorigin: boolean);
@@ -203,6 +224,7 @@ declare module PIXI {
         hasLoaded: boolean;
         id: number;
         premultipliedAlpha: boolean;
+        resolution: number;
         scaleMode: scaleModes;
         source: HTMLImageElement;
         width: number;
@@ -267,14 +289,14 @@ declare module PIXI {
 
     export class CanvasMaskManager {
 
-        pushMask(maskData: MaskData, context: CanvasRenderingContext2D): void;
-        popMask(context: CanvasRenderingContext2D): void;
+        pushMask(maskData: MaskData, renderSession: CanvasRenderingContext2D): void;
+        popMask(renderSession: CanvasRenderingContext2D): void;
 
     }
 
     export class CanvasRenderer implements PixiRenderer {
 
-        constructor(width?: number, height?: number, view?: HTMLCanvasElement, transparent?: boolean);
+        constructor(width?: number, height?: number, options?: PixiRendererOptions);
 
         clearBeforeRender: boolean;
         context: CanvasRenderingContext2D;
@@ -283,6 +305,7 @@ declare module PIXI {
         maskManager: CanvasMaskManager;
         refresh: boolean;
         renderSession: RenderSession;
+        resolution: number;
         transparent: boolean;
         type: number;
         view: HTMLCanvasElement;
@@ -384,7 +407,7 @@ declare module PIXI {
         click(e: InteractionData): void;
         getBounds(matrix?: Matrix): Rectangle;
         getLocalBounds(): Rectangle;
-        generateTexture(renderer: PixiRenderer): RenderTexture;
+        generateTexture(resolution: number, scaleMode: scaleModes, renderer: PixiRenderer): RenderTexture;
         mousedown(e: InteractionData): void;
         mouseout(e: InteractionData): void;
         mouseover(e: InteractionData): void;
@@ -415,10 +438,12 @@ declare module PIXI {
         addChild(child: DisplayObject): void;
         addChildAt(child: DisplayObject, index: number): void;
         getChildAt(index: number): DisplayObject;
+        getChildIndex(child: DisplayObject): number;
         removeChild(child: DisplayObject): DisplayObject;
         removeChildAt(index: number): DisplayObject;
         removeChildren(beginIndex?: number, endIndex?: number): DisplayObject[];
         removeStageReference(): void;
+        setChildIndex(child: DisplayObject, index: number): void;
 
     }
 
@@ -456,7 +481,7 @@ declare module PIXI {
         frameBuffer: WebGLFramebuffer;
         gl: WebGLRenderingContext;
         program: WebGLProgram;
-        scaleMode: number;
+        scaleMode: scaleModes;
 
         clear(): void;
         resize(width: number, height: number): void;
@@ -529,6 +554,7 @@ declare module PIXI {
         mouseOut: boolean;
         mouseoverEnabled: boolean;
         pool: InteractionData[];
+        resolution: number;
         stage: Stage;
         touchs: { [id: string]: InteractionData };
 
@@ -566,8 +592,12 @@ declare module PIXI {
         apply(pos: Point, newPos: Point): Point;
         applyInverse(pos: Point, newPos: Point): Point;
         determineMatrixArrayType(): number[];
+        rotate(angle: number): Matrix;
         fromArray(array: number[]): void;
+        translate(x: number, y: number): Matrix;
         toArray(transpose: boolean): number[];
+        scale(x: number, y: number): Matrix;
+
 
     }
 
@@ -590,6 +620,12 @@ declare module PIXI {
         onComplete(): void;
         play(): void;
         stop(): void;
+
+    }
+
+    export class NoiseFilter extends AbstractFilter {
+
+        noise: number;
 
     }
 
@@ -775,6 +811,7 @@ declare module PIXI {
         constructor(text: string, style?: TextStyle);
 
         context: CanvasRenderingContext2D;
+        resolution: number;
 
         destroy(destroyTexture: boolean): void;
         setStyle(style: TextStyle): void;
@@ -799,7 +836,7 @@ declare module PIXI {
         noFrame: boolean;
         trim: Point;
         width: number;
-        scope: any;
+        scope: Object;
         valid: boolean;
 
         destroy(destroyBase: boolean): void;
@@ -820,6 +857,37 @@ declare module PIXI {
 
         generateTilingTexture(forcePowerOfTwo: boolean): void;
         setTexture(texture: Texture): void;
+
+    }
+
+    export class TiltShiftFilter extends AbstractFilter {
+
+        blur: number;
+        gradientBlur: number;
+        start: number;
+        end: number;
+
+    }
+
+    export class TiltShiftXFilter extends AbstractFilter {
+
+        blur: number;
+        gradientBlur: number;
+        start: number;
+        end: number;
+
+        updateDelta(): void;
+
+    }
+
+    export class TiltShiftYFilter extends AbstractFilter {
+
+        blur: number;
+        gradientBlur: number;
+        start: number;
+        end: number;
+
+        updateDelta(): void;
 
     }
 
@@ -907,13 +975,14 @@ declare module PIXI {
 
         static createWebGLTexture(texture: Texture, gl: WebGLRenderingContext): void;
 
-        constructor(width?: number, height?: number, view?: HTMLCanvasElement, transparent?: boolean, antialias?: boolean, preserveDrawingBuffer?: boolean);
+        constructor(width?: number, height?: number, options?: PixiRendererOptions);
 
         contextLost: boolean;
         contextRestoreLost: boolean;
         height: number;
         gl: WebGLRenderingContext;
-        preserveDrawingBuffer: Boolean;
+        preserveDrawingBuffer: boolean;
+        resolution: number;
         transparent: boolean;
         type: number;
         view: HTMLCanvasElement;
@@ -973,11 +1042,12 @@ declare module PIXI {
 
     export class RenderTexture extends Texture {
 
-        constructor(width?: number, height?: number, renderer?: PixiRenderer, scaleMode?: scaleModes);
+        constructor(width?: number, height?: number, renderer?: PixiRenderer, scaleMode?: scaleModes, resolution?: number);
 
         frame: Rectangle;
         baseTexture: BaseTexture;
         renderer: PixiRenderer;
+        resolution: number;
 
         clear(): void;
         resize(width: number, height: number, updateBase: boolean): void;
@@ -1116,6 +1186,23 @@ declare module Phaser {
 
     }
 
+    class AudioSprite {
+
+        constructor(game: Phaser.Game, key: string);
+
+        game: Phaser.Game;
+        key: string;
+        config: any;
+        autoplayKey: string;
+        autoplay: boolean;
+        sounds: any;
+
+        get(marker: string): Phaser.Sound;
+        play(marker: string, volume?: number): Phaser.Sound;
+        stop(marker: string): Phaser.Sound;
+
+    }
+
     class ArrayList {
 
         first: any;
@@ -1131,7 +1218,6 @@ declare module Phaser {
         remove(child: any): any;
         reset(): void;
         setAll(key: any, value: any): void;
-
 
     }
 
@@ -1300,6 +1386,7 @@ declare module Phaser {
         static TEXT: number;
         static TEXTURE: number;
         static TILEMAP: number;
+        static XML: number;
 
         game: Phaser.Game;
         onSoundUnlock: Phaser.Signal;
@@ -1312,6 +1399,7 @@ declare module Phaser {
         addDefaultImage(): void;
         addImage(key: string, url: string, data: any): void;
         addJSON(key: string, urL: string, data: any): void;
+        addXML(key: string, url: string, data: any): void;
         addMisingImage(): void;
         addPhysicsData(key: string, url: string, JSONData: any, format: number): void;
         addRenderTexture(key: string, texture: RenderTexture): void;
@@ -1332,6 +1420,7 @@ declare module Phaser {
         checkBitmapDataKey(key: string): boolean;
         checkBitmapFontKey(key: string): boolean;
         checkJSONKey(key: string): boolean;
+        checkXMLKey(key: string): boolean;
         decodedSound(key: string, data: any): void;
         destroy(): void;
         getBinary(key: string): any;
@@ -1355,6 +1444,7 @@ declare module Phaser {
         getTextureFrame(key: string): Phaser.Frame;
         getTilemapData(key: string): any;
         getTilemap(key: string): any;
+        getXML(key: string): any;
         isSoundDecoded(key: string): boolean;
         isSoundReady(key: string): boolean;
         isSpriteSheet(key: string): boolean;
@@ -1364,12 +1454,13 @@ declare module Phaser {
         removeBitmapData(key: string): void;
         removeBitmapFont(key: string): void;
         removeCanvas(key: string): void;
-        removeImage(key: string): void;
+        removeImage(key: string, removeFromPixi?: boolean): void;
         removeJSON(key: string): void;
         removePhysics(key: string): void;
         removeSound(key: string): void;
         removeText(key: string): void;
         removeTilemap(key: string): void;
+        removeXML(key: string): void;
         updateFrameData(key: string, frameData: any): void;
         updateSound(key: string, property: string, value: Phaser.Sound): void;
 
@@ -1912,12 +2003,19 @@ declare module Phaser {
         manager: Phaser.ScaleManager;
         width: number;
         height: number;
+        boundsCustom: Phaser.Rectangle;
         boundsFluid: Phaser.Rectangle;
         boundsFull: Phaser.Rectangle;
         boundsNone: Phaser.Rectangle;
+        customWidth: number;
+        customHeight: number;
+        customOffsetX: number;
+        customOffsetY: number;
+        positionCustom: Phaser.Point;
         positionFluid: Phaser.Point;
         positionFull: Phaser.Point;
         positionNone: Phaser.Point;
+        scaleCustom: Phaser.Point;
         scaleFluid: Phaser.Point;
         scaleFluidInversed: Phaser.Point;
         scaleFull: Phaser.Point;
@@ -1926,6 +2024,7 @@ declare module Phaser {
         ratioV: number;
         multiplier: number;
 
+        createCustomLayer(width: number, height: number, children?: any[], addToWorld?: boolean): Phaser.FlexLayer;
         createFluidLayer(children: any[]): Phaser.FlexLayer;
         createFullLayer(children: any[]): Phaser.FlexLayer;
         createFixedLayer(children: any[]): Phaser.FlexLayer;
@@ -2087,6 +2186,7 @@ declare module Phaser {
         world: Phaser.World;
 
         audio(key: string, volume?: number, loop?: boolean, connect?: boolean): Phaser.Sound;
+        audioSprite(key: string): Phaser.AudioSprite;
         bitmapData(width?: number, height?: number, key?: string, addToCache?: boolean): Phaser.BitmapData;
         bitmapText(x: number, y: number, font: string, text?: string, size?: number): Phaser.BitmapText;
         button(x?: number, y?: number, key?: string, callback?: Function, callbackContext?: any, overFrame?: any, outFrame?: any, downFrame?: any, upFrame?: any): Phaser.Button;
@@ -2094,7 +2194,7 @@ declare module Phaser {
         filter(filter: any, ...args: any[]): Phaser.Filter;
         graphics(x: number, y: number): Phaser.Graphics;
         group(parent?: any, name?: string, addToStage?: boolean, enableBody?: boolean, physicsBodyType?: number): Phaser.Group;
-        image(x: number, y: number, key: any, frame?: any): Phaser.Sprite;
+        image(x: number, y: number, key: any, frame?: any): Phaser.Image;
         renderTexture(width?: number, height?: number, key?: any, addToCache?: boolean): Phaser.RenderTexture;
         retroFont(font: string, characterWidth: number, characterHeight: number, chars: string, charsPerRow: number, xSpacing?: number, ySpacing?: number, xOffset?: number, yOffset?: number): Phaser.RetroFont;
         rope(x: number, y: number, key: any, frame?: any, points?: Phaser.Point[]): Phaser.Rope;
@@ -2116,6 +2216,7 @@ declare module Phaser {
         world: Phaser.World;
 
         audio(key: string, volume?: number, loop?: boolean, connect?: boolean): Phaser.Sound;
+        audioSprite(key: string): Phaser.AudioSprite;
         bitmapData(width?: number, height?: number, key?: string, addToCache?: boolean): Phaser.BitmapData;
         bitmapText(x: number, y: number, font: string, text?: string, size?: number, group?: Phaser.Group): Phaser.BitmapText;
         button(x?: number, y?: number, key?: string, callback?: Function, callbackContext?: any, overFrame?: any, outFrame?: any, downFrame?: any, upFrame?: any, group?: Phaser.Group): Phaser.Button;
@@ -2317,6 +2418,7 @@ declare module Phaser {
         exists: boolean;
         fixedToCamera: boolean;
         game: Phaser.Game;
+        ignoreDestroy: boolean;
         length: number;
         name: string;
         onDestroy: Phaser.Signal;
@@ -2458,7 +2560,7 @@ declare module Phaser {
         minPriorityID: number;
         mouse: Phaser.Mouse;
         mousePointer: Phaser.Pointer;
-        moveCallbacks: Function[];
+        moveCallbacks: (pointer: Phaser.Pointer, x: number, y: number) => void[];
         moveCallbackContext: any;
         mspointer: Phaser.MSPointer;
         multiInputOverride: number;
@@ -2832,6 +2934,7 @@ declare module Phaser {
         atlasJSONHash(key: string, textureURL: string, atlasURL?: string, atlasData?: any): Phaser.Loader;
         atlasXML(key: string, textureURL: string, atlasURL?: string, atlasData?: any): Phaser.Loader;
         audio(key: string, urls: any, autoDecode?: boolean): Phaser.Loader;
+        audiosprite(key: string, urls: any, atlasurl: string): Phaser.Loader;
         binary(key: string, url: string, callback?: Function, callbackContext?: Function): Phaser.Loader;
         bitmapFont(key: string, textureURL: string, xmlURL?: string, xmlData?: any, xSpacing?: number, ySpacing?: number): Phaser.Loader;
         checkKeyExists(type: string, key: string): boolean;
@@ -2860,6 +2963,7 @@ declare module Phaser {
         totalLoadedPacks(): number;
         totalQueuedFiles(): number;
         totalQueuedPacks(): number;
+        xml(key: string, url: string, overwrite?: boolean): Phaser.Loader;
         xmlLoadComplete(index: number): void;
 
     }
@@ -4027,6 +4131,7 @@ declare module Phaser {
         static negative(a: Phaser.Point, out?: Phaser.Point): Phaser.Point;
         static multiplyAdd(a: Phaser.Point, b: Phaser.Point, scale: number, out?: Phaser.Point): Phaser.Point;
         static interpolate(a: Phaser.Point, b: Phaser.Point, alpha: number, out?: Phaser.Point): Phaser.Point;
+        static parse(obj: any, xProp?: string, yProp?: string): Phaser.Point;
         static perp(a: Phaser.Point, out?: Phaser.Point): Phaser.Point;
         static rperp(a: Phaser.Point, out?: Phaser.Point): Phaser.Point;
         static distance(a: any, b: any, round?: boolean): number;
@@ -4215,6 +4320,7 @@ declare module Phaser {
         x: number;
         y: number;
 
+        static aabb(points: Phaser.Point[], out?: Phaser.Rectangle): Phaser.Rectangle;
         static clone(a: Phaser.Rectangle, output?: Phaser.Rectangle): Phaser.Rectangle;
         static contains(a: Phaser.Rectangle, x: number, y: number): boolean;
         static containsPoint(a: Phaser.Rectangle, point: Phaser.Point): boolean;
@@ -4468,6 +4574,7 @@ declare module Phaser {
         mute: boolean;
         name: string;
         onDecoded: Phaser.Signal;
+        onFadeComplete: Phaser.Signal;
         onLoop: Phaser.Signal;
         onMarkerComplete: Phaser.Signal;
         onMute: Phaser.Signal;
@@ -4490,6 +4597,8 @@ declare module Phaser {
 
         addMarker(name: string, start: number, duration: number, volume?: number, loop?: boolean): void;
         destroy(): void;
+        fadeIn(duration?: number, loop?: boolean): void;
+        fadeOut(duration?: number): void;
         pause(): void;
         play(marker?: string, position?: number, volume?: number, loop?: boolean, forceRestart?: boolean): Phaser.Sound;
         removeMarker(name: string): void;
@@ -4518,6 +4627,7 @@ declare module Phaser {
         volume: number;
 
         add(key: string, volume?: number, loop?: boolean, connect?: boolean): Phaser.Sound;
+        addSprite(key: string): Phaser.AudioSprite;
         boot(): void;
         decode(key: string, sound?: Phaser.Sound): void;
         destroy(): void;
@@ -4789,6 +4899,7 @@ declare module Phaser {
         resize(width: number, height: number): void;
         start(key: string, clearWorld?: boolean, clearCache?: boolean, ...args: any[]): void;
         update(): void;
+        unlink(key: string): void;
 
     }
 
@@ -4799,6 +4910,7 @@ declare module Phaser {
         align: string;
         angle: number;
         cameraOffset: Phaser.Point;
+        colors: string[];
         destroyPhase: boolean;
         events: Phaser.Events;
         exists: boolean;
@@ -4827,6 +4939,8 @@ declare module Phaser {
         wordWrapWidth: number;
         z: number;
 
+        addColor(color: string, position: number): void;
+        clearColors(): void;
         destroy(destroyChildren?: boolean): void;
         postUpdate(): void;
         preUpdate(): void;
