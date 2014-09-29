@@ -814,7 +814,7 @@ Phaser.Utils.Debug.prototype = {
     */
     box2dBody: function (body, color) {
     
-        this.start();        
+        this.start();
         Phaser.Physics.Box2D.renderBody(this.context, body, color);
         this.stop();
 

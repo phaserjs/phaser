@@ -271,7 +271,7 @@ Phaser.Physics.prototype = {
 
         if (this.box2d)
         {
-            //this.box2d.setBoundsToWorld(); TODO
+            this.box2d.setBoundsToWorld();
         }
 
     },
