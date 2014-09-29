@@ -1268,15 +1268,12 @@ Phaser.InputHandler.prototype = {
             if (this.dragFromCenter)
             {
                 var bounds = this.sprite.getBounds();
+
                 this.sprite.x = this.globalToLocalX(pointer.x) + (this.sprite.x - bounds.centerX);
                 this.sprite.y = this.globalToLocalY(pointer.y) + (this.sprite.y - bounds.centerY);
-                // this._dragPoint.setTo(this.sprite.x - pointer.x, this.sprite.y - pointer.y);
             }
-            // else
-            // {
-                // this._dragPoint.setTo(this.sprite.x - pointer.x, this.sprite.y - pointer.y);
-                this._dragPoint.setTo(this.sprite.x - this.globalToLocalX(pointer.x), this.sprite.y - this.globalToLocalY(pointer.y));
-            // }
+            
+            this._dragPoint.setTo(this.sprite.x - this.globalToLocalX(pointer.x), this.sprite.y - this.globalToLocalY(pointer.y));
         }
 
         this.updateDrag(pointer);
