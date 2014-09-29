@@ -126,7 +126,9 @@
                 'public' => $this->isPublic,
                 'protected' => $this->isProtected,
                 'private' => $this->isPrivate,
-                'parameters' => $params
+                'parameters' => $params,
+                'inherited' => $this->inherited,
+                'inheritedFrom' => $this->inheritedFrom
             );
             
         }

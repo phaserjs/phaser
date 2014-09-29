@@ -30,7 +30,7 @@
         {
             if ($classKey !== '')
             {
-                echo "Extending $classKey\n";
+                // echo "Extending $classKey\n";
                 $this->classes[$classKey]->extend();
             }
             else
@@ -40,7 +40,7 @@
                 {
                     $processor->extend();
 
-                    echo "Extended $key\n";
+                    // echo "Extended $key\n";
                 }
             }
 

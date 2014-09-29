@@ -1,4 +1,9 @@
 <?php
+    if (isset($_GET['src']))
+    {
+        $src = $_GET['src'];
+    }
+
     require 'src/Block.php';
     require 'src/ClassDesc.php';
     require 'src/Constant.php';
@@ -42,6 +47,7 @@
     $gen->extend('Phaser.Sprite');
 
     echo $sprite;
+
 
 
     // foreach ($gen->classes as $key => $processor)

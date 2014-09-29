@@ -158,17 +158,7 @@
                 $this->corrupted = true;
             }
 
-            //  Alphabetically sort the arrays based on the key
-            ksort($this->consts);
-
-            ksort($this->methods['public']);
-            ksort($this->methods['protected']);
-            ksort($this->methods['private']);
-            ksort($this->methods['static']);
-
-            ksort($this->properties['public']);
-            ksort($this->properties['protected']);
-            ksort($this->properties['private']);
+            $this->sortArrays();
 
         }
 
@@ -177,28 +167,9 @@
             return $this->properties['public'];
         }
 
-        public function getPublicMethods($exclude = null)
+        public function getPublicMethods()
         {
-            if (is_array($exclude))
-            {
-                //  Get everything not already in the given array
-                $output = [];
-
-                foreach ($this->methods as $key => $value)
-                {
-                    if (!array_key_exists($key, $exclude))
-                    {
-                        $output[$key] = $value;
-                    }
-                }
-
-                return $output;
-            }
-            else
-            {
-                return $this->methods['public'];
-            }
-
+            return $this->methods['public'];
         }
        
         public function getArray()
@@ -212,14 +183,52 @@
                 $consts[] = $value->getArray();
             }
 
-            foreach ($this->methods as $key => $value)
+            //  Methods
+
+            $methods['public'] = [];
+            $methods['protected'] = [];
+            $methods['private'] = [];
+            $methods['static'] = [];
+
+            foreach ($this->methods['public'] as $key => $value)
             {
-                $methods[] = $value->getArray();
+                $methods['public'][] = $value->getArray();
             }
 
-            foreach ($this->properties as $key => $value)
+            foreach ($this->methods['protected'] as $key => $value)
             {
-                $properties[] = $value->getArray();
+                $methods['protected'][] = $value->getArray();
+            }
+
+            foreach ($this->methods['private'] as $key => $value)
+            {
+                $methods['private'][] = $value->getArray();
+            }
+
+            foreach ($this->methods['static'] as $key => $value)
+            {
+                $methods['static'][] = $value->getArray();
+            }
+
+            //  Properties
+
+            $properties['public'] = [];
+            $properties['protected'] = [];
+            $properties['private'] = [];
+
+            foreach ($this->properties['public'] as $key => $value)
+            {
+                $properties['public'][] = $value->getArray();
+            }
+
+            foreach ($this->properties['protected'] as $key => $value)
+            {
+                $properties['protected'][] = $value->getArray();
+            }
+
+            foreach ($this->properties['private'] as $key => $value)
+            {
+                $properties['private'][] = $value->getArray();
             }
 
             return array(
@@ -253,7 +262,6 @@
             //  Quick bailout
             if (!$this->class->extendsFrom())
             {
-                echo "quick bailout\n";
                 return;
             }
 
@@ -263,53 +271,87 @@
             {
                 $extends = $proc->class->extends;
                 $proc = $this->docgen->get($extends);
-                echo "\n\nextend found: " . $proc->getName() . "\n";
+                // echo "\n\nextend found: " . $proc->getName() . "\n";
 
                 $this->merge($proc);
             }
             while ($proc->class->extendsFrom());
 
+            $this->sortArrays();
+
+        }
+
+        public function sortArrays()
+        {
+            //  Alphabetically sort the arrays based on the key
+            ksort($this->consts);
+
+            ksort($this->methods['public']);
+            ksort($this->methods['protected']);
+            ksort($this->methods['private']);
+            ksort($this->methods['static']);
+
+            ksort($this->properties['public']);
+            ksort($this->properties['protected']);
+            ksort($this->properties['private']);
+        }
+
+        public function getMethodNames()
+        {
+            $output = [];
+
+            foreach ($this->methods['public'] as $key => $method)
+            {
+                $output[$method->name] = true;
+            }
+
+            return $output;
+        }
+
+        public function getPropertyNames()
+        {
+            $output = [];
+
+            foreach ($this->properties['public'] as $key => $property)
+            {
+                $output[$property->name] = true;
+            }
+
+            return $output;
         }
 
         public function merge($processor)
         {
-            echo "Merging ...\n\n";
-
             //  We only want to merge in public methods and properties.
             //  Technically JavaScript merges in bloody everything, but for the sake of docs we'll keep them #public# only.
 
-            echo "Methods\n";
-            echo "-------\n";
-
-            $inheritedMethods = $processor->getPublicMethods($this->getPublicMethods());
+            $inheritedMethods = $processor->getPublicMethods();
+            $currentMethods = $this->getMethodNames();
 
             //  Flag them as inherited
             foreach ($inheritedMethods as $key => $method)
             {
-                echo $method->name . "\n";
-                $method->inherited = true;
-                $method->inheritedFrom = $processor->getName();
+                if (!array_key_exists($method->name, $currentMethods))
+                {
+                    $method->inherited = true;
+                    $method->inheritedFrom = $processor->getName();
+                    $this->methods['public'][$method->name] = $method;
+                }
             }
 
-            //  We should only merge methods not already defined
-            $this->methods['public'] = array_merge($this->methods['public'], $inheritedMethods);
-
-            echo "\n";
-            echo "Properties\n";
-            echo "----------\n";
-
             $inheritedProperties = $processor->getPublicProperties();
+            $currentProperties = $this->getPropertyNames();
 
             //  Flag them as inherited!
             foreach ($inheritedProperties as $key => $property)
             {
-                echo $property->name . "\n";
-                $property->inherited = true;
-                $property->inheritedFrom = $processor->getName();
+                if (!array_key_exists($property->name, $currentProperties))
+                {
+                    $property->inherited = true;
+                    $property->inheritedFrom = $processor->getName();
+                    $this->properties['public'][$property->name] = $property;
+                }
             }
-
-            $this->properties['public'] = array_merge($this->properties['public'], $inheritedProperties);
-
         }
 
         /**
