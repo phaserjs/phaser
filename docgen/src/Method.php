@@ -9,6 +9,7 @@
         public $help = [];
         public $returns = null;
         public $inherited = false;
+        public $inheritedFrom = '';
 
         public $isPublic = true;
         public $isProtected = false;

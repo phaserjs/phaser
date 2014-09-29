@@ -177,9 +177,28 @@
             return $this->properties['public'];
         }
 
-        public function getPublicMethods()
+        public function getPublicMethods($exclude = null)
         {
-            return $this->methods['public'];
+            if (is_array($exclude))
+            {
+                //  Get everything not already in the given array
+                $output = [];
+
+                foreach ($this->methods as $key => $value)
+                {
+                    if (!array_key_exists($key, $exclude))
+                    {
+                        $output[$key] = $value;
+                    }
+                }
+
+                return $output;
+            }
+            else
+            {
+                return $this->methods['public'];
+            }
+
         }
        
         public function getArray()
@@ -262,15 +281,17 @@
             echo "Methods\n";
             echo "-------\n";
 
-            $inheritedMethods = $processor->getPublicMethods();
+            $inheritedMethods = $processor->getPublicMethods($this->getPublicMethods());
 
-            //  Flag them as inherited!
+            //  Flag them as inherited
             foreach ($inheritedMethods as $key => $method)
             {
                 echo $method->name . "\n";
                 $method->inherited = true;
+                $method->inheritedFrom = $processor->getName();
             }
 
+            //  We should only merge methods not already defined
             $this->methods['public'] = array_merge($this->methods['public'], $inheritedMethods);
 
             echo "\n";
@@ -284,6 +305,7 @@
             {
                 echo $property->name . "\n";
                 $property->inherited = true;
+                $property->inheritedFrom = $processor->getName();
             }
 
             $this->properties['public'] = array_merge($this->properties['public'], $inheritedProperties);
