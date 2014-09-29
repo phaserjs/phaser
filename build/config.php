@@ -9,9 +9,14 @@
         $p2 = true;
     }
 
+    if (!isset($box2d))
+    {
+        $box2d = false;
+    }
+
     if (!isset($ninja))
     {
-        $ninja = true;
+        $ninja = false;
     }
 
     if (!isset($arcade))
@@ -22,6 +27,11 @@
     if ($p2)
     {
         echo "    <script src=\"$path/src/physics/p2/p2.js\"></script>";
+    }
+
+    if ($box2d)
+    {
+        echo "    <script src=\"$path/src/physics/box2d/box2d-html5.js\"></script>";
     }
 
     echo <<<EOL
@@ -217,6 +227,19 @@ EOL;
     <script src="$path/src/physics/ninja/AABB.js"></script>
     <script src="$path/src/physics/ninja/Tile.js"></script>
     <script src="$path/src/physics/ninja/Circle.js"></script>
+EOL;
+    }
+
+    if ($box2d)
+    {
+        echo <<<EOL
+
+    <script src="$path/src/physics/box2d/World.js"></script>
+    <script src="$path/src/physics/box2d/Body.js"></script>
+    <script src="$path/src/physics/box2d/PointProxy.js"></script>
+    <script src="$path/src/physics/box2d/DefaultDebugDraw.js"></script>
+    <script src="$path/src/physics/box2d/DefaultContactListener.js"></script>
+    <script src="$path/src/physics/box2d/Polygon.js"></script>
 EOL;
     }
 

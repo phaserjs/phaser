@@ -775,7 +775,48 @@ Phaser.Utils.Debug.prototype = {
                 Phaser.Physics.Arcade.Body.renderBodyInfo(this, sprite.body);
                 this.stop();
             }
+            else if (sprite.body.type === Phaser.Physics.BOX2D)
+            {
+                this.start(x, y, color, 210);
+                this.game.physics.box2d.renderBodyInfo(this, sprite.body);
+                this.stop();
+            }
         }
+
+    },
+
+    /**
+    * Renders 'debug draw' data for the Box2D world if it exists.
+    * This uses the standard debug drawing feature of Box2D, so colors will be decided by
+    * the Box2D engine.
+    *
+    * @method Phaser.Utils.Debug#box2dWorld
+    */
+    box2dWorld: function () {
+    
+        this.start();
+        
+        this.context.translate(-this.game.camera.view.x, -this.game.camera.view.y, 0);
+        this.game.physics.box2d.renderDebugDraw(this.context);
+        
+        this.stop();
+
+    },
+
+    /**
+    * Renders 'debug draw' data for the given Box2D body.
+    * This uses the standard debug drawing feature of Box2D, so colors will be decided by
+    * the Box2D engine.
+    *
+    * @method Phaser.Utils.Debug#box2dBody
+    * @param {Phaser.Sprite} sprite - The sprite whos body will be rendered.
+    * @param {string} [color='rgb(0,255,0)'] - color of the debug info to be rendered. (format is css color string).
+    */
+    box2dBody: function (body, color) {
+    
+        this.start();        
+        Phaser.Physics.Box2D.renderBody(this.context, body, color);
+        this.stop();
 
     }
 

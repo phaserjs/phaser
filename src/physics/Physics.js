@@ -88,7 +88,7 @@ Phaser.Physics.BOX2D = 3;
 * @const
 * @type {number}
 */
-Phaser.Physics.CHIPMUNK = 5;
+Phaser.Physics.CHIPMUNK = 4;
 
 Phaser.Physics.prototype = {
 
@@ -114,6 +114,11 @@ Phaser.Physics.prototype = {
         if (this.config.hasOwnProperty('p2') && this.config['p2'] === true && Phaser.Physics.hasOwnProperty('P2'))
         {
             this.p2 = new Phaser.Physics.P2(this.game, this.config);
+        }
+
+        if (this.config.hasOwnProperty('box2d') && this.config['box2d'] === true && Phaser.Physics.hasOwnProperty('BOX2D'))
+        {
+            this.box2d = new Phaser.Physics.BOX2D(this.game, this.config);
         }
 
     },
@@ -145,7 +150,7 @@ Phaser.Physics.prototype = {
         }
         else if (system === Phaser.Physics.BOX2D && this.box2d === null)
         {
-            throw new Error('The Box2D physics system has not been implemented yet.');
+            this.box2d = new Phaser.Physics.Box2D(this.game, this.config);
         }
         else if (system === Phaser.Physics.CHIPMUNK && this.chipmunk === null)
         {
@@ -162,7 +167,8 @@ Phaser.Physics.prototype = {
     * Phaser.Physics.Arcade - A light weight AABB based collision system with basic separation.
     * Phaser.Physics.P2JS - A full-body advanced physics system supporting multiple object shapes, polygon loading, contact materials, springs and constraints.
     * Phaser.Physics.NINJA - A port of Metanet Softwares N+ physics system. Advanced AABB and Circle vs. Tile collision.
-    * Phaser.Physics.BOX2D and Phaser.Physics.CHIPMUNK are still in development.
+    * Phaser.Physics.BOX2D - A port of https://code.google.com/p/box2d-html5
+    * Phaser.Physics.CHIPMUNK is still in development.
     *
     * If you require more control over what type of body is created, for example to create a Ninja Physics Circle instead of the default AABB, then see the
     * individual physics systems `enable` methods instead of using this generic one.
@@ -189,6 +195,10 @@ Phaser.Physics.prototype = {
         {
             this.ninja.enableAABB(object);
         }
+        else if (system === Phaser.Physics.BOX2D && this.box2d)
+        {
+            this.box2d.enable(object);
+        }
 
     },
 
@@ -207,6 +217,11 @@ Phaser.Physics.prototype = {
             this.p2.preUpdate();
         }
 
+        if (this.box2d)
+        {
+            this.box2d.preUpdate();
+        }
+
     },
 
     /**
@@ -222,6 +237,11 @@ Phaser.Physics.prototype = {
         if (this.p2)
         {
             this.p2.update();
+        }
+
+        if (this.box2d)
+        {
+            this.box2d.update();
         }
 
     },
@@ -249,6 +269,11 @@ Phaser.Physics.prototype = {
             this.p2.setBoundsToWorld();
         }
 
+        if (this.box2d)
+        {
+            //this.box2d.setBoundsToWorld(); TODO
+        }
+
     },
 
     /**
@@ -262,6 +287,11 @@ Phaser.Physics.prototype = {
         if (this.p2)
         {
             this.p2.clear();
+        }
+
+        if (this.box2d)
+        {
+            this.box2d.clear();
         }
 
     },
@@ -278,9 +308,15 @@ Phaser.Physics.prototype = {
             this.p2.destroy();
         }
 
+        if (this.box2d)
+        {
+            this.box2d.destroy();
+        }
+
         this.arcade = null;
         this.ninja = null;
         this.p2 = null;
+        this.box2d = null;
 
     }
 
