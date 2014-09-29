@@ -92,8 +92,9 @@ Version 2.1.2 - "Whitebridge" - in development
 
 ### Updates
 
-* TypeScript definitions fixes and updates (thanks @clark-stevenson @englercj)
+* TypeScript definitions fixes and updates (thanks @clark-stevenson @englercj @benjamindulau)
 * Added the `sourceRect` and `maskRect` parameters back into `BitmapData.alphaMask` as they were accidentally removed in 2.1 (thanks seejay92)
+* jsdoc fixes (thanks @danxexe #1209)
 
 
 

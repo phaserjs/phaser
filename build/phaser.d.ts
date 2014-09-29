@@ -5267,7 +5267,7 @@ declare module Phaser {
         resume(): void;
         sortHandler(a: any, b: any): number;
         start(startDelay?: number): void;
-        stop(): void;
+        stop(clearEvents?: boolean): void;
         update(time: number): boolean;
 
     }
