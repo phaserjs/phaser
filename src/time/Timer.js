@@ -169,7 +169,7 @@ Phaser.Timer.prototype = {
     * Creates a new TimerEvent on this Timer. Use the methods add, repeat or loop instead of this.
     * @method Phaser.Timer#create
     * @private
-    * @param {number} delay - The number of milliseconds that should elapse before the Timer will call the given callback.
+    * @param {number} delay - The number of milliseconds that should elapse before the Timer will call the given callback. This value should be an integer, not a float. Math.round() is applied to it by this method.
     * @param {boolean} loop - Should the event loop or not?
     * @param {number} repeatCount - The number of times the event will repeat.
     * @param {function} callback - The callback that will be called when the Timer event occurs.
@@ -178,6 +178,8 @@ Phaser.Timer.prototype = {
     * @return {Phaser.TimerEvent} The Phaser.TimerEvent object that was created.
     */
     create: function (delay, loop, repeatCount, callback, callbackContext, args) {
+
+        delay = Math.round(delay);
 
         var tick = delay;
 
