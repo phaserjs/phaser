@@ -31,7 +31,7 @@
 
     if ($box2d)
     {
-        echo "    <script src=\"$path/src/physics/box2d/box2d-html5.js\"></script>";
+        echo "    <script src=\"$box2dpath/box2d-html5.js\"></script>";
     }
 
     echo <<<EOL
@@ -234,12 +234,12 @@ EOL;
     {
         echo <<<EOL
 
-    <script src="$path/src/physics/box2d/World.js"></script>
-    <script src="$path/src/physics/box2d/Body.js"></script>
-    <script src="$path/src/physics/box2d/PointProxy.js"></script>
-    <script src="$path/src/physics/box2d/DefaultDebugDraw.js"></script>
-    <script src="$path/src/physics/box2d/DefaultContactListener.js"></script>
-    <script src="$path/src/physics/box2d/Polygon.js"></script>
+    <script src="$box2dpath/World.js"></script>
+    <script src="$box2dpath/Body.js"></script>
+    <script src="$box2dpath/PointProxy.js"></script>
+    <script src="$box2dpath/DefaultDebugDraw.js"></script>
+    <script src="$box2dpath/DefaultContactListener.js"></script>
+    <script src="$box2dpath/Polygon.js"></script>
 EOL;
     }
 
