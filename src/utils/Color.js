@@ -581,6 +581,36 @@ Phaser.Color = {
     },
 
     /**
+    * Converts a CSS 'web' string into a Phaser Color object.
+    *
+    * @method Phaser.Color.webToColor
+    * @static
+    * @param {string} web - The web string in the format: 'rgba(r,g,b,a)'
+    * @param {object} [out] - An object into which 3 properties will be created: r, g and b. If not provided a new object will be created.
+    * @return {object} An object with the red, green and blue values set in the r, g and b properties.
+    */
+    webToColor: function (web, out) {
+
+        if (!out)
+        {
+            out = Phaser.Color.createColor();
+        }
+
+        var result = /^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)$/.exec(web);
+
+        if (result)
+        {
+            out.r = parseInt(result[1], 10);
+            out.g = parseInt(result[2], 10);
+            out.b = parseInt(result[3], 10);
+        }
+
+        return out;
+
+    },
+
+
+    /**
     * Return a string containing a hex representation of the given color component.
     *
     * @method Phaser.Color.componentToHex
