@@ -88,6 +88,7 @@ Version 2.1.2 - "Whitebridge" - in development
 * Text.addColor allows you to set specific colors within the Text. It works by taking a color value, which is a typical HTML string such as `#ff0000` or `rgb(255,0,0)` and a position. The position value is the index of the character in the Text string to start applying this color to. Once set the color remains in use until either another color or the end of the string is encountered. For example if the Text was `Photon Storm` and you did `Text.addColor('#ffff00', 6)` it would color in the word `Storm` in yellow.
 * Text.clearColors resets any previously set colors from `Text.addColor`.
 * If you pass a tinted Sprite to `BitmapData.draw` or `BitmapData.copy` it will now draw the tinted version of the Sprite to the BitmapData and not the original texture.
+* BitmapData.shadow(color, blur, x, y) provides a quick way to set all the relevant shadow settings, which are then be used in future draw calls.
 
 
 

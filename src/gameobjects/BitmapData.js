@@ -1072,6 +1072,33 @@ Phaser.BitmapData.prototype = {
     },
 
     /**
+    * Sets the shadow properties of this BitmapDatas context which will affect all draw operations made to it.
+    * You can cancel an existing shadow by calling this method and passing no parameters.
+    *
+    * @method Phaser.BitmapData#shadow
+    * @param {string} color - The color of the shadow, given in a CSS format, i.e. `#000000` or `rgba(0,0,0,1)`. If `null` or `undefined` the shadow will be reset.
+    * @param {number} [blur=5] - The amount the shadow will be blurred by. Low values = a crisp shadow, high values = a softer shadow.
+    * @param {number} [x=10] - The horizontal offset of the shadow in pixels.
+    * @param {number} [y=10] - The vertical offset of the shadow in pixels.
+    * @return {Phaser.BitmapData} This BitmapData object for method chaining.
+    */
+    shadow: function (color, blur, x, y) {
+
+        if (typeof color === 'undefined' || color === null)
+        {
+            this.context.shadowColor = 'rgba(0,0,0,0)';
+        }
+        else
+        {
+            this.context.shadowColor = color;
+            this.context.shadowBlur = blur || 5;
+            this.context.shadowOffsetX = x || 10;
+            this.context.shadowOffsetY = y || 10;
+        }
+
+    },
+
+    /**
     * Draws the image onto this BitmapData using an image as an alpha mask.
     *
     * @method Phaser.BitmapData#alphaMask
