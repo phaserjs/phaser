@@ -83,6 +83,11 @@ Phaser.AnimationManager.prototype = {
     */
     loadFrameData: function (frameData, frame) {
 
+        if (typeof frameData === 'undefined')
+        {
+            return false;
+        }
+
         if (this.isLoaded)
         {
             //   We need to update the frameData that the animations are using
