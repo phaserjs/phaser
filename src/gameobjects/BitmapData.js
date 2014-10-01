@@ -1074,6 +1074,7 @@ Phaser.BitmapData.prototype = {
     /**
     * Sets the shadow properties of this BitmapDatas context which will affect all draw operations made to it.
     * You can cancel an existing shadow by calling this method and passing no parameters.
+    * Note: At the time of writing (October 2014) Chrome still doesn't support shadowBlur used with drawImage.
     *
     * @method Phaser.BitmapData#shadow
     * @param {string} color - The color of the shadow, given in a CSS format, i.e. `#000000` or `rgba(0,0,0,1)`. If `null` or `undefined` the shadow will be reset.

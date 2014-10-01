@@ -226,11 +226,14 @@ Phaser.Cache.prototype = {
     * @method Phaser.Cache#addBitmapData
     * @param {string} key - Asset key for this BitmapData.
     * @param {Phaser.BitmapData} bitmapData - The BitmapData object to be addded to the cache.
+    * @param {Phaser.FrameData} [frameData] - Optional FrameData set associated with the given BitmapData.
     * @return {Phaser.BitmapData} The BitmapData object to be addded to the cache.
     */
-    addBitmapData: function (key, bitmapData) {
+    addBitmapData: function (key, bitmapData, frameData) {
 
-        this._bitmapDatas[key] = bitmapData;
+        bitmapData.key = key;
+
+        this._bitmapDatas[key] = { data: bitmapData, frameData: frameData };
 
         return bitmapData;
 
@@ -591,7 +594,7 @@ Phaser.Cache.prototype = {
 
         if (this._bitmapDatas[key])
         {
-            return this._bitmapDatas[key];
+            return this._bitmapDatas[key].data;
         }
         else
         {
@@ -904,13 +907,16 @@ Phaser.Cache.prototype = {
     *
     * @method Phaser.Cache#getFrameData
     * @param {string} key - Asset key of the frame data to retrieve from the Cache.
+    * @param {string} [map=Phaser.Cache.IMAGE] - The asset map to get the frameData from, for example `Phaser.Cache.IMAGE`.
     * @return {Phaser.FrameData} The frame data.
     */
-    getFrameData: function (key) {
+    getFrameData: function (key, map) {
 
-        if (this._images[key])
+        if (typeof map === 'undefined') { map = Phaser.Cache.IMAGE; }
+
+        if (this._cacheMap[map][key])
         {
-            return this._images[key].frameData;
+            return this._cacheMap[map][key].frameData;
         }
 
         return null;
