@@ -439,14 +439,12 @@ Phaser.Color = {
     */
     createColor: function (r, g, b, a, h, s, l, v) {
 
-        var out = { r: r || 0, g: g || 0, b: b || 0, a: a || 1, h: h || 0, s: s || 0, l: l || 0, v: v || 0, color: 0, color32: 0 };
-
-        out.rgba = 'rgba(' + out.r + ',' + out.g + ',' + out.b + ',' + out.a + ')';
+        var out = { r: r || 0, g: g || 0, b: b || 0, a: a || 1, h: h || 0, s: s || 0, l: l || 0, v: v || 0, color: 0, color32: 0, rgba: '' };
 
         out.color = Phaser.Color.getColor(out.r, out.g, out.b);
         out.color32 = Phaser.Color.getColor32(out.a, out.r, out.g, out.b);
 
-        return out;
+        return Phaser.Color.updateColor(out);
 
     },
 
@@ -460,7 +458,7 @@ Phaser.Color = {
     */
     updateColor: function (out) {
 
-        out.rgba = 'rgba(' + out.r + ',' + out.g + ',' + out.b + ',' + out.a + ')';
+        out.rgba = 'rgba(' + out.r.toString() + ',' + out.g.toString() + ',' + out.b.toString() + ',' + out.a.toString() + ')';
 
         return out;
 
@@ -553,20 +551,13 @@ Phaser.Color = {
     * @method Phaser.Color.hexToColor
     * @static
     * @param {string} hex - The hex string to convert. Can be in the short-hand format `#03f` or `#0033ff`.
-    * @param {object} [out] - An object into which 3 properties will be created: r, g and b. If not provided a new object will be created.
+    * @param {object} [out] - An object into which 3 properties will be created or set: r, g and b. If not provided a new object will be created.
     * @return {object} An object with the red, green and blue values set in the r, g and b properties.
     */
     hexToColor: function (hex, out) {
 
-        if (!out)
-        {
-            out = Phaser.Color.createColor();
-        }
-
         // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
-        var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
-
-        hex = hex.replace(shorthandRegex, function(m, r, g, b) {
+        hex = hex.replace(/^#?([a-f\d])([a-f\d])([a-f\d])$/i, function(m, r, g, b) {
             return r + r + g + g + b + b;
         });
 
@@ -574,9 +565,20 @@ Phaser.Color = {
 
         if (result)
         {
-            out.r = parseInt(result[1], 16);
-            out.g = parseInt(result[2], 16);
-            out.b = parseInt(result[3], 16);
+            var r = parseInt(result[1], 16);
+            var g = parseInt(result[2], 16);
+            var b = parseInt(result[3], 16);
+
+            if (!out)
+            {
+                out = Phaser.Color.createColor(r, g, b);
+            }
+            else
+            {
+                out.r = r;
+                out.g = g;
+                out.b = b;
+            }
         }
 
         return out;
