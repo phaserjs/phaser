@@ -102,6 +102,7 @@ Version 2.1.2 - "Whitebridge" - in development
 * jsdoc fixes (thanks @danxexe #1209)
 * AnimationParser is now using `value` instead of `nodeValue` when parsing atlas XML files, avoiding Chrome deprecation warnings (thanks @valtterip #1189)
 * Color.webToColor restored. Converts a CSS rgba color into a native color value.
+* Color.createColor now populates the color objects `color` and `color32` properties with the results of `Phaser.Color.getColor` and `getColor32` respectively.
 
 
 
