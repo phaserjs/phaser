@@ -195,13 +195,11 @@ Phaser.Loader.prototype = {
 
         this.preloadSprite = { sprite: sprite, direction: direction, width: sprite.width, height: sprite.height, rect: null };
 
-        if (direction === 0)
-        {
+        if (direction === 0) {
             //  Horizontal rect
             this.preloadSprite.rect = new Phaser.Rectangle(0, 0, 1, sprite.height);
         }
-        else
-        {
+        else {
             //  Vertical rect
             this.preloadSprite.rect = new Phaser.Rectangle(0, 0, sprite.width, 1);
         }
@@ -223,12 +221,9 @@ Phaser.Loader.prototype = {
     */
     checkKeyExists: function (type, key) {
 
-        if (this._fileList.length > 0)
-        {
-            for (var i = 0; i < this._fileList.length; i++)
-            {
-                if (this._fileList[i].type === type && this._fileList[i].key === key)
-                {
+        if (this._fileList.length > 0) {
+            for (var i = 0; i < this._fileList.length; i++) {
+                if (this._fileList[i].type === type && this._fileList[i].key === key) {
                     return true;
                 }
             }
@@ -248,12 +243,9 @@ Phaser.Loader.prototype = {
     */
     getAssetIndex: function (type, key) {
 
-        if (this._fileList.length > 0)
-        {
-            for (var i = 0; i < this._fileList.length; i++)
-            {
-                if (this._fileList[i].type === type && this._fileList[i].key === key)
-                {
+        if (this._fileList.length > 0) {
+            for (var i = 0; i < this._fileList.length; i++) {
+                if (this._fileList[i].type === type && this._fileList[i].key === key) {
                     return i;
                 }
             }
@@ -273,12 +265,9 @@ Phaser.Loader.prototype = {
     */
     getAsset: function (type, key) {
 
-        if (this._fileList.length > 0)
-        {
-            for (var i = 0; i < this._fileList.length; i++)
-            {
-                if (this._fileList[i].type === type && this._fileList[i].key === key)
-                {
+        if (this._fileList.length > 0) {
+            for (var i = 0; i < this._fileList.length; i++) {
+                if (this._fileList[i].type === type && this._fileList[i].key === key) {
                     return { index: i, file: this._fileList[i] };
                 }
             }
@@ -327,16 +316,13 @@ Phaser.Loader.prototype = {
             loaded: false
         };
 
-        if (typeof properties !== "undefined")
-        {
-            for (var prop in properties)
-            {
+        if (typeof properties !== "undefined") {
+            for (var prop in properties) {
                 entry[prop] = properties[prop];
             }
         }
 
-        if (this.checkKeyExists(type, key) === false)
-        {
+        if (this.checkKeyExists(type, key) === false) {
             this._fileList.push(entry);
         }
 
@@ -363,22 +349,18 @@ Phaser.Loader.prototype = {
             loaded: false
         };
 
-        if (typeof properties !== "undefined")
-        {
-            for (var prop in properties)
-            {
+        if (typeof properties !== "undefined") {
+            for (var prop in properties) {
                 entry[prop] = properties[prop];
             }
         }
 
         var index = this.getAssetIndex(type, key);
 
-        if (index === -1)
-        {
+        if (index === -1) {
             this._fileList.push(entry);
         }
-        else
-        {
+        else {
             this._fileList[index] = entry;
         }
 
@@ -400,22 +382,19 @@ Phaser.Loader.prototype = {
         if (typeof data === "undefined") { data = null; }
         if (typeof callbackContext === "undefined") { callbackContext = this; }
 
-        if (url === null && data === null)
-        {
+        if (url === null && data === null) {
             console.warn('Phaser.Loader.pack - Both url and data are null. One must be set.');
             return this;
         }
 
         //  A data object has been given
-        if (data)
-        {
-            if (typeof data === 'string')
-            {
+        if (data) {
+            if (typeof data === 'string') {
                 data = JSON.parse(data);
             }
         }
 
-        this._packList.push( { key: key, url: url, data: data, loaded: false, error: false, callbackContext: callbackContext } );
+        this._packList.push({ key: key, url: url, data: data, loaded: false, error: false, callbackContext: callbackContext });
 
         return this;
 
@@ -434,12 +413,10 @@ Phaser.Loader.prototype = {
 
         if (typeof overwrite === "undefined") { overwrite = false; }
 
-        if (overwrite)
-        {
+        if (overwrite) {
             this.replaceInFileList('image', key, url);
         }
-        else
-        {
+        else {
             this.addToFileList('image', key, url);
         }
 
@@ -460,12 +437,10 @@ Phaser.Loader.prototype = {
 
         if (typeof overwrite === "undefined") { overwrite = false; }
 
-        if (overwrite)
-        {
+        if (overwrite) {
             this.replaceInFileList('text', key, url);
         }
-        else
-        {
+        else {
             this.addToFileList('text', key, url);
         }
 
@@ -486,12 +461,10 @@ Phaser.Loader.prototype = {
 
         if (typeof overwrite === "undefined") { overwrite = false; }
 
-        if (overwrite)
-        {
+        if (overwrite) {
             this.replaceInFileList('json', key, url);
         }
-        else
-        {
+        else {
             this.addToFileList('json', key, url);
         }
 
@@ -512,12 +485,10 @@ Phaser.Loader.prototype = {
 
         if (typeof overwrite === "undefined") { overwrite = false; }
 
-        if (overwrite)
-        {
+        if (overwrite) {
             this.replaceInFileList('xml', key, url);
         }
-        else
-        {
+        else {
             this.addToFileList('xml', key, url);
         }
 
@@ -615,16 +586,16 @@ Phaser.Loader.prototype = {
     },
 
     /**
-     * Add a new audiosprite file to the loader. Audio Sprites are a combination of audio files and a JSON configuration.
-     * The JSON follows the format of that created by https://github.com/tonistiigi/audiosprite
-     *
-     * @method Phaser.Loader#audiosprite
-     * @param {string} key - Unique asset key of the audio file.
-     * @param {Array|string} urls - An array containing the URLs of the audio files, i.e.: [ 'audiosprite.mp3', 'audiosprite.ogg', 'audiosprite.m4a' ] or a single string containing just one URL.
-     * @param {string} atlasURL - The URL of the audiosprite configuration json.
-     * @return {Phaser.Loader} This Loader instance.
-     */
-    audiosprite: function(key, urls, atlasURL) {
+    * Add a new audiosprite file to the loader. Audio Sprites are a combination of audio files and a JSON configuration.
+    * The JSON follows the format of that created by https://github.com/tonistiigi/audiosprite
+    *
+    * @method Phaser.Loader#audiosprite
+    * @param {string} key - Unique asset key of the audio file.
+    * @param {Array|string} urls - An array containing the URLs of the audio files, i.e.: [ 'audiosprite.mp3', 'audiosprite.ogg', 'audiosprite.m4a' ] or a single string containing just one URL.
+    * @param {string} atlasURL - The URL of the audiosprite configuration json.
+    * @return {Phaser.Loader} This Loader instance.
+    */
+    audiosprite: function (key, urls, atlasURL) {
 
         this.audio(key, urls);
 
@@ -650,27 +621,23 @@ Phaser.Loader.prototype = {
         if (typeof data === "undefined") { data = null; }
         if (typeof format === "undefined") { format = Phaser.Tilemap.CSV; }
 
-        if (url == null && data == null)
-        {
+        if (url == null && data == null) {
             console.warn('Phaser.Loader.tilemap - Both url and data are null. One must be set.');
 
             return this;
         }
 
         //  A map data object has been given
-        if (data)
-        {
-            switch (format)
-            {
-                //  A csv string or object has been given
+        if (data) {
+            switch (format) {
+                //  A csv string or object has been given 
                 case Phaser.Tilemap.CSV:
                     break;
 
-                //  An xml string or object has been given
+                //  An xml string or object has been given 
                 case Phaser.Tilemap.TILED_JSON:
 
-                    if (typeof data === 'string')
-                    {
+                    if (typeof data === 'string') {
                         data = JSON.parse(data);
                     }
                     break;
@@ -678,8 +645,7 @@ Phaser.Loader.prototype = {
 
             this.game.cache.addTilemap(key, null, data, format);
         }
-        else
-        {
+        else {
             this.addToFileList('tilemap', key, url, { format: format });
         }
 
@@ -704,25 +670,21 @@ Phaser.Loader.prototype = {
         if (typeof data === "undefined") { data = null; }
         if (typeof format === "undefined") { format = Phaser.Physics.LIME_CORONA_JSON; }
 
-        if (url == null && data == null)
-        {
+        if (url == null && data == null) {
             console.warn('Phaser.Loader.physics - Both url and data are null. One must be set.');
 
             return this;
         }
 
         //  A map data object has been given
-        if (data)
-        {
-            if (typeof data === 'string')
-            {
+        if (data) {
+            if (typeof data === 'string') {
                 data = JSON.parse(data);
             }
 
             this.game.cache.addPhysicsData(key, null, data, format);
         }
-        else
-        {
+        else {
             this.addToFileList('physics', key, url, { format: format });
         }
 
@@ -750,41 +712,33 @@ Phaser.Loader.prototype = {
         if (typeof ySpacing === "undefined") { ySpacing = 0; }
 
         //  A URL to a json/xml file has been given
-        if (xmlURL)
-        {
+        if (xmlURL) {
             this.addToFileList('bitmapfont', key, textureURL, { xmlURL: xmlURL, xSpacing: xSpacing, ySpacing: ySpacing });
         }
-        else
-        {
+        else {
             //  An xml string or object has been given
-            if (typeof xmlData === 'string')
-            {
+            if (typeof xmlData === 'string') {
                 var xml;
 
-                try  {
-                    if (window['DOMParser'])
-                    {
+                try {
+                    if (window['DOMParser']) {
                         var domparser = new DOMParser();
                         xml = domparser.parseFromString(xmlData, "text/xml");
                     }
-                    else
-                    {
+                    else {
                         xml = new ActiveXObject("Microsoft.XMLDOM");
                         xml.async = 'false';
                         xml.loadXML(xmlData);
                     }
                 }
-                catch (e)
-                {
+                catch (e) {
                     xml = undefined;
                 }
 
-                if (!xml || !xml.documentElement || xml.getElementsByTagName("parsererror").length)
-                {
+                if (!xml || !xml.documentElement || xml.getElementsByTagName("parsererror").length) {
                     throw new Error("Phaser.Loader. Invalid Bitmap Font XML given");
                 }
-                else
-                {
+                else {
                     this.addToFileList('bitmapfont', key, textureURL, { xmlURL: null, xmlData: xml, xSpacing: xSpacing, ySpacing: ySpacing });
                 }
             }
@@ -860,54 +814,44 @@ Phaser.Loader.prototype = {
         if (typeof format === "undefined") { format = Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY; }
 
         //  A URL to a json/xml file has been given
-        if (atlasURL)
-        {
+        if (atlasURL) {
             this.addToFileList('textureatlas', key, textureURL, { atlasURL: atlasURL, format: format });
         }
-        else
-        {
-            switch (format)
-            {
-                //  A json string or object has been given
+        else {
+            switch (format) {
+                //  A json string or object has been given 
                 case Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY:
 
-                    if (typeof atlasData === 'string')
-                    {
+                    if (typeof atlasData === 'string') {
                         atlasData = JSON.parse(atlasData);
                     }
                     break;
 
-                //  An xml string or object has been given
+                //  An xml string or object has been given 
                 case Phaser.Loader.TEXTURE_ATLAS_XML_STARLING:
 
-                    if (typeof atlasData === 'string')
-                    {
+                    if (typeof atlasData === 'string') {
                         var xml;
 
-                        try  {
-                            if (window['DOMParser'])
-                            {
+                        try {
+                            if (window['DOMParser']) {
                                 var domparser = new DOMParser();
                                 xml = domparser.parseFromString(atlasData, "text/xml");
                             }
-                            else
-                            {
+                            else {
                                 xml = new ActiveXObject("Microsoft.XMLDOM");
                                 xml.async = 'false';
                                 xml.loadXML(atlasData);
                             }
                         }
-                        catch (e)
-                        {
+                        catch (e) {
                             xml = undefined;
                         }
 
-                        if (!xml || !xml.documentElement || xml.getElementsByTagName("parsererror").length)
-                        {
+                        if (!xml || !xml.documentElement || xml.getElementsByTagName("parsererror").length) {
                             throw new Error("Phaser.Loader. Invalid Texture Atlas XML given");
                         }
-                        else
-                        {
+                        else {
                             atlasData = xml;
                         }
                     }
@@ -933,8 +877,7 @@ Phaser.Loader.prototype = {
 
         var file = this.getAsset(type, key);
 
-        if (file !== false)
-        {
+        if (file !== false) {
             this._fileList.splice(file.index, 1);
         }
 
@@ -958,18 +901,15 @@ Phaser.Loader.prototype = {
     */
     start: function () {
 
-        if (this.isLoading)
-        {
+        if (this.isLoading) {
             return;
         }
 
-        if (this._packList.length > 0)
-        {
+        if (this._packList.length > 0) {
             this._packIndex = 0;
             this.loadPack();
         }
-        else
-        {
+        else {
             this.beginLoad();
         }
 
@@ -990,14 +930,12 @@ Phaser.Loader.prototype = {
 
         this.onLoadStart.dispatch(this._fileList.length);
 
-        if (this._fileList.length > 0)
-        {
+        if (this._fileList.length > 0) {
             this._fileIndex = 0;
             this._progressChunk = 100 / this._fileList.length;
             this.loadFile();
         }
-        else
-        {
+        else {
             this.progress = 100;
             this.progressFloat = 100;
             this.hasLoaded = true;
@@ -1015,20 +953,17 @@ Phaser.Loader.prototype = {
     */
     loadPack: function () {
 
-        if (!this._packList[this._packIndex])
-        {
+        if (!this._packList[this._packIndex]) {
             console.warn('Phaser.Loader loadPackList invalid index ' + this._packIndex);
             return;
         }
 
         var pack = this._packList[this._packIndex];
 
-        if (pack.data !== null)
-        {
+        if (pack.data !== null) {
             this.packLoadComplete(this._packIndex, false);
         }
-        else
-        {
+        else {
             //  Load it
             this.xhrLoad(this._packIndex, this.baseURL + pack.url, 'text', 'packLoadComplete', 'packLoadError');
         }
@@ -1047,8 +982,7 @@ Phaser.Loader.prototype = {
 
         if (typeof parse === 'undefined') { parse = true; }
 
-        if (!this._packList[index])
-        {
+        if (!this._packList[index]) {
             console.warn('Phaser.Loader packLoadComplete invalid index ' + index);
             return;
         }
@@ -1057,25 +991,20 @@ Phaser.Loader.prototype = {
 
         pack.loaded = true;
 
-        if (parse)
-        {
+        if (parse) {
             var data = JSON.parse(this._xhr.responseText);
         }
-        else
-        {
+        else {
             var data = this._packList[index].data;
         }
 
-        if (data[pack.key])
-        {
+        if (data[pack.key]) {
             var file;
 
-            for (var i = 0; i < data[pack.key].length; i++)
-            {
+            for (var i = 0; i < data[pack.key].length; i++) {
                 file = data[pack.key][i];
 
-                switch (file.type)
-                {
+                switch (file.type) {
                     case "image":
                         this.image(file.key, file.url, file.overwrite);
                         break;
@@ -1175,12 +1104,10 @@ Phaser.Loader.prototype = {
 
         this._packIndex++;
 
-        if (this._packIndex < this._packList.length)
-        {
+        if (this._packIndex < this._packList.length) {
             this.loadPack();
         }
-        else
-        {
+        else {
             this.beginLoad();
         }
 
@@ -1194,8 +1121,7 @@ Phaser.Loader.prototype = {
     */
     loadFile: function () {
 
-        if (!this._fileList[this._fileIndex])
-        {
+        if (!this._fileList[this._fileIndex]) {
             console.warn('Phaser.Loader loadFile invalid index ' + this._fileIndex);
             return;
         }
@@ -1206,8 +1132,7 @@ Phaser.Loader.prototype = {
         this.onFileStart.dispatch(this.progress, file.key, file.url);
 
         //  Image or Data?
-        switch (file.type)
-        {
+        switch (file.type) {
             case 'image':
             case 'spritesheet':
             case 'textureatlas':
@@ -1220,8 +1145,7 @@ Phaser.Loader.prototype = {
                 file.data.onerror = function () {
                     return _this.fileError(_this._fileIndex);
                 };
-                if (this.crossOrigin)
-                {
+                if (this.crossOrigin) {
                     file.data.crossOrigin = this.crossOrigin;
                 }
                 file.data.src = this.baseURL + file.url;
@@ -1230,17 +1154,13 @@ Phaser.Loader.prototype = {
             case 'audio':
                 file.url = this.getAudioURL(file.url);
 
-                if (file.url !== null)
-                {
+                if (file.url !== null) {
                     //  WebAudio or Audio Tag?
-                    if (this.game.sound.usingWebAudio)
-                    {
+                    if (this.game.sound.usingWebAudio) {
                         this.xhrLoad(this._fileIndex, this.baseURL + file.url, 'arraybuffer', 'fileComplete', 'fileError');
                     }
-                    else if (this.game.sound.usingAudioTag)
-                    {
-                        if (this.game.sound.touchLocked)
-                        {
+                    else if (this.game.sound.usingAudioTag) {
+                        if (this.game.sound.touchLocked) {
                             //  If audio is locked we can't do this yet, so need to queue this load request. Bum.
                             file.data = new Audio();
                             file.data.name = file.key;
@@ -1248,8 +1168,7 @@ Phaser.Loader.prototype = {
                             file.data.src = this.baseURL + file.url;
                             this.fileComplete(this._fileIndex);
                         }
-                        else
-                        {
+                        else {
                             file.data = new Audio();
                             file.data.name = file.key;
                             file.data.onerror = function () {
@@ -1257,13 +1176,12 @@ Phaser.Loader.prototype = {
                             };
                             file.data.preload = 'auto';
                             file.data.src = this.baseURL + file.url;
-                            file.data.addEventListener('canplaythrough', Phaser.GAMES[this.game.id].load.fileComplete(this._fileIndex), false);
+                            file.data.addEventListener('canplaythrough', function () { Phaser.GAMES[_this.game.id].load.fileComplete(_this._fileIndex); }, false);
                             file.data.load();
                         }
                     }
                 }
-                else
-                {
+                else {
                     this.fileError(this._fileIndex);
                 }
 
@@ -1271,8 +1189,7 @@ Phaser.Loader.prototype = {
 
             case 'json':
 
-                if (this.useXDomainRequest && window.XDomainRequest)
-                {
+                if (this.useXDomainRequest && window.XDomainRequest) {
                     this._ajax = new window.XDomainRequest();
 
                     // XDomainRequest has a few quirks. Occasionally it will abort requests
@@ -1288,9 +1205,9 @@ Phaser.Loader.prototype = {
                         return _this.dataLoadError(_this._fileIndex);
                     };
 
-                    this._ajax.onprogress = function() {};
+                    this._ajax.onprogress = function () { };
 
-                    this._ajax.onload = function(){
+                    this._ajax.onload = function () {
                         return _this.jsonLoadComplete(_this._fileIndex);
                     };
 
@@ -1302,8 +1219,7 @@ Phaser.Loader.prototype = {
                         this._ajax.send();
                     }, 0);
                 }
-                else
-                {
+                else {
                     this.xhrLoad(this._fileIndex, this.baseURL + file.url, 'text', 'jsonLoadComplete', 'dataLoadError');
                 }
 
@@ -1316,16 +1232,13 @@ Phaser.Loader.prototype = {
 
             case 'tilemap':
 
-                if (file.format === Phaser.Tilemap.TILED_JSON)
-                {
+                if (file.format === Phaser.Tilemap.TILED_JSON) {
                     this.xhrLoad(this._fileIndex, this.baseURL + file.url, 'text', 'jsonLoadComplete', 'dataLoadError');
                 }
-                else if (file.format === Phaser.Tilemap.CSV)
-                {
+                else if (file.format === Phaser.Tilemap.CSV) {
                     this.xhrLoad(this._fileIndex, this.baseURL + file.url, 'text', 'csvLoadComplete', 'dataLoadError');
                 }
-                else
-                {
+                else {
                     throw new Error("Phaser.Loader. Invalid Tilemap format: " + file.format);
                 }
                 break;
@@ -1386,13 +1299,11 @@ Phaser.Loader.prototype = {
 
         if (typeof urls === 'string') { urls = [urls]; }
 
-        for (var i = 0; i < urls.length; i++)
-        {
+        for (var i = 0; i < urls.length; i++) {
             extension = urls[i].toLowerCase();
             extension = extension.substr((Math.max(0, extension.lastIndexOf(".")) || Infinity) + 1);
 
-            if (this.game.device.canPlayAudio(extension))
-            {
+            if (this.game.device.canPlayAudio(extension)) {
                 return urls[i];
             }
 
@@ -1429,8 +1340,7 @@ Phaser.Loader.prototype = {
     */
     fileComplete: function (index) {
 
-        if (!this._fileList[index])
-        {
+        if (!this._fileList[index]) {
             console.warn('Phaser.Loader fileComplete invalid index ' + index);
             return;
         }
@@ -1440,8 +1350,7 @@ Phaser.Loader.prototype = {
 
         var loadNext = true;
 
-        switch (file.type)
-        {
+        switch (file.type) {
             case 'image':
 
                 this.game.cache.addImage(file.key, file.url, file.data);
@@ -1454,25 +1363,20 @@ Phaser.Loader.prototype = {
 
             case 'textureatlas':
 
-                if (file.atlasURL == null)
-                {
+                if (file.atlasURL == null) {
                     this.game.cache.addTextureAtlas(file.key, file.url, file.data, file.atlasData, file.format);
                 }
-                else
-                {
+                else {
                     //  Load the JSON or XML before carrying on with the next file
                     loadNext = false;
 
-                    if (file.format == Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY || file.format == Phaser.Loader.TEXTURE_ATLAS_JSON_HASH)
-                    {
+                    if (file.format == Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY || file.format == Phaser.Loader.TEXTURE_ATLAS_JSON_HASH) {
                         this.xhrLoad(this._fileIndex, this.baseURL + file.atlasURL, 'text', 'jsonLoadComplete', 'dataLoadError');
                     }
-                    else if (file.format == Phaser.Loader.TEXTURE_ATLAS_XML_STARLING)
-                    {
+                    else if (file.format == Phaser.Loader.TEXTURE_ATLAS_XML_STARLING) {
                         this.xhrLoad(this._fileIndex, this.baseURL + file.atlasURL, 'text', 'xmlLoadComplete', 'dataLoadError');
                     }
-                    else
-                    {
+                    else {
                         throw new Error("Phaser.Loader. Invalid Texture Atlas format: " + file.format);
                     }
                 }
@@ -1480,12 +1384,10 @@ Phaser.Loader.prototype = {
 
             case 'bitmapfont':
 
-                if (file.xmlURL == null)
-                {
+                if (file.xmlURL == null) {
                     this.game.cache.addBitmapFont(file.key, file.url, file.data, file.xmlData, file.xSpacing, file.ySpacing);
                 }
-                else
-                {
+                else {
                     //  Load the XML before carrying on with the next file
                     loadNext = false;
                     this.xhrLoad(this._fileIndex, this.baseURL + file.xmlURL, 'text', 'xmlLoadComplete', 'dataLoadError');
@@ -1494,30 +1396,26 @@ Phaser.Loader.prototype = {
 
             case 'audio':
 
-                if (this.game.sound.usingWebAudio)
-                {
+                if (this.game.sound.usingWebAudio) {
                     file.data = this._xhr.response;
 
                     this.game.cache.addSound(file.key, file.url, file.data, true, false);
 
-                    if (file.autoDecode)
-                    {
+                    if (file.autoDecode) {
                         var that = this;
                         var key = file.key;
 
                         this.game.cache.updateSound(key, 'isDecoding', true);
 
                         this.game.sound.context.decodeAudioData(file.data, function (buffer) {
-                            if (buffer)
-                            {
+                            if (buffer) {
                                 that.game.cache.decodedSound(key, buffer);
                                 that.game.sound.onSoundDecode.dispatch(key, that.game.cache.getSound(key));
                             }
                         });
                     }
                 }
-                else
-                {
+                else {
                     file.data.removeEventListener('canplaythrough', Phaser.GAMES[this.game.id].load.fileComplete);
                     this.game.cache.addSound(file.key, file.url, file.data, false, true);
                 }
@@ -1540,19 +1438,16 @@ Phaser.Loader.prototype = {
                 file.data.defer = false;
                 file.data.text = this._xhr.responseText;
                 document.head.appendChild(file.data);
-                if (file.callback)
-                {
+                if (file.callback) {
                     file.data = file.callback.call(file.callbackContext, file.key, this._xhr.responseText);
                 }
                 break;
 
             case 'binary':
-                if (file.callback)
-                {
+                if (file.callback) {
                     file.data = file.callback.call(file.callbackContext, file.key, this._xhr.response);
                 }
-                else
-                {
+                else {
                     file.data = this._xhr.response;
                 }
 
@@ -1561,8 +1456,7 @@ Phaser.Loader.prototype = {
                 break;
         }
 
-        if (loadNext)
-        {
+        if (loadNext) {
             this.nextFile(index, true);
         }
 
@@ -1576,35 +1470,29 @@ Phaser.Loader.prototype = {
     */
     jsonLoadComplete: function (index) {
 
-        if (!this._fileList[index])
-        {
+        if (!this._fileList[index]) {
             console.warn('Phaser.Loader jsonLoadComplete invalid index ' + index);
             return;
         }
 
         var file = this._fileList[index];
 
-        if (this._ajax && this._ajax.responseText)
-        {
+        if (this._ajax && this._ajax.responseText) {
             var data = JSON.parse(this._ajax.responseText);
         }
-        else
-        {
+        else {
             var data = JSON.parse(this._xhr.responseText);
         }
 
         file.loaded = true;
 
-        if (file.type === 'tilemap')
-        {
+        if (file.type === 'tilemap') {
             this.game.cache.addTilemap(file.key, file.url, data, file.format);
         }
-        else if (file.type === 'json')
-        {
+        else if (file.type === 'json') {
             this.game.cache.addJSON(file.key, file.url, data);
         }
-        else
-        {
+        else {
             this.game.cache.addTextureAtlas(file.key, file.url, file.data, data, file.format);
         }
 
@@ -1620,8 +1508,7 @@ Phaser.Loader.prototype = {
     */
     csvLoadComplete: function (index) {
 
-        if (!this._fileList[index])
-        {
+        if (!this._fileList[index]) {
             console.warn('Phaser.Loader csvLoadComplete invalid index ' + index);
             return;
         }
@@ -1664,8 +1551,7 @@ Phaser.Loader.prototype = {
     */
     xmlLoadComplete: function (index) {
 
-        if (this._xhr.responseType !== '' && this._xhr.responseType !== 'text')
-        {
+        if (this._xhr.responseType !== '' && this._xhr.responseType !== 'text') {
             console.warn('Invalid XML Response Type', this._fileList[index]);
             console.warn(this._xhr);
         }
@@ -1673,43 +1559,35 @@ Phaser.Loader.prototype = {
         var data = this._xhr.responseText;
         var xml;
 
-        try
-        {
-            if (window['DOMParser'])
-            {
+        try {
+            if (window['DOMParser']) {
                 var domparser = new DOMParser();
                 xml = domparser.parseFromString(data, "text/xml");
             }
-            else
-            {
+            else {
                 xml = new ActiveXObject("Microsoft.XMLDOM");
                 xml.async = 'false';
                 xml.loadXML(data);
             }
         }
-        catch (e)
-        {
+        catch (e) {
             xml = undefined;
         }
 
-        if (!xml || !xml.documentElement || xml.getElementsByTagName("parsererror").length)
-        {
+        if (!xml || !xml.documentElement || xml.getElementsByTagName("parsererror").length) {
             throw new Error("Phaser.Loader. Invalid XML given");
         }
 
         var file = this._fileList[index];
         file.loaded = true;
 
-        if (file.type === 'bitmapfont')
-        {
+        if (file.type === 'bitmapfont') {
             this.game.cache.addBitmapFont(file.key, file.url, file.data, xml, file.xSpacing, file.ySpacing);
         }
-        else if (file.type === 'textureatlas')
-        {
+        else if (file.type === 'textureatlas') {
             this.game.cache.addTextureAtlas(file.key, file.url, file.data, xml, file.format);
         }
-        else if (file.type === 'xml')
-        {
+        else if (file.type === 'xml') {
             this.game.cache.addXML(file.key, file.url, xml);
         }
 
@@ -1730,19 +1608,15 @@ Phaser.Loader.prototype = {
         this.progressFloat += this._progressChunk;
         this.progress = Math.round(this.progressFloat);
 
-        if (this.progress > 100)
-        {
+        if (this.progress > 100) {
             this.progress = 100;
         }
 
-        if (this.preloadSprite !== null)
-        {
-            if (this.preloadSprite.direction === 0)
-            {
+        if (this.preloadSprite !== null) {
+            if (this.preloadSprite.direction === 0) {
                 this.preloadSprite.rect.width = Math.floor((this.preloadSprite.width / 100) * this.progress);
             }
-            else
-            {
+            else {
                 this.preloadSprite.rect.height = Math.floor((this.preloadSprite.height / 100) * this.progress);
             }
 
@@ -1751,13 +1625,11 @@ Phaser.Loader.prototype = {
 
         this.onFileComplete.dispatch(this.progress, this._fileList[previousIndex].key, success, this.totalLoadedFiles(), this._fileList.length);
 
-        if (this.totalQueuedFiles() > 0)
-        {
+        if (this.totalQueuedFiles() > 0) {
             this._fileIndex++;
             this.loadFile();
         }
-        else
-        {
+        else {
             this.hasLoaded = true;
             this.isLoading = false;
 
@@ -1778,10 +1650,8 @@ Phaser.Loader.prototype = {
 
         var total = 0;
 
-        for (var i = 0; i < this._fileList.length; i++)
-        {
-            if (this._fileList[i].loaded)
-            {
+        for (var i = 0; i < this._fileList.length; i++) {
+            if (this._fileList[i].loaded) {
                 total++;
             }
         }
@@ -1800,10 +1670,8 @@ Phaser.Loader.prototype = {
 
         var total = 0;
 
-        for (var i = 0; i < this._fileList.length; i++)
-        {
-            if (this._fileList[i].loaded === false)
-            {
+        for (var i = 0; i < this._fileList.length; i++) {
+            if (this._fileList[i].loaded === false) {
                 total++;
             }
         }
@@ -1822,10 +1690,8 @@ Phaser.Loader.prototype = {
 
         var total = 0;
 
-        for (var i = 0; i < this._packList.length; i++)
-        {
-            if (this._packList[i].loaded)
-            {
+        for (var i = 0; i < this._packList.length; i++) {
+            if (this._packList[i].loaded) {
                 total++;
             }
         }
@@ -1844,10 +1710,8 @@ Phaser.Loader.prototype = {
 
         var total = 0;
 
-        for (var i = 0; i < this._packList.length; i++)
-        {
-            if (this._packList[i].loaded === false)
-            {
+        for (var i = 0; i < this._packList.length; i++) {
+            if (this._packList[i].loaded === false) {
                 total++;
             }
         }
