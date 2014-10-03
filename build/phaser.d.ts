@@ -836,7 +836,7 @@ declare module PIXI {
         noFrame: boolean;
         trim: Point;
         width: number;
-        scope: Object;
+        scope: any;
         valid: boolean;
 
         destroy(destroyBase: boolean): void;
@@ -1296,10 +1296,12 @@ declare module Phaser {
         render(): Phaser.BitmapData;
         replaceRGB(r1: number, g1: number, b1: number, a1: number, r2: number, g2: number, b2: number, a2: number, region: Phaser.Rectangle): Phaser.BitmapData;
         resize(width: number, height: number): Phaser.BitmapData;
-        shiftHSL(h?: number, s?: number, l?: number, region?: Phaser.Rectangle): Phaser.BitmapData;
         setHSL(h?: number, s?: number, l?: number, region?: Phaser.Rectangle): Phaser.BitmapData;
         setPixel(x: number, y: number, red: number, green: number, blue: number, immediate?: boolean): Phaser.BitmapData;
         setPixel32(x: number, y: number, red: number, green: number, blue: number, alpha: number, immediate?: boolean): Phaser.BitmapData;
+        shadow(color: string, blur?: number, x?: number, y?: number): Phaser.BitmapData;
+        shiftHSL(h?: number, s?: number, l?: number, region?: Phaser.Rectangle): Phaser.BitmapData;
+        textureLine(line: Phaser.Line, key: string, repeat?: string): Phaser.BitmapData;
         update(x: number, y: number, width: number, height: number): Phaser.BitmapData;
 
     }
@@ -1392,7 +1394,7 @@ declare module Phaser {
         onSoundUnlock: Phaser.Signal;
 
         addBinary(key: string, binaryData: any): void;
-        addBitmapData(key: string, bitmapData: Phaser.BitmapData): Phaser.BitmapData;
+        addBitmapData(key: string, bitmapData: Phaser.BitmapData, frameData?: Phaser.FrameData): Phaser.BitmapData;
         addBitmapFont(key: string, texture: Phaser.RetroFont): void;
         addBitmapFont(key: string, url: string, data: any, xmlData: any, xSpacing?: number, ySpacing?: number): void;
         addCanvas(key: string, canvas: HTMLCanvasElement, context: CanvasRenderingContext2D): void;
@@ -1430,7 +1432,7 @@ declare module Phaser {
         getFrame(key: string): Phaser.Frame;
         getFrameByIndex(key: string, frame: string): Phaser.Frame;
         getFrameByName(key: string, frame: string): Phaser.Frame;
-        getFrameData(key: string): Phaser.FrameData;
+        getFrameData(key: string, map?: string): Phaser.FrameData;
         getFrameCount(key: string): number;
         getImage(key: string): any;
         getJSON(key: string): any;
@@ -1591,6 +1593,7 @@ declare module Phaser {
         static toRGBA(r: number, g: number, b: number, a: number): number;
         static unpackPixel(rgba: number, out?: any, hsl?: boolean, hsv?: boolean): any;
         static updateColor(out: any): number;
+        static webToColor(web: string, out?: any): { r: number; g: number; b: number; };
 
     }
 
@@ -2628,11 +2631,14 @@ declare module Phaser {
         draggable: boolean;
         enabled: boolean;
         game: Phaser.Game;
+        globalToLocalX(x: number): number;
+        globalToLocalY(y: number): number;
         isDragged: boolean;
         pixelPerfectAlpha: number;
         pixelPerfectClick: boolean;
         pixelPerfectOver: boolean;
         priorityID: number;
+        scaleLayer: boolean;
         snapOffset: Phaser.Point;
         snapOffsetX: number;
         snapOffsetY: number;
@@ -5405,6 +5411,8 @@ declare module Phaser {
             boot(): void;
             body(sprite: Phaser.Sprite, color?: string, filled?: boolean): void;
             bodyInfo(sprite: Phaser.Sprite, x: number, y: Number, color?: string): void;
+            box2dBody(body: Phaser.Sprite, color?: string): void;
+            box2dWorld(): void;
             cameraInfo(camera: Phaser.Camera, x: number, y: number, color?: string): void;
             geom(object: any, color?: string, fiiled?: boolean, forceType?: number): void;
             inputInfo(x: number, y: number, color?: string): void;
