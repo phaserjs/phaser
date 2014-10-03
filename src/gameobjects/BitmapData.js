@@ -1249,15 +1249,20 @@ Phaser.BitmapData.prototype = {
     * @method Phaser.BitmapData#textureLine
     * @param {Phaser.Line} line - A Phaser.Line object that will be used to plot the start and end of the line.
     * @param {string} key - The key of an image in the Phaser.Cache to use as the texture for this line.
+    * @param {string} [repeat='repeat-x'] - The pattern repeat mode to use when drawing the line. Either `repeat`, `repeat-x` or `no-repeat`.
     * @return {Phaser.BitmapData} This BitmapData object for method chaining.
     */
-    textureLine: function (line, key) {
+    textureLine: function (line, key, repeat) {
+
+        if (typeof repeat === 'undefined') { repeat = 'repeat-x'; }
 
         var image = this.game.cache.getImage(key);
 
+        this.context.fillStyle = this.context.createPattern(image, repeat);
+
         this._circle = new Phaser.Circle(line.start.x, line.start.y, image.height);
 
-        circle.circumferencePoint(line.angle - 1.5707963267948966, false, this._pos);
+        this._circle.circumferencePoint(line.angle - 1.5707963267948966, false, this._pos);
 
         this.context.save();
         this.context.translate(this._pos.x, this._pos.y);
