@@ -193,6 +193,12 @@ Phaser.BitmapData = function (game, key, width, height) {
     */
     this._tempB = 0;
 
+    /**
+    * @property {Phaser.Circle} _circle - Internal cache var.
+    * @private
+    */
+    this._circle = new Phaser.Circle();
+
 };
 
 Phaser.BitmapData.prototype = {
@@ -1232,6 +1238,34 @@ Phaser.BitmapData.prototype = {
         this.context.closePath();
 
         this.context.fill();
+
+        return this;
+
+    },
+
+    /**
+    * Takes the given Line object and image and renders it to this BitmapData as a repeating texture line.
+    *
+    * @method Phaser.BitmapData#textureLine
+    * @param {Phaser.Line} line - A Phaser.Line object that will be used to plot the start and end of the line.
+    * @param {string} key - The key of an image in the Phaser.Cache to use as the texture for this line.
+    * @return {Phaser.BitmapData} This BitmapData object for method chaining.
+    */
+    textureLine: function (line, key) {
+
+        var image = this.game.cache.getImage(key);
+
+        this._circle = new Phaser.Circle(line.start.x, line.start.y, image.height);
+
+        circle.circumferencePoint(line.angle - 1.5707963267948966, false, this._pos);
+
+        this.context.save();
+        this.context.translate(this._pos.x, this._pos.y);
+        this.context.rotate(line.angle);
+        this.context.fillRect(0, 0, line.length, image.height);
+        this.context.restore();
+
+        this.dirty = true;
 
         return this;
 

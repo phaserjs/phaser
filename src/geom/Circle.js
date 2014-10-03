@@ -67,7 +67,7 @@ Phaser.Circle.prototype = {
     * @method Phaser.Circle#setTo
     * @param {number} x - The x coordinate of the center of the circle.
     * @param {number} y - The y coordinate of the center of the circle.
-    * @param {number} diameter - The diameter of the circle in pixels.
+    * @param {number} diameter - The diameter of the circle.
     * @return {Circle} This circle object.
     */
     setTo: function (x, y, diameter) {
