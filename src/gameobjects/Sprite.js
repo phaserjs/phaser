@@ -379,7 +379,11 @@ Phaser.Sprite.prototype.loadTexture = function (key, frame, stopAnimation) {
     {
         //  This works from a reference, which probably isn't what we need here
         this.setTexture(key.texture);
-        setFrame = !this.animations.loadFrameData(this.game.cache.getFrameData(key.key, Phaser.Cache.BITMAPDATA), frame);
+
+        if (this.game.cache.getFrameData(key.key, Phaser.Cache.BITMAPDATA))
+        {
+            setFrame = !this.animations.loadFrameData(this.game.cache.getFrameData(key.key, Phaser.Cache.BITMAPDATA), frame);
+        }
     }
     else if (key instanceof PIXI.Texture)
     {
