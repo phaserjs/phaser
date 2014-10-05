@@ -1556,6 +1556,10 @@ Phaser.Cache.prototype = {
             delete this._bitmapFont[item];
         }
 
+        this._urlMap = null;
+        this._urlResolver = null;
+        this._urlTemp = null;
+
     }
 
 };
