@@ -889,7 +889,7 @@ Phaser.Math = {
     *
     * @method Phaser.Math#wrapAngle
     * @param {number} angle - The angle value to check
-    * @param {boolean} radians - True if angle is given in radians.
+    * @param {boolean} radians - Set to `true` if the angle is given in radians, otherwise degrees is expected.
     * @return {number} The new angle value, returns the same as the input angle if it was within bounds.
     */
     wrapAngle: function (angle, radians) {
