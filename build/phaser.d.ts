@@ -1,5 +1,6 @@
 // Type definitions for PIXI 1.6.1
 // Project: https://github.com/GoodBoyDigital/pixi.js/
+/// <reference path="WebGL.d.ts"/>
 
 declare module PIXI {
 
@@ -1724,6 +1725,26 @@ declare module Phaser {
 
     }
 
+    class Filter implements PIXI.AbstractFilter {
+
+    constructor(game: Phaser.Game, ...args: any[]);
+
+    dirty: boolean;
+    game: Phaser.Game;
+    height: number;
+    padding: number;
+    type: number;
+    uniforms: any;
+    fragmentSrc: any[];
+    width: number;
+
+    destroy(): void;
+    init(...args: any[]): void;
+    setResolution(width: number, height: number): any;
+    update(pointer?: Phaser.Pointer): void;
+
+  }
+
     module Filter {
 
         class BinarySerpents extends Phaser.Filter {
@@ -1872,26 +1893,6 @@ declare module Phaser {
             init(width: number, height: number, texture: any): void;
 
         }
-    }
-
-    class Filter implements PIXI.AbstractFilter {
-
-        constructor(game: Phaser.Game, ...args: any[]);
-
-        dirty: boolean;
-        game: Phaser.Game;
-        height: number;
-        padding: number;
-        type: number;
-        uniforms: any;
-        fragmentSrc: any[];
-        width: number;
-
-        destroy(): void;
-        init(...args: any[]): void;
-        setResolution(width: number, height: number): any;
-        update(pointer?: Phaser.Pointer): void;
-
     }
 
     class Frame {
