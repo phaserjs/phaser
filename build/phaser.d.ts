@@ -1159,6 +1159,7 @@ declare module Phaser {
         frameTotal: number;
         game: Phaser.Game;
         isLoaded: boolean;
+        name: string;
         paused: boolean;
         sprite: Phaser.Sprite;
         updateIfVisible: boolean;

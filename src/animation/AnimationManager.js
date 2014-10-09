@@ -503,6 +503,23 @@ Object.defineProperty(Phaser.AnimationManager.prototype, 'paused', {
 });
 
 /**
+* @name Phaser.AnimationManager#name
+* @property {string} name - Gets the current animation name, if set.
+*/
+Object.defineProperty(Phaser.AnimationManager.prototype, 'name', {
+
+    get: function () {
+
+        if (this.currentAnim)
+        {
+            return this.currentAnim.name;
+        }
+
+    }
+
+});
+
+/**
 * @name Phaser.AnimationManager#frame
 * @property {number} frame - Gets or sets the current frame index and updates the Texture Cache for display.
 */
