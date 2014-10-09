@@ -314,8 +314,8 @@ Phaser.FlexGrid.prototype = {
         this.game.debug.text(this.boundsFluid.width + ' x ' + this.boundsFluid.height, this.boundsFluid.x + 4, this.boundsFluid.y + 16);
         this.game.debug.geom(this.boundsFluid, 'rgba(255,0,0,0.9', false);
 
-        this.game.debug.text(this.boundsNone.width + ' x ' + this.boundsNone.height, this.boundsNone.x + 4, this.boundsNone.y + 16);
-        this.game.debug.geom(this.boundsNone, 'rgba(0,255,0,0.9', false);
+        // this.game.debug.text(this.boundsNone.width + ' x ' + this.boundsNone.height, this.boundsNone.x + 4, this.boundsNone.y + 16);
+        // this.game.debug.geom(this.boundsNone, 'rgba(0,255,0,0.9', false);
 
         // this.game.debug.text(this.boundsCustom.width + ' x ' + this.boundsCustom.height, this.boundsCustom.x + 4, this.boundsCustom.y + 16);
         // this.game.debug.geom(this.boundsCustom, 'rgba(255,255,0,0.9', false);
