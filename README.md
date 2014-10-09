@@ -21,11 +21,11 @@
 - [License](#license)
 
 <a name="about"></a>
-# Phaser 2.1.2
+# Phaser 2.1.3
 
 Phaser is a fast, free and fun open source game framework for making desktop and mobile browser HTML5 games. It uses [Pixi.js](https://github.com/GoodBoyDigital/pixi.js/) internally for fast 2D Canvas and WebGL rendering.
 
-Version: 2.1.2 "Whitebridge" - Released: 9th October 2014
+Version: 2.1.3 "Ravinda" - Released: in development
 
 By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 
@@ -43,21 +43,7 @@ By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 ![div](http://phaser.io/images/div4.png)
 
 <a name="whats-new"></a>
-## Welcome to Phaser and What's new in 2.1.2?
-
-Phaser 2.1.2 carries on with our latest round of new features, updates and fixes, demonstrating our commitment to continuously improving our framework and responding to feedback.
-
-This release adds in a number of new features including Audio Sprite json format support, native loading of XML files, Sound fades, per character Text colours, further updates to BitmapData, the ability to use BitmapData with frames as Sprite textures, Group filter, search the Cache by URL and plenty of updates and bug fixes too - including the death of the pesky getPixel issue on Safari / iOS.
-
-Internally we are using Phaser in ever larger client based projects. Thousands of lines of code spread across many States and classes, and we're paying close attention to how best to adapt the API to make life easier for those building apps of the size we are. If there are any features you would like to see then now is the time to suggest them, either by email, the forum or github.
-
-We're also pleased to announce that we have 3 new premium plugins gearing up for launch. They are:
-
-Phaser Box2D - Adds complete Box2D support directly into Phaser, with lots of help methods, over 50 examples and 5 demo games.
-
-Phaser Path Manager - Create complex motion paths for Sprites with a lovely visual editor and this new plugin. No longer rely on tweens for motion :) Instead draw a path, with full branch support, path orientation, segment speeds, path events and more.
-
-Advanced Particle System - The particles included with Phaser are flexible and can create attractive effects. But Advanced Particles is a complete replacement offering professional level particle effects for your games. From multiple render targets, to bitmap caching to all kinds of events, emitters and properties.
+## Welcome to Phaser and What's new in 2.1.3?
 
 Each plugin will come in a range of versions to suit all budgets and there are more on the way. Please visit the [launch page](http://phaserplugins.launchrock.com) to sign-up for notification as soon as they're ready.
 
@@ -85,57 +71,16 @@ Finally the list of [community authored Phaser Tutorials](http://www.lessmilk.co
 <a name="change-log"></a>
 ## Change Log
 
-Version 2.1.2 - "Whitebridge" - October 9th 2014
+Version 2.1.3 - "Ravinda" - in development
 
 ### New Features
 
-* StateManager.unlink will null all State-level Phaser properties, such as `game`, `add`, etc. Useful if you never need to return to the State again.
-* Cache.removeImage has a new parameter: `removeFromPixi` which is `true` by default. It will remove the image from the Pixi BaseTextureCache as well as from the Phaser Cache. Set to false if you don't want the Pixi cache touched.
-* Group.ignoreDestroy boolean will bail out early from any call to `Group.destroy`. Handy if you need to create a global Group that persists across States.
-* Loader can now natively load XML files via `load.xml`. Once the XML file has loaded it is parsed via either DOMParser or ActiveXObject and then added to the Cache, where it can be retrieved via `cache.getXML(key)`.
-* Cache now has support for XML files stored in their own container. You can add them with `cache.addXML` (typically this is done from the Loader automatically for you) and get them with `cache.getXML(key)`. There is also `cache.checkXMLKey(key)`, `cache.checkKeys` and `cache.removeXML(key)`.
-* Rectangle.aabb is a new method that will take an array of Points and return a Rectangle that matches the AABB (bounding area) of the Points (thanks @codevinsky #1199)
-* AudioSprite support is now built into the Loader and SoundManager. AudioSprites are like sprite sheets, only they consist of a selection of audio files and markers in a json configuration. You can find more details at https://github.com/tonistiigi/audiosprite (thanks @codevinsky #1205)
-* Point.parse will return a new Point object based on the x and y properties of the object given to Point.parse (thanks @codevinsky #1198)
-* Sound.fadeOut(duration) will fade the Sound to a volume of zero over the duration given. At the end of the fade the Sound will be stopped and Sound.onFadeComplete dispatched.
-* Sound.fadeIn(duration, loop) will start the Sound playing, or restart it if already playing, set its volume to zero and then increase the volume over the duration given until it reaches 1. At the end of the fade the Sound.onFadeComplete event is dispatched.
-* Text.addColor allows you to set specific colors within the Text. It works by taking a color value, which is a typical HTML string such as `#ff0000` or `rgb(255,0,0)` and a position. The position value is the index of the character in the Text string to start applying this color to. Once set the color remains in use until either another color or the end of the string is encountered. For example if the Text was `Photon Storm` and you did `Text.addColor('#ffff00', 6)` it would color in the word `Storm` in yellow.
-* Text.clearColors resets any previously set colors from `Text.addColor`.
-* If you pass a tinted Sprite to `BitmapData.draw` or `BitmapData.copy` it will now draw the tinted version of the Sprite to the BitmapData and not the original texture.
-* BitmapData.shadow(color, blur, x, y) provides a quick way to set all the relevant shadow settings, which are then be used in future draw calls.
-* Cache.addBitmapData has a new parameter: `frameData` allowing you to pass a `Phaser.FrameData` object along with the BitmapData.
-* Cache.getFrameData has a new parameter: `map` which allows you to specify which cache to get the FrameData from, i.e. `Phaser.Cache.IMAGE` or `Phaser.Cache.BITMAPDATA`.
-* Sprite.loadTexture if given a BitmapData as the texture will now query the cache to see if it has any associated FrameData, and if so it will load that into the AnimationManager.
-* BitmapData.textureLine takes a Phaser.Line object and an image in the image cache. It then accurately draws the image as a repeating texture for the full length of the line.
-* AnimationManager.name will now return the `name` property of the currently playing animation, if any.
-* Group.filter takes a predicate function and passes child, index, and the entire child array to it. It then returns an ArrayList containing all children that the predicate returns true for (thanks @codevinsky #1187)
-* Cache.checkUrl allows you to check if a resource is in the cache based on an absolute URL (thanks @englercj #1221)
-* Cache.getUrl gets a resource from the cache based on the absolute URL it was loaded from (thanks @englercj #1221)
-* Sound.allowMultiple allows you to have multiple instances of a single Sound playing at once. This is only useful when running under Web Audio, and we recommend you implement a local pooling system to not flood the sound channels. But it allows for one Sound object to play overlapping times, useful for gun effects and similar (#1220)
 
 ### Updates
 
-* TypeScript definitions fixes and updates (thanks @clark-stevenson @englercj @benjamindulau)
-* Added the `sourceRect` and `maskRect` parameters back into `BitmapData.alphaMask` as they were accidentally removed in 2.1 (thanks seejay92)
-* jsdoc fixes (thanks @danxexe #1209)
-* AnimationParser is now using `value` instead of `nodeValue` when parsing atlas XML files, avoiding Chrome deprecation warnings (thanks @valtterip #1189)
-* Color.webToColor restored. Converts a CSS rgba color into a native color value.
-* Color.createColor now populates the `color` property of the returned object with the results of `Phaser.Color.getColor`.
-* Color.createColor now has a `color32` property with the results of `Phaser.Color.getColor32`.
-* Color.hexToColor has been optimised to inline the regex and has moved the createColor call so it now populates the color object fully, not just setting the r,g,b properties.
-* Keyboard.PLUS and Keyboard.MINUS have been added to the list of key codes (thanks @VictorBjelkholm #1281)
 
 ### Bug Fixes
 
-* If Game Objects change their frame, such as with an animated Sprite, and the change goes from a previously trimmed frame to a non-trimmed (full size) one, then the previous trim values were still left active, causing it to glitch (thanks stupot)
-* If you called StateManager.start from within a states `init` method which also had a `preload` method it would fail to start the next State.
-* StateManager.boot would call start on a State twice if it was added to the game and started before the DOM load had completed. This didn't cause an error but was duplicating function calls needlessly.
-* Changing any of the Text properties such as font, lineSpacing and fontSize on a Text object that wasn't already on the display list would cause an updateTransform error. Parent is now checked first in all setters.
-* A Timer with a delay value that was a float and not an integer would not loop correctly. Timer delay values are now passed through Math.round to avoid this (thanks @osmanzeki #1196)
-* The Loader would incorrectly call `fileComplete` for legacy audio files instead of setting it as a callback, throwing up errors if the audio file failed to load (thanks @spayton #1212)
-* The Uint32Array check used in Utils was incorrectly replacing Uint32Array on Safari, causing errors like BitmapData.getPixel32 to fail and other related issues (fixes #1043 and #1197)
-* Camera.follow would break if the parent of the Sprite being followed was scaled in any way (thanks @englercj #1222)
-* Fixed the 4fv uniform in the Pixelate filter.
 
 For details about changes made in previous versions of Phaser see the full Change Log at https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md
 
@@ -187,11 +132,11 @@ Nice and easy :)
 
 Phaser is now available on [CDNJS](http://cdnjs.com). You can include the following in your html:
 
-`http://cdnjs.cloudflare.com/ajax/libs/phaser/2.1.2/phaser.min.js`
+`http://cdnjs.cloudflare.com/ajax/libs/phaser/2.1.3/phaser.min.js`
 
 Or if you prefer you can leave the protocol off, so it works via http and https:
 
-`//cdnjs.cloudflare.com/ajax/libs/phaser/2.1.2/phaser.min.js`
+`//cdnjs.cloudflare.com/ajax/libs/phaser/2.1.3/phaser.min.js`
 
 ![div](http://phaser.io/images/div1.png)
 
