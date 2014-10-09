@@ -97,6 +97,7 @@ Version 2.1.2 - "Whitebridge" - in development
 * Group.filter takes a predicate function and passes child, index, and the entire child array to it. It then returns an ArrayList containing all children that the predicate returns true for (thanks @codevinsky #1187)
 * Cache.checkUrl allows you to check if a resource is in the cache based on an absolute URL (thanks @englercj #1221)
 * Cache.getUrl gets a resource from the cache based on the absolute URL it was loaded from (thanks @englercj #1221)
+* Sound.allowMultiple allows you to have multiple instances of a single Sound playing at once. This is only useful when running under Web Audio, and we recommend you implement a local pooling system to not flood the sound channels. But it allows for one Sound object to play overlapping times, useful for gun effects and similar (#1220)
 
 ### Updates
 
@@ -120,6 +121,7 @@ Version 2.1.2 - "Whitebridge" - in development
 * The Loader would incorrectly call `fileComplete` for legacy audio files instead of setting it as a callback, throwing up errors if the audio file failed to load (thanks @spayton #1212)
 * The Uint32Array check used in Utils was incorrectly replacing Uint32Array on Safari, causing errors like BitmapData.getPixel32 to fail and other related issues (fixes #1043 and #1197)
 * Camera.follow would break if the parent of the Sprite being followed was scaled in any way (thanks @englercj #1222)
+* Fixed the 4fv uniform in the Pixelate filter.
 
 
 For details about changes made in previous versions of Phaser see the full Change Log at https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md

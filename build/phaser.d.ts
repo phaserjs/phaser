@@ -4564,6 +4564,7 @@ declare module Phaser {
         constructor(game: Phaser.Game, key: string, volume?: number, loop?: boolean, connect?: boolean);
 
         autoplay: boolean;
+        allowMultiple: boolean;
         context: any;
         currentMarker: string;
         currentTime: number;

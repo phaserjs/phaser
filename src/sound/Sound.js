@@ -138,6 +138,12 @@ Phaser.Sound = function (game, key, volume, loop, connect) {
     this.override = false;
 
     /**
+    * @property {boolean} allowMultiple - This will allow you to have multiple instances of this Sound playing at once. This is only useful when running under Web Audio, and we recommend you implement a local pooling system to not flood the sound channels.
+    * @default
+    */
+    this.allowMultiple = false;
+
+    /**
     * @property {boolean} usingWebAudio - true if this sound is being played with Web Audio.
     * @readonly
     */
@@ -444,13 +450,13 @@ Phaser.Sound.prototype = {
         if (typeof marker === 'undefined') { marker = ''; }
         if (typeof forceRestart === 'undefined') { forceRestart = true; }
 
-        if (this.isPlaying && !forceRestart && !this.override)
+        if (this.isPlaying && !this.allowMultiple && !forceRestart && !this.override)
         {
             //  Use Restart instead
             return this;
         }
 
-        if (this.isPlaying && (this.override || forceRestart))
+        if (this.isPlaying && !this.allowMultiple && (this.override || forceRestart))
         {
             if (this.usingWebAudio)
             {
