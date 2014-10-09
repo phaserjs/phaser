@@ -5,9 +5,9 @@
 */
 
 /**
-* A game only has one instance of a Cache and it is used to store all externally loaded assets such as images, sounds 
+* A game only has one instance of a Cache and it is used to store all externally loaded assets such as images, sounds
 * and data files as a result of Loader calls. Cached items use string based keys for look-up.
-* 
+*
 * @class Phaser.Cache
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
@@ -90,6 +90,24 @@ Phaser.Cache = function (game) {
     * @private
     */
     this._bitmapFont = {};
+
+    /**
+    * @property {object} _urlMap - Maps URLs to resources.
+    * @private
+    */
+    this._urlMap = {};
+
+    /**
+    * @property {Image} _urlResolver - Used to resolve URLs to the absolute path.
+    * @private
+    */
+    this._urlResolver = new Image();
+
+    /**
+    * @property {string} _urlTemp - Temporary variable to hold a resolved url.
+    * @private
+    */
+    this._urlTemp = null;
 
     this.addDefaultImage();
     this.addMissingImage();
@@ -276,6 +294,8 @@ Phaser.Cache.prototype = {
 
         this._images[key].frameData = Phaser.AnimationParser.spriteSheet(this.game, key, frameWidth, frameHeight, frameMax, margin, spacing);
 
+        this._urlMap[this._resolveUrl(url)] = this._images[key];
+
     },
 
     /**
@@ -290,6 +310,8 @@ Phaser.Cache.prototype = {
     addTilemap: function (key, url, mapData, format) {
 
         this._tilemaps[key] = { url: url, data: mapData, format: format };
+
+        this._urlMap[this._resolveUrl(url)] = this._tilemaps[key];
 
     },
 
@@ -323,6 +345,8 @@ Phaser.Cache.prototype = {
             this._images[key].frameData = Phaser.AnimationParser.XMLData(this.game, atlasData, key);
         }
 
+        this._urlMap[this._resolveUrl(url)] = this._images[key];
+
     },
 
     /**
@@ -347,6 +371,8 @@ Phaser.Cache.prototype = {
 
         this._bitmapFont[key] = PIXI.BitmapText.fonts[key];
 
+        this._urlMap[this._resolveUrl(url)] = this._bitmapFont[key];
+
     },
 
     /**
@@ -361,6 +387,8 @@ Phaser.Cache.prototype = {
     addPhysicsData: function (key, url, JSONData, format) {
 
         this._physics[key] = { url: url, data: JSONData, format: format };
+
+        this._urlMap[this._resolveUrl(url)] = this._physics[key];
 
     },
 
@@ -418,6 +446,8 @@ Phaser.Cache.prototype = {
 
         this._text[key] = { url: url, data: data };
 
+        this._urlMap[this._resolveUrl(url)] = this._text[key];
+
     },
 
     /**
@@ -431,6 +461,8 @@ Phaser.Cache.prototype = {
     addJSON: function (key, url, data) {
 
         this._json[key] = { url: url, data: data };
+
+        this._urlMap[this._resolveUrl(url)] = this._json[key];
 
     },
 
@@ -467,6 +499,8 @@ Phaser.Cache.prototype = {
         PIXI.BaseTextureCache[key] = new PIXI.BaseTexture(data);
         PIXI.TextureCache[key] = new PIXI.Texture(PIXI.BaseTextureCache[key]);
 
+        this._urlMap[this._resolveUrl(url)] = this._images[key];
+
     },
 
     /**
@@ -492,6 +526,8 @@ Phaser.Cache.prototype = {
         }
 
         this._sounds[key] = { url: url, data: data, isDecoding: false, decoded: decoded, webAudio: webAudio, audioTag: audioTag, locked: this.game.sound.touchLocked };
+
+        this._urlMap[this._resolveUrl(url)] = this._sounds[key];
 
     },
 
@@ -667,7 +703,7 @@ Phaser.Cache.prototype = {
                         }
 
                     }
-                    
+
                     //  We did not find the requested fixture
                     console.warn('Phaser.Cache.getPhysicsData: Could not find given fixtureKey: "' + fixtureKey + ' in ' + key + '"');
                 }
@@ -858,6 +894,24 @@ Phaser.Cache.prototype = {
     checkXMLKey: function (key) {
 
         return this.checkKey(Phaser.Cache.XML, key);
+
+    },
+
+    /**
+    * Checks if the given URL has been loaded into the Cache.
+    *
+    * @method Phaser.Cache#checkUrl
+    * @param {string} url - The url to check for in the cache.
+    * @return {boolean} True if the url exists, otherwise false.
+    */
+    checkUrl: function (url) {
+
+        if (this._urlMap[this._resolveUrl(url)])
+        {
+            return true;
+        }
+
+        return false;
 
     },
 
@@ -1194,6 +1248,26 @@ Phaser.Cache.prototype = {
     },
 
     /**
+    * Get a cached object by the URL.
+    *
+    * @method Phaser.Cache#getUrl
+    * @param {string} url - The url for the object loaded to get from the cache.
+    * @return {object} The cached object.
+    */
+    getUrl: function (url) {
+
+        if (this._urlMap[this._resolveUrl(url)])
+        {
+            return this._urlMap[this._resolveUrl(url)];
+        }
+        else
+        {
+            console.warn('Phaser.Cache.getUrl: Invalid url: "' + url  + '"');
+        }
+
+    },
+
+    /**
     * Gets all keys used by the Cache for the given data type.
     *
     * @method Phaser.Cache#getKeys
@@ -1395,6 +1469,24 @@ Phaser.Cache.prototype = {
     },
 
     /**
+    * Resolves a url its absolute form.
+    *
+    * @method Phaser.Cache#_resolveUrl
+    * @param {string} url - The url to resolve.
+    * @private
+    */
+    _resolveUrl: function (url) {
+        this._urlResolver.src = this.game.load.baseUrl + url;
+
+        this._urlTemp = this._urlResolver.src;
+
+        // ensure no request is actually made
+        this._urlResolver.src = '';
+
+        return this._urlTemp;
+    },
+
+    /**
     * Clears the cache. Removes every local cache object reference.
     *
     * @method Phaser.Cache#destroy
@@ -1463,6 +1555,10 @@ Phaser.Cache.prototype = {
         {
             delete this._bitmapFont[item];
         }
+
+        this._urlMap = null;
+        this._urlResolver = null;
+        this._urlTemp = null;
 
     }
 
