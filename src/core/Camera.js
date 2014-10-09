@@ -109,6 +109,11 @@ Phaser.Camera = function (game, id, x, y, width, height) {
     */
     this.scale = null;
 
+    /**
+    * @property {Phaser.Point} _targetPosition - Internal point used to calculate target position
+    */
+    this._targetPosition = new Phaser.Point();
+
 };
 
 /**
@@ -247,34 +252,41 @@ Phaser.Camera.prototype = {
     */
     updateTarget: function () {
 
+        this._targetPosition
+            .copyFrom(this.target)
+            .multiply(
+                this.target.parent ? this.target.parent.worldTransform.a : 1,
+                this.target.parent ? this.target.parent.worldTransform.d : 1
+            );
+
         if (this.deadzone)
         {
-            this._edge = this.target.x - this.view.x;
+            this._edge = this._targetPosition.x - this.view.x;
 
             if (this._edge < this.deadzone.left)
             {
-                this.view.x = this.target.x - this.deadzone.left;
+                this.view.x = this._targetPosition.x - this.deadzone.left;
             }
             else if (this._edge > this.deadzone.right)
             {
-                this.view.x = this.target.x - this.deadzone.right;
+                this.view.x = this._targetPosition.x - this.deadzone.right;
             }
 
-            this._edge = this.target.y - this.view.y;
+            this._edge = this._targetPosition.y - this.view.y;
 
             if (this._edge < this.deadzone.top)
             {
-                this.view.y = this.target.y - this.deadzone.top;
+                this.view.y = this._targetPosition.y - this.deadzone.top;
             }
             else if (this._edge > this.deadzone.bottom)
             {
-                this.view.y = this.target.y - this.deadzone.bottom;
+                this.view.y = this._targetPosition.y - this.deadzone.bottom;
             }
         }
         else
         {
-            this.view.x = this.target.x - this.view.halfWidth;
-            this.view.y = this.target.y - this.view.halfHeight;
+            this.view.x = this._targetPosition.x - this.view.halfWidth;
+            this.view.y = this._targetPosition.y - this.view.halfHeight;
         }
 
     },
