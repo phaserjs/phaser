@@ -16,7 +16,7 @@ Phaser.Filter.Pixelate = function(game) {
 
     this.uniforms.invert = { type: '1f', value: 0 };
     this.uniforms.pixelSize = { type: '2f', value: { x: 10, y: 10 } };
-    this.uniforms.dimensions = { type: '4fv', value: new Float32Array( [ 10000, 100, 10, 10 ] ) };
+    this.uniforms.dimensions = { type: '4fv', value: { x: 10000, y: 100, z: 10, w: 10 } };
 
     this.fragmentSrc = [
 
