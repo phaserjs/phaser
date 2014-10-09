@@ -59,6 +59,10 @@
 						</li>
 						
 						<li class="class-depth-1">
+							<a href="Phaser.AudioSprite.html">AudioSprite</a>
+						</li>
+						
+						<li class="class-depth-1">
 							<a href="Phaser.BitmapData.html">BitmapData</a>
 						</li>
 						
@@ -256,6 +260,10 @@
 						
 						<li class="class-depth-1">
 							<a href="Phaser.Particles.html">Particles</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Particles.Arcade.html">Arcade</a>
 						</li>
 						
 						<li class="class-depth-3">
@@ -553,7 +561,7 @@
     
         
 <dt>
-    <h4 class="name" id="Rectangle"><span class="type-signature"></span>new Rectangle<span class="signature">(x, y, width, height)</span><span class="type-signature"> &rarr; {<a href="Phaser.Rectangle.html">Phaser.Rectangle</a>}</span></h4>
+    <h4 class="name" id="Rectangle"><span class="type-signature"></span>new Rectangle<span class="signature">(x, y, width, height)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -561,7 +569,8 @@
     
     
     <div class="description">
-        <p>Creates a new Rectangle object with the top-left corner specified by the x and y parameters and with the specified width and height parameters. If you call this function without parameters, a Rectangle with x, y, width, and height properties set to 0 is created.</p>
+        <p>Creates a new Rectangle object with the top-left corner specified by the x and y parameters and with the specified width and height parameters.
+If you call this function without parameters, a Rectangle with x, y, width, and height properties set to 0 is created.</p>
     </div>
     
 
@@ -733,29 +742,6 @@
     
     
     
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>This Rectangle object.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="Phaser.Rectangle.html">Phaser.Rectangle</a></span>
-
-
-	</dd>
-</dl>
-
-
-        
     
     
 </dd>
@@ -5363,6 +5349,190 @@ This method checks the x, y, width, and height properties of the Rectangles.</p>
         
             
 <dt>
+    <h4 class="name" id="aabb"><span class="type-signature"></span>aabb<span class="signature">(points, <span class="optional">out</span>)</span><span class="type-signature"> &rarr; {<a href="Phaser.Rectangle.html">Phaser.Rectangle</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Calculates the Axis Aligned Bounding Box (or aabb) from an array of points.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>points</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Phaser.Point[]</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The array of one or more points.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>out</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Rectangle.html">Phaser.Rectangle</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Optional Rectangle to store the value in, if not supplied a new Rectangle object will be created.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Rectangle.js.html">geom/Rectangle.js</a>, <a href="Rectangle.js.html#sunlight-1-line-841">line 841</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>The new Rectangle object.</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type"><a href="Phaser.Rectangle.html">Phaser.Rectangle</a></span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
     <h4 class="name" id="centerOn"><span class="type-signature"></span>centerOn<span class="signature">(x, y)</span><span class="type-signature"> &rarr; {<a href="Phaser.Rectangle.html">Phaser.Rectangle</a>}</span></h4>
     
     
@@ -8237,7 +8407,7 @@ This method checks the x, y, width, and height properties of the Rectangles.</p>
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Tue Sep 09 2014 15:29:37 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Thu Oct 09 2014 16:10:05 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

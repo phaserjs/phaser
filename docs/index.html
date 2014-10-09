@@ -59,6 +59,10 @@
 						</li>
 						
 						<li class="class-depth-1">
+							<a href="Phaser.AudioSprite.html">AudioSprite</a>
+						</li>
+						
+						<li class="class-depth-1">
 							<a href="Phaser.BitmapData.html">BitmapData</a>
 						</li>
 						
@@ -256,6 +260,10 @@
 						
 						<li class="class-depth-1">
 							<a href="Phaser.Particles.html">Particles</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Particles.Arcade.html">Arcade</a>
 						</li>
 						
 						<li class="class-depth-3">
@@ -578,9 +586,9 @@
 <li><a href="#license">License</a></li>
 </ul>
 <p>&lt;a name=&quot;about&quot;&gt;&lt;/a&gt;</p>
-<h1>Phaser 2.1.0</h1>
+<h1>Phaser 2.1.2</h1>
 <p>Phaser is a fast, free and fun open source game framework for making desktop and mobile browser HTML5 games. It uses <a href="https://github.com/GoodBoyDigital/pixi.js/">Pixi.js</a> internally for fast 2D Canvas and WebGL rendering.</p>
-<p>Version: 2.1.0 &quot;Cairhien&quot; - Released: 9th September 2014</p>
+<p>Version: 2.1.2 &quot;Whitebridge&quot; - Released: 9th October 2014</p>
 <p>By Richard Davey, <a href="http://www.photonstorm.com">Photon Storm</a></p>
 <ul>
 <li>View the <a href="http://phaser.io">Official Website</a></li>
@@ -596,12 +604,15 @@
 </ul>
 <p><img src="http://phaser.io/images/div4.png" alt="div"></p>
 <p>&lt;a name=&quot;whats-new&quot;&gt;&lt;/a&gt;</p>
-<h2>Welcome to Phaser and What's new in 2.1.0?</h2>
-<p>Phaser 2.1 is a significant update, bringing literally hundreds of features, fixes and updates to the core framework. It's the result of months of hard work from both the Phaser team and the wonderful community on github and the forums.</p>
-<p>We jumped to 2.1 because there are some API breaking changes from the 2.0.x range, especially with regard to P2 physics. P2 itself has undergone lots of changes recently, streamlining the API, adding enhancements like rotational springs and squashing bugs. This update of Phaser brings us fully up to date with P2.</p>
-<p>We've also seen a shift in client requirements for truly responsive games. And that has lead to the introduction of a new Phaser scale mode: RESIZE. Combined with powerful new ways of setting game dimensions, and advanced parent container support, you can now have your Phaser game resize the actual renderer to fill the browser (or parent) and adjust accordingly as they resize. A new state level <code>resize</code> function is called with every change, allowing you to easily re-position sprites that need to be locked into fixed locations, regardless of resolution. We'll be enhancing the reponsive features of Phaser over the coming versions, but the core ground-work is in place and useable today.</p>
-<p>We also took the decision with 2.1 to remove Ninja Physics from the core build. We had hoped it would get more traction and support from contributors, but sadly that wasn't the case. In light of this it's no longer bundled into the main library, saving some space. You can however find a build of Phaser with it in the <code>build\custom</code> folder called <code>phaser-ninja-physics.js</code>.</p>
-<p>We'll move back to point updates now, with 2.1.1 being the next - and will keep a close eye on github issues and the forum. If you want to contribute, be it code, examples or just ideas, please do so. Phaser was born from and thrives on its community, and we're always looking for new members.</p>
+<h2>Welcome to Phaser and What's new in 2.1.2?</h2>
+<p>Phaser 2.1.2 carries on with our latest round of new features, updates and fixes, demonstrating our commitment to continuously improving our framework and responding to feedback.</p>
+<p>This release adds in a number of new features including Audio Sprite json format support, native loading of XML files, Sound fades, per character Text colours, further updates to BitmapData, the ability to use BitmapData with frames as Sprite textures, Group filter, search the Cache by URL and plenty of updates and bug fixes too - including the death of the pesky getPixel issue on Safari / iOS.</p>
+<p>Internally we are using Phaser in ever larger client based projects. Thousands of lines of code spread across many States and classes, and we're paying close attention to how best to adapt the API to make life easier for those building apps of the size we are. If there are any features you would like to see then now is the time to suggest them, either by email, the forum or github.</p>
+<p>We're also pleased to announce that we have 3 new premium plugins gearing up for launch. They are:</p>
+<p>Phaser Box2D - Adds complete Box2D support directly into Phaser, with lots of help methods, over 50 examples and 5 demo games.</p>
+<p>Phaser Path Manager - Create complex motion paths for Sprites with a lovely visual editor and this new plugin. No longer rely on tweens for motion :) Instead draw a path, with full branch support, path orientation, segment speeds, path events and more.</p>
+<p>Advanced Particle System - The particles included with Phaser are flexible and can create attractive effects. But Advanced Particles is a complete replacement offering professional level particle effects for your games. From multiple render targets, to bitmap caching to all kinds of events, emitters and properties.</p>
+<p>Each plugin will come in a range of versions to suit all budgets and there are more on the way. Please visit the <a href="http://phaserplugins.launchrock.com">launch page</a> to sign-up for notification as soon as they're ready.</p>
 <p>Until then happy coding everyone! And we hope to see you on the forums.</p>
 <p><img src="http://www.phaser.io/images/spacedancer.gif" alt="boogie"></p>
 <p><img src="http://phaser.io/images/div1.png" alt="div"></p>
@@ -615,175 +626,56 @@
 <p><img src="http://phaser.io/images/div2.png" alt="div"></p>
 <p>&lt;a name=&quot;change-log&quot;&gt;&lt;/a&gt;</p>
 <h2>Change Log</h2>
-<p>Version 2.1.0 - &quot;Cairhien&quot; - 9th September 2014</p>
+<p>Version 2.1.2 - &quot;Whitebridge&quot; - October 9th 2014</p>
 <h3>New Features</h3>
 <ul>
-<li>Updated to <a href="https://github.com/schteppe/p2.js/commit/d1c7a340c42e4d5d1d939fba5fd13c5e49d6abd2">p2.js 0.6.0</a> - this was an API breaking change, so please see the p2.js section of this change log specifically if you're using p2 in your game.</li>
-<li>If you are using CocoonJS, please set your game render type to CANVAS and not WEBGL or AUTO. You should also disable any of the ScaleManager screen resizing or margin setting code. By default in this mode CocoonJS will now set 'screencanvas=true' which helps with performance significantly.</li>
-<li>Ninja Physics is no longer included in the build files by default. Not enough people were using it, and not enough contributions were coming in to help polish it up, so we've saved the space and removed it. It's still available in the grunt build files if you require it, but we're deprecating it from the core library at this time. It will make a return in Phaser3 when we move to a modular class system.</li>
-<li>ScaleManager has a new scaleMode called <code>RESIZE</code> which will tell Phaser to track the size of the parent container (either a dom element or the browser window if none given) and set the canvas size to match it. If the parent changes size the canvas will resize as well, keeping a 1:1 pixel ratio. There is also a new ScaleManager.setResizeCallback method which will let you define your own function to handle resize events from the game, such as re-positioning sprites for a fluid responsive layout (#642)</li>
-<li>The width and height given to the Phaser.Game constructor can now be numbers or strings in which case the value is treated as a percentage. For example a value of &quot;100%&quot; for the width and height will tell Phaser to size the game to match the parent container dimensions exactly (or the browser window if no parent is given). Equally a size of &quot;50%&quot; would tell it to be half the size of the parent. The values are retained even through resize events, allowing it to maintain a percentage size based on the parent even as it updates.</li>
-<li>Device will now detect for Kindle and PS Vita (thanks @lucbloom)</li>
-<li>Device will now detect for Cordova (thanks @videlais #1102)</li>
-<li>Arcade Physics Body.skipQuadTree is a new boolean that if set to <code>true</code> when you collide the Sprite against a Group it will tell Phaser to skip using a QuadTree for that collision. This is handy if this Body is especially large.</li>
-<li>Arcade Physics World.skipQuadTree will disable the use of all QuadTrees in collision methods, which can help performance in tightly packed scenes.</li>
-<li>Cordova 'deviceready' event check added (thanks @videlais #1120)</li>
-<li>Loader.useXDomainRequest boolean added. If <code>true</code> (the default is <code>false</code>, unless the browser is detected as being IE9 specifically) it will use XDomainRequest when loading JSON files instead of xhr. In rare IE edge-cases this may be required. You'll know if you need it (#1131 #1116)</li>
-<li>Added support for Tiled objects type field (thanks @rex64 #1111)</li>
-<li>Tile properties are now copied from the Tiled JSON data to the Phaser.Tile objects when parsed (thanks @beeglebug #1126)</li>
-<li>All Images now have a frameData value, even if it's only one frame. This removes lots of engine code needed to check if images are sprite sheets or not, and simplifies game code too (thanks @lucbloom #1059)</li>
-<li>Added a new Phaser.Rope object. This allows for a series of 'chained' Sprites and extends the Rope support built into Pixi. Access it via game.add.rope (thanks @codevinsky #1030)</li>
-<li>Phaser.Device.isAndroidStockBrowser will inform you if your game is running in a stock Android browser (rather than Chrome) where you may wish to scale down effects, disable WebGL, etc (thanks @lucbloom #989)</li>
-<li>Phaser.Camera has a new property <code>position</code> which is a Point object that allows you to get or set the camera position without having to read both the x and y values (thanks @Zielak #1015)</li>
-<li>TileSprite now has the <code>alive</code> property, which should help with some Group operations (thanks @jonkelling #1085)</li>
-<li>Events.onDestroy is a new signal that is dispatched whenever the parent is being destroyed. It's dispatched at the start of the destroy process, allowing you to perform any additional house cleaning needed (thanks @jonkelling #1084)</li>
-<li>Group.onDestroy is a new signal that is dispatched whenever the Group is being destroyed. It's dispatched at the start of the destroy process, allowing you to perform any additional house cleaning needed (thanks @jonkelling #1084)</li>
-<li>ScaleManager.destroy now removes the window and document event listeners, which are no longer created anonymously (thanks @eguneys #1092)</li>
-<li>Input.Gamepad.destroy now destroys all connected SinglePads and clears event listeners.</li>
-<li>SinglePad.destroy now clears all associated GamepadButton objects and signals.</li>
-<li>Device.node and Device.nodeWebKit are two new properties (thanks @videlais #1129)</li>
-<li>P2.PointProxy.mx and my values are get and set in meters with no pixel conversion taking place.</li>
-<li>P2.InversePointProxy.mx and my values are get and set in meters with no pixel conversion taking place.</li>
-<li>Pointer.dirty is a new boolean that is set by the InputHandler. It tells the Pointer to re-check all interactive objects it may be over on the next update, regardless if it has moved position or not. This helps solve issues where you may have a Button that on click generates a pop-up window that now obscures the Button (thanks @jflowers45 #882)</li>
-<li>SoundManager.destroy is a new method that will destroy all current sounds and reset any callbacks.</li>
-<li>StateManager.clearCurrentState now handles the process of clearing down the current state and is now called if the Game is destroyed.</li>
-<li>Game.destroy now clears the current state, activating its shutdown callback if it had one. It also now destroys the SoundManager, stopping any currently running sounds (#1092)</li>
-<li>Animation.onUpdate is a new event that is dispatched each time the animation frame changes. Due to its intensive nature it is disabled by default. Enable it with <code>Animation.enableUpdate = true</code> (#902)</li>
-<li>Device now has new features to support detection of running inside a  CocoonJS.App (thanks @videlais #1150)</li>
-<li>Support for CocoonJS.App's 'onSuspended' and 'onActivated' events, making it so that the timers and sounds are stopped/started and muted/unmuted when the user swaps an app from the background to the fore or the reverse (thanks @videlais #1152)</li>
-<li>Canvas.removeFromDOM(canvas) will remove a canvas element from the DOM.</li>
-<li>Game.destroy now removes the games canvas element from the DOM.</li>
-<li>ScaleManager.setMinMax(minWidth, minHeight, maxWidth, maxHeight) is a handy function to allow you to set all the min/max dimensions in one call.</li>
-<li>ArcadePhysics.collide and overlap can now accept 2 Arrays of objects to be used in the collision checks (thanks @ctmartinez1992 #1158)</li>
-<li>RetroFont has a new property called frameData which contains the Frame objects for each of the letters in the font, which can be used by Sprites.</li>
-<li>Phaser.Canvas.setImageRenderingCrisp now sets <code>image-rendering: pixelated</code>, perfect for pixel art, which is now supported in Chrome 38.</li>
-<li>Phaser.Mouse will now add a listener to the <code>window</code> to detect <code>mouseup</code> events. This is used to detect if the player releases the mouse while outside of the game canvas. Previously Pointer objects incorrectly thought they were still pressed when you returned the mouse over the canvas (#1167)</li>
-<li>Rectangle.centerOn(x,y) allows you to quickly center a Rectangle on the given coordinates.</li>
-<li>Group.addMultiple allows you to pass an array of game objects and they'll all be added to the Group in turn.</li>
-<li>The StateManager will now check if a State has a method called <code>resize</code>. If it does, and if the game is running in the RESIZE Scale Mode then this method will be called whenever the game resizes. It will be passed two parameters: <code>width</code> and <code>height</code> that will match the games new dimensions. Resizing can happen as a result of either the parent container changing shape, or the browser window resizing.</li>
-<li>Rectangle.topRight returns a Point object that represents the top-right coordinate of the Rectangle.</li>
-<li>The grunt script now builds a new version of Phaser without any physics (including Arcade Physics), Tilemaps or Particles. This build is called <code>phaser-no-physics.js</code> and works stand-alone. Please note that things like the GameObjectFactory aren't changed, so they will still try and create a Tilemap for example should you ask them to (thanks @eguneys #1172)</li>
-<li>Camera.roundPx is a new boolean. If set to <code>true</code> it will call <code>view.floor</code> as part of its update loop, keeping its boundary to integer values. Set to <code>false</code> to disable this from happening (#1141)</li>
-<li>Phaser.Easing.Default is a new property that is used when a specific type of ease isn't given. It defaults to Linear.None but can be overridden to anything (thanks @alvinsight)</li>
+<li>StateManager.unlink will null all State-level Phaser properties, such as <code>game</code>, <code>add</code>, etc. Useful if you never need to return to the State again.</li>
+<li>Cache.removeImage has a new parameter: <code>removeFromPixi</code> which is <code>true</code> by default. It will remove the image from the Pixi BaseTextureCache as well as from the Phaser Cache. Set to false if you don't want the Pixi cache touched.</li>
+<li>Group.ignoreDestroy boolean will bail out early from any call to <code>Group.destroy</code>. Handy if you need to create a global Group that persists across States.</li>
+<li>Loader can now natively load XML files via <code>load.xml</code>. Once the XML file has loaded it is parsed via either DOMParser or ActiveXObject and then added to the Cache, where it can be retrieved via <code>cache.getXML(key)</code>.</li>
+<li>Cache now has support for XML files stored in their own container. You can add them with <code>cache.addXML</code> (typically this is done from the Loader automatically for you) and get them with <code>cache.getXML(key)</code>. There is also <code>cache.checkXMLKey(key)</code>, <code>cache.checkKeys</code> and <code>cache.removeXML(key)</code>.</li>
+<li>Rectangle.aabb is a new method that will take an array of Points and return a Rectangle that matches the AABB (bounding area) of the Points (thanks @codevinsky #1199)</li>
+<li>AudioSprite support is now built into the Loader and SoundManager. AudioSprites are like sprite sheets, only they consist of a selection of audio files and markers in a json configuration. You can find more details at <a href="https://github.com/tonistiigi/audiosprite">https://github.com/tonistiigi/audiosprite</a> (thanks @codevinsky #1205)</li>
+<li>Point.parse will return a new Point object based on the x and y properties of the object given to Point.parse (thanks @codevinsky #1198)</li>
+<li>Sound.fadeOut(duration) will fade the Sound to a volume of zero over the duration given. At the end of the fade the Sound will be stopped and Sound.onFadeComplete dispatched.</li>
+<li>Sound.fadeIn(duration, loop) will start the Sound playing, or restart it if already playing, set its volume to zero and then increase the volume over the duration given until it reaches 1. At the end of the fade the Sound.onFadeComplete event is dispatched.</li>
+<li>Text.addColor allows you to set specific colors within the Text. It works by taking a color value, which is a typical HTML string such as <code>#ff0000</code> or <code>rgb(255,0,0)</code> and a position. The position value is the index of the character in the Text string to start applying this color to. Once set the color remains in use until either another color or the end of the string is encountered. For example if the Text was <code>Photon Storm</code> and you did <code>Text.addColor('#ffff00', 6)</code> it would color in the word <code>Storm</code> in yellow.</li>
+<li>Text.clearColors resets any previously set colors from <code>Text.addColor</code>.</li>
+<li>If you pass a tinted Sprite to <code>BitmapData.draw</code> or <code>BitmapData.copy</code> it will now draw the tinted version of the Sprite to the BitmapData and not the original texture.</li>
+<li>BitmapData.shadow(color, blur, x, y) provides a quick way to set all the relevant shadow settings, which are then be used in future draw calls.</li>
+<li>Cache.addBitmapData has a new parameter: <code>frameData</code> allowing you to pass a <code>Phaser.FrameData</code> object along with the BitmapData.</li>
+<li>Cache.getFrameData has a new parameter: <code>map</code> which allows you to specify which cache to get the FrameData from, i.e. <code>Phaser.Cache.IMAGE</code> or <code>Phaser.Cache.BITMAPDATA</code>.</li>
+<li>Sprite.loadTexture if given a BitmapData as the texture will now query the cache to see if it has any associated FrameData, and if so it will load that into the AnimationManager.</li>
+<li>BitmapData.textureLine takes a Phaser.Line object and an image in the image cache. It then accurately draws the image as a repeating texture for the full length of the line.</li>
+<li>AnimationManager.name will now return the <code>name</code> property of the currently playing animation, if any.</li>
+<li>Group.filter takes a predicate function and passes child, index, and the entire child array to it. It then returns an ArrayList containing all children that the predicate returns true for (thanks @codevinsky #1187)</li>
+<li>Cache.checkUrl allows you to check if a resource is in the cache based on an absolute URL (thanks @englercj #1221)</li>
+<li>Cache.getUrl gets a resource from the cache based on the absolute URL it was loaded from (thanks @englercj #1221)</li>
+<li>Sound.allowMultiple allows you to have multiple instances of a single Sound playing at once. This is only useful when running under Web Audio, and we recommend you implement a local pooling system to not flood the sound channels. But it allows for one Sound object to play overlapping times, useful for gun effects and similar (#1220)</li>
 </ul>
 <h3>Updates</h3>
 <ul>
-<li>TypeScript definition updates to help fix for the <code>noimplicitany</code> option (thanks @Waog #1088)</li>
-<li>TypeScript definitions fixes and updates (thanks @clark-stevenson @englercj @saikobee and @rhmoller)</li>
-<li>All of the Pixi geom classes have been removed from the build file as they aren't needed (the Phaser.Geom classes overwrite them), saving some space in the process.</li>
-<li>Improved consistency of clone methods on geometry classes (thanks @beeglebug #1130)</li>
-<li>Removed Cache.isSpriteSheet method as no longer required (see #1059)</li>
-<li>Added Cache.getFrameCount to return the number of frames in a FrameData.</li>
-<li>Input.setMoveCallback has been removed due to deprecation.</li>
-<li>BitmapData.refreshBuffer has been removed and replaced with BitmapData.update.</li>
-<li>BitmapData.drawSprite has been removed due to deprecation. Use BitmapData.draw instead.</li>
-<li>Pointer.moveCallback has been removed due to deprecation.</li>
-<li>SinglePad.addButton has been removed due to deprecation.</li>
-<li>P2.Body.loadData has been removed due to deprecation.</li>
-<li>P2.World.defaultFriction and defaultRestitution have been removed due to deprecation.</li>
-<li>Canvas.create noCocoon parameter has been removed due to deprecation.</li>
-<li>Color.getColorInfo, RGBtoHexstring, RGBtoWebstring and colorToHexstring has been removed due to deprecation.</li>
-<li>P2.PointProxy.x and y values are now returned in pixels (previously they were returned in meters). See PointProxy.mx/my for meter values.</li>
-<li>P2.InversePointProxy.x and y values are now returned in pixels (previously they were returned in meters). See PointProxy.mx/my for meter values.</li>
-<li>Arcade.overlap and collide are now more consistent about allowing a Group vs. Group or Group vs. Array of Groups set (thanks @pyromanfo #877 #1147)</li>
-<li>The Pointer move callbacks are now sent an extra parameter: <code>fromClick</code> allowing your callbacks to distinguish between the Pointer just moving, or moving as a result of being pressed down (thanks @iforce2d #1055)</li>
-<li>GamePad and SinglePad onAxisCallback parameters have changed. You are now sent: this (a reference to the SinglePad that caused the callback), the axis index and the axis value in that order.</li>
-<li>If Time.elapsed was &gt; Time.timeCap it would reset the elapsed value to be 1 / 60. It's now set to Time.timeCap and Time.timeCap defaults to <code>1 / 60 * 1000</code> as it's a ms value (thanks @casensiom #899)</li>
-<li>Tiled polylines are now imported into the map objects property as well as map collision (#1117)</li>
-<li>Tile.setCollision now adjusts the tiles interesting faces list as well, this allows you to create one-way jump tiles without using custom callbacks on a specific tile basis (thanks @RafaelOliveira #886)</li>
-<li>Stage.offset has been moved to ScaleManager.offset</li>
-<li>Stage.bounds has been removed, you can access it via Stage.getBounds.</li>
-<li>Stage.checkOffsetInterval has been moved to ScaleManager.trackParentInterval</li>
-<li>ScaleManager.hasResized signal has been removed. Use ScaleManager.setResizeCallback instead.</li>
-<li>The World bounds can now be set to any size, including smaller than the game dimensions. Before it was locked to a minimum size of the game canvas, but it can now be anything.</li>
-<li>ScaleManager.orientationSprite has been removed because it never displayed correctly anyway (it would be distorted by the game scale), it will be bought back in a future version by way of a custom orientation state.</li>
-<li>ArcadePhysics.overlap has been updated so that the Body.overlapX/Y properties are set to the amount the two bodies overlapped by. Previously they were zero and only populated during the separation phase, but now the data is available for just overlap checks as well. You can then use these values in your ovrelap callback as required - note that they are changed for every check, so a Sprite overlap tested against 10 other sprites will have the overlapX/Y values updated 10 times in a single collision pass, so you can only safely use the values in the callback (#641)</li>
-<li>Cache.getImage now returns <code>null</code> if the requested image wasn't found.</li>
-<li>BitmapData now returns a reference to itself from all of its drawing related methods, allowing for easy function chaining.</li>
-<li>The default size of a BitmapData if no width/height is given has been changed from 100x100 to 256x256.</li>
-<li>Phaser.Text.destroy will now destroy the base texture by default (#1162)</li>
-<li>BitmapData.copyPixels is now called BitmapData.copyRect and the method signature has changed.</li>
-<li>BitmapData.draw method signature has changed significantly.</li>
-<li>Phaser.Canvas.getSmoothingEnabled will return <code>true</code> if the given context has image smoothing enabled, otherwise <code>false</code>.</li>
-<li>Math.numberArrayStep is a new method that allows you to return an array of numbers from <code>min</code> to <code>max</code> including an optional <code>step</code> parameter (thanks @codevinsky #1170)</li>
-<li>Removed redundant <code>if</code> check from StateManager.preUpdate (thanks @FedeOmoto #1173)</li>
+<li>TypeScript definitions fixes and updates (thanks @clark-stevenson @englercj @benjamindulau)</li>
+<li>Added the <code>sourceRect</code> and <code>maskRect</code> parameters back into <code>BitmapData.alphaMask</code> as they were accidentally removed in 2.1 (thanks seejay92)</li>
+<li>jsdoc fixes (thanks @danxexe #1209)</li>
+<li>AnimationParser is now using <code>value</code> instead of <code>nodeValue</code> when parsing atlas XML files, avoiding Chrome deprecation warnings (thanks @valtterip #1189)</li>
+<li>Color.webToColor restored. Converts a CSS rgba color into a native color value.</li>
+<li>Color.createColor now populates the <code>color</code> property of the returned object with the results of <code>Phaser.Color.getColor</code>.</li>
+<li>Color.createColor now has a <code>color32</code> property with the results of <code>Phaser.Color.getColor32</code>.</li>
+<li>Color.hexToColor has been optimised to inline the regex and has moved the createColor call so it now populates the color object fully, not just setting the r,g,b properties.</li>
+<li>Keyboard.PLUS and Keyboard.MINUS have been added to the list of key codes (thanks @VictorBjelkholm #1281)</li>
 </ul>
 <h3>Bug Fixes</h3>
 <ul>
-<li>Remove escaping backslashes from RetroFont text set documentation (thanks @jackrugile #1051)</li>
-<li>Phaser.Loader was incorrectly getting the responseText from _xhr instead of _ajax on IE9 xDomainRequests (thanks @lardratboy #1050)</li>
-<li>Phaser.Physics.P2.addPolygon now takes a nested array again (thanks @wayfu #1060)</li>
-<li>Fix for previous PR #1028 where the P2.setBoundsToWorld call was overriding setBoundsToWorld in the P2 constructor (thanks @Dumtard #1028)</li>
-<li>Fix for scale issues in CocoonJS using webgl renderer and screencanvas (thanks @txusinho #1064)</li>
-<li>Resolves issue with pixel perfect click / over detection on Sprites that used trimmed image atlases for animations or frames &gt; 0.</li>
-<li>Group.swap() updates the Z index values properly (thanks @Blank101 #1090)</li>
-<li>Device now recognises ChromeOS as a desktop (thanks @alvinsight @hilts-vaughan #1091)</li>
-<li>Fixed Point.rotate bug (thanks @gamedolphin #1107)</li>
-<li>InputHandler.checkBoundsRect was incorrectly assigning a property in Sprites fixed to the camera being dragged left (thanks @CraigBeswetherick #1093)</li>
-<li>Swapped argument order of Rectangle.containsRect (thanks @beeglebug #1095 #1125)</li>
-<li>The Game configuration object &quot;renderer&quot; property was being wrongly assigned to Game.renderer instead of renderType (thanks @FedeOmoto #1127)</li>
-<li>Fixed Group.removeBetweens default endIndex (thanks @darfux #1142)</li>
-<li>Debug.cameraInfo no longer crashes if the camera bounds are nulled (thanks @wayfu #1143)</li>
-<li>Camera.setBoundsToWorld no longer crashes if the camera bounds are nulled (thanks @wayfu #1143)</li>
-<li>Fixed the resolution uniform type in the SampleFilter (thanks @VictoryRice #1137)</li>
-<li>Calling P2.Body.destroy or ArcadePhysics.Body.destroy wouldn't null the parent sprite body, causing it to error in the next update (thanks @jonathanhooker #1077)</li>
-<li>BitmapFonts are now correctly added to the Cache._bitmapFont array and returned via Cache.getBitmapFont (thanks @prudolfs #1076)</li>
-<li>InputHandler docs updated to avoid Pointer data-type confusion (#1097)</li>
-<li>If you used a single Game configuration object and didn't specify the enableDebug property it would crash on Debug.preUpdate (thanks @luizbills #1053)</li>
-<li>The P2.World.postBroadphaseHandler now checks if the returned pairs array is empty or not before processing it (thanks @wayfu #934)</li>
-<li>Tilemap.hasTile now checks the Tile.index value and will return false if the index is -1 (i.e. a non-active tile) (thanks @elgansayer #859)</li>
-<li>Sound.restart used to cause the Sound to double-up if it was already playing when called. Now correctly stops the sound before restarting it (thanks @wombatbuddy #1136)</li>
-<li>GamePad axis detection now works again properly in Firefox (#1035)</li>
-<li>GamepadButton.justPressed and justReleased now correctly report if the button has just been pressed or released (thanks @padpadpad #1019)</li>
-<li>TilemapParser.getEmptyData now correct adds an empty bodies array into layers. This fixes an issue where p2 couldn't convert a csv map into collision tiles (thanks @sru #845)</li>
-<li>CocoonJS doesn't support mouse wheel events so they've been moved into a conditional check (thanks @videlais #1151)</li>
-<li>ScaleManager window.resize handler would constantly dispatch enterPortrait and enterLandscape events on window resizing, regardless if it actually entered that orientation or not.</li>
-<li>Added Sound._muteVolume which stops Firefox and IE9 crashing if you try to unmute a sound that hasn't yet been muted, which can also happen as a result of a game visibility change (thanks @osmanzeki #1108 #1123)</li>
-<li>P2.World.getSprings used to return an empty array, but now returns all the Springs in the world (#1134)</li>
-<li>Tween.generateData would skip the end values in the data array. They are now included as the object in the final array element.</li>
-<li>Rectangle.bottom setter swapped the order of the calculation (thanks @JakeCoxon #1165)</li>
-<li>Phaser.Text wouldn't render the text to its local canvas if you passed the text on the constructor and didn't add it to the display list. If a string is given it now updates the local canvas on creation.</li>
-<li>Signal.removeAll would ignore the context parameter and remove all bindings regardless (thanks @alect #1168)</li>
-<li>P2.Body.addCapsule didn't use to pass the radius value through pxm, but now does so you have to specify it in pixels, not meters.</li>
-<li>The Debug canvas is now cleared on State swap.</li>
-</ul>
-<h3>p2.js 0.6.0 Changes and New Features</h3>
-<ul>
-<li>DistanceConstraint signature changed to take the new localAnchors.</li>
-<li>World.createDistanceConstraint signature changed to include new local anchors (thanks @rhmoller #1169)</li>
-<li>RevoluteConstraint signature changed to include worldPivot.</li>
-<li>P2.Body now uses the new Body.type value instead of Body.motionState, however as P2.Body already have a property called <code>type</code> we have left the <code>motionState</code> getter/setter in for now.</li>
-<li>World.enableBodySleeping has been removed and replaced with World.sleepMode.</li>
-<li>Phaser P2.Springs are now LinearSprings by default.</li>
-<li>World.createRotationalSpring will now let you create rotational springs.</li>
-</ul>
-<h4>Breaking changes</h4>
-<ul>
-<li>Renamed property .motionState to .type in class Body.</li>
-<li>Changed constructor of RevoluteConstraint. Now the local pivots are passed as options instead of direct arguments. See the constraints demo.</li>
-<li>Removed World.prototype.toJSON and .fromJSON.</li>
-<li>Removed properties .enableBodySleeping and .enableIslandSleeping from World instances. The enum .sleepMode can be used instead. See the sleep demo.</li>
-<li>Converted Spring to a base class for the new LinearSpring and RotationalSpring classes. LinearSpring can be used as the old Spring.</li>
-<li>Utils.ARRAY_TYPE can now be overridden by injecting a global called P2_ARRAY_TYPE. Support for GLMAT_ARRAY_TYPE has been removed.</li>
-</ul>
-<h4>Other changes</h4>
-<ul>
-<li>Added flag .enableFrictionReduction to Narrowphase.</li>
-<li>Added RevoluteConstraint.prototype.setLimits.</li>
-<li>Added PrismaticConstraint.prototype.setLimits.</li>
-<li>LockConstraint, DistanceConstraint, and GearConstraint can now be constructed from current body transforms.</li>
-<li>RevoluteConstraint can now be constructed from the current body transforms and a world point.</li>
-<li>Material id can now be passed via constructor.</li>
-<li>ContactMaterial instances now have a property .contactSkinSize.</li>
-<li>Added method Body.prototype.getAABB.</li>
-<li>Limits for DistanceConstraint. See the DistanceConstraint demo.</li>
-<li>Added Body.prototype.overlaps.</li>
-<li>Added class OverlapKeeper.</li>
-<li>If substepping is used in World.prototype.step, the substeps are aborted if slower than real time.</li>
-<li>Added Heightfield/Convex and Heightfield/Circle collision support.</li>
-<li>Added property .overlapKeeper to World.</li>
-<li>EventEmitter.prototype.has can now check if any listeners were added to a given topic.</li>
-<li>Added Utils.defaults.</li>
+<li>If Game Objects change their frame, such as with an animated Sprite, and the change goes from a previously trimmed frame to a non-trimmed (full size) one, then the previous trim values were still left active, causing it to glitch (thanks stupot)</li>
+<li>If you called StateManager.start from within a states <code>init</code> method which also had a <code>preload</code> method it would fail to start the next State.</li>
+<li>StateManager.boot would call start on a State twice if it was added to the game and started before the DOM load had completed. This didn't cause an error but was duplicating function calls needlessly.</li>
+<li>Changing any of the Text properties such as font, lineSpacing and fontSize on a Text object that wasn't already on the display list would cause an updateTransform error. Parent is now checked first in all setters.</li>
+<li>A Timer with a delay value that was a float and not an integer would not loop correctly. Timer delay values are now passed through Math.round to avoid this (thanks @osmanzeki #1196)</li>
+<li>The Loader would incorrectly call <code>fileComplete</code> for legacy audio files instead of setting it as a callback, throwing up errors if the audio file failed to load (thanks @spayton #1212)</li>
+<li>The Uint32Array check used in Utils was incorrectly replacing Uint32Array on Safari, causing errors like BitmapData.getPixel32 to fail and other related issues (fixes #1043 and #1197)</li>
+<li>Camera.follow would break if the parent of the Sprite being followed was scaled in any way (thanks @englercj #1222)</li>
+<li>Fixed the 4fv uniform in the Pixelate filter.</li>
 </ul>
 <p>For details about changes made in previous versions of Phaser see the full Change Log at <a href="https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md">https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md</a></p>
 <p><img src="http://phaser.io/images/div3.png" alt="div"></p>
@@ -812,9 +704,9 @@
 <p>&lt;a name=&quot;cdnjs&quot;&gt;&lt;/a&gt;</p>
 <h2>CDNJS</h2>
 <p>Phaser is now available on <a href="http://cdnjs.com">CDNJS</a>. You can include the following in your html:</p>
-<p><code>http://cdnjs.cloudflare.com/ajax/libs/phaser/2.1.0/phaser.min.js</code></p>
+<p><code>http://cdnjs.cloudflare.com/ajax/libs/phaser/2.1.2/phaser.min.js</code></p>
 <p>Or if you prefer you can leave the protocol off, so it works via http and https:</p>
-<p><code>//cdnjs.cloudflare.com/ajax/libs/phaser/2.1.0/phaser.min.js</code></p>
+<p><code>//cdnjs.cloudflare.com/ajax/libs/phaser/2.1.2/phaser.min.js</code></p>
 <p><img src="http://phaser.io/images/div1.png" alt="div"></p>
 <p>&lt;a name=&quot;requirements&quot;&gt;&lt;/a&gt;</p>
 <h2>Requirements</h2>
@@ -967,7 +859,7 @@ Sprites also have full Input support: click them, touch them, drag them around, 
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Tue Sep 09 2014 15:29:18 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Thu Oct 09 2014 16:09:46 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

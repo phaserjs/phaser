@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>Phaser Class: Utils</title>
+	<title>Phaser Class: AudioSprite</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -540,15 +540,17 @@
 					
 
 
-	<h1 class="page-title">Class: Utils</h1>
+	<h1 class="page-title">Class: AudioSprite</h1>
 <section>
 
 <header>
     <h2>
         <span class="ancestors"><a href="Phaser.html">Phaser</a>.</span>
     
-    Utils
+    AudioSprite
     </h2>
+    
+        <div class="class-description"><p>Phaser.AudioSprite</p></div>
     
 </header>
 
@@ -559,104 +561,7 @@
     
         
 <dt>
-    <h4 class="name" id="Utils"><span class="type-signature"></span>new Utils<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Utils.js.html">utils/Utils.js</a>, <a href="Utils.js.html#sunlight-1-line-5">line 5</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-    
-    </div>
-
-    
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Classes</h3>
-
-        <dl>
-            
-                
-                <dt class="class-depth-2">
-                    <a href="Phaser.Utils.Debug.html">Debug</a>
-                </dt>
-                <dd>
-                    
-                </dd>
-            
-        </dl>
-    
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Methods</h3>
-
-        <dl>
-            
-<dt>
-    <h4 class="name" id="extend"><span class="type-signature">&lt;static> </span>extend<span class="signature">(deep, target)</span><span class="type-signature"> &rarr; {object}</span></h4>
+    <h4 class="name" id="AudioSprite"><span class="type-signature"></span>new AudioSprite<span class="signature">(game, key)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -664,7 +569,8 @@
     
     
     <div class="description">
-        <p>This is a slightly modified version of <a href="http://api.jquery.com/jQuery.extend/">http://api.jquery.com/jQuery.extend/</a></p>
+        <p>Audio Sprites are a combination of audio files and a JSON configuration.
+The JSON follows the format of that created by <a href="https://github.com/tonistiigi/audiosprite">https://github.com/tonistiigi/audiosprite</a></p>
     </div>
     
 
@@ -698,13 +604,13 @@
 
         <tr>
             
-                <td class="name"><code>deep</code></td>
+                <td class="name"><code>game</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">boolean</span>
+<span class="param-type"><a href="Phaser.Game.html">Phaser.Game</a></span>
 
 
             
@@ -714,178 +620,14 @@
 
             
 
-            <td class="description last"><p>Perform a deep copy?</p></td>
+            <td class="description last"><p>Reference to the current game instance.</p></td>
         </tr>
 
 	
 
         <tr>
             
-                <td class="name"><code>target</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The target object to copy to.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Utils.js.html">utils/Utils.js</a>, <a href="Utils.js.html#sunlight-1-line-285">line 285</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>The extended object.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type">object</span>
-
-
-	</dd>
-</dl>
-
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="getProperty"><span class="type-signature">&lt;static> </span>getProperty<span class="signature">(obj, prop)</span><span class="type-signature"> &rarr; {*}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Gets an objects property by string.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>obj</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The object to traverse.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>prop</code></td>
+                <td class="name"><code>key</code></td>
             
 
             <td class="type">
@@ -901,7 +643,7 @@
 
             
 
-            <td class="description last"><p>The property whose value will be returned.</p></td>
+            <td class="description last"><p>Asset key for the sound.</p></td>
         </tr>
 
 	
@@ -933,7 +675,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Utils.js.html">utils/Utils.js</a>, <a href="Utils.js.html#sunlight-1-line-15">line 15</a>
+        <a href="AudioSprite.js.html">sound/AudioSprite.js</a>, <a href="AudioSprite.js.html#sunlight-1-line-17">line 17</a>
     </li></ul></dd>
     
 
@@ -954,57 +696,51 @@
     
     
     
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>the value of the property or null if property isn't found .</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type">*</span>
-
-
-	</dd>
-</dl>
-
-
-        
     
     
 </dd>
 
-        
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Members</h3>
+
+        <dl>
             
 <dt>
-    <h4 class="name" id="isPlainObject"><span class="type-signature">&lt;static> </span>isPlainObject<span class="signature">(obj)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
+    <h4 class="name" id="autoplay"><span class="type-signature"></span>autoplay<span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
     
-    
     <div class="description">
-        <p>This is a slightly modified version of jQuery.isPlainObject. A plain object is an object whose internal class property is [object Object].</p>
+        <p>Is a sound set to autoplay or not?</p>
     </div>
     
+    
+    
 
     
+<dl class="details">
     
-    
-    
-    
-        <h5>Parameters:</h5>
-        
 
-<table class="params table table-striped">
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
     <thead>
 	<tr>
 		
@@ -1026,100 +762,65 @@
 
         <tr>
             
-                <td class="name"><code>obj</code></td>
+                <td class="name"><code>autoplay</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The object to inspect.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Utils.js.html">utils/Utils.js</a>, <a href="Utils.js.html#sunlight-1-line-250">line 250</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <ul>
-<li>true if the object is plain, otherwise false.</li>
-</ul>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
 <span class="param-type">boolean</span>
 
 
-	</dd>
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+	
+	</tbody>
+</table>
 </dl>
 
+    
 
-        
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="AudioSprite.js.html">sound/AudioSprite.js</a>, <a href="AudioSprite.js.html#sunlight-1-line-48">line 48</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
     
     
 </dd>
@@ -1127,7 +828,543 @@
         
             
 <dt>
-    <h4 class="name" id="mixin"><span class="type-signature">&lt;static> </span>mixin<span class="signature">(from, to)</span><span class="type-signature"> &rarr; {object}</span></h4>
+    <h4 class="name" id="autoplayKey"><span class="type-signature"></span>autoplayKey<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>If a sound is set to auto play, this holds the marker key of it.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>autoplayKey</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="AudioSprite.js.html">sound/AudioSprite.js</a>, <a href="AudioSprite.js.html#sunlight-1-line-41">line 41</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="config"><span class="type-signature"></span>config<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>JSON audio atlas object.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>config</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="AudioSprite.js.html">sound/AudioSprite.js</a>, <a href="AudioSprite.js.html#sunlight-1-line-35">line 35</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="game"><span class="type-signature"></span>game<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>A reference to the currently running Game.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>game</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Game.html">Phaser.Game</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="AudioSprite.js.html">sound/AudioSprite.js</a>, <a href="AudioSprite.js.html#sunlight-1-line-23">line 23</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="key"><span class="type-signature"></span>key<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Asset key for the Audio Sprite.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>key</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="AudioSprite.js.html">sound/AudioSprite.js</a>, <a href="AudioSprite.js.html#sunlight-1-line-29">line 29</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="sounds"><span class="type-signature"></span>sounds<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>An object containing the Phaser.Sound objects for the Audio Sprite.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>sounds</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="AudioSprite.js.html">sound/AudioSprite.js</a>, <a href="AudioSprite.js.html#sunlight-1-line-54">line 54</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        </dl>
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        <dl>
+            
+<dt>
+    <h4 class="name" id="get"><span class="type-signature"></span>get<span class="signature">(marker)</span><span class="type-signature"> &rarr; {<a href="Phaser.Sound.html">Phaser.Sound</a>}</span></h4>
     
     
 </dt>
@@ -1135,8 +1372,7 @@
     
     
     <div class="description">
-        <p>Mixes the source object into the destination object, returning the newly modified destination object.
-Based on original code by @mudcube</p>
+        <p>Get a sound with the given name.</p>
     </div>
     
 
@@ -1170,13 +1406,13 @@ Based on original code by @mudcube</p>
 
         <tr>
             
-                <td class="name"><code>from</code></td>
+                <td class="name"><code>marker</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">object</span>
+<span class="param-type">string</span>
 
 
             
@@ -1186,30 +1422,7 @@ Based on original code by @mudcube</p>
 
             
 
-            <td class="description last"><p>The object to copy (the source object).</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>to</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The object to copy to (the destination object).</p></td>
+            <td class="description last"><p>The name of sound to get.</p></td>
         </tr>
 
 	
@@ -1241,7 +1454,7 @@ Based on original code by @mudcube</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Utils.js.html">utils/Utils.js</a>, <a href="Utils.js.html#sunlight-1-line-364">line 364</a>
+        <a href="AudioSprite.js.html">sound/AudioSprite.js</a>, <a href="AudioSprite.js.html#sunlight-1-line-122">line 122</a>
     </li></ul></dd>
     
 
@@ -1266,7 +1479,7 @@ Based on original code by @mudcube</p>
     
             
 <div class="param-desc">
-    <p>The modified destination object.</p>
+    <p>The sound instance.</p>
 </div>
 
 
@@ -1277,7 +1490,7 @@ Based on original code by @mudcube</p>
 	</dt>
 	<dd>
 		
-<span class="param-type">object</span>
+<span class="param-type"><a href="Phaser.Sound.html">Phaser.Sound</a></span>
 
 
 	</dd>
@@ -1292,7 +1505,7 @@ Based on original code by @mudcube</p>
         
             
 <dt>
-    <h4 class="name" id="pad"><span class="type-signature">&lt;static> </span>pad<span class="signature">(str, len, pad, <span class="optional">dir</span>)</span><span class="type-signature"> &rarr; {string}</span></h4>
+    <h4 class="name" id="play"><span class="type-signature"></span>play<span class="signature">(<span class="optional">marker</span>, <span class="optional">volume</span>)</span><span class="type-signature"> &rarr; {<a href="Phaser.Sound.html">Phaser.Sound</a>}</span></h4>
     
     
 </dt>
@@ -1300,9 +1513,7 @@ Based on original code by @mudcube</p>
     
     
     <div class="description">
-        <p>Javascript string pad <a href="http://www.webtoolkit.info/">http://www.webtoolkit.info/</a>.
-pad = the string to pad it out with (defaults to a space)
-dir = 1 (left), 2 (right), 3 (both)</p>
+        <p>Play a sound with the given name.</p>
     </div>
     
 
@@ -1340,7 +1551,7 @@ dir = 1 (left), 2 (right), 3 (both)</p>
 
         <tr>
             
-                <td class="name"><code>str</code></td>
+                <td class="name"><code>marker</code></td>
             
 
             <td class="type">
@@ -1355,40 +1566,7 @@ dir = 1 (left), 2 (right), 3 (both)</p>
             
                 <td class="attributes">
                 
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last"><p>The target string.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>len</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
+                    &lt;optional><br>
                 
 
                 
@@ -1403,49 +1581,14 @@ dir = 1 (left), 2 (right), 3 (both)</p>
                 </td>
             
 
-            <td class="description last"><p>The number of characters to be added.</p></td>
+            <td class="description last"><p>The name of sound to play</p></td>
         </tr>
 
 	
 
         <tr>
             
-                <td class="name"><code>pad</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last"><p>The string to pad it out with (defaults to a space).</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>dir</code></td>
+                <td class="name"><code>volume</code></td>
             
 
             <td class="type">
@@ -1472,12 +1615,12 @@ dir = 1 (left), 2 (right), 3 (both)</p>
             
                 <td class="default">
                 
-                    3
+                    1
                 
                 </td>
             
 
-            <td class="description last"><p>The direction dir = 1 (left), 2 (right), 3 (both).</p></td>
+            <td class="description last"><p>Volume of the sound you want to play. If none is given it will use the volume given to the Sound when it was created (which defaults to 1 if none was specified).</p></td>
         </tr>
 
 	
@@ -1509,7 +1652,7 @@ dir = 1 (left), 2 (right), 3 (both)</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Utils.js.html">utils/Utils.js</a>, <a href="Utils.js.html#sunlight-1-line-207">line 207</a>
+        <a href="AudioSprite.js.html">sound/AudioSprite.js</a>, <a href="AudioSprite.js.html#sunlight-1-line-84">line 84</a>
     </li></ul></dd>
     
 
@@ -1534,7 +1677,7 @@ dir = 1 (left), 2 (right), 3 (both)</p>
     
             
 <div class="param-desc">
-    <p>The padded string</p>
+    <p>This sound instance.</p>
 </div>
 
 
@@ -1545,7 +1688,7 @@ dir = 1 (left), 2 (right), 3 (both)</p>
 	</dt>
 	<dd>
 		
-<span class="param-type">string</span>
+<span class="param-type"><a href="Phaser.Sound.html">Phaser.Sound</a></span>
 
 
 	</dd>
@@ -1560,7 +1703,7 @@ dir = 1 (left), 2 (right), 3 (both)</p>
         
             
 <dt>
-    <h4 class="name" id="parseDimension"><span class="type-signature">&lt;static> </span>parseDimension<span class="signature">(size, dimension)</span><span class="type-signature"> &rarr; {number}</span></h4>
+    <h4 class="name" id="stop"><span class="type-signature"></span>stop<span class="signature">(<span class="optional">marker</span>)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -1568,7 +1711,7 @@ dir = 1 (left), 2 (right), 3 (both)</p>
     
     
     <div class="description">
-        <p>Get a unit dimension from a string.</p>
+        <p>Stop a sound with the given name.</p>
     </div>
     
 
@@ -1590,7 +1733,11 @@ dir = 1 (left), 2 (right), 3 (both)</p>
 		<th>Type</th>
 
 		
+		<th>Argument</th>
+		
 
+		
+		<th>Default</th>
 		
 
 		<th class="last">Description</th>
@@ -1602,365 +1749,7 @@ dir = 1 (left), 2 (right), 3 (both)</p>
 
         <tr>
             
-                <td class="name"><code>size</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-|
-
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The size to parse.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>dimension</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The window dimension to check.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Utils.js.html">utils/Utils.js</a>, <a href="Utils.js.html#sunlight-1-line-144">line 144</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>The parsed dimension.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type">number</span>
-
-
-	</dd>
-</dl>
-
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="rotateArray"><span class="type-signature">&lt;static> </span>rotateArray<span class="signature">(matrix, direction)</span><span class="type-signature"> &rarr; {array}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Rotates the given array.
-Based on the routine from <a href="http://jsfiddle.net/MrPolywhirl/NH42z/">http://jsfiddle.net/MrPolywhirl/NH42z/</a></p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>matrix</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">array</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The array to rotate.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>direction</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-|
-
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The amount to rotate. Either a number: 90, -90, 270, -270, 180 or a string: 'rotateLeft', 'rotateRight' or 'rotate180'</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Utils.js.html">utils/Utils.js</a>, <a href="Utils.js.html#sunlight-1-line-104">line 104</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>The rotated array</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type">array</span>
-
-
-	</dd>
-</dl>
-
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="setProperty"><span class="type-signature">&lt;static> </span>setProperty<span class="signature">(obj, prop)</span><span class="type-signature"> &rarr; {object}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Sets an objects property by string.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>obj</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The object to traverse</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>prop</code></td>
+                <td class="name"><code>marker</code></td>
             
 
             <td class="type">
@@ -1973,292 +1762,26 @@ Based on the routine from <a href="http://jsfiddle.net/MrPolywhirl/NH42z/">http:
             </td>
 
             
-
-            
-
-            <td class="description last"><p>The property whose value will be changed</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Utils.js.html">utils/Utils.js</a>, <a href="Utils.js.html#sunlight-1-line-48">line 48</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>The object on which the property was set.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type">object</span>
-
-
-	</dd>
-</dl>
-
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="shuffle"><span class="type-signature">&lt;static> </span>shuffle<span class="signature">(array)</span><span class="type-signature"> &rarr; {array}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>A standard Fisher-Yates Array shuffle implementation.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>array</code></td>
-            
-
-            <td class="type">
-            
+                <td class="attributes">
                 
-<span class="param-type">array</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The array to shuffle.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Utils.js.html">utils/Utils.js</a>, <a href="Utils.js.html#sunlight-1-line-187">line 187</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>The shuffled array.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type">array</span>
-
-
-	</dd>
-</dl>
-
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="transposeArray"><span class="type-signature">&lt;static> </span>transposeArray<span class="signature">(array)</span><span class="type-signature"> &rarr; {array}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Transposes the elements of the given Array.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>array</code></td>
-            
-
-            <td class="type">
-            
+                    &lt;optional><br>
                 
-<span class="param-type">array</span>
 
+                
 
-            
-            </td>
-
-            
-
+                
+                </td>
             
 
-            <td class="description last"><p>The array to transpose.</p></td>
+            
+                <td class="default">
+                
+                    ''
+                
+                </td>
+            
+
+            <td class="description last"><p>The name of sound to stop. If none is given it will stop all sounds in the audio sprite.</p></td>
         </tr>
 
 	
@@ -2290,7 +1813,7 @@ Based on the routine from <a href="http://jsfiddle.net/MrPolywhirl/NH42z/">http:
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Utils.js.html">utils/Utils.js</a>, <a href="Utils.js.html#sunlight-1-line-79">line 79</a>
+        <a href="AudioSprite.js.html">sound/AudioSprite.js</a>, <a href="AudioSprite.js.html#sunlight-1-line-100">line 100</a>
     </li></ul></dd>
     
 
@@ -2311,29 +1834,6 @@ Based on the routine from <a href="http://jsfiddle.net/MrPolywhirl/NH42z/">http:
     
     
     
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>The transposed array.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type">array</span>
-
-
-	</dd>
-</dl>
-
-
-        
     
     
 </dd>
@@ -2364,7 +1864,7 @@ Based on the routine from <a href="http://jsfiddle.net/MrPolywhirl/NH42z/">http:
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Thu Oct 09 2014 16:10:11 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Thu Oct 09 2014 16:09:47 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

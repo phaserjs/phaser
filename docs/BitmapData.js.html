@@ -59,6 +59,10 @@
 						</li>
 						
 						<li class="class-depth-1">
+							<a href="Phaser.AudioSprite.html">AudioSprite</a>
+						</li>
+						
+						<li class="class-depth-1">
 							<a href="Phaser.BitmapData.html">BitmapData</a>
 						</li>
 						
@@ -256,6 +260,10 @@
 						
 						<li class="class-depth-1">
 							<a href="Phaser.Particles.html">Particles</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Particles.Arcade.html">Arcade</a>
 						</li>
 						
 						<li class="class-depth-3">
@@ -543,13 +551,11 @@
 */
 
 /**
-* Creates a new BitmapData object.
+* A BitmapData object contains a Canvas element to which you can draw anything you like via normal Canvas context operations.
+* A single BitmapData can be used as the texture for one or many Images/Sprites. 
+* So if you need to dynamically create a Sprite texture then they are a good choice.
 *
 * @class Phaser.BitmapData
-*
-* @classdesc A BitmapData object contains a Canvas element to which you can draw anything you like via normal Canvas context operations.
-* A single BitmapData can be used as the texture for one or many Images/Sprites. So if you need to dynamically create a Sprite texture then they are a good choice.
-*
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
 * @param {string} key - Internal Phaser reference key for the render texture.
@@ -732,6 +738,12 @@ Phaser.BitmapData = function (game, key, width, height) {
     * @private
     */
     this._tempB = 0;
+
+    /**
+    * @property {Phaser.Circle} _circle - Internal cache var.
+    * @private
+    */
+    this._circle = new Phaser.Circle();
 
 };
 
@@ -1429,6 +1441,17 @@ Phaser.BitmapData.prototype = {
                 tx += source.texture.trim.x - source.anchor.x * source.texture.trim.width;
                 ty += source.texture.trim.y - source.anchor.y * source.texture.trim.height;
             }
+
+            if (source.tint !== 0xFFFFFF)
+            {
+                if (source.cachedTint !== source.tint)
+                {
+                    source.cachedTint = source.tint;
+                    source.tintedTexture = PIXI.CanvasTinter.getTintedTexture(source, source.tint);
+                }
+
+                this._image = source.tintedTexture;
+            }
         }
         else
         {
@@ -1601,16 +1624,64 @@ Phaser.BitmapData.prototype = {
     },
 
     /**
+    * Sets the shadow properties of this BitmapDatas context which will affect all draw operations made to it.
+    * You can cancel an existing shadow by calling this method and passing no parameters.
+    * Note: At the time of writing (October 2014) Chrome still doesn't support shadowBlur used with drawImage.
+    *
+    * @method Phaser.BitmapData#shadow
+    * @param {string} color - The color of the shadow, given in a CSS format, i.e. `#000000` or `rgba(0,0,0,1)`. If `null` or `undefined` the shadow will be reset.
+    * @param {number} [blur=5] - The amount the shadow will be blurred by. Low values = a crisp shadow, high values = a softer shadow.
+    * @param {number} [x=10] - The horizontal offset of the shadow in pixels.
+    * @param {number} [y=10] - The vertical offset of the shadow in pixels.
+    * @return {Phaser.BitmapData} This BitmapData object for method chaining.
+    */
+    shadow: function (color, blur, x, y) {
+
+        if (typeof color === 'undefined' || color === null)
+        {
+            this.context.shadowColor = 'rgba(0,0,0,0)';
+        }
+        else
+        {
+            this.context.shadowColor = color;
+            this.context.shadowBlur = blur || 5;
+            this.context.shadowOffsetX = x || 10;
+            this.context.shadowOffsetY = y || 10;
+        }
+
+    },
+
+    /**
     * Draws the image onto this BitmapData using an image as an alpha mask.
     *
     * @method Phaser.BitmapData#alphaMask
     * @param {Phaser.Sprite|Phaser.Image|Phaser.Text|Phaser.BitmapData|HTMLImage|HTMLCanvasElement|string} source - The source to copy from. If you give a string it will try and find the Image in the Game.Cache first. This is quite expensive so try to provide the image itself.
     * @param {Phaser.Sprite|Phaser.Image|Phaser.Text|Phaser.BitmapData|HTMLImage|HTMLCanvasElement|string} [mask] - The object to be used as the mask. If you give a string it will try and find the Image in the Game.Cache first. This is quite expensive so try to provide the image itself. If you don't provide a mask it will use this BitmapData as the mask.
+    * @param {Phaser.Rectangle} [sourceRect] - A Rectangle where x/y define the coordinates to draw the Source image to and width/height define the size.
+    * @param {Phaser.Rectangle} [maskRect] - A Rectangle where x/y define the coordinates to draw the Mask image to and width/height define the size.
     * @return {Phaser.BitmapData} This BitmapData object for method chaining.
     */
-    alphaMask: function (source, mask) {
+    alphaMask: function (source, mask, sourceRect, maskRect) {
 
-        return this.draw(mask).blendSourceAtop().draw(source).blendReset();
+        if (typeof maskRect === 'undefined' || maskRect === null)
+        {
+            this.draw(mask).blendSourceAtop();
+        }
+        else
+        {
+            this.draw(mask, maskRect.x, maskRect.y, maskRect.width, maskRect.height).blendSourceAtop();
+        }
+
+        if (typeof sourceRect === 'undefined' || sourceRect === null)
+        {
+            this.draw(source).blendReset();
+        }
+        else
+        {
+            this.draw(source, sourceRect.x, sourceRect.y, sourceRect.width, sourceRect.height).blendReset();
+        }
+
+        return this;
 
     },
 
@@ -1713,6 +1784,54 @@ Phaser.BitmapData.prototype = {
         this.context.closePath();
 
         this.context.fill();
+
+        return this;
+
+    },
+
+    /**
+    * Takes the given Line object and image and renders it to this BitmapData as a repeating texture line.
+    *
+    * @method Phaser.BitmapData#textureLine
+    * @param {Phaser.Line} line - A Phaser.Line object that will be used to plot the start and end of the line.
+    * @param {string|HTMLImage} image - The key of an image in the Phaser.Cache to use as the texture for this line, or an actual Image.
+    * @param {string} [repeat='repeat-x'] - The pattern repeat mode to use when drawing the line. Either `repeat`, `repeat-x` or `no-repeat`.
+    * @return {Phaser.BitmapData} This BitmapData object for method chaining.
+    */
+    textureLine: function (line, image, repeat) {
+
+        if (typeof repeat === 'undefined') { repeat = 'repeat-x'; }
+
+        if (typeof image === 'string')
+        {
+            image = this.game.cache.getImage(image);
+
+            if (!image)
+            {
+                return;
+            }
+        }
+
+        var width = line.length;
+
+        if (repeat === 'no-repeat' && width > image.width)
+        {
+            width = image.width;
+        }
+
+        this.context.fillStyle = this.context.createPattern(image, repeat);
+
+        this._circle = new Phaser.Circle(line.start.x, line.start.y, image.height);
+
+        this._circle.circumferencePoint(line.angle - 1.5707963267948966, false, this._pos);
+
+        this.context.save();
+        this.context.translate(this._pos.x, this._pos.y);
+        this.context.rotate(line.angle);
+        this.context.fillRect(0, 0, width, image.height);
+        this.context.restore();
+
+        this.dirty = true;
 
         return this;
 
@@ -2148,7 +2267,7 @@ Phaser.BitmapData.prototype.constructor = Phaser.BitmapData;
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Tue Sep 09 2014 15:29:17 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Thu Oct 09 2014 16:09:45 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

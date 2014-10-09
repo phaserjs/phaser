@@ -25,7 +25,7 @@
 
 Phaser is a fast, free and fun open source game framework for making desktop and mobile browser HTML5 games. It uses [Pixi.js](https://github.com/GoodBoyDigital/pixi.js/) internally for fast 2D Canvas and WebGL rendering.
 
-Version: 2.1.2 "Whitebridge" - Released: in development
+Version: 2.1.2 "Whitebridge" - Released: 9th October 2014
 
 By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 
@@ -44,6 +44,22 @@ By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 
 <a name="whats-new"></a>
 ## Welcome to Phaser and What's new in 2.1.2?
+
+Phaser 2.1.2 carries on with our latest round of new features, updates and fixes, demonstrating our commitment to continuously improving our framework and responding to feedback.
+
+This release adds in a number of new features including Audio Sprite json format support, native loading of XML files, Sound fades, per character Text colours, further updates to BitmapData, the ability to use BitmapData with frames as Sprite textures, Group filter, search the Cache by URL and plenty of updates and bug fixes too - including the death of the pesky getPixel issue on Safari / iOS.
+
+Internally we are using Phaser in ever larger client based projects. Thousands of lines of code spread across many States and classes, and we're paying close attention to how best to adapt the API to make life easier for those building apps of the size we are. If there are any features you would like to see then now is the time to suggest them, either by email, the forum or github.
+
+We're also pleased to announce that we have 3 new premium plugins gearing up for launch. They are:
+
+Phaser Box2D - Adds complete Box2D support directly into Phaser, with lots of help methods, over 50 examples and 5 demo games.
+
+Phaser Path Manager - Create complex motion paths for Sprites with a lovely visual editor and this new plugin. No longer rely on tweens for motion :) Instead draw a path, with full branch support, path orientation, segment speeds, path events and more.
+
+Advanced Particle System - The particles included with Phaser are flexible and can create attractive effects. But Advanced Particles is a complete replacement offering professional level particle effects for your games. From multiple render targets, to bitmap caching to all kinds of events, emitters and properties.
+
+Each plugin will come in a range of versions to suit all budgets and there are more on the way. Please visit the [launch page](http://phaserplugins.launchrock.com) to sign-up for notification as soon as they're ready.
 
 Until then happy coding everyone! And we hope to see you on the forums.
 
@@ -69,9 +85,7 @@ Finally the list of [community authored Phaser Tutorials](http://www.lessmilk.co
 <a name="change-log"></a>
 ## Change Log
 
-Version 2.1.2 - "Whitebridge" - in development
-
-
+Version 2.1.2 - "Whitebridge" - October 9th 2014
 
 ### New Features
 
@@ -122,7 +136,6 @@ Version 2.1.2 - "Whitebridge" - in development
 * The Uint32Array check used in Utils was incorrectly replacing Uint32Array on Safari, causing errors like BitmapData.getPixel32 to fail and other related issues (fixes #1043 and #1197)
 * Camera.follow would break if the parent of the Sprite being followed was scaled in any way (thanks @englercj #1222)
 * Fixed the 4fv uniform in the Pixelate filter.
-
 
 For details about changes made in previous versions of Phaser see the full Change Log at https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md
 

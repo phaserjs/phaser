@@ -59,6 +59,10 @@
 						</li>
 						
 						<li class="class-depth-1">
+							<a href="Phaser.AudioSprite.html">AudioSprite</a>
+						</li>
+						
+						<li class="class-depth-1">
 							<a href="Phaser.BitmapData.html">BitmapData</a>
 						</li>
 						
@@ -256,6 +260,10 @@
 						
 						<li class="class-depth-1">
 							<a href="Phaser.Particles.html">Particles</a>
+						</li>
+						
+						<li class="class-depth-2">
+							<a href="Phaser.Particles.Arcade.html">Arcade</a>
 						</li>
 						
 						<li class="class-depth-3">
@@ -546,7 +554,6 @@
 * The Sound class constructor.
 *
 * @class Phaser.Sound
-* @classdesc The Sound class
 * @constructor
 * @param {Phaser.Game} game - Reference to the current game instance.
 * @param {string} key - Asset key for the sound.
@@ -677,6 +684,12 @@ Phaser.Sound = function (game, key, volume, loop, connect) {
     this.override = false;
 
     /**
+    * @property {boolean} allowMultiple - This will allow you to have multiple instances of this Sound playing at once. This is only useful when running under Web Audio, and we recommend you implement a local pooling system to not flood the sound channels.
+    * @default
+    */
+    this.allowMultiple = false;
+
+    /**
     * @property {boolean} usingWebAudio - true if this sound is being played with Web Audio.
     * @readonly
     */
@@ -780,6 +793,11 @@ Phaser.Sound = function (game, key, volume, loop, connect) {
     * @property {Phaser.Signal} onMarkerComplete - The onMarkerComplete event is dispatched when a marker within this sound completes playback.
     */
     this.onMarkerComplete = new Phaser.Signal();
+
+    /**
+    * @property {Phaser.Signal} onFadeComplete - The onFadeComplete event is dispatched when this sound finishes fading either in or out.
+    */
+    this.onFadeComplete = new Phaser.Signal();
 
     /**
     * @property {number} _volume - The global audio volume. A value between 0 (silence) and 1 (full volume).
@@ -978,13 +996,13 @@ Phaser.Sound.prototype = {
         if (typeof marker === 'undefined') { marker = ''; }
         if (typeof forceRestart === 'undefined') { forceRestart = true; }
 
-        if (this.isPlaying && !forceRestart && !this.override)
+        if (this.isPlaying && !this.allowMultiple && !forceRestart && !this.override)
         {
             //  Use Restart instead
             return this;
         }
 
-        if (this.isPlaying && (this.override || forceRestart))
+        if (this.isPlaying && !this.allowMultiple && (this.override || forceRestart))
         {
             if (this.usingWebAudio)
             {
@@ -1315,6 +1333,74 @@ Phaser.Sound.prototype = {
     },
 
     /**
+     * Starts this sound playing (or restarts it if already doing so) and sets the volume to zero.
+     * Then increases the volume from 0 to 1 over the duration specified.
+     * At the end of the fade Sound.onFadeComplete is dispatched with this Sound object as the first parameter, 
+     * and the final volume (1) as the second parameter.
+     *
+     * @method Phaser.Sound#fadeIn
+     * @param {number} [duration=1000] - The time in milliseconds during which the Sound should fade in.
+     * @param {boolean} [loop=false] - Should the Sound be set to loop? Note that this doesn't cause the fade to repeat.
+     */
+    fadeIn: function (duration, loop) {
+
+        if (typeof duration === 'undefined') { duration = 1000; }
+        if (typeof loop === 'undefined') { loop = false; }
+
+        if (this.paused)
+        {
+            return;
+        }
+
+        this.play('', 0, 0, loop);
+
+        var tween = this.game.add.tween(this).to( { volume: 1 }, duration, Phaser.Easing.Linear.None, true);
+
+        tween.onComplete.add(this.fadeComplete, this);
+
+    },
+
+    /**
+     * Decreases the volume of this Sound from its current value to 0 over the duration specified.
+     * At the end of the fade Sound.onFadeComplete is dispatched with this Sound object as the first parameter, 
+     * and the final volume (0) as the second parameter.
+     *
+     * @method Phaser.Sound#fadeOut
+     * @param {number} [duration=1000] - The time in milliseconds during which the Sound should fade out.
+     */
+    fadeOut: function (duration) {
+
+        if (typeof duration === 'undefined') { duration = 1000; }
+
+        if (!this.isPlaying || this.paused || this.volume &lt;= 0)
+        {
+            return;
+        }
+
+        var tween = this.game.add.tween(this).to( { volume: 0 }, duration, Phaser.Easing.Linear.None, true);
+
+        tween.onComplete.add(this.fadeComplete, this);
+
+    },
+
+    /**
+     * Internal handler for Sound.fadeIn and Sound.fadeOut.
+     *
+     * @method Phaser.Sound#fadeComplete
+     * @private
+     */
+    fadeComplete: function () {
+
+        this.onFadeComplete.dispatch(this, this.volume);
+
+        if (this.volume === 0)
+        {
+            this.stop();
+        }
+
+    },
+
+    /**
     * Destroys this sound and all associated events and removes it from the SoundManager.
     *
     * @method Phaser.Sound#destroy
@@ -1481,7 +1567,7 @@ Object.defineProperty(Phaser.Sound.prototype, "volume", {
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Tue Sep 09 2014 15:29:17 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Thu Oct 09 2014 16:09:45 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>
