@@ -713,13 +713,14 @@ Phaser.ScaleManager.prototype = {
         else if (this._scaleMode === Phaser.ScaleManager.EXACT_FIT || this._scaleMode === Phaser.ScaleManager.SHOW_ALL)
         {
             this.refresh();
-            this.checkOrientationState();
     
             if (this.onResize)
             {
                 this.onResize.call(this.onResizeContext, this.width, this.height);
             }
         }
+
+        this.checkOrientationState();
 
     },
 
