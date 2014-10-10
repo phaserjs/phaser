@@ -100,6 +100,8 @@ PIXI.InteractionManager = function(stage)
      *
      */
     this.mouseOut = false;
+
+    this.resolution = 1;
 };
 
 // constructor
@@ -158,6 +160,7 @@ PIXI.InteractionManager.prototype.collectInteractiveSprite = function(displayObj
 PIXI.InteractionManager.prototype.setTarget = function(target)
 {
     this.target = target;
+    this.resolution = target.resolution;
 
     //check if the dom element has been set. If it has don't do anything
     if( this.interactionDOMElement === null ) {
@@ -340,8 +343,8 @@ PIXI.InteractionManager.prototype.onMouseMove = function(event)
     // TODO optimize by not check EVERY TIME! maybe half as often? //
     var rect = this.interactionDOMElement.getBoundingClientRect();
 
-    this.mouse.global.x = (event.clientX - rect.left) * (this.target.width / rect.width);
-    this.mouse.global.y = (event.clientY - rect.top) * ( this.target.height / rect.height);
+    this.mouse.global.x = (event.clientX - rect.left) * (this.target.width / rect.width) / this.resolution;
+    this.mouse.global.y = (event.clientY - rect.top) * ( this.target.height / rect.height) / this.resolution;
 
     var length = this.interactiveItems.length;
 
@@ -528,8 +531,7 @@ PIXI.InteractionManager.prototype.hitTest = function(item, interactionData)
 
     // temp fix for if the element is in a non visible
    
-    var isSprite = (item instanceof PIXI.Sprite),
-        worldTransform = item.worldTransform,
+    var worldTransform = item.worldTransform, i,
         a00 = worldTransform.a, a01 = worldTransform.b, a02 = worldTransform.tx,
         a10 = worldTransform.c, a11 = worldTransform.d, a12 = worldTransform.ty,
         id = 1 / (a00 * a11 + a01 * -a10),
@@ -550,7 +552,7 @@ PIXI.InteractionManager.prototype.hitTest = function(item, interactionData)
         return false;
     }
     // a sprite with no hitarea defined
-    else if(isSprite)
+    else if(item instanceof PIXI.Sprite)
     {
         var width = item.texture.frame.width,
             height = item.texture.frame.height,
@@ -569,10 +571,29 @@ PIXI.InteractionManager.prototype.hitTest = function(item, interactionData)
             }
         }
     }
+    else if(item instanceof PIXI.Graphics)
+    {
+        var graphicsData = item.graphicsData;
+        for (i = 0; i < graphicsData.length; i++)
+        {
+            var data = graphicsData[i];
+            if(!data.fill)continue;
+
+            // only deal with fills..
+            if(data.shape)
+            {
+                if(data.shape.contains(x, y))
+                {
+                    interactionData.target = item;
+                    return true;
+                }
+            }
+        }
+    }
 
     var length = item.children.length;
 
-    for (var i = 0; i < length; i++)
+    for (i = 0; i < length; i++)
     {
         var tempItem = item.children[i];
         var hit = this.hitTest(tempItem, interactionData);
@@ -613,8 +634,8 @@ PIXI.InteractionManager.prototype.onTouchMove = function(event)
         touchData.originalEvent =  event || window.event;
 
         // update the touch position
-        touchData.global.x = (touchEvent.clientX - rect.left) * (this.target.width / rect.width);
-        touchData.global.y = (touchEvent.clientY - rect.top)  * (this.target.height / rect.height);
+        touchData.global.x = ( (touchEvent.clientX - rect.left) * (this.target.width / rect.width) ) / this.resolution;
+        touchData.global.y = ( (touchEvent.clientY - rect.top)  * (this.target.height / rect.height) )  / this.resolution;
         if(navigator.isCocoonJS && !rect.left && !rect.top && !event.target.style.width && !event.target.style.height) {
             //Support for CocoonJS fullscreen scale modes
             touchData.global.x = touchEvent.clientX;
@@ -658,8 +679,8 @@ PIXI.InteractionManager.prototype.onTouchStart = function(event)
         touchData.originalEvent =  event || window.event;
 
         this.touchs[touchEvent.identifier] = touchData;
-        touchData.global.x = (touchEvent.clientX - rect.left) * (this.target.width / rect.width);
-        touchData.global.y = (touchEvent.clientY - rect.top)  * (this.target.height / rect.height);
+        touchData.global.x = ( (touchEvent.clientX - rect.left) * (this.target.width / rect.width) ) / this.resolution;
+        touchData.global.y = ( (touchEvent.clientY - rect.top)  * (this.target.height / rect.height) ) / this.resolution;
         if(navigator.isCocoonJS && !rect.left && !rect.top && !event.target.style.width && !event.target.style.height) {
             //Support for CocoonJS fullscreen scale modes
             touchData.global.x = touchEvent.clientX;
@@ -714,8 +735,8 @@ PIXI.InteractionManager.prototype.onTouchEnd = function(event)
         var touchEvent = changedTouches[i];
         var touchData = this.touchs[touchEvent.identifier];
         var up = false;
-        touchData.global.x = (touchEvent.clientX - rect.left) * (this.target.width / rect.width);
-        touchData.global.y = (touchEvent.clientY - rect.top)  * (this.target.height / rect.height);
+        touchData.global.x = ( (touchEvent.clientX - rect.left) * (this.target.width / rect.width) ) / this.resolution;
+        touchData.global.y = ( (touchEvent.clientY - rect.top)  * (this.target.height / rect.height) ) / this.resolution;
         if(navigator.isCocoonJS && !rect.left && !rect.top && !event.target.style.width && !event.target.style.height) {
             //Support for CocoonJS fullscreen scale modes
             touchData.global.x = touchEvent.clientX;

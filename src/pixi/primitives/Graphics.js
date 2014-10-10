@@ -77,8 +77,10 @@ PIXI.Graphics = function()
      * @type Object
      * @private
      */
-    this.currentPath = {points:[]};
+    this.currentPath = null;
 
+
+    
     /**
      * Array containing some WebGL-related properties used by the WebGL renderer
      *
@@ -102,7 +104,7 @@ PIXI.Graphics = function()
      * @property bounds
      * @type Rectangle
      */
-    this.bounds = null;
+    this.bounds = new PIXI.Rectangle(0, 0, 0, 0);
 
     /**
      * the bounds' padding used for bounds calculation
@@ -115,7 +117,9 @@ PIXI.Graphics = function()
     /**
      * Used to detect if the graphics object has changed if this is set to true then the graphics object will be recalculated
      * 
-     * @type {Boolean}
+     * @property dirty
+     * @type Boolean
+     * @private
      */
     this.dirty = true;
 };
@@ -166,16 +170,25 @@ Object.defineProperty(PIXI.Graphics.prototype, "cacheAsBitmap", {
  */
 PIXI.Graphics.prototype.lineStyle = function(lineWidth, color, alpha)
 {
-    if (!this.currentPath.points.length) this.graphicsData.pop();
-
     this.lineWidth = lineWidth || 0;
     this.lineColor = color || 0;
     this.lineAlpha = (arguments.length < 3) ? 1 : alpha;
 
-    this.currentPath = {lineWidth:this.lineWidth, lineColor:this.lineColor, lineAlpha:this.lineAlpha,
-                        fillColor:this.fillColor, fillAlpha:this.fillAlpha, fill:this.filling, points:[], type:PIXI.Graphics.POLY};
+    if(this.currentPath)
+    {
+        if(this.currentPath.shape.points.length)
+        {
+            // halfway through a line? start a new one!
+            this.drawShape( new PIXI.Polygon( this.currentPath.shape.points.slice(-2) ));
+            return this;
+        }
 
-    this.graphicsData.push(this.currentPath);
+        // otherwise its empty so lets just set the line properties
+        this.currentPath.lineWidth = this.lineWidth;
+        this.currentPath.lineColor = this.lineColor;
+        this.currentPath.lineAlpha = this.lineAlpha;
+        
+    }
 
     return this;
 };
@@ -189,14 +202,42 @@ PIXI.Graphics.prototype.lineStyle = function(lineWidth, color, alpha)
  */
 PIXI.Graphics.prototype.moveTo = function(x, y)
 {
-    if (!this.currentPath.points.length) this.graphicsData.pop();
+    this.drawShape(new PIXI.Polygon([x,y]));
 
-    this.currentPath = this.currentPath = {lineWidth:this.lineWidth, lineColor:this.lineColor, lineAlpha:this.lineAlpha,
-                        fillColor:this.fillColor, fillAlpha:this.fillAlpha, fill:this.filling, points:[], type:PIXI.Graphics.POLY};
+    /*
+    if(this.currentPath)
+    {
+        if(this.currentPath.shape.points.length > 2)
+        {
+            // halfway through a line? start a new one!
+            this.currentPath = this.drawShape( new PIXI.Polygon( x, y );
+            return this;
+        }
+        else
+        {
+            // reuse existing path!
+            this.currentPath.shape.points = [x,y];
+            this.currentPath.lineWidth = this.lineWidth;
+            this.currentPath.lineColor = this.lineColor;
+            this.currentPath.lineAlpha = this.lineAlpha;
 
-    this.currentPath.points.push(x, y);
+            return this
+        }
+    }
+    
+    this.currentPath = this.drawShape(new PIXI.Polygon([x,y]))
 
-    this.graphicsData.push(this.currentPath);
+    this.currentPath.push(x, y);
+`*/
+
+   // if (!this.currentPath.points.length) this.graphicsData.pop();
+
+ ////   this.currentPath = {lineWidth:this.lineWidth, lineColor:this.lineColor, lineAlpha:this.lineAlpha,
+     //                   fillColor:this.fillColor, fillAlpha:this.fillAlpha, fill:this.filling, points:[], type:PIXI.Graphics.POLY};
+
+    //this.currentPath.points.push(x, y);
+
+   // this.graphicsData.push(this.currentPath);
 
     return this;
 };
@@ -211,7 +252,7 @@ PIXI.Graphics.prototype.moveTo = function(x, y)
  */
 PIXI.Graphics.prototype.lineTo = function(x, y)
 {
-    this.currentPath.points.push(x, y);
+    this.currentPath.shape.points.push(x, y);
     this.dirty = true;
 
     return this;
@@ -230,12 +271,19 @@ PIXI.Graphics.prototype.lineTo = function(x, y)
  */
 PIXI.Graphics.prototype.quadraticCurveTo = function(cpX, cpY, toX, toY)
 {
-    if( this.currentPath.points.length === 0)this.moveTo(0,0);
+    if( this.currentPath )
+    {
+        if(this.currentPath.shape.points.length === 0)this.currentPath.shape.points = [0,0];
+    }
+    else
+    {
+        this.moveTo(0,0);
+    }
 
     var xa,
     ya,
     n = 20,
-    points = this.currentPath.points;
+    points = this.currentPath.shape.points;
     if(points.length === 0)this.moveTo(0, 0);
     
 
@@ -274,7 +322,14 @@ PIXI.Graphics.prototype.quadraticCurveTo = function(cpX, cpY, toX, toY)
  */
 PIXI.Graphics.prototype.bezierCurveTo = function(cpX, cpY, cpX2, cpY2, toX, toY)
 {
-    if( this.currentPath.points.length === 0)this.moveTo(0,0);
+    if( this.currentPath )
+    {
+        if(this.currentPath.shape.points.length === 0)this.currentPath.shape.points = [0,0];
+    }
+    else
+    {
+        this.moveTo(0,0);
+    }
 
     var n = 20,
     dt,
@@ -282,14 +337,14 @@ PIXI.Graphics.prototype.bezierCurveTo = function(cpX, cpY, cpX2, cpY2, toX, toY)
     dt3,
     t2,
     t3,
-    points = this.currentPath.points;
+    points = this.currentPath.shape.points;
 
     var fromX = points[points.length-2];
     var fromY = points[points.length-1];
     
     var j = 0;
 
-    for (var i=1; i<n; i++)
+    for (var i=1; i<=n; i++)
     {
         j = i / n;
 
@@ -316,19 +371,28 @@ PIXI.Graphics.prototype.bezierCurveTo = function(cpX, cpY, cpX2, cpY2, toX, toY)
  * "borrowed" from https://code.google.com/p/fxcanvas/ - thanks google!
  *
  * @method arcTo
- * @param  {number}   x1        The x-coordinate of the beginning of the arc
- * @param  {number}   y1        The y-coordinate of the beginning of the arc
- * @param  {number}   x2        The x-coordinate of the end of the arc
- * @param  {number}   y2        The y-coordinate of the end of the arc
- * @param  {number}   radius    The radius of the arc
+ * @param  {Number}   x1        The x-coordinate of the beginning of the arc
+ * @param  {Number}   y1        The y-coordinate of the beginning of the arc
+ * @param  {Number}   x2        The x-coordinate of the end of the arc
+ * @param  {Number}   y2        The y-coordinate of the end of the arc
+ * @param  {Number}   radius    The radius of the arc
  * @return {PIXI.Graphics}
  */
 PIXI.Graphics.prototype.arcTo = function(x1, y1, x2, y2, radius)
 {
+    if( this.currentPath )
+    {
+        if(this.currentPath.shape.points.length === 0)this.currentPath.shape.points = [x1, y1];
+    }
+    else
+    {
+        this.moveTo(x1, y1);
+    }
+
     // check that path contains subpaths
-    if( this.currentPath.points.length === 0)this.moveTo(x1, y1);
+    if( this.currentPath.length === 0)this.moveTo(x1, y1);
     
-    var points = this.currentPath.points;
+    var points = this.currentPath;
     var fromX = points[points.length-2];
     var fromY = points[points.length-1];
 
@@ -375,12 +439,12 @@ PIXI.Graphics.prototype.arcTo = function(x1, y1, x2, y2, radius)
  * The arc() method creates an arc/curve (used to create circles, or parts of circles).
  *
  * @method arc
- * @param  {number}   cx                The x-coordinate of the center of the circle
- * @param  {number}   cy                The y-coordinate of the center of the circle
- * @param  {number}   radius            The radius of the circle
- * @param  {number}   startAngle        The starting angle, in radians (0 is at the 3 o'clock position of the arc's circle)
- * @param  {number}   endAngle          The ending angle, in radians
- * @param  {number}   anticlockwise     Optional. Specifies whether the drawing should be counterclockwise or clockwise. False is default, and indicates clockwise, while true indicates counter-clockwise.
+ * @param  {Number}   cx                The x-coordinate of the center of the circle
+ * @param  {Number}   cy                The y-coordinate of the center of the circle
+ * @param  {Number}   radius            The radius of the circle
+ * @param  {Number}   startAngle        The starting angle, in radians (0 is at the 3 o'clock position of the arc's circle)
+ * @param  {Number}   endAngle          The ending angle, in radians
+ * @param  {Boolean}   anticlockwise     Optional. Specifies whether the drawing should be counterclockwise or clockwise. False is default, and indicates clockwise, while true indicates counter-clockwise.
  * @return {PIXI.Graphics}
  */
 PIXI.Graphics.prototype.arc = function(cx, cy, radius, startAngle, endAngle, anticlockwise)
@@ -388,12 +452,12 @@ PIXI.Graphics.prototype.arc = function(cx, cy, radius, startAngle, endAngle, ant
     var startX = cx + Math.cos(startAngle) * radius;
     var startY = cy + Math.sin(startAngle) * radius;
     
-    var points = this.currentPath.points;
+    var points = this.currentPath.shape.points;
 
     if(points.length !== 0 && points[points.length-2] !== startX || points[points.length-1] !== startY)
     {
         this.moveTo(startX, startY);
-        points = this.currentPath.points;
+        points = this.currentPath.shape.points;
     }
 
     if (startAngle === endAngle)return this;
@@ -441,28 +505,6 @@ PIXI.Graphics.prototype.arc = function(cx, cy, radius, startAngle, endAngle, ant
     return this;
 };
 
-/**
- * Draws a line using the current line style from the current drawing position to (x, y);
- * the current drawing position is then set to (x, y).
- *
- * @method lineTo
- * @param x {Number} the X coordinate to draw to
- * @param y {Number} the Y coordinate to draw to
- */
-PIXI.Graphics.prototype.drawPath = function(path)
-{
-    if (!this.currentPath.points.length) this.graphicsData.pop();
-
-    this.currentPath = {lineWidth:this.lineWidth, lineColor:this.lineColor, lineAlpha:this.lineAlpha,
-                        fillColor:this.fillColor, fillAlpha:this.fillAlpha, fill:this.filling, points:[], type:PIXI.Graphics.POLY};
-
-    this.graphicsData.push(this.currentPath);
-
-    this.currentPath.points = this.currentPath.points.concat(path);
-    this.dirty = true;
-
-    return this;
-};
 
 /**
  * Specifies a simple one-color fill that subsequent calls to other Graphics methods
@@ -477,8 +519,17 @@ PIXI.Graphics.prototype.beginFill = function(color, alpha)
 
     this.filling = true;
     this.fillColor = color || 0;
-    this.fillAlpha = (arguments.length < 2) ? 1 : alpha;
+    this.fillAlpha = (alpha === undefined) ? 1 : alpha;
 
+    if(this.currentPath)
+    {
+        if(this.currentPath.shape.points.length <= 2)
+        {
+            this.currentPath.fill = this.filling;
+            this.currentPath.fillColor = this.fillColor;
+            this.currentPath.fillAlpha = this.fillAlpha;
+        }
+    }
     return this;
 };
 
@@ -506,14 +557,7 @@ PIXI.Graphics.prototype.endFill = function()
  */
 PIXI.Graphics.prototype.drawRect = function( x, y, width, height )
 {
-    if (!this.currentPath.points.length) this.graphicsData.pop();
-
-    this.currentPath = {lineWidth:this.lineWidth, lineColor:this.lineColor, lineAlpha:this.lineAlpha,
-                        fillColor:this.fillColor, fillAlpha:this.fillAlpha, fill:this.filling,
-                        points:[x, y, width, height], type:PIXI.Graphics.RECT};
-
-    this.graphicsData.push(this.currentPath);
-    this.dirty = true;
+    this.drawShape(new PIXI.Rectangle(x,y, width, height));
 
     return this;
 };
@@ -526,21 +570,21 @@ PIXI.Graphics.prototype.drawRect = function( x, y, width, height )
  * @param width {Number} The width of the rectangle
  * @param height {Number} The height of the rectangle
  * @param radius {Number} Radius of the rectangle corners
- */
+ *//*
 PIXI.Graphics.prototype.drawRoundedRect = function( x, y, width, height, radius )
 {
     if (!this.currentPath.points.length) this.graphicsData.pop();
 
-    this.currentPath = {lineWidth:this.lineWidth, lineColor:this.lineColor, lineAlpha:this.lineAlpha,
-                        fillColor:this.fillColor, fillAlpha:this.fillAlpha, fill:this.filling,
-                        points:[x, y, width, height, radius], type:PIXI.Graphics.RREC};
+  //  this.currentPath = {lineWidth:this.lineWidth, lineColor:this.lineColor, lineAlpha:this.lineAlpha,
+    ///                    fillColor:this.fillColor, fillAlpha:this.fillAlpha, fill:this.filling,
+       //                 points:[x, y, width, height, radius], shape:new PIXI.Rectangle(x,y, width, height), type:PIXI.Graphics.RREC};
 
     this.graphicsData.push(this.currentPath);
     this.dirty = true;
 
     return this;
 };
-
+*/
 /**
  * Draws a circle.
  *
@@ -551,15 +595,7 @@ PIXI.Graphics.prototype.drawRoundedRect = function( x, y, width, height, radius 
  */
 PIXI.Graphics.prototype.drawCircle = function(x, y, radius)
 {
-
-    if (!this.currentPath.points.length) this.graphicsData.pop();
-
-    this.currentPath = {lineWidth:this.lineWidth, lineColor:this.lineColor, lineAlpha:this.lineAlpha,
-                        fillColor:this.fillColor, fillAlpha:this.fillAlpha, fill:this.filling,
-                        points:[x, y, radius, radius], type:PIXI.Graphics.CIRC};
-
-    this.graphicsData.push(this.currentPath);
-    this.dirty = true;
+    this.drawShape(new PIXI.Circle(x,y, radius));
 
     return this;
 };
@@ -575,16 +611,23 @@ PIXI.Graphics.prototype.drawCircle = function(x, y, radius)
  */
 PIXI.Graphics.prototype.drawEllipse = function(x, y, width, height)
 {
+    this.drawShape(new PIXI.Ellipse(x, y, width, height));
 
-    if (!this.currentPath.points.length) this.graphicsData.pop();
+    return this;
+};
 
-    this.currentPath = {lineWidth:this.lineWidth, lineColor:this.lineColor, lineAlpha:this.lineAlpha,
-                        fillColor:this.fillColor, fillAlpha:this.fillAlpha, fill:this.filling,
-                        points:[x, y, width, height], type:PIXI.Graphics.ELIP};
-
-    this.graphicsData.push(this.currentPath);
-    this.dirty = true;
-
+/**
+ * Draws a line using the current line style from the current drawing position to (x, y);
+ * the current drawing position is then set to (x, y).
+ *
+ * @method lineTo
+ * @param x {Number} the X coordinate to draw to
+ * @param y {Number} the Y coordinate to draw to
+ */
+PIXI.Graphics.prototype.drawPolygon = function(path)
+{
+    if(!(path instanceof Array))path = Array.prototype.slice.call(arguments);
+    this.drawShape(new PIXI.Polygon(path));
     return this;
 };
 
@@ -612,14 +655,22 @@ PIXI.Graphics.prototype.clear = function()
  * This can be quite useful if your geometry is complicated and needs to be reused multiple times.
  *
  * @method generateTexture
+ * @param resolution {Number} The resolution of the texture being generated
+ * @param scaleMode {Number} Should be one of the PIXI.scaleMode consts
  * @return {Texture} a texture of the graphics object
  */
-PIXI.Graphics.prototype.generateTexture = function()
+PIXI.Graphics.prototype.generateTexture = function(resolution, scaleMode)
 {
+    resolution = resolution || 2;
+
     var bounds = this.getBounds();
 
-    var canvasBuffer = new PIXI.CanvasBuffer(bounds.width, bounds.height);
-    var texture = PIXI.Texture.fromCanvas(canvasBuffer.canvas);
+    var canvasBuffer = new PIXI.CanvasBuffer(bounds.width * resolution, bounds.height * resolution);
+    
+    var texture = PIXI.Texture.fromCanvas(canvasBuffer.canvas, scaleMode);
+    texture.baseTexture.resolution = resolution;
+
+    canvasBuffer.context.scale(resolution, resolution);
 
     canvasBuffer.context.translate(-bounds.x,-bounds.y);
     
@@ -727,10 +778,17 @@ PIXI.Graphics.prototype._renderCanvas = function(renderSession)
 
     if(this._mask)
     {
-        renderSession.maskManager.pushMask(this._mask, renderSession.context);
+        renderSession.maskManager.pushMask(this._mask, renderSession);
     }
 
-    context.setTransform(transform.a, transform.c, transform.b, transform.d, transform.tx, transform.ty);
+    var resolution = renderSession.resolution;
+    context.setTransform(transform.a * resolution,
+                         transform.b * resolution,
+                         transform.c * resolution,
+                         transform.d * resolution,
+                         transform.tx * resolution,
+                         transform.ty * resolution);
+
     PIXI.CanvasGraphics.renderGraphics(this, context);
 
      // simple render children!
@@ -741,7 +799,7 @@ PIXI.Graphics.prototype._renderCanvas = function(renderSession)
 
     if(this._mask)
     {
-        renderSession.maskManager.popMask(renderSession.context);
+        renderSession.maskManager.popMask(renderSession);
     }
 };
 
@@ -829,34 +887,47 @@ PIXI.Graphics.prototype.updateBounds = function()
     var minY = Infinity;
     var maxY = -Infinity;
 
-    var points, x, y, w, h;
+    var shape, points, x, y, w, h;
 
     for (var i = 0; i < this.graphicsData.length; i++) {
         var data = this.graphicsData[i];
         var type = data.type;
         var lineWidth = data.lineWidth;
-
-        points = data.points;
+        shape = data.shape;
+       
 
         if(type === PIXI.Graphics.RECT)
         {
-            x = points[0] - lineWidth/2;
-            y = points[1] - lineWidth/2;
-            w = points[2] + lineWidth;
-            h = points[3] + lineWidth;
+            x = shape.x - lineWidth/2;
+            y = shape.y - lineWidth/2;
+            w = shape.width + lineWidth;
+            h = shape.height + lineWidth;
 
             minX = x < minX ? x : minX;
             maxX = x + w > maxX ? x + w : maxX;
 
-            minY = y < minY ? x : minY;
+            minY = y < minY ? y : minY;
             maxY = y + h > maxY ? y + h : maxY;
         }
-        else if(type === PIXI.Graphics.CIRC || type === PIXI.Graphics.ELIP)
+        else if(type === PIXI.Graphics.CIRC)
         {
-            x = points[0];
-            y = points[1];
-            w = points[2] + lineWidth/2;
-            h = points[3] + lineWidth/2;
+            x = shape.x;
+            y = shape.y;
+            w = shape.radius + lineWidth/2;
+            h = shape.radius + lineWidth/2;
+
+            minX = x - w < minX ? x - w : minX;
+            maxX = x + w > maxX ? x + w : maxX;
+
+            minY = y - h < minY ? y - h : minY;
+            maxY = y + h > maxY ? y + h : maxY;
+        }
+        else if(type === PIXI.Graphics.ELIP)
+        {
+            x = shape.x;
+            y = shape.y;
+            w = shape.width + lineWidth/2;
+            h = shape.height + lineWidth/2;
 
             minX = x - w < minX ? x - w : minX;
             maxX = x + w > maxX ? x + w : maxX;
@@ -867,6 +938,8 @@ PIXI.Graphics.prototype.updateBounds = function()
         else
         {
             // POLY
+            points = shape.points;
+            
             for (var j = 0; j < points.length; j+=2)
             {
 
@@ -933,6 +1006,46 @@ PIXI.Graphics.prototype.destroyCachedSprite = function()
     this._cachedSprite = null;
 };
 
+PIXI.Graphics.prototype.drawShape = function(shape)
+{
+    if(this.currentPath)
+    {
+        // check current path!
+        if(this.currentPath.shape.points.length <= 2)this.graphicsData.pop();
+    }
+
+    this.currentPath = null;
+
+    var data = new PIXI.GraphicsData(this.lineWidth, this.lineColor, this.lineAlpha, this.fillColor, this.fillAlpha, this.filling, shape);
+    
+    this.graphicsData.push(data);
+    
+    if(data.type === PIXI.Graphics.POLY)
+    {
+        data.shape.closed = this.filling;
+        this.currentPath = data;
+    }
+
+    this.dirty = true;
+
+    return data;
+
+};
+
+PIXI.GraphicsData = function(lineWidth, lineColor, lineAlpha, fillColor, fillAlpha, fill, shape)
+{
+    this.lineWidth = lineWidth;
+    this.lineColor = lineColor;
+    this.lineAlpha = lineAlpha;
+
+    this.fillColor = fillColor;
+    this.fillAlpha = fillAlpha;
+    this.fill = fill;
+
+    this.shape = shape;
+    this.type = shape.type;
+};
+
 
 // SOME TYPES:
 PIXI.Graphics.POLY = 0;
@@ -940,4 +1053,10 @@ PIXI.Graphics.RECT = 1;
 PIXI.Graphics.CIRC = 2;
 PIXI.Graphics.ELIP = 3;
 PIXI.Graphics.RREC = 4;
+
+
+PIXI.Polygon.prototype.type = PIXI.Graphics.POLY;
+PIXI.Rectangle.prototype.type = PIXI.Graphics.RECT;
+PIXI.Circle.prototype.type = PIXI.Graphics.CIRC;
+PIXI.Ellipse.prototype.type = PIXI.Graphics.ELIP;
 

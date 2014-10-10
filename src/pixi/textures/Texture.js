@@ -16,11 +16,11 @@ PIXI.TextureCacheIdGenerator = 0;
  * @constructor
  * @param baseTexture {BaseTexture} The base texture source to create the texture from
  * @param frame {Rectangle} The rectangle frame of the texture to show
+ * @param [crop] {Rectangle} The area of original texture 
+ * @param [trim] {Rectangle} Trimmed texture rectangle
  */
-PIXI.Texture = function(baseTexture, frame)
+PIXI.Texture = function(baseTexture, frame, crop, trim)
 {
-    PIXI.EventTarget.call( this );
-
     /**
      * Does this Texture have any frame data assigned to it?
      *
@@ -62,7 +62,7 @@ PIXI.Texture = function(baseTexture, frame)
      * @property trim
      * @type Rectangle
      */
-    this.trim = null;
+    this.trim = trim;
 
     /**
      * This will let the renderer know if the texture is valid. If its not then it cannot be rendered.
@@ -71,6 +71,14 @@ PIXI.Texture = function(baseTexture, frame)
      * @type Boolean
      */
     this.valid = false;
+
+    /**
+     * This will let a renderer know that a texture has been updated (used mainly for webGL uv updates)
+     *
+     * @property requiresUpdate
+     * @type Boolean
+     */
+    this.requiresUpdate = false;
 
     /**
      * The WebGL UV data cache.
@@ -104,7 +112,7 @@ PIXI.Texture = function(baseTexture, frame)
      * @property crop
      * @type Rectangle
      */
-    this.crop = new PIXI.Rectangle(0, 0, 1, 1);
+    this.crop = crop || new PIXI.Rectangle(0, 0, 1, 1);
 
     if (baseTexture.hasLoaded)
     {
@@ -118,6 +126,7 @@ PIXI.Texture = function(baseTexture, frame)
 };
 
 PIXI.Texture.prototype.constructor = PIXI.Texture;
+PIXI.EventTarget.mixin(PIXI.Texture.prototype);
 
 /**
  * Called when the base texture is loaded
@@ -184,8 +193,8 @@ PIXI.Texture.prototype.setFrame = function(frame)
         this.frame.width = this.trim.width;
         this.frame.height = this.trim.height;
     }
-
-    if (this.valid) PIXI.Texture.frameUpdates.push(this);
+    
+    if (this.valid) this._updateUvs();
 
 };
 
@@ -195,14 +204,14 @@ PIXI.Texture.prototype.setFrame = function(frame)
  * @method _updateWebGLuvs
  * @private
  */
-PIXI.Texture.prototype._updateWebGLuvs = function()
+PIXI.Texture.prototype._updateUvs = function()
 {
     if(!this._uvs)this._uvs = new PIXI.TextureUvs();
 
     var frame = this.crop;
     var tw = this.baseTexture.width;
     var th = this.baseTexture.height;
-
+    
     this._uvs.x0 = frame.x / tw;
     this._uvs.y0 = frame.y / th;
 
@@ -305,8 +314,6 @@ PIXI.Texture.removeTextureFromCache = function(id)
     return texture;
 };
 
-// this is more for webGL.. it contains updated frames..
-PIXI.Texture.frameUpdates = [];
 
 PIXI.TextureUvs = function()
 {
@@ -321,6 +328,4 @@ PIXI.TextureUvs = function()
 
     this.x3 = 0;
     this.y3 = 0;
-
-
 };

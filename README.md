@@ -75,6 +75,7 @@ Version 2.1.3 - "Ravinda" - in development
 
 ### New Features
 
+* Updated to Pixi v2.0.0
 
 ### Updates
 

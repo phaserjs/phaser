@@ -1,10 +1,6 @@
 /**
  * @author Mat Groves http://matgroves.com/ @Doormat23
  */
- 
-//BA0285
-//Intercontinental Hotel, 888 Howard Street
-//San Francisco
 
 /**
 * @class WebGLStencilManager
@@ -12,11 +8,11 @@
 * @param gl {WebGLContext} the current WebGL drawing context
 * @private
 */
-PIXI.WebGLStencilManager = function(gl)
+PIXI.WebGLStencilManager = function()
 {
    
     this.stencilStack = [];
-    this.setContext(gl);
+    //this.setContext(gl);
     this.reverse = true;
     this.count = 0;
 
@@ -273,8 +269,6 @@ PIXI.WebGLStencilManager.prototype.popStencil = function(graphics, webGLData, re
 
 
     }
-
-    //renderSession.shaderManager.deactivatePrimitiveShader();
 };
 
 /**

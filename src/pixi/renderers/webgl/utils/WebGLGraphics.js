@@ -131,12 +131,25 @@ PIXI.WebGLGraphics.updateGraphics = function(graphics, gl)
     {
         var data = graphics.graphicsData[i];
 
+        
+
         if(data.type === PIXI.Graphics.POLY)
         {
+            // need to add the points the the graphics object..
+            data.points = data.shape.points.slice();
+            if(data.shape.closed)
+            {
+                // close the poly if the valu is true!
+                if(data.points[0] !== data.points[data.points.length-2] && data.points[1] !== data.points[data.points.length-1])
+                {
+                    data.points.push(data.points[0], data.points[1]);
+                }
+            }
+
             // MAKE SURE WE HAVE THE CORRECT TYPE..
             if(data.fill)
             {
-                if(data.points.length > 6)
+                if(data.points.length >= 6)
                 {
                     if(data.points.length > 5 * 2)
                     {
@@ -230,12 +243,11 @@ PIXI.WebGLGraphics.buildRectangle = function(graphicsData, webGLData)
     // --- //
     // need to convert points to a nice regular data
     //
-    var rectData = graphicsData.points;
-    var x = rectData[0];
-    var y = rectData[1];
-    var width = rectData[2];
-    var height = rectData[3];
-
+    var rectData = graphicsData.shape;
+    var x = rectData.x;
+    var y = rectData.y;
+    var width = rectData.width;
+    var height = rectData.height;
 
     if(graphicsData.fill)
     {
@@ -359,13 +371,16 @@ PIXI.WebGLGraphics.buildRoundedRectangle = function(graphicsData, webGLData)
  * Calcul the points for a quadratic bezier curve. (helper function..)
  * Based on : https://stackoverflow.com/questions/785097/how-do-i-implement-a-bezier-curve-in-c
  *
- * @param  {number}   fromX Origin point x
- * @param  {number}   fromY Origin point x
- * @param  {number}   cpX   Control point x
- * @param  {number}   cpY   Control point y
- * @param  {number}   toX   Destination point x
- * @param  {number}   toY   Destination point y
- * @return {number[]}
+ * @static
+ * @private
+ * @method quadraticBezierCurve
+ * @param fromX {Number} Origin point x
+ * @param fromY {Number} Origin point x
+ * @param cpX {Number} Control point x
+ * @param cpY {Number} Control point y
+ * @param toX {Number} Destination point x
+ * @param toY {Number} Destination point y
+ * @return {Array<Number>}
  */
 PIXI.WebGLGraphics.quadraticBezierCurve = function(fromX, fromY, cpX, cpY, toX, toY) {
     var xa,
@@ -414,13 +429,24 @@ PIXI.WebGLGraphics.quadraticBezierCurve = function(fromX, fromY, cpX, cpY, toX, 
  */
 PIXI.WebGLGraphics.buildCircle = function(graphicsData, webGLData)
 {
-    
     // need to convert points to a nice regular data
-    var rectData = graphicsData.points;
-    var x = rectData[0];
-    var y = rectData[1];
-    var width = rectData[2];
-    var height = rectData[3];
+    var circleData = graphicsData.shape;
+    var x = circleData.x;
+    var y = circleData.y;
+    var width;
+    var height;
+    
+    // TODO - bit hacky??
+    if(graphicsData.type === PIXI.Graphics.CIRC)
+    {
+        width = circleData.radius;
+        height = circleData.radius;
+    }
+    else
+    {
+        width = circleData.width;
+        height = circleData.height;
+    }
 
     var totalSegs = 40;
     var seg = (Math.PI * 2) / totalSegs ;
@@ -488,7 +514,6 @@ PIXI.WebGLGraphics.buildLine = function(graphicsData, webGLData)
 {
     // TODO OPTIMISE!
     var i = 0;
-
     var points = graphicsData.points;
     if(points.length === 0)return;
 
@@ -754,8 +779,8 @@ PIXI.WebGLGraphics.buildComplexPoly = function(graphicsData, webGLData)
 PIXI.WebGLGraphics.buildPoly = function(graphicsData, webGLData)
 {
     var points = graphicsData.points;
-    if(points.length < 6)return;
 
+    if(points.length < 6)return;
     // get first and last point.. figure out the middle!
     var verts = webGLData.points;
     var indices = webGLData.indices;

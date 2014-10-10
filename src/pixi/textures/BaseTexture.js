@@ -3,8 +3,6 @@
  */
 
 PIXI.BaseTextureCache = {};
-PIXI.texturesToUpdate = [];
-PIXI.texturesToDestroy = [];
 
 PIXI.BaseTextureCacheIdGenerator = 0;
 
@@ -19,8 +17,14 @@ PIXI.BaseTextureCacheIdGenerator = 0;
  */
 PIXI.BaseTexture = function(source, scaleMode)
 {
-    PIXI.EventTarget.call( this );
-
+    /**
+     * The Resolution of the texture. 
+     *
+     * @property resolution
+     * @type Number
+     */
+    this.resolution = 1;
+    
     /**
      * [read-only] The width of the base texture set when the image has loaded
      *
@@ -76,21 +80,24 @@ PIXI.BaseTexture = function(source, scaleMode)
     */
     this.premultipliedAlpha = true;
 
+
+    
+
     // used for webGL
     this._glTextures = [];
+    // used for webGL texture updating...
+    // TODO - this needs to be addressed
+    this._dirty = [true, true, true, true];
 
-    // used for webGL teture updateing...
-    this._dirty = [];
 
     if(!source)return;
 
     if((this.source.complete || this.source.getContext) && this.source.width && this.source.height)
     {
         this.hasLoaded = true;
-        this.width = this.source.width;
-        this.height = this.source.height;
-
-        PIXI.texturesToUpdate.push(this);
+        this.width = this.source.naturalWidth || this.source.width;
+        this.height = this.source.naturalHeight || this.source.height;
+        this.dirty();
     }
     else
     {
@@ -99,13 +106,10 @@ PIXI.BaseTexture = function(source, scaleMode)
         this.source.onload = function() {
 
             scope.hasLoaded = true;
-            scope.width = scope.source.width;
-            scope.height = scope.source.height;
+            scope.width = scope.source.naturalWidth || scope.source.width;
+            scope.height = scope.source.naturalHeight || scope.source.height;
 
-            for (var i = 0; i < scope._glTextures.length; i++)
-            {
-                scope._dirty[i] = true;
-            }
+            scope.dirty();
 
             // add it to somewhere...
             scope.dispatchEvent( { type: 'loaded', content: scope } );
@@ -123,6 +127,7 @@ PIXI.BaseTexture = function(source, scaleMode)
 };
 
 PIXI.BaseTexture.prototype.constructor = PIXI.BaseTexture;
+PIXI.EventTarget.mixin(PIXI.BaseTexture.prototype);
 
 /**
  * Destroys this base texture
@@ -136,14 +141,27 @@ PIXI.BaseTexture.prototype.destroy = function()
         delete PIXI.BaseTextureCache[this.imageUrl];
         delete PIXI.TextureCache[this.imageUrl];
         this.imageUrl = null;
-        this.source.src = null;
+        this.source.src = '';
     }
     else if (this.source && this.source._pixiId)
     {
         delete PIXI.BaseTextureCache[this.source._pixiId];
     }
     this.source = null;
-    PIXI.texturesToDestroy.push(this);
+
+    // delete the webGL textures if any.
+    for (var i = this._glTextures.length - 1; i >= 0; i--)
+    {
+        var glTexture = this._glTextures[i];
+        var gl = PIXI.glContexts[i];
+
+        if(gl && glTexture)
+        {
+            gl.deleteTexture(glTexture);
+        }
+    }
+
+    this._glTextures.length = 0;
 };
 
 /**
@@ -157,6 +175,14 @@ PIXI.BaseTexture.prototype.updateSourceImage = function(newSrc)
     this.hasLoaded = false;
     this.source.src = null;
     this.source.src = newSrc;
+};
+
+PIXI.BaseTexture.prototype.dirty = function()
+{
+    for (var i = 0; i < this._glTextures.length; i++)
+    {
+        this._dirty[i] = true;
+    }
 };
 
 /**
@@ -178,6 +204,7 @@ PIXI.BaseTexture.fromImage = function(imageUrl, crossorigin, scaleMode)
 
     if(!baseTexture)
     {
+
         // new Image() breaks tex loading in some versions of Chrome.
         // See https://code.google.com/p/chromium/issues/detail?id=238071
         var image = new Image();//document.createElement('img');
@@ -185,10 +212,17 @@ PIXI.BaseTexture.fromImage = function(imageUrl, crossorigin, scaleMode)
         {
             image.crossOrigin = '';
         }
+
         image.src = imageUrl;
         baseTexture = new PIXI.BaseTexture(image, scaleMode);
         baseTexture.imageUrl = imageUrl;
         PIXI.BaseTextureCache[imageUrl] = baseTexture;
+
+        // if there is an @2x at the end of the url we are going to assume its a highres image
+        if( imageUrl.indexOf(PIXI.RETINA_PREFIX + '.') !== -1)
+        {
+            baseTexture.resolution = 2;
+        }
     }
 
     return baseTexture;
