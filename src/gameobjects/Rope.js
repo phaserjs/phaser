@@ -16,7 +16,7 @@
 * @param {number} y - The y coordinate (in world space) to position the Rope at.
 * @param {string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture} key - This is the image or texture used by the Rope during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.
 * @param {string|number} frame - If this Rope is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
-* @param points Something something dark side.
+* @param {Array} points Something something dark side.
 */
 Phaser.Rope = function (game, x, y, key, frame, points) {
 
