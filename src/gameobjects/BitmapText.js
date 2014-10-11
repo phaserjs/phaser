@@ -112,6 +112,16 @@ Phaser.BitmapText = function (game, x, y, font, text, size) {
     this.position.set(x, y);
 
     /**
+    * The anchor sets the origin point of the texture.
+    * The default is 0,0 this means the textures origin is the top left 
+    * Setting than anchor to 0.5,0.5 means the textures origin is centered
+    * Setting the anchor to 1,1 would mean the textures origin points will be the bottom right
+    *
+    * @property {Phaser.Point} anchor - The anchor around which rotation and scaling takes place.
+    */
+    this.anchor = new Phaser.Point();
+
+    /**
     * A small internal cache:
     * 0 = previous position.x
     * 1 = previous position.y
@@ -173,6 +183,9 @@ Phaser.BitmapText.prototype.preUpdate = function () {
     {
         this._cache[3] = this.game.stage.currentRenderOrderID++;
     }
+
+    this.pivot.x = this.anchor.x*this.textWidth;
+    this.pivot.y = this.anchor.y*this.textHeight;
 
     return true;
 
