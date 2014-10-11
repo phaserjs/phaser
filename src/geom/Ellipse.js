@@ -69,6 +69,17 @@ Phaser.Ellipse.prototype = {
     },
 
     /**
+    * Returns the framing rectangle of the ellipse as a Phaser.Rectangle object.
+    * @method Phaser.Ellipse#getBounds
+    * @return {Phaser.Rectangle} The bounds of the Circle.
+    */
+    getBounds: function () {
+
+        return new Phaser.Rectangle(this.x - this.width, this.y - this.height, this.width, this.height);
+
+    },
+
+    /**
     * Copies the x, y, width and height properties from any given object to this Ellipse.
     * @method Phaser.Ellipse#copyFrom
     * @param {any} source - The object to copy from.

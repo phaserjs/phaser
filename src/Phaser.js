@@ -83,3 +83,8 @@ PIXI.InteractionManager = PIXI.InteractionManager || function () {};
 
 //  Equally we're going to supress the Pixi console log, with their agreement.
 PIXI.dontSayHello = true;
+
+// PIXI.Polygon.prototype.type = PIXI.Graphics.POLY;
+// PIXI.Rectangle.prototype.type = PIXI.Graphics.RECT;
+// PIXI.Circle.prototype.type = PIXI.Graphics.CIRC;
+// PIXI.Ellipse.prototype.type = PIXI.Graphics.ELIP;

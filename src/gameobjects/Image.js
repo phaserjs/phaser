@@ -360,7 +360,8 @@ Phaser.Image.prototype.setFrame = function(frame) {
     {
         if (this.game.renderType === Phaser.WEBGL)
         {
-            PIXI.WebGLRenderer.updateTextureFrame(this.texture);
+            this.texture._updateUvs();
+            // PIXI.WebGLRenderer.updateTextureFrame(this.texture);
         }
     }
 

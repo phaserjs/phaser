@@ -69,7 +69,7 @@
     <script src="$path/src/pixi/renderers/canvas/utils/CanvasTinter.js"></script>
     <script src="$path/src/pixi/renderers/canvas/CanvasRenderer.js"></script>
     <script src="$path/src/pixi/renderers/canvas/CanvasGraphics.js"></script>
-    <script src="$path/src/pixi/primitives/Graphics.js"></script>
+
     <script src="$path/src/pixi/extras/Strip.js"></script>
     <script src="$path/src/pixi/extras/Rope.js"></script>
     <script src="$path/src/pixi/extras/TilingSprite.js"></script>
@@ -86,6 +86,8 @@
     <script src="$path/src/geom/Line.js"></script>
     <script src="$path/src/geom/Ellipse.js"></script>
     <script src="$path/src/geom/Polygon.js"></script>
+
+    <script src="$path/src/pixi/primitives/Graphics.js"></script>
 
     <script src="$path/src/core/Camera.js"></script>
     <script src="$path/src/core/State.js"></script>

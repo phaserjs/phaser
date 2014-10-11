@@ -27,6 +27,8 @@ Phaser.Polygon = function (points) {
 
 Phaser.Polygon.prototype = {
 
+    type: null,
+
     /**
      * Creates a copy of the given Polygon.
      * This is a deep clone, the resulting copy contains new Phaser.Point objects

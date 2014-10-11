@@ -53,6 +53,8 @@ Phaser.Circle = function (x, y, diameter) {
 
 Phaser.Circle.prototype = {
 
+    type: null,
+
     /**
     * The circumference of the circle.
     * @method Phaser.Circle#circumference
@@ -60,6 +62,15 @@ Phaser.Circle.prototype = {
     */
     circumference: function () {
         return 2 * (Math.PI * this._radius);
+    },
+
+    /**
+    * Returns the framing rectangle of the circle as a Phaser.Rectangle object
+    * @method Phaser.Circle#getBounds
+    * @return {Phaser.Rectangle} The bounds of the Circle.
+    */
+    getBounds: function () {
+        return new Phaser.Rectangle(this.x - this.radius, this.y - this.radius, this.radius * 2, this.radius * 2);
     },
 
     /**

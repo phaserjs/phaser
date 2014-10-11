@@ -80,6 +80,8 @@ Version 2.1.3 - "Ravinda" - in development
 ### Updates
 
 * Changed the Animation constructor parameter `delay` to `frameRate` as it's a more accurate term of what it should be. Internally nothing changed.
+* Circle.getBounds added.
+* Ellipse.getBounds added.
 
 ### Bug Fixes
 
