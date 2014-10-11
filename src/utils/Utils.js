@@ -217,9 +217,9 @@ Phaser.Utils = {
     */
     pad: function (str, len, pad, dir) {
 
-        if (typeof(len) == "undefined") { var len = 0; }
-        if (typeof(pad) == "undefined") { var pad = ' '; }
-        if (typeof(dir) == "undefined") { var dir = 3; }
+        if (typeof(len) === "undefined") { var len = 0; }
+        if (typeof(pad) === "undefined") { var pad = ' '; }
+        if (typeof(dir) === "undefined") { var dir = 3; }
 
         var padlen = 0;
 
@@ -415,7 +415,7 @@ Phaser.Utils = {
 /**
 * A polyfill for Function.prototype.bind
 */
-if (typeof Function.prototype.bind != 'function') {
+if (typeof Function.prototype.bind !== 'function') {
 
     /* jshint freeze: false */
     Function.prototype.bind = (function () {
@@ -426,7 +426,7 @@ if (typeof Function.prototype.bind != 'function') {
 
             var target = this, boundArgs = slice.call(arguments, 1);
 
-            if (typeof target != 'function')
+            if (typeof target !== 'function')
             {
                 throw new TypeError();
             }

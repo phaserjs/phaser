@@ -237,7 +237,7 @@ Phaser.AnimationManager.prototype = {
     */
     validateFrames: function (frames, useNumericIndex) {
 
-        if (typeof useNumericIndex == 'undefined') { useNumericIndex = true; }
+        if (typeof useNumericIndex === 'undefined') { useNumericIndex = true; }
 
         for (var i = 0; i < frames.length; i++)
         {
@@ -311,9 +311,9 @@ Phaser.AnimationManager.prototype = {
     */
     stop: function (name, resetFrame) {
 
-        if (typeof resetFrame == 'undefined') { resetFrame = false; }
+        if (typeof resetFrame === 'undefined') { resetFrame = false; }
 
-        if (typeof name == 'string')
+        if (typeof name === 'string')
         {
             if (this._anims[name])
             {

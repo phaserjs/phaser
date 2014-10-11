@@ -410,7 +410,7 @@ Phaser.Animation.prototype = {
                     this._parent.__tilePattern = false;
                     this._parent.tilingTexture = false;
                 }
-    
+
                 if (this.onUpdate)
                 {
                     this.onUpdate.dispatch(this, this.currentFrame);
@@ -544,7 +544,7 @@ Phaser.Animation.prototype = {
 
         this.game.onPause.remove(this.onPause, this);
         this.game.onResume.remove(this.onResume, this);
-        
+
         this.game = null;
         this._parent = null;
         this._frames = null;
@@ -742,7 +742,7 @@ Object.defineProperty(Phaser.Animation.prototype, 'enableUpdate', {
 */
 Phaser.Animation.generateFrameNames = function (prefix, start, stop, suffix, zeroPad) {
 
-    if (typeof suffix == 'undefined') { suffix = ''; }
+    if (typeof suffix === 'undefined') { suffix = ''; }
 
     var output = [];
     var frame = '';
@@ -751,7 +751,7 @@ Phaser.Animation.generateFrameNames = function (prefix, start, stop, suffix, zer
     {
         for (var i = start; i <= stop; i++)
         {
-            if (typeof zeroPad == 'number')
+            if (typeof zeroPad === 'number')
             {
                 //  str, len, pad, dir
                 frame = Phaser.Utils.pad(i.toString(), zeroPad, '0', 1);
@@ -770,7 +770,7 @@ Phaser.Animation.generateFrameNames = function (prefix, start, stop, suffix, zer
     {
         for (var i = start; i >= stop; i--)
         {
-            if (typeof zeroPad == 'number')
+            if (typeof zeroPad === 'number')
             {
                 //  str, len, pad, dir
                 frame = Phaser.Utils.pad(i.toString(), zeroPad, '0', 1);
