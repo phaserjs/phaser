@@ -82,6 +82,7 @@ Version 2.1.3 - "Ravinda" - in development
 * Changed the Animation constructor parameter `delay` to `frameRate` as it's a more accurate term of what it should be. Internally nothing changed.
 * Circle.getBounds added.
 * Ellipse.getBounds added.
+* Device.canPlayAudio now supports the `opus` files directly, as well as `opus` encoded audio stored in ogg containers (#1232)
 
 ### Bug Fixes
 
