@@ -76,13 +76,15 @@ Version 2.1.3 - "Ravinda" - in development
 ### New Features
 
 * Updated to Pixi v2.0.0
+* Time.prevTime is a new property that contains the raw value of the game timer from the previous update.
 
 ### Updates
 
 * Changed the Animation constructor parameter `delay` to `frameRate` as it's a more accurate term of what it should be. Internally nothing changed.
 * Circle.getBounds added.
 * Ellipse.getBounds added.
-* Device.canPlayAudio now supports the `opus` files directly, as well as `opus` encoded audio stored in ogg containers (#1232)
+* Device.canPlayAudio now supports `opus` files directly, as well as `opus` encoded audio stored in ogg containers (#1232)
+* Timer.timeCap has been changed from `1000` to `1 / 60 * 1000` to bring it in line with Time.timeCap.
 
 ### Bug Fixes
 

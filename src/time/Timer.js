@@ -67,7 +67,7 @@ Phaser.Timer = function (game, autoDestroy) {
     /**
     * @property {number} timeCap - If the difference in time between two frame updates exceeds this value, the event times are reset to avoid catch-up situations.
     */
-    this.timeCap = 1000;
+    this.timeCap = 1 / 60 * 1000;
 
     /**
     * @property {boolean} paused - The paused state of the Timer. You can pause the timer by calling Timer.pause() and Timer.resume() or by the game pausing.

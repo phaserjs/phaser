@@ -5228,7 +5228,9 @@ declare module Phaser {
         pausedTime: number;
         pauseDuration: number;
         physicsElapsed: number;
+        prevTime: number;
         time: number;
+        timeCap: number;
         timeToCall: number;
 
         add(timer: Phaser.Timer): Phaser.Timer;
