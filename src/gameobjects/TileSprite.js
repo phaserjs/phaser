@@ -424,11 +424,7 @@ Phaser.TileSprite.prototype.setFrame = function(frame) {
         this.texture.trim = null;
     }
 
-    if (this.game.renderType === Phaser.WEBGL)
-    {
-        this.texture._updateUvs();
-        // PIXI.WebGLRenderer.updateTextureFrame(this.texture);
-    }
+    this.texture.baseTexture.dirty();
 
 };
 

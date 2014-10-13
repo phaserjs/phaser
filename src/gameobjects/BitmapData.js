@@ -1301,13 +1301,9 @@ Phaser.BitmapData.prototype = {
     */
     render: function () {
 
-        if (!this.disableTextureUpload && this.game.renderType === Phaser.WEBGL && this.dirty)
+        if (!this.disableTextureUpload && this.dirty)
         {
-            //  Only needed if running in WebGL, otherwise this array will never get cleared down
-            //  should use the rendersession
-            // PIXI.updateWebGLTexture(this.baseTexture, this.game.renderer.gl);
-            // this.baseTexture._updateUvs();
-
+            this.baseTexture.dirty();
             this.dirty = false;
         }
 

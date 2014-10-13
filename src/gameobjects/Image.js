@@ -358,11 +358,7 @@ Phaser.Image.prototype.setFrame = function(frame) {
     }
     else
     {
-        if (this.game.renderType === Phaser.WEBGL)
-        {
-            this.texture._updateUvs();
-            // PIXI.WebGLRenderer.updateTextureFrame(this.texture);
-        }
+        this.texture.baseTexture.dirty();
     }
 
 };
