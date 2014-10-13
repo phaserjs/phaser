@@ -76,6 +76,9 @@
     <script src="$path/src/pixi/textures/BaseTexture.js"></script>
     <script src="$path/src/pixi/textures/Texture.js"></script>
     <script src="$path/src/pixi/textures/RenderTexture.js"></script>
+    <script src="$path/src/pixi/filters/AbstractFilter.js"></script>
+    <script src="$path/src/pixi/filters/AsciiFilter.js"></script>
+    <script src="$path/src/pixi/filters/TwistFilter.js"></script>
 
     <script src="$path/src/Phaser.js"></script>
     <script src="$path/src/utils/Utils.js"></script>
