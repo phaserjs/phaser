@@ -73,10 +73,13 @@ Finally the list of [community authored Phaser Tutorials](http://www.lessmilk.co
 
 Version 2.1.3 - "Ravinda" - in development
 
+
 ### New Features
 
 * Updated to Pixi v2.0.0
+* Happily removed the IE11 WebGL lock as Pixi now fully supports it :)
 * Time.prevTime is a new property that contains the raw value of the game timer from the previous update.
+
 
 ### Updates
 
@@ -85,6 +88,8 @@ Version 2.1.3 - "Ravinda" - in development
 * Ellipse.getBounds added.
 * Device.canPlayAudio now supports `opus` files directly, as well as `opus` encoded audio stored in ogg containers (#1232)
 * Timer.timeCap has been changed from `1000` to `1 / 60 * 1000` to bring it in line with Time.timeCap.
+* PIXI.AbstractFilter is now bundled by default, to support the new `sprite.shader` feature in Pixi 2.
+
 
 ### Bug Fixes
 
