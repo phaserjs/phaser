@@ -5,7 +5,7 @@
 */
 
 /**
-* This is a base Filter template to use for any Phaser filter development.
+* This is a base Filter class to use for any Phaser filter development.
 *
 * @class Phaser.Filter
 * @constructor
@@ -52,16 +52,37 @@ Phaser.Filter = function (game, uniforms, fragmentSrc) {
     */
     this.padding = 0;
 
+    /*
+    * The supported types are: 1f, 1fv, 1i, 2f, 2fv, 2i, 2iv, 3f, 3fv, 3i, 3iv, 4f, 4fv, 4i, 4iv, mat2, mat3, mat4 and sampler2D.
+    */
+
+    var d = new Date();
+
     /**
-    * @property {object} uniforms - Default uniform mappings.
+    * @property {object} uniforms - Default uniform mappings. Compatible with ShaderToy and GLSLSandbox.
     */
     this.uniforms = {
 
-        time: { type: '1f', value: 0 },
         resolution: { type: '2f', value: { x: 256, y: 256 }},
-        mouse: { type: '2f', value: { x: 0.0, y: 0.0 }}
+        time: { type: '1f', value: 0 },
+        mouse: { type: '2f', value: { x: 0.0, y: 0.0 } },
+        date: { type: '4fv', value: [ d.getFullYear(),  d.getMonth(),  d.getDate(), d.getHours() *60 * 60 + d.getMinutes() * 60 + d.getSeconds() ] },
+        sampleRate: { type: '1f', value: 44100.0 },
+        iChannel0: { type: 'sampler2D', value: null, textureData: { repeat: true } },
+        iChannel1: { type: 'sampler2D', value: null, textureData: { repeat: true } },
+        iChannel2: { type: 'sampler2D', value: null, textureData: { repeat: true } },
+        iChannel3: { type: 'sampler2D', value: null, textureData: { repeat: true } }
 
     };
+
+    //  Copy over/replace any passed in the constructor
+    if (uniforms)
+    {
+        for (var key in uniforms)
+        {
+            this.uniforms[key] = uniforms[key];
+        }
+    }
 
     /**
     * @property {array} fragmentSrc - The fragment shader code.
