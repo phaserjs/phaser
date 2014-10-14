@@ -153,7 +153,7 @@ Phaser.Utils.Debug.prototype = {
 
         if (this.sprite)
         {
-            PIXI.updateWebGLTexture(this.baseTexture, this.game.renderer.gl);
+            this.baseTexture.dirty();
         }
 
     },
@@ -208,7 +208,7 @@ Phaser.Utils.Debug.prototype = {
 
         if (this.sprite)
         {
-            PIXI.updateWebGLTexture(this.baseTexture, this.game.renderer.gl);
+            this.baseTexture.dirty();
         }
 
     },
