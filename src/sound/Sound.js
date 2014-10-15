@@ -16,8 +16,8 @@
 */
 Phaser.Sound = function (game, key, volume, loop, connect) {
 
-    if (typeof volume == 'undefined') { volume = 1; }
-    if (typeof loop == 'undefined') { loop = false; }
+    if (typeof volume === 'undefined') { volume = 1; }
+    if (typeof loop === 'undefined') { loop = false; }
     if (typeof connect === 'undefined') { connect = game.sound.connectToMaster; }
 
     /**
@@ -306,7 +306,7 @@ Phaser.Sound = function (game, key, volume, loop, connect) {
     * @private
     */
     this._paused = false;
-    
+
     /**
     * @property {boolean} _onDecodedEventDispatched - Was the onDecoded event dispatched?
     * @private
@@ -345,8 +345,8 @@ Phaser.Sound.prototype = {
     */
     addMarker: function (name, start, duration, volume, loop) {
 
-        if (typeof volume == 'undefined') { volume = 1; }
-        if (typeof loop == 'undefined') { loop = false; }
+        if (typeof volume === 'undefined') { volume = 1; }
+        if (typeof loop === 'undefined') { loop = false; }
 
         this.markers[name] = {
             name: name,
@@ -377,7 +377,7 @@ Phaser.Sound.prototype = {
     * @protected
     */
     update: function () {
-        
+
         if (this.isDecoded && !this._onDecodedEventDispatched)
         {
             this.onDecoded.dispatch(this);
@@ -642,7 +642,7 @@ Phaser.Sound.prototype = {
         }
 
         return this;
-        
+
     },
 
     /**
@@ -659,7 +659,7 @@ Phaser.Sound.prototype = {
         marker = marker || '';
         position = position || 0;
         volume = volume || 1;
-        if (typeof loop == 'undefined') { loop = false; }
+        if (typeof loop === 'undefined') { loop = false; }
 
         this.play(marker, position, volume, loop, true);
 
@@ -789,7 +789,7 @@ Phaser.Sound.prototype = {
     /**
      * Starts this sound playing (or restarts it if already doing so) and sets the volume to zero.
      * Then increases the volume from 0 to 1 over the duration specified.
-     * At the end of the fade Sound.onFadeComplete is dispatched with this Sound object as the first parameter, 
+     * At the end of the fade Sound.onFadeComplete is dispatched with this Sound object as the first parameter,
      * and the final volume (1) as the second parameter.
      *
      * @method Phaser.Sound#fadeIn
@@ -816,7 +816,7 @@ Phaser.Sound.prototype = {
 
     /**
      * Decreases the volume of this Sound from its current value to 0 over the duration specified.
-     * At the end of the fade Sound.onFadeComplete is dispatched with this Sound object as the first parameter, 
+     * At the end of the fade Sound.onFadeComplete is dispatched with this Sound object as the first parameter,
      * and the final volume (0) as the second parameter.
      *
      * @method Phaser.Sound#fadeOut
