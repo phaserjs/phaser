@@ -1476,7 +1476,7 @@ Phaser.Cache.prototype = {
     * @private
     */
     _resolveUrl: function (url) {
-        this._urlResolver.src = this.game.load.baseUrl + url;
+        this._urlResolver.src = this.game.load.baseURL + url;
 
         this._urlTemp = this._urlResolver.src;
 
