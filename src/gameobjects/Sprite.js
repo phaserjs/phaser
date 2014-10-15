@@ -409,6 +409,8 @@ Phaser.Sprite.prototype.loadTexture = function (key, frame, stopAnimation) {
             setFrame = !this.animations.loadFrameData(this.game.cache.getFrameData(key), frame);
         }
     }
+    
+    this.texture.baseTexture.dirty();
 
     if (setFrame)
     {
@@ -472,10 +474,8 @@ Phaser.Sprite.prototype.setFrame = function(frame) {
     {
         this.updateCrop();
     }
-    else
-    {
-        this.texture.baseTexture.dirty();
-    }
+
+    this.texture._updateUvs();
 
 };
 

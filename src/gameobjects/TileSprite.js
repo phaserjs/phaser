@@ -377,6 +377,8 @@ Phaser.TileSprite.prototype.loadTexture = function (key, frame) {
             this.animations.loadFrameData(this.game.cache.getFrameData(key), frame);
         }
     }
+    
+    this.texture.baseTexture.dirty();
 
 };
 
@@ -424,7 +426,7 @@ Phaser.TileSprite.prototype.setFrame = function(frame) {
         this.texture.trim = null;
     }
 
-    this.texture.baseTexture.dirty();
+    this.texture._updateUvs();
 
 };
 
