@@ -89,6 +89,7 @@ Version 2.1.3 - "Ravinda" - in development
 * Device.canPlayAudio now supports `opus` files directly, as well as `opus` encoded audio stored in ogg containers (#1232)
 * Timer.timeCap has been changed from `1000` to `1 / 60 * 1000` to bring it in line with Time.timeCap.
 * PIXI.AbstractFilter is now bundled by default, to support the new `sprite.shader` feature in Pixi 2.
+* Changed all typeof comparisons from == to === (thanks @bobbywilson0 #1230)
 
 
 ### Bug Fixes
