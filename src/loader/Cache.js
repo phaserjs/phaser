@@ -1469,21 +1469,24 @@ Phaser.Cache.prototype = {
     },
 
     /**
-    * Resolves a url its absolute form.
+    * Resolves a URL to its absolute form.
     *
     * @method Phaser.Cache#_resolveUrl
-    * @param {string} url - The url to resolve.
+    * @param {string} url - The URL to resolve.
+    * @return {string} The resolved URL.
     * @private
     */
     _resolveUrl: function (url) {
-        this._urlResolver.src = this.game.load.baseUrl + url;
+
+        this._urlResolver.src = this.game.load.baseURL + url;
 
         this._urlTemp = this._urlResolver.src;
 
-        // ensure no request is actually made
+        //  Ensure no request is actually made
         this._urlResolver.src = '';
 
         return this._urlTemp;
+
     },
 
     /**

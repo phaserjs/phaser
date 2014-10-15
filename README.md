@@ -93,6 +93,7 @@ Version 2.1.3 - "Ravinda" - in development
 
 ### Bug Fixes
 
+* Fixed a reference error to the Loader.baseURL in Cache._resolveUrl method (thanks @neurofuzzy #1235)
 
 For details about changes made in previous versions of Phaser see the full Change Log at https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md
 
