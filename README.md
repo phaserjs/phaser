@@ -79,6 +79,7 @@ Version 2.1.3 - "Ravinda" - in development
 * Updated to Pixi v2.0.0
 * Happily removed the IE11 WebGL lock as Pixi now fully supports it :)
 * Time.prevTime is a new property that contains the raw value of the game timer from the previous update.
+* Sound.fadeTo allows you to fade the Sound to the given volume over the duration specified (thanks @nickryall #1225)
 
 
 ### Updates

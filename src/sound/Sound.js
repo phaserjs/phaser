@@ -793,12 +793,11 @@ Phaser.Sound.prototype = {
      * and the final volume (1) as the second parameter.
      *
      * @method Phaser.Sound#fadeIn
-     * @param {number} [duration=1000] - The time in milliseconds during which the Sound should fade in.
+     * @param {number} [duration=1000] - The time in milliseconds over which the Sound should fade in.
      * @param {boolean} [loop=false] - Should the Sound be set to loop? Note that this doesn't cause the fade to repeat.
      */
     fadeIn: function (duration, loop) {
 
-        if (typeof duration === 'undefined') { duration = 1000; }
         if (typeof loop === 'undefined') { loop = false; }
 
         if (this.paused)
@@ -808,9 +807,7 @@ Phaser.Sound.prototype = {
 
         this.play('', 0, 0, loop);
 
-        var tween = this.game.add.tween(this).to( { volume: 1 }, duration, Phaser.Easing.Linear.None, true);
-
-        tween.onComplete.add(this.fadeComplete, this);
+        this.fadeTo(duration, 1);
 
     },
 
@@ -820,20 +817,11 @@ Phaser.Sound.prototype = {
      * and the final volume (0) as the second parameter.
      *
      * @method Phaser.Sound#fadeOut
-     * @param {number} [duration=1000] - The time in milliseconds during which the Sound should fade out.
+     * @param {number} [duration=1000] - The time in milliseconds over which the Sound should fade out.
      */
     fadeOut: function (duration) {
 
-        if (typeof duration === 'undefined') { duration = 1000; }
-
-        if (!this.isPlaying || this.paused || this.volume <= 0)
-        {
-            return;
-        }
-
-        var tween = this.game.add.tween(this).to( { volume: 0 }, duration, Phaser.Easing.Linear.None, true);
-
-        tween.onComplete.add(this.fadeComplete, this);
+        this.fadeTo(duration, 0);
 
     },
 
@@ -844,20 +832,20 @@ Phaser.Sound.prototype = {
      *
      * @method Phaser.Sound#fadeTo
      * @param {number} [duration=1000] - The time in milliseconds during which the Sound should fade out.
-     * @param {number} [volume] - The volume which the Sound should fade to.
+     * @param {number} [volume] - The volume which the Sound should fade to. This is a value between 0 and 1.
      */
     fadeTo: function (duration, volume) {
+
+        if (!this.isPlaying || this.paused || volume === this.volume)
+        {
+            return;
+        }
 
         if (typeof duration === 'undefined') { duration = 1000; }
 
         if (typeof volume === 'undefined')
         {
             console.warn("Phaser.Sound.fadeTo: No Volume Specified.");
-            return;
-        }
-
-        if (!this.isPlaying || this.paused || volume === this.volume)
-        {
             return;
         }
 
