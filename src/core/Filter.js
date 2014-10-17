@@ -125,12 +125,12 @@ Phaser.Filter.prototype = {
         {
             if (pointer.x > 0)
             {
-                this.uniforms.mouse.x = pointer.x.toFixed(2);
+                this.uniforms.mouse.value.x = pointer.x.toFixed(2);
             }
 
             if (pointer.y > 0)
             {
-                this.uniforms.mouse.y = pointer.y.toFixed(2);
+                this.uniforms.mouse.value.y = pointer.y.toFixed(2);
             }
         }
 
