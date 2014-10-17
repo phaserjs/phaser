@@ -52,6 +52,11 @@ Phaser.Filter = function (game, uniforms, fragmentSrc) {
     */
     this.padding = 0;
 
+    /**
+    * @property {Phaser.Point} prevPoint - The previous position of the pointer (we don't update the uniform if the same)
+    */
+    this.prevPoint = new Phaser.Point();
+
     /*
     * The supported types are: 1f, 1fv, 1i, 2f, 2fv, 2i, 2iv, 3f, 3fv, 3i, 3iv, 4f, 4fv, 4i, 4iv, mat2, mat3, mat4 and sampler2D.
     */
@@ -123,14 +128,14 @@ Phaser.Filter.prototype = {
 
         if (typeof pointer !== 'undefined')
         {
-            if (pointer.x > 0)
-            {
-                this.uniforms.mouse.value.x = pointer.x.toFixed(2);
-            }
+            var x = pointer.x / this.game.width;
+            var y = 1 - pointer.y / this.game.height;
 
-            if (pointer.y > 0)
+            if (x !== this.prevPoint.x || y !== this.prevPoint)
             {
-                this.uniforms.mouse.value.y = pointer.y.toFixed(2);
+                this.uniforms.mouse.value.x = x.toFixed(2);
+                this.uniforms.mouse.value.y = y.toFixed(2);
+                this.prevPoint.set(x, y);
             }
         }
 

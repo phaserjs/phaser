@@ -94,6 +94,7 @@ Version 2.1.3 - "Ravinda" - in development
 * PIXI.AbstractFilter is now bundled by default, to support the new `sprite.shader` feature in Pixi 2.
 * Changed all typeof comparisons from == to === (thanks @bobbywilson0 #1230)
 * JSDoc fixes in the Rope class (thanks @Rovanion)
+* Filter.update now caches the previous pointer position to avoid flooding the uniform. Also the mouse uniform is now a value between 0 and 1 depending on the position within the game view.
 
 
 ### Bug Fixes
