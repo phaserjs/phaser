@@ -393,10 +393,7 @@ Phaser.Rope.prototype.setFrame = function(frame) {
         this.texture.trim = null;
     }
 
-    if (this.game.renderType === Phaser.WEBGL)
-    {
-        PIXI.WebGLRenderer.updateTextureFrame(this.texture);
-    }
+    this.texture._updateUvs();
 
 };
 
