@@ -80,6 +80,8 @@ Version 2.1.3 - "Ravinda" - in development
 * Happily removed the IE11 WebGL lock as Pixi now fully supports it :)
 * Time.prevTime is a new property that contains the raw value of the game timer from the previous update.
 * Sound.fadeTo allows you to fade the Sound to the given volume over the duration specified (thanks @nickryall #1225)
+* BitmapData.getFirstPixel will scan the BitmapData and return the color and location of the first non-transparent pixel encountered. You can specify one of 4 scan directions: top to bottom, bottom to top, left to right and right to left.
+* BitmapData.getBounds will return a `Rectangle` object that encompasses the full extent of the non-transparent pixels in the BitmapData. This can be useful if you wish to trim away transparent pixels from the sides of a BitmapData down to size before saving.
 
 
 ### Updates

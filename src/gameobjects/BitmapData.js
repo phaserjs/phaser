@@ -818,6 +818,117 @@ Phaser.BitmapData.prototype = {
     },
 
     /**
+    * Scans the BitmapData, pixel by pixel, until it encounters a pixel that isn't transparent (i.e. has an alpha value > 0).
+    * It then stops scanning and returns an object containing the colour of the pixel in r, g and b properties and the location in the x and y properties.
+    * 
+    * The direction parameter controls from which direction it should start the scan:
+    * 
+    * 0 = top to bottom
+    * 1 = bottom to top
+    * 2 = left to right
+    * 3 = right to left
+    *
+    * @method Phaser.BitmapData#getFirstPixel
+    * @param {number} [direction=0] - The direction in which to scan for the first pixel. 0 = top to bottom, 1 = bottom to top, 2 = left to right and 3 = right to left.
+    * @return {object} Returns an object containing the colour of the pixel in the `r`, `g` and `b` properties and the location in the `x` and `y` properties.
+    */
+    getFirstPixel: function (direction) {
+
+        if (typeof direction === 'undefined') { direction = 0; }
+
+        var pixel = Phaser.Color.createColor();
+
+        var x = 0;
+        var y = 0;
+        var v = 1;
+        var scan = false;
+
+        if (direction === 1)
+        {
+            v = -1;
+            y = this.height;
+        }
+        else if (direction === 3)
+        {
+            v = -1;
+            x = this.width;
+        }
+
+        do {
+
+            Phaser.Color.unpackPixel(bmd.getPixel32(x, y), pixel);
+
+            if (direction === 0 || direction === 1)
+            {
+                //  Top to Bottom / Bottom to Top
+                x++;
+
+                if (x === this.width)
+                {
+                    x = 0;
+                    y += v;
+
+                    if (y >= this.height || y <= 0)
+                    {
+                        scan = true;
+                    }
+                }
+            }
+            else if (direction === 2 || direction === 3)
+            {
+                //  Left to Right / Right to Left
+                y++;
+
+                if (y === this.height)
+                {
+                    y = 0;
+                    x += v;
+
+                    if (x >= this.width || x <= 0)
+                    {
+                        scan = true;
+                    }
+                }
+            }
+        }
+        while (pixel.a === 0 && !scan);
+
+        pixel.x = x;
+        pixel.y = y;
+
+        return pixel;
+
+    },
+
+    /**
+    * Scans the BitmapData and calculates the bounds. This is a rectangle that defines the extent of all non-transparent pixels.
+    * The rectangle returned will extend from the top-left of the image to the bottom-right, exluding transparent pixels.
+    *
+    * @method Phaser.BitmapData#getBounds
+    * @param {Phaser.Rectangle} [rect] - If provided this Rectangle object will be populated with the bounds, otherwise a new object will be created.
+    * @return {Phaser.Rectangle} A Rectangle whose dimensions encompass the full extent of non-transparent pixels in this BitmapData.
+    */
+    getBounds: function (rect) {
+
+        if (typeof rect === 'undefined') { rect = new Phaser.Rectangle(); }
+
+        rect.x = this.getFirstPixel(2).x;
+
+        //  If we hit this, there's no point scanning any more, the image is empty
+        if (rect.x === this.width)
+        {
+            return rect.setTo(0, 0, 0, 0);
+        }
+
+        rect.y = this.getFirstPixel(0).y;
+        rect.width = (this.getFirstPixel(3).x - rect.x) + 1;
+        rect.height = (this.getFirstPixel(1).y - rect.y) + 1;
+
+        return rect;
+
+    },
+
+    /**
     * Creates a new Phaser.Image object, assigns this BitmapData to be its texture, adds it to the world then returns it.
     *
     * @method Phaser.BitmapData#addToWorld
