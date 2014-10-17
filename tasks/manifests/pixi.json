@@ -29,6 +29,7 @@
     "src/pixi/renderers/webgl/utils/WebGLFastSpriteBatch.js",
     "src/pixi/renderers/webgl/utils/WebGLFilterManager.js",
     "src/pixi/renderers/webgl/utils/FilterTexture.js",
+    "src/pixi/renderers/canvas/utils/CanvasBuffer.js",
     "src/pixi/renderers/canvas/utils/CanvasMaskManager.js",
     "src/pixi/renderers/canvas/utils/CanvasTinter.js",
     "src/pixi/renderers/canvas/CanvasRenderer.js",
@@ -41,7 +42,6 @@
     "src/pixi/textures/Texture.js",
     "src/pixi/textures/RenderTexture.js",
     "src/pixi/filters/AbstractFilter.js",
-    "src/pixi/filters/TwistFilter.js",
 
     "src/pixi/Outro.js"
 ]

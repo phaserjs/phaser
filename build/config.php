@@ -65,6 +65,7 @@
     <script src="$path/src/pixi/renderers/webgl/utils/WebGLFastSpriteBatch.js"></script>
     <script src="$path/src/pixi/renderers/webgl/utils/WebGLFilterManager.js"></script>
     <script src="$path/src/pixi/renderers/webgl/utils/FilterTexture.js"></script>
+    <script src="$path/src/pixi/renderers/canvas/utils/CanvasBuffer.js"></script>
     <script src="$path/src/pixi/renderers/canvas/utils/CanvasMaskManager.js"></script>
     <script src="$path/src/pixi/renderers/canvas/utils/CanvasTinter.js"></script>
     <script src="$path/src/pixi/renderers/canvas/CanvasRenderer.js"></script>
@@ -77,7 +78,6 @@
     <script src="$path/src/pixi/textures/Texture.js"></script>
     <script src="$path/src/pixi/textures/RenderTexture.js"></script>
     <script src="$path/src/pixi/filters/AbstractFilter.js"></script>
-    <script src="$path/src/pixi/filters/TwistFilter.js"></script>
 
     <script src="$path/src/Phaser.js"></script>
     <script src="$path/src/utils/Utils.js"></script>
