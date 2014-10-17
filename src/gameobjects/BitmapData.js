@@ -856,7 +856,7 @@ Phaser.BitmapData.prototype = {
 
         do {
 
-            Phaser.Color.unpackPixel(bmd.getPixel32(x, y), pixel);
+            Phaser.Color.unpackPixel(this.getPixel32(x, y), pixel);
 
             if (direction === 0 || direction === 1)
             {
