@@ -11,7 +11,6 @@
 * @class Phaser.State
 * @constructor
 */
-
 Phaser.State = function () {
 
     /**

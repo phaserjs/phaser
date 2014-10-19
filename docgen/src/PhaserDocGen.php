@@ -3,7 +3,7 @@
     {
         private $src;
         private $ignore = array('.', '..');
-        private $fileIgnore = array('p2.js');
+        private $fileIgnore = array('Intro.js', 'Outro.js', 'Pixi.js', 'Spine.js', 'p2.js');
 
         public $log;
         public $files;
@@ -38,9 +38,11 @@
                 //  This will go through each class and add in inherited properties, etc
                 foreach ($this->classes as $key => $processor)
                 {
-                    $processor->extend();
-
-                    // echo "Extended $key\n";
+                    if ($processor !== 'corrupted')
+                    {
+                        // echo "Extended $key\n";
+                        $processor->extend();
+                    }
                 }
             }
 
@@ -96,16 +98,26 @@
                                 // $classKey = substr($value, 0, -3);
                                 // $classKey = str_replace(DIRECTORY_SEPARATOR, ".", $index);
                                 $result[$classKey] = $index;
+                                // echo "Class key: $classKey \n";
                                 $this->classes[$classKey] = $tempProcessor;
                             }
                             else
                             {
                                 $this->classes[$index] = 'corrupted';
+                                // echo "CORRUPTED \n";
                             }
 
                             //  Dump to log
                             // echo $index . "\n";
                         }
+                        else
+                        {
+                            // echo "Ignored: $value \n";
+                        }
+                    }
+                    else
+                    {
+                        // echo "NOT A JS FILE\n";
                     }
                 } 
             } 

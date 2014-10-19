@@ -10,7 +10,7 @@
 *
 * @class Phaser.TileSprite
 * @constructor
-* @extends Pixi.TilingSprite
+* @extends PIXI.TilingSprite
 * @param {Phaser.Game} game - A reference to the currently running game.
 * @param {number} x - The x coordinate (in world space) to position the TileSprite at.
 * @param {number} y - The y coordinate (in world space) to position the TileSprite at.

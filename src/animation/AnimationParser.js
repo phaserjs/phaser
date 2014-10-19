@@ -8,6 +8,7 @@
 * Responsible for parsing sprite sheet and JSON data into the internal FrameData format that Phaser uses for animations.
 *
 * @class Phaser.AnimationParser
+* @static
 */
 Phaser.AnimationParser = {
 

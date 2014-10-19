@@ -7,17 +7,17 @@
 /**
 * A Rope is a Sprite that has a repeating texture. The texture can be scrolled and scaled and will automatically wrap on the edges as it does so.
 * Please note that Ropes, as with normal Sprites, have no input handler or physics bodies by default. Both need enabling.
+* Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/demo.js
 *
 * @class Phaser.Rope
 * @constructor
-* @extends Pixi.Rope
+* @extends PIXI.Rope
 * @param {Phaser.Game} game - A reference to the currently running game.
 * @param {number} x - The x coordinate (in world space) to position the Rope at.
 * @param {number} y - The y coordinate (in world space) to position the Rope at.
 * @param {string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture} key - This is the image or texture used by the Rope during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.
 * @param {string|number} frame - If this Rope is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
 * @param {Array} points - An array of {Phaser.Point}.
-* Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/demo.js
 */
 Phaser.Rope = function (game, x, y, key, frame, points) {
 

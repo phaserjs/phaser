@@ -40,23 +40,30 @@
     $gen = new PhaserDocGen();
     $gen->start();
 
-    $sprite = $gen->get('Phaser.Sprite');
+    // $gen->extend();
 
-    echo $sprite;
+    // $sprite = $gen->get('Phaser.Sprite');
+    // echo $sprite;
+    // $gen->extend('Phaser.Sprite');
+    // echo $sprite;
 
-    $gen->extend('Phaser.Sprite');
-
-    echo $sprite;
-
-
-
-    // foreach ($gen->classes as $key => $processor)
-    // {
-        // echo $key . " = " . $processor . "\n";
+    foreach ($gen->classes as $key => $processor)
+    {
+        echo $key . " = " . $processor . "\n";
+        // echo $processor . "\n";
         // echo $key . "\n";
-    // }
+    }
 
-    // print_r($gen->classes);
+    echo "\n";
+    echo " - EXTENDING ... \n";
+    echo "\n";
+
+    $gen->extend();
+
+    foreach ($gen->classes as $key => $processor)
+    {
+        echo $key . " = " . $processor . "\n";
+    }
 
 ?>
     </pre>

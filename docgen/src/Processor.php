@@ -96,12 +96,16 @@
             {
                 if ($this->blocks[$i]->isClass)
                 {
-                    $tempClass = new ClassDesc($this, $this->blocks[$i]);
-                    $this->class = $tempClass;
-
-                    if ($tempClass->corrupted)
+                    //  Some files like PIXI.Graphics have multiple class blocks within them
+                    if ($this->class === null)
                     {
-                        $this->corrupted = true;
+                        $tempClass = new ClassDesc($this, $this->blocks[$i]);
+                        $this->class = $tempClass;
+
+                        if ($tempClass->corrupted)
+                        {
+                            $this->corrupted = true;
+                        }
                     }
                 }
                 else if ($this->blocks[$i]->isConst)
@@ -271,9 +275,16 @@
             {
                 $extends = $proc->class->extends;
                 $proc = $this->docgen->get($extends);
-                // echo "\n\nextend found: " . $proc->getName() . "\n";
 
-                $this->merge($proc);
+                if ($proc !== null)
+                {
+                    // echo "\n\nextend found: " . $proc->getName() . "\n";
+                    $this->merge($proc);
+                }
+                else
+                {
+                    // echo "\n\n --------> fatal extend: " . $extends . "\n";
+                }
             }
             while ($proc->class->extendsFrom());
 
@@ -389,7 +400,7 @@
             }
             else
             {
-                return "Class: " . $this->class->name . ", Methods: " . count($this->methods['public']) . ", Properties: " . count($this->properties['public']) . "\n";
+                return "Class: " . $this->class->name . ", Methods: " . count($this->methods['public']) . ", Properties: " . count($this->properties['public']);
             }
         }
 
