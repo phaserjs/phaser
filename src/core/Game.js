@@ -327,7 +327,10 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     }
     else
     {
-        document.addEventListener('DOMContentLoaded', this._onBoot, false);
+        if (!PIXI.DEVKIT_NATIVE)
+        {
+            document.addEventListener('DOMContentLoaded', this._onBoot, false);
+        }
         window.addEventListener('load', this._onBoot, false);
     }
 
@@ -425,13 +428,15 @@ Phaser.Game.prototype = {
             return;
         }
 
-        if (!document.body)
+        if (!document.body || (PIXI.DEVKIT_NATIVE && !this.__canvas))
         {
             window.setTimeout(this._onBoot, 20);
         }
         else
         {
-            document.removeEventListener('DOMContentLoaded', this._onBoot);
+            if (!PIXI.DEVKIT_NATIVE) {
+                document.removeEventListener('DOMContentLoaded', this._onBoot);
+            }
             window.removeEventListener('load', this._onBoot);
 
             this.onPause = new Phaser.Signal();

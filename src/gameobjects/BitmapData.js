@@ -83,7 +83,7 @@ Phaser.BitmapData = function (game, key, width, height) {
     }
     else
     {
-        if (window['ArrayBuffer'])
+        if (window['ArrayBuffer'] && !PIXI.DEVKIT_NATIVE)
         {
             this.buffer = new ArrayBuffer(this.imageData.data.length);
             this.pixels = new Uint32Array(this.buffer);

@@ -184,7 +184,12 @@ PIXI.CanvasRenderer.prototype.render = function(stage)
 
     stage.updateTransform();
 
-    this.context.setTransform(1,0,0,1,0,0);
+    // TODO: CHANGE THIS TO NOT LOOK FOR A DEVKIT SPECIFIC FUNCTION
+    if (PHASER.DEVKIT_RUNNING) {
+        this.context.loadIdentity();
+    } else {
+        this.context.setTransform(1,0,0,1,0,0);
+    }
     this.context.globalAlpha = 1;
 
     if (navigator.isCocoonJS && this.view.screencanvas) {

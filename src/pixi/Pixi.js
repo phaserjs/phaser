@@ -18,6 +18,7 @@ PIXI.CANVAS_RENDERER = 1;
 // useful for testing against if your lib is using pixi.
 PIXI.VERSION = "v1.6.1";
 
+PIXI.DEVKIT_NATIVE = window.jsio && window.jsio('import device').isMobileNative;
 
 // the various blend modes supported by pixi
 PIXI.blendModes = {

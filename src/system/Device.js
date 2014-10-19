@@ -500,7 +500,7 @@ Phaser.Device.prototype = {
 
         this.worker = !!window['Worker'];
 
-        if ('ontouchstart' in document.documentElement || (window.navigator.maxTouchPoints && window.navigator.maxTouchPoints > 1))
+        if (PIXI.DEVKIT_NATIVE || ('ontouchstart' in document.documentElement || (window.navigator.maxTouchPoints && window.navigator.maxTouchPoints > 1)))
         {
             this.touch = true;
         }
@@ -664,12 +664,13 @@ Phaser.Device.prototype = {
                 this.nodeWebkit = false;
             }
         }
-        
-        if (navigator['isCocoonJS'])
+
+        // TODO: probably should not share this variable
+        if (navigator['isCocoonJS'] || PIXI.DEVKIT_NATIVE)
         {
             this.cocoonJS = true;
         }
-        
+
         if (this.cocoonJS)
         {
             try {
@@ -752,7 +753,7 @@ Phaser.Device.prototype = {
         this.iPhone4 = (this.pixelRatio == 2 && this.iPhone);
         this.iPad = navigator.userAgent.toLowerCase().indexOf('ipad') != -1;
 
-        if (typeof Int8Array !== 'undefined')
+        if (typeof Int8Array !== 'undefined' || PIXI.DEVKIT_NATIVE)
         {
             this.typedArray = true;
         }
@@ -845,6 +846,12 @@ Phaser.Device.prototype = {
     * @private
     */
     _checkCSS3D: function () {
+
+        if (PIXI.DEVKIT_NATIVE)
+        {
+            this.css3D = false;
+            return;
+        }
 
         var el = document.createElement('p');
         var has3d;

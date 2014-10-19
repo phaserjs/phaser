@@ -440,7 +440,7 @@ Phaser.ScaleManager.prototype = {
         window.addEventListener('orientationchange', this._checkOrientation, false);
         window.addEventListener('resize', this._checkResize, false);
 
-        if (!this.game.device.cocoonJS)
+        if (!this.game.device.cocoonJS && !PIXI.DEVKIT_NATIVE)
         {
             document.addEventListener('webkitfullscreenchange', this._fullScreenChange, false);
             document.addEventListener('mozfullscreenchange', this._fullScreenChange, false);

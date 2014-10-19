@@ -53,6 +53,10 @@ Phaser.Canvas = {
 
         point = point || new Phaser.Point();
 
+        if (PIXI.DEVKIT_NATIVE) {
+            return point;
+        }
+
         var box = element.getBoundingClientRect();
         var clientTop = element.clientTop || document.body.clientTop || 0;
         var clientLeft = element.clientLeft || document.body.clientLeft || 0;
@@ -166,6 +170,10 @@ Phaser.Canvas = {
     addToDOM: function (canvas, parent, overflowHidden) {
 
         var target;
+
+        if (PIXI.DEVKIT_NATIVE) {
+            return canvas;
+        }
 
         if (typeof overflowHidden === 'undefined') { overflowHidden = true; }
 

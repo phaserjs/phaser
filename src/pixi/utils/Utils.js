@@ -172,6 +172,7 @@ PIXI.unpackColorRGB = function(r, g, b)//r, g, b, a)
  */
 PIXI.canUseNewCanvasBlendModes = function()
 {
+    if (PIXI.DEVKIT_NATIVE) return false;
     if (typeof document === 'undefined') return false;
     var canvas = document.createElement('canvas');
     canvas.width = 1;
