@@ -687,7 +687,7 @@ Phaser.Rectangle.contains = function (a, x, y) {
         return false;
     }
 
-    return (x >= a.x && x <= a.right && y >= a.y && y <= a.bottom);
+    return (x >= a.x && x < a.right && y >= a.y && y < a.bottom);
 
 };
 
@@ -704,7 +704,7 @@ Phaser.Rectangle.contains = function (a, x, y) {
 */
 Phaser.Rectangle.containsRaw = function (rx, ry, rw, rh, x, y) {
 
-    return (x >= rx && x <= (rx + rw) && y >= ry && y <= (ry + rh));
+    return (x >= rx && x < (rx + rw) && y >= ry && y < (ry + rh));
 
 };
 
@@ -737,7 +737,7 @@ Phaser.Rectangle.containsRect = function (a, b) {
         return false;
     }
 
-    return (a.x >= b.x && a.y >= b.y && a.right <= b.right && a.bottom <= b.bottom);
+    return (a.x >= b.x && a.y >= b.y && a.right < b.right && a.bottom < b.bottom);
 
 };
 

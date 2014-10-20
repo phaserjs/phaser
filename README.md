@@ -86,6 +86,7 @@ Version 2.1.3 - "Ravinda" - in development
 
 ### Updates
 
+* TypeScript definitions fixes and updates (thanks @clark-stevenson)
 * Changed the Animation constructor parameter `delay` to `frameRate` as it's a more accurate term of what it should be. Internally nothing changed.
 * Circle.getBounds added.
 * Ellipse.getBounds added.
