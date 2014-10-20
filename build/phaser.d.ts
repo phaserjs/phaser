@@ -1,4 +1,4 @@
-// Type definitions for PIXI 1.6.1 dev
+// Type definitions for PIXI 2.0.0 dev 2014-10-19
 // Project: https://github.com/GoodBoyDigital/pixi.js/
 
 declare module PIXI {
@@ -42,10 +42,13 @@ declare module PIXI {
     export var INTERACTION_REQUENCY: number;
     export var AUTO_PREVENT_DEFAULT: boolean;
 
+    export var PI_2: number;
     export var RAD_TO_DEG: number;
     export var DEG_TO_RAD: number;
 
     export var RETINA_PREFIX: string;
+    export var identityMatrix: Matrix;
+    export var glContexts: WebGLRenderingContext[];
 
     export var BaseTextureCache: { [key: string]: BaseTexture }
     export var TextureCache: { [key: string]: Texture }
@@ -60,6 +63,9 @@ declare module PIXI {
     export function getNextPowerOfTwo(number: number): number;
 
     export function AjaxRequest(): XMLHttpRequest;
+
+    export function CompileFragmentShader(gl: WebGLRenderingContext, shaderSrc: any): any;
+    export function CompileProgram(gl: WebGLRenderingContext, vertexSrc: any[], fragmentSrc: any): any;
 
 
     export interface IEventCallback {
@@ -168,6 +174,9 @@ declare module PIXI {
         dirty: boolean;
         padding: number;
 
+        apply(frameBuffer: WebGLFramebuffer): void;
+        syncUniforms(): void;
+
     }
 
     export class AlphaMaskFilter extends AbstractFilter {
@@ -186,21 +195,29 @@ declare module PIXI {
 
     }
 
-    export class AssetLoader extends EventTarget {
-
-        constructor(assetURLs: string[], crossorigin: boolean);
+    export class AssetLoader implements Mixin {
 
         assetURLs: string[];
         crossorigin: boolean;
         loadersByType: { [key: string]: Loader };
 
+        constructor(assetURLs: string[], crossorigin: boolean);
+
+        listeners(eventName: string): Function[];
+        emit(eventName: string, data?: any): boolean;
+        dispatchEvent(eventName: string, data?: any): boolean;
+        on(eventName: string, fn: Function): Function;
+        addEventListener(eventName: string, fn: Function): Function;
+        once(eventName: string, fn: Function): Function;
+        off(eventName: string, fn: Function): Function;
+        removeAllEventListeners(eventName: string): void;
+
         load(): void;
-        onComplete(): void;
-        onProgress(): void;
+
 
     }
 
-    export class AtlasLoader extends EventTarget {
+    export class AtlasLoader implements Mixin {
 
         url: string;
         baseUrl: string;
@@ -208,11 +225,21 @@ declare module PIXI {
         loaded: boolean;
 
         constructor(url: string, crossorigin: boolean);
+
+        listeners(eventName: string): Function[];
+        emit(eventName: string, data?: any): boolean;
+        dispatchEvent(eventName: string, data?: any): boolean;
+        on(eventName: string, fn: Function): Function;
+        addEventListener(eventName: string, fn: Function): Function;
+        once(eventName: string, fn: Function): Function;
+        off(eventName: string, fn: Function): Function;
+        removeAllEventListeners(eventName: string): void;
+
         load(): void;
 
     }
 
-    export class BaseTexture extends EventTarget {
+    export class BaseTexture implements Mixin {
 
         static fromImage(imageUrl: string, crossorigin?: boolean, scaleMode?: scaleModes): BaseTexture;
         static fromCanvas(canvas: HTMLCanvasElement, scaleMode?: scaleModes): BaseTexture;
@@ -222,20 +249,29 @@ declare module PIXI {
 
         height: number;
         hasLoaded: boolean;
-        id: number;
         premultipliedAlpha: boolean;
         resolution: number;
         scaleMode: scaleModes;
         source: HTMLImageElement;
         width: number;
 
+        listeners(eventName: string): Function[];
+        emit(eventName: string, data?: any): boolean;
+        dispatchEvent(eventName: string, data?: any): boolean;
+        on(eventName: string, fn: Function): Function;
+        addEventListener(eventName: string, fn: Function): Function;
+        once(eventName: string, fn: Function): Function;
+        off(eventName: string, fn: Function): Function;
+        removeAllEventListeners(eventName: string): void;
+
         destroy(): void;
+        dirty(): void;
         updateSourceImage(newSrc: string): void;
 
 
     }
 
-    export class BitmapFontLoader extends EventTarget {
+    export class BitmapFontLoader implements Mixin {
 
         constructor(url: string, crossorigin: boolean);
 
@@ -243,6 +279,15 @@ declare module PIXI {
         crossorigin: boolean;
         texture: Texture;
         url: string;
+
+        listeners(eventName: string): Function[];
+        emit(eventName: string, data?: any): boolean;
+        dispatchEvent(eventName: string, data?: any): boolean;
+        on(eventName: string, fn: Function): Function;
+        addEventListener(eventName: string, fn: Function): Function;
+        once(eventName: string, fn: Function): Function;
+        off(eventName: string, fn: Function): Function;
+        removeAllEventListeners(eventName: string): void;
 
         load(): void;
 
@@ -287,10 +332,24 @@ declare module PIXI {
 
     }
 
+    export class CanvasBuffer {
+
+        constructor(width: number, height: number);
+
+        canvas: HTMLCanvasElement;
+        context: CanvasRenderingContext2D;
+        height: number;
+        width: number;
+
+        clear(): void;
+        resize(width: number, height: number): void;
+
+    }
+
     export class CanvasMaskManager {
 
-        pushMask(maskData: MaskData, renderSession: CanvasRenderingContext2D): void;
-        popMask(renderSession: CanvasRenderingContext2D): void;
+        pushMask(maskData: MaskData, renderSession: RenderSession): void;
+        popMask(renderSession: RenderSession): void;
 
     }
 
@@ -354,6 +413,16 @@ declare module PIXI {
     export class ColorStepFilter extends AbstractFilter {
 
         step: number;
+
+    }
+
+    export class ConvolutionFilter extends AbstractFilter {
+
+        constructor(matrix: number[], width: number, height: number);
+
+        matrix: number[];
+        width: number;
+        height: number;
 
     }
 
@@ -435,15 +504,18 @@ declare module PIXI {
         height: number;
         width: number;
 
-        addChild(child: DisplayObject): void;
-        addChildAt(child: DisplayObject, index: number): void;
+        addChild(child: DisplayObject): DisplayObject;
+        addChildAt(child: DisplayObject, index: number): DisplayObject;
+        getBounds(): Rectangle;
         getChildAt(index: number): DisplayObject;
         getChildIndex(child: DisplayObject): number;
+        getLocalBounds(): Rectangle;
         removeChild(child: DisplayObject): DisplayObject;
         removeChildAt(index: number): DisplayObject;
         removeChildren(beginIndex?: number, endIndex?: number): DisplayObject[];
         removeStageReference(): void;
         setChildIndex(child: DisplayObject, index: number): void;
+        swapChildren(child: DisplayObject, child2: DisplayObject): void;
 
     }
 
@@ -462,14 +534,23 @@ declare module PIXI {
 
     }
 
+    export class Event {
+
+        constructor(target: any, name: string, data: any);
+
+        target: any;
+        type: string;
+        data: any;
+        timeStamp: number;
+
+        stopPropagation(): void;
+        stopImmediatePropagation(): void;
+
+    }
+
     export class EventTarget {
 
-        listeners: { [key: string]: IEventCallback[] };
-
-        addEventListener(type: string, listener: IEventCallback): void;
-        dispatchEvent(event: IEvent): void;
-        removeAllEventListeners(type: string): void;
-        removeEventListener(type: string, listener: IEventCallback): void;
+        static mixin(obj: any): void;
 
     }
 
@@ -482,6 +563,7 @@ declare module PIXI {
         gl: WebGLRenderingContext;
         program: WebGLProgram;
         scaleMode: scaleModes;
+        texture: any;
 
         clear(): void;
         resize(width: number, height: number): void;
@@ -491,7 +573,6 @@ declare module PIXI {
 
     export class Graphics extends DisplayObjectContainer {
 
-        bounds: Rectangle;
         blendMode: number;
         boundsPadding: number;
         fillAlpha: number;
@@ -508,9 +589,14 @@ declare module PIXI {
         destroyCachedSprite(): void;
         drawCircle(x: number, y: number, radius: number): void;
         drawEllipse(x: number, y: number, width: number, height: number): void;
-        drawPath(path: any): void;
+        drawPolygon(path: any): void;
         drawRect(x: number, y: number, width: number, height: number): void;
         drawRoundedRect(x: number, y: number, width: number, height: number, radius: number): Graphics;
+        drawShape(shape: Circle): any; //GraphicsData?
+        drawShape(shape: Rectangle): any; //GraphicsData?
+        drawShape(shape: Ellipse): any; //GraphicsData?
+        drawShape(shape: Polygon): any; //GraphicsData?
+
         endFill(): void;
         lineStyle(lineWidth: number, color: number, alpha: number): void;
         lineTo(x: number, y: number): void;
@@ -526,11 +612,20 @@ declare module PIXI {
 
     }
 
-    export class ImageLoader extends EventTarget {
+    export class ImageLoader implements Mixin {
 
         constructor(url: string, crossorigin?: boolean);
 
         texture: Texture;
+
+        listeners(eventName: string): Function[];
+        emit(eventName: string, data?: any): boolean;
+        dispatchEvent(eventName: string, data?: any): boolean;
+        on(eventName: string, fn: Function): Function;
+        addEventListener(eventName: string, fn: Function): Function;
+        once(eventName: string, fn: Function): Function;
+        off(eventName: string, fn: Function): Function;
+        removeAllEventListeners(eventName: string): void;
 
         load(): void;
         loadFramedSpriteSheet(frameWidth: number, frameHeight: number, textureName: string): void;
@@ -550,13 +645,21 @@ declare module PIXI {
     export class InteractionManager {
 
         currentCursorStyle: string;
+        last: number;
         mouse: InteractionData;
         mouseOut: boolean;
         mouseoverEnabled: boolean;
+        onMouseMove: Function;
+        onMouseDown: Function;
+        onMouseOut: Function;
+        onMouseUp: Function;
+        onTouchStart: Function;
+        onTouchEnd: Function;
+        onTouchMove: Function;
         pool: InteractionData[];
         resolution: number;
         stage: Stage;
-        touchs: { [id: string]: InteractionData };
+        touches: { [id: string]: InteractionData };
 
         constructor(stage: Stage);
     }
@@ -567,7 +670,7 @@ declare module PIXI {
 
     }
 
-    export class JsonLoader extends EventTarget {
+    export class JsonLoader implements Mixin {
 
         constructor(url: string, crossorigin?: boolean);
 
@@ -575,6 +678,15 @@ declare module PIXI {
         crossorigin: boolean;
         loaded: boolean;
         url: string;
+
+        listeners(eventName: string): Function[];
+        emit(eventName: string, data?: any): boolean;
+        dispatchEvent(eventName: string, data?: any): boolean;
+        on(eventName: string, fn: Function): Function;
+        addEventListener(eventName: string, fn: Function): Function;
+        once(eventName: string, fn: Function): Function;
+        off(eventName: string, fn: Function): Function;
+        removeAllEventListeners(eventName: string): void;
 
         load(): void;
 
@@ -589,15 +701,29 @@ declare module PIXI {
         tx: number;
         ty: number;
 
+        append(matrix: Matrix): Matrix;
         apply(pos: Point, newPos: Point): Point;
         applyInverse(pos: Point, newPos: Point): Point;
         determineMatrixArrayType(): number[];
+        identity(): Matrix;
         rotate(angle: number): Matrix;
         fromArray(array: number[]): void;
         translate(x: number, y: number): Matrix;
         toArray(transpose: boolean): number[];
         scale(x: number, y: number): Matrix;
 
+    }
+
+    export interface Mixin {
+
+        listeners(eventName: string): Function[];
+        emit(eventName: string, data?: any): boolean;
+        dispatchEvent(eventName: string, data?: any): boolean;
+        on(eventName: string, fn: Function): Function;
+        addEventListener(eventName: string, fn: Function): Function;
+        once(eventName: string, fn: Function): Function;
+        off(eventName: string, fn: Function): Function;
+        removeAllEventListeners(eventName: string): void;
 
     }
 
@@ -648,7 +774,9 @@ declare module PIXI {
         constructor(gl: WebGLRenderingContext);
 
         defaultVertexSrc: string;
+        dirty: boolean;
         fragmentSrc: string[];
+        firstRun: boolean;
         gl: WebGLRenderingContext;
         program: WebGLProgram;
         textureCount: number;
@@ -731,6 +859,27 @@ declare module PIXI {
 
     }
 
+    export class SpineLoader implements Mixin {
+
+        url: string;
+        crossorigin: boolean;
+        loaded: boolean;
+
+        constructor(url: string, crossOrigin: boolean);
+
+        listeners(eventName: string): Function[];
+        emit(eventName: string, data?: any): boolean;
+        dispatchEvent(eventName: string, data?: any): boolean;
+        on(eventName: string, fn: Function): Function;
+        addEventListener(eventName: string, fn: Function): Function;
+        once(eventName: string, fn: Function): Function;
+        off(eventName: string, fn: Function): Function;
+        removeAllEventListeners(eventName: string): void;
+
+        load(): void;
+
+    }
+
     export class Spine extends DisplayObjectContainer {
 
         constructor(url: string);
@@ -748,6 +897,7 @@ declare module PIXI {
 
         anchor: Point;
         blendMode: blendModes;
+        shader: AbstractFilter;
         texture: Texture;
         tint: number;
 
@@ -766,7 +916,7 @@ declare module PIXI {
 
     }
 
-    export class SpriteSheetLoader extends EventTarget {
+    export class SpriteSheetLoader implements Mixin {
 
         constructor(url: string, crossorigin?: boolean);
 
@@ -775,6 +925,15 @@ declare module PIXI {
         frames: any;
         texture: Texture;
         url: string;
+
+        listeners(eventName: string): Function[];
+        emit(eventName: string, data?: any): boolean;
+        dispatchEvent(eventName: string, data?: any): boolean;
+        on(eventName: string, fn: Function): Function;
+        addEventListener(eventName: string, fn: Function): Function;
+        once(eventName: string, fn: Function): Function;
+        off(eventName: string, fn: Function): Function;
+        removeAllEventListeners(eventName: string): void;
 
         load(): void;
 
@@ -819,7 +978,7 @@ declare module PIXI {
 
     }
 
-    export class Texture extends EventTarget {
+    export class Texture implements Mixin {
 
         static fromCanvas(canvas: HTMLCanvasElement, scaleMode?: scaleModes): Texture;
         static fromFrame(frameId: string): Texture;
@@ -827,17 +986,27 @@ declare module PIXI {
         static addTextureToCache(texture: Texture, id: string): void;
         static removeTextureFromCache(id: string): Texture;
 
-        constructor(baseTexture: BaseTexture, frame?: Rectangle);
+        constructor(baseTexture: BaseTexture, frame?: Rectangle, crop?: Rectangle, trim?: Rectangle);
 
         baseTexture: BaseTexture;
         crop: Rectangle;
         frame: Rectangle;
         height: number;
         noFrame: boolean;
+        requiresUpdate: boolean;
         trim: Point;
         width: number;
         scope: any;
         valid: boolean;
+
+        listeners(eventName: string): Function[];
+        emit(eventName: string, data?: any): boolean;
+        dispatchEvent(eventName: string, data?: any): boolean;
+        on(eventName: string, fn: Function): Function;
+        addEventListener(eventName: string, fn: Function): Function;
+        once(eventName: string, fn: Function): Function;
+        off(eventName: string, fn: Function): Function;
+        removeAllEventListeners(eventName: string): void;
 
         destroy(destroyBase: boolean): void;
         setFrame(frame: Rectangle): void;
@@ -901,28 +1070,31 @@ declare module PIXI {
 
     export class WebGLBlendModeManager {
 
+        currentBlendMode: number;
+
         destroy(): void;
         setBlendMode(blendMode: number): boolean;
+        setContext(gl: WebGLRenderingContext): void;
 
     }
 
     export class WebGLFastSpriteBatch {
 
-        constructor(gl: WebGLRenderingContext);
+        constructor();
 
         currentBatchSize: number;
         currentBaseTexture: any;
         currentBlendMode: number;
         renderSession: RenderSession;
         drawing: boolean;
-        indexBuffer: any; //todo this is a WebGLBuffer?
+        indexBuffer: any;
         indices: number[];
         lastIndexCount: number;
         matrix: any;
         maxSize: number;
         shader: any;
         size: number;
-        vertexBuffer: any; //todo this is a WebGLBuffer?
+        vertexBuffer: any;
         vertices: number[];
         vertSize: number;
 
@@ -938,8 +1110,6 @@ declare module PIXI {
     }
 
     export class WebGLFilterManager {
-
-        constructor(gl: WebGLRenderingContext, transparent: boolean);
 
         filterStack: AbstractFilter[];
         transparent: boolean;
@@ -962,8 +1132,6 @@ declare module PIXI {
 
     export class WebGLMaskManager {
 
-        constructor(gl: WebGLRenderingContext);
-
         destroy(): void;
         popMask(renderSession: RenderSession): void;
         pushMask(maskData: any[], renderSession: RenderSession): void;
@@ -977,25 +1145,44 @@ declare module PIXI {
 
         constructor(width?: number, height?: number, options?: PixiRendererOptions);
 
+        clearBeforeRender: boolean;
         contextLost: boolean;
+        contextLostBound: Function;
         contextRestoreLost: boolean;
+        contextRestoredBound: Function;
         height: number;
         gl: WebGLRenderingContext;
+        offset: Point;
         preserveDrawingBuffer: boolean;
+        projection: Point;
         resolution: number;
+        renderSession: RenderSession;
+        shaderManager: WebGLShaderManager;
+        spriteBatch: WebGLSpriteBatch;
+        maskManager: WebGLMaskManager;
+        filterManager: WebGLFilterManager;
+        stencilManager: WebGLStencilManager;
+        blendModeManager: WebGLBlendModeManager;
         transparent: boolean;
         type: number;
         view: HTMLCanvasElement;
         width: number;
 
         destroy(): void;
+        initContext(): void;
+        mapBlendModes(): void;
         render(stage: Stage): void;
         renderDisplayObject(displayObject: DisplayObject, projection: Point, buffer: WebGLBuffer): void;
         resize(width: number, height: number): void;
+        updateTexture(texture: Texture): void;
 
     }
 
     export class WebGLShaderManager {
+
+        maxAttibs: number;
+        attribState: any[];
+        stack: any[];
 
         destroy(): void;
         setAttribs(attribs: ShaderAttribute[]): void;
@@ -1006,30 +1193,39 @@ declare module PIXI {
 
     export class WebGLStencilManager {
 
-        constructor(gl: WebGLRenderingContext);
-
         stencilStack: any[];
         reverse: boolean;
         count: number;
 
+        bindGraphics(graphics: Graphics, webGLData: any[], renderSession: RenderSession): void;
         destroy(): void;
+        popStencil(graphics: Graphics, webGLData: any[], renderSession: RenderSession): void;
+        pushStencil(graphics: Graphics, webGLData: any[], renderSession: RenderSession): void;
         setContext(gl: WebGLRenderingContext): void;
 
     }
 
     export class WebGLSpriteBatch {
 
-        constructor(gl: WebGLRenderingContext);
-
+        blendModes: number[];
+        currentBatchSize: number;
+        currentBaseTexture: Texture;
+        defaultShader: AbstractFilter;
+        dirty: boolean;
+        drawing: boolean;
         indices: number[];
+        lastIndexCount: number;
+        textures: Texture[];
+        shaders: AbstractFilter[]; //todo WebGLShader[] or PixiShader[]?
         size: number;
+        sprites: any[]; //todo Sprite[]?
         vertices: number[];
         vertSize: number;
 
         begin(renderSession: RenderSession): void;
         destroy(): void;
         end(): void;
-        flush(): void;
+        flush(shader?: PixiShader): void;
         render(sprite: Sprite): void;
         renderBatch(texture: Texture, size: number, startIndex: number): void;
         renderTilingSprite(sprite: TilingSprite): void;
@@ -1048,8 +1244,11 @@ declare module PIXI {
         baseTexture: BaseTexture;
         renderer: PixiRenderer;
         resolution: number;
+        valid: boolean;
 
         clear(): void;
+        getBase64(): string;
+        getCanvas(): HTMLCanvasElement;
         resize(width: number, height: number, updateBase: boolean): void;
         render(displayObject: DisplayObject, position?: Point, clear?: boolean): void;
 
@@ -1062,6 +1261,9 @@ declare function requestAnimFrame(): void;
 declare module PIXI.PolyK {
     export function Triangulate(p: number[]): number[];
 }
+
+// Type definitions for Phaser 2.1.3 dev 2014-10-19
+// Project: https://github.com/photonstorm/phaser
 
 declare class Phaser {
 
@@ -1108,7 +1310,7 @@ declare module Phaser {
 
     class Animation {
 
-        constructor(game: Phaser.Game, parent: Phaser.Sprite, name: string, frameData: Phaser.FrameData, frames: any[], delay: number, loop: boolean);
+        constructor(game: Phaser.Game, parent: Phaser.Sprite, name: string, frameData: Phaser.FrameData, frames: any[], frameRate?: number, loop?: boolean);
 
         currentAnim: Phaser.Animation;
         currentFrame: Phaser.Frame;
@@ -1557,6 +1759,7 @@ declare module Phaser {
         copyFrom(source: any): Circle;
         copyTo(dest: any): any;
         distance(dest: any, round?: boolean): number;
+        getBounds(): Phaser.Rectangle;
         offset(dx: number, dy: number): Phaser.Circle;
         offsetPoint(point: Phaser.Point): Phaser.Circle;
         setTo(x: number, y: number, diameter: number): Circle;
@@ -1803,6 +2006,7 @@ declare module Phaser {
         contains(x: number, y: number): boolean;
         copyFrom(source: any): Phaser.Ellipse;
         copyTo(dest: any): any;
+        getBounds(): Phaser.Rectangle;
         setTo(x: number, y: number, width: number, height: number): Phaser.Ellipse;
         toString(): string;
 
@@ -1914,6 +2118,12 @@ declare module Phaser {
 
         }
 
+        class LazerBeam extends Phaser.Filter {
+
+            init(width: number, height: number, divisor?: number): void;
+
+        }
+
         class LightBeam extends Phaser.Filter {
 
             constructor(game: Phaser.Game, width: number, height: number);
@@ -1988,15 +2198,18 @@ declare module Phaser {
         dirty: boolean;
         game: Phaser.Game;
         height: number;
+        fragmentSrc: any[];
         padding: number;
+        prevPoint: Phaser.Point;
         type: number;
         uniforms: any;
-        fragmentSrc: any[];
         width: number;
 
+        apply(frameBuffer: WebGLFramebuffer): void;
         destroy(): void;
         init(...args: any[]): void;
         setResolution(width: number, height: number): void;
+        syncUniforms(): void;
         update(pointer?: Phaser.Pointer): void;
 
     }
@@ -4609,6 +4822,7 @@ declare module Phaser {
         destroy(): void;
         fadeIn(duration?: number, loop?: boolean): void;
         fadeOut(duration?: number): void;
+        fadeTo(duration?: number, volume?: number): void;
         pause(): void;
         play(marker?: string, position?: number, volume?: number, loop?: boolean, forceRestart?: boolean): Phaser.Sound;
         removeMarker(name: string): void;
