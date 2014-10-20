@@ -62446,7 +62446,7 @@ Phaser.TilemapLayer.prototype.render = function () {
                     tile = this._column[x];
                 }
 
-                if (tile && tile.index > -1)
+                if (tile && tile.index > -1 && this.map.tiles[tile.index])
                 {
                     set = this.map.tilesets[this.map.tiles[tile.index][2]];
 
@@ -63194,7 +63194,7 @@ Phaser.TilemapParser = {
                 {
                     tile = row[k];
 
-                    if(tile.index < 0) { continue; }
+                    if(tile.index < 0 || !map.tiles[tile.index]) { continue; }
 
                     // find the relevant tileset
                     sid = map.tiles[tile.index][2];
