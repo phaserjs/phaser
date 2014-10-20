@@ -82,6 +82,7 @@ Version 2.1.3 - "Ravinda" - in development
 * Sound.fadeTo allows you to fade the Sound to the given volume over the duration specified (thanks @nickryall #1225)
 * BitmapData.getFirstPixel will scan the BitmapData and return the color and location of the first non-transparent pixel encountered. You can specify one of 4 scan directions: top to bottom, bottom to top, left to right and right to left.
 * BitmapData.getBounds will return a `Rectangle` object that encompasses the full extent of the non-transparent pixels in the BitmapData. This can be useful if you wish to trim away transparent pixels from the sides of a BitmapData down to size before saving.
+* Rectangle.scale allows you to scale the width and height of a Rectangle.
 
 
 ### Updates
