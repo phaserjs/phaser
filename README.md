@@ -102,6 +102,7 @@ Version 2.1.3 - "Ravinda" - in development
 * Fixed a reference error to the Loader.baseURL in Cache._resolveUrl method (thanks @neurofuzzy #1235)
 * Fixed the Filter mouse uniform value population.
 * Fixed an issue where audio files with query strings after them would fail the `canPlayAudio` checks (thanks Vithar)
+* Input.hitTest now accurately detects hits on the extreme edges of a display object (thanks InsaneHero)
 
 For details about changes made in previous versions of Phaser see the full Change Log at https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md
 

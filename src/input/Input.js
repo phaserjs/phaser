@@ -811,11 +811,11 @@ Phaser.Input.prototype = {
             var height = displayObject.texture.frame.height;
             var x1 = -width * displayObject.anchor.x;
 
-            if (this._localPoint.x > x1 && this._localPoint.x < x1 + width)
+            if (this._localPoint.x >= x1 && this._localPoint.x < x1 + width)
             {
                 var y1 = -height * displayObject.anchor.y;
 
-                if (this._localPoint.y > y1 && this._localPoint.y < y1 + height)
+                if (this._localPoint.y >= y1 && this._localPoint.y < y1 + height)
                 {
                     return true;
                 }
@@ -827,11 +827,11 @@ Phaser.Input.prototype = {
             var height = displayObject.height;
             var x1 = -width * displayObject.anchor.x;
 
-            if (this._localPoint.x > x1 && this._localPoint.x < x1 + width)
+            if (this._localPoint.x >= x1 && this._localPoint.x < x1 + width)
             {
                 var y1 = -height * displayObject.anchor.y;
 
-                if (this._localPoint.y > y1 && this._localPoint.y < y1 + height)
+                if (this._localPoint.y >= y1 && this._localPoint.y < y1 + height)
                 {
                     return true;
                 }
