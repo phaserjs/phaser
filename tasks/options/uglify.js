@@ -56,6 +56,14 @@ module.exports = {
         dest: '<%= compile_dir %>/phaser-no-physics.min.js'
     },
 
+    phaserP2Physics: {
+        options: {
+            banner: '/* Phaser (P2) v<%= package.version %> - http://phaser.io - @photonstorm - (c) 2014 Photon Storm Ltd. */\n'
+        },
+        src: ['<%= concat.phaserP2Physics.dest %>'],
+        dest: '<%= compile_dir %>/phaser-p2-physics.min.js'
+    },
+
     standalone: {
         options: {
             sourceMap: true,
