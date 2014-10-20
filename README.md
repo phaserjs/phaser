@@ -104,6 +104,7 @@ Version 2.1.3 - "Ravinda" - in development
 * Fixed the Filter mouse uniform value population.
 * Fixed an issue where audio files with query strings after them would fail the `canPlayAudio` checks (thanks Vithar)
 * Input.hitTest now accurately detects hits on the extreme edges of a display object (thanks InsaneHero)
+* Button.setSounds now works if given an AudioSprite as the sound source.
 
 For details about changes made in previous versions of Phaser see the full Change Log at https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md
 

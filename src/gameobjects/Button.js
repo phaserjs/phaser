@@ -337,13 +337,13 @@ Phaser.Button.prototype.setFrames = function (overFrame, outFrame, downFrame, up
 * Call this function with no parameters at all to reset all sounds on this Button.
 *
 * @method Phaser.Button.prototype.setSounds
-* @param {Phaser.Sound} [overSound] - Over Button Sound.
+* @param {Phaser.Sound|Phaser.AudioSprite} [overSound] - Over Button Sound.
 * @param {string} [overMarker] - Over Button Sound Marker.
-* @param {Phaser.Sound} [downSound] - Down Button Sound.
+* @param {Phaser.Sound|Phaser.AudioSprite} [downSound] - Down Button Sound.
 * @param {string} [downMarker] - Down Button Sound Marker.
-* @param {Phaser.Sound} [outSound] - Out Button Sound.
+* @param {Phaser.Sound|Phaser.AudioSprite} [outSound] - Out Button Sound.
 * @param {string} [outMarker] - Out Button Sound Marker.
-* @param {Phaser.Sound} [upSound] - Up Button Sound.
+* @param {Phaser.Sound|Phaser.AudioSprite} [upSound] - Up Button Sound.
 * @param {string} [upMarker] - Up Button Sound Marker.
 */
 Phaser.Button.prototype.setSounds = function (overSound, overMarker, downSound, downMarker, outSound, outMarker, upSound, upMarker) {
@@ -359,7 +359,7 @@ Phaser.Button.prototype.setSounds = function (overSound, overMarker, downSound, 
 * The Sound to be played when a Pointer moves over this Button.
 *
 * @method Phaser.Button.prototype.setOverSound
-* @param {Phaser.Sound} sound - The Sound that will be played.
+* @param {Phaser.Sound|Phaser.AudioSprite} sound - The Sound that will be played.
 * @param {string} [marker] - A Sound Marker that will be used in the playback.
 */
 Phaser.Button.prototype.setOverSound = function (sound, marker) {
@@ -367,7 +367,7 @@ Phaser.Button.prototype.setOverSound = function (sound, marker) {
     this.onOverSound = null;
     this.onOverSoundMarker = '';
 
-    if (sound instanceof Phaser.Sound)
+    if (sound instanceof Phaser.Sound || sound instanceof Phaser.AudioSprite)
     {
         this.onOverSound = sound;
     }
@@ -383,7 +383,7 @@ Phaser.Button.prototype.setOverSound = function (sound, marker) {
 * The Sound to be played when a Pointer moves out of this Button.
 *
 * @method Phaser.Button.prototype.setOutSound
-* @param {Phaser.Sound} sound - The Sound that will be played.
+* @param {Phaser.Sound|Phaser.AudioSprite} sound - The Sound that will be played.
 * @param {string} [marker] - A Sound Marker that will be used in the playback.
 */
 Phaser.Button.prototype.setOutSound = function (sound, marker) {
@@ -391,7 +391,7 @@ Phaser.Button.prototype.setOutSound = function (sound, marker) {
     this.onOutSound = null;
     this.onOutSoundMarker = '';
 
-    if (sound instanceof Phaser.Sound)
+    if (sound instanceof Phaser.Sound || sound instanceof Phaser.AudioSprite)
     {
         this.onOutSound = sound;
     }
@@ -407,7 +407,7 @@ Phaser.Button.prototype.setOutSound = function (sound, marker) {
 * The Sound to be played when a Pointer presses down on this Button.
 *
 * @method Phaser.Button.prototype.setDownSound
-* @param {Phaser.Sound} sound - The Sound that will be played.
+* @param {Phaser.Sound|Phaser.AudioSprite} sound - The Sound that will be played.
 * @param {string} [marker] - A Sound Marker that will be used in the playback.
 */
 Phaser.Button.prototype.setDownSound = function (sound, marker) {
@@ -415,7 +415,7 @@ Phaser.Button.prototype.setDownSound = function (sound, marker) {
     this.onDownSound = null;
     this.onDownSoundMarker = '';
 
-    if (sound instanceof Phaser.Sound)
+    if (sound instanceof Phaser.Sound || sound instanceof Phaser.AudioSprite)
     {
         this.onDownSound = sound;
     }
@@ -431,7 +431,7 @@ Phaser.Button.prototype.setDownSound = function (sound, marker) {
 * The Sound to be played when a Pointer has pressed down and is released from this Button.
 *
 * @method Phaser.Button.prototype.setUpSound
-* @param {Phaser.Sound} sound - The Sound that will be played.
+* @param {Phaser.Sound|Phaser.AudioSprite} sound - The Sound that will be played.
 * @param {string} [marker] - A Sound Marker that will be used in the playback.
 */
 Phaser.Button.prototype.setUpSound = function (sound, marker) {
@@ -439,7 +439,7 @@ Phaser.Button.prototype.setUpSound = function (sound, marker) {
     this.onUpSound = null;
     this.onUpSoundMarker = '';
 
-    if (sound instanceof Phaser.Sound)
+    if (sound instanceof Phaser.Sound || sound instanceof Phaser.AudioSprite)
     {
         this.onUpSound = sound;
     }
