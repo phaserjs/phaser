@@ -10,6 +10,7 @@
  * @extends Strip
  * @param {Texture} texture - The texture to use on the rope.
  * @param {Array} points - An array of {PIXI.Point}.
+ *
  */
 PIXI.Rope = function(texture, points)
 {
@@ -24,6 +25,7 @@ PIXI.Rope = function(texture, points)
 
     this.refresh();
 };
+
 
 // constructor
 PIXI.Rope.prototype = Object.create( PIXI.Strip.prototype );
@@ -158,7 +160,6 @@ PIXI.Rope.prototype.updateTransform = function()
 
     PIXI.DisplayObjectContainer.prototype.updateTransform.call( this );
 };
-
 /*
  * Sets the texture that the Rope will use
  *
