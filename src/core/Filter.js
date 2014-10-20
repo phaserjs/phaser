@@ -131,7 +131,7 @@ Phaser.Filter.prototype = {
             var x = pointer.x / this.game.width;
             var y = 1 - pointer.y / this.game.height;
 
-            if (x !== this.prevPoint.x || y !== this.prevPoint)
+            if (x !== this.prevPoint.x || y !== this.prevPoint.y)
             {
                 this.uniforms.mouse.value.x = x.toFixed(2);
                 this.uniforms.mouse.value.y = y.toFixed(2);
