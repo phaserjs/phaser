@@ -221,6 +221,11 @@
 
             $types = explode('|', $output);
 
+            if (!is_array($types))
+            {
+                $types = array($output);
+            }
+
             //  @param {number[]|string[]} frames - An array of numbers or strings indicating which frames to play in which order.
             //  @param {(number[]|...number)} points - An array of 2d vectors that form the convex or concave polygon.
             //      Either [[0,0], [0,1],...] or a flat array of numbers that will be interpreted as [x,y, x,y, ...],
@@ -331,21 +336,33 @@
                     //  Valid DOM types?
                     if (!in_array($type, $this->domTypes) && !in_array($type, $this->dataTypes))
                     {
-                        //  Not a DOM type, shall we add PIXI to the front?
-                        if ($pixi)
+                        if ($pixi === null)
                         {
-                            if (substr($type, 0, 5) !== 'PIXI.')
+                            //  It's a ReturnType but we don't know which sort
+                            if (substr($type, 0, 7) !== 'Phaser.' && substr($type, 0, 5) !== 'PIXI.' && substr($type, 0, 3) !== 'p2.')
                             {
+                                //  Going to assume PIXI here as Phaser has the return types properly namespaced
                                 $types[$key] = "PIXI.$type";
                             }
                         }
                         else
                         {
-                            if (substr($type, 0, 7) !== 'Phaser.' && substr($type, 0, 5) !== 'PIXI.' && substr($type, 0, 3) !== 'p2.')
+                            //  Not a DOM type, shall we add PIXI to the front?
+                            if ($pixi)
                             {
-                                $types[$key] = "wtf.$type";
-                                echo($name . '=');
-                                var_dump($type);
+                                if (substr($type, 0, 5) !== 'PIXI.')
+                                {
+                                    $types[$key] = "PIXI.$type";
+                                }
+                            }
+                            else
+                            {
+                                if (substr($type, 0, 7) !== 'Phaser.' && substr($type, 0, 5) !== 'PIXI.' && substr($type, 0, 3) !== 'p2.')
+                                {
+                                    $types[$key] = "wtf.$type";
+                                    echo($name . '=');
+                                    var_dump($type);
+                                }
                             }
                         }
                     }

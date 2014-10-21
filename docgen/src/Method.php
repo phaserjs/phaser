@@ -87,7 +87,7 @@
 
             if ($block->getTypeBoolean('@return'))
             {
-                $this->returns = new ReturnType($block->getLine('@return'));
+                $this->returns = new ReturnType($this->processor, $block->getLine('@return'));
             }
 
         }

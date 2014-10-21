@@ -46,9 +46,9 @@
     echo "There are " . count($gen->uniqueTypes) . " unique data types \n\n";
     print_r($gen->uniqueTypes);
 
-    // $gen->extend('Phaser.Sprite');
-    // $sprite = $gen->get('Phaser.Sprite');
-    // $sprite->export('output/');
+    $gen->extend('Phaser.Sprite');
+    $sprite = $gen->get('Phaser.Sprite');
+    $sprite->export('output/');
 
 
     // echo $sprite;
