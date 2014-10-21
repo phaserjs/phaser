@@ -297,6 +297,8 @@ Phaser has been used to create hundreds of games, which receive millions of play
 
 Here are some of the features planned for future releases:
 
+* Restore Math.interpolateAngles and Math.nearestAngleBetween
+
 ### Version 2.2 ("Tarabon")
 
 * Look at HiDPI Canvas settings.
