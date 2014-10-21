@@ -104,7 +104,7 @@ PIXI.CanvasRenderer = function(width, height, options)
     /**
      * The canvas 2d context that everything is drawn with
      * @property context
-     * @type CanvasRenderingContext2D 2d Context
+     * @type CanvasRenderingContext2D
      */
     this.context = this.view.getContext( "2d", { alpha: this.transparent } );
 

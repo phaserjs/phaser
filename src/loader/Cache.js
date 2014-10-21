@@ -1154,7 +1154,7 @@ Phaser.Cache.prototype = {
     *
     * @method Phaser.Cache#getFrameCount
     * @param {string} key - Asset key of the image you want.
-    * @return {integer} Then number of frames. 0 if the image is not found.
+    * @return {number} Then number of frames. 0 if the image is not found.
     */
     getFrameCount: function (key) {
 
