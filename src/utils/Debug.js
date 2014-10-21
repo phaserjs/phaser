@@ -73,7 +73,7 @@ Phaser.Utils.Debug = function (game) {
     this.renderShadow = true;
 
     /**
-    * @property {Context} currentX - The current X position the debug information will be rendered at.
+    * @property {number} currentX - The current X position the debug information will be rendered at.
     * @default
     */
     this.currentX = 0;

@@ -94,7 +94,7 @@ Phaser.Tileset.prototype = {
     * Draws a tile from this Tileset at the given coordinates on the context.
     *
     * @method Phaser.Tileset#draw
-    * @param {HTMLCanvasContext} context - The context to draw the tile onto.
+    * @param {CanvasRenderingContext2D} context - The context to draw the tile onto.
     * @param {number} x - The x coordinate to draw to.
     * @param {number} y - The y coordinate to draw to.
     * @param {number} index - The index of the tile within the set to draw.

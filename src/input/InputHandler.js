@@ -786,6 +786,7 @@ Phaser.InputHandler.prototype = {
 
     /**
     * Update.
+    * 
     * @method Phaser.InputHandler#update
     * @protected
     * @param {Phaser.Pointer} pointer
@@ -804,11 +805,11 @@ Phaser.InputHandler.prototype = {
             return false;
         }
 
-        if (this.draggable && this._draggedPointerID == pointer.id)
+        if (this.draggable && this._draggedPointerID === pointer.id)
         {
             return this.updateDrag(pointer);
         }
-        else if (this._pointerData[pointer.id].isOver === true)
+        else if (this._pointerData[pointer.id].isOver)
         {
             if (this.checkPointerOver(pointer))
             {
@@ -826,6 +827,7 @@ Phaser.InputHandler.prototype = {
 
     /**
     * Internal method handling the pointer over event.
+    * 
     * @method Phaser.InputHandler#_pointerOverHandler
     * @private
     * @param {Phaser.Pointer} pointer
@@ -862,6 +864,7 @@ Phaser.InputHandler.prototype = {
 
     /**
     * Internal method handling the pointer out event.
+    * 
     * @method Phaser.InputHandler#_pointerOutHandler
     * @private
     * @param {Phaser.Pointer} pointer

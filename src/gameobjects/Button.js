@@ -461,6 +461,12 @@ Phaser.Button.prototype.setUpSound = function (sound, marker) {
 */
 Phaser.Button.prototype.onInputOverHandler = function (sprite, pointer) {
 
+    //  If the Pointer was only just released then we don't fire an over event
+    if (pointer.justReleased())
+    {
+        return;
+    }
+
     if (this.freezeFrames === false)
     {
         this.setState(1);

@@ -429,58 +429,6 @@ Phaser.Math = {
     },
 
     /**
-    * Closest angle between two angles from a1 to a2 absolute value the return for exact angle
-    * @method Phaser.Math#nearestAngleBetween
-    * @param {number} a1
-    * @param {number} a2
-    * @param {boolean} radians - True if angle sizes are expressed in radians.
-    * @return {number}
-    nearestAngleBetween: function (a1, a2, radians) {
-
-        if (typeof radians === "undefined") { radians = true; }
-
-        var rd = (radians) ? Math.PI : 180;
-        a1 = this.normalizeAngle(a1, radians);
-        a2 = this.normalizeAngle(a2, radians);
-
-        if (a1 < -rd / 2 && a2 > rd / 2)
-        {
-            a1 += rd * 2;
-        }
-
-        if (a2 < -rd / 2 && a1 > rd / 2)
-        {
-            a2 += rd * 2;
-        }
-
-        return a2 - a1;
-
-    },
-    */
-
-    /**
-    * Interpolate across the shortest arc between two angles.
-    * @method Phaser.Math#interpolateAngles
-    * @param {number} a1 - Description.
-    * @param {number} a2 - Description.
-    * @param {number} weight - Description.
-    * @param {boolean} radians - True if angle sizes are expressed in radians.
-    * @param {Description} ease - Description.
-    * @return {number}
-    interpolateAngles: function (a1, a2, weight, radians, ease) {
-
-        if (typeof radians === "undefined") { radians = true; }
-        if (typeof ease === "undefined") { ease = null; }
-
-        a1 = this.normalizeAngle(a1, radians);
-        a2 = this.normalizeAngleToAnother(a2, a1, radians);
-
-        return (typeof ease === 'function') ? ease(weight, a1, a2 - a1, 1) : this.interpolateFloat(a1, a2, weight);
-
-    },
-    */
-
-    /**
     * Generate a random bool result based on the chance value.
     * <p>
     * Returns true or false based on the chance value (default 50%). For example if you wanted a player to have a 30% chance
@@ -1014,7 +962,8 @@ Phaser.Math = {
     },
 
     /**
-    * Description.
+    * Calculates a linear value over t.
+    * 
     * @method Phaser.Math#Linear
     * @param {number} p0
     * @param {number} p1
@@ -1058,7 +1007,8 @@ Phaser.Math = {
     },
 
     /**
-    * Description.
+    * Calculates a callmum rom value.
+    * 
     * @method Phaser.Math#catmullRom
     * @param {number} p0
     * @param {number} p1
