@@ -82,13 +82,6 @@
             $this->scanFile();
         }
 
-        public function findType($type)
-        {
-            foreach ($this->methods as $key => $method)
-            {
-            }
-        }
-
         /**
         * Scans the given JS source file and extracts blocks from it
         */

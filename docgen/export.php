@@ -42,36 +42,18 @@
     $gen->start();
     // $gen->extend();
 
-    ksort($gen->uniqueTypes);
-    echo "There are " . count($gen->uniqueTypes) . " unique data types \n\n";
-    print_r($gen->uniqueTypes);
+    // ksort($gen->uniqueTypes);
+    // echo "There are " . count($gen->uniqueTypes) . " unique data types \n\n";
+    // print_r($gen->uniqueTypes);
 
     $gen->extend('Phaser.Sprite');
     $sprite = $gen->get('Phaser.Sprite');
     $sprite->export('output/');
 
+    echo $sprite;
 
-    // echo $sprite;
 
-    /*
-    foreach ($gen->classes as $key => $processor)
-    {
-        echo $key . " = " . $processor . "\n";
-        // echo $processor . "\n";
-        // echo $key . "\n";
-    }
 
-    echo "\n";
-    echo " - EXTENDING ... \n";
-    echo "\n";
-
-    $gen->extend();
-
-    foreach ($gen->classes as $key => $processor)
-    {
-        echo $key . " = " . $processor . "\n";
-    }
-    */
 
 ?>
     </pre>

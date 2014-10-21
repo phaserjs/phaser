@@ -19,10 +19,8 @@
     $gen = new PhaserDocGen();
     $gen->start();
 
-    $sprite = $gen->get('Phaser.Sprite');
+    $obj = $gen->get($src);
+    $obj->extend();
 
-    $gen->extend('Phaser.Sprite');
-
-    echo $sprite->getJSON();
-
+    echo $obj->getJSON();
 ?>
