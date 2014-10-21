@@ -39,18 +39,32 @@
 <?php
 
     $gen = new PhaserDocGen();
+
+    echo "Starting ...\n";
+
     $gen->start();
-    // $gen->extend();
+
+    echo "Extending ...\n";
+
+    $gen->extend();
+
+    echo "Exporting ...\n";
+
+    $gen->export('output/');
+
+    // $obj = $gen->get('Phaser.Animation');
+    // print_r($obj->getArray());
+    // echo $obj;
 
     // ksort($gen->uniqueTypes);
     // echo "There are " . count($gen->uniqueTypes) . " unique data types \n\n";
     // print_r($gen->uniqueTypes);
 
-    $gen->extend('Phaser.Sprite');
-    $sprite = $gen->get('Phaser.Sprite');
-    $sprite->export('output/');
+    // $gen->extend('Phaser.Sprite');
+    // $sprite = $gen->get('Phaser.Sprite');
+    // $sprite->export('output/');
 
-    echo $sprite;
+    // echo $sprite;
 
 
 

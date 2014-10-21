@@ -51,13 +51,23 @@
             }
         }
 
-        public function findType($type)
+        public function export($path, $classKey = '')
         {
-            foreach ($this->classes as $key => $processor)
+            if ($classKey !== '')
             {
-                if ($processor->findType($type))
+                $this->classes[$classKey]->export($path);
+            }
+            else
+            {
+                //  This will go through each class and add in inherited properties, etc
+                foreach ($this->classes as $key => $processor)
                 {
-                    return $processor->file;
+                    if ($processor !== 'corrupted')
+                    {
+                        $processor->export($path);
+                        echo "Exported $key\n";
+                        // echo $processor . "\n";
+                    }
                 }
             }
         }
