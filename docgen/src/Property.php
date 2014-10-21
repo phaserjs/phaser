@@ -68,9 +68,10 @@
 
         public function parsePhaser($output, $block)
         {
-            $this->types = explode('|', $output[2]);
             $this->name = $output[3];
             $this->inlineHelp = $output[5];
+
+            $this->types = $this->processor->parseTypes($output[2], false, $this->name);
 
             //  Default?
             if ($block->getTypeBoolean('@default'))
@@ -100,7 +101,7 @@
 
             if ($block->getTypeBoolean('@type'))
             {
-                $this->types[] = $block->getTag('@type');
+                $this->types = $this->processor->parseTypes($block->getTag('@type'), true, $this->name);
             }
 
             if ($block->getTypeBoolean('@default'))

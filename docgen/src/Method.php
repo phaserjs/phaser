@@ -52,9 +52,9 @@
                 }
             }
 
-            $this->processor->log("vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv");
-            $this->processor->log("Method: $name");
-            $this->processor->log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+            // $this->processor->log("vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv");
+            // $this->processor->log("Method: $name");
+            // $this->processor->log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
 
             $this->name = $name;
 

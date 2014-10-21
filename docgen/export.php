@@ -37,16 +37,23 @@
 
     <pre>
 <?php
+
     $gen = new PhaserDocGen();
     $gen->start();
-
     // $gen->extend();
 
-    // $sprite = $gen->get('Phaser.Sprite');
-    // echo $sprite;
+    ksort($gen->uniqueTypes);
+    echo "There are " . count($gen->uniqueTypes) . " unique data types \n\n";
+    print_r($gen->uniqueTypes);
+
     // $gen->extend('Phaser.Sprite');
+    // $sprite = $gen->get('Phaser.Sprite');
+    // $sprite->export('output/');
+
+
     // echo $sprite;
 
+    /*
     foreach ($gen->classes as $key => $processor)
     {
         echo $key . " = " . $processor . "\n";
@@ -64,6 +71,7 @@
     {
         echo $key . " = " . $processor . "\n";
     }
+    */
 
 ?>
     </pre>

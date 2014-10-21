@@ -26,7 +26,7 @@
             {
                 preg_match("/(@param)\s(\S*)\s{(\S*)}\s?(.*)?/", $line, $output);
 
-                $this->processor->log("parsePixi parameter - " . count($output));
+                // $this->processor->log("parsePixi parameter - " . count($output));
     
                 if (count($output) > 0)
                 {
@@ -40,7 +40,7 @@
         {
             $name = $output[3];
             
-            $this->processor->log("parameter: $name");
+            // $this->processor->log("parameter: $name");
 
             if ($name[0] === '[')
             {
@@ -59,26 +59,7 @@
 
             $this->name = $name;
 
-            //  Remove optional braces
-            if (substr($output[2], 0, 1) === "(")
-            {
-                $output[2] = substr($output[2], 1, -1);
-            }
-
-            $this->types = explode('|', $output[2]);
-
-            //  @param {number[]|string[]} frames - An array of numbers or strings indicating which frames to play in which order.
-            //  @param {(number[]|...number)} points - An array of 2d vectors that form the convex or concave polygon.
-            //      Either [[0,0], [0,1],...] or a flat array of numbers that will be interpreted as [x,y, x,y, ...],
-            //      or the arguments passed can be flat x,y values e.g. `setPolygon(options, x,y, x,y, x,y, ...)` where `x` and `y` are numbers.
-
-            foreach ($this->types as $key => $type)
-            {
-                if (substr($type, -2) === "[]")
-                {
-                    $this->types[$key] = "Array " . substr($type, 0, -2);
-                }
-            }
+            $this->types = $this->processor->parseTypes($output[2], false, $name);
 
             $this->help[] = $output[5];
 
@@ -87,14 +68,16 @@
         public function parsePixi($output)
         {
             $this->name = $output[2];
-            $this->types[] = $output[3];
 
-            $this->processor->log("parameter: $this->name");
+            // $this->processor->log("parameter: $this->name");
+
+            $this->types = $this->processor->parseTypes($output[3], true, $this->name);
 
             if (isset($output[4]))
             {
                 $this->help[] = $output[4];
             }
+
         }
 
         public function getArray()

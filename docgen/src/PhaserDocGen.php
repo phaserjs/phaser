@@ -9,6 +9,8 @@
         public $files;
         public $classes;
 
+        public $uniqueTypes;
+
         /**
         * Processes the Phaser / Pixi source code
         * 
@@ -17,6 +19,8 @@
         public function __construct()
         {
             $this->src = realpath('../src');
+
+            $this->uniqueTypes = [];
 
             $this->classes = [];
         }
@@ -45,7 +49,17 @@
                     }
                 }
             }
+        }
 
+        public function findType($type)
+        {
+            foreach ($this->classes as $key => $processor)
+            {
+                if ($processor->findType($type))
+                {
+                    return $processor->file;
+                }
+            }
         }
 
         public function get($classKey)
