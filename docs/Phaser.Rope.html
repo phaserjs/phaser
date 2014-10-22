@@ -561,7 +561,7 @@
     
         
 <dt>
-    <h4 class="name" id="Rope"><span class="type-signature"></span>new Rope<span class="signature">(game, x, y, width, height, key, frame)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="Rope"><span class="type-signature"></span>new Rope<span class="signature">(game, x, y, key, frame, points)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -570,7 +570,8 @@
     
     <div class="description">
         <p>A Rope is a Sprite that has a repeating texture. The texture can be scrolled and scaled and will automatically wrap on the edges as it does so.
-Please note that Ropes, as with normal Sprites, have no input handler or physics bodies by default. Both need enabling.</p>
+Please note that Ropes, as with normal Sprites, have no input handler or physics bodies by default. Both need enabling.
+Example usage: <a href="https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/demo.js">https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/demo.js</a></p>
     </div>
     
 
@@ -673,52 +674,6 @@ Please note that Ropes, as with normal Sprites, have no input handler or physics
 
         <tr>
             
-                <td class="name"><code>width</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The width of the Rope.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>height</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The height of the Rope.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
                 <td class="name"><code>key</code></td>
             
 
@@ -771,6 +726,29 @@ Please note that Ropes, as with normal Sprites, have no input handler or physics
             
 
             <td class="description last"><p>If this Rope is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>points</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Array.html">Array</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>An array of {Phaser.Point}.</p></td>
         </tr>
 
 	
@@ -834,7 +812,7 @@ Please note that Ropes, as with normal Sprites, have no input handler or physics
         <h3 class="subsection-title">Extends</h3>
 
         <ul>
-            <li>Pixi.Rope</li>
+            <li>PIXI.Rope</li>
         </ul>
     
 
@@ -942,7 +920,7 @@ If you wish to work in radians instead of degrees use the property Sprite.rotati
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Rope.js.html">gameobjects/Rope.js</a>, <a href="Rope.js.html#sunlight-1-line-527">line 527</a>
+        <a href="Rope.js.html">gameobjects/Rope.js</a>, <a href="Rope.js.html#sunlight-1-line-524">line 524</a>
     </li></ul></dd>
     
 
@@ -1592,7 +1570,7 @@ bounds every frame to support it, and not all games need it. Enable it by settin
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Rope.js.html">gameobjects/Rope.js</a>, <a href="Rope.js.html#sunlight-1-line-820">line 820</a>
+        <a href="Rope.js.html">gameobjects/Rope.js</a>, <a href="Rope.js.html#sunlight-1-line-817">line 817</a>
     </li></ul></dd>
     
 
@@ -1802,7 +1780,7 @@ Setting Rope.exists to true will re-add the Body to the physics world (if it has
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Rope.js.html">gameobjects/Rope.js</a>, <a href="Rope.js.html#sunlight-1-line-624">line 624</a>
+        <a href="Rope.js.html">gameobjects/Rope.js</a>, <a href="Rope.js.html#sunlight-1-line-621">line 621</a>
     </li></ul></dd>
     
 
@@ -1910,7 +1888,7 @@ So if this Rope was in a Group that has x: 200, then this will be added to the c
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Rope.js.html">gameobjects/Rope.js</a>, <a href="Rope.js.html#sunlight-1-line-593">line 593</a>
+        <a href="Rope.js.html">gameobjects/Rope.js</a>, <a href="Rope.js.html#sunlight-1-line-590">line 590</a>
     </li></ul></dd>
     
 
@@ -2012,7 +1990,7 @@ So if this Rope was in a Group that has x: 200, then this will be added to the c
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Rope.js.html">gameobjects/Rope.js</a>, <a href="Rope.js.html#sunlight-1-line-551">line 551</a>
+        <a href="Rope.js.html">gameobjects/Rope.js</a>, <a href="Rope.js.html#sunlight-1-line-548">line 548</a>
     </li></ul></dd>
     
 
@@ -2114,7 +2092,7 @@ So if this Rope was in a Group that has x: 200, then this will be added to the c
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Rope.js.html">gameobjects/Rope.js</a>, <a href="Rope.js.html#sunlight-1-line-572">line 572</a>
+        <a href="Rope.js.html">gameobjects/Rope.js</a>, <a href="Rope.js.html#sunlight-1-line-569">line 569</a>
     </li></ul></dd>
     
 
@@ -2428,7 +2406,7 @@ activated for this object and it will then start to process click/touch events a
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Rope.js.html">gameobjects/Rope.js</a>, <a href="Rope.js.html#sunlight-1-line-671">line 671</a>
+        <a href="Rope.js.html">gameobjects/Rope.js</a>, <a href="Rope.js.html#sunlight-1-line-668">line 668</a>
     </li></ul></dd>
     
 
@@ -2747,7 +2725,7 @@ activated for this object and it will then start to process click/touch events a
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Rope.js.html">gameobjects/Rope.js</a>, <a href="Rope.js.html#sunlight-1-line-793">line 793</a>
+        <a href="Rope.js.html">gameobjects/Rope.js</a>, <a href="Rope.js.html#sunlight-1-line-790">line 790</a>
     </li></ul></dd>
     
 
@@ -2955,7 +2933,7 @@ activated for this object and it will then start to process click/touch events a
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Rope.js.html">gameobjects/Rope.js</a>, <a href="Rope.js.html#sunlight-1-line-766">line 766</a>
+        <a href="Rope.js.html">gameobjects/Rope.js</a>, <a href="Rope.js.html#sunlight-1-line-763">line 763</a>
     </li></ul></dd>
     
 
@@ -3163,7 +3141,7 @@ activated for this object and it will then start to process click/touch events a
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Rope.js.html">gameobjects/Rope.js</a>, <a href="Rope.js.html#sunlight-1-line-712">line 712</a>
+        <a href="Rope.js.html">gameobjects/Rope.js</a>, <a href="Rope.js.html#sunlight-1-line-709">line 709</a>
     </li></ul></dd>
     
 
@@ -3269,7 +3247,7 @@ activated for this object and it will then start to process click/touch events a
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Rope.js.html">gameobjects/Rope.js</a>, <a href="Rope.js.html#sunlight-1-line-739">line 739</a>
+        <a href="Rope.js.html">gameobjects/Rope.js</a>, <a href="Rope.js.html#sunlight-1-line-736">line 736</a>
     </li></ul></dd>
     
 
@@ -3506,7 +3484,7 @@ and nulls its reference to game, freeing it up for garbage collection.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Rope.js.html">gameobjects/Rope.js</a>, <a href="Rope.js.html#sunlight-1-line-403">line 403</a>
+        <a href="Rope.js.html">gameobjects/Rope.js</a>, <a href="Rope.js.html#sunlight-1-line-400">line 400</a>
     </li></ul></dd>
     
 
@@ -3912,7 +3890,7 @@ If the requested animation is already playing this request will be ignored. If y
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Rope.js.html">gameobjects/Rope.js</a>, <a href="Rope.js.html#sunlight-1-line-473">line 473</a>
+        <a href="Rope.js.html">gameobjects/Rope.js</a>, <a href="Rope.js.html#sunlight-1-line-470">line 470</a>
     </li></ul></dd>
     
 
@@ -4216,7 +4194,7 @@ If the Rope has a physics body that too is reset.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Rope.js.html">gameobjects/Rope.js</a>, <a href="Rope.js.html#sunlight-1-line-491">line 491</a>
+        <a href="Rope.js.html">gameobjects/Rope.js</a>, <a href="Rope.js.html#sunlight-1-line-488">line 488</a>
     </li></ul></dd>
     
 
@@ -4466,7 +4444,7 @@ This is primarily an internal method used by Rope.loadTexture, although you may 
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Thu Oct 09 2014 16:10:06 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Wed Oct 22 2014 21:46:05 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

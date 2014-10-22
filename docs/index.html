@@ -586,9 +586,9 @@
 <li><a href="#license">License</a></li>
 </ul>
 <p>&lt;a name=&quot;about&quot;&gt;&lt;/a&gt;</p>
-<h1>Phaser 2.1.2</h1>
+<h1>Phaser 2.1.3</h1>
 <p>Phaser is a fast, free and fun open source game framework for making desktop and mobile browser HTML5 games. It uses <a href="https://github.com/GoodBoyDigital/pixi.js/">Pixi.js</a> internally for fast 2D Canvas and WebGL rendering.</p>
-<p>Version: 2.1.2 &quot;Whitebridge&quot; - Released: 9th October 2014</p>
+<p>Version: 2.1.3 &quot;Ravinda&quot; - Released: 23rd October 2014</p>
 <p>By Richard Davey, <a href="http://www.photonstorm.com">Photon Storm</a></p>
 <ul>
 <li>View the <a href="http://phaser.io">Official Website</a></li>
@@ -604,11 +604,14 @@
 </ul>
 <p><img src="http://phaser.io/images/div4.png" alt="div"></p>
 <p>&lt;a name=&quot;whats-new&quot;&gt;&lt;/a&gt;</p>
-<h2>Welcome to Phaser and What's new in 2.1.2?</h2>
-<p>Phaser 2.1.2 carries on with our latest round of new features, updates and fixes, demonstrating our commitment to continuously improving our framework and responding to feedback.</p>
-<p>This release adds in a number of new features including Audio Sprite json format support, native loading of XML files, Sound fades, per character Text colours, further updates to BitmapData, the ability to use BitmapData with frames as Sprite textures, Group filter, search the Cache by URL and plenty of updates and bug fixes too - including the death of the pesky getPixel issue on Safari / iOS.</p>
-<p>Internally we are using Phaser in ever larger client based projects. Thousands of lines of code spread across many States and classes, and we're paying close attention to how best to adapt the API to make life easier for those building apps of the size we are. If there are any features you would like to see then now is the time to suggest them, either by email, the forum or github.</p>
-<p>We're also pleased to announce that we have 3 new premium plugins gearing up for launch. They are:</p>
+<h2>Welcome to Phaser and What's new in 2.1.3?</h2>
+<p><img src="http://www.phaser.io/images/pixi-v2.png" alt="Pixi 2.0"></p>
+<p>Over at Goodboy Digital they've been working away on Pixi v2 for some time now. As Phaser is built on-top of Pixi we've a vested interest in what is happening in Pixi land and it's implications for Phaser. And Pixi v2 is their latest, freshest release.</p>
+<p>There's a detailed <a href="http://www.goodboydigital.com/pixi-js-version-2-now-read/">blog post</a> explaining all about it, but the headliners include full High DPI canvas support, iOS8 WebGL fixes, improved rendering performance, significant updates to the Graphics class and sprite level shaders.</p>
+<p>There have been a few API changes to accommodate all of this, but we've been able to blend all of those into Phaser so that the Phaser API hasn't had to change for you at all. Instead you get to reap the benefits :)</p>
+<p>As well as Pixi v2 there are also more updates and fixes in this release and you can see the change log below for full details.</p>
+<h2>Premium Phaser Plugins</h2>
+<p>We're pleased to announce that we have 3 new premium plugins gearing up for launch. They are:</p>
 <p>Phaser Box2D - Adds complete Box2D support directly into Phaser, with lots of help methods, over 50 examples and 5 demo games.</p>
 <p>Phaser Path Manager - Create complex motion paths for Sprites with a lovely visual editor and this new plugin. No longer rely on tweens for motion :) Instead draw a path, with full branch support, path orientation, segment speeds, path events and more.</p>
 <p>Advanced Particle System - The particles included with Phaser are flexible and can create attractive effects. But Advanced Particles is a complete replacement offering professional level particle effects for your games. From multiple render targets, to bitmap caching to all kinds of events, emitters and properties.</p>
@@ -626,56 +629,66 @@
 <p><img src="http://phaser.io/images/div2.png" alt="div"></p>
 <p>&lt;a name=&quot;change-log&quot;&gt;&lt;/a&gt;</p>
 <h2>Change Log</h2>
-<p>Version 2.1.2 - &quot;Whitebridge&quot; - October 9th 2014</p>
+<p>Version 2.1.3 - &quot;Ravinda&quot; - 23rd October 2014</p>
 <h3>New Features</h3>
 <ul>
-<li>StateManager.unlink will null all State-level Phaser properties, such as <code>game</code>, <code>add</code>, etc. Useful if you never need to return to the State again.</li>
-<li>Cache.removeImage has a new parameter: <code>removeFromPixi</code> which is <code>true</code> by default. It will remove the image from the Pixi BaseTextureCache as well as from the Phaser Cache. Set to false if you don't want the Pixi cache touched.</li>
-<li>Group.ignoreDestroy boolean will bail out early from any call to <code>Group.destroy</code>. Handy if you need to create a global Group that persists across States.</li>
-<li>Loader can now natively load XML files via <code>load.xml</code>. Once the XML file has loaded it is parsed via either DOMParser or ActiveXObject and then added to the Cache, where it can be retrieved via <code>cache.getXML(key)</code>.</li>
-<li>Cache now has support for XML files stored in their own container. You can add them with <code>cache.addXML</code> (typically this is done from the Loader automatically for you) and get them with <code>cache.getXML(key)</code>. There is also <code>cache.checkXMLKey(key)</code>, <code>cache.checkKeys</code> and <code>cache.removeXML(key)</code>.</li>
-<li>Rectangle.aabb is a new method that will take an array of Points and return a Rectangle that matches the AABB (bounding area) of the Points (thanks @codevinsky #1199)</li>
-<li>AudioSprite support is now built into the Loader and SoundManager. AudioSprites are like sprite sheets, only they consist of a selection of audio files and markers in a json configuration. You can find more details at <a href="https://github.com/tonistiigi/audiosprite">https://github.com/tonistiigi/audiosprite</a> (thanks @codevinsky #1205)</li>
-<li>Point.parse will return a new Point object based on the x and y properties of the object given to Point.parse (thanks @codevinsky #1198)</li>
-<li>Sound.fadeOut(duration) will fade the Sound to a volume of zero over the duration given. At the end of the fade the Sound will be stopped and Sound.onFadeComplete dispatched.</li>
-<li>Sound.fadeIn(duration, loop) will start the Sound playing, or restart it if already playing, set its volume to zero and then increase the volume over the duration given until it reaches 1. At the end of the fade the Sound.onFadeComplete event is dispatched.</li>
-<li>Text.addColor allows you to set specific colors within the Text. It works by taking a color value, which is a typical HTML string such as <code>#ff0000</code> or <code>rgb(255,0,0)</code> and a position. The position value is the index of the character in the Text string to start applying this color to. Once set the color remains in use until either another color or the end of the string is encountered. For example if the Text was <code>Photon Storm</code> and you did <code>Text.addColor('#ffff00', 6)</code> it would color in the word <code>Storm</code> in yellow.</li>
-<li>Text.clearColors resets any previously set colors from <code>Text.addColor</code>.</li>
-<li>If you pass a tinted Sprite to <code>BitmapData.draw</code> or <code>BitmapData.copy</code> it will now draw the tinted version of the Sprite to the BitmapData and not the original texture.</li>
-<li>BitmapData.shadow(color, blur, x, y) provides a quick way to set all the relevant shadow settings, which are then be used in future draw calls.</li>
-<li>Cache.addBitmapData has a new parameter: <code>frameData</code> allowing you to pass a <code>Phaser.FrameData</code> object along with the BitmapData.</li>
-<li>Cache.getFrameData has a new parameter: <code>map</code> which allows you to specify which cache to get the FrameData from, i.e. <code>Phaser.Cache.IMAGE</code> or <code>Phaser.Cache.BITMAPDATA</code>.</li>
-<li>Sprite.loadTexture if given a BitmapData as the texture will now query the cache to see if it has any associated FrameData, and if so it will load that into the AnimationManager.</li>
-<li>BitmapData.textureLine takes a Phaser.Line object and an image in the image cache. It then accurately draws the image as a repeating texture for the full length of the line.</li>
-<li>AnimationManager.name will now return the <code>name</code> property of the currently playing animation, if any.</li>
-<li>Group.filter takes a predicate function and passes child, index, and the entire child array to it. It then returns an ArrayList containing all children that the predicate returns true for (thanks @codevinsky #1187)</li>
-<li>Cache.checkUrl allows you to check if a resource is in the cache based on an absolute URL (thanks @englercj #1221)</li>
-<li>Cache.getUrl gets a resource from the cache based on the absolute URL it was loaded from (thanks @englercj #1221)</li>
-<li>Sound.allowMultiple allows you to have multiple instances of a single Sound playing at once. This is only useful when running under Web Audio, and we recommend you implement a local pooling system to not flood the sound channels. But it allows for one Sound object to play overlapping times, useful for gun effects and similar (#1220)</li>
+<li>Updated to Pixi v2.0.0 (see change list below)</li>
+<li>Happily removed the IE11 WebGL lock as Pixi now fully supports it :)</li>
+<li>Time.prevTime is a new property that contains the raw value of the game timer from the previous update.</li>
+<li>Sound.fadeTo allows you to fade the Sound to the given volume over the duration specified (thanks @nickryall #1225)</li>
+<li>BitmapData.getFirstPixel will scan the BitmapData and return the color and location of the first non-transparent pixel encountered. You can specify one of 4 scan directions: top to bottom, bottom to top, left to right and right to left.</li>
+<li>BitmapData.getBounds will return a <code>Rectangle</code> object that encompasses the full extent of the non-transparent pixels in the BitmapData. This can be useful if you wish to trim away transparent pixels from the sides of a BitmapData down to size before saving.</li>
+<li>Rectangle.scale allows you to scale the width and height of a Rectangle.</li>
+<li>RenderTexture has a new optional parameter: <code>resolution</code></li>
 </ul>
 <h3>Updates</h3>
 <ul>
-<li>TypeScript definitions fixes and updates (thanks @clark-stevenson @englercj @benjamindulau)</li>
-<li>Added the <code>sourceRect</code> and <code>maskRect</code> parameters back into <code>BitmapData.alphaMask</code> as they were accidentally removed in 2.1 (thanks seejay92)</li>
-<li>jsdoc fixes (thanks @danxexe #1209)</li>
-<li>AnimationParser is now using <code>value</code> instead of <code>nodeValue</code> when parsing atlas XML files, avoiding Chrome deprecation warnings (thanks @valtterip #1189)</li>
-<li>Color.webToColor restored. Converts a CSS rgba color into a native color value.</li>
-<li>Color.createColor now populates the <code>color</code> property of the returned object with the results of <code>Phaser.Color.getColor</code>.</li>
-<li>Color.createColor now has a <code>color32</code> property with the results of <code>Phaser.Color.getColor32</code>.</li>
-<li>Color.hexToColor has been optimised to inline the regex and has moved the createColor call so it now populates the color object fully, not just setting the r,g,b properties.</li>
-<li>Keyboard.PLUS and Keyboard.MINUS have been added to the list of key codes (thanks @VictorBjelkholm #1281)</li>
+<li>TypeScript definitions fixes and updates (thanks @clark-stevenson)</li>
+<li>Changed the Animation constructor parameter <code>delay</code> to <code>frameRate</code> as it's a more accurate term of what it should be. Internally nothing changed.</li>
+<li>Circle.getBounds added.</li>
+<li>Ellipse.getBounds added.</li>
+<li>Device.canPlayAudio now supports <code>opus</code> files directly, as well as <code>opus</code> encoded audio stored in ogg containers (#1232)</li>
+<li>PIXI.AbstractFilter is now bundled by default to support the new <code>sprite.shader</code> feature in Pixi v2.</li>
+<li>Changed all typeof comparisons from == to === (thanks @bobbywilson0 #1230)</li>
+<li>JSDoc fixes in the Rope class (thanks @Rovanion)</li>
+<li>Filter.update now caches the previous pointer position to avoid flooding the uniform. Also the mouse uniform is now a value between 0 and 1 depending on the position within the game view.</li>
 </ul>
 <h3>Bug Fixes</h3>
 <ul>
-<li>If Game Objects change their frame, such as with an animated Sprite, and the change goes from a previously trimmed frame to a non-trimmed (full size) one, then the previous trim values were still left active, causing it to glitch (thanks stupot)</li>
-<li>If you called StateManager.start from within a states <code>init</code> method which also had a <code>preload</code> method it would fail to start the next State.</li>
-<li>StateManager.boot would call start on a State twice if it was added to the game and started before the DOM load had completed. This didn't cause an error but was duplicating function calls needlessly.</li>
-<li>Changing any of the Text properties such as font, lineSpacing and fontSize on a Text object that wasn't already on the display list would cause an updateTransform error. Parent is now checked first in all setters.</li>
-<li>A Timer with a delay value that was a float and not an integer would not loop correctly. Timer delay values are now passed through Math.round to avoid this (thanks @osmanzeki #1196)</li>
-<li>The Loader would incorrectly call <code>fileComplete</code> for legacy audio files instead of setting it as a callback, throwing up errors if the audio file failed to load (thanks @spayton #1212)</li>
-<li>The Uint32Array check used in Utils was incorrectly replacing Uint32Array on Safari, causing errors like BitmapData.getPixel32 to fail and other related issues (fixes #1043 and #1197)</li>
-<li>Camera.follow would break if the parent of the Sprite being followed was scaled in any way (thanks @englercj #1222)</li>
-<li>Fixed the 4fv uniform in the Pixelate filter.</li>
+<li>Fixed a reference error to the Loader.baseURL in Cache._resolveUrl method. This stops the error where Safari would show lots of file load errors but then still load the files (thanks @neurofuzzy #1235)</li>
+<li>Fixed the Filter mouse uniform value population.</li>
+<li>Fixed an issue where audio files with query strings after them would fail the <code>canPlayAudio</code> checks (thanks Vithar)</li>
+<li>Input.hitTest now accurately detects hits on the extreme edges of a display object (thanks InsaneHero)</li>
+<li>Button.setSounds now works if given an AudioSprite as the sound source.</li>
+</ul>
+<h3>Pixi v2 Specific New Features</h3>
+<ul>
+<li>Sprites can now have a custom shader applied to them. Much better performance than filters.</li>
+<li>Renderers now have a resolution. Ideal for working with different pixel density.</li>
+<li>Big refactor of the webGLRenderer and WebGLSpriteBatch renderer.</li>
+<li>Refactor of CanvasRenderer.</li>
+<li>DisplayObject.updateTransform function rewritten with for better performance.</li>
+<li>New Events Class.</li>
+<li>New Constructor for all renderers (including autoDetect)</li>
+<li>Massive Refactor of Graphics (WebGL and Canvas)</li>
+<li>Graphics objects can now be interactive.</li>
+<li>Made removeChild no longer returns error.</li>
+<li>Lots of new functions added to the Matrix class.</li>
+<li>RenderTexture refactored. Now accepts Matrix in the render function.</li>
+<li>AsciiFilter, NoiseFilter and TiltShiftFilter.</li>
+<li>added getChildIndex and setChildIndex methods to DisplayObjectContainer.</li>
+<li>Bug Fixes.</li>
+</ul>
+<h3>Pixi v2 Specific Bug Fixes</h3>
+<ul>
+<li>iOS8 alpha bug fixed.</li>
+<li>set default padding to 0 for graphics objects.</li>
+<li>PIXI.Graphics initial width and height is 0.</li>
+<li>Fixed Graphics getBounds.</li>
+<li>fix cacheAsBitmap alpha issue for canvas.</li>
+<li>Fixed minY calculation in updateBounds.</li>
+<li>Fixed Bezier issue on Graphics.</li>
+<li>Added 0 width check to DisplayObjectContainer.</li>
 </ul>
 <p>For details about changes made in previous versions of Phaser see the full Change Log at <a href="https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md">https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md</a></p>
 <p><img src="http://phaser.io/images/div3.png" alt="div"></p>
@@ -704,9 +717,9 @@
 <p>&lt;a name=&quot;cdnjs&quot;&gt;&lt;/a&gt;</p>
 <h2>CDNJS</h2>
 <p>Phaser is now available on <a href="http://cdnjs.com">CDNJS</a>. You can include the following in your html:</p>
-<p><code>http://cdnjs.cloudflare.com/ajax/libs/phaser/2.1.2/phaser.min.js</code></p>
+<p><code>http://cdnjs.cloudflare.com/ajax/libs/phaser/2.1.3/phaser.min.js</code></p>
 <p>Or if you prefer you can leave the protocol off, so it works via http and https:</p>
-<p><code>//cdnjs.cloudflare.com/ajax/libs/phaser/2.1.2/phaser.min.js</code></p>
+<p><code>//cdnjs.cloudflare.com/ajax/libs/phaser/2.1.3/phaser.min.js</code></p>
 <p><img src="http://phaser.io/images/div1.png" alt="div"></p>
 <p>&lt;a name=&quot;requirements&quot;&gt;&lt;/a&gt;</p>
 <h2>Requirements</h2>
@@ -779,7 +792,7 @@ Sprites also have full Input support: click them, touch them, drag them around, 
 <p>Here are some of the features planned for future releases:</p>
 <h3>Version 2.2 (&quot;Tarabon&quot;)</h3>
 <ul>
-<li>Look at HiDPI Canvas settings.</li>
+<li>Restore Math.interpolateAngles and Math.nearestAngleBetween</li>
 <li>Enhance the State Management, so you can perform non-destructive State swaps and persistence.</li>
 <li>Scene Manager - json scene parser.</li>
 <li>Adjust how Pointers and Interactive Objects work. Allow an IO to be flagged as &quot;on click only&quot;, so it doesn't ever get processed during normal Pointer move events (unless being dragged)</li>
@@ -859,7 +872,7 @@ Sprites also have full Input support: click them, touch them, drag them around, 
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Thu Oct 09 2014 16:09:46 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Wed Oct 22 2014 21:45:45 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>
