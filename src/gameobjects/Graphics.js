@@ -195,24 +195,6 @@ Phaser.Graphics.prototype.destroy = function(destroyChildren) {
 };
 
 /*
-* Draws a {Phaser.Polygon} or a {PIXI.Polygon} filled
-*
-* @method Phaser.Graphics.prototype.drawPolygon
-*/
-Phaser.Graphics.prototype.drawPolygon = function (poly) {
-
-    this.moveTo(poly.points[0].x, poly.points[0].y);
-
-    for (var i = 1; i < poly.points.length; i += 1)
-    {
-        this.lineTo(poly.points[i].x, poly.points[i].y);
-    }
-
-    this.lineTo(poly.points[0].x, poly.points[0].y);
-
-};
-
-/*
 * Draws a single {Phaser.Polygon} triangle from a {Phaser.Point} array
 *
 * @method Phaser.Graphics.prototype.drawTriangle
