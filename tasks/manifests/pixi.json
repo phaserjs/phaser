@@ -1,6 +1,7 @@
 [
     "src/pixi/Intro.js",
     "src/pixi/Pixi.js",
+    "src/pixi/geom/Polygon.js",
     "src/pixi/geom/Matrix.js",
     "src/pixi/display/DisplayObject.js",
     "src/pixi/display/DisplayObjectContainer.js",
