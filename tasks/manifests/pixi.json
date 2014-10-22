@@ -1,7 +1,7 @@
 [
     "src/pixi/Intro.js",
     "src/pixi/Pixi.js",
-    "src/pixi/core/Matrix.js",
+    "src/pixi/geom/Matrix.js",
     "src/pixi/display/DisplayObject.js",
     "src/pixi/display/DisplayObjectContainer.js",
     "src/pixi/display/Sprite.js",
