@@ -25,7 +25,7 @@
 
 Phaser is a fast, free and fun open source game framework for making desktop and mobile browser HTML5 games. It uses [Pixi.js](https://github.com/GoodBoyDigital/pixi.js/) internally for fast 2D Canvas and WebGL rendering.
 
-Version: 2.1.3 "Ravinda" - Released: in development
+Version: 2.1.3 "Ravinda" - Released: 23rd October 2014
 
 By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 
@@ -44,6 +44,26 @@ By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 
 <a name="whats-new"></a>
 ## Welcome to Phaser and What's new in 2.1.3?
+
+![Pixi 2.0](http://www.phaser.io/images/pixi-v2.png)
+
+Over at Goodboy Digital they've been working away on Pixi v2 for some time now. As Phaser is built on-top of Pixi we've a vested interest in what is happening in Pixi land and it's implications for Phaser. And Pixi v2 is their latest, freshest release.
+
+There's a detailed [blog post](http://www.goodboydigital.com/pixi-js-version-2-now-read/) explaining all about it, but the headliners include full High DPI canvas support, iOS8 WebGL fixes, improved rendering performance, significant updates to the Graphics class and sprite level shaders.
+
+There have been a few API changes to accommodate all of this, but we've been able to blend all of those into Phaser so that the Phaser API hasn't had to change for you at all. Instead you get to reap the benefits :)
+
+As well as Pixi v2 there are also more updates and fixes in this release and you can see the change log below for full details.
+
+## Premium Phaser Plugins
+
+We're pleased to announce that we have 3 new premium plugins gearing up for launch. They are:
+
+Phaser Box2D - Adds complete Box2D support directly into Phaser, with lots of help methods, over 50 examples and 5 demo games.
+
+Phaser Path Manager - Create complex motion paths for Sprites with a lovely visual editor and this new plugin. No longer rely on tweens for motion :) Instead draw a path, with full branch support, path orientation, segment speeds, path events and more.
+
+Advanced Particle System - The particles included with Phaser are flexible and can create attractive effects. But Advanced Particles is a complete replacement offering professional level particle effects for your games. From multiple render targets, to bitmap caching to all kinds of events, emitters and properties.
 
 Each plugin will come in a range of versions to suit all budgets and there are more on the way. Please visit the [launch page](http://phaserplugins.launchrock.com) to sign-up for notification as soon as they're ready.
 
@@ -71,19 +91,18 @@ Finally the list of [community authored Phaser Tutorials](http://www.lessmilk.co
 <a name="change-log"></a>
 ## Change Log
 
-Version 2.1.3 - "Ravinda" - in development
-
+Version 2.1.3 - "Ravinda" - 23rd October 2014
 
 ### New Features
 
-* Updated to Pixi v2.0.0
+* Updated to Pixi v2.0.0 (see change list below)
 * Happily removed the IE11 WebGL lock as Pixi now fully supports it :)
 * Time.prevTime is a new property that contains the raw value of the game timer from the previous update.
 * Sound.fadeTo allows you to fade the Sound to the given volume over the duration specified (thanks @nickryall #1225)
 * BitmapData.getFirstPixel will scan the BitmapData and return the color and location of the first non-transparent pixel encountered. You can specify one of 4 scan directions: top to bottom, bottom to top, left to right and right to left.
 * BitmapData.getBounds will return a `Rectangle` object that encompasses the full extent of the non-transparent pixels in the BitmapData. This can be useful if you wish to trim away transparent pixels from the sides of a BitmapData down to size before saving.
 * Rectangle.scale allows you to scale the width and height of a Rectangle.
-
+* RenderTexture has a new optional parameter: `resolution`
 
 ### Updates
 
@@ -92,20 +111,47 @@ Version 2.1.3 - "Ravinda" - in development
 * Circle.getBounds added.
 * Ellipse.getBounds added.
 * Device.canPlayAudio now supports `opus` files directly, as well as `opus` encoded audio stored in ogg containers (#1232)
-* Timer.timeCap has been changed from `1000` to `1 / 60 * 1000` to bring it in line with Time.timeCap.
-* PIXI.AbstractFilter is now bundled by default, to support the new `sprite.shader` feature in Pixi 2.
+* PIXI.AbstractFilter is now bundled by default to support the new `sprite.shader` feature in Pixi v2.
 * Changed all typeof comparisons from == to === (thanks @bobbywilson0 #1230)
 * JSDoc fixes in the Rope class (thanks @Rovanion)
 * Filter.update now caches the previous pointer position to avoid flooding the uniform. Also the mouse uniform is now a value between 0 and 1 depending on the position within the game view.
 
-
 ### Bug Fixes
 
-* Fixed a reference error to the Loader.baseURL in Cache._resolveUrl method (thanks @neurofuzzy #1235)
+* Fixed a reference error to the Loader.baseURL in Cache._resolveUrl method. This stops the error where Safari would show lots of file load errors but then still load the files (thanks @neurofuzzy #1235)
 * Fixed the Filter mouse uniform value population.
 * Fixed an issue where audio files with query strings after them would fail the `canPlayAudio` checks (thanks Vithar)
 * Input.hitTest now accurately detects hits on the extreme edges of a display object (thanks InsaneHero)
 * Button.setSounds now works if given an AudioSprite as the sound source.
+
+### Pixi v2 Specific New Features
+
+* Sprites can now have a custom shader applied to them. Much better performance than filters.
+* Renderers now have a resolution. Ideal for working with different pixel density.
+* Big refactor of the webGLRenderer and WebGLSpriteBatch renderer.
+* Refactor of CanvasRenderer.
+* DisplayObject.updateTransform function rewritten with for better performance.
+* New Events Class.
+* New Constructor for all renderers (including autoDetect)
+* Massive Refactor of Graphics (WebGL and Canvas)
+* Graphics objects can now be interactive.
+* Made removeChild no longer returns error.
+* Lots of new functions added to the Matrix class.
+* RenderTexture refactored. Now accepts Matrix in the render function.
+* AsciiFilter, NoiseFilter and TiltShiftFilter.
+* added getChildIndex and setChildIndex methods to DisplayObjectContainer.
+* Bug Fixes.
+
+### Pixi v2 Specific Bug Fixes
+
+* iOS8 alpha bug fixed.
+* set default padding to 0 for graphics objects.
+* PIXI.Graphics initial width and height is 0.
+* Fixed Graphics getBounds.
+* fix cacheAsBitmap alpha issue for canvas.
+* Fixed minY calculation in updateBounds.
+* Fixed Bezier issue on Graphics.
+* Added 0 width check to DisplayObjectContainer.
 
 For details about changes made in previous versions of Phaser see the full Change Log at https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md
 
@@ -297,11 +343,10 @@ Phaser has been used to create hundreds of games, which receive millions of play
 
 Here are some of the features planned for future releases:
 
-* Restore Math.interpolateAngles and Math.nearestAngleBetween
 
 ### Version 2.2 ("Tarabon")
 
-* Look at HiDPI Canvas settings.
+* Restore Math.interpolateAngles and Math.nearestAngleBetween
 * Enhance the State Management, so you can perform non-destructive State swaps and persistence.
 * Scene Manager - json scene parser.
 * Adjust how Pointers and Interactive Objects work. Allow an IO to be flagged as "on click only", so it doesn't ever get processed during normal Pointer move events (unless being dragged)

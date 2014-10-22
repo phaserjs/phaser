@@ -4581,13 +4581,14 @@ declare module Phaser {
 
     class RenderTexture extends PIXI.RenderTexture {
 
-        constructor(game: Phaser.Game, width?: number, height?: number, key?: string, scaleMode?: number);
+        constructor(game: Phaser.Game, width?: number, height?: number, key?: string, scaleMode?: number, resolution?: number);
 
         crop: PIXI.Rectangle;
         game: Phaser.Game;
         key: string;
         type: number;
 
+        render(displayObject: PIXI.DisplayObject, position: Phaser.Point, clear?: boolean): void;
         renderXY(displayObject: PIXI.DisplayObject, x: number, y: number, clear?: boolean): void;
 
     }

@@ -1,5 +1,67 @@
 # Change Log
 
+## Version 2.1.3 - "Ravinda" - 23rd October 2014
+
+### New Features
+
+* Updated to Pixi v2.0.0 (see change list below)
+* Happily removed the IE11 WebGL lock as Pixi now fully supports it :)
+* Time.prevTime is a new property that contains the raw value of the game timer from the previous update.
+* Sound.fadeTo allows you to fade the Sound to the given volume over the duration specified (thanks @nickryall #1225)
+* BitmapData.getFirstPixel will scan the BitmapData and return the color and location of the first non-transparent pixel encountered. You can specify one of 4 scan directions: top to bottom, bottom to top, left to right and right to left.
+* BitmapData.getBounds will return a `Rectangle` object that encompasses the full extent of the non-transparent pixels in the BitmapData. This can be useful if you wish to trim away transparent pixels from the sides of a BitmapData down to size before saving.
+* Rectangle.scale allows you to scale the width and height of a Rectangle.
+* RenderTexture has a new optional parameter: `resolution`
+
+### Updates
+
+* TypeScript definitions fixes and updates (thanks @clark-stevenson)
+* Changed the Animation constructor parameter `delay` to `frameRate` as it's a more accurate term of what it should be. Internally nothing changed.
+* Circle.getBounds added.
+* Ellipse.getBounds added.
+* Device.canPlayAudio now supports `opus` files directly, as well as `opus` encoded audio stored in ogg containers (#1232)
+* PIXI.AbstractFilter is now bundled by default to support the new `sprite.shader` feature in Pixi v2.
+* Changed all typeof comparisons from == to === (thanks @bobbywilson0 #1230)
+* JSDoc fixes in the Rope class (thanks @Rovanion)
+* Filter.update now caches the previous pointer position to avoid flooding the uniform. Also the mouse uniform is now a value between 0 and 1 depending on the position within the game view.
+
+### Bug Fixes
+
+* Fixed a reference error to the Loader.baseURL in Cache._resolveUrl method. This stops the error where Safari would show lots of file load errors but then still load the files (thanks @neurofuzzy #1235)
+* Fixed the Filter mouse uniform value population.
+* Fixed an issue where audio files with query strings after them would fail the `canPlayAudio` checks (thanks Vithar)
+* Input.hitTest now accurately detects hits on the extreme edges of a display object (thanks InsaneHero)
+* Button.setSounds now works if given an AudioSprite as the sound source.
+
+### Pixi v2 Specific New Features
+
+* Sprites can now have a custom shader applied to them. Much better performance than filters.
+* Renderers now have a resolution. Ideal for working with different pixel density.
+* Big refactor of the webGLRenderer and WebGLSpriteBatch renderer.
+* Refactor of CanvasRenderer.
+* DisplayObject.updateTransform function rewritten with for better performance.
+* New Events Class.
+* New Constructor for all renderers (including autoDetect)
+* Massive Refactor of Graphics (WebGL and Canvas)
+* Graphics objects can now be interactive.
+* Made removeChild no longer returns error.
+* Lots of new functions added to the Matrix class.
+* RenderTexture refactored. Now accepts Matrix in the render function.
+* AsciiFilter, NoiseFilter and TiltShiftFilter.
+* added getChildIndex and setChildIndex methods to DisplayObjectContainer.
+* Bug Fixes.
+
+### Pixi v2 Specific Bug Fixes
+
+* iOS8 alpha bug fixed.
+* set default padding to 0 for graphics objects.
+* PIXI.Graphics initial width and height is 0.
+* Fixed Graphics getBounds.
+* fix cacheAsBitmap alpha issue for canvas.
+* Fixed minY calculation in updateBounds.
+* Fixed Bezier issue on Graphics.
+* Added 0 width check to DisplayObjectContainer.
+
 ## Version 2.1.2 - "Whitebridge" - 9th October 2014
 
 ### New Features
