@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.1.3 "Ravinda" - Built: Wed Oct 22 2014 21:41:11
+* v2.1.3 "Ravinda" - Built: Wed Oct 22 2014 22:34:22
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -11477,7 +11477,7 @@ PIXI.AbstractFilter.prototype.apply = function(frameBuffer)
 *
 * Phaser - http://phaser.io
 *
-* v2.1.3 "Ravinda" - Built: Wed Oct 22 2014 21:41:11
+* v2.1.3 "Ravinda" - Built: Wed Oct 22 2014 22:34:22
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -38304,16 +38304,15 @@ Phaser.Text.prototype.setStyle = function (style) {
 */
 Phaser.Text.prototype.updateText = function () {
 
+    this.texture.baseTexture.resolution = this.resolution;
+
     this.context.font = this.style.font;
 
     var outputText = this.text;
 
     // word wrap
     // preserve original text
-    if (this.style.wordWrap)
-    {
-        outputText = this.runWordWrap(this.text);
-    }
+    if(this.style.wordWrap)outputText = this.wordWrap(this.text);
 
     //split text into lines
     var lines = outputText.split(/(?:\r\n|\r|\n)/);
@@ -38321,7 +38320,7 @@ Phaser.Text.prototype.updateText = function () {
     //calculate text width
     var lineWidths = [];
     var maxLineWidth = 0;
-
+    var fontProperties = this.determineFontProperties(this.style.font);
     for (var i = 0; i < lines.length; i++)
     {
         var lineWidth = this.context.measureText(lines[i]).width;
@@ -38329,71 +38328,75 @@ Phaser.Text.prototype.updateText = function () {
         maxLineWidth = Math.max(maxLineWidth, lineWidth);
     }
 
-    this.canvas.width = maxLineWidth + this.style.strokeThickness;
+    var width = maxLineWidth + this.style.strokeThickness;
 
+    this.canvas.width = ( width + this.context.lineWidth ) * this.resolution;
+    
     //calculate text height
-    var lineHeight = this.determineFontHeight('font: ' + this.style.font + ';') + this.style.strokeThickness + this._lineSpacing + this.style.shadowOffsetY;
+    var lineHeight = fontProperties.fontSize + this.style.strokeThickness;
+ 
+    var height = lineHeight * lines.length;
 
-    this.canvas.height = lineHeight * lines.length;
+    this.canvas.height = height * this.resolution;
 
-    if (navigator.isCocoonJS)
-    {
-        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    }
+    this.context.scale( this.resolution, this.resolution);
 
-    //set canvas text styles
+    if(navigator.isCocoonJS) this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
+    
     this.context.fillStyle = this.style.fill;
     this.context.font = this.style.font;
-
     this.context.strokeStyle = this.style.stroke;
-    this.context.lineWidth = this.style.strokeThickness;
-
+    this.context.textBaseline = 'alphabetic';
     this.context.shadowOffsetX = this.style.shadowOffsetX;
     this.context.shadowOffsetY = this.style.shadowOffsetY;
     this.context.shadowColor = this.style.shadowColor;
     this.context.shadowBlur = this.style.shadowBlur;
-
-    this.context.textBaseline = 'top';
+    this.context.lineWidth = this.style.strokeThickness;
     this.context.lineCap = 'round';
     this.context.lineJoin = 'round';
+
+    var linePositionX;
+    var linePositionY;
 
     this._charCount = 0;
 
     //draw lines line by line
     for (i = 0; i < lines.length; i++)
     {
-        var linePosition = new PIXI.Point(this.style.strokeThickness / 2, this.style.strokeThickness / 2 + i * lineHeight);
+        linePositionX = this.style.strokeThickness / 2;
+        linePositionY = (this.style.strokeThickness / 2 + i * lineHeight) + fontProperties.ascent;
 
         if (this.style.align === 'right')
         {
-            linePosition.x += maxLineWidth - lineWidths[i];
+            linePositionX += maxLineWidth - lineWidths[i];
         }
         else if (this.style.align === 'center')
         {
-            linePosition.x += (maxLineWidth - lineWidths[i]) / 2;
+            linePositionX += (maxLineWidth - lineWidths[i]) / 2;
         }
 
-        linePosition.y += this._lineSpacing;
+        linePositionY += this._lineSpacing;
 
         if (this.colors.length > 0)
         {
-            this.updateLine(lines[i], linePosition.x, linePosition.y);
+            this.updateLine(lines[i], linePositionX, linePositionY);
         }
         else
         {
             if (this.style.stroke && this.style.strokeThickness)
             {
-                this.context.strokeText(lines[i], linePosition.x, linePosition.y);
+                this.context.strokeText(lines[i], linePositionX, linePositionY);
             }
 
             if (this.style.fill)
             {
-                this.context.fillText(lines[i], linePosition.x, linePosition.y);
+                this.context.fillText(lines[i], linePositionX, linePositionY);
             }
         }
     }
 
     this.updateTexture();
+
 };
 
 Phaser.Text.prototype.updateLine = function (line, x, y) {
