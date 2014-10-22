@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.1.3 "Ravinda" - Built: Wed Oct 22 2014 22:34:22
+* v2.1.3 "Ravinda" - Built: Wed Oct 22 2014 22:48:37
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -26840,9 +26840,10 @@ Phaser.Text.prototype.updateText = function () {
 
     var outputText = this.text;
 
-    // word wrap
-    // preserve original text
-    if(this.style.wordWrap)outputText = this.wordWrap(this.text);
+    if (this.style.wordWrap)
+    {
+        outputText = this.wordWrap(this.text);
+    }
 
     //split text into lines
     var lines = outputText.split(/(?:\r\n|\r|\n)/);
@@ -26851,6 +26852,7 @@ Phaser.Text.prototype.updateText = function () {
     var lineWidths = [];
     var maxLineWidth = 0;
     var fontProperties = this.determineFontProperties(this.style.font);
+
     for (var i = 0; i < lines.length; i++)
     {
         var lineWidth = this.context.measureText(lines[i]).width;
@@ -26860,7 +26862,7 @@ Phaser.Text.prototype.updateText = function () {
 
     var width = maxLineWidth + this.style.strokeThickness;
 
-    this.canvas.width = ( width + this.context.lineWidth ) * this.resolution;
+    this.canvas.width = (width + this.context.lineWidth) * this.resolution;
     
     //calculate text height
     var lineHeight = fontProperties.fontSize + this.style.strokeThickness;
@@ -26869,9 +26871,12 @@ Phaser.Text.prototype.updateText = function () {
 
     this.canvas.height = height * this.resolution;
 
-    this.context.scale( this.resolution, this.resolution);
+    this.context.scale(this.resolution, this.resolution);
 
-    if(navigator.isCocoonJS) this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
+    if (navigator.isCocoonJS)
+    {
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    }
     
     this.context.fillStyle = this.style.fill;
     this.context.font = this.style.font;
