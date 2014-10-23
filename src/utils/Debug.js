@@ -7,7 +7,8 @@
 /**
 * A collection of methods for displaying debug information about game objects.
 * If your game is running in WebGL then Debug will create a Sprite that is placed at the top of the Stage display list and bind a canvas texture
-* to it, which must be uploaded every frame. Be advised: this is expenive.
+* to it, which must be uploaded every frame. Be advised: this is very expensive, especially in browsers like Firefox. So please only enable Debug
+* in WebGL mode if you really need it (or your desktop can cope with it well) and disable it for production!
 * If your game is using a Canvas renderer then the debug information is literally drawn on the top of the active game canvas and no Sprite is used.
 *
 * @class Phaser.Utils.Debug
@@ -22,29 +23,19 @@ Phaser.Utils.Debug = function (game) {
     this.game = game;
 
     /**
-    * @property {PIXI.Sprite} sprite - If debugging in WebGL mode we need this.
+    * @property {Phaser.Image} sprite - If debugging in WebGL mode we need this.
     */
     this.sprite = null;
 
     /**
-    * @property {HTMLCanvasElement} canvas - The canvas to which this BitmapData draws.
+    * @property {Phaser.BitmapData} bmd - In WebGL mode this BitmapData contains a copy of the debug canvas.
+    */
+    this.bmd = null;
+
+    /**
+    * @property {HTMLCanvasElement} canvas - The canvas to which Debug calls draws.
     */
     this.canvas = null;
-
-    /**
-    * @property {PIXI.BaseTexture} baseTexture - Required Pixi var.
-    */
-    this.baseTexture = null;
-
-    /**
-    * @property {PIXI.Texture} texture - Required Pixi var.
-    */
-    this.texture = null;
-
-    /**
-    * @property {Phaser.Frame} textureFrame - Dimensions of the renderable area.
-    */
-    this.textureFrame = null;
 
     /**
     * @property {CanvasRenderingContext2D} context - The 2d context of the canvas.
@@ -113,13 +104,12 @@ Phaser.Utils.Debug.prototype = {
         }
         else
         {
+            this.bmd = this.game.make.bitmapData(this.game.width, this.game.height);
+            this.sprite = this.game.make.image(0, 0, this.bmd);
+            this.game.stage.addChild(this.sprite);
+
             this.canvas = Phaser.Canvas.create(this.game.width, this.game.height, '', true);
             this.context = this.canvas.getContext('2d');
-            this.baseTexture = new PIXI.BaseTexture(this.canvas);
-            this.texture = new PIXI.Texture(this.baseTexture);
-            this.textureFrame = new Phaser.Frame(0, 0, 0, this.game.width, this.game.height, 'debug', this.game.rnd.uuid());
-            this.sprite = this.game.make.image(0, 0, this.texture, this.textureFrame);
-            this.game.stage.addChild(this.sprite);
         }
 
     },
@@ -133,6 +123,9 @@ Phaser.Utils.Debug.prototype = {
 
         if (this.dirty && this.sprite)
         {
+            this.bmd.clear();
+            this.bmd.draw(this.canvas, 0, 0);
+
             this.context.clearRect(0, 0, this.game.width, this.game.height);
             this.dirty = false;
         }
@@ -153,7 +146,7 @@ Phaser.Utils.Debug.prototype = {
 
         if (this.sprite)
         {
-            this.baseTexture.dirty();
+            this.bmd.clear();
         }
 
     },
@@ -181,10 +174,7 @@ Phaser.Utils.Debug.prototype = {
         this.currentAlpha = this.context.globalAlpha;
         this.columnWidth = columnWidth;
 
-        if (this.sprite)
-        {
-            this.dirty = true;
-        }
+        this.dirty = true;
 
         this.context.save();
         this.context.setTransform(1, 0, 0, 1, 0, 0);
@@ -205,11 +195,6 @@ Phaser.Utils.Debug.prototype = {
 
         this.context.restore();
         this.context.globalAlpha = this.currentAlpha;
-
-        if (this.sprite)
-        {
-            this.baseTexture.dirty();
-        }
 
     },
 
