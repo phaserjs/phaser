@@ -72,7 +72,7 @@ Shienar *
 Capital: Fal Moran
 Cities: Ankor Dail, Camron Caan, Fal Dara, Fal Eisen, Fal Sion, Medo, Mos Shirare *
 
-Tarabon
+Tarabon *
 
 Capital: Tanchico *
 Cities: Alcruna, Elmora, Maracru, Nassad, Serana
