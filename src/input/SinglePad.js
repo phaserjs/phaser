@@ -119,7 +119,7 @@ Phaser.SinglePad = function (game, padParent) {
 Phaser.SinglePad.prototype = {
 
     /**
-    * Add callbacks to the this Gamepad to handle connect / disconnect / button down / button up / axis change / float value buttons.
+    * Add callbacks to this Gamepad to handle connect / disconnect / button down / button up / axis change / float value buttons.
     * 
     * @method Phaser.SinglePad#addCallbacks
     * @param {Object} context - The context under which the callbacks are run.
