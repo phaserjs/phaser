@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.1.3 "Ravinda" - Built: Thu Oct 23 2014 12:33:03
+* v2.1.3 "Ravinda" - Built: Thu Oct 23 2014 16:02:23
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -38437,7 +38437,7 @@ Phaser.Text.prototype.updateText = function () {
 
     if (this.style.wordWrap)
     {
-        outputText = this.wordWrap(this.text);
+        outputText = this.runWordWrap(this.text);
     }
 
     //split text into lines
