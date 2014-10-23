@@ -359,7 +359,7 @@ Phaser.Text.prototype.updateText = function () {
 
     if (this.style.wordWrap)
     {
-        outputText = this.wordWrap(this.text);
+        outputText = this.runWordWrap(this.text);
     }
 
     //split text into lines
