@@ -6,9 +6,10 @@
  * @module PIXI
  */
 var PIXI = PIXI || {};
+window.PIXI = PIXI;
 
-/* 
-* 
+/*
+*
 * This file contains a lot of pixi consts which are used across the rendering engine
 * @class Consts
 */
@@ -62,7 +63,7 @@ else
     PIXI.Uint16Array = Array;
 }
 
-// interaction frequency 
+// interaction frequency
 PIXI.INTERACTION_FREQUENCY = 30;
 PIXI.AUTO_PREVENT_DEFAULT = true;
 
@@ -72,7 +73,7 @@ PIXI.DEG_TO_RAD = Math.PI / 180;
 
 PIXI.dontSayHello = false;
 
-PIXI.sayHello = function (type) 
+PIXI.sayHello = function (type)
 {
     if(PIXI.dontSayHello)return;
 
@@ -91,7 +92,7 @@ PIXI.sayHello = function (type)
             'color: #ff2424; background: #fff'
         ];
 
-       
+
 
         console.log.apply(console, args);
     }

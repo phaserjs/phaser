@@ -423,6 +423,7 @@ Phaser.Game.prototype = {
     */
     boot: function () {
 
+        console.log("~~~ BOOTING");
         if (this.isBooted)
         {
             return;
@@ -430,10 +431,12 @@ Phaser.Game.prototype = {
 
         if (!document.body || (PIXI.DEVKIT_NATIVE && !this.__canvas))
         {
+            console.log("~~~ BOOTING - wait");
             window.setTimeout(this._onBoot, 20);
         }
         else
         {
+            console.log("~~~ BOOTING - now");
             if (!PIXI.DEVKIT_NATIVE) {
                 document.removeEventListener('DOMContentLoaded', this._onBoot);
             }
@@ -451,7 +454,7 @@ Phaser.Game.prototype = {
             this.math = Phaser.Math;
 
             this.scale = new Phaser.ScaleManager(this, this._width, this._height);
-            this.stage = new Phaser.Stage(this);
+            this.stage = new Phaser.Stage(this, this._width, this._height);
 
             this.setUpRenderer();
 
@@ -580,13 +583,20 @@ Phaser.Game.prototype = {
             this.renderType = Phaser.CANVAS;
         }
 
-        if (this.config['canvasID'])
-        {
-            this.canvas = Phaser.Canvas.create(this.width, this.height, this.config['canvasID']);
+        if (this.__canvas) {
+            console.log("~~~ ALL GOOD");
+            this.canvas = this.__canvas;
         }
         else
         {
-            this.canvas = Phaser.Canvas.create(this.width, this.height);
+            if (this.config['canvasID'])
+            {
+                this.canvas = Phaser.Canvas.create(this.width, this.height, this.config['canvasID']);
+            }
+            else
+            {
+                this.canvas = Phaser.Canvas.create(this.width, this.height);
+            }
         }
 
         if (this.config['canvasStyle'])
@@ -861,6 +871,10 @@ Phaser.Game.prototype = {
             this.gameResumed(event);
         }
 
+    },
+
+    setCanvas: function(canvas) {
+        this.__canvas = canvas;
     }
 
 };

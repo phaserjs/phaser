@@ -333,6 +333,12 @@ PIXI.Text.prototype.updateTransform = function()
  */
 PIXI.Text.prototype.determineFontHeight = function(fontStyle)
 {
+    var oldFontStyle = this.game.context.font;
+    this.game.context.font = fontStyle.slice(6, -1);
+    var fontMetrics =  this.game.context.measureText('MM');
+    this.game.context.font = oldFontStyle;
+    return fontMetrics.width || 42;
+    /*
     // build a little reference dictionary so if the font style has been used return a
     // cached version...
     var result = PIXI.Text.heightCache[fontStyle];
@@ -352,7 +358,7 @@ PIXI.Text.prototype.determineFontHeight = function(fontStyle)
         body.removeChild(dummy);
     }
 
-    return result;
+    return result;*/
 };
 
 /**

@@ -185,7 +185,7 @@ PIXI.CanvasRenderer.prototype.render = function(stage)
     stage.updateTransform();
 
     // TODO: CHANGE THIS TO NOT LOOK FOR A DEVKIT SPECIFIC FUNCTION
-    if (PHASER.DEVKIT_RUNNING) {
+    if (PIXI.DEVKIT_NATIVE) {
         this.context.loadIdentity();
     } else {
         this.context.setTransform(1,0,0,1,0,0);

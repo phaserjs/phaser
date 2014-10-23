@@ -75,6 +75,7 @@ var Phaser = Phaser || {
     }
 
 };
+window.Phaser = Phaser;
 
 // We don't need this in Pixi, so we've removed it to save space
 // however the Stage object expects a reference to it, so here is a dummy entry.
