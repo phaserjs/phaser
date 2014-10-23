@@ -5612,7 +5612,6 @@ declare module Phaser {
 
             constructor(game: Phaser.Game);
 
-            baseTexture: PIXI.BaseTexture;
             canvas: HTMLCanvasElement;
             columnWidth: number;
             context: CanvasRenderingContext2D;
@@ -5624,9 +5623,7 @@ declare module Phaser {
             game: Phaser.Game;
             lineHeight: number;
             renderShadow: boolean;
-            sprite: PIXI.Sprite;
-            texture: PIXI.Texture;
-            textureFrame: Phaser.Frame;
+            sprite: Phaser.Image;
 
             AStar(astar: Phaser.Plugin.AStar, x: number, y: number, showVisited: boolean): void;
             boot(): void;
