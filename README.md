@@ -81,6 +81,7 @@ Version 2.2.0 - "Tarabon" - in development
 
 ### Bug Fixes
 
+* Tilemaps in WebGL wouldn't update after the first frame due to a subtle change in how Pixi uploads new textures to the GPU.
 
 
 For details about changes made in previous versions of Phaser see the full Change Log at https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md

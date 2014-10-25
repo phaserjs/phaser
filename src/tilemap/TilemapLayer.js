@@ -8,6 +8,7 @@
 * A Tilemap Layer is a set of map data combined with a Tileset in order to render that data to the game.
 *
 * @class Phaser.TilemapLayer
+* @extends {Phaser.Image}
 * @constructor
 * @param {Phaser.Game} game - Game reference to the currently running game.
 * @param {Phaser.Tilemap} tilemap - The tilemap to which this layer belongs.
@@ -613,7 +614,7 @@ Phaser.TilemapLayer.prototype.render = function () {
         this.renderDebug();
     }
 
-    this.texture._updateUvs();
+    this.baseTexture.dirty();
 
     this.dirty = false;
     this.layer.dirty = false;
