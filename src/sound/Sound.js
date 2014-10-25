@@ -169,10 +169,22 @@ Phaser.Sound = function (game, key, volume, loop, connect) {
     */
     this.gainNode = null;
 
+    /**
+    * @property {object} pannerNode - The panner node in a Web Audio system.
+    */
+    this.pannerNode = null;
+
     if (this.usingWebAudio)
     {
         this.context = this.game.sound.context;
         this.masterGainNode = this.game.sound.masterGain;
+
+        this.pannerNode = this.context.createPanner();
+        // FIXME: semi random chosen to sound good, make configurable?
+        this.pannerNode.maxDistance = 1024;
+        this.pannerNode.refDistance = 32;
+        this.pannerNode.rolloffFactor = 1;
+
 
         if (typeof this.context.createGain === 'undefined')
         {
@@ -188,6 +200,7 @@ Phaser.Sound = function (game, key, volume, loop, connect) {
         if (connect)
         {
             this.gainNode.connect(this.masterGainNode);
+            this.pannerNode.connect(this.masterGainNode);
         }
     }
     else
@@ -312,6 +325,12 @@ Phaser.Sound = function (game, key, volume, loop, connect) {
     * @private
     */
     this._onDecodedEventDispatched = false;
+
+    /**
+    * @property {Phaser.Sprite} _following - Sprite this sound is originating from
+    * @private
+    */
+    this._following = false;
 };
 
 Phaser.Sound.prototype = {
@@ -392,6 +411,17 @@ Phaser.Sound.prototype = {
 
         if (this.isPlaying)
         {
+            if (this.usingWebAudio && this._following !== false)
+            {
+                this.pannerNode.setPosition(this._following.x, this._following.y, this._following.z || 0);
+                if (typeof this._following.velocity !== 'undefined' &&
+                    typeof this._following.velocity.x !== 'undefined' &&
+                    typeof this._following.velocity.y !== 'undefined') {
+                    this.pannerNode.setVelocity(this._following.velocity.x, this._following.velocity.y, this._following.velocity.z || 0);
+                } else {
+                    this.pannerNode.setVelocity(0,0,0);
+                }
+            }
             this.currentTime = this.game.time.now - this.startTime;
 
             if (this.currentTime >= this.durationMS)
@@ -549,6 +579,24 @@ Phaser.Sound.prototype = {
                 }
                 else
                 {
+                    if (this._following !== false)
+                    {
+                        this.gainNode.disconnect();
+                        this.gainNode.connect(this.pannerNode);
+                        this.pannerNode.setPosition(this._following.x, this._following.y, this._following.z || 0);
+                        if (typeof this._following.velocity !== 'undefined' &&
+                            typeof this._following.velocity.x !== 'undefined' &&
+                            typeof this._following.velocity.y !== 'undefined') {
+                            this.pannerNode.setVelocity(this._following.velocity.x, this._following.velocity.y, this._following.velocity.z || 0);
+                        } else {
+                            this.pannerNode.setVelocity(0,0,0);
+                        }
+                    }
+                    else
+                    {
+                        this.gainNode.disconnect();
+                        this.gainNode.connect(this.masterGainNode);
+                    }
                     this._sound.connect(this.gainNode);
                 }
 
@@ -1013,6 +1061,33 @@ Object.defineProperty(Phaser.Sound.prototype, "volume", {
             {
                 this._volume = value;
                 this._sound.volume = value;
+            }
+        }
+    }
+
+});
+
+/**
+* @name Phaser.Sound#following
+* @property {Object} following - Object this sprite is following, the object needs to export an x and y public property and optionally z, optionally as well a velocity property with x, y and z
+* @readonly
+*/
+Object.defineProperty(Phaser.Sound.prototype, "following", {
+
+    get: function () {
+        return this._following;
+    },
+
+    set: function (value) {
+
+        if (this.usingWebAudio)
+        {
+            if (value === false) {
+                this._following = value;
+            }
+            else if (typeof value.x !== "undefined" && typeof value.y !== "undefined")
+            {
+                this._following = value;
             }
         }
     }

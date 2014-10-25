@@ -135,3 +135,27 @@ Phaser.AudioSprite.prototype = {
 };
 
 Phaser.AudioSprite.prototype.constructor = Phaser.AudioSprite;
+
+/**
+* @name Phaser.AudioSprite#following
+* @property {Object} following - Object this sprite is following, the object needs to export an x and y public property and optionally z, optionally as well a velocity property with x, y and z
+* @readonly
+*/
+Object.defineProperty(Phaser.AudioSprite.prototype, "following", {
+
+    get: function () {
+        return this._following;
+    },
+
+    set: function (value) {
+
+        if (value === false || (typeof value.x !== "undefined" && typeof value.y !== "undefined"))
+        {
+            for (var key in this.sounds)
+            {
+                this.sounds[key].following = value;
+            }
+        }
+    }
+
+});

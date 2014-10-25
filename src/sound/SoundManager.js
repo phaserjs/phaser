@@ -61,6 +61,12 @@ Phaser.SoundManager = function (game) {
     this._sounds = [];
 
     /**
+    * @property {Phaser.Camera|Phaser.Sprite} _listener - Contains the object to follow for listening to positional audio
+    * @private
+    */
+    this._listener = false;
+
+    /**
     * @property {AudioContext} context - The AudioContext being used for playback.
     * @default
     */
@@ -335,6 +341,17 @@ Phaser.SoundManager.prototype = {
             }
         }
 
+        if (this.context !== null && this._listener !== false)
+        {
+            this.context.listener.setPosition(this._listener.x, this._listener.y, 0);
+            if (typeof this._listener.velocity !== 'undefined' ) {
+                this.context.listener.setVelocity(this._listener.velocity.x, this._listener.velocity.y, this._listener.velocity.z || 0);
+            } else {
+                this.context.listener.setVelocity(0,0,0);
+            }
+            // this.context.listener.setOrientation(0,0,-1,0,1,0);
+        }
+
         for (var i = 0; i < this._sounds.length; i++)
         {
             this._sounds[i].update();
@@ -535,8 +552,31 @@ Phaser.SoundManager.prototype = {
         this._sounds = [];
         this.onSoundDecode.dispose();
 
-    }
+    },
 
+    /**
+    * Sets the listener for positional WebAudio following
+    *
+    * @method Phaser.SoundManager#setListener
+    * @param {Object|false} listener - Object that the listner Web Audio node will follow, must contain an x and y property and optionally z and optionally a velocity property with x, y and/or z
+    */
+    setListener: function (listener) {
+
+        if (this.usingWebAudio)
+        {
+            if (listener === false)
+            {
+                this._listener = false;
+                this.context.listener.setPosition(0,0,0);
+                this.context.listener.setVelocity(0,0,0);
+                this.context.listener.setOrientation(0,0,-1,0,1,0);
+            }
+            else if (typeof listener.x !== 'undefined' && typeof listener.y !== 'undefined')
+            {
+                this._listener = listener;
+            }
+        }
+    }
 };
 
 Phaser.SoundManager.prototype.constructor = Phaser.SoundManager;
@@ -620,6 +660,28 @@ Object.defineProperty(Phaser.SoundManager.prototype, "volume", {
             }
         }
 
+    }
+
+});
+
+/**
+* @name Phaser.SoundManager#listener
+* @property {Object|false} listener - Gets or sets the listener for positional WebAudio, an object with x, y or false
+*/
+Object.defineProperty(Phaser.SoundManager.prototype, "listener", {
+
+    get: function () {
+        return this._listener;
+    },
+
+    set: function (value) {
+        if (value === false) {
+            this._listener = false;
+        }
+        else
+        {
+            this.setListener(value);
+        }
     }
 
 });
