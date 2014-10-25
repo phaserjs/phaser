@@ -6,17 +6,18 @@
 
 /**
 * A Tile set is a combination of an image containing the tiles and collision data per tile.
-* You should not normally instantiate this class directly.
+*
+* Tilesets are normally created automatically when Tiled data is loaded.
 *
 * @class Phaser.Tileset
 * @constructor
 * @param {string} name - The name of the tileset in the map data.
-* @param {number} firstgid - The Tiled firstgid value. In non-Tiled data this should be considered the starting index value of the first tile in this set.
-* @param {number} [width=32] - Width of each tile in pixels.
-* @param {number} [height=32] - Height of each tile in pixels.
-* @param {number} [margin=0] - The amount of margin around the tilesheet.
-* @param {number} [spacing=0] - The amount of spacing between each tile in the sheet.
-* @param {object} [properties] - Tileset properties.
+* @param {integer} firstgid - The first tile index this tileset contains.
+* @param {integer} [width=32] - Width of each tile (in pixels).
+* @param {integer} [height=32] - Height of each tile (in pixels).
+* @param {integer} [margin=0] - The margin around all tiles in the sheet (in pixels).
+* @param {integer} [spacing=0] - The spacing between each tile in the sheet (in pixels).
+* @param {object} [properties={}] - Custom Tileset properties.
 */
 Phaser.Tileset = function (name, firstgid, width, height, margin, spacing, properties) {
 
@@ -26,62 +27,83 @@ Phaser.Tileset = function (name, firstgid, width, height, margin, spacing, prope
     if (typeof spacing === 'undefined') { spacing = 0; }
 
     /**
-    * @property {string} name - The name of the Tileset.
+    * The name of the Tileset.
+    * @member {string}
     */
     this.name = name;
 
     /**
-    * @property {number} firstgid - The Tiled firstgid value. In non-Tiled data this should be considered the starting index value of the first tile in this set.
+    * The Tiled firstgid value.
+    * This is the starting index of the first tile index this Tileset contains.
+    * @member {integer}
     */
-    this.firstgid = firstgid;
+    this.firstgid = firstgid | 0;
 
     /**
-    * @property {number} tileWidth - The width of a tile in pixels.
+    * The width of each tile (in pixels).
+    * @member {integer}
     */
-    this.tileWidth = width;
+    this.tileWidth = width | 0;
 
     /**
-    * @property {number} tileHeight - The height of a tile in pixels.
+    * The height of each tile (in pixels).
+    * @member {integer}
     */
-    this.tileHeight = height;
+    this.tileHeight = height | 0;
 
     /**
-    * @property {number} tileMargin - The margin around the tiles in the tileset.
+    * The margin around the tiles in the sheet (in pixels).
+    * @member {integer}
     */
-    this.tileMargin = margin;
+    this.tileMargin = margin | 0;
 
     /**
-    * @property {number} tileSpacing - The spacing in pixels between each tile in the tileset.
+    * The spacing between each tile in the sheet (in pixels).
+    * @member {integer}
     */
-    this.tileSpacing = spacing;
+    this.tileSpacing = spacing | 0;
 
     /**
-    * @property {object} properties - Tileset specific properties (typically defined in the Tiled editor).
+    * Tileset-specific properties that are typically defined in the Tiled editor.
+    * @member {object}
     */
-    this.properties = properties;
+    this.properties = properties || {};
 
     /**
-    * @property {object} image - The image used for rendering. This is a reference to the image stored in Phaser.Cache.
+    * The cached image that contains the individual tiles. Use `setImage` to set.
+    * @member {?object}
     */
+    // Modified internally
     this.image = null;
 
     /**
-    * @property {number} rows - The number of rows in the tile sheet.
+    * The number of rows in the tile sheet.
+    * @member {integer}
+    * @readonly
     */
+    // Modified internally
     this.rows = 0;
 
     /**
-    * @property {number} columns - The number of columns in the tile sheet.
+    * The number of columns in the sheet.
+    * @member {integer}
+    * @readonly
     */
+    // Modified internally
     this.columns = 0;
 
     /**
-    * @property {number} total - The total number of tiles in the tilesheet.
+    * The total number of tiles in the sheet.
+    * @member {integer}
+    * @readonly
     */
+    // Modified internally
     this.total = 0;
 
     /**
-    * @property {array} draw - The tile drawImage look-up table
+    * The look-up table to specific tile image offsets.
+    * The coordinates are interlaced such that it is [x0, y0, x1, y1 .. xN, yN] and the tile with the index of firstgid is found at indices 0/1.
+    * @member {integer[]}
     * @private
     */
     this.drawCoords = [];
@@ -97,78 +119,103 @@ Phaser.Tileset.prototype = {
     * @param {CanvasRenderingContext2D} context - The context to draw the tile onto.
     * @param {number} x - The x coordinate to draw to.
     * @param {number} y - The y coordinate to draw to.
-    * @param {number} index - The index of the tile within the set to draw.
+    * @param {integer} index - The index of the tile within the set to draw.
     */
     draw: function (context, x, y, index) {
 
-        if (!this.image || !this.drawCoords[index])
+        //  Correct the tile index for the set and bias for interlacing
+        var coordIndex = (index - this.firstgid) << 1;
+
+        if (coordIndex >= 0 && (coordIndex + 1) < this.drawCoords.length)
         {
-            return;
+            context.drawImage(
+                this.image,
+                this.drawCoords[coordIndex],
+                this.drawCoords[coordIndex + 1],
+                this.tileWidth,
+                this.tileHeight,
+                x,
+                y,
+                this.tileWidth,
+                this.tileHeight
+            );
         }
 
-        context.drawImage(
-            this.image,
-            this.drawCoords[index][0],
-            this.drawCoords[index][1],
-            this.tileWidth,
-            this.tileHeight,
-            x,
-            y,
-            this.tileWidth,
-            this.tileHeight
+    },
+
+    /**
+    * Returns true if and only if this tileset contains the given tile index.
+    *
+    * @public
+    * @return {boolean} True if this tileset contains the given index.
+    */
+    containsTileIndex: function (tileIndex)
+    {
+
+        return (
+            tileIndex >= this.firstgid &&
+            tileIndex < (this.firstgid + this.total)
         );
 
     },
 
     /**
-    * Adds a reference from this Tileset to an Image stored in the Phaser.Cache.
+    * Set the image associated with this Tileset and update the tile data.
     *
-    * @method Phaser.Tileset#setImage
-    * @param {Image} image - The image this tileset will use to draw with.
+    * @public
+    * @param {Image} image - The image that contains the tiles.
     */
     setImage: function (image) {
 
         this.image = image;
-
-        this.rows = Math.round((image.height - this.tileMargin) / (this.tileHeight + this.tileSpacing));
-        this.columns = Math.round((image.width - this.tileMargin) / (this.tileWidth + this.tileSpacing));
-        this.total = this.rows * this.columns;
-
-        //  Create the index look-up
-        this.drawCoords.length = 0;
-
-        var tx = this.tileMargin;
-        var ty = this.tileMargin;
-        var i = this.firstgid;
-
-        for (var y = 0; y < this.rows; y++)
-        {
-            for (var x = 0; x < this.columns; x++)
-            {
-                this.drawCoords[i] = [ tx, ty ];
-                tx += this.tileWidth + this.tileSpacing;
-                i++;
-            }
-
-            tx = this.tileMargin;
-            ty += this.tileHeight + this.tileSpacing;
-        }
-
+        this.updateTileData();
+       
     },
 
     /**
     * Sets tile spacing and margins.
     *
-    * @method Phaser.Tileset#setSpacing
-    * @param {number} [tileMargin] - The margin around the tiles in the sheet.
-    * @param {number} [tileSpacing] - The spacing between the tiles in the sheet.
+    * @public
+    * @param {integer} tileMargin - The margin around the tiles in the sheet (in pixels).
+    * @param {integer} tileSpacing - The spacing between the tiles in the sheet (in pixels).
     */
     setSpacing: function (margin, spacing) {
 
-        this.tileMargin = margin;
-        this.tileSpacing = spacing;
+        this.tileMargin = margin | 0;
+        this.tileSpacing = spacing | 0;
 
-        this.setImage(this.image);
+        this.updateTileData();
+
+    },
+
+    /**
+    * Updates tile coordinates and tileset data.
+    *    
+    * @protected
+    */
+    updateTileData: function () {
+
+        this.rows = Math.round((image.height - this.tileMargin) / (this.tileHeight + this.tileSpacing));
+        this.columns = Math.round((image.width - this.tileMargin) / (this.tileWidth + this.tileSpacing));
+        this.total = this.rows * this.columns;
+
+        this.drawCoords.length = 0;
+
+        var tx = this.tileMargin;
+        var ty = this.tileMargin;
+
+        for (var y = 0; y < this.rows; y++)
+        {
+            for (var x = 0; x < this.columns; x++)
+            {
+                this.drawCoords.push(tx);
+                this.drawCoords.push(ty);
+                tx += this.tileWidth + this.tileSpacing;
+            }
+
+            tx = this.tileMargin;
+            ty += this.tileHeight + this.tileSpacing;
+        }
 
     }
 
