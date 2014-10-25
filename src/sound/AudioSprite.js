@@ -149,7 +149,7 @@ Object.defineProperty(Phaser.AudioSprite.prototype, "following", {
 
     set: function (value) {
 
-        if (value === false || (typeof value.x !== "undefined" && typeof value.y !== "undefined"))
+        if (!value || (typeof value.x !== "undefined" && typeof value.y !== "undefined"))
         {
             for (var key in this.sounds)
             {

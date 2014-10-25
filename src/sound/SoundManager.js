@@ -564,7 +564,7 @@ Phaser.SoundManager.prototype = {
 
         if (this.usingWebAudio)
         {
-            if (listener === false)
+            if (!listener)
             {
                 this._listener = false;
                 this.context.listener.setPosition(0,0,0);
@@ -675,7 +675,7 @@ Object.defineProperty(Phaser.SoundManager.prototype, "listener", {
     },
 
     set: function (value) {
-        if (value === false) {
+        if (!value) {
             this._listener = false;
         }
         else

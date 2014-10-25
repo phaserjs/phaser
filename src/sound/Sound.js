@@ -1082,7 +1082,7 @@ Object.defineProperty(Phaser.Sound.prototype, "following", {
 
         if (this.usingWebAudio)
         {
-            if (value === false) {
+            if (!value) {
                 this._following = value;
             }
             else if (typeof value.x !== "undefined" && typeof value.y !== "undefined")
