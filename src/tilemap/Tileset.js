@@ -195,6 +195,7 @@ Phaser.Tileset.prototype = {
     */
     updateTileData: function () {
 
+        var image = this.image;
         this.rows = Math.round((image.height - this.tileMargin) / (this.tileHeight + this.tileSpacing));
         this.columns = Math.round((image.width - this.tileMargin) / (this.tileWidth + this.tileSpacing));
         this.total = this.rows * this.columns;

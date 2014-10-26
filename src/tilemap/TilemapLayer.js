@@ -15,10 +15,13 @@
 * @param {Phaser.Game} game - Game reference to the currently running game.
 * @param {Phaser.Tilemap} tilemap - The tilemap to which this layer belongs.
 * @param {integer} index - The index of the TileLayer to render within the Tilemap.
-* @param {number} width - Width of the renderable area of the layer.
-* @param {number} height - Height of the renderable area of the layer.
+* @param {integer} width - Width of the renderable area of the layer (in pixels).
+* @param {integer} height - Height of the renderable area of the layer (in pixels).
 */
 Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
+
+    width |= 0;
+    height |= 0;
 
     /**
     * A reference to the currently running Game.
