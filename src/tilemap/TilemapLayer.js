@@ -10,6 +10,7 @@
 * Since a TilemapLayer is a Sprite it can be moved around the display, added to other groups or display objects, etc.
 *
 * @class Phaser.TilemapLayer
+* @extends {Phaser.Image}
 * @constructor
 * @param {Phaser.Game} game - Game reference to the currently running game.
 * @param {Phaser.Tilemap} tilemap - The tilemap to which this layer belongs.
@@ -966,7 +967,7 @@ Phaser.TilemapLayer.prototype.render = function () {
         this.renderDebug();
     }
 
-    this.texture._updateUvs();
+    this.baseTexture.dirty();
 
     this.dirty = false;
 
