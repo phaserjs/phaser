@@ -771,7 +771,33 @@ Phaser.Game.prototype = {
         this.world = null;
         this.isBooted = false;
 
-        Phaser.Canvas.removeFromDOM(this.canvas);
+        if (this.renderType === Phaser.WEBGL)
+        {
+            PIXI.glContexts[this.renderer.glContextId] = null;
+
+            this.renderer.projection = null;
+            this.renderer.offset = null;
+
+            this.renderer.shaderManager.destroy();
+            this.renderer.spriteBatch.destroy();
+            this.renderer.maskManager.destroy();
+            this.renderer.filterManager.destroy();
+
+            this.renderer.shaderManager = null;
+            this.renderer.spriteBatch = null;
+            this.renderer.maskManager = null;
+            this.renderer.filterManager = null;
+
+            this.renderer.gl = null;
+            this.renderer.renderSession = null;
+            Phaser.Canvas.removeFromDOM(this.canvas);
+        }
+        else
+        {
+            this.renderer.destroy(true);
+        }
+
+        Phaser.GAMES[this.id] = null;
 
     },
 

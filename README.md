@@ -85,6 +85,7 @@ Version 2.1.4 - "Bethal" - in development
 * Cache._resolveUrl has been renamed to Cache._resolveURL internally and gained a new parameter. This method is a private internal one.
 * Cache.getUrl is deprecated. The same method is now available as Cache.getURL.
 * Loader.useXDomainRequest used to be enabled automatically for IE9 but is now always set to `false`. Please enable it only if you know your server set-up / CDN requires it, as some most certainly do, but we're finding them to be less and less used these days, so we feel it's safe to now disable this by default (#1248)
+* Game.destroy now destroys either the WebGLRenderer or CanvasRenderer, whichever Pixi was using.
 
 ### Bug Fixes
 
@@ -165,7 +166,7 @@ If you need to support IE9 or Android 2.x and want to use P2 physics then you mu
 
 Phaser is developed in JavaScript. We've made no assumptions about how you like to code your games, and were careful not to impose any form of class / inheritance / structure upon you. So you won't find it split into require modules or pull in 3rd party npm packages for example. That doesn't mean you can't, it just means we don't force you to do so. If you're a requireJS user you'll find a new template in the `resources\Project Templates` folder just for you.
 
-If you code with [TypeScript](http://www.typescriptlang.org/) you'll find a comprehensive definitions file inside the `build` folder and tutorials on getting started.
+If you code with [TypeScript](http://www.typescriptlang.org/) you'll find a comprehensive definitions file inside the `build` folder and tutorials on getting started. This definitions file is for TypeScript 1.0+. If you are using an earlier version of TypeScript (i.e. 0.9.5) you will need to include the WebGL definitions into your project first. This file isn't included with Phaser.
 
 <a name="build-files"></a>
 ### Build Files and Custom Builds
