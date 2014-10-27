@@ -84,12 +84,14 @@ Version 2.1.4 - "Bethal" - in development
 * TypeScript definitions fixes and updates (thanks @clark-stevenson)
 * Cache._resolveUrl has been renamed to Cache._resolveURL internally and gained a new parameter. This method is a private internal one.
 * Cache.getUrl is deprecated. The same method is now available as Cache.getURL.
+* Loader.useXDomainRequest used to be enabled automatically for IE9 but is now always set to `false`. Please enable it only if you know your server set-up / CDN requires it, as some most certainly do, but we're finding them to be less and less used these days, so we feel it's safe to now disable this by default (#1248)
 
 ### Bug Fixes
 
 * Tilemaps in WebGL wouldn't update after the first frame due to a subtle change in how Pixi uploads new textures to the GPU.
 * XML files weren't being added to the URL map.
 * Cache._resolveURL was causing a Sound double-load in Firefox and causing errors (thanks @domonyiv #1253)
+* Loader.json was using the wrong context in IE9 with XDomainRequest calls (thanks @pnstickne #1258)
 
 
 For details about changes made in previous versions of Phaser see the full Change Log at https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md

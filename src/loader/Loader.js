@@ -99,9 +99,9 @@ Phaser.Loader = function (game) {
     this.onPackComplete = new Phaser.Signal();
 
     /**
-    * @property {boolean} useXDomainRequest - If true and if the browser supports XDomainRequest, it will be used in preference for xhr when loading json files. It is enabled automatically if the browser is IE9, but you can disable it as required.
+    * @property {boolean} useXDomainRequest - If true and if the browser supports XDomainRequest, it will be used in preference for xhr when loading json files. This is only relevant for IE9 when you know your server/CDN requires it.
     */
-    this.useXDomainRequest = (this.game.device.ieVersion === 9);
+    this.useXDomainRequest = false;
 
     /**
     * @property {array} _packList - Contains all the assets packs.
@@ -1299,7 +1299,7 @@ Phaser.Loader.prototype = {
                     //  Note: The xdr.send() call is wrapped in a timeout to prevent an issue with the interface where some requests are lost
                     //  if multiple XDomainRequests are being sent at the same time.
                     setTimeout(function () {
-                        this._ajax.send();
+                        _this._ajax.send();
                     }, 0);
                 }
                 else
