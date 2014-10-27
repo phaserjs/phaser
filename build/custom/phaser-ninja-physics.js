@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.1.3 "Ravinda" - Built: Thu Oct 23 2014 16:02:23
+* v2.1.4 "Bethal" - Built: Mon Oct 27 2014 23:30:42
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -11582,7 +11582,7 @@ PIXI.AbstractFilter.prototype.apply = function(frameBuffer)
 *
 * Phaser - http://phaser.io
 *
-* v2.1.3 "Ravinda" - Built: Thu Oct 23 2014 16:02:23
+* v2.1.4 "Bethal" - Built: Mon Oct 27 2014 23:30:42
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -11625,7 +11625,7 @@ PIXI.AbstractFilter.prototype.apply = function(frameBuffer)
 */
 var Phaser = Phaser || {
 
-	VERSION: '2.1.3',
+	VERSION: '2.1.4-dev',
 	GAMES: [],
 
     AUTO: 0,
@@ -24625,7 +24625,33 @@ Phaser.Game.prototype = {
         this.world = null;
         this.isBooted = false;
 
-        Phaser.Canvas.removeFromDOM(this.canvas);
+        if (this.renderType === Phaser.WEBGL)
+        {
+            PIXI.glContexts[this.renderer.glContextId] = null;
+
+            this.renderer.projection = null;
+            this.renderer.offset = null;
+
+            this.renderer.shaderManager.destroy();
+            this.renderer.spriteBatch.destroy();
+            this.renderer.maskManager.destroy();
+            this.renderer.filterManager.destroy();
+
+            this.renderer.shaderManager = null;
+            this.renderer.spriteBatch = null;
+            this.renderer.maskManager = null;
+            this.renderer.filterManager = null;
+
+            this.renderer.gl = null;
+            this.renderer.renderSession = null;
+            Phaser.Canvas.removeFromDOM(this.canvas);
+        }
+        else
+        {
+            this.renderer.destroy(true);
+        }
+
+        Phaser.GAMES[this.id] = null;
 
     },
 
@@ -50311,6 +50337,11 @@ Phaser.Cache = function (game) {
     this.game = game;
 
     /**
+    * @property {boolean} autoResolveURL - Automatically resolve resource URLs to absolute paths for use with the Cache.getURL method.
+    */
+    this.autoResolveURL = false;
+
+    /**
     * @property {object} _canvases - Canvas key-value container.
     * @private
     */
@@ -50585,7 +50616,7 @@ Phaser.Cache.prototype = {
 
         this._images[key].frameData = Phaser.AnimationParser.spriteSheet(this.game, key, frameWidth, frameHeight, frameMax, margin, spacing);
 
-        this._urlMap[this._resolveUrl(url)] = this._images[key];
+        this._resolveURL(url, this._images[key]);
 
     },
 
@@ -50602,7 +50633,7 @@ Phaser.Cache.prototype = {
 
         this._tilemaps[key] = { url: url, data: mapData, format: format };
 
-        this._urlMap[this._resolveUrl(url)] = this._tilemaps[key];
+        this._resolveURL(url, this._tilemaps[key]);
 
     },
 
@@ -50636,7 +50667,7 @@ Phaser.Cache.prototype = {
             this._images[key].frameData = Phaser.AnimationParser.XMLData(this.game, atlasData, key);
         }
 
-        this._urlMap[this._resolveUrl(url)] = this._images[key];
+        this._resolveURL(url, this._images[key]);
 
     },
 
@@ -50662,7 +50693,7 @@ Phaser.Cache.prototype = {
 
         this._bitmapFont[key] = PIXI.BitmapText.fonts[key];
 
-        this._urlMap[this._resolveUrl(url)] = this._bitmapFont[key];
+        this._resolveURL(url, this._bitmapFont[key]);
 
     },
 
@@ -50679,7 +50710,7 @@ Phaser.Cache.prototype = {
 
         this._physics[key] = { url: url, data: JSONData, format: format };
 
-        this._urlMap[this._resolveUrl(url)] = this._physics[key];
+        this._resolveURL(url, this._physics[key]);
 
     },
 
@@ -50737,7 +50768,7 @@ Phaser.Cache.prototype = {
 
         this._text[key] = { url: url, data: data };
 
-        this._urlMap[this._resolveUrl(url)] = this._text[key];
+        this._resolveURL(url, this._text[key]);
 
     },
 
@@ -50753,7 +50784,7 @@ Phaser.Cache.prototype = {
 
         this._json[key] = { url: url, data: data };
 
-        this._urlMap[this._resolveUrl(url)] = this._json[key];
+        this._resolveURL(url, this._json[key]);
 
     },
 
@@ -50769,10 +50800,12 @@ Phaser.Cache.prototype = {
 
         this._xml[key] = { url: url, data: data };
 
+        this._resolveURL(url, this._xml[key]);
+
     },
 
     /**
-    * Adds an Image file into the Cache. The file must have already been loaded, typically via Phaser.Loader.
+    * Adds an Image file into the Cache. The file must have already been loaded, typically via Phaser.Loader, but can also have been loaded into the DOM.
     *
     * @method Phaser.Cache#addImage
     * @param {string} key - The unique key by which you will reference this object.
@@ -50790,7 +50823,7 @@ Phaser.Cache.prototype = {
         PIXI.BaseTextureCache[key] = new PIXI.BaseTexture(data);
         PIXI.TextureCache[key] = new PIXI.Texture(PIXI.BaseTextureCache[key]);
 
-        this._urlMap[this._resolveUrl(url)] = this._images[key];
+        this._resolveURL(url, this._images[key]);
 
     },
 
@@ -50818,7 +50851,7 @@ Phaser.Cache.prototype = {
 
         this._sounds[key] = { url: url, data: data, isDecoding: false, decoded: decoded, webAudio: webAudio, audioTag: audioTag, locked: this.game.sound.touchLocked };
 
-        this._urlMap[this._resolveUrl(url)] = this._sounds[key];
+        this._resolveURL(url, this._sounds[key]);
 
     },
 
@@ -50992,7 +51025,6 @@ Phaser.Cache.prototype = {
                         {
                             return fixture;
                         }
-
                     }
 
                     //  We did not find the requested fixture
@@ -51190,14 +51222,17 @@ Phaser.Cache.prototype = {
 
     /**
     * Checks if the given URL has been loaded into the Cache.
+    * This method will only work if Cache.autoResolveURL was set to `true` before any preloading took place.
+    * The method will make a DOM src call to the URL given, so please be aware of this for certain file types, such as Sound files on Firefox
+    * which may cause double-load instances.
     *
-    * @method Phaser.Cache#checkUrl
+    * @method Phaser.Cache#checkURL
     * @param {string} url - The url to check for in the cache.
     * @return {boolean} True if the url exists, otherwise false.
     */
-    checkUrl: function (url) {
+    checkURL: function (url) {
 
-        if (this._urlMap[this._resolveUrl(url)])
+        if (this._urlMap[this._resolveURL(url)])
         {
             return true;
         }
@@ -51207,11 +51242,11 @@ Phaser.Cache.prototype = {
     },
 
     /**
-    * Get image data by key.
+    * Gets an image by its key. Note that this returns a DOM Image object, not a Phaser object.
     *
     * @method Phaser.Cache#getImage
     * @param {string} key - Asset key of the image to retrieve from the Cache.
-    * @return {object} The image data if found in the Cache, otherwise `null`.
+    * @return {Image} The Image object if found in the Cache, otherwise `null`.
     */
     getImage: function (key) {
 
@@ -51354,7 +51389,30 @@ Phaser.Cache.prototype = {
     /**
     * Get a RenderTexture by key.
     *
+    * @method Phaser.Cache#getRenderTexture
+    * @param {string} key - Asset key of the RenderTexture to retrieve from the Cache.
+    * @return {Phaser.RenderTexture} The RenderTexture object.
+    */
+    getRenderTexture: function (key) {
+
+        if (this._textures[key])
+        {
+            return this._textures[key];
+        }
+        else
+        {
+            console.warn('Phaser.Cache.getTexture: Invalid key: "' + key + '"');
+        }
+
+    },
+
+    /**
+    * DEPRECATED: Please use Cache.getRenderTexture instead. This method will be removed in Phaser 2.2.0.
+    * 
+    * Get a RenderTexture by key.
+    *
     * @method Phaser.Cache#getTexture
+    * @deprecated Please use Cache.getRenderTexture instead. This method will be removed in Phaser 2.2.0.
     * @param {string} key - Asset key of the RenderTexture to retrieve from the Cache.
     * @return {Phaser.RenderTexture} The RenderTexture object.
     */
@@ -51540,21 +51598,42 @@ Phaser.Cache.prototype = {
 
     /**
     * Get a cached object by the URL.
+    * This only returns a value if you set Cache.autoResolveURL to `true` *before* starting the preload of any assets.
+    * Be aware that every call to this function makes a DOM src query, so use carefully and double-check for implications in your target browsers/devices.
+    *
+    * @method Phaser.Cache#getURL
+    * @param {string} url - The url for the object loaded to get from the cache.
+    * @return {object} The cached object.
+    */
+    getURL: function (url) {
+
+        var url = this._resolveURL(url);
+
+        if (url)
+        {
+            return this._urlMap[url];
+        }
+        else
+        {
+            console.warn('Phaser.Cache.getUrl: Invalid url: "' + url  + '" or Cache.autoResolveURL was false');
+        }
+
+    },
+
+    /**
+    * DEPRECATED: Please use Cache.getURL instead.
+    * Get a cached object by the URL.
+    * This only returns a value if you set Cache.autoResolveURL to `true` *before* starting the preload of any assets.
+    * Be aware that every call to this function makes a DOM src query, so use carefully and double-check for implications in your target browsers/devices.
     *
     * @method Phaser.Cache#getUrl
+    * @deprecated Please use Cache.getURL instead.
     * @param {string} url - The url for the object loaded to get from the cache.
     * @return {object} The cached object.
     */
     getUrl: function (url) {
 
-        if (this._urlMap[this._resolveUrl(url)])
-        {
-            return this._urlMap[this._resolveUrl(url)];
-        }
-        else
-        {
-            console.warn('Phaser.Cache.getUrl: Invalid url: "' + url  + '"');
-        }
+        return this.getURL(url);
 
     },
 
@@ -51760,14 +51839,21 @@ Phaser.Cache.prototype = {
     },
 
     /**
-    * Resolves a URL to its absolute form.
+    * Resolves a URL to its absolute form and stores it in Cache._urlMap as long as Cache.autoResolveURL is set to `true`.
+    * This is then looked-up by the Cache.getURL and Cache.checkURL calls.
     *
-    * @method Phaser.Cache#_resolveUrl
-    * @param {string} url - The URL to resolve.
-    * @return {string} The resolved URL.
+    * @method Phaser.Cache#_resolveURL
     * @private
+    * @param {string} url - The URL to resolve. This is appended to Loader.baseURL.
+    * @param {object} [data] - The data associated with the URL to be stored to the URL Map.
+    * @return {string} The resolved URL.
     */
-    _resolveUrl: function (url) {
+    _resolveURL: function (url, data) {
+
+        if (!this.autoResolveURL)
+        {
+            return null;
+        }
 
         this._urlResolver.src = this.game.load.baseURL + url;
 
@@ -51775,6 +51861,12 @@ Phaser.Cache.prototype = {
 
         //  Ensure no request is actually made
         this._urlResolver.src = '';
+
+        //  Record the URL to the map
+        if (data)
+        {
+            this._urlMap[this._urlTemp] = data;
+        }
 
         return this._urlTemp;
 
@@ -51961,9 +52053,9 @@ Phaser.Loader = function (game) {
     this.onPackComplete = new Phaser.Signal();
 
     /**
-    * @property {boolean} useXDomainRequest - If true and if the browser supports XDomainRequest, it will be used in preference for xhr when loading json files. It is enabled automatically if the browser is IE9, but you can disable it as required.
+    * @property {boolean} useXDomainRequest - If true and if the browser supports XDomainRequest, it will be used in preference for xhr when loading json files. This is only relevant for IE9 when you know your server/CDN requires it.
     */
-    this.useXDomainRequest = (this.game.device.ieVersion === 9);
+    this.useXDomainRequest = false;
 
     /**
     * @property {array} _packList - Contains all the assets packs.
@@ -53161,7 +53253,7 @@ Phaser.Loader.prototype = {
                     //  Note: The xdr.send() call is wrapped in a timeout to prevent an issue with the interface where some requests are lost
                     //  if multiple XDomainRequests are being sent at the same time.
                     setTimeout(function () {
-                        this._ajax.send();
+                        _this._ajax.send();
                     }, 0);
                 }
                 else
@@ -60618,40 +60710,21 @@ Phaser.Particles.Arcade.Emitter.prototype.constructor = Phaser.Particles.Arcade.
 */
 Phaser.Particles.Arcade.Emitter.prototype.update = function () {
 
-    if (this.on)
+    if (this.on && this.game.time.now >= this._timer)
     {
-        if (this._explode)
+        this.emitParticle();
+
+        this._counter++;
+
+        if (this._quantity > 0)
         {
-            this._counter = 0;
-
-            do
+            if (this._counter >= this._quantity)
             {
-                this.emitParticle();
-                this._counter++;
-            }
-            while (this._counter < this._quantity);
-
-            this.on = false;
-        }
-        else
-        {
-            if (this.game.time.now >= this._timer)
-            {
-                this.emitParticle();
-
-                this._counter++;
-
-                if (this._quantity > 0)
-                {
-                    if (this._counter >= this._quantity)
-                    {
-                        this.on = false;
-                    }
-                }
-
-                this._timer = this.game.time.now + this.frequency;
+                this.on = false;
             }
         }
+
+        this._timer = this.game.time.now + this.frequency;
     }
 
     var i = this.children.length;
@@ -60718,6 +60791,7 @@ Phaser.Particles.Arcade.Emitter.prototype.makeParticles = function (keys, frames
         }
 
         particle.body.collideWorldBounds = collideWorldBounds;
+        particle.body.skipQuadTree = true;
 
         particle.exists = false;
         particle.visible = false;
@@ -60805,23 +60879,24 @@ Phaser.Particles.Arcade.Emitter.prototype.start = function (explode, lifespan, f
     this.revive();
 
     this.visible = true;
-    this.on = true;
 
-    this._explode = explode;
     this.lifespan = lifespan;
     this.frequency = frequency;
 
     if (explode || forceQuantity)
     {
-        this._quantity = quantity;
+        for (var i = 0; i < quantity; i++)
+        {
+            this.emitParticle();
+        }
     }
     else
     {
+        this.on = true;
         this._quantity += quantity;
+        this._counter = 0;
+        this._timer = this.game.time.now + frequency;
     }
-
-    this._counter = 0;
-    this._timer = this.game.time.now + frequency;
 
 };
 
@@ -63406,6 +63481,7 @@ Object.defineProperty(Phaser.Tilemap.prototype, "layer", {
 * A Tilemap Layer is a set of map data combined with a Tileset in order to render that data to the game.
 *
 * @class Phaser.TilemapLayer
+* @extends {Phaser.Image}
 * @constructor
 * @param {Phaser.Game} game - Game reference to the currently running game.
 * @param {Phaser.Tilemap} tilemap - The tilemap to which this layer belongs.
@@ -64011,7 +64087,7 @@ Phaser.TilemapLayer.prototype.render = function () {
         this.renderDebug();
     }
 
-    this.texture._updateUvs();
+    this.baseTexture.dirty();
 
     this.dirty = false;
     this.layer.dirty = false;
