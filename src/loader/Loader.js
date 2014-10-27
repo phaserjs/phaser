@@ -1299,7 +1299,7 @@ Phaser.Loader.prototype = {
                     //  Note: The xdr.send() call is wrapped in a timeout to prevent an issue with the interface where some requests are lost
                     //  if multiple XDomainRequests are being sent at the same time.
                     setTimeout(function () {
-                        this._ajax.send();
+                        _this._ajax.send();
                     }, 0);
                 }
                 else
