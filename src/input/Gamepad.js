@@ -5,8 +5,9 @@
 */
 
 /**
-* The Gamepad class handles looking after gamepad input for your game.
-* Remember to call gamepad.start(); expecting input!
+* The Gamepad class handles gamepad input and dispatches gamepad events.
+*
+* Remember to call `gamepad.start()`.
 *
 * HTML5 GAMEPAD API SUPPORT IS AT AN EXPERIMENTAL STAGE!
 * At moment of writing this (end of 2013) only Chrome supports parts of it out of the box. Firefox supports it
@@ -44,11 +45,11 @@ Phaser.Gamepad = function (game) {
     this._active = false;
 
     /**
-    * You can disable all Gamepad Input by setting disabled to true. While true all new input related events will be ignored.
-    * @property {boolean} disabled - The disabled state of the Gamepad.
+    * Gamepad input will only be processed if enabled.
+    * @member {boolean}
     * @default
     */
-    this.disabled = false;
+    this.enabled = true;
 
     /**
     * Whether or not gamepads are supported in the current browser. Note that as of Dec. 2013 this check is actually not accurate at all due to poor implementation.
@@ -479,6 +480,23 @@ Phaser.Gamepad.prototype = {
 };
 
 Phaser.Gamepad.prototype.constructor = Phaser.Gamepad;
+
+/**
+* If disabled all Gamepad input will be ignored.
+* @member {boolean}
+* @default false
+* @deprecated Use {@link Phaser.Gamepad#enabled} instead
+*/
+Object.defineProperty(Phaser.Gamepad.prototype, "disabled", {
+
+    get: function () {
+        return !this.enabled;
+    },
+    set: function (value) {
+        this.enabled = !value;
+    }
+
+});
 
 /**
 * If the gamepad input is active or not - if not active it should not be updated from Input.js

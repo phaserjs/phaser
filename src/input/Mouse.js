@@ -5,7 +5,8 @@
 */
 
 /**
-* Phaser.Mouse is responsible for handling all aspects of mouse interaction with the browser.
+* The Mouse class is responsible for handling all aspects of mouse interaction with the browser.
+*
 * It captures and processes mouse events that happen on the game canvas object. It also adds a single `mouseup` listener to `window` which
 * is used to capture the mouse being released when not over the game.
 *
@@ -72,10 +73,11 @@ Phaser.Mouse = function (game) {
     this.wheelDelta = 0;
 
     /**
-    * @property {boolean} disabled - You can disable all Input by setting disabled = true. While set all new input related events will be ignored.
+    * Mouse input will only be processed if enabled.
+    * @member {boolean}
     * @default
     */
-    this.disabled = false;
+    this.enabled = true;
 
     /**
     * @property {boolean} locked - If the mouse has been Pointer Locked successfully this will be set to true.
@@ -261,7 +263,7 @@ Phaser.Mouse.prototype = {
             this.mouseDownCallback.call(this.callbackContext, event);
         }
 
-        if (this.game.input.disabled || this.disabled)
+        if (!this.game.input.enabled || !this.enabled)
         {
             return;
         }
@@ -291,7 +293,7 @@ Phaser.Mouse.prototype = {
             this.mouseMoveCallback.call(this.callbackContext, event);
         }
 
-        if (this.game.input.disabled || this.disabled)
+        if (!this.game.input.enabled || !this.enabled)
         {
             return;
         }
@@ -323,7 +325,7 @@ Phaser.Mouse.prototype = {
             this.mouseUpCallback.call(this.callbackContext, event);
         }
 
-        if (this.game.input.disabled || this.disabled)
+        if (!this.game.input.enabled || !this.enabled)
         {
             return;
         }
@@ -380,7 +382,7 @@ Phaser.Mouse.prototype = {
             this.mouseOutCallback.call(this.callbackContext, event);
         }
 
-        if (this.game.input.disabled || this.disabled)
+        if (!this.game.input.enabled || !this.enabled)
         {
             return;
         }
@@ -441,7 +443,7 @@ Phaser.Mouse.prototype = {
             this.mouseOverCallback.call(this.callbackContext, event);
         }
 
-        if (this.game.input.disabled || this.disabled)
+        if (!this.game.input.enabled || !this.enabled)
         {
             return;
         }
@@ -543,3 +545,20 @@ Phaser.Mouse.prototype = {
 };
 
 Phaser.Mouse.prototype.constructor = Phaser.Mouse;
+
+/**
+* If disabled all Mouse input will be ignored.
+* @member {boolean}
+* @default false
+* @deprecated Use {@link Phaser.Mouse#enabled} instead
+*/
+Object.defineProperty(Phaser.Mouse.prototype, "disabled", {
+
+    get: function () {
+        return !this.enabled;
+    },
+    set: function (value) {
+        this.enabled = !value;
+    }
+
+});

@@ -5,9 +5,9 @@
 */
 
 /**
-* The Keyboard class handles looking after keyboard input for your game.
-* It will recognise and respond to key presses and dispatch the required events.
-* Please be aware that lots of keyboards are unable to process certain combinations of keys due to hardware
+* The Keyboard class monitors keyboard input and dispatches keyboard events.
+*
+* _Be aware_ that many keyboards are unable to process certain combinations of keys due to hardware
 * limitations known as ghosting. Full details here: http://www.html5gamedevs.com/topic/4876-impossible-to-use-more-than-2-keyboard-input-buttons-at-the-same-time/
 *
 * @class Phaser.Keyboard
@@ -22,11 +22,11 @@ Phaser.Keyboard = function (game) {
     this.game = game;
 
     /**
-    * You can disable all Keyboard Input by setting disabled to true. While true all new input related events will be ignored.
-    * @property {boolean} disabled - The disabled state of the Keyboard.
+    * Keyboard input will only be processed if enabled.
+    * @member {boolean}
     * @default
     */
-    this.disabled = false;
+    this.enabled = true;
 
     /**
     * @property {Object} event - The most recent DOM event from keydown or keyup. This is updated every time a new key is pressed or released.
@@ -342,7 +342,7 @@ Phaser.Keyboard.prototype = {
 
         this.event = event;
 
-        if (this.game.input.disabled || this.disabled)
+        if (!this.game.input.enabled || !this.enabled)
         {
             return;
         }
@@ -380,7 +380,7 @@ Phaser.Keyboard.prototype = {
 
         this.pressEvent = event;
 
-        if (this.game.input.disabled || this.disabled)
+        if (!this.game.input.enabled || !this.enabled)
         {
             return;
         }
@@ -403,7 +403,7 @@ Phaser.Keyboard.prototype = {
 
         this.event = event;
 
-        if (this.game.input.disabled || this.disabled)
+        if (!this.game.input.enabled || !this.enabled)
         {
             return;
         }
@@ -516,6 +516,23 @@ Phaser.Keyboard.prototype = {
     }
 
 };
+
+/**
+* If disabled all Keyboard input will be ignored.
+* @member {boolean}
+* @default false
+* @deprecated Use {@link Phaser.Keyboard#enabled} instead
+*/
+Object.defineProperty(Phaser.Keyboard.prototype, "disabled", {
+
+    get: function () {
+        return !this.enabled;
+    },
+    set: function (value) {
+        this.enabled = !value;
+    }
+
+});
 
 /**
 * Returns the string value of the most recently pressed key.

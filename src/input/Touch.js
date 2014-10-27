@@ -19,10 +19,11 @@ Phaser.Touch = function (game) {
     this.game = game;
 
     /**
-    * @property {boolean} disabled - You can disable all Touch events by setting disabled = true. While set all new touch events will be ignored.
-    * @return {boolean}
+    * Touch events will only be processed if enabled.
+    * @member {boolean}
+    * @default
     */
-    this.disabled = false;
+    this.enabled = true;
 
     /**
     * @property {Object} callbackContext - The context under which callbacks are called.
@@ -199,7 +200,7 @@ Phaser.Touch.prototype = {
             this.touchStartCallback.call(this.callbackContext, event);
         }
 
-        if (this.game.input.disabled || this.disabled)
+        if (!this.game.input.enabled || !this.enabled)
         {
             return;
         }
@@ -234,7 +235,7 @@ Phaser.Touch.prototype = {
             this.touchCancelCallback.call(this.callbackContext, event);
         }
 
-        if (this.game.input.disabled || this.disabled)
+        if (!this.game.input.enabled || !this.enabled)
         {
             return;
         }
@@ -268,7 +269,7 @@ Phaser.Touch.prototype = {
             this.touchEnterCallback.call(this.callbackContext, event);
         }
 
-        if (this.game.input.disabled || this.disabled)
+        if (!this.game.input.enabled || !this.enabled)
         {
             return;
         }
@@ -378,3 +379,20 @@ Phaser.Touch.prototype = {
 };
 
 Phaser.Touch.prototype.constructor = Phaser.Touch;
+
+/**
+* If disabled all Touch events will be ignored.
+* @member {boolean}
+* @default false
+* @deprecated Use {@link Phaser.Touch#enabled} instead
+*/
+Object.defineProperty(Phaser.Touch.prototype, "disabled", {
+
+    get: function () {
+        return !this.enabled;
+    },
+    set: function (value) {
+        this.enabled = !value;
+    }
+
+});
