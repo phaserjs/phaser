@@ -86,6 +86,8 @@ Version 2.1.4 - "Bethal" - in development
 * Cache.getUrl is deprecated. The same method is now available as Cache.getURL.
 * Loader.useXDomainRequest used to be enabled automatically for IE9 but is now always set to `false`. Please enable it only if you know your server set-up / CDN requires it, as some most certainly do, but we're finding them to be less and less used these days, so we feel it's safe to now disable this by default (#1248)
 * Game.destroy now destroys either the WebGLRenderer or CanvasRenderer, whichever Pixi was using.
+* Particle.Emitter will now automatically set `particle.body.skipQuadTree` to `true` to help with collision speeds within Arcade Physics.
+* Particle.Emitter.explode (or `Emitter.start` with the `explode` parameter set to `true`) will immediately emit the required quantity of particles and not delay until the next frame to do so. This means you can re-use a single emitter across multiple places in your game that require explode-style emissions, just by adjusting the `emitter.x` and `emitter.y` properties before calling explode (thanks Insanehero)
 
 ### Bug Fixes
 
