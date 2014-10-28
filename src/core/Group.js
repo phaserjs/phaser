@@ -91,17 +91,9 @@ Phaser.Group = function (game, parent, name, addToStage, enableBody, physicsBody
     this.classType = Phaser.Sprite;
 
     /**
-    * @property {Phaser.Group|Phaser.Sprite} parent - The parent of this Group.
-    */
-
-    /**
     * @property {Phaser.Point} scale - The scale of the Group container.
     */
     this.scale = new Phaser.Point(1, 1);
-
-    /**
-    * @property {Phaser.Point} pivot - The pivot point of the Group container.
-    */
 
     /**
     * The cursor is a simple way to iterate through the objects in a Group using the Group.next and Group.previous functions.
@@ -132,7 +124,7 @@ Phaser.Group = function (game, parent, name, addToStage, enableBody, physicsBody
     this.physicsBodyType = physicsBodyType;
 
     /**
-    * @property {Phaser.Signal} onDestroy - This signal is dispatched when the parent is destoyed.
+    * @property {Phaser.Signal} onDestroy - This signal is dispatched if this Group is destroyed.
     */
     this.onDestroy = new Phaser.Signal();
 
@@ -1651,7 +1643,7 @@ Phaser.Group.prototype.remove = function (child, destroy, silent) {
 };
 
 /**
-* Removes all children from this Group, setting the group properties of the children to `null`.
+* Removes all children from this Group, setting the `parent` property of the children to `null`.
 * The Group container remains on the display list.
 *
 * @method Phaser.Group#removeAll
