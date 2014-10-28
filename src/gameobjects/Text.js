@@ -379,7 +379,7 @@ Phaser.Text.prototype.updateText = function () {
 
     var width = maxLineWidth + this.style.strokeThickness;
 
-    this.canvas.width = (width + this.context.lineWidth) * this.resolution;
+    this.canvas.width = width * this.resolution;
     
     //calculate text height
     var lineHeight = fontProperties.fontSize + this.style.strokeThickness;
