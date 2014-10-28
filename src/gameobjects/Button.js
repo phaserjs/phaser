@@ -55,7 +55,7 @@ Phaser.Button = function (game, x, y, key, callback, callbackContext, overFrame,
 
     /**
     * The sounds and markers for each state.
-    * Indexed by `Button.STATE_* << 1` for the sound and `+1` for the marker.
+    * Indexed by `Button.STATE_* << 1` for the sound and `+1` for the marker; expanded on-demand.
     * @property {object[]} _stateSounds
     * @private
     */
@@ -132,9 +132,10 @@ Phaser.Button.prototype = Object.create(Phaser.Image.prototype);
 Phaser.Button.prototype.constructor = Phaser.Button;
 
 //  State constants, useful to index into small state arrays.
-Phaser.Button.STATE_UP = 0;
+//  (Arranged by "expected likelines" of custom frames/sounds and may change - don't hard-code.)
+Phaser.Button.STATE_OVER = 0;
 Phaser.Button.STATE_DOWN = 1;
-Phaser.Button.STATE_OVER = 2;
+Phaser.Button.STATE_UP = 2;
 Phaser.Button.STATE_OUT = 3;
 
 /**
@@ -253,27 +254,21 @@ Phaser.Button.prototype.setStateSound = function (state, sound, marker) {
 
     var soundIndex = state << 1;
     var markerIndex = soundIndex + 1;
+    var sounds = this._stateSounds;
 
     if (sound instanceof Phaser.Sound || sound instanceof Phaser.AudioSprite)
     {
-        while (markerIndex < this._stateSounds.index) {
-            this._stateSounds.push(null);
+        while (markerIndex < sounds.length) { // Dense null
+            sounds.push(null);
         }
 
-        this._stateSounds[soundIndex] = sound;
-        if (typeof marker === 'string')
-        {
-            this._stateSounds[markerIndex] = marker;
-        }
-        else
-        {
-            this._stateSounds[markerIndex] = null;
-        }
+        sounds[soundIndex] = sound;
+        sounds[markerIndex] = typeof marker === 'string' ? marker : null;
     }
-    else if (markerIndex < this._stateSounds.length)
+    else if (markerIndex < sounds.length)
     {
-        this._stateSounds[soundIndex] = null;
-        this._stateSounds[markerIndex] = null;
+        sounds[soundIndex] = null;
+        sounds[markerIndex] = null;
     }
 
 };
@@ -290,13 +285,13 @@ Phaser.Button.prototype.playStateSound = function (state) {
 
     var soundIndex = state << 1;
     var markerIndex = soundIndex + 1;
-    var sound = this._stateSounds[soundIndex];
+    var sounds = this._stateSounds;
 
+    var sound = sounds[soundIndex];
     if (sound)
     {
-        var marker = this._stateSounds[markerIndex];
-        //  Not sure if a non-null/undefined marker is required, but it could never be null before so..
-        sound.play(marker != null ? marker : '');
+        var marker = sounds[markerIndex];
+        sound.play(marker);
         return true;
     }
     else
@@ -309,7 +304,8 @@ Phaser.Button.prototype.playStateSound = function (state) {
 /**
 * Sets the sounds to be played whenever this Button is interacted with. Sounds can be either full Sound objects, or markers pointing to a section of a Sound object.
 * The most common forms of sounds are 'hover' effects and 'click' effects, which is why the order of the parameters is overSound then downSound.
-* Call this function with no parameters at all to reset all sounds on this Button.
+*
+* Call this function with no parameters to reset all sounds on this Button.
 *
 * @method Phaser.Button#setSounds
 * @public
@@ -324,10 +320,10 @@ Phaser.Button.prototype.playStateSound = function (state) {
 */
 Phaser.Button.prototype.setSounds = function (overSound, overMarker, downSound, downMarker, outSound, outMarker, upSound, upMarker) {
 
-    this.setOverSound(overSound, overMarker);
-    this.setOutSound(outSound, outMarker);
-    this.setDownSound(downSound, downMarker);
-    this.setUpSound(upSound, upMarker);
+    this.setStateSound(Phaser.Button.STATE_OVER, overSound, overMarker);
+    this.setStateSound(Phaser.Button.STATE_OUT, outSound, outMarker);
+    this.setStateSound(Phaser.Button.STATE_DOWN, downSound, downMarker);
+    this.setStateSound(Phaser.Button.STATE_UP, upSound, upMarker);
 
 };
 
