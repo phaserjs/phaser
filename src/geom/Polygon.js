@@ -90,8 +90,6 @@ Phaser.Polygon.prototype = {
     */
     contains: function (x, y) {
 
-        var inside = false;
-
         // use some raycasting to test hits https://github.com/substack/point-in-polygon/blob/master/index.js
 
         var length = this.points.length / 2;
@@ -107,11 +105,11 @@ Phaser.Polygon.prototype = {
 
             if (intersect)
             {
-                inside = !inside;
+                return true;
             }
         }
 
-        return inside;
+        return false;
 
     },
 
