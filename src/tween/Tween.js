@@ -214,7 +214,7 @@ Phaser.Tween.prototype = {
 
         var self;
 
-        if (this._parent)
+        if (this._parent && this._parent !== this)
         {
             self = this._manager.create(this._object);
             this._lastChild.chain(self);
@@ -239,6 +239,10 @@ Phaser.Tween.prototype = {
         if (delay > 0)
         {
             self._delayTime = delay;
+        }
+        else
+        {
+            self._delayTime = 0;
         }
 
         self._yoyo = yoyo;
@@ -283,10 +287,10 @@ Phaser.Tween.prototype = {
     },
 
     /**
-    * Starts the tween running. Can also be called by the autoStart parameter of Tween.to.
+    * Starts the tween running. Can also be called by the autoStart parameter of `Tween.to.`
     *
     * @method Phaser.Tween#start
-    * @return {Phaser.Tween} Itself.
+    * @return {Phaser.Tween} This tween. Useful for method chaining.
     */
     start: function () {
 
@@ -325,7 +329,6 @@ Phaser.Tween.prototype = {
             }
 
             this._valuesStartRepeat[property] = this._valuesStart[property] || 0;
-
         }
 
         return this;
@@ -451,16 +454,18 @@ Phaser.Tween.prototype = {
     },
 
     /**
-    * Stops the tween if running and removes it from the TweenManager. If there are any onComplete callbacks or events they are not dispatched.
+    * Stops the tween if running and removes it from the TweenManager.
+    * If called directly and there are any `onComplete` callbacks or events they are not dispatched.
     *
     * @method Phaser.Tween#stop
-    * @return {Phaser.Tween} Itself.
+    * @return {Phaser.Tween} This tween. Useful for method chaining.
     */
     stop: function () {
 
         this.isRunning = false;
 
         this._onUpdateCallback = null;
+        this._onStartCallbackFired = false;
 
         this._manager.remove(this);
 
@@ -473,11 +478,12 @@ Phaser.Tween.prototype = {
     *
     * @method Phaser.Tween#delay
     * @param {number} amount - The amount of the delay in ms.
-    * @return {Phaser.Tween} Itself.
+    * @return {Phaser.Tween} This tween. Useful for method chaining.
     */
     delay: function (amount) {
 
         this._delayTime = amount;
+
         return this;
 
     },
@@ -487,7 +493,7 @@ Phaser.Tween.prototype = {
     *
     * @method Phaser.Tween#repeat
     * @param {number} times - How many times to repeat.
-    * @return {Phaser.Tween} Itself.
+    * @return {Phaser.Tween} This tween. Useful for method chaining.
     */
     repeat: function (times) {
 
@@ -503,7 +509,7 @@ Phaser.Tween.prototype = {
     *
     * @method Phaser.Tween#yoyo
     * @param {boolean} yoyo - Set to true to yoyo this tween.
-    * @return {Phaser.Tween} Itself.
+    * @return {Phaser.Tween} This tween. Useful for method chaining.
     */
     yoyo: function(yoyo) {
 
@@ -523,7 +529,7 @@ Phaser.Tween.prototype = {
     *
     * @method Phaser.Tween#easing
     * @param {function} easing - The easing function this tween will use, i.e. Phaser.Easing.Linear.None.
-    * @return {Phaser.Tween} Itself.
+    * @return {Phaser.Tween} This tween. Useful for method chaining.
     */
     easing: function (easing) {
 
@@ -538,7 +544,7 @@ Phaser.Tween.prototype = {
     *
     * @method Phaser.Tween#interpolation
     * @param {function} interpolation - The interpolation function to use (Phaser.Math.linearInterpolation by default)
-    * @return {Phaser.Tween} Itself.
+    * @return {Phaser.Tween} This tween. Useful for method chaining.
     */
     interpolation: function (interpolation) {
 
@@ -552,7 +558,7 @@ Phaser.Tween.prototype = {
     * You can pass as many tweens as you like to this function, they will each be chained in sequence.
     *
     * @method Phaser.Tween#chain
-    * @return {Phaser.Tween} Itself.
+    * @return {Phaser.Tween} This tween. Useful for method chaining.
     */
     chain: function () {
 
@@ -571,7 +577,7 @@ Phaser.Tween.prototype = {
     * .to({ y: 0 }, 1000, Phaser.Easing.Linear.None)
     * .loop();
     * @method Phaser.Tween#loop
-    * @return {Phaser.Tween} Itself.
+    * @return {Phaser.Tween} This tween. Useful for method chaining.
     */
     loop: function() {
 
@@ -586,7 +592,7 @@ Phaser.Tween.prototype = {
     * @method Phaser.Tween#onUpdateCallback
     * @param {function} callback - The callback to invoke each time this tween is updated.
     * @param {object} callbackContext - The context in which to call the onUpdate callback.
-    * @return {Phaser.Tween} Itself.
+    * @return {Phaser.Tween} This tween. Useful for method chaining.
     */
     onUpdateCallback: function (callback, callbackContext) {
 
