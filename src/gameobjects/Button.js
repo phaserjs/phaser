@@ -199,7 +199,7 @@ Phaser.Button.prototype.setStateFrame = function (state, frame, switchImmediatel
 */
 Phaser.Button.prototype.changeStateFrame = function (state) {
 
-    if (this.freezeFrames) 
+    if (this.freezeFrames)
     {
         return false;
     }
@@ -215,7 +215,7 @@ Phaser.Button.prototype.changeStateFrame = function (state) {
         this.frame = frame;
         return true;
     }
-    else 
+    else
     {
         return false;
     }
