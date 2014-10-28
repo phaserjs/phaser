@@ -37,6 +37,11 @@ Phaser.Events = function (sprite) {
     this.onRemovedFromGroup = new Phaser.Signal();
 
     /**
+    * @property {Phaser.Signal} onRemovedFromWorld - This signal is dispatched if this item or any of its parents are removed from the game world.
+    */
+    this.onRemovedFromWorld = new Phaser.Signal();
+
+    /**
     * @property {Phaser.Signal} onDestroy - This signal is dispatched when the parent is destoyed.
     */
     this.onDestroy = new Phaser.Signal();
@@ -131,6 +136,7 @@ Phaser.Events.prototype = {
         this.onDestroy.dispose();
         this.onAddedToGroup.dispose();
         this.onRemovedFromGroup.dispose();
+        this.onRemovedFromWorld.dispose();
         this.onKilled.dispose();
         this.onRevived.dispose();
         this.onOutOfBounds.dispose();
