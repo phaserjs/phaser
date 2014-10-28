@@ -622,15 +622,17 @@ Phaser.Color = {
     },
 
     /**
-    * Converts a string - either in "hex" or a "CSS 'web' string" into a Phaser Color object.    
+    * Converts a value - a "hex" string, a "CSS 'web' string", or a number - into red, green, blue, and alpha components.
+    *
+    * The value can be a string (see `hexToColor` and `webToColor` for the supported formats) or a packed integer (see `getRGB`).
     *
     * An alpha channel is _not_ supported when specifying a hex string.
     *
     * @method Phaser.Color.valueToColor
     * @static
-    * @param {string|number} value - Can either be a string (see `hexToColor` and `webToColor` for the supported formats) or a number (see `getRGB`).
-    * @param {object} [out] - An object into which 4 properties will be created: r, g, b and a. If not provided a new object will be created.
-    * @return {object} An object with the red, green, blue and alpha values set in the r, g, b and a properties.
+    * @param {string|number} value - The color expressed as a recognized string format or a packed integer.
+    * @param {object} [out] - The object to use for the output. If not provided a new object will be created.
+    * @return {object} The (`out`) object with the red, green, blue, and alpha values set as the r/g/b/a properties.
     */
     valueToColor: function (value, out) {
 
