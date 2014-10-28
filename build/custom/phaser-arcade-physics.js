@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.1.4 "Bethal" - Built: Mon Oct 27 2014 23:30:42
+* v2.1.4 "Bethal" - Built: Tue Oct 28 2014 01:49:51
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -11582,7 +11582,7 @@ PIXI.AbstractFilter.prototype.apply = function(frameBuffer)
 *
 * Phaser - http://phaser.io
 *
-* v2.1.4 "Bethal" - Built: Mon Oct 27 2014 23:30:42
+* v2.1.4 "Bethal" - Built: Tue Oct 28 2014 01:49:51
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -18583,23 +18583,19 @@ Phaser.Signal = function () {
         Phaser.Signal.prototype.dispatch.apply(self, arguments);
     };
 
-};
-
-Phaser.Signal.prototype = {
-
     /**
     * If Signal should keep record of previously dispatched parameters and
     * automatically execute listener during `add()`/`addOnce()` if Signal was
     * already dispatched before.
     * @property {boolean} memorize
     */
-    memorize: false,
+    this.memorize = false;
 
     /**
     * @property {boolean} _shouldPropagate
     * @private
     */
-    _shouldPropagate: true,
+    this._shouldPropagate = true;
 
     /**
     * If Signal is active and should broadcast events.
@@ -18607,7 +18603,11 @@ Phaser.Signal.prototype = {
     * @property {boolean} active
     * @default
     */
-    active: true,
+    this.active = true;
+
+};
+
+Phaser.Signal.prototype = {
 
     /**
     * @method Phaser.Signal#validateListener
@@ -18814,7 +18814,7 @@ Phaser.Signal.prototype = {
     },
 
     /**
-    * Gets the total number of listeneres attached to ths Signal.
+    * Gets the total number of listeners attached to this Signal.
     *
     * @method Phaser.Signal#getNumListeners
     * @return {number} Number of listeners attached to the Signal.
@@ -18826,7 +18826,7 @@ Phaser.Signal.prototype = {
     },
 
     /**
-    * Stop propagation of the event, blocking the dispatch to next listeners on the queue.
+    * Stop propagation of the event, blocking the dispatch to next listener on the queue.
     * IMPORTANT: should be called only during signal dispatch, calling it before/after dispatch won't affect signal broadcast.
     * @see Signal.prototype.disable
     *
@@ -18971,23 +18971,28 @@ Phaser.SignalBinding = function (signal, listener, isOnce, listenerContext, prio
     */
     this._priority = priority || 0;
 
-};
-
-Phaser.SignalBinding.prototype = {
+    /**
+    * @property {number} callCount - The number of times the handler function has been called.
+    */
+    this.callCount = 0;
 
     /**
     * If binding is active and should be executed.
     * @property {boolean} active
     * @default
     */
-    active: true,
+    this.active = true;
 
     /**
     * Default parameters passed to listener during `Signal.dispatch` and `SignalBinding.execute` (curried parameters).
     * @property {array|null} params
     * @default
     */
-    params: null,
+    this.params = null;
+
+};
+
+Phaser.SignalBinding.prototype = {
 
     /**
     * Call listener passing arbitrary parameters.
@@ -19004,6 +19009,7 @@ Phaser.SignalBinding.prototype = {
         {
             params = this.params ? this.params.concat(paramsArr) : paramsArr;
             handlerReturn = this._listener.apply(this.context, params);
+            this.callCount++;
 
             if (this._isOnce)
             {
@@ -20157,17 +20163,9 @@ Phaser.Group = function (game, parent, name, addToStage, enableBody, physicsBody
     this.classType = Phaser.Sprite;
 
     /**
-    * @property {Phaser.Group|Phaser.Sprite} parent - The parent of this Group.
-    */
-
-    /**
     * @property {Phaser.Point} scale - The scale of the Group container.
     */
     this.scale = new Phaser.Point(1, 1);
-
-    /**
-    * @property {Phaser.Point} pivot - The pivot point of the Group container.
-    */
 
     /**
     * The cursor is a simple way to iterate through the objects in a Group using the Group.next and Group.previous functions.
@@ -20198,7 +20196,7 @@ Phaser.Group = function (game, parent, name, addToStage, enableBody, physicsBody
     this.physicsBodyType = physicsBodyType;
 
     /**
-    * @property {Phaser.Signal} onDestroy - This signal is dispatched when the parent is destoyed.
+    * @property {Phaser.Signal} onDestroy - This signal is dispatched if this Group is destroyed.
     */
     this.onDestroy = new Phaser.Signal();
 
@@ -21717,7 +21715,7 @@ Phaser.Group.prototype.remove = function (child, destroy, silent) {
 };
 
 /**
-* Removes all children from this Group, setting the group properties of the children to `null`.
+* Removes all children from this Group, setting the `parent` property of the children to `null`.
 * The Group container remains on the display list.
 *
 * @method Phaser.Group#removeAll
@@ -31537,6 +31535,11 @@ Phaser.Events = function (sprite) {
     this.onRemovedFromGroup = new Phaser.Signal();
 
     /**
+    * @property {Phaser.Signal} onRemovedFromWorld - This signal is dispatched if this item or any of its parents are removed from the game world.
+    */
+    this.onRemovedFromWorld = new Phaser.Signal();
+
+    /**
     * @property {Phaser.Signal} onDestroy - This signal is dispatched when the parent is destoyed.
     */
     this.onDestroy = new Phaser.Signal();
@@ -31631,6 +31634,7 @@ Phaser.Events.prototype = {
         this.onDestroy.dispose();
         this.onAddedToGroup.dispose();
         this.onRemovedFromGroup.dispose();
+        this.onRemovedFromWorld.dispose();
         this.onKilled.dispose();
         this.onRevived.dispose();
         this.onOutOfBounds.dispose();
@@ -39847,6 +39851,8 @@ Phaser.Button = function (game, x, y, key, callback, callbackContext, overFrame,
     this.events.onInputDown.add(this.onInputDownHandler, this);
     this.events.onInputUp.add(this.onInputUpHandler, this);
 
+    this.events.onRemovedFromWorld.add(this.removedFromWorld, this);
+
 };
 
 Phaser.Button.prototype = Object.create(Phaser.Image.prototype);
@@ -39870,6 +39876,17 @@ Phaser.Button.prototype.clearFrames = function () {
 
     this._onUpFrameName = null;
     this._onUpFrameID = null;
+
+};
+
+/**
+* Called when this Button is removed from the World.
+*
+* @method Phaser.Button.prototype.removedFromWorld
+*/
+Phaser.Button.prototype.removedFromWorld = function () {
+
+    this.inputEnabled = false;
 
 };
 
@@ -45773,7 +45790,7 @@ Phaser.Tween.prototype = {
 
         var self;
 
-        if (this._parent)
+        if (this._parent && this._parent !== this)
         {
             self = this._manager.create(this._object);
             this._lastChild.chain(self);
@@ -45798,6 +45815,10 @@ Phaser.Tween.prototype = {
         if (delay > 0)
         {
             self._delayTime = delay;
+        }
+        else
+        {
+            self._delayTime = 0;
         }
 
         self._yoyo = yoyo;
@@ -45842,10 +45863,10 @@ Phaser.Tween.prototype = {
     },
 
     /**
-    * Starts the tween running. Can also be called by the autoStart parameter of Tween.to.
+    * Starts the tween running. Can also be called by the autoStart parameter of `Tween.to.`
     *
     * @method Phaser.Tween#start
-    * @return {Phaser.Tween} Itself.
+    * @return {Phaser.Tween} This tween. Useful for method chaining.
     */
     start: function () {
 
@@ -45884,7 +45905,6 @@ Phaser.Tween.prototype = {
             }
 
             this._valuesStartRepeat[property] = this._valuesStart[property] || 0;
-
         }
 
         return this;
@@ -46010,16 +46030,18 @@ Phaser.Tween.prototype = {
     },
 
     /**
-    * Stops the tween if running and removes it from the TweenManager. If there are any onComplete callbacks or events they are not dispatched.
+    * Stops the tween if running and removes it from the TweenManager.
+    * If called directly and there are any `onComplete` callbacks or events they are not dispatched.
     *
     * @method Phaser.Tween#stop
-    * @return {Phaser.Tween} Itself.
+    * @return {Phaser.Tween} This tween. Useful for method chaining.
     */
     stop: function () {
 
         this.isRunning = false;
 
         this._onUpdateCallback = null;
+        this._onStartCallbackFired = false;
 
         this._manager.remove(this);
 
@@ -46032,11 +46054,12 @@ Phaser.Tween.prototype = {
     *
     * @method Phaser.Tween#delay
     * @param {number} amount - The amount of the delay in ms.
-    * @return {Phaser.Tween} Itself.
+    * @return {Phaser.Tween} This tween. Useful for method chaining.
     */
     delay: function (amount) {
 
         this._delayTime = amount;
+
         return this;
 
     },
@@ -46046,7 +46069,7 @@ Phaser.Tween.prototype = {
     *
     * @method Phaser.Tween#repeat
     * @param {number} times - How many times to repeat.
-    * @return {Phaser.Tween} Itself.
+    * @return {Phaser.Tween} This tween. Useful for method chaining.
     */
     repeat: function (times) {
 
@@ -46062,7 +46085,7 @@ Phaser.Tween.prototype = {
     *
     * @method Phaser.Tween#yoyo
     * @param {boolean} yoyo - Set to true to yoyo this tween.
-    * @return {Phaser.Tween} Itself.
+    * @return {Phaser.Tween} This tween. Useful for method chaining.
     */
     yoyo: function(yoyo) {
 
@@ -46082,7 +46105,7 @@ Phaser.Tween.prototype = {
     *
     * @method Phaser.Tween#easing
     * @param {function} easing - The easing function this tween will use, i.e. Phaser.Easing.Linear.None.
-    * @return {Phaser.Tween} Itself.
+    * @return {Phaser.Tween} This tween. Useful for method chaining.
     */
     easing: function (easing) {
 
@@ -46097,7 +46120,7 @@ Phaser.Tween.prototype = {
     *
     * @method Phaser.Tween#interpolation
     * @param {function} interpolation - The interpolation function to use (Phaser.Math.linearInterpolation by default)
-    * @return {Phaser.Tween} Itself.
+    * @return {Phaser.Tween} This tween. Useful for method chaining.
     */
     interpolation: function (interpolation) {
 
@@ -46111,7 +46134,7 @@ Phaser.Tween.prototype = {
     * You can pass as many tweens as you like to this function, they will each be chained in sequence.
     *
     * @method Phaser.Tween#chain
-    * @return {Phaser.Tween} Itself.
+    * @return {Phaser.Tween} This tween. Useful for method chaining.
     */
     chain: function () {
 
@@ -46130,7 +46153,7 @@ Phaser.Tween.prototype = {
     * .to({ y: 0 }, 1000, Phaser.Easing.Linear.None)
     * .loop();
     * @method Phaser.Tween#loop
-    * @return {Phaser.Tween} Itself.
+    * @return {Phaser.Tween} This tween. Useful for method chaining.
     */
     loop: function() {
 
@@ -46145,7 +46168,7 @@ Phaser.Tween.prototype = {
     * @method Phaser.Tween#onUpdateCallback
     * @param {function} callback - The callback to invoke each time this tween is updated.
     * @param {object} callbackContext - The context in which to call the onUpdate callback.
-    * @return {Phaser.Tween} Itself.
+    * @return {Phaser.Tween} This tween. Useful for method chaining.
     */
     onUpdateCallback: function (callback, callbackContext) {
 
