@@ -78,6 +78,8 @@ Version 2.1.4 - "Bethal" - in development
 * Cache.getRenderTexture will retrieve a RenderTexture that is stored in the Phaser Cache. This method replaces Cache.getTexture which is now deprecated.
 * Cache.autoResolveURL is a new boolean (default `false`) that automatically builds a cached map of all loaded assets vs. their absolute URLs, for use with Cache.getURL and Cache.checkURL. Note that in 2.1.3 and earlier this was enabled by default, but has since been moved behind this property which needs to be set to `true` *before* you load any assets to enable.
 * You can now call Tween.to again on a Tween that has already completed. This will re-use the same tween, on the original object, without having to recreate the Tween again. This allows a single tween instance to be re-used multiple times, providing they are linked to the same object (thanks InsaneHero)
+* Phaser.Color.valueToColor converts a value: a "hex" string, a "CSS 'web' string", or a number - into red, green, blue, and alpha components (thanks @pnstickne #1264)
+* Stage.backgroundColor now supports CSS 'rgba' values, as well as hex strings and hex numbers (thanks @pnstickne #1234)
 
 
 ### Updates
@@ -97,6 +99,7 @@ Version 2.1.4 - "Bethal" - in development
 * Cache._resolveURL was causing a Sound double-load in Firefox and causing errors (thanks @domonyiv #1253)
 * Loader.json was using the wrong context in IE9 with XDomainRequest calls (thanks @pnstickne #1258)
 * Polygon.contains was toggling the return value on each valid hit (thanks @Singularetantum #1265 #1266)
+* Text.updateText was incorrectly increasing the size of the texture each time it was called (thanks @spayton #1261)
 
 
 For details about changes made in previous versions of Phaser see the full Change Log at https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md
