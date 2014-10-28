@@ -286,23 +286,19 @@ Phaser.Stage.prototype.visibilityChange = function (event) {
 };
 
 /**
-* Sets the background color for the Stage. The color can be given as a hex value (#RRGGBB) or a numeric value (0xRRGGBB)
+* Sets the background color for the Stage.
+*
+* The color can be given as a hex string (`'#RRGGBB'`), a CSS color string (`'rgb(r,g,b)'`), or a numeric value (`0xRRGGBB`).
+*
+* An alpha channel is _not_ supported and will be ignored.
 *
 * @name Phaser.Stage#setBackgroundColor
 * @param {number|string} backgroundColor - The color of the background.
 */
 Phaser.Stage.prototype.setBackgroundColor = function(backgroundColor)
 {
-    if (typeof backgroundColor === 'string')
-    {
-        var rgb = Phaser.Color.hexToColor(backgroundColor);
-        this._backgroundColor = Phaser.Color.getColor(rgb.r, rgb.g, rgb.b);
-    }
-    else
-    {
-        var rgb = Phaser.Color.getRGB(backgroundColor);
-        this._backgroundColor = backgroundColor;
-    }
+    var rgb = Phaser.Color.valueToColor(backgroundColor);
+    this._backgroundColor = Phaser.Color.getColor(rgb.r, rgb.g, rgb.b);
 
     this.backgroundColorSplit = [ rgb.r / 255, rgb.g / 255, rgb.b / 255 ];
     this.backgroundColorString = Phaser.Color.RGBtoString(rgb.r, rgb.g, rgb.b, 255, '#');
