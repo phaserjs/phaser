@@ -49,23 +49,28 @@ Phaser.SignalBinding = function (signal, listener, isOnce, listenerContext, prio
     */
     this._priority = priority || 0;
 
-};
-
-Phaser.SignalBinding.prototype = {
+    /**
+    * @property {number} callCount - The number of times the handler function has been called.
+    */
+    this.callCount = 0;
 
     /**
     * If binding is active and should be executed.
     * @property {boolean} active
     * @default
     */
-    active: true,
+    this.active = true;
 
     /**
     * Default parameters passed to listener during `Signal.dispatch` and `SignalBinding.execute` (curried parameters).
     * @property {array|null} params
     * @default
     */
-    params: null,
+    this.params = null;
+
+};
+
+Phaser.SignalBinding.prototype = {
 
     /**
     * Call listener passing arbitrary parameters.
@@ -82,6 +87,7 @@ Phaser.SignalBinding.prototype = {
         {
             params = this.params ? this.params.concat(paramsArr) : paramsArr;
             handlerReturn = this._listener.apply(this.context, params);
+            this.callCount++;
 
             if (this._isOnce)
             {

@@ -35,23 +35,19 @@ Phaser.Signal = function () {
         Phaser.Signal.prototype.dispatch.apply(self, arguments);
     };
 
-};
-
-Phaser.Signal.prototype = {
-
     /**
     * If Signal should keep record of previously dispatched parameters and
     * automatically execute listener during `add()`/`addOnce()` if Signal was
     * already dispatched before.
     * @property {boolean} memorize
     */
-    memorize: false,
+    this.memorize = false;
 
     /**
     * @property {boolean} _shouldPropagate
     * @private
     */
-    _shouldPropagate: true,
+    this._shouldPropagate = true;
 
     /**
     * If Signal is active and should broadcast events.
@@ -59,7 +55,11 @@ Phaser.Signal.prototype = {
     * @property {boolean} active
     * @default
     */
-    active: true,
+    this.active = true;
+
+};
+
+Phaser.Signal.prototype = {
 
     /**
     * @method Phaser.Signal#validateListener
@@ -266,7 +266,7 @@ Phaser.Signal.prototype = {
     },
 
     /**
-    * Gets the total number of listeneres attached to ths Signal.
+    * Gets the total number of listeners attached to this Signal.
     *
     * @method Phaser.Signal#getNumListeners
     * @return {number} Number of listeners attached to the Signal.
@@ -278,7 +278,7 @@ Phaser.Signal.prototype = {
     },
 
     /**
-    * Stop propagation of the event, blocking the dispatch to next listeners on the queue.
+    * Stop propagation of the event, blocking the dispatch to next listener on the queue.
     * IMPORTANT: should be called only during signal dispatch, calling it before/after dispatch won't affect signal broadcast.
     * @see Signal.prototype.disable
     *
