@@ -330,7 +330,7 @@ Phaser.Pointer.prototype = {
             {
                 if (this.game.input.interactiveItems.total > 0)
                 {
-                    this.processInteractiveObjects(true);
+                    this.processInteractiveObjects(false);
                 }
 
                 this.dirty = false;

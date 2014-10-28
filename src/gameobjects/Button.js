@@ -586,7 +586,7 @@ Phaser.Button.prototype.onInputUpHandler = function (sprite, pointer, isOver) {
     }
     else
     {
-        if (this._onUpFrameName !== null || this._onUpFrameID !== null)
+        if (this._onUpFrameName || this._onUpFrameID)
         {
             this.setState(4);
         }
