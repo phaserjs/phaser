@@ -202,6 +202,8 @@ Phaser.Button = function (game, x, y, key, callback, callbackContext, overFrame,
     this.events.onInputDown.add(this.onInputDownHandler, this);
     this.events.onInputUp.add(this.onInputUpHandler, this);
 
+    this.events.onRemovedFromWorld.add(this.removedFromWorld, this);
+
 };
 
 Phaser.Button.prototype = Object.create(Phaser.Image.prototype);
@@ -225,6 +227,17 @@ Phaser.Button.prototype.clearFrames = function () {
 
     this._onUpFrameName = null;
     this._onUpFrameID = null;
+
+};
+
+/**
+* Called when this Button is removed from the World.
+*
+* @method Phaser.Button.prototype.removedFromWorld
+*/
+Phaser.Button.prototype.removedFromWorld = function () {
+
+    this.inputEnabled = false;
 
 };
 
