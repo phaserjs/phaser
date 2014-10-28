@@ -293,16 +293,8 @@ Phaser.Stage.prototype.visibilityChange = function (event) {
 */
 Phaser.Stage.prototype.setBackgroundColor = function(backgroundColor)
 {
-    if (typeof backgroundColor === 'string')
-    {
-        var rgb = Phaser.Color.hexToColor(backgroundColor);
-        this._backgroundColor = Phaser.Color.getColor(rgb.r, rgb.g, rgb.b);
-    }
-    else
-    {
-        var rgb = Phaser.Color.getRGB(backgroundColor);
-        this._backgroundColor = backgroundColor;
-    }
+    var rgb = Phaser.Color.valueToColor(backgroundColor);
+    this._backgroundColor = Phaser.Color.getColor(rgb.r, rgb.g, rgb.b);
 
     this.backgroundColorSplit = [ rgb.r / 255, rgb.g / 255, rgb.b / 255 ];
     this.backgroundColorString = Phaser.Color.RGBtoString(rgb.r, rgb.g, rgb.b, 255, '#');
