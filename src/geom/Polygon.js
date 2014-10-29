@@ -101,7 +101,10 @@ Phaser.Polygon.prototype = {
             var jx = this._points[j].x;
             var jy = this._points[j].y;
 
-            ((iy <= y && y < jy) || (jy <= y && y < iy)) && (x < (jx - ix) * (y - iy) / (jy - iy) + ix) && (inside = !inside);
+            if (((iy <= y && y < jy) || (jy <= y && y < iy)) && (x < (jx - ix) * (y - iy) / (jy - iy) + ix))
+            {
+                inside = !inside;
+            }
         }
 
         return inside;
