@@ -91,7 +91,6 @@ Phaser.Polygon.prototype = {
         //  Adapted from http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html by Jonas Raoni Soares Silva
 
         var length = this._points.length;
-        var inside = false;
 
         for (var i = -1, j = length - 1; ++i < length; j = i)
         {
@@ -103,11 +102,11 @@ Phaser.Polygon.prototype = {
 
             if (((iy <= y && y < jy) || (jy <= y && y < iy)) && (x < (jx - ix) * (y - iy) / (jy - iy) + ix))
             {
-                inside = !inside;
+                return true;
             }
         }
 
-        return inside;
+        return false;
 
     },
 
