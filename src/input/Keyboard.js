@@ -23,7 +23,7 @@ Phaser.Keyboard = function (game) {
 
     /**
     * Keyboard input will only be processed if enabled.
-    * @member {boolean}
+    * @property {boolean} enabled
     * @default
     */
     this.enabled = true;
@@ -519,7 +519,8 @@ Phaser.Keyboard.prototype = {
 
 /**
 * If disabled all Keyboard input will be ignored.
-* @member {boolean}
+* @property {boolean} disabled
+* @memberof Phaser.Keyboard
 * @default false
 * @deprecated Use {@link Phaser.Keyboard#enabled} instead
 */

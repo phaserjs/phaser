@@ -56,7 +56,7 @@ Phaser.Input = function (game) {
     * When enabled, input (eg. Keyboard, Mouse, Touch) will be processed - as long as the individual sources are enabled themselves.
     *
     * When not enabled, _all_ input sources are ignored. To disable just one type of input; for example, the Mouse, use `input.mouse.enabled = false`.
-    * @member {boolean}
+    * @property {boolean} enabled
     * @default
     */
     this.enabled = true;
@@ -990,7 +990,8 @@ Object.defineProperty(Phaser.Input.prototype, "worldY", {
 /**
 * _All_ input sources (eg. Mouse, Keyboard, Touch) are ignored when Input is disabled.
 * To disable just one type of input; for example, the Mouse, use `input.mouse.enabled = false`.
-* @member {boolean}
+* @property {boolean} disabled
+* @memberof Phaser.Input
 * @default false
 * @deprecated Use {@link Phaser.Input#enabled} instead
 */

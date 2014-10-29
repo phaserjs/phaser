@@ -20,7 +20,7 @@ Phaser.Touch = function (game) {
 
     /**
     * Touch events will only be processed if enabled.
-    * @member {boolean}
+    * @property {boolean} enabled
     * @default
     */
     this.enabled = true;
@@ -382,7 +382,8 @@ Phaser.Touch.prototype.constructor = Phaser.Touch;
 
 /**
 * If disabled all Touch events will be ignored.
-* @member {boolean}
+* @property {boolean} disabled
+* @memberof Phaser.Touch
 * @default false
 * @deprecated Use {@link Phaser.Touch#enabled} instead
 */

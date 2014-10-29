@@ -74,7 +74,7 @@ Phaser.Mouse = function (game) {
 
     /**
     * Mouse input will only be processed if enabled.
-    * @member {boolean}
+    * @property {boolean} enabled
     * @default
     */
     this.enabled = true;
@@ -548,7 +548,8 @@ Phaser.Mouse.prototype.constructor = Phaser.Mouse;
 
 /**
 * If disabled all Mouse input will be ignored.
-* @member {boolean}
+* @property {boolean} disabled
+* @memberof Phaser.Mouse
 * @default false
 * @deprecated Use {@link Phaser.Mouse#enabled} instead
 */

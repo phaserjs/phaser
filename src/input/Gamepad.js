@@ -46,7 +46,7 @@ Phaser.Gamepad = function (game) {
 
     /**
     * Gamepad input will only be processed if enabled.
-    * @member {boolean}
+    * @property {boolean} enabled
     * @default
     */
     this.enabled = true;
@@ -483,7 +483,8 @@ Phaser.Gamepad.prototype.constructor = Phaser.Gamepad;
 
 /**
 * If disabled all Gamepad input will be ignored.
-* @member {boolean}
+* @property {boolean} disabled
+* @memberof Phaser.Gamepad
 * @default false
 * @deprecated Use {@link Phaser.Gamepad#enabled} instead
 */

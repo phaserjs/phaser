@@ -28,7 +28,7 @@ Phaser.MSPointer = function (game) {
 
     /**
     * MSPointer input will only be processed if enabled.
-    * @member {boolean}
+    * @property {boolean} enabled
     * @default
     */
     this.enabled = true;
@@ -178,7 +178,8 @@ Phaser.MSPointer.prototype.constructor = Phaser.MSPointer;
 
 /**
 * If disabled all MSPointer input will be ignored.
-* @member {boolean}
+* @property {boolean} disabled
+* @memberof Phaser.MSPointer
 * @default false
 * @deprecated Use {@link Phaser.MSPointer#enabled} instead
 */
