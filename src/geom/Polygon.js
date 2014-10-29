@@ -14,7 +14,7 @@
 * @constructor
 * @param {Phaser.Point[]|number[]|...Phaser.Point[]|...number} points - The points that make up this polygon.
 */
-Phaser.Polygon = function (points) {
+Phaser.Polygon = function () {
 
     /**
     * @property {number} type - The base object type.
@@ -31,20 +31,7 @@ Phaser.Polygon = function (points) {
 
     if (arguments.length > 0)
     {
-        //  If points isn't an array then this was invoked variadically.
-        if (!(points instanceof Array))
-        {
-            points = [];
-            //  Prevents de-opts
-            for (var i = 0; i < arguments.length; i++) {
-                points.push(arguments[i]);
-            }
-            this.setToInternal(points, true);
-        }
-        else
-        {
-            this.setToInternal(points);
-        }
+        this.setTo.apply(this, arguments);
     }
     else
     {
@@ -72,10 +59,12 @@ Phaser.Polygon.prototype = {
 
         if (!output)
         {
-            output = new Phaser.Polygon();
+            output = new Phaser.Polygon(this._pairs);
         }
-
-        output._pairs = this._pairs.slice();
+        else
+        {
+            output.setTo(this._pairs);
+        }
 
         return output;
 
@@ -138,9 +127,13 @@ Phaser.Polygon.prototype = {
 
         if (arguments.length > 0)
         {
-            //  If points isn't an array then this was invoked variadically.
-            if (!(points instanceof Array))
+            if (points instanceof Array)
             {
+                this.setToInternal(points);
+            }
+            else
+            {
+                //  If points isn't an array then this was invoked variadically.
                 points = [];
                 //  Prevents de-opts
                 for (var i = 0; i < arguments.length; i++) {
@@ -148,16 +141,10 @@ Phaser.Polygon.prototype = {
                 }
                 this.setToInternal(points, true);
             }
-            else
-            {
-                this.setToInternal(points);
-            }
         }
         else
         {
-            while (this._pairs.length) {
-                this._pairs.pop();
-            }
+            this.setToInternal([], true);
         }
 
         return this;
@@ -179,7 +166,7 @@ Phaser.Polygon.prototype = {
         if (pointsOrPairs[0] && pointsOrPairs[0].x != null) // Object with x not null/undefined
         {
             //  pointsOrPairs should be an array of Point-like objects with `x` and `y` coordinates.
-            var pairs = this._pairs || [];
+            var pairs = [];
             //  This might de-opt a Chrome FloatArray
             for (var i = 0, t = 0, len = pointsOrPairs.length; i < len; i++)
             {
@@ -188,25 +175,12 @@ Phaser.Polygon.prototype = {
                 pairs[t++] = point.y;
             }
 
-            //  Trim excess of existing array if needed
-            var limit = pointsOrPairs.length * 2;
-            while (pairs.length > limit) {
-                pairs.pop();
-            }
-
             this._pairs = pairs;
         }
         else
         {
             // pointsOrPairs should be an array of subsequent x/y pairs
-            if (skipCopy)
-            {
-                this._pairs = pointsOrPairs;
-            }
-            else
-            {
-                this._pairs = pointsOrPairs.slice();
-            }
+            this._pairs = skipCopy ? pointsOrPairs : pointsOrPairs.slice(0);
         }
 
     },
@@ -214,11 +188,11 @@ Phaser.Polygon.prototype = {
     /**
     * Returns an array of Phaser.Point objects that represent this Polygon.
     *
-    * The points should not be modified directly as they or may not be "new".
+    * Neither the returned array nor the points should not be modified directly as they or may not be "new".
     *
     * @method Phaser.Polygon#getPoints
     * @public
-    * @return {Phaer.Point[]} An array of points.
+    * @return {Phaser.Point[]} An array of points.
     */
     getPoints: function () {
 
