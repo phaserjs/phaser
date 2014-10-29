@@ -22,6 +22,7 @@ Phaser.Key = function (game, keycode) {
     /**
     * The enabled state of the key - see `enabled`.
     * @property {boolean} _enabled
+    * @private
     */
     this._enabled = true;
 
