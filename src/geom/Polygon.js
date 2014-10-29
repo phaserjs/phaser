@@ -134,12 +134,12 @@ Phaser.Polygon.prototype = {
             else
             {
                 //  If points isn't an array then this was invoked variadically.
-                points = [];
+                var variadicPoints = [];
                 //  Prevents de-opts
                 for (var i = 0; i < arguments.length; i++) {
-                    points.push(arguments[i]);
+                    variadicPoints.push(arguments[i]);
                 }
-                this.setToInternal(points, true);
+                this.setToInternal(variadicPoints, true);
             }
         }
         else
@@ -167,12 +167,10 @@ Phaser.Polygon.prototype = {
         {
             //  pointsOrPairs should be an array of Point-like objects with `x` and `y` coordinates.
             var pairs = [];
-            //  This might de-opt a Chrome FloatArray
-            for (var i = 0, t = 0, len = pointsOrPairs.length; i < len; i++)
+            for (var i = 0, len = pointsOrPairs.length; i < len; i++)
             {
                 var point = pointsOrPairs[i];
-                pairs[t++] = point.x;
-                pairs[t++] = point.y;
+                pairs.push(point.x, point.y);
             }
 
             this._pairs = pairs;
@@ -237,7 +235,7 @@ Object.defineProperty(Phaser.Polygon.prototype, 'points', {
         }
         else
         {
-            this.setToInternal(); // Clear
+            this.setTo(); // Clear
         }
 
     }
