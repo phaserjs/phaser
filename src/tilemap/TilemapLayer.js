@@ -25,7 +25,7 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
 
     /**
     * A reference to the currently running Game.
-    * @member {Phaser.Game}
+    * @property {Phaser.Game} game
     * @protected
     * @readonly
     */
@@ -33,7 +33,7 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
 
     /**
     * The Tilemap to which this layer is bound.
-    * @member {Phaser.Tilemap}
+    * @property {Phaser.Tilemap} map
     * @protected
     * @readonly
     */
@@ -41,7 +41,7 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
 
     /**
     * The layer object within the Tilemap that this layer represents.
-    * @member {Phaser.TileLayer}
+    * @property {Phaser.TileLayer} layer
     * @protected
     * @readonly
     */
@@ -49,35 +49,36 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
 
     /**
     * The canvas to which this TilemapLayer draws.
-    * @member {HTMLCanvasElement}
+    * @property {HTMLCanvasElement} canvas
     * @protected
     */
     this.canvas = Phaser.Canvas.create(width, height, '', true);
 
     /**
     * The 2d context of the canvas.
-    * @member {CanvasRenderingContext2D}
+    * @property {CanvasRenderingContext2D} context
     * @private
     */
     this.context = this.canvas.getContext('2d');
 
     /**
     * Required Pixi var.
-    * @member {PIXI.BaseTexture}
+    * @property {PIXI.BaseTexture} baseTexture
     * @protected
     */
     this.baseTexture = new PIXI.BaseTexture(this.canvas);
 
     /**
     * Required Pixi var.
-    * @member {PIXI.Texture}
+    * @property {PIXI.Texture} texture
     * @protected
     */
     this.texture = new PIXI.Texture(this.baseTexture);
 
     /**
     * Dimensions of the renderable area.
-    * @member {Phaser.Frame}
+    * @property {Phaser.Frame} textureFrame
+    * @protected
     */
     this.textureFrame = new Phaser.Frame(0, 0, 0, width, height, 'tilemapLayer', game.rnd.uuid());
 
@@ -85,13 +86,13 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
 
     /**
     * The name of the layer.
-    * @member {string}
+    * @property {string} name
     */
     this.name = '';
 
     /**
     * The const type of this object.
-    * @member {number}
+    * @property {number} type
     * @readonly
     * @protected
     * @default Phaser.TILEMAPLAYER
@@ -100,25 +101,22 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
 
     /**
     * An object that is fixed to the camera ignores the position of any ancestors in the display list and uses its x/y coordinates as offsets from the top left of the camera.
-    * @member {boolean}
+    * @property {boolean} fixToCamera
     * @default
     */
     this.fixedToCamera = true;
 
     /**
     * If this object is fixed to the camera then use this Point to specify how far away from the Camera x/y it's rendered.
-    * @member {Phaser.Point}
+    * @property {Phaser.Point} cameraOffset
     */
     this.cameraOffset = new Phaser.Point(0, 0);
 
     /**
     * Settings that control standard (non-diagnostic) rendering.
     *
-    * @member
     * @public
-    *
     * @property {boolean} enableScrollDelta - When enabled, only new newly exposed areas of the layer are redraw after scrolling. This can greatly improve scrolling rendering performance, especially when there are many small tiles.
-    *
     * @default
     */
     this.renderSettings = {
@@ -131,16 +129,13 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
     /**
     * Enable an additional "debug rendering" pass to display collision information.
     *
-    * @member {boolean}
+    * @property {boolean} debug
     * @default
     */
     this.debug = false;
 
     /**
     * Settings used for debugging and diagnostics.
-    *
-    * @member
-    * @public
     *
     * @property {?string} missingImageFill - A tile is rendered as a rectangle using the following fill if a valid tileset/image cannot be found. A value of `null` prevents additional rendering for tiles without a valid tileset image. _This takes effect even when debug rendering for the layer is not enabled._
     *
@@ -171,45 +166,44 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
     /**
     * Speed at which this layer scrolls horizontally, relative to the camera (e.g. scrollFactorX of 0.5 scrolls half as quickly as the 'normal' camera-locked layers do).
     *
-    * @member {number}
-    * @public
-    * @default 1
+    * @property {number} scrollFactorX
+    * @default
     */
     this.scrollFactorX = 1;
 
     /**
     * Speed at which this layer scrolls vertically, relative to the camera (e.g. scrollFactorY of 0.5 scrolls half as quickly as the 'normal' camera-locked layers do)
-    * @member {number}
+    * @property {number} scrollFactorY
     * @public
-    * @default 1
+    * @default
     */
     this.scrollFactorY = 1;
 
     /**
     * If true tiles will be force rendered, even if such is not believed to be required.
-    * @member {boolean} dirty
+    * @property {boolean} dirty
     * @protected
     */
     this.dirty = true;
 
     /**
     * When ray-casting against tiles this is the number of steps it will jump. For larger tile sizes you can increase this to improve performance.
-    * @member {integer}
+    * @property {integer} rayStepRate
     * @default
     */
     this.rayStepRate = 4;
 
     /**
     * Flag controlling if the layer tiles wrap at the edges.
-    * @member {boolean}
-    * @default
+    * @property {boolean} _wrap
     * @private
+    * @default
     */
     this._wrap = false;
 
     /**
     * Local map data and calculation cache.
-    * @member {object}
+    * @property {object} _mc
     * @private
     */
     this._mc = {
@@ -236,21 +230,21 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
 
     /**
     * The current canvas left after scroll is applied.
-    * @member {number}
+    * @property {number} _scrollX
     * @private
     */
     this._scrollX = 0;
 
     /**
     * The current canvas top after scroll is applied.
-    * @member {number}
+    * @propety {number} _scrollY
     * @private
     */
     this._scrollY = 0;
 
     /**
     * Used for caching the tiles / array of tiles.
-    * @member {Phaser.Tile[]}
+    * @property {Phaser.Tile[]} _results
     * @private
     */
     this._results = [];
@@ -263,7 +257,7 @@ Phaser.TilemapLayer.prototype.constructor = Phaser.TilemapLayer;
 /**
 * The index of this layer (`layer`) within the Tilemap.
 *
-* @member {integer} #index
+* @property {integer} index
 * @memberof Phaser.TilemapLayer
 * @readonly
 * @protected
@@ -281,7 +275,7 @@ Object.defineProperty(Phaser.TilemapLayer.prototype, 'index', {
 *
 * Set to `null` to disable rendering anything for tiles without value tileset images.
 *
-* @member {?string} #tileColor
+* @property {?string} tileColor
 * @memberof Phaser.TilemapLayer
 * @default 'rgb(255, 255, 255)'
 * @deprecated Use `debugSettings.missingImageFill` instead.
@@ -574,7 +568,7 @@ Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides
 /**
 * Flag controlling if the layer tiles wrap at the edges. Only works if the World size matches the Map size.
 *
-* @member {boolean} #wrap
+* @property {boolean} wrap
 * @memberof Phaser.TilemapLayer
 * @public
 * @default false
@@ -1082,7 +1076,7 @@ Phaser.TilemapLayer.prototype.renderDebug = function () {
 /**
 * Scrolls the map horizontally or returns the current x position.
 *
-* @member {number} #scrollX
+* @property {number} scrollX
 * @memberof Phaser.TilemapLayer
 * @public
 */
@@ -1101,7 +1095,7 @@ Object.defineProperty(Phaser.TilemapLayer.prototype, "scrollX", {
 /**
 * Scrolls the map vertically or returns the current y position.
 *
-* @member {number} #scrollY
+* @property {number} scrollY
 * @memberof Phaser.TilemapLayer
 * @public
 */
@@ -1120,7 +1114,7 @@ Object.defineProperty(Phaser.TilemapLayer.prototype, "scrollY", {
 /**
 * The width of the collision tiles (in pixels).
 *
-* @member {number} #collisionWidth
+* @property {integer} collisionWidth
 * @memberof Phaser.TilemapLayer
 * @public
 */
@@ -1131,7 +1125,7 @@ Object.defineProperty(Phaser.TilemapLayer.prototype, "collisionWidth", {
     },
 
     set: function (value) {
-        this._mc.cw = value;
+        this._mc.cw = value | 0;
         this.dirty = true;
     }
 
@@ -1140,7 +1134,7 @@ Object.defineProperty(Phaser.TilemapLayer.prototype, "collisionWidth", {
 /**
 * The height of the collision tiles (in pixels).
 *
-* @member {number} #collisionHeight
+* @property {integer} collisionHeight
 * @memberof Phaser.TilemapLayer
 * @public
 */
@@ -1151,7 +1145,7 @@ Object.defineProperty(Phaser.TilemapLayer.prototype, "collisionHeight", {
     },
 
     set: function (value) {
-        this._mc.ch = value;
+        this._mc.ch = value | 0;
         this.dirty = true;
     }
 

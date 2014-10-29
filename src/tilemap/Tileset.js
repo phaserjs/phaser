@@ -28,57 +28,64 @@ Phaser.Tileset = function (name, firstgid, width, height, margin, spacing, prope
 
     /**
     * The name of the Tileset.
-    * @member {string}
+    * @property {string} name
     */
     this.name = name;
 
     /**
     * The Tiled firstgid value.
     * This is the starting index of the first tile index this Tileset contains.
-    * @member {integer}
+    * @property {integer} firstgid
     */
     this.firstgid = firstgid | 0;
 
     /**
     * The width of each tile (in pixels).
-    * @member {integer}
+    * @property {integer} tileWidth
+    * @readonly
     */
     this.tileWidth = width | 0;
 
     /**
     * The height of each tile (in pixels).
-    * @member {integer}
+    * @property {integer} tileHeight
+    * @readonly
     */
     this.tileHeight = height | 0;
 
     /**
     * The margin around the tiles in the sheet (in pixels).
-    * @member {integer}
+    * Use `setSpacing` to change.
+    * @property {integer} tileMarge
+    * @readonly
     */
+    // Modified internally
     this.tileMargin = margin | 0;
 
     /**
     * The spacing between each tile in the sheet (in pixels).
-    * @member {integer}
+    * Use `setSpacing` to change.
+    * @property {integer} tileSpacing
     */
     this.tileSpacing = spacing | 0;
 
     /**
     * Tileset-specific properties that are typically defined in the Tiled editor.
-    * @member {object}
+    * @property {object} properties
     */
     this.properties = properties || {};
 
     /**
     * The cached image that contains the individual tiles. Use `setImage` to set.
-    * @member {?object}
+    * @property {?object} image
+    * @readonly
     */
     // Modified internally
     this.image = null;
 
     /**
     * The number of rows in the tile sheet.
-    * @member {integer}
+    * @property {integer}
     * @readonly
     */
     // Modified internally
@@ -86,7 +93,7 @@ Phaser.Tileset = function (name, firstgid, width, height, margin, spacing, prope
 
     /**
     * The number of columns in the sheet.
-    * @member {integer}
+    * @property {integer} columns
     * @readonly
     */
     // Modified internally
@@ -94,7 +101,7 @@ Phaser.Tileset = function (name, firstgid, width, height, margin, spacing, prope
 
     /**
     * The total number of tiles in the sheet.
-    * @member {integer}
+    * @property {integer} total
     * @readonly
     */
     // Modified internally
@@ -103,7 +110,7 @@ Phaser.Tileset = function (name, firstgid, width, height, margin, spacing, prope
     /**
     * The look-up table to specific tile image offsets.
     * The coordinates are interlaced such that it is [x0, y0, x1, y1 .. xN, yN] and the tile with the index of firstgid is found at indices 0/1.
-    * @member {integer[]}
+    * @property {integer[]} drawCoords
     * @private
     */
     this.drawCoords = [];
