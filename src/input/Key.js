@@ -20,10 +20,11 @@ Phaser.Key = function (game, keycode) {
     this.game = game;
 
     /**
-    * @property {boolean} enabled - An enabled key processes its update and dispatches events. You can toggle this at run-time to disable a key without deleting it.
-    * @default
+    * The enabled state of the key - see `enabled`.
+    * @property {boolean} _enabled
+    * @private
     */
-    this.enabled = true;
+    this._enabled = true;
 
     /**
     * @property {object} event - Stores the most recent DOM event.
@@ -117,7 +118,7 @@ Phaser.Key.prototype = {
 
     update: function () {
 
-        if (!this.enabled) { return; }
+        if (!this._enabled) { return; }
 
         if (this.isDown)
         {
@@ -140,7 +141,7 @@ Phaser.Key.prototype = {
     */
     processKeyDown: function (event) {
 
-        if (!this.enabled) { return; }
+        if (!this._enabled) { return; }
 
         this.event = event;
 
@@ -171,7 +172,7 @@ Phaser.Key.prototype = {
     */
     processKeyUp: function (event) {
 
-        if (!this.enabled) { return; }
+        if (!this._enabled) { return; }
 
         this.event = event;
 
@@ -190,11 +191,13 @@ Phaser.Key.prototype = {
     },
 
     /**
-    * Resets the state of this Key. This sets isDown to false, isUp to true, resets the time to be the current time and clears any callbacks
-    * associated with the onDown and onUp events and nulls the onHoldCallback if set.
+    * Resets the state of this Key.
+    *
+    * This sets isDown to false, isUp to true, resets the time to be the current time, and _enables_ the key.
+    * In addition, if it is a "hard reset", it clears clears any callbacks associated with the onDown and onUp events and removes the onHoldCallback.
     *
     * @method Phaser.Key#reset
-    * @param {boolean} [hard=true] - A soft reset won't reset any events or callbacks that are bound to this Key. A hard reset will.
+    * @param {boolean} [hard=true] - A soft reset won't reset any events or callbacks; a hard reset will.
     */
     reset: function (hard) {
 
@@ -204,7 +207,7 @@ Phaser.Key.prototype = {
         this.isUp = true;
         this.timeUp = this.game.time.now;
         this.duration = 0;
-        this.enabled = true;
+        this._enabled = true; // .enabled causes reset(false)
 
         if (hard)
         {
@@ -245,5 +248,32 @@ Phaser.Key.prototype = {
     }
 
 };
+
+/**
+* An enabled key processes its update and dispatches events.
+* A key can be disabled momentarily at runtime instead of deleting it.
+* @property {boolean} enabled
+* @memberof Phaser.Key
+* @default true
+*/
+Object.defineProperty(Phaser.Key.prototype, "enabled", {
+
+    get: function () {
+        return this._enabled;
+    },
+    set: function (value) {
+        value = !!value;
+
+        if (value !== this._enabled)
+        {
+            if (!value)
+            {
+                this.reset(false);
+            }
+            this._enabled = value;
+        }
+    }
+
+});
 
 Phaser.Key.prototype.constructor = Phaser.Key;
