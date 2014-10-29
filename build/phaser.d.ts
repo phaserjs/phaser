@@ -1,4 +1,4 @@
-// Type definitions for PIXI 2.0.0 dev 2014-10-19
+// Type definitions for PIXI 2.0.0 dev 2014-10-26
 // Project: https://github.com/GoodBoyDigital/pixi.js/
 
 declare module PIXI {
@@ -64,8 +64,8 @@ declare module PIXI {
 
     export function AjaxRequest(): XMLHttpRequest;
 
-    export function CompileFragmentShader(gl: WebGLRenderingContext, shaderSrc: any): any;
-    export function CompileProgram(gl: WebGLRenderingContext, vertexSrc: any[], fragmentSrc: any): any;
+    export function CompileFragmentShader(gl: WebGLRenderingContext, shaderSrc: string[]): any;
+    export function CompileProgram(gl: WebGLRenderingContext, vertexSrc: string[], fragmentSrc: string[]): any;
 
 
     export interface IEventCallback {
@@ -100,12 +100,12 @@ declare module PIXI {
 
     export interface PixiRendererOptions {
 
-        antialias: boolean;
-        clearBeforeRender: boolean;
-        preserveDrawingBuffer: boolean;
-        resolution: number;
-        transparent: boolean;
-        view: HTMLCanvasElement;
+        antialias?: boolean;
+        clearBeforeRender?: boolean;
+        preserveDrawingBuffer?: boolean;
+        resolution?: number;
+        transparent?: boolean;
+        view?: HTMLCanvasElement;
 
     }
 
@@ -169,10 +169,12 @@ declare module PIXI {
 
     export class AbstractFilter {
 
-        constructor(fragmentSrc: any, uniforms: any);
+        constructor(fragmentSrc: string[], uniforms: any);
 
         dirty: boolean;
         padding: number;
+        uniforms: any;
+        fragmentSrc: string[];
 
         apply(frameBuffer: WebGLFramebuffer): void;
         syncUniforms(): void;
@@ -267,7 +269,7 @@ declare module PIXI {
         destroy(): void;
         dirty(): void;
         updateSourceImage(newSrc: string): void;
-
+        unloadFromGPU(): void;
 
     }
 
@@ -370,6 +372,7 @@ declare module PIXI {
         view: HTMLCanvasElement;
         width: number;
 
+        destroy(removeView?: boolean): void;
         render(stage: Stage): void;
         resize(width: number, height: number): void;
 
@@ -420,7 +423,7 @@ declare module PIXI {
 
         constructor(matrix: number[], width: number, height: number);
 
-        matrix: number[];
+        matrix: Matrix;
         width: number;
         height: number;
 
@@ -488,11 +491,12 @@ declare module PIXI {
         rightupoutside(e: InteractionData): void;
         setStageReference(stage: Stage): void;
         tap(e: InteractionData): void;
-        toGlobal(pos: Point): Point;
-        toLocal(pos: Point, from: DisplayObject): Point;
+        toGlobal(position: Point): Point;
+        toLocal(position: Point, from: DisplayObject): Point;
         touchend(e: InteractionData): void;
         touchendoutside(e: InteractionData): void;
         touchstart(e: InteractionData): void;
+        touchmove(e: InteractionData): void;
 
     }
 
@@ -544,6 +548,7 @@ declare module PIXI {
         timeStamp: number;
 
         stopPropagation(): void;
+        preventDefault(): void;
         stopImmediatePropagation(): void;
 
     }
@@ -562,12 +567,26 @@ declare module PIXI {
         frameBuffer: WebGLFramebuffer;
         gl: WebGLRenderingContext;
         program: WebGLProgram;
-        scaleMode: scaleModes;
-        texture: any;
+        scaleMode: number;
+        texture: WebGLTexture;
 
         clear(): void;
         resize(width: number, height: number): void;
         destroy(): void;
+
+    }
+
+    export class GraphicsData {
+
+        constructor(lineWidth?: number, lineColor?: number, lineAlpha?: number, fillColor?: number, fillAlpha?: number, fill?: boolean, shape?: any);
+
+        lineWidth: number;
+        lineColor: number;
+        lineAlpha: number;
+        fillColor: number;
+        fillAlpha: number;
+        fill: boolean;
+        shape: any;
 
     }
 
@@ -580,27 +599,27 @@ declare module PIXI {
         lineWidth: number;
         lineColor: string;
         tint: number;
+        worldAlpha: number;
 
         arc(cx: number, cy: number, radius: number, startAngle: number, endAngle: number, anticlockwise: boolean): Graphics;
         arcTo(x1: number, y1: number, x2: number, y2: number, radius: number): Graphics;
-        beginFill(color: number, alpha?: number): void;
+        beginFill(color: number, alpha?: number): Graphics;
         bezierCurveTo(cpX: number, cpY: number, cpX2: number, cpY2: number, toX: number, toY: number): Graphics;
-        clear(): void;
+        clear(): Graphics;
         destroyCachedSprite(): void;
-        drawCircle(x: number, y: number, radius: number): void;
-        drawEllipse(x: number, y: number, width: number, height: number): void;
-        drawPolygon(path: any): void;
-        drawRect(x: number, y: number, width: number, height: number): void;
+        drawCircle(x: number, y: number, radius: number): Graphics;
+        drawEllipse(x: number, y: number, width: number, height: number): Graphics;
+        drawPolygon(path: any): Graphics;
+        drawRect(x: number, y: number, width: number, height: number): Graphics;
         drawRoundedRect(x: number, y: number, width: number, height: number, radius: number): Graphics;
-        drawShape(shape: Circle): any; //GraphicsData?
-        drawShape(shape: Rectangle): any; //GraphicsData?
-        drawShape(shape: Ellipse): any; //GraphicsData?
-        drawShape(shape: Polygon): any; //GraphicsData?
-
-        endFill(): void;
-        lineStyle(lineWidth: number, color: number, alpha: number): void;
-        lineTo(x: number, y: number): void;
-        moveTo(x: number, y: number): void;
+        drawShape(shape: Circle): GraphicsData;
+        drawShape(shape: Rectangle): GraphicsData;
+        drawShape(shape: Ellipse): GraphicsData;
+        drawShape(shape: Polygon): GraphicsData;
+        endFill(): Graphics;
+        lineStyle(lineWidth: number, color: number, alpha: number): Graphics;
+        lineTo(x: number, y: number): Graphics;
+        moveTo(x: number, y: number): Graphics;
         quadraticCurveTo(cpX: number, cpY: number, toX: number, toY: number): Graphics;
         updateBounds(): void;
 
@@ -769,24 +788,92 @@ declare module PIXI {
 
     }
 
-    export class PixiShader {
+    export class IPixiShader {
 
-        constructor(gl: WebGLRenderingContext);
-
-        defaultVertexSrc: string;
-        dirty: boolean;
         fragmentSrc: string[];
-        firstRun: boolean;
         gl: WebGLRenderingContext;
         program: WebGLProgram;
-        textureCount: number;
-        attributes: ShaderAttribute[];
+        vertexSrc: string[];
 
         destroy(): void;
         init(): void;
+
+    }
+
+    export class PixiShader implements IPixiShader {
+
+        constructor(gl: WebGLRenderingContext);
+
+        attributes: ShaderAttribute[];
+        defaultVertexSrc: string[];
+        dirty: boolean;
+        firstRun: boolean;
+        textureCount: number;
+        fragmentSrc: string[];
+        gl: WebGLRenderingContext;
+        program: WebGLProgram;
+        vertexSrc: string[];
+
         initSampler2D(): void;
         initUniforms(): void;
         syncUniforms(): void;
+
+        destroy(): void;
+        init(): void;
+
+    }
+
+    export class PixiFastShader implements IPixiShader {
+
+        constructor(gl: WebGLRenderingContext);
+
+        textureCount: number;
+        fragmentSrc: string[];
+        gl: WebGLRenderingContext;
+        program: WebGLProgram;
+        vertexSrc: string[];
+
+        destroy(): void;
+        init(): void;
+
+    }
+
+    export class PrimitiveShader implements IPixiShader {
+
+        constructor(gl: WebGLRenderingContext);
+        fragmentSrc: string[];
+        gl: WebGLRenderingContext;
+        program: WebGLProgram;
+        vertexSrc: string[];
+
+        destroy(): void;
+        init(): void;
+
+    }
+
+    export class ComplexPrimitiveShader implements IPixiShader {
+
+        constructor(gl: WebGLRenderingContext);
+        fragmentSrc: string[];
+        gl: WebGLRenderingContext;
+        program: WebGLProgram;
+        vertexSrc: string[];
+
+        destroy(): void;
+        init(): void;
+
+    }
+
+    export class StripShader implements IPixiShader {
+
+        constructor(gl: WebGLRenderingContext);
+        fragmentSrc: string[];
+        gl: WebGLRenderingContext;
+        program: WebGLProgram;
+        vertexSrc: string[];
+
+        destroy(): void;
+        init(): void;
 
     }
 
@@ -832,7 +919,9 @@ declare module PIXI {
 
     export class RGBSplitFilter extends AbstractFilter {
 
-        angle: number;
+        red: Point;
+        green: Point;
+        blue: Point;
 
     }
 
@@ -897,7 +986,7 @@ declare module PIXI {
 
         anchor: Point;
         blendMode: blendModes;
-        shader: AbstractFilter;
+        shader: IPixiShader;
         texture: Texture;
         tint: number;
 
@@ -1080,19 +1169,19 @@ declare module PIXI {
 
     export class WebGLFastSpriteBatch {
 
-        constructor();
+        constructor(gl: CanvasRenderingContext2D);
 
         currentBatchSize: number;
-        currentBaseTexture: any;
+        currentBaseTexture: BaseTexture;
         currentBlendMode: number;
         renderSession: RenderSession;
         drawing: boolean;
         indexBuffer: any;
         indices: number[];
         lastIndexCount: number;
-        matrix: any;
+        matrix: Matrix;
         maxSize: number;
-        shader: any;
+        shader: IPixiShader;
         size: number;
         vertexBuffer: any;
         vertices: number[];
@@ -1100,6 +1189,7 @@ declare module PIXI {
 
         end(): void;
         begin(spriteBatch: SpriteBatch, renderSession: RenderSession): void;
+        destroy(removeView?: boolean): void;
         flush(): void;
         render(spriteBatch: SpriteBatch): void;
         renderSprite(sprite: Sprite): void;
@@ -1127,6 +1217,9 @@ declare module PIXI {
     }
 
     export class WebGLGraphics {
+
+        reset(): void;
+        upload(): void;
 
     }
 
@@ -1183,11 +1276,12 @@ declare module PIXI {
         maxAttibs: number;
         attribState: any[];
         stack: any[];
+        tempAttribState: any[];
 
         destroy(): void;
         setAttribs(attribs: ShaderAttribute[]): void;
         setContext(gl: WebGLRenderingContext): void;
-        setShader(shader: WebGLShader): boolean;
+        setShader(shader: IPixiShader): boolean;
 
     }
 
@@ -1216,7 +1310,7 @@ declare module PIXI {
         indices: number[];
         lastIndexCount: number;
         textures: Texture[];
-        shaders: AbstractFilter[]; //todo WebGLShader[] or PixiShader[]?
+        shaders: IPixiShader[];
         size: number;
         sprites: any[]; //todo Sprite[]?
         vertices: number[];
@@ -1225,7 +1319,7 @@ declare module PIXI {
         begin(renderSession: RenderSession): void;
         destroy(): void;
         end(): void;
-        flush(shader?: PixiShader): void;
+        flush(shader?: IPixiShader): void;
         render(sprite: Sprite): void;
         renderBatch(texture: Texture, size: number, startIndex: number): void;
         renderTilingSprite(sprite: TilingSprite): void;
@@ -1249,6 +1343,7 @@ declare module PIXI {
         clear(): void;
         getBase64(): string;
         getCanvas(): HTMLCanvasElement;
+        getImage(): HTMLImageElement;
         resize(width: number, height: number, updateBase: boolean): void;
         render(displayObject: DisplayObject, position?: Point, clear?: boolean): void;
 
@@ -1256,13 +1351,13 @@ declare module PIXI {
 
 }
 
-declare function requestAnimFrame(): void;
+declare function requestAnimFrame(callback: Function): void;
 
 declare module PIXI.PolyK {
     export function Triangulate(p: number[]): number[];
 }
 
-// Type definitions for Phaser 2.1.3 dev 2014-10-19
+// Type definitions for Phaser 2.1.4 dev 2014-10-29
 // Project: https://github.com/photonstorm/phaser
 
 declare class Phaser {
@@ -1487,6 +1582,8 @@ declare module Phaser {
         draw(source: any, x?: number, y?: number, width?: number, height?: number, blendMode?: string, roundPx?: boolean): Phaser.BitmapData;
         extract(destination: Phaser.BitmapData, r: number, g: number, b: number, a?: number, resize?: boolean, r2?: number, g2?: number, b2?: number): Phaser.BitmapData;
         fill(r: number, g: number, b: number, a?: number): Phaser.BitmapData;
+        getBounds(rect?: Phaser.Rectangle): Phaser.Rectangle;
+        getFirstPixel(direction: number): { r: number; g: number; b: number; x: number; y: number; };
         getPixel(x: number, y: number, out?: any): number;
         getPixelRGB(x: number, y: number, out?: any, hsl?: boolean, hsv?: boolean): any;
         getPixel32(x: number, y: number): number;
@@ -1548,31 +1645,37 @@ declare module Phaser {
 
         forceOut: boolean;
         freezeFrames: boolean;
-        onDownSound: Phaser.Sound;
+        onDownSound: any;
         onDownSoundMarker: string;
         onInputDown: Phaser.Signal;
         onInputOut: Phaser.Signal;
         onInputOver: Phaser.Signal;
         onInputUp: Phaser.Signal;
-        onOutSound: Phaser.Sound;
+        onOutSound: any;
         onOutSoundMarker: string;
-        onOverSound: Phaser.Sound;
+        onOverSound: any;
         onOverSoundMarker: string;
         onOverMouseOnly: boolean;
-        onUpSound: Phaser.Sound;
+        onUpSound: any;
         onUpSoundMaker: string;
         type: number;
 
         clearFrames(): void;
         setDownSound(sound: Phaser.Sound, marker?: string): void;
+        setDownSound(sound: Phaser.AudioSprite, marker?: string): void;
         setFrames(overFrame?: any, outFrame?: any, downFrame?: any, upFrame?: any): void;
         onInputDownHandler(sprite: Phaser.Button, pointer: Phaser.Pointer): void;
         onInputUpHandler(sprite: Phaser.Button, pointer: Phaser.Pointer, isOver: boolean): void;
+        removedFromWorld(): void;
         setOutSound(sound: Phaser.Sound, marker?: string): void;
+        setOutSound(sound: Phaser.AudioSprite, marker?: string): void;
         setOverSound(sound: Phaser.Sound, marker?: string): void;
+        setOverSound(sound: Phaser.AudioSprite, marker?: string): void;
         setSounds(overSound?: Phaser.Sound, overMarker?: string, downSound?: Phaser.Sound, downMarker?: string, outSound?: Phaser.Sound, outMarker?: string, upSound?: Phaser.Sound, upMarker?: string): void;
+        setSounds(overSound?: Phaser.AudioSprite, overMarker?: string, downSound?: Phaser.AudioSprite, downMarker?: string, outSound?: Phaser.AudioSprite, outMarker?: string, upSound?: Phaser.AudioSprite, upMarker?: string): void;
         setState(newState: number): void;
         setUpSound(sound: Phaser.Sound, marker?: string): void;
+        setUpSound(sound: Phaser.AudioSprite, marker?: string): void;
 
     }
 
@@ -1593,6 +1696,7 @@ declare module Phaser {
         static TILEMAP: number;
         static XML: number;
 
+        autoResolveURL: boolean;
         game: Phaser.Game;
         onSoundUnlock: Phaser.Signal;
 
@@ -1625,6 +1729,7 @@ declare module Phaser {
         checkTextKey(key: string): boolean;
         checkTextureKey(key: string): boolean;
         checkTilemapKey(key: string): boolean;
+        checkURL(url: string): any;
         checkUrl(url: string): any;
         checkXMLKey(key: string): boolean;
         decodedSound(key: string, data: any): void;
@@ -1638,10 +1743,11 @@ declare module Phaser {
         getFrameByName(key: string, frame: string): Phaser.Frame;
         getFrameCount(key: string): number;
         getFrameData(key: string, map?: string): Phaser.FrameData;
-        getImage(key: string): any;
+        getImage(key: string): Phaser.Image;
         getJSON(key: string): any;
         getKeys(array: string[]): string[];
         getPhysicsData(key: string, object?: string, fixtureKey?: string): any[];
+        getRenderTexture(key: string): Phaser.RenderTexture;
         getSound(key: string): Phaser.Sound;
         getSoundData(key: string): any;
         getText(key: string): string;
@@ -1650,6 +1756,7 @@ declare module Phaser {
         getTextureFrame(key: string): Phaser.Frame;
         getTilemap(key: string): any;
         getTilemapData(key: string): any;
+        getURL(url: string): any;
         getUrl(url: string): any;
         getXML(key: string): any;
         isSoundDecoded(key: string): boolean;
@@ -1762,6 +1869,7 @@ declare module Phaser {
         getBounds(): Phaser.Rectangle;
         offset(dx: number, dy: number): Phaser.Circle;
         offsetPoint(point: Phaser.Point): Phaser.Circle;
+        scale(x: number, y?: number): Phaser.Rectangle;
         setTo(x: number, y: number, diameter: number): Circle;
         toString(): string;
 
@@ -1799,7 +1907,8 @@ declare module Phaser {
         static toRGBA(r: number, g: number, b: number, a: number): number;
         static unpackPixel(rgba: number, out?: any, hsl?: boolean, hsv?: boolean): any;
         static updateColor(out: any): number;
-        static webToColor(web: string, out?: any): { r: number; g: number; b: number; };
+        static valueToColor(value: string, out?: any): { r: number; g: number; b: number; a: number; }
+        static webToColor(web: string, out?: any): { r: number; g: number; b: number; a: number; };
 
     }
 
@@ -2019,6 +2128,7 @@ declare module Phaser {
         parent: Phaser.Sprite;
         onAddedToGroup: Phaser.Signal;
         onRemovedFromGroup: Phaser.Signal;
+        onRemovedFromWorld: Phaser.Signal;
         onKilled: Phaser.Signal;
         onRevived: Phaser.Signal;
         onOutOfBounds: Phaser.Signal;
@@ -2032,6 +2142,29 @@ declare module Phaser {
         onAnimationStart: Phaser.Signal;
         onAnimationComplete: Phaser.Signal;
         onAnimationLoop: Phaser.Signal;
+
+    }
+
+    class Filter implements PIXI.AbstractFilter {
+
+        constructor(game: Phaser.Game, ...args: any[]);
+
+        dirty: boolean;
+        game: Phaser.Game;
+        height: number;
+        fragmentSrc: any[];
+        padding: number;
+        prevPoint: Phaser.Point;
+        type: number;
+        uniforms: any;
+        width: number;
+
+        apply(frameBuffer: WebGLFramebuffer): void;
+        destroy(): void;
+        init(...args: any[]): void;
+        setResolution(width: number, height: number): void;
+        syncUniforms(): void;
+        update(pointer?: Phaser.Pointer): void;
 
     }
 
@@ -2191,29 +2324,6 @@ declare module Phaser {
         }
     }
 
-    class Filter implements PIXI.AbstractFilter {
-
-        constructor(game: Phaser.Game, ...args: any[]);
-
-        dirty: boolean;
-        game: Phaser.Game;
-        height: number;
-        fragmentSrc: any[];
-        padding: number;
-        prevPoint: Phaser.Point;
-        type: number;
-        uniforms: any;
-        width: number;
-
-        apply(frameBuffer: WebGLFramebuffer): void;
-        destroy(): void;
-        init(...args: any[]): void;
-        setResolution(width: number, height: number): void;
-        syncUniforms(): void;
-        update(pointer?: Phaser.Pointer): void;
-
-    }
-
     class FlexGrid {
 
         constructor(manager: Phaser.ScaleManager, width: number, height: number);
@@ -2327,12 +2437,23 @@ declare module Phaser {
     interface IGameConfig {
 
         enableDebug?: boolean;
+        width?: number;
+        height?: number;
+        renderer?: number;
+        parent?: any;
+        transparent?: boolean;
+        antialias?: boolean;
+        preserveDrawingBuffer?: boolean;
+        physicsConfig?: any;
+        seed?: string;
+        state?: Phaser.State;
 
     }
 
     class Game {
 
         constructor(width?: number, height?: number, renderer?: number, parent?: any, state?: any, transparent?: boolean, antialias?: boolean, physicsConfig?: any);
+        constructor(config: IGameConfig);
 
         add: Phaser.GameObjectFactory;
         antialias: boolean;
@@ -2608,7 +2729,6 @@ declare module Phaser {
         z: number;
 
         destroy(): void;
-        drawPolygon(poly: any): void;
         drawTriangle(points: Phaser.Point[], cull?: boolean): void;
         drawTriangles(vertices: any[], indices?: number[], cull?: boolean): void;
         postUpdate(): void;
@@ -2912,6 +3032,7 @@ declare module Phaser {
         altKey: boolean;
         ctrlKey: boolean;
         duration: number;
+        enabled: boolean;
         event: any;
         game: Phaser.Game;
         isDown: boolean;
@@ -3228,7 +3349,6 @@ declare module Phaser {
         static fuzzyGreaterThan(a: number, b: number, epsilon?: number): boolean;
         static fuzzyLessThan(a: number, b: number, epsilon?: number): boolean;
         static getRandom<T>(objects: T[], startIndex?: number, length?: number): T;
-        static interpolateAngles(a1: number, a2: number, weight: number, radians?: boolean, ease?: any): number;
         static interpolateFloat(a: number, b: number, weight: number): number;
         static isEven(n: number): boolean;
         static isOdd(n: number): boolean;
@@ -3242,7 +3362,6 @@ declare module Phaser {
         static min(...numbers: number[]): number;
         static minProperty(...numbers: number[]): number;
         static minSub(value: number, amount: number, min: number): number;
-        static nearestAngleBetween(a1: number, a2: number, radians?: boolean): number;
         static normalizeAngle(angle: number, radians?: boolean): number;
         static normalizeLatitude(lat: number): number;
         static normalizeLongitude(lng: number): number;
@@ -4573,6 +4692,7 @@ declare module Phaser {
         offset(dx: number, dy: number): Phaser.Rectangle;
         offsetPoint(point: Phaser.Point): Phaser.Rectangle;
         setTo(x: number, y: number, width: number, height: number): Phaser.Rectangle;
+        scale(x: number, y?: number): Phaser.Rectangle;
         size(output?: Phaser.Point): Phaser.Point;
         toString(): string;
         union(b: Phaser.Rectangle, out?: Phaser.Rectangle): Phaser.Rectangle;
@@ -4638,7 +4758,7 @@ declare module Phaser {
         customSpacingX: number;
         customSpacingY: number;
         fixedWidth: number;
-        fontSet: HTMLImageElement;
+        fontSet: Image;
         frameData: Phaser.FrameData;
         multiLine: boolean;
         offsetX: number;
@@ -4724,6 +4844,7 @@ declare module Phaser {
         constructor(signal: Phaser.Signal, listener: Function, isOnce: boolean, listenerContext?: any, priority?: number);
 
         active: boolean;
+        callCount: number;
         context: any;
         params: any[];
 
@@ -5612,6 +5733,7 @@ declare module Phaser {
 
             constructor(game: Phaser.Game);
 
+            bmd: Phaser.BitmapData;
             canvas: HTMLCanvasElement;
             columnWidth: number;
             context: CanvasRenderingContext2D;
