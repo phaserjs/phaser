@@ -6,45 +6,43 @@
 */
 
 /**
-* Creates a new Polygon. You have to provide a list of points.
-* This can be an array of Points that form the polygon, a flat array of numbers that will be interpreted as [x,y, x,y, ...],
-* or the arguments passed can be all the points of the polygon e.g. `new Phaser.Polygon(new Phaser.Point(), new Phaser.Point(), ...)`, or the
-* arguments passed can be flat x,y values e.g. `new Phaser.Polygon(x,y, x,y, x,y, ...)` where `x` and `y` are numbers.
+* Creates a new Polygon.
+* 
+* The points can be set from a variety of formats:
+*
+* - An array of Point objects: `[new Phaser.Point(x1, y1), ...]`
+* - An array of objects with public x/y properties: `[obj1, obj2, ...]`
+* - An array of paired numbers that represent point coordinates: `[x1,y1, x2,y2, ...]`
+* - As separate Point arguments: `setTo(new Phaser.Point(x1, y1), ...)`
+* - As separate objects with public x/y properties arguments: `setTo(obj1, obj2, ...)`
+* - As separate arguments representing point coordinates: `setTo(x1,y1, x2,y2, ...)`
 *
 * @class Phaser.Polygon
 * @constructor
-* @param {Phaser.Point[]|number[]} points - The array of Points.
+* @param {Phaser.Point[]|number[]|...Phaser.Point|...number} points - The points to set.
 */
-Phaser.Polygon = function (points) {
+Phaser.Polygon = function () {
 
     /**
-    * @property {number} type - The base object type.
-    */
+     * @property {number} type - The base object type.
+     */
     this.type = Phaser.POLYGON;
 
-    //  If points isn't an array, use arguments as the array
-    if (!(points instanceof Array))
-    {
-        points = Array.prototype.slice.call(arguments);
-    }
-
-    //  If this is a flat array of numbers, convert it to points
-    if (points[0] instanceof Phaser.Point)
-    {
-        var p = [];
-
-        for (var i = 0, il = points.length; i < il; i++)
-        {
-            p.push(points[i].x, points[i].y);
-        }
-
-        points = p;
-    }
+    /**
+    * @property {number} area - The area of this Polygon.
+    */
+    this.area = 0;
 
     /**
-    * @property {array} points - An array of Points that make up this Polygon.
+    * @property {array} _points - An array of Points that make up this Polygon.
+    * @private
     */
-    this.points = points;
+    this._points = [];
+
+    if (arguments.length > 0)
+    {
+        this.setTo.apply(this, arguments);
+    }
 
     /**
     * @property {boolean} closed - Is the Polygon closed or not?
@@ -60,12 +58,12 @@ Phaser.Polygon.prototype = {
      * This is a deep clone, the resulting copy contains new Phaser.Point objects
      *
      * @method Phaser.Polygon#clone
-     * @param {Phaser.Polygon} [output] Optional Polygon object. If given the values will be set into this object, otherwise a brand new Polygon object will be created and returned.
-     * @return {Phaser.Polygon} The new Polygon object.
+     * @param {Phaser.Polygon} [output=(new Polygon)] - The polygon to update. If not specified a new polygon will be created.
+     * @return {Phaser.Polygon} The cloned (`output`) polygon object.
      */
     clone: function (output) {
 
-        var points = this.points.slice();
+        var points = this._points.slice();
 
         if (typeof output === "undefined" || output === null)
         {
@@ -90,60 +88,122 @@ Phaser.Polygon.prototype = {
     */
     contains: function (x, y) {
 
-        // use some raycasting to test hits https://github.com/substack/point-in-polygon/blob/master/index.js
+        //  Adapted from http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html by Jonas Raoni Soares Silva
 
-        var length = this.points.length / 2;
+        var length = this._points.length;
+        var inside = false;
 
-        for (var i = 0, j = length - 1; i < length; j = i++)
+        for (var i = -1, j = length - 1; ++i < length; j = i)
         {
-            var xi = this.points[i * 2].x;
-            var yi = this.points[i * 2 + 1].y;
-            var xj = this.points[j * 2].x;
-            var yj = this.points[j * 2 + 1].y;
+            var ix = this._points[i].x;
+            var iy = this._points[i].y;
 
-            var intersect = ((yi > y) !== (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+            var jx = this._points[j].x;
+            var jy = this._points[j].y;
 
-            if (intersect)
-            {
-                return true;
-            }
+            ((iy <= y && y < jy) || (jy <= y && y < iy)) && (x < (jx - ix) * (y - iy) / (jy - iy) + ix) && (inside = !inside);
         }
 
-        return false;
+        return inside;
 
     },
 
     /**
-    * Sets this Polygon to the given points.
-    *
-    * @method Phaser.Polygon#setTo
-    * @param {Phaser.Point[]|number[]} points - The array of Points.
-    * @return {boolean} True if the coordinates are within this polygon, otherwise false.
-    */
+     * Sets this Polygon to the given points.
+     *
+     * The points can be set from a variety of formats:
+     *
+     * - An array of Point objects: `[new Phaser.Point(x1, y1), ...]`
+     * - An array of objects with public x/y properties: `[obj1, obj2, ...]`
+     * - An array of paired numbers that represent point coordinates: `[x1,y1, x2,y2, ...]`
+     * - As separate Point arguments: `setTo(new Phaser.Point(x1, y1), ...)`
+     * - As separate objects with public x/y properties arguments: `setTo(obj1, obj2, ...)`
+     * - As separate arguments representing point coordinates: `setTo(x1,y1, x2,y2, ...)`
+     *
+     * `setTo` may also be called without any arguments to remove all points.
+     *
+     * @method Phaser.Polygon#setTo
+     * @param {Phaser.Point[]|number[]|...Phaser.Point|...number} points - The points to set.
+     * @return {Phaser.Polygon} This Polygon object
+     */
     setTo: function (points) {
 
-        //  If points isn't an array, use arguments as the array
-        if (!(points instanceof Array))
-        {
-            points = Array.prototype.slice.call(arguments);
-        }
+        this.area = 0;
+        this._points = [];
 
-        //  If this is a flat array of numbers, convert it to points
-        if (points[0] instanceof Phaser.Point)
+        if (arguments.length > 0)
         {
-            var p = [];
-
-            for (var i = 0, il = points.length; i < il; i++)
+            //  If points isn't an array, use arguments as the array
+            if (!Array.isArray(points))
             {
-                p.push(points[i].x, points[i].y);
+                points = Array.prototype.slice.call(arguments);
             }
 
-            points = p;
+            var y0 = Number.MAX_VALUE;
+
+            //  Allows for mixed-type arguments
+            for (var i = 0, len = points.length; i < len; i++)
+            {
+                if (typeof points[i] === 'number')
+                {
+                    var p = new Phaser.Point(points[i], points[i + 1]);
+                    i++;
+                }
+                else
+                {
+                    var p = new Phaser.Point(points[i].x, points[i].y);
+                }
+
+                this._points.push(p);
+
+                //  Lowest boundary
+                if (p.y < y0)
+                {
+                    y0 = p.y;
+                }
+            }
+
+            this.calculateArea(y0);
         }
 
-        this.points = points;
-
         return this;
+
+    },
+
+    /**
+     * Calcuates the area of the Polygon. This is available in the property Polygon.area
+     *
+     * @method Phaser.Polygon#calculateArea
+     * @private
+     * @param {number} y0 - The lowest boundary
+     * @return {number} The area of the Polygon.
+     */
+    calculateArea: function (y0) {
+
+        var p1;
+        var p2;
+        var avgHeight;
+        var width;
+
+        for (var i = 0, len = this._points.length; i < len; i++)
+        {
+            p1 = this._points[i];
+
+            if (i === len - 1)
+            {
+                p2 = this._points[0];
+            }
+            else
+            {
+                p2 = this._points[i + 1];
+            }
+
+            avgHeight = ((p1.y - y0) + (p2.y - y0)) / 2;
+            width = p1.x - p2.x;
+            this.area += avgHeight * width;
+        }
+
+        return this.area;
 
     }
 
@@ -151,11 +211,14 @@ Phaser.Polygon.prototype = {
 
 Phaser.Polygon.prototype.constructor = Phaser.Polygon;
 
-/*
+/**
 * Sets and modifies the points of this polygon.
 *
+* See {@link Phaser.Polygon#setTo setTo} for the different kinds of arrays formats that can be assigned.
+*
 * @name Phaser.Polygon#points
-* @property {array<Phaser.Point>|array<number>} points - The array of vertex points
+* @property {Phaser.Point[]} points - The array of vertex points.
+* @deprecated Use `setTo`.
 */
 Object.defineProperty(Phaser.Polygon.prototype, 'points', {
 
@@ -165,80 +228,16 @@ Object.defineProperty(Phaser.Polygon.prototype, 'points', {
 
     set: function(points) {
 
-        //if points isn't an array, use arguments as the array
-        if (!(points instanceof Array))
+        if (points != null)
         {
-            points = Array.prototype.slice.call(arguments);
+            this.setTo(points);
         }
-
-        //if this is a flat array of numbers, convert it to points
-        if (typeof points[0] === 'number')
+        else
         {
-            var p = [];
-
-            for (var i = 0, len = points.length; i < len; i += 2)
-            {
-                p.push(new Phaser.Point(points[i], points[i + 1]));
-            }
-
-            points = p;
+            //  Clear the points
+            this.setTo();
         }
-
-        this._points = points;
-    }
-
-});
-
-/**
-* Returns the area of the polygon.
-*
-* @name Phaser.Polygon#area
-* @readonly
-*/
-Object.defineProperty(Phaser.Polygon.prototype, 'area', {
-
-    get: function() {
-
-        var p1;
-        var p2;
-        var avgHeight;
-        var width;
-        var i;
-        var y0 = Number.MAX_VALUE;
-        var area = 0;
-
-        // Find lowest boundary
-        for (i = 0; i < this.points.length; i++)
-        {
-            if (this.points[i].y < y0)
-            {
-                y0 = this.points[i].y;
-            }
-        }
-
-        for (i = 0; i< this.points.length; i++)
-        {
-            p1 = this.points[i];
-
-            if (i === this.points.length - 1)
-            {
-                p2 = this.points[0];
-            }
-            else
-            {
-                p2 = this.points[i+1];
-            }
-
-            avgHeight = ((p1.y - y0) + (p2.y - y0)) / 2;
-            width = p1.x - p2.x;
-            area += avgHeight * width;
-        }
-
-        return area;
 
     }
 
 });
-
-//   Because PIXI uses its own Polygon, we'll replace it with ours to avoid duplicating code or confusion.
-// PIXI.Polygon = Phaser.Polygon;

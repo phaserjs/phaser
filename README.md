@@ -91,6 +91,9 @@ Version 2.1.4 - "Bethal" - in development
 * Game.destroy now destroys either the WebGLRenderer or CanvasRenderer, whichever Pixi was using.
 * Particle.Emitter will now automatically set `particle.body.skipQuadTree` to `true` to help with collision speeds within Arcade Physics.
 * Particle.Emitter.explode (or `Emitter.start` with the `explode` parameter set to `true`) will immediately emit the required quantity of particles and not delay until the next frame to do so. This means you can re-use a single emitter across multiple places in your game that require explode-style emissions, just by adjusting the `emitter.x` and `emitter.y` properties before calling explode (thanks Insanehero)
+* Phaser.Polygon has been refactored to address some Pixi v2 migration issues (thanks @pnstickne for the original implementation #1267)
+* Polygon.area is now only calculated when the Polygon points list is modified, rather than on every call.
+* Phaser.Polygon can now accept the points list in a variety of formats: Arrays of Points, numbers, objects with public x/y properties or any combination of, or as a parameter list (thanks @pnstickne for the original implementation #1267)
 
 ### Bug Fixes
 
@@ -100,6 +103,8 @@ Version 2.1.4 - "Bethal" - in development
 * Loader.json was using the wrong context in IE9 with XDomainRequest calls (thanks @pnstickne #1258)
 * Polygon.contains was toggling the return value on each valid hit (thanks @Singularetantum #1265 #1266)
 * Text.updateText was incorrectly increasing the size of the texture each time it was called (thanks @spayton #1261)
+* Polygon.contains now correctly calculates the result  (thanks @pnstickne @BurnedToast #1267)
+* Setting Key.enabled = false while it is down did not reset the isDown state (thanks @pnstickne #1190 #1271)
 
 
 For details about changes made in previous versions of Phaser see the full Change Log at https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md
