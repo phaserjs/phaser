@@ -165,8 +165,8 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
 
     /**
     * Speed at which this layer scrolls horizontally, relative to the camera (e.g. scrollFactorX of 0.5 scrolls half as quickly as the 'normal' camera-locked layers do).
-    *
     * @property {number} scrollFactorX
+    * @public
     * @default
     */
     this.scrollFactorX = 1;
@@ -197,7 +197,6 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
     * Flag controlling if the layer tiles wrap at the edges.
     * @property {boolean} _wrap
     * @private
-    * @default
     */
     this._wrap = false;
 
@@ -294,6 +293,7 @@ Object.defineProperty(Phaser.TilemapLayer.prototype, 'tileColor', {
 /**
 * Automatically called by World.postUpdate. Handles cache updates.
 *
+* @method Phaser.TilemapLayer#postUpdate
 * @protected
 */
 Phaser.TilemapLayer.prototype.postUpdate = function () {
@@ -325,6 +325,7 @@ Phaser.TilemapLayer.prototype.postUpdate = function () {
 /**
 * Sets the world size to match the size of this layer.
 *
+* @method Phaser.TilemapLayer#resizeWorld
 * @public
 */
 Phaser.TilemapLayer.prototype.resizeWorld = function () {
@@ -336,6 +337,7 @@ Phaser.TilemapLayer.prototype.resizeWorld = function () {
 /**
 * Take an x coordinate that doesn't account for scrollFactorX and 'fix' it into a scrolled local space.
 *
+* @method Phaser.TilemapLayer#_fixX
 * @private
 * @param {number} x - x coordinate in camera space
 * @return {number} x coordinate in scrollFactor-adjusted dimensions
@@ -359,6 +361,7 @@ Phaser.TilemapLayer.prototype._fixX = function (x) {
 /**
 * Take an x coordinate that _does_ account for scrollFactorX and 'unfix' it back to camera space.
 *
+* @method Phaser.TilemapLayer#_unfixX
 * @private
 * @param {number} x - x coordinate in scrollFactor-adjusted dimensions
 * @return {number} x coordinate in camera space
@@ -377,6 +380,7 @@ Phaser.TilemapLayer.prototype._unfixX = function (x) {
 /**
 * Take a y coordinate that doesn't account for scrollFactorY and 'fix' it into a scrolled local space.
 *
+* @method Phaser.TilemapLayer#_fixY
 * @private
 * @param {number} y - y coordinate in camera space
 * @return {number} y coordinate in scrollFactor-adjusted dimensions
@@ -400,6 +404,7 @@ Phaser.TilemapLayer.prototype._fixY = function (y) {
 /**
 * Take a y coordinate that _does_ account for scrollFactorY and 'unfix' it back to camera space.
 *
+* @method Phaser.TilemapLayer#_unfixY
 * @private
 * @param {number} y - y coordinate in scrollFactor-adjusted dimensions
 * @return {number} y coordinate in camera space
@@ -418,6 +423,7 @@ Phaser.TilemapLayer.prototype._unfixY = function (y) {
 /**
 * Convert a pixel value to a tile coordinate.
 *
+* @method Phaser.TilemapLayer#getTileX
 * @public
 * @param {number} x - X position of the point in target tile (in pixels).
 * @return {integer} The X map location of the tile.
@@ -432,6 +438,7 @@ Phaser.TilemapLayer.prototype.getTileX = function (x) {
 /**
 * Convert a pixel value to a tile coordinate.
 *
+* @method Phaser.TilemapLayer#getTileY
 * @public
 * @param {number} y - Y position of the point in target tile (in pixels).
 * @return {integer} The Y map location of the tile.
@@ -446,6 +453,7 @@ Phaser.TilemapLayer.prototype.getTileY = function (y) {
 /**
 * Convert a pixel coordinate to a tile coordinate.
 *
+* @method Phaser.TilemapLayer#getTileXY
 * @public
 * @param {number} x - X position of the point in target tile (in pixels).
 * @param {number} y - Y position of the point in target tile (in pixels).
@@ -464,6 +472,7 @@ Phaser.TilemapLayer.prototype.getTileXY = function (x, y, point) {
 /**
 * Gets all tiles that intersect with the given line.
 *
+* @method Phaser.TilemapLayer#getRayCastTiles
 * @public
 * @param {Phaser.Line} line - The line used to determine which tiles to return.
 * @param {integer} [stepRate=(rayStepRate)] - How many steps through the ray will we check? Defaults to `rayStepRate`.
@@ -510,6 +519,7 @@ Phaser.TilemapLayer.prototype.getRayCastTiles = function (line, stepRate, collid
 /**
 * Get all tiles that exist within the given area, defined by the top-left corner, width and height. Values given are in pixels, not tiles.
 *
+* @method Phaser.TilemapLayer#getTiles
 * @public
 * @param {number} x - X position of the top left corner (in pixels).
 * @param {number} y - Y position of the top left corner (in pixels).
@@ -589,6 +599,7 @@ Object.defineProperty(Phaser.TilemapLayer.prototype, "wrap", {
 /**
 * Returns the appropriate tileset for the index, updating the internal cache as required. This should only be called if `tilesets[index]` evaluates to undefined.
 *
+* @method Phaser.TilemapLayer#resolveTileset
 * @private
 * @param {integer} Tile index
 * @return {Phaser.Tileset|null} Returns the associated tileset or null if there is no such mapping.
@@ -622,6 +633,7 @@ Phaser.TilemapLayer.prototype.resolveTileset = function (tileIndex)
 /**
 * The TilemapLayer caches tileset look-ups. Call this method of clear the cache if tilesets have been added or updated after the layer has been rendered.
 *
+* @method Phaser.TilemapLayer#resetTilesetCache
 * @public
 */
 Phaser.TilemapLayer.prototype.resetTilesetCache = function ()
@@ -637,6 +649,7 @@ Phaser.TilemapLayer.prototype.resetTilesetCache = function ()
 /**
 * Shifts the contents of the canvas - does extra math so that different browsers agree on the result. The specified (x/y) will be shifted to (0,0) after the copy. The newly exposed canvas area will need to be filled in. This method is problematic for transparent tiles.
 *
+* @method Phaser.TilemapLayer#shiftCanvas
 * @private
 * @param {CanvasRenderingContext2D} context - The context to shift
 * @param {integer} x
@@ -677,6 +690,7 @@ Phaser.TilemapLayer.prototype.shiftCanvas = function (context, x, y)
 * Render tiles in the given area given by the virtual tile coordinates biased by the given scroll factor.
 * This will constrain the tile coordinates based on wrapping but not physical coordinates.
 *
+* @method Phaser.TilemapLayer#renderRegion
 * @private
 * @param {integer} scrollX - Render x offset/scroll.
 * @param {integer} scrollY - Render y offset/scroll.
@@ -788,6 +802,7 @@ Phaser.TilemapLayer.prototype.renderRegion = function (scrollX, scrollY, left, t
 /**
 * Shifts the canvas and render damaged edge tiles.
 *
+* @method Phaser.TilemapLayer#renderDeltaScroll
 * @private
 */
 Phaser.TilemapLayer.prototype.renderDeltaScroll = function (shiftX, shiftY) {
@@ -863,6 +878,7 @@ Phaser.TilemapLayer.prototype.renderDeltaScroll = function (shiftX, shiftY) {
 /**
 * Clear and render the entire canvas.
 *
+* @method Phaser.TilemapLayer#renderFull
 * @private
 */
 Phaser.TilemapLayer.prototype.renderFull = function ()
@@ -891,6 +907,7 @@ Phaser.TilemapLayer.prototype.renderFull = function ()
 /**
 * Renders the tiles to the layer canvas and pushes to the display.
 *
+* @method Phaser.TilemapLayer#render
 * @protected
 */
 Phaser.TilemapLayer.prototype.render = function () {
@@ -977,6 +994,7 @@ Phaser.TilemapLayer.prototype.render = function () {
 *
 * See `debugSettings` for assorted configuration options.
 *
+* @method Phaser.TilemapLayer#renderDebug
 * @private
 */
 Phaser.TilemapLayer.prototype.renderDebug = function () {

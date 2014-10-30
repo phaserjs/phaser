@@ -123,6 +123,7 @@ Phaser.Tileset.prototype = {
     * Draws a tile from this Tileset at the given coordinates on the context.
     *
     * @method Phaser.Tileset#draw
+    * @public
     * @param {CanvasRenderingContext2D} context - The context to draw the tile onto.
     * @param {number} x - The x coordinate to draw to.
     * @param {number} y - The y coordinate to draw to.
@@ -153,6 +154,7 @@ Phaser.Tileset.prototype = {
     /**
     * Returns true if and only if this tileset contains the given tile index.
     *
+    * @method Phaser.Tileset#containsTileIndex
     * @public
     * @return {boolean} True if this tileset contains the given index.
     */
@@ -169,6 +171,7 @@ Phaser.Tileset.prototype = {
     /**
     * Set the image associated with this Tileset and update the tile data.
     *
+    * @method Phaser.Tileset#setImage
     * @public
     * @param {Image} image - The image that contains the tiles.
     */
@@ -182,6 +185,7 @@ Phaser.Tileset.prototype = {
     /**
     * Sets tile spacing and margins.
     *
+    * @method Phaser.Tileset#setSpacing
     * @public
     * @param {integer} tileMargin - The margin around the tiles in the sheet (in pixels).
     * @param {integer} tileSpacing - The spacing between the tiles in the sheet (in pixels).
@@ -197,8 +201,9 @@ Phaser.Tileset.prototype = {
 
     /**
     * Updates tile coordinates and tileset data.
-    *    
-    * @protected
+    *
+    * @method Phaser.Tileset#updateTileData
+    * @private
     */
     updateTileData: function () {
 
