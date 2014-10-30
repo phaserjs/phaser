@@ -45,23 +45,101 @@ Phaser.Button = function (game, x, y, key, callback, callbackContext, overFrame,
     /**
     * The Phaser Object Type.
     * @property {number} type
+    * @readonly
     */
     this.type = Phaser.BUTTON;
 
     /**
-    * The frames for each state - can be integers or strings when set. Indexed by `Button.STATE_*`.
-    * @property {Array<string|integer|null>} _stateFrames
+    * The name or ID of the Over state frame.
+    * @property {string|integer} onOverFrame
     * @private
     */
-    this._stateFrames = [null, null, null, null];
+    this._onOverFrame = null;
 
     /**
-    * The sounds and markers for each state.
-    * Indexed by `Button.STATE_* << 1` for the sound and `+1` for the marker; expanded on-demand.
-    * @property {object[]} _stateSounds
+    * The name or ID of the Out state frame.
+    * @property {string|integer} onOutFrame
     * @private
     */
-    this._stateSounds = [];
+    this._onOutFrame = null;
+
+    /**
+    * The name or ID of the Down state frame.
+    * @property {string|integer} onDownFrame
+    * @private
+    */
+    this._onDownFrame = null;
+
+    /**
+    * The name or ID of the Up state frame.
+    * @property {string|integer} onUpFrame
+    * @private
+    */
+    this._onUpFrame = null;
+
+    /**
+    * The Sound to be played when this Buttons Over state is activated.
+    * @property {Phaser.Sound|Phaser.AudioSprite|null} onOverSound
+    * @deprecated
+    * @readonly
+    */
+    this.onOverSound = null;
+
+    /**
+    * The Sound to be played when this Buttons Out state is activated.
+    * @property {Phaser.Sound|Phaser.AudioSprite|null} onOutSound
+    * @deprecated
+    * @readonly
+    */
+    this.onOutSound = null;
+
+    /**
+    * The Sound to be played when this Buttons Down state is activated.
+    * @property {Phaser.Sound|Phaser.AudioSprite|null} onDownSound
+    * @deprecated
+    * @readonly
+    */
+    this.onDownSound = null;
+
+    /**
+    * The Sound to be played when this Buttons Up state is activated.
+    * @property {Phaser.Sound|Phaser.AudioSprite|null} onUpSound
+    * @deprecated
+    * @readonly
+    */
+    this.onUpSound = null;
+
+    /**
+    * The Sound Marker used in conjunction with the onOverSound.
+    * @property {string} onOverSoundMarker
+    * @deprecated
+    * @readonly
+    */
+    this.onOverSoundMarker = '';
+
+    /**
+    * The Sound Marker used in conjunction with the onOutSound.
+    * @property {string} onOutSoundMarker
+    * @deprecated
+    * @readonly
+    */
+    this.onOutSoundMarker = '';
+
+    /**
+    * The Sound Marker used in conjunction with the onDownSound.
+    * @property {string} onDownSoundMarker
+    * @deprecated
+    * @readonly
+    */
+    this.onDownSoundMarker = '';
+
+    /**
+    * The Sound Marker used in conjunction with the onUpSound.
+    * @property {string} onUpSoundMarker
+    * @deprecated
+    * @readonly
+    */
+    this.onUpSoundMarker = '';
 
     /**
     * The Signal (or event) dispatched when this Button is in an Over state.
@@ -133,12 +211,12 @@ Phaser.Button = function (game, x, y, key, callback, callbackContext, overFrame,
 Phaser.Button.prototype = Object.create(Phaser.Image.prototype);
 Phaser.Button.prototype.constructor = Phaser.Button;
 
-//  State constants, useful to index into small state arrays.
-//  (Arranged by "expected likelines" of custom frames/sounds and may change - don't hard-code.)
-Phaser.Button.STATE_OVER = 0;
-Phaser.Button.STATE_DOWN = 1;
-Phaser.Button.STATE_UP = 2;
-Phaser.Button.STATE_OUT = 3;
+//  State constants; local only. These are tied to property names in Phaser.Button.
+var STATE_OVER = 'Over';
+var STATE_OUT = 'Out';
+var STATE_DOWN = 'Down';
+var STATE_UP = 'Up';
+
 
 /**
 * Clears all of the frames set on this Button.
@@ -168,25 +246,27 @@ Phaser.Button.prototype.removedFromWorld = function () {
 *
 * @method Phaser.Button#setStateFrame
 * @private
-* @param {integer} state - See `Button.STATE_*`
+* @param {object} state - See `STATE_*`
 * @param {number|string} frame - The number or string representing the frame.
 * @param {boolean} switchImmediately - Immediately switch to the frame if it was set - and this is true.
 */
 Phaser.Button.prototype.setStateFrame = function (state, frame, switchImmediately)
 {
     
-    if (frame != null) //  Anything but null/undefined
+    var frameKey = '_on' + state + 'Frame';
+
+    if (frame != null) // not null or undefined
     {
-        this._stateFrames[state] = frame;
+        this[frameKey] = frame;
 
         if (switchImmediately)
         {
-            this.changeStateFrame(frame);
+            this.changeStateFrame(state);
         }
     }
     else
     {
-        this._stateFrames[state] = null;
+        this[frameKey] = null;
     }
 
 };
@@ -196,7 +276,7 @@ Phaser.Button.prototype.setStateFrame = function (state, frame, switchImmediatel
 *
 * @method Phaser.Button#changeStateFrame
 * @private
-* @param {integer} state - See `Button.STATE_*`
+* @param {object} state - See `STATE_*`
 * @return {boolean} True only if the frame was assigned a value, possibly the same one it already had.
 */
 Phaser.Button.prototype.changeStateFrame = function (state) {
@@ -206,7 +286,9 @@ Phaser.Button.prototype.changeStateFrame = function (state) {
         return false;
     }
 
-    var frame = this._stateFrames[state];
+    var frameKey = '_on' + state + 'Frame';
+    var frame = this[frameKey];
+
     if (typeof frame === 'string')
     {
         this.frameName = frame;
@@ -238,10 +320,10 @@ Phaser.Button.prototype.changeStateFrame = function (state) {
 */
 Phaser.Button.prototype.setFrames = function (overFrame, outFrame, downFrame, upFrame) {
 
-    this.setStateFrame(Phaser.Button.STATE_OVER, overFrame, this.input.pointerOver());
-    this.setStateFrame(Phaser.Button.STATE_OUT, outFrame, !this.input.pointerOver());
-    this.setStateFrame(Phaser.Button.STATE_DOWN, downFrame, this.input.pointerDown());
-    this.setStateFrame(Phaser.Button.STATE_UP, upFrame, this.input.pointerUp());
+    this.setStateFrame(STATE_OVER, overFrame, this.input.pointerOver());
+    this.setStateFrame(STATE_OUT, outFrame, !this.input.pointerOver());
+    this.setStateFrame(STATE_DOWN, downFrame, this.input.pointerDown());
+    this.setStateFrame(STATE_UP, upFrame, this.input.pointerUp());
 
 };
 
@@ -250,30 +332,24 @@ Phaser.Button.prototype.setFrames = function (overFrame, outFrame, downFrame, up
 *
 * @method Phaser.Button#setStateSound
 * @private
-* @param {integer} state - See `Button.STATE_*`
+* @param {object} state - See `STATE_*`
 * @param {Phaser.Sound|Phaser.AudioSprite} [sound] - Sound.
-* @param {string} [marker=null] - Sound marker.
+* @param {string} [marker=''] - Sound marker.
 */
 Phaser.Button.prototype.setStateSound = function (state, sound, marker) {
 
-    var soundIndex = state << 1;
-    var markerIndex = soundIndex + 1;
-    var sounds = this._stateSounds;
+    var soundKey = 'on' + state + 'Sound';
+    var markerKey = 'on' + state + 'SoundMarker';
 
     if (sound instanceof Phaser.Sound || sound instanceof Phaser.AudioSprite)
     {
-        while (markerIndex > sounds.length) { // Dense null
-            sounds.push(null);
-        }
-
-        sounds[soundIndex] = sound;
-        sounds[markerIndex] = typeof marker === 'string' ? marker : null;
+        this[soundKey] = sound;
+        this[markerKey] = typeof marker === 'string' ? marker : '';
     }
-    else if (markerIndex < sounds.length)
+    else
     {
-        // Only null if set-through
-        sounds[soundIndex] = null;
-        sounds[markerIndex] = null;
+        this[soundKey] = null;
+        this[markerKey] = '';
     }
 
 };
@@ -283,19 +359,19 @@ Phaser.Button.prototype.setStateSound = function (state, sound, marker) {
 *
 * @method Phaser.Button#playStateSound
 * @private
-* @param {integer} state - See `Button.STATE_*`
+* @param {object} state - See `STATE_*`
 * @return {boolean} True only if a sound was played.
 */
 Phaser.Button.prototype.playStateSound = function (state) {
 
-    var soundIndex = state << 1;
-    var markerIndex = soundIndex + 1;
-    var sounds = this._stateSounds;
+    var soundKey = 'on' + state + 'Sound';
+    var sound = this[soundKey];
 
-    var sound = sounds[soundIndex];
     if (sound)
     {
-        var marker = sounds[markerIndex];
+        var markerKey = 'on' + state + 'SoundMarker';
+        var marker = this[markerKey];
+
         sound.play(marker);
         return true;
     }
@@ -325,10 +401,10 @@ Phaser.Button.prototype.playStateSound = function (state) {
 */
 Phaser.Button.prototype.setSounds = function (overSound, overMarker, downSound, downMarker, outSound, outMarker, upSound, upMarker) {
 
-    this.setStateSound(Phaser.Button.STATE_OVER, overSound, overMarker);
-    this.setStateSound(Phaser.Button.STATE_OUT, outSound, outMarker);
-    this.setStateSound(Phaser.Button.STATE_DOWN, downSound, downMarker);
-    this.setStateSound(Phaser.Button.STATE_UP, upSound, upMarker);
+    this.setStateSound(STATE_OVER, overSound, overMarker);
+    this.setStateSound(STATE_OUT, outSound, outMarker);
+    this.setStateSound(STATE_DOWN, downSound, downMarker);
+    this.setStateSound(STATE_UP, upSound, upMarker);
 
 };
 
@@ -342,7 +418,7 @@ Phaser.Button.prototype.setSounds = function (overSound, overMarker, downSound, 
 */
 Phaser.Button.prototype.setOverSound = function (sound, marker) {
 
-    this.setStateSound(Phaser.Button.STATE_OVER, sound, marker);
+    this.setStateSound(STATE_OVER, sound, marker);
 
 };
 
@@ -356,7 +432,7 @@ Phaser.Button.prototype.setOverSound = function (sound, marker) {
 */
 Phaser.Button.prototype.setOutSound = function (sound, marker) {
 
-    this.setStateSound(Phaser.Button.STATE_OUT, sound, marker);
+    this.setStateSound(STATE_OUT, sound, marker);
 
 };
 
@@ -370,7 +446,7 @@ Phaser.Button.prototype.setOutSound = function (sound, marker) {
 */
 Phaser.Button.prototype.setDownSound = function (sound, marker) {
 
-    this.setStateSound(Phaser.Button.STATE_DOWN, sound, marker);
+    this.setStateSound(STATE_DOWN, sound, marker);
 
 };
 
@@ -384,7 +460,7 @@ Phaser.Button.prototype.setDownSound = function (sound, marker) {
 */
 Phaser.Button.prototype.setUpSound = function (sound, marker) {
 
-    this.setStateSound(Phaser.Button.STATE_UP, sound, marker);
+    this.setStateSound(STATE_UP, sound, marker);
 
 };
 
@@ -404,14 +480,14 @@ Phaser.Button.prototype.onInputOverHandler = function (sprite, pointer) {
         return;
     }
 
-    this.changeStateFrame(Phaser.Button.STATE_OVER);
+    this.changeStateFrame(STATE_OVER);
 
     if (this.onOverMouseOnly && !pointer.isMouse)
     {
         return;
     }
 
-    this.playStateSound(Phaser.Button.STATE_OVER);
+    this.playStateSound(STATE_OVER);
 
     if (this.onInputOver)
     {
@@ -430,9 +506,9 @@ Phaser.Button.prototype.onInputOverHandler = function (sprite, pointer) {
 */
 Phaser.Button.prototype.onInputOutHandler = function (sprite, pointer) {
 
-    this.changeStateFrame(Phaser.Button.STATE_OUT);
+    this.changeStateFrame(STATE_OUT);
 
-    this.playStateSound(Phaser.Button.STATE_OUT);
+    this.playStateSound(STATE_OUT);
 
     if (this.onInputOut)
     {
@@ -450,9 +526,9 @@ Phaser.Button.prototype.onInputOutHandler = function (sprite, pointer) {
 */
 Phaser.Button.prototype.onInputDownHandler = function (sprite, pointer) {
 
-    this.changeStateFrame(Phaser.Button.STATE_DOWN);
+    this.changeStateFrame(STATE_DOWN);
 
-    this.playStateSound(Phaser.Button.STATE_DOWN);
+    this.playStateSound(STATE_DOWN);
 
     if (this.onInputDown)
     {
@@ -470,7 +546,7 @@ Phaser.Button.prototype.onInputDownHandler = function (sprite, pointer) {
 */
 Phaser.Button.prototype.onInputUpHandler = function (sprite, pointer, isOver) {
 
-    this.playStateSound(Phaser.Button.STATE_UP);
+    this.playStateSound(STATE_UP);
 
     //  Input dispatched early, before state change (but after sound)
     if (this.onInputUp)
@@ -485,21 +561,21 @@ Phaser.Button.prototype.onInputUpHandler = function (sprite, pointer, isOver) {
 
     if (this.forceOut)
     {
-        this.changeStateFrame(Phaser.Button.STATE_OUT);
+        this.changeStateFrame(STATE_OUT);
     }
     else
     {
-        var changedUp = this.changeStateFrame(Phaser.Button.STATE_UP);
+        var changedUp = this.changeStateFrame(STATE_UP);
         if (!changedUp)
         {
             //  No Up frame to show..
             if (isOver)
             {
-                this.changeStateFrame(Phaser.Button.STATE_OVER);
+                this.changeStateFrame(STATE_OVER);
             }
             else
             {
-                this.changeStateFrame(Phaser.Button.STATE_OUT);
+                this.changeStateFrame(STATE_OUT);
             }
         }
     }
