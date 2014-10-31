@@ -75,22 +75,22 @@ Phaser.TweenManager.prototype = {
     * @param {object|object[]|Phaser.Group} obj - The object you want to remove the tweens from.
     * @param {boolean} children - If passing a group, setting this to true will remove the tweens from all of its children instead of the group itself.
     */
-    removeFrom = function(obj, children) {
+    removeFrom: function(obj, children) {
         
         var o, c, t, len;
         
-        if (Array.isArray(obj) )
+        if (Array.isArray(obj))
         {
             for (o = 0, len = obj.length; o < len; o++)
             {
-                this.removeFrom(obj[o]);   
+                this.removeFrom(obj[o]);
             }
         }
         else if (obj.type === Phaser.GROUP && children)
         {
             for (c = 0, len = obj.children.length; c < len; c++)
             {
-                this.removeFrom(obj.children[c]);   
+                this.removeFrom(obj.children[c]);
             }
         }
         else
