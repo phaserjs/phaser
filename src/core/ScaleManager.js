@@ -184,6 +184,13 @@ Phaser.ScaleManager = function (game, width, height) {
     this.leaveFullScreen = new Phaser.Signal();
 
     /**
+    * This signal is dispatched when the browser fails to enter full screen mode;
+    * or if the device does not support fullscreen mode and `startFullScreen` is invoked.
+    * @property {Phaser.Signal} leaveFullScreen
+    */
+    this.fullScreenFailed = new Phaser.Signal();
+
+    /**
     * The orientation value of the game (as defined by `window.orientation` if set).
     * A value of 90 is landscape and 0 is portrait.
     * @property {number} orientation
@@ -312,6 +319,14 @@ Phaser.ScaleManager = function (game, width, height) {
     * @property {object} onResizeContext
     */
     this.onResizeContext = null;
+
+    /**
+    * True only if fullscreen support will be used. (Changing to fullscreen still might not work.)
+    * @property {boolean}
+    * @protected
+    * @readonly
+    */
+    this.supportsFullScreen = game.device.fullscreen && !game.device.cocoonJS;
 
     /**
     * The original width/height properties of the manager when fullscreen started.
@@ -531,18 +546,28 @@ Phaser.ScaleManager.prototype = {
             return _this.windowResize(event);
         };
 
-        this._fullScreenChange = function(event) {
-            return _this.fullScreenChange(event);
-        };
-
         window.addEventListener('orientationchange', this._orientationChange, false);
         window.addEventListener('resize', this._windowResize, false);
 
-        if (!this.game.device.cocoonJS)
+        if (this.supportsFullScreen)
         {
+            this._fullScreenChange = function(event) {
+                return _this.fullScreenChange(event);
+            };
+
+            this._fullScreenError = function(event) {
+                return _this.fullScreenError(event);
+            };
+
             document.addEventListener('webkitfullscreenchange', this._fullScreenChange, false);
             document.addEventListener('mozfullscreenchange', this._fullScreenChange, false);
+            document.addEventListener('MSFullscreenChange', this._fullScreenChange, false);
             document.addEventListener('fullscreenchange', this._fullScreenChange, false);
+
+            document.addEventListener('webkitfullscreenerror', this._fullScreenError, false);
+            document.addEventListener('mozfullscreenerror', this._fullScreenError, false);
+            document.addEventListener('MSFullscreenError', this._fullScreenError, false);
+            document.addEventListener('fullscreenerror', this._fullScreenError, false);
         }
 
         this.updateDimensions(this.width, this.height, true);
@@ -1223,6 +1248,8 @@ Phaser.ScaleManager.prototype = {
     * Tries to enter the browser into full screen mode.
     *
     * Fullscreen mode needs to be supported by the browser. It is _not_ the same as setting the game size to fill the browser window.
+    *
+    * The `fullScreenDailed` signal will be dispatched if the fullscreen change request failed or the game does not support the Fullscreen API.
     * 
     * @method Phaser.ScaleManager#startFullScreen
     * @public
@@ -1231,9 +1258,16 @@ Phaser.ScaleManager.prototype = {
     */
     startFullScreen: function (antialias) {
 
-        if (this.isFullScreen || !this.game.device.fullscreen)
+        if (this.isFullScreen)
         {
             return false;
+        }
+
+        if (!this.supportsFullScreen)
+        {
+            setTimeout(function (scaleManager) {
+                scaleManager.fullScreenError();
+            }, 10, this);
         }
 
         if (typeof antialias !== 'undefined' && this.game.renderType === Phaser.CANVAS)
@@ -1263,7 +1297,7 @@ Phaser.ScaleManager.prototype = {
     */
     stopFullScreen: function () {
 
-        if (!this.isFullScreen || !this.game.device.fullscreen)
+        if (!this.isFullScreen || !this.supportsFullScreen)
         {
             return false;
         }
@@ -1378,22 +1412,48 @@ Phaser.ScaleManager.prototype = {
     },
 
     /**
-     * Destroys the ScaleManager and removes any event listeners.
-     * This should probably only be called when the game is destroyed.
-     *
-     * @method destroy
-     * @protected
-     */
+    * Called automatically when the browser fullscreen request fails;
+    * or called when a fullscreen request is made on a device for which it is not supported.
+    *
+    * @method Phaser.ScaleManager#fullScreenError
+    * @protected
+    * @param {Event} [event=undefined] - The fullscreenerror event; undefined if invoked on a device that does not support the Fullscreen API.
+    */
+    fullScreenError: function (event) {
+
+        this.event = event;
+
+        if (typeof event === 'undefined' || event.target === this.fullScreenTarget)
+        {
+            console.warn("Phaser.ScaleManager: requestFullscreen failed or device does not support the Fullscreen API");
+            this.fullScreenFailed.dispatch();
+        }
+
+    },
+
+    /**
+    * Destroys the ScaleManager and removes any event listeners.
+    * This should probably only be called when the game is destroyed.
+    *
+    * @method destroy
+    * @protected
+    */
     destroy: function () {
 
         window.removeEventListener('orientationchange', this._orientationChange, false);
         window.removeEventListener('resize', this._windowResize, false);
 
-        if (!this.game.device.cocoonJS)
+        if (this.supportsFullScreen)
         {
             document.removeEventListener('webkitfullscreenchange', this._fullScreenChange, false);
             document.removeEventListener('mozfullscreenchange', this._fullScreenChange, false);
+            document.removeEventListener('MSFullscreenChange', this._fullScreenChange, false);
             document.removeEventListener('fullscreenchange', this._fullScreenChange, false);
+
+            document.removeEventListener('webkitfullscreenerror', this._fullScreenError, false);
+            document.removeEventListener('mozfullscreenerror', this._fullScreenError, false);
+            document.removeEventListener('MSFullscreenError', this._fullScreenError, false);
+            document.removeEventListener('fullscreenerror', this._fullScreenError, false);
         }
 
     }
@@ -1574,7 +1634,8 @@ Object.defineProperty(Phaser.ScaleManager.prototype, "isFullScreen", {
     get: function () {
         return !!(document['fullscreenElement'] ||
             document['mozFullScreenElement'] ||
-            document['webkitFullscreenElement']);
+            document['webkitFullscreenElement'] ||
+            document['msFullscreenElement']);
     }
 
 });
