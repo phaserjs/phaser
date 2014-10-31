@@ -21,6 +21,7 @@ Phaser.Time = function (game) {
 
     /**
     * @property {number} time - Game time counter. If you need a value for in-game calculation please use Phaser.Time.now instead.
+    *                         - This always contains Date.now, but Phaser.Time.now will hold the high resolution RAF timer value (if RAF is available)
     * @protected
     */
     this.time = 0;
@@ -48,6 +49,11 @@ Phaser.Time = function (game) {
     * @protected
     */
     this.pausedTime = 0;
+
+    /**
+     * @property {number} desiredFps = 60 - The desired frame-rate for this project.
+     */
+    this.desiredFps = 60;
 
     /**
     * @property {boolean} advancedTiming - If true Phaser.Time will perform advanced profiling including the fps rate, fps min/max and msMin and msMax.
@@ -93,9 +99,10 @@ Phaser.Time = function (game) {
     this.deltaCap = 0;
 
     /**
-    * @property {number} timeCap - If the difference in time between two frame updates exceeds this value, the frame time is reset to avoid huge elapsed counts.
+    * @property {number} timeCap - If the difference in time between two frame updates exceeds this value in ms, the frame time is reset to avoid huge elapsed counts.
+    *                            - assumes a desiredFps of 60
     */
-    this.timeCap = 1 / 60 * 1000;
+    this.timeCap = 1000 / 60;
 
     /**
     * @property {number} frames - The number of frames record in the last second. Only calculated if Time.advancedTiming is true.
@@ -113,9 +120,9 @@ Phaser.Time = function (game) {
     this.timeToCall = 0;
 
     /**
-    * @property {number} lastTime - Internal value used by timeToCall as part of the setTimeout loop
+    * @property {number} timeExpected - The time when the next call is expected when using setTimer to control the update loop
     */
-    this.lastTime = 0;
+    this.timeExpected = 0;
 
     /**
     * @property {Phaser.Timer} events - This is a Phaser.Timer object bound to the master clock to which you can add timed events.
@@ -242,13 +249,20 @@ Phaser.Time.prototype = {
     */
     update: function (time) {
 
+        // this.time always holds Date.now, this.now may hold the RAF high resolution time value if RAF is available (otherwise it also holds Date.now)
+        this.time = Date.now;
+
+        // 'now' is currently still holding the time of the last call, move it into prevTime
         this.prevTime = this.now;
-
+        // update 'now' to hold the current time
         this.now = time;
+        // elapsed time between previous call and now
+        this.elapsed = this.now - this.prevTime;
 
-        this.timeToCall = this.game.math.max(0, 16 - (time - this.lastTime));
-
-        this.elapsed = this.now - this.time;
+        // time to call this function again in ms in case we're using timers instead of RequestAnimationFrame to update the game
+        this.timeToCall = Math.floor(this.game.math.max(0, (1000.0 / this.desiredFps) - (this.timeCallExpected - time)));
+        // time when the next call is expected if using timers
+        this.timeCallExpected = time + this.timeToCall;
 
         //  spike-dislike
         if (this.elapsed > this.timeCap)
@@ -259,8 +273,8 @@ Phaser.Time.prototype = {
             this.elapsed = this.timeCap;
         }
 
-        //  Calculate physics elapsed, ensure it's > 0, use 1/60 as a fallback
-        this.physicsElapsed = this.elapsed / 1000 || 1 / 60;
+        //  Calculate physics elapsed, ensure it's > 0, use 1/this.desiredFps as a fallback
+        this.physicsElapsed = this.elapsed / 1000 || 1 / this.desiredFps;
 
         if (this.deltaCap > 0 && this.physicsElapsed > this.deltaCap)
         {
@@ -283,9 +297,6 @@ Phaser.Time.prototype = {
                 this.frames = 0;
             }
         }
-
-        this.time = this.now;
-        this.lastTime = time + this.timeToCall;
 
         //  Paused but still running?
         if (!this.game.paused)
@@ -346,7 +357,7 @@ Phaser.Time.prototype = {
         //  Level out the elapsed timer to avoid spikes
         this.time = this.now = Date.now();
 
-        this.pauseDuration = this.time - this._pauseStarted;
+        this.pauseDuration = this.now - this._pauseStarted;
 
         this.events.resume();
 

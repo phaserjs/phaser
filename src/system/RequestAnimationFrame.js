@@ -103,10 +103,11 @@ Phaser.RequestAnimationFrame.prototype = {
     /**
     * The update method for the requestAnimationFrame
     * @method Phaser.RequestAnimationFrame#updateRAF
+    * 
     */
-    updateRAF: function () {
+    updateRAF: function (rafTime) {
 
-        this.game.update(Date.now());
+        this.game.update(Math.floor(rafTime));
 
         this._timeOutID = window.requestAnimationFrame(this._onLoop);
 

@@ -640,11 +640,18 @@ Phaser.Game.prototype = {
     *
     * @method Phaser.Game#update
     * @protected
-    * @param {number} time - The current time as provided by RequestAnimationFrame.
+    * @param {number} time - The current time as provided by Date.now (see updateRAF in RequestAnimationFrame.js) in milliseconds
     */
     update: function (time) {
 
         this.time.update(time);
+
+        this.updateLogic(1.0 / this.time.desiredFps);
+        this.updateRender(this.time.elapsed);
+
+    },
+
+    updateLogic: function (timeStep) {
 
         if (!this._paused && !this.pendingStep)
         {
@@ -686,6 +693,10 @@ Phaser.Game.prototype = {
                 this.debug.preUpdate();
             }
         }
+
+    },
+
+    updateRender: function (elapsedTime) {
 
         if (this.renderType != Phaser.HEADLESS)
         {
