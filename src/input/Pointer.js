@@ -695,9 +695,10 @@ Phaser.Pointer.prototype = {
     *
     * A click trampoline is a callback that is run on the DOM 'click' event; this is primarily
     * needed with certain browsers (ie. IE11) which restrict some actions like requestFullscreen
-    * to the DOM 'click' event and reject it for 'pointer*'' and 'mouseup*'' events.
+    * to the DOM 'click' event and reject it for 'pointer*' and 'mouse*' events.
     *
     * This is used internally by the ScaleManager; click trampoline usage is uncommon.
+    * Click trampolines can only be added to pointers that are currently down.
     *
     * @method Phaser.Pointer#addClickTrampoline
     * @protected
