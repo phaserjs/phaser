@@ -90,14 +90,14 @@ Phaser.Input = function (game) {
     this.scale = null;
 
     /**
-    * @property {number} maxPointers - The maximum number of Pointers allowed to be active at any one time. For lots of games it's useful to set this to 1.
-    * @default
+    * @property {integer} maxPointers - The maximum number of Pointers allowed to be active at any one time. A value of -1 is only limited by the total number of pointers. For lots of games it's useful to set this to 1.
+    * @default -1 (Limited by total pointers.)
     */
-    this.maxPointers = 10;
+    this.maxPointers = -1;
 
     /**
     * @property {number} currentPointers - The current number of active Pointers.
-    * @default
+    * @deprecated This is only updated when `maxPointers >= 0` and will generally be innacurate. Use `totalActivePointers` instead.
     */
     this.currentPointers = 0;
 
@@ -203,6 +203,15 @@ Phaser.Input = function (game) {
     * @property {Phaser.Pointer} pointer10 - A Pointer object.
     */
     this.pointer10 = null;
+
+    /**
+    * An array of non-mouse pointers that have been added to the game.
+    * The properties `pointer1..N` are aliases for `pointers[0..N-1]`.
+    * @property {Phaser.Pointer[]} pointers
+    * @public
+    * @readonly
+    */
+    this.pointers = [];
 
     /**
     * The most recently active Pointer object.
@@ -329,18 +338,26 @@ Phaser.Input.TOUCH_OVERRIDES_MOUSE = 1;
 */
 Phaser.Input.MOUSE_TOUCH_COMBINE = 2;
 
+/**
+* The maximum number of pointers that can be added. This excludes the mouse pointer.
+* @constant
+* @type {integer}
+*/
+Phaser.Input.MAX_POINTERS = 10;
+
 Phaser.Input.prototype = {
 
     /**
     * Starts the Input Manager running.
+    *
     * @method Phaser.Input#boot
     * @protected
     */
     boot: function () {
 
         this.mousePointer = new Phaser.Pointer(this.game, 0);
-        this.pointer1 = new Phaser.Pointer(this.game, 1);
-        this.pointer2 = new Phaser.Pointer(this.game, 2);
+        this.addPointer();
+        this.addPointer();
 
         this.mouse = new Phaser.Mouse(this.game);
         this.keyboard = new Phaser.Keyboard(this.game);
@@ -378,6 +395,7 @@ Phaser.Input.prototype = {
 
     /**
     * Stops all of the Input Managers from running.
+    *
     * @method Phaser.Input#destroy
     */
     destroy: function () {
@@ -394,6 +412,7 @@ Phaser.Input.prototype = {
 
     /**
     * Adds a callback that is fired every time the activePointer receives a DOM move event such as a mousemove or touchmove.
+    *
     * It will be called every time the activePointer moves, which in a multi-touch game can be a lot of times, so this is best
     * to only use if you've limited input to a single pointer (i.e. mouse or touch).
     * The callback is added to the Phaser.Input.moveCallbacks array and should be removed with Phaser.Input.deleteMoveCallback.
@@ -405,7 +424,7 @@ Phaser.Input.prototype = {
     */
     addMoveCallback: function (callback, context) {
 
-        return this.moveCallbacks.push( { callback: callback, context: context }) - 1;
+        return this.moveCallbacks.push({ callback: callback, context: context }) - 1;
 
     },
 
@@ -425,33 +444,28 @@ Phaser.Input.prototype = {
     },
 
     /**
-    * Add a new Pointer object to the Input Manager. By default Input creates 3 pointer objects: mousePointer, pointer1 and pointer2.
-    * If you need more then use this to create a new one, up to a maximum of 10.
+    * Add a new Pointer object to the Input Manager.
+    * By default Input creates 3 pointer objects: `mousePointer` (not include in part of general pointer pool), `pointer1` and `pointer2`.
+    * This method adds an additional pointer, up to a maximum of Phaser.Input.MAX_POINTERS (default of 10).
+    *
     * @method Phaser.Input#addPointer
-    * @return {Phaser.Pointer} A reference to the new Pointer object that was created.
+    * @return {Phaser.Pointer|null} The new Pointer object that was created; null if a new pointer could not be added.
     */
     addPointer: function () {
 
-        var next = 0;
-
-        for (var i = 10; i > 0; i--)
+        if (this.pointers.length >= Phaser.Input.MAX_POINTERS)
         {
-            if (this['pointer' + i] === null)
-            {
-                next = i;
-            }
-        }
-
-        if (next === 0)
-        {
-            console.warn("You can only have 10 Pointer objects");
+            console.warn("Phaser.Input.addPointer: only " + Phaser.Input.MAX_POINTERS + " pointer allowed");
             return null;
         }
-        else
-        {
-            this['pointer' + next] = new Phaser.Pointer(this.game, next);
-            return this['pointer' + next];
-        }
+
+        var id = this.pointers.length + 1;
+        var pointer = new Phaser.Pointer(this.game, id);
+
+        this.pointers.push(pointer);
+        this['pointer' + id] = pointer;
+
+        return pointer;
 
     },
 
@@ -479,28 +493,24 @@ Phaser.Input.prototype = {
 
         if (this.gamepad.active) { this.gamepad.update(); }
 
-        this.pointer1.update();
-        this.pointer2.update();
-
-        if (this.pointer3) { this.pointer3.update(); }
-        if (this.pointer4) { this.pointer4.update(); }
-        if (this.pointer5) { this.pointer5.update(); }
-        if (this.pointer6) { this.pointer6.update(); }
-        if (this.pointer7) { this.pointer7.update(); }
-        if (this.pointer8) { this.pointer8.update(); }
-        if (this.pointer9) { this.pointer9.update(); }
-        if (this.pointer10) { this.pointer10.update(); }
+        for (var i = 0; i < this.pointers.length; i++)
+        {
+            this.pointers[i].update();
+        }
 
         this._pollCounter = 0;
 
     },
 
     /**
-    * Reset all of the Pointers and Input states. The optional `hard` parameter will reset any events or callbacks that may be bound.
-    * Input.reset is called automatically during a State change or if a game loses focus / visibility. If you wish to control the reset
-    * directly yourself then set InputManager.resetLocked to `true`.
+    * Reset all of the Pointers and Input states.
+    *
+    * The optional `hard` parameter will reset any events or callbacks that may be bound.
+    * Input.reset is called automatically during a State change or if a game loses focus / visibility.
+    * To control control the reset manually set {@link Phaser.InputManager.resetLocked} to `true`.
     *
     * @method Phaser.Input#reset
+    * @public
     * @param {boolean} [hard=false] - A soft reset won't reset any events or callbacks that are bound. A hard reset will.
     */
     reset: function (hard) {
@@ -516,12 +526,9 @@ Phaser.Input.prototype = {
         this.mousePointer.reset();
         this.gamepad.reset();
 
-        for (var i = 1; i <= 10; i++)
+        for (var i = 0; i < this.pointers.length; i++)
         {
-            if (this['pointer' + i])
-            {
-                this['pointer' + i].reset();
-            }
+            this.pointers[i].reset();
         }
 
         this.currentPointers = 0;
@@ -550,6 +557,7 @@ Phaser.Input.prototype = {
 
     /**
     * Resets the speed and old position properties.
+    *
     * @method Phaser.Input#resetSpeed
     * @param {number} x - Sets the oldPosition.x value.
     * @param {number} y - Sets the oldPosition.y value.
@@ -562,34 +570,36 @@ Phaser.Input.prototype = {
     },
 
     /**
-    * Find the first free Pointer object and start it, passing in the event data. This is called automatically by Phaser.Touch and Phaser.MSPointer.
+    * Find the first free Pointer object and start it, passing in the event data.
+    * This is called automatically by Phaser.Touch and Phaser.MSPointer.
+    *
     * @method Phaser.Input#startPointer
+    * @protected
     * @param {Any} event - The event data from the Touch event.
     * @return {Phaser.Pointer} The Pointer object that was started or null if no Pointer object is available.
     */
     startPointer: function (event) {
 
-        if (this.maxPointers < 10 && this.totalActivePointers == this.maxPointers)
+        if (this.maxPointers >= 0 && this.countActivePointers(this.maxPointers) >= this.maxPointers)
         {
             return null;
         }
 
-        if (this.pointer1.active === false)
+        if (!this.pointer1.active)
         {
             return this.pointer1.start(event);
         }
-        else if (this.pointer2.active === false)
+        if (!this.pointer2.active)
         {
             return this.pointer2.start(event);
         }
-        else
+
+        for (var i = 2; i < this.pointers.length; i++)
         {
-            for (var i = 3; i <= 10; i++)
+            var pointer = this.pointers[i];
+            if (!pointer.active)
             {
-                if (this['pointer' + i] && this['pointer' + i].active === false)
-                {
-                    return this['pointer' + i].start(event);
-                }
+                return pointer.start(event);
             }
         }
 
@@ -598,29 +608,31 @@ Phaser.Input.prototype = {
     },
 
     /**
-    * Updates the matching Pointer object, passing in the event data. This is called automatically and should not normally need to be invoked.
+    * Updates the matching Pointer object, passing in the event data.
+    * This is called automatically and should not normally need to be invoked.
+    *
     * @method Phaser.Input#updatePointer
+    * @protected
     * @param {Any} event - The event data from the Touch event.
-    * @return {Phaser.Pointer} The Pointer object that was updated or null if no Pointer object is available.
+    * @return {Phaser.Pointer} The Pointer object that was updated; null if no pointer was updated.
     */
     updatePointer: function (event) {
 
-        if (this.pointer1.active && this.pointer1.identifier == event.identifier)
+        if (this.pointer1.active && this.pointer1.identifier === event.identifier)
         {
             return this.pointer1.move(event);
         }
-        else if (this.pointer2.active && this.pointer2.identifier == event.identifier)
+        if (this.pointer2.active && this.pointer2.identifier === event.identifier)
         {
             return this.pointer2.move(event);
         }
-        else
+
+        for (var i = 2; i < this.pointers.length; i++)
         {
-            for (var i = 3; i <= 10; i++)
+            var pointer = this.pointers[i];
+            if (pointer.active && pointer.identifier === event.identifier)
             {
-                if (this['pointer' + i] && this['pointer' + i].active && this['pointer' + i].identifier == event.identifier)
-                {
-                    return this['pointer' + i].move(event);
-                }
+                return pointer.move(event);
             }
         }
 
@@ -630,28 +642,29 @@ Phaser.Input.prototype = {
 
     /**
     * Stops the matching Pointer object, passing in the event data.
+    *
     * @method Phaser.Input#stopPointer
+    * @protected
     * @param {Any} event - The event data from the Touch event.
     * @return {Phaser.Pointer} The Pointer object that was stopped or null if no Pointer object is available.
     */
     stopPointer: function (event) {
 
-        if (this.pointer1.active && this.pointer1.identifier == event.identifier)
+        if (this.pointer1.active && this.pointer1.identifier === event.identifier)
         {
             return this.pointer1.stop(event);
         }
-        else if (this.pointer2.active && this.pointer2.identifier == event.identifier)
+        if (this.pointer2.active && this.pointer2.identifier === event.identifier)
         {
             return this.pointer2.stop(event);
         }
-        else
+
+        for (var i = 2; i < this.pointers.length; i++)
         {
-            for (var i = 3; i <= 10; i++)
+            var pointer = this.pointers[i];
+            if (pointer.active && pointer.identifier === event.identifier)
             {
-                if (this['pointer' + i] && this['pointer' + i].active && this['pointer' + i].identifier == event.identifier)
-                {
-                    return this['pointer' + i].stop(event);
-                }
+                return pointer.stop(event);
             }
         }
 
@@ -660,31 +673,51 @@ Phaser.Input.prototype = {
     },
 
     /**
-    * Get the next Pointer object whos active property matches the given state
+    * Returns the total number of active pointers, not exceeding the specified limit
+    *
+    * @name Phaser.Input#countActivePointers
+    * @private
+    * @property {integer} [limit=(max pointers)] - Stop counting after this.
+    * @return {integer} The number of active pointers, or limit - whichever is less.
+    */
+    countActivePointers: function (limit) {
+
+        if (typeof limit === 'undefined') { limit = this.pointers.length; }
+
+        var count = limit;
+        for (var i = 0; i < this.pointers.length && count > 0; i++)
+        {
+            var pointer = this.pointers[i];
+            if (pointer.active)
+            {
+                count--;
+            }
+        }
+
+        // For backwards compatibility with side-effect in totalActivePointers.
+        this.currentPointers = (limit - count);
+
+        return (limit - count);
+
+    },
+
+    /**
+    * Get the first Pointer with the given active state.
+    *
     * @method Phaser.Input#getPointer
-    * @param {boolean} state - The state the Pointer should be in (false for inactive, true for active).
+    * @param {boolean} [isActive=false] - The state the Pointer should be in - active or innactive?
     * @return {Phaser.Pointer} A Pointer object or null if no Pointer object matches the requested state.
     */
-    getPointer: function (state) {
+    getPointer: function (isActive) {
 
-        state = state || false;
+        if (typeof isActive === 'undefined') { isActive = false; }
 
-        if (this.pointer1.active == state)
+        for (var i = 0; i < this.pointers.length; i++)
         {
-            return this.pointer1;
-        }
-        else if (this.pointer2.active == state)
-        {
-            return this.pointer2;
-        }
-        else
-        {
-            for (var i = 3; i <= 10; i++)
+            var pointer = this.pointers[i];
+            if (pointer.active === isActive)
             {
-                if (this['pointer' + i] && this['pointer' + i].active == state)
-                {
-                    return this['pointer' + i];
-                }
+                return pointer;
             }
         }
 
@@ -694,6 +727,7 @@ Phaser.Input.prototype = {
 
     /**
     * Get the Pointer object whos `identifier` property matches the given identifier value.
+    *
     * The identifier property is not set until the Pointer has been used at least once, as its populated by the DOM event.
     * Also it can change every time you press the pointer down, and is not fixed once set.
     * Note: Not all browsers set the identifier property and it's not part of the W3C spec, so you may need getPointerFromId instead.
@@ -704,22 +738,12 @@ Phaser.Input.prototype = {
     */
     getPointerFromIdentifier: function (identifier) {
 
-        if (this.pointer1.identifier === identifier)
+        for (var i = 0; i < this.pointers.length; i++)
         {
-            return this.pointer1;
-        }
-        else if (this.pointer2.identifier === identifier)
-        {
-            return this.pointer2;
-        }
-        else
-        {
-            for (var i = 3; i <= 10; i++)
+            var pointer = this.pointers[i];
+            if (pointer.identifier === identifier)
             {
-                if (this['pointer' + i] && this['pointer' + i].identifier === identifier)
-                {
-                    return this['pointer' + i];
-                }
+                return pointer;
             }
         }
 
@@ -729,31 +753,22 @@ Phaser.Input.prototype = {
 
     /**
     * Get the Pointer object whos `pointerId` property matches the given value.
+    *
     * The pointerId property is not set until the Pointer has been used at least once, as its populated by the DOM event.
     * Also it can change every time you press the pointer down if the browser recycles it.
     *
     * @method Phaser.Input#getPointerFromId
-    * @param {number} pointerId - The Pointer.pointerId value to search for.
+    * @param {number} pointerId - The `pointerId` (not 'id') value to search for.
     * @return {Phaser.Pointer} A Pointer object or null if no Pointer object matches the requested identifier.
     */
     getPointerFromId: function (pointerId) {
 
-        if (this.pointer1.pointerId === pointerId)
+        for (var i = 0; i < this.pointers.length; i++)
         {
-            return this.pointer1;
-        }
-        else if (this.pointer2.pointerId === pointerId)
-        {
-            return this.pointer2;
-        }
-        else
-        {
-            for (var i = 3; i <= 10; i++)
+            var pointer = this.pointers[i];
+            if (pointer.pointerId === pointerId)
             {
-                if (this['pointer' + i] && this['pointer' + i].pointerId === pointerId)
-                {
-                    return this['pointer' + i];
-                }
+                return pointer;
             }
         }
 
@@ -763,6 +778,7 @@ Phaser.Input.prototype = {
 
     /**
     * This will return the local coordinates of the specified displayObject based on the given Pointer.
+    *
     * @method Phaser.Input#getLocalPosition
     * @param {Phaser.Sprite|Phaser.Image} displayObject - The DisplayObject to get the local coordinates for.
     * @param {Phaser.Pointer} pointer - The Pointer to use in the check against the displayObject.
@@ -874,9 +890,10 @@ Phaser.Input.prototype = {
 Phaser.Input.prototype.constructor = Phaser.Input;
 
 /**
-* The X coordinate of the most recently active pointer. This value takes game scaling into account automatically. See Pointer.screenX/clientX for source values.
+* The X coordinate of the most recently active pointer.
+* This value takes game scaling into account automatically. See Pointer.screenX/clientX for source values.
 * @name Phaser.Input#x
-* @property {number} x - The X coordinate of the most recently active pointer.
+* @property {number} x
 */
 Object.defineProperty(Phaser.Input.prototype, "x", {
 
@@ -891,9 +908,10 @@ Object.defineProperty(Phaser.Input.prototype, "x", {
 });
 
 /**
-* The Y coordinate of the most recently active pointer. This value takes game scaling into account automatically. See Pointer.screenY/clientY for source values.
+* The Y coordinate of the most recently active pointer.
+* This value takes game scaling into account automatically. See Pointer.screenY/clientY for source values.
 * @name Phaser.Input#y
-* @property {number} y - The Y coordinate of the most recently active pointer.
+* @property {number} y
 */
 Object.defineProperty(Phaser.Input.prototype, "y", {
 
@@ -908,8 +926,9 @@ Object.defineProperty(Phaser.Input.prototype, "y", {
 });
 
 /**
+* True if the Input is currently poll rate locked.
 * @name Phaser.Input#pollLocked
-* @property {boolean} pollLocked - True if the Input is currently poll rate locked.
+* @property {boolean} pollLocked
 * @readonly
 */
 Object.defineProperty(Phaser.Input.prototype, "pollLocked", {
@@ -921,41 +940,29 @@ Object.defineProperty(Phaser.Input.prototype, "pollLocked", {
 });
 
 /**
-* The total number of inactive Pointers
+* The total number of inactive Pointers.
 * @name Phaser.Input#totalInactivePointers
-* @property {number} totalInactivePointers - The total number of inactive Pointers.
+* @property {number} totalInactivePointers
 * @readonly
 */
 Object.defineProperty(Phaser.Input.prototype, "totalInactivePointers", {
 
     get: function () {
-        return 10 - this.currentPointers;
+        return this.pointers.length - this.countActivePointers();
     }
 
 });
 
 /**
-* The total number of active Pointers
+* The total number of active Pointers, not counting the mouse pointer.
 * @name Phaser.Input#totalActivePointers
-* @property {number} totalActivePointers - The total number of active Pointers.
+* @property {integers} totalActivePointers
 * @readonly
 */
 Object.defineProperty(Phaser.Input.prototype, "totalActivePointers", {
 
     get: function () {
-
-        this.currentPointers = 0;
-
-        for (var i = 1; i <= 10; i++)
-        {
-            if (this['pointer' + i] && this['pointer' + i].active)
-            {
-                this.currentPointers++;
-            }
-        }
-
-        return this.currentPointers;
-
+        return this.countActivePointers();
     }
 
 });
@@ -964,6 +971,7 @@ Object.defineProperty(Phaser.Input.prototype, "totalActivePointers", {
 * The world X coordinate of the most recently active pointer.
 * @name Phaser.Input#worldX
 * @property {number} worldX - The world X coordinate of the most recently active pointer.
+* @readonly
 */
 Object.defineProperty(Phaser.Input.prototype, "worldX", {
 
@@ -977,6 +985,7 @@ Object.defineProperty(Phaser.Input.prototype, "worldX", {
 * The world Y coordinate of the most recently active pointer.
 * @name Phaser.Input#worldY
 * @property {number} worldY - The world Y coordinate of the most recently active pointer.
+* @readonly
 */
 Object.defineProperty(Phaser.Input.prototype, "worldY", {
 
