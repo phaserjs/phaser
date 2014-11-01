@@ -1267,8 +1267,9 @@ Phaser.ScaleManager.prototype = {
 
         if (!this.supportsFullScreen)
         {
-            setTimeout(function (scaleManager) {
-                scaleManager.fullScreenError();
+            var _this = this;
+            setTimeout(function () {
+                _this.fullScreenError();
             }, 10, this);
             return;
         }
@@ -1426,11 +1427,8 @@ Phaser.ScaleManager.prototype = {
 
         this.event = event;
 
-        if (typeof event === 'undefined' || event.target === this.fullScreenTarget)
-        {
-            console.warn("Phaser.ScaleManager: requestFullscreen failed or device does not support the Fullscreen API");
-            this.fullScreenFailed.dispatch();
-        }
+        console.warn("Phaser.ScaleManager: requestFullscreen failed or device does not support the Fullscreen API");
+        this.fullScreenFailed.dispatch();
 
     },
 
