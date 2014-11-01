@@ -1247,18 +1247,19 @@ Phaser.ScaleManager.prototype = {
     },
 
     /**
-    * Tries to enter the browser into full screen mode.
+    * Tries to enter the browser into full screen mode - this _must_ be called from a user input Pointer or Mouse event.
     *
     * Fullscreen mode needs to be supported by the browser. It is _not_ the same as setting the game size to fill the browser window.
     *
     * The `fullScreenDailed` signal will be dispatched if the fullscreen change request failed or the game does not support the Fullscreen API.
-    * 
+    *
     * @method Phaser.ScaleManager#startFullScreen
     * @public
     * @param {boolean} [antialias] - Changes the anti-alias feature of the canvas before jumping in to full screen (false = retain pixel art, true = smooth art). If not specified then no change is made. Only works in CANVAS mode.
+    * @param {boolean} [allowTrampoline=undefined] - Internal argument. If false click trampolining is suppressed.
     * @return {boolean} Returns true if the device supports fullscreen mode and fullscreen mode was attempted to be started. (It might not actually start, wait for the signals.)
     */
-    startFullScreen: function (antialias) {
+    startFullScreen: function (antialias, allowTrampoline) {
 
         if (this.isFullScreen)
         {
@@ -1267,10 +1268,23 @@ Phaser.ScaleManager.prototype = {
 
         if (!this.supportsFullScreen)
         {
+            // Error is called in timeout to emulate the real fullscreenerror event better
             var _this = this;
             setTimeout(function () {
                 _this.fullScreenError();
             }, 10, this);
+            return;
+        }
+
+        // IE11 clicks trigger MSPointer which is not the mousePointer
+        // (The extra check for addClickTrampoline is to not break if that is not in..)
+        var input = this.game.input;
+        if (input.activePointer !== input.mousePointer &&
+            input.activePointer.addClickTrampoline &&
+            (allowTrampoline || allowTrampoline === undefined))
+        {
+            input.activePointer.addClickTrampoline(
+                "startFullScreen", this.startFullScreen, this, [antialias, false]);
             return;
         }
 
