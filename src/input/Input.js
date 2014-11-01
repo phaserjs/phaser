@@ -374,6 +374,13 @@ Phaser.Input.prototype = {
         this.mspointer.start();
         this.mousePointer.active = true;
 
+        var _this = this;
+        this._onClickTrampoline = function (event) {
+            _this.onClickTrampoline(event);
+        };
+
+        this.game.canvas.addEventListener('click', this._onClickTrampoline, false);
+
     },
 
     /**
@@ -389,6 +396,8 @@ Phaser.Input.prototype = {
         this.gamepad.stop();
 
         this.moveCallbacks = [];
+
+        this.game.canvas.removeEventListener('click', this._onClickTrampoline);
 
     },
 
@@ -867,6 +876,21 @@ Phaser.Input.prototype = {
         }
 
         return false;
+    },
+
+    /**
+    * Used for click trampolines. See {@link Phaser.Pointer.addClickTrampoline}.
+    *
+    * @method Phaser.Mouse#onMouseDown
+    * @private
+    * @param {MouseEvent} event - The native event from the browser. This gets stored in Mouse.event.
+    */
+    onClickTrampoline: function () {
+
+        // It might not always be the active pointer, but this does work on
+        // Desktop browsers (read: IE) with Mouse or MSPointer input.
+        this.activePointer.processClickTrampolines();
+
     }
 
 };
