@@ -716,7 +716,7 @@ Phaser.Pointer.prototype = {
 
         var trampolines = (this._clickTrampolines = this._clickTrampolines || []);
 
-        for (var i = 0; i < trampolines.length; i++) 
+        for (var i = 0; i < trampolines.length; i++)
         {
             if (trampolines[i].name === name)
             {
