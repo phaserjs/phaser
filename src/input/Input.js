@@ -882,9 +882,8 @@ Phaser.Input.prototype = {
     /**
     * Used for click trampolines. See {@link Phaser.Pointer.addClickTrampoline}.
     *
-    * @method Phaser.Mouse#onMouseDown
+    * @method Phaser.Input#onClickTrampoline
     * @private
-    * @param {MouseEvent} event - The native event from the browser. This gets stored in Mouse.event.
     */
     onClickTrampoline: function () {
 
