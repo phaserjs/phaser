@@ -264,6 +264,13 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     */
     this._codePaused = false;
 
+    /**
+    * @property {number} _deltaTime - accumulate elapsed time until a logic update is due
+    * @private
+    */
+    this._deltaTime = 0;
+
+
     this._width = 800;
     this._height = 600;
 
@@ -646,8 +653,20 @@ Phaser.Game.prototype = {
 
         this.time.update(time);
 
-        this.updateLogic(1.0 / this.time.desiredFps);
-        this.updateRender(this.time.elapsed);
+        // accumulate time until the _slowStep threshold is met or exceeded
+        this._deltaTime += Math.min(1000, this.time.elapsed);
+
+        // call the game update logic multiple times if necessary to "catch up" with dropped frames
+        var step = 1000.0 / this.time.desiredFps;
+        var slowStep = this.time.slowMotion * step;
+        while(this._deltaTime >= slowStep)
+        {
+            this._deltaTime -= slowStep;
+            this.updateLogic(1.0 / this.time.desiredFps);
+        }
+
+        // call the game render update exactly once every frame
+        this.updateRender(this._deltaTime / slowStep);
 
     },
 
@@ -674,10 +693,9 @@ Phaser.Game.prototype = {
 
             this.state.update();
             this.stage.update();
-            this.tweens.update();
             this.sound.update();
             this.input.update();
-            this.physics.update();
+            this.physics.update(timeStep);
             this.particles.update();
             this.plugins.update();
 
@@ -697,6 +715,10 @@ Phaser.Game.prototype = {
     },
 
     updateRender: function (elapsedTime) {
+
+        // update tweens once every frame along with the render logic (to keep them smooth in slowMotion scenarios)
+        if (!this._paused && !this.pendingStep)
+            this.tweens.update(elapsedTime);
 
         if (this.renderType != Phaser.HEADLESS)
         {

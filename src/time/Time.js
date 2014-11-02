@@ -56,6 +56,12 @@ Phaser.Time = function (game) {
     this.desiredFps = 60;
 
     /**
+     * @property {number} slowMotion = 1.0 - Scaling factor to make the game move smoothly in slow motion (1.0 = normal speed, 2.0 = half speed)
+     * @type {Number}
+     */
+    this.slowMotion = 1.0;
+
+    /**
     * @property {boolean} advancedTiming - If true Phaser.Time will perform advanced profiling including the fps rate, fps min/max and msMin and msMax.
     * @default
     */
