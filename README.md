@@ -94,6 +94,7 @@ Version 2.1.4 - "Bethal" - in development
 * Phaser.Polygon has been refactored to address some Pixi v2 migration issues (thanks @pnstickne for the original implementation #1267)
 * Polygon.area is now only calculated when the Polygon points list is modified, rather than on every call.
 * Phaser.Polygon can now accept the points list in a variety of formats: Arrays of Points, numbers, objects with public x/y properties or any combination of, or as a parameter list (thanks @pnstickne for the original implementation #1267)
+* All of the Input classes now use the more consistent `enabled` property instead of `disabled`. I.e. you can now check `if (input.mouse.enabled)` rather than `if (!input.mouse.disabled)`. The disabled property has been moved to a getter for backwards compatibility but is deprecated and will be removed in a future version (thanks @pnstickne #1257)
 
 ### Bug Fixes
 
