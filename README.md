@@ -95,6 +95,13 @@ Version 2.1.4 - "Bethal" - in development
 * Polygon.area is now only calculated when the Polygon points list is modified, rather than on every call.
 * Phaser.Polygon can now accept the points list in a variety of formats: Arrays of Points, numbers, objects with public x/y properties or any combination of, or as a parameter list (thanks @pnstickne for the original implementation #1267)
 * All of the Input classes now use the more consistent `enabled` property instead of `disabled`. I.e. you can now check `if (input.mouse.enabled)` rather than `if (!input.mouse.disabled)`. The disabled property has been moved to a getter for backwards compatibility but is deprecated and will be removed in a future version (thanks @pnstickne #1257)
+* The Input class has been given a minor refactor to tidy things up. Specifically:
+    * pointerN are aliases to backed pointers[N-1] array. This simplifies (and increases the efficiency of) looping through all the pointers when applicable; also eliminates pointer-existance checks Removes various hard-coded limits (added MAX_POINTERS); changed maxPointers default
+    * Removed some special-casing from cases where it did not matter
+    * Removed === false/true, == usage for consistency, changed missing value check to typeof, etc.
+    * Updated documentation for specificty; added @public\@protected
+    * @deprecated currentPointers due to odd set pattern; totalCurrentPointers is more appropriate.
+(thanks @pnstickne #1283)
 
 ### Bug Fixes
 
