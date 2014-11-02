@@ -106,6 +106,7 @@ Version 2.1.4 - "Bethal" - in development
 * Polygon.contains now correctly calculates the result  (thanks @pnstickne @BurnedToast #1267)
 * Setting Key.enabled = false while it is down did not reset the isDown state (thanks @pnstickne #1190 #1271)
 * The Gamepad.addCallbacks context parameter was never actually remembered, causing the callbacks to run in the wrong context (thanks @englercj #1285)
+* Animation.setFrame used the wrong frames array if `useLocalFrameIndex` was `false` and a numeric frame ID was given (thanks @Skeptron #1284)
 
 
 For details about changes made in previous versions of Phaser see the full Change Log at https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md
