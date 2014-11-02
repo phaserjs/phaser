@@ -136,7 +136,8 @@ Phaser.Gamepad = function (game) {
 Phaser.Gamepad.prototype = {
 
     /**
-    * Add callbacks to the main Gamepad handler to handle connect/disconnect/button down/button up/axis change/float value buttons
+    * Add callbacks to the main Gamepad handler to handle connect/disconnect/button down/button up/axis change/float value buttons.
+    * 
     * @method Phaser.Gamepad#addCallbacks
     * @param {Object} context - The context under which the callbacks are run.
     * @param {Object} callbacks - Object that takes six different callback methods:
@@ -152,6 +153,7 @@ Phaser.Gamepad.prototype = {
             this.onUpCallback = (typeof callbacks.onUp === 'function') ? callbacks.onUp : this.onUpCallback;
             this.onAxisCallback = (typeof callbacks.onAxis === 'function') ? callbacks.onAxis : this.onAxisCallback;
             this.onFloatCallback = (typeof callbacks.onFloat === 'function') ? callbacks.onFloat : this.onFloatCallback;
+            this.callbackContext = context;
         }
 
     },
