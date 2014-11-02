@@ -101,7 +101,6 @@ Version 2.1.4 - "Bethal" - in development
 * XML files weren't being added to the URL map.
 * Cache._resolveURL was causing a Sound double-load in Firefox and causing errors (thanks @domonyiv #1253)
 * Loader.json was using the wrong context in IE9 with XDomainRequest calls (thanks @pnstickne #1258)
-* Polygon.contains was toggling the return value on each valid hit (thanks @Singularetantum #1265 #1266)
 * Text.updateText was incorrectly increasing the size of the texture each time it was called (thanks @spayton #1261)
 * Polygon.contains now correctly calculates the result  (thanks @pnstickne @BurnedToast #1267)
 * Setting Key.enabled = false while it is down did not reset the isDown state (thanks @pnstickne #1190 #1271)
