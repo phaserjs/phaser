@@ -53,12 +53,13 @@ Phaser.Input = function (game) {
     this.pollRate = 0;
 
     /**
-    * You can disable all Input by setting Input.disabled = true. While set all new input related events will be ignored.
-    * If you need to disable just one type of input; for example mouse; use Input.mouse.disabled = true instead
-    * @property {boolean} disabled
+    * When enabled, input (eg. Keyboard, Mouse, Touch) will be processed - as long as the individual sources are enabled themselves.
+    *
+    * When not enabled, _all_ input sources are ignored. To disable just one type of input; for example, the Mouse, use `input.mouse.enabled = false`.
+    * @property {boolean} enabled
     * @default
     */
-    this.disabled = false;
+    this.enabled = true;
 
     /**
     * @property {number} multiInputOverride - Controls the expected behaviour when using a mouse and touch together on a multi-input device.
@@ -982,6 +983,25 @@ Object.defineProperty(Phaser.Input.prototype, "worldY", {
 
     get: function () {
         return this.game.camera.view.y + this.y;
+    }
+
+});
+
+/**
+* _All_ input sources (eg. Mouse, Keyboard, Touch) are ignored when Input is disabled.
+* To disable just one type of input; for example, the Mouse, use `input.mouse.enabled = false`.
+* @property {boolean} disabled
+* @memberof Phaser.Input
+* @default false
+* @deprecated Use {@link Phaser.Input#enabled} instead
+*/
+Object.defineProperty(Phaser.Input.prototype, "disabled", {
+
+    get: function () {
+        return !this.enabled;
+    },
+    set: function (value) {
+        this.enabled = !value;
     }
 
 });

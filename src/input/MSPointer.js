@@ -5,7 +5,8 @@
 */
 
 /**
-* The MSPointer class handles touch interactions with the game and the resulting Pointer objects.
+* The MSPointer class handles Microsoft touch interactions with the game and the resulting Pointer objects.
+*
 * It will work only in Internet Explorer 10 and Windows Store or Windows Phone 8 apps using JavaScript.
 * http://msdn.microsoft.com/en-us/library/ie/hh673557(v=vs.85).aspx
 *
@@ -26,10 +27,11 @@ Phaser.MSPointer = function (game) {
     this.callbackContext = this.game;
 
     /**
-    * You can disable all Input by setting disabled = true. While set all new input related events will be ignored.
-    * @property {boolean} disabled
+    * MSPointer input will only be processed if enabled.
+    * @property {boolean} enabled
+    * @default
     */
-    this.disabled = false;
+    this.enabled = true;
 
     /**
     * @property {function} _onMSPointerDown - Internal function to handle MSPointer events.
@@ -104,7 +106,7 @@ Phaser.MSPointer.prototype = {
     */
     onPointerDown: function (event) {
 
-        if (this.game.input.disabled || this.disabled)
+        if (!this.game.input.enabled || !this.enabled)
         {
             return;
         }
@@ -123,7 +125,7 @@ Phaser.MSPointer.prototype = {
     */
     onPointerMove: function (event) {
 
-        if (this.game.input.disabled || this.disabled)
+        if (!this.game.input.enabled || !this.enabled)
         {
             return;
         }
@@ -142,7 +144,7 @@ Phaser.MSPointer.prototype = {
     */
     onPointerUp: function (event) {
 
-        if (this.game.input.disabled || this.disabled)
+        if (!this.game.input.enabled || !this.enabled)
         {
             return;
         }
@@ -173,3 +175,21 @@ Phaser.MSPointer.prototype = {
 };
 
 Phaser.MSPointer.prototype.constructor = Phaser.MSPointer;
+
+/**
+* If disabled all MSPointer input will be ignored.
+* @property {boolean} disabled
+* @memberof Phaser.MSPointer
+* @default false
+* @deprecated Use {@link Phaser.MSPointer#enabled} instead
+*/
+Object.defineProperty(Phaser.MSPointer.prototype, "disabled", {
+
+    get: function () {
+        return !this.enabled;
+    },
+    set: function (value) {
+        this.enabled = !value;
+    }
+
+});

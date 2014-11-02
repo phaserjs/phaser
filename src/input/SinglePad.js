@@ -168,7 +168,7 @@ Phaser.SinglePad.prototype = {
     */
     pollStatus: function () {
 
-        if (!this.connected || this.game.input.disabled || this.game.input.gamepad.disabled || (this._rawPad.timestamp && (this._rawPad.timestamp === this._prevTimestamp)))
+        if (!this.connected || !this.game.input.enabled || !this.game.input.gamepad.enabled || (this._rawPad.timestamp && (this._rawPad.timestamp === this._prevTimestamp)))
         {
             return;
         }
