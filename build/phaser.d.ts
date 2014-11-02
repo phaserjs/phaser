@@ -1,4 +1,4 @@
-// Type definitions for PIXI 2.0.0 dev 2014-10-26
+// Type definitions for PIXI 2.0.0 dev Reviewed: 2014-10-31
 // Project: https://github.com/GoodBoyDigital/pixi.js/
 
 declare module PIXI {
@@ -1357,7 +1357,7 @@ declare module PIXI.PolyK {
     export function Triangulate(p: number[]): number[];
 }
 
-// Type definitions for Phaser 2.1.4 dev 2014-10-29
+// Type definitions for Phaser 2.1.4 dev Reviewed 2014-11-02
 // Project: https://github.com/photonstorm/phaser
 
 declare class Phaser {
@@ -2658,6 +2658,7 @@ declare module Phaser {
         active: boolean;
         callbackContext: any;
         disabled: boolean;
+        enabled: boolean;
         game: Phaser.Game;
         onAxisCallBack: Function;
         onConnectCallback: Function;
@@ -2877,6 +2878,7 @@ declare module Phaser {
 
         constructor(game: Phaser.Game);
 
+        static MAX_POINTERS: number;
         static MOUSE_OVERRIDES_TOUCH: number;
         static MOUSE_TOUCH_COMBINE: number;
         static TOUCH_OVERRIDES_MOUSE: number;
@@ -2885,6 +2887,7 @@ declare module Phaser {
         circle: Phaser.Circle;
         currentPointers: number;
         disabled: boolean;
+        enabled: boolean;
         doubleTapRate: number;
         game: Phaser.Game;
         gamepad: Phaser.Gamepad;
@@ -2920,6 +2923,7 @@ declare module Phaser {
         pollLocked: boolean;
         pollRate: number;
         position: Phaser.Point;
+        pointer: Phaser.Pointer[];
         recordLimit: number;
         recordPointerHistory: boolean;
         recordRate: number;
@@ -2938,10 +2942,11 @@ declare module Phaser {
         addPointer(): Phaser.Pointer;
         addMoveCallback(callback: Function, context: any): number;
         boot(): void;
+        countActivePointers(limit?: number): number;
         deleteMoveCallback(index: number): void;
         destroy(): void;
         getLocalPosition(displayObject: any, pointer: Phaser.Pointer): Phaser.Point;
-        getPointer(state: boolean): Phaser.Pointer;
+        getPointer(isActive?: boolean): Phaser.Pointer;
         getPointerFromId(pointerID: number): Phaser.Pointer;
         getPointerFromIdentifier(identifier: number): Phaser.Pointer;
         hitTest(displayObject: any, pointer: Phaser.Pointer, localPoint: Phaser.Point): void;
@@ -3161,6 +3166,7 @@ declare module Phaser {
 
         callbackContext: any;
         disabled: boolean;
+        enabled: boolean;
         event: any;
         game: Phaser.Game;
         lastChar: string;
@@ -3409,6 +3415,7 @@ declare module Phaser {
         callbackContext: any;
         capture: boolean;
         disabled: boolean;
+        enabled: boolean;
         event: MouseEvent;
         game: Phaser.Game;
         locked: boolean;
@@ -3443,6 +3450,7 @@ declare module Phaser {
 
         callbackContext: any;
         disabled: boolean;
+        enabled: boolean;
         game: Phaser.Game;
 
         onPointerDown(event: MSPointerEvent): void;
@@ -3576,7 +3584,6 @@ declare module Phaser {
         arcade: Phaser.Physics.Arcade;
         config: any;
         game: Phaser.Game;
-        ninja: Phaser.Physics.Ninja;
         p2: Phaser.Physics.P2;
 
         clear(): void;
@@ -3735,179 +3742,6 @@ declare module Phaser {
             }
         }
 
-        class Ninja {
-
-            constructor(game: Phaser.Game);
-
-            game: Phaser.Game
-            gravity: number;
-            bounds: Phaser.Rectangle;
-            maxObjects: number;
-            maxLevels: number;
-            quadTree: Phaser.QuadTree;
-            time: Phaser.Time;
-
-            clearTilemapLayerBodies(map: Phaser.Tilemap, layer: any): void;
-            collide(object1: any, object2: any, collideCallback?: Function, processCallback?: Function, callbackContext?: any): boolean;
-            convertTilemap(map: Phaser.Tilemap, layer?: any, slopeMap?: any): Phaser.Physics.Ninja.Tile[];
-            enableAABB(object: any, children?: boolean): void;
-            enableCircle(object: any, radius: number, children?: boolean): void;
-            enableTile(object: any, id: number, children?: boolean): void;
-            enable(object: any, type?: number, id?: number, radius?: number, children?: boolean): void;
-            enableBody(object: any, type?: number, id?: number, radius?: number): void;
-            overlap(object1: any, object2: any, overlapCallback?: Function, processCallback?: Function, callbackContext?: any): boolean;
-            separate(body1: Phaser.Physics.Ninja.Body, body2: Phaser.Physics.Ninja.Body, processCallback?: Function, callbackContext?: any, overlapOnly?: boolean): boolean;
-            setBounds(x: number, y: number, width: number, height: number): void;
-            setBoundsToWorld(): void;
-        }
-
-        module Ninja {
-
-            class Body {
-
-                constructor(system: Phaser.Physics.Ninja, sprite: Phaser.Sprite, type?: number, id?: number, radius?: number, x?: number, y?: number, width?: number, height?: number);
-
-                aabb: Phaser.Physics.Ninja.AABB;
-                angle: number;
-                bottom: number;
-                bounce: number;
-                checkCollision: Phaser.Physics.Arcade.FaceChoices;
-                circle: Phaser.Physics.Ninja.Circle;
-                collideWorldBounds: boolean;
-                drag: number;
-                facing: number;
-                friction: number;
-                game: Phaser.Game;
-                gravityScale: number;
-                height: number;
-                immovable: boolean;
-                maxSpeed: number;
-                right: number;
-                sprite: Phaser.Sprite;
-                system: Phaser.Physics.Ninja;
-                tile: Phaser.Physics.Ninja.Tile;
-                touching: Phaser.Physics.Arcade.FaceChoices;
-                type: number;
-                shape: any;
-                speed: number;
-                velocity: Phaser.Point;
-                wasTouching: Phaser.Physics.Arcade.FaceChoices;
-                width: number;
-                x: number;
-                y: number;
-
-                deltaAbsX(): number;
-                deltaAbsY(): number;
-                deltaX(): number;
-                deltaY(): number;
-                destroy(): void;
-                setZeroVelocity(): void;
-                moveTo(speed: number, angle: number): void;
-                moveFrom(speed: number, angle: number): void;
-                moveLeft(speed: number): void;
-                moveRight(speed: number): void;
-                moveUp(speed: number): void;
-                moveDown(speed: number): void;
-                poseUpdate(): void;
-                preUpdate(): void;
-                render(context: any, body: Phaser.Physics.Ninja.Body, color?: string, filled?: boolean): void;
-                reset(): void;
-
-            }
-
-            class AABB {
-
-                constructor(body: Phaser.Physics.Ninja.Body, x: number, y: number, width: number, height: number);
-
-                static COL_NONE: number;
-                static COL_AXIS: number;
-                static COL_OTHER: number;
-
-                aabbTileProjections: any;
-                body: Phaser.Physics.Ninja.Body;
-                height: number;
-                oldPos: Phaser.Point;
-                pos: Phaser.Point;
-                system: Phaser.Physics.Ninja;
-                width: number;
-                velocity: Phaser.Point;
-                xw: number;
-                yw: number;
-
-                collideWorldBounds(): void;
-                collideAABBVsAABB(aabb: Phaser.Physics.Ninja.AABB): boolean;
-                collideAABBVsTile(tile: Phaser.Physics.Ninja.Tile): boolean;
-                destroy(): void;
-                integrate(): void;
-                render(context: any, xOffset: number, yOffset: number, color: string, filled: boolean): void;
-                reportCollisionVsWorld(px: number, py: number, dx: number, dy: number, obj: any): void;
-                reportCollisionVsBody(px: number, py: number, dx: number, dy: number, obj: any): void;
-                resolveTile(x: number, y: number, body: Phaser.Physics.Ninja.AABB, tile: Phaser.Physics.Ninja.Tile): boolean;
-                reverse(): void;
-
-            }
-
-            class Circle {
-
-                constructor(body: Phaser.Physics.Ninja.Body, x: number, y: number, radius: number);
-
-                COL_NONE: number;
-                COL_AXIS: number;
-                COL_OTHER: number;
-
-                body: Phaser.Physics.Ninja.Body;
-                circleTileProjections: any;
-                oldPos: Phaser.Point;
-                height: number;
-                pos: Phaser.Point;
-                radius: number;
-                system: Phaser.Physics.Ninja;
-                velocity: Phaser.Point;
-                width: number;
-                xw: number;
-                yw: number;
-
-                collideCircleVsTile(tile: Phaser.Physics.Ninja.Tile): boolean;
-                collideWorldBounds(): void;
-                destroy(): void;
-                integrate(): void;
-                render(context: any, xOffset: number, yOffset: number, color: string, filled: boolean): void;
-                reportCollisionVsWorld(px: number, py: number, dx: number, dy: number, obj: any): void;
-                reportCollisionVsBody(px: number, py: number, dx: number, dy: number, obj: any): void;
-                resolveCircleTile(x: number, y: number, oH: number, oV: number, obj: Phaser.Physics.Ninja.Circle, t: Phaser.Physics.Ninja.Tile): boolean;
-
-            }
-
-            class Tile {
-
-                constructor(body: Phaser.Physics.Ninja.Body, x: number, y: number, width: number, height: number, type?: number);
-
-                body: Phaser.Physics.Ninja.Body;
-                bottom: number;
-                height: number;
-                id: number;
-                oldpos: Phaser.Point;
-                pos: Phaser.Point;
-                right: number;
-                system: Phaser.Physics.Ninja;
-                type: number;
-                velocity: Phaser.Point;
-                width: number;
-                xw: number;
-                yw: number;
-                x: number;
-                y: number;
-
-                clear(): void;
-                collideWorldBounds(): void;
-                destroy(): void;
-                integrate(): void;
-                reportCollisionVsWorld(px: number, py: number, dx: number, dy: number, obj: any): void;
-                setType(id: number): number;
-
-            }
-
-        }
 
         class P2 {
 
@@ -4559,6 +4393,7 @@ declare module Phaser {
         x: number;
         y: number;
 
+        addClickTrampoline(name: string, callback: Function, callbackContext: any, ...callbackArgs: any[]): void;
         justPressed(duration?: number): boolean;
         justReleased(duration?: number): boolean;
         leave(event: any): void;
@@ -5100,6 +4935,7 @@ declare module Phaser {
 
         aspectRatio: number;
         bounds: Phaser.Rectangle;
+        currentScaleMode: number;
         enterFullScreen: Phaser.Signal;
         enterIncorrectOrientation: Phaser.Signal;
         enterLandscape: Phaser.Signal;
@@ -5108,6 +4944,7 @@ declare module Phaser {
         height: number;
         forcePortrait: boolean;
         forceLandscape: boolean;
+        fullScreenFailed: Phaser.Signal;
         fullScreenTarget: any;
         fullScreenScaleMode: number;
         game: Phaser.Game;
@@ -5137,16 +4974,19 @@ declare module Phaser {
         scaleFactor: Phaser.Point;
         scaleFactorInversed: Phaser.Point;
         sourceAspectRatio: number;
+        supportsFullScreen: boolean;
         trackParentInterval: number;
         width: number;
 
         boot(width: number, height: number): void;
         checkOrientation(event: any): void;
-        checkOrientationState(): void;
+        checkOrientationState(): boolean;
         checkResize(event: any): void;
         destroy(): void;
         forceOrientation(forceLandscape: boolean, forcePortrait?: boolean): void;
         fullScreenChange(event: any): void;
+        fullScreenError(event: any): void;
+        getParentBounds(fullScreen?: boolean, target?: Phaser.Rectangle): Phaser.Rectangle;
         parseConfig(config: any): void;
         preUpdate(): void;
         refresh(): void;
@@ -5159,8 +4999,8 @@ declare module Phaser {
         setShowAll(): void;
         setSize(): void;
         setupScale(width: number, height: number): void;
-        startFullScreen(antialias?: boolean): void;
-        stopFullScreen(): void;
+        startFullScreen(antialias?: boolean, allowTrampoline?: boolean): void;
+        stopFullScreen(): boolean;
         updateDimensions(width: number, height: number, resize: boolean): void;
 
     }
@@ -5642,6 +5482,7 @@ declare module Phaser {
 
         callbackContext: any;
         disabled: boolean;
+        enabled: boolean;
         event: any;
         game: Phaser.Game;
         preventDefault: boolean;
