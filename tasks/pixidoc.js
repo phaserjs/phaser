@@ -23,7 +23,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('pixidoc', 'Generates JSDoc from the PIXI YUIdocs', function () {
 
-      var sources = ['C:/code/ph/phaser/src/pixi'];
+      var sources = ['src/pixi'];
       var output = 'docs/pixi-jsdoc.js';
 
       var yui2jsdoc = require('./yuidoc-to-jsdoc/converter');

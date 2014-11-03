@@ -19,4 +19,6 @@ module.exports = function (grunt) {
 
     grunt.registerTask('dist', ['replace', 'build', 'copy']);
 
+    grunt.registerTask('docs', ['pixidoc', 'builddoc']);
+
 };
