@@ -181,6 +181,11 @@ function resolve_item_qualifiedname(itemdesc, typedesc, typedescs) {
 }
 
 function add_itemdesc_common_attrs (itemdesc, typedesc, typedescs, attrs) {
+
+    var access = itemdesc['access'];
+    if (access) {
+        attrs.push(['access', access]);
+    }
  
     if (typedesc.file) {
         attrs.push(['sourcefile', typedesc.file]);
@@ -233,11 +238,6 @@ function propertydesc_to_attrs(itemdesc, typedesc, typedescs)
     attrs.push(['member', resolve_item_qualifiedname(itemdesc, typedesc, typedescs)]);
     attrs.push(['type', "{" + resolve_typename(itemdesc.type, typedescs) + "}"]);
     
-    var access = itemdesc['access'];
-    if (access) {
-        attrs.push(['access', access]);
-    }
-
     if (itemdesc['readonly'] !== undefined) {
         attrs.push(['readonly', '']);
     }
