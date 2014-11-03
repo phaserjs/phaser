@@ -58,11 +58,6 @@ Phaser.Group = function (game, parent, name, addToStage, enableBody, physicsBody
     }
 
     /**
-    * @property {number} z - The z-depth value of this object within its Group (remember the World is a Group as well). No two objects in a Group can have the same z value.
-    */
-    this.z = 0;
-
-    /**
     * @property {number} type - Internal Phaser Type value.
     * @protected
     */
