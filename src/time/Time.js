@@ -279,8 +279,8 @@ Phaser.Time.prototype = {
             this.elapsed = this.timeCap;
         }
 
-        //  Calculate physics elapsed, ensure it's > 0, use 1/this.desiredFps as a fallback
-        this.physicsElapsed = this.elapsed / 1000 || 1 / this.desiredFps;
+        //  Set the physics elapsed time... this will always be 1 / this.desiredFps because we're using fixed time steps in game.update now
+        this.physicsElapsed = 1 / this.desiredFps;
 
         if (this.deltaCap > 0 && this.physicsElapsed > this.deltaCap)
         {
@@ -339,7 +339,9 @@ Phaser.Time.prototype = {
     */
     gamePaused: function () {
 
-        this._pauseStarted = this.now;
+        // use Date.now (instead of time.now) because the gameResumed function uses Date.now and the two values must be compatible
+        // (time.now may not be updated while the game is paused so we can't use that in both places)
+        this._pauseStarted = Date.now();
 
         this.events.pause();
 
@@ -360,10 +362,13 @@ Phaser.Time.prototype = {
     */
     gameResumed: function () {
 
+        // TODO: check if this is needed.  It won't work if the game is using RAF timing
+        // (Date.now() values can't mix with RAF times) but the deltaCap should do the same thing anyway and the new fixed step timing will also help.
+        
         //  Level out the elapsed timer to avoid spikes
-        this.time = this.now = Date.now();
+//        this.time = this.now = Date.now();
 
-        this.pauseDuration = this.now - this._pauseStarted;
+        this.pauseDuration = Date.now() - this._pauseStarted;
 
         this.events.resume();
 
