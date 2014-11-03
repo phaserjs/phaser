@@ -44,14 +44,16 @@ module.exports = function (grunt) {
         }
 
         // Fake in namespace (current limitation)
+        // A preamble/warning wrt the YUIDoc-to-JSDoc with proper link-outs could
+        // also be added here.
         var header =
           "/**\n" +
           "* @namespace PIXI\n" +
           "*/";
 
-        var res = yui2jsdoc.convert(data);
-        var flat = res.join("\n");
-        fs.writeFileSync(output, header + "\n" + flat);
+        var comments = yui2jsdoc.convert(data);
+        comments.unshift(header);
+        fs.writeFileSync(output, comments.join("\n"));
 
   });
 

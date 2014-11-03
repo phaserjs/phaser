@@ -3,15 +3,34 @@
 *
 * Use a JSDoc plugin to handle custom @sourcefile/@sourceline and reattach meta-data.
 *
-* This works on the current PIXI source code (and, unfortunately, exposes a few issues it has).
+* This works on the current PIXI source code (and exposes a few documentation bugs).
+*
+* Known limitations:
+* - Does not support (from YUIDoc):
+*   - @namespace/@module (although all types in the output are fully-resolved)
+*   - @event, @bubbles, @for, @uses, @chainable, @async
+*   - @author, @deprecated, @version, @since, @beta
+*   - Most "YUI-Specific" (@readonly is supported)
+* - Does not support file-level documentation
+* - All class-level documentation is put into @classdesc as there appears to be no separate
+*   concept in YUIDoc for constructor vs. class documentation.
+* - Probably doesn't work with nested modules/namespaces.
+*   (And many unknown)
+*
 */
 'use strict';
 
-// Does not work with 'props'
-function paramdesc_to_str(desc, typedescs) {
+/**
+* Convert a parameter into a parameter tag string; also do this for each desc.props, specifying the baseprop.
+*/
+function paramdesc_to_str(desc, typedescs, basename) {
     var name = desc.name;
     var typename = desc.type;
     var description = desc.description;
+
+    if (basename) {
+        name = basename + "." + name;
+    }
 
     if (desc.optional) {
         if (desc.optdefault) {
@@ -24,6 +43,28 @@ function paramdesc_to_str(desc, typedescs) {
     return "{" + resolve_typename(typename, typedescs) + "} " + name + " - " + description;
 }
 
+/**
+* Convert a parameter to as many @params as required; this is to map YUIDoc "props"
+*/
+function paramdesc_to_attrs(desc, typedescs, attrs, baseprop) {
+
+    attrs = attrs || [];
+
+    attrs.push(paramdesc_to_str(desc, typedescs, baseprop ? baseprop.name : ''));
+
+    if (desc.props) {
+        desc.props.forEach(function (prop) {
+            paramdesc_to_attrs(prop, typedescs, attrs, desc);
+        });
+    }
+
+    return attrs;
+
+}
+
+/**
+* Convert a return into a return tag string.
+*/
 function returndesc_to_string(desc, typedescs) {
     var typename = desc.type;
     var description = desc.description;
@@ -36,8 +77,8 @@ function returndesc_to_string(desc, typedescs) {
 
 /**
 * Convert flat 'typeitems' found in YUIDoc to a dictionary:
-*    className: {
-*       items: [..] - only properties and methods
+*    typename: {
+*       items: [..] - properties and methods
 *    }
 */
 function group_typeitems(typeitems) {
@@ -65,7 +106,10 @@ function group_typeitems(typeitems) {
 
 }
 
-// Use this for anything but trivial types; it takes apart complex types
+/**
+* Process a complex (possibly multiple) type.
+* (This has limited ability now: will not recurse, handle special arrays, etc.)
+*/
 function resolve_typename(typename, typedescs) {
 
     if (!typename) { typename = "Any"; }
@@ -88,7 +132,11 @@ function resolve_typename(typename, typedescs) {
 
         // This may happen for some terribly invalid input; ideally this would not be
         // "handled" here, but trying to work with some not-correct input..
+        var origpart = part;
         part = part.replace(/[^a-zA-Z0-9_$<>.]/g, '');
+        if (origpart !== part) {
+            console.log("Mutilating questionable type: " + origpart);
+        }
 
         var resolved = resolve_single_typename(part, typedescs);
         if (repeating) {
@@ -105,9 +153,12 @@ function resolve_typename(typename, typedescs) {
     }
 }
 
+/**
+* Process a single type
+*/
 function resolve_single_typename(typename, typedescs) {
 
-    if (!typename || typename.toLowerCase() === "Any" || typename === "*") {
+    if (!typename || typename.toLowerCase() === "any" || typename === "*") {
         return ""; // "Any"
     }
 
@@ -119,11 +170,28 @@ function resolve_single_typename(typename, typedescs) {
     }
 }
 
-function resolve_item_name(name, typedesc, typedescs) {
+function resolve_item_qualifiedname(itemdesc, typedesc, typedescs) {
+    var name = itemdesc.name;
     var typename = resolve_single_typename(typedesc.name, typedescs);
-    return typename + "#" + name;
+    if (itemdesc['static']) {
+        return typename + "." + name;
+    } else {
+        return typename + "#" + name;
+    }
 }
 
+function add_itemdesc_common_attrs (itemdesc, typedesc, typedescs, attrs) {
+ 
+    if (typedesc.file) {
+        attrs.push(['sourcefile', typedesc.file]);
+        attrs.push(['sourceline', typedesc.line]);
+    }
+
+}
+
+/**
+* Process Method
+*/
 function methoddesc_to_attrs(itemdesc, typedesc, typedescs)
 {
     var attrs = [];
@@ -131,11 +199,14 @@ function methoddesc_to_attrs(itemdesc, typedesc, typedescs)
     if (itemdesc.description) {
         attrs.push(['description', itemdesc.description]);
     }
-    attrs.push(['method', resolve_item_name(itemdesc.name, typedesc, typedescs)]);
+    attrs.push(['method', resolve_item_qualifiedname(itemdesc, typedesc, typedescs)]);
     if (itemdesc.params)
     {
         itemdesc.params.forEach(function (param, i) {
-            attrs.push(['param', paramdesc_to_str(param, typedescs)]);
+            var paramattrs = paramdesc_to_attrs(param, typedescs);
+            paramattrs.forEach(function (paramattr) {
+                attrs.push(['param', paramattr]);
+            });
         });
     }
 
@@ -144,14 +215,14 @@ function methoddesc_to_attrs(itemdesc, typedesc, typedescs)
         attrs.push(['return', returndesc_to_string(itemdesc['return'], typedescs)]);
     }
 
-    if (typedesc.file) {
-        attrs.push(['sourcefile', typedesc.file]);
-        attrs.push(['sourceline', typedesc.line]);
-    }
+    add_itemdesc_common_attrs(itemdesc, typedesc, typedescs, attrs);
 
     return attrs;
 }
 
+/**
+* Process Property - Member in JSDoc
+*/
 function propertydesc_to_attrs(itemdesc, typedesc, typedescs)
 {
     var attrs = [];
@@ -159,7 +230,7 @@ function propertydesc_to_attrs(itemdesc, typedesc, typedescs)
     if (itemdesc.description) {
         attrs.push(['description', itemdesc.description]);
     }
-    attrs.push(['member', resolve_item_name(itemdesc.name, typedesc, typedescs)]);
+    attrs.push(['member', resolve_item_qualifiedname(itemdesc, typedesc, typedescs)]);
     attrs.push(['type', "{" + resolve_typename(itemdesc.type, typedescs) + "}"]);
     
     var access = itemdesc['access'];
@@ -175,10 +246,7 @@ function propertydesc_to_attrs(itemdesc, typedesc, typedescs)
         attrs.push(['default', itemdesc['default']]);
     }
 
-    if (typedesc.file) {
-        attrs.push(['sourcefile', typedesc.file]);
-        attrs.push(['sourceline', typedesc.line]);
-    }
+    add_itemdesc_common_attrs(itemdesc, typedesc, typedescs, attrs);
 
     return attrs;
 }
@@ -203,6 +271,17 @@ function write_attr_block (attrs, res) {
 
 }
 
+/**
+* Turns an array of "attributes" into a JSDoc comment block.
+*/
+function flatten_jsdoc_comment (attrs) {
+
+    var res = [];
+    write_attr_block(attrs, res);
+    return res.join("\n");
+
+}
+
 function itemdesc_to_attrs(itemdesc, typedesc, typedescs) {
 
     if (itemdesc.itemtype === 'method')
@@ -212,6 +291,10 @@ function itemdesc_to_attrs(itemdesc, typedesc, typedescs) {
     else if (itemdesc.itemtype === 'property')
     {
         return propertydesc_to_attrs(itemdesc, typedesc, typedescs);
+    }
+    else
+    {
+        console.warn("Unable to process item: " + itemdesc.name);
     }
 
 }
@@ -264,33 +347,37 @@ function typedesc_to_attrs (typedesc, typedescs) {
 }
 
 /**
-* Convert a "data.json" (as JSON, not text) from YUIDoc to an equivalent JSDoc markup.
+* Converts YUIDoc JSON (as found in data.json after generating documentation) into JSDoc comments.
+*
+* @method
+* @param {} data - YUIDoc data.
+* @return {string[]} An array of comment blocks.
 */
 function yuidocdata_to_jsdoc(data) {
 
     var typedescs = data.classes;
     var type_itemdesc_groups = group_typeitems(data.classitems);
 
-    var res = [];
+    var comments = [];
 
     Object.keys(typedescs).forEach(function (name) {
         var typedesc = typedescs[name];
 
         var typeattrs = typedesc_to_attrs(typedesc, typedescs);
-        write_attr_block(typeattrs, res);
+        comments.push(flatten_jsdoc_comment(typeattrs));
 
         var type_itemdesc = type_itemdesc_groups[name];
         if (type_itemdesc) {
             type_itemdesc.items.forEach(function (itemdesc, i) {
                 var attrs = itemdesc_to_attrs(itemdesc, typedesc, typedescs);
-                write_attr_block(attrs, res);
+                comments.push(flatten_jsdoc_comment(attrs));
             });
         } else {
             console.log("No items for " + name);
         }
     });
 
-    return res;
+    return comments;
 
 }
 
