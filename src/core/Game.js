@@ -270,6 +270,18 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     */
     this._deltaTime = 0;
 
+    /**
+     * @property {number} _lastCount - remember how many 'catch-up' iterations were used on the logicUpdate last frame
+     * @private
+     */
+    this._lastCount = 0;
+
+    /**
+     * @property {number} _spiralling - if the 'catch-up' iterations are spiralling out of control, this counter is incremented
+     * @private
+     */
+    this._spiralling = 0;
+
 
     this._width = 800;
     this._height = 600;
@@ -653,16 +665,43 @@ Phaser.Game.prototype = {
 
         this.time.update(time);
 
-        // accumulate time until the _slowStep threshold is met or exceeded
-        this._deltaTime += Math.max(Math.min(1000, this.time.elapsed), 0);
-
-        // call the game update logic multiple times if necessary to "catch up" with dropped frames
-        var step = 1000.0 / this.time.desiredFps;
-        var slowStep = this.time.slowMotion * step;
-        while(this._deltaTime >= slowStep)
+        // if the logic time is spiralling upwards, skip a frame entirely
+        if (this._spiralling > 1)
         {
-            this._deltaTime -= slowStep;
-            this.updateLogic(1.0 / this.time.desiredFps);
+            // TODO: cause an event to warn the program that this CPU can't keep up at the current desiredFps rate
+
+            // reset the _deltaTime accumulator which will cause all pending dropped frames to be permanently skipped
+            this._deltaTime = 0;
+            this._spiralling = 0;
+        }
+        else
+        {
+            // step size taking into account the slow motion speed
+            var slowStep = this.time.slowMotion * 1000.0 / this.time.desiredFps;
+
+            // accumulate time until the slowStep threshold is met or exceeded
+            this._deltaTime += Math.max(Math.min(1000, this.time.elapsed), 0);
+
+            // call the game update logic multiple times if necessary to "catch up" with dropped frames
+            var count = 0;
+            while(this._deltaTime >= slowStep)
+            {
+                this._deltaTime -= slowStep;
+                this.updateLogic(1.0 / this.time.desiredFps);
+                count++;
+            }
+
+            // detect spiralling (if the catch-up loop isn't fast enough, the number of iterations will increase constantly)
+            if (count > this._lastCount)
+            {
+                this._spiralling++;
+            }
+            else if (count < this._lastCount)
+            {
+                // looks like it caught up successfully, reset the spiral alert counter
+                this._spiralling = 0;
+            }
+            this._lastCount = count;
         }
 
         // call the game render update exactly once every frame
