@@ -25,7 +25,7 @@ module.exports = function (grunt) {
 
       var sources = ['C:/code/ph/phaser/src/pixi'];
       var output = 'docs/pixi-jsdoc.js';
-      
+
       var yui2jsdoc = require('./yuidoc-to-jsdoc/converter');
       var fs = require('fs');
       var path = require('path');
@@ -39,7 +39,7 @@ module.exports = function (grunt) {
       var data = generateYuiDoc(sources);
 
         if (!data) {
-            grunt.fail.warn("PIXI YUIDoc not generated - nothing to do")
+            grunt.fail.warn("PIXI YUIDoc not generated - nothing to do");
             return;
         }
 

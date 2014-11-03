@@ -17,7 +17,7 @@ function paramdesc_to_str(desc, typedescs) {
         if (desc.optdefault) {
             name = "[" + name + "=" + desc.optdefault + "]";
         } else {
-            name = "[" + name + "]"
+            name = "[" + name + "]";
         }
     }
 
@@ -48,7 +48,7 @@ function group_typeitems(typeitems) {
         var class_name = itemdesc['class'];
         var itemtype = itemdesc.itemtype;
 
-        if (itemtype === 'method' || itemtype === 'property') 
+        if (itemtype === 'method' || itemtype === 'property')
         {
             var type = types[class_name];
             if (!type) {
@@ -70,8 +70,9 @@ function resolve_typename(typename, typedescs) {
 
     if (!typename) { typename = "Any"; }
 
+    var typenames;
     if (typename.indexOf('|') > -1) {
-        var typenames = typename.split(/[|]/g);
+        typenames = typename.split(/[|]/g);
     } else {
         typenames = [typename];
     }
@@ -91,7 +92,7 @@ function resolve_typename(typename, typedescs) {
 
         var resolved = resolve_single_typename(part, typedescs);
         if (repeating) {
-            return "..." + resolved
+            return "..." + resolved;
         } else {
             return resolved;
         }
@@ -104,9 +105,9 @@ function resolve_typename(typename, typedescs) {
     }
 }
 
-function resolve_single_typename(typename, typedescs) {   
+function resolve_single_typename(typename, typedescs) {
 
-    if (!typename || typename.toLowerCase() == "Any" || typename === "*") {
+    if (!typename || typename.toLowerCase() === "Any" || typename === "*") {
         return ""; // "Any"
     }
 
@@ -123,7 +124,7 @@ function resolve_item_name(name, typedesc, typedescs) {
     return typename + "#" + name;
 }
 
-function methoddesc_to_attrs(itemdesc, typedesc, typedescs) 
+function methoddesc_to_attrs(itemdesc, typedesc, typedescs)
 {
     var attrs = [];
 
@@ -151,7 +152,7 @@ function methoddesc_to_attrs(itemdesc, typedesc, typedescs)
     return attrs;
 }
 
-function propertydesc_to_attrs(itemdesc, typedesc, typedescs) 
+function propertydesc_to_attrs(itemdesc, typedesc, typedescs)
 {
     var attrs = [];
 
@@ -204,7 +205,7 @@ function write_attr_block (attrs, res) {
 
 function itemdesc_to_attrs(itemdesc, typedesc, typedescs) {
 
-    if (itemdesc.itemtype === 'method') 
+    if (itemdesc.itemtype === 'method')
     {
         return methoddesc_to_attrs(itemdesc, typedesc, typedescs);
     }
@@ -265,7 +266,7 @@ function typedesc_to_attrs (typedesc, typedescs) {
 /**
 * Convert a "data.json" (as JSON, not text) from YUIDoc to an equivalent JSDoc markup.
 */
-function yuidocDatatoJSDoc(data) {
+function yuidocdata_to_jsdoc(data) {
 
     var typedescs = data.classes;
     var type_itemdesc_groups = group_typeitems(data.classitems);
@@ -291,10 +292,10 @@ function yuidocDatatoJSDoc(data) {
 
     return res;
 
-};
+}
 
 exports.convert = function (yuidoc) {
 
-    return yuidocDatatoJSDoc(yuidoc);
+    return yuidocdata_to_jsdoc(yuidoc);
 
 };

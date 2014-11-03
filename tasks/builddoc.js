@@ -7,7 +7,7 @@
 module.exports = function (grunt) {
 
   grunt.registerTask('builddoc', 'Builds the project documentation', function () {
-      
+
     var done = this.async();
 
     grunt.util.spawn({

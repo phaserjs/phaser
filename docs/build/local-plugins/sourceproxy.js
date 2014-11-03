@@ -9,7 +9,7 @@ exports.defineTags = function(dictionary) {
 
     dictionary.defineTag('nosource', {
         onTagged: function (doclet, tag) {
-            doclet.meta.nosource = true; 
+            doclet.meta.nosource = true;
             //doclet.meta.path = '';
             //doclet.meta.filename = '';
         }
