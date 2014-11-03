@@ -17,10 +17,6 @@ function looksLikeItMightContain (haystack, needle) {
     haystack = haystack || '';
     needle = needle || '';
 
-    if (!needle) {
-        return false;
-    }
-
     haystack = haystack.replace(/[^a-z]/gi, '').toLowerCase();
     needle = needle.replace(/[^a-z]/gi, '').toLowerCase();
 
@@ -50,13 +46,11 @@ exports.handlers.newDoclet = function (e) {
         {
             doclet.description = prop.description;
         }
-        else
+        else if (prop.description &&
+            !looksLikeItMightContain(doclet.description, prop.description))
         {
-            if (!looksLikeItMightContain(doclet.description, prop.description))
-            {
-                // Tack it on..
-                doclet.description += " " + prop.description;
-            }
+            // Tack it on..
+            doclet.description += " " + prop.description;
         }
 
         // And no more prop
