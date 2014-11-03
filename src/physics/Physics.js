@@ -229,22 +229,19 @@ Phaser.Physics.prototype = {
     *
     * @method Phaser.Physics#update
     * @protected
-    * 
-    * @param {number} timeStep - the time step advance the physics model by
-    * 
     */
-    update: function (timeStep) {
+    update: function () {
 
         //  ArcadePhysics / Ninja don't have a core to update
 
         if (this.p2)
         {
-            this.p2.update(timeStep);
+            this.p2.update();
         }
 
         if (this.box2d)
         {
-            this.box2d.update(timeStep);
+            this.box2d.update();
         }
 
     },

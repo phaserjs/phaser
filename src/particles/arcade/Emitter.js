@@ -265,7 +265,7 @@ Phaser.Particles.Arcade.Emitter.prototype.update = function () {
             }
         }
 
-        this._timer = this.game.time.now + this.frequency;
+        this._timer = this.game.time.now + this.frequency * this.game.time.slowMotion;
     }
 
     var i = this.children.length;
@@ -436,7 +436,7 @@ Phaser.Particles.Arcade.Emitter.prototype.start = function (explode, lifespan, f
         this.on = true;
         this._quantity += quantity;
         this._counter = 0;
-        this._timer = this.game.time.now + frequency;
+        this._timer = this.game.time.now + frequency * this.game.time.slowMotion;
     }
 
 };

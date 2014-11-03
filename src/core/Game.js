@@ -654,7 +654,7 @@ Phaser.Game.prototype = {
         this.time.update(time);
 
         // accumulate time until the _slowStep threshold is met or exceeded
-        this._deltaTime += Math.min(1000, this.time.elapsed);
+        this._deltaTime += Math.max(Math.min(1000, this.time.elapsed), 0);
 
         // call the game update logic multiple times if necessary to "catch up" with dropped frames
         var step = 1000.0 / this.time.desiredFps;
@@ -695,7 +695,7 @@ Phaser.Game.prototype = {
             this.stage.update();
             this.sound.update();
             this.input.update();
-            this.physics.update(timeStep);
+            this.physics.update();
             this.particles.update();
             this.plugins.update();
 
