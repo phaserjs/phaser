@@ -282,6 +282,19 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
      */
     this._spiralling = 0;
 
+    /**
+     * @property {Phaser.Signal} fpsProblemNotifier - if the game is struggling to maintain the desiredFps, this signal will be dispatched
+     *                                                to suggest that the program adjust it's fps closer to the Time.suggestedFps value
+     * @public
+     */
+    this.fpsProblemNotifier = new Phaser.Signal();
+
+    /**
+     * @property {number} _nextNotification - the soonest game.time.time value that the next fpsProblemNotifier can be dispatched
+     * @private
+     */
+    this._nextFpsNotification = 0;
+
 
     this._width = 800;
     this._height = 600;
@@ -668,7 +681,14 @@ Phaser.Game.prototype = {
         // if the logic time is spiralling upwards, skip a frame entirely
         if (this._spiralling > 1)
         {
-            // TODO: cause an event to warn the program that this CPU can't keep up at the current desiredFps rate
+            // cause an event to warn the program that this CPU can't keep up with the current desiredFps rate
+            if (this.time.time > this._nextFpsNotification)
+            {
+                // only permit one fps notification per 10 seconds
+                this._nextFpsNotification = this.time.time + 1000 * 10;
+                // dispatch the notification signal
+                this.fpsProblemNotifier.dispatch();
+            }
 
             // reset the _deltaTime accumulator which will cause all pending dropped frames to be permanently skipped
             this._deltaTime = 0;
