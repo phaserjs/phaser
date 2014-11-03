@@ -28,7 +28,10 @@
         "includePattern": ".+\\.js(doc)?$",
         "excludePattern": "(^|\\/|\\\\)_"
     },
-    "plugins"   : ["plugins/markdown"],
+    "plugins"   : [
+        "local-plugins/proptomember",
+        "plugins/markdown"
+    ],
     "templates": {
         "cleverLinks"     : false,
         "monospaceLinks"  : false,
