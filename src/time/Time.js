@@ -276,7 +276,7 @@ Phaser.Time.prototype = {
     update: function (time) {
 
         // this.time always holds Date.now, this.now may hold the RAF high resolution time value if RAF is available (otherwise it also holds Date.now)
-        this.time = Date.now;
+        this.time = Date.now();
 
         // 'now' is currently still holding the time of the last call, move it into prevTime
         this.prevTime = this.now;
