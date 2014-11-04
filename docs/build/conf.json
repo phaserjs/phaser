@@ -4,6 +4,7 @@
     },
     "source": {
         "include": [ 
+            "../pixi-jsdoc.js",
             "../../src/Phaser.js", 
             "../../src/animation/", 
             "../../src/core/", 
@@ -28,7 +29,11 @@
         "includePattern": ".+\\.js(doc)?$",
         "excludePattern": "(^|\\/|\\\\)_"
     },
-    "plugins"   : ["plugins/markdown"],
+    "plugins"   : [
+        "local-plugins/proptomember",
+        "local-plugins/sourceproxy",
+        "plugins/markdown"
+    ],
     "templates": {
         "cleverLinks"     : false,
         "monospaceLinks"  : false,

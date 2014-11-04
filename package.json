@@ -40,6 +40,7 @@
     "grunt-contrib-uglify": "^0.4.0",
     "grunt-notify": "^0.3.0",
     "grunt-text-replace": "^0.3.11",
-    "load-grunt-config": "~0.7.2"
+    "load-grunt-config": "~0.7.2",
+    "yuidocjs": "^0.3.50"
   }
 }
