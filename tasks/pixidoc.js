@@ -38,22 +38,22 @@ module.exports = function (grunt) {
 
       var data = generateYuiDoc(sources);
 
-        if (!data) {
-            grunt.fail.warn("PIXI YUIDoc not generated - nothing to do");
-            return;
-        }
+      if (!data) {
+          grunt.fail.warn("PIXI YUIDoc not generated - nothing to do");
+          return;
+      }
 
-        // Fake in namespace (current limitation)
-        // A preamble/warning wrt the YUIDoc-to-JSDoc with proper link-outs could
-        // also be added here.
-        var header =
-          "/**\n" +
-          "* @namespace PIXI\n" +
-          "*/";
+      // Fake in namespace (current limitation)
+      // A preamble/warning wrt the YUIDoc-to-JSDoc with proper link-outs could
+      // also be added here.
+      var header =
+        "/**\n" +
+        "* @namespace PIXI\n" +
+        "*/";
 
-        var comments = yui2jsdoc.convert(data);
-        comments.unshift(header);
-        fs.writeFileSync(output, comments.join("\n"));
+      var comments = yui2jsdoc.convert(data);
+      comments.unshift(header);
+      fs.writeFileSync(output, comments.join("\n"));
 
   });
 

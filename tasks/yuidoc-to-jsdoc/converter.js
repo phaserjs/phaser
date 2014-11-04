@@ -9,11 +9,11 @@
 * - Does not support (from YUIDoc):
 *   - @namespace/@module (although all types in the output are fully-resolved)
 *   - @event, @bubbles, @for, @uses, @chainable, @async
-*   - @author, @deprecated, @version, @since, @beta
-*   - Most "YUI-Specific" (@readonly is supported)
-* - Does not support file-level documentation
-* - All class-level documentation is put into @classdesc as there appears to be no separate
-*   concept in YUIDoc for constructor vs. class documentation.
+*   - @beta
+*   - Most "YUI-Specific" (but @readOnly is supported)
+* - File-level documentation is probably lost.
+* - All class-level documentation is put into the constructor's @description as there appears
+*   to be no separate concept in YUIDoc for constructor vs. class documentation.
 * - Probably doesn't work with nested modules/namespaces.
 *   (And many unknown)
 *
@@ -86,20 +86,16 @@ function group_typeitems(typeitems) {
     var types = {};
 
     typeitems.forEach(function (itemdesc, i) {
-        var class_name = itemdesc['class'];
-        var itemtype = itemdesc.itemtype;
+        var typename = itemdesc['class'];
 
-        if (itemtype === 'method' || itemtype === 'property')
-        {
-            var type = types[class_name];
-            if (!type) {
-                type = types[class_name] = {
-                    items: []
-                };
-            }
-
-            type.items.push(itemdesc);
+        var type = types[typename];
+        if (!type) {
+            type = types[typename] = {
+                items: []
+            };
         }
+
+        type.items.push(itemdesc);
     });
 
     return types;
@@ -135,7 +131,7 @@ function resolve_typename(typename, typedescs) {
         var origpart = part;
         part = part.replace(/[^a-zA-Z0-9_$<>.]/g, '');
         if (origpart !== part) {
-            console.log("Mutilating questionable type: " + origpart);
+            console.log("Mutilating type: {" + origpart + "}");
         }
 
         var resolved = resolve_single_typename(part, typedescs);
@@ -180,16 +176,21 @@ function resolve_item_qualifiedname(itemdesc, typedesc, typedescs) {
     }
 }
 
-function add_itemdesc_common_attrs (itemdesc, typedesc, typedescs, attrs) {
+function add_generic_attrs (desc, attrs) {
 
-    var access = itemdesc['access'];
-    if (access) {
-        attrs.push(['access', access]);
-    }
- 
-    if (typedesc.file) {
-        attrs.push(['sourcefile', typedesc.file]);
-        attrs.push(['sourceline', typedesc.line]);
+    var map = ['access', 'author', 'version', 'since', 'deprecated'];
+
+    map.forEach(function (m) {
+        var key = m;
+        var value = desc[key];
+        if (value) {
+            attrs.push([key, value]);
+        }
+    });
+
+    if (desc.file) {
+        attrs.push(['sourcefile', desc.file]);
+        attrs.push(['sourceline', desc.line]);
     }
 
 }
@@ -220,7 +221,7 @@ function methoddesc_to_attrs(itemdesc, typedesc, typedescs)
         attrs.push(['return', returndesc_to_string(itemdesc['return'], typedescs)]);
     }
 
-    add_itemdesc_common_attrs(itemdesc, typedesc, typedescs, attrs);
+    add_generic_attrs(itemdesc, attrs);
 
     return attrs;
 }
@@ -246,7 +247,7 @@ function propertydesc_to_attrs(itemdesc, typedesc, typedescs)
         attrs.push(['default', itemdesc['default']]);
     }
 
-    add_itemdesc_common_attrs(itemdesc, typedesc, typedescs, attrs);
+    add_generic_attrs(itemdesc, attrs);
 
     return attrs;
 }
@@ -294,7 +295,7 @@ function itemdesc_to_attrs(itemdesc, typedesc, typedescs) {
     }
     else
     {
-        console.warn("Unable to process item: " + itemdesc.name);
+        console.log("Skipping loose comment: " + itemdesc.file + ":" + itemdesc.line);
     }
 
 }
@@ -309,7 +310,7 @@ function typedesc_to_attrs (typedesc, typedescs) {
         attrs.push(['class', resolve_single_typename(typedesc.name, typedescs)]);
 
         if (typedesc.description) {
-            attrs.push(['classdesc', typedesc.description]);
+            attrs.push(['description', typedesc.description]);
         }
 
     } else {
@@ -337,10 +338,19 @@ function typedesc_to_attrs (typedesc, typedescs) {
         });
     }
 
-    if (typedesc.file) {
-        attrs.push(['sourcefile', typedesc.file]);
-        attrs.push(['sourceline', typedesc.line]);
-    }
+    add_generic_attrs(typedesc, attrs);
+
+    return attrs;
+
+}
+
+function filedesc_to_attrs (filedesc) {
+
+    var attrs = [];
+
+    attrs.push(['fileoverview', filedesc.description]);
+
+    add_generic_attrs(filedesc, attrs);
 
     return attrs;
 
@@ -364,17 +374,31 @@ function yuidocdata_to_jsdoc(data) {
         var typedesc = typedescs[name];
 
         var typeattrs = typedesc_to_attrs(typedesc, typedescs);
-        comments.push(flatten_jsdoc_comment(typeattrs));
+        var type_comments = [];
 
         var type_itemdesc = type_itemdesc_groups[name];
         if (type_itemdesc) {
+
+            // First item might be a file-level comment
+            var first_item = type_itemdesc.items[0];
+            if (first_item.itemtype === undefined) {
+                type_itemdesc.items.shift();
+
+                var file_attrs = filedesc_to_attrs(first_item);
+                comments.push(flatten_jsdoc_comment(file_attrs));
+            }
+
             type_itemdesc.items.forEach(function (itemdesc, i) {
                 var attrs = itemdesc_to_attrs(itemdesc, typedesc, typedescs);
-                comments.push(flatten_jsdoc_comment(attrs));
+                type_comments.push(flatten_jsdoc_comment(attrs));
             });
         } else {
             console.log("No items for " + name);
         }
+
+        comments.push(flatten_jsdoc_comment(typeattrs));
+        comments.push.apply(comments, type_comments);
+
     });
 
     return comments;
