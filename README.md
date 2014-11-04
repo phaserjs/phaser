@@ -81,6 +81,8 @@ Version 2.1.4 - "Bethal" - in development
 * Phaser.Color.valueToColor converts a value: a "hex" string, a "CSS 'web' string", or a number - into red, green, blue, and alpha components (thanks @pnstickne #1264)
 * Stage.backgroundColor now supports CSS 'rgba' values, as well as hex strings and hex numbers (thanks @pnstickne #1234)
 * Pointer.addClickTrampoline now adds in support for click trampolines. These  raise pointer events into click events, which are required internally for a few edge cases like IE11 full screen mode support, but are also useful if you know you specifically need a DOM click event from a pointer (thanks @pnstickne #1282)
+* Point.floor will Math.floor both the `x` and `y` values of the Point.
+* Point.ceil will Math.ceil both the `x` and `y` values of the Point.
 
 ### Updates
 
@@ -103,6 +105,16 @@ Version 2.1.4 - "Bethal" - in development
     * Updated documentation for specificty; added @public\@protected
     * @deprecated currentPointers due to odd set pattern; totalCurrentPointers is more appropriate.
 (thanks @pnstickne #1283)
+* Various ScaleManager fixes and updates:
+    * Scale modes can now be set independently
+    * Switching between fullscreen and normal correctly restores modes
+    * Alignment does not incorrectly offset in fullscreen mode (#1255)
+    * Changing scale/alignment promptly refreshes layout
+    * `isFullScreen` returns a boolean, as it should
+    * Faster parent checks (if required)
+    * NO_SCALE should not not scale (vs previous behavior of having no behavior)
+    * Correct usage of scaleMode depending on mode
+(thanks @pnstickne)
 
 ### Bug Fixes
 
@@ -115,6 +127,7 @@ Version 2.1.4 - "Bethal" - in development
 * Setting Key.enabled = false while it is down did not reset the isDown state (thanks @pnstickne #1190 #1271)
 * The Gamepad.addCallbacks context parameter was never actually remembered, causing the callbacks to run in the wrong context (thanks @englercj #1285)
 * Animation.setFrame used the wrong frames array if `useLocalFrameIndex` was `false` and a numeric frame ID was given (thanks @Skeptron #1284)
+* Fullscreen mode in IE11 now works (thanks @pnstickne)
 
 
 For details about changes made in previous versions of Phaser see the full Change Log at https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md
