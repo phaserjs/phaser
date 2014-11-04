@@ -414,6 +414,62 @@ Phaser.ScaleManager.RESIZE = 3;
 Phaser.ScaleManager.prototype = {
 
     /**
+    * Calculates and sets the game dimensions based on the given width and height.
+    * This is used internally.
+    * 
+    * @method Phaser.ScaleManager#boot
+    * @protected
+    */
+    boot: function () {
+
+        this.supportsFullScreen = this.game.device.fullscreen && !this.game.device.cocoonJS;
+
+        //  Now the canvas has been created we can target it
+        this.fullScreenTarget = this.game.canvas;
+
+        var _this = this;
+
+        this._orientationChange = function(event) {
+            return _this.orientationChange(event);
+        };
+
+        this._windowResize = function(event) {
+            return _this.windowResize(event);
+        };
+
+        window.addEventListener('orientationchange', this._orientationChange, false);
+        window.addEventListener('resize', this._windowResize, false);
+
+        if (this.supportsFullScreen)
+        {
+            this._fullScreenChange = function(event) {
+                return _this.fullScreenChange(event);
+            };
+
+            this._fullScreenError = function(event) {
+                return _this.fullScreenError(event);
+            };
+
+            document.addEventListener('webkitfullscreenchange', this._fullScreenChange, false);
+            document.addEventListener('mozfullscreenchange', this._fullScreenChange, false);
+            document.addEventListener('MSFullscreenChange', this._fullScreenChange, false);
+            document.addEventListener('fullscreenchange', this._fullScreenChange, false);
+
+            document.addEventListener('webkitfullscreenerror', this._fullScreenError, false);
+            document.addEventListener('mozfullscreenerror', this._fullScreenError, false);
+            document.addEventListener('MSFullscreenError', this._fullScreenError, false);
+            document.addEventListener('fullscreenerror', this._fullScreenError, false);
+        }
+
+        this.updateDimensions(this.width, this.height, true);
+
+        Phaser.Canvas.getOffset(this.game.canvas, this.offset);
+
+        this.bounds.setTo(this.offset.x, this.offset.y, this.width, this.height);
+
+    },
+
+    /**
     * Load configuration settings.
     * 
     * @method Phaser.ScaleManager#parseConfig
@@ -525,62 +581,6 @@ Phaser.ScaleManager.prototype = {
     },
 
     /**
-    * Calculates and sets the game dimensions based on the given width and height.
-    * This is used internally.
-    * 
-    * @method Phaser.ScaleManager#boot
-    * @protected
-    */
-    boot: function () {
-
-        this.supportsFullScreen = this.game.device.fullscreen && !this.game.device.cocoonJS;
-
-        //  Now the canvas has been created we can target it
-        this.fullScreenTarget = this.game.canvas;
-
-        var _this = this;
-
-        this._orientationChange = function(event) {
-            return _this.orientationChange(event);
-        };
-
-        this._windowResize = function(event) {
-            return _this.windowResize(event);
-        };
-
-        window.addEventListener('orientationchange', this._orientationChange, false);
-        window.addEventListener('resize', this._windowResize, false);
-
-        if (this.supportsFullScreen)
-        {
-            this._fullScreenChange = function(event) {
-                return _this.fullScreenChange(event);
-            };
-
-            this._fullScreenError = function(event) {
-                return _this.fullScreenError(event);
-            };
-
-            document.addEventListener('webkitfullscreenchange', this._fullScreenChange, false);
-            document.addEventListener('mozfullscreenchange', this._fullScreenChange, false);
-            document.addEventListener('MSFullscreenChange', this._fullScreenChange, false);
-            document.addEventListener('fullscreenchange', this._fullScreenChange, false);
-
-            document.addEventListener('webkitfullscreenerror', this._fullScreenError, false);
-            document.addEventListener('mozfullscreenerror', this._fullScreenError, false);
-            document.addEventListener('MSFullscreenError', this._fullScreenError, false);
-            document.addEventListener('fullscreenerror', this._fullScreenError, false);
-        }
-
-        this.updateDimensions(this.width, this.height, true);
-
-        Phaser.Canvas.getOffset(this.game.canvas, this.offset);
-
-        this.bounds.setTo(this.offset.x, this.offset.y, this.width, this.height);
-
-    },
-
-    /**
     * Sets the callback that will be called when the window resize event occurs, or if set the parent container changes dimensions.
     * Use this to handle responsive game layout options.
     *
@@ -601,7 +601,7 @@ Phaser.ScaleManager.prototype = {
     /**
     * Set the min and max dimensions for the game object.
     *
-    * @method setMinMax
+    * @method Phaser.ScaleManager#setMinMax
     * @public
     * @param {number} minWidth - The minimum width the game is allowed to scale down to.
     * @param {number} minHeight - The minimum height the game is allowed to scale down to.
@@ -946,6 +946,7 @@ Phaser.ScaleManager.prototype = {
     * Set screen (game canvas) size automatically based on the scaleMode.
     * This is only needed if `currentScaleMode` is not set to `RESIZE`.
     * 
+    * @method Phaser.ScaleManager#setScreenSize
     * @param {boolean} force - If force is true the resize will be forced immediately instead of waiting for a pending recomputation/callback.
     * @protected
     */
@@ -1022,9 +1023,9 @@ Phaser.ScaleManager.prototype = {
     * @param {boolean} [fullscreen=(isFullScreen)] - Is fullscreen.
     * @param {Phaser.Rectangle} [target=(new Rectangle)] - The rectangle to update; a new one is created as needed.
     */
-    // Not to be confused with `_parentBounds` which is used for RESIZE support and tracking.
     getParentBounds: function (fullscreen, target) {
 
+        // Not to be confused with `_parentBounds` which is used for RESIZE support and tracking.
         if (typeof fullscreen === 'undefined') { fullscreen = this.isFullScreen; }
 
         var bounds = target || new Phaser.Rectangle();
