@@ -267,14 +267,15 @@ Phaser.FlexGrid.prototype = {
 
         this.scaleFull.set(this.boundsFull.width / this.width, this.boundsFull.height / this.height);
 
-        this.boundsFull.width = this.manager.width * this.scaleFluidInversed.x;
-        this.boundsFull.height = this.manager.height * this.scaleFluidInversed.y;
+        this.boundsFull.width = Math.round(this.manager.width * this.scaleFluidInversed.x);
+        this.boundsFull.height = Math.round(this.manager.height * this.scaleFluidInversed.y);
 
         this.boundsFluid.centerOn(this.manager.bounds.centerX, this.manager.bounds.centerY);
         this.boundsNone.centerOn(this.manager.bounds.centerX, this.manager.bounds.centerY);
 
         this.positionFluid.set(this.boundsFluid.x, this.boundsFluid.y);
         this.positionNone.set(this.boundsNone.x, this.boundsNone.y);
+
 
         //  Custom Layer
 
