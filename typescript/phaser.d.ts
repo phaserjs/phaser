@@ -1357,9 +1357,8 @@ declare module PIXI.PolyK {
     export function Triangulate(p: number[]): number[];
 }
 
-// Type definitions for Phaser 2.1.4 dev 2014-10-29
+// Type definitions for Phaser 2.1.4 dev 2014-11-05
 // Project: https://github.com/photonstorm/phaser
-
 declare class Phaser {
 
     static VERSION: string;
@@ -2658,6 +2657,7 @@ declare module Phaser {
         active: boolean;
         callbackContext: any;
         disabled: boolean;
+        enabled: boolean;
         game: Phaser.Game;
         onAxisCallBack: Function;
         onConnectCallback: Function;
@@ -2877,6 +2877,7 @@ declare module Phaser {
 
         constructor(game: Phaser.Game);
 
+        static MAX_POINTERS: number;
         static MOUSE_OVERRIDES_TOUCH: number;
         static MOUSE_TOUCH_COMBINE: number;
         static TOUCH_OVERRIDES_MOUSE: number;
@@ -2885,6 +2886,7 @@ declare module Phaser {
         circle: Phaser.Circle;
         currentPointers: number;
         disabled: boolean;
+        enabled: boolean;
         doubleTapRate: number;
         game: Phaser.Game;
         gamepad: Phaser.Gamepad;
@@ -2920,6 +2922,7 @@ declare module Phaser {
         pollLocked: boolean;
         pollRate: number;
         position: Phaser.Point;
+        pointer: Phaser.Pointer[];
         recordLimit: number;
         recordPointerHistory: boolean;
         recordRate: number;
@@ -2938,10 +2941,11 @@ declare module Phaser {
         addPointer(): Phaser.Pointer;
         addMoveCallback(callback: Function, context: any): number;
         boot(): void;
+        countActivePointers(limit?: number): number;
         deleteMoveCallback(index: number): void;
         destroy(): void;
         getLocalPosition(displayObject: any, pointer: Phaser.Pointer): Phaser.Point;
-        getPointer(state: boolean): Phaser.Pointer;
+        getPointer(isActive?: boolean): Phaser.Pointer;
         getPointerFromId(pointerID: number): Phaser.Pointer;
         getPointerFromIdentifier(identifier: number): Phaser.Pointer;
         hitTest(displayObject: any, pointer: Phaser.Pointer, localPoint: Phaser.Point): void;
@@ -3161,6 +3165,7 @@ declare module Phaser {
 
         callbackContext: any;
         disabled: boolean;
+        enabled: boolean;
         event: any;
         game: Phaser.Game;
         lastChar: string;
@@ -3409,6 +3414,7 @@ declare module Phaser {
         callbackContext: any;
         capture: boolean;
         disabled: boolean;
+        enabled: boolean;
         event: MouseEvent;
         game: Phaser.Game;
         locked: boolean;
@@ -4491,12 +4497,14 @@ declare module Phaser {
         clampY(min: number, max: number): Phaser.Point;
         clone(output?: Phaser.Point): Phaser.Point;
         copyFrom(source: Phaser.Point): Phaser.Point;
-        copyTo(dest: Phaser.Point): any;
+        copyTo<T>(dest: T): T;
+        ceil(): Phaser.Point;
         cross(a: Phaser.Point): number;
         divide(x: number, y: number): Phaser.Point;
         distance(dest: Phaser.Point, round?: boolean): number;
         dot(a: Phaser.Point): number;
         equals(a: Phaser.Point): boolean;
+        floor(): Phaser.Point;
         getMagnitude(): number;
         getMagnitudeSq(): number;
         invert(): Phaser.Point;
@@ -4559,6 +4567,7 @@ declare module Phaser {
         x: number;
         y: number;
 
+        addClickTrampoline(name: string, callback: Function, callbackContext: any, ...callbackArgs: any[]): void;
         justPressed(duration?: number): boolean;
         justReleased(duration?: number): boolean;
         leave(event: any): void;
@@ -5100,6 +5109,7 @@ declare module Phaser {
 
         aspectRatio: number;
         bounds: Phaser.Rectangle;
+        currentScaleMode: number;
         enterFullScreen: Phaser.Signal;
         enterIncorrectOrientation: Phaser.Signal;
         enterLandscape: Phaser.Signal;
@@ -5108,6 +5118,7 @@ declare module Phaser {
         height: number;
         forcePortrait: boolean;
         forceLandscape: boolean;
+        fullScreenFailed: boolean;
         fullScreenTarget: any;
         fullScreenScaleMode: number;
         game: Phaser.Game;
@@ -5137,16 +5148,19 @@ declare module Phaser {
         scaleFactor: Phaser.Point;
         scaleFactorInversed: Phaser.Point;
         sourceAspectRatio: number;
+        supportsFullScreen: boolean;
         trackParentInterval: number;
         width: number;
 
         boot(width: number, height: number): void;
         checkOrientation(event: any): void;
-        checkOrientationState(): void;
+        checkOrientationState(): boolean;
         checkResize(event: any): void;
         destroy(): void;
         forceOrientation(forceLandscape: boolean, forcePortrait?: boolean): void;
         fullScreenChange(event: any): void;
+        fullScreenError(event: any): void;
+        getParentBounds(fullScreen?: boolean, target?: Phaser.Rectangle): Phaser.Rectangle;
         parseConfig(config: any): void;
         preUpdate(): void;
         refresh(): void;
@@ -5159,8 +5173,8 @@ declare module Phaser {
         setShowAll(): void;
         setSize(): void;
         setupScale(width: number, height: number): void;
-        startFullScreen(antialias?: boolean): void;
-        stopFullScreen(): void;
+        startFullScreen(antialias?: boolean, allowTrampoline?: boolean): void;
+        stopFullScreen(): boolean;
         updateDimensions(width: number, height: number, resize: boolean): void;
 
     }
@@ -5642,6 +5656,7 @@ declare module Phaser {
 
         callbackContext: any;
         disabled: boolean;
+        enabled: boolean;
         event: any;
         game: Phaser.Game;
         preventDefault: boolean;
