@@ -138,6 +138,7 @@ Version 2.1.4 - "Bethal" - in development
 * Animation.setFrame used the wrong frames array if `useLocalFrameIndex` was `false` and a numeric frame ID was given (thanks @Skeptron #1284)
 * Fullscreen mode in IE11 now works (thanks @pnstickne)
 * Cache.addBitmapData now auto-creates a FrameData (thanks @pnstickne #1294 #1300)
+* P2.BodyDebug circles were drawing at half widths (thanks @enriqueto #1288)
 
 
 For details about changes made in previous versions of Phaser see the full Change Log at https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md
