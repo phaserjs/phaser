@@ -21,11 +21,11 @@
 - [License](#license)
 
 <a name="about"></a>
-# Phaser 2.1.4
+# Phaser 2.2.0
 
 Phaser is a fast, free and fun open source game framework for making desktop and mobile browser HTML5 games. It uses [Pixi.js](https://github.com/GoodBoyDigital/pixi.js/) internally for fast 2D Canvas and WebGL rendering.
 
-Version: 2.1.4 "Bethal" - Released: -in development-
+Version: 2.2.0 "Bethal" - Released: -in development-
 
 By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 
@@ -43,7 +43,7 @@ By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 ![div](http://phaser.io/images/div4.png)
 
 <a name="whats-new"></a>
-## Welcome to Phaser and What's new in 2.1.4?
+## Welcome to Phaser and What's new in 2.2.0?
 
 ![Pixi 2.0](http://www.phaser.io/images/pixi-v2.png)
 
@@ -71,7 +71,7 @@ Finally the list of [community authored Phaser Tutorials](http://www.lessmilk.co
 <a name="change-log"></a>
 ## Change Log
 
-Version 2.1.4 - "Bethal" - in development
+Version 2.2.0 - "Bethal" - in development
 
 ### New Features
 
@@ -204,11 +204,11 @@ Nice and easy :)
 
 Phaser is now available on [CDNJS](http://cdnjs.com). You can include the following in your html:
 
-`http://cdnjs.cloudflare.com/ajax/libs/phaser/2.1.4/phaser.min.js`
+`http://cdnjs.cloudflare.com/ajax/libs/phaser/2.2.0/phaser.min.js`
 
 Or if you prefer you can leave the protocol off, so it works via http and https:
 
-`//cdnjs.cloudflare.com/ajax/libs/phaser/2.1.4/phaser.min.js`
+`//cdnjs.cloudflare.com/ajax/libs/phaser/2.2.0/phaser.min.js`
 
 ![div](http://phaser.io/images/div1.png)
 
