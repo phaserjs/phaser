@@ -83,6 +83,15 @@ Version 2.1.4 - "Bethal" - in development
 * Pointer.addClickTrampoline now adds in support for click trampolines. These  raise pointer events into click events, which are required internally for a few edge cases like IE11 full screen mode support, but are also useful if you know you specifically need a DOM click event from a pointer (thanks @pnstickne #1282)
 * Point.floor will Math.floor both the `x` and `y` values of the Point.
 * Point.ceil will Math.ceil both the `x` and `y` values of the Point.
+* ScaleManager.elementBounds is a cross-browser element.getBoundingClientRect method with optional cushion.
+* ScaleManager.calibrate is a private method that calibrates element coordinates for viewport checks.
+* ScaleManager.aspect gets the viewport aspect ratio (or the aspect ratio of an object or element)
+* ScaleManager.inViewport tests if the given DOM element is within the viewport, with an optional cushion parameter that allows you to specify a distance.
+* ScaleManager.scaleSprite takes a Sprite or Image object and scales it to fit the given dimensions. Scaling happens proportionally without distortion to the sprites texture. The letterBox parameter controls if scaling will produce a letter-box effect or zoom the sprite until it fills the given values.
+* ScaleManager.viewportWidth returns the viewport width in pixels.
+* ScaleManager.viewportHeight returns the viewport height in pixels.
+* ScaleManager.documentWidth returns the document width in pixels.
+* ScaleManager.documentHeight returns the document height in pixels.
 
 ### Updates
 
