@@ -67,6 +67,18 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     this.height = 600;
 
     /**
+    * @property {integer} _width - Private internal var.
+    * @private
+    */
+    this._width = 800;
+
+    /**
+    * @property {integer} _height - Private internal var.
+    * @private
+    */
+    this._height = 600;
+
+    /**
     * @property {boolean} transparent - Use a transparent canvas background or not.
     * @default
     */
@@ -274,8 +286,36 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     */
     this._codePaused = false;
 
-    this._width = 800;
-    this._height = 600;
+    /**
+    * @property {number} _deltaTime - accumulate elapsed time until a logic update is due
+    * @private
+    */
+    this._deltaTime = 0;
+
+    /**
+     * @property {number} _lastCount - remember how many 'catch-up' iterations were used on the logicUpdate last frame
+     * @private
+     */
+    this._lastCount = 0;
+
+    /**
+     * @property {number} _spiralling - if the 'catch-up' iterations are spiralling out of control, this counter is incremented
+     * @private
+     */
+    this._spiralling = 0;
+
+    /**
+     * @property {Phaser.Signal} fpsProblemNotifier - if the game is struggling to maintain the desiredFps, this signal will be dispatched
+     *                                                to suggest that the program adjust it's fps closer to the Time.suggestedFps value
+     * @public
+     */
+    this.fpsProblemNotifier = new Phaser.Signal();
+
+    /**
+     * @property {number} _nextNotification - the soonest game.time.time value that the next fpsProblemNotifier can be dispatched
+     * @private
+     */
+    this._nextFpsNotification = 0;
 
     //  Parse the configuration object (if any)
     if (arguments.length === 1 && typeof arguments[0] === 'object')
@@ -650,11 +690,67 @@ Phaser.Game.prototype = {
     *
     * @method Phaser.Game#update
     * @protected
-    * @param {number} time - The current time as provided by RequestAnimationFrame.
+    * @param {number} time - The current time as provided by Date.now (see updateRAF in RequestAnimationFrame.js) in milliseconds
     */
     update: function (time) {
 
         this.time.update(time);
+
+        // if the logic time is spiralling upwards, skip a frame entirely
+        if (this._spiralling > 1)
+        {
+            // cause an event to warn the program that this CPU can't keep up with the current desiredFps rate
+            if (this.time.time > this._nextFpsNotification)
+            {
+                // only permit one fps notification per 10 seconds
+                this._nextFpsNotification = this.time.time + 1000 * 10;
+
+                // dispatch the notification signal
+                this.fpsProblemNotifier.dispatch();
+            }
+
+            // reset the _deltaTime accumulator which will cause all pending dropped frames to be permanently skipped
+            this._deltaTime = 0;
+            this._spiralling = 0;
+        }
+        else
+        {
+            // step size taking into account the slow motion speed
+            var slowStep = this.time.slowMotion * 1000.0 / this.time.desiredFps;
+
+            // accumulate time until the slowStep threshold is met or exceeded
+            this._deltaTime += Math.max(Math.min(1000, this.time.elapsed), 0);
+
+            // call the game update logic multiple times if necessary to "catch up" with dropped frames
+            var count = 0;
+
+            while (this._deltaTime >= slowStep)
+            {
+                this._deltaTime -= slowStep;
+                this.updateLogic(1.0 / this.time.desiredFps);
+                count++;
+            }
+
+            // detect spiralling (if the catch-up loop isn't fast enough, the number of iterations will increase constantly)
+            if (count > this._lastCount)
+            {
+                this._spiralling++;
+            }
+            else if (count < this._lastCount)
+            {
+                // looks like it caught up successfully, reset the spiral alert counter
+                this._spiralling = 0;
+            }
+
+            this._lastCount = count;
+        }
+
+        // call the game render update exactly once every frame
+        this.updateRender(this._deltaTime / slowStep);
+
+    },
+
+    updateLogic: function (timeStep) {
 
         if (!this._paused && !this.pendingStep)
         {
@@ -677,7 +773,6 @@ Phaser.Game.prototype = {
 
             this.state.update();
             this.stage.update();
-            this.tweens.update();
             this.sound.update();
             this.input.update();
             this.physics.update();
@@ -695,6 +790,15 @@ Phaser.Game.prototype = {
             {
                 this.debug.preUpdate();
             }
+        }
+    },
+
+    updateRender: function (elapsedTime) {
+
+        // update tweens once every frame along with the render logic (to keep them smooth in slowMotion scenarios)
+        if (!this._paused && !this.pendingStep)
+        {
+            this.tweens.update(elapsedTime);
         }
 
         if (this.renderType != Phaser.HEADLESS)

@@ -93,6 +93,17 @@ Version 2.1.4 - "Bethal" - in development
 * ScaleManager.documentWidth returns the document width in pixels.
 * ScaleManager.documentHeight returns the document height in pixels.
 * TilemapLayers have been given a decent performance boost on canvas with map shifting edge-redraw (thanks @pnstickne #1250)
+* A large refactor to how the internal game timers and physics calculations has been made. We've now swapped to using a fixed time step internally across Phaser, instead of the variable one we had before that caused glitchse on low-fps systems. Thanks to pjbaron for his help with all of these related changes.
+* We have separated the logic and render updates to permit slow motion and time slicing effects. We've fixed time calling to fix physics problems caused by variable time updates (i.e. collisions sometimes missing, objects tunneling, etc)
+* Once per frame calling for rendering and tweening to keep things as smooth as possible
+* Calculates a `suggestedFps` value (in multiples of 5 fps) based on a 2 second average of actual elapsed time values in the `Time.update` method.  This is recalculated every 2 seconds so it could be used on a level-by-level basis if a game varies dramatically. I.e. if the fps rate consistently drops, you can adjust your game effects accordingly.
+* Game loop now tries to "catch up" frames if it is falling behind by iterating the logic update. This will help if the logic is occasionally causing things to run too slow, or if the renderer occasionally pushes the combined frame time over the FPS time. It's not a band-aid for a game that floods a low powered device however, so you still need to code accordingly. But it should help capture issues such as gc spikes or temporarily overloaded CPUs.
+* It now detects 'spiralling' which happens if a lot of frames are pushed out in succession meaning the CPU can never "catch up". It skips frames instead of trying to catch them up in this case. Note: the time value passed to the logic update functions is always constant regardless of these shenanigans.
+* Signals to the game program if there is a problem which might be fixed by lowering the desiredFps
+* Time.desiredFps is the new desired frame rate for your game.
+* Time.suggestedFps is the suggested frame rate for the game based on system load.
+* Time.slowMotion allows you to push the game into a slow motion mode. The default value is 1.0. 2.0 would be half speed, and so on.
+* Time.timeCap is no longer used and now deprecated. All timing is now handled by the fixed time-step code we've introduced.
 
 ### Updates
 
