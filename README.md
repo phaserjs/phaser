@@ -92,6 +92,7 @@ Version 2.1.4 - "Bethal" - in development
 * ScaleManager.viewportHeight returns the viewport height in pixels.
 * ScaleManager.documentWidth returns the document width in pixels.
 * ScaleManager.documentHeight returns the document height in pixels.
+* TilemapLayers have been given a decent performance boost on canvas with map shifting edge-redraw (thanks @pnstickne #1250)
 
 ### Updates
 
@@ -139,6 +140,7 @@ Version 2.1.4 - "Bethal" - in development
 * Fullscreen mode in IE11 now works (thanks @pnstickne)
 * Cache.addBitmapData now auto-creates a FrameData (thanks @pnstickne #1294 #1300)
 * P2.BodyDebug circles were drawing at half widths (thanks @enriqueto #1288)
+* FrameData.clone fixed when cloning data using frame names rather than indexes (thanks pjbaron)
 
 
 For details about changes made in previous versions of Phaser see the full Change Log at https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md
