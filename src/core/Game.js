@@ -690,7 +690,7 @@ Phaser.Game.prototype = {
     *
     * @method Phaser.Game#update
     * @protected
-    * @param {number} time - The current time as provided by Date.now (see updateRAF in RequestAnimationFrame.js) in milliseconds
+    * @param {number} time - The current time as provided by RequestAnimationFrame.
     */
     update: function (time) {
 
@@ -767,8 +767,8 @@ Phaser.Game.prototype = {
             }
 
             this.physics.preUpdate();
-            this.state.preUpdate();
-            this.plugins.preUpdate();
+            this.state.preUpdate(timeStep);
+            this.plugins.preUpdate(timeStep);
             this.stage.preUpdate();
 
             this.state.update();
