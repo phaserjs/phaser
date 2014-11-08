@@ -45,13 +45,21 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     this.parent = '';
 
     /**
-    * @property {number} width - The calculated game width in pixels.
+    * The current game width in pixels.
+    * _Do not modify this property directly._ Use the ScaleManager#setGameSize (`game.scale.setGameSize`) instead.
+    *
+    * @property {number} width
+    * @readonly
     * @default
     */
     this.width = 800;
 
     /**
-    * @property {number} height - The calculated game height in pixels.
+    * The current game height in pixels.
+    * _Do not modify this property directly._ Use the ScaleManager#setGameSize (`game.scale.setGameSize`) instead.
+    *
+    * @property {number} height
+    * @readonly
     * @default
     */
     this.height = 600;

@@ -373,8 +373,7 @@ Phaser.ScaleManager = function (game, width, height) {
     this._fullScreenRestore = null;
 
     /**
-    * Previous game dimensions. Used for restoring the size when leaving RESIZE mode.
-    * Such "prefered/user-set" size may be a good candidate for integration into Game.
+    * The actual game dimensions: used for restoring between scale changes, including RESIZE.
     * @property {Phaser.Rectangle} _gameSize
     * @private
     */
@@ -522,7 +521,7 @@ Phaser.ScaleManager.prototype = {
             this.parentNode = target;
             this.parentIsWindow = false;
 
-            this.getParentBounds(undefined, this._parentBounds);
+            this.getParentBounds(this._parentBounds);
 
             rect.width = this._parentBounds.width;
             rect.height = this._parentBounds.height;
@@ -606,13 +605,33 @@ Phaser.ScaleManager.prototype = {
             document.addEventListener('fullscreenerror', this._fullScreenError, false);
         }
 
-        this.updateDimensions(this.width, this.height, true);
-
         Phaser.Canvas.getOffset(this.game.canvas, this.offset);
 
         this.bounds.setTo(this.offset.x, this.offset.y, this.width, this.height);
 
-        this._gameSize.setTo(0, 0, this.game.width, this.game.height);
+        this.setGameDimensions(this.game.width, this.game.height);
+
+    },
+
+    /**
+    * Set the virtual size / dimensions of the game itself.
+    *
+    * The actual physical display will depend on the Scale Mode and size of the game canvas's parent element.
+    *
+    * @method Phaser.ScaleManager#setGameDimensions
+    * @public
+    * @param {integer} width - _Game width_, in pixels.
+    * @param {integer} height - _Game height_, in pixels.
+    */
+    setGameDimensions: function (width, height) {
+
+        this._gameSize.setTo(0, 0, width, height);
+        
+        if (this.currentScaleMode !== Phaser.ScaleManager.RESIZE)
+        {
+            this.updateDimensions(width, height, true);
+        }
+        this.queueUpdate(true);
 
     },
 
@@ -678,20 +697,11 @@ Phaser.ScaleManager.prototype = {
 
         var prevWidth = this._parentBounds.width;
         var prevHeight = this._parentBounds.height;
-        var bounds = this.getParentBounds(undefined, this._parentBounds);
+        var bounds = this.getParentBounds(this._parentBounds);
 
         if (bounds.width !== prevWidth || bounds.height !== prevHeight)
         {
-            var scaleMode = this.currentScaleMode;
-
-            // It is ugly but it ought to work barring some obscure race conditions
-            if (!this.isFullScreen &&
-                scaleMode !== Phaser.ScaleManager.RESIZE)
-            {
-                this._gameSize.setTo(0, 0, this.game.width, this.game.height);
-            }
-            
-            this.setScreenSize(true);
+            this.setScreenSize();
         }
 
         // Don't let an update be too eager about resetting the throttle.
@@ -996,7 +1006,7 @@ Phaser.ScaleManager.prototype = {
         // (This came from older code, by why is it here?)
         // Set minimum height of content to new window height
         document.documentElement['style'].minHeight = window.innerHeight + 'px';
-
+        
         if (this.incorrectOrientation)
         {
             this.setMaximum();
@@ -1009,7 +1019,19 @@ Phaser.ScaleManager.prototype = {
             }
             else if (scaleMode === Phaser.ScaleManager.SHOW_ALL)
             {
-                this.setShowAll();
+                if (!this.isFullScreen && !this.parentIsWindow)
+                {
+                    // Try to expand parent out, but choosing maximizing dimensions.                    
+                    // Then select minimize dimensions which should then honor parent
+                    // maximum bound applications.
+                    this.setShowAll(true);
+                    this.resetCanvas();
+                    this.setShowAll();
+                }
+                else
+                {
+                    this.setShowAll();
+                }
             }
             else if (scaleMode === Phaser.ScaleManager.NO_SCALE)
             {
@@ -1036,17 +1058,14 @@ Phaser.ScaleManager.prototype = {
     *
     * @method Phaser.ScaleManager#getParentBounds
     * @protected
-    * @param {boolean} [fullscreen=(isFullScreen)] - Is fullscreen.
     * @param {Phaser.Rectangle} [target=(new Rectangle)] - The rectangle to update; a new one is created as needed.
     */
-    getParentBounds: function (fullscreen, target) {
-
-        if (typeof fullscreen === 'undefined') { fullscreen = this.isFullScreen; }
+    getParentBounds: function (target) {
 
         var bounds = target || new Phaser.Rectangle();
         var parentNode = this.game.canvas && this.game.canvas.parentNode;
 
-        if (fullscreen && !this._createdFullScreenTarget)
+        if (this.isFullScreen && !this._createdFullScreenTarget)
         {
             bounds.setTo(0, 0, Math.round(window.outerWidth), Math.round(window.outerHeight));
         }
@@ -1143,17 +1162,12 @@ Phaser.ScaleManager.prototype = {
     */
     reflowGame: function ()
     {
-        var canvas = this.game.canvas;
-        canvas.style.marginLeft = '0';
-        canvas.style.marginTop = '0';
-        canvas.style.marginRight = '';
-        canvas.style.marginBottom = '';
-        canvas.style.width = '100%';
-        canvas.style.height = '100%';
 
-        // It might be a slight misfeature to use _parentBounds here
-        var bounds = this._parentBounds;
+        this.resetCanvas('', '');
+
+        var bounds = this.getParentBounds();
         this.updateDimensions(bounds.width, bounds.height, true);
+
     },
 
     /**
@@ -1166,42 +1180,15 @@ Phaser.ScaleManager.prototype = {
     */
     reflowCanvas: function () {
 
-        var scaleMode = this.currentScaleMode;
-
         if (!this.incorrectOrientation)
         {
-            if (this.maxWidth && this.width > this.maxWidth)
-            {
-                this.width = this.maxWidth;
-            }
-
-            if (this.maxHeight && this.height > this.maxHeight)
-            {
-                this.height = this.maxHeight;
-            }
-
-            if (this.minWidth && this.width < this.minWidth)
-            {
-                this.width = this.minWidth;
-            }
-
-            if (this.minHeight && this.height < this.minHeight)
-            {
-                this.height = this.minHeight;
-            }
+            this.width = Phaser.Math.clamp(this.width, this.minWidth || 0, this.maxWidth || this.width);
+            this.height = Phaser.Math.clamp(this.height, this.minHeight || 0, this.maxHeight || this.height);
         }
 
-        var canvas = this.game.canvas;
-        canvas.style.marginLeft = '0';
-        canvas.style.marginTop = '0';
-        canvas.style.marginRight = '';
-        canvas.style.marginBottom = '';
-        canvas.style.width = this.width + 'px';
-        canvas.style.height = this.height + 'px';
+        this.resetCanvas();
 
-        if (this.isFullScreen &&
-            this._createdFullScreenTarget &&
-            scaleMode !== Phaser.ScaleManager.RESIZE)
+        if (this.isFullScreen && this._createdFullScreenTarget)
         {
             this.alignCanvas(true, true);
         }
@@ -1215,7 +1202,27 @@ Phaser.ScaleManager.prototype = {
     },
 
     /**
+    * "Reset" the game canvas as set the specified styles directly.
+    * @method Phaser.ScaleManager#resetCanvas
+    * @private
+    * @param {string} [cssWidth=(current width)] - The css width to set.
+    * @param {string} [cssHeight=(current height)] - The css height to set.
+    */
+    resetCanvas: function (cssWidth, cssHeight) {
+
+        if (typeof cssWidth === 'undefined') { cssWidth = this.width + 'px'; }
+        if (typeof cssHeight === 'undefined') { cssHeight = this.height + 'px'; }
+
+        var canvas = this.game.canvas;
+        canvas.style.margin = '';
+        canvas.style.width = cssWidth;
+        canvas.style.height = cssHeight;
+
+    },
+
+    /**
     * Queues/marks a size/bounds check as needing to occur (from `preUpdate`).
+    * @method Phaser.ScaleManager#queueUpdate
     * @private
     * @param {boolean|undefined} force - If true updates the parent bounds to ensure the check is dirty; if false updates current bounds; if not specified does not update bounds.
     */
@@ -1227,7 +1234,7 @@ Phaser.ScaleManager.prototype = {
         }
         else if (force === false)
         {
-            this.getParentBounds(undefined, this._parentBounds);
+            this.getParentBounds(this._parentBounds);
         }
 
         this._sizeCheckThrottle = 0;
@@ -1266,14 +1273,23 @@ Phaser.ScaleManager.prototype = {
     * 
     * @method Phaser.ScaleManager#setShowAll
     * @private
+    * @param {boolean} expanding - If true then the maximizing dimension is chosen.
     */
-    setShowAll: function () {
+    setShowAll: function (expanding) {
 
         var bounds = this.getParentBounds();
         var width = bounds.width;
         var height = bounds.height;
 
-        var multiplier = Math.min((height / this.game.height), (width / this.game.width));
+        var multiplier;
+        if (expanding)
+        {
+            multiplier = Math.max((height / this.game.height), (width / this.game.width));
+        }
+        else
+        {
+            multiplier = Math.min((height / this.game.height), (width / this.game.width));
+        }
 
         this.width = Math.round(this.game.width * multiplier);
         this.height = Math.round(this.game.height * multiplier);
@@ -1291,33 +1307,23 @@ Phaser.ScaleManager.prototype = {
 
         var bounds = this.getParentBounds();
 
+        this.width = bounds.width;
+        this.height = bounds.height;
+
         if (this.isFullScreen)
         {
             // Max/min not honored fullscreen
-            this.width = bounds.width;
-            this.height = bounds.height;
             return;
         }
 
-        var availableWidth = bounds.width;
-        var availableHeight = bounds.height;
-
-        if (this.maxWidth && availableWidth > this.maxWidth)
+        if (this.maxWidth)
         {
-            this.width = this.maxWidth;
-        }
-        else
-        {
-            this.width = availableWidth;
+            this.width = Math.min(this.width, this.maxWidth);
         }
 
-        if (this.maxHeight && availableHeight > this.maxHeight)
+        if (this.maxHeight)
         {
-            this.height = this.maxHeight;
-        }
-        else
-        {
-            this.height = availableHeight;
+            this.height = Math.min(this.height, this.maxHeight);
         }
 
     },
@@ -1432,7 +1438,7 @@ Phaser.ScaleManager.prototype = {
             parent.insertBefore(this.game.canvas, fsTarget);
             parent.removeChild(fsTarget);
 
-            this._createdFullScreenTarget = false;
+            this._createdFullScreenTarget = null;
         }
 
     },
@@ -1500,19 +1506,11 @@ Phaser.ScaleManager.prototype = {
                 this.width = this._fullScreenRestore.game.width;
                 this.height = this._fullScreenRestore.game.height;
 
-                // Wee hack to reset/fix if we bumped up parent container sizes;
-                // this should be momentarily fixed in a future update
-                canvas.style.width = this.width + 'px';
-                canvas.style.height = this.height + 'px';
-
                 this._fullScreenRestore = null;
             }
 
-            // Always reset from "RESIZE" as game dimensions may have been altered.
-            if (this.fullScreenScaleMode === Phaser.ScaleManager.RESIZE)
-            {
-                this.updateDimensions(this._gameSize.width, this._gameSize.height, true);
-            }
+            this.updateDimensions(this._gameSize.width, this._gameSize.height, true);
+            this.resetCanvas();
         }
 
     },
@@ -1669,11 +1667,7 @@ Object.defineProperty(Phaser.ScaleManager.prototype, "scaleMode", {
         {
             if (!this.isFullScreen)
             {
-                if (this._scaleMode === Phaser.ScaleManager.RESIZE)
-                {
-                    this.updateDimensions(this._gameSize.width, this._gameSize.height, true);
-                }
-
+                this.updateDimensions(this._gameSize.width, this._gameSize.height, true);
                 this.queueUpdate(true);
             }
 
