@@ -410,7 +410,7 @@ Phaser.Time.prototype = {
     * @return {number} The number of seconds that have elapsed since the game was started.
     */
     totalElapsedSeconds: function() {
-        return (this.now - this._started) * 0.001;
+        return (this.time - this._started) * 0.001;
     },
 
     /**
@@ -421,7 +421,7 @@ Phaser.Time.prototype = {
     * @return {number} The difference between the given time and now.
     */
     elapsedSince: function (since) {
-        return this.now - since;
+        return this.time - since;
     },
 
     /**
@@ -432,7 +432,7 @@ Phaser.Time.prototype = {
     * @return {number} Duration between given time and now (in seconds).
     */
     elapsedSecondsSince: function (since) {
-        return (this.now - since) * 0.001;
+        return (this.time - since) * 0.001;
     },
 
     /**
