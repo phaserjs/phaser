@@ -799,7 +799,7 @@ Phaser.ScaleManager.prototype = {
     */
     preUpdate: function () {
 
-        if (this.game.time.now < (this._lastSizeCheck + this._sizeThrottle))
+        if (this.game.time.time < (this._lastSizeCheck + this._sizeThrottle))
         {
             return;
         }
@@ -833,7 +833,7 @@ Phaser.ScaleManager.prototype = {
         var throttle = this._sizeThrottle * 2;
 
         this._sizeThrottle = Phaser.Math.clamp(throttle, 10, this.trackParentInterval);
-        this._lastSizeCheck = this.game.time.now;
+        this._lastSizeCheck = this.game.time.time;
 
     },
 

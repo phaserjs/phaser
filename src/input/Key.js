@@ -122,7 +122,7 @@ Phaser.Key.prototype = {
 
         if (this.isDown)
         {
-            this.duration = this.game.time.now - this.timeDown;
+            this.duration = this.game.time.time - this.timeDown;
             this.repeats++;
 
             if (this.onHoldCallback)
@@ -156,7 +156,7 @@ Phaser.Key.prototype = {
 
         this.isDown = true;
         this.isUp = false;
-        this.timeDown = this.game.time.now;
+        this.timeDown = this.game.time.time;
         this.duration = 0;
         this.repeats = 0;
 
@@ -183,8 +183,8 @@ Phaser.Key.prototype = {
 
         this.isDown = false;
         this.isUp = true;
-        this.timeUp = this.game.time.now;
-        this.duration = this.game.time.now - this.timeDown;
+        this.timeUp = this.game.time.time;
+        this.duration = this.game.time.time - this.timeDown;
 
         this.onUp.dispatch(this);
 
@@ -205,7 +205,7 @@ Phaser.Key.prototype = {
 
         this.isDown = false;
         this.isUp = true;
-        this.timeUp = this.game.time.now;
+        this.timeUp = this.game.time.time;
         this.duration = 0;
         this._enabled = true; // .enabled causes reset(false)
 
@@ -243,7 +243,7 @@ Phaser.Key.prototype = {
 
         if (typeof duration === "undefined") { duration = 50; }
 
-        return (!this.isDown && ((this.game.time.now - this.timeUp) < duration));
+        return (!this.isDown && ((this.game.time.time - this.timeUp) < duration));
 
     }
 
