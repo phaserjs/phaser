@@ -316,13 +316,13 @@ Phaser.ScaleManager = function (game, width, height) {
     this.event = null;
 
     /**
-    * If `true` then EXACT_FIT and SHOW_ALL will work to fit within the window bounds
-    * as well as the bounds of the parent container. This preserves 2.1.3 and prior semantics.
+    * The borders on which to constrain the Canvas _to_ the Window viewport in _addition_ to any restrictions of the parent container.
     * @property {boolean} constrainToWindow
     * @public
     * @default
+    * @todo Implement left/top constraints.
     */
-    this.constrainToWindow = true;
+    this.windowConstraints = {left: false, top: false, bottom: true, right: true};
 
     /**
     * Scale mode to be used when not in full screen.
@@ -1170,19 +1170,29 @@ Phaser.ScaleManager.prototype = {
         {
             var clientRect = parentNode.getBoundingClientRect();
 
-            bounds.setTo(
-                Math.round(clientRect.left), Math.round(clientRect.top),
-                Math.round(clientRect.width), Math.round(clientRect.height));
+            bounds.setTo(clientRect.left, clientRect.top, clientRect.width, clientRect.height);
 
-            constrainToWindow = true;
-            if (constrainToWindow)
+            var wc = this.windowConstraints;
+            if (wc.left)
             {
-                var offset = Phaser.Canvas.getOffset(parentNode);
-                var toRight = Math.round(window.innerWidth - offset.x);
-                var toBottom = Math.round(window.innerHeight - offset.y);
-                bounds.width = Phaser.Math.clmap(bounds.width, 0, toRight);
-                bounds.height = Phaser.Math.clmap(bounds.height, 0, toBottom);
+                bounds.left = Math.max(bounds.left, 0);
             }
+            if (wc.right)
+            {
+                bounds.right = Math.min(bounds.right, window.innerWidth);
+            }
+            if (wc.top)
+            {
+                bounds.top = Math.max(bounds.top, 0);
+            }
+            if (wc.bottom)
+            {
+                bounds.bottom = Math.min(bounds.bottom, window.innerHeight);
+            }
+
+            bounds.setTo(
+                Math.round(bounds.x), Math.round(bounds.y),
+                Math.round(bounds.width), Math.round(bounds.height));
         }
 
         return bounds;
