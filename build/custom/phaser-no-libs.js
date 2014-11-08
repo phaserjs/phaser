@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.1.4 "Bethal" - Built: Sat Nov 08 2014 19:03:01
+* v2.2.0 "Bethal" - Built: Sat Nov 08 2014 19:24:51
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -50,7 +50,7 @@
 */
 var Phaser = Phaser || {
 
-	VERSION: '2.1.4-dev',
+	VERSION: '2.2.0-dev',
 	GAMES: [],
 
     AUTO: 0,
@@ -4720,7 +4720,7 @@ PIXI.Graphics.prototype._renderWebGL = function(renderSession)
             this.dirty = false;
         }
 
-        this._cachedSprite.alpha = this.alpha;
+        this._cachedSprite.worldAlpha = this.worldAlpha;
         PIXI.Sprite.prototype._renderWebGL.call(this._cachedSprite, renderSession);
 
         return;
