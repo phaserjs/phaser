@@ -1151,9 +1151,8 @@ Phaser.ScaleManager.prototype = {
     * @method Phaser.ScaleManager#getParentBounds
     * @protected
     * @param {Phaser.Rectangle} [target=(new Rectangle)] - The rectangle to update; a new one is created as needed.
-    * @param {boolean} [constrainToWindow=false] - If set then *also* constrain the bounding rectangle to the window.
     */
-    getParentBounds: function (target, constrainToWindow) {
+    getParentBounds: function (target) {
 
         var bounds = target || new Phaser.Rectangle();
         var parentNode = this.game.canvas && this.game.canvas.parentNode;
