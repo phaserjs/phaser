@@ -40,6 +40,14 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
     this.map = tilemap;
 
     /**
+    * The index of this layer within the Tilemap.
+    * @property {number} index
+    * @protected
+    * @readonly
+    */
+    this.index = index;
+
+    /**
     * The layer object within the Tilemap that this layer represents.
     * @property {Phaser.TileLayer} layer
     * @protected
@@ -252,22 +260,6 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
 
 Phaser.TilemapLayer.prototype = Object.create(Phaser.Image.prototype);
 Phaser.TilemapLayer.prototype.constructor = Phaser.TilemapLayer;
-
-/**
-* The index of this layer (`layer`) within the Tilemap.
-*
-* @property {integer} index
-* @memberof Phaser.TilemapLayer
-* @readonly
-* @protected
-*/
-Object.defineProperty(Phaser.TilemapLayer.prototype, 'index', {
-
-    get: function () {
-        return this.layer.layerIndex;
-    }
-
-});
 
 /**
 * If no valid tileset/image can be found for a tile, the tile is rendered as a rectangle using this as a fill value.
