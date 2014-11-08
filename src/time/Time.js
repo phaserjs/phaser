@@ -335,7 +335,7 @@ Phaser.Time.prototype = {
         if (!this.game.paused)
         {
             //  Our internal Phaser.Timer
-            this.events.update(this.now);
+            this.events.update(this.time);
 
             //  Any game level timers
             this._i = 0;
@@ -343,7 +343,7 @@ Phaser.Time.prototype = {
 
             while (this._i < this._len)
             {
-                if (this._timers[this._i].update(this.now))
+                if (this._timers[this._i].update(this.time))
                 {
                     this._i++;
                 }
