@@ -324,7 +324,12 @@ Phaser.ScaleManager = function (game, width, height) {
     * @default
     * @todo Implement left/top constraints.
     */
-    this.windowConstraints = {left: false, top: false, bottom: true, right: true};
+    this.windowConstraints = {
+        left: false,
+        top: false,
+        bottom: true,
+        right: true
+    };
 
     /**
     * Scale mode to be used when not in full screen.
@@ -676,58 +681,6 @@ Phaser.ScaleManager.prototype = {
         this.grid = new Phaser.FlexGrid(this, newWidth, newHeight);
 
         this.updateDimensions(newWidth, newHeight, false);
-
-    },
-
-    /**
-    * Start the ScaleManager.
-    * 
-    * @method Phaser.ScaleManager#boot
-    * @protected
-    */
-    boot: function () {
-
-        this.supportsFullScreen = this.game.device.fullscreen && !this.game.device.cocoonJS;
-
-        var _this = this;
-
-        this._orientationChange = function(event) {
-            return _this.orientationChange(event);
-        };
-
-        this._windowResize = function(event) {
-            return _this.windowResize(event);
-        };
-
-        window.addEventListener('orientationchange', this._orientationChange, false);
-        window.addEventListener('resize', this._windowResize, false);
-
-        if (this.supportsFullScreen)
-        {
-            this._fullScreenChange = function(event) {
-                return _this.fullScreenChange(event);
-            };
-
-            this._fullScreenError = function(event) {
-                return _this.fullScreenError(event);
-            };
-
-            document.addEventListener('webkitfullscreenchange', this._fullScreenChange, false);
-            document.addEventListener('mozfullscreenchange', this._fullScreenChange, false);
-            document.addEventListener('MSFullscreenChange', this._fullScreenChange, false);
-            document.addEventListener('fullscreenchange', this._fullScreenChange, false);
-
-            document.addEventListener('webkitfullscreenerror', this._fullScreenError, false);
-            document.addEventListener('mozfullscreenerror', this._fullScreenError, false);
-            document.addEventListener('MSFullscreenError', this._fullScreenError, false);
-            document.addEventListener('fullscreenerror', this._fullScreenError, false);
-        }
-
-        Phaser.Canvas.getOffset(this.game.canvas, this.offset);
-
-        this.bounds.setTo(this.offset.x, this.offset.y, this.width, this.height);
-
-        this.setGameSize(this.game.width, this.game.height);
 
     },
 
@@ -1858,7 +1811,7 @@ Phaser.ScaleManager.prototype = {
 
         if (typeof width === 'undefined') { width = this.width; }
         if (typeof height === 'undefined') { height = this.height; }
-        if (typeof letterbox === 'undefined') { letterbox = false; }
+        if (typeof letterBox === 'undefined') { letterBox = false; }
 
         sprite.scale.set(1);
 
