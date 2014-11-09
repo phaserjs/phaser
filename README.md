@@ -21,11 +21,11 @@
 - [License](#license)
 
 <a name="about"></a>
-# Phaser 2.1.4
+# Phaser 2.2.0
 
 Phaser is a fast, free and fun open source game framework for making desktop and mobile browser HTML5 games. It uses [Pixi.js](https://github.com/GoodBoyDigital/pixi.js/) internally for fast 2D Canvas and WebGL rendering.
 
-Version: 2.1.4 "Bethal" - Released: -in development-
+Version: 2.2.0 "Bethal" - Released: -in development-
 
 By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 
@@ -43,7 +43,7 @@ By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 ![div](http://phaser.io/images/div4.png)
 
 <a name="whats-new"></a>
-## Welcome to Phaser and What's new in 2.1.4?
+## Welcome to Phaser and What's new in 2.2.0?
 
 ![Pixi 2.0](http://www.phaser.io/images/pixi-v2.png)
 
@@ -71,7 +71,7 @@ Finally the list of [community authored Phaser Tutorials](http://www.lessmilk.co
 <a name="change-log"></a>
 ## Change Log
 
-Version 2.1.4 - "Bethal" - in development
+Version 2.2.0 - "Bethal" - in development
 
 ### New Features
 
@@ -81,6 +81,30 @@ Version 2.1.4 - "Bethal" - in development
 * Phaser.Color.valueToColor converts a value: a "hex" string, a "CSS 'web' string", or a number - into red, green, blue, and alpha components (thanks @pnstickne #1264)
 * Stage.backgroundColor now supports CSS 'rgba' values, as well as hex strings and hex numbers (thanks @pnstickne #1234)
 * Pointer.addClickTrampoline now adds in support for click trampolines. These  raise pointer events into click events, which are required internally for a few edge cases like IE11 full screen mode support, but are also useful if you know you specifically need a DOM click event from a pointer (thanks @pnstickne #1282)
+* Point.floor will Math.floor both the `x` and `y` values of the Point.
+* Point.ceil will Math.ceil both the `x` and `y` values of the Point.
+* ScaleManager.elementBounds is a cross-browser element.getBoundingClientRect method with optional cushion.
+* ScaleManager.calibrate is a private method that calibrates element coordinates for viewport checks.
+* ScaleManager.aspect gets the viewport aspect ratio (or the aspect ratio of an object or element)
+* ScaleManager.inViewport tests if the given DOM element is within the viewport, with an optional cushion parameter that allows you to specify a distance.
+* ScaleManager.scaleSprite takes a Sprite or Image object and scales it to fit the given dimensions. Scaling happens proportionally without distortion to the sprites texture. The letterBox parameter controls if scaling will produce a letter-box effect or zoom the sprite until it fills the given values.
+* ScaleManager.viewportWidth returns the viewport width in pixels.
+* ScaleManager.viewportHeight returns the viewport height in pixels.
+* ScaleManager.documentWidth returns the document width in pixels.
+* ScaleManager.documentHeight returns the document height in pixels.
+* TilemapLayers have been given a decent performance boost on canvas with map shifting edge-redraw (thanks @pnstickne #1250)
+* A large refactor to how the internal game timers and physics calculations has been made. We've now swapped to using a fixed time step internally across Phaser, instead of the variable one we had before that caused glitchse on low-fps systems. Thanks to pjbaron for his help with all of these related changes.
+* We have separated the logic and render updates to permit slow motion and time slicing effects. We've fixed time calling to fix physics problems caused by variable time updates (i.e. collisions sometimes missing, objects tunneling, etc)
+* Once per frame calling for rendering and tweening to keep things as smooth as possible
+* Calculates a `suggestedFps` value (in multiples of 5 fps) based on a 2 second average of actual elapsed time values in the `Time.update` method.  This is recalculated every 2 seconds so it could be used on a level-by-level basis if a game varies dramatically. I.e. if the fps rate consistently drops, you can adjust your game effects accordingly.
+* Game loop now tries to "catch up" frames if it is falling behind by iterating the logic update. This will help if the logic is occasionally causing things to run too slow, or if the renderer occasionally pushes the combined frame time over the FPS time. It's not a band-aid for a game that floods a low powered device however, so you still need to code accordingly. But it should help capture issues such as gc spikes or temporarily overloaded CPUs.
+* It now detects 'spiralling' which happens if a lot of frames are pushed out in succession meaning the CPU can never "catch up". It skips frames instead of trying to catch them up in this case. Note: the time value passed to the logic update functions is always constant regardless of these shenanigans.
+* Signals to the game program if there is a problem which might be fixed by lowering the desiredFps
+* Time.desiredFps is the new desired frame rate for your game.
+* Time.suggestedFps is the suggested frame rate for the game based on system load.
+* Time.slowMotion allows you to push the game into a slow motion mode. The default value is 1.0. 2.0 would be half speed, and so on.
+* Time.timeCap is no longer used and now deprecated. All timing is now handled by the fixed time-step code we've introduced.
+* Time.now can no longer be relied upon to contain a timestamp value. If the browser supports requestAnimationFrame then `Time.now` will contain the high resolution timer value that rAf generates. Otherwise it will contain the value of Date.now. If you require the actual time value (in milliseconds) then please use `Time.time` instead. Note that all Phaser sub-systems that used to rely on `Time.now` have been updated, so if you have any code that extends these please be sure to check it.
 
 ### Updates
 
@@ -103,6 +127,16 @@ Version 2.1.4 - "Bethal" - in development
     * Updated documentation for specificty; added @public\@protected
     * @deprecated currentPointers due to odd set pattern; totalCurrentPointers is more appropriate.
 (thanks @pnstickne #1283)
+* Various ScaleManager fixes and updates:
+    * Scale modes can now be set independently
+    * Switching between fullscreen and normal correctly restores modes
+    * Alignment does not incorrectly offset in fullscreen mode (#1255)
+    * Changing scale/alignment promptly refreshes layout
+    * `isFullScreen` returns a boolean, as it should
+    * Faster parent checks (if required)
+    * NO_SCALE should not not scale (vs previous behavior of having no behavior)
+    * Correct usage of scaleMode depending on mode
+(thanks @pnstickne)
 
 ### Bug Fixes
 
@@ -115,6 +149,10 @@ Version 2.1.4 - "Bethal" - in development
 * Setting Key.enabled = false while it is down did not reset the isDown state (thanks @pnstickne #1190 #1271)
 * The Gamepad.addCallbacks context parameter was never actually remembered, causing the callbacks to run in the wrong context (thanks @englercj #1285)
 * Animation.setFrame used the wrong frames array if `useLocalFrameIndex` was `false` and a numeric frame ID was given (thanks @Skeptron #1284)
+* Fullscreen mode in IE11 now works (thanks @pnstickne)
+* Cache.addBitmapData now auto-creates a FrameData (thanks @pnstickne #1294 #1300)
+* P2.BodyDebug circles were drawing at half widths (thanks @enriqueto #1288)
+* FrameData.clone fixed when cloning data using frame names rather than indexes (thanks pjbaron)
 
 
 For details about changes made in previous versions of Phaser see the full Change Log at https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md
@@ -167,11 +205,11 @@ Nice and easy :)
 
 Phaser is now available on [CDNJS](http://cdnjs.com). You can include the following in your html:
 
-`http://cdnjs.cloudflare.com/ajax/libs/phaser/2.1.4/phaser.min.js`
+`http://cdnjs.cloudflare.com/ajax/libs/phaser/2.2.0/phaser.min.js`
 
 Or if you prefer you can leave the protocol off, so it works via http and https:
 
-`//cdnjs.cloudflare.com/ajax/libs/phaser/2.1.4/phaser.min.js`
+`//cdnjs.cloudflare.com/ajax/libs/phaser/2.2.0/phaser.min.js`
 
 ![div](http://phaser.io/images/div1.png)
 

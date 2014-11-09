@@ -21,6 +21,7 @@ Phaser.Time = function (game) {
 
     /**
     * @property {number} time - Game time counter. If you need a value for in-game calculation please use Phaser.Time.now instead.
+    *                         - This always contains Date.now, but Phaser.Time.now will hold the high resolution RAF timer value (if RAF is available)
     * @protected
     */
     this.time = 0;
@@ -48,6 +49,35 @@ Phaser.Time = function (game) {
     * @protected
     */
     this.pausedTime = 0;
+
+    /**
+     * @property {number} desiredFps = 60 - The desired frame-rate for this project.
+     */
+    this.desiredFps = 60;
+
+    /**
+     * @property {number} suggestedFps = null - The suggested frame-rate for this project.
+     * NOTE: not available until after a few frames have passed, it is recommended to use this after a few seconds (eg. after the menus)
+     */
+    this.suggestedFps = null;
+
+    /**
+     * @property {number} _frameCount - count the number of calls to time.update since the last suggestedFps was calculated
+     * @private
+     */
+    this._frameCount = 0;
+
+    /**
+     * @property {number} _elapsedAcumulator - sum of the elapsed time since the last suggestedFps was calculated
+     * @private
+     */
+    this._elapsedAccumulator = 0;
+
+    /**
+     * @property {number} slowMotion = 1.0 - Scaling factor to make the game move smoothly in slow motion (1.0 = normal speed, 2.0 = half speed)
+     * @type {Number}
+     */
+    this.slowMotion = 1.0;
 
     /**
     * @property {boolean} advancedTiming - If true Phaser.Time will perform advanced profiling including the fps rate, fps min/max and msMin and msMax.
@@ -93,9 +123,12 @@ Phaser.Time = function (game) {
     this.deltaCap = 0;
 
     /**
-    * @property {number} timeCap - If the difference in time between two frame updates exceeds this value, the frame time is reset to avoid huge elapsed counts.
+    * @property {number} timeCap - If the difference in time between two frame updates exceeds this value in ms, the frame time is reset to avoid huge elapsed counts.
+    *                            - assumes a desiredFps of 60
+    *
+    * DEPRECATED: this no longer has any effect since the change to fixed-time stepping in game.update  3rd November 2014
     */
-    this.timeCap = 1 / 60 * 1000;
+    this.timeCap = 1000 / 60;
 
     /**
     * @property {number} frames - The number of frames record in the last second. Only calculated if Time.advancedTiming is true.
@@ -113,9 +146,9 @@ Phaser.Time = function (game) {
     this.timeToCall = 0;
 
     /**
-    * @property {number} lastTime - Internal value used by timeToCall as part of the setTimeout loop
+    * @property {number} timeExpected - The time when the next call is expected when using setTimer to control the update loop
     */
-    this.lastTime = 0;
+    this.timeExpected = 0;
 
     /**
     * @property {Phaser.Timer} events - This is a Phaser.Timer object bound to the master clock to which you can add timed events.
@@ -242,25 +275,39 @@ Phaser.Time.prototype = {
     */
     update: function (time) {
 
+        // this.time always holds Date.now, this.now may hold the RAF high resolution time value if RAF is available (otherwise it also holds Date.now)
+        this.time = Date.now();
+
+        // 'now' is currently still holding the time of the last call, move it into prevTime
         this.prevTime = this.now;
 
+        // update 'now' to hold the current time
         this.now = time;
 
-        this.timeToCall = this.game.math.max(0, 16 - (time - this.lastTime));
+        // elapsed time between previous call and now
+        this.elapsed = this.now - this.prevTime;
 
-        this.elapsed = this.now - this.time;
+        // time to call this function again in ms in case we're using timers instead of RequestAnimationFrame to update the game
+        this.timeToCall = Math.floor(this.game.math.max(0, (1000.0 / this.desiredFps) - (this.timeCallExpected - time)));
 
-        //  spike-dislike
-        if (this.elapsed > this.timeCap)
+        // time when the next call is expected if using timers
+        this.timeCallExpected = time + this.timeToCall;
+
+        // count the number of time.update calls
+        this._frameCount++;
+        this._elapsedAccumulator += this.elapsed;
+
+        // occasionally recalculate the suggestedFps based on the accumulated elapsed time
+        if (this._frameCount >= this.desiredFps * 2)
         {
-            //  For some reason the time between now and the last time the game was updated was larger than our timeCap
-            //  This can happen if the Stage.disableVisibilityChange is true and you swap tabs, which makes the raf pause.
-            //  In this case we'll drop to some default values to stop the game timers going nuts.
-            this.elapsed = this.timeCap;
+            // this formula calculates suggestedFps in multiples of 5 fps
+            this.suggestedFps = Math.floor(200 / (this._elapsedAccumulator / this._frameCount)) * 5;
+            this._frameCount = 0;
+            this._elapsedAccumulator = 0;
         }
 
-        //  Calculate physics elapsed, ensure it's > 0, use 1/60 as a fallback
-        this.physicsElapsed = this.elapsed / 1000 || 1 / 60;
+        //  Set the physics elapsed time... this will always be 1 / this.desiredFps because we're using fixed time steps in game.update now
+        this.physicsElapsed = 1 / this.desiredFps;
 
         if (this.deltaCap > 0 && this.physicsElapsed > this.deltaCap)
         {
@@ -284,14 +331,11 @@ Phaser.Time.prototype = {
             }
         }
 
-        this.time = this.now;
-        this.lastTime = time + this.timeToCall;
-
         //  Paused but still running?
         if (!this.game.paused)
         {
             //  Our internal Phaser.Timer
-            this.events.update(this.now);
+            this.events.update(this.time);
 
             //  Any game level timers
             this._i = 0;
@@ -299,7 +343,7 @@ Phaser.Time.prototype = {
 
             while (this._i < this._len)
             {
-                if (this._timers[this._i].update(this.now))
+                if (this._timers[this._i].update(this.time))
                 {
                     this._i++;
                 }
@@ -322,7 +366,7 @@ Phaser.Time.prototype = {
     */
     gamePaused: function () {
 
-        this._pauseStarted = this.now;
+        this._pauseStarted = Date.now();
 
         this.events.pause();
 
@@ -343,8 +387,8 @@ Phaser.Time.prototype = {
     */
     gameResumed: function () {
 
-        //  Level out the elapsed timer to avoid spikes
-        this.time = this.now = Date.now();
+        // Set the parameter which stores Date.now() to make sure it's correct on resume
+        this.time = Date.now();
 
         this.pauseDuration = this.time - this._pauseStarted;
 
@@ -366,7 +410,7 @@ Phaser.Time.prototype = {
     * @return {number} The number of seconds that have elapsed since the game was started.
     */
     totalElapsedSeconds: function() {
-        return (this.now - this._started) * 0.001;
+        return (this.time - this._started) * 0.001;
     },
 
     /**
@@ -377,7 +421,7 @@ Phaser.Time.prototype = {
     * @return {number} The difference between the given time and now.
     */
     elapsedSince: function (since) {
-        return this.now - since;
+        return this.time - since;
     },
 
     /**
@@ -388,7 +432,7 @@ Phaser.Time.prototype = {
     * @return {number} Duration between given time and now (in seconds).
     */
     elapsedSecondsSince: function (since) {
-        return (this.now - since) * 0.001;
+        return (this.time - since) * 0.001;
     },
 
     /**

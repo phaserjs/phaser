@@ -244,17 +244,23 @@ Phaser.Cache.prototype = {
     },
 
     /**
-    * Add a BitmapData object in to the cache.
+    * Add a BitmapData object to the cache.
     *
     * @method Phaser.Cache#addBitmapData
     * @param {string} key - Asset key for this BitmapData.
     * @param {Phaser.BitmapData} bitmapData - The BitmapData object to be addded to the cache.
-    * @param {Phaser.FrameData} [frameData] - Optional FrameData set associated with the given BitmapData.
+    * @param {Phaser.FrameData|null} [frameData=(auto create)] - Optional FrameData set associated with the given BitmapData. If not specified (or `undefined`) a new FrameData object is created containing the Bitmap's Frame. If `null` is supplied then no FrameData will be created.
     * @return {Phaser.BitmapData} The BitmapData object to be addded to the cache.
     */
     addBitmapData: function (key, bitmapData, frameData) {
 
         bitmapData.key = key;
+
+        if (typeof frameData === 'undefined')
+        {
+            frameData = new Phaser.FrameData();
+            frameData.addFrame(bitmapData.textureFrame);
+        }
 
         this._bitmapDatas[key] = { data: bitmapData, frameData: frameData };
 

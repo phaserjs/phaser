@@ -9,6 +9,8 @@
 *
 * The `width` and `height` constructor parameters can either be a number which represents pixels or a string that represents a percentage: e.g. `800` (for 800 pixels) or `"80%"` for 80%.
 *
+* Some parts of ScaleManager were inspired by the research of Ryan Van Etten, released under MIT License 2013.
+*
 * @class Phaser.ScaleManager
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
@@ -313,7 +315,10 @@ Phaser.ScaleManager = function (game, width, height) {
     * @public
     * @default
     */
-    this.windowConstraints = {bottom: true, right: true};
+    this.windowConstraints = {
+        bottom: true,
+        right: true
+    };
 
     /**
     * Various compatibility settings. The `(auto)` settings are automatically configured on boot based on device and other runtime information.
@@ -540,6 +545,79 @@ Phaser.ScaleManager.USER_SCALE = 4;
 Phaser.ScaleManager.prototype = {
 
     /**
+    * Start the ScaleManager.
+    * 
+    * @method Phaser.ScaleManager#boot
+    * @protected
+    */
+    boot: function () {
+
+        // Configure device-dependent compatibility
+
+        var compat = this.compatibility;
+        
+        compat.supportsFullScreen = this.game.device.fullscreen && !this.game.device.cocoonJS;
+
+        //  We can't do anything about the status bars in iPads, web apps or desktops
+        if (!this.game.device.iPad && !this.game.device.webApp && !this.game.device.desktop)
+        {
+            if (this.game.device.android && !this.game.device.chrome)
+            {
+                compat.scrollTo = new Phaser.Point(0, 1);
+            }
+            else
+            {
+                compat.scrollTo = new Phaser.Point(0, 0);
+            }
+        }
+
+        // Configure event listeners
+
+        var _this = this;
+
+        this._orientationChange = function(event) {
+            return _this.orientationChange(event);
+        };
+
+        this._windowResize = function(event) {
+            return _this.windowResize(event);
+        };
+
+        window.addEventListener('orientationchange', this._orientationChange, false);
+        window.addEventListener('resize', this._windowResize, false);
+
+        if (this.compatibility.supportsFullScreen)
+        {
+            this._fullScreenChange = function(event) {
+                return _this.fullScreenChange(event);
+            };
+
+            this._fullScreenError = function(event) {
+                return _this.fullScreenError(event);
+            };
+
+            document.addEventListener('webkitfullscreenchange', this._fullScreenChange, false);
+            document.addEventListener('mozfullscreenchange', this._fullScreenChange, false);
+            document.addEventListener('MSFullscreenChange', this._fullScreenChange, false);
+            document.addEventListener('fullscreenchange', this._fullScreenChange, false);
+
+            document.addEventListener('webkitfullscreenerror', this._fullScreenError, false);
+            document.addEventListener('mozfullscreenerror', this._fullScreenError, false);
+            document.addEventListener('MSFullscreenError', this._fullScreenError, false);
+            document.addEventListener('fullscreenerror', this._fullScreenError, false);
+        }
+
+        // Initialize core bounds
+
+        Phaser.Canvas.getOffset(this.game.canvas, this.offset);
+
+        this.bounds.setTo(this.offset.x, this.offset.y, this.width, this.height);
+
+        this.setGameSize(this.game.width, this.game.height);
+
+    },
+
+    /**
     * Load configuration settings.
     * 
     * @method Phaser.ScaleManager#parseConfig
@@ -644,82 +722,11 @@ Phaser.ScaleManager.prototype = {
             newHeight = rect.height * this.parentScaleFactor.y;
         }
 
+        this._gameSize.setTo(0, 0, newWidth, newHeight);
+
         this.grid = new Phaser.FlexGrid(this, newWidth, newHeight);
 
         this.updateDimensions(newWidth, newHeight, false);
-
-    },
-
-    /**
-    * Start the ScaleManager.
-    * 
-    * @method Phaser.ScaleManager#boot
-    * @protected
-    */
-    boot: function () {
-
-        // Configure device-dependent compatibility
-
-        var compat = this.compatibility;
-        
-        compat.supportsFullScreen = this.game.device.fullscreen && !this.game.device.cocoonJS;
-
-        //  We can't do anything about the status bars in iPads, web apps or desktops
-        if (!this.game.device.iPad && !this.game.device.webApp && !this.game.device.desktop)
-        {
-            if (this.game.device.android && !this.game.device.chrome)
-            {
-                compat.scrollTo = new Phaser.Point(0, 1);
-            }
-            else
-            {
-                compat.scrollTo = new Phaser.Point(0, 0);
-            }
-        }
-
-        // Configure event listeners
-
-        var _this = this;
-
-        this._orientationChange = function(event) {
-            return _this.orientationChange(event);
-        };
-
-        this._windowResize = function(event) {
-            return _this.windowResize(event);
-        };
-
-        window.addEventListener('orientationchange', this._orientationChange, false);
-        window.addEventListener('resize', this._windowResize, false);
-
-        if (this.compatibility.supportsFullScreen)
-        {
-            this._fullScreenChange = function(event) {
-                return _this.fullScreenChange(event);
-            };
-
-            this._fullScreenError = function(event) {
-                return _this.fullScreenError(event);
-            };
-
-            document.addEventListener('webkitfullscreenchange', this._fullScreenChange, false);
-            document.addEventListener('mozfullscreenchange', this._fullScreenChange, false);
-            document.addEventListener('MSFullscreenChange', this._fullScreenChange, false);
-            document.addEventListener('fullscreenchange', this._fullScreenChange, false);
-
-            document.addEventListener('webkitfullscreenerror', this._fullScreenError, false);
-            document.addEventListener('mozfullscreenerror', this._fullScreenError, false);
-            document.addEventListener('MSFullscreenError', this._fullScreenError, false);
-            document.addEventListener('fullscreenerror', this._fullScreenError, false);
-        }
-
-        // Initialize core bounds
-
-        Phaser.Canvas.getOffset(this.game.canvas, this.offset);
-
-        this.bounds.setTo(this.offset.x, this.offset.y, this.width, this.height);
-
-        this.setGameSize(this.game.width, this.game.height);
 
     },
 
@@ -740,15 +747,13 @@ Phaser.ScaleManager.prototype = {
     */
     setGameSize: function (width, height) {
 
-        width |= 0;
-        height |= 0;
-
         this._gameSize.setTo(0, 0, width, height);
         
         if (this.currentScaleMode !== Phaser.ScaleManager.RESIZE)
         {
             this.updateDimensions(width, height, true);
         }
+
         this.queueUpdate(true);
 
     },
@@ -800,7 +805,7 @@ Phaser.ScaleManager.prototype = {
     */
     signalSizeChange: function () {
 
-        if (!Phaser.Rectangle.sameDimensions(this, this._lastReportedCanvasSize.width) ||
+        if (!Phaser.Rectangle.sameDimensions(this, this._lastReportedCanvasSize) ||
             !Phaser.Rectangle.sameDimensions(this.game, this._lastReportedGameSize))
         {
             var width = this.width;
@@ -825,7 +830,7 @@ Phaser.ScaleManager.prototype = {
     /**
     * Set the min and max dimensions for the game object.
     *
-    * @method setMinMax
+    * @method Phaser.ScaleManager#setMinMax
     * @public
     * @param {number} minWidth - The minimum width the game is allowed to scale down to.
     * @param {number} minHeight - The minimum height the game is allowed to scale down to.
@@ -858,7 +863,7 @@ Phaser.ScaleManager.prototype = {
     */
     preUpdate: function () {
 
-        if (this.game.time.now < (this._lastSizeCheck + this._sizeThrottle))
+        if (this.game.time.time < (this._lastSizeCheck + this._sizeThrottle))
         {
             return;
         }
@@ -892,7 +897,7 @@ Phaser.ScaleManager.prototype = {
         var throttle = this._sizeThrottle * 2;
 
         this._sizeThrottle = Phaser.Math.clamp(throttle, 10, this.trackParentInterval);
-        this._lastSizeCheck = this.game.time.now;
+        this._lastSizeCheck = this.game.time.time;
 
     },
 
@@ -1734,7 +1739,180 @@ Phaser.ScaleManager.prototype = {
         this.cleanupCreatedTarget();
 
         console.warn('Phaser.ScaleManager: requestFullscreen failed or device does not support the Fullscreen API');
+
         this.fullScreenFailed.dispatch();
+
+    },
+
+    /**
+    * A cross-browser element.getBoundingClientRect method with optional cushion.
+    * 
+    * Returns a plain object containing the properties `top/bottom/left/right/width/height` with respect to the top-left corner of the current viewport.
+    * Its properties match the native rectangle.
+    * The cushion parameter is an amount of pixels (+/-) to cushion the element.
+    * It adjusts the measurements such that it is possible to detect when an element is near the viewport.
+    * 
+    * @method Phaser.ScaleManager#elementBounds
+    * @public
+    * @param {Element|Object} element - The element or stack (uses first item) to get the bounds for. If none given it defaults to the Phaser game canvas.
+    * @param {number} [cushion] - A +/- pixel adjustment amount.
+    * @return {Object|boolean} A plain object containing the properties `top/bottom/left/right/width/height` or `false` if a non-valid element is given.
+    */
+    elementBounds: function (element, cushion) {
+
+        if (typeof element === 'undefined') { element = this.game.canvas; }
+        if (typeof cushion === 'undefined') { cushion = 0; }
+
+        element = element && !element.nodeType ? element[0] : element;
+
+        if (!element || element.nodeType !== 1)
+        {
+            return false;
+        }
+        else
+        {
+            return this.calibrate(element.getBoundingClientRect(), cushion);
+        }
+
+    },
+
+    /**
+    * Calibrates element coordinates for `inViewport` checks.
+    *
+    * @method Phaser.ScaleManager#calibrate
+    * @private
+    * @param {Object} coords -An object containing the following properties: `{top: number, right: number, bottom: number, left: number}`
+    * @param {number} [cushion] - A value to adjust the coordinates by.
+    * @return {Object} The calibrated element coordinates
+    */
+    calibrate: function (coords, cushion) {
+
+        cushion = +cushion || 0;
+
+        var output = { width: 0, height: 0, left: 0, right: 0, top: 0, bottom: 0 };
+
+        output.width = (output.right = coords.right + cushion) - (output.left = coords.left - cushion);
+        output.height = (output.bottom = coords.bottom + cushion) - (output.top = coords.top - cushion);
+
+        return output;
+
+    },
+
+    /**
+    * Get the viewport aspect ratio (or the aspect ratio of an object or element)
+    * @link http://w3.org/TR/css3-mediaqueries/#orientation
+    * 
+    * @method Phaser.ScaleManager#aspect
+    * @public
+    * @param {(Element|Object)=} [object] - Optional object. Must have public `width` and `height` properties or methods.
+    * @return {number} The aspect ratio.
+    */
+    aspect: function (object) {
+
+        object = null == object ? this.viewport() : 1 === object.nodeType ? this.elementBounds(object) : object;
+
+        var w = object['width'];
+        var h = object['height'];
+
+        if (typeof w === 'function')
+        {
+            w = w.call(object);
+        }
+
+        if (typeof h === 'function')
+        {
+            h = h.call(object);
+        }
+
+        return w / h;
+
+    },
+
+    /**
+    * Tests if the given DOM element is within the viewport.
+    * 
+    * The optional cushion parameter allows you to specify a distance.
+    * 
+    * inViewport(element, 100) is `true` if the element is in the viewport or 100px near it.
+    * inViewport(element, -100) is `true` if the element is in the viewport or at least 100px near it.
+    * 
+    * @method Phaser.ScaleManager#inViewport
+    * @public
+    * @param {Element|Object} [element] - The DOM element to check. If no element is given it defaults to the Phaser game canvas.
+    * @param {number} [cushion] - The cushion allows you to specify a distance within which the element must be within the viewport.
+    * @return {boolean} True if the element is within the viewport, or within `cushion` distance from it.
+    */
+    inViewport: function (element, cushion) {
+
+        if (typeof element === 'undefined') { element = this.game.canvas; }
+
+        var r = this.elementBounds(element, cushion);
+
+        return !!r && r.bottom >= 0 && r.right >= 0 && r.top <= this.viewportH() && r.left <= this.viewportW();
+
+    },
+
+    /**
+    * Takes a Sprite or Image object and scales it to fit the given dimensions.
+    * Scaling happens proportionally without distortion to the sprites texture.
+    * The letterBox parameter controls if scaling will produce a letter-box effect or zoom the
+    * sprite until it fills the given values. Note that with letterBox set to false the scaled sprite may spill out over either
+    * the horizontal or vertical sides of the target dimensions. If you wish to stop this you can crop the Sprite.
+    *
+    * @method Phaser.ScaleManager#scaleSprite
+    * @public
+    * @param {Phaser.Sprite|Phaser.Image} sprite - The sprite we want to scale.
+    * @param {integer} [width] - The target width that we want to fit the sprite in to. If not given it defaults to ScaleManager.width.
+    * @param {integer} [height] - The target height that we want to fit the sprite in to. If not given it defaults to ScaleManager.height.
+    * @param {boolean} [letterBox=false] - True if we want the `fitted` mode. Otherwise, the function uses the `zoom` mode.
+    * @return {Phaser.Sprite|Phaser.Image} The scaled sprite.
+    */
+    scaleSprite: function (sprite, width, height, letterBox) {
+
+        if (typeof width === 'undefined') { width = this.width; }
+        if (typeof height === 'undefined') { height = this.height; }
+        if (typeof letterBox === 'undefined') { letterBox = false; }
+
+        sprite.scale.set(1);
+
+        if ((sprite.width <= 0) || (sprite.height <= 0) || (width <= 0) || (height <= 0))
+        {
+            return sprite;
+        }
+
+        var scaleX1 = width;
+        var scaleY1 = (sprite.height * width) / sprite.width;
+
+        var scaleX2 = (sprite.width * height) / sprite.height;
+        var scaleY2 = height;
+
+        var scaleOnWidth = (scaleX2 > width);
+
+        if (scaleOnWidth)
+        {
+            scaleOnWidth = letterBox;
+        }
+        else
+        {
+            scaleOnWidth = !letterBox;
+        }
+
+        if (scaleOnWidth)
+        {
+            sprite.width = Math.floor(scaleX1);
+            sprite.height = Math.floor(scaleY1);
+        }
+        else
+        {
+            sprite.width = Math.floor(scaleX2);
+            sprite.height = Math.floor(scaleY2);
+        }
+
+        //  Enable at some point?
+        // sprite.x = Math.floor((width - sprite.width) / 2);
+        // sprite.y = Math.floor((height - sprite.height) / 2);
+
+        return sprite;
 
     },
 
@@ -1821,7 +1999,7 @@ Phaser.ScaleManager.prototype.checkOrientationState = function () {
 /**
 * The scaling method used by the ScaleManager.
 *
-* See {@link Phaser.ScaleManager.NO_SCALE}, {@link Phaser.ScaleManager.EXACT_FIT}, {@link Phaser.ScaleManager.SHOW_ALL}, {@link Phaser.ScaleManager.RESIZE}
+* See {@link Phaser.ScaleManager.NO_SCALE}, {@link Phaser.ScaleManager.EXACT_FIT}, {@link Phaser.ScaleManager.SHOW_ALL}, {@link Phaser.ScaleManager.RESIZE}, {@link Phaser.ScaleManager.USER_SCALE}
 *
 * @name Phaser.ScaleManager#scaleMode
 * @property {number} scaleMode
@@ -2016,6 +2194,112 @@ Object.defineProperty(Phaser.ScaleManager.prototype, "isLandscape", {
 
     get: function () {
         return (this.orientation === 90 || this.orientation === -90);
+    }
+
+});
+
+/**
+* A cross-browser window.scrollX.
+*
+* @name Phaser.ScaleManager#scrollX
+* @property {number} scrollX
+* @readonly
+*/
+Object.defineProperty(Phaser.ScaleManager.prototype, "scrollX", {
+
+    get: function () {
+        return window.pageXOffset || document.documentElement.scrollLeft;
+    }
+
+});
+
+/**
+* A cross-browser window.scrollY.
+*
+* @name Phaser.ScaleManager#scrollY
+* @property {number} scrollY
+* @readonly
+*/
+Object.defineProperty(Phaser.ScaleManager.prototype, "scrollY", {
+
+    get: function () {
+        return window.pageYOffset || document.documentElement.scrollTop;
+    }
+
+});
+
+/**
+* Gets the viewport width in pixels.
+*
+* @name Phaser.ScaleManager#viewportWidth
+* @property {number} viewportWidth
+* @readonly
+*/
+Object.defineProperty(Phaser.ScaleManager.prototype, "viewportWidth", {
+
+    get: function () {
+
+        var a = document.documentElement.clientWidth;
+        var b = window.innerWidth;
+
+        return a < b ? b : a;
+
+    }
+
+});
+
+/**
+* Gets the viewport height in pixels.
+*
+* @name Phaser.ScaleManager#viewportHeight
+* @property {number} viewportHeight
+* @readonly
+*/
+Object.defineProperty(Phaser.ScaleManager.prototype, "viewportHeight", {
+
+    get: function () {
+
+        var a = document.documentElement.clientHeight;
+        var b = window.innerHeight;
+
+        return a < b ? b : a;
+
+    }
+
+});
+
+/**
+* Gets the document width in pixels.
+*
+* @name Phaser.ScaleManager#documentWidth
+* @property {number} documentWidth
+* @readonly
+*/
+Object.defineProperty(Phaser.ScaleManager.prototype, "documentWidth", {
+
+    get: function () {
+
+        var d = document.documentElement;
+        return Math.max(d.clientWidth, d.offsetWidth, d.scrollWidth);
+
+    }
+
+});
+
+/**
+* Gets the document height in pixels.
+*
+* @name Phaser.ScaleManager#documentHeight
+* @property {number} documentHeight
+* @readonly
+*/
+Object.defineProperty(Phaser.ScaleManager.prototype, "documentHeight", {
+
+    get: function () {
+
+        var d = document.documentElement;
+        return Math.max(d.clientHeight, d.offsetHeight, d.scrollHeight);
+
     }
 
 });

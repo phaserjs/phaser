@@ -187,8 +187,8 @@ Phaser.Animation.prototype = {
         this.paused = false;
         this.loopCount = 0;
 
-        this._timeLastFrame = this.game.time.now;
-        this._timeNextFrame = this.game.time.now + this.delay;
+        this._timeLastFrame = this.game.time.time;
+        this._timeNextFrame = this.game.time.time + this.delay;
 
         this._frameIndex = 0;
 
@@ -223,8 +223,8 @@ Phaser.Animation.prototype = {
         this.paused = false;
         this.loopCount = 0;
 
-        this._timeLastFrame = this.game.time.now;
-        this._timeNextFrame = this.game.time.now + this.delay;
+        this._timeLastFrame = this.game.time.time;
+        this._timeNextFrame = this.game.time.time + this.delay;
 
         this._frameIndex = 0;
 
@@ -287,7 +287,7 @@ Phaser.Animation.prototype = {
             this._frameIndex = frameIndex - 1;
 
             //  Make the animation update at next update
-            this._timeNextFrame = this.game.time.now;
+            this._timeNextFrame = this.game.time.time;
 
             this.update();
         }
@@ -334,7 +334,7 @@ Phaser.Animation.prototype = {
 
         if (this.isPlaying)
         {
-            this._frameDiff = this._timeNextFrame - this.game.time.now;
+            this._frameDiff = this._timeNextFrame - this.game.time.time;
         }
 
     },
@@ -348,7 +348,7 @@ Phaser.Animation.prototype = {
 
         if (this.isPlaying)
         {
-            this._timeNextFrame = this.game.time.now + this._frameDiff;
+            this._timeNextFrame = this.game.time.time + this._frameDiff;
         }
 
     },
@@ -365,14 +365,14 @@ Phaser.Animation.prototype = {
             return false;
         }
 
-        if (this.isPlaying && this.game.time.now >= this._timeNextFrame)
+        if (this.isPlaying && this.game.time.time >= this._timeNextFrame)
         {
             this._frameSkip = 1;
 
             //  Lagging?
-            this._frameDiff = this.game.time.now - this._timeNextFrame;
+            this._frameDiff = this.game.time.time - this._timeNextFrame;
 
-            this._timeLastFrame = this.game.time.now;
+            this._timeLastFrame = this.game.time.time;
 
             if (this._frameDiff > this.delay)
             {
@@ -382,7 +382,7 @@ Phaser.Animation.prototype = {
             }
 
             //  And what's left now?
-            this._timeNextFrame = this.game.time.now + (this.delay - this._frameDiff);
+            this._timeNextFrame = this.game.time.time + (this.delay - this._frameDiff);
 
             this._frameIndex += this._frameSkip;
 
@@ -612,14 +612,14 @@ Object.defineProperty(Phaser.Animation.prototype, 'paused', {
         if (value)
         {
             //  Paused
-            this._pauseStartTime = this.game.time.now;
+            this._pauseStartTime = this.game.time.time;
         }
         else
         {
             //  Un-paused
             if (this.isPlaying)
             {
-                this._timeNextFrame = this.game.time.now + this.delay;
+                this._timeNextFrame = this.game.time.time + this.delay;
             }
         }
 
