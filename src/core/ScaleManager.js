@@ -81,7 +81,8 @@ Phaser.ScaleManager = function (game, width, height) {
     this.maxHeight = null;
 
     /**
-    * The offset coordinates of the Game canvas from the top-left of the browser window (used by Input and other classes).
+    * The offset coordinates of the Game canvas from the top-left of the browser window.
+    * The is used internally by Phaser.Pointer (for Input) and possibly other types.
     * @property {Phaser.Point} offset
     * @readonly
     * @protected
@@ -133,7 +134,7 @@ Phaser.ScaleManager = function (game, width, height) {
     * @property {number} maxIterations
     * @protected
     * @default
-    * @deprecated This is not used.
+    * @deprecated 2.1.4 - This is not used anymore as reflow iterations are "automatic".
     */
     this.maxIterations = 5;
 
@@ -166,14 +167,14 @@ Phaser.ScaleManager = function (game, width, height) {
     this.leaveIncorrectOrientation = new Phaser.Signal();
 
     /**
-    * This is the DOM element that will have the Full Screen mode called on it.
-    * It can be retargetted to any valid DOM element; the target element must have the correct CSS applied and must contain the game canvas.
+    * This is the DOM element on which the Full Screen API will be invoked.
+    * It can be any valid DOM element - the target element must have the correct CSS styling and should contain the game canvas.
     *
     * This element's style will be modified (ie. the width and height might be set to 100%)
     * but it will not be added to, removed from, or repositioned within the DOM.
     * An attempt is made to restore relevant style changes when fullscreen mode is left.
     *
-    * For old behavior use: `game.scale.fullScreenTarget = game.scale.parentNode`.
+    * For pre 2.1.4 behavior set `game.scale.fullScreenTarget = game.canvas`.
     *
     * @property {DOMElement|null} fullScreenTarget
     * @default
@@ -182,50 +183,51 @@ Phaser.ScaleManager = function (game, width, height) {
     this.fullScreenTarget = null;
 
     /**
-    * A function to create a full screen target when `fullScreenTarget` is not set.
-    * The Game Canvas is moved onto this element for the duration of the full screen mode
-    * and restored to it's original DOM location when full screen is exited.
+    * The `createFullScreenTarget` function creates a fullscreen target when `fullScreenTarget` is not set.
+    * 
+    * The Game canvas is moved onto the created element for the duration of the fullscreen mode
+    * and restored to it's original DOM location when fullscreen is exited.
     *
-    * The default implementation is to create a new element.
+    * The returned element (which should probably be newly created) is moved/reparanted within
+    * the DOM and may have its CSS styles updated. Assign an element to `fullScreenTarget` to avoid
+    * this DOM manipulation and revert to earlier behavior.
     *
-    * The returned element is modified and is manipulated within the DOM; it is advisable to create a new
-    * element each time. Assign a value (possibly the game canvas) to `fullScreenTarget` to avoid this
-    * DOM manipulation and revert to earlier behavior.
+    * The default implementation is to create a new element with a black background.
     *
     * @public {function} createFullScreenTarget
     */
     this.createFullScreenTarget = function () {
         var fsTarget = document.createElement('div');
-        fsTarget.style['margin'] = '0';
-        fsTarget.style['padding'] = '0';
-        fsTarget.style['background'] = '#000';
+        fsTarget.style.margin = '0';
+        fsTarget.style.padding = '0';
+        fsTarget.style.background = '#000';
         return fsTarget;
     };
 
     /**
-    * The full screen target, as created by `createFullScreenTarget`.
-    * This is not set if `fullScreenTarget` is used and is cleared when full screen mode ends.
+    * The fullscreen target, as created by `createFullScreenTarget`.
+    * This is not set if `fullScreenTarget` is used and is cleared when fullscreen mode ends.
     * @property {DOMElement|null} _createdFullScreenTarget
     * @private
     */
     this._createdFullScreenTarget = null;
 
     /**
-    * This singal is dispatched when the browser enters full screen mode, if it supports the FullScreen API.
+    * This signal is dispatched when the browser enters fullscreen mode, if supported.
     * @property {Phaser.Signal} enterFullScreen
     * @public
     */
     this.enterFullScreen = new Phaser.Signal();
 
     /**
-    * This signal is dispatched when the browser leaves full screen mode, if it supports the FullScreen API.
+    * This signal is dispatched when the browser leaves fullscreen mode.
     * @property {Phaser.Signal} leaveFullScreen
     * @public
     */
     this.leaveFullScreen = new Phaser.Signal();
 
     /**
-    * This signal is dispatched when the browser fails to enter full screen mode;
+    * This signal is dispatched when the browser fails to enter fullscreen mode;
     * or if the device does not support fullscreen mode and `startFullScreen` is invoked.
     * @property {Phaser.Signal} leaveFullScreen
     * @public
@@ -233,7 +235,7 @@ Phaser.ScaleManager = function (game, width, height) {
     this.fullScreenFailed = new Phaser.Signal();
 
     /**
-    * The orientation value of the game (as defined by `window.orientation` if set).
+    * The orientation value of the game, as defined by `window.orientation` or guessed.
     * A value of 90 is landscape and 0 is portrait.
     * @property {number} orientation
     * @public
@@ -241,9 +243,9 @@ Phaser.ScaleManager = function (game, width, height) {
     */
     this.orientation = 0;
 
-    if (window['orientation'])
+    if (window.orientation)
     {
-        this.orientation = window['orientation'] | 0;
+        this.orientation = window.orientation | 0;
     }
     else
     {
@@ -254,7 +256,7 @@ Phaser.ScaleManager = function (game, width, height) {
     }
 
     /**
-    * The scale factor based on the game dimensions vs. the scaled dimensions.
+    * The _current_ scale factor based on the game dimensions vs. the scaled dimensions.
     * @property {Phaser.Point} scaleFactor
     * @public
     * @readonly
@@ -262,7 +264,7 @@ Phaser.ScaleManager = function (game, width, height) {
     this.scaleFactor = new Phaser.Point(1, 1);
 
     /**
-    * The inversed scale factor. The displayed dimensions divided by the game dimensions.
+    * The _current_ inversed scale factor. The displayed dimensions divided by the game dimensions.
     * @property {Phaser.Point} scaleFactorInversed
     * @protected
     * @readonly
@@ -270,21 +272,11 @@ Phaser.ScaleManager = function (game, width, height) {
     this.scaleFactorInversed = new Phaser.Point(1, 1);
 
     /**
-    * If true then the canvas's margins will not be updated anymore: existing margins must be manually cleared.
-    * Disabling margins prevents automatic canvas alignment/centering, possibly in full screen.
-    * @property {boolean} noMargins
-    * @protected
-    * @default
-    */
-    this.noMargins = false;
-
-    /**
     * The game canvas is aligned by adjusting the margins; the last margins are stored here.
-    * The margins (left, top, right, bottom) correspond to (x, y, width, height), respectively.
-    * @property {Phaser.Point} margin
+    * @property {Bounds-like} margin
     * @readonly
     */
-    this.margin = new Phaser.Rectangle(0, 0, 0, 0);
+    this.margin = {left: 0, top: 0, right: 0, bottom: 0, x: 0, y: 0};
 
     /**
     * The bounds of the scaled game. The x/y will match the offset of the canvas element and the width/height the scaled width and height.
@@ -310,7 +302,7 @@ Phaser.ScaleManager = function (game, width, height) {
     this.sourceAspectRatio = 0;
 
     /**
-    * The native browser events from full screen API changes.
+    * The native browser events from Fullscreen API changes.
     * @property {any} event
     * @private
     * @readonly
@@ -318,28 +310,47 @@ Phaser.ScaleManager = function (game, width, height) {
     this.event = null;
 
     /**
-    * The borders on which to constrain the Canvas _to_ the Window viewport in _addition_ to any restrictions of the parent container.
-    * @property {boolean} constrainToWindow
+    * The edges on which to constrain the Canvas _to_ the Window viewport in _addition_ to any restrictions of the parent container.
+    * @property {boolean} windowConstraints
     * @public
     * @default
-    * @todo Implement left/top constraints.
     */
     this.windowConstraints = {
-        left: false,
-        top: false,
         bottom: true,
         right: true
     };
 
     /**
-    * Scale mode to be used when not in full screen.
+    * Various compatibility settings. The `(auto)` settings are automatically configured on boot based on device and other runtime information.
+    * @protected
+    * 
+    * @property {boolean} [supportsFullscreen=(auto)] - True only if fullscreen support will be used. (Changing to fullscreen still might not work.)
+    *
+    * @property {boolean} [noMargins=false] - If true then the Game canvas's margins will not be updated anymore: existing margins must be manually cleared. Disabling margins prevents automatic canvas alignment/centering, possibly in fullscreen.
+    *
+    * @property {Phaser.Point|null} [scrollTo=(auto)] - If specified the window will be scrolled to this position on every refresh.
+    *
+    * @property {boolean} [forceMinimumDocumentHeight=true] - If enabled the document element's minimum height is explicity set on updates.
+    *
+    * @property {boolean} [showAllCanExpand=true] - If enabled then SHOW_ALL is allowed to try and expand it's non-window parent. It may be necessary for the parent element to impose CSS width/height restrictions.
+    */
+    this.compatibility = {
+        supportsFullScreen: false,
+        noMargins: false,
+        scrollTo: null,
+        forceMinimumDocumentHeight: true,
+        showAllCanExpand: true
+    };
+
+    /**
+    * Scale mode to be used when not in fullscreen.
     * @property {number} _scaleMode
     * @private
     */
     this._scaleMode = Phaser.ScaleManager.NO_SCALE;
 
     /*
-    * Scale mode to be used in full screen.
+    * Scale mode to be used in fullscreen.
     * @property {number} _fullScreenScaleMode
     * @private
     */
@@ -354,7 +365,7 @@ Phaser.ScaleManager = function (game, width, height) {
 
     /**
     * The _original_ DOM element for the parent of the game canvas.
-    * This may be different in full screen - see `createFullScreenTarget`.
+    * This may be different in fullscreen - see `createFullScreenTarget`.
     *
     * If the `parentIsWindow` is true then this should likely be `null`.
     *
@@ -410,15 +421,7 @@ Phaser.ScaleManager = function (game, width, height) {
     this.onResizeContext = null;
 
     /**
-    * True only if fullscreen support will be used. (Changing to fullscreen still might not work.)
-    * @property {boolean}
-    * @protected
-    * @readonly
-    */
-    this.supportsFullScreen = false;
-
-    /**
-    * Information saved when full screen mode is started.
+    * Information saved when fullscreen mode is started.
     * @property {object|null} _fullScreenRestore
     * @private
     */
@@ -432,6 +435,13 @@ Phaser.ScaleManager = function (game, width, height) {
     this._gameSize = new Phaser.Rectangle();
 
     /**
+    * The user-supplied scale factor, used with the USER_SCALE scaling mode.
+    * @property {Phaser.Point} _userScaleFactor
+    * @private
+    */
+    this._userScaleFactor = new Phaser.Point(1, 1);
+
+    /**
     * The last time the bounds were checked in `preUpdate`.
     * @property {number} _lastSizeCheck
     * @private
@@ -442,7 +452,6 @@ Phaser.ScaleManager = function (game, width, height) {
     * Size checks updates are delayed according to the throttle.
     * The throttle increases to `trackParentInterval` over time and is used to more
     * rapidly detect changes in certain browsers (eg. IE) while providing back-off.
-    * (This also replaces the setInterval timer.)
     * @property {integer} _sizeCheckThrottle
     * @private
     */
@@ -462,11 +471,18 @@ Phaser.ScaleManager = function (game, width, height) {
     this._parentBounds = new Phaser.Rectangle();
 
     /**
-    * The bounds at which the last onResize event was triggered.
-    * @property {Phaser.Rectangle} _lastResizeBounds
+    * The Canvas size at which the last onSizeChange signal was triggered.
+    * @property {Phaser.Rectangle} _lastReportedCanvasSize
     * @private
     */
-    this._lastResizeBounds = new Phaser.Rectangle();
+    this._lastReportedCanvasSize = new Phaser.Rectangle();
+
+    /**
+    * The Game size at which the last onSizeChange signal was triggered.
+    * @property {Phaser.Rectangle} _lastReportedGameSize
+    * @private
+    */
+    this._lastReportedGameSize = new Phaser.Rectangle();
 
     if (game.config)
     {
@@ -515,21 +531,47 @@ Phaser.ScaleManager.SHOW_ALL = 2;
 */
 Phaser.ScaleManager.RESIZE = 3;
 
+/**
+* _Experimental_: The Game display area is scaled according to a user-speficied scale.
+* Use `setUserScale` to change the scale factor.
+*
+* @constant
+* @protected
+* @type {integer}
+*/
+Phaser.ScaleManager.USER_SCALE = 4;
+
+
 Phaser.ScaleManager.prototype = {
 
     /**
-    * Calculates and sets the game dimensions based on the given width and height.
-    * This is used internally.
+    * Start the ScaleManager.
     * 
     * @method Phaser.ScaleManager#boot
     * @protected
     */
     boot: function () {
 
-        this.supportsFullScreen = this.game.device.fullscreen && !this.game.device.cocoonJS;
+        // Configure device-dependent compatibility
 
-        //  Now the canvas has been created we can target it
-        this.fullScreenTarget = this.game.canvas;
+        var compat = this.compatibility;
+        
+        compat.supportsFullScreen = this.game.device.fullscreen && !this.game.device.cocoonJS;
+
+        //  We can't do anything about the status bars in iPads, web apps or desktops
+        if (!this.game.device.iPad && !this.game.device.webApp && !this.game.device.desktop)
+        {
+            if (this.game.device.android && !this.game.device.chrome)
+            {
+                compat.scrollTo = new Phaser.Point(0, 1);
+            }
+            else
+            {
+                compat.scrollTo = new Phaser.Point(0, 0);
+            }
+        }
+
+        // Configure event listeners
 
         var _this = this;
 
@@ -544,7 +586,7 @@ Phaser.ScaleManager.prototype = {
         window.addEventListener('orientationchange', this._orientationChange, false);
         window.addEventListener('resize', this._windowResize, false);
 
-        if (this.supportsFullScreen)
+        if (this.compatibility.supportsFullScreen)
         {
             this._fullScreenChange = function(event) {
                 return _this.fullScreenChange(event);
@@ -565,11 +607,13 @@ Phaser.ScaleManager.prototype = {
             document.addEventListener('fullscreenerror', this._fullScreenError, false);
         }
 
-        this.updateDimensions(this.width, this.height, true);
+        // Initialize core bounds
 
         Phaser.Canvas.getOffset(this.game.canvas, this.offset);
 
         this.bounds.setTo(this.offset.x, this.offset.y, this.width, this.height);
+
+        this.setGameSize(this.game.width, this.game.height);
 
     },
 
@@ -687,14 +731,14 @@ Phaser.ScaleManager.prototype = {
     },
 
     /**
-    * Set the virtual Game size.
+    * Set the actual Game size.
     * Use this instead of directly changing `game.width` or `game.height`.
     *
-    * The actual physical display (Canvas element size) will depend on various settings including
-    * - Scale Mode
-    * - Scale Factor
-    * - Size of Canvas's parent element (or Window);
-    *   or CSS styling on the parent element, such as max-height or min-height
+    * The actual physical display (Canvas element size) depends on various settings including
+    * - Scale mode
+    * - Scaling factor
+    * - Size of Canvas's parent element or CSS rules such as min-height/max-height;
+    * - The size of the Window
     *
     * @method Phaser.ScaleManager#setGameSize
     * @public
@@ -710,6 +754,21 @@ Phaser.ScaleManager.prototype = {
             this.updateDimensions(width, height, true);
         }
 
+        this.queueUpdate(true);
+
+    },
+
+    /**
+    * _Experimental_: Set a User scaling factor. This is only used in the USER_SCALE scaling mode.
+    *
+    * @method Phaser.ScaleManager#setGameSize
+    * @protected
+    * @param {number} width - Width scaling factor.
+    * @param {numer} height - Height scaling factor.
+    */
+    setUserScale: function (width, height) {
+
+        this._userScaleFactor.setTo(width, height);
         this.queueUpdate(true);
 
     },
@@ -737,21 +796,23 @@ Phaser.ScaleManager.prototype = {
     },
 
     /**
-    * Signals a resize - IF the target bounds differ from the last bounds the resize was sent at.
+    * Signals a resize - IF the canvas or game size differs from the last signal.
+    *
     * This also triggers updates on `grid` (FlexGrid) and, if in a RESIZE mode, `game.state` (StateManager).
     *
-    * @method Phaser.ScaleMager#signalResize
+    * @method Phaser.ScaleMager#signalSizeChange
     * @private
     */
     signalSizeChange: function () {
 
-        var width = this.width;
-        var height = this.height;
-
-        if (width !== this._lastResizeBounds.width ||
-            height !== this._lastResizeBounds.height)
+        if (!Phaser.Rectangle.sameDimensions(this, this._lastReportedCanvasSize) ||
+            !Phaser.Rectangle.sameDimensions(this.game, this._lastReportedGameSize))
         {
-            this._lastResizeBounds.setTo(0, 0, width, height);
+            var width = this.width;
+            var height = this.height;
+
+            this._lastReportedCanvasSize.setTo(0, 0, width, height);
+            this._lastReportedGameSize.setTo(0, 0, this.game.width, this.game.height);
 
             this.grid.onResize(width, height);
 
@@ -975,7 +1036,7 @@ Phaser.ScaleManager.prototype = {
 
         this.event = event;
 
-        this.orientation = window['orientation'] | 0;
+        this.orientation = window.orientation | 0;
 
         if (this.isLandscape)
         {
@@ -1053,22 +1114,15 @@ Phaser.ScaleManager.prototype = {
     },
 
     /**
-    * Scroll to the top - in some environments.
+    * Scroll to the top - in some environments. See `compatibility.scrollTo`.
     * @private
     */
     scrollTop: function () {
 
-        //  We can't do anything about the status bars in iPads, web apps or desktops
-        if (!this.game.device.iPad && !this.game.device.webApp && !this.game.device.desktop)
+        var scrollTo = this.compatibility.scrollTo;
+        if (scrollTo)
         {
-            if (this.game.device.android && !this.game.device.chrome)
-            {
-                window.scrollTo(0, 1);
-            }
-            else
-            {
-                window.scrollTo(0, 0);
-            }
+            window.scrollTo(scrollTo.x, scrollTo.y);
         }
 
     },
@@ -1109,9 +1163,12 @@ Phaser.ScaleManager.prototype = {
 
         this.scrollTop();
 
-        // (This came from older code, by why is it here?)
-        // Set minimum height of content to new window height
-        document.documentElement['style'].minHeight = window.innerHeight + 'px';
+        if (this.compatibility.forceMinimumDocumentHeight)
+        {
+            // (This came from older code, by why is it here?)
+            // Set minimum height of content to new window height
+            document.documentElement.style.minHeight = window.innerHeight + 'px';
+        }
         
         if (this.incorrectOrientation)
         {
@@ -1125,7 +1182,8 @@ Phaser.ScaleManager.prototype = {
             }
             else if (scaleMode === Phaser.ScaleManager.SHOW_ALL)
             {
-                if (!this.isFullScreen && !this.parentIsWindow)
+                if (!this.isFullScreen && !this.parentIsWindow &&
+                    this.compatibility.showAllCanExpand)
                 {
                     // Try to expand parent out, but choosing maximizing dimensions.                    
                     // Then select minimize dimensions which should then honor parent
@@ -1143,6 +1201,11 @@ Phaser.ScaleManager.prototype = {
             {
                 this.width = this.game.width;
                 this.height = this.game.height;
+            }
+            else if (scaleMode === Phaser.ScaleManager.USER_SCALE)
+            {
+                this.width = this.game.width * this._userScaleFactor.x;
+                this.height = this.game.height * this._userScaleFactor.y;
             }
         }
 
@@ -1186,17 +1249,9 @@ Phaser.ScaleManager.prototype = {
             bounds.setTo(clientRect.left, clientRect.top, clientRect.width, clientRect.height);
 
             var wc = this.windowConstraints;
-            if (wc.left)
-            {
-                bounds.left = Math.max(bounds.left, 0);
-            }
             if (wc.right)
             {
                 bounds.right = Math.min(bounds.right, window.innerWidth);
-            }
-            if (wc.top)
-            {
-                bounds.top = Math.max(bounds.top, 0);
             }
             if (wc.bottom)
             {
@@ -1230,9 +1285,10 @@ Phaser.ScaleManager.prototype = {
 
         if (horizontal)
         {
-            margin.x = margin.width = 0;
+            margin.left = margin.right = 0;
 
             var canvasBounds = canvas.getBoundingClientRect();
+
             if (this.width < parentBounds.width && !this.incorrectOrientation)
             {
                 var currentEdge = canvasBounds.left - parentBounds.x;
@@ -1240,23 +1296,25 @@ Phaser.ScaleManager.prototype = {
 
                 targetEdge = Math.max(targetEdge, 0);
 
-                var offset = Math.round(targetEdge - currentEdge);
-                margin.x = offset;
+                var offset = targetEdge - currentEdge;
+
+                margin.left = Math.round(offset);
             }
 
-            canvas.style.marginLeft = margin.x + 'px';
-            if (margin.x !== 0)
+            canvas.style.marginLeft = margin.left + 'px';
+            if (margin.left !== 0)
             {
-                margin.width = -(parentBounds.width - canvasBounds.width - margin.x);
-                canvas.style.marginRight = margin.width + 'px';
+                margin.right = -(parentBounds.width - canvasBounds.width - margin.left);
+                canvas.style.marginRight = margin.right + 'px';
             }
         }
 
         if (vertical)
         {
-            margin.y = margin.height = 0;
+            margin.top = margin.bottom = 0;
 
             var canvasBounds = canvas.getBoundingClientRect();
+            
             if (this.height < parentBounds.height && !this.incorrectOrientation)
             {
                 var currentEdge = canvasBounds.top - parentBounds.y;
@@ -1264,17 +1322,21 @@ Phaser.ScaleManager.prototype = {
 
                 targetEdge = Math.max(targetEdge, 0);
                 
-                var offset = Math.round(targetEdge - currentEdge);
-                margin.y = offset;
+                var offset = targetEdge - currentEdge;
+                margin.top = Math.round(offset);
             }
 
-            canvas.style.marginTop = margin.y + 'px';
-            if (margin.y !== 0)
+            canvas.style.marginTop = margin.top + 'px';
+            if (margin.top !== 0)
             {
-                margin.height = -(parentBounds.height - canvasBounds.height - margin.y);
-                canvas.style.marginBottom = margin.height + 'px';
+                margin.bottom = -(parentBounds.height - canvasBounds.height - margin.top);
+                canvas.style.marginBottom = margin.bottom + 'px';
             }
         }
+
+        // Silly backwards compatibility..
+        margin.x = margin.left;
+        margin.y = margin.top;
 
     },
 
@@ -1314,7 +1376,7 @@ Phaser.ScaleManager.prototype = {
 
         this.resetCanvas();
 
-        if (!this.noMargins)
+        if (!this.compatibility.noMargins)
         {
             if (this.isFullScreen && this._createdFullScreenTarget)
             {
@@ -1343,7 +1405,7 @@ Phaser.ScaleManager.prototype = {
         if (typeof cssHeight === 'undefined') { cssHeight = this.height + 'px'; }
 
         var canvas = this.game.canvas;
-        if (!this.noMargins)
+        if (!this.compatibility.noMargins)
         {
             canvas.style.marginLeft = '';
             canvas.style.marginTop = '';
@@ -1433,7 +1495,7 @@ Phaser.ScaleManager.prototype = {
 
     /**
     * Updates the width/height such that the game is stretched to the available size.
-    * Honors `maxWidth` and `maxHeight` when _not_ in full screen.
+    * Honors `maxWidth` and `maxHeight` when _not_ in fullscreen.
     *
     * @method Phaser.ScaleManager#setExactFit
     * @private
@@ -1464,15 +1526,16 @@ Phaser.ScaleManager.prototype = {
     },
 
     /**
-    * Tries to enter the browser into full screen mode - this _must_ be called from a user input Pointer or Mouse event.
+    * Start the browser's fullscreen mode - this _must_ be called from a user input Pointer or Mouse event.
     *
-    * Fullscreen mode needs to be supported by the browser. It is _not_ the same as setting the game size to fill the browser window.
+    * The Fullscreen API must be supported by the browser for this to work. It is not the same as setting the game size to fill the browser window.
+    * See `compatibility.supportsFullScreen` to check if the current device appears to support fullscreen mode.
     *
     * The `fullScreenFailed` signal will be dispatched if the fullscreen change request failed or the game does not support the Fullscreen API.
     *
     * @method Phaser.ScaleManager#startFullScreen
     * @public
-    * @param {boolean} [antialias] - Changes the anti-alias feature of the canvas before jumping in to full screen (false = retain pixel art, true = smooth art). If not specified then no change is made. Only works in CANVAS mode.
+    * @param {boolean} [antialias] - Changes the anti-alias feature of the canvas before jumping in to fullscreen (false = retain pixel art, true = smooth art). If not specified then no change is made. Only works in CANVAS mode.
     * @param {boolean} [allowTrampoline=undefined] - Internal argument. If false click trampolining is suppressed.
     * @return {boolean} Returns true if the device supports fullscreen mode and fullscreen mode was attempted to be started. (It might not actually start, wait for the signals.)
     */
@@ -1483,7 +1546,7 @@ Phaser.ScaleManager.prototype = {
             return false;
         }
 
-        if (!this.supportsFullScreen)
+        if (!this.compatibility.supportsFullScreen)
         {
             // Error is called in timeout to emulate the real fullscreenerror event better
             var _this = this;
@@ -1539,7 +1602,7 @@ Phaser.ScaleManager.prototype = {
     },
 
     /**
-    * Stops full screen mode if the browser is in it.
+    * Stops fullscreen mode, if active.
     *
     * @method Phaser.ScaleManager#stopFullScreen
     * @public
@@ -1547,7 +1610,7 @@ Phaser.ScaleManager.prototype = {
     */
     stopFullScreen: function () {
 
-        if (!this.isFullScreen || !this.supportsFullScreen)
+        if (!this.isFullScreen || !this.compatibility.supportsFullScreen)
         {
             return false;
         }
@@ -1559,7 +1622,7 @@ Phaser.ScaleManager.prototype = {
     },
 
     /**
-    * Cleans up the previous full screen target, if such was automatically created.
+    * Cleans up the previous fullscreen target, if such was automatically created.
     * This ensures the canvas is restored to its former parent, assuming the target didn't move.
     * @private
     */
@@ -1573,9 +1636,9 @@ Phaser.ScaleManager.prototype = {
             var parent = fsTarget.parentNode;
             parent.insertBefore(this.game.canvas, fsTarget);
             parent.removeChild(fsTarget);
-
-            this._createdFullScreenTarget = null;
         }
+
+        this._createdFullScreenTarget = null;
 
     },
 
@@ -1594,39 +1657,33 @@ Phaser.ScaleManager.prototype = {
 
         if (enteringFullscreen)
         {
-
             if (createdTarget || this.fullScreenScaleMode === Phaser.ScaleManager.EXACT_FIT)
             {
                 // Resize target, as long as it's not the canvas
                 if (fsTarget !== this.game.canvas)
                 {
-                    this._fullScreenRestore = {};
-
-                    this._fullScreenRestore.target = {
-                        width: fsTarget.style['width'],
-                        height: fsTarget.style['height']
+                    this._fullScreenRestore = {
+                        targetWidth: fsTarget.style.width,
+                        targetHeight: fsTarget.style.height
                     };
 
-                    fsTarget.style['width'] = '100%';
-                    fsTarget.style['height'] = '100%';
+                    fsTarget.style.width = '100%';
+                    fsTarget.style.height = '100%';
                 }
             }
         }
         else
         {
-
             // Have restore information
             if (this._fullScreenRestore)
             {
-                if (this._fullScreenRestore.target)
-                {
-                    fsTarget.style['width'] = this._fullScreenRestore.target.width;
-                    fsTarget.style['height'] = this._fullScreenRestore.target.height;
-                }
+                fsTarget.style.width = this._fullScreenRestore.targetWidth;
+                fsTarget.style.height = this._fullScreenRestore.targetHeight;
 
                 this._fullScreenRestore = null;
             }
 
+            // Always reset to game size
             this.updateDimensions(this._gameSize.width, this._gameSize.height, true);
             this.resetCanvas();
         }
@@ -1634,7 +1691,7 @@ Phaser.ScaleManager.prototype = {
     },
 
     /**
-    * Called automatically when the browser enters of leaves full screen mode.
+    * Called automatically when the browser enters of leaves fullscreen mode.
     *
     * @method Phaser.ScaleManager#fullScreenChange
     * @protected
@@ -1681,7 +1738,7 @@ Phaser.ScaleManager.prototype = {
 
         this.cleanupCreatedTarget();
 
-        console.warn("Phaser.ScaleManager: requestFullscreen failed or device does not support the Fullscreen API");
+        console.warn('Phaser.ScaleManager: requestFullscreen failed or device does not support the Fullscreen API');
 
         this.fullScreenFailed.dispatch();
 
@@ -1871,7 +1928,7 @@ Phaser.ScaleManager.prototype = {
         window.removeEventListener('orientationchange', this._orientationChange, false);
         window.removeEventListener('resize', this._windowResize, false);
 
-        if (this.supportsFullScreen)
+        if (this.compatibility.supportsFullScreen)
         {
             document.removeEventListener('webkitfullscreenchange', this._fullScreenChange, false);
             document.removeEventListener('mozfullscreenchange', this._fullScreenChange, false);
@@ -1942,6 +1999,8 @@ Phaser.ScaleManager.prototype.checkOrientationState = function () {
 /**
 * The scaling method used by the ScaleManager.
 *
+* See {@link Phaser.ScaleManager.NO_SCALE}, {@link Phaser.ScaleManager.EXACT_FIT}, {@link Phaser.ScaleManager.SHOW_ALL}, {@link Phaser.ScaleManager.RESIZE}, {@link Phaser.ScaleManager.USER_SCALE}
+*
 * @name Phaser.ScaleManager#scaleMode
 * @property {number} scaleMode
 */
@@ -1973,7 +2032,7 @@ Object.defineProperty(Phaser.ScaleManager.prototype, "scaleMode", {
 });
 
 /**
-* The scaling method used by the ScaleManager in fullscreen.
+* The scaling method used by the ScaleManager when in fullscreen.
 *
 * @name Phaser.ScaleManager#fullScreenScaleMode
 * @property {number} fullScreenScaleMode
@@ -2095,7 +2154,7 @@ Object.defineProperty(Phaser.ScaleManager.prototype, "pageAlignVertically", {
 });
 
 /**
-* Returns true if the browser is in full screen mode, otherwise false.
+* Returns true if the browser is in fullscreen mode, otherwise false.
 * @name Phaser.ScaleManager#isFullScreen
 * @property {boolean} isFullScreen
 * @readonly
@@ -2144,7 +2203,7 @@ Object.defineProperty(Phaser.ScaleManager.prototype, "isLandscape", {
 *
 * @name Phaser.ScaleManager#scrollX
 * @property {number} scrollX
-* @readOnly
+* @readonly
 */
 Object.defineProperty(Phaser.ScaleManager.prototype, "scrollX", {
 
@@ -2159,7 +2218,7 @@ Object.defineProperty(Phaser.ScaleManager.prototype, "scrollX", {
 *
 * @name Phaser.ScaleManager#scrollY
 * @property {number} scrollY
-* @readOnly
+* @readonly
 */
 Object.defineProperty(Phaser.ScaleManager.prototype, "scrollY", {
 
@@ -2174,7 +2233,7 @@ Object.defineProperty(Phaser.ScaleManager.prototype, "scrollY", {
 *
 * @name Phaser.ScaleManager#viewportWidth
 * @property {number} viewportWidth
-* @readOnly
+* @readonly
 */
 Object.defineProperty(Phaser.ScaleManager.prototype, "viewportWidth", {
 
@@ -2194,7 +2253,7 @@ Object.defineProperty(Phaser.ScaleManager.prototype, "viewportWidth", {
 *
 * @name Phaser.ScaleManager#viewportHeight
 * @property {number} viewportHeight
-* @readOnly
+* @readonly
 */
 Object.defineProperty(Phaser.ScaleManager.prototype, "viewportHeight", {
 
@@ -2214,7 +2273,7 @@ Object.defineProperty(Phaser.ScaleManager.prototype, "viewportHeight", {
 *
 * @name Phaser.ScaleManager#documentWidth
 * @property {number} documentWidth
-* @readOnly
+* @readonly
 */
 Object.defineProperty(Phaser.ScaleManager.prototype, "documentWidth", {
 
@@ -2232,7 +2291,7 @@ Object.defineProperty(Phaser.ScaleManager.prototype, "documentWidth", {
 *
 * @name Phaser.ScaleManager#documentHeight
 * @property {number} documentHeight
-* @readOnly
+* @readonly
 */
 Object.defineProperty(Phaser.ScaleManager.prototype, "documentHeight", {
 
