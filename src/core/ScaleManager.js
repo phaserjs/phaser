@@ -678,6 +678,8 @@ Phaser.ScaleManager.prototype = {
             newHeight = rect.height * this.parentScaleFactor.y;
         }
 
+        this._gameSize.setTo(0, 0, newWidth, newHeight);
+
         this.grid = new Phaser.FlexGrid(this, newWidth, newHeight);
 
         this.updateDimensions(newWidth, newHeight, false);
@@ -707,6 +709,7 @@ Phaser.ScaleManager.prototype = {
         {
             this.updateDimensions(width, height, true);
         }
+
         this.queueUpdate(true);
 
     },
