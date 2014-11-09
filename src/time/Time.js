@@ -288,7 +288,7 @@ Phaser.Time.prototype = {
         this.elapsed = this.now - this.prevTime;
 
         // time to call this function again in ms in case we're using timers instead of RequestAnimationFrame to update the game
-        this.timeToCall = Math.floor(this.game.math.max(0, (1000.0 / this.desiredFps) - (this.timeCallExpected - time)));
+        this.timeToCall = Math.floor(Math.max(0, (1000.0 / this.desiredFps) - (this.timeCallExpected - time)));
 
         // time when the next call is expected if using timers
         this.timeCallExpected = time + this.timeToCall;
@@ -316,16 +316,16 @@ Phaser.Time.prototype = {
 
         if (this.advancedTiming)
         {
-            this.msMin = this.game.math.min(this.msMin, this.elapsed);
-            this.msMax = this.game.math.max(this.msMax, this.elapsed);
+            this.msMin = Math.min(this.msMin, this.elapsed);
+            this.msMax = Math.max(this.msMax, this.elapsed);
 
             this.frames++;
 
             if (this.now > this._timeLastSecond + 1000)
             {
                 this.fps = Math.round((this.frames * 1000) / (this.now - this._timeLastSecond));
-                this.fpsMin = this.game.math.min(this.fpsMin, this.fps);
-                this.fpsMax = this.game.math.max(this.fpsMax, this.fps);
+                this.fpsMin = Math.min(this.fpsMin, this.fps);
+                this.fpsMax = Math.max(this.fpsMax, this.fps);
                 this._timeLastSecond = this.now;
                 this.frames = 0;
             }
