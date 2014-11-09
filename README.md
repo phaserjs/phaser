@@ -153,6 +153,7 @@ Version 2.2.0 - "Bethal" - in development
 * Cache.addBitmapData now auto-creates a FrameData (thanks @pnstickne #1294 #1300)
 * P2.BodyDebug circles were drawing at half widths (thanks @enriqueto #1288)
 * FrameData.clone fixed when cloning data using frame names rather than indexes (thanks pjbaron)
+* Lots of the Cache getters (such as `Cache.getbitmapData`) would return `undefined` if the asset couldn't be found. They now all consistently return `null` for missing entries (thanks @Matoking #1305)
 
 
 For details about changes made in previous versions of Phaser see the full Change Log at https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md
