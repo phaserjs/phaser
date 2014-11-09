@@ -628,6 +628,7 @@ Phaser.Cache.prototype = {
         else
         {
             console.warn('Phaser.Cache.getCanvas: Invalid key: "' + key + '"');
+            return null;
         }
 
     },
@@ -648,6 +649,7 @@ Phaser.Cache.prototype = {
         else
         {
             console.warn('Phaser.Cache.getBitmapData: Invalid key: "' + key + '"');
+            return null;
         }
 
     },
@@ -668,6 +670,7 @@ Phaser.Cache.prototype = {
         else
         {
             console.warn('Phaser.Cache.getBitmapFont: Invalid key: "' + key + '"');
+            return null;
         }
 
     },
@@ -967,6 +970,7 @@ Phaser.Cache.prototype = {
         else
         {
             console.warn('Phaser.Cache.getTilemapData: Invalid key: "' + key + '"');
+            return null;
         }
 
     },
@@ -1091,6 +1095,7 @@ Phaser.Cache.prototype = {
         else
         {
             console.warn('Phaser.Cache.getTexture: Invalid key: "' + key + '"');
+            return null;
         }
 
     },
@@ -1134,6 +1139,7 @@ Phaser.Cache.prototype = {
         else
         {
             console.warn('Phaser.Cache.getSound: Invalid key: "' + key + '"');
+            return null;
         }
 
     },
@@ -1154,6 +1160,7 @@ Phaser.Cache.prototype = {
         else
         {
             console.warn('Phaser.Cache.getSoundData: Invalid key: "' + key + '"');
+            return null;
         }
 
     },
@@ -1221,6 +1228,7 @@ Phaser.Cache.prototype = {
         else
         {
             console.warn('Phaser.Cache.getText: Invalid key: "' + key + '"');
+            return null;
         }
 
     },
@@ -1241,6 +1249,7 @@ Phaser.Cache.prototype = {
         else
         {
             console.warn('Phaser.Cache.getJSON: Invalid key: "' + key + '"');
+            return null;
         }
 
     },
@@ -1261,6 +1270,7 @@ Phaser.Cache.prototype = {
         else
         {
             console.warn('Phaser.Cache.getXML: Invalid key: "' + key + '"');
+            return null;
         }
 
     },
@@ -1281,6 +1291,7 @@ Phaser.Cache.prototype = {
         else
         {
             console.warn('Phaser.Cache.getBinary: Invalid key: "' + key + '"');
+            return null;
         }
 
     },
@@ -1305,6 +1316,7 @@ Phaser.Cache.prototype = {
         else
         {
             console.warn('Phaser.Cache.getUrl: Invalid url: "' + url  + '" or Cache.autoResolveURL was false');
+            return null;
         }
 
     },
