@@ -1,6 +1,6 @@
 /// <reference path="pixi.d.ts" />
 
-// Type definitions for Phaser 2.1.4 dev 2014-11-05
+// Type definitions for Phaser 2.2.0 dev 2014-11-10
 // Project: https://github.com/photonstorm/phaser
 
 declare class Phaser {
@@ -1107,6 +1107,7 @@ declare module Phaser {
         context: any;
         debug: Phaser.Utils.Debug;
         device: Phaser.Device;
+        fpsProblemNotifier: Phaser.Signal;
         height: number;
         id: number;
         input: Phaser.Input;
@@ -1158,6 +1159,8 @@ declare module Phaser {
         showDebugHeader(): void;
         step(): void;
         update(time: number): void;
+        updateLogic(timeStep: number): void;
+        updateRender(timeStep: number): void;
 
     }
 
@@ -1512,6 +1515,7 @@ declare module Phaser {
         resetFrame(): void;
         revive(): Phaser.Image;
         setFrame(frame: Phaser.Frame): void;
+        setScaleMinMax(minX?: number, minY?: number, maxX?: number, maxY?: number): void;
         update(): void;
         updateCrop(): void;
 
@@ -3377,7 +3381,7 @@ declare module Phaser {
         isSetTimeOut(): boolean;
         start(): boolean;
         stop(): void;
-        updateRAF(): void;
+        updateRAF(rafTime: number): void;
         updateSetTimeout(): void;
 
     }
@@ -3678,6 +3682,8 @@ declare module Phaser {
         physicsEnabled: boolean;
         renderOrderID: number;
         scale: Phaser.Point;
+        scaleMin: Phaser.Point;
+        scaleMax: Phaser.Point;
         smoothed: boolean;
         type: number;
         world: Phaser.Point;
@@ -3700,6 +3706,7 @@ declare module Phaser {
         resetFrame(): void;
         revive(health?: number): Phaser.Sprite;
         setFrame(frame: Phaser.Frame): void;
+        setScaleMinMax(minX?: number, minY?: number, maxX?: number, maxY?: number): void;
         update(): void;
         updateCrop(): void;
 
@@ -3750,10 +3757,20 @@ declare module Phaser {
         static NO_SCALE: number;
         static SHOW_ALL: number;
         static RESIZE: number;
+        static USER_SCALE: number;
 
         aspectRatio: number;
         bounds: Phaser.Rectangle;
         currentScaleMode: number;
+        compatibility: {
+            supportsFullScreen: boolean;
+            noMargins: boolean;
+            scrollTo: Phaser.Point;
+            forceMinimumDocumentHeight: boolean;
+            showAllCanExpand: boolean;
+        };
+        documentWidth: number;
+        documentHeight: number;
         enterFullScreen: Phaser.Signal;
         enterIncorrectOrientation: Phaser.Signal;
         enterLandscape: Phaser.Signal;
@@ -3763,7 +3780,7 @@ declare module Phaser {
         forcePortrait: boolean;
         forceLandscape: boolean;
         fullScreenFailed: boolean;
-        fullScreenTarget: any;
+        fullScreenTarget: HTMLDivElement;
         fullScreenScaleMode: number;
         game: Phaser.Game;
         grid: Phaser.FlexGrid;
@@ -3773,7 +3790,7 @@ declare module Phaser {
         isLandscape: boolean;
         isFullScreen: boolean;
         isPortrait: boolean;
-        margin: Phaser.Point;
+        margin: { left: number; top: number; right: number; bottom: number; x: number; y: number; };
         maxHeight: number;
         maxIterations: number;
         maxWidth: number;
@@ -3782,40 +3799,57 @@ declare module Phaser {
         offset: Phaser.Point;
         onResize: ResizeCallback;
         onResizeContext: any;
+        onSizeChange: Phaser.Signal;
         orientation: number;
         pageAlignHorizontally: boolean;
         pageAlignVertically: boolean;
         parentIsWindow: boolean;
-        parentNode: any;
+        parentNode: HTMLDivElement;
         parentScaleFactor: Phaser.Point;
         scaleMode: number;
         scaleFactor: Phaser.Point;
         scaleFactorInversed: Phaser.Point;
+        scrollX: number;
+        scrollY: number;
         sourceAspectRatio: number;
-        supportsFullScreen: boolean;
         trackParentInterval: number;
+        viewportWidth: number;
+        viewportHeight: number;
         width: number;
+        windowConstrains: { bottom: boolean; right: boolean; };
 
+        alignCanvaas(horizontal: boolean, vertical: boolean): void;
+        aspect(object: { width: number; height: number; }): number;
         boot(width: number, height: number): void;
         checkOrientation(event: any): void;
         checkOrientationState(): boolean;
         checkResize(event: any): void;
+        createFullScreenTarget(): HTMLDivElement;
+        calicate(coords: { top: number; right: number; bottom: number; left: number; }, cushion: number): { top: number; right: number; bottom: number; left: number; };
         destroy(): void;
+        elementBounds(element?: any, cushion?: number): { top: number; bottom: number; left: number; width: number; height: number; };
         forceOrientation(forceLandscape: boolean, forcePortrait?: boolean): void;
         fullScreenChange(event: any): void;
         fullScreenError(event: any): void;
-        getParentBounds(fullScreen?: boolean, target?: Phaser.Rectangle): Phaser.Rectangle;
+        getParentBounds(target?: Phaser.Rectangle): Phaser.Rectangle;
+        inViewport(element?: any, cushion?: number): boolean;
         parseConfig(config: any): void;
         preUpdate(): void;
+        reflowGame(): void;
+        reflowCanvas(): void;
         refresh(): void;
         reset(clearWorld?: boolean): void;
+        resetCanvas(cssWidth: string, cssHeight: string): void;
+        scaleSprite(sprite: Phaser.Sprite, width?: number, height?: number, letterBox?: boolean): Phaser.Sprite;
+        setGameSize(width: number, height: number): void;
         setExactFit(): void;
         setMaximum(): void;
         setMinMax(minWidth: number, minHeight: number, maxWidth?: number, maxHeight?: number): void;
         setResizeCallback(callback: ResizeCallback, context: any): void;
-        setScreenSize(force?: boolean): void;
-        setShowAll(): void;
+        setScreenSize(): void;
+        setShowAll(expanding: boolean): void;
         setSize(): void;
+        setUserScale(width: number, height: number): void;
         setupScale(width: number, height: number): void;
         startFullScreen(antialias?: boolean, allowTrampoline?: boolean): void;
         stopFullScreen(): boolean;
@@ -4086,7 +4120,7 @@ declare module Phaser {
 
     class TilemapLayer extends Phaser.Image {
 
-        constructor(game: Phaser.Game, tilemap: Phaser.Tilemap, index: number, width: number, height: number);
+        constructor(game: Phaser.Game, tilemap: Phaser.Tilemap, index: number, width?: number, height?: number);
 
         baseTexture: PIXI.BaseTexture;
         cameraOffset: Phaser.Point;
@@ -4098,16 +4132,16 @@ declare module Phaser {
         debugAlpha: number;
         debugCallbackColor: string;
         debugColor: string;
-        debugFill: boolean;
-        debugFillColor: string;
+        debugSettings: { missingImageFill: string; debuggedTileOverfill: string; forceFullRedraw: boolean; debugAlpha: number; facingEdgeStroke: string; collidingTileOverfill: string; };
         dirty: boolean;
         fixedToCamera: boolean;
         game: Phaser.Game;
         index: number;
-        layer: any;
+        layer: Phaser.TilemapLayer;
         map: Phaser.Tilemap;
         name: string;
         rayStepRate: number;
+        renderSettings: { enableScrollDelta: boolean; overdrawRatio: number; };
         scrollFactorX: number;
         scrollFactorY: number;
         scrollX: number;
@@ -4125,8 +4159,8 @@ declare module Phaser {
         getTileY(y: number): number;
         postUpdate(): void;
         render(): void;
-        renderDebug(): void;
         resizeWorld(): void;
+        resetTilesetCache(): void;
         updateMax(): void;
 
     }
@@ -4156,6 +4190,7 @@ declare module Phaser {
         tileWidth: number;
         total: number;
 
+        containsTileIndex(tileIndex: number): boolean;
         draw(context: CanvasRenderingContext2D, x: number, y: number, index: number): void;
         setImage(image: any): void;
         setSpacing(margin?: number, spacing?: number): void;
@@ -4208,6 +4243,7 @@ declare module Phaser {
 
         advancedTiming: boolean;
         deltaCap: number;
+        desiredFps: number;
         elapsed: number;
         events: Phaser.Timer;
         fps: number;
@@ -4223,8 +4259,11 @@ declare module Phaser {
         pauseDuration: number;
         physicsElapsed: number;
         prevTime: number;
+        slowMotion: number;
+        suggestedFps: number;
         time: number;
         timeCap: number;
+        timeExpected: number;
         timeToCall: number;
 
         add(timer: Phaser.Timer): Phaser.Timer;
@@ -5158,6 +5197,8 @@ declare module p2 {
     }
 
     export class Rectangle extends Shape {
+
+        static sameDimensions(a: Rectangle, b: Rectangle): boolean;
 
         constructor(width?: number, height?: number);
 
