@@ -435,6 +435,7 @@ Phaser.Math = {
     * @param {number} min - The minimum value the array starts with.
     * @param {number} max - The maximum value the array contains.
     * @return {array} The array of number values.
+    * @deprecated 2.1.4 - Specialized function not used internally.
     */
     numberArray: function (min, max) {
 
@@ -450,34 +451,35 @@ Phaser.Math = {
     },
 
     /**
-     * Creates an array of numbers (positive and/or negative) progressing from
-     * `start` up to but not including `end`. If `start` is less than `stop` a
-     * zero-length range is created unless a negative `step` is specified.
-     *
-     * @method Phaser.Math#numberArrayStep
-     * @param {number} [start=0] - The start of the range.
-     * @param {number} end - The end of the range.
-     * @param {number} [step=1] - The value to increment or decrement by.
-     * @returns {Array} Returns the new array of numbers.
-     * @example
-     * Phaser.Math.numberArrayStep(4);
-     * // => [0, 1, 2, 3]
-     *
-     * Phaser.Math.numberArrayStep(1, 5);
-     * // => [1, 2, 3, 4]
-     *
-     * Phaser.Math.numberArrayStep(0, 20, 5);
-     * // => [0, 5, 10, 15]
-     *
-     * Phaser.Math.numberArrayStep(0, -4, -1);
-     * // => [0, -1, -2, -3]
-     *
-     * Phaser.Math.numberArrayStep(1, 4, 0);
-     * // => [1, 1, 1]
-     *
-     * Phaser.Math.numberArrayStep(0);
-     * // => []
-     */
+    * Creates an array of numbers (positive and/or negative) progressing from
+    * `start` up to but not including `end`. If `start` is less than `stop` a
+    * zero-length range is created unless a negative `step` is specified.
+    *
+    * @method Phaser.Math#numberArrayStep
+    * @param {number} [start=0] - The start of the range.
+    * @param {number} end - The end of the range.
+    * @param {number} [step=1] - The value to increment or decrement by.
+    * @returns {Array} Returns the new array of numbers.
+    * @example
+    * Phaser.Math.numberArrayStep(4);
+    * // => [0, 1, 2, 3]
+    *
+    * Phaser.Math.numberArrayStep(1, 5);
+    * // => [1, 2, 3, 4]
+    *
+    * Phaser.Math.numberArrayStep(0, 20, 5);
+    * // => [0, 5, 10, 15]
+    *
+    * Phaser.Math.numberArrayStep(0, -4, -1);
+    * // => [0, -1, -2, -3]
+    *
+    * Phaser.Math.numberArrayStep(1, 4, 0);
+    * // => [1, 1, 1]
+    *
+    * Phaser.Math.numberArrayStep(0);
+    * // => []
+    * @deprecated 2.1.4 - Specialized function not used internally.
+    */
     numberArrayStep: function(start, end, step) {
 
         start = +start || 0;
@@ -1017,7 +1019,7 @@ Phaser.Math = {
     * @method Phaser.Math#floor
     * @param {number} value - Any number.
     * @return {integer} The rounded value of that number.
-    * @deprecated 2.1.4 - Use {@link Phaser.Math#truncate} or instead.
+    * @deprecated 2.1.4 - Use {@link Phaser.Math#truncate} or `Math.trunc` instead.
     */
     floor: function (value) {
         return Math.trunc(value);
@@ -1170,9 +1172,7 @@ Phaser.Math = {
     * @deprecated 2.1.4 - Do the rounding locally.
     */
     distanceRounded: function (x1, y1, x2, y2) {
-
         return Math.round(Phaser.Math.distance(x1, y1, x2, y2));
-
     },
 
     /**
@@ -1185,9 +1185,7 @@ Phaser.Math = {
     * @return {number}
     */
     clamp: function (x, a, b) {
-
         return ( x < a ) ? a : ( ( x > b ) ? b : x );
-
     },
 
     /**
@@ -1200,9 +1198,7 @@ Phaser.Math = {
     * @return {number}
     */
     clampBottom: function (x, a) {
-
         return x < a ? a : x;
-
     },
 
     /**
@@ -1216,9 +1212,7 @@ Phaser.Math = {
     * @see {@link Phaser.Math.fuzzyEqual}
     */
     within: function (a, b, tolerance) {
-
         return (Math.abs(a - b) <= tolerance);
-
     },
 
     /**
@@ -1233,9 +1227,7 @@ Phaser.Math = {
     * @return {number}
     */
     mapLinear: function (x, a1, a2, b1, b2) {
-
         return b1 + ( x - a1 ) * ( b2 - b1 ) / ( a2 - a1 );
-
     },
 
     /**
@@ -1248,10 +1240,8 @@ Phaser.Math = {
     * @return {number}
     */
     smoothstep: function (x, min, max) {
-
         x = Math.max(0, Math.min(1, (x - min) / (max - min)));
         return x * x * (3 - 2 * x);
-
     },
 
     /**
@@ -1264,10 +1254,8 @@ Phaser.Math = {
     * @return {number}
     */
     smootherstep: function (x, min, max) {
-
         x = Math.max(0, Math.min(1, (x - min) / (max - min)));
         return x * x * x * (x * (x * 6 - 15) + 10);
-
     },
 
     /**
@@ -1280,9 +1268,7 @@ Phaser.Math = {
     * @return {integer} An integer in {-1, 0, 1}
     */
     sign: function (x) {
-
         return ( x < 0 ) ? -1 : ( ( x > 0 ) ? 1 : 0 );
-
     },
 
     /**
@@ -1311,40 +1297,31 @@ Phaser.Math = {
             return (a - base) / b;
         }
 
-    },
+    }
 
-    /**
-    * Convert degrees to radians.
-    *
-    * @method Phaser.Math#degToRad
-    * @param {number} degrees - Angle in degrees.
-    * @return {number} Angle in radians.
-    */
-    degToRad: (function() {
+};
 
-        var degreeToRadiansFactor = Math.PI / 180;
+var degreeToRadiansFactor = Math.PI / 180;
+var radianToDegreesFactor = 180 / Math.PI;
 
-        return function (degrees) {
-            return degrees * degreeToRadiansFactor;
-        };
+/**
+* Convert degrees to radians.
+*
+* @method Phaser.Math#degToRad
+* @param {number} degrees - Angle in degrees.
+* @return {number} Angle in radians.
+*/
+Phaser.Math.degToRad = function degToRad (degrees) {
+    return degrees * degreeToRadiansFactor;
+};
 
-    }()),
-
-    /**
-    * Convert degrees to radians.
-    *
-    * @method Phaser.Math#radToDeg
-    * @param {number} radians - Angle in radians.
-    * @return {number} Angle in degrees
-    */
-    radToDeg: (function() {
-
-        var radianToDegreesFactor = 180 / Math.PI;
-
-        return function (radians) {
-            return radians * radianToDegreesFactor;
-        };
-
-    }())
-
+/**
+* Convert degrees to radians.
+*
+* @method Phaser.Math#radToDeg
+* @param {number} radians - Angle in radians.
+* @return {number} Angle in degrees
+*/
+Phaser.Math.radToDeg = function radToDeg (radians) {
+    return radians * radianToDegreesFactor;
 };

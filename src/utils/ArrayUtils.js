@@ -26,21 +26,14 @@ Phaser.ArrayUtils = {
     */
     getRandomItem: function (objects, startIndex, length) {
 
-        if (typeof startIndex === 'undefined') { startIndex = 0; }
-        if (typeof length === 'undefined') { length = 0; }
-
         if (objects == null) { // undefined or null
             return null;
         }
 
-        var l = length;
+        if (typeof startIndex === 'undefined') { startIndex = 0; }
+        if (typeof length === 'undefined') { length = objects.length; }
 
-        if ((l === 0) || (l > objects.length - startIndex))
-        {
-            l = objects.length - startIndex;
-        }
-
-        var randomIndex = startIndex + Math.floor(Math.random() * l);
+        var randomIndex = startIndex + Math.floor(Math.random() * length);
         return objects[randomIndex] || null;
 
     },
@@ -57,28 +50,23 @@ Phaser.ArrayUtils = {
     */
     removeRandomItem: function (objects, startIndex, length) {
 
-        if (typeof startIndex === 'undefined') { startIndex = 0; }
-        if (typeof length === 'undefined') { length = 0; }
-
         if (objects == null) { // undefined or null
             return null;
         }
 
-        var l = length;
+        if (typeof startIndex === 'undefined') { startIndex = 0; }
+        if (typeof length === 'undefined') { length = objects.length; }
 
-        if ((l === 0) || (l > objects.length - startIndex))
+        var randomIndex = startIndex + Math.floor(Math.random() * length);
+        if (randomIndex < objects.length)
         {
-            l = objects.length - startIndex;
-        }
-
-        if (l > 0)
-        {
-            var idx = startIndex + Math.floor(Math.random() * l);
-            var removed = objects.splice(idx, 1);
+            var removed = objects.splice(randomIndex, 1);
             return removed[0];
         }
-
-        return null;
+        else
+        {
+            return null;
+        }
 
     },
 
@@ -179,12 +167,16 @@ Phaser.ArrayUtils = {
     */
     findClosest: function (value, arr) {
 
-        if (value < arr[0]) {
+        if (!arr.length)
+        {
+            return NaN;
+        }
+        else if (arr.length === 1 || value < arr[0])
+        {
             return arr[0];
         }
 
         var i = 1;
-
         while (arr[i] < value) {
             i++;
         }
@@ -194,6 +186,6 @@ Phaser.ArrayUtils = {
 
         return ((high - value) <= (value - low)) ? high : low;
 
-    },
+    }
 
 };
