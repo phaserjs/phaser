@@ -5,9 +5,14 @@
 */
 
 /**
-* A collection of mathematical methods.
+* A collection of useful mathematical functions.
+*
+* These are normally accessed through `game.math`.
 *
 * @class Phaser.Math
+* @static
+* @see {@link Phaser.Utils}
+* @see {@link Phaser.ArrayUtils}
 */
 Phaser.Math = {
 
@@ -15,6 +20,7 @@ Phaser.Math = {
     * Twice PI.
     * @property {number} Phaser.Math#PI2
     * @default ~6.283
+    * @deprecated 2.1.4 - Not used internally. Use `2 * Math.PI` instead.
     */
     PI2: Math.PI * 2,
 
@@ -970,6 +976,8 @@ Phaser.Math = {
     },
 
     /**
+    * The (absolute) difference between two values.
+    *
     * @method Phaser.Math#difference
     * @param {number} a
     * @param {number} b
@@ -1100,7 +1108,7 @@ Phaser.Math = {
     * @method Phaser.Math#shift
     * @param {array} stack - The array to shift.
     * @return {any} The shifted value.
-    * @deprecated 2.1.4 - Not used internally, better to do locally
+    * @deprecated 2.1.4 - Specialized function. Not used internally, better to do locally
     */
     shift: function (stack) {
 
@@ -1189,7 +1197,7 @@ Phaser.Math = {
     },
 
     /**
-    * Clamp value to range `[a, inf)`.
+    * Clamp `x` to the range `[a, Infinity)`.
     * Roughly the same as `Math.max(x, a)`, except for NaN handling.
     *
     * @method Phaser.Math#clampBottom
@@ -1261,7 +1269,7 @@ Phaser.Math = {
     /**
     * A value representing the sign of the value: -1 for negative, +1 for positive, 0 if value is 0.
     *
-    * This works differently from `Math.sign` for value of NaN and -0, etc.
+    * This works differently from `Math.sign` for values of NaN and -0, etc.
     *
     * @method Phaser.Math#sign
     * @param {number} x

@@ -134,13 +134,13 @@ Phaser.ArrayUtils = {
 
         if (direction === 90 || direction === -270 || direction === 'rotateLeft')
         {
-            matrix = Phaser.Utils.transposeArray(matrix);
+            matrix = Phaser.ArrayUtils.transpose(matrix);
             matrix = matrix.reverse();
         }
         else if (direction === -90 || direction === 270 || direction === 'rotateRight')
         {
             matrix = matrix.reverse();
-            matrix = Phaser.Utils.transposeArray(matrix);
+            matrix = Phaser.ArrayUtils.transpose(matrix);
         }
         else if (Math.abs(direction) === 180 || direction === 'rotate180')
         {
