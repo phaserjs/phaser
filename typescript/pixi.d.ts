@@ -1,4 +1,4 @@
-// Type definitions for PIXI 2.0.0 dev 2014-11-05
+// Type definitions for PIXI 2.0.0 dev 2014-11-09
 // Project: https://github.com/GoodBoyDigital/pixi.js/
 
 declare module PIXI {
@@ -484,6 +484,7 @@ declare module PIXI {
         mouseout(e: InteractionData): void;
         mouseover(e: InteractionData): void;
         mouseup(e: InteractionData): void;
+        mousemove(e: InteractionData): void;
         mouseupoutside(e: InteractionData): void;
         rightclick(e: InteractionData): void;
         rightdown(e: InteractionData): void;
@@ -969,14 +970,6 @@ declare module PIXI {
 
     }
 
-    export class Spine extends DisplayObjectContainer {
-
-        constructor(url: string);
-
-        createSprite(slot: any, descriptior: any): void;
-
-    }
-
     export class Sprite extends DisplayObjectContainer {
 
         static fromFrame(frameId: string): Sprite;
@@ -1362,9 +1355,453 @@ declare module PIXI {
 
     }
 
+    //SPINE
+
+    export class BoneData {
+
+        constructor(name: string, parent?: any);
+
+        name: string;
+        parent: any;
+        length: number;
+        x: number;
+        y: number;
+        rotation: number;
+        scaleX: number;
+        scaleY: number;
+
+    }
+
+    export class SlotData {
+
+        constructor(name: string, boneData: BoneData);
+
+        name: string;
+        boneData: BoneData;
+        r: number;
+        g: number;
+        b: number;
+        a: number;
+        attachmentName: string;
+
+    }
+
+    export class Bone {
+
+        constructor(boneData: BoneData, parent?: any);
+
+        data: BoneData;
+        parent: any;
+        yDown: boolean;
+        x: number;
+        y: number;
+        rotation: number;
+        scaleX: number;
+        scaleY: number;
+        worldRotation: number;
+        worldScaleX: number;
+        worldScaleY: number;
+
+        updateWorldTransform(flipX: boolean, flip: boolean): void;
+        setToSetupPose(): void;
+
+    }
+
+    export class Slot {
+
+        constructor(slotData: SlotData, skeleton: Skeleton, bone: Bone);
+
+        data: SlotData;
+        skeleton: Skeleton;
+        bone: Bone;
+        r: number;
+        g: number;
+        b: number;
+        a: number;
+        attachment: RegionAttachment;
+        setAttachment(attachment: RegionAttachment): void;
+        setAttachmentTime(time: number): void;
+        getAttachmentTime(): number;
+        setToSetupPose(): void;
+
+    }
+
+    export class Skin {
+
+        constructor(name: string);
+
+        name: string;
+        attachments: any;
+
+        addAttachment(slotIndex: number, name: string, attachment: RegionAttachment): void;
+        getAttachment(slotIndex: number, name: string): void;
+
+    }
+
+    export class Animation {
+
+        constructor(name: string, timelines: ISpineTimeline[], duration: number);
+
+        name: string;
+        timelines: ISpineTimeline[];
+        duration: number;
+        apply(skeleton: Skeleton, time: number, loop: boolean): void;
+        min(skeleton: Skeleton, time: number, loop: boolean, alpha: number): void;
+
+    }
+
+    export class Curves {
+
+        constructor(frameCount: number);
+
+        curves: number[];
+
+        setLinear(frameIndex: number): void;
+        setStepped(frameIndex: number): void;
+        setCurve(frameIndex: number, cx1: number, cy1: number, cx2: number, cy2: number): void;
+        getCurvePercent(frameIndex: number, percent: number): number;
+
+    }
+
+    export interface ISpineTimeline {
+
+        curves: Curves;
+        frames: number[];
+
+        getFrameCount(): number;
+        apply(skeleton: Skeleton, time: number, alpha: number): void;
+
+    }
+
+    export class RotateTimeline implements ISpineTimeline {
+
+        constructor(frameCount: number);
+
+        curves: Curves;
+        frames: number[];
+        boneIndex: number;
+
+        getFrameCount(): number;
+        setFrame(frameIndex: number, time: number, angle: number): void;
+        apply(skeleton: Skeleton, time: number, alpha: number): void;
+
+    }
+
+    export class TranslateTimeline implements ISpineTimeline {
+
+        constructor(frameCount: number);
+
+        curves: Curves;
+        frames: number[];
+        boneIndex: number;
+
+        getFrameCount(): number;
+        setFrame(frameIndex: number, time: number, x: number, y: number): void;
+        apply(skeleton: Skeleton, time: number, alpha: number): void;
+
+    }
+
+    export class ScaleTimeline implements ISpineTimeline {
+
+        constructor(frameCount: number);
+
+        curves: Curves;
+        frames: number[];
+        boneIndex: number;
+
+        getFrameCount(): number;
+        setFrame(frameIndex: number, time: number, x: number, y: number): void;
+        apply(skeleton: Skeleton, time: number, alpha: number): void;
+
+    }
+
+    export class ColorTimeline implements ISpineTimeline {
+
+        constructor(frameCount: number);
+
+        curves: Curves;
+        frames: number[];
+        boneIndex: number;
+
+        getFrameCount(): number;
+        setFrame(frameIndex: number, time: number, r: number, g: number, b: number, a: number): void;
+        apply(skeleton: Skeleton, time: number, alpha: number): void;
+
+    }
+
+    export class AttachmentTimeline implements ISpineTimeline {
+
+        constructor(frameCount: number);
+
+        curves: Curves;
+        frames: number[];
+        attachmentNames: string[];
+        slotIndex: number;
+
+        getFrameCount(): number;
+        setFrame(frameIndex: number, time: number, attachmentName: string): void;
+        apply(skeleton: Skeleton, time: number, alpha: number): void;
+
+    }
+
+    export class SkeletonData {
+
+        bones: Bone[];
+        slots: Slot[];
+        skins: Skin[];
+        animations: Animation[];
+        defaultSkin: Skin;
+
+        findBone(boneName: string): Bone;
+        findBoneIndex(boneName: string): number;
+        findSlot(slotName: string): Slot;
+        findSlotIndex(slotName: string): number;
+        findSkin(skinName: string): Skin;
+        findAnimation(animationName: string): Animation;
+
+    }
+
+    export class Skeleton {
+
+        constructor(skeletonData: SkeletonData);
+
+        data: SkeletonData;
+        bones: Bone[];
+        slots: Slot[];
+        drawOrder: any[];
+        x: number;
+        y: number;
+        skin: Skin;
+        r: number;
+        g: number;
+        b: number;
+        a: number;
+        time: number;
+        flipX: boolean;
+        flipY: boolean;
+
+        updateWorldTransform(): void;
+        setToSetupPose(): void;
+        setBonesToSetupPose(): void;
+        setSlotsToSetupPose(): void;
+        getRootBone(): Bone;
+        findBone(boneName: string): Bone;
+        fineBoneIndex(boneName: string): number;
+        findSlot(slotName: string): Slot;
+        findSlotIndex(slotName: string): number;
+        setSkinByName(skinName: string): void;
+        setSkin(newSkin: Skin): void;
+        getAttachmentBySlotName(slotName: string, attachmentName: string): RegionAttachment;
+        getAttachmentBySlotIndex(slotIndex: number, attachmentName: string): RegionAttachment;
+        setAttachment(slotName: string, attachmentName: string): void;
+        update(data: number): void;
+
+    }
+
+    export class RegionAttachment {
+
+        offset: number[];
+        uvs: number[];
+        x: number;
+        y: number;
+        rotation: number;
+        scaleX: number;
+        scaleY: number;
+        width: number;
+        height: number;
+        rendererObject: any;
+        regionOffsetX: number;
+        regionOffsetY: number;
+        regionWidth: number;
+        regionHeight: number;
+        regionOriginalWidth: number;
+        regionOriginalHeight: number;
+
+        setUVs(u: number, v: number, u2: number, v2: number, rotate: number): void;
+        updateOffset(): void;
+        computeVertices(x: number, y: number, bone: Bone, vertices: number[]): void;
+
+    }
+
+    export class AnimationStateData {
+
+        constructor(skeletonData: SkeletonData);
+
+        skeletonData: SkeletonData;
+        animationToMixTime: any;
+        defaultMix: number;
+
+        setMixByName(fromName: string, toName: string, duration: number): void;
+        setMix(from: string, to: string): number;
+
+    }
+
+    export class AnimationState {
+
+        constructor(stateData: any);
+
+        animationSpeed: number;
+        current: any;
+        previous: any;
+        currentTime: number;
+        previousTime: number;
+        currentLoop: boolean;
+        previousLoop: boolean;
+        mixTime: number;
+        mixDuration: number;
+        queue: Animation[];
+
+        update(delta: number): void;
+        apply(skeleton: any): void;
+        clearAnimation(): void;
+        setAnimation(animation: any, loop: boolean): void;
+        setAnimationByName(animationName: string, loop: boolean): void;
+        addAnimationByName(animationName: string, loop: boolean, delay: number): void;
+        addAnimation(animation: any, loop: boolean, delay: number): void;
+        isComplete(): number;
+
+    }
+
+    export class SkeletonJson {
+
+        constructor(attachmentLoader: AtlasAttachmentLoader);
+
+        attachmentLoader: AtlasAttachmentLoader;
+        scale: number;
+
+        readSkeletonData(root: any): SkeletonData;
+        readAttachment(skin: Skin, name: string, map: any): RegionAttachment;
+        readAnimation(name: string, map: any, skeletonData: SkeletonData): void;
+        readCurve(timeline: ISpineTimeline, frameIndex: number, valueMap: any): void;
+        toColor(hexString: string, colorIndex: number): number;
+
+    }
+
+    export class Atlas {
+
+        static FORMAT: {
+
+            alpha: number;
+            intensity: number;
+            luminanceAlpha: number;
+            rgb565: number;
+            rgba4444: number;
+            rgb888: number;
+            rgba8888: number;
+
+        }
+
+        static TextureFilter: {
+
+            nearest: number;
+            linear: number;
+            mipMap: number;
+            mipMapNearestNearest: number;
+            mipMapLinearNearest: number;
+            mipMapNearestLinear: number;
+            mipMapLinearLinear: number;
+
+        }
+
+        static textureWrap: {
+
+            mirroredRepeat: number;
+            clampToEdge: number;
+            repeat: number;
+
+        }
+
+        constructor(atlasText: string, textureLoader: AtlasLoader);
+
+        textureLoader: AtlasLoader;
+        pages: AtlasPage[];
+        regions: AtlasRegion[];
+
+        findRegion(name: string): AtlasRegion;
+        dispose(): void;
+        updateUVs(page: AtlasPage): void;
+
+    }
+
+    export class AtlasPage {
+
+        name: string;
+        format: number;
+        minFilter: number;
+        magFilter: number;
+        uWrap: number;
+        vWrap: number;
+        rendererObject: any;
+        width: number;
+        height: number;
+
+    }
+
+    export class AtlasRegion {
+
+        page: AtlasPage;
+        name: string;
+        x: number;
+        y: number;
+        width: number;
+        height: number;
+        u: number;
+        v: number;
+        u2: number;
+        v2: number;
+        offsetX: number;
+        offsetY: number;
+        originalWidth: number;
+        originalHeight: number;
+        index: number;
+        rotate: boolean;
+        splits: any[];
+        pads: any[];
+
+    }
+
+    export class AtlasReader {
+
+        constructor(text: string);
+
+        lines: string[];
+        index: number;
+
+        trim(value: string): string;
+        readLine(): string;
+        readValue(): string;
+        readTuple(tuple: number): number;
+
+    }
+
+    export class AtlasAttachmentLoader {
+
+        constructor(atlas: Atlas);
+
+        atlas: Atlas;
+
+        newAttachment(skin: Skin, type: number, name: string): RegionAttachment;
+
+    }
+
+    export class Spine extends DisplayObjectContainer {
+
+        constructor(url: string);
+
+        spineData: any;
+
+        skeleton: Skeleton;
+        stateData: AnimationStateData;
+        state: AnimationState;
+        slotContainers: DisplayObjectContainer[];
+
+        createSprite(slot: Slot, descriptor: { name: string }): Sprite[];
+
+    }
+
 }
 
-declare function requestAnimFrame(callback:Function): void;
+declare function requestAnimFrame(callback: Function): void;
 
 declare module PIXI.PolyK {
     export function Triangulate(p: number[]): number[];
