@@ -287,7 +287,8 @@ function buildNav( members ) {
 
 				nav.class.members.push( {
 					link: linkto( c.longname, c.name ),
-					depth: c.longname.split('.').length - 1
+					depth: c.longname.split('.').length - 1,
+					member: c
 				} );
 			}
 			seen[c.longname] = true;

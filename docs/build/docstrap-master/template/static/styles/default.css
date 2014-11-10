@@ -1,0 +1,20 @@
+/**
+Default styles for some custom classes.
+Change with theme as appropriate..
+*/
+
+.deprecated-notice {
+    padding: 10px;
+}
+
+.toc-deprecated {
+    text-decoration: line-through;
+}
+
+.returns-type {
+    float: left;
+    padding-right: 10px;
+}
+
+.returns-desc {    
+}
