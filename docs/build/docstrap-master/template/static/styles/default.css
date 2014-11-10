@@ -4,7 +4,9 @@ Change with theme as appropriate..
 */
 
 .deprecated-notice {
+    border: 2px solid rgb(255, 238, 238);
     padding: 10px;
+    margin-bottom: 10px;
 }
 
 .toc-deprecated {
@@ -17,4 +19,8 @@ Change with theme as appropriate..
 }
 
 .returns-desc {    
+}
+
+dt a {
+    font-weight: normal;
 }
