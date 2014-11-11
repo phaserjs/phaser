@@ -822,6 +822,7 @@ Phaser.ScaleManager.prototype = {
             if (this.currentScaleMode === Phaser.ScaleManager.RESIZE)
             {
                 this.game.state.resize(width, height);
+                this.game.load.resize(width, height);
             }
         }
 
