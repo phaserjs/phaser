@@ -1,16 +1,30 @@
 <?js
 var data = obj;
 var self = this;
+function mkSignature (data) {
+    var attribs = data.attribs;
+    attribs = attribs.replace('protected', 'internal');    
+
+    return (attribs + (data.kind === 'class' ? 'new ' : '') +
+        data.name +
+        (data.kind !== 'event' ? data.signature : ''));
+}
 ?>
 <dt>
-    <h4 class="name" id="<?js= id ?>"><?js= data.attribs + (kind === 'class' ? 'new ' : '') + name + (kind !== 'event' ? data.signature : '') ?></h4>
+    <h4 class="name <?js= data.deprecated ? 'toc-deprecated' : ''?>"
+        id="<?js= id ?>"><?js= mkSignature(data) ?></h4>
     
     <?js if (data.summary) { ?>
     <p class="summary"><?js= summary ?></p>
     <?js } ?>
 </dt>
 <dd>
-    
+    <?js if (data.deprecated) { ?>
+        <dt class="important deprecated-notice">
+            This method is <em>deprecated</em> and should not be used. It may be removed in the future.
+        </dt>
+    <?js } ?>
+
     <?js if (data.description) { ?>
     <div class="description">
         <?js= data.description ?>
@@ -34,6 +48,15 @@ var self = this;
     <?js if (data.params && params.length) { ?>
         <h5>Parameters:</h5>
         <?js= this.partial('params.tmpl', params) ?>
+    <?js } ?>
+
+    <?js if (data.returns && returns.length) { ?>
+    <h5>Returns:</h5>
+    <div class="returns">
+        <?js returns.forEach(function(r) { ?>
+            <?js= self.partial('returns.tmpl', r) ?>
+        <?js }); ?>
+    </div>
     <?js } ?>
     
     <?js= this.partial('details.tmpl', data) ?>
@@ -69,19 +92,7 @@ var self = this;
         exceptions.forEach(function(r) { ?>
             <?js= self.partial('exceptions.tmpl', r) ?>
         <?js });
-    } } ?>
-    
-    <?js if (data.returns && returns.length) { ?>
-    <h5>Returns:</h5>
-    <?js if (returns.length > 1) { ?><ul><?js
-        returns.forEach(function(r) { ?>
-            <li><?js= self.partial('returns.tmpl', r) ?></li>
-        <?js });
-    ?></ul><?js } else {
-        returns.forEach(function(r) { ?>
-            <?js= self.partial('returns.tmpl', r) ?>
-        <?js });
-    } } ?>
+    } } ?>   
     
     <?js if (data.examples && examples.length) { ?>
         <h5>Example<?js= examples.length > 1? 's':'' ?></h5>

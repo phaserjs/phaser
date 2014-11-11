@@ -201,7 +201,15 @@ jQuery.fn.toc.defaults = {
     return $heading.text();
   },
   itemClass: function(i, heading, $heading, prefix) {
-    return prefix + '-' + $heading[0].tagName.toLowerCase();
+    // Remove all classes not starting like 'toc-'
+    var tocClasses = ($heading.attr('class') || '')
+      .replace(/\b\S+/gi, function (m) {
+        return m.indexOf("toc-") === 0 ? m : '';
+      });
+
+    var itemClass = prefix + '-' + $heading[0].tagName.toLowerCase();
+
+    return tocClasses + ' ' + itemClass;
   }
 
 };
