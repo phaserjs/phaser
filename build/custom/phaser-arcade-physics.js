@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.2.0 "Bethal" - Built: Tue Nov 11 2014 01:10:05
+* v2.2.0 "Bethal" - Built: Tue Nov 11 2014 14:30:49
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -1974,8 +1974,8 @@ PIXI.Sprite.prototype.getBounds = function(matrix)
     var worldTransform = matrix || this.worldTransform ;
 
     var a = worldTransform.a;
-    var b = worldTransform.c;
-    var c = worldTransform.b;
+    var b = worldTransform.b;
+    var c = worldTransform.c;
     var d = worldTransform.d;
     var tx = worldTransform.tx;
     var ty = worldTransform.ty;
@@ -5926,7 +5926,7 @@ PIXI.WebGLRenderer = function(width, height, options)
      * @property autoResize
      * @type Boolean
      */
-    this.autoResize = options.autoResize || false;
+    this.autoResize = options.autoResize || false;
 
     /**
      * The value of the preserveDrawingBuffer flag affects whether or not the contents of the stencil buffer is retained after rendering.
@@ -9019,7 +9019,7 @@ PIXI.CanvasRenderer = function(width, height, options)
      * @property autoResize
      * @type Boolean
      */
-    this.autoResize = options.autoResize || false;
+    this.autoResize = options.autoResize || false;
 
 
     /**
@@ -10413,8 +10413,8 @@ PIXI.TilingSprite.prototype.getBounds = function()
     var worldTransform = this.worldTransform;
 
     var a = worldTransform.a;
-    var b = worldTransform.c;
-    var c = worldTransform.b;
+    var b = worldTransform.b;
+    var c = worldTransform.c;
     var d = worldTransform.d;
     var tx = worldTransform.tx;
     var ty = worldTransform.ty;
@@ -11642,7 +11642,7 @@ PIXI.AbstractFilter.prototype.apply = function(frameBuffer)
 *
 * Phaser - http://phaser.io
 *
-* v2.2.0 "Bethal" - Built: Tue Nov 11 2014 01:10:05
+* v2.2.0 "Bethal" - Built: Tue Nov 11 2014 14:30:49
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -11685,7 +11685,7 @@ PIXI.AbstractFilter.prototype.apply = function(frameBuffer)
 */
 var Phaser = Phaser || {
 
-	VERSION: '2.2.0-RC2',
+	VERSION: '2.2.0-RC3',
 	GAMES: [],
 
     AUTO: 0,
@@ -16520,8 +16520,8 @@ PIXI.Graphics.prototype.getBounds = function( matrix )
     var worldTransform = matrix || this.worldTransform;
 
     var a = worldTransform.a;
-    var b = worldTransform.c;
-    var c = worldTransform.b;
+    var b = worldTransform.b;
+    var c = worldTransform.c;
     var d = worldTransform.d;
     var tx = worldTransform.tx;
     var ty = worldTransform.ty;
@@ -19893,7 +19893,7 @@ Phaser.Stage.prototype.parseConfig = function (config) {
 */
 Phaser.Stage.prototype.boot = function () {
 
-    Phaser.Canvas.getOffset(this.game.canvas, this.offset);
+    Phaser.DOM.getOffset(this.game.canvas, this.offset);
 
     var _this = this;
 
@@ -22809,7 +22809,7 @@ Phaser.ScaleManager = function (game, width, height) {
 
     /**
     * _EXPERIMENTAL:_ A responsive grid on which you can align game objects.
-    * @property {Phaser.FlexGrid} gridobjects.
+    * @property {Phaser.FlexGrid} grid
     * @public
     */
     this.grid = null;
@@ -22817,12 +22817,14 @@ Phaser.ScaleManager = function (game, width, height) {
     /**
     * Target width (in pixels) of the Game canvas.
     * @property {number} width
+    * @readonly
     */
     this.width = 0;
 
     /**
     * Target height (in pixels) of the Game canvas.
     * @property {number} height
+    * @readonly
     */
     this.height = 0;
 
@@ -22875,6 +22877,7 @@ Phaser.ScaleManager = function (game, width, height) {
     * @property {boolean} forceLandscape
     * @readonly
     * @default
+    * @protected
     */
     this.forceLandscape = false;
 
@@ -22884,14 +22887,15 @@ Phaser.ScaleManager = function (game, width, height) {
     * @property {boolean} forcePortrait
     * @readonly
     * @default
+    * @protected
     */
     this.forcePortrait = false;
 
     /**
     * True if the `forceLandscape` or `forcePortrait` are set and do not agree with the browser orientation.
-    * @property {boolean} incorrectOrientation
-    * @protected
+    * @property {boolean} incorrectOrientation    
     * @readonly
+    * @protected
     */
     this.incorrectOrientation = false;
 
@@ -22912,9 +22916,9 @@ Phaser.ScaleManager = function (game, width, height) {
     /**
     * The maximum number of times a canvas will be resized (in a row) in order to fill the browser.
     * @property {number} maxIterations
-    * @protected
     * @default
     * @deprecated 2.1.4 - This is not used anymore as reflow iterations are "automatic".
+    * @protected
     */
     this.maxIterations = 5;
 
@@ -22974,7 +22978,8 @@ Phaser.ScaleManager = function (game, width, height) {
     *
     * The default implementation is to create a new element with a black background.
     *
-    * @public {function} createFullScreenTarget
+    * @property {function} createFullScreenTarget
+    * @protected
     */
     this.createFullScreenTarget = function () {
         var fsTarget = document.createElement('div');
@@ -23018,8 +23023,8 @@ Phaser.ScaleManager = function (game, width, height) {
     * The orientation value of the game, as defined by `window.orientation` or guessed.
     * A value of 90 is landscape and 0 is portrait.
     * @property {number} orientation
-    * @public
     * @readonly
+    * @public
     */
     this.orientation = 0;
 
@@ -23038,7 +23043,6 @@ Phaser.ScaleManager = function (game, width, height) {
     /**
     * The _current_ scale factor based on the game dimensions vs. the scaled dimensions.
     * @property {Phaser.Point} scaleFactor
-    * @public
     * @readonly
     */
     this.scaleFactor = new Phaser.Point(1, 1);
@@ -23046,8 +23050,8 @@ Phaser.ScaleManager = function (game, width, height) {
     /**
     * The _current_ inversed scale factor. The displayed dimensions divided by the game dimensions.
     * @property {Phaser.Point} scaleFactorInversed
-    * @protected
     * @readonly
+    * @protected
     */
     this.scaleFactorInversed = new Phaser.Point(1, 1);
 
@@ -23068,7 +23072,6 @@ Phaser.ScaleManager = function (game, width, height) {
     /**
     * The aspect ratio of the scaled game canvas.
     * @property {number} aspectRatio
-    * @public
     * @readonly
     */
     this.aspectRatio = 0;
@@ -23076,7 +23079,6 @@ Phaser.ScaleManager = function (game, width, height) {
     /**
     * The aspect ratio of the original game dimensions.
     * @property {number} sourceAspectRatio
-    * @public
     * @readonly
     */
     this.sourceAspectRatio = 0;
@@ -23084,15 +23086,14 @@ Phaser.ScaleManager = function (game, width, height) {
     /**
     * The native browser events from Fullscreen API changes.
     * @property {any} event
-    * @private
     * @readonly
+    * @private
     */
     this.event = null;
 
     /**
     * The edges on which to constrain the Canvas _to_ the Window viewport in _addition_ to any restrictions of the parent container.
     * @property {boolean} windowConstraints
-    * @public
     * @default
     */
     this.windowConstraints = {
@@ -23165,8 +23166,8 @@ Phaser.ScaleManager = function (game, width, height) {
     * The maximum time (in ms) between dimension update checks for the Canvas's parent element (or window).
     * Update checks normally happen quicker in response to other events.
     * @property {integer} trackParentInterval
-    * @protected
     * @default
+    * @protected
     */
     this.trackParentInterval = 2000;
 
@@ -23181,7 +23182,6 @@ Phaser.ScaleManager = function (game, width, height) {
     * Use this to handle responsive game layout options.
     *
     * @property {Phaser.Signal} onSizeChange
-    * @public
     * @todo Formalize the arguments, if any, supplied to this signal.
     */
     this.onSizeChange = new Phaser.Signal();
@@ -23389,7 +23389,7 @@ Phaser.ScaleManager.prototype = {
 
         // Initialize core bounds
 
-        Phaser.Canvas.getOffset(this.game.canvas, this.offset);
+        Phaser.DOM.getOffset(this.game.canvas, this.offset);
 
         this.bounds.setTo(this.offset.x, this.offset.y, this.width, this.height);
 
@@ -23602,6 +23602,7 @@ Phaser.ScaleManager.prototype = {
             if (this.currentScaleMode === Phaser.ScaleManager.RESIZE)
             {
                 this.game.state.resize(width, height);
+                this.game.load.resize(width, height);
             }
         }
 
@@ -23650,7 +23651,7 @@ Phaser.ScaleManager.prototype = {
 
         var prevThrottle = this._sizeThrottle;
 
-        Phaser.Canvas.getOffset(this.game.canvas, this.offset);
+        Phaser.DOM.getOffset(this.game.canvas, this.offset);
 
         var prevWidth = this._parentBounds.width;
         var prevHeight = this._parentBounds.height;
@@ -23733,7 +23734,7 @@ Phaser.ScaleManager.prototype = {
         // This can be invoked in boot pre-canvas
         if (this.game.canvas)
         {
-            Phaser.Canvas.getOffset(this.game.canvas, this.offset);
+            Phaser.DOM.getOffset(this.game.canvas, this.offset);
         }
         this.bounds.setTo(this.offset.x, this.offset.y, this.width, this.height);
 
@@ -24533,48 +24534,16 @@ Phaser.ScaleManager.prototype = {
     * It adjusts the measurements such that it is possible to detect when an element is near the viewport.
     * 
     * @method Phaser.ScaleManager#elementBounds
-    * @public
-    * @param {Element|Object} element - The element or stack (uses first item) to get the bounds for. If none given it defaults to the Phaser game canvas.
+    * @protected
+    * @param {DOMElement|Object} [element=(game canvas)] - The element or stack (uses first item) to get the bounds for. If none given it defaults to the Phaser game canvas.
     * @param {number} [cushion] - A +/- pixel adjustment amount.
     * @return {Object|boolean} A plain object containing the properties `top/bottom/left/right/width/height` or `false` if a non-valid element is given.
+    * @see {@link Phaser.DOM.getBounds}
     */
     elementBounds: function (element, cushion) {
-
+        
         if (typeof element === 'undefined') { element = this.game.canvas; }
-        if (typeof cushion === 'undefined') { cushion = 0; }
-
-        element = element && !element.nodeType ? element[0] : element;
-
-        if (!element || element.nodeType !== 1)
-        {
-            return false;
-        }
-        else
-        {
-            return this.calibrate(element.getBoundingClientRect(), cushion);
-        }
-
-    },
-
-    /**
-    * Calibrates element coordinates for `inViewport` checks.
-    *
-    * @method Phaser.ScaleManager#calibrate
-    * @private
-    * @param {Object} coords -An object containing the following properties: `{top: number, right: number, bottom: number, left: number}`
-    * @param {number} [cushion] - A value to adjust the coordinates by.
-    * @return {Object} The calibrated element coordinates
-    */
-    calibrate: function (coords, cushion) {
-
-        cushion = +cushion || 0;
-
-        var output = { width: 0, height: 0, left: 0, right: 0, top: 0, bottom: 0 };
-
-        output.width = (output.right = coords.right + cushion) - (output.left = coords.left - cushion);
-        output.height = (output.bottom = coords.bottom + cushion) - (output.top = coords.top - cushion);
-
-        return output;
+        return Phaser.DOM.getBounds(element, cushion);
 
     },
 
@@ -24583,52 +24552,14 @@ Phaser.ScaleManager.prototype = {
     * @link http://w3.org/TR/css3-mediaqueries/#orientation
     * 
     * @method Phaser.ScaleManager#aspect
-    * @public
-    * @param {(Element|Object)=} [object] - Optional object. Must have public `width` and `height` properties or methods.
+    * @protected
+    * @param {(DOMElement|Object)} [object=(viewport)] - Optional object. Must have public `width` and `height` properties or methods.
     * @return {number} The aspect ratio.
+    * @see {@link Phaser.DOM.getAspectRatio}
     */
     aspect: function (object) {
 
-        object = null == object ? this.viewport() : 1 === object.nodeType ? this.elementBounds(object) : object;
-
-        var w = object['width'];
-        var h = object['height'];
-
-        if (typeof w === 'function')
-        {
-            w = w.call(object);
-        }
-
-        if (typeof h === 'function')
-        {
-            h = h.call(object);
-        }
-
-        return w / h;
-
-    },
-
-    /**
-    * Tests if the given DOM element is within the viewport.
-    * 
-    * The optional cushion parameter allows you to specify a distance.
-    * 
-    * inViewport(element, 100) is `true` if the element is in the viewport or 100px near it.
-    * inViewport(element, -100) is `true` if the element is in the viewport or at least 100px near it.
-    * 
-    * @method Phaser.ScaleManager#inViewport
-    * @public
-    * @param {Element|Object} [element] - The DOM element to check. If no element is given it defaults to the Phaser game canvas.
-    * @param {number} [cushion] - The cushion allows you to specify a distance within which the element must be within the viewport.
-    * @return {boolean} True if the element is within the viewport, or within `cushion` distance from it.
-    */
-    inViewport: function (element, cushion) {
-
-        if (typeof element === 'undefined') { element = this.game.canvas; }
-
-        var r = this.elementBounds(element, cushion);
-
-        return !!r && r.bottom >= 0 && r.right >= 0 && r.top <= this.viewportH() && r.left <= this.viewportW();
+        return Phaser.DOM.getAspectRatio(object);
 
     },
 
@@ -24640,7 +24571,7 @@ Phaser.ScaleManager.prototype = {
     * the horizontal or vertical sides of the target dimensions. If you wish to stop this you can crop the Sprite.
     *
     * @method Phaser.ScaleManager#scaleSprite
-    * @public
+    * @protected
     * @param {Phaser.Sprite|Phaser.Image} sprite - The sprite we want to scale.
     * @param {integer} [width] - The target width that we want to fit the sprite in to. If not given it defaults to ScaleManager.width.
     * @param {integer} [height] - The target height that we want to fit the sprite in to. If not given it defaults to ScaleManager.height.
@@ -24816,7 +24747,6 @@ Object.defineProperty(Phaser.ScaleManager.prototype, "scaleMode", {
 *
 * @name Phaser.ScaleManager#fullScreenScaleMode
 * @property {number} fullScreenScaleMode
-* @public
 */
 Object.defineProperty(Phaser.ScaleManager.prototype, "fullScreenScaleMode", {
 
@@ -24974,112 +24904,6 @@ Object.defineProperty(Phaser.ScaleManager.prototype, "isLandscape", {
 
     get: function () {
         return (this.orientation === 90 || this.orientation === -90);
-    }
-
-});
-
-/**
-* A cross-browser window.scrollX.
-*
-* @name Phaser.ScaleManager#scrollX
-* @property {number} scrollX
-* @readonly
-*/
-Object.defineProperty(Phaser.ScaleManager.prototype, "scrollX", {
-
-    get: function () {
-        return window.pageXOffset || document.documentElement.scrollLeft;
-    }
-
-});
-
-/**
-* A cross-browser window.scrollY.
-*
-* @name Phaser.ScaleManager#scrollY
-* @property {number} scrollY
-* @readonly
-*/
-Object.defineProperty(Phaser.ScaleManager.prototype, "scrollY", {
-
-    get: function () {
-        return window.pageYOffset || document.documentElement.scrollTop;
-    }
-
-});
-
-/**
-* Gets the viewport width in pixels.
-*
-* @name Phaser.ScaleManager#viewportWidth
-* @property {number} viewportWidth
-* @readonly
-*/
-Object.defineProperty(Phaser.ScaleManager.prototype, "viewportWidth", {
-
-    get: function () {
-
-        var a = document.documentElement.clientWidth;
-        var b = window.innerWidth;
-
-        return a < b ? b : a;
-
-    }
-
-});
-
-/**
-* Gets the viewport height in pixels.
-*
-* @name Phaser.ScaleManager#viewportHeight
-* @property {number} viewportHeight
-* @readonly
-*/
-Object.defineProperty(Phaser.ScaleManager.prototype, "viewportHeight", {
-
-    get: function () {
-
-        var a = document.documentElement.clientHeight;
-        var b = window.innerHeight;
-
-        return a < b ? b : a;
-
-    }
-
-});
-
-/**
-* Gets the document width in pixels.
-*
-* @name Phaser.ScaleManager#documentWidth
-* @property {number} documentWidth
-* @readonly
-*/
-Object.defineProperty(Phaser.ScaleManager.prototype, "documentWidth", {
-
-    get: function () {
-
-        var d = document.documentElement;
-        return Math.max(d.clientWidth, d.offsetWidth, d.scrollWidth);
-
-    }
-
-});
-
-/**
-* Gets the document height in pixels.
-*
-* @name Phaser.ScaleManager#documentHeight
-* @property {number} documentHeight
-* @readonly
-*/
-Object.defineProperty(Phaser.ScaleManager.prototype, "documentHeight", {
-
-    get: function () {
-
-        var d = document.documentElement;
-        return Math.max(d.clientHeight, d.offsetHeight, d.scrollHeight);
-
     }
 
 });
@@ -25398,6 +25222,11 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     this.fpsProblemNotifier = new Phaser.Signal();
 
     /**
+     * @property {boolean} forceSingleUpdate - Should the game loop force a logic update, regardless of the delta timer? Set to true if you know you need this. You can toggle it on the fly.
+     */
+    this.forceSingleUpdate = false;
+
+    /**
      * @property {number} _nextNotification - the soonest game.time.time value that the next fpsProblemNotifier can be dispatched
      * @private
      */
@@ -25457,8 +25286,9 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     {
         window.setTimeout(this._onBoot, 0);
     }
-    else if(typeof window.cordova !== "undefined")
+    else if (typeof window.cordova !== "undefined" && !navigator['isCocoonJS'])
     {
+        //  Cordova, but NOT Cocoon?
         document.addEventListener('deviceready', this._onBoot, false);
     }
     else
@@ -25783,7 +25613,7 @@ Phaser.Game.prototype = {
         this.time.update(time);
 
         // if the logic time is spiralling upwards, skip a frame entirely
-        if (this._spiralling > 1)
+        if (this._spiralling > 1 && !this.forceSingleUpdate)
         {
             // cause an event to warn the program that this CPU can't keep up with the current desiredFps rate
             if (this.time.time > this._nextFpsNotification)
@@ -25798,6 +25628,8 @@ Phaser.Game.prototype = {
             // reset the _deltaTime accumulator which will cause all pending dropped frames to be permanently skipped
             this._deltaTime = 0;
             this._spiralling = 0;
+
+            var slowStep = this.time.slowMotion * 1000.0 / this.time.desiredFps;
         }
         else
         {
@@ -25808,6 +25640,7 @@ Phaser.Game.prototype = {
             this._deltaTime += Math.max(Math.min(1000, this.time.elapsed), 0);
 
             // call the game update logic multiple times if necessary to "catch up" with dropped frames
+            // unless forceSingleUpdate is true
             var count = 0;
 
             while (this._deltaTime >= slowStep)
@@ -25815,6 +25648,11 @@ Phaser.Game.prototype = {
                 this._deltaTime -= slowStep;
                 this.updateLogic(1.0 / this.time.desiredFps);
                 count++;
+
+                if (this.forceSingleUpdate && count === 1)
+                {
+                    break;
+                }
             }
 
             // detect spiralling (if the catch-up loop isn't fast enough, the number of iterations will increase constantly)
@@ -43412,47 +43250,20 @@ Phaser.Particle.prototype.reset = function(x, y, health) {
 */
 
 /**
-* The Canvas class handles everything related to creating the `canvas` DOM tag that Phaser will use, including styles, offset and aspect ratio.
+* DOM utility class.
 *
-* @class Phaser.Canvas
+* Provides a useful Window and Element functions as well as cross-browser compatibility buffer.
+*
+* @class Phaser.DOM
 * @static
 */
-Phaser.Canvas = {
-
-    /**
-    * Creates a `canvas` DOM element. The element is not automatically added to the document.
-    *
-    * @method Phaser.Canvas.create
-    * @param {number} [width=256] - The width of the canvas element.
-    * @param {number} [height=256] - The height of the canvas element..
-    * @param {string} [id=''] - If given this will be set as the ID of the canvas element, otherwise no ID will be set.
-    * @return {HTMLCanvasElement} The newly created canvas element.
-    */
-    create: function (width, height, id) {
-
-        width = width || 256;
-        height = height || 256;
-
-        var canvas = document.createElement('canvas');
-
-        if (typeof id === 'string' && id !== '')
-        {
-            canvas.id = id;
-        }
-
-        canvas.width = width;
-        canvas.height = height;
-
-        canvas.style.display = 'block';
-
-        return canvas;
-
-    },
+Phaser.DOM = {
 
     /**
     * Get the DOM offset values of any given element
-    * @method Phaser.Canvas.getOffset
-    * @param {HTMLElement} element - The targeted element that we want to retrieve the offset.
+    *
+    * @method Phaser.DOM.getOffset
+    * @param {DOMElement} element - The targeted element that we want to retrieve the offset.
     * @param {Phaser.Point} [point] - The point we want to take the x/y values of the offset.
     * @return {Phaser.Point} - A point objet with the offsetX and Y as its properties.
     */
@@ -43488,14 +43299,278 @@ Phaser.Canvas = {
     },
 
     /**
-    * Returns the aspect ratio of the given canvas.
-    *
-    * @method Phaser.Canvas.getAspectRatio
-    * @param {HTMLCanvasElement} canvas - The canvas to get the aspect ratio from.
-    * @return {number} The ratio between canvas' width and height.
+    * A cross-browser element.getBoundingClientRect method with optional cushion.
+    * 
+    * Returns a plain object containing the properties `top/bottom/left/right/width/height` with respect to the top-left corner of the current viewport.
+    * Its properties match the native rectangle.
+    * The cushion parameter is an amount of pixels (+/-) to cushion the element.
+    * It adjusts the measurements such that it is possible to detect when an element is near the viewport.
+    * 
+    * @method Phaser.DOM.getBounds
+    * @param {DOMElement|Object} element - The element or stack (uses first item) to get the bounds for. If none given it defaults to the Phaser game canvas.
+    * @param {number} [cushion] - A +/- pixel adjustment amount.
+    * @return {Object|boolean} A plain object containing the properties `top/bottom/left/right/width/height` or `false` if a non-valid element is given.
     */
-    getAspectRatio: function (canvas) {
-        return canvas.width / canvas.height;
+    getBounds: function (element, cushion) {
+
+        if (typeof cushion === 'undefined') { cushion = 0; }
+
+        element = element && !element.nodeType ? element[0] : element;
+
+        if (!element || element.nodeType !== 1)
+        {
+            return false;
+        }
+        else
+        {
+            return this.calibrate(element.getBoundingClientRect(), cushion);
+        }
+
+    },
+
+    /**
+    * Calibrates element coordinates for `inViewport` checks.
+    *
+    * @method Phaser.DOM.calibrate
+    * @private
+    * @param {Object} coords - An object containing the following properties: `{top: number, right: number, bottom: number, left: number}`
+    * @param {number} [cushion] - A value to adjust the coordinates by.
+    * @return {Object} The calibrated element coordinates
+    */
+    calibrate: function (coords, cushion) {
+
+        cushion = +cushion || 0;
+
+        var output = { width: 0, height: 0, left: 0, right: 0, top: 0, bottom: 0 };
+
+        output.width = (output.right = coords.right + cushion) - (output.left = coords.left - cushion);
+        output.height = (output.bottom = coords.bottom + cushion) - (output.top = coords.top - cushion);
+
+        return output;
+
+    },
+
+    /**
+    * Get the viewport aspect ratio (or the aspect ratio of an object or element)
+    * @link http://w3.org/TR/css3-mediaqueries/#orientation
+    * 
+    * @method Phaser.DOM.getAspectRatio
+    * @param {(DOMElement|Object)} [object=(viewport)] - Optional object. Must have public `width` and `height` properties or methods.
+    * @return {number} The aspect ratio.
+    */
+    getAspectRatio: function (object) {
+
+        object = null == object ? this.getViewport() : 1 === object.nodeType ? this.getElementBounds(object) : object;
+
+        var w = object['width'];
+        var h = object['height'];
+
+        if (typeof w === 'function')
+        {
+            w = w.call(object);
+        }
+
+        if (typeof h === 'function')
+        {
+            h = h.call(object);
+        }
+
+        return w / h;
+
+    },
+
+    /**
+    * Get the viewport dimensions.
+    *
+    * @method Phaser.DOM#getViewport
+    * @protected
+    */
+    getViewport: function () {
+
+        return {
+            width: this.viewportWidth,
+            height: this.viewportHeight
+        };
+
+    },
+
+    /**
+    * Tests if the given DOM element is within the viewport.
+    * 
+    * The optional cushion parameter allows you to specify a distance.
+    * 
+    * inViewport(element, 100) is `true` if the element is in the viewport or 100px near it.
+    * inViewport(element, -100) is `true` if the element is in the viewport or at least 100px near it.
+    * 
+    * @method Phaser.DOM.inViewport
+    * @param {DOMElement|Object} element - The DOM element to check. If no element is given it defaults to the Phaser game canvas.
+    * @param {number} [cushion] - The cushion allows you to specify a distance within which the element must be within the viewport.
+    * @return {boolean} True if the element is within the viewport, or within `cushion` distance from it.
+    */
+    inViewport: function (element, cushion) {
+
+        var r = this.getElementBounds(element, cushion);
+
+        return !!r && r.bottom >= 0 && r.right >= 0 && r.top <= this.viewportWidth && r.left <= this.viewportHeight;
+
+    }
+
+};
+
+/**
+* A cross-browser window.scrollX.
+*
+* @name Phaser.DOM.scrollX
+* @property {number} scrollX
+* @readonly
+* @protected
+*/
+Object.defineProperty(Phaser.DOM, "scrollX", {
+
+    get: function () {
+        return window.pageXOffset || document.documentElement.scrollLeft;
+    }
+
+});
+
+/**
+* A cross-browser window.scrollY.
+*
+* @name Phaser.DOM.scrollY
+* @property {number} scrollY
+* @readonly
+* @protected
+*/
+Object.defineProperty(Phaser.DOM, "scrollY", {
+
+    get: function () {
+        return window.pageYOffset || document.documentElement.scrollTop;
+    }
+
+});
+
+/**
+* Gets the viewport width in pixels.
+*
+* @name Phaser.DOM.viewportWidth
+* @property {number} viewportWidth
+* @readonly
+* @protected
+*/
+Object.defineProperty(Phaser.DOM, "viewportWidth", {
+
+    get: function () {
+
+        var a = document.documentElement.clientWidth;
+        var b = window.innerWidth;
+
+        return a < b ? b : a;
+
+    }
+
+});
+
+/**
+* Gets the viewport height in pixels.
+*
+* @name Phaser.DOM.viewportHeight
+* @property {number} viewportHeight
+* @readonly
+* @protected
+*/
+Object.defineProperty(Phaser.DOM, "viewportHeight", {
+
+    get: function () {
+
+        var a = document.documentElement.clientHeight;
+        var b = window.innerHeight;
+
+        return a < b ? b : a;
+
+    }
+
+});
+
+/**
+* Gets the document width in pixels.
+*
+* @name Phaser.DOM.documentWidth
+* @property {number} documentWidth
+* @readonly
+* @protected
+*/
+Object.defineProperty(Phaser.DOM, "documentWidth", {
+
+    get: function () {
+
+        var d = document.documentElement;
+        return Math.max(d.clientWidth, d.offsetWidth, d.scrollWidth);
+
+    }
+
+});
+
+/**
+* Gets the document height in pixels.
+*
+* @name Phaser.DOM.documentHeight
+* @property {number} documentHeight
+* @readonly
+* @protected
+*/
+Object.defineProperty(Phaser.DOM, "documentHeight", {
+
+    get: function () {
+
+        var d = document.documentElement;
+        return Math.max(d.clientHeight, d.offsetHeight, d.scrollHeight);
+
+    }
+
+});
+
+/**
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2014 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+*/
+
+/**
+* The Canvas class handles everything related to creating the `canvas` DOM tag that Phaser will use, including styles, offset and aspect ratio.
+*
+* @class Phaser.Canvas
+* @static
+*/
+Phaser.Canvas = {
+
+    /**
+    * Creates a `canvas` DOM element. The element is not automatically added to the document.
+    *
+    * @method Phaser.Canvas.create
+    * @param {number} [width=256] - The width of the canvas element.
+    * @param {number} [height=256] - The height of the canvas element..
+    * @param {string} [id=''] - If given this will be set as the ID of the canvas element, otherwise no ID will be set.
+    * @return {HTMLCanvasElement} The newly created canvas element.
+    */
+    create: function (width, height, id) {
+
+        width = width || 256;
+        height = height || 256;
+
+        var canvas = document.createElement('canvas');
+
+        if (typeof id === 'string' && id !== '')
+        {
+            canvas.id = id;
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+
+        canvas.style.display = 'block';
+
+        return canvas;
+
     },
 
     /**
@@ -43720,6 +43795,27 @@ Phaser.Canvas = {
     }
 
 };
+
+/**
+* Get the DOM offset values of any given element
+*
+* @method Phaser.Canvas.getOffset
+* @param {HTMLElement} element - The targeted element that we want to retrieve the offset.
+* @param {Phaser.Point} [point] - The point we want to take the x/y values of the offset.
+* @return {Phaser.Point} - A point objet with the offsetX and Y as its properties.
+* @deprecated 2.1.4 - Use {@link Phaser.DOM.getOffset}
+*/
+Phaser.Canvas.getOffset = Phaser.DOM.getOffset;
+
+/**
+* Returns the aspect ratio of the given canvas.
+*
+* @method Phaser.Canvas.getAspectRatio
+* @param {HTMLCanvasElement} canvas - The canvas to get the aspect ratio from.
+* @return {number} The ratio between canvas' width and height.
+* @deprecated 2.1.4 - User {@link Phaser.DOM.getAspectRatio}
+*/
+Phaser.Canvas.getAspectRatio = Phaser.DOM.getAspectRatio;
 
 /**
 * @author       Richard Davey <rich@photonstorm.com>
@@ -54026,6 +54122,23 @@ Phaser.Loader.prototype = {
         sprite.crop(this.preloadSprite.rect);
 
         sprite.visible = true;
+
+    },
+
+    /**
+    * Called automatically by ScaleManager when the game resizes in RESIZE scalemode.
+    * We use this to adjust the height of the preloading sprite, if set.
+    *
+    * @method Phaser.Loader#resize
+    * @param {number} width - The new width of the game in pixels.
+    * @param {number} height - The new height of the game in pixels.
+    */
+    resize: function () {
+
+        if (this.preloadSprite && this.preloadSprite.height !== this.preloadSprite.sprite.height)
+        {
+            this.preloadSprite.rect.height = this.preloadSprite.sprite.height;
+        }
 
     },
 
