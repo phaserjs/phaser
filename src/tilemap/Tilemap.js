@@ -449,16 +449,16 @@ Phaser.Tilemap.prototype = {
         layer = this.getLayer(layer);
 
         if (typeof group === 'undefined') { group = this.game.world; }
-        if (typeof properties === 'undefined') { properties = {} };
+        if (typeof properties === 'undefined') { properties = {}; }
 
         if (properties.customClass === undefined)
         {
-           properties.customClass = Phaser.Sprite;
+            properties.customClass = Phaser.Sprite;
         }
 
         if (properties.adjustY === undefined)
         {
-           properties.adjustY = true;
+            properties.adjustY = true;
         }
 
         var lw = this.layers[layer].width;
@@ -1477,7 +1477,7 @@ Phaser.Tilemap.prototype = {
     * @param {integer|string|Phaser.TilemapLayer} [layer] - The layer to copy the tiles from.
     * @return {array} An array of the tiles that were copied.
     */
-    copy: function (x, y, width, height, layer, indexes) {
+    copy: function (x, y, width, height, layer) {
 
         layer = this.getLayer(layer);
 
