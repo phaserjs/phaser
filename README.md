@@ -127,7 +127,7 @@ Version 2.2.0 - "Bethal" - in development
     * Updated documentation for specificty; added @public\@protected
     * @deprecated currentPointers due to odd set pattern; totalCurrentPointers is more appropriate.
 (thanks @pnstickne #1283)
-* Various ScaleManager fixes and updates:
+* Various ScaleManager fixes and updates (thanks @pnstickne):
     * Scale modes can now be set independently
     * Switching between fullscreen and normal correctly restores modes
     * Alignment does not incorrectly offset in fullscreen mode (#1255)
@@ -136,7 +136,9 @@ Version 2.2.0 - "Bethal" - in development
     * Faster parent checks (if required)
     * NO_SCALE should not not scale (vs previous behavior of having no behavior)
     * Correct usage of scaleMode depending on mode
-(thanks @pnstickne)
+* AudioSprite - removed an unnecessary if-statement (thanks @DaanHaaz #1312)
+* ArcadePhysics.skipQuadTree is now set to `true` by default. A QuadTree is a wonderful thing if the objects in your game are well spaced out. But in tightly packed games, especially those with tilemaps or single-screen games, they are a considerable performance drain and eat up CPU. We've taken the decision to disable the Arcade Physics QuadTree by default. It's all still in there and can be re-enabled via `game.physics.arcade.skipQuadTree = false`, but please only do so if you're sure your game benefits from this.
+
 
 ### Bug Fixes
 

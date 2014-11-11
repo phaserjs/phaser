@@ -61,9 +61,9 @@ Phaser.Physics.Arcade = function (game) {
     this.forceX = false;
 
     /**
-    * @property {boolean} skipQuadTree - If true a QuadTree will never be used for any collision. Handy for tightly packed games. See also Body.skipQuadTree.
+    * @property {boolean} skipQuadTree - If true the QuadTree will not be used for any collision. QuadTrees are great if objects are well spread out in your game, otherwise they are a performance hit. If you enable this you can disable on a per body basis via `Body.skipQuadTree`.
     */
-    this.skipQuadTree = false;
+    this.skipQuadTree = true;
 
     /**
     * @property {Phaser.QuadTree} quadTree - The world QuadTree.
