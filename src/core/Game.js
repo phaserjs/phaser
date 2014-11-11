@@ -376,8 +376,9 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     {
         window.setTimeout(this._onBoot, 0);
     }
-    else if(typeof window.cordova !== "undefined")
+    else if (typeof window.cordova !== "undefined" && !navigator['isCocoonJS'])
     {
+        //  Cordova, but NOT Cocoon?
         document.addEventListener('deviceready', this._onBoot, false);
     }
     else
