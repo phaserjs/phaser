@@ -75,6 +75,7 @@ Version 2.2.0 - "Bethal" - in development
 
 ### New Features
 
+* Updated to Pixi v2.1.0 - see seprate change log entry below.
 * Cache.getRenderTexture will retrieve a RenderTexture that is stored in the Phaser Cache. This method replaces Cache.getTexture which is now deprecated.
 * Cache.autoResolveURL is a new boolean (default `false`) that automatically builds a cached map of all loaded assets vs. their absolute URLs, for use with Cache.getURL and Cache.checkURL. Note that in 2.1.3 and earlier this was enabled by default, but has since been moved behind this property which needs to be set to `true` *before* you load any assets to enable.
 * You can now call Tween.to again on a Tween that has already completed. This will re-use the same tween, on the original object, without having to recreate the Tween again. This allows a single tween instance to be re-used multiple times, providing they are linked to the same object (thanks InsaneHero)
@@ -142,7 +143,6 @@ Version 2.2.0 - "Bethal" - in development
 * ArcadePhysics.skipQuadTree is now set to `true` by default. A QuadTree is a wonderful thing if the objects in your game are well spaced out. But in tightly packed games, especially those with tilemaps or single-screen games, they are a considerable performance drain and eat up CPU. We've taken the decision to disable the Arcade Physics QuadTree by default. It's all still in there and can be re-enabled via `game.physics.arcade.skipQuadTree = false`, but please only do so if you're sure your game benefits from this.
 * Phaser.DOM now houses new DOM functions. Some have been moved over from ScaleManager as appropriate.
 
-
 ### Bug Fixes
 
 * Tilemaps in WebGL wouldn't update after the first frame due to a subtle change in how Pixi uploads new textures to the GPU.
@@ -161,6 +161,31 @@ Version 2.2.0 - "Bethal" - in development
 * Lots of the Cache getters (such as `Cache.getbitmapData`) would return `undefined` if the asset couldn't be found. They now all consistently return `null` for missing entries (thanks @Matoking #1305)
 * Phaser games should now work again from the CocoonJS Launcher.
 
+### Pixi 2.1.0 New Features
+
+* unloadFromGPU added to PIXI.BaseTexture
+* PIXI.VideoTexture added
+* PIXI.RoundedRectangle added
+* Ensured all float32arrays use PIXI.Float32Array
+* Removed the use of call in updateTransform (as its 10x faster to run the function directly)
+* autoResize option added to renderer options (default is false). Pixi no longer automatically changes the style of the canvas.
+* PIXI.RenderTexture.getCanvas optimized
+
+### Pixi 2.1.0 Bug Fixes
+
+* Fix destroy method of PIXI.WebGLRenderer
+* Fixed Graphics.drawRoundedRectangle 
+* Fixed Graphics.arcTo issue
+* Fixed Graphics.arc issue
+* Fixed Graphics.cacheAsBitmap alpha issue
+* Fixed PIXI.Strip alpha issue
+* Fixed PIXI.DisplayObject.cacheAsBitmap alpha issue
+* Fixed PIXI.RenderTexture Canvas Clear bug
+* Fixed PIXI.DisplayObject.updateTransform issue 
+* Fixed webGL Shader textures issue
+* Fixed PIXI.DisplayObject.getLocalPosition()
+* Fixed CocoonJS crashing, when loading destroyed texture
+* Fix eventTarget emit bug
 
 For details about changes made in previous versions of Phaser see the full Change Log at https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md
 

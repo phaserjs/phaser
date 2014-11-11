@@ -776,6 +776,7 @@ Phaser.Input.prototype = {
         for (var i = 0; i < this.pointers.length; i++)
         {
             var pointer = this.pointers[i];
+
             if (pointer.pointerId === pointerId)
             {
                 return pointer;

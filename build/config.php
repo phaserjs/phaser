@@ -39,6 +39,7 @@
     <script src="$path/src/pixi/Pixi.js"></script>
     <script src="$path/src/pixi/geom/Matrix.js"></script>
     <script src="$path/src/pixi/geom/Polygon.js"></script>
+    <script src="$path/src/pixi/geom/RoundedRectangle.js"></script>
     <script src="$path/src/pixi/display/DisplayObject.js"></script>
     <script src="$path/src/pixi/display/DisplayObjectContainer.js"></script>
     <script src="$path/src/pixi/display/Sprite.js"></script>
