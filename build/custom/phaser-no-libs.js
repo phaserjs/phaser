@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.2.0 "Bethal" - Built: Mon Nov 10 2014 01:40:47
+* v2.2.0 "Bethal" - Built: Tue Nov 11 2014 01:10:05
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -50,7 +50,7 @@
 */
 var Phaser = Phaser || {
 
-	VERSION: '2.2.0-dev',
+	VERSION: '2.2.0-RC2',
 	GAMES: [],
 
     AUTO: 0,
@@ -4863,6 +4863,9 @@ PIXI.Graphics.prototype._renderCanvas = function(renderSession)
  */
 PIXI.Graphics.prototype.getBounds = function( matrix )
 {
+    // return an empty object if the item is a mask!
+    if(this.isMask)return PIXI.EmptyRectangle;
+
     if(this.dirty)
     {
         this.updateBounds();
@@ -4955,7 +4958,7 @@ PIXI.Graphics.prototype.updateBounds = function()
             shape = data.shape;
            
 
-            if(type === PIXI.Graphics.RECT || type === PIXI.Graphics.RRECT)
+            if(type === PIXI.Graphics.RECT || type === PIXI.Graphics.RREC)
             {
                 x = shape.x - lineWidth/2;
                 y = shape.y - lineWidth/2;
@@ -48077,9 +48080,9 @@ Phaser.Physics.Arcade = function (game) {
     this.forceX = false;
 
     /**
-    * @property {boolean} skipQuadTree - If true a QuadTree will never be used for any collision. Handy for tightly packed games. See also Body.skipQuadTree.
+    * @property {boolean} skipQuadTree - If true the QuadTree will not be used for any collision. QuadTrees are great if objects are well spread out in your game, otherwise they are a performance hit. If you enable this you can disable on a per body basis via `Body.skipQuadTree`.
     */
-    this.skipQuadTree = false;
+    this.skipQuadTree = true;
 
     /**
     * @property {Phaser.QuadTree} quadTree - The world QuadTree.
@@ -52378,6 +52381,100 @@ Phaser.Tilemap.prototype = {
     },
 
     /**
+    * Creates a Sprite for every object matching the given tile indexes in the map data.
+    * You can specify the group that the Sprite will be created in. If none is given it will be created in the World.
+    * You can optional specify if the tile will be replaced with another after the Sprite is created. This is useful if you want to lay down special 
+    * tiles in a level that are converted to Sprites, but want to replace the tile itself with a floor tile or similar once converted.
+    *
+    * @method Phaser.Tilemap#createFromTiles
+    * @param {integer|Array} tiles - The tile index, or array of indexes, to create Sprites from.
+    * @param {integer|Array} replacements - The tile index, or array of indexes, to change a converted tile to. Set to `null` to not change.
+    * @param {string} key - The Game.cache key of the image that this Sprite will use.
+    * @param {Phaser.Group} [group=Phaser.World] - Group to add the Sprite to. If not specified it will be added to the World group.
+    * @param {object} [properties] - An object that contains the default properties for your newly created Sprite. This object will be iterated and any matching Sprite property will be set.
+    * @param {number|string|Phaser.TilemapLayer} [layer] - The layer to operate on.
+    * @return {integer} The number of Sprites that were created.
+    */
+    createFromTiles: function (tiles, replacements, key, layer, group, properties) {
+
+        if (typeof tiles === 'number') { tiles = [tiles]; }
+
+        if (typeof replacements === 'undefined' || replacements === null)
+        {
+            replacements = [];
+        }
+        else if (typeof replacements === 'number')
+        {
+            replacements = [replacements];
+        }
+
+        layer = this.getLayer(layer);
+
+        if (typeof group === 'undefined') { group = this.game.world; }
+        if (typeof properties === 'undefined') { properties = {}; }
+
+        if (properties.customClass === undefined)
+        {
+            properties.customClass = Phaser.Sprite;
+        }
+
+        if (properties.adjustY === undefined)
+        {
+            properties.adjustY = true;
+        }
+
+        var lw = this.layers[layer].width;
+        var lh = this.layers[layer].height;
+
+        this.copy(0, 0, lw, lh, layer);
+
+        if (this._results.length < 2)
+        {
+            return 0;
+        }
+
+        var total = 0;
+        var sprite;
+
+        for (var i = 1, len = this._results.length; i < len; i++)
+        {
+            if (tiles.indexOf(this._results[i].index) !== -1)
+            {
+                sprite = new properties.customClass(this.game, this._results[i].worldX, this._results[i].worldY, key);
+
+                for (var property in properties)
+                {
+                    sprite[property] = properties[property];
+                }
+
+                group.add(sprite);
+                total++;
+            }
+
+        }
+
+        if (replacements.length === 1)
+        {
+            //  Assume 1 replacement for all types of tile given
+            for (i = 0; i < tiles.length; i++)
+            {
+                this.replace(tiles[i], replacements[0], 0, 0, lw, lh, layer);
+            }
+        }
+        else if (replacements.length > 1)
+        {
+            //  Assume 1 for 1 mapping
+            for (i = 0; i < tiles.length; i++)
+            {
+                this.replace(tiles[i], replacements[i], 0, 0, lw, lh, layer);
+            }
+        }
+
+        return total;
+
+    },
+
+    /**
     * Creates a new TilemapLayer object. By default TilemapLayers are fixed to the camera.
     * The `layer` parameter is important. If you've created your map in Tiled then you can get this by looking in Tiled and looking at the Layer name.
     * Or you can open the JSON file it exports and look at the layers[].name value. Either way it must match.
@@ -52825,10 +52922,6 @@ Phaser.Tilemap.prototype = {
         {
             layer = this.currentLayer;
         }
-        // else if (typeof layer === 'number')
-        // {
-        //     layer = layer;
-        // }
         else if (typeof layer === 'string')
         {
             layer = this.getLayerIndex(layer);
@@ -52843,25 +52936,32 @@ Phaser.Tilemap.prototype = {
     },
 
     /**
-    * Turn off/on the recalculation of faces for tile or collission updates. 
-    * setPreventRecalculate(true) puts recalculation on hold while
-    * setPreventRecalculate(false) recalculates all the changed layers.
+    * Turn off/on the recalculation of faces for tile or collision updates. 
+    * `setPreventRecalculate(true)` puts recalculation on hold while `setPreventRecalculate(false)` recalculates all the changed layers.
     *
     * @method Phaser.Tilemap#setPreventRecalculate
-    * @param {boolean} if true it will put the recalculation on hold.
+    * @param {boolean} value - If true it will put the recalculation on hold.
     */
     setPreventRecalculate: function (value) {
-        if((value===true)&&(this.preventingRecalculate!==true)){
+
+        if (value === true && this.preventingRecalculate !== true)
+        {
             this.preventingRecalculate = true;
             this.needToRecalculate = {};
         }
-        if((value===false)&&(this.preventingRecalculate===true)){
+
+        if (value === false && this.preventingRecalculate === true)
+        {
             this.preventingRecalculate = false;
-            for(var i in this.needToRecalculate){
+
+            for (var i in this.needToRecalculate)
+            {
                 this.calculateFaces(i);
             }
+
             this.needToRecalculate = false;
         }
+
     },
 
     /**
@@ -53332,11 +53432,11 @@ Phaser.Tilemap.prototype = {
     * Copies all of the tiles in the given rectangular block into the tilemap data buffer.
     *
     * @method Phaser.Tilemap#copy
-    * @param {number} x - X position of the top left of the area to copy (given in tiles, not pixels)
-    * @param {number} y - Y position of the top left of the area to copy (given in tiles, not pixels)
-    * @param {number} width - The width of the area to copy (given in tiles, not pixels)
-    * @param {number} height - The height of the area to copy (given in tiles, not pixels)
-    * @param {number|string|Phaser.TilemapLayer} [layer] - The layer to copy the tiles from.
+    * @param {integer} x - X position of the top left of the area to copy (given in tiles, not pixels)
+    * @param {integer} y - Y position of the top left of the area to copy (given in tiles, not pixels)
+    * @param {integer} width - The width of the area to copy (given in tiles, not pixels)
+    * @param {integer} height - The height of the area to copy (given in tiles, not pixels)
+    * @param {integer|string|Phaser.TilemapLayer} [layer] - The layer to copy the tiles from.
     * @return {array} An array of the tiles that were copied.
     */
     copy: function (x, y, width, height, layer) {
@@ -53353,7 +53453,7 @@ Phaser.Tilemap.prototype = {
         if (typeof y === "undefined") { y = 0; }
         if (typeof width === "undefined") { width = this.layers[layer].width; }
         if (typeof height === "undefined") { height = this.layers[layer].height; }
-
+        
         if (x < 0)
         {
             x = 0;
@@ -53765,6 +53865,7 @@ Object.defineProperty(Phaser.Tilemap.prototype, "layer", {
 * A TilemapLayer is a Phaser.Image/Sprite that renders a specific TileLayer of a Tilemap.
 *
 * Since a TilemapLayer is a Sprite it can be moved around the display, added to other groups or display objects, etc.
+* By default TilemapLayers have fixedToCamera set to `true`. Changing this will break Camera follow and scrolling behaviour.
 *
 * @class Phaser.TilemapLayer
 * @extends {Phaser.Image}
