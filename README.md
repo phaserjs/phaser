@@ -83,15 +83,15 @@ Version 2.2.0 - "Bethal" - in development
 * Pointer.addClickTrampoline now adds in support for click trampolines. These  raise pointer events into click events, which are required internally for a few edge cases like IE11 full screen mode support, but are also useful if you know you specifically need a DOM click event from a pointer (thanks @pnstickne #1282)
 * Point.floor will Math.floor both the `x` and `y` values of the Point.
 * Point.ceil will Math.ceil both the `x` and `y` values of the Point.
-* ScaleManager.elementBounds is a cross-browser element.getBoundingClientRect method with optional cushion.
-* ScaleManager.calibrate is a private method that calibrates element coordinates for viewport checks.
-* ScaleManager.aspect gets the viewport aspect ratio (or the aspect ratio of an object or element)
-* ScaleManager.inViewport tests if the given DOM element is within the viewport, with an optional cushion parameter that allows you to specify a distance.
 * ScaleManager.scaleSprite takes a Sprite or Image object and scales it to fit the given dimensions. Scaling happens proportionally without distortion to the sprites texture. The letterBox parameter controls if scaling will produce a letter-box effect or zoom the sprite until it fills the given values.
-* ScaleManager.viewportWidth returns the viewport width in pixels.
-* ScaleManager.viewportHeight returns the viewport height in pixels.
-* ScaleManager.documentWidth returns the document width in pixels.
-* ScaleManager.documentHeight returns the document height in pixels.
+* Phaser.DOM.getBounds is a cross-browser element.getBoundingClientRect method with optional cushion.
+* Phaser.DOM.calibrate is a private method that calibrates element coordinates for viewport checks.
+* Phaser.DOM.aspect gets the viewport aspect ratio (or the aspect ratio of an object or element)
+* Phaser.DOM.inViewport tests if the given DOM element is within the viewport, with an optional cushion parameter that allows you to specify a distance.
+* Phaser.DOM.viewportWidth returns the viewport width in pixels.
+* Phaser.DOM.viewportHeight returns the viewport height in pixels.
+* Phaser.DOM.documentWidth returns the document width in pixels.
+* Phaser.DOM.documentHeight returns the document height in pixels.
 * TilemapLayers have been given a decent performance boost on canvas with map shifting edge-redraw (thanks @pnstickne #1250)
 * A large refactor to how the internal game timers and physics calculations has been made. We've now swapped to using a fixed time step internally across Phaser, instead of the variable one we had before that caused glitchse on low-fps systems. Thanks to pjbaron for his help with all of these related changes.
 * We have separated the logic and render updates to permit slow motion and time slicing effects. We've fixed time calling to fix physics problems caused by variable time updates (i.e. collisions sometimes missing, objects tunneling, etc)
@@ -140,6 +140,7 @@ Version 2.2.0 - "Bethal" - in development
     * Correct usage of scaleMode depending on mode
 * AudioSprite - removed an unnecessary if-statement (thanks @DaanHaaz #1312)
 * ArcadePhysics.skipQuadTree is now set to `true` by default. A QuadTree is a wonderful thing if the objects in your game are well spaced out. But in tightly packed games, especially those with tilemaps or single-screen games, they are a considerable performance drain and eat up CPU. We've taken the decision to disable the Arcade Physics QuadTree by default. It's all still in there and can be re-enabled via `game.physics.arcade.skipQuadTree = false`, but please only do so if you're sure your game benefits from this.
+* Phaser.DOM now houses new DOM functions. Some have been moved over from ScaleManager as appropriate.
 
 
 ### Bug Fixes
