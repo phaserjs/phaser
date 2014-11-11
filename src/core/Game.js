@@ -312,6 +312,11 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     this.fpsProblemNotifier = new Phaser.Signal();
 
     /**
+     * @property {boolean} forceSingleUpdate - Should the game loop force a logic update, regardless of the delta timer? Set to true if you know you need this. You can toggle it on the fly.
+     */
+    this.forceSingleUpdate = false;
+
+    /**
      * @property {number} _nextNotification - the soonest game.time.time value that the next fpsProblemNotifier can be dispatched
      * @private
      */
@@ -697,7 +702,7 @@ Phaser.Game.prototype = {
         this.time.update(time);
 
         // if the logic time is spiralling upwards, skip a frame entirely
-        if (this._spiralling > 1)
+        if (this._spiralling > 1 && !this.forceSingleUpdate)
         {
             // cause an event to warn the program that this CPU can't keep up with the current desiredFps rate
             if (this.time.time > this._nextFpsNotification)
@@ -712,6 +717,8 @@ Phaser.Game.prototype = {
             // reset the _deltaTime accumulator which will cause all pending dropped frames to be permanently skipped
             this._deltaTime = 0;
             this._spiralling = 0;
+
+            var slowStep = this.time.slowMotion * 1000.0 / this.time.desiredFps;
         }
         else
         {
@@ -722,6 +729,7 @@ Phaser.Game.prototype = {
             this._deltaTime += Math.max(Math.min(1000, this.time.elapsed), 0);
 
             // call the game update logic multiple times if necessary to "catch up" with dropped frames
+            // unless forceSingleUpdate is true
             var count = 0;
 
             while (this._deltaTime >= slowStep)
@@ -729,6 +737,11 @@ Phaser.Game.prototype = {
                 this._deltaTime -= slowStep;
                 this.updateLogic(1.0 / this.time.desiredFps);
                 count++;
+
+                if (this.forceSingleUpdate && count === 1)
+                {
+                    break;
+                }
             }
 
             // detect spiralling (if the catch-up loop isn't fast enough, the number of iterations will increase constantly)
