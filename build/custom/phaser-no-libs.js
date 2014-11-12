@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.2.0 "Bethal" - Built: Tue Nov 11 2014 14:30:49
+* v2.2.0 "Bethal" - Built: Wed Nov 12 2014 22:48:42
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -50,7 +50,7 @@
 */
 var Phaser = Phaser || {
 
-	VERSION: '2.2.0-RC3',
+	VERSION: '2.2.0-RC5',
 	GAMES: [],
 
     AUTO: 0,
@@ -129,8 +129,6 @@ PIXI.dontSayHello = true;
 // PIXI.Circle.prototype.type = PIXI.Graphics.CIRC;
 // PIXI.Ellipse.prototype.type = PIXI.Graphics.ELIP;
 
-/* jshint supernew: true */
-
 /**
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2014 Photon Storm Ltd.
@@ -208,68 +206,68 @@ Phaser.Utils = {
     },
 
     /**
-     * Transposes the elements of the given Array.
-     *
-     * @method Phaser.Utils.transposeArray
-     * @param {array} array - The array to transpose.
-     * @return {array} The transposed array.
-     */
-    transposeArray: function (array) {
-
-        var result = new Array(array[0].length);
-
-        for (var i = 0; i < array[0].length; i++)
-        {
-            result[i] = new Array(array.length - 1);
-
-            for (var j = array.length - 1; j > -1; j--)
-            {
-                result[i][j] = array[j][i];
-            }
-        }
-
-        return result;
-
+    * Generate a random bool result based on the chance value.
+    *
+    * Returns true or false based on the chance value (default 50%). For example if you wanted a player to have a 30% chance
+    * of getting a bonus, call chanceRoll(30) - true means the chance passed, false means it failed.
+    *
+    * @method Phaser.Math#chanceRoll
+    * @param {number} chance - The chance of receiving the value. A number between 0 and 100 (effectively 0% to 100%).
+    * @return {boolean} True if the roll passed, or false otherwise.
+    */
+    chanceRoll: function (chance) {
+        if (typeof chance === 'undefined') { chance = 50; }
+        return chance > 0 && (Math.random() * 100 <= chance);
     },
 
     /**
-     * Rotates the given array.
-     * Based on the routine from http://jsfiddle.net/MrPolywhirl/NH42z/
-     *
-     * @method Phaser.Utils.rotateArray
-     * @param {array} matrix - The array to rotate.
-     * @param {number|string} direction - The amount to rotate. Either a number: 90, -90, 270, -270, 180 or a string: 'rotateLeft', 'rotateRight' or 'rotate180'
-     * @return {array} The rotated array
-     */
+    * Choose between one of two values randomly.
+    *
+    * @method Phaser.Utils#randomChoice
+    * @param {any} choice1
+    * @param {any} choice2
+    * @return {any} The randomly selected choice
+    */
+    randomChoice: function (choice1, choice2) {
+        return (Math.random() < 0.5) ? choice1 : choice2;
+    },
+
+    /**
+    * Transposes the elements of the given Array.
+    *
+    * @method Phaser.Utils.transposeArray
+    * @param {array} array - The array to transpose.
+    * @return {array} The transposed array.
+    * @deprecated 2.2.0 - Use Phaser.ArrayUtils.transposeMatrix
+    */
+    transposeArray: function (array) {
+        return Phaser.ArrayUtils.transposeMatrix(array);
+    },
+
+    /**
+    * Rotates the given array.
+    * Based on the routine from http://jsfiddle.net/MrPolywhirl/NH42z/
+    *
+    * @method Phaser.Utils.rotateArray
+    * @param {array} matrix - The array to rotate.
+    * @param {number|string} direction - The amount to rotate. Either a number: 90, -90, 270, -270, 180 or a string: 'rotateLeft', 'rotateRight' or 'rotate180'
+    * @return {array} The rotated array
+    * @deprecated 2.2.0 - Use Phaser.ArrayUtils.rotateMatrix
+    */
     rotateArray: function (matrix, direction) {
+        return Phaser.ArrayUtils.rotateMatrix(matrix, direction);
+    },
 
-        if (typeof direction !== 'string')
-        {
-            direction = ((direction % 360) + 360) % 360;
-        }
-
-        if (direction === 90 || direction === -270 || direction === 'rotateLeft')
-        {
-            matrix = Phaser.Utils.transposeArray(matrix);
-            matrix = matrix.reverse();
-        }
-        else if (direction === -90 || direction === 270 || direction === 'rotateRight')
-        {
-            matrix = matrix.reverse();
-            matrix = Phaser.Utils.transposeArray(matrix);
-        }
-        else if (Math.abs(direction) === 180 || direction === 'rotate180')
-        {
-            for (var i = 0; i < matrix.length; i++)
-            {
-                matrix[i].reverse();
-            }
-
-            matrix = matrix.reverse();
-        }
-
-        return matrix;
-
+    /**
+    * A standard Fisher-Yates Array shuffle implementation.
+    *
+    * @method Phaser.Utils.shuffle
+    * @param {array} array - The array to shuffle.
+    * @return {array} The shuffled array.
+    * @deprecated 2.2.0 - User Phaser.ArrayUtils.shuffle
+    */
+    shuffle: function (array) {
+        return Phaser.ArrayUtils.shuffle(array);
     },
 
     /**
@@ -316,29 +314,8 @@ Phaser.Utils = {
     },
 
     /**
-    * A standard Fisher-Yates Array shuffle implementation.
-    * @method Phaser.Utils.shuffle
-    * @param {array} array - The array to shuffle.
-    * @return {array} The shuffled array.
-    */
-    shuffle: function (array) {
-
-        for (var i = array.length - 1; i > 0; i--)
-        {
-            var j = Math.floor(Math.random() * (i + 1));
-            var temp = array[i];
-            array[i] = array[j];
-            array[j] = temp;
-        }
-
-        return array;
-
-    },
-
-    /**
     * Javascript string pad http://www.webtoolkit.info/.
-    * pad = the string to pad it out with (defaults to a space)
-    * dir = 1 (left), 2 (right), 3 (both)
+    *
     * @method Phaser.Utils.pad
     * @param {string} str - The target string.
     * @param {number} len - The number of characters to be added.
@@ -379,7 +356,8 @@ Phaser.Utils = {
     },
 
     /**
-    * This is a slightly modified version of jQuery.isPlainObject. A plain object is an object whose internal class property is [object Object].
+    * This is a slightly modified version of jQuery.isPlainObject.
+    * A plain object is an object whose internal class property is [object Object].
     * @method Phaser.Utils.isPlainObject
     * @param {object} obj - The object to inspect.
     * @return {boolean} - true if the object is plain, otherwise false.
@@ -544,147 +522,6 @@ Phaser.Utils = {
 };
 
 /**
-* A polyfill for Function.prototype.bind
-*/
-if (typeof Function.prototype.bind !== 'function') {
-
-    /* jshint freeze: false */
-    Function.prototype.bind = (function () {
-
-        var slice = Array.prototype.slice;
-
-        return function (thisArg) {
-
-            var target = this, boundArgs = slice.call(arguments, 1);
-
-            if (typeof target !== 'function')
-            {
-                throw new TypeError();
-            }
-
-            function bound() {
-                var args = boundArgs.concat(slice.call(arguments));
-                target.apply(this instanceof bound ? this : thisArg, args);
-            }
-
-            bound.prototype = (function F(proto) {
-                if (proto)
-                {
-                    F.prototype = proto;
-                }
-
-                if (!(this instanceof F))
-                {
-                    return new F;
-                }
-            })(target.prototype);
-
-            return bound;
-        };
-    })();
-}
-
-/**
-* A polyfill for Array.isArray
-*/
-if (!Array.isArray)
-{
-    Array.isArray = function (arg)
-    {
-        return Object.prototype.toString.call(arg) == '[object Array]';
-    };
-}
-
-/**
-* A polyfill for Array.forEach
-* https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach
-*/
-if (!Array.prototype.forEach)
-{
-    Array.prototype.forEach = function(fun /*, thisArg */)
-    {
-        "use strict";
-
-        if (this === void 0 || this === null)
-        {
-            throw new TypeError();
-        }
-
-        var t = Object(this);
-        var len = t.length >>> 0;
-
-        if (typeof fun !== "function")
-        {
-            throw new TypeError();
-        }
-
-        var thisArg = arguments.length >= 2 ? arguments[1] : void 0;
-
-        for (var i = 0; i < len; i++)
-        {
-            if (i in t)
-            {
-                fun.call(thisArg, t[i], i, t);
-            }
-        }
-    };
-}
-
-/**
-* Low-budget Float32Array knock-off, suitable for use with P2.js in IE9
-* Source: http://www.html5gamedevs.com/topic/5988-phaser-12-ie9/
-* Cameron Foale (http://www.kibibu.com)
-*/
-if (typeof window.Uint32Array !== "function" && typeof window.Uint32Array !== "object")
-{
-    var CheapArray = function(type)
-    {
-        var proto = new Array(); // jshint ignore:line
-
-        window[type] = function(arg) {
-
-            if (typeof(arg) === "number")
-            {
-                Array.call(this, arg);
-                this.length = arg;
-
-                for (var i = 0; i < this.length; i++)
-                {
-                    this[i] = 0;
-                }
-            }
-            else
-            {
-                Array.call(this, arg.length);
-
-                this.length = arg.length;
-
-                for (var i = 0; i < this.length; i++)
-                {
-                    this[i] = arg[i];
-                }
-            }
-        };
-
-        window[type].prototype = proto;
-        window[type].constructor = window[type];
-    };
-
-    CheapArray('Uint32Array'); // jshint ignore:line
-    CheapArray('Int16Array');  // jshint ignore:line
-}
-
-/**
- * Also fix for the absent console in IE9
- */
-if (!window.console)
-{
-    window.console = {};
-    window.console.log = window.console.assert = function(){};
-    window.console.warn = window.console.assert = function(){};
-}
-
-/**
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2014 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
@@ -811,21 +648,13 @@ Phaser.Circle.prototype = {
     * (can be Circle, Point or anything with x/y properties)
     * @method Phaser.Circle#distance
     * @param {object} dest - The target object. Must have visible x and y properties that represent the center of the object.
-    * @param {boolean} [round] - Round the distance to the nearest integer (default false).
+    * @param {boolean} [round=false] - Round the distance to the nearest integer.
     * @return {number} The distance between this Point object and the destination Point object.
     */
     distance: function (dest, round) {
 
-        if (typeof round === "undefined") { round = false; }
-
-        if (round)
-        {
-            return Phaser.Math.distanceRounded(this.x, this.y, dest.x, dest.y);
-        }
-        else
-        {
-            return Phaser.Math.distance(this.x, this.y, dest.x, dest.y);
-        }
+        var distance = Phaser.Math.distance(this.x, this.y, dest.x, dest.y);
+        return round ? Math.round(distance) : distance;
 
     },
 
@@ -1942,21 +1771,13 @@ Phaser.Point.rperp = function (a, out) {
 * @method Phaser.Point.distance
 * @param {object} a - The target object. Must have visible x and y properties that represent the center of the object.
 * @param {object} b - The target object. Must have visible x and y properties that represent the center of the object.
-* @param {boolean} [round] - Round the distance to the nearest integer (default false).
+* @param {boolean} [round=false] - Round the distance to the nearest integer.
 * @return {number} The distance between this Point object and the destination Point object.
 */
 Phaser.Point.distance = function (a, b, round) {
 
-    if (typeof round === "undefined") { round = false; }
-
-    if (round)
-    {
-        return Phaser.Math.distanceRounded(a.x, a.y, b.x, b.y);
-    }
-    else
-    {
-        return Phaser.Math.distance(a.x, a.y, b.x, b.y);
-    }
+    var distance = Phaser.Math.distance(a.x, a.y, b.x, b.y);
+    return round ? Math.round(distance) : distance;
 
 };
 
@@ -4165,6 +3986,8 @@ PIXI.Graphics = function()
      */
     this.boundsPadding = 0;
 
+    this._localBounds = new PIXI.Rectangle(0,0,1,1);
+
     /**
      * Used to detect if the graphics object has changed. If this is set to true then the graphics object will be recalculated.
      * 
@@ -4419,17 +4242,17 @@ PIXI.Graphics.prototype.arcTo = function(x1, y1, x2, y2, radius)
 {
     if( this.currentPath )
     {
-        if(this.currentPath.shape.points.length === 0)this.currentPath.shape.points = [x1, y1];
+        if(this.currentPath.shape.points.length === 0)
+        {
+            this.currentPath.shape.points.push(x1, y1);
+        }
     }
     else
     {
         this.moveTo(x1, y1);
     }
 
-    // check that path contains subpaths
-    if( this.currentPath.length === 0)this.moveTo(x1, y1);
-    
-    var points = this.currentPath;
+    var points = this.currentPath.shape.points;
     var fromX = points[points.length-2];
     var fromY = points[points.length-1];
     var a1 = fromY - y1;
@@ -4438,9 +4261,14 @@ PIXI.Graphics.prototype.arcTo = function(x1, y1, x2, y2, radius)
     var b2 = x2   - x1;
     var mm = Math.abs(a1 * b2 - b1 * a2);
 
+
     if (mm < 1.0e-8 || radius === 0)
     {
-        points.push(x1, y1);
+        if( points[points.length-2] !== x1 || points[points.length-1] !== y1)
+        {
+            //console.log(">>")
+            points.push(x1, y1);
+        }
     }
     else
     {
@@ -4484,15 +4312,19 @@ PIXI.Graphics.prototype.arc = function(cx, cy, radius, startAngle, endAngle, ant
 {
     var startX = cx + Math.cos(startAngle) * radius;
     var startY = cy + Math.sin(startAngle) * radius;
-    
+   
     var points = this.currentPath.shape.points;
 
-    if(points.length !== 0 && points[points.length-2] !== startX || points[points.length-1] !== startY)
+    if(points.length === 0)
     {
         this.moveTo(startX, startY);
         points = this.currentPath.shape.points;
     }
-
+    else if( points[points.length-2] !== startX || points[points.length-1] !== startY)
+    {
+        points.push(startX, startY);
+    }
+  
     if (startAngle === endAngle)return this;
 
     if( !anticlockwise && endAngle <= startAngle )
@@ -4607,7 +4439,7 @@ PIXI.Graphics.prototype.drawRect = function( x, y, width, height )
  */
 PIXI.Graphics.prototype.drawRoundedRect = function( x, y, width, height, radius )
 {
-    this.drawShape({ points:[x, y, width, height, radius], type:PIXI.Graphics.RREC });
+    this.drawShape(new PIXI.RoundedRectangle(x, y, width, height, radius));
 
     return this;
 };
@@ -4868,13 +4700,13 @@ PIXI.Graphics.prototype.getBounds = function( matrix )
 
     if(this.dirty)
     {
-        this.updateBounds();
+        this.updateLocalBounds();
         this.webGLDirty = true;
         this.cachedSpriteDirty = true;
         this.dirty = false;
     }
 
-    var bounds = this._bounds;
+    var bounds = this._localBounds;
 
     var w0 = bounds.x;
     var w1 = bounds.width + bounds.x;
@@ -4925,21 +4757,21 @@ PIXI.Graphics.prototype.getBounds = function( matrix )
     maxY = y3 > maxY ? y3 : maxY;
     maxY = y4 > maxY ? y4 : maxY;
 
-    bounds.x = minX;
-    bounds.width = maxX - minX;
+    this._bounds.x = minX;
+    this._bounds.width = maxX - minX;
 
-    bounds.y = minY;
-    bounds.height = maxY - minY;
+    this._bounds.y = minY;
+    this._bounds.height = maxY - minY;
 
-    return bounds;
+    return  this._bounds;
 };
 
 /**
  * Update the bounds of the object
  *
- * @method updateBounds
+ * @method updateLocalBounds
  */
-PIXI.Graphics.prototype.updateBounds = function()
+PIXI.Graphics.prototype.updateLocalBounds = function()
 {
     var minX = Infinity;
     var maxX = -Infinity;
@@ -5025,13 +4857,12 @@ PIXI.Graphics.prototype.updateBounds = function()
     }
 
     var padding = this.boundsPadding;
-    var bounds = this._bounds;
     
-    bounds.x = minX - padding;
-    bounds.width = (maxX - minX) + padding * 2;
+    this._localBounds.x = minX - padding;
+    this._localBounds.width = (maxX - minX) + padding * 2;
 
-    bounds.y = minY - padding;
-    bounds.height = (maxY - minY) + padding * 2;
+    this._localBounds.y = minY - padding;
+    this._localBounds.height = (maxY - minY) + padding * 2;
 };
 
 /**
@@ -5175,6 +5006,8 @@ PIXI.Polygon.prototype.type = PIXI.Graphics.POLY;
 PIXI.Rectangle.prototype.type = PIXI.Graphics.RECT;
 PIXI.Circle.prototype.type = PIXI.Graphics.CIRC;
 PIXI.Ellipse.prototype.type = PIXI.Graphics.ELIP;
+PIXI.RoundedRectangle.prototype.type = PIXI.Graphics.RREC;
+
 
 /**
 * @author       Richard Davey <rich@photonstorm.com>
@@ -10129,7 +9962,7 @@ Phaser.Group.prototype.getRandom = function (startIndex, length) {
     startIndex = startIndex || 0;
     length = length || this.children.length;
 
-    return this.game.math.getRandom(this.children, startIndex, length);
+    return Phaser.ArrayUtils.getRandomItem(this.children, startIndex, length);
 
 };
 
@@ -11282,13 +11115,16 @@ Phaser.ScaleManager = function (game, width, height) {
     * The maximum number of times a canvas will be resized (in a row) in order to fill the browser.
     * @property {number} maxIterations
     * @default
-    * @deprecated 2.1.4 - This is not used anymore as reflow iterations are "automatic".
+    * @deprecated 2.2.0 - This is not used anymore as reflow iterations are "automatic".
     * @protected
     */
     this.maxIterations = 5;
 
     /**
     * This signal is dispatched when the browser enters landscape orientation, having been in portrait.
+    *
+    * This is signaled from  `preUpdate` (or `pauseUpdate`) _even when_ the game is paused.
+    *
     * @property {Phaser.Signal} enterLandscape
     * @public
     */
@@ -11296,6 +11132,9 @@ Phaser.ScaleManager = function (game, width, height) {
 
     /**
     * This signal is dispatched when the browser enters portrait orientation, having been in landscape.
+    *
+    * This is signaled from `preUpdate` (or `pauseUpdate`) _even when_ the game is paused.
+    *
     * @property {Phaser.Signal} enterPortrait
     * @public
     */
@@ -11303,6 +11142,9 @@ Phaser.ScaleManager = function (game, width, height) {
 
     /**
     * This signal is dispatched when the browser enters an incorrect orientation, as defined by `forceOrientation`.
+    *
+    * This is signaled from `preUpdate` (or `pauseUpdate`) _even when_ the game is paused.
+    *
     * @property {Phaser.Signal} enterIncorrectOrientation
     * @public
     */
@@ -11310,6 +11152,9 @@ Phaser.ScaleManager = function (game, width, height) {
 
     /**
     * This signal is dispatched when the browser leaves an incorrect orientation, as defined by `forceOrientation`.
+    *
+    * This is signaled from `preUpdate` (or `pauseUpdate`) _even when_ the game is paused.
+    *
     * @property {Phaser.Signal} leaveIncorrectOrientation - 
     * @public
     */
@@ -11323,11 +11168,11 @@ Phaser.ScaleManager = function (game, width, height) {
     * but it will not be added to, removed from, or repositioned within the DOM.
     * An attempt is made to restore relevant style changes when fullscreen mode is left.
     *
-    * For pre 2.1.4 behavior set `game.scale.fullScreenTarget = game.canvas`.
+    * For pre 2.2.0 behavior set `game.scale.fullScreenTarget = game.canvas`.
     *
     * @property {DOMElement|null} fullScreenTarget
     * @default
-    * @deprecated 2.1.4 - See `createFullScreenTarget` as an alternative.
+    * @deprecated 2.2.0 - See `createFullScreenTarget` as an alternative.
     */
     this.fullScreenTarget = null;
 
@@ -11385,25 +11230,14 @@ Phaser.ScaleManager = function (game, width, height) {
     this.fullScreenFailed = new Phaser.Signal();
 
     /**
-    * The orientation value of the game, as defined by `window.orientation` or guessed.
-    * A value of 90 is landscape and 0 is portrait.
-    * @property {number} orientation
+    * The _last known_ orientation of the screen, as defined in the Window Screen Web API.
+    * See {@link Phaser.DOM.getScreenOrientation} for possible values.
+    *
+    * @property {string} screenOrientation
     * @readonly
     * @public
     */
-    this.orientation = 0;
-
-    if (window.orientation)
-    {
-        this.orientation = window.orientation | 0;
-    }
-    else
-    {
-        if (window.outerWidth > window.outerHeight)
-        {
-            this.orientation = 90;
-        }
-    }
+    this.screenOrientation = Phaser.DOM.getScreenOrientation();
 
     /**
     * The _current_ scale factor based on the game dimensions vs. the scaled dimensions.
@@ -11472,6 +11306,8 @@ Phaser.ScaleManager = function (game, width, height) {
     * 
     * @property {boolean} [supportsFullscreen=(auto)] - True only if fullscreen support will be used. (Changing to fullscreen still might not work.)
     *
+    * @property {boolean} [orientationFallback=(auto)] - See {@link Phaser.DOM.getScreenOrientation}.
+    *
     * @property {boolean} [noMargins=false] - If true then the Game canvas's margins will not be updated anymore: existing margins must be manually cleared. Disabling margins prevents automatic canvas alignment/centering, possibly in fullscreen.
     *
     * @property {Phaser.Point|null} [scrollTo=(auto)] - If specified the window will be scrolled to this position on every refresh.
@@ -11482,6 +11318,7 @@ Phaser.ScaleManager = function (game, width, height) {
     */
     this.compatibility = {
         supportsFullScreen: false,
+        orientationFallback: null,
         noMargins: false,
         scrollTo: null,
         forceMinimumDocumentHeight: true,
@@ -11546,6 +11383,8 @@ Phaser.ScaleManager = function (game, width, height) {
     *
     * Use this to handle responsive game layout options.
     *
+    * This is signaled from `preUpdate` (or `pauseUpdate`) _even when_ the game is paused.
+    *
     * @property {Phaser.Signal} onSizeChange
     * @todo Formalize the arguments, if any, supplied to this signal.
     */
@@ -11588,25 +11427,26 @@ Phaser.ScaleManager = function (game, width, height) {
 
     /**
     * The last time the bounds were checked in `preUpdate`.
-    * @property {number} _lastSizeCheck
+    * @property {number} _lastUpdate
     * @private
     */
-    this._lastSizeCheck = 0;
+    this._lastUpdate = 0;
 
     /**
     * Size checks updates are delayed according to the throttle.
     * The throttle increases to `trackParentInterval` over time and is used to more
-    * rapidly detect changes in certain browsers (eg. IE) while providing back-off.
-    * @property {integer} _sizeCheckThrottle
+    * rapidly detect changes in certain browsers (eg. IE) while providing back-off safety.
+    * @property {integer} _updateThrottle
     * @private
     */
-    this._sizeThrottle = 0;
+    this._updateThrottle = 0;
 
     /**
-    * The reset barrier of the throttle; it will only be reset if above this limit.
+    * The minimum throttle allowed until it has slowed down sufficiently.
+    * @property {integer} _updateThrottleReset   
     * @private
     */
-    this._sizeThrottleReset = 100;
+    this._updateThrottleReset = 100;
 
     /**
     * The cached result of the parent (possibly window) bounds; used to invalidate sizing.
@@ -11716,6 +11556,15 @@ Phaser.ScaleManager.prototype = {
             }
         }
 
+        if (this.game.device.desktop)
+        {
+            compat.orientationFallback = 'screen';
+        }
+        else
+        {
+            compat.orientationFallback = '';
+        }
+
         // Configure event listeners
 
         var _this = this;
@@ -11728,6 +11577,7 @@ Phaser.ScaleManager.prototype = {
             return _this.windowResize(event);
         };
 
+        // This does not appear to be on the standards track
         window.addEventListener('orientationchange', this._orientationChange, false);
         window.addEventListener('resize', this._windowResize, false);
 
@@ -11752,6 +11602,8 @@ Phaser.ScaleManager.prototype = {
             document.addEventListener('fullscreenerror', this._fullScreenError, false);
         }
 
+        this.game.onResume.add(this._gameResumed, this);
+
         // Initialize core bounds
 
         Phaser.DOM.getOffset(this.game.canvas, this.offset);
@@ -11759,6 +11611,9 @@ Phaser.ScaleManager.prototype = {
         this.bounds.setTo(this.offset.x, this.offset.y, this.width, this.height);
 
         this.setGameSize(this.game.width, this.game.height);
+
+        // Don't use updateOrientationState so events are not fired
+        this.screenOrientation = Phaser.DOM.getScreenOrientation(this.compatibility.orientationFallback);
 
     },
 
@@ -11876,6 +11731,18 @@ Phaser.ScaleManager.prototype = {
     },
 
     /**
+    * Invoked when the game is resumed.
+    * @method Phaser.ScaleManager#gameResumed
+    * @private
+    */
+    _gameResumed: function ()
+    {
+
+        this.queueUpdate(true);
+
+    },
+
+    /**
     * Set the actual Game size.
     * Use this instead of directly changing `game.width` or `game.height`.
     *
@@ -11921,10 +11788,10 @@ Phaser.ScaleManager.prototype = {
     /**
     * Sets the callback that will be called when the bounds of the Canvas's parent container may have changed.
     *
-    * This callback ..
-    * - Will normally be invoked from `preUpdate`
+    * This callback
     * - May be invoked even though the parent container or canvas sizes have not changed
     * - Unlike `onSizeChange`, it runs _before_ the canvas is guaranteed to be updated
+    * - Will be invoked from `preUpdate`, _even when_ the game is paused
     *
     * See `onSizeChange` for a better way of reacting to layout updates.
     * 
@@ -12009,12 +11876,13 @@ Phaser.ScaleManager.prototype = {
     */
     preUpdate: function () {
 
-        if (this.game.time.time < (this._lastSizeCheck + this._sizeThrottle))
+        if (this.game.time.time < (this._lastUpdate + this._updateThrottle))
         {
             return;
         }
 
-        var prevThrottle = this._sizeThrottle;
+        var prevThrottle = this._updateThrottle;
+        this._updateThrottleReset = prevThrottle >= 400 ? 0 : 100;
 
         Phaser.DOM.getOffset(this.game.canvas, this.offset);
 
@@ -12022,7 +11890,12 @@ Phaser.ScaleManager.prototype = {
         var prevHeight = this._parentBounds.height;
         var bounds = this.getParentBounds(this._parentBounds);
 
-        if (bounds.width !== prevWidth || bounds.height !== prevHeight)
+        var boundsChanged = bounds.width !== prevWidth || bounds.height !== prevHeight;
+
+        // Always invalidate on a newly detected orientation change
+        var orientationChanged = this.updateOrientationState(false);
+
+        if (boundsChanged || orientationChanged)
         {
             if (this.onResize)
             {
@@ -12034,17 +11907,27 @@ Phaser.ScaleManager.prototype = {
             this.signalSizeChange();
         }
 
+        // Next throttle, eg. 25, 50, 100, 200..
+        var throttle = this._updateThrottle * 2;
+
         // Don't let an update be too eager about resetting the throttle.
-        if (this._sizeThrottle < prevThrottle)
+        if (this._updateThrottle < prevThrottle)
         {
-            this._sizeThrottle = Math.max(this._sizeThrottle, this._sizeThrottleReset);
+            throttle = Math.min(prevThrottle, this._updateThrottleReset);
         }
 
-        var throttle = this._sizeThrottle * 2;
+        this._updateThrottle = Phaser.Math.clamp(throttle, 25, this.trackParentInterval);
+        this._lastUpdate = this.game.time.time;
 
-        this._sizeThrottle = Phaser.Math.clamp(throttle, 10, this.trackParentInterval);
-        this._lastSizeCheck = this.game.time.time;
+    },
 
+    pauseUpdate: function () {
+
+        this.preUpdate();
+
+        // Updates at slowest.
+        this._updateThrottle = this.trackParentInterval;
+        
     },
 
     /**
@@ -12113,6 +11996,8 @@ Phaser.ScaleManager.prototype = {
 
     /**
     * Force the game to run in only one orientation.
+    *
+    * This enables generation of incorrect orientation signals and affects resizing but does not otherwise rotate or lock the orientation.
     * 
     * @method Phaser.ScaleManager#forceOrientation
     * @public
@@ -12126,48 +12011,87 @@ Phaser.ScaleManager.prototype = {
         this.forceLandscape = forceLandscape;
         this.forcePortrait = forcePortrait;
 
-        this.queueUpdate(true);
+        if (this.updateOrientationState(true))
+        {
+            this.queueUpdate(true);
+        }
 
     },
 
     /**
-    * Checks if the browser is in the correct orientation for the game, dependent upon `forceLandscape` and `forcePortrait`, and updates the state.
-    *
-    * The appropriate event is dispatched if the orientation became valid or invalid.
-    * 
-    * @method Phaser.ScaleManager#updateOrientationState
+    * Classify the orientation, per `getScreenOrientation`.
+    * @method Phaser.ScaleManager#classifyOrientation
     * @private
-    * @return {boolean} True if the orientation state changed (consider a refresh)
+    * @param {string} orientation - The orientation string, e.g. 'portrait-primary'.
+    * @return {string|null} The classified orientation: 'portrait', 'landscape`, or null.
     */
-    updateOrientationState: function () {
+    classifyOrientation: function (orientation) {
 
-        //  They are in the wrong orientation
-        if (this.incorrectOrientation)
+        if (orientation === 'portrait-primary' || orientation === 'portrait-secondary')
         {
-            if ((this.forceLandscape && window.innerWidth > window.innerHeight) ||
-                (this.forcePortrait && window.innerHeight > window.innerWidth))
-            {
-                //  Back to normal
-                this.incorrectOrientation = false;
-                this.leaveIncorrectOrientation.dispatch();
-
-                return true;
-            }
+            return 'portrait';
+        }
+        else if (orientation === 'landscape-primary' || orientation === 'landscape-secondary')
+        {
+            return 'landscape';
         }
         else
         {
-            if ((this.forceLandscape && window.innerWidth < window.innerHeight) ||
-                (this.forcePortrait && window.innerHeight < window.innerWidth))
-            {
-                //  Show orientation screen
-                this.incorrectOrientation = true;
-                this.enterIncorrectOrientation.dispatch();
+            return null;
+        }
 
-                return true;
+    },
+
+    /**
+    * Updates the current orientation and dispatches orientation change events.
+    * 
+    * @method Phaser.ScaleManager#updateOrientationState
+    * @private
+    * @param {boolean} [recheckOreientation=false] - Forcing rechecking of [in]correct orientation.
+    * @return {boolean} True if the orientation state changed which means a forced update is likely required.
+    */
+    updateOrientationState: function (recheckOrientation) {
+
+        var previousOrientation = this.screenOrientation;
+        
+        this.screenOrientation = Phaser.DOM.getScreenOrientation(this.compatibility.orientationFallback);
+
+        var changed = previousOrientation !== this.screenOrientation;
+
+        if (changed)
+        {
+            if (this.isLandscape)
+            {
+                this.enterLandscape.dispatch(this.orientation, true, false);
+            }
+            else
+            {
+                this.enterPortrait.dispatch(this.orientation, false, true);
             }
         }
 
-        return false;
+        if (changed || recheckOrientation)
+        {
+            var wasIncorrect = this.incorrectOrientation;
+            var incorrectNow = (this.forceLandscape && !this.isLandscape) ||
+                (this.forcePortrait && !this.isPortrait);
+
+            if (wasIncorrect !== incorrectNow) {
+                this.incorrectOrientation = incorrectNow;
+                changed = true;
+
+                if (incorrectNow)
+                {
+                    this.enterIncorrectOrientation.dispatch();
+                }
+                else
+                {
+                    this.leaveIncorrectOrientation.dispatch();
+                }
+            }
+        }
+
+        return changed;
 
     },
 
@@ -12181,17 +12105,6 @@ Phaser.ScaleManager.prototype = {
     orientationChange: function (event) {
 
         this.event = event;
-
-        this.orientation = window.orientation | 0;
-
-        if (this.isLandscape)
-        {
-            this.enterLandscape.dispatch(this.orientation, true, false);
-        }
-        else
-        {
-            this.enterPortrait.dispatch(this.orientation, false, true);
-        }
 
         this.queueUpdate(true);
 
@@ -12208,54 +12121,7 @@ Phaser.ScaleManager.prototype = {
 
         this.event = event;
 
-        var wasLandscape = this.isLandscape;
-
-        if (window.outerWidth > window.outerHeight)
-        {
-            this.orientation = 90;
-        }
-        else
-        {
-            this.orientation = 0;
-        }
-
-        //  If it WAS in Landscape but is now in portrait ...
-        if (wasLandscape && this.isPortrait)
-        {
-            this.enterPortrait.dispatch(this.orientation, false, true);
-
-            if (this.forceLandscape)
-            {
-                this.enterIncorrectOrientation.dispatch();
-            }
-            else if (this.forcePortrait)
-            {
-                this.leaveIncorrectOrientation.dispatch();
-            }
-        }
-        else if (!wasLandscape && this.isLandscape)
-        {
-            //  It WAS in portrait mode, but is now in Landscape ...
-            this.enterLandscape.dispatch(this.orientation, true, false);
-
-            if (this.forceLandscape)
-            {
-                this.leaveIncorrectOrientation.dispatch();
-            }
-            else if (this.forcePortrait)
-            {
-                this.enterIncorrectOrientation.dispatch();
-            }
-        }
-
-        if (this.updateOrientationState())
-        {
-            this.queueUpdate(true);
-        }
-        else
-        {
-            this.queueUpdate();
-        }
+        this.queueUpdate(true);
 
     },
 
@@ -12295,7 +12161,7 @@ Phaser.ScaleManager.prototype = {
     *
     * @method Phaser.ScaleManager#setScreenSize
     * @protected
-    * @deprecated 2.1.4 - This method is _internal_ and may be made _private_ in the future.
+    * @deprecated 2.2.0 - This method is _internal_ and may be made _private_ in the future.
     */
     setScreenSize: function () {
 
@@ -12355,11 +12221,6 @@ Phaser.ScaleManager.prototype = {
             }
         }
 
-        if (this.updateOrientationState())
-        {
-            this.queueUpdate(true);
-        }
-
         this.reflowCanvas();
 
     },
@@ -12382,11 +12243,11 @@ Phaser.ScaleManager.prototype = {
 
         if (this.isFullScreen && !this._createdFullScreenTarget)
         {
-            bounds.setTo(0, 0, Math.round(window.outerWidth), Math.round(window.outerHeight));
+            bounds.setTo(0, 0, window.outerWidth, window.outerHeight);
         }
         else if (this.parentIsWindow || !parentNode)
         {
-            bounds.setTo(0, 0, Math.round(window.innerWidth), Math.round(window.innerHeight));
+            bounds.setTo(0, 0, window.innerWidth, window.innerHeight);
         }
         else
         {
@@ -12403,11 +12264,11 @@ Phaser.ScaleManager.prototype = {
             {
                 bounds.bottom = Math.min(bounds.bottom, window.innerHeight);
             }
-
-            bounds.setTo(
-                Math.round(bounds.x), Math.round(bounds.y),
-                Math.round(bounds.width), Math.round(bounds.height));
         }
+
+        bounds.setTo(
+            Math.round(bounds.x), Math.round(bounds.y),
+            Math.round(bounds.width), Math.round(bounds.height));
 
         return bounds;
 
@@ -12567,20 +12428,16 @@ Phaser.ScaleManager.prototype = {
     * Queues/marks a size/bounds check as needing to occur (from `preUpdate`).
     * @method Phaser.ScaleManager#queueUpdate
     * @private
-    * @param {boolean|undefined} force - If true updates the parent bounds to ensure the check is dirty; if false updates current bounds; if not specified does not update bounds.
+    * @param {boolean} force - If true resets the parent bounds to ensure the check is dirty.
     */
     queueUpdate: function (force) {
-        if (force === true)
+        if (force)
         {
             this._parentBounds.width = 0;
             this._parentBounds.height = 0;
         }
-        else if (force === false)
-        {
-            this.getParentBounds(this._parentBounds);
-        }
 
-        this._sizeThrottle = 0;
+        this._updateThrottle = this._updateThrottleReset;
     },
 
     /**
@@ -13001,6 +12858,8 @@ Phaser.ScaleManager.prototype = {
     */
     destroy: function () {
 
+        this.game.onResume.remove(this._gameResumed, this);
+
         window.removeEventListener('orientationchange', this._orientationChange, false);
         window.removeEventListener('resize', this._windowResize, false);
 
@@ -13028,7 +12887,7 @@ Phaser.ScaleManager.prototype.constructor = Phaser.ScaleManager;
 * @method checkResize
 * @memberof Phaser.ScaleManager
 * @protected
-* @deprecated 2.1.4 - Internal. _Do not use_
+* @deprecated 2.2.0 - Internal. _Do not use_
 */
 Phaser.ScaleManager.prototype.checkResize = Phaser.ScaleManager.prototype.windowResize;
 
@@ -13037,7 +12896,7 @@ Phaser.ScaleManager.prototype.checkResize = Phaser.ScaleManager.prototype.window
 * @method checkOrientation
 * @memberof Phaser.ScaleManager
 * @protected
-* @deprecated 2.1.4 - Internal. _Do not use_
+* @deprecated 2.2.0 - Internal. _Do not use_
 */
 Phaser.ScaleManager.prototype.checkOrientation = Phaser.ScaleManager.prototype.orientationChange;
 
@@ -13046,7 +12905,7 @@ Phaser.ScaleManager.prototype.checkOrientation = Phaser.ScaleManager.prototype.o
 * @method setSize
 * @memberof Phaser.ScaleManager
 * @protected
-* @deprecated 2.1.4 - Internal. Use `refresh` if needed.
+* @deprecated 2.2.0 - Internal. Use `refresh` if needed.
 */
 Phaser.ScaleManager.prototype.setSize = Phaser.ScaleManager.prototype.reflowCanvas;
 
@@ -13059,16 +12918,16 @@ Phaser.ScaleManager.prototype.setSize = Phaser.ScaleManager.prototype.reflowCanv
 * @memberof Phaser.ScaleManager
 * @protected
 * @return {boolean} True if the orientation state changed (consider a refresh)
-* @deprecated 2.1.4 - This is only for backward compatibility of user code.
+* @deprecated 2.2.0 - This is only for backward compatibility of user code.
 */
 Phaser.ScaleManager.prototype.checkOrientationState = function () {
 
-    var orientationChanged = this.updateOrientationState();
-    if (orientationChanged)
+    var changed = this.updateOrientationState();
+    if (changed)
     {
         this.refresh();
     }
-    return orientationChanged;
+    return changed;
 
 };
 
@@ -13254,7 +13113,7 @@ Object.defineProperty(Phaser.ScaleManager.prototype, "isFullScreen", {
 Object.defineProperty(Phaser.ScaleManager.prototype, "isPortrait", {
 
     get: function () {
-        return (this.orientation === 0 || this.orientation === 180);
+        return this.classifyOrientation(this.screenOrientation) === 'portrait';
     }
 
 });
@@ -13268,7 +13127,22 @@ Object.defineProperty(Phaser.ScaleManager.prototype, "isPortrait", {
 Object.defineProperty(Phaser.ScaleManager.prototype, "isLandscape", {
 
     get: function () {
-        return (this.orientation === 90 || this.orientation === -90);
+        return this.classifyOrientation(this.screenOrientation) === 'landscape';
+    }
+
+});
+
+/**
+* The _last known_ orientation value of the game. A value of 90 is landscape and 0 is portrait.
+* @property {number} orientation
+* @readonly
+* @deprecated 2.2.0 - Use `ScaleManager.screenOrientation` instead.
+*/
+Object.defineProperty(Phaser.ScaleManager.prototype, "orientation", {
+
+    get: function ()
+    {
+        return (this.classifyOrientation(this.screenOrientation) === 'portrait' ? 0 : 90);
     }
 
 });
@@ -13994,15 +13868,16 @@ Phaser.Game.prototype = {
             this._deltaTime = 0;
             this._spiralling = 0;
 
-            var slowStep = this.time.slowMotion * 1000.0 / this.time.desiredFps;
+            // call the game render update exactly once every frame
+            this.updateRender(this.time.slowMotion * this.time.desiredFps);
         }
         else
         {
             // step size taking into account the slow motion speed
             var slowStep = this.time.slowMotion * 1000.0 / this.time.desiredFps;
 
-            // accumulate time until the slowStep threshold is met or exceeded
-            this._deltaTime += Math.max(Math.min(1000, this.time.elapsed), 0);
+            // accumulate time until the slowStep threshold is met or exceeded... up to a limit of 3 catch-up frames at slowStep intervals
+            this._deltaTime += Math.max(Math.min(slowStep * 3, this.time.elapsed), 0);
 
             // call the game update logic multiple times if necessary to "catch up" with dropped frames
             // unless forceSingleUpdate is true
@@ -14032,13 +13907,20 @@ Phaser.Game.prototype = {
             }
 
             this._lastCount = count;
-        }
 
-        // call the game render update exactly once every frame
-        this.updateRender(this._deltaTime / slowStep);
+            // call the game render update exactly once every frame unless we're playing catch-up from a spiral condition
+            this.updateRender(this._deltaTime / slowStep);
+        }
 
     },
 
+    /**
+    * Updates all logic subsystems in Phaser. Called automatically by Game.update.
+    *
+    * @method Phaser.Game#updateLogic
+    * @protected
+    * @param {number} timeStep - The current timeStep value as determined by Game.update.
+    */
     updateLogic: function (timeStep) {
 
         if (!this._paused && !this.pendingStep)
@@ -14073,6 +13955,9 @@ Phaser.Game.prototype = {
         }
         else
         {
+            // Scaling and device orientation changes are still reflected when paused.
+            this.scale.pauseUpdate();
+
             this.state.pauseUpdate();
 
             if (this.config['enableDebug'])
@@ -14082,6 +13967,13 @@ Phaser.Game.prototype = {
         }
     },
 
+    /**
+    * Renders the display list. Called automatically by Game.update.
+    *
+    * @method Phaser.Game#updateRender
+    * @protected
+    * @param {number} elapsedTime - The time elapsed since the last update.
+    */
     updateRender: function (elapsedTime) {
 
         // update tweens once every frame along with the render logic (to keep them smooth in slowMotion scenarios)
@@ -15109,6 +15001,7 @@ Phaser.Input.prototype = {
         for (var i = 0; i < this.pointers.length; i++)
         {
             var pointer = this.pointers[i];
+
             if (pointer.pointerId === pointerId)
             {
                 return pointer;
@@ -16400,7 +16293,7 @@ Phaser.Mouse = function (game) {
     this.button = -1;
 
     /**
-     * @property {number} wheelDelta - The direction of the mousewheel usage 1 for up -1 for down
+     * @property {number} wheelDelta - The direction of the _last_ mousewheel usage 1 for up -1 for down
      */
     this.wheelDelta = 0;
 
@@ -16430,7 +16323,9 @@ Phaser.Mouse = function (game) {
     this.pointerLock = new Phaser.Signal();
 
     /**
-    * @property {MouseEvent} event - The browser mouse DOM event. Will be set to null if no mouse event has ever been received.
+    * The browser mouse DOM event. Will be null if no mouse event has ever been received.
+    * Access this property only inside a Mouse event handler and do not keep references to it.
+    * @property {MouseEvent|null} event
     * @default
     */
     this.event = null;
@@ -16466,10 +16361,17 @@ Phaser.Mouse = function (game) {
     this._onMouseOver = null;
 
     /**
-     * @property {function} _onMouseWheel - Internal event handler reference.
-     * @private
-     */
+    * @property {function} _onMouseWheel - Internal event handler reference.
+    * @private
+    */
     this._onMouseWheel = null;
+
+    /**
+    * Wheel proxy event object, if required. Shared for all wheel events for this mouse.
+    * @property {Phaser.Mouse~WheelEventProxy} _wheelEvent
+    * @private
+    */
+    this._wheelEvent = null;
 
 };
 
@@ -16568,8 +16470,21 @@ Phaser.Mouse.prototype = {
             window.addEventListener('mouseup', this._onMouseUpGlobal, true);
             this.game.canvas.addEventListener('mouseover', this._onMouseOver, true);
             this.game.canvas.addEventListener('mouseout', this._onMouseOut, true);
-            this.game.canvas.addEventListener('mousewheel', this._onMouseWheel, true);
-            this.game.canvas.addEventListener('DOMMouseScroll', this._onMouseWheel, true);
+        }
+
+        var wheelEvent = this.game.device.wheelEvent;
+        if (wheelEvent)
+        {
+            this.game.canvas.addEventListener(wheelEvent, this._onMouseWheel, true);
+
+            if (wheelEvent === 'mousewheel')
+            {
+                this._wheelEvent = new WheelEventProxy(-1/40, 1);
+            }
+            else if (wheelEvent === 'DOMMouseScroll')
+            {
+                this._wheelEvent = new WheelEventProxy(1, 1);
+            }
         }
 
     },
@@ -16732,9 +16647,13 @@ Phaser.Mouse.prototype = {
      * The internal method that handles the mouse wheel event from the browser.
      *
      * @method Phaser.Mouse#onMouseWheel
-     * @param {MouseEvent} event - The native event from the browser. This gets stored in Mouse.event.
+     * @param {MouseEvent} event - The native event from the browser.
      */
     onMouseWheel: function (event) {
+
+        if (this._wheelEvent) {
+            event = this._wheelEvent.bindEvent(event);
+        }
 
         this.event = event;
 
@@ -16744,7 +16663,7 @@ Phaser.Mouse.prototype = {
         }
 
         // reverse detail for firefox
-        this.wheelDelta = Math.max(-1, Math.min(1, (event.wheelDelta || -event.detail)));
+        this.wheelDelta = Phaser.Math.clamp(-event.deltaY, -1, 1);
 
         if (this.mouseWheelCallback)
         {
@@ -16863,8 +16782,12 @@ Phaser.Mouse.prototype = {
         this.game.canvas.removeEventListener('mouseup', this._onMouseUp, true);
         this.game.canvas.removeEventListener('mouseover', this._onMouseOver, true);
         this.game.canvas.removeEventListener('mouseout', this._onMouseOut, true);
-        this.game.canvas.removeEventListener('mousewheel', this._onMouseWheel, true);
-        this.game.canvas.removeEventListener('DOMMouseScroll', this._onMouseWheel, true);
+
+        var wheelEvent = this.game.device.wheelEvent;
+        if (wheelEvent)
+        {
+            this.game.canvas.removeEventListener(wheelEvent, this._onMouseWheel, true);
+        }
 
         window.removeEventListener('mouseup', this._onMouseUpGlobal, true);
 
@@ -16894,6 +16817,76 @@ Object.defineProperty(Phaser.Mouse.prototype, "disabled", {
         this.enabled = !value;
     }
 
+});
+
+/* jshint latedef:nofunc */
+/**
+* A purely internal event support class to proxy 'wheelscroll' and 'DOMMouseWheel'
+* events to 'wheel'-like events.
+*
+* See https://developer.mozilla.org/en-US/docs/Web/Events/mousewheel for choosing a scale and delta mode.
+*
+* @class Phaser.Mouse~WheelEventProxy
+* @private
+* @param {number} scaleFactor - Scale factor as applied to wheelDelta/wheelDeltaX or details.
+* @param {integer} deltaMode - The reported delta mode.
+*/
+function WheelEventProxy (scaleFactor, deltaMode) {
+
+    this._scaleFactor = scaleFactor;
+
+    this._deltaMode = deltaMode;
+
+    /**
+    * The original event _currently_ being proxied; the getters will follow suit.
+    */
+    this.originalEvent = null;
+}
+
+WheelEventProxy.prototype = {};
+WheelEventProxy.prototype.constructor = WheelEventProxy;
+
+WheelEventProxy.prototype.bindEvent = function (event) {
+
+    // Generate stubs automatically
+    if (!WheelEventProxy._stubsGenerated && event)
+    {
+        var makeBinder = function (name) {
+            return function () {
+                var v = this.originalEvent[name];
+                return typeof v !== 'function' ? v : v.bind(this.originalEvent);
+            };
+        };
+        for (var prop in event) {
+            if (!(prop in WheelEventProxy.prototype))
+            {
+                Object.defineProperty(WheelEventProxy.prototype, prop, {
+                    get: makeBinder(prop)
+                });
+            }
+        }
+        WheelEventProxy._stubsGenerated = true;
+    }
+
+    this.originalEvent = event;
+    return this;
+
+};
+
+Object.defineProperties(WheelEventProxy.prototype, {
+    "type": { value: "wheel" },
+    "deltaMode": { get: function () { return this._deltaMode; } },
+    "deltaY": {
+        get: function () {
+            return (this._scaleFactor * (this.originalEvent.wheelDelta || this.originalEvent.detail)) || 0;
+        }
+    },
+    "deltaX": {
+        get: function () {
+            return (this._scaleFactor * this.originalEvent.wheelDeltaX) || 0;
+        }
+    },
+    "deltaZ": { value: 0 }
 });
 
 /**
@@ -31778,6 +31771,79 @@ Phaser.DOM = {
 
         return !!r && r.bottom >= 0 && r.right >= 0 && r.top <= this.viewportWidth && r.left <= this.viewportHeight;
 
+    },
+
+    /**
+    * Returns the device screen orientation.
+    *
+    * Orientation values: 'portrait-primary', 'landscape-primary', 'portrait-secondary', 'landscape-secondary'.
+    *
+    * Order of resolving:
+    * - Screen Orientation API, or variation of - Future track. Most desktop and mobile browsers.
+    * - Screen size ratio check - If fallback is 'screen', suited for desktops.
+    * - Viewport size ratio check - If fallback is 'viewport', suited for mobile.
+    * - window.orientation - If fallback is 'window.orientation', non-recommended track.
+    * - Media query
+    * - Viewport size ratio check (probably only IE9 and legacy mobile gets here..)
+    *
+    * See
+    * - https://w3c.github.io/screen-orientation/ (conflicts with mozOrientation/msOrientation)
+    * - https://developer.mozilla.org/en-US/docs/Web/API/Screen.orientation (mozOrientation)
+    * - http://msdn.microsoft.com/en-us/library/ie/dn342934(v=vs.85).aspx
+    * - https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Testing_media_queries
+    * - http://stackoverflow.com/questions/4917664/detect-viewport-orientation
+    * - http://www.matthewgifford.com/blog/2011/12/22/a-misconception-about-window-orientation
+    *
+    * @method Phaser.DOM.getScreenOrientation
+    * @protected
+    * @param {string} [primaryFallback=(none)] - Specify 'screen', 'viewport', or 'window.orientation'.
+    */
+    getScreenOrientation: function (primaryFallback) {
+
+        var screen = window.screen;
+        var orientation = screen.orientation || screen.mozOrientation || screen.msOrientation;
+
+        if (orientation && typeof orientation.type === 'string')
+        {
+            // Screen Orientation API specification
+            return orientation.type;
+        }
+        else if (typeof orientation === 'string')
+        {
+            // moz/ms-orientation are strings
+            return orientation;
+        }
+
+        var PORTRAIT = 'portrait-primary';
+        var LANDSCAPE = 'landscape-primary';
+        
+        if (primaryFallback === 'screen')
+        {
+            return (screen.height > screen.width) ? PORTRAIT : LANDSCAPE;
+        }
+        else if (primaryFallback === 'viewport')
+        {
+            return (this.viewportHeight > this.viewportWidth) ? PORTRAIT : LANDSCAPE;
+        }
+        else if (primaryFallback === 'window.orientation' && typeof window.orientation === 'number')
+        {
+            // This may change by device based on "natural" orientation.
+            return (window.orientation === 0 || window.orientation === 180) ? PORTRAIT : LANDSCAPE;
+        }
+        else if (window.matchMedia)
+        {
+            if (window.matchMedia("(orientation: portrait)").matches)
+            {
+                return PORTRAIT;
+            }
+            else if (window.matchMedia("(orientation: landscape)").matches)
+            {
+                return LANDSCAPE;
+            }
+        }
+
+        return (this.viewportHeight > this.viewportWidth) ? PORTRAIT : LANDSCAPE;
+
     }
 
 };
@@ -32332,18 +32398,6 @@ Phaser.Device = function (game) {
     this.worker = false;
 
     /**
-    * @property {boolean} touch - Is touch available?
-    * @default
-    */
-    this.touch = false;
-
-    /**
-    * @property {boolean} mspointer - Is mspointer available?
-    * @default
-    */
-    this.mspointer = false;
-
-    /**
     * @property {boolean} css3D - Is css3D available?
     * @default
     */
@@ -32378,6 +32432,27 @@ Phaser.Device = function (game) {
     * @default
     */
     this.quirksMode = false;
+
+    //  Input
+
+    /**
+    * @property {boolean} touch - Is touch available?
+    * @default
+    */
+    this.touch = false;
+
+    /**
+    * @property {boolean} mspointer - Is mspointer available?
+    * @default
+    */
+    this.mspointer = false;
+
+    /**
+    * @property {string|null} wheelType - The newest type of Wheel/Scroll event supported: 'wheel', 'mousewheel', 'DOMMouseScroll'
+    * @default
+    * @protected
+    */
+    this.wheelEvent = null;
 
     //  Browser
 
@@ -32585,6 +32660,7 @@ Phaser.Device = function (game) {
     this._checkCSS3D();
     this._checkDevice();
     this._checkFeatures();
+    this._checkInput();
 
 };
 
@@ -32684,7 +32760,24 @@ Phaser.Device.prototype = {
 
         this.worker = !!window['Worker'];
 
-        if ('ontouchstart' in document.documentElement || (window.navigator.maxTouchPoints && window.navigator.maxTouchPoints > 1))
+        this.pointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
+
+        this.quirksMode = (document.compatMode === 'CSS1Compat') ? false : true;
+
+        this.getUserMedia = !!(navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
+
+    },
+
+    /**
+    * Checks/configures various input.
+    *
+    * @method Phaser.Device#checkInput
+    * @private
+    */
+    _checkInput: function () {
+
+        if ('ontouchstart' in document.documentElement ||
+            (window.navigator.maxTouchPoints && window.navigator.maxTouchPoints > 1))
         {
             this.touch = true;
         }
@@ -32694,11 +32787,25 @@ Phaser.Device.prototype = {
             this.mspointer = true;
         }
 
-        this.pointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
-
-        this.quirksMode = (document.compatMode === 'CSS1Compat') ? false : true;
-
-        this.getUserMedia = !!(navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
+        if (!this.cocoonJS)
+        {
+            // See https://developer.mozilla.org/en-US/docs/Web/Events/wheel
+            if ('onwheel' in window || (this.ie && 'WheelEvent' in window))
+            {
+                // DOM3 Wheel Event: FF 17+, IE 9+, Chrome 31+, Safari 7+
+                this.wheelEvent = 'wheel';
+            }
+            else if ('onmousewheel' in window)
+            {
+                // Non-FF legacy: IE 6-9, Chrome 1-31, Safari 5-7.
+                this.wheelEvent = 'mousewheel';
+            }
+            else if (this.firefox && 'MouseScrollEvent' in window)
+            {
+                // FF prior to 17. This should probably be scrubbed.
+                this.wheelEvent = 'DOMMouseScroll';
+            }
+        }
 
     },
 
@@ -33322,109 +33429,118 @@ Phaser.RequestAnimationFrame.prototype.constructor = Phaser.RequestAnimationFram
 */
 
 /**
-* A collection of mathematical methods.
+* A collection of useful mathematical functions.
+*
+* These are normally accessed through `game.math`.
 *
 * @class Phaser.Math
+* @static
+* @see {@link Phaser.Utils}
+* @see {@link Phaser.ArrayUtils}
 */
 Phaser.Math = {
 
     /**
-    * = 2 &pi;
-    * @method Phaser.Math#PI2
+    * Twice PI.
+    * @property {number} Phaser.Math#PI2
+    * @default ~6.283
+    * @deprecated 2.2.0 - Not used internally. Use `2 * Math.PI` instead.
     */
     PI2: Math.PI * 2,
 
     /**
-    * Two number are fuzzyEqual if their difference is less than &epsilon;.
+    * Two number are fuzzyEqual if their difference is less than epsilon.
+    *
     * @method Phaser.Math#fuzzyEqual
     * @param {number} a
     * @param {number} b
-    * @param {number} epsilon
-    * @return {boolean} True if |a-b|<&epsilon;
+    * @param {number} [epsilon=(small value)]
+    * @return {boolean} True if |a-b|<epsilon
     */
     fuzzyEqual: function (a, b, epsilon) {
-        if (typeof epsilon === "undefined") { epsilon = 0.0001; }
+        if (typeof epsilon === 'undefined') { epsilon = 0.0001; }
         return Math.abs(a - b) < epsilon;
     },
 
     /**
-    * a is fuzzyLessThan b if it is less than b + &epsilon;.
+    * `a` is fuzzyLessThan `b` if it is less than b + epsilon.
+    *
     * @method Phaser.Math#fuzzyLessThan
     * @param {number} a
     * @param {number} b
-    * @param {number} epsilon
-    * @return {boolean} True if a<b+&epsilon;
+    * @param {number} [epsilon=(small value)]
+    * @return {boolean} True if a<b+epsilon
     */
     fuzzyLessThan: function (a, b, epsilon) {
-        if (typeof epsilon === "undefined") { epsilon = 0.0001; }
+        if (typeof epsilon === 'undefined') { epsilon = 0.0001; }
         return a < b + epsilon;
     },
 
     /**
-    * a is fuzzyGreaterThan b if it is more than b - &epsilon;.
+    * `a` is fuzzyGreaterThan `b` if it is more than b - epsilon.
+    *
     * @method Phaser.Math#fuzzyGreaterThan
     * @param {number} a
     * @param {number} b
-    * @param {number} epsilon
-    * @return {boolean} True if a>b+&epsilon;
+    * @param {number} [epsilon=(small value)]
+    * @return {boolean} True if a>b+epsilon
     */
     fuzzyGreaterThan: function (a, b, epsilon) {
-        if (typeof epsilon === "undefined") { epsilon = 0.0001; }
+        if (typeof epsilon === 'undefined') { epsilon = 0.0001; }
         return a > b - epsilon;
     },
 
     /**
     * @method Phaser.Math#fuzzyCeil
+    *
     * @param {number} val
-    * @param {number} epsilon
-    * @return {boolean} ceiling(val-&epsilon;)
+    * @param {number} [epsilon=(small value)]
+    * @return {boolean} ceiling(val-epsilon)
     */
     fuzzyCeil: function (val, epsilon) {
-        if (typeof epsilon === "undefined") { epsilon = 0.0001; }
+        if (typeof epsilon === 'undefined') { epsilon = 0.0001; }
         return Math.ceil(val - epsilon);
     },
 
     /**
     * @method Phaser.Math#fuzzyFloor
+    *
     * @param {number} val
-    * @param {number} epsilon
-    * @return {boolean} floor(val-&epsilon;)
+    * @param {number} [epsilon=(small value)]
+    * @return {boolean} floor(val-epsilon)
     */
     fuzzyFloor: function (val, epsilon) {
-        if (typeof epsilon === "undefined") { epsilon = 0.0001; }
+        if (typeof epsilon === 'undefined') { epsilon = 0.0001; }
         return Math.floor(val + epsilon);
     },
 
     /**
-    * Averages all values passed to the function and returns the result. You can pass as many parameters as you like.
+    * Averages all values passed to the function and returns the result.
+    *
     * @method Phaser.Math#average
+    * @params {...number} The numbers to average
     * @return {number} The average of all given values.
     */
     average: function () {
 
-        var args = [];
+        var sum = 0;
 
-        for (var _i = 0; _i < (arguments.length - 0); _i++) {
-            args[_i] = arguments[_i + 0];
+        for (var i = 0; i < arguments.length; i++) {
+            sum += (+arguments[i]);
         }
 
-        var avg = 0;
-
-        for (var i = 0; i < args.length; i++) {
-            avg += args[i];
-        }
-
-        return avg / args.length;
+        return sum / arguments.length;
 
     },
 
     /**
     * @method Phaser.Math#truncate
     * @param {number} n
-    * @return {number}
+    * @return {integer}
+    * @deprecated 2.2.0 - Use `Math.trunc` (now with polyfill)
     */
     truncate: function (n) {
-        return (n > 0) ? Math.floor(n) : Math.ceil(n);
+        return Math.trunc(n);
     },
 
     /**
@@ -33449,7 +33565,7 @@ Phaser.Math = {
     */
     snapTo: function (input, gap, start) {
 
-        if (typeof start === "undefined") { start = 0; }
+        if (typeof start === 'undefined') { start = 0; }
 
         if (gap === 0) {
             return input;
@@ -33475,7 +33591,7 @@ Phaser.Math = {
     */
     snapToFloor: function (input, gap, start) {
 
-        if (typeof start === "undefined") { start = 0; }
+        if (typeof start === 'undefined') { start = 0; }
 
         if (gap === 0) {
             return input;
@@ -33501,7 +33617,7 @@ Phaser.Math = {
     */
     snapToCeil: function (input, gap, start) {
 
-        if (typeof start === "undefined") { start = 0; }
+        if (typeof start === 'undefined') { start = 0; }
 
         if (gap === 0) {
             return input;
@@ -33514,66 +33630,53 @@ Phaser.Math = {
 
     },
 
-
     /**
     * Snaps a value to the nearest value in an array.
+    *
     * @method Phaser.Math#snapToInArray
     * @param {number} input
-    * @param {array} arr
+    * @param {number[]} arr
     * @param {boolean} sort - True if the array needs to be sorted.
     * @return {number}
+    * @deprecated 2.2.0 - See {@link Phaser.ArrayUtils.findClosest} for an alternative.
     */
     snapToInArray: function (input, arr, sort) {
 
-        if (typeof sort === "undefined") { sort = true; }
+        if (typeof sort === 'undefined') { sort = true; }
 
         if (sort) {
             arr.sort();
         }
 
-        if (input < arr[0]) {
-            return arr[0];
-        }
-
-        var i = 1;
-
-        while (arr[i] < input) {
-            i++;
-        }
-
-        var low = arr[i - 1];
-        var high = (i < arr.length) ? arr[i] : Number.POSITIVE_INFINITY;
-
-        return ((high - input) <= (input - low)) ? high : low;
+        return Phaser.ArrayUtils.findClosest(input, arr);
 
     },
 
     /**
-    * Round to some place comparative to a 'base', default is 10 for decimal place.
+    * Round to some place comparative to a `base`, default is 10 for decimal place.
+    * The `place` is represented by the power applied to `base` to get that place.
     *
-    * 'place' is represented by the power applied to 'base' to get that place
-    * e.g.
-    * 2000/7 ~= 285.714285714285714285714 ~= (bin)100011101.1011011011011011
+    *     e.g. 2000/7 ~= 285.714285714285714285714 ~= (bin)100011101.1011011011011011
     *
-    * roundTo(2000/7,3) === 0
-    * roundTo(2000/7,2) == 300
-    * roundTo(2000/7,1) == 290
-    * roundTo(2000/7,0) == 286
-    * roundTo(2000/7,-1) == 285.7
-    * roundTo(2000/7,-2) == 285.71
-    * roundTo(2000/7,-3) == 285.714
-    * roundTo(2000/7,-4) == 285.7143
-    * roundTo(2000/7,-5) == 285.71429
+    *     roundTo(2000/7,3) === 0
+    *     roundTo(2000/7,2) == 300
+    *     roundTo(2000/7,1) == 290
+    *     roundTo(2000/7,0) == 286
+    *     roundTo(2000/7,-1) == 285.7
+    *     roundTo(2000/7,-2) == 285.71
+    *     roundTo(2000/7,-3) == 285.714
+    *     roundTo(2000/7,-4) == 285.7143
+    *     roundTo(2000/7,-5) == 285.71429
     *
-    * roundTo(2000/7,3,2)  == 288       -- 100100000
-    * roundTo(2000/7,2,2)  == 284       -- 100011100
-    * roundTo(2000/7,1,2)  == 286       -- 100011110
-    * roundTo(2000/7,0,2)  == 286       -- 100011110
-    * roundTo(2000/7,-1,2) == 285.5     -- 100011101.1
-    * roundTo(2000/7,-2,2) == 285.75    -- 100011101.11
-    * roundTo(2000/7,-3,2) == 285.75    -- 100011101.11
-    * roundTo(2000/7,-4,2) == 285.6875  -- 100011101.1011
-    * roundTo(2000/7,-5,2) == 285.71875 -- 100011101.10111
+    *     roundTo(2000/7,3,2)  == 288       -- 100100000
+    *     roundTo(2000/7,2,2)  == 284       -- 100011100
+    *     roundTo(2000/7,1,2)  == 286       -- 100011110
+    *     roundTo(2000/7,0,2)  == 286       -- 100011110
+    *     roundTo(2000/7,-1,2) == 285.5     -- 100011101.1
+    *     roundTo(2000/7,-2,2) == 285.75    -- 100011101.11
+    *     roundTo(2000/7,-3,2) == 285.75    -- 100011101.11
+    *     roundTo(2000/7,-4,2) == 285.6875  -- 100011101.1011
+    *     roundTo(2000/7,-5,2) == 285.71875 -- 100011101.10111
     *
     * Note what occurs when we round to the 3rd space (8ths place), 100100000, this is to be assumed
     * because we are rounding 100011.1011011011011011 which rounds up.
@@ -33586,8 +33689,8 @@ Phaser.Math = {
     */
     roundTo: function (value, place, base) {
 
-        if (typeof place === "undefined") { place = 0; }
-        if (typeof base === "undefined") { base = 10; }
+        if (typeof place === 'undefined') { place = 0; }
+        if (typeof base === 'undefined') { base = 10; }
 
         var p = Math.pow(base, -place);
 
@@ -33604,8 +33707,8 @@ Phaser.Math = {
     */
     floorTo: function (value, place, base) {
 
-        if (typeof place === "undefined") { place = 0; }
-        if (typeof base === "undefined") { base = 10; }
+        if (typeof place === 'undefined') { place = 0; }
+        if (typeof base === 'undefined') { base = 10; }
 
         var p = Math.pow(base, -place);
 
@@ -33622,8 +33725,8 @@ Phaser.Math = {
     */
     ceilTo: function (value, place, base) {
 
-        if (typeof place === "undefined") { place = 0; }
-        if (typeof base === "undefined") { base = 10; }
+        if (typeof place === 'undefined') { place = 0; }
+        if (typeof base === 'undefined') { base = 10; }
 
         var p = Math.pow(base, -place);
 
@@ -33638,6 +33741,7 @@ Phaser.Math = {
     * @param {number} b
     * @param {number} weight
     * @return {number}
+    * @deprecated 2.2.0 - See {@link Phaser.Math#linear}
     */
     interpolateFloat: function (a, b, weight) {
         return (b - a) * weight + a;
@@ -33650,7 +33754,7 @@ Phaser.Math = {
     * @param {number} y1
     * @param {number} x2
     * @param {number} y2
-    * @return {number}
+    * @return {number} The angle, in radians.
     */
     angleBetween: function (x1, y1, x2, y2) {
         return Math.atan2(y2 - y1, x2 - x1);
@@ -33666,7 +33770,7 @@ Phaser.Math = {
     * @param {number} y1
     * @param {number} x2
     * @param {number} y2
-    * @return {number}
+    * @return {number} The angle, in radians.
     */
     angleBetweenY: function (x1, y1, x2, y2) {
         return Math.atan2(x2 - x1, y2 - y1);
@@ -33677,7 +33781,7 @@ Phaser.Math = {
     * @method Phaser.Math#angleBetweenPoints
     * @param {Phaser.Point} point1
     * @param {Phaser.Point} point2
-    * @return {number}
+    * @return {number} The angle, in radians.
     */
     angleBetweenPoints: function (point1, point2) {
         return Math.atan2(point2.y - point1.y, point2.x - point1.x);
@@ -33688,7 +33792,7 @@ Phaser.Math = {
     * @method Phaser.Math#angleBetweenPointsY
     * @param {Phaser.Point} point1
     * @param {Phaser.Point} point2
-    * @return {number}
+    * @return {number} The angle, in radians.
     */
     angleBetweenPointsY: function (point1, point2) {
         return Math.atan2(point2.x - point1.x, point2.y - point1.y);
@@ -33722,9 +33826,10 @@ Phaser.Math = {
     * @method Phaser.Math#normalizeLatitude
     * @param {number} lat - The latitude to normalize, in degrees.
     * @return {number} Returns the latitude, fit within the [-90,90] range.
+    * @deprecated 2.2.0 - Use {@link Phaser.Math#clamp}.
     */
     normalizeLatitude: function (lat) {
-        return Math.max(-90, Math.min(90, lat));
+        return Phaser.Math.clamp(lat, -90, 90);
     },
 
     /**
@@ -33732,146 +33837,58 @@ Phaser.Math = {
     * @method Phaser.Math#normalizeLongitude
     * @param {number} lng - The longitude to normalize, in degrees.
     * @return {number} Returns the longitude, fit within the [-180,180] range.
+    * @deprecated 2.2.0 - Use {@link Phaser.Math#wrap}.
     */
     normalizeLongitude: function (lng) {
-
-        if (lng % 360 == 180)
-        {
-            return 180;
-        }
-
-        lng = lng % 360;
-        return lng < -180 ? lng + 360 : lng > 180 ? lng - 360 : lng;
-
+        return Phaser.Math.wrap(lng, -180, 180);
     },
 
     /**
     * Generate a random bool result based on the chance value.
-    * <p>
+    *
     * Returns true or false based on the chance value (default 50%). For example if you wanted a player to have a 30% chance
     * of getting a bonus, call chanceRoll(30) - true means the chance passed, false means it failed.
-    * </p>
+    *
     * @method Phaser.Math#chanceRoll
     * @param {number} chance - The chance of receiving the value. A number between 0 and 100 (effectively 0% to 100%).
     * @return {boolean} True if the roll passed, or false otherwise.
+    * @deprecated 2.2.0 - Use {@link Phaser.Utils.chanceRoll}
     */
     chanceRoll: function (chance) {
-
-        if (typeof chance === "undefined") { chance = 50; }
-
-        if (chance <= 0)
-        {
-            return false;
-        }
-        else if (chance >= 100)
-        {
-            return true;
-        }
-        else
-        {
-            if (Math.random() * 100 >= chance)
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
-        }
-
+        return Phaser.Utils.chanceRoll(chance);
     },
 
     /**
-    * Returns an Array containing the numbers from min to max and inclusive of both values.
-    * If you need exclusive of max then see Phaser.Math.numberArrayEx.
+    * Create an array representing the inclusive range of numbers (usually integers) in `[start, end]`.
     *
     * @method Phaser.Math#numberArray
-    * @param {number} min - The minimum value the array starts with.
-    * @param {number} max - The maximum value the array contains.
+    * @param {number} start - The minimum value the array starts with.
+    * @param {number} end - The maximum value the array contains.
     * @return {array} The array of number values.
+    * @deprecated 2.2.0 - See {@link Phaser.ArrayUtils.numberArray}
     */
-    numberArray: function (min, max) {
-
-        var result = [];
-
-        for (var i = min; i <= max; i++)
-        {
-            result.push(i);
-        }
-
-        return result;
-
+    numberArray: function (start, end) {
+        return Phaser.ArrayUtils.numberArray(start, end);
     },
 
     /**
-     * Creates an array of numbers (positive and/or negative) progressing from
-     * `start` up to but not including `end`. If `start` is less than `stop` a
-     * zero-length range is created unless a negative `step` is specified.
-     *
-     * @static
-     * @method Phaser.Math#numberArrayStep
-     * @param {number} [start=0] - The start of the range.
-     * @param {number} end - The end of the range.
-     * @param {number} [step=1] - The value to increment or decrement by.
-     * @returns {Array} Returns the new array of numbers.
-     * @example
-     *
-     * Phaser.Math.numberArrayStep(4);
-     * // => [0, 1, 2, 3]
-     *
-     * Phaser.Math.numberArrayStep(1, 5);
-     * // => [1, 2, 3, 4]
-     *
-     * Phaser.Math.numberArrayStep(0, 20, 5);
-     * // => [0, 5, 10, 15]
-     *
-     * Phaser.Math.numberArrayStep(0, -4, -1);
-     * // => [0, -1, -2, -3]
-     *
-     * Phaser.Math.numberArrayStep(1, 4, 0);
-     * // => [1, 1, 1]
-     *
-     * Phaser.Math.numberArrayStep(0);
-     * // => []
-     */
+    * Create an array of numbers (positive and/or negative) progressing from `start`
+    * up to but not including `end` by advancing by `step`.
+    *
+    * If `start` is less than `stop` a zero-length range is created unless a negative `step` is specified.
+    *
+    * Certain values for `start` and `end` (eg. NaN/undefined/null) are coerced to 0;
+    * for forward compatibility make sure to pass in actual numbers.
+    *
+    * @method Phaser.Math#numberArrayStep
+    * @param {number} start - The start of the range.
+    * @param {number} end - The end of the range.
+    * @param {number} [step=1] - The value to increment or decrement by.
+    * @returns {Array} Returns the new array of numbers.
+    * @deprecated 2.2.0 - See {@link Phaser.ArrayUtils.numberArrayStep}
+    */
     numberArrayStep: function(start, end, step) {
-
-        start = +start || 0;
-
-        // enables use as a callback for functions like `_.map`
-        var type = typeof end;
-
-        if ((type === 'number' || type === 'string') && step && step[end] === start)
-        {
-            end = step = null;
-        }
-
-        step = step == null ? 1 : (+step || 0);
-
-        if (end === null)
-        {
-            end = start;
-            start = 0;
-        }
-        else
-        {
-            end = +end || 0;
-        }
-
-        // use `Array(length)` so engines like Chakra and V8 avoid slower modes
-        // http://youtu.be/XAqIpGU8ZZk#t=17m25s
-        var index = -1;
-        var length = Phaser.Math.max(Phaser.Math.ceil((end - start) / (step || 1)), 0);
-        var result = new Array(length);
-
-        while (++index < length)
-        {
-            result[index] = start;
-            start += step;
-        }
-
-        return result;
-
+        return Phaser.ArrayUtils.numberArrayStep(start, end, step);
     },
 
     /**
@@ -33880,20 +33897,11 @@ Phaser.Math = {
     * @method Phaser.Math#maxAdd
     * @param {number} value - The value to add the amount to.
     * @param {number} amount - The amount to add to the value.
-    * @param {number} max- The maximum the value is allowed to be.
+    * @param {number} max - The maximum the value is allowed to be.
     * @return {number}
     */
     maxAdd: function (value, amount, max) {
-
-        value += amount;
-
-        if (value > max)
-        {
-            value = max;
-        }
-
-        return value;
-
+        return Math.min(value + amount, max);
     },
 
     /**
@@ -33906,26 +33914,18 @@ Phaser.Math = {
     * @return {number} The new value.
     */
     minSub: function (value, amount, min) {
-
-        value -= amount;
-
-        if (value < min)
-        {
-            value = min;
-        }
-
-        return value;
-
+        return Math.max(value - amount, min);
     },
 
     /**
     * Ensures that the value always stays between min and max, by wrapping the value around.
-    * max should be larger than min, or the function will return 0.
+    *
+    * If `max` is not larger than `min` the result is 0.
     *
     * @method Phaser.Math#wrap
     * @param {number} value - The value to wrap.
     * @param {number} min - The minimum the value is allowed to be.
-    * @param {number} max - The maximum the value is allowed to be.
+    * @param {number} max - The maximum the value is allowed to be, should be larger than `min`.
     * @return {number} The wrapped value.
     */
     wrap: function (value, min, max) {
@@ -33950,7 +33950,8 @@ Phaser.Math = {
 
     /**
     * Adds value to amount and ensures that the result always stays between 0 and max, by wrapping the value around.
-    * Values must be positive integers, and are passed through Math.abs.
+    *
+    * Values _must_ be positive integers, and are passed through Math.abs. See {@link Phaser.Math#wrap} for an alternative.
     *
     * @method Phaser.Math#wrapValue
     * @param {number} value - The value to add the amount to.
@@ -33978,67 +33979,58 @@ Phaser.Math = {
     * @param {number} min - The minimum the value can be.
     * @param {number} max - The maximum the value can be.
     * @return {number} The limited value.
+    * @deprecated 2.2.0 - Use {@link Phaser.Math#clamp}
     */
     limitValue: function(value, min, max) {
-
-        return value < min ? min : value > max ? max : value;
-
+        return Phaser.Math.clamp(value, min, max);
     },
 
     /**
     * Randomly returns either a 1 or -1.
     *
     * @method Phaser.Math#randomSign
-    * @return {number}  1 or -1
+    * @return {number} Either 1 or -1
+    * @deprecated 2.2.0 - Use {@link Phaser.Utils.randomChoice} or other
     */
     randomSign: function () {
-
-        return (Math.random() > 0.5) ? 1 : -1;
-
+        return Phaser.Utils.randomChoice(-1, 1);
     },
 
     /**
     * Returns true if the number given is odd.
     *
     * @method Phaser.Math#isOdd
-    * @param {number} n - The number to check.
-    * @return {boolean} True if the given number is odd. False if the given number is even.
+    * @param {integer} n - The number to check.
+    * @return {boolean} True if the given number is odd. False if the given number is even.    
     */
     isOdd: function (n) {
-
+        // Does not work with extremely large values
         return (n & 1);
-
     },
 
     /**
     * Returns true if the number given is even.
     *
     * @method Phaser.Math#isEven
-    * @param {number} n - The number to check.
+    * @param {integer} n - The number to check.
     * @return {boolean} True if the given number is even. False if the given number is odd.
     */
     isEven: function (n) {
-
-        if (n & 1)
-        {
-            return false;
-        }
-        else
-        {
-            return true;
-        }
-
+        // Does not work with extremely large values
+        return !(n & 1);
     },
 
     /**
-    * Updated version of Math.min that can be passed either an array of numbers or the numbers as parameters.
-    * See http://jsperf.com/math-s-min-max-vs-homemade/5
+    * Variation of Math.min that can be passed either an array of numbers or the numbers as parameters.    
+    *
+    * Prefer the standard `Math.min` function when appropriate.
     *
     * @method Phaser.Math#min
     * @return {number} The lowest value from those given.
+    * @see {@link http://jsperf.com/math-s-min-max-vs-homemade}
     */
     min: function () {
-
+ 
         if (arguments.length === 1 && typeof arguments[0] === 'object')
         {
             var data = arguments[0];
@@ -34047,7 +34039,7 @@ Phaser.Math = {
         {
             var data = arguments;
         }
-
+ 
         for (var i = 1, min = 0, len = data.length; i < len; i++)
         {
             if (data[i] < data[min])
@@ -34061,13 +34053,16 @@ Phaser.Math = {
     },
 
     /**
-    * Updated version of Math.max that can be passed either an array of numbers or the numbers as parameters.
+    * Variation of Math.max that can be passed either an array of numbers or the numbers as parameters.
+    *
+    * Prefer the standard `Math.max` function when appropriate.
     *
     * @method Phaser.Math#max
     * @return {number} The largest value from those given.
+    * @see {@link http://jsperf.com/math-s-min-max-vs-homemade}
     */
     max: function () {
-
+ 
         if (arguments.length === 1 && typeof arguments[0] === 'object')
         {
             var data = arguments[0];
@@ -34076,7 +34071,7 @@ Phaser.Math = {
         {
             var data = arguments;
         }
-
+ 
         for (var i = 1, max = 0, len = data.length; i < len; i++)
         {
             if (data[i] > data[max])
@@ -34090,7 +34085,7 @@ Phaser.Math = {
     },
 
     /**
-    * Updated version of Math.min that can be passed a property and either an array of objects or the objects as parameters.
+    * Variation of Math.min that can be passed a property and either an array of objects or the objects as parameters.
     * It will find the lowest matching property value from the given objects.
     *
     * @method Phaser.Math#minProperty
@@ -34120,7 +34115,7 @@ Phaser.Math = {
     },
 
     /**
-    * Updated version of Math.max that can be passed a property and either an array of objects or the objects as parameters.
+    * Variation of Math.max that can be passed a property and either an array of objects or the objects as parameters.
     * It will find the largest matching property value from the given objects.
     *
     * @method Phaser.Math#maxProperty
@@ -34150,17 +34145,16 @@ Phaser.Math = {
     },
 
     /**
-    * Keeps an angle value between -180 and +180.
+    * Keeps an angle value between -180 and +180; or -PI and PI if radians.
     *
     * @method Phaser.Math#wrapAngle
-    * @param {number} angle - The angle value to check
-    * @param {boolean} radians - Set to `true` if the angle is given in radians, otherwise degrees is expected.
-    * @return {number} The new angle value, returns the same as the input angle if it was within bounds.
+    * @param {number} angle - The angle value to wrap
+    * @param {boolean} [radians=false] - Set to `true` if the angle is given in radians, otherwise degrees is expected.
+    * @return {number} The new angle value; will be the same as the input angle if it was within bounds.
     */
     wrapAngle: function (angle, radians) {
 
-        var radianFactor = (radians) ? Math.PI / 180 : 1;
-        return this.wrap(angle, -180 * radianFactor, 180 * radianFactor);
+        return radians ? this.wrap(angle, -Math.PI, Math.PI) : this.wrap(angle, -180, 180);
 
     },
 
@@ -34172,6 +34166,7 @@ Phaser.Math = {
     * @param {number} min - The minimum angle that is allowed (must be -180 or greater).
     * @param {number} max - The maximum angle that is allowed (must be 180 or less).
     * @return {number} The new angle value, returns the same as the input angle if it was within bounds
+    * @deprecated 2.2.0 - Use {@link Phaser.Math#clamp} instead
     */
     angleLimit: function (angle, min, max) {
 
@@ -34279,9 +34274,9 @@ Phaser.Math = {
     },
 
     /**
-    * Calculates a linear value over t.
+    * Calculates a linear (interpolation) value over t.
     * 
-    * @method Phaser.Math#Linear
+    * @method Phaser.Math#linear
     * @param {number} p0
     * @param {number} p1
     * @param {number} t
@@ -34293,6 +34288,7 @@ Phaser.Math = {
 
     /**
     * @method Phaser.Math#bernstein
+    * @protected
     * @param {number} n
     * @param {number} i
     * @return {number}
@@ -34321,12 +34317,14 @@ Phaser.Math = {
         }
 
         return res;
+
     },
 
     /**
     * Calculates a callmum rom value.
     * 
     * @method Phaser.Math#catmullRom
+    * @protected
     * @param {number} p0
     * @param {number} p1
     * @param {number} p2
@@ -34343,6 +34341,8 @@ Phaser.Math = {
     },
 
     /**
+    * The (absolute) difference between two values.
+    *
     * @method Phaser.Math#difference
     * @param {number} a
     * @param {number} b
@@ -34361,29 +34361,10 @@ Phaser.Math = {
     * @param {number} startIndex - Optional offset off the front of the array. Default value is 0, or the beginning of the array.
     * @param {number} length - Optional restriction on the number of values you want to randomly select from.
     * @return {object} The random object that was selected.
+    * @deprecated 2.2.0 - Use {@link Phaser.ArrayUtils.getRandomItem}
     */
     getRandom: function (objects, startIndex, length) {
-
-        if (typeof startIndex === "undefined") { startIndex = 0; }
-        if (typeof length === "undefined") { length = 0; }
-
-        if (objects != null) {
-
-            var l = length;
-
-            if ((l === 0) || (l > objects.length - startIndex))
-            {
-                l = objects.length - startIndex;
-            }
-
-            if (l > 0)
-            {
-                return objects[startIndex + Math.floor(Math.random() * l)];
-            }
-        }
-
-        return null;
-
+        return Phaser.ArrayUtils.getRandomItem(objects, startIndex, length);
     },
 
     /**
@@ -34395,78 +34376,74 @@ Phaser.Math = {
     * @param {number} startIndex - Optional offset off the front of the array. Default value is 0, or the beginning of the array.
     * @param {number} length - Optional restriction on the number of values you want to randomly select from.
     * @return {object} The random object that was removed.
+    * @deprecated 2.2.0 - Use {@link Phaser.ArrayUtils.removeRandomItem}
     */
     removeRandom: function (objects, startIndex, length) {
-
-        if (typeof startIndex === "undefined") { startIndex = 0; }
-        if (typeof length === "undefined") { length = 0; }
-
-        if (objects != null) {
-
-            var l = length;
-
-            if ((l === 0) || (l > objects.length - startIndex))
-            {
-                l = objects.length - startIndex;
-            }
-
-            if (l > 0)
-            {
-                var idx = startIndex + Math.floor(Math.random() * l);
-                var removed = objects.splice(idx, 1);
-                return removed[0];
-            }
-        }
-
-        return null;
-
+        return Phaser.ArrayUtils.removeRandomItem(objects, startIndex, length);
     },
 
     /**
-    * Round down to the next whole number. E.g. floor(1.7) == 1, and floor(-2.7) == -2.
+    * _Do not use this function._
+    *
+    * Round to the next whole number _towards_ zero.
+    *
+    * E.g. `floor(1.7) == 1`, and `floor(-2.7) == -2`.
     *
     * @method Phaser.Math#floor
-    * @param {number} Value Any number.
-    * @return {number} The rounded value of that number.
+    * @param {number} value - Any number.
+    * @return {integer} The rounded value of that number.
+    * @deprecated 2.2.0 - Use {@link Phaser.Math#truncate} or `Math.trunc` instead.
     */
     floor: function (value) {
-
-        var n = value | 0;
-
-        return (value > 0) ? (n) : ((n != value) ? (n - 1) : (n));
-
+        return Math.trunc(value);
     },
 
     /**
-    * Round up to the next whole number.  E.g. ceil(1.3) == 2, and ceil(-2.3) == -3.
+    * _Do not use this function._
+    *
+    * Round to the next whole number _away_ from zero.
+    *
+    * E.g. `ceil(1.3) == 2`, and `ceil(-2.3) == -3`.
     *
     * @method Phaser.Math#ceil
     * @param {number} value - Any number.
-    * @return {number} The rounded value of that number.
+    * @return {integer} The rounded value of that number.
+    * @deprecated 2.2.0 - Use {@link Phaser.Math#roundAwayFromZero} instead.
     */
     ceil: function (value) {
-        var n = value | 0;
-        return (value > 0) ? ((n != value) ? (n + 1) : (n)) : (n);
+        return Phaser.Math.roundAwayFromZero(value);
+    },
+
+    /**
+    * Round to the next whole number _away_ from zero.
+    *
+    * @method Phaser.Math#roundAwayFromZero
+    * @param {number} value - Any number.
+    * @return {integer} The rounded value of that number.
+    */
+    roundAwayFromZero: function (value) {
+        // "Opposite" of truncate.
+        return (value > 0) ? Math.ceil(value) : Math.floor(value);
     },
 
     /**
     * Generate a sine and cosine table simultaneously and extremely quickly. Based on research by Franky of scene.at
-    * <p>
+    *
     * The parameters allow you to specify the length, amplitude and frequency of the wave. Once you have called this function
     * you should get the results via getSinTable() and getCosTable(). This generator is fast enough to be used in real-time.
-    * </p>
+    *
     * @method Phaser.Math#sinCosGenerator
     * @param {number} length - The length of the wave
     * @param {number} sinAmplitude - The amplitude to apply to the sine table (default 1.0) if you need values between say -+ 125 then give 125 as the value
     * @param {number} cosAmplitude - The amplitude to apply to the cosine table (default 1.0) if you need values between say -+ 125 then give 125 as the value
     * @param {number} frequency  - The frequency of the sine and cosine table data
-    * @return {Array} Returns the sine table
+    * @return {{sin:number[], cos:number[]}} Returns the table data.
     */
     sinCosGenerator: function (length, sinAmplitude, cosAmplitude, frequency) {
 
-        if (typeof sinAmplitude === "undefined") { sinAmplitude = 1.0; }
-        if (typeof cosAmplitude === "undefined") { cosAmplitude = 1.0; }
-        if (typeof frequency === "undefined") { frequency = 1.0; }
+        if (typeof sinAmplitude === 'undefined') { sinAmplitude = 1.0; }
+        if (typeof cosAmplitude === 'undefined') { cosAmplitude = 1.0; }
+        if (typeof frequency === 'undefined') { frequency = 1.0; }
 
         var sin = sinAmplitude;
         var cos = cosAmplitude;
@@ -34490,40 +34467,31 @@ Phaser.Math = {
     },
 
     /**
-    * Removes the top element from the stack and re-inserts it onto the bottom, then returns it.
-    * The original stack is modified in the process. This effectively moves the position of the data from the start to the end of the table.
+    * Moves the element from the start of the array to the end, shifting all items in the process.
     *
     * @method Phaser.Math#shift
-    * @param {array} stack - The array to shift.
+    * @param {any[]} array - The array to shift/rotate. The array is modified.
     * @return {any} The shifted value.
+    * @deprecated 2.2.0 - Use {@link Phaser.ArrayUtils.rotate} instead
     */
-    shift: function (stack) {
+    shift: function (array) {
 
-        var s = stack.shift();
-        stack.push(s);
+        var s = array.shift();
+        array.push(s);
 
         return s;
 
     },
 
     /**
-    * Shuffles the data in the given array into a new order
+    * Shuffles the data in the given array into a new order.
     * @method Phaser.Math#shuffleArray
     * @param {array} array - The array to shuffle
     * @return {array} The array
+    * @deprecated 2.2.0 - Use {@link Phaser.ArrayUtils.shuffle}
     */
     shuffleArray: function (array) {
-
-        for (var i = array.length - 1; i > 0; i--) {
-
-            var j = Math.floor(Math.random() * (i + 1));
-            var temp = array[i];
-            array[i] = array[j];
-            array[j] = temp;
-        }
-
-        return array;
-
+        return Phaser.ArrayUtils.shuffle(array);
     },
 
     /**
@@ -34573,16 +34541,14 @@ Phaser.Math = {
     * @param {number} x2
     * @param {number} y2
     * @return {number} The distance between this Point object and the destination Point object.
+    * @deprecated 2.2.0 - Do the rounding locally.
     */
     distanceRounded: function (x1, y1, x2, y2) {
-
         return Math.round(Phaser.Math.distance(x1, y1, x2, y2));
-
     },
 
     /**
-    * Force a value within the boundaries of two values.
-    * Clamp value to range <a, b>
+    * Force a value within the boundaries by clamping `x` to the range `[a, b]`.
     *
     * @method Phaser.Math#clamp
     * @param {number} x
@@ -34590,24 +34556,21 @@ Phaser.Math = {
     * @param {number} b
     * @return {number}
     */
-    clamp: function ( x, a, b ) {
-
+    clamp: function (x, a, b) {
         return ( x < a ) ? a : ( ( x > b ) ? b : x );
-
     },
 
     /**
-    * Clamp value to range <a, inf).
+    * Clamp `x` to the range `[a, Infinity)`.
+    * Roughly the same as `Math.max(x, a)`, except for NaN handling.
     *
     * @method Phaser.Math#clampBottom
     * @param {number} x
     * @param {number} a
     * @return {number}
     */
-    clampBottom: function ( x, a ) {
-
+    clampBottom: function (x, a) {
         return x < a ? a : x;
-
     },
 
     /**
@@ -34618,11 +34581,10 @@ Phaser.Math = {
     * @param {number} b - The second number to check
     * @param {number} tolerance - The tolerance. Anything equal to or less than this is considered within the range.
     * @return {boolean} True if a is <= tolerance of b.
+    * @see {@link Phaser.Math.fuzzyEqual}
     */
-    within: function ( a, b, tolerance ) {
-
+    within: function (a, b, tolerance) {
         return (Math.abs(a - b) <= tolerance);
-
     },
 
     /**
@@ -34636,10 +34598,8 @@ Phaser.Math = {
     * @param {number} b2 final endpoint of the range  <b1, b2>
     * @return {number}
     */
-    mapLinear: function ( x, a1, a2, b1, b2 ) {
-
+    mapLinear: function (x, a1, a2, b1, b2) {
         return b1 + ( x - a1 ) * ( b2 - b1 ) / ( a2 - a1 );
-
     },
 
     /**
@@ -34651,11 +34611,9 @@ Phaser.Math = {
     * @param {number} max
     * @return {number}
     */
-    smoothstep: function ( x, min, max ) {
-
+    smoothstep: function (x, min, max) {
         x = Math.max(0, Math.min(1, (x - min) / (max - min)));
         return x * x * (3 - 2 * x);
-
     },
 
     /**
@@ -34667,29 +34625,26 @@ Phaser.Math = {
     * @param {number} max
     * @return {number}
     */
-    smootherstep: function ( x, min, max ) {
-
+    smootherstep: function (x, min, max) {
         x = Math.max(0, Math.min(1, (x - min) / (max - min)));
         return x * x * x * (x * (x * 6 - 15) + 10);
-
     },
 
     /**
-    * A value representing the sign of the value.
-    * -1 for negative, +1 for positive, 0 if value is 0
+    * A value representing the sign of the value: -1 for negative, +1 for positive, 0 if value is 0.
+    *
+    * This works differently from `Math.sign` for values of NaN and -0, etc.
     *
     * @method Phaser.Math#sign
     * @param {number} x
-    * @return {number}
+    * @return {integer} An integer in {-1, 0, 1}
     */
-    sign: function ( x ) {
-
+    sign: function (x) {
         return ( x < 0 ) ? -1 : ( ( x > 0 ) ? 1 : 0 );
-
     },
 
     /**
-    * Work out what percentage value a is of value b using the given base.
+    * Work out what percentage value `a` is of value `b` using the given base.
     *
     * @method Phaser.Math#percent
     * @param {number} a - The value to work out the percentage for.
@@ -34714,44 +34669,33 @@ Phaser.Math = {
             return (a - base) / b;
         }
 
-    },
+    }
 
-    /**
-    * Convert degrees to radians.
-    *
-    * @method Phaser.Math#degToRad
-    * @return {function}
-    */
-    degToRad: (function() {
+};
 
-        var degreeToRadiansFactor = Math.PI / 180;
+var degreeToRadiansFactor = Math.PI / 180;
+var radianToDegreesFactor = 180 / Math.PI;
 
-        return function ( degrees ) {
+/**
+* Convert degrees to radians.
+*
+* @method Phaser.Math#degToRad
+* @param {number} degrees - Angle in degrees.
+* @return {number} Angle in radians.
+*/
+Phaser.Math.degToRad = function degToRad (degrees) {
+    return degrees * degreeToRadiansFactor;
+};
 
-            return degrees * degreeToRadiansFactor;
-
-        };
-
-    }()),
-
-    /**
-    * Convert degrees to radians.
-    *
-    * @method Phaser.Math#radToDeg
-    * @return {function}
-    */
-    radToDeg: (function() {
-
-        var radianToDegreesFactor = 180 / Math.PI;
-
-        return function ( radians ) {
-
-            return radians * radianToDegreesFactor;
-
-        };
-
-    }())
-
+/**
+* Convert degrees to radians.
+*
+* @method Phaser.Math#radToDeg
+* @param {number} radians - Angle in radians.
+* @return {number} Angle in degrees
+*/
+Phaser.Math.radToDeg = function radToDeg (radians) {
+    return radians * radianToDegreesFactor;
 };
 
 /* jshint noempty: false */
@@ -37468,7 +37412,7 @@ Phaser.Time.prototype = {
         this.elapsed = this.now - this.prevTime;
 
         // time to call this function again in ms in case we're using timers instead of RequestAnimationFrame to update the game
-        this.timeToCall = Math.floor(this.game.math.max(0, (1000.0 / this.desiredFps) - (this.timeCallExpected - time)));
+        this.timeToCall = Math.floor(Math.max(0, (1000.0 / this.desiredFps) - (this.timeCallExpected - time)));
 
         // time when the next call is expected if using timers
         this.timeCallExpected = time + this.timeToCall;
@@ -37496,16 +37440,16 @@ Phaser.Time.prototype = {
 
         if (this.advancedTiming)
         {
-            this.msMin = this.game.math.min(this.msMin, this.elapsed);
-            this.msMax = this.game.math.max(this.msMax, this.elapsed);
+            this.msMin = Math.min(this.msMin, this.elapsed);
+            this.msMax = Math.max(this.msMax, this.elapsed);
 
             this.frames++;
 
             if (this.now > this._timeLastSecond + 1000)
             {
                 this.fps = Math.round((this.frames * 1000) / (this.now - this._timeLastSecond));
-                this.fpsMin = this.game.math.min(this.fpsMin, this.fps);
-                this.fpsMax = this.game.math.max(this.fpsMax, this.fps);
+                this.fpsMin = Math.min(this.fpsMin, this.fps);
+                this.fpsMax = Math.max(this.fpsMax, this.fps);
                 this._timeLastSecond = this.now;
                 this.frames = 0;
             }
@@ -37630,7 +37574,6 @@ Phaser.Time.prototype = {
 };
 
 Phaser.Time.prototype.constructor = Phaser.Time;
-
 /**
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2014 Photon Storm Ltd.
@@ -46024,6 +45967,308 @@ Object.defineProperty(Phaser.SoundManager.prototype, "volume", {
 */
 
 /**
+* Utility functions for dealing with Arrays.
+*
+* @class Phaser.ArrayUtils
+* @static
+*/
+Phaser.ArrayUtils = {
+
+    /**
+    * Fetch a random entry from the given array.
+    * Will return null if random selection is missing, or array has no entries.
+    *
+    * @method
+    * @param {any[]} objects - An array of objects.
+    * @param {integer} startIndex - Optional offset off the front of the array. Default value is 0, or the beginning of the array.
+    * @param {integer} length - Optional restriction on the number of values you want to randomly select from.
+    * @return {object} The random object that was selected.
+    */
+    getRandomItem: function (objects, startIndex, length) {
+
+        if (objects == null) { // undefined or null
+            return null;
+        }
+
+        if (typeof startIndex === 'undefined') { startIndex = 0; }
+        if (typeof length === 'undefined') { length = objects.length; }
+
+        var randomIndex = startIndex + Math.floor(Math.random() * length);
+        return objects[randomIndex] || null;
+
+    },
+
+    /**
+    * Removes a random object from the given array and returns it.
+    * Will return null if random selection is missing, or array has no entries.
+    *
+    * @method
+    * @param {any[]} objects - An array of objects.
+    * @param {integer} startIndex - Optional offset off the front of the array. Default value is 0, or the beginning of the array.
+    * @param {integer} length - Optional restriction on the number of values you want to randomly select from.
+    * @return {object} The random object that was removed.
+    */
+    removeRandomItem: function (objects, startIndex, length) {
+
+        if (objects == null) { // undefined or null
+            return null;
+        }
+
+        if (typeof startIndex === 'undefined') { startIndex = 0; }
+        if (typeof length === 'undefined') { length = objects.length; }
+
+        var randomIndex = startIndex + Math.floor(Math.random() * length);
+        if (randomIndex < objects.length)
+        {
+            var removed = objects.splice(randomIndex, 1);
+            return removed[0];
+        }
+        else
+        {
+            return null;
+        }
+
+    },
+
+    /**
+    * A standard Fisher-Yates Array shuffle implementation which modifies the array in place.
+    *
+    * @method
+    * @param {array} array - The array to shuffle.
+    * @return {array} The original array, now shuffled.
+    */
+    shuffle: function (array) {
+
+        for (var i = array.length - 1; i > 0; i--)
+        {
+            var j = Math.floor(Math.random() * (i + 1));
+            var temp = array[i];
+            array[i] = array[j];
+            array[j] = temp;
+        }
+
+        return array;
+
+    },
+
+    /**
+    * Transposes the elements of the given Array.
+    *
+    * @method
+    * @param {array} array - The array to transpose.
+    * @return {array} The transposed array.
+    */
+    transposeMatrix: function (array) {
+
+        var result = new Array(array[0].length);
+
+        for (var i = 0; i < array[0].length; i++)
+        {
+            result[i] = new Array(array.length - 1);
+
+            for (var j = array.length - 1; j > -1; j--)
+            {
+                result[i][j] = array[j][i];
+            }
+        }
+
+        return result;
+
+    },
+
+    /**
+    * Rotates the given array.
+    * Based on the routine from http://jsfiddle.net/MrPolywhirl/NH42z/
+    *
+    * @method
+    * @param {array} matrix - The array to rotate.
+    * @param {number|string} direction - The amount to rotate. Either a number: 90, -90, 270, -270, 180 or a string: 'rotateLeft', 'rotateRight' or 'rotate180'
+    * @return {array} The rotated array
+    */
+    rotateMatrix: function (matrix, direction) {
+
+        if (typeof direction !== 'string')
+        {
+            direction = ((direction % 360) + 360) % 360;
+        }
+
+        if (direction === 90 || direction === -270 || direction === 'rotateLeft')
+        {
+            matrix = Phaser.ArrayUtils.transposeMatrix(matrix);
+            matrix = matrix.reverse();
+        }
+        else if (direction === -90 || direction === 270 || direction === 'rotateRight')
+        {
+            matrix = matrix.reverse();
+            matrix = Phaser.ArrayUtils.transposeMatrix(matrix);
+        }
+        else if (Math.abs(direction) === 180 || direction === 'rotate180')
+        {
+            for (var i = 0; i < matrix.length; i++)
+            {
+                matrix[i].reverse();
+            }
+
+            matrix = matrix.reverse();
+        }
+
+        return matrix;
+
+    },
+
+    /**
+    * Snaps a value to the nearest value in an array.
+    * The result will always be in the range `[first_value, last_value]`.
+    *
+    * @method
+    * @param {number} value - The search value
+    * @param {number[]} arr - The input array which _must_ be sorted.
+    * @return {number} The nearest value found.
+    */
+    findClosest: function (value, arr) {
+
+        if (!arr.length)
+        {
+            return NaN;
+        }
+        else if (arr.length === 1 || value < arr[0])
+        {
+            return arr[0];
+        }
+
+        var i = 1;
+        while (arr[i] < value) {
+            i++;
+        }
+
+        var low = arr[i - 1];
+        var high = (i < arr.length) ? arr[i] : Number.POSITIVE_INFINITY;
+
+        return ((high - value) <= (value - low)) ? high : low;
+
+    },
+
+    /**
+    * Moves the element from the start of the array to the end, shifting all items in the process.
+    * The "rotation" happens to the left.
+    *
+    * @method Phaser.ArrayUtils.rotate
+    * @param {any[]} array - The array to shift/rotate. The array is modified.
+    * @return {any} The shifted value.
+    */
+    rotate: function (array) {
+
+        var s = array.shift();
+        array.push(s);
+
+        return s;
+
+    },
+
+    /**
+    * Create an array representing the inclusive range of numbers (usually integers) in `[start, end]`.
+    * This is equivalent to `numberArrayStep(start, end, 1)`.
+    *
+    * @method Phaser.Math#numberArray
+    * @param {number} start - The minimum value the array starts with.
+    * @param {number} end - The maximum value the array contains.
+    * @return {array} The array of number values.
+    */
+    numberArray: function (start, end) {
+
+        var result = [];
+
+        for (var i = start; i <= end; i++)
+        {
+            result.push(i);
+        }
+
+        return result;
+
+    },
+
+    /**
+    * Create an array of numbers (positive and/or negative) progressing from `start`
+    * up to but not including `end` by advancing by `step`.
+    *
+    * If `start` is less than `stop` a zero-length range is created unless a negative `step` is specified.
+    *
+    * Certain values for `start` and `end` (eg. NaN/undefined/null) are currently coerced to 0;
+    * for forward compatibility make sure to pass in actual numbers.
+    *
+    * @method Phaser.Math#numberArrayStep
+    * @param {number} start - The start of the range.
+    * @param {number} end - The end of the range.
+    * @param {number} [step=1] - The value to increment or decrement by.
+    * @returns {Array} Returns the new array of numbers.
+    * @example
+    * Phaser.Math.numberArrayStep(4);
+    * // => [0, 1, 2, 3]
+    *
+    * Phaser.Math.numberArrayStep(1, 5);
+    * // => [1, 2, 3, 4]
+    *
+    * Phaser.Math.numberArrayStep(0, 20, 5);
+    * // => [0, 5, 10, 15]
+    *
+    * Phaser.Math.numberArrayStep(0, -4, -1);
+    * // => [0, -1, -2, -3]
+    *
+    * Phaser.Math.numberArrayStep(1, 4, 0);
+    * // => [1, 1, 1]
+    *
+    * Phaser.Math.numberArrayStep(0);
+    * // => []
+    */
+    numberArrayStep: function(start, end, step) {
+
+        start = +start || 0;
+
+        // enables use as a callback for functions like `_.map`
+        var type = typeof end;
+
+        if ((type === 'number' || type === 'string') && step && step[end] === start)
+        {
+            end = step = null;
+        }
+
+        step = step == null ? 1 : (+step || 0);
+
+        if (end === null)
+        {
+            end = start;
+            start = 0;
+        }
+        else
+        {
+            end = +end || 0;
+        }
+
+        // use `Array(length)` so engines like Chakra and V8 avoid slower modes
+        // http://youtu.be/XAqIpGU8ZZk#t=17m25s
+        var index = -1;
+        var length = Math.max(Phaser.Math.roundAwayFromZero((end - start) / (step || 1)), 0);
+        var result = new Array(length);
+
+        while (++index < length)
+        {
+            result[index] = start;
+            start += step;
+        }
+
+        return result;
+
+    }
+
+};
+
+/**
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2014 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+*/
+
+/**
 * A collection of methods for displaying debug information about game objects.
 * If your game is running in WebGL then Debug will create a Sprite that is placed at the top of the Stage display list and bind a canvas texture
 * to it, which must be uploaded every frame. Be advised: this is very expensive, especially in browsers like Firefox. So please only enable Debug
@@ -48784,9 +49029,9 @@ Phaser.Physics.Arcade.prototype = {
 
         var len = group.children.length;
 
-        for (var i = 0; i < len; i++)
+        for (var i = 0; i < len - 1; i++)
         {
-            for (var j = i + 1; j <= len; j++)
+            for (var j = i + 1; j < len; j++)
             {
                 if (group.children[i] && group.children[j] && group.children[i].exists && group.children[j].exists)
                 {
@@ -49539,24 +49784,43 @@ Phaser.Physics.Arcade.prototype = {
             return;
         }
 
+        return this.getObjectsAtLocation(pointer.x, pointer.y, group, callback, callbackContext, pointer);
+
+    },
+
+    /**
+    * Given a Group and a location this will check to see which Group children overlap with the coordinates.
+    * Each child will be sent to the given callback for further processing.
+    * Note that the children are not checked for depth order, but simply if they overlap the coordinate or not.
+    *
+    * @method Phaser.Physics.Arcade#getObjectsAtLocation
+    * @param {Phaser.Pointer} pointer - The Pointer to check.
+    * @param {Phaser.Group} group - The Group to check.
+    * @param {function} [callback] - A callback function that is called if the object overlaps the coordinates. The callback will be sent two parameters: the callbackArg and the Object that overlapped the location.
+    * @param {object} [callbackContext] - The context in which to run the callback.
+    * @param {object} [callbackArg] - An argument to pass to the callback.
+    * @return {array} An array of the Sprites from the Group that overlapped the coordinates.
+    */
+    getObjectsAtLocation: function (x, y, group, callback, callbackContext, callbackArg) {
+
         this.quadTree.clear();
 
         this.quadTree.reset(this.game.world.bounds.x, this.game.world.bounds.y, this.game.world.bounds.width, this.game.world.bounds.height, this.maxObjects, this.maxLevels);
 
         this.quadTree.populate(group);
 
-        var rect = new Phaser.Rectangle(pointer.x, pointer.y, 1, 1);
+        var rect = new Phaser.Rectangle(x, y, 1, 1);
         var output = [];
 
         this._potentials = this.quadTree.retrieve(rect);
 
         for (var i = 0, len = this._potentials.length; i < len; i++)
         {
-            if (this._potentials[i].hitTest(pointer.x, pointer.y))
+            if (this._potentials[i].hitTest(x, y))
             {
                 if (callback)
                 {
-                    callback.call(callbackContext, pointer, this._potentials[i].sprite);
+                    callback.call(callbackContext, callbackArg, this._potentials[i].sprite);
                 }
 
                 output.push(this._potentials[i].sprite);
@@ -49564,7 +49828,7 @@ Phaser.Physics.Arcade.prototype = {
         }
 
         return output;
-
+        
     },
 
     /**

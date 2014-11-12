@@ -176,6 +176,7 @@
     <script src="$path/src/sound/Sound.js"></script>
     <script src="$path/src/sound/SoundManager.js"></script>
 
+    <script src="$path/src/utils/ArrayUtils.js"></script>
     <script src="$path/src/utils/Debug.js"></script>
     <script src="$path/src/utils/Color.js"></script>
 
