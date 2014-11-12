@@ -798,6 +798,9 @@ Phaser.Game.prototype = {
         }
         else
         {
+            // Scaling and device orientation changes are still reflected when paused.
+            this.scale.pauseUpdate();
+
             this.state.pauseUpdate();
 
             if (this.config['enableDebug'])

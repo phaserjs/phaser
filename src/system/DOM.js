@@ -168,6 +168,79 @@ Phaser.DOM = {
 
         return !!r && r.bottom >= 0 && r.right >= 0 && r.top <= this.viewportWidth && r.left <= this.viewportHeight;
 
+    },
+
+    /**
+    * Returns the device screen orientation.
+    *
+    * Orientation values: 'portrait-primary', 'landscape-primary', 'portrait-secondary', 'landscape-secondary'.
+    *
+    * Order of resolving:
+    * - Screen Orientation API, or variation of - Future track. Most desktop and mobile browsers.
+    * - Screen size ratio check - If fallback is 'screen', suited for desktops.
+    * - Viewport size ratio check - If fallback is 'viewport', suited for mobile.
+    * - window.orientation - If fallback is 'window.orientation', non-recommended track.
+    * - Media query
+    * - Viewport size ratio check (probably only IE9 and legacy mobile gets here..)
+    *
+    * See
+    * - https://w3c.github.io/screen-orientation/ (conflicts with mozOrientation/msOrientation)
+    * - https://developer.mozilla.org/en-US/docs/Web/API/Screen.orientation (mozOrientation)
+    * - http://msdn.microsoft.com/en-us/library/ie/dn342934(v=vs.85).aspx
+    * - https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Testing_media_queries
+    * - http://stackoverflow.com/questions/4917664/detect-viewport-orientation
+    * - http://www.matthewgifford.com/blog/2011/12/22/a-misconception-about-window-orientation
+    *
+    * @method Phaser.DOM.getScreenOrientation
+    * @protected
+    * @param {string} [primaryFallback=(none)] - Specify 'screen', 'viewport', or 'window.orientation'.
+    */
+    getScreenOrientation: function (primaryFallback) {
+
+        var screen = window.screen;
+        var orientation = screen.orientation || screen.mozOrientation || screen.msOrientation;
+
+        if (orientation && typeof orientation.type === 'string')
+        {
+            // Screen Orientation API specification
+            return orientation.type;
+        }
+        else if (typeof orientation === 'string')
+        {
+            // moz/ms-orientation are strings
+            return orientation;
+        }
+
+        var PORTRAIT = 'portrait-primary';
+        var LANDSCAPE = 'landscape-primary';
+        
+        if (primaryFallback === 'screen')
+        {
+            return (screen.height > screen.width) ? PORTRAIT : LANDSCAPE;
+        }
+        else if (primaryFallback === 'viewport')
+        {
+            return (this.viewportHeight > this.viewportWidth) ? PORTRAIT : LANDSCAPE;
+        }
+        else if (primaryFallback === 'window.orientation' && typeof window.orientation === 'number')
+        {
+            // This may change by device based on "natural" orientation.
+            return (window.orientation === 0 || window.orientation === 180) ? PORTRAIT : LANDSCAPE;
+        }
+        else if (window.matchMedia)
+        {
+            if (window.matchMedia("(orientation: portrait)").matches)
+            {
+                return PORTRAIT;
+            }
+            else if (window.matchMedia("(orientation: landscape)").matches)
+            {
+                return LANDSCAPE;
+            }
+        }
+
+        return (this.viewportHeight > this.viewportWidth) ? PORTRAIT : LANDSCAPE;
+
     }
 
 };
