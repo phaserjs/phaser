@@ -36,6 +36,8 @@
 
     echo <<<EOL
 
+    <script src="$path/src/polyfills.js"></script>
+
     <script src="$path/src/pixi/Pixi.js"></script>
     <script src="$path/src/pixi/geom/Matrix.js"></script>
     <script src="$path/src/pixi/geom/Polygon.js"></script>

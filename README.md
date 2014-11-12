@@ -113,7 +113,6 @@ Version 2.2.0 - "Bethal" - in development
 supported via a non-exported reused wrapper object; WheelEventProxy.
 The proxy methods are generated one-time dynamically but only when needed.
 
-
 ### Updates
 
 * TypeScript definitions fixes and updates (thanks @clark-stevenson)
