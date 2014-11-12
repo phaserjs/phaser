@@ -68,7 +68,7 @@ Phaser.Mouse = function (game) {
     this.button = -1;
 
     /**
-     * @property {number} wheelDelta - The direction of the mousewheel usage 1 for up -1 for down
+     * @property {number} wheelDelta - The direction of the _last_ mousewheel usage 1 for up -1 for down
      */
     this.wheelDelta = 0;
 
@@ -98,7 +98,9 @@ Phaser.Mouse = function (game) {
     this.pointerLock = new Phaser.Signal();
 
     /**
-    * @property {MouseEvent} event - The browser mouse DOM event. Will be set to null if no mouse event has ever been received.
+    * The browser mouse DOM event. Will be null if no mouse event has ever been received.
+    * Access this property only inside a Mouse event handler and do not keep references to it.
+    * @property {MouseEvent|null} event
     * @default
     */
     this.event = null;
@@ -134,10 +136,17 @@ Phaser.Mouse = function (game) {
     this._onMouseOver = null;
 
     /**
-     * @property {function} _onMouseWheel - Internal event handler reference.
-     * @private
-     */
+    * @property {function} _onMouseWheel - Internal event handler reference.
+    * @private
+    */
     this._onMouseWheel = null;
+
+    /**
+    * Wheel proxy event object, if required. Shared for all wheel events for this mouse.
+    * @property {Phaser.Mouse~WheelEventProxy} _wheelEvent
+    * @private
+    */
+    this._wheelEvent = null;
 
 };
 
@@ -236,8 +245,26 @@ Phaser.Mouse.prototype = {
             window.addEventListener('mouseup', this._onMouseUpGlobal, true);
             this.game.canvas.addEventListener('mouseover', this._onMouseOver, true);
             this.game.canvas.addEventListener('mouseout', this._onMouseOut, true);
-            this.game.canvas.addEventListener('mousewheel', this._onMouseWheel, true);
-            this.game.canvas.addEventListener('DOMMouseScroll', this._onMouseWheel, true);
+
+            // (These can probably be moved out of the cocoonJS check)
+            // See https://developer.mozilla.org/en-US/docs/Web/Events/wheel
+            if ('onwheel' in window || 'WindowEvent' in window)
+            {
+                // DOM3 Wheel Event: FF 17+, IE 9+, Chrome 31+, Safari 7+
+                this.game.canvas.addEventListener('wheel', this._onMouseWheel, true);
+            }
+            else if ('onmousewheel' in window)
+            {
+                // Non-FF legacy: IE 6-9, Chrome 1-31, Safari 5-7.
+                this.game.canvas.addEventListener('mousewheel', this._onMouseWheel, true);
+                this._wheelEvent = new WheelEventProxy(-1/40, 1);
+            }
+            else if ('MouseScrollEvent' in window)
+            {
+                // FF prior to 17. This should probably be scrubbed.
+                this.game.canvas.addEventListener('DOMMouseScroll', this._onMouseWheel, true);
+                this._wheelEvent = new WheelEventProxy(1, 1);
+            }
         }
 
     },
@@ -400,9 +427,13 @@ Phaser.Mouse.prototype = {
      * The internal method that handles the mouse wheel event from the browser.
      *
      * @method Phaser.Mouse#onMouseWheel
-     * @param {MouseEvent} event - The native event from the browser. This gets stored in Mouse.event.
+     * @param {MouseEvent} event - The native event from the browser.
      */
     onMouseWheel: function (event) {
+
+        if (this._wheelEvent) {
+            event = this._wheelEvent.bindEvent(event);
+        }
 
         this.event = event;
 
@@ -412,7 +443,7 @@ Phaser.Mouse.prototype = {
         }
 
         // reverse detail for firefox
-        this.wheelDelta = Math.max(-1, Math.min(1, (event.wheelDelta || -event.detail)));
+        this.wheelDelta = Phaser.Math.clamp(-event.deltaY, -1, 1);
 
         if (this.mouseWheelCallback)
         {
@@ -531,6 +562,8 @@ Phaser.Mouse.prototype = {
         this.game.canvas.removeEventListener('mouseup', this._onMouseUp, true);
         this.game.canvas.removeEventListener('mouseover', this._onMouseOver, true);
         this.game.canvas.removeEventListener('mouseout', this._onMouseOut, true);
+
+        this.game.canvas.removeEventListener('wheel', this._onMouseWheel, true);
         this.game.canvas.removeEventListener('mousewheel', this._onMouseWheel, true);
         this.game.canvas.removeEventListener('DOMMouseScroll', this._onMouseWheel, true);
 
@@ -562,4 +595,74 @@ Object.defineProperty(Phaser.Mouse.prototype, "disabled", {
         this.enabled = !value;
     }
 
+});
+
+/* jshint latedef:nofunc */
+/**
+* A purely internal event support class to proxy 'wheelscroll' and 'DOMMouseWheel'
+* events to 'wheel'-like events.
+*
+* See https://developer.mozilla.org/en-US/docs/Web/Events/mousewheel for choosing a scale and delta mode.
+*
+* @class Phaser.Mouse~WheelEventProxy
+* @private
+* @param {number} scaleFactor - Scale factor as applied to wheelDelta/wheelDeltaX or details.
+* @param {integer} deltaMode- The reported delta mode.
+*/
+function WheelEventProxy (scaleFactor, deltaMode) {
+
+    this._scaleFactor = scaleFactor;
+
+    this._deltaMode = deltaMode;
+
+    /**
+    * The original event _currently_ being proxied; the getters will follow suit.
+    */
+    this.originalEvent = null;
+}
+
+WheelEventProxy.prototype = {};
+WheelEventProxy.prototype.constructor = WheelEventProxy;
+
+WheelEventProxy.prototype.bindEvent = function (event) {
+
+    // Generate stubs automatically
+    if (!WheelEventProxy._stubsGenerated && event)
+    {
+        var makeBinder = function (name) {
+            return function () {
+                var v = this.originalEvent[name];
+                return typeof v !== 'function' ? v : v.bind(this.originalEvent);
+            };
+        };
+        for (var prop in event) {
+            if (!(prop in WheelEventProxy.prototype))
+            {
+                Object.defineProperty(WheelEventProxy.prototype, prop, {
+                    get: makeBinder(prop)
+                });
+            }
+        }
+        WheelEventProxy._stubsGenerated = true;
+    }
+
+    this.originalEvent = event;
+    return this;
+
+};
+
+Object.defineProperties(WheelEventProxy.prototype, {
+    "type": { value: "wheel" },
+    "deltaMode": { get: function () { return this._deltaMode; } },
+    "deltaY": {
+        get: function () {
+            return this._scaleFactor * (this.originalEvent.detail || this.originalEvent.wheelDelta || 0);
+        }
+    },
+    "deltaX": {
+        get: function () {
+            return this._scaleFactor * (this.originalEvent.wheelDeltaX || 0);
+        }
+    },
+    "deltaZ": { get: function () { return 0; } }
 });
