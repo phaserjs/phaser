@@ -277,32 +277,13 @@ Phaser.Time.prototype = {
 
         // this.time always holds Date.now, this.now may hold the RAF high resolution time value if RAF is available (otherwise it also holds Date.now)
         this.time = Date.now();
-<<<<<<< HEAD
-
-        // 'now' is currently still holding the time of the last call, move it into prevTime
-        this.prevTime = this.now;
-=======
 
         // 'now' is currently still holding the time of the last call, move it into prevTime
         this.prevTime = this.now;
 
->>>>>>> phaser-github/dev
         // update 'now' to hold the current time
         this.now = time;
-        // elapsed time between previous call and now
-        this.elapsed = this.now - this.prevTime;
 
-<<<<<<< HEAD
-        // time to call this function again in ms in case we're using timers instead of RequestAnimationFrame to update the game
-        this.timeToCall = Math.floor(this.game.math.max(0, (1000.0 / this.desiredFps) - (this.timeCallExpected - time)));
-        // time when the next call is expected if using timers
-        this.timeCallExpected = time + this.timeToCall;
-
-        // count the number of time.update calls
-        this._frameCount++;
-        this._elapsedAccumulator += this.elapsed;
-
-=======
         // elapsed time between previous call and now
         this.elapsed = this.now - this.prevTime;
 
@@ -316,7 +297,6 @@ Phaser.Time.prototype = {
         this._frameCount++;
         this._elapsedAccumulator += this.elapsed;
 
->>>>>>> phaser-github/dev
         // occasionally recalculate the suggestedFps based on the accumulated elapsed time
         if (this._frameCount >= this.desiredFps * 2)
         {
