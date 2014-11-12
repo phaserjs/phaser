@@ -449,22 +449,23 @@ Phaser.ScaleManager = function (game, width, height) {
 
     /**
     * The last time the bounds were checked in `preUpdate`.
-    * @property {number} _lastSizeCheck
+    * @property {number} _lastUpdate
     * @private
     */
-    this._lastSizeCheck = 0;
+    this._lastUpdate = 0;
 
     /**
     * Size checks updates are delayed according to the throttle.
     * The throttle increases to `trackParentInterval` over time and is used to more
     * rapidly detect changes in certain browsers (eg. IE) while providing back-off safety.
-    * @property {integer} _sizeCheckThrottle
+    * @property {integer} _updateThrottle
     * @private
     */
     this._updateThrottle = 0;
 
     /**
     * The minimum throttle allowed until it has slowed down sufficiently.
+    * @property {integer} _updateThrottleReset   
     * @private
     */
     this._updateThrottleReset = 100;
@@ -896,7 +897,7 @@ Phaser.ScaleManager.prototype = {
     */
     preUpdate: function () {
 
-        if (this.game.time.time < (this._lastSizeCheck + this._updateThrottle))
+        if (this.game.time.time < (this._lastUpdate + this._updateThrottle))
         {
             return;
         }
@@ -937,7 +938,7 @@ Phaser.ScaleManager.prototype = {
         }
 
         this._updateThrottle = Phaser.Math.clamp(throttle, 25, this.trackParentInterval);
-        this._lastSizeCheck = this.game.time.time;
+        this._lastUpdate = this.game.time.time;
 
     },
 
@@ -1043,11 +1044,11 @@ Phaser.ScaleManager.prototype = {
     * @method Phaser.ScaleManager#classifyOrientation
     * @private
     * @param {string} orientation - The orientation string, e.g. 'portrait-primary'.
-    * @return {string|null} The classified orientation: 'portrait', 'landscape`, or null null.
+    * @return {string|null} The classified orientation: 'portrait', 'landscape`, or null.
     */
     classifyOrientation: function (orientation) {
 
-        if (orientation === 'portrait-primary' || orientation == 'portrait-secondary')
+        if (orientation === 'portrait-primary' || orientation === 'portrait-secondary')
         {
             return 'portrait';
         }
@@ -2153,11 +2154,9 @@ Object.defineProperty(Phaser.ScaleManager.prototype, "isLandscape", {
 });
 
 /**
-* The _last known_ orientation value of the game, as defined by {@link Phaser.ScaleManager#screenOrientation}.
-* A value of 90 is landscape and 0 is portrait.
+* The _last known_ orientation value of the game. A value of 90 is landscape and 0 is portrait.
 * @property {number} orientation
 * @readonly
-* @public
 * @deprecated 2.1.4 - Use `ScaleManager.screenOrientation` instead.
 */
 Object.defineProperty(Phaser.ScaleManager.prototype, "orientation", {
