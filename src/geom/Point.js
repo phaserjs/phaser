@@ -456,6 +456,30 @@ Phaser.Point.prototype = {
     },
 
     /**
+    * Math.floor() both the x and y properties of this Point.
+    *
+    * @method Phaser.Point#floor
+    * @return {Phaser.Point} This Point object.
+    */
+    floor: function () {
+
+        return this.setTo(Math.floor(this.x), Math.floor(this.y));
+
+    },
+
+    /**
+    * Math.ceil() both the x and y properties of this Point.
+    *
+    * @method Phaser.Point#ceil
+    * @return {Phaser.Point} This Point object.
+    */
+    ceil: function () {
+
+        return this.setTo(Math.ceil(this.x), Math.ceil(this.y));
+
+    },
+
+    /**
     * Returns a string representation of this object.
     *
     * @method Phaser.Point#toString

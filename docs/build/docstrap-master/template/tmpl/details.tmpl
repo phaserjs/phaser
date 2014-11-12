@@ -1,6 +1,21 @@
 <?js
 var data = obj;
 var self = this;
+function isInternal (data) {
+    return data.access === 'protected' || data.access === 'private';
+}
+function deprecatedHeading (data) {
+    if (data.deprecated && isInternal(data)) {
+        return "Deprecated / Internal";
+    } else if (isInternal(data)) {
+        return "Internal"
+    } else {
+        return "Deprecated"
+    }
+}
+function cleanShortPath (shortpath) {
+    return shortpath.replace(/^.*\bsrc[/]/, '');
+}
 ?>
 <dl class="details">
     <?js
@@ -31,11 +46,14 @@ var self = this;
     </li></dd>
     <?js } ?>
 
-    <?js if (data.deprecated) { ?>
-        <dt class="important tag-deprecated">Deprecated:</dt><?js
-            if (data.deprecated === true) { ?><dd class="yes-def tag-deprecated"><ul class="dummy"><li>Yes</li></ul></dd><?js }
-            else { ?><dd><ul class="dummy"><li><?js= data.deprecated ?></li><ul></dd><?js }
-        ?>
+    <?js if (data.deprecated || isInternal(data)) { ?>
+        <dt class="important tag-deprecated"><?js= deprecatedHeading(data) ?>:</dt>
+        <dd class="tag-deprecated"><ul>
+        <?js if (data.access === 'protected') { ?>
+            <li>This member is <em>internal (protected)</em> and may be modified or removed in the future.</li><?js } ?>
+        <?js if (data.deprecated != null) { ?>
+            <li><?js if (isInternal(data)) { ?><em>Deprecated:</em> <?js }?><?js= data.deprecated === true ? 'Yes' : data.deprecated ?></li><?js } ?>
+        </ul></dd>
     <?js } ?>
 
     <?js if (data.author && author.length) {?>
@@ -63,10 +81,9 @@ var self = this;
     <?js } ?>
 
     <?js if (data.meta) {?>
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <?js= self.linkto(meta.shortpath) ?><?js if (this.navOptions.linenums) {?>, <?js= self.linkto(meta.shortpath, 'line ' + meta.lineno, null, 'sunlight-1-line-' + meta.lineno) ?><?js } ?>
-    </li></ul></dd>
+    <dt class="tag-source">Source -
+    <?js= self.linkto(meta.shortpath, cleanShortPath(meta.shortpath)) ?><?js if (this.navOptions.linenums) {?>, <?js= self.linkto(meta.shortpath, 'line ' + meta.lineno, null, 'sunlight-1-line-' + meta.lineno) ?><?js } ?>
+    </dt>
     <?js } ?>
 
     <?js if (data.tutorials && tutorials.length) {?>

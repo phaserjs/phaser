@@ -102,7 +102,7 @@ Phaser.Stage.prototype.parseConfig = function (config) {
 */
 Phaser.Stage.prototype.boot = function () {
 
-    Phaser.Canvas.getOffset(this.game.canvas, this.offset);
+    Phaser.DOM.getOffset(this.game.canvas, this.offset);
 
     var _this = this;
 

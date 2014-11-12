@@ -181,7 +181,7 @@ Phaser.Utils.extend(Phaser.Physics.P2.BodyDebug.prototype, {
         if (typeof color === 'undefined') { color = 0xffffff; }
         g.lineStyle(lineWidth, 0x000000, 1);
         g.beginFill(color, 1.0);
-        g.drawCircle(x, y, -radius);
+        g.drawCircle(x, y, -radius*2);
         g.endFill();
         g.moveTo(x, y);
         g.lineTo(x + radius * Math.cos(-angle), y + radius * Math.sin(-angle));

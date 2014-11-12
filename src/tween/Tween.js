@@ -305,7 +305,9 @@ Phaser.Tween.prototype = {
 
         this._onStartCallbackFired = false;
 
-        this._startTime = this.game.time.now + this._delayTime;
+        // delays before the tween start are also affected by the time.slowMotion factor
+        // TODO: if the slowMotion factor changes during the delay, this will continue to use the original value until the delay expires!
+        this._startTime = this.game.time.now + this._delayTime * this.game.time.slowMotion;
 
         for (var property in this._valuesEnd)
         {
@@ -389,10 +391,10 @@ Phaser.Tween.prototype = {
         {
             var property;
 
-            var elapsed = (time - this._startTime) / this._duration;
-            elapsed = elapsed > 1 ? 1 : elapsed;
+            var percent = (time - this._startTime) / this._duration;
+            percent = percent > 1 ? 1 : percent;
 
-            var value = this._easingFunction(elapsed);
+            var value = this._easingFunction(percent);
             var blob = {};
 
             for (property in this._valuesEnd)
@@ -688,10 +690,6 @@ Phaser.Tween.prototype = {
 
         var property;
 
-        if (time < this._startTime)
-        {
-            return true;
-        }
 
         if (this._onStartCallbackFired === false)
         {
@@ -699,10 +697,10 @@ Phaser.Tween.prototype = {
             this._onStartCallbackFired = true;
         }
 
-        var elapsed = (time - this._startTime) / this._duration;
-        elapsed = elapsed > 1 ? 1 : elapsed;
+        var percent = (time - this._startTime) / (this._duration * this.game.time.slowMotion);
+        percent = percent > 1 ? 1 : percent;
 
-        var value = this._easingFunction(elapsed);
+        var value = this._easingFunction(percent);
 
         for (property in this._valuesEnd)
         {
@@ -739,7 +737,7 @@ Phaser.Tween.prototype = {
             }
         }
 
-        if (elapsed == 1)
+        if (percent == 1)
         {
             if (this._repeat > 0)
             {
