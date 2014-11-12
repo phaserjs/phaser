@@ -652,9 +652,9 @@ Phaser.Physics.Arcade.prototype = {
 
         var len = group.children.length;
 
-        for (var i = 0; i < len; i++)
+        for (var i = 0; i < len - 1; i++)
         {
-            for (var j = i + 1; j <= len; j++)
+            for (var j = i + 1; j < len; j++)
             {
                 if (group.children[i] && group.children[j] && group.children[i].exists && group.children[j].exists)
                 {
