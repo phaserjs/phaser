@@ -233,7 +233,7 @@ Phaser.DOM = {
             {
                 return PORTRAIT;
             }
-            else if (window.matchMedia && window.matchMedia("(orientation: landscape)").matches)
+            else if (window.matchMedia("(orientation: landscape)").matches)
             {
                 return LANDSCAPE;
             }

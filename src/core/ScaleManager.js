@@ -137,7 +137,7 @@ Phaser.ScaleManager = function (game, width, height) {
     * The maximum number of times a canvas will be resized (in a row) in order to fill the browser.
     * @property {number} maxIterations
     * @default
-    * @deprecated 2.1.4 - This is not used anymore as reflow iterations are "automatic".
+    * @deprecated 2.2.0 - This is not used anymore as reflow iterations are "automatic".
     * @protected
     */
     this.maxIterations = 5;
@@ -190,11 +190,11 @@ Phaser.ScaleManager = function (game, width, height) {
     * but it will not be added to, removed from, or repositioned within the DOM.
     * An attempt is made to restore relevant style changes when fullscreen mode is left.
     *
-    * For pre 2.1.4 behavior set `game.scale.fullScreenTarget = game.canvas`.
+    * For pre 2.2.0 behavior set `game.scale.fullScreenTarget = game.canvas`.
     *
     * @property {DOMElement|null} fullScreenTarget
     * @default
-    * @deprecated 2.1.4 - See `createFullScreenTarget` as an alternative.
+    * @deprecated 2.2.0 - See `createFullScreenTarget` as an alternative.
     */
     this.fullScreenTarget = null;
 
@@ -1182,7 +1182,7 @@ Phaser.ScaleManager.prototype = {
     *
     * @method Phaser.ScaleManager#setScreenSize
     * @protected
-    * @deprecated 2.1.4 - This method is _internal_ and may be made _private_ in the future.
+    * @deprecated 2.2.0 - This method is _internal_ and may be made _private_ in the future.
     */
     setScreenSize: function () {
 
@@ -1908,7 +1908,7 @@ Phaser.ScaleManager.prototype.constructor = Phaser.ScaleManager;
 * @method checkResize
 * @memberof Phaser.ScaleManager
 * @protected
-* @deprecated 2.1.4 - Internal. _Do not use_
+* @deprecated 2.2.0 - Internal. _Do not use_
 */
 Phaser.ScaleManager.prototype.checkResize = Phaser.ScaleManager.prototype.windowResize;
 
@@ -1917,7 +1917,7 @@ Phaser.ScaleManager.prototype.checkResize = Phaser.ScaleManager.prototype.window
 * @method checkOrientation
 * @memberof Phaser.ScaleManager
 * @protected
-* @deprecated 2.1.4 - Internal. _Do not use_
+* @deprecated 2.2.0 - Internal. _Do not use_
 */
 Phaser.ScaleManager.prototype.checkOrientation = Phaser.ScaleManager.prototype.orientationChange;
 
@@ -1926,7 +1926,7 @@ Phaser.ScaleManager.prototype.checkOrientation = Phaser.ScaleManager.prototype.o
 * @method setSize
 * @memberof Phaser.ScaleManager
 * @protected
-* @deprecated 2.1.4 - Internal. Use `refresh` if needed.
+* @deprecated 2.2.0 - Internal. Use `refresh` if needed.
 */
 Phaser.ScaleManager.prototype.setSize = Phaser.ScaleManager.prototype.reflowCanvas;
 
@@ -1939,7 +1939,7 @@ Phaser.ScaleManager.prototype.setSize = Phaser.ScaleManager.prototype.reflowCanv
 * @memberof Phaser.ScaleManager
 * @protected
 * @return {boolean} True if the orientation state changed (consider a refresh)
-* @deprecated 2.1.4 - This is only for backward compatibility of user code.
+* @deprecated 2.2.0 - This is only for backward compatibility of user code.
 */
 Phaser.ScaleManager.prototype.checkOrientationState = function () {
 
@@ -2157,7 +2157,7 @@ Object.defineProperty(Phaser.ScaleManager.prototype, "isLandscape", {
 * The _last known_ orientation value of the game. A value of 90 is landscape and 0 is portrait.
 * @property {number} orientation
 * @readonly
-* @deprecated 2.1.4 - Use `ScaleManager.screenOrientation` instead.
+* @deprecated 2.2.0 - Use `ScaleManager.screenOrientation` instead.
 */
 Object.defineProperty(Phaser.ScaleManager.prototype, "orientation", {
 
