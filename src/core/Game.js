@@ -727,8 +727,8 @@ Phaser.Game.prototype = {
             // step size taking into account the slow motion speed
             var slowStep = this.time.slowMotion * 1000.0 / this.time.desiredFps;
 
-            // accumulate time until the slowStep threshold is met or exceeded
-            this._deltaTime += Math.max(Math.min(1000, this.time.elapsed), 0);
+            // accumulate time until the slowStep threshold is met or exceeded... up to a limit of 3 catch-up frames at slowStep intervals
+            this._deltaTime += Math.max(Math.min(slowStep * 3, this.time.elapsed), 0);
 
             // call the game update logic multiple times if necessary to "catch up" with dropped frames
             // unless forceSingleUpdate is true
