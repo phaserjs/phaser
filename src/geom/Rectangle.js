@@ -775,6 +775,19 @@ Phaser.Rectangle.equals = function (a, b) {
 };
 
 /**
+* Determines if the two objects (either Rectangles or Rectangle-like) have the same width and height values under strict equality.
+* @method Phaser.Rectangle.sameDimensions
+* @param {Rectangle-like} a - The first Rectangle object.
+* @param {Rectangle-like} b - The second Rectangle object.
+* @return {boolean} True if the object have equivalent values for the width and height properties.
+*/
+Phaser.Rectangle.sameDimensions = function (a, b) {
+
+    return (a.width === b.width && a.height === b.height);
+
+};
+
+/**
 * If the Rectangle object specified in the toIntersect parameter intersects with this Rectangle object, returns the area of intersection as a Rectangle object. If the Rectangles do not intersect, this method returns an empty Rectangle object with its properties set to 0.
 * @method Phaser.Rectangle.intersection
 * @param {Phaser.Rectangle} a - The first Rectangle object.

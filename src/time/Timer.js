@@ -186,7 +186,7 @@ Phaser.Timer.prototype = {
 
         if (this._now === 0)
         {
-            tick += this.game.time.now;
+            tick += this.game.time.time;
         }
         else
         {
@@ -274,7 +274,7 @@ Phaser.Timer.prototype = {
             return;
         }
 
-        this._started = this.game.time.now + (delay || 0);
+        this._started = this.game.time.time + (delay || 0);
 
         this.running = true;
 
@@ -494,7 +494,7 @@ Phaser.Timer.prototype = {
             return;
         }
 
-        this._pauseStarted = this.game.time.now;
+        this._pauseStarted = this.game.time.time;
 
         this.paused = true;
 
@@ -512,7 +512,7 @@ Phaser.Timer.prototype = {
             return;
         }
 
-        this._pauseStarted = this.game.time.now;
+        this._pauseStarted = this.game.time.time;
 
         this.paused = true;
 
@@ -567,7 +567,7 @@ Phaser.Timer.prototype = {
             return;
         }
 
-        var now = this.game.time.now;
+        var now = this.game.time.time;
         this._pauseTotal += now - this._now;
         this._now = now;
 

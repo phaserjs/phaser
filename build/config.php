@@ -39,6 +39,8 @@
     <script src="$path/src/pixi/Pixi.js"></script>
     <script src="$path/src/pixi/geom/Matrix.js"></script>
     <script src="$path/src/pixi/geom/Polygon.js"></script>
+    <script src="$path/src/pixi/geom/Rectangle.js"></script>
+    <script src="$path/src/pixi/geom/RoundedRectangle.js"></script>
     <script src="$path/src/pixi/display/DisplayObject.js"></script>
     <script src="$path/src/pixi/display/DisplayObjectContainer.js"></script>
     <script src="$path/src/pixi/display/Sprite.js"></script>
@@ -139,6 +141,7 @@
     <script src="$path/src/gameobjects/Particle.js"></script>
     <script src="$path/src/gameobjects/Rope.js"></script>
 
+    <script src="$path/src/system/DOM.js"></script>
     <script src="$path/src/system/Canvas.js"></script>
     <script src="$path/src/system/Device.js"></script>
     <script src="$path/src/system/RequestAnimationFrame.js"></script>

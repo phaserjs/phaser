@@ -213,6 +213,23 @@ Phaser.Loader.prototype = {
     },
 
     /**
+    * Called automatically by ScaleManager when the game resizes in RESIZE scalemode.
+    * We use this to adjust the height of the preloading sprite, if set.
+    *
+    * @method Phaser.Loader#resize
+    * @param {number} width - The new width of the game in pixels.
+    * @param {number} height - The new height of the game in pixels.
+    */
+    resize: function () {
+
+        if (this.preloadSprite && this.preloadSprite.height !== this.preloadSprite.sprite.height)
+        {
+            this.preloadSprite.rect.height = this.preloadSprite.sprite.height;
+        }
+
+    },
+
+    /**
     * Check whether asset exists with a specific key.
     * Use Phaser.Cache to access loaded assets, e.g. Phaser.Cache#checkImageKey
     *

@@ -251,7 +251,7 @@ Phaser.Particles.Arcade.Emitter.prototype.constructor = Phaser.Particles.Arcade.
 */
 Phaser.Particles.Arcade.Emitter.prototype.update = function () {
 
-    if (this.on && this.game.time.now >= this._timer)
+    if (this.on && this.game.time.time >= this._timer)
     {
         this.emitParticle();
 
@@ -265,7 +265,7 @@ Phaser.Particles.Arcade.Emitter.prototype.update = function () {
             }
         }
 
-        this._timer = this.game.time.now + this.frequency * this.game.time.slowMotion;
+        this._timer = this.game.time.time + this.frequency * this.game.time.slowMotion;
     }
 
     var i = this.children.length;
@@ -436,7 +436,7 @@ Phaser.Particles.Arcade.Emitter.prototype.start = function (explode, lifespan, f
         this.on = true;
         this._quantity += quantity;
         this._counter = 0;
-        this._timer = this.game.time.now + frequency * this.game.time.slowMotion;
+        this._timer = this.game.time.time + frequency * this.game.time.slowMotion;
     }
 
 };

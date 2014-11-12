@@ -246,6 +246,9 @@ Phaser.FlexGrid.prototype = {
      */
     onResize: function (width, height) {
 
+        this.ratioH = width / height;
+        this.ratioV = height / width;
+
         this.refresh(width, height);
 
     },
@@ -267,8 +270,8 @@ Phaser.FlexGrid.prototype = {
 
         this.scaleFull.set(this.boundsFull.width / this.width, this.boundsFull.height / this.height);
 
-        this.boundsFull.width = this.manager.width * this.scaleFluidInversed.x;
-        this.boundsFull.height = this.manager.height * this.scaleFluidInversed.y;
+        this.boundsFull.width = Math.round(this.manager.width * this.scaleFluidInversed.x);
+        this.boundsFull.height = Math.round(this.manager.height * this.scaleFluidInversed.y);
 
         this.boundsFluid.centerOn(this.manager.bounds.centerX, this.manager.bounds.centerY);
         this.boundsNone.centerOn(this.manager.bounds.centerX, this.manager.bounds.centerY);
@@ -276,23 +279,14 @@ Phaser.FlexGrid.prototype = {
         this.positionFluid.set(this.boundsFluid.x, this.boundsFluid.y);
         this.positionNone.set(this.boundsNone.x, this.boundsNone.y);
 
-        //  Custom Layer
+    },
 
-        /*
-        if (this.customWidth > 0)
-        {
-            var customMultiplier = Math.min((this.manager.height / this.customHeight), (this.manager.width / this.customWidth));
+    fitSprite: function (sprite) {
 
-            this.boundsCustom.width = Math.round(this.customWidth * customMultiplier);
-            this.boundsCustom.height = Math.round(this.customHeight * customMultiplier);
+        this.manager.scaleSprite(sprite);
 
-            this.boundsCustom.centerOn(this.manager.bounds.centerX, this.manager.bounds.centerY);
-
-            this.scaleCustom.set(this.boundsCustom.width / this.width, this.boundsCustom.height / this.height);
-
-            this.positionCustom.set(this.boundsCustom.x, this.boundsCustom.y);
-        }
-        */
+        sprite.x = this.manager.bounds.centerX;
+        sprite.y = this.manager.bounds.centerY;
 
     },
 

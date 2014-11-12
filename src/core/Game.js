@@ -45,16 +45,38 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     this.parent = '';
 
     /**
-    * @property {number} width - The calculated game width in pixels.
+    * The current Game Width in pixels.
+    *
+    * _Do not modify this property directly:_ use {@link Phaser.ScaleManager#setGameSize} - eg. `game.scale.setGameSize(width, height)` - instead.
+    *
+    * @property {integer} width
+    * @readonly
     * @default
     */
     this.width = 800;
 
     /**
-    * @property {number} height - The calculated game height in pixels.
+    * The current Game Height in pixels.
+    *
+    * _Do not modify this property directly:_ use {@link Phaser.ScaleManager#setGameSize} - eg. `game.scale.setGameSize(width, height)` - instead.
+    *
+    * @property {integer} height
+    * @readonly
     * @default
     */
     this.height = 600;
+
+    /**
+    * @property {integer} _width - Private internal var.
+    * @private
+    */
+    this._width = 800;
+
+    /**
+    * @property {integer} _height - Private internal var.
+    * @private
+    */
+    this._height = 600;
 
     /**
     * @property {boolean} transparent - Use a transparent canvas background or not.
@@ -290,14 +312,15 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     this.fpsProblemNotifier = new Phaser.Signal();
 
     /**
+     * @property {boolean} forceSingleUpdate - Should the game loop force a logic update, regardless of the delta timer? Set to true if you know you need this. You can toggle it on the fly.
+     */
+    this.forceSingleUpdate = false;
+
+    /**
      * @property {number} _nextNotification - the soonest game.time.time value that the next fpsProblemNotifier can be dispatched
      * @private
      */
     this._nextFpsNotification = 0;
-
-
-    this._width = 800;
-    this._height = 600;
 
     //  Parse the configuration object (if any)
     if (arguments.length === 1 && typeof arguments[0] === 'object')
@@ -353,8 +376,9 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     {
         window.setTimeout(this._onBoot, 0);
     }
-    else if(typeof window.cordova !== "undefined")
+    else if (typeof window.cordova !== "undefined" && !navigator['isCocoonJS'])
     {
+        //  Cordova, but NOT Cocoon?
         document.addEventListener('deviceready', this._onBoot, false);
     }
     else
@@ -672,20 +696,21 @@ Phaser.Game.prototype = {
     *
     * @method Phaser.Game#update
     * @protected
-    * @param {number} time - The current time as provided by Date.now (see updateRAF in RequestAnimationFrame.js) in milliseconds
+    * @param {number} time - The current time as provided by RequestAnimationFrame.
     */
     update: function (time) {
 
         this.time.update(time);
 
         // if the logic time is spiralling upwards, skip a frame entirely
-        if (this._spiralling > 1)
+        if (this._spiralling > 1 && !this.forceSingleUpdate)
         {
             // cause an event to warn the program that this CPU can't keep up with the current desiredFps rate
             if (this.time.time > this._nextFpsNotification)
             {
                 // only permit one fps notification per 10 seconds
                 this._nextFpsNotification = this.time.time + 1000 * 10;
+
                 // dispatch the notification signal
                 this.fpsProblemNotifier.dispatch();
             }
@@ -693,6 +718,8 @@ Phaser.Game.prototype = {
             // reset the _deltaTime accumulator which will cause all pending dropped frames to be permanently skipped
             this._deltaTime = 0;
             this._spiralling = 0;
+
+            var slowStep = this.time.slowMotion * 1000.0 / this.time.desiredFps;
         }
         else
         {
@@ -703,12 +730,19 @@ Phaser.Game.prototype = {
             this._deltaTime += Math.max(Math.min(1000, this.time.elapsed), 0);
 
             // call the game update logic multiple times if necessary to "catch up" with dropped frames
+            // unless forceSingleUpdate is true
             var count = 0;
-            while(this._deltaTime >= slowStep)
+
+            while (this._deltaTime >= slowStep)
             {
                 this._deltaTime -= slowStep;
                 this.updateLogic(1.0 / this.time.desiredFps);
                 count++;
+
+                if (this.forceSingleUpdate && count === 1)
+                {
+                    break;
+                }
             }
 
             // detect spiralling (if the catch-up loop isn't fast enough, the number of iterations will increase constantly)
@@ -721,6 +755,7 @@ Phaser.Game.prototype = {
                 // looks like it caught up successfully, reset the spiral alert counter
                 this._spiralling = 0;
             }
+
             this._lastCount = count;
         }
 
@@ -746,8 +781,8 @@ Phaser.Game.prototype = {
             }
 
             this.physics.preUpdate();
-            this.state.preUpdate();
-            this.plugins.preUpdate();
+            this.state.preUpdate(timeStep);
+            this.plugins.preUpdate(timeStep);
             this.stage.preUpdate();
 
             this.state.update();
@@ -770,14 +805,15 @@ Phaser.Game.prototype = {
                 this.debug.preUpdate();
             }
         }
-
     },
 
     updateRender: function (elapsedTime) {
 
         // update tweens once every frame along with the render logic (to keep them smooth in slowMotion scenarios)
         if (!this._paused && !this.pendingStep)
+        {
             this.tweens.update(elapsedTime);
+        }
 
         if (this.renderType != Phaser.HEADLESS)
         {

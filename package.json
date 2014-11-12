@@ -1,6 +1,6 @@
 {
   "name": "phaser",
-  "version": "2.1.4",
+  "version": "2.2.0",
   "release": "Bethal",
   "description": "A fast, free and fun HTML5 Game Framework for Desktop and Mobile web browsers.",
   "author": "Richard Davey <rdavey@gmail.com> (http://www.photonstorm.com)",
@@ -40,6 +40,7 @@
     "grunt-contrib-uglify": "^0.4.0",
     "grunt-notify": "^0.3.0",
     "grunt-text-replace": "^0.3.11",
-    "load-grunt-config": "~0.7.2"
+    "load-grunt-config": "~0.7.2",
+    "yuidocjs": "^0.3.50"
   }
 }

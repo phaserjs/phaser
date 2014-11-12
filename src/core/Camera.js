@@ -52,7 +52,8 @@ Phaser.Camera = function (game, id, x, y, width, height) {
     /**
     * The Camera is bound to this Rectangle and cannot move outside of it. By default it is enabled and set to the size of the World.
     * The Rectangle can be located anywhere in the world and updated as often as you like. If you don't wish the Camera to be bound
-    * at all then set this to null. The values can be anything and are in World coordinates, with 0,0 being the center of the world.
+    * at all then set this to null. The values can be anything and are in World coordinates, with 0,0 being the top-left of the world.
+    * 
     * @property {Phaser.Rectangle} bounds - The Rectangle in which the Camera is bounded. Set to null to allow for movement anywhere.
     */
     this.bounds = new Phaser.Rectangle(x, y, width, height);

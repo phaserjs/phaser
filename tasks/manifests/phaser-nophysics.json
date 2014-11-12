@@ -59,6 +59,7 @@
     "src/gameobjects/RetroFont.js",
     "src/gameobjects/Particle.js",
 
+    "src/system/DOM.js",
     "src/system/Canvas.js",
     "src/system/Device.js",
     "src/system/RequestAnimationFrame.js",

@@ -690,6 +690,7 @@ Phaser.Tween.prototype = {
 
         var property;
 
+
         if (this._onStartCallbackFired === false)
         {
             this.onStart.dispatch(this._object);
