@@ -108,6 +108,11 @@ Version 2.2.0 - "Bethal" - in development
 * Time.now can no longer be relied upon to contain a timestamp value. If the browser supports requestAnimationFrame then `Time.now` will contain the high resolution timer value that rAf generates. Otherwise it will contain the value of Date.now. If you require the actual time value (in milliseconds) then please use `Time.time` instead. Note that all Phaser sub-systems that used to rely on `Time.now` have been updated, so if you have any code that extends these please be sure to check it.
 * Game.forceSingleUpdate will force just a single logic update, regardless of the delta timer values. You can use this in extremely heavy CPU situations where you know you're about to flood the CPU but don't want Phaser to get stuck in a spiral.
 * Tilemap.createFromTiles will convert all tiles matching the given tile index (or an array of indexes) into Sprites. You can optionally then replace these tiles if you wish. This is perfect for games when you want to turn specific tiles into Sprites for extra control. The Sprites have an optional properties object which they can be populated with.
+* Added support for the Wheel Event, which is the DOM3 spec (thanks @pnstickne #1318)
+* Wheel Scroll Event (old non-FF) and DOM Mouse Wheel (old FF) are
+supported via a non-exported reused wrapper object; WheelEventProxy.
+The proxy methods are generated one-time dynamically but only when needed.
+
 
 ### Updates
 
@@ -160,6 +165,8 @@ Version 2.2.0 - "Bethal" - in development
 * FrameData.clone fixed when cloning data using frame names rather than indexes (thanks pjbaron)
 * Lots of the Cache getters (such as `Cache.getbitmapData`) would return `undefined` if the asset couldn't be found. They now all consistently return `null` for missing entries (thanks @Matoking #1305)
 * Phaser games should now work again from the CocoonJS Launcher.
+* Only one of the mouse wheel events is listened to, newest standard first.
+This fixes a bug in FF where it would use the default DOMMouseWheel (thanks @pnstickne #1313)
 
 ### Pixi 2.1.0 New Features
 
