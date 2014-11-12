@@ -1,5 +1,3 @@
-/* jshint supernew: true */
-
 /**
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2014 Photon Storm Ltd.
@@ -98,7 +96,7 @@ Phaser.ArrayUtils = {
     * @param {array} array - The array to transpose.
     * @return {array} The transposed array.
     */
-    transpose: function (array) {
+    transposeMatrix: function (array) {
 
         var result = new Array(array[0].length);
 
@@ -125,7 +123,7 @@ Phaser.ArrayUtils = {
     * @param {number|string} direction - The amount to rotate. Either a number: 90, -90, 270, -270, 180 or a string: 'rotateLeft', 'rotateRight' or 'rotate180'
     * @return {array} The rotated array
     */
-    rotate: function (matrix, direction) {
+    rotateMatrix: function (matrix, direction) {
 
         if (typeof direction !== 'string')
         {
@@ -134,13 +132,13 @@ Phaser.ArrayUtils = {
 
         if (direction === 90 || direction === -270 || direction === 'rotateLeft')
         {
-            matrix = Phaser.ArrayUtils.transpose(matrix);
+            matrix = Phaser.ArrayUtils.transposeMatrix(matrix);
             matrix = matrix.reverse();
         }
         else if (direction === -90 || direction === 270 || direction === 'rotateRight')
         {
             matrix = matrix.reverse();
-            matrix = Phaser.ArrayUtils.transpose(matrix);
+            matrix = Phaser.ArrayUtils.transposeMatrix(matrix);
         }
         else if (Math.abs(direction) === 180 || direction === 'rotate180')
         {
@@ -185,6 +183,118 @@ Phaser.ArrayUtils = {
         var high = (i < arr.length) ? arr[i] : Number.POSITIVE_INFINITY;
 
         return ((high - value) <= (value - low)) ? high : low;
+
+    },
+
+    /**
+    * Moves the element from the start of the array to the end, shifting all items in the process.
+    * The "rotation" happens to the left.
+    *
+    * @method Phaser.ArrayUtils.rotate
+    * @param {any[]} array - The array to shift/rotate. The array is modified.
+    * @return {any} The shifted value.
+    */
+    rotate: function (array) {
+
+        var s = array.shift();
+        array.push(s);
+
+        return s;
+
+    },
+
+    /**
+    * Create an array representing the inclusive range of numbers (usually integers) in `[start, end]`.
+    * This is equivalent to `numberArrayStep(start, end, 1)`.
+    *
+    * @method Phaser.Math#numberArray
+    * @param {number} start - The minimum value the array starts with.
+    * @param {number} end - The maximum value the array contains.
+    * @return {array} The array of number values.
+    */
+    numberArray: function (start, end) {
+
+        var result = [];
+
+        for (var i = start; i <= end; i++)
+        {
+            result.push(i);
+        }
+
+        return result;
+
+    },
+
+    /**
+    * Create an array of numbers (positive and/or negative) progressing from `start`
+    * up to but not including `end` by advancing by `step`.
+    *
+    * If `start` is less than `stop` a zero-length range is created unless a negative `step` is specified.
+    *
+    * Certain values for `start` and `end` (eg. NaN/undefined/null) are currently coerced to 0;
+    * for forward compatibility make sure to pass in actual numbers.
+    *
+    * @method Phaser.Math#numberArrayStep
+    * @param {number} start - The start of the range.
+    * @param {number} end - The end of the range.
+    * @param {number} [step=1] - The value to increment or decrement by.
+    * @returns {Array} Returns the new array of numbers.
+    * @example
+    * Phaser.Math.numberArrayStep(4);
+    * // => [0, 1, 2, 3]
+    *
+    * Phaser.Math.numberArrayStep(1, 5);
+    * // => [1, 2, 3, 4]
+    *
+    * Phaser.Math.numberArrayStep(0, 20, 5);
+    * // => [0, 5, 10, 15]
+    *
+    * Phaser.Math.numberArrayStep(0, -4, -1);
+    * // => [0, -1, -2, -3]
+    *
+    * Phaser.Math.numberArrayStep(1, 4, 0);
+    * // => [1, 1, 1]
+    *
+    * Phaser.Math.numberArrayStep(0);
+    * // => []
+    */
+    numberArrayStep: function(start, end, step) {
+
+        start = +start || 0;
+
+        // enables use as a callback for functions like `_.map`
+        var type = typeof end;
+
+        if ((type === 'number' || type === 'string') && step && step[end] === start)
+        {
+            end = step = null;
+        }
+
+        step = step == null ? 1 : (+step || 0);
+
+        if (end === null)
+        {
+            end = start;
+            start = 0;
+        }
+        else
+        {
+            end = +end || 0;
+        }
+
+        // use `Array(length)` so engines like Chakra and V8 avoid slower modes
+        // http://youtu.be/XAqIpGU8ZZk#t=17m25s
+        var index = -1;
+        var length = Math.max(Phaser.Math.roundAwayFromZero((end - start) / (step || 1)), 0);
+        var result = new Array(length);
+
+        while (++index < length)
+        {
+            result[index] = start;
+            start += step;
+        }
+
+        return result;
 
     }
 

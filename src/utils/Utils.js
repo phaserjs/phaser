@@ -1,5 +1,3 @@
-/* jshint supernew: true */
-
 /**
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2014 Photon Storm Ltd.
@@ -109,10 +107,10 @@ Phaser.Utils = {
     * @method Phaser.Utils.transposeArray
     * @param {array} array - The array to transpose.
     * @return {array} The transposed array.
-    * @deprecated 2.1.4 - Use Phaser.ArrayUtils.transpose
+    * @deprecated 2.2.0 - Use Phaser.ArrayUtils.transposeMatrix
     */
     transposeArray: function (array) {
-        return Phaser.ArrayUtils.transpose(array);
+        return Phaser.ArrayUtils.transposeMatrix(array);
     },
 
     /**
@@ -123,10 +121,10 @@ Phaser.Utils = {
     * @param {array} matrix - The array to rotate.
     * @param {number|string} direction - The amount to rotate. Either a number: 90, -90, 270, -270, 180 or a string: 'rotateLeft', 'rotateRight' or 'rotate180'
     * @return {array} The rotated array
-    * @deprecated 2.1.4 - Use Phaser.ArrayUtils.rotate
+    * @deprecated 2.2.0 - Use Phaser.ArrayUtils.rotateMatrix
     */
     rotateArray: function (matrix, direction) {
-        return Phaser.ArrayUtils.rotate(matrix, direction);
+        return Phaser.ArrayUtils.rotateMatrix(matrix, direction);
     },
 
     /**
@@ -135,7 +133,7 @@ Phaser.Utils = {
     * @method Phaser.Utils.shuffle
     * @param {array} array - The array to shuffle.
     * @return {array} The shuffled array.
-    * @deprecated 2.1.4 - User Phaser.ArrayUtils.shuffle
+    * @deprecated 2.2.0 - User Phaser.ArrayUtils.shuffle
     */
     shuffle: function (array) {
         return Phaser.ArrayUtils.shuffle(array);

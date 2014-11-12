@@ -20,7 +20,7 @@ Phaser.Math = {
     * Twice PI.
     * @property {number} Phaser.Math#PI2
     * @default ~6.283
-    * @deprecated 2.1.4 - Not used internally. Use `2 * Math.PI` instead.
+    * @deprecated 2.2.0 - Not used internally. Use `2 * Math.PI` instead.
     */
     PI2: Math.PI * 2,
 
@@ -113,7 +113,7 @@ Phaser.Math = {
     * @method Phaser.Math#truncate
     * @param {number} n
     * @return {integer}
-    * @deprecated 2.1.4 - Use `Math.trunc` (now with polyfill)
+    * @deprecated 2.2.0 - Use `Math.trunc` (now with polyfill)
     */
     truncate: function (n) {
         return Math.trunc(n);
@@ -214,7 +214,7 @@ Phaser.Math = {
     * @param {number[]} arr
     * @param {boolean} sort - True if the array needs to be sorted.
     * @return {number}
-    * @deprecated 2.1.4 - See {@link Phaser.Utils.Arrays.findClosest} for an alternative.
+    * @deprecated 2.2.0 - See {@link Phaser.ArrayUtils.findClosest} for an alternative.
     */
     snapToInArray: function (input, arr, sort) {
 
@@ -224,7 +224,7 @@ Phaser.Math = {
             arr.sort();
         }
 
-        return Phaser.Utils.Arrays.findClosest(input, arr);
+        return Phaser.ArrayUtils.findClosest(input, arr);
 
     },
 
@@ -317,6 +317,7 @@ Phaser.Math = {
     * @param {number} b
     * @param {number} weight
     * @return {number}
+    * @deprecated 2.2.0 - See {@link Phaser.Math#linear}
     */
     interpolateFloat: function (a, b, weight) {
         return (b - a) * weight + a;
@@ -401,7 +402,7 @@ Phaser.Math = {
     * @method Phaser.Math#normalizeLatitude
     * @param {number} lat - The latitude to normalize, in degrees.
     * @return {number} Returns the latitude, fit within the [-90,90] range.
-    * @deprecated 2.1.4 - Use {@link Phaser.Math#clamp}.
+    * @deprecated 2.2.0 - Use {@link Phaser.Math#clamp}.
     */
     normalizeLatitude: function (lat) {
         return Phaser.Math.clamp(lat, -90, 90);
@@ -412,7 +413,7 @@ Phaser.Math = {
     * @method Phaser.Math#normalizeLongitude
     * @param {number} lng - The longitude to normalize, in degrees.
     * @return {number} Returns the longitude, fit within the [-180,180] range.
-    * @deprecated 2.1.4 - Use {@link Phaser.Math#wrap}.
+    * @deprecated 2.2.0 - Use {@link Phaser.Math#wrap}.
     */
     normalizeLongitude: function (lng) {
         return Phaser.Math.wrap(lng, -180, 180);
@@ -427,103 +428,43 @@ Phaser.Math = {
     * @method Phaser.Math#chanceRoll
     * @param {number} chance - The chance of receiving the value. A number between 0 and 100 (effectively 0% to 100%).
     * @return {boolean} True if the roll passed, or false otherwise.
-    * @deprecated 2.1.4 - Use {@link Phaser.Utils.chanceRoll}
+    * @deprecated 2.2.0 - Use {@link Phaser.Utils.chanceRoll}
     */
     chanceRoll: function (chance) {
         return Phaser.Utils.chanceRoll(chance);
     },
 
     /**
-    * Returns an Array containing the numbers from min to max and inclusive of both values.
-    * If you need exclusive of max then see Phaser.Math.numberArrayEx.
+    * Create an array representing the inclusive range of numbers (usually integers) in `[start, end]`.
     *
     * @method Phaser.Math#numberArray
-    * @param {number} min - The minimum value the array starts with.
-    * @param {number} max - The maximum value the array contains.
+    * @param {number} start - The minimum value the array starts with.
+    * @param {number} end - The maximum value the array contains.
     * @return {array} The array of number values.
-    * @deprecated 2.1.4 - Specialized function not used internally.
+    * @deprecated 2.2.0 - See {@link Phaser.ArrayUtils.numberArray}
     */
-    numberArray: function (min, max) {
-
-        var result = [];
-
-        for (var i = min; i <= max; i++)
-        {
-            result.push(i);
-        }
-
-        return result;
-
+    numberArray: function (start, end) {
+        return Phaser.ArrayUtils.numberArray(start, end);
     },
 
     /**
-    * Creates an array of numbers (positive and/or negative) progressing from
-    * `start` up to but not including `end`. If `start` is less than `stop` a
-    * zero-length range is created unless a negative `step` is specified.
+    * Create an array of numbers (positive and/or negative) progressing from `start`
+    * up to but not including `end` by advancing by `step`.
+    *
+    * If `start` is less than `stop` a zero-length range is created unless a negative `step` is specified.
+    *
+    * Certain values for `start` and `end` (eg. NaN/undefined/null) are coerced to 0;
+    * for forward compatibility make sure to pass in actual numbers.
     *
     * @method Phaser.Math#numberArrayStep
-    * @param {number} [start=0] - The start of the range.
+    * @param {number} start - The start of the range.
     * @param {number} end - The end of the range.
     * @param {number} [step=1] - The value to increment or decrement by.
     * @returns {Array} Returns the new array of numbers.
-    * @example
-    * Phaser.Math.numberArrayStep(4);
-    * // => [0, 1, 2, 3]
-    *
-    * Phaser.Math.numberArrayStep(1, 5);
-    * // => [1, 2, 3, 4]
-    *
-    * Phaser.Math.numberArrayStep(0, 20, 5);
-    * // => [0, 5, 10, 15]
-    *
-    * Phaser.Math.numberArrayStep(0, -4, -1);
-    * // => [0, -1, -2, -3]
-    *
-    * Phaser.Math.numberArrayStep(1, 4, 0);
-    * // => [1, 1, 1]
-    *
-    * Phaser.Math.numberArrayStep(0);
-    * // => []
-    * @deprecated 2.1.4 - Specialized function not used internally.
+    * @deprecated 2.2.0 - See {@link Phaser.ArrayUtils.numberArrayStep}
     */
     numberArrayStep: function(start, end, step) {
-
-        start = +start || 0;
-
-        // enables use as a callback for functions like `_.map`
-        var type = typeof end;
-
-        if ((type === 'number' || type === 'string') && step && step[end] === start)
-        {
-            end = step = null;
-        }
-
-        step = step == null ? 1 : (+step || 0);
-
-        if (end === null)
-        {
-            end = start;
-            start = 0;
-        }
-        else
-        {
-            end = +end || 0;
-        }
-
-        // use `Array(length)` so engines like Chakra and V8 avoid slower modes
-        // http://youtu.be/XAqIpGU8ZZk#t=17m25s
-        var index = -1;
-        var length = Math.max(Phaser.Math.roundAwayFromZero((end - start) / (step || 1)), 0);
-        var result = new Array(length);
-
-        while (++index < length)
-        {
-            result[index] = start;
-            start += step;
-        }
-
-        return result;
-
+        return Phaser.ArrayUtils.numberArrayStep(start, end, step);
     },
 
     /**
@@ -554,12 +495,13 @@ Phaser.Math = {
 
     /**
     * Ensures that the value always stays between min and max, by wrapping the value around.
-    * max should be larger than min, or the function will return 0.
+    *
+    * If `max` is not larger than `min` the result is 0.
     *
     * @method Phaser.Math#wrap
     * @param {number} value - The value to wrap.
     * @param {number} min - The minimum the value is allowed to be.
-    * @param {number} max - The maximum the value is allowed to be.
+    * @param {number} max - The maximum the value is allowed to be, should be larger than `min`.
     * @return {number} The wrapped value.
     */
     wrap: function (value, min, max) {
@@ -584,7 +526,8 @@ Phaser.Math = {
 
     /**
     * Adds value to amount and ensures that the result always stays between 0 and max, by wrapping the value around.
-    * Values must be positive integers, and are passed through Math.abs.
+    *
+    * Values _must_ be positive integers, and are passed through Math.abs. See {@link Phaser.Math#wrap} for an alternative.
     *
     * @method Phaser.Math#wrapValue
     * @param {number} value - The value to add the amount to.
@@ -612,7 +555,7 @@ Phaser.Math = {
     * @param {number} min - The minimum the value can be.
     * @param {number} max - The maximum the value can be.
     * @return {number} The limited value.
-    * @deprecated 2.1.4 - Use {@link Phaser.Math#clamp}
+    * @deprecated 2.2.0 - Use {@link Phaser.Math#clamp}
     */
     limitValue: function(value, min, max) {
         return Phaser.Math.clamp(value, min, max);
@@ -623,7 +566,7 @@ Phaser.Math = {
     *
     * @method Phaser.Math#randomSign
     * @return {number} Either 1 or -1
-    * @deprecated 2.1.4 - Use {@link Phaser.Utils.randomChoice} or other
+    * @deprecated 2.2.0 - Use {@link Phaser.Utils.randomChoice} or other
     */
     randomSign: function () {
         return Phaser.Utils.randomChoice(-1, 1);
@@ -718,7 +661,7 @@ Phaser.Math = {
     },
 
     /**
-    * Vartiation of Math.min that can be passed a property and either an array of objects or the objects as parameters.
+    * Variation of Math.min that can be passed a property and either an array of objects or the objects as parameters.
     * It will find the lowest matching property value from the given objects.
     *
     * @method Phaser.Math#minProperty
@@ -778,17 +721,16 @@ Phaser.Math = {
     },
 
     /**
-    * Keeps an angle value between -180 and +180.
+    * Keeps an angle value between -180 and +180; or -PI and PI if radians.
     *
     * @method Phaser.Math#wrapAngle
-    * @param {number} angle - The angle value to check
-    * @param {boolean} radians - Set to `true` if the angle is given in radians, otherwise degrees is expected.
-    * @return {number} The new angle value, returns the same as the input angle if it was within bounds.
+    * @param {number} angle - The angle value to wrap
+    * @param {boolean} [radians=false] - Set to `true` if the angle is given in radians, otherwise degrees is expected.
+    * @return {number} The new angle value; will be the same as the input angle if it was within bounds.
     */
     wrapAngle: function (angle, radians) {
 
-        var radianFactor = (radians) ? Math.PI / 180 : 1;
-        return this.wrap(angle, -180 * radianFactor, 180 * radianFactor);
+        return radians ? this.wrap(angle, -Math.PI, Math.PI) : this.wrap(angle, -180, 180);
 
     },
 
@@ -800,6 +742,7 @@ Phaser.Math = {
     * @param {number} min - The minimum angle that is allowed (must be -180 or greater).
     * @param {number} max - The maximum angle that is allowed (must be 180 or less).
     * @return {number} The new angle value, returns the same as the input angle if it was within bounds
+    * @deprecated 2.2.0 - Use {@link Phaser.Math#clamp} instead
     */
     angleLimit: function (angle, min, max) {
 
@@ -907,14 +850,13 @@ Phaser.Math = {
     },
 
     /**
-    * Calculates a linear value over t.
+    * Calculates a linear (interpolation) value over t.
     * 
-    * @method Phaser.Math#Linear
+    * @method Phaser.Math#linear
     * @param {number} p0
     * @param {number} p1
     * @param {number} t
     * @return {number}
-    * @private
     */
     linear: function (p0, p1, t) {
         return (p1 - p0) * t + p0;
@@ -922,10 +864,10 @@ Phaser.Math = {
 
     /**
     * @method Phaser.Math#bernstein
+    * @protected
     * @param {number} n
     * @param {number} i
     * @return {number}
-    * @private
     */
     bernstein: function (n, i) {
         return this.factorial(n) / this.factorial(i) / this.factorial(n - i);
@@ -935,7 +877,6 @@ Phaser.Math = {
     * @method Phaser.Math#factorial
     * @param {number} value - the number you want to evaluate
     * @return {number}
-    * @private
     */
     factorial : function( value ){
 
@@ -959,13 +900,13 @@ Phaser.Math = {
     * Calculates a callmum rom value.
     * 
     * @method Phaser.Math#catmullRom
+    * @protected
     * @param {number} p0
     * @param {number} p1
     * @param {number} p2
     * @param {number} p3
     * @param {number} t
     * @return {number}
-    * @private
     */
     catmullRom: function (p0, p1, p2, p3, t) {
 
@@ -996,10 +937,10 @@ Phaser.Math = {
     * @param {number} startIndex - Optional offset off the front of the array. Default value is 0, or the beginning of the array.
     * @param {number} length - Optional restriction on the number of values you want to randomly select from.
     * @return {object} The random object that was selected.
-    * @deprecated 2.1.4 - Use {@link Phaser.Utils.Arrays.getRandomItem}
+    * @deprecated 2.2.0 - Use {@link Phaser.ArrayUtils.getRandomItem}
     */
     getRandom: function (objects, startIndex, length) {
-        return Phaser.Utils.Arrays.getRandomItem(objects, startIndex, length);
+        return Phaser.ArrayUtils.getRandomItem(objects, startIndex, length);
     },
 
     /**
@@ -1011,10 +952,10 @@ Phaser.Math = {
     * @param {number} startIndex - Optional offset off the front of the array. Default value is 0, or the beginning of the array.
     * @param {number} length - Optional restriction on the number of values you want to randomly select from.
     * @return {object} The random object that was removed.
-    * @deprecated 2.1.4 - Use {@link Phaser.Utils.Arrays.removeRandomItem}
+    * @deprecated 2.2.0 - Use {@link Phaser.ArrayUtils.removeRandomItem}
     */
     removeRandom: function (objects, startIndex, length) {
-        return Phaser.Utils.Arrays.removeRandomItem(objects, startIndex, length);
+        return Phaser.ArrayUtils.removeRandomItem(objects, startIndex, length);
     },
 
     /**
@@ -1027,7 +968,7 @@ Phaser.Math = {
     * @method Phaser.Math#floor
     * @param {number} value - Any number.
     * @return {integer} The rounded value of that number.
-    * @deprecated 2.1.4 - Use {@link Phaser.Math#truncate} or `Math.trunc` instead.
+    * @deprecated 2.2.0 - Use {@link Phaser.Math#truncate} or `Math.trunc` instead.
     */
     floor: function (value) {
         return Math.trunc(value);
@@ -1043,7 +984,7 @@ Phaser.Math = {
     * @method Phaser.Math#ceil
     * @param {number} value - Any number.
     * @return {integer} The rounded value of that number.
-    * @deprecated 2.1.4 - Use {@link Phaser.Math#roundAwayFromZero} instead.
+    * @deprecated 2.2.0 - Use {@link Phaser.Math#roundAwayFromZero} instead.
     */
     ceil: function (value) {
         return Phaser.Math.roundAwayFromZero(value);
@@ -1102,18 +1043,17 @@ Phaser.Math = {
     },
 
     /**
-    * Removes the top element from the stack and re-inserts it onto the bottom, then returns it.
-    * The original stack is modified in the process. This effectively moves the position of the data from the start to the end of the table.
+    * Moves the element from the start of the array to the end, shifting all items in the process.
     *
     * @method Phaser.Math#shift
-    * @param {array} stack - The array to shift.
+    * @param {any[]} array - The array to shift/rotate. The array is modified.
     * @return {any} The shifted value.
-    * @deprecated 2.1.4 - Specialized function. Not used internally, better to do locally
+    * @deprecated 2.2.0 - Use {@link Phaser.ArrayUtils.rotate} instead
     */
-    shift: function (stack) {
+    shift: function (array) {
 
-        var s = stack.shift();
-        stack.push(s);
+        var s = array.shift();
+        array.push(s);
 
         return s;
 
@@ -1124,10 +1064,10 @@ Phaser.Math = {
     * @method Phaser.Math#shuffleArray
     * @param {array} array - The array to shuffle
     * @return {array} The array
-    * @deprecated 2.1.4 - Use {@link Phaser.Utils.Arrays.shuffle}
+    * @deprecated 2.2.0 - Use {@link Phaser.ArrayUtils.shuffle}
     */
     shuffleArray: function (array) {
-        return Phaser.Utils.Arrays.shuffle(array);
+        return Phaser.ArrayUtils.shuffle(array);
     },
 
     /**
@@ -1177,7 +1117,7 @@ Phaser.Math = {
     * @param {number} x2
     * @param {number} y2
     * @return {number} The distance between this Point object and the destination Point object.
-    * @deprecated 2.1.4 - Do the rounding locally.
+    * @deprecated 2.2.0 - Do the rounding locally.
     */
     distanceRounded: function (x1, y1, x2, y2) {
         return Math.round(Phaser.Math.distance(x1, y1, x2, y2));
