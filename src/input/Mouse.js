@@ -607,7 +607,7 @@ Object.defineProperty(Phaser.Mouse.prototype, "disabled", {
 * @class Phaser.Mouse~WheelEventProxy
 * @private
 * @param {number} scaleFactor - Scale factor as applied to wheelDelta/wheelDeltaX or details.
-* @param {integer} deltaMode- The reported delta mode.
+* @param {integer} deltaMode - The reported delta mode.
 */
 function WheelEventProxy (scaleFactor, deltaMode) {
 
@@ -664,5 +664,5 @@ Object.defineProperties(WheelEventProxy.prototype, {
             return this._scaleFactor * (this.originalEvent.wheelDeltaX || 0);
         }
     },
-    "deltaZ": { get: function () { return 0; } }
+    "deltaZ": { value: 0 }
 });
