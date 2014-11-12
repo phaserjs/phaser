@@ -1595,7 +1595,7 @@ Phaser.Group.prototype.getRandom = function (startIndex, length) {
     startIndex = startIndex || 0;
     length = length || this.children.length;
 
-    return this.game.math.getRandom(this.children, startIndex, length);
+    return Phaser.ArrayUtils.getRandomItem(this.children, startIndex, length);
 
 };
 

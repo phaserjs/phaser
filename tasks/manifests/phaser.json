@@ -1,6 +1,7 @@
 [
     "src/Intro.js",
     "src/Phaser.js",
+    "src/polyfill.js",
     "src/utils/Utils.js",
 
     "src/geom/Circle.js",
@@ -92,6 +93,7 @@
     "src/sound/Sound.js",
     "src/sound/SoundManager.js",
 
+    "src/utils/ArrayUtils.js",
     "src/utils/Debug.js",
     "src/utils/Color.js",
 
