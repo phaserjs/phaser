@@ -245,24 +245,19 @@ Phaser.Mouse.prototype = {
             window.addEventListener('mouseup', this._onMouseUpGlobal, true);
             this.game.canvas.addEventListener('mouseover', this._onMouseOver, true);
             this.game.canvas.addEventListener('mouseout', this._onMouseOut, true);
+        }
 
-            // (These can probably be moved out of the cocoonJS check)
-            // See https://developer.mozilla.org/en-US/docs/Web/Events/wheel
-            if ('onwheel' in window || 'WindowEvent' in window)
+        var wheelEvent = this.game.device.wheelEvent;
+        if (wheelEvent)
+        {
+            this.game.canvas.addEventListener(wheelEvent, this._onMouseWheel, true);
+
+            if (wheelEvent === 'mousewheel')
             {
-                // DOM3 Wheel Event: FF 17+, IE 9+, Chrome 31+, Safari 7+
-                this.game.canvas.addEventListener('wheel', this._onMouseWheel, true);
-            }
-            else if ('onmousewheel' in window)
-            {
-                // Non-FF legacy: IE 6-9, Chrome 1-31, Safari 5-7.
-                this.game.canvas.addEventListener('mousewheel', this._onMouseWheel, true);
                 this._wheelEvent = new WheelEventProxy(-1/40, 1);
             }
-            else if ('MouseScrollEvent' in window)
+            else if (wheelEvent === 'DOMMouseScroll')
             {
-                // FF prior to 17. This should probably be scrubbed.
-                this.game.canvas.addEventListener('DOMMouseScroll', this._onMouseWheel, true);
                 this._wheelEvent = new WheelEventProxy(1, 1);
             }
         }
@@ -563,9 +558,11 @@ Phaser.Mouse.prototype = {
         this.game.canvas.removeEventListener('mouseover', this._onMouseOver, true);
         this.game.canvas.removeEventListener('mouseout', this._onMouseOut, true);
 
-        this.game.canvas.removeEventListener('wheel', this._onMouseWheel, true);
-        this.game.canvas.removeEventListener('mousewheel', this._onMouseWheel, true);
-        this.game.canvas.removeEventListener('DOMMouseScroll', this._onMouseWheel, true);
+        var wheelEvent = this.game.device.wheelEvent;
+        if (wheelEvent)
+        {
+            this.game.canvas.removeEventListener(wheelEvent, this._onMouseWheel, true);
+        }
 
         window.removeEventListener('mouseup', this._onMouseUpGlobal, true);
 
@@ -656,12 +653,12 @@ Object.defineProperties(WheelEventProxy.prototype, {
     "deltaMode": { get: function () { return this._deltaMode; } },
     "deltaY": {
         get: function () {
-            return this._scaleFactor * (this.originalEvent.detail || this.originalEvent.wheelDelta || 0);
+            return (this._scaleFactor * (this.originalEvent.wheelDelta || this.originalEvent.detail)) || 0;
         }
     },
     "deltaX": {
         get: function () {
-            return this._scaleFactor * (this.originalEvent.wheelDeltaX || 0);
+            return (this._scaleFactor * this.originalEvent.wheelDeltaX) || 0;
         }
     },
     "deltaZ": { value: 0 }
