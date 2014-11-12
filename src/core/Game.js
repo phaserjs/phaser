@@ -719,7 +719,8 @@ Phaser.Game.prototype = {
             this._deltaTime = 0;
             this._spiralling = 0;
 
-            var slowStep = this.time.slowMotion * 1000.0 / this.time.desiredFps;
+            // call the game render update exactly once every frame
+            this.updateRender(this.time.slowMotion * this.time.desiredFps);
         }
         else
         {
@@ -757,10 +758,10 @@ Phaser.Game.prototype = {
             }
 
             this._lastCount = count;
-        }
 
-        // call the game render update exactly once every frame
-        this.updateRender(this._deltaTime / slowStep);
+            // call the game render update exactly once every frame unless we're playing catch-up from a spiral condition
+            this.updateRender(this._deltaTime / slowStep);
+        }
 
     },
 
