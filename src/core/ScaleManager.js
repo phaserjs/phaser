@@ -253,8 +253,9 @@ Phaser.ScaleManager = function (game, width, height) {
 
     /**
     * The _last known_ orientation of the screen, as defined in the Window Screen Web API.
+    * See {@link Phaser.DOM.getScreenOrientation} for possible values.
     *
-    * @property {string|null} screenOrientation
+    * @property {string} screenOrientation
     * @readonly
     * @public
     */
@@ -900,8 +901,6 @@ Phaser.ScaleManager.prototype = {
             return;
         }
 
-        console.log("E: " + Math.round(this.game.time.time - this._lastSizeCheck));
-
         var prevThrottle = this._updateThrottle;
         this._updateThrottleReset = prevThrottle >= 400 ? 0 : 100;
 
@@ -939,8 +938,6 @@ Phaser.ScaleManager.prototype = {
 
         this._updateThrottle = Phaser.Math.clamp(throttle, 25, this.trackParentInterval);
         this._lastSizeCheck = this.game.time.time;
-
-        console.log("T: " + this._updateThrottle);
 
     },
 
