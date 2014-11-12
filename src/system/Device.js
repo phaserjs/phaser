@@ -148,18 +148,6 @@ Phaser.Device = function (game) {
     this.worker = false;
 
     /**
-    * @property {boolean} touch - Is touch available?
-    * @default
-    */
-    this.touch = false;
-
-    /**
-    * @property {boolean} mspointer - Is mspointer available?
-    * @default
-    */
-    this.mspointer = false;
-
-    /**
     * @property {boolean} css3D - Is css3D available?
     * @default
     */
@@ -194,6 +182,27 @@ Phaser.Device = function (game) {
     * @default
     */
     this.quirksMode = false;
+
+    //  Input
+
+    /**
+    * @property {boolean} touch - Is touch available?
+    * @default
+    */
+    this.touch = false;
+
+    /**
+    * @property {boolean} mspointer - Is mspointer available?
+    * @default
+    */
+    this.mspointer = false;
+
+    /**
+    * @property {string|null} wheelType - The newest type of Wheel/Scroll event supported: 'wheel', 'mousewheel', 'DOMMouseScroll'
+    * @default
+    * @protected
+    */
+    this.wheelEvent = null;
 
     //  Browser
 
@@ -401,6 +410,7 @@ Phaser.Device = function (game) {
     this._checkCSS3D();
     this._checkDevice();
     this._checkFeatures();
+    this._checkInput();
 
 };
 
@@ -500,7 +510,24 @@ Phaser.Device.prototype = {
 
         this.worker = !!window['Worker'];
 
-        if ('ontouchstart' in document.documentElement || (window.navigator.maxTouchPoints && window.navigator.maxTouchPoints > 1))
+        this.pointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
+
+        this.quirksMode = (document.compatMode === 'CSS1Compat') ? false : true;
+
+        this.getUserMedia = !!(navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
+
+    },
+
+    /**
+    * Checks/configures various input.
+    *
+    * @method Phaser.Device#checkInput
+    * @private
+    */
+    _checkInput: function () {
+
+        if ('ontouchstart' in document.documentElement ||
+            (window.navigator.maxTouchPoints && window.navigator.maxTouchPoints > 1))
         {
             this.touch = true;
         }
@@ -510,11 +537,25 @@ Phaser.Device.prototype = {
             this.mspointer = true;
         }
 
-        this.pointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
-
-        this.quirksMode = (document.compatMode === 'CSS1Compat') ? false : true;
-
-        this.getUserMedia = !!(navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
+        if (!this.cocoonJS)
+        {
+            // See https://developer.mozilla.org/en-US/docs/Web/Events/wheel
+            if ('onwheel' in window || (this.ie && 'WheelEvent' in window))
+            {
+                // DOM3 Wheel Event: FF 17+, IE 9+, Chrome 31+, Safari 7+
+                this.wheelEvent = 'wheel';
+            }
+            else if ('onmousewheel' in window)
+            {
+                // Non-FF legacy: IE 6-9, Chrome 1-31, Safari 5-7.
+                this.wheelEvent = 'mousewheel';
+            }
+            else if (this.firefox && 'MouseScrollEvent' in window)
+            {
+                // FF prior to 17. This should probably be scrubbed.
+                this.wheelEvent = 'DOMMouseScroll';
+            }
+        }
 
     },
 

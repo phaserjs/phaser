@@ -765,6 +765,13 @@ Phaser.Game.prototype = {
 
     },
 
+    /**
+    * Updates all logic subsystems in Phaser. Called automatically by Game.update.
+    *
+    * @method Phaser.Game#updateLogic
+    * @protected
+    * @param {number} timeStep - The current timeStep value as determined by Game.update.
+    */
     updateLogic: function (timeStep) {
 
         if (!this._paused && !this.pendingStep)
@@ -811,6 +818,13 @@ Phaser.Game.prototype = {
         }
     },
 
+    /**
+    * Renders the display list. Called automatically by Game.update.
+    *
+    * @method Phaser.Game#updateRender
+    * @protected
+    * @param {number} elapsedTime - The time elapsed since the last update.
+    */
     updateRender: function (elapsedTime) {
 
         // update tweens once every frame along with the render logic (to keep them smooth in slowMotion scenarios)
