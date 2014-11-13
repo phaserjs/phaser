@@ -277,7 +277,7 @@ Object.defineProperty(Phaser.Key.prototype, "justDown", {
     },
     set: function (value) {
         this._justDown = value;
-    },
+    }
 
 });
 
