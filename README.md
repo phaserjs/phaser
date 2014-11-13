@@ -166,6 +166,7 @@ The proxy methods are generated one-time dynamically but only when needed.
 * Phaser games should now work again from the CocoonJS Launcher.
 * Only one of the mouse wheel events is listened to, newest standard first.
 This fixes a bug in FF where it would use the default DOMMouseWheel (thanks @pnstickne #1313)
+* Stage.smoothed needed to modify the value of PIXI.scaleMode.DEFAULT instead of PIXI.scaleMode.LINEAR (thanks @pixelpicosean #1322)
 
 ### Pixi 2.1.0 New Features
 
