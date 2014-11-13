@@ -112,6 +112,8 @@ Version 2.2.0 - "Bethal" - in development
 * Wheel Scroll Event (old non-FF) and DOM Mouse Wheel (old FF) are
 supported via a non-exported reused wrapper object; WheelEventProxy.
 The proxy methods are generated one-time dynamically but only when needed.
+* Key.justDown allows you to test if a Key has just been pressed down or not. You can only call justDown once per key press. It will only return `true` once, until the Key is released and pressed down again. This allows you to use it in situations where you want to check if this key is down without using a Signal, such as in a core game loop (thanks @pjbaron #1321)
+* Key.justUp allows you to test if a Key has just been released or not. You can only call justUp once per key press. It will only return `true` once, until the Key is pressed down and released again. This allows you to use it in situations where you want to check if this key is up without using a Signal, such as in a core game loop (thanks @pjbaron #1321)
 
 ### Updates
 
@@ -146,6 +148,8 @@ The proxy methods are generated one-time dynamically but only when needed.
 * AudioSprite - removed an unnecessary if-statement (thanks @DaanHaaz #1312)
 * ArcadePhysics.skipQuadTree is now set to `true` by default. A QuadTree is a wonderful thing if the objects in your game are well spaced out. But in tightly packed games, especially those with tilemaps or single-screen games, they are a considerable performance drain and eat up CPU. We've taken the decision to disable the Arcade Physics QuadTree by default. It's all still in there and can be re-enabled via `game.physics.arcade.skipQuadTree = false`, but please only do so if you're sure your game benefits from this.
 * Phaser.DOM now houses new DOM functions. Some have been moved over from ScaleManager as appropriate.
+* Key.justPressed has bee renamed to Key.downDuration which is a much clearer name for what the method actually does. See Key.justDown for a nice clean alternative.
+* Key.justReleased has bee renamed to Key.upDuration which is a much clearer name for what the method actually does. See Key.justUp for a nice clean alternative.
 
 ### Bug Fixes
 
