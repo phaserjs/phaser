@@ -1689,6 +1689,8 @@ declare module Phaser {
         game: Phaser.Game;
         isDown: boolean;
         isUp: boolean;
+        justDown: boolean;
+        justUp: boolean;
         keyCode: number;
         onDown: Phaser.Signal;
         onHoldCallback: Function;
@@ -1699,12 +1701,12 @@ declare module Phaser {
         timeDown: number;
         timeUp: number;
 
-        justPressed(duration?: number): boolean;
-        justReleased(duration?: number): boolean;
+        downDuration(duration?: number): boolean;
         processKeyDown(event: KeyboardEvent): void;
         processKeyUp(event: KeyboardEvent): void;
         reset(hard?: boolean): void;
         update(): void;
+        upDuration(duration?: number): boolean;
 
     }
 
