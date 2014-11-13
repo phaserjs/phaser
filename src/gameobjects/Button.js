@@ -252,7 +252,6 @@ Phaser.Button.prototype.removedFromWorld = function () {
 */
 Phaser.Button.prototype.setStateFrame = function (state, frame, switchImmediately)
 {
-    
     var frameKey = '_on' + state + 'Frame';
 
     if (frame != null) // not null or undefined

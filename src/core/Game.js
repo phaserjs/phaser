@@ -586,13 +586,13 @@ Phaser.Game.prototype = {
         if (this.device.chrome)
         {
             var args = [
-                '%c %c %c Phaser v' + v + ' | Pixi.js ' + PIXI.VERSION + ' | ' + r + ' | ' + a + '  %c %c ' + ' http://phaser.io  %c %c \u2665%c\u2665%c\u2665 ',
-                'background: #7a66a3',
-                'background: #625186',
-                'color: #ffffff; background: #43375b;',
-                'background: #625186',
-                'background: #ccb9f2',
-                'background: #625186'
+                '%c %c %c Phaser v' + v + ' | Pixi.js ' + PIXI.VERSION + ' | ' + r + ' | ' + a + '  %c %c ' + '%c http://phaser.io %c\u2665%c\u2665%c\u2665',
+                'background: #3db79f',
+                'background: #329582',
+                'color: #ffffff; background: #226558;',
+                'background: #329582',
+                'background: #3db79f',
+                'background: #ffffff'
             ];
 
             for (var i = 0; i < 3; i++)
