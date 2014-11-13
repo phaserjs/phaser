@@ -5,107 +5,107 @@
 */
 
 /**
-* A set data structure. Allows items to add themselves to and remove themselves from the set. Items can only exist once in the set.
+* ArraySet is a Set data structure (items must be unique within the set) that also maintains order.
+* This allows specific items to be easily added or removed from the Set.
 *
-* @class Phaser.ArrayList
+* Item equality (and uniqueness) is determined by the behavior of `Array.indexOf`.
+*
+* This used primarily by the Input subsystem.
+*
+* @class Phaser.ArraySet
 * @constructor
+* @param {*[]} [list=(new array)] - The backing array: if specified the items in the list _must_ be unique, per `Array.indexOf`, and the ownership of the array _should_ be relinquished to the ArraySet.
 */
-Phaser.ArrayList = function () {
+Phaser.ArraySet = function (list) {
 
     /**
-    * @property {number} total - Number of objects in the list.
-    * @default
-    */
-    this.total = 0;
-
-    /**
-    * @property {number} position - Current cursor position.
+    * Current cursor position as established by `first` and `next`.
+    * @property {integer} position
     * @default
     */
     this.position = 0;
 
     /**
-    * @property {array} list - The list.
+    * The backing array. If items are added/removed manually the `total` property must be updated accordingly.
+    * @property {*[]} list
     */
-    this.list = [];
+    this.list = list || [];
 
 };
 
-Phaser.ArrayList.prototype = {
+Phaser.ArraySet.prototype = {
 
     /**
-    * Adds a new element to this list. The item can only exist in the list once.
+    * Adds a new element to the end of the list.
+    * If the item already exists in the list it is not moved.
     *
-    * @method Phaser.ArrayList#add
-    * @param {object} child - The element to add to this list. Can be a Phaser.Sprite or any other object you need to quickly iterate through.
-    * @return {object} The child that was added.
+    * @method Phaser.ArraySet#add
+    * @param {*} item - The element to add to this list.
+    * @return {*} The item that was added.
     */
-    add: function (child) {
+    add: function (item) {
 
-        if (!this.exists(child))
+        if (!this.exists(item))
         {
-            this.list.push(child);
-            this.total++;
+            this.list.push(item);
         }
 
-        return child;
+        return item;
 
     },
 
     /**
-    * Gets the index of the child in the list, or -1 if it isn't in the list.
+    * Gets the index of the item in the list, or -1 if it isn't in the list.
     *
-    * @method Phaser.ArrayList#getIndex
-    * @param {object} child - The element to get the list index for.
-    * @return {number} The index of the child or -1 if not found.
+    * @method Phaser.ArraySet#getIndex
+    * @param {*} item - The element to get the list index for.
+    * @return {number} The index of the item or -1 if not found.
     */
-    getIndex: function (child) {
+    getIndex: function (item) {
 
-        return this.list.indexOf(child);
+        return this.list.indexOf(item);
 
     },
 
     /**
-    * Checks for the child within this list.
+    * Checks for the item within this list.
     *
-    * @method Phaser.ArrayList#exists
-    * @param {object} child - The element to get the list index for.
-    * @return {boolean} True if the child is found in the list, otherwise false.
+    * @method Phaser.ArraySet#exists
+    * @param {*} item - The element to get the list index for.
+    * @return {boolean} True if the item is found in the list, otherwise false.
     */
-    exists: function (child) {
+    exists: function (item) {
 
-        return (this.list.indexOf(child) > -1);
+        return (this.list.indexOf(item) > -1);
 
     },
 
     /**
-    * Resets the list length and drops all items in the list.
+    * Removes all the items.
     *
-    * @method Phaser.ArrayList#reset
+    * @method Phaser.ArraySet#reset
     */
     reset: function () {
 
         this.list.length = 0;
-        this.total = 0;
 
     },
 
     /**
     * Removes the given element from this list if it exists.
     *
-    * @method Phaser.ArrayList#remove
-    * @param {object} child - The child to be removed from the list.
-    * @return {object} child - The child that was removed.
+    * @method Phaser.ArraySet#remove
+    * @param {*} item - The item to be removed from the list.
+    * @return {*} item - The item that was removed.
     */
-    remove: function (child) {
+    remove: function (item) {
 
-        var idx = this.list.indexOf(child);
+        var idx = this.list.indexOf(item);
 
         if (idx > -1)
         {
             this.list.splice(idx, 1);
-            this.total--;
-            return child;
+            return item;
         }
 
     },
@@ -113,8 +113,8 @@ Phaser.ArrayList.prototype = {
     /**
     * Sets the property `key` to the given value on all members of this list.
     *
-    * @method Phaser.ArrayList#setAll
-    * @param {object} key - The object on the child to set.
+    * @method Phaser.ArraySet#setAll
+    * @param {*} key - The object on the item to set.
     * @param {*} value - The value to set the property to.
     */
     setAll: function (key, value) {
@@ -123,7 +123,7 @@ Phaser.ArrayList.prototype = {
 
         while (i--)
         {
-            if (this.list[i] && this.list[i][key])
+            if (this.list[i])
             {
                 this.list[i][key] = value;
             }
@@ -135,7 +135,7 @@ Phaser.ArrayList.prototype = {
     * Calls a function on all members of this list, using the member as the context for the callback.
     * The function must exist on the member.
     *
-    * @method Phaser.ArrayList#callAll
+    * @method Phaser.ArraySet#callAll
     * @param {function} callback - The function to call.
     * @param {...*} parameter - Additional parameters that will be passed to the callback.
     */
@@ -158,18 +158,32 @@ Phaser.ArrayList.prototype = {
 };
 
 /**
-* Resets the cursor to the first item in the list and returns it.
+* Number of items in the ArraySet. Same as `list.length`.
 *
-* @name Phaser.ArrayList#first
-* @property {object} first - The first item in the list.
+* @name Phaser.ArraySet#total
+* @property {integer} total
 */
-Object.defineProperty(Phaser.ArrayList.prototype, "first", {
+Object.defineProperty(Phaser.ArraySet.prototype, "total", {
+
+    get: function () {
+        return this.list.length;
+    }
+
+});
+
+/**
+* Returns the first item and resets the cursor to the start.
+*
+* @name Phaser.ArraySet#first
+* @property {*} first
+*/
+Object.defineProperty(Phaser.ArraySet.prototype, "first", {
 
     get: function () {
 
         this.position = 0;
 
-        if (this.total > 0)
+        if (this.list.length > 0)
         {
             return this.list[0];
         }
@@ -183,16 +197,16 @@ Object.defineProperty(Phaser.ArrayList.prototype, "first", {
 });
 
 /**
-* Gets the next item in the list and returns it, advancing the cursor.
+* Returns the the next item (based on the cursor) and advances the cursor.
 *
-* @name Phaser.ArrayList#next
-* @property {object} next - Advanced the cursor and return.
+* @name Phaser.ArraySet#next
+* @property {*} next
 */
-Object.defineProperty(Phaser.ArrayList.prototype, "next", {
+Object.defineProperty(Phaser.ArraySet.prototype, "next", {
 
     get: function () {
 
-        if (this.position < this.total)
+        if (this.position < this.list.length)
         {
             this.position++;
 
@@ -207,4 +221,13 @@ Object.defineProperty(Phaser.ArrayList.prototype, "next", {
 
 });
 
-Phaser.ArrayList.prototype.constructor = Phaser.ArrayList;
+Phaser.ArraySet.prototype.constructor = Phaser.ArraySet;
+
+/**
+* Phaser.ArraySet is a deprecated alias for Phaser.ArraySet.
+*
+* @class Phaser.ArrayList
+* @constructor
+* @deprecated 2.2.0 - Use {@link Phaser.ArraySet} instead.
+*/
+Phaser.ArrayList = Phaser.ArraySet;
