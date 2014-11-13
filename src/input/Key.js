@@ -45,6 +45,12 @@ Phaser.Key = function (game, keycode) {
     this.isUp = true;
 
     /**
+     * @property {boolean} _justDown - True if the key has just been pressed (NOTE: requires to be reset, see justDown getter)
+     * @private
+     */
+    this._justDown = false;
+
+    /**
     * @property {boolean} altKey - The down state of the ALT key, if pressed at the same time as this key.
     * @default
     */
@@ -145,6 +151,7 @@ Phaser.Key.prototype = {
 
         this.event = event;
 
+        // exit if this key down is from auto-repeat
         if (this.isDown)
         {
             return;
@@ -159,6 +166,10 @@ Phaser.Key.prototype = {
         this.timeDown = this.game.time.time;
         this.duration = 0;
         this.repeats = 0;
+
+        // _justDown will remain true until it is read via the justDown Getter
+        // this enables the game to poll for past presses, or reset it at the start of a new game state
+        this._justDown = true;
 
         this.onDown.dispatch(this);
 
@@ -248,6 +259,28 @@ Phaser.Key.prototype = {
     }
 
 };
+
+
+/**
+* Getter / Setter for _justDown property.
+* Reading justDown will reset it to false
+* @property {boolean} justDown
+* @memberof Phaser.Key
+* @default false
+*/
+Object.defineProperty(Phaser.Key.prototype, "justDown", {
+
+    get: function () {
+        var r = this._justDown;
+        this._justDown = false;
+        return r;
+    },
+    set: function (value) {
+        this._justDown = value;
+    },
+
+});
+
 
 /**
 * An enabled key processes its update and dispatches events.
