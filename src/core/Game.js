@@ -206,7 +206,7 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     /**
     * @property {Phaser.Device} device - Contains device information and capabilities.
     */
-    this.device = null;
+    this.device = Phaser.Device;
 
     /**
     * @property {Phaser.Camera} camera - A handy reference to world.camera.
@@ -366,26 +366,7 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
         this.state = new Phaser.StateManager(this, state);
     }
 
-    var _this = this;
-
-    this._onBoot = function () {
-        return _this.boot();
-    };
-
-    if (document.readyState === 'complete' || document.readyState === 'interactive')
-    {
-        window.setTimeout(this._onBoot, 0);
-    }
-    else if (typeof window.cordova !== "undefined" && !navigator['isCocoonJS'])
-    {
-        //  Cordova, but NOT Cocoon?
-        document.addEventListener('deviceready', this._onBoot, false);
-    }
-    else
-    {
-        document.addEventListener('DOMContentLoaded', this._onBoot, false);
-        window.addEventListener('load', this._onBoot, false);
-    }
+    this.device.whenReady(this.boot, this);
 
     return this;
 
@@ -481,76 +462,62 @@ Phaser.Game.prototype = {
             return;
         }
 
-        if (!document.body)
+        this.onPause = new Phaser.Signal();
+        this.onResume = new Phaser.Signal();
+        this.onBlur = new Phaser.Signal();
+        this.onFocus = new Phaser.Signal();
+
+        this.isBooted = true;
+
+        this.math = Phaser.Math;
+
+        this.scale = new Phaser.ScaleManager(this, this._width, this._height);
+        this.stage = new Phaser.Stage(this);
+
+        this.setUpRenderer();
+
+        this.world = new Phaser.World(this);
+        this.add = new Phaser.GameObjectFactory(this);
+        this.make = new Phaser.GameObjectCreator(this);
+        this.cache = new Phaser.Cache(this);
+        this.load = new Phaser.Loader(this);
+        this.time = new Phaser.Time(this);
+        this.tweens = new Phaser.TweenManager(this);
+        this.input = new Phaser.Input(this);
+        this.sound = new Phaser.SoundManager(this);
+        this.physics = new Phaser.Physics(this, this.physicsConfig);
+        this.particles = new Phaser.Particles(this);
+        this.plugins = new Phaser.PluginManager(this);
+        this.net = new Phaser.Net(this);
+
+        this.time.boot();
+        this.stage.boot();
+        this.world.boot();
+        this.scale.boot();
+        this.input.boot();
+        this.sound.boot();
+        this.state.boot();
+
+        if (this.config['enableDebug'])
         {
-            window.setTimeout(this._onBoot, 20);
+            this.debug = new Phaser.Utils.Debug(this);
+            this.debug.boot();
+        }
+
+        this.showDebugHeader();
+
+        this.isRunning = true;
+
+        if (this.config && this.config['forceSetTimeOut'])
+        {
+            this.raf = new Phaser.RequestAnimationFrame(this, this.config['forceSetTimeOut']);
         }
         else
         {
-            document.removeEventListener('DOMContentLoaded', this._onBoot);
-            window.removeEventListener('load', this._onBoot);
-
-            this.onPause = new Phaser.Signal();
-            this.onResume = new Phaser.Signal();
-            this.onBlur = new Phaser.Signal();
-            this.onFocus = new Phaser.Signal();
-
-            this.isBooted = true;
-
-            this.device = new Phaser.Device(this);
-
-            this.math = Phaser.Math;
-
-            this.scale = new Phaser.ScaleManager(this, this._width, this._height);
-            this.stage = new Phaser.Stage(this);
-
-            this.setUpRenderer();
-
-            this.device.checkFullScreenSupport();
-
-            this.world = new Phaser.World(this);
-            this.add = new Phaser.GameObjectFactory(this);
-            this.make = new Phaser.GameObjectCreator(this);
-            this.cache = new Phaser.Cache(this);
-            this.load = new Phaser.Loader(this);
-            this.time = new Phaser.Time(this);
-            this.tweens = new Phaser.TweenManager(this);
-            this.input = new Phaser.Input(this);
-            this.sound = new Phaser.SoundManager(this);
-            this.physics = new Phaser.Physics(this, this.physicsConfig);
-            this.particles = new Phaser.Particles(this);
-            this.plugins = new Phaser.PluginManager(this);
-            this.net = new Phaser.Net(this);
-
-            this.time.boot();
-            this.stage.boot();
-            this.world.boot();
-            this.scale.boot();
-            this.input.boot();
-            this.sound.boot();
-            this.state.boot();
-
-            if (this.config['enableDebug'])
-            {
-                this.debug = new Phaser.Utils.Debug(this);
-                this.debug.boot();
-            }
-
-            this.showDebugHeader();
-
-            this.isRunning = true;
-
-            if (this.config && this.config['forceSetTimeOut'])
-            {
-                this.raf = new Phaser.RequestAnimationFrame(this, this.config['forceSetTimeOut']);
-            }
-            else
-            {
-                this.raf = new Phaser.RequestAnimationFrame(this, false);
-            }
-
-            this.raf.start();
+            this.raf = new Phaser.RequestAnimationFrame(this, false);
         }
+
+        this.raf.start();
 
     },
 
@@ -586,13 +553,13 @@ Phaser.Game.prototype = {
         if (this.device.chrome)
         {
             var args = [
-                '%c %c %c Phaser v' + v + ' | Pixi.js ' + PIXI.VERSION + ' | ' + r + ' | ' + a + '  %c %c ' + ' http://phaser.io  %c %c \u2665%c\u2665%c\u2665 ',
-                'background: #7a66a3',
-                'background: #625186',
-                'color: #ffffff; background: #43375b;',
-                'background: #625186',
-                'background: #ccb9f2',
-                'background: #625186'
+                '%c %c %c Phaser v' + v + ' | Pixi.js ' + PIXI.VERSION + ' | ' + r + ' | ' + a + '  %c %c ' + '%c http://phaser.io %c\u2665%c\u2665%c\u2665',
+                'background: #3db79f',
+                'background: #329582',
+                'color: #ffffff; background: #226558;',
+                'background: #329582',
+                'background: #3db79f',
+                'background: #ffffff'
             ];
 
             for (var i = 0; i < 3; i++)
