@@ -936,11 +936,11 @@ Phaser.Device._initialize = function () {
 
         if (typeof ArrayBuffer !== 'undefined' && typeof Uint8Array !== 'undefined' && typeof Uint32Array !== 'undefined')
         {
-            device.littleEndian = _checkIsLittleEndian(this);
+            device.littleEndian = _checkIsLittleEndian();
             device.LITTLE_ENDIAN = device.littleEndian;
         }
 
-        device.support32bit = (typeof ArrayBuffer !== "undefined" && typeof Uint8ClampedArray !== "undefined" && typeof Int32Array !== "undefined" && device.littleEndian !== null && _checkIsUint8ClampedImageData(this));
+        device.support32bit = (typeof ArrayBuffer !== "undefined" && typeof Uint8ClampedArray !== "undefined" && typeof Int32Array !== "undefined" && device.littleEndian !== null && _checkIsUint8ClampedImageData());
 
         navigator.vibrate = navigator.vibrate || navigator.webkitVibrate || navigator.mozVibrate || navigator.msVibrate;
 
@@ -1043,14 +1043,14 @@ Phaser.Device._initialize = function () {
     }
 
     //  Run the checks
-    _checkOS(this);
-    _checkAudio(this);
-    _checkBrowser(this);
-    _checkCSS3D(this);
-    _checkDevice(this);
-    _checkFeatures(this);
-    _checkFullScreenSupport(this);
-    _checkInput(this);
+    _checkOS();
+    _checkAudio();
+    _checkBrowser();
+    _checkCSS3D();
+    _checkDevice();
+    _checkFeatures();
+    _checkFullScreenSupport();
+    _checkInput();
 
 };
 
@@ -1140,8 +1140,9 @@ Phaser.Device.isConsoleOpen = function () {
 * @method isAndroidStockBrowser
 * @memberof Phaser.Device.prototype
 */
-Phaser.Device.isAndroidStockBrowser = function()
-{
+Phaser.Device.isAndroidStockBrowser = function () {
+
     var matches = window.navigator.userAgent.match(/Android.*AppleWebKit\/([\d.]+)/);
     return matches && matches[1] < 537;
+
 };
