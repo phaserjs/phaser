@@ -1,4 +1,4 @@
-// Type definitions for PIXI 2.0.0 dev 2014-11-09
+// Type definitions for PIXI 2.1.1 dev 2014-11-13
 // Project: https://github.com/GoodBoyDigital/pixi.js/
 
 declare module PIXI {
@@ -49,6 +49,7 @@ declare module PIXI {
     export var RETINA_PREFIX: string;
     export var identityMatrix: Matrix;
     export var glContexts: WebGLRenderingContext[];
+    export var instances: any[];
 
     export var BaseTextureCache: { [key: string]: BaseTexture }
     export var TextureCache: { [key: string]: Texture }
@@ -87,6 +88,7 @@ declare module PIXI {
 
     export interface PixiRenderer {
 
+        autoResize: boolean;
         height: number;
         transparent: boolean;
         type: number;
@@ -100,6 +102,7 @@ declare module PIXI {
 
     export interface PixiRendererOptions {
 
+        autoResize?: boolean;
         antialias?: boolean;
         clearBeforeRender?: boolean;
         preserveDrawingBuffer?: boolean;
@@ -359,6 +362,7 @@ declare module PIXI {
 
         constructor(width?: number, height?: number, options?: PixiRendererOptions);
 
+        autoResize: boolean;
         clearBeforeRender: boolean;
         context: CanvasRenderingContext2D;
         count: number;
@@ -477,6 +481,7 @@ declare module PIXI {
         y: number;
 
         click(e: InteractionData): void;
+        displayObjectUpdateTransform(): void;
         getBounds(matrix?: Matrix): Rectangle;
         getLocalBounds(): Rectangle;
         generateTexture(resolution: number, scaleMode: scaleModes, renderer: PixiRenderer): RenderTexture;
@@ -498,6 +503,7 @@ declare module PIXI {
         touchendoutside(e: InteractionData): void;
         touchstart(e: InteractionData): void;
         touchmove(e: InteractionData): void;
+        updateTransform(): void;
 
     }
 
@@ -588,10 +594,17 @@ declare module PIXI {
         fillAlpha: number;
         fill: boolean;
         shape: any;
+        type: number;
 
     }
 
     export class Graphics extends DisplayObjectContainer {
+
+        static POLY: number;
+        static RECT: number;
+        static CIRC: number;
+        static ELIP: number;
+        static RREC: number;
 
         blendMode: number;
         boundsPadding: number;
@@ -622,7 +635,6 @@ declare module PIXI {
         lineTo(x: number, y: number): Graphics;
         moveTo(x: number, y: number): Graphics;
         quadraticCurveTo(cpX: number, cpY: number, toX: number, toY: number): Graphics;
-        updateBounds(): void;
 
     }
 
@@ -937,6 +949,21 @@ declare module PIXI {
 
     }
 
+    export class RoundedRectangle implements HitArea {
+
+        constructor(x?: number, y?: number, width?: number, height?: number, radius?: number);
+
+        x: number;
+        y: number;
+        width: number;
+        height: number;
+        radius: number;
+
+        clone(): RoundedRectangle;
+        contains(x: number, y: number): boolean;
+
+    }
+
     export class SepiaFilter extends AbstractFilter {
 
         sepia: number;
@@ -1037,6 +1064,7 @@ declare module PIXI {
 
         constructor(texture: Texture);
 
+        blendMode: number;
         colors: number[];
         dirty: boolean;
         indices: number[];
@@ -1061,6 +1089,8 @@ declare module PIXI {
     }
 
     export class Texture implements Mixin {
+
+        static emptyTexture: Texture;
 
         static fromCanvas(canvas: HTMLCanvasElement, scaleMode?: scaleModes): Texture;
         static fromFrame(frameId: string): Texture;
@@ -1160,6 +1190,9 @@ declare module PIXI {
 
         destroy(): void;
         updateBound(): void;
+        onPlayStart(): void;
+        onPlayStop(): void;
+        onCanPlay(): void;
 
     }
 
@@ -1224,6 +1257,40 @@ declare module PIXI {
 
     export class WebGLGraphics {
 
+        static graphicsDataPool: any[];
+
+        static renderGraphics(graphics: Graphics, renderRession: RenderSession): void;
+        static updateGraphics(graphics: Graphics, gl: WebGLRenderingContext): void;
+        static switchMode(webGL: WebGLRenderingContext, type: number): any; //WebGLData
+        static buildRectangle(graphicsData: GraphicsData, webGLData: any): void;
+        static buildRoundedRectangle(graphicsData: GraphicsData, webGLData: any): void;
+        static quadraticBezierCurve(fromX: number, fromY: number, cpX: number, cpY: number, toX: number, toY: number): number[];
+        static buildCircle(graphicsData: GraphicsData, webGLData: any): void;
+        static buildLine(graphicsData: GraphicsData, webGLData: any): void;
+        static buildComplexPoly(graphicsData: GraphicsData, webGLData: any): void;
+        static buildPoly(graphicsData: GraphicsData, webGLData: any): boolean;
+
+        reset(): void;
+        upload(): void;
+
+    }
+
+    export class WebGLGraphicsData {
+
+        constructor(gl: WebGLRenderingContext);
+
+        gl: WebGLRenderingContext;
+        glPoints: any[];
+        color: number[];
+        points: any[];
+        indices: any[];
+        lastIndex: number;
+        buffer: WebGLBuffer;
+        indexBuffer: WebGLBuffer;
+        mode: number;
+        alpha: number;
+        dirty: boolean;
+
         reset(): void;
         upload(): void;
 
@@ -1244,6 +1311,7 @@ declare module PIXI {
 
         constructor(width?: number, height?: number, options?: PixiRendererOptions);
 
+        autoResize: boolean;
         clearBeforeRender: boolean;
         contextLost: boolean;
         contextLostBound: Function;
