@@ -114,6 +114,8 @@ supported via a non-exported reused wrapper object; WheelEventProxy.
 The proxy methods are generated one-time dynamically but only when needed.
 * Key.justDown allows you to test if a Key has just been pressed down or not. You can only call justDown once per key press. It will only return `true` once, until the Key is released and pressed down again. This allows you to use it in situations where you want to check if this key is down without using a Signal, such as in a core game loop (thanks @pjbaron #1321)
 * Key.justUp allows you to test if a Key has just been released or not. You can only call justUp once per key press. It will only return `true` once, until the Key is pressed down and released again. This allows you to use it in situations where you want to check if this key is up without using a Signal, such as in a core game loop (thanks @pjbaron #1321)
+* Device.whenReady is a new signal that you can use to tell when the device is initialised.
+* Device.onInitialized is dispatched after device initialization occurs but before any of the ready callbacks have been invoked. Local "patching" for a particular device can/should be done in this event.
 
 ### Updates
 
@@ -151,6 +153,7 @@ The proxy methods are generated one-time dynamically but only when needed.
 * Phaser.DOM now houses new DOM functions. Some have been moved over from ScaleManager as appropriate.
 * Key.justPressed has bee renamed to Key.downDuration which is a much clearer name for what the method actually does. See Key.justDown for a nice clean alternative.
 * Key.justReleased has bee renamed to Key.upDuration which is a much clearer name for what the method actually does. See Key.justUp for a nice clean alternative.
+* The Phaser.Device class has been made into a singleton and removed it's dependancy on Phaser.Game (thanks @pnstickne #1328)
 
 ### Bug Fixes
 
@@ -172,6 +175,7 @@ The proxy methods are generated one-time dynamically but only when needed.
 * Only one of the mouse wheel events is listened to, newest standard first.
 This fixes a bug in FF where it would use the default DOMMouseWheel (thanks @pnstickne #1313)
 * Stage.smoothed needed to modify the value of PIXI.scaleMode.DEFAULT instead of PIXI.scaleMode.LINEAR (thanks @pixelpicosean #1322)
+* Newly created Groups always had zero z index (thanks @spayton #1291)
 
 ### Pixi 2.1.0 New Features
 
