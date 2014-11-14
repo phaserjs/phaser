@@ -102,6 +102,13 @@ Phaser.TweenManager.prototype = {
                     this.remove(this._tweens[t]);
                 }
             }
+            for (t = 0, len = this._add.length; t < len; t++)
+            {
+                if (obj === this._add[t]._object)
+                {
+                    this.remove(this._add[t]);
+                }
+            }
         }
         
     },
