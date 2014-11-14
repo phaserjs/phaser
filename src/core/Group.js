@@ -39,24 +39,23 @@ Phaser.Group = function (game, parent, name, addToStage, enableBody, physicsBody
     */
     this.name = name || 'group';
 
-    PIXI.DisplayObjectContainer.call(this);
-
-    if (addToStage)
-    {
-        this.game.stage.addChild(this);
-    }
-    else
-    {
-        if (parent)
-        {
-            parent.addChild(this);
-        }
-    }
-
     /**
     * @property {number} z - The z-depth value of this object within its Group (remember the World is a Group as well). No two objects in a Group can have the same z value.
     */
     this.z = 0;
+
+    PIXI.DisplayObjectContainer.call(this);
+
+    if (addToStage) {
+        this.game.stage.addChild(this);
+        this.z = this.game.stage.children.length;
+    }
+    else {
+        if (parent) {
+            parent.addChild(this);
+            this.z = parent.children.length;
+        }
+    }
 
     /**
     * @property {number} type - Internal Phaser Type value.
