@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.2.0 "Bethal" - Built: Wed Nov 12 2014 22:48:42
+* v2.2.0 "Bethal" - Built: Fri Nov 14 2014 08:15:57
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -50,7 +50,7 @@
 */
 var Phaser = Phaser || {
 
-	VERSION: '2.2.0-RC5',
+	VERSION: '2.2.0-RC6',
 	GAMES: [],
 
     AUTO: 0,
@@ -123,11 +123,6 @@ PIXI.InteractionManager = PIXI.InteractionManager || function () {};
 
 //  Equally we're going to supress the Pixi console log, with their agreement.
 PIXI.dontSayHello = true;
-
-// PIXI.Polygon.prototype.type = PIXI.Graphics.POLY;
-// PIXI.Rectangle.prototype.type = PIXI.Graphics.RECT;
-// PIXI.Circle.prototype.type = PIXI.Graphics.CIRC;
-// PIXI.Ellipse.prototype.type = PIXI.Graphics.ELIP;
 
 /**
 * @author       Richard Davey <rich@photonstorm.com>
@@ -8347,7 +8342,7 @@ Object.defineProperty(Phaser.Stage.prototype, "smoothed", {
 
     get: function () {
 
-        return !PIXI.scaleModes.LINEAR;
+        return PIXI.scaleModes.DEFAULT === PIXI.scaleModes.LINEAR;
 
     },
 
@@ -8355,11 +8350,11 @@ Object.defineProperty(Phaser.Stage.prototype, "smoothed", {
 
         if (value)
         {
-            PIXI.scaleModes.LINEAR = 0;
+            PIXI.scaleModes.DEFAULT = PIXI.scaleModes.LINEAR;
         }
         else
         {
-            PIXI.scaleModes.LINEAR = 1;
+            PIXI.scaleModes.DEFAULT = PIXI.scaleModes.NEAREST;
         }
     }
 
@@ -13735,13 +13730,13 @@ Phaser.Game.prototype = {
         if (this.device.chrome)
         {
             var args = [
-                '%c %c %c Phaser v' + v + ' | Pixi.js ' + PIXI.VERSION + ' | ' + r + ' | ' + a + '  %c %c ' + ' http://phaser.io  %c %c \u2665%c\u2665%c\u2665 ',
-                'background: #7a66a3',
-                'background: #625186',
-                'color: #ffffff; background: #43375b;',
-                'background: #625186',
-                'background: #ccb9f2',
-                'background: #625186'
+                '%c %c %c Phaser v' + v + ' | Pixi.js ' + PIXI.VERSION + ' | ' + r + ' | ' + a + '  %c %c ' + '%c http://phaser.io %c\u2665%c\u2665%c\u2665',
+                'background: #3db79f',
+                'background: #329582',
+                'color: #ffffff; background: #226558;',
+                'background: #329582',
+                'background: #3db79f',
+                'background: #ffffff'
             ];
 
             for (var i = 0; i < 3; i++)
@@ -15299,13 +15294,13 @@ Phaser.Key = function (game, keycode) {
     this.event = null;
 
     /**
-    * @property {boolean} isDown - The "down" state of the key.
+    * @property {boolean} isDown - The "down" state of the key. This will remain `true` for as long as the keyboard thinks this key is held down.
     * @default
     */
     this.isDown = false;
 
     /**
-    * @property {boolean} isUp - The "up" state of the key.
+    * @property {boolean} isUp - The "up" state of the key. This will remain `true` for as long as the keyboard thinks this key is up.
     * @default
     */
     this.isUp = true;
@@ -15378,10 +15373,28 @@ Phaser.Key = function (game, keycode) {
     */
     this.onUp = new Phaser.Signal();
 
+    /**
+     * @property {boolean} _justDown - True if the key has just been pressed (NOTE: requires to be reset, see justDown getter)
+     * @private
+     */
+    this._justDown = false;
+
+    /**
+     * @property {boolean} _justUp - True if the key has just been pressed (NOTE: requires to be reset, see justDown getter)
+     * @private
+     */
+    this._justUp = false;
+
 };
 
 Phaser.Key.prototype = {
 
+    /**
+    * Called automatically by Phaser.Keyboard.
+    * 
+    * @method Phaser.Key#update
+    * @protected
+    */
     update: function () {
 
         if (!this._enabled) { return; }
@@ -15401,8 +15414,9 @@ Phaser.Key.prototype = {
 
     /**
     * Called automatically by Phaser.Keyboard.
+    * 
     * @method Phaser.Key#processKeyDown
-    * @param {KeyboardEvent} event.
+    * @param {KeyboardEvent} event - The DOM event that triggered this.
     * @protected
     */
     processKeyDown: function (event) {
@@ -15411,6 +15425,7 @@ Phaser.Key.prototype = {
 
         this.event = event;
 
+        // exit if this key down is from auto-repeat
         if (this.isDown)
         {
             return;
@@ -15426,14 +15441,19 @@ Phaser.Key.prototype = {
         this.duration = 0;
         this.repeats = 0;
 
+        // _justDown will remain true until it is read via the justDown Getter
+        // this enables the game to poll for past presses, or reset it at the start of a new game state
+        this._justDown = true;
+
         this.onDown.dispatch(this);
 
     },
 
     /**
     * Called automatically by Phaser.Keyboard.
+    * 
     * @method Phaser.Key#processKeyUp
-    * @param {KeyboardEvent} event.
+    * @param {KeyboardEvent} event - The DOM event that triggered this.
     * @protected
     */
     processKeyUp: function (event) {
@@ -15451,6 +15471,10 @@ Phaser.Key.prototype = {
         this.isUp = true;
         this.timeUp = this.game.time.time;
         this.duration = this.game.time.time - this.timeDown;
+
+        // _justUp will remain true until it is read via the justUp Getter
+        // this enables the game to poll for past presses, or reset it at the start of a new game state
+        this._justUp = true;
 
         this.onUp.dispatch(this);
 
@@ -15474,6 +15498,8 @@ Phaser.Key.prototype = {
         this.timeUp = this.game.time.time;
         this.duration = 0;
         this._enabled = true; // .enabled causes reset(false)
+        this._justDown = false;
+        this._justUp = false;
 
         if (hard)
         {
@@ -15486,12 +15512,14 @@ Phaser.Key.prototype = {
     },
 
     /**
-    * Returns the "just pressed" state of the Key. Just pressed is considered true if the key was pressed down within the duration given.
-    * @method Phaser.Key#justPressed
-    * @param {number} [duration=50] - The duration below which the key is considered as being just pressed.
-    * @return {boolean} True if the key is just pressed otherwise false.
+    * Returns `true` if the Key was pressed down within the `duration` value given, or `false` is it either isn't down,
+    * or was pressed down longer ago than then given duration.
+    * 
+    * @method Phaser.Key#downDuration
+    * @param {number} [duration=50] - The duration within which the key is considered as being just pressed. Given in ms.
+    * @return {boolean} True if the key was pressed down within the given duration.
     */
-    justPressed: function (duration) {
+    downDuration: function (duration) {
 
         if (typeof duration === "undefined") { duration = 50; }
 
@@ -15500,12 +15528,14 @@ Phaser.Key.prototype = {
     },
 
     /**
-    * Returns the "just released" state of the Key. Just released is considered as being true if the key was released within the duration given.
-    * @method Phaser.Key#justReleased
-    * @param {number} [duration=50] - The duration below which the key is considered as being just released.
-    * @return {boolean} True if the key is just released otherwise false.
+    * Returns `true` if the Key was pressed down within the `duration` value given, or `false` is it either isn't down,
+    * or was pressed down longer ago than then given duration.
+    * 
+    * @method Phaser.Key#upDuration
+    * @param {number} [duration=50] - The duration within which the key is considered as being just released. Given in ms.
+    * @return {boolean} True if the key was released down within the given duration.
     */
-    justReleased: function (duration) {
+    upDuration: function (duration) {
 
         if (typeof duration === "undefined") { duration = 50; }
 
@@ -15516,8 +15546,53 @@ Phaser.Key.prototype = {
 };
 
 /**
+* The justDown value allows you to test if this Key has just been pressed down or not.
+* When you check this value it will return `true` if the Key is down, otherwise `false`.
+* You can only call justDown once per key press. It will only return `true` once, until the Key is released and pressed down again.
+* This allows you to use it in situations where you want to check if this key is down without using a Signal, such as in a core game loop.
+* 
+* @property {boolean} justDown
+* @memberof Phaser.Key
+* @default false
+*/
+Object.defineProperty(Phaser.Key.prototype, "justDown", {
+
+    get: function () {
+
+        var current = this._justDown;
+        this._justDown = false;
+        return current;
+
+    }
+
+});
+
+/**
+* The justUp value allows you to test if this Key has just been released or not.
+* When you check this value it will return `true` if the Key is up, otherwise `false`.
+* You can only call justUp once per key release. It will only return `true` once, until the Key is pressed down and released again.
+* This allows you to use it in situations where you want to check if this key is up without using a Signal, such as in a core game loop.
+* 
+* @property {boolean} justUp
+* @memberof Phaser.Key
+* @default false
+*/
+Object.defineProperty(Phaser.Key.prototype, "justUp", {
+
+    get: function () {
+
+        var current = this._justUp;
+        this._justUp = false;
+        return current;
+
+    }
+
+});
+
+/**
 * An enabled key processes its update and dispatches events.
 * A key can be disabled momentarily at runtime instead of deleting it.
+* 
 * @property {boolean} enabled
 * @memberof Phaser.Key
 * @default true
@@ -15525,9 +15600,13 @@ Phaser.Key.prototype = {
 Object.defineProperty(Phaser.Key.prototype, "enabled", {
 
     get: function () {
+
         return this._enabled;
+
     },
+
     set: function (value) {
+
         value = !!value;
 
         if (value !== this._enabled)
@@ -15536,6 +15615,7 @@ Object.defineProperty(Phaser.Key.prototype, "enabled", {
             {
                 this.reset(false);
             }
+
             this._enabled = value;
         }
     }
@@ -29955,7 +30035,6 @@ Phaser.Button.prototype.removedFromWorld = function () {
 */
 Phaser.Button.prototype.setStateFrame = function (state, frame, switchImmediately)
 {
-    
     var frameKey = '_on' + state + 'Frame';
 
     if (frame != null) // not null or undefined

@@ -145,6 +145,7 @@ The proxy methods are generated one-time dynamically but only when needed.
     * Faster parent checks (if required)
     * NO_SCALE should not not scale (vs previous behavior of having no behavior)
     * Correct usage of scaleMode depending on mode
+    * Fullscreen Mode always scaling to fill screen in Firefox (#1256)
 * AudioSprite - removed an unnecessary if-statement (thanks @DaanHaaz #1312)
 * ArcadePhysics.skipQuadTree is now set to `true` by default. A QuadTree is a wonderful thing if the objects in your game are well spaced out. But in tightly packed games, especially those with tilemaps or single-screen games, they are a considerable performance drain and eat up CPU. We've taken the decision to disable the Arcade Physics QuadTree by default. It's all still in there and can be re-enabled via `game.physics.arcade.skipQuadTree = false`, but please only do so if you're sure your game benefits from this.
 * Phaser.DOM now houses new DOM functions. Some have been moved over from ScaleManager as appropriate.
