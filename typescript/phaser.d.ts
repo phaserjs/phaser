@@ -1,6 +1,6 @@
 /// <reference path="pixi.d.ts" />
 
-// Type definitions for Phaser 2.2.0 dev 2014-11-10
+// Type definitions for Phaser 2.2.0 dev 2014-11-14
 // Project: https://github.com/photonstorm/phaser
 
 declare class Phaser {
@@ -159,6 +159,20 @@ declare module Phaser {
         remove(child: any): any;
         reset(): void;
         setAll(key: any, value: any): void;
+
+    }
+
+    class ArrayUtils {
+
+        static getRandomItem<T>(objects: T[], startIndex?: number, length?: number): T;
+        static removeRandomItem<T>(objects: T[], startIndex?: number, length?: number): T;
+        static shuffle<T>(array: T[]): T[];
+        static transposeMatrix<T>(array: T[]): T;
+        static rotateMatrix(matrix: any, direction: number): any;
+        static findClosest(value: number, arr: number[]): number;
+        static rotate(array: any[]): any;
+        static numberArray(start: number, end: number): number[];
+        static numberArrayStep(start: number, end: number, step?: number): number[];
 
     }
 
@@ -583,8 +597,6 @@ declare module Phaser {
 
         static LITTLE_ENDIAN: boolean;
 
-        constructor(game: Phaser.Game);
-
         android: boolean;
         arora: boolean;
         audioData: boolean;
@@ -598,6 +610,7 @@ declare module Phaser {
         crosswalk: boolean;
         css3D: boolean;
         desktop: boolean;
+        deviceReadyAt: number;
         ejecta: boolean;
         epiphany: boolean;
         file: boolean;
@@ -610,6 +623,7 @@ declare module Phaser {
         ie: boolean;
         ieVersion: number;
         iOS: boolean;
+        initialized: boolean;
         iPad: boolean;
         iPhone: boolean;
         iPhone4: boolean;
@@ -626,6 +640,7 @@ declare module Phaser {
         node: boolean;
         nodeWebkit: boolean;
         ogg: boolean;
+        onInitialized: Phaser.Signal;
         opera: boolean;
         opus: boolean;
         pixelRatio: number;
@@ -648,12 +663,26 @@ declare module Phaser {
         webm: boolean;
         windows: boolean;
         windowsPhone: boolean;
+        wheelEvent: string;
         worker: boolean;
 
         checkFullScreenSupport(): void;
+        _checkAudio(): void;
+        _checkBrowser(): void;
+        _checkCSS3D(): void;
+        _checkDevice(): void;
+        _checkFeatures(): void;
+        _checkFullScreenSupport(): void;
+        _checkInput(): void;
+        _checkIsLittleEndian(): void;
+        _checkIsUint8ClampedImageData(): boolean;
+        _checkOS(): void;
         canPlayAudio(type: string): boolean;
+        _initialze(): void;
         isConsoleOpen(): boolean;
         isAndroidStockBrowser(): string;
+        _readyCheck(): void;
+        whenReady: (callback: Function, context?: any) => void;
 
     }
 
@@ -1107,6 +1136,7 @@ declare module Phaser {
         context: any;
         debug: Phaser.Utils.Debug;
         device: Phaser.Device;
+        forceSingleUpdate: boolean;
         fpsProblemNotifier: Phaser.Signal;
         height: number;
         id: number;
@@ -1689,7 +1719,9 @@ declare module Phaser {
         game: Phaser.Game;
         isDown: boolean;
         isUp: boolean;
+        _justDown: boolean;
         justDown: boolean;
+        _justUp: boolean;
         justUp: boolean;
         keyCode: number;
         onDown: Phaser.Signal;
@@ -1951,6 +1983,7 @@ declare module Phaser {
         removeFile(key: string, type: string): void;
         replaceInFileList(type: string, key: string, url: string, properties: any): void;
         reset(): void;
+        resize(): void;
         script(key: string, url: String, callback?: Function, callbackContext?: any): Phaser.Loader;
         setPreloadSprite(sprite: Phaser.Sprite, direction?: number): void;
         spritesheet(key: string, url: string, frameWidth: number, frameHeight: number, frameMax?: number, margin?: number, spacing?: number): Phaser.Loader;
@@ -2020,7 +2053,7 @@ declare module Phaser {
         static normalizeAngle(angle: number, radians?: boolean): number;
         static normalizeLatitude(lat: number): number;
         static normalizeLongitude(lng: number): number;
-        static numberArray(min: number, max: number): number[];
+        static numberArray(start: number, end: number): number[];
         static numberArrayStep(start: number, end: number, step?: number): number[];
         static percent(a: number, b: number, base?: number): number;
         static p2px(v: number): number;
@@ -2049,6 +2082,18 @@ declare module Phaser {
 
     }
 
+    interface WheelEventProxy {
+
+        bindEvent(event: any): WheelEventProxy;
+
+        type: string;
+        deltaMode: number;
+        deltaX: number;
+        deltaY: number;
+        deltaZ: number;
+
+    }
+
     class Mouse {
 
         constructor(game: Phaser.Game);
@@ -2068,15 +2113,22 @@ declare module Phaser {
         event: MouseEvent;
         game: Phaser.Game;
         locked: boolean;
-        mouseDownCallback: Function;
-        mouseMoveCallback: Function;
-        mouseOutCallback: Function;
-        mouseOverCallback: Function;
-        mouseUpCallback: Function;
-        mouseWheelCallback: Function;
+        mouseDownCallback: (event: MouseEvent) => void;
+        mouseMoveCallback: (event: MouseEvent) => void;
+        mouseOutCallback: (event: MouseEvent) => void;
+        mouseOverCallback: (event: MouseEvent) => void;
+        mouseUpCallback: (event: MouseEvent) => void;
+        mouseWheelCallback: (event: MouseEvent) => void;
+        _onMouseDown: (event: MouseEvent) => void;
+        _onMouseMove: (event: MouseEvent) => void;
+        _onMouseUp: (event: MouseEvent) => void;
+        _onMouseOut: (event: MouseEvent) => void;
+        _onMouseOver: (event: MouseEvent) => void;
+        _onMouseWheel: (event: MouseEvent) => void;
+        _wheelEvent: WheelEventProxy;
         pointerLock: Phaser.Signal;
         stopOnGameOut: boolean;
-        wheelDelta: number;
+        wheelDelta: WheelEventProxy;
 
         onMouseDown(event: MouseEvent): void;
         onMouseMove(event: MouseEvent): void;
@@ -2279,6 +2331,7 @@ declare module Phaser {
             distanceToXY(displayObject: any, x: number, y: number): number;
             enable(object: any, children?: Boolean): void;
             enableBody(object: any): void;
+            getObjectsAtLocation(x: number, y: number, group: Phaser.Group, callback?: (callbackArg: any, object: any) => void, callbackContext?: any, callbackArg?: any): Sprite[]; 
             intersects(body1: Phaser.Physics.Arcade.Body, body2: Phaser.Physics.Arcade.Body): boolean;
             moveToObject(displayObject: any, destination: any, speed?: number, maxTime?: number): number;
             moveToPointer(displayObject: any, speed?: number, pointer?: Phaser.Pointer, maxTime?: number): number;
@@ -2526,6 +2579,7 @@ declare module Phaser {
                 collideCircleVsTile(tile: Phaser.Physics.Ninja.Tile): boolean;
                 collideWorldBounds(): void;
                 destroy(): void;
+                distance(dest: number, round?: boolean): number;
                 integrate(): void;
                 render(context: any, xOffset: number, yOffset: number, color: string, filled: boolean): void;
                 reportCollisionVsWorld(px: number, py: number, dx: number, dy: number, obj: any): void;
@@ -2863,7 +2917,7 @@ declare module Phaser {
                 x: number;
                 y: number;
                 mx: number;
-                my: number;
+                my: number;             
 
             }
 
@@ -3761,101 +3815,145 @@ declare module Phaser {
         static RESIZE: number;
         static USER_SCALE: number;
 
+
         aspectRatio: number;
-        bounds: Phaser.Rectangle;
-        currentScaleMode: number;
+        _createFullScreenTarget: HTMLElement;
+        bounds: Rectangle;
         compatibility: {
             supportsFullScreen: boolean;
             noMargins: boolean;
-            scrollTo: Phaser.Point;
+            scrollTo: Point;
             forceMinimumDocumentHeight: boolean;
             showAllCanExpand: boolean;
         };
-        documentWidth: number;
-        documentHeight: number;
-        enterFullScreen: Phaser.Signal;
-        enterIncorrectOrientation: Phaser.Signal;
-        enterLandscape: Phaser.Signal;
-        enterPortrait: Phaser.Signal;
+        currentScaleMode: number;
+        enterIncorrectOrientation: Signal;
+        enterFullScreen: Signal;
+        enterLandscape: Signal;
+        enterPortrait: Signal;
         event: any;
-        height: number;
-        forcePortrait: boolean;
         forceLandscape: boolean;
-        fullScreenFailed: boolean;
-        fullScreenTarget: HTMLDivElement;
+        forcePortrait: boolean;
         fullScreenScaleMode: number;
-        game: Phaser.Game;
-        grid: Phaser.FlexGrid;
+        fullScreenFailed: Signal;
+        _fullScreenRestore: any;
+        _fullScreenScaleMode: number;
+        fullScreenTarget: HTMLElement;
+        game: Game;
+        _gameSize: Rectangle;
+        grid: FlexGrid;
+        height: number;
         incorrectOrientation: boolean;
-        leaveFullScreen: Phaser.Signal;
-        leaveIncorrectOrientation: Phaser.Signal;
-        isLandscape: boolean;
         isFullScreen: boolean;
         isPortrait: boolean;
+        isLandscape: boolean;
+        leaveFullScreen: Signal;
+        leaveIncorrectOrientation: Signal;
+        _lastUpdate: number;
+        _lastReportedGameSize: Rectangle;
+        _lastReportedCanvasSize: Rectangle;
         margin: { left: number; top: number; right: number; bottom: number; x: number; y: number; };
-        maxHeight: number;
         maxIterations: number;
+        maxHeight: number;
         maxWidth: number;
         minHeight: number;
         minWidth: number;
-        offset: Phaser.Point;
+        offset: Point;
         onResize: ResizeCallback;
         onResizeContext: any;
-        onSizeChange: Phaser.Signal;
+        onSizeChange: Signal;
         orientation: number;
         pageAlignHorizontally: boolean;
         pageAlignVertically: boolean;
+        parentNode: HTMLElement;
         parentIsWindow: boolean;
-        parentNode: HTMLDivElement;
-        parentScaleFactor: Phaser.Point;
+        parentScaleFactor: Point;
+        _pageAlignHorizontally: boolean;
+        _pageAlignVertically: boolean;
+        _parentBounds: Rectangle;
+        scaleFactor: Point;
+        scaleFactorInversed: Point;
         scaleMode: number;
-        scaleFactor: Phaser.Point;
-        scaleFactorInversed: Phaser.Point;
-        scrollX: number;
-        scrollY: number;
+        _scaleMode: number;
+        screenOrientation: string;
         sourceAspectRatio: number;
         trackParentInterval: number;
-        viewportWidth: number;
-        viewportHeight: number;
+        _userScaleFactor: Point;
+        _updateThrottle: number;
+        _updateThrottleReset: number;
         width: number;
-        windowConstrains: { bottom: boolean; right: boolean; };
+        windowConstraints: {
+            bottom: boolean;
+            right: boolean;
+        };
 
-        alignCanvaas(horizontal: boolean, vertical: boolean): void;
         aspect(object: { width: number; height: number; }): number;
-        boot(width: number, height: number): void;
+        alignCanvas(horizontal: boolean, vertical: boolean): void;
+        boot(): void;
+        checkResize(event: any): void;
         checkOrientation(event: any): void;
         checkOrientationState(): boolean;
-        checkResize(event: any): void;
+        classifyOrientation(orientation: string): string;
+        cleanupCreatedTarget(): void;
         createFullScreenTarget(): HTMLDivElement;
-        calicate(coords: { top: number; right: number; bottom: number; left: number; }, cushion: number): { top: number; right: number; bottom: number; left: number; };
         destroy(): void;
-        elementBounds(element?: any, cushion?: number): { top: number; bottom: number; left: number; width: number; height: number; };
+        elementBounds(element?: any, cushion?: number): any; //{ top: number; bottom: number; left: number; width: number; height: number; } or boolean
         forceOrientation(forceLandscape: boolean, forcePortrait?: boolean): void;
-        fullScreenChange(event: any): void;
-        fullScreenError(event: any): void;
-        getParentBounds(target?: Phaser.Rectangle): Phaser.Rectangle;
-        inViewport(element?: any, cushion?: number): boolean;
+        fullScreenChange(event: Event): void;
+        fullScreenError(event: Event): void;
+        _gameResumed(): void;
+        getParentBounds(target?: Rectangle): Rectangle;
+        orientationChange(event: any): void;
         parseConfig(config: any): void;
         preUpdate(): void;
+        queueUpdate(force: boolean): void;
+        prepScreenModel(enteringFullScreen: boolean): void;
+        pauseUpdate(): void;
+        refresh(): void;
         reflowGame(): void;
         reflowCanvas(): void;
-        refresh(): void;
         reset(clearWorld?: boolean): void;
         resetCanvas(cssWidth: string, cssHeight: string): void;
-        scaleSprite(sprite: Phaser.Sprite, width?: number, height?: number, letterBox?: boolean): Phaser.Sprite;
-        setGameSize(width: number, height: number): void;
+        scrollTop(): void;
         setExactFit(): void;
-        setMaximum(): void;
-        setMinMax(minWidth: number, minHeight: number, maxWidth?: number, maxHeight?: number): void;
+        setGameSize(width: number, height: number): void;
         setResizeCallback(callback: ResizeCallback, context: any): void;
+        setUserScale(width: number, height: number): void;
+        signalSizeChange(): void;
+        setMinMax(minWidth: number, minHeight: number, maxWidth?: number, maxHeight?: number): void;
+        setupScale(width: number, height: number): void;
         setScreenSize(): void;
         setShowAll(expanding: boolean): void;
+        setMaximum(): void;
         setSize(): void;
-        setUserScale(width: number, height: number): void;
-        setupScale(width: number, height: number): void;
-        startFullScreen(antialias?: boolean, allowTrampoline?: boolean): void;
+        scaleSprite(sprite: Sprite, width?: number, height?: number, letterBox?: boolean): Sprite
+        scaleSprite(sprite: Image, width?: number, height?: number, letterBox?: boolean): Sprite;
+        startFullScreen(antialias?: boolean, allowTrampoline?: boolean): boolean;
         stopFullScreen(): boolean;
         updateDimensions(width: number, height: number, resize: boolean): void;
+        updateScalingAndBounds(): void;
+        updateOrientationState(recheckOrientation?: boolean): boolean;
+        windowResize(event: any): void;
+
+
+    }
+
+    class DOM {
+
+        static calibrate(coords: any, cushion?: number): any;
+        static getAspectRatio(object: any): number;
+        static getScreenOrientation(primaryFallback?: string): string;
+        static getBounds(element: any, cushion?: number): any;
+        static getOffset(element: any, point?: Point): Point;
+        static getViewport(): { width: number; height: number; };
+        static inViewport(element: any, cushion?: number): boolean;
+
+        static documentWidth: number;
+        static documentHeight: number;
+        static scrollX: number;
+        static scrollY: number;
+        static viewportWidth: number;
+        static viewportHeight: number;
 
     }
 
@@ -4079,6 +4177,7 @@ declare module Phaser {
         create(name: string, width: number, height: number, tileWidth: number, tileHeight: number, group?: Phaser.Group): Phaser.TilemapLayer;
         createBlankLayer(name: string, width: number, height: number, tileWidth: number, tileHeight: number, group?: Phaser.Group): Phaser.TilemapLayer;
         createFromObjects(name: string, gid: number, key: string, frame?: any, exists?: boolean, autoCull?: boolean, group?: Phaser.Group, CustomClass?: any, adjustY?: boolean): void;
+        createFromTiles(tiles: any, replacements: any, key: string, layer?: any, group?: Phaser.Group, properties?: any): number;
         createLayer(layer: any, width?: number, height?: number, group?: Phaser.Group): Phaser.TilemapLayer;
         destroy(): void;
         dump(): void;
@@ -5280,9 +5379,14 @@ declare module p2 {
     export class Utils {
 
         static appendArray<T>(a: Array<T>, b: Array<T>): Array<T>;
-        static splice<T>(array: Array<T>, index: number, howMany: number): void;
-        static extend(a: any, b: any): void;
+        static chanceRoll(chance: number): boolean;
         static defaults(options: any, defaults: any): any;
+        static extend(a: any, b: any): void;
+        static randomChoice(choice1: any, choice2: any): any; 
+        static rotateArray(matrix: any[], direction: any): any[];
+        static splice<T>(array: Array<T>, index: number, howMany: number): void;
+        static shuffle<T>(array: T[]): T[];
+        static transposeArray<T>(array: T[]): T[];
 
     }
 
