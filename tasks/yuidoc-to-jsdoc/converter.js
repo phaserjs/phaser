@@ -103,6 +103,61 @@ function group_typeitems(typeitems) {
 }
 
 /**
+* Convert ident to the "closest" valid non-quoted identifier.
+*/
+function as_valid_identifier (ident) {
+    ident = ident.replace(/\s/g, '_');
+    ident = ident.replace(/[^\w_$]/g, '');
+    ident = ident.replace(/^(\d)/, '_$1');
+
+    return ident;
+}
+
+/**
+* YUIDoc has no concept of generic types and various projects use inconsistent mashups.
+* This is a simple hack to provide some normalization; only spome formats
+* (in particular, that seen in the pixi project) and a few types of input are
+* correctly accepted and nested arrays are not supported.
+*
+* Returns the corrected type if successful
+*/
+function fixup_yuidoc_array (rawtype) {
+    // Accept examples, where the angle braces represent all braces.
+    // 1. X < >
+    // 2. Array < X >
+    // 3. Array..of < X >
+    var r = rawtype;
+    var m;
+
+    // Trim spaces
+    r = r.replace(/^\s+|\s+$/g, '');
+    // make all brackets angles 
+    r = r.replace(/[({[]/g, '<').replace(/[)}\]]/g, '>');
+    // remove whitespace and periods next to brackets
+    r = r.replace(/[\s.]*([<>])[\s.]*/g, '$1');
+
+    // match T<..>, where T != 'array'
+    m = r.match(/^(\S+)(?:<.*>)$/i);
+    if (m && m[1].toLowerCase() !== 'array') {
+        return 'Array<' + as_valid_identifier(m[1] || 'unknown') + '>';
+    }
+
+    // match Array <T>
+    m = r.match(/^Array<(.*)>$/i);
+    if (m) {
+        return 'Array<' + as_valid_identifier(m[1] || 'unknown') + '>';
+    }
+
+    // match Array..of T
+    m = r.match(/^Array.*?of\b\s*(.*)$/i);
+    if (m) {
+        return 'Array<' + as_valid_identifier(m[1] || 'unknown') + '>';
+    }
+
+    return '';
+}
+
+/**
 * Process a complex (possibly multiple) type.
 * (This has limited ability now: will not recurse, handle special arrays, etc.)
 */
@@ -118,20 +173,43 @@ function resolve_typename(typename, typedescs) {
     }
 
     typenames = typenames.map(function (part) {
-        
-        // YUIDoc is type... and JSDoc is ...type
+
+        var orig = part;
+        var prev;
+        var loss = false;
         var repeating = false;
-        if (part.match(/[.]{2,}/)) {
-            repeating = true;
-            part = part.replace(/[.]{2,}/g, '');
+        var array = false;
+
+        // Don't accept quotes in names from upstream
+        prev = part;
+        part = part.replace(/"/g, '');
+        loss = loss || prev !== part;
+
+        // YUIDoc is type... and JSDoc is ...type
+        prev = part;
+        part = part.replace(/^\.{3,}|\.{3,}$/g, '');
+        repeating = prev !== part;
+
+        prev = part;
+        part = fixup_yuidoc_array(part);
+        if (part) {
+            array = true;
+        } else {
+            part = prev;
         }
 
-        // This may happen for some terribly invalid input; ideally this would not be
-        // "handled" here, but trying to work with some not-correct input..
-        var origpart = part;
-        part = part.replace(/[^a-zA-Z0-9_$<>.]/g, '');
-        if (origpart !== part) {
-            console.log("Mutilating type: {" + origpart + "}");
+        if (array) {
+            loss = loss || orig.replace(/^\W/, '') !== part.replace(/^\W/, '');
+        } else {
+            prev = part;
+            var m = part.match(/[\w$.]+/); // Take possible '.' to start
+            part = (m && m[0]) || '';
+            part = as_valid_identifier(part);
+            loss = loss || prev !== part;
+        }
+
+        if (loss) {
+            console.log("Mutilating type: (" + orig + "=>" + part + ")");
         }
 
         var resolved = resolve_single_typename(part, typedescs);
@@ -293,9 +371,11 @@ function itemdesc_to_attrs(itemdesc, typedesc, typedescs) {
     {
         return propertydesc_to_attrs(itemdesc, typedesc, typedescs);
     }
-    else
+    else if (!typedesc._loggedLooseComment)
     {
-        console.log("Skipping loose comment: " + itemdesc.file + ":" + itemdesc.line);
+        typedesc._loggedLooseComment = true;
+        var name = itemdesc.file.match(/([^\/\\]*)$/)[1];
+        console.log("Skipping loose comment: " + name + ":" + itemdesc.line + " (first)");
     }
 
 }

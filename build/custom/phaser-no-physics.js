@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.2.0 "Bethal" - Built: Fri Nov 14 2014 08:15:58
+* v2.2.0 "Bethal" - Built: Sat Nov 15 2014 20:03:34
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -41,23 +41,63 @@
  */
 
 /**
+ * The [pixi.js](http://www.pixijs.com/) module/namespace.
+ *
  * @module PIXI
+ */
+ 
+/**
+ * Namespace-class for [pixi.js](http://www.pixijs.com/).
+ *
+ * Contains assorted static properties and enumerations.
+ *
+ * @class PIXI
+ * @static
  */
 var PIXI = PIXI || {};
 
-/* 
-* 
-* This file contains a lot of pixi consts which are used across the rendering engine
-* @class Consts
-*/
+/**
+ * @property {Number} WEBGL_RENDERER
+ * @protected
+ * @static 
+ */
 PIXI.WEBGL_RENDERER = 0;
+/**
+ * @property {Number} CANVAS_RENDERER
+ * @protected
+ * @static
+ */
 PIXI.CANVAS_RENDERER = 1;
 
-// useful for testing against if your lib is using pixi.
+/**
+ * Version of pixi that is loaded.
+ * @property {String} VERSION
+ * @static 
+ */
 PIXI.VERSION = "v2.1.0";
 
-
-// the various blend modes supported by pixi
+/**
+ * Various blend modes supported by pixi.
+ * @property {Object} blendModes
+ * @property {Number} blendModes.NORMAL
+ * @property {Number} blendModes.ADD
+ * @property {Number} blendModes.MULTIPLY
+ * @property {Number} blendModes.SCREEN
+ * @property {Number} blendModes.OVERLAY
+ * @property {Number} blendModes.DARKEN
+ * @property {Number} blendModes.LIGHTEN
+ * @property {Number} blendModes.COLOR_DODGE
+ * @property {Number} blendModes.COLOR_BURN
+ * @property {Number} blendModes.HARD_LIGHT
+ * @property {Number} blendModes.SOFT_LIGHT
+ * @property {Number} blendModes.DIFFERENCE
+ * @property {Number} blendModes.EXCLUSION
+ * @property {Number} blendModes.HUE
+ * @property {Number} blendModes.SATURATION
+ * @property {Number} blendModes.COLOR
+ * @property {Number} blendModes.LUMINOSITY
+ * @static
+ */
 PIXI.blendModes = {
     NORMAL:0,
     ADD:1,
@@ -78,7 +118,18 @@ PIXI.blendModes = {
     LUMINOSITY:16
 };
 
-// the scale modes
+/**
+ * The scale modes that are supported by pixi.
+ *
+ * The DEFAULT scale mode affects the default scaling mode of future operations.
+ * It can be re-assigned to either LINEAR or NEAREST, depending upon suitability.
+ *
+ * @property {Object} scaleModes
+ * @property {Number} scaleModes.DEFAULT=LINEAR
+ * @property {Number} scaleModes.LINEAR Smooth scaling
+ * @property {Number} scaleModes.NEAREST Pixelating scaling
+ * @static
+ */
 PIXI.scaleModes = {
     DEFAULT:0,
     LINEAR:0,
@@ -103,19 +154,58 @@ else
 PIXI.INTERACTION_FREQUENCY = 30;
 PIXI.AUTO_PREVENT_DEFAULT = true;
 
+/**
+ * @property {Number} PI_2
+ * @static
+ */
 PIXI.PI_2 = Math.PI * 2;
+
+/**
+ * @property {Number} RAD_TO_DEG
+ * @static
+ */
 PIXI.RAD_TO_DEG = 180 / Math.PI;
+
+/**
+ * @property {Number} DEG_TO_RAD
+ * @static
+ */
 PIXI.DEG_TO_RAD = Math.PI / 180;
 
+/**
+ * @property {String} RETINA_PREFIX
+ * @protected
+ * @static
+ */
 PIXI.RETINA_PREFIX = "@2x";
 //PIXI.SCALE_PREFIX "@x%%";
 
+/**
+ * If true the default pixi startup (console) banner message will be suppressed.
+ *
+ * @property {Boolean} dontSayHello
+ * @default false
+ * @static
+ */
 PIXI.dontSayHello = false;
 
-
+/**
+ * The default render options if none are supplied to
+ * {{#crossLink "WebGLRenderer"}}{{/crossLink}} or {{#crossLink "CanvasRenderer"}}{{/crossLink}}.
+ *
+ * @property {Object} defaultRenderOptions
+ * @property {Object} defaultRenderOptions.view=null
+ * @property {Boolean} defaultRenderOptions.transparent=false
+ * @property {Boolean} defaultRenderOptions.antialias=false
+ * @property {Boolean} defaultRenderOptions.preserveDrawingBuffer=false
+ * @property {Number} defaultRenderOptions.resolution=1
+ * @property {Boolean} defaultRenderOptions.clearBeforeRender=true
+ * @property {Boolean} defaultRenderOptions.autoResize=false
+ * @static
+ */
 PIXI.defaultRenderOptions = {
-    view:null, 
-    transparent:false, 
+    view:null,
+    transparent:false,
     antialias:false, 
     preserveDrawingBuffer:false,
     resolution:1,
@@ -142,8 +232,6 @@ PIXI.sayHello = function (type)
             'color: #ff2424; background: #fff'
         ];
 
-       
-
         console.log.apply(console, args);
     }
     else if (window['console'])
@@ -161,7 +249,7 @@ PIXI.sayHello = function (type)
 /**
  * @class Polygon
  * @constructor
- * @param points* {Array<Point>|Array<Number>|Point...|Number...} This can be an array of Points that form the polygon,
+ * @param points* {Array(Point)|Array(Number)|Point...|Number...} This can be an array of Points that form the polygon,
  *      a flat array of numbers that will be interpreted as [x,y, x,y, ...], or the arguments passed can be
  *      all the points of the polygon e.g. `new PIXI.Polygon(new PIXI.Point(), new PIXI.Point(), ...)`, or the
  *      arguments passed can be flat x,y values e.g. `new PIXI.Polygon(x,y, x,y, x,y, ...)` where `x` and `y` are
@@ -592,9 +680,9 @@ PIXI.EmptyRectangle = new PIXI.Rectangle(0,0,0,0);
  */
 
 /**
- * the Rounded Rectangle object is an area defined by its position and has nice rounded corners, as indicated by its top-left corner point (x, y) and by its width and its height.
+ * The Rounded Rectangle object is an area defined by its position and has nice rounded corners, as indicated by its top-left corner point (x, y) and by its width and its height.
  *
- * @class Rounded Rectangle
+ * @class RoundedRectangle
  * @constructor
  * @param x {Number} The X coordinate of the upper-left corner of the rounded rectangle
  * @param y {Number} The Y coordinate of the upper-left corner of the rounded rectangle
@@ -644,7 +732,7 @@ PIXI.RoundedRectangle = function(x, y, width, height, radius)
  * Creates a clone of this Rounded Rectangle
  *
  * @method clone
- * @return {rounded Rectangle} a copy of the rounded rectangle
+ * @return {RoundedRectangle} a copy of the rounded rectangle
  */
 PIXI.RoundedRectangle.prototype.clone = function()
 {
@@ -1086,7 +1174,7 @@ Object.defineProperty(PIXI.DisplayObject.prototype, 'mask', {
  * * IMPORTANT: This is a webGL only feature and will be ignored by the canvas renderer.
  * To remove filters simply set this property to 'null'
  * @property filters
- * @type Array An array of filters
+ * @type Array(Filter)
  */
 Object.defineProperty(PIXI.DisplayObject.prototype, 'filters', {
 
@@ -1203,8 +1291,8 @@ PIXI.DisplayObject.prototype.updateTransform = function()
         a  = this.scale.x;
         d  = this.scale.y;
 
-        tx =  this.position.x;
-        ty =  this.position.y;
+        tx = this.position.x - this.pivot.x * a;
+        ty = this.position.y - this.pivot.y * d;
 
         wt.a  = a  * pt.a;
         wt.b  = a  * pt.b;
@@ -1270,7 +1358,7 @@ PIXI.DisplayObject.prototype.setStageReference = function(stage)
  *
  * @method generateTexture
  * @param resolution {Number} The resolution of the texture being generated
- * @param scaleMode {Number} Should be one of the PIXI.scaleMode consts
+ * @param scaleMode {Number} See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
  * @param renderer {CanvasRenderer|WebGLRenderer} The renderer used to generate the texture.
  * @return {Texture} a texture of the graphics object
  */
@@ -1307,7 +1395,8 @@ PIXI.DisplayObject.prototype.updateCache = function()
  */
 PIXI.DisplayObject.prototype.toGlobal = function(position)
 {
-    this.updateTransform();
+    // don't need to u[date the lot
+    this.displayObjectUpdateTransform();
     return this.worldTransform.apply(position);
 };
 
@@ -1321,13 +1410,14 @@ PIXI.DisplayObject.prototype.toGlobal = function(position)
  */
 PIXI.DisplayObject.prototype.toLocal = function(position, from)
 {
+     // 
     if (from)
     {
         position = from.toGlobal(position);
     }
 
-    this.updateTransform();
-
+    // don't need to u[date the lot
+    this.displayObjectUpdateTransform();
     return this.worldTransform.applyInverse(position);
 };
 
@@ -1384,7 +1474,7 @@ PIXI.DisplayObject.prototype._generateCachedSprite = function()
     PIXI.DisplayObject._tempMatrix.tx = -bounds.x;
     PIXI.DisplayObject._tempMatrix.ty = -bounds.y;
     
-    this._cachedSprite.texture.render(this, PIXI.DisplayObject._tempMatrix );
+    this._cachedSprite.texture.render(this, PIXI.DisplayObject._tempMatrix, true);
 
     this._cachedSprite.anchor.x = -( bounds.x / bounds.width );
     this._cachedSprite.anchor.y = -( bounds.y / bounds.height );
@@ -1491,7 +1581,7 @@ PIXI.DisplayObjectContainer = function()
      * [read-only] The array of children of this container.
      *
      * @property children
-     * @type Array<DisplayObject>
+     * @type Array(DisplayObject)
      * @readOnly
      */
     this.children = [];
@@ -2067,7 +2157,7 @@ PIXI.Sprite = function(texture)
      * The shader that will be used to render the texture to the stage. Set to null to remove a current shader.
      *
      * @property shader
-     * @type PIXI.AbstractFilter
+     * @type AbstractFilter
      * @default null
      */
     this.shader = null;
@@ -3779,7 +3869,7 @@ PIXI.EventTarget = {
          *
          * @method listeners
          * @param eventName {String} The events that should be listed.
-         * @returns {Array} An array of listener functions
+         * @return {Array} An array of listener functions
          */
         obj.listeners = function listeners(eventName) {
             this._listeners = this._listeners || {};
@@ -3793,7 +3883,7 @@ PIXI.EventTarget = {
          * @method emit
          * @alias dispatchEvent
          * @param eventName {String} The name of the event.
-         * @returns {Boolean} Indication if we've emitted an event.
+         * @return {Boolean} Indication if we've emitted an event.
          */
         obj.emit = obj.dispatchEvent = function emit(eventName, data) {
             this._listeners = this._listeners || {};
@@ -4305,7 +4395,7 @@ PIXI.PixiShader = function(gl)
     /**
      * The WebGL program.
      * @property program
-     * @type {Any}
+     * @type Any
      */
     this.program = null;
 
@@ -4650,7 +4740,7 @@ PIXI.PixiShader.prototype.destroy = function()
 PIXI.PixiShader.defaultVertexSrc = [
     'attribute vec2 aVertexPosition;',
     'attribute vec2 aTextureCoord;',
-    'attribute vec4 aColor;',
+    'attribute vec2 aColor;',
 
     'uniform vec2 projectionVector;',
     'uniform vec2 offsetVector;',
@@ -4695,7 +4785,7 @@ PIXI.PixiFastShader = function(gl)
     /**
      * The WebGL program.
      * @property program
-     * @type {Any}
+     * @type Any
      */
     this.program = null;
 
@@ -4851,7 +4941,7 @@ PIXI.StripShader = function(gl)
     /**
      * The WebGL program.
      * @property program
-     * @type {Any}
+     * @type Any
      */
     this.program = null;
 
@@ -4975,7 +5065,7 @@ PIXI.PrimitiveShader = function(gl)
     /**
      * The WebGL program.
      * @property program
-     * @type {Any}
+     * @type Any
      */
     this.program = null;
 
@@ -5091,7 +5181,7 @@ PIXI.ComplexPrimitiveShader = function(gl)
     /**
      * The WebGL program.
      * @property program
-     * @type {Any}
+     * @type Any
      */
     this.program = null;
 
@@ -5577,7 +5667,7 @@ PIXI.WebGLGraphics.buildRoundedRectangle = function(graphicsData, webGLData)
  * @param cpY {Number} Control point y
  * @param toX {Number} Destination point x
  * @param toY {Number} Destination point y
- * @return {Array<Number>}
+ * @return {Array(Number)}
  */
 PIXI.WebGLGraphics.quadraticBezierCurve = function(fromX, fromY, cpX, cpY, toX, toY) {
 
@@ -8700,7 +8790,7 @@ PIXI.WebGLFilterManager.prototype.destroy = function()
 * @param gl {WebGLContext} the current WebGL drawing context
 * @param width {Number} the horizontal range of the filter
 * @param height {Number} the vertical range of the filter
-* @param scaleMode {Number} Should be one of the PIXI.scaleMode consts
+* @param scaleMode {Number} See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
 */
 PIXI.FilterTexture = function(gl, width, height, scaleMode)
 {
@@ -8942,8 +9032,9 @@ PIXI.CanvasMaskManager.prototype.popMask = function(renderSession)
  */
 
 /**
+ * Utility methods for Sprite/Texture tinting.
+ *
  * @class CanvasTinter
- * @constructor
  * @static
  */
 PIXI.CanvasTinter = function()
@@ -8954,6 +9045,7 @@ PIXI.CanvasTinter = function()
  * Basically this method just needs a sprite and a color and tints the sprite with the given color.
  * 
  * @method getTintedTexture 
+ * @static
  * @param sprite {Sprite} the sprite to tint
  * @param color {Number} the color to use to tint the sprite with
  * @return {HTMLCanvasElement} The tinted canvas
@@ -8998,6 +9090,7 @@ PIXI.CanvasTinter.getTintedTexture = function(sprite, color)
  * Tint a texture using the "multiply" operation.
  * 
  * @method tintWithMultiply
+ * @static
  * @param texture {Texture} the texture to tint
  * @param color {Number} the color to use to tint the sprite with
  * @param canvas {HTMLCanvasElement} the current canvas
@@ -9044,6 +9137,7 @@ PIXI.CanvasTinter.tintWithMultiply = function(texture, color, canvas)
  * Tint a texture using the "overlay" operation.
  * 
  * @method tintWithOverlay
+ * @static
  * @param texture {Texture} the texture to tint
  * @param color {Number} the color to use to tint the sprite with
  * @param canvas {HTMLCanvasElement} the current canvas
@@ -9079,6 +9173,7 @@ PIXI.CanvasTinter.tintWithOverlay = function(texture, color, canvas)
  * Tint a texture pixel per pixel.
  * 
  * @method tintPerPixel
+ * @static
  * @param texture {Texture} the texture to tint
  * @param color {Number} the color to use to tint the sprite with
  * @param canvas {HTMLCanvasElement} the current canvas
@@ -9124,6 +9219,7 @@ PIXI.CanvasTinter.tintWithPerPixel = function(texture, color, canvas)
  * Rounds the specified color according to the PIXI.CanvasTinter.cacheStepsPerColorChannel.
  * 
  * @method roundColor
+ * @static
  * @param color {number} the color to round, should be a hex color
  */
 PIXI.CanvasTinter.roundColor = function(color)
@@ -9142,8 +9238,9 @@ PIXI.CanvasTinter.roundColor = function(color)
 /**
  * Number of steps which will be used as a cap when rounding colors.
  *
- * @property cacheStepsPerColorChannel
+ * @property cacheStepsPerColorChannel 
  * @type Number
+ * @static
  */
 PIXI.CanvasTinter.cacheStepsPerColorChannel = 8;
 
@@ -9152,6 +9249,7 @@ PIXI.CanvasTinter.cacheStepsPerColorChannel = 8;
  *
  * @property convertTintToImage
  * @type Boolean
+ * @static
  */
 PIXI.CanvasTinter.convertTintToImage = false;
 
@@ -9160,6 +9258,7 @@ PIXI.CanvasTinter.convertTintToImage = false;
  *
  * @property canUseMultiply
  * @type Boolean
+ * @static
  */
 PIXI.CanvasTinter.canUseMultiply = PIXI.canUseNewCanvasBlendModes();
 
@@ -9167,6 +9266,7 @@ PIXI.CanvasTinter.canUseMultiply = PIXI.canUseNewCanvasBlendModes();
  * The tinting method that will be used.
  * 
  * @method tintMethod
+ * @static
  */
 PIXI.CanvasTinter.tintMethod = PIXI.CanvasTinter.canUseMultiply ? PIXI.CanvasTinter.tintWithMultiply :  PIXI.CanvasTinter.tintWithPerPixel;
 
@@ -9542,14 +9642,21 @@ PIXI.CanvasGraphics = function()
 PIXI.CanvasGraphics.renderGraphics = function(graphics, context)
 {
     var worldAlpha = graphics.worldAlpha;
-    var color = '';
+
+    if(graphics.dirty)
+    {
+        this.updateGraphicsTint(graphics);
+        graphics.dirty = false;
+    }
+    
 
     for (var i = 0; i < graphics.graphicsData.length; i++)
     {
         var data = graphics.graphicsData[i];
         var shape = data.shape;
 
-        context.strokeStyle = color = '#' + ('00000' + ( data.lineColor | 0).toString(16)).substr(-6);
+        var fillColor = data._fillTint;
+        var lineColor = data._lineTint;
 
         context.lineWidth = data.lineWidth;
 
@@ -9580,12 +9687,13 @@ PIXI.CanvasGraphics.renderGraphics = function(graphics, context)
             if(data.fill)
             {
                 context.globalAlpha = data.fillAlpha * worldAlpha;
-                context.fillStyle = color = '#' + ('00000' + ( data.fillColor | 0).toString(16)).substr(-6);
+                context.fillStyle = '#' + ('00000' + ( fillColor | 0).toString(16)).substr(-6);
                 context.fill();
             }
             if(data.lineWidth)
             {
                 context.globalAlpha = data.lineAlpha * worldAlpha;
+                context.strokeStyle = '#' + ('00000' + ( lineColor | 0).toString(16)).substr(-6);
                 context.stroke();
             }
         }
@@ -9595,13 +9703,14 @@ PIXI.CanvasGraphics.renderGraphics = function(graphics, context)
             if(data.fillColor || data.fillColor === 0)
             {
                 context.globalAlpha = data.fillAlpha * worldAlpha;
-                context.fillStyle = color = '#' + ('00000' + ( data.fillColor | 0).toString(16)).substr(-6);
-                context.fillRect(shape.x, shape.y, shape.width, shape.height);
+                context.fillStyle = '#' + ('00000' + ( fillColor | 0).toString(16)).substr(-6);
+                context.colorRect(shape.x, shape.y, shape.width, shape.height);
 
             }
             if(data.lineWidth)
             {
                 context.globalAlpha = data.lineAlpha * worldAlpha;
+                context.strokeStyle = '#' + ('00000' + ( lineColor | 0).toString(16)).substr(-6);
                 context.strokeRect(shape.x, shape.y, shape.width, shape.height);
             }
         }
@@ -9615,12 +9724,13 @@ PIXI.CanvasGraphics.renderGraphics = function(graphics, context)
             if(data.fill)
             {
                 context.globalAlpha = data.fillAlpha * worldAlpha;
-                context.fillStyle = color = '#' + ('00000' + ( data.fillColor | 0).toString(16)).substr(-6);
+                context.fillStyle = '#' + ('00000' + ( fillColor | 0).toString(16)).substr(-6);
                 context.fill();
             }
             if(data.lineWidth)
             {
                 context.globalAlpha = data.lineAlpha * worldAlpha;
+                context.strokeStyle = '#' + ('00000' + ( lineColor | 0).toString(16)).substr(-6);
                 context.stroke();
             }
         }
@@ -9655,12 +9765,13 @@ PIXI.CanvasGraphics.renderGraphics = function(graphics, context)
             if(data.fill)
             {
                 context.globalAlpha = data.fillAlpha * worldAlpha;
-                context.fillStyle = color = '#' + ('00000' + ( data.fillColor | 0).toString(16)).substr(-6);
+                context.fillStyle = '#' + ('00000' + ( fillColor | 0).toString(16)).substr(-6);
                 context.fill();
             }
             if(data.lineWidth)
             {
                 context.globalAlpha = data.lineAlpha * worldAlpha;
+                context.strokeStyle = '#' + ('00000' + ( lineColor | 0).toString(16)).substr(-6);
                 context.stroke();
             }
         }
@@ -9690,13 +9801,14 @@ PIXI.CanvasGraphics.renderGraphics = function(graphics, context)
             if(data.fillColor || data.fillColor === 0)
             {
                 context.globalAlpha = data.fillAlpha * worldAlpha;
-                context.fillStyle = color = '#' + ('00000' + ( data.fillColor | 0).toString(16)).substr(-6);
+                context.fillStyle = '#' + ('00000' + ( fillColor | 0).toString(16)).substr(-6);
                 context.fill();
 
             }
             if(data.lineWidth)
             {
                 context.globalAlpha = data.lineAlpha * worldAlpha;
+                context.strokeStyle = '#' + ('00000' + ( lineColor | 0).toString(16)).substr(-6);
                 context.stroke();
             }
         }
@@ -9817,6 +9929,51 @@ PIXI.CanvasGraphics.renderGraphicsMask = function(graphics, context)
         }
     }
 };
+
+PIXI.CanvasGraphics.updateGraphicsTint = function(graphics)
+{
+    if(graphics.tint === 0xFFFFFF)return;
+
+    var tintR = (graphics.tint >> 16 & 0xFF) / 255;
+    var tintG = (graphics.tint >> 8 & 0xFF) / 255;
+    var tintB = (graphics.tint & 0xFF)/ 255;
+
+    for (var i = 0; i < graphics.graphicsData.length; i++)
+    {
+        var data = graphics.graphicsData[i];
+
+        var fillColor = data.fillColor | 0;
+        var lineColor = data.lineColor | 0;
+
+        /*
+        var colorR = (fillColor >> 16 & 0xFF) / 255;
+        var colorG = (fillColor >> 8 & 0xFF) / 255;
+        var colorB = (fillColor & 0xFF) / 255; 
+
+        colorR *= tintR;
+        colorG *= tintG;
+        colorB *= tintB;
+
+        fillColor = ((colorR*255 << 16) + (colorG*255 << 8) + colorB*255);
+
+        colorR = (lineColor >> 16 & 0xFF) / 255;
+        colorG = (lineColor >> 8 & 0xFF) / 255;
+        colorB = (lineColor & 0xFF) / 255; 
+
+        colorR *= tintR;
+        colorG *= tintG;
+        colorB *= tintB;
+
+        lineColor = ((colorR*255 << 16) + (colorG*255 << 8) + colorB*255);   
+        */
+        
+        // super inline cos im an optimization NAZI :)
+        data._fillTint = (((fillColor >> 16 & 0xFF) / 255 * tintR*255 << 16) + ((fillColor >> 8 & 0xFF) / 255 * tintG*255 << 8) +  (fillColor & 0xFF) / 255 * tintB*255);
+        data._lineTint = (((lineColor >> 16 & 0xFF) / 255 * tintR*255 << 16) + ((lineColor >> 8 & 0xFF) / 255 * tintG*255 << 8) +  (lineColor & 0xFF) / 255 * tintB*255);
+
+    }
+};
+
 
 /**
  * @author Mat Groves http://matgroves.com/
@@ -10835,7 +10992,7 @@ PIXI.BaseTextureCacheIdGenerator = 0;
  * @uses EventTarget
  * @constructor
  * @param source {String} the source object (image or canvas)
- * @param scaleMode {Number} Should be one of the PIXI.scaleMode consts
+ * @param scaleMode {Number} See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
  */
 PIXI.BaseTexture = function(source, scaleMode)
 {
@@ -10869,7 +11026,7 @@ PIXI.BaseTexture = function(source, scaleMode)
      * The scale mode to apply when scaling this texture
      * 
      * @property scaleMode
-     * @type PIXI.scaleModes
+     * @type {Number}
      * @default PIXI.scaleModes.LINEAR
      */
     this.scaleMode = scaleMode || PIXI.scaleModes.DEFAULT;
@@ -11055,7 +11212,7 @@ PIXI.BaseTexture.prototype.unloadFromGPU = function()
  * @method fromImage
  * @param imageUrl {String} The image url of the texture
  * @param crossorigin {Boolean}
- * @param scaleMode {Number} Should be one of the PIXI.scaleMode consts
+ * @param scaleMode {Number} See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
  * @return BaseTexture
  */
 PIXI.BaseTexture.fromImage = function(imageUrl, crossorigin, scaleMode)
@@ -11095,7 +11252,7 @@ PIXI.BaseTexture.fromImage = function(imageUrl, crossorigin, scaleMode)
  * @static
  * @method fromCanvas
  * @param canvas {Canvas} The canvas element source of the texture
- * @param scaleMode {Number} Should be one of the PIXI.scaleMode consts
+ * @param scaleMode {Number} See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
  * @return BaseTexture
  */
 PIXI.BaseTexture.fromCanvas = function(canvas, scaleMode)
@@ -11350,7 +11507,7 @@ PIXI.Texture.prototype._updateUvs = function()
  * @method fromImage
  * @param imageUrl {String} The image url of the texture
  * @param crossorigin {Boolean} Whether requests should be treated as crossorigin
- * @param scaleMode {Number} Should be one of the PIXI.scaleMode consts
+ * @param scaleMode {Number} See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
  * @return Texture
  */
 PIXI.Texture.fromImage = function(imageUrl, crossorigin, scaleMode)
@@ -11388,7 +11545,7 @@ PIXI.Texture.fromFrame = function(frameId)
  * @static
  * @method fromCanvas
  * @param canvas {Canvas} The canvas element source of the texture
- * @param scaleMode {Number} Should be one of the PIXI.scaleMode consts
+ * @param scaleMode {Number} See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
  * @return Texture
  */
 PIXI.Texture.fromCanvas = function(canvas, scaleMode)
@@ -11477,7 +11634,7 @@ PIXI.Texture.emptyTexture = new PIXI.Texture(new PIXI.BaseTexture());
  * @param width {Number} The width of the render texture
  * @param height {Number} The height of the render texture
  * @param renderer {CanvasRenderer|WebGLRenderer} The renderer used for this RenderTexture
- * @param scaleMode {Number} Should be one of the PIXI.scaleMode consts
+ * @param scaleMode {Number} See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
  * @param resolution {Number} The resolution of the texture being generated
  */
 PIXI.RenderTexture = function(width, height, renderer, scaleMode, resolution)
@@ -11801,14 +11958,14 @@ PIXI.AbstractFilter = function(fragmentSrc, uniforms)
     * An array of passes - some filters contain a few steps this array simply stores the steps in a liniear fashion.
     * For example the blur filter has two passes blurX and blurY.
     * @property passes
-    * @type Array an array of filter objects
+    * @type Array(Filter)
     * @private
     */
     this.passes = [this];
 
     /**
     * @property shaders
-    * @type Array an array of shaders
+    * @type Array(Shader)
     * @private
     */
     this.shaders = [];
@@ -11898,7 +12055,7 @@ PIXI.AbstractFilter.prototype.apply = function(frameBuffer)
 */
 var Phaser = Phaser || {
 
-	VERSION: '2.2.0-RC6',
+	VERSION: '2.2.0-RC7',
 	GAMES: [],
 
     AUTO: 0,
@@ -15785,7 +15942,7 @@ PIXI.Graphics = function()
      * @default 0xFFFFFF
      */
     this.tint = 0xFFFFFF;
-    
+
     /**
      * The blend mode to be applied to the graphic shape. Apply a value of PIXI.blendModes.NORMAL to reset the blend mode.
      *
@@ -16155,19 +16312,27 @@ PIXI.Graphics.prototype.arc = function(cx, cy, radius, startAngle, endAngle, ant
 {
     var startX = cx + Math.cos(startAngle) * radius;
     var startY = cy + Math.sin(startAngle) * radius;
-   
-    var points = this.currentPath.shape.points;
+    var points;
 
-    if(points.length === 0)
+    if( this.currentPath )
+    {
+        points = this.currentPath.shape.points;
+
+        if(points.length === 0)
+        {
+            points.push(startX, startY);
+        }
+        else if( points[points.length-2] !== startX || points[points.length-1] !== startY)
+        {
+            points.push(startX, startY);
+        }
+    }
+    else
     {
         this.moveTo(startX, startY);
         points = this.currentPath.shape.points;
     }
-    else if( points[points.length-2] !== startX || points[points.length-1] !== startY)
-    {
-        points.push(startX, startY);
-    }
-  
+    
     if (startAngle === endAngle)return this;
 
     if( !anticlockwise && endAngle <= startAngle )
@@ -16829,9 +16994,11 @@ PIXI.GraphicsData = function(lineWidth, lineColor, lineAlpha, fillColor, fillAlp
     this.lineWidth = lineWidth;
     this.lineColor = lineColor;
     this.lineAlpha = lineAlpha;
+    this._lineTint = lineColor;
 
     this.fillColor = fillColor;
     this.fillAlpha = fillAlpha;
+    this._fillTint = fillColor;
     this.fill = fill;
 
     this.shape = shape;
@@ -20249,24 +20416,23 @@ Phaser.Group = function (game, parent, name, addToStage, enableBody, physicsBody
     */
     this.name = name || 'group';
 
-    PIXI.DisplayObjectContainer.call(this);
-
-    if (addToStage)
-    {
-        this.game.stage.addChild(this);
-    }
-    else
-    {
-        if (parent)
-        {
-            parent.addChild(this);
-        }
-    }
-
     /**
     * @property {number} z - The z-depth value of this object within its Group (remember the World is a Group as well). No two objects in a Group can have the same z value.
     */
     this.z = 0;
+
+    PIXI.DisplayObjectContainer.call(this);
+
+    if (addToStage) {
+        this.game.stage.addChild(this);
+        this.z = this.game.stage.children.length;
+    }
+    else {
+        if (parent) {
+            parent.addChild(this);
+            this.z = parent.children.length;
+        }
+    }
 
     /**
     * @property {number} type - Internal Phaser Type value.
@@ -25198,7 +25364,7 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     /**
     * @property {Phaser.Device} device - Contains device information and capabilities.
     */
-    this.device = null;
+    this.device = Phaser.Device;
 
     /**
     * @property {Phaser.Camera} camera - A handy reference to world.camera.
@@ -25358,26 +25524,7 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
         this.state = new Phaser.StateManager(this, state);
     }
 
-    var _this = this;
-
-    this._onBoot = function () {
-        return _this.boot();
-    };
-
-    if (document.readyState === 'complete' || document.readyState === 'interactive')
-    {
-        window.setTimeout(this._onBoot, 0);
-    }
-    else if (typeof window.cordova !== "undefined" && !navigator['isCocoonJS'])
-    {
-        //  Cordova, but NOT Cocoon?
-        document.addEventListener('deviceready', this._onBoot, false);
-    }
-    else
-    {
-        document.addEventListener('DOMContentLoaded', this._onBoot, false);
-        window.addEventListener('load', this._onBoot, false);
-    }
+    this.device.whenReady(this.boot, this);
 
     return this;
 
@@ -25473,76 +25620,62 @@ Phaser.Game.prototype = {
             return;
         }
 
-        if (!document.body)
+        this.onPause = new Phaser.Signal();
+        this.onResume = new Phaser.Signal();
+        this.onBlur = new Phaser.Signal();
+        this.onFocus = new Phaser.Signal();
+
+        this.isBooted = true;
+
+        this.math = Phaser.Math;
+
+        this.scale = new Phaser.ScaleManager(this, this._width, this._height);
+        this.stage = new Phaser.Stage(this);
+
+        this.setUpRenderer();
+
+        this.world = new Phaser.World(this);
+        this.add = new Phaser.GameObjectFactory(this);
+        this.make = new Phaser.GameObjectCreator(this);
+        this.cache = new Phaser.Cache(this);
+        this.load = new Phaser.Loader(this);
+        this.time = new Phaser.Time(this);
+        this.tweens = new Phaser.TweenManager(this);
+        this.input = new Phaser.Input(this);
+        this.sound = new Phaser.SoundManager(this);
+        this.physics = new Phaser.Physics(this, this.physicsConfig);
+        this.particles = new Phaser.Particles(this);
+        this.plugins = new Phaser.PluginManager(this);
+        this.net = new Phaser.Net(this);
+
+        this.time.boot();
+        this.stage.boot();
+        this.world.boot();
+        this.scale.boot();
+        this.input.boot();
+        this.sound.boot();
+        this.state.boot();
+
+        if (this.config['enableDebug'])
         {
-            window.setTimeout(this._onBoot, 20);
+            this.debug = new Phaser.Utils.Debug(this);
+            this.debug.boot();
+        }
+
+        this.showDebugHeader();
+
+        this.isRunning = true;
+
+        if (this.config && this.config['forceSetTimeOut'])
+        {
+            this.raf = new Phaser.RequestAnimationFrame(this, this.config['forceSetTimeOut']);
         }
         else
         {
-            document.removeEventListener('DOMContentLoaded', this._onBoot);
-            window.removeEventListener('load', this._onBoot);
-
-            this.onPause = new Phaser.Signal();
-            this.onResume = new Phaser.Signal();
-            this.onBlur = new Phaser.Signal();
-            this.onFocus = new Phaser.Signal();
-
-            this.isBooted = true;
-
-            this.device = new Phaser.Device(this);
-
-            this.math = Phaser.Math;
-
-            this.scale = new Phaser.ScaleManager(this, this._width, this._height);
-            this.stage = new Phaser.Stage(this);
-
-            this.setUpRenderer();
-
-            this.device.checkFullScreenSupport();
-
-            this.world = new Phaser.World(this);
-            this.add = new Phaser.GameObjectFactory(this);
-            this.make = new Phaser.GameObjectCreator(this);
-            this.cache = new Phaser.Cache(this);
-            this.load = new Phaser.Loader(this);
-            this.time = new Phaser.Time(this);
-            this.tweens = new Phaser.TweenManager(this);
-            this.input = new Phaser.Input(this);
-            this.sound = new Phaser.SoundManager(this);
-            this.physics = new Phaser.Physics(this, this.physicsConfig);
-            this.particles = new Phaser.Particles(this);
-            this.plugins = new Phaser.PluginManager(this);
-            this.net = new Phaser.Net(this);
-
-            this.time.boot();
-            this.stage.boot();
-            this.world.boot();
-            this.scale.boot();
-            this.input.boot();
-            this.sound.boot();
-            this.state.boot();
-
-            if (this.config['enableDebug'])
-            {
-                this.debug = new Phaser.Utils.Debug(this);
-                this.debug.boot();
-            }
-
-            this.showDebugHeader();
-
-            this.isRunning = true;
-
-            if (this.config && this.config['forceSetTimeOut'])
-            {
-                this.raf = new Phaser.RequestAnimationFrame(this, this.config['forceSetTimeOut']);
-            }
-            else
-            {
-                this.raf = new Phaser.RequestAnimationFrame(this, false);
-            }
-
-            this.raf.start();
+            this.raf = new Phaser.RequestAnimationFrame(this, false);
         }
+
+        this.raf.start();
 
     },
 
@@ -44182,22 +44315,48 @@ Phaser.Canvas.getAspectRatio = Phaser.DOM.getAspectRatio;
 */
 
 /**
-* Detects device support capabilities. Using some elements from System.js by MrDoob and Modernizr
+* @classdesc
+* Detects device support capabilities and is responsible for device intialization - see {@link Phaser.Device.whenReady whenReady}.
 *
-* @class Phaser.Device
-* @constructor
+* This class represents a singleton object that can be accessed directly as `game.device`
+* (or, as a fallback, `Phaser.Device` when a game instance is not available) without the need to instantiate it.
+*
+* Unless otherwise noted the device capabilities are only guaranteed after initialization. Initialization
+* occurs automatically and is guaranteed complete before {@link Phaser.Game} begins its "boot" phase.
+* Feature detection can be modified in the {@link Phaser.Device.onInitialized onInitialized} signal.
+*
+* When checking features using the exposed properties only the *truth-iness* of the value should be relied upon
+* unless the documentation states otherwise: properties may return `false`, `''`, `null`, or even `undefined`
+* when indicating the lack of a feature.
+*
+* Uses elements from System.js by MrDoob and Modernizr
+*
+* @description
+* It is not possible to instantiate the Device class manually.
+*
+* @class
+* @protected
 */
-Phaser.Device = function (game) {
+Phaser.Device = function () {
 
     /**
-    * @property {Phaser.Game} game - A reference to the currently running game.
+    * The time the device became ready.
+    * @property {integer} deviceReadyAt
+    * @protected
     */
-    this.game = game;
-
-    //  Operating System
+    this.deviceReadyAt = 0;
 
     /**
-    * @property {boolean} desktop - Is running desktop?
+    * The time as which initialization has completed.
+    * @property {boolean} initialized
+    * @protected
+    */
+    this.initialized = false;
+
+    //  Browser / Host / Operating System
+
+    /**
+    * @property {boolean} desktop - Is running on a desktop?
     * @default
     */
     this.desktop = false;
@@ -44426,7 +44585,7 @@ Phaser.Device = function (game) {
     this.trident = false;
 
     /**
-    * @property {number} tridentVersion - If running in Internet Explorer 11 this will contain the major version number. See http://msdn.microsoft.com/en-us/library/ie/ms537503(v=vs.85).aspx
+    * @property {number} tridentVersion - If running in Internet Explorer 11 this will contain the major version number. See {@link http://msdn.microsoft.com/en-us/library/ie/ms537503(v=vs.85).aspx}
     * @default
     */
     this.tridentVersion = 0;
@@ -44551,6 +44710,12 @@ Phaser.Device = function (game) {
     this.littleEndian = false;
 
     /**
+    * @property {boolean} LITTLE_ENDIAN - Same value as `littleEndian`.
+    * @default
+    */
+    this.LITTLE_ENDIAN = false;
+
+    /**
     * @property {boolean} support32bit - Does the device context support 32bit pixel manipulation using array buffer views?
     * @default
     */
@@ -44580,168 +44745,273 @@ Phaser.Device = function (game) {
     */
     this.fullscreenKeyboard = false;
 
-    //  Run the checks
-    this._checkOS();
-    this._checkAudio();
-    this._checkBrowser();
-    this._checkCSS3D();
-    this._checkDevice();
-    this._checkFeatures();
-    this._checkInput();
+};
+
+// Device is really a singleton/static entity; instantiate it
+// and add new methods directly sans-prototype.
+Phaser.Device = new Phaser.Device();
+
+/**
+* This signal is dispatched after device initialization occurs but before any of the ready
+* callbacks (see {@link Phaser.Device.whenReady whenReady}) have been invoked.
+*
+* Local "patching" for a particular device can/should be done in this event.
+*
+* _Note_: This signal is removed after the device has been readied; if a handler has not been
+* added _before_ `new Phaser.Game(..)` it is probably too late.
+*
+* @type {?Phaser.Signal}
+* @static
+*/
+Phaser.Device.onInitialized = new Phaser.Signal();
+
+/**
+* Add a device-ready handler and ensure the device ready sequence is started.
+*
+* Phaser.Device will _not_ activate or initialize until at least one `whenReady` handler is added,
+* which is normally done automatically be calling `new Phaser.Game(..)`.
+*
+* The handler is invoked when the device is considered "ready", which may be immediately
+* if the device is already "ready". See {@link Phaser.Device#deviceReadyAt deviceReadyAt}.
+*
+* @method
+* @param {function} handler - Callback to invoke when the device is ready
+* @param {object} [context] - Context in which to invoke the handler
+*/
+Phaser.Device.whenReady = function (callback, context) {
+
+    var readyCheck = this._readyCheck;
+
+    if (this.deviceReadyAt || !readyCheck)
+    {
+        callback.call(context);
+    }
+    else if (readyCheck._monitor)
+    {
+        readyCheck._queue.push([callback, context]);
+    }
+    else
+    {
+        readyCheck._monitor = readyCheck.bind(this);
+        readyCheck._queue = [];
+        readyCheck._queue.push([callback, context]);
+        
+        var cordova = typeof window.cordova !== 'undefined';
+        var cocoonJS = navigator['isCocoonJS'];
+
+        if (document.readyState === 'complete' || document.readyState === 'interactive')
+        {
+            // Why is there an additional timeout here?
+            window.setTimeout(readyCheck._monitor, 0);
+        }
+        else if (cordova && !cocoonJS)
+        {
+            // Ref. http://docs.phonegap.com/en/3.5.0/cordova_events_events.md.html#deviceready
+            //  Cordova, but NOT Cocoon?
+            document.addEventListener('deviceready', readyCheck._monitor, false);
+        }
+        else
+        {
+            document.addEventListener('DOMContentLoaded', readyCheck._monitor, false);
+            window.addEventListener('load', readyCheck._monitor, false);
+        }
+    }
 
 };
 
-Phaser.Device.LITTLE_ENDIAN = false;
+/**
+* Internal method used for checking when the device is ready.
+* This function is removed from Phaser.Device when the device becomes ready.
+*
+* @method
+* @private
+*/
+Phaser.Device._readyCheck = function () {
 
-Phaser.Device.prototype = {
+    var readyCheck = this._readyCheck;
+
+    if (!document.body)
+    {
+        window.setTimeout(readyCheck._monitor, 20);
+    }
+    else if (!this.deviceReadyAt)
+    {
+        this.deviceReadyAt = Date.now();
+
+        document.removeEventListener('deviceready', readyCheck._monitor);
+        document.removeEventListener('DOMContentLoaded', readyCheck._monitor);
+        window.removeEventListener('load', readyCheck._monitor);
+
+        this._initialize();
+        this.initialized = true;
+
+        this.onInitialized.dispatch(this);
+
+        var item;
+        while ((item = readyCheck._queue.shift()))
+        {
+            var callback = item[0];
+            var context = item[1];
+            callback.call(context);
+        }
+
+        // Remove no longer useful methods and properties.
+        this._readyCheck = null;
+        this._initialize = null;
+        this.onInitialized = null;
+    }
+
+};
+
+/**
+* Internal method to initialize the capability checks.
+* This function is removed from Phaser.Device once the device is initialized.
+*
+* @method
+* @private
+*/
+Phaser.Device._initialize = function () {
+
+    var device = this;
 
     /**
     * Check which OS is game running on.
-    * @method Phaser.Device#_checkOS
-    * @private
     */
-    _checkOS: function () {
+    function _checkOS () {
 
         var ua = navigator.userAgent;
 
         if (/Playstation Vita/.test(ua))
         {
-            this.vita = true;
+            device.vita = true;
         }
         else if (/Kindle/.test(ua) || /\bKF[A-Z][A-Z]+/.test(ua) || /Silk.*Mobile Safari/.test(ua))
         {
-            this.kindle = true;
+            device.kindle = true;
             // This will NOT detect early generations of Kindle Fire, I think there is no reliable way...
             // E.g. "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_3; en-us; Silk/1.1.0-80) AppleWebKit/533.16 (KHTML, like Gecko) Version/5.0 Safari/533.16 Silk-Accelerated=true"
         }
         else if (/Android/.test(ua))
         {
-            this.android = true;
+            device.android = true;
         }
         else if (/CrOS/.test(ua))
         {
-            this.chromeOS = true;
+            device.chromeOS = true;
         }
         else if (/iP[ao]d|iPhone/i.test(ua))
         {
-            this.iOS = true;
+            device.iOS = true;
         }
         else if (/Linux/.test(ua))
         {
-            this.linux = true;
+            device.linux = true;
         }
         else if (/Mac OS/.test(ua))
         {
-            this.macOS = true;
+            device.macOS = true;
         }
         else if (/Windows/.test(ua))
         {
-            this.windows = true;
+            device.windows = true;
 
             if (/Windows Phone/i.test(ua))
             {
-                this.windowsPhone = true;
+                device.windowsPhone = true;
             }
         }
 
-        if (this.windows || this.macOS || (this.linux && this.silk === false) || this.chromeOS)
+        if (device.windows || device.macOS || (device.linux && device.silk === false) || device.chromeOS)
         {
-            this.desktop = true;
+            device.desktop = true;
         }
 
         //  Windows Phone / Table reset
-        if (this.windowsPhone || ((/Windows NT/i.test(ua)) && (/Touch/i.test(ua))))
+        if (device.windowsPhone || ((/Windows NT/i.test(ua)) && (/Touch/i.test(ua))))
         {
-            this.desktop = false;
+            device.desktop = false;
         }
 
-    },
+    }
 
     /**
     * Check HTML5 features of the host environment.
-    * @method Phaser.Device#_checkFeatures
-    * @private
     */
-    _checkFeatures: function () {
+    function _checkFeatures () {
 
-        this.canvas = !!window['CanvasRenderingContext2D'] || this.cocoonJS;
+        device.canvas = !!window['CanvasRenderingContext2D'] || device.cocoonJS;
 
         try {
-            this.localStorage = !!localStorage.getItem;
+            device.localStorage = !!localStorage.getItem;
         } catch (error) {
-            this.localStorage = false;
+            device.localStorage = false;
         }
 
-        this.file = !!window['File'] && !!window['FileReader'] && !!window['FileList'] && !!window['Blob'];
-        this.fileSystem = !!window['requestFileSystem'];
-        this.webGL = ( function () { try { var canvas = document.createElement( 'canvas' ); /*Force screencanvas to false*/ canvas.screencanvas = false; return !! window.WebGLRenderingContext && ( canvas.getContext( 'webgl' ) || canvas.getContext( 'experimental-webgl' ) ); } catch( e ) { return false; } } )();
+        device.file = !!window['File'] && !!window['FileReader'] && !!window['FileList'] && !!window['Blob'];
+        device.fileSystem = !!window['requestFileSystem'];
+        device.webGL = ( function () { try { var canvas = document.createElement( 'canvas' ); /*Force screencanvas to false*/ canvas.screencanvas = false; return !! window.WebGLRenderingContext && ( canvas.getContext( 'webgl' ) || canvas.getContext( 'experimental-webgl' ) ); } catch( e ) { return false; } } )();
 
-        if (this.webGL === null || this.webGL === false)
+        if (device.webGL === null || device.webGL === false)
         {
-            this.webGL = false;
+            device.webGL = false;
         }
         else
         {
-            this.webGL = true;
+            device.webGL = true;
         }
 
-        this.worker = !!window['Worker'];
+        device.worker = !!window['Worker'];
 
-        this.pointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
+        device.pointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
 
-        this.quirksMode = (document.compatMode === 'CSS1Compat') ? false : true;
+        device.quirksMode = (document.compatMode === 'CSS1Compat') ? false : true;
 
-        this.getUserMedia = !!(navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
+        device.getUserMedia = !!(navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
 
-    },
+    }
 
     /**
     * Checks/configures various input.
-    *
-    * @method Phaser.Device#checkInput
-    * @private
     */
-    _checkInput: function () {
+    function _checkInput () {
 
         if ('ontouchstart' in document.documentElement ||
             (window.navigator.maxTouchPoints && window.navigator.maxTouchPoints > 1))
         {
-            this.touch = true;
+            device.touch = true;
         }
 
         if (window.navigator.msPointerEnabled || window.navigator.pointerEnabled)
         {
-            this.mspointer = true;
+            device.mspointer = true;
         }
 
-        if (!this.cocoonJS)
+        if (!device.cocoonJS)
         {
             // See https://developer.mozilla.org/en-US/docs/Web/Events/wheel
-            if ('onwheel' in window || (this.ie && 'WheelEvent' in window))
+            if ('onwheel' in window || (device.ie && 'WheelEvent' in window))
             {
                 // DOM3 Wheel Event: FF 17+, IE 9+, Chrome 31+, Safari 7+
-                this.wheelEvent = 'wheel';
+                device.wheelEvent = 'wheel';
             }
             else if ('onmousewheel' in window)
             {
                 // Non-FF legacy: IE 6-9, Chrome 1-31, Safari 5-7.
-                this.wheelEvent = 'mousewheel';
+                device.wheelEvent = 'mousewheel';
             }
-            else if (this.firefox && 'MouseScrollEvent' in window)
+            else if (device.firefox && 'MouseScrollEvent' in window)
             {
                 // FF prior to 17. This should probably be scrubbed.
-                this.wheelEvent = 'DOMMouseScroll';
+                device.wheelEvent = 'DOMMouseScroll';
             }
         }
 
-    },
+    }
 
     /**
     * Checks for support of the Full Screen API.
-    *
-    * @method Phaser.Device#checkFullScreenSupport
     */
-    checkFullScreenSupport: function () {
+    function _checkFullScreenSupport () {
 
         var fs = [
             'requestFullscreen',
@@ -44754,13 +45024,14 @@ Phaser.Device.prototype = {
             'mozRequestFullscreen'
         ];
 
+        var element = document.createElement('div');
+
         for (var i = 0; i < fs.length; i++)
         {
-            if (this.game.canvas[fs[i]])
-            // if (document[fs[i]])
+            if (element[fs[i]])
             {
-                this.fullscreen = true;
-                this.requestFullscreen = fs[i];
+                device.fullscreen = true;
+                device.requestFullscreen = fs[i];
                 break;
             }
         }
@@ -44776,13 +45047,13 @@ Phaser.Device.prototype = {
             'mozExitFullscreen'
         ];
 
-        if (this.fullscreen)
+        if (device.fullscreen)
         {
             for (var i = 0; i < cfs.length; i++)
             {
                 if (document[cfs[i]])
                 {
-                    this.cancelFullscreen = cfs[i];
+                    device.cancelFullscreen = cfs[i];
                     break;
                 }
             }
@@ -44791,135 +45062,131 @@ Phaser.Device.prototype = {
         //  Keyboard Input?
         if (window['Element'] && Element['ALLOW_KEYBOARD_INPUT'])
         {
-            this.fullscreenKeyboard = true;
+            device.fullscreenKeyboard = true;
         }
 
-    },
+    }
 
     /**
     * Check what browser is game running in.
-    * @method Phaser.Device#_checkBrowser
-    * @private
     */
-    _checkBrowser: function () {
+    function _checkBrowser () {
 
         var ua = navigator.userAgent;
 
         if (/Arora/.test(ua))
         {
-            this.arora = true;
+            device.arora = true;
         }
         else if (/Chrome/.test(ua))
         {
-            this.chrome = true;
+            device.chrome = true;
         }
         else if (/Epiphany/.test(ua))
         {
-            this.epiphany = true;
+            device.epiphany = true;
         }
         else if (/Firefox/.test(ua))
         {
-            this.firefox = true;
+            device.firefox = true;
         }
-        else if (/AppleWebKit/.test(ua) && this.iOS)
+        else if (/AppleWebKit/.test(ua) && device.iOS)
         {
-            this.mobileSafari = true;
+            device.mobileSafari = true;
         }
         else if (/MSIE (\d+\.\d+);/.test(ua))
         {
-            this.ie = true;
-            this.ieVersion = parseInt(RegExp.$1, 10);
+            device.ie = true;
+            device.ieVersion = parseInt(RegExp.$1, 10);
         }
         else if (/Midori/.test(ua))
         {
-            this.midori = true;
+            device.midori = true;
         }
         else if (/Opera/.test(ua))
         {
-            this.opera = true;
+            device.opera = true;
         }
         else if (/Safari/.test(ua))
         {
-            this.safari = true;
+            device.safari = true;
         }
         else if (/Trident\/(\d+\.\d+)(.*)rv:(\d+\.\d+)/.test(ua))
         {
-            this.ie = true;
-            this.trident = true;
-            this.tridentVersion = parseInt(RegExp.$1, 10);
-            this.ieVersion = parseInt(RegExp.$3, 10);
+            device.ie = true;
+            device.trident = true;
+            device.tridentVersion = parseInt(RegExp.$1, 10);
+            device.ieVersion = parseInt(RegExp.$3, 10);
         }
 
         //Silk gets its own if clause because its ua also contains 'Safari'
         if (/Silk/.test(ua))
         {
-            this.silk = true;
+            device.silk = true;
         }
 
         // WebApp mode in iOS
         if (navigator['standalone'])
         {
-            this.webApp = true;
+            device.webApp = true;
         }
         
         if (typeof window.cordova !== "undefined")
         {
-            this.cordova = true;
+            device.cordova = true;
         }
         
         if (typeof process !== "undefined" && typeof require !== "undefined")
         {
-            this.node = true;
+            device.node = true;
         }
         
-        if (this.node)
+        if (device.node)
         {
             try {
-                this.nodeWebkit = (typeof require('nw.gui') !== "undefined");
+                device.nodeWebkit = (typeof require('nw.gui') !== "undefined");
             }
             catch(error)
             {
-                this.nodeWebkit = false;
+                device.nodeWebkit = false;
             }
         }
         
         if (navigator['isCocoonJS'])
         {
-            this.cocoonJS = true;
+            device.cocoonJS = true;
         }
         
-        if (this.cocoonJS)
+        if (device.cocoonJS)
         {
             try {
-                this.cocoonJSApp = (typeof CocoonJS !== "undefined");
+                device.cocoonJSApp = (typeof CocoonJS !== "undefined");
             }
             catch(error)
             {
-                this.cocoonJSApp = false;
+                device.cocoonJSApp = false;
             }
         }
 
         if (typeof window.ejecta !== "undefined")
         {
-            this.ejecta = true;
+            device.ejecta = true;
         }
 
         if (/Crosswalk/.test(ua))
         {
-            this.crosswalk = true;
+            device.crosswalk = true;
         }
 
-    },
+    }
 
     /**
     * Check audio support.
-    * @method Phaser.Device#_checkAudio
-    * @private
     */
-    _checkAudio: function () {
+    function _checkAudio () {
 
-        this.audioData = !!(window['Audio']);
-        this.webAudio = !!(window['webkitAudioContext'] || window['AudioContext']);
+        device.audioData = !!(window['Audio']);
+        device.webAudio = !!(window['webkitAudioContext'] || window['AudioContext']);
         var audioElement = document.createElement('audio');
         var result = false;
 
@@ -44927,82 +45194,79 @@ Phaser.Device.prototype = {
             if (result = !!audioElement.canPlayType) {
 
                 if (audioElement.canPlayType('audio/ogg; codecs="vorbis"').replace(/^no$/, '')) {
-                    this.ogg = true;
+                    device.ogg = true;
                 }
 
                 if (audioElement.canPlayType('audio/ogg; codecs="opus"').replace(/^no$/, '') || audioElement.canPlayType('audio/opus;').replace(/^no$/, '')) {
-                    this.opus = true;
+                    device.opus = true;
                 }
 
                 if (audioElement.canPlayType('audio/mpeg;').replace(/^no$/, '')) {
-                    this.mp3 = true;
+                    device.mp3 = true;
                 }
 
                 // Mimetypes accepted:
                 //   developer.mozilla.org/En/Media_formats_supported_by_the_audio_and_video_elements
                 //   bit.ly/iphoneoscodecs
                 if (audioElement.canPlayType('audio/wav; codecs="1"').replace(/^no$/, '')) {
-                    this.wav = true;
+                    device.wav = true;
                 }
 
                 if (audioElement.canPlayType('audio/x-m4a;') || audioElement.canPlayType('audio/aac;').replace(/^no$/, '')) {
-                    this.m4a = true;
+                    device.m4a = true;
                 }
 
                 if (audioElement.canPlayType('audio/webm; codecs="vorbis"').replace(/^no$/, '')) {
-                    this.webm = true;
+                    device.webm = true;
                 }
             }
         } catch (e) {
         }
 
-    },
+    }
 
     /**
     * Check PixelRatio, iOS device, Vibration API, ArrayBuffers and endianess.
-    * @method Phaser.Device#_checkDevice
-    * @private
     */
-    _checkDevice: function () {
+    function _checkDevice () {
 
-        this.pixelRatio = window['devicePixelRatio'] || 1;
-        this.iPhone = navigator.userAgent.toLowerCase().indexOf('iphone') != -1;
-        this.iPhone4 = (this.pixelRatio == 2 && this.iPhone);
-        this.iPad = navigator.userAgent.toLowerCase().indexOf('ipad') != -1;
+        device.pixelRatio = window['devicePixelRatio'] || 1;
+        device.iPhone = navigator.userAgent.toLowerCase().indexOf('iphone') != -1;
+        device.iPhone4 = (device.pixelRatio == 2 && device.iPhone);
+        device.iPad = navigator.userAgent.toLowerCase().indexOf('ipad') != -1;
 
         if (typeof Int8Array !== 'undefined')
         {
-            this.typedArray = true;
+            device.typedArray = true;
         }
         else
         {
-            this.typedArray = false;
+            device.typedArray = false;
         }
 
         if (typeof ArrayBuffer !== 'undefined' && typeof Uint8Array !== 'undefined' && typeof Uint32Array !== 'undefined')
         {
-            this.littleEndian = this._checkIsLittleEndian();
-            Phaser.Device.LITTLE_ENDIAN = this.littleEndian;
+            device.littleEndian = _checkIsLittleEndian();
+            device.LITTLE_ENDIAN = device.littleEndian;
         }
 
-        this.support32bit = (typeof ArrayBuffer !== "undefined" && typeof Uint8ClampedArray !== "undefined" && typeof Int32Array !== "undefined" && this.littleEndian !== null && this._checkIsUint8ClampedImageData());
+        device.support32bit = (typeof ArrayBuffer !== "undefined" && typeof Uint8ClampedArray !== "undefined" && typeof Int32Array !== "undefined" && device.littleEndian !== null && _checkIsUint8ClampedImageData());
 
         navigator.vibrate = navigator.vibrate || navigator.webkitVibrate || navigator.mozVibrate || navigator.msVibrate;
 
         if (navigator.vibrate)
         {
-            this.vibration = true;
+            device.vibration = true;
         }
 
-    },
+    }
 
     /**
     * Check Little or Big Endian system.
+    *
     * @author Matt DesLauriers (@mattdesl)
-    * @method Phaser.Device#_checkIsLittleEndian
-    * @private
     */
-    _checkIsLittleEndian: function () {
+    function _checkIsLittleEndian () {
 
         var a = new ArrayBuffer(4);
         var b = new Uint8Array(a);
@@ -45028,15 +45292,14 @@ Phaser.Device.prototype = {
             return null;
         }
 
-    },
+    }
 
     /**
     * Test to see if ImageData uses CanvasPixelArray or Uint8ClampedArray.
+    *
     * @author Matt DesLauriers (@mattdesl)
-    * @method Phaser.Device#_checkIsUint8ClampedImageData
-    * @private
     */
-    _checkIsUint8ClampedImageData: function () {
+    function _checkIsUint8ClampedImageData () {
 
         if (typeof Uint8ClampedArray === "undefined")
         {
@@ -45055,14 +45318,12 @@ Phaser.Device.prototype = {
 
         return image.data instanceof Uint8ClampedArray;
 
-    },
+    }
 
     /**
     * Check whether the host environment support 3D CSS.
-    * @method Phaser.Device#_checkCSS3D
-    * @private
     */
-    _checkCSS3D: function () {
+    function _checkCSS3D () {
 
         var el = document.createElement('p');
         var has3d;
@@ -45087,97 +45348,113 @@ Phaser.Device.prototype = {
         }
 
         document.body.removeChild(el);
-        this.css3D = (has3d !== undefined && has3d.length > 0 && has3d !== "none");
-
-    },
-
-    /**
-    * Check whether the host environment can play audio.
-    * @method Phaser.Device#canPlayAudio
-    * @param {string} type - One of 'mp3, 'ogg', 'm4a', 'wav', 'webm' or 'opus'.
-    * @return {boolean} True if the given file type is supported by the browser, otherwise false.
-    */
-    canPlayAudio: function (type) {
-
-        if (type == 'mp3' && this.mp3)
-        {
-            return true;
-        }
-        else if (type == 'ogg' && (this.ogg || this.opus))
-        {
-            return true;
-        }
-        else if (type == 'm4a' && this.m4a)
-        {
-            return true;
-        }
-        else if (type == 'opus' && this.opus)
-        {
-            return true;
-        }
-        else if (type == 'wav' && this.wav)
-        {
-            return true;
-        }
-        else if (type == 'webm' && this.webm)
-        {
-            return true;
-        }
-
-        return false;
-
-    },
-
-    /**
-    * Check whether the console is open.
-    * Note that this only works in Firefox with Firebug and earlier versions of Chrome.
-    * It used to work in Chrome, but then they removed the ability: http://src.chromium.org/viewvc/blink?view=revision&revision=151136
-    *
-    * @method Phaser.Device#isConsoleOpen
-    * @return {boolean} True if the browser dev console is open.
-    */
-    isConsoleOpen: function () {
-
-        if (window.console && window.console['firebug'])
-        {
-            return true;
-        }
-
-        if (window.console)
-        {
-            console.profile();
-            console.profileEnd();
-
-            if (console.clear)
-            {
-                console.clear();
-            }
-
-            if (console['profiles'])
-            {
-                return console['profiles'].length > 0;
-            }
-        }
-
-        return false;
+        device.css3D = (has3d !== undefined && has3d.length > 0 && has3d !== "none");
 
     }
 
+    //  Run the checks
+    _checkOS();
+    _checkAudio();
+    _checkBrowser();
+    _checkCSS3D();
+    _checkDevice();
+    _checkFeatures();
+    _checkFullScreenSupport();
+    _checkInput();
+
 };
 
-Phaser.Device.prototype.constructor = Phaser.Device;
+/**
+* Check whether the host environment can play audio.
+*
+* @method canPlayAudio
+* @memberof Phaser.Device.prototype
+* @param {string} type - One of 'mp3, 'ogg', 'm4a', 'wav', 'webm' or 'opus'.
+* @return {boolean} True if the given file type is supported by the browser, otherwise false.
+*/
+Phaser.Device.canPlayAudio = function (type) {
+
+    if (type == 'mp3' && this.mp3)
+    {
+        return true;
+    }
+    else if (type == 'ogg' && (this.ogg || this.opus))
+    {
+        return true;
+    }
+    else if (type == 'm4a' && this.m4a)
+    {
+        return true;
+    }
+    else if (type == 'opus' && this.opus)
+    {
+        return true;
+    }
+    else if (type == 'wav' && this.wav)
+    {
+        return true;
+    }
+    else if (type == 'webm' && this.webm)
+    {
+        return true;
+    }
+
+    return false;
+
+};
 
 /**
-* A class-static function to check wether we’re running on an Android Stock browser.
-* Autors might want to scale down on effects and switch to the CANVAS rendering method on those devices.
-* Usage: var defaultRenderingMode = Phaser.Device.isAndroidStockBrowser() ? Phaser.CANVAS : Phaser.AUTO;
-* 
-* @function Phaser.Device#isAndroidStockBrowser
+* Check whether the console is open.
+* Note that this only works in Firefox with Firebug and earlier versions of Chrome.
+* It used to work in Chrome, but then they removed the ability: {@link http://src.chromium.org/viewvc/blink?view=revision&revision=151136}
+*
+* @method isConsoleOpen
+* @memberof Phaser.Device.prototype
 */
-Phaser.Device.isAndroidStockBrowser = function()
-{
+Phaser.Device.isConsoleOpen = function () {
+
+    if (window.console && window.console['firebug'])
+    {
+        return true;
+    }
+
+    if (window.console)
+    {
+        console.profile();
+        console.profileEnd();
+
+        if (console.clear)
+        {
+            console.clear();
+        }
+
+        if (console['profiles'])
+        {
+            return console['profiles'].length > 0;
+        }
+    }
+
+    return false;
+
+};
+
+/**
+* Detect if the host is a an Android Stock browser.
+* This is available before the device "ready" event.
+*
+* Authors might want to scale down on effects and switch to the CANVAS rendering method on those devices.
+*
+* @example
+* var defaultRenderingMode = Phaser.Device.isAndroidStockBrowser() ? Phaser.CANVAS : Phaser.AUTO;
+* 
+* @method isAndroidStockBrowser
+* @memberof Phaser.Device.prototype
+*/
+Phaser.Device.isAndroidStockBrowser = function () {
+
     var matches = window.navigator.userAgent.match(/Android.*AppleWebKit\/([\d.]+)/);
     return matches && matches[1] < 537;
+
 };
 
 /**

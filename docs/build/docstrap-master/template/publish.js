@@ -347,7 +347,11 @@ function buildNav( members ) {
 		members.globals.forEach( function ( g ) {
 			if ( g.kind !== 'typedef' && !hasOwnProp.call( seen, g.longname ) ) {
 
-				nav.global.members.push( linkto( g.longname, g.name ) );
+				nav.global.members.push( {
+					link: linkto( g.longname, g.name ),
+					depth: g.longname.split('.').length - 1
+				} );
+
 			}
 			seen[g.longname] = true;
 		} );
