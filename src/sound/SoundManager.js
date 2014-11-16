@@ -163,13 +163,12 @@ Phaser.SoundManager.prototype = {
         {
             if (!!window['AudioContext'])
             {
-                    try {
-                        this.context = new window['AudioContext']();
-                    } catch (error) {
-                        this.context = null;
-                        this.usingWebAudio = false;
-                        this.noAudio = true;
-                    }
+                try {
+                    this.context = new window['AudioContext']();
+                } catch (error) {
+                    this.context = null;
+                    this.usingWebAudio = false;
+                    this.noAudio = true;
                 }
             }
             else if (!!window['webkitAudioContext'])
