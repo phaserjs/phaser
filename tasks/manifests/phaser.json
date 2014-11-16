@@ -16,8 +16,6 @@
     "src/core/Camera.js",
     "src/core/State.js",
     "src/core/StateManager.js",
-    "src/core/LinkedList.js",
-    "src/core/ArrayList.js",
     "src/core/Signal.js",
     "src/core/SignalBinding.js",
     "src/core/Filter.js",
@@ -93,6 +91,8 @@
     "src/sound/Sound.js",
     "src/sound/SoundManager.js",
 
+    "src/utils/ArraySet.js",
+    "src/utils/LinkedList.js",
     "src/utils/ArrayUtils.js",
     "src/utils/Debug.js",
     "src/utils/Color.js",

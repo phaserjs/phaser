@@ -285,9 +285,9 @@ Phaser.Input = function (game) {
 
     /**
     * A list of interactive objects. The InputHandler components add and remove themselves from this list.
-    * @property {Phaser.ArrayList} interactiveItems
+    * @property {Phaser.ArraySet} interactiveItems
     */
-    this.interactiveItems = new Phaser.ArrayList();
+    this.interactiveItems = new Phaser.ArraySet();
 
     /**
     * @property {Phaser.Point} _localPoint - Internal cache var.
