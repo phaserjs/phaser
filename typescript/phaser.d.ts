@@ -1,6 +1,6 @@
 /// <reference path="pixi.d.ts" />
 
-// Type definitions for Phaser 2.2.0 dev 2014-11-14
+// Type definitions for Phaser 2.2.0 dev 2014-11-16
 // Project: https://github.com/photonstorm/phaser
 
 declare class Phaser {
@@ -144,21 +144,23 @@ declare module Phaser {
 
     }
 
-    class ArrayList {
+    class ArraySet {
 
-        first: any;
-        list: any[];
-        next: any;
+        constructor(list: any[]);
+
         position: number;
+        list: any[];
         total: number;
+        first: any;
+        next: any;
 
-        add(child: any): any;
-        callAll(callback: Function, ...parameters: any[]): void;
-        exists(child: any): boolean;
-        getIndex(child: any): number;
-        remove(child: any): any;
+        add(item: any): any;
+        getIndex(item: any): number;
+        exists(item: any): boolean;
         reset(): void;
+        remove(item: any): any;
         setAll(key: any, value: any): void;
+        callAll(callback: any, ...parameter: any[]): void;
 
     }
 
@@ -1466,6 +1468,7 @@ declare module Phaser {
         forEachAlive(callback: Function, callbackContext: any): void;
         forEachDead(callback: Function, callbackContext: any): void;
         forEachExists(callback: Function, callbackContext: any): void;
+        filter(predicate: Function, checkExists?: boolean): ArraySet;
         getAt(index: number): any;
         getBottom(): any;
         getFirstAlive(): any;
@@ -1571,7 +1574,7 @@ declare module Phaser {
         hitCanvas: HTMLCanvasElement;
         hitContext: CanvasRenderingContext2D;
         holdRate: number;
-        interactiveItems: Phaser.ArrayList;
+        interactiveItems: Phaser.ArraySet;
         justPressedRate: number;
         justReleasedRate: number;
         keyboard: Phaser.Keyboard;
@@ -1636,7 +1639,7 @@ declare module Phaser {
 
     }
 
-    class InputHandler extends Phaser.LinkedListItem {
+    class InputHandler {
 
         constructor(sprite: Phaser.Sprite);
 
@@ -1908,26 +1911,17 @@ declare module Phaser {
 
     }
 
-    class LinkedListItem {
+    class LinkedList {
 
-        next: LinkedListItem;
-        prev: LinkedListItem;
-        first: LinkedListItem;
-        last: LinkedListItem;
-
-    }
-
-    class LinkedList extends LinkedListItem {
-
-        first: LinkedListItem;
-        last: LinkedListItem;
-        next: LinkedListItem;
-        prev: LinkedListItem;
+        first: any;
+        last: any;
+        next: any;
+        prev: any;
         total: number;
 
-        add(child: LinkedListItem): LinkedListItem;
+        add(item: any): any;
         callAll(callback: Function): void;
-        remove(child: LinkedListItem): void;
+        remove(item: any): void;
         reset(): void;
 
     }
@@ -2331,7 +2325,7 @@ declare module Phaser {
             distanceToXY(displayObject: any, x: number, y: number): number;
             enable(object: any, children?: Boolean): void;
             enableBody(object: any): void;
-            getObjectsAtLocation(x: number, y: number, group: Phaser.Group, callback?: (callbackArg: any, object: any) => void, callbackContext?: any, callbackArg?: any): Sprite[]; 
+            getObjectsAtLocation(x: number, y: number, group: Phaser.Group, callback?: (callbackArg: any, object: any) => void, callbackContext?: any, callbackArg?: any): Sprite[];
             intersects(body1: Phaser.Physics.Arcade.Body, body2: Phaser.Physics.Arcade.Body): boolean;
             moveToObject(displayObject: any, destination: any, speed?: number, maxTime?: number): number;
             moveToPointer(displayObject: any, speed?: number, pointer?: Phaser.Pointer, maxTime?: number): number;
@@ -2917,7 +2911,7 @@ declare module Phaser {
                 x: number;
                 y: number;
                 mx: number;
-                my: number;             
+                my: number;
 
             }
 
@@ -3807,7 +3801,8 @@ declare module Phaser {
 
     class ScaleManager {
 
-        constructor(game: Phaser.Game, width: any, height: any);
+        constructor(game: Phaser.Game, width: number, height: number);
+        constructor(game: Phaser.Game, width: string, height: string);
 
         static EXACT_FIT: number;
         static NO_SCALE: number;
@@ -3859,6 +3854,7 @@ declare module Phaser {
         minHeight: number;
         minWidth: number;
         offset: Point;
+        onFullScreenInit: Phaser.Signal;
         onResize: ResizeCallback;
         onResizeContext: any;
         onSizeChange: Signal;
@@ -3934,7 +3930,6 @@ declare module Phaser {
         updateScalingAndBounds(): void;
         updateOrientationState(recheckOrientation?: boolean): boolean;
         windowResize(event: any): void;
-
 
     }
 
@@ -4505,6 +4500,7 @@ declare module Phaser {
         isTweening(object: any): boolean;
         remove(tween: Phaser.Tween): Phaser.Tween;
         removeAll(): void;
+        removeFrom(obj: any, children: boolean): void;
         resumeAll(): void;
         update(): boolean;
         pauseAll(): void;
@@ -5382,7 +5378,7 @@ declare module p2 {
         static chanceRoll(chance: number): boolean;
         static defaults(options: any, defaults: any): any;
         static extend(a: any, b: any): void;
-        static randomChoice(choice1: any, choice2: any): any; 
+        static randomChoice(choice1: any, choice2: any): any;
         static rotateArray(matrix: any[], direction: any): any[];
         static splice<T>(array: Array<T>, index: number, howMany: number): void;
         static shuffle<T>(array: T[]): T[];
