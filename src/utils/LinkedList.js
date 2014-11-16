@@ -5,7 +5,12 @@
 */
 
 /**
-* A basic linked list data structure.
+* A basic Linked List data structure.
+*
+* This implementation _modifies_ the `prev` and `next` properties of each item added:
+* - The `prev` and `next` properties must be writable and should not be used for any other purpose.
+* - Items _cannot_ be added to multiple LinkedLists at the same time.
+* - Only objects can be added.
 *
 * @class Phaser.LinkedList
 * @constructor
@@ -13,31 +18,36 @@
 Phaser.LinkedList = function () {
 
     /**
-    * @property {object} next - Next element in the list.
+    * Next element in the list.
+    * @property {object} next
     * @default
     */
     this.next = null;
 
     /**
-    * @property {object} prev - Previous element in the list.
+    * Previous element in the list.
+    * @property {object} prev
     * @default
     */
     this.prev = null;
 
     /**
-    * @property {object} first - First element in the list.
+    * First element in the list.
+    * @property {object} first
     * @default
     */
     this.first = null;
 
     /**
-    * @property {object} last - Last element in the list.
+    * Last element in the list.
+    * @property {object} last
     * @default
     */
     this.last = null;
 
     /**
-    * @property {number} total - Number of elements in the list.
+    * Number of elements in the list.
+    * @property {integer} total
     * @default
     */
     this.total = 0;
@@ -50,32 +60,32 @@ Phaser.LinkedList.prototype = {
     * Adds a new element to this linked list.
     *
     * @method Phaser.LinkedList#add
-    * @param {object} child - The element to add to this list. Can be a Phaser.Sprite or any other object you need to quickly iterate through.
-    * @return {object} The child that was added.
+    * @param {object} item - The element to add to this list. Can be a Phaser.Sprite or any other object you need to quickly iterate through.
+    * @return {object} The item that was added.
     */
-    add: function (child) {
+    add: function (item) {
 
         //  If the list is empty
         if (this.total === 0 && this.first === null && this.last === null)
         {
-            this.first = child;
-            this.last = child;
-            this.next = child;
-            child.prev = this;
+            this.first = item;
+            this.last = item;
+            this.next = item;
+            item.prev = this;
             this.total++;
-            return child;
+            return item;
         }
 
         //  Gets appended to the end of the list, regardless of anything, and it won't have any children of its own (non-nested list)
-        this.last.next = child;
+        this.last.next = item;
 
-        child.prev = this.last;
+        item.prev = this.last;
 
-        this.last = child;
+        this.last = item;
 
         this.total++;
 
-        return child;
+        return item;
 
     },
 
@@ -98,41 +108,41 @@ Phaser.LinkedList.prototype = {
     * Removes the given element from this linked list if it exists.
     *
     * @method Phaser.LinkedList#remove
-    * @param {object} child - The child to be removed from the list.
+    * @param {object} item - The item to be removed from the list.
     */
-    remove: function (child) {
+    remove: function (item) {
 
         if (this.total === 1)
         {
             this.reset();
-            child.next = child.prev = null;
+            item.next = item.prev = null;
             return;
         }
 
-        if (child === this.first)
+        if (item === this.first)
         {
             // It was 'first', make 'first' point to first.next
             this.first = this.first.next;
         }
-        else if (child === this.last)
+        else if (item === this.last)
         {
             // It was 'last', make 'last' point to last.prev
             this.last = this.last.prev;
         }
 
-        if (child.prev)
+        if (item.prev)
         {
-            // make child.prev.next point to childs.next instead of child
-            child.prev.next = child.next;
+            // make item.prev.next point to childs.next instead of item
+            item.prev.next = item.next;
         }
 
-        if (child.next)
+        if (item.next)
         {
-            // make child.next.prev point to child.prev instead of child
-            child.next.prev = child.prev;
+            // make item.next.prev point to item.prev instead of item
+            item.next.prev = item.prev;
         }
 
-        child.next = child.prev = null;
+        item.next = item.prev = null;
 
         if (this.first === null )
         {
