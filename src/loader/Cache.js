@@ -389,7 +389,7 @@ Phaser.Cache.prototype = {
     /**
     * Add a new physics data object to the Cache.
     *
-    * @method Phaser.Cache#addTilemap
+    * @method Phaser.Cache#addPhysicsData
     * @param {string} key - The unique key by which you will reference this object.
     * @param {string} url - URL of the physics json data.
     * @param {object} JSONData - The physics data object (a JSON file).
