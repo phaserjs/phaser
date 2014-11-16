@@ -116,6 +116,7 @@ The proxy methods are generated one-time dynamically but only when needed.
 * Key.justUp allows you to test if a Key has just been released or not. You can only call justUp once per key press. It will only return `true` once, until the Key is pressed down and released again. This allows you to use it in situations where you want to check if this key is up without using a Signal, such as in a core game loop (thanks @pjbaron #1321)
 * Device.whenReady is a new signal that you can use to tell when the device is initialised.
 * Device.onInitialized is dispatched after device initialization occurs but before any of the ready callbacks have been invoked. Local "patching" for a particular device can/should be done in this event.
+* TweenManager.removeFrom method allows you to remove a tween from a game object such as a Sprite (thanks @lewster32 #1279)
 
 ### Updates
 
@@ -154,6 +155,7 @@ The proxy methods are generated one-time dynamically but only when needed.
 * Key.justPressed has bee renamed to Key.downDuration which is a much clearer name for what the method actually does. See Key.justDown for a nice clean alternative.
 * Key.justReleased has bee renamed to Key.upDuration which is a much clearer name for what the method actually does. See Key.justUp for a nice clean alternative.
 * The Phaser.Device class has been made into a singleton and removed it's dependancy on Phaser.Game (thanks @pnstickne #1328)
+* ArrayList has been renamed to `ArraySet` (as it's actually a data set implementation) and moved from the `core` folder to the `utils` folder (thanks @pnstickne)
 
 ### Bug Fixes
 
