@@ -801,7 +801,7 @@ declare module PIXI {
 
     }
 
-    export class IPixiShader {
+    export interface IPixiShader {
 
         fragmentSrc: string[];
         gl: WebGLRenderingContext;
