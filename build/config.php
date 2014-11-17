@@ -99,8 +99,6 @@
     <script src="$path/src/core/Camera.js"></script>
     <script src="$path/src/core/State.js"></script>
     <script src="$path/src/core/StateManager.js"></script>
-    <script src="$path/src/core/ArrayList.js"></script>
-    <script src="$path/src/core/LinkedList.js"></script>
     <script src="$path/src/core/Signal.js"></script>
     <script src="$path/src/core/SignalBinding.js"></script>
     <script src="$path/src/core/Filter.js"></script>
@@ -176,6 +174,8 @@
     <script src="$path/src/sound/Sound.js"></script>
     <script src="$path/src/sound/SoundManager.js"></script>
 
+    <script src="$path/src/utils/ArraySet.js"></script>
+    <script src="$path/src/utils/LinkedList.js"></script>
     <script src="$path/src/utils/ArrayUtils.js"></script>
     <script src="$path/src/utils/Debug.js"></script>
     <script src="$path/src/utils/Color.js"></script>

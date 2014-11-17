@@ -155,7 +155,7 @@ Phaser.SoundManager.prototype = {
             }
         }
 
-        if (window['PhaserGlobal'].audioContext)
+        if (window['PhaserGlobal'] && window['PhaserGlobal'].audioContext)
         {
             this.context = window['PhaserGlobal'].audioContext;
         }

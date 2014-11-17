@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.2.0 "Bethal" - Built: Mon Nov 17 2014 13:08:14
+* v2.2.0 "Bethal" - Built: Mon Nov 17 2014 14:11:38
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -45458,7 +45458,7 @@ Phaser.SoundManager.prototype = {
             }
         }
 
-        if (window['PhaserGlobal'].audioContext)
+        if (window['PhaserGlobal'] && window['PhaserGlobal'].audioContext)
         {
             this.context = window['PhaserGlobal'].audioContext;
         }
