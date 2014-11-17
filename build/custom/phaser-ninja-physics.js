@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.2.0 "Bethal" - Built: Sat Nov 15 2014 20:03:34
+* v2.2.0 "Bethal" - Built: Mon Nov 17 2014 13:08:15
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -1250,7 +1250,6 @@ PIXI.DisplayObject.prototype.updateTransform = function()
     // temporary matrix variables
     var a, b, c, d, tx, ty;
 
-    // TODO create a const for 2_PI 
     // so if rotation is between 0 then we can simplify the multiplication process..
     if(this.rotation % PIXI.PI_2)
     {
@@ -2266,43 +2265,65 @@ PIXI.Sprite.prototype.getBounds = function(matrix)
     var tx = worldTransform.tx;
     var ty = worldTransform.ty;
 
-    var x1 = a * w1 + c * h1 + tx;
-    var y1 = d * h1 + b * w1 + ty;
-
-    var x2 = a * w0 + c * h1 + tx;
-    var y2 = d * h1 + b * w0 + ty;
-
-    var x3 = a * w0 + c * h0 + tx;
-    var y3 = d * h0 + b * w0 + ty;
-
-    var x4 =  a * w1 + c * h0 + tx;
-    var y4 =  d * h0 + b * w1 + ty;
-
     var maxX = -Infinity;
     var maxY = -Infinity;
 
     var minX = Infinity;
     var minY = Infinity;
 
-    minX = x1 < minX ? x1 : minX;
-    minX = x2 < minX ? x2 : minX;
-    minX = x3 < minX ? x3 : minX;
-    minX = x4 < minX ? x4 : minX;
+    if(b === 0 && c === 0)
+    {
+        // scale may be negative!
+        if(a < 0)a *= -1;
+        if(d < 0)d *= -1;
 
-    minY = y1 < minY ? y1 : minY;
-    minY = y2 < minY ? y2 : minY;
-    minY = y3 < minY ? y3 : minY;
-    minY = y4 < minY ? y4 : minY;
+        // this means there is no rotation going on right? RIGHT?
+        // if thats the case then we can avoid checking the bound values! yay         
+        minX = a * w1 + tx;
+        maxX = a * w0 + tx;
+        minY = d * h1 + ty;
+        maxY = d * h0 + ty;
+    }
+    else
+    {
+        var x1 = a * w1 + c * h1 + tx;
+        var y1 = d * h1 + b * w1 + ty;
 
-    maxX = x1 > maxX ? x1 : maxX;
-    maxX = x2 > maxX ? x2 : maxX;
-    maxX = x3 > maxX ? x3 : maxX;
-    maxX = x4 > maxX ? x4 : maxX;
+        var x2 = a * w0 + c * h1 + tx;
+        var y2 = d * h1 + b * w0 + ty;
 
-    maxY = y1 > maxY ? y1 : maxY;
-    maxY = y2 > maxY ? y2 : maxY;
-    maxY = y3 > maxY ? y3 : maxY;
-    maxY = y4 > maxY ? y4 : maxY;
+        var x3 = a * w0 + c * h0 + tx;
+        var y3 = d * h0 + b * w0 + ty;
+
+        var x4 =  a * w1 + c * h0 + tx;
+        var y4 =  d * h0 + b * w1 + ty;
+
+        maxX = -Infinity;
+        maxY = -Infinity;
+
+        minX = Infinity;
+        minY = Infinity;
+
+        minX = x1 < minX ? x1 : minX;
+        minX = x2 < minX ? x2 : minX;
+        minX = x3 < minX ? x3 : minX;
+        minX = x4 < minX ? x4 : minX;
+
+        minY = y1 < minY ? y1 : minY;
+        minY = y2 < minY ? y2 : minY;
+        minY = y3 < minY ? y3 : minY;
+        minY = y4 < minY ? y4 : minY;
+
+        maxX = x1 > maxX ? x1 : maxX;
+        maxX = x2 > maxX ? x2 : maxX;
+        maxX = x3 > maxX ? x3 : maxX;
+        maxX = x4 > maxX ? x4 : maxX;
+
+        maxY = y1 > maxY ? y1 : maxY;
+        maxY = y2 > maxY ? y2 : maxY;
+        maxY = y3 > maxY ? y3 : maxY;
+        maxY = y4 > maxY ? y4 : maxY;
+    }
 
     var bounds = this._bounds;
 
@@ -12042,7 +12063,7 @@ PIXI.AbstractFilter.prototype.apply = function(frameBuffer)
 *
 * Phaser - http://phaser.io
 *
-* v2.2.0 "Bethal" - Built: Sat Nov 15 2014 20:03:34
+* v2.2.0 "Bethal" - Built: Mon Nov 17 2014 13:08:14
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -12085,7 +12106,7 @@ PIXI.AbstractFilter.prototype.apply = function(frameBuffer)
 */
 var Phaser = Phaser || {
 
-	VERSION: '2.2.0-RC7',
+	VERSION: '2.2.0-RC8',
 	GAMES: [],
 
     AUTO: 0,
@@ -18496,396 +18517,6 @@ Phaser.StateManager.prototype = {
 Phaser.StateManager.prototype.constructor = Phaser.StateManager;
 
 /**
-* @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
-* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
-*/
-
-/**
-* A basic linked list data structure.
-*
-* @class Phaser.LinkedList
-* @constructor
-*/
-Phaser.LinkedList = function () {
-
-    /**
-    * @property {object} next - Next element in the list.
-    * @default
-    */
-    this.next = null;
-
-    /**
-    * @property {object} prev - Previous element in the list.
-    * @default
-    */
-    this.prev = null;
-
-    /**
-    * @property {object} first - First element in the list.
-    * @default
-    */
-    this.first = null;
-
-    /**
-    * @property {object} last - Last element in the list.
-    * @default
-    */
-    this.last = null;
-
-    /**
-    * @property {number} total - Number of elements in the list.
-    * @default
-    */
-    this.total = 0;
-
-};
-
-Phaser.LinkedList.prototype = {
-
-    /**
-    * Adds a new element to this linked list.
-    *
-    * @method Phaser.LinkedList#add
-    * @param {object} child - The element to add to this list. Can be a Phaser.Sprite or any other object you need to quickly iterate through.
-    * @return {object} The child that was added.
-    */
-    add: function (child) {
-
-        //  If the list is empty
-        if (this.total === 0 && this.first === null && this.last === null)
-        {
-            this.first = child;
-            this.last = child;
-            this.next = child;
-            child.prev = this;
-            this.total++;
-            return child;
-        }
-
-        //  Gets appended to the end of the list, regardless of anything, and it won't have any children of its own (non-nested list)
-        this.last.next = child;
-
-        child.prev = this.last;
-
-        this.last = child;
-
-        this.total++;
-
-        return child;
-
-    },
-
-    /**
-    * Resets the first, last, next and previous node pointers in this list.
-    *
-    * @method Phaser.LinkedList#reset
-    */
-    reset: function () {
-
-        this.first = null;
-        this.last = null;
-        this.next = null;
-        this.prev = null;
-        this.total = 0;
-
-    },
-
-    /**
-    * Removes the given element from this linked list if it exists.
-    *
-    * @method Phaser.LinkedList#remove
-    * @param {object} child - The child to be removed from the list.
-    */
-    remove: function (child) {
-
-        if (this.total === 1)
-        {
-            this.reset();
-            child.next = child.prev = null;
-            return;
-        }
-
-        if (child === this.first)
-        {
-            // It was 'first', make 'first' point to first.next
-            this.first = this.first.next;
-        }
-        else if (child === this.last)
-        {
-            // It was 'last', make 'last' point to last.prev
-            this.last = this.last.prev;
-        }
-
-        if (child.prev)
-        {
-            // make child.prev.next point to childs.next instead of child
-            child.prev.next = child.next;
-        }
-
-        if (child.next)
-        {
-            // make child.next.prev point to child.prev instead of child
-            child.next.prev = child.prev;
-        }
-
-        child.next = child.prev = null;
-
-        if (this.first === null )
-        {
-            this.last = null;
-        }
-
-        this.total--;
-
-    },
-
-    /**
-    * Calls a function on all members of this list, using the member as the context for the callback.
-    * The function must exist on the member.
-    *
-    * @method Phaser.LinkedList#callAll
-    * @param {function} callback - The function to call.
-    */
-    callAll: function (callback) {
-
-        if (!this.first || !this.last)
-        {
-            return;
-        }
-
-        var entity = this.first;
-
-        do
-        {
-            if (entity && entity[callback])
-            {
-                entity[callback].call(entity);
-            }
-
-            entity = entity.next;
-
-        }
-        while(entity != this.last.next);
-
-    }
-
-};
-
-Phaser.LinkedList.prototype.constructor = Phaser.LinkedList;
-
-/**
-* @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
-* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
-*/
-
-/**
-* A set data structure. Allows items to add themselves to and remove themselves from the set. Items can only exist once in the set.
-*
-* @class Phaser.ArrayList
-* @constructor
-*/
-Phaser.ArrayList = function () {
-
-    /**
-    * @property {number} total - Number of objects in the list.
-    * @default
-    */
-    this.total = 0;
-
-    /**
-    * @property {number} position - Current cursor position.
-    * @default
-    */
-    this.position = 0;
-
-    /**
-    * @property {array} list - The list.
-    */
-    this.list = [];
-
-};
-
-Phaser.ArrayList.prototype = {
-
-    /**
-    * Adds a new element to this list. The item can only exist in the list once.
-    *
-    * @method Phaser.ArrayList#add
-    * @param {object} child - The element to add to this list. Can be a Phaser.Sprite or any other object you need to quickly iterate through.
-    * @return {object} The child that was added.
-    */
-    add: function (child) {
-
-        if (!this.exists(child))
-        {
-            this.list.push(child);
-            this.total++;
-        }
-
-        return child;
-
-    },
-
-    /**
-    * Gets the index of the child in the list, or -1 if it isn't in the list.
-    *
-    * @method Phaser.ArrayList#getIndex
-    * @param {object} child - The element to get the list index for.
-    * @return {number} The index of the child or -1 if not found.
-    */
-    getIndex: function (child) {
-
-        return this.list.indexOf(child);
-
-    },
-
-    /**
-    * Checks for the child within this list.
-    *
-    * @method Phaser.ArrayList#exists
-    * @param {object} child - The element to get the list index for.
-    * @return {boolean} True if the child is found in the list, otherwise false.
-    */
-    exists: function (child) {
-
-        return (this.list.indexOf(child) > -1);
-
-    },
-
-    /**
-    * Resets the list length and drops all items in the list.
-    *
-    * @method Phaser.ArrayList#reset
-    */
-    reset: function () {
-
-        this.list.length = 0;
-        this.total = 0;
-
-    },
-
-    /**
-    * Removes the given element from this list if it exists.
-    *
-    * @method Phaser.ArrayList#remove
-    * @param {object} child - The child to be removed from the list.
-    * @return {object} child - The child that was removed.
-    */
-    remove: function (child) {
-
-        var idx = this.list.indexOf(child);
-
-        if (idx > -1)
-        {
-            this.list.splice(idx, 1);
-            this.total--;
-            return child;
-        }
-
-    },
-
-    /**
-    * Sets the property `key` to the given value on all members of this list.
-    *
-    * @method Phaser.ArrayList#setAll
-    * @param {object} key - The object on the child to set.
-    * @param {*} value - The value to set the property to.
-    */
-    setAll: function (key, value) {
-
-        var i = this.list.length;
-
-        while (i--)
-        {
-            if (this.list[i] && this.list[i][key])
-            {
-                this.list[i][key] = value;
-            }
-        }
-
-    },
-
-    /**
-    * Calls a function on all members of this list, using the member as the context for the callback.
-    * The function must exist on the member.
-    *
-    * @method Phaser.ArrayList#callAll
-    * @param {function} callback - The function to call.
-    * @param {...*} parameter - Additional parameters that will be passed to the callback.
-    */
-    callAll: function (callback) {
-
-        var args = Array.prototype.splice.call(arguments, 1);
-
-        var i = this.list.length;
-
-        while (i--)
-        {
-            if (this.list[i] && this.list[i][callback])
-            {
-                this.list[i][callback].apply(this.list[i], args);
-            }
-        }
-
-    }
-
-};
-
-/**
-* Resets the cursor to the first item in the list and returns it.
-*
-* @name Phaser.ArrayList#first
-* @property {object} first - The first item in the list.
-*/
-Object.defineProperty(Phaser.ArrayList.prototype, "first", {
-
-    get: function () {
-
-        this.position = 0;
-
-        if (this.total > 0)
-        {
-            return this.list[0];
-        }
-        else
-        {
-            return null;
-        }
-
-    }
-
-});
-
-/**
-* Gets the next item in the list and returns it, advancing the cursor.
-*
-* @name Phaser.ArrayList#next
-* @property {object} next - Advanced the cursor and return.
-*/
-Object.defineProperty(Phaser.ArrayList.prototype, "next", {
-
-    get: function () {
-
-        if (this.position < this.total)
-        {
-            this.position++;
-
-            return this.list[this.position];
-        }
-        else
-        {
-            return null;
-        }
-
-    }
-
-});
-
-Phaser.ArrayList.prototype.constructor = Phaser.ArrayList;
-
-/**
 * @author       Miller Medeiros http://millermedeiros.github.com/js-signals/
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2014 Photon Storm Ltd.
@@ -21606,32 +21237,36 @@ Phaser.Group.prototype.postUpdate = function () {
 
 
 /**
-* Allows you to obtain a Phaser.ArrayList of children that return true for the given predicate
+* Allows you to obtain a Phaser.ArraySet of children that return true for the given predicate
 * For example:
+*
 *     var healthyList = Group.filter(function(child, index, children) {
 *         return child.health > 10 ? true : false;
 *     }, true);
 *     healthyList.callAll('attack');
+*
 * Note: Currently this will skip any children which are Groups themselves.
+*
 * @method Phaser.Group#filter
 * @param {function} predicate - The function that each child will be evaluated against. Each child of the Group will be passed to it as its first parameter, the index as the second, and the entire child array as the third
 * @param {boolean} [checkExists=false] - If set only children with exists=true will be passed to the callback, otherwise all children will be passed.
-* @return {Phaser.ArrayList} Returns an array list containing all the children that the predicate returned true for
+* @return {Phaser.ArraySet} Returns an array list containing all the children that the predicate returned true for
 */
 Phaser.Group.prototype.filter = function(predicate, checkExists) {
-    var index = -1,
-        length = this.children.length,
-        result = new Phaser.ArrayList();
+    var index = -1;
+    var length = this.children.length;
+    var results = [];
 
     while(++index < length) {
         var child = this.children[index];
         if(!checkExists || (checkExists && child.exists)) {
             if(predicate(child, index, this.children)) {
-                result.add(child);
+                results.push(child);
             }
         }
     }
-    return result;
+
+    return new Phaser.ArraySet(results);
 };
 
 /**
@@ -23022,14 +22657,39 @@ Phaser.FlexLayer.prototype.debug = function () {
 */
 
 /**
-* The ScaleManager object is responsible managing the scaling, resizing and alignment of the game and display canvas.
+* @classdesc
+* The ScaleManager object handles the the scaling, resizing, and alignment of the
+* Game size and the game Display canvas.
 *
-* The `width` and `height` constructor parameters can either be a number which represents pixels or a string that represents a percentage: e.g. `800` (for 800 pixels) or `"80%"` for 80%.
+* The Game size is the logical size of the game; the Display canvas has size as an HTML element.
+*
+* The calculations of these are heavily influenced by the Parent size which is the computed
+* dimenstions of the Display canvas's Parent container/element - the _effective CSS rules of the
+* canvas's Parent element play an important role_ in the operation of the ScaleManager. 
+*
+* The Display canvas - or Game size, depending {@link Phaser.ScaleManager#scaleMode} - is updated to best utilize the Parent size.
+*
+* Parent and Display canvas containment guidelines:
+*
+* - Style the Parent element (of the game canvas) to control the Parent size and
+*   thus the Display canvas's size and layout.
+*   The Parent element's CSS styles should _effectivelly_ apply maximum (and minimum) bounding behavior.
+*
+* - The Display canvas layout CSS styles (ie. margins, size) should generally not be altered manually as
+*   they may be updated by the ScaleManager.
+*
+* - When running in Fullscreen mode or as `parentIsWindow` the Parent size is that of the viewport.
+*
+* See {@link Phaser.ScaleManager#getParentBounds}.
 *
 * Some parts of ScaleManager were inspired by the research of Ryan Van Etten, released under MIT License 2013.
 *
-* @class Phaser.ScaleManager
-* @constructor
+* @description
+* Create a new ScaleManager object - this is done automatically by {@link Phaser.Game}
+*
+* The `width` and `height` constructor parameters can either be a number which represents pixels or a string that represents a percentage: e.g. `800` (for 800 pixels) or `"80%"` for 80%.
+*
+* @class
 * @param {Phaser.Game} game - A reference to the currently running game.
 * @param {number|string} width - The width of the game. See above.
 * @param {number|string} height - The height of the game. See above.
@@ -23052,14 +22712,14 @@ Phaser.ScaleManager = function (game, width, height) {
     this.grid = null;
 
     /**
-    * Target width (in pixels) of the Game canvas.
+    * Target width (in pixels) of the Display canvas.
     * @property {number} width
     * @readonly
     */
     this.width = 0;
 
     /**
-    * Target height (in pixels) of the Game canvas.
+    * Target height (in pixels) of the Display canvas.
     * @property {number} height
     * @readonly
     */
@@ -23100,7 +22760,7 @@ Phaser.ScaleManager = function (game, width, height) {
     this.maxHeight = null;
 
     /**
-    * The offset coordinates of the Game canvas from the top-left of the browser window.
+    * The offset coordinates of the Display canvas from the top-left of the browser window.
     * The is used internally by Phaser.Pointer (for Input) and possibly other types.
     * @property {Phaser.Point} offset
     * @readonly
@@ -23152,10 +22812,10 @@ Phaser.ScaleManager = function (game, width, height) {
 
     /**
     * The maximum number of times a canvas will be resized (in a row) in order to fill the browser.
-    * @property {number} maxIterations
-    * @default
-    * @deprecated 2.2.0 - This is not used anymore as reflow iterations are "automatic".
+    * @property {number} maxIterations    
     * @protected
+    * @see {@link Phaser.ScaleManger#refresh}
+    * @deprecated 2.2.0 - This is not used anymore as reflow iterations are "automatic".
     */
     this.maxIterations = 5;
 
@@ -23200,54 +22860,55 @@ Phaser.ScaleManager = function (game, width, height) {
     this.leaveIncorrectOrientation = new Phaser.Signal();
 
     /**
-    * This is the DOM element on which the Full Screen API will be invoked.
-    * It can be any valid DOM element - the target element must have the correct CSS styling and should contain the game canvas.
+    * If specified, this is the DOM element on which the Fullscreen API enter request will be invoked.
+    * The target element must have the correct CSS styling and contain the Display canvas.
     *
-    * This element's style will be modified (ie. the width and height might be set to 100%)
+    * The element's style will be modified (ie. the width and height might be set to 100%)
     * but it will not be added to, removed from, or repositioned within the DOM.
     * An attempt is made to restore relevant style changes when fullscreen mode is left.
     *
-    * For pre 2.2.0 behavior set `game.scale.fullScreenTarget = game.canvas`.
+    * For pre-2.2.0 behavior set `game.scale.fullScreenTarget = game.canvas`.
     *
-    * @property {DOMElement|null} fullScreenTarget
+    * @property {?DOMElement} fullScreenTarget
     * @default
-    * @deprecated 2.2.0 - See `createFullScreenTarget` as an alternative.
+    * @deprecated 2.2.0 - See {@link Phaser.ScaleManger#onFulLScreenInit} and {@link Phaser.ScaleManager#createFullScreenTarget}.
     */
     this.fullScreenTarget = null;
 
     /**
-    * The `createFullScreenTarget` function creates a fullscreen target when `fullScreenTarget` is not set.
-    * 
-    * The Game canvas is moved onto the created element for the duration of the fullscreen mode
-    * and restored to it's original DOM location when fullscreen is exited.
-    *
-    * The returned element (which should probably be newly created) is moved/reparanted within
-    * the DOM and may have its CSS styles updated. Assign an element to `fullScreenTarget` to avoid
-    * this DOM manipulation and revert to earlier behavior.
-    *
-    * The default implementation is to create a new element with a black background.
-    *
-    * @property {function} createFullScreenTarget
-    * @protected
-    */
-    this.createFullScreenTarget = function () {
-        var fsTarget = document.createElement('div');
-        fsTarget.style.margin = '0';
-        fsTarget.style.padding = '0';
-        fsTarget.style.background = '#000';
-        return fsTarget;
-    };
-
-    /**
     * The fullscreen target, as created by `createFullScreenTarget`.
     * This is not set if `fullScreenTarget` is used and is cleared when fullscreen mode ends.
-    * @property {DOMElement|null} _createdFullScreenTarget
+    * @property {?DOMElement} _createdFullScreenTarget
     * @private
     */
     this._createdFullScreenTarget = null;
 
     /**
+    * This signal is dispatched when fullscreen mode is ready to be initialized but
+    * before the fullscreen request.
+    *
+    * The signal is passed a single argument, an object in the form `{targetElement: DOMElement}`.
+    *
+    * The `targetElement` is the {@link Phaser.ScaleManager#fullScreenTarget} element,
+    * if such is assigned, or a new element created by {@link Phaser.ScaleManager#createFullScreenTarget}.
+    *
+    * Custom CSS styling or resets can be applied to `targetElement` as required.
+    *
+    * If `targetElement` is _not_ the same element as {@link Phaser.ScaleManager.fullScreenTarget}:
+    * - After initialization the Display canvas is moved onto the `targetElement` for
+    *   the duration of the fullscreen mode, and restored to it's original DOM location when fullscreen is exited.
+    * - The `targetElement` is moved/reparanted within the DOM and may have its CSS styles updated.
+    *
+    * The behavior of a pre-assigned target element is covered in {@link Phaser.ScaleManager#fullScreenTarget}.
+    *
+    * @property {Phaser.Signal} onFullScreenInit
+    * @public
+    */
+    this.onFullScreenInit = new Phaser.Signal();
+
+    /**
     * This signal is dispatched when the browser enters fullscreen mode, if supported.
+    *
     * @property {Phaser.Signal} enterFullScreen
     * @public
     */
@@ -23255,6 +22916,7 @@ Phaser.ScaleManager = function (game, width, height) {
 
     /**
     * This signal is dispatched when the browser leaves fullscreen mode.
+    *
     * @property {Phaser.Signal} leaveFullScreen
     * @public
     */
@@ -23263,7 +22925,8 @@ Phaser.ScaleManager = function (game, width, height) {
     /**
     * This signal is dispatched when the browser fails to enter fullscreen mode;
     * or if the device does not support fullscreen mode and `startFullScreen` is invoked.
-    * @property {Phaser.Signal} leaveFullScreen
+    *
+    * @property {Phaser.Signal} fullScreenFailed
     * @public
     */
     this.fullScreenFailed = new Phaser.Signal();
@@ -23294,7 +22957,7 @@ Phaser.ScaleManager = function (game, width, height) {
     this.scaleFactorInversed = new Phaser.Point(1, 1);
 
     /**
-    * The game canvas is aligned by adjusting the margins; the last margins are stored here.
+    * The Display canvas is aligned by adjusting the margins; the last margins are stored here.
     * @property {Bounds-like} margin
     * @readonly
     */
@@ -23308,7 +22971,7 @@ Phaser.ScaleManager = function (game, width, height) {
     this.bounds = new Phaser.Rectangle();
 
     /**
-    * The aspect ratio of the scaled game canvas.
+    * The aspect ratio of the scaled Display canvas.
     * @property {number} aspectRatio
     * @readonly
     */
@@ -23340,16 +23003,17 @@ Phaser.ScaleManager = function (game, width, height) {
     };
 
     /**
-    * Various compatibility settings. The `(auto)` settings are automatically configured on boot based on device and other runtime information.
+    * Various compatibility settings.
+    * The `(auto)` value indicates the setting is configured based on device and runtime information.
     * @protected
     * 
     * @property {boolean} [supportsFullscreen=(auto)] - True only if fullscreen support will be used. (Changing to fullscreen still might not work.)
     *
     * @property {boolean} [orientationFallback=(auto)] - See {@link Phaser.DOM.getScreenOrientation}.
     *
-    * @property {boolean} [noMargins=false] - If true then the Game canvas's margins will not be updated anymore: existing margins must be manually cleared. Disabling margins prevents automatic canvas alignment/centering, possibly in fullscreen.
+    * @property {boolean} [noMargins=false] - If true then the Display canvas's margins will not be updated anymore: existing margins must be manually cleared. Disabling margins prevents automatic canvas alignment/centering, possibly in fullscreen.
     *
-    * @property {Phaser.Point|null} [scrollTo=(auto)] - If specified the window will be scrolled to this position on every refresh.
+    * @property {?Phaser.Point} [scrollTo=(auto)] - If specified the window will be scrolled to this position on every refresh.
     *
     * @property {boolean} [forceMinimumDocumentHeight=true] - If enabled the document element's minimum height is explicity set on updates.
     *
@@ -23386,12 +23050,10 @@ Phaser.ScaleManager = function (game, width, height) {
     this.parentIsWindow = false;
 
     /**
-    * The _original_ DOM element for the parent of the game canvas.
+    * The _original_ DOM element for the parent of the Display canvas.
     * This may be different in fullscreen - see `createFullScreenTarget`.
     *
-    * If the `parentIsWindow` is true then this should likely be `null`.
-    *
-    * @property {DOMElement|null} parentNode
+    * @property {?DOMElement} parentNode
     * @readonly
     */
     this.parentNode = null;
@@ -23406,14 +23068,16 @@ Phaser.ScaleManager = function (game, width, height) {
     /**
     * The maximum time (in ms) between dimension update checks for the Canvas's parent element (or window).
     * Update checks normally happen quicker in response to other events.
+    *
     * @property {integer} trackParentInterval
     * @default
     * @protected
+    * @see {@link Phaser.ScaleManager#refresh}
     */
     this.trackParentInterval = 2000;
 
     /*
-    * This signal is dispatched when the size of the Game canvas changes _or_ the size of the Game changes. 
+    * This signal is dispatched when the size of the Display canvas changes _or_ the size of the Game changes. 
     * When invoked this is done _after_ the Canvas size/position have been updated.
     *
     * This signal is _only_ called when a change occurs and a reflow may be required.
@@ -23445,7 +23109,7 @@ Phaser.ScaleManager = function (game, width, height) {
 
     /**
     * Information saved when fullscreen mode is started.
-    * @property {object|null} _fullScreenRestore
+    * @property {?object} _fullScreenRestore
     * @private
     */
     this._fullScreenRestore = null;
@@ -23518,8 +23182,7 @@ Phaser.ScaleManager = function (game, width, height) {
 };
 
 /**
-* The Game display area will be _stretched_ to fill the entire size of the canvas's parent element and/or screen.
-* Proportions are not mainted.
+* A scale mode that stretches content to fill all available space - see {@link Phaser.ScaleManager#scaleMode}.
 *
 * @constant
 * @type {integer}
@@ -23527,9 +23190,7 @@ Phaser.ScaleManager = function (game, width, height) {
 Phaser.ScaleManager.EXACT_FIT = 0;
 
 /**
-* The Game display area will not be scaled - even if it is too large for the canvas/screen.
-*
-* This mode _ignores_ any applied scaling factor and displays the canvas at the Game size.
+* A scale mode that prevents any scaling - see {@link Phaser.ScaleManager#scaleMode}.
 *
 * @constant
 * @type {integer}
@@ -23537,7 +23198,7 @@ Phaser.ScaleManager.EXACT_FIT = 0;
 Phaser.ScaleManager.NO_SCALE = 1;
 
 /**
-* Show the entire game display area while _maintaining_ the original aspect ratio.
+* A scale mode that shows the entire game while maintaining proportions - see {@link Phaser.ScaleManager#scaleMode}.
 *
 * @constant
 * @type {integer}
@@ -23545,10 +23206,7 @@ Phaser.ScaleManager.NO_SCALE = 1;
 Phaser.ScaleManager.SHOW_ALL = 2;
 
 /**
-* The dimensions of the game display area are changed to match the size of the parent container.
-* That is, this mode _changes the Game size_ to match the display size.
-*
-* Any manually set Game size (see `setGameSize`) is ignored while in effect.
+* A scale mode that causes the Game size to change - see {@link Phaser.ScaleManager#scaleMode}.
 *
 * @constant
 * @type {integer}
@@ -23556,8 +23214,7 @@ Phaser.ScaleManager.SHOW_ALL = 2;
 Phaser.ScaleManager.RESIZE = 3;
 
 /**
-* _Experimental_: The Game display area is scaled according to a user-speficied scale.
-* Use `setUserScale` to change the scale factor.
+* A scale mode that allows a custom scale factor - see {@link Phaser.ScaleManager#scaleMode}.
 *
 * @constant
 * @protected
@@ -23847,7 +23504,7 @@ Phaser.ScaleManager.prototype = {
     },
 
     /**
-    * Signals a resize - IF the canvas or game size differs from the last signal.
+    * Signals a resize - IF the canvas or Game size differs from the last signal.
     *
     * This also triggers updates on `grid` (FlexGrid) and, if in a RESIZE mode, `game.state` (StateManager).
     *
@@ -23880,7 +23537,11 @@ Phaser.ScaleManager.prototype = {
     },
 
     /**
-    * Set the min and max dimensions for the game object.
+    * Set the min and max dimensions for the Display canvas.
+    * 
+    * _Note:_ The min/max dimensions are only applied in some cases
+    * - When the device is not in an incorrect orientation; or
+    * - The scale mode is EXACT_FIT when not in fullscreen
     *
     * @method Phaser.ScaleManager#setMinMax
     * @public
@@ -23941,7 +23602,7 @@ Phaser.ScaleManager.prototype = {
                 this.onResize.call(this.onResizeContext, bounds.width, bounds.height);
             }
 
-            this.setScreenSize();
+            this.updateLayout();
 
             this.signalSizeChange();
         }
@@ -23991,10 +23652,10 @@ Phaser.ScaleManager.prototype = {
 
         if (resize)
         {
-            //  Resize the renderer (which in turn resizes the Game canvas!)
+            //  Resize the renderer (which in turn resizes the Display canvas!)
             this.game.renderer.resize(this.width, this.height);
 
-            //  The Camera can never be smaller than the game size
+            //  The Camera can never be smaller than the Game size
             this.game.camera.setSize(this.width, this.height);
 
             //  This should only happen if the world is smaller than the new canvas size
@@ -24062,7 +23723,7 @@ Phaser.ScaleManager.prototype = {
     * @method Phaser.ScaleManager#classifyOrientation
     * @private
     * @param {string} orientation - The orientation string, e.g. 'portrait-primary'.
-    * @return {string|null} The classified orientation: 'portrait', 'landscape`, or null.
+    * @return {?string} The classified orientation: 'portrait', 'landscape`, or null.
     */
     classifyOrientation: function (orientation) {
 
@@ -24179,8 +23840,20 @@ Phaser.ScaleManager.prototype = {
     },
 
     /**
-    * Request a refresh, which is not normally needed, based on the current mode settings.
-    * The refresh does not run immediately but rather is queued for subsequent game updates.
+    * The `refresh` methods informs the ScaleManager that a layout refresh is required.
+    *
+    * The ScaleManager automatically queues a layout refresh (eg. updates the Game size or Display canvas layout)
+    * when the browser is resized, the orientation changes, or when there is a detected change
+    * of the Parent size. Refreshing is also done automatically when public properties,
+    * such as `scaleMode`, are updated or state-changing methods are invoked.
+    *
+    * The `refresh` method _may_ need to be used in a few (rare) situtations when
+    *
+    * - a device change event is not correctly detected; or
+    * - the Parent size changes (and an immediate reflow is desired); or
+    * - the ScaleManager state is updated by non-standard means.
+    *
+    * The queued layout refresh is not immediate but will run promptly in an upcoming `preRender`.
     * 
     * @method Phaser.ScaleManager#refresh
     * @public
@@ -24193,16 +23866,12 @@ Phaser.ScaleManager.prototype = {
     },
 
     /**
-    * Set game and/or screen (game canvas) size automatically based on the scaleMode.
-    * This is used internally.
+    * Updates the game / canvas position and size.
     *
-    * Do not call this to "refresh" the display, but rather use `refresh`.
-    *
-    * @method Phaser.ScaleManager#setScreenSize
-    * @protected
-    * @deprecated 2.2.0 - This method is _internal_ and may be made _private_ in the future.
+    * @method Phaser.ScaleManager#updateLayout
+    * @private
     */
-    setScreenSize: function () {
+    updateLayout: function () {
 
         var scaleMode = this.currentScaleMode;
 
@@ -24265,11 +23934,14 @@ Phaser.ScaleManager.prototype = {
     },
 
     /**
-    * Returns the bounds of the parent.
+    * Returns the computed Parent size/bounds that the Display canvas is allowed/expected to fill.
     *
-    * If fullscreen or without parent, this is the bounds of the screen itself.
+    * If in fullscreen mode or without parent (see {@link Phaser.ScaleManager#parentIsWindow}),
+    * this will be the bounds of the viewport itself.
     *
-    * The values are rounded to the nearest pixel.
+    * This function takes the `windowConstraints` into consideration - if the parent is partially outside
+    * the viewport then this function may return a smaller than expected size.
+    * Values are rounded to the nearest pixel.
     *
     * @method Phaser.ScaleManager#getParentBounds
     * @protected
@@ -24387,9 +24059,9 @@ Phaser.ScaleManager.prototype = {
     },
 
     /**
-    * Updates the game dimensions and canvas based on internal state.
+    * Updates the Game state / size.
     *
-    * The canvas margins may always be adjusted, even alignment is not in effect.
+    * The canvas margins may always be adjusted, even if alignment is not in effect.
     * 
     * @method Phaser.ScaleManager#reflowGame
     * @private
@@ -24405,7 +24077,7 @@ Phaser.ScaleManager.prototype = {
     },
 
     /**
-    * Updates the size/position of the canvas based on internal state.
+    * Updates the Display canvas size.
     *
     * The canvas margins may always be adjusted, even alignment is not in effect.
     * 
@@ -24439,7 +24111,8 @@ Phaser.ScaleManager.prototype = {
     },
 
     /**
-    * "Reset" the game canvas as set the specified styles directly.
+    * "Reset" the Display canvas and set the specified width/height.
+    *
     * @method Phaser.ScaleManager#resetCanvas
     * @private
     * @param {string} [cssWidth=(current width)] - The css width to set.
@@ -24465,6 +24138,7 @@ Phaser.ScaleManager.prototype = {
 
     /**
     * Queues/marks a size/bounds check as needing to occur (from `preUpdate`).
+    *
     * @method Phaser.ScaleManager#queueUpdate
     * @private
     * @param {boolean} force - If true resets the parent bounds to ensure the check is dirty.
@@ -24568,10 +24242,28 @@ Phaser.ScaleManager.prototype = {
     },
 
     /**
+    * Creates a fullscreen target. This is called automatically as as needed when entering
+    * fullscreen mode and the resulting element is supplied to `onFullScreenInit`.
+    *
+    * Use {@link Phaser.ScaleManager#onFullScreenInit} to customize the created object.
+    *
+    * @method Phaser.ScaleMode#createFullScreenTarget
+    * @protected
+    */
+    createFullScreenTarget: function () {
+        var fsTarget = document.createElement('div');
+        fsTarget.style.margin = '0';
+        fsTarget.style.padding = '0';
+        fsTarget.style.background = '#000';
+        return fsTarget;
+    },
+
+    /**
     * Start the browser's fullscreen mode - this _must_ be called from a user input Pointer or Mouse event.
     *
-    * The Fullscreen API must be supported by the browser for this to work. It is not the same as setting the game size to fill the browser window.
-    * See `compatibility.supportsFullScreen` to check if the current device appears to support fullscreen mode.
+    * The Fullscreen API must be supported by the browser for this to work - it is not the same as setting
+    * the game size to fill the browser window See `compatibility.supportsFullScreen` to check if the current
+    * device is reported to support fullscreen mode.
     *
     * The `fullScreenFailed` signal will be dispatched if the fullscreen change request failed or the game does not support the Fullscreen API.
     *
@@ -24621,8 +24313,16 @@ Phaser.ScaleManager.prototype = {
 
             this._createdFullScreenTarget = this.createFullScreenTarget();
             fsTarget = this._createdFullScreenTarget;
+        }
 
-            // Move the game canvas inside of the target and add the target to the DOM
+        var initData = {
+            targetElement: fsTarget
+        };
+        this.onFullScreenInit.dispatch(initData);
+
+        if (this._createdFullScreenTarget)
+        {
+            // Move the Display canvas inside of the target and add the target to the DOM
             // (The target has to be added for the Fullscreen API to work.)
             var canvas = this.game.canvas;
             var parent = canvas.parentNode;
@@ -24644,7 +24344,7 @@ Phaser.ScaleManager.prototype = {
     },
 
     /**
-    * Stops fullscreen mode, if active.
+    * Stops / exits fullscreen mode, if active.
     *
     * @method Phaser.ScaleManager#stopFullScreen
     * @public
@@ -24666,6 +24366,7 @@ Phaser.ScaleManager.prototype = {
     /**
     * Cleans up the previous fullscreen target, if such was automatically created.
     * This ensures the canvas is restored to its former parent, assuming the target didn't move.
+    *
     * @private
     */
     cleanupCreatedTarget: function () {
@@ -24736,7 +24437,7 @@ Phaser.ScaleManager.prototype = {
     * Called automatically when the browser enters of leaves fullscreen mode.
     *
     * @method Phaser.ScaleManager#fullScreenChange
-    * @protected
+    * @private
     * @param {Event} [event=undefined] - The fullscreenchange event
     */
     fullScreenChange: function (event) {
@@ -24747,7 +24448,7 @@ Phaser.ScaleManager.prototype = {
         {
             this.prepScreenMode(true);
 
-            this.setScreenSize();
+            this.updateLayout();
             this.queueUpdate(true);
 
             this.enterFullScreen.dispatch(this.width, this.height);
@@ -24758,7 +24459,7 @@ Phaser.ScaleManager.prototype = {
 
             this.cleanupCreatedTarget();
 
-            this.setScreenSize();
+            this.updateLayout();
             this.queueUpdate(true);
 
             this.leaveFullScreen.dispatch(this.width, this.height);
@@ -24771,7 +24472,7 @@ Phaser.ScaleManager.prototype = {
     * or called when a fullscreen request is made on a device for which it is not supported.
     *
     * @method Phaser.ScaleManager#fullScreenError
-    * @protected
+    * @private
     * @param {Event} [event=undefined] - The fullscreenerror event; undefined if invoked on a device that does not support the Fullscreen API.
     */
     fullScreenError: function (event) {
@@ -24796,7 +24497,7 @@ Phaser.ScaleManager.prototype = {
     * 
     * @method Phaser.ScaleManager#elementBounds
     * @protected
-    * @param {DOMElement|Object} [element=(game canvas)] - The element or stack (uses first item) to get the bounds for. If none given it defaults to the Phaser game canvas.
+    * @param {DOMElement|Object} [element=(Display canvas)] - The element or stack (uses first item) to get the bounds for. If none given it defaults to the Phaser Display canvas.
     * @param {number} [cushion] - A +/- pixel adjustment amount.
     * @return {Object|boolean} A plain object containing the properties `top/bottom/left/right/width/height` or `false` if a non-valid element is given.
     * @see {@link Phaser.DOM.getBounds}
@@ -24810,8 +24511,8 @@ Phaser.ScaleManager.prototype = {
 
     /**
     * Get the viewport aspect ratio (or the aspect ratio of an object or element)
-    * @link http://w3.org/TR/css3-mediaqueries/#orientation
-    * 
+    * See {@link http://w3.org/TR/css3-mediaqueries/#orientation}.
+    *
     * @method Phaser.ScaleManager#aspect
     * @protected
     * @param {(DOMElement|Object)} [object=(viewport)] - Optional object. Must have public `width` and `height` properties or methods.
@@ -24892,7 +24593,7 @@ Phaser.ScaleManager.prototype = {
     * Destroys the ScaleManager and removes any event listeners.
     * This should probably only be called when the game is destroyed.
     *
-    * @method destroy
+    * @method Phaser.ScaleManager#destroy
     * @protected
     */
     destroy: function () {
@@ -24926,7 +24627,7 @@ Phaser.ScaleManager.prototype.constructor = Phaser.ScaleManager;
 * @method checkResize
 * @memberof Phaser.ScaleManager
 * @protected
-* @deprecated 2.2.0 - Internal. _Do not use_
+* @deprecated 2.2.0 - This method is INTERNAL: avoid using it directly.
 */
 Phaser.ScaleManager.prototype.checkResize = Phaser.ScaleManager.prototype.windowResize;
 
@@ -24935,16 +24636,30 @@ Phaser.ScaleManager.prototype.checkResize = Phaser.ScaleManager.prototype.window
 * @method checkOrientation
 * @memberof Phaser.ScaleManager
 * @protected
-* @deprecated 2.2.0 - Internal. _Do not use_
+* @deprecated 2.2.0 - This method is INTERNAL: avoid using it directly.
 */
 Phaser.ScaleManager.prototype.checkOrientation = Phaser.ScaleManager.prototype.orientationChange;
 
 /**
-* Updates the size/position of the canvas based on internal state.
+* Updates the size of the Game or the size/position of the Display canvas based on internal state.
+*
+* Do not call this to "refresh" the layout - use {@link Phaser.ScaleManager#refresh}.
+*
+* @method Phaser.ScaleManager#setScreenSize
+* @protected
+* @deprecated 2.2.0 - This method is INTERNAL: avoid using it directly.
+*/
+Phaser.ScaleManager.prototype.setScreenSize = Phaser.ScaleManager.prototype.updateLayout;
+
+/**
+* Updates the size/position of the Display canvas based on internal state.
+*
+* Do not call this to "refresh" the layout - use {@link Phaser.ScaleManager#refresh}.
+*
 * @method setSize
 * @memberof Phaser.ScaleManager
 * @protected
-* @deprecated 2.2.0 - Internal. Use `refresh` if needed.
+* @deprecated 2.2.0 - This method is INTERNAL: avoid using it directly.
 */
 Phaser.ScaleManager.prototype.setSize = Phaser.ScaleManager.prototype.reflowCanvas;
 
@@ -24971,12 +24686,39 @@ Phaser.ScaleManager.prototype.checkOrientationState = function () {
 };
 
 /**
-* The scaling method used by the ScaleManager.
+* The scaling method used by the ScaleManager when not in fullscreen.
+* 
+* <dl>
+*   <dt>{@link Phaser.ScaleManager.NO_SCALE}</dt>
+*   <dd>
+*       The Game display area will not be scaled - even if it is too large for the canvas/screen.
+*       This mode _ignores_ any applied scaling factor and displays the canvas at the Game size.
+*   </dd>
+*   <dt>{@link Phaser.ScaleManager.EXACT_FIT}</dt>
+*   <dd>
+*       The Game display area will be _stretched_ to fill the entire size of the canvas's parent element and/or screen.
+*       Proportions are not mainted.
+*   </dd>
+*   <dt>{@link Phaser.ScaleManager.SHOW_ALL}</dt>
+*   <dd>
+*       Show the entire game display area while _maintaining_ the original aspect ratio.
+*   </dd>
+*   <dt>{@link Phaser.ScaleManager.RESIZE}</dt>
+*   <dd>
+*       The dimensions of the game display area are changed to match the size of the parent container.
+*       That is, this mode _changes the Game size_ to match the display size.
 *
-* See {@link Phaser.ScaleManager.NO_SCALE}, {@link Phaser.ScaleManager.EXACT_FIT}, {@link Phaser.ScaleManager.SHOW_ALL}, {@link Phaser.ScaleManager.RESIZE}, {@link Phaser.ScaleManager.USER_SCALE}
+*       Any manually set Game size (see `setGameSize`) is ignored while in effect.
+*   </dd>
+*   <dt>{@link Phaser.ScaleManager.USER_SCALE}</dt>
+*   <dd>
+*       _Experimental_: The Game display area is scaled according to a user-speficied scale.
+*       Use `setUserScale` to change the scale factor.
+*   </dd>
+* </dl>
 *
 * @name Phaser.ScaleManager#scaleMode
-* @property {number} scaleMode
+* @property {integer} scaleMode
 */
 Object.defineProperty(Phaser.ScaleManager.prototype, "scaleMode", {
 
@@ -25008,8 +24750,10 @@ Object.defineProperty(Phaser.ScaleManager.prototype, "scaleMode", {
 /**
 * The scaling method used by the ScaleManager when in fullscreen.
 *
+* See {@link Phaser.ScaleManager#scaleMode} for the different modes allowed.
+*
 * @name Phaser.ScaleManager#fullScreenScaleMode
-* @property {number} fullScreenScaleMode
+* @property {integer} fullScreenScaleMode
 */
 Object.defineProperty(Phaser.ScaleManager.prototype, "fullScreenScaleMode", {
 
@@ -25063,9 +24807,9 @@ Object.defineProperty(Phaser.ScaleManager.prototype, "currentScaleMode", {
 });
 
 /**
-* If true then the game canvas will be horizontally-aligned _in the parent container_.
+* If true then the Display canvas will be horizontally-aligned _in the parent container_.
 *
-* To align across the page the game canvas should be added directly to page;
+* To align across the page the Display canvas should be added directly to page;
 * or the parent container should itself be aligned.
 *
 * This is not applicable for the `RESIZE` scaling mode.
@@ -25095,9 +24839,9 @@ Object.defineProperty(Phaser.ScaleManager.prototype, "pageAlignHorizontally", {
 });
 
 /**
-* If true then the game canvas will be vertically-aligned _in the parent container_.
+* If true then the Display canvas will be vertically-aligned _in the parent container_.
 *
-* To align across the page the game canvas should be added directly to page;
+* To align across the page the Display canvas should be added directly to page;
 * or the parent container should itself be aligned.
 *
 * This is not applicable for the `RESIZE` scaling mode.
@@ -25173,7 +24917,8 @@ Object.defineProperty(Phaser.ScaleManager.prototype, "isLandscape", {
 
 /**
 * The _last known_ orientation value of the game. A value of 90 is landscape and 0 is portrait.
-* @property {number} orientation
+* @name Phaser.ScaleManager#orientation
+* @property {integer} orientation
 * @readonly
 * @deprecated 2.2.0 - Use `ScaleManager.screenOrientation` instead.
 */
@@ -26516,9 +26261,9 @@ Phaser.Input = function (game) {
 
     /**
     * A list of interactive objects. The InputHandler components add and remove themselves from this list.
-    * @property {Phaser.ArrayList} interactiveItems
+    * @property {Phaser.ArraySet} interactiveItems
     */
-    this.interactiveItems = new Phaser.ArrayList();
+    this.interactiveItems = new Phaser.ArraySet();
 
     /**
     * @property {Phaser.Point} _localPoint - Internal cache var.
@@ -47816,6 +47561,50 @@ Phaser.TweenManager.prototype = {
         this._add = [];
 
     },
+    
+    /**
+    * Remove all tweens from a specific object, array of objects or group.
+    * @method Phaser.TweenManager#removeFrom
+    * @param {object|object[]|Phaser.Group} obj - The object you want to remove the tweens from.
+    * @param {boolean} children - If passing a group, setting this to true will remove the tweens from all of its children instead of the group itself.
+    */
+    removeFrom: function(obj, children) {
+        
+        var o, c, t, len;
+        
+        if (Array.isArray(obj))
+        {
+            for (o = 0, len = obj.length; o < len; o++)
+            {
+                this.removeFrom(obj[o]);
+            }
+        }
+        else if (obj.type === Phaser.GROUP && children)
+        {
+            for (c = 0, len = obj.children.length; c < len; c++)
+            {
+                this.removeFrom(obj.children[c]);
+            }
+        }
+        else
+        {
+            for (t = 0, len = this._tweens.length; t < len; t++)
+            {
+                if (obj === this._tweens[t]._object)
+                {
+                    this.remove(this._tweens[t]);
+                }
+            }
+            for (t = 0, len = this._add.length; t < len; t++)
+            {
+                if (obj === this._add[t]._object)
+                {
+                    this.remove(this._add[t]);
+                }
+            }
+        }
+        
+    },
 
     /**
     * Add a new tween into the TweenManager.
@@ -53189,7 +52978,7 @@ Phaser.Cache.prototype = {
     /**
     * Add a new physics data object to the Cache.
     *
-    * @method Phaser.Cache#addTilemap
+    * @method Phaser.Cache#addPhysicsData
     * @param {string} key - The unique key by which you will reference this object.
     * @param {string} url - URL of the physics json data.
     * @param {object} JSONData - The physics data object (a JSON file).
@@ -57580,9 +57369,13 @@ Object.defineProperty(Phaser.Sound.prototype, "volume", {
 * The audio file type and the encoding of those files are extremely important. Not all browsers can play all audio formats.
 * There is a good guide to what's supported here: http://hpr.dogphilosophy.net/test/
 *
+* If you are reloading a Phaser Game on a page that never properly refreshes (such as in an AngularJS project) then you will quickly run out
+* of AudioContext nodes. If this is the case create a global var called PhaserGlobal on the window object before creating the game. The active
+* AudioContext will then be saved to window.PhaserGlobal.audioContext when the Phaser game is destroyed, and re-used when it starts again.
+*
 * @class Phaser.SoundManager
 * @constructor
-* @param {Phaser.Game} game reference to the current game instance.
+* @param {Phaser.Game} game - Reference to the current game instance.
 */
 Phaser.SoundManager = function (game) {
 
@@ -57721,24 +57514,31 @@ Phaser.SoundManager.prototype = {
             }
         }
 
-        if (!!window['AudioContext'])
+        if (window['PhaserGlobal'].audioContext)
         {
-            try {
-                this.context = new window['AudioContext']();
-            } catch (error) {
-                this.context = null;
-                this.usingWebAudio = false;
-                this.noAudio = true;
-            }
+            this.context = window['PhaserGlobal'].audioContext;
         }
-        else if (!!window['webkitAudioContext'])
+        else
         {
-            try {
-                this.context = new window['webkitAudioContext']();
-            } catch (error) {
-                this.context = null;
-                this.usingWebAudio = false;
-                this.noAudio = true;
+            if (!!window['AudioContext'])
+            {
+                try {
+                    this.context = new window['AudioContext']();
+                } catch (error) {
+                    this.context = null;
+                    this.usingWebAudio = false;
+                    this.noAudio = true;
+                }
+            }
+            else if (!!window['webkitAudioContext'])
+            {
+                try {
+                    this.context = new window['webkitAudioContext']();
+                } catch (error) {
+                    this.context = null;
+                    this.usingWebAudio = false;
+                    this.noAudio = true;
+                }
             }
         }
 
@@ -58103,7 +57903,14 @@ Phaser.SoundManager.prototype = {
         }
 
         this._sounds = [];
+
         this.onSoundDecode.dispose();
+
+        if (this.context && window['PhaserGlobal'])
+        {
+            //  Store this in the PhaserGlobal window var, if set, to allow for re-use if the game is created again without the page refreshing
+            window['PhaserGlobal'].audioContext = this.context;
+        }
 
     }
 
@@ -58193,6 +58000,429 @@ Object.defineProperty(Phaser.SoundManager.prototype, "volume", {
     }
 
 });
+
+/**
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2014 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+*/
+
+/**
+* ArraySet is a Set data structure (items must be unique within the set) that also maintains order.
+* This allows specific items to be easily added or removed from the Set.
+*
+* Item equality (and uniqueness) is determined by the behavior of `Array.indexOf`.
+*
+* This used primarily by the Input subsystem.
+*
+* @class Phaser.ArraySet
+* @constructor
+* @param {*[]} [list=(new array)] - The backing array: if specified the items in the list _must_ be unique, per `Array.indexOf`, and the ownership of the array _should_ be relinquished to the ArraySet.
+*/
+Phaser.ArraySet = function (list) {
+
+    /**
+    * Current cursor position as established by `first` and `next`.
+    * @property {integer} position
+    * @default
+    */
+    this.position = 0;
+
+    /**
+    * The backing array. If items are added/removed manually the `total` property must be updated accordingly.
+    * @property {*[]} list
+    */
+    this.list = list || [];
+
+};
+
+Phaser.ArraySet.prototype = {
+
+    /**
+    * Adds a new element to the end of the list.
+    * If the item already exists in the list it is not moved.
+    *
+    * @method Phaser.ArraySet#add
+    * @param {*} item - The element to add to this list.
+    * @return {*} The item that was added.
+    */
+    add: function (item) {
+
+        if (!this.exists(item))
+        {
+            this.list.push(item);
+        }
+
+        return item;
+
+    },
+
+    /**
+    * Gets the index of the item in the list, or -1 if it isn't in the list.
+    *
+    * @method Phaser.ArraySet#getIndex
+    * @param {*} item - The element to get the list index for.
+    * @return {number} The index of the item or -1 if not found.
+    */
+    getIndex: function (item) {
+
+        return this.list.indexOf(item);
+
+    },
+
+    /**
+    * Checks for the item within this list.
+    *
+    * @method Phaser.ArraySet#exists
+    * @param {*} item - The element to get the list index for.
+    * @return {boolean} True if the item is found in the list, otherwise false.
+    */
+    exists: function (item) {
+
+        return (this.list.indexOf(item) > -1);
+
+    },
+
+    /**
+    * Removes all the items.
+    *
+    * @method Phaser.ArraySet#reset
+    */
+    reset: function () {
+
+        this.list.length = 0;
+
+    },
+
+    /**
+    * Removes the given element from this list if it exists.
+    *
+    * @method Phaser.ArraySet#remove
+    * @param {*} item - The item to be removed from the list.
+    * @return {*} item - The item that was removed.
+    */
+    remove: function (item) {
+
+        var idx = this.list.indexOf(item);
+
+        if (idx > -1)
+        {
+            this.list.splice(idx, 1);
+            return item;
+        }
+
+    },
+
+    /**
+    * Sets the property `key` to the given value on all members of this list.
+    *
+    * @method Phaser.ArraySet#setAll
+    * @param {*} key - The object on the item to set.
+    * @param {*} value - The value to set the property to.
+    */
+    setAll: function (key, value) {
+
+        var i = this.list.length;
+
+        while (i--)
+        {
+            if (this.list[i])
+            {
+                this.list[i][key] = value;
+            }
+        }
+
+    },
+
+    /**
+    * Calls a function on all members of this list, using the member as the context for the callback.
+    * The function must exist on the member.
+    *
+    * @method Phaser.ArraySet#callAll
+    * @param {function} callback - The function to call.
+    * @param {...*} parameter - Additional parameters that will be passed to the callback.
+    */
+    callAll: function (callback) {
+
+        var args = Array.prototype.splice.call(arguments, 1);
+
+        var i = this.list.length;
+
+        while (i--)
+        {
+            if (this.list[i] && this.list[i][callback])
+            {
+                this.list[i][callback].apply(this.list[i], args);
+            }
+        }
+
+    }
+
+};
+
+/**
+* Number of items in the ArraySet. Same as `list.length`.
+*
+* @name Phaser.ArraySet#total
+* @property {integer} total
+*/
+Object.defineProperty(Phaser.ArraySet.prototype, "total", {
+
+    get: function () {
+        return this.list.length;
+    }
+
+});
+
+/**
+* Returns the first item and resets the cursor to the start.
+*
+* @name Phaser.ArraySet#first
+* @property {*} first
+*/
+Object.defineProperty(Phaser.ArraySet.prototype, "first", {
+
+    get: function () {
+
+        this.position = 0;
+
+        if (this.list.length > 0)
+        {
+            return this.list[0];
+        }
+        else
+        {
+            return null;
+        }
+
+    }
+
+});
+
+/**
+* Returns the the next item (based on the cursor) and advances the cursor.
+*
+* @name Phaser.ArraySet#next
+* @property {*} next
+*/
+Object.defineProperty(Phaser.ArraySet.prototype, "next", {
+
+    get: function () {
+
+        if (this.position < this.list.length)
+        {
+            this.position++;
+
+            return this.list[this.position];
+        }
+        else
+        {
+            return null;
+        }
+
+    }
+
+});
+
+Phaser.ArraySet.prototype.constructor = Phaser.ArraySet;
+
+/**
+* Phaser.ArraySet is a deprecated alias for Phaser.ArraySet.
+*
+* @class Phaser.ArrayList
+* @constructor
+* @deprecated 2.2.0 - Use {@link Phaser.ArraySet} instead.
+*/
+Phaser.ArrayList = Phaser.ArraySet;
+
+/**
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2014 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+*/
+
+/**
+* A basic Linked List data structure.
+*
+* This implementation _modifies_ the `prev` and `next` properties of each item added:
+* - The `prev` and `next` properties must be writable and should not be used for any other purpose.
+* - Items _cannot_ be added to multiple LinkedLists at the same time.
+* - Only objects can be added.
+*
+* @class Phaser.LinkedList
+* @constructor
+*/
+Phaser.LinkedList = function () {
+
+    /**
+    * Next element in the list.
+    * @property {object} next
+    * @default
+    */
+    this.next = null;
+
+    /**
+    * Previous element in the list.
+    * @property {object} prev
+    * @default
+    */
+    this.prev = null;
+
+    /**
+    * First element in the list.
+    * @property {object} first
+    * @default
+    */
+    this.first = null;
+
+    /**
+    * Last element in the list.
+    * @property {object} last
+    * @default
+    */
+    this.last = null;
+
+    /**
+    * Number of elements in the list.
+    * @property {integer} total
+    * @default
+    */
+    this.total = 0;
+
+};
+
+Phaser.LinkedList.prototype = {
+
+    /**
+    * Adds a new element to this linked list.
+    *
+    * @method Phaser.LinkedList#add
+    * @param {object} item - The element to add to this list. Can be a Phaser.Sprite or any other object you need to quickly iterate through.
+    * @return {object} The item that was added.
+    */
+    add: function (item) {
+
+        //  If the list is empty
+        if (this.total === 0 && this.first === null && this.last === null)
+        {
+            this.first = item;
+            this.last = item;
+            this.next = item;
+            item.prev = this;
+            this.total++;
+            return item;
+        }
+
+        //  Gets appended to the end of the list, regardless of anything, and it won't have any children of its own (non-nested list)
+        this.last.next = item;
+
+        item.prev = this.last;
+
+        this.last = item;
+
+        this.total++;
+
+        return item;
+
+    },
+
+    /**
+    * Resets the first, last, next and previous node pointers in this list.
+    *
+    * @method Phaser.LinkedList#reset
+    */
+    reset: function () {
+
+        this.first = null;
+        this.last = null;
+        this.next = null;
+        this.prev = null;
+        this.total = 0;
+
+    },
+
+    /**
+    * Removes the given element from this linked list if it exists.
+    *
+    * @method Phaser.LinkedList#remove
+    * @param {object} item - The item to be removed from the list.
+    */
+    remove: function (item) {
+
+        if (this.total === 1)
+        {
+            this.reset();
+            item.next = item.prev = null;
+            return;
+        }
+
+        if (item === this.first)
+        {
+            // It was 'first', make 'first' point to first.next
+            this.first = this.first.next;
+        }
+        else if (item === this.last)
+        {
+            // It was 'last', make 'last' point to last.prev
+            this.last = this.last.prev;
+        }
+
+        if (item.prev)
+        {
+            // make item.prev.next point to childs.next instead of item
+            item.prev.next = item.next;
+        }
+
+        if (item.next)
+        {
+            // make item.next.prev point to item.prev instead of item
+            item.next.prev = item.prev;
+        }
+
+        item.next = item.prev = null;
+
+        if (this.first === null )
+        {
+            this.last = null;
+        }
+
+        this.total--;
+
+    },
+
+    /**
+    * Calls a function on all members of this list, using the member as the context for the callback.
+    * The function must exist on the member.
+    *
+    * @method Phaser.LinkedList#callAll
+    * @param {function} callback - The function to call.
+    */
+    callAll: function (callback) {
+
+        if (!this.first || !this.last)
+        {
+            return;
+        }
+
+        var entity = this.first;
+
+        do
+        {
+            if (entity && entity[callback])
+            {
+                entity[callback].call(entity);
+            }
+
+            entity = entity.next;
+
+        }
+        while(entity != this.last.next);
+
+    }
+
+};
+
+Phaser.LinkedList.prototype.constructor = Phaser.LinkedList;
 
 /**
 * @author       Richard Davey <rich@photonstorm.com>
