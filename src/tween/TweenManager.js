@@ -70,43 +70,48 @@ Phaser.TweenManager.prototype = {
     },
     
     /**
-    * Remove all tweens from a specific object, array of objects or group.
+    * Remove all tweens from a specific object, array of objects or Group.
+    * 
     * @method Phaser.TweenManager#removeFrom
     * @param {object|object[]|Phaser.Group} obj - The object you want to remove the tweens from.
-    * @param {boolean} children - If passing a group, setting this to true will remove the tweens from all of its children instead of the group itself.
+    * @param {boolean} [children=true] - If passing a group, setting this to true will remove the tweens from all of its children instead of the group itself.
     */
-    removeFrom: function(obj, children) {
+    removeFrom: function (obj, children) {
         
-        var o, c, t, len;
-        
+        if (typeof children === 'undefined') { children = true; }
+
+        var i;
+        var len;
+
         if (Array.isArray(obj))
         {
-            for (o = 0, len = obj.length; o < len; o++)
+            for (i = 0, len = obj.length; i < len; i++)
             {
-                this.removeFrom(obj[o]);
+                this.removeFrom(obj[i]);
             }
         }
         else if (obj.type === Phaser.GROUP && children)
         {
-            for (c = 0, len = obj.children.length; c < len; c++)
+            for (var i = 0, len = obj.children.length; i < len; i++)
             {
-                this.removeFrom(obj.children[c]);
+                this.removeFrom(obj.children[i]);
             }
         }
         else
         {
-            for (t = 0, len = this._tweens.length; t < len; t++)
+            for (i = 0, len = this._tweens.length; i < len; i++)
             {
-                if (obj === this._tweens[t]._object)
+                if (obj === this._tweens[i]._object)
                 {
-                    this.remove(this._tweens[t]);
+                    this.remove(this._tweens[i]);
                 }
             }
-            for (t = 0, len = this._add.length; t < len; t++)
+
+            for (i = 0, len = this._add.length; i < len; i++)
             {
-                if (obj === this._add[t]._object)
+                if (obj === this._add[i]._object)
                 {
-                    this.remove(this._add[t]);
+                    this.remove(this._add[i]);
                 }
             }
         }
@@ -186,7 +191,7 @@ Phaser.TweenManager.prototype = {
 
         while (i < numTweens)
         {
-            if (this._tweens[i].update(this.game.time.now))
+            if (this._tweens[i].update(this.game.time.time))
             {
                 i++;
             }

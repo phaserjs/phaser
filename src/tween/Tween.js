@@ -60,6 +60,12 @@ Phaser.Tween = function (object, game, manager) {
     this._duration = 1000;
 
     /**
+    * @property {number} percent - A value between 0 and 1 that represents how far through the duration this tween is.
+    * @readOnly
+    */
+    this.percent = 0;
+
+    /**
     * @property {number} _repeat - Private repeat counter.
     * @private
     * @default
@@ -307,7 +313,7 @@ Phaser.Tween.prototype = {
 
         // delays before the tween start are also affected by the time.slowMotion factor
         // TODO: if the slowMotion factor changes during the delay, this will continue to use the original value until the delay expires!
-        this._startTime = this.game.time.now + this._delayTime * this.game.time.slowMotion;
+        this._startTime = this.game.time.time + this._delayTime * this.game.time.slowMotion;
 
         for (var property in this._valuesEnd)
         {
@@ -690,17 +696,16 @@ Phaser.Tween.prototype = {
 
         var property;
 
-
         if (this._onStartCallbackFired === false)
         {
             this.onStart.dispatch(this._object);
             this._onStartCallbackFired = true;
         }
+ 
+       this.percent = (time - this._startTime) / (this._duration * this.game.time.slowMotion);
+        this.percent = this.percent > 1 ? 1 : this.percent;
 
-        var percent = (time - this._startTime) / (this._duration * this.game.time.slowMotion);
-        percent = percent > 1 ? 1 : percent;
-
-        var value = this._easingFunction(percent);
+        var value = this._easingFunction(this.percent);
 
         for (property in this._valuesEnd)
         {
@@ -737,7 +742,7 @@ Phaser.Tween.prototype = {
             }
         }
 
-        if (percent == 1)
+        if (this.percent === 1)
         {
             if (this._repeat > 0)
             {
