@@ -458,6 +458,7 @@ declare module Phaser {
         scale: Phaser.Point;
         screenView: Phaser.Rectangle;
         target: Phaser.Sprite;
+        totalInView: number;
         view: Phaser.Rectangle;
         visible: boolean;
         width: number;

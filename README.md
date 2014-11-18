@@ -157,6 +157,7 @@ The proxy methods are generated one-time dynamically but only when needed.
 * The Phaser.Device class has been made into a singleton and removed it's dependancy on Phaser.Game (thanks @pnstickne #1328)
 * ArrayList has been renamed to `ArraySet` (as it's actually a data set implementation) and moved from the `core` folder to the `utils` folder (thanks @pnstickne)
 * If you are reloading a Phaser Game on a page that never properly refreshes (such as in an AngularJS project) then you will quickly run out of AudioContext nodes. If this is the case create a global var called `PhaserGlobal` on the window object before creating the game. The active AudioContext will then be saved to `window.PhaserGlobal.audioContext` when the Phaser game is destroyed, and re-used when it starts again (#1233)
+* Camera.screenView is now deprecated. All Camera culling checks are made against Camera.view now instead.
 
 ### Bug Fixes
 
@@ -179,6 +180,8 @@ The proxy methods are generated one-time dynamically but only when needed.
 This fixes a bug in FF where it would use the default DOMMouseWheel (thanks @pnstickne #1313)
 * Stage.smoothed needed to modify the value of PIXI.scaleMode.DEFAULT instead of PIXI.scaleMode.LINEAR (thanks @pixelpicosean #1322)
 * Newly created Groups always had zero z index (thanks @spayton #1291)
+* Sprite.autoCull now properly works if the camera moves around the world.
+* Sprite.inCamera uses a much faster check if auto culling or world bounds checks are enabled and properly adjusts for camera position.
 
 ### Pixi 2.1.0 New Features
 
