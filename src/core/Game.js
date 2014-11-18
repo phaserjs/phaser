@@ -755,6 +755,7 @@ Phaser.Game.prototype = {
                 this.debug.preUpdate();
             }
 
+            this.world.camera.preUpdate();
             this.physics.preUpdate();
             this.state.preUpdate(timeStep);
             this.plugins.preUpdate(timeStep);
@@ -800,7 +801,7 @@ Phaser.Game.prototype = {
             this.tweens.update(elapsedTime);
         }
 
-        if (this.renderType != Phaser.HEADLESS)
+        if (this.renderType !== Phaser.HEADLESS)
         {
             this.state.preRender();
             this.renderer.render(this.stage);
