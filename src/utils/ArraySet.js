@@ -151,7 +151,7 @@ Phaser.ArraySet.prototype = {
         {
             if (this.list[i] && this.list[i][key])
             {
-                this.list[i][callback].apply(this.list[i], args);
+                this.list[i][key].apply(this.list[i], args);
             }
         }
 
