@@ -1,7 +1,7 @@
 [
     "src/Intro.js",
     "src/Phaser.js",
-    "src/polyfill.js",
+    "src/polyfills.js",
     "src/utils/Utils.js",
 
     "src/geom/Circle.js",
