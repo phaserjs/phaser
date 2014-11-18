@@ -465,25 +465,27 @@ Phaser.Device.onInitialized = new Phaser.Signal();
 * if the device is already "ready". See {@link Phaser.Device#deviceReadyAt deviceReadyAt}.
 *
 * @method
-* @param {function} handler - Callback to invoke when the device is ready
+* @param {function} handler - Callback to invoke when the device is ready. It is invoked with the given context the Phaser.Device object is supplied as the first argument.
 * @param {object} [context] - Context in which to invoke the handler
+* @param {boolean} [nonPrimer=false] - If true the device ready check will not be started.
 */
-Phaser.Device.whenReady = function (callback, context) {
+Phaser.Device.whenReady = function (callback, context, nonPrimer) {
 
     var readyCheck = this._readyCheck;
 
     if (this.deviceReadyAt || !readyCheck)
     {
-        callback.call(context);
+        callback.call(context, this);
     }
-    else if (readyCheck._monitor)
+    else if (readyCheck._monitor || nonPrimer)
     {
+        readyCheck._queue = readyCheck._queue || [];
         readyCheck._queue.push([callback, context]);
     }
     else
     {
         readyCheck._monitor = readyCheck.bind(this);
-        readyCheck._queue = [];
+        readyCheck._queue = readyCheck._queue || [];
         readyCheck._queue.push([callback, context]);
         
         var cordova = typeof window.cordova !== 'undefined';
@@ -542,7 +544,7 @@ Phaser.Device._readyCheck = function () {
         {
             var callback = item[0];
             var context = item[1];
-            callback.call(context);
+            callback.call(context, this);
         }
 
         // Remove no longer useful methods and properties.
@@ -611,7 +613,9 @@ Phaser.Device._initialize = function () {
             }
         }
 
-        if (device.windows || device.macOS || (device.linux && device.silk === false) || device.chromeOS)
+        var silk = /Silk/.test(ua); // detected in browsers
+
+        if (device.windows || device.macOS || (device.linux && !silk) || device.chromeOS)
         {
             device.desktop = true;
         }

@@ -14,7 +14,7 @@
 *
 * @class Phaser.ArraySet
 * @constructor
-* @param {*[]} [list=(new array)] - The backing array: if specified the items in the list _must_ be unique, per `Array.indexOf`, and the ownership of the array _should_ be relinquished to the ArraySet.
+* @param {any[]} [list=(new array)] - The backing array: if specified the items in the list _must_ be unique, per `Array.indexOf`, and the ownership of the array _should_ be relinquished to the ArraySet.
 */
 Phaser.ArraySet = function (list) {
 
@@ -26,8 +26,8 @@ Phaser.ArraySet = function (list) {
     this.position = 0;
 
     /**
-    * The backing array. If items are added/removed manually the `total` property must be updated accordingly.
-    * @property {*[]} list
+    * The backing array.
+    * @property {any[]} list
     */
     this.list = list || [];
 
@@ -114,7 +114,7 @@ Phaser.ArraySet.prototype = {
     * Sets the property `key` to the given value on all members of this list.
     *
     * @method Phaser.ArraySet#setAll
-    * @param {*} key - The object on the item to set.
+    * @param {*} key - The propety of the item to set.
     * @param {*} value - The value to set the property to.
     */
     setAll: function (key, value) {
@@ -133,13 +133,15 @@ Phaser.ArraySet.prototype = {
 
     /**
     * Calls a function on all members of this list, using the member as the context for the callback.
-    * The function must exist on the member.
+    *
+    * If the `key` property is present it must be a function.
+    * The function is invoked using the item as the context.
     *
     * @method Phaser.ArraySet#callAll
-    * @param {function} callback - The function to call.
+    * @param {string} key - The name of the property with the function to call.
     * @param {...*} parameter - Additional parameters that will be passed to the callback.
     */
-    callAll: function (callback) {
+    callAll: function (key) {
 
         var args = Array.prototype.splice.call(arguments, 1);
 
@@ -147,9 +149,9 @@ Phaser.ArraySet.prototype = {
 
         while (i--)
         {
-            if (this.list[i] && this.list[i][callback])
+            if (this.list[i] && this.list[i][key])
             {
-                this.list[i][callback].apply(this.list[i], args);
+                this.list[i][key].apply(this.list[i], args);
             }
         }
 
@@ -224,7 +226,7 @@ Object.defineProperty(Phaser.ArraySet.prototype, "next", {
 Phaser.ArraySet.prototype.constructor = Phaser.ArraySet;
 
 /**
-* Phaser.ArraySet is a deprecated alias for Phaser.ArraySet.
+* Phaser.ArrayList is a deprecated alias for Phaser.ArraySet.
 *
 * @class Phaser.ArrayList
 * @constructor

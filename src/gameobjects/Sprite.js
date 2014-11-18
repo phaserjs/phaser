@@ -261,32 +261,43 @@ Phaser.Sprite.prototype.preUpdate = function() {
     if (this.autoCull || this.checkWorldBounds)
     {
         this._bounds.copyFrom(this.getBounds());
-    }
 
-    if (this.autoCull)
-    {
-        //  Won't get rendered but will still get its transform updated
-        this.renderable = this.game.world.camera.screenView.intersects(this._bounds);
-    }
+        this._bounds.x += this.game.camera.view.x;
+        this._bounds.y += this.game.camera.view.y;
 
-    if (this.checkWorldBounds)
-    {
-        //  The Sprite is already out of the world bounds, so let's check to see if it has come back again
-        if (this._cache[5] === 1 && this.game.world.bounds.intersects(this._bounds))
+        if (this.autoCull)
         {
-            this._cache[5] = 0;
-            this.events.onEnterBounds.dispatch(this);
-        }
-        else if (this._cache[5] === 0 && !this.game.world.bounds.intersects(this._bounds))
-        {
-            //  The Sprite WAS in the screen, but has now left.
-            this._cache[5] = 1;
-            this.events.onOutOfBounds.dispatch(this);
-
-            if (this.outOfBoundsKill)
+            //  Won't get rendered but will still get its transform updated
+            if (this.game.world.camera.view.intersects(this._bounds))
             {
-                this.kill();
-                return false;
+                this.renderable = true;
+                this.game.world.camera.totalInView++;
+            }
+            else
+            {
+                this.renderable = false;
+            }
+        }
+
+        if (this.checkWorldBounds)
+        {
+            //  The Sprite is already out of the world bounds, so let's check to see if it has come back again
+            if (this._cache[5] === 1 && this.game.world.bounds.intersects(this._bounds))
+            {
+                this._cache[5] = 0;
+                this.events.onEnterBounds.dispatch(this);
+            }
+            else if (this._cache[5] === 0 && !this.game.world.bounds.intersects(this._bounds))
+            {
+                //  The Sprite WAS in the screen, but has now left.
+                this._cache[5] = 1;
+                this.events.onOutOfBounds.dispatch(this);
+
+                if (this.outOfBoundsKill)
+                {
+                    this.kill();
+                    return false;
+                }
             }
         }
     }
@@ -1065,7 +1076,14 @@ Object.defineProperty(Phaser.Sprite.prototype, "inCamera", {
 
     get: function() {
 
-        return this.game.world.camera.screenView.intersects(this.getBounds());
+        if (!this.autoCull && !this.checkWorldBounds)
+        {
+            this._bounds.copyFrom(this.getBounds());
+            this._bounds.x += this.game.camera.view.x;
+            this._bounds.y += this.game.camera.view.y;
+        }
+
+        return this.game.world.camera.view.intersects(this._bounds);
 
     }
 

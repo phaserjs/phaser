@@ -39,13 +39,14 @@ Phaser.Camera = function (game, id, x, y, width, height) {
     * Camera view.
     * The view into the world we wish to render (by default the game dimensions).
     * The x/y values are in world coordinates, not screen coordinates, the width/height is how many pixels to render.
-    * Objects outside of this view are not rendered if set to camera cull.
+    * Sprites outside of this view are not rendered if Sprite.autoCull is set to `true`. Otherwise they are always rendered.
     * @property {Phaser.Rectangle} view
     */
     this.view = new Phaser.Rectangle(x, y, width, height);
 
     /**
     * @property {Phaser.Rectangle} screenView - Used by Sprites to work out Camera culling.
+    * @deprecated No longer used for camera culling. Uses Camera.view instead.
     */
     this.screenView = new Phaser.Rectangle(x, y, width, height);
 
@@ -87,6 +88,27 @@ Phaser.Camera = function (game, id, x, y, width, height) {
     this.target = null;
 
     /**
+    * @property {PIXI.DisplayObject} displayObject - The display object to which all game objects are added. Set by World.boot
+    */
+    this.displayObject = null;
+
+    /**
+    * @property {Phaser.Point} scale - The scale of the display object to which all game objects are added. Set by World.boot
+    */
+    this.scale = null;
+
+    /**
+    * @property {number} totalInView - The total number of Sprites with `autoCull` set to `true` that are visible by this Camera.
+    * @readOnly
+    */
+    this.totalInView = 0;
+
+    /**
+    * @property {Phaser.Point} _targetPosition - Internal point used to calculate target position
+    */
+    this._targetPosition = new Phaser.Point();
+
+    /**
     * @property {number} edge - Edge property.
     * @private
     * @default
@@ -99,21 +121,6 @@ Phaser.Camera = function (game, id, x, y, width, height) {
     * @default
     */
     this._position = new Phaser.Point();
-
-    /**
-    * @property {PIXI.DisplayObject} displayObject - The display object to which all game objects are added. Set by World.boot
-    */
-    this.displayObject = null;
-
-    /**
-    * @property {Phaser.Point} scale - The scale of the display object to which all game objects are added. Set by World.boot
-    */
-    this.scale = null;
-
-    /**
-    * @property {Phaser.Point} _targetPosition - Internal point used to calculate target position
-    */
-    this._targetPosition = new Phaser.Point();
 
 };
 
@@ -142,6 +149,12 @@ Phaser.Camera.FOLLOW_TOPDOWN = 2;
 Phaser.Camera.FOLLOW_TOPDOWN_TIGHT = 3;
 
 Phaser.Camera.prototype = {
+
+    preUpdate: function () {
+
+        this.totalInView = 0;
+
+    },
 
     /**
     * Tells this camera which sprite to follow.
@@ -253,12 +266,12 @@ Phaser.Camera.prototype = {
     */
     updateTarget: function () {
 
-        this._targetPosition
-            .copyFrom(this.target)
-            .multiply(
-                this.target.parent ? this.target.parent.worldTransform.a : 1,
-                this.target.parent ? this.target.parent.worldTransform.d : 1
-            );
+        this._targetPosition.copyFrom(this.target);
+
+        if (this.target.parent)
+        {
+            this._targetPosition.multiply(this.target.parent.worldTransform.a, this.target.parent.worldTransform.d);
+        }
 
         if (this.deadzone)
         {

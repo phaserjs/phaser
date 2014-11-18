@@ -85,6 +85,7 @@
     <script src="$path/src/pixi/filters/AbstractFilter.js"></script>
 
     <script src="$path/src/Phaser.js"></script>
+    <script src="$path/src/polyfills.js"></script>
     <script src="$path/src/utils/Utils.js"></script>
 
     <script src="$path/src/geom/Circle.js"></script>
@@ -107,10 +108,10 @@
     <script src="$path/src/core/Stage.js"></script>
     <script src="$path/src/core/Group.js"></script>
     <script src="$path/src/core/World.js"></script>
-    <script src="$path/src/core/Game.js"></script>
     <script src="$path/src/core/FlexGrid.js"></script>
     <script src="$path/src/core/FlexLayer.js"></script>
     <script src="$path/src/core/ScaleManager.js"></script>
+    <script src="$path/src/core/Game.js"></script>
 
     <script src="$path/src/input/Input.js"></script>
     <script src="$path/src/input/Key.js"></script>
@@ -125,12 +126,13 @@
     <script src="$path/src/input/InputHandler.js"></script>
 
     <script src="$path/src/gameobjects/Events.js"></script>
-    <script src="$path/src/gameobjects/GameObjectCreator.js"></script>
     <script src="$path/src/gameobjects/GameObjectFactory.js"></script>
+    <script src="$path/src/gameobjects/GameObjectCreator.js"></script>
     <script src="$path/src/gameobjects/BitmapData.js"></script>
     <script src="$path/src/gameobjects/Sprite.js"></script>
     <script src="$path/src/gameobjects/Image.js"></script>
     <script src="$path/src/gameobjects/TileSprite.js"></script>
+    <script src="$path/src/gameobjects/Rope.js"></script>
     <script src="$path/src/gameobjects/Text.js"></script>
     <script src="$path/src/gameobjects/BitmapText.js"></script>
     <script src="$path/src/gameobjects/Button.js"></script>
@@ -139,11 +141,10 @@
     <script src="$path/src/gameobjects/SpriteBatch.js"></script>
     <script src="$path/src/gameobjects/RetroFont.js"></script>
     <script src="$path/src/gameobjects/Particle.js"></script>
-    <script src="$path/src/gameobjects/Rope.js"></script>
 
+    <script src="$path/src/system/Device.js"></script>
     <script src="$path/src/system/DOM.js"></script>
     <script src="$path/src/system/Canvas.js"></script>
-    <script src="$path/src/system/Device.js"></script>
     <script src="$path/src/system/RequestAnimationFrame.js"></script>
 
     <script src="$path/src/math/Math.js"></script>
@@ -191,6 +192,7 @@
     <script src="$path/src/tilemap/TilemapLayer.js"></script>
     <script src="$path/src/tilemap/TilemapParser.js"></script>
     <script src="$path/src/tilemap/Tileset.js"></script>
+
 EOL;
 
     if ($arcade)

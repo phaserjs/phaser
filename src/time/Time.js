@@ -20,8 +20,7 @@ Phaser.Time = function (game) {
     this.game = game;
 
     /**
-    * @property {number} time - Game time counter. If you need a value for in-game calculation please use Phaser.Time.now instead.
-    *                         - This always contains Date.now, but Phaser.Time.now will hold the high resolution RAF timer value (if RAF is available)
+    * @property {number} time - This always contains the Date.now value.
     * @protected
     */
     this.time = 0;
@@ -33,13 +32,14 @@ Phaser.Time = function (game) {
     this.prevTime = 0;
 
     /**
-    * @property {number} now - The time right now.
+    * @property {number} now - The high resolution RAF timer value (if RAF is available) or Date.now if using setTimeout.
     * @protected
     */
     this.now = 0;
 
     /**
-    * @property {number} elapsed - Elapsed time since the last frame (in ms).
+    * @property {number} elapsed - Elapsed time since the last frame. In ms if running under setTimeout or an integer if using RAF.
+    * @see Phaser.Time.time
     * @protected
     */
     this.elapsed = 0;
@@ -51,32 +51,22 @@ Phaser.Time = function (game) {
     this.pausedTime = 0;
 
     /**
-     * @property {number} desiredFps = 60 - The desired frame-rate for this project.
-     */
+    * @property {number} desiredFps - The desired frame rate of your game.
+    * @default
+    */
     this.desiredFps = 60;
 
     /**
-     * @property {number} suggestedFps = null - The suggested frame-rate for this project.
-     * NOTE: not available until after a few frames have passed, it is recommended to use this after a few seconds (eg. after the menus)
-     */
+    * @property {number} suggestedFps = The suggested frame rate for your game, based on an averaged real frame rate.
+    * NOTE: Not available until after a few frames have passed, it is recommended to use this after a few seconds (eg. after the menus)
+    * @default
+    */
     this.suggestedFps = null;
 
     /**
-     * @property {number} _frameCount - count the number of calls to time.update since the last suggestedFps was calculated
-     * @private
-     */
-    this._frameCount = 0;
-
-    /**
-     * @property {number} _elapsedAcumulator - sum of the elapsed time since the last suggestedFps was calculated
-     * @private
-     */
-    this._elapsedAccumulator = 0;
-
-    /**
-     * @property {number} slowMotion = 1.0 - Scaling factor to make the game move smoothly in slow motion (1.0 = normal speed, 2.0 = half speed)
-     * @type {Number}
-     */
+    * @property {number} slowMotion = 1.0 - Scaling factor to make the game move smoothly in slow motion (1.0 = normal speed, 2.0 = half speed)
+    * @default
+    */
     this.slowMotion = 1.0;
 
     /**
@@ -113,20 +103,19 @@ Phaser.Time = function (game) {
     this.msMax = 0;
 
     /**
-    * @property {number} physicsElapsed - The elapsed time calculated for the physics motion updates. In a stable 60fps system this will be 0.016 every frame.
+    * @property {number} physicsElapsed - The physics motion value as used by Arcade Physics. Equivalent to 1.0 / Time.desiredFps.
     */
     this.physicsElapsed = 0;
 
     /**
     * @property {number} deltaCap - If you need to cap the delta timer, set the value here. For 60fps the delta should be 0.016, so try variances just above this.
+    * @deprecated No longer used internally
     */
     this.deltaCap = 0;
 
     /**
     * @property {number} timeCap - If the difference in time between two frame updates exceeds this value in ms, the frame time is reset to avoid huge elapsed counts.
-    *                            - assumes a desiredFps of 60
-    *
-    * DEPRECATED: this no longer has any effect since the change to fixed-time stepping in game.update  3rd November 2014
+    * @deprecated This no longer has any effect since the change to fixed-time stepping in game.update
     */
     this.timeCap = 1000 / 60;
 
@@ -154,6 +143,18 @@ Phaser.Time = function (game) {
     * @property {Phaser.Timer} events - This is a Phaser.Timer object bound to the master clock to which you can add timed events.
     */
     this.events = new Phaser.Timer(this.game, false);
+
+    /**
+     * @property {number} _frameCount - count the number of calls to time.update since the last suggestedFps was calculated
+     * @private
+     */
+    this._frameCount = 0;
+
+    /**
+     * @property {number} _elapsedAcumulator - sum of the elapsed time since the last suggestedFps was calculated
+     * @private
+     */
+    this._elapsedAccumulator = 0;
 
     /**
     * @property {number} _started - The time at which the Game instance started.
@@ -308,11 +309,6 @@ Phaser.Time.prototype = {
 
         //  Set the physics elapsed time... this will always be 1 / this.desiredFps because we're using fixed time steps in game.update now
         this.physicsElapsed = 1 / this.desiredFps;
-
-        if (this.deltaCap > 0 && this.physicsElapsed > this.deltaCap)
-        {
-            this.physicsElapsed = this.deltaCap;
-        }
 
         if (this.advancedTiming)
         {

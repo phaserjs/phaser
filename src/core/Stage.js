@@ -128,9 +128,7 @@ Phaser.Stage.prototype.preUpdate = function () {
     this.currentRenderOrderID = 0;
 
     //  This can't loop in reverse, we need the orderID to be in sequence
-    var len = this.children.length;
-
-    for (var i = 0; i < len; i++)
+    for (var i = 0, len = this.children.length; i < len; i++)
     {
         this.children[i].preUpdate();
     }
