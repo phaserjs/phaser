@@ -1,6 +1,6 @@
 /// <reference path="pixi.d.ts" />
 
-// Type definitions for Phaser 2.2.0 dev 2014-11-16
+// Type definitions for Phaser 2.2.0 dev 2014-11-17
 // Project: https://github.com/photonstorm/phaser
 
 declare class Phaser {
@@ -160,7 +160,7 @@ declare module Phaser {
         reset(): void;
         remove(item: any): any;
         setAll(key: any, value: any): void;
-        callAll(callback: any, ...parameter: any[]): void;
+        callAll(key: string, ...parameter: any[]): void;
 
     }
 
@@ -3814,14 +3814,16 @@ declare module Phaser {
         aspectRatio: number;
         _createFullScreenTarget: HTMLElement;
         bounds: Rectangle;
+        boundingParent: HTMLElement;
         compatibility: {
-            supportsFullScreen: boolean;
+            canExpandParent: boolean;
+            forceMinimumDocumentHeight: boolean;
             noMargins: boolean;
             scrollTo: Point;
-            forceMinimumDocumentHeight: boolean;
-            showAllCanExpand: boolean;
+            supportsFullScreen: boolean;
         };
         currentScaleMode: number;
+        dom: Phaser.DOM;
         enterIncorrectOrientation: Signal;
         enterFullScreen: Signal;
         enterLandscape: Signal;
@@ -3855,6 +3857,9 @@ declare module Phaser {
         minWidth: number;
         offset: Point;
         onFullScreenInit: Phaser.Signal;
+        onFullScreenChange: Phaser.Signal;
+        onFullScreenError: Phaser.Signal;
+        onOrientationChange: Phaser.Signal;
         onResize: ResizeCallback;
         onResizeContext: any;
         onSizeChange: Signal;
@@ -3875,6 +3880,7 @@ declare module Phaser {
         sourceAspectRatio: number;
         trackParentInterval: number;
         _userScaleFactor: Point;
+        _userScaleTrim: Point;
         _updateThrottle: number;
         _updateThrottleReset: number;
         width: number;
@@ -3893,7 +3899,6 @@ declare module Phaser {
         cleanupCreatedTarget(): void;
         createFullScreenTarget(): HTMLDivElement;
         destroy(): void;
-        elementBounds(element?: any, cushion?: number): any; //{ top: number; bottom: number; left: number; width: number; height: number; } or boolean
         forceOrientation(forceLandscape: boolean, forcePortrait?: boolean): void;
         fullScreenChange(event: Event): void;
         fullScreenError(event: Event): void;
@@ -3914,11 +3919,10 @@ declare module Phaser {
         setExactFit(): void;
         setGameSize(width: number, height: number): void;
         setResizeCallback(callback: ResizeCallback, context: any): void;
-        setUserScale(width: number, height: number): void;
+        setUserScale(hScale: number, vScale: number, hTrim?: number, vTrim?: number): void;
         signalSizeChange(): void;
         setMinMax(minWidth: number, minHeight: number, maxWidth?: number, maxHeight?: number): void;
         setupScale(width: number, height: number): void;
-        setScreenSize(): void;
         setShowAll(expanding: boolean): void;
         setMaximum(): void;
         setSize(): void;
@@ -3927,28 +3931,25 @@ declare module Phaser {
         startFullScreen(antialias?: boolean, allowTrampoline?: boolean): boolean;
         stopFullScreen(): boolean;
         updateDimensions(width: number, height: number, resize: boolean): void;
+        updateLayout(): void;
         updateScalingAndBounds(): void;
-        updateOrientationState(recheckOrientation?: boolean): boolean;
+        updateOrientationState(): boolean;
         windowResize(event: any): void;
 
     }
 
     class DOM {
 
+        static visualBounds: Phaser.Rectangle;
+        static layoutBounds: Phaser.Rectangle;
+        static documentBounds: Phaser.Rectangle;
+
         static calibrate(coords: any, cushion?: number): any;
         static getAspectRatio(object: any): number;
         static getScreenOrientation(primaryFallback?: string): string;
         static getBounds(element: any, cushion?: number): any;
         static getOffset(element: any, point?: Point): Point;
-        static getViewport(): { width: number; height: number; };
-        static inViewport(element: any, cushion?: number): boolean;
-
-        static documentWidth: number;
-        static documentHeight: number;
-        static scrollX: number;
-        static scrollY: number;
-        static viewportWidth: number;
-        static viewportHeight: number;
+        static inLayoutViewport(element: any, cushion?: number): boolean;
 
     }
 

@@ -1,4 +1,4 @@
-// Type definitions for PIXI 2.1.1 dev 2014-11-13
+// Type definitions for PIXI 2.1.1 dev 2014-11-17
 // Project: https://github.com/GoodBoyDigital/pixi.js/
 
 declare module PIXI {
@@ -617,7 +617,7 @@ declare module PIXI {
 
         arc(cx: number, cy: number, radius: number, startAngle: number, endAngle: number, anticlockwise: boolean): Graphics;
         arcTo(x1: number, y1: number, x2: number, y2: number, radius: number): Graphics;
-        beginFill(color: number, alpha?: number): Graphics;
+        beginFill(color?: number, alpha?: number): Graphics;
         bezierCurveTo(cpX: number, cpY: number, cpX2: number, cpY2: number, toX: number, toY: number): Graphics;
         clear(): Graphics;
         destroyCachedSprite(): void;
@@ -631,7 +631,7 @@ declare module PIXI {
         drawShape(shape: Ellipse): GraphicsData;
         drawShape(shape: Polygon): GraphicsData;
         endFill(): Graphics;
-        lineStyle(lineWidth: number, color: number, alpha: number): Graphics;
+        lineStyle(lineWidth?: number, color?: number, alpha?: number): Graphics;
         lineTo(x: number, y: number): Graphics;
         moveTo(x: number, y: number): Graphics;
         quadraticCurveTo(cpX: number, cpY: number, toX: number, toY: number): Graphics;
