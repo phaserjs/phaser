@@ -1,6 +1,7 @@
 [
     "src/Intro.js",
     "src/Phaser.js",
+    "src/polyfills.js",
     "src/utils/Utils.js",
 
     "src/geom/Circle.js",
@@ -15,8 +16,6 @@
     "src/core/Camera.js",
     "src/core/State.js",
     "src/core/StateManager.js",
-    "src/core/LinkedList.js",
-    "src/core/ArrayList.js",
     "src/core/Signal.js",
     "src/core/SignalBinding.js",
     "src/core/Filter.js",
@@ -59,9 +58,9 @@
     "src/gameobjects/RetroFont.js",
     "src/gameobjects/Particle.js",
 
+    "src/system/Device.js",
     "src/system/DOM.js",
     "src/system/Canvas.js",
-    "src/system/Device.js",
     "src/system/RequestAnimationFrame.js",
 
     "src/math/Math.js",
@@ -72,6 +71,7 @@
 
     "src/tween/TweenManager.js",
     "src/tween/Tween.js",
+    "src/tween/TweenData.js",
     "src/tween/Easing.js",
 
     "src/time/Time.js",
@@ -92,6 +92,9 @@
     "src/sound/Sound.js",
     "src/sound/SoundManager.js",
 
+    "src/utils/ArraySet.js",
+    "src/utils/LinkedList.js",
+    "src/utils/ArrayUtils.js",
     "src/utils/Debug.js",
     "src/utils/Color.js",
 
