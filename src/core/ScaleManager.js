@@ -810,7 +810,7 @@ Phaser.ScaleManager.prototype = {
             this.parentIsWindow = true;
 
             rect.width = this.dom.visualBounds.width;
-            rect.height = this.dom.visualBounds.width;
+            rect.height = this.dom.visualBounds.height;
 
             this.offset.set(0, 0);
         }
@@ -1633,7 +1633,7 @@ Phaser.ScaleManager.prototype = {
     setMaximum: function () {
 
         this.width = this.dom.visualBounds.width;
-        this.height = this.dom.visualBounds.width;
+        this.height = this.dom.visualBounds.height;
 
     },
 
