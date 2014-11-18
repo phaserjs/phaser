@@ -182,6 +182,7 @@ This fixes a bug in FF where it would use the default DOMMouseWheel (thanks @pns
 * Newly created Groups always had zero z index (thanks @spayton #1291)
 * Sprite.autoCull now properly works if the camera moves around the world.
 * Sprite.inCamera uses a much faster check if auto culling or world bounds checks are enabled and properly adjusts for camera position.
+* Camera.totalInView is a new property that contains the total number of Sprites rendered that have `autoCull` set to true and are within the Cameras view.
 
 ### Pixi 2.1.0 New Features
 
