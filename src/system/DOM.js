@@ -9,13 +9,17 @@
 *
 * Provides a useful Window and Element functions as well as cross-browser compatibility buffer.
 *
+* Some code originally derived from {@link https://github.com/ryanve/verge verge}.
+* 
 * @class Phaser.DOM
 * @static
 */
 Phaser.DOM = {
 
     /**
-    * Get the DOM offset values of any given element
+    * Get the [absolute] position of the element relative to the Document.
+    *
+    * The value may vary slightly as the page is scrolled due to rounding errors.
     *
     * @method Phaser.DOM.getOffset
     * @param {DOMElement} element - The targeted element that we want to retrieve the offset.
@@ -27,24 +31,11 @@ Phaser.DOM = {
         point = point || new Phaser.Point();
 
         var box = element.getBoundingClientRect();
-        var clientTop = element.clientTop || document.body.clientTop || 0;
-        var clientLeft = element.clientLeft || document.body.clientLeft || 0;
 
-        //  Without this check Chrome is now throwing console warnings about strict vs. quirks :(
-
-        var scrollTop = 0;
-        var scrollLeft = 0;
-
-        if (document.compatMode === 'CSS1Compat')
-        {
-            scrollTop = window.pageYOffset || document.documentElement.scrollTop || element.scrollTop || 0;
-            scrollLeft = window.pageXOffset || document.documentElement.scrollLeft || element.scrollLeft || 0;
-        }
-        else
-        {
-            scrollTop = window.pageYOffset || document.body.scrollTop || element.scrollTop || 0;
-            scrollLeft = window.pageXOffset || document.body.scrollLeft || element.scrollLeft || 0;
-        }
+        var scrollTop = Phaser.DOM.scrollY;
+        var scrollLeft = Phaser.DOM.scrollX;
+        var clientTop = document.documentElement.clientTop;
+        var clientLeft = document.documentElement.clientLeft;
 
         point.x = box.left + scrollLeft - clientLeft;
         point.y = box.top + scrollTop - clientTop;
@@ -62,7 +53,7 @@ Phaser.DOM = {
     * It adjusts the measurements such that it is possible to detect when an element is near the viewport.
     * 
     * @method Phaser.DOM.getBounds
-    * @param {DOMElement|Object} element - The element or stack (uses first item) to get the bounds for. If none given it defaults to the Phaser game canvas.
+    * @param {DOMElement|Object} element - The element or stack (uses first item) to get the bounds for.
     * @param {number} [cushion] - A +/- pixel adjustment amount.
     * @return {Object|boolean} A plain object containing the properties `top/bottom/left/right/width/height` or `false` if a non-valid element is given.
     */
@@ -106,16 +97,15 @@ Phaser.DOM = {
     },
 
     /**
-    * Get the viewport aspect ratio (or the aspect ratio of an object or element)
-    * @link http://w3.org/TR/css3-mediaqueries/#orientation
+    * Get the Visual viewport aspect ratio (or the aspect ratio of an object or element)    
     * 
     * @method Phaser.DOM.getAspectRatio
-    * @param {(DOMElement|Object)} [object=(viewport)] - Optional object. Must have public `width` and `height` properties or methods.
+    * @param {(DOMElement|Object)} [object=(visualViewport)] - The object to determine the aspect ratio for. Must have public `width` and `height` properties or methods.
     * @return {number} The aspect ratio.
     */
     getAspectRatio: function (object) {
 
-        object = null == object ? this.getViewport() : 1 === object.nodeType ? this.getElementBounds(object) : object;
+        object = null == object ? this.visualBounds : 1 === object.nodeType ? this.getBounds(object) : object;
 
         var w = object['width'];
         var h = object['height'];
@@ -135,22 +125,7 @@ Phaser.DOM = {
     },
 
     /**
-    * Get the viewport dimensions.
-    *
-    * @method Phaser.DOM#getViewport
-    * @protected
-    */
-    getViewport: function () {
-
-        return {
-            width: this.viewportWidth,
-            height: this.viewportHeight
-        };
-
-    },
-
-    /**
-    * Tests if the given DOM element is within the viewport.
+    * Tests if the given DOM element is within the Layout viewport.
     * 
     * The optional cushion parameter allows you to specify a distance.
     * 
@@ -162,11 +137,11 @@ Phaser.DOM = {
     * @param {number} [cushion] - The cushion allows you to specify a distance within which the element must be within the viewport.
     * @return {boolean} True if the element is within the viewport, or within `cushion` distance from it.
     */
-    inViewport: function (element, cushion) {
+    inLayoutViewport: function (element, cushion) {
 
-        var r = this.getElementBounds(element, cushion);
+        var r = this.getBounds(element, cushion);
 
-        return !!r && r.bottom >= 0 && r.right >= 0 && r.top <= this.viewportWidth && r.left <= this.viewportHeight;
+        return !!r && r.bottom >= 0 && r.right >= 0 && r.top <= this.layoutBounds.width && r.left <= this.layoutBounds.height;
 
     },
 
@@ -179,7 +154,7 @@ Phaser.DOM = {
     * - Screen Orientation API, or variation of - Future track. Most desktop and mobile browsers.
     * - Screen size ratio check - If fallback is 'screen', suited for desktops.
     * - Viewport size ratio check - If fallback is 'viewport', suited for mobile.
-    * - window.orientation - If fallback is 'window.orientation', non-recommended track.
+    * - window.orientation - If fallback is 'window.orientation', works iOS and probably most Android; non-recommended track.
     * - Media query
     * - Viewport size ratio check (probably only IE9 and legacy mobile gets here..)
     *
@@ -220,7 +195,7 @@ Phaser.DOM = {
         }
         else if (primaryFallback === 'viewport')
         {
-            return (this.viewportHeight > this.viewportWidth) ? PORTRAIT : LANDSCAPE;
+            return (this.visualBounds.height > this.visualBounds.width) ? PORTRAIT : LANDSCAPE;
         }
         else if (primaryFallback === 'window.orientation' && typeof window.orientation === 'number')
         {
@@ -239,120 +214,206 @@ Phaser.DOM = {
             }
         }
 
-        return (this.viewportHeight > this.viewportWidth) ? PORTRAIT : LANDSCAPE;
+        return (this.visualBounds.height > this.visualBounds.width) ? PORTRAIT : LANDSCAPE;
 
-    }
+    },
+
+    /**
+    * The bounds of the Visual viewport, as discussed in 
+    * {@link http://www.quirksmode.org/mobile/viewports.html A tale of two viewports — part one}
+    * with one difference: the viewport size _excludes_ scrollbars, as found on some desktop browsers.   
+    *
+    * Supported mobile:
+    *   iOS/Safari, Android 4, IE10, Firefox OS (maybe not Firefox Android), Opera Mobile 16
+    *
+    * The properties change dynamically.
+    *
+    * @type {Phaser.Rectangle}
+    * @property {number} x - Scroll, left offset - eg. "scrollX"
+    * @property {number} y - Scroll, top offset - eg. "scrollY"
+    * @property {number} width - Viewport width in pixels.
+    * @property {number} height - Viewport height in pixels.
+    * @readonly
+    */
+    visualBounds: new Phaser.Rectangle(),
+
+    /**
+    * The bounds of the Layout viewport, as discussed in 
+    * {@link http://www.quirksmode.org/mobile/viewports2.html A tale of two viewports — part two};
+    * but honoring the constraints as specified applicable viewport meta-tag.
+    *
+    * The bounds returned are not guaranteed to be fully aligned with CSS media queries (see
+    * {@link http://www.matanich.com/2013/01/07/viewport-size/ What size is my viewport?}).
+    *
+    * This is _not_ representative of the Visual bounds: in particular the non-primary axis will
+    * generally be significantly larger than the screen height on mobile devices when running with a
+    * constrained viewport.
+    *
+    * The properties change dynamically.
+    *
+    * @type {Phaser.Rectangle}
+    * @property {number} width - Viewport width in pixels.
+    * @property {number} height - Viewport height in pixels.
+    * @readonly
+    */
+    layoutBounds: new Phaser.Rectangle(),
+
+    /**
+    * The size of the document / Layout viewport.
+    *
+    * This incorrectly reports the dimensions in IE.
+    *
+    * The properties change dynamically.
+    *
+    * @type {Phaser.Rectangle}
+    * @property {number} width - Document width in pixels.
+    * @property {number} height - Document height in pixels.
+    * @readonly
+    */
+    documentBounds: new Phaser.Rectangle()
 
 };
 
-/**
-* A cross-browser window.scrollX.
-*
-* @name Phaser.DOM.scrollX
-* @property {number} scrollX
-* @readonly
-* @protected
-*/
-Object.defineProperty(Phaser.DOM, "scrollX", {
+Phaser.Device.whenReady(function (device) {
 
-    get: function () {
-        return window.pageXOffset || document.documentElement.scrollLeft;
-    }
+    // All target browsers should support page[XY]Offset.
+    var scrollX = window && ('pageXOffset' in window) ?
+        function () { return window.pageXOffset; } :
+        function () { return document.documentElement.scrollLeft; };
 
-});
+    var scrollY = window && ('pageYOffset' in window) ?
+        function () { return window.pageYOffset; } :
+        function () { return document.documentElement.scrollTop; };
 
-/**
-* A cross-browser window.scrollY.
-*
-* @name Phaser.DOM.scrollY
-* @property {number} scrollY
-* @readonly
-* @protected
-*/
-Object.defineProperty(Phaser.DOM, "scrollY", {
+    /**
+    * A cross-browser window.scrollX.
+    *
+    * @name Phaser.DOM.scrollX
+    * @property {number} scrollX
+    * @readonly
+    * @protected
+    */
+    Object.defineProperty(Phaser.DOM, "scrollX", {
+        get: scrollX
+    });
 
-    get: function () {
-        return window.pageYOffset || document.documentElement.scrollTop;
-    }
+    /**
+    * A cross-browser window.scrollY.
+    *
+    * @name Phaser.DOM.scrollY
+    * @property {number} scrollY
+    * @readonly
+    * @protected
+    */
+    Object.defineProperty(Phaser.DOM, "scrollY", {
+        get: scrollY
+    });
 
-});
+    // For Phaser.DOM.visualBounds
+    // Ref. http://quirksmode.org/mobile/tableViewport.html
 
-/**
-* Gets the viewport width in pixels.
-*
-* @name Phaser.DOM.viewportWidth
-* @property {number} viewportWidth
-* @readonly
-* @protected
-*/
-Object.defineProperty(Phaser.DOM, "viewportWidth", {
+    Object.defineProperty(Phaser.DOM.visualBounds, "x", {
+        get: scrollX
+    });
 
-    get: function () {
+    Object.defineProperty(Phaser.DOM.visualBounds, "y", {
+        get: scrollY
+    });
 
-        var a = document.documentElement.clientWidth;
-        var b = window.innerWidth;
+    // Desktop browsers align the layout viewport with the visual viewport.
+    // This differs from mobile browsers with their zooming design.
+    if (device.desktop &&
+        (document.documentElement.clientWidth <= window.innerWidth) &&
+        (document.documentElement.clientHeight <= window.innerHeight))
+    {
 
-        return a < b ? b : a;
+        Object.defineProperty(Phaser.DOM.visualBounds, "width", {
+            get: function () {
+                return document.documentElement.clientWidth;
+            }
+        });
 
-    }
+        Object.defineProperty(Phaser.DOM.visualBounds, "height", {
+            get: function () {
+                return document.documentElement.clientHeight;
+            }
+        });
 
-});
+    } else {
 
-/**
-* Gets the viewport height in pixels.
-*
-* @name Phaser.DOM.viewportHeight
-* @property {number} viewportHeight
-* @readonly
-* @protected
-*/
-Object.defineProperty(Phaser.DOM, "viewportHeight", {
+        Object.defineProperty(Phaser.DOM.visualBounds, "width", {
+            get: function () {
+                return window.innerWidth;
+            }
+        });
 
-    get: function () {
-
-        var a = document.documentElement.clientHeight;
-        var b = window.innerHeight;
-
-        return a < b ? b : a;
-
-    }
-
-});
-
-/**
-* Gets the document width in pixels.
-*
-* @name Phaser.DOM.documentWidth
-* @property {number} documentWidth
-* @readonly
-* @protected
-*/
-Object.defineProperty(Phaser.DOM, "documentWidth", {
-
-    get: function () {
-
-        var d = document.documentElement;
-        return Math.max(d.clientWidth, d.offsetWidth, d.scrollWidth);
+        Object.defineProperty(Phaser.DOM.visualBounds, "height", {
+            get: function () {
+                return window.innerHeight;
+            }
+        });
 
     }
 
-});
+    // For Phaser.DOM.layoutBounds
 
-/**
-* Gets the document height in pixels.
-*
-* @name Phaser.DOM.documentHeight
-* @property {number} documentHeight
-* @readonly
-* @protected
-*/
-Object.defineProperty(Phaser.DOM, "documentHeight", {
+    Object.defineProperty(Phaser.DOM.layoutBounds, "x", {
+        value: 0
+    });
 
-    get: function () {
+    Object.defineProperty(Phaser.DOM.layoutBounds, "y", {
+        value: 0
+    });
 
-        var d = document.documentElement;
-        return Math.max(d.clientHeight, d.offsetHeight, d.scrollHeight);
+    Object.defineProperty(Phaser.DOM.layoutBounds, "width", {
 
-    }
+        get: function () {
+            var a = document.documentElement.clientWidth;
+            var b = window.innerWidth;
 
-});
+            return a < b ? b : a; // max
+        }
+
+    });
+
+    Object.defineProperty(Phaser.DOM.layoutBounds, "height", {
+
+        get: function () {
+            var a = document.documentElement.clientHeight;
+            var b = window.innerHeight;
+
+            return a < b ? b : a; // max
+        }
+
+    });
+
+    // For Phaser.DOM.documentBounds
+    // Ref. http://www.quirksmode.org/mobile/tableViewport_desktop.html
+
+    Object.defineProperty(Phaser.DOM.documentBounds, "x", {
+        value: 0
+    });
+
+    Object.defineProperty(Phaser.DOM.documentBounds, "y", {
+        value: 0
+    });
+
+    Object.defineProperty(Phaser.DOM.documentBounds, "width", {
+
+        get: function () {
+            var d = document.documentElement;
+            return Math.max(d.clientWidth, d.offsetWidth, d.scrollWidth);
+        }
+
+    });
+
+    Object.defineProperty(Phaser.DOM.documentBounds, "height", {
+
+        get: function () {
+            var d = document.documentElement;
+            return Math.max(d.clientHeight, d.offsetHeight, d.scrollHeight);
+        }
+
+    });
+
+}, null, true);
