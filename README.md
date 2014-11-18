@@ -183,6 +183,7 @@ This fixes a bug in FF where it would use the default DOMMouseWheel (thanks @pns
 * Sprite.autoCull now properly works if the camera moves around the world.
 * Sprite.inCamera uses a much faster check if auto culling or world bounds checks are enabled and properly adjusts for camera position.
 * Camera.totalInView is a new property that contains the total number of Sprites rendered that have `autoCull` set to true and are within the Cameras view.
+* Emitter.setScale fixed minX minY order presedence (thanks spayton)
 
 ### Pixi 2.1.0 New Features
 
