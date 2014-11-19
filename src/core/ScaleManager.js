@@ -416,18 +416,21 @@ Phaser.ScaleManager = function (game, width, height) {
     this.event = null;
 
     /**
-    * The edges on which to constrain the Display canvas _to_ the viewport in _addition_ to any restrictions of the Parent element.
+    * The edges on which to constrain the game Display/canvas in _addition_ to the restrictions of the parent container.
     *
-    * The viewport does not include the scrollbars by default.
+    * The properties are strings and can be '', 'visual', 'layout', or 'layout-soft'.
+    * - If 'visual', the edge will be constrained to the Window / displayed screen area
+    * - If 'layout', the edge will be constrained to the CSS Layout bounds
+    * - An invalid value is treated as 'visual'
     *
-    * Call {@link Phaser.ScaleManager#refresh refresh} after modifying this object.
-    *
-    * @property {boolean} windowConstraints
+    * @member
+    * @property {string} bottom
+    * @property {string} right
     * @default
     */
     this.windowConstraints = {
-        bottom: true,
-        right: true
+        right: 'layout',
+        bottom: ''
     };
 
     /**
@@ -592,6 +595,13 @@ Phaser.ScaleManager = function (game, width, height) {
     * @private
     */
     this._parentBounds = new Phaser.Rectangle();
+
+    /**
+    * Temporary bounds used for internal work to cut down on new objects created.
+    * @property {Phaser.Rectangle} _parentBounds
+    * @private
+    */
+    this._tempBounds = new Phaser.Rectangle();
 
     /**
     * The Canvas size at which the last onSizeChange signal was triggered.
@@ -1376,7 +1386,7 @@ Phaser.ScaleManager.prototype = {
         if (!this.compatibility.canExpandParent &&
             (scaleMode === Phaser.ScaleManager.SHOW_ALL || scaleMode === Phaser.ScaleManager.USER_SCALE))
         {
-            var bounds = this.getParentBounds();
+            var bounds = this.getParentBounds(this._tempBounds);
             this.width = Math.min(this.width, bounds.width);
             this.height = Math.min(this.height, bounds.height);
         }
@@ -1409,11 +1419,12 @@ Phaser.ScaleManager.prototype = {
 
         var bounds = target || new Phaser.Rectangle();
         var parentNode = this.boundingParent;
-        var vp = this.dom.visualBounds;
+        var visualBounds = this.dom.visualBounds;
+        var layoutBounds = this.dom.layoutBounds;
 
         if (!parentNode)
         {
-            bounds.setTo(0, 0, vp.width, vp.height);
+            bounds.setTo(0, 0, visualBounds.width, visualBounds.height);
         }
         else
         {
@@ -1425,11 +1436,13 @@ Phaser.ScaleManager.prototype = {
             var wc = this.windowConstraints;
             if (wc.right)
             {
-                bounds.right = Math.min(bounds.right, vp.width);
+                var windowBounds = wc.right === 'layout' ? layoutBounds : visualBounds;
+                bounds.right = Math.min(bounds.right, windowBounds.width);
             }
             if (wc.bottom)
             {
-                bounds.bottom = Math.min(bounds.bottom, vp.height);
+                var windowBounds = wc.bottom === 'layout' ? layoutBounds : visualBounds;
+                bounds.bottom = Math.min(bounds.bottom, windowBounds.height);
             }
         }
 
@@ -1453,7 +1466,7 @@ Phaser.ScaleManager.prototype = {
     */
     alignCanvas: function (horizontal, vertical) {
 
-        var parentBounds = this.getParentBounds();
+        var parentBounds = this.getParentBounds(this._tempBounds);
         var canvas = this.game.canvas;
         var margin = this.margin;
 
@@ -1527,7 +1540,7 @@ Phaser.ScaleManager.prototype = {
 
         this.resetCanvas('', '');
 
-        var bounds = this.getParentBounds();
+        var bounds = this.getParentBounds(this._tempBounds);
         this.updateDimensions(bounds.width, bounds.height, true);
 
     },
@@ -1646,7 +1659,7 @@ Phaser.ScaleManager.prototype = {
     */
     setShowAll: function (expanding) {
 
-        var bounds = this.getParentBounds();
+        var bounds = this.getParentBounds(this._tempBounds);
         var width = bounds.width;
         var height = bounds.height;
 
@@ -1674,7 +1687,7 @@ Phaser.ScaleManager.prototype = {
     */
     setExactFit: function () {
 
-        var bounds = this.getParentBounds();
+        var bounds = this.getParentBounds(this._tempBounds);
 
         this.width = bounds.width;
         this.height = bounds.height;
