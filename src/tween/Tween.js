@@ -9,7 +9,7 @@
 *
 * @class Phaser.Tween
 * @constructor
-* @param {object} target - The Target object that will be affected by this tween.
+* @param {object} target - The target object, such as a Phaser.Sprite or property like Phaser.Sprite.scale.
 * @param {Phaser.Game} game - Current game instance.
 * @param {Phaser.TweenManager} manager - The TweenManager responsible for looking after this Tween.
 */
@@ -21,70 +21,48 @@ Phaser.Tween = function (target, game, manager) {
     this.game = game;
 
     /**
-    * @property {object} target - Reference to the target object.
+    * @property {object} target - The target object, such as a Phaser.Sprite or property like Phaser.Sprite.scale.
     */
     this.target = target;
 
     /**
     * @property {object} parent - Reference to the parent tween if part of a chained tween.
     */
-    this.parent = null;
+    // this.parent = null;
 
     /**
-    * @property {Phaser.TweenManager} manager - Reference to the TweenManager.
+    * @property {Phaser.TweenManager} manager - Reference to the TweenManager responsible for updating this Tween.
     */
     this.manager = manager;
 
+    /**
+    * @property {Array} timeline - An Array of TweenData objects that comprise the different parts of this Tween.
+    */
     this.timeline = [];
 
     /**
-    * @property {number} duration - The duration of the tween in ms.
-    * @readOnly
+    * @property {boolean} reverse - If set to `true` the current tween will play in reverse. If the tween hasn't yet started this has no effect. If there are child tweens then all child tweens will play in reverse from the current point.
     * @default
     */
-    this.duration = 1000;
+    this.reverse = false;
 
     /**
-    * @property {number} percent - A value between 0 and 1 that represents how far through the duration this tween is.
-    * @readOnly
+    * @property {number} speed - The speed at which the tweens will run. A value of 1 means it will match the game frame rate. 0.5 will run at half the frame rate. 2 at double the frame rate and so on.
+    * @default
     */
-    this.percent = 0;
+    this.speed = 1;
 
     /**
-    * @property {number} repeatCounter - If the Tween is set to repeat this contains the current repeat count.
+    * @property {number} repeatCounter - If the Tween and any child tweens are set to repeat this contains the current repeat count.
     */
     this.repeatCounter = 0;
-
-    /**
-    * @property {boolean} yoyo - True if the Tween is set to yoyo, otherwise false.
-    * @default
-    */
-    this.yoyo = false;
-
-    /**
-    * @property {boolean} inReverse - When a Tween is yoyoing this value holds if it's currently playing forwards (false) or in reverse (true).
-    * @default
-    */
-    this.inReverse = false;
-
-    /**
-    * @property {number} _delay - Private delay counter.
-    * @private
-    * @default
-    */
-    this._delay = 0;
-
-    /**
-    * @property {number} startTime - The time the Tween started or null if it hasn't yet started.
-    */
-    this.startTime = null;
 
     /**
     * @property {boolean} _onStartCallbackFired - Private flag.
     * @private
     * @default
     */
-    this._onStartCallbackFired = false;
+    // this._onStartCallbackFired = false;
 
     /**
     * @property {function} _onUpdateCallback - An onUpdate callback.
@@ -123,16 +101,24 @@ Phaser.Tween = function (target, game, manager) {
     /**
     * @property {boolean} pendingDelete - True if this Tween is ready to be deleted by the TweenManager.
     * @default
+    * @readOnly
     */
     this.pendingDelete = false;
 
+    //  Move all of these to TweenManager?
+
     /**
-    * @property {Phaser.Signal} onStart - The onStart event is fired when the Tween begins.
+    * @property {Phaser.Signal} onStart - The onStart event is fired when the Tween begins. If there is a delay before the tween starts then onStart fires after the delay is finished.
     */
     this.onStart = new Phaser.Signal();
 
     /**
-    * @property {Phaser.Signal} onLoop - The onLoop event is fired if the Tween loops.
+    * @property {Phaser.Signal} onStart - The onStart event is fired when the Tween begins. If there is a delay before the tween starts then onStart fires after the delay is finished.
+    */
+    this.onChildStart = new Phaser.Signal();
+
+    /**
+    * @property {Phaser.Signal} onLoop - The onLoop event is fired if the Tween loops. If there are chained tweens it fires after all the child tweens have completed.
     */
     this.onLoop = new Phaser.Signal();
 
@@ -147,6 +133,11 @@ Phaser.Tween = function (target, game, manager) {
     */
     this.isRunning = false;
 
+    /**
+    * @property {number} current - The current Tween child being run.
+    * @default
+    * @readOnly
+    */
     this.current = 0;
 
 };
@@ -156,82 +147,82 @@ Phaser.Tween.prototype = {
     /**
     * Sets this tween to be a `to` tween on the properties given. A `to` tween starts at the current value and tweens to the destination value given.
     * For example a Sprite with an `x` coordinate of 100 could be tweened to `x` 200 by giving a properties object of `{ x: 200 }`.
+    * The ease function allows you define the rate of change. You can pass either a function such as Phaser.Easing.Circular.Out or a string such as "Circ".
+    * ".easeIn", ".easeOut" and "easeInOut" variants are all supported for all ease types.
     *
     * @method Phaser.Tween#to
-    * @param {object} properties - The properties you want to tween, such as `Sprite.x` or `Sound.volume`. Given as a JavaScript object.
+    * @param {object} properties - An object containing the properties you want to tween., such as `Sprite.x` or `Sound.volume`. Given as a JavaScript object.
     * @param {number} [duration=1000] - Duration of this tween in ms.
-    * @param {function} [ease=null] - Easing function. If not set it will default to Phaser.Easing.Default, which is Phaser.Easing.Linear.None by default but can be over-ridden at will.
-    * @param {boolean} [autoStart=false] - Whether this tween will start automatically or not.
-    * @param {number} [delay=0] - Delay before this tween will start, defaults to 0 (no delay). Value given is in ms.
-    * @param {number} [repeat=0] - Should the tween automatically restart once complete? If you want it to run forever set as -1. This ignores any chained tweens.
+    * @param {function|string} [ease=null] - Easing function. If not set it will default to Phaser.Easing.Default, which is Phaser.Easing.Linear.None by default but can be over-ridden.
+    * @param {boolean} [autoStart=false] - Set to `true` to allow this tween to start automatically. Otherwise call Tween.start().
+    * @param {number} [delay=0] - Delay before this tween will start in milliseconds. Defaults to 0, no delay.
+    * @param {number} [repeat=0] - Should the tween automatically restart once complete? If you want it to run forever set as -1. This only effects this induvidual tween, not any chained tweens.
     * @param {boolean} [yoyo=false] - A tween that yoyos will reverse itself and play backwards automatically. A yoyo'd tween doesn't fire the Tween.onComplete event, so listen for Tween.onLoop instead.
     * @return {Phaser.Tween} This Tween object.
     */
     to: function (properties, duration, ease, autoStart, delay, repeat, yoyo) {
 
         if (typeof duration === 'undefined') { duration = 1000; }
-        if (typeof ease === 'undefined') { ease = this.easingFunction; }
+        if (typeof ease === 'undefined') { ease = Phaser.Easing.Default; }
         if (typeof autoStart === 'undefined') { autoStart = false; }
         if (typeof delay === 'undefined') { delay = 0; }
         if (typeof repeat === 'undefined') { repeat = 0; }
         if (typeof yoyo === 'undefined') { yoyo = false; }
 
-        if (yoyo && repeat === 0)
+        if (typeof ease === 'string' && this.manager.easeMap[ease])
         {
-            repeat = 1;
+            ease = this.manager.easeMap[ease];
         }
 
         this.timeline.push(new Phaser.TweenData(this).to(properties, duration, ease, autoStart, delay, repeat, yoyo));
 
         if (autoStart)
         {
-            return this.start();
+            this.start();
         }
-        else
-        {
-            return this;
-        }
+
+        return this;
 
     },
 
     /**
     * Sets this tween to be a `from` tween on the properties given. A `from` tween starts at the given value and tweens to the current values.
     * For example a Sprite with an `x` coordinate of 100 could be tweened from `x: 200` by giving a properties object of `{ x: 200 }`.
+    * The ease function allows you define the rate of change. You can pass either a function such as Phaser.Easing.Circular.Out or a string such as "Circ".
+    * ".easeIn", ".easeOut" and "easeInOut" variants are all supported for all ease types.
     *
     * @method Phaser.Tween#from
-    * @param {object} properties - Properties you want to tween from.
+    * @param {object} properties - An object containing the properties you want to tween., such as `Sprite.x` or `Sound.volume`. Given as a JavaScript object.
     * @param {number} [duration=1000] - Duration of this tween in ms.
-    * @param {function} [ease=null] - Easing function. If not set it will default to Phaser.Easing.Linear.None.
-    * @param {boolean} [autoStart=false] - Whether this tween will start automatically or not.
-    * @param {number} [delay=0] - Delay before this tween will start, defaults to 0 (no delay). Value given is in ms.
-    * @param {number} [repeat=0] - Should the tween automatically restart once complete? If you want it to run forever set as Number.MAX_VALUE. This ignores any chained tweens.
+    * @param {function|string} [ease=null] - Easing function. If not set it will default to Phaser.Easing.Default, which is Phaser.Easing.Linear.None by default but can be over-ridden.
+    * @param {boolean} [autoStart=false] - Set to `true` to allow this tween to start automatically. Otherwise call Tween.start().
+    * @param {number} [delay=0] - Delay before this tween will start in milliseconds. Defaults to 0, no delay.
+    * @param {number} [repeat=0] - Should the tween automatically restart once complete? If you want it to run forever set as -1. This only effects this induvidual tween, not any chained tweens.
     * @param {boolean} [yoyo=false] - A tween that yoyos will reverse itself and play backwards automatically. A yoyo'd tween doesn't fire the Tween.onComplete event, so listen for Tween.onLoop instead.
     * @return {Phaser.Tween} This Tween object.
     */
     from: function(properties, duration, ease, autoStart, delay, repeat, yoyo) {
 
         if (typeof duration === 'undefined') { duration = 1000; }
-        if (typeof ease === 'undefined') { ease = this.easingFunction; }
+        if (typeof ease === 'undefined') { ease = Phaser.Easing.Default; }
         if (typeof autoStart === 'undefined') { autoStart = false; }
         if (typeof delay === 'undefined') { delay = 0; }
         if (typeof repeat === 'undefined') { repeat = 0; }
         if (typeof yoyo === 'undefined') { yoyo = false; }
 
-        if (yoyo && repeat === 0)
+        if (typeof ease === 'string' && this.manager.easeMap[ease])
         {
-            repeat = 1;
+            ease = this.manager.easeMap[ease];
         }
 
         this.timeline.push(new Phaser.TweenData(this).from(properties, duration, ease, autoStart, delay, repeat, yoyo));
 
         if (autoStart)
         {
-            return this.start();
+            this.start();
         }
-        else
-        {
-            return this;
-        }
+
+        return this;
 
     },
 
@@ -241,7 +232,7 @@ Phaser.Tween.prototype = {
     * If the Tween has a delay set then nothing will start tweening until that delay has expired.
     *
     * @method Phaser.Tween#start
-    * @param {number} [index=0] - If this Tween contains chained child tweens you can specify which one to start from. The default is zero, i.e. the first tween created.
+    * @param {number} [index=0] - If this Tween contains child tweens you can specify which one to start from. The default is zero, i.e. the first tween created.
     * @return {Phaser.Tween} This tween. Useful for method chaining.
     */
     start: function (index) {

@@ -755,6 +755,8 @@ Phaser.Game.prototype = {
                 this.debug.preUpdate();
             }
 
+            this.tweens.update(timeStep);
+
             this.world.camera.preUpdate();
             this.physics.preUpdate();
             this.state.preUpdate(timeStep);
@@ -798,7 +800,7 @@ Phaser.Game.prototype = {
         // update tweens once every frame along with the render logic (to keep them smooth in slowMotion scenarios)
         if (!this._paused && !this.pendingStep)
         {
-            this.tweens.update(elapsedTime);
+            // this.tweens.update(elapsedTime);
         }
 
         if (this.renderType !== Phaser.HEADLESS)
