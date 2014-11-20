@@ -155,6 +155,7 @@
 
     <script src="$path/src/tween/TweenManager.js"></script>
     <script src="$path/src/tween/Tween.js"></script>
+    <script src="$path/src/tween/TweenData.js"></script>
     <script src="$path/src/tween/Easing.js"></script>
 
     <script src="$path/src/time/Time.js"></script>

@@ -1214,21 +1214,27 @@ Phaser.Group.prototype.postUpdate = function () {
 * @param {boolean} [checkExists=false] - If set only children with exists=true will be passed to the callback, otherwise all children will be passed.
 * @return {Phaser.ArraySet} Returns an array list containing all the children that the predicate returned true for
 */
-Phaser.Group.prototype.filter = function(predicate, checkExists) {
+Phaser.Group.prototype.filter = function (predicate, checkExists) {
+
     var index = -1;
     var length = this.children.length;
     var results = [];
 
-    while(++index < length) {
+    while (++index < length)
+    {
         var child = this.children[index];
-        if(!checkExists || (checkExists && child.exists)) {
-            if(predicate(child, index, this.children)) {
+
+        if (!checkExists || (checkExists && child.exists))
+        {
+            if (predicate(child, index, this.children))
+            {
                 results.push(child);
             }
         }
     }
 
     return new Phaser.ArraySet(results);
+
 };
 
 /**

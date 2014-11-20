@@ -4462,31 +4462,83 @@ declare module Phaser {
 
     class Tween {
 
-        constructor(object: any, game: Phaser.Game, manager: Phaser.TweenManager);
+        constructor(target: any, game: Phaser.Game, manager: Phaser.TweenManager);
 
+        chainedTween: Phaser.Tween;
+        current: number;
         game: Phaser.Game;
+        isPaused: boolean;
         isRunning: boolean;
+        manager: Phaser.TweenManager;
+        onChildComplete: Phaser.Signal;
         onComplete: Phaser.Signal;
         onLoop: Phaser.Signal;
+        onRepeat: Phaser.Signal;
         onStart: Phaser.Signal;
         pendingDelete: boolean;
+        properties: any;
+        repeatCounter: number;
+        repeatDelay: number;
+        reverse: boolean;
+        target: any;
+        timeline: array;
+        timeScale: number;
+        totalDuration: number;
 
         chain(): Phaser.Tween;
-        delay(amount: number): Phaser.Tween;
-        easing(easing: Function): Phaser.Tween;
+        delay(duration: number, index?: number): Phaser.Tween;
+        easing(ease: any, index?: number): Phaser.Tween;
         from(properties: any, duration?: number, ease?: Function, autoStart?: boolean, delay?: number, repeat?: number, yoyo?: boolean): Phaser.Tween;
         generateData(frameRate: number, data: any): any[];
-        interpolation(interpolation: Function): Phaser.Tween;
-        loop(): Phaser.Tween;
+        interpolation(interpolation: Function, index?: number): Phaser.Tween;
+        loop(value: boolean): Phaser.Tween;
         onUpdateCallback(callback: Function, callbackContext: any): Phaser.Tween;
         pause(): void;
-        repeat(times: number): Phaser.Tween;
+        repeat(total: number, index?: number): Phaser.Tween;
+        repeatAll(total: number): Phaser.Tween;
         resume(): void;
-        start(): Phaser.Tween;
-        stop(): Phaser.Tween;
+        start(index: number): Phaser.Tween;
+        stop(complete: boolean): Phaser.Tween;
         to(properties: any, duration?: number, ease?: Function, autoStart?: boolean, delay?: number, repeat?: number, yoyo?: boolean): Phaser.Tween;
         update(time: number): boolean;
-        yoyo(yoyo: boolean): Phaser.Tween;
+        yoyo(enable: boolean, index?: number): Phaser.Tween;
+
+    }
+
+    class TweenData {
+
+        constructor(parent: Phaser.Tween);
+
+        static COMPLETE: number;
+        static LOOPED: number;
+        static PENDING: number;
+        static RUNNING: number;
+
+        delay: number;
+        dt: number;
+        duration: number;
+        easingFunction: Function;
+        game: Phaser.Game;
+        inReverse: boolean;
+        interpolationFunction: Function;
+        isFrom: boolean;
+        isRunning: boolean;
+        parent: Phaser.Tween;
+        percent: number;
+        repeatCounter: number;
+        repeatDelay: number;
+        startTime: number;
+        value: number;
+        vEnd: any;
+        vEndCache: any;
+        vStart: any;
+        vStartCache: any;
+        yoyo: boolean;
+
+        from(properties: any, duration?: number, ease?: Function, delay?: number, repeat?: number, yoyo?: boolean): Phaser.TweenData;
+        start(): Phaser.TweenData;
+        to(properties: any, duration?: number, ease?: Function, delay?: number, repeat?: number, yoyo?: boolean): Phaser.TweenData;
+        update(): number;
 
     }
 
