@@ -755,8 +755,6 @@ Phaser.Game.prototype = {
                 this.debug.preUpdate();
             }
 
-            this.tweens.update(timeStep);
-
             this.world.camera.preUpdate();
             this.physics.preUpdate();
             this.state.preUpdate(timeStep);
@@ -765,6 +763,7 @@ Phaser.Game.prototype = {
 
             this.state.update();
             this.stage.update();
+            this.tweens.update(timeStep);
             this.sound.update();
             this.input.update();
             this.physics.update();
@@ -797,20 +796,14 @@ Phaser.Game.prototype = {
     */
     updateRender: function (elapsedTime) {
 
-        // update tweens once every frame along with the render logic (to keep them smooth in slowMotion scenarios)
-        if (!this._paused && !this.pendingStep)
-        {
-            // this.tweens.update(elapsedTime);
-        }
-
         if (this.renderType !== Phaser.HEADLESS)
         {
             this.state.preRender();
             this.renderer.render(this.stage);
 
-            this.plugins.render();
-            this.state.render();
-            this.plugins.postRender();
+            this.plugins.render(elapsedTime);
+            this.state.render(elapsedTime);
+            this.plugins.postRender(elapsedTime);
 
             if (this.device.cocoonJS && this.renderType === Phaser.CANVAS && this.stage.currentRenderOrderID === 1)
             {
