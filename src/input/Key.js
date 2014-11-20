@@ -251,7 +251,7 @@ Phaser.Key.prototype = {
     },
 
     /**
-    * Returns `true` if the Key was pressed down within the `duration` value given, or `false` is it either isn't down,
+    * Returns `true` if the Key was pressed down within the `duration` value given, or `false` if it either isn't down,
     * or was pressed down longer ago than then given duration.
     * 
     * @method Phaser.Key#downDuration
@@ -267,12 +267,12 @@ Phaser.Key.prototype = {
     },
 
     /**
-    * Returns `true` if the Key was pressed down within the `duration` value given, or `false` is it either isn't down,
+    * Returns `true` if the Key was pressed down within the `duration` value given, or `false` if it either isn't down,
     * or was pressed down longer ago than then given duration.
     * 
     * @method Phaser.Key#upDuration
     * @param {number} [duration=50] - The duration within which the key is considered as being just released. Given in ms.
-    * @return {boolean} True if the key was released down within the given duration.
+    * @return {boolean} True if the key was released within the given duration.
     */
     upDuration: function (duration) {
 

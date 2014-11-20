@@ -199,6 +199,9 @@ required on mobile browsers.
 * Phaser.DOM now houses new DOM functions. Some have been moved over from ScaleManager as appropriate.
 * Key.justPressed has bee renamed to Key.downDuration which is a much clearer name for what the method actually does. See Key.justDown for a nice clean alternative.
 * Key.justReleased has bee renamed to Key.upDuration which is a much clearer name for what the method actually does. See Key.justUp for a nice clean alternative.
+* Keyboard.justPressed has bee renamed to Keyboard.downDuration which is a much clearer name for what the method actually does.
+* Keyboard.justReleased has bee renamed to Keyboard.upDuration which is a much clearer name for what the method actually does.
+* Keyboard.downDuration, Keyboard.upDuration and Keyboard.isDown now all return `null` if the Key wasn't found in the local keys array.
 * The Phaser.Device class has been made into a singleton and removed it's dependancy on Phaser.Game (thanks @pnstickne #1328)
 * ArrayList has been renamed to `ArraySet` (as it's actually a data set implementation) and moved from the `core` folder to the `utils` folder (thanks @pnstickne)
 * If you are reloading a Phaser Game on a page that never properly refreshes (such as in an AngularJS project) then you will quickly run out of AudioContext nodes. If this is the case create a global var called `PhaserGlobal` on the window object before creating the game. The active AudioContext will then be saved to `window.PhaserGlobal.audioContext` when the Phaser game is destroyed, and re-used when it starts again (#1233)
