@@ -5,11 +5,15 @@
 */
 
 /**
-* Create a new Tween.
+* A Tween allows you to alter one or more properties of a target object over a defined period of time.
+* This can be used for things such as alpha fading Sprites, scaling them or motion.
+* Use `Tween.to` or `Tween.from` to set-up the tween values. You can create multiple tweens on the same object
+* by calling Tween.to multiple times on the same Tween. Additional tweens specified in this way become "child" tweens and
+* are played through in sequence. You can use Tween.timeScale and Tween.reverse to control the playback of this Tween and all of its children.
 *
 * @class Phaser.Tween
 * @constructor
-* @param {object} target - The target object, such as a Phaser.Sprite or property like Phaser.Sprite.scale.
+* @param {object} target - The target object, such as a Phaser.Sprite or Phaser.Sprite.scale.
 * @param {Phaser.Game} game - Current game instance.
 * @param {Phaser.TweenManager} manager - The TweenManager responsible for looking after this Tween.
 */
@@ -120,6 +124,16 @@ Phaser.Tween = function (target, game, manager) {
     this.current = 0;
 
     /**
+    * @property {Object} properties - Target property cache used when building the child data values.
+    */
+    this.properties = {};
+
+    /**
+    * @property {Phaser.Tween} chainedTween - If this Tween is chained to another this holds a reference to it.
+    */
+    this.chainedTween = null;
+
+    /**
     * @property {function} _onUpdateCallback - An onUpdate callback.
     * @private
     * @default null
@@ -186,7 +200,13 @@ Phaser.Tween.prototype = {
             ease = this.manager.easeMap[ease];
         }
 
-        this.timeline.push(new Phaser.TweenData(this).to(properties, duration, ease, autoStart, delay, repeat, yoyo));
+        if (this.isRunning)
+        {
+            console.warn('Phaser.Tween.to cannot be called after Tween.start');
+            return this;
+        }
+
+        this.timeline.push(new Phaser.TweenData(this).to(properties, duration, ease, delay, repeat, yoyo));
 
         if (autoStart)
         {
@@ -198,8 +218,8 @@ Phaser.Tween.prototype = {
     },
 
     /**
-    * Sets this tween to be a `from` tween on the properties given. A `from` tween starts at the given value and tweens to the current values.
-    * For example a Sprite with an `x` coordinate of 100 could be tweened from `x: 200` by giving a properties object of `{ x: 200 }`.
+    * Sets this tween to be a `from` tween on the properties given. A `from` tween sets the target to the destination value and tweens to its current value.
+    * For example a Sprite with an `x` coordinate of 100 tweened from `x` 500 would be set to `x` 500 and then tweened to `x` 100 by giving a properties object of `{ x: 500 }`.
     * The ease function allows you define the rate of change. You can pass either a function such as Phaser.Easing.Circular.Out or a string such as "Circ".
     * ".easeIn", ".easeOut" and "easeInOut" variants are all supported for all ease types.
     *
@@ -227,7 +247,13 @@ Phaser.Tween.prototype = {
             ease = this.manager.easeMap[ease];
         }
 
-        this.timeline.push(new Phaser.TweenData(this).from(properties, duration, ease, autoStart, delay, repeat, yoyo));
+        if (this.isRunning)
+        {
+            console.warn('Phaser.Tween.from cannot be called after Tween.start');
+            return this;
+        }
+
+        this.timeline.push(new Phaser.TweenData(this).from(properties, duration, ease, delay, repeat, yoyo));
 
         if (autoStart)
         {
@@ -251,9 +277,32 @@ Phaser.Tween.prototype = {
 
         if (typeof index === 'undefined') { index = 0; }
 
-        if (this.game === null || this.target === null || this.timeline.length === 0)
+        if (this.game === null || this.target === null || this.timeline.length === 0 || this.isRunning)
         {
             return this;
+        }
+
+        //  Populate the tween data
+        for (var i = 0; i < this.timeline.length; i++)
+        {
+            //  Build our master property list with the starting values
+            for (var property in this.timeline[i].vEnd)
+            {
+                this.properties[property] = this.target[property] || 0;
+
+                if (!Array.isArray(this.properties[property]))
+                {
+                    //  Ensures we're using numbers, not strings
+                    this.properties[property] *= 1.0;
+                }
+            }
+        }
+
+        console.log(this.properties);
+
+        for (var i = 0; i < this.timeline.length; i++)
+        {
+            this.timeline[i].loadValues();
         }
 
         this.manager.add(this);
@@ -482,15 +531,36 @@ Phaser.Tween.prototype = {
     },
 
     /**
-    * You can chain tweens together by passing a reference to the chain function. This enables one tween to call another on completion.
-    * You can pass as many tweens as you like to this function, they will each be chained in sequence.
+    * This method allows you to chain tweens together. Any tween chained to this tween will have its `Tween.start` method called
+    * as soon as this tween completes. If this tween never completes (i.e. repeatAll or loop is set) then the chain will never progress.
+    * Note that `Tween.onComplete` will fire when *this* tween completes, not when the whole chain completes.
+    * For that you should listen to `onComplete` on the final tween in your chain.
+    * 
+    * If you pass multiple tweens to this method they will be joined into a single long chain.
+    * For example if this is Tween A and you pass in B, C and D then B will be chained to A, C will be chained to B and D will be chained to C.
+    * Any previously chained tweens that may have been set will be overwritten.
     *
     * @method Phaser.Tween#chain
+    * @param {...Phaser.Tween} tweens - One or more tweens that will be chained to this one.
     * @return {Phaser.Tween} This tween. Useful for method chaining.
     */
     chain: function () {
 
-        this.chainedTweens = arguments;
+        console.log(arguments);
+
+        var i = arguments.length;
+
+        while (i--)
+        {
+            if (i > 0)
+            {
+                arguments[i - 1].chainedTween = arguments[i];
+            }
+            else
+            {
+                this.chainedTween = arguments[i];
+            }
+        }
 
         return this;
 
@@ -707,6 +777,12 @@ Phaser.Tween.prototype = {
                     //  No more repeats and no more children, so we're done
                     this.isRunning = false;
                     this.onComplete.dispatch(this.target, this);
+
+                    if (this.chainedTween)
+                    {
+                        this.chainedTween.start();
+                    }
+
                     return false;
                 }
             }
@@ -730,7 +806,6 @@ Phaser.Tween.prototype = {
     * @param {number} [frameRate=60] - The speed in frames per second that the data should be generated at. The higher the value, the larger the array it creates.
     * @param {array} [data] - If given the generated data will be appended to this array, otherwise a new array will be returned.
     * @return {array} An array of tweened values.
-    */
     generateData: function (frameRate, data) {
 
         if (this.game === null || this.target === null)
@@ -838,18 +913,26 @@ Phaser.Tween.prototype = {
         }
 
     }
+    */
 
 };
 
 /**
-* @name Phaser.Tween#activeChild
-* @property {Phaser.TweenData} activeChild - Gets the currently active set of TweenData.
+* @name Phaser.Tween#totalDuration
+* @property {Phaser.TweenData} totalDuration - Gets the total duration of this Tween, including all child tweens, in milliseconds.
 */
-Object.defineProperty(Phaser.Tween.prototype, 'activeChild', {
+Object.defineProperty(Phaser.Tween.prototype, 'totalDuration', {
 
     get: function () {
 
-        return this.timeline[this.current];
+        var total = 0;
+
+        for (var i = 0; i < this.timeline.length; i++)
+        {
+            total += this.timeline[i].duration;
+        }
+
+        return total;
 
     }
 

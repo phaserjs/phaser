@@ -5,7 +5,9 @@
 */
 
 /**
-* A bundle of tween values as used by Phaser.Tween.
+* A Phaser.Tween contains at least one TweenData object. It contains all of the tween data values, such as the
+* starting and ending values, the ease function, interpolation and duration. The Tween acts as a timeline manager for
+* TweenData objects and can contain multiple TweenData objects.
 *
 * @class Phaser.TweenData
 * @constructor
@@ -116,10 +118,16 @@ Phaser.TweenData = function (parent) {
     this.interpolationFunction = Phaser.Math.linearInterpolation;
 
     /**
-    * @property {boolean} isRunning - If the tween is running this is set to true, otherwise false. Tweens that are in a delayed state or waiting to start are considered as being running.
+    * @property {boolean} isRunning - If the tween is running this is set to `true`. Unless Phaser.Tween a TweenData that is waiting for a delay to expire is *not* considered as running.
     * @default
     */
     this.isRunning = false;
+
+    /**
+    * @property {boolean} isFrom - Is this a from tween or a to tween?
+    * @default
+    */
+    this.isFrom = false;
 
 };
 
@@ -157,13 +165,12 @@ Phaser.TweenData.prototype = {
     * @param {object} properties - The properties you want to tween, such as `Sprite.x` or `Sound.volume`. Given as a JavaScript object.
     * @param {number} [duration=1000] - Duration of this tween in ms.
     * @param {function} [ease=null] - Easing function. If not set it will default to Phaser.Easing.Default, which is Phaser.Easing.Linear.None by default but can be over-ridden at will.
-    * @param {boolean} [autoStart=false] - Whether this tween will start automatically or not.
     * @param {number} [delay=0] - Delay before this tween will start, defaults to 0 (no delay). Value given is in ms.
     * @param {number} [repeat=0] - Should the tween automatically restart once complete? If you want it to run forever set as -1. This ignores any chained tweens.
     * @param {boolean} [yoyo=false] - A tween that yoyos will reverse itself and play backwards automatically. A yoyo'd tween doesn't fire the Tween.onComplete event, so listen for Tween.onLoop instead.
     * @return {Phaser.TweenData} This Tween object.
     */
-    to: function (properties, duration, ease, autoStart, delay, repeat, yoyo) {
+    to: function (properties, duration, ease, delay, repeat, yoyo) {
 
         this.vEnd = properties;
         this.duration = duration;
@@ -172,8 +179,35 @@ Phaser.TweenData.prototype = {
         this.repeatCounter = repeat;
         this.yoyo = yoyo;
 
-        this.isRunning = false;
-        this.value = 0;
+        this.isFrom = false;
+
+        return this;
+
+    },
+
+    /**
+    * Sets this tween to be a `from` tween on the properties given. A `from` tween sets the target to the destination value and tweens to its current value.
+    * For example a Sprite with an `x` coordinate of 100 tweened from `x` 500 would be set to `x` 500 and then tweened to `x` 100 by giving a properties object of `{ x: 500 }`.
+    *
+    * @method Phaser.Tween#from
+    * @param {object} properties - The properties you want to tween, such as `Sprite.x` or `Sound.volume`. Given as a JavaScript object.
+    * @param {number} [duration=1000] - Duration of this tween in ms.
+    * @param {function} [ease=null] - Easing function. If not set it will default to Phaser.Easing.Default, which is Phaser.Easing.Linear.None by default but can be over-ridden at will.
+    * @param {number} [delay=0] - Delay before this tween will start, defaults to 0 (no delay). Value given is in ms.
+    * @param {number} [repeat=0] - Should the tween automatically restart once complete? If you want it to run forever set as -1. This ignores any chained tweens.
+    * @param {boolean} [yoyo=false] - A tween that yoyos will reverse itself and play backwards automatically. A yoyo'd tween doesn't fire the Tween.onComplete event, so listen for Tween.onLoop instead.
+    * @return {Phaser.TweenData} This Tween object.
+    */
+    from: function (properties, duration, ease, delay, repeat, yoyo) {
+
+        this.vEnd = properties;
+        this.duration = duration;
+        this.easingFunction = ease;
+        this.delay = delay;
+        this.repeatCounter = repeat;
+        this.yoyo = yoyo;
+
+        this.isFrom = true;
 
         return this;
 
@@ -189,10 +223,36 @@ Phaser.TweenData.prototype = {
 
         this.startTime = this.game.time.time + this.delay;
 
-        if (this.delay === 0)
+        if (this.parent.reverse)
         {
-            this.loadValues();
+            this.dt = this.duration;
         }
+        else
+        {
+            this.dt = 0;
+        }
+
+        if (this.delay > 0)
+        {
+            this.isRunning = false;
+        }
+        else
+        {
+            this.isRunning = true;
+        }
+
+        if (this.isFrom)
+        {
+            //  Reverse them all
+            for (var property in this.vStartCache)
+            {
+                this.vStart[property] = this.vEndCache[property];
+                this.vEnd[property] = this.vStartCache[property];
+            }
+        }
+
+        this.value = 0;
+        this.yoyoCounter = 0;
 
         return this;
 
@@ -207,9 +267,12 @@ Phaser.TweenData.prototype = {
     */
     loadValues: function () {
 
-        for (var property in this.vEnd)
+        for (var property in this.parent.properties)
         {
-            //  Check if an Array was provided as property value
+            //  Load the property from the parent object
+            this.vStart[property] = this.parent.properties[property];
+
+            //  Check if an Array was provided as property value (NEEDS TESTING)
             if (Array.isArray(this.vEnd[property]))
             {
                 if (this.vEnd[property].length === 0)
@@ -218,39 +281,28 @@ Phaser.TweenData.prototype = {
                 }
 
                 //  Create a local copy of the Array with the start value at the front
-                this.vEnd[property] = [this.parent.target[property]].concat(this.vEnd[property]);
+                this.vEnd[property] = [this.parent.properties[property]].concat(this.vEnd[property]);
             }
 
-            this.vStart[property] = this.parent.target[property] || 0;
-
-            if (!Array.isArray(this.vStart[property]))
+            if (this.vEnd[property])
             {
-                this.vStart[property] *= 1.0; // Ensures we're using numbers, not strings
+                if (typeof this.vEnd[property] === 'string')
+                {
+                    //  Parses relative end values with start as base (e.g.: +10, -3)
+                    this.vEnd[property] = this.vStart[property] + parseFloat(this.vEnd[property], 10);
+                }
+
+                this.parent.properties[property] = this.vEnd[property];
             }
-
-            if (typeof this.vEnd[property] === 'string')
+            else
             {
-                //  Parses relative end values with start as base (e.g.: +10, -3)
-                this.vEnd[property] = this.vStart[property] + parseFloat(this.vEnd[property], 10);
+                //  Null tween
+                this.vEnd[property] = this.vStart[property];
             }
 
             this.vStartCache[property] = this.vStart[property];
             this.vEndCache[property] = this.vEnd[property];
         }
-
-        if (this.parent.reverse)
-        {
-            this.dt = this.duration;
-        }
-        else
-        {
-            this.dt = 0;
-        }
-
-        this.isRunning = true;
-        this.yoyoCounter = 0;
-
-        console.log('loadValues', this.dt, this.vStart, this.vEnd);
 
         return this;
 
@@ -269,7 +321,7 @@ Phaser.TweenData.prototype = {
         {
             if (this.game.time.time >= this.startTime)
             {
-                this.loadValues();
+                this.isRunning = true;
             }
             else
             {
@@ -303,7 +355,7 @@ Phaser.TweenData.prototype = {
             }
             else
             {
-                this.parent.target[property] = start + (end - start) * this.value;
+                this.parent.target[property] = start + ((end - start) * this.value);
             }
         }
 
