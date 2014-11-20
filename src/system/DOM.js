@@ -309,9 +309,6 @@ Phaser.Device.whenReady(function (device) {
         get: scrollY
     });
 
-    // For Phaser.DOM.visualBounds
-    // Ref. http://quirksmode.org/mobile/tableViewport.html
-
     Object.defineProperty(Phaser.DOM.visualBounds, "x", {
         get: scrollX
     });
@@ -320,23 +317,46 @@ Phaser.Device.whenReady(function (device) {
         get: scrollY
     });
 
+    Object.defineProperty(Phaser.DOM.layoutBounds, "x", {
+        value: 0
+    });
+
+    Object.defineProperty(Phaser.DOM.layoutBounds, "y", {
+        value: 0
+    });
+
+    var treatAsDesktop = device.desktop &&
+        (document.documentElement.clientWidth <= window.innerWidth) &&
+        (document.documentElement.clientHeight <= window.innerHeight);
+
     // Desktop browsers align the layout viewport with the visual viewport.
     // This differs from mobile browsers with their zooming design.
-    if (device.desktop &&
-        (document.documentElement.clientWidth <= window.innerWidth) &&
-        (document.documentElement.clientHeight <= window.innerHeight))
+    // Ref. http://quirksmode.org/mobile/tableViewport.html  
+    if (treatAsDesktop)
     {
 
+        var clientWidth = function () {
+            return document.documentElement.clientWidth;
+        };
+        var clientHeight = function () {
+            return document.documentElement.clientHeight;
+        };
+
+        // Interested in area sans-scrollbar
         Object.defineProperty(Phaser.DOM.visualBounds, "width", {
-            get: function () {
-                return document.documentElement.clientWidth;
-            }
+            get: clientWidth
         });
 
         Object.defineProperty(Phaser.DOM.visualBounds, "height", {
-            get: function () {
-                return document.documentElement.clientHeight;
-            }
+            get: clientHeight
+        });
+
+        Object.defineProperty(Phaser.DOM.layoutBounds, "width", {
+            get: clientWidth
+        });
+
+        Object.defineProperty(Phaser.DOM.layoutBounds, "height", {
+            get: clientHeight
         });
 
     } else {
@@ -353,39 +373,29 @@ Phaser.Device.whenReady(function (device) {
             }
         });
 
+        Object.defineProperty(Phaser.DOM.layoutBounds, "width", {
+
+            get: function () {
+                var a = document.documentElement.clientWidth;
+                var b = window.innerWidth;
+
+                return a < b ? b : a; // max
+            }
+
+        });
+
+        Object.defineProperty(Phaser.DOM.layoutBounds, "height", {
+
+            get: function () {
+                var a = document.documentElement.clientHeight;
+                var b = window.innerHeight;
+
+                return a < b ? b : a; // max
+            }
+
+        });
+
     }
-
-    // For Phaser.DOM.layoutBounds
-
-    Object.defineProperty(Phaser.DOM.layoutBounds, "x", {
-        value: 0
-    });
-
-    Object.defineProperty(Phaser.DOM.layoutBounds, "y", {
-        value: 0
-    });
-
-    Object.defineProperty(Phaser.DOM.layoutBounds, "width", {
-
-        get: function () {
-            var a = document.documentElement.clientWidth;
-            var b = window.innerWidth;
-
-            return a < b ? b : a; // max
-        }
-
-    });
-
-    Object.defineProperty(Phaser.DOM.layoutBounds, "height", {
-
-        get: function () {
-            var a = document.documentElement.clientHeight;
-            var b = window.innerHeight;
-
-            return a < b ? b : a; // max
-        }
-
-    });
 
     // For Phaser.DOM.documentBounds
     // Ref. http://www.quirksmode.org/mobile/tableViewport_desktop.html
