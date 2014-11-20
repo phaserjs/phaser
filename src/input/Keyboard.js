@@ -460,7 +460,7 @@ Phaser.Keyboard.prototype = {
     * @param {number} [duration=50] - The duration within which the key is considered as being just pressed. Given in ms.
     * @return {boolean} True if the key was pressed down within the given duration, false if not or null if the Key wasn't found.
     */
-    downDuration: function (keycode) {
+    downDuration: function (keycode, duration) {
 
         if (this._keys[keycode])
         {
