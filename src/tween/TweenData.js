@@ -243,11 +243,12 @@ Phaser.TweenData.prototype = {
 
         if (this.isFrom)
         {
-            //  Reverse them all
+            //  Reverse them all and instant set them
             for (var property in this.vStartCache)
             {
                 this.vStart[property] = this.vEndCache[property];
                 this.vEnd[property] = this.vStartCache[property];
+                this.parent.target[property] = this.vStart[property];
             }
         }
 
