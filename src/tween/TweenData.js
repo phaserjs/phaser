@@ -207,10 +207,6 @@ Phaser.TweenData.prototype = {
     */
     loadValues: function () {
 
-        this.isRunning = true;
-        this.dt = 0;
-        this.yoyoCounter = 0;
-
         for (var property in this.vEnd)
         {
             //  Check if an Array was provided as property value
@@ -241,6 +237,20 @@ Phaser.TweenData.prototype = {
             this.vStartCache[property] = this.vStart[property];
             this.vEndCache[property] = this.vEnd[property];
         }
+
+        if (this.parent.reverse)
+        {
+            this.dt = this.duration;
+        }
+        else
+        {
+            this.dt = 0;
+        }
+
+        this.isRunning = true;
+        this.yoyoCounter = 0;
+
+        console.log('loadValues', this.dt, this.vStart, this.vEnd);
 
         return this;
 
@@ -362,7 +372,14 @@ Phaser.TweenData.prototype = {
 
         this.startTime = this.game.time.time + this.delay;
 
-        this.dt = 0;
+        if (this.parent.reverse)
+        {
+            this.dt = this.duration;
+        }
+        else
+        {
+            this.dt = 0;
+        }
 
         return Phaser.TweenData.LOOPED;
 

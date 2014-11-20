@@ -78,14 +78,29 @@ Phaser.Tween = function (target, game, manager) {
     this.onStart = new Phaser.Signal();
 
     /**
-    * The onLoop event is fired if the Tween loops. If there are chained tweens it fires after all the child tweens have completed.
+    * The onLoop event is fired if the Tween or any child tween loops.
     * It will be sent 2 parameters: the target object and this tween.
     * @property {Phaser.Signal} onLoop
     */
     this.onLoop = new Phaser.Signal();
 
     /**
-    * The onComplete event is fired when the Tween completes. Does not fire if the Tween is set to loop or repeatAll(-1).
+    * The onRepeat event is fired if the Tween and all of its children repeats. If this tween has no children this will never be fired.
+    * It will be sent 2 parameters: the target object and this tween.
+    * @property {Phaser.Signal} onRepeat
+    */
+    this.onRepeat = new Phaser.Signal();
+
+    /**
+    * The onChildComplete event is fired when the Tween or any of its children completes.
+    * Fires every time a child completes unless a child is set to repeat forever.
+    * It will be sent 2 parameters: the target object and this tween.
+    * @property {Phaser.Signal} onChildComplete
+    */
+    this.onChildComplete = new Phaser.Signal();
+
+    /**
+    * The onComplete event is fired when the Tween and all of its children completes. Does not fire if the Tween is set to loop or repeatAll(-1).
     * It will be sent 2 parameters: the target object and this tween.
     * @property {Phaser.Signal} onComplete
     */
@@ -646,41 +661,61 @@ Phaser.Tween.prototype = {
         }
         else if (status === Phaser.TweenData.COMPLETE)
         {
+            var complete = false;
+
             //  What now?
             if (this.reverse)
             {
                 this.current--;
-            }
-            else
-            {
-                this.current++;
-            }
-
-            if (this.repeatCounter === -1 || this.repeatCounter > 0)
-            {
-                if (this.repeatCounter !== -1)
-                {
-                    this.repeatCounter--;
-                }
 
                 if (this.current < 0)
                 {
                     this.current = this.timeline.length - 1;
+                    complete = true;
                 }
-                else if (this.current === this.timeline.length)
-                {
-                    this.current = 0;
-                }
-
-                this.timeline[this.current].start();
-                return true;
             }
             else
             {
-                //  And we're done
-                this.isRunning = false;
-                this.onComplete.dispatch(this.target, this);
-                return false;
+                this.current++;
+
+                if (this.current === this.timeline.length)
+                {
+                    this.current = 0;
+                    complete = true;
+                }
+            }
+
+            if (complete)
+            {
+                //  We've reached the start or end of the child tweens (depending on Tween.reverse), should we repeat it?
+                if (this.repeatCounter === -1)
+                {
+                    this.timeline[this.current].start();
+                    this.onRepeat.dispatch(this.target, this);
+                    return true;
+                }
+                else if (this.repeatCounter > 0)
+                {
+                    this.repeatCounter--;
+
+                    this.timeline[this.current].start();
+                    this.onRepeat.dispatch(this.target, this);
+                    return true;
+                }
+                else
+                {
+                    //  No more repeats and no more children, so we're done
+                    this.isRunning = false;
+                    this.onComplete.dispatch(this.target, this);
+                    return false;
+                }
+            }
+            else
+            {
+                //  We've still got some children to go
+                this.onChildComplete.dispatch(this.target, this);
+                this.timeline[this.current].start();
+                return true;
             }
         }
 
