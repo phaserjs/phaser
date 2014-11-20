@@ -71,6 +71,11 @@ Phaser.TweenData = function (parent) {
     this.repeatCounter = 0;
 
     /**
+    * @property {number} repeatDelay - The amount of time in ms between repeats of this tween.
+    */
+    this.repeatDelay = 0;
+
+    /**
     * @property {boolean} yoyo - True if the Tween is set to yoyo, otherwise false.
     * @default
     */
@@ -109,6 +114,12 @@ Phaser.TweenData = function (parent) {
     * @default Phaser.Math.linearInterpolation
     */
     this.interpolationFunction = Phaser.Math.linearInterpolation;
+
+    /**
+    * @property {boolean} isRunning - If the tween is running this is set to true, otherwise false. Tweens that are in a delayed state or waiting to start are considered as being running.
+    * @default
+    */
+    this.isRunning = false;
 
 };
 
@@ -154,8 +165,6 @@ Phaser.TweenData.prototype = {
     */
     to: function (properties, duration, ease, autoStart, delay, repeat, yoyo) {
 
-        console.log('TweenData to', arguments);
-
         this.vEnd = properties;
         this.duration = duration;
         this.easingFunction = ease;
@@ -163,7 +172,7 @@ Phaser.TweenData.prototype = {
         this.repeatCounter = repeat;
         this.yoyo = yoyo;
 
-        this.started = false;
+        this.isRunning = false;
         this.value = 0;
 
         return this;
@@ -198,7 +207,7 @@ Phaser.TweenData.prototype = {
     */
     loadValues: function () {
 
-        this.started = true;
+        this.isRunning = true;
         this.dt = 0;
         this.yoyoCounter = 0;
 
@@ -246,7 +255,7 @@ Phaser.TweenData.prototype = {
     */
     update: function () {
 
-        if (!this.started)
+        if (!this.isRunning)
         {
             if (this.game.time.time >= this.startTime)
             {
@@ -260,12 +269,12 @@ Phaser.TweenData.prototype = {
 
         if (this.parent.reverse)
         {
-            this.dt -= (this.game.time.physicsElapsed * 1000) * this.parent.speed;
+            this.dt -= (this.game.time.physicsElapsed * 1000) * this.parent.timeScale;
             this.dt = Math.max(this.dt, 0);
         }
         else
         {
-            this.dt += (this.game.time.physicsElapsed * 1000) * this.parent.speed;
+            this.dt += (this.game.time.physicsElapsed * 1000) * this.parent.timeScale;
             this.dt = Math.min(this.dt, this.duration);
         }
 
