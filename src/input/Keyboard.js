@@ -465,7 +465,7 @@ Phaser.Keyboard.prototype = {
 
         if (this._keys[keycode])
         {
-            return this._keys[keycode].justPressed(duration);
+            return this._keys[keycode].downDuration(duration);
         }
         else
         {
@@ -488,7 +488,7 @@ Phaser.Keyboard.prototype = {
 
         if (this._keys[keycode])
         {
-            return this._keys[keycode].justReleased(duration);
+            return this._keys[keycode].upDuration(duration);
         }
         else
         {
