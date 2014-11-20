@@ -284,7 +284,7 @@ Phaser.TweenData.prototype = {
                 this.vEnd[property] = [this.parent.properties[property]].concat(this.vEnd[property]);
             }
 
-            if (this.vEnd[property])
+            if (typeof this.vEnd[property] !== 'undefined')
             {
                 if (typeof this.vEnd[property] === 'string')
                 {
