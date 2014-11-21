@@ -7,6 +7,7 @@
 /**
 * This is where the magic happens. The Game object is the heart of your game,
 * providing quick access to common functions and handling the boot process.
+* 
 * "Hell, there are no rules here - we're trying to accomplish something."
 *                                                       Thomas A. Edison
 *
@@ -503,6 +504,10 @@ Phaser.Game.prototype = {
             this.debug = new Phaser.Utils.Debug(this);
             this.debug.boot();
         }
+        else
+        {
+            this.debug = { preUpdate: function () {}, update: function () {} };
+        }
 
         this.showDebugHeader();
 
@@ -749,12 +754,7 @@ Phaser.Game.prototype = {
             }
 
             this.scale.preUpdate();
-
-            if (this.config['enableDebug'])
-            {
-                this.debug.preUpdate();
-            }
-
+            this.debug.preUpdate();
             this.world.camera.preUpdate();
             this.physics.preUpdate();
             this.state.preUpdate(timeStep);
@@ -777,13 +777,8 @@ Phaser.Game.prototype = {
         {
             // Scaling and device orientation changes are still reflected when paused.
             this.scale.pauseUpdate();
-
             this.state.pauseUpdate();
-
-            if (this.config['enableDebug'])
-            {
-                this.debug.preUpdate();
-            }
+            this.debug.preUpdate();
         }
     },
 
@@ -796,21 +791,12 @@ Phaser.Game.prototype = {
     */
     updateRender: function (elapsedTime) {
 
-        if (this.renderType !== Phaser.HEADLESS)
-        {
-            this.state.preRender();
-            this.renderer.render(this.stage);
+        this.state.preRender();
+        this.renderer.render(this.stage);
 
-            this.plugins.render(elapsedTime);
-            this.state.render(elapsedTime);
-            this.plugins.postRender(elapsedTime);
-
-            if (this.device.cocoonJS && this.renderType === Phaser.CANVAS && this.stage.currentRenderOrderID === 1)
-            {
-                //  Horrible hack! But without it Cocoon fails to render a scene with just a single drawImage call on it.
-                this.context.fillRect(0, 0, 0, 0);
-            }
-        }
+        this.plugins.render(elapsedTime);
+        this.state.render(elapsedTime);
+        this.plugins.postRender(elapsedTime);
 
     },
 

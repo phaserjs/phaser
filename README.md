@@ -206,6 +206,8 @@ required on mobile browsers.
 * ArrayList has been renamed to `ArraySet` (as it's actually a data set implementation) and moved from the `core` folder to the `utils` folder (thanks @pnstickne)
 * If you are reloading a Phaser Game on a page that never properly refreshes (such as in an AngularJS project) then you will quickly run out of AudioContext nodes. If this is the case create a global var called `PhaserGlobal` on the window object before creating the game. The active AudioContext will then be saved to `window.PhaserGlobal.audioContext` when the Phaser game is destroyed, and re-used when it starts again (#1233)
 * Camera.screenView is now deprecated. All Camera culling checks are made against Camera.view now instead.
+* Various CocoonJS related hacks removed thanks to fixes from Ludei directly in CocoonJS! Woohoo :)
+* Phaser.HEADLESS check removed from the core game loop. If you need to disable rendering you can now override the Phaser.Game.updateRender method instead with your own.
 
 ### Bug Fixes
 
@@ -276,7 +278,7 @@ Run `grunt` to perform a default build to the `dist` folder.
 
 If you replace Pixi or p2 then run `grunt replace` to patch their UMD strings so they work properly with Phaser and requireJS.
 
-Note: Some of you may not be aware, but the `phaser.min.js` file in the build folder contains all 3 physics systems bundled in. If you only need Arcade Physics then you can use `build\custom\phaser-arcade-physics.min.js` instead. This will save you 180KB from the minified file size.
+Note: Some of you may not be aware, but the `phaser.min.js` file in the build folder contains both Arcade Physics and P2 Physics bundled in. If you only need Arcade Physics then you can use `build\custom\phaser-arcade-physics.min.js` instead. This will save you 180KB from the minified file size.
 
 ![div](http://phaser.io/images/div4.png)
 
