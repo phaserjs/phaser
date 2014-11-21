@@ -1235,16 +1235,18 @@ Phaser.Loader.prototype = {
                 file.data.onload = function () {
                     file.data.onload = null;
                     file.data.onerror = null;
-                    if (file.loaded) return;
-
-                    _this.fileComplete(_this._fileIndex);
+                    if (!file.loaded)
+                    {
+                        _this.fileComplete(_this._fileIndex);
+                    }
                 };
                 file.data.onerror = function () {
                     file.data.onload = null;
                     file.data.onerror = null;
-                    if (file.loaded) return;
-
-                    _this.fileError(_this._fileIndex);
+                    if (!file.loaded)
+                    {
+                        _this.fileError(_this._fileIndex);
+                    }
                 };
 
                 if (this.crossOrigin)
