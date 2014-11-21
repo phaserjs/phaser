@@ -74,6 +74,16 @@ Phaser.Loader = function (game) {
     this.onLoadStart = new Phaser.Signal();
 
     /**
+    * @property {Phaser.Signal} onLoadComplete - This event is dispatched when the final file in the load queue has either loaded or failed.
+    */
+    this.onLoadComplete = new Phaser.Signal();
+
+    /**
+    * @property {Phaser.Signal} onPackComplete - This event is dispatched when an asset pack has either loaded or failed.
+    */
+    this.onPackComplete = new Phaser.Signal();
+
+    /**
     * @property {Phaser.Signal} onFileStart - This event is dispatched immediately before a file starts loading. It's possible the file may still error (404, etc) after this event is sent.
     */
     this.onFileStart = new Phaser.Signal();
@@ -89,43 +99,39 @@ Phaser.Loader = function (game) {
     this.onFileError = new Phaser.Signal();
 
     /**
-    * @property {Phaser.Signal} onLoadComplete - This event is dispatched when the final file in the load queue has either loaded or failed.
-    */
-    this.onLoadComplete = new Phaser.Signal();
-
-    /**
-    * @property {Phaser.Signal} onPackComplete - This event is dispatched when an asset pack has either loaded or failed.
-    */
-    this.onPackComplete = new Phaser.Signal();
-
-    /**
-    * @property {boolean} useXDomainRequest - If true and if the browser supports XDomainRequest, it will be used in preference for xhr when loading json files. This is only relevant for IE9 when you know your server/CDN requires it.
+    * @property {boolean} useXDomainRequest - If true and if the browser supports XDomainRequest, it will be used in preference for XHR when loading JSON files (it does not affect other file types). This is only relevant for IE9 and should only be enabled when you know your server/CDN requires it.
     */
     this.useXDomainRequest = false;
 
     /**
+    * Contains all queued pack information to load.
+    * Packs are removed from this list as they are processed.
+    *
     * @property {array} _packList - Contains all the assets packs.
     * @private
     */
     this._packList = [];
 
     /**
-    * @property {number} _packIndex - The index of the current asset pack.
-    * @private
-    */
-    this._packIndex = 0;
-
-    /**
-    * @property {array} _fileList - Contains all the assets file infos.
+    * Contains all the information for asset files that need to be loaded.
+    * Files are removed from this list as they are processed.
+    * 
+    * @property {array} _fileList
     * @private
     */
     this._fileList = [];
 
     /**
-    * @property {number} _fileIndex - The index of the current file being loaded.
+    * The total number of files/assets to be loaded.
+    * This may increase after processing packs.
+    *
+    * @property {number} _totalFileCount
     * @private
     */
-    this._fileIndex = 0;
+    this._totalFileCount = 0;
+
+    this._loadedFileCount = 0;
+    this._failedFileCount = 0;
 
     /**
     * @property {number} _progressChunk - Indicates the size of 1 file in terms of a percentage out of 100.
@@ -133,18 +139,6 @@ Phaser.Loader = function (game) {
     * @default
     */
     this._progressChunk = 0;
-
-    /**
-    * @property {XMLHttpRequest} - An XMLHttpRequest object used for loading text and audio data.
-    * @private
-    */
-    this._xhr = new XMLHttpRequest();
-
-    /**
-    * @property {XDomainRequest} - An ajax request used specifically by IE9 for CORs loading issues.
-    * @private
-    */
-    this._ajax = null;
 
 };
 
@@ -217,8 +211,6 @@ Phaser.Loader.prototype = {
     * We use this to adjust the height of the preloading sprite, if set.
     *
     * @method Phaser.Loader#resize
-    * @param {number} width - The new width of the game in pixels.
-    * @param {number} height - The new height of the game in pixels.
     */
     resize: function () {
 
@@ -240,18 +232,7 @@ Phaser.Loader.prototype = {
     */
     checkKeyExists: function (type, key) {
 
-        if (this._fileList.length > 0)
-        {
-            for (var i = 0; i < this._fileList.length; i++)
-            {
-                if (this._fileList[i].type === type && this._fileList[i].key === key)
-                {
-                    return true;
-                }
-            }
-        }
-
-        return false;
+        return this.getAssetIndex(type, key) > -1;
 
     },
 
@@ -265,14 +246,11 @@ Phaser.Loader.prototype = {
     */
     getAssetIndex: function (type, key) {
 
-        if (this._fileList.length > 0)
+        for (var i = 0; i < this._fileList.length; i++)
         {
-            for (var i = 0; i < this._fileList.length; i++)
+            if (this._fileList[i].type === type && this._fileList[i].key === key)
             {
-                if (this._fileList[i].type === type && this._fileList[i].key === key)
-                {
-                    return i;
-                }
+                return i;
             }
         }
 
@@ -286,19 +264,15 @@ Phaser.Loader.prototype = {
     * @method Phaser.Loader#getAsset
     * @param {string} type - The type asset you want to check.
     * @param {string} key - Key of the asset you want to check.
-    * @return {any} Returns an object if found that has 2 properties: index and file. Otherwise false.
+    * @return {any} Returns an object if found that has 2 properties: index and asset entry. Otherwise false.
     */
     getAsset: function (type, key) {
 
-        if (this._fileList.length > 0)
+        var fileIndex = this.getAssetIndex(type, key);
+
+        if (fileIndex > -1)
         {
-            for (var i = 0; i < this._fileList.length; i++)
-            {
-                if (this._fileList[i].type === type && this._fileList[i].key === key)
-                {
-                    return { index: i, file: this._fileList[i] };
-                }
-            }
+            return { index: fileIndex, file: this._fileList[fileIndex] };
         }
 
         return false;
@@ -316,10 +290,7 @@ Phaser.Loader.prototype = {
         this.isLoading = false;
 
         this._packList.length = 0;
-        this._packIndex = 0;
-
         this._fileList.length = 0;
-        this._fileIndex = 0;
 
     },
 
@@ -331,9 +302,10 @@ Phaser.Loader.prototype = {
     * @param {string} type - The type of resource to add to the list (image, audio, xml, etc).
     * @param {string} key - The unique Cache ID key of this resource.
     * @param {string} url - The URL the asset will be loaded from.
-    * @param {object} properties - Any additional properties needed to load the file.
+    * @param {object} [properties] - Any additional properties needed to load the file.
+    * @param {boolean} [overwrite=false] - If true then this will overwrite an aspect of the same type/key. Otherwise it will will only add a new asset.
     */
-    addToFileList: function (type, key, url, properties) {
+    addToFileList: function (type, key, url, properties, overwrite) {
 
         var entry = {
             type: type,
@@ -344,7 +316,7 @@ Phaser.Loader.prototype = {
             loaded: false
         };
 
-        if (typeof properties !== "undefined")
+        if (properties)
         {
             for (var prop in properties)
             {
@@ -352,7 +324,14 @@ Phaser.Loader.prototype = {
             }
         }
 
-        if (this.checkKeyExists(type, key) === false)
+        var fileIndex = this.getAssetIndex(type, key);
+        
+        if (overwrite && fileIndex > -1)
+        {
+            // Could potentially overwrite an already loaded asset..
+            this._fileList[fileIndex] = entry;
+        }
+        else if (assetIndex === -1)
         {
             this._fileList.push(entry);
         }
@@ -371,41 +350,15 @@ Phaser.Loader.prototype = {
     */
     replaceInFileList: function (type, key, url, properties) {
 
-        var entry = {
-            type: type,
-            key: key,
-            url: url,
-            data: null,
-            error: false,
-            loaded: false
-        };
-
-        if (typeof properties !== "undefined")
-        {
-            for (var prop in properties)
-            {
-                entry[prop] = properties[prop];
-            }
-        }
-
-        var index = this.getAssetIndex(type, key);
-
-        if (index === -1)
-        {
-            this._fileList.push(entry);
-        }
-        else
-        {
-            this._fileList[index] = entry;
-        }
+        return addToFileList(type, key, url, properties, true);
 
     },
 
     /**
-    * Add an image to the Loader.
+    * Add a JSON resource pack to the Loader.
     *
-    * @method Phaser.Loader#pack
-    * @param {string} key - Unique asset key of this image file.
+    * @method Phaser.Loader#pack    
+    * @param {string} key - Unique asset key of this resource pack.
     * @param {string} [url] - URL of the Asset Pack JSON file. If you wish to pass a json object instead set this to null and pass the object as the data parameter.
     * @param {object} [data] - The Asset Pack JSON data. Use this to pass in a json data object rather than loading it from a URL. TODO
     * @param {object} [callbackContext] - Some Loader operations, like Binary and Script require a context for their callbacks. Pass the context here.
@@ -417,7 +370,7 @@ Phaser.Loader.prototype = {
         if (typeof data === "undefined") { data = null; }
         if (typeof callbackContext === "undefined") { callbackContext = this; }
 
-        if (url === null && data === null)
+        if (!url && !data)
         {
             console.warn('Phaser.Loader.pack - Both url and data are null. One must be set.');
             return this;
@@ -451,14 +404,7 @@ Phaser.Loader.prototype = {
 
         if (typeof overwrite === "undefined") { overwrite = false; }
 
-        if (overwrite)
-        {
-            this.replaceInFileList('image', key, url);
-        }
-        else
-        {
-            this.addToFileList('image', key, url);
-        }
+        this.addToFileList('image', key, url, undefined, overwrite);
 
         return this;
 
@@ -477,14 +423,7 @@ Phaser.Loader.prototype = {
 
         if (typeof overwrite === "undefined") { overwrite = false; }
 
-        if (overwrite)
-        {
-            this.replaceInFileList('text', key, url);
-        }
-        else
-        {
-            this.addToFileList('text', key, url);
-        }
+        this.addToFileList('text', key, url, undefined, overwrite);
 
         return this;
 
@@ -503,14 +442,7 @@ Phaser.Loader.prototype = {
 
         if (typeof overwrite === "undefined") { overwrite = false; }
 
-        if (overwrite)
-        {
-            this.replaceInFileList('json', key, url);
-        }
-        else
-        {
-            this.addToFileList('json', key, url);
-        }
+        this.addToFileList('json', key, url, undefined, overwrite);
 
         return this;
 
@@ -529,33 +461,31 @@ Phaser.Loader.prototype = {
 
         if (typeof overwrite === "undefined") { overwrite = false; }
 
-        if (overwrite)
-        {
-            this.replaceInFileList('xml', key, url);
-        }
-        else
-        {
-            this.addToFileList('xml', key, url);
-        }
+        this.addToFileList('xml', key, url, undefined, overwrite);
 
         return this;
 
     },
 
     /**
-    * Add a JavaScript file to the Loader. Once loaded the JavaScript file will be automatically turned into a script tag (and executed), so be careful what you load!
-    * You can also specify a callback. This will be executed as soon as the script tag has been created.
+    * Add a JavaScript file to the Loader.
+    *
+    * The loaded JavaScript is automatically turned into a script tag and executed, so be careful what you load!
+    *
+    * A callback, which will be invoked as the script tag has been created, can also be specified.
+    * The callback must return relevant `data`.
     *
     * @method Phaser.Loader#script
     * @param {string} key - Unique asset key of the script file.
     * @param {string} url - URL of the JavaScript file.
-    * @param {function} [callback] - Optional callback that will be called after the script tag has loaded, so you can perform additional processing.
-    * @param {function} [callbackContext] - The context under which the callback will be applied. If not specified it will use the callback itself as the context.
+    * @param {function} [callback=(none)] - Optional callback that will be called after the script tag has loaded, so you can perform additional processing.
+    * @param {object} [callbackContext=(Loader)] - The context under which the callback will be applied. If not specified it will use the callback itself as the context.
     * @return {Phaser.Loader} This Loader instance.
     */
     script: function (key, url, callback, callbackContext) {
 
         if (typeof callback === 'undefined') { callback = false; }
+        // PST-FIXME-WARN Why is the default callback context the ..callback?
         if (callback !== false && typeof callbackContext === 'undefined') { callbackContext = callback; }
 
         this.addToFileList('script', key, url, { callback: callback, callbackContext: callbackContext });
@@ -565,15 +495,18 @@ Phaser.Loader.prototype = {
     },
 
     /**
-    * Add a binary file to the Loader. It will be loaded via xhr with a responseType of "arraybuffer". You can specify an optional callback to process the file after load.
+    * Add a binary file to the Loader.
+    *
+    * It will be loaded via xhr with a responseType of "arraybuffer". You can specify an optional callback to process the file after load.
     * When the callback is called it will be passed 2 parameters: the key of the file and the file data.
-    * WARNING: If you specify a callback, the file data will be set to whatever your callback returns. So always return the data object, even if you didn't modify it.
+    *
+    * WARNING: If a callback is specified the data will be set to whatever it returns. Always return the data object, even if you didn't modify it.
     *
     * @method Phaser.Loader#binary
     * @param {string} key - Unique asset key of the binary file.
     * @param {string} url - URL of the binary file.
-    * @param {function} [callback] - Optional callback that will be passed the file after loading, so you can perform additional processing on it.
-    * @param {function} [callbackContext] - The context under which the callback will be applied. If not specified it will use the callback itself as the context.
+    * @param {function} [callback=(none)] - Optional callback that will be passed the file after loading, so you can perform additional processing on it.
+    * @param {object} [callbackContext] - The context under which the callback will be applied. If not specified it will use the callback itself as the context.
     * @return {Phaser.Loader} This Loader instance.
     */
     binary: function (key, url, callback, callbackContext) {
@@ -617,8 +550,9 @@ Phaser.Loader.prototype = {
     *
     * @method Phaser.Loader#audio
     * @param {string} key - Unique asset key of the audio file.
-    * @param {Array|string} urls - An array containing the URLs of the audio files, i.e.: [ 'jump.mp3', 'jump.ogg', 'jump.m4a' ] or a single string containing just one URL.
-    * @param {boolean} autoDecode - When using Web Audio the audio files can either be decoded at load time or run-time. They can't be played until they are decoded, but this let's you control when that happens. Decoding is a non-blocking async process.
+    * @param {string[]|string} urls - An array containing the URLs of the audio files, i.e.: [ 'jump.mp3', 'jump.ogg', 'jump.m4a' ] or a single string containing just one URL.
+    * @param {boolean} [autoDecode=true] - When using Web Audio the audio files can either be decoded at load time or run-time.
+    *     They can't be played until they are decoded, but this let's you control when that happens. Decoding is a non-blocking async process.
     * @return {Phaser.Loader} This Loader instance.
     */
     audio: function (key, urls, autoDecode) {
@@ -632,7 +566,9 @@ Phaser.Loader.prototype = {
     },
 
     /**
-     * Add a new audiosprite file to the loader. Audio Sprites are a combination of audio files and a JSON configuration.
+     * Add a new audiosprite file to the loader.
+     *
+     * Audio Sprites are a combination of audio files and a JSON configuration.
      * The JSON follows the format of that created by https://github.com/tonistiigi/audiosprite
      *
      * @method Phaser.Loader#audiosprite
@@ -667,7 +603,7 @@ Phaser.Loader.prototype = {
         if (typeof data === "undefined") { data = null; }
         if (typeof format === "undefined") { format = Phaser.Tilemap.CSV; }
 
-        if (url == null && data == null)
+        if (!url && !data)
         {
             console.warn('Phaser.Loader.tilemap - Both url and data are null. One must be set.');
 
@@ -706,6 +642,7 @@ Phaser.Loader.prototype = {
 
     /**
     * Add a new physics data object loading request.
+    *
     * The data must be in Lime + Corona JSON format. Physics Editor by code'n'web exports in this format natively.
     *
     * @method Phaser.Loader#physics
@@ -721,7 +658,7 @@ Phaser.Loader.prototype = {
         if (typeof data === "undefined") { data = null; }
         if (typeof format === "undefined") { format = Phaser.Physics.LIME_CORONA_JSON; }
 
-        if (url == null && data == null)
+        if (!url && !data)
         {
             console.warn('Phaser.Loader.physics - Both url and data are null. One must be set.');
 
@@ -776,34 +713,14 @@ Phaser.Loader.prototype = {
             //  An xml string or object has been given
             if (typeof xmlData === 'string')
             {
-                var xml;
+                var xml = this.parseXml(xmlData);
 
-                try  {
-                    if (window['DOMParser'])
-                    {
-                        var domparser = new DOMParser();
-                        xml = domparser.parseFromString(xmlData, "text/xml");
-                    }
-                    else
-                    {
-                        xml = new ActiveXObject("Microsoft.XMLDOM");
-                        xml.async = 'false';
-                        xml.loadXML(xmlData);
-                    }
-                }
-                catch (e)
-                {
-                    xml = undefined;
-                }
-
-                if (!xml || !xml.documentElement || xml.getElementsByTagName("parsererror").length)
+                if (!xml)
                 {
                     throw new Error("Phaser.Loader. Invalid Bitmap Font XML given");
                 }
-                else
-                {
-                    this.addToFileList('bitmapfont', key, textureURL, { xmlURL: null, xmlData: xml, xSpacing: xSpacing, ySpacing: ySpacing });
-                }
+
+                this.addToFileList('bitmapfont', key, textureURL, { xmlURL: null, xmlData: xml, xSpacing: xSpacing, ySpacing: ySpacing });
             }
         }
 
@@ -899,34 +816,14 @@ Phaser.Loader.prototype = {
 
                     if (typeof atlasData === 'string')
                     {
-                        var xml;
+                        var xml = this.parseXml(atlasData);
 
-                        try  {
-                            if (window['DOMParser'])
-                            {
-                                var domparser = new DOMParser();
-                                xml = domparser.parseFromString(atlasData, "text/xml");
-                            }
-                            else
-                            {
-                                xml = new ActiveXObject("Microsoft.XMLDOM");
-                                xml.async = 'false';
-                                xml.loadXML(atlasData);
-                            }
-                        }
-                        catch (e)
-                        {
-                            xml = undefined;
-                        }
-
-                        if (!xml || !xml.documentElement || xml.getElementsByTagName("parsererror").length)
+                        if (!xml)
                         {
                             throw new Error("Phaser.Loader. Invalid Texture Atlas XML given");
                         }
-                        else
-                        {
-                            atlasData = xml;
-                        }
+
+                        atlasData = xml;
                     }
                     break;
             }
@@ -943,6 +840,7 @@ Phaser.Loader.prototype = {
     * Remove loading request of a file.
     *
     * @method Phaser.Loader#removeFile
+    * @protected
     * @param {string} type - The type of resource to add to the list (image, audio, xml, etc).
     * @param {string} key - Key of the file you want to remove.
     */
@@ -950,7 +848,7 @@ Phaser.Loader.prototype = {
 
         var file = this.getAsset(type, key);
 
-        if (file !== false)
+        if (file)
         {
             this._fileList.splice(file.index, 1);
         }
@@ -982,13 +880,31 @@ Phaser.Loader.prototype = {
 
         if (this._packList.length > 0)
         {
-            this._packIndex = 0;
             this.loadPack();
         }
         else
         {
             this.beginLoad();
         }
+
+    },
+
+    /**
+    * Process the next item in the file/asset queue.
+    * - fileList: pickup queue
+    * - inflight: in flight requests
+    *   - inflight is removed on error/success
+    *   - inflight is only processed in order for certain types
+    *   - inflight is always sequential by queue order
+    *   - loaded, loading, error - all cycles back to queue
+    *     - loadStartedAt, finishedAt (by process)
+    *     - fetched (item, data) -> handler -> loaded -> process
+    *     - 
+    * - packs must be processed in order, but can be downloaded parallel
+    * - packs must be processed first
+    * - a pack must be immediately added to the processing/inflight
+    */
+    pump: function (item, success) {
 
     },
 
@@ -1007,10 +923,9 @@ Phaser.Loader.prototype = {
 
         this.onLoadStart.dispatch(this._fileList.length);
 
-        if (this._fileList.length > 0)
+        if (this._fileList.length)
         {
-            this._fileIndex = 0;
-            this._progressChunk = 100 / this._fileList.length;
+            this._progressChunk = 100 / this._totalFileCount;
             this.loadFile();
         }
         else
@@ -1032,22 +947,27 @@ Phaser.Loader.prototype = {
     */
     loadPack: function () {
 
-        if (!this._packList[this._packIndex])
+        var pack = this._packList.shift();
+
+        if (!pack)
         {
-            console.warn('Phaser.Loader loadPackList invalid index ' + this._packIndex);
+            console.warn('Phaser.Loader loadPack: no more packs');
             return;
         }
 
-        var pack = this._packList[this._packIndex];
-
-        if (pack.data !== null)
+        if (pack.data)
         {
-            this.packLoadComplete(this._packIndex, false);
+            var packData = pack.data[pack.key];
+            if (packData)
+            {
+                this.processPackData(packData);
+            }
+            this.nextPack(pack, true;)
         }
         else
         {
             //  Load it
-            this.xhrLoad(this._packIndex, this.baseURL + pack.url, 'text', 'packLoadComplete', 'packLoadError');
+            this.xhrLoad(pack, this.baseURL + pack.url, 'text', 'packLoadComplete', 'packLoadError');
         }
 
     },
@@ -1057,106 +977,94 @@ Phaser.Loader.prototype = {
     *
     * @method Phaser.Loader#packLoadComplete
     * @private
-    * @param {number} index - The index of the file in the file queue that loaded.
-    * @param {boolean} [parse=true] - Automatically parse the JSON data?
+    * @param {object} pack - Pack associated with this request
+    * @param {XMLHttpRequest} xhr
     */
-    packLoadComplete: function (index, parse) {
-
-        if (typeof parse === 'undefined') { parse = true; }
-
-        if (!this._packList[index])
-        {
-            console.warn('Phaser.Loader packLoadComplete invalid index ' + index);
-            return;
-        }
-
-        var pack = this._packList[index];
+    packLoadComplete: function (pack, xhr) {
 
         pack.loaded = true;
 
-        if (parse)
+        var data = JSON.parse(xhr.responseText);
+        var packData = data[pack.key];
+        if (packData)
         {
-            var data = JSON.parse(this._xhr.responseText);
-        }
-        else
-        {
-            var data = this._packList[index].data;
+            processPackData(packData);
         }
 
-        if (data[pack.key])
-        {
-            var file;
+        this.nextPack(pack, true);
 
-            for (var i = 0; i < data[pack.key].length; i++)
+    },
+
+    processPackData: function (packData) {
+        var file;
+
+        for (var i = 0; i < packData.length; i++)
+        {
+            file = packData[i];
+
+            switch (file.type)
             {
-                file = data[pack.key][i];
+                case "image":
+                    this.image(file.key, file.url, file.overwrite);
+                    break;
 
-                switch (file.type)
-                {
-                    case "image":
-                        this.image(file.key, file.url, file.overwrite);
-                        break;
+                case "text":
+                    this.text(file.key, file.url, file.overwrite);
+                    break;
 
-                    case "text":
-                        this.text(file.key, file.url, file.overwrite);
-                        break;
+                case "json":
+                    this.json(file.key, file.url, file.overwrite);
+                    break;
 
-                    case "json":
-                        this.json(file.key, file.url, file.overwrite);
-                        break;
+                case "xml":
+                    this.xml(file.key, file.url, file.overwrite);
+                    break;
 
-                    case "xml":
-                        this.xml(file.key, file.url, file.overwrite);
-                        break;
+                case "script":
+                    this.script(file.key, file.url, file.callback, pack.callbackContext);
+                    break;
 
-                    case "script":
-                        this.script(file.key, file.url, file.callback, pack.callbackContext);
-                        break;
+                case "binary":
+                    this.binary(file.key, file.url, file.callback, pack.callbackContext);
+                    break;
 
-                    case "binary":
-                        this.binary(file.key, file.url, file.callback, pack.callbackContext);
-                        break;
+                case "spritesheet":
+                    this.spritesheet(file.key, file.url, file.frameWidth, file.frameHeight, file.frameMax, file.margin, file.spacing);
+                    break;
 
-                    case "spritesheet":
-                        this.spritesheet(file.key, file.url, file.frameWidth, file.frameHeight, file.frameMax, file.margin, file.spacing);
-                        break;
+                case "audio":
+                    this.audio(file.key, file.urls, file.autoDecode);
+                    break;
 
-                    case "audio":
-                        this.audio(file.key, file.urls, file.autoDecode);
-                        break;
+                case "tilemap":
+                    this.tilemap(file.key, file.url, file.data, Phaser.Tilemap[file.format]);
+                    break;
 
-                    case "tilemap":
-                        this.tilemap(file.key, file.url, file.data, Phaser.Tilemap[file.format]);
-                        break;
+                case "physics":
+                    this.physics(file.key, file.url, file.data, Phaser.Loader[file.format]);
+                    break;
 
-                    case "physics":
-                        this.physics(file.key, file.url, file.data, Phaser.Loader[file.format]);
-                        break;
+                case "bitmapFont":
+                    this.bitmapFont(file.key, file.textureURL, file.xmlURL, file.xmlData, file.xSpacing, file.ySpacing);
+                    break;
 
-                    case "bitmapFont":
-                        this.bitmapFont(file.key, file.textureURL, file.xmlURL, file.xmlData, file.xSpacing, file.ySpacing);
-                        break;
+                case "atlasJSONArray":
+                    this.atlasJSONArray(file.key, file.textureURL, file.atlasURL, file.atlasData);
+                    break;
 
-                    case "atlasJSONArray":
-                        this.atlasJSONArray(file.key, file.textureURL, file.atlasURL, file.atlasData);
-                        break;
+                case "atlasJSONHash":
+                    this.atlasJSONHash(file.key, file.textureURL, file.atlasURL, file.atlasData);
+                    break;
 
-                    case "atlasJSONHash":
-                        this.atlasJSONHash(file.key, file.textureURL, file.atlasURL, file.atlasData);
-                        break;
+                case "atlasXML":
+                    this.atlasXML(file.key, file.textureURL, file.atlasURL, file.atlasData);
+                    break;
 
-                    case "atlasXML":
-                        this.atlasXML(file.key, file.textureURL, file.atlasURL, file.atlasData);
-                        break;
-
-                    case "atlas":
-                        this.atlas(file.key, file.textureURL, file.atlasURL, file.atlasData, Phaser.Loader[file.format]);
-                        break;
-                }
+                case "atlas":
+                    this.atlas(file.key, file.textureURL, file.atlasURL, file.atlasData, Phaser.Loader[file.format]);
+                    break;
             }
         }
-
-        this.nextPack(index, true);
 
     },
 
@@ -1165,18 +1073,19 @@ Phaser.Loader.prototype = {
     *
     * @method Phaser.Loader#packError
     * @private
-    * @param {number} index - The index of the file in the file queue that errored.
+    * @param {object} pack - Pack associated with this request
+    * @param {?XMLHttpRequest} xhr
     */
-    packError: function (index) {
+    packError: function (pack, xhr) {
 
-        this._packList[index].loaded = true;
-        this._packList[index].error = true;
+        pack.loaded = true;
+        pack.error = true;
 
-        this.onFileError.dispatch(this._packList[index].key, this._packList[index]);
+        this.onFileError.dispatch(pack.key, pack);
 
-        console.warn("Phaser.Loader error loading pack file: " + this._packList[index].key + ' from URL ' + this._packList[index].url);
+        console.warn("Phaser.Loader error loading pack file: " + pack.key + ' from URL ' + pack.url);
 
-        this.nextPack(index, false);
+        this.nextPack(pack, false);
 
     },
 
@@ -1185,14 +1094,14 @@ Phaser.Loader.prototype = {
     *
     * @method Phaser.Loader#nextPack
     * @private
+    * @param {object} pack - Pack associated with this request
+    * @param {?XMLHttpRequest} xhr
     */
-    nextPack: function (index, success) {
+    nextPack: function (pack, success) {
 
-        this.onPackComplete.dispatch(this._packList[index].key, success, this.totalLoadedPacks(), this._packList.length);
+        this.onPackComplete.dispatch(pack.key, success, this.totalLoadedPacks(), this._packList.length);
 
-        this._packIndex++;
-
-        if (this._packIndex < this._packList.length)
+        if (this._packList.length)
         {
             this.loadPack();
         }
@@ -1211,13 +1120,14 @@ Phaser.Loader.prototype = {
     */
     loadFile: function () {
 
-        if (!this._fileList[this._fileIndex])
+        var file = this._fileList.shift();
+
+        if (!file)
         {
-            console.warn('Phaser.Loader loadFile invalid index ' + this._fileIndex);
+            console.warn('Phaser.Loader loadFile: no more files');
             return;
         }
 
-        var file = this._fileList[this._fileIndex];
         var _this = this;
 
         this.onFileStart.dispatch(this.progress, file.key, file.url);
@@ -1232,10 +1142,14 @@ Phaser.Loader.prototype = {
                 file.data = new Image();
                 file.data.name = file.key;
                 file.data.onload = function () {
-                    return _this.fileComplete(_this._fileIndex);
+                    file.data.onload = null;
+                    file.data.onerror = null;
+                    return _this.fileComplete(file);
                 };
                 file.data.onerror = function () {
-                    return _this.fileError(_this._fileIndex);
+                    file.data.onload = null;
+                    file.data.onerror = null;
+                    return _this.fileError(file);
                 };
                 if (this.crossOrigin)
                 {
@@ -1247,12 +1161,12 @@ Phaser.Loader.prototype = {
             case 'audio':
                 file.url = this.getAudioURL(file.url);
 
-                if (file.url !== null)
+                if (file.url)
                 {
                     //  WebAudio or Audio Tag?
                     if (this.game.sound.usingWebAudio)
                     {
-                        this.xhrLoad(this._fileIndex, this.baseURL + file.url, 'arraybuffer', 'fileComplete', 'fileError');
+                        this.xhrLoad(file, this.baseURL + file.url, 'arraybuffer', 'fileComplete', 'fileError');
                     }
                     else if (this.game.sound.usingAudioTag)
                     {
@@ -1263,25 +1177,30 @@ Phaser.Loader.prototype = {
                             file.data.name = file.key;
                             file.data.preload = 'auto';
                             file.data.src = this.baseURL + file.url;
-                            this.fileComplete(this._fileIndex);
+                            this.fileComplete(file);
                         }
                         else
                         {
                             file.data = new Audio();
                             file.data.name = file.key;
                             file.data.onerror = function () {
-                                return _this.fileError(_this._fileIndex);
+                                file.data.onerror = null;
+                                return _this.fileError(file);
                             };
                             file.data.preload = 'auto';
                             file.data.src = this.baseURL + file.url;
-                            file.data.addEventListener('canplaythrough', function () { Phaser.GAMES[_this.game.id].load.fileComplete(_this._fileIndex); }, false);
+                            file.data.addEventListener('canplaythrough', function ev () {
+                                file.data.removeEventListener('canplaythrough', ev, false);
+                                // Why does this cycle through games?
+                                Phaser.GAMES[_this.game.id].load.fileComplete(file);
+                            }, false);
                             file.data.load();
                         }
                     }
                 }
                 else
                 {
-                    this.fileError(this._fileIndex);
+                    this.fileError(file);
                 }
 
                 break;
@@ -1290,56 +1209,56 @@ Phaser.Loader.prototype = {
 
                 if (this.useXDomainRequest && window.XDomainRequest)
                 {
-                    this._ajax = new window.XDomainRequest();
+                    var xhr = new window.XDomainRequest();
 
                     // XDomainRequest has a few quirks. Occasionally it will abort requests
                     // A way to avoid this is to make sure ALL callbacks are set even if not used
                     // More info here: http://stackoverflow.com/questions/15786966/xdomainrequest-aborts-post-on-ie-9
-                    this._ajax.timeout = 3000;
+                    xhr.timeout = 3000;
 
-                    this._ajax.onerror = function () {
-                        return _this.dataLoadError(_this._fileIndex);
+                    xhr.onerror = function () {
+                        return _this.dataLoadError(file, xhr);
                     };
 
-                    this._ajax.ontimeout = function () {
-                        return _this.dataLoadError(_this._fileIndex);
+                    xhr.ontimeout = function () {
+                        return _this.dataLoadError(file, xhr);
                     };
 
-                    this._ajax.onprogress = function() {};
+                    xhr.onprogress = function() {};
 
-                    this._ajax.onload = function(){
-                        return _this.jsonLoadComplete(_this._fileIndex);
+                    xhr.onload = function(){
+                        return _this.jsonLoadComplete(file, xhr);
                     };
 
-                    this._ajax.open('GET', this.baseURL + file.url, true);
+                    xhr.open('GET', this.baseURL + file.url, true);
 
                     //  Note: The xdr.send() call is wrapped in a timeout to prevent an issue with the interface where some requests are lost
                     //  if multiple XDomainRequests are being sent at the same time.
                     setTimeout(function () {
-                        _this._ajax.send();
+                        xhr.send();
                     }, 0);
                 }
                 else
                 {
-                    this.xhrLoad(this._fileIndex, this.baseURL + file.url, 'text', 'jsonLoadComplete', 'dataLoadError');
+                    this.xhrLoad(file, this.baseURL + file.url, 'text', 'jsonLoadComplete', 'dataLoadError');
                 }
 
                 break;
 
             case 'xml':
 
-                this.xhrLoad(this._fileIndex, this.baseURL + file.url, 'text', 'xmlLoadComplete', 'dataLoadError');
+                this.xhrLoad(file, this.baseURL + file.url, 'text', 'xmlLoadComplete', 'dataLoadError');
                 break;
 
             case 'tilemap':
 
                 if (file.format === Phaser.Tilemap.TILED_JSON)
                 {
-                    this.xhrLoad(this._fileIndex, this.baseURL + file.url, 'text', 'jsonLoadComplete', 'dataLoadError');
+                    this.xhrLoad(file, this.baseURL + file.url, 'text', 'jsonLoadComplete', 'dataLoadError');
                 }
                 else if (file.format === Phaser.Tilemap.CSV)
                 {
-                    this.xhrLoad(this._fileIndex, this.baseURL + file.url, 'text', 'csvLoadComplete', 'dataLoadError');
+                    this.xhrLoad(file, this.baseURL + file.url, 'text', 'csvLoadComplete', 'dataLoadError');
                 }
                 else
                 {
@@ -1350,11 +1269,11 @@ Phaser.Loader.prototype = {
             case 'text':
             case 'script':
             case 'physics':
-                this.xhrLoad(this._fileIndex, this.baseURL + file.url, 'text', 'fileComplete', 'fileError');
+                this.xhrLoad(file, this.baseURL + file.url, 'text', 'fileComplete', 'fileError');
                 break;
 
             case 'binary':
-                this.xhrLoad(this._fileIndex, this.baseURL + file.url, 'arraybuffer', 'fileComplete', 'fileError');
+                this.xhrLoad(file, this.baseURL + file.url, 'arraybuffer', 'fileComplete', 'fileError');
                 break;
         }
 
@@ -1365,47 +1284,47 @@ Phaser.Loader.prototype = {
     *
     * @method Phaser.Loader#xhrLoad
     * @private
-    * @param {number} index - The index of the file to load from the file list.
+    * @param {object} data - Data to associate with the load/error handler. This is normally the file entry from the file list.
     * @param {string} url - The URL of the file.
     * @param {string} type - The xhr responseType.
     * @param {string} onload - A String of the name of the local function to be called on a successful file load.
     * @param {string} onerror - A String of the name of the local function to be called on a file load error.
     */
-    xhrLoad: function (index, url, type, onload, onerror) {
+    xhrLoad: function (data, url, type, onload, onerror) {
 
-        this._xhr.open("GET", url, true);
-        this._xhr.responseType = type;
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", url, true);
+        xhr.responseType = type;
 
         var _this = this;
 
-        this._xhr.onload = function () {
-            return _this[onload](index);
+        xhr.onload = function () {
+            return _this[onload](data, xhr);
         };
 
-        this._xhr.onerror = function () {
-            return _this[onerror](index);
+        xhr.onerror = function () {
+            return _this[onerror](data, xhr);
         };
 
-        this._xhr.send();
+        xhr.send();
 
     },
 
     /**
-    * Private method ONLY used by loader.
+    * Give a bunch of URLs, return the first URL that has an extension this device thinks it can play.
     *
     * @method Phaser.Loader#getAudioURL
     * @private
-    * @param {array|string} urls - Either an array of audio file URLs or a string containing a single URL path.
+    * @param {string[]|string} urls - Either an array of audio file URLs or a string containing a single URL path.
+    * @return {string} The URL to try and fetch; or null.
     */
     getAudioURL: function (urls) {
-
-        var extension;
 
         if (typeof urls === 'string') { urls = [urls]; }
 
         for (var i = 0; i < urls.length; i++)
         {
-            extension = urls[i].toLowerCase();
+            var extension = urls[i].toLowerCase();
             extension = extension.substr((Math.max(0, extension.lastIndexOf(".")) || Infinity) + 1);
 
             if (extension.indexOf("?") >= 0)
@@ -1427,18 +1346,19 @@ Phaser.Loader.prototype = {
     * Error occured when loading a file.
     *
     * @method Phaser.Loader#fileError
-    * @param {number} index - The index of the file in the file queue that errored.
+    * @private
+    * @param {object} file
     */
-    fileError: function (index) {
+    fileError: function (file) {
 
-        this._fileList[index].loaded = true;
-        this._fileList[index].error = true;
+        file.loaded = true;
+        file.error = true;
 
-        this.onFileError.dispatch(this._fileList[index].key, this._fileList[index]);
+        this.onFileError.dispatch(file.key, file);
 
-        console.warn("Phaser.Loader error loading file: " + this._fileList[index].key + ' from URL ' + this._fileList[index].url);
+        console.warn("Phaser.Loader error loading file: " + file.key + ' from URL ' + file.url);
 
-        this.nextFile(index, false);
+        this.nextFile(file, false);
 
     },
 
@@ -1446,17 +1366,11 @@ Phaser.Loader.prototype = {
     * Called when a file is successfully loaded.
     *
     * @method Phaser.Loader#fileComplete
-    * @param {number} index - The index of the file in the file queue that loaded.
+    * @param {object} file - File loaded
+    * @param {XMLHttpRequest} xhr
     */
-    fileComplete: function (index) {
+    fileComplete: function (file, xhr) {
 
-        if (!this._fileList[index])
-        {
-            console.warn('Phaser.Loader fileComplete invalid index ' + index);
-            return;
-        }
-
-        var file = this._fileList[index];
         file.loaded = true;
 
         var loadNext = true;
@@ -1486,11 +1400,11 @@ Phaser.Loader.prototype = {
 
                     if (file.format == Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY || file.format == Phaser.Loader.TEXTURE_ATLAS_JSON_HASH)
                     {
-                        this.xhrLoad(this._fileIndex, this.baseURL + file.atlasURL, 'text', 'jsonLoadComplete', 'dataLoadError');
+                        this.xhrLoad(file, this.baseURL + file.atlasURL, 'text', 'jsonLoadComplete', 'dataLoadError');
                     }
                     else if (file.format == Phaser.Loader.TEXTURE_ATLAS_XML_STARLING)
                     {
-                        this.xhrLoad(this._fileIndex, this.baseURL + file.atlasURL, 'text', 'xmlLoadComplete', 'dataLoadError');
+                        this.xhrLoad(file, this.baseURL + file.atlasURL, 'text', 'xmlLoadComplete', 'dataLoadError');
                     }
                     else
                     {
@@ -1509,7 +1423,7 @@ Phaser.Loader.prototype = {
                 {
                     //  Load the XML before carrying on with the next file
                     loadNext = false;
-                    this.xhrLoad(this._fileIndex, this.baseURL + file.xmlURL, 'text', 'xmlLoadComplete', 'dataLoadError');
+                    this.xhrLoad(file, this.baseURL + file.xmlURL, 'text', 'xmlLoadComplete', 'dataLoadError');
                 }
                 break;
 
@@ -1517,7 +1431,7 @@ Phaser.Loader.prototype = {
 
                 if (this.game.sound.usingWebAudio)
                 {
-                    file.data = this._xhr.response;
+                    file.data = xhr.response;
 
                     this.game.cache.addSound(file.key, file.url, file.data, true, false);
 
@@ -1539,18 +1453,17 @@ Phaser.Loader.prototype = {
                 }
                 else
                 {
-                    file.data.removeEventListener('canplaythrough', Phaser.GAMES[this.game.id].load.fileComplete);
                     this.game.cache.addSound(file.key, file.url, file.data, false, true);
                 }
                 break;
 
             case 'text':
-                file.data = this._xhr.responseText;
+                file.data = xhr.responseText;
                 this.game.cache.addText(file.key, file.url, file.data);
                 break;
 
             case 'physics':
-                var data = JSON.parse(this._xhr.responseText);
+                var data = JSON.parse(this.responseText);
                 this.game.cache.addPhysicsData(file.key, file.url, data, file.format);
                 break;
 
@@ -1559,22 +1472,22 @@ Phaser.Loader.prototype = {
                 file.data.language = 'javascript';
                 file.data.type = 'text/javascript';
                 file.data.defer = false;
-                file.data.text = this._xhr.responseText;
+                file.data.text = this.responseText;
                 document.head.appendChild(file.data);
                 if (file.callback)
                 {
-                    file.data = file.callback.call(file.callbackContext, file.key, this._xhr.responseText);
+                    file.data = file.callback.call(file.callbackContext, file.key, this.responseText);
                 }
                 break;
 
             case 'binary':
                 if (file.callback)
                 {
-                    file.data = file.callback.call(file.callbackContext, file.key, this._xhr.response);
+                    file.data = file.callback.call(file.callbackContext, file.key, this.response);
                 }
                 else
                 {
-                    file.data = this._xhr.response;
+                    file.data = xhr.response;
                 }
 
                 this.game.cache.addBinary(file.key, file.data);
@@ -1584,7 +1497,7 @@ Phaser.Loader.prototype = {
 
         if (loadNext)
         {
-            this.nextFile(index, true);
+            this.nextFile(file, true);
         }
 
     },
@@ -1593,26 +1506,13 @@ Phaser.Loader.prototype = {
     * Successfully loaded a JSON file.
     *
     * @method Phaser.Loader#jsonLoadComplete
-    * @param {number} index - The index of the file in the file queue that loaded.
+    * @private
+    * @param {object} file - File associated with this request
+    * @param {XMLHttpRequest} xhr
     */
-    jsonLoadComplete: function (index) {
+    jsonLoadComplete: function (file, xhr) {
 
-        if (!this._fileList[index])
-        {
-            console.warn('Phaser.Loader jsonLoadComplete invalid index ' + index);
-            return;
-        }
-
-        var file = this._fileList[index];
-
-        if (this._ajax && this._ajax.responseText)
-        {
-            var data = JSON.parse(this._ajax.responseText);
-        }
-        else
-        {
-            var data = JSON.parse(this._xhr.responseText);
-        }
+        var data = JSON.parse(xhr.responseText);
 
         file.loaded = true;
 
@@ -1629,7 +1529,7 @@ Phaser.Loader.prototype = {
             this.game.cache.addTextureAtlas(file.key, file.url, file.data, data, file.format);
         }
 
-        this.nextFile(index, true);
+        this.nextFile(file, true);
 
     },
 
@@ -1637,24 +1537,19 @@ Phaser.Loader.prototype = {
     * Successfully loaded a CSV file.
     *
     * @method Phaser.Loader#csvLoadComplete
-    * @param {number} index - The index of the file in the file queue that loaded.
+    * @private
+    * @param {object} file - File associated with this request
+    * @param {XMLHttpRequest} xhr
     */
-    csvLoadComplete: function (index) {
+    csvLoadComplete: function (file, xhr) {
 
-        if (!this._fileList[index])
-        {
-            console.warn('Phaser.Loader csvLoadComplete invalid index ' + index);
-            return;
-        }
-
-        var file = this._fileList[index];
-        var data = this._xhr.responseText;
+        var data = xhr.responseText;
 
         file.loaded = true;
 
         this.game.cache.addTilemap(file.key, file.url, data, file.format);
 
-        this.nextFile(index, true);
+        this.nextFile(file, true);
 
     },
 
@@ -1662,18 +1557,18 @@ Phaser.Loader.prototype = {
     * Error occured when load a JSON.
     *
     * @method Phaser.Loader#dataLoadError
-    * @param {number} index - The index of the file in the file queue that errored.
+    * @private
+    * @param {object} file - File associated with this request
+    * @param {XMLHttpRequest} xhr
     */
-    dataLoadError: function (index) {
-
-        var file = this._fileList[index];
+    dataLoadError: function (file, xhr) {
 
         file.loaded = true;
         file.error = true;
 
         console.warn("Phaser.Loader dataLoadError: " + file.key);
 
-        this.nextFile(index, true);
+        this.nextFile(file, true);
 
     },
 
@@ -1681,19 +1576,60 @@ Phaser.Loader.prototype = {
     * Successfully loaded an XML file.
     *
     * @method Phaser.Loader#xmlLoadComplete
-    * @param {number} index - The index of the file in the file queue that loaded.
+    * @private
+    * @param {object} file - File associated with this request
+    * @param {XMLHttpRequest} xhr
     */
-    xmlLoadComplete: function (index) {
+    xmlLoadComplete: function (file, xhr) {
 
-        if (this._xhr.responseType !== '' && this._xhr.responseType !== 'text')
+        file.loaded = true;
+
+        if (xhr.responseType !== '' && xhr.responseType !== 'text')
         {
-            console.warn('Invalid XML Response Type', this._fileList[index]);
-            console.warn(this._xhr);
+            console.warn('Invalid XML Response Type', file);
+            console.warn(xhr);
         }
 
-        var data = this._xhr.responseText;
-        var xml;
+        var data = xhr.responseText;
+        var xml = this.parseXml(data);
 
+        file.error = true; // until make it past xml exception (why exception?)
+
+        if (!xml)
+        {
+            throw new Error("Phaser.Loader. Invalid XML");
+        }
+
+        file.error = false;
+
+        if (file.type === 'bitmapfont')
+        {
+            this.game.cache.addBitmapFont(file.key, file.url, file.data, xml, file.xSpacing, file.ySpacing);
+        }
+        else if (file.type === 'textureatlas')
+        {
+            this.game.cache.addTextureAtlas(file.key, file.url, file.data, xml, file.format);
+        }
+        else if (file.type === 'xml')
+        {
+            this.game.cache.addXML(file.key, file.url, xml);
+        }
+
+        this.nextFile(file, true);
+
+    },
+
+    /**
+    * Parses string data as XML.
+    *
+    * @method parseXml
+    * @private
+    * @param {string} data - The XML text to parse
+    * @return {?XMLDocument} Returns the xml document, or null if such could not parsed to a valid document.
+    */
+    parseXml: function (data) {
+
+        var xml;
         try
         {
             if (window['DOMParser'])
@@ -1710,31 +1646,17 @@ Phaser.Loader.prototype = {
         }
         catch (e)
         {
-            xml = undefined;
+            xml = null;
         }
 
         if (!xml || !xml.documentElement || xml.getElementsByTagName("parsererror").length)
         {
-            throw new Error("Phaser.Loader. Invalid XML given");
+            return null;
         }
-
-        var file = this._fileList[index];
-        file.loaded = true;
-
-        if (file.type === 'bitmapfont')
+        else
         {
-            this.game.cache.addBitmapFont(file.key, file.url, file.data, xml, file.xSpacing, file.ySpacing);
+            return xml;
         }
-        else if (file.type === 'textureatlas')
-        {
-            this.game.cache.addTextureAtlas(file.key, file.url, file.data, xml, file.format);
-        }
-        else if (file.type === 'xml')
-        {
-            this.game.cache.addXML(file.key, file.url, xml);
-        }
-
-        this.nextFile(index, true);
 
     },
 
@@ -1743,10 +1665,10 @@ Phaser.Loader.prototype = {
     *
     * @method Phaser.Loader#nextFile
     * @private
-    * @param {number} previousIndex - Index of the previously loaded asset.
+    * @param {object} previousFile
     * @param {boolean} success - Whether the previous asset loaded successfully or not.
     */
-    nextFile: function (previousIndex, success) {
+    nextFile: function (previousFile, success) {
 
         this.progressFloat += this._progressChunk;
         this.progress = Math.round(this.progressFloat);
@@ -1770,11 +1692,11 @@ Phaser.Loader.prototype = {
             this.preloadSprite.sprite.updateCrop();
         }
 
-        this.onFileComplete.dispatch(this.progress, this._fileList[previousIndex].key, success, this.totalLoadedFiles(), this._fileList.length);
+        var totalProcessed = this._loadedFileCount + this._failedFileCount;
+        this.onFileComplete.dispatch(this.progress, previousFile.key, success, totalProcessed, this._totalFileCount);
 
-        if (this.totalQueuedFiles() > 0)
+        if (this._fileList.length)
         {
-            this._fileIndex++;
             this.loadFile();
         }
         else
