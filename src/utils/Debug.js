@@ -398,7 +398,7 @@ Phaser.Utils.Debug.prototype = {
         this.start(x, y, color, 150);
 
         this.line('Key:', key.keyCode, 'isDown:', key.isDown);
-        this.line('justPressed:', key.justPressed(), 'justReleased:', key.justReleased());
+        this.line('justDown:', key.justDown, 'justUp:', key.justUp);
         this.line('Time Down:', key.timeDown.toFixed(0), 'duration:', key.duration.toFixed(0));
 
         this.stop();

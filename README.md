@@ -137,6 +137,31 @@ The proxy methods are generated one-time dynamically but only when needed.
 * * Phaser.Easing.Power2 = Phaser.Easing.Cubic.Out
 * * Phaser.Easing.Power3 = Phaser.Easing.Quartic.Out
 * * Phaser.Easing.Power4 = Phaser.Easing.Quintic.Out
+* ScaleManager.windowContraints now allows specifing 'visual' or 'layout' as
+the constraint. Using the 'layout' constraint should prevent a mobile
+device from trying to resize the game when zooming.
+
+Including the the new changes the defaults have been changed to
+
+windowContraints = { right: 'layout', bottom: '' }
+
+This changes the current scaling behavior as seen in "Game Scaling" (as it
+will only scale for the right edge) but also prevents such scaling from
+going wonkers in some mobile environtments like the newer Android browser.
+(Automatic scroll-to-top, albeit configurable, enabled for non-desktop by
+default is not a fun situation here.)
+
+To obtain the current semantics on a desktop the bottom should be changed
+to 'layout'; although this will result in different behavior depending on
+mobile device. To make the sizing also follow mobile zooming they should
+be changed to 'visual'.
+
+Also added temp Rectangle re-used for various internal calculations.
+
+Phaser.DOM now also special-cases desktops to align the layout bounds
+correctly (this may disagree with CSS breakpoints but it aligns the with
+actual CSS width), without applying a window height/width expansion as
+required on mobile browsers.
 
 ### Updates
 
@@ -174,6 +199,9 @@ The proxy methods are generated one-time dynamically but only when needed.
 * Phaser.DOM now houses new DOM functions. Some have been moved over from ScaleManager as appropriate.
 * Key.justPressed has bee renamed to Key.downDuration which is a much clearer name for what the method actually does. See Key.justDown for a nice clean alternative.
 * Key.justReleased has bee renamed to Key.upDuration which is a much clearer name for what the method actually does. See Key.justUp for a nice clean alternative.
+* Keyboard.justPressed has bee renamed to Keyboard.downDuration which is a much clearer name for what the method actually does.
+* Keyboard.justReleased has bee renamed to Keyboard.upDuration which is a much clearer name for what the method actually does.
+* Keyboard.downDuration, Keyboard.upDuration and Keyboard.isDown now all return `null` if the Key wasn't found in the local keys array.
 * The Phaser.Device class has been made into a singleton and removed it's dependancy on Phaser.Game (thanks @pnstickne #1328)
 * ArrayList has been renamed to `ArraySet` (as it's actually a data set implementation) and moved from the `core` folder to the `utils` folder (thanks @pnstickne)
 * If you are reloading a Phaser Game on a page that never properly refreshes (such as in an AngularJS project) then you will quickly run out of AudioContext nodes. If this is the case create a global var called `PhaserGlobal` on the window object before creating the game. The active AudioContext will then be saved to `window.PhaserGlobal.audioContext` when the Phaser game is destroyed, and re-used when it starts again (#1233)

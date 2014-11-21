@@ -452,47 +452,45 @@ Phaser.Keyboard.prototype = {
     },
 
     /**
-    * Returns the "just pressed" state of the key. Just pressed is considered true if the key was pressed down within the duration given (default 250ms)
-    *
-    * @method Phaser.Keyboard#justPressed
-    * @param {number} keycode - The keycode of the key to remove, i.e. Phaser.Keyboard.UP or Phaser.Keyboard.SPACEBAR
-    * @param {number} [duration=50] - The duration below which the key is considered as being just pressed.
-    * @return {boolean} True if the key is just pressed otherwise false.
+    * Returns `true` if the Key was pressed down within the `duration` value given, or `false` if it either isn't down,
+    * or was pressed down longer ago than then given duration.
+    * 
+    * @method Phaser.Keyboard#downDuration
+    * @param {number} keycode - The keycode of the key to check, i.e. Phaser.Keyboard.UP or Phaser.Keyboard.SPACEBAR
+    * @param {number} [duration=50] - The duration within which the key is considered as being just pressed. Given in ms.
+    * @return {boolean} True if the key was pressed down within the given duration, false if not or null if the Key wasn't found.
     */
-    justPressed: function (keycode, duration) {
-
-        if (typeof duration === 'undefined') { duration = 50; }
+    downDuration: function (keycode, duration) {
 
         if (this._keys[keycode])
         {
-            return this._keys[keycode].justPressed(duration);
+            return this._keys[keycode].downDuration(duration);
         }
         else
         {
-            return false;
+            return null;
         }
 
     },
 
     /**
-    * Returns the "just released" state of the Key. Just released is considered as being true if the key was released within the duration given (default 250ms)
-    *
-    * @method Phaser.Keyboard#justReleased
-    * @param {number} keycode - The keycode of the key to remove, i.e. Phaser.Keyboard.UP or Phaser.Keyboard.SPACEBAR
-    * @param {number} [duration=50] - The duration below which the key is considered as being just released.
-    * @return {boolean} True if the key is just released otherwise false.
+    * Returns `true` if the Key was pressed down within the `duration` value given, or `false` if it either isn't down,
+    * or was pressed down longer ago than then given duration.
+    * 
+    * @method Phaser.Keyboard#upDuration
+    * @param {number} keycode - The keycode of the key to check, i.e. Phaser.Keyboard.UP or Phaser.Keyboard.SPACEBAR
+    * @param {number} [duration=50] - The duration within which the key is considered as being just released. Given in ms.
+    * @return {boolean} True if the key was released within the given duration, false if not or null if the Key wasn't found.
     */
-    justReleased: function (keycode, duration) {
-
-        if (typeof duration === 'undefined') { duration = 50; }
+    upDuration: function (keycode, duration) {
 
         if (this._keys[keycode])
         {
-            return this._keys[keycode].justReleased(duration);
+            return this._keys[keycode].upDuration(duration);
         }
         else
         {
-            return false;
+            return null;
         }
 
     },
@@ -501,8 +499,8 @@ Phaser.Keyboard.prototype = {
     * Returns true of the key is currently pressed down. Note that it can only detect key presses on the web browser.
     *
     * @method Phaser.Keyboard#isDown
-    * @param {number} keycode - The keycode of the key to remove, i.e. Phaser.Keyboard.UP or Phaser.Keyboard.SPACEBAR
-    * @return {boolean} True if the key is currently down.
+    * @param {number} keycode - The keycode of the key to check, i.e. Phaser.Keyboard.UP or Phaser.Keyboard.SPACEBAR
+    * @return {boolean} True if the key is currently down, false if not or null if the Key wasn't found.
     */
     isDown: function (keycode) {
 
@@ -510,8 +508,10 @@ Phaser.Keyboard.prototype = {
         {
             return this._keys[keycode].isDown;
         }
-
-        return false;
+        else
+        {
+            return null;
+        }
 
     }
 
