@@ -331,24 +331,28 @@ Phaser.Loader.prototype = {
     },
 
     /**
-    * Reset the loader. This will abort any loading and clear any queued assets.
+    * Reset the loader.
     *
-    * This also clears the `preloadSprite` property.
-    *
-    * This will also suppress all further loading events.
+    * This will abort any loading and clear any queued assets.
     *
     * @method Phaser.Loader#reset
+    * @protected
+    * @param {boolean} [hard=false] - If true then the sprite preload and other artifacts may also be cleared.
     */
-    reset: function () {
+    reset: function (hard) {
 
-        this.preloadSprite = null;
+        if (hard)
+        {
+            this.preloadSprite = null;
+        }
+
         this.isLoading = false;
 
         this._processingHead = 0;
-
         this._fileList.length = 0;
         this._flightQueue.length = 0;
 
+        this._fileLoadStarted = false;
         this._totalFileCount = 0;
         this._totalPackCount = 0;
         this._loadedPackCount = 0;
@@ -962,7 +966,7 @@ Phaser.Loader.prototype = {
     },
 
     /**
-    * Remove all file loading requests - this is insufficient to clear loading. Use `reset` instead.
+    * Remove all file loading requests - this is _insufficient_ to clear loading. Use `reset` instead.
     *
     * @method Phaser.Loader#removeAll
     * @protected
@@ -986,6 +990,7 @@ Phaser.Loader.prototype = {
             return;
         }
 
+        this.hasLoaded = false;
         this.isLoading = true;
 
         this.updateProgress();
@@ -1032,19 +1037,20 @@ Phaser.Loader.prototype = {
                 if (file.error)
                 {
                     this.onFileError.dispatch(file.key, file);
-                    if (file.type === 'packfile')
-                    {
-                        this._loadedPackCount++;
-                        this.onPackComplete.dispatch(file.key, !file.error, this._loadedPackCount, this._totalPackCount);
-                    }
                 }
 
-                // Non-error pack files are handled when processing the file list below
                 if (file.type !== 'packfile')
                 {
                     this._loadedFileCount++;
                     this.onFileComplete.dispatch(this.progress, file.key, !file.error, this._loadedFileCount, this._totalFileCount);
                 }
+                else if (file.type === 'packfile' && file.error)
+                {
+                    // Non-error pack files are handled when processing the file queue below
+                    this._loadedPackCount++;
+                    this.onPackComplete.dispatch(file.key, !file.error, this._loadedPackCount, this._totalPackCount);
+                }
+
             }
         }
 
@@ -1157,9 +1163,9 @@ Phaser.Loader.prototype = {
         this.hasLoaded = true;
         this.isLoading = false;
 
-        this.removeAll();
-
         this.onLoadComplete.dispatch();
+
+        this.reset();
 
     },
 
@@ -1964,7 +1970,7 @@ Phaser.Loader.prototype = {
 Object.defineProperty(Phaser.Loader.prototype, "progressFloat", {
 
     get: function () {
-        var progress = this._loadedFileCount / this._totalFileCount;
+        var progress = (this._loadedFileCount / this._totalFileCount) * 100;
         return Phaser.Math.clamp(progress || 0, 0, 100);
     }
 
