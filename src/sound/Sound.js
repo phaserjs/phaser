@@ -327,7 +327,7 @@ Phaser.Sound = function (game, key, volume, loop, connect) {
     this._onDecodedEventDispatched = false;
 
     /**
-    * @property {Phaser.Sprite} _following - Sprite this sound is originating from
+    * @property {Object} _following - Object this sound is following. Only works for WebAudio
     * @private
     */
     this._following = false;
@@ -875,7 +875,7 @@ Phaser.Sound.prototype = {
 
     /**
      * Fades the volume of this Sound from its current value to the given volume over the duration specified.
-     * At the end of the fade Sound.onFadeComplete is dispatched with this Sound object as the first parameter, 
+     * At the end of the fade Sound.onFadeComplete is dispatched with this Sound object as the first parameter,
      * and the final volume (volume) as the second parameter.
      *
      * @method Phaser.Sound#fadeTo
@@ -1069,7 +1069,7 @@ Object.defineProperty(Phaser.Sound.prototype, "volume", {
 
 /**
 * @name Phaser.Sound#following
-* @property {Object} following - Object this sprite is following, the object needs to export an x and y public property and optionally z, optionally as well a velocity property with x, y and z
+* @property {Object} following - Object this sound is following, the object needs to export an x and y public property and optionally z, optionally as well a velocity property with x, y and z. This only works for WebAudio.
 * @readonly
 */
 Object.defineProperty(Phaser.Sound.prototype, "following", {

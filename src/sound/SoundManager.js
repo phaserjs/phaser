@@ -61,7 +61,7 @@ Phaser.SoundManager = function (game) {
     this._sounds = [];
 
     /**
-    * @property {Phaser.Camera|Phaser.Sprite} _listener - Contains the object to follow for listening to positional audio
+    * @property {Phaser.Camera|Phaser.Sprite} _listener - Contains the object to follow for listening to positional audio. Only works for WebAudio.
     * @private
     */
     this._listener = false;
