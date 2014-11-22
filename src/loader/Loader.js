@@ -132,6 +132,12 @@ Phaser.Loader = function (game) {
     this.maxParallelDownloads = 5;
 
     /**
+    * A counter: if more than zero files will be automatically added as a synchronization point.
+    * @property {integer} _withSyncPointDepth;
+    */
+    this._withSyncPointDepth = 0;
+
+    /**
     * Contains all the information for asset files (including packs) to load.
     *
     * @property {array} _fileList
@@ -395,6 +401,7 @@ Phaser.Loader.prototype = {
             type: type,
             key: key,
             url: url,
+            syncPoint: this._withSyncPointDepth > 0,
             data: null,
             loading: false,
             loaded: false,
@@ -477,9 +484,9 @@ Phaser.Loader.prototype = {
 
         var pack = {
             type: 'packfile',
-            sync: true,
             key: key,
             url: url,
+            syncPoint: true,
             data: null,
             loading: false,
             loaded: false,
@@ -613,7 +620,7 @@ Phaser.Loader.prototype = {
         // Why is the default callback context the ..callback?
         if (callback !== false && typeof callbackContext === 'undefined') { callbackContext = callback; }
 
-        this.addToFileList('script', key, url, { sync: true, callback: callback, callbackContext: callbackContext });
+        this.addToFileList('script', key, url, { syncPoint: true, callback: callback, callbackContext: callbackContext });
 
         return this;
 
@@ -963,6 +970,53 @@ Phaser.Loader.prototype = {
     },
 
     /**
+    * Add a synchronization point to the assets/files added within the supplied callback.
+    *
+    * A synchronization point denotes that an asset _must_ be completely loaded before
+    * subsequent assets can be loaded. An asset marked as a sync-point does not need to wait
+    * for previous assets to load (unless they are sync-points). Resources, such as packs, may still
+    * be downloaded around sync-points, as long as they do not finalize loading.
+    *
+    * @method Phader.Loader#withSyncPoints
+    * @param {function} callback - The callback is invoked and is supplied with a single argument: the loader.
+    * @param {object} [callbackContext=(loader)] - Context for the callback.
+    * @return {Phaser.Loader} This Loader instance.
+    */
+    withSyncPoint: function (callback, callbackContext) {
+
+        this._withSyncPointDepth++;
+        try {
+            callback.call(callbackContext || this, this);
+        } finally {
+            this._withSyncPointDepth--;
+        }
+
+        return this;
+    },
+
+    /**
+    * Add a synchronization point to a specific file/asset in the load queue.
+    *
+    * This has no effect on already loaded assets.    
+    *
+    * @method Phader.Loader#withSyncPoints
+    * @param {function} callback - The callback is invoked and is supplied with a single argument: the loader.
+    * @param {object} [callbackContext=(loader)] - Context for the callback.
+    * @return {Phaser.Loader} This Loader instance.
+    * @see {@link Phaser.Loader#withSyncPoint withSyncPoint}
+    */
+    addSyncPoint: function (type, key) {
+
+        var asset = this.getAsset(type, key);
+        if (asset)
+        {
+            asset.file.syncPoint = true;
+        }
+
+        return this;
+    },
+
+    /**
     * Remove a file/asset from the loading queue.
     *
     * A file that has already started loading cannot be removed.
@@ -1138,7 +1192,7 @@ Phaser.Loader.prototype = {
                 }
             }
 
-            if (!file.loaded && file.sync)
+            if (!file.loaded && file.syncPoint)
             {
                 syncblock = true;
             }
@@ -1316,7 +1370,7 @@ Phaser.Loader.prototype = {
     * @method Phaser.Loader#transformUrl
     * @protected
     */
-    transformUrl: function (url, file) {
+    transformUrl: function (url /*, file */) {
         return this.baseURL + url;
     },
 
