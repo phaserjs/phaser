@@ -1490,12 +1490,12 @@ Phaser.Loader.prototype = {
                 _this.fileComplete(file);
             }
         };
-        file.data.onerror = function (message) {
+        file.data.onerror = function () {
             if (file.data.onload)
             {
                 file.data.onload = null;
                 file.data.onerror = null;
-                _this.fileError(file, null, message);
+                _this.fileError(file);
             }
         };
 
@@ -1540,10 +1540,10 @@ Phaser.Loader.prototype = {
                 // Why does this cycle through games?
                 Phaser.GAMES[_this.game.id].load.fileComplete(file);
             };
-            file.data.onerror = function (message) {
+            file.data.onerror = function () {
                 file.data.removeEventListener('canplaythrough', playThroughEvent, false);
                 file.data.onerror = null;
-                _this.fileError(file, null, message);
+                _this.fileError(file);
             };
 
             file.data.preload = 'auto';
@@ -1703,7 +1703,8 @@ Phaser.Loader.prototype = {
     */
     fileError: function (file, xhr, reason) {
 
-        var message = 'error loading asset from URL ' + (file.requestUrl || (file.baseURL + file.url));
+        var url = file.requestUrl || this.transformUrl(file.url, file);
+        var message = 'error loading asset from URL ' + url;
 
         if (!reason && xhr)
         {
