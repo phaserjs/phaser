@@ -5055,7 +5055,7 @@ declare module Phaser {
         make: Phaser.GameObjectCreator;
         math: Phaser.Math;
         particles: Phaser.Particles;
-        physics: Phaser.Physics.Arcade;
+        physics: Phaser.Physics;
         rnd: Phaser.RandomDataGenerator;
         scale: Phaser.ScaleManager;
         sound: Phaser.SoundManager;
