@@ -1432,28 +1432,38 @@ Phaser.Group.prototype.descendingSortHandler = function (a, b) {
 };
 
 /**
-* Iterates over the children of the Group. When a child has a property matching key that equals the given value, it is considered as a match.
-* Matched children can be sent to the optional callback, or simply returned or counted.
-* You can add as many callback parameters as you like, which will all be passed to the callback along with the child, after the callbackContext parameter.
+* Iterates over the children of the Group performing one of several actions for matched children.
+*
+* A child is considered a match when it has a property, named `key`, whose value is equal to `value`
+* according to a strict equality comparison.
+*
+* The result depends on the `returnType`:
+*
+* - {@link Phaser.Group.RETURN_TOTAL RETURN_TOTAL}:
+*     The callback, if any, is applied to all matching children. The number of matched children is returned.
+* - {@link Phaser.Group.RETURN_NONE RETURN_NONE}:
+*     The callback, if any, is applied to all matching children. No value is returned.
+* - {@link Phaser.Group.RETURN_CHILD RETURN_CHILD}:
+*     The callback, if any, is applied to the *first* matching child and the *first* matched child is returned.
+*     If there is no matching child then null is returned.
+*
+* If `args` is specified it must be an array. The matched child will be assigned to the first
+* element and the entire array will be applied to the callback function.
 *
 * @method Phaser.Group#iterate
 * @param {string} key - The child property to check, i.e. 'exists', 'alive', 'health'
-* @param {any} value - If child.key === this value it will be considered a match. Note that a strict comparison is used.
-* @param {number} returnType - How to return the data from this method. Either Phaser.Group.RETURN_NONE, Phaser.Group.RETURN_TOTAL or Phaser.Group.RETURN_CHILD.
-* @param {function} [callback=null] - Optional function that will be called on each matching child. Each child of the Group will be passed to it as its first parameter.
-* @param {Object} [callbackContext] - The context in which the function should be called (usually 'this').
-* @return {any} Returns either a numeric total (if RETURN_TOTAL was specified) or the child object.
+* @param {any} value - A child matches if `child[key] === value` is true.
+* @param {integer} returnType - How to iterate the childen and what to return.
+* @param {function} [callback=null] - Optional function that will be called on each matching child. The matched child is supplied as the first argument.
+* @param {object} [callbackContext=null] - The context in which the callback will be invoked (usually 'this').
+* @param {any[]} [args=(none)] - The arguments supplied to to the callback; the first array index (argument) will be replaced with the matched child.
+* @return {any} Returns either an integer (for RETURN_TOTAL), the first matched child (for RETURN_CHILD), or null.
 */
 Phaser.Group.prototype.iterate = function (key, value, returnType, callback, callbackContext, args) {
 
     if (returnType === Phaser.Group.RETURN_TOTAL && this.children.length === 0)
     {
         return 0;
-    }
-
-    if (typeof callback === 'undefined')
-    {
-        callback = false;
     }
 
     var total = 0;
@@ -1466,8 +1476,15 @@ Phaser.Group.prototype.iterate = function (key, value, returnType, callback, cal
 
             if (callback)
             {
-                args[0] = this.children[i];
-                callback.apply(callbackContext, args);
+                if (args)
+                {
+                    args[0] = this.children[i];
+                    callback.apply(callbackContext, args);
+                }
+                else
+                {
+                    callback.call(callbackContext, this.children[i]);
+                }
             }
 
             if (returnType === Phaser.Group.RETURN_CHILD)
@@ -1481,10 +1498,9 @@ Phaser.Group.prototype.iterate = function (key, value, returnType, callback, cal
     {
         return total;
     }
-    else if (returnType === Phaser.Group.RETURN_CHILD)
-    {
-        return null;
-    }
+
+    // RETURN_CHILD or RETURN_NONE
+    return null;
 
 };
 
