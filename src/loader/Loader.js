@@ -466,7 +466,7 @@ Phaser.Loader.prototype = {
 
         if (typeof url === 'undefined') { url = null; }
         if (typeof data === 'undefined') { data = null; }
-        if (typeof callbackContext === 'undefined') { callbackContext = this; }
+        if (typeof callbackContext === 'undefined') { callbackContext = null; }
 
         if (!url && !data)
         {
@@ -1037,6 +1037,10 @@ Phaser.Loader.prototype = {
         if (!this.isLoading)
         {
             console.warn('Phaser.Loader - active loading cancelled/reset');
+            if (!this.hasLoaded)
+            {
+                this.onLoadComplete.dispatch();
+            }
             this.reset();
             return;
         }
@@ -1052,7 +1056,8 @@ Phaser.Loader.prototype = {
                 i--;
 
                 file.loading = false;
-                file.requestObject = null; // clear XHR or other
+                file.requestUrl = null;
+                file.requestObject = null;
 
                 if (file.error)
                 {
@@ -1258,11 +1263,11 @@ Phaser.Loader.prototype = {
                     break;
 
                 case "script":
-                    this.script(file.key, file.url, file.callback, pack.callbackContext);
+                    this.script(file.key, file.url, file.callback, pack.callbackContext || this);
                     break;
 
                 case "binary":
-                    this.binary(file.key, file.url, file.callback, pack.callbackContext);
+                    this.binary(file.key, file.url, file.callback, pack.callbackContext || this);
                     break;
 
                 case "spritesheet":
@@ -1719,7 +1724,7 @@ Phaser.Loader.prototype = {
 
             case 'bitmapfont':
 
-                if (file.xmlURL == null)
+                if (!file.xmlURL)
                 {
                     this.game.cache.addBitmapFont(file.key, file.url, file.data, file.xmlData, file.xSpacing, file.ySpacing);
                 }
