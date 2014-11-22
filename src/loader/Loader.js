@@ -7,7 +7,7 @@
 
 /**
 * The Loader handles loading all external content such as Images, Sounds, Texture Atlases and data files.
-* It uses a combination of Image() loading and xhr and provides progress and completion callbacks.
+* It uses a combination of tag loading (eg. Image elements) and XHR and provides progress and completion callbacks.
 *
 * @class Phaser.Loader
 * @constructor
@@ -32,13 +32,13 @@ Phaser.Loader = function (game) {
     */
     this.hasLoaded = false;
 
-    /**    
+    /**
     * You can optionally link a sprite to the preloader.
     *
     * The Sprites width or height will be cropped based on the percentage loaded.
     * This property is an object containing: sprite, rect, direction, width and height
     *
-    * @property {object} preloadSprite
+    * @property {?object} preloadSprite
     */
     this.preloadSprite = null;
 
@@ -50,14 +50,14 @@ Phaser.Loader = function (game) {
 
     /**
     * If you want to append a URL before the path of any asset you can set this here.
-    * Useful if you need to allow an asset url to be configured outside of the game code.
-    * MUST have / on the end of it!
+    * Useful if allowing the asset base url to be configured outside of the game code.
+    * The string _must_ end an "/".
     * @property {string} baseURL
     */
     this.baseURL = '';
 
     /**
-    * This event is dispatched when the loading process starts, before the first file has been requested
+    * This event is dispatched when the loading process starts: before the first file has been requested,
     * but after all the initial packs have been loaded.
     *
     * @property {Phaser.Signal} onLoadStart
@@ -81,7 +81,8 @@ Phaser.Loader = function (game) {
     this.onPackComplete = new Phaser.Signal();
 
     /**
-    * This event is dispatched immediately before a file starts loading. It's possible the file may still error (404, etc) after this event is sent.
+    * This event is dispatched immediately before a file starts loading.
+    * It's possible the file may fail (eg. download error, invalid format) after this event is sent.
     *
     * Params: `(progress, file key, file url)`
     *
@@ -161,8 +162,7 @@ Phaser.Loader = function (game) {
 
     /**
     * True when the first file (not pack) has loading started.
-    * This used to to control disoatching `onLoadStart` which happens after any initial
-    * packs are loaded.
+    * This used to to control dispatching `onLoadStart` which happens after any initial packs are loaded.
     *
     * @property {boolean} _initialPacksLoaded
     * @private
@@ -232,9 +232,12 @@ Phaser.Loader.PHYSICS_PHASER_JSON = 4;
 Phaser.Loader.prototype = {
 
     /**
-    * You can set a Sprite to be a "preload" sprite by passing it to this method.
+    * Set a Sprite to be a "preload" sprite by passing it to this method.
+    *
     * A "preload" sprite will have its width or height crop adjusted based on the percentage of the loader in real-time.
-    * This allows you to easily make loading bars for games. Note that Sprite.visible = true will be set when calling this.
+    * This allows you to easily make loading bars for games.
+    *
+    * The sprite will automatically be made visible when calling this.
     *
     * @method Phaser.Loader#setPreloadSprite
     * @param {Phaser.Sprite|Phaser.Image} sprite - The sprite or image that will be cropped during the load.
@@ -265,9 +268,11 @@ Phaser.Loader.prototype = {
 
     /**
     * Called automatically by ScaleManager when the game resizes in RESIZE scalemode.
+    *
     * We use this to adjust the height of the preloading sprite, if set.
     *
     * @method Phaser.Loader#resize
+    * @protected
     */
     resize: function () {
 
@@ -279,8 +284,9 @@ Phaser.Loader.prototype = {
     },
 
     /**
-    * Check whether asset exists with a specific key.
-    * Use Phaser.Cache to access loaded assets, e.g. Phaser.Cache#checkImageKey
+    * Check whether a file/asset with a specific key is queued to be loaded.
+    *
+    * To access a loaded asset use Phaser.Cache, eg. {@link Phaser.Cache#checkImageKey}
     *
     * @method Phaser.Loader#checkKeyExists
     * @param {string} type - The type asset you want to check.
@@ -294,12 +300,15 @@ Phaser.Loader.prototype = {
     },
 
     /**
-    * Gets the fileList index for the given key.
+    * Get the queue-index of the file/asset with a specific key.
+    *
+    * Only assets in the download file queue will be found.
     *
     * @method Phaser.Loader#getAssetIndex
     * @param {string} type - The type asset you want to check.
     * @param {string} key - Key of the asset you want to check.
     * @return {number} The index of this key in the filelist, or -1 if not found.
+    *     The index may change and should only be used immediately following this call
     */
     getAssetIndex: function (type, key) {
 
@@ -316,12 +325,14 @@ Phaser.Loader.prototype = {
     },
 
     /**
-    * Gets the asset that is queued for load.
+    * Find a file/asset with a specific key.
+    *
+    * Only assets in the download file queue will be found.
     *
     * @method Phaser.Loader#getAsset
     * @param {string} type - The type asset you want to check.
     * @param {string} key - Key of the asset you want to check.
-    * @return {any} Returns an object if found that has 2 properties: index and asset entry. Otherwise false.
+    * @return {any} Returns an object if found that has 2 properties: `index` and `file`; otherwise a non-true value is returned.
     *     The index may change and should only be used immediately following this call.
     */
     getAsset: function (type, key) {
@@ -448,7 +459,7 @@ Phaser.Loader.prototype = {
     * @param {string} key - Unique asset key of this resource pack.
     * @param {string} [url] - URL of the Asset Pack JSON file. If you wish to pass a json object instead set this to null and pass the object as the data parameter.
     * @param {object} [data] - The Asset Pack JSON data. Use this to pass in a json data object rather than loading it from a URL. TODO
-    * @param {object} [callbackContext] - Some Loader operations, like Binary and Script require a context for their callbacks. Pass the context here.
+    * @param {object} [callbackContext=(loader)] - Some Loader operations, like Binary and Script require a context for their callbacks. Pass the context here.
     * @return {Phaser.Loader} This Loader instance.
     */
     pack: function (key, url, data, callbackContext) {
@@ -593,7 +604,7 @@ Phaser.Loader.prototype = {
     * @param {string} key - Unique asset key of the script file.
     * @param {string} url - URL of the JavaScript file.
     * @param {function} [callback=(none)] - Optional callback that will be called after the script tag has loaded, so you can perform additional processing.
-    * @param {object} [callbackContext=(Loader)] - The context under which the callback will be applied. If not specified it will use the callback itself as the context.
+    * @param {object} [callbackContext=(loader)] - The context under which the callback will be applied. If not specified it will use the callback itself as the context.
     * @return {Phaser.Loader} This Loader instance.
     */
     script: function (key, url, callback, callbackContext) {
@@ -681,17 +692,17 @@ Phaser.Loader.prototype = {
     },
 
     /**
-     * Add a new audiosprite file to the loader.
-     *
-     * Audio Sprites are a combination of audio files and a JSON configuration.
-     * The JSON follows the format of that created by https://github.com/tonistiigi/audiosprite
-     *
-     * @method Phaser.Loader#audiosprite
-     * @param {string} key - Unique asset key of the audio file.
-     * @param {Array|string} urls - An array containing the URLs of the audio files, i.e.: [ 'audiosprite.mp3', 'audiosprite.ogg', 'audiosprite.m4a' ] or a single string containing just one URL.
-     * @param {string} atlasURL - The URL of the audiosprite configuration json.
-     * @return {Phaser.Loader} This Loader instance.
-     */
+    * Add a new audiosprite file to the loader.
+    *
+    * Audio Sprites are a combination of audio files and a JSON configuration.
+    * The JSON follows the format of that created by https://github.com/tonistiigi/audiosprite
+    *
+    * @method Phaser.Loader#audiosprite
+    * @param {string} key - Unique asset key of the audio file.
+    * @param {Array|string} urls - An array containing the URLs of the audio files, i.e.: [ 'audiosprite.mp3', 'audiosprite.ogg', 'audiosprite.m4a' ] or a single string containing just one URL.
+    * @param {string} atlasURL - The URL of the audiosprite configuration json.
+    * @return {Phaser.Loader} This Loader instance.
+    */
     audiosprite: function(key, urls, atlasURL) {
 
         this.audio(key, urls);
@@ -952,7 +963,9 @@ Phaser.Loader.prototype = {
     },
 
     /**
-    * Remove loading request of a file; does nothing if the file is already processed.
+    * Remove a file/asset from the loading queue.
+    *
+    * A file that has already started loading cannot be removed.
     *
     * @method Phaser.Loader#removeFile
     * @protected
@@ -973,7 +986,7 @@ Phaser.Loader.prototype = {
     },
 
     /**
-    * Remove all file loading requests - this is _insufficient_ to clear loading. Use `reset` instead.
+    * Remove all file loading requests - this is _insufficient_ to stop current loading. Use `reset` instead.
     *
     * @method Phaser.Loader#removeAll
     * @protected
