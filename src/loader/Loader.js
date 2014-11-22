@@ -1284,6 +1284,16 @@ Phaser.Loader.prototype = {
     },
 
     /**
+    * Transforms the asset URL. The default implementation prepends the baseURL.
+    *
+    * @method Phaser.Loader#transformUrl
+    * @protected
+    */
+    transformUrl: function (url, file) {
+        return this.baseURL + url;
+    },
+
+    /**
     * Start fetching a resource.
     *
     * All code paths, async or otherwise, from this function must return to `asyncComplete`.
@@ -1294,13 +1304,11 @@ Phaser.Loader.prototype = {
     */
     loadFile: function (file) {
 
-        var _this = this;
-
         //  Image or Data?
         switch (file.type)
         {
             case 'packfile':
-                this.xhrLoad(file, this.baseURL + file.url, 'text', this.fileComplete);
+                this.xhrLoad(file, this.transformUrl(file.url, file), 'text', this.fileComplete);
                 break;
 
             case 'image':
@@ -1318,7 +1326,7 @@ Phaser.Loader.prototype = {
                     //  WebAudio or Audio Tag?
                     if (this.game.sound.usingWebAudio)
                     {
-                        this.xhrLoad(file, this.baseURL + file.url, 'arraybuffer', this.fileComplete);
+                        this.xhrLoad(file, this.transformUrl(file.url, file), 'arraybuffer', this.fileComplete);
                     }
                     else if (this.game.sound.usingAudioTag)
                     {
@@ -1329,36 +1337,34 @@ Phaser.Loader.prototype = {
                 {
                     this.fileError(file, null, 'no supported audio URL specified');
                 }
-
                 break;
 
             case 'json':
 
                 if (this.useXDomainRequest && window.XDomainRequest)
                 {
-                    this.xhrLoadWithXDR(file, this.baseURL + file.url, 'text', this.jsonLoadComplete);
+                    this.xhrLoadWithXDR(file, this.transformUrl(file.url, file), 'text', this.jsonLoadComplete);
                 }
                 else
                 {
-                    this.xhrLoad(file, this.baseURL + file.url, 'text', this.jsonLoadComplete);
+                    this.xhrLoad(file, this.transformUrl(file.url, file), 'text', this.jsonLoadComplete);
                 }
-
                 break;
 
             case 'xml':
 
-                this.xhrLoad(file, this.baseURL + file.url, 'text', this.xmlLoadComplete);
+                this.xhrLoad(file, this.transformUrl(file.url, file), 'text', this.xmlLoadComplete);
                 break;
 
             case 'tilemap':
 
                 if (file.format === Phaser.Tilemap.TILED_JSON)
                 {
-                    this.xhrLoad(file, this.baseURL + file.url, 'text', this.jsonLoadComplete);
+                    this.xhrLoad(file, this.transformUrl(file.url, file), 'text', this.jsonLoadComplete);
                 }
                 else if (file.format === Phaser.Tilemap.CSV)
                 {
-                    this.xhrLoad(file, this.baseURL + file.url, 'text', this.csvLoadComplete);
+                    this.xhrLoad(file, this.transformUrl(file.url, file), 'text', this.csvLoadComplete);
                 }
                 else
                 {
@@ -1369,11 +1375,11 @@ Phaser.Loader.prototype = {
             case 'text':
             case 'script':
             case 'physics':
-                this.xhrLoad(file, this.baseURL + file.url, 'text', this.fileComplete);
+                this.xhrLoad(file, this.transformUrl(file.url, file), 'text', this.fileComplete);
                 break;
 
             case 'binary':
-                this.xhrLoad(file, this.baseURL + file.url, 'arraybuffer', this.fileComplete);
+                this.xhrLoad(file, this.transformUrl(file.url, file), 'arraybuffer', this.fileComplete);
                 break;
         }
 
@@ -1384,6 +1390,8 @@ Phaser.Loader.prototype = {
     * @private
     */
     loadImageTag: function (file) {
+
+        var _this = this;
 
         file.data = new Image();
         file.data.name = file.key;
@@ -1410,7 +1418,7 @@ Phaser.Loader.prototype = {
             }
         };
 
-        file.data.src = this.baseURL + file.url;
+        file.data.src = this.transformUrl(file.url, file);
         
         // Image is immediately-available/cached
         if (file.data.complete && file.data.width && file.data.height)
@@ -1428,13 +1436,15 @@ Phaser.Loader.prototype = {
     */
     loadAudioTag: function (file) {
 
+        var _this = this;
+
         if (this.game.sound.touchLocked)
         {
             //  If audio is locked we can't do this yet, so need to queue this load request. Bum.
             file.data = new Audio();
             file.data.name = file.key;
             file.data.preload = 'auto';
-            file.data.src = this.baseURL + file.url;
+            file.data.src = this.transformUrl(file.url, file);
 
             this.fileComplete(file);
         }
@@ -1456,7 +1466,7 @@ Phaser.Loader.prototype = {
             };
 
             file.data.preload = 'auto';
-            file.data.src = this.baseURL + file.url;
+            file.data.src = this.transformUrl(file.url, file);
             file.data.addEventListener('canplaythrough', playThroughEvent, false);
             file.data.load();
         }
@@ -1672,11 +1682,11 @@ Phaser.Loader.prototype = {
 
                     if (file.format == Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY || file.format == Phaser.Loader.TEXTURE_ATLAS_JSON_HASH)
                     {
-                        this.xhrLoad(file, this.baseURL + file.atlasURL, 'text', this.jsonLoadComplete);
+                        this.xhrLoad(file, this.transformUrl(file.atlasURL, file), 'text', this.jsonLoadComplete);
                     }
                     else if (file.format == Phaser.Loader.TEXTURE_ATLAS_XML_STARLING)
                     {
-                        this.xhrLoad(file, this.baseURL + file.atlasURL, 'text', this.xmlLoadComplete);
+                        this.xhrLoad(file, this.transformUrl(file.atlasURL, file), 'text', this.xmlLoadComplete);
                     }
                     else
                     {
@@ -1695,7 +1705,7 @@ Phaser.Loader.prototype = {
                 {
                     //  Load the XML before carrying on with the next file
                     loadNext = false;
-                    this.xhrLoad(file, this.baseURL + file.xmlURL, 'text', this.xmlLoadComplete);
+                    this.xhrLoad(file, this.transformUrl(file.xmlURL, file), 'text', this.xmlLoadComplete);
                 }
                 break;
 
