@@ -115,17 +115,24 @@ Phaser.Loader = function (game) {
     this.useXDomainRequest = false;
 
     /**
-    * The number of concurrent assets to try and fetch at once - must be at least 1.
+    * If true then parallel downloading will be enabled.
+    *
+    * @property {integer} enableParallelDownloads
+    */
+    this.enableParallelDownloads = true;
+
+    /**
+    * The number of concurrent assets to try and fetch at once.
     * Most browsers limit 6 requests per host.
     *
-    * @property {integer} concurrentRequestCount
+    * @property {integer} maxParallelDownloads
     * @protected
     */
-    this.concurrentRequestCount = 6;
+    this.maxParallelDownloads = 5;
 
     /**
     * Contains all the information for asset files (including packs) to load.
-    * 
+    *
     * @property {array} _fileList
     * @private
     */
@@ -1056,7 +1063,9 @@ Phaser.Loader.prototype = {
 
         // When true further non-pack file downloads are suppressed
         var syncblock = false;
-        var inflightLimit = Phaser.Math.clamp(this.concurrentRequestCount, 1, 10);
+
+        var inflightLimit = Phaser.Math.clamp(
+            this.maxParallelDownloads, 1, this.enableParallelDownloads ? 12 : 1);
 
         for (var i = this._processingHead; i < this._fileList.length; i++)
         {
@@ -1085,7 +1094,7 @@ Phaser.Loader.prototype = {
             }
             else if (!file.loading && this._flightQueue.length < inflightLimit)
             {
-                // -> !file.loaded
+                // -> not loaded, not loading
                 if (file.type === 'packfile' && !file.data)
                 {
                     // Fetches the pack data: the pack is processed above as it reaches queue-start.
@@ -1118,7 +1127,7 @@ Phaser.Loader.prototype = {
 
             // Stop looking if queue full - or if syncblocked and there are no more packs.
             // (As only packs can be loaded around a syncblock)
-            if (this._flightQueue.length === inflightLimit ||
+            if (this._flightQueue.length >= inflightLimit ||
                 (syncblock && this._loadedPackCount === this._totalPackCount))
             {
                 break;
