@@ -9,6 +9,9 @@
 * The Loader handles loading all external content such as Images, Sounds, Texture Atlases and data files.
 * It uses a combination of tag loading (eg. Image elements) and XHR and provides progress and completion callbacks.
 *
+* Parallel loading is supported but must be enabled explicitly with {@link Phaser.Loader#enableParallelDownloads enableParallelDownloads}.
+* Load-before behavior of parallel resources is controlled by synchronization points as discussed in {@link Phaser.Loader#withSyncPoint withSyncPoint}.
+*
 * @class Phaser.Loader
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
@@ -16,34 +19,39 @@
 Phaser.Loader = function (game) {
 
     /**
-    * @property {Phaser.Game} game - Local reference to game.
+    * Local reference to game.
+    * @property {Phaser.Game} game
+    * @protected
     */
     this.game = game;
 
     /**
-    * @property {boolean} isLoading - True if the Loader is in the process of loading the queue.
+    * True if the Loader is in the process of loading the queue.
+    * @property {boolean} isLoading
     * @default
     */
     this.isLoading = false;
 
     /**
-    * @property {boolean} hasLoaded - True if all assets in the queue have finished loading.
+    * True if all assets in the queue have finished loading.
+    * @property {boolean} hasLoaded
     * @default
     */
     this.hasLoaded = false;
 
     /**
-    * You can optionally link a sprite to the preloader.
+    * You can optionally link a progress sprite with {@link Phaser.Loader#setPreloadSprite setPreloadSprite}.
     *
-    * The Sprites width or height will be cropped based on the percentage loaded.
     * This property is an object containing: sprite, rect, direction, width and height
     *
     * @property {?object} preloadSprite
+    * @protected
     */
     this.preloadSprite = null;
 
     /**
-    * @property {boolean|string} crossOrigin - The crossOrigin value applied to loaded images. Very often this needs to be set to 'anonymous'.
+    * The crossOrigin value applied to loaded images. Very often this needs to be set to 'anonymous'.
+    * @property {boolean|string} crossOrigin
     * @default
     */
     this.crossOrigin = false;
@@ -111,7 +119,9 @@ Phaser.Loader = function (game) {
     this.onFileError = new Phaser.Signal();
 
     /**
-    * @property {boolean} useXDomainRequest - If true and if the browser supports XDomainRequest, it will be used in preference for XHR when loading JSON files (it does not affect other file types). This is only relevant for IE9 and should only be enabled when you know your server/CDN requires it.
+    * If true and if the browser supports XDomainRequest, it will be used in preference for XHR when loading JSON files (it does not affect other file types).
+    * This is only relevant for IE9 and should only be enabled when required by the server/CDN.
+    * @property {boolean} useXDomainRequest
     */
     this.useXDomainRequest = false;
 
@@ -124,7 +134,7 @@ Phaser.Loader = function (game) {
 
     /**
     * The number of concurrent assets to try and fetch at once.
-    * Most browsers limit 6 requests per host.
+    * Most browsers limit 6 requests per domain.
     *
     * @property {integer} maxParallelDownloads
     * @protected
@@ -132,13 +142,15 @@ Phaser.Loader = function (game) {
     this.maxParallelDownloads = 5;
 
     /**
-    * A counter: if more than zero files will be automatically added as a synchronization point.
+    * A counter: if more than zero, files will be automatically added as a synchronization point.
     * @property {integer} _withSyncPointDepth;
     */
     this._withSyncPointDepth = 0;
 
     /**
     * Contains all the information for asset files (including packs) to load.
+    *
+    * File/assets are only removed from the list after all loading completes.
     *
     * @property {array} _fileList
     * @private
@@ -1027,7 +1039,7 @@ Phaser.Loader.prototype = {
     /**
     * Remove a file/asset from the loading queue.
     *
-    * A file that has already started loading cannot be removed.
+    * A file that is loaded or has started loading cannot be removed.
     *
     * @method Phaser.Loader#removeFile
     * @protected
@@ -1088,7 +1100,7 @@ Phaser.Loader.prototype = {
     *
     * If a sync-file is encountered then subsequent asset processing is delayed until it completes.
     * The exception to this rule is that packfiles can be downloaded (but not processed) even if
-    * there appear other sync files (ie. packs) - this enables multiple packfiles to be fetched asynchronously,
+    * there appear other sync files (ie. packs) - this enables multiple packfiles to be fetched in parallel.
     * such as during the start phaser.
     *
     * @method Phaser.Loader#processLoadQueue
@@ -2050,6 +2062,7 @@ Phaser.Loader.prototype = {
     * Returns the number of files that have already been loaded, even if they errored.
     *
     * @method Phaser.Loader#totalLoadedFiles
+    * @protected
     * @return {number} The number of files that have already been loaded (even if they errored)
     */
     totalLoadedFiles: function () {
@@ -2062,6 +2075,7 @@ Phaser.Loader.prototype = {
     * Returns the number of files still waiting to be processed in the load queue. This value decreases as each file in the queue is loaded.
     *
     * @method Phaser.Loader#totalQueuedFiles
+    * @protected
     * @return {number} The number of files that still remain in the load queue.
     */
     totalQueuedFiles: function () {
@@ -2074,6 +2088,7 @@ Phaser.Loader.prototype = {
     * Returns the number of asset packs that have already been loaded, even if they errored.
     *
     * @method Phaser.Loader#totalLoadedPacks
+    * @protected
     * @return {number} The number of asset packs that have already been loaded (even if they errored)
     */
     totalLoadedPacks: function () {
@@ -2086,6 +2101,7 @@ Phaser.Loader.prototype = {
     * Returns the number of asset packs still waiting to be processed in the load queue. This value decreases as each pack in the queue is loaded.
     *
     * @method Phaser.Loader#totalQueuedPacks
+    * @protected
     * @return {number} The number of asset packs that still remain in the load queue.
     */
     totalQueuedPacks: function () {
