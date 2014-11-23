@@ -9,7 +9,7 @@
 * The Loader handles loading all external content such as Images, Sounds, Texture Atlases and data files.
 * It uses a combination of tag loading (eg. Image elements) and XHR and provides progress and completion callbacks.
 *
-* Parallel loading is supported but must be enabled explicitly with {@link Phaser.Loader#enableParallelDownloads enableParallelDownloads}.
+* Parallel loading is supported but must be enabled explicitly with {@link Phaser.Loader#enableParallel enableParallel}.
 * Load-before behavior of parallel resources is controlled by synchronization points as discussed in {@link Phaser.Loader#withSyncPoint withSyncPoint}.
 *
 * @class Phaser.Loader
@@ -60,6 +60,7 @@ Phaser.Loader = function (game) {
     * If you want to append a URL before the path of any asset you can set this here.
     * Useful if allowing the asset base url to be configured outside of the game code.
     * The string _must_ end an "/".
+    *
     * @property {string} baseURL
     */
     this.baseURL = '';
@@ -121,16 +122,16 @@ Phaser.Loader = function (game) {
     /**
     * If true and if the browser supports XDomainRequest, it will be used in preference for XHR when loading JSON files (it does not affect other file types).
     * This is only relevant for IE9 and should only be enabled when required by the server/CDN.
+    *
     * @property {boolean} useXDomainRequest
     */
     this.useXDomainRequest = false;
 
     /**
     * If true then parallel downloading will be enabled.
-    *
-    * @property {integer} enableParallelDownloads
+    * @property {integer} enableParallel
     */
-    this.enableParallelDownloads = true;
+    this.enableParallel = false;
 
     /**
     * The number of concurrent assets to try and fetch at once.
@@ -139,7 +140,7 @@ Phaser.Loader = function (game) {
     * @property {integer} maxParallelDownloads
     * @protected
     */
-    this.maxParallelDownloads = 5;
+    this.maxParallelDownloads = 6;
 
     /**
     * A counter: if more than zero, files will be automatically added as a synchronization point.
@@ -152,7 +153,7 @@ Phaser.Loader = function (game) {
     *
     * File/assets are only removed from the list after all loading completes.
     *
-    * @property {array} _fileList
+    * @property {file[]} _fileList
     * @private
     */
     this._fileList = [];
@@ -166,6 +167,7 @@ Phaser.Loader = function (game) {
     * The files in the queue may have additional properties added to them,
     * including `requestObject` which is normally the associated XHR.
     *
+    * @property {file[]} _flightQueue
     * @private
     */
     this._flightQueue = [];
@@ -522,7 +524,7 @@ Phaser.Loader.prototype = {
                 data = JSON.parse(data);
             }
             
-            pack.data = data;
+            pack.data = data || {};
         }
         
         // Add before first non-pack/no-loaded ~ last pack from start prior to loading
@@ -533,11 +535,10 @@ Phaser.Loader.prototype = {
             if (!file || (!file.loaded && !file.loading && file.type !== 'packfile'))
             {
                 this._fileList.splice(i, 1, pack);
+                this._totalPackCount++;
                 break;
             }
         }
-
-        this._totalPackCount++;
 
         return this;
 
@@ -1111,11 +1112,7 @@ Phaser.Loader.prototype = {
         if (!this.isLoading)
         {
             console.warn('Phaser.Loader - active loading cancelled/reset');
-            if (!this.hasLoaded)
-            {
-                this.onLoadComplete.dispatch();
-            }
-            this.reset();
+            this.finishedLoading(true);
             return;
         }
 
@@ -1157,7 +1154,7 @@ Phaser.Loader.prototype = {
         var syncblock = false;
 
         var inflightLimit = Phaser.Math.clamp(
-            this.maxParallelDownloads, 1, this.enableParallelDownloads ? 12 : 1);
+            this.maxParallelDownloads, 1, this.enableParallel ? 12 : 1);
 
         for (var i = this._processingHead; i < this._fileList.length; i++)
         {
@@ -1178,7 +1175,7 @@ Phaser.Loader.prototype = {
 
             if (file.loaded || file.error)
             {
-                // Item at the start - no longer a concern
+                // Item at the start of file list finished, can skip it in future
                 if (i === this._processingHead)
                 {
                     this._processingHead = i + 1;
@@ -1186,7 +1183,7 @@ Phaser.Loader.prototype = {
             }
             else if (!file.loading && this._flightQueue.length < inflightLimit)
             {
-                // -> not loaded, not loading
+                // -> not loaded/failed, not loading
                 if (file.type === 'packfile' && !file.data)
                 {
                     // Fetches the pack data: the pack is processed above as it reaches queue-start.
@@ -1232,24 +1229,17 @@ Phaser.Loader.prototype = {
         // (There should be no inflight items as they are complete - loaded/error.)
         if (this._processingHead >= this._fileList.length)
         {
-            // If there were no files make sure to trigger the event anyway, for consistency
-            if (!this._fileLoadStarted)
-            {
-                this._fileLoadStarted = true;
-                this.onLoadStart.dispatch();
-            }
-
-            this.finishedProcessingQueue();
+            this.finishedLoading();
         }
         else if (!this._flightQueue.length)
         {
-            // Flight queue is empty but file list is not done being processed
-            // (There is no known case for this being reached.)
-            console.warn("Phaser.Loader - processing queue empty, loading may have stalled");
+            // Flight queue is empty but file list is not done being processed.
+            // This indicates a critical internal error with no known recovery.
+            console.warn("Phaser.Loader - aborting: processing queue empty, loading may have stalled");
             var _this = this;
             setTimeout(function () {
-                _this.processLoadQueue();
-            }, 1000);
+                _this.finishedLoading(true);
+            }, 2000);
         }
 
     },
@@ -1257,13 +1247,26 @@ Phaser.Loader.prototype = {
     /**
     * The loading is all finished.
     *
-    * @method Phaser.Loader#finishedProcessingQueue
+    * @method Phaser.Loader#finishedLoading
     * @private
+    * @param {boolean} [abnormal=true] - True if the loading finished abnormally.
     */
-    finishedProcessingQueue: function () {
+    finishedLoading: function (abnormal) {
+
+        if (this.hasLoaded)
+        {
+            return;
+        }
 
         this.hasLoaded = true;
         this.isLoading = false;
+
+        // If there were no files make sure to trigger the event anyway, for consistency
+        if (!abnormal && !this._fileLoadStarted)
+        {
+            this._fileLoadStarted = true;
+            this.onLoadStart.dispatch();
+        }
 
         this.onLoadComplete.dispatch();
 
@@ -1672,6 +1675,9 @@ Phaser.Loader.prototype = {
             }
         };
 
+        file.requestObject = xhr;
+        file.requestUrl = url;
+
         //  Note: The xdr.send() call is wrapped in a timeout to prevent an issue with the interface where some requests are lost
         //  if multiple XDomainRequests are being sent at the same time.
         setTimeout(function () {
@@ -1971,22 +1977,6 @@ Phaser.Loader.prototype = {
         }
 
         this.asyncComplete(file);
-
-    },
-
-    /**
-    * Error failed during fetch of secondary data.
-    *
-    * @method Phaser.Loader#dataLoadError
-    * @private
-    * @param {object} file - File associated with this request
-    * @param {XMLHttpRequest} xhr
-    */
-    dataLoadError: function (file, xhr) {
-
-        var message = 'error loading file data (' + xhr.status + ')';
-
-        this.asyncComplete(file, message);
 
     },
 
