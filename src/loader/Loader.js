@@ -318,15 +318,23 @@ Phaser.Loader.prototype = {
     */
     getAssetIndex: function (type, key) {
 
+        var bestFound = -1;
+
         for (var i = 0; i < this._fileList.length; i++)
         {
-            if (this._fileList[i].type === type && this._fileList[i].key === key)
+            var file = this._fileList[i];
+            if (file.type === type && file.key === key)
             {
-                return i;
+                bestFound = i;
+                // An already loaded/loading file may be superceded.
+                if (!file.loaded && !file.loading)
+                {
+                    break;
+                }
             }
         }
 
-        return -1;
+        return bestFound;
 
     },
 
