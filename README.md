@@ -165,7 +165,7 @@ required on mobile browsers.
 
 ### Updates
 
-* TypeScript definitions fixes and updates (thanks @clark-stevenson)
+* TypeScript definitions fixes and updates (thanks @clark-stevenson @draconisNoctis)
 * The TypeScript definitions have moved to the `typescript` folder in the root of the repository.
 * Cache._resolveUrl has been renamed to Cache._resolveURL internally and gained a new parameter. This method is a private internal one.
 * Cache.getUrl is deprecated. The same method is now available as Cache.getURL.
