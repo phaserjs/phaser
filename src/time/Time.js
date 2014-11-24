@@ -45,6 +45,12 @@ Phaser.Time = function (game) {
     this.elapsed = 0;
 
     /**
+    * @property {number} elapsedMS - The time in ms since the last update. Will vary dramatically based on system performance, do not use for physics calculations!
+    * @protected
+    */
+    this.elapsedMS = 0;
+
+    /**
     * @property {number} pausedTime - Records how long the game has been paused for. Is reset each time the game pauses.
     * @protected
     */
@@ -106,18 +112,6 @@ Phaser.Time = function (game) {
     * @property {number} physicsElapsed - The physics motion value as used by Arcade Physics. Equivalent to 1.0 / Time.desiredFps.
     */
     this.physicsElapsed = 0;
-
-    /**
-    * @property {number} deltaCap - If you need to cap the delta timer, set the value here. For 60fps the delta should be 0.016, so try variances just above this.
-    * @deprecated No longer used internally
-    */
-    this.deltaCap = 0;
-
-    /**
-    * @property {number} timeCap - If the difference in time between two frame updates exceeds this value in ms, the frame time is reset to avoid huge elapsed counts.
-    * @deprecated This no longer has any effect since the change to fixed-time stepping in game.update
-    */
-    this.timeCap = 1000 / 60;
 
     /**
     * @property {number} frames - The number of frames record in the last second. Only calculated if Time.advancedTiming is true.
@@ -211,6 +205,7 @@ Phaser.Time.prototype = {
     boot: function () {
 
         this._started = Date.now();
+        this.time = Date.now();
         this.events.start();
 
     },
@@ -276,8 +271,14 @@ Phaser.Time.prototype = {
     */
     update: function (time) {
 
+        //  Set to the old Date.now value
+        this.elapsedMS = this.time;
+
         // this.time always holds Date.now, this.now may hold the RAF high resolution time value if RAF is available (otherwise it also holds Date.now)
         this.time = Date.now();
+
+        //  Adjust accorindlgy.
+        this.elapsedMS = this.time - this.elapsedMS;
 
         // 'now' is currently still holding the time of the last call, move it into prevTime
         this.prevTime = this.now;

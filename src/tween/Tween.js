@@ -796,17 +796,19 @@ Phaser.Tween.prototype = {
             }
         }
 
-    }
+    },
 
     /**
     * This will generate an array populated with the tweened object values from start to end.
-    * It works by running the tween simulation at the given frame rate based on the values set-up in Tween.to and similar functions.
-    * It ignores delay and repeat counts and any chained tweens. Just one play through of tween data is returned, including yoyo if set.
+    * It works by running the tween simulation at the given frame rate based on the values set-up in Tween.to and Tween.from.
+    * It ignores delay and repeat counts and any chained tweens, but does include child tweens.
+    * Just one play through of the tween data is returned, including yoyo if set.
     *
     * @method Phaser.Tween#generateData
     * @param {number} [frameRate=60] - The speed in frames per second that the data should be generated at. The higher the value, the larger the array it creates.
     * @param {array} [data] - If given the generated data will be appended to this array, otherwise a new array will be returned.
     * @return {array} An array of tweened values.
+    */
     generateData: function (frameRate, data) {
 
         if (this.game === null || this.target === null)
@@ -814,107 +816,37 @@ Phaser.Tween.prototype = {
             return null;
         }
 
-        this.startTime = 0;
+        if (typeof data === 'undefined') { data = []; }
 
-        for (var property in this._valuesEnd)
+        //  Populate the tween data
+        for (var i = 0; i < this.timeline.length; i++)
         {
-            // Check if an Array was provided as property value
-            if (Array.isArray(this._valuesEnd[property]))
+            //  Build our master property list with the starting values
+            for (var property in this.timeline[i].vEnd)
             {
-                if (this._valuesEnd[property].length === 0)
+                this.properties[property] = this.target[property] || 0;
+
+                if (!Array.isArray(this.properties[property]))
                 {
-                    continue;
-                }
-
-                // create a local copy of the Array with the start value at the front
-                this._valuesEnd[property] = [this.target[property]].concat(this._valuesEnd[property]);
-            }
-
-            this._valuesStart[property] = this.target[property];
-
-            if (!Array.isArray(this._valuesStart[property]))
-            {
-                this._valuesStart[property] *= 1.0; // Ensures we're using numbers, not strings
-            }
-
-            this._valuesStartRepeat[property] = this._valuesStart[property] || 0;
-        }
-
-        //  Simulate the tween. We will run for frameRate * (this.duration / 1000) (ms)
-        var time = 0;
-        var total = Math.floor(frameRate * (this.duration / 1000));
-        var tick = this.duration / total;
-
-        var output = [];
-
-        while (total--)
-        {
-            var property;
-
-            var percent = (time - this.startTime) / this.duration;
-            percent = percent > 1 ? 1 : percent;
-
-            var value = this.easingFunction(percent);
-            var blob = {};
-
-            for (property in this._valuesEnd)
-            {
-                var start = this._valuesStart[property] || 0;
-                var end = this._valuesEnd[property];
-
-                if (end instanceof Array)
-                {
-                    blob[property] = this.interpolationFunction(end, value);
-                }
-                else
-                {
-                    if (typeof end === 'string')
-                    {
-                        //  Parses relative end values with start as base (e.g.: +10, -3)
-                        end = start + parseFloat(end, 10);
-                    }
-                    else if (typeof end === 'number')
-                    {
-                        //  Protect against non numeric properties.
-                        blob[property] = start + (end - start) * value;
-                    }
+                    //  Ensures we're using numbers, not strings
+                    this.properties[property] *= 1.0;
                 }
             }
-
-            output.push(blob);
-
-            time += tick;
         }
 
-        var blob = {};
-
-        for (property in this._valuesEnd)
+        for (var i = 0; i < this.timeline.length; i++)
         {
-            blob[property] = this._valuesEnd[property];
+            this.timeline[i].loadValues();
         }
 
-        output.push(blob);
-
-        if (this.yoyo)
+        for (var i = 0; i < this.timeline.length; i++)
         {
-            var reversed = output.slice();
-            reversed.reverse();
-            output = output.concat(reversed);
+            data = data.concat(this.timeline[i].generateData(frameRate));
         }
 
-        if (typeof data !== 'undefined')
-        {
-            data = data.concat(output);
-
-            return data;
-        }
-        else
-        {
-            return output;
-        }
+        return data;
 
     }
-    */
 
 };
 

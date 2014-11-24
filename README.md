@@ -208,6 +208,7 @@ required on mobile browsers.
 * Camera.screenView is now deprecated. All Camera culling checks are made against Camera.view now instead.
 * Various CocoonJS related hacks removed thanks to fixes from Ludei directly in CocoonJS! Woohoo :)
 * Phaser.HEADLESS check removed from the core game loop. If you need to disable rendering you can now override the Phaser.Game.updateRender method instead with your own.
+* Group.forEach fixed against browser de-optimization (thanks @pnstickne #1357)
 
 ### Bug Fixes
 
@@ -234,6 +235,7 @@ This fixes a bug in FF where it would use the default DOMMouseWheel (thanks @pns
 * Sprite.inCamera uses a much faster check if auto culling or world bounds checks are enabled and properly adjusts for camera position.
 * Camera.totalInView is a new property that contains the total number of Sprites rendered that have `autoCull` set to true and are within the Cameras view.
 * Emitter.setScale fixed minX minY order presedence (thanks spayton)
+* Group.iterate can now accept undefined/null as the arguments (thanks @pnstickne #1353 @tasos-ch #1352)
 
 ### Pixi 2.1.0 New Features
 

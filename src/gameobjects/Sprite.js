@@ -248,7 +248,7 @@ Phaser.Sprite.prototype.preUpdate = function() {
 
     if (this.lifespan > 0)
     {
-        this.lifespan -= this.game.time.elapsed;
+        this.lifespan -= this.game.time.elapsedMS;
 
         if (this.lifespan <= 0)
         {
