@@ -14,10 +14,10 @@
 Phaser.Signal = function () {
 
     /**
-    * @property {Array.<Phaser.SignalBinding>} _bindings - Internal variable.
+    * @property {?Array.<Phaser.SignalBinding>} _bindings - Internal variable.
     * @private
     */
-    this._bindings = [];
+    this._bindings = null;
 
     /**
     * @property {any} _prevParams - Internal variable.
@@ -121,6 +121,11 @@ Phaser.Signal.prototype = {
     */
     _addBinding: function (binding) {
 
+        if (!this._bindings)
+        {
+            this._bindings = [];
+        }
+
         //  Simplified insertion sort
         var n = this._bindings.length;
 
@@ -140,6 +145,11 @@ Phaser.Signal.prototype = {
     * @return {number} The index of the listener within the private bindings array.
     */
     _indexOfListener: function (listener, context) {
+
+        if (!this._bindings)
+        {
+            return -1;
+        }
 
         var n = this._bindings.length;
         var cur;
@@ -240,6 +250,11 @@ Phaser.Signal.prototype = {
 
         if (typeof context === 'undefined') { context = null; }
 
+        if (!this._bindings)
+        {
+            return;
+        }
+
         var n = this._bindings.length;
 
         while (n--)
@@ -273,7 +288,7 @@ Phaser.Signal.prototype = {
     */
     getNumListeners: function () {
 
-        return this._bindings.length;
+        return this._bindings ? this._bindings.length : 0;
 
     },
 
@@ -298,7 +313,7 @@ Phaser.Signal.prototype = {
     */
     dispatch: function () {
 
-        if (!this.active)
+        if (!this.active || !this._bindings)
         {
             return;
         }
@@ -352,8 +367,8 @@ Phaser.Signal.prototype = {
 
         this.removeAll();
 
-        delete this._bindings;
-        delete this._prevParams;
+        this._bindings = null;
+        this._prevParams = null;
 
     },
 
