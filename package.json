@@ -41,6 +41,8 @@
     "grunt-notify": "^0.3.0",
     "grunt-text-replace": "^0.3.11",
     "load-grunt-config": "~0.7.2",
-    "yuidocjs": "^0.3.50"
+    "yuidocjs": "^0.3.50",
+    "jsdoc": "~3.3.0-alpha10",
+    "grunt-jsdoc": "~0.5.7"
   }
 }
