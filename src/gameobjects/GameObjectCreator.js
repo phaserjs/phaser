@@ -70,7 +70,7 @@ Phaser.GameObjectCreator.prototype = {
     */
     tween: function (obj) {
 
-        return new Phaser.Tween(obj, this.game);
+        return new Phaser.Tween(obj, this.game, this.game.tweens);
 
     },
 

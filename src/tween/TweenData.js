@@ -370,6 +370,84 @@ Phaser.TweenData.prototype = {
     },
 
     /**
+    * This will generate an array populated with the tweened object values from start to end.
+    * It works by running the tween simulation at the given frame rate based on the values set-up in Tween.to and Tween.from.
+    * Just one play through of the tween data is returned, including yoyo if set.
+    *
+    * @method Phaser.TweenData#generateData
+    * @param {number} [frameRate=60] - The speed in frames per second that the data should be generated at. The higher the value, the larger the array it creates.
+    * @return {array} An array of tweened values.
+    */
+    generateData: function (frameRate) {
+
+        if (this.parent.reverse)
+        {
+            this.dt = this.duration;
+        }
+        else
+        {
+            this.dt = 0;
+        }
+
+        var data = [];
+        var complete = false;
+        var fps = (1 / frameRate) * 1000;
+
+        do
+        {
+            if (this.parent.reverse)
+            {
+                this.dt -= fps;
+                this.dt = Math.max(this.dt, 0);
+            }
+            else
+            {
+                this.dt += fps;
+                this.dt = Math.min(this.dt, this.duration);
+            }
+
+            this.percent = this.dt / this.duration;
+
+            this.value = this.easingFunction(this.percent);
+
+            var blob = {};
+
+            for (var property in this.vEnd)
+            {
+                var start = this.vStart[property];
+                var end = this.vEnd[property];
+
+                if (Array.isArray(end))
+                {
+                    blob[property] = this.interpolationFunction(end, this.value);
+                }
+                else
+                {
+                    blob[property] = start + ((end - start) * this.value);
+                }
+            }
+
+            data.push(blob);
+
+            if ((!this.parent.reverse && this.percent === 1) || (this.parent.reverse && this.percent === 0))
+            {
+                complete = true;
+            }
+
+        } while (!complete)
+
+        if (this.yoyo)
+        {
+            var reversed = data.slice();
+            reversed.reverse();
+            data = data.concat(reversed);
+        }
+
+        return data;
+
+    },
+
+    /**
     * Checks if this Tween is meant to repeat or yoyo and handles doing so.
     *
     * @private
