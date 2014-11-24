@@ -434,7 +434,7 @@ Phaser.TweenData.prototype = {
                 complete = true;
             }
 
-        } while (!complete)
+        } while (!complete);
 
         if (this.yoyo)
         {
