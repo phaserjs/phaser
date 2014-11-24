@@ -1,4 +1,4 @@
-// Type definitions for PIXI 2.1.1 dev 2014-11-17
+// Type definitions for PIXI 2.1.1 dev 2014-11-23
 // Project: https://github.com/GoodBoyDigital/pixi.js/
 
 declare module PIXI {
@@ -941,6 +941,7 @@ declare module PIXI {
     export class Rope extends Strip {
 
         points: Point[];
+        vertices: number[];
 
         constructor(texture: Texture, points: Point[]);
 
@@ -994,6 +995,15 @@ declare module PIXI {
         removeAllEventListeners(eventName: string): void;
 
         load(): void;
+
+    }
+
+    export class SpineTextureLoader {
+
+        constructor(basePath: string, crossorigin: boolean);
+
+        load(page: AtlasPage, file: string): void;
+        unload(texture: BaseTexture): void;
 
     }
 
@@ -1062,6 +1072,13 @@ declare module PIXI {
 
     export class Strip extends DisplayObjectContainer {
 
+        static DrawModes: {
+
+            TRIANGLE_STRIP: number;
+            TRIANGLES: number;
+
+        }
+
         constructor(texture: Texture);
 
         blendMode: number;
@@ -1072,6 +1089,8 @@ declare module PIXI {
         texture: Texture;
         uvs: number[];
         vertices: number[];
+
+        getBounds(matrix?: Matrix): Rectangle;
 
     }
 
@@ -1284,7 +1303,6 @@ declare module PIXI {
         color: number[];
         points: any[];
         indices: any[];
-        lastIndex: number;
         buffer: WebGLBuffer;
         indexBuffer: WebGLBuffer;
         mode: number;
@@ -1856,14 +1874,15 @@ declare module PIXI {
 
         constructor(url: string);
 
+        autoUpdate: boolean;
         spineData: any;
-
         skeleton: Skeleton;
         stateData: AnimationStateData;
         state: AnimationState;
         slotContainers: DisplayObjectContainer[];
 
         createSprite(slot: Slot, descriptor: { name: string }): Sprite[];
+        update(dt: number): void;
 
     }
 
