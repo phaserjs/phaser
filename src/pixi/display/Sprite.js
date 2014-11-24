@@ -36,7 +36,7 @@ PIXI.Sprite = function(texture)
      * @property texture
      * @type Texture
      */
-    this.texture = texture;
+    this.texture = texture || PIXI.Texture.emptyTexture;
 
     /**
      * The width of the sprite (this is initially set by the texture)
@@ -83,7 +83,7 @@ PIXI.Sprite = function(texture)
      */
     this.shader = null;
 
-    if(texture.baseTexture.hasLoaded)
+    if(this.texture.baseTexture.hasLoaded)
     {
         this.onTextureUpdate();
     }
@@ -220,11 +220,7 @@ PIXI.Sprite.prototype.getBounds = function(matrix)
         var x4 =  a * w1 + c * h0 + tx;
         var y4 =  d * h0 + b * w1 + ty;
 
-        maxX = -Infinity;
-        maxY = -Infinity;
 
-        minX = Infinity;
-        minY = Infinity;
 
         minX = x1 < minX ? x1 : minX;
         minX = x2 < minX ? x2 : minX;

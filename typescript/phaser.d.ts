@@ -567,7 +567,7 @@ declare module Phaser {
         static toRGBA(r: number, g: number, b: number, a: number): number;
         static unpackPixel(rgba: number, out?: any, hsl?: boolean, hsv?: boolean): any;
         static updateColor(out: any): number;
-        static valueToColor(value: string, out?: any): { r: number; g: number; b: number; a: number; }
+        static valueToColor(value: string, out?: any): { r: number; g: number; b: number; a: number; };
         static webToColor(web: string, out?: any): { r: number; g: number; b: number; a: number; };
 
     }
@@ -820,7 +820,7 @@ declare module Phaser {
 
     }
 
-    class Filter implements PIXI.AbstractFilter {
+    class Filter extends PIXI.AbstractFilter {
 
         constructor(game: Phaser.Game, ...args: any[]);
 
@@ -3927,7 +3927,7 @@ declare module Phaser {
         setShowAll(expanding: boolean): void;
         setMaximum(): void;
         setSize(): void;
-        scaleSprite(sprite: Sprite, width?: number, height?: number, letterBox?: boolean): Sprite
+        scaleSprite(sprite: Sprite, width?: number, height?: number, letterBox?: boolean): Sprite;
         scaleSprite(sprite: Image, width?: number, height?: number, letterBox?: boolean): Sprite;
         startFullScreen(antialias?: boolean, allowTrampoline?: boolean): boolean;
         stopFullScreen(): boolean;
@@ -3965,7 +3965,7 @@ declare module Phaser {
         make: Phaser.GameObjectCreator;
         math: Phaser.Math;
         particles: Phaser.Particles;
-        physics: Phaser.Physics.Arcade;
+        physics: Phaser.Physics;
         rnd: Phaser.RandomDataGenerator;
         scale: Phaser.ScaleManager;
         sound: Phaser.SoundManager;
