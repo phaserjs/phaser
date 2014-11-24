@@ -1009,7 +1009,12 @@ Phaser.Group.prototype.divideAll = function (property, amount, checkAlive, check
 */
 Phaser.Group.prototype.callAllExists = function (callback, existsValue) {
 
-    var args = Array.prototype.splice.call(arguments, 2);
+    var args;
+    if (arguments.length > 2)
+    {
+        args = [];
+        for (var i = 2; i < arguments.length; i++) { args.push(arguments[i]); }
+    }
 
     for (var i = 0, len = this.children.length; i < len; i++)
     {
@@ -1109,7 +1114,13 @@ Phaser.Group.prototype.callAll = function (method, context) {
         }
     }
 
-    var args = Array.prototype.splice.call(arguments, 2);
+    var args;
+    if (arguments.length > 2)
+    {
+        args = [];
+        for (var i = 2; i < arguments.length; i++) { args.push(arguments[i]); }
+    }
+
     var callback = null;
     var callbackContext = null;
 
@@ -1252,15 +1263,30 @@ Phaser.Group.prototype.forEach = function (callback, callbackContext, checkExist
 
     if (typeof checkExists === 'undefined') { checkExists = false; }
 
-    var args = Array.prototype.splice.call(arguments, 3);
-    args.unshift(null);
-
-    for (var i = 0, len = this.children.length; i < len; i++)
+    if (arguments.length <= 3)
     {
-        if (!checkExists || (checkExists && this.children[i].exists))
+        for (var i = 0, len = this.children.length; i < len; i++)
         {
-            args[0] = this.children[i];
-            callback.apply(callbackContext, args);
+            if (!checkExists || (checkExists && this.children[i].exists))
+            {
+                callback.call(callbackContext, this.children[i]);
+            }
+        }
+    }
+    else
+    {
+        // Assigning to arguments properties causes Extreme Deoptimization in Chrome, FF, and IE.
+        // Using an array and pushing each element (not a slice!) is _significantly_ faster.
+        var args = [null];
+        for (var i = 3; i < arguments.length; i++) { args.push(arguments[i]); }
+
+        for (var i = 0, len = this.children.length; i < len; i++)
+        {
+            if (!checkExists || (checkExists && this.children[i].exists))
+            {
+                args[0] = this.children[i];
+                callback.apply(callbackContext, args);
+            }
         }
     }
 
@@ -1277,8 +1303,12 @@ Phaser.Group.prototype.forEach = function (callback, callbackContext, checkExist
 */
 Phaser.Group.prototype.forEachExists = function (callback, callbackContext) {
 
-    var args = Array.prototype.splice.call(arguments, 2);
-    args.unshift(null);
+    var args;
+    if (arguments.length > 2)
+    {
+        args = [null];
+        for (var i = 2; i < arguments.length; i++) { args.push(arguments[i]); }
+    }
 
     this.iterate('exists', true, Phaser.Group.RETURN_TOTAL, callback, callbackContext, args);
 
@@ -1295,8 +1325,12 @@ Phaser.Group.prototype.forEachExists = function (callback, callbackContext) {
 */
 Phaser.Group.prototype.forEachAlive = function (callback, callbackContext) {
 
-    var args = Array.prototype.splice.call(arguments, 2);
-    args.unshift(null);
+    var args;
+    if (arguments.length > 2)
+    {
+        args = [null];
+        for (var i = 2; i < arguments.length; i++) { args.push(arguments[i]); }
+    }
 
     this.iterate('alive', true, Phaser.Group.RETURN_TOTAL, callback, callbackContext, args);
 
@@ -1313,8 +1347,12 @@ Phaser.Group.prototype.forEachAlive = function (callback, callbackContext) {
 */
 Phaser.Group.prototype.forEachDead = function (callback, callbackContext) {
 
-    var args = Array.prototype.splice.call(arguments, 2);
-    args.unshift(null);
+    var args;
+    if (arguments.length > 2)
+    {
+        args = [null];
+        for (var i = 2; i < arguments.length; i++) { args.push(arguments[i]); }
+    }
 
     this.iterate('alive', false, Phaser.Group.RETURN_TOTAL, callback, callbackContext, args);
 
@@ -1451,11 +1489,6 @@ Phaser.Group.prototype.iterate = function (key, value, returnType, callback, cal
         return 0;
     }
 
-    if (typeof callback === 'undefined')
-    {
-        callback = false;
-    }
-
     var total = 0;
 
     for (var i = 0, len = this.children.length; i < len; i++)
@@ -1466,8 +1499,15 @@ Phaser.Group.prototype.iterate = function (key, value, returnType, callback, cal
 
             if (callback)
             {
-                args[0] = this.children[i];
-                callback.apply(callbackContext, args);
+                if (args)
+                {
+                    args[0] = this.children[i];
+                    callback.apply(callbackContext, args);
+                }
+                else
+                {
+                    callback.call(callbackContext, this.children[i]);
+                }
             }
 
             if (returnType === Phaser.Group.RETURN_CHILD)
@@ -1481,10 +1521,9 @@ Phaser.Group.prototype.iterate = function (key, value, returnType, callback, cal
     {
         return total;
     }
-    else if (returnType === Phaser.Group.RETURN_CHILD)
-    {
-        return null;
-    }
+
+    // RETURN_CHILD or RETURN_NONE
+    return null;
 
 };
 
