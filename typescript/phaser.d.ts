@@ -4372,6 +4372,7 @@ declare module Phaser {
         order(): void;
         pause(): void;
         remove(event: Phaser.TimerEvent): boolean;
+        removeAll(): void;
         repeat(delay: number, repeatCount: number, callback: Function, callbackContext: any, ...args: any[]): Phaser.TimerEvent;
         resume(): void;
         sortHandler(a: any, b: any): number;
@@ -4537,8 +4538,8 @@ declare module Phaser {
         static parseDimension(size: any, dimension: number): number;
         static rotateArray<T>(array: T[], direction: any): T;
         static setProperty(obj: any, prop: string, value: any): any;
-        static shuffle<T>(array: T[]): T;
-        static transposeArray<T>(array: T[]): T;
+        static shuffle<T>(array: T[]): T[];
+        static transposeArray<T>(array: T[]): T[];
 
     }
 
