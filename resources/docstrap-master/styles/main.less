@@ -1,0 +1,167 @@
+@import "../bower_components/bootstrap/less/bootstrap.less";
+@import "variables.less";
+@import "bootswatch.less";
+
+@headerHeight: 56px;
+
+#main {
+  margin-top : @headerHeight;
+}
+
+.navbar-fixed-top {
+  .navbar-inner {
+	padding-left  : 20px;
+	padding-right : 20px;
+  }
+
+}
+
+.navbar {
+  .dropdown-menu {
+	padding          : 20px;
+	max-height       : 300px;
+	overflow         : auto;
+	width            : 300px;
+	background-color : @navbarInverseBackground;
+	a, a:visited {
+	  color : @navbarInverseLinkColor;
+	}
+	a:hover {
+	  color            : @navbarInverseLinkColorHover;
+	  background-color : @navbarInverseLinkBackgroundHover;
+	}
+	a:active {
+	  color            : @navbarInverseLinkColorActive;
+	  background-color : @navbarInverseLinkBackgroundActive;
+	}
+	a {
+	  padding-left  : 0;
+	  padding-right : 5px;
+	  font-weight   : 500;
+	  font-size     : 115%;
+	}
+  }
+
+}
+
+#toc {
+  position   : fixed;
+  top        : @headerHeight;
+  width      : 29%;
+  max-height : 90%;
+  overflow   : auto;
+  .border-radius(5px);
+  border     : 1px @navbarBackground solid;
+  padding    : 5px;
+
+  .toc-active {
+	background-color : @navbarLinkBackgroundActive;
+	color            : @navbarLinkColorActive;
+	.border-radius(3px);
+	a, a:hover, a:active, a:visited {
+	  background-color : @navbarLinkBackgroundActive;
+	  color            : @navbarLinkColorActive;
+	}
+  }
+}
+
+.toc-shim {
+  padding-top : @headerHeight;
+  margin-top  : -@headerHeight;
+  display     : block;
+}
+
+.toc-h1 {
+  margin-left  : 2px;
+  margin-right : 2px;
+}
+
+.toc-h2 {
+  margin-left  : 7px;
+  margin-right : 7px;
+}
+
+.toc-h3 {
+  margin-left  : 14px;
+  margin-right : 7px;
+}
+
+.toc-h4 {
+  margin-left  : 21px;
+  margin-right : 7px;
+}
+
+.copyright {
+  font-size  : 90%;
+  text-align : center;
+  color      : @navbarInverseBackground;
+  width      : 100%;
+  display    : block;
+}
+
+.jsdoc-message {
+  font-size  : 90%;
+  text-align : center;
+  color      : @navbarInverseBackground;
+  width      : 100%;
+  display    : block;
+}
+
+.page-title {
+  font-size   : 220%;
+  color       : @navbarInverseBackground;
+  font-weight : 700;
+  padding-top : 10px;
+  display     : block;
+}
+
+footer {
+  border-top  : 1px solid  @navbarInverseBackgroundHighlight;
+  padding-top : 15px;
+}
+
+code {
+  background-color : none;
+  border           : none;
+  color            : @orange;
+}
+
+.buffered-name {
+  padding-top : @headerHeight;
+  margin-top  : -@headerHeight;
+}
+
+
+.member-collapsed {
+  background-color : @navbarInverseBackground;
+  color            : @navbarInverseText;
+}
+
+.member-open {
+  background-color : inherit;
+  color            : inherit;
+}
+
+.member {
+  .transition(background-color 0.5s linear);
+  .transition(color 0.5s linear);
+  .border-radius(5px);
+  padding : 10px;
+}
+
+.sunlight-highlighted {
+  margin: 0;
+  line-height: auto;
+  word-break: normal;
+  word-wrap: normal;
+  white-space: pre;
+  background-color: transparent;
+  border: none;
+}
+.sunlight-line-number-margin {
+   border-radius: 0;
+   border-width: 0 1px 0 0;
+   font-size: 12px;
+   line-height: 15px;
+   padding: 12px 4px !important;  
+}
