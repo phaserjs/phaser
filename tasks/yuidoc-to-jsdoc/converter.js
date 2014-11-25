@@ -104,6 +104,7 @@ function group_typeitems(typeitems) {
 
 /**
 * Convert ident to the "closest" valid non-quoted identifier.
+* May return the empty string (which is not a valid identifier).
 */
 function as_valid_identifier (ident) {
     ident = ident.replace(/\s/g, '_');
@@ -137,24 +138,55 @@ function fixup_yuidoc_array (rawtype) {
     r = r.replace(/[\s.]*([<>])[\s.]*/g, '$1');
 
     // match T<..>, where T != 'array'
-    m = r.match(/^(\S+)(?:<.*>)$/i);
+    m = r.match(/^([\w$.]+)(?:<.*>)$/i);
     if (m && m[1].toLowerCase() !== 'array') {
-        return 'Array<' + as_valid_identifier(m[1] || 'unknown') + '>';
+        return 'Array<' + (as_valid_identifier(m[1]) || 'unknown') + '>';
     }
 
     // match Array <T>
     m = r.match(/^Array<(.*)>$/i);
     if (m) {
-        return 'Array<' + as_valid_identifier(m[1] || 'unknown') + '>';
+        return 'Array<' + (as_valid_identifier(m[1]) || 'unknown') + '>';
     }
 
     // match Array..of T
     m = r.match(/^Array.*?of\b\s*(.*)$/i);
     if (m) {
-        return 'Array<' + as_valid_identifier(m[1] || 'unknown') + '>';
+        return 'Array<' + (as_valid_identifier(m[1]) || 'unknown') + '>';
     }
 
     return '';
+}
+
+/**
+* Try to fixup a type if it looks like it may conform to `{key: value, ..}`.
+* Nesting is not supported and quoted keys are not supported.
+*
+* Returns the fixed up version or ''.
+*/
+function fixup_jsobject_like (rawType) {
+
+    var r = rawType;
+
+    // Trim spaces
+    r = r.replace(/^\s+|\s+$/g, '');
+    // And duplicate brackets
+    if (r.match(/^{\s*{.*}\s*}$/)) {
+        r = r.replace(/^{\s*(.*?)\s*}$/, '$1');
+    }
+
+    if (r.match(/^{([\w$.]+:\s*[\w$.]+,?\s*)+}$/)) {
+        r = r.replace(/([\w$.]+):\s*([\w$.]+)(,?\s*)/g, function (m, a, b, c) {
+            if (c) { c = ", " };
+            return as_valid_identifier(a) + ": " + as_valid_identifier(b) + c;
+        });
+        return r;
+    }
+    else
+    {
+        return '';
+    }
+
 }
 
 /**
@@ -179,6 +211,7 @@ function resolve_typename(typename, typedescs) {
         var loss = false;
         var repeating = false;
         var array = false;
+        var objlike = false;
 
         // Don't accept quotes in names from upstream
         prev = part;
@@ -191,6 +224,14 @@ function resolve_typename(typename, typedescs) {
         repeating = prev !== part;
 
         prev = part;
+        part = fixup_jsobject_like(part);
+        if (part) {
+            objlike = true;
+        } else {
+            part = prev;
+        }
+
+        prev = part;
         part = fixup_yuidoc_array(part);
         if (part) {
             array = true;
@@ -198,7 +239,9 @@ function resolve_typename(typename, typedescs) {
             part = prev;
         }
 
-        if (array) {
+        if (objlike) {
+            loss = loss || orig.replace(/\W+/g, '') !== part.replace(/\W+/g, '');
+        } else if (array) {
             loss = loss || orig.replace(/^\W/, '') !== part.replace(/^\W/, '');
         } else {
             prev = part;
