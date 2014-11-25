@@ -177,7 +177,7 @@ function fixup_jsobject_like (rawType) {
 
     if (r.match(/^{([\w$.]+:\s*[\w$.]+,?\s*)+}$/)) {
         r = r.replace(/([\w$.]+):\s*([\w$.]+)(,?\s*)/g, function (m, a, b, c) {
-            if (c) { c = ", " };
+            if (c) { c = ", "; }
             return as_valid_identifier(a) + ": " + as_valid_identifier(b) + c;
         });
         return r;
