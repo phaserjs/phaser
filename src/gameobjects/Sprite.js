@@ -116,9 +116,12 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     this.health = 1;
 
     /**
-    * If you would like the Sprite to have a lifespan once 'born' you can set this to a positive value. Handy for particles, bullets, etc.
-    * The lifespan is decremented by game.time.elapsed each update, once it reaches zero the kill() function is called.
-    * @property {number} lifespan - The lifespan of the Sprite (in ms) before it will be killed.
+    * To given a Sprite a lifespan, in milliseconds, once 'born' you can set this to a positive value. Handy for particles, bullets, etc.
+    *
+    * The lifespan is decremented by `game.time.physicsElapsed` (converted to milliseconds) each logic update,
+    * and {@link Phaser.Sprite.kill kill} is called once the lifespan reaches 0.
+    *
+    * @property {number} lifespan
     * @default
     */
     this.lifespan = 0;
@@ -248,7 +251,7 @@ Phaser.Sprite.prototype.preUpdate = function() {
 
     if (this.lifespan > 0)
     {
-        this.lifespan -= this.game.time.elapsedMS;
+        this.lifespan -= 1000 * this.game.time.physicsElapsed;
 
         if (this.lifespan <= 0)
         {
