@@ -66,25 +66,13 @@ Phaser.Utils.extend(Phaser.Physics.P2.BodyDebug.prototype, {
     /**
     * Core update.
     *
-    * @method Phaser.Physics.P2.BodyDebug#update
-    */
-    update: function() {
-
-        this.updateSpriteTransform();
-
-    },
-
-    /**
-    * Core update.
-    *
     * @method Phaser.Physics.P2.BodyDebug#updateSpriteTransform
     */
     updateSpriteTransform: function() {
 
         this.position.x = this.body.position[0] * this.ppu;
         this.position.y = this.body.position[1] * this.ppu;
-
-        return this.rotation = this.body.angle;
+        this.rotation = this.body.angle;
 
     },
 
