@@ -209,6 +209,18 @@ required on mobile browsers.
 * Various CocoonJS related hacks removed thanks to fixes from Ludei directly in CocoonJS! Woohoo :)
 * Phaser.HEADLESS check removed from the core game loop. If you need to disable rendering you can now override the Phaser.Game.updateRender method instead with your own.
 * Group.forEach fixed against browser de-optimization (thanks @pnstickne #1357)
+* Phaser.Signals have been taken on a diet. They have been updated such that there is significantly less penalty for having many unusued signals. The changes include:
+* * Changing it so there is no dispatch *closure* created. This is a
+potentially breaking change for third party code.
+* * In the rare case that code needs to obtain a dispatch-closure, the
+`boundDispatch` property can be used to trivially obtain a cached
+closure.
+* * The properties and default values are moved into the prototype; and the
+_bindings array creation is deferred. This change, coupled with the
+removal of the automatic closure, results in a very lightweight
+~24bytes/object (in Chrome) for unbound signals.
+* With this change in place Signals now consume less than 50KB / 50KB (shallow / retained memory) for 200 sprites, where-as before they used 300KB / 600KB (thanks @pnstickne #1359)
+* Time.elapsedMS holds the number of milliseconds since the last Game loop, regardless of raF or setTimout being used.
 
 ### Bug Fixes
 
@@ -451,41 +463,38 @@ Phaser has been used to create hundreds of games, which receive millions of play
 <a name="road-map"></a>
 ## Road Map
 
-Here are some of the features planned for future releases:
+Here are some of the features planned for future releases. Not all features are promised to be delivered, and no timescale is put against any of them either.
 
+### Version 2.3 ("Tarabon")
 
-### Version 2.2 ("Tarabon")
-
+* Look carefully at the internal structure of Phaser to avoid method repetition (such as Sprite.crop and Image.crop), investigate using mixins to help reduce overall codebase size.
+* Support for parallel asset loading.
 * Restore Math.interpolateAngles and Math.nearestAngleBetween
 * Enhance the State Management, so you can perform non-destructive State swaps and persistence.
 * Scene Manager - json scene parser.
+* Touch Gestures.
+* Optimised global Animation manager to cut down on object creation.
+* Flash CC HTML5 export integration.
+* Massively enhance the audio side of Phaser. Take more advantage of Web Audio: echo effects, positional sound, etc.
+* DragonBones support.
+* Game parameters stored in Google Docs.
 * Adjust how Pointers and Interactive Objects work. Allow an IO to be flagged as "on click only", so it doesn't ever get processed during normal Pointer move events (unless being dragged)
 * Allow multiple drag items - no longer bind just 1 to a Pointer
 * Allow Groups to have Priority IDs too and input disable entire Groups and all children (let it flow down the chain)
 * Allow Groups to be InputEnabled? Dragging a Group would be really useful.
 * Ability to control DOM elements from the core game and layer them into the game.
-* Touch Gestures.
-* Optimised global Animation manager to cut down on object creation.
-* Swapping to using a RenderTexture for the Tilemaps and implementing Tilemap slicing.
-
-### Version 2.3 ("Illian") and Beyond
-
-* Look carefully at the internal structure of Phaser to avoid method repetition (such as Sprite.crop and Image.crop), investigate using mixins to help reduce overall codebase size.
-* Flash CC HTML5 export integration.
-* Massively enhance the audio side of Phaser. Take more advantage of Web Audio: echo effects, positional sound, etc.
-* Comprehensive testing across Firefox OS devices, CocoonJS and Ejecta.
-* Support for parallel asset loading.
-* DragonBones support.
-* Integration with third party services like Google Play Game Services and Amazon JS SDK.
-* Test out packaging with Node-webkit.
-* Game parameters stored in Google Docs.
-* Multiple Camera support.
 * Cache to localStorage using If-Modified-Since. [See github request](https://github.com/photonstorm/phaser/issues/495)
 * Allow for complex assets like Bitmap Fonts to be stored within a texture atlas.
 
 ### Phaser 3
 
-Phaser 3 has entered the planning stages. Development will not begin until early 2015, but we are already asking for suggestions and feedback in [this forum thread](http://www.html5gamedevs.com/topic/7949-the-phaser-3-wishlist-thread/). We are currently experimenting with a fully ES6 based module system and we're keen for Phaser 3 to use as many native ES6 features as possible and where sensible. It will be a significant refactoring of the code base, but not at the expense of features or ease-of-use.
+Development has now begun on Phaser 3. At the moment it's still in the very early stages. We are asking for suggestions and feedback in [this forum thread](http://www.html5gamedevs.com/topic/7949-the-phaser-3-wishlist-thread/) so be sure to add your voice.
+
+We are currently experimenting with an ES6 based module system and we're keen for Phaser 3 to use as many native ES6 features as possible. It will be a significant refactoring of the code base, but never at the expense of features or ease-of-use. Development will be made public when the time is right.
+
+We don't anticipate a release until Summer 2015. Phaser 2 still has roadmap features left that we'd like to implement, but after 2.3 it will be in pure maintenance mode as we work on Phaser 3.
+
+If you are an exceptional JavaScript developer and would like to join the Phaser 3 development team then let us know. We have a limited budget available to pay towards your time.
 
 ![div](http://phaser.io/images/div1.png)
 
@@ -535,3 +544,4 @@ Phaser is released under the [MIT License](http://opensource.org/licenses/MIT).
 [forum]: http://www.html5gamedevs.com/forum/14-phaser/
 
 [![Analytics](https://ga-beacon.appspot.com/UA-44006568-2/phaser/index)](https://github.com/igrigorik/ga-beacon)
+
