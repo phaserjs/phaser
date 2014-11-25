@@ -17,11 +17,13 @@
 * @param {number} [height=100] - The height of the render texture.
 * @param {string} [key=''] - The key of the RenderTexture in the Cache, if stored there.
 * @param {number} [scaleMode=Phaser.scaleModes.DEFAULT] - One of the Phaser.scaleModes consts.
+* @param {number} [resolution=1] - The resolution of the texture being generated.
 */
-Phaser.RenderTexture = function (game, width, height, key, scaleMode) {
+Phaser.RenderTexture = function (game, width, height, key, scaleMode, resolution) {
 
     if (typeof key === 'undefined') { key = ''; }
     if (typeof scaleMode === 'undefined') { scaleMode = Phaser.scaleModes.DEFAULT; }
+    if (typeof resolution === 'undefined') { resolution = 1; }
 
     /**
     * @property {Phaser.Game} game - A reference to the currently running game.
@@ -39,12 +41,13 @@ Phaser.RenderTexture = function (game, width, height, key, scaleMode) {
     this.type = Phaser.RENDERTEXTURE;
 
     /**
-    * @property {Phaser.Point} _temp - Internal var.
-    * @private
+    * @property {PIXI.Matrix} matrix - The matrix that is applied when display objects are rendered to this RenderTexture.
     */
-    this._temp = new Phaser.Point();
+    this.matrix = new PIXI.Matrix();
 
-    PIXI.RenderTexture.call(this, width, height, this.game.renderer, scaleMode);
+    PIXI.RenderTexture.call(this, width, height, this.game.renderer, scaleMode, resolution);
+
+    this.render = Phaser.RenderTexture.prototype.render;
 
 };
 
@@ -62,13 +65,19 @@ Phaser.RenderTexture.prototype.constructor = Phaser.RenderTexture;
 */
 Phaser.RenderTexture.prototype.renderXY = function (displayObject, x, y, clear) {
 
-    this._temp.set(x, y);
+    this.matrix.tx = x;
+    this.matrix.ty = y;
 
-    this.render(displayObject, this._temp, clear);
+    if (this.renderer.type === PIXI.WEBGL_RENDERER)
+    {
+        this.renderWebGL(displayObject, this.matrix, clear);
+    }
+    else
+    {
+        this.renderCanvas(displayObject, this.matrix, clear);
+    }
 
 };
-
-//  Documentation stubs
 
 /**
 * This function will draw the display object to the texture.
@@ -78,11 +87,18 @@ Phaser.RenderTexture.prototype.renderXY = function (displayObject, x, y, clear) 
 * @param {Phaser.Point} position - A Point object containing the position to render the display object at.
 * @param {boolean} clear - If true the texture will be cleared before the display object is drawn.
 */
+Phaser.RenderTexture.prototype.render = function (displayObject, position, clear) {
 
-/**
-* Resize this RenderTexture to the given width and height.
-*
-* @method Phaser.RenderTexture.prototype.resize
-* @param {number} width - The new width of the RenderTexture.
-* @param {number} height - The new height of the RenderTexture.
-*/
+    this.matrix.tx = position.x;
+    this.matrix.ty = position.y;
+
+    if (this.renderer.type === PIXI.WEBGL_RENDERER)
+    {
+        this.renderWebGL(displayObject, this.matrix, clear);
+    }
+    else
+    {
+        this.renderCanvas(displayObject, this.matrix, clear);
+    }
+
+};

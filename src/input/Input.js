@@ -773,11 +773,11 @@ Phaser.Input.prototype = {
         if (typeof output === 'undefined') { output = new Phaser.Point(); }
 
         var wt = displayObject.worldTransform;
-        var id = 1 / (wt.a * wt.d + wt.b * -wt.c);
+        var id = 1 / (wt.a * wt.d + wt.c * -wt.b);
 
         return output.setTo(
-            wt.d * id * pointer.x + -wt.b * id * pointer.y + (wt.ty * wt.b - wt.tx * wt.d) * id,
-            wt.a * id * pointer.y + -wt.c * id * pointer.x + (-wt.ty * wt.a + wt.tx * wt.c) * id
+            wt.d * id * pointer.x + -wt.c * id * pointer.y + (wt.ty * wt.c - wt.tx * wt.d) * id,
+            wt.a * id * pointer.y + -wt.b * id * pointer.x + (-wt.ty * wt.a + wt.tx * wt.b) * id
         );
 
     },
@@ -803,28 +803,7 @@ Phaser.Input.prototype = {
 
         if (displayObject.hitArea && displayObject.hitArea.contains)
         {
-            if (displayObject.hitArea.contains(this._localPoint.x, this._localPoint.y))
-            {
-                return true;
-            }
-
-            return false;
-        }
-        else if (displayObject instanceof Phaser.TileSprite)
-        {
-            var width = displayObject.width;
-            var height = displayObject.height;
-            var x1 = -width * displayObject.anchor.x;
-
-            if (this._localPoint.x > x1 && this._localPoint.x < x1 + width)
-            {
-                var y1 = -height * displayObject.anchor.y;
-
-                if (this._localPoint.y > y1 && this._localPoint.y < y1 + height)
-                {
-                    return true;
-                }
-            }
+            return (displayObject.hitArea.contains(this._localPoint.x, this._localPoint.y));
         }
         else if (displayObject instanceof PIXI.Sprite)
         {
@@ -832,16 +811,52 @@ Phaser.Input.prototype = {
             var height = displayObject.texture.frame.height;
             var x1 = -width * displayObject.anchor.x;
 
-            if (this._localPoint.x > x1 && this._localPoint.x < x1 + width)
+            if (this._localPoint.x >= x1 && this._localPoint.x < x1 + width)
             {
                 var y1 = -height * displayObject.anchor.y;
 
-                if (this._localPoint.y > y1 && this._localPoint.y < y1 + height)
+                if (this._localPoint.y >= y1 && this._localPoint.y < y1 + height)
                 {
                     return true;
                 }
             }
         }
+        else if (displayObject instanceof Phaser.TileSprite)
+        {
+            var width = displayObject.width;
+            var height = displayObject.height;
+            var x1 = -width * displayObject.anchor.x;
+
+            if (this._localPoint.x >= x1 && this._localPoint.x < x1 + width)
+            {
+                var y1 = -height * displayObject.anchor.y;
+
+                if (this._localPoint.y >= y1 && this._localPoint.y < y1 + height)
+                {
+                    return true;
+                }
+            }
+        }
+        else if (displayObject instanceof Phaser.Graphics)
+        {
+            for (var i = 0; i < displayObject.graphicsData.length; i++)
+            {
+                var data = displayObject.graphicsData[i];
+
+                if (!data.fill)
+                {
+                    continue;
+                }
+
+                //  Only deal with fills..
+                if (data.shape && data.shape.contains(this._localPoint.x, this._localPoint.y))
+                {
+                    return true;
+                }
+            }
+        }
+
+        //  Didn't hit the parent, does it have any children?
 
         for (var i = 0, len = displayObject.children.length; i < len; i++)
         {

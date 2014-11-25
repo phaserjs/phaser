@@ -52,9 +52,9 @@
                 }
             }
 
-            $this->processor->log("vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv");
-            $this->processor->log("Method: $name");
-            $this->processor->log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+            // $this->processor->log("vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv");
+            // $this->processor->log("Method: $name");
+            // $this->processor->log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
 
             $this->name = $name;
 
@@ -87,7 +87,7 @@
 
             if ($block->getTypeBoolean('@return'))
             {
-                $this->returns = new ReturnType($block->getLine('@return'));
+                $this->returns = new ReturnType($this->processor, $block->getLine('@return'));
             }
 
         }

@@ -262,7 +262,7 @@ Phaser.Cache.prototype = {
     *
     * @method Phaser.Cache#addRenderTexture
     * @param {string} key - The unique key by which you will reference this object.
-    * @param {Phaser.Texture} texture - The texture to use as the base of the RenderTexture.
+    * @param {Phaser.RenderTexture} texture - The texture to use as the base of the RenderTexture.
     */
     addRenderTexture: function (key, texture) {
 
@@ -1154,7 +1154,7 @@ Phaser.Cache.prototype = {
     *
     * @method Phaser.Cache#getFrameCount
     * @param {string} key - Asset key of the image you want.
-    * @return {integer} Then number of frames. 0 if the image is not found.
+    * @return {number} Then number of frames. 0 if the image is not found.
     */
     getFrameCount: function (key) {
 
@@ -1469,21 +1469,24 @@ Phaser.Cache.prototype = {
     },
 
     /**
-    * Resolves a url its absolute form.
+    * Resolves a URL to its absolute form.
     *
     * @method Phaser.Cache#_resolveUrl
-    * @param {string} url - The url to resolve.
+    * @param {string} url - The URL to resolve.
+    * @return {string} The resolved URL.
     * @private
     */
     _resolveUrl: function (url) {
+
         this._urlResolver.src = this.game.load.baseURL + url;
 
         this._urlTemp = this._urlResolver.src;
 
-        // ensure no request is actually made
+        //  Ensure no request is actually made
         this._urlResolver.src = '';
 
         return this._urlTemp;
+
     },
 
     /**

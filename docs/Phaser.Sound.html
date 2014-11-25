@@ -1935,7 +1935,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sound.js.html">sound/Sound.js</a>, <a href="Sound.js.html#sunlight-1-line-909">line 909</a>
+        <a href="Sound.js.html">sound/Sound.js</a>, <a href="Sound.js.html#sunlight-1-line-927">line 927</a>
     </li></ul></dd>
     
 
@@ -2037,7 +2037,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sound.js.html">sound/Sound.js</a>, <a href="Sound.js.html#sunlight-1-line-896">line 896</a>
+        <a href="Sound.js.html">sound/Sound.js</a>, <a href="Sound.js.html#sunlight-1-line-914">line 914</a>
     </li></ul></dd>
     
 
@@ -2652,7 +2652,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sound.js.html">sound/Sound.js</a>, <a href="Sound.js.html#sunlight-1-line-922">line 922</a>
+        <a href="Sound.js.html">sound/Sound.js</a>, <a href="Sound.js.html#sunlight-1-line-940">line 940</a>
     </li></ul></dd>
     
 
@@ -4905,7 +4905,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sound.js.html">sound/Sound.js</a>, <a href="Sound.js.html#sunlight-1-line-973">line 973</a>
+        <a href="Sound.js.html">sound/Sound.js</a>, <a href="Sound.js.html#sunlight-1-line-991">line 991</a>
     </li></ul></dd>
     
 
@@ -5424,7 +5424,7 @@ This allows you to bundle multiple sounds together into a single audio file and 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sound.js.html">sound/Sound.js</a>, <a href="Sound.js.html#sunlight-1-line-857">line 857</a>
+        <a href="Sound.js.html">sound/Sound.js</a>, <a href="Sound.js.html#sunlight-1-line-875">line 875</a>
     </li></ul></dd>
     
 
@@ -5462,7 +5462,7 @@ This allows you to bundle multiple sounds together into a single audio file and 
     <div class="description">
         <p>Starts this sound playing (or restarts it if already doing so) and sets the volume to zero.
 Then increases the volume from 0 to 1 over the duration specified.
-At the end of the fade Sound.onFadeComplete is dispatched with this Sound object as the first parameter, 
+At the end of the fade Sound.onFadeComplete is dispatched with this Sound object as the first parameter,
 and the final volume (1) as the second parameter.</p>
     </div>
     
@@ -5533,7 +5533,7 @@ and the final volume (1) as the second parameter.</p>
                 </td>
             
 
-            <td class="description last"><p>The time in milliseconds during which the Sound should fade in.</p></td>
+            <td class="description last"><p>The time in milliseconds over which the Sound should fade in.</p></td>
         </tr>
 
 	
@@ -5641,8 +5641,148 @@ and the final volume (1) as the second parameter.</p>
     
     <div class="description">
         <p>Decreases the volume of this Sound from its current value to 0 over the duration specified.
-At the end of the fade Sound.onFadeComplete is dispatched with this Sound object as the first parameter, 
+At the end of the fade Sound.onFadeComplete is dispatched with this Sound object as the first parameter,
 and the final volume (0) as the second parameter.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+		<th>Default</th>
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>duration</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    1000
+                
+                </td>
+            
+
+            <td class="description last"><p>The time in milliseconds over which the Sound should fade out.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Sound.js.html">sound/Sound.js</a>, <a href="Sound.js.html#sunlight-1-line-814">line 814</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="fadeTo"><span class="type-signature"></span>fadeTo<span class="signature">(<span class="optional">duration</span>, <span class="optional">volume</span>)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Fades the volume of this Sound from its current value to the given volume over the duration specified.
+At the end of the fade Sound.onFadeComplete is dispatched with this Sound object as the first parameter, 
+and the final volume (volume) as the second parameter.</p>
     </div>
     
 
@@ -5716,6 +5856,43 @@ and the final volume (0) as the second parameter.</p>
         </tr>
 
 	
+
+        <tr>
+            
+                <td class="name"><code>volume</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The volume which the Sound should fade to. This is a value between 0 and 1.</p></td>
+        </tr>
+
+	
 	</tbody>
 </table>
 
@@ -5744,7 +5921,7 @@ and the final volume (0) as the second parameter.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sound.js.html">sound/Sound.js</a>, <a href="Sound.js.html#sunlight-1-line-817">line 817</a>
+        <a href="Sound.js.html">sound/Sound.js</a>, <a href="Sound.js.html#sunlight-1-line-828">line 828</a>
     </li></ul></dd>
     
 
@@ -6879,7 +7056,7 @@ and the final volume (0) as the second parameter.</p>
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Thu Oct 09 2014 16:10:07 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Wed Oct 22 2014 21:46:06 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

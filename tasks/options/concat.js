@@ -54,6 +54,19 @@ module.exports = {
         dest: '<%= compile_dir %>/phaser-no-physics.js'
     },
 
+    //  Phaser with just P2 physics included. Does include Pixi.
+    phaserP2Physics: {
+        options: {
+            banner: '<%= banner %>'
+        },
+        src: [
+            '<%= compile_dir %>/pixi.js',
+            require('../manifests/phaser-nophysics'),
+            '<%= compile_dir %>/p2.js'
+        ],
+        dest: '<%= compile_dir %>/phaser-p2-physics.js'
+    },
+
     //  One ring to rule them all
     standalone: {
         options: {

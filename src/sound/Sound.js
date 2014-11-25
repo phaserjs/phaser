@@ -16,8 +16,8 @@
 */
 Phaser.Sound = function (game, key, volume, loop, connect) {
 
-    if (typeof volume == 'undefined') { volume = 1; }
-    if (typeof loop == 'undefined') { loop = false; }
+    if (typeof volume === 'undefined') { volume = 1; }
+    if (typeof loop === 'undefined') { loop = false; }
     if (typeof connect === 'undefined') { connect = game.sound.connectToMaster; }
 
     /**
@@ -306,7 +306,7 @@ Phaser.Sound = function (game, key, volume, loop, connect) {
     * @private
     */
     this._paused = false;
-    
+
     /**
     * @property {boolean} _onDecodedEventDispatched - Was the onDecoded event dispatched?
     * @private
@@ -345,8 +345,8 @@ Phaser.Sound.prototype = {
     */
     addMarker: function (name, start, duration, volume, loop) {
 
-        if (typeof volume == 'undefined') { volume = 1; }
-        if (typeof loop == 'undefined') { loop = false; }
+        if (typeof volume === 'undefined') { volume = 1; }
+        if (typeof loop === 'undefined') { loop = false; }
 
         this.markers[name] = {
             name: name,
@@ -377,7 +377,7 @@ Phaser.Sound.prototype = {
     * @protected
     */
     update: function () {
-        
+
         if (this.isDecoded && !this._onDecodedEventDispatched)
         {
             this.onDecoded.dispatch(this);
@@ -642,7 +642,7 @@ Phaser.Sound.prototype = {
         }
 
         return this;
-        
+
     },
 
     /**
@@ -659,7 +659,7 @@ Phaser.Sound.prototype = {
         marker = marker || '';
         position = position || 0;
         volume = volume || 1;
-        if (typeof loop == 'undefined') { loop = false; }
+        if (typeof loop === 'undefined') { loop = false; }
 
         this.play(marker, position, volume, loop, true);
 
@@ -789,16 +789,15 @@ Phaser.Sound.prototype = {
     /**
      * Starts this sound playing (or restarts it if already doing so) and sets the volume to zero.
      * Then increases the volume from 0 to 1 over the duration specified.
-     * At the end of the fade Sound.onFadeComplete is dispatched with this Sound object as the first parameter, 
+     * At the end of the fade Sound.onFadeComplete is dispatched with this Sound object as the first parameter,
      * and the final volume (1) as the second parameter.
      *
      * @method Phaser.Sound#fadeIn
-     * @param {number} [duration=1000] - The time in milliseconds during which the Sound should fade in.
+     * @param {number} [duration=1000] - The time in milliseconds over which the Sound should fade in.
      * @param {boolean} [loop=false] - Should the Sound be set to loop? Note that this doesn't cause the fade to repeat.
      */
     fadeIn: function (duration, loop) {
 
-        if (typeof duration === 'undefined') { duration = 1000; }
         if (typeof loop === 'undefined') { loop = false; }
 
         if (this.paused)
@@ -808,37 +807,56 @@ Phaser.Sound.prototype = {
 
         this.play('', 0, 0, loop);
 
-        var tween = this.game.add.tween(this).to( { volume: 1 }, duration, Phaser.Easing.Linear.None, true);
-
-        tween.onComplete.add(this.fadeComplete, this);
+        this.fadeTo(duration, 1);
 
     },
 
     /**
      * Decreases the volume of this Sound from its current value to 0 over the duration specified.
-     * At the end of the fade Sound.onFadeComplete is dispatched with this Sound object as the first parameter, 
+     * At the end of the fade Sound.onFadeComplete is dispatched with this Sound object as the first parameter,
      * and the final volume (0) as the second parameter.
      *
      * @method Phaser.Sound#fadeOut
-     * @param {number} [duration=1000] - The time in milliseconds during which the Sound should fade out.
+     * @param {number} [duration=1000] - The time in milliseconds over which the Sound should fade out.
      */
     fadeOut: function (duration) {
 
-        if (typeof duration === 'undefined') { duration = 1000; }
+        this.fadeTo(duration, 0);
 
-        if (!this.isPlaying || this.paused || this.volume <= 0)
+    },
+
+    /**
+     * Fades the volume of this Sound from its current value to the given volume over the duration specified.
+     * At the end of the fade Sound.onFadeComplete is dispatched with this Sound object as the first parameter, 
+     * and the final volume (volume) as the second parameter.
+     *
+     * @method Phaser.Sound#fadeTo
+     * @param {number} [duration=1000] - The time in milliseconds during which the Sound should fade out.
+     * @param {number} [volume] - The volume which the Sound should fade to. This is a value between 0 and 1.
+     */
+    fadeTo: function (duration, volume) {
+
+        if (!this.isPlaying || this.paused || volume === this.volume)
         {
             return;
         }
 
-        var tween = this.game.add.tween(this).to( { volume: 0 }, duration, Phaser.Easing.Linear.None, true);
+        if (typeof duration === 'undefined') { duration = 1000; }
+
+        if (typeof volume === 'undefined')
+        {
+            console.warn("Phaser.Sound.fadeTo: No Volume Specified.");
+            return;
+        }
+
+        var tween = this.game.add.tween(this).to( { volume: volume }, duration, Phaser.Easing.Linear.None, true);
 
         tween.onComplete.add(this.fadeComplete, this);
 
     },
 
     /**
-     * Internal handler for Sound.fadeIn and Sound.fadeOut.
+     * Internal handler for Sound.fadeIn, Sound.fadeOut and Sound.fadeTo.
      *
      * @method Phaser.Sound#fadeComplete
      * @private

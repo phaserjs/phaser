@@ -26,6 +26,12 @@ Phaser.Time = function (game) {
     this.time = 0;
 
     /**
+    * @property {number} prevTime - The time the previous update occurred.
+    * @protected
+    */
+    this.prevTime = 0;
+
+    /**
     * @property {number} now - The time right now.
     * @protected
     */
@@ -235,6 +241,8 @@ Phaser.Time.prototype = {
     * @param {number} time - The current timestamp.
     */
     update: function (time) {
+
+        this.prevTime = this.now;
 
         this.now = time;
 

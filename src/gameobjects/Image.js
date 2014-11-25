@@ -293,6 +293,8 @@ Phaser.Image.prototype.loadTexture = function (key, frame) {
             setFrame = !this.animations.loadFrameData(this.game.cache.getFrameData(key), frame);
         }
     }
+    
+    this.texture.baseTexture.dirty();
 
     if (setFrame)
     {
@@ -356,13 +358,8 @@ Phaser.Image.prototype.setFrame = function(frame) {
     {
         this.updateCrop();
     }
-    else
-    {
-        if (this.game.renderType === Phaser.WEBGL)
-        {
-            PIXI.WebGLRenderer.updateTextureFrame(this.texture);
-        }
-    }
+
+    this.texture._updateUvs();
 
 };
 
@@ -458,10 +455,7 @@ Phaser.Image.prototype.updateCrop = function() {
     this.texture.width = this.texture.frame.width;
     this.texture.height = this.texture.frame.height;
 
-    if (this.game.renderType === Phaser.WEBGL)
-    {
-        PIXI.WebGLRenderer.updateTextureFrame(this.texture);
-    }
+    this.texture._updateUvs();
 
 };
 

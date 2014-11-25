@@ -561,7 +561,7 @@
     
         
 <dt>
-    <h4 class="name" id="RenderTexture"><span class="type-signature"></span>new RenderTexture<span class="signature">(game, key, <span class="optional">width</span>, <span class="optional">height</span>, <span class="optional">key</span>, <span class="optional">scaleMode</span>)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="RenderTexture"><span class="type-signature"></span>new RenderTexture<span class="signature">(game, key, <span class="optional">width</span>, <span class="optional">height</span>, <span class="optional">key</span>, <span class="optional">scaleMode</span>, <span class="optional">resolution</span>)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -831,6 +831,45 @@ render them down into a single quad (on WebGL) which can then be used to texture
         </tr>
 
 	
+
+        <tr>
+            
+                <td class="name"><code>resolution</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    1
+                
+                </td>
+            
+
+            <td class="description last"><p>The resolution of the texture being generated.</p></td>
+        </tr>
+
+	
 	</tbody>
 </table>
 
@@ -859,7 +898,7 @@ render them down into a single quad (on WebGL) which can then be used to texture
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="RenderTexture.js.html">gameobjects/RenderTexture.js</a>, <a href="RenderTexture.js.html#sunlight-1-line-21">line 21</a>
+        <a href="RenderTexture.js.html">gameobjects/RenderTexture.js</a>, <a href="RenderTexture.js.html#sunlight-1-line-22">line 22</a>
     </li></ul></dd>
     
 
@@ -993,7 +1032,7 @@ render them down into a single quad (on WebGL) which can then be used to texture
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="RenderTexture.js.html">gameobjects/RenderTexture.js</a>, <a href="RenderTexture.js.html#sunlight-1-line-29">line 29</a>
+        <a href="RenderTexture.js.html">gameobjects/RenderTexture.js</a>, <a href="RenderTexture.js.html#sunlight-1-line-31">line 31</a>
     </li></ul></dd>
     
 
@@ -1095,7 +1134,109 @@ render them down into a single quad (on WebGL) which can then be used to texture
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="RenderTexture.js.html">gameobjects/RenderTexture.js</a>, <a href="RenderTexture.js.html#sunlight-1-line-34">line 34</a>
+        <a href="RenderTexture.js.html">gameobjects/RenderTexture.js</a>, <a href="RenderTexture.js.html#sunlight-1-line-36">line 36</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="matrix"><span class="type-signature"></span>matrix<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>matrix</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">PIXI.Matrix</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The matrix that is applied when display objects are rendered to this RenderTexture.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="RenderTexture.js.html">gameobjects/RenderTexture.js</a>, <a href="RenderTexture.js.html#sunlight-1-line-46">line 46</a>
     </li></ul></dd>
     
 
@@ -1197,7 +1338,7 @@ render them down into a single quad (on WebGL) which can then be used to texture
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="RenderTexture.js.html">gameobjects/RenderTexture.js</a>, <a href="RenderTexture.js.html#sunlight-1-line-39">line 39</a>
+        <a href="RenderTexture.js.html">gameobjects/RenderTexture.js</a>, <a href="RenderTexture.js.html#sunlight-1-line-41">line 41</a>
     </li></ul></dd>
     
 
@@ -1369,7 +1510,7 @@ render them down into a single quad (on WebGL) which can then be used to texture
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="RenderTexture.js.html">gameobjects/RenderTexture.js</a>, <a href="RenderTexture.js.html#sunlight-1-line-73">line 73</a>
+        <a href="RenderTexture.js.html">gameobjects/RenderTexture.js</a>, <a href="RenderTexture.js.html#sunlight-1-line-82">line 82</a>
     </li></ul></dd>
     
 
@@ -1568,148 +1709,7 @@ render them down into a single quad (on WebGL) which can then be used to texture
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="RenderTexture.js.html">gameobjects/RenderTexture.js</a>, <a href="RenderTexture.js.html#sunlight-1-line-54">line 54</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="resize"><span class="type-signature"></span>resize<span class="signature">(width, height)</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Resize this RenderTexture to the given width and height.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>width</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The new width of the RenderTexture.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>height</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The new height of the RenderTexture.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="RenderTexture.js.html">gameobjects/RenderTexture.js</a>, <a href="RenderTexture.js.html#sunlight-1-line-75">line 75</a>
+        <a href="RenderTexture.js.html">gameobjects/RenderTexture.js</a>, <a href="RenderTexture.js.html#sunlight-1-line-57">line 57</a>
     </li></ul></dd>
     
 
@@ -1760,7 +1760,7 @@ render them down into a single quad (on WebGL) which can then be used to texture
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Thu Oct 09 2014 16:10:05 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Wed Oct 22 2014 21:46:05 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

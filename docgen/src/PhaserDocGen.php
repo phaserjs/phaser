@@ -3,11 +3,13 @@
     {
         private $src;
         private $ignore = array('.', '..');
-        private $fileIgnore = array('p2.js');
+        private $fileIgnore = array('Intro.js', 'Outro.js', 'Pixi.js', 'Spine.js', 'p2.js');
 
         public $log;
         public $files;
         public $classes;
+
+        public $uniqueTypes;
 
         /**
         * Processes the Phaser / Pixi source code
@@ -17,6 +19,8 @@
         public function __construct()
         {
             $this->src = realpath('../src');
+
+            $this->uniqueTypes = [];
 
             $this->classes = [];
         }
@@ -38,12 +42,34 @@
                 //  This will go through each class and add in inherited properties, etc
                 foreach ($this->classes as $key => $processor)
                 {
-                    $processor->extend();
-
-                    // echo "Extended $key\n";
+                    if ($processor !== 'corrupted')
+                    {
+                        // echo "Extended $key\n";
+                        $processor->extend();
+                    }
                 }
             }
+        }
 
+        public function export($path, $classKey = '')
+        {
+            if ($classKey !== '')
+            {
+                $this->classes[$classKey]->export($path);
+            }
+            else
+            {
+                //  This will go through each class and add in inherited properties, etc
+                foreach ($this->classes as $key => $processor)
+                {
+                    if ($processor !== 'corrupted')
+                    {
+                        $processor->export($path);
+                        echo "Exported $key\n";
+                        // echo $processor . "\n";
+                    }
+                }
+            }
         }
 
         public function get($classKey)
@@ -96,16 +122,26 @@
                                 // $classKey = substr($value, 0, -3);
                                 // $classKey = str_replace(DIRECTORY_SEPARATOR, ".", $index);
                                 $result[$classKey] = $index;
+                                // echo "Class key: $classKey \n";
                                 $this->classes[$classKey] = $tempProcessor;
                             }
                             else
                             {
                                 $this->classes[$index] = 'corrupted';
+                                // echo "CORRUPTED \n";
                             }
 
                             //  Dump to log
                             // echo $index . "\n";
                         }
+                        else
+                        {
+                            // echo "Ignored: $value \n";
+                        }
+                    }
+                    else
+                    {
+                        // echo "NOT A JS FILE\n";
                     }
                 } 
             } 

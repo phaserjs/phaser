@@ -712,7 +712,7 @@ Phaser.Device.prototype = {
                     this.ogg = true;
                 }
 
-                if (audioElement.canPlayType('audio/ogg; codecs="opus"').replace(/^no$/, '')) {
+                if (audioElement.canPlayType('audio/ogg; codecs="opus"').replace(/^no$/, '') || audioElement.canPlayType('audio/opus;').replace(/^no$/, '')) {
                     this.opus = true;
                 }
 
@@ -876,7 +876,7 @@ Phaser.Device.prototype = {
     /**
     * Check whether the host environment can play audio.
     * @method Phaser.Device#canPlayAudio
-    * @param {string} type - One of 'mp3, 'ogg', 'm4a', 'wav', 'webm'.
+    * @param {string} type - One of 'mp3, 'ogg', 'm4a', 'wav', 'webm' or 'opus'.
     * @return {boolean} True if the given file type is supported by the browser, otherwise false.
     */
     canPlayAudio: function (type) {
@@ -890,6 +890,10 @@ Phaser.Device.prototype = {
             return true;
         }
         else if (type == 'm4a' && this.m4a)
+        {
+            return true;
+        }
+        else if (type == 'opus' && this.opus)
         {
             return true;
         }

@@ -12,6 +12,9 @@
         public $docgen;
         public $processLog;
 
+        public $dataTypes;
+        public $domTypes;
+
         public $corrupted;
 
         /**
@@ -40,6 +43,41 @@
             $this->properties['private'] = [];
             $this->properties['protected'] = [];
             $this->properties['public'] = [];
+
+            $this->domTypes = [ 
+                'ArrayBuffer', 
+                'AudioContext', 
+                'CanvasRenderingContext2D', 
+                'DOMElement',
+                'Event',
+                'Float32Array',
+                'HTMLCanvasElement',
+                'HTMLElement',
+                'Image',
+                'ImageData',
+                'KeyboardEvent',
+                'MouseEvent',
+                'Pointer',
+                'PointerEvent',
+                'TouchEvent',
+                'Uint16Array',
+                'Uint32Array',
+                'Uint8ClampedArray',
+                'XDomainRequest',
+                'XMLHttpRequest'
+            ];
+
+            $this->dataTypes = [ 
+                'any', 
+                'array', 
+                'boolean', 
+                'function', 
+                'null', 
+                'number', 
+                'object', 
+                'string',
+                'undefined'
+            ];
 
             $this->scanFile();
         }
@@ -96,12 +134,16 @@
             {
                 if ($this->blocks[$i]->isClass)
                 {
-                    $tempClass = new ClassDesc($this, $this->blocks[$i]);
-                    $this->class = $tempClass;
-
-                    if ($tempClass->corrupted)
+                    //  Some files like PIXI.Graphics have multiple class blocks within them
+                    if ($this->class === null)
                     {
-                        $this->corrupted = true;
+                        $tempClass = new ClassDesc($this, $this->blocks[$i]);
+                        $this->class = $tempClass;
+
+                        if ($tempClass->corrupted)
+                        {
+                            $this->corrupted = true;
+                        }
                     }
                 }
                 else if ($this->blocks[$i]->isConst)
@@ -159,6 +201,179 @@
             }
 
             $this->sortArrays();
+
+        }
+
+        public function parseTypes($output, $pixi, $name)
+        {
+            //  Remove optional braces
+            if (substr($output, 0, 1) === "(")
+            {
+                $output = substr($output, 1, -1);
+            }
+
+            $types = explode('|', $output);
+
+            if (!is_array($types))
+            {
+                $types = array($output);
+            }
+
+            //  @param {number[]|string[]} frames - An array of numbers or strings indicating which frames to play in which order.
+            //  @param {(number[]|...number)} points - An array of 2d vectors that form the convex or concave polygon.
+            //      Either [[0,0], [0,1],...] or a flat array of numbers that will be interpreted as [x,y, x,y, ...],
+            //      or the arguments passed can be flat x,y values e.g. `setPolygon(options, x,y, x,y, x,y, ...)` where `x` and `y` are numbers.
+
+            foreach ($types as $key => $type)
+            {
+                trim($type);
+
+                if (substr($type, -2) === "[]")
+                {
+                    $tidy = substr($type, 0, -2);
+                    $types[$key] = "array " . substr($type, 0, -2);
+                }
+                else if (strpos($type, '<') > 0)
+                {
+                    //  array<Phaser.Physics.P2.Material>
+
+                    $left = strpos($type, '<') + 1;
+                    // $right = strpos($type, '>') - 1;
+                    $tidy = substr($type, $left, -1);
+
+                    if ($tidy === 'Number' || $tidy === 'String')
+                    {
+                        $tidy = strtolower($tidy);
+                    }
+                    else if ($tidy === 'Point')
+                    {
+                        $tidy = 'Phaser.Point';
+                    }
+                    else if ($tidy === 'Texture' || $tidy === 'DisplayObject')
+                    {
+                        $tidy = 'PIXI.' . $tidy;
+                    }
+
+                    $types[$key] = 'array ' . $tidy;
+                }
+                else if (substr($type, 0, 5) === "Array")
+                {
+                    $types[$key] = "array";
+                }
+                else if ($type === "Number" || $type === "{Number}" || substr($type, 0, 7) === "Number " || $type === "Number..." || $type === "...number")
+                {
+                    $types[$key] = "number";
+                }
+                else if ($type === "String")
+                {
+                    $types[$key] = "string";
+                }
+                else if ($type === "Boolean")
+                {
+                    $types[$key] = "boolean";
+                }
+                else if ($type === "Function")
+                {
+                    $types[$key] = "function";
+                }
+                else if ($type === "Object")
+                {
+                    $types[$key] = "object";
+                }
+                else if ($type === "Null")
+                {
+                    $types[$key] = "null";
+                }
+                else if ($type === "Circle")
+                {
+                    $types[$key] = "Phaser.Circle";
+                }
+                else if ($type === "Point" || $type === "Point...")
+                {
+                    $types[$key] = "Phaser.Point";
+                }
+                else if ($type === "Line")
+                {
+                    $types[$key] = "Phaser.Line";
+                }
+                else if ($type === "Texture")
+                {
+                    $types[$key] = "PIXI.Texture";
+                }
+                else if ($type === "Polygon")
+                {
+                    $types[$key] = "Phaser.Polygon";
+                }
+                else if ($type === "Ellipse")
+                {
+                    $types[$key] = "Phaser.Ellipse";
+                }
+                else if ($type === "Rectangle")
+                {
+                    $types[$key] = "Phaser.Rectangle";
+                }
+                else if ($type === "Matrix")
+                {
+                    $types[$key] = "PIXI.Matrix";
+                }
+                else if ($type === "DisplayObject")
+                {
+                    $types[$key] = "PIXI.DisplayObject";
+                }
+                else if ($type === "Any" || $type === "{Any}" || $type === "*" || $type === "...*")
+                {
+                    $types[$key] = "any";
+                }
+                else
+                {
+                    //  Valid DOM types?
+                    if (!in_array($type, $this->domTypes) && !in_array($type, $this->dataTypes))
+                    {
+                        if ($pixi === null)
+                        {
+                            //  It's a ReturnType but we don't know which sort
+                            if (substr($type, 0, 7) !== 'Phaser.' && substr($type, 0, 5) !== 'PIXI.' && substr($type, 0, 3) !== 'p2.')
+                            {
+                                //  Going to assume PIXI here as Phaser has the return types properly namespaced
+                                $types[$key] = "PIXI.$type";
+                            }
+                        }
+                        else
+                        {
+                            //  Not a DOM type, shall we add PIXI to the front?
+                            if ($pixi)
+                            {
+                                if (substr($type, 0, 5) !== 'PIXI.')
+                                {
+                                    $types[$key] = "PIXI.$type";
+                                }
+                            }
+                            else
+                            {
+                                if (substr($type, 0, 7) !== 'Phaser.' && substr($type, 0, 5) !== 'PIXI.' && substr($type, 0, 3) !== 'p2.')
+                                {
+                                    $types[$key] = "wtf.$type";
+                                    echo($name . '=');
+                                    var_dump($type);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (isset($this->docgen->uniqueTypes[$types[$key]]))
+                {
+                    $this->docgen->uniqueTypes[$types[$key]] += 1;
+                }
+                else
+                {
+                    $this->docgen->uniqueTypes[$types[$key]] = 1;
+                    // echo($name . '=' . $type . "\n");
+                    // var_dump($name);
+                }
+            }
+
+            return $types;
 
         }
 
@@ -245,6 +460,11 @@
             return json_encode($this->getArray());
         }
 
+        public function export($path)
+        {
+            file_put_contents($path . $this->class->name . '.json', $this->getJSON());
+        }
+
         public function getConstsArray()
         {
             $out = [];
@@ -271,9 +491,16 @@
             {
                 $extends = $proc->class->extends;
                 $proc = $this->docgen->get($extends);
-                // echo "\n\nextend found: " . $proc->getName() . "\n";
 
-                $this->merge($proc);
+                if ($proc !== null)
+                {
+                    // echo "\n\nextend found: " . $proc->getName() . "\n";
+                    $this->merge($proc);
+                }
+                else
+                {
+                    // echo "\n\n --------> fatal extend: " . $extends . "\n";
+                }
             }
             while ($proc->class->extendsFrom());
 
@@ -389,7 +616,7 @@
             }
             else
             {
-                return "Class: " . $this->class->name . ", Methods: " . count($this->methods['public']) . ", Properties: " . count($this->properties['public']) . "\n";
+                return "Class: " . $this->class->name . ", Methods: " . count($this->methods['public']) . ", Properties: " . count($this->properties['public']);
             }
         }
 

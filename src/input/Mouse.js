@@ -479,8 +479,9 @@ Phaser.Mouse.prototype = {
 
     /**
     * Internal pointerLockChange handler.
+    * 
     * @method Phaser.Mouse#pointerLockChange
-    * @param {pointerlockchange} event - The native event from the browser. This gets stored in Mouse.event.
+    * @param {Event} event - The native event from the browser. This gets stored in Mouse.event.
     */
     pointerLockChange: function (event) {
 

@@ -17,7 +17,7 @@
 *
 * @class Phaser.Events
 * @constructor
-* @param {Phaser.Sprite} sprite - A reference to Description.
+* @param {Phaser.Sprite} sprite - A reference to the Sprite that owns this Events object.
 */
 Phaser.Events = function (sprite) {
 

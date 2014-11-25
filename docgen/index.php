@@ -82,7 +82,8 @@
             else
             {
                 echo "<li><a href=\"view.php?src=$file\">$name</a>";
-                echo " &nbsp;&nbsp; [ <a href=\"export.php?src=$file\">json</a> ]</li>";
+                // echo " &nbsp;&nbsp; [ <a href=\"export.php?src=$file\">json</a> ]</li>";
+                echo " &nbsp;&nbsp; [ <a href=\"json.php?src=$file\">json</a> ]</li>";
             }
         }
 

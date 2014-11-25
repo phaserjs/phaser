@@ -121,7 +121,7 @@ Phaser.SignalBinding.prototype = {
 
     /**
     * @method Phaser.SignalBinding#getListener
-    * @return {Function} Handler function bound to the signal.
+    * @return {function} Handler function bound to the signal.
     */
     getListener: function () {
         return this._listener;
@@ -129,7 +129,7 @@ Phaser.SignalBinding.prototype = {
 
     /**
     * @method Phaser.SignalBinding#getSignal
-    * @return {Signal} Signal that listener is currently bound to.
+    * @return {Phaser.Signal} Signal that listener is currently bound to.
     */
     getSignal: function () {
         return this._signal;

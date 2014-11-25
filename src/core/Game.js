@@ -568,13 +568,6 @@ Phaser.Game.prototype = {
     */
     setUpRenderer: function () {
 
-        if (this.device.trident)
-        {
-            //  Pixi WebGL renderer on IE11 doesn't work correctly at the moment, the pre-multiplied alpha gets all washed out.
-            //  So we're forcing canvas for now until this is fixed, sorry. It's got to be better than no game appearing at all, right?
-            this.renderType = Phaser.CANVAS;
-        }
-
         if (this.config['canvasID'])
         {
             this.canvas = Phaser.Canvas.create(this.width, this.height, this.config['canvasID']);
@@ -615,7 +608,7 @@ Phaser.Game.prototype = {
                     this.renderType = Phaser.CANVAS;
                 }
 
-                this.renderer = new PIXI.CanvasRenderer(this.width, this.height, this.canvas, this.transparent);
+                this.renderer = new PIXI.CanvasRenderer(this.width, this.height, { "view": this.canvas, "transparent": this.transparent, "resolution": 1, "clearBeforeRender": true });
                 this.context = this.renderer.context;
             }
             else
@@ -627,7 +620,8 @@ Phaser.Game.prototype = {
         {
             //  They requested WebGL and their browser supports it
             this.renderType = Phaser.WEBGL;
-            this.renderer = new PIXI.WebGLRenderer(this.width, this.height, this.canvas, this.transparent, this.antialias, this.preserveDrawingBuffer);
+
+            this.renderer = new PIXI.WebGLRenderer(this.width, this.height, { "view": this.canvas, "transparent": this.transparent, "resolution": 1, "antialias": this.antialias, "preserveDrawingBuffer": this.preserveDrawingBuffer });
             this.context = null;
         }
 

@@ -108,7 +108,7 @@ Phaser.RetroFont = function (game, key, characterWidth, characterHeight, chars, 
     this.fixedWidth = 0;
 
     /**
-    * @property {HTMLImage} fontSet - A reference to the image stored in the Game.Cache that contains the font.
+    * @property {Image} fontSet - A reference to the image stored in the Game.Cache that contains the font.
     */
     this.fontSet = game.cache.getImage(key);
 

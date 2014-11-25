@@ -1391,11 +1391,15 @@ Phaser.Loader.prototype = {
             extension = urls[i].toLowerCase();
             extension = extension.substr((Math.max(0, extension.lastIndexOf(".")) || Infinity) + 1);
 
+            if (extension.indexOf("?") >= 0)
+            {
+                extension = extension.substr(0, extension.indexOf("?"));
+            }
+
             if (this.game.device.canPlayAudio(extension))
             {
                 return urls[i];
             }
-
         }
 
         return null;

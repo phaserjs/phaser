@@ -6,7 +6,7 @@
 
 /**
 * The Input Handler is bound to a specific Sprite and is responsible for managing all Input events on that Sprite.
-* 
+*
 * @class Phaser.InputHandler
 * @constructor
 * @param {Phaser.Sprite} sprite - The Sprite object to which this Input Handler belongs.
@@ -455,7 +455,7 @@ Phaser.InputHandler.prototype = {
     /**
     * The x coordinate of the Input pointer, relative to the top-left of the parent Sprite.
     * This value is only set when the pointer is over this Sprite.
-    * 
+    *
     * @method Phaser.InputHandler#pointerX
     * @param {number} pointer - The index of the pointer to check. You can get this from Phaser.Pointer.id.
     * @return {number} The x coordinate of the Input pointer.
@@ -471,7 +471,7 @@ Phaser.InputHandler.prototype = {
     /**
     * The y coordinate of the Input pointer, relative to the top-left of the parent Sprite
     * This value is only set when the pointer is over this Sprite.
-    * 
+    *
     * @method Phaser.InputHandler#pointerY
     * @param {number} pointer - The index of the pointer to check. You can get this from Phaser.Pointer.id.
     * @return {number} The y coordinate of the Input pointer.
@@ -486,7 +486,7 @@ Phaser.InputHandler.prototype = {
 
     /**
     * If the Pointer is down this returns true. Please note that it only checks if the Pointer is down, not if it's down over any specific Sprite.
-    * 
+    *
     * @method Phaser.InputHandler#pointerDown
     * @param {number} pointer - The index of the pointer to check. You can get this from Phaser.Pointer.id.
     * @return {boolean} - True if the given pointer is down, otherwise false.
@@ -501,7 +501,7 @@ Phaser.InputHandler.prototype = {
 
     /**
     * If the Pointer is up this returns true. Please note that it only checks if the Pointer is up, not if it's up over any specific Sprite.
-    * 
+    *
     * @method Phaser.InputHandler#pointerUp
     * @param {number} pointer - The index of the pointer to check. You can get this from Phaser.Pointer.id.
     * @return {boolean} - True if the given pointer is up, otherwise false.
@@ -516,7 +516,7 @@ Phaser.InputHandler.prototype = {
 
     /**
     * A timestamp representing when the Pointer first touched the touchscreen.
-    * 
+    *
     * @method Phaser.InputHandler#pointerTimeDown
     * @param {number} pointer - The index of the pointer to check. You can get this from Phaser.Pointer.id.
     * @return {number}
@@ -545,7 +545,7 @@ Phaser.InputHandler.prototype = {
 
     /**
     * Is the Pointer over this Sprite?
-    * 
+    *
     * @method Phaser.InputHandler#pointerOver
     * @param {number} [index] - The ID number of a Pointer to check. If you don't provide a number it will check all Pointers.
     * @return {boolean} - True if the given pointer (if a index was given, or any pointer if not) is over this object.
@@ -649,7 +649,7 @@ Phaser.InputHandler.prototype = {
     /**
     * Checks if the given pointer is both down and over the Sprite this InputHandler belongs to.
     * Use the `fastTest` flag is to quickly check just the bounding hit area even if `InputHandler.pixelPerfectOver` is `true`.
-    * 
+    *
     * @method Phaser.InputHandler#checkPointerDown
     * @param {Phaser.Pointer} pointer
     * @param {boolean} [fastTest=false] - Force a simple hit area check even if `pixelPerfectOver` is true for this object?
@@ -684,7 +684,7 @@ Phaser.InputHandler.prototype = {
     /**
     * Checks if the given pointer is over the Sprite this InputHandler belongs to.
     * Use the `fastTest` flag is to quickly check just the bounding hit area even if `InputHandler.pixelPerfectOver` is `true`.
-    * 
+    *
     * @method Phaser.InputHandler#checkPointerOver
     * @param {Phaser.Pointer} pointer
     * @param {boolean} [fastTest=false] - Force a simple hit area check even if `pixelPerfectOver` is true for this object?
@@ -786,6 +786,7 @@ Phaser.InputHandler.prototype = {
 
     /**
     * Update.
+    * 
     * @method Phaser.InputHandler#update
     * @protected
     * @param {Phaser.Pointer} pointer
@@ -804,11 +805,11 @@ Phaser.InputHandler.prototype = {
             return false;
         }
 
-        if (this.draggable && this._draggedPointerID == pointer.id)
+        if (this.draggable && this._draggedPointerID === pointer.id)
         {
             return this.updateDrag(pointer);
         }
-        else if (this._pointerData[pointer.id].isOver === true)
+        else if (this._pointerData[pointer.id].isOver)
         {
             if (this.checkPointerOver(pointer))
             {
@@ -826,6 +827,7 @@ Phaser.InputHandler.prototype = {
 
     /**
     * Internal method handling the pointer over event.
+    * 
     * @method Phaser.InputHandler#_pointerOverHandler
     * @private
     * @param {Phaser.Pointer} pointer
@@ -862,6 +864,7 @@ Phaser.InputHandler.prototype = {
 
     /**
     * Internal method handling the pointer out event.
+    * 
     * @method Phaser.InputHandler#_pointerOutHandler
     * @private
     * @param {Phaser.Pointer} pointer
@@ -915,7 +918,7 @@ Phaser.InputHandler.prototype = {
             this._pointerData[pointer.id].isDown = true;
             this._pointerData[pointer.id].isUp = false;
             this._pointerData[pointer.id].timeDown = this.game.time.now;
-    
+
             if (this.sprite && this.sprite.events)
             {
                 this.sprite.events.onInputDown.dispatch(this.sprite, pointer);
@@ -1192,12 +1195,12 @@ Phaser.InputHandler.prototype = {
     */
     enableDrag: function (lockCenter, bringToTop, pixelPerfect, alphaThreshold, boundsRect, boundsSprite) {
 
-        if (typeof lockCenter == 'undefined') { lockCenter = false; }
-        if (typeof bringToTop == 'undefined') { bringToTop = false; }
-        if (typeof pixelPerfect == 'undefined') { pixelPerfect = false; }
-        if (typeof alphaThreshold == 'undefined') { alphaThreshold = 255; }
-        if (typeof boundsRect == 'undefined') { boundsRect = null; }
-        if (typeof boundsSprite == 'undefined') { boundsSprite = null; }
+        if (typeof lockCenter === 'undefined') { lockCenter = false; }
+        if (typeof bringToTop === 'undefined') { bringToTop = false; }
+        if (typeof pixelPerfect === 'undefined') { pixelPerfect = false; }
+        if (typeof alphaThreshold === 'undefined') { alphaThreshold = 255; }
+        if (typeof boundsRect === 'undefined') { boundsRect = null; }
+        if (typeof boundsSprite === 'undefined') { boundsSprite = null; }
 
         this._dragPoint = new Phaser.Point();
         this.draggable = true;
@@ -1272,7 +1275,7 @@ Phaser.InputHandler.prototype = {
                 this.sprite.x = this.globalToLocalX(pointer.x) + (this.sprite.x - bounds.centerX);
                 this.sprite.y = this.globalToLocalY(pointer.y) + (this.sprite.y - bounds.centerY);
             }
-            
+
             this._dragPoint.setTo(this.sprite.x - this.globalToLocalX(pointer.x), this.sprite.y - this.globalToLocalY(pointer.y));
         }
 
@@ -1365,8 +1368,8 @@ Phaser.InputHandler.prototype = {
     */
     setDragLock: function (allowHorizontal, allowVertical) {
 
-        if (typeof allowHorizontal == 'undefined') { allowHorizontal = true; }
-        if (typeof allowVertical == 'undefined') { allowVertical = true; }
+        if (typeof allowHorizontal === 'undefined') { allowHorizontal = true; }
+        if (typeof allowVertical === 'undefined') { allowVertical = true; }
 
         this.allowHorizontalDrag = allowHorizontal;
         this.allowVerticalDrag = allowVertical;
@@ -1386,10 +1389,10 @@ Phaser.InputHandler.prototype = {
     */
     enableSnap: function (snapX, snapY, onDrag, onRelease, snapOffsetX, snapOffsetY) {
 
-        if (typeof onDrag == 'undefined') { onDrag = true; }
-        if (typeof onRelease == 'undefined') { onRelease = false; }
-        if (typeof snapOffsetX == 'undefined') { snapOffsetX = 0; }
-        if (typeof snapOffsetY == 'undefined') { snapOffsetY = 0; }
+        if (typeof onDrag === 'undefined') { onDrag = true; }
+        if (typeof onRelease === 'undefined') { onRelease = false; }
+        if (typeof snapOffsetX === 'undefined') { snapOffsetX = 0; }
+        if (typeof snapOffsetY === 'undefined') { snapOffsetY = 0; }
 
         this.snapX = snapX;
         this.snapY = snapY;

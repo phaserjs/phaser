@@ -41,7 +41,7 @@ Phaser.SoundManager = function (game) {
     this._muted = false;
 
     /**
-    * @property {Description} _unlockSource - Internal unlock tracking var.
+    * @property {AudioContext} _unlockSource - Internal unlock tracking var.
     * @private
     * @default
     */

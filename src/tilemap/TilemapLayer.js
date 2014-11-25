@@ -613,11 +613,7 @@ Phaser.TilemapLayer.prototype.render = function () {
         this.renderDebug();
     }
 
-    if (this.game.renderType === Phaser.WEBGL)
-    {
-        // PIXI.updateWebGLTexture(this.baseTexture, renderSession.gl);
-        PIXI.updateWebGLTexture(this.baseTexture, this.game.renderer.gl);
-    }
+    this.texture._updateUvs();
 
     this.dirty = false;
     this.layer.dirty = false;
