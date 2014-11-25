@@ -385,7 +385,7 @@ Phaser.Text.prototype.updateText = function () {
     this.canvas.width = width * this.resolution;
     
     //calculate text height
-    var lineHeight = fontProperties.fontSize + this.style.strokeThickness;
+    var lineHeight = fontProperties.fontSize + this.style.strokeThickness + this._lineSpacing;
  
     var height = lineHeight * lines.length;
 
@@ -429,8 +429,6 @@ Phaser.Text.prototype.updateText = function () {
         {
             linePositionX += (maxLineWidth - lineWidths[i]) / 2;
         }
-
-        linePositionY += this._lineSpacing;
 
         if (this.colors.length > 0)
         {
