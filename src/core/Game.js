@@ -288,45 +288,57 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     this._codePaused = false;
 
     /**
+    * The number of the logic update applied this render frame, starting from 0.
+    *
+    * The first update is `updateNumber === 0` and the last update is `updateNumber === updatesThisFrame.`
+    * @property {number} updateNumber
+    * @protected
+    */
+    this.updateNumber = 0;
+
+    /**
+    * Number of logic updates expected to occur this render frame;
+    * will be 1 unless there are catch-ups required (and allowed).
+    * @property {integer} updatesThisFrame
+    * @protected
+    */
+    this.updatesThisFrame = 1;
+
+    /**
     * @property {number} _deltaTime - accumulate elapsed time until a logic update is due
     * @private
     */
     this._deltaTime = 0;
 
     /**
-     * @property {number} count - Update iteration counter.
-     * @protected
-     */
-    this.count = 0;
-
-    /**
-     * @property {number} _lastCount - remember how many 'catch-up' iterations were used on the logicUpdate last frame
-     * @private
-     */
+    * @property {number} _lastCount - remember how many 'catch-up' iterations were used on the logicUpdate last frame
+    * @private
+    */
     this._lastCount = 0;
 
     /**
-     * @property {number} _spiralling - if the 'catch-up' iterations are spiralling out of control, this counter is incremented
-     * @private
-     */
+    * @property {number} _spiralling - if the 'catch-up' iterations are spiralling out of control, this counter is incremented
+    * @private
+    */
     this._spiralling = 0;
 
     /**
-     * @property {Phaser.Signal} fpsProblemNotifier - if the game is struggling to maintain the desiredFps, this signal will be dispatched
-     *                                                to suggest that the program adjust it's fps closer to the Time.suggestedFps value
-     * @public
-     */
+    * If the game is struggling to maintain the desired FPS, this signal will be dispatched.
+    * The desired/chosen FPS should probably be closer to the {@link Phaser.Time#suggestedFps} value.
+    * @property {Phaser.Signal} fpsProblemNotifier
+    * @public
+    */
     this.fpsProblemNotifier = new Phaser.Signal();
 
     /**
-     * @property {boolean} forceSingleUpdate - Should the game loop force a logic update, regardless of the delta timer? Set to true if you know you need this. You can toggle it on the fly.
-     */
+    * @property {boolean} forceSingleUpdate - Should the game loop force a logic update, regardless of the delta timer? Set to true if you know you need this. You can toggle it on the fly.
+    */
     this.forceSingleUpdate = false;
 
     /**
-     * @property {number} _nextNotification - the soonest game.time.time value that the next fpsProblemNotifier can be dispatched
-     * @private
-     */
+    * @property {number} _nextNotification - the soonest game.time.time value that the next fpsProblemNotifier can be dispatched
+    * @private
+    */
     this._nextFpsNotification = 0;
 
     //  Parse the configuration object (if any)
@@ -710,32 +722,39 @@ Phaser.Game.prototype = {
 
             // call the game update logic multiple times if necessary to "catch up" with dropped frames
             // unless forceSingleUpdate is true
-            this.count = 0;
+            var count = 0;
+
+            this.updatesThisFrame = Math.floor(this._deltaTime / slowStep);
+            if (this.forceSingleUpdate)
+            {
+                this.updatesThisFrame = Math.min(1, this.updatesThisFrame);
+            }
 
             while (this._deltaTime >= slowStep)
             {
                 this._deltaTime -= slowStep;
+                this.updateNumber = count;
                 this.updateLogic(1.0 / this.time.desiredFps);
-                this.count++;
+                count++;
 
-                if (this.forceSingleUpdate && this.count === 1)
+                if (this.forceSingleUpdate && count === 1)
                 {
                     break;
                 }
             }
 
             // detect spiralling (if the catch-up loop isn't fast enough, the number of iterations will increase constantly)
-            if (this.count > this._lastCount)
+            if (count > this._lastCount)
             {
                 this._spiralling++;
             }
-            else if (this.count < this._lastCount)
+            else if (count < this._lastCount)
             {
                 // looks like it caught up successfully, reset the spiral alert counter
                 this._spiralling = 0;
             }
 
-            this._lastCount = this.count;
+            this._lastCount = count;
 
             // call the game render update exactly once every frame unless we're playing catch-up from a spiral condition
             this.updateRender(this._deltaTime / slowStep);
