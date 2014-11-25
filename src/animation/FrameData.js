@@ -108,7 +108,7 @@ Phaser.FrameData.prototype = {
     /**
      * Makes a copy of this FrameData including copies (not references) to all of the Frames it contains.
      *
-     * @method clone
+     * @method Phaser.FrameData#clone
      * @return {Phaser.FrameData} A clone of this object, including clones of the Frame objects it contains.
      */
     clone: function () {

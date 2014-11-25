@@ -127,7 +127,7 @@ Phaser.Events.prototype = {
     /**
      * Removes all events.
      *
-     * @method destroy
+     * @method Phaser.Events#destroy
      */
     destroy: function () {
 
