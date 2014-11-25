@@ -30,7 +30,7 @@ exports.defineTags = function(dictionary) {
        }
     });
 
-}
+};
 
 exports.handlers = {};
 exports.handlers.newDoclet = function (e) {

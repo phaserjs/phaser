@@ -601,19 +601,28 @@ Object.defineProperty(Phaser.Mouse.prototype, "disabled", {
 *
 * See https://developer.mozilla.org/en-US/docs/Web/Events/mousewheel for choosing a scale and delta mode.
 *
-* @class Phaser.Mouse~WheelEventProxy
+* @method Phaser.Mouse#WheelEventProxy
 * @private
 * @param {number} scaleFactor - Scale factor as applied to wheelDelta/wheelDeltaX or details.
 * @param {integer} deltaMode - The reported delta mode.
 */
 function WheelEventProxy (scaleFactor, deltaMode) {
 
+    /**
+    * @property {number} _scaleFactor - Scale factor as applied to wheelDelta/wheelDeltaX or details.
+    * @private
+    */
     this._scaleFactor = scaleFactor;
 
+    /**
+    * @property {number} _deltaMode - The reported delta mode.
+    * @private
+    */
     this._deltaMode = deltaMode;
 
     /**
-    * The original event _currently_ being proxied; the getters will follow suit.
+    * @property {any} originalEvent - The original event _currently_ being proxied; the getters will follow suit.
+    * @private
     */
     this.originalEvent = null;
 }
@@ -627,12 +636,16 @@ WheelEventProxy.prototype.bindEvent = function (event) {
     if (!WheelEventProxy._stubsGenerated && event)
     {
         var makeBinder = function (name) {
+
             return function () {
                 var v = this.originalEvent[name];
                 return typeof v !== 'function' ? v : v.bind(this.originalEvent);
             };
+
         };
-        for (var prop in event) {
+
+        for (var prop in event)
+        {
             if (!(prop in WheelEventProxy.prototype))
             {
                 Object.defineProperty(WheelEventProxy.prototype, prop, {

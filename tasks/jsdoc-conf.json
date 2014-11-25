@@ -4,34 +4,34 @@
     },
     "source": {
         "include": [ 
-            "../pixi-jsdoc.js",
-            "../../src/Phaser.js", 
-            "../../src/animation/", 
-            "../../src/core/", 
-            "../../src/gameobjects/", 
-            "../../src/geom/", 
-            "../../src/input/", 
-            "../../src/loader/", 
-            "../../src/math/", 
-            "../../src/net/", 
-            "../../src/particles/", 
-            "../../src/physics/", 
-            "../../src/sound/", 
-            "../../src/system/", 
-            "../../src/tilemap/", 
-            "../../src/time/", 
-            "../../src/tween/", 
-            "../../src/utils/" 
+            "./docs/pixi-jsdoc.js",
+            "./src/Phaser.js", 
+            "./src/animation/", 
+            "./src/core/", 
+            "./src/gameobjects/", 
+            "./src/geom/", 
+            "./src/input/", 
+            "./src/loader/", 
+            "./src/math/", 
+            "./src/net/", 
+            "./src/particles/", 
+            "./src/physics/", 
+            "./src/sound/", 
+            "./src/system/", 
+            "./src/tilemap/", 
+            "./src/time/", 
+            "./src/tween/", 
+            "./src/utils/" 
         ],
         "exclude": [
-            "../../src/physics/p2/p2.js"
+            "./src/physics/p2/p2.js"
         ],
         "includePattern": ".+\\.js(doc)?$",
         "excludePattern": "(^|\\/|\\\\)_"
     },
     "plugins"   : [
-        "local-plugins/proptomember",
-        "local-plugins/sourceproxy",
+        "./tasks/jsdoc-plugins/proptomember",
+        "./tasks/jsdoc-plugins/sourceproxy",
         "plugins/markdown"
     ],
     "templates": {
@@ -54,11 +54,12 @@
         "hardwrap" : true
     },
     "opts": {
-        "template": "docstrap-master/template/",
         "encoding": "utf8",
-        "destination": "../",
         "recurse": true,
         "private": false,
-        "lenient": true
+        "lenient": true,
+        "destination": "./docs",
+        "template": "./resources/docstrap-master/template"
+
     }
 }

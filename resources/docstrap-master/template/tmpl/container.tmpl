@@ -5,7 +5,7 @@
 
 <?js if (doc.kind === 'mainpage' || (doc.kind === 'package')) { ?>
 	<?js if (i === 0){ ?>
-	<span class="page-title"><?js= title ?></span>
+	<!-- <span class="page-title"><?js= title ?></span> -->
 	<?js } ?>
 	<?js= self.partial('mainpage.tmpl', doc) ?>
 
@@ -13,7 +13,7 @@
 		<h1 class="page-title"><?js= title ?></h1>
     <?js= self.partial('source.tmpl', doc) ?>
 <?js } else { ?>
-	<h1 class="page-title"><?js= title ?></h1>
+	<!--<h1 class="page-title"><?js= title ?></h1>-->
 <section>
 
 <header>

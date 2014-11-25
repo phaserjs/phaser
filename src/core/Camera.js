@@ -105,6 +105,7 @@ Phaser.Camera = function (game, id, x, y, width, height) {
 
     /**
     * @property {Phaser.Point} _targetPosition - Internal point used to calculate target position
+    * @private
     */
     this._targetPosition = new Phaser.Point();
 

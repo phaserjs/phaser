@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>Phaser Source: D:/wamp/www/phaser/src/core/LinkedList.js</title>
+	<title>Phaser Source: D:/wamp/www/phaser/src/utils/LinkedList.js</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -19,11 +19,14 @@
 </head>
 
 <body>
+
 <div class="container-fluid">
 	<div class="navbar navbar-fixed-top navbar-inverse">
+		<div style="position: absolute; width: 143px; height: 31px; right: 10px; top: 10px; z-index: 1050"><a href="http://phaser.io"><img src="img/phaser.png" border="0" /></a></div>
 		<div class="navbar-inner">
-			<a class="brand" href="index.html">Phaser</a>
+			<a class="brand" href="index.html">Phaser API</a>
 			<ul class="nav">
+
 				
 				<li class="dropdown">
 					<a href="namespaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Namespaces<b
@@ -63,6 +66,10 @@
 						
 						<li class="class-depth-1">
 							<a href="Phaser.ArrayList.html">ArrayList</a>
+						</li>
+						
+						<li class="class-depth-1">
+							<a href="Phaser.ArraySet.html">ArraySet</a>
 						</li>
 						
 						<li class="class-depth-1">
@@ -522,6 +529,10 @@
 						</li>
 						
 						<li class="class-depth-1">
+							<a href="Phaser.TweenData.html">TweenData</a>
+						</li>
+						
+						<li class="class-depth-1">
 							<a href="Phaser.TweenManager.html">TweenManager</a>
 						</li>
 						
@@ -782,6 +793,10 @@
 						</li>
 						
 						<li class="class-depth-1">
+							<a href="PIXI.SpineTextureLoader.html">SpineTextureLoader</a>
+						</li>
+						
+						<li class="class-depth-1">
 							<a href="PIXI.Sprite.html">Sprite</a>
 						</li>
 						
@@ -857,64 +872,100 @@
 					</ul>
 				</li>
 				
+
 				<li class="dropdown">
-					<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b
-						class="caret"></b></a>
-
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Core<b class="caret"></b></a>
 					<ul class="dropdown-menu ">
-						
-						<li class="class-depth-0">
-							<a href="global.html#clone">clone</a>
-						</li>
-						
-						<li class="class-depth-0">
-							<a href="global.html#createCustomLayer">createCustomLayer</a>
-						</li>
-						
-						<li class="class-depth-0">
-							<a href="global.html#createFixedLayer">createFixedLayer</a>
-						</li>
-						
-						<li class="class-depth-0">
-							<a href="global.html#createFluidLayer">createFluidLayer</a>
-						</li>
-						
-						<li class="class-depth-0">
-							<a href="global.html#createFullLayer">createFullLayer</a>
-						</li>
-						
-						<li class="class-depth-0">
-							<a href="global.html#debug">debug</a>
-						</li>
-						
-						<li class="class-depth-0">
-							<a href="global.html#destroy">destroy</a>
-						</li>
-						
-						<li class="class-depth-0">
-							<a href="global.html#onResize">onResize</a>
-						</li>
-						
-						<li class="class-depth-0">
-							<a href="global.html#originalEvent">originalEvent</a>
-						</li>
-						
-						<li class="class-depth-0">
-							<a href="global.html#refresh">refresh</a>
-						</li>
-						
-						<li class="class-depth-0">
-							<a href="global.html#reset">reset</a>
-						</li>
-						
-						<li class="class-depth-0">
-							<a href="global.html#setSize">setSize</a>
-						</li>
-						
-
+						<li class="class-depth-1"><a href="Phaser.Group.html">Group</a></li>
+						<li class="class-depth-1"><a href="Phaser.World.html">World</a></li>
+						<li class="class-depth-1"><a href="Phaser.Loader.html">Loader</a></li>
+						<li class="class-depth-1"><a href="Phaser.Time.html">Time</a></li>
+						<li class="class-depth-1"><a href="Phaser.Camera.html">Camera</a></li>
+						<li class="class-depth-1"><a href="Phaser.StateManager.html">State Manager</a></li>
+						<li class="class-depth-1"><a href="Phaser.TweenManager.html">Tween Manager</a></li>
+						<li class="class-depth-1"><a href="Phaser.SoundManager.html">Sound Manager</a></li>
+						<li class="class-depth-1"><a href="Phaser.InputManager.html">Input Manager</a></li>
+						<li class="class-depth-1"><a href="Phaser.ScaleManager.html">Scale Manager</a></li>
 					</ul>
 				</li>
-				
+
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Game Objects<b class="caret"></b></a>
+					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="Phaser.GameObjectFactory.html">Factory (game.add)</a></li>
+						<li class="class-depth-1"><a href="Phaser.GameObjectCreator.html">Creator (game.make)</a></li>
+						<li class="class-depth-1"><a href="Phaser.Sprite.html">Sprite</a></li>
+						<li class="class-depth-1"><a href="Phaser.Image.html">Image</a></li>
+						<li class="class-depth-1"><a href="Phaser.Sound.html">Sound</a></li>
+						<li class="class-depth-1"><a href="Phaser.Emitter.html">Emitter</a></li>
+						<li class="class-depth-1"><a href="Phaser.Text.html">Text</a></li>
+						<li class="class-depth-1"><a href="Phaser.Tween.html">Tween</a></li>
+						<li class="class-depth-1"><a href="Phaser.BitmapText.html">BitmapText</a></li>
+						<li class="class-depth-1"><a href="Phaser.Tilemap.html">Tilemap</a></li>
+						<li class="class-depth-1"><a href="Phaser.BitmapData.html">BitmapData</a></li>
+						<li class="class-depth-1"><a href="Phaser.RetroFont.html">RetroFont</a></li>
+						<li class="class-depth-1"><a href="Phaser.Button.html">Button</a></li>
+						<li class="class-depth-1"><a href="Phaser.Animation.html">Animation</a></li>
+						<li class="class-depth-1"><a href="Phaser.Graphics.html">Graphics</a></li>
+						<li class="class-depth-1"><a href="Phaser.RenderTexture.html">RenderTexture</a></li>
+						<li class="class-depth-1"><a href="Phaser.TileSprite.html">TileSprite</a></li>
+					</ul>
+				</li>
+
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Geometry<b class="caret"></b></a>
+					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="Phaser.Circle.html">Circle</a></li>
+						<li class="class-depth-1"><a href="Phaser.Rectangle.html">Rectangle</a></li>
+						<li class="class-depth-1"><a href="Phaser.Point.html">Point</a></li>
+						<li class="class-depth-1"><a href="Phaser.Line.html">Line</a></li>
+						<li class="class-depth-1"><a href="Phaser.Ellipse.html">Ellipse</a></li>
+						<li class="class-depth-1"><a href="Phaser.Polygon.html">Polygon</a></li>
+					</ul>
+				</li>
+
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Physics<b class="caret"></b></a>
+					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="Phaser.Physics.Arcade.html">Arcade Physics</a></li>
+						<li class="class-depth-2"><a href="Phaser.Physics.Arcade.Body.html">Body</a></li>
+						<li class="class-depth-1"><a href="Phaser.Physics.P2.html">P2 Physics</a></li>
+						<li class="class-depth-2"><a href="Phaser.Physics.P2.Body.html">Body</a></li>
+						<li class="class-depth-2"><a href="Phaser.Physics.P2.Spring.html">Spring</a></li>
+						<li class="class-depth-2"><a href="Phaser.Physics.P2.CollisionGroup.html">CollisionGroup</a></li>
+						<li class="class-depth-2"><a href="Phaser.Physics.P2.ContactMaterial.html">ContactMaterial</a></li>
+						<li class="class-depth-1"><a href="Phaser.Physics.Ninja.html">Ninja Physics</a></li>
+						<li class="class-depth-2"><a href="Phaser.Physics.Body.html">Body</a></li>
+					</ul>
+				</li>
+
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Input<b class="caret"></b></a>
+					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="Phaser.InputHandler.html">Input Handler</a></li>
+						<li class="class-depth-1"><a href="Phaser.Pointer.html">Pointer</a></li>
+						<li class="class-depth-1"><a href="Phaser.Mouse.html">Mouse</a></li>
+						<li class="class-depth-1"><a href="Phaser.Keyboard.html">Keyboard</a></li>
+						<li class="class-depth-1"><a href="Phaser.Key.html">Key</a></li>
+						<li class="class-depth-1"><a href="Phaser.Gamepad.html">Gamepad</a></li>
+					</ul>
+				</li>
+
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Community<b class="caret"></b></a>
+					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="https://github.com/photonstorm/phaser">Phaser Github</a></li>
+						<li class="class-depth-1"><a href="http://examples.phaser.io">Phaser Examples</a></li>
+						<li class="class-depth-1"><a href="https://github.com/photonstorm/phaser-plugins">Phaser Plugins</a></li>
+						<li class="class-depth-1"><a href="http://www.html5gamedevs.com/forum/14-phaser/">Forum</a></li>
+						<li class="class-depth-1"><a href="http://stackoverflow.com/questions/tagged/phaser-framework">Stack Overflow</a></li>
+						<li class="class-depth-1"><a href="https://confirmsubscription.com/h/r/369DE48E3E86AF1E">Newsletter</a></li>
+						<li class="class-depth-1"><a href="https://twitter.com/photonstorm">Twitter</a></li>
+						<li class="class-depth-1"><a href="http://www.html5gamedevs.com/topic/4470-official-phaserio-irc-channel-phaserio-on-freenode/">IRC</a></li>
+						<li class="class-depth-1"><a href="https://www.gittip.com/photonstorm/">GitTip</a></li>
+					</ul>
+				</li>
+
 			</ul>
 		</div>
 	</div>
@@ -928,7 +979,7 @@
 					
 
 
-		<h1 class="page-title">Source: D:/wamp/www/phaser/src/core/LinkedList.js</h1>
+		<h1 class="page-title">Source: D:/wamp/www/phaser/src/utils/LinkedList.js</h1>
     
     <section>
         <article>
@@ -939,7 +990,12 @@
 */
 
 /**
-* A basic linked list data structure.
+* A basic Linked List data structure.
+*
+* This implementation _modifies_ the `prev` and `next` properties of each item added:
+* - The `prev` and `next` properties must be writable and should not be used for any other purpose.
+* - Items _cannot_ be added to multiple LinkedLists at the same time.
+* - Only objects can be added.
 *
 * @class Phaser.LinkedList
 * @constructor
@@ -947,31 +1003,36 @@
 Phaser.LinkedList = function () {
 
     /**
-    * @property {object} next - Next element in the list.
+    * Next element in the list.
+    * @property {object} next
     * @default
     */
     this.next = null;
 
     /**
-    * @property {object} prev - Previous element in the list.
+    * Previous element in the list.
+    * @property {object} prev
     * @default
     */
     this.prev = null;
 
     /**
-    * @property {object} first - First element in the list.
+    * First element in the list.
+    * @property {object} first
     * @default
     */
     this.first = null;
 
     /**
-    * @property {object} last - Last element in the list.
+    * Last element in the list.
+    * @property {object} last
     * @default
     */
     this.last = null;
 
     /**
-    * @property {number} total - Number of elements in the list.
+    * Number of elements in the list.
+    * @property {integer} total
     * @default
     */
     this.total = 0;
@@ -984,32 +1045,32 @@ Phaser.LinkedList.prototype = {
     * Adds a new element to this linked list.
     *
     * @method Phaser.LinkedList#add
-    * @param {object} child - The element to add to this list. Can be a Phaser.Sprite or any other object you need to quickly iterate through.
-    * @return {object} The child that was added.
+    * @param {object} item - The element to add to this list. Can be a Phaser.Sprite or any other object you need to quickly iterate through.
+    * @return {object} The item that was added.
     */
-    add: function (child) {
+    add: function (item) {
 
         //  If the list is empty
         if (this.total === 0 && this.first === null && this.last === null)
         {
-            this.first = child;
-            this.last = child;
-            this.next = child;
-            child.prev = this;
+            this.first = item;
+            this.last = item;
+            this.next = item;
+            item.prev = this;
             this.total++;
-            return child;
+            return item;
         }
 
         //  Gets appended to the end of the list, regardless of anything, and it won't have any children of its own (non-nested list)
-        this.last.next = child;
+        this.last.next = item;
 
-        child.prev = this.last;
+        item.prev = this.last;
 
-        this.last = child;
+        this.last = item;
 
         this.total++;
 
-        return child;
+        return item;
 
     },
 
@@ -1032,41 +1093,41 @@ Phaser.LinkedList.prototype = {
     * Removes the given element from this linked list if it exists.
     *
     * @method Phaser.LinkedList#remove
-    * @param {object} child - The child to be removed from the list.
+    * @param {object} item - The item to be removed from the list.
     */
-    remove: function (child) {
+    remove: function (item) {
 
         if (this.total === 1)
         {
             this.reset();
-            child.next = child.prev = null;
+            item.next = item.prev = null;
             return;
         }
 
-        if (child === this.first)
+        if (item === this.first)
         {
             // It was 'first', make 'first' point to first.next
             this.first = this.first.next;
         }
-        else if (child === this.last)
+        else if (item === this.last)
         {
             // It was 'last', make 'last' point to last.prev
             this.last = this.last.prev;
         }
 
-        if (child.prev)
+        if (item.prev)
         {
-            // make child.prev.next point to childs.next instead of child
-            child.prev.next = child.next;
+            // make item.prev.next point to childs.next instead of item
+            item.prev.next = item.next;
         }
 
-        if (child.next)
+        if (item.next)
         {
-            // make child.next.prev point to child.prev instead of child
-            child.next.prev = child.prev;
+            // make item.next.prev point to item.prev instead of item
+            item.next.prev = item.prev;
         }
 
-        child.next = child.prev = null;
+        item.next = item.prev = null;
 
         if (this.first === null )
         {
@@ -1131,7 +1192,7 @@ Phaser.LinkedList.prototype.constructor = Phaser.LinkedList;
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Sat Nov 15 2014 19:54:25 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Tue Nov 25 2014 00:17:18 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>
@@ -1151,7 +1212,6 @@ Phaser.LinkedList.prototype.constructor = Phaser.LinkedList;
 	<script src="scripts/jquery.localScroll.js"></script>
 	<script src="scripts/bootstrap-dropdown.js"></script>
 	<script src="scripts/toc.js"></script>
-
 
 	<script>  Sunlight.highlightAll({lineNumbers:true,  showMenu: true, enableDoclinks :true}); </script>
 

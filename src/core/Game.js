@@ -294,6 +294,12 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     this._deltaTime = 0;
 
     /**
+     * @property {number} count - Update iteration counter.
+     * @protected
+     */
+    this.count = 0;
+
+    /**
      * @property {number} _lastCount - remember how many 'catch-up' iterations were used on the logicUpdate last frame
      * @private
      */
@@ -704,32 +710,32 @@ Phaser.Game.prototype = {
 
             // call the game update logic multiple times if necessary to "catch up" with dropped frames
             // unless forceSingleUpdate is true
-            var count = 0;
+            this.count = 0;
 
             while (this._deltaTime >= slowStep)
             {
                 this._deltaTime -= slowStep;
                 this.updateLogic(1.0 / this.time.desiredFps);
-                count++;
+                this.count++;
 
-                if (this.forceSingleUpdate && count === 1)
+                if (this.forceSingleUpdate && this.count === 1)
                 {
                     break;
                 }
             }
 
             // detect spiralling (if the catch-up loop isn't fast enough, the number of iterations will increase constantly)
-            if (count > this._lastCount)
+            if (this.count > this._lastCount)
             {
                 this._spiralling++;
             }
-            else if (count < this._lastCount)
+            else if (this.count < this._lastCount)
             {
                 // looks like it caught up successfully, reset the spiral alert counter
                 this._spiralling = 0;
             }
 
-            this._lastCount = count;
+            this._lastCount = this.count;
 
             // call the game render update exactly once every frame unless we're playing catch-up from a spiral condition
             this.updateRender(this._deltaTime / slowStep);
