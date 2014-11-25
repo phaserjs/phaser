@@ -29,7 +29,7 @@ Phaser.Time = function (game) {
 
     /**
     * The `now` when the previous update occurred.
-    * @property {integer} prevTime
+    * @property {number} prevTime
     * @protected
     */
     this.prevTime = 0;
@@ -37,9 +37,12 @@ Phaser.Time = function (game) {
     /**
     * An increasing value representing cumulative milliseconds since an undisclosed epoch.
     *
+    * This value must _not_ be used with `Date.now()`.
+    *
     * The source may either be from a high-res source (eg. if RAF is available) or the standard Date.now;
     * the value can only be relied upon within a particular game instance.
-    * @property {integer} now
+    *
+    * @property {number} now
     * @protected
     */
     this.now = 0;
@@ -47,10 +50,12 @@ Phaser.Time = function (game) {
     /**
     * Elapsed time since the last time update, in milliseconds, based on `now`.
     *
+    * This value _may_ include time that the game is paused/inactive.
+    *
     * _Note:_ This is updated only once per game loop - even if multiple logic update steps are done.
     * Use {@link Phaser.Timer#physicsTime physicsTime} as a basis of game/logic calculations instead.
     *
-    * @property {integer} elapsed
+    * @property {number} elapsed
     * @see Phaser.Time.time
     * @protected
     */
@@ -59,28 +64,33 @@ Phaser.Time = function (game) {
     /**
     * The time in ms since the last time update, in milliseconds, based on `time`.
     *
+    * This value is corrected for game pauses and will be "about zero" after a game is resumed.
+    *
     * _Note:_ This is updated once per game loop - even if multiple logic update steps are done.
     * Use {@link Phaser.Timer#physicsTime physicsTime} as a basis of game/logic calculations instead.
     *
     * @property {integer} elapsedMS 
     * @protected
-    * @drepecated 2.2.0 - Use `elapsed` instead.
-    *     Both are internal methods representing a change in elapsed time but `elapsed` will always
-    *     be at least as (and probably more) precise and cannot get a negative value if the clock is adjusted.
     */
     this.elapsedMS = 0;
 
     /**
-    * The `time` when the game was last paused.
-    * @property {number} pausedTime
-    * @protected
+    * The physics update delta, in fractional seconds.
+    *    
+    * This should be used as an applicable multiplier by all logic update steps (eg. `preUpdate/postUpdate/update`)
+    * to ensure consistent game timing.
+    *
+    * With fixed-step updates this normally equivalent to `1.0 / desiredFps`.
+    *
+    * @property {number} physicsElapsed
     */
-    this.pausedTime = 0;
+    this.physicsElapsed = 0;
 
     /**
     * The desired frame rate of the game.
     *
     * This is used is used to calculate the physic/logic multiplier and how to apply catch-up logic updates.
+    *
     * @property {number} desiredFps
     * @default
     */
@@ -90,6 +100,7 @@ Phaser.Time = function (game) {
     * The suggested frame rate for your game, based on an averaged real frame rate.
     *
     * _Note:_ This is not available until after a few frames have passed; use it after a few seconds (eg. after the menus)
+    *
     * @property {number} suggestedFps
     * @default
     */
@@ -135,34 +146,34 @@ Phaser.Time = function (game) {
     this.msMax = 0;
 
     /**
-    * The physics update delta, in fractional seconds.
-    *    
-    * This should be used as an applicable multiplier by all logic update steps (eg. `preUpdate/postUpdate/update`)
-    * to ensure consistent game timing.
-    *
-    * With fixed-step updates this normally equivalent to `1.0 / desiredFps`.
-    * @property {number} physicsElapsed
-    */
-    this.physicsElapsed = 0;
-
-    /**
     * The number of render frames record in the last second. Only calculated if Time.advancedTiming is true.
     * @property {integer} frames
     */
     this.frames = 0;
 
     /**
-    * @property {number} pauseDuration - Records how long the game was paused for in miliseconds.
+    * The `time` when the game was last paused.
+    * @property {number} pausedTime
+    * @protected
+    */
+    this.pausedTime = 0;
+
+    /**
+    * Records how long the game was last paused, in miliseconds.
+    * (This is not updated until the game is resumed.)
+    * @property {number} pauseDuration
     */
     this.pauseDuration = 0;
 
     /**
     * @property {number} timeToCall - The value that setTimeout needs to work out when to next update
+    * @protected
     */
     this.timeToCall = 0;
 
     /**
     * @property {number} timeExpected - The time when the next call is expected when using setTimer to control the update loop
+    * @protected
     */
     this.timeExpected = 0;
 
