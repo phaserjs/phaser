@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>Phaser Class: Net</title>
+	<title>Phaser Source: D:/wamp/www/phaser/src/utils/ArraySet.js</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -973,922 +973,255 @@
 	<div class="row-fluid">
 
 		
-		<div class="span8">
-			
+			<div class="span12">
+				
 				<div id="main">
 					
 
 
-	<!--<h1 class="page-title">Class: Net</h1>-->
-<section>
-
-<header>
-    <h2>
-        <span class="ancestors"><a href="Phaser.html">Phaser</a>.</span>
-    
-    Net
-    </h2>
-    
-        <div class="class-description"><p>Phaser.Net</p></div>
-    
-</header>
-
-<article>
-    <div class="container-overview">
-    
-
-    
-        
-<dt>
-    <h4 class="name "
-        id="Net"><span class="type-signature"></span>new Net<span class="signature">(game)</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>Phaser.Net handles browser URL related tasks such as checking host names, domain names and query string manipulation.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>game</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Phaser.Game.html">Phaser.Game</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>A reference to the currently running game.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="Net.js.html">net/Net.js</a>, <a href="Net.js.html#sunlight-1-line-14">line 14</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-       
-    
-    
-</dd>
-
-    
-    </div>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Methods</h3>
-
-        <dl>
-            
-<dt>
-    <h4 class="name "
-        id="checkDomainName"><span class="type-signature"></span>checkDomainName<span class="signature">(domain)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>Compares the given domain name against the hostname of the browser containing the game.
-If the domain name is found it returns true.
-You can specify a part of a domain, for example 'google' would match 'google.com', 'google.co.uk', etc.
-Do not include 'http://' at the start.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>domain</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-
-    
-    <h5>Returns:</h5>
-    <div class="returns">
-        
-            
-    
-        <div class="returns-type">
-        
-<span class="param-type">boolean</span>
-
- -
-        </div>
-    
-    <div class="returns-desc param-desc">
-        <p>true if the given domain fragment can be found in the window.location.hostname</p>
-    </div>
-
-
-        
-    </div>
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="Net.js.html">net/Net.js</a>, <a href="Net.js.html#sunlight-1-line-38">line 38</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-       
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="decodeURI"><span class="type-signature"></span>decodeURI<span class="signature">(value)</span><span class="type-signature"> &rarr; {string}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>Returns the Query String as an object.
-If you specify a parameter it will return just the value of that parameter, should it exist.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>value</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The URI component to be decoded.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-
-    
-    <h5>Returns:</h5>
-    <div class="returns">
-        
-            
-    
-        <div class="returns-type">
-        
-<span class="param-type">string</span>
-
- -
-        </div>
-    
-    <div class="returns-desc param-desc">
-        <p>The decoded value.</p>
-    </div>
-
-
-        
-    </div>
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="Net.js.html">net/Net.js</a>, <a href="Net.js.html#sunlight-1-line-152">line 152</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-       
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="getHostName"><span class="type-signature"></span>getHostName<span class="signature">()</span><span class="type-signature"> &rarr; {string}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>Returns the hostname given by the browser.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-
-    
-    <h5>Returns:</h5>
-    <div class="returns">
-        
-            
-    
-        <div class="returns-type">
-        
-<span class="param-type">string</span>
-
- -
-        </div>
-    
-    <div class="returns-desc param-desc">
-        
-    </div>
-
-
-        
-    </div>
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="Net.js.html">net/Net.js</a>, <a href="Net.js.html#sunlight-1-line-22">line 22</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-       
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="getQueryString"><span class="type-signature"></span>getQueryString<span class="signature">(<span class="optional">parameter</span>)</span><span class="type-signature"> &rarr; {string|object}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>Returns the Query String as an object.
-If you specify a parameter it will return just the value of that parameter, should it exist.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-		<th>Argument</th>
-		
-
-		
-		<th>Default</th>
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>parameter</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    ''
-                
-                </td>
-            
-
-            <td class="description last"><p>If specified this will return just the value for that key.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-
-    
-    <h5>Returns:</h5>
-    <div class="returns">
-        
-            
-    
-        <div class="returns-type">
-        
-<span class="param-type">string</span>
-|
-
-<span class="param-type">object</span>
-
- -
-        </div>
-    
-    <div class="returns-desc param-desc">
-        <p>An object containing the key value pairs found in the query string or just the value if a parameter was given.</p>
-    </div>
-
-
-        
-    </div>
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="Net.js.html">net/Net.js</a>, <a href="Net.js.html#sunlight-1-line-116">line 116</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-       
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="updateQueryString"><span class="type-signature"></span>updateQueryString<span class="signature">(key, value, redirect, url)</span><span class="type-signature"> &rarr; {string}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>Updates a value on the Query String and returns it in full.
-If the value doesn't already exist it is set.
-If the value exists it is replaced with the new value given. If you don't provide a new value it is removed from the query string.
-Optionally you can redirect to the new url, or just return it as a string.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>key</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The querystring key to update.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>value</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The new value to be set. If it already exists it will be replaced.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>redirect</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>If true the browser will issue a redirect to the url with the new querystring.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>url</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The URL to modify. If none is given it uses window.location.href.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-
-    
-    <h5>Returns:</h5>
-    <div class="returns">
-        
-            
-    
-        <div class="returns-type">
-        
-<span class="param-type">string</span>
-
- -
-        </div>
-    
-    <div class="returns-desc param-desc">
-        <p>If redirect is false then the modified url and query string is returned.</p>
-    </div>
-
-
-        
-    </div>
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="Net.js.html">net/Net.js</a>, <a href="Net.js.html#sunlight-1-line-52">line 52</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-       
-    
-    
-</dd>
-
-        </dl>
-    
-
-    
-
-    
-</article>
+		<h1 class="page-title">Source: D:/wamp/www/phaser/src/utils/ArraySet.js</h1>
+    
+    <section>
+        <article>
+            <pre class="sunlight-highlight-javascript linenums">/**
+* @author       Richard Davey &lt;rich@photonstorm.com>
+* @copyright    2014 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+*/
+
+/**
+* ArraySet is a Set data structure (items must be unique within the set) that also maintains order.
+* This allows specific items to be easily added or removed from the Set.
+*
+* Item equality (and uniqueness) is determined by the behavior of `Array.indexOf`.
+*
+* This used primarily by the Input subsystem.
+*
+* @class Phaser.ArraySet
+* @constructor
+* @param {any[]} [list=(new array)] - The backing array: if specified the items in the list _must_ be unique, per `Array.indexOf`, and the ownership of the array _should_ be relinquished to the ArraySet.
+*/
+Phaser.ArraySet = function (list) {
+
+    /**
+    * Current cursor position as established by `first` and `next`.
+    * @property {integer} position
+    * @default
+    */
+    this.position = 0;
+
+    /**
+    * The backing array.
+    * @property {any[]} list
+    */
+    this.list = list || [];
+
+};
+
+Phaser.ArraySet.prototype = {
+
+    /**
+    * Adds a new element to the end of the list.
+    * If the item already exists in the list it is not moved.
+    *
+    * @method Phaser.ArraySet#add
+    * @param {*} item - The element to add to this list.
+    * @return {*} The item that was added.
+    */
+    add: function (item) {
+
+        if (!this.exists(item))
+        {
+            this.list.push(item);
+        }
+
+        return item;
+
+    },
+
+    /**
+    * Gets the index of the item in the list, or -1 if it isn't in the list.
+    *
+    * @method Phaser.ArraySet#getIndex
+    * @param {*} item - The element to get the list index for.
+    * @return {number} The index of the item or -1 if not found.
+    */
+    getIndex: function (item) {
+
+        return this.list.indexOf(item);
+
+    },
+
+    /**
+    * Checks for the item within this list.
+    *
+    * @method Phaser.ArraySet#exists
+    * @param {*} item - The element to get the list index for.
+    * @return {boolean} True if the item is found in the list, otherwise false.
+    */
+    exists: function (item) {
+
+        return (this.list.indexOf(item) > -1);
+
+    },
+
+    /**
+    * Removes all the items.
+    *
+    * @method Phaser.ArraySet#reset
+    */
+    reset: function () {
+
+        this.list.length = 0;
+
+    },
+
+    /**
+    * Removes the given element from this list if it exists.
+    *
+    * @method Phaser.ArraySet#remove
+    * @param {*} item - The item to be removed from the list.
+    * @return {*} item - The item that was removed.
+    */
+    remove: function (item) {
+
+        var idx = this.list.indexOf(item);
+
+        if (idx > -1)
+        {
+            this.list.splice(idx, 1);
+            return item;
+        }
+
+    },
+
+    /**
+    * Sets the property `key` to the given value on all members of this list.
+    *
+    * @method Phaser.ArraySet#setAll
+    * @param {*} key - The propety of the item to set.
+    * @param {*} value - The value to set the property to.
+    */
+    setAll: function (key, value) {
+
+        var i = this.list.length;
+
+        while (i--)
+        {
+            if (this.list[i])
+            {
+                this.list[i][key] = value;
+            }
+        }
+
+    },
+
+    /**
+    * Calls a function on all members of this list, using the member as the context for the callback.
+    *
+    * If the `key` property is present it must be a function.
+    * The function is invoked using the item as the context.
+    *
+    * @method Phaser.ArraySet#callAll
+    * @param {string} key - The name of the property with the function to call.
+    * @param {...*} parameter - Additional parameters that will be passed to the callback.
+    */
+    callAll: function (key) {
+
+        var args = Array.prototype.splice.call(arguments, 1);
+
+        var i = this.list.length;
+
+        while (i--)
+        {
+            if (this.list[i] && this.list[i][key])
+            {
+                this.list[i][key].apply(this.list[i], args);
+            }
+        }
+
+    }
+
+};
+
+/**
+* Number of items in the ArraySet. Same as `list.length`.
+*
+* @name Phaser.ArraySet#total
+* @property {integer} total
+*/
+Object.defineProperty(Phaser.ArraySet.prototype, "total", {
+
+    get: function () {
+        return this.list.length;
+    }
+
+});
+
+/**
+* Returns the first item and resets the cursor to the start.
+*
+* @name Phaser.ArraySet#first
+* @property {*} first
+*/
+Object.defineProperty(Phaser.ArraySet.prototype, "first", {
+
+    get: function () {
+
+        this.position = 0;
+
+        if (this.list.length > 0)
+        {
+            return this.list[0];
+        }
+        else
+        {
+            return null;
+        }
+
+    }
+
+});
+
+/**
+* Returns the the next item (based on the cursor) and advances the cursor.
+*
+* @name Phaser.ArraySet#next
+* @property {*} next
+*/
+Object.defineProperty(Phaser.ArraySet.prototype, "next", {
+
+    get: function () {
+
+        if (this.position &lt; this.list.length)
+        {
+            this.position++;
+
+            return this.list[this.position];
+        }
+        else
+        {
+            return null;
+        }
+
+    }
+
+});
+
+Phaser.ArraySet.prototype.constructor = Phaser.ArraySet;
+
+/**
+* Phaser.ArrayList is a deprecated alias for Phaser.ArraySet.
+*
+* @class Phaser.ArrayList
+* @constructor
+* @deprecated 2.2.0 - Use {@link Phaser.ArraySet} instead.
+*/
+Phaser.ArrayList = Phaser.ArraySet;
+</pre>
+        </article>
+    </section>
 
-</section>
 
 
 
@@ -1906,15 +1239,11 @@ Optionally you can redirect to the new url, or just return it as a string.</p>
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Tue Nov 25 2014 00:17:40 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Tue Nov 25 2014 00:17:18 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>
 
-			
-			<div class="span3">
-				<div id="toc"></div>
-			</div>
 			
 			<br clear="both">
 		</div>

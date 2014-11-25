@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>Phaser Class: Net</title>
+	<title>Phaser Class: ArraySet</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -979,17 +979,17 @@
 					
 
 
-	<!--<h1 class="page-title">Class: Net</h1>-->
+	<!--<h1 class="page-title">Class: ArraySet</h1>-->
 <section>
 
 <header>
     <h2>
         <span class="ancestors"><a href="Phaser.html">Phaser</a>.</span>
     
-    Net
+    ArraySet
     </h2>
     
-        <div class="class-description"><p>Phaser.Net</p></div>
+        <div class="class-description"><p>Phaser.ArraySet</p></div>
     
 </header>
 
@@ -1001,7 +1001,7 @@
         
 <dt>
     <h4 class="name "
-        id="Net"><span class="type-signature"></span>new Net<span class="signature">(game)</span><span class="type-signature"></span></h4>
+        id="ArraySet"><span class="type-signature"></span>new ArraySet<span class="signature">(<span class="optional">list</span>)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -1010,517 +1010,10 @@
 
     
     <div class="description">
-        <p>Phaser.Net handles browser URL related tasks such as checking host names, domain names and query string manipulation.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>game</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Phaser.Game.html">Phaser.Game</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>A reference to the currently running game.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="Net.js.html">net/Net.js</a>, <a href="Net.js.html#sunlight-1-line-14">line 14</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-       
-    
-    
-</dd>
-
-    
-    </div>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Methods</h3>
-
-        <dl>
-            
-<dt>
-    <h4 class="name "
-        id="checkDomainName"><span class="type-signature"></span>checkDomainName<span class="signature">(domain)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>Compares the given domain name against the hostname of the browser containing the game.
-If the domain name is found it returns true.
-You can specify a part of a domain, for example 'google' would match 'google.com', 'google.co.uk', etc.
-Do not include 'http://' at the start.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>domain</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-
-    
-    <h5>Returns:</h5>
-    <div class="returns">
-        
-            
-    
-        <div class="returns-type">
-        
-<span class="param-type">boolean</span>
-
- -
-        </div>
-    
-    <div class="returns-desc param-desc">
-        <p>true if the given domain fragment can be found in the window.location.hostname</p>
-    </div>
-
-
-        
-    </div>
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="Net.js.html">net/Net.js</a>, <a href="Net.js.html#sunlight-1-line-38">line 38</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-       
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="decodeURI"><span class="type-signature"></span>decodeURI<span class="signature">(value)</span><span class="type-signature"> &rarr; {string}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>Returns the Query String as an object.
-If you specify a parameter it will return just the value of that parameter, should it exist.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>value</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The URI component to be decoded.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-
-    
-    <h5>Returns:</h5>
-    <div class="returns">
-        
-            
-    
-        <div class="returns-type">
-        
-<span class="param-type">string</span>
-
- -
-        </div>
-    
-    <div class="returns-desc param-desc">
-        <p>The decoded value.</p>
-    </div>
-
-
-        
-    </div>
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="Net.js.html">net/Net.js</a>, <a href="Net.js.html#sunlight-1-line-152">line 152</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-       
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="getHostName"><span class="type-signature"></span>getHostName<span class="signature">()</span><span class="type-signature"> &rarr; {string}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>Returns the hostname given by the browser.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-
-    
-    <h5>Returns:</h5>
-    <div class="returns">
-        
-            
-    
-        <div class="returns-type">
-        
-<span class="param-type">string</span>
-
- -
-        </div>
-    
-    <div class="returns-desc param-desc">
-        
-    </div>
-
-
-        
-    </div>
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="Net.js.html">net/Net.js</a>, <a href="Net.js.html#sunlight-1-line-22">line 22</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-       
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="getQueryString"><span class="type-signature"></span>getQueryString<span class="signature">(<span class="optional">parameter</span>)</span><span class="type-signature"> &rarr; {string|object}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>Returns the Query String as an object.
-If you specify a parameter it will return just the value of that parameter, should it exist.</p>
+        <p>ArraySet is a Set data structure (items must be unique within the set) that also maintains order.
+This allows specific items to be easily added or removed from the Set.</p>
+<p>Item equality (and uniqueness) is determined by the behavior of <code>Array.indexOf</code>.</p>
+<p>This used primarily by the Input subsystem.</p>
     </div>
     
 
@@ -1558,13 +1051,13 @@ If you specify a parameter it will return just the value of that parameter, shou
 
         <tr>
             
-                <td class="name"><code>parameter</code></td>
+                <td class="name"><code>list</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">any[]</span>
 
 
             
@@ -1585,12 +1078,467 @@ If you specify a parameter it will return just the value of that parameter, shou
             
                 <td class="default">
                 
-                    ''
+                    (new array)
                 
                 </td>
             
 
-            <td class="description last"><p>If specified this will return just the value for that key.</p></td>
+            <td class="description last"><p>The backing array: if specified the items in the list <em>must</em> be unique, per <code>Array.indexOf</code>, and the ownership of the array <em>should</em> be relinquished to the ArraySet.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="ArraySet.js.html">utils/ArraySet.js</a>, <a href="ArraySet.js.html#sunlight-1-line-19">line 19</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+       
+    
+    
+</dd>
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Members</h3>
+
+        <dl>
+            
+<dt>
+    <h4 class="name "
+        id="first"><span class="type-signature"></span>first<span class="type-signature"> :*</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>Returns the first item and resets the cursor to the start.</p>
+    </div>
+    
+    
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">*</span>
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="ArraySet.js.html">utils/ArraySet.js</a>, <a href="ArraySet.js.html#sunlight-1-line-176">line 176</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="list"><span class="type-signature"></span>list<span class="type-signature"> :any[]</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>The backing array.</p>
+    </div>
+    
+    
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">any[]</span>
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="ArraySet.js.html">utils/ArraySet.js</a>, <a href="ArraySet.js.html#sunlight-1-line-32">line 32</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="next"><span class="type-signature"></span>next<span class="type-signature"> :*</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>Returns the the next item (based on the cursor) and advances the cursor.</p>
+    </div>
+    
+    
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">*</span>
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="ArraySet.js.html">utils/ArraySet.js</a>, <a href="ArraySet.js.html#sunlight-1-line-201">line 201</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="position"><span class="type-signature"></span>position<span class="type-signature"> :integer</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>Current cursor position as established by <code>first</code> and <code>next</code>.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>0</li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="ArraySet.js.html">utils/ArraySet.js</a>, <a href="ArraySet.js.html#sunlight-1-line-26">line 26</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="total"><span class="type-signature"></span>total<span class="type-signature"> :integer</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>Number of items in the ArraySet. Same as <code>list.length</code>.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="ArraySet.js.html">utils/ArraySet.js</a>, <a href="ArraySet.js.html#sunlight-1-line-162">line 162</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        </dl>
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        <dl>
+            
+<dt>
+    <h4 class="name "
+        id="add"><span class="type-signature"></span>add<span class="signature">(item)</span><span class="type-signature"> &rarr; {*}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>Adds a new element to the end of the list.
+If the item already exists in the list it is not moved.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>item</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">*</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The element to add to this list.</p></td>
         </tr>
 
 	
@@ -1607,16 +1555,13 @@ If you specify a parameter it will return just the value of that parameter, shou
     
         <div class="returns-type">
         
-<span class="param-type">string</span>
-|
-
-<span class="param-type">object</span>
+<span class="param-type">*</span>
 
  -
         </div>
     
     <div class="returns-desc param-desc">
-        <p>An object containing the key value pairs found in the query string or just the value if a parameter was given.</p>
+        <p>The item that was added.</p>
     </div>
 
 
@@ -1646,7 +1591,7 @@ If you specify a parameter it will return just the value of that parameter, shou
 
     
     <dt class="tag-source">Source -
-    <a href="Net.js.html">net/Net.js</a>, <a href="Net.js.html#sunlight-1-line-116">line 116</a>
+    <a href="ArraySet.js.html">utils/ArraySet.js</a>, <a href="ArraySet.js.html#sunlight-1-line-38">line 38</a>
     </dt>
     
 
@@ -1673,7 +1618,7 @@ If you specify a parameter it will return just the value of that parameter, shou
             
 <dt>
     <h4 class="name "
-        id="updateQueryString"><span class="type-signature"></span>updateQueryString<span class="signature">(key, value, redirect, url)</span><span class="type-signature"> &rarr; {string}</span></h4>
+        id="callAll"><span class="type-signature"></span>callAll<span class="signature">(key, parameter)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -1682,10 +1627,658 @@ If you specify a parameter it will return just the value of that parameter, shou
 
     
     <div class="description">
-        <p>Updates a value on the Query String and returns it in full.
-If the value doesn't already exist it is set.
-If the value exists it is replaced with the new value given. If you don't provide a new value it is removed from the query string.
-Optionally you can redirect to the new url, or just return it as a string.</p>
+        <p>Calls a function on all members of this list, using the member as the context for the callback.</p>
+<p>If the <code>key</code> property is present it must be a function.
+The function is invoked using the item as the context.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>key</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The name of the property with the function to call.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>parameter</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">*</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                    &lt;repeatable><br>
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Additional parameters that will be passed to the callback.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="ArraySet.js.html">utils/ArraySet.js</a>, <a href="ArraySet.js.html#sunlight-1-line-134">line 134</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+       
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="exists"><span class="type-signature"></span>exists<span class="signature">(item)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>Checks for the item within this list.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>item</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">*</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The element to get the list index for.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+
+    
+    <h5>Returns:</h5>
+    <div class="returns">
+        
+            
+    
+        <div class="returns-type">
+        
+<span class="param-type">boolean</span>
+
+ -
+        </div>
+    
+    <div class="returns-desc param-desc">
+        <p>True if the item is found in the list, otherwise false.</p>
+    </div>
+
+
+        
+    </div>
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="ArraySet.js.html">utils/ArraySet.js</a>, <a href="ArraySet.js.html#sunlight-1-line-70">line 70</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+       
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="getIndex"><span class="type-signature"></span>getIndex<span class="signature">(item)</span><span class="type-signature"> &rarr; {number}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>Gets the index of the item in the list, or -1 if it isn't in the list.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>item</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">*</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The element to get the list index for.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+
+    
+    <h5>Returns:</h5>
+    <div class="returns">
+        
+            
+    
+        <div class="returns-type">
+        
+<span class="param-type">number</span>
+
+ -
+        </div>
+    
+    <div class="returns-desc param-desc">
+        <p>The index of the item or -1 if not found.</p>
+    </div>
+
+
+        
+    </div>
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="ArraySet.js.html">utils/ArraySet.js</a>, <a href="ArraySet.js.html#sunlight-1-line-57">line 57</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+       
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="remove"><span class="type-signature"></span>remove<span class="signature">(item)</span><span class="type-signature"> &rarr; {*}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>Removes the given element from this list if it exists.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>item</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">*</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The item to be removed from the list.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+
+    
+    <h5>Returns:</h5>
+    <div class="returns">
+        
+            
+    
+        <div class="returns-type">
+        
+<span class="param-type">*</span>
+
+ -
+        </div>
+    
+    <div class="returns-desc param-desc">
+        <p>item - The item that was removed.</p>
+    </div>
+
+
+        
+    </div>
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="ArraySet.js.html">utils/ArraySet.js</a>, <a href="ArraySet.js.html#sunlight-1-line-94">line 94</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+       
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="reset"><span class="type-signature"></span>reset<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>Removes all the items.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="ArraySet.js.html">utils/ArraySet.js</a>, <a href="ArraySet.js.html#sunlight-1-line-83">line 83</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+       
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="setAll"><span class="type-signature"></span>setAll<span class="signature">(key, value)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>Sets the property <code>key</code> to the given value on all members of this list.</p>
     </div>
     
 
@@ -1725,7 +2318,7 @@ Optionally you can redirect to the new url, or just return it as a string.</p>
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">*</span>
 
 
             
@@ -1735,7 +2328,7 @@ Optionally you can redirect to the new url, or just return it as a string.</p>
 
             
 
-            <td class="description last"><p>The querystring key to update.</p></td>
+            <td class="description last"><p>The propety of the item to set.</p></td>
         </tr>
 
 	
@@ -1748,7 +2341,7 @@ Optionally you can redirect to the new url, or just return it as a string.</p>
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">*</span>
 
 
             
@@ -1758,53 +2351,7 @@ Optionally you can redirect to the new url, or just return it as a string.</p>
 
             
 
-            <td class="description last"><p>The new value to be set. If it already exists it will be replaced.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>redirect</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>If true the browser will issue a redirect to the url with the new querystring.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>url</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The URL to modify. If none is given it uses window.location.href.</p></td>
+            <td class="description last"><p>The value to set the property to.</p></td>
         </tr>
 
 	
@@ -1813,26 +2360,6 @@ Optionally you can redirect to the new url, or just return it as a string.</p>
 
     
 
-    
-    <h5>Returns:</h5>
-    <div class="returns">
-        
-            
-    
-        <div class="returns-type">
-        
-<span class="param-type">string</span>
-
- -
-        </div>
-    
-    <div class="returns-desc param-desc">
-        <p>If redirect is false then the modified url and query string is returned.</p>
-    </div>
-
-
-        
-    </div>
     
     
     
@@ -1857,7 +2384,7 @@ Optionally you can redirect to the new url, or just return it as a string.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="Net.js.html">net/Net.js</a>, <a href="Net.js.html#sunlight-1-line-52">line 52</a>
+    <a href="ArraySet.js.html">utils/ArraySet.js</a>, <a href="ArraySet.js.html#sunlight-1-line-113">line 113</a>
     </dt>
     
 
@@ -1906,7 +2433,7 @@ Optionally you can redirect to the new url, or just return it as a string.</p>
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Tue Nov 25 2014 00:17:40 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Tue Nov 25 2014 00:17:21 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>
