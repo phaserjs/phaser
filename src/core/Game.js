@@ -725,6 +725,7 @@ Phaser.Game.prototype = {
             var count = 0;
 
             this.updatesThisFrame = Math.floor(this._deltaTime / slowStep);
+
             if (this.forceSingleUpdate)
             {
                 this.updatesThisFrame = Math.min(1, this.updatesThisFrame);

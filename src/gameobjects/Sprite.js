@@ -250,9 +250,9 @@ Phaser.Sprite.prototype.preUpdate = function() {
     }
 
     //  Only apply lifespan decrement in the first updateLogic pass.
-    if (this.lifespan > 0 && this.game.count === 0)
+    if (this.lifespan > 0 && this.game.updateNumber === 0)
     {
-        this.lifespan -= 1000 * this.game.time.physicsElapsed;
+        this.lifespan -= this.game.time.elapsedMS;
 
         if (this.lifespan <= 0)
         {

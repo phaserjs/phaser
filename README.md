@@ -248,7 +248,7 @@ This fixes a bug in FF where it would use the default DOMMouseWheel (thanks @pns
 * Camera.totalInView is a new property that contains the total number of Sprites rendered that have `autoCull` set to true and are within the Cameras view.
 * Emitter.setScale fixed minX minY order presedence (thanks spayton)
 * Group.iterate can now accept undefined/null as the arguments (thanks @pnstickne #1353 @tasos-ch #1352)
-* When you change State the P2 Physics world is no longer fully cleared. All of the bodies, springs, fixtures, materials and constraints are removed - but config settings such as gravity, restitution, the contact solver, etc are all retained. The P2.World object is only created the very first time you call Physics.startSystem. Every subsequent call hits P2.World.reset instead (#1292)
+* When you change State the P2 Physics world is no longer fully cleared. All of the bodies, springs, fixtures, materials and constraints are removed - but config settings such as gravity, restitution, the contact solver, etc are all retained. The P2.World object is only created the very first time you call Physics.startSystem. Every subsequent call hits P2.World.reset instead. This fixes "P2.World gravity broken after switching states" (and other related issues) (#1292 #1289 #1176)
 
 ### Pixi 2.1.0 New Features
 
