@@ -157,7 +157,8 @@ Phaser.Text.prototype.constructor = Phaser.Text;
 
 /**
 * Automatically called by World.preUpdate.
-* @method Phaser.Text.prototype.preUpdate
+* 
+* @method Phaser.Text#preUpdate
 */
 Phaser.Text.prototype.preUpdate = function () {
 
@@ -198,7 +199,6 @@ Phaser.Text.prototype.preUpdate = function () {
 * Override and use this function in your own custom objects to handle any update requirements you may have.
 *
 * @method Phaser.Text#update
-* @memberof Phaser.Text
 */
 Phaser.Text.prototype.update = function() {
 
@@ -206,7 +206,8 @@ Phaser.Text.prototype.update = function() {
 
 /**
 * Automatically called by World.postUpdate.
-* @method Phaser.Text.prototype.postUpdate
+* 
+* @method Phaser.Text#postUpdate
 */
 Phaser.Text.prototype.postUpdate = function () {
 
@@ -225,7 +226,7 @@ Phaser.Text.prototype.postUpdate = function () {
 };
 
 /**
-* @method Phaser.Text.prototype.destroy
+* @method Phaser.Text#destroy
 * @param {boolean} [destroyChildren=true] - Should every child of this object have its destroy method called?
 */
 Phaser.Text.prototype.destroy = function (destroyChildren) {
@@ -294,7 +295,9 @@ Phaser.Text.prototype.destroy = function (destroyChildren) {
 };
 
 /**
-* @method Phaser.Text.prototype.setShadow
+* Sets a drop-shadow effect on the Text.
+* 
+* @method Phaser.Text#setShadow
 * @param {number} [x=0] - The shadowOffsetX value in pixels. This is how far offset horizontally the shadow effect will be.
 * @param {number} [y=0] - The shadowOffsetY value in pixels. This is how far offset vertically the shadow effect will be.
 * @param {string} [color='rgba(0,0,0,0)'] - The color of the shadow, as given in CSS rgba format. Set the alpha component to 0 to disable the shadow.
@@ -313,7 +316,7 @@ Phaser.Text.prototype.setShadow = function (x, y, color, blur) {
 /**
 * Set the style of the text by passing a single style object to it.
 *
-* @method Phaser.Text.prototype.setStyle
+* @method Phaser.Text#setStyle
 * @param {Object} [style] - The style properties to be set on the Text.
 * @param {string} [style.font='bold 20pt Arial'] - The style and size of the font.
 * @param {string} [style.fill='black'] - A canvas fillstyle that will be used on the text eg 'red', '#00FF00'.
@@ -346,7 +349,7 @@ Phaser.Text.prototype.setStyle = function (style) {
 /**
 * Renders text. This replaces the Pixi.Text.updateText function as we need a few extra bits in here.
 *
-* @method Phaser.Text.prototype.updateText
+* @method Phaser.Text#updateText
 * @private
 */
 Phaser.Text.prototype.updateText = function () {
@@ -451,6 +454,12 @@ Phaser.Text.prototype.updateText = function () {
 
 };
 
+/**
+* Updates a line of text.
+*
+* @method Phaser.Text#updateLine
+* @private
+*/
 Phaser.Text.prototype.updateLine = function (line, x, y) {
 
     for (var i = 0; i < line.length; i++)
@@ -483,7 +492,7 @@ Phaser.Text.prototype.updateLine = function (line, x, y) {
 /**
 * Clears any previously set color stops.
 *
-* @method Phaser.Text.prototype.clearColors
+* @method Phaser.Text#clearColors
 */
 Phaser.Text.prototype.clearColors = function () {
 
@@ -499,7 +508,7 @@ Phaser.Text.prototype.clearColors = function () {
 * Once set the color remains in use until either another color or the end of the string is encountered.
 * For example if the Text was `Photon Storm` and you did `Text.addColor('#ffff00', 6)` it would color in the word `Storm` in yellow.
 *
-* @method Phaser.Text.prototype.addColor
+* @method Phaser.Text#addColor
 * @param {string} color - A canvas fillstyle that will be used on the text eg `red`, `#00FF00`, `rgba()`.
 * @param {number} position - The index of the character in the string to start applying this color value from.
 */
@@ -513,7 +522,7 @@ Phaser.Text.prototype.addColor = function (color, position) {
 /**
 * Greedy wrapping algorithm that will wrap words as the line grows longer than its horizontal bounds.
 *
-* @method Phaser.Text.prototype.runWordWrap
+* @method Phaser.Text#runWordWrap
 * @param {string} text - The text to perform word wrap detection against.
 * @private
 */
@@ -563,6 +572,7 @@ Phaser.Text.prototype.runWordWrap = function (text) {
 * Indicates the rotation of the Text, in degrees, from its original orientation. Values from 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation.
 * Values outside this range are added to or subtracted from 360 to obtain a value within the range. For example, the statement player.angle = 450 is the same as player.angle = 90.
 * If you wish to work in radians instead of degrees use the property Sprite.rotation instead.
+* 
 * @name Phaser.Text#angle
 * @property {number} angle - Gets or sets the angle of rotation in degrees.
 */
