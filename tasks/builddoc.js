@@ -12,10 +12,7 @@ module.exports = function (grunt) {
 
     grunt.util.spawn({
       cmd: 'jsdoc',
-      args: ['-c', 'conf.json', '../../README.md'],
-      opts: {
-          cwd: 'docs/build'
-      }
+      args: ['-c', './tasks/jsdoc-conf.json', './README.md'],
     }, function (error, result, code) {
         if (error) {
             grunt.fail.warn("" + result);

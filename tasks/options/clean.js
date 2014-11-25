@@ -1,3 +1,7 @@
 module.exports = {
-    compile_dir: ['<%= compile_dir %>']
+
+    docs: ['<%= docs_dir %>/*'],
+    dist: ['<%= compile_dir %>/*'],
+    out: ['out']
+
 };
