@@ -19,7 +19,7 @@ module.exports = {
     },
 
     docs: {
-        src: ['docs/index.html'], 
+        src: ['docs/index.html'],
         dest: 'docs/index.html',
         replacements: [
             {
