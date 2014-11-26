@@ -332,12 +332,12 @@ Phaser.TweenData.prototype = {
 
         if (this.parent.reverse)
         {
-            this.dt -= (this.game.time.physicsElapsed * 1000) * this.parent.timeScale;
+            this.dt -= this.game.time.physicsElapsedMS * this.parent.timeScale;
             this.dt = Math.max(this.dt, 0);
         }
         else
         {
-            this.dt += (this.game.time.physicsElapsed * 1000) * this.parent.timeScale;
+            this.dt += this.game.time.physicsElapsedMS * this.parent.timeScale;
             this.dt = Math.min(this.dt, this.duration);
         }
 
