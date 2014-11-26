@@ -6,8 +6,11 @@
 
 /**
 * A TimerEvent is a single event that is processed by a Phaser.Timer.
+*
 * It consists of a delay, which is a value in milliseconds after which the event will fire.
-* It can call a specific callback, passing in optional parameters.
+* When the event fires it calls a specific callback with the specified arguments.
+*
+* Use {@link Phaser.Timer#add}, {@link Phaser.Timer#add}, or {@link Phaser.Timer#add} methods to create a new event.
 *
 * @class Phaser.TimerEvent
 * @constructor
@@ -18,12 +21,14 @@
 * @param {boolean} loop - True if this TimerEvent loops, otherwise false.
 * @param {function} callback - The callback that will be called when the TimerEvent occurs.
 * @param {object} callbackContext - The context in which the callback will be called.
-* @param {array} arguments - The values to be passed to the callback.
+* @param {array} arguments - Additional arguments to be passed to the callback.
 */
 Phaser.TimerEvent = function (timer, delay, tick, repeatCount, loop, callback, callbackContext, args) {
 
     /**
     * @property {Phaser.Timer} timer - The Timer object that this TimerEvent belongs to.
+    * @protected
+    * @readonly
     */
 	this.timer = timer;
 
@@ -58,7 +63,7 @@ Phaser.TimerEvent = function (timer, delay, tick, repeatCount, loop, callback, c
 	this.callbackContext = callbackContext;
 
     /**
-    * @property {array} arguments - The values to be passed to the callback.
+    * @property {any[]} arguments - Additional arguments to be passed to the callback.
     */
 	this.args = args;
 

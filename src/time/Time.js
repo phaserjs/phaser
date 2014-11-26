@@ -6,7 +6,11 @@
 
 /**
 * This is the core internal game clock.
-* It manages the elapsed time and calculation of elapsed values, used for game object motion and tweens.
+*
+* It manages the elapsed time and calculation of elapsed values, used for game object motion and tweens,
+* and also handlers the standard Timer pool.
+*
+* To create a general timed event, use the master {@link Phaser.Timer} accessible through {@link Phaser.Time.events events}.
 *
 * @class Phaser.Time
 * @constructor
@@ -37,7 +41,8 @@ Phaser.Time = function (game) {
     /**
     * An increasing value representing cumulative milliseconds since an undisclosed epoch.
     *
-    * This value must _not_ be used with `Date.now()`.
+    * While this value is in milliseconds and can be used to compute time deltas,
+    * it must must _not_ be used with `Date.now()` as it may not use the same epoch / starting reference. 
     *
     * The source may either be from a high-res source (eg. if RAF is available) or the standard Date.now;
     * the value can only be relied upon within a particular game instance.
@@ -78,16 +83,17 @@ Phaser.Time = function (game) {
     * The physics update delta, in fractional seconds.
     *    
     * This should be used as an applicable multiplier by all logic update steps (eg. `preUpdate/postUpdate/update`)
-    * to ensure consistent game timing.
+    * to ensure consistent game timing. Game/logic timing can drift from real-world time if the system
+    * is unable to consistently maintain the desired FPS.
     *
-    * With fixed-step updates this normally equivalent to `1.0 / desiredFps`.
+    * With fixed-step updates this is normally equivalent to `1.0 / desiredFps`.
     *
     * @property {number} physicsElapsed
     */
     this.physicsElapsed = 0;
 
     /**
-    * The Time.physicsElapsed property * 1000.
+    * The physics update delta, in milliseconds - equivalent to `physicsElapsed * 1000`.
     *
     * @property {number} physicsElapsedMS
     */
@@ -114,56 +120,75 @@ Phaser.Time = function (game) {
     this.suggestedFps = null;
 
     /**
-    * @property {number} slowMotion = 1.0 - Scaling factor to make the game move smoothly in slow motion (1.0 = normal speed, 2.0 = half speed)
+    * Scaling factor to make the game move smoothly in slow motion
+    * - 1.0 = normal speed
+    * - 2.0 = half speed
+    * @property {number} slowMotion
     * @default
     */
     this.slowMotion = 1.0;
 
     /**
-    * @property {boolean} advancedTiming - If true Phaser.Time will perform advanced profiling including the fps rate, fps min/max and msMin and msMax.
+    * If true then advanced profiling, including the fps rate, fps min/max and msMin/msMax are updated.
+    * @property {boolean} advancedTiming
     * @default
     */
     this.advancedTiming = false;
 
     /**
-    * @property {number} fps - Frames per second. Only calculated if Time.advancedTiming is true.
-    * @protected
+    * Advanced timing result: The number of render frames record in the last second.
+    *
+    * Only calculated if {@link Phaser.Time#advancedTiming advancedTiming} is enabled.
+    * @property {integer} frames
+    * @readonly
+    */
+    this.frames = 0;
+
+    /**
+    * Advanced timing result: Frames per second.
+    *
+    * Only calculated if {@link Phaser.Time#advancedTiming advancedTiming} is enabled.
+    * @property {number} fps
+    * @readonly
     */
     this.fps = 0;
 
     /**
-    * @property {number} fpsMin - The lowest rate the fps has dropped to. Only calculated if Time.advancedTiming is true.
+    * Advanced timing result: The lowest rate the fps has dropped to.
+    *
+    * Only calculated if {@link Phaser.Time#advancedTiming advancedTiming} is enabled.
+    * This value can be manually reset.
+    * @property {number} fpsMin
     */
     this.fpsMin = 1000;
 
     /**
-    * @property {number} fpsMax - The highest rate the fps has reached (usually no higher than 60fps). Only calculated if Time.advancedTiming is true.
+    * Advanced timing result: The highest rate the fps has reached (usually no higher than 60fps).
+    *
+    * Only calculated if {@link Phaser.Time#advancedTiming advancedTiming} is enabled.
+    * This value can be manually reset.
+    * @property {number} fpsMax
     */
     this.fpsMax = 0;
 
     /**
-    * @property {number} msMin - The minimum amount of time the game has taken between two frames. Only calculated if Time.advancedTiming is true.
+    * Advanced timing result: The minimum amount of time the game has taken between consecutive frames.
+    *
+    * Only calculated if {@link Phaser.Time#advancedTiming advancedTiming} is enabled.
+    * This value can be manually reset.
+    * @property {number} msMin
     * @default
     */
     this.msMin = 1000;
 
     /**
-    * @property {number} msMax - The maximum amount of time the game has taken between two frames. Only calculated if Time.advancedTiming is true.
+    * Advanced timing result: The maximum amount of time the game has taken between consecutive frames.
+    *
+    * Only calculated if {@link Phaser.Time#advancedTiming advancedTiming} is enabled.
+    * This value can be manually reset.
+    * @property {number} msMax
     */
     this.msMax = 0;
-
-    /**
-    * The number of render frames record in the last second. Only calculated if Time.advancedTiming is true.
-    * @property {integer} frames
-    */
-    this.frames = 0;
-
-    /**
-    * The `time` when the game was last paused.
-    * @property {number} pausedTime
-    * @protected
-    */
-    this.pausedTime = 0;
 
     /**
     * Records how long the game was last paused, in miliseconds.
@@ -185,20 +210,21 @@ Phaser.Time = function (game) {
     this.timeExpected = 0;
 
     /**
-    * @property {Phaser.Timer} events - This is a Phaser.Timer object bound to the master clock to which you can add timed events.
+    * A {@link Phaser.Timer} object bound to the master clock (this Time object) which events can be added to.
+    * @property {Phaser.Timer} events
     */
     this.events = new Phaser.Timer(this.game, false);
 
     /**
-     * @property {number} _frameCount - count the number of calls to time.update since the last suggestedFps was calculated
-     * @private
-     */
+    * @property {number} _frameCount - count the number of calls to time.update since the last suggestedFps was calculated
+    * @private
+    */
     this._frameCount = 0;
 
     /**
-     * @property {number} _elapsedAcumulator - sum of the elapsed time since the last suggestedFps was calculated
-     * @private
-     */
+    * @property {number} _elapsedAcumulator - sum of the elapsed time since the last suggestedFps was calculated
+    * @private
+    */
     this._elapsedAccumulator = 0;
 
     /**
@@ -230,18 +256,6 @@ Phaser.Time = function (game) {
     * @private
     */
     this._timers = [];
-
-    /**
-    * @property {number} _len - Temp. array length variable.
-    * @private
-    */
-    this._len = 0;
-
-    /**
-    * @property {number} _i - Temp. array counter variable.
-    * @private
-    */
-    this._i = 0;
 
 };
 
@@ -296,7 +310,7 @@ Phaser.Time.prototype = {
     },
 
     /**
-    * Remove all Timer objects, regardless of their state. Also clears all Timers from the Time.events timer.
+    * Remove all Timer objects, regardless of their state and clears all Timers from the {@link Phaser.Time#events events} timer.
     *
     * @method Phaser.Time#removeAll
     */
@@ -318,7 +332,7 @@ Phaser.Time.prototype = {
     *
     * @method Phaser.Time#update
     * @protected
-    * @param {number} time - The current timestamp.
+    * @param {number} time - The current relative timestamp; see {@link Phaser.Time#now now}.
     */
     update: function (time) {
 
@@ -388,20 +402,20 @@ Phaser.Time.prototype = {
             this.events.update(this.time);
 
             //  Any game level timers
-            this._i = 0;
-            this._len = this._timers.length;
+            var i = 0;
+            var len = this._timers.length;
 
-            while (this._i < this._len)
+            while (i < len)
             {
-                if (this._timers[this._i].update(this.time))
+                if (this._timers[i].update(this.time))
                 {
-                    this._i++;
+                    i++;
                 }
                 else
                 {
-                    this._timers.splice(this._i, 1);
-
-                    this._len--;
+                    //  Timer requests to be removed
+                    this._timers.splice(i, 1);
+                    len--;
                 }
             }
         }
