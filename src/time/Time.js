@@ -87,6 +87,13 @@ Phaser.Time = function (game) {
     this.physicsElapsed = 0;
 
     /**
+    * The Time.physicsElapsed property * 1000.
+    *
+    * @property {number} physicsElapsedMS
+    */
+    this.physicsElapsedMS = 0;
+
+    /**
     * The desired frame rate of the game.
     *
     * This is used is used to calculate the physic/logic multiplier and how to apply catch-up logic updates.
@@ -354,6 +361,8 @@ Phaser.Time.prototype = {
 
         //  Set the physics elapsed time... this will always be 1 / this.desiredFps because we're using fixed time steps in game.update now
         this.physicsElapsed = 1 / this.desiredFps;
+
+        this.physicsElapsedMS = this.physicsElapsed * 1000;
 
         if (this.advancedTiming)
         {
