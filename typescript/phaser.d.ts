@@ -1,6 +1,6 @@
 /// <reference path="pixi.d.ts" />
 
-// Type definitions for Phaser 2.2.0 dev 2014-11-24
+// Type definitions for Phaser dev2.2.0 RC12 2014-11-26
 // Project: https://github.com/photonstorm/phaser
 
 declare class Phaser {
@@ -1144,6 +1144,7 @@ declare module Phaser {
         canvas: HTMLCanvasElement;
         config: IGameConfig;
         context: any;
+        count: number;
         debug: Phaser.Utils.Debug;
         device: Phaser.Device;
         forceSingleUpdate: boolean;
@@ -1182,6 +1183,8 @@ declare module Phaser {
         time: Phaser.Time;
         transparent: boolean;
         tweens: Phaser.TweenManager;
+        updateNumber: number;
+        updatesThisFrame: number;
         width: number;
         world: Phaser.World;
 
@@ -2715,6 +2718,7 @@ declare module Phaser {
             removeConstraint<T>(constraint: T): T;
             removeContactMaterial(material: Phaser.Physics.P2.ContactMaterial): Phaser.Physics.P2.ContactMaterial;
             removeSpring(spring: Phaser.Physics.P2.Spring): Phaser.Physics.P2.Spring;
+            reset(): void;
             resume(): void;
             setBounds(x: number, y: number, width: number, height: number, left?: Boolean, right?: boolean, top?: boolean, bottom?: boolean, setCollisionGroup?: boolean): void;
             setBoundsToWorld(left?: boolean, right?: boolean, top?: boolean, bottom?: boolean, setCollisionGroup?: boolean): void;
@@ -2835,7 +2839,6 @@ declare module Phaser {
                 canvas: Phaser.Graphics;
                 ppu: number;
 
-                update(): void;
                 updateSpriteTransform(): void;
                 draw(): void;
 
@@ -4323,6 +4326,7 @@ declare module Phaser {
         pausedTime: number;
         pauseDuration: number;
         physicsElapsed: number;
+        physicsElapsedMS: number;
         prevTime: number;
         slowMotion: number;
         suggestedFps: number;
