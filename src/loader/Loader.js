@@ -120,12 +120,19 @@ Phaser.Loader = function (game) {
     this.onFileError = new Phaser.Signal();
 
     /**
-    * If true and if the browser supports XDomainRequest, it will be used in preference for XHR when loading JSON files (it does not affect other file types).
-    * This is only relevant for IE9 and should only be enabled when required by the server/CDN.
+    * If true and if the browser supports XDomainRequest, it will be used in preference for XHR.
+    *
+    * This is only relevant for IE 9 and should _only_ be enabled for IE 9 clients when required by the server/CDN.
     *
     * @property {boolean} useXDomainRequest
+    * @deprecated This is only relevant for IE 9.
     */
     this.useXDomainRequest = false;
+
+    /**
+    * @property {boolean} _warnedAboutXDomainRequest - Control number of warnings for using XDR outside of IE 9.
+    */
+    this._warnedAboutXDomainRequest = false;
 
     /**
     * If true then parallel downloading will be enabled.
@@ -1445,14 +1452,7 @@ Phaser.Loader.prototype = {
 
             case 'json':
 
-                if (this.useXDomainRequest && window.XDomainRequest)
-                {
-                    this.xhrLoadWithXDR(file, this.transformUrl(file.url, file), 'text', this.jsonLoadComplete);
-                }
-                else
-                {
-                    this.xhrLoad(file, this.transformUrl(file.url, file), 'text', this.jsonLoadComplete);
-                }
+                this.xhrLoad(file, this.transformUrl(file.url, file), 'text', this.jsonLoadComplete);
                 break;
 
             case 'xml':
@@ -1579,7 +1579,8 @@ Phaser.Loader.prototype = {
 
     /**
     * Starts the xhr loader.
-    * This is designed specifically to use with asset files.
+    *
+    * This is designed specifically to use with asset file processing.
     *
     * @method Phaser.Loader#xhrLoad
     * @private
@@ -1590,6 +1591,12 @@ Phaser.Loader.prototype = {
     * @param {function} [onerror=fileError]  The function to call on error. Invoked in `this` context and supplied with `(file, xhr)` arguments.
     */
     xhrLoad: function (file, url, type, onload, onerror) {
+
+        if (this.useXDomainRequest && window.XDomainRequest)
+        {
+            this.xhrLoadWithXDR(file, url, type, onload, onerror);
+            return;
+        }
 
         var xhr = new XMLHttpRequest();
         xhr.open("GET", url, true);
@@ -1624,7 +1631,9 @@ Phaser.Loader.prototype = {
 
     /**
     * Starts the xhr loader - using XDomainRequest.
-    * This is designed specifically to use with asset files.
+    * This should _only_ be used with IE 9. Phaser does not support IE 8 and XDR is deprecated in IE 10.
+    * 
+    * This is designed specifically to use with asset file processing.
     *
     * @method Phaser.Loader#xhrLoad
     * @private
@@ -1633,9 +1642,19 @@ Phaser.Loader.prototype = {
     * @param {string} type - The xhr responseType.
     * @param {function} onload - The function to call on success. Invoked in `this` context and supplied with `(file, xhr)` arguments.
     * @param {function} [onerror=fileError]  The function to call on error. Invoked in `this` context and supplied with `(file, xhr)` arguments.
+    * @deprecated This is only relevant for IE 9.
     */
     xhrLoadWithXDR: function (file, url, type, onload, onerror) {
 
+        // Special IE9 magic .. only
+        if (!this._warnedAboutXDomainRequest &&
+            (!this.game.device.ie || this.game.device.ieVersion >= 10))
+        {
+            this._warnedAboutXDomainRequest = true;
+            console.warn("Phaser.Loader - using XDomainRequest outside of IE 9");
+        }
+
+        // Ref: http://blogs.msdn.com/b/ieinternals/archive/2010/05/13/xdomainrequest-restrictions-limitations-and-workarounds.aspx
         var xhr = new window.XDomainRequest();
         xhr.open('GET', url, true);
         xhr.responseType = type;
