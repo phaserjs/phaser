@@ -595,8 +595,10 @@ Phaser.Text.prototype.runWordWrap = function (text) {
 
 /**
 * Updates the internal `style.font` if it now differs according to generation from components.
+*
 * @method Phaser.Text#updateFont
 * @private
+* @param {object} components - Font components.
 */
 Phaser.Text.prototype.updateFont = function (components) {
 
@@ -617,8 +619,10 @@ Phaser.Text.prototype.updateFont = function (components) {
 
 /**
 * Converting a short CSS-font string into the relevant components.
+*
 * @method Phaser.Text#fontToComponents
 * @private
+* @param {string} font - a CSS font string
 */
 Phaser.Text.prototype.fontToComponents = function (font) {
 
@@ -634,15 +638,17 @@ Phaser.Text.prototype.fontToComponents = function (font) {
     if (m)
     {
         return {
+            font: font,
             fontStyle: m[1] || 'normal',
             fontVariant: m[2] || 'normal',
             fontWeight: m[3] || 'normal',
             fontSize: m[4] || 'medium',
-            font: m[5]
+            fontFamily: m[5]
         };
     }
     else
     {
+        console.warn("Phaser.Text - unparsable CSS font: " + font);
         return {
             font: font
         };
@@ -651,9 +657,11 @@ Phaser.Text.prototype.fontToComponents = function (font) {
 };
 
 /**
-* Converts font-components, see `fontToComponents` to a short font string.
+* Converts individual font components (see `fontToComponents`) to a short CSS font string.
+*
 * @method Phaser.Text#componentsToFont
 * @private
+* @param {object} components - Font components.
 */
 Phaser.Text.prototype.componentsToFont = function (components) {
 
@@ -672,7 +680,14 @@ Phaser.Text.prototype.componentsToFont = function (components) {
     v = components.fontSize;
     if (v && v !== 'medium') { parts.push(v); }
 
-    parts.push(components.font);
+    v = components.fontFamily;
+    if (v) { parts.push(v); }
+
+    if (!parts.length)
+    {
+        // Fallback to whatever value the 'font' was
+        parts.push(components.font);
+    }
 
     return parts.join(" ");
 
@@ -702,6 +717,7 @@ Object.defineProperty(Phaser.Text.prototype, 'angle', {
 
 /**
 * The text string to be displayed by this Text object, taking into account the style settings.
+*
 * @name Phaser.Text#text
 * @property {string} text
 */
@@ -729,7 +745,7 @@ Object.defineProperty(Phaser.Text.prototype, 'text', {
 });
 
 /**
-* Change the CSS font string used.
+* Change the font used.
 *
 * This is equivalent of the `font` property specified to {@link Phaser.Text#setStyle setStyle}, except
 * that unlike using `setStyle` this will not change any current font fill/color settings.
@@ -755,18 +771,20 @@ Object.defineProperty(Phaser.Text.prototype, 'cssFont', {
 });
 
 /**
-* Change the font family that the text will be rendered in such as 'Arial'.
+* Change the font family that the text will be rendered in, such as 'Arial'.
 *
-* To change the entire font string use {@link Phaser.Text#cssFont cssFont} instead: `text.cssFont = 'bold 20pt Arial'`.
+* Multiple CSS font familes and generic fallbacks can be specified as long as
+* {@link http://www.w3.org/TR/CSS2/fonts.html#propdef-font-family CSS font-family rules} are followed.
 *
-* The font must be pre-loaded before use.
+* To change the entire font string use {@link Phaser.Text#cssFont cssFont} instead: eg. `text.cssFont = 'bold 20pt Arial'`.
+*
 * @name Phaser.Text#font
 * @property {string} font
 */
 Object.defineProperty(Phaser.Text.prototype, 'font', {
 
     get: function() {
-        return this._fontComponents.font;
+        return this._fontComponents.fontFamily;
     },
 
     set: function(value) {
@@ -774,12 +792,13 @@ Object.defineProperty(Phaser.Text.prototype, 'font', {
         value = value || 'Arial';
         value = value.trim();
 
-        if (!/^[a-zA-Z-]+$/.exec(value) && !/['"]/.exec(value))
+        // If it looks like the value should be quoted, but isn't, then quote it.
+        if (!/^(?:inherit|serif|sans-serif|cursive|fantasy|monospace)$/.exec(value) && !/['",]/.exec(value))
         {
             value = "'" + value + "'";
         }
 
-        this._fontComponents.font = value;
+        this._fontComponents.fontFamily = value;
         this.updateFont(this._fontComponents);
 
     }
@@ -789,7 +808,8 @@ Object.defineProperty(Phaser.Text.prototype, 'font', {
 /**
 * The size of the font.
 *
-* If the font size is specified in pixels then the number (eg. `32`) is returned; otherwise a string is returned (eg. `'12pt'`).
+* If the font size is specified in pixels (eg. `32` or `'32px`') then a number (ie. `32`) representing
+* the font size in pixels is returned; otherwise the value with CSS unit is returned as a string (eg. `'12pt'`).
 *
 * @name Phaser.Text#fontSize
 * @property {number|string} fontSize
@@ -812,12 +832,12 @@ Object.defineProperty(Phaser.Text.prototype, 'fontSize', {
 
     set: function(value) {
 
+        value = value || '0';
         if (typeof value === 'number')
         {
             value = value + 'px';
         }
 
-        value = value || '0';
         this._fontComponents.fontSize = value;
         this.updateFont(this._fontComponents);
 
@@ -833,7 +853,7 @@ Object.defineProperty(Phaser.Text.prototype, 'fontSize', {
 Object.defineProperty(Phaser.Text.prototype, 'fontWeight', {
 
     get: function() {
-        return this._fontComponents.fontWeight;
+        return this._fontComponents.fontWeight || 'normal';
     },
 
     set: function(value) {
@@ -854,7 +874,7 @@ Object.defineProperty(Phaser.Text.prototype, 'fontWeight', {
 Object.defineProperty(Phaser.Text.prototype, 'fontStyle', {
 
     get: function() {
-        return this._fontComponents.fontStyle;
+        return this._fontComponents.fontStyle || 'normal';
     },
 
     set: function(value) {
@@ -875,7 +895,7 @@ Object.defineProperty(Phaser.Text.prototype, 'fontStyle', {
 Object.defineProperty(Phaser.Text.prototype, 'fontVariant', {
 
     get: function() {
-        return this._fontComponents.fontVariant;
+        return this._fontComponents.fontVariant || 'normal';
     },
 
     set: function(value) {
