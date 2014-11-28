@@ -5,8 +5,9 @@
 */
 
 /**
-* The Game Object Creator is a quick way to create all of the different sorts of core objects that Phaser uses, but not add them to the game world.
-* Use the GameObjectFactory to create and add the objects into the world.
+* The Game Object Creator is a quick way to create mnay common game objects _without_ adding them to the game world.
+*
+* Use GameObjectFactory (usually {@linkcode Phaser.Game#add game.add}) to create and add the objects into the world.
 *
 * @class Phaser.GameObjectCreator
 * @constructor
@@ -16,11 +17,13 @@ Phaser.GameObjectCreator = function (game) {
 
     /**
     * @property {Phaser.Game} game - A reference to the currently running Game.
+    * @protected
     */
     this.game = game;
 
     /**
     * @property {Phaser.World} world - A reference to the game world.
+    * @protected
     */
     this.world = this.game.world;
 

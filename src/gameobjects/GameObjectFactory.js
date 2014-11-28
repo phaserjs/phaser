@@ -5,7 +5,11 @@
 */
 
 /**
-* The Game Object Factory is a quick way to create all of the different sorts of core objects that Phaser uses.
+* The Game Object Factory is a quick way to create mamy common game objects.
+*
+* Created objects are _automtically added_ the appropriate Manager, World, or manually specified parent Group.
+*
+* Use GameObjectCreator (usually {@linkcode Phaser.Game#make game.make}) to create objects without adding them.
 *
 * @class Phaser.GameObjectFactory
 * @constructor
@@ -15,11 +19,13 @@ Phaser.GameObjectFactory = function (game) {
 
     /**
     * @property {Phaser.Game} game - A reference to the currently running Game.
+    * @protected
     */
     this.game = game;
 
     /**
     * @property {Phaser.World} world - A reference to the game world.
+    * @protected
     */
     this.world = this.game.world;
 
@@ -221,10 +227,10 @@ Phaser.GameObjectFactory.prototype = {
     * @param {number} y - The y coordinate (in world space) to position the TileSprite at.
     * @param {string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture} key - This is the image or texture used by the TileSprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.
     * @param {string|number} frame - If this TileSprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
-		* @param {Array} points - An array of {Phaser.Point}.
+    * @param {Array} points - An array of {Phaser.Point}.
     * @param {Phaser.Group} [group] - Optional Group to add the object to. If not specified it will be added to the World group.
     * @return {Phaser.TileSprite} The newly created tileSprite object.
-		* Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/demo.js
+    * Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/demo.js
     */
     rope: function (x, y, key, frame, points, group) {
 
