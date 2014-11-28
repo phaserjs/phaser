@@ -78,22 +78,10 @@ Phaser.Text = function (game, x, y, text, style) {
     this._text = text;
 
     /**
-    * @property {string} _font - Internal cache var.
+    * @property {object} _fontComponents - The font, broken down into components, set in `setStyle`.
     * @private
     */
-    this._font = '';
-
-    /**
-    * @property {number} _fontSize - Internal cache var.
-    * @private
-    */
-    this._fontSize = 32;
-
-    /**
-    * @property {string} _fontWeight - Internal cache var.
-    * @private
-    */
-    this._fontWeight = 'normal';
+    this._fontComponents = null;
 
     /**
     * @property {number} lineSpacing - Additional spacing (in pixels) between each line of text if multi-line.
@@ -233,6 +221,8 @@ Phaser.Text.prototype.postUpdate = function () {
 };
 
 /**
+* Destroy this Text object, removing it from the group it belongs to.
+*
 * @method Phaser.Text#destroy
 * @param {boolean} [destroyChildren=true] - Should every child of this object have its destroy method called?
 */
@@ -326,6 +316,10 @@ Phaser.Text.prototype.setShadow = function (x, y, color, blur) {
 * @method Phaser.Text#setStyle
 * @param {Object} [style] - The style properties to be set on the Text.
 * @param {string} [style.font='bold 20pt Arial'] - The style and size of the font.
+* @param {string} [style.fontStyle=(from font)] - The style of the font (eg. 'italic'): overrides the value in `style.font`.
+* @param {string} [style.fontVariant=(from font)] - The variant of the font (eg. 'small-caps'): overrides the value in `style.font`.
+* @param {string} [style.fontWeight=(from font)] - The weight of the font (eg. 'bold'): overrides the value in `style.font`.
+* @param {string|number} [style.fontSize=(from font)] - The size of the font (eg. 32 or '32px'): overrides the value in `style.font`.
 * @param {string} [style.fill='black'] - A canvas fillstyle that will be used on the text eg 'red', '#00FF00'.
 * @param {string} [style.align='left'] - Alignment for multiline text ('left', 'center' or 'right'), does not affect single line text.
 * @param {string} [style.stroke='black'] - A canvas stroke style that will be used on the text stroke eg 'blue', '#FCFF00'.
@@ -348,6 +342,31 @@ Phaser.Text.prototype.setStyle = function (style) {
     style.shadowColor = style.shadowColor || 'rgba(0,0,0,0)';
     style.shadowBlur = style.shadowBlur || 0;
 
+    var components = this.fontToComponents(style.font);
+    if (style.fontStyle)
+    {
+        components.fontStyle = style.fontStyle;
+    }
+    if (style.fontVariant)
+    {
+        components.fontVariant = style.fontVariant;
+    }
+    if (style.fontWeight)
+    {
+        components.fontWeight = style.fontWeight;
+    }
+    if (style.fontSize)
+    {
+        if (typeof style.fontSize === 'number')
+        {
+            style.fontSize = style.fontSize + 'px';
+        }
+        components.fontSize = style.fontSize;
+    }
+
+    this._fontComponents = components;
+
+    style.font = this.componentsToFont(this._fontComponents);
     this.style = style;
     this.dirty = true;
 
@@ -575,6 +594,69 @@ Phaser.Text.prototype.runWordWrap = function (text) {
 };
 
 /**
+* Converting a short CSS-font string into the relevant components.
+* @method Phaser.Text#fontToComponents
+* @private
+*/
+Phaser.Text.prototype.fontToComponents = function (font) {
+
+    // The format is specified in http://www.w3.org/TR/CSS2/fonts.html#font-shorthand:
+    // style - normal | italic | oblique | inherit
+    // variant - normal | small-caps | inherit
+    // weight - normal | bold | bolder | lighter | 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900 | inherit
+    // size - xx-small | x-small | small | medium | large | x-large | xx-large,
+    //        larger | smaller
+    //        {number} (em | ex | ch | rem | vh | vw | vmin | vmax | px | mm | cm | in | pt | pc | %)
+    // font-family - rest (but identifiers or quoted with comma separation)
+    var m = font.match(/^\s*(?:\b(normal|italic|oblique|inherit)?\b)\s*(?:\b(normal|small-caps|inherit)?\b)\s*(?:\b(normal|bold|bolder|lighter|100|200|300|400|500|600|700|800|900|inherit)?\b)\s*(?:\b(xx-small|x-small|small|medium|large|x-large|xx-large|larger|smaller|0|\d*(?:[.]\d*)?(?:%|[a-z]{2,5}))?\b)\s*(.*)\s*$/);
+    if (m)
+    {
+        return {
+            fontStyle: m[1] || 'normal',
+            fontVariant: m[2] || 'normal',
+            fontWeight: m[3] || 'normal',
+            fontSize: m[4] || 'medium',
+            font: m[5]
+        };
+    }
+    else
+    {
+        return {
+            font: font
+        };
+    }
+
+};
+
+/**
+* Converts font-components, see `fontToComponents` to a short font string.
+* @method Phaser.Text#componentsToFont
+* @private
+*/
+Phaser.Text.prototype.componentsToFont = function (components) {
+
+    var parts = [];
+    var v;
+
+    v = components.fontStyle;
+    if (v && v !== 'normal') { parts.push(v); }
+
+    v = components.fontVariant;
+    if (v && v !== 'normal') { parts.push(v); }
+
+    v = components.fontWeight;
+    if (v && v !== 'normal') { parts.push(v); }
+
+    v = components.fontSize;
+    if (v && v !== 'medium') { parts.push(v); }
+
+    parts.push(components.font);
+
+    return parts.join(" ");
+
+};
+
+/**
 * The rotation of the Text, in degrees, from its original orientation.
 *
 * Values from 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation.
@@ -625,21 +707,35 @@ Object.defineProperty(Phaser.Text.prototype, 'text', {
 });
 
 /**
+* Change the font family that the text will be rendered in such as 'Arial'.
+*
+* To change the entire font string use {@link Phaser.Text#setStyle setStyle} instead:
+* eg. `text.setStyle({font: 'bold 20pt Arial'})`.
+*
+* The font must be pre-loaded before use.
 * @name Phaser.Text#font
-* @property {string} font - The font the text will be rendered in, i.e. 'Arial'. Must be loaded in the browser before use.
+* @property {string} font
 */
 Object.defineProperty(Phaser.Text.prototype, 'font', {
 
     get: function() {
-        return this._font;
+        return this._fontComponents.font;
     },
 
     set: function(value) {
 
-        if (value !== this._font)
+        value = (value || '').trim();
+
+        if (value !== this._fontComponents.font)
         {
-            this._font = value.trim();
-            this.style.font = this._fontWeight + ' ' + this._fontSize + "px '" + this._font + "'";
+            // Ideally the user should supply quotes around fonts as required, but.. if not
+            if (!/^[a-zA-Z-]+$/.exec(value) && !/['"]/.exec(value))
+            {
+                value = "'" + value + "'";
+            }
+
+            this._fontComponents.font = value;
+            this.style.font = this.componentsToFont(this._fontComponents);
             this.dirty = true;
 
             if (this.parent)
@@ -653,23 +749,40 @@ Object.defineProperty(Phaser.Text.prototype, 'font', {
 });
 
 /**
+* The size of the font.
+*
+* _Important:_ If the font size was not specified in pixels this will return NaN.
+*
 * @name Phaser.Text#fontSize
-* @property {number} fontSize - The size of the font in pixels.
+* @property {number} fontSize
 */
 Object.defineProperty(Phaser.Text.prototype, 'fontSize', {
 
     get: function() {
-        return this._fontSize;
+
+        var size = this._fontComponents.fontSize;
+        if (size && /(?:0|px)$/.exec(size))
+        {
+            return parseInt(size, 10);
+        }
+        else
+        {
+            return NaN;
+        }
+
     },
 
     set: function(value) {
 
-        value = parseInt(value, 10);
-
-        if (value !== this._fontSize)
+        if (typeof value === 'number')
         {
-            this._fontSize = value;
-            this.style.font = this._fontWeight + ' ' + this._fontSize + "px '" + this._font + "'";
+            value = value + 'px';
+        }
+
+        if (value !== this._fontComponents.fontSize)
+        {
+            this._fontComponents.fontSize = value;
+            this.style.font = this.componentsToFont(this._fontComponents);
             this.dirty = true;
 
             if (this.parent)
@@ -689,15 +802,15 @@ Object.defineProperty(Phaser.Text.prototype, 'fontSize', {
 Object.defineProperty(Phaser.Text.prototype, 'fontWeight', {
 
     get: function() {
-        return this._fontWeight;
+        return this._fontComponents.fontWeight;
     },
 
     set: function(value) {
 
         if (value !== this._fontWeight)
         {
-            this._fontWeight = value;
-            this.style.font = this._fontWeight + ' ' + this._fontSize + "px '" + this._font + "'";
+            this._fontComponents.fontWeight = value;
+            this.style.font = this.componentsToFont(this._fontComponents);
             this.dirty = true;
 
             if (this.parent)
