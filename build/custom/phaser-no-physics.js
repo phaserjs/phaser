@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.2.0 "Bethal" - Built: Tue Nov 25 2014 00:42:58
+* v2.2.0 "Bethal" - Built: Thu Nov 27 2014 21:10:45
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -12182,7 +12182,7 @@ PIXI.AbstractFilter.prototype.apply = function(frameBuffer)
 */
 var Phaser = Phaser || {
 
-	VERSION: '2.2.0-RC11',
+	VERSION: '2.2.0-RC12',
 	GAMES: [],
 
     AUTO: 0,
@@ -18109,7 +18109,7 @@ Phaser.StateManager = function (game, pendingState) {
     this.onResizeCallback = null;
 
     /**
-    * @property {function} onPreRenderCallback - This is called before the state is rendered and before the stage is cleared.
+    * @property {function} onPreRenderCallback - This is called before the state is rendered and before the stage is cleared but after all game objects have had their final properties adjusted.
     */
     this.onPreRenderCallback = null;
 
@@ -18237,6 +18237,7 @@ Phaser.StateManager.prototype = {
             this.onLoadUpdateCallback = null;
             this.onCreateCallback = null;
             this.onUpdateCallback = null;
+            this.onPreRenderCallback = null;
             this.onRenderCallback = null;
             this.onResizeCallback = null;
             this.onPausedCallback = null;
@@ -18439,10 +18440,10 @@ Phaser.StateManager.prototype = {
         {
             var valid = false;
 
-            if (this.states[key]['preload']) { valid = true; }
-            if (this.states[key]['create']) { valid = true; }
-            if (this.states[key]['update']) { valid = true; }
-            if (this.states[key]['render']) { valid = true; }
+            if (this.states[key]['preload'] || this.states[key]['create'] || this.states[key]['update'] || this.states[key]['render'])
+            {
+                valid = true;
+            }
 
             if (valid === false)
             {
@@ -22367,6 +22368,13 @@ Phaser.World.prototype.setBounds = function (x, y, width, height) {
 
 };
 
+/**
+* Updates the size of this world. Note that this doesn't modify the world x/y coordinates, just the width and height.
+*
+* @method Phaser.World#resize
+* @param {number} width - New width of the game world in pixels.
+* @param {number} height - New height of the game world in pixels.
+*/
 Phaser.World.prototype.resize = function (width, height) {
 
     //  Don't ever scale the World bounds lower than the original requested dimensions if it's a defined world size
@@ -23913,11 +23921,11 @@ Phaser.ScaleManager.prototype = {
 
     /**
     * Invoked when the game is resumed.
-    * @method Phaser.ScaleManager#gameResumed
+    * 
+    * @method Phaser.ScaleManager#_gameResumed
     * @private
     */
-    _gameResumed: function ()
-    {
+    _gameResumed: function () {
 
         this.queueUpdate(true);
 
@@ -24120,6 +24128,12 @@ Phaser.ScaleManager.prototype = {
 
     },
 
+    /**
+    * Update method while paused.
+    *
+    * @method Phaser.ScaleManager#pauseUpdate
+    * @private
+    */
     pauseUpdate: function () {
 
         this.preUpdate();
@@ -24166,6 +24180,8 @@ Phaser.ScaleManager.prototype = {
     /**
     * Update relevant scaling values based on the ScaleManager dimension and game dimensions,
     * which should already be set. This does not change `sourceAspectRatio`.
+    * 
+    * @method Phaser.ScaleManager#updateScalingAndBounds
     * @private
     */
     updateScalingAndBounds: function () {
@@ -24216,6 +24232,7 @@ Phaser.ScaleManager.prototype = {
 
     /**
     * Classify the orientation, per `getScreenOrientation`.
+    * 
     * @method Phaser.ScaleManager#classifyOrientation
     * @private
     * @param {string} orientation - The orientation string, e.g. 'portrait-primary'.
@@ -24270,7 +24287,8 @@ Phaser.ScaleManager.prototype = {
             }
         }
 
-        if (correctnessChanged) {
+        if (correctnessChanged)
+        {
             if (this.incorrectOrientation)
             {
                 this.enterIncorrectOrientation.dispatch();
@@ -24322,11 +24340,14 @@ Phaser.ScaleManager.prototype = {
 
     /**
     * Scroll to the top - in some environments. See `compatibility.scrollTo`.
+    * 
+    * @method Phaser.ScaleManager#scrollTop
     * @private
     */
     scrollTop: function () {
 
         var scrollTo = this.compatibility.scrollTo;
+
         if (scrollTo)
         {
             window.scrollTo(scrollTo.x, scrollTo.y);
@@ -24475,11 +24496,13 @@ Phaser.ScaleManager.prototype = {
             bounds.setTo(clientRect.left, clientRect.top, clientRect.width, clientRect.height);
 
             var wc = this.windowConstraints;
+
             if (wc.right)
             {
                 var windowBounds = wc.right === 'layout' ? layoutBounds : visualBounds;
                 bounds.right = Math.min(bounds.right, windowBounds.width);
             }
+
             if (wc.bottom)
             {
                 var windowBounds = wc.bottom === 'layout' ? layoutBounds : visualBounds;
@@ -24530,6 +24553,7 @@ Phaser.ScaleManager.prototype = {
             }
 
             canvas.style.marginLeft = margin.left + 'px';
+
             if (margin.left !== 0)
             {
                 margin.right = -(parentBounds.width - canvasBounds.width - margin.left);
@@ -24555,6 +24579,7 @@ Phaser.ScaleManager.prototype = {
             }
 
             canvas.style.marginTop = margin.top + 'px';
+
             if (margin.top !== 0)
             {
                 margin.bottom = -(parentBounds.height - canvasBounds.height - margin.top);
@@ -24576,8 +24601,7 @@ Phaser.ScaleManager.prototype = {
     * @method Phaser.ScaleManager#reflowGame
     * @private
     */
-    reflowGame: function ()
-    {
+    reflowGame: function () {
 
         this.resetCanvas('', '');
 
@@ -24634,6 +24658,7 @@ Phaser.ScaleManager.prototype = {
         if (typeof cssHeight === 'undefined') { cssHeight = this.height + 'px'; }
 
         var canvas = this.game.canvas;
+
         if (!this.compatibility.noMargins)
         {
             canvas.style.marginLeft = '';
@@ -24641,6 +24666,7 @@ Phaser.ScaleManager.prototype = {
             canvas.style.marginRight = '';
             canvas.style.marginBottom = '';
         }
+
         canvas.style.width = cssWidth;
         canvas.style.height = cssHeight;
 
@@ -24654,6 +24680,7 @@ Phaser.ScaleManager.prototype = {
     * @param {boolean} force - If true resets the parent bounds to ensure the check is dirty.
     */
     queueUpdate: function (force) {
+
         if (force)
         {
             this._parentBounds.width = 0;
@@ -24661,6 +24688,7 @@ Phaser.ScaleManager.prototype = {
         }
 
         this._updateThrottle = this._updateThrottleReset;
+
     },
 
     /**
@@ -24705,6 +24733,7 @@ Phaser.ScaleManager.prototype = {
         var height = bounds.height;
 
         var multiplier;
+
         if (expanding)
         {
             multiplier = Math.max((height / this.game.height), (width / this.game.width));
@@ -24761,11 +24790,15 @@ Phaser.ScaleManager.prototype = {
     * @protected
     */
     createFullScreenTarget: function () {
+
         var fsTarget = document.createElement('div');
+
         fsTarget.style.margin = '0';
         fsTarget.style.padding = '0';
         fsTarget.style.background = '#000';
+
         return fsTarget;
+
     },
 
     /**
@@ -24802,11 +24835,10 @@ Phaser.ScaleManager.prototype = {
 
         // IE11 clicks trigger MSPointer which is not the mousePointer
         var input = this.game.input;
-        if (input.activePointer !== input.mousePointer &&
-            (allowTrampoline || allowTrampoline !== false))
+
+        if (input.activePointer !== input.mousePointer && (allowTrampoline || allowTrampoline !== false))
         {
-            input.activePointer.addClickTrampoline(
-                "startFullScreen", this.startFullScreen, this, [antialias, false]);
+            input.activePointer.addClickTrampoline("startFullScreen", this.startFullScreen, this, [antialias, false]);
             return;
         }
 
@@ -24828,6 +24860,7 @@ Phaser.ScaleManager.prototype = {
         var initData = {
             targetElement: fsTarget
         };
+
         this.onFullScreenInit.dispatch(this, initData);
 
         if (this._createdFullScreenTarget)
@@ -24877,11 +24910,13 @@ Phaser.ScaleManager.prototype = {
     * Cleans up the previous fullscreen target, if such was automatically created.
     * This ensures the canvas is restored to its former parent, assuming the target didn't move.
     *
+    * @method Phaser.ScaleManager#cleanupCreatedTarget
     * @private
     */
     cleanupCreatedTarget: function () {
 
         var fsTarget = this._createdFullScreenTarget;
+
         if (fsTarget && fsTarget.parentNode)
         {
             // Make sure to cleanup synthetic target for sure;
@@ -25169,6 +25204,7 @@ Phaser.ScaleManager.prototype.checkOrientationState = function () {
 * This `null` if `parentIsWindow` is true or if fullscreen mode is entered and `fullScreenTarget` is specified.
 * It will also be null if there is no game canvas or if the game canvas has no parent.
 *
+* @name Phaser.ScaleManager#boundingParent
 * @property {?DOMElement} boundingParent
 * @readonly
 */
@@ -25729,39 +25765,57 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     this._codePaused = false;
 
     /**
+    * The number of the logic update applied this render frame, starting from 0.
+    *
+    * The first update is `updateNumber === 0` and the last update is `updateNumber === updatesThisFrame.`
+    * @property {number} updateNumber
+    * @protected
+    */
+    this.updateNumber = 0;
+
+    /**
+    * Number of logic updates expected to occur this render frame;
+    * will be 1 unless there are catch-ups required (and allowed).
+    * @property {integer} updatesThisFrame
+    * @protected
+    */
+    this.updatesThisFrame = 1;
+
+    /**
     * @property {number} _deltaTime - accumulate elapsed time until a logic update is due
     * @private
     */
     this._deltaTime = 0;
 
     /**
-     * @property {number} _lastCount - remember how many 'catch-up' iterations were used on the logicUpdate last frame
-     * @private
-     */
+    * @property {number} _lastCount - remember how many 'catch-up' iterations were used on the logicUpdate last frame
+    * @private
+    */
     this._lastCount = 0;
 
     /**
-     * @property {number} _spiralling - if the 'catch-up' iterations are spiralling out of control, this counter is incremented
-     * @private
-     */
+    * @property {number} _spiralling - if the 'catch-up' iterations are spiralling out of control, this counter is incremented
+    * @private
+    */
     this._spiralling = 0;
 
     /**
-     * @property {Phaser.Signal} fpsProblemNotifier - if the game is struggling to maintain the desiredFps, this signal will be dispatched
-     *                                                to suggest that the program adjust it's fps closer to the Time.suggestedFps value
-     * @public
-     */
+    * If the game is struggling to maintain the desired FPS, this signal will be dispatched.
+    * The desired/chosen FPS should probably be closer to the {@link Phaser.Time#suggestedFps} value.
+    * @property {Phaser.Signal} fpsProblemNotifier
+    * @public
+    */
     this.fpsProblemNotifier = new Phaser.Signal();
 
     /**
-     * @property {boolean} forceSingleUpdate - Should the game loop force a logic update, regardless of the delta timer? Set to true if you know you need this. You can toggle it on the fly.
-     */
+    * @property {boolean} forceSingleUpdate - Should the game loop force a logic update, regardless of the delta timer? Set to true if you know you need this. You can toggle it on the fly.
+    */
     this.forceSingleUpdate = false;
 
     /**
-     * @property {number} _nextNotification - the soonest game.time.time value that the next fpsProblemNotifier can be dispatched
-     * @private
-     */
+    * @property {number} _nextNotification - the soonest game.time.time value that the next fpsProblemNotifier can be dispatched
+    * @private
+    */
     this._nextFpsNotification = 0;
 
     //  Parse the configuration object (if any)
@@ -26147,9 +26201,17 @@ Phaser.Game.prototype = {
             // unless forceSingleUpdate is true
             var count = 0;
 
+            this.updatesThisFrame = Math.floor(this._deltaTime / slowStep);
+
+            if (this.forceSingleUpdate)
+            {
+                this.updatesThisFrame = Math.min(1, this.updatesThisFrame);
+            }
+
             while (this._deltaTime >= slowStep)
             {
                 this._deltaTime -= slowStep;
+                this.updateNumber = count;
                 this.updateLogic(1.0 / this.time.desiredFps);
                 count++;
 
@@ -36625,9 +36687,12 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     this.health = 1;
 
     /**
-    * If you would like the Sprite to have a lifespan once 'born' you can set this to a positive value. Handy for particles, bullets, etc.
-    * The lifespan is decremented by game.time.elapsed each update, once it reaches zero the kill() function is called.
-    * @property {number} lifespan - The lifespan of the Sprite (in ms) before it will be killed.
+    * To given a Sprite a lifespan, in milliseconds, once 'born' you can set this to a positive value. Handy for particles, bullets, etc.
+    *
+    * The lifespan is decremented by `game.time.physicsElapsed` (converted to milliseconds) each logic update,
+    * and {@link Phaser.Sprite.kill kill} is called once the lifespan reaches 0.
+    *
+    * @property {number} lifespan
     * @default
     */
     this.lifespan = 0;
@@ -36755,9 +36820,10 @@ Phaser.Sprite.prototype.preUpdate = function() {
         return false;
     }
 
-    if (this.lifespan > 0)
+    //  Only apply lifespan decrement in the first updateLogic pass.
+    if (this.lifespan > 0 && this.game.updateNumber === 0)
     {
-        this.lifespan -= this.game.time.elapsedMS;
+        this.lifespan -= this.game.time.physicsElapsedMS;
 
         if (this.lifespan <= 0)
         {
@@ -40706,7 +40772,8 @@ Phaser.Text.prototype.constructor = Phaser.Text;
 
 /**
 * Automatically called by World.preUpdate.
-* @method Phaser.Text.prototype.preUpdate
+* 
+* @method Phaser.Text#preUpdate
 */
 Phaser.Text.prototype.preUpdate = function () {
 
@@ -40747,7 +40814,6 @@ Phaser.Text.prototype.preUpdate = function () {
 * Override and use this function in your own custom objects to handle any update requirements you may have.
 *
 * @method Phaser.Text#update
-* @memberof Phaser.Text
 */
 Phaser.Text.prototype.update = function() {
 
@@ -40755,7 +40821,8 @@ Phaser.Text.prototype.update = function() {
 
 /**
 * Automatically called by World.postUpdate.
-* @method Phaser.Text.prototype.postUpdate
+* 
+* @method Phaser.Text#postUpdate
 */
 Phaser.Text.prototype.postUpdate = function () {
 
@@ -40774,7 +40841,7 @@ Phaser.Text.prototype.postUpdate = function () {
 };
 
 /**
-* @method Phaser.Text.prototype.destroy
+* @method Phaser.Text#destroy
 * @param {boolean} [destroyChildren=true] - Should every child of this object have its destroy method called?
 */
 Phaser.Text.prototype.destroy = function (destroyChildren) {
@@ -40843,7 +40910,9 @@ Phaser.Text.prototype.destroy = function (destroyChildren) {
 };
 
 /**
-* @method Phaser.Text.prototype.setShadow
+* Sets a drop-shadow effect on the Text.
+* 
+* @method Phaser.Text#setShadow
 * @param {number} [x=0] - The shadowOffsetX value in pixels. This is how far offset horizontally the shadow effect will be.
 * @param {number} [y=0] - The shadowOffsetY value in pixels. This is how far offset vertically the shadow effect will be.
 * @param {string} [color='rgba(0,0,0,0)'] - The color of the shadow, as given in CSS rgba format. Set the alpha component to 0 to disable the shadow.
@@ -40862,7 +40931,7 @@ Phaser.Text.prototype.setShadow = function (x, y, color, blur) {
 /**
 * Set the style of the text by passing a single style object to it.
 *
-* @method Phaser.Text.prototype.setStyle
+* @method Phaser.Text#setStyle
 * @param {Object} [style] - The style properties to be set on the Text.
 * @param {string} [style.font='bold 20pt Arial'] - The style and size of the font.
 * @param {string} [style.fill='black'] - A canvas fillstyle that will be used on the text eg 'red', '#00FF00'.
@@ -40895,7 +40964,7 @@ Phaser.Text.prototype.setStyle = function (style) {
 /**
 * Renders text. This replaces the Pixi.Text.updateText function as we need a few extra bits in here.
 *
-* @method Phaser.Text.prototype.updateText
+* @method Phaser.Text#updateText
 * @private
 */
 Phaser.Text.prototype.updateText = function () {
@@ -40931,9 +41000,9 @@ Phaser.Text.prototype.updateText = function () {
     this.canvas.width = width * this.resolution;
     
     //calculate text height
-    var lineHeight = fontProperties.fontSize + this.style.strokeThickness;
- 
-    var height = lineHeight * lines.length;
+    var lineHeight = fontProperties.fontSize + this.style.strokeThickness + this._lineSpacing;
+
+    var height = (lineHeight + this._lineSpacing) * lines.length;
 
     this.canvas.height = height * this.resolution;
 
@@ -40976,8 +41045,6 @@ Phaser.Text.prototype.updateText = function () {
             linePositionX += (maxLineWidth - lineWidths[i]) / 2;
         }
 
-        linePositionY += this._lineSpacing;
-
         if (this.colors.length > 0)
         {
             this.updateLine(lines[i], linePositionX, linePositionY);
@@ -41000,6 +41067,12 @@ Phaser.Text.prototype.updateText = function () {
 
 };
 
+/**
+* Updates a line of text.
+*
+* @method Phaser.Text#updateLine
+* @private
+*/
 Phaser.Text.prototype.updateLine = function (line, x, y) {
 
     for (var i = 0; i < line.length; i++)
@@ -41032,7 +41105,7 @@ Phaser.Text.prototype.updateLine = function (line, x, y) {
 /**
 * Clears any previously set color stops.
 *
-* @method Phaser.Text.prototype.clearColors
+* @method Phaser.Text#clearColors
 */
 Phaser.Text.prototype.clearColors = function () {
 
@@ -41048,7 +41121,7 @@ Phaser.Text.prototype.clearColors = function () {
 * Once set the color remains in use until either another color or the end of the string is encountered.
 * For example if the Text was `Photon Storm` and you did `Text.addColor('#ffff00', 6)` it would color in the word `Storm` in yellow.
 *
-* @method Phaser.Text.prototype.addColor
+* @method Phaser.Text#addColor
 * @param {string} color - A canvas fillstyle that will be used on the text eg `red`, `#00FF00`, `rgba()`.
 * @param {number} position - The index of the character in the string to start applying this color value from.
 */
@@ -41062,7 +41135,7 @@ Phaser.Text.prototype.addColor = function (color, position) {
 /**
 * Greedy wrapping algorithm that will wrap words as the line grows longer than its horizontal bounds.
 *
-* @method Phaser.Text.prototype.runWordWrap
+* @method Phaser.Text#runWordWrap
 * @param {string} text - The text to perform word wrap detection against.
 * @private
 */
@@ -41112,6 +41185,7 @@ Phaser.Text.prototype.runWordWrap = function (text) {
 * Indicates the rotation of the Text, in degrees, from its original orientation. Values from 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation.
 * Values outside this range are added to or subtracted from 360 to obtain a value within the range. For example, the statement player.angle = 450 is the same as player.angle = 90.
 * If you wish to work in radians instead of degrees use the property Sprite.rotation instead.
+* 
 * @name Phaser.Text#angle
 * @property {number} angle - Gets or sets the angle of rotation in degrees.
 */
@@ -49644,12 +49718,12 @@ Phaser.TweenData.prototype = {
 
         if (this.parent.reverse)
         {
-            this.dt -= (this.game.time.physicsElapsed * 1000) * this.parent.timeScale;
+            this.dt -= this.game.time.physicsElapsedMS * this.parent.timeScale;
             this.dt = Math.max(this.dt, 0);
         }
         else
         {
-            this.dt += (this.game.time.physicsElapsed * 1000) * this.parent.timeScale;
+            this.dt += this.game.time.physicsElapsedMS * this.parent.timeScale;
             this.dt = Math.min(this.dt, this.duration);
         }
 
@@ -50421,55 +50495,99 @@ Phaser.Time = function (game) {
 
     /**
     * @property {Phaser.Game} game - Local reference to game.
+    * @protected
     */
     this.game = game;
 
     /**
-    * @property {number} time - This always contains the Date.now value.
+    * The `Date.now()` value when the time was last updated.
+    * @property {integer} time
     * @protected
     */
     this.time = 0;
 
     /**
-    * @property {number} prevTime - The time the previous update occurred.
+    * The `now` when the previous update occurred.
+    * @property {number} prevTime
     * @protected
     */
     this.prevTime = 0;
 
     /**
-    * @property {number} now - The high resolution RAF timer value (if RAF is available) or Date.now if using setTimeout.
+    * An increasing value representing cumulative milliseconds since an undisclosed epoch.
+    *
+    * This value must _not_ be used with `Date.now()`.
+    *
+    * The source may either be from a high-res source (eg. if RAF is available) or the standard Date.now;
+    * the value can only be relied upon within a particular game instance.
+    *
+    * @property {number} now
     * @protected
     */
     this.now = 0;
 
     /**
-    * @property {number} elapsed - Elapsed time since the last frame. In ms if running under setTimeout or an integer if using RAF.
+    * Elapsed time since the last time update, in milliseconds, based on `now`.
+    *
+    * This value _may_ include time that the game is paused/inactive.
+    *
+    * _Note:_ This is updated only once per game loop - even if multiple logic update steps are done.
+    * Use {@link Phaser.Timer#physicsTime physicsTime} as a basis of game/logic calculations instead.
+    *
+    * @property {number} elapsed
     * @see Phaser.Time.time
     * @protected
     */
     this.elapsed = 0;
 
     /**
-    * @property {number} elapsedMS - The time in ms since the last update. Will vary dramatically based on system performance, do not use for physics calculations!
+    * The time in ms since the last time update, in milliseconds, based on `time`.
+    *
+    * This value is corrected for game pauses and will be "about zero" after a game is resumed.
+    *
+    * _Note:_ This is updated once per game loop - even if multiple logic update steps are done.
+    * Use {@link Phaser.Timer#physicsTime physicsTime} as a basis of game/logic calculations instead.
+    *
+    * @property {integer} elapsedMS 
     * @protected
     */
     this.elapsedMS = 0;
 
     /**
-    * @property {number} pausedTime - Records how long the game has been paused for. Is reset each time the game pauses.
-    * @protected
+    * The physics update delta, in fractional seconds.
+    *    
+    * This should be used as an applicable multiplier by all logic update steps (eg. `preUpdate/postUpdate/update`)
+    * to ensure consistent game timing.
+    *
+    * With fixed-step updates this normally equivalent to `1.0 / desiredFps`.
+    *
+    * @property {number} physicsElapsed
     */
-    this.pausedTime = 0;
+    this.physicsElapsed = 0;
 
     /**
-    * @property {number} desiredFps - The desired frame rate of your game.
+    * The Time.physicsElapsed property * 1000.
+    *
+    * @property {number} physicsElapsedMS
+    */
+    this.physicsElapsedMS = 0;
+
+    /**
+    * The desired frame rate of the game.
+    *
+    * This is used is used to calculate the physic/logic multiplier and how to apply catch-up logic updates.
+    *
+    * @property {number} desiredFps
     * @default
     */
     this.desiredFps = 60;
 
     /**
-    * @property {number} suggestedFps = The suggested frame rate for your game, based on an averaged real frame rate.
-    * NOTE: Not available until after a few frames have passed, it is recommended to use this after a few seconds (eg. after the menus)
+    * The suggested frame rate for your game, based on an averaged real frame rate.
+    *
+    * _Note:_ This is not available until after a few frames have passed; use it after a few seconds (eg. after the menus)
+    *
+    * @property {number} suggestedFps
     * @default
     */
     this.suggestedFps = null;
@@ -50514,27 +50632,34 @@ Phaser.Time = function (game) {
     this.msMax = 0;
 
     /**
-    * @property {number} physicsElapsed - The physics motion value as used by Arcade Physics. Equivalent to 1.0 / Time.desiredFps.
-    */
-    this.physicsElapsed = 0;
-
-    /**
-    * @property {number} frames - The number of frames record in the last second. Only calculated if Time.advancedTiming is true.
+    * The number of render frames record in the last second. Only calculated if Time.advancedTiming is true.
+    * @property {integer} frames
     */
     this.frames = 0;
 
     /**
-    * @property {number} pauseDuration - Records how long the game was paused for in miliseconds.
+    * The `time` when the game was last paused.
+    * @property {number} pausedTime
+    * @protected
+    */
+    this.pausedTime = 0;
+
+    /**
+    * Records how long the game was last paused, in miliseconds.
+    * (This is not updated until the game is resumed.)
+    * @property {number} pauseDuration
     */
     this.pauseDuration = 0;
 
     /**
     * @property {number} timeToCall - The value that setTimeout needs to work out when to next update
+    * @protected
     */
     this.timeToCall = 0;
 
     /**
     * @property {number} timeExpected - The time when the next call is expected when using setTimer to control the update loop
+    * @protected
     */
     this.timeExpected = 0;
 
@@ -50677,13 +50802,13 @@ Phaser.Time.prototype = {
     update: function (time) {
 
         //  Set to the old Date.now value
-        this.elapsedMS = this.time;
+        var previousDateNow = this.time;
 
         // this.time always holds Date.now, this.now may hold the RAF high resolution time value if RAF is available (otherwise it also holds Date.now)
         this.time = Date.now();
 
         //  Adjust accorindlgy.
-        this.elapsedMS = this.time - this.elapsedMS;
+        this.elapsedMS = this.time - previousDateNow;
 
         // 'now' is currently still holding the time of the last call, move it into prevTime
         this.prevTime = this.now;
@@ -50715,6 +50840,8 @@ Phaser.Time.prototype = {
 
         //  Set the physics elapsed time... this will always be 1 / this.desiredFps because we're using fixed time steps in game.update now
         this.physicsElapsed = 1 / this.desiredFps;
+
+        this.physicsElapsedMS = this.physicsElapsed * 1000;
 
         if (this.advancedTiming)
         {
@@ -50852,6 +50979,7 @@ Phaser.Time.prototype = {
 };
 
 Phaser.Time.prototype.constructor = Phaser.Time;
+
 /**
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2014 Photon Storm Ltd.
@@ -60461,7 +60589,7 @@ Phaser.Utils.Debug.prototype = {
         this.line('x: ' + sprite.x.toFixed(1) + ' y: ' + sprite.y.toFixed(1));
         this.line('angle: ' + sprite.angle.toFixed(1) + ' rotation: ' + sprite.rotation.toFixed(1));
         this.line('visible: ' + sprite.visible + ' in camera: ' + sprite.inCamera);
-        this.line('bounds x: ' + sprite._bounds.x + ' y: ' + sprite._bounds.y + ' w: ' + sprite._bounds.width + ' h: ' + sprite._bounds.height);
+        this.line('bounds x: ' + sprite._bounds.x.toFixed(1) + ' y: ' + sprite._bounds.y.toFixed(1) + ' w: ' + sprite._bounds.width.toFixed(1) + ' h: ' + sprite._bounds.height.toFixed(1));
 
         this.stop();
 
@@ -61781,8 +61909,9 @@ Phaser.Color = {
 
 /**
 * The Physics Manager is responsible for looking after all of the running physics systems.
-* Phaser supports 3 physics systems: Arcade Physics, P2 and Ninja Physics (with Box2D and Chipmunk in development)
-* Game Objects can belong to only 1 physics system, but you can have multiple systems active in a single game.
+* Phaser supports 4 physics systems: Arcade Physics, P2, Ninja Physics and Box2D via a commercial plugin.
+* 
+* Game Objects (such as Sprites) can only belong to 1 physics system, but you can have multiple systems active in a single game.
 *
 * For example you could have P2 managing a polygon-built terrain landscape that an vehicle drives over, while it could be firing bullets that use the
 * faster (due to being much simpler) Arcade Physics system.
@@ -61817,12 +61946,12 @@ Phaser.Physics = function (game, config) {
     this.p2 = null;
 
     /**
-    * @property {Phaser.Physics.Ninja} ninja - The N+ Ninja Physics System.
+    * @property {Phaser.Physics.Ninja} ninja - The N+ Ninja Physics system.
     */
     this.ninja = null;
 
     /**
-    * @property {Phaser.Physics.Box2D} box2d - The Box2D Physics system (to be done).
+    * @property {Phaser.Physics.Box2D} box2d - The Box2D Physics system.
     */
     this.box2d = null;
 
@@ -61901,13 +62030,22 @@ Phaser.Physics.prototype = {
     /**
     * This will create an instance of the requested physics simulation.
     * Phaser.Physics.Arcade is running by default, but all others need activating directly.
+    * 
     * You can start the following physics systems:
+    * 
     * Phaser.Physics.P2JS - A full-body advanced physics system by Stefan Hedman.
     * Phaser.Physics.NINJA - A port of Metanet Softwares N+ physics system.
-    * Phaser.Physics.BOX2D and Phaser.Physics.CHIPMUNK are still in development.
+    * Phaser.Physics.BOX2D - A commercial Phaser Plugin (see http://phaser.io)
+    *
+    * Both Ninja Physics and Box2D require their respective plugins to be loaded before you can start them.
+    * They are not bundled into the core Phaser library.
+    *
+    * If the physics world has already been created (i.e. in another state in your game) then 
+    * calling startSystem will reset the physics world, not re-create it. If you need to start them again from their constructors 
+    * then set Phaser.Physics.p2 (or whichever system you want to recreate) to `null` before calling `startSystem`.
     *
     * @method Phaser.Physics#startSystem
-    * @param {number} The physics system to start.
+    * @param {number} system - The physics system to start: Phaser.Physics.ARCADE, Phaser.Physics.P2JS, Phaser.Physics.NINJA or Phaser.Physics.BOX2D.
     */
     startSystem: function (system) {
 
@@ -61917,19 +62055,29 @@ Phaser.Physics.prototype = {
         }
         else if (system === Phaser.Physics.P2JS)
         {
-            this.p2 = new Phaser.Physics.P2(this.game, this.config);
+            if (this.p2 === null)
+            {
+                this.p2 = new Phaser.Physics.P2(this.game, this.config);
+            }
+            else
+            {
+                this.p2.reset();
+            }
         }
-        if (system === Phaser.Physics.NINJA)
+        else if (system === Phaser.Physics.NINJA)
         {
             this.ninja = new Phaser.Physics.Ninja(this.game);
         }
-        else if (system === Phaser.Physics.BOX2D && this.box2d === null)
+        else if (system === Phaser.Physics.BOX2D)
         {
-            this.box2d = new Phaser.Physics.Box2D(this.game, this.config);
-        }
-        else if (system === Phaser.Physics.CHIPMUNK && this.chipmunk === null)
-        {
-            throw new Error('The Chipmunk physics system has not been implemented yet.');
+            if (this.box2d === null)
+            {
+                this.box2d = new Phaser.Physics.Box2D(this.game, this.config);
+            }
+            else
+            {
+                this.box2d.reset();
+            }
         }
 
     },
