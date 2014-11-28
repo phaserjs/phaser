@@ -416,18 +416,21 @@ Phaser.ScaleManager = function (game, width, height) {
     this.event = null;
 
     /**
-    * The edges on which to constrain the Display canvas _to_ the viewport in _addition_ to any restrictions of the Parent element.
+    * The edges on which to constrain the game Display/canvas in _addition_ to the restrictions of the parent container.
     *
-    * The viewport does not include the scrollbars by default.
+    * The properties are strings and can be '', 'visual', 'layout', or 'layout-soft'.
+    * - If 'visual', the edge will be constrained to the Window / displayed screen area
+    * - If 'layout', the edge will be constrained to the CSS Layout bounds
+    * - An invalid value is treated as 'visual'
     *
-    * Call {@link Phaser.ScaleManager#refresh refresh} after modifying this object.
-    *
-    * @property {boolean} windowConstraints
+    * @member
+    * @property {string} bottom
+    * @property {string} right
     * @default
     */
     this.windowConstraints = {
-        bottom: true,
-        right: true
+        right: 'layout',
+        bottom: ''
     };
 
     /**
@@ -592,6 +595,13 @@ Phaser.ScaleManager = function (game, width, height) {
     * @private
     */
     this._parentBounds = new Phaser.Rectangle();
+
+    /**
+    * Temporary bounds used for internal work to cut down on new objects created.
+    * @property {Phaser.Rectangle} _parentBounds
+    * @private
+    */
+    this._tempBounds = new Phaser.Rectangle();
 
     /**
     * The Canvas size at which the last onSizeChange signal was triggered.
@@ -862,11 +872,11 @@ Phaser.ScaleManager.prototype = {
 
     /**
     * Invoked when the game is resumed.
-    * @method Phaser.ScaleManager#gameResumed
+    * 
+    * @method Phaser.ScaleManager#_gameResumed
     * @private
     */
-    _gameResumed: function ()
-    {
+    _gameResumed: function () {
 
         this.queueUpdate(true);
 
@@ -1069,6 +1079,12 @@ Phaser.ScaleManager.prototype = {
 
     },
 
+    /**
+    * Update method while paused.
+    *
+    * @method Phaser.ScaleManager#pauseUpdate
+    * @private
+    */
     pauseUpdate: function () {
 
         this.preUpdate();
@@ -1115,6 +1131,8 @@ Phaser.ScaleManager.prototype = {
     /**
     * Update relevant scaling values based on the ScaleManager dimension and game dimensions,
     * which should already be set. This does not change `sourceAspectRatio`.
+    * 
+    * @method Phaser.ScaleManager#updateScalingAndBounds
     * @private
     */
     updateScalingAndBounds: function () {
@@ -1165,6 +1183,7 @@ Phaser.ScaleManager.prototype = {
 
     /**
     * Classify the orientation, per `getScreenOrientation`.
+    * 
     * @method Phaser.ScaleManager#classifyOrientation
     * @private
     * @param {string} orientation - The orientation string, e.g. 'portrait-primary'.
@@ -1219,7 +1238,8 @@ Phaser.ScaleManager.prototype = {
             }
         }
 
-        if (correctnessChanged) {
+        if (correctnessChanged)
+        {
             if (this.incorrectOrientation)
             {
                 this.enterIncorrectOrientation.dispatch();
@@ -1271,11 +1291,14 @@ Phaser.ScaleManager.prototype = {
 
     /**
     * Scroll to the top - in some environments. See `compatibility.scrollTo`.
+    * 
+    * @method Phaser.ScaleManager#scrollTop
     * @private
     */
     scrollTop: function () {
 
         var scrollTo = this.compatibility.scrollTo;
+
         if (scrollTo)
         {
             window.scrollTo(scrollTo.x, scrollTo.y);
@@ -1376,7 +1399,7 @@ Phaser.ScaleManager.prototype = {
         if (!this.compatibility.canExpandParent &&
             (scaleMode === Phaser.ScaleManager.SHOW_ALL || scaleMode === Phaser.ScaleManager.USER_SCALE))
         {
-            var bounds = this.getParentBounds();
+            var bounds = this.getParentBounds(this._tempBounds);
             this.width = Math.min(this.width, bounds.width);
             this.height = Math.min(this.height, bounds.height);
         }
@@ -1409,11 +1432,12 @@ Phaser.ScaleManager.prototype = {
 
         var bounds = target || new Phaser.Rectangle();
         var parentNode = this.boundingParent;
-        var vp = this.dom.visualBounds;
+        var visualBounds = this.dom.visualBounds;
+        var layoutBounds = this.dom.layoutBounds;
 
         if (!parentNode)
         {
-            bounds.setTo(0, 0, vp.width, vp.height);
+            bounds.setTo(0, 0, visualBounds.width, visualBounds.height);
         }
         else
         {
@@ -1423,13 +1447,17 @@ Phaser.ScaleManager.prototype = {
             bounds.setTo(clientRect.left, clientRect.top, clientRect.width, clientRect.height);
 
             var wc = this.windowConstraints;
+
             if (wc.right)
             {
-                bounds.right = Math.min(bounds.right, vp.width);
+                var windowBounds = wc.right === 'layout' ? layoutBounds : visualBounds;
+                bounds.right = Math.min(bounds.right, windowBounds.width);
             }
+
             if (wc.bottom)
             {
-                bounds.bottom = Math.min(bounds.bottom, vp.height);
+                var windowBounds = wc.bottom === 'layout' ? layoutBounds : visualBounds;
+                bounds.bottom = Math.min(bounds.bottom, windowBounds.height);
             }
         }
 
@@ -1453,7 +1481,7 @@ Phaser.ScaleManager.prototype = {
     */
     alignCanvas: function (horizontal, vertical) {
 
-        var parentBounds = this.getParentBounds();
+        var parentBounds = this.getParentBounds(this._tempBounds);
         var canvas = this.game.canvas;
         var margin = this.margin;
 
@@ -1476,6 +1504,7 @@ Phaser.ScaleManager.prototype = {
             }
 
             canvas.style.marginLeft = margin.left + 'px';
+
             if (margin.left !== 0)
             {
                 margin.right = -(parentBounds.width - canvasBounds.width - margin.left);
@@ -1501,6 +1530,7 @@ Phaser.ScaleManager.prototype = {
             }
 
             canvas.style.marginTop = margin.top + 'px';
+
             if (margin.top !== 0)
             {
                 margin.bottom = -(parentBounds.height - canvasBounds.height - margin.top);
@@ -1522,12 +1552,11 @@ Phaser.ScaleManager.prototype = {
     * @method Phaser.ScaleManager#reflowGame
     * @private
     */
-    reflowGame: function ()
-    {
+    reflowGame: function () {
 
         this.resetCanvas('', '');
 
-        var bounds = this.getParentBounds();
+        var bounds = this.getParentBounds(this._tempBounds);
         this.updateDimensions(bounds.width, bounds.height, true);
 
     },
@@ -1580,6 +1609,7 @@ Phaser.ScaleManager.prototype = {
         if (typeof cssHeight === 'undefined') { cssHeight = this.height + 'px'; }
 
         var canvas = this.game.canvas;
+
         if (!this.compatibility.noMargins)
         {
             canvas.style.marginLeft = '';
@@ -1587,6 +1617,7 @@ Phaser.ScaleManager.prototype = {
             canvas.style.marginRight = '';
             canvas.style.marginBottom = '';
         }
+
         canvas.style.width = cssWidth;
         canvas.style.height = cssHeight;
 
@@ -1600,6 +1631,7 @@ Phaser.ScaleManager.prototype = {
     * @param {boolean} force - If true resets the parent bounds to ensure the check is dirty.
     */
     queueUpdate: function (force) {
+
         if (force)
         {
             this._parentBounds.width = 0;
@@ -1607,6 +1639,7 @@ Phaser.ScaleManager.prototype = {
         }
 
         this._updateThrottle = this._updateThrottleReset;
+
     },
 
     /**
@@ -1646,11 +1679,12 @@ Phaser.ScaleManager.prototype = {
     */
     setShowAll: function (expanding) {
 
-        var bounds = this.getParentBounds();
+        var bounds = this.getParentBounds(this._tempBounds);
         var width = bounds.width;
         var height = bounds.height;
 
         var multiplier;
+
         if (expanding)
         {
             multiplier = Math.max((height / this.game.height), (width / this.game.width));
@@ -1674,7 +1708,7 @@ Phaser.ScaleManager.prototype = {
     */
     setExactFit: function () {
 
-        var bounds = this.getParentBounds();
+        var bounds = this.getParentBounds(this._tempBounds);
 
         this.width = bounds.width;
         this.height = bounds.height;
@@ -1707,11 +1741,15 @@ Phaser.ScaleManager.prototype = {
     * @protected
     */
     createFullScreenTarget: function () {
+
         var fsTarget = document.createElement('div');
+
         fsTarget.style.margin = '0';
         fsTarget.style.padding = '0';
         fsTarget.style.background = '#000';
+
         return fsTarget;
+
     },
 
     /**
@@ -1748,11 +1786,10 @@ Phaser.ScaleManager.prototype = {
 
         // IE11 clicks trigger MSPointer which is not the mousePointer
         var input = this.game.input;
-        if (input.activePointer !== input.mousePointer &&
-            (allowTrampoline || allowTrampoline !== false))
+
+        if (input.activePointer !== input.mousePointer && (allowTrampoline || allowTrampoline !== false))
         {
-            input.activePointer.addClickTrampoline(
-                "startFullScreen", this.startFullScreen, this, [antialias, false]);
+            input.activePointer.addClickTrampoline("startFullScreen", this.startFullScreen, this, [antialias, false]);
             return;
         }
 
@@ -1774,6 +1811,7 @@ Phaser.ScaleManager.prototype = {
         var initData = {
             targetElement: fsTarget
         };
+
         this.onFullScreenInit.dispatch(this, initData);
 
         if (this._createdFullScreenTarget)
@@ -1823,11 +1861,13 @@ Phaser.ScaleManager.prototype = {
     * Cleans up the previous fullscreen target, if such was automatically created.
     * This ensures the canvas is restored to its former parent, assuming the target didn't move.
     *
+    * @method Phaser.ScaleManager#cleanupCreatedTarget
     * @private
     */
     cleanupCreatedTarget: function () {
 
         var fsTarget = this._createdFullScreenTarget;
+
         if (fsTarget && fsTarget.parentNode)
         {
             // Make sure to cleanup synthetic target for sure;
@@ -2115,6 +2155,7 @@ Phaser.ScaleManager.prototype.checkOrientationState = function () {
 * This `null` if `parentIsWindow` is true or if fullscreen mode is entered and `fullScreenTarget` is specified.
 * It will also be null if there is no game canvas or if the game canvas has no parent.
 *
+* @name Phaser.ScaleManager#boundingParent
 * @property {?DOMElement} boundingParent
 * @readonly
 */

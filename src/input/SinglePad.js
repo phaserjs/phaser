@@ -297,7 +297,7 @@ Phaser.SinglePad.prototype = {
     /**
      * Destroys this object and associated callback references.
      *
-     * @method destroy
+     * @method Phaser.SinglePad#destroy
      */
     destroy: function () {
 

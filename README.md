@@ -117,10 +117,55 @@ The proxy methods are generated one-time dynamically but only when needed.
 * Device.whenReady is a new signal that you can use to tell when the device is initialised.
 * Device.onInitialized is dispatched after device initialization occurs but before any of the ready callbacks have been invoked. Local "patching" for a particular device can/should be done in this event.
 * TweenManager.removeFrom method allows you to remove a tween from a game object such as a Sprite (thanks @lewster32 #1279)
+* Tweens have been completely rewritten. They're now much more flexible and  efficient than before:
+* When specifying the ease in `Tween.to` or `Tween.from` you can now use a string instead of the Function. This makes your code less verbose. For example instead of `Phaser.Easing.Sinusoidal.Out` and you can now just use the string "Sine".The string names match those used by TweenMax and includes: "Linear", "Quad", "Cubic", "Quart", "Quint", "Sine", "Expo", "Circ", "Elastic", "Back", "Bounce", "Power0", "Power1", "Power2", "Power3" and "Power4". You can append ".easeIn", ".easeOut" and "easeInOut" variants. All are supported for each ease types.
+* Tweens now create a TweenData object. The Tween object itself acts like more of a timeline, managing multiple TweenData objects. You can now call `Tween.to` and each call will create a new child tween that is added to the timeline, which are played through in sequence.
+* Tweens are now bound to the new Time.desiredFps value and update based on the new Game core loop, rather than being bound to time calculations. This means that tweens are now running with the same update logic as physics and the core loop.
+* Tween.timeScale allows you to scale the duration of a tween (and any child tweens it may have). A value of 1.0 means it should play at the desiredFps rate. A value of 0.5 will run at half the frame rate, 2 at double and so on. You can even tween the timeScale value for interesting effects!
+* Tween.reverse allows you to instantly reverse an active tween. If the Tween has children then it will smoothly reverse through all child tweens as well.
+* Tween.repeatAll allows you to control how many times all child tweens will repeat before firing the Tween.onComplete event. You can set the value to -1 to repeat forever.
+* Tween.loop now controls the looping of all child tweens.
+* Tween.onRepeat is a new signal that is dispatched whenever a Tween repeats. If a Tween has many child tweens its dispatched once the sequence has repeated.
+* Tween.onChildComplete is a new signal that is dispatched whenever any child tweens have completed. If a Tween consists of 4 sections you will get 3 onChildComplete events followed by 1 onComplete event as the final tween finishes.
+* Chained tweens are now more intelligently handled. Because you can easily create child tweens (by simply calling Tween.to multiple times) chained tweens are now used to kick-off longer sequences. You can pass as many Tween objects to `Tween.chain` as you like as they'll all be played in sequence. As one Tween completes it passes on to the next until the entire chain is finished.
+* Tween.stop has a new `complete` parameter that if set will still fire the onComplete event and start the next chained tween, if there is one.
+* Tween.delay, Tween.repeat, Tween.yoyo, Tween.easing and Tween.interpolation all have a new `index` parameter. This allows you to target specific child tweens, or if set to -1 it will update all children at once.
+* Tween.totalDuration reports the total duration of all child tweens in ms.
+* There are new easing aliases:
+* * Phaser.Easing.Power0 = Phaser.Easing.Linear.None
+* * Phaser.Easing.Power1 = Phaser.Easing.Quadratic.Out
+* * Phaser.Easing.Power2 = Phaser.Easing.Cubic.Out
+* * Phaser.Easing.Power3 = Phaser.Easing.Quartic.Out
+* * Phaser.Easing.Power4 = Phaser.Easing.Quintic.Out
+* ScaleManager.windowContraints now allows specifing 'visual' or 'layout' as
+the constraint. Using the 'layout' constraint should prevent a mobile
+device from trying to resize the game when zooming.
+
+Including the the new changes the defaults have been changed to
+
+windowContraints = { right: 'layout', bottom: '' }
+
+This changes the current scaling behavior as seen in "Game Scaling" (as it
+will only scale for the right edge) but also prevents such scaling from
+going wonkers in some mobile environtments like the newer Android browser.
+(Automatic scroll-to-top, albeit configurable, enabled for non-desktop by
+default is not a fun situation here.)
+
+To obtain the current semantics on a desktop the bottom should be changed
+to 'layout'; although this will result in different behavior depending on
+mobile device. To make the sizing also follow mobile zooming they should
+be changed to 'visual'.
+
+Also added temp Rectangle re-used for various internal calculations.
+
+Phaser.DOM now also special-cases desktops to align the layout bounds
+correctly (this may disagree with CSS breakpoints but it aligns the with
+actual CSS width), without applying a window height/width expansion as
+required on mobile browsers.
 
 ### Updates
 
-* TypeScript definitions fixes and updates (thanks @clark-stevenson)
+* TypeScript definitions fixes and updates (thanks @clark-stevenson @draconisNoctis)
 * The TypeScript definitions have moved to the `typescript` folder in the root of the repository.
 * Cache._resolveUrl has been renamed to Cache._resolveURL internally and gained a new parameter. This method is a private internal one.
 * Cache.getUrl is deprecated. The same method is now available as Cache.getURL.
@@ -154,10 +199,29 @@ The proxy methods are generated one-time dynamically but only when needed.
 * Phaser.DOM now houses new DOM functions. Some have been moved over from ScaleManager as appropriate.
 * Key.justPressed has bee renamed to Key.downDuration which is a much clearer name for what the method actually does. See Key.justDown for a nice clean alternative.
 * Key.justReleased has bee renamed to Key.upDuration which is a much clearer name for what the method actually does. See Key.justUp for a nice clean alternative.
+* Keyboard.justPressed has bee renamed to Keyboard.downDuration which is a much clearer name for what the method actually does.
+* Keyboard.justReleased has bee renamed to Keyboard.upDuration which is a much clearer name for what the method actually does.
+* Keyboard.downDuration, Keyboard.upDuration and Keyboard.isDown now all return `null` if the Key wasn't found in the local keys array.
 * The Phaser.Device class has been made into a singleton and removed it's dependancy on Phaser.Game (thanks @pnstickne #1328)
 * ArrayList has been renamed to `ArraySet` (as it's actually a data set implementation) and moved from the `core` folder to the `utils` folder (thanks @pnstickne)
 * If you are reloading a Phaser Game on a page that never properly refreshes (such as in an AngularJS project) then you will quickly run out of AudioContext nodes. If this is the case create a global var called `PhaserGlobal` on the window object before creating the game. The active AudioContext will then be saved to `window.PhaserGlobal.audioContext` when the Phaser game is destroyed, and re-used when it starts again (#1233)
 * Camera.screenView is now deprecated. All Camera culling checks are made against Camera.view now instead.
+* Various CocoonJS related hacks removed thanks to fixes from Ludei directly in CocoonJS! Woohoo :)
+* Phaser.HEADLESS check removed from the core game loop. If you need to disable rendering you can now override the Phaser.Game.updateRender method instead with your own.
+* Group.forEach fixed against browser de-optimization (thanks @pnstickne #1357)
+* Phaser.Signals have been taken on a diet. They have been updated such that there is significantly less penalty for having many unusued signals. The changes include:
+* * Changing it so there is no dispatch *closure* created. This is a
+potentially breaking change for third party code.
+* * In the rare case that code needs to obtain a dispatch-closure, the
+`boundDispatch` property can be used to trivially obtain a cached
+closure.
+* * The properties and default values are moved into the prototype; and the
+_bindings array creation is deferred. This change, coupled with the
+removal of the automatic closure, results in a very lightweight
+~24bytes/object (in Chrome) for unbound signals.
+* With this change in place Signals now consume less than 50KB / 50KB (shallow / retained memory) for 200 sprites, where-as before they used 300KB / 600KB (thanks @pnstickne #1359)
+* Time.elapsedMS holds the number of milliseconds since the last Game loop, regardless of raF or setTimout being used.
+* Incorrectly prepared tilemap images (with dimensions not evenly divisible by the tile dimensions) would render incorrectly when compared to the display seen in Tiled. The Phaser tilemap code has been adjusted to match the way Tiled deals with this, which should help if you're using tileset images that contain extra padding/margin pixels. Additional console warnings have been added. However the fact remains that you should carefully prepare your tilesets before using them. Crop off extra padding, make sure they are the right dimensions (thanks @SoulBeaver for the report and @pnstickne for the fix #1371)
 
 ### Bug Fixes
 
@@ -184,6 +248,11 @@ This fixes a bug in FF where it would use the default DOMMouseWheel (thanks @pns
 * Sprite.inCamera uses a much faster check if auto culling or world bounds checks are enabled and properly adjusts for camera position.
 * Camera.totalInView is a new property that contains the total number of Sprites rendered that have `autoCull` set to true and are within the Cameras view.
 * Emitter.setScale fixed minX minY order presedence (thanks spayton)
+* Group.iterate can now accept undefined/null as the arguments (thanks @pnstickne #1353 @tasos-ch #1352)
+* When you change State the P2 Physics world is no longer fully cleared. All of the bodies, springs, fixtures, materials and constraints are removed - but config settings such as gravity, restitution, the contact solver, etc are all retained. The P2.World object is only created the very first time you call Physics.startSystem. Every subsequent call hits P2.World.reset instead. This fixes "P2.World gravity broken after switching states" (and other related issues) (#1292 #1289 #1176)
+* Text.lineSpacing works correctly again. Before no space was added between the lines (thanks @intimidate #1367 and @brejep #1366)
+* P2.BodyDebug always lagged behind the position of the Body it was tracking by one frame, which became visible at high speeds. It now syncs its position in the Body.postUpdate which prevents this from happening (thanks @valueerror)
+* A State.preRender callback wan't removed correctly when switching States.
 
 ### Pixi 2.1.0 New Features
 
@@ -228,7 +297,7 @@ Run `grunt` to perform a default build to the `dist` folder.
 
 If you replace Pixi or p2 then run `grunt replace` to patch their UMD strings so they work properly with Phaser and requireJS.
 
-Note: Some of you may not be aware, but the `phaser.min.js` file in the build folder contains all 3 physics systems bundled in. If you only need Arcade Physics then you can use `build\custom\phaser-arcade-physics.min.js` instead. This will save you 180KB from the minified file size.
+Note: Some of you may not be aware, but the `phaser.min.js` file in the build folder contains both Arcade Physics and P2 Physics bundled in. If you only need Arcade Physics then you can use `build\custom\phaser-arcade-physics.min.js` instead. This will save you 180KB from the minified file size.
 
 ![div](http://phaser.io/images/div4.png)
 
@@ -399,41 +468,38 @@ Phaser has been used to create hundreds of games, which receive millions of play
 <a name="road-map"></a>
 ## Road Map
 
-Here are some of the features planned for future releases:
+Here are some of the features planned for future releases. Not all features are promised to be delivered, and no timescale is put against any of them either.
 
+### Version 2.3 ("Tarabon")
 
-### Version 2.2 ("Tarabon")
-
+* Look carefully at the internal structure of Phaser to avoid method repetition (such as Sprite.crop and Image.crop), investigate using mixins to help reduce overall codebase size.
+* Support for parallel asset loading.
 * Restore Math.interpolateAngles and Math.nearestAngleBetween
 * Enhance the State Management, so you can perform non-destructive State swaps and persistence.
 * Scene Manager - json scene parser.
+* Touch Gestures.
+* Optimised global Animation manager to cut down on object creation.
+* Flash CC HTML5 export integration.
+* Massively enhance the audio side of Phaser. Take more advantage of Web Audio: echo effects, positional sound, etc.
+* DragonBones support.
+* Game parameters stored in Google Docs.
 * Adjust how Pointers and Interactive Objects work. Allow an IO to be flagged as "on click only", so it doesn't ever get processed during normal Pointer move events (unless being dragged)
 * Allow multiple drag items - no longer bind just 1 to a Pointer
 * Allow Groups to have Priority IDs too and input disable entire Groups and all children (let it flow down the chain)
 * Allow Groups to be InputEnabled? Dragging a Group would be really useful.
 * Ability to control DOM elements from the core game and layer them into the game.
-* Touch Gestures.
-* Optimised global Animation manager to cut down on object creation.
-* Swapping to using a RenderTexture for the Tilemaps and implementing Tilemap slicing.
-
-### Version 2.3 ("Illian") and Beyond
-
-* Look carefully at the internal structure of Phaser to avoid method repetition (such as Sprite.crop and Image.crop), investigate using mixins to help reduce overall codebase size.
-* Flash CC HTML5 export integration.
-* Massively enhance the audio side of Phaser. Take more advantage of Web Audio: echo effects, positional sound, etc.
-* Comprehensive testing across Firefox OS devices, CocoonJS and Ejecta.
-* Support for parallel asset loading.
-* DragonBones support.
-* Integration with third party services like Google Play Game Services and Amazon JS SDK.
-* Test out packaging with Node-webkit.
-* Game parameters stored in Google Docs.
-* Multiple Camera support.
 * Cache to localStorage using If-Modified-Since. [See github request](https://github.com/photonstorm/phaser/issues/495)
 * Allow for complex assets like Bitmap Fonts to be stored within a texture atlas.
 
 ### Phaser 3
 
-Phaser 3 has entered the planning stages. Development will not begin until early 2015, but we are already asking for suggestions and feedback in [this forum thread](http://www.html5gamedevs.com/topic/7949-the-phaser-3-wishlist-thread/). We are currently experimenting with a fully ES6 based module system and we're keen for Phaser 3 to use as many native ES6 features as possible and where sensible. It will be a significant refactoring of the code base, but not at the expense of features or ease-of-use.
+Development has now begun on Phaser 3. At the moment it's still in the very early stages. We are asking for suggestions and feedback in [this forum thread](http://www.html5gamedevs.com/topic/7949-the-phaser-3-wishlist-thread/) so be sure to add your voice.
+
+We are currently experimenting with an ES6 based module system and we're keen for Phaser 3 to use as many native ES6 features as possible. It will be a significant refactoring of the code base, but never at the expense of features or ease-of-use. Development will be made public when the time is right.
+
+We don't anticipate a release until Summer 2015. Phaser 2 still has roadmap features left that we'd like to implement, but after 2.3 it will be in pure maintenance mode as we work on Phaser 3.
+
+If you are an exceptional JavaScript developer and would like to join the Phaser 3 development team then let us know. We have a limited budget available to pay towards your time.
 
 ![div](http://phaser.io/images/div1.png)
 
@@ -483,3 +549,4 @@ Phaser is released under the [MIT License](http://opensource.org/licenses/MIT).
 [forum]: http://www.html5gamedevs.com/forum/14-phaser/
 
 [![Analytics](https://ga-beacon.appspot.com/UA-44006568-2/phaser/index)](https://github.com/igrigorik/ga-beacon)
+

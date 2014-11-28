@@ -15,7 +15,7 @@
 * @param {Phaser.Signal} signal - Reference to Signal object that listener is currently bound to.
 * @param {function} listener - Handler function bound to the signal.
 * @param {boolean} isOnce - If binding should be executed just once.
-* @param {object} [listenerContext] - Context on which listener will be executed (object that should represent the `this` variable inside listener function).
+* @param {object} [listenerContext=null] - Context on which listener will be executed (object that should represent the `this` variable inside listener function).
 * @param {number} [priority] - The priority level of the event listener. (default = 0).
 */
 Phaser.SignalBinding = function (signal, listener, isOnce, listenerContext, priority) {
@@ -26,16 +26,15 @@ Phaser.SignalBinding = function (signal, listener, isOnce, listenerContext, prio
     */
     this._listener = listener;
 
-    /**
-    * @property {boolean} _isOnce - If binding should be executed just once.
-    * @private
-    */
-    this._isOnce = isOnce;
+    if (isOnce)
+    {
+        this._isOnce = true;
+    }
 
-    /**
-    * @property {object|undefined|null} context - Context on which listener will be executed (object that should represent the `this` variable inside listener function).
-    */
-    this.context = listenerContext;
+    if (listenerContext != null) /* not null/undefined */
+    {
+        this.context = listenerContext;
+    }
 
     /**
     * @property {Phaser.Signal} _signal - Reference to Signal object that listener is currently bound to.
@@ -43,34 +42,50 @@ Phaser.SignalBinding = function (signal, listener, isOnce, listenerContext, prio
     */
     this._signal = signal;
 
+    if (priority)
+    {
+        this._priority = priority;
+    }
+
+};
+
+Phaser.SignalBinding.prototype = {
+
+    /**
+    * @property {?object} context - Context on which listener will be executed (object that should represent the `this` variable inside listener function).
+    */
+    context: null,
+
+    /**
+    * @property {boolean} _isOnce - If binding should be executed just once.
+    * @private
+    */
+    _isOnce: false,
+
     /**
     * @property {number} _priority - Listener priority.
     * @private
     */
-    this._priority = priority || 0;
+    _priority: 0,
 
     /**
     * @property {number} callCount - The number of times the handler function has been called.
     */
-    this.callCount = 0;
+    callCount: 0,
 
     /**
     * If binding is active and should be executed.
     * @property {boolean} active
     * @default
     */
-    this.active = true;
+    active: true,
 
     /**
     * Default parameters passed to listener during `Signal.dispatch` and `SignalBinding.execute` (curried parameters).
     * @property {array|null} params
     * @default
     */
-    this.params = null;
-
-};
-
-Phaser.SignalBinding.prototype = {
+    params: null,
 
     /**
     * Call listener passing arbitrary parameters.

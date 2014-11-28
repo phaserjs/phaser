@@ -360,21 +360,21 @@ To remove simply set this property to 'null'
 * @param {PIXI.Matrix} matrix - 
 * @return {PIXI.Rectangle} the rectangular bounding area
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 547
+* @sourceline 546
 */
 /**
 * @description Retrieves the local bounds of the displayObject as a rectangle object
 * @method PIXI.DisplayObject#getLocalBounds
 * @return {PIXI.Rectangle} the rectangular bounding area
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 560
+* @sourceline 559
 */
 /**
 * @description Sets the object's stage reference, the stage this object is connected to
 * @method PIXI.DisplayObject#setStageReference
 * @param {PIXI.Stage} stage - the stage that the object will have as its current stage reference
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 571
+* @sourceline 570
 */
 /**
 * @description Useful function that returns a texture of the displayObject object that can then be used to create sprites
@@ -385,13 +385,13 @@ This can be quite useful if your displayObject is static / complicated and needs
 * @param {(PIXI.CanvasRenderer|PIXI.WebGLRenderer)} renderer - The renderer used to generate the texture.
 * @return {PIXI.Texture} a texture of the graphics object
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 583
+* @sourceline 582
 */
 /**
 * @description Generates and updates the cached sprite for this object.
 * @method PIXI.DisplayObject#updateCache
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 607
+* @sourceline 606
 */
 /**
 * @description Calculates the global position of the display object
@@ -399,7 +399,7 @@ This can be quite useful if your displayObject is static / complicated and needs
 * @param {PIXI.Point} position - The world origin to calculate from
 * @return {PIXI.Point} A point object representing the position of this object
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 617
+* @sourceline 616
 */
 /**
 * @description Calculates the local position of the display object relative to another point
@@ -408,7 +408,7 @@ This can be quite useful if your displayObject is static / complicated and needs
 * @param {PIXI.DisplayObject} [from] - The DisplayObject to calculate the global position from
 * @return {PIXI.Point} A point object representing the position of this object
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 631
+* @sourceline 630
 */
 /**
 * @description Internal method.
@@ -416,21 +416,21 @@ This can be quite useful if your displayObject is static / complicated and needs
 * @param {Object} renderSession - The render session
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 652
+* @sourceline 651
 */
 /**
 * @description Internal method.
 * @method PIXI.DisplayObject#_generateCachedSprite
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 673
+* @sourceline 672
 */
 /**
 * @description Destroys the cached sprite.
 * @method PIXI.DisplayObject#_destroyCachedSprite
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 715
+* @sourceline 714
 */
 /**
 * @description Renders the object using the WebGL renderer
@@ -438,7 +438,7 @@ This can be quite useful if your displayObject is static / complicated and needs
 * @param {RenderSession} renderSession - 
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 731
+* @sourceline 730
 */
 /**
 * @description Renders the object using the Canvas renderer
@@ -446,21 +446,21 @@ This can be quite useful if your displayObject is static / complicated and needs
 * @param {RenderSession} renderSession - 
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 745
+* @sourceline 744
 */
 /**
 * @description The position of the displayObject on the x axis relative to the local coordinates of the parent.
 * @member PIXI.DisplayObject#x
 * @type {Number}
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 762
+* @sourceline 761
 */
 /**
 * @description The position of the displayObject on the y axis relative to the local coordinates of the parent.
 * @member PIXI.DisplayObject#y
 * @type {Number}
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 777
+* @sourceline 776
 */
 /**
 * @fileoverview
@@ -844,7 +844,7 @@ Setting the anchor to 1,1 would mean the textures origin points will be the bott
 * @param {RenderSession} renderSession - 
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\Sprite.js
-* @sourceline 242
+* @sourceline 260
 */
 /**
 * @description Renders the object using the Canvas renderer
@@ -852,7 +852,7 @@ Setting the anchor to 1,1 would mean the textures origin points will be the bott
 * @param {RenderSession} renderSession - 
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\Sprite.js
-* @sourceline 305
+* @sourceline 323
 */
 /**
 * @description Helper function that creates a sprite that will contain a texture from the TextureCache based on the frameId
@@ -861,7 +861,7 @@ Setting the anchor to 1,1 would mean the textures origin points will be the bott
 * @param {String} frameId - The frame Id of the texture in the cache
 * @return {PIXI.Sprite} A new Sprite using a texture from the texture cache matching the frameId
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\Sprite.js
-* @sourceline 418
+* @sourceline 436
 */
 /**
 * @description Helper function that creates a sprite that will contain a texture based on an image url
@@ -870,7 +870,7 @@ Setting the anchor to 1,1 would mean the textures origin points will be the bott
 * @param {String} imageId - The image url of the texture
 * @return {PIXI.Sprite} A new Sprite using a texture from the texture cache matching the image id
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\Sprite.js
-* @sourceline 435
+* @sourceline 453
 */
 /**
 * @fileoverview
@@ -991,6 +991,74 @@ This is useful for when you have other DOM elements on top of the Canvas element
 * @sourceline 126
 */
 /**
+* @class PIXI.SpineTextureLoader
+* @description Supporting class to load images from spine atlases as per spine spec.
+* @param {String} basePath - Tha base path where to look for the images to be loaded
+* @param {Boolean} crossorigin - Whether requests should be treated as crossorigin
+* @sourcefile d:\wamp\www\phaser\src\pixi\extras\PIXISpine.js
+* @sourceline 6
+*/
+/**
+* @description Starts loading a base texture as per spine specification
+* @method PIXI.SpineTextureLoader#load
+* @param {spineAtlasPage} page - Atlas page to which texture belongs
+* @param {String} file - The file to load, this is just the file path relative to the base path configured in the constructor
+* @sourcefile d:\wamp\www\phaser\src\pixi\extras\PIXISpine.js
+* @sourceline 27
+*/
+/**
+* @description Unloads a previously loaded texture as per spine specification
+* @method PIXI.SpineTextureLoader#unload
+* @param {PIXI.BaseTexture} texture - Texture object to destroy
+* @sourcefile d:\wamp\www\phaser\src\pixi\extras\PIXISpine.js
+* @sourceline 51
+*/
+/**
+* @class PIXI.Spine
+* @description A class that enables the you to import and run your spine animations in pixi.
+Spine animation data needs to be loaded using the PIXI.AssetLoader or PIXI.SpineLoader before it can be used by this class
+See example 12 (http://www.goodboydigital.com/pixijs/examples/12/) to see a working example and check out the source
+* @augments PIXI.DisplayObjectContainer
+* @param {String} url - The url of the spine anim file to be used
+* @sourcefile d:\wamp\www\phaser\src\pixi\extras\PIXISpine.js
+* @sourceline 62
+*/
+/**
+* @description If this flag is set to true, the spine animation will be autoupdated every time
+the object id drawn. The down side of this approach is that the delta time is
+automatically calculated and you could miss out on cool effects like slow motion,
+pause, skip ahead and the sorts. Most of these effects can be achieved even with
+autoupdate enabled but are harder to achieve.
+* @member PIXI.Spine#autoUpdate
+* @type {Boolean}
+* @default true
+* @sourcefile d:\wamp\www\phaser\src\pixi\extras\PIXISpine.js
+* @sourceline 124
+*/
+/**
+* @description Update the spine skeleton and its animations by delta time (dt)
+* @method PIXI.Spine#update
+* @param {Number} dt - Delta time. Time by which the animation should be updated
+* @sourcefile d:\wamp\www\phaser\src\pixi\extras\PIXISpine.js
+* @sourceline 147
+*/
+/**
+* @description When autoupdate is set to yes this function is used as pixi's updateTransform function
+* @method PIXI.Spine#autoUpdateTransform
+* @access private
+* @sourcefile d:\wamp\www\phaser\src\pixi\extras\PIXISpine.js
+* @sourceline 242
+*/
+/**
+* @description Create a new sprite to be used with spine.RegionAttachment
+* @method PIXI.Spine#createSprite
+* @param {spineSlot} slot - The slot to which the attachment is parented
+* @param {spineRegionAttachment} attachment - The attachment that the sprite will represent
+* @access private
+* @sourcefile d:\wamp\www\phaser\src\pixi\extras\PIXISpine.js
+* @sourceline 258
+*/
+/**
 * @fileoverview
 * @author Mat Groves http://matgroves.com/ @Doormat23
 * @sourcefile d:\wamp\www\phaser\src\pixi\extras\Rope.js
@@ -1005,53 +1073,34 @@ This is useful for when you have other DOM elements on top of the Canvas element
 * @sourceline 6
 */
 /**
-* @fileoverview
-* @author Mat Groves http://matgroves.com/ @Doormat23
-based on pixi impact spine implementation made by Eemeli Kelokorpi (@ekelokorpi) https://github.com/ekelokorpi
+* @fileoverview Spine Runtimes Software License
+Version 2.1
 
-Awesome JS run time provided by EsotericSoftware
-https://github.com/EsotericSoftware/spine-runtimes
+Copyright (c) 2013, Esoteric Software
+All rights reserved.
+
+You are granted a perpetual, non-exclusive, non-sublicensable and
+non-transferable license to install, execute and perform the Spine Runtimes
+Software (the "Software") solely for internal use. Without the written
+permission of Esoteric Software (typically granted by licensing Spine), you
+may not (a) modify, translate, adapt or otherwise create derivative works,
+improvements of the Software or develop new applications using the Software
+or (b) remove, delete, alter or obscure any trademarks or any copyright,
+trademark, patent or other intellectual property or proprietary rights
+notices on or in the Software, including any copy thereof. Redistributions
+in binary or source form must include this license and terms.
+
+THIS SOFTWARE IS PROVIDED BY ESOTERIC SOFTWARE "AS IS" AND ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO
+EVENT SHALL ESOTERIC SOFTARE BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 * @sourcefile d:\wamp\www\phaser\src\pixi\extras\Spine.js
-* @sourceline 1
-*/
-/**
-* @class PIXI.Spine
-* @description A class that enables the you to import and run your spine animations in pixi.
-Spine animation data needs to be loaded using the PIXI.AssetLoader or PIXI.SpineLoader before it can be used by this class
-See example 12 (http://www.goodboydigital.com/pixijs/examples/12/) to see a working example and check out the source
-* @augments PIXI.DisplayObjectContainer
-* @param {String} url - The url of the spine anim file to be used
-* @sourcefile d:\wamp\www\phaser\src\pixi\extras\Spine.js
-* @sourceline 1357
-*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/**
-* @fileoverview
-* @author Mat Groves http://matgroves.com/
-* @sourcefile d:\wamp\www\phaser\src\pixi\extras\Strip.js
 * @sourceline 1
 */
 /**
@@ -1063,6 +1112,43 @@ See example 12 (http://www.goodboydigital.com/pixijs/examples/12/) to see a work
 * @sourcefile d:\wamp\www\phaser\src\pixi\extras\Strip.js
 * @sourceline 5
 */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
 * @description The texture of the strip
 * @member PIXI.Strip#texture
@@ -1098,7 +1184,7 @@ See example 12 (http://www.goodboydigital.com/pixijs/examples/12/) to see a work
 * @param {PIXI.Strip} strip - The Strip to render
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\extras\Strip.js
-* @sourceline 302
+* @sourceline 341
 */
 /**
 * @description When the texture is updated, this event will fire to update the scale and frame
@@ -1106,7 +1192,22 @@ See example 12 (http://www.goodboydigital.com/pixijs/examples/12/) to see a work
 * @param {} event - 
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\extras\Strip.js
-* @sourceline 350
+* @sourceline 389
+*/
+/**
+* @description Returns the bounds of the mesh as a rectangle. The bounds calculation takes the worldTransform into account.
+* @method PIXI.Strip#getBounds
+* @param {PIXI.Matrix} matrix - the transformation matrix of the sprite
+* @return {PIXI.Rectangle} the framing rectangle
+* @sourcefile d:\wamp\www\phaser\src\pixi\extras\Strip.js
+* @sourceline 402
+*/
+/**
+* @description Different drawing buffer modes supported
+* @member PIXI.Strip.
+* @type {Array<>}
+* @sourcefile d:\wamp\www\phaser\src\pixi\extras\Strip.js
+* @sourceline 459
 */
 /**
 * @fileoverview
@@ -2714,14 +2815,14 @@ If loading fails this class will dispatch an 'error' event
 * @member PIXI.JsonLoader#url
 * @type {String}
 * @sourcefile d:\wamp\www\phaser\src\pixi\loaders\JsonLoader.js
-* @sourceline 18
+* @sourceline 17
 */
 /**
 * @description Whether the requests should be treated as cross origin
 * @member PIXI.JsonLoader#crossorigin
 * @type {Boolean}
 * @sourcefile d:\wamp\www\phaser\src\pixi\loaders\JsonLoader.js
-* @sourceline 26
+* @sourceline 25
 */
 /**
 * @description [read-only] The base url of the bitmap font data
@@ -2729,7 +2830,7 @@ If loading fails this class will dispatch an 'error' event
 * @type {String}
 * @readonly 
 * @sourcefile d:\wamp\www\phaser\src\pixi\loaders\JsonLoader.js
-* @sourceline 34
+* @sourceline 33
 */
 /**
 * @description [read-only] Whether the data has loaded yet
@@ -2737,34 +2838,41 @@ If loading fails this class will dispatch an 'error' event
 * @type {Boolean}
 * @readonly 
 * @sourcefile d:\wamp\www\phaser\src\pixi\loaders\JsonLoader.js
-* @sourceline 43
+* @sourceline 42
 */
 /**
 * @description Loads the JSON data
 * @method PIXI.JsonLoader#load
 * @sourcefile d:\wamp\www\phaser\src\pixi\loaders\JsonLoader.js
-* @sourceline 59
+* @sourceline 57
 */
 /**
-* @description Invoked when the JSON file is loaded.
+* @description Bridge function to be able to use the more reliable onreadystatechange in XMLHttpRequest.
+* @method PIXI.JsonLoader#onReadyStateChanged
+* @access private
+* @sourcefile d:\wamp\www\phaser\src\pixi\loaders\JsonLoader.js
+* @sourceline 100
+*/
+/**
+* @description Invoke when JSON file is loaded
 * @method PIXI.JsonLoader#onJSONLoaded
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\loaders\JsonLoader.js
-* @sourceline 98
+* @sourceline 112
 */
 /**
-* @description Invoked when the json file has loaded.
+* @description Invoke when json file loaded
 * @method PIXI.JsonLoader#onLoaded
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\loaders\JsonLoader.js
-* @sourceline 162
+* @sourceline 226
 */
 /**
-* @description Invoked if an error occurs.
+* @description Invoke when error occured
 * @method PIXI.JsonLoader#onError
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\loaders\JsonLoader.js
-* @sourceline 176
+* @sourceline 240
 */
 /**
 * @fileoverview
@@ -6219,7 +6327,7 @@ This manager also supports multitouch.
 * @param {PIXI.DisplayObject} iParent - the display object's parent
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\InteractionManager.js
-* @sourceline 152
+* @sourceline 155
 */
 /**
 * @description Sets the target for event delegation
@@ -6227,7 +6335,7 @@ This manager also supports multitouch.
 * @param {(PIXI.WebGLRenderer|PIXI.CanvasRenderer)} target - the renderer to bind events to
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\InteractionManager.js
-* @sourceline 193
+* @sourceline 196
 */
 /**
 * @description Sets the DOM element which will receive mouse/touch events. This is useful for when you have other DOM
@@ -6237,26 +6345,26 @@ to receive those events
 * @param {DOMElement} domElement - the DOM element which will receive mouse and touch events
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\InteractionManager.js
-* @sourceline 211
+* @sourceline 214
 */
 /**
 * @method PIXI.InteractionManager#removeEvents
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\InteractionManager.js
-* @sourceline 245
+* @sourceline 248
 */
 /**
 * @description updates the state of interactive objects
 * @method PIXI.InteractionManager#update
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\InteractionManager.js
-* @sourceline 270
+* @sourceline 273
 */
 /**
 * @method PIXI.InteractionManager#rebuildInteractiveGraph
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\InteractionManager.js
-* @sourceline 355
+* @sourceline 358
 */
 /**
 * @description Is called when the mouse moves across the renderer element
@@ -6264,7 +6372,7 @@ to receive those events
 * @param {PIXI.Event} event - The DOM event of the mouse moving
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\InteractionManager.js
-* @sourceline 380
+* @sourceline 383
 */
 /**
 * @description Is called when the mouse button is pressed down on the renderer element
@@ -6272,7 +6380,7 @@ to receive those events
 * @param {PIXI.Event} event - The DOM event of a mouse button being pressed down
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\InteractionManager.js
-* @sourceline 416
+* @sourceline 419
 */
 /**
 * @description Is called when the mouse is moved out of the renderer element
@@ -6280,7 +6388,7 @@ to receive those events
 * @param {PIXI.Event} event - The DOM event of a mouse being moved out
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\InteractionManager.js
-* @sourceline 477
+* @sourceline 480
 */
 /**
 * @description Is called when the mouse button is released on the renderer element
@@ -6288,7 +6396,7 @@ to receive those events
 * @param {PIXI.Event} event - The DOM event of a mouse button being released
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\InteractionManager.js
-* @sourceline 518
+* @sourceline 521
 */
 /**
 * @description Tests if the current mouse coordinates hit a sprite
@@ -6297,7 +6405,7 @@ to receive those events
 * @param {PIXI.InteractionData} interactionData - The interactionData object to update in the case there is a hit
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\InteractionManager.js
-* @sourceline 586
+* @sourceline 589
 */
 /**
 * @description Is called when a touch is moved across the renderer element
@@ -6305,7 +6413,7 @@ to receive those events
 * @param {PIXI.Event} event - The DOM event of a touch moving across the renderer view
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\InteractionManager.js
-* @sourceline 683
+* @sourceline 675
 */
 /**
 * @description Is called when a touch is started on the renderer element
@@ -6313,7 +6421,7 @@ to receive those events
 * @param {PIXI.Event} event - The DOM event of a touch starting on the renderer view
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\InteractionManager.js
-* @sourceline 729
+* @sourceline 721
 */
 /**
 * @description Is called when a touch is ended on the renderer element
@@ -6321,5 +6429,5 @@ to receive those events
 * @param {PIXI.Event} event - The DOM event of a touch ending on the renderer view
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\InteractionManager.js
-* @sourceline 798
+* @sourceline 790
 */

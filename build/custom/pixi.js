@@ -2084,7 +2084,7 @@ PIXI.Sprite = function(texture)
      * @property texture
      * @type Texture
      */
-    this.texture = texture;
+    this.texture = texture || PIXI.Texture.emptyTexture;
 
     /**
      * The width of the sprite (this is initially set by the texture)
@@ -2131,7 +2131,7 @@ PIXI.Sprite = function(texture)
      */
     this.shader = null;
 
-    if(texture.baseTexture.hasLoaded)
+    if(this.texture.baseTexture.hasLoaded)
     {
         this.onTextureUpdate();
     }
@@ -2268,11 +2268,7 @@ PIXI.Sprite.prototype.getBounds = function(matrix)
         var x4 =  a * w1 + c * h0 + tx;
         var y4 =  d * h0 + b * w1 + ty;
 
-        maxX = -Infinity;
-        maxY = -Infinity;
 
-        minX = Infinity;
-        minY = Infinity;
 
         minX = x1 < minX ? x1 : minX;
         minX = x2 < minX ? x2 : minX;
@@ -2319,7 +2315,7 @@ PIXI.Sprite.prototype.getBounds = function(matrix)
 PIXI.Sprite.prototype._renderWebGL = function(renderSession)
 {
     // if the sprite is not visible or the alpha is 0 then no need to render this element
-    if(!this.visible || this.alpha <= 0)return;
+    if (!this.visible || this.alpha <= 0 || !this.renderable) return;
 
     var i,j;
 
@@ -2382,7 +2378,7 @@ PIXI.Sprite.prototype._renderWebGL = function(renderSession)
 PIXI.Sprite.prototype._renderCanvas = function(renderSession)
 {
     // If the sprite is not visible or the alpha is 0 then no need to render this element
-    if (this.visible === false || this.alpha === 0 || this.texture.crop.width <= 0 || this.texture.crop.height <= 0) return;
+    if (this.visible === false || this.alpha === 0 || this.renderable === false || this.texture.crop.width <= 0 || this.texture.crop.height <= 0) return;
 
     if (this.blendMode !== renderSession.currentBlendMode)
     {
@@ -3103,7 +3099,7 @@ PIXI.Text.prototype.determineFontProperties = function(fontStyle)
 
         context.textBaseline = 'alphabetic';
         context.fillStyle = '#000';
-        context.fillText('|Mq', 0, baseline);
+        context.fillText('|M�q', 0, baseline);
 
         var imagedata = context.getImageData(0, 0, width, height).data;
         var pixels = imagedata.length;
@@ -5404,8 +5400,8 @@ PIXI.WebGLGraphics.updateGraphics = function(graphics, gl)
             data.points = data.shape.points.slice();
             if(data.shape.closed)
             {
-                // close the poly if the valu is true!
-                if(data.points[0] !== data.points[data.points.length-2] && data.points[1] !== data.points[data.points.length-1])
+                // close the poly if the value is true!
+                if(data.points[0] !== data.points[data.points.length-2] || data.points[1] !== data.points[data.points.length-1])
                 {
                     data.points.push(data.points[0], data.points[1]);
                 }
@@ -9695,7 +9691,7 @@ PIXI.CanvasGraphics.renderGraphics = function(graphics, context)
             {
                 context.globalAlpha = data.fillAlpha * worldAlpha;
                 context.fillStyle = '#' + ('00000' + ( fillColor | 0).toString(16)).substr(-6);
-                context.colorRect(shape.x, shape.y, shape.width, shape.height);
+                context.fillRect(shape.x, shape.y, shape.width, shape.height);
 
             }
             if(data.lineWidth)
@@ -9971,19 +9967,19 @@ PIXI.CanvasGraphics.updateGraphicsTint = function(graphics)
  */
 
  /**
- * 
+ *
  * @class Strip
  * @extends DisplayObjectContainer
  * @constructor
  * @param texture {Texture} The texture to use
- * @param width {Number} the width 
+ * @param width {Number} the width
  * @param height {Number} the height
- * 
+ *
  */
 PIXI.Strip = function(texture)
 {
     PIXI.DisplayObjectContainer.call( this );
-    
+
 
     /**
      * The texture of the strip
@@ -9999,7 +9995,7 @@ PIXI.Strip = function(texture)
                                       1, 0,
                                       0, 1]);
 
-    this.verticies = new PIXI.Float32Array([0, 0,
+    this.vertices = new PIXI.Float32Array([0, 0,
                                             100, 0,
                                             100, 100,
                                             0, 100]);
@@ -10007,7 +10003,7 @@ PIXI.Strip = function(texture)
     this.colors = new PIXI.Float32Array([1, 1, 1, 1]);
 
     this.indices = new PIXI.Uint16Array([0, 1, 2, 3]);
-    
+
     /**
      * Whether the strip is dirty or not
      *
@@ -10024,7 +10020,7 @@ PIXI.Strip = function(texture)
      * @default PIXI.blendModes.NORMAL;
      */
     this.blendMode = PIXI.blendModes.NORMAL;
-    
+
     /**
      * if you need a padding, not yet implemented
      *
@@ -10033,6 +10029,8 @@ PIXI.Strip = function(texture)
      */
     this.padding = 0;
      // NYI, TODO padding ?
+
+    this.drawMode = PIXI.Strip.DrawModes.TRIANGLE_STRIP;
 
 };
 
@@ -10050,7 +10048,7 @@ PIXI.Strip.prototype._renderWebGL = function(renderSession)
 
     // init! init!
     if(!this._vertexBuffer)this._initWebGL(renderSession);
-    
+
     renderSession.shaderManager.setShader(renderSession.shaderManager.stripShader);
 
     this._renderStrip(renderSession);
@@ -10059,28 +10057,28 @@ PIXI.Strip.prototype._renderWebGL = function(renderSession)
 
     renderSession.spriteBatch.start();
 
-    //TODO check culling  
+    //TODO check culling
 };
 
 PIXI.Strip.prototype._initWebGL = function(renderSession)
 {
     // build the strip!
     var gl = renderSession.gl;
-    
+
     this._vertexBuffer = gl.createBuffer();
     this._indexBuffer = gl.createBuffer();
     this._uvBuffer = gl.createBuffer();
     this._colorBuffer = gl.createBuffer();
-    
+
     gl.bindBuffer(gl.ARRAY_BUFFER, this._vertexBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, this.verticies, gl.DYNAMIC_DRAW);
+    gl.bufferData(gl.ARRAY_BUFFER, this.vertices, gl.DYNAMIC_DRAW);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, this._uvBuffer);
     gl.bufferData(gl.ARRAY_BUFFER,  this.uvs, gl.STATIC_DRAW);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, this._colorBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, this.colors, gl.STATIC_DRAW);
- 
+
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this._indexBuffer);
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, this.indices, gl.STATIC_DRAW);
 };
@@ -10092,11 +10090,12 @@ PIXI.Strip.prototype._renderStrip = function(renderSession)
         offset = renderSession.offset,
         shader = renderSession.shaderManager.stripShader;
 
+    var drawMode = this.drawMode === PIXI.Strip.DrawModes.TRIANGLE_STRIP ? gl.TRIANGLE_STRIP : gl.TRIANGLES;
 
     // gl.uniformMatrix4fv(shaderProgram.mvMatrixUniform, false, mat4Real);
 
     renderSession.blendModeManager.setBlendMode(this.blendMode);
-    
+
 
     // set uniforms
     gl.uniformMatrix3fv(shader.translationMatrix, false, this.worldTransform.toArray(true));
@@ -10106,15 +10105,15 @@ PIXI.Strip.prototype._renderStrip = function(renderSession)
 
     if(!this.dirty)
     {
-        
+
         gl.bindBuffer(gl.ARRAY_BUFFER, this._vertexBuffer);
-        gl.bufferSubData(gl.ARRAY_BUFFER, 0, this.verticies);
+        gl.bufferSubData(gl.ARRAY_BUFFER, 0, this.vertices);
         gl.vertexAttribPointer(shader.aVertexPosition, 2, gl.FLOAT, false, 0, 0);
-        
+
         // update the uvs
         gl.bindBuffer(gl.ARRAY_BUFFER, this._uvBuffer);
         gl.vertexAttribPointer(shader.aTextureCoord, 2, gl.FLOAT, false, 0, 0);
-            
+
         gl.activeTexture(gl.TEXTURE0);
 
         // check if a texture is dirty..
@@ -10127,25 +10126,25 @@ PIXI.Strip.prototype._renderStrip = function(renderSession)
             // bind the current texture
             gl.bindTexture(gl.TEXTURE_2D, this.texture.baseTexture._glTextures[gl.id]);
         }
-    
+
         // dont need to upload!
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this._indexBuffer);
-    
-    
+
+
     }
     else
     {
 
         this.dirty = false;
         gl.bindBuffer(gl.ARRAY_BUFFER, this._vertexBuffer);
-        gl.bufferData(gl.ARRAY_BUFFER, this.verticies, gl.STATIC_DRAW);
+        gl.bufferData(gl.ARRAY_BUFFER, this.vertices, gl.STATIC_DRAW);
         gl.vertexAttribPointer(shader.aVertexPosition, 2, gl.FLOAT, false, 0, 0);
-        
+
         // update the uvs
         gl.bindBuffer(gl.ARRAY_BUFFER, this._uvBuffer);
         gl.bufferData(gl.ARRAY_BUFFER, this.uvs, gl.STATIC_DRAW);
         gl.vertexAttribPointer(shader.aTextureCoord, 2, gl.FLOAT, false, 0, 0);
-            
+
         gl.activeTexture(gl.TEXTURE0);
 
         // check if a texture is dirty..
@@ -10157,18 +10156,18 @@ PIXI.Strip.prototype._renderStrip = function(renderSession)
         {
             gl.bindTexture(gl.TEXTURE_2D, this.texture.baseTexture._glTextures[gl.id]);
         }
-    
+
         // dont need to upload!
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this._indexBuffer);
         gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, this.indices, gl.STATIC_DRAW);
-        
+
     }
     //console.log(gl.TRIANGLE_STRIP)
     //
     //
-    gl.drawElements(gl.TRIANGLE_STRIP, this.indices.length, gl.UNSIGNED_SHORT, 0);
-    
-  
+    gl.drawElements(drawMode, this.indices.length, gl.UNSIGNED_SHORT, 0);
+
+
 };
 
 
@@ -10176,7 +10175,7 @@ PIXI.Strip.prototype._renderStrip = function(renderSession)
 PIXI.Strip.prototype._renderCanvas = function(renderSession)
 {
     var context = renderSession.context;
-    
+
     var transform = this.worldTransform;
 
     if (renderSession.roundPixels)
@@ -10187,84 +10186,120 @@ PIXI.Strip.prototype._renderCanvas = function(renderSession)
     {
         context.setTransform(transform.a, transform.b, transform.c, transform.d, transform.tx, transform.ty);
     }
-        
-    var strip = this;
-    // draw triangles!!
-    var verticies = strip.verticies;
-    var uvs = strip.uvs;
 
-    var length = verticies.length/2;
-    this.count++;
-
-    for (var i = 0; i < length-2; i++)
+    if (this.drawMode === PIXI.Strip.DrawModes.TRIANGLE_STRIP)
     {
-        // draw some triangles!
-        var index = i*2;
-
-        var x0 = verticies[index],   x1 = verticies[index+2], x2 = verticies[index+4];
-        var y0 = verticies[index+1], y1 = verticies[index+3], y2 = verticies[index+5];
-
-        if(this.padding > 0)
-        {
-            var centerX = (x0 + x1 + x2)/3;
-            var centerY = (y0 + y1 + y2)/3;
-
-            var normX = x0 - centerX;
-            var normY = y0 - centerY;
-
-            var dist = Math.sqrt( normX * normX + normY * normY );
-            x0 = centerX + (normX / dist) * (dist + 3);
-            y0 = centerY + (normY / dist) * (dist + 3);
-
-            // 
-            
-            normX = x1 - centerX;
-            normY = y1 - centerY;
-
-            dist = Math.sqrt( normX * normX + normY * normY );
-            x1 = centerX + (normX / dist) * (dist + 3);
-            y1 = centerY + (normY / dist) * (dist + 3);
-
-            normX = x2 - centerX;
-            normY = y2 - centerY;
-
-            dist = Math.sqrt( normX * normX + normY * normY );
-            x2 = centerX + (normX / dist) * (dist + 3);
-            y2 = centerY + (normY / dist) * (dist + 3);
-        }
-
-        var u0 = uvs[index] * strip.texture.width,   u1 = uvs[index+2] * strip.texture.width, u2 = uvs[index+4]* strip.texture.width;
-        var v0 = uvs[index+1]* strip.texture.height, v1 = uvs[index+3] * strip.texture.height, v2 = uvs[index+5]* strip.texture.height;
-
-        context.save();
-        context.beginPath();
-
-
-        context.moveTo(x0, y0);
-        context.lineTo(x1, y1);
-        context.lineTo(x2, y2);
-
-        context.closePath();
-
-        context.clip();
-
-        // Compute matrix transform
-        var delta = u0*v1 + v0*u2 + u1*v2 - v1*u2 - v0*u1 - u0*v2;
-        var deltaA = x0*v1 + v0*x2 + x1*v2 - v1*x2 - v0*x1 - x0*v2;
-        var deltaB = u0*x1 + x0*u2 + u1*x2 - x1*u2 - x0*u1 - u0*x2;
-        var deltaC = u0*v1*x2 + v0*x1*u2 + x0*u1*v2 - x0*v1*u2 - v0*u1*x2 - u0*x1*v2;
-        var deltaD = y0*v1 + v0*y2 + y1*v2 - v1*y2 - v0*y1 - y0*v2;
-        var deltaE = u0*y1 + y0*u2 + u1*y2 - y1*u2 - y0*u1 - u0*y2;
-        var deltaF = u0*v1*y2 + v0*y1*u2 + y0*u1*v2 - y0*v1*u2 - v0*u1*y2 - u0*y1*v2;
-
-        context.transform(deltaA / delta, deltaD / delta,
-                            deltaB / delta, deltaE / delta,
-                            deltaC / delta, deltaF / delta);
-
-        context.drawImage(strip.texture.baseTexture.source, 0, 0);
-        context.restore();
+        this._renderCanvasTriangleStrip(context);
+    }
+    else
+    {
+        this._renderCanvasTriangles(context);
     }
 };
+
+PIXI.Strip.prototype._renderCanvasTriangleStrip = function(context)
+{
+    // draw triangles!!
+    var vertices = this.vertices;
+    var uvs = this.uvs;
+
+    var length = vertices.length / 2;
+    this.count++;
+
+    for (var i = 0; i < length - 2; i++) {
+        // draw some triangles!
+        var index = i * 2;
+        this._renderCanvasDrawTriangle(context, vertices, uvs, index, (index + 2), (index + 4));
+    }
+};
+
+PIXI.Strip.prototype._renderCanvasTriangles = function(context)
+{
+    // draw triangles!!
+    var vertices = this.vertices;
+    var uvs = this.uvs;
+    var indices = this.indices;
+
+    var length = indices.length;
+    this.count++;
+
+    for (var i = 0; i < length; i += 3) {
+        // draw some triangles!
+        var index0 = indices[i] * 2, index1 = indices[i + 1] * 2, index2 = indices[i + 2] * 2;
+        this._renderCanvasDrawTriangle(context, vertices, uvs, index0, index1, index2);
+    }
+};
+
+PIXI.Strip.prototype._renderCanvasDrawTriangle = function(context, vertices, uvs, index0, index1, index2)
+{
+    var textureSource = this.texture.baseTexture.source;
+    var textureWidth = this.texture.width;
+    var textureHeight = this.texture.height;
+
+    var x0 = vertices[index0], x1 = vertices[index1], x2 = vertices[index2];
+    var y0 = vertices[index0 + 1], y1 = vertices[index1 + 1], y2 = vertices[index2 + 1];
+
+    var u0 = uvs[index0] * textureWidth, u1 = uvs[index1] * textureWidth, u2 = uvs[index2] * textureWidth;
+    var v0 = uvs[index0 + 1] * textureHeight, v1 = uvs[index1 + 1] * textureHeight, v2 = uvs[index2 + 1] * textureHeight;
+
+    if (this.padding > 0) {
+        var padding = this.padding;
+        var centerX = (x0 + x1 + x2) / 3;
+        var centerY = (y0 + y1 + y2) / 3;
+
+        var normX = x0 - centerX;
+        var normY = y0 - centerY;
+
+        var dist = Math.sqrt(normX * normX + normY * normY);
+        x0 = centerX + (normX / dist) * (dist + padding);
+        y0 = centerY + (normY / dist) * (dist + padding);
+
+        //
+
+        normX = x1 - centerX;
+        normY = y1 - centerY;
+
+        dist = Math.sqrt(normX * normX + normY * normY);
+        x1 = centerX + (normX / dist) * (dist + padding);
+        y1 = centerY + (normY / dist) * (dist + padding);
+
+        normX = x2 - centerX;
+        normY = y2 - centerY;
+
+        dist = Math.sqrt(normX * normX + normY * normY);
+        x2 = centerX + (normX / dist) * (dist + padding);
+        y2 = centerY + (normY / dist) * (dist + padding);
+    }
+
+    context.save();
+    context.beginPath();
+
+
+    context.moveTo(x0, y0);
+    context.lineTo(x1, y1);
+    context.lineTo(x2, y2);
+
+    context.closePath();
+
+    context.clip();
+
+    // Compute matrix transform
+    var delta =  (u0 * v1)      + (v0 * u2)      + (u1 * v2)      - (v1 * u2)      - (v0 * u1)      - (u0 * v2);
+    var deltaA = (x0 * v1)      + (v0 * x2)      + (x1 * v2)      - (v1 * x2)      - (v0 * x1)      - (x0 * v2);
+    var deltaB = (u0 * x1)      + (x0 * u2)      + (u1 * x2)      - (x1 * u2)      - (x0 * u1)      - (u0 * x2);
+    var deltaC = (u0 * v1 * x2) + (v0 * x1 * u2) + (x0 * u1 * v2) - (x0 * v1 * u2) - (v0 * u1 * x2) - (u0 * x1 * v2);
+    var deltaD = (y0 * v1)      + (v0 * y2)      + (y1 * v2)      - (v1 * y2)      - (v0 * y1)      - (y0 * v2);
+    var deltaE = (u0 * y1)      + (y0 * u2)      + (u1 * y2)      - (y1 * u2)      - (y0 * u1)      - (u0 * y2);
+    var deltaF = (u0 * v1 * y2) + (v0 * y1 * u2) + (y0 * u1 * v2) - (y0 * v1 * u2) - (v0 * u1 * y2) - (u0 * y1 * v2);
+
+    context.transform(deltaA / delta, deltaD / delta,
+        deltaB / delta, deltaE / delta,
+        deltaC / delta, deltaF / delta);
+
+    context.drawImage(textureSource, 0, 0);
+    context.restore();
+};
+
 
 
 /**
@@ -10277,9 +10312,9 @@ PIXI.Strip.prototype._renderCanvas = function(renderSession)
 PIXI.Strip.prototype.renderStripFlat = function(strip)
 {
     var context = this.context;
-    var verticies = strip.verticies;
+    var vertices = strip.vertices;
 
-    var length = verticies.length/2;
+    var length = vertices.length/2;
     this.count++;
 
     context.beginPath();
@@ -10288,15 +10323,15 @@ PIXI.Strip.prototype.renderStripFlat = function(strip)
         // draw some triangles!
         var index = i*2;
 
-        var x0 = verticies[index],   x1 = verticies[index+2], x2 = verticies[index+4];
-        var y0 = verticies[index+1], y1 = verticies[index+3], y2 = verticies[index+5];
+        var x0 = vertices[index],   x1 = vertices[index+2], x2 = vertices[index+4];
+        var y0 = vertices[index+1], y1 = vertices[index+3], y2 = vertices[index+5];
 
         context.moveTo(x0, y0);
         context.lineTo(x1, y1);
         context.lineTo(x2, y2);
     }
 
-    context.fillStyle = "#FF0000";
+    context.fillStyle = '#FF0000';
     context.fill();
     context.closePath();
 };
@@ -10327,6 +10362,76 @@ PIXI.Strip.prototype.onTextureUpdate = function()
 {
     this.updateFrame = true;
 };
+
+/**
+ * Returns the bounds of the mesh as a rectangle. The bounds calculation takes the worldTransform into account.
+ *
+ * @method getBounds
+ * @param matrix {Matrix} the transformation matrix of the sprite
+ * @return {Rectangle} the framing rectangle
+ */
+PIXI.Strip.prototype.getBounds = function(matrix)
+{
+    var worldTransform = matrix || this.worldTransform;
+
+    var a = worldTransform.a;
+    var b = worldTransform.b;
+    var c = worldTransform.c;
+    var d = worldTransform.d;
+    var tx = worldTransform.tx;
+    var ty = worldTransform.ty;
+
+    var maxX = -Infinity;
+    var maxY = -Infinity;
+
+    var minX = Infinity;
+    var minY = Infinity;
+
+    var vertices = this.vertices;
+    for (var i = 0, n = vertices.length; i < n; i += 2)
+    {
+        var rawX = vertices[i], rawY = vertices[i + 1];
+        var x = (a * rawX) + (c * rawY) + tx;
+        var y = (d * rawY) + (b * rawX) + ty;
+
+        minX = x < minX ? x : minX;
+        minY = y < minY ? y : minY;
+
+        maxX = x > maxX ? x : maxX;
+        maxY = y > maxY ? y : maxY;
+    }
+
+    if (minX === -Infinity || maxY === Infinity)
+    {
+        return PIXI.EmptyRectangle;
+    }
+
+    var bounds = this._bounds;
+
+    bounds.x = minX;
+    bounds.width = maxX - minX;
+
+    bounds.y = minY;
+    bounds.height = maxY - minY;
+
+    // store a reference so that if this function gets called again in the render cycle we do not have to recalculate
+    this._currentBounds = bounds;
+
+    return bounds;
+};
+
+/**
+ * Different drawing buffer modes supported
+ *
+ * @property
+ * @type {{TRIANGLE_STRIP: number, TRIANGLES: number}}
+ * @static
+ */
+PIXI.Strip.DrawModes = {
+    TRIANGLE_STRIP: 0,
+    TRIANGLES: 1
+};
+
 /**
  * @author Mat Groves http://matgroves.com/ @Doormat23
  * @copyright Mat Groves, Rovanion Luckey
@@ -10346,7 +10451,7 @@ PIXI.Rope = function(texture, points)
     PIXI.Strip.call( this, texture );
     this.points = points;
 
-    this.verticies = new PIXI.Float32Array(points.length * 4);
+    this.vertices = new PIXI.Float32Array(points.length * 4);
     this.uvs = new PIXI.Float32Array(points.length * 4);
     this.colors = new PIXI.Float32Array(points.length * 2);
     this.indices = new PIXI.Uint16Array(points.length * 2);
@@ -10446,7 +10551,7 @@ PIXI.Rope.prototype.updateTransform = function()
 
     this.count-=0.2;
 
-    var verticies = this.verticies;
+    var vertices = this.vertices;
     var total = points.length,
         point, index, ratio, perpLength, num;
 
@@ -10479,10 +10584,10 @@ PIXI.Rope.prototype.updateTransform = function()
         perp.x *= num;
         perp.y *= num;
 
-        verticies[index] = point.x + perp.x;
-        verticies[index+1] = point.y + perp.y;
-        verticies[index+2] = point.x - perp.x;
-        verticies[index+3] = point.y - perp.y;
+        vertices[index] = point.x + perp.x;
+        vertices[index+1] = point.y + perp.y;
+        vertices[index+2] = point.x - perp.x;
+        vertices[index+3] = point.y - perp.y;
 
         lastPoint = point;
     }
@@ -10908,7 +11013,8 @@ PIXI.TilingSprite.prototype.generateTilingTexture = function(forcePowerOfTwo)
         targetWidth = PIXI.getNextPowerOfTwo(frame.width);
         targetHeight = PIXI.getNextPowerOfTwo(frame.height);
 
-        if (frame.width !== targetWidth || frame.height !== targetHeight) newTextureRequired = true;
+        //  If the BaseTexture dimensions don't match the texture frame then we need a new texture anyway because it's part of a texture atlas
+        if (frame.width !== targetWidth || frame.height !== targetHeight || texture.baseTexture.width !== targetWidth || texture.baseTexture.height || targetHeight) newTextureRequired = true;
     }
 
     if (newTextureRequired)

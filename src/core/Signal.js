@@ -12,28 +12,21 @@
 * @constructor
 */
 Phaser.Signal = function () {
+};
+
+Phaser.Signal.prototype = {
 
     /**
-    * @property {Array.<Phaser.SignalBinding>} _bindings - Internal variable.
+    * @property {?Array.<Phaser.SignalBinding>} _bindings - Internal variable.
     * @private
     */
-    this._bindings = [];
+    _bindings: null,
 
     /**
     * @property {any} _prevParams - Internal variable.
     * @private
     */
-    this._prevParams = null;
-
-    // enforce dispatch to aways work on same context (#47)
-    var self = this;
-
-    /**
-    * @property {function} dispatch - The dispatch function is what sends the Signal out.
-    */
-    this.dispatch = function(){
-        Phaser.Signal.prototype.dispatch.apply(self, arguments);
-    };
+    _prevParams: null,
 
     /**
     * If Signal should keep record of previously dispatched parameters and
@@ -41,13 +34,13 @@ Phaser.Signal = function () {
     * already dispatched before.
     * @property {boolean} memorize
     */
-    this.memorize = false;
+    memorize: false,
 
     /**
     * @property {boolean} _shouldPropagate
     * @private
     */
-    this._shouldPropagate = true;
+    _shouldPropagate: true,
 
     /**
     * If Signal is active and should broadcast events.
@@ -55,11 +48,13 @@ Phaser.Signal = function () {
     * @property {boolean} active
     * @default
     */
-    this.active = true;
+    active: true,
 
-};
-
-Phaser.Signal.prototype = {
+    /**
+    * @property {function} _boundDispatch - The bound dispatch function, if any.
+    * @private
+    */
+    _boundDispatch: true,
 
     /**
     * @method Phaser.Signal#validateListener
@@ -121,6 +116,11 @@ Phaser.Signal.prototype = {
     */
     _addBinding: function (binding) {
 
+        if (!this._bindings)
+        {
+            this._bindings = [];
+        }
+
         //  Simplified insertion sort
         var n = this._bindings.length;
 
@@ -137,9 +137,17 @@ Phaser.Signal.prototype = {
     * @method Phaser.Signal#_indexOfListener
     * @private
     * @param {function} listener - Signal handler function.
+    * @param {object} [context=null] - Signal handler function.
     * @return {number} The index of the listener within the private bindings array.
     */
     _indexOfListener: function (listener, context) {
+
+        if (!this._bindings)
+        {
+            return -1;
+        }
+
+        if (typeof context === 'undefined') { context = null; }
 
         var n = this._bindings.length;
         var cur;
@@ -211,7 +219,7 @@ Phaser.Signal.prototype = {
     *
     * @method Phaser.Signal#remove
     * @param {function} listener - Handler function that should be removed.
-    * @param {object} [context] - Execution context (since you can add the same handler multiple times if executing in a different context).
+    * @param {object} [context=null] - Execution context (since you can add the same handler multiple times if executing in a different context).
     * @return {function} Listener handler function.
     */
     remove: function (listener, context) {
@@ -239,6 +247,11 @@ Phaser.Signal.prototype = {
     removeAll: function (context) {
 
         if (typeof context === 'undefined') { context = null; }
+
+        if (!this._bindings)
+        {
+            return;
+        }
 
         var n = this._bindings.length;
 
@@ -273,7 +286,7 @@ Phaser.Signal.prototype = {
     */
     getNumListeners: function () {
 
-        return this._bindings.length;
+        return this._bindings ? this._bindings.length : 0;
 
     },
 
@@ -293,12 +306,14 @@ Phaser.Signal.prototype = {
     /**
     * Dispatch/Broadcast Signal to all listeners added to the queue.
     *
+    * To create a bound dispatch for this Signal, use {@link Phaser.Signal#boundDispatch}.
+    *
     * @method Phaser.Signal#dispatch
     * @param {any} [params] - Parameters that should be passed to each handler.
     */
     dispatch: function () {
 
-        if (!this.active)
+        if (!this.active || !this._bindings)
         {
             return;
         }
@@ -338,7 +353,10 @@ Phaser.Signal.prototype = {
     */
     forget: function() {
 
-        this._prevParams = null;
+        if (this._prevParams)
+        {
+            this._prevParams = null;
+        }
 
     },
 
@@ -352,8 +370,11 @@ Phaser.Signal.prototype = {
 
         this.removeAll();
 
-        delete this._bindings;
-        delete this._prevParams;
+        this._bindings = null;
+        if (this._prevParams)
+        {
+            this._prevParams = null;
+        }
 
     },
 
@@ -369,5 +390,23 @@ Phaser.Signal.prototype = {
     }
 
 };
+
+/**
+* If the dispatch function needs to be passed somewhere, or called independently
+* of the Signal object, use this function.
+*
+* @memberof Phaser.Signal
+* @property {function} boundDispatch
+*/
+Object.defineProperty(Phaser.Signal.prototype, "boundDispatch", {
+
+    get: function () {
+        var _this = this;
+        return this._boundDispatch || (this._boundDispatch = function () {
+            return _this.dispatch.apply(_this, arguments);
+        });
+    }
+
+});
 
 Phaser.Signal.prototype.constructor = Phaser.Signal;

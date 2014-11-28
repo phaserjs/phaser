@@ -7,6 +7,7 @@
 /**
 * This is where the magic happens. The Game object is the heart of your game,
 * providing quick access to common functions and handling the boot process.
+* 
 * "Hell, there are no rules here - we're trying to accomplish something."
 *                                                       Thomas A. Edison
 *
@@ -287,39 +288,57 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     this._codePaused = false;
 
     /**
+    * The number of the logic update applied this render frame, starting from 0.
+    *
+    * The first update is `updateNumber === 0` and the last update is `updateNumber === updatesThisFrame.`
+    * @property {number} updateNumber
+    * @protected
+    */
+    this.updateNumber = 0;
+
+    /**
+    * Number of logic updates expected to occur this render frame;
+    * will be 1 unless there are catch-ups required (and allowed).
+    * @property {integer} updatesThisFrame
+    * @protected
+    */
+    this.updatesThisFrame = 1;
+
+    /**
     * @property {number} _deltaTime - accumulate elapsed time until a logic update is due
     * @private
     */
     this._deltaTime = 0;
 
     /**
-     * @property {number} _lastCount - remember how many 'catch-up' iterations were used on the logicUpdate last frame
-     * @private
-     */
+    * @property {number} _lastCount - remember how many 'catch-up' iterations were used on the logicUpdate last frame
+    * @private
+    */
     this._lastCount = 0;
 
     /**
-     * @property {number} _spiralling - if the 'catch-up' iterations are spiralling out of control, this counter is incremented
-     * @private
-     */
+    * @property {number} _spiralling - if the 'catch-up' iterations are spiralling out of control, this counter is incremented
+    * @private
+    */
     this._spiralling = 0;
 
     /**
-     * @property {Phaser.Signal} fpsProblemNotifier - if the game is struggling to maintain the desiredFps, this signal will be dispatched
-     *                                                to suggest that the program adjust it's fps closer to the Time.suggestedFps value
-     * @public
-     */
+    * If the game is struggling to maintain the desired FPS, this signal will be dispatched.
+    * The desired/chosen FPS should probably be closer to the {@link Phaser.Time#suggestedFps} value.
+    * @property {Phaser.Signal} fpsProblemNotifier
+    * @public
+    */
     this.fpsProblemNotifier = new Phaser.Signal();
 
     /**
-     * @property {boolean} forceSingleUpdate - Should the game loop force a logic update, regardless of the delta timer? Set to true if you know you need this. You can toggle it on the fly.
-     */
+    * @property {boolean} forceSingleUpdate - Should the game loop force a logic update, regardless of the delta timer? Set to true if you know you need this. You can toggle it on the fly.
+    */
     this.forceSingleUpdate = false;
 
     /**
-     * @property {number} _nextNotification - the soonest game.time.time value that the next fpsProblemNotifier can be dispatched
-     * @private
-     */
+    * @property {number} _nextNotification - the soonest game.time.time value that the next fpsProblemNotifier can be dispatched
+    * @private
+    */
     this._nextFpsNotification = 0;
 
     //  Parse the configuration object (if any)
@@ -502,6 +521,10 @@ Phaser.Game.prototype = {
         {
             this.debug = new Phaser.Utils.Debug(this);
             this.debug.boot();
+        }
+        else
+        {
+            this.debug = { preUpdate: function () {}, update: function () {} };
         }
 
         this.showDebugHeader();
@@ -701,9 +724,17 @@ Phaser.Game.prototype = {
             // unless forceSingleUpdate is true
             var count = 0;
 
+            this.updatesThisFrame = Math.floor(this._deltaTime / slowStep);
+
+            if (this.forceSingleUpdate)
+            {
+                this.updatesThisFrame = Math.min(1, this.updatesThisFrame);
+            }
+
             while (this._deltaTime >= slowStep)
             {
                 this._deltaTime -= slowStep;
+                this.updateNumber = count;
                 this.updateLogic(1.0 / this.time.desiredFps);
                 count++;
 
@@ -749,12 +780,7 @@ Phaser.Game.prototype = {
             }
 
             this.scale.preUpdate();
-
-            if (this.config['enableDebug'])
-            {
-                this.debug.preUpdate();
-            }
-
+            this.debug.preUpdate();
             this.world.camera.preUpdate();
             this.physics.preUpdate();
             this.state.preUpdate(timeStep);
@@ -763,6 +789,7 @@ Phaser.Game.prototype = {
 
             this.state.update();
             this.stage.update();
+            this.tweens.update(timeStep);
             this.sound.update();
             this.input.update();
             this.physics.update();
@@ -776,13 +803,8 @@ Phaser.Game.prototype = {
         {
             // Scaling and device orientation changes are still reflected when paused.
             this.scale.pauseUpdate();
-
             this.state.pauseUpdate();
-
-            if (this.config['enableDebug'])
-            {
-                this.debug.preUpdate();
-            }
+            this.debug.preUpdate();
         }
     },
 
@@ -795,27 +817,12 @@ Phaser.Game.prototype = {
     */
     updateRender: function (elapsedTime) {
 
-        // update tweens once every frame along with the render logic (to keep them smooth in slowMotion scenarios)
-        if (!this._paused && !this.pendingStep)
-        {
-            this.tweens.update(elapsedTime);
-        }
+        this.state.preRender();
+        this.renderer.render(this.stage);
 
-        if (this.renderType !== Phaser.HEADLESS)
-        {
-            this.state.preRender();
-            this.renderer.render(this.stage);
-
-            this.plugins.render();
-            this.state.render();
-            this.plugins.postRender();
-
-            if (this.device.cocoonJS && this.renderType === Phaser.CANVAS && this.stage.currentRenderOrderID === 1)
-            {
-                //  Horrible hack! But without it Cocoon fails to render a scene with just a single drawImage call on it.
-                this.context.fillRect(0, 0, 0, 0);
-            }
-        }
+        this.plugins.render(elapsedTime);
+        this.state.render(elapsedTime);
+        this.plugins.postRender(elapsedTime);
 
     },
 

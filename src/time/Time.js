@@ -16,49 +16,99 @@ Phaser.Time = function (game) {
 
     /**
     * @property {Phaser.Game} game - Local reference to game.
+    * @protected
     */
     this.game = game;
 
     /**
-    * @property {number} time - This always contains the Date.now value.
+    * The `Date.now()` value when the time was last updated.
+    * @property {integer} time
     * @protected
     */
     this.time = 0;
 
     /**
-    * @property {number} prevTime - The time the previous update occurred.
+    * The `now` when the previous update occurred.
+    * @property {number} prevTime
     * @protected
     */
     this.prevTime = 0;
 
     /**
-    * @property {number} now - The high resolution RAF timer value (if RAF is available) or Date.now if using setTimeout.
+    * An increasing value representing cumulative milliseconds since an undisclosed epoch.
+    *
+    * This value must _not_ be used with `Date.now()`.
+    *
+    * The source may either be from a high-res source (eg. if RAF is available) or the standard Date.now;
+    * the value can only be relied upon within a particular game instance.
+    *
+    * @property {number} now
     * @protected
     */
     this.now = 0;
 
     /**
-    * @property {number} elapsed - Elapsed time since the last frame. In ms if running under setTimeout or an integer if using RAF.
+    * Elapsed time since the last time update, in milliseconds, based on `now`.
+    *
+    * This value _may_ include time that the game is paused/inactive.
+    *
+    * _Note:_ This is updated only once per game loop - even if multiple logic update steps are done.
+    * Use {@link Phaser.Timer#physicsTime physicsTime} as a basis of game/logic calculations instead.
+    *
+    * @property {number} elapsed
     * @see Phaser.Time.time
     * @protected
     */
     this.elapsed = 0;
 
     /**
-    * @property {number} pausedTime - Records how long the game has been paused for. Is reset each time the game pauses.
+    * The time in ms since the last time update, in milliseconds, based on `time`.
+    *
+    * This value is corrected for game pauses and will be "about zero" after a game is resumed.
+    *
+    * _Note:_ This is updated once per game loop - even if multiple logic update steps are done.
+    * Use {@link Phaser.Timer#physicsTime physicsTime} as a basis of game/logic calculations instead.
+    *
+    * @property {integer} elapsedMS 
     * @protected
     */
-    this.pausedTime = 0;
+    this.elapsedMS = 0;
 
     /**
-    * @property {number} desiredFps - The desired frame rate of your game.
+    * The physics update delta, in fractional seconds.
+    *    
+    * This should be used as an applicable multiplier by all logic update steps (eg. `preUpdate/postUpdate/update`)
+    * to ensure consistent game timing.
+    *
+    * With fixed-step updates this normally equivalent to `1.0 / desiredFps`.
+    *
+    * @property {number} physicsElapsed
+    */
+    this.physicsElapsed = 0;
+
+    /**
+    * The Time.physicsElapsed property * 1000.
+    *
+    * @property {number} physicsElapsedMS
+    */
+    this.physicsElapsedMS = 0;
+
+    /**
+    * The desired frame rate of the game.
+    *
+    * This is used is used to calculate the physic/logic multiplier and how to apply catch-up logic updates.
+    *
+    * @property {number} desiredFps
     * @default
     */
     this.desiredFps = 60;
 
     /**
-    * @property {number} suggestedFps = The suggested frame rate for your game, based on an averaged real frame rate.
-    * NOTE: Not available until after a few frames have passed, it is recommended to use this after a few seconds (eg. after the menus)
+    * The suggested frame rate for your game, based on an averaged real frame rate.
+    *
+    * _Note:_ This is not available until after a few frames have passed; use it after a few seconds (eg. after the menus)
+    *
+    * @property {number} suggestedFps
     * @default
     */
     this.suggestedFps = null;
@@ -103,39 +153,34 @@ Phaser.Time = function (game) {
     this.msMax = 0;
 
     /**
-    * @property {number} physicsElapsed - The physics motion value as used by Arcade Physics. Equivalent to 1.0 / Time.desiredFps.
-    */
-    this.physicsElapsed = 0;
-
-    /**
-    * @property {number} deltaCap - If you need to cap the delta timer, set the value here. For 60fps the delta should be 0.016, so try variances just above this.
-    * @deprecated No longer used internally
-    */
-    this.deltaCap = 0;
-
-    /**
-    * @property {number} timeCap - If the difference in time between two frame updates exceeds this value in ms, the frame time is reset to avoid huge elapsed counts.
-    * @deprecated This no longer has any effect since the change to fixed-time stepping in game.update
-    */
-    this.timeCap = 1000 / 60;
-
-    /**
-    * @property {number} frames - The number of frames record in the last second. Only calculated if Time.advancedTiming is true.
+    * The number of render frames record in the last second. Only calculated if Time.advancedTiming is true.
+    * @property {integer} frames
     */
     this.frames = 0;
 
     /**
-    * @property {number} pauseDuration - Records how long the game was paused for in miliseconds.
+    * The `time` when the game was last paused.
+    * @property {number} pausedTime
+    * @protected
+    */
+    this.pausedTime = 0;
+
+    /**
+    * Records how long the game was last paused, in miliseconds.
+    * (This is not updated until the game is resumed.)
+    * @property {number} pauseDuration
     */
     this.pauseDuration = 0;
 
     /**
     * @property {number} timeToCall - The value that setTimeout needs to work out when to next update
+    * @protected
     */
     this.timeToCall = 0;
 
     /**
     * @property {number} timeExpected - The time when the next call is expected when using setTimer to control the update loop
+    * @protected
     */
     this.timeExpected = 0;
 
@@ -211,6 +256,7 @@ Phaser.Time.prototype = {
     boot: function () {
 
         this._started = Date.now();
+        this.time = Date.now();
         this.events.start();
 
     },
@@ -276,8 +322,14 @@ Phaser.Time.prototype = {
     */
     update: function (time) {
 
+        //  Set to the old Date.now value
+        var previousDateNow = this.time;
+
         // this.time always holds Date.now, this.now may hold the RAF high resolution time value if RAF is available (otherwise it also holds Date.now)
         this.time = Date.now();
+
+        //  Adjust accorindlgy.
+        this.elapsedMS = this.time - previousDateNow;
 
         // 'now' is currently still holding the time of the last call, move it into prevTime
         this.prevTime = this.now;
@@ -309,6 +361,8 @@ Phaser.Time.prototype = {
 
         //  Set the physics elapsed time... this will always be 1 / this.desiredFps because we're using fixed time steps in game.update now
         this.physicsElapsed = 1 / this.desiredFps;
+
+        this.physicsElapsedMS = this.physicsElapsed * 1000;
 
         if (this.advancedTiming)
         {

@@ -103,6 +103,13 @@ Phaser.World.prototype.setBounds = function (x, y, width, height) {
 
 };
 
+/**
+* Updates the size of this world. Note that this doesn't modify the world x/y coordinates, just the width and height.
+*
+* @method Phaser.World#resize
+* @param {number} width - New width of the game world in pixels.
+* @param {number} height - New height of the game world in pixels.
+*/
 Phaser.World.prototype.resize = function (width, height) {
 
     //  Don't ever scale the World bounds lower than the original requested dimensions if it's a defined world size

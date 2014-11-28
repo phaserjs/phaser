@@ -466,7 +466,7 @@ Phaser.Gamepad.prototype = {
     /**
      * Destroys this object and the associated event listeners.
      *
-     * @method destroy
+     * @method Phaser.Gamepad#destroy
      */
     destroy: function () {
 
