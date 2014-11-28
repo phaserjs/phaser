@@ -5,9 +5,12 @@
 */
 
 /**
-* Create a new `Text` object. This uses a local hidden Canvas object and renders the type into it. It then makes a texture from this for renderning to the view.
-* Because of this you can only display fonts that are currently loaded and available to the browser. It won't load the fonts for you.
-* Here is a compatibility table showing the available default fonts across different mobile browsers: http://www.jordanm.co.uk/tinytype
+* Create a new game object for displaying Text.
+*
+* This uses a local hidden Canvas object and renders the type into it. It then makes a texture from this for renderning to the view.
+* Because of this you can only display fonts that are currently loaded and available to the browser: fonts must be pre-loaded.
+*
+* See {@link http://www.jordanm.co.uk/tinytype this compatibility table} for the available default fonts across mobile browsers.
 *
 * @class Phaser.Text
 * @extends PIXI.Text
@@ -36,6 +39,7 @@ Phaser.Text = function (game, x, y, text, style) {
 
     /**
     * @property {Phaser.Game} game - A reference to the currently running Game.
+    * @protected
     */
     this.game = game;
 
@@ -109,7 +113,7 @@ Phaser.Text = function (game, x, y, text, style) {
     this.events = new Phaser.Events(this);
 
     /**
-    * @property {Phaser.InputHandler|null} input - The Input Handler for this object. Needs to be enabled with image.inputEnabled = true before you can use it.
+    * @property {?Phaser.InputHandler} input - The Input Handler for this object. Needs to be enabled with image.inputEnabled = true before you can use it.
     */
     this.input = null;
 
@@ -119,7 +123,7 @@ Phaser.Text = function (game, x, y, text, style) {
     this.cameraOffset = new Phaser.Point();
 
     /**
-    * @property {array} colors - An array of the color values as specified by `Text.addColor`.
+    * @property {array} colors - An array of the color values as specified by {@link Phaser.Text#addColor addColor}.
     */
     this.colors = [];
 
@@ -159,6 +163,7 @@ Phaser.Text.prototype.constructor = Phaser.Text;
 * Automatically called by World.preUpdate.
 * 
 * @method Phaser.Text#preUpdate
+* @protected
 */
 Phaser.Text.prototype.preUpdate = function () {
 
@@ -196,9 +201,10 @@ Phaser.Text.prototype.preUpdate = function () {
 };
 
 /**
-* Override and use this function in your own custom objects to handle any update requirements you may have.
+* Override this function to handle any special update requirements.
 *
 * @method Phaser.Text#update
+* @protected
 */
 Phaser.Text.prototype.update = function() {
 
@@ -208,6 +214,7 @@ Phaser.Text.prototype.update = function() {
 * Automatically called by World.postUpdate.
 * 
 * @method Phaser.Text#postUpdate
+* @protected
 */
 Phaser.Text.prototype.postUpdate = function () {
 
@@ -500,7 +507,8 @@ Phaser.Text.prototype.clearColors = function () {
 };
 
 /**
-* This method allows you to set specific colors within the Text.
+* Set specific colors for certain characters within the Text.
+*
 * It works by taking a color value, which is a typical HTML string such as `#ff0000` or `rgb(255,0,0)` and a position.
 * The position value is the index of the character in the Text string to start applying this color to.
 * Once set the color remains in use until either another color or the end of the string is encountered.
@@ -567,12 +575,14 @@ Phaser.Text.prototype.runWordWrap = function (text) {
 };
 
 /**
-* Indicates the rotation of the Text, in degrees, from its original orientation. Values from 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation.
+* The rotation of the Text, in degrees, from its original orientation.
+*
+* Values from 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation.
 * Values outside this range are added to or subtracted from 360 to obtain a value within the range. For example, the statement player.angle = 450 is the same as player.angle = 90.
 * If you wish to work in radians instead of degrees use the property Sprite.rotation instead.
 * 
 * @name Phaser.Text#angle
-* @property {number} angle - Gets or sets the angle of rotation in degrees.
+* @property {number} angle - 
 */
 Object.defineProperty(Phaser.Text.prototype, 'angle', {
 
@@ -589,7 +599,7 @@ Object.defineProperty(Phaser.Text.prototype, 'angle', {
 /**
 * The text string to be displayed by this Text object, taking into account the style settings.
 * @name Phaser.Text#text
-* @property {string} text - The text string to be displayed by this Text object, taking into account the style settings.
+* @property {string} text
 */
 Object.defineProperty(Phaser.Text.prototype, 'text', {
 
@@ -948,11 +958,12 @@ Object.defineProperty(Phaser.Text.prototype, 'shadowBlur', {
 });
 
 /**
+* Set to true to allow this object to receive input events.
 * By default a Text object won't process any input events at all. By setting inputEnabled to true the Phaser.InputHandler is
 * activated for this object and it will then start to process click/touch events and more.
 *
 * @name Phaser.Text#inputEnabled
-* @property {boolean} inputEnabled - Set to true to allow this object to receive input events.
+* @property {boolean} inputEnabled
 */
 Object.defineProperty(Phaser.Text.prototype, "inputEnabled", {
 
@@ -989,12 +1000,14 @@ Object.defineProperty(Phaser.Text.prototype, "inputEnabled", {
 });
 
 /**
+* Set to true to fix this Text to the Camera at its current world coordinates.
+*
 * An Text that is fixed to the camera uses its x/y coordinates as offsets from the top left of the camera. These are stored in Text.cameraOffset.
 * Note that the cameraOffset values are in addition to any parent in the display list.
 * So if this Text was in a Group that has x: 200, then this will be added to the cameraOffset.x
 *
 * @name Phaser.Text#fixedToCamera
-* @property {boolean} fixedToCamera - Set to true to fix this Text to the Camera at its current world coordinates.
+* @property {boolean} fixedToCamera
 */
 Object.defineProperty(Phaser.Text.prototype, "fixedToCamera", {
 
@@ -1022,6 +1035,7 @@ Object.defineProperty(Phaser.Text.prototype, "fixedToCamera", {
 /**
 * @name Phaser.Text#destroyPhase
 * @property {boolean} destroyPhase - True if this object is currently being destroyed.
+* @protected
 */
 Object.defineProperty(Phaser.Text.prototype, "destroyPhase", {
 
