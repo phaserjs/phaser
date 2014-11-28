@@ -30,42 +30,42 @@ Phaser.TimerEvent = function (timer, delay, tick, repeatCount, loop, callback, c
     * @protected
     * @readonly
     */
-	this.timer = timer;
+    this.timer = timer;
 
     /**
     * @property {number} delay - The delay in ms at which this TimerEvent fires.
     */
-	this.delay = delay;
+    this.delay = delay;
 
     /**
     * @property {number} tick - The tick is the next game clock time that this event will fire at.
     */
-	this.tick = tick;
+    this.tick = tick;
 
     /**
     * @property {number} repeatCount - If this TimerEvent repeats it will do so this many times.
     */
-	this.repeatCount = repeatCount - 1;
+    this.repeatCount = repeatCount - 1;
 
     /**
     * @property {boolean} loop - True if this TimerEvent loops, otherwise false.
     */
-	this.loop = loop;
+    this.loop = loop;
 
     /**
     * @property {function} callback - The callback that will be called when the TimerEvent occurs.
     */
-	this.callback = callback;
+    this.callback = callback;
 
     /**
     * @property {object} callbackContext - The context in which the callback will be called.
     */
-	this.callbackContext = callbackContext;
+    this.callbackContext = callbackContext;
 
     /**
     * @property {any[]} arguments - Additional arguments to be passed to the callback.
     */
-	this.args = args;
+    this.args = args;
 
     /**
     * @property {boolean} pendingDelete - A flag that controls if the TimerEvent is pending deletion.
