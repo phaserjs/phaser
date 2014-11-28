@@ -594,6 +594,28 @@ Phaser.Text.prototype.runWordWrap = function (text) {
 };
 
 /**
+* Updates the internal `style.font` if it now differs according to generation from components.
+* @method Phaser.Text#updateFont
+* @private
+*/
+Phaser.Text.prototype.updateFont = function (components) {
+
+    var font = this.componentsToFont(components);
+
+    if (this.style.font !== font)
+    {
+        this.style.font = font;
+        this.dirty = true;
+
+        if (this.parent)
+        {
+            this.updateTransform();
+        }
+    }
+
+};
+
+/**
 * Converting a short CSS-font string into the relevant components.
 * @method Phaser.Text#fontToComponents
 * @private
@@ -707,10 +729,35 @@ Object.defineProperty(Phaser.Text.prototype, 'text', {
 });
 
 /**
+* Change the CSS font string used.
+*
+* This is equivalent of the `font` property specified to {@link Phaser.Text#setStyle setStyle}, except
+* that unlike using `setStyle` this will not change any current font fill/color settings.
+*
+* The CSS font string can also be invidually altered with the `font`, `fontSize`, `fontWeight`, `fontStyle`, and `fontVariant` properties.
+*
+* @name Phaser.Text#cssFont
+* @property {string} cssFont
+*/
+Object.defineProperty(Phaser.Text.prototype, 'cssFont', {
+
+    get: function() {
+        return this.componentsToFont(this._fontComponents);
+    },
+
+    set: function (value)
+    {
+        value = value || 'bold 20pt Arial';
+        this._fontComponents = this.fontToComponents(value);
+        this.updateFont(this._fontComponents);
+    }
+
+});
+
+/**
 * Change the font family that the text will be rendered in such as 'Arial'.
 *
-* To change the entire font string use {@link Phaser.Text#setStyle setStyle} instead:
-* eg. `text.setStyle({font: 'bold 20pt Arial'})`.
+* To change the entire font string use {@link Phaser.Text#cssFont cssFont} instead: `text.cssFont = 'bold 20pt Arial'`.
 *
 * The font must be pre-loaded before use.
 * @name Phaser.Text#font
@@ -724,25 +771,16 @@ Object.defineProperty(Phaser.Text.prototype, 'font', {
 
     set: function(value) {
 
-        value = (value || '').trim();
+        value = value || 'Arial';
+        value = value.trim();
 
-        if (value !== this._fontComponents.font)
+        if (!/^[a-zA-Z-]+$/.exec(value) && !/['"]/.exec(value))
         {
-            // Ideally the user should supply quotes around fonts as required, but.. if not
-            if (!/^[a-zA-Z-]+$/.exec(value) && !/['"]/.exec(value))
-            {
-                value = "'" + value + "'";
-            }
-
-            this._fontComponents.font = value;
-            this.style.font = this.componentsToFont(this._fontComponents);
-            this.dirty = true;
-
-            if (this.parent)
-            {
-                this.updateTransform();
-            }
+            value = "'" + value + "'";
         }
+
+        this._fontComponents.font = value;
+        this.updateFont(this._fontComponents);
 
     }
 
@@ -751,23 +789,23 @@ Object.defineProperty(Phaser.Text.prototype, 'font', {
 /**
 * The size of the font.
 *
-* _Important:_ If the font size was not specified in pixels this will return NaN.
+* If the font size is specified in pixels then the number (eg. `32`) is returned; otherwise a string is returned (eg. `'12pt'`).
 *
 * @name Phaser.Text#fontSize
-* @property {number} fontSize
+* @property {number|string} fontSize
 */
 Object.defineProperty(Phaser.Text.prototype, 'fontSize', {
 
     get: function() {
 
         var size = this._fontComponents.fontSize;
-        if (size && /(?:0|px)$/.exec(size))
+        if (size && /(?:^0$|px$)/.exec(size))
         {
             return parseInt(size, 10);
         }
         else
         {
-            return NaN;
+            return size;
         }
 
     },
@@ -779,25 +817,18 @@ Object.defineProperty(Phaser.Text.prototype, 'fontSize', {
             value = value + 'px';
         }
 
-        if (value !== this._fontComponents.fontSize)
-        {
-            this._fontComponents.fontSize = value;
-            this.style.font = this.componentsToFont(this._fontComponents);
-            this.dirty = true;
-
-            if (this.parent)
-            {
-                this.updateTransform();
-            }
-        }
+        value = value || '0';
+        this._fontComponents.fontSize = value;
+        this.updateFont(this._fontComponents);
 
     }
 
 });
 
 /**
+* The weight of the font: 'normal', 'bold', or {@link http://www.w3.org/TR/CSS2/fonts.html#propdef-font-weight a valid CSS font weight}.
 * @name Phaser.Text#fontWeight
-* @property {number} fontWeight - The weight of the font: 'normal', 'bold', 'italic'. You can combine settings too, such as 'bold italic'.
+* @property {string} fontWeight
 */
 Object.defineProperty(Phaser.Text.prototype, 'fontWeight', {
 
@@ -807,17 +838,51 @@ Object.defineProperty(Phaser.Text.prototype, 'fontWeight', {
 
     set: function(value) {
 
-        if (value !== this._fontWeight)
-        {
-            this._fontComponents.fontWeight = value;
-            this.style.font = this.componentsToFont(this._fontComponents);
-            this.dirty = true;
+        value = value || 'normal';
+        this._fontComponents.fontWeight = value;
+        this.updateFont(this._fontComponents);
 
-            if (this.parent)
-            {
-                this.updateTransform();
-            }
-        }
+    }
+
+});
+
+/**
+* The style of the font: 'normal', 'italic', 'oblique'
+* @name Phaser.Text#fontStyle
+* @property {string} fontStyle
+*/
+Object.defineProperty(Phaser.Text.prototype, 'fontStyle', {
+
+    get: function() {
+        return this._fontComponents.fontStyle;
+    },
+
+    set: function(value) {
+
+        value = value || 'normal';
+        this._fontComponents.fontStyle = value;
+        this.updateFont(this._fontComponents);
+
+    }
+
+});
+
+/**
+* The variant the font: 'normal', 'small-caps'
+* @name Phaser.Text#fontVariant
+* @property {string} fontVariant
+*/
+Object.defineProperty(Phaser.Text.prototype, 'fontVariant', {
+
+    get: function() {
+        return this._fontComponents.fontVariant;
+    },
+
+    set: function(value) {
+
+        value = value || 'normal';
+        this._fontComponents.fontVariant = value;
+        this.updateFont(this._fontComponents);
 
     }
 
