@@ -5,8 +5,12 @@
 */
 
 /**
-* An Image is a light-weight object you can use to display anything that doesn't need physics or animation.
-* It can still rotate, scale, crop and receive input events. This makes it perfect for logos, backgrounds, simple buttons and other non-Sprite graphics.
+* An Image is a light-weight {@link Pixi.DisplayObject Display Object} that can be used when physics and animation are not required.
+*
+* Like other display objects, an Image can still be rotated, scaled, cropped and receive input events.
+* This makes it perfect for logos, backgrounds, simple buttons and other non-Sprite graphics.
+*
+* The documentation uses 'sprite' to generically talk about Images and other Phaser.Sprite objects, which share much of the same behavior.
 *
 * @class Phaser.Image
 * @extends PIXI.Sprite
@@ -26,11 +30,13 @@ Phaser.Image = function (game, x, y, key, frame) {
 
     /**
     * @property {Phaser.Game} game - A reference to the currently running Game.
+    * @protected
     */
     this.game = game;
 
     /**
-    * @property {boolean} exists - If exists = false then the Image isn't updated by the core game loop.
+    * An Image is only shown and updated if it exists.
+    * @property {boolean} exists
     * @default
     */
     this.exists = true;
@@ -44,6 +50,7 @@ Phaser.Image = function (game, x, y, key, frame) {
     /**
     * @property {number} type - The const type of this object.
     * @readonly
+    * @protected
     */
     this.type = Phaser.IMAGE;
 
@@ -75,30 +82,42 @@ Phaser.Image = function (game, x, y, key, frame) {
     this.position.set(x, y);
 
     /**
-    * @property {Phaser.Point} world - The world coordinates of this Image. This differs from the x/y coordinates which are relative to the Images container.
+    * The world coordinates of this sprite.
+    *
+    * This differs from the local x/y coordinates which are relative to the parent.
+    *
+    * @property {Phaser.Point} world
     */
     this.world = new Phaser.Point(x, y);
 
     /**
-    * @property {boolean} alive - A useful boolean to control if the Image is alive or dead (in terms of your gameplay, it doesn't effect rendering).
-    * @default
-    */
-    this.alive = true;
-
-    /**
-    * Should this Image be automatically culled if out of range of the camera?
-    * A culled sprite has its renderable property set to 'false'.
-    * Be advised this is quite an expensive operation, as it has to calculate the bounds of the object every frame, so only enable it if you really need it.
+    * Should the sprite be automatically camera culled or not?
     *
-    * @property {boolean} autoCull - A flag indicating if the Image should be automatically camera culled or not.
+    * An auto-culled sprite has its `renderable` property set to 'false' when it leaves the game camera view and 'true'
+    * when it reenters the camera view.
+    *
+    * This is quite an expensive operation, as it has to calculate the bounds of the object every frame, so only enable it if you really need it.
+    *
+    * @property {boolean} autoCull
     * @default
     */
     this.autoCull = false;
 
     /**
-    * @property {Phaser.InputHandler|null} input - The Input Handler for this object. Needs to be enabled with image.inputEnabled = true before you can use it.
+    * The Input Handler for this object. Must be enabled with `inputEnabled` before use.
+    * @property {Phaser.InputHandler|null} input - 
     */
     this.input = null;
+
+    /**
+    * Is the sprite 'alive'?
+    *
+    * This is useful for game logic, but does not affect rendering.
+    *
+    * @property {boolean} alive.
+    * @default
+    */
+    this.alive = true;
 
     /**
     * @property {boolean} debug - Handy flag to use with Game.enableStep
@@ -107,13 +126,17 @@ Phaser.Image = function (game, x, y, key, frame) {
     this.debug = false;
 
     /**
-    * @property {Phaser.Point} cameraOffset - If this object is fixedToCamera then this stores the x/y offset that its drawn at, from the top-left of the camera view.
+    * If this object is `fixedToCamera` then this stores the x/y offset that its drawn at, from the top-left of the camera view.
+    * @property {Phaser.Point} cameraOffset
     */
     this.cameraOffset = new Phaser.Point();
 
     /**
-    * @property {Phaser.Rectangle} cropRect - The Rectangle used to crop the texture. Set this via Sprite.crop. Any time you modify this property directly you must call Sprite.updateCrop.
+    * The Rectangle used to crop the texture.
+    * Set this via {@link Phaser.Image#crop crop} and use {@link Phaser.Image#updateCrop updateCrop} as required.
+    * @property {Phaser.Rectangle} cropRect
     * @default
+    * @readonly
     */
     this.cropRect = null;
 
@@ -159,10 +182,11 @@ Phaser.Image.prototype = Object.create(PIXI.Sprite.prototype);
 Phaser.Image.prototype.constructor = Phaser.Image;
 
 /**
-* Automatically called by World.preUpdate.
+* Internal function called by the World preUpdate cycle.
 *
 * @method Phaser.Image#preUpdate
 * @memberof Phaser.Image
+* @protected
 */
 Phaser.Image.prototype.preUpdate = function() {
 
@@ -202,10 +226,13 @@ Phaser.Image.prototype.preUpdate = function() {
 };
 
 /**
-* Override and use this function in your own custom objects to handle any update requirements you may have.
+* Override and this method for custom update logic.
 *
-* @method Phaser.Image#update
-* @memberof Phaser.Image
+* If this sprite has any children you should call update on them too.
+*
+* @method Phaser.Sprite#update
+* @memberof Phaser.Sprite
+* @protected
 */
 Phaser.Image.prototype.update = function() {
 
@@ -216,6 +243,7 @@ Phaser.Image.prototype.update = function() {
 *
 * @method Phaser.Image#postUpdate
 * @memberof Phaser.Image
+* @protected
 */
 Phaser.Image.prototype.postUpdate = function() {
 
@@ -240,7 +268,8 @@ Phaser.Image.prototype.postUpdate = function() {
 };
 
 /**
-* Changes the Texture the Image is using entirely. The old texture is removed and the new one is referenced or fetched from the Cache.
+* Changes the underlying Texture.
+*
 * This causes a WebGL texture update, so use sparingly or in low-intensity portions of your game.
 *
 * @method Phaser.Image#loadTexture
@@ -312,12 +341,13 @@ Phaser.Image.prototype.loadTexture = function (key, frame) {
 };
 
 /**
-* Sets the Texture frame the Image uses for rendering.
-* This is primarily an internal method used by Image.loadTexture, although you may call it directly.
+* Sets the displayed Texture frame bounds.
+*
+* This is primarily an internal method used by Image.loadTexture.
 *
 * @method Phaser.Image#setFrame
 * @memberof Phaser.Image
-* @param {Phaser.Frame} frame - The Frame to be used by the Image texture.
+* @param {Phaser.Frame} frame - The Frame to be used by the texture.
 */
 Phaser.Image.prototype.setFrame = function(frame) {
 
@@ -367,7 +397,7 @@ Phaser.Image.prototype.setFrame = function(frame) {
 };
 
 /**
-* Resets the Texture frame dimensions that the Image uses for rendering.
+* Resets the Texture frame bounds that are used for rendering.
 *
 * @method Phaser.Image#resetFrame
 * @memberof Phaser.Image
@@ -382,15 +412,17 @@ Phaser.Image.prototype.resetFrame = function() {
 };
 
 /**
-* Crop allows you to crop the texture used to display this Image.
-* Cropping takes place from the top-left of the Image and can be modified in real-time by providing an updated rectangle object.
-* The rectangle object given to this method can be either a Phaser.Rectangle or any object so long as it has public x, y, width and height properties.
-* Please note that the rectangle object given is not duplicated by this method, but rather the Image uses a reference to the rectangle.
-* Keep this in mind if assigning a rectangle in a for-loop, or when cleaning up for garbage collection.
+* Crops the texture used for display. Cropping takes place from the top-left of the sprite.
+*
+* This method does not create a copy of `rect` by default: the rectangle can shared between
+* multiple sprite and updated in real-time. In this case, `updateCrop` must be called after any modifications
+* to the shared/non-copied rectangle before the crop will be updated.
+*
+* The rectangle object can be a Phaser.Rectangle or any object so long as it has public x, y, width and height properties.
 *
 * @method Phaser.Image#crop
 * @memberof Phaser.Image
-* @param {Phaser.Rectangle} rect - The Rectangle used during cropping. Pass null or no parameters to clear a previously set crop rectangle.
+* @param {?Phaser.Rectangle} rect - The Rectangle used during cropping. Pass null or no parameters to clear a previously set crop rectangle.
 * @param {boolean} [copy=false] - If false Sprite.cropRect will be a reference to the given rect. If true it will copy the rect values into a local Sprite.cropRect object.
 */
 Phaser.Image.prototype.crop = function(rect, copy) {
@@ -425,8 +457,10 @@ Phaser.Image.prototype.crop = function(rect, copy) {
 };
 
 /**
-* If you have set a crop rectangle on this Image via Image.crop and since modified the Image.cropRect property (or the rectangle it references)
-* then you need to update the crop frame by calling this method.
+* Update the texture crop.
+*
+* If the rectangle supplied to `crop` has been modified (and was not copied),
+* then this method needs to be called to update the internal crop/frame data.
 *
 * @method Phaser.Image#updateCrop
 * @memberof Phaser.Image
@@ -463,9 +497,10 @@ Phaser.Image.prototype.updateCrop = function() {
 };
 
 /**
-* Brings a 'dead' Image back to life, optionally giving it the health value specified.
-* A resurrected Image has its alive, exists and visible properties all set to true.
-* It will dispatch the onRevived event, you can listen to Image.events.onRevived for the signal.
+* Brings a 'dead' sprite back to life.
+*
+* A resurrected Image has its `alive`, `exists`, and `visible` properties set to true
+* and the `onRevived` event will be dispatched.
 *
 * @method Phaser.Image#revive
 * @memberof Phaser.Image
@@ -487,10 +522,13 @@ Phaser.Image.prototype.revive = function() {
 };
 
 /**
-* Kills a Image. A killed Image has its alive, exists and visible properties all set to false.
-* It will dispatch the onKilled event, you can listen to Image.events.onKilled for the signal.
-* Note that killing a Image is a way for you to quickly recycle it in a Image pool, it doesn't free it up from memory.
-* If you don't need this Image any more you should call Image.destroy instead.
+* Kills the sprite.
+*
+* A killed sprite has its `alive`, `exists`, and `visible` properties all set to false
+* and the `onKilled` event will be dispatched.
+*
+* Killing a sprite is a way to recycle the Image (eg. in a Group/pool) but it doesn't free it from memory.
+* Use {@link Phaser.Sprite#destroy} if the sprite is no longer needed.
 *
 * @method Phaser.Image#kill
 * @memberof Phaser.Image
@@ -512,7 +550,9 @@ Phaser.Image.prototype.kill = function() {
 };
 
 /**
-* Destroys the Image. This removes it from its parent group, destroys the input, event and animation handlers if present
+* Destroys the sprite.
+*
+* This removes it from its parent group, destroys the input, event, and animation handlers if present
 * and nulls its reference to game, freeing it up for garbage collection.
 *
 * @method Phaser.Image#destroy
@@ -589,7 +629,10 @@ Phaser.Image.prototype.destroy = function(destroyChildren) {
 };
 
 /**
-* Resets the Image. This places the Image at the given x/y world coordinates and then sets alive, exists, visible and renderable all to true.
+* Resets the sprite.
+*
+* This places the sprite at the given x/y world coordinates and then
+* sets `alive`, `exists`, `visible`, and `renderable` all to true.
 *
 * @method Phaser.Image#reset
 * @memberof Phaser.Image
@@ -612,8 +655,7 @@ Phaser.Image.prototype.reset = function(x, y) {
 };
 
 /**
-* Brings the Image to the top of the display list it is a child of. Images that are members of a Phaser.Group are only
-* bought to the top of that Group, not the entire display list.
+* Brings the sprite to the top of the display list (ie. Group) it is a child of.
 *
 * @method Phaser.Image#bringToTop
 * @memberof Phaser.Image
@@ -636,6 +678,7 @@ Phaser.Image.prototype.bringToTop = function() {
  * @method Phaser.Image#checkTransform
  * @private
  * @param {PIXI.Matrix} wt - The updated worldTransform matrix.
+ * @protected
  */
 Phaser.Image.prototype.checkTransform = function (wt) {
 
@@ -668,28 +711,29 @@ Phaser.Image.prototype.checkTransform = function (wt) {
 };
 
 /**
- * Sets the scaleMin and scaleMax values in one call.
- * These values are used to limit how far this Image will scale (either up or down) based on its parent.
- * For example if this Image has a minScale value of 1 and its parent has a scale value of 0.5, the 0.5 will be ignored and the scale value of 1 will be used.
- * By using these values you can carefully control how Images deal with responsive scaling.
- * 
- * If only one parameter is given then that value will be used for both scaleMin and scaleMax:
- * setScaleMinMax(1) = scaleMin.x, scaleMin.y, scaleMax.x and scaleMax.y all = 1
- *
- * If only two parameters are given the first is set as scaleMin.x and y and the second as scaleMax.x and y:
- * setScaleMinMax(0.5, 2) = scaleMin.x and y = 0.5 and scaleMax.x and y = 2
- *
- * If you wish to set scaleMin with different values for x and y then either modify Image.scaleMin directly, or pass `null` for the maxX and maxY parameters.
- * 
- * Call setScaleMinMax(null) to clear both the scaleMin and scaleMax values.
- *
- * @method Phaser.Image#setScaleMinMax
- * @memberof Phaser.Image
- * @param {number|null} minX - The minimum horizontal scale value this Image can scale down to.
- * @param {number|null} minY - The minimum vertical scale value this Image can scale down to.
- * @param {number|null} maxX - The maximum horizontal scale value this Image can scale up to.
- * @param {number|null} maxY - The maximum vertical scale value this Image can scale up to.
- */
+* Sets the scaleMin and scaleMax values.
+*
+* These values are used to limit how far this Image will scale (either up or down) based on its parent.
+* For example if this Image has a minScale value of 1 and its parent has a scale value of 0.5, the 0.5 will be ignored and the scale value of 1 will be used.
+* By using these values you can carefully control how Images deal with responsive scaling.
+* 
+* If only one parameter is given then that value will be used for both scaleMin and scaleMax:
+* setScaleMinMax(1) = scaleMin.x, scaleMin.y, scaleMax.x and scaleMax.y all = 1
+*
+* If only two parameters are given the first is set as scaleMin.x and y and the second as scaleMax.x and y:
+* setScaleMinMax(0.5, 2) = scaleMin.x and y = 0.5 and scaleMax.x and y = 2
+*
+* If you wish to set scaleMin with different values for x and y then either modify Image.scaleMin directly, or pass `null` for the maxX and maxY parameters.
+* 
+* Call setScaleMinMax(null) to clear both the scaleMin and scaleMax values.
+*
+* @method Phaser.Image#setScaleMinMax
+* @memberof Phaser.Image
+* @param {number|null} minX - The minimum horizontal scale value this Image can scale down to.
+* @param {number|null} minY - The minimum vertical scale value this Image can scale down to.
+* @param {number|null} maxX - The maximum horizontal scale value this Image can scale up to.
+* @param {number|null} maxY - The maximum vertical scale value this Image can scale up to.
+*/
 Phaser.Image.prototype.setScaleMinMax = function (minX, minY, maxX, maxY) {
 
     if (typeof minY === 'undefined')
@@ -739,8 +783,11 @@ Phaser.Image.prototype.setScaleMinMax = function (minX, minY, maxX, maxY) {
 };
 
 /**
-* Indicates the rotation of the Image, in degrees, from its original orientation. Values from 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation.
+* The rotation of the sprite, in degrees, from its original orientation.
+* 
+* Values from 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation.
 * Values outside this range are added to or subtracted from 360 to obtain a value within the range. For example, the statement player.angle = 450 is the same as player.angle = 90.
+*
 * If you wish to work in radians instead of degrees use the property Image.rotation instead. Working in radians is also a little faster as it doesn't have to convert the angle.
 *
 * @name Phaser.Image#angle
@@ -763,10 +810,12 @@ Object.defineProperty(Phaser.Image.prototype, "angle", {
 });
 
 /**
-* Returns the delta x value. The difference between world.x now and in the previous step.
+* The delta x value: the difference between world.x now and in the previous step.
+*
+* Positive if the motion was to the right, negative if to the left.
 *
 * @name Phaser.Image#deltaX
-* @property {number} deltaX - The delta value. Positive if the motion was to the right, negative if to the left.
+* @property {number} deltaX - The delta value. 
 * @readonly
 */
 Object.defineProperty(Phaser.Image.prototype, "deltaX", {
@@ -780,10 +829,12 @@ Object.defineProperty(Phaser.Image.prototype, "deltaX", {
 });
 
 /**
-* Returns the delta y value. The difference between world.y now and in the previous step.
+* The delta y value: the difference between world.y now and in the previous step.
+*
+* Positive if the motion was downwards, negative if upwards.
 *
 * @name Phaser.Image#deltaY
-* @property {number} deltaY - The delta value. Positive if the motion was downwards, negative if upwards.
+* @property {number} deltaY - The delta value. 
 * @readonly
 */
 Object.defineProperty(Phaser.Image.prototype, "deltaY", {
@@ -797,11 +848,12 @@ Object.defineProperty(Phaser.Image.prototype, "deltaY", {
 });
 
 /**
-* Returns the delta z value. The difference between rotation now and in the previous step.
+* The delta z value: the difference between rotation now and in the previous step.
 *
 * @name Phaser.Image#deltaZ
-* @property {number} deltaZ - The delta value.
+* @property {number} deltaZ
 * @readonly
+* @todo Check name / operation.
 */
 Object.defineProperty(Phaser.Image.prototype, "deltaZ", {
 
@@ -814,10 +866,10 @@ Object.defineProperty(Phaser.Image.prototype, "deltaZ", {
 });
 
 /**
-* Checks if the Image bounds are within the game world, otherwise false if fully outside of it.
+* True if any part of the Image bounds are within the game world, otherwise false.
 *
 * @name Phaser.Image#inWorld
-* @property {boolean} inWorld - True if the Image bounds is within the game world, even if only partially. Otherwise false if fully outside of it.
+* @property {boolean} inWorld
 * @readonly
 */
 Object.defineProperty(Phaser.Image.prototype, "inWorld", {
@@ -831,10 +883,10 @@ Object.defineProperty(Phaser.Image.prototype, "inWorld", {
 });
 
 /**
-* Checks if the Image bounds are within the game camera, otherwise false if fully outside of it.
+* True if any part of the Image bounds are within the game camera view, otherwise false.
 *
 * @name Phaser.Image#inCamera
-* @property {boolean} inCamera - True if the Image bounds is within the game camera, even if only partially. Otherwise false if fully outside of it.
+* @property {boolean} inCamera
 * @readonly
 */
 Object.defineProperty(Phaser.Image.prototype, "inCamera", {
@@ -848,8 +900,10 @@ Object.defineProperty(Phaser.Image.prototype, "inCamera", {
 });
 
 /**
+* Gets or sets the current frame index and updates the Texture for display.
+*
 * @name Phaser.Image#frame
-* @property {number} frame - Gets or sets the current frame index and updates the Texture for display.
+* @property {number} frame
 */
 Object.defineProperty(Phaser.Image.prototype, "frame", {
 
@@ -877,8 +931,10 @@ Object.defineProperty(Phaser.Image.prototype, "frame", {
 });
 
 /**
+* Gets or sets the current frame by name and updates the Texture for display.
+*
 * @name Phaser.Image#frameName
-* @property {string} frameName - Gets or sets the current frame by name and updates the Texture for display.
+* @property {string} frameName
 */
 Object.defineProperty(Phaser.Image.prototype, "frameName", {
 
@@ -906,9 +962,11 @@ Object.defineProperty(Phaser.Image.prototype, "frameName", {
 });
 
 /**
+* The render order ID, reset every frame.
 * @name Phaser.Image#renderOrderID
-* @property {number} renderOrderID - The render order ID, reset every frame.
+* @property {number} renderOrderID
 * @readonly
+* @protected
 */
 Object.defineProperty(Phaser.Image.prototype, "renderOrderID", {
 
@@ -921,11 +979,11 @@ Object.defineProperty(Phaser.Image.prototype, "renderOrderID", {
 });
 
 /**
-* By default an Image won't process any input events at all. By setting inputEnabled to true the Phaser.InputHandler is
+* By default a sprite won't process any input events at all. By setting inputEnabled to true the Phaser.InputHandler is
 * activated for this object and it will then start to process click/touch events and more.
 *
 * @name Phaser.Image#inputEnabled
-* @property {boolean} inputEnabled - Set to true to allow this object to receive input events.
+* @property {boolean} inputEnabled
 */
 Object.defineProperty(Phaser.Image.prototype, "inputEnabled", {
 
@@ -961,12 +1019,13 @@ Object.defineProperty(Phaser.Image.prototype, "inputEnabled", {
 });
 
 /**
-* An Image that is fixed to the camera uses its x/y coordinates as offsets from the top left of the camera. These are stored in Image.cameraOffset.
+* An sprite that is fixed to the camera uses its x/y coordinates as offsets from the top left of the camera; these are stored in Image.cameraOffset.
+*
 * Note that the cameraOffset values are in addition to any parent in the display list.
 * So if this Image was in a Group that has x: 200, then this will be added to the cameraOffset.x
 *
 * @name Phaser.Image#fixedToCamera
-* @property {boolean} fixedToCamera - Set to true to fix this Image to the Camera at its current world coordinates.
+* @property {boolean} fixedToCamera
 */
 Object.defineProperty(Phaser.Image.prototype, "fixedToCamera", {
 
@@ -992,10 +1051,14 @@ Object.defineProperty(Phaser.Image.prototype, "fixedToCamera", {
 });
 
 /**
-* Enable or disable texture smoothing for this Image. Only works for bitmap/image textures. Smoothing is enabled by default.
+* Enable or disable texture smoothing for this sprite (does not affect children).
+* 
+* Set to true to smooth the texture, or false to disable smoothing (great for pixel art).
+* Smoothing only work for bitmap/image textures.
 *
 * @name Phaser.Image#smoothed
-* @property {boolean} smoothed - Set to true to smooth the texture of this Image, or false to disable smoothing (great for pixel art)
+* @property {boolean} smoothed
+* @default true
 */
 Object.defineProperty(Phaser.Image.prototype, "smoothed", {
 
@@ -1026,8 +1089,10 @@ Object.defineProperty(Phaser.Image.prototype, "smoothed", {
 });
 
 /**
+* True if this object is currently being destroyed.
 * @name Phaser.Image#destroyPhase
-* @property {boolean} destroyPhase - True if this object is currently being destroyed.
+* @property {boolean} destroyPhase
+* @protected
 */
 Object.defineProperty(Phaser.Image.prototype, "destroyPhase", {
 
