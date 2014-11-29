@@ -8,8 +8,13 @@
 * Creates a new `Graphics` object.
 *
 * @class Phaser.Graphics
-* @constructor
 * @extends PIXI.Graphics
+* -- Google Closure Compiler and future jsdoc can use @implements instead of @extends
+* @extends Phaser.GameObject.CoreMixin
+* @extends Phaser.GameObject.CullingMixin
+* @extends Phaser.GameObject.InputMixin
+* @extends Phaser.GameObject.EventsMixin
+* @constructor
 * @param {Phaser.Game} game Current game instance.
 * @param {number} x - X position of the new graphics object.
 * @param {number} y - Y position of the new graphics object.
@@ -24,63 +29,29 @@ Phaser.Graphics = function (game, x, y) {
     */
     this.game = game;
 
-    /**
-    * @property {boolean} exists - If exists = false then the Text isn't updated by the core game loop.
-    * @default
-    */
-    this.exists = true;
-
-    /**
-    * @property {string} name - The user defined name given to this object.
-    * @default
-    */
-    this.name = '';
-
-    /**
-    * @property {number} type - The const type of this object.
-    * @default
-    */
-    this.type = Phaser.GRAPHICS;
-
-    /**
-    * @property {number} z - The z-depth value of this object within its Group (remember the World is a Group as well). No two objects in a Group can have the same z value.
-    */
-    this.z = 0;
-
-    /**
-    * @property {Phaser.Point} world - The world coordinates of this Sprite. This differs from the x/y coordinates which are relative to the Sprites container.
-    */
-    this.world = new Phaser.Point(x, y);
-
-    /**
-    * @property {Phaser.Point} cameraOffset - If this object is fixedToCamera then this stores the x/y offset that its drawn at, from the top-left of the camera view.
-    */
-    this.cameraOffset = new Phaser.Point();
-
     PIXI.Graphics.call(this);
 
-    this.position.set(x, y);
+    Phaser.GameObject.init.call(this, Phaser.GameObject.GRAPHICS_LIKE);
 
-    /**
-    * A small internal cache:
-    * 0 = previous position.x
-    * 1 = previous position.y
-    * 2 = previous rotation
-    * 3 = renderID
-    * 4 = fresh? (0 = no, 1 = yes)
-    * 5 = outOfBoundsFired (0 = no, 1 = yes)
-    * 6 = exists (0 = no, 1 = yes)
-    * 7 = fixed to camera (0 = no, 1 = yes)
-    * 8 = destroy phase? (0 = no, 1 = yes)
-    * @property {Array} _cache
-    * @private
-    */
-    this._cache = [ 0, 0, 0, 0, 1, 0, 1, 0, 0 ];
+    this.transformCallback = this.checkTransform;
+    this.transformCallbackContext = this;
+
+    this.position.set(x, y);
+    this.world.setTo(x, y);
 
 };
 
 Phaser.Graphics.prototype = Object.create(PIXI.Graphics.prototype);
 Phaser.Graphics.prototype.constructor = Phaser.Graphics;
+
+/**
+* @property {number} type - The const type of this object.
+* @readonly
+* @default
+*/
+Phaser.Graphics.prototype.type = Phaser.GRAPHICS;
+
+Phaser.GameObject.mix(Phaser.Image.prototype, Phaser.GameObject.GRAPHICS_LIKE);
 
 /**
 * Automatically called by World.preUpdate.
@@ -116,16 +87,6 @@ Phaser.Graphics.prototype.preUpdate = function () {
 };
 
 /**
-* Override and use this function in your own custom objects to handle any update requirements you may have.
-*
-* @method Phaser.Graphics#update
-* @memberof Phaser.Graphics
-*/
-Phaser.Graphics.prototype.update = function() {
-
-};
-
-/**
 * Automatically called by World.postUpdate.
 * @method Phaser.Graphics.prototype.postUpdate
 */
@@ -146,51 +107,11 @@ Phaser.Graphics.prototype.postUpdate = function () {
 * @method Phaser.Graphics.prototype.destroy
 * @param {boolean} [destroyChildren=true] - Should every child of this object have its destroy method called?
 */
-Phaser.Graphics.prototype.destroy = function(destroyChildren) {
+Phaser.Graphics.prototype.customDestroy = function(destroyChildren) {
 
     if (this.game === null || this.destroyPhase) { return; }
 
-    if (typeof destroyChildren === 'undefined') { destroyChildren = true; }
-
-    this._cache[8] = 1;
-
     this.clear();
-
-    if (this.parent)
-    {
-        if (this.parent instanceof Phaser.Group)
-        {
-            this.parent.remove(this);
-        }
-        else
-        {
-            this.parent.removeChild(this);
-        }
-    }
-
-    var i = this.children.length;
-
-    if (destroyChildren)
-    {
-        while (i--)
-        {
-            this.children[i].destroy(destroyChildren);
-        }
-    }
-    else
-    {
-        while (i--)
-        {
-            this.removeChild(this.children[i]);
-        }
-    }
-
-    this.exists = false;
-    this.visible = false;
-
-    this.game = null;
-
-    this._cache[8] = 0;
 
 };
 

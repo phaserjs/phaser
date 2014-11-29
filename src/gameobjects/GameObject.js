@@ -1,6 +1,5 @@
 /**
-* @namespace Phaser.GameObject
-* @private
+* @class Phaser.GameObject
 */
 Phaser.GameObject = {};
 
@@ -11,7 +10,22 @@ Phaser.GameObject.EVENTS = 1 << 4;
 Phaser.GameObject.PHYSICS = 1 << 5;
 Phaser.GameObject.LIFE = 1 << 6;
 
+/**
+* Supports core, culling, and input - no physics or textures and they are expected to be provided by the implementation.
+*/
+Phaser.GameObject.GRAPHICS_LIKE = Phaser.GameObject.CULLING | Phaser.GameObject.INPUT;
+
+/**
+* A sprite is a "full" game object.
+*/
 Phaser.GameObject.SPRITE_LIKE = Phaser.GameObject.CULLING | Phaser.GameObject.TEXTURE | Phaser.GameObject.INPUT | Phaser.GameObject.PHYSICS | Phaser.GameObject.LIFE;
+
+/**
+* There isn't much difference between an Image (basis of Button) and a Sprite (bases of Particle),
+* but one difference is that an Image doesn't technically support Physics.
+*
+* The Life mixin for compatibility with existing code.
+*/
 Phaser.GameObject.IMAGE_LIKE = Phaser.GameObject.CULLING | Phaser.GameObject.TEXTURE | Phaser.GameObject.INPUT | Phaser.GameObject.LIFE;
 
 /**
@@ -71,22 +85,22 @@ Phaser.GameObject.mixPrototype = function (target, mixin) {
 * All game objects are expected to inherit from PIXI.DisplayObject or otherwise 
 * implementation the methods and properties it defines.
 *
-* @name Phaser.GameObject.Core
+* @name Phaser.GameObject.CoreMixin
 * @interface
 * @protected
 */
 
 /**
-* Mixes Phaser.GameObject.Core into the target.
+* Mixes Phaser.GameObject.CoreMixin into the target.
 *
-* @method Phaser.GameObject.Core.mix
+* @method Phaser.GameObject.CoreMixin.mix
 * @param {object} target - The target prototype/instance.
 * @param {integer} mixinMask - The game object mixins to apply.
 * @protected
 */
 Phaser.GameObject.mix = function (target, mixinMask) {
 
-    Phaser.GameObject.mixPrototype(target, Phaser.GameObject.Core.prototype);
+    Phaser.GameObject.mixPrototype(target, Phaser.GameObject.CoreMixin.prototype);
 
     if (mixinMask & (Phaser.GameObject.INPUT | Phaser.GameObject.CULLING))
     {
@@ -95,32 +109,32 @@ Phaser.GameObject.mix = function (target, mixinMask) {
 
     if (mixinMask & Phaser.GameObject.CULLING)
     {
-        Phaser.GameObject.mixPrototype(target, Phaser.GameObject.Culling.prototype);
+        Phaser.GameObject.mixPrototype(target, Phaser.GameObject.CullingMixin.prototype);
     }
     
     if (mixinMask & Phaser.GameObject.TEXTURE)
     {
-        Phaser.GameObject.mixPrototype(target, Phaser.GameObject.Texture.prototype);
+        Phaser.GameObject.mixPrototype(target, Phaser.GameObject.TextureMixin.prototype);
     }
 
     if (mixinMask & Phaser.GameObject.INPUT)
     {
-        Phaser.GameObject.mixPrototype(target, Phaser.GameObject.Input.prototype);
+        Phaser.GameObject.mixPrototype(target, Phaser.GameObject.InputMixin.prototype);
     }
 
     if (mixinMask & Phaser.GameObject.EVENTS)
     {
-        Phaser.GameObject.mixPrototype(target, Phaser.GameObject.Events.prototype);
+        Phaser.GameObject.mixPrototype(target, Phaser.GameObject.EventsMixin.prototype);
     }
 
     if (mixinMask & Phaser.GameObject.PHYSICS)
     {
-        Phaser.GameObject.mixPrototype(target, Phaser.GameObject.Physics.prototype);
+        Phaser.GameObject.mixPrototype(target, Phaser.GameObject.PhysicsMixin.prototype);
     }
 
     if (mixinMask & Phaser.GameObject.LIFE)
     {
-        Phaser.GameObject.mixPrototype(target, Phaser.GameObject.Life.prototype);
+        Phaser.GameObject.mixPrototype(target, Phaser.GameObject.LifeMixin.prototype);
     }
 
 };
@@ -128,7 +142,7 @@ Phaser.GameObject.mix = function (target, mixinMask) {
 /**
 * Initializes the mixin: call in the constructor, with the "this context", after calling the base constructor.
 *
-* @method Phaser.GameObject.Core.omot
+* @method Phaser.GameObject.CoreMixin.omot
 * @param {integer} mixinMask - The game object mixins to apply.
 * @protected
 */
@@ -195,12 +209,13 @@ Phaser.GameObject.init = function (mixinMask) {
 
 /**
 * The core game object mixin.
-* @class Phaser.GameObject.Core
+* @namespace Phaser.GameObject
+* @class Phaser.GameObject.CoreMixin
 */
-Phaser.GameObject.Core = function () {
+Phaser.GameObject.CoreMixin = function () {
 };
 
-Phaser.GameObject.Core.prototype = /* @lends Phaser.GameObject.Core */ {
+Phaser.GameObject.CoreMixin.prototype = /* @lends Phaser.GameObject.CoreMixin */ {
 
     /**
     * The user defined name given to this game object; useful for debugging, perhaps.
@@ -293,7 +308,7 @@ Phaser.GameObject.Core.prototype = /* @lends Phaser.GameObject.Core */ {
     * Generic preUpdate logic that can be re-used between various game objects.
     * Uses property guards.
     *
-    * @method Phaser.GameObject.Core#preUpdate
+    * @method Phaser.GameObject.CoreMixin#preUpdate
     * @return {boolean} True if the game object should be rendered, otherwise false.
     * @protected
     */
@@ -326,7 +341,7 @@ Phaser.GameObject.Core.prototype = /* @lends Phaser.GameObject.Core */ {
     *
     * If this game object has any children you should call update on them too.
     *
-    * @method Phaser.GameObject.Core#update
+    * @method Phaser.GameObject.CoreMixin#update
     * @protected
     */
     update: function() {
@@ -336,7 +351,7 @@ Phaser.GameObject.Core.prototype = /* @lends Phaser.GameObject.Core */ {
     * Generic postUpdate logic that can be re-used between various game objects.
     * Uses property guards.
     *
-    * @method Phaser.GameObject.Core#postUpdate
+    * @method Phaser.GameObject.CoreMixin#postUpdate
     * @protected
     */
     postUpdate: function() {
@@ -364,7 +379,7 @@ Phaser.GameObject.Core.prototype = /* @lends Phaser.GameObject.Core */ {
     * This does not call `body.preUpdate`, as required by Physics, and it does not automatically
     * update the children.
     *
-    * @method Phaser.GameObject.Core#preUpdateCommon
+    * @method Phaser.GameObject.CoreMixin#preUpdateCommon
     * @return {boolean} True if the game object should be rendered, otherwise false.
     * @protected
     */
@@ -465,7 +480,7 @@ Phaser.GameObject.Core.prototype = /* @lends Phaser.GameObject.Core */ {
     *
     * This does not peform physics post-updates or invoking postUpdate on children.
     *
-    * @method Phaser.GameObject.Core#postUpdateCommon
+    * @method Phaser.GameObject.CoreMixin#postUpdateCommon
     * @protected
     */
     postUpdateCommon: function() {
@@ -487,7 +502,7 @@ Phaser.GameObject.Core.prototype = /* @lends Phaser.GameObject.Core */ {
     /**
     * Brings the gmae object to the top of the display list (ie. Group or another Sprite) it is a child of.
     *
-    * @method Phaser.GameObject.Core#bringToTop
+    * @method Phaser.GameObject.CoreMixin#bringToTop
     * @return {Phaser.Image} This instance.
     */
     bringToTop: function() {
@@ -504,7 +519,7 @@ Phaser.GameObject.Core.prototype = /* @lends Phaser.GameObject.Core */ {
     /**
     * Adjust scaling limits, if set, to this Image.
     *
-    * @method Phaser.GameObject.Core#checkTransform
+    * @method Phaser.GameObject.CoreMixin#checkTransform
     * @private
     * @param {PIXI.Matrix} wt - The updated worldTransform matrix.
     */
@@ -555,7 +570,7 @@ Phaser.GameObject.Core.prototype = /* @lends Phaser.GameObject.Core */ {
     * 
     * Call setScaleMinMax(null) to clear both the scaleMin and scaleMax values.
     *
-    * @method Phaser.GameObject.Core#setScaleMinMax
+    * @method Phaser.GameObject.CoreMixin#setScaleMinMax
     * @param {number|null} minX - The minimum horizontal scale value this Image can scale down to.
     * @param {number|null} minY - The minimum vertical scale value this Image can scale down to.
     * @param {number|null} maxX - The maximum horizontal scale value this Image can scale up to.
@@ -615,7 +630,7 @@ Phaser.GameObject.Core.prototype = /* @lends Phaser.GameObject.Core */ {
     * This places the game object at the given x/y world coordinates and then
     * sets `alive` (if supported), `exists`, `visible`, and `renderable` to true.
     *
-    * @method Phaser.GameObject.Core#reset
+    * @method Phaser.GameObject.CoreMixin#reset
     * @param {number} x - The x coordinate (in world space) to position the Image at.
     * @param {number} y - The y coordinate (in world space) to position the Image at.
     * @return {object} This game object instance.
@@ -625,6 +640,7 @@ Phaser.GameObject.Core.prototype = /* @lends Phaser.GameObject.Core */ {
         this.world.setTo(x, y);
         this.position.x = x;
         this.position.y = y;
+
         if ('alive' in this)
         {
             this.alive = true;
@@ -632,6 +648,14 @@ Phaser.GameObject.Core.prototype = /* @lends Phaser.GameObject.Core */ {
         this.exists = true;
         this.visible = true;
         this.renderable = true;
+
+        if (this.body)
+        {
+            this.body.reset(x, y, false, false);
+        }
+
+        // "is fresh"
+        this._cache[4] = 1;
 
         return this;
 
@@ -643,7 +667,7 @@ Phaser.GameObject.Core.prototype = /* @lends Phaser.GameObject.Core */ {
     * This removes it from its parent group, destroys the event and animation handlers if present
     * and nulls its reference to game, freeing it up for garbage collection.
     *
-    * @method Phaser.GameObject.Core#destroy
+    * @method Phaser.GameObject.CoreMixin#destroy
     * @param {boolean} [destroyChildren=true] - Should every child of this object have its destroy method called?
     */
     destroy: function(destroyChildren) {
@@ -1011,12 +1035,12 @@ Phaser.GameObject.Core.prototype = /* @lends Phaser.GameObject.Core */ {
 
 /**
 * The game object culling mixin.
-* @class Phaser.GameObject.Culling
+* @class Phaser.GameObject.CullingMixin
 */
-Phaser.GameObject.Culling = function () {
+Phaser.GameObject.CullingMixin = function () {
 };
 
-Phaser.GameObject.Culling.prototype = /* @lends Phaser.GameObject.Culling */ {
+Phaser.GameObject.CullingMixin.prototype = /* @lends Phaser.GameObject.CullingMixin */ {
 
     /**
     * Should the sprite be automatically camera culled or not?
@@ -1045,12 +1069,12 @@ Phaser.GameObject.Culling.prototype = /* @lends Phaser.GameObject.Culling */ {
 
 /**
 * The game object texture mixin.
-* @class Phaser.GameObject.Texture
+* @class Phaser.GameObject.TextureMixin
 */
-Phaser.GameObject.Texture = function () {
+Phaser.GameObject.TextureMixin = function () {
 };
 
-Phaser.GameObject.Texture.prototype = /* @lends Phaser.GameObject.Texture */ {
+Phaser.GameObject.TextureMixin.prototype = /* @lends Phaser.GameObject.TextureMixin */ {
 
     /**
     * This is the image or texture used by the Image during rendering.
@@ -1072,7 +1096,7 @@ Phaser.GameObject.Texture.prototype = /* @lends Phaser.GameObject.Texture */ {
     /**
     * The Rectangle used to crop the texture.
     *
-    * Set this via {@link Phaser.GameObject.Texture#crop crop} and use {@link Phaser.GameObject.Texture#updateCrop updateCrop} as required.
+    * Set this via {@link Phaser.GameObject.TextureMixin#crop crop} and use {@link Phaser.GameObject.TextureMixin#updateCrop updateCrop} as required.
     *
     * @property {Phaser.Rectangle} cropRect
     * @default
@@ -1101,7 +1125,7 @@ Phaser.GameObject.Texture.prototype = /* @lends Phaser.GameObject.Texture */ {
     *
     * This causes a WebGL texture update, so use sparingly or in low-intensity portions of your game.
     *
-    * @method Phaser.GameObject.Texture#loadTexture
+    * @method Phaser.GameObject.TextureMixin#loadTexture
     * @param {string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture} key - This is the image or texture used by the Image during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture, BitmapData or PIXI.Texture.
     * @param {string|number} frame - If this Image is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
     */
@@ -1174,7 +1198,7 @@ Phaser.GameObject.Texture.prototype = /* @lends Phaser.GameObject.Texture */ {
     *
     * This is primarily an internal method used by Image.loadTexture.
     *
-    * @method Phaser.GameObject.Texture#setFrame
+    * @method Phaser.GameObject.TextureMixin#setFrame
     * @param {Phaser.Frame} frame - The Frame to be used by the texture.
     */
     setFrame: function(frame) {
@@ -1227,7 +1251,7 @@ Phaser.GameObject.Texture.prototype = /* @lends Phaser.GameObject.Texture */ {
     /**
     * Resets the Texture frame bounds that are used for rendering.
     *
-    * @method Phaser.GameObject.Texture#resetFrame
+    * @method Phaser.GameObject.TextureMixin#resetFrame
     */
     resetFrame: function() {
 
@@ -1247,7 +1271,7 @@ Phaser.GameObject.Texture.prototype = /* @lends Phaser.GameObject.Texture */ {
     *
     * The rectangle object can be a Phaser.Rectangle or any object so long as it has public x, y, width and height properties.
     *
-    * @method Phaser.GameObject.Texture#crop
+    * @method Phaser.GameObject.TextureMixin#crop
     * @param {?Phaser.Rectangle} rect - The Rectangle used during cropping. Pass null or no parameters to clear a previously set crop rectangle.
     * @param {boolean} [copy=false] - If false Sprite.cropRect will be a reference to the given rect. If true it will copy the rect values into a local Sprite.cropRect object.
     */
@@ -1288,7 +1312,7 @@ Phaser.GameObject.Texture.prototype = /* @lends Phaser.GameObject.Texture */ {
     * If the rectangle supplied to `crop` has been modified (and was not copied),
     * then this method needs to be called to update the internal crop/frame data.
     *
-    * @method Phaser.GameObject.Texture#updateCrop
+    * @method Phaser.GameObject.TextureMixin#updateCrop
     */
     updateCrop: function () {
 
@@ -1428,12 +1452,12 @@ Phaser.GameObject.Texture.prototype = /* @lends Phaser.GameObject.Texture */ {
 
 /**
 * The game object input mixin.
-* @class Phaser.GameObject.Input
+* @class Phaser.GameObject.InputMixin
 */
-Phaser.GameObject.Input = function () {
+Phaser.GameObject.InputMixin = function () {
 };
 
-Phaser.GameObject.Input.prototype = /* @lends Phaser.GameObject.Input */ {
+Phaser.GameObject.InputMixin.prototype = /* @lends Phaser.GameObject.InputMixin */ {
 
     /**
     * The Input Handler for this object. Must be enabled with `inputEnabled` before use.
@@ -1485,12 +1509,12 @@ Phaser.GameObject.Input.prototype = /* @lends Phaser.GameObject.Input */ {
 
 /**
 * The game object input mixin.
-* @class Phaser.GameObject.Events
+* @class Phaser.GameObject.EventsMixin
 */
-Phaser.GameObject.Events = function () {
+Phaser.GameObject.EventsMixin = function () {
 };
 
-Phaser.GameObject.Events.prototype = /* @lends Phaser.GameObject.Events */ {
+Phaser.GameObject.EventsMixin.prototype = /* @lends Phaser.GameObject.EventsMixin */ {
 
     /**
     * The Events you can subscribe to that are dispatched when certain things happen on this Image or its components.   
@@ -1503,12 +1527,12 @@ Phaser.GameObject.Events.prototype = /* @lends Phaser.GameObject.Events */ {
 
 /**
 * The game object physics mixin.
-* @class Phaser.GameObject.Physics
+* @class Phaser.GameObject.PhysicsMixin
 */
-Phaser.GameObject.Physics = function () {
+Phaser.GameObject.PhysicsMixin = function () {
 };
 
-Phaser.GameObject.Physics.prototype = /* @lends Phaser.GameObject.Physics */ {
+Phaser.GameObject.PhysicsMixin.prototype = /* @lends Phaser.GameObject.PhysicsMixin */ {
 
     /**
     * By default game objects are not part of any physics system and body will be `null`.
@@ -1528,12 +1552,12 @@ Phaser.GameObject.Physics.prototype = /* @lends Phaser.GameObject.Physics */ {
 
 /**
 * The game object life mixin.
-* @class Phaser.GameObject.Life
+* @class Phaser.GameObject.LifeMixin
 */
-Phaser.GameObject.Life = function () {
+Phaser.GameObject.LifeMixin = function () {
 };
 
-Phaser.GameObject.Life.prototype = /* @lends Phaser.GameObject.Life */ {
+Phaser.GameObject.LifeMixin.prototype = /* @lends Phaser.GameObject.LifeMixin */ {
 
     /**
     * Is this game object 'alive'?
@@ -1559,7 +1583,7 @@ Phaser.GameObject.Life.prototype = /* @lends Phaser.GameObject.Life */ {
     * A resurrected Image has its `alive`, `exists`, and `visible` properties set to true
     * and the `onRevived` event will be dispatched.
     *
-    * @method Phaser.GameObject.Texture#revive
+    * @method Phaser.GameObject.LifeMixin#revive
     * @return {object} This game object instance.
     */
     revive: function() {
@@ -1584,9 +1608,9 @@ Phaser.GameObject.Life.prototype = /* @lends Phaser.GameObject.Life */ {
     * and the `onKilled` event will be dispatched.
     *
     * Killing a game object is a way to recycle it a parent Group/pool, but it doesn't free it from memory.
-    * Use {@link Phaser.GameObject.Core#destroy destrop} if the sprite is no longer needed.
+    * Use {@link Phaser.GameObject.CoreMixin#destroy destrop} if the sprite is no longer needed.
     *
-    * @method Phaser.GameObject.Texture#kill
+    * @method Phaser.GameObject.LifeMixin#kill
     * @return {object} This game object instance.
     */
     kill: function() {

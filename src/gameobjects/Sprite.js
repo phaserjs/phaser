@@ -12,16 +12,16 @@
 * events (via Sprite.events), animation (via Sprite.animations), camera culling and more. Please see the Examples for use cases.
 *
 * @class Phaser.Sprite
-* @constructor
 * @extends PIXI.Sprite
 * -- Google Closure Compiler and future jsdoc can use @implements instead of @extends
-* @extends Phaser.GameObject.Core
-* @extends Phaser.GameObject.Culling
-* @extends Phaser.GameObject.Texture
-* @extends Phaser.GameObject.Input
-* @extends Phaser.GameObject.Events
-* @extends Phaser.GameObject.Physics
-* @extends Phaser.GameObject.Life
+* @extends Phaser.GameObject.CoreMixin
+* @extends Phaser.GameObject.CullingMixin
+* @extends Phaser.GameObject.TextureMixin
+* @extends Phaser.GameObject.InputMixin
+* @extends Phaser.GameObject.EventsMixin
+* @extends Phaser.GameObject.PhysicsMixin
+* @extends Phaser.GameObject.LifeMixin
+* @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
 * @param {number} x - The x coordinate (in world space) to position the Sprite at.
 * @param {number} y - The y coordinate (in world space) to position the Sprite at.
@@ -82,162 +82,6 @@ Phaser.Sprite.prototype.constructor = Phaser.Sprite;
 Phaser.Sprite.prototype.type = Phaser.SPRITE;
 
 Phaser.GameObject.mix(Phaser.Image.prototype, Phaser.GameObject.SPRITE_LIKE);
-
-/**
-* Internal function called by the World preUpdate cycle.
-*
-* @method Phaser.Sprite#_preUpdate
-* @memberof Phaser.Sprite
-* @return {boolean} True if the Sprite was rendered, otherwise false.
-* @protected
-*/
-Phaser.Sprite.prototype._preUpdate = function() {
-
-    if (this._cache[4] === 1 && this.exists)
-    {
-        this.world.setTo(this.parent.position.x + this.position.x, this.parent.position.y + this.position.y);
-        this.worldTransform.tx = this.world.x;
-        this.worldTransform.ty = this.world.y;
-        this._cache[0] = this.world.x;
-        this._cache[1] = this.world.y;
-        this._cache[2] = this.rotation;
-
-        if (this.body)
-        {
-            this.body.preUpdate();
-        }
-
-        this._cache[4] = 0;
-
-        return false;
-    }
-
-    this._cache[0] = this.world.x;
-    this._cache[1] = this.world.y;
-    this._cache[2] = this.rotation;
-
-    if (!this.exists || !this.parent.exists)
-    {
-        //  Reset the renderOrderID
-        this._cache[3] = -1;
-        return false;
-    }
-
-    //  Only apply lifespan decrement in the first updateLogic pass.
-    if (this.lifespan > 0 && this.game.updateNumber === 0)
-    {
-        this.lifespan -= this.game.time.physicsElapsedMS;
-
-        if (this.lifespan <= 0)
-        {
-            this.kill();
-            return false;
-        }
-    }
-
-    //  Cache the bounds if we need it
-    if (this.autoCull || this.checkWorldBounds)
-    {
-        this._bounds.copyFrom(this.getBounds());
-
-        this._bounds.x += this.game.camera.view.x;
-        this._bounds.y += this.game.camera.view.y;
-
-        if (this.autoCull)
-        {
-            //  Won't get rendered but will still get its transform updated
-            if (this.game.world.camera.view.intersects(this._bounds))
-            {
-                this.renderable = true;
-                this.game.world.camera.totalInView++;
-            }
-            else
-            {
-                this.renderable = false;
-            }
-        }
-
-        if (this.checkWorldBounds)
-        {
-            //  The Sprite is already out of the world bounds, so let's check to see if it has come back again
-            if (this._cache[5] === 1 && this.game.world.bounds.intersects(this._bounds))
-            {
-                this._cache[5] = 0;
-                this.events.onEnterBounds.dispatch(this);
-            }
-            else if (this._cache[5] === 0 && !this.game.world.bounds.intersects(this._bounds))
-            {
-                //  The Sprite WAS in the screen, but has now left.
-                this._cache[5] = 1;
-                this.events.onOutOfBounds.dispatch(this);
-
-                if (this.outOfBoundsKill)
-                {
-                    this.kill();
-                    return false;
-                }
-            }
-        }
-    }
-
-    this.world.setTo(this.game.camera.x + this.worldTransform.tx, this.game.camera.y + this.worldTransform.ty);
-
-    if (this.visible)
-    {
-        this._cache[3] = this.game.stage.currentRenderOrderID++;
-    }
-
-    this.animations.update();
-
-    if (this.body)
-    {
-        this.body.preUpdate();
-    }
-
-    //  Update any Children
-    for (var i = 0, len = this.children.length; i < len; i++)
-    {
-        this.children[i].preUpdate();
-    }
-
-    return true;
-
-};
-
-
-/**
-* Internal function called by the World postUpdate cycle.
-*
-* @method Phaser.Sprite#_postUpdate
-* @memberof Phaser.Sprite
-* @protected
-*/
-Phaser.Sprite.prototype._postUpdate = function() {
-
-    if (this.key instanceof Phaser.BitmapData)
-    {
-        this.key.render();
-    }
-
-    if (this.exists && this.body)
-    {
-        this.body.postUpdate();
-    }
-
-    //  Fixed to Camera?
-    if (this._cache[7] === 1)
-    {
-        this.position.x = (this.game.camera.view.x + this.cameraOffset.x) / this.game.camera.scale.x;
-        this.position.y = (this.game.camera.view.y + this.cameraOffset.y) / this.game.camera.scale.y;
-    }
-
-    //  Update any Children
-    for (var i = 0, len = this.children.length; i < len; i++)
-    {
-        this.children[i].postUpdate();
-    }
-
-};
 
 /**
 * Brings a 'dead' sprite back to life.
@@ -302,25 +146,9 @@ Phaser.Sprite.prototype.reset = function(x, y, health) {
 
     if (typeof health === 'undefined') { health = 1; }
 
-    this.world.setTo(x, y);
-    this.position.x = x;
-    this.position.y = y;
-    this.alive = true;
-    this.exists = true;
-    this.visible = true;
-    this.renderable = true;
-    this._outOfBoundsFired = false;
-
     this.health = health;
 
-    if (this.body)
-    {
-        this.body.reset(x, y, false, false);
-    }
-
-    this._cache[4] = 1;
-
-    return this;
+    return Phaser.GameObject.Core.reset.call(this, x, y);
 
 };
 

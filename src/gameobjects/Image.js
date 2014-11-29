@@ -12,15 +12,16 @@
 *
 * The documentation uses 'sprite' to generically talk about Images and other Phaser.Sprite objects, which share much of the same behavior.
 *
-* @constructor Phaser.Image
+* @class Phaser.Image
 * @extends PIXI.Sprite
 * -- Google Closure Compiler and future jsdoc can use @implements instead of @extends
-* @extends Phaser.GameObject.Core
-* @extends Phaser.GameObject.Culling
-* @extends Phaser.GameObject.Texture
-* @extends Phaser.GameObject.Input
-* @extends Phaser.GameObject.Events
-* @extends Phaser.GameObject.Life
+* @extends Phaser.GameObject.CoreMixin
+* @extends Phaser.GameObject.CullingMixin
+* @extends Phaser.GameObject.TextureMixin
+* @extends Phaser.GameObject.InputMixin
+* @extends Phaser.GameObject.EventsMixin
+* @extends Phaser.GameObject.LifeMixin
+* @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
 * @param {number} x - The x coordinate of the Image. The coordinate is relative to any parent container this Image may be in.
 * @param {number} y - The y coordinate of the Image. The coordinate is relative to any parent container this Image may be in.
