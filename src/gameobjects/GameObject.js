@@ -39,22 +39,30 @@
 */
 Phaser.GameObject = {};
 
-Phaser.GameObject.CULLING = 1 << 1;
-Phaser.GameObject.TEXTURE = 1 << 2;
-Phaser.GameObject.INPUT = 1 << 3;
-Phaser.GameObject.EVENTS = 1 << 4;
-Phaser.GameObject.PHYSICS = 1 << 5;
-Phaser.GameObject.LIFE = 1 << 6;
+/**
+* Various traits that a game object can have.
+* @protected
+*/
+Phaser.GameObject.Traits = {
+    CULLING: 1 << 1,
+    TEXTURE: 1 << 2,
+    INPUT: 1 << 3,
+    EVENTS: 1 << 4,
+    PHYSICS: 1 << 5,
+    LIFE: 1 << 6
+};
+
+var Traits = Phaser.GameObject.Traits;
 
 /**
 * Supports core, culling, and input - no physics or textures and they are expected to be provided by the implementation.
 */
-Phaser.GameObject.GRAPHICS_LIKE = Phaser.GameObject.CULLING | Phaser.GameObject.INPUT;
+Phaser.GameObject.GRAPHICS_LIKE = Traits.CULLING | Traits.INPUT;
 
 /**
 * A sprite is a "full" game object.
 */
-Phaser.GameObject.SPRITE_LIKE = Phaser.GameObject.CULLING | Phaser.GameObject.TEXTURE | Phaser.GameObject.INPUT | Phaser.GameObject.PHYSICS | Phaser.GameObject.LIFE;
+Phaser.GameObject.SPRITE_LIKE = Traits.CULLING | Traits.TEXTURE | Traits.INPUT | Traits.PHYSICS | Traits.LIFE;
 
 /**
 * There isn't much difference between an Image (basis of Button) and a Sprite (bases of Particle),
@@ -62,7 +70,7 @@ Phaser.GameObject.SPRITE_LIKE = Phaser.GameObject.CULLING | Phaser.GameObject.TE
 *
 * The Life mixin for compatibility with existing code.
 */
-Phaser.GameObject.IMAGE_LIKE = Phaser.GameObject.CULLING | Phaser.GameObject.TEXTURE | Phaser.GameObject.INPUT | Phaser.GameObject.LIFE;
+Phaser.GameObject.IMAGE_LIKE = Traits.CULLING | Traits.TEXTURE | Traits.INPUT | Traits.LIFE;
 
 /**
 * Mixes in mixin with target.
@@ -95,46 +103,48 @@ Phaser.GameObject.mixPrototype = function (target, mixin) {
 /**
 * Mixes Phaser.GameObject.CoreMixin into the target.
 *
-* @method Phaser.GameObject.CoreMixin.mix
 * @param {object} target - The target prototype/instance.
-* @param {integer} mixinMask - The game object mixins to apply.
+* @param {integer} traits - The game object Traits to apply.
 * @protected
 */
-Phaser.GameObject.mix = function (target, mixinMask) {
+Phaser.GameObject.mix = function (target, traits) {
+
+    // Remember the applied traits
+    target.gameObjectTraits = traits;
 
     Phaser.GameObject.mixPrototype(target, Phaser.GameObject.CoreMixin.prototype);
 
-    if (mixinMask & (Phaser.GameObject.INPUT | Phaser.GameObject.CULLING))
+    if (traits & (Traits.INPUT | Traits.CULLING))
     {
-        mixinMask |= Phaser.GameObject.EVENTS;
+        traits |= Traits.EVENTS;
     }
 
-    if (mixinMask & Phaser.GameObject.CULLING)
+    if (traits & Traits.CULLING)
     {
         Phaser.GameObject.mixPrototype(target, Phaser.GameObject.CullingMixin.prototype);
     }
     
-    if (mixinMask & Phaser.GameObject.TEXTURE)
+    if (traits & Traits.TEXTURE)
     {
         Phaser.GameObject.mixPrototype(target, Phaser.GameObject.TextureMixin.prototype);
     }
 
-    if (mixinMask & Phaser.GameObject.INPUT)
+    if (traits & Traits.INPUT)
     {
         Phaser.GameObject.mixPrototype(target, Phaser.GameObject.InputMixin.prototype);
     }
 
-    if (mixinMask & Phaser.GameObject.EVENTS)
+    if (traits & Traits.EVENTS)
     {
         Phaser.GameObject.mixPrototype(target, Phaser.GameObject.EventsMixin.prototype);
     }
 
-    if (mixinMask & Phaser.GameObject.PHYSICS)
+    if (traits & Traits.PHYSICS)
     {
         Phaser.GameObject.mixPrototype(target, Phaser.GameObject.PhysicsMixin.prototype);
     }
 
-    if (mixinMask & Phaser.GameObject.LIFE)
+    if (traits & Traits.LIFE)
     {
         Phaser.GameObject.mixPrototype(target, Phaser.GameObject.LifeMixin.prototype);
     }
@@ -145,14 +155,16 @@ Phaser.GameObject.mix = function (target, mixinMask) {
 * Initializes the mixin: call in the constructor, with the "this context", after calling the base constructor.
 *
 * @method Phaser.GameObject.CoreMixin.omot
-* @param {integer} mixinMask - The game object mixins to apply.
+* @param {integer} [traits=(from `mix`)] - The game object Traits to apply.
 * @protected
 */
-Phaser.GameObject.init = function (mixinMask) {
+Phaser.GameObject.init = function (traits) {
 
-    if (mixinMask & (Phaser.GameObject.INPUT | Phaser.GameObject.CULLING))
+    if (typeof traits === 'undefined') { traits = this.gameObjectTraits; }
+
+    if (traits & (Traits.INPUT | Traits.CULLING))
     {
-        mixinMask |= Phaser.GameObject.EVENTS;
+        traits |= Traits.EVENTS;
     }
 
     // Cache used by `exists` - and maybe others
@@ -178,12 +190,12 @@ Phaser.GameObject.init = function (mixinMask) {
     // Added with `enableInput`
     this.input = null;
 
-    if (mixinMask & Phaser.GameObject.EVENTS)
+    if (traits & Traits.EVENTS)
     {
         this.events = new Phaser.Events(this);
     }
 
-    if (mixinMask & Phaser.GameObject.TEXTURE)
+    if (traits & Traits.TEXTURE)
     {
         // `key` not available, should be set externally
         // this.key = key;
@@ -194,13 +206,13 @@ Phaser.GameObject.init = function (mixinMask) {
         // this._frame = null;
     }
 
-    if (mixinMask & Phaser.GameObject.PHYSICS)
+    if (traits & Traits.PHYSICS)
     {
         // Physics is a special-case and `body` is expected to be a hasOwnProperty
         this.body = null;
     }
 
-    if (mixinMask & Phaser.GameObject.LIFE)
+    if (traits & Traits.LIFE)
     {
         this.alive = true;
     }
@@ -218,6 +230,13 @@ Phaser.GameObject.CoreMixin = function () {
 };
 
 Phaser.GameObject.CoreMixin.prototype = /* @lends Phaser.GameObject.CoreMixin */ {
+
+    /**
+    * The game object Traits established with `mix`.
+    * @property {integer} gameObjectTraits
+    * @protected
+    */
+    // Property assigned in `mix`
 
     /**
     * The user defined name given to this game object; useful for debugging, perhaps.

@@ -31,7 +31,7 @@ Phaser.Graphics = function (game, x, y) {
 
     PIXI.Graphics.call(this);
 
-    Phaser.GameObject.init.call(this, Phaser.GameObject.GRAPHICS_LIKE);
+    Phaser.GameObject.init.call(this);
 
     this.transformCallback = this.checkTransform;
     this.transformCallbackContext = this;

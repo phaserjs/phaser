@@ -90,7 +90,7 @@ Phaser.Text = function (game, x, y, text, style) {
 
     PIXI.Text.call(this, text, this.style);
 
-    Phaser.GameObject.init.call(this, Phaser.GameObject.GRAPHICS_LIKE);
+    Phaser.GameObject.init.call(this);
 
     this.transformCallback = this.checkTransform;
     this.transformCallbackContext = this;

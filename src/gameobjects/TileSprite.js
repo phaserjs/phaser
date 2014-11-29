@@ -43,7 +43,7 @@ Phaser.TileSprite = function (game, x, y, width, height, key, frame) {
 
     PIXI.TilingSprite.call(this, PIXI.TextureCache['__default'], width, height);
 
-    Phaser.GameObject.init.call(this, Phaser.GameObject.SPRITE_LIKE);
+    Phaser.GameObject.init.call(this);
 
     /**
     * @property {Phaser.Point} _scroll - Internal cache var.

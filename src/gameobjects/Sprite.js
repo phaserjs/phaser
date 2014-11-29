@@ -43,7 +43,7 @@ Phaser.Sprite = function (game, x, y, key, frame) {
 
     PIXI.Sprite.call(this, PIXI.TextureCache['__default']);
 
-    Phaser.GameObject.init.call(this, Phaser.GameObject.SPRITE_LIKE);
+    Phaser.GameObject.init.call(this);
 
     /**
     * @property {number} health - Health value. Used in combination with damage() to allow for quick killing of Sprites.

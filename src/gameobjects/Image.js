@@ -43,7 +43,7 @@ Phaser.Image = function (game, x, y, key, frame) {
 
     PIXI.Sprite.call(this, PIXI.TextureCache['__default']);
 
-    Phaser.GameObject.init.call(this, Phaser.GameObject.IMAGE_LIKE);
+    Phaser.GameObject.init.call(this);
 
     this.transformCallback = this.checkTransform;
     this.transformCallbackContext = this;
