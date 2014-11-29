@@ -20,8 +20,8 @@
             "./src/system/", 
             "./src/tilemap/", 
             "./src/time/", 
-            "./src/tween/", 
-            "./src/utils/" 
+            "./src/tween/",
+            "./src/utils/"
         ],
         "exclude": [
             "./src/physics/p2/p2.js"
@@ -30,6 +30,7 @@
         "excludePattern": "(^|\\/|\\\\)_"
     },
     "plugins"   : [
+        "./tasks/jsdoc-plugins/filterpixi",
         "./tasks/jsdoc-plugins/proptomember",
         "./tasks/jsdoc-plugins/sourceproxy",
         "plugins/markdown"
