@@ -51,65 +51,13 @@ Phaser.Graphics.prototype.constructor = Phaser.Graphics;
 */
 Phaser.Graphics.prototype.type = Phaser.GRAPHICS;
 
-Phaser.GameObject.mix(Phaser.Image.prototype, Phaser.GameObject.GRAPHICS_LIKE);
+Phaser.GameObject.mix(Phaser.Graphics.prototype, Phaser.GameObject.GRAPHICS_LIKE);
 
 /**
-* Automatically called by World.preUpdate.
-* @method Phaser.Graphics.prototype.preUpdate
+* @method Phaser.Graphics.prototype.destroyCustom
+* @protected
 */
-Phaser.Graphics.prototype.preUpdate = function () {
-
-    this._cache[0] = this.world.x;
-    this._cache[1] = this.world.y;
-    this._cache[2] = this.rotation;
-
-    if (!this.exists || !this.parent.exists)
-    {
-        this.renderOrderID = -1;
-        return false;
-    }
-
-    if (this.autoCull)
-    {
-        //  Won't get rendered but will still get its transform updated
-        this.renderable = this.game.world.camera.screenView.intersects(this.getBounds());
-    }
-
-    this.world.setTo(this.game.camera.x + this.worldTransform.tx, this.game.camera.y + this.worldTransform.ty);
-
-    if (this.visible)
-    {
-        this._cache[3] = this.game.stage.currentRenderOrderID++;
-    }
-
-    return true;
-
-};
-
-/**
-* Automatically called by World.postUpdate.
-* @method Phaser.Graphics.prototype.postUpdate
-*/
-Phaser.Graphics.prototype.postUpdate = function () {
-
-    //  Fixed to Camera?
-    if (this._cache[7] === 1)
-    {
-        this.position.x = (this.game.camera.view.x + this.cameraOffset.x) / this.game.camera.scale.x;
-        this.position.y = (this.game.camera.view.y + this.cameraOffset.y) / this.game.camera.scale.y;
-    }
-
-};
-
-/**
-* Destroy this Graphics instance.
-*
-* @method Phaser.Graphics.prototype.destroy
-* @param {boolean} [destroyChildren=true] - Should every child of this object have its destroy method called?
-*/
-Phaser.Graphics.prototype.customDestroy = function(destroyChildren) {
-
-    if (this.game === null || this.destroyPhase) { return; }
+Phaser.Graphics.prototype.destroyCustom = function() {
 
     this.clear();
 

@@ -305,38 +305,6 @@ Phaser.GameObject.CoreMixin.prototype = /* @lends Phaser.GameObject.CoreMixin */
     _bounds: null,
 
     /**
-    * Generic preUpdate logic that can be re-used between various game objects.
-    * Uses property guards.
-    *
-    * @method Phaser.GameObject.CoreMixin#preUpdate
-    * @return {boolean} True if the game object should be rendered, otherwise false.
-    * @protected
-    */
-    preUpdate: function() {
-
-        var rendering = this.preUpdateCommon();
-
-        if (this.exists && this.body)
-        {
-            this.body.preUpdate();
-        }
-
-        if (!rendering)
-        {
-            return false;
-        }
-
-        //  Update any Children
-        for (var i = 0, len = this.children.length; i < len; i++)
-        {
-            this.children[i].preUpdate();
-        }
-
-        return true;
-
-    },
-
-    /**
     * Override and this method for custom update logic.
     *
     * If this game object has any children you should call update on them too.
@@ -348,42 +316,14 @@ Phaser.GameObject.CoreMixin.prototype = /* @lends Phaser.GameObject.CoreMixin */
     },
 
     /**
-    * Generic postUpdate logic that can be re-used between various game objects.
+    * Generic preUpdate logic that can be re-used between various game objects.
     * Uses property guards.
     *
-    * @method Phaser.GameObject.CoreMixin#postUpdate
-    * @protected
-    */
-    postUpdate: function() {
-
-        if (this.exists && this.body)
-        {
-            this.body.postUpdate();
-        }
-
-        this.postUpdateCommon();
-        
-        //  Update any Children
-        for (var i = 0, len = this.children.length; i < len; i++)
-        {
-            this.children[i].postUpdate();
-        }
-
-    },
-
-    /**
-    * Generic/common preUpdate logic.
-    *
-    * This takes care of basic world transforms, cache updates, and culling (if enabled), etc.
-    *
-    * This does not call `body.preUpdate`, as required by Physics, and it does not automatically
-    * update the children.
-    *
-    * @method Phaser.GameObject.CoreMixin#preUpdateCommon
+    * @method Phaser.GameObject.CoreMixin#preUpdate
     * @return {boolean} True if the game object should be rendered, otherwise false.
     * @protected
     */
-    preUpdateCommon: function() {
+    preUpdate: function() {
 
         if (this._cache[4] === 1 && this.exists)
         {
@@ -395,6 +335,11 @@ Phaser.GameObject.CoreMixin.prototype = /* @lends Phaser.GameObject.CoreMixin */
             this._cache[2] = this.rotation;
             this._cache[3] = -1;
             this._cache[4] = 0;
+
+            if (this.exists && this.body)
+            {
+                this.body.preUpdate();
+            }
 
             return false;
         }
@@ -436,18 +381,23 @@ Phaser.GameObject.CoreMixin.prototype = /* @lends Phaser.GameObject.CoreMixin */
                 if (this._cache[5] === 1 && worldBoundIntersect)
                 {
                     this._cache[5] = 0;
-                    this.events.onEnterBounds.dispatch(this);
+                    if (this.events)
+                    {
+                        this.events.onEnterBounds.dispatch(this);
+                    }
                 }
                 else if (this._cache[5] === 0 && !worldBoundIntersect)
                 {
                     //  The display object WAS in the screen, but has now left.
                     this._cache[5] = 1;
-                    this.events.onOutOfBounds.dispatch(this);
+                    if (this.events)
+                    {
+                        this.events.onOutOfBounds.dispatch(this);
+                    }
 
                     if (this.outOfBoundsKill)
                     {
                         this.kill();
-                        return false;
                     }
                 }
             }
@@ -456,34 +406,54 @@ Phaser.GameObject.CoreMixin.prototype = /* @lends Phaser.GameObject.CoreMixin */
         // Update the world position
         this.world.setTo(this.game.camera.x + this.worldTransform.tx, this.game.camera.y + this.worldTransform.ty);
 
+        this.preUpdateCustom();
+
+        if (!this.exists)
+        {
+            // May no longer exist after preUpdateCustom
+            return false;
+        }
+
         if (this.animations)
         {
             this.animations.update();
         }
 
+        if (this.exists && this.body)
+        {
+            this.body.preUpdate();
+        }
+
         if (this.visible && this.renderable)
         {
             this._cache[3] = this.game.stage.currentRenderOrderID++;
-            return true;
         }
         else
         {
             return false;
         }
 
+        //  Update any Children
+        if (this.children && this.children.length)
+        {
+            for (var i = 0, len = this.children.length; i < len; i++)
+            {
+                this.children[i].preUpdate();
+            }
+        }
+
+        return true;
+
     },
 
     /**
-    * Generic/common postUpdate logic.
+    * Generic postUpdate logic that can be re-used between various game objects.
+    * Uses property guards.
     *
-    * This takes care of basic pinning the object to the camera and special texture/key rendering.
-    *
-    * This does not peform physics post-updates or invoking postUpdate on children.
-    *
-    * @method Phaser.GameObject.CoreMixin#postUpdateCommon
+    * @method Phaser.GameObject.CoreMixin#postUpdate
     * @protected
     */
-    postUpdateCommon: function() {
+    postUpdate: function() {
 
         if (this.key instanceof Phaser.BitmapData)
         {
@@ -493,10 +463,54 @@ Phaser.GameObject.CoreMixin.prototype = /* @lends Phaser.GameObject.CoreMixin */
         //  Fixed to Camera?
         if (this._cache[7] === 1)
         {
-            this.position.x = (this.game.camera.view.x + this.cameraOffset.x) / this.game.camera.scale.x;
-            this.position.y = (this.game.camera.view.y + this.cameraOffset.y) / this.game.camera.scale.y;
+            var camera = this.game.camera;
+            this.position.x = (camera.view.x + this.cameraOffset.x) / camera.scale.x;
+            this.position.y = (camera.view.y + this.cameraOffset.y) / camera.scale.y;
         }
 
+        this.postUpdateCustom();
+
+        if (this.exists && this.body)
+        {
+            this.body.postUpdate();
+        }
+
+        //  Update any Children
+        if (this.children && this.children.length)
+        {
+            for (var i = 0, len = this.children.length; i < len; i++)
+            {
+                this.children[i].postUpdate();
+            }
+        }
+
+    },
+
+    /**
+    * Called from the default `preUpdate`.
+    *
+    * It is called after the `world` has been updated but before animations (if applicable),
+    * physics (if applicable), and children (if applicable) are updates.
+    *
+    * It is called only when the game object is not marked as "fresh",
+    * and the game object exists. (The game object may have been killed by culling.)
+    *
+    * @method Phaser.GameObject.CoreMixin#update
+    * @protected
+    */
+    preUpdateCustom: function() {
+    },
+
+    /**
+    * Called from the default `postUpdate`.
+    *
+    * This is called after any internal rendering cleanup and after the
+    * position has been adjusted if fixedToCamera.
+    *
+    * @method Phaser.GameObject.CoreMixin#update
+    * @protected
+    */
+    postUpdateCustom: function() {
     },
 
     /**
@@ -683,6 +697,8 @@ Phaser.GameObject.CoreMixin.prototype = /* @lends Phaser.GameObject.CoreMixin */
             this.events.onDestroy.dispatch(this);
         }
 
+        this.destroyCustom();
+
         if (this.filters)
         {
             this.filters = null;
@@ -753,6 +769,17 @@ Phaser.GameObject.CoreMixin.prototype = /* @lends Phaser.GameObject.CoreMixin */
 
         this._cache[8] = 0;
 
+    },
+
+    /**
+    * This is called by `destroy`.
+    *
+    * It is a suitable place for custom cleanup.
+    *
+    * @method Phaser.GameObject.CoreMixin#destroyCustom
+    * @protected
+    */
+    destroyCustom: function () {
     },
 
     /**

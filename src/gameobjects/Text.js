@@ -118,14 +118,10 @@ Phaser.Text.prototype.type = Phaser.TEXT;
 Phaser.GameObject.mix(Phaser.Image.prototype, Phaser.GameObject.GRAPHICS_LIKE);
 
 /**
-* @method Phaser.Text#destroy
-* @param {boolean} [destroyChildren=true] - Should every child of this object have its destroy method called?
+* @method Phaser.Text#destroyCustom
+* @protected
 */
-Phaser.Text.prototype.customDestroy = function (destroyChildren) {
-
-    if (this.game === null || this.destroyPhase) { return; }
-
-    if (typeof destroyChildren === 'undefined') { destroyChildren = true; }
+Phaser.Text.prototype.destroyCustom = function () {
 
     if (this.canvas.parentNode)
     {

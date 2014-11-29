@@ -84,19 +84,7 @@ Phaser.GameObject.mix(Phaser.Image.prototype, Phaser.GameObject.SPRITE_LIKE);
 * @method Phaser.Rope#preUpdate
 * @memberof Phaser.Rope
 */
-Phaser.Rope.prototype.preUpdate = function() {
-
-    var rendering = this.preUpdateCommon();
-    
-    if (this.exists && this.body)
-    {
-        this.body.preUpdate();
-    }
-
-    if (!rendering)
-    {
-        return false;
-    }
+Phaser.Rope.prototype.preUpdateCustom = function() {
 
     if (this._scroll.x !== 0)
     {
@@ -107,14 +95,6 @@ Phaser.Rope.prototype.preUpdate = function() {
     {
         this.tilePosition.y += this._scroll.y * this.game.time.physicsElapsed;
     }
-
-    //  Update any Children
-    for (var i = 0, len = this.children.length; i < len; i++)
-    {
-        this.children[i].preUpdate();
-    }
-
-    return true;
 
 };
 

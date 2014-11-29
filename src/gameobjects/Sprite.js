@@ -83,6 +83,20 @@ Phaser.Sprite.prototype.type = Phaser.SPRITE;
 
 Phaser.GameObject.mix(Phaser.Image.prototype, Phaser.GameObject.SPRITE_LIKE);
 
+Phaser.Sprite.prototype.preUpdateCustom = function () {
+
+    if (this.lifespan > 0)
+    {
+        this.lifespan -= this.game.time.physicsElapsedMS;
+
+        if (this.lifespan <= 0)
+        {
+            this.kill();
+        }
+    }
+
+};
+
 /**
 * Brings a 'dead' sprite back to life.
 *
