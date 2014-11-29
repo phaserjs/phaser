@@ -45,6 +45,12 @@ Phaser.TileSprite = function (game, x, y, width, height, key, frame) {
 
     Phaser.GameObject.init.call(this, Phaser.GameObject.SPRITE_LIKE);
 
+    /**
+    * @property {Phaser.Point} _scroll - Internal cache var.
+    * @private
+    */
+    this._scroll = new Phaser.Point();
+
     this.transformCallback = this.checkTransform;
     this.transformCallbackContext = this;
 
@@ -65,7 +71,7 @@ Phaser.TileSprite.prototype.constructor = Phaser.TileSprite;
 */
 Phaser.TileSprite.prototype.type = Phaser.TILESPRITE;
 
-Phaser.GameObject.mix(Phaser.Image.prototype, Phaser.GameObject.SPRITE_LIKE);
+Phaser.GameObject.mix(Phaser.TileSprite.prototype, Phaser.GameObject.SPRITE_LIKE);
 
 /**
 * Automatically called by World.preUpdate.
@@ -150,6 +156,6 @@ Phaser.TileSprite.prototype.reset = function(x, y) {
     this.tilePosition.x = 0;
     this.tilePosition.y = 0;
 
-    return Phaser.GameObject.Core.reset.call(this, x, y);
+    return Phaser.GameObject.CoreMixin.prototype.reset.call(this, x, y);
 
 };

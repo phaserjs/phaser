@@ -76,7 +76,7 @@ Phaser.Rope.prototype.constructor = Phaser.Rope;
 */
 Phaser.Rope.prototype.type = Phaser.ROPE;
 
-Phaser.GameObject.mix(Phaser.Image.prototype, Phaser.GameObject.SPRITE_LIKE);
+Phaser.GameObject.mix(Phaser.Rope.prototype, Phaser.GameObject.SPRITE_LIKE);
 
 /**
 * Automatically called by World.preUpdate.

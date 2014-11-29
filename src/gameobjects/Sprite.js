@@ -81,7 +81,7 @@ Phaser.Sprite.prototype.constructor = Phaser.Sprite;
 */
 Phaser.Sprite.prototype.type = Phaser.SPRITE;
 
-Phaser.GameObject.mix(Phaser.Image.prototype, Phaser.GameObject.SPRITE_LIKE);
+Phaser.GameObject.mix(Phaser.Sprite.prototype, Phaser.GameObject.SPRITE_LIKE);
 
 Phaser.Sprite.prototype.preUpdateCustom = function () {
 
@@ -113,7 +113,7 @@ Phaser.Sprite.prototype.revive = function(health) {
     if (typeof health === 'undefined') { health = 1; }
 
     this.health = health;
-    return Phaser.GameObject.Life.prototype.revive.call(this);
+    return Phaser.GameObject.LifeMixin.prototype.revive.call(this);
 
 };
 
@@ -162,7 +162,7 @@ Phaser.Sprite.prototype.reset = function(x, y, health) {
 
     this.health = health;
 
-    return Phaser.GameObject.Core.reset.call(this, x, y);
+    return Phaser.GameObject.CoreMixin.prototype.reset.call(this, x, y);
 
 };
 

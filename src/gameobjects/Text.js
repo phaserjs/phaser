@@ -115,7 +115,7 @@ Phaser.Text.prototype.constructor = Phaser.Text;
 */
 Phaser.Text.prototype.type = Phaser.TEXT;
 
-Phaser.GameObject.mix(Phaser.Image.prototype, Phaser.GameObject.GRAPHICS_LIKE);
+Phaser.GameObject.mix(Phaser.Text.prototype, Phaser.GameObject.GRAPHICS_LIKE);
 
 /**
 * @method Phaser.Text#destroyCustom

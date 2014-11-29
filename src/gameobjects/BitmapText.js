@@ -91,7 +91,7 @@ Phaser.BitmapText.prototype.constructor = Phaser.BitmapText;
 */
 Phaser.BitmapText.prototype.type = Phaser.BITMAPTEXT;
 
-Phaser.GameObject.mix(Phaser.Image.prototype, Phaser.GameObject.GRAPHICS_LIKE);
+Phaser.GameObject.mix(Phaser.BitmapText.prototype, Phaser.GameObject.GRAPHICS_LIKE);
 
 /**
 * @method Phaser.BitmapText.prototype.setStyle
