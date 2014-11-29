@@ -1763,7 +1763,7 @@ Phaser.BitmapData.prototype = {
 };
 
 /**
-* @name Phaser.Sprite#smoothed
+* @name Phaser.BitmapData#smoothed
 * @property {boolean} smoothed - Gets or sets this BitmapData.contexts smoothing enabled value.
 */
 Object.defineProperty(Phaser.BitmapData.prototype, "smoothed", {

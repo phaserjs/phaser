@@ -238,7 +238,7 @@ Phaser.Sprite.prototype.constructor = Phaser.Sprite;
 * @return {boolean} True if the Sprite was rendered, otherwise false.
 * @protected
 */
-Phaser.Sprite.prototype.preUpdate = function() {
+Phaser.Sprite.prototype.preUpdate = function() {    
 
     if (this._cache[4] === 1 && this.exists)
     {
@@ -1318,13 +1318,7 @@ Object.defineProperty(Phaser.Sprite.prototype, "fixedToCamera", {
 });
 
 /**
-* Enable or disable texture smoothing for this sprite (does not affect children).
-* 
-* Set to true to smooth the texture, or false to disable smoothing (great for pixel art).
-* Smoothing only work for bitmap/image textures.
-*
-* @name Phaser.Sprite#smoothed
-* @property {boolean} smoothed
+* @borrows Phaser.Image#smoothed as Phaser.Sprite#smoothed
 */
 Object.defineProperty(Phaser.Sprite.prototype, "smoothed", {
 

@@ -165,72 +165,18 @@ Phaser.Rope.prototype.constructor = Phaser.Rope;
 * @memberof Phaser.Rope
 */
 Phaser.Rope.prototype.preUpdate = function() {
-    if (this._cache[4] === 1 && this.exists)
+
+    var rendering = this.preUpdateCommon();
+    
+    if (this.exists && this.body)
     {
-        this.world.setTo(this.parent.position.x + this.position.x, this.parent.position.y + this.position.y);
-        this.worldTransform.tx = this.world.x;
-        this.worldTransform.ty = this.world.y;
-        this._cache[0] = this.world.x;
-        this._cache[1] = this.world.y;
-        this._cache[2] = this.rotation;
+        this.body.preUpdate();
+    }
 
-        if (this.body)
-        {
-            this.body.preUpdate();
-        }
-
-        this._cache[4] = 0;
-
+    if (!rendering)
+    {
         return false;
     }
-
-    this._cache[0] = this.world.x;
-    this._cache[1] = this.world.y;
-    this._cache[2] = this.rotation;
-
-    if (!this.exists || !this.parent.exists)
-    {
-        //  Reset the renderOrderID
-        this._cache[3] = -1;
-        return false;
-    }
-
-    //  Cache the bounds if we need it
-    if (this.autoCull || this.checkWorldBounds)
-    {
-        this._bounds.copyFrom(this.getBounds());
-    }
-
-    if (this.autoCull)
-    {
-        //  Won't get rendered but will still get its transform updated
-        this.renderable = this.game.world.camera.screenView.intersects(this._bounds);
-    }
-
-    if (this.checkWorldBounds)
-    {
-        //  The Sprite is already out of the world bounds, so let's check to see if it has come back again
-        if (this._cache[5] === 1 && this.game.world.bounds.intersects(this._bounds))
-        {
-            this._cache[5] = 0;
-            this.events.onEnterBounds.dispatch(this);
-        }
-        else if (this._cache[5] === 0 && !this.game.world.bounds.intersects(this._bounds))
-        {
-            //  The Sprite WAS in the screen, but has now left.
-            this._cache[5] = 1;
-            this.events.onOutOfBounds.dispatch(this);
-        }
-    }
-
-    this.world.setTo(this.game.camera.x + this.worldTransform.tx, this.game.camera.y + this.worldTransform.ty);
-
-    if (this.visible)
-    {
-        this._cache[3] = this.game.stage.currentRenderOrderID++;
-    }
-
-    this.animations.update();
 
     if (this._scroll.x !== 0)
     {
@@ -240,11 +186,6 @@ Phaser.Rope.prototype.preUpdate = function() {
     if (this._scroll.y !== 0)
     {
         this.tilePosition.y += this._scroll.y * this.game.time.physicsElapsed;
-    }
-
-    if (this.body)
-    {
-        this.body.preUpdate();
     }
 
     //  Update any Children
@@ -264,7 +205,9 @@ Phaser.Rope.prototype.preUpdate = function() {
 * @memberof Phaser.Rope
 */
 Phaser.Rope.prototype.update = function() {
-    if(this._hasUpdateAnimation) {
+
+    if (this._hasUpdateAnimation)
+    {
         this.updateAnimation.call(this);
     }
 
