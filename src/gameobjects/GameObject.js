@@ -1,5 +1,41 @@
 /**
+* @classdesc
+* Game objects are {@link PIXI.DisplayObjects display objects} with additional Phaser features.
+*
+* Because there is not a single prototype hierarchy a "GameObject" mixin system is used to 
+* consistently add the appropriate game object features to different Phaser types.
+
+* All game objects are expected to inherit from PIXI.DisplayObject or otherwise 
+* implementation the methods and properties it defines.
+*
+* ---
+*
+* A mixin approach is used to avoid altering the prototype inheritance while providing maximum
+* feature compatibility and code/documentation sharing between existing types.
+*
+* This approach has been designed for maximum code-resue and consistency with minimal performance
+* impact; the shared functions may even improve overall performance, even if they are not specialized.
+* Judicial guards are used around features and care is taken to not introduce extra work.
+*
+* The following game object mixins are available:
+*
+* - {@link Phaser.GameObject.CoreMixin} - Included in every game object.
+* - {@link Phaser.GameObject.CullingMixin}
+* - {@link Phaser.GameObject.TextureMixin}
+* - {@link Phaser.GameObject.InputMixin}
+* - {@link Phaser.GameObject.EventsMixin}
+* - {@link Phaser.GameObject.PhysicsMixin}
+* - {@link Phaser.GameObject.LifeMixin}
+*
+* Using separate types also allows documentation generation and inheritance tracing:
+*
+* Google Closure Compiler should support @interface/@extends and @interface/@implements.
+* JSDoc-dev currently supports @interface/@extends and should support @interface/@implements by 3.3.0-final.
+* Even though no MI is used, multiple @extends JSDoc doclets result in usable/relevant output that shows the
+* mixin member with the type and links to the inherited base.
+*
 * @class Phaser.GameObject
+* @protected
 */
 Phaser.GameObject = {};
 
@@ -55,40 +91,6 @@ Phaser.GameObject.mixPrototype = function (target, mixin) {
         }
     }
 };
-
-/**
-* GameObjectMixin, and the associated mixins, are types that provides common features found in Sprite-like objects.
-*
-* A mixin approach is used to avoid altering the prototype inheritance while providing maximum
-* feature compatibility and code/documentation sharing between existing types.
-*
-* This approach has been design/optimizied for maximum code-resue and consistency with minimal performance
-* impact; the shared functions may even improve overall performance, even if they are not specialized.
-* Judicial guards are used around features and care is taken to not introduce extra work.
-*
-* Google Closure Compiler should support @interface/@extends and @interface/@implements.
-* JSDoc-dev currently supports @interface/@extends and should support @interface/@implements by 3.3.0-final.
-* Even though no MI is used, multiple @extends JSDoc doclets result in usable/relevant output that shows the
-* mixin member with the type and links to the inherited base.
-*
-* The following core mixins are available:
-*
-* - GameObjectCoreMixin (name, debug, _bounds, z, exists, ?events, _cached, update logic, world, cameraBounds, fixedToCamera)
-*   This must be included if any other mixin is used, and should likely be included for all types deriving
-*   from PIXI.DisplayObject.
-* - GameObjectCullingMixin (autoCull, checkWorldBounds, fixedToCamera)
-* - GameObjectTextureMixin (frame, crop, animation, key, _frame, _crop)
-* - GameObjectPhysicsMixin (body)
-* - GameObjectLifeMixin (alive, revive, kill, outOfBoundsKill)
-* - GameObjectInputMixin (input, enableInput)
-*
-* All game objects are expected to inherit from PIXI.DisplayObject or otherwise 
-* implementation the methods and properties it defines.
-*
-* @name Phaser.GameObject.CoreMixin
-* @interface
-* @protected
-*/
 
 /**
 * Mixes Phaser.GameObject.CoreMixin into the target.
