@@ -24,6 +24,20 @@
         $arcade = true;
     }
 
+    if (!isset($tilemap))
+    {
+        $tilemap = true;
+    }
+
+    if (isset($nophysics))
+    {
+        $p2 = false;
+        $box2d = false;
+        $ninja = false;
+        $arcade = false;
+        $tilemap = false;
+    }
+
     if ($p2)
     {
         echo "    <script src=\"$path/src/physics/p2/p2.js\"></script>";
@@ -188,6 +202,12 @@
     <script src="$path/src/particles/arcade/ArcadeParticles.js"></script>
     <script src="$path/src/particles/arcade/Emitter.js"></script>
 
+EOL;
+
+    if ($tilemap)
+    {
+        echo <<<EOL
+
     <script src="$path/src/tilemap/Tile.js"></script>
     <script src="$path/src/tilemap/Tilemap.js"></script>
     <script src="$path/src/tilemap/TilemapLayer.js"></script>
@@ -195,6 +215,7 @@
     <script src="$path/src/tilemap/Tileset.js"></script>
 
 EOL;
+    }
 
     if ($arcade)
     {
@@ -204,7 +225,6 @@ EOL;
     <script src="$path/src/physics/arcade/Body.js"></script>
 EOL;
     }
-
 
     if ($p2)
     {
