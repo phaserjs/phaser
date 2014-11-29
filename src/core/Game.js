@@ -26,6 +26,7 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
 
     /**
     * @property {number} id - Phaser Game ID (for when Pixi supports multiple instances).
+    * @readonly
     */
     this.id = Phaser.GAMES.push(this) - 1;
 
@@ -99,11 +100,13 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
 
     /**
     * @property {PIXI.CanvasRenderer|PIXI.WebGLRenderer} renderer - The Pixi Renderer.
+    * @protected
     */
     this.renderer = null;
 
     /**
     * @property {number} renderType - The Renderer this game will use. Either Phaser.AUTO, Phaser.CANVAS or Phaser.WEBGL.
+    * @readonly
     */
     this.renderType = Phaser.AUTO;
 
@@ -114,18 +117,19 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
 
     /**
     * @property {boolean} isBooted - Whether the game engine is booted, aka available.
-    * @default
+    * @readonly
     */
     this.isBooted = false;
 
     /**
-    * @property {boolean} id -Is game running or paused?
-    * @default
+    * @property {boolean} isRuiining - Is game running or paused?
+    * @readonly
     */
     this.isRunning = false;
 
     /**
     * @property {Phaser.RequestAnimationFrame} raf - Automatically handles the core game loop via requestAnimationFrame or setTimeout
+    * @protected
     */
     this.raf = null;
 

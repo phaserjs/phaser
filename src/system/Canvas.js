@@ -65,7 +65,7 @@ Phaser.Canvas = {
     *
     * @method Phaser.Canvas.setTouchAction
     * @param {HTMLCanvasElement} canvas - The canvas to set the touch action on.
-    * @param {String} [value] - The touch action to set. Defaults to 'none'.
+    * @param {string} [value] - The touch action to set. Defaults to 'none'.
     * @return {HTMLCanvasElement} The source canvas.
     */
     setTouchAction: function (canvas, value) {
@@ -85,7 +85,7 @@ Phaser.Canvas = {
     *
     * @method Phaser.Canvas.setUserSelect
     * @param {HTMLCanvasElement} canvas - The canvas to set the touch action on.
-    * @param {String} [value] - The touch action to set. Defaults to 'none'.
+    * @param {string} [value] - The touch action to set. Defaults to 'none'.
     * @return {HTMLCanvasElement} The source canvas.
     */
     setUserSelect: function (canvas, value) {

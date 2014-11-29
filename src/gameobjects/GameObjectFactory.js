@@ -5,7 +5,10 @@
 */
 
 /**
-* The Game Object Factory is a quick way to create all of the different sorts of core objects that Phaser uses.
+* The GameObjectFactory is a quick way to create mamy common game objects
+* using {@linkcode Phaser.Game#add `game.add`}.
+*
+* Created objects are _automtically added_ to the appropriate Manager, World, or manually specified parent Group.
 *
 * @class Phaser.GameObjectFactory
 * @constructor
@@ -15,11 +18,13 @@ Phaser.GameObjectFactory = function (game) {
 
     /**
     * @property {Phaser.Game} game - A reference to the currently running Game.
+    * @protected
     */
     this.game = game;
 
     /**
     * @property {Phaser.World} world - A reference to the game world.
+    * @protected
     */
     this.world = this.game.world;
 
@@ -221,10 +226,10 @@ Phaser.GameObjectFactory.prototype = {
     * @param {number} y - The y coordinate (in world space) to position the TileSprite at.
     * @param {string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture} key - This is the image or texture used by the TileSprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.
     * @param {string|number} frame - If this TileSprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
-		* @param {Array} points - An array of {Phaser.Point}.
+    * @param {Array} points - An array of {Phaser.Point}.
     * @param {Phaser.Group} [group] - Optional Group to add the object to. If not specified it will be added to the World group.
     * @return {Phaser.TileSprite} The newly created tileSprite object.
-		* Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/demo.js
+    * Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/demo.js
     */
     rope: function (x, y, key, frame, points, group) {
 
@@ -257,15 +262,15 @@ Phaser.GameObjectFactory.prototype = {
     * Creates a new Button object.
     *
     * @method Phaser.GameObjectFactory#button
-    * @param {number} [x] X position of the new button object.
-    * @param {number} [y] Y position of the new button object.
-    * @param {string} [key] The image key as defined in the Game.Cache to use as the texture for this button.
-    * @param {function} [callback] The function to call when this button is pressed
-    * @param {object} [callbackContext] The context in which the callback will be called (usually 'this')
-    * @param {string|number} [overFrame] This is the frame or frameName that will be set when this button is in an over state. Give either a number to use a frame ID or a string for a frame name.
-    * @param {string|number} [outFrame] This is the frame or frameName that will be set when this button is in an out state. Give either a number to use a frame ID or a string for a frame name.
-    * @param {string|number} [downFrame] This is the frame or frameName that will be set when this button is in a down state. Give either a number to use a frame ID or a string for a frame name.
-    * @param {string|number} [upFrame] This is the frame or frameName that will be set when this button is in an up state. Give either a number to use a frame ID or a string for a frame name.
+    * @param {number} [x] - X position of the new button object.
+    * @param {number} [y] - Y position of the new button object.
+    * @param {string} [key] - The image key as defined in the Game.Cache to use as the texture for this button.
+    * @param {function} [callback] - The function to call when this button is pressed
+    * @param {object} [callbackContext] - The context in which the callback will be called (usually 'this')
+    * @param {string|number} [overFrame] - This is the frame or frameName that will be set when this button is in an over state. Give either a number to use a frame ID or a string for a frame name.
+    * @param {string|number} [outFrame] - This is the frame or frameName that will be set when this button is in an out state. Give either a number to use a frame ID or a string for a frame name.
+    * @param {string|number} [downFrame] - This is the frame or frameName that will be set when this button is in a down state. Give either a number to use a frame ID or a string for a frame name.
+    * @param {string|number} [upFrame] - This is the frame or frameName that will be set when this button is in an up state. Give either a number to use a frame ID or a string for a frame name.
     * @param {Phaser.Group} [group] - Optional Group to add the object to. If not specified it will be added to the World group.
     * @return {Phaser.Button} The newly created button object.
     */
@@ -295,7 +300,9 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
-    * Emitter is a lightweight particle emitter. It can be used for one-time explosions or for
+    * Create a new Emitter.
+    *
+    * A particle emitter can be used for one-time explosions or for
     * continuous effects like rain and fire. All it really does is launch Particle objects out
     * at set intervals, and fixes their positions and velocities accorindgly.
     *
@@ -312,7 +319,9 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
-    * Create a new RetroFont object to be used as a texture for an Image or Sprite and optionally add it to the Cache.
+    * Create a new RetroFont object.
+    *
+    * A RetroFont can be used as a texture for an Image or Sprite and optionally add it to the Cache.
     * A RetroFont uses a bitmap which contains fixed with characters for the font set. You use character spacing to define the set.
     * If you need variable width character support then use a BitmapText object instead. The main difference between a RetroFont and a BitmapText
     * is that a RetroFont creates a single texture that you can apply to a game object, where-as a BitmapText creates one Sprite object per letter of text.
@@ -358,7 +367,9 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
-    * Creates a new Phaser.Tilemap object. The map can either be populated with data from a Tiled JSON file or from a CSV file.
+    * Creates a new Phaser.Tilemap object.
+    *
+    * The map can either be populated with data from a Tiled JSON file or from a CSV file.
     * To do this pass the Cache key as the first parameter. When using Tiled data you need only provide the key.
     * When using CSV data you must provide the key and the tileWidth and tileHeight parameters.
     * If creating a blank tilemap to be populated later, you can either specify no parameters at all and then use `Tilemap.create` or pass the map and tile dimensions here.
@@ -405,7 +416,9 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
-    * A BitmapData object which can be manipulated and drawn to like a traditional Canvas object and used to texture Sprites.
+    * Create a BitmapData object.
+    *
+    * A BitmapData object can be manipulated and drawn to like a traditional Canvas object and used to texture Sprites.
     *
     * @method Phaser.GameObjectFactory#bitmapData
     * @param {number} [width=256] - The width of the BitmapData in pixels.
@@ -452,7 +465,8 @@ Phaser.GameObjectFactory.prototype = {
 
     /**
     * Add a new Plugin into the PluginManager.
-    * The Plugin must have 2 properties: game and parent. Plugin.game is set to the game reference the PluginManager uses, and parent is set to the PluginManager.
+    *
+    * The Plugin must have 2 properties: `game` and `parent`. Plugin.game is set to the game reference the PluginManager uses, and parent is set to the PluginManager.
     *
     * @method Phaser.GameObjectFactory#plugin
     * @param {object|Phaser.Plugin} plugin - The Plugin to add into the PluginManager. This can be a function or an existing object.
