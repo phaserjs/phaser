@@ -29,12 +29,10 @@
         "includePattern": ".+\\.js(doc)?$",
         "excludePattern": "(^|\\/|\\\\)_"
     },
-    "plugins": [
-        "./tasks/jsdoc-plugins/namealias",
+    "plugins"   : [
         "./tasks/jsdoc-plugins/filterpixi",
         "./tasks/jsdoc-plugins/proptomember",
         "./tasks/jsdoc-plugins/sourceproxy",
-        "./tasks/jsdoc-plugins/shortlinks",
         "plugins/markdown"
     ],
     "templates": {
