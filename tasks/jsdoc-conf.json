@@ -29,7 +29,8 @@
         "includePattern": ".+\\.js(doc)?$",
         "excludePattern": "(^|\\/|\\\\)_"
     },
-    "plugins"   : [
+    "plugins": [
+        "./tasks/jsdoc-plugins/namealias",
         "./tasks/jsdoc-plugins/filterpixi",
         "./tasks/jsdoc-plugins/proptomember",
         "./tasks/jsdoc-plugins/sourceproxy",
