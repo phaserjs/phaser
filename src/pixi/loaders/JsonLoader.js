@@ -35,7 +35,7 @@ PIXI.JsonLoader = function (url, crossorigin) {
      *
      * @property baseUrl
      * @type String
-     * @readOnly
+     * @readonly
      */
     this.baseUrl = url.replace(/[^\/]*$/, '');
 
@@ -44,7 +44,7 @@ PIXI.JsonLoader = function (url, crossorigin) {
      *
      * @property loaded
      * @type Boolean
-     * @readOnly
+     * @readonly
      */
     this.loaded = false;
 

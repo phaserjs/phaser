@@ -44,7 +44,7 @@ PIXI.SpineLoader = function(url, crossorigin)
      *
      * @property loaded
      * @type Boolean
-     * @readOnly
+     * @readonly
      */
     this.loaded = false;
 };

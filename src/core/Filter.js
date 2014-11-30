@@ -10,7 +10,7 @@
 * @class Phaser.Filter
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
-* @param {Object} uniforms - Uniform mappings object
+* @param {object} uniforms - Uniform mappings object
 * @param {Array} fragmentSrc - The fragment shader code.
 */
 Phaser.Filter = function (game, uniforms, fragmentSrc) {

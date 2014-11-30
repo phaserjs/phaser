@@ -35,8 +35,8 @@ Phaser.GameObjectFactory.prototype = {
     /**
     * Adds an existing object to the game world.
     * @method Phaser.GameObjectFactory#existing
-    * @param {*} object - An instance of Phaser.Sprite, Phaser.Button or any other display object..
-    * @return {*} The child that was added to the Group.
+    * @param {any} object - An instance of Phaser.Sprite, Phaser.Button or any other display object..
+    * @return {any} The child that was added to the Group.
     */
     existing: function (object) {
 

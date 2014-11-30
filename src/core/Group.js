@@ -233,7 +233,7 @@ Phaser.Group.prototype.add = function (child, silent) {
 * TODO: Add ability to pass the children as parameters rather than having to be an array.
 *
 * @method Phaser.Group#addMultiple
-* @param {array} children - An array containing instances of Phaser.Sprite, Phaser.Button or any other display object.
+* @param {PIXI.DisplayObject[]} children - An array containing instances of Phaser.Sprite, Phaser.Button or any other display object.
 * @param {boolean} [silent=false] - If the silent parameter is `true` the children will not dispatch the onAddedToGroup event.
 * @return {*} The array of children that were added to the Group.
 */
@@ -664,7 +664,7 @@ Phaser.Group.prototype.replace = function (oldChild, newChild) {
 *
 * @method Phaser.Group#hasProperty
 * @param {*} child - The child to check for the existance of the property on.
-* @param {array} key - An array of strings that make up the property.
+* @param {string[]} key - An array of strings that make up the property.
 * @return {boolean} True if the child has the property, otherwise false.
 */
 Phaser.Group.prototype.hasProperty = function (child, key) {
@@ -1256,7 +1256,7 @@ Phaser.Group.prototype.filter = function (predicate, checkExists) {
 *
 * @method Phaser.Group#forEach
 * @param {function} callback - The function that will be called. Each child of the Group will be passed to it as its first parameter.
-* @param {Object} callbackContext - The context in which the function should be called (usually 'this').
+* @param {object} callbackContext - The context in which the function should be called (usually 'this').
 * @param {boolean} [checkExists=false] - If set only children with exists=true will be passed to the callback, otherwise all children will be passed.
 */
 Phaser.Group.prototype.forEach = function (callback, callbackContext, checkExists) {
@@ -1299,7 +1299,7 @@ Phaser.Group.prototype.forEach = function (callback, callbackContext, checkExist
 *
 * @method Phaser.Group#forEachExists
 * @param {function} callback - The function that will be called. Each child of the Group will be passed to it as its first parameter.
-* @param {Object} callbackContext - The context in which the function should be called (usually 'this').
+* @param {object} callbackContext - The context in which the function should be called (usually 'this').
 */
 Phaser.Group.prototype.forEachExists = function (callback, callbackContext) {
 
@@ -1321,7 +1321,7 @@ Phaser.Group.prototype.forEachExists = function (callback, callbackContext) {
 *
 * @method Phaser.Group#forEachAlive
 * @param {function} callback - The function that will be called. Each child of the Group will be passed to it as its first parameter.
-* @param {Object} callbackContext - The context in which the function should be called (usually 'this').
+* @param {object} callbackContext - The context in which the function should be called (usually 'this').
 */
 Phaser.Group.prototype.forEachAlive = function (callback, callbackContext) {
 
@@ -1343,7 +1343,7 @@ Phaser.Group.prototype.forEachAlive = function (callback, callbackContext) {
 *
 * @method Phaser.Group#forEachDead
 * @param {function} callback - The function that will be called. Each child of the Group will be passed to it as its first parameter.
-* @param {Object} callbackContext - The context in which the function should be called (usually 'this').
+* @param {object} callbackContext - The context in which the function should be called (usually 'this').
 */
 Phaser.Group.prototype.forEachDead = function (callback, callbackContext) {
 
@@ -1479,7 +1479,7 @@ Phaser.Group.prototype.descendingSortHandler = function (a, b) {
 * @param {any} value - If child.key === this value it will be considered a match. Note that a strict comparison is used.
 * @param {number} returnType - How to return the data from this method. Either Phaser.Group.RETURN_NONE, Phaser.Group.RETURN_TOTAL or Phaser.Group.RETURN_CHILD.
 * @param {function} [callback=null] - Optional function that will be called on each matching child. Each child of the Group will be passed to it as its first parameter.
-* @param {Object} [callbackContext] - The context in which the function should be called (usually 'this').
+* @param {object} [callbackContext] - The context in which the function should be called (usually 'this').
 * @return {any} Returns either a numeric total (if RETURN_TOTAL was specified) or the child object.
 */
 Phaser.Group.prototype.iterate = function (key, value, returnType, callback, callbackContext, args) {
@@ -1532,7 +1532,7 @@ Phaser.Group.prototype.iterate = function (key, value, returnType, callback, cal
 *
 * @method Phaser.Group#getFirstExists
 * @param {boolean} state - True or false.
-* @return {Any} The first child, or null if none found.
+* @return {any} The first child, or null if none found.
 */
 Phaser.Group.prototype.getFirstExists = function (state) {
 
@@ -1550,7 +1550,7 @@ Phaser.Group.prototype.getFirstExists = function (state) {
 * This is handy for checking if everything has been wiped out, or choosing a squad leader, etc.
 *
 * @method Phaser.Group#getFirstAlive
-* @return {Any} The first alive child, or null if none found.
+* @return {any} The first alive child, or null if none found.
 */
 Phaser.Group.prototype.getFirstAlive = function () {
 
@@ -1563,7 +1563,7 @@ Phaser.Group.prototype.getFirstAlive = function () {
 * This is handy for checking if everything has been wiped out, or choosing a squad leader, etc.
 *
 * @method Phaser.Group#getFirstDead
-* @return {Any} The first dead child, or null if none found.
+* @return {any} The first dead child, or null if none found.
 */
 Phaser.Group.prototype.getFirstDead = function () {
 
@@ -1575,7 +1575,7 @@ Phaser.Group.prototype.getFirstDead = function () {
 * Returns the child at the top of this Group. The top is the one being displayed (rendered) above every other child.
 *
 * @method Phaser.Group#getTop
-* @return {Any} The child at the top of the Group.
+* @return {any} The child at the top of the Group.
 */
 Phaser.Group.prototype.getTop = function () {
 
@@ -1590,7 +1590,7 @@ Phaser.Group.prototype.getTop = function () {
 * Returns the child at the bottom of this Group. The bottom is the one being displayed (rendered) below every other child.
 *
 * @method Phaser.Group#getBottom
-* @return {Any} The child at the bottom of the Group.
+* @return {any} The child at the bottom of the Group.
 */
 Phaser.Group.prototype.getBottom = function () {
 
@@ -1631,7 +1631,7 @@ Phaser.Group.prototype.countDead = function () {
 * @method Phaser.Group#getRandom
 * @param {number} startIndex - Optional offset off the front of the array. Default value is 0, or the beginning of the array.
 * @param {number} length - Optional restriction on the number of values you want to randomly select from.
-* @return {Any} A random child of this Group.
+* @return {any} A random child of this Group.
 */
 Phaser.Group.prototype.getRandom = function (startIndex, length) {
 
@@ -1652,7 +1652,7 @@ Phaser.Group.prototype.getRandom = function (startIndex, length) {
 * reset the Group cursor and optionally destroy the child.
 *
 * @method Phaser.Group#remove
-* @param {Any} child - The child to remove.
+* @param {any} child - The child to remove.
 * @param {boolean} [destroy=false] - You can optionally call destroy on the child that was removed.
 * @param {boolean} [silent=false] - If the silent parameter is `true` the child will not dispatch the onRemovedFromGroup event.
 * @return {boolean} true if the child was removed from this Group, otherwise false.

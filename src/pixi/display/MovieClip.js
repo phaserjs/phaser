@@ -54,7 +54,7 @@ PIXI.MovieClip = function(textures)
      * @property currentFrame
      * @type Number
      * @default 0
-     * @readOnly
+     * @readonly
      */
     this.currentFrame = 0;
 
@@ -63,7 +63,7 @@ PIXI.MovieClip = function(textures)
      *
      * @property playing
      * @type Boolean
-     * @readOnly
+     * @readonly
      */
     this.playing = false;
 };
@@ -79,7 +79,7 @@ PIXI.MovieClip.prototype.constructor = PIXI.MovieClip;
 * @property totalFrames
 * @type Number
 * @default 0
-* @readOnly
+* @readonly
 */
 Object.defineProperty( PIXI.MovieClip.prototype, 'totalFrames', {
 	get: function() {

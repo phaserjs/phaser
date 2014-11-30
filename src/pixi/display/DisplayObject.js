@@ -108,7 +108,7 @@ PIXI.DisplayObject = function()
      *
      * @property parent
      * @type DisplayObjectContainer
-     * @readOnly
+     * @readonly
      */
     this.parent = null;
 
@@ -117,7 +117,7 @@ PIXI.DisplayObject = function()
      *
      * @property stage
      * @type Stage
-     * @readOnly
+     * @readonly
      */
     this.stage = null;
 
@@ -126,7 +126,7 @@ PIXI.DisplayObject = function()
      *
      * @property worldAlpha
      * @type Number
-     * @readOnly
+     * @readonly
      */
     this.worldAlpha = 1;
 
@@ -135,7 +135,7 @@ PIXI.DisplayObject = function()
      *
      * @property _interactive
      * @type Boolean
-     * @readOnly
+     * @readonly
      * @private
      */
     this._interactive = false;
@@ -154,7 +154,7 @@ PIXI.DisplayObject = function()
      *
      * @property worldTransform
      * @type Matrix
-     * @readOnly
+     * @readonly
      * @private
      */
     this.worldTransform = new PIXI.Matrix();

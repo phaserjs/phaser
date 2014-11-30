@@ -26,7 +26,7 @@ PIXI.BitmapText = function(text, style)
      *
      * @property textWidth
      * @type Number
-     * @readOnly
+     * @readonly
      */
     this.textWidth = 0;
 
@@ -36,7 +36,7 @@ PIXI.BitmapText = function(text, style)
      *
      * @property textHeight
      * @type Number
-     * @readOnly
+     * @readonly
      */
     this.textHeight = 0;
 

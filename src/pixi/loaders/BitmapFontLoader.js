@@ -37,7 +37,7 @@ PIXI.BitmapFontLoader = function(url, crossorigin)
      *
      * @property baseUrl
      * @type String
-     * @readOnly
+     * @readonly
      */
     this.baseUrl = url.replace(/[^\/]*$/, '');
 

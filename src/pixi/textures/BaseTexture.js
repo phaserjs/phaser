@@ -30,7 +30,7 @@ PIXI.BaseTexture = function(source, scaleMode)
      *
      * @property width
      * @type Number
-     * @readOnly
+     * @readonly
      */
     this.width = 100;
 
@@ -39,7 +39,7 @@ PIXI.BaseTexture = function(source, scaleMode)
      *
      * @property height
      * @type Number
-     * @readOnly
+     * @readonly
      */
     this.height = 100;
 
@@ -57,7 +57,7 @@ PIXI.BaseTexture = function(source, scaleMode)
      *
      * @property hasLoaded
      * @type Boolean
-     * @readOnly
+     * @readonly
      */
     this.hasLoaded = false;
 

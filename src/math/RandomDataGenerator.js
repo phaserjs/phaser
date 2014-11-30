@@ -13,7 +13,7 @@
 *
 * @class Phaser.RandomDataGenerator
 * @constructor
-* @param {array} [seeds] - An array of values to use as the seed.
+* @param {any[]} [seeds] - An array of values to use as the seed.
 */
 Phaser.RandomDataGenerator = function (seeds) {
 
@@ -72,7 +72,7 @@ Phaser.RandomDataGenerator.prototype = {
     * Reset the seed of the random data generator.
     *
     * @method Phaser.RandomDataGenerator#sow
-    * @param {array} seeds
+    * @param {any[]} seeds
     */
     sow: function (seeds) {
 
@@ -102,7 +102,7 @@ Phaser.RandomDataGenerator.prototype = {
     *
     * @method Phaser.RandomDataGenerator#hash
     * @private
-    * @param {Any} data
+    * @param {any} data
     * @return {number} hashed value.
     */
     hash: function (data) {

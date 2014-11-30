@@ -19,7 +19,7 @@ PIXI.DisplayObjectContainer = function()
      *
      * @property children
      * @type Array(DisplayObject)
-     * @readOnly
+     * @readonly
      */
     this.children = [];
 

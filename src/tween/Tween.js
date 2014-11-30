@@ -70,7 +70,7 @@ Phaser.Tween = function (target, game, manager) {
     /**
     * @property {boolean} pendingDelete - True if this Tween is ready to be deleted by the TweenManager.
     * @default
-    * @readOnly
+    * @readonly
     */
     this.pendingDelete = false;
 
@@ -119,12 +119,12 @@ Phaser.Tween = function (target, game, manager) {
     /**
     * @property {number} current - The current Tween child being run.
     * @default
-    * @readOnly
+    * @readonly
     */
     this.current = 0;
 
     /**
-    * @property {Object} properties - Target property cache used when building the child data values.
+    * @property {object} properties - Target property cache used when building the child data values.
     */
     this.properties = {};
 

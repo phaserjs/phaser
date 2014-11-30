@@ -105,8 +105,8 @@ Phaser.Utils = {
     * Transposes the elements of the given Array.
     *
     * @method Phaser.Utils.transposeArray
-    * @param {array} array - The array to transpose.
-    * @return {array} The transposed array.
+    * @param {array[]} array - The array to transpose.
+    * @return {array[]} The transposed array.
     * @deprecated 2.2.0 - Use Phaser.ArrayUtils.transposeMatrix
     */
     transposeArray: function (array) {
@@ -118,9 +118,9 @@ Phaser.Utils = {
     * Based on the routine from http://jsfiddle.net/MrPolywhirl/NH42z/
     *
     * @method Phaser.Utils.rotateArray
-    * @param {array} matrix - The array to rotate.
+    * @param {array[]} matrix - The array to rotate.
     * @param {number|string} direction - The amount to rotate. Either a number: 90, -90, 270, -270, 180 or a string: 'rotateLeft', 'rotateRight' or 'rotate180'
-    * @return {array} The rotated array
+    * @return {array[]} The rotated array
     * @deprecated 2.2.0 - Use Phaser.ArrayUtils.rotateMatrix
     */
     rotateArray: function (matrix, direction) {
@@ -131,8 +131,8 @@ Phaser.Utils = {
     * A standard Fisher-Yates Array shuffle implementation.
     *
     * @method Phaser.Utils.shuffle
-    * @param {array} array - The array to shuffle.
-    * @return {array} The shuffled array.
+    * @param {any[]} array - The array to shuffle.
+    * @return {any[]} The shuffled array.
     * @deprecated 2.2.0 - User Phaser.ArrayUtils.shuffle
     */
     shuffle: function (array) {
