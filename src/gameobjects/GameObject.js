@@ -151,6 +151,12 @@ Phaser.GameObject.mix = function (target, traits) {
         Phaser.GameObject.mixPrototype(target, Phaser.GameObject.LifeMixin.prototype);
     }
 
+    // Pull up children into the target
+    if (!('children' in target))
+    {
+        target.children = undefined;
+    }
+
 };
 
 /**
@@ -178,11 +184,9 @@ Phaser.GameObject.init = function (game, traits) {
     // Cache used by `exists` - and maybe others
     this._cache = [ 0, 0, 0, 0, 1, 0, 1, 0, 0 ];
 
-    // Defaults in prototype
+    // Defaults in prototype + low use paths
     // this.name = '';
     // this.debug = false;
-
-    this.exists = true;
 
     this.z = 0;
 
@@ -191,8 +195,11 @@ Phaser.GameObject.init = function (game, traits) {
     this.cameraOffset = new Phaser.Point();
 
     // Defaults in prototype, but promote to instance
+    // (This will promote `undefined` without CULLING)
     this.autoCull = this.autoCull;
     this.checkWorldBounds = this.checkWorldBounds;
+    
+    // Defaults in prototype + low use path
     //this.outOfBoundsKill = false;
 
     // Controlled by setMinMax, etc
@@ -218,11 +225,9 @@ Phaser.GameObject.init = function (game, traits) {
         // this._frame = null;
     }
 
-    if (traits & Traits.PHYSICS)
-    {
-        // Physics is a special-case and `body` must be null to be considered in-play
-        this.body = null;
-    }
+    // Defaults in prototype, but promote to instance
+    // (This will promote `undefined` without PHYSICS)
+    this.body = this.body;
 
     if (traits & Traits.LIFE)
     {
@@ -230,6 +235,8 @@ Phaser.GameObject.init = function (game, traits) {
     }
 
     this._bounds = new Phaser.Rectangle();
+
+    this.exists = true;
 
 };
 
@@ -316,6 +323,10 @@ Phaser.GameObject.CoreMixin.prototype = /* @lends Phaser.GameObject.CoreMixin */
 
     _scaleMax: null,
 
+    // Physics is a special-case and `body` must be null to be considered in-play;
+    // here it is promoted to the prototype as undefined and applied to non-PHYSICS
+    body: undefined,
+
     /**
     * A small internal cache:
     * 0 = previous position.x
@@ -336,7 +347,7 @@ Phaser.GameObject.CoreMixin.prototype = /* @lends Phaser.GameObject.CoreMixin */
     /**
     * Internal cache var.
     *
-    * @property {Array} _bounds
+    * @property {object} _bounds
     * @private
     */
     _bounds: null,
@@ -344,7 +355,8 @@ Phaser.GameObject.CoreMixin.prototype = /* @lends Phaser.GameObject.CoreMixin */
     /**
     * Override and this method for custom update logic.
     *
-    * If this game object has any children you should call update on them too.
+    * If this game object has any children that need updating, you should call update on them too.
+    * (Children are not updated by default.)
     *
     * @method Phaser.GameObject.CoreMixin#update
     * @protected
@@ -373,7 +385,7 @@ Phaser.GameObject.CoreMixin.prototype = /* @lends Phaser.GameObject.CoreMixin */
             this._cache[3] = -1;
             this._cache[4] = 0;
 
-            if (this.exists && this.body)
+            if (this._cache[6] === 1 /* exists */ && this.body)
             {
                 this.body.preUpdate();
             }
@@ -386,7 +398,7 @@ Phaser.GameObject.CoreMixin.prototype = /* @lends Phaser.GameObject.CoreMixin */
         this._cache[2] = this.rotation;
         this._cache[3] = -1;
 
-        if (!this.exists || !this.parent.exists)
+        if (this._cache[6] === 0 /* !exists */ || !this.parent.exists)
         {
             return false;
         }
@@ -445,7 +457,7 @@ Phaser.GameObject.CoreMixin.prototype = /* @lends Phaser.GameObject.CoreMixin */
 
         this.preUpdateCustom();
 
-        if (!this.exists)
+        if (this._cache[6] === 0 /* !exists */)
         {
             // May no longer exist after preUpdateCustom
             return false;
@@ -456,7 +468,7 @@ Phaser.GameObject.CoreMixin.prototype = /* @lends Phaser.GameObject.CoreMixin */
             this.animations.update();
         }
 
-        if (this.exists && this.body)
+        if (this.body)
         {
             this.body.preUpdate();
         }
