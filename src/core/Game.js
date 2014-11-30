@@ -122,7 +122,7 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     this.isBooted = false;
 
     /**
-    * @property {boolean} isRuiining - Is game running or paused?
+    * @property {boolean} isRunning - Is game running or paused?
     * @readonly
     */
     this.isRunning = false;
