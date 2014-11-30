@@ -28,9 +28,6 @@ Phaser.Graphics = function (game, x, y) {
 
     Phaser.GameObject.init.call(this, game);
 
-    this.transformCallback = this.checkTransform;
-    this.transformCallbackContext = this;
-
     this.position.set(x, y);
     this.world.setTo(x, y);
 

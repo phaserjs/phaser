@@ -51,9 +51,6 @@ Phaser.Rope = function (game, x, y, key, frame, points) {
     */
     this._scroll = new Phaser.Point();
 
-    this.transformCallback = this.checkTransform;
-    this.transformCallbackContext = this;
-
     this.position.set(x, y);
     this.world.setTo(x, y);
 
@@ -71,7 +68,7 @@ Phaser.Rope.prototype.constructor = Phaser.Rope;
 */
 Phaser.Rope.prototype.type = Phaser.ROPE;
 
-Phaser.GameObject.mix(Phaser.Rope.prototype, Phaser.GameObject.Traits.GRAPHICS_LIKE);
+Phaser.GameObject.mix(Phaser.Rope.prototype, Phaser.GameObject.Traits.SPRITE_LIKE);
 
 /**
 * Automatically called by World.preUpdate.

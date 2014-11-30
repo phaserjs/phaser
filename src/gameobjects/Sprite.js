@@ -54,10 +54,7 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     * @default
     */
     this.lifespan = 0;
-
-    this.transformCallback = this.checkTransform;
-    this.transformCallbackContext = this;
-
+   
     this.position.set(x, y);
     this.world.setTo(x, y);
 
@@ -75,7 +72,7 @@ Phaser.Sprite.prototype.constructor = Phaser.Sprite;
 */
 Phaser.Sprite.prototype.type = Phaser.SPRITE;
 
-Phaser.GameObject.mix(Phaser.Sprite.prototype, Phaser.GameObject.Traits.GRAPHICS_LIKE);
+Phaser.GameObject.mix(Phaser.Sprite.prototype, Phaser.GameObject.Traits.SPRITE_LIKE);
 
 Phaser.Sprite.prototype.preUpdateCustom = function () {
 

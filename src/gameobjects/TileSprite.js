@@ -63,7 +63,7 @@ Phaser.TileSprite.prototype.constructor = Phaser.TileSprite;
 */
 Phaser.TileSprite.prototype.type = Phaser.TILESPRITE;
 
-Phaser.GameObject.mix(Phaser.TileSprite.prototype, Phaser.GameObject.Traits.GRAPHICS_LIKE);
+Phaser.GameObject.mix(Phaser.TileSprite.prototype, Phaser.GameObject.Traits.SPRITE_LIKE);
 
 /**
 * Automatically called by World.preUpdate.
