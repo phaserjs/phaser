@@ -39,9 +39,6 @@ Phaser.Image = function (game, x, y, key, frame) {
 
     Phaser.GameObject.init.call(this, game);
 
-    this.transformCallback = this.checkTransform;
-    this.transformCallbackContext = this;
-
     this.position.set(x, y);
     this.world.setTo(x, y);
 

@@ -66,10 +66,7 @@ Phaser.BitmapText = function (game, x, y, font, text, size) {
 
     PIXI.BitmapText.call(this, text);
 
-    Phaser.GameObject.init.call(this);
-
-    this.transformCallback = this.checkTransform;
-    this.transformCallbackContext = this;
+    Phaser.GameObject.init.call(this, game);
 
     this.position.set(x, y);
     this.world.setTo(x, y);

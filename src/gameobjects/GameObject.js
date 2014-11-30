@@ -195,6 +195,10 @@ Phaser.GameObject.init = function (game, traits) {
     this.checkWorldBounds = this.checkWorldBounds;
     //this.outOfBoundsKill = false;
 
+    // Controlled by setMinMax, etc
+    this.transformCallback = null;
+    this.transformCallbackContext = this;
+
     // Added with `enableInput`
     this.input = null;
 
@@ -216,7 +220,7 @@ Phaser.GameObject.init = function (game, traits) {
 
     if (traits & Traits.PHYSICS)
     {
-        // Physics is a special-case and `body` is expected to be a hasOwnProperty
+        // Physics is a special-case and `body` must be null to be considered in-play
         this.body = null;
     }
 
@@ -234,6 +238,9 @@ Phaser.GameObject.init = function (game, traits) {
 * The Core game object mixin - this is always included in all game objects.
 *
 * Provides a wide variety of common properties and methods.
+* 
+* Some common properties are exposed even though not requested by other mixins;
+* this is for guard-check performance and hidden class generation.
 *
 * @class Phaser.GameObject.CoreMixin
 * @protected
@@ -305,19 +312,9 @@ Phaser.GameObject.CoreMixin.prototype = /* @lends Phaser.GameObject.CoreMixin */
     */
     cameraOffset: null,
 
-    /**
-    * Set the minimum scale this Sprite will scale down to. Prevents a parent from scaling this Sprite lower than the given value. Set to `null` to remove.
-    *
-    * @property {Phaser.Point} scaleMin
-    */
-    scaleMin: null,
+    _scaleMin: null,
 
-    /**
-    * Set the maximum scale this Sprite will scale up to. Prevents a parent from scaling this Sprite higher than the given value. Set to `null` to remove.
-    *
-    * @property {Phaser.Point} scaleMax
-    */
-    scaleMax: null,
+    _scaleMax: null,
 
     /**
     * A small internal cache:
@@ -579,30 +576,68 @@ Phaser.GameObject.CoreMixin.prototype = /* @lends Phaser.GameObject.CoreMixin */
     */
     checkTransform: function (wt) {
 
-        if (this.scaleMin)
+        if (this._scaleMin)
         {
-            if (wt.a < this.scaleMin.x)
+            if (wt.a < this._scaleMin.x)
             {
-                wt.a = this.scaleMin.x;
+                wt.a = this._scaleMin.x;
             }
 
-            if (wt.d < this.scaleMin.y)
+            if (wt.d < this._scaleMin.y)
             {
-                wt.d = this.scaleMin.y;
+                wt.d = this._scaleMin.y;
             }
         }
 
-        if (this.scaleMax)
+        if (this._scaleMax)
         {
-            if (wt.a > this.scaleMax.x)
+            if (wt.a > this._scaleMax.x)
             {
-                wt.a = this.scaleMax.x;
+                wt.a = this._scaleMax.x;
             }
 
-            if (wt.d > this.scaleMax.y)
+            if (wt.d > this._scaleMax.y)
             {
-                wt.d = this.scaleMax.y;
+                wt.d = this._scaleMax.y;
             }
+        }
+
+    },
+
+    /**
+    * Set the minimum scale this Sprite will scale down to. Prevents a parent from scaling this Sprite lower than the given value. Set to `null` to remove.
+    *
+    * @property {Phaser.Point} scaleMin
+    */
+    scaleMin: {
+
+        get: function () {
+            return this._scaleMin;
+        },
+
+        set: function (value) {
+            this._scaleMin = value;
+            this.transformCallback = (this._scaleMin || this._scaleMax) ? this.checkTransform : null;
+            return value;
+        }
+
+    },
+
+    /**
+    * Set the maximum scale this Sprite will scale up to. Prevents a parent from scaling this Sprite higher than the given value. Set to `null` to remove.
+    *
+    * @property {Phaser.Point} scaleMax
+    */
+    scaleMax: {
+
+        get: function () {
+            return this._scaleMax;
+        },
+
+        set: function (value) {
+            this._scaleMax = value;
+            this.transformCallback = (this._scaleMin || this._scaleMax) ? this.checkTransform : null;
+            return value;
         }
 
     },

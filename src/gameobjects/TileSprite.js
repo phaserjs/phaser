@@ -46,9 +46,6 @@ Phaser.TileSprite = function (game, x, y, width, height, key, frame) {
     */
     this._scroll = new Phaser.Point();
 
-    this.transformCallback = this.checkTransform;
-    this.transformCallbackContext = this;
-
     this.position.set(x, y);
     this.world.setTo(x, y);
 
