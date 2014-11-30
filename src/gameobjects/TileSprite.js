@@ -71,7 +71,7 @@ Phaser.GameObject.mix(Phaser.TileSprite.prototype, Phaser.GameObject.Traits.SPRI
 * @method Phaser.TileSprite#preUpdate
 * @memberof Phaser.TileSprite
 */
-Phaser.TileSprite.prototype.preUpdateCustom = function() {
+Phaser.TileSprite.prototype.preUpdateImpl = function() {
 
     if (this._scroll.x !== 0)
     {

@@ -74,7 +74,7 @@ Phaser.Sprite.prototype.type = Phaser.SPRITE;
 
 Phaser.GameObject.mix(Phaser.Sprite.prototype, Phaser.GameObject.Traits.SPRITE_LIKE);
 
-Phaser.Sprite.prototype.preUpdateCustom = function () {
+Phaser.Sprite.prototype.preUpdateImpl = function () {
 
     if (this.lifespan > 0)
     {

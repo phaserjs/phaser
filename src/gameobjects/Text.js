@@ -110,10 +110,10 @@ Phaser.Text.prototype.type = Phaser.TEXT;
 Phaser.GameObject.mix(Phaser.Text.prototype, Phaser.GameObject.Traits.GRAPHICS_LIKE);
 
 /**
-* @method Phaser.Text#destroyCustom
+* @method Phaser.Text#destroyImpl
 * @protected
 */
-Phaser.Text.prototype.destroyCustom = function () {
+Phaser.Text.prototype.destroyImpl = function () {
 
     if (this.canvas.parentNode)
     {

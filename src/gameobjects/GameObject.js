@@ -455,11 +455,11 @@ Phaser.GameObject.CoreMixin.prototype = /* @lends Phaser.GameObject.CoreMixin */
         // Update the world position
         this.world.setTo(this.game.camera.x + this.worldTransform.tx, this.game.camera.y + this.worldTransform.ty);
 
-        this.preUpdateCustom();
+        this.preUpdateImpl();
 
         if (this._cache[6] === 0 /* !exists */)
         {
-            // May no longer exist after preUpdateCustom
+            // May no longer exist after preUpdateImpl
             return false;
         }
 
@@ -517,7 +517,7 @@ Phaser.GameObject.CoreMixin.prototype = /* @lends Phaser.GameObject.CoreMixin */
             this.position.y = (camera.view.y + this.cameraOffset.y) / camera.scale.y;
         }
 
-        this.postUpdateCustom();
+        this.postUpdateImpl();
 
         if (this.exists && this.body)
         {
@@ -547,7 +547,7 @@ Phaser.GameObject.CoreMixin.prototype = /* @lends Phaser.GameObject.CoreMixin */
     * @method Phaser.GameObject.CoreMixin#update
     * @protected
     */
-    preUpdateCustom: function() {
+    preUpdateImpl: function() {
     },
 
     /**
@@ -559,7 +559,7 @@ Phaser.GameObject.CoreMixin.prototype = /* @lends Phaser.GameObject.CoreMixin */
     * @method Phaser.GameObject.CoreMixin#update
     * @protected
     */
-    postUpdateCustom: function() {
+    postUpdateImpl: function() {
     },
 
     /**
@@ -784,7 +784,7 @@ Phaser.GameObject.CoreMixin.prototype = /* @lends Phaser.GameObject.CoreMixin */
             this.events.onDestroy.dispatch(this);
         }
 
-        this.destroyCustom();
+        this.destroyImpl();
 
         if (this.filters)
         {
@@ -863,10 +863,10 @@ Phaser.GameObject.CoreMixin.prototype = /* @lends Phaser.GameObject.CoreMixin */
     *
     * It is a suitable place for custom cleanup.
     *
-    * @method Phaser.GameObject.CoreMixin#destroyCustom
+    * @method Phaser.GameObject.CoreMixin#destroyImpl
     * @protected
     */
-    destroyCustom: function () {
+    destroyImpl: function () {
     },
 
     /**

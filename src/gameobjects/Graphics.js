@@ -46,10 +46,10 @@ Phaser.Graphics.prototype.type = Phaser.GRAPHICS;
 Phaser.GameObject.mix(Phaser.Graphics.prototype, Phaser.GameObject.Traits.GRAPHICS_LIKE);
 
 /**
-* @method Phaser.Graphics.prototype.destroyCustom
+* @method Phaser.Graphics.prototype.destroyImpl
 * @protected
 */
-Phaser.Graphics.prototype.destroyCustom = function() {
+Phaser.Graphics.prototype.destroyImpl = function() {
 
     this.clear();
 

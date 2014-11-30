@@ -76,7 +76,7 @@ Phaser.GameObject.mix(Phaser.Rope.prototype, Phaser.GameObject.Traits.SPRITE_LIK
 * @method Phaser.Rope#preUpdate
 * @memberof Phaser.Rope
 */
-Phaser.Rope.prototype.preUpdateCustom = function() {
+Phaser.Rope.prototype.preUpdateImpl = function() {
 
     if (this._scroll.x !== 0)
     {
