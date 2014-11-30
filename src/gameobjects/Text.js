@@ -16,7 +16,6 @@
 * @extends Phaser.GameObject.CullingMixin
 * @extends Phaser.GameObject.InputMixin
 * @extends Phaser.GameObject.EventsMixin
-* @extends Phaser.GameObject.LifeMixin
 * @constructor
 * @param {Phaser.Game} game - Current game instance.
 * @param {number} x - X position of the new text object.

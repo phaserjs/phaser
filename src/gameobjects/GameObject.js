@@ -14,8 +14,11 @@
 * feature compatibility and code/documentation sharing between existing types.
 *
 * This approach has been designed for maximum code-resue and consistency with no/minimal performance
-* impact; the shared functions may even improve overall performance, even if they are not specialized.
-* Judicial guards are used around features and care is taken to not introduce extra work.
+* impact; the shared functions and easy of applying general optimizations may even improve overall performance,
+* even if the functions themselves are not specialized.
+*
+* Judicial guards - lifted into a prototype or instance as appropriate - are used to handle
+* varied features and care is taken to not introduce extra work.
 *
 * The following game object mixins are available:
 *
@@ -27,12 +30,13 @@
 * - {@link Phaser.GameObject.PhysicsMixin}
 * - {@link Phaser.GameObject.LifeMixin}
 *
-* Using separate types also allows documentation generation and inheritance tracing:
+* Using separate types also allows documentation generation and inheritance tracing. In JSDoc this
+* is handled with the use of multuple @extends doclets.
 *
-* Google Closure Compiler should support @interface/@extends and @interface/@implements.
-* JSDoc-dev currently supports @interface/@extends and should support @interface/@implements by 3.3.0-final.
-* Even though no MI is used, multiple @extends JSDoc doclets result in usable/relevant output that shows the
-* mixin member with the type and links to the inherited base.
+* - Even though no MI is used, multiple @extends JSDoc doclets result in correct output that shows the
+*   mixin member with the type and links to the inherited base.
+*   (JSDoc 3.3 should include @interface/@implements support.)
+* - Google Closure Compiler may currently support @interface/@implements.
 *
 * @class Phaser.GameObject
 * @protected
@@ -42,11 +46,15 @@ Phaser.GameObject = {};
 /**
 * Various traits that a game object can have.
 *
+* The values represent bitmask flags. 
+* Supply the relevant trait mask to {@link Phaser.GameObject.mix mix}.
+*
 * @member
 * @property {number} CULLING - Supports camera/world culling.
+*     There is currently no per-type performance impact for supporting CULLING.
 * @property {number} TEXTURE - Supports textures and texture frames.
-* @property {number} INPUT - Supports input (implied by EVENTS and LIFE).
-* @property {number} EVENTS - Supports textures and texture frames.
+* @property {number} INPUT - Supports input.
+* @property {number} EVENTS - Supports events (implied by INPUT and LIFE).
 * @property {number} PHYSICS - Supports a physics body.
 * @property {number} LIFE - Supports 'alive'.
 * @property {number} GRAPHICS_LIKE -
@@ -70,12 +78,12 @@ Phaser.GameObject.Traits = {
 
 var Traits = Phaser.GameObject.Traits;
 
-Phaser.GameObject.Traits.GRAPHICS_LIKE = Traits.CULLING | Traits.INPUT;
-Phaser.GameObject.Traits.SPRITE_LIKE = Traits.CULLING | Traits.TEXTURE | Traits.INPUT | Traits.PHYSICS | Traits.LIFE;
-Phaser.GameObject.Traits.IMAGE_LIKE = Traits.CULLING | Traits.TEXTURE | Traits.INPUT | Traits.LIFE;
+Traits.GRAPHICS_LIKE = Traits.CULLING | Traits.INPUT;
+Traits.SPRITE_LIKE = Traits.CULLING | Traits.TEXTURE | Traits.INPUT | Traits.PHYSICS | Traits.LIFE;
+Traits.IMAGE_LIKE = Traits.CULLING | Traits.TEXTURE | Traits.INPUT | Traits.LIFE;
 
 /**
-* Mixes in mixin with target.
+* Mixes in a mixin object with the target.
 *
 * Prototype values with that have either `get` or `set` functions are created as properties
 * via defineProperty.
@@ -106,7 +114,7 @@ Phaser.GameObject.mixPrototype = function (target, mixin) {
 * Mixes the selected game object features/traits into the target.
 *
 * @param {object} target - The target prototype/instance.
-* @param {integer} traits - A bitmask of game object Traits to apply.
+* @param {integer} traits - The bitmask of game object Traits to apply.
 * @protected
 */
 Phaser.GameObject.mix = function (target, traits) {
@@ -160,11 +168,14 @@ Phaser.GameObject.mix = function (target, traits) {
 };
 
 /**
-* Initializes the mixin: call in the constructor, with the "this context", after calling the base constructor.
+* Initializes the game object mixins.
+*
+* Call in the constructor, with the "this context".
 *
 * @method Phaser.GameObject.init
 * @param {Phaser.Game} [game=(don't set)] - The current game and/or context object.
-* @param {integer} [traits=(from `mix`)] - The game object Traits to apply.
+* @param {integer} [traits=(from `mix`)] - The bitmask of game object Traits to apply.
+*     If not specified this uses the mask established with {@link Phaser.GameObject.mix mix}.
 * @protected
 */
 Phaser.GameObject.init = function (game, traits) {
@@ -216,13 +227,14 @@ Phaser.GameObject.init = function (game, traits) {
 
     if (traits & Traits.TEXTURE)
     {
-        // `key` not available and should be set by loadTexture
-        // this.key = key;
-        this.animations = new Phaser.AnimationManager(this);
         // Defaults in prototype
-        // this.cropRect = null;
-        // this._crop = null;
-        // this._frame = null;
+        // `key` not available and should be set by loadTexture
+        //this.key = this.key;
+        //this.cropRect = this.cropRect;
+        //this._crop = this._crop;
+        //this._frame = this._frame;
+
+        this.animations = new Phaser.AnimationManager(this);
     }
 
     // Defaults in prototype, but promote to instance
@@ -246,7 +258,7 @@ Phaser.GameObject.init = function (game, traits) {
 *
 * Provides a wide variety of common properties and methods.
 * 
-* Some common properties are exposed even though not requested by other mixins;
+* Some common properties are floated even though not requested by other mixins;
 * this is for guard-check performance and hidden class generation.
 *
 * @class Phaser.GameObject.CoreMixin
@@ -261,15 +273,16 @@ Phaser.GameObject.CoreMixin.prototype = /* @lends Phaser.GameObject.CoreMixin */
     * A reference to the currently running Game.
     * @property {Phaser.Game} game
     * @protected
+    * @readonly
     */
     game: null,
 
     /**
-    * The game object Traits established with `mix`.
+    * The mask of the game object Traits established with `mix`.
     * @property {integer} gameObjectTraits
     * @protected
     */
-    // Property assigned in `mix`
+    // Property assigned in `mix`, before prototypes applied
 
     /**
     * The user defined name given to this game object; useful for debugging, perhaps.
@@ -288,39 +301,39 @@ Phaser.GameObject.CoreMixin.prototype = /* @lends Phaser.GameObject.CoreMixin */
     debug: false,
 
     /**
-    * An game object is only visible / update if it exists.
-    *
-    * @property {boolean} exists
-    * @default
-    */
-    // Implemented as property
-
-    /**
     * The z-depth value of this object within its Group (the World is a Group as well).
-    * No two objects in a Group can have the same z value.
+    *
+    * No two objects in a Group can have the same z value; this is updated internally
+    * when a display object is moved within a Group.
     *
     * @property {integer} z
+    * @readonly
     */
     z: 0,
 
     /**
-    * The world coordinates of this sprite.
+    * The world coordinates of this sprite; this differs from x/y and position which
+    * are relative to the parent.
     *
-    * This differs from the local x/y coordinates which are relative to the parent.
+    * _Warning_: this is updated in the `preUpdate` logic and may not always be a current representation.
     *
     * @property {Phaser.Point} world
     */
     world: null,
 
-    /**
-    * If this object is `fixedToCamera` then this stores the x/y offset that its drawn at, from the top-left of the camera view.
+    /**    
+    * If this object is {@link Phaser.GameObject.CoreMixin#fixedToCamera} then this stores the x/y offset that its drawn at, from the top-left of the camera view.
+    *
+    * _Warning_: in the future this may be either null or a dummy Point object if not previously fixed to the camera.
     *
     * @property {Phaser.Point} cameraOffset
     */
     cameraOffset: null,
 
+    // See scaleMin
     _scaleMin: null,
 
+    // See scaleMax
     _scaleMax: null,
 
     // Physics is a special-case and `body` must be null to be considered in-play;
@@ -554,7 +567,7 @@ Phaser.GameObject.CoreMixin.prototype = /* @lends Phaser.GameObject.CoreMixin */
     * Called from the default `postUpdate`.
     *
     * This is called after any internal rendering cleanup and after the
-    * position has been adjusted if fixedToCamera.
+    * position has been adjusted if {@link Phaser.GameObject.CoreMixin#fixedToCamera}.
     *
     * @method Phaser.GameObject.CoreMixin#update
     * @protected
@@ -882,7 +895,7 @@ Phaser.GameObject.CoreMixin.prototype = /* @lends Phaser.GameObject.CoreMixin */
 
         get: function () {
 
-            return !!this._cache[6];
+            return this._cache[6] === 1;
 
         },
 
@@ -916,6 +929,17 @@ Phaser.GameObject.CoreMixin.prototype = /* @lends Phaser.GameObject.CoreMixin */
         }
 
     },
+
+    /**
+    * The coordinate of the object relative to the local coordinates of the parent.
+    *
+    * Consider usin the `x` and `y` properties of the game object instead (as they may work better
+    * with physics..)
+    *
+    * @property {PIXI.Point} position
+    * @internal
+    */
+    // PIXI doc override (attempt)
 
     /**
     * The position of the game object on the x axis relative to the local coordinates of the parent.
