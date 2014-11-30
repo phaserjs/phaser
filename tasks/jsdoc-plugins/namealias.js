@@ -17,11 +17,13 @@ exports.handlers.jsdocCommentFound = function (e) {
 
     var raw = e.comment;
 
-    if (/^(\s*[*])\s*@class\b/m.exec(raw))
+    var m = /^(\s*[*])\s*@class\b/m.exec(raw);
+    if (m)
     {
-        // @class X / @constructor -> @alias X / @class
-        raw = raw.replace(/^(\s*[*])\s*@class\s+(\S+).*?$/mg, "$1 @alias $2\n$1 @class");
-        raw = raw.replace(/^(\s*[*])\s*@constructor\b.*?$/mg, "$1");
+        // @class X -> @alias X / @class
+        raw = raw.replace(/^(\s*[*])\s*@class[ \t]+(\S+).*?((?=[\r\n]+))/mg, "$1 @alias $2$3$1 @class");
+        // @constructor -> {removed}
+        raw = raw.replace(/^(\s*[*])\s*@constructor\b.*?(?=[\r\n]+)/mg, "$1");
 
         e.comment = raw;
     }
