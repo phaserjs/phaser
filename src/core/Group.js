@@ -22,7 +22,7 @@
 * @param {string} [name='group'] - A name for this group. Not used internally but useful for debugging.
 * @param {boolean} [addToStage=false] - If true this group will be added directly to the Game.Stage instead of Game.World.
 * @param {boolean} [enableBody=false] - If true all Sprites created with {@link #create} or {@link #createMulitple} will have a physics body created on them. Change the body type with {@link #physicsBodyType}.
-* @param {number} [physicsBodyType=0] - The physics body type to use when physics bodies are automatically added. See {@link #physicsBodyType} for values.
+* @param {integer} [physicsBodyType=0] - The physics body type to use when physics bodies are automatically added. See {@link #physicsBodyType} for values.
 */
 Phaser.Group = function (game, parent, name, addToStage, enableBody, physicsBodyType) {
 
@@ -51,7 +51,7 @@ Phaser.Group = function (game, parent, name, addToStage, enableBody, physicsBody
     /**
     * The z-depth value of this object within its parent container/Group - the World is a Group as well.
     * This value must be unique for each child in a Group.
-    * @property {number} z
+    * @property {integer} z
     */
     this.z = 0;
 
@@ -70,7 +70,7 @@ Phaser.Group = function (game, parent, name, addToStage, enableBody, physicsBody
 
     /**
     * Internal Phaser Type value.
-    * @property {number} type
+    * @property {integer} type
     * @protected
     */
     this.type = Phaser.GROUP;
@@ -149,7 +149,7 @@ Phaser.Group = function (game, parent, name, addToStage, enableBody, physicsBody
     * If {@link #enableBody} is true this is the type of physics body that is created on new Sprites.
     *
     * The valid values are {@link Phaser.Physics.ARCADE}, {@link Phaser.Physics.P2}, {@link Phaser.Physics.NINJA}, etc.
-    * @property {number} physicsBodyType
+    * @property {integer} physicsBodyType
     */
     this.physicsBodyType = physicsBodyType;
 
@@ -298,7 +298,7 @@ Phaser.Group.prototype.addMultiple = function (children, silent) {
 *
 * @method Phaser.Group#addAt
 * @param {DisplayObject} child - The display object to add as a child.
-* @param {number} [index=0] - The index within the group to insert the child to.
+* @param {integer} [index=0] - The index within the group to insert the child to.
 * @param {boolean} [silent=false] - If true the child will not dispatch the `onAddedToGroup` event.
 * @return {DisplayObject} The child that was added to the group.
 */
@@ -336,7 +336,7 @@ Phaser.Group.prototype.addAt = function (child, index, silent) {
 * Returns the child found at the given index within this group.
 *
 * @method Phaser.Group#getAt
-* @param {index} index - The index to return the child from.
+* @param {integer} index - The index to return the child from.
 * @return {DisplayObject} The child that was found at the given index, or -1 for an invalid index.
 */
 Phaser.Group.prototype.getAt = function (index) {
@@ -361,7 +361,7 @@ Phaser.Group.prototype.getAt = function (index) {
 * @param {number} x - The x coordinate to display the newly created Sprite at. The value is in relation to the group.x point.
 * @param {number} y - The y coordinate to display the newly created Sprite at. The value is in relation to the group.y point.
 * @param {string} key - The Game.cache key of the image that this Sprite will use.
-* @param {number|string} [frame] - If the Sprite image contains multiple frames you can specify which one to use here.
+* @param {integer|string} [frame] - If the Sprite image contains multiple frames you can specify which one to use here.
 * @param {boolean} [exists=true] - The default exists state of the Sprite.
 * @return {DisplayObject} The child that was created: will be a {@link Phaser.Sprite} unless {@link #classType} has been changed.
 */
@@ -407,9 +407,9 @@ Phaser.Group.prototype.create = function (x, y, key, frame, exists) {
 * Use {@link #classType} to change the type of object creaded.
 *
 * @method Phaser.Group#createMultiple
-* @param {number} quantity - The number of Sprites to create.
+* @param {integer} quantity - The number of Sprites to create.
 * @param {string} key - The Game.cache key of the image that this Sprite will use.
-* @param {number|string} [frame] - If the Sprite image contains multiple frames you can specify which one to use here.
+* @param {integer|string} [frame] - If the Sprite image contains multiple frames you can specify which one to use here.
 * @param {boolean} [exists=false] - The default exists state of the Sprite.
 */
 Phaser.Group.prototype.createMultiple = function (quantity, key, frame, exists) {
@@ -448,7 +448,7 @@ Phaser.Group.prototype.updateZ = function () {
 * If the optional index parameter is given it sets the cursor to the object at that index instead.
 *
 * @method Phaser.Group#resetCursor
-* @param {number} [index=0] - Set the cursor to point to a specific index.
+* @param {integer} [index=0] - Set the cursor to point to a specific index.
 * @return {any} The child the cursor now points to.
 */
 Phaser.Group.prototype.resetCursor = function (index) {
@@ -633,7 +633,7 @@ Phaser.Group.prototype.moveDown = function (child) {
 * Positions the child found at the given index within this group to the given x and y coordinates.
 *
 * @method Phaser.Group#xy
-* @param {number} index - The index of the child in the group to set the position of.
+* @param {integer} index - The index of the child in the group to set the position of.
 * @param {number} x - The new x position of the child.
 * @param {number} y - The new y position of the child.
 */
@@ -670,7 +670,7 @@ Phaser.Group.prototype.reverse = function () {
 *
 * @method Phaser.Group#getIndex
 * @param {any} child - The child to get the index for.
-* @return {number} The index of the child or -1 if it's not a member of this group.
+* @return {integer} The index of the child or -1 if it's not a member of this group.
 */
 Phaser.Group.prototype.getIndex = function (child) {
 
@@ -763,7 +763,7 @@ Phaser.Group.prototype.hasProperty = function (child, key) {
 * @param {any} child - The child to set the property value on.
 * @param {array} key - An array of strings that make up the property that will be set.
 * @param {any} value - The value that will be set.
-* @param {number} [operation=0] - Controls how the value is assigned. A value of 0 replaces the value with the new one. A value of 1 adds it, 2 subtracts it, 3 multiplies it and 4 divides it.
+* @param {integer} [operation=0] - Controls how the value is assigned. A value of 0 replaces the value with the new one. A value of 1 adds it, 2 subtracts it, 3 multiplies it and 4 divides it.
 * @param {boolean} [force=false] - If `force` is true then the property will be set on the child regardless if it already exists or not. If false and the property doesn't exist, nothing will be set.
 * @return {boolean} True if the property was set, false if not.
 */
@@ -867,7 +867,7 @@ Phaser.Group.prototype.checkProperty = function (child, key, value, force) {
 * @param {any} value - The value that will be set.
 * @param {boolean} [checkAlive=false] - If set then the child will only be updated if alive=true.
 * @param {boolean} [checkVisible=false] - If set then the child will only be updated if visible=true.
-* @param {number} [operation=0] - Controls how the value is assigned. A value of 0 replaces the value with the new one. A value of 1 adds it, 2 subtracts it, 3 multiplies it and 4 divides it.
+* @param {integer} [operation=0] - Controls how the value is assigned. A value of 0 replaces the value with the new one. A value of 1 adds it, 2 subtracts it, 3 multiplies it and 4 divides it.
 * @param {boolean} [force=false] - If `force` is true then the property will be set on the child regardless if it already exists or not. If false and the property doesn't exist, nothing will be set.
 * @return {boolean} True if the property was set, false if not.
 */
@@ -900,7 +900,7 @@ Phaser.Group.prototype.set = function (child, key, value, checkAlive, checkVisib
 * @param {any} value - The value that will be set.
 * @param {boolean} [checkAlive=false] - If set then only children with alive=true will be updated. This includes any Groups that are children.
 * @param {boolean} [checkVisible=false] - If set then only children with visible=true will be updated. This includes any Groups that are children.
-* @param {number} [operation=0] - Controls how the value is assigned. A value of 0 replaces the value with the new one. A value of 1 adds it, 2 subtracts it, 3 multiplies it and 4 divides it.
+* @param {integer} [operation=0] - Controls how the value is assigned. A value of 0 replaces the value with the new one. A value of 1 adds it, 2 subtracts it, 3 multiplies it and 4 divides it.
 * @param {boolean} [force=false] - If `force` is true then the property will be set on the child regardless if it already exists or not. If false and the property doesn't exist, nothing will be set.
 */
 Phaser.Group.prototype.setAll = function (key, value, checkAlive, checkVisible, operation, force) {
@@ -935,7 +935,7 @@ Phaser.Group.prototype.setAll = function (key, value, checkAlive, checkVisible, 
 * @param {any} value - The value that will be set.
 * @param {boolean} [checkAlive=false] - If set then only children with alive=true will be updated. This includes any Groups that are children.
 * @param {boolean} [checkVisible=false] - If set then only children with visible=true will be updated. This includes any Groups that are children.
-* @param {number} [operation=0] - Controls how the value is assigned. A value of 0 replaces the value with the new one. A value of 1 adds it, 2 subtracts it, 3 multiplies it and 4 divides it.
+* @param {integer} [operation=0] - Controls how the value is assigned. A value of 0 replaces the value with the new one. A value of 1 adds it, 2 subtracts it, 3 multiplies it and 4 divides it.
 * @param {boolean} [force=false] - If `force` is true then the property will be set on the child regardless if it already exists or not. If false and the property doesn't exist, nothing will be set.
 */
 Phaser.Group.prototype.setAllChildren = function (key, value, checkAlive, checkVisible, operation, force) {
@@ -1099,7 +1099,7 @@ Phaser.Group.prototype.callAllExists = function (callback, existsValue) {
 * @method Phaser.Group#callbackFromArray
 * @param {object} child - The object to inspect.
 * @param {array} callback - The array of function names.
-* @param {number} length - The size of the array (pre-calculated in callAll).
+* @param {integer} length - The size of the array (pre-calculated in callAll).
 * @protected
 */
 Phaser.Group.prototype.callbackFromArray = function (child, callback, length) {
@@ -1711,7 +1711,7 @@ Phaser.Group.prototype.getBottom = function () {
 * Get the number of living children in this group.
 *
 * @method Phaser.Group#countLiving
-* @return {number} The number of children flagged as alive.
+* @return {integer} The number of children flagged as alive.
 */
 Phaser.Group.prototype.countLiving = function () {
 
@@ -1723,7 +1723,7 @@ Phaser.Group.prototype.countLiving = function () {
 * Get the number of dead children in this group.
 *
 * @method Phaser.Group#countDead
-* @return {number} The number of children flagged as dead.
+* @return {integer} The number of children flagged as dead.
 */
 Phaser.Group.prototype.countDead = function () {
 
@@ -1735,8 +1735,8 @@ Phaser.Group.prototype.countDead = function () {
 * Returns a random child from the group.
 *
 * @method Phaser.Group#getRandom
-* @param {number} [startIndex=0] - Offset from the front of the front of the group (lowest child).
-* @param {number} [length=(to top)] - Restriction on the number of values you want to randomly select from.
+* @param {integer} [startIndex=0] - Offset from the front of the front of the group (lowest child).
+* @param {integer} [length=(to top)] - Restriction on the number of values you want to randomly select from.
 * @return {any} A random child of this Group.
 */
 Phaser.Group.prototype.getRandom = function (startIndex, length) {
@@ -1840,8 +1840,8 @@ Phaser.Group.prototype.removeAll = function (destroy, silent) {
 * Removes all children from this group whose index falls beteen the given startIndex and endIndex values.
 *
 * @method Phaser.Group#removeBetween
-* @param {number} startIndex - The index to start removing children from.
-* @param {number} [endIndex] - The index to stop removing children at. Must be higher than startIndex. If undefined this method will remove all children between startIndex and the end of the group.
+* @param {integer} startIndex - The index to start removing children from.
+* @param {integer} [endIndex] - The index to stop removing children at. Must be higher than startIndex. If undefined this method will remove all children between startIndex and the end of the group.
 * @param {boolean} [destroy=false] - If true `destroy` will be invoked on each removed child.
 * @param {boolean} [silent=false] - If true the children will not dispatch their `onRemovedFromGroup` events.
 */
@@ -1929,7 +1929,7 @@ Phaser.Group.prototype.destroy = function (destroyChildren, soft) {
 * Total number of existing children in the group.
 *
 * @name Phaser.Group#total
-* @property {number} total
+* @property {integer} total
 * @readonly
 */
 Object.defineProperty(Phaser.Group.prototype, "total", {
@@ -1946,7 +1946,7 @@ Object.defineProperty(Phaser.Group.prototype, "total", {
 * Total number of children in this group, regardless of exists/alive status.
 *
 * @name Phaser.Group#length
-* @property {number} length 
+* @property {integer} length 
 * @readonly
 */
 Object.defineProperty(Phaser.Group.prototype, "length", {
