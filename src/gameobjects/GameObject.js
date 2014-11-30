@@ -157,16 +157,22 @@ Phaser.GameObject.mix = function (target, traits) {
 * Initializes the mixin: call in the constructor, with the "this context", after calling the base constructor.
 *
 * @method Phaser.GameObject.init
+* @param {Phaser.Game} [game=(don't set)] - The current game and/or context object.
 * @param {integer} [traits=(from `mix`)] - The game object Traits to apply.
 * @protected
 */
-Phaser.GameObject.init = function (traits) {
+Phaser.GameObject.init = function (game, traits) {
 
     if (typeof traits === 'undefined') { traits = this.gameObjectTraits; }
 
     if (traits & (Traits.INPUT | Traits.CULLING))
     {
         traits |= Traits.EVENTS;
+    }
+
+    if (typeof game !== 'undefined')
+    {
+        this.game = game;
     }
 
     // Cache used by `exists` - and maybe others

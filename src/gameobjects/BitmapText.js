@@ -35,11 +35,6 @@ Phaser.BitmapText = function (game, x, y, font, text, size) {
     size = size || 32;
 
     /**
-    * @property {Phaser.Game} game - A reference to the currently running Game.
-    */
-    this.game = game;
-
-    /**
     * @property {string} _text - Internal cache var.
     * @private
     */
@@ -91,7 +86,7 @@ Phaser.BitmapText.prototype.constructor = Phaser.BitmapText;
 */
 Phaser.BitmapText.prototype.type = Phaser.BITMAPTEXT;
 
-Phaser.GameObject.mix(Phaser.BitmapText.prototype, Phaser.GameObject.GRAPHICS_LIKE);
+Phaser.GameObject.mix(Phaser.BitmapText.prototype, Phaser.GameObject.Traits.GRAPHICS_LIKE);
 
 /**
 * @method Phaser.BitmapText.prototype.setStyle

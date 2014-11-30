@@ -35,15 +35,9 @@ Phaser.Image = function (game, x, y, key, frame) {
     key = key || null;
     frame = frame || null;
 
-    /**
-    * @property {Phaser.Game} game - A reference to the currently running Game.
-    * @protected
-    */
-    this.game = game;
-
     PIXI.Sprite.call(this, PIXI.TextureCache['__default']);
 
-    Phaser.GameObject.init.call(this);
+    Phaser.GameObject.init.call(this, game);
 
     this.transformCallback = this.checkTransform;
     this.transformCallbackContext = this;
@@ -66,4 +60,4 @@ Phaser.Image.prototype.constructor = Phaser.Image;
 */
 Phaser.Image.prototype.type = Phaser.IMAGE;
 
-Phaser.GameObject.mix(Phaser.Image.prototype, Phaser.GameObject.IMAGE_LIKE);
+Phaser.GameObject.mix(Phaser.Image.prototype, Phaser.GameObject.Traits.IMAGE_LIKE);

@@ -41,11 +41,6 @@ Phaser.Text = function (game, x, y, text, style) {
     }
 
     /**
-    * @property {Phaser.Game} game - A reference to the currently running Game.
-    */
-    this.game = game;
-
-    /**
     * @property {string} _text - Internal cache var.
     * @private
     */
@@ -90,7 +85,7 @@ Phaser.Text = function (game, x, y, text, style) {
 
     PIXI.Text.call(this, text, this.style);
 
-    Phaser.GameObject.init.call(this);
+    Phaser.GameObject.init.call(this, game);
 
     this.transformCallback = this.checkTransform;
     this.transformCallbackContext = this;
@@ -115,7 +110,7 @@ Phaser.Text.prototype.constructor = Phaser.Text;
 */
 Phaser.Text.prototype.type = Phaser.TEXT;
 
-Phaser.GameObject.mix(Phaser.Text.prototype, Phaser.GameObject.GRAPHICS_LIKE);
+Phaser.GameObject.mix(Phaser.Text.prototype, Phaser.GameObject.Traits.GRAPHICS_LIKE);
 
 /**
 * @method Phaser.Text#destroyCustom

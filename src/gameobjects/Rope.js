@@ -41,11 +41,9 @@ Phaser.Rope = function (game, x, y, key, frame, points) {
     key = key || null;
     frame = frame || null;
 
-    this.game = game;
-
     PIXI.Rope.call(this, key, this.points);
 
-    Phaser.GameObject.init.call(this);
+    Phaser.GameObject.init.call(this, game);
 
     /**
     * @property {Phaser.Point} _scroll - Internal cache var.

@@ -24,14 +24,9 @@ Phaser.Graphics = function (game, x, y) {
     x = x || 0;
     y = y || 0;
 
-    /**
-    * @property {Phaser.Game} game - A reference to the currently running Game.
-    */
-    this.game = game;
-
     PIXI.Graphics.call(this);
 
-    Phaser.GameObject.init.call(this);
+    Phaser.GameObject.init.call(this, game);
 
     this.transformCallback = this.checkTransform;
     this.transformCallbackContext = this;
@@ -51,7 +46,7 @@ Phaser.Graphics.prototype.constructor = Phaser.Graphics;
 */
 Phaser.Graphics.prototype.type = Phaser.GRAPHICS;
 
-Phaser.GameObject.mix(Phaser.Graphics.prototype, Phaser.GameObject.GRAPHICS_LIKE);
+Phaser.GameObject.mix(Phaser.Graphics.prototype, Phaser.GameObject.Traits.GRAPHICS_LIKE);
 
 /**
 * @method Phaser.Graphics.prototype.destroyCustom
