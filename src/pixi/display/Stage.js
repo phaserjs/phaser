@@ -27,7 +27,7 @@ PIXI.Stage = function(backgroundColor)
      *
      * @property worldTransform
      * @type Matrix
-     * @readonly
+     * @readOnly
      * @private
      */
     this.worldTransform = new PIXI.Matrix();

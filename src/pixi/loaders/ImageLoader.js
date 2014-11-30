@@ -29,7 +29,7 @@ PIXI.ImageLoader = function(url, crossorigin)
      *
      * @property frames
      * @type Array
-     * @readonly
+     * @readOnly
      */
     this.frames = [];
 };

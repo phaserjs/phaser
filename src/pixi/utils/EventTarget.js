@@ -210,7 +210,7 @@ PIXI.Event = function(target, name, data) {
      * @property stopped
      * @type Boolean
      * @private
-     * @readonly
+     * @readOnly
      */
     this.stopped = false;
 
@@ -221,7 +221,7 @@ PIXI.Event = function(target, name, data) {
      * @property stoppedImmediate
      * @type Boolean
      * @private
-     * @readonly
+     * @readOnly
      */
     this.stoppedImmediate = false;
 
@@ -230,7 +230,7 @@ PIXI.Event = function(target, name, data) {
      *
      * @property target
      * @type Object
-     * @readonly
+     * @readOnly
      */
     this.target = target;
 
@@ -239,7 +239,7 @@ PIXI.Event = function(target, name, data) {
      *
      * @property type
      * @type String
-     * @readonly
+     * @readOnly
      */
     this.type = name;
 
@@ -248,7 +248,7 @@ PIXI.Event = function(target, name, data) {
      *
      * @property data
      * @type Object
-     * @readonly
+     * @readOnly
      */
     this.data = data;
 
@@ -260,7 +260,7 @@ PIXI.Event = function(target, name, data) {
      *
      * @property timeStamp
      * @type Number
-     * @readonly
+     * @readOnly
      */
     this.timeStamp = Date.now();
 };
