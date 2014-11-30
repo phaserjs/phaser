@@ -41,9 +41,6 @@ Phaser.Rope = function (game, x, y, key, frame, points) {
     key = key || null;
     frame = frame || null;
 
-    /**
-    * @property {Phaser.Game} game - A reference to the currently running Game.
-    */
     this.game = game;
 
     PIXI.Rope.call(this, key, this.points);
@@ -76,7 +73,7 @@ Phaser.Rope.prototype.constructor = Phaser.Rope;
 */
 Phaser.Rope.prototype.type = Phaser.ROPE;
 
-Phaser.GameObject.mix(Phaser.Rope.prototype, Phaser.GameObject.SPRITE_LIKE);
+Phaser.GameObject.mix(Phaser.Rope.prototype, Phaser.GameObject.Traits.GRAPHICS_LIKE);
 
 /**
 * Automatically called by World.preUpdate.

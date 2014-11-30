@@ -35,15 +35,9 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     key = key || null;
     frame = frame || null;
 
-    /**
-    * @property {Phaser.Game} game - A reference to the currently running Game.
-    * @protected
-    */
-    this.game = game;
-
     PIXI.Sprite.call(this, PIXI.TextureCache['__default']);
 
-    Phaser.GameObject.init.call(this);
+    Phaser.GameObject.init.call(this, game);
 
     /**
     * @property {number} health - Health value. Used in combination with damage() to allow for quick killing of Sprites.
@@ -81,7 +75,7 @@ Phaser.Sprite.prototype.constructor = Phaser.Sprite;
 */
 Phaser.Sprite.prototype.type = Phaser.SPRITE;
 
-Phaser.GameObject.mix(Phaser.Sprite.prototype, Phaser.GameObject.SPRITE_LIKE);
+Phaser.GameObject.mix(Phaser.Sprite.prototype, Phaser.GameObject.Traits.GRAPHICS_LIKE);
 
 Phaser.Sprite.prototype.preUpdateCustom = function () {
 

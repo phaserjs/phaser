@@ -1,6 +1,6 @@
 /**
 * @classdesc
-* Game objects are {@link PIXI.DisplayObjects display objects} with additional Phaser features.
+* Game objects are {@link PIXI.DisplayObject display objects} with additional Phaser features.
 *
 * Because there is not a single prototype hierarchy a "GameObject" mixin system is used to 
 * consistently add the appropriate game object features to different Phaser types.
@@ -13,7 +13,7 @@
 * A mixin approach is used to avoid altering the prototype inheritance while providing maximum
 * feature compatibility and code/documentation sharing between existing types.
 *
-* This approach has been designed for maximum code-resue and consistency with minimal performance
+* This approach has been designed for maximum code-resue and consistency with no/minimal performance
 * impact; the shared functions may even improve overall performance, even if they are not specialized.
 * Judicial guards are used around features and care is taken to not introduce extra work.
 *
@@ -41,6 +41,22 @@ Phaser.GameObject = {};
 
 /**
 * Various traits that a game object can have.
+*
+* @member
+* @property {number} CULLING - Supports camera/world culling.
+* @property {number} TEXTURE - Supports textures and texture frames.
+* @property {number} INPUT - Supports input (implied by EVENTS and LIFE).
+* @property {number} EVENTS - Supports textures and texture frames.
+* @property {number} PHYSICS - Supports a physics body.
+* @property {number} LIFE - Supports 'alive'.
+* @property {number} GRAPHICS_LIKE -
+*     Supports CULLING and INPUT - no physics or textures as they are expected to be provided by the implementation.
+* @property {number} SPRITE_LIKE -
+*     A sprite is a "full" game object and supports every individual Trait.
+* @property {number} IMAGE_LIKE -
+*     There isn't much difference between an Image and a Sprite
+*     except Image _doesn't_ support PHYSICS.
+*     Also includes LIFE for compatibility with existing code.
 * @protected
 */
 Phaser.GameObject.Traits = {
@@ -54,23 +70,9 @@ Phaser.GameObject.Traits = {
 
 var Traits = Phaser.GameObject.Traits;
 
-/**
-* Supports core, culling, and input - no physics or textures and they are expected to be provided by the implementation.
-*/
-Phaser.GameObject.GRAPHICS_LIKE = Traits.CULLING | Traits.INPUT;
-
-/**
-* A sprite is a "full" game object.
-*/
-Phaser.GameObject.SPRITE_LIKE = Traits.CULLING | Traits.TEXTURE | Traits.INPUT | Traits.PHYSICS | Traits.LIFE;
-
-/**
-* There isn't much difference between an Image (basis of Button) and a Sprite (bases of Particle),
-* but one difference is that an Image doesn't technically support Physics.
-*
-* The Life mixin for compatibility with existing code.
-*/
-Phaser.GameObject.IMAGE_LIKE = Traits.CULLING | Traits.TEXTURE | Traits.INPUT | Traits.LIFE;
+Phaser.GameObject.Traits.GRAPHICS_LIKE = Traits.CULLING | Traits.INPUT;
+Phaser.GameObject.Traits.SPRITE_LIKE = Traits.CULLING | Traits.TEXTURE | Traits.INPUT | Traits.PHYSICS | Traits.LIFE;
+Phaser.GameObject.Traits.IMAGE_LIKE = Traits.CULLING | Traits.TEXTURE | Traits.INPUT | Traits.LIFE;
 
 /**
 * Mixes in mixin with target.
@@ -101,10 +103,10 @@ Phaser.GameObject.mixPrototype = function (target, mixin) {
 };
 
 /**
-* Mixes Phaser.GameObject.CoreMixin into the target.
+* Mixes the selected game object features/traits into the target.
 *
 * @param {object} target - The target prototype/instance.
-* @param {integer} traits - The game object Traits to apply.
+* @param {integer} traits - A bitmask of game object Traits to apply.
 * @protected
 */
 Phaser.GameObject.mix = function (target, traits) {
@@ -154,7 +156,7 @@ Phaser.GameObject.mix = function (target, traits) {
 /**
 * Initializes the mixin: call in the constructor, with the "this context", after calling the base constructor.
 *
-* @method Phaser.GameObject.CoreMixin.omot
+* @method Phaser.GameObject.init
 * @param {integer} [traits=(from `mix`)] - The game object Traits to apply.
 * @protected
 */
@@ -197,7 +199,7 @@ Phaser.GameObject.init = function (traits) {
 
     if (traits & Traits.TEXTURE)
     {
-        // `key` not available, should be set externally
+        // `key` not available and should be set by loadTexture
         // this.key = key;
         this.animations = new Phaser.AnimationManager(this);
         // Defaults in prototype
@@ -222,14 +224,25 @@ Phaser.GameObject.init = function (traits) {
 };
 
 /**
-* The core game object mixin.
-* @namespace Phaser.GameObject
+* @classdesc
+* The Core game object mixin - this is always included in all game objects.
+*
+* Provides a wide variety of common properties and methods.
+*
 * @class Phaser.GameObject.CoreMixin
+* @protected
 */
 Phaser.GameObject.CoreMixin = function () {
 };
 
 Phaser.GameObject.CoreMixin.prototype = /* @lends Phaser.GameObject.CoreMixin */ {
+
+    /**
+    * A reference to the currently running Game.
+    * @property {Phaser.Game} game
+    * @protected
+    */
+    game: null,
 
     /**
     * The game object Traits established with `mix`.
@@ -1082,8 +1095,13 @@ Phaser.GameObject.CoreMixin.prototype = /* @lends Phaser.GameObject.CoreMixin */
 };
 
 /**
-* The game object culling mixin.
+* @classdesc
+* The Culling mixin.
+*
+* This provide properties for camera/world culling.
+*
 * @class Phaser.GameObject.CullingMixin
+* @protected
 */
 Phaser.GameObject.CullingMixin = function () {
 };
@@ -1116,8 +1134,14 @@ Phaser.GameObject.CullingMixin.prototype = /* @lends Phaser.GameObject.CullingMi
 };
 
 /**
-* The game object texture mixin.
+* @classdesc
+* The Texture mixin.
+*
+* This provides support for loading textures and specifying texture crops and framing.
+* This also includes an animation manager.
+*
 * @class Phaser.GameObject.TextureMixin
+* @protected
 */
 Phaser.GameObject.TextureMixin = function () {
 };
@@ -1499,8 +1523,13 @@ Phaser.GameObject.TextureMixin.prototype = /* @lends Phaser.GameObject.TextureMi
 };
 
 /**
-* The game object input mixin.
+* @classdesc
+* The Input mixin.
+*
+* This provides support for enabling and handling input.
+*
 * @class Phaser.GameObject.InputMixin
+* @protected
 */
 Phaser.GameObject.InputMixin = function () {
 };
@@ -1556,8 +1585,13 @@ Phaser.GameObject.InputMixin.prototype = /* @lends Phaser.GameObject.InputMixin 
 };
 
 /**
-* The game object input mixin.
+* @classdesc
+* The Events mixin.
+*
+* This provides support for the standard events object.
+*
 * @class Phaser.GameObject.EventsMixin
+* @protected
 */
 Phaser.GameObject.EventsMixin = function () {
 };
@@ -1574,8 +1608,13 @@ Phaser.GameObject.EventsMixin.prototype = /* @lends Phaser.GameObject.EventsMixi
 };
 
 /**
-* The game object physics mixin.
+* @classdesc
+* The Physics mixin.
+*
+* This provides support for a physics body.
+*
 * @class Phaser.GameObject.PhysicsMixin
+* @protected
 */
 Phaser.GameObject.PhysicsMixin = function () {
 };
@@ -1599,8 +1638,14 @@ Phaser.GameObject.PhysicsMixin.prototype = /* @lends Phaser.GameObject.PhysicsMi
 };
 
 /**
-* The game object life mixin.
+* @classdesc
+* The Life mixin.
+*
+* This provides support for 'alive' as well as killing and reviving;
+* does not support health, which is a specialization.
+*
 * @class Phaser.GameObject.LifeMixin
+* @protected
 */
 Phaser.GameObject.LifeMixin = function () {
 };
