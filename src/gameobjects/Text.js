@@ -239,7 +239,7 @@ Phaser.Text.prototype.destroy = function (destroyChildren) {
 
     if (this.events)
     {
-        this.events.onDestroy.dispatch(this);
+        this.events.onDestroy$dispatch(this);
     }
 
     if (this.parent)
