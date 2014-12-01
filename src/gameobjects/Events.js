@@ -13,11 +13,12 @@
 *
 * Where `yourFunction` is the function you want called when this event occurs.
 *
-* The Input related events will onlt be dispatched if the Sprite has had `inputEnabled` set to `true`.
+* The Input-related events will only be dispatched if the Sprite has had `inputEnabled` set to `true`
+* and the Animation-related events only apply to game objects with animations like {@link Phaser.Sprite}.
 *
 * @class Phaser.Events
 * @constructor
-* @param {Phaser.Sprite} sprite - A reference to the Sprite that owns this Events object.
+* @param {Phaser.Sprite} sprite - A reference to the game object / Sprite that owns this Events object.
 */
 Phaser.Events = function (sprite) {
 
