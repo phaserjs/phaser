@@ -479,7 +479,7 @@ Phaser.Image.prototype.revive = function() {
 
     if (this.events)
     {
-        this.events.onRevived.dispatch(this);
+        this.events.onRevived$dispatch(this);
     }
 
     return this;
@@ -504,7 +504,7 @@ Phaser.Image.prototype.kill = function() {
 
     if (this.events)
     {
-        this.events.onKilled.dispatch(this);
+        this.events.onKilled$dispatch(this);
     }
 
     return this;
@@ -529,7 +529,7 @@ Phaser.Image.prototype.destroy = function(destroyChildren) {
 
     if (this.events)
     {
-        this.events.onDestroy.dispatch(this);
+        this.events.onDestroy$dispatch(this);
     }
 
     if (this.parent)
