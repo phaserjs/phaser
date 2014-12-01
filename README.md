@@ -162,6 +162,7 @@ Phaser.DOM now also special-cases desktops to align the layout bounds
 correctly (this may disagree with CSS breakpoints but it aligns the with
 actual CSS width), without applying a window height/width expansion as
 required on mobile browsers.
+* Signals have been heavily restructured to cut down on the number that are generated in-game. New signal proxies manage the setting and creation as required, cutting down on the volume of run-time object creation significantly. No user code needs to change, however if you did override Phaser.Signal or Sprite.Events then please be aware of the changes by inspecting the source (and commit #1389 by @pnstickne).
 
 ### Updates
 
@@ -472,24 +473,28 @@ Here are some of the features planned for future releases. Not all features are 
 
 ### Version 2.3 ("Tarabon")
 
-* Look carefully at the internal structure of Phaser to avoid method repetition (such as Sprite.crop and Image.crop), investigate using mixins to help reduce overall codebase size.
-* Support for parallel asset loading.
-* Restore Math.interpolateAngles and Math.nearestAngleBetween
+* New parallel asset loader (already started in dev branch)
 * Enhance the State Management, so you can perform non-destructive State swaps and persistence.
+* Updated Text handling
+* Look carefully at the internal structure of Phaser to avoid method repetition (such as Sprite.crop and Image.crop), investigate using mixins to help reduce overall codebase size.
+* Restore Math.interpolateAngles and Math.nearestAngleBetween
 * Scene Manager - json scene parser.
 * Touch Gestures.
-* Optimised global Animation manager to cut down on object creation.
-* Flash CC HTML5 export integration.
-* Massively enhance the audio side of Phaser. Take more advantage of Web Audio: echo effects, positional sound, etc.
-* DragonBones support.
-* Game parameters stored in Google Docs.
 * Adjust how Pointers and Interactive Objects work. Allow an IO to be flagged as "on click only", so it doesn't ever get processed during normal Pointer move events (unless being dragged)
 * Allow multiple drag items - no longer bind just 1 to a Pointer
 * Allow Groups to have Priority IDs too and input disable entire Groups and all children (let it flow down the chain)
 * Allow Groups to be InputEnabled? Dragging a Group would be really useful.
-* Ability to control DOM elements from the core game and layer them into the game.
 * Cache to localStorage using If-Modified-Since. [See github request](https://github.com/photonstorm/phaser/issues/495)
 * Allow for complex assets like Bitmap Fonts to be stored within a texture atlas.
+
+### Version 2.4
+
+* Ability to control DOM elements from the core game and layer them into the game.
+* Game parameters stored in Google Docs.
+* Optimised global Animation manager to cut down on object creation.
+* Flash CC HTML5 export integration.
+* Massively enhance the audio side of Phaser. Take more advantage of Web Audio: echo effects, positional sound, etc.
+* DragonBones support.
 
 ### Phaser 3
 
@@ -497,7 +502,7 @@ Development has now begun on Phaser 3. At the moment it's still in the very earl
 
 We are currently experimenting with an ES6 based module system and we're keen for Phaser 3 to use as many native ES6 features as possible. It will be a significant refactoring of the code base, but never at the expense of features or ease-of-use. Development will be made public when the time is right.
 
-We don't anticipate a release until Summer 2015. Phaser 2 still has roadmap features left that we'd like to implement, but after 2.3 it will be in pure maintenance mode as we work on Phaser 3.
+We don't anticipate a release until Summer 2015. Phaser 2 still has roadmap features left that we'd like to implement, but after 2.3 it will be in  maintenance mode as we work on Phaser 3.
 
 If you are an exceptional JavaScript developer and would like to join the Phaser 3 development team then let us know. We have a limited budget available to pay towards your time.
 
