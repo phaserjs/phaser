@@ -1183,7 +1183,7 @@ declare module Phaser {
         time: Phaser.Time;
         transparent: boolean;
         tweens: Phaser.TweenManager;
-        updateNumber: number;
+        currentUpdateID: number;
         updatesThisFrame: number;
         width: number;
         world: Phaser.World;
