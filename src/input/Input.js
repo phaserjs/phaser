@@ -587,7 +587,7 @@ Phaser.Input.prototype = {
     *
     * @method Phaser.Input#startPointer
     * @protected
-    * @param {Any} event - The event data from the Touch event.
+    * @param {any} event - The event data from the Touch event.
     * @return {Phaser.Pointer} The Pointer object that was started or null if no Pointer object is available.
     */
     startPointer: function (event) {
@@ -625,7 +625,7 @@ Phaser.Input.prototype = {
     *
     * @method Phaser.Input#updatePointer
     * @protected
-    * @param {Any} event - The event data from the Touch event.
+    * @param {any} event - The event data from the Touch event.
     * @return {Phaser.Pointer} The Pointer object that was updated; null if no pointer was updated.
     */
     updatePointer: function (event) {
@@ -657,7 +657,7 @@ Phaser.Input.prototype = {
     *
     * @method Phaser.Input#stopPointer
     * @protected
-    * @param {Any} event - The event data from the Touch event.
+    * @param {any} event - The event data from the Touch event.
     * @return {Phaser.Pointer} The Pointer object that was stopped or null if no Pointer object is available.
     */
     stopPointer: function (event) {

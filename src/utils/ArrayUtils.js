@@ -72,8 +72,8 @@ Phaser.ArrayUtils = {
     * A standard Fisher-Yates Array shuffle implementation which modifies the array in place.
     *
     * @method
-    * @param {array} array - The array to shuffle.
-    * @return {array} The original array, now shuffled.
+    * @param {any[]} array - The array to shuffle.
+    * @return {any[]} The original array, now shuffled.
     */
     shuffle: function (array) {
 
@@ -93,8 +93,8 @@ Phaser.ArrayUtils = {
     * Transposes the elements of the given Array.
     *
     * @method
-    * @param {array} array - The array to transpose.
-    * @return {array} The transposed array.
+    * @param {array[]} array - The array to transpose.
+    * @return {array[]} The transposed array.
     */
     transposeMatrix: function (array) {
 
@@ -119,9 +119,9 @@ Phaser.ArrayUtils = {
     * Based on the routine from http://jsfiddle.net/MrPolywhirl/NH42z/
     *
     * @method
-    * @param {array} matrix - The array to rotate.
+    * @param {array[]} matrix - The array to rotate.
     * @param {number|string} direction - The amount to rotate. Either a number: 90, -90, 270, -270, 180 or a string: 'rotateLeft', 'rotateRight' or 'rotate180'
-    * @return {array} The rotated array
+    * @return {array[]} The rotated array
     */
     rotateMatrix: function (matrix, direction) {
 
@@ -210,7 +210,7 @@ Phaser.ArrayUtils = {
     * @method Phaser.Math#numberArray
     * @param {number} start - The minimum value the array starts with.
     * @param {number} end - The maximum value the array contains.
-    * @return {array} The array of number values.
+    * @return {number[]} The array of number values.
     */
     numberArray: function (start, end) {
 

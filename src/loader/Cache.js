@@ -959,7 +959,7 @@ Phaser.Cache.prototype = {
     *
     * @method Phaser.Cache#getTilemapData
     * @param {string} key - Asset key of the tilemap data to retrieve from the Cache.
-    * @return {Object} The raw tilemap data in CSV or JSON format.
+    * @return {object} The raw tilemap data in CSV or JSON format.
     */
     getTilemapData: function (key) {
 

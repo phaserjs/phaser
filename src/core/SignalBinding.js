@@ -91,7 +91,7 @@ Phaser.SignalBinding.prototype = {
     * Call listener passing arbitrary parameters.
     * If binding was added using `Signal.addOnce()` it will be automatically removed from signal dispatch queue, this method is used internally for the signal dispatch.
     * @method Phaser.SignalBinding#execute
-    * @param {array} [paramsArr] - Array of parameters that should be passed to the listener.
+    * @param {any[]} [paramsArr] - Array of parameters that should be passed to the listener.
     * @return {any} Value returned by the listener.
     */
     execute: function(paramsArr) {

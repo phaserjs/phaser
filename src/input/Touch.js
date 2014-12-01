@@ -26,7 +26,7 @@ Phaser.Touch = function (game) {
     this.enabled = true;
 
     /**
-    * @property {Object} callbackContext - The context under which callbacks are called.
+    * @property {object} callbackContext - The context under which callbacks are called.
     */
     this.callbackContext = this.game;
 

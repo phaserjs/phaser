@@ -1398,7 +1398,7 @@ Phaser.Physics.Arcade.prototype = {
     * @param {Phaser.Group} group - The Group to check.
     * @param {function} [callback] - A callback function that is called if the object overlaps with the Pointer. The callback will be sent two parameters: the Pointer and the Object that overlapped with it.
     * @param {object} [callbackContext] - The context in which to run the callback.
-    * @return {array} An array of the Sprites from the Group that overlapped the Pointer coordinates.
+    * @return {PIXI.DisplayObject[]} An array of the Sprites from the Group that overlapped the Pointer coordinates.
     */
     getObjectsUnderPointer: function (pointer, group, callback, callbackContext) {
 
@@ -1422,7 +1422,7 @@ Phaser.Physics.Arcade.prototype = {
     * @param {function} [callback] - A callback function that is called if the object overlaps the coordinates. The callback will be sent two parameters: the callbackArg and the Object that overlapped the location.
     * @param {object} [callbackContext] - The context in which to run the callback.
     * @param {object} [callbackArg] - An argument to pass to the callback.
-    * @return {array} An array of the Sprites from the Group that overlapped the coordinates.
+    * @return {PIXI.DisplayObject[]} An array of the Sprites from the Group that overlapped the coordinates.
     */
     getObjectsAtLocation: function (x, y, group, callback, callbackContext, callbackArg) {
 

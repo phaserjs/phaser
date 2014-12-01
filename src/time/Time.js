@@ -252,7 +252,7 @@ Phaser.Time = function (game) {
     this._justResumed = false;
 
     /**
-    * @property {array} _timers - Internal store of Phaser.Timer objects.
+    * @property {Phaser.Timer[]} _timers - Internal store of Phaser.Timer objects.
     * @private
     */
     this._timers = [];

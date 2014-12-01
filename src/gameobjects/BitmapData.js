@@ -164,7 +164,7 @@ Phaser.BitmapData = function (game, key, width, height) {
     this._rotate = 0;
 
     /**
-    * @property {Object} _alpha - Internal cache var.
+    * @property {object} _alpha - Internal cache var.
     * @private
     */
     this._alpha = { prev: 1, current: 1 };
@@ -1792,7 +1792,7 @@ Object.defineProperty(Phaser.BitmapData.prototype, "smoothed", {
  * @param {number} scaleY - The scale y value.
  * @param {number} skewX - The skew x value.
  * @param {number} skewY - The skew y value.
- * @return {Object} A JavaScript object containing all of the properties BitmapData needs for transforms.
+ * @return {object} A JavaScript object containing all of the properties BitmapData needs for transforms.
  */
 Phaser.BitmapData.getTransform = function (translateX, translateY, scaleX, scaleY, skewX, skewY) {
 

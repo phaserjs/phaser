@@ -317,7 +317,7 @@ Phaser.Text.prototype.setShadow = function (x, y, color, blur) {
 * Set the style of the text by passing a single style object to it.
 *
 * @method Phaser.Text#setStyle
-* @param {Object} [style] - The style properties to be set on the Text.
+* @param {object} [style] - The style properties to be set on the Text.
 * @param {string} [style.font='bold 20pt Arial'] - The style and size of the font.
 * @param {string} [style.fill='black'] - A canvas fillstyle that will be used on the text eg 'red', '#00FF00'.
 * @param {string} [style.align='left'] - Alignment for multiline text ('left', 'center' or 'right'), does not affect single line text.

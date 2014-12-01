@@ -791,7 +791,7 @@ Object.defineProperty(Phaser.Rope.prototype, "updateAnimation", {
 * The segments that make up the rope body as an array of Phaser.Rectangles
 *
 * @name Phaser.Rope#segments
-* @property {array} updateAnimation - Returns an array of Phaser.Rectangles that represent the segments of the given rope
+* @property {Phaser.Rectangles[]} updateAnimation - Returns an array of Phaser.Rectangles that represent the segments of the given rope
 */
 Object.defineProperty(Phaser.Rope.prototype, "segments", {
     get: function() {
