@@ -31,10 +31,6 @@
 * - The Display canvas layout CSS styles (ie. margins, size) should not be altered/specified as
 *   they may be updated by the ScaleManager.
 *
-* ---
-*
-* Some parts of ScaleManager were inspired by the research of Ryan Van Etten, released under MIT License 2013.
-*
 * @description
 * Create a new ScaleManager object - this is done automatically by {@link Phaser.Game}
 *
@@ -507,7 +503,7 @@ Phaser.ScaleManager = function (game, width, height) {
     */
     this.trackParentInterval = 2000;
 
-    /*
+    /**
     * This signal is dispatched when the size of the Display canvas changes _or_ the size of the Game changes. 
     * When invoked this is done _after_ the Canvas size/position have been updated.
     *

@@ -10,6 +10,7 @@
 * Provides a useful Window and Element functions as well as cross-browser compatibility buffer.
 *
 * Some code originally derived from {@link https://github.com/ryanve/verge verge}.
+* Some parts were inspired by the research of Ryan Van Etten, released under MIT License 2013.
 * 
 * @class Phaser.DOM
 * @static
