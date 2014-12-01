@@ -4023,7 +4023,7 @@ declare module Phaser {
         fixedToCamera: boolean;
         font: string;
         fontSize: number;
-        fontWeight: number;
+        fontWeight: string;
         game: Phaser.Game;
         input: Phaser.InputHandler;
         inputEnabled: boolean;
