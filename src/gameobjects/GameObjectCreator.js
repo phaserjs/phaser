@@ -5,8 +5,8 @@
 */
 
 /**
-* The Game Object Creator is a quick way to create all of the different sorts of core objects that Phaser uses, but not add them to the game world.
-* Use the GameObjectFactory to create and add the objects into the world.
+* The GameObjectCreator is a quick way to create common game objects _without_ adding them to the game world.
+* The object creator can be accessed with {@linkcode Phaser.Game#make `game.make`}.
 *
 * @class Phaser.GameObjectCreator
 * @constructor
@@ -16,11 +16,13 @@ Phaser.GameObjectCreator = function (game) {
 
     /**
     * @property {Phaser.Game} game - A reference to the currently running Game.
+    * @protected
     */
     this.game = game;
 
     /**
     * @property {Phaser.World} world - A reference to the game world.
+    * @protected
     */
     this.world = this.game.world;
 
@@ -29,7 +31,9 @@ Phaser.GameObjectCreator = function (game) {
 Phaser.GameObjectCreator.prototype = {
 
     /**
-    * Create a new `Image` object. An Image is a light-weight object you can use to display anything that doesn't need physics or animation.
+    * Create a new Image object.
+    *
+    * An Image is a light-weight object you can use to display anything that doesn't need physics or animation.
     * It can still rotate, scale, crop and receive input events. This makes it perfect for logos, backgrounds, simple buttons and other non-Sprite graphics.
     *
     * @method Phaser.GameObjectCreator#image
@@ -37,7 +41,7 @@ Phaser.GameObjectCreator.prototype = {
     * @param {number} y - Y position of the image.
     * @param {string|Phaser.RenderTexture|PIXI.Texture} key - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.
     * @param {string|number} [frame] - If the sprite uses an image from a texture atlas or sprite sheet you can pass the frame here. Either a number for a frame ID or a string for a frame name.
-    * @returns {Phaser.Sprite} the newly created sprite object.
+    * @returns {Phaser.Image} the newly created sprite object.
     */
     image: function (x, y, key, frame) {
 
@@ -62,7 +66,9 @@ Phaser.GameObjectCreator.prototype = {
     },
 
     /**
-    * Create a tween object for a specific object. The object can be any JavaScript object or Phaser object such as Sprite.
+    * Create a tween object for a specific object.
+    *
+    * The object can be any JavaScript object or Phaser object such as Sprite.
     *
     * @method Phaser.GameObjectCreator#tween
     * @param {object} obj - Object the tween will be run on.
@@ -92,13 +98,13 @@ Phaser.GameObjectCreator.prototype = {
     },
 
     /**
-    * A Group is a container for display objects that allows for fast pooling, recycling and collision checks.
+    * Create a new SpriteBatch.
     *
     * @method Phaser.GameObjectCreator#spriteBatch
     * @param {any} parent - The parent Group or DisplayObjectContainer that will hold this group, if any.
     * @param {string} [name='group'] - A name for this Group. Not used internally but useful for debugging.
     * @param {boolean} [addToStage=false] - If set to true this Group will be added directly to the Game.Stage instead of Game.World.
-    * @return {Phaser.Group} The newly created group.
+    * @return {Phaser.SpriteBatch} The newly created group.
     */
     spriteBatch: function (parent, name, addToStage) {
 
@@ -242,7 +248,9 @@ Phaser.GameObjectCreator.prototype = {
     },
 
     /**
-    * Emitter is a lightweight particle emitter. It can be used for one-time explosions or for
+    * Creat a new Emitter.
+    *
+    * An Emitter is a lightweight particle emitter. It can be used for one-time explosions or for
     * continuous effects like rain and fire. All it really does is launch Particle objects out
     * at set intervals, and fixes their positions and velocities accorindgly.
     *
@@ -259,7 +267,9 @@ Phaser.GameObjectCreator.prototype = {
     },
 
     /**
-    * Create a new RetroFont object to be used as a texture for an Image or Sprite and optionally add it to the Cache.
+    * Create a new RetroFont object.
+    *
+    * A RetroFont can be used as a texture for an Image or Sprite and optionally add it to the Cache.
     * A RetroFont uses a bitmap which contains fixed with characters for the font set. You use character spacing to define the set.
     * If you need variable width character support then use a BitmapText object instead. The main difference between a RetroFont and a BitmapText
     * is that a RetroFont creates a single texture that you can apply to a game object, where-as a BitmapText creates one Sprite object per letter of text.
@@ -302,7 +312,9 @@ Phaser.GameObjectCreator.prototype = {
     },
 
     /**
-    * Creates a new Phaser.Tilemap object. The map can either be populated with data from a Tiled JSON file or from a CSV file.
+    * Creates a new Phaser.Tilemap object.
+    *
+    * The map can either be populated with data from a Tiled JSON file or from a CSV file.
     * To do this pass the Cache key as the first parameter. When using Tiled data you need only provide the key.
     * When using CSV data you must provide the key and the tileWidth and tileHeight parameters.
     * If creating a blank tilemap to be populated later, you can either specify no parameters at all and then use `Tilemap.create` or pass the map and tile dimensions here.
@@ -348,7 +360,9 @@ Phaser.GameObjectCreator.prototype = {
     },
 
     /**
-    * A BitmapData object which can be manipulated and drawn to like a traditional Canvas object and used to texture Sprites.
+    * Create a BitmpaData object.
+    *
+    * A BitmapData object can be manipulated and drawn to like a traditional Canvas object and used to texture Sprites.
     *
     * @method Phaser.GameObjectCreator#bitmapData
     * @param {number} [width=256] - The width of the BitmapData in pixels.

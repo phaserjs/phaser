@@ -108,7 +108,7 @@ Phaser.Circle.prototype = {
     * Copies the x, y and diameter properties from this Circle to any given object.
     * @method Phaser.Circle#copyTo
     * @param {any} dest - The object to copy to.
-    * @return {Object} This dest object.
+    * @return {object} This dest object.
     */
     copyTo: function (dest) {
 

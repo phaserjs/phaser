@@ -26,7 +26,7 @@ Phaser.Gamepad = function (game) {
     this.game = game;
 
     /**
-    * @property {Object} _gamepadIndexMap - Maps the browsers gamepad indices to our Phaser Gamepads
+    * @property {object} _gamepadIndexMap - Maps the browsers gamepad indices to our Phaser Gamepads
     * @private
     */
     this._gamepadIndexMap = {};
@@ -75,7 +75,7 @@ Phaser.Gamepad = function (game) {
     this._prevTimestamps = [];
 
     /**
-    * @property {Object} callbackContext - The context under which the callbacks are run.
+    * @property {object} callbackContext - The context under which the callbacks are run.
     */
     this.callbackContext = this;
 
@@ -140,8 +140,8 @@ Phaser.Gamepad.prototype = {
     * Add callbacks to the main Gamepad handler to handle connect/disconnect/button down/button up/axis change/float value buttons.
     * 
     * @method Phaser.Gamepad#addCallbacks
-    * @param {Object} context - The context under which the callbacks are run.
-    * @param {Object} callbacks - Object that takes six different callback methods:
+    * @param {object} context - The context under which the callbacks are run.
+    * @param {object} callbacks - Object that takes six different callback methods:
     * onConnectCallback, onDisconnectCallback, onDownCallback, onUpCallback, onAxisCallback, onFloatCallback
     */
     addCallbacks: function (context, callbacks) {

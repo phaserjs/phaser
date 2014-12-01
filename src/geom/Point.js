@@ -234,7 +234,7 @@ Phaser.Point.prototype = {
     *
     * @method Phaser.Point#copyTo
     * @param {any} dest - The object to copy to.
-    * @return {Object} The dest object.
+    * @return {object} The dest object.
     */
     copyTo: function (dest) {
 
@@ -886,7 +886,7 @@ Phaser.Point.centroid = function (points, out) {
 *
 * @method Phaser.Point.parse
 * @static
-* @param {Object} obj - The object to parse.
+* @param {object} obj - The object to parse.
 * @param {string} [xProp='x'] - The property used to set the Point.x value.
 * @param {string} [yProp='y'] - The property used to set the Point.y value.
 * @return {Phaser.Point} The new Point object.
