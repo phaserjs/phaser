@@ -350,6 +350,15 @@ PIXI.Sprite.prototype._renderCanvas = function(renderSession)
 
         renderSession.context.globalAlpha = this.worldAlpha;
 
+         //  If smoothingEnabled is supported and we need to change the smoothing property for this texture
+        if (renderSession.smoothProperty && renderSession.scaleMode !== this.texture.baseTexture.scaleMode)
+        {
+            renderSession.scaleMode = this.texture.baseTexture.scaleMode;
+            renderSession.context[renderSession.smoothProperty] = (renderSession.scaleMode === PIXI.scaleModes.LINEAR);
+        }
+        //  If the texture is trimmed we offset by the trim x/y, otherwise we use the frame dimensions
+        var dx = (this.texture.trim) ? this.texture.trim.x - this.anchor.x * this.texture.trim.width : this.anchor.x * -this.texture.frame.width;
+        var dy = (this.texture.trim) ? this.texture.trim.y - this.anchor.y * this.texture.trim.height : this.anchor.y * -this.texture.frame.height;
         //  Allow for pixel rounding
         if (renderSession.roundPixels)
         {
@@ -360,6 +369,8 @@ PIXI.Sprite.prototype._renderCanvas = function(renderSession)
                 this.worldTransform.d,
                 (this.worldTransform.tx* renderSession.resolution) | 0,
                 (this.worldTransform.ty* renderSession.resolution) | 0);
+            dx = dx | 0;
+            dy = dy | 0;
         }
         else
         {
@@ -371,17 +382,6 @@ PIXI.Sprite.prototype._renderCanvas = function(renderSession)
                 this.worldTransform.tx * renderSession.resolution,
                 this.worldTransform.ty * renderSession.resolution);
         }
-
-        //  If smoothingEnabled is supported and we need to change the smoothing property for this texture
-        if (renderSession.smoothProperty && renderSession.scaleMode !== this.texture.baseTexture.scaleMode)
-        {
-            renderSession.scaleMode = this.texture.baseTexture.scaleMode;
-            renderSession.context[renderSession.smoothProperty] = (renderSession.scaleMode === PIXI.scaleModes.LINEAR);
-        }
-
-        //  If the texture is trimmed we offset by the trim x/y, otherwise we use the frame dimensions
-        var dx = (this.texture.trim) ? this.texture.trim.x - this.anchor.x * this.texture.trim.width : this.anchor.x * -this.texture.frame.width;
-        var dy = (this.texture.trim) ? this.texture.trim.y - this.anchor.y * this.texture.trim.height : this.anchor.y * -this.texture.frame.height;
 
         if (this.tint !== 0xFFFFFF)
         {
