@@ -1231,17 +1231,37 @@ Phaser.Loader.prototype = {
             case 'bitmapfont':
                 file.data = new Image();
                 file.data.name = file.key;
+                
                 file.data.onload = function () {
-                    return _this.fileComplete(_this._fileIndex);
+                    file.data.onload = null;
+                    file.data.onerror = null;
+                    if (!file.loaded)
+                    {
+                        _this.fileComplete(_this._fileIndex);
+                    }
                 };
                 file.data.onerror = function () {
-                    return _this.fileError(_this._fileIndex);
+                    file.data.onload = null;
+                    file.data.onerror = null;
+                    if (!file.loaded)
+                    {
+                        _this.fileError(_this._fileIndex);
+                    }
                 };
+
                 if (this.crossOrigin)
                 {
                     file.data.crossOrigin = this.crossOrigin;
                 }
                 file.data.src = this.baseURL + file.url;
+                
+                // Image is immediately-available/cached
+                if (file.data.complete && (file.data.width + file.data.height) > 0)
+                {
+                    file.data.onload = null;
+                    file.data.onerror = null;
+                    this.fileComplete(this._fileIndex);
+                }
                 break;
 
             case 'audio':
