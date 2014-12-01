@@ -13,7 +13,7 @@
 *
 * Where `yourFunction` is the function you want called when this event occurs.
 *
-* Note that the Input related events only exist if the Sprite has had `inputEnabled` set to `true`.
+* The Input related events will onlt be dispatched if the Sprite has had `inputEnabled` set to `true`.
 *
 * @class Phaser.Events
 * @constructor
@@ -24,7 +24,7 @@ Phaser.Events = function (sprite) {
     /**
     * @property {Phaser.Sprite} parent - The Sprite that owns these events.
     */
-    this._parent = sprite;
+    this.parent = sprite;
 
     // Initializes the backing properties for the events.
     // The actual Signal obiects are automatically created as needed through the proxy property;
@@ -84,8 +84,7 @@ Phaser.Events.prototype = {
 
     },
 
-    // The following properties will be replaced with getters, they
-    // exist here as a sentinal until they are created.
+    // The following properties are sentinels that will be replaced with getters
 
     /**
     * @property {Phaser.Signal} onAddedToGroup - This signal is dispatched when the parent is added to a new Group.
@@ -192,8 +191,7 @@ for (var prop in Phaser.Events.prototype)
     var backing = 'this._' + prop;
     var dispatch = prop + '$dispatch';
 
-    // new Function is ugly but it avoids closures and by-string property lookups.
-    // This does cause duplicate function bodies, but they are small and limited in number.
+    // `new Function(string)` is ugly but it avoids closures and by-string property lookups.
     // Since this is a [near] micro-optimization anyway, might as well go all the way.
     /*jslint evil: true */
 
