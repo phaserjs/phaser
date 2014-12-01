@@ -214,7 +214,7 @@ Phaser.Group.prototype.add = function (child, silent) {
 
         if (!silent && child.events)
         {
-            child.events.onAddedToGroup.dispatch(child, this);
+            child.events.onAddedToGroup$dispatch(child, this);
         }
 
         if (this.cursor === null)
@@ -278,7 +278,7 @@ Phaser.Group.prototype.addAt = function (child, index, silent) {
 
         if (!silent && child.events)
         {
-            child.events.onAddedToGroup.dispatch(child, this);
+            child.events.onAddedToGroup$dispatch(child, this);
         }
 
         if (this.cursor === null)
@@ -344,7 +344,7 @@ Phaser.Group.prototype.create = function (x, y, key, frame, exists) {
 
     if (child.events)
     {
-        child.events.onAddedToGroup.dispatch(child, this);
+        child.events.onAddedToGroup$dispatch(child, this);
     }
 
     if (this.cursor === null)
@@ -639,7 +639,7 @@ Phaser.Group.prototype.replace = function (oldChild, newChild) {
     {
         if (newChild.parent !== undefined)
         {
-            newChild.events.onRemovedFromGroup.dispatch(newChild, this);
+            newChild.events.onRemovedFromGroup$dispatch(newChild, this);
             newChild.parent.removeChild(newChild);
 
             if (newChild.parent instanceof Phaser.Group)
@@ -1669,7 +1669,7 @@ Phaser.Group.prototype.remove = function (child, destroy, silent) {
 
     if (!silent && child.events && !child.destroyPhase)
     {
-        child.events.onRemovedFromGroup.dispatch(child, this);
+        child.events.onRemovedFromGroup$dispatch(child, this);
     }
 
     var removed = this.removeChild(child);
@@ -1712,7 +1712,7 @@ Phaser.Group.prototype.removeAll = function (destroy, silent) {
     {
         if (!silent && this.children[0].events)
         {
-            this.children[0].events.onRemovedFromGroup.dispatch(this.children[0], this);
+            this.children[0].events.onRemovedFromGroup$dispatch(this.children[0], this);
         }
 
         var removed = this.removeChild(this.children[0]);
@@ -1759,7 +1759,7 @@ Phaser.Group.prototype.removeBetween = function (startIndex, endIndex, destroy, 
     {
         if (!silent && this.children[i].events)
         {
-            this.children[i].events.onRemovedFromGroup.dispatch(this.children[i], this);
+            this.children[i].events.onRemovedFromGroup$dispatch(this.children[i], this);
         }
 
         var removed = this.removeChild(this.children[i]);
