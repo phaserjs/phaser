@@ -289,13 +289,13 @@ Phaser.Sprite.prototype.preUpdate = function() {
             if (this._cache[5] === 1 && this.game.world.bounds.intersects(this._bounds))
             {
                 this._cache[5] = 0;
-                this.events.onEnterBounds.dispatch(this);
+                this.events.onEnterBounds$dispatch(this);
             }
             else if (this._cache[5] === 0 && !this.game.world.bounds.intersects(this._bounds))
             {
                 //  The Sprite WAS in the screen, but has now left.
                 this._cache[5] = 1;
-                this.events.onOutOfBounds.dispatch(this);
+                this.events.onOutOfBounds$dispatch(this);
 
                 if (this.outOfBoundsKill)
                 {
@@ -627,7 +627,7 @@ Phaser.Sprite.prototype.revive = function(health) {
 
     if (this.events)
     {
-        this.events.onRevived.dispatch(this);
+        this.events.onRevived$dispatch(this);
     }
 
     return this;
@@ -652,7 +652,7 @@ Phaser.Sprite.prototype.kill = function() {
 
     if (this.events)
     {
-        this.events.onKilled.dispatch(this);
+        this.events.onKilled$dispatch(this);
     }
 
     return this;
@@ -677,7 +677,7 @@ Phaser.Sprite.prototype.destroy = function(destroyChildren) {
 
     if (this.events)
     {
-        this.events.onDestroy.dispatch(this);
+        this.events.onDestroy$dispatch(this);
     }
 
     if (this.parent)
