@@ -20,8 +20,8 @@
             "./src/system/", 
             "./src/tilemap/", 
             "./src/time/", 
-            "./src/tween/", 
-            "./src/utils/" 
+            "./src/tween/",
+            "./src/utils/"
         ],
         "exclude": [
             "./src/physics/p2/p2.js"
@@ -29,9 +29,12 @@
         "includePattern": ".+\\.js(doc)?$",
         "excludePattern": "(^|\\/|\\\\)_"
     },
-    "plugins"   : [
+    "plugins": [
+        "./tasks/jsdoc-plugins/namealias",
+        "./tasks/jsdoc-plugins/filterpixi",
         "./tasks/jsdoc-plugins/proptomember",
         "./tasks/jsdoc-plugins/sourceproxy",
+        "./tasks/jsdoc-plugins/shortlinks",
         "plugins/markdown"
     ],
     "templates": {
