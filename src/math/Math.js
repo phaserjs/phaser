@@ -930,13 +930,15 @@ Phaser.Math = {
 
     /**
     * Fetch a random entry from the given array.
-    * Will return null if random selection is missing, or array has no entries.
+    *
+    * Will return null if there are no array items that fall within the specified range
+    * or if there is no item for the randomly choosen index.
     *
     * @method Phaser.Math#getRandom
     * @param {any[]} objects - An array of objects.
-    * @param {number} startIndex - Optional offset off the front of the array. Default value is 0, or the beginning of the array.
-    * @param {number} length - Optional restriction on the number of values you want to randomly select from.
-    * @return {any} The random object that was selected.
+    * @param {integer} startIndex - Optional offset off the front of the array. Default value is 0, or the beginning of the array.
+    * @param {integer} length - Optional restriction on the number of values you want to randomly select from.
+    * @return {object} The random object that was selected.    
     * @deprecated 2.2.0 - Use {@link Phaser.ArrayUtils.getRandomItem}
     */
     getRandom: function (objects, startIndex, length) {
@@ -945,13 +947,15 @@ Phaser.Math = {
 
     /**
     * Removes a random object from the given array and returns it.
-    * Will return null if random selection is missing, or array has no entries.
+    *
+    * Will return null if there are no array items that fall within the specified range
+    * or if there is no item for the randomly choosen index.
     *
     * @method Phaser.Math#removeRandom
     * @param {any[]} objects - An array of objects.
-    * @param {number} startIndex - Optional offset off the front of the array. Default value is 0, or the beginning of the array.
-    * @param {number} length - Optional restriction on the number of values you want to randomly select from.
-    * @return {any} The random object that was removed.
+    * @param {integer} startIndex - Optional offset off the front of the array. Default value is 0, or the beginning of the array.
+    * @param {integer} length - Optional restriction on the number of values you want to randomly select from.
+    * @return {object} The random object that was removed.
     * @deprecated 2.2.0 - Use {@link Phaser.ArrayUtils.removeRandomItem}
     */
     removeRandom: function (objects, startIndex, length) {
