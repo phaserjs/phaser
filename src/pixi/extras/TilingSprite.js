@@ -200,6 +200,7 @@ PIXI.TilingSprite.prototype._renderWebGL = function(renderSession)
 */
 PIXI.TilingSprite.prototype._renderCanvas = function(renderSession)
 {
+
     if (this.visible === false || this.alpha === 0)return;
     
     var context = renderSession.context;
@@ -218,8 +219,8 @@ PIXI.TilingSprite.prototype._renderCanvas = function(renderSession)
     var resolution = renderSession.resolution;
 
     context.setTransform(transform.a * resolution,
-                         transform.c * resolution,
                          transform.b * resolution,
+                         transform.c * resolution,
                          transform.d * resolution,
                          transform.tx * resolution,
                          transform.ty * resolution);
@@ -252,18 +253,18 @@ PIXI.TilingSprite.prototype._renderCanvas = function(renderSession)
     tilePosition.y %= this.tilingTexture.baseTexture.height;
 
     // offset - make sure to account for the anchor point..
-    context.scale(tileScale.x,tileScale.y);
-    context.translate(tilePosition.x + (this.anchor.x * -this._width), tilePosition.y + (this.anchor.y * -this._height));
+    //context.scale(tileScale.x,tileScale.y);
+    //context.translate(tilePosition.x + (this.anchor.x * -this._width), tilePosition.y + (this.anchor.y * -this._height));
 
     context.fillStyle = this.__tilePattern;
 
     context.fillRect(-tilePosition.x,
-                    -tilePosition.y,
-                    this._width / tileScale.x,
-                    this._height / tileScale.y);
+                     -tilePosition.y,
+                     this._width / tileScale.x,
+                     this._height / tileScale.y);
 
-    context.scale(1 / tileScale.x, 1 / tileScale.y);
-    context.translate(-tilePosition.x + (this.anchor.x * this._width), -tilePosition.y + (this.anchor.y * this._height));
+    //context.scale(1 / tileScale.x, 1 / tileScale.y);
+    //context.translate(-tilePosition.x + (this.anchor.x * this._width), -tilePosition.y + (this.anchor.y * this._height));
 
     if (this._mask)
     {
