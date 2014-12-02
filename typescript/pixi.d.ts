@@ -1,4 +1,4 @@
-// Type definitions for PIXI 2.1.1 dev 2014-11-23
+// Type definitions for PIXI 2.2.0 dev 2014-11-02
 // Project: https://github.com/GoodBoyDigital/pixi.js/
 
 declare module PIXI {
@@ -53,6 +53,8 @@ declare module PIXI {
 
     export var BaseTextureCache: { [key: string]: BaseTexture }
     export var TextureCache: { [key: string]: Texture }
+
+    export function isPowerOfTwo(width: number, height: number): boolean;
 
     export function rgb2hex(rgb: number[]): string;
     export function hex2rgb(hex: string): number[];
@@ -254,6 +256,7 @@ declare module PIXI {
 
         height: number;
         hasLoaded: boolean;
+        mipmap: boolean;
         premultipliedAlpha: boolean;
         resolution: number;
         scaleMode: scaleModes;
@@ -1085,7 +1088,7 @@ declare module PIXI {
         colors: number[];
         dirty: boolean;
         indices: number[];
-        padding: number;
+        canvasPadding: number;
         texture: Texture;
         uvs: number[];
         vertices: number[];
@@ -1394,6 +1397,7 @@ declare module PIXI {
     export class WebGLSpriteBatch {
 
         blendModes: number[];
+        colors: number[];
         currentBatchSize: number;
         currentBaseTexture: Texture;
         defaultShader: AbstractFilter;
@@ -1401,6 +1405,7 @@ declare module PIXI {
         drawing: boolean;
         indices: number[];
         lastIndexCount: number;
+        positions: number[];
         textures: Texture[];
         shaders: IPixiShader[];
         size: number;
