@@ -1155,6 +1155,7 @@ declare module Phaser {
         isBooted: boolean;
         isRunning: boolean;
         load: Phaser.Loader;
+        lockRender: boolean;
         make: Phaser.GameObjectCreator;
         math: Phaser.Math;
         net: Phaser.Net;
@@ -1183,7 +1184,7 @@ declare module Phaser {
         time: Phaser.Time;
         transparent: boolean;
         tweens: Phaser.TweenManager;
-        updateNumber: number;
+        currentUpdateID: number;
         updatesThisFrame: number;
         width: number;
         world: Phaser.World;

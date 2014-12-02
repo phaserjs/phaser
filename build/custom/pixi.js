@@ -2398,6 +2398,15 @@ PIXI.Sprite.prototype._renderCanvas = function(renderSession)
 
         renderSession.context.globalAlpha = this.worldAlpha;
 
+         //  If smoothingEnabled is supported and we need to change the smoothing property for this texture
+        if (renderSession.smoothProperty && renderSession.scaleMode !== this.texture.baseTexture.scaleMode)
+        {
+            renderSession.scaleMode = this.texture.baseTexture.scaleMode;
+            renderSession.context[renderSession.smoothProperty] = (renderSession.scaleMode === PIXI.scaleModes.LINEAR);
+        }
+        //  If the texture is trimmed we offset by the trim x/y, otherwise we use the frame dimensions
+        var dx = (this.texture.trim) ? this.texture.trim.x - this.anchor.x * this.texture.trim.width : this.anchor.x * -this.texture.frame.width;
+        var dy = (this.texture.trim) ? this.texture.trim.y - this.anchor.y * this.texture.trim.height : this.anchor.y * -this.texture.frame.height;
         //  Allow for pixel rounding
         if (renderSession.roundPixels)
         {
@@ -2408,6 +2417,8 @@ PIXI.Sprite.prototype._renderCanvas = function(renderSession)
                 this.worldTransform.d,
                 (this.worldTransform.tx* renderSession.resolution) | 0,
                 (this.worldTransform.ty* renderSession.resolution) | 0);
+            dx = dx | 0;
+            dy = dy | 0;
         }
         else
         {
@@ -2419,17 +2430,6 @@ PIXI.Sprite.prototype._renderCanvas = function(renderSession)
                 this.worldTransform.tx * renderSession.resolution,
                 this.worldTransform.ty * renderSession.resolution);
         }
-
-        //  If smoothingEnabled is supported and we need to change the smoothing property for this texture
-        if (renderSession.smoothProperty && renderSession.scaleMode !== this.texture.baseTexture.scaleMode)
-        {
-            renderSession.scaleMode = this.texture.baseTexture.scaleMode;
-            renderSession.context[renderSession.smoothProperty] = (renderSession.scaleMode === PIXI.scaleModes.LINEAR);
-        }
-
-        //  If the texture is trimmed we offset by the trim x/y, otherwise we use the frame dimensions
-        var dx = (this.texture.trim) ? this.texture.trim.x - this.anchor.x * this.texture.trim.width : this.anchor.x * -this.texture.frame.width;
-        var dy = (this.texture.trim) ? this.texture.trim.y - this.anchor.y * this.texture.trim.height : this.anchor.y * -this.texture.frame.height;
 
         if (this.tint !== 0xFFFFFF)
         {
@@ -3809,6 +3809,10 @@ PIXI.getNextPowerOfTwo = function(number)
         while (result < number) result <<= 1;
         return result;
     }
+};
+PIXI.isPowerOfTwo = function(width, height)
+{
+    return (width > 0 && (width & (width - 1)) === 0 && height > 0 && (height & (height - 1)) === 0);
 };
 
 /**
@@ -6118,7 +6122,6 @@ PIXI.WebGLGraphicsData = function(gl)
     this.color = [0,0,0]; // color split!
     this.points = [];
     this.indices = [];
-    this.lastIndex = 0;
     this.buffer = gl.createBuffer();
     this.indexBuffer = gl.createBuffer();
     this.mode = 1;
@@ -6133,7 +6136,6 @@ PIXI.WebGLGraphicsData.prototype.reset = function()
 {
     this.points = [];
     this.indices = [];
-    this.lastIndex = 0;
 };
 
 /**
@@ -6580,7 +6582,17 @@ PIXI.WebGLRenderer.prototype.updateTexture = function(texture)
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture.source);
 
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, texture.scaleMode === PIXI.scaleModes.LINEAR ? gl.LINEAR : gl.NEAREST);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, texture.scaleMode === PIXI.scaleModes.LINEAR ? gl.LINEAR : gl.NEAREST);
+    
+
+    if(texture.mipmap && PIXI.isPowerOfTwo(texture.width, texture.height))
+    {
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, texture.scaleMode === PIXI.scaleModes.LINEAR ? gl.LINEAR_MIPMAP_LINEAR : gl.NEAREST_MIPMAP_NEAREST);
+        gl.generateMipmap(gl.TEXTURE_2D);
+    }
+    else
+    {
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, texture.scaleMode === PIXI.scaleModes.LINEAR ? gl.LINEAR : gl.NEAREST);
+    }
 
     // reguler...
     if(!texture._powerOf2)
@@ -7531,49 +7543,70 @@ PIXI.WebGLSpriteBatch.prototype.render = function(sprite)
     var tx = worldTransform.tx;
     var ty = worldTransform.ty;
 
+    if(this.renderSession.roundPixels)
+    {
+        //xy
+        verticies[index] = a * w1 + c * h1 + tx | 0;
+        verticies[index+1] = d * h1 + b * w1 + ty | 0;
 
-    // xy
-    verticies[index++] = a * w1 + c * h1 + tx;
-    verticies[index++] = d * h1 + b * w1 + ty;
-    // uv
-    verticies[index++] = uvs.x0;
-    verticies[index++] = uvs.y0;
-    // color
-    verticies[index++] = alpha;
-    verticies[index++] = tint;
+        // xy
+        verticies[index+6] = a * w0 + c * h1 + tx | 0;
+        verticies[index+7] = d * h1 + b * w0 + ty | 0;
 
-    // xy
-    verticies[index++] = a * w0 + c * h1 + tx;
-    verticies[index++] = d * h1 + b * w0 + ty;
-    // uv
-    verticies[index++] = uvs.x1;
-    verticies[index++] = uvs.y1;
-    // color
-    verticies[index++] = alpha;
-    verticies[index++] = tint;
+         // xy
+        verticies[index+12] = a * w0 + c * h0 + tx | 0;
+        verticies[index+13] = d * h0 + b * w0 + ty | 0;
 
-    // xy
-    verticies[index++] = a * w0 + c * h0 + tx;
-    verticies[index++] = d * h0 + b * w0 + ty;
-    // uv
-    verticies[index++] = uvs.x2;
-    verticies[index++] = uvs.y2;
-    // color
-    verticies[index++] = alpha;
-    verticies[index++] = tint;
+        // xy
+        verticies[index+18] = a * w1 + c * h0 + tx | 0;
+        verticies[index+19] = d * h0 + b * w1 + ty | 0;
+    }
+    else
+    {
+        //xy
+        verticies[index] = a * w1 + c * h1 + tx;
+        verticies[index+1] = d * h1 + b * w1 + ty;
 
-    // xy
-    verticies[index++] = a * w1 + c * h0 + tx;
-    verticies[index++] = d * h0 + b * w1 + ty;
-    // uv
-    verticies[index++] = uvs.x3;
-    verticies[index++] = uvs.y3;
-    // color
-    verticies[index++] = alpha;
-    verticies[index++] = tint;
+        // xy
+        verticies[index+6] = a * w0 + c * h1 + tx;
+        verticies[index+7] = d * h1 + b * w0 + ty;
+
+         // xy
+        verticies[index+12] = a * w0 + c * h0 + tx;
+        verticies[index+13] = d * h0 + b * w0 + ty;
+
+        // xy
+        verticies[index+18] = a * w1 + c * h0 + tx;
+        verticies[index+19] = d * h0 + b * w1 + ty;
+    }
     
+    // uv
+    verticies[index+2] = uvs.x0;
+    verticies[index+3] = uvs.y0;
+
+    // uv
+    verticies[index+8] = uvs.x1;
+    verticies[index+9] = uvs.y1;
+
+     // uv
+    verticies[index+14] = uvs.x2;
+    verticies[index+15] = uvs.y2;
+
+    // uv
+    verticies[index+20] = uvs.x3;
+    verticies[index+21] = uvs.y3;
+
+    // color
+    verticies[index+4] = verticies[index+10] = verticies[index+16] = verticies[index+22] = alpha;
+    
+    // alpha
+    verticies[index+5] = verticies[index+11] = verticies[index+17] = verticies[index+23] = tint;
+
+    
+
     // increment the batchsize
     this.sprites[this.currentBatchSize++] = sprite;
+
 
 };
 
@@ -11165,6 +11198,15 @@ PIXI.BaseTexture = function(source, scaleMode)
      */
     this._glTextures = [];
 
+    /**
+     *
+     * Set this to true if a mipmap of this texture needs to be generated. This value needs to be set before the texture is used
+     * Also the texture must be a power of two size to work
+     * 
+     * @property mipmap
+     * @type {Boolean}
+     */
+    this.mipmap = false;
     // used for webGL texture updating...
     // TODO - this needs to be addressed
 
