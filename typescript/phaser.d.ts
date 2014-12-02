@@ -1,6 +1,6 @@
 /// <reference path="pixi.d.ts" />
 
-// Type definitions for Phaser dev2.2.0 RC12 2014-11-26
+// Type definitions for Phaser dev2.2.0 RC12 2014-12-02
 // Project: https://github.com/photonstorm/phaser
 
 declare class Phaser {
@@ -825,6 +825,8 @@ declare module Phaser {
         onAnimationComplete: Phaser.Signal;
         onAnimationLoop: Phaser.Signal;
 
+        destroy(): void;
+
     }
 
     class Filter extends PIXI.AbstractFilter {
@@ -1035,10 +1037,10 @@ declare module Phaser {
         ratioV: number;
         multiplier: number;
 
-        createCustomLayer(width: number, height: number, children?: any[], addToWorld?: boolean): Phaser.FlexLayer;
-        createFluidLayer(children: any[]): Phaser.FlexLayer;
-        createFullLayer(children: any[]): Phaser.FlexLayer;
-        createFixedLayer(children: any[]): Phaser.FlexLayer;
+        createCustomLayer(width: number, height: number, children?: PIXI.DisplayObject[], addToWorld?: boolean): Phaser.FlexLayer;
+        createFluidLayer(children: PIXI.DisplayObject[]): Phaser.FlexLayer;
+        createFullLayer(children: PIXI.DisplayObject[]): Phaser.FlexLayer;
+        createFixedLayer(children: PIXI.DisplayObject[]): Phaser.FlexLayer;
         debug(): void;
         onResize(width: number, height: number): void;
         refresh(): void;
@@ -1230,7 +1232,7 @@ declare module Phaser {
         rope(x: number, y: number, key: any, frame?: any, points?: Phaser.Point[]): Phaser.Rope;
         sound(key: string, volume?: number, loop?: boolean, connect?: boolean): Phaser.Sound;
         sprite(x: number, y: number, key?: any, frame?: any): Phaser.Sprite;
-        spriteBatch(parent: any, name?: String, addToStage?: boolean): Phaser.Group;
+        spriteBatch(parent: any, name?: String, addToStage?: boolean): Phaser.SpriteBatch;
         text(x: number, y: number, text?: string, style?: any): Phaser.Text;
         tileMap(key: string, tileWidth?: number, tileHeight?: number, width?: number, height?: number): Phaser.Tilemap;
         tileSprite(x: number, y: number, width: number, height: number, key: any, frame: any): Phaser.TileSprite;
@@ -1473,21 +1475,21 @@ declare module Phaser {
         countLiving(): number;
         create(x: number, y: number, key: string, frame?: any, exists?: boolean): any;
         createMultiple(quantity: number, key: string, frame?: any, exists?: boolean): void;
-        customSort(sortHandler: Function, context: any): void;
+        customSort(sortHandler: Function, context?: any): void;
         destroy(destroyChildren?: boolean, soft?: boolean): void;
         divideAll(property: string, amount: number, checkAlive?: boolean, checkVisible?: boolean): void;
-        forEach(callback: Function, callbackContext: any, checkExists?: boolean): void;
-        forEachAlive(callback: Function, callbackContext: any): void;
-        forEachDead(callback: Function, callbackContext: any): void;
+        forEach(callback: Function, callbackContext: any, checkExists?: boolean, ...args: any[]): void;
+        forEachAlive(callback: Function, callbackContext: any, ...args: any[]): void;
+        forEachDead(callback: Function, callbackContext: any, ...args:any[]): void;
         forEachExists(callback: Function, callbackContext: any): void;
         filter(predicate: Function, checkExists?: boolean): ArraySet;
         getAt(index: number): any;
         getBottom(): any;
         getFirstAlive(): any;
         getFirstDead(): any;
-        getFirstExists(state: boolean): any;
+        getFirstExists(exists: boolean): any;
         getIndex(child: any): number;
-        getRandom(startIndex: number, length: number): any;
+        getRandom(startIndex?: number, length?: number): any;
         getTop(): any;
         hasProperty(child: any, key: string[]): boolean;
         iterate(key: string, value: any, returnType: number, callback?: Function, callbackContext?: any, ...args: any[]): any;
@@ -1502,12 +1504,13 @@ declare module Phaser {
         removeAll(destroy?: boolean, silent?: boolean): void;
         removeBetween(startIndex: number, endIndex?: number, destroy?: boolean, silent?: boolean): void;
         replace(oldChild: any, newChild: any): any;
+        resetCursor(index?: number): any;
         reverse(): void;
         sendToBack(child: any): any;
         set(child: any, key: string[], value: any, operation?: number, force?: boolean): boolean;
         setAll(key: string, value: any, checkAlive?: boolean, checkVisible?: boolean, operation?: number, force?: boolean): boolean;
         setProperty(child: any, key: string[], value: any, operation?: number, force?: boolean): boolean;
-        sort(index?: string, order?: number): void;
+        sort(key?: string, order?: number): void;
         subAll(property: string, amount: number, checkAlive: boolean, checkVisible: boolean): void;
         swap(child1: any, child2: any): boolean;
         update(): void;
@@ -3996,7 +3999,7 @@ declare module Phaser {
         link(key: string): void;
         loadComplete(): void;
         pause(): void;
-        preRender(): void;
+        preRender(elapsedTime: number): void;
         preUpdate(): void;
         render(): void;
         remove(key: string): void;
