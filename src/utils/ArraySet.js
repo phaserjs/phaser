@@ -40,8 +40,8 @@ Phaser.ArraySet.prototype = {
     * If the item already exists in the list it is not moved.
     *
     * @method Phaser.ArraySet#add
-    * @param {*} item - The element to add to this list.
-    * @return {*} The item that was added.
+    * @param {any} item - The element to add to this list.
+    * @return {any} The item that was added.
     */
     add: function (item) {
 
@@ -58,8 +58,8 @@ Phaser.ArraySet.prototype = {
     * Gets the index of the item in the list, or -1 if it isn't in the list.
     *
     * @method Phaser.ArraySet#getIndex
-    * @param {*} item - The element to get the list index for.
-    * @return {number} The index of the item or -1 if not found.
+    * @param {any} item - The element to get the list index for.
+    * @return {integer} The index of the item or -1 if not found.
     */
     getIndex: function (item) {
 
@@ -71,7 +71,7 @@ Phaser.ArraySet.prototype = {
     * Checks for the item within this list.
     *
     * @method Phaser.ArraySet#exists
-    * @param {*} item - The element to get the list index for.
+    * @param {any} item - The element to get the list index for.
     * @return {boolean} True if the item is found in the list, otherwise false.
     */
     exists: function (item) {
@@ -95,8 +95,8 @@ Phaser.ArraySet.prototype = {
     * Removes the given element from this list if it exists.
     *
     * @method Phaser.ArraySet#remove
-    * @param {*} item - The item to be removed from the list.
-    * @return {*} item - The item that was removed.
+    * @param {any} item - The item to be removed from the list.
+    * @return {any} item - The item that was removed.
     */
     remove: function (item) {
 
@@ -114,8 +114,8 @@ Phaser.ArraySet.prototype = {
     * Sets the property `key` to the given value on all members of this list.
     *
     * @method Phaser.ArraySet#setAll
-    * @param {*} key - The propety of the item to set.
-    * @param {*} value - The value to set the property to.
+    * @param {any} key - The propety of the item to set.
+    * @param {any} value - The value to set the property to.
     */
     setAll: function (key, value) {
 
@@ -177,7 +177,7 @@ Object.defineProperty(Phaser.ArraySet.prototype, "total", {
 * Returns the first item and resets the cursor to the start.
 *
 * @name Phaser.ArraySet#first
-* @property {*} first
+* @property {any} first
 */
 Object.defineProperty(Phaser.ArraySet.prototype, "first", {
 
@@ -202,7 +202,7 @@ Object.defineProperty(Phaser.ArraySet.prototype, "first", {
 * Returns the the next item (based on the cursor) and advances the cursor.
 *
 * @name Phaser.ArraySet#next
-* @property {*} next
+* @property {any} next
 */
 Object.defineProperty(Phaser.ArraySet.prototype, "next", {
 

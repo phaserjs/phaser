@@ -423,6 +423,8 @@ Phaser.Input.prototype = {
     /**
     * Adds a callback that is fired every time the activePointer receives a DOM move event such as a mousemove or touchmove.
     *
+    * The callback will be sent 4 parameters: The Pointer that moved, the x position of the pointer, the y position and the down state.
+
     * It will be called every time the activePointer moves, which in a multi-touch game can be a lot of times, so this is best
     * to only use if you've limited input to a single pointer (i.e. mouse or touch).
     * The callback is added to the Phaser.Input.moveCallbacks array and should be removed with Phaser.Input.deleteMoveCallback.
@@ -585,7 +587,7 @@ Phaser.Input.prototype = {
     *
     * @method Phaser.Input#startPointer
     * @protected
-    * @param {Any} event - The event data from the Touch event.
+    * @param {any} event - The event data from the Touch event.
     * @return {Phaser.Pointer} The Pointer object that was started or null if no Pointer object is available.
     */
     startPointer: function (event) {
@@ -623,7 +625,7 @@ Phaser.Input.prototype = {
     *
     * @method Phaser.Input#updatePointer
     * @protected
-    * @param {Any} event - The event data from the Touch event.
+    * @param {any} event - The event data from the Touch event.
     * @return {Phaser.Pointer} The Pointer object that was updated; null if no pointer was updated.
     */
     updatePointer: function (event) {
@@ -655,7 +657,7 @@ Phaser.Input.prototype = {
     *
     * @method Phaser.Input#stopPointer
     * @protected
-    * @param {Any} event - The event data from the Touch event.
+    * @param {any} event - The event data from the Touch event.
     * @return {Phaser.Pointer} The Pointer object that was stopped or null if no Pointer object is available.
     */
     stopPointer: function (event) {

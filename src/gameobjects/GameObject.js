@@ -445,7 +445,7 @@ Phaser.GameObject.CoreMixin.prototype = /* @lends Phaser.GameObject.CoreMixin */
                     this._cache[5] = 0;
                     if (this.events)
                     {
-                        this.events.onEnterBounds.dispatch(this);
+                        this.events.onEnterBounds$dispatch(this);
                     }
                 }
                 else if (this._cache[5] === 0 && !worldBoundIntersect)
@@ -454,7 +454,7 @@ Phaser.GameObject.CoreMixin.prototype = /* @lends Phaser.GameObject.CoreMixin */
                     this._cache[5] = 1;
                     if (this.events)
                     {
-                        this.events.onOutOfBounds.dispatch(this);
+                        this.events.onOutOfBounds$dispatch(this);
                     }
 
                     if (this.outOfBoundsKill)
@@ -794,7 +794,7 @@ Phaser.GameObject.CoreMixin.prototype = /* @lends Phaser.GameObject.CoreMixin */
 
         if (this.events)
         {
-            this.events.onDestroy.dispatch(this);
+            this.events.onDestroy$dispatch(this);
         }
 
         this.destroyImpl();
@@ -1764,7 +1764,7 @@ Phaser.GameObject.LifeMixin.prototype = /* @lends Phaser.GameObject.LifeMixin */
 
         if (this.events)
         {
-            this.events.onRevived.dispatch(this);
+            this.events.onRevived$dispatch(this);
         }
 
         return this;
@@ -1791,7 +1791,7 @@ Phaser.GameObject.LifeMixin.prototype = /* @lends Phaser.GameObject.LifeMixin */
 
         if (this.events)
         {
-            this.events.onKilled.dispatch(this);
+            this.events.onKilled$dispatch(this);
         }
 
         return this;

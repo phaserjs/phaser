@@ -26,6 +26,7 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
 
     /**
     * @property {number} id - Phaser Game ID (for when Pixi supports multiple instances).
+    * @readonly
     */
     this.id = Phaser.GAMES.push(this) - 1;
 
@@ -99,11 +100,13 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
 
     /**
     * @property {PIXI.CanvasRenderer|PIXI.WebGLRenderer} renderer - The Pixi Renderer.
+    * @protected
     */
     this.renderer = null;
 
     /**
     * @property {number} renderType - The Renderer this game will use. Either Phaser.AUTO, Phaser.CANVAS or Phaser.WEBGL.
+    * @readonly
     */
     this.renderType = Phaser.AUTO;
 
@@ -114,18 +117,19 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
 
     /**
     * @property {boolean} isBooted - Whether the game engine is booted, aka available.
-    * @default
+    * @readonly
     */
     this.isBooted = false;
 
     /**
-    * @property {boolean} id -Is game running or paused?
-    * @default
+    * @property {boolean} isRunning - Is game running or paused?
+    * @readonly
     */
     this.isRunning = false;
 
     /**
     * @property {Phaser.RequestAnimationFrame} raf - Automatically handles the core game loop via requestAnimationFrame or setTimeout
+    * @protected
     */
     this.raf = null;
 
@@ -288,13 +292,13 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     this._codePaused = false;
 
     /**
-    * The number of the logic update applied this render frame, starting from 0.
+    * The ID of the current/last logic update applied this render frame, starting from 0.
     *
-    * The first update is `updateNumber === 0` and the last update is `updateNumber === updatesThisFrame.`
-    * @property {number} updateNumber
+    * The first update is `currentUpdateID === 0` and the last update is `currentUpdateID === updatesThisFrame.`
+    * @property {integer} currentUpdateID
     * @protected
     */
-    this.updateNumber = 0;
+    this.currentUpdateID = 0;
 
     /**
     * Number of logic updates expected to occur this render frame;
@@ -734,7 +738,7 @@ Phaser.Game.prototype = {
             while (this._deltaTime >= slowStep)
             {
                 this._deltaTime -= slowStep;
-                this.updateNumber = count;
+                this.currentUpdateID = count;
                 this.updateLogic(1.0 / this.time.desiredFps);
                 count++;
 

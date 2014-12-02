@@ -99,7 +99,7 @@ Phaser.Camera = function (game, id, x, y, width, height) {
 
     /**
     * @property {number} totalInView - The total number of Sprites with `autoCull` set to `true` that are visible by this Camera.
-    * @readOnly
+    * @readonly
     */
     this.totalInView = 0;
 

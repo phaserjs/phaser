@@ -21,7 +21,7 @@
 * @param {boolean} loop - True if this TimerEvent loops, otherwise false.
 * @param {function} callback - The callback that will be called when the TimerEvent occurs.
 * @param {object} callbackContext - The context in which the callback will be called.
-* @param {array} arguments - Additional arguments to be passed to the callback.
+* @param {any[]} arguments - Additional arguments to be passed to the callback.
 */
 Phaser.TimerEvent = function (timer, delay, tick, repeatCount, loop, callback, callbackContext, args) {
 

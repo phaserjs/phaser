@@ -79,9 +79,9 @@ Phaser.DOM = {
     *
     * @method Phaser.DOM.calibrate
     * @private
-    * @param {Object} coords - An object containing the following properties: `{top: number, right: number, bottom: number, left: number}`
+    * @param {object} coords - An object containing the following properties: `{top: number, right: number, bottom: number, left: number}`
     * @param {number} [cushion] - A value to adjust the coordinates by.
-    * @return {Object} The calibrated element coordinates
+    * @return {object} The calibrated element coordinates
     */
     calibrate: function (coords, cushion) {
 
