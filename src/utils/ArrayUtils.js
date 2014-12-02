@@ -40,7 +40,9 @@ Phaser.ArrayUtils = {
 
     /**
     * Removes a random object from the given array and returns it.
-    * Will return null if random selection is missing, or array has no entries.
+    *
+    * Will return null if there are no array items that fall within the specified range
+    * or if there is no item for the randomly choosen index.
     *
     * @method
     * @param {any[]} objects - An array of objects.
@@ -61,7 +63,7 @@ Phaser.ArrayUtils = {
         if (randomIndex < objects.length)
         {
             var removed = objects.splice(randomIndex, 1);
-            return removed[0];
+            return removed[0] === undefined ? null : removed[0];
         }
         else
         {
