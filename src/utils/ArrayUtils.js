@@ -14,7 +14,9 @@ Phaser.ArrayUtils = {
 
     /**
     * Fetch a random entry from the given array.
-    * Will return null if random selection is missing, or array has no entries.
+    *
+    * Will return null if there are no array items that fall within the specified range
+    * or if there is no item for the randomly choosen index.
     *
     * @method
     * @param {any[]} objects - An array of objects.
@@ -32,7 +34,7 @@ Phaser.ArrayUtils = {
         if (typeof length === 'undefined') { length = objects.length; }
 
         var randomIndex = startIndex + Math.floor(Math.random() * length);
-        return objects[randomIndex] || null;
+        return objects[randomIndex] === undefined ? null : objects[randomIndex];
 
     },
 
@@ -90,21 +92,24 @@ Phaser.ArrayUtils = {
     },
 
     /**
-    * Transposes the elements of the given Array.
+    * Transposes the elements of the given matrix (array of arrays).
     *
     * @method
-    * @param {array[]} array - The array to transpose.
-    * @return {array[]} The transposed array.
+    * @param {Array<any[]>} array - The matrix to transpose.
+    * @return {Array<any[]>} A new transposed matrix
     */
     transposeMatrix: function (array) {
 
-        var result = new Array(array[0].length);
+        var sourceRowCount = array.length;
+        var sourceColCount = array[0].length;
 
-        for (var i = 0; i < array[0].length; i++)
+        var result = new Array(sourceColCount);
+
+        for (var i = 0; i < sourceColCount; i++)
         {
-            result[i] = new Array(array.length - 1);
+            result[i] = new Array(sourceRowCount);
 
-            for (var j = array.length - 1; j > -1; j--)
+            for (var j = sourceRowCount - 1; j > -1; j--)
             {
                 result[i][j] = array[j][i];
             }
@@ -115,13 +120,14 @@ Phaser.ArrayUtils = {
     },
 
     /**
-    * Rotates the given array.
-    * Based on the routine from http://jsfiddle.net/MrPolywhirl/NH42z/
+    * Rotates the given matrix (array of arrays).
+    *
+    * Based on the routine from {@link http://jsfiddle.net/MrPolywhirl/NH42z/}.
     *
     * @method
-    * @param {array[]} matrix - The array to rotate.
-    * @param {number|string} direction - The amount to rotate. Either a number: 90, -90, 270, -270, 180 or a string: 'rotateLeft', 'rotateRight' or 'rotate180'
-    * @return {array[]} The rotated array
+    * @param {Array<any[]>} matrix - The array to rotate; this matrix _may_ be altered.
+    * @param {number|string} direction - The amount to rotate: the roation in degrees (90, -90, 270, -270, 180) or a string command ('rotateLeft', 'rotateRight' or 'rotate180').
+    * @return {Array<any[]>} The rotated matrix. The source matrix should be discarded for the returned matrix.
     */
     rotateMatrix: function (matrix, direction) {
 
