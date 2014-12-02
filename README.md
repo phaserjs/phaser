@@ -163,6 +163,7 @@ correctly (this may disagree with CSS breakpoints but it aligns the with
 actual CSS width), without applying a window height/width expansion as
 required on mobile browsers.
 * Signals have been heavily restructured to cut down on the number that are generated in-game. New signal proxies manage the setting and creation as required, cutting down on the volume of run-time object creation significantly. No user code needs to change, however if you did override Phaser.Signal or Sprite.Events then please be aware of the changes by inspecting the source (and commit #1389 by @pnstickne).
+* Game.lockRender is a new property. If `false` Phaser will automatically render the display list every update. If `true` the render loop will be skipped. You can toggle this value at run-time to gain exact control over when Phaser renders. This can be useful in certain types of game or application. Please note that if you don't render the display list then none of the game object transforms will be updated, so use this value carefully.
 
 ### Updates
 
@@ -224,6 +225,9 @@ removal of the automatic closure, results in a very lightweight
 * Time.elapsedMS holds the number of milliseconds since the last Game loop, regardless of raF or setTimout being used.
 * Incorrectly prepared tilemap images (with dimensions not evenly divisible by the tile dimensions) would render incorrectly when compared to the display seen in Tiled. The Phaser tilemap code has been adjusted to match the way Tiled deals with this, which should help if you're using tileset images that contain extra padding/margin pixels. Additional console warnings have been added. However the fact remains that you should carefully prepare your tilesets before using them. Crop off extra padding, make sure they are the right dimensions (thanks @SoulBeaver for the report and @pnstickne for the fix #1371)
 * Text.setShadow has had the default `color` value changed from `rgba(0,0,0,0)` to `rgba(0,0,0,1)` so it appears as a black shadow by default - before the alpha channel made it invisible.
+* Math.getRandom will now return `null` if random selection is missing, or array has no entries (thanks @pnstickne #1395)
+* Array.transposeArray has had a small off-by-one error fixed. It didn't effect the results but meant returned arrays were 1 element bigger than needed (thanks @nextht #1394)
+* State.preRender is now sent two parameters: a reference to the Phaser.Game instance and a new parameter: `elapsedTime` which is the time elapsed since the last update.
 
 ### Bug Fixes
 
