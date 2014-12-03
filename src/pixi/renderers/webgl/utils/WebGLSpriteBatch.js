@@ -3,8 +3,7 @@
  * 
  * Big thanks to the very clever Matt DesLauriers <mattdesl> https://github.com/mattdesl/
  * for creating the original pixi version!
- * Also a thanks to https://github.com/bchevalier for tweaking the tint and alpha so that they now share 4 bytes on the vertex buffer
- * 
+ *
  * Heavily inspired by LibGDX's WebGLSpriteBatch:
  * https://github.com/libgdx/libgdx/blob/master/gdx/src/com/badlogic/gdx/graphics/g2d/WebGLSpriteBatch.java
  */
@@ -21,7 +20,7 @@ PIXI.WebGLSpriteBatch = function()
      * @property vertSize
      * @type Number
      */
-    this.vertSize = 5;
+    this.vertSize = 6;
 
     /**
      * The number of images in the SpriteBatch before it flushes
@@ -30,8 +29,8 @@ PIXI.WebGLSpriteBatch = function()
      */
     this.size = 2000;//Math.pow(2, 16) /  this.vertSize;
 
-    //the total number of bytes in our batch
-    var numVerts = this.size * 4 * 4 * this.vertSize;
+    //the total number of floats in our batch
+    var numVerts = this.size * 4 *  this.vertSize;
     //the total number of indices in our batch
     var numIndices = this.size * 6;
 
@@ -39,25 +38,9 @@ PIXI.WebGLSpriteBatch = function()
     * Holds the vertices
     *
     * @property vertices
-    * @type ArrayBuffer
-    */
-    this.vertices = new PIXI.ArrayBuffer(numVerts);
-
-    /**
-    * View on the vertices as a Float32Array
-    *
-    * @property positions
     * @type Float32Array
     */
-    this.positions = new PIXI.Float32Array(this.vertices);
-
-    /**
-    * View on the vertices as a Uint32Array
-    *
-    * @property colors
-    * @type Uint32Array
-    */
-    this.colors = new PIXI.Uint32Array(this.vertices);
+    this.vertices = new PIXI.Float32Array(numVerts);
 
     /**
      * Holds the indices
@@ -205,7 +188,7 @@ PIXI.WebGLSpriteBatch.prototype.end = function()
 PIXI.WebGLSpriteBatch.prototype.render = function(sprite)
 {
     var texture = sprite.texture;
-
+    
    //TODO set blend modes.. 
     // check texture..
     if(this.currentBatchSize >= this.size)
@@ -218,6 +201,12 @@ PIXI.WebGLSpriteBatch.prototype.render = function(sprite)
     var uvs = texture._uvs;
     // if the uvs have not updated then no point rendering just yet!
     if(!uvs)return;
+
+    // get the sprites current alpha
+    var alpha = sprite.worldAlpha;
+    var tint = sprite.tint;
+
+    var verticies = this.vertices;
 
     // TODO trim??
     var aX = sprite.anchor.x;
@@ -259,65 +248,66 @@ PIXI.WebGLSpriteBatch.prototype.render = function(sprite)
     var tx = worldTransform.tx;
     var ty = worldTransform.ty;
 
-    var colors = this.colors;
-    var positions = this.positions;
-
     if(this.renderSession.roundPixels)
     {
-        // xy
-        positions[index] = a * w1 + c * h1 + tx | 0;
-        positions[index+1] = d * h1 + b * w1 + ty | 0;
+        //xy
+        verticies[index] = a * w1 + c * h1 + tx | 0;
+        verticies[index+1] = d * h1 + b * w1 + ty | 0;
 
         // xy
-        positions[index+5] = a * w0 + c * h1 + tx | 0;
-        positions[index+6] = d * h1 + b * w0 + ty | 0;
+        verticies[index+6] = a * w0 + c * h1 + tx | 0;
+        verticies[index+7] = d * h1 + b * w0 + ty | 0;
 
          // xy
-        positions[index+10] = a * w0 + c * h0 + tx | 0;
-        positions[index+11] = d * h0 + b * w0 + ty | 0;
+        verticies[index+12] = a * w0 + c * h0 + tx | 0;
+        verticies[index+13] = d * h0 + b * w0 + ty | 0;
 
         // xy
-        positions[index+15] = a * w1 + c * h0 + tx | 0;
-        positions[index+16] = d * h0 + b * w1 + ty | 0;
+        verticies[index+18] = a * w1 + c * h0 + tx | 0;
+        verticies[index+19] = d * h0 + b * w1 + ty | 0;
     }
     else
     {
-        // xy
-        positions[index] = a * w1 + c * h1 + tx;
-        positions[index+1] = d * h1 + b * w1 + ty;
+        //xy
+        verticies[index] = a * w1 + c * h1 + tx;
+        verticies[index+1] = d * h1 + b * w1 + ty;
 
         // xy
-        positions[index+5] = a * w0 + c * h1 + tx;
-        positions[index+6] = d * h1 + b * w0 + ty;
+        verticies[index+6] = a * w0 + c * h1 + tx;
+        verticies[index+7] = d * h1 + b * w0 + ty;
 
          // xy
-        positions[index+10] = a * w0 + c * h0 + tx;
-        positions[index+11] = d * h0 + b * w0 + ty;
+        verticies[index+12] = a * w0 + c * h0 + tx;
+        verticies[index+13] = d * h0 + b * w0 + ty;
 
         // xy
-        positions[index+15] = a * w1 + c * h0 + tx;
-        positions[index+16] = d * h0 + b * w1 + ty;
+        verticies[index+18] = a * w1 + c * h0 + tx;
+        verticies[index+19] = d * h0 + b * w1 + ty;
     }
     
     // uv
-    positions[index+2] = uvs.x0;
-    positions[index+3] = uvs.y0;
+    verticies[index+2] = uvs.x0;
+    verticies[index+3] = uvs.y0;
 
     // uv
-    positions[index+7] = uvs.x1;
-    positions[index+8] = uvs.y1;
+    verticies[index+8] = uvs.x1;
+    verticies[index+9] = uvs.y1;
 
      // uv
-    positions[index+12] = uvs.x2;
-    positions[index+13] = uvs.y2;
+    verticies[index+14] = uvs.x2;
+    verticies[index+15] = uvs.y2;
 
     // uv
-    positions[index+17] = uvs.x3;
-    positions[index+18] = uvs.y3;
+    verticies[index+20] = uvs.x3;
+    verticies[index+21] = uvs.y3;
 
-    // color and alpha
-    var tint = sprite.tint;
-    colors[index+4] = colors[index+9] = colors[index+14] = colors[index+19] = (tint >> 16) + (tint & 0xff00) + ((tint & 0xff) << 16) + (sprite.alpha * 255 << 24);
+    // color
+    verticies[index+4] = verticies[index+10] = verticies[index+16] = verticies[index+22] = alpha;
+    
+    // alpha
+    verticies[index+5] = verticies[index+11] = verticies[index+17] = verticies[index+23] = tint;
+
+    
 
     // increment the batchsize
     this.sprites[this.currentBatchSize++] = sprite;
@@ -369,14 +359,13 @@ PIXI.WebGLSpriteBatch.prototype.renderTilingSprite = function(tilingSprite)
     uvs.y2 = (1 * scaleY) - offsetY;
 
     uvs.x3 = 0 - offsetX;
-    uvs.y3 = (1 * scaleY) - offsetY;
+    uvs.y3 = (1 *scaleY) - offsetY;
 
-    // get the tilingSprites current alpha and tint and combining them into a single color
+    // get the tilingSprites current alpha
+    var alpha = tilingSprite.worldAlpha;
     var tint = tilingSprite.tint;
-    var color = (tint >> 16) + (tint & 0xff00) + ((tint & 0xff) << 16) + (tilingSprite.alpha * 255 << 24);
 
-    var positions = this.positions;
-    var colors = this.colors;
+    var  verticies = this.vertices;
 
     var width = tilingSprite.width;
     var height = tilingSprite.height;
@@ -401,43 +390,47 @@ PIXI.WebGLSpriteBatch.prototype.renderTilingSprite = function(tilingSprite)
     var c = worldTransform.c / resolution;//[1];
     var d = worldTransform.d / resolution;//[4];
     var tx = worldTransform.tx;//[2];
-    var ty = worldTransform.ty;//[5];
+    var ty = worldTransform.ty;///[5];
 
     // xy
-    positions[index++] = a * w1 + c * h1 + tx;
-    positions[index++] = d * h1 + b * w1 + ty;
+    verticies[index++] = a * w1 + c * h1 + tx;
+    verticies[index++] = d * h1 + b * w1 + ty;
     // uv
-    positions[index++] = uvs.x0;
-    positions[index++] = uvs.y0;
+    verticies[index++] = uvs.x0;
+    verticies[index++] = uvs.y0;
     // color
-    colors[index++] = color;
+    verticies[index++] = alpha;
+    verticies[index++] = tint;
 
     // xy
-    positions[index++] = (a * w0 + c * h1 + tx);
-    positions[index++] = d * h1 + b * w0 + ty;
+    verticies[index++] = (a * w0 + c * h1 + tx);
+    verticies[index++] = d * h1 + b * w0 + ty;
     // uv
-    positions[index++] = uvs.x1;
-    positions[index++] = uvs.y1;
+    verticies[index++] = uvs.x1;
+    verticies[index++] = uvs.y1;
     // color
-    colors[index++] = color;
+    verticies[index++] = alpha;
+    verticies[index++] = tint;
     
     // xy
-    positions[index++] = a * w0 + c * h0 + tx;
-    positions[index++] = d * h0 + b * w0 + ty;
+    verticies[index++] = a * w0 + c * h0 + tx;
+    verticies[index++] = d * h0 + b * w0 + ty;
     // uv
-    positions[index++] = uvs.x2;
-    positions[index++] = uvs.y2;
+    verticies[index++] = uvs.x2;
+    verticies[index++] = uvs.y2;
     // color
-    colors[index++] = color;
+    verticies[index++] = alpha;
+    verticies[index++] = tint;
 
     // xy
-    positions[index++] = a * w1 + c * h0 + tx;
-    positions[index++] = d * h0 + b * w1 + ty;
+    verticies[index++] = a * w1 + c * h0 + tx;
+    verticies[index++] = d * h0 + b * w1 + ty;
     // uv
-    positions[index++] = uvs.x3;
-    positions[index++] = uvs.y3;
+    verticies[index++] = uvs.x3;
+    verticies[index++] = uvs.y3;
     // color
-    colors[index++] = color;
+    verticies[index++] = alpha;
+    verticies[index++] = tint;
 
     // increment the batchsize
     this.sprites[this.currentBatchSize++] = tilingSprite;
@@ -472,9 +465,7 @@ PIXI.WebGLSpriteBatch.prototype.flush = function()
         var stride =  this.vertSize * 4;
         gl.vertexAttribPointer(shader.aVertexPosition, 2, gl.FLOAT, false, stride, 0);
         gl.vertexAttribPointer(shader.aTextureCoord, 2, gl.FLOAT, false, stride, 2 * 4);
-
-        // color attributes will be interpreted as unsigned bytes and normalized
-        gl.vertexAttribPointer(shader.colorAttribute, 4, gl.UNSIGNED_BYTE, true, stride, 4 * 4);
+        gl.vertexAttribPointer(shader.colorAttribute, 2, gl.FLOAT, false, stride, 4 * 4);
     }
 
     // upload the verts to the buffer  
@@ -484,7 +475,7 @@ PIXI.WebGLSpriteBatch.prototype.flush = function()
     }
     else
     {
-        var view = this.positions.subarray(0, this.currentBatchSize * 4 * this.vertSize);
+        var view = this.vertices.subarray(0, this.currentBatchSize * 4 * this.vertSize);
         gl.bufferSubData(gl.ARRAY_BUFFER, 0, view);
     }
 
