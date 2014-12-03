@@ -85,6 +85,7 @@ Version 2.2.1 - "Danabar" - in dev
 
 * Fixed TweenManager.isTweening() and .removeFrom() (thanks @jotson #1408)
 * Added Game.debug reset method for when the debug manager is disabled (thanks @DanielSitarz #1407)
+* Custom Particle classes that used a BitmapData wouldn't work (thanks @hardalias #1402)
 
 For details about changes made in previous versions of Phaser see the full Change Log at https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md
 
