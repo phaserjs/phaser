@@ -124,50 +124,6 @@
 							<a href="Phaser.Easing.html">Easing</a>
 						</li>
 						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Back.html">Back</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Bounce.html">Bounce</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Circular.html">Circular</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Cubic.html">Cubic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Elastic.html">Elastic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Exponential.html">Exponential</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Linear.html">Linear</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Quadratic.html">Quadratic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Quartic.html">Quartic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Quintic.html">Quintic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Sinusoidal.html">Sinusoidal</a>
-						</li>
-						
 						<li class="class-depth-1">
 							<a href="Phaser.Ellipse.html">Ellipse</a>
 						</li>
@@ -876,6 +832,7 @@
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Core<b class="caret"></b></a>
 					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="Phaser.Game.html">Game</a></li>
 						<li class="class-depth-1"><a href="Phaser.Group.html">Group</a></li>
 						<li class="class-depth-1"><a href="Phaser.World.html">World</a></li>
 						<li class="class-depth-1"><a href="Phaser.Loader.html">Loader</a></li>
@@ -898,6 +855,7 @@
 						<li class="class-depth-1"><a href="Phaser.Image.html">Image</a></li>
 						<li class="class-depth-1"><a href="Phaser.Sound.html">Sound</a></li>
 						<li class="class-depth-1"><a href="Phaser.Emitter.html">Emitter</a></li>
+						<li class="class-depth-1"><a href="Phaser.Particle.html">Particle</a></li>
 						<li class="class-depth-1"><a href="Phaser.Text.html">Text</a></li>
 						<li class="class-depth-1"><a href="Phaser.Tween.html">Tween</a></li>
 						<li class="class-depth-1"><a href="Phaser.BitmapText.html">BitmapText</a></li>
@@ -962,6 +920,7 @@
 						<li class="class-depth-1"><a href="https://confirmsubscription.com/h/r/369DE48E3E86AF1E">Newsletter</a></li>
 						<li class="class-depth-1"><a href="https://twitter.com/photonstorm">Twitter</a></li>
 						<li class="class-depth-1"><a href="http://www.html5gamedevs.com/topic/4470-official-phaserio-irc-channel-phaserio-on-freenode/">IRC</a></li>
+						<li class="class-depth-1"><a href="https://leanpub.com/u/photonstorm">Phaser Books</a></li>
 						<li class="class-depth-1"><a href="https://www.gittip.com/photonstorm/">GitTip</a></li>
 					</ul>
 				</li>
@@ -1042,7 +1001,7 @@
 
     
     <dt class="tag-source">Source -
-    <a href="ArrayUtils.js.html">utils/ArrayUtils.js</a>, <a href="ArrayUtils.js.html#sunlight-1-line-3">line 3</a>
+    <a href="ArrayUtils.js.html">utils/ArrayUtils.js</a>, <a href="ArrayUtils.js.html#sunlight-1-line-13">line 13</a>
     </dt>
     
 
@@ -1223,7 +1182,7 @@ The result will always be in the range <code>[first_value, last_value]</code>.</
 
     
     <dt class="tag-source">Source -
-    <a href="ArrayUtils.js.html">utils/ArrayUtils.js</a>, <a href="ArrayUtils.js.html#sunlight-1-line-166">line 166</a>
+    <a href="ArrayUtils.js.html">utils/ArrayUtils.js</a>, <a href="ArrayUtils.js.html#sunlight-1-line-174">line 174</a>
     </dt>
     
 
@@ -1259,8 +1218,9 @@ The result will always be in the range <code>[first_value, last_value]</code>.</
 
     
     <div class="description">
-        <p>Fetch a random entry from the given array.
-Will return null if random selection is missing, or array has no entries.</p>
+        <p>Fetch a random entry from the given array.</p>
+<p>Will return null if there are no array items that fall within the specified range
+or if there is no item for the randomly choosen index.</p>
     </div>
     
 
@@ -1409,7 +1369,7 @@ Will return null if random selection is missing, or array has no entries.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="ArrayUtils.js.html">utils/ArrayUtils.js</a>, <a href="ArrayUtils.js.html#sunlight-1-line-25">line 25</a>
+    <a href="ArrayUtils.js.html">utils/ArrayUtils.js</a>, <a href="ArrayUtils.js.html#sunlight-1-line-27">line 27</a>
     </dt>
     
 
@@ -1445,8 +1405,9 @@ Will return null if random selection is missing, or array has no entries.</p>
 
     
     <div class="description">
-        <p>Removes a random object from the given array and returns it.
-Will return null if random selection is missing, or array has no entries.</p>
+        <p>Removes a random object from the given array and returns it.</p>
+<p>Will return null if there are no array items that fall within the specified range
+or if there is no item for the randomly choosen index.</p>
     </div>
     
 
@@ -1595,7 +1556,7 @@ Will return null if random selection is missing, or array has no entries.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="ArrayUtils.js.html">utils/ArrayUtils.js</a>, <a href="ArrayUtils.js.html#sunlight-1-line-49">line 49</a>
+    <a href="ArrayUtils.js.html">utils/ArrayUtils.js</a>, <a href="ArrayUtils.js.html#sunlight-1-line-53">line 53</a>
     </dt>
     
 
@@ -1735,7 +1696,7 @@ The &quot;rotation&quot; happens to the left.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="ArrayUtils.js.html">utils/ArrayUtils.js</a>, <a href="ArrayUtils.js.html#sunlight-1-line-189">line 189</a>
+    <a href="ArrayUtils.js.html">utils/ArrayUtils.js</a>, <a href="ArrayUtils.js.html#sunlight-1-line-197">line 197</a>
     </dt>
     
 
@@ -1762,7 +1723,7 @@ The &quot;rotation&quot; happens to the left.</p>
             
 <dt>
     <h4 class="name "
-        id="rotateMatrix"><span class="type-signature">&lt;static> </span>rotateMatrix<span class="signature">(matrix, direction)</span><span class="type-signature"> &rarr; {array}</span></h4>
+        id="rotateMatrix"><span class="type-signature">&lt;static> </span>rotateMatrix<span class="signature">(matrix, direction)</span><span class="type-signature"> &rarr; {Array.&lt;Array.&lt;any>>}</span></h4>
     
     
 </dt>
@@ -1771,8 +1732,8 @@ The &quot;rotation&quot; happens to the left.</p>
 
     
     <div class="description">
-        <p>Rotates the given array.
-Based on the routine from <a href="http://jsfiddle.net/MrPolywhirl/NH42z/">http://jsfiddle.net/MrPolywhirl/NH42z/</a></p>
+        <p>Rotates the given matrix (array of arrays).</p>
+<p>Based on the routine from ">http://jsfiddle.net/MrPolywhirl/NH42z/}</a>.</p>
     </div>
     
 
@@ -1812,7 +1773,7 @@ Based on the routine from <a href="http://jsfiddle.net/MrPolywhirl/NH42z/">http:
             <td class="type">
             
                 
-<span class="param-type">array</span>
+<span class="param-type">Array.&lt;Array.&lt;any>></span>
 
 
             
@@ -1822,7 +1783,7 @@ Based on the routine from <a href="http://jsfiddle.net/MrPolywhirl/NH42z/">http:
 
             
 
-            <td class="description last"><p>The array to rotate.</p></td>
+            <td class="description last"><p>The array to rotate; this matrix <em>may</em> be altered.</p></td>
         </tr>
 
 	
@@ -1848,7 +1809,7 @@ Based on the routine from <a href="http://jsfiddle.net/MrPolywhirl/NH42z/">http:
 
             
 
-            <td class="description last"><p>The amount to rotate. Either a number: 90, -90, 270, -270, 180 or a string: 'rotateLeft', 'rotateRight' or 'rotate180'</p></td>
+            <td class="description last"><p>The amount to rotate: the roation in degrees (90, -90, 270, -270, 180) or a string command ('rotateLeft', 'rotateRight' or 'rotate180').</p></td>
         </tr>
 
 	
@@ -1865,13 +1826,13 @@ Based on the routine from <a href="http://jsfiddle.net/MrPolywhirl/NH42z/">http:
     
         <div class="returns-type">
         
-<span class="param-type">array</span>
+<span class="param-type">Array.&lt;Array.&lt;any>></span>
 
  -
         </div>
     
     <div class="returns-desc param-desc">
-        <p>The rotated array</p>
+        <p>The rotated matrix. The source matrix should be discarded for the returned matrix.</p>
     </div>
 
 
@@ -1901,7 +1862,7 @@ Based on the routine from <a href="http://jsfiddle.net/MrPolywhirl/NH42z/">http:
 
     
     <dt class="tag-source">Source -
-    <a href="ArrayUtils.js.html">utils/ArrayUtils.js</a>, <a href="ArrayUtils.js.html#sunlight-1-line-126">line 126</a>
+    <a href="ArrayUtils.js.html">utils/ArrayUtils.js</a>, <a href="ArrayUtils.js.html#sunlight-1-line-134">line 134</a>
     </dt>
     
 
@@ -1928,7 +1889,7 @@ Based on the routine from <a href="http://jsfiddle.net/MrPolywhirl/NH42z/">http:
             
 <dt>
     <h4 class="name "
-        id="shuffle"><span class="type-signature">&lt;static> </span>shuffle<span class="signature">(array)</span><span class="type-signature"> &rarr; {array}</span></h4>
+        id="shuffle"><span class="type-signature">&lt;static> </span>shuffle<span class="signature">(array)</span><span class="type-signature"> &rarr; {any[]}</span></h4>
     
     
 </dt>
@@ -1977,7 +1938,7 @@ Based on the routine from <a href="http://jsfiddle.net/MrPolywhirl/NH42z/">http:
             <td class="type">
             
                 
-<span class="param-type">array</span>
+<span class="param-type">any[]</span>
 
 
             
@@ -2004,7 +1965,7 @@ Based on the routine from <a href="http://jsfiddle.net/MrPolywhirl/NH42z/">http:
     
         <div class="returns-type">
         
-<span class="param-type">array</span>
+<span class="param-type">any[]</span>
 
  -
         </div>
@@ -2040,7 +2001,7 @@ Based on the routine from <a href="http://jsfiddle.net/MrPolywhirl/NH42z/">http:
 
     
     <dt class="tag-source">Source -
-    <a href="ArrayUtils.js.html">utils/ArrayUtils.js</a>, <a href="ArrayUtils.js.html#sunlight-1-line-78">line 78</a>
+    <a href="ArrayUtils.js.html">utils/ArrayUtils.js</a>, <a href="ArrayUtils.js.html#sunlight-1-line-82">line 82</a>
     </dt>
     
 
@@ -2067,7 +2028,7 @@ Based on the routine from <a href="http://jsfiddle.net/MrPolywhirl/NH42z/">http:
             
 <dt>
     <h4 class="name "
-        id="transposeMatrix"><span class="type-signature">&lt;static> </span>transposeMatrix<span class="signature">(array)</span><span class="type-signature"> &rarr; {array}</span></h4>
+        id="transposeMatrix"><span class="type-signature">&lt;static> </span>transposeMatrix<span class="signature">(array)</span><span class="type-signature"> &rarr; {Array.&lt;Array.&lt;any>>}</span></h4>
     
     
 </dt>
@@ -2076,7 +2037,7 @@ Based on the routine from <a href="http://jsfiddle.net/MrPolywhirl/NH42z/">http:
 
     
     <div class="description">
-        <p>Transposes the elements of the given Array.</p>
+        <p>Transposes the elements of the given matrix (array of arrays).</p>
     </div>
     
 
@@ -2116,7 +2077,7 @@ Based on the routine from <a href="http://jsfiddle.net/MrPolywhirl/NH42z/">http:
             <td class="type">
             
                 
-<span class="param-type">array</span>
+<span class="param-type">Array.&lt;Array.&lt;any>></span>
 
 
             
@@ -2126,7 +2087,7 @@ Based on the routine from <a href="http://jsfiddle.net/MrPolywhirl/NH42z/">http:
 
             
 
-            <td class="description last"><p>The array to transpose.</p></td>
+            <td class="description last"><p>The matrix to transpose.</p></td>
         </tr>
 
 	
@@ -2143,13 +2104,13 @@ Based on the routine from <a href="http://jsfiddle.net/MrPolywhirl/NH42z/">http:
     
         <div class="returns-type">
         
-<span class="param-type">array</span>
+<span class="param-type">Array.&lt;Array.&lt;any>></span>
 
  -
         </div>
     
     <div class="returns-desc param-desc">
-        <p>The transposed array.</p>
+        <p>A new transposed matrix</p>
     </div>
 
 
@@ -2179,7 +2140,7 @@ Based on the routine from <a href="http://jsfiddle.net/MrPolywhirl/NH42z/">http:
 
     
     <dt class="tag-source">Source -
-    <a href="ArrayUtils.js.html">utils/ArrayUtils.js</a>, <a href="ArrayUtils.js.html#sunlight-1-line-99">line 99</a>
+    <a href="ArrayUtils.js.html">utils/ArrayUtils.js</a>, <a href="ArrayUtils.js.html#sunlight-1-line-103">line 103</a>
     </dt>
     
 
@@ -2228,7 +2189,7 @@ Based on the routine from <a href="http://jsfiddle.net/MrPolywhirl/NH42z/">http:
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Tue Nov 25 2014 00:17:22 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Wed Dec 03 2014 10:30:34 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

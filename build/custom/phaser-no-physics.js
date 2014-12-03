@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.2.0 "Bethal" - Built: Tue Dec 02 2014 09:04:17
+* v2.2.0 "Bethal" - Built: Wed Dec 03 2014 09:34:03
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -74,7 +74,7 @@ PIXI.CANVAS_RENDERER = 1;
  * @property {String} VERSION
  * @static 
  */
-PIXI.VERSION = "v2.1.0";
+PIXI.VERSION = "v2.2.0";
 
 /**
  * Various blend modes supported by pixi.
@@ -143,6 +143,14 @@ if(typeof(Float32Array) != 'undefined')
 {
     PIXI.Float32Array = Float32Array;
     PIXI.Uint16Array = Uint16Array;
+
+    // Uint32Array and ArrayBuffer only used by WebGL renderer
+    // We can suppose that if WebGL is supported then typed arrays are supported too
+    // as they predate WebGL support for all browsers:
+    // see typed arrays support: http://caniuse.com/#search=TypedArrays
+    // see WebGL support: http://caniuse.com/#search=WebGL
+    PIXI.Uint32Array = Uint32Array;
+    PIXI.ArrayBuffer = ArrayBuffer;
 }
 else
 {
@@ -2605,7 +2613,7 @@ PIXI.SpriteBatch.prototype.initWebGL = function(gl)
 PIXI.SpriteBatch.prototype.updateTransform = function()
 {
     // TODO don't need to!
-    PIXI.DisplayObject.prototype.updateTransform.call( this );
+    this.displayObjectUpdateTransform();
     //  PIXI.DisplayObjectContainer.prototype.updateTransform.call( this );
 };
 
@@ -2647,7 +2655,7 @@ PIXI.SpriteBatch.prototype._renderCanvas = function(renderSession)
     var context = renderSession.context;
     context.globalAlpha = this.worldAlpha;
 
-    PIXI.DisplayObject.prototype.updateTransform.call(this);
+    this.displayObjectUpdateTransform();
 
     var transform = this.worldTransform;
     // alow for trimming
@@ -2688,7 +2696,7 @@ PIXI.SpriteBatch.prototype._renderCanvas = function(renderSession)
         {
             if(!isRotated)isRotated = true;
     
-            PIXI.DisplayObject.prototype.updateTransform.call(child);
+            child.displayObjectUpdateTransform();
            
             var childTransform = child.worldTransform;
 
@@ -3129,7 +3137,7 @@ PIXI.Text.prototype.determineFontProperties = function(fontStyle)
 
         context.textBaseline = 'alphabetic';
         context.fillStyle = '#000';
-        context.fillText('|M�q', 0, baseline);
+        context.fillText('|MÉq', 0, baseline);
 
         var imagedata = context.getImageData(0, 0, width, height).data;
         var pixels = imagedata.length;
@@ -4761,7 +4769,7 @@ PIXI.PixiShader.prototype.destroy = function()
 PIXI.PixiShader.defaultVertexSrc = [
     'attribute vec2 aVertexPosition;',
     'attribute vec2 aTextureCoord;',
-    'attribute vec2 aColor;',
+    'attribute vec4 aColor;',
 
     'uniform vec2 projectionVector;',
     'uniform vec2 offsetVector;',
@@ -4774,11 +4782,9 @@ PIXI.PixiShader.defaultVertexSrc = [
     'void main(void) {',
     '   gl_Position = vec4( ((aVertexPosition + offsetVector) / projectionVector) + center , 0.0, 1.0);',
     '   vTextureCoord = aTextureCoord;',
-    '   vec3 color = mod(vec3(aColor.y/65536.0, aColor.y/256.0, aColor.y), 256.0) / 256.0;',
-    '   vColor = vec4(color * aColor.x, aColor.x);',
+    '   vColor = aColor;',
     '}'
 ];
-
 /**
  * @author Mat Groves http://matgroves.com/ @Doormat23
  */
@@ -7328,7 +7334,8 @@ PIXI.WebGLShaderManager.prototype.destroy = function()
  * 
  * Big thanks to the very clever Matt DesLauriers <mattdesl> https://github.com/mattdesl/
  * for creating the original pixi version!
- *
+ * Also a thanks to https://github.com/bchevalier for tweaking the tint and alpha so that they now share 4 bytes on the vertex buffer
+ * 
  * Heavily inspired by LibGDX's WebGLSpriteBatch:
  * https://github.com/libgdx/libgdx/blob/master/gdx/src/com/badlogic/gdx/graphics/g2d/WebGLSpriteBatch.java
  */
@@ -7345,7 +7352,7 @@ PIXI.WebGLSpriteBatch = function()
      * @property vertSize
      * @type Number
      */
-    this.vertSize = 6;
+    this.vertSize = 5;
 
     /**
      * The number of images in the SpriteBatch before it flushes
@@ -7354,8 +7361,8 @@ PIXI.WebGLSpriteBatch = function()
      */
     this.size = 2000;//Math.pow(2, 16) /  this.vertSize;
 
-    //the total number of floats in our batch
-    var numVerts = this.size * 4 *  this.vertSize;
+    //the total number of bytes in our batch
+    var numVerts = this.size * 4 * 4 * this.vertSize;
     //the total number of indices in our batch
     var numIndices = this.size * 6;
 
@@ -7363,9 +7370,25 @@ PIXI.WebGLSpriteBatch = function()
     * Holds the vertices
     *
     * @property vertices
+    * @type ArrayBuffer
+    */
+    this.vertices = new PIXI.ArrayBuffer(numVerts);
+
+    /**
+    * View on the vertices as a Float32Array
+    *
+    * @property positions
     * @type Float32Array
     */
-    this.vertices = new PIXI.Float32Array(numVerts);
+    this.positions = new PIXI.Float32Array(this.vertices);
+
+    /**
+    * View on the vertices as a Uint32Array
+    *
+    * @property colors
+    * @type Uint32Array
+    */
+    this.colors = new PIXI.Uint32Array(this.vertices);
 
     /**
      * Holds the indices
@@ -7513,7 +7536,7 @@ PIXI.WebGLSpriteBatch.prototype.end = function()
 PIXI.WebGLSpriteBatch.prototype.render = function(sprite)
 {
     var texture = sprite.texture;
-    
+
    //TODO set blend modes.. 
     // check texture..
     if(this.currentBatchSize >= this.size)
@@ -7526,12 +7549,6 @@ PIXI.WebGLSpriteBatch.prototype.render = function(sprite)
     var uvs = texture._uvs;
     // if the uvs have not updated then no point rendering just yet!
     if(!uvs)return;
-
-    // get the sprites current alpha
-    var alpha = sprite.worldAlpha;
-    var tint = sprite.tint;
-
-    var verticies = this.vertices;
 
     // TODO trim??
     var aX = sprite.anchor.x;
@@ -7573,66 +7590,65 @@ PIXI.WebGLSpriteBatch.prototype.render = function(sprite)
     var tx = worldTransform.tx;
     var ty = worldTransform.ty;
 
+    var colors = this.colors;
+    var positions = this.positions;
+
     if(this.renderSession.roundPixels)
     {
-        //xy
-        verticies[index] = a * w1 + c * h1 + tx | 0;
-        verticies[index+1] = d * h1 + b * w1 + ty | 0;
+        // xy
+        positions[index] = a * w1 + c * h1 + tx | 0;
+        positions[index+1] = d * h1 + b * w1 + ty | 0;
 
         // xy
-        verticies[index+6] = a * w0 + c * h1 + tx | 0;
-        verticies[index+7] = d * h1 + b * w0 + ty | 0;
+        positions[index+5] = a * w0 + c * h1 + tx | 0;
+        positions[index+6] = d * h1 + b * w0 + ty | 0;
 
          // xy
-        verticies[index+12] = a * w0 + c * h0 + tx | 0;
-        verticies[index+13] = d * h0 + b * w0 + ty | 0;
+        positions[index+10] = a * w0 + c * h0 + tx | 0;
+        positions[index+11] = d * h0 + b * w0 + ty | 0;
 
         // xy
-        verticies[index+18] = a * w1 + c * h0 + tx | 0;
-        verticies[index+19] = d * h0 + b * w1 + ty | 0;
+        positions[index+15] = a * w1 + c * h0 + tx | 0;
+        positions[index+16] = d * h0 + b * w1 + ty | 0;
     }
     else
     {
-        //xy
-        verticies[index] = a * w1 + c * h1 + tx;
-        verticies[index+1] = d * h1 + b * w1 + ty;
+        // xy
+        positions[index] = a * w1 + c * h1 + tx;
+        positions[index+1] = d * h1 + b * w1 + ty;
 
         // xy
-        verticies[index+6] = a * w0 + c * h1 + tx;
-        verticies[index+7] = d * h1 + b * w0 + ty;
+        positions[index+5] = a * w0 + c * h1 + tx;
+        positions[index+6] = d * h1 + b * w0 + ty;
 
          // xy
-        verticies[index+12] = a * w0 + c * h0 + tx;
-        verticies[index+13] = d * h0 + b * w0 + ty;
+        positions[index+10] = a * w0 + c * h0 + tx;
+        positions[index+11] = d * h0 + b * w0 + ty;
 
         // xy
-        verticies[index+18] = a * w1 + c * h0 + tx;
-        verticies[index+19] = d * h0 + b * w1 + ty;
+        positions[index+15] = a * w1 + c * h0 + tx;
+        positions[index+16] = d * h0 + b * w1 + ty;
     }
     
     // uv
-    verticies[index+2] = uvs.x0;
-    verticies[index+3] = uvs.y0;
+    positions[index+2] = uvs.x0;
+    positions[index+3] = uvs.y0;
 
     // uv
-    verticies[index+8] = uvs.x1;
-    verticies[index+9] = uvs.y1;
+    positions[index+7] = uvs.x1;
+    positions[index+8] = uvs.y1;
 
      // uv
-    verticies[index+14] = uvs.x2;
-    verticies[index+15] = uvs.y2;
+    positions[index+12] = uvs.x2;
+    positions[index+13] = uvs.y2;
 
     // uv
-    verticies[index+20] = uvs.x3;
-    verticies[index+21] = uvs.y3;
+    positions[index+17] = uvs.x3;
+    positions[index+18] = uvs.y3;
 
-    // color
-    verticies[index+4] = verticies[index+10] = verticies[index+16] = verticies[index+22] = alpha;
-    
-    // alpha
-    verticies[index+5] = verticies[index+11] = verticies[index+17] = verticies[index+23] = tint;
-
-    
+    // color and alpha
+    var tint = sprite.tint;
+    colors[index+4] = colors[index+9] = colors[index+14] = colors[index+19] = (tint >> 16) + (tint & 0xff00) + ((tint & 0xff) << 16) + (sprite.alpha * 255 << 24);
 
     // increment the batchsize
     this.sprites[this.currentBatchSize++] = sprite;
@@ -7684,13 +7700,14 @@ PIXI.WebGLSpriteBatch.prototype.renderTilingSprite = function(tilingSprite)
     uvs.y2 = (1 * scaleY) - offsetY;
 
     uvs.x3 = 0 - offsetX;
-    uvs.y3 = (1 *scaleY) - offsetY;
+    uvs.y3 = (1 * scaleY) - offsetY;
 
-    // get the tilingSprites current alpha
-    var alpha = tilingSprite.worldAlpha;
+    // get the tilingSprites current alpha and tint and combining them into a single color
     var tint = tilingSprite.tint;
+    var color = (tint >> 16) + (tint & 0xff00) + ((tint & 0xff) << 16) + (tilingSprite.alpha * 255 << 24);
 
-    var  verticies = this.vertices;
+    var positions = this.positions;
+    var colors = this.colors;
 
     var width = tilingSprite.width;
     var height = tilingSprite.height;
@@ -7715,47 +7732,43 @@ PIXI.WebGLSpriteBatch.prototype.renderTilingSprite = function(tilingSprite)
     var c = worldTransform.c / resolution;//[1];
     var d = worldTransform.d / resolution;//[4];
     var tx = worldTransform.tx;//[2];
-    var ty = worldTransform.ty;///[5];
+    var ty = worldTransform.ty;//[5];
 
     // xy
-    verticies[index++] = a * w1 + c * h1 + tx;
-    verticies[index++] = d * h1 + b * w1 + ty;
+    positions[index++] = a * w1 + c * h1 + tx;
+    positions[index++] = d * h1 + b * w1 + ty;
     // uv
-    verticies[index++] = uvs.x0;
-    verticies[index++] = uvs.y0;
+    positions[index++] = uvs.x0;
+    positions[index++] = uvs.y0;
     // color
-    verticies[index++] = alpha;
-    verticies[index++] = tint;
+    colors[index++] = color;
 
     // xy
-    verticies[index++] = (a * w0 + c * h1 + tx);
-    verticies[index++] = d * h1 + b * w0 + ty;
+    positions[index++] = (a * w0 + c * h1 + tx);
+    positions[index++] = d * h1 + b * w0 + ty;
     // uv
-    verticies[index++] = uvs.x1;
-    verticies[index++] = uvs.y1;
+    positions[index++] = uvs.x1;
+    positions[index++] = uvs.y1;
     // color
-    verticies[index++] = alpha;
-    verticies[index++] = tint;
+    colors[index++] = color;
     
     // xy
-    verticies[index++] = a * w0 + c * h0 + tx;
-    verticies[index++] = d * h0 + b * w0 + ty;
+    positions[index++] = a * w0 + c * h0 + tx;
+    positions[index++] = d * h0 + b * w0 + ty;
     // uv
-    verticies[index++] = uvs.x2;
-    verticies[index++] = uvs.y2;
+    positions[index++] = uvs.x2;
+    positions[index++] = uvs.y2;
     // color
-    verticies[index++] = alpha;
-    verticies[index++] = tint;
+    colors[index++] = color;
 
     // xy
-    verticies[index++] = a * w1 + c * h0 + tx;
-    verticies[index++] = d * h0 + b * w1 + ty;
+    positions[index++] = a * w1 + c * h0 + tx;
+    positions[index++] = d * h0 + b * w1 + ty;
     // uv
-    verticies[index++] = uvs.x3;
-    verticies[index++] = uvs.y3;
+    positions[index++] = uvs.x3;
+    positions[index++] = uvs.y3;
     // color
-    verticies[index++] = alpha;
-    verticies[index++] = tint;
+    colors[index++] = color;
 
     // increment the batchsize
     this.sprites[this.currentBatchSize++] = tilingSprite;
@@ -7790,7 +7803,9 @@ PIXI.WebGLSpriteBatch.prototype.flush = function()
         var stride =  this.vertSize * 4;
         gl.vertexAttribPointer(shader.aVertexPosition, 2, gl.FLOAT, false, stride, 0);
         gl.vertexAttribPointer(shader.aTextureCoord, 2, gl.FLOAT, false, stride, 2 * 4);
-        gl.vertexAttribPointer(shader.colorAttribute, 2, gl.FLOAT, false, stride, 4 * 4);
+
+        // color attributes will be interpreted as unsigned bytes and normalized
+        gl.vertexAttribPointer(shader.colorAttribute, 4, gl.UNSIGNED_BYTE, true, stride, 4 * 4);
     }
 
     // upload the verts to the buffer  
@@ -7800,7 +7815,7 @@ PIXI.WebGLSpriteBatch.prototype.flush = function()
     }
     else
     {
-        var view = this.vertices.subarray(0, this.currentBatchSize * 4 * this.vertSize);
+        var view = this.positions.subarray(0, this.currentBatchSize * 4 * this.vertSize);
         gl.bufferSubData(gl.ARRAY_BUFFER, 0, view);
     }
 
@@ -7949,7 +7964,6 @@ PIXI.WebGLSpriteBatch.prototype.destroy = function()
     
     this.gl = null;
 };
-
 /**
  * @author Mat Groves
  * 
@@ -10085,13 +10099,12 @@ PIXI.Strip = function(texture)
     this.blendMode = PIXI.blendModes.NORMAL;
 
     /**
-     * if you need a padding, not yet implemented
+     * Triangles in canvas mode are automatically antialiased, use this value to force triangles to overlap a bit with each other.
      *
-     * @property padding
+     * @property canvasPadding
      * @type Number
      */
-    this.padding = 0;
-     // NYI, TODO padding ?
+    this.canvasPadding = 0;
 
     this.drawMode = PIXI.Strip.DrawModes.TRIANGLE_STRIP;
 
@@ -10305,8 +10318,9 @@ PIXI.Strip.prototype._renderCanvasDrawTriangle = function(context, vertices, uvs
     var u0 = uvs[index0] * textureWidth, u1 = uvs[index1] * textureWidth, u2 = uvs[index2] * textureWidth;
     var v0 = uvs[index0 + 1] * textureHeight, v1 = uvs[index1 + 1] * textureHeight, v2 = uvs[index2 + 1] * textureHeight;
 
-    if (this.padding > 0) {
-        var padding = this.padding;
+    if (this.canvasPadding > 0) {
+        var paddingX = this.canvasPadding / this.worldTransform.a;
+        var paddingY = this.canvasPadding / this.worldTransform.d;
         var centerX = (x0 + x1 + x2) / 3;
         var centerY = (y0 + y1 + y2) / 3;
 
@@ -10314,8 +10328,8 @@ PIXI.Strip.prototype._renderCanvasDrawTriangle = function(context, vertices, uvs
         var normY = y0 - centerY;
 
         var dist = Math.sqrt(normX * normX + normY * normY);
-        x0 = centerX + (normX / dist) * (dist + padding);
-        y0 = centerY + (normY / dist) * (dist + padding);
+        x0 = centerX + (normX / dist) * (dist + paddingX);
+        y0 = centerY + (normY / dist) * (dist + paddingY);
 
         //
 
@@ -10323,15 +10337,15 @@ PIXI.Strip.prototype._renderCanvasDrawTriangle = function(context, vertices, uvs
         normY = y1 - centerY;
 
         dist = Math.sqrt(normX * normX + normY * normY);
-        x1 = centerX + (normX / dist) * (dist + padding);
-        y1 = centerY + (normY / dist) * (dist + padding);
+        x1 = centerX + (normX / dist) * (dist + paddingX);
+        y1 = centerY + (normY / dist) * (dist + paddingY);
 
         normX = x2 - centerX;
         normY = y2 - centerY;
 
         dist = Math.sqrt(normX * normX + normY * normY);
-        x2 = centerX + (normX / dist) * (dist + padding);
-        y2 = centerY + (normY / dist) * (dist + padding);
+        x2 = centerX + (normX / dist) * (dist + paddingX);
+        y2 = centerY + (normY / dist) * (dist + paddingY);
     }
 
     context.save();
@@ -10890,8 +10904,8 @@ PIXI.TilingSprite.prototype._renderCanvas = function(renderSession)
     var resolution = renderSession.resolution;
 
     context.setTransform(transform.a * resolution,
-                         transform.c * resolution,
                          transform.b * resolution,
+                         transform.c * resolution,
                          transform.d * resolution,
                          transform.tx * resolution,
                          transform.ty * resolution);
@@ -12224,7 +12238,7 @@ PIXI.AbstractFilter.prototype.apply = function(frameBuffer)
 */
 var Phaser = Phaser || {
 
-	VERSION: '2.2.0-RC13',
+	VERSION: '2.2.0',
 	GAMES: [],
 
     AUTO: 0,
@@ -23484,7 +23498,6 @@ Phaser.ScaleManager = function (game, width, height) {
     *
     * @property {Phaser.Signal} enterIncorrectOrientation
     * @public
-    * @deprecated 2.2.0 - Use {@link Phaser.ScaleManager#onOrientationChange onOrientationChange}
     */
     this.enterIncorrectOrientation = new Phaser.Signal();
 
@@ -23495,7 +23508,6 @@ Phaser.ScaleManager = function (game, width, height) {
     *
     * @property {Phaser.Signal} leaveIncorrectOrientation
     * @public
-    * @deprecated 2.2.0 - Use {@link Phaser.ScaleManager#onOrientationChange onOrientationChange}
     */
     this.leaveIncorrectOrientation = new Phaser.Signal();
 
@@ -23503,7 +23515,7 @@ Phaser.ScaleManager = function (game, width, height) {
     * If specified, this is the DOM element on which the Fullscreen API enter request will be invoked.
     * The target element must have the correct CSS styling and contain the Display canvas.
     *
-    * The element's style will be modified (ie. the width and height might be set to 100%)
+    * The elements style will be modified (ie. the width and height might be set to 100%)
     * but it will not be added to, removed from, or repositioned within the DOM.
     * An attempt is made to restore relevant style changes when fullscreen mode is left.
     *
@@ -23511,7 +23523,6 @@ Phaser.ScaleManager = function (game, width, height) {
     *
     * @property {?DOMElement} fullScreenTarget
     * @default
-    * @deprecated 2.2.0 - See {@link Phaser.ScaleManger#onFulLScreenInit onFulLScreenInit} and {@link Phaser.ScaleManager#createFullScreenTarget createFullScreenTarget}.
     */
     this.fullScreenTarget = null;
 
@@ -23690,7 +23701,7 @@ Phaser.ScaleManager = function (game, width, height) {
     *
     * @property {?Phaser.Point} [scrollTo=(auto)] - If specified the window will be scrolled to this position on every refresh.
     *
-    * @property {boolean} [forceMinimumDocumentHeight=true] - If enabled the document element's minimum height is explicity set on updates.
+    * @property {boolean} [forceMinimumDocumentHeight=false] - If enabled the document elements minimum height is explicity set on updates.
     *
     * @property {boolean} [canExpandParent=true] - If enabled then SHOW_ALL and USER_SCALE modes can try and expand the parent element. It may be necessary for the parent element to impose CSS width/height restrictions.
     */
@@ -23699,7 +23710,7 @@ Phaser.ScaleManager = function (game, width, height) {
         orientationFallback: null,
         noMargins: false,
         scrollTo: null,
-        forceMinimumDocumentHeight: true,
+        forceMinimumDocumentHeight: false,
         canExpandParent: true
     };
 
@@ -24179,7 +24190,7 @@ Phaser.ScaleManager.prototype = {
     },
 
     /**
-    * Sets the callback that will be invoked before sizing calcualtions.
+    * Sets the callback that will be invoked before sizing calculations.
     *
     * This is the appropriate place to call `setUserScale` if needing custom dynamic scaling.
     *
@@ -24997,10 +25008,10 @@ Phaser.ScaleManager.prototype = {
     },
 
     /**
-    * Start the browser's fullscreen mode - this _must_ be called from a user input Pointer or Mouse event.
+    * Start the browsers fullscreen mode - this _must_ be called from a user input Pointer or Mouse event.
     *
     * The Fullscreen API must be supported by the browser for this to work - it is not the same as setting
-    * the game size to fill the browser window See `compatibility.supportsFullScreen` to check if the current
+    * the game size to fill the browser window. See `compatibility.supportsFullScreen` to check if the current
     * device is reported to support fullscreen mode.
     *
     * The `fullScreenFailed` signal will be dispatched if the fullscreen change request failed or the game does not support the Fullscreen API.
@@ -25008,7 +25019,7 @@ Phaser.ScaleManager.prototype = {
     * @method Phaser.ScaleManager#startFullScreen
     * @public
     * @param {boolean} [antialias] - Changes the anti-alias feature of the canvas before jumping in to fullscreen (false = retain pixel art, true = smooth art). If not specified then no change is made. Only works in CANVAS mode.
-    * @param {boolean} [allowTrampoline=undefined] - Internal argument. If false click trampolining is suppressed.
+    * @param {boolean} [allowTrampoline=undefined] - Internal argument. If `false` click trampolining is suppressed.
     * @return {boolean} Returns true if the device supports fullscreen mode and fullscreen mode was attempted to be started. (It might not actually start, wait for the signals.)
     */
     startFullScreen: function (antialias, allowTrampoline) {

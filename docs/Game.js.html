@@ -124,50 +124,6 @@
 							<a href="Phaser.Easing.html">Easing</a>
 						</li>
 						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Back.html">Back</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Bounce.html">Bounce</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Circular.html">Circular</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Cubic.html">Cubic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Elastic.html">Elastic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Exponential.html">Exponential</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Linear.html">Linear</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Quadratic.html">Quadratic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Quartic.html">Quartic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Quintic.html">Quintic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Sinusoidal.html">Sinusoidal</a>
-						</li>
-						
 						<li class="class-depth-1">
 							<a href="Phaser.Ellipse.html">Ellipse</a>
 						</li>
@@ -876,6 +832,7 @@
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Core<b class="caret"></b></a>
 					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="Phaser.Game.html">Game</a></li>
 						<li class="class-depth-1"><a href="Phaser.Group.html">Group</a></li>
 						<li class="class-depth-1"><a href="Phaser.World.html">World</a></li>
 						<li class="class-depth-1"><a href="Phaser.Loader.html">Loader</a></li>
@@ -898,6 +855,7 @@
 						<li class="class-depth-1"><a href="Phaser.Image.html">Image</a></li>
 						<li class="class-depth-1"><a href="Phaser.Sound.html">Sound</a></li>
 						<li class="class-depth-1"><a href="Phaser.Emitter.html">Emitter</a></li>
+						<li class="class-depth-1"><a href="Phaser.Particle.html">Particle</a></li>
 						<li class="class-depth-1"><a href="Phaser.Text.html">Text</a></li>
 						<li class="class-depth-1"><a href="Phaser.Tween.html">Tween</a></li>
 						<li class="class-depth-1"><a href="Phaser.BitmapText.html">BitmapText</a></li>
@@ -962,6 +920,7 @@
 						<li class="class-depth-1"><a href="https://confirmsubscription.com/h/r/369DE48E3E86AF1E">Newsletter</a></li>
 						<li class="class-depth-1"><a href="https://twitter.com/photonstorm">Twitter</a></li>
 						<li class="class-depth-1"><a href="http://www.html5gamedevs.com/topic/4470-official-phaserio-irc-channel-phaserio-on-freenode/">IRC</a></li>
+						<li class="class-depth-1"><a href="https://leanpub.com/u/photonstorm">Phaser Books</a></li>
 						<li class="class-depth-1"><a href="https://www.gittip.com/photonstorm/">GitTip</a></li>
 					</ul>
 				</li>
@@ -1011,6 +970,7 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
 
     /**
     * @property {number} id - Phaser Game ID (for when Pixi supports multiple instances).
+    * @readonly
     */
     this.id = Phaser.GAMES.push(this) - 1;
 
@@ -1084,11 +1044,13 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
 
     /**
     * @property {PIXI.CanvasRenderer|PIXI.WebGLRenderer} renderer - The Pixi Renderer.
+    * @protected
     */
     this.renderer = null;
 
     /**
     * @property {number} renderType - The Renderer this game will use. Either Phaser.AUTO, Phaser.CANVAS or Phaser.WEBGL.
+    * @readonly
     */
     this.renderType = Phaser.AUTO;
 
@@ -1099,18 +1061,19 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
 
     /**
     * @property {boolean} isBooted - Whether the game engine is booted, aka available.
-    * @default
+    * @readonly
     */
     this.isBooted = false;
 
     /**
-    * @property {boolean} id -Is game running or paused?
-    * @default
+    * @property {boolean} isRunning - Is game running or paused?
+    * @readonly
     */
     this.isRunning = false;
 
     /**
     * @property {Phaser.RequestAnimationFrame} raf - Automatically handles the core game loop via requestAnimationFrame or setTimeout
+    * @protected
     */
     this.raf = null;
 
@@ -1220,6 +1183,15 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     this.particles = null;
 
     /**
+    * If `false` Phaser will automatically render the display list every update. If `true` the render loop will be skipped.
+    * You can toggle this value at run-time to gain exact control over when Phaser renders. This can be useful in certain types of game or application.
+    * Please note that if you don't render the display list then none of the game object transforms will be updated, so use this value carefully.
+    * @property {boolean} lockRender
+    * @default
+    */
+    this.lockRender = false;
+
+    /**
     * @property {boolean} stepping - Enable core loop stepping with Game.enableStep().
     * @default
     * @readonly
@@ -1273,39 +1245,57 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     this._codePaused = false;
 
     /**
+    * The ID of the current/last logic update applied this render frame, starting from 0.
+    *
+    * The first update is `currentUpdateID === 0` and the last update is `currentUpdateID === updatesThisFrame.`
+    * @property {integer} currentUpdateID
+    * @protected
+    */
+    this.currentUpdateID = 0;
+
+    /**
+    * Number of logic updates expected to occur this render frame;
+    * will be 1 unless there are catch-ups required (and allowed).
+    * @property {integer} updatesThisFrame
+    * @protected
+    */
+    this.updatesThisFrame = 1;
+
+    /**
     * @property {number} _deltaTime - accumulate elapsed time until a logic update is due
     * @private
     */
     this._deltaTime = 0;
 
     /**
-     * @property {number} _lastCount - remember how many 'catch-up' iterations were used on the logicUpdate last frame
-     * @private
-     */
+    * @property {number} _lastCount - remember how many 'catch-up' iterations were used on the logicUpdate last frame
+    * @private
+    */
     this._lastCount = 0;
 
     /**
-     * @property {number} _spiralling - if the 'catch-up' iterations are spiralling out of control, this counter is incremented
-     * @private
-     */
+    * @property {number} _spiralling - if the 'catch-up' iterations are spiralling out of control, this counter is incremented
+    * @private
+    */
     this._spiralling = 0;
 
     /**
-     * @property {Phaser.Signal} fpsProblemNotifier - if the game is struggling to maintain the desiredFps, this signal will be dispatched
-     *                                                to suggest that the program adjust it's fps closer to the Time.suggestedFps value
-     * @public
-     */
+    * If the game is struggling to maintain the desired FPS, this signal will be dispatched.
+    * The desired/chosen FPS should probably be closer to the {@link Phaser.Time#suggestedFps} value.
+    * @property {Phaser.Signal} fpsProblemNotifier
+    * @public
+    */
     this.fpsProblemNotifier = new Phaser.Signal();
 
     /**
-     * @property {boolean} forceSingleUpdate - Should the game loop force a logic update, regardless of the delta timer? Set to true if you know you need this. You can toggle it on the fly.
-     */
+    * @property {boolean} forceSingleUpdate - Should the game loop force a logic update, regardless of the delta timer? Set to true if you know you need this. You can toggle it on the fly.
+    */
     this.forceSingleUpdate = false;
 
     /**
-     * @property {number} _nextNotification - the soonest game.time.time value that the next fpsProblemNotifier can be dispatched
-     * @private
-     */
+    * @property {number} _nextNotification - the soonest game.time.time value that the next fpsProblemNotifier can be dispatched
+    * @private
+    */
     this._nextFpsNotification = 0;
 
     //  Parse the configuration object (if any)
@@ -1691,9 +1681,17 @@ Phaser.Game.prototype = {
             // unless forceSingleUpdate is true
             var count = 0;
 
+            this.updatesThisFrame = Math.floor(this._deltaTime / slowStep);
+
+            if (this.forceSingleUpdate)
+            {
+                this.updatesThisFrame = Math.min(1, this.updatesThisFrame);
+            }
+
             while (this._deltaTime >= slowStep)
             {
                 this._deltaTime -= slowStep;
+                this.currentUpdateID = count;
                 this.updateLogic(1.0 / this.time.desiredFps);
                 count++;
 
@@ -1768,7 +1766,15 @@ Phaser.Game.prototype = {
     },
 
     /**
-    * Renders the display list. Called automatically by Game.update.
+    * Runs the Render cycle.
+    * It starts by calling State.preRender. In here you can do any last minute adjustments of display objects as required.
+    * It then calls the renderer, which renders the entire display list, starting from the Stage object and working down.
+    * It then calls plugin.render on any loaded plugins, in the order in which they were enabled.
+    * After this State.render is called. Any rendering that happens here will take place on-top of the display list.
+    * Finally plugin.postRender is called on any loaded plugins, in the order in which they were enabled.
+    * This method is called automatically by Game.update, you don't need to call it directly.
+    * Should you wish to have fine-grained control over when Phaser renders then use the `Game.lockRender` boolean.
+    * Phaser will only render when this boolean is `false`.
     *
     * @method Phaser.Game#updateRender
     * @protected
@@ -1776,7 +1782,12 @@ Phaser.Game.prototype = {
     */
     updateRender: function (elapsedTime) {
 
-        this.state.preRender();
+        if (this.lockRender)
+        {
+            return;
+        }
+
+        this.state.preRender(elapsedTime);
         this.renderer.render(this.stage);
 
         this.plugins.render(elapsedTime);
@@ -2028,7 +2039,7 @@ Object.defineProperty(Phaser.Game.prototype, "paused", {
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Tue Nov 25 2014 00:17:18 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Wed Dec 03 2014 10:30:31 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

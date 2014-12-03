@@ -124,50 +124,6 @@
 							<a href="Phaser.Easing.html">Easing</a>
 						</li>
 						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Back.html">Back</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Bounce.html">Bounce</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Circular.html">Circular</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Cubic.html">Cubic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Elastic.html">Elastic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Exponential.html">Exponential</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Linear.html">Linear</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Quadratic.html">Quadratic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Quartic.html">Quartic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Quintic.html">Quintic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Sinusoidal.html">Sinusoidal</a>
-						</li>
-						
 						<li class="class-depth-1">
 							<a href="Phaser.Ellipse.html">Ellipse</a>
 						</li>
@@ -876,6 +832,7 @@
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Core<b class="caret"></b></a>
 					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="Phaser.Game.html">Game</a></li>
 						<li class="class-depth-1"><a href="Phaser.Group.html">Group</a></li>
 						<li class="class-depth-1"><a href="Phaser.World.html">World</a></li>
 						<li class="class-depth-1"><a href="Phaser.Loader.html">Loader</a></li>
@@ -898,6 +855,7 @@
 						<li class="class-depth-1"><a href="Phaser.Image.html">Image</a></li>
 						<li class="class-depth-1"><a href="Phaser.Sound.html">Sound</a></li>
 						<li class="class-depth-1"><a href="Phaser.Emitter.html">Emitter</a></li>
+						<li class="class-depth-1"><a href="Phaser.Particle.html">Particle</a></li>
 						<li class="class-depth-1"><a href="Phaser.Text.html">Text</a></li>
 						<li class="class-depth-1"><a href="Phaser.Tween.html">Tween</a></li>
 						<li class="class-depth-1"><a href="Phaser.BitmapText.html">BitmapText</a></li>
@@ -962,6 +920,7 @@
 						<li class="class-depth-1"><a href="https://confirmsubscription.com/h/r/369DE48E3E86AF1E">Newsletter</a></li>
 						<li class="class-depth-1"><a href="https://twitter.com/photonstorm">Twitter</a></li>
 						<li class="class-depth-1"><a href="http://www.html5gamedevs.com/topic/4470-official-phaserio-irc-channel-phaserio-on-freenode/">IRC</a></li>
+						<li class="class-depth-1"><a href="https://leanpub.com/u/photonstorm">Phaser Books</a></li>
 						<li class="class-depth-1"><a href="https://www.gittip.com/photonstorm/">GitTip</a></li>
 					</ul>
 				</li>
@@ -1087,11 +1046,11 @@ Phaser.Utils = {
     },
 
     /**
-    * Transposes the elements of the given Array.
+    * Transposes the elements of the given matrix (array of arrays).
     *
     * @method Phaser.Utils.transposeArray
-    * @param {array} array - The array to transpose.
-    * @return {array} The transposed array.
+    * @param {Array&lt;any[]>} array - The matrix to transpose.
+    * @return {Array&lt;any[]>} A new transposed matrix
     * @deprecated 2.2.0 - Use Phaser.ArrayUtils.transposeMatrix
     */
     transposeArray: function (array) {
@@ -1099,13 +1058,14 @@ Phaser.Utils = {
     },
 
     /**
-    * Rotates the given array.
-    * Based on the routine from http://jsfiddle.net/MrPolywhirl/NH42z/
+    * Rotates the given matrix (array of arrays).
+    *
+    * Based on the routine from {@link http://jsfiddle.net/MrPolywhirl/NH42z/}.
     *
     * @method Phaser.Utils.rotateArray
-    * @param {array} matrix - The array to rotate.
-    * @param {number|string} direction - The amount to rotate. Either a number: 90, -90, 270, -270, 180 or a string: 'rotateLeft', 'rotateRight' or 'rotate180'
-    * @return {array} The rotated array
+    * @param {Array&lt;any[]>} matrix - The array to rotate; this matrix _may_ be altered.
+    * @param {number|string} direction - The amount to rotate: the roation in degrees (90, -90, 270, -270, 180) or a string command ('rotateLeft', 'rotateRight' or 'rotate180').
+    * @return {Array&lt;any[]>} The rotated matrix. The source matrix should be discarded for the returned matrix.
     * @deprecated 2.2.0 - Use Phaser.ArrayUtils.rotateMatrix
     */
     rotateArray: function (matrix, direction) {
@@ -1116,8 +1076,8 @@ Phaser.Utils = {
     * A standard Fisher-Yates Array shuffle implementation.
     *
     * @method Phaser.Utils.shuffle
-    * @param {array} array - The array to shuffle.
-    * @return {array} The shuffled array.
+    * @param {any[]} array - The array to shuffle.
+    * @return {any[]} The shuffled array.
     * @deprecated 2.2.0 - User Phaser.ArrayUtils.shuffle
     */
     shuffle: function (array) {
@@ -1395,7 +1355,7 @@ Phaser.Utils = {
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Tue Nov 25 2014 00:17:18 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Wed Dec 03 2014 10:30:31 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

@@ -124,50 +124,6 @@
 							<a href="Phaser.Easing.html">Easing</a>
 						</li>
 						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Back.html">Back</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Bounce.html">Bounce</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Circular.html">Circular</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Cubic.html">Cubic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Elastic.html">Elastic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Exponential.html">Exponential</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Linear.html">Linear</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Quadratic.html">Quadratic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Quartic.html">Quartic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Quintic.html">Quintic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Sinusoidal.html">Sinusoidal</a>
-						</li>
-						
 						<li class="class-depth-1">
 							<a href="Phaser.Ellipse.html">Ellipse</a>
 						</li>
@@ -876,6 +832,7 @@
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Core<b class="caret"></b></a>
 					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="Phaser.Game.html">Game</a></li>
 						<li class="class-depth-1"><a href="Phaser.Group.html">Group</a></li>
 						<li class="class-depth-1"><a href="Phaser.World.html">World</a></li>
 						<li class="class-depth-1"><a href="Phaser.Loader.html">Loader</a></li>
@@ -898,6 +855,7 @@
 						<li class="class-depth-1"><a href="Phaser.Image.html">Image</a></li>
 						<li class="class-depth-1"><a href="Phaser.Sound.html">Sound</a></li>
 						<li class="class-depth-1"><a href="Phaser.Emitter.html">Emitter</a></li>
+						<li class="class-depth-1"><a href="Phaser.Particle.html">Particle</a></li>
 						<li class="class-depth-1"><a href="Phaser.Text.html">Text</a></li>
 						<li class="class-depth-1"><a href="Phaser.Tween.html">Tween</a></li>
 						<li class="class-depth-1"><a href="Phaser.BitmapText.html">BitmapText</a></li>
@@ -962,6 +920,7 @@
 						<li class="class-depth-1"><a href="https://confirmsubscription.com/h/r/369DE48E3E86AF1E">Newsletter</a></li>
 						<li class="class-depth-1"><a href="https://twitter.com/photonstorm">Twitter</a></li>
 						<li class="class-depth-1"><a href="http://www.html5gamedevs.com/topic/4470-official-phaserio-irc-channel-phaserio-on-freenode/">IRC</a></li>
+						<li class="class-depth-1"><a href="https://leanpub.com/u/photonstorm">Phaser Books</a></li>
 						<li class="class-depth-1"><a href="https://www.gittip.com/photonstorm/">GitTip</a></li>
 					</ul>
 				</li>
@@ -988,8 +947,6 @@
     
     StateManager
     </h2>
-    
-        <div class="class-description"><p>Phaser.StateManager</p></div>
     
 </header>
 
@@ -1707,7 +1664,7 @@
 
     
     <div class="description">
-        <p>This is called before the state is rendered and before the stage is cleared.</p>
+        <p>This is called before the state is rendered and before the stage is cleared but after all game objects have had their final properties adjusted.</p>
     </div>
     
     
@@ -2034,7 +1991,7 @@
             
 <dt>
     <h4 class="name "
-        id="states"><span class="type-signature"></span>states<span class="type-signature"> :Object</span></h4>
+        id="states"><span class="type-signature"></span>states<span class="type-signature"> :object</span></h4>
     
     
 </dt>
@@ -2425,7 +2382,7 @@ If a function is given a new state object will be created by calling it.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="StateManager.js.html">core/StateManager.js</a>, <a href="StateManager.js.html#sunlight-1-line-415">line 415</a>
+    <a href="StateManager.js.html">core/StateManager.js</a>, <a href="StateManager.js.html#sunlight-1-line-416">line 416</a>
     </dt>
     
 
@@ -2496,7 +2453,7 @@ resets the camera, resets input, clears physics, removes timers and if set clear
 
     
     <dt class="tag-source">Source -
-    <a href="StateManager.js.html">core/StateManager.js</a>, <a href="StateManager.js.html#sunlight-1-line-365">line 365</a>
+    <a href="StateManager.js.html">core/StateManager.js</a>, <a href="StateManager.js.html#sunlight-1-line-366">line 366</a>
     </dt>
     
 
@@ -2567,7 +2524,7 @@ You don't recover from this without rebuilding the Phaser instance again.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="StateManager.js.html">core/StateManager.js</a>, <a href="StateManager.js.html#sunlight-1-line-718">line 718</a>
+    <a href="StateManager.js.html">core/StateManager.js</a>, <a href="StateManager.js.html#sunlight-1-line-720">line 720</a>
     </dt>
     
 
@@ -2650,7 +2607,7 @@ You don't recover from this without rebuilding the Phaser instance again.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="StateManager.js.html">core/StateManager.js</a>, <a href="StateManager.js.html#sunlight-1-line-563">line 563</a>
+    <a href="StateManager.js.html">core/StateManager.js</a>, <a href="StateManager.js.html#sunlight-1-line-564">line 564</a>
     </dt>
     
 
@@ -2776,7 +2733,7 @@ You don't recover from this without rebuilding the Phaser instance again.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="StateManager.js.html">core/StateManager.js</a>, <a href="StateManager.js.html#sunlight-1-line-451">line 451</a>
+    <a href="StateManager.js.html">core/StateManager.js</a>, <a href="StateManager.js.html#sunlight-1-line-452">line 452</a>
     </dt>
     
 
@@ -2849,7 +2806,7 @@ You don't recover from this without rebuilding the Phaser instance again.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="StateManager.js.html">core/StateManager.js</a>, <a href="StateManager.js.html#sunlight-1-line-574">line 574</a>
+    <a href="StateManager.js.html">core/StateManager.js</a>, <a href="StateManager.js.html#sunlight-1-line-575">line 575</a>
     </dt>
     
 
@@ -2922,7 +2879,7 @@ You don't recover from this without rebuilding the Phaser instance again.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="StateManager.js.html">core/StateManager.js</a>, <a href="StateManager.js.html#sunlight-1-line-595">line 595</a>
+    <a href="StateManager.js.html">core/StateManager.js</a>, <a href="StateManager.js.html#sunlight-1-line-596">line 596</a>
     </dt>
     
 
@@ -2995,7 +2952,7 @@ You don't recover from this without rebuilding the Phaser instance again.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="StateManager.js.html">core/StateManager.js</a>, <a href="StateManager.js.html#sunlight-1-line-641">line 641</a>
+    <a href="StateManager.js.html">core/StateManager.js</a>, <a href="StateManager.js.html#sunlight-1-line-642">line 642</a>
     </dt>
     
 
@@ -3022,7 +2979,7 @@ You don't recover from this without rebuilding the Phaser instance again.</p>
             
 <dt>
     <h4 class="name "
-        id="preRender"><span class="type-signature">&lt;internal> </span>preRender<span class="signature">()</span><span class="type-signature"></span></h4>
+        id="preRender"><span class="type-signature">&lt;internal> </span>preRender<span class="signature">(elapsedTime)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -3035,6 +2992,55 @@ You don't recover from this without rebuilding the Phaser instance again.</p>
     
     
     
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>elapsedTime</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The time elapsed since the last update.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
     
 
     
@@ -3068,7 +3074,7 @@ You don't recover from this without rebuilding the Phaser instance again.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="StateManager.js.html">core/StateManager.js</a>, <a href="StateManager.js.html#sunlight-1-line-661">line 661</a>
+    <a href="StateManager.js.html">core/StateManager.js</a>, <a href="StateManager.js.html#sunlight-1-line-662">line 662</a>
     </dt>
     
 
@@ -3138,7 +3144,7 @@ You don't recover from this without rebuilding the Phaser instance again.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="StateManager.js.html">core/StateManager.js</a>, <a href="StateManager.js.html#sunlight-1-line-306">line 306</a>
+    <a href="StateManager.js.html">core/StateManager.js</a>, <a href="StateManager.js.html#sunlight-1-line-307">line 307</a>
     </dt>
     
 
@@ -3330,7 +3336,7 @@ You don't recover from this without rebuilding the Phaser instance again.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="StateManager.js.html">core/StateManager.js</a>, <a href="StateManager.js.html#sunlight-1-line-687">line 687</a>
+    <a href="StateManager.js.html">core/StateManager.js</a>, <a href="StateManager.js.html#sunlight-1-line-689">line 689</a>
     </dt>
     
 
@@ -3403,7 +3409,7 @@ You don't recover from this without rebuilding the Phaser instance again.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="StateManager.js.html">core/StateManager.js</a>, <a href="StateManager.js.html#sunlight-1-line-674">line 674</a>
+    <a href="StateManager.js.html">core/StateManager.js</a>, <a href="StateManager.js.html#sunlight-1-line-676">line 676</a>
     </dt>
     
 
@@ -3618,7 +3624,7 @@ You don't recover from this without rebuilding the Phaser instance again.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="StateManager.js.html">core/StateManager.js</a>, <a href="StateManager.js.html#sunlight-1-line-273">line 273</a>
+    <a href="StateManager.js.html">core/StateManager.js</a>, <a href="StateManager.js.html#sunlight-1-line-274">line 274</a>
     </dt>
     
 
@@ -3691,7 +3697,7 @@ You don't recover from this without rebuilding the Phaser instance again.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="StateManager.js.html">core/StateManager.js</a>, <a href="StateManager.js.html#sunlight-1-line-608">line 608</a>
+    <a href="StateManager.js.html">core/StateManager.js</a>, <a href="StateManager.js.html#sunlight-1-line-609">line 609</a>
     </dt>
     
 
@@ -3941,7 +3947,7 @@ You don't recover from this without rebuilding the Phaser instance again.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="StateManager.js.html">core/StateManager.js</a>, <a href="StateManager.js.html#sunlight-1-line-239">line 239</a>
+    <a href="StateManager.js.html">core/StateManager.js</a>, <a href="StateManager.js.html#sunlight-1-line-240">line 240</a>
     </dt>
     
 
@@ -4067,7 +4073,7 @@ You don't recover from this without rebuilding the Phaser instance again.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="StateManager.js.html">core/StateManager.js</a>, <a href="StateManager.js.html#sunlight-1-line-481">line 481</a>
+    <a href="StateManager.js.html">core/StateManager.js</a>, <a href="StateManager.js.html#sunlight-1-line-482">line 482</a>
     </dt>
     
 
@@ -4140,7 +4146,7 @@ You don't recover from this without rebuilding the Phaser instance again.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="StateManager.js.html">core/StateManager.js</a>, <a href="StateManager.js.html#sunlight-1-line-621">line 621</a>
+    <a href="StateManager.js.html">core/StateManager.js</a>, <a href="StateManager.js.html#sunlight-1-line-622">line 622</a>
     </dt>
     
 
@@ -4189,7 +4195,7 @@ You don't recover from this without rebuilding the Phaser instance again.</p>
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Tue Nov 25 2014 00:17:58 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Wed Dec 03 2014 10:31:03 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

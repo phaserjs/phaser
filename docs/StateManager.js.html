@@ -124,50 +124,6 @@
 							<a href="Phaser.Easing.html">Easing</a>
 						</li>
 						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Back.html">Back</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Bounce.html">Bounce</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Circular.html">Circular</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Cubic.html">Cubic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Elastic.html">Elastic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Exponential.html">Exponential</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Linear.html">Linear</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Quadratic.html">Quadratic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Quartic.html">Quartic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Quintic.html">Quintic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Sinusoidal.html">Sinusoidal</a>
-						</li>
-						
 						<li class="class-depth-1">
 							<a href="Phaser.Ellipse.html">Ellipse</a>
 						</li>
@@ -876,6 +832,7 @@
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Core<b class="caret"></b></a>
 					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="Phaser.Game.html">Game</a></li>
 						<li class="class-depth-1"><a href="Phaser.Group.html">Group</a></li>
 						<li class="class-depth-1"><a href="Phaser.World.html">World</a></li>
 						<li class="class-depth-1"><a href="Phaser.Loader.html">Loader</a></li>
@@ -898,6 +855,7 @@
 						<li class="class-depth-1"><a href="Phaser.Image.html">Image</a></li>
 						<li class="class-depth-1"><a href="Phaser.Sound.html">Sound</a></li>
 						<li class="class-depth-1"><a href="Phaser.Emitter.html">Emitter</a></li>
+						<li class="class-depth-1"><a href="Phaser.Particle.html">Particle</a></li>
 						<li class="class-depth-1"><a href="Phaser.Text.html">Text</a></li>
 						<li class="class-depth-1"><a href="Phaser.Tween.html">Tween</a></li>
 						<li class="class-depth-1"><a href="Phaser.BitmapText.html">BitmapText</a></li>
@@ -962,6 +920,7 @@
 						<li class="class-depth-1"><a href="https://confirmsubscription.com/h/r/369DE48E3E86AF1E">Newsletter</a></li>
 						<li class="class-depth-1"><a href="https://twitter.com/photonstorm">Twitter</a></li>
 						<li class="class-depth-1"><a href="http://www.html5gamedevs.com/topic/4470-official-phaserio-irc-channel-phaserio-on-freenode/">IRC</a></li>
+						<li class="class-depth-1"><a href="https://leanpub.com/u/photonstorm">Phaser Books</a></li>
 						<li class="class-depth-1"><a href="https://www.gittip.com/photonstorm/">GitTip</a></li>
 					</ul>
 				</li>
@@ -1007,7 +966,7 @@ Phaser.StateManager = function (game, pendingState) {
     this.game = game;
 
     /**
-    * @property {Object} states - The object containing Phaser.States.
+    * @property {object} states - The object containing Phaser.States.
     */
     this.states = {};
 
@@ -1041,7 +1000,7 @@ Phaser.StateManager = function (game, pendingState) {
     this._created = false;
 
     /**
-    * @property {array} _args - Temporary container when you pass vars from one State to another.
+    * @property {any[]} _args - Temporary container when you pass vars from one State to another.
     * @private
     */
     this._args = [];
@@ -1082,7 +1041,7 @@ Phaser.StateManager = function (game, pendingState) {
     this.onResizeCallback = null;
 
     /**
-    * @property {function} onPreRenderCallback - This is called before the state is rendered and before the stage is cleared.
+    * @property {function} onPreRenderCallback - This is called before the state is rendered and before the stage is cleared but after all game objects have had their final properties adjusted.
     */
     this.onPreRenderCallback = null;
 
@@ -1210,6 +1169,7 @@ Phaser.StateManager.prototype = {
             this.onLoadUpdateCallback = null;
             this.onCreateCallback = null;
             this.onUpdateCallback = null;
+            this.onPreRenderCallback = null;
             this.onRenderCallback = null;
             this.onResizeCallback = null;
             this.onPausedCallback = null;
@@ -1412,10 +1372,10 @@ Phaser.StateManager.prototype = {
         {
             var valid = false;
 
-            if (this.states[key]['preload']) { valid = true; }
-            if (this.states[key]['create']) { valid = true; }
-            if (this.states[key]['update']) { valid = true; }
-            if (this.states[key]['render']) { valid = true; }
+            if (this.states[key]['preload'] || this.states[key]['create'] || this.states[key]['update'] || this.states[key]['render'])
+            {
+                valid = true;
+            }
 
             if (valid === false)
             {
@@ -1646,12 +1606,13 @@ Phaser.StateManager.prototype = {
     /**
     * @method Phaser.StateManager#preRender
     * @protected
+    * @param {number} elapsedTime - The time elapsed since the last update.
     */
-    preRender: function () {
+    preRender: function (elapsedTime) {
 
         if (this.onPreRenderCallback)
         {
-            this.onPreRenderCallback.call(this.callbackContext, this.game);
+            this.onPreRenderCallback.call(this.callbackContext, this.game, elapsedTime);
         }
 
     },
@@ -1754,7 +1715,7 @@ Phaser.StateManager.prototype.constructor = Phaser.StateManager;
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Tue Nov 25 2014 00:17:19 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Wed Dec 03 2014 10:30:31 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

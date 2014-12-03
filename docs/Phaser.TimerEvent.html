@@ -124,50 +124,6 @@
 							<a href="Phaser.Easing.html">Easing</a>
 						</li>
 						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Back.html">Back</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Bounce.html">Bounce</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Circular.html">Circular</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Cubic.html">Cubic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Elastic.html">Elastic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Exponential.html">Exponential</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Linear.html">Linear</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Quadratic.html">Quadratic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Quartic.html">Quartic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Quintic.html">Quintic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Sinusoidal.html">Sinusoidal</a>
-						</li>
-						
 						<li class="class-depth-1">
 							<a href="Phaser.Ellipse.html">Ellipse</a>
 						</li>
@@ -876,6 +832,7 @@
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Core<b class="caret"></b></a>
 					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="Phaser.Game.html">Game</a></li>
 						<li class="class-depth-1"><a href="Phaser.Group.html">Group</a></li>
 						<li class="class-depth-1"><a href="Phaser.World.html">World</a></li>
 						<li class="class-depth-1"><a href="Phaser.Loader.html">Loader</a></li>
@@ -898,6 +855,7 @@
 						<li class="class-depth-1"><a href="Phaser.Image.html">Image</a></li>
 						<li class="class-depth-1"><a href="Phaser.Sound.html">Sound</a></li>
 						<li class="class-depth-1"><a href="Phaser.Emitter.html">Emitter</a></li>
+						<li class="class-depth-1"><a href="Phaser.Particle.html">Particle</a></li>
 						<li class="class-depth-1"><a href="Phaser.Text.html">Text</a></li>
 						<li class="class-depth-1"><a href="Phaser.Tween.html">Tween</a></li>
 						<li class="class-depth-1"><a href="Phaser.BitmapText.html">BitmapText</a></li>
@@ -962,6 +920,7 @@
 						<li class="class-depth-1"><a href="https://confirmsubscription.com/h/r/369DE48E3E86AF1E">Newsletter</a></li>
 						<li class="class-depth-1"><a href="https://twitter.com/photonstorm">Twitter</a></li>
 						<li class="class-depth-1"><a href="http://www.html5gamedevs.com/topic/4470-official-phaserio-irc-channel-phaserio-on-freenode/">IRC</a></li>
+						<li class="class-depth-1"><a href="https://leanpub.com/u/photonstorm">Phaser Books</a></li>
 						<li class="class-depth-1"><a href="https://www.gittip.com/photonstorm/">GitTip</a></li>
 					</ul>
 				</li>
@@ -989,8 +948,6 @@
     TimerEvent
     </h2>
     
-        <div class="class-description"><p>Phaser.TimerEvent</p></div>
-    
 </header>
 
 <article>
@@ -1010,9 +967,10 @@
 
     
     <div class="description">
-        <p>A TimerEvent is a single event that is processed by a Phaser.Timer.
-It consists of a delay, which is a value in milliseconds after which the event will fire.
-It can call a specific callback, passing in optional parameters.</p>
+        <p>A TimerEvent is a single event that is processed by a Phaser.Timer.</p>
+<p>It consists of a delay, which is a value in milliseconds after which the event will fire.
+When the event fires it calls a specific callback with the specified arguments.</p>
+<p>Use <a href="Phaser.Timer.html#add">Phaser.Timer#add</a>, <a href="Phaser.Timer.html#add">Phaser.Timer#add</a>, or <a href="Phaser.Timer.html#add">Phaser.Timer#add</a> methods to create a new event.</p>
     </div>
     
 
@@ -1213,7 +1171,7 @@ It can call a specific callback, passing in optional parameters.</p>
             <td class="type">
             
                 
-<span class="param-type">array</span>
+<span class="param-type">any[]</span>
 
 
             
@@ -1223,7 +1181,7 @@ It can call a specific callback, passing in optional parameters.</p>
 
             
 
-            <td class="description last"><p>The values to be passed to the callback.</p></td>
+            <td class="description last"><p>Additional arguments to be passed to the callback.</p></td>
         </tr>
 
 	
@@ -1256,7 +1214,7 @@ It can call a specific callback, passing in optional parameters.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="TimerEvent.js.html">time/TimerEvent.js</a>, <a href="TimerEvent.js.html#sunlight-1-line-23">line 23</a>
+    <a href="TimerEvent.js.html">time/TimerEvent.js</a>, <a href="TimerEvent.js.html#sunlight-1-line-26">line 26</a>
     </dt>
     
 
@@ -1346,7 +1304,7 @@ It can call a specific callback, passing in optional parameters.</p>
             <td class="type">
             
                 
-<span class="param-type">array</span>
+<span class="param-type">any[]</span>
 
 
             
@@ -1356,7 +1314,7 @@ It can call a specific callback, passing in optional parameters.</p>
 
             
 
-            <td class="description last"><p>The values to be passed to the callback.</p></td>
+            <td class="description last"><p>Additional arguments to be passed to the callback.</p></td>
         </tr>
 
 	
@@ -1384,7 +1342,7 @@ It can call a specific callback, passing in optional parameters.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="TimerEvent.js.html">time/TimerEvent.js</a>, <a href="TimerEvent.js.html#sunlight-1-line-63">line 63</a>
+    <a href="TimerEvent.js.html">time/TimerEvent.js</a>, <a href="TimerEvent.js.html#sunlight-1-line-68">line 68</a>
     </dt>
     
 
@@ -1440,7 +1398,7 @@ It can call a specific callback, passing in optional parameters.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="TimerEvent.js.html">time/TimerEvent.js</a>, <a href="TimerEvent.js.html#sunlight-1-line-53">line 53</a>
+    <a href="TimerEvent.js.html">time/TimerEvent.js</a>, <a href="TimerEvent.js.html#sunlight-1-line-58">line 58</a>
     </dt>
     
 
@@ -1496,7 +1454,7 @@ It can call a specific callback, passing in optional parameters.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="TimerEvent.js.html">time/TimerEvent.js</a>, <a href="TimerEvent.js.html#sunlight-1-line-58">line 58</a>
+    <a href="TimerEvent.js.html">time/TimerEvent.js</a>, <a href="TimerEvent.js.html#sunlight-1-line-63">line 63</a>
     </dt>
     
 
@@ -1552,7 +1510,7 @@ It can call a specific callback, passing in optional parameters.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="TimerEvent.js.html">time/TimerEvent.js</a>, <a href="TimerEvent.js.html#sunlight-1-line-33">line 33</a>
+    <a href="TimerEvent.js.html">time/TimerEvent.js</a>, <a href="TimerEvent.js.html#sunlight-1-line-38">line 38</a>
     </dt>
     
 
@@ -1608,7 +1566,7 @@ It can call a specific callback, passing in optional parameters.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="TimerEvent.js.html">time/TimerEvent.js</a>, <a href="TimerEvent.js.html#sunlight-1-line-48">line 48</a>
+    <a href="TimerEvent.js.html">time/TimerEvent.js</a>, <a href="TimerEvent.js.html#sunlight-1-line-53">line 53</a>
     </dt>
     
 
@@ -1671,7 +1629,7 @@ It can call a specific callback, passing in optional parameters.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="TimerEvent.js.html">time/TimerEvent.js</a>, <a href="TimerEvent.js.html#sunlight-1-line-69">line 69</a>
+    <a href="TimerEvent.js.html">time/TimerEvent.js</a>, <a href="TimerEvent.js.html#sunlight-1-line-74">line 74</a>
     </dt>
     
 
@@ -1727,7 +1685,7 @@ It can call a specific callback, passing in optional parameters.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="TimerEvent.js.html">time/TimerEvent.js</a>, <a href="TimerEvent.js.html#sunlight-1-line-43">line 43</a>
+    <a href="TimerEvent.js.html">time/TimerEvent.js</a>, <a href="TimerEvent.js.html#sunlight-1-line-48">line 48</a>
     </dt>
     
 
@@ -1783,7 +1741,7 @@ It can call a specific callback, passing in optional parameters.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="TimerEvent.js.html">time/TimerEvent.js</a>, <a href="TimerEvent.js.html#sunlight-1-line-38">line 38</a>
+    <a href="TimerEvent.js.html">time/TimerEvent.js</a>, <a href="TimerEvent.js.html#sunlight-1-line-43">line 43</a>
     </dt>
     
 
@@ -1802,7 +1760,7 @@ It can call a specific callback, passing in optional parameters.</p>
             
 <dt>
     <h4 class="name "
-        id="timer"><span class="type-signature"></span>timer<span class="type-signature"> :<a href="Phaser.Timer.html">Phaser.Timer</a></span></h4>
+        id="timer"><span class="type-signature">&lt;internal, readonly> </span>timer<span class="type-signature"> :<a href="Phaser.Timer.html">Phaser.Timer</a></span></h4>
     
     
 </dt>
@@ -1828,6 +1786,13 @@ It can call a specific callback, passing in optional parameters.</p>
     
 
     
+        <dt class="important tag-deprecated">Internal:</dt>
+        <dd class="tag-deprecated"><ul>
+        
+            <li>This member is <em>internal (protected)</em> and may be modified or removed in the future.</li>
+        
+        </ul></dd>
+    
 
     
 
@@ -1839,7 +1804,7 @@ It can call a specific callback, passing in optional parameters.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="TimerEvent.js.html">time/TimerEvent.js</a>, <a href="TimerEvent.js.html#sunlight-1-line-28">line 28</a>
+    <a href="TimerEvent.js.html">time/TimerEvent.js</a>, <a href="TimerEvent.js.html#sunlight-1-line-33">line 33</a>
     </dt>
     
 
@@ -1882,7 +1847,7 @@ It can call a specific callback, passing in optional parameters.</p>
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Tue Nov 25 2014 00:18:02 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Wed Dec 03 2014 10:31:07 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

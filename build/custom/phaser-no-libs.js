@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.2.0 "Bethal" - Built: Tue Dec 02 2014 09:04:17
+* v2.2.0 "Bethal" - Built: Wed Dec 03 2014 09:34:03
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -50,7 +50,7 @@
 */
 var Phaser = Phaser || {
 
-	VERSION: '2.2.0-RC13',
+	VERSION: '2.2.0',
 	GAMES: [],
 
     AUTO: 0,
@@ -11310,7 +11310,6 @@ Phaser.ScaleManager = function (game, width, height) {
     *
     * @property {Phaser.Signal} enterIncorrectOrientation
     * @public
-    * @deprecated 2.2.0 - Use {@link Phaser.ScaleManager#onOrientationChange onOrientationChange}
     */
     this.enterIncorrectOrientation = new Phaser.Signal();
 
@@ -11321,7 +11320,6 @@ Phaser.ScaleManager = function (game, width, height) {
     *
     * @property {Phaser.Signal} leaveIncorrectOrientation
     * @public
-    * @deprecated 2.2.0 - Use {@link Phaser.ScaleManager#onOrientationChange onOrientationChange}
     */
     this.leaveIncorrectOrientation = new Phaser.Signal();
 
@@ -11329,7 +11327,7 @@ Phaser.ScaleManager = function (game, width, height) {
     * If specified, this is the DOM element on which the Fullscreen API enter request will be invoked.
     * The target element must have the correct CSS styling and contain the Display canvas.
     *
-    * The element's style will be modified (ie. the width and height might be set to 100%)
+    * The elements style will be modified (ie. the width and height might be set to 100%)
     * but it will not be added to, removed from, or repositioned within the DOM.
     * An attempt is made to restore relevant style changes when fullscreen mode is left.
     *
@@ -11337,7 +11335,6 @@ Phaser.ScaleManager = function (game, width, height) {
     *
     * @property {?DOMElement} fullScreenTarget
     * @default
-    * @deprecated 2.2.0 - See {@link Phaser.ScaleManger#onFulLScreenInit onFulLScreenInit} and {@link Phaser.ScaleManager#createFullScreenTarget createFullScreenTarget}.
     */
     this.fullScreenTarget = null;
 
@@ -11516,7 +11513,7 @@ Phaser.ScaleManager = function (game, width, height) {
     *
     * @property {?Phaser.Point} [scrollTo=(auto)] - If specified the window will be scrolled to this position on every refresh.
     *
-    * @property {boolean} [forceMinimumDocumentHeight=true] - If enabled the document element's minimum height is explicity set on updates.
+    * @property {boolean} [forceMinimumDocumentHeight=false] - If enabled the document elements minimum height is explicity set on updates.
     *
     * @property {boolean} [canExpandParent=true] - If enabled then SHOW_ALL and USER_SCALE modes can try and expand the parent element. It may be necessary for the parent element to impose CSS width/height restrictions.
     */
@@ -11525,7 +11522,7 @@ Phaser.ScaleManager = function (game, width, height) {
         orientationFallback: null,
         noMargins: false,
         scrollTo: null,
-        forceMinimumDocumentHeight: true,
+        forceMinimumDocumentHeight: false,
         canExpandParent: true
     };
 
@@ -12005,7 +12002,7 @@ Phaser.ScaleManager.prototype = {
     },
 
     /**
-    * Sets the callback that will be invoked before sizing calcualtions.
+    * Sets the callback that will be invoked before sizing calculations.
     *
     * This is the appropriate place to call `setUserScale` if needing custom dynamic scaling.
     *
@@ -12823,10 +12820,10 @@ Phaser.ScaleManager.prototype = {
     },
 
     /**
-    * Start the browser's fullscreen mode - this _must_ be called from a user input Pointer or Mouse event.
+    * Start the browsers fullscreen mode - this _must_ be called from a user input Pointer or Mouse event.
     *
     * The Fullscreen API must be supported by the browser for this to work - it is not the same as setting
-    * the game size to fill the browser window See `compatibility.supportsFullScreen` to check if the current
+    * the game size to fill the browser window. See `compatibility.supportsFullScreen` to check if the current
     * device is reported to support fullscreen mode.
     *
     * The `fullScreenFailed` signal will be dispatched if the fullscreen change request failed or the game does not support the Fullscreen API.
@@ -12834,7 +12831,7 @@ Phaser.ScaleManager.prototype = {
     * @method Phaser.ScaleManager#startFullScreen
     * @public
     * @param {boolean} [antialias] - Changes the anti-alias feature of the canvas before jumping in to fullscreen (false = retain pixel art, true = smooth art). If not specified then no change is made. Only works in CANVAS mode.
-    * @param {boolean} [allowTrampoline=undefined] - Internal argument. If false click trampolining is suppressed.
+    * @param {boolean} [allowTrampoline=undefined] - Internal argument. If `false` click trampolining is suppressed.
     * @return {boolean} Returns true if the device supports fullscreen mode and fullscreen mode was attempted to be started. (It might not actually start, wait for the signals.)
     */
     startFullScreen: function (antialias, allowTrampoline) {
