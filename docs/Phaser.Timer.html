@@ -124,50 +124,6 @@
 							<a href="Phaser.Easing.html">Easing</a>
 						</li>
 						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Back.html">Back</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Bounce.html">Bounce</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Circular.html">Circular</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Cubic.html">Cubic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Elastic.html">Elastic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Exponential.html">Exponential</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Linear.html">Linear</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Quadratic.html">Quadratic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Quartic.html">Quartic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Quintic.html">Quintic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Sinusoidal.html">Sinusoidal</a>
-						</li>
-						
 						<li class="class-depth-1">
 							<a href="Phaser.Ellipse.html">Ellipse</a>
 						</li>
@@ -876,6 +832,7 @@
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Core<b class="caret"></b></a>
 					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="Phaser.Game.html">Game</a></li>
 						<li class="class-depth-1"><a href="Phaser.Group.html">Group</a></li>
 						<li class="class-depth-1"><a href="Phaser.World.html">World</a></li>
 						<li class="class-depth-1"><a href="Phaser.Loader.html">Loader</a></li>
@@ -898,6 +855,7 @@
 						<li class="class-depth-1"><a href="Phaser.Image.html">Image</a></li>
 						<li class="class-depth-1"><a href="Phaser.Sound.html">Sound</a></li>
 						<li class="class-depth-1"><a href="Phaser.Emitter.html">Emitter</a></li>
+						<li class="class-depth-1"><a href="Phaser.Particle.html">Particle</a></li>
 						<li class="class-depth-1"><a href="Phaser.Text.html">Text</a></li>
 						<li class="class-depth-1"><a href="Phaser.Tween.html">Tween</a></li>
 						<li class="class-depth-1"><a href="Phaser.BitmapText.html">BitmapText</a></li>
@@ -962,6 +920,7 @@
 						<li class="class-depth-1"><a href="https://confirmsubscription.com/h/r/369DE48E3E86AF1E">Newsletter</a></li>
 						<li class="class-depth-1"><a href="https://twitter.com/photonstorm">Twitter</a></li>
 						<li class="class-depth-1"><a href="http://www.html5gamedevs.com/topic/4470-official-phaserio-irc-channel-phaserio-on-freenode/">IRC</a></li>
+						<li class="class-depth-1"><a href="https://leanpub.com/u/photonstorm">Phaser Books</a></li>
 						<li class="class-depth-1"><a href="https://www.gittip.com/photonstorm/">GitTip</a></li>
 					</ul>
 				</li>
@@ -989,8 +948,6 @@
     Timer
     </h2>
     
-        <div class="class-description"><p>Phaser.Timer</p></div>
-    
 </header>
 
 <article>
@@ -1010,9 +967,11 @@
 
     
     <div class="description">
-        <p>A Timer is a way to create small re-usable or disposable objects that do nothing but wait for a specific moment in time, and then dispatch an event.
-You can add as many events to a Timer as you like, each with their own delays. A Timer uses milliseconds as its unit of time. There are 1000 ms in 1 second.
-So if you want to fire an event every quarter of a second you'd need to set the delay to 250.</p>
+        <p>A Timer is a way to create small re-usable (or disposable) objects that wait for a specific moment in time,
+and then run the specified callbacks.</p>
+<p>You can many events to a Timer, each with their own delays. A Timer uses milliseconds as its unit of time (there are 1000 ms in 1 second).
+So a delay to 250 would fire the event every quarter of a second.</p>
+<p>Timers are based on real-world (not physics) time, adjusted for game pause durations.</p>
     </div>
     
 
@@ -1117,7 +1076,7 @@ So if you want to fire an event every quarter of a second you'd need to set the 
                 </td>
             
 
-            <td class="description last"><p>A Timer that is set to automatically destroy itself will do so after all of its events have been dispatched (assuming no looping events).</p></td>
+            <td class="description last"><p>If true, the timer will automatically destroy itself after all the events have been dispatched (assuming no looping events).</p></td>
         </tr>
 
 	
@@ -1150,7 +1109,7 @@ So if you want to fire an event every quarter of a second you'd need to set the 
 
     
     <dt class="tag-source">Source -
-    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-17">line 17</a>
+    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-21">line 21</a>
     </dt>
     
 
@@ -1193,215 +1152,7 @@ So if you want to fire an event every quarter of a second you'd need to set the 
             
 <dt>
     <h4 class="name "
-        id="HALF"><span class="type-signature">&lt;static, constant> </span>HALF<span class="type-signature"> :number</span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-159">line 159</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="MINUTE"><span class="type-signature">&lt;static, constant> </span>MINUTE<span class="type-signature"> :number</span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-147">line 147</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="QUARTER"><span class="type-signature">&lt;static, constant> </span>QUARTER<span class="type-signature"> :number</span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-165">line 165</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="SECOND"><span class="type-signature">&lt;static, constant> </span>SECOND<span class="type-signature"> :number</span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-153">line 153</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="autoDestroy"><span class="type-signature"></span>autoDestroy<span class="type-signature"> :boolean</span></h4>
+        id="HALF"><span class="type-signature">&lt;static, constant> </span>HALF<span class="type-signature"> :integer</span></h4>
     
     
 </dt>
@@ -1410,7 +1161,7 @@ So if you want to fire an event every quarter of a second you'd need to set the 
 
     
     <div class="description">
-        <p>A Timer that is set to automatically destroy itself will do so after all of its events have been dispatched (assuming no looping events).</p>
+        <p>Number of milliseconds in half a second.</p>
     </div>
     
     
@@ -1438,7 +1189,231 @@ So if you want to fire an event every quarter of a second you'd need to set the 
 
     
     <dt class="tag-source">Source -
-    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-35">line 35</a>
+    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-176">line 176</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="MINUTE"><span class="type-signature">&lt;static, constant> </span>MINUTE<span class="type-signature"> :integer</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>Number of milliseconds in a minute.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-162">line 162</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="QUARTER"><span class="type-signature">&lt;static, constant> </span>QUARTER<span class="type-signature"> :integer</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>Number of milliseconds in a quarter of a second.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-183">line 183</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="SECOND"><span class="type-signature">&lt;static, constant> </span>SECOND<span class="type-signature"> :integer</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>Number of milliseconds in a second.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-169">line 169</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="autoDestroy"><span class="type-signature"></span>autoDestroy<span class="type-signature"> :boolean</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>If true, the timer will automatically destroy itself after all the events have been dispatched (assuming no looping events).</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-45">line 45</a>
     </dt>
     
 
@@ -1494,7 +1469,7 @@ So if you want to fire an event every quarter of a second you'd need to set the 
 
     
     <dt class="tag-source">Source -
-    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-645">line 645</a>
+    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-677">line 677</a>
     </dt>
     
 
@@ -1557,7 +1532,7 @@ So if you want to fire an event every quarter of a second you'd need to set the 
 
     
     <dt class="tag-source">Source -
-    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-48">line 48</a>
+    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-58">line 58</a>
     </dt>
     
 
@@ -1576,7 +1551,7 @@ So if you want to fire an event every quarter of a second you'd need to set the 
             
 <dt>
     <h4 class="name "
-        id="events"><span class="type-signature"></span>events<span class="type-signature"> :array.&lt;<a href="Phaser.TimerEvent.html">Phaser.TimerEvent</a>></span></h4>
+        id="events"><span class="type-signature"></span>events<span class="type-signature"> :Phaser.TimerEvent[]</span></h4>
     
     
 </dt>
@@ -1594,7 +1569,7 @@ So if you want to fire an event every quarter of a second you'd need to set the 
         <ul>
             <li>
                 
-<span class="param-type">array.&lt;<a href="Phaser.TimerEvent.html">Phaser.TimerEvent</a>></span>
+<span class="param-type">Phaser.TimerEvent[]</span>
 
 
             </li>
@@ -1623,7 +1598,7 @@ So if you want to fire an event every quarter of a second you'd need to set the 
 
     
     <dt class="tag-source">Source -
-    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-53">line 53</a>
+    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-63">line 63</a>
     </dt>
     
 
@@ -1682,7 +1657,7 @@ So if you want to fire an event every quarter of a second you'd need to set the 
 
     
     <dt class="tag-source">Source -
-    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-42">line 42</a>
+    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-52">line 52</a>
     </dt>
     
 
@@ -1701,7 +1676,7 @@ So if you want to fire an event every quarter of a second you'd need to set the 
             
 <dt>
     <h4 class="name "
-        id="game"><span class="type-signature"></span>game<span class="type-signature"> :<a href="Phaser.Game.html">Phaser.Game</a></span></h4>
+        id="game"><span class="type-signature">&lt;internal> </span>game<span class="type-signature"> :<a href="Phaser.Game.html">Phaser.Game</a></span></h4>
     
     
 </dt>
@@ -1727,6 +1702,13 @@ So if you want to fire an event every quarter of a second you'd need to set the 
     
 
     
+        <dt class="important tag-deprecated">Internal:</dt>
+        <dd class="tag-deprecated"><ul>
+        
+            <li>This member is <em>internal (protected)</em> and may be modified or removed in the future.</li>
+        
+        </ul></dd>
+    
 
     
 
@@ -1738,7 +1720,7 @@ So if you want to fire an event every quarter of a second you'd need to set the 
 
     
     <dt class="tag-source">Source -
-    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-24">line 24</a>
+    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-29">line 29</a>
     </dt>
     
 
@@ -1794,7 +1776,7 @@ So if you want to fire an event every quarter of a second you'd need to set the 
 
     
     <dt class="tag-source">Source -
-    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-667">line 667</a>
+    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-699">line 699</a>
     </dt>
     
 
@@ -1850,7 +1832,7 @@ So if you want to fire an event every quarter of a second you'd need to set the 
 
     
     <dt class="tag-source">Source -
-    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-680">line 680</a>
+    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-712">line 712</a>
     </dt>
     
 
@@ -1906,7 +1888,7 @@ So if you want to fire an event every quarter of a second you'd need to set the 
 
     
     <dt class="tag-source">Source -
-    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-632">line 632</a>
+    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-664">line 664</a>
     </dt>
     
 
@@ -1969,7 +1951,7 @@ So if you want to fire an event every quarter of a second you'd need to set the 
 
     
     <dt class="tag-source">Source -
-    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-65">line 65</a>
+    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-79">line 79</a>
     </dt>
     
 
@@ -1997,7 +1979,8 @@ So if you want to fire an event every quarter of a second you'd need to set the 
 
     
     <div class="description">
-        <p>This signal will be dispatched when this Timer has completed, meaning there are no more events in the queue.</p>
+        <p>This signal will be dispatched when this Timer has completed which means that there are no more events in the queue.</p>
+<p>The signal is supplied with one argument, <code>timer</code>, which is this Timer object.</p>
     </div>
     
     
@@ -2025,7 +2008,7 @@ So if you want to fire an event every quarter of a second you'd need to set the 
 
     
     <dt class="tag-source">Source -
-    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-58">line 58</a>
+    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-72">line 72</a>
     </dt>
     
 
@@ -2084,7 +2067,7 @@ So if you want to fire an event every quarter of a second you'd need to set the 
 
     
     <dt class="tag-source">Source -
-    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-78">line 78</a>
+    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-92">line 92</a>
     </dt>
     
 
@@ -2103,7 +2086,7 @@ So if you want to fire an event every quarter of a second you'd need to set the 
             
 <dt>
     <h4 class="name "
-        id="running"><span class="type-signature"></span>running<span class="type-signature"> :boolean</span></h4>
+        id="running"><span class="type-signature">&lt;readonly> </span>running<span class="type-signature"> :boolean</span></h4>
     
     
 </dt>
@@ -2112,7 +2095,8 @@ So if you want to fire an event every quarter of a second you'd need to set the 
 
     
     <div class="description">
-        <p>True if the Timer is actively running. Do not switch this boolean, if you wish to pause the timer then use Timer.pause() instead.</p>
+        <p>True if the Timer is actively running.</p>
+<p>Do not modify this boolean - use <a href="Phaser.Timer.html#pause">pause</a> (and <a href="Phaser.Timer.html#resume">resume</a>) to pause the timer.</p>
     </div>
     
     
@@ -2143,7 +2127,7 @@ So if you want to fire an event every quarter of a second you'd need to set the 
 
     
     <dt class="tag-source">Source -
-    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-30">line 30</a>
+    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-39">line 39</a>
     </dt>
     
 
@@ -2199,7 +2183,7 @@ So if you want to fire an event every quarter of a second you'd need to set the 
 
     
     <dt class="tag-source">Source -
-    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-702">line 702</a>
+    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-734">line 734</a>
     </dt>
     
 
@@ -2255,7 +2239,7 @@ So if you want to fire an event every quarter of a second you'd need to set the 
 
     
     <dt class="tag-source">Source -
-    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-71">line 71</a>
+    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-85">line 85</a>
     </dt>
     
 
@@ -2289,9 +2273,10 @@ So if you want to fire an event every quarter of a second you'd need to set the 
 
     
     <div class="description">
-        <p>Adds a new Event to this Timer. The event will fire after the given amount of 'delay' in milliseconds has passed, once the Timer has started running.
-Call Timer.start() once you have added all of the Events you require for this Timer. The delay is in relation to when the Timer starts, not the time it was added.
-If the Timer is already running the delay will be calculated based on the timers current time.</p>
+        <p>Adds a new Event to this Timer.</p>
+<p>The event will fire after the given amount of <code>delay</code> in milliseconds has passed, once the Timer has started running.
+The delay is in relation to when the Timer starts, not the time it was added. If the Timer is already running the delay will be calculated based on the timers current time.</p>
+<p>Make sure to call <a href="Phaser.Timer.html#start">start</a> after adding all of the Events you require for this Timer.</p>
     </div>
     
 
@@ -2351,7 +2336,7 @@ If the Timer is already running the delay will be calculated based on the timers
 
             
 
-            <td class="description last"><p>The number of milliseconds that should elapse before the Timer will call the given callback.</p></td>
+            <td class="description last"><p>The number of milliseconds that should elapse before the callback is invoked.</p></td>
         </tr>
 
 	
@@ -2446,7 +2431,7 @@ If the Timer is already running the delay will be calculated based on the timers
 
             
 
-            <td class="description last"><p>The values to be sent to your callback function when it is called.</p></td>
+            <td class="description last"><p>Additional arguments that will be supplied to the callback.</p></td>
         </tr>
 
 	
@@ -2499,7 +2484,7 @@ If the Timer is already running the delay will be calculated based on the timers
 
     
     <dt class="tag-source">Source -
-    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-208">line 208</a>
+    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-229">line 229</a>
     </dt>
     
 
@@ -2526,7 +2511,7 @@ If the Timer is already running the delay will be calculated based on the timers
             
 <dt>
     <h4 class="name "
-        id="adjustEvents"><span class="type-signature"></span>adjustEvents<span class="signature">()</span><span class="type-signature"></span></h4>
+        id="adjustEvents"><span class="type-signature">&lt;internal> </span>adjustEvents<span class="signature">()</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -2558,6 +2543,13 @@ If the Timer is already running the delay will be calculated based on the timers
     
 
     
+        <dt class="important tag-deprecated">Internal:</dt>
+        <dd class="tag-deprecated"><ul>
+        
+            <li>This member is <em>internal (protected)</em> and may be modified or removed in the future.</li>
+        
+        </ul></dd>
+    
 
     
 
@@ -2569,7 +2561,7 @@ If the Timer is already running the delay will be calculated based on the timers
 
     
     <dt class="tag-source">Source -
-    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-521">line 521</a>
+    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-552">line 552</a>
     </dt>
     
 
@@ -2596,7 +2588,7 @@ If the Timer is already running the delay will be calculated based on the timers
             
 <dt>
     <h4 class="name "
-        id="clearPendingEvents"><span class="type-signature"></span>clearPendingEvents<span class="signature">()</span><span class="type-signature"></span></h4>
+        id="clearPendingEvents"><span class="type-signature">&lt;internal> </span>clearPendingEvents<span class="signature">()</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -2628,6 +2620,13 @@ If the Timer is already running the delay will be calculated based on the timers
     
 
     
+        <dt class="important tag-deprecated">Internal:</dt>
+        <dd class="tag-deprecated"><ul>
+        
+            <li>This member is <em>internal (protected)</em> and may be modified or removed in the future.</li>
+        
+        </ul></dd>
+    
 
     
 
@@ -2639,7 +2638,7 @@ If the Timer is already running the delay will be calculated based on the timers
 
     
     <dt class="tag-source">Source -
-    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-362">line 362</a>
+    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-392">line 392</a>
     </dt>
     
 
@@ -2710,7 +2709,7 @@ The onComplete callbacks won't be called.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-614">line 614</a>
+    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-646">line 646</a>
     </dt>
     
 
@@ -2746,10 +2745,10 @@ The onComplete callbacks won't be called.</p>
 
     
     <div class="description">
-        <p>Adds a new looped Event to this Timer that will repeat forever or until the Timer is stopped.
-The event will fire after the given amount of 'delay' milliseconds has passed once the Timer has started running.
-Call Timer.start() once you have added all of the Events you require for this Timer. The delay is in relation to when the Timer starts, not the time it was added.
-If the Timer is already running the delay will be calculated based on the timers current time.</p>
+        <p>Adds a new looped Event to this Timer that will repeat forever or until the Timer is stopped.</p>
+<p>The event will fire after the given amount of <code>delay</code> in milliseconds has passed, once the Timer has started running.
+The delay is in relation to when the Timer starts, not the time it was added. If the Timer is already running the delay will be calculated based on the timers current time.</p>
+<p>Make sure to call <a href="Phaser.Timer.html#start">start</a> after adding all of the Events you require for this Timer.</p>
     </div>
     
 
@@ -2904,7 +2903,7 @@ If the Timer is already running the delay will be calculated based on the timers
 
             
 
-            <td class="description last"><p>The values to be sent to your callback function when it is called.</p></td>
+            <td class="description last"><p>Additional arguments that will be supplied to the callback.</p></td>
         </tr>
 
 	
@@ -2957,7 +2956,7 @@ If the Timer is already running the delay will be calculated based on the timers
 
     
     <dt class="tag-source">Source -
-    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-246">line 246</a>
+    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-272">line 272</a>
     </dt>
     
 
@@ -2984,7 +2983,7 @@ If the Timer is already running the delay will be calculated based on the timers
             
 <dt>
     <h4 class="name "
-        id="order"><span class="type-signature"></span>order<span class="signature">()</span><span class="type-signature"></span></h4>
+        id="order"><span class="type-signature">&lt;internal> </span>order<span class="signature">()</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -2993,7 +2992,8 @@ If the Timer is already running the delay will be calculated based on the timers
 
     
     <div class="description">
-        <p>Orders the events on this Timer so they are in tick order. This is called automatically when new events are created.</p>
+        <p>Orders the events on this Timer so they are in tick order.
+This is called automatically when new events are created.</p>
     </div>
     
 
@@ -3016,6 +3016,13 @@ If the Timer is already running the delay will be calculated based on the timers
     
 
     
+        <dt class="important tag-deprecated">Internal:</dt>
+        <dd class="tag-deprecated"><ul>
+        
+            <li>This member is <em>internal (protected)</em> and may be modified or removed in the future.</li>
+        
+        </ul></dd>
+    
 
     
 
@@ -3027,7 +3034,7 @@ If the Timer is already running the delay will be calculated based on the timers
 
     
     <dt class="tag-source">Source -
-    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-326">line 326</a>
+    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-354">line 354</a>
     </dt>
     
 
@@ -3097,7 +3104,7 @@ If the Timer is already running the delay will be calculated based on the timers
 
     
     <dt class="tag-source">Source -
-    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-479">line 479</a>
+    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-510">line 510</a>
     </dt>
     
 
@@ -3216,7 +3223,7 @@ If the Timer is already running the delay will be calculated based on the timers
 
     
     <dt class="tag-source">Source -
-    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-306">line 306</a>
+    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-334">line 334</a>
     </dt>
     
 
@@ -3252,8 +3259,7 @@ If the Timer is already running the delay will be calculated based on the timers
 
     
     <div class="description">
-        <p>Removes all Events from this Timer and all callbacks linked to onComplete, but leaves the Timer running.
-The onComplete callbacks won't be called.</p>
+        <p>Removes all Events from this Timer and all callbacks linked to onComplete, but leaves the Timer running.<br>The onComplete callbacks won't be called.</p>
     </div>
     
 
@@ -3287,7 +3293,7 @@ The onComplete callbacks won't be called.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-599">line 599</a>
+    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-631">line 631</a>
     </dt>
     
 
@@ -3323,10 +3329,10 @@ The onComplete callbacks won't be called.</p>
 
     
     <div class="description">
-        <p>Adds a new TimerEvent that will always play through once and then repeat for the given number of iterations.
-The event will fire after the given amount of 'delay' milliseconds has passed once the Timer has started running.
-Call Timer.start() once you have added all of the Events you require for this Timer. The delay is in relation to when the Timer starts, not the time it was added.
-If the Timer is already running the delay will be calculated based on the timers current time.</p>
+        <p>Adds a new TimerEvent that will always play through once and then repeat for the given number of iterations.</p>
+<p>The event will fire after the given amount of <code>delay</code> in milliseconds has passed, once the Timer has started running.
+The delay is in relation to when the Timer starts, not the time it was added. If the Timer is already running the delay will be calculated based on the timers current time.</p>
+<p>Make sure to call <a href="Phaser.Timer.html#start">start</a> after adding all of the Events you require for this Timer.</p>
     </div>
     
 
@@ -3512,7 +3518,7 @@ If the Timer is already running the delay will be calculated based on the timers
 
             
 
-            <td class="description last"><p>The values to be sent to your callback function when it is called.</p></td>
+            <td class="description last"><p>Additional arguments that will be supplied to the callback.</p></td>
         </tr>
 
 	
@@ -3565,7 +3571,7 @@ If the Timer is already running the delay will be calculated based on the timers
 
     
     <dt class="tag-source">Source -
-    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-226">line 226</a>
+    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-250">line 250</a>
     </dt>
     
 
@@ -3635,84 +3641,7 @@ If the Timer is already running the delay will be calculated based on the timers
 
     
     <dt class="tag-source">Source -
-    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-558">line 558</a>
-    </dt>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-       
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name "
-        id="sortHandler"><span class="type-signature">&lt;internal> </span>sortHandler<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-
-    
-    <div class="description">
-        <p>Sort handler used by Phaser.Timer.order.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-        <dt class="important tag-deprecated">Internal:</dt>
-        <dd class="tag-deprecated"><ul>
-        
-            <li>This member is <em>internal (protected)</em> and may be modified or removed in the future.</li>
-        
-        </ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source -
-    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-342">line 342</a>
+    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-590">line 590</a>
     </dt>
     
 
@@ -3851,7 +3780,7 @@ If the Timer is already running the delay will be calculated based on the timers
 
     
     <dt class="tag-source">Source -
-    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-265">line 265</a>
+    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-293">line 293</a>
     </dt>
     
 
@@ -3990,7 +3919,7 @@ If the Timer is already running the delay will be calculated based on the timers
 
     
     <dt class="tag-source">Source -
-    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-288">line 288</a>
+    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-316">line 316</a>
     </dt>
     
 
@@ -4136,7 +4065,7 @@ If the Timer is already running the delay will be calculated based on the timers
 
     
     <dt class="tag-source">Source -
-    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-384">line 384</a>
+    <a href="Timer.js.html">time/Timer.js</a>, <a href="Timer.js.html#sunlight-1-line-415">line 415</a>
     </dt>
     
 
@@ -4185,7 +4114,7 @@ If the Timer is already running the delay will be calculated based on the timers
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Tue Nov 25 2014 00:18:01 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Wed Dec 03 2014 10:31:06 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

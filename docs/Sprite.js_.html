@@ -124,50 +124,6 @@
 							<a href="Phaser.Easing.html">Easing</a>
 						</li>
 						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Back.html">Back</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Bounce.html">Bounce</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Circular.html">Circular</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Cubic.html">Cubic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Elastic.html">Elastic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Exponential.html">Exponential</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Linear.html">Linear</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Quadratic.html">Quadratic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Quartic.html">Quartic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Quintic.html">Quintic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Sinusoidal.html">Sinusoidal</a>
-						</li>
-						
 						<li class="class-depth-1">
 							<a href="Phaser.Ellipse.html">Ellipse</a>
 						</li>
@@ -876,6 +832,7 @@
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Core<b class="caret"></b></a>
 					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="Phaser.Game.html">Game</a></li>
 						<li class="class-depth-1"><a href="Phaser.Group.html">Group</a></li>
 						<li class="class-depth-1"><a href="Phaser.World.html">World</a></li>
 						<li class="class-depth-1"><a href="Phaser.Loader.html">Loader</a></li>
@@ -898,6 +855,7 @@
 						<li class="class-depth-1"><a href="Phaser.Image.html">Image</a></li>
 						<li class="class-depth-1"><a href="Phaser.Sound.html">Sound</a></li>
 						<li class="class-depth-1"><a href="Phaser.Emitter.html">Emitter</a></li>
+						<li class="class-depth-1"><a href="Phaser.Particle.html">Particle</a></li>
 						<li class="class-depth-1"><a href="Phaser.Text.html">Text</a></li>
 						<li class="class-depth-1"><a href="Phaser.Tween.html">Tween</a></li>
 						<li class="class-depth-1"><a href="Phaser.BitmapText.html">BitmapText</a></li>
@@ -962,6 +920,7 @@
 						<li class="class-depth-1"><a href="https://confirmsubscription.com/h/r/369DE48E3E86AF1E">Newsletter</a></li>
 						<li class="class-depth-1"><a href="https://twitter.com/photonstorm">Twitter</a></li>
 						<li class="class-depth-1"><a href="http://www.html5gamedevs.com/topic/4470-official-phaserio-irc-channel-phaserio-on-freenode/">IRC</a></li>
+						<li class="class-depth-1"><a href="https://leanpub.com/u/photonstorm">Phaser Books</a></li>
 						<li class="class-depth-1"><a href="https://www.gittip.com/photonstorm/">GitTip</a></li>
 					</ul>
 				</li>
@@ -1101,9 +1060,12 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     this.health = 1;
 
     /**
-    * If you would like the Sprite to have a lifespan once 'born' you can set this to a positive value. Handy for particles, bullets, etc.
-    * The lifespan is decremented by game.time.elapsed each update, once it reaches zero the kill() function is called.
-    * @property {number} lifespan - The lifespan of the Sprite (in ms) before it will be killed.
+    * To given a Sprite a lifespan, in milliseconds, once 'born' you can set this to a positive value. Handy for particles, bullets, etc.
+    *
+    * The lifespan is decremented by `game.time.physicsElapsed` (converted to milliseconds) each logic update,
+    * and {@link Phaser.Sprite.kill kill} is called once the lifespan reaches 0.
+    *
+    * @property {number} lifespan
     * @default
     */
     this.lifespan = 0;
@@ -1233,7 +1195,7 @@ Phaser.Sprite.prototype.preUpdate = function() {
 
     if (this.lifespan > 0)
     {
-        this.lifespan -= this.game.time.elapsedMS;
+        this.lifespan -= this.game.time.physicsElapsedMS;
 
         if (this.lifespan &lt;= 0)
         {
@@ -1270,13 +1232,13 @@ Phaser.Sprite.prototype.preUpdate = function() {
             if (this._cache[5] === 1 && this.game.world.bounds.intersects(this._bounds))
             {
                 this._cache[5] = 0;
-                this.events.onEnterBounds.dispatch(this);
+                this.events.onEnterBounds$dispatch(this);
             }
             else if (this._cache[5] === 0 && !this.game.world.bounds.intersects(this._bounds))
             {
                 //  The Sprite WAS in the screen, but has now left.
                 this._cache[5] = 1;
-                this.events.onOutOfBounds.dispatch(this);
+                this.events.onOutOfBounds$dispatch(this);
 
                 if (this.outOfBoundsKill)
                 {
@@ -1608,7 +1570,7 @@ Phaser.Sprite.prototype.revive = function(health) {
 
     if (this.events)
     {
-        this.events.onRevived.dispatch(this);
+        this.events.onRevived$dispatch(this);
     }
 
     return this;
@@ -1633,7 +1595,7 @@ Phaser.Sprite.prototype.kill = function() {
 
     if (this.events)
     {
-        this.events.onKilled.dispatch(this);
+        this.events.onKilled$dispatch(this);
     }
 
     return this;
@@ -1658,7 +1620,7 @@ Phaser.Sprite.prototype.destroy = function(destroyChildren) {
 
     if (this.events)
     {
-        this.events.onDestroy.dispatch(this);
+        this.events.onDestroy$dispatch(this);
     }
 
     if (this.parent)
@@ -2362,7 +2324,7 @@ Object.defineProperty(Phaser.Sprite.prototype, "destroyPhase", {
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Tue Nov 25 2014 00:17:18 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Wed Dec 03 2014 10:30:31 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

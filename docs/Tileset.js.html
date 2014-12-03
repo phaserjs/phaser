@@ -124,50 +124,6 @@
 							<a href="Phaser.Easing.html">Easing</a>
 						</li>
 						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Back.html">Back</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Bounce.html">Bounce</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Circular.html">Circular</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Cubic.html">Cubic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Elastic.html">Elastic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Exponential.html">Exponential</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Linear.html">Linear</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Quadratic.html">Quadratic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Quartic.html">Quartic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Quintic.html">Quintic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Sinusoidal.html">Sinusoidal</a>
-						</li>
-						
 						<li class="class-depth-1">
 							<a href="Phaser.Ellipse.html">Ellipse</a>
 						</li>
@@ -876,6 +832,7 @@
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Core<b class="caret"></b></a>
 					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="Phaser.Game.html">Game</a></li>
 						<li class="class-depth-1"><a href="Phaser.Group.html">Group</a></li>
 						<li class="class-depth-1"><a href="Phaser.World.html">World</a></li>
 						<li class="class-depth-1"><a href="Phaser.Loader.html">Loader</a></li>
@@ -898,6 +855,7 @@
 						<li class="class-depth-1"><a href="Phaser.Image.html">Image</a></li>
 						<li class="class-depth-1"><a href="Phaser.Sound.html">Sound</a></li>
 						<li class="class-depth-1"><a href="Phaser.Emitter.html">Emitter</a></li>
+						<li class="class-depth-1"><a href="Phaser.Particle.html">Particle</a></li>
 						<li class="class-depth-1"><a href="Phaser.Text.html">Text</a></li>
 						<li class="class-depth-1"><a href="Phaser.Tween.html">Tween</a></li>
 						<li class="class-depth-1"><a href="Phaser.BitmapText.html">BitmapText</a></li>
@@ -962,6 +920,7 @@
 						<li class="class-depth-1"><a href="https://confirmsubscription.com/h/r/369DE48E3E86AF1E">Newsletter</a></li>
 						<li class="class-depth-1"><a href="https://twitter.com/photonstorm">Twitter</a></li>
 						<li class="class-depth-1"><a href="http://www.html5gamedevs.com/topic/4470-official-phaserio-irc-channel-phaserio-on-freenode/">IRC</a></li>
+						<li class="class-depth-1"><a href="https://leanpub.com/u/photonstorm">Phaser Books</a></li>
 						<li class="class-depth-1"><a href="https://www.gittip.com/photonstorm/">GitTip</a></li>
 					</ul>
 				</li>
@@ -1051,6 +1010,7 @@ Phaser.Tileset = function (name, firstgid, width, height, margin, spacing, prope
     * The spacing between each tile in the sheet (in pixels).
     * Use `setSpacing` to change.
     * @property {integer} tileSpacing
+    * @readonly
     */
     this.tileSpacing = spacing | 0;
 
@@ -1061,7 +1021,7 @@ Phaser.Tileset = function (name, firstgid, width, height, margin, spacing, prope
     this.properties = properties || {};
 
     /**
-    * The cached image that contains the individual tiles. Use `setImage` to set.
+    * The cached image that contains the individual tiles. Use {@link Phaser.Tileset.setImage setImage} to set.
     * @property {?object} image
     * @readonly
     */
@@ -1069,7 +1029,7 @@ Phaser.Tileset = function (name, firstgid, width, height, margin, spacing, prope
     this.image = null;
 
     /**
-    * The number of rows in the tile sheet.
+    * The number of tile rows in the the tileset.
     * @property {integer}
     * @readonly
     */
@@ -1077,7 +1037,7 @@ Phaser.Tileset = function (name, firstgid, width, height, margin, spacing, prope
     this.rows = 0;
 
     /**
-    * The number of columns in the sheet.
+    * The number of tile columns in the tileset.
     * @property {integer} columns
     * @readonly
     */
@@ -1085,7 +1045,7 @@ Phaser.Tileset = function (name, firstgid, width, height, margin, spacing, prope
     this.columns = 0;
 
     /**
-    * The total number of tiles in the sheet.
+    * The total number of tiles in the tileset.
     * @property {integer} total
     * @readonly
     */
@@ -1163,7 +1123,7 @@ Phaser.Tileset.prototype = {
     setImage: function (image) {
 
         this.image = image;
-        this.updateTileData();
+        this.updateTileData(image.width, image.height);
        
     },
 
@@ -1180,7 +1140,10 @@ Phaser.Tileset.prototype = {
         this.tileMargin = margin | 0;
         this.tileSpacing = spacing | 0;
 
-        this.updateTileData();
+        if (this.image)
+        {
+            this.updateTileData(this.image.width, this.image.height);
+        }
 
     },
 
@@ -1189,13 +1152,33 @@ Phaser.Tileset.prototype = {
     *
     * @method Phaser.Tileset#updateTileData
     * @private
+    * @param {integer} imageWidth - The (expected) width of the image to slice.
+    * @param {integer} imageHeight - The (expected) height of the image to slice.
     */
-    updateTileData: function () {
+    updateTileData: function (imageWidth, imageHeight) {
 
-        var image = this.image;
-        this.rows = Math.round((image.height - this.tileMargin) / (this.tileHeight + this.tileSpacing));
-        this.columns = Math.round((image.width - this.tileMargin) / (this.tileWidth + this.tileSpacing));
-        this.total = this.rows * this.columns;
+        // May be fractional values
+        var rowCount = (imageHeight - this.tileMargin) / (this.tileHeight + this.tileSpacing);
+        var colCount = (imageWidth - this.tileMargin) / (this.tileWidth + this.tileSpacing);
+
+        if (rowCount % 1 !== 0 || colCount % 1 !== 0)
+        {
+            console.warn("Phaser.Tileset - image tile area is not an even multiple of tile size");
+        }
+
+        // In Tiled a tileset image that is not an even multiple of the tile dimensions
+        // is truncated - hence the floor when calculating the rows/columns.
+        rowCount = Math.floor(rowCount);
+        colCount = Math.floor(colCount);
+
+        if ((this.rows && this.rows !== rowCount) || (this.columns && this.columns !== colCount))
+        {
+            console.warn("Phaser.Tileset - actual and expected number of tile rows and columns differ");
+        }
+
+        this.rows = rowCount;
+        this.columns = colCount;
+        this.total = rowCount * colCount;
 
         this.drawCoords.length = 0;
 
@@ -1241,7 +1224,7 @@ Phaser.Tileset.prototype.constructor = Phaser.Tileset;
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Tue Nov 25 2014 00:17:19 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Wed Dec 03 2014 10:30:32 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

@@ -124,50 +124,6 @@
 							<a href="Phaser.Easing.html">Easing</a>
 						</li>
 						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Back.html">Back</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Bounce.html">Bounce</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Circular.html">Circular</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Cubic.html">Cubic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Elastic.html">Elastic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Exponential.html">Exponential</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Linear.html">Linear</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Quadratic.html">Quadratic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Quartic.html">Quartic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Quintic.html">Quintic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Sinusoidal.html">Sinusoidal</a>
-						</li>
-						
 						<li class="class-depth-1">
 							<a href="Phaser.Ellipse.html">Ellipse</a>
 						</li>
@@ -876,6 +832,7 @@
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Core<b class="caret"></b></a>
 					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="Phaser.Game.html">Game</a></li>
 						<li class="class-depth-1"><a href="Phaser.Group.html">Group</a></li>
 						<li class="class-depth-1"><a href="Phaser.World.html">World</a></li>
 						<li class="class-depth-1"><a href="Phaser.Loader.html">Loader</a></li>
@@ -898,6 +855,7 @@
 						<li class="class-depth-1"><a href="Phaser.Image.html">Image</a></li>
 						<li class="class-depth-1"><a href="Phaser.Sound.html">Sound</a></li>
 						<li class="class-depth-1"><a href="Phaser.Emitter.html">Emitter</a></li>
+						<li class="class-depth-1"><a href="Phaser.Particle.html">Particle</a></li>
 						<li class="class-depth-1"><a href="Phaser.Text.html">Text</a></li>
 						<li class="class-depth-1"><a href="Phaser.Tween.html">Tween</a></li>
 						<li class="class-depth-1"><a href="Phaser.BitmapText.html">BitmapText</a></li>
@@ -962,6 +920,7 @@
 						<li class="class-depth-1"><a href="https://confirmsubscription.com/h/r/369DE48E3E86AF1E">Newsletter</a></li>
 						<li class="class-depth-1"><a href="https://twitter.com/photonstorm">Twitter</a></li>
 						<li class="class-depth-1"><a href="http://www.html5gamedevs.com/topic/4470-official-phaserio-irc-channel-phaserio-on-freenode/">IRC</a></li>
+						<li class="class-depth-1"><a href="https://leanpub.com/u/photonstorm">Phaser Books</a></li>
 						<li class="class-depth-1"><a href="https://www.gittip.com/photonstorm/">GitTip</a></li>
 					</ul>
 				</li>
@@ -989,8 +948,6 @@
     Signal
     </h2>
     
-        <div class="class-description"><p>Phaser.Signal</p></div>
-    
 </header>
 
 <article>
@@ -1010,7 +967,8 @@
 
     
     <div class="description">
-        <p>A Signal is used for object communication via a custom broadcaster instead of Events.</p>
+        <p>A Signal is an event dispatch mechansim than supports broadcasting to multiple listeners.</p>
+<p>Event listeners are uniquely identified by the listener/callback function and the context.</p>
     </div>
     
 
@@ -1044,7 +1002,7 @@
 
     
     <dt class="tag-source">Source -
-    <a href="Signal.js.html">core/Signal.js</a>, <a href="Signal.js.html#sunlight-1-line-14">line 14</a>
+    <a href="Signal.js.html">core/Signal.js</a>, <a href="Signal.js.html#sunlight-1-line-16">line 16</a>
     </dt>
     
 
@@ -1096,8 +1054,8 @@
 
     
     <div class="description">
-        <p>If Signal is active and should broadcast events.
-IMPORTANT: Setting this property during a dispatch will only affect the next dispatch, if you want to stop the propagation of a signal use <code>halt()</code> instead.</p>
+        <p>Is the Signal active? Only active signal will broadcast dispatched events.</p>
+<p>Setting this property during a dispatch will only affect the next dispatch. To stop the propagation of a signal from a listener use <a href="Phaser.Signal.html#halt">halt</a>.</p>
     </div>
     
     
@@ -1128,7 +1086,7 @@ IMPORTANT: Setting this property during a dispatch will only affect the next dis
 
     
     <dt class="tag-source">Source -
-    <a href="Signal.js.html">core/Signal.js</a>, <a href="Signal.js.html#sunlight-1-line-51">line 51</a>
+    <a href="Signal.js.html">core/Signal.js</a>, <a href="Signal.js.html#sunlight-1-line-57">line 57</a>
     </dt>
     
 
@@ -1156,9 +1114,9 @@ IMPORTANT: Setting this property during a dispatch will only affect the next dis
 
     
     <div class="description">
-        <p>If Signal should keep record of previously dispatched parameters and
-automatically execute listener during <code>add()</code>/<code>addOnce()</code> if Signal was
-already dispatched before.</p>
+        <p>Memorize the previously dispatched event?</p>
+<p>If an event has been memorized it is automatically dispatched when a new listener is added with <a href="Phaser.Signal.html#add">add</a> or <a href="Phaser.Signal.html#addOnce">addOnce</a>.
+Use <a href="Phaser.Signal.html#forget">forget</a> to clear any currently memorized event.</p>
     </div>
     
     
@@ -1186,7 +1144,7 @@ already dispatched before.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="Signal.js.html">core/Signal.js</a>, <a href="Signal.js.html#sunlight-1-line-37">line 37</a>
+    <a href="Signal.js.html">core/Signal.js</a>, <a href="Signal.js.html#sunlight-1-line-41">line 41</a>
     </dt>
     
 
@@ -1220,7 +1178,7 @@ already dispatched before.</p>
 
     
     <div class="description">
-        <p>Add a listener to the signal.</p>
+        <p>Add an event listener.</p>
     </div>
     
 
@@ -1399,7 +1357,7 @@ already dispatched before.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="Signal.js.html">core/Signal.js</a>, <a href="Signal.js.html#sunlight-1-line-183">line 183</a>
+    <a href="Signal.js.html">core/Signal.js</a>, <a href="Signal.js.html#sunlight-1-line-189">line 189</a>
     </dt>
     
 
@@ -1435,7 +1393,9 @@ already dispatched before.</p>
 
     
     <div class="description">
-        <p>Add listener to the signal that should be removed after first execution (will be executed only once).</p>
+        <p>Add a one-time listener - the listener is automatically removed after the first execution.</p>
+<p>If there is as <a href="Phaser.Signal.html#memorize">memorized</a> event then it will be dispatched and
+the listener will be removed immediately.</p>
     </div>
     
 
@@ -1614,7 +1574,7 @@ already dispatched before.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="Signal.js.html">core/Signal.js</a>, <a href="Signal.js.html#sunlight-1-line-200">line 200</a>
+    <a href="Signal.js.html">core/Signal.js</a>, <a href="Signal.js.html#sunlight-1-line-206">line 206</a>
     </dt>
     
 
@@ -1650,8 +1610,8 @@ already dispatched before.</p>
 
     
     <div class="description">
-        <p>Dispatch/Broadcast Signal to all listeners added to the queue.</p>
-<p>To create a bound dispatch for this Signal, use Phaser.Signal#boundDispatch.</p>
+        <p>Dispatch / broadcast the event to all listeners.</p>
+<p>To create an instance-bound dispatch for this Signal, use boundDispatch.</p>
     </div>
     
 
@@ -1746,7 +1706,7 @@ already dispatched before.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="Signal.js.html">core/Signal.js</a>, <a href="Signal.js.html#sunlight-1-line-306">line 306</a>
+    <a href="Signal.js.html">core/Signal.js</a>, <a href="Signal.js.html#sunlight-1-line-316">line 316</a>
     </dt>
     
 
@@ -1782,8 +1742,9 @@ already dispatched before.</p>
 
     
     <div class="description">
-        <p>Remove all bindings from signal and destroy any reference to external objects (destroy Signal object).
-IMPORTANT: calling any method on the signal instance after calling dispose will throw errors.</p>
+        <p>Dispose the signal - no more events can be dispatched.</p>
+<p>This removes all event listeners and clears references to external objects.
+Calling methods on a disposed objects results in undefined behavior.</p>
     </div>
     
 
@@ -1817,7 +1778,7 @@ IMPORTANT: calling any method on the signal instance after calling dispose will 
 
     
     <dt class="tag-source">Source -
-    <a href="Signal.js.html">core/Signal.js</a>, <a href="Signal.js.html#sunlight-1-line-363">line 363</a>
+    <a href="Signal.js.html">core/Signal.js</a>, <a href="Signal.js.html#sunlight-1-line-372">line 372</a>
     </dt>
     
 
@@ -1853,7 +1814,7 @@ IMPORTANT: calling any method on the signal instance after calling dispose will 
 
     
     <div class="description">
-        <p>Forget memorized arguments.</p>
+        <p>Forget the currently <a href="Phaser.Signal.html#memorize">memorized</a> event, if any.</p>
     </div>
     
 
@@ -1887,19 +1848,12 @@ IMPORTANT: calling any method on the signal instance after calling dispose will 
 
     
     <dt class="tag-source">Source -
-    <a href="Signal.js.html">core/Signal.js</a>, <a href="Signal.js.html#sunlight-1-line-348">line 348</a>
+    <a href="Signal.js.html">core/Signal.js</a>, <a href="Signal.js.html#sunlight-1-line-358">line 358</a>
     </dt>
     
 
     
 
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li>Signal.memorize</li>
-        </ul>
-    </dd>
     
 
     
@@ -1921,7 +1875,7 @@ IMPORTANT: calling any method on the signal instance after calling dispose will 
             
 <dt>
     <h4 class="name "
-        id="getNumListeners"><span class="type-signature"></span>getNumListeners<span class="signature">()</span><span class="type-signature"> &rarr; {number}</span></h4>
+        id="getNumListeners"><span class="type-signature"></span>getNumListeners<span class="signature">()</span><span class="type-signature"> &rarr; {integer}</span></h4>
     
     
 </dt>
@@ -1948,7 +1902,7 @@ IMPORTANT: calling any method on the signal instance after calling dispose will 
     
         <div class="returns-type">
         
-<span class="param-type">number</span>
+<span class="param-type">integer</span>
 
  -
         </div>
@@ -1984,7 +1938,7 @@ IMPORTANT: calling any method on the signal instance after calling dispose will 
 
     
     <dt class="tag-source">Source -
-    <a href="Signal.js.html">core/Signal.js</a>, <a href="Signal.js.html#sunlight-1-line-281">line 281</a>
+    <a href="Signal.js.html">core/Signal.js</a>, <a href="Signal.js.html#sunlight-1-line-290">line 290</a>
     </dt>
     
 
@@ -2020,8 +1974,9 @@ IMPORTANT: calling any method on the signal instance after calling dispose will 
 
     
     <div class="description">
-        <p>Stop propagation of the event, blocking the dispatch to next listener on the queue.
-IMPORTANT: should be called only during signal dispatch, calling it before/after dispatch won't affect signal broadcast.</p>
+        <p>Stop propagation of the event, blocking the dispatch to next listener on the queue.</p>
+<p>This should be called only during event dispatch as calling it before/after dispatch won't affect other broadcast.
+See <a href="Phaser.Signal.html#active">active</a> to enable/disable the signal entirely.</p>
     </div>
     
 
@@ -2055,19 +2010,12 @@ IMPORTANT: should be called only during signal dispatch, calling it before/after
 
     
     <dt class="tag-source">Source -
-    <a href="Signal.js.html">core/Signal.js</a>, <a href="Signal.js.html#sunlight-1-line-293">line 293</a>
+    <a href="Signal.js.html">core/Signal.js</a>, <a href="Signal.js.html#sunlight-1-line-302">line 302</a>
     </dt>
     
 
     
 
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li>Signal.prototype.disable</li>
-        </ul>
-    </dd>
     
 
     
@@ -2098,7 +2046,7 @@ IMPORTANT: should be called only during signal dispatch, calling it before/after
 
     
     <div class="description">
-        <p>Check if listener was attached to Signal.</p>
+        <p>Check if a specific listener is attached.</p>
     </div>
     
 
@@ -2244,7 +2192,7 @@ IMPORTANT: should be called only during signal dispatch, calling it before/after
 
     
     <dt class="tag-source">Source -
-    <a href="Signal.js.html">core/Signal.js</a>, <a href="Signal.js.html#sunlight-1-line-169">line 169</a>
+    <a href="Signal.js.html">core/Signal.js</a>, <a href="Signal.js.html#sunlight-1-line-175">line 175</a>
     </dt>
     
 
@@ -2280,7 +2228,7 @@ IMPORTANT: should be called only during signal dispatch, calling it before/after
 
     
     <div class="description">
-        <p>Remove a single listener from the dispatch queue.</p>
+        <p>Remove a single event listener.</p>
     </div>
     
 
@@ -2438,7 +2386,7 @@ IMPORTANT: should be called only during signal dispatch, calling it before/after
 
     
     <dt class="tag-source">Source -
-    <a href="Signal.js.html">core/Signal.js</a>, <a href="Signal.js.html#sunlight-1-line-217">line 217</a>
+    <a href="Signal.js.html">core/Signal.js</a>, <a href="Signal.js.html#sunlight-1-line-226">line 226</a>
     </dt>
     
 
@@ -2474,7 +2422,7 @@ IMPORTANT: should be called only during signal dispatch, calling it before/after
 
     
     <div class="description">
-        <p>Remove all listeners from the Signal.</p>
+        <p>Remove all event listeners.</p>
     </div>
     
 
@@ -2577,7 +2525,7 @@ IMPORTANT: should be called only during signal dispatch, calling it before/after
 
     
     <dt class="tag-source">Source -
-    <a href="Signal.js.html">core/Signal.js</a>, <a href="Signal.js.html#sunlight-1-line-241">line 241</a>
+    <a href="Signal.js.html">core/Signal.js</a>, <a href="Signal.js.html#sunlight-1-line-250">line 250</a>
     </dt>
     
 
@@ -2611,6 +2559,10 @@ IMPORTANT: should be called only during signal dispatch, calling it before/after
 <dd>
     
 
+    
+    <div class="description">
+        <p>A string representation of the object.</p>
+    </div>
     
 
     
@@ -2663,7 +2615,7 @@ IMPORTANT: should be called only during signal dispatch, calling it before/after
 
     
     <dt class="tag-source">Source -
-    <a href="Signal.js.html">core/Signal.js</a>, <a href="Signal.js.html#sunlight-1-line-381">line 381</a>
+    <a href="Signal.js.html">core/Signal.js</a>, <a href="Signal.js.html#sunlight-1-line-392">line 392</a>
     </dt>
     
 
@@ -2712,7 +2664,7 @@ IMPORTANT: should be called only during signal dispatch, calling it before/after
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Tue Nov 25 2014 00:17:54 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Wed Dec 03 2014 10:31:00 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

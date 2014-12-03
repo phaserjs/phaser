@@ -1047,7 +1047,7 @@ autoupdate enabled but are harder to achieve.
 * @method PIXI.Spine#autoUpdateTransform
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\extras\PIXISpine.js
-* @sourceline 242
+* @sourceline 249
 */
 /**
 * @description Create a new sprite to be used with spine.RegionAttachment
@@ -1056,7 +1056,7 @@ autoupdate enabled but are harder to achieve.
 * @param {spineRegionAttachment} attachment - The attachment that the sprite will represent
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\extras\PIXISpine.js
-* @sourceline 258
+* @sourceline 265
 */
 /**
 * @fileoverview
@@ -1172,8 +1172,8 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 * @sourceline 51
 */
 /**
-* @description if you need a padding, not yet implemented
-* @member PIXI.Strip#padding
+* @description Triangles in canvas mode are automatically antialiased, use this value to force triangles to overlap a bit with each other.
+* @member PIXI.Strip#canvasPadding
 * @type {Number}
 * @sourcefile d:\wamp\www\phaser\src\pixi\extras\Strip.js
 * @sourceline 60
@@ -1205,7 +1205,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 /**
 * @description Different drawing buffer modes supported
 * @member PIXI.Strip.
-* @type {Array<>}
+* @type {{TRIANGLE_STRIP: number, TRIANGLES: number}}
 * @sourcefile d:\wamp\www\phaser\src\pixi\extras\Strip.js
 * @sourceline 459
 */
@@ -4464,12 +4464,12 @@ Based on: https://stackoverflow.com/questions/785097/how-do-i-implement-a-bezier
 /**
 * @method PIXI.WebGLGraphicsData#reset
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\utils\WebGLGraphics.js
-* @sourceline 864
+* @sourceline 863
 */
 /**
 * @method PIXI.WebGLGraphicsData#upload
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\utils\WebGLGraphics.js
-* @sourceline 874
+* @sourceline 872
 */
 /**
 * @fileoverview
@@ -4585,7 +4585,7 @@ Based on: https://stackoverflow.com/questions/785097/how-do-i-implement-a-bezier
 * @class PIXI.WebGLSpriteBatch
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\utils\WebGLSpriteBatch.js
-* @sourceline 11
+* @sourceline 12
 */
 /**
 * @method PIXI.WebGLSpriteBatch.initDefaultShaders
@@ -4633,124 +4633,138 @@ Based on: https://stackoverflow.com/questions/785097/how-do-i-implement-a-bezier
 * @member PIXI.WebGLSpriteBatch#vertSize
 * @type {Number}
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\utils\WebGLSpriteBatch.js
-* @sourceline 19
+* @sourceline 20
 */
 /**
 * @description The number of images in the SpriteBatch before it flushes
 * @member PIXI.WebGLSpriteBatch#size
 * @type {Number}
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\utils\WebGLSpriteBatch.js
-* @sourceline 25
+* @sourceline 26
 */
 /**
 * @description Holds the vertices
 * @member PIXI.WebGLSpriteBatch#vertices
+* @type {ArrayBuffer}
+* @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\utils\WebGLSpriteBatch.js
+* @sourceline 38
+*/
+/**
+* @description View on the vertices as a Float32Array
+* @member PIXI.WebGLSpriteBatch#positions
 * @type {Float32Array}
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\utils\WebGLSpriteBatch.js
-* @sourceline 37
+* @sourceline 46
+*/
+/**
+* @description View on the vertices as a Uint32Array
+* @member PIXI.WebGLSpriteBatch#colors
+* @type {Uint32Array}
+* @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\utils\WebGLSpriteBatch.js
+* @sourceline 54
 */
 /**
 * @description Holds the indices
 * @member PIXI.WebGLSpriteBatch#indices
 * @type {Uint16Array}
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\utils\WebGLSpriteBatch.js
-* @sourceline 45
+* @sourceline 62
 */
 /**
 * @member PIXI.WebGLSpriteBatch#lastIndexCount
 * @type {Number}
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\utils\WebGLSpriteBatch.js
-* @sourceline 53
+* @sourceline 70
 */
 /**
 * @member PIXI.WebGLSpriteBatch#drawing
 * @type {Boolean}
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\utils\WebGLSpriteBatch.js
-* @sourceline 69
+* @sourceline 86
 */
 /**
 * @member PIXI.WebGLSpriteBatch#currentBatchSize
 * @type {Number}
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\utils\WebGLSpriteBatch.js
-* @sourceline 75
+* @sourceline 92
 */
 /**
 * @member PIXI.WebGLSpriteBatch#currentBaseTexture
 * @type {PIXI.BaseTexture}
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\utils\WebGLSpriteBatch.js
-* @sourceline 81
+* @sourceline 98
 */
 /**
 * @member PIXI.WebGLSpriteBatch#dirty
 * @type {Boolean}
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\utils\WebGLSpriteBatch.js
-* @sourceline 87
+* @sourceline 104
 */
 /**
 * @member PIXI.WebGLSpriteBatch#textures
 * @type {Array}
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\utils\WebGLSpriteBatch.js
-* @sourceline 93
+* @sourceline 110
 */
 /**
 * @member PIXI.WebGLSpriteBatch#blendModes
 * @type {Array}
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\utils\WebGLSpriteBatch.js
-* @sourceline 99
+* @sourceline 116
 */
 /**
 * @member PIXI.WebGLSpriteBatch#shaders
 * @type {Array}
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\utils\WebGLSpriteBatch.js
-* @sourceline 105
+* @sourceline 122
 */
 /**
 * @member PIXI.WebGLSpriteBatch#sprites
 * @type {Array}
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\utils\WebGLSpriteBatch.js
-* @sourceline 111
+* @sourceline 128
 */
 /**
 * @member PIXI.WebGLSpriteBatch#defaultShader
 * @type {PIXI.AbstractFilter}
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\utils\WebGLSpriteBatch.js
-* @sourceline 117
+* @sourceline 134
 */
 /**
 * @method PIXI.WebGLSpriteBatch#setContext
 * @param {WebGLContext} gl - the current WebGL drawing context
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\utils\WebGLSpriteBatch.js
-* @sourceline 132
+* @sourceline 149
 */
 /**
 * @method PIXI.WebGLSpriteBatch#begin
 * @param {Object} renderSession - The RenderSession object
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\utils\WebGLSpriteBatch.js
-* @sourceline 164
+* @sourceline 181
 */
 /**
 * @method PIXI.WebGLSpriteBatch#end
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\utils\WebGLSpriteBatch.js
-* @sourceline 176
+* @sourceline 193
 */
 /**
 * @method PIXI.WebGLSpriteBatch#render
 * @param {PIXI.Sprite} sprite - the sprite to render when using this spritebatch
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\utils\WebGLSpriteBatch.js
-* @sourceline 184
+* @sourceline 201
 */
 /**
 * @description Renders a TilingSprite using the spriteBatch.
 * @method PIXI.WebGLSpriteBatch#renderTilingSprite
 * @param {PIXI.TilingSprite} sprite - the tilingSprite to render
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\utils\WebGLSpriteBatch.js
-* @sourceline 297
+* @sourceline 328
 */
 /**
 * @description Renders the content and empties the current batch.
 * @method PIXI.WebGLSpriteBatch#flush
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\utils\WebGLSpriteBatch.js
-* @sourceline 418
+* @sourceline 446
 */
 /**
 * @method PIXI.WebGLSpriteBatch#renderBatch
@@ -4758,23 +4772,23 @@ Based on: https://stackoverflow.com/questions/785097/how-do-i-implement-a-bezier
 * @param {Number} size - 
 * @param {Number} startIndex - 
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\utils\WebGLSpriteBatch.js
-* @sourceline 542
+* @sourceline 572
 */
 /**
 * @method PIXI.WebGLSpriteBatch#stop
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\utils\WebGLSpriteBatch.js
-* @sourceline 572
+* @sourceline 602
 */
 /**
 * @method PIXI.WebGLSpriteBatch#start
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\utils\WebGLSpriteBatch.js
-* @sourceline 581
+* @sourceline 611
 */
 /**
 * @description Destroys the SpriteBatch.
 * @method PIXI.WebGLSpriteBatch#destroy
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\utils\WebGLSpriteBatch.js
-* @sourceline 589
+* @sourceline 619
 */
 /**
 * @fileoverview
@@ -5036,7 +5050,7 @@ Disable this by setting this to false. For example: if your game has a canvas fi
 * @param {PIXI.Event} event - 
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\WebGLRenderer.js
-* @sourceline 443
+* @sourceline 453
 */
 /**
 * @description Handles a restored webgl context
@@ -5044,19 +5058,19 @@ Disable this by setting this to false. For example: if your game has a canvas fi
 * @param {PIXI.Event} event - 
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\WebGLRenderer.js
-* @sourceline 456
+* @sourceline 466
 */
 /**
 * @description Removes everything from the renderer (event listeners, spritebatch, etc...)
 * @method PIXI.WebGLRenderer#destroy
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\WebGLRenderer.js
-* @sourceline 477
+* @sourceline 487
 */
 /**
 * @description Maps Pixi blend modes to WebGL blend modes.
 * @method PIXI.WebGLRenderer#mapBlendModes
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\WebGLRenderer.js
-* @sourceline 508
+* @sourceline 518
 */
 /**
 * @fileoverview
@@ -5353,50 +5367,58 @@ bounds set by the Text object's wordWrapWidth property.
 * @sourceline 85
 */
 /**
+* @description Set this to true if a mipmap of this texture needs to be generated. This value needs to be set before the texture is used
+ Also the texture must be a power of two size to work
+* @member PIXI.BaseTexture#mipmap
+* @type {Boolean}
+* @sourcefile d:\wamp\www\phaser\src\pixi\textures\BaseTexture.js
+* @sourceline 92
+*/
+/**
 * @member PIXI.BaseTexture#_dirty
 * @type {Array}
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\BaseTexture.js
-* @sourceline 95
+* @sourceline 104
 */
 /**
 * @member PIXI.BaseTexture#imageUrl
 * @type {String}
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\BaseTexture.js
-* @sourceline 132
+* @sourceline 141
 */
 /**
 * @member PIXI.BaseTexture#_powerOf2
 * @type {Boolean}
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\BaseTexture.js
-* @sourceline 138
+* @sourceline 147
 */
 /**
 * @description Destroys this base texture
 * @method PIXI.BaseTexture#destroy
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\BaseTexture.js
-* @sourceline 151
+* @sourceline 160
 */
 /**
 * @description Changes the source image of the texture
 * @method PIXI.BaseTexture#updateSourceImage
 * @param {String} newSrc - the path of the image
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\BaseTexture.js
-* @sourceline 174
+* @sourceline 183
 */
 /**
 * @description Sets all glTextures to be dirty.
 * @method PIXI.BaseTexture#dirty
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\BaseTexture.js
-* @sourceline 187
+* @sourceline 196
 */
 /**
 * @description Removes the base texture from the GPU, useful for managing resources on the GPU.
 Atexture is still 100% usable and will simply be reuploaded if there is a sprite on screen that is using it.
 * @method PIXI.BaseTexture#unloadFromGPU
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\BaseTexture.js
-* @sourceline 200
+* @sourceline 209
 */
 /**
 * @description Helper function that creates a base texture from the given image url.
@@ -5407,7 +5429,7 @@ If the image is not in the base texture cache it will be created and loaded.
 * @param {Number} scaleMode - See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
 * @return BaseTexture
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\BaseTexture.js
-* @sourceline 228
+* @sourceline 237
 */
 /**
 * @description Helper function that creates a base texture from the given canvas element.
@@ -5416,7 +5438,7 @@ If the image is not in the base texture cache it will be created and loaded.
 * @param {Number} scaleMode - See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
 * @return BaseTexture
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\BaseTexture.js
-* @sourceline 270
+* @sourceline 279
 */
 /**
 * @fileoverview
@@ -5858,26 +5880,26 @@ It can be re-assigned to either LINEAR or NEAREST, depending upon suitability.
 * @member PIXI.PIXI.PI_2
 * @type {Number}
 * @sourcefile d:\wamp\www\phaser\src\pixi\Pixi.js
-* @sourceline 119
+* @sourceline 127
 */
 /**
 * @member PIXI.PIXI.RAD_TO_DEG
 * @type {Number}
 * @sourcefile d:\wamp\www\phaser\src\pixi\Pixi.js
-* @sourceline 125
+* @sourceline 133
 */
 /**
 * @member PIXI.PIXI.DEG_TO_RAD
 * @type {Number}
 * @sourcefile d:\wamp\www\phaser\src\pixi\Pixi.js
-* @sourceline 131
+* @sourceline 139
 */
 /**
 * @member PIXI.PIXI.RETINA_PREFIX
 * @type {String}
 * @access protected
 * @sourcefile d:\wamp\www\phaser\src\pixi\Pixi.js
-* @sourceline 137
+* @sourceline 145
 */
 /**
 * @description If true the default pixi startup (console) banner message will be suppressed.
@@ -5885,7 +5907,7 @@ It can be re-assigned to either LINEAR or NEAREST, depending upon suitability.
 * @type {Boolean}
 * @default false
 * @sourcefile d:\wamp\www\phaser\src\pixi\Pixi.js
-* @sourceline 145
+* @sourceline 153
 */
 /**
 * @description The default render options if none are supplied to
@@ -5893,7 +5915,7 @@ It can be re-assigned to either LINEAR or NEAREST, depending upon suitability.
 * @member PIXI.PIXI.defaultRenderOptions
 * @type {Object}
 * @sourcefile d:\wamp\www\phaser\src\pixi\Pixi.js
-* @sourceline 154
+* @sourceline 162
 */
 /**
 * @fileoverview

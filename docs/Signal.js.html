@@ -124,50 +124,6 @@
 							<a href="Phaser.Easing.html">Easing</a>
 						</li>
 						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Back.html">Back</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Bounce.html">Bounce</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Circular.html">Circular</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Cubic.html">Cubic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Elastic.html">Elastic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Exponential.html">Exponential</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Linear.html">Linear</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Quadratic.html">Quadratic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Quartic.html">Quartic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Quintic.html">Quintic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Sinusoidal.html">Sinusoidal</a>
-						</li>
-						
 						<li class="class-depth-1">
 							<a href="Phaser.Ellipse.html">Ellipse</a>
 						</li>
@@ -876,6 +832,7 @@
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Core<b class="caret"></b></a>
 					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="Phaser.Game.html">Game</a></li>
 						<li class="class-depth-1"><a href="Phaser.Group.html">Group</a></li>
 						<li class="class-depth-1"><a href="Phaser.World.html">World</a></li>
 						<li class="class-depth-1"><a href="Phaser.Loader.html">Loader</a></li>
@@ -898,6 +855,7 @@
 						<li class="class-depth-1"><a href="Phaser.Image.html">Image</a></li>
 						<li class="class-depth-1"><a href="Phaser.Sound.html">Sound</a></li>
 						<li class="class-depth-1"><a href="Phaser.Emitter.html">Emitter</a></li>
+						<li class="class-depth-1"><a href="Phaser.Particle.html">Particle</a></li>
 						<li class="class-depth-1"><a href="Phaser.Text.html">Text</a></li>
 						<li class="class-depth-1"><a href="Phaser.Tween.html">Tween</a></li>
 						<li class="class-depth-1"><a href="Phaser.BitmapText.html">BitmapText</a></li>
@@ -962,6 +920,7 @@
 						<li class="class-depth-1"><a href="https://confirmsubscription.com/h/r/369DE48E3E86AF1E">Newsletter</a></li>
 						<li class="class-depth-1"><a href="https://twitter.com/photonstorm">Twitter</a></li>
 						<li class="class-depth-1"><a href="http://www.html5gamedevs.com/topic/4470-official-phaserio-irc-channel-phaserio-on-freenode/">IRC</a></li>
+						<li class="class-depth-1"><a href="https://leanpub.com/u/photonstorm">Phaser Books</a></li>
 						<li class="class-depth-1"><a href="https://www.gittip.com/photonstorm/">GitTip</a></li>
 					</ul>
 				</li>
@@ -991,7 +950,9 @@
 */
 
 /**
-* A Signal is used for object communication via a custom broadcaster instead of Events.
+* A Signal is an event dispatch mechansim than supports broadcasting to multiple listeners.
+*
+* Event listeners are uniquely identified by the listener/callback function and the context.
 * 
 * @class Phaser.Signal
 * @constructor
@@ -1014,9 +975,11 @@ Phaser.Signal.prototype = {
     _prevParams: null,
 
     /**
-    * If Signal should keep record of previously dispatched parameters and
-    * automatically execute listener during `add()`/`addOnce()` if Signal was
-    * already dispatched before.
+    * Memorize the previously dispatched event?
+    *
+    * If an event has been memorized it is automatically dispatched when a new listener is added with {@link #add} or {@link #addOnce}.
+    * Use {@link #forget} to clear any currently memorized event.
+    *
     * @property {boolean} memorize
     */
     memorize: false,
@@ -1028,8 +991,10 @@ Phaser.Signal.prototype = {
     _shouldPropagate: true,
 
     /**
-    * If Signal is active and should broadcast events.
-    * IMPORTANT: Setting this property during a dispatch will only affect the next dispatch, if you want to stop the propagation of a signal use `halt()` instead.
+    * Is the Signal active? Only active signal will broadcast dispatched events.
+    *
+    * Setting this property during a dispatch will only affect the next dispatch. To stop the propagation of a signal from a listener use {@link #halt}.
+    *
     * @property {boolean} active
     * @default
     */
@@ -1152,7 +1117,7 @@ Phaser.Signal.prototype = {
     },
 
     /**
-    * Check if listener was attached to Signal.
+    * Check if a specific listener is attached.
     *
     * @method Phaser.Signal#has
     * @param {function} listener - Signal handler function.
@@ -1166,7 +1131,7 @@ Phaser.Signal.prototype = {
     },
 
     /**
-    * Add a listener to the signal.
+    * Add an event listener.
     *
     * @method Phaser.Signal#add
     * @param {function} listener - The function to call when this Signal is dispatched.
@@ -1183,7 +1148,10 @@ Phaser.Signal.prototype = {
     },
 
     /**
-    * Add listener to the signal that should be removed after first execution (will be executed only once).
+    * Add a one-time listener - the listener is automatically removed after the first execution.
+    *
+    * If there is as {@link Phaser.Signal#memorize memorized} event then it will be dispatched and
+    * the listener will be removed immediately.
     *
     * @method Phaser.Signal#addOnce
     * @param {function} listener - The function to call when this Signal is dispatched.
@@ -1200,7 +1168,7 @@ Phaser.Signal.prototype = {
     },
 
     /**
-    * Remove a single listener from the dispatch queue.
+    * Remove a single event listener.
     *
     * @method Phaser.Signal#remove
     * @param {function} listener - Handler function that should be removed.
@@ -1224,7 +1192,7 @@ Phaser.Signal.prototype = {
     },
 
     /**
-    * Remove all listeners from the Signal.
+    * Remove all event listeners.
     *
     * @method Phaser.Signal#removeAll
     * @param {object} [context=null] - If specified only listeners for the given context will be removed.
@@ -1267,7 +1235,7 @@ Phaser.Signal.prototype = {
     * Gets the total number of listeners attached to this Signal.
     *
     * @method Phaser.Signal#getNumListeners
-    * @return {number} Number of listeners attached to the Signal.
+    * @return {integer} Number of listeners attached to the Signal.
     */
     getNumListeners: function () {
 
@@ -1277,8 +1245,9 @@ Phaser.Signal.prototype = {
 
     /**
     * Stop propagation of the event, blocking the dispatch to next listener on the queue.
-    * IMPORTANT: should be called only during signal dispatch, calling it before/after dispatch won't affect signal broadcast.
-    * @see Signal.prototype.disable
+    *
+    * This should be called only during event dispatch as calling it before/after dispatch won't affect other broadcast.
+    * See {@link #active} to enable/disable the signal entirely.
     *
     * @method Phaser.Signal#halt
     */
@@ -1289,9 +1258,9 @@ Phaser.Signal.prototype = {
     },
 
     /**
-    * Dispatch/Broadcast Signal to all listeners added to the queue.
+    * Dispatch / broadcast the event to all listeners.
     *
-    * To create a bound dispatch for this Signal, use {@link Phaser.Signal#boundDispatch}.
+    * To create an instance-bound dispatch for this Signal, use {@link #boundDispatch}.
     *
     * @method Phaser.Signal#dispatch
     * @param {any} [params] - Parameters that should be passed to each handler.
@@ -1331,8 +1300,7 @@ Phaser.Signal.prototype = {
     },
 
     /**
-    * Forget memorized arguments.
-    * @see Signal.memorize
+    * Forget the currently {@link Phaser.Signal#memorize memorized} event, if any.
     *
     * @method Phaser.Signal#forget
     */
@@ -1346,8 +1314,10 @@ Phaser.Signal.prototype = {
     },
 
     /**
-    * Remove all bindings from signal and destroy any reference to external objects (destroy Signal object).
-    * IMPORTANT: calling any method on the signal instance after calling dispose will throw errors.
+    * Dispose the signal - no more events can be dispatched.
+    *
+    * This removes all event listeners and clears references to external objects.
+    * Calling methods on a disposed objects results in undefined behavior.
     *
     * @method Phaser.Signal#dispose
     */
@@ -1364,6 +1334,7 @@ Phaser.Signal.prototype = {
     },
 
     /**
+    * A string representation of the object.
     *
     * @method Phaser.Signal#toString
     * @return {string} String representation of the object.
@@ -1377,8 +1348,10 @@ Phaser.Signal.prototype = {
 };
 
 /**
-* If the dispatch function needs to be passed somewhere, or called independently
-* of the Signal object, use this function.
+* Create a `dispatch` function that maintains a binding to the original Signal context.
+*
+* Use the resulting value if the dispatch function needs to be passed somewhere
+* or called independently of the Signal object.
 *
 * @memberof Phaser.Signal
 * @property {function} boundDispatch
@@ -1416,7 +1389,7 @@ Phaser.Signal.prototype.constructor = Phaser.Signal;
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Tue Nov 25 2014 00:17:19 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Wed Dec 03 2014 10:30:31 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>
