@@ -219,13 +219,13 @@ Phaser.TileSprite.prototype.preUpdate = function() {
         if (this._cache[5] === 1 && this.game.world.bounds.intersects(this._bounds))
         {
             this._cache[5] = 0;
-            this.events.onEnterBounds.dispatch(this);
+            this.events.onEnterBounds$dispatch(this);
         }
         else if (this._cache[5] === 0 && !this.game.world.bounds.intersects(this._bounds))
         {
             //  The Sprite WAS in the screen, but has now left.
             this._cache[5] = 1;
-            this.events.onOutOfBounds.dispatch(this);
+            this.events.onOutOfBounds$dispatch(this);
         }
     }
 
@@ -448,7 +448,7 @@ Phaser.TileSprite.prototype.destroy = function(destroyChildren) {
 
     if (this.events)
     {
-        this.events.onDestroy.dispatch(this);
+        this.events.onDestroy$dispatch(this);
     }
 
     if (this.filters)

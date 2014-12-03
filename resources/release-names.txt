@@ -42,7 +42,7 @@ Cities: Eianrod *, Jurene, Maerone, Morelle, Selean, Taien, Tremonsien
 Ghealdan *
 
 Capital: Jehannah
-Cities: Bethal, Boannda, Cosamelle, Fyall, Jarra, Samaha, Samara, Sidon, Tallan, Willar
+Cities: Bethal *, Boannda, Cosamelle, Fyall, Jarra, Samaha, Samara, Sidon, Tallan, Willar
 POI: Forest of Shadows, River Manetherendrelle, River Eldar, River Boern, Dhallin Forest
 
 Illian

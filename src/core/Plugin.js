@@ -10,7 +10,7 @@
 * @class Phaser.Plugin
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
-* @param {Any} parent - The object that owns this plugin, usually Phaser.PluginManager.
+* @param {any} parent - The object that owns this plugin, usually Phaser.PluginManager.
 */
 Phaser.Plugin = function (game, parent) {
 
@@ -22,7 +22,7 @@ Phaser.Plugin = function (game, parent) {
     this.game = game;
 
     /**
-    * @property {Any} parent - The parent of this plugin. If added to the PluginManager the parent will be set to that, otherwise it will be null.
+    * @property {any} parent - The parent of this plugin. If added to the PluginManager the parent will be set to that, otherwise it will be null.
     */
     this.parent = parent;
 

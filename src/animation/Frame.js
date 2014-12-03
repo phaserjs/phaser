@@ -169,7 +169,7 @@ Phaser.Frame.prototype = {
      * Clones this Frame into a new Phaser.Frame object and returns it.
      * Note that all properties are cloned, including the name, index and UUID.
      *
-     * @method clone
+     * @method Phaser.Frame#clone
      * @return {Phaser.Frame} An exact copy of this Frame object.
      */
     clone: function () {
