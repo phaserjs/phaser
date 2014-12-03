@@ -236,7 +236,6 @@ Phaser.ScaleManager = function (game, width, height) {
     *
     * @property {Phaser.Signal} enterIncorrectOrientation
     * @public
-    * @deprecated 2.2.0 - Use {@link Phaser.ScaleManager#onOrientationChange onOrientationChange}
     */
     this.enterIncorrectOrientation = new Phaser.Signal();
 
@@ -247,7 +246,6 @@ Phaser.ScaleManager = function (game, width, height) {
     *
     * @property {Phaser.Signal} leaveIncorrectOrientation
     * @public
-    * @deprecated 2.2.0 - Use {@link Phaser.ScaleManager#onOrientationChange onOrientationChange}
     */
     this.leaveIncorrectOrientation = new Phaser.Signal();
 
@@ -255,7 +253,7 @@ Phaser.ScaleManager = function (game, width, height) {
     * If specified, this is the DOM element on which the Fullscreen API enter request will be invoked.
     * The target element must have the correct CSS styling and contain the Display canvas.
     *
-    * The element's style will be modified (ie. the width and height might be set to 100%)
+    * The elements style will be modified (ie. the width and height might be set to 100%)
     * but it will not be added to, removed from, or repositioned within the DOM.
     * An attempt is made to restore relevant style changes when fullscreen mode is left.
     *
@@ -263,7 +261,6 @@ Phaser.ScaleManager = function (game, width, height) {
     *
     * @property {?DOMElement} fullScreenTarget
     * @default
-    * @deprecated 2.2.0 - See {@link Phaser.ScaleManger#onFulLScreenInit onFulLScreenInit} and {@link Phaser.ScaleManager#createFullScreenTarget createFullScreenTarget}.
     */
     this.fullScreenTarget = null;
 
@@ -931,7 +928,7 @@ Phaser.ScaleManager.prototype = {
     },
 
     /**
-    * Sets the callback that will be invoked before sizing calcualtions.
+    * Sets the callback that will be invoked before sizing calculations.
     *
     * This is the appropriate place to call `setUserScale` if needing custom dynamic scaling.
     *
@@ -1749,10 +1746,10 @@ Phaser.ScaleManager.prototype = {
     },
 
     /**
-    * Start the browser's fullscreen mode - this _must_ be called from a user input Pointer or Mouse event.
+    * Start the browsers fullscreen mode - this _must_ be called from a user input Pointer or Mouse event.
     *
     * The Fullscreen API must be supported by the browser for this to work - it is not the same as setting
-    * the game size to fill the browser window See `compatibility.supportsFullScreen` to check if the current
+    * the game size to fill the browser window. See `compatibility.supportsFullScreen` to check if the current
     * device is reported to support fullscreen mode.
     *
     * The `fullScreenFailed` signal will be dispatched if the fullscreen change request failed or the game does not support the Fullscreen API.
@@ -1760,7 +1757,7 @@ Phaser.ScaleManager.prototype = {
     * @method Phaser.ScaleManager#startFullScreen
     * @public
     * @param {boolean} [antialias] - Changes the anti-alias feature of the canvas before jumping in to fullscreen (false = retain pixel art, true = smooth art). If not specified then no change is made. Only works in CANVAS mode.
-    * @param {boolean} [allowTrampoline=undefined] - Internal argument. If false click trampolining is suppressed.
+    * @param {boolean} [allowTrampoline=undefined] - Internal argument. If `false` click trampolining is suppressed.
     * @return {boolean} Returns true if the device supports fullscreen mode and fullscreen mode was attempted to be started. (It might not actually start, wait for the signals.)
     */
     startFullScreen: function (antialias, allowTrampoline) {
