@@ -83,7 +83,7 @@ Version 2.2.1 - "Danabar" - in dev
 
 ### Bug Fixes
 
-
+* Fixed TweenManager.isTweening() and .removeFrom() (thanks @jotson #1408)
 
 For details about changes made in previous versions of Phaser see the full Change Log at https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md
 
