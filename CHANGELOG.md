@@ -1,5 +1,14 @@
 # Change Log
 
+## Version 2.2.1 - "Danabar" - 4th December 2014
+
+### Bug Fixes
+
+* Fixed Pixi.js issue with `alpha` not working on any display object.
+* Fixed TweenManager.isTweening() and .removeFrom() (thanks @jotson #1408)
+* Added Game.debug reset method for when the debug manager is disabled (thanks @DanielSitarz #1407)
+* Custom Particle classes that used a BitmapData wouldn't work (thanks @hardalias #1402)
+
 ## Version 2.2.0 - "Bethal" - 3rd December 2014
 
 ### New Features
