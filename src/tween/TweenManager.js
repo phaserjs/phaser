@@ -156,7 +156,7 @@ Phaser.TweenManager.prototype = {
         {
             for (i = 0, len = this._tweens.length; i < len; i++)
             {
-                if (obj === this._tweens[i]._object)
+                if (obj === this._tweens[i].target)
                 {
                     this.remove(this._tweens[i]);
                 }
@@ -164,7 +164,7 @@ Phaser.TweenManager.prototype = {
 
             for (i = 0, len = this._add.length; i < len; i++)
             {
-                if (obj === this._add[i]._object)
+                if (obj === this._add[i].target)
                 {
                     this.remove(this._add[i]);
                 }
@@ -279,7 +279,7 @@ Phaser.TweenManager.prototype = {
     isTweening: function(object) {
 
         return this._tweens.some(function(tween) {
-            return tween._object === object;
+            return tween.target === object;
         });
 
     },
