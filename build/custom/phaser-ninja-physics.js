@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.2.0 "Bethal" - Built: Wed Dec 03 2014 09:34:03
+* v2.2.1 "Danabar" - Built: Thu Dec 04 2014 11:31:00
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -4782,7 +4782,7 @@ PIXI.PixiShader.defaultVertexSrc = [
     'void main(void) {',
     '   gl_Position = vec4( ((aVertexPosition + offsetVector) / projectionVector) + center , 0.0, 1.0);',
     '   vTextureCoord = aTextureCoord;',
-    '   vColor = aColor;',
+    '   vColor = vec4(aColor.rgb * aColor.a, aColor.a);',
     '}'
 ];
 /**
@@ -7648,7 +7648,7 @@ PIXI.WebGLSpriteBatch.prototype.render = function(sprite)
 
     // color and alpha
     var tint = sprite.tint;
-    colors[index+4] = colors[index+9] = colors[index+14] = colors[index+19] = (tint >> 16) + (tint & 0xff00) + ((tint & 0xff) << 16) + (sprite.alpha * 255 << 24);
+    colors[index+4] = colors[index+9] = colors[index+14] = colors[index+19] = (tint >> 16) + (tint & 0xff00) + ((tint & 0xff) << 16) + (sprite.worldAlpha * 255 << 24);
 
     // increment the batchsize
     this.sprites[this.currentBatchSize++] = sprite;
@@ -12225,7 +12225,7 @@ PIXI.AbstractFilter.prototype.apply = function(frameBuffer)
 *
 * Phaser - http://phaser.io
 *
-* v2.2.0 "Bethal" - Built: Wed Dec 03 2014 09:34:03
+* v2.2.1 "Danabar" - Built: Thu Dec 04 2014 11:31:00
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -12268,7 +12268,7 @@ PIXI.AbstractFilter.prototype.apply = function(frameBuffer)
 */
 var Phaser = Phaser || {
 
-	VERSION: '2.2.0',
+	VERSION: '2.2.1',
 	GAMES: [],
 
     AUTO: 0,
@@ -26250,7 +26250,7 @@ Phaser.Game.prototype = {
         }
         else
         {
-            this.debug = { preUpdate: function () {}, update: function () {} };
+            this.debug = { preUpdate: function () {}, update: function () {}, reset: function () {} };
         }
 
         this.showDebugHeader();
@@ -48634,7 +48634,7 @@ Phaser.TweenManager.prototype = {
         {
             for (i = 0, len = this._tweens.length; i < len; i++)
             {
-                if (obj === this._tweens[i]._object)
+                if (obj === this._tweens[i].target)
                 {
                     this.remove(this._tweens[i]);
                 }
@@ -48642,7 +48642,7 @@ Phaser.TweenManager.prototype = {
 
             for (i = 0, len = this._add.length; i < len; i++)
             {
-                if (obj === this._add[i]._object)
+                if (obj === this._add[i].target)
                 {
                     this.remove(this._add[i]);
                 }
@@ -48757,7 +48757,7 @@ Phaser.TweenManager.prototype = {
     isTweening: function(object) {
 
         return this._tweens.some(function(tween) {
-            return tween._object === object;
+            return tween.target === object;
         });
 
     },
@@ -52675,7 +52675,7 @@ Object.defineProperty(Phaser.AnimationManager.prototype, 'frame', {
 
     set: function (value) {
 
-        if (typeof value === 'number' && this._frameData.getFrame(value) !== null)
+        if (typeof value === 'number' && this._frameData && this._frameData.getFrame(value) !== null)
         {
             this.currentFrame = this._frameData.getFrame(value);
 
