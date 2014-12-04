@@ -21,11 +21,11 @@
 - [License](#license)
 
 <a name="about"></a>
-# Phaser 2.2.1
+# Phaser 2.2.2
 
 Phaser is a fast, free and fun open source game framework for making desktop and mobile browser HTML5 games. It uses [Pixi.js](https://github.com/GoodBoyDigital/pixi.js/) internally for fast 2D Canvas and WebGL rendering.
 
-Version: 2.2.1 "Danabar" - Released: 4th December 2014
+Version: 2.2.2 "Alkindar" - Released: in development
 
 By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 
@@ -43,23 +43,7 @@ By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 ![div](http://phaser.io/images/div4.png)
 
 <a name="whats-new"></a>
-## Welcome to Phaser and What's new in 2.2.1?
-
-One of the nicest and most surprising things about a truly open-source project like Phaser is that you never know who might jump on for the ride. I've been extremely lucky with the support I've received over the years - fellow developers both fixing bugs and reporting issues, all helping to make Phaser  stronger as a result.
-
-But sometimes a single individual can come along and make a substantial difference all on their own. A quick glance at the Change Log for this release will show many different contributors, but one stood out more than any other: [Paul Stickney](https://github.com/pnstickne). Thanks to his contributions alone Phaser is now sporting a powerful new Scale Manager, nicely updated API docs and many other fixes and features across the board. The Scale Manager, a core part of any HTML5 game has had its own book published about it: [A Guide to the Phaser Scale Manager](https://leanpub.com/phaserscalemanager) which is available now.
-
-One of his other major contributions was in updating Signals, the event system used inside Phaser. Before Phaser was creating thousands of Signals in a busy game, most of which sat idle. Now they've gone on a diet in terms of memory consumption and hide behind a proxy causing them to not even be created unless needed. This has cut down on the amount of objects being generated every frame dramatically.
-
-As you may have noticed we've bumped the release version to 2.2 from 2.1. This is because there are some API breaking changes and some core fundamentals have been updated as well. The biggest change here is the move to a proper fixed-step internal game loop. The logic and rendering are now fully decoupled, with both Arcade Physics and Tweens having been updated to use this new system. This is by no means a panacea for overloading low-powered mobile devices. However it will help prevent issues arising from devices running Phaser games at different speeds just because it has a slower processor.
-
-Also given a large update is the Tween Manager. This is now hooked in to the new timestep code, smoothing out tweens when the frame rate drops. New features have been added, including the ability to pause and resume a whole timeline of tweens and tween chaining has vastly improved.
-
-The Change Log is indeed extensive. I would say that if you are *already* working on a Phaser game, and a good way through development, then you should carry on with whatever version you used before. But for all new projects definitely take the leap into 2.2 and I hope you enjoy splashing around in its new features :)
-
-Thank you to everyone who beta tested 2.2 with us in one of its many Release Candidate incarnations. Your feedback helped fix issues that would have been otherwise troublesome to find and it's a process we'll carry on with for future builds.
-
-2014 has been an amazing year for Phaser and I'd like to take this opportunity to thank everyone who has been involved, one way or another. Your support has been fantastic and we've built great things. Here's to 2015.
+## Welcome to Phaser and What's new in 2.2.2?
 
 Happy coding everyone! I hope to see you on the forums.
 
@@ -85,229 +69,15 @@ Finally the list of [community authored Phaser Tutorials](http://www.lessmilk.co
 <a name="change-log"></a>
 ## Change Log
 
-Version 2.2.1 - "Danabar" - 4th December 2014
-
-### Bug Fixes
-
-* Fixed Pixi.js issue with `alpha` not working on any display object.
-* Fixed TweenManager.isTweening() and .removeFrom() (thanks @jotson #1408)
-* Added Game.debug reset method for when the debug manager is disabled (thanks @DanielSitarz #1407)
-* Custom Particle classes that used a BitmapData wouldn't work (thanks @hardalias #1402)
-
-## Version 2.2.0 - "Bethal" - 3rd December 2014
+Version 2.2.2 - "Alkindar" - in development
 
 ### New Features
 
-* Updated to Pixi v2.2.0 - see separate change log entry below.
-* Cache.getRenderTexture will retrieve a RenderTexture that is stored in the Phaser Cache. This method replaces Cache.getTexture which is now deprecated.
-* Cache.autoResolveURL is a new boolean (default `false`) that automatically builds a cached map of all loaded assets vs. their absolute URLs, for use with Cache.getURL and Cache.checkURL. Note that in 2.1.3 and earlier this was enabled by default, but has since been moved behind this property which needs to be set to `true` *before* you load any assets to enable.
-* You can now call Tween.to again on a Tween that has already completed. This will re-use the same tween, on the original object, without having to recreate the Tween again. This allows a single tween instance to be re-used multiple times, providing they are linked to the same object (thanks InsaneHero)
-* Phaser.Color.valueToColor converts a value: a "hex" string, a "CSS 'web' string", or a number - into red, green, blue, and alpha components (thanks @pnstickne #1264)
-* Stage.backgroundColor now supports CSS 'rgba' values, as well as hex strings and hex numbers (thanks @pnstickne #1234)
-* Pointer.addClickTrampoline now adds in support for click trampolines. These  raise pointer events into click events, which are required internally for a few edge cases like IE11 full screen mode support, but are also useful if you know you specifically need a DOM click event from a pointer (thanks @pnstickne #1282)
-* Point.floor will Math.floor both the `x` and `y` values of the Point.
-* Point.ceil will Math.ceil both the `x` and `y` values of the Point.
-* ScaleManager.scaleSprite takes a Sprite or Image object and scales it to fit the given dimensions. Scaling happens proportionally without distortion to the sprites texture. The letterBox parameter controls if scaling will produce a letter-box effect or zoom the sprite until it fills the given values.
-* Phaser.DOM.getBounds is a cross-browser element.getBoundingClientRect method with optional cushion.
-* Phaser.DOM.calibrate is a private method that calibrates element coordinates for viewport checks.
-* Phaser.DOM.aspect gets the viewport aspect ratio (or the aspect ratio of an object or element)
-* Phaser.DOM.inViewport tests if the given DOM element is within the viewport, with an optional cushion parameter that allows you to specify a distance.
-* Phaser.DOM.viewportWidth returns the viewport width in pixels.
-* Phaser.DOM.viewportHeight returns the viewport height in pixels.
-* Phaser.DOM.documentWidth returns the document width in pixels.
-* Phaser.DOM.documentHeight returns the document height in pixels.
-* TilemapLayers have been given a decent performance boost on canvas with map shifting edge-redraw (thanks @pnstickne #1250)
-* A large refactor to how the internal game timers and physics calculations has been made. We've now swapped to using a fixed time step internally across Phaser, instead of the variable one we had before that caused glitchse on low-fps systems. Thanks to pjbaron for his help with all of these related changes.
-* We have separated the logic and render updates to permit slow motion and time slicing effects. We've fixed time calling to fix physics problems caused by variable time updates (i.e. collisions sometimes missing, objects tunneling, etc)
-* Once per frame calling for rendering and tweening to keep things as smooth as possible
-* Calculates a `suggestedFps` value (in multiples of 5 fps) based on a 2 second average of actual elapsed time values in the `Time.update` method.  This is recalculated every 2 seconds so it could be used on a level-by-level basis if a game varies dramatically. I.e. if the fps rate consistently drops, you can adjust your game effects accordingly.
-* Game loop now tries to "catch up" frames if it is falling behind by iterating the logic update. This will help if the logic is occasionally causing things to run too slow, or if the renderer occasionally pushes the combined frame time over the FPS time. It's not a band-aid for a game that floods a low powered device however, so you still need to code accordingly. But it should help capture issues such as gc spikes or temporarily overloaded CPUs.
-* It now detects 'spiraling' which happens if a lot of frames are pushed out in succession meaning the CPU can never "catch up". It skips frames instead of trying to catch them up in this case. Note: the time value passed to the logic update functions is always constant regardless of these shenanigans.
-* Signals to the game program if there is a problem which might be fixed by lowering the desiredFps
-* Time.desiredFps is the new desired frame rate for your game.
-* Time.suggestedFps is the suggested frame rate for the game based on system load.
-* Time.slowMotion allows you to push the game into a slow motion mode. The default value is 1.0. 2.0 would be half speed, and so on.
-* Time.timeCap is no longer used and now deprecated. All timing is now handled by the fixed time-step code we've introduced.
-* Time.now can no longer be relied upon to contain a timestamp value. If the browser supports requestAnimationFrame then `Time.now` will contain the high resolution timer value that rAf generates. Otherwise it will contain the value of Date.now. If you require the actual time value (in milliseconds) then please use `Time.time` instead. Note that all Phaser sub-systems that used to rely on `Time.now` have been updated, so if you have any code that extends these please be sure to check it.
-* Game.forceSingleUpdate will force just a single logic update, regardless of the delta timer values. You can use this in extremely heavy CPU situations where you know you're about to flood the CPU but don't want Phaser to get stuck in a spiral.
-* Tilemap.createFromTiles will convert all tiles matching the given tile index (or an array of indexes) into Sprites. You can optionally then replace these tiles if you wish. This is perfect for games when you want to turn specific tiles into Sprites for extra control. The Sprites have an optional properties object which they can be populated with.
-* Added support for the Wheel Event, which is the DOM3 spec (thanks @pnstickne #1318)
-* Wheel Scroll Event (old non-FF) and DOM Mouse Wheel (old FF) are
-supported via a non-exported reused wrapper object; WheelEventProxy.
-The proxy methods are generated one-time dynamically but only when needed.
-* Key.justDown allows you to test if a Key has just been pressed down or not. You can only call justDown once per key press. It will only return `true` once, until the Key is released and pressed down again. This allows you to use it in situations where you want to check if this key is down without using a Signal, such as in a core game loop (thanks @pjbaron #1321)
-* Key.justUp allows you to test if a Key has just been released or not. You can only call justUp once per key press. It will only return `true` once, until the Key is pressed down and released again. This allows you to use it in situations where you want to check if this key is up without using a Signal, such as in a core game loop (thanks @pjbaron #1321)
-* Device.whenReady is a new signal that you can use to tell when the device is initialized.
-* Device.onInitialized is dispatched after device initialization occurs but before any of the ready callbacks have been invoked. Local "patching" for a particular device can/should be done in this event.
-* TweenManager.removeFrom method allows you to remove a tween from a game object such as a Sprite (thanks @lewster32 #1279)
-* Tweens have been completely rewritten. They're now much more flexible and  efficient than before:
-* When specifying the ease in `Tween.to` or `Tween.from` you can now use a string instead of the Function. This makes your code less verbose. For example instead of `Phaser.Easing.Sinusoidal.Out` and you can now just use the string "Sine".The string names match those used by TweenMax and includes: "Linear", "Quad", "Cubic", "Quart", "Quint", "Sine", "Expo", "Circ", "Elastic", "Back", "Bounce", "Power0", "Power1", "Power2", "Power3" and "Power4". You can append ".easeIn", ".easeOut" and "easeInOut" variants. All are supported for each ease types.
-* Tweens now create a TweenData object. The Tween object itself acts like more of a timeline, managing multiple TweenData objects. You can now call `Tween.to` and each call will create a new child tween that is added to the timeline, which are played through in sequence.
-* Tweens are now bound to the new Time.desiredFps value and update based on the new Game core loop, rather than being bound to time calculations. This means that tweens are now running with the same update logic as physics and the core loop.
-* Tween.timeScale allows you to scale the duration of a tween (and any child tweens it may have). A value of 1.0 means it should play at the desiredFps rate. A value of 0.5 will run at half the frame rate, 2 at double and so on. You can even tween the timeScale value for interesting effects!
-* Tween.reverse allows you to instantly reverse an active tween. If the Tween has children then it will smoothly reverse through all child tweens as well.
-* Tween.repeatAll allows you to control how many times all child tweens will repeat before firing the Tween.onComplete event. You can set the value to -1 to repeat forever.
-* Tween.loop now controls the looping of all child tweens.
-* Tween.onRepeat is a new signal that is dispatched whenever a Tween repeats. If a Tween has many child tweens its dispatched once the sequence has repeated.
-* Tween.onChildComplete is a new signal that is dispatched whenever any child tweens have completed. If a Tween consists of 4 sections you will get 3 onChildComplete events followed by 1 onComplete event as the final tween finishes.
-* Chained tweens are now more intelligently handled. Because you can easily create child tweens (by simply calling Tween.to multiple times) chained tweens are now used to kick-off longer sequences. You can pass as many Tween objects to `Tween.chain` as you like as they'll all be played in sequence. As one Tween completes it passes on to the next until the entire chain is finished.
-* Tween.stop has a new `complete` parameter that if set will still fire the onComplete event and start the next chained tween, if there is one.
-* Tween.delay, Tween.repeat, Tween.yoyo, Tween.easing and Tween.interpolation all have a new `index` parameter. This allows you to target specific child tweens, or if set to -1 it will update all children at once.
-* Tween.totalDuration reports the total duration of all child tweens in ms.
-* There are new easing aliases:
-* * Phaser.Easing.Power0 = Phaser.Easing.Linear.None
-* * Phaser.Easing.Power1 = Phaser.Easing.Quadratic.Out
-* * Phaser.Easing.Power2 = Phaser.Easing.Cubic.Out
-* * Phaser.Easing.Power3 = Phaser.Easing.Quartic.Out
-* * Phaser.Easing.Power4 = Phaser.Easing.Quintic.Out
-* ScaleManager.windowContraints now allows specifying 'visual' or 'layout' as
-the constraint. Using the 'layout' constraint should prevent a mobile
-device from trying to resize the game when zooming.
-
-    Including the the new changes the defaults have been changed to
-
-    windowContraints = { right: 'layout', bottom: '' }
-
-    This changes the current scaling behavior as seen in "Game Scaling" (as it
-will only scale for the right edge) but also prevents such scaling from
-going bonkers in some mobile environments like the newer Android browser.
-(Automatic scroll-to-top, albeit configurable, enabled for non-desktop by
-default is not a fun situation here.)
-
-    To obtain the current semantics on a desktop the bottom should be changed
-to 'layout'; although this will result in different behavior depending on
-mobile device. To make the sizing also follow mobile zooming they should
-be changed to 'visual'.
-
-    Also added temp Rectangle re-used for various internal calculations.
-
-* Phaser.DOM now also special-cases desktops to align the layout bounds
-correctly (this may disagree with CSS breakpoints but it aligns the with
-actual CSS width), without applying a window height/width expansion as
-required on mobile browsers.
-* Signals have been heavily restructured to cut down on the number that are generated in-game. New signal proxies manage the setting and creation as required, cutting down on the volume of run-time object creation significantly. No user code needs to change, however if you did override Phaser.Signal or Sprite.Events then please be aware of the changes by inspecting the source (and commit #1389 by @pnstickne).
-* Game.lockRender is a new property. If `false` Phaser will automatically render the display list every update. If `true` the render loop will be skipped. You can toggle this value at run-time to gain exact control over when Phaser renders. This can be useful in certain types of game or application. Please note that if you don't render the display list then none of the game object transforms will be updated, so use this value carefully.
-
 ### Updates
 
-* TypeScript definitions fixes and updates (thanks @clark-stevenson @draconisNoctis)
-* The TypeScript definitions have moved to the `typescript` folder in the root of the repository.
-* Cache._resolveUrl has been renamed to Cache._resolveURL internally and gained a new parameter. This method is a private internal one.
-* Cache.getUrl is deprecated. The same method is now available as Cache.getURL.
-* Loader.useXDomainRequest used to be enabled automatically for IE9 but is now always set to `false`. Please enable it only if you know your server set-up / CDN requires it, as some most certainly do, but we're finding them to be less and less used these days, so we feel it's safe to now disable this by default (#1248)
-* Game.destroy now destroys either the WebGLRenderer or CanvasRenderer, whichever Pixi was using.
-* Particle.Emitter will now automatically set `particle.body.skipQuadTree` to `true` to help with collision speeds within Arcade Physics.
-* Particle.Emitter.explode (or `Emitter.start` with the `explode` parameter set to `true`) will immediately emit the required quantity of particles and not delay until the next frame to do so. This means you can re-use a single emitter across multiple places in your game that require explode-style emissions, just by adjusting the `emitter.x` and `emitter.y` properties before calling explode (thanks Insanehero)
-* Phaser.Polygon has been refactored to address some Pixi v2 migration issues (thanks @pnstickne for the original implementation #1267)
-* Polygon.area is now only calculated when the Polygon points list is modified, rather than on every call.
-* Phaser.Polygon can now accept the points list in a variety of formats: Arrays of Points, numbers, objects with public x/y properties or any combination of, or as a parameter list (thanks @pnstickne for the original implementation #1267)
-* All of the Input classes now use the more consistent `enabled` property instead of `disabled`. I.e. you can now check `if (input.mouse.enabled)` rather than `if (!input.mouse.disabled)`. The disabled property has been moved to a getter for backwards compatibility but is deprecated and will be removed in a future version (thanks @pnstickne #1257)
-* The Input class has been given a minor refactor to tidy things up. Specifically:
-    * pointerN are aliases to backed pointers[N-1] array. This simplifies (and increases the efficiency of) looping through all the pointers when applicable; also eliminates pointer-existence checks Removes various hard-coded limits (added MAX_POINTERS); changed maxPointers default
-    * Removed some special-casing from cases where it did not matter
-    * Removed === false/true, == usage for consistency, changed missing value check to typeof, etc.
-    * Updated documentation for specificity; added @public\@protected
-    * @deprecated currentPointers due to odd set pattern; totalCurrentPointers is more appropriate.
-(thanks @pnstickne #1283)
-* Various ScaleManager fixes and updates (thanks @pnstickne):
-    * Scale modes can now be set independently
-    * Switching between fullscreen and normal correctly restores modes
-    * Alignment does not incorrectly offset in fullscreen mode (#1255)
-    * Changing scale/alignment promptly refreshes layout
-    * `isFullScreen` returns a boolean, as it should
-    * Faster parent checks (if required)
-    * NO_SCALE should not not scale (vs previous behavior of having no behavior)
-    * Correct usage of scaleMode depending on mode
-    * Fullscreen Mode always scaling to fill screen in Firefox (#1256)
-* AudioSprite - removed an unnecessary if-statement (thanks @DaanHaaz #1312)
-* ArcadePhysics.skipQuadTree is now set to `true` by default. A QuadTree is a wonderful thing if the objects in your game are well spaced out. But in tightly packed games, especially those with tilemaps or single-screen games, they are a considerable performance drain and eat up CPU. We've taken the decision to disable the Arcade Physics QuadTree by default. It's all still in there and can be re-enabled via `game.physics.arcade.skipQuadTree = false`, but please only do so if you're sure your game benefits from this.
-* Phaser.DOM now houses new DOM functions. Some have been moved over from ScaleManager as appropriate.
-* Key.justPressed has bee renamed to Key.downDuration which is a much clearer name for what the method actually does. See Key.justDown for a nice clean alternative.
-* Key.justReleased has bee renamed to Key.upDuration which is a much clearer name for what the method actually does. See Key.justUp for a nice clean alternative.
-* Keyboard.justPressed has bee renamed to Keyboard.downDuration which is a much clearer name for what the method actually does.
-* Keyboard.justReleased has bee renamed to Keyboard.upDuration which is a much clearer name for what the method actually does.
-* Keyboard.downDuration, Keyboard.upDuration and Keyboard.isDown now all return `null` if the Key wasn't found in the local keys array.
-* The Phaser.Device class has been made into a singleton and removed it's dependency on Phaser.Game (thanks @pnstickne #1328)
-* ArrayList has been renamed to `ArraySet` (as it's actually a data set implementation) and moved from the `core` folder to the `utils` folder (thanks @pnstickne)
-* If you are reloading a Phaser Game on a page that never properly refreshes (such as in an AngularJS project) then you will quickly run out of AudioContext nodes. If this is the case create a global var called `PhaserGlobal` on the window object before creating the game. The active AudioContext will then be saved to `window.PhaserGlobal.audioContext` when the Phaser game is destroyed, and re-used when it starts again (#1233)
-* Camera.screenView is now deprecated. All Camera culling checks are made against Camera.view now instead.
-* Various CocoonJS related hacks removed thanks to fixes from Ludei directly in CocoonJS! Woohoo :)
-* Phaser.HEADLESS check removed from the core game loop. If you need to disable rendering you can now override the Phaser.Game.updateRender method instead with your own.
-* Group.forEach fixed against browser de-optimization (thanks @pnstickne #1357)
-* Phaser.Signals have been taken on a diet. They have been updated such that there is significantly less penalty for having many unused signals. The changes include:
-* * Changing it so there is no dispatch *closure* created. This is a
-potentially breaking change for third party code.
-* * In the rare case that code needs to obtain a dispatch-closure, the
-`boundDispatch` property can be used to trivially obtain a cached
-closure.
-* * The properties and default values are moved into the prototype; and the
-_bindings array creation is deferred. This change, coupled with the
-removal of the automatic closure, results in a very lightweight
-~24bytes/object (in Chrome) for unbound signals.
-* With this change in place Signals now consume less than 50KB / 50KB (shallow / retained memory) for 200 sprites, where-as before they used 300KB / 600KB (thanks @pnstickne #1359)
-* Time.elapsedMS holds the number of milliseconds since the last Game loop, regardless of raF or setTimout being used.
-* Incorrectly prepared tilemap images (with dimensions not evenly divisible by the tile dimensions) would render incorrectly when compared to the display seen in Tiled. The Phaser tilemap code has been adjusted to match the way Tiled deals with this, which should help if you're using tileset images that contain extra padding/margin pixels. Additional console warnings have been added. However the fact remains that you should carefully prepare your tilesets before using them. Crop off extra padding, make sure they are the right dimensions (thanks @SoulBeaver for the report and @pnstickne for the fix #1371)
-* Text.setShadow has had the default `color` value changed from `rgba(0,0,0,0)` to `rgba(0,0,0,1)` so it appears as a black shadow by default - before the alpha channel made it invisible.
-* Math.getRandom will now return `null` if random selection is missing, or array has no entries (thanks @pnstickne #1395)
-* Array.transposeArray has had a small off-by-one error fixed. It didn't effect the results but meant returned arrays were 1 element bigger than needed (thanks @nextht #1394)
-* State.preRender is now sent two parameters: a reference to the Phaser.Game instance and a new parameter: `elapsedTime` which is the time elapsed since the last update.
+* TypeScript definitions fixes and updates (thanks @clark-stevenson)
 
 ### Bug Fixes
-
-* Tilemaps in WebGL wouldn't update after the first frame due to a subtle change in how Pixi uploads new textures to the GPU.
-* XML files weren't being added to the URL map.
-* Cache._resolveURL was causing a Sound double-load in Firefox and causing errors (thanks @domonyiv #1253)
-* Loader.json was using the wrong context in IE9 with XDomainRequest calls (thanks @pnstickne #1258)
-* Text.updateText was incorrectly increasing the size of the texture each time it was called (thanks @spayton #1261)
-* Polygon.contains now correctly calculates the result  (thanks @pnstickne @BurnedToast #1267)
-* Setting Key.enabled = false while it is down did not reset the isDown state (thanks @pnstickne #1190 #1271)
-* The Gamepad.addCallbacks context parameter was never actually remembered, causing the callbacks to run in the wrong context (thanks @englercj #1285)
-* Animation.setFrame used the wrong frames array if `useLocalFrameIndex` was `false` and a numeric frame ID was given (thanks @Skeptron #1284)
-* Fullscreen mode in IE11 now works (thanks @pnstickne)
-* Cache.addBitmapData now auto-creates a FrameData (thanks @pnstickne #1294 #1300)
-* P2.BodyDebug circles were drawing at half widths (thanks @enriqueto #1288)
-* FrameData.clone fixed when cloning data using frame names rather than indexes (thanks pjbaron)
-* Lots of the Cache getters (such as `Cache.getbitmapData`) would return `undefined` if the asset couldn't be found. They now all consistently return `null` for missing entries (thanks @Matoking #1305)
-* Phaser games should now work again from the CocoonJS Launcher.
-* Only one of the mouse wheel events is listened to, newest standard first.
-This fixes a bug in FF where it would use the default DOMMouseWheel (thanks @pnstickne #1313)
-* Stage.smoothed needed to modify the value of PIXI.scaleMode.DEFAULT instead of PIXI.scaleMode.LINEAR (thanks @pixelpicosean #1322)
-* Newly created Groups always had zero z index (thanks @spayton #1291)
-* Sprite.autoCull now properly works if the camera moves around the world.
-* Sprite.inCamera uses a much faster check if auto culling or world bounds checks are enabled and properly adjusts for camera position.
-* Camera.totalInView is a new property that contains the total number of Sprites rendered that have `autoCull` set to true and are within the Cameras view.
-* Emitter.setScale fixed minX minY order precedence (thanks spayton)
-* Group.iterate can now accept undefined/null as the arguments (thanks @pnstickne #1353 @tasos-ch #1352)
-* When you change State the P2 Physics world is no longer fully cleared. All of the bodies, springs, fixtures, materials and constraints are removed - but config settings such as gravity, restitution, the contact solver, etc are all retained. The P2.World object is only created the very first time you call Physics.startSystem. Every subsequent call hits P2.World.reset instead. This fixes "P2.World gravity broken after switching states" (and other related issues) (#1292 #1289 #1176)
-* Text.lineSpacing works correctly again. Before no space was added between the lines (thanks @intimidate #1367 and @brejep #1366)
-* P2.BodyDebug always lagged behind the position of the Body it was tracking by one frame, which became visible at high speeds. It now syncs its position in the Body.postUpdate which prevents this from happening (thanks @valueerror)
-* A State.preRender callback wasn't removed correctly when switching States.
-
-### Pixi 2.1.0 New Features
-
-* unloadFromGPU added to PIXI.BaseTexture
-* PIXI.VideoTexture added
-* PIXI.RoundedRectangle added
-* Ensured all float32arrays use PIXI.Float32Array
-* Removed the use of call in updateTransform (as its 10x faster to run the function directly)
-* autoResize option added to renderer options (default is false). Pixi no longer automatically changes the style of the canvas.
-* PIXI.RenderTexture.getCanvas optimized
-
-### Pixi 2.1.0 Bug Fixes
-
-* Fix destroy method of PIXI.WebGLRenderer
-* Fixed Graphics.drawRoundedRectangle 
-* Fixed Graphics.arcTo issue
-* Fixed Graphics.arc issue
-* Fixed Graphics.cacheAsBitmap alpha issue
-* Fixed PIXI.Strip alpha issue
-* Fixed PIXI.DisplayObject.cacheAsBitmap alpha issue
-* Fixed PIXI.RenderTexture Canvas Clear bug
-* Fixed PIXI.DisplayObject.updateTransform issue 
-* Fixed webGL Shader textures issue
-* Fixed PIXI.DisplayObject.getLocalPosition()
-* Fixed CocoonJS crashing, when loading destroyed texture
-* Fix eventTarget emit bug
 
 For details about changes made in previous versions of Phaser see the full Change Log at https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md
 
@@ -359,11 +129,11 @@ Nice and easy :)
 
 Phaser is now available on [CDNJS](http://cdnjs.com). You can include the following in your html:
 
-`http://cdnjs.cloudflare.com/ajax/libs/phaser/2.2.1/phaser.min.js`
+`http://cdnjs.cloudflare.com/ajax/libs/phaser/2.2.2/phaser.min.js`
 
 Or if you prefer you can leave the protocol off, so it works via http and https:
 
-`//cdnjs.cloudflare.com/ajax/libs/phaser/2.2.1/phaser.min.js`
+`//cdnjs.cloudflare.com/ajax/libs/phaser/2.2.2/phaser.min.js`
 
 ![div](http://phaser.io/images/div1.png)
 

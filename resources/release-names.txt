@@ -7,7 +7,7 @@ Anything marked * has been used as a release name already.
 Altara
 
 Capital: Ebou Dar
-Cities: Alkindar, Brytan, Coramen, Cormaed, Ionin Spring, Jurador, Malden, Marella, Moisen, Mosra, Nor Chasen, Remen, Salidar, Sehar, So Eban, So Habor, So Tehar, Soremaine, Weesin
+Cities: Alkindar *, Brytan, Coramen, Cormaed, Ionin Spring, Jurador, Malden, Marella, Moisen, Mosra, Nor Chasen, Remen, Salidar, Sehar, So Eban, So Habor, So Tehar, Soremaine, Weesin
 POI: River Eldar, Sea of Storms
 
 Amadicia *
