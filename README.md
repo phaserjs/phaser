@@ -21,11 +21,11 @@
 - [License](#license)
 
 <a name="about"></a>
-# Phaser 2.2.1
+# Phaser 2.2.2
 
 Phaser is a fast, free and fun open source game framework for making desktop and mobile browser HTML5 games. It uses [Pixi.js](https://github.com/GoodBoyDigital/pixi.js/) internally for fast 2D Canvas and WebGL rendering.
 
-Version: 2.2.1 "Danabar" - Released: in dev
+Version: 2.2.2 "Alkindar" - Released: in development
 
 By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 
@@ -43,9 +43,7 @@ By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 ![div](http://phaser.io/images/div4.png)
 
 <a name="whats-new"></a>
-## Welcome to Phaser and What's new in 2.2.1?
-
-...
+## Welcome to Phaser and What's new in 2.2.2?
 
 Happy coding everyone! I hope to see you on the forums.
 
@@ -71,21 +69,15 @@ Finally the list of [community authored Phaser Tutorials](http://www.lessmilk.co
 <a name="change-log"></a>
 ## Change Log
 
-Version 2.2.1 - "Danabar" - in dev
+Version 2.2.2 - "Alkindar" - in development
 
 ### New Features
-
 
 ### Updates
 
 * TypeScript definitions fixes and updates (thanks @clark-stevenson)
 
-
 ### Bug Fixes
-
-* Fixed TweenManager.isTweening() and .removeFrom() (thanks @jotson #1408)
-* Added Game.debug reset method for when the debug manager is disabled (thanks @DanielSitarz #1407)
-* Custom Particle classes that used a BitmapData wouldn't work (thanks @hardalias #1402)
 
 For details about changes made in previous versions of Phaser see the full Change Log at https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md
 
@@ -137,11 +129,11 @@ Nice and easy :)
 
 Phaser is now available on [CDNJS](http://cdnjs.com). You can include the following in your html:
 
-`http://cdnjs.cloudflare.com/ajax/libs/phaser/2.2.1/phaser.min.js`
+`http://cdnjs.cloudflare.com/ajax/libs/phaser/2.2.2/phaser.min.js`
 
 Or if you prefer you can leave the protocol off, so it works via http and https:
 
-`//cdnjs.cloudflare.com/ajax/libs/phaser/2.2.1/phaser.min.js`
+`//cdnjs.cloudflare.com/ajax/libs/phaser/2.2.2/phaser.min.js`
 
 ![div](http://phaser.io/images/div1.png)
 
