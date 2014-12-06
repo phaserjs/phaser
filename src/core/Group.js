@@ -692,24 +692,23 @@ Phaser.Group.prototype.replace = function (oldChild, newChild) {
 
     if (index !== -1)
     {
-        if (newChild.parent !== undefined)
+        if (newChild.parent)
         {
-            newChild.events.onRemovedFromGroup$dispatch(newChild, this);
-            newChild.parent.removeChild(newChild);
-
             if (newChild.parent instanceof Phaser.Group)
             {
-                newChild.parent.updateZ();
+                newChild.parent.remove(newChild);
+            }
+            else
+            {
+                newChild.parent.removeChild(newChild);
             }
         }
 
-        var temp = oldChild;
-
-        this.remove(temp);
+        this.remove(oldChild);
 
         this.addAt(newChild, index);
 
-        return temp;
+        return oldChild;
     }
 
 };
