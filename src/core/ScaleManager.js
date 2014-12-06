@@ -442,6 +442,11 @@ Phaser.ScaleManager = function (game, width, height) {
     * @property {boolean} [forceMinimumDocumentHeight=false] - If enabled the document elements minimum height is explicity set on updates.
     *
     * @property {boolean} [canExpandParent=true] - If enabled then SHOW_ALL and USER_SCALE modes can try and expand the parent element. It may be necessary for the parent element to impose CSS width/height restrictions.
+    *
+    * @property {string} [clickTrampoline=(auto)] - On certain browsers (eg. IE) FullScreen events need to be triggered via 'click' events.
+    *     A value of 'when-not-mouse' uses a click trampoline when a pointer that is not the primary mouse is used.
+    *     Any other string value (including the empty string) prevents using click trampolines.
+    *     For more details on click trampolines see {@link Phaser.Pointer#addClickTrampoline}.
     */
     this.compatibility = {
         supportsFullScreen: false,
@@ -449,7 +454,8 @@ Phaser.ScaleManager = function (game, width, height) {
         noMargins: false,
         scrollTo: null,
         forceMinimumDocumentHeight: false,
-        canExpandParent: true
+        canExpandParent: true,
+        clickTrampoline: ''
     };
 
     /**
@@ -692,10 +698,12 @@ Phaser.ScaleManager.prototype = {
         if (this.game.device.desktop)
         {
             compat.orientationFallback = 'screen';
+            compat.clickTrampoline = 'when-not-mouse';
         }
         else
         {
             compat.orientationFallback = '';
+            compat.clickTrampoline = '';
         }
 
         // Configure event listeners
@@ -1777,13 +1785,17 @@ Phaser.ScaleManager.prototype = {
             return;
         }
 
-        // IE11 clicks trigger MSPointer which is not the mousePointer
-        var input = this.game.input;
-
-        if (input.activePointer !== input.mousePointer && (allowTrampoline || allowTrampoline !== false))
+        if (this.compatibility.clickTrampoline === 'when-not-mouse')
         {
-            input.activePointer.addClickTrampoline("startFullScreen", this.startFullScreen, this, [antialias, false]);
-            return;
+            var input = this.game.input;
+
+            if (input.activePointer &&
+                input.activePointer !== input.mousePointer &&
+                (allowTrampoline || allowTrampoline !== false))
+            {
+                input.activePointer.addClickTrampoline("startFullScreen", this.startFullScreen, this, [antialias, false]);
+                return;
+            }
         }
 
         if (typeof antialias !== 'undefined' && this.game.renderType === Phaser.CANVAS)
