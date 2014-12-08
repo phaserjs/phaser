@@ -9,7 +9,7 @@
 - [How to Build](#how-to-build)
 - [Koding](#koding)
 - [Bower / NPM](#bower)
-- [CDNJS](#cdnjs)
+- [jsDelivr](#jsdelivr)
 - [Requirements](#requirements)
 - [Build Files](#build-files)
 - [Learn By Example](#example)
@@ -79,6 +79,8 @@ Version 2.2.2 - "Alkindar" - in development
 
 ### Bug Fixes
 
+* Tween.delay, Tween.repeat and Tween.yoyo will no longer throw an error if called before a TweenData object has been created (via Tween.to or Tween.from) (thanks @SomMeri #1419)
+
 For details about changes made in previous versions of Phaser see the full Change Log at https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md
 
 ![div](http://phaser.io/images/div3.png)
@@ -124,16 +126,18 @@ Nice and easy :)
 
 ![div](http://phaser.io/images/div6.png)
 
-<a name="cdnjs"></a>
-## CDNJS
+<a name="jsdelivr"></a>
+## jsDelivr
 
-Phaser is now available on [CDNJS](http://cdnjs.com). You can include the following in your html:
+Phaser is now available on [jsDelivr](http://jsdelivr.com) - a "super-fast CDN for developers and webmasters." You can include the following in your html:
 
-`http://cdnjs.cloudflare.com/ajax/libs/phaser/2.2.2/phaser.min.js`
+`//cdn.jsdelivr.net/phaser/2.2.2/phaser.min.js`
 
-Or if you prefer you can leave the protocol off, so it works via http and https:
+or the non-minified version:
 
-`//cdnjs.cloudflare.com/ajax/libs/phaser/2.2.2/phaser.min.js`
+`//cdn.jsdelivr.net/phaser/2.2.2/phaser.js`
+
+More details on the [jsDelivr Phaser page](http://www.jsdelivr.com/#!phaser).
 
 ![div](http://phaser.io/images/div1.png)
 
