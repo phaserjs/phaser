@@ -599,6 +599,13 @@ declare module Phaser {
     class Device {
 
         static LITTLE_ENDIAN: boolean;
+        static onInitialized: Phaser.Signal;
+
+        static checkFullScreenSupport(): void;
+        static canPlayAudio(type: string): boolean;
+        static isConsoleOpen(): boolean;
+        static isAndroidStockBrowser(): string;
+        static whenReady: (callback: Function, context?: any) => void;
 
         android: boolean;
         arora: boolean;
@@ -643,7 +650,6 @@ declare module Phaser {
         node: boolean;
         nodeWebkit: boolean;
         ogg: boolean;
-        onInitialized: Phaser.Signal;
         opera: boolean;
         opus: boolean;
         pixelRatio: number;
@@ -668,24 +674,6 @@ declare module Phaser {
         windowsPhone: boolean;
         wheelEvent: string;
         worker: boolean;
-
-        checkFullScreenSupport(): void;
-        _checkAudio(): void;
-        _checkBrowser(): void;
-        _checkCSS3D(): void;
-        _checkDevice(): void;
-        _checkFeatures(): void;
-        _checkFullScreenSupport(): void;
-        _checkInput(): void;
-        _checkIsLittleEndian(): void;
-        _checkIsUint8ClampedImageData(): boolean;
-        _checkOS(): void;
-        canPlayAudio(type: string): boolean;
-        _initialze(): void;
-        isConsoleOpen(): boolean;
-        isAndroidStockBrowser(): string;
-        _readyCheck(): void;
-        whenReady: (callback: Function, context?: any) => void;
 
     }
 
