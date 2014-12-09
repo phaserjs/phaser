@@ -365,6 +365,8 @@ Phaser.Sprite.prototype.postUpdate = function() {
         this.position.y = (this.game.camera.view.y + this.cameraOffset.y) / this.game.camera.scale.y;
     }
 
+    this.updateTransform();
+
     //  Update any Children
     for (var i = 0, len = this.children.length; i < len; i++)
     {
