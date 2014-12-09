@@ -80,6 +80,17 @@ Version 2.2.2 - "Alkindar" - in development
 ### Bug Fixes
 
 * Tween.delay, Tween.repeat and Tween.yoyo will no longer throw an error if called before a TweenData object has been created (via Tween.to or Tween.from) (thanks @SomMeri #1419)
+* The click trampoline added for IE prevents Chrome for Android from being
+able to launch Full Screen mode with the default parameters for
+ScaleManger#startFullScreen. (The desktop version of Chrome is not
+affected.)
+    This fix adds an additional compatibility settings (clickTrampoline)
+that can be used to configure when such is used. By default the
+'when-not-mouse' mode is only enabled for Desktop browsers, where the
+primary input is ubiquitously a mouse.
+    There are no known breaking compatibility changes - the Full Screen should
+be initiatable in Chrome for Android as it was in 2.1.x. The default
+Android browser does not support Full Screen.
 
 For details about changes made in previous versions of Phaser see the full Change Log at https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md
 
