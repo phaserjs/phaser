@@ -70,6 +70,9 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
     */
     this.context = this.canvas.getContext('2d');
 
+    // Required for canvas-shifting to avoid alpha artifacts
+    this.context.globalCompositeOperation = 'copy';
+
     /**
     * Required Pixi var.
     * @property {PIXI.BaseTexture} baseTexture
@@ -673,10 +676,7 @@ Phaser.TilemapLayer.prototype.shiftCanvas = function (context, x, y)
         sy = 0;
     }
 
-    context.save();
-    context.globalCompositeOperation = 'copy';
     context.drawImage(canvas, dx, dy, copyW, copyH, sx, sy, copyW, copyH);
-    context.restore();
 };
 
 /**
