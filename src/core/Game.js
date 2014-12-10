@@ -301,6 +301,12 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     this._codePaused = false;
 
     /**
+    * @property {boolean} _updateTransform - Was Stage.updateTransform called in updateLogic or skipped?
+    * @private
+    */
+    this._updateTransform = false;
+
+    /**
     * The ID of the current/last logic update applied this render frame, starting from 0.
     *
     * The first update is `currentUpdateID === 0` and the last update is `currentUpdateID === updatesThisFrame.`
@@ -705,7 +711,9 @@ Phaser.Game.prototype = {
 
         this.time.update(time);
 
-        // if the logic time is spiralling upwards, skip a frame entirely
+        this._updateTransform = false;
+
+        // if the logic time is spiraling upwards, skip a frame entirely
         if (this._spiralling > 1 && !this.forceSingleUpdate)
         {
             // cause an event to warn the program that this CPU can't keep up with the current desiredFps rate
@@ -757,7 +765,7 @@ Phaser.Game.prototype = {
                 }
             }
 
-            // detect spiralling (if the catch-up loop isn't fast enough, the number of iterations will increase constantly)
+            // detect spiraling (if the catch-up loop isn't fast enough, the number of iterations will increase constantly)
             if (count > this._lastCount)
             {
                 this._spiralling++;
@@ -819,6 +827,11 @@ Phaser.Game.prototype = {
             this.state.pauseUpdate();
             this.debug.preUpdate();
         }
+
+        //  We do this regardless to avoid physics issues
+        this.stage.updateTransform();
+        this._updateTransform = true;
+
     },
 
     /**
