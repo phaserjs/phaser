@@ -24,9 +24,21 @@ Phaser.Physics.P2 = function (game, config) {
     */
     this.game = game;
 
-    if (typeof config === 'undefined' || !config.hasOwnProperty('gravity') || !config.hasOwnProperty('broadphase'))
+    if (typeof config === 'undefined')
     {
         config = { gravity: [0, 0], broadphase: new p2.SAPBroadphase() };
+    }
+    else
+    {
+        if (!config.hasOwnProperty('gravity')
+        {
+            config.gravity: [0, 0];
+        }
+
+        if (!config.hasOwnProperty('broadphase')
+        {
+            config.broadphase: new p2.SAPBroadphase();
+        }
     }
 
     /**

@@ -76,6 +76,8 @@ Version 2.2.2 - "Alkindar" - in development
 ### Updates
 
 * TypeScript definitions fixes and updates (thanks @clark-stevenson)
+* DOM.visualBounds now includes scroll bars (#1429)
+* The new fixed time-step code has been more carefully linked to Pixi transform updates. This should finally put a stop to the tunneling issues that were being reported.
 
 ### Bug Fixes
 
@@ -94,6 +96,7 @@ Android browser does not support Full Screen.
 * TilemapParser now checks for image collections, avoiding crashes. These would arise with maps exported from the new release of Tiled (thanks @paul-reilly #1440)
 * Group.replace could still access `newChild.parent` after it was set to `undefined`. This unifies the approach (thanks @pnstickney #1410 #1417)
 * P2.postBroadphaserHandler updated to avoid skipping final 2 pairs.
+* The P2 World constructor wouldn't let you use your own config unless you specified both the gravity *and* broadphase. Now allows one or both (thanks @englercj #1412)
 
 For details about changes made in previous versions of Phaser see the full Change Log at https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md
 
