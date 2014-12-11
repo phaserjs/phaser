@@ -92,6 +92,8 @@ primary input is ubiquitously a mouse.
 be initiatable in Chrome for Android as it was in 2.1.x. The default
 Android browser does not support Full Screen.
 * TilemapParser now checks for image collections, avoiding crashes. These would arise with maps exported from the new release of Tiled (thanks @paul-reilly #1440)
+* Group.replace could still access `newChild.parent` after it was set to `undefined`. This unifies the approach (thanks @pnstickney #1410 #1417)
+* P2.postBroadphaserHandler updated to avoid skipping final 2 pairs.
 
 For details about changes made in previous versions of Phaser see the full Change Log at https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md
 
