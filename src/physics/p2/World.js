@@ -30,14 +30,14 @@ Phaser.Physics.P2 = function (game, config) {
     }
     else
     {
-        if (!config.hasOwnProperty('gravity')
+        if (!config.hasOwnProperty('gravity'))
         {
-            config.gravity: [0, 0];
+            config.gravity = [0, 0];
         }
 
-        if (!config.hasOwnProperty('broadphase')
+        if (!config.hasOwnProperty('broadphase'))
         {
-            config.broadphase: new p2.SAPBroadphase();
+            config.broadphase = new p2.SAPBroadphase();
         }
     }
 
