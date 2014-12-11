@@ -355,16 +355,16 @@ Phaser.Physics.P2.prototype = {
     */
     postBroadphaseHandler: function (event) {
 
-        var i = event.pairs.length;
-
-        if (this.postBroadphaseCallback && i > 0)
+        if (!this.postBroadphaseCallback || event.pairs.length === 0)
         {
-            while (i -= 2)
+            return;
+        }
+
+        for (var i = event.pairs.length - 2; i >= 0; i -= 2)
+        {
+            if (event.pairs[i].parent && event.pairs[i+1].parent && !this.postBroadphaseCallback.call(this.callbackContext, event.pairs[i].parent, event.pairs[i+1].parent))
             {
-                if (event.pairs[i].parent && event.pairs[i+1].parent && !this.postBroadphaseCallback.call(this.callbackContext, event.pairs[i].parent, event.pairs[i+1].parent))
-                {
-                    event.pairs.splice(i, 2);
-                }
+                event.pairs.splice(i, 2);
             }
         }
 
