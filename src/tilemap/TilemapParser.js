@@ -321,7 +321,7 @@ Phaser.TilemapParser = {
             //  name, firstgid, width, height, margin, spacing, properties
             var set = json.tilesets[i];
 
-            if (!set.tiles)
+            if (set.image)
             {
                 var newSet = new Phaser.Tileset(set.name, set.firstgid, set.tilewidth, set.tileheight, set.margin, set.spacing, set.properties);
 
