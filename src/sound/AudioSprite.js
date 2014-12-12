@@ -32,7 +32,7 @@ Phaser.AudioSprite = function (game, key) {
      * JSON audio atlas object.
      * @property {object} config
      */
-    this.config = this.game.cache.getJSON(key + '-audioatlas');
+    this.config = this.game.cache.getAudio(key).atlasData || this.game.cache.getJSON(key + '-audioatlas');
 
     /**
      * If a sound is set to auto play, this holds the marker key of it.
@@ -60,11 +60,11 @@ Phaser.AudioSprite = function (game, key) {
 
         if (marker.loop)
         {
-            sound.addMarker(k, marker.start, (marker.end - marker.start), null, true);
+            sound.addMarker(k, marker.start, (marker.end - marker.start), marker.volume, true);
         }
         else
         {
-            sound.addMarker(k, marker.start, (marker.end - marker.start), null, false);
+            sound.addMarker(k, marker.start, (marker.end - marker.start), marker.volume, false);
         }
 
         this.sounds[k] = sound;
