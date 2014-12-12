@@ -70,8 +70,11 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
     */
     this.context = this.canvas.getContext('2d');
 
-    // Required for canvas-shifting to avoid alpha artifacts
-    this.context.globalCompositeOperation = 'copy';
+    /**
+    * @property {?HTMLCanvasElement} _copyCanvas
+    * @private
+    */
+    this._copyCanvas = Phaser.Canvas.create(width, height, '', true);
 
     /**
     * Required Pixi var.
@@ -134,6 +137,7 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
     this.renderSettings = {
 
         enableScrollDelta: true,
+
         overdrawRatio: 0.20
 
     };
@@ -643,7 +647,8 @@ Phaser.TilemapLayer.prototype.resetTilesetCache = function ()
 };
 
 /**
-* Shifts the contents of the canvas - does extra math so that different browsers agree on the result. The specified (x/y) will be shifted to (0,0) after the copy. The newly exposed canvas area will need to be filled in. This method is problematic for transparent tiles.
+* Shifts the contents of the canvas - does extra math so that different browsers agree on the result.
+* The specified (x/y) will be shifted to (0,0) after the copy and the newly exposed canvas area will need to be filled in.
 *
 * @method Phaser.TilemapLayer#shiftCanvas
 * @private
@@ -676,7 +681,25 @@ Phaser.TilemapLayer.prototype.shiftCanvas = function (context, x, y)
         sy = 0;
     }
 
-    context.drawImage(canvas, dx, dy, copyW, copyH, sx, sy, copyW, copyH);
+    if (!this._copyCanvas)
+    {
+        // Flickers in Safari / Safari Mobile
+        // Ref. https://github.com/photonstorm/phaser/issues/1439
+        context.save();
+        context.globalCompositionOperation = 'copy';
+        context.drawImage(canvas, dx, dy, copyW, copyH, sx, sy, copyW, copyH);
+        context.restore();
+    }
+    else
+    {
+        var cpCanvas = this._copyCanvas;
+        var cpContext = cpCanvas.getContext('2d');
+        cpContext.clearRect(0, 0, copyW, copyH);
+        cpContext.drawImage(canvas, dx, dy, copyW, copyH, 0, 0, copyW, copyH);
+        // clear allows default 'source-over' semantics
+        context.clearRect(sx, sy, copyW, copyH);
+        context.drawImage(cpCanvas, 0, 0, copyW, copyH, sx, sy, copyW, copyH);
+    }
 };
 
 /**
