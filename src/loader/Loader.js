@@ -619,13 +619,15 @@ Phaser.Loader.prototype = {
     * @param {string} key - Unique asset key of the audio file.
     * @param {Array|string} urls - An array containing the URLs of the audio files, i.e.: [ 'jump.mp3', 'jump.ogg', 'jump.m4a' ] or a single string containing just one URL.
     * @param {boolean} autoDecode - When using Web Audio the audio files can either be decoded at load time or run-time. They can't be played until they are decoded, but this let's you control when that happens. Decoding is a non-blocking async process.
+    * @param {string} atlasData - The audiosprite marker configuration json data.
     * @return {Phaser.Loader} This Loader instance.
     */
-    audio: function (key, urls, autoDecode) {
+    audio: function (key, urls, autoDecode, atlasData) {
 
         if (typeof autoDecode === "undefined") { autoDecode = true; }
+        if (typeof atlasData === "undefined") { atlasData = null; }
 
-        this.addToFileList('audio', key, urls, { buffer: null, autoDecode: autoDecode });
+        this.addToFileList('audio', key, urls, { buffer: null, autoDecode: autoDecode, atlasData: atlasData });
 
         return this;
 
@@ -639,13 +641,16 @@ Phaser.Loader.prototype = {
      * @param {string} key - Unique asset key of the audio file.
      * @param {Array|string} urls - An array containing the URLs of the audio files, i.e.: [ 'audiosprite.mp3', 'audiosprite.ogg', 'audiosprite.m4a' ] or a single string containing just one URL.
      * @param {string} atlasURL - The URL of the audiosprite configuration json.
+     * @param {string} atlasData - The audiosprite configuration json data.
      * @return {Phaser.Loader} This Loader instance.
      */
-    audiosprite: function(key, urls, atlasURL) {
+    audiosprite: function(key, urls, atlasURL, atlasData) {
 
-        this.audio(key, urls);
+        this.audio(key, urls, true, atlasData);
 
-        this.json(key + '-audioatlas', atlasURL);
+        if (typeof atlasData === "undefined") {
+            this.json(key + '-audioatlas', atlasURL);
+        }
 
         return this;
 
@@ -1519,7 +1524,7 @@ Phaser.Loader.prototype = {
                 {
                     file.data = this._xhr.response;
 
-                    this.game.cache.addSound(file.key, file.url, file.data, true, false);
+                    this.game.cache.addSound(file.key, file.url, file.data, true, false, file.atlasData);
 
                     if (file.autoDecode)
                     {

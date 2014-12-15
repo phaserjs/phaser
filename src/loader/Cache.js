@@ -525,8 +525,9 @@ Phaser.Cache.prototype = {
     * @param {object} data - Extra sound data.
     * @param {boolean} webAudio - True if the file is using web audio.
     * @param {boolean} audioTag - True if the file is using legacy HTML audio.
+    * @param {object} atlasData - Audioatlas JSON object.
     */
-    addSound: function (key, url, data, webAudio, audioTag) {
+    addSound: function (key, url, data, webAudio, audioTag, atlasData) {
 
         webAudio = webAudio || true;
         audioTag = audioTag || false;
@@ -538,7 +539,7 @@ Phaser.Cache.prototype = {
             decoded = true;
         }
 
-        this._sounds[key] = { url: url, data: data, isDecoding: false, decoded: decoded, webAudio: webAudio, audioTag: audioTag, locked: this.game.sound.touchLocked };
+        this._sounds[key] = { url: url, data: data, isDecoding: false, decoded: decoded, webAudio: webAudio, audioTag: audioTag, locked: this.game.sound.touchLocked, atlasData: atlasData };
 
         this._resolveURL(url, this._sounds[key]);
 
