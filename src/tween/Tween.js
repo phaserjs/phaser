@@ -342,7 +342,7 @@ Phaser.Tween.prototype = {
 
         if (complete)
         {
-            this.onComplete.dispatch(this);
+            this.onComplete.dispatch(this.target, this);
 
             if (this.chainedTween)
             {
