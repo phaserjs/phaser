@@ -78,6 +78,7 @@ Version 2.2.2 - "Alkindar" - in development
 * TypeScript definitions fixes and updates (thanks @clark-stevenson)
 * DOM.visualBounds now includes scroll bars (#1429)
 * The new fixed time-step code has been more carefully linked to Pixi transform updates. This should finally put a stop to the tunneling issues that were being reported.
+* Tween.stop fired a different set of onComplete parameters to Tween.update. Both now dispatch onComplete(target, tween) as the parameters in that order (thanks @P0rnflake #1450)
 
 ### Bug Fixes
 
@@ -94,9 +95,10 @@ primary input is ubiquitously a mouse.
 be initiatable in Chrome for Android as it was in 2.1.x. The default
 Android browser does not support Full Screen.
 * TilemapParser now checks for image collections, avoiding crashes. These would arise with maps exported from the new release of Tiled (thanks @paul-reilly #1440)
-* Group.replace could still access `newChild.parent` after it was set to `undefined`. This unifies the approach (thanks @pnstickney #1410 #1417)
+* Group.replace could still access `newChild.parent` after it was set to `undefined`. This unifies the approach (thanks @pnstickne #1410 #1417)
 * P2.postBroadphaserHandler updated to avoid skipping final 2 pairs.
 * The P2 World constructor wouldn't let you use your own config unless you specified both the gravity *and* broadphase. Now allows one or both (thanks @englercj #1412)
+* The RandomDataGenerator could be seeded with an array of values. However if the array contained a zero it would stop seeding from that point (thanks @jpcloud @pnstickne #1456)
 
 For details about changes made in previous versions of Phaser see the full Change Log at https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md
 
