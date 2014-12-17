@@ -82,6 +82,7 @@ Version 2.2.2 - "Alkindar" - in development
 * The new fixed time-step code has been more carefully linked to Pixi transform updates. This should finally put a stop to the tunneling issues that were being reported.
 * Tween.stop fired a different set of onComplete parameters to Tween.update. Both now dispatch onComplete(target, tween) as the parameters in that order (thanks @P0rnflake #1450)
 * Removed redundant `tolerance` parameter from Rectangle.intersects (thanks @toolness #1463)
+* Phaser.Graphics.drawCircle now overrides PIXI.drawCircle which means the docs are now correct re: diameter not radius (thanks @ethankaminski #1454)
 
 ### Bug Fixes
 
