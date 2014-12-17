@@ -105,6 +105,20 @@ Android browser does not support Full Screen.
 * The RandomDataGenerator could be seeded with an array of values. However if the array contained a zero it would stop seeding from that point (thanks @jpcloud @pnstickne #1456)
 * Added extra checks to Sound.play to stop it throwing DOM Exception Error 11 if the `sound.readyState` wasn't set or the sound was invalid. Also wrapped `stop()`` call in a `try catch`.
 
+### Pixi.js 2.2.0 Updates
+
+* The strip class has now three extra properties, canvasPadding, paddingX, and paddingY : @darionco
+* Added mipmap option to to textures.
+* Added the ability to use GL_TRIANGLES when rendering Strips @darionco
+* Added the ability to tint the Graphics.
+* Fixed Y-flipped mask issue on render texture.
+* Fixed the issue where you could an alpha that is more than one and it would.
+* Fixed text issues when using accents.
+* Fixed sprite caching not clearing the previous cached texture : @kambing86
+* Fixed arcTo issues.
+* Vertex buffer and and vertex shader optimisation and reduced memory footprint on the tint and alpha : @bchevalier
+* Applied the new generic updateTransform to spritebatch : @kambing86
+
 For details about changes made in previous versions of Phaser see the full Change Log at https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md
 
 ![div](http://phaser.io/images/div3.png)
