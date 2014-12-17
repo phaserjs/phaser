@@ -24,6 +24,20 @@
         $arcade = true;
     }
 
+    if (!isset($tilemap))
+    {
+        $tilemap = true;
+    }
+
+    if (isset($nophysics))
+    {
+        $p2 = false;
+        $box2d = false;
+        $ninja = false;
+        $arcade = false;
+        $tilemap = false;
+    }
+
     if ($p2)
     {
         echo "    <script src=\"$path/src/physics/p2/p2.js\"></script>";
@@ -36,9 +50,13 @@
 
     echo <<<EOL
 
+    <script src="$path/src/polyfills.js"></script>
+
     <script src="$path/src/pixi/Pixi.js"></script>
-    <script src="$path/src/pixi/geom/Polygon.js"></script>
     <script src="$path/src/pixi/geom/Matrix.js"></script>
+    <script src="$path/src/pixi/geom/Polygon.js"></script>
+    <script src="$path/src/pixi/geom/Rectangle.js"></script>
+    <script src="$path/src/pixi/geom/RoundedRectangle.js"></script>
     <script src="$path/src/pixi/display/DisplayObject.js"></script>
     <script src="$path/src/pixi/display/DisplayObjectContainer.js"></script>
     <script src="$path/src/pixi/display/Sprite.js"></script>
@@ -81,6 +99,7 @@
     <script src="$path/src/pixi/filters/AbstractFilter.js"></script>
 
     <script src="$path/src/Phaser.js"></script>
+    <script src="$path/src/polyfills.js"></script>
     <script src="$path/src/utils/Utils.js"></script>
 
     <script src="$path/src/geom/Circle.js"></script>
@@ -95,8 +114,6 @@
     <script src="$path/src/core/Camera.js"></script>
     <script src="$path/src/core/State.js"></script>
     <script src="$path/src/core/StateManager.js"></script>
-    <script src="$path/src/core/ArrayList.js"></script>
-    <script src="$path/src/core/LinkedList.js"></script>
     <script src="$path/src/core/Signal.js"></script>
     <script src="$path/src/core/SignalBinding.js"></script>
     <script src="$path/src/core/Filter.js"></script>
@@ -105,10 +122,10 @@
     <script src="$path/src/core/Stage.js"></script>
     <script src="$path/src/core/Group.js"></script>
     <script src="$path/src/core/World.js"></script>
-    <script src="$path/src/core/Game.js"></script>
     <script src="$path/src/core/FlexGrid.js"></script>
     <script src="$path/src/core/FlexLayer.js"></script>
     <script src="$path/src/core/ScaleManager.js"></script>
+    <script src="$path/src/core/Game.js"></script>
 
     <script src="$path/src/input/Input.js"></script>
     <script src="$path/src/input/Key.js"></script>
@@ -123,12 +140,13 @@
     <script src="$path/src/input/InputHandler.js"></script>
 
     <script src="$path/src/gameobjects/Events.js"></script>
-    <script src="$path/src/gameobjects/GameObjectCreator.js"></script>
     <script src="$path/src/gameobjects/GameObjectFactory.js"></script>
+    <script src="$path/src/gameobjects/GameObjectCreator.js"></script>
     <script src="$path/src/gameobjects/BitmapData.js"></script>
     <script src="$path/src/gameobjects/Sprite.js"></script>
     <script src="$path/src/gameobjects/Image.js"></script>
     <script src="$path/src/gameobjects/TileSprite.js"></script>
+    <script src="$path/src/gameobjects/Rope.js"></script>
     <script src="$path/src/gameobjects/Text.js"></script>
     <script src="$path/src/gameobjects/BitmapText.js"></script>
     <script src="$path/src/gameobjects/Button.js"></script>
@@ -137,10 +155,10 @@
     <script src="$path/src/gameobjects/SpriteBatch.js"></script>
     <script src="$path/src/gameobjects/RetroFont.js"></script>
     <script src="$path/src/gameobjects/Particle.js"></script>
-    <script src="$path/src/gameobjects/Rope.js"></script>
 
-    <script src="$path/src/system/Canvas.js"></script>
     <script src="$path/src/system/Device.js"></script>
+    <script src="$path/src/system/DOM.js"></script>
+    <script src="$path/src/system/Canvas.js"></script>
     <script src="$path/src/system/RequestAnimationFrame.js"></script>
 
     <script src="$path/src/math/Math.js"></script>
@@ -151,6 +169,7 @@
 
     <script src="$path/src/tween/TweenManager.js"></script>
     <script src="$path/src/tween/Tween.js"></script>
+    <script src="$path/src/tween/TweenData.js"></script>
     <script src="$path/src/tween/Easing.js"></script>
 
     <script src="$path/src/time/Time.js"></script>
@@ -171,6 +190,9 @@
     <script src="$path/src/sound/Sound.js"></script>
     <script src="$path/src/sound/SoundManager.js"></script>
 
+    <script src="$path/src/utils/ArraySet.js"></script>
+    <script src="$path/src/utils/LinkedList.js"></script>
+    <script src="$path/src/utils/ArrayUtils.js"></script>
     <script src="$path/src/utils/Debug.js"></script>
     <script src="$path/src/utils/Color.js"></script>
 
@@ -180,12 +202,20 @@
     <script src="$path/src/particles/arcade/ArcadeParticles.js"></script>
     <script src="$path/src/particles/arcade/Emitter.js"></script>
 
+EOL;
+
+    if ($tilemap)
+    {
+        echo <<<EOL
+
     <script src="$path/src/tilemap/Tile.js"></script>
     <script src="$path/src/tilemap/Tilemap.js"></script>
     <script src="$path/src/tilemap/TilemapLayer.js"></script>
     <script src="$path/src/tilemap/TilemapParser.js"></script>
     <script src="$path/src/tilemap/Tileset.js"></script>
+
 EOL;
+    }
 
     if ($arcade)
     {
@@ -195,7 +225,6 @@ EOL;
     <script src="$path/src/physics/arcade/Body.js"></script>
 EOL;
     }
-
 
     if ($p2)
     {

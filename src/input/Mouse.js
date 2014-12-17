@@ -5,7 +5,8 @@
 */
 
 /**
-* Phaser.Mouse is responsible for handling all aspects of mouse interaction with the browser.
+* The Mouse class is responsible for handling all aspects of mouse interaction with the browser.
+*
 * It captures and processes mouse events that happen on the game canvas object. It also adds a single `mouseup` listener to `window` which
 * is used to capture the mouse being released when not over the game.
 *
@@ -21,7 +22,7 @@ Phaser.Mouse = function (game) {
     this.game = game;
 
     /**
-    * @property {Object} callbackContext - The context under which callbacks are called.
+    * @property {object} callbackContext - The context under which callbacks are called.
     */
     this.callbackContext = this.game;
 
@@ -67,15 +68,16 @@ Phaser.Mouse = function (game) {
     this.button = -1;
 
     /**
-     * @property {number} wheelDelta - The direction of the mousewheel usage 1 for up -1 for down
+     * @property {number} wheelDelta - The direction of the _last_ mousewheel usage 1 for up -1 for down
      */
     this.wheelDelta = 0;
 
     /**
-    * @property {boolean} disabled - You can disable all Input by setting disabled = true. While set all new input related events will be ignored.
+    * Mouse input will only be processed if enabled.
+    * @property {boolean} enabled
     * @default
     */
-    this.disabled = false;
+    this.enabled = true;
 
     /**
     * @property {boolean} locked - If the mouse has been Pointer Locked successfully this will be set to true.
@@ -96,7 +98,9 @@ Phaser.Mouse = function (game) {
     this.pointerLock = new Phaser.Signal();
 
     /**
-    * @property {MouseEvent} event - The browser mouse DOM event. Will be set to null if no mouse event has ever been received.
+    * The browser mouse DOM event. Will be null if no mouse event has ever been received.
+    * Access this property only inside a Mouse event handler and do not keep references to it.
+    * @property {MouseEvent|null} event
     * @default
     */
     this.event = null;
@@ -132,10 +136,17 @@ Phaser.Mouse = function (game) {
     this._onMouseOver = null;
 
     /**
-     * @property {function} _onMouseWheel - Internal event handler reference.
-     * @private
-     */
+    * @property {function} _onMouseWheel - Internal event handler reference.
+    * @private
+    */
     this._onMouseWheel = null;
+
+    /**
+    * Wheel proxy event object, if required. Shared for all wheel events for this mouse.
+    * @property {Phaser.Mouse~WheelEventProxy} _wheelEvent
+    * @private
+    */
+    this._wheelEvent = null;
 
 };
 
@@ -234,8 +245,21 @@ Phaser.Mouse.prototype = {
             window.addEventListener('mouseup', this._onMouseUpGlobal, true);
             this.game.canvas.addEventListener('mouseover', this._onMouseOver, true);
             this.game.canvas.addEventListener('mouseout', this._onMouseOut, true);
-            this.game.canvas.addEventListener('mousewheel', this._onMouseWheel, true);
-            this.game.canvas.addEventListener('DOMMouseScroll', this._onMouseWheel, true);
+        }
+
+        var wheelEvent = this.game.device.wheelEvent;
+        if (wheelEvent)
+        {
+            this.game.canvas.addEventListener(wheelEvent, this._onMouseWheel, true);
+
+            if (wheelEvent === 'mousewheel')
+            {
+                this._wheelEvent = new WheelEventProxy(-1/40, 1);
+            }
+            else if (wheelEvent === 'DOMMouseScroll')
+            {
+                this._wheelEvent = new WheelEventProxy(1, 1);
+            }
         }
 
     },
@@ -261,7 +285,7 @@ Phaser.Mouse.prototype = {
             this.mouseDownCallback.call(this.callbackContext, event);
         }
 
-        if (this.game.input.disabled || this.disabled)
+        if (!this.game.input.enabled || !this.enabled)
         {
             return;
         }
@@ -291,7 +315,7 @@ Phaser.Mouse.prototype = {
             this.mouseMoveCallback.call(this.callbackContext, event);
         }
 
-        if (this.game.input.disabled || this.disabled)
+        if (!this.game.input.enabled || !this.enabled)
         {
             return;
         }
@@ -323,7 +347,7 @@ Phaser.Mouse.prototype = {
             this.mouseUpCallback.call(this.callbackContext, event);
         }
 
-        if (this.game.input.disabled || this.disabled)
+        if (!this.game.input.enabled || !this.enabled)
         {
             return;
         }
@@ -380,7 +404,7 @@ Phaser.Mouse.prototype = {
             this.mouseOutCallback.call(this.callbackContext, event);
         }
 
-        if (this.game.input.disabled || this.disabled)
+        if (!this.game.input.enabled || !this.enabled)
         {
             return;
         }
@@ -398,9 +422,13 @@ Phaser.Mouse.prototype = {
      * The internal method that handles the mouse wheel event from the browser.
      *
      * @method Phaser.Mouse#onMouseWheel
-     * @param {MouseEvent} event - The native event from the browser. This gets stored in Mouse.event.
+     * @param {MouseEvent} event - The native event from the browser.
      */
     onMouseWheel: function (event) {
+
+        if (this._wheelEvent) {
+            event = this._wheelEvent.bindEvent(event);
+        }
 
         this.event = event;
 
@@ -410,7 +438,7 @@ Phaser.Mouse.prototype = {
         }
 
         // reverse detail for firefox
-        this.wheelDelta = Math.max(-1, Math.min(1, (event.wheelDelta || -event.detail)));
+        this.wheelDelta = Phaser.Math.clamp(-event.deltaY, -1, 1);
 
         if (this.mouseWheelCallback)
         {
@@ -441,7 +469,7 @@ Phaser.Mouse.prototype = {
             this.mouseOverCallback.call(this.callbackContext, event);
         }
 
-        if (this.game.input.disabled || this.disabled)
+        if (!this.game.input.enabled || !this.enabled)
         {
             return;
         }
@@ -529,8 +557,12 @@ Phaser.Mouse.prototype = {
         this.game.canvas.removeEventListener('mouseup', this._onMouseUp, true);
         this.game.canvas.removeEventListener('mouseover', this._onMouseOver, true);
         this.game.canvas.removeEventListener('mouseout', this._onMouseOut, true);
-        this.game.canvas.removeEventListener('mousewheel', this._onMouseWheel, true);
-        this.game.canvas.removeEventListener('DOMMouseScroll', this._onMouseWheel, true);
+
+        var wheelEvent = this.game.device.wheelEvent;
+        if (wheelEvent)
+        {
+            this.game.canvas.removeEventListener(wheelEvent, this._onMouseWheel, true);
+        }
 
         window.removeEventListener('mouseup', this._onMouseUpGlobal, true);
 
@@ -543,3 +575,104 @@ Phaser.Mouse.prototype = {
 };
 
 Phaser.Mouse.prototype.constructor = Phaser.Mouse;
+
+/**
+* If disabled all Mouse input will be ignored.
+* @property {boolean} disabled
+* @memberof Phaser.Mouse
+* @default false
+* @deprecated Use {@link Phaser.Mouse#enabled} instead
+*/
+Object.defineProperty(Phaser.Mouse.prototype, "disabled", {
+
+    get: function () {
+        return !this.enabled;
+    },
+    set: function (value) {
+        this.enabled = !value;
+    }
+
+});
+
+/* jshint latedef:nofunc */
+/**
+* A purely internal event support class to proxy 'wheelscroll' and 'DOMMouseWheel'
+* events to 'wheel'-like events.
+*
+* See https://developer.mozilla.org/en-US/docs/Web/Events/mousewheel for choosing a scale and delta mode.
+*
+* @method Phaser.Mouse#WheelEventProxy
+* @private
+* @param {number} scaleFactor - Scale factor as applied to wheelDelta/wheelDeltaX or details.
+* @param {integer} deltaMode - The reported delta mode.
+*/
+function WheelEventProxy (scaleFactor, deltaMode) {
+
+    /**
+    * @property {number} _scaleFactor - Scale factor as applied to wheelDelta/wheelDeltaX or details.
+    * @private
+    */
+    this._scaleFactor = scaleFactor;
+
+    /**
+    * @property {number} _deltaMode - The reported delta mode.
+    * @private
+    */
+    this._deltaMode = deltaMode;
+
+    /**
+    * @property {any} originalEvent - The original event _currently_ being proxied; the getters will follow suit.
+    * @private
+    */
+    this.originalEvent = null;
+}
+
+WheelEventProxy.prototype = {};
+WheelEventProxy.prototype.constructor = WheelEventProxy;
+
+WheelEventProxy.prototype.bindEvent = function (event) {
+
+    // Generate stubs automatically
+    if (!WheelEventProxy._stubsGenerated && event)
+    {
+        var makeBinder = function (name) {
+
+            return function () {
+                var v = this.originalEvent[name];
+                return typeof v !== 'function' ? v : v.bind(this.originalEvent);
+            };
+
+        };
+
+        for (var prop in event)
+        {
+            if (!(prop in WheelEventProxy.prototype))
+            {
+                Object.defineProperty(WheelEventProxy.prototype, prop, {
+                    get: makeBinder(prop)
+                });
+            }
+        }
+        WheelEventProxy._stubsGenerated = true;
+    }
+
+    this.originalEvent = event;
+    return this;
+
+};
+
+Object.defineProperties(WheelEventProxy.prototype, {
+    "type": { value: "wheel" },
+    "deltaMode": { get: function () { return this._deltaMode; } },
+    "deltaY": {
+        get: function () {
+            return (this._scaleFactor * (this.originalEvent.wheelDelta || this.originalEvent.detail)) || 0;
+        }
+    },
+    "deltaX": {
+        get: function () {
+            return (this._scaleFactor * this.originalEvent.wheelDeltaX) || 0;
+        }
+    },
+    "deltaZ": { value: 0 }
+});

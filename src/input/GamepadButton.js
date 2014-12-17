@@ -104,7 +104,7 @@ Phaser.GamepadButton.prototype = {
 
         this.isDown = true;
         this.isUp = false;
-        this.timeDown = this.game.time.now;
+        this.timeDown = this.game.time.time;
         this.duration = 0;
         this.repeats = 0;
         this.value = value;
@@ -124,7 +124,7 @@ Phaser.GamepadButton.prototype = {
 
         this.isDown = false;
         this.isUp = true;
-        this.timeUp = this.game.time.now;
+        this.timeUp = this.game.time.time;
         this.value = value;
 
         this.onUp.dispatch(this, value);
@@ -157,7 +157,7 @@ Phaser.GamepadButton.prototype = {
 
         duration = duration || 250;
 
-        return (this.isDown === true && (this.timeDown + duration) > this.game.time.now);
+        return (this.isDown === true && (this.timeDown + duration) > this.game.time.time);
 
     },
 
@@ -172,7 +172,7 @@ Phaser.GamepadButton.prototype = {
 
         duration = duration || 250;
 
-        return (this.isUp === true && (this.timeUp + duration) > this.game.time.now);
+        return (this.isUp === true && (this.timeUp + duration) > this.game.time.time);
 
     },
 
@@ -185,7 +185,7 @@ Phaser.GamepadButton.prototype = {
 
         this.isDown = false;
         this.isUp = true;
-        this.timeDown = this.game.time.now;
+        this.timeDown = this.game.time.time;
         this.duration = 0;
         this.repeats = 0;
 

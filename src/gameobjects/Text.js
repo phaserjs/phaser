@@ -16,7 +16,7 @@
 * @param {number} x - X position of the new text object.
 * @param {number} y - Y position of the new text object.
 * @param {string} text - The actual text that will be written.
-* @param {object} style - The style object containing style attributes like font, font size ,
+* @param {object} style - The style object containing style attributes like font, font size, etc.
 */
 Phaser.Text = function (game, x, y, text, style) {
 
@@ -157,7 +157,8 @@ Phaser.Text.prototype.constructor = Phaser.Text;
 
 /**
 * Automatically called by World.preUpdate.
-* @method Phaser.Text.prototype.preUpdate
+* 
+* @method Phaser.Text#preUpdate
 */
 Phaser.Text.prototype.preUpdate = function () {
 
@@ -198,7 +199,6 @@ Phaser.Text.prototype.preUpdate = function () {
 * Override and use this function in your own custom objects to handle any update requirements you may have.
 *
 * @method Phaser.Text#update
-* @memberof Phaser.Text
 */
 Phaser.Text.prototype.update = function() {
 
@@ -206,7 +206,8 @@ Phaser.Text.prototype.update = function() {
 
 /**
 * Automatically called by World.postUpdate.
-* @method Phaser.Text.prototype.postUpdate
+* 
+* @method Phaser.Text#postUpdate
 */
 Phaser.Text.prototype.postUpdate = function () {
 
@@ -225,7 +226,7 @@ Phaser.Text.prototype.postUpdate = function () {
 };
 
 /**
-* @method Phaser.Text.prototype.destroy
+* @method Phaser.Text#destroy
 * @param {boolean} [destroyChildren=true] - Should every child of this object have its destroy method called?
 */
 Phaser.Text.prototype.destroy = function (destroyChildren) {
@@ -238,7 +239,7 @@ Phaser.Text.prototype.destroy = function (destroyChildren) {
 
     if (this.events)
     {
-        this.events.onDestroy.dispatch(this);
+        this.events.onDestroy$dispatch(this);
     }
 
     if (this.parent)
@@ -294,18 +295,28 @@ Phaser.Text.prototype.destroy = function (destroyChildren) {
 };
 
 /**
-* @method Phaser.Text.prototype.setShadow
+* Sets a drop shadow effect on the Text. You can specify the horizontal and vertical distance of the drop shadow with the `x` and `y` parameters.
+* The color controls the shade of the shadow (default is black) and can be either an `rgba` or `hex` value.
+* The blur is the strength of the shadow. A value of zero means a hard shadow, a value of 10 means a very soft shadow.
+* To remove a shadow already in place you can call this method with no parameters set.
+* 
+* @method Phaser.Text#setShadow
 * @param {number} [x=0] - The shadowOffsetX value in pixels. This is how far offset horizontally the shadow effect will be.
 * @param {number} [y=0] - The shadowOffsetY value in pixels. This is how far offset vertically the shadow effect will be.
-* @param {string} [color='rgba(0,0,0,0)'] - The color of the shadow, as given in CSS rgba format. Set the alpha component to 0 to disable the shadow.
+* @param {string} [color='rgba(0,0,0,1)'] - The color of the shadow, as given in CSS rgba or hex format. Set the alpha component to 0 to disable the shadow.
 * @param {number} [blur=0] - The shadowBlur value. Make the shadow softer by applying a Gaussian blur to it. A number from 0 (no blur) up to approx. 10 (depending on scene).
 */
 Phaser.Text.prototype.setShadow = function (x, y, color, blur) {
 
-    this.style.shadowOffsetX = x || 0;
-    this.style.shadowOffsetY = y || 0;
-    this.style.shadowColor = color || 'rgba(0,0,0,0)';
-    this.style.shadowBlur = blur || 0;
+    if (typeof x === 'undefined') { x = 0; }
+    if (typeof y === 'undefined') { y = 0; }
+    if (typeof color === 'undefined') { color = 'rgba(0, 0, 0, 1)'; }
+    if (typeof blur === 'undefined') { blur = 0; }
+
+    this.style.shadowOffsetX = x;
+    this.style.shadowOffsetY = y;
+    this.style.shadowColor = color;
+    this.style.shadowBlur = blur;
     this.dirty = true;
 
 };
@@ -313,8 +324,8 @@ Phaser.Text.prototype.setShadow = function (x, y, color, blur) {
 /**
 * Set the style of the text by passing a single style object to it.
 *
-* @method Phaser.Text.prototype.setStyle
-* @param {Object} [style] - The style properties to be set on the Text.
+* @method Phaser.Text#setStyle
+* @param {object} [style] - The style properties to be set on the Text.
 * @param {string} [style.font='bold 20pt Arial'] - The style and size of the font.
 * @param {string} [style.fill='black'] - A canvas fillstyle that will be used on the text eg 'red', '#00FF00'.
 * @param {string} [style.align='left'] - Alignment for multiline text ('left', 'center' or 'right'), does not affect single line text.
@@ -346,7 +357,7 @@ Phaser.Text.prototype.setStyle = function (style) {
 /**
 * Renders text. This replaces the Pixi.Text.updateText function as we need a few extra bits in here.
 *
-* @method Phaser.Text.prototype.updateText
+* @method Phaser.Text#updateText
 * @private
 */
 Phaser.Text.prototype.updateText = function () {
@@ -379,12 +390,12 @@ Phaser.Text.prototype.updateText = function () {
 
     var width = maxLineWidth + this.style.strokeThickness;
 
-    this.canvas.width = (width + this.context.lineWidth) * this.resolution;
+    this.canvas.width = width * this.resolution;
     
     //calculate text height
-    var lineHeight = fontProperties.fontSize + this.style.strokeThickness;
- 
-    var height = lineHeight * lines.length;
+    var lineHeight = fontProperties.fontSize + this.style.strokeThickness + this._lineSpacing;
+
+    var height = (lineHeight + this._lineSpacing) * lines.length;
 
     this.canvas.height = height * this.resolution;
 
@@ -427,8 +438,6 @@ Phaser.Text.prototype.updateText = function () {
             linePositionX += (maxLineWidth - lineWidths[i]) / 2;
         }
 
-        linePositionY += this._lineSpacing;
-
         if (this.colors.length > 0)
         {
             this.updateLine(lines[i], linePositionX, linePositionY);
@@ -451,6 +460,12 @@ Phaser.Text.prototype.updateText = function () {
 
 };
 
+/**
+* Updates a line of text.
+*
+* @method Phaser.Text#updateLine
+* @private
+*/
 Phaser.Text.prototype.updateLine = function (line, x, y) {
 
     for (var i = 0; i < line.length; i++)
@@ -483,7 +498,7 @@ Phaser.Text.prototype.updateLine = function (line, x, y) {
 /**
 * Clears any previously set color stops.
 *
-* @method Phaser.Text.prototype.clearColors
+* @method Phaser.Text#clearColors
 */
 Phaser.Text.prototype.clearColors = function () {
 
@@ -499,7 +514,7 @@ Phaser.Text.prototype.clearColors = function () {
 * Once set the color remains in use until either another color or the end of the string is encountered.
 * For example if the Text was `Photon Storm` and you did `Text.addColor('#ffff00', 6)` it would color in the word `Storm` in yellow.
 *
-* @method Phaser.Text.prototype.addColor
+* @method Phaser.Text#addColor
 * @param {string} color - A canvas fillstyle that will be used on the text eg `red`, `#00FF00`, `rgba()`.
 * @param {number} position - The index of the character in the string to start applying this color value from.
 */
@@ -513,7 +528,7 @@ Phaser.Text.prototype.addColor = function (color, position) {
 /**
 * Greedy wrapping algorithm that will wrap words as the line grows longer than its horizontal bounds.
 *
-* @method Phaser.Text.prototype.runWordWrap
+* @method Phaser.Text#runWordWrap
 * @param {string} text - The text to perform word wrap detection against.
 * @private
 */
@@ -563,6 +578,7 @@ Phaser.Text.prototype.runWordWrap = function (text) {
 * Indicates the rotation of the Text, in degrees, from its original orientation. Values from 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation.
 * Values outside this range are added to or subtracted from 360 to obtain a value within the range. For example, the statement player.angle = 450 is the same as player.angle = 90.
 * If you wish to work in radians instead of degrees use the property Sprite.rotation instead.
+* 
 * @name Phaser.Text#angle
 * @property {number} angle - Gets or sets the angle of rotation in degrees.
 */

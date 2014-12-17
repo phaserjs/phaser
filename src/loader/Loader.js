@@ -99,9 +99,9 @@ Phaser.Loader = function (game) {
     this.onPackComplete = new Phaser.Signal();
 
     /**
-    * @property {boolean} useXDomainRequest - If true and if the browser supports XDomainRequest, it will be used in preference for xhr when loading json files. It is enabled automatically if the browser is IE9, but you can disable it as required.
+    * @property {boolean} useXDomainRequest - If true and if the browser supports XDomainRequest, it will be used in preference for xhr when loading json files. This is only relevant for IE9 when you know your server/CDN requires it.
     */
-    this.useXDomainRequest = (this.game.device.ieVersion === 9);
+    this.useXDomainRequest = false;
 
     /**
     * @property {array} _packList - Contains all the assets packs.
@@ -209,6 +209,23 @@ Phaser.Loader.prototype = {
         sprite.crop(this.preloadSprite.rect);
 
         sprite.visible = true;
+
+    },
+
+    /**
+    * Called automatically by ScaleManager when the game resizes in RESIZE scalemode.
+    * We use this to adjust the height of the preloading sprite, if set.
+    *
+    * @method Phaser.Loader#resize
+    * @param {number} width - The new width of the game in pixels.
+    * @param {number} height - The new height of the game in pixels.
+    */
+    resize: function () {
+
+        if (this.preloadSprite && this.preloadSprite.height !== this.preloadSprite.sprite.height)
+        {
+            this.preloadSprite.rect.height = this.preloadSprite.sprite.height;
+        }
 
     },
 
@@ -1299,7 +1316,7 @@ Phaser.Loader.prototype = {
                     //  Note: The xdr.send() call is wrapped in a timeout to prevent an issue with the interface where some requests are lost
                     //  if multiple XDomainRequests are being sent at the same time.
                     setTimeout(function () {
-                        this._ajax.send();
+                        _this._ajax.send();
                     }, 0);
                 }
                 else

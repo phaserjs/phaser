@@ -187,8 +187,8 @@ Phaser.Animation.prototype = {
         this.paused = false;
         this.loopCount = 0;
 
-        this._timeLastFrame = this.game.time.now;
-        this._timeNextFrame = this.game.time.now + this.delay;
+        this._timeLastFrame = this.game.time.time;
+        this._timeNextFrame = this.game.time.time + this.delay;
 
         this._frameIndex = 0;
 
@@ -203,7 +203,7 @@ Phaser.Animation.prototype = {
             this._parent.tilingTexture = false;
         }
 
-        this._parent.events.onAnimationStart.dispatch(this._parent, this);
+        this._parent.events.onAnimationStart$dispatch(this._parent, this);
 
         this.onStart.dispatch(this._parent, this);
 
@@ -223,8 +223,8 @@ Phaser.Animation.prototype = {
         this.paused = false;
         this.loopCount = 0;
 
-        this._timeLastFrame = this.game.time.now;
-        this._timeNextFrame = this.game.time.now + this.delay;
+        this._timeLastFrame = this.game.time.time;
+        this._timeNextFrame = this.game.time.time + this.delay;
 
         this._frameIndex = 0;
 
@@ -273,7 +273,7 @@ Phaser.Animation.prototype = {
             {
                 for (var i = 0; i < this._frames.length; i++)
                 {
-                    if (this.frames[i] === frameIndex)
+                    if (this._frames[i] === frameIndex)
                     {
                         frameIndex = i;
                     }
@@ -287,7 +287,7 @@ Phaser.Animation.prototype = {
             this._frameIndex = frameIndex - 1;
 
             //  Make the animation update at next update
-            this._timeNextFrame = this.game.time.now;
+            this._timeNextFrame = this.game.time.time;
 
             this.update();
         }
@@ -319,7 +319,7 @@ Phaser.Animation.prototype = {
 
         if (dispatchComplete)
         {
-            this._parent.events.onAnimationComplete.dispatch(this._parent, this);
+            this._parent.events.onAnimationComplete$dispatch(this._parent, this);
             this.onComplete.dispatch(this._parent, this);
         }
 
@@ -334,7 +334,7 @@ Phaser.Animation.prototype = {
 
         if (this.isPlaying)
         {
-            this._frameDiff = this._timeNextFrame - this.game.time.now;
+            this._frameDiff = this._timeNextFrame - this.game.time.time;
         }
 
     },
@@ -348,7 +348,7 @@ Phaser.Animation.prototype = {
 
         if (this.isPlaying)
         {
-            this._timeNextFrame = this.game.time.now + this._frameDiff;
+            this._timeNextFrame = this.game.time.time + this._frameDiff;
         }
 
     },
@@ -365,14 +365,14 @@ Phaser.Animation.prototype = {
             return false;
         }
 
-        if (this.isPlaying && this.game.time.now >= this._timeNextFrame)
+        if (this.isPlaying && this.game.time.time >= this._timeNextFrame)
         {
             this._frameSkip = 1;
 
             //  Lagging?
-            this._frameDiff = this.game.time.now - this._timeNextFrame;
+            this._frameDiff = this.game.time.time - this._timeNextFrame;
 
-            this._timeLastFrame = this.game.time.now;
+            this._timeLastFrame = this.game.time.time;
 
             if (this._frameDiff > this.delay)
             {
@@ -382,7 +382,7 @@ Phaser.Animation.prototype = {
             }
 
             //  And what's left now?
-            this._timeNextFrame = this.game.time.now + (this.delay - this._frameDiff);
+            this._timeNextFrame = this.game.time.time + (this.delay - this._frameDiff);
 
             this._frameIndex += this._frameSkip;
 
@@ -393,7 +393,7 @@ Phaser.Animation.prototype = {
                     this._frameIndex %= this._frames.length;
                     this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
                     this.loopCount++;
-                    this._parent.events.onAnimationLoop.dispatch(this._parent, this);
+                    this._parent.events.onAnimationLoop$dispatch(this._parent, this);
                     this.onLoop.dispatch(this._parent, this);
                 }
                 else
@@ -578,7 +578,7 @@ Phaser.Animation.prototype = {
         this.isFinished = true;
         this.paused = false;
 
-        this._parent.events.onAnimationComplete.dispatch(this._parent, this);
+        this._parent.events.onAnimationComplete$dispatch(this._parent, this);
 
         this.onComplete.dispatch(this._parent, this);
 
@@ -612,14 +612,14 @@ Object.defineProperty(Phaser.Animation.prototype, 'paused', {
         if (value)
         {
             //  Paused
-            this._pauseStartTime = this.game.time.now;
+            this._pauseStartTime = this.game.time.time;
         }
         else
         {
             //  Un-paused
             if (this.isPlaying)
             {
-                this._timeNextFrame = this.game.time.now + this.delay;
+                this._timeNextFrame = this.game.time.time + this.delay;
             }
         }
 
@@ -741,7 +741,7 @@ Object.defineProperty(Phaser.Animation.prototype, 'enableUpdate', {
 * @param {number} stop - The number to count to. If your frames are named 'explosion_0001' to 'explosion_0034' the stop value is 34.
 * @param {string} [suffix=''] - The end of the filename. If the filename was 'explosion_0001-large' the prefix would be '-large'.
 * @param {number} [zeroPad=0] - The number of zeroes to pad the min and max values with. If your frames are named 'explosion_0001' to 'explosion_0034' then the zeroPad is 4.
-* @return {array} An array of framenames.
+* @return {string[]} An array of framenames.
 */
 Phaser.Animation.generateFrameNames = function (prefix, start, stop, suffix, zeroPad) {
 

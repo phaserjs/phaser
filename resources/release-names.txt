@@ -19,7 +19,7 @@ POI: Mountains of Mist, River Eldar, River Sharia, Shadow Coast
 Andor
 
 Capital: Caemlyn
-Cities: Arien, Aringill, Baerlon, Breen's Spring, Buryhill, Carysford, Comfrey, Cullen's Crossing, Damelien, Danabar, Deven Ride, Emond's Field, Forel Market, Four Kings, Harlon Bridge, Jornhill *, Kore Springs, Market Sheran, New Braem, Sheldyn, Taren Ferry, Watch Hill, Whitebridge *
+Cities: Arien, Aringill, Baerlon, Breen's Spring, Buryhill, Carysford, Comfrey, Cullen's Crossing, Damelien, Danabar *, Deven Ride, Emond's Field, Forel Market, Four Kings, Harlon Bridge, Jornhill *, Kore Springs, Market Sheran, New Braem, Sheldyn, Taren Ferry, Watch Hill, Whitebridge *
 POI: Mountains of Mist, Tower of Ghenjei, Two Rivers, Whitebridge *
 
 Arad Doman
@@ -42,7 +42,7 @@ Cities: Eianrod *, Jurene, Maerone, Morelle, Selean, Taien, Tremonsien
 Ghealdan *
 
 Capital: Jehannah
-Cities: Bethal, Boannda, Cosamelle, Fyall, Jarra, Samaha, Samara, Sidon, Tallan, Willar
+Cities: Bethal *, Boannda, Cosamelle, Fyall, Jarra, Samaha, Samara, Sidon, Tallan, Willar
 POI: Forest of Shadows, River Manetherendrelle, River Eldar, River Boern, Dhallin Forest
 
 Illian

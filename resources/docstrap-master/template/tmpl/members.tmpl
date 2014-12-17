@@ -1,0 +1,59 @@
+<?js
+var data = obj;
+var self = this;
+function mkSignature () {
+    var attribs = data.attribs;
+    attribs = attribs.replace('protected', 'internal');
+
+    return (attribs + data.name +
+        (data.signature ? data.signature : ''));
+}
+function hasComplexType (data) {
+    var names = data.type ? data.type.names : [];
+    if (!names.length) {
+        return false;
+    } else if (names.length > 1) {
+        return true;
+    } else {
+        // Simple is word-characters + {# . ~}
+        return !names[0].match(/^[\w\x23.~]*$/);
+    }
+}
+?>
+<dt>
+    <h4 class="name <?js= data.deprecated ? 'toc-deprecated' : ''?>"
+        id="<?js= id ?>"><?js= mkSignature(data) ?></h4>
+    
+    <?js if (data.summary) { ?>
+    <p class="summary"><?js= summary ?></p>
+    <?js } ?>
+</dt>
+<dd>
+    <?js if (data.deprecated) { ?>
+        <dt class="important deprecated-notice">
+            This method is <em>deprecated</em> and should not be used. It may be removed in the future.
+        </dt>
+    <?js } ?>
+
+    <?js if (data.description) { ?>
+    <div class="description">
+        <?js= data.description ?>
+    </div>
+    <?js } ?>
+    
+    <?js if (hasComplexType(data)) {?>
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                <?js= self.partial('type.tmpl', data.type.names) ?>
+            </li>
+        </ul>
+    <?js } ?>
+
+    <?js= this.partial('details.tmpl', data) ?>
+    
+    <?js if (data.examples && examples.length) { ?>
+        <h5>Example<?js= examples.length > 1? 's':'' ?></h5>
+        <?js= this.partial('examples.tmpl', examples) ?>
+    <?js } ?>
+</dd>

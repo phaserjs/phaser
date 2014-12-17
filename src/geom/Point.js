@@ -234,7 +234,7 @@ Phaser.Point.prototype = {
     *
     * @method Phaser.Point#copyTo
     * @param {any} dest - The object to copy to.
-    * @return {Object} The dest object.
+    * @return {object} The dest object.
     */
     copyTo: function (dest) {
 
@@ -452,6 +452,30 @@ Phaser.Point.prototype = {
     normalRightHand: function () {
 
         return this.setTo(this.y * -1, this.x);
+
+    },
+
+    /**
+    * Math.floor() both the x and y properties of this Point.
+    *
+    * @method Phaser.Point#floor
+    * @return {Phaser.Point} This Point object.
+    */
+    floor: function () {
+
+        return this.setTo(Math.floor(this.x), Math.floor(this.y));
+
+    },
+
+    /**
+    * Math.ceil() both the x and y properties of this Point.
+    *
+    * @method Phaser.Point#ceil
+    * @return {Phaser.Point} This Point object.
+    */
+    ceil: function () {
+
+        return this.setTo(Math.ceil(this.x), Math.ceil(this.y));
 
     },
 
@@ -684,21 +708,13 @@ Phaser.Point.rperp = function (a, out) {
 * @method Phaser.Point.distance
 * @param {object} a - The target object. Must have visible x and y properties that represent the center of the object.
 * @param {object} b - The target object. Must have visible x and y properties that represent the center of the object.
-* @param {boolean} [round] - Round the distance to the nearest integer (default false).
+* @param {boolean} [round=false] - Round the distance to the nearest integer.
 * @return {number} The distance between this Point object and the destination Point object.
 */
 Phaser.Point.distance = function (a, b, round) {
 
-    if (typeof round === "undefined") { round = false; }
-
-    if (round)
-    {
-        return Phaser.Math.distanceRounded(a.x, a.y, b.x, b.y);
-    }
-    else
-    {
-        return Phaser.Math.distance(a.x, a.y, b.x, b.y);
-    }
+    var distance = Phaser.Math.distance(a.x, a.y, b.x, b.y);
+    return round ? Math.round(distance) : distance;
 
 };
 
@@ -870,7 +886,7 @@ Phaser.Point.centroid = function (points, out) {
 *
 * @method Phaser.Point.parse
 * @static
-* @param {Object} obj - The object to parse.
+* @param {object} obj - The object to parse.
 * @param {string} [xProp='x'] - The property used to set the Point.x value.
 * @param {string} [yProp='y'] - The property used to set the Point.y value.
 * @return {Phaser.Point} The new Point object.

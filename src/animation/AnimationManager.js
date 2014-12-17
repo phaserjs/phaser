@@ -196,14 +196,6 @@ Phaser.AnimationManager.prototype = {
             }
         }
 
-        //  Create the signals the AnimationManager will emit
-        if (this.sprite.events.onAnimationStart === null)
-        {
-            this.sprite.events.onAnimationStart = new Phaser.Signal();
-            this.sprite.events.onAnimationComplete = new Phaser.Signal();
-            this.sprite.events.onAnimationLoop = new Phaser.Signal();
-        }
-
         this._outputFrames.length = 0;
 
         this._frameData.getFrameIndexes(frames, useNumericIndex, this._outputFrames);
@@ -536,7 +528,7 @@ Object.defineProperty(Phaser.AnimationManager.prototype, 'frame', {
 
     set: function (value) {
 
-        if (typeof value === 'number' && this._frameData.getFrame(value) !== null)
+        if (typeof value === 'number' && this._frameData && this._frameData.getFrame(value) !== null)
         {
             this.currentFrame = this._frameData.getFrame(value);
 

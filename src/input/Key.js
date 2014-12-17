@@ -20,10 +20,11 @@ Phaser.Key = function (game, keycode) {
     this.game = game;
 
     /**
-    * @property {boolean} enabled - An enabled key processes its update and dispatches events. You can toggle this at run-time to disable a key without deleting it.
-    * @default
+    * The enabled state of the key - see `enabled`.
+    * @property {boolean} _enabled
+    * @private
     */
-    this.enabled = true;
+    this._enabled = true;
 
     /**
     * @property {object} event - Stores the most recent DOM event.
@@ -32,13 +33,13 @@ Phaser.Key = function (game, keycode) {
     this.event = null;
 
     /**
-    * @property {boolean} isDown - The "down" state of the key.
+    * @property {boolean} isDown - The "down" state of the key. This will remain `true` for as long as the keyboard thinks this key is held down.
     * @default
     */
     this.isDown = false;
 
     /**
-    * @property {boolean} isUp - The "up" state of the key.
+    * @property {boolean} isUp - The "up" state of the key. This will remain `true` for as long as the keyboard thinks this key is up.
     * @default
     */
     this.isUp = true;
@@ -111,17 +112,35 @@ Phaser.Key = function (game, keycode) {
     */
     this.onUp = new Phaser.Signal();
 
+    /**
+     * @property {boolean} _justDown - True if the key has just been pressed (NOTE: requires to be reset, see justDown getter)
+     * @private
+     */
+    this._justDown = false;
+
+    /**
+     * @property {boolean} _justUp - True if the key has just been pressed (NOTE: requires to be reset, see justDown getter)
+     * @private
+     */
+    this._justUp = false;
+
 };
 
 Phaser.Key.prototype = {
 
+    /**
+    * Called automatically by Phaser.Keyboard.
+    * 
+    * @method Phaser.Key#update
+    * @protected
+    */
     update: function () {
 
-        if (!this.enabled) { return; }
+        if (!this._enabled) { return; }
 
         if (this.isDown)
         {
-            this.duration = this.game.time.now - this.timeDown;
+            this.duration = this.game.time.time - this.timeDown;
             this.repeats++;
 
             if (this.onHoldCallback)
@@ -134,16 +153,18 @@ Phaser.Key.prototype = {
 
     /**
     * Called automatically by Phaser.Keyboard.
+    * 
     * @method Phaser.Key#processKeyDown
-    * @param {KeyboardEvent} event.
+    * @param {KeyboardEvent} event - The DOM event that triggered this.
     * @protected
     */
     processKeyDown: function (event) {
 
-        if (!this.enabled) { return; }
+        if (!this._enabled) { return; }
 
         this.event = event;
 
+        // exit if this key down is from auto-repeat
         if (this.isDown)
         {
             return;
@@ -155,9 +176,13 @@ Phaser.Key.prototype = {
 
         this.isDown = true;
         this.isUp = false;
-        this.timeDown = this.game.time.now;
+        this.timeDown = this.game.time.time;
         this.duration = 0;
         this.repeats = 0;
+
+        // _justDown will remain true until it is read via the justDown Getter
+        // this enables the game to poll for past presses, or reset it at the start of a new game state
+        this._justDown = true;
 
         this.onDown.dispatch(this);
 
@@ -165,13 +190,14 @@ Phaser.Key.prototype = {
 
     /**
     * Called automatically by Phaser.Keyboard.
+    * 
     * @method Phaser.Key#processKeyUp
-    * @param {KeyboardEvent} event.
+    * @param {KeyboardEvent} event - The DOM event that triggered this.
     * @protected
     */
     processKeyUp: function (event) {
 
-        if (!this.enabled) { return; }
+        if (!this._enabled) { return; }
 
         this.event = event;
 
@@ -182,19 +208,25 @@ Phaser.Key.prototype = {
 
         this.isDown = false;
         this.isUp = true;
-        this.timeUp = this.game.time.now;
-        this.duration = this.game.time.now - this.timeDown;
+        this.timeUp = this.game.time.time;
+        this.duration = this.game.time.time - this.timeDown;
+
+        // _justUp will remain true until it is read via the justUp Getter
+        // this enables the game to poll for past presses, or reset it at the start of a new game state
+        this._justUp = true;
 
         this.onUp.dispatch(this);
 
     },
 
     /**
-    * Resets the state of this Key. This sets isDown to false, isUp to true, resets the time to be the current time and clears any callbacks
-    * associated with the onDown and onUp events and nulls the onHoldCallback if set.
+    * Resets the state of this Key.
+    *
+    * This sets isDown to false, isUp to true, resets the time to be the current time, and _enables_ the key.
+    * In addition, if it is a "hard reset", it clears clears any callbacks associated with the onDown and onUp events and removes the onHoldCallback.
     *
     * @method Phaser.Key#reset
-    * @param {boolean} [hard=true] - A soft reset won't reset any events or callbacks that are bound to this Key. A hard reset will.
+    * @param {boolean} [hard=true] - A soft reset won't reset any events or callbacks; a hard reset will.
     */
     reset: function (hard) {
 
@@ -202,9 +234,11 @@ Phaser.Key.prototype = {
 
         this.isDown = false;
         this.isUp = true;
-        this.timeUp = this.game.time.now;
+        this.timeUp = this.game.time.time;
         this.duration = 0;
-        this.enabled = true;
+        this._enabled = true; // .enabled causes reset(false)
+        this._justDown = false;
+        this._justUp = false;
 
         if (hard)
         {
@@ -217,12 +251,14 @@ Phaser.Key.prototype = {
     },
 
     /**
-    * Returns the "just pressed" state of the Key. Just pressed is considered true if the key was pressed down within the duration given.
-    * @method Phaser.Key#justPressed
-    * @param {number} [duration=50] - The duration below which the key is considered as being just pressed.
-    * @return {boolean} True if the key is just pressed otherwise false.
+    * Returns `true` if the Key was pressed down within the `duration` value given, or `false` if it either isn't down,
+    * or was pressed down longer ago than then given duration.
+    * 
+    * @method Phaser.Key#downDuration
+    * @param {number} [duration=50] - The duration within which the key is considered as being just pressed. Given in ms.
+    * @return {boolean} True if the key was pressed down within the given duration.
     */
-    justPressed: function (duration) {
+    downDuration: function (duration) {
 
         if (typeof duration === "undefined") { duration = 50; }
 
@@ -231,19 +267,98 @@ Phaser.Key.prototype = {
     },
 
     /**
-    * Returns the "just released" state of the Key. Just released is considered as being true if the key was released within the duration given.
-    * @method Phaser.Key#justReleased
-    * @param {number} [duration=50] - The duration below which the key is considered as being just released.
-    * @return {boolean} True if the key is just released otherwise false.
+    * Returns `true` if the Key was pressed down within the `duration` value given, or `false` if it either isn't down,
+    * or was pressed down longer ago than then given duration.
+    * 
+    * @method Phaser.Key#upDuration
+    * @param {number} [duration=50] - The duration within which the key is considered as being just released. Given in ms.
+    * @return {boolean} True if the key was released within the given duration.
     */
-    justReleased: function (duration) {
+    upDuration: function (duration) {
 
         if (typeof duration === "undefined") { duration = 50; }
 
-        return (!this.isDown && ((this.game.time.now - this.timeUp) < duration));
+        return (!this.isDown && ((this.game.time.time - this.timeUp) < duration));
 
     }
 
 };
+
+/**
+* The justDown value allows you to test if this Key has just been pressed down or not.
+* When you check this value it will return `true` if the Key is down, otherwise `false`.
+* You can only call justDown once per key press. It will only return `true` once, until the Key is released and pressed down again.
+* This allows you to use it in situations where you want to check if this key is down without using a Signal, such as in a core game loop.
+* 
+* @property {boolean} justDown
+* @memberof Phaser.Key
+* @default false
+*/
+Object.defineProperty(Phaser.Key.prototype, "justDown", {
+
+    get: function () {
+
+        var current = this._justDown;
+        this._justDown = false;
+        return current;
+
+    }
+
+});
+
+/**
+* The justUp value allows you to test if this Key has just been released or not.
+* When you check this value it will return `true` if the Key is up, otherwise `false`.
+* You can only call justUp once per key release. It will only return `true` once, until the Key is pressed down and released again.
+* This allows you to use it in situations where you want to check if this key is up without using a Signal, such as in a core game loop.
+* 
+* @property {boolean} justUp
+* @memberof Phaser.Key
+* @default false
+*/
+Object.defineProperty(Phaser.Key.prototype, "justUp", {
+
+    get: function () {
+
+        var current = this._justUp;
+        this._justUp = false;
+        return current;
+
+    }
+
+});
+
+/**
+* An enabled key processes its update and dispatches events.
+* A key can be disabled momentarily at runtime instead of deleting it.
+* 
+* @property {boolean} enabled
+* @memberof Phaser.Key
+* @default true
+*/
+Object.defineProperty(Phaser.Key.prototype, "enabled", {
+
+    get: function () {
+
+        return this._enabled;
+
+    },
+
+    set: function (value) {
+
+        value = !!value;
+
+        if (value !== this._enabled)
+        {
+            if (!value)
+            {
+                this.reset(false);
+            }
+
+            this._enabled = value;
+        }
+    }
+
+});
 
 Phaser.Key.prototype.constructor = Phaser.Key;

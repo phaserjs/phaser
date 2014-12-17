@@ -10,9 +10,13 @@
 * The audio file type and the encoding of those files are extremely important. Not all browsers can play all audio formats.
 * There is a good guide to what's supported here: http://hpr.dogphilosophy.net/test/
 *
+* If you are reloading a Phaser Game on a page that never properly refreshes (such as in an AngularJS project) then you will quickly run out
+* of AudioContext nodes. If this is the case create a global var called PhaserGlobal on the window object before creating the game. The active
+* AudioContext will then be saved to window.PhaserGlobal.audioContext when the Phaser game is destroyed, and re-used when it starts again.
+*
 * @class Phaser.SoundManager
 * @constructor
-* @param {Phaser.Game} game reference to the current game instance.
+* @param {Phaser.Game} game - Reference to the current game instance.
 */
 Phaser.SoundManager = function (game) {
 
@@ -151,24 +155,31 @@ Phaser.SoundManager.prototype = {
             }
         }
 
-        if (!!window['AudioContext'])
+        if (window['PhaserGlobal'] && window['PhaserGlobal'].audioContext)
         {
-            try {
-                this.context = new window['AudioContext']();
-            } catch (error) {
-                this.context = null;
-                this.usingWebAudio = false;
-                this.noAudio = true;
-            }
+            this.context = window['PhaserGlobal'].audioContext;
         }
-        else if (!!window['webkitAudioContext'])
+        else
         {
-            try {
-                this.context = new window['webkitAudioContext']();
-            } catch (error) {
-                this.context = null;
-                this.usingWebAudio = false;
-                this.noAudio = true;
+            if (!!window['AudioContext'])
+            {
+                try {
+                    this.context = new window['AudioContext']();
+                } catch (error) {
+                    this.context = null;
+                    this.usingWebAudio = false;
+                    this.noAudio = true;
+                }
+            }
+            else if (!!window['webkitAudioContext'])
+            {
+                try {
+                    this.context = new window['webkitAudioContext']();
+                } catch (error) {
+                    this.context = null;
+                    this.usingWebAudio = false;
+                    this.noAudio = true;
+                }
             }
         }
 
@@ -533,7 +544,14 @@ Phaser.SoundManager.prototype = {
         }
 
         this._sounds = [];
+
         this.onSoundDecode.dispose();
+
+        if (this.context && window['PhaserGlobal'])
+        {
+            //  Store this in the PhaserGlobal window var, if set, to allow for re-use if the game is created again without the page refreshing
+            window['PhaserGlobal'].audioContext = this.context;
+        }
 
     }
 
