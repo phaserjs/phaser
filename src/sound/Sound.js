@@ -456,9 +456,9 @@ Phaser.Sound.prototype = {
             return this;
         }
 
-        if (this.isPlaying && !this.allowMultiple && (this.override || forceRestart))
+        if (this._sound && this.isPlaying && !this.allowMultiple && (this.override || forceRestart))
         {
-            if (this.usingWebAudio)
+            if (this.usingWebAudio && this._sound.readyState > 0)
             {
                 if (typeof this._sound.stop === 'undefined')
                 {
@@ -466,7 +466,11 @@ Phaser.Sound.prototype = {
                 }
                 else
                 {
-                    this._sound.stop(0);
+                    try {
+                        this._sound.stop(0);
+                    }
+                    catch (e) {
+                    }
                 }
             }
             else if (this.usingAudioTag)
