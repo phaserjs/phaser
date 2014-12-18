@@ -105,6 +105,7 @@ Android browser does not support Full Screen.
 * The RandomDataGenerator could be seeded with an array of values. However if the array contained a zero it would stop seeding from that point (thanks @jpcloud @pnstickne #1456)
 * Added extra checks to Sound.play to stop it throwing DOM Exception Error 11 if the `sound.readyState` wasn't set or the sound was invalid. Also wrapped `stop()`` call in a `try catch`.
 * Time.reset would incorrectly reset the `_started` property, now maps it to `Time.time` (thanks @XekeDeath #1467)
+* Wrapped `play()`` calls in a `try catch` when not using webAudio, IE on Windows Phone throws randomly `Unexpected call or property access`
 
 ### Pixi.js 2.2.0 Updates
 
