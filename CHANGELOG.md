@@ -137,10 +137,10 @@ required on mobile browsers.
 * AudioSprite - removed an unnecessary if-statement (thanks @DaanHaaz #1312)
 * ArcadePhysics.skipQuadTree is now set to `true` by default. A QuadTree is a wonderful thing if the objects in your game are well spaced out. But in tightly packed games, especially those with tilemaps or single-screen games, they are a considerable performance drain and eat up CPU. We've taken the decision to disable the Arcade Physics QuadTree by default. It's all still in there and can be re-enabled via `game.physics.arcade.skipQuadTree = false`, but please only do so if you're sure your game benefits from this.
 * Phaser.DOM now houses new DOM functions. Some have been moved over from ScaleManager as appropriate.
-* Key.justPressed has bee renamed to Key.downDuration which is a much clearer name for what the method actually does. See Key.justDown for a nice clean alternative.
-* Key.justReleased has bee renamed to Key.upDuration which is a much clearer name for what the method actually does. See Key.justUp for a nice clean alternative.
-* Keyboard.justPressed has bee renamed to Keyboard.downDuration which is a much clearer name for what the method actually does.
-* Keyboard.justReleased has bee renamed to Keyboard.upDuration which is a much clearer name for what the method actually does.
+* Key.justPressed has been renamed to Key.downDuration which is a much clearer name for what the method actually does. See Key.justDown for a nice clean alternative.
+* Key.justReleased has been renamed to Key.upDuration which is a much clearer name for what the method actually does. See Key.justUp for a nice clean alternative.
+* Keyboard.justPressed has been renamed to Keyboard.downDuration which is a much clearer name for what the method actually does.
+* Keyboard.justReleased has been renamed to Keyboard.upDuration which is a much clearer name for what the method actually does.
 * Keyboard.downDuration, Keyboard.upDuration and Keyboard.isDown now all return `null` if the Key wasn't found in the local keys array.
 * The Phaser.Device class has been made into a singleton and removed it's dependency on Phaser.Game (thanks @pnstickne #1328)
 * ArrayList has been renamed to `ArraySet` (as it's actually a data set implementation) and moved from the `core` folder to the `utils` folder (thanks @pnstickne)
