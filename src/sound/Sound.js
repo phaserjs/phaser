@@ -458,7 +458,7 @@ Phaser.Sound.prototype = {
 
         if (this._sound && this.isPlaying && !this.allowMultiple && (this.override || forceRestart))
         {
-            if (this.usingWebAudio && this._sound.readyState > 0)
+            if (this.usingWebAudio)
             {
                 if (typeof this._sound.stop === 'undefined')
                 {
