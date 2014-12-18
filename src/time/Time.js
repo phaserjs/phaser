@@ -506,7 +506,7 @@ Phaser.Time.prototype = {
     */
     reset: function () {
 
-        this._started = this.now;
+        this._started = this.time;
         this.removeAll();
 
     }
