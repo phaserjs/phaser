@@ -278,6 +278,8 @@ Phaser.Utils.Debug.prototype = {
         }
 
         this.line('View x: ' + camera.view.x + ' Y: ' + camera.view.y + ' w: ' + camera.view.width + ' h: ' + camera.view.height);
+        // this.line('Screen View x: ' + camera.screenView.x + ' Y: ' + camera.screenView.y + ' w: ' + camera.screenView.width + ' h: ' + camera.screenView.height);
+        this.line('Total in view: ' + camera.totalInView);
         this.stop();
 
     },
@@ -396,7 +398,7 @@ Phaser.Utils.Debug.prototype = {
         this.start(x, y, color, 150);
 
         this.line('Key:', key.keyCode, 'isDown:', key.isDown);
-        this.line('justPressed:', key.justPressed(), 'justReleased:', key.justReleased());
+        this.line('justDown:', key.justDown, 'justUp:', key.justUp);
         this.line('Time Down:', key.timeDown.toFixed(0), 'duration:', key.duration.toFixed(0));
 
         this.stop();
@@ -474,6 +476,7 @@ Phaser.Utils.Debug.prototype = {
         this.line('x: ' + sprite.x.toFixed(1) + ' y: ' + sprite.y.toFixed(1));
         this.line('angle: ' + sprite.angle.toFixed(1) + ' rotation: ' + sprite.rotation.toFixed(1));
         this.line('visible: ' + sprite.visible + ' in camera: ' + sprite.inCamera);
+        this.line('bounds x: ' + sprite._bounds.x.toFixed(1) + ' y: ' + sprite._bounds.y.toFixed(1) + ' w: ' + sprite._bounds.width.toFixed(1) + ' h: ' + sprite._bounds.height.toFixed(1));
 
         this.stop();
 

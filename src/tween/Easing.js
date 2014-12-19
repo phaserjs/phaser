@@ -563,3 +563,8 @@ Phaser.Easing = {
 };
 
 Phaser.Easing.Default = Phaser.Easing.Linear.None;
+Phaser.Easing.Power0 = Phaser.Easing.Linear.None;
+Phaser.Easing.Power1 = Phaser.Easing.Quadratic.Out;
+Phaser.Easing.Power2 = Phaser.Easing.Cubic.Out;
+Phaser.Easing.Power3 = Phaser.Easing.Quartic.Out;
+Phaser.Easing.Power4 = Phaser.Easing.Quintic.Out;

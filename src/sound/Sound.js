@@ -422,7 +422,7 @@ Phaser.Sound.prototype = {
                     this.pannerNode.setVelocity(0,0,0);
                 }
             }
-            this.currentTime = this.game.time.now - this.startTime;
+            this.currentTime = this.game.time.time - this.startTime;
 
             if (this.currentTime >= this.durationMS)
             {
@@ -436,7 +436,7 @@ Phaser.Sound.prototype = {
                         if (this.currentMarker === '')
                         {
                             this.currentTime = 0;
-                            this.startTime = this.game.time.now;
+                            this.startTime = this.game.time.time;
                         }
                         else
                         {
@@ -486,7 +486,7 @@ Phaser.Sound.prototype = {
             return this;
         }
 
-        if (this.isPlaying && !this.allowMultiple && (this.override || forceRestart))
+        if (this._sound && this.isPlaying && !this.allowMultiple && (this.override || forceRestart))
         {
             if (this.usingWebAudio)
             {
@@ -496,7 +496,11 @@ Phaser.Sound.prototype = {
                 }
                 else
                 {
-                    this._sound.stop(0);
+                    try {
+                        this._sound.stop(0);
+                    }
+                    catch (e) {
+                    }
                 }
             }
             else if (this.usingAudioTag)
@@ -628,7 +632,7 @@ Phaser.Sound.prototype = {
                 }
 
                 this.isPlaying = true;
-                this.startTime = this.game.time.now;
+                this.startTime = this.game.time.time;
                 this.currentTime = 0;
                 this.stopTime = this.startTime + this.durationMS;
                 this.onPlay.dispatch(this);
@@ -677,7 +681,7 @@ Phaser.Sound.prototype = {
                     }
 
                     this.isPlaying = true;
-                    this.startTime = this.game.time.now;
+                    this.startTime = this.game.time.time;
                     this.currentTime = 0;
                     this.stopTime = this.startTime + this.durationMS;
                     this.onPlay.dispatch(this);
@@ -724,7 +728,7 @@ Phaser.Sound.prototype = {
         {
             this.paused = true;
             this.pausedPosition = this.currentTime;
-            this.pausedTime = this.game.time.now;
+            this.pausedTime = this.game.time.time;
             this.onPause.dispatch(this);
             this.stop();
         }
@@ -778,7 +782,7 @@ Phaser.Sound.prototype = {
 
             this.isPlaying = true;
             this.paused = false;
-            this.startTime += (this.game.time.now - this.pausedTime);
+            this.startTime += (this.game.time.time - this.pausedTime);
             this.onResume.dispatch(this);
         }
 

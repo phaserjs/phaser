@@ -66,6 +66,9 @@ Phaser.Sprite = function (game, x, y, key, frame) {
 
     PIXI.Sprite.call(this, PIXI.TextureCache['__default']);
 
+    this.transformCallback = this.checkTransform;
+    this.transformCallbackContext = this;
+
     this.position.set(x, y);
 
     /**
@@ -113,9 +116,12 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     this.health = 1;
 
     /**
-    * If you would like the Sprite to have a lifespan once 'born' you can set this to a positive value. Handy for particles, bullets, etc.
-    * The lifespan is decremented by game.time.elapsed each update, once it reaches zero the kill() function is called.
-    * @property {number} lifespan - The lifespan of the Sprite (in ms) before it will be killed.
+    * To given a Sprite a lifespan, in milliseconds, once 'born' you can set this to a positive value. Handy for particles, bullets, etc.
+    *
+    * The lifespan is decremented by `game.time.physicsElapsed` (converted to milliseconds) each logic update,
+    * and {@link Phaser.Sprite.kill kill} is called once the lifespan reaches 0.
+    *
+    * @property {number} lifespan
     * @default
     */
     this.lifespan = 0;
@@ -151,6 +157,16 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     * @default
     */
     this.cropRect = null;
+
+    /**
+    * @property {Phaser.Point} scaleMin - Set the minimum scale this Sprite will scale down to. Prevents a parent from scaling this Sprite lower than the given value. Set to `null` to remove.
+    */
+    this.scaleMin = null;
+
+    /**
+    * @property {Phaser.Point} scaleMax - Set the maximum scale this Sprite will scale up to. Prevents a parent from scaling this Sprite higher than the given value. Set to `null` to remove.
+    */
+    this.scaleMax = null;
 
     /**
     * A small internal cache:
@@ -235,7 +251,7 @@ Phaser.Sprite.prototype.preUpdate = function() {
 
     if (this.lifespan > 0)
     {
-        this.lifespan -= this.game.time.elapsed;
+        this.lifespan -= this.game.time.physicsElapsedMS;
 
         if (this.lifespan <= 0)
         {
@@ -248,32 +264,43 @@ Phaser.Sprite.prototype.preUpdate = function() {
     if (this.autoCull || this.checkWorldBounds)
     {
         this._bounds.copyFrom(this.getBounds());
-    }
 
-    if (this.autoCull)
-    {
-        //  Won't get rendered but will still get its transform updated
-        this.renderable = this.game.world.camera.screenView.intersects(this._bounds);
-    }
+        this._bounds.x += this.game.camera.view.x;
+        this._bounds.y += this.game.camera.view.y;
 
-    if (this.checkWorldBounds)
-    {
-        //  The Sprite is already out of the world bounds, so let's check to see if it has come back again
-        if (this._cache[5] === 1 && this.game.world.bounds.intersects(this._bounds))
+        if (this.autoCull)
         {
-            this._cache[5] = 0;
-            this.events.onEnterBounds.dispatch(this);
-        }
-        else if (this._cache[5] === 0 && !this.game.world.bounds.intersects(this._bounds))
-        {
-            //  The Sprite WAS in the screen, but has now left.
-            this._cache[5] = 1;
-            this.events.onOutOfBounds.dispatch(this);
-
-            if (this.outOfBoundsKill)
+            //  Won't get rendered but will still get its transform updated
+            if (this.game.world.camera.view.intersects(this._bounds))
             {
-                this.kill();
-                return false;
+                this.renderable = true;
+                this.game.world.camera.totalInView++;
+            }
+            else
+            {
+                this.renderable = false;
+            }
+        }
+
+        if (this.checkWorldBounds)
+        {
+            //  The Sprite is already out of the world bounds, so let's check to see if it has come back again
+            if (this._cache[5] === 1 && this.game.world.bounds.intersects(this._bounds))
+            {
+                this._cache[5] = 0;
+                this.events.onEnterBounds$dispatch(this);
+            }
+            else if (this._cache[5] === 0 && !this.game.world.bounds.intersects(this._bounds))
+            {
+                //  The Sprite WAS in the screen, but has now left.
+                this._cache[5] = 1;
+                this.events.onOutOfBounds$dispatch(this);
+
+                if (this.outOfBoundsKill)
+                {
+                    this.kill();
+                    return false;
+                }
             }
         }
     }
@@ -599,7 +626,7 @@ Phaser.Sprite.prototype.revive = function(health) {
 
     if (this.events)
     {
-        this.events.onRevived.dispatch(this);
+        this.events.onRevived$dispatch(this);
     }
 
     return this;
@@ -624,7 +651,7 @@ Phaser.Sprite.prototype.kill = function() {
 
     if (this.events)
     {
-        this.events.onKilled.dispatch(this);
+        this.events.onKilled$dispatch(this);
     }
 
     return this;
@@ -649,7 +676,7 @@ Phaser.Sprite.prototype.destroy = function(destroyChildren) {
 
     if (this.events)
     {
-        this.events.onDestroy.dispatch(this);
+        this.events.onDestroy$dispatch(this);
     }
 
     if (this.parent)
@@ -843,6 +870,113 @@ Phaser.Sprite.prototype.overlap = function (displayObject) {
 };
 
 /**
+ * Adjust scaling limits, if set, to this Sprite.
+ *
+ * @method Phaser.Sprite#checkTransform
+ * @private
+ * @param {PIXI.Matrix} wt - The updated worldTransform matrix.
+ */
+Phaser.Sprite.prototype.checkTransform = function (wt) {
+
+    if (this.scaleMin)
+    {
+        if (wt.a < this.scaleMin.x)
+        {
+            wt.a = this.scaleMin.x;
+        }
+
+        if (wt.d < this.scaleMin.y)
+        {
+            wt.d = this.scaleMin.y;
+        }
+    }
+
+    if (this.scaleMax)
+    {
+        if (wt.a > this.scaleMax.x)
+        {
+            wt.a = this.scaleMax.x;
+        }
+
+        if (wt.d > this.scaleMax.y)
+        {
+            wt.d = this.scaleMax.y;
+        }
+    }
+
+};
+
+/**
+ * Sets the scaleMin and scaleMax values. These values are used to limit how far this Sprite will scale based on its parent.
+ * For example if this Sprite has a minScale value of 1 and its parent has a scale value of 0.5, the 0.5 will be ignored and the scale value of 1 will be used.
+ * By using these values you can carefully control how Sprites deal with responsive scaling.
+ * 
+ * If only one parameter is given then that value will be used for both scaleMin and scaleMax:
+ * setScaleMinMax(1) = scaleMin.x, scaleMin.y, scaleMax.x and scaleMax.y all = 1
+ *
+ * If only two parameters are given the first is set as scaleMin.x and y and the second as scaleMax.x and y:
+ * setScaleMinMax(0.5, 2) = scaleMin.x and y = 0.5 and scaleMax.x and y = 2
+ *
+ * If you wish to set scaleMin with different values for x and y then either modify Sprite.scaleMin directly, or pass `null` for the maxX and maxY parameters.
+ * 
+ * Call setScaleMinMax(null) to clear both the scaleMin and scaleMax values.
+ *
+ * @method Phaser.Sprite#setScaleMinMax
+ * @memberof Phaser.Sprite
+ * @param {number|null} minX - The minimum horizontal scale value this Sprite can scale down to.
+ * @param {number|null} minY - The minimum vertical scale value this Sprite can scale down to.
+ * @param {number|null} maxX - The maximum horizontal scale value this Sprite can scale up to.
+ * @param {number|null} maxY - The maximum vertical scale value this Sprite can scale up to.
+ */
+Phaser.Sprite.prototype.setScaleMinMax = function (minX, minY, maxX, maxY) {
+
+    if (typeof minY === 'undefined')
+    {
+        //  1 parameter, set all to it
+        minY = maxX = maxY = minX;
+    }
+    else if (typeof maxX === 'undefined')
+    {
+        //  2 parameters, the first is min, the second max
+        maxX = maxY = minY;
+        minY = minX;
+    }
+
+    if (minX === null)
+    {
+        this.scaleMin = null;
+    }
+    else
+    {
+        if (this.scaleMin)
+        {
+            this.scaleMin.set(minX, minY);
+        }
+        else
+        {
+            this.scaleMin = new Phaser.Point(minX, minY);
+        }
+    }
+
+    if (maxX === null)
+    {
+        this.scaleMax = null;
+    }
+    else
+    {
+        if (this.scaleMax)
+        {
+            this.scaleMax.set(maxX, maxY);
+        }
+        else
+        {
+            this.scaleMax = new Phaser.Point(maxX, maxY);
+        }
+    }
+
+};
+
+/**
 * Indicates the rotation of the Sprite, in degrees, from its original orientation. Values from 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation.
 * Values outside this range are added to or subtracted from 360 to obtain a value within the range. For example, the statement player.angle = 450 is the same as player.angle = 90.
 * If you wish to work in radians instead of degrees use the property Sprite.rotation instead. Working in radians is also a little faster as it doesn't have to convert the angle.
@@ -945,7 +1079,14 @@ Object.defineProperty(Phaser.Sprite.prototype, "inCamera", {
 
     get: function() {
 
-        return this.game.world.camera.screenView.intersects(this.getBounds());
+        if (!this.autoCull && !this.checkWorldBounds)
+        {
+            this._bounds.copyFrom(this.getBounds());
+            this._bounds.x += this.game.camera.view.x;
+            this._bounds.y += this.game.camera.view.y;
+        }
+
+        return this.game.world.camera.view.intersects(this._bounds);
 
     }
 

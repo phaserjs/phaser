@@ -22,7 +22,7 @@ Phaser.StateManager = function (game, pendingState) {
     this.game = game;
 
     /**
-    * @property {Object} states - The object containing Phaser.States.
+    * @property {object} states - The object containing Phaser.States.
     */
     this.states = {};
 
@@ -56,7 +56,7 @@ Phaser.StateManager = function (game, pendingState) {
     this._created = false;
 
     /**
-    * @property {array} _args - Temporary container when you pass vars from one State to another.
+    * @property {any[]} _args - Temporary container when you pass vars from one State to another.
     * @private
     */
     this._args = [];
@@ -97,7 +97,7 @@ Phaser.StateManager = function (game, pendingState) {
     this.onResizeCallback = null;
 
     /**
-    * @property {function} onPreRenderCallback - This is called before the state is rendered and before the stage is cleared.
+    * @property {function} onPreRenderCallback - This is called before the state is rendered and before the stage is cleared but after all game objects have had their final properties adjusted.
     */
     this.onPreRenderCallback = null;
 
@@ -225,6 +225,7 @@ Phaser.StateManager.prototype = {
             this.onLoadUpdateCallback = null;
             this.onCreateCallback = null;
             this.onUpdateCallback = null;
+            this.onPreRenderCallback = null;
             this.onRenderCallback = null;
             this.onResizeCallback = null;
             this.onPausedCallback = null;
@@ -427,10 +428,10 @@ Phaser.StateManager.prototype = {
         {
             var valid = false;
 
-            if (this.states[key]['preload']) { valid = true; }
-            if (this.states[key]['create']) { valid = true; }
-            if (this.states[key]['update']) { valid = true; }
-            if (this.states[key]['render']) { valid = true; }
+            if (this.states[key]['preload'] || this.states[key]['create'] || this.states[key]['update'] || this.states[key]['render'])
+            {
+                valid = true;
+            }
 
             if (valid === false)
             {
@@ -661,12 +662,13 @@ Phaser.StateManager.prototype = {
     /**
     * @method Phaser.StateManager#preRender
     * @protected
+    * @param {number} elapsedTime - The time elapsed since the last update.
     */
-    preRender: function () {
+    preRender: function (elapsedTime) {
 
         if (this.onPreRenderCallback)
         {
-            this.onPreRenderCallback.call(this.callbackContext, this.game);
+            this.onPreRenderCallback.call(this.callbackContext, this.game, elapsedTime);
         }
 
     },

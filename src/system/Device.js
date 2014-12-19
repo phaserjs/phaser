@@ -5,22 +5,48 @@
 */
 
 /**
-* Detects device support capabilities. Using some elements from System.js by MrDoob and Modernizr
+* @classdesc
+* Detects device support capabilities and is responsible for device intialization - see {@link Phaser.Device.whenReady whenReady}.
 *
-* @class Phaser.Device
-* @constructor
+* This class represents a singleton object that can be accessed directly as `game.device`
+* (or, as a fallback, `Phaser.Device` when a game instance is not available) without the need to instantiate it.
+*
+* Unless otherwise noted the device capabilities are only guaranteed after initialization. Initialization
+* occurs automatically and is guaranteed complete before {@link Phaser.Game} begins its "boot" phase.
+* Feature detection can be modified in the {@link Phaser.Device.onInitialized onInitialized} signal.
+*
+* When checking features using the exposed properties only the *truth-iness* of the value should be relied upon
+* unless the documentation states otherwise: properties may return `false`, `''`, `null`, or even `undefined`
+* when indicating the lack of a feature.
+*
+* Uses elements from System.js by MrDoob and Modernizr
+*
+* @description
+* It is not possible to instantiate the Device class manually.
+*
+* @class
+* @protected
 */
-Phaser.Device = function (game) {
+Phaser.Device = function () {
 
     /**
-    * @property {Phaser.Game} game - A reference to the currently running game.
+    * The time the device became ready.
+    * @property {integer} deviceReadyAt
+    * @protected
     */
-    this.game = game;
-
-    //  Operating System
+    this.deviceReadyAt = 0;
 
     /**
-    * @property {boolean} desktop - Is running desktop?
+    * The time as which initialization has completed.
+    * @property {boolean} initialized
+    * @protected
+    */
+    this.initialized = false;
+
+    //  Browser / Host / Operating System
+
+    /**
+    * @property {boolean} desktop - Is running on a desktop?
     * @default
     */
     this.desktop = false;
@@ -148,18 +174,6 @@ Phaser.Device = function (game) {
     this.worker = false;
 
     /**
-    * @property {boolean} touch - Is touch available?
-    * @default
-    */
-    this.touch = false;
-
-    /**
-    * @property {boolean} mspointer - Is mspointer available?
-    * @default
-    */
-    this.mspointer = false;
-
-    /**
     * @property {boolean} css3D - Is css3D available?
     * @default
     */
@@ -194,6 +208,27 @@ Phaser.Device = function (game) {
     * @default
     */
     this.quirksMode = false;
+
+    //  Input
+
+    /**
+    * @property {boolean} touch - Is touch available?
+    * @default
+    */
+    this.touch = false;
+
+    /**
+    * @property {boolean} mspointer - Is mspointer available?
+    * @default
+    */
+    this.mspointer = false;
+
+    /**
+    * @property {string|null} wheelType - The newest type of Wheel/Scroll event supported: 'wheel', 'mousewheel', 'DOMMouseScroll'
+    * @default
+    * @protected
+    */
+    this.wheelEvent = null;
 
     //  Browser
 
@@ -240,7 +275,7 @@ Phaser.Device = function (game) {
     this.trident = false;
 
     /**
-    * @property {number} tridentVersion - If running in Internet Explorer 11 this will contain the major version number. See http://msdn.microsoft.com/en-us/library/ie/ms537503(v=vs.85).aspx
+    * @property {number} tridentVersion - If running in Internet Explorer 11 this will contain the major version number. See {@link http://msdn.microsoft.com/en-us/library/ie/ms537503(v=vs.85).aspx}
     * @default
     */
     this.tridentVersion = 0;
@@ -365,6 +400,12 @@ Phaser.Device = function (game) {
     this.littleEndian = false;
 
     /**
+    * @property {boolean} LITTLE_ENDIAN - Same value as `littleEndian`.
+    * @default
+    */
+    this.LITTLE_ENDIAN = false;
+
+    /**
     * @property {boolean} support32bit - Does the device context support 32bit pixel manipulation using array buffer views?
     * @default
     */
@@ -394,136 +435,277 @@ Phaser.Device = function (game) {
     */
     this.fullscreenKeyboard = false;
 
-    //  Run the checks
-    this._checkOS();
-    this._checkAudio();
-    this._checkBrowser();
-    this._checkCSS3D();
-    this._checkDevice();
-    this._checkFeatures();
+};
+
+// Device is really a singleton/static entity; instantiate it
+// and add new methods directly sans-prototype.
+Phaser.Device = new Phaser.Device();
+
+/**
+* This signal is dispatched after device initialization occurs but before any of the ready
+* callbacks (see {@link Phaser.Device.whenReady whenReady}) have been invoked.
+*
+* Local "patching" for a particular device can/should be done in this event.
+*
+* _Note_: This signal is removed after the device has been readied; if a handler has not been
+* added _before_ `new Phaser.Game(..)` it is probably too late.
+*
+* @type {?Phaser.Signal}
+* @static
+*/
+Phaser.Device.onInitialized = new Phaser.Signal();
+
+/**
+* Add a device-ready handler and ensure the device ready sequence is started.
+*
+* Phaser.Device will _not_ activate or initialize until at least one `whenReady` handler is added,
+* which is normally done automatically be calling `new Phaser.Game(..)`.
+*
+* The handler is invoked when the device is considered "ready", which may be immediately
+* if the device is already "ready". See {@link Phaser.Device#deviceReadyAt deviceReadyAt}.
+*
+* @method
+* @param {function} handler - Callback to invoke when the device is ready. It is invoked with the given context the Phaser.Device object is supplied as the first argument.
+* @param {object} [context] - Context in which to invoke the handler
+* @param {boolean} [nonPrimer=false] - If true the device ready check will not be started.
+*/
+Phaser.Device.whenReady = function (callback, context, nonPrimer) {
+
+    var readyCheck = this._readyCheck;
+
+    if (this.deviceReadyAt || !readyCheck)
+    {
+        callback.call(context, this);
+    }
+    else if (readyCheck._monitor || nonPrimer)
+    {
+        readyCheck._queue = readyCheck._queue || [];
+        readyCheck._queue.push([callback, context]);
+    }
+    else
+    {
+        readyCheck._monitor = readyCheck.bind(this);
+        readyCheck._queue = readyCheck._queue || [];
+        readyCheck._queue.push([callback, context]);
+        
+        var cordova = typeof window.cordova !== 'undefined';
+        var cocoonJS = navigator['isCocoonJS'];
+
+        if (document.readyState === 'complete' || document.readyState === 'interactive')
+        {
+            // Why is there an additional timeout here?
+            window.setTimeout(readyCheck._monitor, 0);
+        }
+        else if (cordova && !cocoonJS)
+        {
+            // Ref. http://docs.phonegap.com/en/3.5.0/cordova_events_events.md.html#deviceready
+            //  Cordova, but NOT Cocoon?
+            document.addEventListener('deviceready', readyCheck._monitor, false);
+        }
+        else
+        {
+            document.addEventListener('DOMContentLoaded', readyCheck._monitor, false);
+            window.addEventListener('load', readyCheck._monitor, false);
+        }
+    }
 
 };
 
-Phaser.Device.LITTLE_ENDIAN = false;
+/**
+* Internal method used for checking when the device is ready.
+* This function is removed from Phaser.Device when the device becomes ready.
+*
+* @method
+* @private
+*/
+Phaser.Device._readyCheck = function () {
 
-Phaser.Device.prototype = {
+    var readyCheck = this._readyCheck;
+
+    if (!document.body)
+    {
+        window.setTimeout(readyCheck._monitor, 20);
+    }
+    else if (!this.deviceReadyAt)
+    {
+        this.deviceReadyAt = Date.now();
+
+        document.removeEventListener('deviceready', readyCheck._monitor);
+        document.removeEventListener('DOMContentLoaded', readyCheck._monitor);
+        window.removeEventListener('load', readyCheck._monitor);
+
+        this._initialize();
+        this.initialized = true;
+
+        this.onInitialized.dispatch(this);
+
+        var item;
+        while ((item = readyCheck._queue.shift()))
+        {
+            var callback = item[0];
+            var context = item[1];
+            callback.call(context, this);
+        }
+
+        // Remove no longer useful methods and properties.
+        this._readyCheck = null;
+        this._initialize = null;
+        this.onInitialized = null;
+    }
+
+};
+
+/**
+* Internal method to initialize the capability checks.
+* This function is removed from Phaser.Device once the device is initialized.
+*
+* @method
+* @private
+*/
+Phaser.Device._initialize = function () {
+
+    var device = this;
 
     /**
     * Check which OS is game running on.
-    * @method Phaser.Device#_checkOS
-    * @private
     */
-    _checkOS: function () {
+    function _checkOS () {
 
         var ua = navigator.userAgent;
 
         if (/Playstation Vita/.test(ua))
         {
-            this.vita = true;
+            device.vita = true;
         }
         else if (/Kindle/.test(ua) || /\bKF[A-Z][A-Z]+/.test(ua) || /Silk.*Mobile Safari/.test(ua))
         {
-            this.kindle = true;
+            device.kindle = true;
             // This will NOT detect early generations of Kindle Fire, I think there is no reliable way...
             // E.g. "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_3; en-us; Silk/1.1.0-80) AppleWebKit/533.16 (KHTML, like Gecko) Version/5.0 Safari/533.16 Silk-Accelerated=true"
         }
         else if (/Android/.test(ua))
         {
-            this.android = true;
+            device.android = true;
         }
         else if (/CrOS/.test(ua))
         {
-            this.chromeOS = true;
+            device.chromeOS = true;
         }
         else if (/iP[ao]d|iPhone/i.test(ua))
         {
-            this.iOS = true;
+            device.iOS = true;
         }
         else if (/Linux/.test(ua))
         {
-            this.linux = true;
+            device.linux = true;
         }
         else if (/Mac OS/.test(ua))
         {
-            this.macOS = true;
+            device.macOS = true;
         }
         else if (/Windows/.test(ua))
         {
-            this.windows = true;
+            device.windows = true;
 
             if (/Windows Phone/i.test(ua))
             {
-                this.windowsPhone = true;
+                device.windowsPhone = true;
             }
         }
 
-        if (this.windows || this.macOS || (this.linux && this.silk === false) || this.chromeOS)
+        var silk = /Silk/.test(ua); // detected in browsers
+
+        if (device.windows || device.macOS || (device.linux && !silk) || device.chromeOS)
         {
-            this.desktop = true;
+            device.desktop = true;
         }
 
         //  Windows Phone / Table reset
-        if (this.windowsPhone || ((/Windows NT/i.test(ua)) && (/Touch/i.test(ua))))
+        if (device.windowsPhone || ((/Windows NT/i.test(ua)) && (/Touch/i.test(ua))))
         {
-            this.desktop = false;
+            device.desktop = false;
         }
 
-    },
+    }
 
     /**
     * Check HTML5 features of the host environment.
-    * @method Phaser.Device#_checkFeatures
-    * @private
     */
-    _checkFeatures: function () {
+    function _checkFeatures () {
 
-        this.canvas = !!window['CanvasRenderingContext2D'] || this.cocoonJS;
+        device.canvas = !!window['CanvasRenderingContext2D'] || device.cocoonJS;
 
         try {
-            this.localStorage = !!localStorage.getItem;
+            device.localStorage = !!localStorage.getItem;
         } catch (error) {
-            this.localStorage = false;
+            device.localStorage = false;
         }
 
-        this.file = !!window['File'] && !!window['FileReader'] && !!window['FileList'] && !!window['Blob'];
-        this.fileSystem = !!window['requestFileSystem'];
-        this.webGL = ( function () { try { var canvas = document.createElement( 'canvas' ); /*Force screencanvas to false*/ canvas.screencanvas = false; return !! window.WebGLRenderingContext && ( canvas.getContext( 'webgl' ) || canvas.getContext( 'experimental-webgl' ) ); } catch( e ) { return false; } } )();
+        device.file = !!window['File'] && !!window['FileReader'] && !!window['FileList'] && !!window['Blob'];
+        device.fileSystem = !!window['requestFileSystem'];
+        device.webGL = ( function () { try { var canvas = document.createElement( 'canvas' ); /*Force screencanvas to false*/ canvas.screencanvas = false; return !! window.WebGLRenderingContext && ( canvas.getContext( 'webgl' ) || canvas.getContext( 'experimental-webgl' ) ); } catch( e ) { return false; } } )();
 
-        if (this.webGL === null || this.webGL === false)
+        if (device.webGL === null || device.webGL === false)
         {
-            this.webGL = false;
+            device.webGL = false;
         }
         else
         {
-            this.webGL = true;
+            device.webGL = true;
         }
 
-        this.worker = !!window['Worker'];
+        device.worker = !!window['Worker'];
 
-        if ('ontouchstart' in document.documentElement || (window.navigator.maxTouchPoints && window.navigator.maxTouchPoints > 1))
+        device.pointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
+
+        device.quirksMode = (document.compatMode === 'CSS1Compat') ? false : true;
+
+        device.getUserMedia = !!(navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
+
+    }
+
+    /**
+    * Checks/configures various input.
+    */
+    function _checkInput () {
+
+        if ('ontouchstart' in document.documentElement ||
+            (window.navigator.maxTouchPoints && window.navigator.maxTouchPoints > 1))
         {
-            this.touch = true;
+            device.touch = true;
         }
 
         if (window.navigator.msPointerEnabled || window.navigator.pointerEnabled)
         {
-            this.mspointer = true;
+            device.mspointer = true;
         }
 
-        this.pointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
+        if (!device.cocoonJS)
+        {
+            // See https://developer.mozilla.org/en-US/docs/Web/Events/wheel
+            if ('onwheel' in window || (device.ie && 'WheelEvent' in window))
+            {
+                // DOM3 Wheel Event: FF 17+, IE 9+, Chrome 31+, Safari 7+
+                device.wheelEvent = 'wheel';
+            }
+            else if ('onmousewheel' in window)
+            {
+                // Non-FF legacy: IE 6-9, Chrome 1-31, Safari 5-7.
+                device.wheelEvent = 'mousewheel';
+            }
+            else if (device.firefox && 'MouseScrollEvent' in window)
+            {
+                // FF prior to 17. This should probably be scrubbed.
+                device.wheelEvent = 'DOMMouseScroll';
+            }
+        }
 
-        this.quirksMode = (document.compatMode === 'CSS1Compat') ? false : true;
-
-        this.getUserMedia = !!(navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
-
-    },
+    }
 
     /**
     * Checks for support of the Full Screen API.
-    *
-    * @method Phaser.Device#checkFullScreenSupport
     */
-    checkFullScreenSupport: function () {
+    function _checkFullScreenSupport () {
 
         var fs = [
             'requestFullscreen',
@@ -536,13 +718,14 @@ Phaser.Device.prototype = {
             'mozRequestFullscreen'
         ];
 
+        var element = document.createElement('div');
+
         for (var i = 0; i < fs.length; i++)
         {
-            if (this.game.canvas[fs[i]])
-            // if (document[fs[i]])
+            if (element[fs[i]])
             {
-                this.fullscreen = true;
-                this.requestFullscreen = fs[i];
+                device.fullscreen = true;
+                device.requestFullscreen = fs[i];
                 break;
             }
         }
@@ -558,13 +741,13 @@ Phaser.Device.prototype = {
             'mozExitFullscreen'
         ];
 
-        if (this.fullscreen)
+        if (device.fullscreen)
         {
             for (var i = 0; i < cfs.length; i++)
             {
                 if (document[cfs[i]])
                 {
-                    this.cancelFullscreen = cfs[i];
+                    device.cancelFullscreen = cfs[i];
                     break;
                 }
             }
@@ -573,135 +756,131 @@ Phaser.Device.prototype = {
         //  Keyboard Input?
         if (window['Element'] && Element['ALLOW_KEYBOARD_INPUT'])
         {
-            this.fullscreenKeyboard = true;
+            device.fullscreenKeyboard = true;
         }
 
-    },
+    }
 
     /**
     * Check what browser is game running in.
-    * @method Phaser.Device#_checkBrowser
-    * @private
     */
-    _checkBrowser: function () {
+    function _checkBrowser () {
 
         var ua = navigator.userAgent;
 
         if (/Arora/.test(ua))
         {
-            this.arora = true;
+            device.arora = true;
         }
         else if (/Chrome/.test(ua))
         {
-            this.chrome = true;
+            device.chrome = true;
         }
         else if (/Epiphany/.test(ua))
         {
-            this.epiphany = true;
+            device.epiphany = true;
         }
         else if (/Firefox/.test(ua))
         {
-            this.firefox = true;
+            device.firefox = true;
         }
-        else if (/AppleWebKit/.test(ua) && this.iOS)
+        else if (/AppleWebKit/.test(ua) && device.iOS)
         {
-            this.mobileSafari = true;
+            device.mobileSafari = true;
         }
         else if (/MSIE (\d+\.\d+);/.test(ua))
         {
-            this.ie = true;
-            this.ieVersion = parseInt(RegExp.$1, 10);
+            device.ie = true;
+            device.ieVersion = parseInt(RegExp.$1, 10);
         }
         else if (/Midori/.test(ua))
         {
-            this.midori = true;
+            device.midori = true;
         }
         else if (/Opera/.test(ua))
         {
-            this.opera = true;
+            device.opera = true;
         }
         else if (/Safari/.test(ua))
         {
-            this.safari = true;
+            device.safari = true;
         }
         else if (/Trident\/(\d+\.\d+)(.*)rv:(\d+\.\d+)/.test(ua))
         {
-            this.ie = true;
-            this.trident = true;
-            this.tridentVersion = parseInt(RegExp.$1, 10);
-            this.ieVersion = parseInt(RegExp.$3, 10);
+            device.ie = true;
+            device.trident = true;
+            device.tridentVersion = parseInt(RegExp.$1, 10);
+            device.ieVersion = parseInt(RegExp.$3, 10);
         }
 
         //Silk gets its own if clause because its ua also contains 'Safari'
         if (/Silk/.test(ua))
         {
-            this.silk = true;
+            device.silk = true;
         }
 
         // WebApp mode in iOS
         if (navigator['standalone'])
         {
-            this.webApp = true;
+            device.webApp = true;
         }
         
         if (typeof window.cordova !== "undefined")
         {
-            this.cordova = true;
+            device.cordova = true;
         }
         
         if (typeof process !== "undefined" && typeof require !== "undefined")
         {
-            this.node = true;
+            device.node = true;
         }
         
-        if (this.node)
+        if (device.node)
         {
             try {
-                this.nodeWebkit = (typeof require('nw.gui') !== "undefined");
+                device.nodeWebkit = (typeof require('nw.gui') !== "undefined");
             }
             catch(error)
             {
-                this.nodeWebkit = false;
+                device.nodeWebkit = false;
             }
         }
         
         if (navigator['isCocoonJS'])
         {
-            this.cocoonJS = true;
+            device.cocoonJS = true;
         }
         
-        if (this.cocoonJS)
+        if (device.cocoonJS)
         {
             try {
-                this.cocoonJSApp = (typeof CocoonJS !== "undefined");
+                device.cocoonJSApp = (typeof CocoonJS !== "undefined");
             }
             catch(error)
             {
-                this.cocoonJSApp = false;
+                device.cocoonJSApp = false;
             }
         }
 
         if (typeof window.ejecta !== "undefined")
         {
-            this.ejecta = true;
+            device.ejecta = true;
         }
 
         if (/Crosswalk/.test(ua))
         {
-            this.crosswalk = true;
+            device.crosswalk = true;
         }
 
-    },
+    }
 
     /**
     * Check audio support.
-    * @method Phaser.Device#_checkAudio
-    * @private
     */
-    _checkAudio: function () {
+    function _checkAudio () {
 
-        this.audioData = !!(window['Audio']);
-        this.webAudio = !!(window['webkitAudioContext'] || window['AudioContext']);
+        device.audioData = !!(window['Audio']);
+        device.webAudio = !!(window['webkitAudioContext'] || window['AudioContext']);
         var audioElement = document.createElement('audio');
         var result = false;
 
@@ -709,82 +888,79 @@ Phaser.Device.prototype = {
             if (result = !!audioElement.canPlayType) {
 
                 if (audioElement.canPlayType('audio/ogg; codecs="vorbis"').replace(/^no$/, '')) {
-                    this.ogg = true;
+                    device.ogg = true;
                 }
 
                 if (audioElement.canPlayType('audio/ogg; codecs="opus"').replace(/^no$/, '') || audioElement.canPlayType('audio/opus;').replace(/^no$/, '')) {
-                    this.opus = true;
+                    device.opus = true;
                 }
 
                 if (audioElement.canPlayType('audio/mpeg;').replace(/^no$/, '')) {
-                    this.mp3 = true;
+                    device.mp3 = true;
                 }
 
                 // Mimetypes accepted:
                 //   developer.mozilla.org/En/Media_formats_supported_by_the_audio_and_video_elements
                 //   bit.ly/iphoneoscodecs
                 if (audioElement.canPlayType('audio/wav; codecs="1"').replace(/^no$/, '')) {
-                    this.wav = true;
+                    device.wav = true;
                 }
 
                 if (audioElement.canPlayType('audio/x-m4a;') || audioElement.canPlayType('audio/aac;').replace(/^no$/, '')) {
-                    this.m4a = true;
+                    device.m4a = true;
                 }
 
                 if (audioElement.canPlayType('audio/webm; codecs="vorbis"').replace(/^no$/, '')) {
-                    this.webm = true;
+                    device.webm = true;
                 }
             }
         } catch (e) {
         }
 
-    },
+    }
 
     /**
     * Check PixelRatio, iOS device, Vibration API, ArrayBuffers and endianess.
-    * @method Phaser.Device#_checkDevice
-    * @private
     */
-    _checkDevice: function () {
+    function _checkDevice () {
 
-        this.pixelRatio = window['devicePixelRatio'] || 1;
-        this.iPhone = navigator.userAgent.toLowerCase().indexOf('iphone') != -1;
-        this.iPhone4 = (this.pixelRatio == 2 && this.iPhone);
-        this.iPad = navigator.userAgent.toLowerCase().indexOf('ipad') != -1;
+        device.pixelRatio = window['devicePixelRatio'] || 1;
+        device.iPhone = navigator.userAgent.toLowerCase().indexOf('iphone') != -1;
+        device.iPhone4 = (device.pixelRatio == 2 && device.iPhone);
+        device.iPad = navigator.userAgent.toLowerCase().indexOf('ipad') != -1;
 
         if (typeof Int8Array !== 'undefined')
         {
-            this.typedArray = true;
+            device.typedArray = true;
         }
         else
         {
-            this.typedArray = false;
+            device.typedArray = false;
         }
 
         if (typeof ArrayBuffer !== 'undefined' && typeof Uint8Array !== 'undefined' && typeof Uint32Array !== 'undefined')
         {
-            this.littleEndian = this._checkIsLittleEndian();
-            Phaser.Device.LITTLE_ENDIAN = this.littleEndian;
+            device.littleEndian = _checkIsLittleEndian();
+            device.LITTLE_ENDIAN = device.littleEndian;
         }
 
-        this.support32bit = (typeof ArrayBuffer !== "undefined" && typeof Uint8ClampedArray !== "undefined" && typeof Int32Array !== "undefined" && this.littleEndian !== null && this._checkIsUint8ClampedImageData());
+        device.support32bit = (typeof ArrayBuffer !== "undefined" && typeof Uint8ClampedArray !== "undefined" && typeof Int32Array !== "undefined" && device.littleEndian !== null && _checkIsUint8ClampedImageData());
 
         navigator.vibrate = navigator.vibrate || navigator.webkitVibrate || navigator.mozVibrate || navigator.msVibrate;
 
         if (navigator.vibrate)
         {
-            this.vibration = true;
+            device.vibration = true;
         }
 
-    },
+    }
 
     /**
     * Check Little or Big Endian system.
+    *
     * @author Matt DesLauriers (@mattdesl)
-    * @method Phaser.Device#_checkIsLittleEndian
-    * @private
     */
-    _checkIsLittleEndian: function () {
+    function _checkIsLittleEndian () {
 
         var a = new ArrayBuffer(4);
         var b = new Uint8Array(a);
@@ -810,15 +986,14 @@ Phaser.Device.prototype = {
             return null;
         }
 
-    },
+    }
 
     /**
     * Test to see if ImageData uses CanvasPixelArray or Uint8ClampedArray.
+    *
     * @author Matt DesLauriers (@mattdesl)
-    * @method Phaser.Device#_checkIsUint8ClampedImageData
-    * @private
     */
-    _checkIsUint8ClampedImageData: function () {
+    function _checkIsUint8ClampedImageData () {
 
         if (typeof Uint8ClampedArray === "undefined")
         {
@@ -837,14 +1012,12 @@ Phaser.Device.prototype = {
 
         return image.data instanceof Uint8ClampedArray;
 
-    },
+    }
 
     /**
     * Check whether the host environment support 3D CSS.
-    * @method Phaser.Device#_checkCSS3D
-    * @private
     */
-    _checkCSS3D: function () {
+    function _checkCSS3D () {
 
         var el = document.createElement('p');
         var has3d;
@@ -869,95 +1042,111 @@ Phaser.Device.prototype = {
         }
 
         document.body.removeChild(el);
-        this.css3D = (has3d !== undefined && has3d.length > 0 && has3d !== "none");
-
-    },
-
-    /**
-    * Check whether the host environment can play audio.
-    * @method Phaser.Device#canPlayAudio
-    * @param {string} type - One of 'mp3, 'ogg', 'm4a', 'wav', 'webm' or 'opus'.
-    * @return {boolean} True if the given file type is supported by the browser, otherwise false.
-    */
-    canPlayAudio: function (type) {
-
-        if (type == 'mp3' && this.mp3)
-        {
-            return true;
-        }
-        else if (type == 'ogg' && (this.ogg || this.opus))
-        {
-            return true;
-        }
-        else if (type == 'm4a' && this.m4a)
-        {
-            return true;
-        }
-        else if (type == 'opus' && this.opus)
-        {
-            return true;
-        }
-        else if (type == 'wav' && this.wav)
-        {
-            return true;
-        }
-        else if (type == 'webm' && this.webm)
-        {
-            return true;
-        }
-
-        return false;
-
-    },
-
-    /**
-    * Check whether the console is open.
-    * Note that this only works in Firefox with Firebug and earlier versions of Chrome.
-    * It used to work in Chrome, but then they removed the ability: http://src.chromium.org/viewvc/blink?view=revision&revision=151136
-    *
-    * @method Phaser.Device#isConsoleOpen
-    * @return {boolean} True if the browser dev console is open.
-    */
-    isConsoleOpen: function () {
-
-        if (window.console && window.console['firebug'])
-        {
-            return true;
-        }
-
-        if (window.console)
-        {
-            console.profile();
-            console.profileEnd();
-
-            if (console.clear)
-            {
-                console.clear();
-            }
-
-            if (console['profiles'])
-            {
-                return console['profiles'].length > 0;
-            }
-        }
-
-        return false;
+        device.css3D = (has3d !== undefined && has3d.length > 0 && has3d !== "none");
 
     }
 
+    //  Run the checks
+    _checkOS();
+    _checkAudio();
+    _checkBrowser();
+    _checkCSS3D();
+    _checkDevice();
+    _checkFeatures();
+    _checkFullScreenSupport();
+    _checkInput();
+
 };
 
-Phaser.Device.prototype.constructor = Phaser.Device;
+/**
+* Check whether the host environment can play audio.
+*
+* @method canPlayAudio
+* @memberof Phaser.Device.prototype
+* @param {string} type - One of 'mp3, 'ogg', 'm4a', 'wav', 'webm' or 'opus'.
+* @return {boolean} True if the given file type is supported by the browser, otherwise false.
+*/
+Phaser.Device.canPlayAudio = function (type) {
+
+    if (type == 'mp3' && this.mp3)
+    {
+        return true;
+    }
+    else if (type == 'ogg' && (this.ogg || this.opus))
+    {
+        return true;
+    }
+    else if (type == 'm4a' && this.m4a)
+    {
+        return true;
+    }
+    else if (type == 'opus' && this.opus)
+    {
+        return true;
+    }
+    else if (type == 'wav' && this.wav)
+    {
+        return true;
+    }
+    else if (type == 'webm' && this.webm)
+    {
+        return true;
+    }
+
+    return false;
+
+};
 
 /**
-* A class-static function to check wether we’re running on an Android Stock browser.
-* Autors might want to scale down on effects and switch to the CANVAS rendering method on those devices.
-* Usage: var defaultRenderingMode = Phaser.Device.isAndroidStockBrowser() ? Phaser.CANVAS : Phaser.AUTO;
-* 
-* @function Phaser.Device#isAndroidStockBrowser
+* Check whether the console is open.
+* Note that this only works in Firefox with Firebug and earlier versions of Chrome.
+* It used to work in Chrome, but then they removed the ability: {@link http://src.chromium.org/viewvc/blink?view=revision&revision=151136}
+*
+* @method isConsoleOpen
+* @memberof Phaser.Device.prototype
 */
-Phaser.Device.isAndroidStockBrowser = function()
-{
+Phaser.Device.isConsoleOpen = function () {
+
+    if (window.console && window.console['firebug'])
+    {
+        return true;
+    }
+
+    if (window.console)
+    {
+        console.profile();
+        console.profileEnd();
+
+        if (console.clear)
+        {
+            console.clear();
+        }
+
+        if (console['profiles'])
+        {
+            return console['profiles'].length > 0;
+        }
+    }
+
+    return false;
+
+};
+
+/**
+* Detect if the host is a an Android Stock browser.
+* This is available before the device "ready" event.
+*
+* Authors might want to scale down on effects and switch to the CANVAS rendering method on those devices.
+*
+* @example
+* var defaultRenderingMode = Phaser.Device.isAndroidStockBrowser() ? Phaser.CANVAS : Phaser.AUTO;
+* 
+* @method isAndroidStockBrowser
+* @memberof Phaser.Device.prototype
+*/
+Phaser.Device.isAndroidStockBrowser = function () {
+
     var matches = window.navigator.userAgent.match(/Android.*AppleWebKit\/([\d.]+)/);
     return matches && matches[1] < 537;
+
 };

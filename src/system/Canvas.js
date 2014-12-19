@@ -43,55 +43,6 @@ Phaser.Canvas = {
     },
 
     /**
-    * Get the DOM offset values of any given element
-    * @method Phaser.Canvas.getOffset
-    * @param {HTMLElement} element - The targeted element that we want to retrieve the offset.
-    * @param {Phaser.Point} [point] - The point we want to take the x/y values of the offset.
-    * @return {Phaser.Point} - A point objet with the offsetX and Y as its properties.
-    */
-    getOffset: function (element, point) {
-
-        point = point || new Phaser.Point();
-
-        var box = element.getBoundingClientRect();
-        var clientTop = element.clientTop || document.body.clientTop || 0;
-        var clientLeft = element.clientLeft || document.body.clientLeft || 0;
-
-        //  Without this check Chrome is now throwing console warnings about strict vs. quirks :(
-
-        var scrollTop = 0;
-        var scrollLeft = 0;
-
-        if (document.compatMode === 'CSS1Compat')
-        {
-            scrollTop = window.pageYOffset || document.documentElement.scrollTop || element.scrollTop || 0;
-            scrollLeft = window.pageXOffset || document.documentElement.scrollLeft || element.scrollLeft || 0;
-        }
-        else
-        {
-            scrollTop = window.pageYOffset || document.body.scrollTop || element.scrollTop || 0;
-            scrollLeft = window.pageXOffset || document.body.scrollLeft || element.scrollLeft || 0;
-        }
-
-        point.x = box.left + scrollLeft - clientLeft;
-        point.y = box.top + scrollTop - clientTop;
-
-        return point;
-
-    },
-
-    /**
-    * Returns the aspect ratio of the given canvas.
-    *
-    * @method Phaser.Canvas.getAspectRatio
-    * @param {HTMLCanvasElement} canvas - The canvas to get the aspect ratio from.
-    * @return {number} The ratio between canvas' width and height.
-    */
-    getAspectRatio: function (canvas) {
-        return canvas.width / canvas.height;
-    },
-
-    /**
     * Sets the background color behind the canvas. This changes the canvas style property.
     *
     * @method Phaser.Canvas.setBackgroundColor
@@ -114,7 +65,7 @@ Phaser.Canvas = {
     *
     * @method Phaser.Canvas.setTouchAction
     * @param {HTMLCanvasElement} canvas - The canvas to set the touch action on.
-    * @param {String} [value] - The touch action to set. Defaults to 'none'.
+    * @param {string} [value] - The touch action to set. Defaults to 'none'.
     * @return {HTMLCanvasElement} The source canvas.
     */
     setTouchAction: function (canvas, value) {
@@ -134,7 +85,7 @@ Phaser.Canvas = {
     *
     * @method Phaser.Canvas.setUserSelect
     * @param {HTMLCanvasElement} canvas - The canvas to set the touch action on.
-    * @param {String} [value] - The touch action to set. Defaults to 'none'.
+    * @param {string} [value] - The touch action to set. Defaults to 'none'.
     * @return {HTMLCanvasElement} The source canvas.
     */
     setUserSelect: function (canvas, value) {
@@ -313,3 +264,24 @@ Phaser.Canvas = {
     }
 
 };
+
+/**
+* Get the DOM offset values of any given element
+*
+* @method Phaser.Canvas.getOffset
+* @param {HTMLElement} element - The targeted element that we want to retrieve the offset.
+* @param {Phaser.Point} [point] - The point we want to take the x/y values of the offset.
+* @return {Phaser.Point} - A point objet with the offsetX and Y as its properties.
+* @deprecated 2.1.4 - Use {@link Phaser.DOM.getOffset}
+*/
+Phaser.Canvas.getOffset = Phaser.DOM.getOffset;
+
+/**
+* Returns the aspect ratio of the given canvas.
+*
+* @method Phaser.Canvas.getAspectRatio
+* @param {HTMLCanvasElement} canvas - The canvas to get the aspect ratio from.
+* @return {number} The ratio between canvas' width and height.
+* @deprecated 2.1.4 - User {@link Phaser.DOM.getAspectRatio}
+*/
+Phaser.Canvas.getAspectRatio = Phaser.DOM.getAspectRatio;
