@@ -610,7 +610,11 @@ Phaser.Sound.prototype = {
             {
                 if (this._sound && (this.game.device.cocoonJS || this._sound.readyState === 4))
                 {
-                    this._sound.play();
+                    try {
+                        this._sound.play();
+                    }
+                    catch (e) {
+                    }
                     //  This doesn't become available until you call play(), wonderful ...
                     this.totalDuration = this._sound.duration;
 
@@ -729,7 +733,11 @@ Phaser.Sound.prototype = {
             }
             else
             {
-                this._sound.play();
+                try {
+                    this._sound.play();
+                }
+                catch (e) {
+                }
             }
 
             this.isPlaying = true;
@@ -768,7 +776,11 @@ Phaser.Sound.prototype = {
             }
             else if (this.usingAudioTag)
             {
-                this._sound.pause();
+                try {
+                    this._sound.pause();
+                }
+                catch (e) {
+                }
                 this._sound.currentTime = 0;
             }
         }
@@ -831,7 +843,7 @@ Phaser.Sound.prototype = {
 
     /**
      * Fades the volume of this Sound from its current value to the given volume over the duration specified.
-     * At the end of the fade Sound.onFadeComplete is dispatched with this Sound object as the first parameter, 
+     * At the end of the fade Sound.onFadeComplete is dispatched with this Sound object as the first parameter,
      * and the final volume (volume) as the second parameter.
      *
      * @method Phaser.Sound#fadeTo
