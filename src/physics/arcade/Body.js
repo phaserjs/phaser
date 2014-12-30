@@ -509,8 +509,11 @@ Phaser.Physics.Arcade.Body.prototype = {
                 }
             }
 
-            this.sprite.x += this._dx;
-            this.sprite.y += this._dy;
+            if (this._dx !== 0 || this._dy !== 0) {
+                this.sprite.x += this._dx;
+                this.sprite.y += this._dy;
+                this.sprite.updateTransform()
+            }
         }
 
         this.center.setTo(this.position.x + this.halfWidth, this.position.y + this.halfHeight);
