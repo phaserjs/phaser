@@ -144,6 +144,18 @@ Phaser.Device = function () {
     this.canvas = false;
 
     /**
+    * @property {?boolean} canvasBitBltShift - True if canvas supports a 'copy' bitblt onto itself when the source and destination regions overlap.
+    * @default
+    */
+    this.canvasBitBltShift = null;
+
+    /**
+    * @property {boolean} webGL - Is webGL available?
+    * @default
+    */
+    this.webGL = false;
+
+    /**
     * @property {boolean} file - Is file available?
     * @default
     */
@@ -160,12 +172,6 @@ Phaser.Device = function () {
     * @default
     */
     this.localStorage = false;
-
-    /**
-    * @property {boolean} webGL - Is webGL available?
-    * @default
-    */
-    this.webGL = false;
 
     /**
     * @property {boolean} worker - Is worker available?
@@ -224,7 +230,7 @@ Phaser.Device = function () {
     this.mspointer = false;
 
     /**
-    * @property {string|null} wheelType - The newest type of Wheel/Scroll event supported: 'wheel', 'mousewheel', 'DOMMouseScroll'
+    * @property {?string} wheelType - The newest type of Wheel/Scroll event supported: 'wheel', 'mousewheel', 'DOMMouseScroll'
     * @default
     * @protected
     */
@@ -386,6 +392,8 @@ Phaser.Device = function () {
     * @default
     */
     this.iPad = false;
+
+    // Device features
 
     /**
     * @property {number} pixelRatio - PixelRatio of the host device?
@@ -643,16 +651,9 @@ Phaser.Device._initialize = function () {
 
         device.file = !!window['File'] && !!window['FileReader'] && !!window['FileList'] && !!window['Blob'];
         device.fileSystem = !!window['requestFileSystem'];
-        device.webGL = ( function () { try { var canvas = document.createElement( 'canvas' ); /*Force screencanvas to false*/ canvas.screencanvas = false; return !! window.WebGLRenderingContext && ( canvas.getContext( 'webgl' ) || canvas.getContext( 'experimental-webgl' ) ); } catch( e ) { return false; } } )();
 
-        if (device.webGL === null || device.webGL === false)
-        {
-            device.webGL = false;
-        }
-        else
-        {
-            device.webGL = true;
-        }
+        device.webGL = ( function () { try { var canvas = document.createElement( 'canvas' ); /*Force screencanvas to false*/ canvas.screencanvas = false; return !! window.WebGLRenderingContext && ( canvas.getContext( 'webgl' ) || canvas.getContext( 'experimental-webgl' ) ); } catch( e ) { return false; } } )();
+        device.webGL = !!device.webGL;
 
         device.worker = !!window['Worker'];
 
@@ -661,6 +662,17 @@ Phaser.Device._initialize = function () {
         device.quirksMode = (document.compatMode === 'CSS1Compat') ? false : true;
 
         device.getUserMedia = !!(navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
+
+        if (device.ie || device.firefox || device.chrome)
+        {
+            // Believed to work - need verification of Chrome for iOS, or other browsers using UIWebKit.
+            device.canvasBitBltShift = true;
+        }
+        if (device.safari || device.mobileSafari)
+        {
+            // Known not to work
+            device.canvasBitBltShift = false;
+        }
 
     }
 
