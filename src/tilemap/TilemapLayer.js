@@ -686,16 +686,13 @@ Phaser.TilemapLayer.prototype.resetTilesetCache = function ()
 *
 * The specified (x/y) will be shifted to (0,0) after the copy and the newly exposed canvas area will need to be filled in.
 *
-* If `copyCanvas` is specified it will be used as an intermediate copy buffer and may be resized.
-*
 * @method Phaser.TilemapLayer#shiftCanvas
 * @private
 * @param {CanvasRenderingContext2D} context - The context to shift
 * @param {integer} x
 * @param {integer} y
-* @param {DOMCanvasElement} [copyCanvas=(none)] - If specified this canvas will be used as an intermediate copy buffer.
 */
-Phaser.TilemapLayer.prototype.shiftCanvas = function (context, x, y, copyCanvas)
+Phaser.TilemapLayer.prototype.shiftCanvas = function (context, x, y)
 {
 
     var canvas = context.canvas;
@@ -720,6 +717,7 @@ Phaser.TilemapLayer.prototype.shiftCanvas = function (context, x, y, copyCanvas)
         sy = 0;
     }
 
+    var copyCanvas = this.renderSettings.copyCanvas;
     if (copyCanvas)
     {
         // Copying happens in slices to minimize copy canvas size overhead
@@ -928,7 +926,7 @@ Phaser.TilemapLayer.prototype.renderDeltaScroll = function (shiftX, shiftY) {
         bottom = shiftY;
     }
 
-    this.shiftCanvas(this.context, shiftX, shiftY, this.renderSettings.copyCanvas);
+    this.shiftCanvas(this.context, shiftX, shiftY);
 
     // Transform into tile-space
     left = Math.floor((left + scrollX) / tw);
