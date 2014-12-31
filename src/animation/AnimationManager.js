@@ -436,10 +436,13 @@ Phaser.AnimationManager.prototype = {
         }
 
         this._anims = {};
+        this._outputFrames = [];
         this._frameData = null;
         this._frameIndex = 0;
         this.currentAnim = null;
         this.currentFrame = null;
+        this.sprite = null;
+        this.game = null;
 
     }
 
