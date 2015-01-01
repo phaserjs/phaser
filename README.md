@@ -83,6 +83,7 @@ Version 2.2.2 - "Alkindar" - in development
 * Tween.stop fired a different set of onComplete parameters to Tween.update. Both now dispatch onComplete(target, tween) as the parameters in that order (thanks @P0rnflake #1450)
 * Removed redundant `tolerance` parameter from Rectangle.intersects (thanks @toolness #1463)
 * Phaser.Graphics.drawCircle now overrides PIXI.drawCircle which means the docs are now correct re: diameter not radius (thanks @ethankaminski #1454)
+* Device.webAudio check inversed to avoid throwing a warning in Chrome.
 
 ### Bug Fixes
 
