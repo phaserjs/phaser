@@ -167,20 +167,21 @@ for (var prop in Phaser.Events.prototype)
         continue;
     }
 
-    var backing = 'this._' + prop;
-    var dispatch = prop + '$dispatch';
+    (function (prop, backing) {
+        'use strict';
 
-    // `new Function(string)` is ugly but it avoids closures and by-string property lookups.
-    // Since this is a [near] micro-optimization anyway, might as well go all the way.
-    /*jslint evil: true */
+        // The accessor creates a new Signal; and so it should only be used from user-code.
+        Object.defineProperty(Phaser.Events.prototype, prop, {
+            get: function () {
+                return this[backing] || (this[backing] = new Phaser.Signal());
+            }
+        });
 
-    // The accessor creates a new Signal (and so it should only be used from user-code.)
-    Object.defineProperty(Phaser.Events.prototype, prop, {
-        get: new Function("return "+backing+" || ("+backing+" = new Phaser.Signal())")
-    });
+        // The dispatcher will only broadcast on an already-created signal; call this internally.
+        Phaser.Events.prototype[prop + '$dispatch'] = function () {
+            return this[backing] ? this[backing].dispatch.apply(this[backing], arguments) : null;
+        };
 
-    // The dispatcher will only broadcast on an already-defined signal.
-    Phaser.Events.prototype[dispatch] =
-        new Function("return "+backing+" ? "+backing+".dispatch.apply("+backing+", arguments) : null");
+    })(prop, '_' + prop);
 
 }
