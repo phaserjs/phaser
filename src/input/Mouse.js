@@ -32,7 +32,8 @@ Phaser.Mouse = function (game) {
     this.mouseDownCallback = null;
 
     /**
-    * @property {function} mouseMoveCallback - A callback that can be fired when the mouse is moved while pressed down.
+    * @property {function} mouseMoveCallback - A callback that can be fired when the mouse is moved.
+    * @deprecated Will be removed soon. Please use `Input.addMoveCallback` instead.
     */
     this.mouseMoveCallback = null;
 

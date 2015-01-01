@@ -84,6 +84,7 @@ Version 2.2.2 - "Alkindar" - in development
 * Removed redundant `tolerance` parameter from Rectangle.intersects (thanks @toolness #1463)
 * Phaser.Graphics.drawCircle now overrides PIXI.drawCircle which means the docs are now correct re: diameter not radius (thanks @ethankaminski #1454)
 * Device.webAudio check inversed to avoid throwing a warning in Chrome.
+* Mouse.mouseMoveCallback is flagged as deprecated.
 
 ### Bug Fixes
 
