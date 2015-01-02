@@ -663,16 +663,19 @@ Phaser.Device._initialize = function () {
 
         device.getUserMedia = !!(navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
 
-        // TODO: replace with actual feature check
-        if (device.ie || device.firefox || device.chrome)
+        // TODO: replace canvasBitBltShift detection with actual feature check
+
+        // Excludes iOS versions as they generally wrap UIWebView (eg. Safari WebKit) and it
+        // is safer to not try and use the fast copy-over method.
+        if (!device.iOS &&
+            (device.ie || device.firefox || device.chrome))
         {
-            // Believed to work; XYZ for iOS should be reset below
             device.canvasBitBltShift = true;
         }
-        if (device.safari || device.mobileSafari || device.iOS)
+
+        // Known not to work
+        if (device.safari || device.mobileSafari)
         {
-            // Known or suspected not to work
-            // The iOS check is to catch Chrome for iOS and other browsers that use UIWebView (aka Safari WebKit).
             device.canvasBitBltShift = false;
         }
 
