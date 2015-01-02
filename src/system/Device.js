@@ -663,14 +663,16 @@ Phaser.Device._initialize = function () {
 
         device.getUserMedia = !!(navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
 
+        // TODO: replace with actual feature check
         if (device.ie || device.firefox || device.chrome)
         {
-            // Believed to work - need verification of Chrome for iOS, or other browsers using UIWebKit.
+            // Believed to work; XYZ for iOS should be reset below
             device.canvasBitBltShift = true;
         }
-        if (device.safari || device.mobileSafari)
+        if (device.safari || device.mobileSafari || device.iOS)
         {
-            // Known not to work
+            // Known or suspected not to work
+            // The iOS check is to catch Chrome for iOS and other browsers that use UIWebView (aka Safari WebKit).
             device.canvasBitBltShift = false;
         }
 
