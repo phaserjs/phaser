@@ -48,6 +48,7 @@ Phaser.Events.prototype = {
         if (this._onRemovedFromWorld)  { this._onRemovedFromWorld.dispose(); }
         if (this._onKilled)            { this._onKilled.dispose(); }
         if (this._onRevived)           { this._onRevived.dispose(); }
+        if (this._onEnterBounds)       { this._onEnterBounds.dispose(); }
         if (this._onOutOfBounds)       { this._onOutOfBounds.dispose(); }
 
         if (this._onInputOver)         { this._onInputOver.dispose(); }
@@ -159,7 +160,6 @@ Phaser.Events.prototype.constructor = Phaser.Events;
 // and the dispatch method is the same as the event name postfixed with '$dispatch'.
 for (var prop in Phaser.Events.prototype)
 {
-
     if (!Phaser.Events.prototype.hasOwnProperty(prop) ||
         prop.indexOf('on') !== 0 ||
         Phaser.Events.prototype[prop] !== null)

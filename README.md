@@ -109,6 +109,8 @@ Android browser does not support Full Screen.
 * Time.reset would incorrectly reset the `_started` property, now maps it to `Time.time` (thanks @XekeDeath #1467)
 * Fix floating point inaccuracy in Tween easing edge cases (thanks @jounii #1492)
 * Simplified call to updateTransform - unified and verified fix for #1424 #1502
+* Phaser.Signal was causing a CSP script-src violations in Cordova and Google Chrome Apps (thanks @elennaro #1494)
+* Added Events.onEnterBounds to the destroy method (thanks @legendary-mich #1497)
 
 ### Pixi.js 2.2.0 Updates
 
