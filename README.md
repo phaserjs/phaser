@@ -108,6 +108,7 @@ Android browser does not support Full Screen.
 * Added extra checks to Sound.play to stop it throwing DOM Exception Error 11 if the `sound.readyState` wasn't set or the sound was invalid. Also wrapped `stop()`` call in a `try catch`.
 * Time.reset would incorrectly reset the `_started` property, now maps it to `Time.time` (thanks @XekeDeath #1467)
 * Fix floating point inaccuracy in Tween easing edge cases (thanks @jounii #1492)
+* Simplified call to updateTransform - unified and verified fix for #1424 #1502
 
 ### Pixi.js 2.2.0 Updates
 
