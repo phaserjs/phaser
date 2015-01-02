@@ -1,4 +1,4 @@
-// Type definitions for PIXI 2.2.0 dev 2014-11-02
+// Type definitions for PIXI 2.2.0 dev 2014-16-12
 // Project: https://github.com/GoodBoyDigital/pixi.js/
 
 declare module PIXI {
@@ -912,7 +912,7 @@ declare module PIXI {
         constructor(...points: Point[]);
         constructor(...points: number[]);
 
-        points: number[];
+        points: any[]; //number[] Point[]
 
         clone(): Polygon;
         contains(x: number, y: number): boolean;
