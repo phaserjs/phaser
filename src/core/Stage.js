@@ -199,11 +199,6 @@ Phaser.Stage.prototype.postUpdate = function () {
 */
 Phaser.Stage.prototype.updateTransform = function () {
 
-    if (this.game._updateTransform)
-    {
-        return;
-    }
-
     this.worldAlpha = 1;
 
     for (var i = 0, j = this.children.length; i < j; i++)
