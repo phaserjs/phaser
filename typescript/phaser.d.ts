@@ -1,6 +1,6 @@
 /// <reference path="pixi.d.ts" />
 
-// Type definitions for Phaser dev2.2.0 RC12 2014-12-02
+// Type definitions for Phaser dev2.2.0 RC12 2015-02-01
 // Project: https://github.com/photonstorm/phaser
 
 declare class Phaser {
@@ -802,6 +802,7 @@ declare module Phaser {
         onKilled: Phaser.Signal;
         onRevived: Phaser.Signal;
         onOutOfBounds: Phaser.Signal;
+        onEnterBounds: Phaser.Signal;
         onInputOver: Phaser.Signal;
         onInputOut: Phaser.Signal;
         onInputDown: Phaser.Signal;
@@ -1468,7 +1469,7 @@ declare module Phaser {
         divideAll(property: string, amount: number, checkAlive?: boolean, checkVisible?: boolean): void;
         forEach(callback: Function, callbackContext: any, checkExists?: boolean, ...args: any[]): void;
         forEachAlive(callback: Function, callbackContext: any, ...args: any[]): void;
-        forEachDead(callback: Function, callbackContext: any, ...args:any[]): void;
+        forEachDead(callback: Function, callbackContext: any, ...args: any[]): void;
         forEachExists(callback: Function, callbackContext: any): void;
         filter(predicate: Function, checkExists?: boolean): ArraySet;
         getAt(index: number): any;
@@ -2257,7 +2258,7 @@ declare module Phaser {
                 kill(): void;
                 makeParticles(keys: any, frames?: any, quantity?: number, collide?: boolean, collideWorldBounds?: boolean): Phaser.Particles.Arcade.Emitter;
                 reset(x: number, y: number, health?: number): Phaser.Particles;
-                setAlpha(min?: number, max?: number, rate?: number, ease?: number, yoyo?: boolean): void;
+                setAlpha(min?: number, max?: number, rate?: number, ease?: (k: number) => number, yoyo?: boolean): void;
                 setRotation(min?: number, max?: number): void;
                 setScale(minX?: number, maxX?: number, minY?: number, maxY?: number, rate?: number, ease?: (k: number) => number, yoyo?: boolean): void;
                 setSize(width: number, height: number): void;
@@ -3798,6 +3799,7 @@ declare module Phaser {
         setBackgroundColor(backgroundColor: number): void;
         setBackgroundColor(backgroundColor: string): void;
         update(): void;
+        updateTransform(): void;
         visibilityChange(event: any): void;
 
     }
@@ -3822,6 +3824,7 @@ declare module Phaser {
         boundingParent: HTMLElement;
         compatibility: {
             canExpandParent: boolean;
+            clickTrampoline: string;
             forceMinimumDocumentHeight: boolean;
             noMargins: boolean;
             scrollTo: Point;

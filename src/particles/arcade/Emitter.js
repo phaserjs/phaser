@@ -126,7 +126,7 @@ Phaser.Particles.Arcade.Emitter = function (game, x, y, maxParticles) {
     this.angularDrag = 0;
 
     /**
-    * @property {boolean} frequency - How often a particle is emitted in ms (if emitter is started with Explode === false).
+    * @property {number} frequency - How often a particle is emitted in ms (if emitter is started with Explode === false).
     * @default
     */
     this.frequency = 100;

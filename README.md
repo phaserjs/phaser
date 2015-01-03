@@ -77,12 +77,14 @@ Version 2.2.2 - "Alkindar" - in development
 
 ### Updates
 
-* TypeScript definitions fixes and updates (thanks @clark-stevenson)
+* TypeScript definitions fixes and updates (thanks @clark-stevenson @Schmavery)
 * DOM.visualBounds now includes scroll bars (#1429)
 * The new fixed time-step code has been more carefully linked to Pixi transform updates. This should finally put a stop to the tunneling issues that were being reported.
 * Tween.stop fired a different set of onComplete parameters to Tween.update. Both now dispatch onComplete(target, tween) as the parameters in that order (thanks @P0rnflake #1450)
 * Removed redundant `tolerance` parameter from Rectangle.intersects (thanks @toolness #1463)
 * Phaser.Graphics.drawCircle now overrides PIXI.drawCircle which means the docs are now correct re: diameter not radius (thanks @ethankaminski #1454)
+* Device.webAudio check inversed to avoid throwing a warning in Chrome.
+* Mouse.mouseMoveCallback is flagged as deprecated.
 
 ### Bug Fixes
 
@@ -105,6 +107,10 @@ Android browser does not support Full Screen.
 * The RandomDataGenerator could be seeded with an array of values. However if the array contained a zero it would stop seeding from that point (thanks @jpcloud @pnstickne #1456)
 * Added extra checks to Sound.play to stop it throwing DOM Exception Error 11 if the `sound.readyState` wasn't set or the sound was invalid. Also wrapped `stop()`` call in a `try catch`.
 * Time.reset would incorrectly reset the `_started` property, now maps it to `Time.time` (thanks @XekeDeath #1467)
+* Fix floating point inaccuracy in Tween easing edge cases (thanks @jounii #1492)
+* Simplified call to updateTransform - unified and verified fix for #1424 #1502
+* Phaser.Signal was causing a CSP script-src violations in Cordova and Google Chrome Apps (thanks @elennaro #1494)
+* Added Events.onEnterBounds to the destroy method (thanks @legendary-mich #1497)
 
 ### Pixi.js 2.2.0 Updates
 
@@ -368,6 +374,8 @@ We now have a full [Contributors Guide][contribute] which goes into the process 
 - If you issue a Pull Request for Phaser, please only do so againt the `dev` branch and *not* against the `master` branch.
 
 - Before submitting a Pull Request please run your code through [JSHint](http://www.jshint.com/) to check for stylistic or formatting errors. To use JSHint, run `grunt jshint`. This isn't a strict requirement and we are happy to receive Pull Requests that haven't been JSHinted, so don't let it put you off contributing, but do know that we'll reformat your source before going live with it.
+
+- Before contributing, please read the [code of conduct](https://github.com/photonstorm/phaser/blob/master/CODE_OF_CONDUCT.md).
 
 [![Build Status](https://travis-ci.org/photonstorm/phaser.png?branch=dev)](https://travis-ci.org/photonstorm/phaser)
 

@@ -880,7 +880,7 @@ Phaser.Device._initialize = function () {
     function _checkAudio () {
 
         device.audioData = !!(window['Audio']);
-        device.webAudio = !!(window['webkitAudioContext'] || window['AudioContext']);
+        device.webAudio = !!(window['AudioContext'] || window['webkitAudioContext']);
         var audioElement = document.createElement('audio');
         var result = false;
 

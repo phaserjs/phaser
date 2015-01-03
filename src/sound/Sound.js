@@ -447,7 +447,7 @@ Phaser.Sound.prototype = {
     */
     play: function (marker, position, volume, loop, forceRestart) {
 
-        if (typeof marker === 'undefined') { marker = ''; }
+        if (typeof marker === 'undefined' || marker === false || marker === null) { marker = ''; }
         if (typeof forceRestart === 'undefined') { forceRestart = true; }
 
         if (this.isPlaying && !this.allowMultiple && !forceRestart && !this.override)
@@ -480,10 +480,17 @@ Phaser.Sound.prototype = {
             }
         }
 
-        this.currentMarker = marker;
+        if (marker === '' && Object.keys(this.markers).length > 0)
+        {
+            //  If they didn't specify a marker but this is an audio sprite, 
+            //  we should never play the entire thing
+            return this;
+        }
 
         if (marker !== '')
         {
+            this.currentMarker = marker;
+
             if (this.markers[marker])
             {
                 //  Playing a marker? Then we default to the marker values
