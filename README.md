@@ -77,7 +77,7 @@ Version 2.2.2 - "Alkindar" - in development
 
 ### Updates
 
-* TypeScript definitions fixes and updates (thanks @clark-stevenson)
+* TypeScript definitions fixes and updates (thanks @clark-stevenson @Schmavery)
 * DOM.visualBounds now includes scroll bars (#1429)
 * The new fixed time-step code has been more carefully linked to Pixi transform updates. This should finally put a stop to the tunneling issues that were being reported.
 * Tween.stop fired a different set of onComplete parameters to Tween.update. Both now dispatch onComplete(target, tween) as the parameters in that order (thanks @P0rnflake #1450)
