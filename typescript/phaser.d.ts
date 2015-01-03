@@ -3708,6 +3708,7 @@ declare module Phaser {
         constructor(game: Phaser.Game, x: number, y: number, key?: any, frame?: any);
 
         alive: boolean;
+        alpha: number;
         anchor: Phaser.Point;
         angle: number;
         animations: Phaser.AnimationManager;
