@@ -78,7 +78,7 @@ Phaser.Color = {
         }
 
         out.color = rgba;
-        out.rgba = 'rgba(' + out.r + ',' + out.g + ',' + out.b + ',' + (out.a / 255) + ')';
+        Phaser.Color.updateColor(out);
 
         if (hsl)
         {
@@ -117,7 +117,7 @@ Phaser.Color = {
         out.b = ((rgba & 0x0000ff00) >>> 8);
         out.a = ((rgba & 0x000000ff));
 
-        out.rgba = 'rgba(' + out.r + ',' + out.g + ',' + out.b + ',' + (out.a / 255) + ')';
+        Phaser.Color.updateColor(out);
 
         return out;
 
@@ -441,7 +441,7 @@ Phaser.Color = {
 
         var out = { r: r || 0, g: g || 0, b: b || 0, a: a || 1, h: h || 0, s: s || 0, l: l || 0, v: v || 0, color: 0 };
 
-        out.rgba = 'rgba(' + out.r + ',' + out.g + ',' + out.b + ',' + (out.a / 255) + ')';
+        Phaser.Color.updateColor(out);
 
         return out;
 
