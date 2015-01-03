@@ -159,7 +159,7 @@ Phaser.Color = {
 
         if (!out)
         {
-            out = Phaser.Color.createColor(r, g, b, 1);
+            out = Phaser.Color.createColor(r, g, b, 255);
         }
 
         r /= 255;
@@ -323,7 +323,7 @@ Phaser.Color = {
     */
     HSVtoRGB: function (h, s, v, out) {
 
-        if (typeof out === 'undefined') { out = Phaser.Color.createColor(0, 0, 0, 1, h, s, 0, v); }
+        if (typeof out === 'undefined') { out = Phaser.Color.createColor(0, 0, 0, 255, h, s, 0, v); }
 
         var r, g, b;
         var i = Math.floor(h * 6);
@@ -420,7 +420,7 @@ Phaser.Color = {
 
     /**
     * A utility function to create a lightweight 'color' object with the default components.
-    * Any components that are not specified will default to zero.
+    * Any components that are not specified will default to zero, except alpha which will default to fully opaque.
     *
     * This is useful when you want to use a shared color object for the getPixel and getPixelAt methods.
     *
@@ -430,16 +430,16 @@ Phaser.Color = {
     * @param {number} [r=0] - The red color component, in the range 0 - 255.
     * @param {number} [g=0] - The green color component, in the range 0 - 255.
     * @param {number} [b=0] - The blue color component, in the range 0 - 255.
-    * @param {number} [a=1] - The alpha color component, in the range 0 - 1.
+    * @param {number} [a=1] - The alpha color component, in the range 0 - 255.
     * @param {number} [h=0] - The hue, in the range 0 - 1.
     * @param {number} [s=0] - The saturation, in the range 0 - 1.
     * @param {number} [l=0] - The lightness, in the range 0 - 1.
     * @param {number} [v=0] - The value, in the range 0 - 1.
-    * @return {object} The resulting object with r, g, b, a properties and h, s, l and v.
+    * @return {object} The resulting object with r, g, b, a properties, the rgba() string for canvas styles, and h, s, l and v.
     */
     createColor: function (r, g, b, a, h, s, l, v) {
 
-        var out = { r: r || 0, g: g || 0, b: b || 0, a: a || 1, h: h || 0, s: s || 0, l: l || 0, v: v || 0, color: 0 };
+        var out = { r: r || 0, g: g || 0, b: b || 0, a: a || 255, h: h || 0, s: s || 0, l: l || 0, v: v || 0, color: 0 };
 
         Phaser.Color.updateColor(out);
 
@@ -576,6 +576,8 @@ Phaser.Color = {
             out.b = parseInt(result[3], 16);
         }
 
+        Phaser.Color.updateColor(out);
+        
         return out;
 
     },
@@ -805,12 +807,14 @@ Phaser.Color = {
 
         if (typeof color === 'object')
         {
-            return 'rgba(' + color.r.toString() + ',' + color.g.toString() + ',' + color.b.toString() + ',' + (color.a / 255).toString() + ')';
+            Phaser.Color.updateColor(color);
+            return color.rgba;
         }
         else
         {
             var rgb = Phaser.Color.getRGB(color);
-            return 'rgba(' + rgb.r.toString() + ',' + rgb.g.toString() + ',' + rgb.b.toString() + ',' + (rgb.a / 255).toString() + ')';
+            Phaser.Color.updateColor(rgb);
+            return rgb.rgba;
         }
 
     },
@@ -821,7 +825,7 @@ Phaser.Color = {
     * @method Phaser.Color.getAlpha
     * @static
     * @param {number} color - In the format 0xAARRGGBB.
-    * @returns {number} The Alpha component of the color, will be between 0 and 1 (0 being no Alpha (opaque), 1 full Alpha (transparent)).
+    * @returns {number} The Alpha component of the color, will be between 0 and 1 (0 being no Alpha (transparent), 1 full Alpha (opaque)).
     */
     getAlpha: function (color) {
         return color >>> 24;
@@ -833,7 +837,7 @@ Phaser.Color = {
     * @method Phaser.Color.getAlphaFloat
     * @static
     * @param {number} color - In the format 0xAARRGGBB.
-    * @returns {number} The Alpha component of the color, will be between 0 and 1 (0 being no Alpha (opaque), 1 full Alpha (transparent)).
+    * @returns {number} The Alpha component of the color, will be between 0 and 1 (0 being no Alpha (transparent), 1 full Alpha (opaque)).
     */
     getAlphaFloat: function (color) {
         return (color >>> 24) / 255;
