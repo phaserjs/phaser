@@ -25,6 +25,7 @@ Phaser.Easing = {
         *
         * @method Phaser.Easing.Linear.None
         * @param {number} k - The value to be tweened.
+        * @static
         * @returns {number} k.
         */
         None: function ( k ) {
@@ -47,6 +48,7 @@ Phaser.Easing = {
         *
         * @method Phaser.Easing.Quadratic.In
         * @param {number} k - The value to be tweened.
+        * @static
         * @returns {number} k^2.
         */
         In: function ( k ) {
@@ -60,6 +62,7 @@ Phaser.Easing = {
         *
         * @method Phaser.Easing.Quadratic.Out
         * @param {number} k - The value to be tweened.
+        * @static
         * @returns {number} k* (2-k).
         */
         Out: function ( k ) {
@@ -73,6 +76,7 @@ Phaser.Easing = {
         *
         * @method Phaser.Easing.Quadratic.InOut
         * @param {number} k - The value to be tweened.
+        * @static
         * @returns {number} The tweened value.
         */
         InOut: function ( k ) {
@@ -96,6 +100,7 @@ Phaser.Easing = {
         *
         * @method Phaser.Easing.Cubic.In
         * @param {number} k - The value to be tweened.
+        * @static
         * @returns {number} The tweened value.
         */
         In: function ( k ) {
@@ -109,6 +114,7 @@ Phaser.Easing = {
         *
         * @method Phaser.Easing.Cubic.Out
         * @param {number} k - The value to be tweened.
+        * @static
         * @returns {number} The tweened value.
         */
         Out: function ( k ) {
@@ -122,6 +128,7 @@ Phaser.Easing = {
         *
         * @method Phaser.Easing.Cubic.InOut
         * @param {number} k - The value to be tweened.
+        * @static
         * @returns {number} The tweened value.
         */
         InOut: function ( k ) {
@@ -145,6 +152,7 @@ Phaser.Easing = {
         *
         * @method Phaser.Easing.Quartic.In
         * @param {number} k - The value to be tweened.
+        * @static
         * @returns {number} The tweened value.
         */
         In: function ( k ) {
@@ -158,6 +166,7 @@ Phaser.Easing = {
         *
         * @method Phaser.Easing.Quartic.Out
         * @param {number} k - The value to be tweened.
+        * @static
         * @returns {number} The tweened value.
         */
         Out: function ( k ) {
@@ -171,6 +180,7 @@ Phaser.Easing = {
         *
         * @method Phaser.Easing.Quartic.InOut
         * @param {number} k - The value to be tweened.
+        * @static
         * @returns {number} The tweened value.
         */
         InOut: function ( k ) {
@@ -194,6 +204,7 @@ Phaser.Easing = {
         *
         * @method Phaser.Easing.Quintic.In
         * @param {number} k - The value to be tweened.
+        * @static
         * @returns {number} The tweened value.
         */
         In: function ( k ) {
@@ -207,6 +218,7 @@ Phaser.Easing = {
         *
         * @method Phaser.Easing.Quintic.Out
         * @param {number} k - The value to be tweened.
+        * @static
         * @returns {number} The tweened value.
         */
         Out: function ( k ) {
@@ -220,6 +232,7 @@ Phaser.Easing = {
         *
         * @method Phaser.Easing.Quintic.InOut
         * @param {number} k - The value to be tweened.
+        * @static
         * @returns {number} The tweened value.
         */
         InOut: function ( k ) {
@@ -243,6 +256,7 @@ Phaser.Easing = {
         *
         * @method Phaser.Easing.Sinusoidal.In
         * @param {number} k - The value to be tweened.
+        * @static
         * @returns {number} The tweened value.
         */
         In: function ( k ) {
@@ -256,6 +270,7 @@ Phaser.Easing = {
         *
         * @method Phaser.Easing.Sinusoidal.Out
         * @param {number} k - The value to be tweened.
+        * @static
         * @returns {number} The tweened value.
         */
         Out: function ( k ) {
@@ -269,6 +284,7 @@ Phaser.Easing = {
         *
         * @method Phaser.Easing.Sinusoidal.InOut
         * @param {number} k - The value to be tweened.
+        * @static
         * @returns {number} The tweened value.
         */
         InOut: function ( k ) {
@@ -291,6 +307,7 @@ Phaser.Easing = {
         *
         * @method Phaser.Easing.Exponential.In
         * @param {number} k - The value to be tweened.
+        * @static
         * @returns {number} The tweened value.
         */
         In: function ( k ) {
@@ -304,6 +321,7 @@ Phaser.Easing = {
         *
         * @method Phaser.Easing.Exponential.Out
         * @param {number} k - The value to be tweened.
+        * @static
         * @returns {number} The tweened value.
         */
         Out: function ( k ) {
@@ -317,6 +335,7 @@ Phaser.Easing = {
         *
         * @method Phaser.Easing.Exponential.InOut
         * @param {number} k - The value to be tweened.
+        * @static
         * @returns {number} The tweened value.
         */
         InOut: function ( k ) {
@@ -342,6 +361,7 @@ Phaser.Easing = {
         *
         * @method Phaser.Easing.Circular.In
         * @param {number} k - The value to be tweened.
+        * @static
         * @returns {number} The tweened value.
         */
         In: function ( k ) {
@@ -355,6 +375,7 @@ Phaser.Easing = {
         *
         * @method Phaser.Easing.Circular.Out
         * @param {number} k - The value to be tweened.
+        * @static
         * @returns {number} The tweened value.
         */
         Out: function ( k ) {
@@ -368,6 +389,7 @@ Phaser.Easing = {
         *
         * @method Phaser.Easing.Circular.InOut
         * @param {number} k - The value to be tweened.
+        * @static
         * @returns {number} The tweened value.
         */
         InOut: function ( k ) {
@@ -391,6 +413,7 @@ Phaser.Easing = {
         *
         * @method Phaser.Easing.Elastic.In
         * @param {number} k - The value to be tweened.
+        * @static
         * @returns {number} The tweened value.
         */
         In: function ( k ) {
@@ -409,6 +432,7 @@ Phaser.Easing = {
         *
         * @method Phaser.Easing.Elastic.Out
         * @param {number} k - The value to be tweened.
+        * @static
         * @returns {number} The tweened value.
         */
         Out: function ( k ) {
@@ -427,6 +451,7 @@ Phaser.Easing = {
         *
         * @method Phaser.Easing.Elastic.InOut
         * @param {number} k - The value to be tweened.
+        * @static
         * @returns {number} The tweened value.
         */
         InOut: function ( k ) {
@@ -455,6 +480,7 @@ Phaser.Easing = {
         *
         * @method Phaser.Easing.Back.In
         * @param {number} k - The value to be tweened.
+        * @static
         * @returns {number} The tweened value.
         */
         In: function ( k ) {
@@ -469,6 +495,7 @@ Phaser.Easing = {
         *
         * @method Phaser.Easing.Back.Out
         * @param {number} k - The value to be tweened.
+        * @static
         * @returns {number} The tweened value.
         */
         Out: function ( k ) {
@@ -483,6 +510,7 @@ Phaser.Easing = {
         *
         * @method Phaser.Easing.Back.InOut
         * @param {number} k - The value to be tweened.
+        * @static
         * @returns {number} The tweened value.
         */
         InOut: function ( k ) {
@@ -507,6 +535,7 @@ Phaser.Easing = {
         *
         * @method Phaser.Easing.Bounce.In
         * @param {number} k - The value to be tweened.
+        * @static
         * @returns {number} The tweened value.
         */
         In: function ( k ) {
@@ -520,6 +549,7 @@ Phaser.Easing = {
         *
         * @method Phaser.Easing.Bounce.Out
         * @param {number} k - The value to be tweened.
+        * @static
         * @returns {number} The tweened value.
         */
         Out: function ( k ) {
@@ -549,6 +579,7 @@ Phaser.Easing = {
         *
         * @method Phaser.Easing.Bounce.InOut
         * @param {number} k - The value to be tweened.
+        * @static
         * @returns {number} The tweened value.
         */
         InOut: function ( k ) {
