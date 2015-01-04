@@ -74,6 +74,9 @@ Version 2.2.2 - "Alkindar" - in development
 ### New Features
 
 * Phaser.Loader now supports BLOB urls for audio files (thanks @aressler38 #1462)
+* Line.reflect will calculate the reflected, or outgoing angle of the line and a given line if they intersect. This can be used for Body vs. Line collision responses and rebounds.
+* Line.normalX and Line.normalY contain the x and y components of the left-hand normal of the line.
+* Line.fromAngle will sets this line to start at the given `x` and `y` coordinates and for the segment to extend at `angle` for the given `length`.
 
 ### Updates
 
