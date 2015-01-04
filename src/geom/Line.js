@@ -37,6 +37,7 @@ Phaser.Line.prototype = {
 
     /**
     * Sets the components of the Line to the specified values.
+    * 
     * @method Phaser.Line#setTo
     * @param {number} [x1=0] - The x coordinate of the start of the line.
     * @param {number} [y1=0] - The y coordinate of the start of the line.
@@ -56,6 +57,7 @@ Phaser.Line.prototype = {
     /**
     * Sets the line to match the x/y coordinates of the two given sprites.
     * Can optionally be calculated from their center coordinates.
+    * 
     * @method Phaser.Line#fromSprite
     * @param {Phaser.Sprite} startSprite - The coordinates of this Sprite will be set to the Line.start point.
     * @param {Phaser.Sprite} endSprite - The coordinates of this Sprite will be set to the Line.start point.
@@ -72,6 +74,25 @@ Phaser.Line.prototype = {
         }
 
         return this.setTo(startSprite.x, startSprite.y, endSprite.x, endSprite.y);
+
+    },
+
+    /**
+    * Sets this line to start at the given `x` and `y` coordinates and for the segment to extend at `angle` for the given `length`.
+    * 
+    * @method Phaser.Line#fromAngle
+    * @param {number} x - The x coordinate of the start of the line.
+    * @param {number} y - The y coordinate of the start of the line.
+    * @param {number} angle - The angle of the line in radians.
+    * @param {number} length - The length of the line in pixels.
+    * @return {Phaser.Line} This line object
+    */
+    fromAngle: function (x, y, angle, length) {
+
+        this.start.setTo(x, y);
+        this.end.setTo(x + (Math.cos(angle) * length), y + (Math.sin(angle) * length));
+
+        return this;
 
     },
 
@@ -93,7 +114,24 @@ Phaser.Line.prototype = {
     },
 
     /**
+    * Returns the reflected, or outgoing angle of intersection between this and the given line in radians.
+    * If asSegment is true it will check for segment intersection. If asSegment is false it will check for line intersection.
+    * If the lines don't intersect then it returns `null`.
+    *
+    * @method Phaser.Line#reflect
+    * @param {Phaser.Line} line - The line to check against this one.
+    * @param {boolean} [asSegment=true] - If true it will check for segment intersection, otherwise full line intersection.
+    * @return {number} The reflected angle of the intersection in radians, or null if there is no intersection.
+    */
+    reflect: function (line, asSegment) {
+
+        return Phaser.Line.reflect(this, line, asSegment);
+
+    },
+
+    /**
     * Tests if the given coordinates fall on this line. See pointOnSegment to test against just the line segment.
+    * 
     * @method Phaser.Line#pointOnLine
     * @param {number} x - The line to check against this one.
     * @param {number} y - The line to check against this one.
@@ -107,6 +145,7 @@ Phaser.Line.prototype = {
 
     /**
     * Tests if the given coordinates fall on this line and within the segment. See pointOnLine to test against just the line.
+    * 
     * @method Phaser.Line#pointOnSegment
     * @param {number} x - The line to check against this one.
     * @param {number} y - The line to check against this one.
@@ -361,6 +400,32 @@ Object.defineProperty(Phaser.Line.prototype, "height", {
 });
 
 /**
+* @name Phaser.Line#normalX
+* @property {number} normalX - Gets the x component of the left-hand normal of this line.
+* @readonly
+*/
+Object.defineProperty(Phaser.Line.prototype, "normalX", {
+
+    get: function () {
+        return Math.cos(this.angle - 1.5707963267948966);
+    }
+
+});
+
+/**
+* @name Phaser.Line#normalY
+* @property {number} normalY - Gets the y component of the left-hand normal of this line.
+* @readonly
+*/
+Object.defineProperty(Phaser.Line.prototype, "normalY", {
+
+    get: function () {
+        return Math.sin(this.angle - 1.5707963267948966);
+    }
+
+});
+
+/**
 * Checks for intersection between two lines as defined by the given start and end points.
 * If asSegment is true it will check for line segment intersection. If asSegment is false it will check for line intersection.
 * Returns the intersection segment of AB and EF as a Point, or null if there is no intersection.
@@ -372,7 +437,7 @@ Object.defineProperty(Phaser.Line.prototype, "height", {
 * @param {Phaser.Point} e - The start of the second Line to be checked.
 * @param {Phaser.Point} f - The end of the second line to be checked.
 * @param {boolean} [asSegment=true] - If true it will check for segment intersection, otherwise full line intersection.
-* @param {Phaser.Point} [result] - A Point object to store the result in, if not given a new one will be created.
+* @param {Phaser.Point|object} [result] - A Point object to store the result in, if not given a new one will be created.
 * @return {Phaser.Point} The intersection segment of the two lines as a Point, or null if there is no intersection.
 */
 Phaser.Line.intersectsPoints = function (a, b, e, f, asSegment, result) {
@@ -398,12 +463,16 @@ Phaser.Line.intersectsPoints = function (a, b, e, f, asSegment, result) {
 
     if (asSegment)
     {
-        var uc = ((f.y-e.y)*(b.x-a.x) - (f.x-e.x)*(b.y- a.y));
-        var ua = (((f.x-e.x)*(a.y-e.y)) - (f.y-e.y)*(a.x-e.x)) / uc;
-        var ub = (((b.x- a.x)*(a.y- e.y)) - ((b.y-a.y)*(a.x- e.x))) / uc;
-        if (ua >=0 && ua<=1 && ub >=0 && ub <=1) {
+        var uc = ((f.y - e.y) * (b.x - a.x) - (f.x - e.x) * (b.y - a.y));
+        var ua = (((f.x - e.x) * (a.y - e.y)) - (f.y - e.y) * (a.x - e.x)) / uc;
+        var ub = (((b.x - a.x) * (a.y - e.y)) - ((b.y - a.y) * (a.x - e.x))) / uc;
+
+        if (ua >= 0 && ua <= 1 && ub >= 0 && ub <= 1)
+        {
             return result;
-        } else {
+        }
+        else
+        {
             return null;
         }
     }
@@ -431,3 +500,33 @@ Phaser.Line.intersects = function (a, b, asSegment, result) {
     return Phaser.Line.intersectsPoints(a.start, a.end, b.start, b.end, asSegment, result);
 
 };
+
+/**
+* Returns the reflected angle of intersection between two lines. This is the outgoing angle based on the angle of Line 1.
+* If asSegment is true it will check for segment intersection.
+* If asSegment is false it will check for line intersection.
+*
+* @method Phaser.Line.reflect
+* @param {Phaser.Line} a - The first Line to be checked.
+* @param {Phaser.Line} b - The second Line to be checked.
+* @param {boolean} [asSegment=true] - If true it will check for segment intersection, otherwise full line intersection.
+* @return {number} The reflected angle of the intersection in radians, or null if there is no intersection.
+*/
+Phaser.Line.reflect = function (a, b, asSegment) {
+
+    var p = { x: 0, y: 0 };
+
+    if (Phaser.Line.intersectsPoints(a.start, a.end, b.start, b.end, asSegment, p) !== null)
+    {
+        var ex = p.x + b.normalX;
+        var ey = p.y + b.normalY;
+        var normalAngle = Math.atan2(ey - p.y, ex - p.x);
+        return 2 * normalAngle - 3.141592653589793 - a.angle;
+    }
+    else
+    {
+        return null;
+    }
+
+};
+
