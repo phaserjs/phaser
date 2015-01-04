@@ -342,7 +342,7 @@ Phaser.Tween.prototype = {
 
         if (complete)
         {
-            this.onComplete.dispatch(this);
+            this.onComplete.dispatch(this.target, this);
 
             if (this.chainedTween)
             {
@@ -359,6 +359,7 @@ Phaser.Tween.prototype = {
     /**
     * Sets the delay in milliseconds before this tween will start. If there are child tweens it sets the delay before the first child starts.
     * The delay is invoked as soon as you call `Tween.start`. If the tween is already running this method doesn't do anything for the current active tween.
+    * If you have not yet called `Tween.to` or `Tween.from` at least once then this method will do nothing, as there are no tweens to delay.
     * If you have child tweens and pass -1 as the index value it sets the delay across all of them.
     *
     * @method Phaser.Tween#delay
@@ -367,6 +368,8 @@ Phaser.Tween.prototype = {
     * @return {Phaser.Tween} This tween. Useful for method chaining.
     */
     delay: function (duration, index) {
+
+        if (this.timeline.length === 0) { return this; }
 
         if (typeof index === 'undefined') { index = 0; }
 
@@ -388,6 +391,7 @@ Phaser.Tween.prototype = {
 
     /**
     * Sets the number of times this tween will repeat.
+    * If you have not yet called `Tween.to` or `Tween.from` at least once then this method will do nothing, as there are no tweens to repeat.
     * If you have child tweens and pass -1 as the index value it sets the number of times they'll repeat across all of them.
     * If you wish to define how many times this Tween and all children will repeat see Tween.repeatAll.
     *
@@ -397,6 +401,8 @@ Phaser.Tween.prototype = {
     * @return {Phaser.Tween} This tween. Useful for method chaining.
     */
     repeat: function (total, index) {
+
+        if (this.timeline.length === 0) { return this; }
 
         if (typeof index === 'undefined') { index = 0; }
 
@@ -419,6 +425,7 @@ Phaser.Tween.prototype = {
     /**
     * A Tween that has yoyo set to true will run through from its starting values to its end values and then play back in reverse from end to start.
     * Used in combination with repeat you can create endless loops.
+    * If you have not yet called `Tween.to` or `Tween.from` at least once then this method will do nothing, as there are no tweens to yoyo.
     * If you have child tweens and pass -1 as the index value it sets the yoyo property across all of them.
     * If you wish to yoyo this Tween and all of its children then see Tween.yoyoAll.
     *
@@ -428,6 +435,8 @@ Phaser.Tween.prototype = {
     * @return {Phaser.Tween} This tween. Useful for method chaining.
     */
     yoyo: function(enable, index) {
+
+        if (this.timeline.length === 0) { return this; }
 
         if (typeof index === 'undefined') { index = 0; }
 

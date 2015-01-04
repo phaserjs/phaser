@@ -10,6 +10,7 @@
 * Provides a useful Window and Element functions as well as cross-browser compatibility buffer.
 *
 * Some code originally derived from {@link https://github.com/ryanve/verge verge}.
+* Some parts were inspired by the research of Ryan Van Etten, released under MIT License 2013.
 * 
 * @class Phaser.DOM
 * @static
@@ -335,11 +336,13 @@ Phaser.Device.whenReady(function (device) {
     if (treatAsDesktop)
     {
 
+        // PST- When scrollbars are not included this causes upstream issues in ScaleManager.
+        // So reverted to the old "include scrollbars."
         var clientWidth = function () {
-            return document.documentElement.clientWidth;
+            return Math.max(window.innerWidth, document.documentElement.clientWidth);
         };
         var clientHeight = function () {
-            return document.documentElement.clientHeight;
+            return Math.max(window.innerHeight, document.documentElement.clientHeight);
         };
 
         // Interested in area sans-scrollbar

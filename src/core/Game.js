@@ -239,6 +239,15 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     this.particles = null;
 
     /**
+    * If `false` Phaser will automatically render the display list every update. If `true` the render loop will be skipped.
+    * You can toggle this value at run-time to gain exact control over when Phaser renders. This can be useful in certain types of game or application.
+    * Please note that if you don't render the display list then none of the game object transforms will be updated, so use this value carefully.
+    * @property {boolean} lockRender
+    * @default
+    */
+    this.lockRender = false;
+
+    /**
     * @property {boolean} stepping - Enable core loop stepping with Game.enableStep().
     * @default
     * @readonly
@@ -290,6 +299,12 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     * @private
     */
     this._codePaused = false;
+
+    /**
+    * @property {boolean} _updateTransform - Was Stage.updateTransform called in updateLogic or skipped?
+    * @private
+    */
+    this._updateTransform = false;
 
     /**
     * The ID of the current/last logic update applied this render frame, starting from 0.
@@ -528,7 +543,7 @@ Phaser.Game.prototype = {
         }
         else
         {
-            this.debug = { preUpdate: function () {}, update: function () {} };
+            this.debug = { preUpdate: function () {}, update: function () {}, reset: function () {} };
         }
 
         this.showDebugHeader();
@@ -696,7 +711,9 @@ Phaser.Game.prototype = {
 
         this.time.update(time);
 
-        // if the logic time is spiralling upwards, skip a frame entirely
+        this._updateTransform = false;
+
+        // if the logic time is spiraling upwards, skip a frame entirely
         if (this._spiralling > 1 && !this.forceSingleUpdate)
         {
             // cause an event to warn the program that this CPU can't keep up with the current desiredFps rate
@@ -748,7 +765,7 @@ Phaser.Game.prototype = {
                 }
             }
 
-            // detect spiralling (if the catch-up loop isn't fast enough, the number of iterations will increase constantly)
+            // detect spiraling (if the catch-up loop isn't fast enough, the number of iterations will increase constantly)
             if (count > this._lastCount)
             {
                 this._spiralling++;
@@ -810,10 +827,23 @@ Phaser.Game.prototype = {
             this.state.pauseUpdate();
             this.debug.preUpdate();
         }
+
+        //  We do this regardless to avoid physics issues
+        this.stage.updateTransform();
+        this._updateTransform = true;
+
     },
 
     /**
-    * Renders the display list. Called automatically by Game.update.
+    * Runs the Render cycle.
+    * It starts by calling State.preRender. In here you can do any last minute adjustments of display objects as required.
+    * It then calls the renderer, which renders the entire display list, starting from the Stage object and working down.
+    * It then calls plugin.render on any loaded plugins, in the order in which they were enabled.
+    * After this State.render is called. Any rendering that happens here will take place on-top of the display list.
+    * Finally plugin.postRender is called on any loaded plugins, in the order in which they were enabled.
+    * This method is called automatically by Game.update, you don't need to call it directly.
+    * Should you wish to have fine-grained control over when Phaser renders then use the `Game.lockRender` boolean.
+    * Phaser will only render when this boolean is `false`.
     *
     * @method Phaser.Game#updateRender
     * @protected
@@ -821,7 +851,12 @@ Phaser.Game.prototype = {
     */
     updateRender: function (elapsedTime) {
 
-        this.state.preRender();
+        if (this.lockRender)
+        {
+            return;
+        }
+
+        this.state.preRender(elapsedTime);
         this.renderer.render(this.stage);
 
         this.plugins.render(elapsedTime);

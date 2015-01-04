@@ -12,18 +12,31 @@
 * to rewrite the @class [@constructor] to @alias @class which enables JSDoc to collect better data.
 */
 
+// Regular expression to match a line starting with what appears to be a doclet tag.
+// This only works for solo single-line doclet tags. The line start is captured in $1,
+// the doclet tag in $2 and everything else in $3.
+var extract = /^(\s*(?:\/\*{2,}|\*{1,})\s*)(@\w+)\s*?([^\r\n]*)/mg;
+
 exports.handlers = {};
 exports.handlers.jsdocCommentFound = function (e) {
 
     var raw = e.comment;
 
-    var m = /^(\s*[*])\s*@class\b/m.exec(raw);
-    if (m)
+    var classdoc = /@class\b/.exec(raw);
+    var sourcefile = /@sourcefile\b/.exec(raw);
+
+    // PIXI docs generated from YUIDocs have @sourcefile (but no code) and need to be excluded
+    if (classdoc && !sourcefile)
     {
-        // @class X -> @alias X / @class
-        raw = raw.replace(/^(\s*[*])\s*@class[ \t]+(\S+).*?((?=[\r\n]+))/mg, "$1 @alias $2$3$1 @class");
-        // @constructor -> {removed}
-        raw = raw.replace(/^(\s*[*])\s*@constructor\b.*?(?=[\r\n]+)/mg, "$1");
+        raw = raw.replace(extract, function (m, pre, doclet, extra) {
+            if (doclet === '@class' && extra.trim()) {
+                return pre + '@alias ' + extra.trim() + '\n' + pre + '@class';
+            } else if (doclet === '@constructor') {
+                return '';
+            } else {
+                return m;
+            }
+        });
 
         e.comment = raw;
     }
