@@ -90,7 +90,9 @@ Version 2.2.2 - "Alkindar" - in development
 * Device.webAudio check inversed to avoid throwing a warning in Chrome.
 * Mouse.mouseMoveCallback is flagged as deprecated.
 * Remove `tw` and `th` init from TilemapLayer (thanks @nextht #1474)
-* Particles.Arcade.Emitter.makeParticles now checks the given `quantity` value against `Emitter.maxParticles`. If `quantity` is more than `maxParticles` then the `maxParticles` value is used instead.
+* Particles.Arcade.Emitter.makeParticles now checks the given `quantity` value against `Emitter.maxParticles`. If `quantity` is more than `maxParticles` then the `maxParticles` value is reset to the new `quantity` given (as this is how most devs seem to use it).
+* Particles.Arcade.Emitter.emitParticle now returns a boolean depending if a particle was emitted or not.
+* Particles.Arcade.Emitter.update only updates `_counter` if a particle was successfully emitted.
 
 ### Bug Fixes
 

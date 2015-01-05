@@ -247,25 +247,24 @@ Phaser.Particles.Arcade.Emitter.prototype.constructor = Phaser.Particles.Arcade.
 
 /**
 * Called automatically by the game loop, decides when to launch particles and when to "die".
+* 
 * @method Phaser.Particles.Arcade.Emitter#update
 */
 Phaser.Particles.Arcade.Emitter.prototype.update = function () {
 
     if (this.on && this.game.time.time >= this._timer)
     {
-        this.emitParticle();
+        this._timer = this.game.time.time + this.frequency * this.game.time.slowMotion;
 
-        this._counter++;
-
-        if (this._quantity > 0)
+        if (this.emitParticle())
         {
-            if (this._counter >= this._quantity)
+            this._counter++;
+
+            if (this._quantity > 0 && this._counter >= this._quantity)
             {
                 this.on = false;
             }
         }
-
-        this._timer = this.game.time.time + this.frequency * this.game.time.slowMotion;
     }
 
     var i = this.children.length;
@@ -307,7 +306,7 @@ Phaser.Particles.Arcade.Emitter.prototype.makeParticles = function (keys, frames
 
     if (quantity > this.maxParticles)
     {
-        quantity = this.maxParticles;
+        this.maxParticles = quantity;
     }
 
     while (i < quantity)
@@ -411,8 +410,8 @@ Phaser.Particles.Arcade.Emitter.prototype.flow = function (lifespan, frequency, 
 * @param {boolean} [explode=true] - Whether the particles should all burst out at once (true) or at the frequency given (false).
 * @param {number} [lifespan=0] - How long each particle lives once emitted in ms. 0 = forever.
 * @param {number} [frequency=250] - Ignored if Explode is set to true. Frequency is how often to emit 1 particle. Value given in ms.
-* @param {number} [quantity=0] - How many particles to launch. 0 = "all of the particles".
-* @param {number} [forceQuantity=false] - If true and creating a particle flow, the quantity emitted will be forced to the be quantity given in this call.
+* @param {number} [quantity=0] - How many particles to launch. 0 = "all of the particles" which will keep emitting until Emitter.maxParticles is reached.
+* @param {number} [forceQuantity=false] - If `true` and creating a particle flow, the quantity emitted will be forced to the be quantity given in this call. This can never exceed Emitter.maxParticles.
 */
 Phaser.Particles.Arcade.Emitter.prototype.start = function (explode, lifespan, frequency, quantity, forceQuantity) {
 
@@ -421,6 +420,11 @@ Phaser.Particles.Arcade.Emitter.prototype.start = function (explode, lifespan, f
     if (typeof frequency === 'undefined' || frequency === null) { frequency = 250; }
     if (typeof quantity === 'undefined') { quantity = 0; }
     if (typeof forceQuantity === 'undefined') { forceQuantity = false; }
+
+    if (quantity > this.maxParticles)
+    {
+        quantity = this.maxParticles;
+    }
 
     this.revive();
 
@@ -439,7 +443,7 @@ Phaser.Particles.Arcade.Emitter.prototype.start = function (explode, lifespan, f
     else
     {
         this.on = true;
-        this._quantity = quantity;
+        this._quantity += quantity;
         this._counter = 0;
         this._timer = this.game.time.time + frequency * this.game.time.slowMotion;
     }
@@ -450,6 +454,7 @@ Phaser.Particles.Arcade.Emitter.prototype.start = function (explode, lifespan, f
 * This function can be used both internally and externally to emit the next particle in the queue.
 *
 * @method Phaser.Particles.Arcade.Emitter#emitParticle
+* @return {boolean} True if a particle was emitted, otherwise false.
 */
 Phaser.Particles.Arcade.Emitter.prototype.emitParticle = function () {
 
@@ -457,7 +462,7 @@ Phaser.Particles.Arcade.Emitter.prototype.emitParticle = function () {
 
     if (particle === null)
     {
-        return;
+        return false;
     }
 
     if (this.width > 1 || this.height > 1)
@@ -530,6 +535,8 @@ Phaser.Particles.Arcade.Emitter.prototype.emitParticle = function () {
     particle.body.angularDrag = this.angularDrag;
 
     particle.onEmit();
+
+    return true;
 
 };
 
