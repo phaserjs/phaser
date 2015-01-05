@@ -573,9 +573,6 @@ Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides
     x = this._fixX(x);
     y = this._fixY(y);
 
-    var tw = this._mc.tileWidth;
-    var th = this._mc.tileHeight;
-
     //  Convert the pixel values into tile coordinates
     var tx = Math.floor(x / this._mc.cw);
     var ty = Math.floor(y / this._mc.ch);
