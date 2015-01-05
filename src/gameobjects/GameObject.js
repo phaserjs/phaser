@@ -505,12 +505,16 @@ Phaser.GameObject.CoreMixin.prototype = /* @lends Phaser.GameObject.CoreMixin */
             return false;
         }
 
-        //  Update any Children
+        //  preUpdate any Children - guard for non-Phaser game objects
         if (this.children && this.children.length)
         {
             for (var i = 0, len = this.children.length; i < len; i++)
             {
-                this.children[i].preUpdate();
+                var child = this.children[i];
+                if (child.preUpdate)
+                {
+                    child.preUpdate();
+                }
             }
         }
 
@@ -547,12 +551,16 @@ Phaser.GameObject.CoreMixin.prototype = /* @lends Phaser.GameObject.CoreMixin */
             this.body.postUpdate();
         }
 
-        //  Update any Children
+        //  postUpdate any Children - guard for non-Phaser game objects
         if (this.children && this.children.length)
         {
             for (var i = 0, len = this.children.length; i < len; i++)
             {
-                this.children[i].postUpdate();
+                var child = this.children[i];
+                if (child.postUpdate)
+                {
+                    child.postUpdate();
+                }
             }
         }
 
