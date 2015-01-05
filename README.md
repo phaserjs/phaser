@@ -1,8 +1,27 @@
+![div](http://www.phaser.io/images/github-divider.png)
 ![Phaser 2.0](http://www.phaser.io/images/phaser2-github.png)
+
+# Phaser 2.2.2 "Alkindar" - Released: in development
+
+Phaser is a fast, free and fun open source HTML5 game framework. It uses [Pixi.js](https://github.com/GoodBoyDigital/pixi.js/) for WebGL and Canvas rendering across desktop and mobile web browsers. Games can be compiled into native iOS and Android apps via 3rd party tools.
+
+Phaser is currently the highest ranked JavaScript game framework on Github and is used by tens of thousands of developers worldwide. It's actively maintained by the HTML5 game development company [Photon Storm](http://www.photonstorm.com) and the incredible open source community.
+
+* [Website](http://phaser.io)
+* [Twitter](https://twitter.com/photonstorm) (hashtag #phaserjs)
+* [API Documentationn](http://docs.phaser.io)
+* [Forum](http://www.html5gamedevs.com/forum/14-phaser/)
+* Over 400 [Source Code Examples](http://examples.phaser.io) also available in this [git repo](https://github.com/photonstorm/phaser-examples)
+* Subscribe to the [Phaser Newsletter](https://confirmsubscription.com/h/r/369DE48E3E86AF1E)
+* StackOverflow tag: [phaser-framework](http://stackoverflow.com/questions/tagged/phaser-framework)
+* [Phaser Plugins](https://github.com/photonstorm/phaser-plugins)
+* [freenode #phaserio IRC channel](http://www.html5gamedevs.com/topic/4470-official-phaserio-irc-channel-phaserio-on-freenode/)
+* Please support our work via [Gratipay](https://gratipay.com/photonstorm/)
+
+![div](http://www.phaser.io/images/github-divider.png)
 
 # Index
 
-- [About](#about)
 - [What's New?](#whats-new)
 - [Getting Started](#getting-started)
 - [Change Log](#change-log)
@@ -20,27 +39,7 @@
 - [Bugs?](#bugs)
 - [License](#license)
 
-<a name="about"></a>
-# Phaser 2.2.2
-
-Phaser is a fast, free and fun open source game framework for making desktop and mobile browser HTML5 games. It uses [Pixi.js](https://github.com/GoodBoyDigital/pixi.js/) internally for fast 2D Canvas and WebGL rendering.
-
-Version: 2.2.2 "Alkindar" - Released: in development
-
-By Richard Davey, [Photon Storm](http://www.photonstorm.com)
-
-* View the [Official Website](http://phaser.io)
-* Follow on [Twitter](https://twitter.com/photonstorm)
-* Join the [Forum](http://www.html5gamedevs.com/forum/14-phaser/)
-* StackOverflow tag: [phaser-framework](http://stackoverflow.com/questions/tagged/phaser-framework)
-* Source code for 400+ [Phaser Examples](https://github.com/photonstorm/phaser-examples) or [browse them online](http://examples.phaser.io)
-* View the growing list of [Phaser Plugins](https://github.com/photonstorm/phaser-plugins)
-* Read the [documentation online](http://docs.phaser.io)
-* Join our [#phaserio IRC channel](http://www.html5gamedevs.com/topic/4470-official-phaserio-irc-channel-phaserio-on-freenode/) on freenode
-* Subscribe to the [Phaser Newsletter](https://confirmsubscription.com/h/r/369DE48E3E86AF1E) and we'll email you when new versions are released.
-* Please help support our work via [Gittip](https://www.gittip.com/photonstorm/)
-
-![div](http://phaser.io/images/div4.png)
+![div](http://www.phaser.io/images/github-divider.png)
 
 <a name="whats-new"></a>
 ## Welcome to Phaser and What's new in 2.2.2?
@@ -49,10 +48,12 @@ Happy coding everyone! I hope to see you on the forums.
 
 ![boogie](http://www.phaser.io/images/spacedancer.gif)
 
-![div](http://phaser.io/images/div1.png)
+![div](http://www.phaser.io/images/github-divider.png)
+
+![Phaser Logo](http://www.photonstorm.com/wp-content/uploads/2013/09/phaser_10_release.jpg)
 
 <a name="getting-started"></a>
-## Getting Started Guides
+## Getting Started
 
 We have a [Getting Started Guide](http://phaser.io/getting-started-js.php) which covers all you need to begin developing games with Phaser. From setting up a web server to picking an IDE. If you're new to HTML5 game development, or are coming from another language like AS3, then we recommend starting there.
 
@@ -62,9 +63,7 @@ The [Game Mechanic Explorer](http://gamemechanicexplorer.com) is a great interac
 
 Finally the list of [community authored Phaser Tutorials](http://www.lessmilk.com/phaser-tutorial/) is growing fast!
 
-![Phaser Logo](http://www.photonstorm.com/wp-content/uploads/2013/09/phaser_10_release.jpg)
-
-![div](http://phaser.io/images/div2.png)
+![div](http://www.phaser.io/images/github-divider.png)
 
 <a name="change-log"></a>
 ## Change Log
@@ -138,7 +137,7 @@ primary input is ubiquitously a mouse. There are no known breaking compatibility
 
 For details about changes made in previous versions of Phaser see the full Change Log at https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md
 
-![div](http://phaser.io/images/div3.png)
+![div](http://www.phaser.io/images/github-divider.png)
 
 <a name="how-to-build"></a>
 ## How to Build
@@ -155,14 +154,14 @@ If you replace Pixi or p2 then run `grunt replace` to patch their UMD strings so
 
 Note: Some of you may not be aware, but the `phaser.min.js` file in the build folder contains both Arcade Physics and P2 Physics bundled in. If you only need Arcade Physics then you can use `build\custom\phaser-arcade-physics.min.js` instead. This will save you 180KB from the minified file size.
 
-![div](http://phaser.io/images/div4.png)
+![div](http://www.phaser.io/images/github-divider.png)
 
 <a name="koding"></a>
 ## Koding
 
 You can [clone the Phaser repo in Koding](https://koding.com/Teamwork?import=https://github.com/photonstorm/phaser/archive/master.zip&c=git1) and then start editing and previewing code right away using their web based VM development system.
 
-![div](http://phaser.io/images/div5.png)
+![div](http://www.phaser.io/images/github-divider.png)
 
 <a name="bower"></a>
 ## Bower / NPM
@@ -179,7 +178,7 @@ Nice and easy :)
 
 ![Tanks](http://www.photonstorm.com/wp-content/uploads/2013/10/phaser_tanks-640x480.png)
 
-![div](http://phaser.io/images/div6.png)
+![div](http://www.phaser.io/images/github-divider.png)
 
 <a name="jsdelivr"></a>
 ## jsDelivr
@@ -194,7 +193,7 @@ or the non-minified version:
 
 More details on the [jsDelivr Phaser page](http://www.jsdelivr.com/#!phaser).
 
-![div](http://phaser.io/images/div1.png)
+![div](http://www.phaser.io/images/github-divider.png)
 
 <a name="requirements"></a>
 ## Requirements
@@ -224,7 +223,7 @@ If you don't need any physics system at all, or are implementing your own, there
 
 You can create your own custom build of Phaser by looking at the grunt options and manifests in the tasks folder.
 
-![div](http://phaser.io/images/div3.png)
+![div](http://www.phaser.io/images/github-divider.png)
 
 <a name="example"></a>
 ## Learn By Example
@@ -249,7 +248,7 @@ There is a 'Side View' example viewer as well. This loads all the examples into 
 
 You can also browse all [Phaser Examples](http://examples.phaser.io) online.
 
-![div](http://phaser.io/images/div4.png)
+![div](http://www.phaser.io/images/github-divider.png)
 
 <a name="features"></a>
 ## Features
@@ -321,7 +320,7 @@ Phaser has been used to create hundreds of games, which receive millions of play
 
 ![FruitParty](http://www.photonstorm.com/wp-content/uploads/2013/10/phaser_fruit_particles-640x480.png)
 
-![div](http://phaser.io/images/div6.png)
+![div](http://www.phaser.io/images/github-divider.png)
 
 <a name="road-map"></a>
 ## Road Map
@@ -363,14 +362,14 @@ We don't anticipate a release until Summer 2015. Phaser 2 still has roadmap feat
 
 If you are an exceptional JavaScript developer and would like to join the Phaser 3 development team then let us know. We have a limited budget available to pay towards your time.
 
-![div](http://phaser.io/images/div1.png)
+![div](http://www.phaser.io/images/github-divider.png)
 
 <a name="mighty-editor"></a>
 ## Mighty Editor - A Visual Phaser Game Editor
 
 [MightyEditor](http://mightyfingers.com/) is a browser-based visual Phaser game editor. Create your maps with ease, position objects and share them in seconds. It also exports to native Phaser code. Excellent for quickly setting-up levels and scenes.
 
-![div](http://phaser.io/images/div2.png)
+![div](http://www.phaser.io/images/github-divider.png)
 
 <a name="contributing"></a>
 ## Contributing
@@ -389,7 +388,7 @@ We now have a full [Contributors Guide][contribute] which goes into the process 
 
 [![Build Status](https://travis-ci.org/photonstorm/phaser.png?branch=dev)](https://travis-ci.org/photonstorm/phaser)
 
-![div](http://phaser.io/images/div3.png)
+![div](http://www.phaser.io/images/github-divider.png)
 
 <a name="bugs"></a>
 ## Bugs?
@@ -400,7 +399,7 @@ Please add them to the [Issue Tracker][issues] with as much info as possible, es
 
 "Being negative is not how we make progress" - Larry Page, Google
 
-![div](http://phaser.io/images/div4.png)
+![div](http://www.phaser.io/images/github-divider.png)
 
 <a name="license"></a>
 ## License
