@@ -78,6 +78,7 @@ Version 2.2.2 - "Alkindar" - in development
 * Line.normalAngle gets the angle of the line normal in radians.
 * Line.normalX and Line.normalY contain the x and y components of the left-hand normal of the line.
 * Line.fromAngle will sets this line to start at the given `x` and `y` coordinates and for the segment to extend at `angle` for the given `length`.
+* BitmapData.drawGroup draws the immediate children of a Phaser.Group to a BitmapData. Children are only drawn if they have their `exists` property set to `true`. The children will be drawn at their `x` and `y` world space coordinates. When drawing it will take into account the child's rotation, scale and alpha values. No iteration takes place. Groups nested inside other Groups will not be iterated through.
 
 ### Updates
 
@@ -94,6 +95,8 @@ Version 2.2.2 - "Alkindar" - in development
 * Particles.Arcade.Emitter.emitParticle now returns a boolean depending if a particle was emitted or not.
 * Particles.Arcade.Emitter.update only updates `_counter` if a particle was successfully emitted.
 * Phaser.Point.angleSq removed. It didn't work so any code relying on it would be broken, and it's unclear what it was meant for (thanks @nextht #1396)
+* BitmapData.copy `tx` parameter if `null` and `source` is a Display Object, it will default to `source.x`.
+* BitmapData.copy `ty` parameter if `null` and `source` is a Display Object, it will default to `source.y`.
 
 ### Bug Fixes
 

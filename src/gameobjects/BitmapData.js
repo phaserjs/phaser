@@ -969,8 +969,8 @@ Phaser.BitmapData.prototype = {
      * @param {number} [y=0] - The y coordinate representing the top-left of the region to copy from the source image.
      * @param {number} [width] - The width of the region to copy from the source image. If not specified it will use the full source image width.
      * @param {number} [height] - The height of the region to copy from the source image. If not specified it will use the full source image height.
-     * @param {number} [tx] - The x coordinate to translate to before drawing. If not specified it will default to the `x` parameter.
-     * @param {number} [ty] - The y coordinate to translate to before drawing. If not specified it will default to the `y` parameter.
+     * @param {number} [tx] - The x coordinate to translate to before drawing. If not specified it will default to the `x` parameter. If `null` and `source` is a Display Object, it will default to `source.x`.
+     * @param {number} [ty] - The y coordinate to translate to before drawing. If not specified it will default to the `y` parameter. If `null` and `source` is a Display Object, it will default to `source.y`.
      * @param {number} [newWidth] - The new width of the block being copied. If not specified it will default to the `width` parameter.
      * @param {number} [newHeight] - The new height of the block being copied. If not specified it will default to the `height` parameter.
      * @param {number} [rotate=0] - The angle in radians to rotate the block to before drawing. Rotation takes place around the center by default, but can be changed with the `anchor` parameters.
@@ -999,6 +999,9 @@ Phaser.BitmapData.prototype = {
             this._rotate = source.rotation;
             this._alpha.current = source.alpha;
             this._image = source.texture.baseTexture.source;
+
+            if (typeof tx === 'undefined' || tx === null) { tx = source.x; }
+            if (typeof ty === 'undefined' || ty === null) { ty = source.y; }
 
             if (source.texture.trim)
             {
@@ -1185,6 +1188,30 @@ Phaser.BitmapData.prototype = {
 
         //  By specifying null for most parameters it will tell `copy` to use the Sprite values instead, which is what we want here
         return this.copy(source, null, null, null, null, x, y, width, height, null, null, null, null, null, null, blendMode, roundPx);
+
+    },
+
+    /**
+    * Draws the immediate children of a Phaser.Group to this BitmapData.
+    * Children are only drawn if they have their `exists` property set to `true`.
+    * The children will be drawn at their `x` and `y` world space coordinates. If this is outside the bounds of the BitmapData they won't be drawn.
+    * When drawing it will take into account the child's rotation, scale and alpha values.
+    * No iteration takes place. Groups nested inside other Groups will not be iterated through.
+    *
+    * @method Phaser.BitmapData#drawGroup
+    * @param {Phaser.Group} group - The Group to draw onto this BitmapData.
+    * @param {number} [blendMode=null] - The composite blend mode that will be used when drawing the Group children. The default is no blend mode at all.
+    * @param {boolean} [roundPx=false] - Should the x and y values be rounded to integers before drawing? This prevents anti-aliasing in some instances.
+    * @return {Phaser.BitmapData} This BitmapData object for method chaining.
+    */
+    drawGroup: function (group, blendMode, roundPx) {
+
+        if (group.total > 0)
+        {
+            group.forEachExists(this.copy, this, null, null, null, null, null, null, null, null, null, null, null, null, null, null, blendMode, roundPx);
+        }
+
+        return this;
 
     },
 
