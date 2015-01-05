@@ -96,8 +96,8 @@ Version 2.2.2 - "Alkindar" - in development
 
 ### Bug Fixes
 
-* Fix / double-copy for Safari tilemap bug when rendering with delta scrolling. This fixes tilemaps not appearing to update on Safari OS X and iOS specifically (thanks @pnstickne #1498)
-* Simplified call to `updateTransform`. This is the unified and verified fix for #1424 #1490 #1502 and solves issues with physics tunneling under the new time step code.
+* Fix / double-copy for Safari tilemap bug when rendering with delta scrolling. This fixes tilemaps not appearing to update on Safari OS X and iOS specifically (thanks @pnstickne @neurofuzzy @lastnightsparty #1439 #1498)
+* Simplified call to `updateTransform`. This is the unified and verified fix for #1424 #1479 #1490 #1502 and solves issues with physics tunneling and visual glitches under the new time step code.
 * Tween.delay, Tween.repeat and Tween.yoyo will no longer throw an error if called before a TweenData object has been created (via Tween.to or Tween.from) (thanks @SomMeri #1419)
 * The click trampoline added for IE prevented Chrome for Android from being
 able to launch Full Screen mode with the default parameters for
@@ -114,6 +114,9 @@ primary input is ubiquitously a mouse. There are no known breaking compatibility
 * Fix floating point inaccuracy in Tween easing edge cases (thanks @jounii #1492)
 * Phaser.Signal was causing a CSP script-src violations in Cordova and Google Chrome Apps (thanks @elennaro #1494)
 * Added Events.onEnterBounds to the destroy method (thanks @legendary-mich #1497)
+* AnimationManager.destroy is now more careful about clearing up deep references (thanks @Arturszott #1449)
+* Ellipse.right and Ellipse.bottom setters fixed (thanks @nextht #1397)
+* Fixed double Ellipse.getBounds definition (thanks @nextht #1397)
 
 ### Pixi.js 2.2.0 Updates
 

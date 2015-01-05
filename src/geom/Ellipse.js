@@ -70,8 +70,9 @@ Phaser.Ellipse.prototype = {
 
     /**
     * Returns the framing rectangle of the ellipse as a Phaser.Rectangle object.
+    * 
     * @method Phaser.Ellipse#getBounds
-    * @return {Phaser.Rectangle} The bounds of the Circle.
+    * @return {Phaser.Rectangle} The bounds of the Ellipse.
     */
     getBounds: function () {
 
@@ -81,6 +82,7 @@ Phaser.Ellipse.prototype = {
 
     /**
     * Copies the x, y, width and height properties from any given object to this Ellipse.
+    * 
     * @method Phaser.Ellipse#copyFrom
     * @param {any} source - The object to copy from.
     * @return {Phaser.Ellipse} This Ellipse object.
@@ -193,7 +195,7 @@ Object.defineProperty(Phaser.Ellipse.prototype, "right", {
         }
         else
         {
-            this.width = this.x + value;
+            this.width = value - this.x;
         }
     }
 
@@ -235,7 +237,7 @@ Object.defineProperty(Phaser.Ellipse.prototype, "bottom", {
         }
         else
         {
-            this.height = this.y + value;
+            this.height = value - this.y;
         }
     }
 
@@ -266,6 +268,7 @@ Object.defineProperty(Phaser.Ellipse.prototype, "empty", {
 
 /**
 * Return true if the given x/y coordinates are within the Ellipse object.
+* 
 * @method Phaser.Ellipse.contains
 * @param {Phaser.Ellipse} a - The Ellipse to be checked.
 * @param {number} x - The X value of the coordinate to test.
@@ -279,26 +282,14 @@ Phaser.Ellipse.contains = function (a, x, y) {
         return false;
     }
 
-    //  Normalize the coords to an ellipse with center 0,0 and a radius of 0.5
-    var normx = ((x - a.x) / a.width) - 0.5;
-    var normy = ((y - a.y) / a.height) - 0.5;
+    //  Normalize the coords to an ellipse with center 0,0
+    var normx = ((x - a.x) / a.width);
+    var normy = ((y - a.y) / a.height);
 
     normx *= normx;
     normy *= normy;
 
-    return (normx + normy < 0.25);
-
-};
-
-/**
-* Returns the framing rectangle of the ellipse as a Phaser.Rectangle object.
-*
-* @method Phaser.Ellipse.getBounds
-* @return {Phaser.Rectangle} The framing rectangle
-*/
-Phaser.Ellipse.prototype.getBounds = function() {
-
-    return new Phaser.Rectangle(this.x, this.y, this.width, this.height);
+    return (normx + normy <= 1);
 
 };
 
