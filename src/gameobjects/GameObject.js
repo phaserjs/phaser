@@ -1541,27 +1541,19 @@ Phaser.GameObject.TextureMixin.prototype = /* @lends Phaser.GameObject.TextureMi
     * Gets or sets the current frame index and updates the Texture for display.
     *
     * @property {number} frame
+    * @deprecated 
     */
     frame: {
 
         get: function() {
 
-            return this._frame;
+            return this.animations.frame;
 
         },
 
         set: function(value) {
 
-            if (value !== this.frame)
-            {
-                var frameData = this.game.cache.getFrameData(this.key);
-
-                if (frameData && value < frameData.total && frameData.getFrame(value))
-                {
-                    this.setTexture(PIXI.TextureCache[frameData.getFrame(value).uuid]);
-                    this._frame = value;
-                }
-            }
+            this.animations.frame = value;
 
         }
 
@@ -1576,22 +1568,13 @@ Phaser.GameObject.TextureMixin.prototype = /* @lends Phaser.GameObject.TextureMi
 
         get: function() {
 
-            return this._frameName;
+            return this.animations.frameName;
 
         },
 
         set: function(value) {
 
-            if (value !== this.frameName)
-            {
-                var frameData = this.game.cache.getFrameData(this.key);
-
-                if (frameData && frameData.getFrameByName(value))
-                {
-                    this.setTexture(PIXI.TextureCache[frameData.getFrameByName(value).uuid]);
-                    this._frameName = value;
-                }
-            }
+            this.animations.frameName = value;
 
         }
 
