@@ -1075,7 +1075,7 @@ Phaser.Math = {
     },
 
     /**
-    * Returns the distance between the two given set of coordinates.
+    * Returns the euclidian distance between the two given set of coordinates.
     *
     * @method Phaser.Math#distance
     * @param {number} x1

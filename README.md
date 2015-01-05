@@ -93,6 +93,7 @@ Version 2.2.2 - "Alkindar" - in development
 * Particles.Arcade.Emitter.makeParticles now checks the given `quantity` value against `Emitter.maxParticles`. If `quantity` is more than `maxParticles` then the `maxParticles` value is reset to the new `quantity` given (as this is how most devs seem to use it).
 * Particles.Arcade.Emitter.emitParticle now returns a boolean depending if a particle was emitted or not.
 * Particles.Arcade.Emitter.update only updates `_counter` if a particle was successfully emitted.
+* Phaser.Point.angleSq removed. It didn't work so any code relying on it would be broken, and it's unclear what it was meant for (thanks @nextht #1396)
 
 ### Bug Fixes
 
