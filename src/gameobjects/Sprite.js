@@ -40,20 +40,10 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     Phaser.GameObject.init.call(this, game);
 
     /**
-    * @property {number} health - Health value. Used in combination with damage() to allow for quick killing of Sprites.
+    * @property {number} health - Health value.
+    *     Used in combination with damage() to allow for quick killing of Sprites.
     */
     this.health = 1;
-
-    /**
-    * To given a Sprite a lifespan, in milliseconds, once 'born' you can set this to a positive value. Handy for particles, bullets, etc.
-    *
-    * The lifespan is decremented by `game.time.physicsElapsed` (converted to milliseconds) each logic update,
-    * and {@link Phaser.Sprite.kill kill} is called once the lifespan reaches 0.
-    *
-    * @property {number} lifespan
-    * @default
-    */
-    this.lifespan = 0;
    
     this.position.set(x, y);
     this.world.setTo(x, y);
@@ -73,66 +63,6 @@ Phaser.Sprite.prototype.constructor = Phaser.Sprite;
 Phaser.Sprite.prototype.type = Phaser.SPRITE;
 
 Phaser.GameObject.mix(Phaser.Sprite.prototype, Phaser.GameObject.Traits.SPRITE_LIKE);
-
-Phaser.Sprite.prototype.preUpdateImpl = function () {
-
-    if (this.lifespan > 0)
-    {
-        this.lifespan -= this.game.time.physicsElapsedMS;
-
-        if (this.lifespan <= 0)
-        {
-            this.kill();
-        }
-    }
-
-};
-
-/**
-* Brings a 'dead' sprite back to life.
-*
-* A resurrected Image has its `alive`, `exists`, and `visible` properties set to true
-* and the `onRevived` event will be dispatched.
-*
-* @method Phaser.Sprite#revive
-* @memberof Phaser.Sprite
-* @param {number} [health=1] - The health to give the Sprite.
-* @return (Phaser.Sprite) This instance.
-*/
-Phaser.Sprite.prototype.revive = function(health) {
-
-    if (typeof health === 'undefined') { health = 1; }
-
-    this.health = health;
-    return Phaser.GameObject.LifeMixin.prototype.revive.call(this);
-
-};
-
-/**
-* Damages the Sprite by removing the given amount of health.
-*
-* {@link Phaser.Sprite#kill} is called if `health` fals to 0 (or less).
-*
-* @method Phaser.Sprite#damage
-* @memberof Phaser.Sprite
-* @param {number} amount - The amount to subtract from the Sprite.health value.
-* @return {Phaser.Sprite} This instance.
-*/
-Phaser.Sprite.prototype.damage = function(amount) {
-
-    if (this.alive)
-    {
-        this.health -= amount;
-
-        if (this.health <= 0)
-        {
-            this.kill();
-        }
-    }
-
-    return this;
-
-};
 
 /**
 * Resets the sprite.

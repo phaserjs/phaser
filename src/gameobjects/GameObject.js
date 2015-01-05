@@ -4,7 +4,7 @@
 *
 * Because there is not a single prototype hierarchy a "GameObject" mixin system is used to 
 * consistently add the appropriate game object features to different Phaser types.
-
+*
 * All game objects are expected to inherit from PIXI.DisplayObject or otherwise 
 * implementation the methods and properties it defines.
 *
@@ -350,6 +350,9 @@ Phaser.GameObject.CoreMixin.prototype = /* @lends Phaser.GameObject.CoreMixin */
     // here it is promoted to the prototype as undefined and applied to non-PHYSICS
     body: undefined,
 
+    // For objects with the LIFE trait; promoted to prototype
+    lifetime: undefined,
+
     /**
     * A small internal cache:
     * 0 = previous position.x
@@ -477,6 +480,17 @@ Phaser.GameObject.CoreMixin.prototype = /* @lends Phaser.GameObject.CoreMixin */
 
         // Update the world position
         this.world.setTo(this.game.camera.x + this.worldTransform.tx, this.game.camera.y + this.worldTransform.ty);
+
+        if (this.lifespan)
+        {
+            this.lifespan -= this.game.time.physicsElapsedMS;
+
+            if (this.lifespan <= 0)
+            {
+                this.lifespan = 0;
+                this.kill();
+            }
+        }
 
         this.preUpdateImpl();
 
@@ -757,6 +771,36 @@ Phaser.GameObject.CoreMixin.prototype = /* @lends Phaser.GameObject.CoreMixin */
     },
 
     /**
+    * Kills the game object.
+    *
+    * A killed game object has its `exists`, and `visible` set to false
+    * and will dispatch the `onKilled` event
+    *
+    * Killing a game object is a way to recycle it a parent Group/pool, but it doesn't free it from memory.
+    * Use {@link Phaser.GameObject.CoreMixin#destroy destroy} if the sprite is no longer needed.
+    *
+    * @method Phaser.GameObject.CoreMixin#kill
+    * @return {object} This game object instance.
+    */
+    kill: function() {
+
+        if (typeof this.alive === 'boolean')
+        {
+            this.alive = false;
+        }
+        this.exists = false;
+        this.visible = false;
+
+        if (this.events)
+        {
+            this.events.onKilled$dispatch(this);
+        }
+
+        return this;
+
+    },
+
+    /**
     * Resets the game object.
     *
     * This places the game object at the given x/y world coordinates and then
@@ -773,7 +817,7 @@ Phaser.GameObject.CoreMixin.prototype = /* @lends Phaser.GameObject.CoreMixin */
         this.position.x = x;
         this.position.y = y;
 
-        if ('alive' in this)
+        if (typeof this.alive === 'boolean')
         {
             this.alive = true;
         }
@@ -1224,7 +1268,16 @@ Phaser.GameObject.CullingMixin.prototype = /* @lends Phaser.GameObject.CullingMi
     * @property {boolean} checkWorldBounds
     * @default
     */
-    checkWorldBounds: false
+    checkWorldBounds: false,
+
+    /**
+    * If true {@link Phaser.GameObject.CoreMixin kill} is called when {@link Phaser.GameObject.CoreMixin inWorld} returns false.
+    * This check is done in the update when as long as {@link checkWorldBounds} is true.
+    *
+    * @property {boolean} outOfBoundsKill
+    * @default
+    */
+    outOfBoundsKill: false
 
 };
 
@@ -1741,23 +1794,40 @@ Phaser.GameObject.LifeMixin.prototype = /* @lends Phaser.GameObject.LifeMixin */
     alive: false,
 
     /**
-    * If true Sprite.kill is called as soon as Sprite.inWorld returns false, as long as Sprite.checkWorldBounds is true.
+    * @property {number} health - Health value.
+    *     Used in combination with {@link damage} to allow for quick killing of game objects.
+    */
+    health: 1,
+
+    /**
+    * The object lifetime, in physics milliseconds.
     *
-    * @property {boolean} outOfBoundsKill
+    * Once 'born' you can set this to a positive value that will decay; once it reaches zero the object is killed.
+    * Handy for particles, bullets, etc.
+    *
+    * The lifespan is decremented by number of elapsed physics milliseconds each logic update
+    * and {@link kill} is called once the lifespan reaches 0.  
+    * Manually resetting this value to zero will not automatically kill the object.
+    *
+    * @property {number} lifespan
     * @default
     */
-    outOfBoundsKill: false,
+    lifespan: 0,
 
     /**
     * Brings a 'dead' sprite back to life.
     *
-    * A resurrected Image has its `alive`, `exists`, and `visible` properties set to true
+    * A resurrected object has its `alive`, `exists`, and `visible` properties set to true
     * and the `onRevived` event will be dispatched.
     *
-    * @method Phaser.GameObject.LifeMixin#revive
+    * @param {number} [health=1] - The health to give.
     * @return {object} This game object instance.
     */
-    revive: function() {
+    revive: function (health) {
+
+        if (typeof health === 'undefined') { health = 1; }
+
+        this.health = health;
 
         this.alive = true;
         this.exists = true;
@@ -1773,13 +1843,39 @@ Phaser.GameObject.LifeMixin.prototype = /* @lends Phaser.GameObject.LifeMixin */
     },
 
     /**
+    * Damages the object by removing the given amount of health.
+    *
+    * The {@link kill} method is called if {@link health} falls to 0 or below.
+    *
+    * @param {number} amount - The amount to subtract from the Sprite.health value.
+    * @return {Phaser.Sprite} This instance.
+    */
+    damage: function(amount) {
+
+        if (this.alive)
+        {
+            this.health -= amount;
+
+            if (this.health <= 0)
+            {
+                this.kill();
+            }
+        }
+
+        return this;
+
+    },
+
+    /**
     * Kills the game object.
     *
     * A killed game object has its `alive`, `exists`, and `visible` properties all set to false
     * and the `onKilled` event will be dispatched.
     *
+    * The {@link health} property is unaffected.
+    *
     * Killing a game object is a way to recycle it a parent Group/pool, but it doesn't free it from memory.
-    * Use {@link Phaser.GameObject.CoreMixin#destroy destrop} if the sprite is no longer needed.
+    * Use {@link Phaser.GameObject.CoreMixin#destroy destroy} if the sprite is no longer needed.
     *
     * @method Phaser.GameObject.LifeMixin#kill
     * @return {object} This game object instance.
