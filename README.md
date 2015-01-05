@@ -78,32 +78,36 @@ Version 2.2.2 - "Alkindar" - in development
 * Line.normalAngle gets the angle of the line normal in radians.
 * Line.normalX and Line.normalY contain the x and y components of the left-hand normal of the line.
 * Line.fromAngle will sets this line to start at the given `x` and `y` coordinates and for the segment to extend at `angle` for the given `length`.
+* BitmapData.drawGroup draws the immediate children of a Phaser.Group to a BitmapData. Children are only drawn if they have their `exists` property set to `true`. The children will be drawn at their `x` and `y` world space coordinates. When drawing it will take into account the child's rotation, scale and alpha values. No iteration takes place. Groups nested inside other Groups will not be iterated through.
 
 ### Updates
 
 * TypeScript definitions fixes and updates (thanks @clark-stevenson @Schmavery)
 * DOM.visualBounds now includes scroll bars (#1429)
 * The new fixed time-step code has been more carefully linked to Pixi transform updates. This should finally put a stop to the tunneling issues that were being reported.
-* Tween.stop fired a different set of onComplete parameters to Tween.update. Both now dispatch onComplete(target, tween) as the parameters in that order (thanks @P0rnflake #1450)
+* Tween.stop fired a different set of onComplete parameters to Tween.update. Both now dispatch `onComplete(target, tween)`` as the parameters in that order (thanks @P0rnflake #1450)
 * Removed redundant `tolerance` parameter from Rectangle.intersects (thanks @toolness #1463)
 * Phaser.Graphics.drawCircle now overrides PIXI.drawCircle which means the docs are now correct re: diameter not radius (thanks @ethankaminski #1454)
 * Device.webAudio check inversed to avoid throwing a warning in Chrome.
 * Mouse.mouseMoveCallback is flagged as deprecated.
+* Remove `tw` and `th` init from TilemapLayer (thanks @nextht #1474)
+* Particles.Arcade.Emitter.makeParticles now checks the given `quantity` value against `Emitter.maxParticles`. If `quantity` is more than `maxParticles` then the `maxParticles` value is reset to the new `quantity` given (as this is how most devs seem to use it).
+* Particles.Arcade.Emitter.emitParticle now returns a boolean depending if a particle was emitted or not.
+* Particles.Arcade.Emitter.update only updates `_counter` if a particle was successfully emitted.
+* Phaser.Point.angleSq removed. It didn't work so any code relying on it would be broken, and it's unclear what it was meant for (thanks @nextht #1396)
+* BitmapData.copy `tx` parameter if `null` and `source` is a Display Object, it will default to `source.x`.
+* BitmapData.copy `ty` parameter if `null` and `source` is a Display Object, it will default to `source.y`.
 
 ### Bug Fixes
 
+* Fix / double-copy for Safari tilemap bug when rendering with delta scrolling. This fixes tilemaps not appearing to update on Safari OS X and iOS specifically (thanks @pnstickne @neurofuzzy @lastnightsparty #1439 #1498)
+* Simplified call to `updateTransform`. This is the unified and verified fix for #1424 #1479 #1490 #1502 and solves issues with physics tunneling and visual glitches under the new time step code.
 * Tween.delay, Tween.repeat and Tween.yoyo will no longer throw an error if called before a TweenData object has been created (via Tween.to or Tween.from) (thanks @SomMeri #1419)
-* The click trampoline added for IE prevents Chrome for Android from being
+* The click trampoline added for IE prevented Chrome for Android from being
 able to launch Full Screen mode with the default parameters for
-ScaleManger#startFullScreen. (The desktop version of Chrome is not
-affected.)
-    This fix adds an additional compatibility settings (clickTrampoline)
-that can be used to configure when such is used. By default the
-'when-not-mouse' mode is only enabled for Desktop browsers, where the
-primary input is ubiquitously a mouse.
-    There are no known breaking compatibility changes - the Full Screen should
-be initiatable in Chrome for Android as it was in 2.1.x. The default
-Android browser does not support Full Screen.
+ScaleManger#startFullScreen (the desktop version of Chrome was not
+affected.). This is now fixed and additional compatibility settings (clickTrampoline) that can be used to configure when such is used. By default the 'when-not-mouse' mode is only enabled for Desktop browsers, where the
+primary input is ubiquitously a mouse. There are no known breaking compatibility changes - the Full Screen should be initiatable in Chrome for Android as it was in 2.1.x. The default Android browser does not support Full Screen (thanks @pnstickne)
 * TilemapParser now checks for image collections, avoiding crashes. These would arise with maps exported from the new release of Tiled (thanks @paul-reilly #1440)
 * Group.replace could still access `newChild.parent` after it was set to `undefined`. This unifies the approach (thanks @pnstickne #1410 #1417)
 * P2.postBroadphaserHandler updated to avoid skipping final 2 pairs.
@@ -112,9 +116,11 @@ Android browser does not support Full Screen.
 * Added extra checks to Sound.play to stop it throwing DOM Exception Error 11 if the `sound.readyState` wasn't set or the sound was invalid. Also wrapped `stop()`` call in a `try catch`.
 * Time.reset would incorrectly reset the `_started` property, now maps it to `Time.time` (thanks @XekeDeath #1467)
 * Fix floating point inaccuracy in Tween easing edge cases (thanks @jounii #1492)
-* Simplified call to updateTransform - unified and verified fix for #1424 #1502
 * Phaser.Signal was causing a CSP script-src violations in Cordova and Google Chrome Apps (thanks @elennaro #1494)
 * Added Events.onEnterBounds to the destroy method (thanks @legendary-mich #1497)
+* AnimationManager.destroy is now more careful about clearing up deep references (thanks @Arturszott #1449)
+* Ellipse.right and Ellipse.bottom setters fixed (thanks @nextht #1397)
+* Fixed double Ellipse.getBounds definition (thanks @nextht #1397)
 
 ### Pixi.js 2.2.0 Updates
 

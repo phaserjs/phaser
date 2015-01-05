@@ -205,7 +205,7 @@ declare module Phaser {
 
         add(object: any): Phaser.BitmapData;
         addToWorld(x?: number, y?: number, anchorX?: number, anchorY?: number, scaleX?: number, scaleY?: number): Phaser.Image;
-        alphaMask(source: any, mask: any, sourceRect?: Phaser.Rectangle, maskRect?: Phaser.Rectangle): Phaser.BitmapData;
+        alphaMask(source: any, mask?: any, sourceRect?: Phaser.Rectangle, maskRect?: Phaser.Rectangle): Phaser.BitmapData;
         blendAdd(): Phaser.BitmapData;
         blendColor(): Phaser.BitmapData;
         blendColorBurn(): Phaser.BitmapData;
@@ -239,6 +239,7 @@ declare module Phaser {
         copyPixels(source: any, area: Phaser.Rectangle, x: number, y: number, alpha?: number): void;
         copyRect(source: any, area: Phaser.Rectangle, x?: number, y?: number, alpha?: number, blendMode?: number, roundPx?: boolean): Phaser.BitmapData;
         draw(source: any, x?: number, y?: number, width?: number, height?: number, blendMode?: number, roundPx?: boolean): Phaser.BitmapData;
+        drawGroup(group: Phaser.Group, blendMode?: number, roundPx?: boolean): Phaser.BitmapData;
         extract(destination: Phaser.BitmapData, r: number, g: number, b: number, a?: number, resize?: boolean, r2?: number, g2?: number, b2?: number): Phaser.BitmapData;
         fill(r: number, g: number, b: number, a?: number): Phaser.BitmapData;
         getBounds(rect?: Phaser.Rectangle): Phaser.Rectangle;
@@ -1896,6 +1897,9 @@ declare module Phaser {
         height: number;
         left: number;
         length: number;
+        normalAngle: number;
+        normalX: number;
+        normalY: number;
         perpSlope: number;
         right: number;
         slope: number;
@@ -1907,13 +1911,16 @@ declare module Phaser {
 
         static intersectsPoints(a: Phaser.Point, b: Phaser.Point, e: Phaser.Point, f: Phaser.Point, asSegment?: boolean, result?: Phaser.Point): Phaser.Point;
         static intersects(a: Phaser.Line, b: Phaser.Line, asSegment?: boolean, result?: Phaser.Point): Phaser.Point;
+        static reflect(a: Phaser.Line, b: Phaser.Line): number;
 
         clone(output: Phaser.Line): Phaser.Line;
         coordinatesOnLine(stepRate: number, results: any[]): any[];
+        fromAngle(x: number, y: number, angle: number, length: number): Phaser.Line;
         fromSprite(startSprite: Phaser.Sprite, endSprite: Phaser.Sprite, useCenter?: boolean): Phaser.Line;
         intersects(line: Phaser.Line, asSegment?: boolean, result?: Phaser.Point): Phaser.Point;
         pointOnLine(x: number, y: number): boolean;
         pointOnSegment(x: number, y: number): boolean;
+        reflect(line: Phaser.Line): number;
         setTo(x1?: number, y1?: number, x2?: number, y2?: number): Phaser.Line;
 
     }
