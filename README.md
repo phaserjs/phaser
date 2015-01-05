@@ -84,26 +84,23 @@ Version 2.2.2 - "Alkindar" - in development
 * TypeScript definitions fixes and updates (thanks @clark-stevenson @Schmavery)
 * DOM.visualBounds now includes scroll bars (#1429)
 * The new fixed time-step code has been more carefully linked to Pixi transform updates. This should finally put a stop to the tunneling issues that were being reported.
-* Tween.stop fired a different set of onComplete parameters to Tween.update. Both now dispatch onComplete(target, tween) as the parameters in that order (thanks @P0rnflake #1450)
+* Tween.stop fired a different set of onComplete parameters to Tween.update. Both now dispatch `onComplete(target, tween)`` as the parameters in that order (thanks @P0rnflake #1450)
 * Removed redundant `tolerance` parameter from Rectangle.intersects (thanks @toolness #1463)
 * Phaser.Graphics.drawCircle now overrides PIXI.drawCircle which means the docs are now correct re: diameter not radius (thanks @ethankaminski #1454)
 * Device.webAudio check inversed to avoid throwing a warning in Chrome.
 * Mouse.mouseMoveCallback is flagged as deprecated.
+* Remove `tw` and `th` init from TilemapLayer (thanks @nextht #1474)
+* Particles.Arcade.Emitter.makeParticles now checks the given `quantity` value against `Emitter.maxParticles`. If `quantity` is more than `maxParticles` then the `maxParticles` value is used instead.
 
 ### Bug Fixes
 
+* Fix / double-copy for Safari tilemap bug when rendering with delta scrolling. This fixes tilemaps not appearing to update on Safari OS X and iOS specifically (thanks @pnstickne #1498)
 * Tween.delay, Tween.repeat and Tween.yoyo will no longer throw an error if called before a TweenData object has been created (via Tween.to or Tween.from) (thanks @SomMeri #1419)
-* The click trampoline added for IE prevents Chrome for Android from being
+* The click trampoline added for IE prevented Chrome for Android from being
 able to launch Full Screen mode with the default parameters for
-ScaleManger#startFullScreen. (The desktop version of Chrome is not
-affected.)
-    This fix adds an additional compatibility settings (clickTrampoline)
-that can be used to configure when such is used. By default the
-'when-not-mouse' mode is only enabled for Desktop browsers, where the
-primary input is ubiquitously a mouse.
-    There are no known breaking compatibility changes - the Full Screen should
-be initiatable in Chrome for Android as it was in 2.1.x. The default
-Android browser does not support Full Screen.
+ScaleManger#startFullScreen (the desktop version of Chrome was not
+affected.). This is now fixed and additional compatibility settings (clickTrampoline) that can be used to configure when such is used. By default the 'when-not-mouse' mode is only enabled for Desktop browsers, where the
+primary input is ubiquitously a mouse. There are no known breaking compatibility changes - the Full Screen should be initiatable in Chrome for Android as it was in 2.1.x. The default Android browser does not support Full Screen (thanks @pnstickne)
 * TilemapParser now checks for image collections, avoiding crashes. These would arise with maps exported from the new release of Tiled (thanks @paul-reilly #1440)
 * Group.replace could still access `newChild.parent` after it was set to `undefined`. This unifies the approach (thanks @pnstickne #1410 #1417)
 * P2.postBroadphaserHandler updated to avoid skipping final 2 pairs.
