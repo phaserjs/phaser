@@ -97,6 +97,7 @@ Version 2.2.2 - "Alkindar" - in development
 ### Bug Fixes
 
 * Fix / double-copy for Safari tilemap bug when rendering with delta scrolling. This fixes tilemaps not appearing to update on Safari OS X and iOS specifically (thanks @pnstickne #1498)
+* Simplified call to `updateTransform`. This is the unified and verified fix for #1424 #1490 #1502 and solves issues with physics tunneling under the new time step code.
 * Tween.delay, Tween.repeat and Tween.yoyo will no longer throw an error if called before a TweenData object has been created (via Tween.to or Tween.from) (thanks @SomMeri #1419)
 * The click trampoline added for IE prevented Chrome for Android from being
 able to launch Full Screen mode with the default parameters for
@@ -111,7 +112,6 @@ primary input is ubiquitously a mouse. There are no known breaking compatibility
 * Added extra checks to Sound.play to stop it throwing DOM Exception Error 11 if the `sound.readyState` wasn't set or the sound was invalid. Also wrapped `stop()`` call in a `try catch`.
 * Time.reset would incorrectly reset the `_started` property, now maps it to `Time.time` (thanks @XekeDeath #1467)
 * Fix floating point inaccuracy in Tween easing edge cases (thanks @jounii #1492)
-* Simplified call to updateTransform - unified and verified fix for #1424 #1502
 * Phaser.Signal was causing a CSP script-src violations in Cordova and Google Chrome Apps (thanks @elennaro #1494)
 * Added Events.onEnterBounds to the destroy method (thanks @legendary-mich #1497)
 
