@@ -19,6 +19,7 @@
 *
 * Judicial guards - lifted into a prototype or instance as appropriate - are used to handle
 * varied features and care is taken to not introduce extra work.
+* (Support for various Traits can be triggered after an object is created by adding properties.)
 *
 * The following game object mixins are available:
 *
@@ -35,7 +36,7 @@
 *
 * - Even though no MI is used, multiple @extends JSDoc doclets result in correct output that shows the
 *   mixin member with the type and links to the inherited base.
-*   (JSDoc 3.3 should include @interface/@implements support.)
+*   (JSDoc 3.3 should include @interface/@implements and better @mixin support.)
 * - Google Closure Compiler may currently support @interface/@implements.
 *
 * @class Phaser.GameObject
@@ -46,41 +47,42 @@ Phaser.GameObject = {};
 /**
 * Various traits that a game object can have.
 *
-* The values represent bitmask flags. 
-* Supply the relevant trait mask to {@link Phaser.GameObject.mix mix}.
+* The property values represent bitmask flag;
+* supply the relevant trait mask to {@link Phaser.GameObject.mix mix}.
 *
 * @member
 * @property {number} CULLING - Supports camera/world culling.
 *     There is currently no per-type performance impact for supporting CULLING.
-* @property {number} TEXTURE - Supports textures and texture frames.
+* @property {number} TEXTURE - Supports textures, but not necessarily frames.
+* @protpert {number} TEXTURE_FRAMES - Supports keyed texture frames, implies TEXTURE.
 * @property {number} INPUT - Supports input.
 * @property {number} EVENTS - Supports events (implied by INPUT and LIFE).
-* @property {number} PHYSICS - Supports a physics body.
 * @property {number} LIFE - Supports 'alive'.
+* @property {number} PHYSICS - Supports a physics body.
 * @property {number} GRAPHICS_LIKE -
 *     Supports CULLING and INPUT - no physics or textures as they are expected to be provided by the implementation.
 * @property {number} SPRITE_LIKE -
 *     A sprite is a "full" game object and supports every individual Trait.
 * @property {number} IMAGE_LIKE -
-*     There isn't much difference between an Image and a Sprite
-*     except Image _doesn't_ support PHYSICS.
+*     There isn't much difference between an Image and a Sprite except an Image _"doesn't"_ support PHYSICS.
 *     Also includes LIFE for compatibility with existing code.
 * @protected
 */
 Phaser.GameObject.Traits = {
     CULLING: 1 << 1,
     TEXTURE: 1 << 2,
-    INPUT: 1 << 3,
-    EVENTS: 1 << 4,
-    PHYSICS: 1 << 5,
-    LIFE: 1 << 6
+    TEXTURE_FRAMES: 1 << 3,
+    INPUT: 1 << 4,
+    EVENTS: 1 << 5,
+    LIFE: 1 << 6,
+    PHYSICS: 1 << 7
 };
 
 var Traits = Phaser.GameObject.Traits;
 
 Traits.GRAPHICS_LIKE = Traits.CULLING | Traits.INPUT;
-Traits.SPRITE_LIKE = Traits.CULLING | Traits.TEXTURE | Traits.INPUT | Traits.PHYSICS | Traits.LIFE;
-Traits.IMAGE_LIKE = Traits.CULLING | Traits.TEXTURE | Traits.INPUT | Traits.LIFE;
+Traits.SPRITE_LIKE = Traits.CULLING | Traits.TEXTURE_FRAMES | Traits.INPUT | Traits.LIFE | Traits.PHYSICS;
+Traits.IMAGE_LIKE = Traits.CULLING | Traits.TEXTURE_FRAMES | Traits.INPUT | Traits.LIFE;
 
 /**
 * Mixes in a mixin object with the target.
@@ -119,15 +121,19 @@ Phaser.GameObject.mixPrototype = function (target, mixin) {
 */
 Phaser.GameObject.mix = function (target, traits) {
 
-    // Remember the applied traits
-    target.gameObjectTraits = traits;
-
-    Phaser.GameObject.mixPrototype(target, Phaser.GameObject.CoreMixin.prototype);
-
     if (traits & (Traits.INPUT | Traits.CULLING))
     {
         traits |= Traits.EVENTS;
     }
+    if (traits & Traits.TEXTURE_FRAMES)
+    {
+        traits |= Traits.TEXTURE;
+    }
+
+    // Remember the applied traits
+    target.gameObjectTraits = traits;
+
+    Phaser.GameObject.mixPrototype(target, Phaser.GameObject.CoreMixin.prototype);
 
     if (traits & Traits.CULLING)
     {
@@ -186,6 +192,10 @@ Phaser.GameObject.init = function (game, traits) {
     {
         traits |= Traits.EVENTS;
     }
+    if (traits & Traits.TEXTURE_FRAMES)
+    {
+        traits |= Traits.TEXTURE;
+    }
 
     if (typeof game !== 'undefined')
     {
@@ -225,10 +235,10 @@ Phaser.GameObject.init = function (game, traits) {
         this.events = new Phaser.Events(this);
     }
 
-    if (traits & Traits.TEXTURE)
+    if (traits & Traits.TEXTURE_FRAMES)
     {
         // Defaults in prototype
-        // `key` not available and should be set by loadTexture
+        // `key` not available: should be set by `loadTexture` which also applies others
         //this.key = this.key;
         //this.cropRect = this.cropRect;
         //this._crop = this._crop;
