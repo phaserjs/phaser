@@ -3,19 +3,19 @@
 
 # Phaser
 
-Phaser is a fast, free and fun open source HTML5 game framework. It uses [Pixi.js](https://github.com/GoodBoyDigital/pixi.js/) for WebGL and Canvas rendering across desktop and mobile web browsers. Games can be compiled into native iOS and Android apps via 3rd party tools.
+Phaser is a fast, free and fun open source HTML5 game framework. It uses [Pixi.js](https://github.com/GoodBoyDigital/pixi.js/) for WebGL and Canvas rendering across desktop and mobile web browsers. Games can be compiled to iOS and Android apps via 3rd party tools.
 
-Phaser is currently the highest ranked JavaScript game framework on Github and is used by tens of thousands of developers worldwide. It's actively maintained by the HTML5 game development company [Photon Storm](http://www.photonstorm.com) and the incredible open source community.
+It is actively developed and maintained by the company [Photon Storm](http://www.photonstorm.com) along with the fantastic open source community. As a result of continued support and a friendly API Phaser is currently one of the [most starred](https://github.com/showcases/javascript-game-engines) game frameworks on Github. Thousands of developers worldwide use it. From indies to multi-national digital agencies. Each creating incredible games.
 
-* [Website](http://phaser.io)
-* [Twitter](https://twitter.com/photonstorm) (hashtag #phaserjs)
+* The official [website](http://phaser.io)
+* [Twitter](https://twitter.com/photonstorm) (feel free to use #phaserjs when tweeting)
 * [API Documentationn](http://docs.phaser.io)
-* [Forum](http://www.html5gamedevs.com/forum/14-phaser/)
-* Over 400 [Source Code Examples](http://examples.phaser.io) also available in this [git repo](https://github.com/photonstorm/phaser-examples)
+* [Support Forum][forum]
+* [Source Code Examples](http://examples.phaser.io) (also available in this [git repo][examples])
 * Subscribe to the [Phaser Newsletter](https://confirmsubscription.com/h/r/369DE48E3E86AF1E)
 * StackOverflow tag: [phaser-framework](http://stackoverflow.com/questions/tagged/phaser-framework)
 * [Phaser Plugins](https://github.com/photonstorm/phaser-plugins)
-* [freenode #phaserio IRC channel](http://www.html5gamedevs.com/topic/4470-official-phaserio-irc-channel-phaserio-on-freenode/)
+* [#phaserio IRC channel](http://www.html5gamedevs.com/topic/4470-official-phaserio-irc-channel-phaserio-on-freenode/) on freenode
 * Please support our work via [Gratipay](https://gratipay.com/photonstorm/)
 
 ![div](http://www.phaser.io/images/github-hr.png)
@@ -55,7 +55,7 @@ Happy coding everyone! I hope to see you on the forums.
 <a name="change-log"></a>
 ## Change Log
 
-Version 2.2.2 - "Alkindar" - in development
+The current stable version of Phaser is 2.2.2 "Alkindar" released: in-dev
 
 ### New Features
 
@@ -123,7 +123,7 @@ primary input is ubiquitously a mouse. There are no known breaking compatibility
 * Vertex buffer and and vertex shader optimisation and reduced memory footprint on the tint and alpha : @bchevalier
 * Applied the new generic updateTransform to spritebatch : @kambing86
 
-For details about changes made in previous versions of Phaser see the full Change Log at https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md
+For changes made in previous versions please see the comprehensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 
 ![Phaser Logo](http://www.photonstorm.com/wp-content/uploads/2013/09/phaser_10_release.jpg)
 
@@ -132,26 +132,22 @@ For details about changes made in previous versions of Phaser see the full Chang
 <a name="download"></a>
 ## Download Phaser
 
-The Phaser project is [hosted on Github][phaser]. Github offers you a number of ways to download the source:
+Phaser is [hosted on Github][phaser]. There are a number of ways to download it:
 
-* Clone the git repository via [https][clone-http], [ssh][clone-ssh] or [Github Desktop][clone-gh].
-* Download as a [zip][get-zip] or [tar.gz][get-tgz]
-* Download just the release files: [phaser.js][get-js] and [phaser.min.js][get-minjs]
+* Clone the git repository via [https][clone-http], [ssh][clone-ssh] or with the [Github Desktop][clone-gh] client.
+* Download as [zip][get-zip] or [tar.gz][get-tgz]
+* Download just the build files: [phaser.js][get-js] and [phaser.min.js][get-minjs]
 * Checkout with [svn][clone-svn]
 
 ### Bower / npm
 
-Install via [bower](http://bower.io/) with:
+Install via [bower](http://bower.io): `bower install phaser`
 
-`bower install phaser`
+Install via [npm](https://www.npmjs.com): `npm install phaser`
 
-Install via [npm](https://www.npmjs.com/) with:
+### jsDelivr CDN
 
-`npm install phaser`
-
-### jsDelivr
-
-Phaser is available on [jsDelivr](http://jsdelivr.com) "A super-fast CDN for developers and webmasters". Include the following in your html:
+[jsDelivr](http://jsdelivr.com) is a "super-fast CDN for developers". Include the following in your html:
 
 `<script src="//cdn.jsdelivr.net/phaser/2.2.1/phaser.js"></script>`
 
@@ -163,7 +159,7 @@ More details on the [jsDelivr Phaser page](http://www.jsdelivr.com/#!phaser).
 
 ### Koding
 
-Want to try Phaser without downloading anything? You can [clone the Phaser repo in Koding](https://koding.com/Teamwork?import=https://github.com/photonstorm/phaser/archive/master.zip&c=git1) and start working right away with their web based development system.
+Want to try Phaser without downloading anything? [Clone Phaser in Koding](https://koding.com/Teamwork?import=https://github.com/photonstorm/phaser/archive/master.zip&c=git1) and start working right away in their web based development system.
 
 ![div](http://www.phaser.io/images/github-hr.png)
 
@@ -182,48 +178,50 @@ Finally the list of [community authored Phaser Tutorials](http://www.lessmilk.co
 
 ## Using Phaser
 
-Phaser is provided ready compiled in the `build` folder of the repository. There you will find both plain and minified versions. The plain version is meant for development only. The minified version is for production use.
+Phaser is provided ready compiled in the `build` folder of the repository. There are both plain and minified versions. The plain version is for use during development and the minified version for production.
 
-This version of Phaser is 153 KB *gzipped and minified* and contains *both* Arcade Physics **and** P2 Physics. We provide Custom Builds for more streamlined versions.
+This current release of Phaser is 153 KB *gzipped and minified*. It contains both **Arcade Physics** and **P2 Physics**. We also provide streamlined custom builds which are smaller.
 
 ### Custom Builds
 
 The custom builds of Phaser are in the `build\custom` folder.
 
-Phaser includes two physics systems: Arcade Physics and [P2.js](https://schteppe.github.io/p2.js/). Arcade Physics is perfect for arcade style games and provides an AABB (bounding box) based collision system. P2 however is a full body physics system, complete with springs, materials, constraints and lots more.
+Phaser includes two physics systems: Arcade Physics and [P2.js](https://schteppe.github.io/p2.js/). Arcade Physics is perfect for arcade style games and provides an AABB (bounding box) based collision system. P2 is a full body physics system, complete with springs, materials, constraints and lots more.
 
-If you don't require P2 then use `phaser-arcade-physics.min.js`. It will save  nearly 200 KB from the minified file size.
+If you don't require P2 then use `phaser-arcade-physics.js`. It will save  nearly 200 KB from the *minified* file size.
 
-If you don't need any physics system at all, or are implementing your own, there is an even smaller build: `phaser-no-physics.min.js`. This build doesn't include Tilemaps or the Particle Emitter as both rely on Arcade Physics.
+If you don't need physics at all, or are implementing your own, there is an even smaller build: `phaser-no-physics.js`. This doesn't include Tilemaps or Particle Emitter support as both rely on Arcade Physics but is even smaller as a result.
 
-Finally there is `phaser-no-libs.min.js` which is Phaser without any physics support or Pixi.js. You will need Pixi.js in order to use Phaser, but this file allows you to package your own custom build of Pixi instead of using the one Phaser provides.
+Finally there is `phaser-no-libs.js` which is Phaser without any physics support or Pixi.js. Phaser requires Pixi.js to work, but this build allows you to use your own version of Pixi instead of using the one Phaser provides.
 
-You can create your own custom build of Phaser by looking at the grunt options and manifests in the tasks folder.
+Create your own custom build by looking at the grunt tasks and manifests in the `tasks` folder.
 
 ### Building from source
 
-Should you need to build your own version of Phaser from source you can take advantage of the provided [Grunt](http://gruntjs.com/) scripts.
+Should you wish to build Phaser from source you can take advantage of the provided [Grunt](http://gruntjs.com/) scripts. Ensure you have the required packages by running `npm install` first.
 
 Run `grunt` to perform a default build to the `dist` folder.
 
-If you have replaced Pixi or p2 as part of your changes then make sure you run `grunt replace`. This task will patch their UMD strings so they work properly with Phaser and requireJS.
+If you change either Pixi.js or P2 then use the Grunt tasks `replace:pixi` and `replace:p2`. These tasks patch their UMD strings so they work properly with Phaser under requireJS.
 
 ![div](http://www.phaser.io/images/github-hr.png)
 
 <a name="requirements"></a>
 ## Requirements
 
-Phaser requires a modern web browser that supports the canvas tag. This includes Internet Explorer 9+, Firefox, Chrome, Safari and Opera. It also works on mobile devices including the stock Android browser and iOS5 Mobile Safari and above. Always be aware of browser limitations: not all features of Phaser work on all browsers.
+Phaser requires a modern web browser that supports the [canvas tag](http://caniuse.com/#feat=canvas). This includes Internet Explorer 9+, Firefox, Chrome, Safari and Opera on desktop. iOS Safari, Android Browser and Chrome for Android are supported on mobile.
+
+While Phaser does its best to ensure a consistent cross-platform experience always be aware of browser and device limitations. Especially with regard to memory and GPU limits on mobile, and older browser HTML5 compatibility.
 
 ### IE9
 
-If you need to support IE9 or Android 2.x **and** want to use P2 Physics then you must use the polyfill found in the `resources/IE9 Polyfill` folder. If you don't use P2 Physics (or don't care about IE9!) you can skip this.
+If you need to support IE9 / Android 2.x **and** use P2 physics then you must use the polyfill in the `resources/IE9 Polyfill` folder. If you don't use P2 (or don't care about IE9!) you can skip this.
 
 ### JavaScript and TypeScript
 
-Phaser is developed in JavaScript. We've made no assumptions about how you like to code and were careful not to impose any form of coding structure upon you. You won't find Phaser split into modules or relying on 3rd party npm packages. That doesn't mean you can't do this, it just means we don't force it upon you. If you're a requireJS user you'll find a template in the `resources\Project Templates` folder just for you.
+Phaser is developed in JavaScript. We've made no assumptions about how you like to code and were careful not to impose a strict structure upon you. You won't find Phaser split into modules, requiring a build step, or making you use a class / inheritance OOP approach. That doesn't mean you can't do so, it just means we don't *force* you to. It's your choice.
 
-If you code with [TypeScript](http://www.typescriptlang.org/) there is a comprehensive definitions file in the `typescript` folder and tutorials on getting started on our site. This definitions file is for TypeScript 1.0+. If you are using an earlier version of TypeScript (i.e. 0.9.5) you will need to include the WebGL definitions into your project first. This file isn't included with Phaser.
+If you code with [TypeScript](http://www.typescriptlang.org/) there are comprehensive definition files in the `typescript` folder. They are for TypeScript 1.0+. If using an earlier version of TypeScript (i.e. 0.9.5) you will need to include [WebGL definitions](https://github.com/piersh/WebGL.ts) into your project first.
 
 ![div](http://www.phaser.io/images/github-hr.png)
 
@@ -408,5 +406,6 @@ Phaser is released under the [MIT License](http://opensource.org/licenses/MIT).
 [clone-gh]: github-windows://openRepo/https://github.com/photonstorm/phaser
 [phaser]: https://github.com/photonstorm/phaser
 [issues]: https://github.com/photonstorm/phaser/issues
+[examples]: https://github.com/photonstorm/phaser-examples
 [contribute]: https://github.com/photonstorm/phaser/blob/master/CONTRIBUTING.md
 [forum]: http://www.html5gamedevs.com/forum/14-phaser/
