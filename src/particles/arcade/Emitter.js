@@ -489,7 +489,7 @@ Phaser.Particles.Arcade.Emitter.prototype.emitParticle = function () {
         particle.scale.set(this.game.rnd.realInRange(this._minParticleScale.x, this._maxParticleScale.x), this.game.rnd.realInRange(this._minParticleScale.y, this._maxParticleScale.y));
     }
 
-    if (Array.isArray(this._frames === 'object'))
+    if (Array.isArray(this._frames))
     {
         particle.frame = this.game.rnd.pick(this._frames);
     }
