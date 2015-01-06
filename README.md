@@ -41,7 +41,7 @@ It is actively developed and maintained by the company [Photon Storm](http://www
 
 <div align="center"><img src="http://phaser.io/images/github/news.jpg"></div>
 
-Happy New Year and to the first release of Phaser in 2015!
+Happy New Year! and welcome to the first release of Phaser in 2015.
 
 After the runaway success Phaser enjoyed in 2014 we're really excited to see what this year will bring. So we're starting out strong with the 2.2.2 release. This is mostly a maintenance release and fixes a few crucial issues such as tilemap rendering in Safari and physics performance. But a few small but super-useful features sneaked in too, my favourite being that the Loader now supports BLOB urls for audio files.
 
@@ -175,11 +175,11 @@ Phaser is released under the [MIT License](http://opensource.org/licenses/MIT).
 
 We have a [Getting Started Guide](http://phaser.io/getting-started-js.php) which covers all you need to begin developing games with Phaser. From setting up a web server to picking an IDE to coding your first game.
 
-Lynda.com have published a free video course: [HTML5 Game Development with Phaser](http://www.lynda.com/Phaser-tutorials/HTML5-Game-Development-Phaser/163641-2.html)
+Lynda.com have published a free **video course**: [HTML5 Game Development with Phaser](http://www.lynda.com/Phaser-tutorials/HTML5-Game-Development-Phaser/163641-2.html)
 
 We wrote a comprehensive [How to Learn Phaser](http://gamedevelopment.tutsplus.com/articles/how-to-learn-the-phaser-html5-game-engine--gamedev-13643) guide for GameDevTuts+  which covers finding tutorials, examples and support.
 
-Although it's currently a bit of a wall of text we urge you to check out the "News" section of the [Phaser web site][http://phaser.io]. You'll find fresh links *daily* including loads of tutorials.
+Although it's currently a bit of a "wall of text" we urge you to check out the **News** section of the [Phaser web site](http://phaser.io). You'll find fresh links *daily* including loads of tutorials.
 
 ### Learn by Example
 
@@ -189,9 +189,14 @@ Browse the [Phaser Examples](http://examples.phaser.io) or clone the [examples r
 
 ### Phaser Books
 
-<div align="center"><img src="http://phaser.io/images/github/news.jpg"></div>
+<div align="center"><img src="http://phaser.io/images/github/books.jpg"></div>
 
-Available now: [A Guide to the Phaser Tween Manager](https://leanpub.com/phasertweenmanager) Book + Code Bundle! and [A Guide to the Phaser Scale Manager](https://leanpub.com/phaserscalemanager) with more on the way.
+We've been busy writing books about Phaser. There are two available now:
+
+* [A Guide to the Phaser Tween Manager](https://leanpub.com/phasertweenmanager) Book + Code Bundle
+* [A Guide to the Phaser Scale Manager](https://leanpub.com/phaserscalemanager)
+
+And more on the way.
 
 ### Game Mechanic Explorer
 
@@ -239,13 +244,13 @@ If you change either Pixi.js or P2 then use the Grunt tasks `replace:pixi` and `
 
 *Thousands* of games have been made in Phaser. This is just a tiny sample.
 
-[![Game Title](http://phaser.io/images/github/shot1.jpg)][game1]
-[![Game Title](http://phaser.io/images/github/shot2.jpg)][game2]
-[![Game Title](http://phaser.io/images/github/shot3.jpg)][game3]
-[![Game Title](http://phaser.io/images/github/shot4.jpg)][game4]
-[![Game Title](http://phaser.io/images/github/shot5.jpg)][game5]
-[![Game Title](http://phaser.io/images/github/shot6.jpg)][game6]
-[![Game Title](http://phaser.io/images/github/shot7.jpg)][game7]
+[![Game Title](http://phaser.io/images/github/shot1a.jpg)][game1]
+[![Game Title](http://phaser.io/images/github/shot2a.jpg)][game2]
+[![Game Title](http://phaser.io/images/github/shot3a.jpg)][game3]
+[![Game Title](http://phaser.io/images/github/shot4a.jpg)][game4]
+[![Game Title](http://phaser.io/images/github/shot5a.jpg)][game5]
+[![Game Title](http://phaser.io/images/github/shot6a.jpg)][game6]
+[![Game Title](http://phaser.io/images/github/shot7a.jpg)][game7]
 
 ![div](http://www.phaser.io/images/github/div.png)
 
