@@ -7,6 +7,9 @@ Phaser is a fast, free and fun open source HTML5 game framework. It uses [Pixi.j
 
 It is actively developed and maintained by the company [Photon Storm](http://www.photonstorm.com) along with the fantastic open source community. As a result of continued support and a friendly API Phaser is currently one of the [most starred](https://github.com/showcases/javascript-game-engines) game frameworks on Github. Thousands of developers worldwide use it. From indies to multi-national digital agencies. Each creating incredible games.
 
+<table>
+<tr>
+<td>
 * The official [website](http://phaser.io)
 * [Twitter](https://twitter.com/photonstorm) (feel free to use #phaserjs when tweeting)
 * [API Documentationn](http://docs.phaser.io)
@@ -17,6 +20,11 @@ It is actively developed and maintained by the company [Photon Storm](http://www
 * [Phaser Plugins](https://github.com/photonstorm/phaser-plugins)
 * [#phaserio IRC channel](http://www.html5gamedevs.com/topic/4470-official-phaserio-irc-channel-phaserio-on-freenode/) on freenode
 * Please support our work via [Gratipay](https://gratipay.com/photonstorm/)
+</td>
+<td width="260"><img src="http://examples.phaser.io/assets/sprites/bunny.png"></td>
+</tr>
+</table>
+
 
 ![div](http://www.phaser.io/images/github-hr.png)
 
@@ -134,7 +142,7 @@ For changes made in previous versions please see the comprehensive [Version Hist
 
 Phaser is [hosted on Github][phaser]. There are a number of ways to download it:
 
-* Clone the git repository via [https][clone-http], [ssh][clone-ssh] or with the [Github Desktop][clone-gh] client.
+* Clone the git repository via [https][clone-http], [ssh][clone-ssh] or with the Github Desktop [Windows][clone-ghwin] or [Mac][clone-ghmac] client.
 * Download as [zip][get-zip] or [tar.gz][get-tgz]
 * Download just the build files: [phaser.js][get-js] and [phaser.min.js][get-minjs]
 * Checkout with [svn][clone-svn]
@@ -403,7 +411,8 @@ Phaser is released under the [MIT License](http://opensource.org/licenses/MIT).
 [clone-http]: https://github.com/photonstorm/phaser.git
 [clone-ssh]: git@github.com:photonstorm/phaser.git
 [clone-svn]: https://github.com/photonstorm/phaser
-[clone-gh]: github-windows://openRepo/https://github.com/photonstorm/phaser
+[clone-ghwin]: github-windows://openRepo/https://github.com/photonstorm/phaser
+[clone-ghmac]: github-mac://openRepo/https://github.com/photonstorm/phaser
 [phaser]: https://github.com/photonstorm/phaser
 [issues]: https://github.com/photonstorm/phaser/issues
 [examples]: https://github.com/photonstorm/phaser-examples
