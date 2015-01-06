@@ -8,18 +8,15 @@ Phaser is a fast, free and fun open source HTML5 game framework. It uses [Pixi.j
 
 Along with the fantastic open source community Phaser is actively developed and maintained by [Photon Storm Limited](http://www.photonstorm.com). As a result of rapid support and a developer friendly API Phaser is currently one of the [most starred](https://github.com/showcases/javascript-game-engines) game frameworks on Github.
 
-Thousands of developers worldwide use it. From indies to multi-national digital agencies. Each creating their own incredible games. Grab the source and join in the fun!
+Thousands of developers worldwide use it. From indies and multi-national digital agencies to schools and Universities. Each creating their own incredible games. Grab the source and join in the fun!
 
-* The [official website](http://phaser.io)
-* [Twitter](https://twitter.com/photonstorm) (feel free to use #phaserjs when tweeting)
-* [API Documentation](http://docs.phaser.io)
-* [Support Forum][forum]
-* 400+ [Code Examples](http://examples.phaser.io) (also available in this [git repo][examples])
-* Subscribe to the [Phaser Newsletter](https://confirmsubscription.com/h/r/369DE48E3E86AF1E)
-* StackOverflow tag: [phaser-framework](http://stackoverflow.com/questions/tagged/phaser-framework)
-* [Phaser Plugins](https://github.com/photonstorm/phaser-plugins)
-* [#phaserio IRC channel](http://www.html5gamedevs.com/topic/4470-official-phaserio-irc-channel-phaserio-on-freenode/) on freenode
-* Please support our work via [Gratipay](https://gratipay.com/photonstorm/)
+* **Visit:** The [Phaser website](http://phaser.io) and follow on [Twitter](https://twitter.com/photonstorm) (feel free to use #phaserjs)
+* **Learn:** [API Documentation](http://docs.phaser.io), [Support Forum][forum] and [StackOverflow](http://stackoverflow.com/questions/tagged/phaser-framework)
+* **Code:** 400+ [Source Examples](http://examples.phaser.io) (also available in this [git repo][examples])
+* **Read:** Subscribe to the [Newsletter](https://confirmsubscription.com/h/r/369DE48E3E86AF1E) and grab our [Phaser Books](https://leanpub.com/u/photonstorm)
+* **Chat:** [#phaserio IRC channel](http://www.html5gamedevs.com/topic/4470-official-phaserio-irc-channel-phaserio-on-freenode/) on freenode
+* **Extend:** With [Phaser Plugins](https://github.com/photonstorm/phaser-plugins)
+* **Be awesome:** Support our work via [Gratipay](https://gratipay.com/photonstorm/)
 
 ![div](http://www.phaser.io/images/github/div.png)
 
@@ -129,7 +126,7 @@ primary input is ubiquitously a mouse. There are no known breaking compatibility
 * Vertex buffer and and vertex shader optimisation and reduced memory footprint on the tint and alpha : @bchevalier
 * Applied the new generic updateTransform to spritebatch : @kambing86
 
-For changes made in previous versions please see the [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
+For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 
 ![div](http://www.phaser.io/images/github/div.png)
 
@@ -180,13 +177,13 @@ Phaser is released under the [MIT License](http://opensource.org/licenses/MIT).
 
 We have a [Getting Started Guide](http://phaser.io/getting-started-js.php) which covers all you need to begin developing games with Phaser. From setting up a web server to picking an IDE to coding your first game.
 
-Lynda.com have published a free **video course**: [HTML5 Game Development with Phaser](http://www.lynda.com/Phaser-tutorials/HTML5-Game-Development-Phaser/163641-2.html)
+Prefer **videos** to reading? Lynda.com have published a free course: [HTML5 Game Development with Phaser](http://www.lynda.com/Phaser-tutorials/HTML5-Game-Development-Phaser/163641-2.html)
 
-We wrote a comprehensive [How to Learn Phaser](http://gamedevelopment.tutsplus.com/articles/how-to-learn-the-phaser-html5-game-engine--gamedev-13643) guide for GameDevTuts+  which covers finding tutorials, examples and support.
+Use the [How to Learn Phaser](http://gamedevelopment.tutsplus.com/articles/how-to-learn-the-phaser-html5-game-engine--gamedev-13643) guide we wrote for GameDevTuts+. It covers finding tutorials, examples and support.
 
-Although it's currently a bit of a "wall of text" we urge you to check out the **News** section of the [Phaser web site](http://phaser.io). You'll find fresh links *daily* including loads of tutorials.
+Although currently a bit of a "wall of text" we urge you to check out the **News** section of the [Phaser web site](http://phaser.io). You'll find fresh links posted there *daily*.
 
-If you're using Phaser with TypeScript then we'd strongly recommend this great series of tutorials on [Game From Scratch](http://www.gamefromscratch.com/page/Adventures-in-Phaser-with-TypeScript-tutorial-series.aspx).
+Using Phaser with **TypeScript**? Then we strongly recommend this great series of [Game From Scratch](http://www.gamefromscratch.com/page/Adventures-in-Phaser-with-TypeScript-tutorial-series.aspx) tutorials.
 
 ### Source Code Examples
 
@@ -203,7 +200,7 @@ We've been busy writing books about Phaser. Available now:
 * [A Guide to the Phaser Tween Manager](https://leanpub.com/phasertweenmanager) Book + Code Bundle
 * [A Guide to the Phaser Scale Manager](https://leanpub.com/phaserscalemanager)
 
-With more on the way. [Vote on the next title](http://www.html5gamedevs.com/topic/10962-which-phaser-book-would-you-like-to-see-next/)!
+With more on the way. [Vote on the next title](http://www.html5gamedevs.com/topic/10962-which-phaser-book-would-you-like-to-see-next/) to be written.
 
 ### Game Mechanic Explorer
 
@@ -220,7 +217,7 @@ The [Game Mechanic Explorer](http://gamemechanicexplorer.com) is a great interac
 
 Phaser is provided ready compiled in the `build` folder of the repository. There are both plain and minified versions. The plain version is for use during development and the minified version for production.
 
-This current release of Phaser is 153 KB *gzipped and minified* with both **Arcade Physics** and **P2 Physics** included. We also provide streamlined custom builds.
+This current release of Phaser is 153 KB *gzipped and minified* with both **Arcade Physics** and **P2 Physics** included. We also provide smaller custom builds.
 
 ### Custom Builds
 
@@ -232,9 +229,9 @@ If you don't require P2 then use the custom build: `phaser-arcade-physics.js`. T
 
 If you don't need physics at all, or are implementing your own, there is an even smaller build: `phaser-no-physics.js`. This doesn't include Tilemaps or Particle Emitter support either, as both rely on Arcade Physics, but is even smaller as a result.
 
-Finally there is `phaser-no-libs.js` which is Phaser without any physics support or Pixi.js. Phaser requires Pixi.js to work, but this build allows you to use your own version of Pixi instead of using the one Phaser provides.
+Finally there is `phaser-no-libs.js` which is Phaser without any physics support *or* Pixi.js. Phaser requires Pixi.js to work, but this build allows you to use your own version of Pixi instead of the one Phaser provides.
 
-See the manifests files in the `tasks` folder to create your own custom builds.
+Want to create your own custom builds? Take a look at the manifests files in the `tasks` folder.
 
 ### Building from source
 
@@ -266,7 +263,7 @@ Thousands of games have been made in Phaser. From game jam entries to titles for
 [![Game](http://phaser.io/images/github/shot13.jpg)][game13]
 [![Game](http://phaser.io/images/github/shot14.jpg)][game14]
 
-Artwork copyright their respective developers.
+Artwork copyright their respective owners.
 
 Find lots more on the [HTML5 Game Devs Forum](http://www.html5gamedevs.com/forum/8-game-showcase/).
 
@@ -328,9 +325,9 @@ Here are some of the features planned for future releases. Not all are promised 
 
 Development has begun on Phaser 3. At the moment it's still in the very early stages. We are asking for suggestions and feedback in [this forum thread](http://www.html5gamedevs.com/topic/7949-the-phaser-3-wishlist-thread/) so be sure to add your voice.
 
-We are currently experimenting with an ES6 based module system and we're keen for Phaser 3 to use as many native ES6 features as possible. It will be a significant refactoring of the code base, but never at the expense of features or ease-of-use. Development will be made public when the time is right.
+We are currently experimenting with an ES6 based module system and we're keen for Phaser 3 to use as many native ES6 features as possible. It will be a significant refactoring of the code base, but never at the expense of features or ease-of-use.
 
-We don't anticipate a release until Summer 2015. Phaser 2 still has roadmap features left that we'd like to implement, but after 2.3 it will be in  maintenance mode as we work on Phaser 3.
+We don't anticipate a release until Summer 2015 and will support Phaser 2 fully in the meantime.
 
 If you are an exceptional JavaScript developer and would like to join the Phaser 3 development team then let us know. We have a limited budget available to pay towards your time.
 
@@ -345,23 +342,24 @@ Please read the [Contributors Guide][contribute] for full details on helping wit
 
 - Pull Requests should only be made against the `dev` branch. *Never* against `master`.
 
-- Before submitting a Pull Request run your code through [JSHint](http://www.jshint.com/). Use our grunt JSHint task and config.
+- Before submitting a Pull Request run your code through [JSHint](http://www.jshint.com/) using our [config](https://github.com/photonstorm/phaser/blob/master/.jshintrc).
 
-- Before contributing, please read the [code of conduct](https://github.com/photonstorm/phaser/blob/master/CODE_OF_CONDUCT.md).
+- Before contributing please read the [code of conduct](https://github.com/photonstorm/phaser/blob/master/CODE_OF_CONDUCT.md).
 
-Written something cool that shows Phaser in use? Please tell us about it!
-Post it to our [forum][forum] or email: rich@photonstorm.com
+Written something cool that shows Phaser in use? Please tell us about it in our [forum][forum] or email: rich@photonstorm.com
 
 [![Build Status](https://travis-ci.org/photonstorm/phaser.png?branch=dev)](https://travis-ci.org/photonstorm/phaser)
 
 ![div](http://www.phaser.io/images/github/div.png)
 
-![storm](http://www.phaser.io/images/github/photonstorm.png)
+![storm](http://www.phaser.io/images/github/photonstorm-x2.png)
 
 Phaser is a [Photon Storm](http://www.photonstorm.com) production.
-Created by Richard Davey and powered by coffee, anime, pixels and love.
 
-The Phaser logo and characters are &copy; copyright 2015 Photon Storm Limited.
+Created by Richard Davey. Powered by coffee, anime, pixels and love.
+
+The Phaser logo and characters are &copy; 2015 Photon Storm Limited.
+
 All rights reserved.
 
 [![Analytics](https://ga-beacon.appspot.com/UA-44006568-2/phaser/index)](https://github.com/igrigorik/ga-beacon)
