@@ -23,6 +23,26 @@ module.exports = {
         dest: 'docs/index.html',
         replacements: [
             {
+                from: /<p><img src="http:\/\/www.phaser.io\/images\/github\/welcome-div2.png" alt="div"><\/p>/g,
+                to: ''
+            },
+            {
+                from: /<p><img src="http:\/\/www.phaser.io\/images\/github\/div.png" alt="div"><\/p>/g,
+                to: ''
+            },
+            {
+                from: /&lt;div align=&quot;center&quot;&gt;&lt;img src=&quot;http:\/\/phaser.io\/images\/github\/news.jpg&quot;&gt;&lt;\/div&gt;/g,
+                to: ''
+            },
+            {
+                from: /&lt;div align=&quot;center&quot;&gt;&lt;img src=&quot;http:\/\/phaser.io\/images\/github\/books.jpg&quot;&gt;&lt;\/div&gt;/g,
+                to: ''
+            },
+            {
+                from: /&lt;div align=&quot;center&quot;&gt;&lt;img src=&quot;http:\/\/phaser.io\/images\/github\/books.jpg&quot;&gt;&lt;\/div&gt;/g,
+                to: ''
+            },
+            {
                 from: /(<p><img src="http:\/\/www\.phaser\.io\/images\/phaser2)[\s\S]*(<li><a href="#license">License<\/a><\/li>\s<\/ul>)/g,
                 to: ''
             },
@@ -33,6 +53,62 @@ module.exports = {
             {
                 from: /(<p>&lt;).*(&gt;<\/p>)/g,
                 to: ''
+            },
+            {
+                from: '<a href="http://phaser.io/images/github/shot1a.jpg">![Game</a>][game1]',
+                to: '<img src="http://phaser.io/images/github/shot1a.jpg">'
+            },
+            {
+                from: '<a href="http://phaser.io/images/github/shot2a.jpg">![Game</a>][game2]',
+                to: '<img src="http://phaser.io/images/github/shot2a.jpg"><br>'
+            },
+            {
+                from: '<a href="http://phaser.io/images/github/shot3a.jpg">![Game</a>][game3]',
+                to: '<img src="http://phaser.io/images/github/shot3a.jpg">'
+            },
+            {
+                from: '<a href="http://phaser.io/images/github/shot4a.jpg">![Game</a>][game4]',
+                to: '<img src="http://phaser.io/images/github/shot4a.jpg"><br>'
+            },
+            {
+                from: '<a href="http://phaser.io/images/github/shot5b.jpg">![Game</a>][game5]',
+                to: '<img src="http://phaser.io/images/github/shot5b.jpg">'
+            },
+            {
+                from: '<a href="http://phaser.io/images/github/shot6b.jpg">![Game</a>][game6]',
+                to: '<img src="http://phaser.io/images/github/shot6b.jpg">'
+            },
+            {
+                from: '<a href="http://phaser.io/images/github/shot7b.jpg">![Game</a>][game7]',
+                to: '<img src="http://phaser.io/images/github/shot7b.jpg"><br>'
+            },
+            {
+                from: '<a href="http://phaser.io/images/github/shot8.jpg">![Game</a>][game8]',
+                to: '<img src="http://phaser.io/images/github/shot8.jpg">'
+            },
+            {
+                from: '<a href="http://phaser.io/images/github/shot9.jpg">![Game</a>][game9]',
+                to: '<img src="http://phaser.io/images/github/shot9.jpg"><br>'
+            },
+            {
+                from: '<a href="http://phaser.io/images/github/shot10.jpg">![Game</a>][game10]',
+                to: '<img src="http://phaser.io/images/github/shot10.jpg">'
+            },
+            {
+                from: '<a href="http://phaser.io/images/github/shot11.jpg">![Game</a>][game11]',
+                to: '<img src="http://phaser.io/images/github/shot11.jpg"><br>'
+            },
+            {
+                from: '<a href="http://phaser.io/images/github/shot12.jpg">![Game</a>][game12]',
+                to: '<img src="http://phaser.io/images/github/shot12.jpg">'
+            },
+            {
+                from: '<a href="http://phaser.io/images/github/shot13.jpg">![Game</a>][game13]',
+                to: '<img src="http://phaser.io/images/github/shot13.jpg">'
+            },
+            {
+                from: '<a href="http://phaser.io/images/github/shot14.jpg">![Game</a>]<a href="http://www.tempalabs.com/works/gattai/">game14</a>',
+                to: '<img src="http://phaser.io/images/github/shot14.jpg">'
             }
         ]
     }

@@ -841,7 +841,7 @@
 						<li class="class-depth-1"><a href="Phaser.StateManager.html">State Manager</a></li>
 						<li class="class-depth-1"><a href="Phaser.TweenManager.html">Tween Manager</a></li>
 						<li class="class-depth-1"><a href="Phaser.SoundManager.html">Sound Manager</a></li>
-						<li class="class-depth-1"><a href="Phaser.InputManager.html">Input Manager</a></li>
+						<li class="class-depth-1"><a href="Phaser.Input.html">Input Manager</a></li>
 						<li class="class-depth-1"><a href="Phaser.ScaleManager.html">Scale Manager</a></li>
 					</ul>
 				</li>
@@ -854,7 +854,7 @@
 						<li class="class-depth-1"><a href="Phaser.Sprite.html">Sprite</a></li>
 						<li class="class-depth-1"><a href="Phaser.Image.html">Image</a></li>
 						<li class="class-depth-1"><a href="Phaser.Sound.html">Sound</a></li>
-						<li class="class-depth-1"><a href="Phaser.Emitter.html">Emitter</a></li>
+						<li class="class-depth-1"><a href="Phaser.Particles.Arcade.Emitter.html">Particle Emitter</a></li>
 						<li class="class-depth-1"><a href="Phaser.Particle.html">Particle</a></li>
 						<li class="class-depth-1"><a href="Phaser.Text.html">Text</a></li>
 						<li class="class-depth-1"><a href="Phaser.Tween.html">Tween</a></li>
@@ -912,6 +912,7 @@
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Community<b class="caret"></b></a>
 					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="https://leanpub.com/u/photonstorm">Phaser Books</a></li>
 						<li class="class-depth-1"><a href="https://github.com/photonstorm/phaser">Phaser Github</a></li>
 						<li class="class-depth-1"><a href="http://examples.phaser.io">Phaser Examples</a></li>
 						<li class="class-depth-1"><a href="https://github.com/photonstorm/phaser-plugins">Phaser Plugins</a></li>
@@ -920,7 +921,6 @@
 						<li class="class-depth-1"><a href="https://confirmsubscription.com/h/r/369DE48E3E86AF1E">Newsletter</a></li>
 						<li class="class-depth-1"><a href="https://twitter.com/photonstorm">Twitter</a></li>
 						<li class="class-depth-1"><a href="http://www.html5gamedevs.com/topic/4470-official-phaserio-irc-channel-phaserio-on-freenode/">IRC</a></li>
-						<li class="class-depth-1"><a href="https://leanpub.com/u/photonstorm">Phaser Books</a></li>
 						<li class="class-depth-1"><a href="https://www.gittip.com/photonstorm/">GitTip</a></li>
 					</ul>
 				</li>
@@ -1245,7 +1245,7 @@ If you wish to work in radians instead of degrees use the property Sprite.rotati
 
     
     <dt class="tag-source">Source -
-    <a href="Graphics.js_.html">gameobjects/Graphics.js</a>, <a href="Graphics.js_.html#sunlight-1-line-305">line 305</a>
+    <a href="Graphics.js_.html">gameobjects/Graphics.js</a>, <a href="Graphics.js_.html#sunlight-1-line-321">line 321</a>
     </dt>
     
 
@@ -1614,7 +1614,7 @@ If you wish to work in radians instead of degrees use the property Sprite.rotati
 
     
     <dt class="tag-source">Source -
-    <a href="Graphics.js_.html">gameobjects/Graphics.js</a>, <a href="Graphics.js_.html#sunlight-1-line-356">line 356</a>
+    <a href="Graphics.js_.html">gameobjects/Graphics.js</a>, <a href="Graphics.js_.html#sunlight-1-line-372">line 372</a>
     </dt>
     
 
@@ -1927,7 +1927,7 @@ So if this Graphics was in a Group that has x: 200, then this will be added to t
 
     
     <dt class="tag-source">Source -
-    <a href="Graphics.js_.html">gameobjects/Graphics.js</a>, <a href="Graphics.js_.html#sunlight-1-line-325">line 325</a>
+    <a href="Graphics.js_.html">gameobjects/Graphics.js</a>, <a href="Graphics.js_.html#sunlight-1-line-341">line 341</a>
     </dt>
     
 
@@ -4911,7 +4911,7 @@ This ability allows you to check any of the matrix values and perform actions su
             
 <dt>
     <h4 class="name "
-        id="drawCircle"><span class="type-signature"></span>drawCircle<span class="signature">(x, y, radius)</span><span class="type-signature"> &rarr; {<a href="PIXI.Graphics.html">PIXI.Graphics</a>}</span></h4>
+        id="drawCircle"><span class="type-signature"></span>drawCircle<span class="signature">(x, y, radius)</span><span class="type-signature"> &rarr; {<a href="Phaser.Graphics.html">Phaser.Graphics</a>}</span></h4>
     
     
 </dt>
@@ -4920,7 +4920,8 @@ This ability allows you to check any of the matrix values and perform actions su
 
     
     <div class="description">
-        <p>Draws a circle.</p>
+        <p>/*
+Draws a circle.</p>
     </div>
     
 
@@ -4970,7 +4971,7 @@ This ability allows you to check any of the matrix values and perform actions su
 
             
 
-            <td class="description last"><p>The X coordinate of the center of the circle</p></td>
+            <td class="description last"><p>The X coordinate of the center of the circle.</p></td>
         </tr>
 
 	
@@ -4993,7 +4994,7 @@ This ability allows you to check any of the matrix values and perform actions su
 
             
 
-            <td class="description last"><p>The Y coordinate of the center of the circle</p></td>
+            <td class="description last"><p>The Y coordinate of the center of the circle.</p></td>
         </tr>
 
 	
@@ -5016,7 +5017,7 @@ This ability allows you to check any of the matrix values and perform actions su
 
             
 
-            <td class="description last"><p>The radius of the circle</p></td>
+            <td class="description last"><p>The diameter of the circle.</p></td>
         </tr>
 
 	
@@ -5033,13 +5034,13 @@ This ability allows you to check any of the matrix values and perform actions su
     
         <div class="returns-type">
         
-<span class="param-type"><a href="PIXI.Graphics.html">PIXI.Graphics</a></span>
+<span class="param-type"><a href="Phaser.Graphics.html">Phaser.Graphics</a></span>
 
  -
         </div>
     
     <div class="returns-desc param-desc">
-        
+        <p>This Graphics object.</p>
     </div>
 
 
@@ -5056,11 +5057,6 @@ This ability allows you to check any of the matrix values and perform actions su
     
 
     
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="PIXI.Graphics.html#drawCircle">PIXI.Graphics#drawCircle</a>
-    </li></dd>
-    
 
     
 
@@ -5074,7 +5070,7 @@ This ability allows you to check any of the matrix values and perform actions su
 
     
     <dt class="tag-source">Source -
-    <a href="Graphics.js.html">pixi/primitives/Graphics.js</a>, <a href="Graphics.js.html#sunlight-1-line-570">line 570</a>
+    <a href="Graphics.js_.html">gameobjects/Graphics.js</a>, <a href="Graphics.js_.html#sunlight-1-line-197">line 197</a>
     </dt>
     
 
@@ -6183,7 +6179,7 @@ Draws a single {Phaser.Polygon} triangle from a {Phaser.Point} array</p>
 
     
     <dt class="tag-source">Source -
-    <a href="Graphics.js_.html">gameobjects/Graphics.js</a>, <a href="Graphics.js_.html#sunlight-1-line-197">line 197</a>
+    <a href="Graphics.js_.html">gameobjects/Graphics.js</a>, <a href="Graphics.js_.html#sunlight-1-line-213">line 213</a>
     </dt>
     
 
@@ -6396,7 +6392,7 @@ Draws {Phaser.Polygon} triangles</p>
 
     
     <dt class="tag-source">Source -
-    <a href="Graphics.js_.html">gameobjects/Graphics.js</a>, <a href="Graphics.js_.html#sunlight-1-line-229">line 229</a>
+    <a href="Graphics.js_.html">gameobjects/Graphics.js</a>, <a href="Graphics.js_.html#sunlight-1-line-245">line 245</a>
     </dt>
     
 
@@ -9544,7 +9540,7 @@ Based on: <a href="https://stackoverflow.com/questions/785097/how-do-i-implement
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Thu Dec 04 2014 11:32:36 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Tue Jan 06 2015 06:32:00 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>
