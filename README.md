@@ -173,6 +173,8 @@ Phaser is released under the [MIT License](http://opensource.org/licenses/MIT).
 <a name="getting-started"></a>
 ## Getting Started
 
+<img src="http://phaser.io/images/github/learn.jpg" align="right">
+
 We have a [Getting Started Guide](http://phaser.io/getting-started-js.php) which covers all you need to begin developing games with Phaser. From setting up a web server to picking an IDE to coding your first game.
 
 Lynda.com have published a free **video course**: [HTML5 Game Development with Phaser](http://www.lynda.com/Phaser-tutorials/HTML5-Game-Development-Phaser/163641-2.html)
@@ -181,7 +183,7 @@ We wrote a comprehensive [How to Learn Phaser](http://gamedevelopment.tutsplus.c
 
 Although it's currently a bit of a "wall of text" we urge you to check out the **News** section of the [Phaser web site](http://phaser.io). You'll find fresh links *daily* including loads of tutorials.
 
-### Learn by Example
+### Source Code Examples
 
 Ever since we started Phaser we've been growing and expanding our extensive set of source code examples. Currently there are over 400 of them!
 
@@ -202,7 +204,7 @@ And more on the way.
 
 The [Game Mechanic Explorer](http://gamemechanicexplorer.com) is a great interactive way to learn how to develop specific game mechanics in Phaser. Well worth exploring once you've got your dev environment set-up.
 
-### Mighty Editor - A Visual Phaser Game Editor
+### Mighty Editor - Visual Game Editor
 
 [MightyEditor](http://mightyfingers.com/) is a browser-based visual Phaser game editor. Create your maps with ease, position objects and share them in seconds. It also exports to native Phaser code. Excellent for quickly setting-up levels and scenes.
 
@@ -240,17 +242,28 @@ If you change either Pixi.js or P2 then use the Grunt tasks `replace:pixi` and `
 ![div](http://www.phaser.io/images/github/div.png)
 
 <a name="games"></a>
-## Phaser made Games
+## Games made with Phaser
 
-*Thousands* of games have been made in Phaser. This is just a tiny sample.
+*Thousands* of games have been made in Phaser. From game jam entries to games for some of the largest entertainment brands in the world. This is just a tiny sample.
 
-[![Game Title](http://phaser.io/images/github/shot1a.jpg)][game1]
-[![Game Title](http://phaser.io/images/github/shot2a.jpg)][game2]
-[![Game Title](http://phaser.io/images/github/shot3a.jpg)][game3]
-[![Game Title](http://phaser.io/images/github/shot4a.jpg)][game4]
-[![Game Title](http://phaser.io/images/github/shot5b.jpg)][game5]
-[![Game Title](http://phaser.io/images/github/shot6b.jpg)][game6]
-[![Game Title](http://phaser.io/images/github/shot7b.jpg)][game7]
+[![Game](http://phaser.io/images/github/shot1a.jpg)][game1]
+[![Game](http://phaser.io/images/github/shot2a.jpg)][game2]
+[![Game](http://phaser.io/images/github/shot3a.jpg)][game3]
+[![Game](http://phaser.io/images/github/shot4a.jpg)][game4]
+[![Game](http://phaser.io/images/github/shot5b.jpg)][game5]
+[![Game](http://phaser.io/images/github/shot6b.jpg)][game6]
+[![Game](http://phaser.io/images/github/shot7b.jpg)][game7]
+[![Game](http://phaser.io/images/github/shot8.jpg)][game8]
+[![Game](http://phaser.io/images/github/shot9.jpg)][game9]
+[![Game](http://phaser.io/images/github/shot10.jpg)][game10]
+[![Game](http://phaser.io/images/github/shot11.jpg)][game11]
+[![Game](http://phaser.io/images/github/shot12.jpg)][game12]
+[![Game](http://phaser.io/images/github/shot13.jpg)][game13]
+[![Game](http://phaser.io/images/github/shot14.jpg)][game14]
+
+Artwork copyright their respective developers.
+
+Find lots more on the [HTML5 Game Devs Forum](http://www.html5gamedevs.com/forum/8-game-showcase/).
 
 ![div](http://www.phaser.io/images/github/div.png)
 
@@ -276,7 +289,7 @@ If you code with [TypeScript](http://www.typescriptlang.org/) there are comprehe
 <a name="road-map"></a>
 ## Road Map
 
-Here are some of the features planned for future releases. Not all features are promised to be delivered, and no timescale is put against any of them either.
+Here are some of the features planned for future releases. Not all are promised to be delivered and no timescale is given. But they serve as a good indication of the direction Phaser is heading in.
 
 ### Version 2.3 ("Tarabon")
 
@@ -362,10 +375,17 @@ The Phaser logo and characters are &copy; Copyright 2012 - 2015 Photon Storm Lim
 [contribute]: https://github.com/photonstorm/phaser/blob/master/CONTRIBUTING.md
 [forum]: http://www.html5gamedevs.com/forum/14-phaser/
 
-[game1]: http://phaser.io
-[game2]: http://phaser.io
-[game3]: http://phaser.io
-[game4]: http://phaser.io
-[game5]: http://phaser.io
-[game6]: http://phaser.io
-[game7]: http://phaser.io
+[game1]: https://www.prodigygame.com/Fun-Math-Games/
+[game2]: http://www.bbc.co.uk/cbbc/games/deadly-defenders
+[game3]: http://www.defiantfew.com/
+[game4]: http://www.pawpatrol.com/fun.php
+[game5]: http://www.fyretale.com/
+[game6]: http://www.pocoyo.com/juegos-ninos/caramelos
+[game7]: http://www.html5gamedevs.com/topic/11179-phaser-cocoonjs-tap-tap-submarine/
+[game8]: http://www.gamepix.com/project/footchinko/
+[game9]: http://orcattack.thehobbit.com
+[game10]: http://runsheldon.com/
+[game11]: http://www.tempalabs.com/works/moon-rocket/
+[game12]: http://www.tempalabs.com/works/master-of-arms-sword-staff-spear/
+[game13]: http://m.silvergames.com/en/pocahontas-slots
+[game14]: http://www.tempalabs.com/works/gattai/
