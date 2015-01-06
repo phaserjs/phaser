@@ -10,7 +10,7 @@ Along with the fantastic open source community Phaser is actively developed and 
 
 Thousands of developers worldwide use it. From indies and multi-national digital agencies to schools and Universities. Each creating their own incredible games. Grab the source and join in the fun!
 
-* **Visit:** The [Phaser website](http://phaser.io) and follow on [Twitter](https://twitter.com/photonstorm) (feel free to use #phaserjs)
+* **Visit:** The [Phaser website](http://phaser.io) and follow on [Twitter](https://twitter.com/photonstorm) (#phaserjs)
 * **Learn:** [API Documentation](http://docs.phaser.io), [Support Forum][forum] and [StackOverflow](http://stackoverflow.com/questions/tagged/phaser-framework)
 * **Code:** 400+ [Source Examples](http://examples.phaser.io) (also available in this [git repo][examples])
 * **Read:** Subscribe to the [Newsletter](https://confirmsubscription.com/h/r/369DE48E3E86AF1E) and grab our [Phaser Books](https://leanpub.com/u/photonstorm)
@@ -41,9 +41,9 @@ Thousands of developers worldwide use it. From indies and multi-national digital
 
 Happy New Year! Welcome to the first release of Phaser in 2015.
 
-We're kicking off the year with the 2.2.2 release. This is mostly a maintenance release and fixes a few crucial issues such as tilemap rendering in Safari and physics performance. But a few small but super-useful features sneaked in too, my favourite being that the Loader now supports BLOB urls for audio files.
+We're kicking off the year with the 2.2.2 release. This is mostly a maintenance release and fixes a few crucial issues such as tilemap rendering in Safari and physics performance. But a few small yet super-useful features sneaked in too, my favourite being that the Loader now supports BLOB urls for audio files.
 
-We're hard at work on Phaser 3. Development on the brand new renderer began in earnest last year and we're already seeing exceptional results from it. You can follow our development in the forum and public repo. Even though we're working on taking Phaser 3 into ES6 and the next generation of web browsers, we haven't stopped with the 2.x branch either. 
+We're hard at work on Phaser 3. Development on the brand new renderer began in earnest last year and we're already seeing exceptional results from it. You can follow our development in the forum and public repo. Even though we're working on taking Phaser 3 into ES6 and the next generation of web browsers, we haven't stopped with the 2.x branch.
 
 If you take a peek at the [2.3 milestones](https://github.com/photonstorm/phaser/milestones/2.3.0) you'll see we've got some great features in build. Included is a refactoring of all the Game Object classes, a new parallel asset loader and more consistent Text style handling.
 
@@ -179,11 +179,11 @@ We have a [Getting Started Guide](http://phaser.io/getting-started-js.php) which
 
 Prefer **videos** to reading? Lynda.com have published a free course: [HTML5 Game Development with Phaser](http://www.lynda.com/Phaser-tutorials/HTML5-Game-Development-Phaser/163641-2.html)
 
-Use the [How to Learn Phaser](http://gamedevelopment.tutsplus.com/articles/how-to-learn-the-phaser-html5-game-engine--gamedev-13643) guide we wrote for GameDevTuts+. It covers finding tutorials, examples and support.
+Use the [How to Learn Phaser](http://gamedevelopment.tutsplus.com/articles/how-to-learn-the-phaser-html5-game-engine--gamedev-13643) guide we wrote for GameDevTuts+. It covers finding tutorials, examples and getting support.
 
-Although currently a bit of a "wall of text" we urge you to check out the **News** section of the [Phaser web site](http://phaser.io). You'll find fresh links posted there *daily*.
+Although currently a bit of a "wall of text" we urge you to keep and eye on the **News** section of the [Phaser web site](http://phaser.io). We post fresh links posted there *daily*.
 
-Using Phaser with **TypeScript**? Then we strongly recommend this great series of [Game From Scratch](http://www.gamefromscratch.com/page/Adventures-in-Phaser-with-TypeScript-tutorial-series.aspx) tutorials.
+Using Phaser with **TypeScript**? Check out this great series of [Game From Scratch](http://www.gamefromscratch.com/page/Adventures-in-Phaser-with-TypeScript-tutorial-series.aspx) tutorials.
 
 ### Source Code Examples
 
@@ -356,7 +356,7 @@ Written something cool that shows Phaser in use? Please tell us about it in our 
 
 Phaser is a [Photon Storm](http://www.photonstorm.com) production.
 
-Created by Richard Davey. Powered by coffee, anime, pixels and love.
+Created by [Richard Davey](mailto:rich@photonstorm.com). Powered by coffee, anime, pixels and love.
 
 The Phaser logo and characters are &copy; 2015 Photon Storm Limited.
 
