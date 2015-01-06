@@ -1312,14 +1312,14 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 * @param {RenderSession} renderSession - 
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\extras\TilingSprite.js
-* @sourceline 194
+* @sourceline 192
 */
 /**
 * @description Returns the framing rectangle of the sprite as a PIXI.Rectangle object
 * @method PIXI.TilingSprite#getBounds
 * @return {PIXI.Rectangle} the framing rectangle
 * @sourcefile d:\wamp\www\phaser\src\pixi\extras\TilingSprite.js
-* @sourceline 280
+* @sourceline 278
 */
 /**
 * @description When the texture is updated, this event will fire to update the scale and frame
@@ -1327,13 +1327,13 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 * @param {} event - 
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\extras\TilingSprite.js
-* @sourceline 360
+* @sourceline 358
 */
 /**
 * @method PIXI.TilingSprite#generateTilingTexture
 * @param {Boolean} forcePowerOfTwo - Whether we want to force the texture to be a power of two
 * @sourcefile d:\wamp\www\phaser\src\pixi\extras\TilingSprite.js
-* @sourceline 373
+* @sourceline 371
 */
 /**
 * @fileoverview
@@ -2130,11 +2130,19 @@ original filter https://github.com/evanw/glfx.js/blob/master/src/filters/blur/ti
 * @sourceline 30
 */
 /**
+* @description The type of the object, should be one of the Graphics type consts, PIXI.Graphics.CIRC in this case
+* @member PIXI.Circle#type
+* @type {Number}
+* @default 0
+* @sourcefile d:\wamp\www\phaser\src\pixi\geom\Circle.js
+* @sourceline 37
+*/
+/**
 * @description Creates a clone of this Circle instance
 * @method PIXI.Circle#clone
 * @return {PIXI.Circle} a copy of the Circle
 * @sourcefile d:\wamp\www\phaser\src\pixi\geom\Circle.js
-* @sourceline 38
+* @sourceline 45
 */
 /**
 * @description Checks whether the x and y coordinates given are contained within this circle
@@ -2143,14 +2151,14 @@ original filter https://github.com/evanw/glfx.js/blob/master/src/filters/blur/ti
 * @param {Number} y - The Y coordinate of the point to test
 * @return {Boolean} Whether the x/y coordinates are within this Circle
 * @sourcefile d:\wamp\www\phaser\src\pixi\geom\Circle.js
-* @sourceline 49
+* @sourceline 56
 */
 /**
 * @description Returns the framing rectangle of the circle as a PIXI.Rectangle object
 * @method PIXI.Circle#getBounds
 * @return {PIXI.Rectangle} the framing rectangle
 * @sourcefile d:\wamp\www\phaser\src\pixi\geom\Circle.js
-* @sourceline 72
+* @sourceline 79
 */
 /**
 * @fileoverview
@@ -2197,11 +2205,19 @@ original filter https://github.com/evanw/glfx.js/blob/master/src/filters/blur/ti
 * @sourceline 38
 */
 /**
+* @description The type of the object, should be one of the Graphics type consts, PIXI.Graphics.ELIP in this case
+* @member PIXI.Ellipse#type
+* @type {Number}
+* @default 0
+* @sourcefile d:\wamp\www\phaser\src\pixi\geom\Ellipse.js
+* @sourceline 46
+*/
+/**
 * @description Creates a clone of this Ellipse instance
 * @method PIXI.Ellipse#clone
 * @return {PIXI.Ellipse} a copy of the ellipse
 * @sourcefile d:\wamp\www\phaser\src\pixi\geom\Ellipse.js
-* @sourceline 46
+* @sourceline 54
 */
 /**
 * @description Checks whether the x and y coordinates given are contained within this ellipse
@@ -2210,14 +2226,14 @@ original filter https://github.com/evanw/glfx.js/blob/master/src/filters/blur/ti
 * @param {Number} y - The Y coordinate of the point to test
 * @return {Boolean} Whether the x/y coords are within this ellipse
 * @sourcefile d:\wamp\www\phaser\src\pixi\geom\Ellipse.js
-* @sourceline 57
+* @sourceline 65
 */
 /**
 * @description Returns the framing rectangle of the ellipse as a PIXI.Rectangle object
 * @method PIXI.Ellipse#getBounds
 * @return {PIXI.Rectangle} the framing rectangle
 * @sourcefile d:\wamp\www\phaser\src\pixi\geom\Ellipse.js
-* @sourceline 80
+* @sourceline 88
 */
 /**
 * @fileoverview
@@ -2421,11 +2437,26 @@ If y is omitted, both x and y will be set to x.
 * @sourceline 5
 */
 /**
+* @description An array of the points of this polygon
+* @member PIXI.Polygon#points
+* @type {(Array<Point>|Array<Number>)}
+* @sourcefile d:\wamp\www\phaser\src\pixi\geom\Polygon.js
+* @sourceline 33
+*/
+/**
+* @description The type of the object, should be one of the Graphics type consts, PIXI.Graphics.POLY in this case
+* @member PIXI.Polygon#type
+* @type {Number}
+* @default 0
+* @sourcefile d:\wamp\www\phaser\src\pixi\geom\Polygon.js
+* @sourceline 41
+*/
+/**
 * @description Creates a clone of this polygon
 * @method PIXI.Polygon#clone
 * @return {PIXI.Polygon} a copy of the polygon
 * @sourcefile d:\wamp\www\phaser\src\pixi\geom\Polygon.js
-* @sourceline 35
+* @sourceline 49
 */
 /**
 * @description Checks whether the x and y coordinates passed to this function are contained within this polygon
@@ -2434,7 +2465,7 @@ If y is omitted, both x and y will be set to x.
 * @param {Number} y - The Y coordinate of the point to test
 * @return {Boolean} Whether the x/y coordinates are within this polygon
 * @sourcefile d:\wamp\www\phaser\src\pixi\geom\Polygon.js
-* @sourceline 47
+* @sourceline 61
 */
 /**
 * @fileoverview
@@ -2481,11 +2512,19 @@ If y is omitted, both x and y will be set to x.
 * @sourceline 38
 */
 /**
+* @description The type of the object, should be one of the Graphics type consts, PIXI.Graphics.RECT in this case
+* @member PIXI.Rectangle#type
+* @type {Number}
+* @default 0
+* @sourcefile d:\wamp\www\phaser\src\pixi\geom\Rectangle.js
+* @sourceline 45
+*/
+/**
 * @description Creates a clone of this Rectangle
 * @method PIXI.Rectangle#clone
 * @return {PIXI.Rectangle} a copy of the rectangle
 * @sourcefile d:\wamp\www\phaser\src\pixi\geom\Rectangle.js
-* @sourceline 46
+* @sourceline 53
 */
 /**
 * @description Checks whether the x and y coordinates given are contained within this Rectangle
@@ -2494,7 +2533,7 @@ If y is omitted, both x and y will be set to x.
 * @param {Number} y - The Y coordinate of the point to test
 * @return {Boolean} Whether the x/y coordinates are within this Rectangle
 * @sourcefile d:\wamp\www\phaser\src\pixi\geom\Rectangle.js
-* @sourceline 57
+* @sourceline 64
 */
 /**
 * @fileoverview
@@ -2509,7 +2548,7 @@ If y is omitted, both x and y will be set to x.
 * @param {Number} y - The Y coordinate of the upper-left corner of the rounded rectangle
 * @param {Number} width - The overall width of this rounded rectangle
 * @param {Number} height - The overall height of this rounded rectangle
-* @param {Number} radius - The overall radius of this corners of this rounded rectangle
+* @param {Number} radius - Controls the radius of the rounded corners
 * @sourcefile d:\wamp\www\phaser\src\pixi\geom\RoundedRectangle.js
 * @sourceline 5
 */
@@ -2549,11 +2588,19 @@ If y is omitted, both x and y will be set to x.
 * @sourceline 46
 */
 /**
+* @description The type of the object, should be one of the Graphics type consts, PIXI.Graphics.RRECT in this case
+* @member PIXI.RoundedRectangle#type
+* @type {Number}
+* @default 0
+* @sourcefile d:\wamp\www\phaser\src\pixi\geom\RoundedRectangle.js
+* @sourceline 53
+*/
+/**
 * @description Creates a clone of this Rounded Rectangle
 * @method PIXI.RoundedRectangle#clone
 * @return {PIXI.RoundedRectangle} a copy of the rounded rectangle
 * @sourcefile d:\wamp\www\phaser\src\pixi\geom\RoundedRectangle.js
-* @sourceline 54
+* @sourceline 61
 */
 /**
 * @description Checks whether the x and y coordinates given are contained within this Rounded Rectangle
@@ -2562,7 +2609,7 @@ If y is omitted, both x and y will be set to x.
 * @param {Number} y - The Y coordinate of the point to test
 * @return {Boolean} Whether the x/y coordinates are within this Rounded Rectangle
 * @sourcefile d:\wamp\www\phaser\src\pixi\geom\RoundedRectangle.js
-* @sourceline 65
+* @sourceline 72
 */
 /**
 * @fileoverview
@@ -3476,34 +3523,49 @@ This can be quite useful if your geometry is complicated and needs to be reused 
 * @method PIXI.CanvasTinter.roundColor
 * @param {Number} color - the color to round, should be a hex color
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\canvas\utils\CanvasTinter.js
-* @sourceline 189
+* @sourceline 198
+*/
+/**
+* @description Rounds the specified color according to the PIXI.CanvasTinter.cacheStepsPerColorChannel.
+* @method PIXI.CanvasTinter.roundColor
+* @param {Number} color - the color to round, should be a hex color
+* @sourcefile d:\wamp\www\phaser\src\pixi\renderers\canvas\utils\CanvasTinter.js
+* @sourceline 218
 */
 /**
 * @description Number of steps which will be used as a cap when rounding colors.
 * @member PIXI.CanvasTinter.cacheStepsPerColorChannel
 * @type {Number}
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\canvas\utils\CanvasTinter.js
-* @sourceline 209
+* @sourceline 247
 */
 /**
 * @description Tint cache boolean flag.
 * @member PIXI.CanvasTinter.convertTintToImage
 * @type {Boolean}
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\canvas\utils\CanvasTinter.js
-* @sourceline 218
+* @sourceline 256
+*/
+/**
+* @description If the browser isn't capable of handling tinting with alpha this will be false.
+This property is only applicable if using tintWithPerPixel.
+* @member PIXI.CanvasTinter.canHandleAlpha
+* @type {Boolean}
+* @sourcefile d:\wamp\www\phaser\src\pixi\renderers\canvas\utils\CanvasTinter.js
+* @sourceline 265
 */
 /**
 * @description Whether or not the Canvas BlendModes are supported, consequently the ability to tint using the multiply method.
 * @member PIXI.CanvasTinter.canUseMultiply
 * @type {Boolean}
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\canvas\utils\CanvasTinter.js
-* @sourceline 227
+* @sourceline 275
 */
 /**
 * @description The tinting method that will be used.
 * @method PIXI.CanvasTinter.tintMethod
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\canvas\utils\CanvasTinter.js
-* @sourceline 236
+* @sourceline 284
 */
 /**
 * @fileoverview
@@ -3725,7 +3787,7 @@ Disable this by setting this to false. For example if your game has a canvas fil
 * @description Destroys the shader.
 * @method PIXI.ComplexPrimitiveShader#destroy
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\shaders\ComplexPrimitiveShader.js
-* @sourceline 109
+* @sourceline 110
 */
 /**
 * @fileoverview
@@ -3951,13 +4013,13 @@ http://www.khronos.org/registry/gles/specs/2.0/GLSL_ES_Specification_1.0.17.pdf
 * @description Initialises the shader.
 * @method PIXI.PrimitiveShader#init
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\shaders\PrimitiveShader.js
-* @sourceline 74
+* @sourceline 75
 */
 /**
 * @description Destroys the shader.
 * @method PIXI.PrimitiveShader#destroy
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\shaders\PrimitiveShader.js
-* @sourceline 103
+* @sourceline 105
 */
 /**
 * @fileoverview
@@ -4376,7 +4438,7 @@ https://github.com/libgdx/libgdx/blob/master/gdx/src/com/badlogic/gdx/graphics/g
 * @param {WebGLContext} gl - the current WebGL drawing context
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\utils\WebGLGraphics.js
-* @sourceline 84
+* @sourceline 86
 */
 /**
 * @method PIXI.WebGLGraphics.switchMode
@@ -4384,7 +4446,7 @@ https://github.com/libgdx/libgdx/blob/master/gdx/src/com/badlogic/gdx/graphics/g
 * @param {Number} type - 
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\utils\WebGLGraphics.js
-* @sourceline 209
+* @sourceline 211
 */
 /**
 * @description Builds a rectangle to draw
@@ -4393,7 +4455,7 @@ https://github.com/libgdx/libgdx/blob/master/gdx/src/com/badlogic/gdx/graphics/g
 * @param {Object} webGLData - 
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\utils\WebGLGraphics.js
-* @sourceline 243
+* @sourceline 245
 */
 /**
 * @description Builds a rounded rectangle to draw
@@ -4402,7 +4464,7 @@ https://github.com/libgdx/libgdx/blob/master/gdx/src/com/badlogic/gdx/graphics/g
 * @param {Object} webGLData - 
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\utils\WebGLGraphics.js
-* @sourceline 311
+* @sourceline 313
 */
 /**
 * @description Calculate the points for a quadratic bezier curve. (helper function..)
@@ -4417,7 +4479,7 @@ Based on: https://stackoverflow.com/questions/785097/how-do-i-implement-a-bezier
 * @return {Array<Number>} 
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\utils\WebGLGraphics.js
-* @sourceline 379
+* @sourceline 384
 */
 /**
 * @description Builds a circle to draw
@@ -4426,7 +4488,7 @@ Based on: https://stackoverflow.com/questions/785097/how-do-i-implement-a-bezier
 * @param {Object} webGLData - 
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\utils\WebGLGraphics.js
-* @sourceline 431
+* @sourceline 436
 */
 /**
 * @description Builds a line to draw
@@ -4435,7 +4497,7 @@ Based on: https://stackoverflow.com/questions/785097/how-do-i-implement-a-bezier
 * @param {Object} webGLData - 
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\utils\WebGLGraphics.js
-* @sourceline 514
+* @sourceline 519
 */
 /**
 * @description Builds a complex polygon to draw
@@ -4444,7 +4506,7 @@ Based on: https://stackoverflow.com/questions/785097/how-do-i-implement-a-bezier
 * @param {Object} webGLData - 
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\utils\WebGLGraphics.js
-* @sourceline 726
+* @sourceline 731
 */
 /**
 * @description Builds a polygon to draw
@@ -4453,23 +4515,23 @@ Based on: https://stackoverflow.com/questions/785097/how-do-i-implement-a-bezier
 * @param {Object} webGLData - 
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\utils\WebGLGraphics.js
-* @sourceline 788
+* @sourceline 793
 */
 /**
 * @class PIXI.WebGLGraphicsData
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\utils\WebGLGraphics.js
-* @sourceline 843
+* @sourceline 848
 */
 /**
 * @method PIXI.WebGLGraphicsData#reset
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\utils\WebGLGraphics.js
-* @sourceline 863
+* @sourceline 868
 */
 /**
 * @method PIXI.WebGLGraphicsData#upload
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\utils\WebGLGraphics.js
-* @sourceline 872
+* @sourceline 877
 */
 /**
 * @fileoverview
@@ -4833,13 +4895,13 @@ Based on: https://stackoverflow.com/questions/785097/how-do-i-implement-a-bezier
 * @param {Array} webGLData - 
 * @param {Object} renderSession - 
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\utils\WebGLStencilManager.js
-* @sourceline 190
+* @sourceline 193
 */
 /**
 * @description Destroys the mask stack.
 * @method PIXI.WebGLStencilManager#destroy
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\utils\WebGLStencilManager.js
-* @sourceline 285
+* @sourceline 288
 */
 /**
 * @fileoverview
@@ -5035,14 +5097,14 @@ Disable this by setting this to false. For example: if your game has a canvas fi
 * @param {Number} width - the new width of the webGL view
 * @param {Number} height - the new height of the webGL view
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\WebGLRenderer.js
-* @sourceline 378
+* @sourceline 381
 */
 /**
 * @description Updates and Creates a WebGL texture for the renderers context.
 * @method PIXI.WebGLRenderer#updateTexture
 * @param {PIXI.Texture} texture - the texture to update
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\WebGLRenderer.js
-* @sourceline 404
+* @sourceline 407
 */
 /**
 * @description Handles a lost webgl context
@@ -5050,7 +5112,7 @@ Disable this by setting this to false. For example: if your game has a canvas fi
 * @param {PIXI.Event} event - 
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\WebGLRenderer.js
-* @sourceline 453
+* @sourceline 456
 */
 /**
 * @description Handles a restored webgl context
@@ -5058,19 +5120,19 @@ Disable this by setting this to false. For example: if your game has a canvas fi
 * @param {PIXI.Event} event - 
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\WebGLRenderer.js
-* @sourceline 466
+* @sourceline 469
 */
 /**
 * @description Removes everything from the renderer (event listeners, spritebatch, etc...)
 * @method PIXI.WebGLRenderer#destroy
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\WebGLRenderer.js
-* @sourceline 487
+* @sourceline 490
 */
 /**
 * @description Maps Pixi blend modes to WebGL blend modes.
 * @method PIXI.WebGLRenderer#mapBlendModes
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\WebGLRenderer.js
-* @sourceline 518
+* @sourceline 521
 */
 /**
 * @fileoverview
@@ -5241,7 +5303,7 @@ or add a wordWrap property set to true and and wordWrapWidth property with a val
 * @method PIXI.Text#updateTexture
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\text\Text.js
-* @sourceline 281
+* @sourceline 285
 */
 /**
 * @description Renders the object using the WebGL renderer
@@ -5249,7 +5311,7 @@ or add a wordWrap property set to true and and wordWrapWidth property with a val
 * @param {RenderSession} renderSession - 
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\text\Text.js
-* @sourceline 301
+* @sourceline 305
 */
 /**
 * @description Renders the object using the Canvas renderer
@@ -5257,7 +5319,7 @@ or add a wordWrap property set to true and and wordWrapWidth property with a val
 * @param {RenderSession} renderSession - 
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\text\Text.js
-* @sourceline 321
+* @sourceline 325
 */
 /**
 * @description Calculates the ascent, descent and fontSize of a given fontStyle
@@ -5265,7 +5327,7 @@ or add a wordWrap property set to true and and wordWrapWidth property with a val
 * @param {Object} fontStyle - 
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\text\Text.js
-* @sourceline 341
+* @sourceline 345
 */
 /**
 * @description Applies newlines to a string to have it optimally fit into the horizontal
@@ -5274,7 +5336,7 @@ bounds set by the Text object's wordWrapWidth property.
 * @param {String} text - 
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\text\Text.js
-* @sourceline 444
+* @sourceline 450
 */
 /**
 * @description Returns the bounds of the Text as a rectangle. The bounds calculation takes the worldTransform into account.
@@ -5282,14 +5344,14 @@ bounds set by the Text object's wordWrapWidth property.
 * @param {PIXI.Matrix} matrix - the transformation matrix of the Text
 * @return {PIXI.Rectangle} the framing rectangle
 * @sourcefile d:\wamp\www\phaser\src\pixi\text\Text.js
-* @sourceline 492
+* @sourceline 498
 */
 /**
 * @description Destroys this text object.
 * @method PIXI.Text#destroy
 * @param {Boolean} destroyBaseTexture - whether to destroy the base texture as well
 * @sourcefile d:\wamp\www\phaser\src\pixi\text\Text.js
-* @sourceline 510
+* @sourceline 516
 */
 /**
 * @fileoverview
@@ -5860,7 +5922,7 @@ This function will likely change and update as webGL performance improves on the
 * @sourceline 34
 */
 /**
-* @description Various blend modes supported by pixi.
+* @description Various blend modes supported by pixi. IMPORTANT - The WebGL renderer only supports the NORMAL, ADD, MULTIPLY and SCREEN blend modes.
 * @member PIXI.PIXI.blendModes
 * @type {Object}
 * @sourcefile d:\wamp\www\phaser\src\pixi\Pixi.js
@@ -6158,6 +6220,15 @@ this function is taken from Starling Framework as its pretty neat ;)
 * @return {Number} the closest number that is a power of two
 * @sourcefile d:\wamp\www\phaser\src\pixi\utils\Utils.js
 * @sourceline 189
+*/
+/**
+* @description checks if the given width and height make a power of two texture
+* @method PIXI.AjaxRequest#isPowerOfTwo
+* @param {Number} width - 
+* @param {Number} height - 
+* @return {Boolean} 
+* @sourcefile d:\wamp\www\phaser\src\pixi\utils\Utils.js
+* @sourceline 209
 */
 /**
 * @fileoverview
