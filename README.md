@@ -7,31 +7,11 @@ Phaser is a fast, free and fun open source HTML5 game framework. It uses [Pixi.j
 
 It is actively developed and maintained by the company [Photon Storm](http://www.photonstorm.com) along with the fantastic open source community. As a result of continued support and a friendly API Phaser is currently one of the [most starred](https://github.com/showcases/javascript-game-engines) game frameworks on Github. Thousands of developers worldwide use it. From indies to multi-national digital agencies. Each creating incredible games.
 
-<table>
-<tr>
-<td border="0">
-    <ul>
-        <li>The <a href="http://phaser.io">official website</a></li>
-        <li><a href="https://twitter.com/photonstorm">Twitter</a> (feel free to use #phaserjs when tweeting)</li>
-        <li><a href="http://docs.phaser.io">API Documentation</a></li>
-        <li><a href="http://forum.phaser.io">Support Forum</a></li>
-        <li><a href="http://examples.phaser.io">Code Examples</a> (also available in this <a href="">git repo</a>)</li>
-        <li>Subscribe to the <a href="https://confirmsubscription.com/h/r/369DE48E3E86AF1E">Phaser Newsletter</a></li>
-        <li>StackOverflow tag: <a href="http://stackoverflow.com/questions/tagged/phaser-framework">phaser-framework</a></li>
-        <li><a href="https://github.com/photonstorm/phaser-plugins">Phaser Plugins</a></li>
-        <li><a href="http://www.html5gamedevs.com/topic/4470-official-phaserio-irc-channel-phaserio-on-freenode/">#phaserio IRC channel</a> on freenode</li>
-        <li>Please support our work via <a href="https://gratipay.com/photonstorm/">Gratipay</a></li>
-    </ul>
-</td>
-<td width="180" border="0"><img src="http://phaser.io/images/github/jump.jpg"></td>
-</tr>
-</table>
-
-![div](http://www.phaser.io/images/github-hr.png)
+<img src="http://phaser.io/images/github/jump.jpg" align="right">
 
 * The official [website](http://phaser.io)
 * [Twitter](https://twitter.com/photonstorm) (feel free to use #phaserjs when tweeting)
-* [API Documentationn](http://docs.phaser.io)
+* [API Documentation](http://docs.phaser.io)
 * [Support Forum][forum]
 * [Source Code Examples](http://examples.phaser.io) (also available in this [git repo][examples])
 * Subscribe to the [Phaser Newsletter](https://confirmsubscription.com/h/r/369DE48E3E86AF1E)
@@ -40,6 +20,7 @@ It is actively developed and maintained by the company [Photon Storm](http://www
 * [#phaserio IRC channel](http://www.html5gamedevs.com/topic/4470-official-phaserio-irc-channel-phaserio-on-freenode/) on freenode
 * Please support our work via [Gratipay](https://gratipay.com/photonstorm/)
 
+![div](http://www.phaser.io/images/github-hr.png)
 
 # Index
 
