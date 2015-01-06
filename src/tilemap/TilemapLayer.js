@@ -757,7 +757,7 @@ Phaser.TilemapLayer.prototype.shiftCanvas = function (context, x, y)
         // Avoids a second copy but flickers in Safari / Safari Mobile
         // Ref. https://github.com/photonstorm/phaser/issues/1439
         context.save();
-        context.globalCompositionOperation = 'copy';
+        context.globalCompositeOperation = 'copy';
         context.drawImage(canvas, dx, dy, copyW, copyH, sx, sy, copyW, copyH);
         context.restore();
     }
