@@ -66,7 +66,7 @@ Version 2.3.0 - "Tarabon" - in dev
 
 ### Bug Fixes
 
-
+* SoundManager.unlock checks for audio `start` support and falls back to `noteOn` if not found.
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 
