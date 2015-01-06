@@ -248,9 +248,9 @@ If you change either Pixi.js or P2 then use the Grunt tasks `replace:pixi` and `
 [![Game Title](http://phaser.io/images/github/shot2a.jpg)][game2]
 [![Game Title](http://phaser.io/images/github/shot3a.jpg)][game3]
 [![Game Title](http://phaser.io/images/github/shot4a.jpg)][game4]
-[![Game Title](http://phaser.io/images/github/shot5a.jpg)][game5]
-[![Game Title](http://phaser.io/images/github/shot6a.jpg)][game6]
-[![Game Title](http://phaser.io/images/github/shot7a.jpg)][game7]
+[![Game Title](http://phaser.io/images/github/shot5b.jpg)][game5]
+[![Game Title](http://phaser.io/images/github/shot6b.jpg)][game6]
+[![Game Title](http://phaser.io/images/github/shot7b.jpg)][game7]
 
 ![div](http://www.phaser.io/images/github/div.png)
 
