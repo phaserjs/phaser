@@ -1,15 +1,14 @@
-![div](http://www.phaser.io/images/github-hr.png)
-![Phaser 2.0](http://www.phaser.io/images/phaser2-github.png)
+![div](http://www.phaser.io/images/github/welcome-div.png)
 
 # Phaser
+
+<img src="http://phaser.io/images/github/jump.jpg" align="right">
 
 Phaser is a fast, free and fun open source HTML5 game framework. It uses [Pixi.js](https://github.com/GoodBoyDigital/pixi.js/) for WebGL and Canvas rendering across desktop and mobile web browsers. Games can be compiled to iOS and Android apps via 3rd party tools.
 
 It is actively developed and maintained by the company [Photon Storm](http://www.photonstorm.com) along with the fantastic open source community. As a result of continued support and a friendly API Phaser is currently one of the [most starred](https://github.com/showcases/javascript-game-engines) game frameworks on Github. Thousands of developers worldwide use it. From indies to multi-national digital agencies. Each creating incredible games.
 
-<img src="http://phaser.io/images/github/jump.jpg" align="right">
-
-* The official [website](http://phaser.io)
+* The [official website](http://phaser.io)
 * [Twitter](https://twitter.com/photonstorm) (feel free to use #phaserjs when tweeting)
 * [API Documentation](http://docs.phaser.io)
 * [Support Forum][forum]
@@ -46,13 +45,15 @@ It is actively developed and maintained by the company [Photon Storm](http://www
 <a name="whats-new"></a>
 ## What's new in 2.2.2?
 
+<div align="center"><img src="http://phaser.io/images/github/news.jpg"></div>
+
 Content here :)
 
 Happy coding everyone! I hope to see you on the forums.
 
 ![boogie](http://www.phaser.io/images/spacedancer.gif)
 
-![div](http://www.phaser.io/images/github-hr.png)
+![div](http://www.phaser.io/images/github/change-log-div.png)
 
 <a name="change-log"></a>
 ## Change Log
