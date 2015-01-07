@@ -12,7 +12,7 @@
 * The Game size is the logical size of the game; the Display canvas has size as an HTML element.
 *
 * The calculations of these are heavily influenced by the bounding Parent size which is the computed
-* dimenstions of the Display canvas's Parent container/element - the _effective CSS rules of the
+* dimensions of the Display canvas's Parent container/element - the _effective CSS rules of the
 * canvas's Parent element play an important role_ in the operation of the ScaleManager. 
 *
 * The Display canvas - or Game size, depending {@link #scaleMode} - is updated to best utilize the Parent size.
@@ -288,7 +288,7 @@ Phaser.ScaleManager = function (game, width, height) {
     * If `targetElement` is _not_ the same element as {@link #fullScreenTarget}:
     * - After initialization the Display canvas is moved onto the `targetElement` for
     *   the duration of the fullscreen mode, and restored to it's original DOM location when fullscreen is exited.
-    * - The `targetElement` is moved/reparanted within the DOM and may have its CSS styles updated.
+    * - The `targetElement` is moved/re-parented within the DOM and may have its CSS styles updated.
     *
     * The behavior of a pre-assigned target element is covered in {@link Phaser.ScaleManager#fullScreenTarget fullScreenTarget}.
     *
@@ -432,7 +432,7 @@ Phaser.ScaleManager = function (game, width, height) {
     * Various compatibility settings.
     * A value of "(auto)" indicates the setting is configured based on device and runtime information.
     *
-    * A {@link #refresh} may need to be peformed after making changes.
+    * A {@link #refresh} may need to be performed after making changes.
     *
     * @protected
     * 
@@ -444,7 +444,7 @@ Phaser.ScaleManager = function (game, width, height) {
     *
     * @property {?Phaser.Point} [scrollTo=(auto)] - If specified the window will be scrolled to this position on every refresh.
     *
-    * @property {boolean} [forceMinimumDocumentHeight=false] - If enabled the document elements minimum height is explicity set on updates.
+    * @property {boolean} [forceMinimumDocumentHeight=false] - If enabled the document elements minimum height is explicitly set on updates.
     *    The height set varies by device and may either be the height of the window or the viewport.
     *
     * @property {boolean} [canExpandParent=true] - If enabled then SHOW_ALL and USER_SCALE modes can try and expand the parent element. It may be necessary for the parent element to impose CSS width/height restrictions.
@@ -479,7 +479,7 @@ Phaser.ScaleManager = function (game, width, height) {
     this._fullScreenScaleMode = Phaser.ScaleManager.NO_SCALE;
 
     /**
-    * If the parent container of the Game canvas is the browser window itself (ie. document.body),
+    * If the parent container of the Game canvas is the browser window itself (i.e. document.body),
     * rather than another div, this should set to `true`.
     *
     * The {@link #parentNode} property is generally ignored while this is in effect.
@@ -766,6 +766,8 @@ Phaser.ScaleManager.prototype = {
         // Don't use updateOrientationState so events are not fired
         this.screenOrientation = this.dom.getScreenOrientation(this.compatibility.orientationFallback);
 
+        this.grid = new Phaser.FlexGrid(this, this.width, this.height);
+
     },
 
     /**
@@ -875,8 +877,6 @@ Phaser.ScaleManager.prototype = {
 
         this._gameSize.setTo(0, 0, newWidth, newHeight);
 
-        this.grid = new Phaser.FlexGrid(this, newWidth, newHeight);
-
         this.updateDimensions(newWidth, newHeight, false);
 
     },
@@ -977,7 +977,7 @@ Phaser.ScaleManager.prototype = {
     *
     * This also triggers updates on {@link #grid} (FlexGrid) and, if in a RESIZE mode, `game.state` (StateManager).
     *
-    * @method Phaser.ScaleMager#signalSizeChange
+    * @method Phaser.ScaleManager#signalSizeChange
     * @private
     */
     signalSizeChange: function () {
