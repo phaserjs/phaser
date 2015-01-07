@@ -1,6 +1,6 @@
 /// <reference path="pixi.d.ts" />
 
-// Type definitions for Phaser dev2.2.0 RC12 2015-02-01
+// Type definitions for Phaser dev2.2.0 RC12 2015-07-01
 // Project: https://github.com/photonstorm/phaser
 
 declare class Phaser {
@@ -1126,7 +1126,7 @@ declare module Phaser {
 
     class Game {
 
-        constructor(width?: number, height?: number, renderer?: number, parent?: any, state?: any, transparent?: boolean, antialias?: boolean, physicsConfig?: any);
+        constructor(width?: any, height?: any, renderer?: number, parent?: any, state?: any, transparent?: boolean, antialias?: boolean, physicsConfig?: any);
         constructor(config: IGameConfig);
 
         add: Phaser.GameObjectFactory;
@@ -1684,7 +1684,7 @@ declare module Phaser {
         disableDrag(): void;
         disableSnap(): void;
         downDuration(pointer: Phaser.Pointer): number;
-        enableDrag(lockCenter?: boolean, bringToTop?: boolean, pixelPerfect?: boolean, alphaThreshold?: number, boundsRect?: Phaser.Rectangle, boundsSprite?: Phaser.Rectangle): void;
+        enableDrag(lockCenter?: boolean, bringToTop?: boolean, pixelPerfect?: boolean, alphaThreshold?: number, boundsRect?: Phaser.Rectangle, boundsSprite?: Phaser.Sprite): void;
         enableSnap(snapX: number, snapY: number, onDrag?: boolean, onRelease?: boolean, snapOffsetX?: number, snapOffsetY?: number): void;
         isPixelPerfect(): boolean;
         justOut(pointer: number, delay: number): boolean;
@@ -4054,6 +4054,8 @@ declare module Phaser {
         setShadow(x?: number, y?: number, color?: any, blur?: number): void;
         setStyle(style?: { font?: string; fill?: any; align?: string; stroke?: string; strokeThickness?: number; wordWrap?: boolean; wordWrapWidth?: number; shadowOffsetX?: number; shadowOffsetY?: number; shadowColor?: string; shadowBlur?: number; }): void;
         update(): void;
+        updateTexture(): void;
+        updateLine(text:string, x?:number, y?:number): void;
 
     }
 
