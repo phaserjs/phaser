@@ -192,6 +192,23 @@ Phaser.Stage.prototype.postUpdate = function () {
 };
 
 /**
+* Updates the transforms for all objects on the display list.
+* This overrides the Pixi default as we don't need the interactionManager, but do need the game property check.
+* 
+* @method Phaser.Stage#updateTransform
+*/
+Phaser.Stage.prototype.updateTransform = function () {
+
+    this.worldAlpha = 1;
+
+    for (var i = 0, j = this.children.length; i < j; i++)
+    {
+        this.children[i].updateTransform();
+    }
+
+};
+
+/**
 * Starts a page visibility event listener running, or window.blur/focus if not supported by the browser.
 * @method Phaser.Stage#checkVisibility
 */

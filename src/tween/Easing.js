@@ -247,6 +247,8 @@ Phaser.Easing = {
         */
         In: function ( k ) {
 
+            if (k === 0) return 0;
+            if (k === 1) return 1;
             return 1 - Math.cos( k * Math.PI / 2 );
 
         },
@@ -260,6 +262,8 @@ Phaser.Easing = {
         */
         Out: function ( k ) {
 
+            if (k === 0) return 0;
+            if (k === 1) return 1;
             return Math.sin( k * Math.PI / 2 );
 
         },
@@ -273,6 +277,8 @@ Phaser.Easing = {
         */
         InOut: function ( k ) {
 
+            if (k === 0) return 0;
+            if (k === 1) return 1;
             return 0.5 * ( 1 - Math.cos( Math.PI * k ) );
 
         }
