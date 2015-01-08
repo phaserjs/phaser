@@ -64,9 +64,12 @@ Version 2.3.0 - "Tarabon" - in dev
 
 ### Updates
 
+* TypeScript definitions fixes and updates (thanks @clark-stevenson @TimvdEijnden)
+
 ### Bug Fixes
 
 * SoundManager.unlock checks for audio `start` support and falls back to `noteOn` if not found.
+* Sprite.frame and AnimationManager.frame wouldn't return the correct index if a sprite sheet was being used unless it had first been set via the setter.
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 

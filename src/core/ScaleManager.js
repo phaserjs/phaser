@@ -30,7 +30,7 @@
 *   If you need to add a border, margin or any other CSS around your game container, then use a parent element and
 *   apply the CSS to this instead, otherwise you'll be constantly resizing the shape of the game container.
 *
-* - The Display canvas layout CSS styles (ie. margins, size) should not be altered/specified as
+* - The Display canvas layout CSS styles (i.e. margins, size) should not be altered/specified as
 *   they may be updated by the ScaleManager.
 *
 * @description
@@ -1161,6 +1161,7 @@ Phaser.ScaleManager.prototype = {
         {
             this.dom.getOffset(this.game.canvas, this.offset);
         }
+
         this.bounds.setTo(this.offset.x, this.offset.y, this.width, this.height);
 
         // Can be invoked in boot pre-input
@@ -2158,10 +2159,12 @@ Phaser.ScaleManager.prototype.setSize = Phaser.ScaleManager.prototype.reflowCanv
 Phaser.ScaleManager.prototype.checkOrientationState = function () {
 
     var changed = this.updateOrientationState();
+
     if (changed)
     {
         this.refresh();
     }
+
     return changed;
 
 };
@@ -2405,7 +2408,7 @@ Object.defineProperty(Phaser.ScaleManager.prototype, "isFullScreen", {
 });
 
 /**
-* Returns true if the browser is in portrait mode.
+* Returns true if the screen orientation is in portrait mode.
 *
 * @name Phaser.ScaleManager#isPortrait
 * @property {boolean} isPortrait
@@ -2420,7 +2423,7 @@ Object.defineProperty(Phaser.ScaleManager.prototype, "isPortrait", {
 });
 
 /**
-* Returns true if the browser is in landscape mode.
+* Returns true if the screen orientation is in landscape mode.
 *
 * @name Phaser.ScaleManager#isLandscape
 * @property {boolean} isLandscape
@@ -2435,7 +2438,7 @@ Object.defineProperty(Phaser.ScaleManager.prototype, "isLandscape", {
 });
 
 /**
-* The _last known_ orientation value of the game. A value of 90 is landscape and 0 is portrait.
+* The _last known_ orientation value of the screen. A value of 90 is landscape and 0 is portrait.
 * @name Phaser.ScaleManager#orientation
 * @property {integer} orientation
 * @readonly
@@ -2443,9 +2446,44 @@ Object.defineProperty(Phaser.ScaleManager.prototype, "isLandscape", {
 */
 Object.defineProperty(Phaser.ScaleManager.prototype, "orientation", {
 
-    get: function ()
-    {
+    get: function () {
         return (this.classifyOrientation(this.screenOrientation) === 'portrait' ? 0 : 90);
+    }
+
+});
+
+/**
+* Returns true if the game dimensions are portrait (height > width).
+* This is especially useful to check when using the RESIZE scale mode 
+* but wanting to maintain game orientation on desktop browsers, 
+* where typically the screen orientation will always be landscape regardless of the browser viewport.
+*
+* @name Phaser.ScaleManager#isGamePortrait
+* @property {boolean} isGamePortrait
+* @readonly
+*/
+Object.defineProperty(Phaser.ScaleManager.prototype, "isGamePortrait", {
+
+    get: function () {
+        return (this.height > this.width);
+    }
+
+});
+
+/**
+* Returns true if the game dimensions are landscape (width > height).
+* This is especially useful to check when using the RESIZE scale mode 
+* but wanting to maintain game orientation on desktop browsers, 
+* where typically the screen orientation will always be landscape regardless of the browser viewport.
+*
+* @name Phaser.ScaleManager#isGameLandscape
+* @property {boolean} isGameLandscape
+* @readonly
+*/
+Object.defineProperty(Phaser.ScaleManager.prototype, "isGameLandscape", {
+
+    get: function () {
+        return (this.width > this.height);
     }
 
 });
