@@ -94,7 +94,7 @@ Phaser.Loader = function (game) {
     this.onLoadComplete = new Phaser.Signal();
 
     /**
-    * @property {Phaser.Signal} onPackComplete - This event is dispatched when an asset pack has either loaded or failed.
+    * @property {Phaser.Signal} onPackComplete - This event is dispatched when the asset pack manifest file has loaded and successfully added its contents to the loader queue.
     */
     this.onPackComplete = new Phaser.Signal();
 
