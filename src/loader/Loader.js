@@ -8,6 +8,8 @@
 /**
 * The Loader handles loading all external content such as Images, Sounds, Texture Atlases and data files.
 * It uses a combination of Image() loading and xhr and provides progress and completion callbacks.
+* Texture Atlases can be created with tools such as [Texture Packer](https://www.codeandweb.com/texturepacker/phaser) and
+* [Shoebox](http://renderhjs.net/shoebox/)
 *
 * @class Phaser.Loader
 * @constructor
@@ -813,6 +815,8 @@ Phaser.Loader.prototype = {
 
     /**
     * Add a new texture atlas to the loader. This atlas uses the JSON Array data format.
+    * Texture Atlases can be created with tools such as [Texture Packer](https://www.codeandweb.com/texturepacker/phaser) and
+    * [Shoebox](http://renderhjs.net/shoebox/)
     *
     * @method Phaser.Loader#atlasJSONArray
     * @param {string} key - Unique asset key of the texture atlas file.
@@ -829,6 +833,8 @@ Phaser.Loader.prototype = {
 
     /**
     * Add a new texture atlas to the loader. This atlas uses the JSON Hash data format.
+    * Texture Atlases can be created with tools such as [Texture Packer](https://www.codeandweb.com/texturepacker/phaser) and
+    * [Shoebox](http://renderhjs.net/shoebox/)
     *
     * @method Phaser.Loader#atlasJSONHash
     * @param {string} key - Unique asset key of the texture atlas file.
@@ -861,6 +867,8 @@ Phaser.Loader.prototype = {
 
     /**
     * Add a new texture atlas to the loader.
+    * Texture Atlases can be created with tools such as [Texture Packer](https://www.codeandweb.com/texturepacker/phaser) and
+    * [Shoebox](http://renderhjs.net/shoebox/)
     *
     * @method Phaser.Loader#atlas
     * @param {string} key - Unique asset key of the texture atlas file.
