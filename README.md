@@ -62,6 +62,8 @@ Version 2.3.0 - "Tarabon" - in dev
 
 ### New Features
 
+* `Physics.Arcade.isPaused` allows you to toggle Arcade Physics processing on and off. If `true` the `Body.preUpdate` method will be skipped, halting all motion for all bodies. Note that other methods such as `collide` will still work, so be careful not to call them on paused bodies.
+
 ### Updates
 
 * TypeScript definitions fixes and updates (thanks @clark-stevenson @TimvdEijnden)

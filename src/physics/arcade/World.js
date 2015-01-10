@@ -66,6 +66,11 @@ Phaser.Physics.Arcade = function (game) {
     this.skipQuadTree = true;
 
     /**
+    * @property {boolean} isPaused - If `true` the `Body.preUpdate` method will be skipped, halting all motion for all bodies. Note that other methods such as `collide` will still work, so be careful not to call them on paused bodies.
+    */
+    this.isPaused = false;
+
+    /**
     * @property {Phaser.QuadTree} quadTree - The world QuadTree.
     */
     this.quadTree = new Phaser.QuadTree(this.game.world.bounds.x, this.game.world.bounds.y, this.game.world.bounds.width, this.game.world.bounds.height, this.maxObjects, this.maxLevels);
@@ -258,7 +263,7 @@ Phaser.Physics.Arcade.prototype = {
     },
 
     /**
-    * Called automatically by a Physics body, it updates all motion related values on the Body.
+    * Called automatically by a Physics body, it updates all motion related values on the Body unless `World.isPaused` is `true`.
     *
     * @method Phaser.Physics.Arcade#updateMotion
     * @param {Phaser.Physics.Arcade.Body} The Body object to be updated.
