@@ -841,7 +841,7 @@
 						<li class="class-depth-1"><a href="Phaser.StateManager.html">State Manager</a></li>
 						<li class="class-depth-1"><a href="Phaser.TweenManager.html">Tween Manager</a></li>
 						<li class="class-depth-1"><a href="Phaser.SoundManager.html">Sound Manager</a></li>
-						<li class="class-depth-1"><a href="Phaser.InputManager.html">Input Manager</a></li>
+						<li class="class-depth-1"><a href="Phaser.Input.html">Input Manager</a></li>
 						<li class="class-depth-1"><a href="Phaser.ScaleManager.html">Scale Manager</a></li>
 					</ul>
 				</li>
@@ -854,7 +854,7 @@
 						<li class="class-depth-1"><a href="Phaser.Sprite.html">Sprite</a></li>
 						<li class="class-depth-1"><a href="Phaser.Image.html">Image</a></li>
 						<li class="class-depth-1"><a href="Phaser.Sound.html">Sound</a></li>
-						<li class="class-depth-1"><a href="Phaser.Emitter.html">Emitter</a></li>
+						<li class="class-depth-1"><a href="Phaser.Particles.Arcade.Emitter.html">Particle Emitter</a></li>
 						<li class="class-depth-1"><a href="Phaser.Particle.html">Particle</a></li>
 						<li class="class-depth-1"><a href="Phaser.Text.html">Text</a></li>
 						<li class="class-depth-1"><a href="Phaser.Tween.html">Tween</a></li>
@@ -912,6 +912,7 @@
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Community<b class="caret"></b></a>
 					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="https://leanpub.com/u/photonstorm">Phaser Books</a></li>
 						<li class="class-depth-1"><a href="https://github.com/photonstorm/phaser">Phaser Github</a></li>
 						<li class="class-depth-1"><a href="http://examples.phaser.io">Phaser Examples</a></li>
 						<li class="class-depth-1"><a href="https://github.com/photonstorm/phaser-plugins">Phaser Plugins</a></li>
@@ -920,7 +921,6 @@
 						<li class="class-depth-1"><a href="https://confirmsubscription.com/h/r/369DE48E3E86AF1E">Newsletter</a></li>
 						<li class="class-depth-1"><a href="https://twitter.com/photonstorm">Twitter</a></li>
 						<li class="class-depth-1"><a href="http://www.html5gamedevs.com/topic/4470-official-phaserio-irc-channel-phaserio-on-freenode/">IRC</a></li>
-						<li class="class-depth-1"><a href="https://leanpub.com/u/photonstorm">Phaser Books</a></li>
 						<li class="class-depth-1"><a href="https://www.gittip.com/photonstorm/">GitTip</a></li>
 					</ul>
 				</li>
@@ -1103,7 +1103,7 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
     <dt class="tag-source">Source -
-    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-456">line 456</a>
+    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-464">line 464</a>
     </dt>
     
 
@@ -1221,7 +1221,7 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
     <dt class="tag-source">Source -
-    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-239">line 239</a>
+    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-245">line 245</a>
     </dt>
     
 
@@ -1280,7 +1280,7 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
     <dt class="tag-source">Source -
-    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-325">line 325</a>
+    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-331">line 331</a>
     </dt>
     
 
@@ -1336,7 +1336,7 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
     <dt class="tag-source">Source -
-    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-430">line 430</a>
+    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-438">line 438</a>
     </dt>
     
 
@@ -1414,6 +1414,65 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
             
 <dt>
     <h4 class="name "
+        id="canvasBitBltShift"><span class="type-signature"></span>canvasBitBltShift<span class="type-signature"> :boolean</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>True if canvas supports a 'copy' bitblt onto itself when the source and destination regions overlap.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-150">line 150</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
         id="chrome"><span class="type-signature"></span>chrome<span class="type-signature"> :boolean</span></h4>
     
     
@@ -1454,7 +1513,7 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
     <dt class="tag-source">Source -
-    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-245">line 245</a>
+    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-251">line 251</a>
     </dt>
     
 
@@ -1808,7 +1867,7 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
     <dt class="tag-source">Source -
-    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-180">line 180</a>
+    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-186">line 186</a>
     </dt>
     
 
@@ -2048,7 +2107,7 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
     <dt class="tag-source">Source -
-    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-251">line 251</a>
+    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-257">line 257</a>
     </dt>
     
 
@@ -2107,7 +2166,7 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
     <dt class="tag-source">Source -
-    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-150">line 150</a>
+    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-162">line 162</a>
     </dt>
     
 
@@ -2166,7 +2225,7 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
     <dt class="tag-source">Source -
-    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-156">line 156</a>
+    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-168">line 168</a>
     </dt>
     
 
@@ -2225,7 +2284,7 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
     <dt class="tag-source">Source -
-    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-257">line 257</a>
+    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-263">line 263</a>
     </dt>
     
 
@@ -2284,7 +2343,7 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
     <dt class="tag-source">Source -
-    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-418">line 418</a>
+    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-426">line 426</a>
     </dt>
     
 
@@ -2343,7 +2402,7 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
     <dt class="tag-source">Source -
-    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-436">line 436</a>
+    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-444">line 444</a>
     </dt>
     
 
@@ -2402,7 +2461,7 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
     <dt class="tag-source">Source -
-    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-204">line 204</a>
+    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-210">line 210</a>
     </dt>
     
 
@@ -2461,7 +2520,7 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
     <dt class="tag-source">Source -
-    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-263">line 263</a>
+    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-269">line 269</a>
     </dt>
     
 
@@ -2520,7 +2579,7 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
     <dt class="tag-source">Source -
-    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-269">line 269</a>
+    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-275">line 275</a>
     </dt>
     
 
@@ -2701,7 +2760,7 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
     <dt class="tag-source">Source -
-    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-388">line 388</a>
+    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-394">line 394</a>
     </dt>
     
 
@@ -2760,7 +2819,7 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
     <dt class="tag-source">Source -
-    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-376">line 376</a>
+    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-382">line 382</a>
     </dt>
     
 
@@ -2819,7 +2878,7 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
     <dt class="tag-source">Source -
-    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-382">line 382</a>
+    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-388">line 388</a>
     </dt>
     
 
@@ -2937,7 +2996,7 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
     <dt class="tag-source">Source -
-    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-406">line 406</a>
+    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-414">line 414</a>
     </dt>
     
 
@@ -2996,7 +3055,7 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
     <dt class="tag-source">Source -
-    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-400">line 400</a>
+    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-408">line 408</a>
     </dt>
     
 
@@ -3055,7 +3114,7 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
     <dt class="tag-source">Source -
-    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-162">line 162</a>
+    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-174">line 174</a>
     </dt>
     
 
@@ -3114,7 +3173,7 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
     <dt class="tag-source">Source -
-    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-362">line 362</a>
+    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-368">line 368</a>
     </dt>
     
 
@@ -3232,7 +3291,7 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
     <dt class="tag-source">Source -
-    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-293">line 293</a>
+    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-299">line 299</a>
     </dt>
     
 
@@ -3291,7 +3350,7 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
     <dt class="tag-source">Source -
-    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-287">line 287</a>
+    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-293">line 293</a>
     </dt>
     
 
@@ -3350,7 +3409,7 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
     <dt class="tag-source">Source -
-    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-349">line 349</a>
+    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-355">line 355</a>
     </dt>
     
 
@@ -3409,7 +3468,7 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
     <dt class="tag-source">Source -
-    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-224">line 224</a>
+    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-230">line 230</a>
     </dt>
     
 
@@ -3586,7 +3645,7 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
     <dt class="tag-source">Source -
-    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-337">line 337</a>
+    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-343">line 343</a>
     </dt>
     
 
@@ -3645,7 +3704,7 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
     <dt class="tag-source">Source -
-    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-299">line 299</a>
+    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-305">line 305</a>
     </dt>
     
 
@@ -3704,7 +3763,7 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
     <dt class="tag-source">Source -
-    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-343">line 343</a>
+    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-349">line 349</a>
     </dt>
     
 
@@ -3763,7 +3822,7 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
     <dt class="tag-source">Source -
-    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-394">line 394</a>
+    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-402">line 402</a>
     </dt>
     
 
@@ -3822,7 +3881,7 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
     <dt class="tag-source">Source -
-    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-186">line 186</a>
+    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-192">line 192</a>
     </dt>
     
 
@@ -3881,7 +3940,7 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
     <dt class="tag-source">Source -
-    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-210">line 210</a>
+    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-216">line 216</a>
     </dt>
     
 
@@ -3937,7 +3996,7 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
     <dt class="tag-source">Source -
-    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-424">line 424</a>
+    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-432">line 432</a>
     </dt>
     
 
@@ -3996,7 +4055,7 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
     <dt class="tag-source">Source -
-    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-305">line 305</a>
+    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-311">line 311</a>
     </dt>
     
 
@@ -4055,7 +4114,7 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
     <dt class="tag-source">Source -
-    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-317">line 317</a>
+    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-323">line 323</a>
     </dt>
     
 
@@ -4114,7 +4173,7 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
     <dt class="tag-source">Source -
-    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-412">line 412</a>
+    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-420">line 420</a>
     </dt>
     
 
@@ -4173,7 +4232,7 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
     <dt class="tag-source">Source -
-    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-218">line 218</a>
+    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-224">line 224</a>
     </dt>
     
 
@@ -4232,7 +4291,7 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
     <dt class="tag-source">Source -
-    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-275">line 275</a>
+    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-281">line 281</a>
     </dt>
     
 
@@ -4291,7 +4350,7 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
     <dt class="tag-source">Source -
-    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-281">line 281</a>
+    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-287">line 287</a>
     </dt>
     
 
@@ -4350,7 +4409,7 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
     <dt class="tag-source">Source -
-    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-192">line 192</a>
+    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-198">line 198</a>
     </dt>
     
 
@@ -4409,7 +4468,7 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
     <dt class="tag-source">Source -
-    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-198">line 198</a>
+    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-204">line 204</a>
     </dt>
     
 
@@ -4468,7 +4527,7 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
     <dt class="tag-source">Source -
-    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-355">line 355</a>
+    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-361">line 361</a>
     </dt>
     
 
@@ -4527,7 +4586,7 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
     <dt class="tag-source">Source -
-    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-311">line 311</a>
+    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-317">line 317</a>
     </dt>
     
 
@@ -4586,7 +4645,7 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
     <dt class="tag-source">Source -
-    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-331">line 331</a>
+    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-337">line 337</a>
     </dt>
     
 
@@ -4645,7 +4704,7 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
     <dt class="tag-source">Source -
-    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-168">line 168</a>
+    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-156">line 156</a>
     </dt>
     
 
@@ -4704,7 +4763,7 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
     <dt class="tag-source">Source -
-    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-368">line 368</a>
+    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-374">line 374</a>
     </dt>
     
 
@@ -4752,6 +4811,8 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 		<th>Type</th>
 
 		
+		<th>Argument</th>
+		
 
 		
 
@@ -4771,14 +4832,19 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
             
                 
 <span class="param-type">string</span>
-|
-
-<span class="param-type">null</span>
 
 
             
             </td>
 
+            
+                <td class="attributes">
+                
+
+                
+                    &lt;nullable><br>
+                
+                </td>
             
 
             
@@ -4821,7 +4887,7 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
     <dt class="tag-source">Source -
-    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-231">line 231</a>
+    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-237">line 237</a>
     </dt>
     
 
@@ -4998,7 +5064,7 @@ added <em>before</em> <code>new Phaser.Game(..)</code> it is probably too late.<
 
     
     <dt class="tag-source">Source -
-    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-174">line 174</a>
+    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-180">line 180</a>
     </dt>
     
 
@@ -5211,7 +5277,7 @@ if the device is already &quot;ready&quot;. See <a href="Phaser.Device.html#devi
 
     
     <dt class="tag-source">Source -
-    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-472">line 472</a>
+    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-480">line 480</a>
     </dt>
     
 
@@ -5350,7 +5416,7 @@ if the device is already &quot;ready&quot;. See <a href="Phaser.Device.html#devi
 
     
     <dt class="tag-source">Source -
-    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-1061">line 1061</a>
+    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-1078">line 1078</a>
     </dt>
     
 
@@ -5422,7 +5488,7 @@ This is available before the device &quot;ready&quot; event.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-1135">line 1135</a>
+    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-1152">line 1152</a>
     </dt>
     
 
@@ -5500,7 +5566,7 @@ It used to work in Chrome, but then they removed the ability: ">http://src.chrom
 
     
     <dt class="tag-source">Source -
-    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-1100">line 1100</a>
+    <a href="Device.js.html">system/Device.js</a>, <a href="Device.js.html#sunlight-1-line-1117">line 1117</a>
     </dt>
     
 
@@ -5549,7 +5615,7 @@ It used to work in Chrome, but then they removed the ability: ">http://src.chrom
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Thu Dec 04 2014 11:32:31 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Tue Jan 06 2015 06:31:55 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

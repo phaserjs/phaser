@@ -705,7 +705,7 @@ Phaser.Game.prototype = {
 
         this.time.update(time);
 
-        // if the logic time is spiralling upwards, skip a frame entirely
+        // if the logic time is spiraling upwards, skip a frame entirely
         if (this._spiralling > 1 && !this.forceSingleUpdate)
         {
             // cause an event to warn the program that this CPU can't keep up with the current desiredFps rate
@@ -748,7 +748,11 @@ Phaser.Game.prototype = {
             {
                 this._deltaTime -= slowStep;
                 this.currentUpdateID = count;
+
                 this.updateLogic(1.0 / this.time.desiredFps);
+                //  Sync the scene graph after _every_ logic update to account for moved game objects                
+                this.stage.updateTransform();
+
                 count++;
 
                 if (this.forceSingleUpdate && count === 1)
@@ -757,7 +761,7 @@ Phaser.Game.prototype = {
                 }
             }
 
-            // detect spiralling (if the catch-up loop isn't fast enough, the number of iterations will increase constantly)
+            // detect spiraling (if the catch-up loop isn't fast enough, the number of iterations will increase constantly)
             if (count > this._lastCount)
             {
                 this._spiralling++;
@@ -819,6 +823,7 @@ Phaser.Game.prototype = {
             this.state.pauseUpdate();
             this.debug.preUpdate();
         }
+
     },
 
     /**

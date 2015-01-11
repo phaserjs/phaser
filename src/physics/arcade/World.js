@@ -409,7 +409,7 @@ Phaser.Physics.Arcade.prototype = {
     * @param {function} [collideCallback=null] - An optional callback function that is called if the objects collide. The two objects will be passed to this function in the same order in which you specified them, unless you are colliding Group vs. Sprite, in which case Sprite will always be the first parameter.
     * @param {function} [processCallback=null] - A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then collision will only happen if processCallback returns true. The two objects will be passed to this function in the same order in which you specified them.
     * @param {object} [callbackContext] - The context in which to run the callbacks.
-    * @return {boolean} True if a collision occured otherwise false.
+    * @return {boolean} True if a collision occurred otherwise false.
     */
     collide: function (object1, object2, collideCallback, processCallback, callbackContext) {
 
@@ -1005,7 +1005,7 @@ Phaser.Physics.Arcade.prototype = {
     */
     separateY: function (body1, body2, overlapOnly) {
 
-        //  Can't separate two immovable or non-existing bodys
+        //  Can't separate two immovable or non-existing bodies
         if (body1.immovable && body2.immovable)
         {
             return false;
@@ -1136,7 +1136,7 @@ Phaser.Physics.Arcade.prototype = {
         //  We re-check for collision in case body was separated in a previous step
         if (!body.enable || !tile.intersects(body.position.x, body.position.y, body.right, body.bottom))
         {
-            //  no collision so bail out (separted in a previous step)
+            //  no collision so bail out (separated in a previous step)
             return false;
         }
 
@@ -1232,7 +1232,7 @@ Phaser.Physics.Arcade.prototype = {
     * @method Phaser.Physics.Arcade#tileCheckX
     * @param {Phaser.Physics.Arcade.Body} body - The Body object to separate.
     * @param {Phaser.Tile} tile - The tile to check.
-    * @return {number} The amount of separation that occured.
+    * @return {number} The amount of separation that occurred.
     */
     tileCheckX: function (body, tile) {
 
@@ -1281,7 +1281,7 @@ Phaser.Physics.Arcade.prototype = {
     * @method Phaser.Physics.Arcade#tileCheckY
     * @param {Phaser.Physics.Arcade.Body} body - The Body object to separate.
     * @param {Phaser.Tile} tile - The tile to check.
-    * @return {number} The amount of separation that occured.
+    * @return {number} The amount of separation that occurred.
     */
     tileCheckY: function (body, tile) {
 

@@ -1,6 +1,6 @@
 /// <reference path="pixi.d.ts" />
 
-// Type definitions for Phaser dev2.2.0 RC12 2014-12-02
+// Type definitions for Phaser dev2.2.0 RC12 2015-02-01
 // Project: https://github.com/photonstorm/phaser
 
 declare class Phaser {
@@ -205,7 +205,7 @@ declare module Phaser {
 
         add(object: any): Phaser.BitmapData;
         addToWorld(x?: number, y?: number, anchorX?: number, anchorY?: number, scaleX?: number, scaleY?: number): Phaser.Image;
-        alphaMask(source: any, mask: any, sourceRect?: Phaser.Rectangle, maskRect?: Phaser.Rectangle): Phaser.BitmapData;
+        alphaMask(source: any, mask?: any, sourceRect?: Phaser.Rectangle, maskRect?: Phaser.Rectangle): Phaser.BitmapData;
         blendAdd(): Phaser.BitmapData;
         blendColor(): Phaser.BitmapData;
         blendColorBurn(): Phaser.BitmapData;
@@ -235,10 +235,11 @@ declare module Phaser {
         circle(x: number, y: number, radius: number, fillStyle?: string): Phaser.BitmapData;
         clear(): Phaser.BitmapData;
         cls(): Phaser.BitmapData;
-        copy(source?: any, x?: number, y?: number, width?: number, height?: number, tx?: number, ty?: number, newWidth?: number, newHeight?: number, rotate?: number, anchorX?: number, anchorY?: number, scaleX?: number, scaleY?: number, alpha?: number, blendMode?: string, roundPx?: boolean): Phaser.BitmapData;
+        copy(source?: any, x?: number, y?: number, width?: number, height?: number, tx?: number, ty?: number, newWidth?: number, newHeight?: number, rotate?: number, anchorX?: number, anchorY?: number, scaleX?: number, scaleY?: number, alpha?: number, blendMode?: number, roundPx?: boolean): Phaser.BitmapData;
         copyPixels(source: any, area: Phaser.Rectangle, x: number, y: number, alpha?: number): void;
-        copyRect(source: any, area: Phaser.Rectangle, x?: number, y?: number, alpha?: number, blendMode?: string, roundPx?: boolean): Phaser.BitmapData;
-        draw(source: any, x?: number, y?: number, width?: number, height?: number, blendMode?: string, roundPx?: boolean): Phaser.BitmapData;
+        copyRect(source: any, area: Phaser.Rectangle, x?: number, y?: number, alpha?: number, blendMode?: number, roundPx?: boolean): Phaser.BitmapData;
+        draw(source: any, x?: number, y?: number, width?: number, height?: number, blendMode?: number, roundPx?: boolean): Phaser.BitmapData;
+        drawGroup(group: Phaser.Group, blendMode?: number, roundPx?: boolean): Phaser.BitmapData;
         extract(destination: Phaser.BitmapData, r: number, g: number, b: number, a?: number, resize?: boolean, r2?: number, g2?: number, b2?: number): Phaser.BitmapData;
         fill(r: number, g: number, b: number, a?: number): Phaser.BitmapData;
         getBounds(rect?: Phaser.Rectangle): Phaser.Rectangle;
@@ -599,6 +600,13 @@ declare module Phaser {
     class Device {
 
         static LITTLE_ENDIAN: boolean;
+        static onInitialized: Phaser.Signal;
+
+        static checkFullScreenSupport(): void;
+        static canPlayAudio(type: string): boolean;
+        static isConsoleOpen(): boolean;
+        static isAndroidStockBrowser(): string;
+        static whenReady: (callback: Function, context?: any) => void;
 
         android: boolean;
         arora: boolean;
@@ -643,7 +651,6 @@ declare module Phaser {
         node: boolean;
         nodeWebkit: boolean;
         ogg: boolean;
-        onInitialized: Phaser.Signal;
         opera: boolean;
         opus: boolean;
         pixelRatio: number;
@@ -668,24 +675,6 @@ declare module Phaser {
         windowsPhone: boolean;
         wheelEvent: string;
         worker: boolean;
-
-        checkFullScreenSupport(): void;
-        _checkAudio(): void;
-        _checkBrowser(): void;
-        _checkCSS3D(): void;
-        _checkDevice(): void;
-        _checkFeatures(): void;
-        _checkFullScreenSupport(): void;
-        _checkInput(): void;
-        _checkIsLittleEndian(): void;
-        _checkIsUint8ClampedImageData(): boolean;
-        _checkOS(): void;
-        canPlayAudio(type: string): boolean;
-        _initialze(): void;
-        isConsoleOpen(): boolean;
-        isAndroidStockBrowser(): string;
-        _readyCheck(): void;
-        whenReady: (callback: Function, context?: any) => void;
 
     }
 
@@ -814,6 +803,7 @@ declare module Phaser {
         onKilled: Phaser.Signal;
         onRevived: Phaser.Signal;
         onOutOfBounds: Phaser.Signal;
+        onEnterBounds: Phaser.Signal;
         onInputOver: Phaser.Signal;
         onInputOut: Phaser.Signal;
         onInputDown: Phaser.Signal;
@@ -1226,7 +1216,7 @@ declare module Phaser {
         filter(filter: any, ...args: any[]): Phaser.Filter;
         graphics(x: number, y: number): Phaser.Graphics;
         group(parent?: any, name?: string, addToStage?: boolean, enableBody?: boolean, physicsBodyType?: number): Phaser.Group;
-        image(x: number, y: number, key: any, frame?: any): Phaser.Image;
+        image(x: number, y: number, key?: any, frame?: any): Phaser.Image;
         renderTexture(width?: number, height?: number, key?: any, addToCache?: boolean): Phaser.RenderTexture;
         retroFont(font: string, characterWidth: number, characterHeight: number, chars: string, charsPerRow: number, xSpacing?: number, ySpacing?: number, xOffset?: number, yOffset?: number): Phaser.RetroFont;
         rope(x: number, y: number, key: any, frame?: any, points?: Phaser.Point[]): Phaser.Rope;
@@ -1257,7 +1247,7 @@ declare module Phaser {
         filter(filter: string, ...args: any[]): Phaser.Filter;
         graphics(x: number, y: number, group?: Phaser.Group): Phaser.Graphics;
         group(parent?: any, name?: string, addToStage?: boolean, enableBody?: boolean, physicsBodyType?: number): Phaser.Group;
-        image(x: number, y: number, key: any, frame?: any, group?: Phaser.Group): Phaser.Image;
+        image(x: number, y: number, key?: any, frame?: any, group?: Phaser.Group): Phaser.Image;
         physicsGroup(physicsBodyType: number, parent?: any, name?: string, addToStage?: boolean): Phaser.Group;
         plugin(plugin: Phaser.Plugin, ...parameter: any[]): Phaser.Plugin;
         renderTexture(width?: number, height?: number, key?: string, addToCache?: boolean): Phaser.RenderTexture;
@@ -1480,7 +1470,7 @@ declare module Phaser {
         divideAll(property: string, amount: number, checkAlive?: boolean, checkVisible?: boolean): void;
         forEach(callback: Function, callbackContext: any, checkExists?: boolean, ...args: any[]): void;
         forEachAlive(callback: Function, callbackContext: any, ...args: any[]): void;
-        forEachDead(callback: Function, callbackContext: any, ...args:any[]): void;
+        forEachDead(callback: Function, callbackContext: any, ...args: any[]): void;
         forEachExists(callback: Function, callbackContext: any): void;
         filter(predicate: Function, checkExists?: boolean): ArraySet;
         getAt(index: number): any;
@@ -1907,6 +1897,9 @@ declare module Phaser {
         height: number;
         left: number;
         length: number;
+        normalAngle: number;
+        normalX: number;
+        normalY: number;
         perpSlope: number;
         right: number;
         slope: number;
@@ -1918,13 +1911,16 @@ declare module Phaser {
 
         static intersectsPoints(a: Phaser.Point, b: Phaser.Point, e: Phaser.Point, f: Phaser.Point, asSegment?: boolean, result?: Phaser.Point): Phaser.Point;
         static intersects(a: Phaser.Line, b: Phaser.Line, asSegment?: boolean, result?: Phaser.Point): Phaser.Point;
+        static reflect(a: Phaser.Line, b: Phaser.Line): number;
 
         clone(output: Phaser.Line): Phaser.Line;
         coordinatesOnLine(stepRate: number, results: any[]): any[];
+        fromAngle(x: number, y: number, angle: number, length: number): Phaser.Line;
         fromSprite(startSprite: Phaser.Sprite, endSprite: Phaser.Sprite, useCenter?: boolean): Phaser.Line;
         intersects(line: Phaser.Line, asSegment?: boolean, result?: Phaser.Point): Phaser.Point;
         pointOnLine(x: number, y: number): boolean;
         pointOnSegment(x: number, y: number): boolean;
+        reflect(line: Phaser.Line): number;
         setTo(x1?: number, y1?: number, x2?: number, y2?: number): Phaser.Line;
 
     }
@@ -2269,7 +2265,7 @@ declare module Phaser {
                 kill(): void;
                 makeParticles(keys: any, frames?: any, quantity?: number, collide?: boolean, collideWorldBounds?: boolean): Phaser.Particles.Arcade.Emitter;
                 reset(x: number, y: number, health?: number): Phaser.Particles;
-                setAlpha(min?: number, max?: number, rate?: number, ease?: number, yoyo?: boolean): void;
+                setAlpha(min?: number, max?: number, rate?: number, ease?: (k: number) => number, yoyo?: boolean): void;
                 setRotation(min?: number, max?: number): void;
                 setScale(minX?: number, maxX?: number, minY?: number, maxY?: number, rate?: number, ease?: (k: number) => number, yoyo?: boolean): void;
                 setSize(width: number, height: number): void;
@@ -3810,6 +3806,7 @@ declare module Phaser {
         setBackgroundColor(backgroundColor: number): void;
         setBackgroundColor(backgroundColor: string): void;
         update(): void;
+        updateTransform(): void;
         visibilityChange(event: any): void;
 
     }
@@ -3834,6 +3831,7 @@ declare module Phaser {
         boundingParent: HTMLElement;
         compatibility: {
             canExpandParent: boolean;
+            clickTrampoline: string;
             forceMinimumDocumentHeight: boolean;
             noMargins: boolean;
             scrollTo: Point;

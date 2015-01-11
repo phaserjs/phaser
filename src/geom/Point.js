@@ -296,19 +296,6 @@ Phaser.Point.prototype = {
     },
 
     /**
-    * Returns the angle squared between this Point object and another object with public x and y properties.
-    *
-    * @method Phaser.Point#angleSq
-    * @param {Phaser.Point|any} a - The object to get the angleSq from this Point to.
-    * @return {number} The angleSq between the two objects.
-    */
-    angleSq: function (a) {
-
-        return this.subtract(a).angle(a.subtract(this));
-
-    },
-
-    /**
     * Rotates this Point around the x/y coordinates given to the desired angle.
     *
     * @method Phaser.Point#rotate
@@ -605,20 +592,6 @@ Phaser.Point.angle = function (a, b) {
 };
 
 /**
-* Returns the angle squared between two Point objects.
-*
-* @method Phaser.Point.angleSq
-* @param {Phaser.Point} a - The first Point object.
-* @param {Phaser.Point} b - The second Point object.
-* @return {number} The angle squared between the two Points.
-*/
-Phaser.Point.angleSq = function (a, b) {
-
-    return a.subtract(b).angle(b.subtract(a));
-
-};
-
-/**
 * Creates a negative Point.
 *
 * @method Phaser.Point.negative
@@ -703,7 +676,7 @@ Phaser.Point.rperp = function (a, out) {
 };
 
 /**
-* Returns the distance of this Point object to the given object (can be a Circle, Point or anything with x/y properties).
+* Returns the euclidian distance of this Point object to the given object (can be a Circle, Point or anything with x/y properties).
 *
 * @method Phaser.Point.distance
 * @param {object} a - The target object. Must have visible x and y properties that represent the center of the object.

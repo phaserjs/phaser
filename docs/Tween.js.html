@@ -841,7 +841,7 @@
 						<li class="class-depth-1"><a href="Phaser.StateManager.html">State Manager</a></li>
 						<li class="class-depth-1"><a href="Phaser.TweenManager.html">Tween Manager</a></li>
 						<li class="class-depth-1"><a href="Phaser.SoundManager.html">Sound Manager</a></li>
-						<li class="class-depth-1"><a href="Phaser.InputManager.html">Input Manager</a></li>
+						<li class="class-depth-1"><a href="Phaser.Input.html">Input Manager</a></li>
 						<li class="class-depth-1"><a href="Phaser.ScaleManager.html">Scale Manager</a></li>
 					</ul>
 				</li>
@@ -854,7 +854,7 @@
 						<li class="class-depth-1"><a href="Phaser.Sprite.html">Sprite</a></li>
 						<li class="class-depth-1"><a href="Phaser.Image.html">Image</a></li>
 						<li class="class-depth-1"><a href="Phaser.Sound.html">Sound</a></li>
-						<li class="class-depth-1"><a href="Phaser.Emitter.html">Emitter</a></li>
+						<li class="class-depth-1"><a href="Phaser.Particles.Arcade.Emitter.html">Particle Emitter</a></li>
 						<li class="class-depth-1"><a href="Phaser.Particle.html">Particle</a></li>
 						<li class="class-depth-1"><a href="Phaser.Text.html">Text</a></li>
 						<li class="class-depth-1"><a href="Phaser.Tween.html">Tween</a></li>
@@ -912,6 +912,7 @@
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Community<b class="caret"></b></a>
 					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="https://leanpub.com/u/photonstorm">Phaser Books</a></li>
 						<li class="class-depth-1"><a href="https://github.com/photonstorm/phaser">Phaser Github</a></li>
 						<li class="class-depth-1"><a href="http://examples.phaser.io">Phaser Examples</a></li>
 						<li class="class-depth-1"><a href="https://github.com/photonstorm/phaser-plugins">Phaser Plugins</a></li>
@@ -920,7 +921,6 @@
 						<li class="class-depth-1"><a href="https://confirmsubscription.com/h/r/369DE48E3E86AF1E">Newsletter</a></li>
 						<li class="class-depth-1"><a href="https://twitter.com/photonstorm">Twitter</a></li>
 						<li class="class-depth-1"><a href="http://www.html5gamedevs.com/topic/4470-official-phaserio-irc-channel-phaserio-on-freenode/">IRC</a></li>
-						<li class="class-depth-1"><a href="https://leanpub.com/u/photonstorm">Phaser Books</a></li>
 						<li class="class-depth-1"><a href="https://www.gittip.com/photonstorm/">GitTip</a></li>
 					</ul>
 				</li>
@@ -1286,7 +1286,7 @@ Phaser.Tween.prototype = {
 
         if (complete)
         {
-            this.onComplete.dispatch(this);
+            this.onComplete.dispatch(this.target, this);
 
             if (this.chainedTween)
             {
@@ -1303,6 +1303,7 @@ Phaser.Tween.prototype = {
     /**
     * Sets the delay in milliseconds before this tween will start. If there are child tweens it sets the delay before the first child starts.
     * The delay is invoked as soon as you call `Tween.start`. If the tween is already running this method doesn't do anything for the current active tween.
+    * If you have not yet called `Tween.to` or `Tween.from` at least once then this method will do nothing, as there are no tweens to delay.
     * If you have child tweens and pass -1 as the index value it sets the delay across all of them.
     *
     * @method Phaser.Tween#delay
@@ -1311,6 +1312,8 @@ Phaser.Tween.prototype = {
     * @return {Phaser.Tween} This tween. Useful for method chaining.
     */
     delay: function (duration, index) {
+
+        if (this.timeline.length === 0) { return this; }
 
         if (typeof index === 'undefined') { index = 0; }
 
@@ -1332,6 +1335,7 @@ Phaser.Tween.prototype = {
 
     /**
     * Sets the number of times this tween will repeat.
+    * If you have not yet called `Tween.to` or `Tween.from` at least once then this method will do nothing, as there are no tweens to repeat.
     * If you have child tweens and pass -1 as the index value it sets the number of times they'll repeat across all of them.
     * If you wish to define how many times this Tween and all children will repeat see Tween.repeatAll.
     *
@@ -1341,6 +1345,8 @@ Phaser.Tween.prototype = {
     * @return {Phaser.Tween} This tween. Useful for method chaining.
     */
     repeat: function (total, index) {
+
+        if (this.timeline.length === 0) { return this; }
 
         if (typeof index === 'undefined') { index = 0; }
 
@@ -1363,6 +1369,7 @@ Phaser.Tween.prototype = {
     /**
     * A Tween that has yoyo set to true will run through from its starting values to its end values and then play back in reverse from end to start.
     * Used in combination with repeat you can create endless loops.
+    * If you have not yet called `Tween.to` or `Tween.from` at least once then this method will do nothing, as there are no tweens to yoyo.
     * If you have child tweens and pass -1 as the index value it sets the yoyo property across all of them.
     * If you wish to yoyo this Tween and all of its children then see Tween.yoyoAll.
     *
@@ -1372,6 +1379,8 @@ Phaser.Tween.prototype = {
     * @return {Phaser.Tween} This tween. Useful for method chaining.
     */
     yoyo: function(enable, index) {
+
+        if (this.timeline.length === 0) { return this; }
 
         if (typeof index === 'undefined') { index = 0; }
 
@@ -1837,7 +1846,7 @@ Phaser.Tween.prototype.constructor = Phaser.Tween;
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Thu Dec 04 2014 11:32:25 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Tue Jan 06 2015 06:31:49 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

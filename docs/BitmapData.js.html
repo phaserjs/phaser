@@ -841,7 +841,7 @@
 						<li class="class-depth-1"><a href="Phaser.StateManager.html">State Manager</a></li>
 						<li class="class-depth-1"><a href="Phaser.TweenManager.html">Tween Manager</a></li>
 						<li class="class-depth-1"><a href="Phaser.SoundManager.html">Sound Manager</a></li>
-						<li class="class-depth-1"><a href="Phaser.InputManager.html">Input Manager</a></li>
+						<li class="class-depth-1"><a href="Phaser.Input.html">Input Manager</a></li>
 						<li class="class-depth-1"><a href="Phaser.ScaleManager.html">Scale Manager</a></li>
 					</ul>
 				</li>
@@ -854,7 +854,7 @@
 						<li class="class-depth-1"><a href="Phaser.Sprite.html">Sprite</a></li>
 						<li class="class-depth-1"><a href="Phaser.Image.html">Image</a></li>
 						<li class="class-depth-1"><a href="Phaser.Sound.html">Sound</a></li>
-						<li class="class-depth-1"><a href="Phaser.Emitter.html">Emitter</a></li>
+						<li class="class-depth-1"><a href="Phaser.Particles.Arcade.Emitter.html">Particle Emitter</a></li>
 						<li class="class-depth-1"><a href="Phaser.Particle.html">Particle</a></li>
 						<li class="class-depth-1"><a href="Phaser.Text.html">Text</a></li>
 						<li class="class-depth-1"><a href="Phaser.Tween.html">Tween</a></li>
@@ -912,6 +912,7 @@
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Community<b class="caret"></b></a>
 					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="https://leanpub.com/u/photonstorm">Phaser Books</a></li>
 						<li class="class-depth-1"><a href="https://github.com/photonstorm/phaser">Phaser Github</a></li>
 						<li class="class-depth-1"><a href="http://examples.phaser.io">Phaser Examples</a></li>
 						<li class="class-depth-1"><a href="https://github.com/photonstorm/phaser-plugins">Phaser Plugins</a></li>
@@ -920,7 +921,6 @@
 						<li class="class-depth-1"><a href="https://confirmsubscription.com/h/r/369DE48E3E86AF1E">Newsletter</a></li>
 						<li class="class-depth-1"><a href="https://twitter.com/photonstorm">Twitter</a></li>
 						<li class="class-depth-1"><a href="http://www.html5gamedevs.com/topic/4470-official-phaserio-irc-channel-phaserio-on-freenode/">IRC</a></li>
-						<li class="class-depth-1"><a href="https://leanpub.com/u/photonstorm">Phaser Books</a></li>
 						<li class="class-depth-1"><a href="https://www.gittip.com/photonstorm/">GitTip</a></li>
 					</ul>
 				</li>
@@ -1913,8 +1913,8 @@ Phaser.BitmapData.prototype = {
      * @param {number} [y=0] - The y coordinate representing the top-left of the region to copy from the source image.
      * @param {number} [width] - The width of the region to copy from the source image. If not specified it will use the full source image width.
      * @param {number} [height] - The height of the region to copy from the source image. If not specified it will use the full source image height.
-     * @param {number} [tx] - The x coordinate to translate to before drawing. If not specified it will default to the `x` parameter.
-     * @param {number} [ty] - The y coordinate to translate to before drawing. If not specified it will default to the `y` parameter.
+     * @param {number} [tx] - The x coordinate to translate to before drawing. If not specified it will default to the `x` parameter. If `null` and `source` is a Display Object, it will default to `source.x`.
+     * @param {number} [ty] - The y coordinate to translate to before drawing. If not specified it will default to the `y` parameter. If `null` and `source` is a Display Object, it will default to `source.y`.
      * @param {number} [newWidth] - The new width of the block being copied. If not specified it will default to the `width` parameter.
      * @param {number} [newHeight] - The new height of the block being copied. If not specified it will default to the `height` parameter.
      * @param {number} [rotate=0] - The angle in radians to rotate the block to before drawing. Rotation takes place around the center by default, but can be changed with the `anchor` parameters.
@@ -1943,6 +1943,9 @@ Phaser.BitmapData.prototype = {
             this._rotate = source.rotation;
             this._alpha.current = source.alpha;
             this._image = source.texture.baseTexture.source;
+
+            if (typeof tx === 'undefined' || tx === null) { tx = source.x; }
+            if (typeof ty === 'undefined' || ty === null) { ty = source.y; }
 
             if (source.texture.trim)
             {
@@ -2129,6 +2132,30 @@ Phaser.BitmapData.prototype = {
 
         //  By specifying null for most parameters it will tell `copy` to use the Sprite values instead, which is what we want here
         return this.copy(source, null, null, null, null, x, y, width, height, null, null, null, null, null, null, blendMode, roundPx);
+
+    },
+
+    /**
+    * Draws the immediate children of a Phaser.Group to this BitmapData.
+    * Children are only drawn if they have their `exists` property set to `true`.
+    * The children will be drawn at their `x` and `y` world space coordinates. If this is outside the bounds of the BitmapData they won't be drawn.
+    * When drawing it will take into account the child's rotation, scale and alpha values.
+    * No iteration takes place. Groups nested inside other Groups will not be iterated through.
+    *
+    * @method Phaser.BitmapData#drawGroup
+    * @param {Phaser.Group} group - The Group to draw onto this BitmapData.
+    * @param {number} [blendMode=null] - The composite blend mode that will be used when drawing the Group children. The default is no blend mode at all.
+    * @param {boolean} [roundPx=false] - Should the x and y values be rounded to integers before drawing? This prevents anti-aliasing in some instances.
+    * @return {Phaser.BitmapData} This BitmapData object for method chaining.
+    */
+    drawGroup: function (group, blendMode, roundPx) {
+
+        if (group.total > 0)
+        {
+            group.forEachExists(this.copy, this, null, null, null, null, null, null, null, null, null, null, null, null, null, null, blendMode, roundPx);
+        }
+
+        return this;
 
     },
 
@@ -2773,7 +2800,7 @@ Phaser.BitmapData.prototype.constructor = Phaser.BitmapData;
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Thu Dec 04 2014 11:32:24 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Tue Jan 06 2015 06:31:48 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

@@ -841,7 +841,7 @@
 						<li class="class-depth-1"><a href="Phaser.StateManager.html">State Manager</a></li>
 						<li class="class-depth-1"><a href="Phaser.TweenManager.html">Tween Manager</a></li>
 						<li class="class-depth-1"><a href="Phaser.SoundManager.html">Sound Manager</a></li>
-						<li class="class-depth-1"><a href="Phaser.InputManager.html">Input Manager</a></li>
+						<li class="class-depth-1"><a href="Phaser.Input.html">Input Manager</a></li>
 						<li class="class-depth-1"><a href="Phaser.ScaleManager.html">Scale Manager</a></li>
 					</ul>
 				</li>
@@ -854,7 +854,7 @@
 						<li class="class-depth-1"><a href="Phaser.Sprite.html">Sprite</a></li>
 						<li class="class-depth-1"><a href="Phaser.Image.html">Image</a></li>
 						<li class="class-depth-1"><a href="Phaser.Sound.html">Sound</a></li>
-						<li class="class-depth-1"><a href="Phaser.Emitter.html">Emitter</a></li>
+						<li class="class-depth-1"><a href="Phaser.Particles.Arcade.Emitter.html">Particle Emitter</a></li>
 						<li class="class-depth-1"><a href="Phaser.Particle.html">Particle</a></li>
 						<li class="class-depth-1"><a href="Phaser.Text.html">Text</a></li>
 						<li class="class-depth-1"><a href="Phaser.Tween.html">Tween</a></li>
@@ -912,6 +912,7 @@
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Community<b class="caret"></b></a>
 					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="https://leanpub.com/u/photonstorm">Phaser Books</a></li>
 						<li class="class-depth-1"><a href="https://github.com/photonstorm/phaser">Phaser Github</a></li>
 						<li class="class-depth-1"><a href="http://examples.phaser.io">Phaser Examples</a></li>
 						<li class="class-depth-1"><a href="https://github.com/photonstorm/phaser-plugins">Phaser Plugins</a></li>
@@ -920,7 +921,6 @@
 						<li class="class-depth-1"><a href="https://confirmsubscription.com/h/r/369DE48E3E86AF1E">Newsletter</a></li>
 						<li class="class-depth-1"><a href="https://twitter.com/photonstorm">Twitter</a></li>
 						<li class="class-depth-1"><a href="http://www.html5gamedevs.com/topic/4470-official-phaserio-irc-channel-phaserio-on-freenode/">IRC</a></li>
-						<li class="class-depth-1"><a href="https://leanpub.com/u/photonstorm">Phaser Books</a></li>
 						<li class="class-depth-1"><a href="https://www.gittip.com/photonstorm/">GitTip</a></li>
 					</ul>
 				</li>
@@ -952,6 +952,7 @@
 * A TilemapLayer is a Phaser.Image/Sprite that renders a specific TileLayer of a Tilemap.
 *
 * Since a TilemapLayer is a Sprite it can be moved around the display, added to other groups or display objects, etc.
+*
 * By default TilemapLayers have fixedToCamera set to `true`. Changing this will break Camera follow and scrolling behaviour.
 *
 * @class Phaser.TilemapLayer
@@ -1005,7 +1006,7 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
     * @property {HTMLCanvasElement} canvas
     * @protected
     */
-    this.canvas = Phaser.Canvas.create(width, height, '', true);
+    this.canvas = Phaser.Canvas.create(width, height);
 
     /**
     * The 2d context of the canvas.
@@ -1068,15 +1069,24 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
     /**
     * Settings that control standard (non-diagnostic) rendering.
     *
-    * @public
-    * @property {boolean} enableScrollDelta - When enabled, only new newly exposed areas of the layer are redraw after scrolling. This can greatly improve scrolling rendering performance, especially when there are many small tiles.
+    * @property {boolean} [enableScrollDelta=true] - Delta scroll rendering only draws tiles/edges as them come into view.
+    *     This can greatly improve scrolling rendering performance, especially when there are many small tiles.
+    *     It should only be disabled in rare cases.
+    *
+    * @property {?DOMCanvasElement} [copyCanvas=(auto)] - [Internal] If set, force using a separate (shared) copy canvas.
+    *     Using a canvas bitblt/copy when the source and destinations region overlap produces unexpected behavior
+    *     in some browsers, notably Safari. 
+    *
+    * @property {integer} copySliceCount - [Internal] The number of vertical slices to copy when using a `copyCanvas`.
+    *     This is ratio of the pixel count of the primary canvas to the copy canvas.
+    *
     * @default
     */
     this.renderSettings = {
-
         enableScrollDelta: true,
-        overdrawRatio: 0.20
-
+        overdrawRatio: 0.20,
+        copyCanvas: null,
+        copySliceCount: 4
     };
 
     /**
@@ -1201,6 +1211,35 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
     */
     this._results = [];
 
+    if (!game.device.canvasBitBltShift)
+    {
+        this.renderSettings.copyCanvas = Phaser.TilemapLayer.ensureSharedCopyCanvas();
+    }
+
+};
+
+/**
+* The shared double-copy canvas, created as needed.
+*
+* @private
+* @static
+*/
+Phaser.TilemapLayer.sharedCopyCanvas = null;
+
+/**
+* Create if needed (and return) a shared copy canvas that is shared across all TilemapLayers.
+*
+* Code that uses the canvas is responsible to ensure the dimensions and save/restore state as appropriate.
+*
+* @protected
+* @static
+*/
+Phaser.TilemapLayer.ensureSharedCopyCanvas = function () {
+    if (!this.sharedCopyCanvas)
+    {
+        this.sharedCopyCanvas = Phaser.Canvas.create(2, 2);
+    }
+    return this.sharedCopyCanvas;
 };
 
 Phaser.TilemapLayer.prototype = Object.create(Phaser.Image.prototype);
@@ -1478,9 +1517,6 @@ Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides
     x = this._fixX(x);
     y = this._fixY(y);
 
-    var tw = this._mc.tileWidth;
-    var th = this._mc.tileHeight;
-
     //  Convert the pixel values into tile coordinates
     var tx = Math.floor(x / this._mc.cw);
     var ty = Math.floor(y / this._mc.ch);
@@ -1534,7 +1570,8 @@ Object.defineProperty(Phaser.TilemapLayer.prototype, "wrap", {
 });
 
 /**
-* Returns the appropriate tileset for the index, updating the internal cache as required. This should only be called if `tilesets[index]` evaluates to undefined.
+* Returns the appropriate tileset for the index, updating the internal cache as required.
+* This should only be called if `tilesets[index]` evaluates to undefined.
 *
 * @method Phaser.TilemapLayer#resolveTileset
 * @private
@@ -1568,7 +1605,9 @@ Phaser.TilemapLayer.prototype.resolveTileset = function (tileIndex)
 };
 
 /**
-* The TilemapLayer caches tileset look-ups. Call this method of clear the cache if tilesets have been added or updated after the layer has been rendered.
+* The TilemapLayer caches tileset look-ups.
+*
+* Call this method of clear the cache if tilesets have been added or updated after the layer has been rendered.
 *
 * @method Phaser.TilemapLayer#resetTilesetCache
 * @public
@@ -1584,7 +1623,9 @@ Phaser.TilemapLayer.prototype.resetTilesetCache = function ()
 };
 
 /**
-* Shifts the contents of the canvas - does extra math so that different browsers agree on the result. The specified (x/y) will be shifted to (0,0) after the copy. The newly exposed canvas area will need to be filled in. This method is problematic for transparent tiles.
+* Shifts the contents of the canvas - does extra math so that different browsers agree on the result.
+*
+* The specified (x/y) will be shifted to (0,0) after the copy and the newly exposed canvas area will need to be filled in.
 *
 * @method Phaser.TilemapLayer#shiftCanvas
 * @private
@@ -1617,10 +1658,53 @@ Phaser.TilemapLayer.prototype.shiftCanvas = function (context, x, y)
         sy = 0;
     }
 
-    context.save();
-    context.globalCompositeOperation = 'copy';
-    context.drawImage(canvas, dx, dy, copyW, copyH, sx, sy, copyW, copyH);
-    context.restore();
+    var copyCanvas = this.renderSettings.copyCanvas;
+    if (copyCanvas)
+    {
+        // Copying happens in slices to minimize copy canvas size overhead
+        var sliceCount = this.renderSettings.copySliceCount;
+        var sH = Math.ceil(copyH / sliceCount);
+        // Ensure copy canvas is large enough
+        if (copyCanvas.width &lt; copyW) { copyCanvas.width = copyW; }
+        if (copyCanvas.height &lt; sH) { copyCanvas.height = sH; }
+
+        var vShift;
+        if (dy >= sy)
+        {
+            // move old region up, or don't change vertically - copy top to bottom
+            vShift = sH;
+        }
+        else
+        {
+            // move old region down - copy segments from bottom to top
+            vShift = -sH;
+            dy += (sH * (sliceCount - 1));
+            sy += (sH * (sliceCount - 1));
+        }
+
+        var copyContext = copyCanvas.getContext('2d');
+        while (sliceCount--)
+        {
+            copyContext.clearRect(0, 0, copyW, sH);
+            copyContext.drawImage(canvas, dx, dy, copyW, sH, 0, 0, copyW, sH);
+            // clear allows default 'source-over' semantics
+            context.clearRect(sx, sy, copyW, sH);
+            context.drawImage(copyCanvas, 0, 0, copyW, sH, sx, sy, copyW, sH);
+
+            dy += vShift;
+            sy += vShift;
+        }
+
+    }
+    else
+    {
+        // Avoids a second copy but flickers in Safari / Safari Mobile
+        // Ref. https://github.com/photonstorm/phaser/issues/1439
+        context.save();
+        context.globalCompositeOperation = 'copy';
+        context.drawImage(canvas, dx, dy, copyW, copyH, sx, sy, copyW, copyH);
+        context.restore();
+    }
 };
 
 /**
@@ -2126,7 +2210,7 @@ Object.defineProperty(Phaser.TilemapLayer.prototype, "collisionHeight", {
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Thu Dec 04 2014 11:32:25 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Tue Jan 06 2015 06:31:49 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>
