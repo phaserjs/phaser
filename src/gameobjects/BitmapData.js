@@ -879,10 +879,6 @@ Phaser.BitmapData.prototype = {
             source = this.game.cache.getImage(source);
         }
 
-        var src = source;
-        var sx = 0;
-        var sy = 0;
- 
         if (source instanceof Phaser.Image || source instanceof Phaser.Sprite)
         {
             var t = source.worldTransform;
