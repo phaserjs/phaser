@@ -862,6 +862,41 @@ Phaser.BitmapData.prototype = {
     },
 
     /**
+    * Draws the given Game Object to this BitmapData exactly as it would be drawn to the game during rendering, with an optional offset.
+    *
+    * @method Phaser.BitmapData#drawAsRendered
+    * @param {Phaser.Sprite|Phaser.Image} source - The Object to draw. If you give a string it will try and find the Image in the Game.Cache.
+    * @param {number} [x=0] - The x offset.
+    * @param {number} [y=0] - The y offset.
+    */
+    drawAsRendered: function (source, x, y) {
+
+        if (typeof x === 'undefined') { x = 0; }
+        if (typeof y === 'undefined') { y = 0; }
+
+        if (typeof source === 'string')
+        {
+            source = this.game.cache.getImage(source);
+        }
+
+        var src = source;
+        var sx = 0;
+        var sy = 0;
+ 
+        if (source instanceof Phaser.Image || source instanceof Phaser.Sprite)
+        {
+            var t = source.worldTransform;
+            this.context.save();
+            this.context.setTransform(t.a, t.b, t.c, t.d, t.tx + x, t.ty +y);        
+            this.copy(source, 0, 0, source.width, source.height, source.pivot.x * source.anchor.x, source.pivot.y * source.anchor.x);
+            this.context.restore();
+        }
+
+        this.dirty = true;
+
+    },
+
+    /**
     * DEPRECATED: Use BitmapData.draw instead.
     * 
     * Draws the given image to this BitmapData at the coordinates specified.
