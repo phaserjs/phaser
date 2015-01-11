@@ -63,7 +63,8 @@ Version 2.2.2 - "Alkindar" - 6th January 2015
 ### New Features
 
 * Phaser.Loader now supports BLOB urls for audio files (thanks @aressler38 #1462)
-* Line.reflect will calculate the reflected, or outgoing angle of the line and a given line if they intersect. This can be used for Body vs. Line collision responses and rebounds.
+* Line.reflect will calculate the reflected, or outgoing angle of two lines. This can be used for Body vs. Line collision responses and rebounds.
+* Line.normalAngle gets the angle of the line normal in radians.
 * Line.normalX and Line.normalY contain the x and y components of the left-hand normal of the line.
 * Line.fromAngle will sets this line to start at the given `x` and `y` coordinates and for the segment to extend at `angle` for the given `length`.
 * BitmapData.drawGroup draws the immediate children of a Phaser.Group to a BitmapData. Children are only drawn if they have their `exists` property set to `true`. The children will be drawn at their `x` and `y` world space coordinates. When drawing it will take into account the child's rotation, scale and alpha values. No iteration takes place. Groups nested inside other Groups will not be iterated through.
