@@ -14,7 +14,7 @@ $.fn.toc = function(options) {
       var elScrollTo = $(e.target).attr('href');
       var $el = $(elScrollTo);
 
-      $('body,html').animate({ scrollTop: $el.offset().top - $('div.navbar-inner').height()*1.2 }, 400, 'swing', function() {
+      $('body,html').animate({ scrollTop: $el.offset().top - $('div.navbar-inner').height()*1.1 }, 400, 'swing', function() {
         location.hash = elScrollTo;
       });
     }

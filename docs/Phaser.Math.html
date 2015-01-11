@@ -9915,7 +9915,23 @@ for forward compatibility make sure to pass in actual numbers.</p>
     
         <h5>Example</h5>
         
-    <pre class="sunlight-highlight-javascript">Phaser.Math.numberArrayStep(4);// => [0, 1, 2, 3]Phaser.Math.numberArrayStep(1, 5);// => [1, 2, 3, 4]Phaser.Math.numberArrayStep(0, 20, 5);// => [0, 5, 10, 15]Phaser.Math.numberArrayStep(0, -4, -1);// => [0, -1, -2, -3]Phaser.Math.numberArrayStep(1, 4, 0);// => [1, 1, 1]Phaser.Math.numberArrayStep(0);// => []</pre>
+    <pre class="sunlight-highlight-javascript">Phaser.Math.numberArrayStep(4);
+// => [0, 1, 2, 3]
+
+Phaser.Math.numberArrayStep(1, 5);
+// => [1, 2, 3, 4]
+
+Phaser.Math.numberArrayStep(0, 20, 5);
+// => [0, 5, 10, 15]
+
+Phaser.Math.numberArrayStep(0, -4, -1);
+// => [0, -1, -2, -3]
+
+Phaser.Math.numberArrayStep(1, 4, 0);
+// => [1, 1, 1]
+
+Phaser.Math.numberArrayStep(0);
+// => []</pre>
 
 
     
@@ -14036,7 +14052,7 @@ you should get the results via getSinTable() and getCosTable(). This generator i
 				scrollTo    : 60
 			} );
 			$( "#toc>ul" ).addClass( "nav nav-pills nav-stacked" );
-			$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+				
 
 		} );
 	</script>
