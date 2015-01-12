@@ -2136,7 +2136,7 @@ declare module Phaser {
         _wheelEvent: WheelEventProxy;
         pointerLock: Phaser.Signal;
         stopOnGameOut: boolean;
-        wheelDelta: WheelEventProxy;
+        wheelDelta: number;
 
         onMouseDown(event: MouseEvent): void;
         onMouseMove(event: MouseEvent): void;
