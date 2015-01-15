@@ -14063,12 +14063,12 @@ onConnectCallback, onDisconnectCallback, onDownCallback, onUpCallback, onAxisCal
             /**
             * An array of the bodies the world bounds collides with.
             */
-            boundsCollidesWith: Phaser.Physics.P2.World.Body[];
+            boundsCollidesWith: Phaser.Physics.P2.Body[];
 
             /**
             * A default collision group.
             */
-            boundsCollisionGroup: Phaser.Physics.P2.World.CollisionGroup;
+            boundsCollisionGroup: Phaser.Physics.P2.CollisionGroup;
 
             /**
             * The p2 World configuration object.
@@ -14083,9 +14083,9 @@ onConnectCallback, onDisconnectCallback, onDownCallback, onUpCallback, onAxisCal
             /**
             * An array containing the collision groups that have been defined in the World.
             */
-            collisionGroups: Phaser.Physics.P2.World.CollisionGroup[];
+            collisionGroups: Phaser.Physics.P2.CollisionGroup[];
 
-            contactMaterial: Phaser.Physics.P2.World.ContactMaterial;
+            contactMaterial: Phaser.Physics.P2.ContactMaterial;
 
             /**
             * Set to true if you want to the world to emit the "impact" event. Turning this off could improve performance.
@@ -14095,7 +14095,7 @@ onConnectCallback, onDisconnectCallback, onDownCallback, onUpCallback, onAxisCal
             /**
             * A default collision group.
             */
-            everythingCollisionGroup: Phaser.Physics.P2.World.CollisionGroup;
+            everythingCollisionGroup: Phaser.Physics.P2.CollisionGroup;
 
             /**
             * The frame rate the world will be stepped at. Defaults to 1 / 60, but you can change here. Also see useElapsedTime property.
@@ -14112,17 +14112,17 @@ onConnectCallback, onDisconnectCallback, onDownCallback, onUpCallback, onAxisCal
             /**
             * Gravity in the world. This is applied on all bodies in the beginning of each step().
             */
-            gravity: Phaser.Physics.P2.World.InversePointProxy;
+            gravity: Phaser.Physics.P2.InversePointProxy;
 
             /**
             * A local array of all created Materials.
             */
-            materials: Phaser.Physics.P2.World.Material[];
+            materials: Phaser.Physics.P2.Material[];
 
             /**
             * A default collision group.
             */
-            nothingCollisionGroup: Phaser.Physics.P2.World.CollisionGroup;
+            nothingCollisionGroup: Phaser.Physics.P2.CollisionGroup;
 
             /**
             * Dispatched when a new Body is added to the World.
@@ -14204,10 +14204,10 @@ onConnectCallback, onDisconnectCallback, onDownCallback, onUpCallback, onAxisCal
             * An object containing the 4 wall bodies that bound the physics world.
             */
             walls: {
-                left?: Phaser.Physics.P2.World.Body;
-                right?: Phaser.Physics.P2.World.Body;
-                top?: Phaser.Physics.P2.World.Body;
-                bottom?: Phaser.Physics.P2.World.Body;
+                left?: Phaser.Physics.P2.Body;
+                right?: Phaser.Physics.P2.Body;
+                top?: Phaser.Physics.P2.Body;
+                bottom?: Phaser.Physics.P2.Body;
             };
 
             /**
@@ -14221,14 +14221,14 @@ onConnectCallback, onDisconnectCallback, onDownCallback, onUpCallback, onAxisCal
             *
             * @param body - 
             */
-            addBody(body: Phaser.Physics.P2.World.Body): boolean;
+            addBody(body: Phaser.Physics.P2.Body): boolean;
 
             /**
             * Add a ContactMaterial to the simulation.
             *
             * @param contactMaterial - 
             */
-            addContactMaterial(material: Phaser.Physics.P2.World.ContactMaterial): Phaser.Physics.P2.World.ContactMaterial;
+            addContactMaterial(material: Phaser.Physics.P2.ContactMaterial): Phaser.Physics.P2.ContactMaterial;
 
             /**
             * Add a constraint to the simulation.
@@ -14242,7 +14242,7 @@ onConnectCallback, onDisconnectCallback, onDownCallback, onUpCallback, onAxisCal
             *
             * @param s - 
             */
-            addSpring(spring: Phaser.Physics.P2.World.Spring): Phaser.Physics.P2.World.Spring;
+            addSpring(spring: Phaser.Physics.P2.Spring): Phaser.Physics.P2.Spring;
 
             /**
             * Handles a p2 begin contact event.
@@ -14274,7 +14274,7 @@ onConnectCallback, onDisconnectCallback, onDownCallback, onUpCallback, onAxisCal
             * @param addToWorld - If true it will automatically add each body to the world. - Default: true
             * @return An array of the Phaser.Physics.Body objects that have been created.
             */
-            convertCollisionObjects(map: Phaser.Tilemap, layer?: any, addToWorld?: boolean): Phaser.Physics.P2.World.Body[];
+            convertCollisionObjects(map: Phaser.Tilemap, layer?: any, addToWorld?: boolean): Phaser.Physics.P2.Body[];
 
             /**
             * Goes through all tiles in the given Tilemap and TilemapLayer and converts those set to collide into physics bodies.
@@ -14288,7 +14288,7 @@ onConnectCallback, onDisconnectCallback, onDownCallback, onUpCallback, onAxisCal
             * @param optimize - If true adjacent colliding tiles will be combined into a single body to save processing. However it means you cannot perform specific Tile to Body collision responses. - Default: true
             * @return An array of the Phaser.Physics.P2.Body objects that were created.
             */
-            convertTilemap(map: Phaser.Tilemap, layer?: any, addToWorld?: Boolean, optimize?: boolean): Phaser.Physics.P2.World.Body[];
+            convertTilemap(map: Phaser.Tilemap, layer?: any, addToWorld?: Boolean, optimize?: boolean): Phaser.Physics.P2.Body[];
 
             /**
             * Creates a new Body and adds it to the World.
@@ -14306,7 +14306,7 @@ onConnectCallback, onDisconnectCallback, onDownCallback, onUpCallback, onAxisCal
                                       or the arguments passed can be flat x,y values e.g. `setPolygon(options, x,y, x,y, x,y, ...)` where `x` and `y` are numbers.
             * @return The body
             */
-            createBody(x: number, y: number, mass: number, addToWorld?: boolean, options?: p2.BodyOptions, data?: number[][]): Phaser.Physics.P2.World.Body;
+            createBody(x: number, y: number, mass: number, addToWorld?: boolean, options?: p2.BodyOptions, data?: number[][]): Phaser.Physics.P2.Body;
 
             /**
             * Creates a new Body and adds it to the World.
@@ -14324,7 +14324,7 @@ onConnectCallback, onDisconnectCallback, onDownCallback, onUpCallback, onAxisCal
                                       or the arguments passed can be flat x,y values e.g. `setPolygon(options, x,y, x,y, x,y, ...)` where `x` and `y` are numbers.
             * @return The body
             */
-            createBody(x: number, y: number, mass: number, addToWorld?: boolean, options?: p2.BodyOptions, data?: number[]): Phaser.Physics.P2.World.Body;
+            createBody(x: number, y: number, mass: number, addToWorld?: boolean, options?: p2.BodyOptions, data?: number[]): Phaser.Physics.P2.Body;
 
             /**
             * Creates a new Collision Group and optionally applies it to the given object.
@@ -14332,7 +14332,7 @@ onConnectCallback, onDisconnectCallback, onDownCallback, onUpCallback, onAxisCal
             *
             * @param object - An optional Sprite or Group to apply the Collision Group to. If a Group is given it will be applied to all top-level children.
             */
-            createCollisionGroup(group?: Phaser.Group): Phaser.Physics.P2.World.CollisionGroup;
+            createCollisionGroup(group?: Phaser.Group): Phaser.Physics.P2.CollisionGroup;
 
             /**
             * Creates a new Collision Group and optionally applies it to the given object.
@@ -14340,7 +14340,7 @@ onConnectCallback, onDisconnectCallback, onDownCallback, onUpCallback, onAxisCal
             *
             * @param object - An optional Sprite or Group to apply the Collision Group to. If a Group is given it will be applied to all top-level children.
             */
-            createCollisionGroup(group?: Phaser.Sprite): Phaser.Physics.P2.World.CollisionGroup;
+            createCollisionGroup(group?: Phaser.Sprite): Phaser.Physics.P2.CollisionGroup;
 
             /**
             * Creates a Contact Material from the two given Materials. You can then edit the properties of the Contact Material directly.
@@ -14350,7 +14350,7 @@ onConnectCallback, onDisconnectCallback, onDownCallback, onUpCallback, onAxisCal
             * @param options - Material options object.
             * @return The Contact Material that was created.
             */
-            createContactMaterial(materialA: Phaser.Physics.P2.World.Material, materialB: Phaser.Physics.P2.World.Material, options?: p2.ContactMaterialOptions): Phaser.Physics.P2.World.ContactMaterial;
+            createContactMaterial(materialA: Phaser.Physics.P2.Material, materialB: Phaser.Physics.P2.Material, options?: p2.ContactMaterialOptions): Phaser.Physics.P2.ContactMaterial;
 
             /**
             * Creates a constraint that tries to keep the distance between two bodies constant.
@@ -14363,7 +14363,7 @@ onConnectCallback, onDisconnectCallback, onDownCallback, onUpCallback, onAxisCal
             * @param maxForce - The maximum force that should be applied to constrain the bodies.
             * @return The constraint
             */
-            createDistanceConstraint(bodyA: any, bodyB: any, distance: number, localAnchorA?: number[], localAnchorB?: number[], maxForce?: number): Phaser.Physics.P2.World.DistanceConstraint;
+            createDistanceConstraint(bodyA: any, bodyB: any, distance: number, localAnchorA?: number[], localAnchorB?: number[], maxForce?: number): Phaser.Physics.P2.DistanceConstraint;
 
             /**
             * Creates a constraint that tries to keep the distance between two bodies constant.
@@ -14374,7 +14374,7 @@ onConnectCallback, onDisconnectCallback, onDownCallback, onUpCallback, onAxisCal
             * @param ratio - The gear ratio. - Default: 1
             * @return The constraint
             */
-            createGearConstraint(bodyA: any, bodyB: any, angle?: number, ratio?: number): Phaser.Physics.P2.World.GearConstraint;
+            createGearConstraint(bodyA: any, bodyB: any, angle?: number, ratio?: number): Phaser.Physics.P2.GearConstraint;
 
             /**
             * Locks the relative position between two bodies.
@@ -14386,7 +14386,7 @@ onConnectCallback, onDisconnectCallback, onDownCallback, onUpCallback, onAxisCal
             * @param maxForce - The maximum force that should be applied to constrain the bodies.
             * @return The constraint
             */
-            createLockConstraint(bodyA: any, bodyB: any, offset?: number[], angle?: number, maxForce?: number): Phaser.Physics.P2.World.LockConstraint;
+            createLockConstraint(bodyA: any, bodyB: any, offset?: number[], angle?: number, maxForce?: number): Phaser.Physics.P2.LockConstraint;
 
             /**
             * Creates a Material. Materials are applied to Shapes owned by a Body and can be set with Body.setMaterial().
@@ -14397,7 +14397,7 @@ onConnectCallback, onDisconnectCallback, onDownCallback, onUpCallback, onAxisCal
             * @param body - Optional Body. If given it will assign the newly created Material to the Body shapes.
             * @return The Material that was created. This is also stored in Phaser.Physics.P2.materials.
             */
-            createMaterial(name?: string, body?: Phaser.Physics.P2.World.Body): Phaser.Physics.P2.World.Material;
+            createMaterial(name?: string, body?: Phaser.Physics.P2.Body): Phaser.Physics.P2.Material;
 
             /**
             * Creates a new Particle and adds it to the World.
@@ -14414,7 +14414,7 @@ onConnectCallback, onDisconnectCallback, onDownCallback, onUpCallback, onAxisCal
                                       Either [[0,0], [0,1],...] or a flat array of numbers that will be interpreted as [x,y, x,y, ...],
                                       or the arguments passed can be flat x,y values e.g. `setPolygon(options, x,y, x,y, x,y, ...)` where `x` and `y` are numbers.
             */
-            createParticle(x: number, y: number, mass: number, addToWorld?: boolean, options?: p2.BodyOptions, data?: number[][]): Phaser.Physics.P2.World.Body;
+            createParticle(x: number, y: number, mass: number, addToWorld?: boolean, options?: p2.BodyOptions, data?: number[][]): Phaser.Physics.P2.Body;
 
             /**
             * Creates a new Particle and adds it to the World.
@@ -14431,7 +14431,7 @@ onConnectCallback, onDisconnectCallback, onDownCallback, onUpCallback, onAxisCal
                                       Either [[0,0], [0,1],...] or a flat array of numbers that will be interpreted as [x,y, x,y, ...],
                                       or the arguments passed can be flat x,y values e.g. `setPolygon(options, x,y, x,y, x,y, ...)` where `x` and `y` are numbers.
             */
-            createParticle(x: number, y: number, mass: number, addToWorld?: boolean, options?: p2.BodyOptions, data?: number[]): Phaser.Physics.P2.World.Body;
+            createParticle(x: number, y: number, mass: number, addToWorld?: boolean, options?: p2.BodyOptions, data?: number[]): Phaser.Physics.P2.Body;
 
             /**
             * Constraint that only allows bodies to move along a line, relative to each other.
@@ -14446,7 +14446,7 @@ onConnectCallback, onDisconnectCallback, onDownCallback, onUpCallback, onAxisCal
             * @param maxForce - The maximum force that should be applied to constrain the bodies.
             * @return The constraint
             */
-            createPrismaticConstraint(body: any, bodyB: any, lockRotation?: boolean, anchorA?: number[], anchorB?: number[], axis?: Float32Array, maxForce?: number): Phaser.Physics.P2.World.PrismaticConstraint;
+            createPrismaticConstraint(body: any, bodyB: any, lockRotation?: boolean, anchorA?: number[], anchorB?: number[], axis?: Float32Array, maxForce?: number): Phaser.Physics.P2.PrismaticConstraint;
 
             /**
             * Connects two bodies at given offset points, letting them rotate relative to each other around this point.
@@ -14460,7 +14460,7 @@ onConnectCallback, onDisconnectCallback, onDownCallback, onUpCallback, onAxisCal
             * @param worldPivot - A pivot point given in world coordinates. If specified, localPivotA and localPivotB are automatically computed from this value. - Default: null
             * @return The constraint
             */
-            createRevoluteConstraint(bodyA: any, pivotA: number[], bodyB: any, pivotB: number[], maxForce?: number, worldPivot?: number[]): Phaser.Physics.P2.World.RevoluteContraint;
+            createRevoluteConstraint(bodyA: any, pivotA: number[], bodyB: any, pivotB: number[], maxForce?: number, worldPivot?: number[]): Phaser.Physics.P2.RevoluteContraint;
 
             /**
             * Creates a rotational spring, connecting two bodies. A spring can have a resting length, a stiffness and damping.
@@ -14488,7 +14488,7 @@ onConnectCallback, onDisconnectCallback, onDownCallback, onUpCallback, onAxisCal
             * @param localB - Where to hook the spring to body B in local body coordinates. This value is an array by 2 elements, x and y, i.e: [32, 32].
             * @return The spring
             */
-            createSpring(bodyA: any, bodyB: any, restLength?: number, stiffness?: number, damping?: number, worldA?: number[], worldB?: number[], localA?: number[], localB?: number[]): Phaser.Physics.P2.World.Spring;
+            createSpring(bodyA: any, bodyB: any, restLength?: number, stiffness?: number, damping?: number, worldA?: number[], worldB?: number[], localA?: number[], localB?: number[]): Phaser.Physics.P2.Spring;
 
             /**
             * Clears all bodies from the simulation and unlinks World from Game. Should only be called on game shutdown. Call `clear` on a State change.
@@ -14528,7 +14528,7 @@ onConnectCallback, onDisconnectCallback, onDownCallback, onUpCallback, onAxisCal
             *
             * @return An array containing all current Bodies in the world.
             */
-            getBodies(): Phaser.Physics.P2.World.Body[];
+            getBodies(): Phaser.Physics.P2.Body[];
 
             /**
             * Checks the given object to see if it has a p2.Body and if so returns it.
@@ -14536,7 +14536,7 @@ onConnectCallback, onDisconnectCallback, onDownCallback, onUpCallback, onAxisCal
             * @param object - The object to check for a p2.Body on.
             * @return The p2.Body, or null if not found.
             */
-            getBody(object: any): Phaser.Physics.P2.World.Body;
+            getBody(object: any): Phaser.Physics.P2.Body;
 
             /**
             * Populates and returns an array of all current Constraints in the world.
@@ -14550,7 +14550,7 @@ onConnectCallback, onDisconnectCallback, onDownCallback, onUpCallback, onAxisCal
             *
             * @return An array containing all current Springs in the world.
             */
-            getSprings(): Phaser.Physics.P2.World.Spring[];
+            getSprings(): Phaser.Physics.P2.Spring[];
 
             /**
             * Get a contact material given two materials
@@ -14559,7 +14559,7 @@ onConnectCallback, onDisconnectCallback, onDownCallback, onUpCallback, onAxisCal
             * @param materialB - 
             * @return The matching ContactMaterial, or false on fail.
             */
-            getContactMaterial(materialA: Phaser.Physics.P2.World.Material, materialB: Phaser.Physics.P2.World.Material): Phaser.Physics.P2.World.ContactMaterial;
+            getContactMaterial(materialA: Phaser.Physics.P2.Material, materialB: Phaser.Physics.P2.Material): Phaser.Physics.P2.ContactMaterial;
 
             /**
             * Test if a world point overlaps bodies
@@ -14569,7 +14569,7 @@ onConnectCallback, onDisconnectCallback, onDownCallback, onUpCallback, onAxisCal
             * @param precision - Used for matching against particles and lines. Adds some margin to these infinitesimal objects.
             * @return Array of bodies that overlap the point
             */
-            hitTest(worldPoint: Phaser.Point, bodies?: any[], precision?: number, filterStatic?: boolean): Phaser.Physics.P2.World.Body[];
+            hitTest(worldPoint: Phaser.Point, bodies?: any[], precision?: number, filterStatic?: boolean): Phaser.Physics.P2.Body[];
 
             /**
             * Convert p2 physics value (meters) to pixel scale.
@@ -14628,14 +14628,14 @@ onConnectCallback, onDisconnectCallback, onDownCallback, onUpCallback, onAxisCal
             *
             * @param body - 
             */
-            removeBody(body: Phaser.Physics.P2.World.Body): Phaser.Physics.P2.World.Body;
+            removeBody(body: Phaser.Physics.P2.Body): Phaser.Physics.P2.Body;
 
             /**
             * This will add a P2 Physics body into the removal list for the next step.
             *
             * @param body - The body to remove at the start of the next step.
             */
-            removeBodyNextStep(body: Phaser.Physics.P2.World.Body): void;
+            removeBodyNextStep(body: Phaser.Physics.P2.Body): void;
 
             /**
             * Removes a constraint
@@ -14649,14 +14649,14 @@ onConnectCallback, onDisconnectCallback, onDownCallback, onUpCallback, onAxisCal
             *
             * @param cm - 
             */
-            removeContactMaterial(material: Phaser.Physics.P2.World.ContactMaterial): Phaser.Physics.P2.World.ContactMaterial;
+            removeContactMaterial(material: Phaser.Physics.P2.ContactMaterial): Phaser.Physics.P2.ContactMaterial;
 
             /**
             * Remove a spring
             *
             * @param s - 
             */
-            removeSpring(spring: Phaser.Physics.P2.World.Spring): Phaser.Physics.P2.World.Spring;
+            removeSpring(spring: Phaser.Physics.P2.Spring): Phaser.Physics.P2.Spring;
 
             /**
             * Called by Phaser.Physics when a State swap occurs.
@@ -14696,7 +14696,7 @@ onConnectCallback, onDisconnectCallback, onDownCallback, onUpCallback, onAxisCal
             * @param object - A Sprite or Group to apply the Collision Group to. If a Group is given it will be applied to all top-level children.
             * @param group - The Collision Group that this Bodies shapes will use.
             */
-            setCollisionGroup(object: any, group: Phaser.Physics.P2.World.CollisionGroup): void;
+            setCollisionGroup(object: any, group: Phaser.Physics.P2.CollisionGroup): void;
 
             /**
             * Impact event handling is disabled by default. Enable it before any impact events will be dispatched.
@@ -14712,7 +14712,7 @@ onConnectCallback, onDisconnectCallback, onDownCallback, onUpCallback, onAxisCal
             * @param material - The Material to be applied to the given Bodies.
             * @param bodies - An Array of Body objects that the given Material will be set on.
             */
-            setMaterial(material: Phaser.Physics.P2.World.Material, bodies?: Phaser.Physics.P2.World.Body[]): void;
+            setMaterial(material: Phaser.Physics.P2.Material, bodies?: Phaser.Physics.P2.Body[]): void;
 
             /**
             * Sets a callback to be fired after the Broadphase has collected collision pairs in the world.
@@ -14725,7 +14725,7 @@ onConnectCallback, onDisconnectCallback, onDownCallback, onUpCallback, onAxisCal
             */
             setPostBroadphaseCallback(callback: Function, context: any): void;
 
-            setWorldMaterial(material: Phaser.Physics.P2.World.Material, left?: boolean, right?: boolean, top?: boolean, bottom?: boolean): void;
+            setWorldMaterial(material: Phaser.Physics.P2.Material, left?: boolean, right?: boolean, top?: boolean, bottom?: boolean): void;
 
             /**
             * Converts the current world into a JSON object.
