@@ -91,12 +91,15 @@ declare module PIXI {
     export interface PixiRenderer {
 
         autoResize: boolean;
+        clearBeforeRender: boolean;
         height: number;
+        resolution: number;
         transparent: boolean;
         type: number;
-        width: number;
         view: HTMLCanvasElement;
+        width: number;
 
+        destroy(): void;
         render(stage: Stage): void;
         resize(width: number, height: number): void;
 
