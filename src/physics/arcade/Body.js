@@ -369,7 +369,7 @@ Phaser.Physics.Arcade.Body.prototype = {
     */
     preUpdate: function () {
 
-        if (!this.enable)
+        if (!this.enable || this.game.physics.arcade.isPaused)
         {
             return;
         }

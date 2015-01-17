@@ -1,4 +1,4 @@
-// Type definitions for PIXI 2.2.0 dev 2014-16-12
+// Type definitions for PIXI 2.2.0 dev 2015-01-01
 // Project: https://github.com/GoodBoyDigital/pixi.js/
 
 declare module PIXI {
@@ -91,12 +91,15 @@ declare module PIXI {
     export interface PixiRenderer {
 
         autoResize: boolean;
+        clearBeforeRender: boolean;
         height: number;
+        resolution: number;
         transparent: boolean;
         type: number;
-        width: number;
         view: HTMLCanvasElement;
+        width: number;
 
+        destroy(): void;
         render(stage: Stage): void;
         resize(width: number, height: number): void;
 
@@ -1100,6 +1103,10 @@ declare module PIXI {
     export class Text extends Sprite {
 
         constructor(text: string, style?: TextStyle);
+
+        static fontPropertiesCanvas: any;
+        static fontPropertiesContext: any;
+        static fontPropertiesCache: any;
 
         context: CanvasRenderingContext2D;
         resolution: number;

@@ -438,7 +438,6 @@ Phaser.AnimationManager.prototype = {
         this._anims = {};
         this._outputFrames = [];
         this._frameData = null;
-        this._frameIndex = 0;
         this.currentAnim = null;
         this.currentFrame = null;
         this.sprite = null;
@@ -524,7 +523,7 @@ Object.defineProperty(Phaser.AnimationManager.prototype, 'frame', {
 
         if (this.currentFrame)
         {
-            return this._frameIndex;
+            return this.currentFrame.index;
         }
 
     },
@@ -537,8 +536,6 @@ Object.defineProperty(Phaser.AnimationManager.prototype, 'frame', {
 
             if (this.currentFrame)
             {
-                this._frameIndex = value;
-
                 this.sprite.setFrame(this.currentFrame);
 
                 if (this.sprite.__tilePattern)

@@ -62,11 +62,16 @@ Version 2.3.0 - "Tarabon" - in dev
 
 ### New Features
 
+* `Physics.Arcade.isPaused` allows you to toggle Arcade Physics processing on and off. If `true` the `Body.preUpdate` method will be skipped, halting all motion for all bodies. Note that other methods such as `collide` will still work, so be careful not to call them on paused bodies.
+
 ### Updates
+
+* TypeScript definitions fixes and updates (thanks @clark-stevenson @TimvdEijnden)
 
 ### Bug Fixes
 
 * SoundManager.unlock checks for audio `start` support and falls back to `noteOn` if not found.
+* Sprite.frame and AnimationManager.frame wouldn't return the correct index if a sprite sheet was being used unless it had first been set via the setter.
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 
