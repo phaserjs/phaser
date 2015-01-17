@@ -3157,7 +3157,7 @@ declare module Phaser {
 
     class PluginManager extends StateCycle {
 
-        constructor(game: Phaser.Game, parent: any);
+        constructor(game: Phaser.Game);
 
         game: Phaser.Game;
         plugins: Phaser.Plugin[];
