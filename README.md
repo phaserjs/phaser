@@ -64,6 +64,7 @@ Version 2.3.0 - "Tarabon" - in dev
 
 * `Physics.Arcade.isPaused` allows you to toggle Arcade Physics processing on and off. If `true` the `Body.preUpdate` method will be skipped, halting all motion for all bodies. Note that other methods such as `collide` will still work, so be careful not to call them on paused bodies.
 * `Arcade.Body.friction` allows you to have more fine-grained control over the amount of velocity passed between bodies on collision.
+* BitmapData.text will render the given string to the BitmapData, with optional font, color and shadow settings.
 
 ### Updates
 
