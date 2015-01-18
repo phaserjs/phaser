@@ -63,10 +63,11 @@ Version 2.3.0 - "Tarabon" - in dev
 ### New Features
 
 * `Physics.Arcade.isPaused` allows you to toggle Arcade Physics processing on and off. If `true` the `Body.preUpdate` method will be skipped, halting all motion for all bodies. Note that other methods such as `collide` will still work, so be careful not to call them on paused bodies.
+* `Arcade.Body.friction` allows you to have more fine-grained control over the amount of velocity passed between bodies on collision.
 
 ### Updates
 
-* TypeScript definitions fixes and updates (thanks @clark-stevenson @TimvdEijnden)
+* TypeScript definitions fixes and updates (thanks @clark-stevenson @TimvdEijnden @belohlavek @ivw)
 
 ### Bug Fixes
 
@@ -122,13 +123,13 @@ Phaser is released under the [MIT License](http://opensource.org/licenses/MIT).
 
 <img src="http://phaser.io/images/github/learn.jpg" align="right">
 
-We have a [Getting Started Guide](http://phaser.io/getting-started-js.php) which covers all you need to begin developing games with Phaser. From setting up a web server to picking an IDE to coding your first game.
+We have a [Getting Started Guide](http://phaser.io/getting-started-js.php) which covers all you need to begin developing games with Phaser. From setting up a web server, to picking an IDE and coding your first game.
 
 Prefer **videos** to reading? Lynda.com have published a free course: [HTML5 Game Development with Phaser](http://www.lynda.com/Phaser-tutorials/HTML5-Game-Development-Phaser/163641-2.html)
 
-Use the [How to Learn Phaser](http://gamedevelopment.tutsplus.com/articles/how-to-learn-the-phaser-html5-game-engine--gamedev-13643) guide we wrote for GameDevTuts+. It covers finding tutorials, examples and getting support.
+Use the [How to Learn Phaser](http://gamedevelopment.tutsplus.com/articles/how-to-learn-the-phaser-html5-game-engine--gamedev-13643) guide we wrote for GameDevTuts. It covers finding tutorials, examples and getting support.
 
-Although currently a bit of a "wall of text" we urge you to keep and eye on the **News** section of the [Phaser web site](http://phaser.io). We post fresh links posted there *daily*.
+Although currently a bit of a "wall of text" we urge you to keep an eye on the **News** section of the [Phaser web site](http://phaser.io). We post fresh links there *daily*.
 
 Using Phaser with **TypeScript**? Check out this great series of [Game From Scratch](http://www.gamefromscratch.com/page/Adventures-in-Phaser-with-TypeScript-tutorial-series.aspx) tutorials.
 
