@@ -19,7 +19,7 @@ var TypeScriptDocGenerator = (function () {
         this.lineMap = this.tree.lineMap();
     }
     TypeScriptDocGenerator.prototype.completePrefix = function (oldPrefix, appendedPrefix) {
-        if (oldPrefix == "") {
+        if (oldPrefix === "") {
             return appendedPrefix;
         }
         else {
@@ -55,8 +55,8 @@ var TypeScriptDocGenerator = (function () {
                 var nbSpaces = lc.character();
                 var startLinePosition = this.lineMap.getLineStartPosition(lc.line());
                 var comment = "\n" + this.repeatSpaces(nbSpaces) + "/**\n";
-                for (var i = 0; i < commentLines.length; i++) {
-                    comment += this.repeatSpaces(nbSpaces) + "* " + commentLines[i] + "\n";
+                for (var j = 0; j < commentLines.length; j++) {
+                    comment += this.repeatSpaces(nbSpaces) + "* " + commentLines[j] + "\n";
                 }
                 comment += this.repeatSpaces(nbSpaces) + "*/\n";
                 this.tsDefFileContent = this.tsDefFileContent.substr(0, startLinePosition + this.nbCharsAdded) + comment + this.tsDefFileContent.substr(startLinePosition + this.nbCharsAdded);
@@ -65,7 +65,7 @@ var TypeScriptDocGenerator = (function () {
         }
     };
     TypeScriptDocGenerator.prototype.findClass = function (className) {
-        if (className.indexOf("p2.") == 0) {
+        if (className.indexOf("p2.") === 0) {
             className = className.replace("p2.", "Phaser.Physics.P2.");
         }
         var elements = this.docs.classes.filter(function (element) {
@@ -79,9 +79,9 @@ var TypeScriptDocGenerator = (function () {
             for (var i = 0; i < c.members.length; i++) {
                 if (c.members[i].name == memberName) {
                     var m = c.members[i];
-                    var comments = new Array();
+                    var comments = [];
                     comments = comments.concat(m.description.split("\n"));
-                    if ((m.default != null) && (m.default != "")) {
+                    if ((m.default != null) && (m.default !== "")) {
                         comments.push("Default: " + m.default);
                     }
                     return comments;
@@ -95,7 +95,7 @@ var TypeScriptDocGenerator = (function () {
     TypeScriptDocGenerator.prototype.generateClassComments = function (className) {
         var c = this.findClass(className);
         if (c != null) {
-            var comments = new Array();
+            var comments = [];
             comments = comments.concat(c.description.split("\n"));
             return comments;
         }
@@ -107,7 +107,7 @@ var TypeScriptDocGenerator = (function () {
         var c = this.findClass(className);
         if (c != null) {
             var con = c.constructor;
-            var comments = new Array();
+            var comments = [];
             comments = comments.concat(con.description.split("\n"));
             if (con.parameters.length > 0) {
                 comments.push("");
@@ -118,7 +118,7 @@ var TypeScriptDocGenerator = (function () {
                     p.name = "args";
                 }
                 var def = "";
-                if ((p.default != null) && (p.default != "")) {
+                if ((p.default != null) && (p.default !== "")) {
                     def = " - Default: " + p.default;
                 }
                 comments.push("@param " + p.name + " - " + p.description + def);
@@ -133,9 +133,9 @@ var TypeScriptDocGenerator = (function () {
         var c = this.findClass(className);
         if (c != null) {
             for (var i = 0; i < c.functions.length; i++) {
-                if (c.functions[i].name == functionName) {
+                if (c.functions[i].name === functionName) {
                     var f = c.functions[i];
-                    var comments = new Array();
+                    var comments = [];
                     comments = comments.concat(f.description.split("\n"));
                     if (f.parameters.length > 0) {
                         comments.push("");
@@ -146,7 +146,7 @@ var TypeScriptDocGenerator = (function () {
                             p.name = "args";
                         }
                         var def = "";
-                        if ((p.default != null) && (p.default != "")) {
+                        if ((p.default != null) && (p.default !== "")) {
                             def = " - Default: " + p.default;
                         }
                         comments.push("@param " + p.name + " - " + p.description + def);
@@ -180,7 +180,7 @@ var TypeScriptDocGenerator = (function () {
                         this.insertComment(this.generateFunctionComments(fullName, elem.propertyName.fullText().trim()), classPos + this.leadingWidth(elem));
                         break;
                 }
-                if (elem.kind() != ts.SyntaxKind.List) {
+                if (elem.kind() !== ts.SyntaxKind.List) {
                     classPos += elem.fullWidth();
                 }
             }
@@ -208,7 +208,7 @@ var TypeScriptDocGenerator = (function () {
                     }
                     break;
             }
-            if ((elem.kind() != ts.SyntaxKind.List) && (elem.kind() != ts.SyntaxKind.ModuleDeclaration)) {
+            if ((elem.kind() !== ts.SyntaxKind.List) && (elem.kind() !== ts.SyntaxKind.ModuleDeclaration)) {
                 this.pos += elem.fullWidth();
             }
         }
