@@ -77,7 +77,7 @@ var TypeScriptDocGenerator = (function () {
         var c = this.findClass(className);
         if (c != null) {
             for (var i = 0; i < c.members.length; i++) {
-                if (c.members[i].name == memberName) {
+                if (c.members[i].name === memberName) {
                     var m = c.members[i];
                     var comments = [];
                     comments = comments.concat(m.description.split("\n"));
