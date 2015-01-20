@@ -74,6 +74,7 @@ Version 2.3.0 - "Tarabon" - in dev
 
 * SoundManager.unlock checks for audio `start` support and falls back to `noteOn` if not found.
 * Sprite.frame and AnimationManager.frame wouldn't return the correct index if a sprite sheet was being used unless it had first been set via the setter.
+* Error in diffX and diffY calculation in Tilemap.paste (thanks @amelia410 #1446)
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 
