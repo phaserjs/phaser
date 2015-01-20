@@ -22,4 +22,5 @@ module.exports = function (grunt) {
 
     grunt.registerTask('docs', [ 'clean:docs', 'pixidoc', 'builddoc', 'replace:docs', 'clean:out']);
 
+    grunt.registerTask('tsdocs', ['pixidoc', 'exportdocjson', 'buildtsdoc:pixi', 'buildtsdoc:phaser', 'replace:phasertsdefheader', 'clean:out']);
 };
