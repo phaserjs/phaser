@@ -30,7 +30,8 @@
         "./tasks/jsdoc-plugins/namealias",
         "./tasks/jsdoc-plugins/filterpixi",
         "./tasks/jsdoc-plugins/proptomember",
-        "./tasks/jsdoc-plugins/shortlinks"
+        "./tasks/jsdoc-plugins/shortlinks",
+        "./tasks/jsdoc-plugins/p2completeclass"
     ],
     "markdown"  : {
         "parser"   : "gfm",

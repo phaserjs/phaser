@@ -18,6 +18,9 @@ var TypeScriptDocGenerator = (function () {
         this.sourceUnit = this.tree.sourceUnit();
         this.lineMap = this.tree.lineMap();
     }
+    TypeScriptDocGenerator.prototype.cleanEndLine = function (str) {
+        return str.replace(new RegExp('[' + "\r\n" + ']', 'g'), "\n").replace(new RegExp('[' + "\r" + ']', 'g'), "\n");
+    };
     TypeScriptDocGenerator.prototype.completePrefix = function (oldPrefix, appendedPrefix) {
         if (oldPrefix === "") {
             return appendedPrefix;
@@ -54,11 +57,11 @@ var TypeScriptDocGenerator = (function () {
                 var lc = this.lineMap.getLineAndCharacterFromPosition(position);
                 var nbSpaces = lc.character();
                 var startLinePosition = this.lineMap.getLineStartPosition(lc.line());
-                var comment = "\n" + this.repeatSpaces(nbSpaces) + "/**\n";
+                var comment = "\r\n" + this.repeatSpaces(nbSpaces) + "/**\r\n";
                 for (var j = 0; j < commentLines.length; j++) {
-                    comment += this.repeatSpaces(nbSpaces) + "* " + commentLines[j] + "\n";
+                    comment += this.repeatSpaces(nbSpaces) + "* " + commentLines[j].trim() + "\r\n";
                 }
-                comment += this.repeatSpaces(nbSpaces) + "*/\n";
+                comment += this.repeatSpaces(nbSpaces) + "*/\r\n";
                 this.tsDefFileContent = this.tsDefFileContent.substr(0, startLinePosition + this.nbCharsAdded) + comment + this.tsDefFileContent.substr(startLinePosition + this.nbCharsAdded);
                 this.nbCharsAdded += comment.length;
             }
@@ -80,7 +83,7 @@ var TypeScriptDocGenerator = (function () {
                 if (c.members[i].name === memberName) {
                     var m = c.members[i];
                     var comments = [];
-                    comments = comments.concat(m.description.split("\n"));
+                    comments = comments.concat(this.cleanEndLine(m.description).split("\n"));
                     if ((m.default != null) && (m.default !== "")) {
                         comments.push("Default: " + m.default);
                     }
@@ -96,7 +99,7 @@ var TypeScriptDocGenerator = (function () {
         var c = this.findClass(className);
         if (c != null) {
             var comments = [];
-            comments = comments.concat(c.description.split("\n"));
+            comments = comments.concat(this.cleanEndLine(c.description).split("\n"));
             return comments;
         }
         else {
@@ -108,7 +111,7 @@ var TypeScriptDocGenerator = (function () {
         if (c != null) {
             var con = c.constructor;
             var comments = [];
-            comments = comments.concat(con.description.split("\n"));
+            comments = comments.concat(this.cleanEndLine(con.description).split("\n"));
             if (con.parameters.length > 0) {
                 comments.push("");
             }
@@ -121,7 +124,7 @@ var TypeScriptDocGenerator = (function () {
                 if ((p.default != null) && (p.default !== "")) {
                     def = " - Default: " + p.default;
                 }
-                var paramComments = p.description.split("\n");
+                var paramComments = this.cleanEndLine(p.description).split("\n");
                 for (var k = 0; k < paramComments.length; k++) {
                     if (k === 0) {
                         comments.push("@param " + p.name + " " + paramComments[k].trim() + ((k === paramComments.length - 1) ? def : ""));
@@ -144,7 +147,7 @@ var TypeScriptDocGenerator = (function () {
                 if (c.functions[i].name === functionName) {
                     var f = c.functions[i];
                     var comments = [];
-                    comments = comments.concat(f.description.split("\n"));
+                    comments = comments.concat(this.cleanEndLine(f.description).split("\n"));
                     if (f.parameters.length > 0) {
                         comments.push("");
                     }
@@ -158,7 +161,7 @@ var TypeScriptDocGenerator = (function () {
                             def = " - Default: " + p.default;
                         }
 
-                        var paramComments = p.description.split("\n");
+                        var paramComments = this.cleanEndLine(p.description).split("\n");
                         for (var k = 0; k < paramComments.length; k++)
                         {
                             if (k === 0)
@@ -173,7 +176,16 @@ var TypeScriptDocGenerator = (function () {
                         
                     }
                     if (f.returns != null) {
-                        comments.push("@return " + f.returns.description);
+                        var returnComments = this.cleanEndLine(f.returns.description).split("\n");
+                        for (var l = 0; l < returnComments.length; l++) {
+                            if (l === 0) {
+                                comments.push("@return " + returnComments[l].trim());
+                            }
+                            else
+                            {
+                                comments.push(this.repeatSpaces(("@return ").length) + returnComments[l].trim());
+                            }
+                        }
                     }
                     return comments;
                 }

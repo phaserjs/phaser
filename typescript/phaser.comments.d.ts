@@ -769,7 +769,7 @@ declare module Phaser {
 
     /**
     * A BitmapData object contains a Canvas element to which you can draw anything you like via normal Canvas context operations.
-    * A single BitmapData can be used as the texture for one or many Images/Sprites. 
+    * A single BitmapData can be used as the texture for one or many Images/Sprites.
     * So if you need to dynamically create a Sprite texture then they are a good choice.
     */
     class BitmapData {
@@ -777,7 +777,7 @@ declare module Phaser {
 
         /**
         * A BitmapData object contains a Canvas element to which you can draw anything you like via normal Canvas context operations.
-        * A single BitmapData can be used as the texture for one or many Images/Sprites. 
+        * A single BitmapData can be used as the texture for one or many Images/Sprites.
         * So if you need to dynamically create a Sprite texture then they are a good choice.
         * 
         * @param game A reference to the currently running game.
@@ -2992,7 +2992,7 @@ declare module Phaser {
 
         /**
         * The circumference of the circle.
-        * @return 
+        * @return
         */
         circumference(): number;
 
@@ -3236,7 +3236,7 @@ declare module Phaser {
         /**
         * Converts a hex string into a Phaser Color object.
         * 
-        * The hex string can supplied as `'#0033ff'` or the short-hand format of `'#03f'`; it can begin with an optional "#" or "0x", or be unprefixed.    
+        * The hex string can supplied as `'#0033ff'` or the short-hand format of `'#03f'`; it can begin with an optional "#" or "0x", or be unprefixed.
         * 
         * An alpha channel is _not_ supported.
         * 
@@ -3296,9 +3296,9 @@ declare module Phaser {
         * Converts a hue to an RGB color.
         * Based on code by Michael Jackson (https://github.com/mjijackson)
         * 
-        * @param p 
-        * @param q 
-        * @param t 
+        * @param p
+        * @param q
+        * @param t
         * @return The color component value.
         */
         static hueToColor(p: number, q: number, t: number): number;
@@ -5234,7 +5234,7 @@ declare module Phaser {
     * providing quick access to common functions and handling the boot process.
     * 
     * "Hell, there are no rules here - we're trying to accomplish something."
-    *                                                       Thomas A. Edison
+    * Thomas A. Edison
     */
     class Game {
 
@@ -5244,7 +5244,7 @@ declare module Phaser {
         * providing quick access to common functions and handling the boot process.
         * 
         * "Hell, there are no rules here - we're trying to accomplish something."
-        *                                                       Thomas A. Edison
+        * Thomas A. Edison
         * 
         * @param width The width of your game in game pixels. If given as a string the value must be between 0 and 100 and will be used as the percentage width of the parent container, or the browser window if no parent is given. - Default: 800
         * @param height The height of your game in game pixels. If given as a string the value must be between 0 and 100 and will be used as the percentage height of the parent container, or the browser window if no parent is given. - Default: 600
@@ -5262,7 +5262,7 @@ declare module Phaser {
         * providing quick access to common functions and handling the boot process.
         * 
         * "Hell, there are no rules here - we're trying to accomplish something."
-        *                                                       Thomas A. Edison
+        * Thomas A. Edison
         * 
         * @param width The width of your game in game pixels. If given as a string the value must be between 0 and 100 and will be used as the percentage width of the parent container, or the browser window if no parent is given. - Default: 800
         * @param height The height of your game in game pixels. If given as a string the value must be between 0 and 100 and will be used as the percentage height of the parent container, or the browser window if no parent is given. - Default: 600
@@ -5280,7 +5280,7 @@ declare module Phaser {
         * providing quick access to common functions and handling the boot process.
         * 
         * "Hell, there are no rules here - we're trying to accomplish something."
-        *                                                       Thomas A. Edison
+        * Thomas A. Edison
         * 
         * @param width The width of your game in game pixels. If given as a string the value must be between 0 and 100 and will be used as the percentage width of the parent container, or the browser window if no parent is given. - Default: 800
         * @param height The height of your game in game pixels. If given as a string the value must be between 0 and 100 and will be used as the percentage height of the parent container, or the browser window if no parent is given. - Default: 600
@@ -6154,7 +6154,7 @@ declare module Phaser {
         * @param points An array of {Phaser.Point}.
         * @param group Optional Group to add the object to. If not specified it will be added to the World group.
         * @return The newly created tileSprite object.
-Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/demo.js
+        * Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/demo.js
         */
         rope(x: number, y: number, key: any, frame?: any, points?: Phaser.Point[]): Phaser.Rope;
 
@@ -6430,7 +6430,7 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
         * 
         * @param context The context under which the callbacks are run.
         * @param callbacks Object that takes six different callback methods:
-        *                  onConnectCallback, onDisconnectCallback, onDownCallback, onUpCallback, onAxisCallback, onFloatCallback
+        * onConnectCallback, onDisconnectCallback, onDownCallback, onUpCallback, onAxisCallback, onFloatCallback
         */
         addCallbacks(context: any, callbacks: any): void;
 
@@ -6746,7 +6746,7 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
         * 
         * @param game A reference to the currently running game.
         * @param parent The parent Group (or other {@link DisplayObject}) that this group will be added to.
-        *               If undefined/unspecified the Group will be added to the {@link Phaser.Game#world Game World}; if null the Group will not be added to any parent. - Default: (game world)
+        * If undefined/unspecified the Group will be added to the {@link Phaser.Game#world Game World}; if null the Group will not be added to any parent. - Default: (game world)
         * @param name A name for this group. Not used internally but useful for debugging. - Default: 'group'
         * @param addToStage If true this group will be added directly to the Game.Stage instead of Game.World. - Default: false
         * @param enableBody If true all Sprites created with {@link #create} or {@link #createMulitple} will have a physics body created on them. Change the body type with {@link #physicsBodyType}. - Default: false
@@ -7102,7 +7102,7 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
         * 
         * Additional arguments for the callback can be specified after the `checkExists` parameter. For example,
         * 
-        *     Group.forEach(awardBonusGold, this, true, 100, 500)
+        * Group.forEach(awardBonusGold, this, true, 100, 500)
         * 
         * would invoke thee `awardBonusGolds` with the parameters `(child, 100, 500)`.
         * 
@@ -7153,10 +7153,10 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
         * 
         * For example:
         * 
-        *     var healthyList = Group.filter(function(child, index, children) {
-        *         return child.health > 10 ? true : false;
-        *     }, true);
-        *     healthyList.callAll('attack');
+        * var healthyList = Group.filter(function(child, index, children) {
+        * return child.health > 10 ? true : false;
+        * }, true);
+        * healthyList.callAll('attack');
         * 
         * Note: Currently this will skip any children which are Groups themselves.
         * 
@@ -7251,12 +7251,12 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
         * The result depends on the `returnType`:
         * 
         * - {@link Phaser.Group.RETURN_TOTAL RETURN_TOTAL}:
-        *     The callback, if any, is applied to all matching children. The number of matched children is returned.
+        * The callback, if any, is applied to all matching children. The number of matched children is returned.
         * - {@link Phaser.Group.RETURN_NONE RETURN_NONE}:
-        *     The callback, if any, is applied to all matching children. No value is returned.
+        * The callback, if any, is applied to all matching children. No value is returned.
         * - {@link Phaser.Group.RETURN_CHILD RETURN_CHILD}:
-        *     The callback, if any, is applied to the *first* matching child and the *first* matched child is returned.
-        *     If there is no matching child then null is returned.
+        * The callback, if any, is applied to the *first* matching child and the *first* matched child is returned.
+        * If there is no matching child then null is returned.
         * 
         * If `args` is specified it must be an array. The matched child will be assigned to the first
         * element and the entire array will be applied to the callback function.
@@ -8328,14 +8328,14 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
         /**
         * Warning: EXPERIMENTAL
         * 
-        * @param x 
+        * @param x
         */
         globalToLocalX(x: number): number;
 
         /**
         * Warning: EXPERIMENTAL
         * 
-        * @param y 
+        * @param y
         */
         globalToLocalY(y: number): number;
 
@@ -8459,7 +8459,7 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
         * Checks if the given pointer is both down and over the Sprite this InputHandler belongs to.
         * Use the `fastTest` flag is to quickly check just the bounding hit area even if `InputHandler.pixelPerfectOver` is `true`.
         * 
-        * @param pointer 
+        * @param pointer
         * @param fastTest Force a simple hit area check even if `pixelPerfectOver` is true for this object? - Default: false
         * @return True if the pointer is down, otherwise false.
         */
@@ -8469,9 +8469,9 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
         * Checks if the given pointer is over the Sprite this InputHandler belongs to.
         * Use the `fastTest` flag is to quickly check just the bounding hit area even if `InputHandler.pixelPerfectOver` is `true`.
         * 
-        * @param pointer 
+        * @param pointer
         * @param fastTest Force a simple hit area check even if `pixelPerfectOver` is true for this object? - Default: false
-        * @return 
+        * @return
         */
         checkPointerOver(pointer: Phaser.Pointer, fastTest?: boolean): boolean;
 
@@ -8493,7 +8493,7 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
         /**
         * If the pointer is currently over this Sprite this returns how long it has been there for in milliseconds.
         * 
-        * @param pointer 
+        * @param pointer
         * @return The number of milliseconds the pointer has been pressed down on the Sprite, or -1 if not over.
         */
         downDuration(pointer: Phaser.Pointer): number;
@@ -8532,43 +8532,43 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
         /**
         * Returns true if the pointer has left the Sprite within the specified delay time (defaults to 500ms, half a second)
         * 
-        * @param pointer 
+        * @param pointer
         * @param delay The time below which the pointer is considered as just out.
-        * @return 
+        * @return
         */
         justOut(pointer: number, delay: number): boolean;
 
         /**
         * Returns true if the pointer has entered the Sprite within the specified delay time (defaults to 500ms, half a second)
         * 
-        * @param pointer 
+        * @param pointer
         * @param delay The time below which the pointer is considered as just over.
-        * @return 
+        * @return
         */
         justOver(pointer: number, delay: number): boolean;
 
         /**
         * Returns true if the pointer has touched or clicked on the Sprite within the specified delay time (defaults to 500ms, half a second)
         * 
-        * @param pointer 
+        * @param pointer
         * @param delay The time below which the pointer is considered as just over.
-        * @return 
+        * @return
         */
         justPressed(pointer: number, delay: number): boolean;
 
         /**
         * Returns true if the pointer was touching this Sprite, but has been released within the specified delay time (defaults to 500ms, half a second)
         * 
-        * @param pointer 
+        * @param pointer
         * @param delay The time below which the pointer is considered as just out.
-        * @return 
+        * @return
         */
         justReleased(pointer: number, delay: number): boolean;
 
         /**
         * If the pointer is currently over this Sprite this returns how long it has been there for in milliseconds.
         * 
-        * @param pointer 
+        * @param pointer
         * @return The number of milliseconds the pointer has been over the Sprite, or -1 if not over.
         */
         overDuration(pointer: Phaser.Pointer): number;
@@ -8584,7 +8584,7 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
         /**
         * Is this sprite being dragged by the mouse or not?
         * 
-        * @param pointer 
+        * @param pointer
         * @return True if the pointer is dragging an object, otherwise false.
         */
         pointerDragged(pointer: Phaser.Pointer): boolean;
@@ -8609,31 +8609,31 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
         * A timestamp representing when the Pointer first touched the touchscreen.
         * 
         * @param pointer The index of the pointer to check. You can get this from Phaser.Pointer.id.
-        * @return 
+        * @return
         */
         pointerTimeDown(pointer: Phaser.Pointer): number;
 
         /**
         * A timestamp representing when the Pointer left the touchscreen.
         * 
-        * @param pointer 
-        * @return 
+        * @param pointer
+        * @return
         */
         pointerTimeOut(pointer: Phaser.Pointer): number;
 
         /**
         * A timestamp representing when the Pointer first touched the touchscreen.
         * 
-        * @param pointer 
-        * @return 
+        * @param pointer
+        * @return
         */
         pointerTimeOver(pointer: number): number;
 
         /**
         * A timestamp representing when the Pointer left the touchscreen.
         * 
-        * @param pointer 
-        * @return 
+        * @param pointer
+        * @return
         */
         pointerTimeUp(pointer: number): number;
 
@@ -8688,7 +8688,7 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
         /**
         * Called by Pointer when drag starts on this Sprite. Should not usually be called directly.
         * 
-        * @param pointer 
+        * @param pointer
         */
         startDrag(pointer: Phaser.Pointer): void;
 
@@ -8700,22 +8700,22 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
         /**
         * Called by Pointer when drag is stopped on this Sprite. Should not usually be called directly.
         * 
-        * @param pointer 
+        * @param pointer
         */
         stopDrag(pointer: Phaser.Pointer): void;
 
         /**
         * Update.
         * 
-        * @param pointer 
+        * @param pointer
         */
         update(pointer: Phaser.Pointer): void;
 
         /**
         * Updates the Pointer drag on this Sprite.
         * 
-        * @param pointer 
-        * @return 
+        * @param pointer
+        * @return
         */
         updateDrag(pointer: Phaser.Pointer): boolean;
 
@@ -9141,21 +9141,21 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
         /**
         * Process the keydown event.
         * 
-        * @param event 
+        * @param event
         */
         processKeyDown(event: KeyboardEvent): void;
 
         /**
         * Process the keypress event.
         * 
-        * @param event 
+        * @param event
         */
         processKeyPress(event: KeyboardEvent): void;
 
         /**
         * Process the keyup event.
         * 
-        * @param event 
+        * @param event
         */
         processKeyUp(event: KeyboardEvent): void;
 
@@ -9169,7 +9169,7 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
         /**
         * Removes an existing key capture.
         * 
-        * @param keycode 
+        * @param keycode
         */
         removeKeyCapture(keycode: number): void;
 
@@ -10010,10 +10010,10 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
         /**
         * Find the angle of a segment from (x1, y1) -> (x2, y2).
         * 
-        * @param x1 
-        * @param y1 
-        * @param x2 
-        * @param y2 
+        * @param x1
+        * @param y1
+        * @param x2
+        * @param y2
         * @return The angle, in radians.
         */
         static angleBetween(x1: number, y1: number, x2: number, y2: number): number;
@@ -10021,8 +10021,8 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
         /**
         * Find the angle of a segment from (point1.x, point1.y) -> (point2.x, point2.y).
         * 
-        * @param point1 
-        * @param point2 
+        * @param point1
+        * @param point2
         * @return The angle, in radians.
         */
         static angleBetweenPoints(point1: Phaser.Point, point2: Phaser.Point): number;
@@ -10032,10 +10032,10 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
         * Note that the difference between this method and Math.angleBetween is that this assumes the y coordinate travels
         * down the screen.
         * 
-        * @param x1 
-        * @param y1 
-        * @param x2 
-        * @param y2 
+        * @param x1
+        * @param y1
+        * @param x2
+        * @param y2
         * @return The angle, in radians.
         */
         static angleBetweenY(x1: number, y1: number, x2: number, y2: number): number;
@@ -10043,8 +10043,8 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
         /**
         * Find the angle of a segment from (point1.x, point1.y) -> (point2.x, point2.y).
         * 
-        * @param point1 
-        * @param point2 
+        * @param point1
+        * @param point2
         * @return The angle, in radians.
         */
         static angleBetweenPointsY(point1: Phaser.Point, point2: Phaser.Point): number;
@@ -10068,39 +10068,39 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
         /**
         * 
         * 
-        * @param n 
-        * @param i 
-        * @return 
+        * @param n
+        * @param i
+        * @return
         */
         static bernstein(n: number, i: number): number;
 
         /**
         * A Bezier Interpolation Method, mostly used by Phaser.Tween.
         * 
-        * @param v 
-        * @param k 
-        * @return 
+        * @param v
+        * @param k
+        * @return
         */
         static bezierInterpolation(v: number[], k: number): number;
 
         /**
         * Calculates a callmum rom value.
         * 
-        * @param p0 
-        * @param p1 
-        * @param p2 
-        * @param p3 
-        * @param t 
-        * @return 
+        * @param p0
+        * @param p1
+        * @param p2
+        * @param p3
+        * @param t
+        * @return
         */
         static catmullRom(p0: number, p1: number, p2: number, p3: number, t: number): number;
 
         /**
         * A Catmull Rom Interpolation Method, mostly used by Phaser.Tween.
         * 
-        * @param v 
-        * @param k 
-        * @return 
+        * @param v
+        * @param k
+        * @return
         */
         static catmullRomInterpolation(v: number[], k: number): number;
 
@@ -10122,7 +10122,7 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
         * @param value The value to round.
         * @param place The place to round to.
         * @param base The base to round in... default is 10 for decimal.
-        * @return 
+        * @return
         */
         static ceilTo(value: number, place?: number, base?: number): number;
 
@@ -10140,10 +10140,10 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
         /**
         * Force a value within the boundaries by clamping `x` to the range `[a, b]`.
         * 
-        * @param x 
-        * @param a 
-        * @param b 
-        * @return 
+        * @param x
+        * @param a
+        * @param b
+        * @return
         */
         static clamp(x: number, a: number, b: number): number;
 
@@ -10151,9 +10151,9 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
         * Clamp `x` to the range `[a, Infinity)`.
         * Roughly the same as `Math.max(x, a)`, except for NaN handling.
         * 
-        * @param x 
-        * @param a 
-        * @return 
+        * @param x
+        * @param a
+        * @return
         */
         static clampBottom(x: number, a: number): number;
 
@@ -10168,19 +10168,19 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
         /**
         * The (absolute) difference between two values.
         * 
-        * @param a 
-        * @param b 
-        * @return 
+        * @param a
+        * @param b
+        * @return
         */
         static difference(a: number, b: number): number;
 
         /**
         * Returns the euclidian distance between the two given set of coordinates.
         * 
-        * @param x1 
-        * @param y1 
-        * @param x2 
-        * @param y2 
+        * @param x1
+        * @param y1
+        * @param x2
+        * @param y2
         * @return The distance between the two sets of coordinates.
         */
         static distance(x1: number, y1: number, x2: number, y2: number): number;
@@ -10188,10 +10188,10 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
         /**
         * Returns the distance between the two given set of coordinates at the power given.
         * 
-        * @param x1 
-        * @param y1 
-        * @param x2 
-        * @param y2 
+        * @param x1
+        * @param y1
+        * @param x2
+        * @param y2
         * @param pow  - Default: 2
         * @return The distance between the two sets of coordinates.
         */
@@ -10200,10 +10200,10 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
         /**
         * Returns the rounded distance between the two given set of coordinates.
         * 
-        * @param x1 
-        * @param y1 
-        * @param x2 
-        * @param y2 
+        * @param x1
+        * @param y1
+        * @param x2
+        * @param y2
         * @return The distance between this Point object and the destination Point object.
         */
         static distanceRounded(x1: number, y1: number, x2: number, y2: number): number;
@@ -10212,7 +10212,7 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
         * 
         * 
         * @param value the number you want to evaluate
-        * @return 
+        * @return
         */
         static factorial(value: number): number;
 
@@ -10234,14 +10234,14 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
         * @param value The value to round.
         * @param place The place to round to.
         * @param base The base to round in... default is 10 for decimal.
-        * @return 
+        * @return
         */
         static floorTo(value: number, place: number, base: number): number;
 
         /**
         * 
         * 
-        * @param val 
+        * @param val
         * @param epsilon  - Default: (small value)
         * @return ceiling(val-epsilon)
         */
@@ -10250,8 +10250,8 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
         /**
         * Two number are fuzzyEqual if their difference is less than epsilon.
         * 
-        * @param a 
-        * @param b 
+        * @param a
+        * @param b
         * @param epsilon  - Default: (small value)
         * @return True if |a-b|<epsilon
         */
@@ -10260,8 +10260,8 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
         /**
         * `a` is fuzzyLessThan `b` if it is less than b + epsilon.
         * 
-        * @param a 
-        * @param b 
+        * @param a
+        * @param b
         * @param epsilon  - Default: (small value)
         * @return True if a<b+epsilon
         */
@@ -10270,7 +10270,7 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
         /**
         * 
         * 
-        * @param val 
+        * @param val
         * @param epsilon  - Default: (small value)
         * @return floor(val-epsilon)
         */
@@ -10279,8 +10279,8 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
         /**
         * `a` is fuzzyGreaterThan `b` if it is more than b - epsilon.
         * 
-        * @param a 
-        * @param b 
+        * @param a
+        * @param b
         * @param epsilon  - Default: (small value)
         * @return True if a>b+epsilon
         */
@@ -10289,8 +10289,8 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
         /**
         * `a` is fuzzyLessThan `b` if it is less than b + epsilon.
         * 
-        * @param a 
-        * @param b 
+        * @param a
+        * @param b
         * @param epsilon  - Default: (small value)
         * @return True if a<b+epsilon
         */
@@ -10312,10 +10312,10 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
         /**
         * A one dimensional linear interpolation of a value.
         * 
-        * @param a 
-        * @param b 
-        * @param weight 
-        * @return 
+        * @param a
+        * @param b
+        * @param weight
+        * @return
         */
         static interpolateFloat(a: number, b: number, weight: number): number;
 
@@ -10338,19 +10338,19 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
         /**
         * Calculates a linear (interpolation) value over t.
         * 
-        * @param p0 
-        * @param p1 
-        * @param t 
-        * @return 
+        * @param p0
+        * @param p1
+        * @param t
+        * @return
         */
         static linear(p0: number, p1: number, t: number): number;
 
         /**
         * A Linear Interpolation Method, mostly used by Phaser.Tween.
         * 
-        * @param v 
-        * @param k 
-        * @return 
+        * @param v
+        * @param k
+        * @return
         */
         static linearInterpolation(v: number[], k: number): number;
 
@@ -10372,7 +10372,7 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
         * @param a2 final endpoint of the range <a1, a2>
         * @param b1 first endpoint of the range <b1, b2>
         * @param b2 final endpoint of the range  <b1, b2>
-        * @return 
+        * @return
         */
         static mapLinear(x: number, a1: number, a2: number, b1: number, b2: number): number;
 
@@ -10390,7 +10390,7 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
         * @param value The value to add the amount to.
         * @param amount The amount to add to the value.
         * @param max The maximum the value is allowed to be.
-        * @return 
+        * @return
         */
         static maxAdd(value: number, amount: number, max: number): number;
 
@@ -10402,7 +10402,7 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
         static maxProperty(...numbers: number[]): number;
 
         /**
-        * Variation of Math.min that can be passed either an array of numbers or the numbers as parameters.    
+        * Variation of Math.min that can be passed either an array of numbers or the numbers as parameters.
         * 
         * Prefer the standard `Math.min` function when appropriate.
         * @return The lowest value from those given.
@@ -10531,27 +10531,27 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
         * Round to some place comparative to a `base`, default is 10 for decimal place.
         * The `place` is represented by the power applied to `base` to get that place.
         * 
-        *     e.g. 2000/7 ~= 285.714285714285714285714 ~= (bin)100011101.1011011011011011
+        * e.g. 2000/7 ~= 285.714285714285714285714 ~= (bin)100011101.1011011011011011
         * 
-        *     roundTo(2000/7,3) === 0
-        *     roundTo(2000/7,2) == 300
-        *     roundTo(2000/7,1) == 290
-        *     roundTo(2000/7,0) == 286
-        *     roundTo(2000/7,-1) == 285.7
-        *     roundTo(2000/7,-2) == 285.71
-        *     roundTo(2000/7,-3) == 285.714
-        *     roundTo(2000/7,-4) == 285.7143
-        *     roundTo(2000/7,-5) == 285.71429
+        * roundTo(2000/7,3) === 0
+        * roundTo(2000/7,2) == 300
+        * roundTo(2000/7,1) == 290
+        * roundTo(2000/7,0) == 286
+        * roundTo(2000/7,-1) == 285.7
+        * roundTo(2000/7,-2) == 285.71
+        * roundTo(2000/7,-3) == 285.714
+        * roundTo(2000/7,-4) == 285.7143
+        * roundTo(2000/7,-5) == 285.71429
         * 
-        *     roundTo(2000/7,3,2)  == 288       -- 100100000
-        *     roundTo(2000/7,2,2)  == 284       -- 100011100
-        *     roundTo(2000/7,1,2)  == 286       -- 100011110
-        *     roundTo(2000/7,0,2)  == 286       -- 100011110
-        *     roundTo(2000/7,-1,2) == 285.5     -- 100011101.1
-        *     roundTo(2000/7,-2,2) == 285.75    -- 100011101.11
-        *     roundTo(2000/7,-3,2) == 285.75    -- 100011101.11
-        *     roundTo(2000/7,-4,2) == 285.6875  -- 100011101.1011
-        *     roundTo(2000/7,-5,2) == 285.71875 -- 100011101.10111
+        * roundTo(2000/7,3,2)  == 288       -- 100100000
+        * roundTo(2000/7,2,2)  == 284       -- 100011100
+        * roundTo(2000/7,1,2)  == 286       -- 100011110
+        * roundTo(2000/7,0,2)  == 286       -- 100011110
+        * roundTo(2000/7,-1,2) == 285.5     -- 100011101.1
+        * roundTo(2000/7,-2,2) == 285.75    -- 100011101.11
+        * roundTo(2000/7,-3,2) == 285.75    -- 100011101.11
+        * roundTo(2000/7,-4,2) == 285.6875  -- 100011101.1011
+        * roundTo(2000/7,-5,2) == 285.71875 -- 100011101.10111
         * 
         * Note what occurs when we round to the 3rd space (8ths place), 100100000, this is to be assumed
         * because we are rounding 100011.1011011011011011 which rounds up.
@@ -10559,14 +10559,14 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
         * @param value The value to round.
         * @param place The place to round to.
         * @param base The base to round in... default is 10 for decimal.
-        * @return 
+        * @return
         */
         static roundTo(value: number, place?: number, base?: number): number;
 
         /**
         * 
         * 
-        * @param n 
+        * @param n
         * @return n mod 1
         */
         static shear(n: number): number;
@@ -10592,7 +10592,7 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
         * 
         * This works differently from `Math.sign` for values of NaN and -0, etc.
         * 
-        * @param x 
+        * @param x
         * @return An integer in {-1, 0, 1}
         */
         static sign(x: number): number;
@@ -10614,20 +10614,20 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
         /**
         * Smootherstep function as detailed at http://en.wikipedia.org/wiki/Smoothstep
         * 
-        * @param x 
-        * @param min 
-        * @param max 
-        * @return 
+        * @param x
+        * @param min
+        * @param max
+        * @return
         */
         static smootherstep(x: number, min: number, max: number): number;
 
         /**
         * Smoothstep function as detailed at http://en.wikipedia.org/wiki/Smoothstep
         * 
-        * @param x 
-        * @param min 
-        * @param max 
-        * @return 
+        * @param x
+        * @param min
+        * @param max
+        * @return
         */
         static smoothstep(x: number, min: number, max: number): number;
 
@@ -10639,7 +10639,7 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
         * @param input The value to snap.
         * @param gap The interval gap of the grid.
         * @param start Optional starting offset for gap.
-        * @return 
+        * @return
         */
         static snapTo(input: number, gap: number, start?: number): number;
 
@@ -10651,7 +10651,7 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
         * @param input The value to snap.
         * @param gap The interval gap of the grid.
         * @param start Optional starting offset for gap.
-        * @return 
+        * @return
         */
         static snapToCeil(input: number, gap: number, start?: number): number;
 
@@ -10663,25 +10663,25 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
         * @param input The value to snap.
         * @param gap The interval gap of the grid.
         * @param start Optional starting offset for gap.
-        * @return 
+        * @return
         */
         static snapToFloor(input: number, gap: number, start?: number): number;
 
         /**
         * Snaps a value to the nearest value in an array.
         * 
-        * @param input 
-        * @param arr 
+        * @param input
+        * @param arr
         * @param sort True if the array needs to be sorted.
-        * @return 
+        * @return
         */
         static snapToInArray(input: number, arr: number[], sort?: boolean): number;
 
         /**
         * 
         * 
-        * @param n 
-        * @return 
+        * @param n
+        * @return
         */
         static truncate(n: number): number;
 
@@ -11064,7 +11064,7 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
         * You can specify a part of a domain, for example 'google' would match 'google.com', 'google.co.uk', etc.
         * Do not include 'http://' at the start.
         * 
-        * @param domain 
+        * @param domain
         * @return true if the given domain fragment can be found in the window.location.hostname
         */
         checkDomainName(domain: string): boolean;
@@ -11080,7 +11080,7 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
 
         /**
         * Returns the hostname given by the browser.
-        * @return 
+        * @return
         */
         getHostName(): string;
 
@@ -11692,8 +11692,8 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
         * Both Ninja Physics and Box2D require their respective plugins to be loaded before you can start them.
         * They are not bundled into the core Phaser library.
         * 
-        * If the physics world has already been created (i.e. in another state in your game) then 
-        * calling startSystem will reset the physics world, not re-create it. If you need to start them again from their constructors 
+        * If the physics world has already been created (i.e. in another state in your game) then
+        * calling startSystem will reset the physics world, not re-create it. If you need to start them again from their constructors
         * then set Phaser.Physics.p2 (or whichever system you want to recreate) to `null` before calling `startSystem`.
         * 
         * @param system The physics system to start: Phaser.Physics.ARCADE, Phaser.Physics.P2JS, Phaser.Physics.NINJA or Phaser.Physics.BOX2D.
@@ -13780,8 +13780,8 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
             * @param options.skipSimpleCheck Set to true if you already know that the path is not intersecting itself. - Default: false
             * @param options.removeCollinearPoints Set to a number (angle threshold value) to remove collinear points, or false to keep all points. - Default: false
             * @param points An array of 2d vectors that form the convex or concave polygon.
-            *               Either [[0,0], [0,1],...] or a flat array of numbers that will be interpreted as [x,y, x,y, ...],
-            *               or the arguments passed can be flat x,y values e.g. `setPolygon(options, x,y, x,y, x,y, ...)` where `x` and `y` are numbers.
+            * Either [[0,0], [0,1],...] or a flat array of numbers that will be interpreted as [x,y, x,y, ...],
+            * or the arguments passed can be flat x,y values e.g. `setPolygon(options, x,y, x,y, x,y, ...)` where `x` and `y` are numbers.
             * @return The body
             */
             createBody(x: number, y: number, mass: number, addToWorld?: boolean, options?: p2.BodyOptions, data?: number[][]): Phaser.Physics.P2.Body;
@@ -13798,8 +13798,8 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
             * @param options.skipSimpleCheck Set to true if you already know that the path is not intersecting itself. - Default: false
             * @param options.removeCollinearPoints Set to a number (angle threshold value) to remove collinear points, or false to keep all points. - Default: false
             * @param points An array of 2d vectors that form the convex or concave polygon.
-            *               Either [[0,0], [0,1],...] or a flat array of numbers that will be interpreted as [x,y, x,y, ...],
-            *               or the arguments passed can be flat x,y values e.g. `setPolygon(options, x,y, x,y, x,y, ...)` where `x` and `y` are numbers.
+            * Either [[0,0], [0,1],...] or a flat array of numbers that will be interpreted as [x,y, x,y, ...],
+            * or the arguments passed can be flat x,y values e.g. `setPolygon(options, x,y, x,y, x,y, ...)` where `x` and `y` are numbers.
             * @return The body
             */
             createBody(x: number, y: number, mass: number, addToWorld?: boolean, options?: p2.BodyOptions, data?: number[]): Phaser.Physics.P2.Body;
@@ -13889,8 +13889,8 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
             * @param options.skipSimpleCheck Set to true if you already know that the path is not intersecting itself. - Default: false
             * @param options.removeCollinearPoints Set to a number (angle threshold value) to remove collinear points, or false to keep all points. - Default: false
             * @param points An array of 2d vectors that form the convex or concave polygon.
-            *               Either [[0,0], [0,1],...] or a flat array of numbers that will be interpreted as [x,y, x,y, ...],
-            *               or the arguments passed can be flat x,y values e.g. `setPolygon(options, x,y, x,y, x,y, ...)` where `x` and `y` are numbers.
+            * Either [[0,0], [0,1],...] or a flat array of numbers that will be interpreted as [x,y, x,y, ...],
+            * or the arguments passed can be flat x,y values e.g. `setPolygon(options, x,y, x,y, x,y, ...)` where `x` and `y` are numbers.
             */
             createParticle(x: number, y: number, mass: number, addToWorld?: boolean, options?: p2.BodyOptions, data?: number[][]): Phaser.Physics.P2.Body;
 
@@ -13906,8 +13906,8 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
             * @param options.skipSimpleCheck Set to true if you already know that the path is not intersecting itself. - Default: false
             * @param options.removeCollinearPoints Set to a number (angle threshold value) to remove collinear points, or false to keep all points. - Default: false
             * @param points An array of 2d vectors that form the convex or concave polygon.
-            *               Either [[0,0], [0,1],...] or a flat array of numbers that will be interpreted as [x,y, x,y, ...],
-            *               or the arguments passed can be flat x,y values e.g. `setPolygon(options, x,y, x,y, x,y, ...)` where `x` and `y` are numbers.
+            * Either [[0,0], [0,1],...] or a flat array of numbers that will be interpreted as [x,y, x,y, ...],
+            * or the arguments passed can be flat x,y values e.g. `setPolygon(options, x,y, x,y, x,y, ...)` where `x` and `y` are numbers.
             */
             createParticle(x: number, y: number, mass: number, addToWorld?: boolean, options?: p2.BodyOptions, data?: number[]): Phaser.Physics.P2.Body;
 
@@ -14510,8 +14510,8 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
                 * @param options.skipSimpleCheck Set to true if you already know that the path is not intersecting itself. - Default: false
                 * @param options.removeCollinearPoints Set to a number (angle threshold value) to remove collinear points, or false to keep all points. - Default: false
                 * @param points An array of 2d vectors that form the convex or concave polygon.
-                *               Either [[0,0], [0,1],...] or a flat array of numbers that will be interpreted as [x,y, x,y, ...],
-                *               or the arguments passed can be flat x,y values e.g. `setPolygon(options, x,y, x,y, x,y, ...)` where `x` and `y` are numbers.
+                * Either [[0,0], [0,1],...] or a flat array of numbers that will be interpreted as [x,y, x,y, ...],
+                * or the arguments passed can be flat x,y values e.g. `setPolygon(options, x,y, x,y, x,y, ...)` where `x` and `y` are numbers.
                 * @return True on success, else false.
                 */
                 addPolygon(options: { optimalDecomp?: boolean; skipSimpleCheck?: boolean; removeCollinearPoints?: boolean; }, points: number[][]): boolean;
@@ -15232,22 +15232,24 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
 
 
             /**
-            * Connects two bodies at given offset points, letting them rotate relative to each other around this point.
+            * Constraint that only allows bodies to move along a line, relative to each other. See <a href="http://www.iforce2d.net/b2dtut/joints-prismatic">this tutorial</a>.
             */
             class PrismaticConstraint extends p2.PrismaticConstraint {
 
 
                 /**
-                * Connects two bodies at given offset points, letting them rotate relative to each other around this point.
+                * Constraint that only allows bodies to move along a line, relative to each other. See <a href="http://www.iforce2d.net/b2dtut/joints-prismatic">this tutorial</a>.
                 * 
-                * @param world A reference to the P2 World.
-                * @param bodyA First connected body.
-                * @param bodyB Second connected body.
-                * @param lockRotation If set to false, bodyB will be free to rotate around its anchor point. - Default: true
-                * @param anchorA Body A's anchor point, defined in its own local frame. The value is an array with 2 elements matching x and y, i.e: [32, 32].
-                * @param anchorB Body A's anchor point, defined in its own local frame. The value is an array with 2 elements matching x and y, i.e: [32, 32].
-                * @param axis An axis, defined in body A frame, that body B's anchor point may slide along. The value is an array with 2 elements matching x and y, i.e: [32, 32].
-                * @param maxForce The maximum force that should be applied to constrain the bodies.
+                * @param bodyA
+                * @param bodyB
+                * @param options
+                * @param options.maxForce Max force to be applied by the constraint
+                * @param options.localAnchorA Body A's anchor point, defined in its own local frame.
+                * @param options.localAnchorB Body B's anchor point, defined in its own local frame.
+                * @param options.localAxisA An axis, defined in body A frame, that body B's anchor point may slide along.
+                * @param options.disableRotationalLock If set to true, bodyB will be free to rotate around its anchor point.
+                * @param options.upperLimit
+                * @param options.lowerLimit
                 */
                 constructor(world: Phaser.Physics.P2, bodyA?: Phaser.Physics.P2.Body, bodyB?: Phaser.Physics.P2.Body, lockRotation?: boolean, anchorA?: number[], anchorB?: number[], axis?: number[], maxForce?: number);
 
@@ -15275,24 +15277,23 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
 
 
             /**
-            * Creates a linear spring, connecting two bodies. A spring can have a resting length, a stiffness and damping.
+            * A spring, connecting two bodies. The Spring explicitly adds force and angularForce to the bodies and does therefore not put load on the constraint solver.
             */
             class Spring {
 
 
                 /**
-                * Creates a linear spring, connecting two bodies. A spring can have a resting length, a stiffness and damping.
+                * A spring, connecting two bodies. The Spring explicitly adds force and angularForce to the bodies and does therefore not put load on the constraint solver.
                 * 
-                * @param world A reference to the P2 World.
-                * @param bodyA First connected body.
-                * @param bodyB Second connected body.
-                * @param restLength Rest length of the spring. A number > 0. - Default: 1
-                * @param stiffness Stiffness of the spring. A number >= 0. - Default: 100
-                * @param damping Damping of the spring. A number >= 0. - Default: 1
-                * @param worldA Where to hook the spring to body A in world coordinates. This value is an array with 2 elements matching x and y, i.e: [32, 32].
-                * @param worldB Where to hook the spring to body B in world coordinates. This value is an array with 2 elements matching x and y, i.e: [32, 32].
-                * @param localA Where to hook the spring to body A in local body coordinates. This value is an array with 2 elements matching x and y, i.e: [32, 32].
-                * @param localB Where to hook the spring to body B in local body coordinates. This value is an array with 2 elements matching x and y, i.e: [32, 32].
+                * @param bodyA
+                * @param bodyB
+                * @param options
+                * @param options.stiffness Spring constant (see Hookes Law). A number >= 0. - Default: 100
+                * @param options.damping A number >= 0. Default: 1 - Default: 1
+                * @param options.localAnchorA Where to hook the spring to body A, in local body coordinates. Defaults to the body center.
+                * @param options.localAnchorB
+                * @param options.worldAnchorA Where to hook the spring to body A, in world coordinates. Overrides the option "localAnchorA" if given.
+                * @param options.worldAnchorB
                 */
                 constructor(world: Phaser.Physics.P2, bodyA: Phaser.Physics.P2.Body, bodyB: Phaser.Physics.P2.Body, restLength?: number, stiffness?: number, damping?: number, worldA?: number[], worldB?: number[], localA?: number[], localB?: number[]);
 
@@ -16660,9 +16661,9 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
     * Based on Nonsense by Josh Faul https://github.com/jocafa/Nonsense.
     * 
     * The random number genererator is based on the Alea PRNG, but is modified.
-    *  - https://github.com/coverslide/node-alea
-    *  - https://github.com/nquinlan/better-random-numbers-for-javascript-mirror
-    *  - http://baagoe.org/en/wiki/Better_random_numbers_for_javascript (original, perm. 404)
+    * - https://github.com/coverslide/node-alea
+    * - https://github.com/nquinlan/better-random-numbers-for-javascript-mirror
+    * - http://baagoe.org/en/wiki/Better_random_numbers_for_javascript (original, perm. 404)
     */
     class RandomDataGenerator {
 
@@ -16673,9 +16674,9 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
         * Based on Nonsense by Josh Faul https://github.com/jocafa/Nonsense.
         * 
         * The random number genererator is based on the Alea PRNG, but is modified.
-        *  - https://github.com/coverslide/node-alea
-        *  - https://github.com/nquinlan/better-random-numbers-for-javascript-mirror
-        *  - http://baagoe.org/en/wiki/Better_random_numbers_for_javascript (original, perm. 404)
+        * - https://github.com/coverslide/node-alea
+        * - https://github.com/nquinlan/better-random-numbers-for-javascript-mirror
+        * - http://baagoe.org/en/wiki/Better_random_numbers_for_javascript (original, perm. 404)
         * 
         * @param seeds An array of values to use as the seed.
         */
@@ -16914,7 +16915,7 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
         * Returns a new Rectangle object with the same values for the x, y, width, and height properties as the original Rectangle object.
         * 
         * @param output Optional Rectangle object. If given the values will be set into the object, otherwise a brand new Rectangle object will be created and returned.
-        * @return 
+        * @return
         */
         static clone(a: Phaser.Rectangle, output?: Phaser.Rectangle): Phaser.Rectangle;
 
@@ -17046,7 +17047,7 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
         * Returns a new Rectangle object with the same values for the x, y, width, and height properties as the original Rectangle object.
         * 
         * @param output Optional Rectangle object. If given the values will be set into the object, otherwise a brand new Rectangle object will be created and returned.
-        * @return 
+        * @return
         */
         clone(output: Phaser.Rectangle): Phaser.Rectangle;
 
@@ -17300,13 +17301,13 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
 
         /**
         * Is the browser using requestAnimationFrame?
-        * @return 
+        * @return
         */
         isRAF(): boolean;
 
         /**
         * Is the browser using setTimeout?
-        * @return 
+        * @return
         */
         isSetTimeOut(): boolean;
 
@@ -18117,7 +18118,7 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
         * 
         * @param context The context under which the callbacks are run.
         * @param callbacks Object that takes six different callbak methods:
-        *                  onConnectCallback, onDisconnectCallback, onDownCallback, onUpCallback, onAxisCallback, onFloatCallback
+        * onConnectCallback, onDisconnectCallback, onDownCallback, onUpCallback, onAxisCallback, onFloatCallback
         */
         addCallbacks(context: any, callbacks: any): void;
 
@@ -18505,7 +18506,7 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
 
         /**
         * Fades the volume of this Sound from its current value to the given volume over the duration specified.
-        * At the end of the fade Sound.onFadeComplete is dispatched with this Sound object as the first parameter, 
+        * At the end of the fade Sound.onFadeComplete is dispatched with this Sound object as the first parameter,
         * and the final volume (volume) as the second parameter.
         * 
         * @param duration The time in milliseconds during which the Sound should fade out. - Default: 1000
@@ -19324,7 +19325,7 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
     * 
     * The calculations of these are heavily influenced by the bounding Parent size which is the computed
     * dimensions of the Display canvas's Parent container/element - the _effective CSS rules of the
-    * canvas's Parent element play an important role_ in the operation of the ScaleManager. 
+    * canvas's Parent element play an important role_ in the operation of the ScaleManager.
     * 
     * The Display canvas - or Game size, depending {@link Phaser.ScaleManager#scaleMode scaleMode} - is updated to best utilize the Parent size.
     * When in Fullscreen mode or with {@link Phaser.ScaleManager#parentIsWindow parentIsWindow} the Parent size is that of the visual viewport (see {@link Phaser.ScaleManager#getParentBounds getParentBounds}).
@@ -19332,17 +19333,17 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
     * Parent and Display canvas containment guidelines:
     * 
     * - Style the Parent element (of the game canvas) to control the Parent size and
-    *   thus the Display canvas's size and layout.
+    * thus the Display canvas's size and layout.
     * 
     * - The Parent element's CSS styles should _effectively_ apply maximum (and minimum) bounding behavior.
     * 
     * - The Parent element should _not_ apply a padding as this is not accounted for.
-    *   If a padding is required apply it to the Parent's parent or apply a margin to the Parent.
-    *   If you need to add a border, margin or any other CSS around your game container, then use a parent element and
-    *   apply the CSS to this instead, otherwise you'll be constantly resizing the shape of the game container.
+    * If a padding is required apply it to the Parent's parent or apply a margin to the Parent.
+    * If you need to add a border, margin or any other CSS around your game container, then use a parent element and
+    * apply the CSS to this instead, otherwise you'll be constantly resizing the shape of the game container.
     * 
     * - The Display canvas layout CSS styles (i.e. margins, size) should not be altered/specified as
-    *   they may be updated by the ScaleManager.
+    * they may be updated by the ScaleManager.
     */
     class ScaleManager {
 
@@ -19480,7 +19481,7 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
         forceLandscape: boolean;
 
         /**
-        * If true, the game should only run in a portrait 
+        * If true, the game should only run in a portrait
         * Change with {@link Phaser.ScaleManager#forceOrientation forceOrientation}.
         * Default: false
         */
@@ -19616,7 +19617,7 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
         * 
         * If `targetElement` is _not_ the same element as {@link Phaser.ScaleManager#fullScreenTarget fullScreenTarget}:
         * - After initialization the Display canvas is moved onto the `targetElement` for
-        *   the duration of the fullscreen mode, and restored to it's original DOM location when fullscreen is exited.
+        * the duration of the fullscreen mode, and restored to it's original DOM location when fullscreen is exited.
         * - The `targetElement` is moved/re-parented within the DOM and may have its CSS styles updated.
         * 
         * The behavior of a pre-assigned target element is covered in {@link Phaser.ScaleManager#fullScreenTarget fullScreenTarget}.
@@ -19650,10 +19651,10 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
         * Access the current orientation and validity with `scale.screenOrientation` and `scale.incorrectOrientation`.
         * Thus the following tests can be done:
         * 
-        *     // The orientation itself changed:
-        *     scale.screenOrientation !== prevOrientation
-        *     // The orientation just became incorrect:
-        *     scale.incorrectOrientation && !wasIncorrect
+        * // The orientation itself changed:
+        * scale.screenOrientation !== prevOrientation
+        * // The orientation just became incorrect:
+        * scale.incorrectOrientation && !wasIncorrect
         * 
         * It is possible that this signal is triggered after {@link Phaser.ScaleManager#forceOrientation forceOrientation} so the orientation
         * correctness changes even if the orientation itself does not change.
@@ -19663,7 +19664,7 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
         onOrientationChange: Phaser.Signal;
 
         /**
-        * This signal is dispatched when the size of the Display canvas changes _or_ the size of the Game changes. 
+        * This signal is dispatched when the size of the Display canvas changes _or_ the size of the Game changes.
         * When invoked this is done _after_ the Canvas size/position have been updated.
         * 
         * This signal is _only_ called when a change occurs and a reflow may be required.
@@ -19745,34 +19746,34 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
         * The scaling method used by the ScaleManager when not in fullscreen.
         * 
         * <dl>
-        *   <dt>{@link Phaser.ScaleManager.NO_SCALE}</dt>
-        *   <dd>
-        *       The Game display area will not be scaled - even if it is too large for the canvas/screen.
-        *       This mode _ignores_ any applied scaling factor and displays the canvas at the Game size.
-        *   </dd>
-        *   <dt>{@link Phaser.ScaleManager.EXACT_FIT}</dt>
-        *   <dd>
-        *       The Game display area will be _stretched_ to fill the entire size of the canvas's parent element and/or screen.
-        *       Proportions are not mainted.
-        *   </dd>
-        *   <dt>{@link Phaser.ScaleManager.SHOW_ALL}</dt>
-        *   <dd>
-        *       Show the entire game display area while _maintaining_ the original aspect ratio.
-        *   </dd>
-        *   <dt>{@link Phaser.ScaleManager.RESIZE}</dt>
-        *   <dd>
-        *       The dimensions of the game display area are changed to match the size of the parent container.
-        *       That is, this mode _changes the Game size_ to match the display size.
-        *       <p>
-        *       Any manually set Game size (see {@link Phaser.ScaleManager#setGameSize setGameSize}) is ignored while in effect.
-        *   </dd>
-        *   <dt>{@link Phaser.ScaleManager.USER_SCALE}</dt>
-        *   <dd>
-        *       The game Display is scaled according to the user-specified scale set by {@link Phaser.ScaleManager#setUserScale setUserScale}.
-        *       <p>
-        *       This scale can be adjusted in the {@link Phaser.ScaleManager#setResizeCallback resize callback}
-        *       for flexible custom-sizing needs.
-        *   </dd>
+        * <dt>{@link Phaser.ScaleManager.NO_SCALE}</dt>
+        * <dd>
+        * The Game display area will not be scaled - even if it is too large for the canvas/screen.
+        * This mode _ignores_ any applied scaling factor and displays the canvas at the Game size.
+        * </dd>
+        * <dt>{@link Phaser.ScaleManager.EXACT_FIT}</dt>
+        * <dd>
+        * The Game display area will be _stretched_ to fill the entire size of the canvas's parent element and/or screen.
+        * Proportions are not mainted.
+        * </dd>
+        * <dt>{@link Phaser.ScaleManager.SHOW_ALL}</dt>
+        * <dd>
+        * Show the entire game display area while _maintaining_ the original aspect ratio.
+        * </dd>
+        * <dt>{@link Phaser.ScaleManager.RESIZE}</dt>
+        * <dd>
+        * The dimensions of the game display area are changed to match the size of the parent container.
+        * That is, this mode _changes the Game size_ to match the display size.
+        * <p>
+        * Any manually set Game size (see {@link Phaser.ScaleManager#setGameSize setGameSize}) is ignored while in effect.
+        * </dd>
+        * <dt>{@link Phaser.ScaleManager.USER_SCALE}</dt>
+        * <dd>
+        * The game Display is scaled according to the user-specified scale set by {@link Phaser.ScaleManager#setUserScale setUserScale}.
+        * <p>
+        * This scale can be adjusted in the {@link Phaser.ScaleManager#setResizeCallback resize callback}
+        * for flexible custom-sizing needs.
+        * </dd>
         * </dl>
         */
         scaleMode: number;
@@ -19931,7 +19932,7 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
         * This callback
         * - May be invoked even though the parent container or canvas sizes have not changed
         * - Unlike {@link Phaser.ScaleManager#onSizeChange onSizeChange}, it runs _before_ the canvas is guaranteed to be updated
-        * - Will be invoked from `preUpdate`, _even when_ the game is paused    
+        * - Will be invoked from `preUpdate`, _even when_ the game is paused
         * 
         * See {@link Phaser.ScaleManager#onSizeChange onSizeChange} for a better way of reacting to layout updates.
         * 
@@ -19945,8 +19946,8 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
         * 
         * The target canvas size is computed by:
         * 
-        *     canvas.width = (game.width * hScale) - hTrim
-        *     canvas.height = (game.height * vScale) - vTrim
+        * canvas.width = (game.width * hScale) - hTrim
+        * canvas.height = (game.height * vScale) - vTrim
         * 
         * This method can be used in the {@link Phaser.ScaleManager#setResizeCallback resize callback}.
         * 
@@ -20057,19 +20058,19 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
 
 
         /**
-        * The bounds of the Visual viewport, as discussed in 
+        * The bounds of the Visual viewport, as discussed in
         * {@link http://www.quirksmode.org/mobile/viewports.html A tale of two viewports — part one}
-        * with one difference: the viewport size _excludes_ scrollbars, as found on some desktop browsers.   
+        * with one difference: the viewport size _excludes_ scrollbars, as found on some desktop browsers.
         * 
         * Supported mobile:
-        *   iOS/Safari, Android 4, IE10, Firefox OS (maybe not Firefox Android), Opera Mobile 16
+        * iOS/Safari, Android 4, IE10, Firefox OS (maybe not Firefox Android), Opera Mobile 16
         * 
         * The properties change dynamically.
         */
         static visualBounds: Phaser.Rectangle;
 
         /**
-        * The bounds of the Layout viewport, as discussed in 
+        * The bounds of the Layout viewport, as discussed in
         * {@link http://www.quirksmode.org/mobile/viewports2.html A tale of two viewports — part two};
         * but honoring the constraints as specified applicable viewport meta-tag.
         * 
@@ -21244,7 +21245,7 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
         /**
         * Creates a Sprite for every object matching the given tile indexes in the map data.
         * You can specify the group that the Sprite will be created in. If none is given it will be created in the World.
-        * You can optional specify if the tile will be replaced with another after the Sprite is created. This is useful if you want to lay down special 
+        * You can optional specify if the tile will be replaced with another after the Sprite is created. This is useful if you want to lay down special
         * tiles in a level that are converted to Sprites, but want to replace the tile itself with a floor tile or similar once converted.
         * 
         * @param tiles The tile index, or array of indexes, to create Sprites from.
@@ -21583,7 +21584,7 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
         setLayer(layer: any): void;
 
         /**
-        * Turn off/on the recalculation of faces for tile or collision updates. 
+        * Turn off/on the recalculation of faces for tile or collision updates.
         * `setPreventRecalculate(true)` puts recalculation on hold while `setPreventRecalculate(false)` recalculates all the changed layers.
         * 
         * @param value If true it will put the recalculation on hold.
@@ -22389,7 +22390,7 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
         * An increasing value representing cumulative milliseconds since an undisclosed epoch.
         * 
         * While this value is in milliseconds and can be used to compute time deltas,
-        * it must must _not_ be used with `Date.now()` as it may not use the same epoch / starting reference. 
+        * it must must _not_ be used with `Date.now()` as it may not use the same epoch / starting reference.
         * 
         * The source may either be from a high-res source (eg. if RAF is available) or the standard Date.now;
         * the value can only be relied upon within a particular game instance.
@@ -22405,7 +22406,7 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
 
         /**
         * The physics update delta, in fractional seconds.
-        *    
+        * 
         * This should be used as an applicable multiplier by all logic update steps (eg. `preUpdate/postUpdate/update`)
         * to ensure consistent game timing. Game/logic timing can drift from real-world time if the system
         * is unable to consistently maintain the desired FPS.
@@ -22702,7 +22703,7 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
         remove(event: Phaser.TimerEvent): boolean;
 
         /**
-        * Removes all Events from this Timer and all callbacks linked to onComplete, but leaves the Timer running.    
+        * Removes all Events from this Timer and all callbacks linked to onComplete, but leaves the Timer running.
         * The onComplete callbacks won't be called.
         */
         removeAll(): void;
@@ -24138,8 +24139,20 @@ Example usage: https://github.com/codevinsky/phaser-rope-demo/blob/master/dist/d
 
 declare module p2 {
 
+
+    /**
+    * Axis aligned bounding box class.
+    */
     export class AABB {
 
+
+        /**
+        * Axis aligned bounding box class.
+        * 
+        * @param options
+        * @param options.upperBound
+        * @param options.lowerBound
+        */
         constructor(options?: {
             upperBound?: number[];
             lowerBound?: number[];
@@ -24152,9 +24165,21 @@ declare module p2 {
 
     }
 
+
+    /**
+    * Base class for broadphase implementations.
+    */
     export class Broadphase {
 
+
+        /**
+        * Axis aligned bounding box type.
+        */
         static AABB: number;
+
+        /**
+        * Bounding circle type.
+        */
         static BOUNDING_CIRCLE: number;
 
         static NAIVE: number;
@@ -24164,11 +24189,27 @@ declare module p2 {
         static aabbCheck(bodyA: Body, bodyB: Body): boolean;
         static canCollide(bodyA: Body, bodyB: Body): boolean;
 
+
+        /**
+        * Base class for broadphase implementations.
+        */
         constructor(type: number);
 
         type: number;
+
+        /**
+        * The resulting overlapping pairs. Will be filled with results during .getCollisionPairs().
+        */
         result: Body[];
+
+        /**
+        * The world to search for collision pairs in. To change it, use .setWorld()
+        */
         world: World;
+
+        /**
+        * The bounding volume type to use in the broadphase algorithms.
+        */
         boundingVolumeType: number;
 
         setWorld(world: World): void;
@@ -24177,8 +24218,24 @@ declare module p2 {
 
     }
 
+
+    /**
+    * Broadphase that uses axis-aligned bins.
+    */
     export class GridBroadphase extends Broadphase {
 
+
+        /**
+        * Broadphase that uses axis-aligned bins.
+        * 
+        * @param options
+        * @param options.xmin Lower x bound of the grid
+        * @param options.xmax Upper x bound
+        * @param options.ymin Lower y bound
+        * @param options.ymax Upper y bound
+        * @param options.nx Number of bins along x axis
+        * @param options.ny Number of bins along y axis
+        */
         constructor(options?: {
             xmin?: number;
             xmax?: number;
@@ -24203,23 +24260,73 @@ declare module p2 {
 
     }
 
+
+    /**
+    * Narrowphase. Creates contacts and friction given shapes and transforms.
+    */
     export class Narrowphase {
 
         contactEquations: ContactEquation[];
         frictionEquations: FrictionEquation[];
+
+        /**
+        * Whether to make friction equations in the upcoming contacts.
+        */
         enableFriction: boolean;
+
+        /**
+        * The friction slip force to use when creating friction equations.
+        */
         slipForce: number;
+
+        /**
+        * The friction value to use in the upcoming friction equations.
+        */
         frictionCoefficient: number;
+
+        /**
+        * Will be the .relativeVelocity in each produced FrictionEquation.
+        */
         surfaceVelocity: number;
         reuseObjects: boolean;
         resuableContactEquations: any[];
         reusableFrictionEquations: any[];
+
+        /**
+        * The restitution value to use in the next contact equations.
+        */
         restitution: number;
+
+        /**
+        * The stiffness value to use in the next contact equations.
+        */
         stiffness: number;
+
+        /**
+        * The stiffness value to use in the next contact equations.
+        */
         relaxation: number;
+
+        /**
+        * The stiffness value to use in the next friction equations.
+        */
         frictionStiffness: number;
+
+        /**
+        * The relaxation value to use in the next friction equations.
+        */
         frictionRelaxation: number;
+
+        /**
+        * Enable reduction of friction equations. If disabled, a box on a plane will generate 2 contact equations and 2 friction equations. If enabled, there will be only one friction equation. Same kind of simplifications are made  for all collision types.
+        * Default: true
+        */
         enableFrictionReduction: boolean;
+
+        /**
+        * Contact skin size value to use in the next contact equations.
+        * Default: 0.01
+        */
         contactSkinSize: number;
 
         collidedLastStep(bodyA: Body, bodyB: Body): boolean;
@@ -24229,13 +24336,29 @@ declare module p2 {
 
     }
 
+
+    /**
+    * Sweep and prune broadphase along one axis.
+    */
     export class SAPBroadphase extends Broadphase {
 
+
+        /**
+        * List of bodies currently in the broadphase.
+        */
         axisList: Body[];
+
+        /**
+        * The axis to sort along. 0 means x-axis and 1 y-axis. If your bodies are more spread out over the X axis, set axisIndex to 0, and you will gain some performance.
+        */
         axisIndex: number;
 
     }
 
+
+    /**
+    * Base constraint class.
+    */
     export class Constraint {
 
         static DISTANCE: number;
@@ -24244,15 +24367,42 @@ declare module p2 {
         static PRISMATIC: number;
         static REVOLUTE: number;
 
+
+        /**
+        * Base constraint class.
+        * 
+        * @param bodyA
+        * @param bodyB
+        * @param type
+        * @param options
+        * @param options.collideConnected  - Default: true
+        */
         constructor(bodyA: Body, bodyB: Body, type: number, options?: {
             collideConnected?: boolean;
             wakeUpBodies?: boolean;
         });
 
+
+        /**
+        * The type of constraint. May be one of Constraint.DISTANCE, Constraint.GEAR, Constraint.LOCK, Constraint.PRISMATIC or Constraint.REVOLUTE.
+        */
         type: number;
         equeations: Equation[];
+
+        /**
+        * First body participating in the constraint.
+        */
         bodyA: Body;
+
+        /**
+        * Second body participating in the constraint.
+        */
         bodyB: Body;
+
+        /**
+        * Set to true if you want the connected bodies to collide.
+        * Default: true
+        */
         collideConnected: boolean;
 
         update(): void;
@@ -24288,14 +24438,50 @@ declare module p2 {
             maxForce?: number;
         });
 
+
+        /**
+        * Local anchor in body A.
+        */
         localAnchorA: number[];
+
+        /**
+        * Local anchor in body B.
+        */
         localAnchorB: number[];
+
+        /**
+        * The distance to keep.
+        */
         distance: number;
+
+        /**
+        * Max force to apply.
+        */
         maxForce: number;
+
+        /**
+        * If the upper limit is enabled or not.
+        */
         upperLimitEnabled: boolean;
+
+        /**
+        * The upper constraint limit.
+        */
         upperLimit: number;
+
+        /**
+        * If the lower limit is enabled or not.
+        */
         lowerLimitEnabled: boolean;
+
+        /**
+        * The lower constraint limit.
+        */
         lowerLimit: number;
+
+        /**
+        * Current constraint position. This is equal to the current distance between the world anchor points.
+        */
         position: number;
 
         setMaxForce(f: number): void;
@@ -24327,7 +24513,15 @@ declare module p2 {
             maxTorque?: number;
         });
 
+
+        /**
+        * The gear ratio.
+        */
         ratio: number;
+
+        /**
+        * The relative angle
+        */
         angle: number;
 
         setMaxTorque(torque: number): void;
@@ -24367,22 +24561,24 @@ declare module p2 {
 
 
     /**
-    * Connects two bodies at given offset points, letting them rotate relative to each other around this point.
+    * Constraint that only allows bodies to move along a line, relative to each other. See <a href="http://www.iforce2d.net/b2dtut/joints-prismatic">this tutorial</a>.
     */
     export class PrismaticConstraint extends Constraint {
 
 
         /**
-        * Connects two bodies at given offset points, letting them rotate relative to each other around this point.
+        * Constraint that only allows bodies to move along a line, relative to each other. See <a href="http://www.iforce2d.net/b2dtut/joints-prismatic">this tutorial</a>.
         * 
-        * @param world A reference to the P2 World.
-        * @param bodyA First connected body.
-        * @param bodyB Second connected body.
-        * @param lockRotation If set to false, bodyB will be free to rotate around its anchor point. - Default: true
-        * @param anchorA Body A's anchor point, defined in its own local frame. The value is an array with 2 elements matching x and y, i.e: [32, 32].
-        * @param anchorB Body A's anchor point, defined in its own local frame. The value is an array with 2 elements matching x and y, i.e: [32, 32].
-        * @param axis An axis, defined in body A frame, that body B's anchor point may slide along. The value is an array with 2 elements matching x and y, i.e: [32, 32].
-        * @param maxForce The maximum force that should be applied to constrain the bodies.
+        * @param bodyA
+        * @param bodyB
+        * @param options
+        * @param options.maxForce Max force to be applied by the constraint
+        * @param options.localAnchorA Body A's anchor point, defined in its own local frame.
+        * @param options.localAnchorB Body B's anchor point, defined in its own local frame.
+        * @param options.localAxisA An axis, defined in body A frame, that body B's anchor point may slide along.
+        * @param options.disableRotationalLock If set to true, bodyB will be free to rotate around its anchor point.
+        * @param options.upperLimit
+        * @param options.lowerLimit
         */
         constructor(bodyA: Body, bodyB: Body, type: number, options?: {
             collideConnected?: boolean;
@@ -24399,16 +24595,48 @@ declare module p2 {
         localAnchorA: number[];
         localAnchorB: number[];
         localAxisA: number[];
+
+        /**
+        * The position of anchor A relative to anchor B, along the constraint axis.
+        */
         position: number;
         velocity: number;
+
+        /**
+        * Set to true to enable lower limit.
+        */
         lowerLimitEnabled: boolean;
+
+        /**
+        * Set to true to enable upper limit.
+        */
         upperLimitEnabled: boolean;
+
+        /**
+        * Lower constraint limit. The constraint position is forced to be larger than this value.
+        */
         lowerLimit: number;
+
+        /**
+        * Upper constraint limit. The constraint position is forced to be smaller than this value.
+        */
         upperLimit: number;
         upperLimitEquation: ContactEquation;
         lowerLimitEquation: ContactEquation;
+
+        /**
+        * Equation used for the motor.
+        */
         motorEquation: Equation;
+
+        /**
+        * The current motor state. Enable or disable the motor using .enableMotor
+        */
         motorEnabled: boolean;
+
+        /**
+        * Set the target speed for the motor.
+        */
         motorSpeed: number;
 
         enableMotor(): void;
@@ -24420,22 +24648,20 @@ declare module p2 {
 
     /**
     * Connects two bodies at given offset points, letting them rotate relative to each other around this point.
-    * The pivot points are given in world (pixel) coordinates.
     */
     export class RevoluteConstraint extends Constraint {
 
 
         /**
         * Connects two bodies at given offset points, letting them rotate relative to each other around this point.
-        * The pivot points are given in world (pixel) coordinates.
         * 
-        * @param world A reference to the P2 World.
-        * @param bodyA First connected body.
-        * @param pivotA The point relative to the center of mass of bodyA which bodyA is constrained to. The value is an array with 2 elements matching x and y, i.e: [32, 32].
-        * @param bodyB Second connected body.
-        * @param pivotB The point relative to the center of mass of bodyB which bodyB is constrained to. The value is an array with 2 elements matching x and y, i.e: [32, 32].
-        * @param maxForce The maximum force that should be applied to constrain the bodies. - Default: 0
-        * @param worldPivot A pivot point given in world coordinates. If specified, localPivotA and localPivotB are automatically computed from this value. - Default: null
+        * @param bodyA
+        * @param bodyB
+        * @param options
+        * @param options.worldPivot A pivot point given in world coordinates. If specified, localPivotA and localPivotB are automatically computed from this value.
+        * @param options.localPivotA The point relative to the center of mass of bodyA which bodyA is constrained to.
+        * @param options.localPivotB See localPivotA.
+        * @param options.maxForce The maximum force that should be applied to constrain the bodies.
         */
         constructor(bodyA: Body, bodyB: Body, type: number, options?: {
             collideConnected?: boolean;
@@ -24449,11 +24675,35 @@ declare module p2 {
         pivotA: number[];
         pivotB: number[];
         motorEquation: RotationalVelocityEquation;
+
+        /**
+        * Indicates whether the motor is enabled. Use .enableMotor() to enable the constraint motor.
+        */
         motorEnabled: boolean;
+
+        /**
+        * The constraint position.
+        */
         angle: number;
+
+        /**
+        * Set to true to enable lower limit
+        */
         lowerLimitEnabled: boolean;
+
+        /**
+        * Set to true to enable upper limit
+        */
         upperLimitEnabled: boolean;
+
+        /**
+        * The lower limit on the constraint angle.
+        */
         lowerLimit: number;
+
+        /**
+        * The upper limit on the constraint angle.
+        */
         upperLimit: number;
         upperLimitEquation: ContactEquation;
         lowerLimitEquation: ContactEquation;
@@ -24467,8 +24717,22 @@ declare module p2 {
 
     }
 
+
+    /**
+    * Locks the relative angle between two bodies. The constraint tries to keep the dot product between two vectors, local in each body, to zero. The local angle in body i is a parameter.
+    */
     export class AngleLockEquation extends Equation {
 
+
+        /**
+        * Locks the relative angle between two bodies. The constraint tries to keep the dot product between two vectors, local in each body, to zero. The local angle in body i is a parameter.
+        * 
+        * @param bodyA
+        * @param bodyB
+        * @param options
+        * @param options.angle Angle to add to the local vector in body A.
+        * @param options.ratio Gear ratio
+        */
         constructor(bodyA: Body, bodyB: Body, options?: {
             angle?: number;
             ratio?: number;
@@ -24480,45 +24744,151 @@ declare module p2 {
 
     }
 
+
+    /**
+    * Non-penetration constraint equation. Tries to make the contactPointA and contactPointB vectors coincide, while keeping the applied force repulsive.
+    */
     export class ContactEquation extends Equation {
 
+
+        /**
+        * Non-penetration constraint equation. Tries to make the contactPointA and contactPointB vectors coincide, while keeping the applied force repulsive.
+        * 
+        * @param bodyA
+        * @param bodyB
+        */
         constructor(bodyA: Body, bodyB: Body);
 
+
+        /**
+        * Vector from body i center of mass to the contact point.
+        */
         contactPointA: number[];
         penetrationVec: number[];
+
+        /**
+        * World-oriented vector from body A center of mass to the contact point.
+        */
         contactPointB: number[];
+
+        /**
+        * The normal vector, pointing out of body i
+        */
         normalA: number[];
+
+        /**
+        * The restitution to use (0=no bounciness, 1=max bounciness).
+        */
         restitution: number;
+
+        /**
+        * This property is set to true if this is the first impact between the bodies (not persistant contact).
+        */
         firstImpact: boolean;
+
+        /**
+        * The shape in body i that triggered this contact.
+        */
         shapeA: Shape;
+
+        /**
+        * The shape in body j that triggered this contact.
+        */
         shapeB: Shape;
 
         computeB(a: number, b: number, h: number): number;
 
     }
 
+
+    /**
+    * Base class for constraint equations.
+    */
     export class Equation {
 
+
+        /**
+        * The default stiffness when creating a new Equation.
+        * Default: 1e6
+        */
         static DEFAULT_STIFFNESS: number;
+
+        /**
+        * The default relaxation when creating a new Equation.
+        * Default: 4
+        */
         static DEFAULT_RELAXATION: number;
 
+
+        /**
+        * Base class for constraint equations.
+        * 
+        * @param bodyA First body participating in the equation
+        * @param bodyB Second body participating in the equation
+        * @param minForce Minimum force to apply. Default: -Number.MAX_VALUE
+        * @param maxForce Maximum force to apply. Default: Number.MAX_VALUE
+        */
         constructor(bodyA: Body, bodyB: Body, minForce?: number, maxForce?: number);
 
+
+        /**
+        * Minimum force to apply when solving.
+        */
         minForce: number;
+
+        /**
+        * Max force to apply when solving.
+        */
         maxForce: number;
+
+        /**
+        * First body participating in the constraint
+        */
         bodyA: Body;
+
+        /**
+        * Second body participating in the constraint
+        */
         bodyB: Body;
+
+        /**
+        * The stiffness of this equation. Typically chosen to a large number (~1e7), but can be chosen somewhat freely to get a stable simulation.
+        */
         stiffness: number;
+
+        /**
+        * The number of time steps needed to stabilize the constraint equation. Typically between 3 and 5 time steps.
+        */
         relaxation: number;
+
+        /**
+        * The Jacobian entry of this equation. 6 numbers, 3 per body (x,y,angle).
+        */
         G: number[];
         offset: number;
         a: number;
         b: number;
         epsilon: number;
         timeStep: number;
+
+        /**
+        * Indicates if stiffness or relaxation was changed.
+        */
         needsUpdate: boolean;
+
+        /**
+        * The resulting constraint multiplier from the last solve. This is mostly equivalent to the force produced by the constraint.
+        */
         multiplier: number;
+
+        /**
+        * Relative velocity.
+        */
         relativeVelocity: number;
+
+        /**
+        * Whether this equation is enabled or not. If true, it will be added to the solver.
+        */
         enabled: boolean;
 
         gmult(G: number[], vi: number[], wi: number[], vj: number[], wj: number[]): number;
@@ -24533,15 +24903,51 @@ declare module p2 {
 
     }
 
+
+    /**
+    * Constrains the slipping in a contact along a tangent
+    */
     export class FrictionEquation extends Equation {
 
+
+        /**
+        * Constrains the slipping in a contact along a tangent
+        * 
+        * @param bodyA
+        * @param bodyB
+        * @param slipForce
+        */
         constructor(bodyA: Body, bodyB: Body, slipForce: number);
 
+
+        /**
+        * Relative vector from center of body A to the contact point, world oriented.
+        */
         contactPointA: number[];
+
+        /**
+        * Relative vector from center of body B to the contact point, world oriented.
+        */
         contactPointB: number[];
+
+        /**
+        * Tangent vector that the friction force will act along. World oriented.
+        */
         t: number[];
+
+        /**
+        * The shape in body i that triggered this friction.
+        */
         shapeA: Shape;
+
+        /**
+        * The shape in body j that triggered this friction.
+        */
         shapeB: Shape;
+
+        /**
+        * The friction coefficient to use.
+        */
         frictionCoefficient: number;
 
         setSlipForce(slipForce: number): number;
@@ -24550,8 +24956,21 @@ declare module p2 {
 
     }
 
+
+    /**
+    * Locks the relative angle between two bodies. The constraint tries to keep the dot product between two vectors, local in each body, to zero. The local angle in body i is a parameter.
+    */
     export class RotationalLockEquation extends Equation {
 
+
+        /**
+        * Locks the relative angle between two bodies. The constraint tries to keep the dot product between two vectors, local in each body, to zero. The local angle in body i is a parameter.
+        * 
+        * @param bodyA
+        * @param bodyB
+        * @param options
+        * @param options.angle Angle to add to the local vector in bodyA.
+        */
         constructor(bodyA: Body, bodyB: Body, options?: {
             angle?: number;
         });
@@ -24562,14 +24981,29 @@ declare module p2 {
 
     }
 
+
+    /**
+    * Syncs rotational velocity of two bodies, or sets a relative velocity (motor).
+    */
     export class RotationalVelocityEquation extends Equation {
 
+
+        /**
+        * Syncs rotational velocity of two bodies, or sets a relative velocity (motor).
+        * 
+        * @param bodyA
+        * @param bodyB
+        */
         constructor(bodyA: Body, bodyB: Body);
 
         computeB(a: number, b: number, h: number): number;
 
     }
 
+
+    /**
+    * Base class for objects that dispatches events.
+    */
     export class EventEmitter {
 
         on(type: string, listener: Function, context: any): EventEmitter;
@@ -24609,16 +25043,56 @@ declare module p2 {
         */
         constructor(materialA: Material, materialB: Material, options?: ContactMaterialOptions);
 
+
+        /**
+        * The contact material identifier
+        */
         id: number;
+
+        /**
+        * First material participating in the contact material
+        */
         materialA: Material;
+
+        /**
+        * Second material participating in the contact material
+        */
         materialB: Material;
+
+        /**
+        * Friction to use in the contact of these two materials
+        */
         friction: number;
+
+        /**
+        * Restitution to use in the contact of these two materials
+        */
         restitution: number;
+
+        /**
+        * Stiffness of the resulting ContactEquation that this ContactMaterial generate
+        */
         stiffness: number;
+
+        /**
+        * Relaxation of the resulting ContactEquation that this ContactMaterial generate
+        */
         relaxation: number;
         frictionStuffness: number;
+
+        /**
+        * Relaxation of the resulting FrictionEquation that this ContactMaterial generate
+        */
         frictionRelaxation: number;
+
+        /**
+        * Will add surface velocity to this material. If bodyA rests on top if bodyB, and the surface velocity is positive, bodyA will slide to the right.
+        */
         surfaceVelocity: number;
+
+        /**
+        * Offset to be set on ContactEquations. A positive value will make the bodies penetrate more into each other. Can be useful in scenes where contacts need to be more persistent, for example when stacking. Aka "cure for nervous contacts".
+        */
         contactSkinSize: number;
 
     }
@@ -24643,10 +25117,18 @@ declare module p2 {
         */
         constructor(id: number);
 
+
+        /**
+        * The material identifier
+        */
         id: number;
 
     }
 
+
+    /**
+    * The vec2 object from glMatrix, with some extensions and some removed methods. See http://glmatrix.net.
+    */
     export class vec2 {
 
         static crossLength(a: number[], b: number[]): number;
@@ -24767,20 +25249,42 @@ declare module p2 {
         * Local reference to the P2 World.
         */
         world: World;
+
+        /**
+        * The shapes of the body. The local transform of the shape in .shapes[i] is
+        * defined by .shapeOffsets[i] and .shapeAngles[i].
+        */
         shapes: Shape[];
+
+        /**
+        * The local shape offsets, relative to the body center of mass. This is an
+        * array of Array.
+        */
         shapeOffsets: number[][];
+
+        /**
+        * The body-local shape angle transforms. This is an array of numbers (angles).
+        */
         shapeAngles: number[];
 
         /**
         * -
         */
         mass: number;
+
+        /**
+        * The inverse mass of the body.
+        */
         invMass: number;
 
         /**
         * The inertia of the body around the Z axis..
         */
         inertia: number;
+
+        /**
+        * The inverse inertia of the body.
+        */
         invInertia: number;
         invMassSolve: number;
         invInertiaSolve: number;
@@ -24789,17 +25293,45 @@ declare module p2 {
         * -
         */
         fixedRotation: number;
+
+        /**
+        * The position of the body
+        */
         position: number[];
+
+        /**
+        * The interpolated position of the body.
+        */
         interpolatedPosition: number[];
+
+        /**
+        * The interpolated angle of the body.
+        */
         interpolatedAngle: number;
+
+        /**
+        * The previous position of the body.
+        */
         previousPosition: number[];
+
+        /**
+        * The previous angle of the body.
+        */
         previousAngle: number;
 
         /**
         * The velocity of the body. Set velocity.x to a negative value to move to the left, position to the right. velocity.y negative values move up, positive move down.
         */
         velocity: number[];
+
+        /**
+        * Constraint velocity that was added to the body during the last step.
+        */
         vlambda: number[];
+
+        /**
+        * Angular constraint velocity that was added to the body during last step.
+        */
         wlambda: number[];
 
         /**
@@ -24838,8 +25370,20 @@ declare module p2 {
         * The type of physics system this body belongs to.
         */
         type: number;
+
+        /**
+        * Bounding circle radius.
+        */
         boundingRadius: number;
+
+        /**
+        * Bounding box of this body.
+        */
         aabb: AABB;
+
+        /**
+        * Indicates if the AABB needs update. Update it with {{#crossLink "Body/updateAABB:method"}}.updateAABB(){{/crossLink}}.
+        */
         aabbNeedsUpdate: boolean;
 
         /**
@@ -24847,13 +25391,30 @@ declare module p2 {
         */
         allowSleep: boolean;
         wantsToSleep: boolean;
+
+        /**
+        * One of {{#crossLink "Body/AWAKE:property"}}Body.AWAKE{{/crossLink}}, {{#crossLink "Body/SLEEPY:property"}}Body.SLEEPY{{/crossLink}} and {{#crossLink "Body/SLEEPING:property"}}Body.SLEEPING{{/crossLink}}.
+        * 
+        * The body is initially Body.AWAKE. If its velocity norm is below .sleepSpeedLimit, the sleepState will become Body.SLEEPY. If the body continues to be Body.SLEEPY for .sleepTimeLimit seconds, it will fall asleep (Body.SLEEPY).
+        * Default: Body.AWAKE
+        */
         sleepState: number;
 
         /**
         * .
         */
         sleepSpeedLimit: number;
+
+        /**
+        * If the body has been sleepy for this sleepTimeLimit seconds, it is considered sleeping.
+        * Default: 1
+        */
         sleepTimeLimit: number;
+
+        /**
+        * Gravity scaling factor. If you want the body to ignore gravity, set this to zero. If you want to reverse gravity, set it to -1.
+        * Default: 1
+        */
         gravityScale: number;
 
         updateSolveMassProperties(): void;
@@ -24942,24 +25503,23 @@ declare module p2 {
 
 
     /**
-    * Creates a linear spring, connecting two bodies. A spring can have a resting length, a stiffness and damping.
+    * A spring, connecting two bodies. The Spring explicitly adds force and angularForce to the bodies and does therefore not put load on the constraint solver.
     */
     export class Spring {
 
 
         /**
-        * Creates a linear spring, connecting two bodies. A spring can have a resting length, a stiffness and damping.
+        * A spring, connecting two bodies. The Spring explicitly adds force and angularForce to the bodies and does therefore not put load on the constraint solver.
         * 
-        * @param world A reference to the P2 World.
-        * @param bodyA First connected body.
-        * @param bodyB Second connected body.
-        * @param restLength Rest length of the spring. A number > 0. - Default: 1
-        * @param stiffness Stiffness of the spring. A number >= 0. - Default: 100
-        * @param damping Damping of the spring. A number >= 0. - Default: 1
-        * @param worldA Where to hook the spring to body A in world coordinates. This value is an array with 2 elements matching x and y, i.e: [32, 32].
-        * @param worldB Where to hook the spring to body B in world coordinates. This value is an array with 2 elements matching x and y, i.e: [32, 32].
-        * @param localA Where to hook the spring to body A in local body coordinates. This value is an array with 2 elements matching x and y, i.e: [32, 32].
-        * @param localB Where to hook the spring to body B in local body coordinates. This value is an array with 2 elements matching x and y, i.e: [32, 32].
+        * @param bodyA
+        * @param bodyB
+        * @param options
+        * @param options.stiffness Spring constant (see Hookes Law). A number >= 0. - Default: 100
+        * @param options.damping A number >= 0. Default: 1 - Default: 1
+        * @param options.localAnchorA Where to hook the spring to body A, in local body coordinates. Defaults to the body center.
+        * @param options.localAnchorB
+        * @param options.worldAnchorA Where to hook the spring to body A, in world coordinates. Overrides the option "localAnchorA" if given.
+        * @param options.worldAnchorB
         */
         constructor(bodyA: Body, bodyB: Body, options?: {
 
@@ -24972,19 +25532,53 @@ declare module p2 {
 
         });
 
+
+        /**
+        * Stiffness of the spring.
+        */
         stiffness: number;
+
+        /**
+        * Damping of the spring.
+        */
         damping: number;
+
+        /**
+        * First connected body.
+        */
         bodyA: Body;
+
+        /**
+        * Second connected body.
+        */
         bodyB: Body;
 
         applyForce(): void;
 
     }
 
+
+    /**
+    * A spring, connecting two bodies.
+    * 
+    * The Spring explicitly adds force and angularForce to the bodies.
+    */
     export class LinearSpring extends Spring {
 
+
+        /**
+        * Anchor for bodyA in local bodyA coordinates.
+        */
         localAnchorA: number[];
+
+        /**
+        * Anchor for bodyB in local bodyB coordinates.
+        */
         localAnchorB: number[];
+
+        /**
+        * Rest length of the spring.
+        */
         restLength: number;
 
         setWorldAnchorA(worldAnchorA: number[]): void;
@@ -24997,20 +25591,24 @@ declare module p2 {
 
 
     /**
-    * Creates a rotational spring, connecting two bodies. A spring can have a resting length, a stiffness and damping.
+    * A rotational spring, connecting two bodies rotation. This spring explicitly adds angularForce (torque) to the bodies.
+    * 
+    * The spring can be combined with a {{#crossLink "RevoluteConstraint"}}{{/crossLink}} to make, for example, a mouse trap.
     */
     export class RotationalSpring extends Spring {
 
 
         /**
-        * Creates a rotational spring, connecting two bodies. A spring can have a resting length, a stiffness and damping.
+        * A rotational spring, connecting two bodies rotation. This spring explicitly adds angularForce (torque) to the bodies.
         * 
-        * @param world A reference to the P2 World.
-        * @param bodyA First connected body.
-        * @param bodyB Second connected body.
-        * @param restAngle The relative angle of bodies at which the spring is at rest. If not given, it's set to the current relative angle between the bodies.
-        * @param stiffness Stiffness of the spring. A number >= 0. - Default: 100
-        * @param damping Damping of the spring. A number >= 0. - Default: 1
+        * The spring can be combined with a {{#crossLink "RevoluteConstraint"}}{{/crossLink}} to make, for example, a mouse trap.
+        * 
+        * @param bodyA
+        * @param bodyB
+        * @param options
+        * @param options.restAngle The relative angle of bodies at which the spring is at rest. If not given, it's set to the current relative angle between the bodies.
+        * @param options.stiffness Spring constant (see Hookes Law). A number >= 0. - Default: 100
+        * @param options.damping A number >= 0. - Default: 1
         */
         constructor(bodyA: Body, bodyB: Body, options?: {
             restAngle?: number;
@@ -25018,37 +25616,105 @@ declare module p2 {
             damping?: number;
         });
 
+
+        /**
+        * Rest angle of the spring.
+        */
         restAngle: number;
 
     }
 
+
+    /**
+    * Capsule shape class.
+    */
     export class Capsule extends Shape {
 
+
+        /**
+        * Capsule shape class.
+        * 
+        * @param length The distance between the end points - Default: 1
+        * @param radius Radius of the capsule - Default: 1
+        */
         constructor(length?: number, radius?: number);
 
+
+        /**
+        * The distance between the end points.
+        */
         length: number;
+
+        /**
+        * The radius of the capsule.
+        */
         radius: number;
 
     }
 
+
+    /**
+    * Circle shape class.
+    */
     export class Circle extends Shape {
 
+
+        /**
+        * Circle shape class.
+        * 
+        * @param radius The radius of this circle - Default: 1
+        */
         constructor(radius: number);
 
+
+        /**
+        * The radius of the circle.
+        */
         radius: number;
 
     }
 
+
+    /**
+    * Convex shape class.
+    */
     export class Convex extends Shape {
 
         static triangleArea(a: number[], b: number[], c: number[]): number;
 
+
+        /**
+        * Convex shape class.
+        * 
+        * @param vertices An array of vertices that span this shape. Vertices are given in counter-clockwise (CCW) direction.
+        * @param axes An array of unit length vectors, representing the symmetry axes in the convex.
+        */
         constructor(vertices: number[][], axes: number[]);
 
+
+        /**
+        * Vertices defined in the local frame.
+        */
         vertices: number[][];
+
+        /**
+        * Axes defined in the local frame.
+        */
         axes: number[];
+
+        /**
+        * The center of mass of the Convex
+        */
         centerOfMass: number[];
+
+        /**
+        * Triangulated version of this convex. The structure is Array of 3-Arrays, and each subarray contains 3 integers, referencing the vertices.
+        */
         triangles: number[];
+
+        /**
+        * The bounding radius of the convex
+        */
         boundingRadius: number;
 
         projectOntoLocalAxis(localAxis: number[], result: number[]): void;
@@ -25058,21 +25724,55 @@ declare module p2 {
 
     }
 
+
+    /**
+    * Heightfield shape class. Height data is given as an array. These data points are spread out evenly with a distance "elementWidth".
+    */
     export class Heightfield extends Shape {
 
+
+        /**
+        * Heightfield shape class. Height data is given as an array. These data points are spread out evenly with a distance "elementWidth".
+        * 
+        * @param data An array of Y values that will be used to construct the terrain.
+        * @param options
+        * @param options.minValue Minimum value of the data points in the data array. Will be computed automatically if not given.
+        * @param options.maxValue Maximum value.
+        * @param options.elementWidth World spacing between the data points in X direction. - Default: 0.1
+        */
         constructor(data: number[], options?: {
             minValue?: number;
             maxValue?: number;
             elementWidth: number;
         });
 
+
+        /**
+        * An array of numbers, or height values, that are spread out along the x axis.
+        */
         data: number[];
+
+        /**
+        * Max value of the data
+        */
         maxValue: number;
+
+        /**
+        * Max value of the data
+        */
         minValue: number;
+
+        /**
+        * The width of each element
+        */
         elementWidth: number;
 
     }
 
+
+    /**
+    * Base class for shapes.
+    */
     export class Shape {
 
         static idCounter: number;
@@ -25085,15 +25785,62 @@ declare module p2 {
         static CAPSULE: number;
         static HEIGHTFIELD: number;
 
+
+        /**
+        * Base class for shapes.
+        * 
+        * @param type
+        */
         constructor(type: number);
 
+
+        /**
+        * The type of the shape. One of:
+        * 
+        * * {{#crossLink "Shape/CIRCLE:property"}}Shape.CIRCLE{{/crossLink}}
+        * * {{#crossLink "Shape/PARTICLE:property"}}Shape.PARTICLE{{/crossLink}}
+        * * {{#crossLink "Shape/PLANE:property"}}Shape.PLANE{{/crossLink}}
+        * * {{#crossLink "Shape/CONVEX:property"}}Shape.CONVEX{{/crossLink}}
+        * * {{#crossLink "Shape/LINE:property"}}Shape.LINE{{/crossLink}}
+        * * {{#crossLink "Shape/RECTANGLE:property"}}Shape.RECTANGLE{{/crossLink}}
+        * * {{#crossLink "Shape/CAPSULE:property"}}Shape.CAPSULE{{/crossLink}}
+        * * {{#crossLink "Shape/HEIGHTFIELD:property"}}Shape.HEIGHTFIELD{{/crossLink}}
+        */
         type: number;
+
+        /**
+        * Shape object identifier.
+        */
         id: number;
+
+        /**
+        * Bounding circle radius of this shape
+        */
         boundingRadius: number;
+
+        /**
+        * Collision group that this shape belongs to (bit mask). See <a href="http://www.aurelienribon.com/blog/2011/07/box2d-tutorial-collision-filtering/">this tutorial</a>.
+        */
         collisionGroup: number;
+
+        /**
+        * Collision mask of this shape. See .collisionGroup.
+        */
         collisionMask: number;
+
+        /**
+        * Material to use in collisions for this Shape. If this is set to null, the world will use default material properties instead.
+        */
         material: Material;
+
+        /**
+        * Area of this shape.
+        */
         area: number;
+
+        /**
+        * Set to true if you want this shape to be a sensor. A sensor does not generate contacts, but it still reports contact events. This is good if you want to know if a shape is overlapping another shape, without them generating contacts.
+        */
         sensor: boolean;
 
         computeMomentOfInertia(mass: number): number;
@@ -25103,42 +25850,97 @@ declare module p2 {
 
     }
 
+
+    /**
+    * Container for line-related functions
+    */
     export class Line extends Shape {
 
+
+        /**
+        * Container for line-related functions
+        */
         constructor(length?: number);
 
+
+        /**
+        * Length of this line
+        */
         length: number;
 
     }
 
+
+    /**
+    * Particle shape class.
+    */
     export class Particle extends Shape {
 
     }
 
+
+    /**
+    * Plane shape class. The plane is facing in the Y direction.
+    */
     export class Plane extends Shape {
 
     }
 
+
+    /**
+    * Rectangle shape class.
+    */
     export class Rectangle extends Shape {
 
         static sameDimensions(a: Rectangle, b: Rectangle): boolean;
 
+
+        /**
+        * Rectangle shape class.
+        * 
+        * @param width Width - Default: 1
+        * @param height Height - Default: 1
+        */
         constructor(width?: number, height?: number);
 
+
+        /**
+        * Total width of the rectangle
+        */
         width: number;
+
+        /**
+        * Total height of the rectangle
+        */
         height: number;
 
     }
 
+
+    /**
+    * Base class for constraint solvers.
+    */
     export class Solver extends EventEmitter {
 
         static GS: number;
         static ISLAND: number;
 
+
+        /**
+        * Base class for constraint solvers.
+        */
         constructor(options?: {}, type?: number);
 
         type: number;
+
+        /**
+        * Current equations in the solver.
+        */
         equations: Equation[];
+
+        /**
+        * Function that is used to sort all equations before each solve.
+        */
         equationSortFunction: Equation; //Equation | boolean
 
         solve(dy: number, world: World): void;
@@ -25151,25 +25953,66 @@ declare module p2 {
 
     }
 
+
+    /**
+    * Iterative Gauss-Seidel constraint equation solver.
+    */
     export class GSSolver extends Solver {
 
+
+        /**
+        * Iterative Gauss-Seidel constraint equation solver.
+        * 
+        * @param options
+        * @param options.iterations  - Default: 10
+        * @param options.tolerance  - Default: 0
+        */
         constructor(options?: {
             iterations?: number;
             tolerance?: number;
         });
 
+
+        /**
+        * The number of iterations to do when solving. More gives better results, but is more expensive.
+        */
         iterations: number;
+
+        /**
+        * The error tolerance, per constraint. If the total error is below this limit, the solver will stop iterating. Set to zero for as good solution as possible, but to something larger than zero to make computations faster.
+        */
         tolerance: number;
+
+        /**
+        * Set to true to set all right hand side terms to zero when solving. Can be handy for a few applications.
+        */
         useZeroRHS: boolean;
+
+        /**
+        * Number of solver iterations that are done to approximate normal forces. When these iterations are done, friction force will be computed from the contact normal forces. These friction forces will override any other friction forces set from the World for example.
+        * The solver will use less iterations if the solution is below the .tolerance.
+        */
         frictionIterations: number;
+
+        /**
+        * The number of iterations that were made during the last solve. If .tolerance is zero, this value will always be equal to .iterations, but if .tolerance is larger than zero, and the solver can quit early, then this number will be somewhere between 1 and .iterations.
+        */
         usedIterations: number;
 
         solve(h: number, world: World): void;
 
     }
 
+
+    /**
+    * Keeps track of overlaps in the current state and the last step state.
+    */
     export class OverlapKeeper {
 
+
+        /**
+        * Keeps track of overlaps in the current state and the last step state.
+        */
         constructor(bodyA: Body, shapeA: Shape, bodyB: Body, shapeB: Shape);
 
         shapeA: Shape;
@@ -25186,7 +26029,15 @@ declare module p2 {
 
     export class TupleDictionary {
 
+
+        /**
+        * The data storage
+        */
         data: number[];
+
+        /**
+        * Keys that are currently used.
+        */
         keys: number[];
 
         getKey(id1: number, id2: number): string;
@@ -25198,6 +26049,10 @@ declare module p2 {
 
     }
 
+
+    /**
+    * Misc utility functions
+    */
     export class Utils {
 
         static appendArray<T>(a: Array<T>, b: Array<T>): Array<T>;
@@ -25212,9 +26067,21 @@ declare module p2 {
 
     }
 
+
+    /**
+    * An island of bodies connected with equations.
+    */
     export class Island {
 
+
+        /**
+        * Current equations in this island.
+        */
         equations: Equation[];
+
+        /**
+        * Current bodies in this island.
+        */
         bodies: Body[];
 
         reset(): void;
@@ -25224,12 +26091,28 @@ declare module p2 {
 
     }
 
+
+    /**
+    * Splits the system of bodies and equations into independent islands
+    */
     export class IslandManager extends Solver {
 
         static getUnvisitedNode(nodes: Node[]): IslandNode; // IslandNode | boolean
 
+
+        /**
+        * The equations to split. Manually fill this array before running .split().
+        */
         equations: Equation[];
+
+        /**
+        * The resulting {{#crossLink "Island"}}{{/crossLink}}s.
+        */
         islands: Island[];
+
+        /**
+        * The resulting graph nodes.
+        */
         nodes: IslandNode[];
 
         visit(node: IslandNode, bds: Body[], eqs: Equation[]): void;
@@ -25238,19 +26121,49 @@ declare module p2 {
 
     }
 
+
+    /**
+    * Holds a body and keeps track of some additional properties needed for graph traversal.
+    */
     export class IslandNode {
 
+
+        /**
+        * Holds a body and keeps track of some additional properties needed for graph traversal.
+        * 
+        * @param body
+        */
         constructor(body: Body);
 
+
+        /**
+        * The body that is contained in this node.
+        */
         body: Body;
+
+        /**
+        * Neighboring IslandNodes
+        */
         neighbors: IslandNode[];
+
+        /**
+        * Equations connected to this node.
+        */
         equations: Equation[];
+
+        /**
+        * If this node was visiting during the graph traversal.
+        */
         visited: boolean;
 
         reset(): void;
 
     }
 
+
+    /**
+    * The dynamics world, where all bodies and constraints lives.
+    */
     export class World extends EventEmitter {
 
         postStepEvent: {
@@ -25306,12 +26219,35 @@ declare module p2 {
             frictionEquations: FrictionEquation[];
         };
 
+
+        /**
+        * Never deactivate bodies.
+        */
         static NO_SLEEPING: number;
+
+        /**
+        * Deactivate individual bodies if they are sleepy.
+        */
         static BODY_SLEEPING: number;
+
+        /**
+        * Deactivates bodies that are in contact, if all of them are sleepy. Note that you must enable {{#crossLink "World/islandSplit:property"}}.islandSplit{{/crossLink}} for this to work.
+        */
         static ISLAND_SLEEPING: number;
 
         static integrateBody(body: Body, dy: number): void;
 
+
+        /**
+        * The dynamics world, where all bodies and constraints lives.
+        * 
+        * @param options
+        * @param options.solver Defaults to GSSolver.
+        * @param options.gravity Defaults to [0,-9.78]
+        * @param options.broadphase Defaults to NaiveBroadphase
+        * @param options.islandSplit  - Default: false
+        * @param options.doProfiling  - Default: false
+        */
         constructor(options?: {
             solver?: Solver;
             gravity?: number[];
@@ -25320,31 +26256,137 @@ declare module p2 {
             doProfiling?: boolean;
         });
 
+
+        /**
+        * All springs in the world. To add a spring to the world, use {{#crossLink "World/addSpring:method"}}{{/crossLink}}.
+        */
         springs: Spring[];
+
+        /**
+        * All bodies in the world. To add a body to the world, use {{#crossLink "World/addBody:method"}}{{/crossLink}}.
+        */
         bodies: Body[];
+
+        /**
+        * The solver used to satisfy constraints and contacts. Default is {{#crossLink "GSSolver"}}{{/crossLink}}.
+        */
         solver: Solver;
+
+        /**
+        * The narrowphase to use to generate contacts.
+        */
         narrowphase: Narrowphase;
+
+        /**
+        * The island manager of this world.
+        */
         islandManager: IslandManager;
+
+        /**
+        * Gravity in the world. This is applied on all bodies in the beginning of each step().
+        */
         gravity: number[];
+
+        /**
+        * Gravity to use when approximating the friction max force (mu*mass*gravity).
+        */
         frictionGravity: number;
+
+        /**
+        * Set to true if you want .frictionGravity to be automatically set to the length of .gravity.
+        */
         useWorldGravityAsFrictionGravity: boolean;
+
+        /**
+        * If the length of .gravity is zero, and .useWorldGravityAsFrictionGravity=true, then switch to using .frictionGravity for friction instead. This fallback is useful for gravityless games.
+        */
         useFrictionGravityOnZeroGravity: boolean;
+
+        /**
+        * Whether to do timing measurements during the step() or not.
+        */
         doProfiling: boolean;
+
+        /**
+        * How many millisecconds the last step() took. This is updated each step if .doProfiling is set to true.
+        */
         lastStepTime: number;
+
+        /**
+        * The broadphase algorithm to use.
+        */
         broadphase: Broadphase;
+
+        /**
+        * User-added constraints.
+        */
         constraints: Constraint[];
+
+        /**
+        * Dummy default material in the world, used in .defaultContactMaterial
+        */
         defaultMaterial: Material;
+
+        /**
+        * The default contact material to use, if no contact material was set for the colliding materials.
+        */
         defaultContactMaterial: ContactMaterial;
+
+        /**
+        * For keeping track of what time step size we used last step
+        */
         lastTimeStep: number;
+
+        /**
+        * Enable to automatically apply spring forces each step.
+        */
         applySpringForces: boolean;
+
+        /**
+        * Enable to automatically apply body damping each step.
+        */
         applyDamping: boolean;
+
+        /**
+        * Enable to automatically apply gravity each step.
+        */
         applyGravity: boolean;
+
+        /**
+        * Enable/disable constraint solving in each step.
+        */
         solveConstraints: boolean;
+
+        /**
+        * The ContactMaterials added to the World.
+        */
         contactMaterials: ContactMaterial[];
+
+        /**
+        * World time.
+        */
         time: number;
+
+        /**
+        * Is true during the step().
+        */
         stepping: boolean;
+
+        /**
+        * Whether to enable island splitting. Island splitting can be an advantage for many things, including solver performance. See {{#crossLink "IslandManager"}}{{/crossLink}}.
+        */
         islandSplit: boolean;
+
+        /**
+        * Set to true if you want to the world to emit the "impact" event. Turning this off could improve performance.
+        */
         emitImpactEvent: boolean;
+
+        /**
+        * How to deactivate bodies during simulation. Possible modes are: {{#crossLink "World/NO_SLEEPING:property"}}World.NO_SLEEPING{{/crossLink}}, {{#crossLink "World/BODY_SLEEPING:property"}}World.BODY_SLEEPING{{/crossLink}} and {{#crossLink "World/ISLAND_SLEEPING:property"}}World.ISLAND_SLEEPING{{/crossLink}}.
+        * If sleeping is enabled, you might need to {{#crossLink "Body/wakeUp:method"}}wake up{{/crossLink}} the bodies if they fall asleep when they shouldn't. If you want to enable sleeping in the world, but want to disable it for a particular body, see {{#crossLink "Body/allowSleep:property"}}Body.allowSleep{{/crossLink}}.
+        * Default: World.NO_SLEEPING
+        */
         sleepMode: number;
 
         addConstraint(c: Constraint): void;
