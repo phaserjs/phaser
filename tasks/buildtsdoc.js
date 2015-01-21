@@ -59,7 +59,7 @@ var TypeScriptDocGenerator = (function () {
                 var startLinePosition = this.lineMap.getLineStartPosition(lc.line());
                 var comment = "\r\n" + this.repeatSpaces(nbSpaces) + "/**\r\n";
                 for (var j = 0; j < commentLines.length; j++) {
-                    comment += this.repeatSpaces(nbSpaces) + "* " + commentLines[j] + "\r\n";
+                    comment += this.repeatSpaces(nbSpaces) + "* " + commentLines[j].trimRight() + "\r\n";
                 }
                 comment += this.repeatSpaces(nbSpaces) + "*/\r\n";
                 this.tsDefFileContent = this.tsDefFileContent.substr(0, startLinePosition + this.nbCharsAdded) + comment + this.tsDefFileContent.substr(startLinePosition + this.nbCharsAdded);

@@ -1002,8 +1002,8 @@ declare module PIXI {
 
 
     /**
-    * The ConvolutionFilter class applies a matrix convolution filter effect. 
-    * A convolution combines pixels in the input image with neighboring pixels to produce a new image. 
+    * The ConvolutionFilter class applies a matrix convolution filter effect.
+    * A convolution combines pixels in the input image with neighboring pixels to produce a new image.
     * A wide variety of image effects can be achieved through convolutions, including blurring, edge detection, sharpening, embossing, and beveling.
     * The matrix should be specified as a 9 point Array. See http://docs.gimp.org/en/plug-in-convmatrix.html for more info.
     */
@@ -1011,8 +1011,8 @@ declare module PIXI {
 
 
         /**
-        * The ConvolutionFilter class applies a matrix convolution filter effect. 
-        * A convolution combines pixels in the input image with neighboring pixels to produce a new image. 
+        * The ConvolutionFilter class applies a matrix convolution filter effect.
+        * A convolution combines pixels in the input image with neighboring pixels to produce a new image.
         * A wide variety of image effects can be achieved through convolutions, including blurring, edge detection, sharpening, embossing, and beveling.
         * The matrix should be specified as a 9 point Array. See http://docs.gimp.org/en/plug-in-convmatrix.html for more info.
         * 
@@ -2168,8 +2168,8 @@ declare module PIXI {
 
 
     /**
-    * The Matrix class is now an object, which makes it a lot faster, 
-    * here is a representation of it : 
+    * The Matrix class is now an object, which makes it a lot faster,
+    * here is a representation of it :
     * | a | b | tx|
     * | c | d | ty|
     * | 0 | 0 | 1 |
@@ -2421,7 +2421,7 @@ declare module PIXI {
 
 
     /**
-    * The NormalMapFilter class uses the pixel values from the specified texture (called the displacement map) to perform a displacement of an object. 
+    * The NormalMapFilter class uses the pixel values from the specified texture (called the displacement map) to perform a displacement of an object.
     * You can use this filter to apply all manor of crazy warping effects
     * Currently the r property of the texture is used offset the x and the g property of the texture is used to offset the y.
     */
@@ -3150,7 +3150,7 @@ declare module PIXI {
         * The Sprite object is the base for all textured objects that are rendered to the screen
         * 
         * @param texture The texture for this sprite
-        *                
+        * 
         *                A sprite can be created directly from an image like this :
         *                var sprite = new PIXI.Sprite.fromImage('assets/image.png');
         *                yourStage.addChild(sprite);
@@ -3202,9 +3202,9 @@ declare module PIXI {
 
 
     /**
-    * The SpriteBatch class is a really fast version of the DisplayObjectContainer 
+    * The SpriteBatch class is a really fast version of the DisplayObjectContainer
     * built solely for speed, so use when you need a lot of sprites or particles.
-    * And it's extremely easy to use : 
+    * And it's extremely easy to use :
     * 
     *    var container = new PIXI.SpriteBatch();
     * 
@@ -3221,9 +3221,9 @@ declare module PIXI {
 
 
         /**
-        * The SpriteBatch class is a really fast version of the DisplayObjectContainer 
+        * The SpriteBatch class is a really fast version of the DisplayObjectContainer
         * built solely for speed, so use when you need a lot of sprites or particles.
-        * And it's extremely easy to use : 
+        * And it's extremely easy to use :
         * 
         *    var container = new PIXI.SpriteBatch();
         * 
@@ -3329,7 +3329,7 @@ declare module PIXI {
         * 
         * @param backgroundColor the background color of the stage, you have to pass this in is in hex format
         *                        like: 0xFFFFFF for white
-        *                        
+        * 
         *                        Creating a stage is a mandatory process when you use Pixi, which is as simple as this :
         *                        var stage = new PIXI.Stage(0xFFFFFF);
         *                        where the parameter given is the background colour of the stage, in hex

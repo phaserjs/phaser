@@ -769,7 +769,7 @@ declare module Phaser {
 
     /**
     * A BitmapData object contains a Canvas element to which you can draw anything you like via normal Canvas context operations.
-    * A single BitmapData can be used as the texture for one or many Images/Sprites. 
+    * A single BitmapData can be used as the texture for one or many Images/Sprites.
     * So if you need to dynamically create a Sprite texture then they are a good choice.
     */
     class BitmapData {
@@ -777,7 +777,7 @@ declare module Phaser {
 
         /**
         * A BitmapData object contains a Canvas element to which you can draw anything you like via normal Canvas context operations.
-        * A single BitmapData can be used as the texture for one or many Images/Sprites. 
+        * A single BitmapData can be used as the texture for one or many Images/Sprites.
         * So if you need to dynamically create a Sprite texture then they are a good choice.
         * 
         * @param game A reference to the currently running game.
@@ -3235,7 +3235,7 @@ declare module Phaser {
         /**
         * Converts a hex string into a Phaser Color object.
         * 
-        * The hex string can supplied as `'#0033ff'` or the short-hand format of `'#03f'`; it can begin with an optional "#" or "0x", or be unprefixed.    
+        * The hex string can supplied as `'#0033ff'` or the short-hand format of `'#03f'`; it can begin with an optional "#" or "0x", or be unprefixed.
         * 
         * An alpha channel is _not_ supported.
         * 
@@ -3295,9 +3295,9 @@ declare module Phaser {
         * Converts a hue to an RGB color.
         * Based on code by Michael Jackson (https://github.com/mjijackson)
         * 
-        * @param p 
-        * @param q 
-        * @param t 
+        * @param p
+        * @param q
+        * @param t
         * @return The color component value.
         */
         static hueToColor(p: number, q: number, t: number): number;
@@ -8327,14 +8327,14 @@ declare module Phaser {
         /**
         * Warning: EXPERIMENTAL
         * 
-        * @param x 
+        * @param x
         */
         globalToLocalX(x: number): number;
 
         /**
         * Warning: EXPERIMENTAL
         * 
-        * @param y 
+        * @param y
         */
         globalToLocalY(y: number): number;
 
@@ -8458,7 +8458,7 @@ declare module Phaser {
         * Checks if the given pointer is both down and over the Sprite this InputHandler belongs to.
         * Use the `fastTest` flag is to quickly check just the bounding hit area even if `InputHandler.pixelPerfectOver` is `true`.
         * 
-        * @param pointer 
+        * @param pointer
         * @param fastTest Force a simple hit area check even if `pixelPerfectOver` is true for this object? - Default: false
         * @return True if the pointer is down, otherwise false.
         */
@@ -8468,7 +8468,7 @@ declare module Phaser {
         * Checks if the given pointer is over the Sprite this InputHandler belongs to.
         * Use the `fastTest` flag is to quickly check just the bounding hit area even if `InputHandler.pixelPerfectOver` is `true`.
         * 
-        * @param pointer 
+        * @param pointer
         * @param fastTest Force a simple hit area check even if `pixelPerfectOver` is true for this object? - Default: false
         */
         checkPointerOver(pointer: Phaser.Pointer, fastTest?: boolean): boolean;
@@ -8491,7 +8491,7 @@ declare module Phaser {
         /**
         * If the pointer is currently over this Sprite this returns how long it has been there for in milliseconds.
         * 
-        * @param pointer 
+        * @param pointer
         * @return The number of milliseconds the pointer has been pressed down on the Sprite, or -1 if not over.
         */
         downDuration(pointer: Phaser.Pointer): number;
@@ -8530,7 +8530,7 @@ declare module Phaser {
         /**
         * Returns true if the pointer has left the Sprite within the specified delay time (defaults to 500ms, half a second)
         * 
-        * @param pointer 
+        * @param pointer
         * @param delay The time below which the pointer is considered as just out.
         */
         justOut(pointer: number, delay: number): boolean;
@@ -8538,7 +8538,7 @@ declare module Phaser {
         /**
         * Returns true if the pointer has entered the Sprite within the specified delay time (defaults to 500ms, half a second)
         * 
-        * @param pointer 
+        * @param pointer
         * @param delay The time below which the pointer is considered as just over.
         */
         justOver(pointer: number, delay: number): boolean;
@@ -8546,7 +8546,7 @@ declare module Phaser {
         /**
         * Returns true if the pointer has touched or clicked on the Sprite within the specified delay time (defaults to 500ms, half a second)
         * 
-        * @param pointer 
+        * @param pointer
         * @param delay The time below which the pointer is considered as just over.
         */
         justPressed(pointer: number, delay: number): boolean;
@@ -8554,7 +8554,7 @@ declare module Phaser {
         /**
         * Returns true if the pointer was touching this Sprite, but has been released within the specified delay time (defaults to 500ms, half a second)
         * 
-        * @param pointer 
+        * @param pointer
         * @param delay The time below which the pointer is considered as just out.
         */
         justReleased(pointer: number, delay: number): boolean;
@@ -8562,7 +8562,7 @@ declare module Phaser {
         /**
         * If the pointer is currently over this Sprite this returns how long it has been there for in milliseconds.
         * 
-        * @param pointer 
+        * @param pointer
         * @return The number of milliseconds the pointer has been over the Sprite, or -1 if not over.
         */
         overDuration(pointer: Phaser.Pointer): number;
@@ -8578,7 +8578,7 @@ declare module Phaser {
         /**
         * Is this sprite being dragged by the mouse or not?
         * 
-        * @param pointer 
+        * @param pointer
         * @return True if the pointer is dragging an object, otherwise false.
         */
         pointerDragged(pointer: Phaser.Pointer): boolean;
@@ -8609,21 +8609,21 @@ declare module Phaser {
         /**
         * A timestamp representing when the Pointer left the touchscreen.
         * 
-        * @param pointer 
+        * @param pointer
         */
         pointerTimeOut(pointer: Phaser.Pointer): number;
 
         /**
         * A timestamp representing when the Pointer first touched the touchscreen.
         * 
-        * @param pointer 
+        * @param pointer
         */
         pointerTimeOver(pointer: number): number;
 
         /**
         * A timestamp representing when the Pointer left the touchscreen.
         * 
-        * @param pointer 
+        * @param pointer
         */
         pointerTimeUp(pointer: number): number;
 
@@ -8678,7 +8678,7 @@ declare module Phaser {
         /**
         * Called by Pointer when drag starts on this Sprite. Should not usually be called directly.
         * 
-        * @param pointer 
+        * @param pointer
         */
         startDrag(pointer: Phaser.Pointer): void;
 
@@ -8690,21 +8690,21 @@ declare module Phaser {
         /**
         * Called by Pointer when drag is stopped on this Sprite. Should not usually be called directly.
         * 
-        * @param pointer 
+        * @param pointer
         */
         stopDrag(pointer: Phaser.Pointer): void;
 
         /**
         * Update.
         * 
-        * @param pointer 
+        * @param pointer
         */
         update(pointer: Phaser.Pointer): void;
 
         /**
         * Updates the Pointer drag on this Sprite.
         * 
-        * @param pointer 
+        * @param pointer
         */
         updateDrag(pointer: Phaser.Pointer): boolean;
 
@@ -9130,21 +9130,21 @@ declare module Phaser {
         /**
         * Process the keydown event.
         * 
-        * @param event 
+        * @param event
         */
         processKeyDown(event: KeyboardEvent): void;
 
         /**
         * Process the keypress event.
         * 
-        * @param event 
+        * @param event
         */
         processKeyPress(event: KeyboardEvent): void;
 
         /**
         * Process the keyup event.
         * 
-        * @param event 
+        * @param event
         */
         processKeyUp(event: KeyboardEvent): void;
 
@@ -9158,7 +9158,7 @@ declare module Phaser {
         /**
         * Removes an existing key capture.
         * 
-        * @param keycode 
+        * @param keycode
         */
         removeKeyCapture(keycode: number): void;
 
@@ -9999,10 +9999,10 @@ declare module Phaser {
         /**
         * Find the angle of a segment from (x1, y1) -> (x2, y2).
         * 
-        * @param x1 
-        * @param y1 
-        * @param x2 
-        * @param y2 
+        * @param x1
+        * @param y1
+        * @param x2
+        * @param y2
         * @return The angle, in radians.
         */
         static angleBetween(x1: number, y1: number, x2: number, y2: number): number;
@@ -10010,8 +10010,8 @@ declare module Phaser {
         /**
         * Find the angle of a segment from (point1.x, point1.y) -> (point2.x, point2.y).
         * 
-        * @param point1 
-        * @param point2 
+        * @param point1
+        * @param point2
         * @return The angle, in radians.
         */
         static angleBetweenPoints(point1: Phaser.Point, point2: Phaser.Point): number;
@@ -10021,10 +10021,10 @@ declare module Phaser {
         * Note that the difference between this method and Math.angleBetween is that this assumes the y coordinate travels
         * down the screen.
         * 
-        * @param x1 
-        * @param y1 
-        * @param x2 
-        * @param y2 
+        * @param x1
+        * @param y1
+        * @param x2
+        * @param y2
         * @return The angle, in radians.
         */
         static angleBetweenY(x1: number, y1: number, x2: number, y2: number): number;
@@ -10032,8 +10032,8 @@ declare module Phaser {
         /**
         * Find the angle of a segment from (point1.x, point1.y) -> (point2.x, point2.y).
         * 
-        * @param point1 
-        * @param point2 
+        * @param point1
+        * @param point2
         * @return The angle, in radians.
         */
         static angleBetweenPointsY(point1: Phaser.Point, point2: Phaser.Point): number;
@@ -10057,35 +10057,35 @@ declare module Phaser {
         /**
         * 
         * 
-        * @param n 
-        * @param i 
+        * @param n
+        * @param i
         */
         static bernstein(n: number, i: number): number;
 
         /**
         * A Bezier Interpolation Method, mostly used by Phaser.Tween.
         * 
-        * @param v 
-        * @param k 
+        * @param v
+        * @param k
         */
         static bezierInterpolation(v: number[], k: number): number;
 
         /**
         * Calculates a callmum rom value.
         * 
-        * @param p0 
-        * @param p1 
-        * @param p2 
-        * @param p3 
-        * @param t 
+        * @param p0
+        * @param p1
+        * @param p2
+        * @param p3
+        * @param t
         */
         static catmullRom(p0: number, p1: number, p2: number, p3: number, t: number): number;
 
         /**
         * A Catmull Rom Interpolation Method, mostly used by Phaser.Tween.
         * 
-        * @param v 
-        * @param k 
+        * @param v
+        * @param k
         */
         static catmullRomInterpolation(v: number[], k: number): number;
 
@@ -10124,9 +10124,9 @@ declare module Phaser {
         /**
         * Force a value within the boundaries by clamping `x` to the range `[a, b]`.
         * 
-        * @param x 
-        * @param a 
-        * @param b 
+        * @param x
+        * @param a
+        * @param b
         */
         static clamp(x: number, a: number, b: number): number;
 
@@ -10134,8 +10134,8 @@ declare module Phaser {
         * Clamp `x` to the range `[a, Infinity)`.
         * Roughly the same as `Math.max(x, a)`, except for NaN handling.
         * 
-        * @param x 
-        * @param a 
+        * @param x
+        * @param a
         */
         static clampBottom(x: number, a: number): number;
 
@@ -10150,18 +10150,18 @@ declare module Phaser {
         /**
         * The (absolute) difference between two values.
         * 
-        * @param a 
-        * @param b 
+        * @param a
+        * @param b
         */
         static difference(a: number, b: number): number;
 
         /**
         * Returns the euclidian distance between the two given set of coordinates.
         * 
-        * @param x1 
-        * @param y1 
-        * @param x2 
-        * @param y2 
+        * @param x1
+        * @param y1
+        * @param x2
+        * @param y2
         * @return The distance between the two sets of coordinates.
         */
         static distance(x1: number, y1: number, x2: number, y2: number): number;
@@ -10169,10 +10169,10 @@ declare module Phaser {
         /**
         * Returns the distance between the two given set of coordinates at the power given.
         * 
-        * @param x1 
-        * @param y1 
-        * @param x2 
-        * @param y2 
+        * @param x1
+        * @param y1
+        * @param x2
+        * @param y2
         * @param pow  - Default: 2
         * @return The distance between the two sets of coordinates.
         */
@@ -10181,10 +10181,10 @@ declare module Phaser {
         /**
         * Returns the rounded distance between the two given set of coordinates.
         * 
-        * @param x1 
-        * @param y1 
-        * @param x2 
-        * @param y2 
+        * @param x1
+        * @param y1
+        * @param x2
+        * @param y2
         * @return The distance between this Point object and the destination Point object.
         */
         static distanceRounded(x1: number, y1: number, x2: number, y2: number): number;
@@ -10220,7 +10220,7 @@ declare module Phaser {
         /**
         * 
         * 
-        * @param val 
+        * @param val
         * @param epsilon  - Default: (small value)
         * @return ceiling(val-epsilon)
         */
@@ -10229,8 +10229,8 @@ declare module Phaser {
         /**
         * Two number are fuzzyEqual if their difference is less than epsilon.
         * 
-        * @param a 
-        * @param b 
+        * @param a
+        * @param b
         * @param epsilon  - Default: (small value)
         * @return True if |a-b|<epsilon
         */
@@ -10239,8 +10239,8 @@ declare module Phaser {
         /**
         * `a` is fuzzyLessThan `b` if it is less than b + epsilon.
         * 
-        * @param a 
-        * @param b 
+        * @param a
+        * @param b
         * @param epsilon  - Default: (small value)
         * @return True if a<b+epsilon
         */
@@ -10249,7 +10249,7 @@ declare module Phaser {
         /**
         * 
         * 
-        * @param val 
+        * @param val
         * @param epsilon  - Default: (small value)
         * @return floor(val-epsilon)
         */
@@ -10258,8 +10258,8 @@ declare module Phaser {
         /**
         * `a` is fuzzyGreaterThan `b` if it is more than b - epsilon.
         * 
-        * @param a 
-        * @param b 
+        * @param a
+        * @param b
         * @param epsilon  - Default: (small value)
         * @return True if a>b+epsilon
         */
@@ -10268,8 +10268,8 @@ declare module Phaser {
         /**
         * `a` is fuzzyLessThan `b` if it is less than b + epsilon.
         * 
-        * @param a 
-        * @param b 
+        * @param a
+        * @param b
         * @param epsilon  - Default: (small value)
         * @return True if a<b+epsilon
         */
@@ -10291,9 +10291,9 @@ declare module Phaser {
         /**
         * A one dimensional linear interpolation of a value.
         * 
-        * @param a 
-        * @param b 
-        * @param weight 
+        * @param a
+        * @param b
+        * @param weight
         */
         static interpolateFloat(a: number, b: number, weight: number): number;
 
@@ -10316,17 +10316,17 @@ declare module Phaser {
         /**
         * Calculates a linear (interpolation) value over t.
         * 
-        * @param p0 
-        * @param p1 
-        * @param t 
+        * @param p0
+        * @param p1
+        * @param t
         */
         static linear(p0: number, p1: number, t: number): number;
 
         /**
         * A Linear Interpolation Method, mostly used by Phaser.Tween.
         * 
-        * @param v 
-        * @param k 
+        * @param v
+        * @param k
         */
         static linearInterpolation(v: number[], k: number): number;
 
@@ -10376,7 +10376,7 @@ declare module Phaser {
         static maxProperty(...numbers: number[]): number;
 
         /**
-        * Variation of Math.min that can be passed either an array of numbers or the numbers as parameters.    
+        * Variation of Math.min that can be passed either an array of numbers or the numbers as parameters.
         * 
         * Prefer the standard `Math.min` function when appropriate.
         * @return The lowest value from those given.
@@ -10539,7 +10539,7 @@ declare module Phaser {
         /**
         * 
         * 
-        * @param n 
+        * @param n
         * @return n mod 1
         */
         static shear(n: number): number;
@@ -10565,7 +10565,7 @@ declare module Phaser {
         * 
         * This works differently from `Math.sign` for values of NaN and -0, etc.
         * 
-        * @param x 
+        * @param x
         * @return An integer in {-1, 0, 1}
         */
         static sign(x: number): number;
@@ -10587,18 +10587,18 @@ declare module Phaser {
         /**
         * Smootherstep function as detailed at http://en.wikipedia.org/wiki/Smoothstep
         * 
-        * @param x 
-        * @param min 
-        * @param max 
+        * @param x
+        * @param min
+        * @param max
         */
         static smootherstep(x: number, min: number, max: number): number;
 
         /**
         * Smoothstep function as detailed at http://en.wikipedia.org/wiki/Smoothstep
         * 
-        * @param x 
-        * @param min 
-        * @param max 
+        * @param x
+        * @param min
+        * @param max
         */
         static smoothstep(x: number, min: number, max: number): number;
 
@@ -10638,8 +10638,8 @@ declare module Phaser {
         /**
         * Snaps a value to the nearest value in an array.
         * 
-        * @param input 
-        * @param arr 
+        * @param input
+        * @param arr
         * @param sort True if the array needs to be sorted.
         */
         static snapToInArray(input: number, arr: number[], sort?: boolean): number;
@@ -10647,7 +10647,7 @@ declare module Phaser {
         /**
         * 
         * 
-        * @param n 
+        * @param n
         */
         static truncate(n: number): number;
 
@@ -11030,7 +11030,7 @@ declare module Phaser {
         * You can specify a part of a domain, for example 'google' would match 'google.com', 'google.co.uk', etc.
         * Do not include 'http://' at the start.
         * 
-        * @param domain 
+        * @param domain
         * @return true if the given domain fragment can be found in the window.location.hostname
         */
         checkDomainName(domain: string): boolean;
@@ -11657,8 +11657,8 @@ declare module Phaser {
         * Both Ninja Physics and Box2D require their respective plugins to be loaded before you can start them.
         * They are not bundled into the core Phaser library.
         * 
-        * If the physics world has already been created (i.e. in another state in your game) then 
-        * calling startSystem will reset the physics world, not re-create it. If you need to start them again from their constructors 
+        * If the physics world has already been created (i.e. in another state in your game) then
+        * calling startSystem will reset the physics world, not re-create it. If you need to start them again from their constructors
         * then set Phaser.Physics.p2 (or whichever system you want to recreate) to `null` before calling `startSystem`.
         * 
         * @param system The physics system to start: Phaser.Physics.ARCADE, Phaser.Physics.P2JS, Phaser.Physics.NINJA or Phaser.Physics.BOX2D.
@@ -15205,16 +15205,16 @@ declare module Phaser {
                 /**
                 * Constraint that only allows bodies to move along a line, relative to each other. See <a href="http://www.iforce2d.net/b2dtut/joints-prismatic">this tutorial</a>.
                 * 
-                * @param bodyA 
-                * @param bodyB 
-                * @param options 
+                * @param bodyA
+                * @param bodyB
+                * @param options
                 * @param options.maxForce Max force to be applied by the constraint
                 * @param options.localAnchorA Body A's anchor point, defined in its own local frame.
                 * @param options.localAnchorB Body B's anchor point, defined in its own local frame.
                 * @param options.localAxisA An axis, defined in body A frame, that body B's anchor point may slide along.
                 * @param options.disableRotationalLock If set to true, bodyB will be free to rotate around its anchor point.
-                * @param options.upperLimit 
-                * @param options.lowerLimit 
+                * @param options.upperLimit
+                * @param options.lowerLimit
                 */
                 constructor(world: Phaser.Physics.P2, bodyA?: Phaser.Physics.P2.Body, bodyB?: Phaser.Physics.P2.Body, lockRotation?: boolean, anchorA?: number[], anchorB?: number[], axis?: number[], maxForce?: number);
 
@@ -15250,15 +15250,15 @@ declare module Phaser {
                 /**
                 * A spring, connecting two bodies. The Spring explicitly adds force and angularForce to the bodies and does therefore not put load on the constraint solver.
                 * 
-                * @param bodyA 
-                * @param bodyB 
-                * @param options 
+                * @param bodyA
+                * @param bodyB
+                * @param options
                 * @param options.stiffness Spring constant (see Hookes Law). A number >= 0. - Default: 100
                 * @param options.damping A number >= 0. Default: 1 - Default: 1
                 * @param options.localAnchorA Where to hook the spring to body A, in local body coordinates. Defaults to the body center.
-                * @param options.localAnchorB 
+                * @param options.localAnchorB
                 * @param options.worldAnchorA Where to hook the spring to body A, in world coordinates. Overrides the option "localAnchorA" if given.
-                * @param options.worldAnchorB 
+                * @param options.worldAnchorB
                 */
                 constructor(world: Phaser.Physics.P2, bodyA: Phaser.Physics.P2.Body, bodyB: Phaser.Physics.P2.Body, restLength?: number, stiffness?: number, damping?: number, worldA?: number[], worldB?: number[], localA?: number[], localB?: number[]);
 
@@ -18467,7 +18467,7 @@ declare module Phaser {
 
         /**
         * Fades the volume of this Sound from its current value to the given volume over the duration specified.
-        * At the end of the fade Sound.onFadeComplete is dispatched with this Sound object as the first parameter, 
+        * At the end of the fade Sound.onFadeComplete is dispatched with this Sound object as the first parameter,
         * and the final volume (volume) as the second parameter.
         * 
         * @param duration The time in milliseconds during which the Sound should fade out. - Default: 1000
@@ -19286,7 +19286,7 @@ declare module Phaser {
     * 
     * The calculations of these are heavily influenced by the bounding Parent size which is the computed
     * dimensions of the Display canvas's Parent container/element - the _effective CSS rules of the
-    * canvas's Parent element play an important role_ in the operation of the ScaleManager. 
+    * canvas's Parent element play an important role_ in the operation of the ScaleManager.
     * 
     * The Display canvas - or Game size, depending {@link Phaser.ScaleManager#scaleMode scaleMode} - is updated to best utilize the Parent size.
     * When in Fullscreen mode or with {@link Phaser.ScaleManager#parentIsWindow parentIsWindow} the Parent size is that of the visual viewport (see {@link Phaser.ScaleManager#getParentBounds getParentBounds}).
@@ -19442,7 +19442,7 @@ declare module Phaser {
         forceLandscape: boolean;
 
         /**
-        * If true, the game should only run in a portrait 
+        * If true, the game should only run in a portrait
         * Change with {@link Phaser.ScaleManager#forceOrientation forceOrientation}.
         * Default: false
         */
@@ -19625,7 +19625,7 @@ declare module Phaser {
         onOrientationChange: Phaser.Signal;
 
         /**
-        * This signal is dispatched when the size of the Display canvas changes _or_ the size of the Game changes. 
+        * This signal is dispatched when the size of the Display canvas changes _or_ the size of the Game changes.
         * When invoked this is done _after_ the Canvas size/position have been updated.
         * 
         * This signal is _only_ called when a change occurs and a reflow may be required.
@@ -19893,7 +19893,7 @@ declare module Phaser {
         * This callback
         * - May be invoked even though the parent container or canvas sizes have not changed
         * - Unlike {@link Phaser.ScaleManager#onSizeChange onSizeChange}, it runs _before_ the canvas is guaranteed to be updated
-        * - Will be invoked from `preUpdate`, _even when_ the game is paused    
+        * - Will be invoked from `preUpdate`, _even when_ the game is paused
         * 
         * See {@link Phaser.ScaleManager#onSizeChange onSizeChange} for a better way of reacting to layout updates.
         * 
@@ -20019,9 +20019,9 @@ declare module Phaser {
 
 
         /**
-        * The bounds of the Visual viewport, as discussed in 
+        * The bounds of the Visual viewport, as discussed in
         * {@link http://www.quirksmode.org/mobile/viewports.html A tale of two viewports — part one}
-        * with one difference: the viewport size _excludes_ scrollbars, as found on some desktop browsers.   
+        * with one difference: the viewport size _excludes_ scrollbars, as found on some desktop browsers.
         * 
         * Supported mobile:
         *   iOS/Safari, Android 4, IE10, Firefox OS (maybe not Firefox Android), Opera Mobile 16
@@ -20031,7 +20031,7 @@ declare module Phaser {
         static visualBounds: Phaser.Rectangle;
 
         /**
-        * The bounds of the Layout viewport, as discussed in 
+        * The bounds of the Layout viewport, as discussed in
         * {@link http://www.quirksmode.org/mobile/viewports2.html A tale of two viewports — part two};
         * but honoring the constraints as specified applicable viewport meta-tag.
         * 
@@ -21206,7 +21206,7 @@ declare module Phaser {
         /**
         * Creates a Sprite for every object matching the given tile indexes in the map data.
         * You can specify the group that the Sprite will be created in. If none is given it will be created in the World.
-        * You can optional specify if the tile will be replaced with another after the Sprite is created. This is useful if you want to lay down special 
+        * You can optional specify if the tile will be replaced with another after the Sprite is created. This is useful if you want to lay down special
         * tiles in a level that are converted to Sprites, but want to replace the tile itself with a floor tile or similar once converted.
         * 
         * @param tiles The tile index, or array of indexes, to create Sprites from.
@@ -21545,7 +21545,7 @@ declare module Phaser {
         setLayer(layer: any): void;
 
         /**
-        * Turn off/on the recalculation of faces for tile or collision updates. 
+        * Turn off/on the recalculation of faces for tile or collision updates.
         * `setPreventRecalculate(true)` puts recalculation on hold while `setPreventRecalculate(false)` recalculates all the changed layers.
         * 
         * @param value If true it will put the recalculation on hold.
@@ -22351,7 +22351,7 @@ declare module Phaser {
         * An increasing value representing cumulative milliseconds since an undisclosed epoch.
         * 
         * While this value is in milliseconds and can be used to compute time deltas,
-        * it must must _not_ be used with `Date.now()` as it may not use the same epoch / starting reference. 
+        * it must must _not_ be used with `Date.now()` as it may not use the same epoch / starting reference.
         * 
         * The source may either be from a high-res source (eg. if RAF is available) or the standard Date.now;
         * the value can only be relied upon within a particular game instance.
@@ -22367,7 +22367,7 @@ declare module Phaser {
 
         /**
         * The physics update delta, in fractional seconds.
-        *    
+        * 
         * This should be used as an applicable multiplier by all logic update steps (eg. `preUpdate/postUpdate/update`)
         * to ensure consistent game timing. Game/logic timing can drift from real-world time if the system
         * is unable to consistently maintain the desired FPS.
@@ -22664,7 +22664,7 @@ declare module Phaser {
         remove(event: Phaser.TimerEvent): boolean;
 
         /**
-        * Removes all Events from this Timer and all callbacks linked to onComplete, but leaves the Timer running.    
+        * Removes all Events from this Timer and all callbacks linked to onComplete, but leaves the Timer running.
         * The onComplete callbacks won't be called.
         */
         removeAll(): void;
@@ -24110,9 +24110,9 @@ declare module p2 {
         /**
         * Axis aligned bounding box class.
         * 
-        * @param options 
-        * @param options.upperBound 
-        * @param options.lowerBound 
+        * @param options
+        * @param options.upperBound
+        * @param options.lowerBound
         */
         constructor(options?: {
             upperBound?: number[];
@@ -24189,7 +24189,7 @@ declare module p2 {
         /**
         * Broadphase that uses axis-aligned bins.
         * 
-        * @param options 
+        * @param options
         * @param options.xmin Lower x bound of the grid
         * @param options.xmax Upper x bound
         * @param options.ymin Lower y bound
@@ -24332,10 +24332,10 @@ declare module p2 {
         /**
         * Base constraint class.
         * 
-        * @param bodyA 
-        * @param bodyB 
-        * @param type 
-        * @param options 
+        * @param bodyA
+        * @param bodyB
+        * @param type
+        * @param options
         * @param options.collideConnected  - Default: true
         */
         constructor(bodyA: Body, bodyB: Body, type: number, options?: {
@@ -24530,16 +24530,16 @@ declare module p2 {
         /**
         * Constraint that only allows bodies to move along a line, relative to each other. See <a href="http://www.iforce2d.net/b2dtut/joints-prismatic">this tutorial</a>.
         * 
-        * @param bodyA 
-        * @param bodyB 
-        * @param options 
+        * @param bodyA
+        * @param bodyB
+        * @param options
         * @param options.maxForce Max force to be applied by the constraint
         * @param options.localAnchorA Body A's anchor point, defined in its own local frame.
         * @param options.localAnchorB Body B's anchor point, defined in its own local frame.
         * @param options.localAxisA An axis, defined in body A frame, that body B's anchor point may slide along.
         * @param options.disableRotationalLock If set to true, bodyB will be free to rotate around its anchor point.
-        * @param options.upperLimit 
-        * @param options.lowerLimit 
+        * @param options.upperLimit
+        * @param options.lowerLimit
         */
         constructor(bodyA: Body, bodyB: Body, type: number, options?: {
             collideConnected?: boolean;
@@ -24616,9 +24616,9 @@ declare module p2 {
         /**
         * Connects two bodies at given offset points, letting them rotate relative to each other around this point.
         * 
-        * @param bodyA 
-        * @param bodyB 
-        * @param options 
+        * @param bodyA
+        * @param bodyB
+        * @param options
         * @param options.worldPivot A pivot point given in world coordinates. If specified, localPivotA and localPivotB are automatically computed from this value.
         * @param options.localPivotA The point relative to the center of mass of bodyA which bodyA is constrained to.
         * @param options.localPivotB See localPivotA.
@@ -24688,9 +24688,9 @@ declare module p2 {
         /**
         * Locks the relative angle between two bodies. The constraint tries to keep the dot product between two vectors, local in each body, to zero. The local angle in body i is a parameter.
         * 
-        * @param bodyA 
-        * @param bodyB 
-        * @param options 
+        * @param bodyA
+        * @param bodyB
+        * @param options
         * @param options.angle Angle to add to the local vector in body A.
         * @param options.ratio Gear ratio
         */
@@ -24715,8 +24715,8 @@ declare module p2 {
         /**
         * Non-penetration constraint equation. Tries to make the contactPointA and contactPointB vectors coincide, while keeping the applied force repulsive.
         * 
-        * @param bodyA 
-        * @param bodyB 
+        * @param bodyA
+        * @param bodyB
         */
         constructor(bodyA: Body, bodyB: Body);
 
@@ -24874,9 +24874,9 @@ declare module p2 {
         /**
         * Constrains the slipping in a contact along a tangent
         * 
-        * @param bodyA 
-        * @param bodyB 
-        * @param slipForce 
+        * @param bodyA
+        * @param bodyB
+        * @param slipForce
         */
         constructor(bodyA: Body, bodyB: Body, slipForce: number);
 
@@ -24927,9 +24927,9 @@ declare module p2 {
         /**
         * Locks the relative angle between two bodies. The constraint tries to keep the dot product between two vectors, local in each body, to zero. The local angle in body i is a parameter.
         * 
-        * @param bodyA 
-        * @param bodyB 
-        * @param options 
+        * @param bodyA
+        * @param bodyB
+        * @param options
         * @param options.angle Angle to add to the local vector in bodyA.
         */
         constructor(bodyA: Body, bodyB: Body, options?: {
@@ -24952,8 +24952,8 @@ declare module p2 {
         /**
         * Syncs rotational velocity of two bodies, or sets a relative velocity (motor).
         * 
-        * @param bodyA 
-        * @param bodyB 
+        * @param bodyA
+        * @param bodyB
         */
         constructor(bodyA: Body, bodyB: Body);
 
@@ -25472,15 +25472,15 @@ declare module p2 {
         /**
         * A spring, connecting two bodies. The Spring explicitly adds force and angularForce to the bodies and does therefore not put load on the constraint solver.
         * 
-        * @param bodyA 
-        * @param bodyB 
-        * @param options 
+        * @param bodyA
+        * @param bodyB
+        * @param options
         * @param options.stiffness Spring constant (see Hookes Law). A number >= 0. - Default: 100
         * @param options.damping A number >= 0. Default: 1 - Default: 1
         * @param options.localAnchorA Where to hook the spring to body A, in local body coordinates. Defaults to the body center.
-        * @param options.localAnchorB 
+        * @param options.localAnchorB
         * @param options.worldAnchorA Where to hook the spring to body A, in world coordinates. Overrides the option "localAnchorA" if given.
-        * @param options.worldAnchorB 
+        * @param options.worldAnchorB
         */
         constructor(bodyA: Body, bodyB: Body, options?: {
 
@@ -25564,9 +25564,9 @@ declare module p2 {
         * 
         * The spring can be combined with a {{#crossLink "RevoluteConstraint"}}{{/crossLink}} to make, for example, a mouse trap.
         * 
-        * @param bodyA 
-        * @param bodyB 
-        * @param options 
+        * @param bodyA
+        * @param bodyB
+        * @param options
         * @param options.restAngle The relative angle of bodies at which the spring is at rest. If not given, it's set to the current relative angle between the bodies.
         * @param options.stiffness Spring constant (see Hookes Law). A number >= 0. - Default: 100
         * @param options.damping A number >= 0. - Default: 1
@@ -25696,7 +25696,7 @@ declare module p2 {
         * Heightfield shape class. Height data is given as an array. These data points are spread out evenly with a distance "elementWidth".
         * 
         * @param data An array of Y values that will be used to construct the terrain.
-        * @param options 
+        * @param options
         * @param options.minValue Minimum value of the data points in the data array. Will be computed automatically if not given.
         * @param options.maxValue Maximum value.
         * @param options.elementWidth World spacing between the data points in X direction. - Default: 0.1
@@ -25750,7 +25750,7 @@ declare module p2 {
         /**
         * Base class for shapes.
         * 
-        * @param type 
+        * @param type
         */
         constructor(type: number);
 
@@ -25924,7 +25924,7 @@ declare module p2 {
         /**
         * Iterative Gauss-Seidel constraint equation solver.
         * 
-        * @param options 
+        * @param options
         * @param options.iterations  - Default: 10
         * @param options.tolerance  - Default: 0
         */
@@ -26092,7 +26092,7 @@ declare module p2 {
         /**
         * Holds a body and keeps track of some additional properties needed for graph traversal.
         * 
-        * @param body 
+        * @param body
         */
         constructor(body: Body);
 
@@ -26202,7 +26202,7 @@ declare module p2 {
         /**
         * The dynamics world, where all bodies and constraints lives.
         * 
-        * @param options 
+        * @param options
         * @param options.solver Defaults to GSSolver.
         * @param options.gravity Defaults to [0,-9.78]
         * @param options.broadphase Defaults to NaiveBroadphase
