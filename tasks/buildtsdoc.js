@@ -121,7 +121,15 @@ var TypeScriptDocGenerator = (function () {
                 if ((p.default != null) && (p.default !== "")) {
                     def = " - Default: " + p.default;
                 }
-                comments.push("@param " + p.name + " - " + p.description + def);
+                var paramComments = p.description.split("\n");
+                for (var k = 0; k < paramComments.length; k++) {
+                    if (k === 0) {
+                        comments.push("@param " + p.name + " " + paramComments[k].trim() + ((k === paramComments.length - 1) ? def : ""));
+                    }
+                    else {
+                        comments.push(this.repeatSpaces(("@param " + p.name + " ").length) + paramComments[k].trim() + ((k === paramComments.length - 1) ? def : ""));
+                    }
+                }
             }
             return comments;
         }
@@ -149,10 +157,23 @@ var TypeScriptDocGenerator = (function () {
                         if ((p.default != null) && (p.default !== "")) {
                             def = " - Default: " + p.default;
                         }
-                        comments.push("@param " + p.name + " - " + p.description + def);
+
+                        var paramComments = p.description.split("\n");
+                        for (var k = 0; k < paramComments.length; k++)
+                        {
+                            if (k === 0)
+                            {
+                                comments.push("@param " + p.name + " " + paramComments[k].trim() + ((k === paramComments.length - 1) ? def : ""));
+                            }
+                            else
+                            {
+                                comments.push(this.repeatSpaces(("@param " + p.name + " ").length) + paramComments[k].trim() + ((k === paramComments.length - 1) ? def : ""));
+                            }
+                        }
+                        
                     }
                     if (f.returns != null) {
-                        comments.push("@return - " + f.returns.description);
+                        comments.push("@return " + f.returns.description);
                     }
                     return comments;
                 }

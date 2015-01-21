@@ -187,8 +187,8 @@ declare module PIXI {
         * This is the base class for creating a PIXI filter. Currently only webGL supports filters.
         * If you want to make a custom filter this should be your base class.
         * 
-        * @param fragmentSrc - The fragment source in an array of strings.
-        * @param uniforms - An object containing the uniforms for this filter.
+        * @param fragmentSrc The fragment source in an array of strings.
+        * @param uniforms An object containing the uniforms for this filter.
         */
         constructor(fragmentSrc: string[], uniforms: any);
 
@@ -220,7 +220,7 @@ declare module PIXI {
         * You can use this filter to apply all manor of crazy warping effects
         * Currently the r property of the texture is used to offset the x and the g property of the texture is used to offset the y.
         * 
-        * @param texture - The texture used for the displacement map * must be power of 2 texture at the moment
+        * @param texture The texture used for the displacement map * must be power of 2 texture at the moment
         */
         constructor(texture: Texture);
 
@@ -286,11 +286,11 @@ declare module PIXI {
         * When all items have been loaded this class will dispatch a 'onLoaded' event
         * As each individual item is loaded this class will dispatch a 'onProgress' event
         * 
-        * @param assetURLs - An array of image/sprite sheet urls that you would like loaded
-     supported. Supported image formats include 'jpeg', 'jpg', 'png', 'gif'. Supported
-     sprite sheet data formats only include 'JSON' at this time. Supported bitmap font
-     data formats include 'xml' and 'fnt'.
-        * @param crossorigin - Whether requests should be treated as crossorigin
+        * @param assetURLs An array of image/sprite sheet urls that you would like loaded
+        *                  supported. Supported image formats include 'jpeg', 'jpg', 'png', 'gif'. Supported
+        *                  sprite sheet data formats only include 'JSON' at this time. Supported bitmap font
+        *                  data formats include 'xml' and 'fnt'.
+        * @param crossorigin Whether requests should be treated as crossorigin
         */
         constructor(assetURLs: string[], crossorigin: boolean);
 
@@ -337,8 +337,8 @@ declare module PIXI {
         * It is highly recommended to use texture atlases (also know as 'sprite sheets') as it allowed sprites to be batched and drawn together for highly increased rendering speed.
         * Once the data has been loaded the frames are stored in the PIXI texture cache and can be accessed though PIXI.Texture.fromFrameId() and PIXI.Sprite.fromFrameId()
         * 
-        * @param url - The url of the JSON file
-        * @param crossorigin - Whether requests should be treated as crossorigin
+        * @param url The url of the JSON file
+        * @param crossorigin Whether requests should be treated as crossorigin
         */
         constructor(url: string, crossorigin: boolean);
 
@@ -370,19 +370,19 @@ declare module PIXI {
         * Helper function that creates a base texture from the given image url.
         * If the image is not in the base texture cache it will be created and loaded.
         * 
-        * @param imageUrl - The image url of the texture
-        * @param crossorigin - -
-        * @param scaleMode - See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
-        * @return - BaseTexture
+        * @param imageUrl The image url of the texture
+        * @param crossorigin -
+        * @param scaleMode See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
+        * @return BaseTexture
         */
         static fromImage(imageUrl: string, crossorigin?: boolean, scaleMode?: scaleModes): BaseTexture;
 
         /**
         * Helper function that creates a base texture from the given canvas element.
         * 
-        * @param canvas - The canvas element source of the texture
-        * @param scaleMode - See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
-        * @return - BaseTexture
+        * @param canvas The canvas element source of the texture
+        * @param scaleMode See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
+        * @return BaseTexture
         */
         static fromCanvas(canvas: HTMLCanvasElement, scaleMode?: scaleModes): BaseTexture;
 
@@ -390,16 +390,16 @@ declare module PIXI {
         /**
         * A texture stores the information that represents an image. All textures have a base texture.
         * 
-        * @param source - the source object (image or canvas)
-        * @param scaleMode - See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
+        * @param source the source object (image or canvas)
+        * @param scaleMode See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
         */
         constructor(source: HTMLImageElement, scaleMode: scaleModes);
 
         /**
         * A texture stores the information that represents an image. All textures have a base texture.
         * 
-        * @param source - the source object (image or canvas)
-        * @param scaleMode - See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
+        * @param source the source object (image or canvas)
+        * @param scaleMode See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
         */
         constructor(source: HTMLCanvasElement, scaleMode: scaleModes);
 
@@ -470,7 +470,7 @@ declare module PIXI {
         /**
         * Changes the source image of the texture
         * 
-        * @param newSrc - the path of the image
+        * @param newSrc the path of the image
         */
         updateSourceImage(newSrc: string): void;
 
@@ -498,8 +498,8 @@ declare module PIXI {
         * This loader will also load the image file as the data.
         * When loaded this class will dispatch a 'loaded' event
         * 
-        * @param url - The url of the sprite sheet JSON file
-        * @param crossorigin - Whether requests should be treated as crossorigin
+        * @param url The url of the sprite sheet JSON file
+        * @param crossorigin Whether requests should be treated as crossorigin
         */
         constructor(url: string, crossorigin: boolean);
 
@@ -559,8 +559,8 @@ declare module PIXI {
         * http://www.angelcode.com/products/bmfont/ for windows or
         * http://www.bmglyph.com/ for mac.
         * 
-        * @param text - The copy that you would like the text to display
-        * @param style - The style parameters
+        * @param text The copy that you would like the text to display
+        * @param style The style parameters
         */
         constructor(text: string, style: BitmapTextStyle);
 
@@ -590,7 +590,7 @@ declare module PIXI {
         /**
         * Set the text string to be rendered.
         * 
-        * @param text - The text that you would like displayed
+        * @param text The text that you would like displayed
         */
         setText(text: string): void;
 
@@ -599,7 +599,7 @@ declare module PIXI {
         * style.font {String} The size (optional) and bitmap font id (required) eq 'Arial' or '20px Arial' (must have loaded previously)
         * [style.align='left'] {String} Alignment for multiline text ('left', 'center' or 'right'), does not affect single lines of text
         * 
-        * @param style - The style parameters, contained as properties of an object
+        * @param style The style parameters, contained as properties of an object
         */
         setStyle(style: BitmapTextStyle): void;
 
@@ -673,8 +673,8 @@ declare module PIXI {
         /**
         * Creates a Canvas element of the given size.
         * 
-        * @param width - the width for the newly created canvas
-        * @param height - the height for the newly created canvas
+        * @param width the width for the newly created canvas
+        * @param height the height for the newly created canvas
         */
         constructor(width: number, height: number);
 
@@ -708,8 +708,8 @@ declare module PIXI {
         /**
         * Resizes the canvas to the specified width and height.
         * 
-        * @param width - the new width of the canvas
-        * @param height - the new height of the canvas
+        * @param width the new width of the canvas
+        * @param height the new height of the canvas
         */
         resize(width: number, height: number): void;
 
@@ -725,15 +725,15 @@ declare module PIXI {
         /**
         * This method adds it to the current stack of masks.
         * 
-        * @param maskData - the maskData that will be pushed
-        * @param renderSession - The renderSession whose context will be used for this mask manager.
+        * @param maskData the maskData that will be pushed
+        * @param renderSession The renderSession whose context will be used for this mask manager.
         */
         pushMask(maskData: MaskData, renderSession: RenderSession): void;
 
         /**
         * Restores the current drawing context to the state it was before the mask was applied.
         * 
-        * @param renderSession - The renderSession whose context will be used for this mask manager.
+        * @param renderSession The renderSession whose context will be used for this mask manager.
         */
         popMask(renderSession: RenderSession): void;
 
@@ -751,9 +751,9 @@ declare module PIXI {
         * The CanvasRenderer draws the Stage and all its content onto a 2d canvas. This renderer should be used for browsers that do not support webGL.
         * Don't forget to add the CanvasRenderer.view to your DOM or you will not see anything :)
         * 
-        * @param width - the width of the canvas view - Default: 800
-        * @param height - the height of the canvas view - Default: 600
-        * @param options - The optional renderer parameters
+        * @param width the width of the canvas view - Default: 800
+        * @param height the height of the canvas view - Default: 600
+        * @param options The optional renderer parameters
         */
         constructor(width?: number, height?: number, options?: PixiRendererOptions);
 
@@ -828,22 +828,22 @@ declare module PIXI {
         /**
         * Removes everything from the renderer and optionally removes the Canvas DOM element.
         * 
-        * @param removeView - Removes the Canvas element from the DOM. - Default: true
+        * @param removeView Removes the Canvas element from the DOM. - Default: true
         */
         destroy(removeView?: boolean): void;
 
         /**
         * Renders the Stage to this canvas view
         * 
-        * @param stage - the Stage element to be rendered
+        * @param stage the Stage element to be rendered
         */
         render(stage: Stage): void;
 
         /**
         * Resizes the canvas view to the specified width and height
         * 
-        * @param width - the new width of the canvas view
-        * @param height - the new height of the canvas view
+        * @param width the new width of the canvas view
+        * @param height the new height of the canvas view
         */
         resize(width: number, height: number): void;
 
@@ -859,27 +859,27 @@ declare module PIXI {
         /**
         * Basically this method just needs a sprite and a color and tints the sprite with the given color.
         * 
-        * @param sprite - the sprite to tint
-        * @param color - the color to use to tint the sprite with
-        * @return - The tinted canvas
+        * @param sprite the sprite to tint
+        * @param color the color to use to tint the sprite with
+        * @return The tinted canvas
         */
         static getTintedTexture(sprite: Sprite, color: number): HTMLCanvasElement;
 
         /**
         * Tint a texture using the "multiply" operation.
         * 
-        * @param texture - the texture to tint
-        * @param color - the color to use to tint the sprite with
-        * @param canvas - the current canvas
+        * @param texture the texture to tint
+        * @param color the color to use to tint the sprite with
+        * @param canvas the current canvas
         */
         static tintWithMultiply(texture: Texture, color: number, canvas: HTMLCanvasElement): void;
 
         /**
         * Tint a texture using the "overlay" operation.
         * 
-        * @param texture - the texture to tint
-        * @param color - the color to use to tint the sprite with
-        * @param canvas - the current canvas
+        * @param texture the texture to tint
+        * @param color the color to use to tint the sprite with
+        * @param canvas the current canvas
         */
         static tintWithOverlay(texture: Texture, color: number, canvas: HTMLCanvasElement): void;
         static tintWithPerPixel(texture: Texture, color: number, canvas: HTMLCanvasElement): void;
@@ -887,7 +887,7 @@ declare module PIXI {
         /**
         * Rounds the specified color according to the PIXI.CanvasTinter.cacheStepsPerColorChannel.
         * 
-        * @param color - the color to round, should be a hex color
+        * @param color the color to round, should be a hex color
         */
         static roundColor(color: number): void;
 
@@ -920,9 +920,9 @@ declare module PIXI {
         /**
         * The Circle object can be used to specify a hit area for displayObjects
         * 
-        * @param x - The X coordinate of the center of this circle
-        * @param y - The Y coordinate of the center of this circle
-        * @param radius - The radius of the circle
+        * @param x The X coordinate of the center of this circle
+        * @param y The Y coordinate of the center of this circle
+        * @param radius The radius of the circle
         */
         constructor(x: number, y: number, radius: number);
 
@@ -948,22 +948,22 @@ declare module PIXI {
 
         /**
         * Creates a clone of this Circle instance
-        * @return - a copy of the Circle
+        * @return a copy of the Circle
         */
         clone(): Circle;
 
         /**
         * Checks whether the x and y coordinates given are contained within this circle
         * 
-        * @param x - The X coordinate of the point to test
-        * @param y - The Y coordinate of the point to test
-        * @return - Whether the x/y coordinates are within this Circle
+        * @param x The X coordinate of the point to test
+        * @param y The Y coordinate of the point to test
+        * @return Whether the x/y coordinates are within this Circle
         */
         contains(x: number, y: number): boolean;
 
         /**
         * Returns the framing rectangle of the circle as a PIXI.Rectangle object
-        * @return - the framing rectangle
+        * @return the framing rectangle
         */
         getBounds(): Rectangle;
 
@@ -1016,9 +1016,9 @@ declare module PIXI {
         * A wide variety of image effects can be achieved through convolutions, including blurring, edge detection, sharpening, embossing, and beveling.
         * The matrix should be specified as a 9 point Array. See http://docs.gimp.org/en/plug-in-convmatrix.html for more info.
         * 
-        * @param matrix - An array of values used for matrix transformation. Specified as a 9 point Array.
-        * @param width - Width of the object you are transforming
-        * @param height - Height of the object you are transforming
+        * @param matrix An array of values used for matrix transformation. Specified as a 9 point Array.
+        * @param width Width of the object you are transforming
+        * @param height Height of the object you are transforming
         */
         constructor(matrix: number[], width: number, height: number);
 
@@ -1069,7 +1069,7 @@ declare module PIXI {
         * You can use this filter to apply all manor of crazy warping effects
         * Currently the r property of the texture is used offset the x and the g property of the texture is used to offset the y.
         * 
-        * @param texture - The texture used for the displacement map * must be power of 2 texture at the moment
+        * @param texture The texture used for the displacement map * must be power of 2 texture at the moment
         */
         constructor(texture: Texture);
 
@@ -1236,7 +1236,7 @@ declare module PIXI {
         /**
         * A callback that is used when the users clicks on the displayObject with their mouse's left button
         * 
-        * @param interactionData - -
+        * @param interactionData -
         */
         click(e: InteractionData): void;
         displayObjectUpdateTransform(): void;
@@ -1244,14 +1244,14 @@ declare module PIXI {
         /**
         * Retrieves the bounds of the displayObject as a rectangle object
         * 
-        * @param matrix - -
-        * @return - the rectangular bounding area
+        * @param matrix -
+        * @return the rectangular bounding area
         */
         getBounds(matrix?: Matrix): Rectangle;
 
         /**
         * Retrieves the local bounds of the displayObject as a rectangle object
-        * @return - the rectangular bounding area
+        * @return the rectangular bounding area
         */
         getLocalBounds(): Rectangle;
 
@@ -1259,31 +1259,31 @@ declare module PIXI {
         * Useful function that returns a texture of the displayObject object that can then be used to create sprites
         * This can be quite useful if your displayObject is static / complicated and needs to be reused multiple times.
         * 
-        * @param resolution - The resolution of the texture being generated
-        * @param scaleMode - See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
-        * @param renderer - The renderer used to generate the texture.
-        * @return - a texture of the graphics object
+        * @param resolution The resolution of the texture being generated
+        * @param scaleMode See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
+        * @param renderer The renderer used to generate the texture.
+        * @return a texture of the graphics object
         */
         generateTexture(resolution: number, scaleMode: scaleModes, renderer: PixiRenderer): RenderTexture;
 
         /**
         * A callback that is used when the user clicks the mouse's left button down over the sprite
         * 
-        * @param interactionData - -
+        * @param interactionData -
         */
         mousedown(e: InteractionData): void;
 
         /**
         * A callback that is used when the users mouse leaves the displayObject
         * 
-        * @param interactionData - -
+        * @param interactionData -
         */
         mouseout(e: InteractionData): void;
 
         /**
         * A callback that is used when the users mouse rolls over the displayObject
         * 
-        * @param interactionData - -
+        * @param interactionData -
         */
         mouseover(e: InteractionData): void;
 
@@ -1291,7 +1291,7 @@ declare module PIXI {
         * A callback that is used when the user releases the mouse's left button that was over the displayObject
         * for this callback to be fired, the mouse's left button must have been pressed down over the displayObject
         * 
-        * @param interactionData - -
+        * @param interactionData -
         */
         mouseup(e: InteractionData): void;
         mousemove(e: InteractionData): void;
@@ -1300,21 +1300,21 @@ declare module PIXI {
         * A callback that is used when the user releases the mouse's left button that was over the displayObject but is no longer over the displayObject
         * for this callback to be fired, the mouse's left button must have been pressed down over the displayObject
         * 
-        * @param interactionData - -
+        * @param interactionData -
         */
         mouseupoutside(e: InteractionData): void;
 
         /**
         * A callback that is used when the users clicks on the displayObject with their mouse's right button
         * 
-        * @param interactionData - -
+        * @param interactionData -
         */
         rightclick(e: InteractionData): void;
 
         /**
         * A callback that is used when the user clicks the mouse's right button down over the sprite
         * 
-        * @param interactionData - -
+        * @param interactionData -
         */
         rightdown(e: InteractionData): void;
 
@@ -1322,7 +1322,7 @@ declare module PIXI {
         * A callback that is used when the user releases the mouse's right button that was over the displayObject
         * for this callback to be fired the mouse's right button must have been pressed down over the displayObject
         * 
-        * @param interactionData - -
+        * @param interactionData -
         */
         rightup(e: InteractionData): void;
 
@@ -1330,14 +1330,14 @@ declare module PIXI {
         * A callback that is used when the user releases the mouse's right button that was over the displayObject but is no longer over the displayObject
         * for this callback to be fired, the mouse's right button must have been pressed down over the displayObject
         * 
-        * @param interactionData - -
+        * @param interactionData -
         */
         rightupoutside(e: InteractionData): void;
 
         /**
         * Sets the object's stage reference, the stage this object is connected to
         * 
-        * @param stage - the stage that the object will have as its current stage reference
+        * @param stage the stage that the object will have as its current stage reference
         */
         setStageReference(stage: Stage): void;
 
@@ -1345,31 +1345,31 @@ declare module PIXI {
         * A callback that is used when the users taps on the sprite with their finger
         * basically a touch version of click
         * 
-        * @param interactionData - -
+        * @param interactionData -
         */
         tap(e: InteractionData): void;
 
         /**
         * Calculates the global position of the display object
         * 
-        * @param position - The world origin to calculate from
-        * @return - A point object representing the position of this object
+        * @param position The world origin to calculate from
+        * @return A point object representing the position of this object
         */
         toGlobal(position: Point): Point;
 
         /**
         * Calculates the local position of the display object relative to another point
         * 
-        * @param position - The world origin to calculate from
-        * @param from - The DisplayObject to calculate the global position from
-        * @return - A point object representing the position of this object
+        * @param position The world origin to calculate from
+        * @param from The DisplayObject to calculate the global position from
+        * @return A point object representing the position of this object
         */
         toLocal(position: Point, from: DisplayObject): Point;
 
         /**
         * A callback that is used when the user releases a touch over the displayObject
         * 
-        * @param interactionData - -
+        * @param interactionData -
         */
         touchend(e: InteractionData): void;
 
@@ -1377,14 +1377,14 @@ declare module PIXI {
         * A callback that is used when the user releases the touch that was over the displayObject
         * for this callback to be fired, The touch must have started over the sprite
         * 
-        * @param interactionData - -
+        * @param interactionData -
         */
         touchendoutside(e: InteractionData): void;
 
         /**
         * A callback that is used when the user touches over the displayObject
         * 
-        * @param interactionData - -
+        * @param interactionData -
         */
         touchstart(e: InteractionData): void;
         touchmove(e: InteractionData): void;
@@ -1426,69 +1426,69 @@ declare module PIXI {
         /**
         * Adds a child to the container.
         * 
-        * @param child - The DisplayObject to add to the container
-        * @return - The child that was added.
+        * @param child The DisplayObject to add to the container
+        * @return The child that was added.
         */
         addChild(child: DisplayObject): DisplayObject;
 
         /**
         * Adds a child to the container at a specified index. If the index is out of bounds an error will be thrown
         * 
-        * @param child - The child to add
-        * @param index - The index to place the child in
-        * @return - The child that was added.
+        * @param child The child to add
+        * @param index The index to place the child in
+        * @return The child that was added.
         */
         addChildAt(child: DisplayObject, index: number): DisplayObject;
 
         /**
         * Retrieves the bounds of the displayObjectContainer as a rectangle. The bounds calculation takes all visible children into consideration.
-        * @return - The rectangular bounding area
+        * @return The rectangular bounding area
         */
         getBounds(): Rectangle;
 
         /**
         * Returns the child at the specified index
         * 
-        * @param index - The index to get the child from
-        * @return - The child at the given index, if any.
+        * @param index The index to get the child from
+        * @return The child at the given index, if any.
         */
         getChildAt(index: number): DisplayObject;
 
         /**
         * Returns the index position of a child DisplayObject instance
         * 
-        * @param child - The DisplayObject instance to identify
-        * @return - The index position of the child display object to identify
+        * @param child The DisplayObject instance to identify
+        * @return The index position of the child display object to identify
         */
         getChildIndex(child: DisplayObject): number;
 
         /**
         * Retrieves the non-global local bounds of the displayObjectContainer as a rectangle. The calculation takes all visible children into consideration.
-        * @return - The rectangular bounding area
+        * @return The rectangular bounding area
         */
         getLocalBounds(): Rectangle;
 
         /**
         * Removes a child from the container.
         * 
-        * @param child - The DisplayObject to remove
-        * @return - The child that was removed.
+        * @param child The DisplayObject to remove
+        * @return The child that was removed.
         */
         removeChild(child: DisplayObject): DisplayObject;
 
         /**
         * Removes a child from the specified index position.
         * 
-        * @param index - The index to get the child from
-        * @return - The child that was removed.
+        * @param index The index to get the child from
+        * @return The child that was removed.
         */
         removeChildAt(index: number): DisplayObject;
 
         /**
         * Removes all children from this container that are within the begin and end indexes.
         * 
-        * @param beginIndex - The beginning position. Default value is 0.
-        * @param endIndex - The ending position. Default value is size of the container.
+        * @param beginIndex The beginning position. Default value is 0.
+        * @param endIndex The ending position. Default value is size of the container.
         */
         removeChildren(beginIndex?: number, endIndex?: number): DisplayObject[];
 
@@ -1500,16 +1500,16 @@ declare module PIXI {
         /**
         * Changes the position of an existing child in the display object container
         * 
-        * @param child - The child DisplayObject instance for which you want to change the index number
-        * @param index - The resulting index number for the child display object
+        * @param child The child DisplayObject instance for which you want to change the index number
+        * @param index The resulting index number for the child display object
         */
         setChildIndex(child: DisplayObject, index: number): void;
 
         /**
         * Swaps the position of 2 Display Objects within this container.
         * 
-        * @param child - -
-        * @param child2 - -
+        * @param child -
+        * @param child2 -
         */
         swapChildren(child: DisplayObject, child2: DisplayObject): void;
 
@@ -1525,10 +1525,10 @@ declare module PIXI {
         /**
         * The Ellipse object can be used to specify a hit area for displayObjects
         * 
-        * @param x - The X coordinate of the center of the ellipse
-        * @param y - The Y coordinate of the center of the ellipse
-        * @param width - The half width of this ellipse
-        * @param height - The half height of this ellipse
+        * @param x The X coordinate of the center of the ellipse
+        * @param y The Y coordinate of the center of the ellipse
+        * @param width The half width of this ellipse
+        * @param height The half height of this ellipse
         */
         constructor(x: number, y: number, width: number, height: number);
 
@@ -1560,22 +1560,22 @@ declare module PIXI {
 
         /**
         * Creates a clone of this Ellipse instance
-        * @return - a copy of the ellipse
+        * @return a copy of the ellipse
         */
         clone(): Ellipse;
 
         /**
         * Checks whether the x and y coordinates given are contained within this ellipse
         * 
-        * @param x - The X coordinate of the point to test
-        * @param y - The Y coordinate of the point to test
-        * @return - Whether the x/y coords are within this ellipse
+        * @param x The X coordinate of the point to test
+        * @param y The Y coordinate of the point to test
+        * @return Whether the x/y coords are within this ellipse
         */
         contains(x: number, y: number): boolean;
 
         /**
         * Returns the framing rectangle of the ellipse as a PIXI.Rectangle object
-        * @return - the framing rectangle
+        * @return the framing rectangle
         */
         getBounds(): Rectangle;
 
@@ -1591,9 +1591,9 @@ declare module PIXI {
         /**
         * Creates an homogenous object for tracking events so users can know what to expect.
         * 
-        * @param target - The target object that the event is called on
-        * @param name - The string name of the event that was triggered
-        * @param data - Arbitrary event data to pass along
+        * @param target The target object that the event is called on
+        * @param name The string name of the event that was triggered
+        * @param data Arbitrary event data to pass along
         */
         constructor(target: any, name: string, data: any);
 
@@ -1642,7 +1642,7 @@ declare module PIXI {
         /**
         * Mixes in the properties of the EventTarget prototype onto another object
         * 
-        * @param object - The obj to mix into
+        * @param object The obj to mix into
         */
         static mixin(obj: any): void;
 
@@ -1654,10 +1654,10 @@ declare module PIXI {
         /**
         * 
         * 
-        * @param gl - the current WebGL drawing context
-        * @param width - the horizontal range of the filter
-        * @param height - the vertical range of the filter
-        * @param scaleMode - See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
+        * @param gl the current WebGL drawing context
+        * @param width the horizontal range of the filter
+        * @param height the vertical range of the filter
+        * @param scaleMode See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
         */
         constructor(gl: WebGLRenderingContext, width: number, height: number, scaleMode: scaleModes);
 
@@ -1677,8 +1677,8 @@ declare module PIXI {
         /**
         * Resizes the texture to the specified width and height
         * 
-        * @param width - the new width of the texture
-        * @param height - the new height of the texture
+        * @param width the new width of the texture
+        * @param height the new height of the texture
         */
         resize(width: number, height: number): void;
 
@@ -1772,13 +1772,13 @@ declare module PIXI {
         /**
         * The arc method creates an arc/curve (used to create circles, or parts of circles).
         * 
-        * @param cx - The x-coordinate of the center of the circle
-        * @param cy - The y-coordinate of the center of the circle
-        * @param radius - The radius of the circle
-        * @param startAngle - The starting angle, in radians (0 is at the 3 o'clock position of the arc's circle)
-        * @param endAngle - The ending angle, in radians
-        * @param anticlockwise - Optional. Specifies whether the drawing should be counterclockwise or clockwise. False is default, and indicates clockwise, while true indicates counter-clockwise.
-        * @return - 
+        * @param cx The x-coordinate of the center of the circle
+        * @param cy The y-coordinate of the center of the circle
+        * @param radius The radius of the circle
+        * @param startAngle The starting angle, in radians (0 is at the 3 o'clock position of the arc's circle)
+        * @param endAngle The ending angle, in radians
+        * @param anticlockwise Optional. Specifies whether the drawing should be counterclockwise or clockwise. False is default, and indicates clockwise, while true indicates counter-clockwise.
+        * @return 
         */
         arc(cx: number, cy: number, radius: number, startAngle: number, endAngle: number, anticlockwise: boolean): Graphics;
         arcTo(x1: number, y1: number, x2: number, y2: number, radius: number): Graphics;
@@ -1787,28 +1787,28 @@ declare module PIXI {
         * Specifies a simple one-color fill that subsequent calls to other Graphics methods
         * (such as lineTo() or drawCircle()) use when drawing.
         * 
-        * @param color - the color of the fill
-        * @param alpha - the alpha of the fill
-        * @return - 
+        * @param color the color of the fill
+        * @param alpha the alpha of the fill
+        * @return 
         */
         beginFill(color?: number, alpha?: number): Graphics;
 
         /**
         * Calculate the points for a bezier curve and then draws it.
         * 
-        * @param cpX - Control point x
-        * @param cpY - Control point y
-        * @param cpX2 - Second Control point x
-        * @param cpY2 - Second Control point y
-        * @param toX - Destination point x
-        * @param toY - Destination point y
-        * @return - 
+        * @param cpX Control point x
+        * @param cpY Control point y
+        * @param cpX2 Second Control point x
+        * @param cpY2 Second Control point y
+        * @param toX Destination point x
+        * @param toY Destination point y
+        * @return 
         */
         bezierCurveTo(cpX: number, cpY: number, cpX2: number, cpY2: number, toX: number, toY: number): Graphics;
 
         /**
         * Clears the graphics that were drawn to this Graphics object, and resets fill and line style settings.
-        * @return - 
+        * @return 
         */
         clear(): Graphics;
 
@@ -1820,99 +1820,99 @@ declare module PIXI {
         /**
         * Draws a circle.
         * 
-        * @param x - The X coordinate of the center of the circle
-        * @param y - The Y coordinate of the center of the circle
-        * @param radius - The radius of the circle
-        * @return - 
+        * @param x The X coordinate of the center of the circle
+        * @param y The Y coordinate of the center of the circle
+        * @param radius The radius of the circle
+        * @return 
         */
         drawCircle(x: number, y: number, radius: number): Graphics;
 
         /**
         * Draws an ellipse.
         * 
-        * @param x - The X coordinate of the center of the ellipse
-        * @param y - The Y coordinate of the center of the ellipse
-        * @param width - The half width of the ellipse
-        * @param height - The half height of the ellipse
-        * @return - 
+        * @param x The X coordinate of the center of the ellipse
+        * @param y The Y coordinate of the center of the ellipse
+        * @param width The half width of the ellipse
+        * @param height The half height of the ellipse
+        * @return 
         */
         drawEllipse(x: number, y: number, width: number, height: number): Graphics;
 
         /**
         * Draws a polygon using the given path.
         * 
-        * @param path - The path data used to construct the polygon.
-        * @return - 
+        * @param path The path data used to construct the polygon.
+        * @return 
         */
         drawPolygon(path: any): Graphics;
 
         /**
         * 
         * 
-        * @param x - The X coord of the top-left of the rectangle
-        * @param y - The Y coord of the top-left of the rectangle
-        * @param width - The width of the rectangle
-        * @param height - The height of the rectangle
-        * @return - 
+        * @param x The X coord of the top-left of the rectangle
+        * @param y The Y coord of the top-left of the rectangle
+        * @param width The width of the rectangle
+        * @param height The height of the rectangle
+        * @return 
         */
         drawRect(x: number, y: number, width: number, height: number): Graphics;
 
         /**
         * 
         * 
-        * @param x - The X coord of the top-left of the rectangle
-        * @param y - The Y coord of the top-left of the rectangle
-        * @param width - The width of the rectangle
-        * @param height - The height of the rectangle
-        * @param radius - Radius of the rectangle corners
+        * @param x The X coord of the top-left of the rectangle
+        * @param y The Y coord of the top-left of the rectangle
+        * @param width The width of the rectangle
+        * @param height The height of the rectangle
+        * @param radius Radius of the rectangle corners
         */
         drawRoundedRect(x: number, y: number, width: number, height: number, radius: number): Graphics;
 
         /**
         * Draws the given shape to this Graphics object. Can be any of Circle, Rectangle, Ellipse, Line or Polygon.
         * 
-        * @param shape - The Shape object to draw.
-        * @return - The generated GraphicsData object.
+        * @param shape The Shape object to draw.
+        * @return The generated GraphicsData object.
         */
         drawShape(shape: Circle): GraphicsData;
 
         /**
         * Draws the given shape to this Graphics object. Can be any of Circle, Rectangle, Ellipse, Line or Polygon.
         * 
-        * @param shape - The Shape object to draw.
-        * @return - The generated GraphicsData object.
+        * @param shape The Shape object to draw.
+        * @return The generated GraphicsData object.
         */
         drawShape(shape: Rectangle): GraphicsData;
 
         /**
         * Draws the given shape to this Graphics object. Can be any of Circle, Rectangle, Ellipse, Line or Polygon.
         * 
-        * @param shape - The Shape object to draw.
-        * @return - The generated GraphicsData object.
+        * @param shape The Shape object to draw.
+        * @return The generated GraphicsData object.
         */
         drawShape(shape: Ellipse): GraphicsData;
 
         /**
         * Draws the given shape to this Graphics object. Can be any of Circle, Rectangle, Ellipse, Line or Polygon.
         * 
-        * @param shape - The Shape object to draw.
-        * @return - The generated GraphicsData object.
+        * @param shape The Shape object to draw.
+        * @return The generated GraphicsData object.
         */
         drawShape(shape: Polygon): GraphicsData;
 
         /**
         * Applies a fill to the lines and shapes that were added since the last call to the beginFill() method.
-        * @return - 
+        * @return 
         */
         endFill(): Graphics;
 
         /**
         * Specifies the line style used for subsequent calls to Graphics methods such as the lineTo() method or the drawCircle() method.
         * 
-        * @param lineWidth - width of the line to draw, will update the objects stored style
-        * @param color - color of the line to draw, will update the objects stored style
-        * @param alpha - alpha of the line to draw, will update the objects stored style
-        * @return - 
+        * @param lineWidth width of the line to draw, will update the objects stored style
+        * @param color color of the line to draw, will update the objects stored style
+        * @param alpha alpha of the line to draw, will update the objects stored style
+        * @return 
         */
         lineStyle(lineWidth?: number, color?: number, alpha?: number): Graphics;
 
@@ -1920,18 +1920,18 @@ declare module PIXI {
         * Draws a line using the current line style from the current drawing position to (x, y);
         * The current drawing position is then set to (x, y).
         * 
-        * @param x - the X coordinate to draw to
-        * @param y - the Y coordinate to draw to
-        * @return - 
+        * @param x the X coordinate to draw to
+        * @param y the Y coordinate to draw to
+        * @return 
         */
         lineTo(x: number, y: number): Graphics;
 
         /**
         * Moves the current drawing position to x, y.
         * 
-        * @param x - the X coordinate to move to
-        * @param y - the Y coordinate to move to
-        * @return - 
+        * @param x the X coordinate to move to
+        * @param y the Y coordinate to move to
+        * @return 
         */
         moveTo(x: number, y: number): Graphics;
 
@@ -1939,11 +1939,11 @@ declare module PIXI {
         * Calculate the points for a quadratic bezier curve and then draws it.
         * Based on: https://stackoverflow.com/questions/785097/how-do-i-implement-a-bezier-curve-in-c
         * 
-        * @param cpX - Control point x
-        * @param cpY - Control point y
-        * @param toX - Destination point x
-        * @param toY - Destination point y
-        * @return - 
+        * @param cpX Control point x
+        * @param cpY Control point y
+        * @param toX Destination point x
+        * @param toY Destination point y
+        * @return 
         */
         quadraticCurveTo(cpX: number, cpY: number, toX: number, toY: number): Graphics;
 
@@ -1977,8 +1977,8 @@ declare module PIXI {
         * Once the image has been loaded it is stored in the PIXI texture cache and can be accessed though PIXI.Texture.fromFrame() and PIXI.Sprite.fromFrame()
         * When loaded this class will dispatch a 'loaded' event
         * 
-        * @param url - The url of the image
-        * @param crossorigin - Whether requests should be treated as crossorigin
+        * @param url The url of the image
+        * @param crossorigin Whether requests should be treated as crossorigin
         */
         constructor(url: string, crossorigin?: boolean);
 
@@ -2006,9 +2006,9 @@ declare module PIXI {
         /**
         * Loads image and split it to uniform sized frames
         * 
-        * @param frameWidth - width of each frame
-        * @param frameHeight - height of each frame
-        * @param textureName - if given, the frames will be cached in <textureName>-<ord> format
+        * @param frameWidth width of each frame
+        * @param frameHeight height of each frame
+        * @param textureName if given, the frames will be cached in <textureName>-<ord> format
         */
         loadFramedSpriteSheet(frameWidth: number, frameHeight: number, textureName: string): void;
 
@@ -2040,9 +2040,9 @@ declare module PIXI {
         /**
         * This will return the local coordinates of the specified displayObject for this InteractionData
         * 
-        * @param displayObject - The DisplayObject that you would like the local coords off
-        * @param point - A Point object in which to store the value, optional (otherwise will create a new point)
-        * @return - A point containing the coordinates of the InteractionData position relative to the DisplayObject
+        * @param displayObject The DisplayObject that you would like the local coords off
+        * @param point A Point object in which to store the value, optional (otherwise will create a new point)
+        * @return A point containing the coordinates of the InteractionData position relative to the DisplayObject
         */
         getLocalPosition(displayObject: DisplayObject): Point;
 
@@ -2103,7 +2103,7 @@ declare module PIXI {
         * if its interactive parameter is set to true
         * This manager also supports multitouch.
         * 
-        * @param stage - The stage to handle interactions
+        * @param stage The stage to handle interactions
         */
         constructor(stage: Stage);
     }
@@ -2136,8 +2136,8 @@ declare module PIXI {
         * When loaded this class will dispatch a 'loaded' event
         * If loading fails this class will dispatch an 'error' event
         * 
-        * @param url - The url of the JSON file
-        * @param crossorigin - Whether requests should be treated as crossorigin
+        * @param url The url of the JSON file
+        * @param crossorigin Whether requests should be treated as crossorigin
         */
         constructor(url: string, crossorigin?: boolean);
 
@@ -2230,8 +2230,8 @@ declare module PIXI {
         /**
         * Appends the given Matrix to this Matrix.
         * 
-        * @param matrix - -
-        * @return - This matrix. Good for chaining method calls.
+        * @param matrix -
+        * @return This matrix. Good for chaining method calls.
         */
         append(matrix: Matrix): Matrix;
 
@@ -2239,9 +2239,9 @@ declare module PIXI {
         * Get a new position with the current transformation applied.
         * Can be used to go from a child's coordinate space to the world coordinate space. (e.g. rendering)
         * 
-        * @param pos - The origin
-        * @param newPos - The point that the new position is assigned to (allowed to be same as input)
-        * @return - The new point, transformed through this matrix
+        * @param pos The origin
+        * @param newPos The point that the new position is assigned to (allowed to be same as input)
+        * @return The new point, transformed through this matrix
         */
         apply(pos: Point, newPos: Point): Point;
 
@@ -2249,24 +2249,24 @@ declare module PIXI {
         * Get a new position with the inverse of the current transformation applied.
         * Can be used to go from the world coordinate space to a child's coordinate space. (e.g. input)
         * 
-        * @param pos - The origin
-        * @param newPos - The point that the new position is assigned to (allowed to be same as input)
-        * @return - The new point, inverse-transformed through this matrix
+        * @param pos The origin
+        * @param newPos The point that the new position is assigned to (allowed to be same as input)
+        * @return The new point, inverse-transformed through this matrix
         */
         applyInverse(pos: Point, newPos: Point): Point;
         determineMatrixArrayType(): number[];
 
         /**
         * Resets this Matix to an identity (default) matrix.
-        * @return - This matrix. Good for chaining method calls.
+        * @return This matrix. Good for chaining method calls.
         */
         identity(): Matrix;
 
         /**
         * Applies a rotation transformation to the matrix.
         * 
-        * @param angle - The angle in radians.
-        * @return - This matrix. Good for chaining method calls.
+        * @param angle The angle in radians.
+        * @return This matrix. Good for chaining method calls.
         */
         rotate(angle: number): Matrix;
 
@@ -2280,33 +2280,33 @@ declare module PIXI {
         * tx = array[2]
         * ty = array[5]
         * 
-        * @param array - The array that the matrix will be populated from.
+        * @param array The array that the matrix will be populated from.
         */
         fromArray(array: number[]): void;
 
         /**
         * Translates the matrix on the x and y.
         * 
-        * @param x - -
-        * @param y - -
-        * @return - This matrix. Good for chaining method calls.
+        * @param x -
+        * @param y -
+        * @return This matrix. Good for chaining method calls.
         */
         translate(x: number, y: number): Matrix;
 
         /**
         * Creates an array from the current Matrix object.
         * 
-        * @param transpose - Whether we need to transpose the matrix or not
-        * @return - the newly created array which contains the matrix
+        * @param transpose Whether we need to transpose the matrix or not
+        * @return the newly created array which contains the matrix
         */
         toArray(transpose: boolean): number[];
 
         /**
         * Applies a scale transformation to the matrix.
         * 
-        * @param x - The amount to scale horizontally
-        * @param y - The amount to scale vertically
-        * @return - This matrix. Good for chaining method calls.
+        * @param x The amount to scale horizontally
+        * @param y The amount to scale vertically
+        * @return This matrix. Good for chaining method calls.
         */
         scale(x: number, y: number): Matrix;
 
@@ -2335,14 +2335,14 @@ declare module PIXI {
         /**
         * A short hand way of creating a movieclip from an array of frame ids
         * 
-        * @param frames - the array of frames ids the movieclip will use as its texture frames
+        * @param frames the array of frames ids the movieclip will use as its texture frames
         */
         static fromFrames(frames: string[]): MovieClip;
 
         /**
         * A short hand way of creating a movieclip from an array of image ids
         * 
-        * @param frames - the array of image ids the movieclip will use as its texture frames
+        * @param frames the array of image ids the movieclip will use as its texture frames
         */
         static fromImages(images: HTMLImageElement[]): HTMLImageElement;
 
@@ -2350,7 +2350,7 @@ declare module PIXI {
         /**
         * A MovieClip is a simple way to display an animation depicted by a list of textures.
         * 
-        * @param textures - an array of {Texture} objects that make up the animation
+        * @param textures an array of {Texture} objects that make up the animation
         */
         constructor(textures: Texture[]);
 
@@ -2394,14 +2394,14 @@ declare module PIXI {
         /**
         * Goes to a specific frame and begins playing the MovieClip
         * 
-        * @param frameNumber - frame index to start at
+        * @param frameNumber frame index to start at
         */
         gotoAndPlay(frameNumber: number): void;
 
         /**
         * Stops the MovieClip and goes to a specific frame
         * 
-        * @param frameNumber - frame index to stop at
+        * @param frameNumber frame index to stop at
         */
         gotoAndStop(frameNumber: number): void;
         onComplete(): void;
@@ -2490,7 +2490,7 @@ declare module PIXI {
         /**
         * 
         * 
-        * @param gl - the current WebGL drawing context
+        * @param gl the current WebGL drawing context
         */
         constructor(gl: WebGLRenderingContext);
 
@@ -2570,7 +2570,7 @@ declare module PIXI {
         /**
         * 
         * 
-        * @param gl - the current WebGL drawing context
+        * @param gl the current WebGL drawing context
         */
         constructor(gl: WebGLRenderingContext);
 
@@ -2615,7 +2615,7 @@ declare module PIXI {
         /**
         * 
         * 
-        * @param gl - the current WebGL drawing context
+        * @param gl the current WebGL drawing context
         */
         constructor(gl: WebGLRenderingContext);
 
@@ -2654,7 +2654,7 @@ declare module PIXI {
         /**
         * 
         * 
-        * @param gl - the current WebGL drawing context
+        * @param gl the current WebGL drawing context
         */
         constructor(gl: WebGLRenderingContext);
 
@@ -2693,7 +2693,7 @@ declare module PIXI {
         /**
         * 
         * 
-        * @param gl - the current WebGL drawing context
+        * @param gl the current WebGL drawing context
         */
         constructor(gl: WebGLRenderingContext);
 
@@ -2736,8 +2736,8 @@ declare module PIXI {
         /**
         * The Point object represents a location in a two-dimensional coordinate system, where x represents the horizontal axis and y represents the vertical axis.
         * 
-        * @param x - position of the point on the x axis
-        * @param y - position of the point on the y axis
+        * @param x position of the point on the x axis
+        * @param y position of the point on the y axis
         */
         constructor(x?: number, y?: number);
 
@@ -2757,7 +2757,7 @@ declare module PIXI {
 
         /**
         * Creates a clone of this point
-        * @return - a copy of the point
+        * @return a copy of the point
         */
         clone(): Point;
 
@@ -2765,8 +2765,8 @@ declare module PIXI {
         * Sets the point to a new x and y position.
         * If y is omitted, both x and y will be set to x.
         * 
-        * @param x - position of the point on the x axis - Default: 0
-        * @param y - position of the point on the y axis - Default: 0
+        * @param x position of the point on the x axis - Default: 0
+        * @param y position of the point on the y axis - Default: 0
         */
         set(x: number, y: number): void;
 
@@ -2778,44 +2778,44 @@ declare module PIXI {
         /**
         * 
         * 
-        * @param points - This can be an array of Points that form the polygon,
-     a flat array of numbers that will be interpreted as [x,y, x,y, ...], or the arguments passed can be
-     all the points of the polygon e.g. `new PIXI.Polygon(new PIXI.Point(), new PIXI.Point(), ...)`, or the
-     arguments passed can be flat x,y values e.g. `new PIXI.Polygon(x,y, x,y, x,y, ...)` where `x` and `y` are
-     Numbers.
+        * @param points This can be an array of Points that form the polygon,
+        *               a flat array of numbers that will be interpreted as [x,y, x,y, ...], or the arguments passed can be
+        *               all the points of the polygon e.g. `new PIXI.Polygon(new PIXI.Point(), new PIXI.Point(), ...)`, or the
+        *               arguments passed can be flat x,y values e.g. `new PIXI.Polygon(x,y, x,y, x,y, ...)` where `x` and `y` are
+        *               Numbers.
         */
         constructor(points: Point[]);
 
         /**
         * 
         * 
-        * @param points - This can be an array of Points that form the polygon,
-     a flat array of numbers that will be interpreted as [x,y, x,y, ...], or the arguments passed can be
-     all the points of the polygon e.g. `new PIXI.Polygon(new PIXI.Point(), new PIXI.Point(), ...)`, or the
-     arguments passed can be flat x,y values e.g. `new PIXI.Polygon(x,y, x,y, x,y, ...)` where `x` and `y` are
-     Numbers.
+        * @param points This can be an array of Points that form the polygon,
+        *               a flat array of numbers that will be interpreted as [x,y, x,y, ...], or the arguments passed can be
+        *               all the points of the polygon e.g. `new PIXI.Polygon(new PIXI.Point(), new PIXI.Point(), ...)`, or the
+        *               arguments passed can be flat x,y values e.g. `new PIXI.Polygon(x,y, x,y, x,y, ...)` where `x` and `y` are
+        *               Numbers.
         */
         constructor(points: number[]);
 
         /**
         * 
         * 
-        * @param points - This can be an array of Points that form the polygon,
-     a flat array of numbers that will be interpreted as [x,y, x,y, ...], or the arguments passed can be
-     all the points of the polygon e.g. `new PIXI.Polygon(new PIXI.Point(), new PIXI.Point(), ...)`, or the
-     arguments passed can be flat x,y values e.g. `new PIXI.Polygon(x,y, x,y, x,y, ...)` where `x` and `y` are
-     Numbers.
+        * @param points This can be an array of Points that form the polygon,
+        *               a flat array of numbers that will be interpreted as [x,y, x,y, ...], or the arguments passed can be
+        *               all the points of the polygon e.g. `new PIXI.Polygon(new PIXI.Point(), new PIXI.Point(), ...)`, or the
+        *               arguments passed can be flat x,y values e.g. `new PIXI.Polygon(x,y, x,y, x,y, ...)` where `x` and `y` are
+        *               Numbers.
         */
         constructor(...points: Point[]);
 
         /**
         * 
         * 
-        * @param points - This can be an array of Points that form the polygon,
-     a flat array of numbers that will be interpreted as [x,y, x,y, ...], or the arguments passed can be
-     all the points of the polygon e.g. `new PIXI.Polygon(new PIXI.Point(), new PIXI.Point(), ...)`, or the
-     arguments passed can be flat x,y values e.g. `new PIXI.Polygon(x,y, x,y, x,y, ...)` where `x` and `y` are
-     Numbers.
+        * @param points This can be an array of Points that form the polygon,
+        *               a flat array of numbers that will be interpreted as [x,y, x,y, ...], or the arguments passed can be
+        *               all the points of the polygon e.g. `new PIXI.Polygon(new PIXI.Point(), new PIXI.Point(), ...)`, or the
+        *               arguments passed can be flat x,y values e.g. `new PIXI.Polygon(x,y, x,y, x,y, ...)` where `x` and `y` are
+        *               Numbers.
         */
         constructor(...points: number[]);
 
@@ -2828,16 +2828,16 @@ declare module PIXI {
 
         /**
         * Creates a clone of this polygon
-        * @return - a copy of the polygon
+        * @return a copy of the polygon
         */
         clone(): Polygon;
 
         /**
         * Checks whether the x and y coordinates passed to this function are contained within this polygon
         * 
-        * @param x - The X coordinate of the point to test
-        * @param y - The Y coordinate of the point to test
-        * @return - Whether the x/y coordinates are within this polygon
+        * @param x The X coordinate of the point to test
+        * @param y The Y coordinate of the point to test
+        * @return Whether the x/y coordinates are within this polygon
         */
         contains(x: number, y: number): boolean;
 
@@ -2853,10 +2853,10 @@ declare module PIXI {
         /**
         * the Rectangle object is an area defined by its position, as indicated by its top-left corner point (x, y) and by its width and its height.
         * 
-        * @param x - The X coordinate of the upper-left corner of the rectangle
-        * @param y - The Y coordinate of the upper-left corner of the rectangle
-        * @param width - The overall width of this rectangle
-        * @param height - The overall height of this rectangle
+        * @param x The X coordinate of the upper-left corner of the rectangle
+        * @param y The Y coordinate of the upper-left corner of the rectangle
+        * @param width The overall width of this rectangle
+        * @param height The overall height of this rectangle
         */
         constructor(x?: number, y?: number, width?: number, height?: number);
 
@@ -2888,16 +2888,16 @@ declare module PIXI {
 
         /**
         * Creates a clone of this Rectangle
-        * @return - a copy of the rectangle
+        * @return a copy of the rectangle
         */
         clone(): Rectangle;
 
         /**
         * Checks whether the x and y coordinates given are contained within this Rectangle
         * 
-        * @param x - The X coordinate of the point to test
-        * @param y - The Y coordinate of the point to test
-        * @return - Whether the x/y coordinates are within this Rectangle
+        * @param x The X coordinate of the point to test
+        * @param y The Y coordinate of the point to test
+        * @return Whether the x/y coordinates are within this Rectangle
         */
         contains(x: number, y: number): boolean;
 
@@ -2936,8 +2936,8 @@ declare module PIXI {
         /**
         * 
         * 
-        * @param texture - - The texture to use on the rope.
-        * @param points - - An array of {PIXI.Point}.
+        * @param texture - The texture to use on the rope.
+        * @param points - An array of {PIXI.Point}.
         */
         constructor(texture: Texture, points: Point[]);
 
@@ -2956,11 +2956,11 @@ declare module PIXI {
         /**
         * The Rounded Rectangle object is an area defined by its position and has nice rounded corners, as indicated by its top-left corner point (x, y) and by its width and its height.
         * 
-        * @param x - The X coordinate of the upper-left corner of the rounded rectangle
-        * @param y - The Y coordinate of the upper-left corner of the rounded rectangle
-        * @param width - The overall width of this rounded rectangle
-        * @param height - The overall height of this rounded rectangle
-        * @param radius - Controls the radius of the rounded corners
+        * @param x The X coordinate of the upper-left corner of the rounded rectangle
+        * @param y The Y coordinate of the upper-left corner of the rounded rectangle
+        * @param width The overall width of this rounded rectangle
+        * @param height The overall height of this rounded rectangle
+        * @param radius Controls the radius of the rounded corners
         */
         constructor(x?: number, y?: number, width?: number, height?: number, radius?: number);
 
@@ -2998,16 +2998,16 @@ declare module PIXI {
 
         /**
         * Creates a clone of this Rounded Rectangle
-        * @return - a copy of the rounded rectangle
+        * @return a copy of the rounded rectangle
         */
         clone(): RoundedRectangle;
 
         /**
         * Checks whether the x and y coordinates given are contained within this Rounded Rectangle
         * 
-        * @param x - The X coordinate of the point to test
-        * @param y - The Y coordinate of the point to test
-        * @return - Whether the x/y coordinates are within this Rounded Rectangle
+        * @param x The X coordinate of the point to test
+        * @param y The Y coordinate of the point to test
+        * @return Whether the x/y coordinates are within this Rounded Rectangle
         */
         contains(x: number, y: number): boolean;
 
@@ -3078,8 +3078,8 @@ declare module PIXI {
         * You will need to generate a sprite sheet to accompany the spine data
         * When loaded this class will dispatch a "loaded" event
         * 
-        * @param url - The url of the JSON file
-        * @param crossorigin - Whether requests should be treated as crossorigin
+        * @param url The url of the JSON file
+        * @param crossorigin Whether requests should be treated as crossorigin
         */
         constructor(url: string, crossOrigin: boolean);
 
@@ -3110,8 +3110,8 @@ declare module PIXI {
         /**
         * Supporting class to load images from spine atlases as per spine spec.
         * 
-        * @param basePath - Tha base path where to look for the images to be loaded
-        * @param crossorigin - Whether requests should be treated as crossorigin
+        * @param basePath Tha base path where to look for the images to be loaded
+        * @param crossorigin Whether requests should be treated as crossorigin
         */
         constructor(basePath: string, crossorigin: boolean);
 
@@ -3119,15 +3119,15 @@ declare module PIXI {
         /**
         * Starts loading a base texture as per spine specification
         * 
-        * @param page - Atlas page to which texture belongs
-        * @param file - The file to load, this is just the file path relative to the base path configured in the constructor
+        * @param page Atlas page to which texture belongs
+        * @param file The file to load, this is just the file path relative to the base path configured in the constructor
         */
         load(page: AtlasPage, file: string): void;
 
         /**
         * Unloads a previously loaded texture as per spine specification
         * 
-        * @param texture - Texture object to destroy
+        * @param texture Texture object to destroy
         */
         unload(texture: BaseTexture): void;
 
@@ -3144,8 +3144,8 @@ declare module PIXI {
         * Helper function that creates a sprite that will contain a texture from the TextureCache based on the frameId
         *  The frame ids are created when a Texture packer file has been loaded
         * 
-        * @param frameId - The frame Id of the texture in the cache
-        * @return - A new Sprite using a texture from the texture cache matching the frameId
+        * @param frameId The frame Id of the texture in the cache
+        * @return A new Sprite using a texture from the texture cache matching the frameId
         */
         static fromFrame(frameId: string): Sprite;
 
@@ -3153,8 +3153,8 @@ declare module PIXI {
         * Helper function that creates a sprite that will contain a texture based on an image url
         *  If the image is not in the texture cache it will be loaded
         * 
-        * @param imageId - The image url of the texture
-        * @return - A new Sprite using a texture from the texture cache matching the image id
+        * @param imageId The image url of the texture
+        * @return A new Sprite using a texture from the texture cache matching the image id
         */
         static fromImage(url: string, crossorigin?: boolean, scaleMode?: scaleModes): Sprite;
 
@@ -3162,12 +3162,12 @@ declare module PIXI {
         /**
         * The Sprite object is the base for all textured objects that are rendered to the screen
         * 
-        * @param texture - The texture for this sprite
-
-A sprite can be created directly from an image like this :
-var sprite = new PIXI.Sprite.fromImage('assets/image.png');
-yourStage.addChild(sprite);
-then obviously don't forget to add it to the stage you have already created
+        * @param texture The texture for this sprite
+        *                
+        *                A sprite can be created directly from an image like this :
+        *                var sprite = new PIXI.Sprite.fromImage('assets/image.png');
+        *                yourStage.addChild(sprite);
+        *                then obviously don't forget to add it to the stage you have already created
         */
         constructor(texture: Texture);
 
@@ -3207,7 +3207,7 @@ then obviously don't forget to add it to the stage you have already created
         /**
         * Sets the texture of the sprite
         * 
-        * @param texture - The PIXI texture that is displayed by the sprite
+        * @param texture The PIXI texture that is displayed by the sprite
         */
         setTexture(texture: Texture): void;
 
@@ -3249,7 +3249,7 @@ then obviously don't forget to add it to the stage you have already created
         *    }
         * And here you have a hundred sprites that will be renderer at the speed of light
         * 
-        * @param texture - -
+        * @param texture -
         */
         constructor(texture?: Texture);
 
@@ -3282,8 +3282,8 @@ then obviously don't forget to add it to the stage you have already created
         * This loader will load the image file that the Spritesheet points to as well as the data.
         * When loaded this class will dispatch a 'loaded' event
         * 
-        * @param url - The url of the sprite sheet JSON file
-        * @param crossorigin - Whether requests should be treated as crossorigin
+        * @param url The url of the sprite sheet JSON file
+        * @param crossorigin Whether requests should be treated as crossorigin
         */
         constructor(url: string, crossorigin?: boolean);
 
@@ -3340,15 +3340,15 @@ then obviously don't forget to add it to the stage you have already created
         /**
         * A Stage represents the root of the display tree. Everything connected to the stage is rendered
         * 
-        * @param backgroundColor - the background color of the stage, you have to pass this in is in hex format
-     like: 0xFFFFFF for white
-
-Creating a stage is a mandatory process when you use Pixi, which is as simple as this : 
-var stage = new PIXI.Stage(0xFFFFFF);
-where the parameter given is the background colour of the stage, in hex
-you will use this stage instance to add your sprites to it and therefore to the renderer
-Here is how to add a sprite to the stage : 
-stage.addChild(sprite);
+        * @param backgroundColor the background color of the stage, you have to pass this in is in hex format
+        *                        like: 0xFFFFFF for white
+        *                        
+        *                        Creating a stage is a mandatory process when you use Pixi, which is as simple as this :
+        *                        var stage = new PIXI.Stage(0xFFFFFF);
+        *                        where the parameter given is the background colour of the stage, in hex
+        *                        you will use this stage instance to add your sprites to it and therefore to the renderer
+        *                        Here is how to add a sprite to the stage :
+        *                        stage.addChild(sprite);
         */
         constructor(backgroundColor: number);
 
@@ -3361,15 +3361,15 @@ stage.addChild(sprite);
 
         /**
         * This will return the point containing global coordinates of the mouse.
-        * @return - A point containing the coordinates of the global InteractionData position.
+        * @return A point containing the coordinates of the global InteractionData position.
         */
         getMousePosition(): Point;
 
         /**
         * Sets the background color for the stage
         * 
-        * @param backgroundColor - the color of the background, easiest way to pass this in is in hex format
-     like: 0xFFFFFF for white
+        * @param backgroundColor the color of the background, easiest way to pass this in is in hex format
+        *                        like: 0xFFFFFF for white
         */
         setBackgroundColor(backgroundColor: number): void;
 
@@ -3377,7 +3377,7 @@ stage.addChild(sprite);
         * Sets another DOM element which can receive mouse/touch interactions instead of the default Canvas element.
         * This is useful for when you have other DOM elements on top of the Canvas element.
         * 
-        * @param domElement - This new domElement which will receive mouse/touch events
+        * @param domElement This new domElement which will receive mouse/touch events
         */
         setInteractionDelegate(domElement: HTMLElement): void;
 
@@ -3396,9 +3396,9 @@ stage.addChild(sprite);
         /**
         * 
         * 
-        * @param texture - The texture to use
-        * @param width - the width
-        * @param height - the height
+        * @param texture The texture to use
+        * @param width the width
+        * @param height the height
         */
         constructor(texture: Texture);
 
@@ -3432,8 +3432,8 @@ stage.addChild(sprite);
         /**
         * Returns the bounds of the mesh as a rectangle. The bounds calculation takes the worldTransform into account.
         * 
-        * @param matrix - the transformation matrix of the sprite
-        * @return - the framing rectangle
+        * @param matrix the transformation matrix of the sprite
+        * @return the framing rectangle
         */
         getBounds(matrix?: Matrix): Rectangle;
 
@@ -3451,8 +3451,8 @@ stage.addChild(sprite);
         * A Text Object will create a line or multiple lines of text. To split a line you can use '\n' in your text string,
         * or add a wordWrap property set to true and and wordWrapWidth property with a value in the style object.
         * 
-        * @param text - The copy that you would like the text to display
-        * @param style - The style parameters
+        * @param text The copy that you would like the text to display
+        * @param style The style parameters
         */
         constructor(text: string, style?: TextStyle);
 
@@ -3475,32 +3475,32 @@ stage.addChild(sprite);
         /**
         * Destroys this text object.
         * 
-        * @param destroyBaseTexture - whether to destroy the base texture as well
+        * @param destroyBaseTexture whether to destroy the base texture as well
         */
         destroy(destroyTexture: boolean): void;
 
         /**
         * Set the style of the text
         * 
-        * @param style - The style parameters
-        * @param style.fill - A canvas fillstyle that will be used on the text eg 'red', '#00FF00' - Default: 'black'
-        * @param style.align - Alignment for multiline text ('left', 'center' or 'right'), does not affect single line text - Default: 'left'
-        * @param style.stroke - A canvas fillstyle that will be used on the text stroke eg 'blue', '#FCFF00' - Default: 'black'
-        * @param style.strokeThickness - A number that represents the thickness of the stroke. Default is 0 (no stroke) - Default: 0
-        * @param style.wordWrap - Indicates if word wrap should be used - Default: false
-        * @param style.wordWrapWidth - The width at which text will wrap - Default: 100
-        * @param style.dropShadow - Set a drop shadow for the text - Default: false
-        * @param style.dropShadowColor - A fill style to be used on the dropshadow e.g 'red', '#00FF00' - Default: '#000000'
-        * @param style.dropShadowAngle - Set a angle of the drop shadow - Default: Math.PI/4
-        * @param style.dropShadowDistance - Set a distance of the drop shadow - Default: 5
-        * @param style.font - The style and size of the font - Default: 'bold - 20pt Arial'
+        * @param style The style parameters
+        * @param style.fill A canvas fillstyle that will be used on the text eg 'red', '#00FF00' - Default: 'black'
+        * @param style.align Alignment for multiline text ('left', 'center' or 'right'), does not affect single line text - Default: 'left'
+        * @param style.stroke A canvas fillstyle that will be used on the text stroke eg 'blue', '#FCFF00' - Default: 'black'
+        * @param style.strokeThickness A number that represents the thickness of the stroke. Default is 0 (no stroke) - Default: 0
+        * @param style.wordWrap Indicates if word wrap should be used - Default: false
+        * @param style.wordWrapWidth The width at which text will wrap - Default: 100
+        * @param style.dropShadow Set a drop shadow for the text - Default: false
+        * @param style.dropShadowColor A fill style to be used on the dropshadow e.g 'red', '#00FF00' - Default: '#000000'
+        * @param style.dropShadowAngle Set a angle of the drop shadow - Default: Math.PI/4
+        * @param style.dropShadowDistance Set a distance of the drop shadow - Default: 5
+        * @param style.font The style and size of the font - Default: 'bold - 20pt Arial'
         */
         setStyle(style: TextStyle): void;
 
         /**
         * Set the copy for the text object. To split a line you can use '\n'.
         * 
-        * @param text - The copy that you would like the text to display
+        * @param text The copy that you would like the text to display
         */
         setText(text: string): void;
 
@@ -3519,9 +3519,9 @@ stage.addChild(sprite);
         /**
         * Helper function that creates a new a Texture based on the given canvas element.
         * 
-        * @param canvas - The canvas element source of the texture
-        * @param scaleMode - See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
-        * @return - Texture
+        * @param canvas The canvas element source of the texture
+        * @param scaleMode See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
+        * @return Texture
         */
         static fromCanvas(canvas: HTMLCanvasElement, scaleMode?: scaleModes): Texture;
 
@@ -3529,8 +3529,8 @@ stage.addChild(sprite);
         * Helper function that returns a Texture objected based on the given frame id.
         * If the frame id is not in the texture cache an error will be thrown.
         * 
-        * @param frameId - The frame id of the texture
-        * @return - Texture
+        * @param frameId The frame id of the texture
+        * @return Texture
         */
         static fromFrame(frameId: string): Texture;
 
@@ -3538,26 +3538,26 @@ stage.addChild(sprite);
         * Helper function that creates a Texture object from the given image url.
         * If the image is not in the texture cache it will be  created and loaded.
         * 
-        * @param imageUrl - The image url of the texture
-        * @param crossorigin - Whether requests should be treated as crossorigin
-        * @param scaleMode - See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
-        * @return - Texture
+        * @param imageUrl The image url of the texture
+        * @param crossorigin Whether requests should be treated as crossorigin
+        * @param scaleMode See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
+        * @return Texture
         */
         static fromImage(imageUrl: string, crossorigin?: boolean, scaleMode?: scaleModes): Texture;
 
         /**
         * Adds a texture to the global PIXI.TextureCache. This cache is shared across the whole PIXI object.
         * 
-        * @param texture - The Texture to add to the cache.
-        * @param id - The id that the texture will be stored against.
+        * @param texture The Texture to add to the cache.
+        * @param id The id that the texture will be stored against.
         */
         static addTextureToCache(texture: Texture, id: string): void;
 
         /**
         * Remove a texture from the global PIXI.TextureCache.
         * 
-        * @param id - The id of the texture to be removed
-        * @return - The texture that was removed
+        * @param id The id of the texture to be removed
+        * @return The texture that was removed
         */
         static removeTextureFromCache(id: string): Texture;
 
@@ -3566,10 +3566,10 @@ stage.addChild(sprite);
         * A texture stores the information that represents an image or part of an image. It cannot be added
         * to the display list directly. Instead use it as the texture for a PIXI.Sprite. If no frame is provided then the whole image is used.
         * 
-        * @param baseTexture - The base texture source to create the texture from
-        * @param frame - The rectangle frame of the texture to show
-        * @param crop - The area of original texture
-        * @param trim - Trimmed texture rectangle
+        * @param baseTexture The base texture source to create the texture from
+        * @param frame The rectangle frame of the texture to show
+        * @param crop The area of original texture
+        * @param trim Trimmed texture rectangle
         */
         constructor(baseTexture: BaseTexture, frame?: Rectangle, crop?: Rectangle, trim?: Rectangle);
 
@@ -3634,14 +3634,14 @@ stage.addChild(sprite);
         /**
         * Destroys this texture
         * 
-        * @param destroyBase - Whether to destroy the base texture as well
+        * @param destroyBase Whether to destroy the base texture as well
         */
         destroy(destroyBase: boolean): void;
 
         /**
         * Specifies the region of the baseTexture that this texture will use.
         * 
-        * @param frame - The frame of the texture to set it to
+        * @param frame The frame of the texture to set it to
         */
         setFrame(frame: Rectangle): void;
 
@@ -3657,9 +3657,9 @@ stage.addChild(sprite);
         /**
         * A tiling sprite is a fast way of rendering a tiling image
         * 
-        * @param texture - the texture of the tiling sprite
-        * @param width - the width of the tiling sprite
-        * @param height - the height of the tiling sprite
+        * @param texture the texture of the tiling sprite
+        * @param width the width of the tiling sprite
+        * @param height the height of the tiling sprite
         */
         constructor(texture: Texture, width: number, height: number);
 
@@ -3700,14 +3700,14 @@ stage.addChild(sprite);
         /**
         * 
         * 
-        * @param forcePowerOfTwo - Whether we want to force the texture to be a power of two
+        * @param forcePowerOfTwo Whether we want to force the texture to be a power of two
         */
         generateTilingTexture(forcePowerOfTwo: boolean): void;
 
         /**
         * Sets the texture of the sprite
         * 
-        * @param texture - The PIXI texture that is displayed by the sprite
+        * @param texture The PIXI texture that is displayed by the sprite
         */
         setTexture(texture: Texture): void;
 
@@ -3848,27 +3848,27 @@ stage.addChild(sprite);
         /**
         * Mimic Pixi BaseTexture.from.... method.
         * 
-        * @param video - -
-        * @param scaleMode - See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
-        * @return - 
+        * @param video -
+        * @param scaleMode See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
+        * @return 
         */
         static baseTextureFromVideo(video: HTMLVideoElement, scaleMode: number): BaseTexture;
 
         /**
         * Mimic Pixi BaseTexture.from.... method.
         * 
-        * @param video - -
-        * @param scaleMode - See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
-        * @return - A Texture, but not a VideoTexture.
+        * @param video -
+        * @param scaleMode See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
+        * @return A Texture, but not a VideoTexture.
         */
         static textureFromVideo(video: HTMLVideoElement, scaleMode: number): Texture;
 
         /**
         * Mimic Pixi BaseTexture.from.... method.
         * 
-        * @param videoSrc - The URL for the video.
-        * @param scaleMode - See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
-        * @return - 
+        * @param videoSrc The URL for the video.
+        * @param scaleMode See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
+        * @return 
         */
         static fromUrl(videoSrc: string, scaleMode: number): Texture;
 
@@ -3899,14 +3899,14 @@ stage.addChild(sprite);
         /**
         * Sets-up the given blendMode from WebGL's point of view.
         * 
-        * @param blendMode - the blendMode, should be a Pixi const, such as PIXI.BlendModes.ADD
+        * @param blendMode the blendMode, should be a Pixi const, such as PIXI.BlendModes.ADD
         */
         setBlendMode(blendMode: number): boolean;
 
         /**
         * Sets the WebGL Context.
         * 
-        * @param gl - the current WebGL drawing context
+        * @param gl the current WebGL drawing context
         */
         setContext(gl: WebGLRenderingContext): void;
 
@@ -3945,8 +3945,8 @@ stage.addChild(sprite);
         /**
         * 
         * 
-        * @param spriteBatch - -
-        * @param renderSession - -
+        * @param spriteBatch -
+        * @param renderSession -
         */
         begin(spriteBatch: SpriteBatch, renderSession: RenderSession): void;
         destroy(removeView?: boolean): void;
@@ -3955,21 +3955,21 @@ stage.addChild(sprite);
         /**
         * 
         * 
-        * @param spriteBatch - -
+        * @param spriteBatch -
         */
         render(spriteBatch: SpriteBatch): void;
 
         /**
         * 
         * 
-        * @param sprite - -
+        * @param sprite -
         */
         renderSprite(sprite: Sprite): void;
 
         /**
         * Sets the WebGL Context.
         * 
-        * @param gl - the current WebGL drawing context
+        * @param gl the current WebGL drawing context
         */
         setContext(gl: WebGLRenderingContext): void;
         start(): void;
@@ -3988,18 +3988,18 @@ stage.addChild(sprite);
         /**
         * Applies the filter to the specified area.
         * 
-        * @param filter - the filter that needs to be applied
-        * @param filterArea - TODO - might need an update
-        * @param width - the horizontal range of the filter
-        * @param height - the vertical range of the filter
+        * @param filter the filter that needs to be applied
+        * @param filterArea TODO - might need an update
+        * @param width the horizontal range of the filter
+        * @param height the vertical range of the filter
         */
         applyFilterPass(filter: AbstractFilter, filterArea: Texture, width: number, height: number): void;
 
         /**
         * 
         * 
-        * @param renderSession - -
-        * @param buffer - -
+        * @param renderSession -
+        * @param buffer -
         */
         begin(renderSession: RenderSession, buffer: ArrayBuffer): void;
 
@@ -4021,14 +4021,14 @@ stage.addChild(sprite);
         /**
         * Applies the filter and adds it to the current filter stack.
         * 
-        * @param filterBlock - the filter that will be pushed to the current filter stack
+        * @param filterBlock the filter that will be pushed to the current filter stack
         */
         pushFilter(filterBlock: FilterBlock): void;
 
         /**
         * Initialises the context and the properties.
         * 
-        * @param gl - the current WebGL drawing context
+        * @param gl the current WebGL drawing context
         */
         setContext(gl: WebGLRenderingContext): void;
 
@@ -4046,40 +4046,40 @@ stage.addChild(sprite);
         /**
         * Renders the graphics object
         * 
-        * @param graphics - -
-        * @param renderSession - -
+        * @param graphics -
+        * @param renderSession -
         */
         static renderGraphics(graphics: Graphics, renderRession: RenderSession): void;
 
         /**
         * Updates the graphics object
         * 
-        * @param graphicsData - The graphics object to update
-        * @param gl - the current WebGL drawing context
+        * @param graphicsData The graphics object to update
+        * @param gl the current WebGL drawing context
         */
         static updateGraphics(graphics: Graphics, gl: WebGLRenderingContext): void;
 
         /**
         * 
         * 
-        * @param webGL - -
-        * @param type - -
+        * @param webGL -
+        * @param type -
         */
         static switchMode(webGL: WebGLRenderingContext, type: number): any; //WebGLData
 
         /**
         * Builds a rectangle to draw
         * 
-        * @param graphicsData - The graphics object containing all the necessary properties
-        * @param webGLData - -
+        * @param graphicsData The graphics object containing all the necessary properties
+        * @param webGLData -
         */
         static buildRectangle(graphicsData: GraphicsData, webGLData: any): void;
 
         /**
         * Builds a rounded rectangle to draw
         * 
-        * @param graphicsData - The graphics object containing all the necessary properties
-        * @param webGLData - -
+        * @param graphicsData The graphics object containing all the necessary properties
+        * @param webGLData -
         */
         static buildRoundedRectangle(graphicsData: GraphicsData, webGLData: any): void;
 
@@ -4087,45 +4087,45 @@ stage.addChild(sprite);
         * Calculate the points for a quadratic bezier curve. (helper function..)
         * Based on: https://stackoverflow.com/questions/785097/how-do-i-implement-a-bezier-curve-in-c
         * 
-        * @param fromX - Origin point x
-        * @param fromY - Origin point x
-        * @param cpX - Control point x
-        * @param cpY - Control point y
-        * @param toX - Destination point x
-        * @param toY - Destination point y
-        * @return - 
+        * @param fromX Origin point x
+        * @param fromY Origin point x
+        * @param cpX Control point x
+        * @param cpY Control point y
+        * @param toX Destination point x
+        * @param toY Destination point y
+        * @return 
         */
         static quadraticBezierCurve(fromX: number, fromY: number, cpX: number, cpY: number, toX: number, toY: number): number[];
 
         /**
         * Builds a circle to draw
         * 
-        * @param graphicsData - The graphics object to draw
-        * @param webGLData - -
+        * @param graphicsData The graphics object to draw
+        * @param webGLData -
         */
         static buildCircle(graphicsData: GraphicsData, webGLData: any): void;
 
         /**
         * Builds a line to draw
         * 
-        * @param graphicsData - The graphics object containing all the necessary properties
-        * @param webGLData - -
+        * @param graphicsData The graphics object containing all the necessary properties
+        * @param webGLData -
         */
         static buildLine(graphicsData: GraphicsData, webGLData: any): void;
 
         /**
         * Builds a complex polygon to draw
         * 
-        * @param graphicsData - The graphics object containing all the necessary properties
-        * @param webGLData - -
+        * @param graphicsData The graphics object containing all the necessary properties
+        * @param webGLData -
         */
         static buildComplexPoly(graphicsData: GraphicsData, webGLData: any): void;
 
         /**
         * Builds a polygon to draw
         * 
-        * @param graphicsData - The graphics object containing all the necessary properties
-        * @param webGLData - -
+        * @param graphicsData The graphics object containing all the necessary properties
+        * @param webGLData -
         */
         static buildPoly(graphicsData: GraphicsData, webGLData: any): boolean;
 
@@ -4165,23 +4165,23 @@ stage.addChild(sprite);
         /**
         * Removes the last filter from the filter stack and doesn't return it.
         * 
-        * @param maskData - -
-        * @param renderSession - an object containing all the useful parameters
+        * @param maskData -
+        * @param renderSession an object containing all the useful parameters
         */
         popMask(renderSession: RenderSession): void;
 
         /**
         * Applies the Mask and adds it to the current filter stack.
         * 
-        * @param maskData - -
-        * @param renderSession - -
+        * @param maskData -
+        * @param renderSession -
         */
         pushMask(maskData: any[], renderSession: RenderSession): void;
 
         /**
         * Sets the drawing context to the one given in parameter.
         * 
-        * @param gl - the current WebGL drawing context
+        * @param gl the current WebGL drawing context
         */
         setContext(gl: WebGLRenderingContext): void;
 
@@ -4205,9 +4205,9 @@ stage.addChild(sprite);
         * So no need for Sprite Batches or Sprite Clouds.
         * Don't forget to add the view to your DOM or you will not see anything :)
         * 
-        * @param width - the width of the canvas view - Default: 0
-        * @param height - the height of the canvas view - Default: 0
-        * @param options - The optional renderer parameters
+        * @param width the width of the canvas view - Default: 0
+        * @param height the height of the canvas view - Default: 0
+        * @param options The optional renderer parameters
         */
         constructor(width?: number, height?: number, options?: PixiRendererOptions);
 
@@ -4316,31 +4316,31 @@ stage.addChild(sprite);
         /**
         * Renders the stage to its webGL view
         * 
-        * @param stage - the Stage element to be rendered
+        * @param stage the Stage element to be rendered
         */
         render(stage: Stage): void;
 
         /**
         * Renders a Display Object.
         * 
-        * @param displayObject - The DisplayObject to render
-        * @param projection - The projection
-        * @param buffer - a standard WebGL buffer
+        * @param displayObject The DisplayObject to render
+        * @param projection The projection
+        * @param buffer a standard WebGL buffer
         */
         renderDisplayObject(displayObject: DisplayObject, projection: Point, buffer: WebGLBuffer): void;
 
         /**
         * Resizes the webGL view to the specified width and height.
         * 
-        * @param width - the new width of the webGL view
-        * @param height - the new height of the webGL view
+        * @param width the new width of the webGL view
+        * @param height the new height of the webGL view
         */
         resize(width: number, height: number): void;
 
         /**
         * Updates and Creates a WebGL texture for the renderers context.
         * 
-        * @param texture - the texture to update
+        * @param texture the texture to update
         */
         updateTexture(texture: Texture): void;
 
@@ -4362,21 +4362,21 @@ stage.addChild(sprite);
         /**
         * Takes the attributes given in parameters.
         * 
-        * @param attribs - attribs
+        * @param attribs attribs
         */
         setAttribs(attribs: ShaderAttribute[]): void;
 
         /**
         * Initialises the context and the properties.
         * 
-        * @param gl - the current WebGL drawing context
+        * @param gl the current WebGL drawing context
         */
         setContext(gl: WebGLRenderingContext): void;
 
         /**
         * Sets the current shader.
         * 
-        * @param shader - -
+        * @param shader -
         */
         setShader(shader: IPixiShader): boolean;
 
@@ -4392,9 +4392,9 @@ stage.addChild(sprite);
         /**
         * TODO this does not belong here!
         * 
-        * @param graphics - -
-        * @param webGLData - -
-        * @param renderSession - -
+        * @param graphics -
+        * @param webGLData -
+        * @param renderSession -
         */
         bindGraphics(graphics: Graphics, webGLData: any[], renderSession: RenderSession): void;
 
@@ -4406,9 +4406,9 @@ stage.addChild(sprite);
         /**
         * 
         * 
-        * @param graphics - -
-        * @param webGLData - -
-        * @param renderSession - -
+        * @param graphics -
+        * @param webGLData -
+        * @param renderSession -
         */
         popStencil(graphics: Graphics, webGLData: any[], renderSession: RenderSession): void;
         pushStencil(graphics: Graphics, webGLData: any[], renderSession: RenderSession): void;
@@ -4416,7 +4416,7 @@ stage.addChild(sprite);
         /**
         * Sets the drawing context to the one given in parameter.
         * 
-        * @param gl - the current WebGL drawing context
+        * @param gl the current WebGL drawing context
         */
         setContext(gl: WebGLRenderingContext): void;
 
@@ -4465,7 +4465,7 @@ stage.addChild(sprite);
         /**
         * 
         * 
-        * @param renderSession - The RenderSession object
+        * @param renderSession The RenderSession object
         */
         begin(renderSession: RenderSession): void;
 
@@ -4483,23 +4483,23 @@ stage.addChild(sprite);
         /**
         * 
         * 
-        * @param sprite - the sprite to render when using this spritebatch
+        * @param sprite the sprite to render when using this spritebatch
         */
         render(sprite: Sprite): void;
 
         /**
         * 
         * 
-        * @param texture - -
-        * @param size - -
-        * @param startIndex - -
+        * @param texture -
+        * @param size -
+        * @param startIndex -
         */
         renderBatch(texture: Texture, size: number, startIndex: number): void;
 
         /**
         * Renders a TilingSprite using the spriteBatch.
         * 
-        * @param sprite - the tilingSprite to render
+        * @param sprite the tilingSprite to render
         */
         renderTilingSprite(sprite: TilingSprite): void;
         setBlendMode(blendMode: blendModes): void;
@@ -4507,7 +4507,7 @@ stage.addChild(sprite);
         /**
         * 
         * 
-        * @param gl - the current WebGL drawing context
+        * @param gl the current WebGL drawing context
         */
         setContext(gl: WebGLRenderingContext): void;
         start(): void;
@@ -4561,11 +4561,11 @@ stage.addChild(sprite);
         *    doc.addChild(sprite);
         *    renderTexture.render(doc);  // Renders to center of renderTexture
         * 
-        * @param width - The width of the render texture
-        * @param height - The height of the render texture
-        * @param renderer - The renderer used for this RenderTexture
-        * @param scaleMode - See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
-        * @param resolution - The resolution of the texture being generated
+        * @param width The width of the render texture
+        * @param height The height of the render texture
+        * @param renderer The renderer used for this RenderTexture
+        * @param scaleMode See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
+        * @param resolution The resolution of the texture being generated
         */
         constructor(width?: number, height?: number, renderer?: PixiRenderer, scaleMode?: scaleModes, resolution?: number);
 
@@ -4599,28 +4599,28 @@ stage.addChild(sprite);
 
         /**
         * Will return a a base64 encoded string of this texture. It works by calling RenderTexture.getCanvas and then running toDataURL on that.
-        * @return - A base64 encoded string of the texture.
+        * @return A base64 encoded string of the texture.
         */
         getBase64(): string;
 
         /**
         * Creates a Canvas element, renders this RenderTexture to it and then returns it.
-        * @return - A Canvas element with the texture rendered on.
+        * @return A Canvas element with the texture rendered on.
         */
         getCanvas(): HTMLCanvasElement;
 
         /**
         * Will return a HTML Image of the texture
-        * @return - 
+        * @return 
         */
         getImage(): HTMLImageElement;
 
         /**
         * Resizes the RenderTexture.
         * 
-        * @param width - The width to resize to.
-        * @param height - The height to resize to.
-        * @param updateBase - Should the baseTexture.width and height values be resized as well?
+        * @param width The width to resize to.
+        * @param height The height to resize to.
+        * @param updateBase Should the baseTexture.width and height values be resized as well?
         */
         resize(width: number, height: number, updateBase: boolean): void;
         render(displayObject: DisplayObject, position?: Point, clear?: boolean): void;
@@ -5070,7 +5070,7 @@ stage.addChild(sprite);
         * Spine animation data needs to be loaded using the PIXI.AssetLoader or PIXI.SpineLoader before it can be used by this class
         * See example 12 (http://www.goodboydigital.com/pixijs/examples/12/) to see a working example and check out the source
         * 
-        * @param url - The url of the spine anim file to be used
+        * @param url The url of the spine anim file to be used
         */
         constructor(url: string);
 
@@ -5094,15 +5094,15 @@ stage.addChild(sprite);
         /**
         * Create a new sprite to be used with spine.RegionAttachment
         * 
-        * @param slot - The slot to which the attachment is parented
-        * @param attachment - The attachment that the sprite will represent
+        * @param slot The slot to which the attachment is parented
+        * @param attachment The attachment that the sprite will represent
         */
         createSprite(slot: Slot, descriptor: { name: string }): Sprite[];
 
         /**
         * Update the spine skeleton and its animations by delta time (dt)
         * 
-        * @param dt - Delta time. Time by which the animation should be updated
+        * @param dt Delta time. Time by which the animation should be updated
         */
         update(dt: number): void;
 
