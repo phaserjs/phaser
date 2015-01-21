@@ -287,9 +287,9 @@ declare module PIXI {
         * As each individual item is loaded this class will dispatch a 'onProgress' event
         * 
         * @param assetURLs An array of image/sprite sheet urls that you would like loaded
-        * supported. Supported image formats include 'jpeg', 'jpg', 'png', 'gif'. Supported
-        * sprite sheet data formats only include 'JSON' at this time. Supported bitmap font
-        * data formats include 'xml' and 'fnt'.
+        *                  supported. Supported image formats include 'jpeg', 'jpg', 'png', 'gif'. Supported
+        *                  sprite sheet data formats only include 'JSON' at this time. Supported bitmap font
+        *                  data formats include 'xml' and 'fnt'.
         * @param crossorigin Whether requests should be treated as crossorigin
         */
         constructor(assetURLs: string[], crossorigin: boolean);
@@ -416,7 +416,7 @@ declare module PIXI {
 
         /**
         * Set this to true if a mipmap of this texture needs to be generated. This value needs to be set before the texture is used
-        * Also the texture must be a power of two size to work
+        *  Also the texture must be a power of two size to work
         */
         mipmap: boolean;
 
@@ -1002,8 +1002,8 @@ declare module PIXI {
 
 
     /**
-    * The ConvolutionFilter class applies a matrix convolution filter effect.
-    * A convolution combines pixels in the input image with neighboring pixels to produce a new image.
+    * The ConvolutionFilter class applies a matrix convolution filter effect. 
+    * A convolution combines pixels in the input image with neighboring pixels to produce a new image. 
     * A wide variety of image effects can be achieved through convolutions, including blurring, edge detection, sharpening, embossing, and beveling.
     * The matrix should be specified as a 9 point Array. See http://docs.gimp.org/en/plug-in-convmatrix.html for more info.
     */
@@ -1011,8 +1011,8 @@ declare module PIXI {
 
 
         /**
-        * The ConvolutionFilter class applies a matrix convolution filter effect.
-        * A convolution combines pixels in the input image with neighboring pixels to produce a new image.
+        * The ConvolutionFilter class applies a matrix convolution filter effect. 
+        * A convolution combines pixels in the input image with neighboring pixels to produce a new image. 
         * A wide variety of image effects can be achieved through convolutions, including blurring, edge detection, sharpening, embossing, and beveling.
         * The matrix should be specified as a 9 point Array. See http://docs.gimp.org/en/plug-in-convmatrix.html for more info.
         * 
@@ -1778,7 +1778,6 @@ declare module PIXI {
         * @param startAngle The starting angle, in radians (0 is at the 3 o'clock position of the arc's circle)
         * @param endAngle The ending angle, in radians
         * @param anticlockwise Optional. Specifies whether the drawing should be counterclockwise or clockwise. False is default, and indicates clockwise, while true indicates counter-clockwise.
-        * @return
         */
         arc(cx: number, cy: number, radius: number, startAngle: number, endAngle: number, anticlockwise: boolean): Graphics;
         arcTo(x1: number, y1: number, x2: number, y2: number, radius: number): Graphics;
@@ -1789,7 +1788,6 @@ declare module PIXI {
         * 
         * @param color the color of the fill
         * @param alpha the alpha of the fill
-        * @return
         */
         beginFill(color?: number, alpha?: number): Graphics;
 
@@ -1802,13 +1800,11 @@ declare module PIXI {
         * @param cpY2 Second Control point y
         * @param toX Destination point x
         * @param toY Destination point y
-        * @return
         */
         bezierCurveTo(cpX: number, cpY: number, cpX2: number, cpY2: number, toX: number, toY: number): Graphics;
 
         /**
         * Clears the graphics that were drawn to this Graphics object, and resets fill and line style settings.
-        * @return
         */
         clear(): Graphics;
 
@@ -1823,7 +1819,6 @@ declare module PIXI {
         * @param x The X coordinate of the center of the circle
         * @param y The Y coordinate of the center of the circle
         * @param radius The radius of the circle
-        * @return
         */
         drawCircle(x: number, y: number, radius: number): Graphics;
 
@@ -1834,7 +1829,6 @@ declare module PIXI {
         * @param y The Y coordinate of the center of the ellipse
         * @param width The half width of the ellipse
         * @param height The half height of the ellipse
-        * @return
         */
         drawEllipse(x: number, y: number, width: number, height: number): Graphics;
 
@@ -1842,7 +1836,6 @@ declare module PIXI {
         * Draws a polygon using the given path.
         * 
         * @param path The path data used to construct the polygon.
-        * @return
         */
         drawPolygon(path: any): Graphics;
 
@@ -1853,7 +1846,6 @@ declare module PIXI {
         * @param y The Y coord of the top-left of the rectangle
         * @param width The width of the rectangle
         * @param height The height of the rectangle
-        * @return
         */
         drawRect(x: number, y: number, width: number, height: number): Graphics;
 
@@ -1902,7 +1894,6 @@ declare module PIXI {
 
         /**
         * Applies a fill to the lines and shapes that were added since the last call to the beginFill() method.
-        * @return
         */
         endFill(): Graphics;
 
@@ -1912,7 +1903,6 @@ declare module PIXI {
         * @param lineWidth width of the line to draw, will update the objects stored style
         * @param color color of the line to draw, will update the objects stored style
         * @param alpha alpha of the line to draw, will update the objects stored style
-        * @return
         */
         lineStyle(lineWidth?: number, color?: number, alpha?: number): Graphics;
 
@@ -1922,7 +1912,6 @@ declare module PIXI {
         * 
         * @param x the X coordinate to draw to
         * @param y the Y coordinate to draw to
-        * @return
         */
         lineTo(x: number, y: number): Graphics;
 
@@ -1931,7 +1920,6 @@ declare module PIXI {
         * 
         * @param x the X coordinate to move to
         * @param y the Y coordinate to move to
-        * @return
         */
         moveTo(x: number, y: number): Graphics;
 
@@ -1943,7 +1931,6 @@ declare module PIXI {
         * @param cpY Control point y
         * @param toX Destination point x
         * @param toY Destination point y
-        * @return
         */
         quadraticCurveTo(cpX: number, cpY: number, toX: number, toY: number): Graphics;
 
@@ -2181,8 +2168,8 @@ declare module PIXI {
 
 
     /**
-    * The Matrix class is now an object, which makes it a lot faster,
-    * here is a representation of it :
+    * The Matrix class is now an object, which makes it a lot faster, 
+    * here is a representation of it : 
     * | a | b | tx|
     * | c | d | ty|
     * | 0 | 0 | 1 |
@@ -2434,7 +2421,7 @@ declare module PIXI {
 
 
     /**
-    * The NormalMapFilter class uses the pixel values from the specified texture (called the displacement map) to perform a displacement of an object.
+    * The NormalMapFilter class uses the pixel values from the specified texture (called the displacement map) to perform a displacement of an object. 
     * You can use this filter to apply all manor of crazy warping effects
     * Currently the r property of the texture is used offset the x and the g property of the texture is used to offset the y.
     */
@@ -2779,10 +2766,10 @@ declare module PIXI {
         * 
         * 
         * @param points This can be an array of Points that form the polygon,
-        * a flat array of numbers that will be interpreted as [x,y, x,y, ...], or the arguments passed can be
-        * all the points of the polygon e.g. `new PIXI.Polygon(new PIXI.Point(), new PIXI.Point(), ...)`, or the
-        * arguments passed can be flat x,y values e.g. `new PIXI.Polygon(x,y, x,y, x,y, ...)` where `x` and `y` are
-        * Numbers.
+        *               a flat array of numbers that will be interpreted as [x,y, x,y, ...], or the arguments passed can be
+        *               all the points of the polygon e.g. `new PIXI.Polygon(new PIXI.Point(), new PIXI.Point(), ...)`, or the
+        *               arguments passed can be flat x,y values e.g. `new PIXI.Polygon(x,y, x,y, x,y, ...)` where `x` and `y` are
+        *               Numbers.
         */
         constructor(points: Point[]);
 
@@ -2790,10 +2777,10 @@ declare module PIXI {
         * 
         * 
         * @param points This can be an array of Points that form the polygon,
-        * a flat array of numbers that will be interpreted as [x,y, x,y, ...], or the arguments passed can be
-        * all the points of the polygon e.g. `new PIXI.Polygon(new PIXI.Point(), new PIXI.Point(), ...)`, or the
-        * arguments passed can be flat x,y values e.g. `new PIXI.Polygon(x,y, x,y, x,y, ...)` where `x` and `y` are
-        * Numbers.
+        *               a flat array of numbers that will be interpreted as [x,y, x,y, ...], or the arguments passed can be
+        *               all the points of the polygon e.g. `new PIXI.Polygon(new PIXI.Point(), new PIXI.Point(), ...)`, or the
+        *               arguments passed can be flat x,y values e.g. `new PIXI.Polygon(x,y, x,y, x,y, ...)` where `x` and `y` are
+        *               Numbers.
         */
         constructor(points: number[]);
 
@@ -2801,10 +2788,10 @@ declare module PIXI {
         * 
         * 
         * @param points This can be an array of Points that form the polygon,
-        * a flat array of numbers that will be interpreted as [x,y, x,y, ...], or the arguments passed can be
-        * all the points of the polygon e.g. `new PIXI.Polygon(new PIXI.Point(), new PIXI.Point(), ...)`, or the
-        * arguments passed can be flat x,y values e.g. `new PIXI.Polygon(x,y, x,y, x,y, ...)` where `x` and `y` are
-        * Numbers.
+        *               a flat array of numbers that will be interpreted as [x,y, x,y, ...], or the arguments passed can be
+        *               all the points of the polygon e.g. `new PIXI.Polygon(new PIXI.Point(), new PIXI.Point(), ...)`, or the
+        *               arguments passed can be flat x,y values e.g. `new PIXI.Polygon(x,y, x,y, x,y, ...)` where `x` and `y` are
+        *               Numbers.
         */
         constructor(...points: Point[]);
 
@@ -2812,10 +2799,10 @@ declare module PIXI {
         * 
         * 
         * @param points This can be an array of Points that form the polygon,
-        * a flat array of numbers that will be interpreted as [x,y, x,y, ...], or the arguments passed can be
-        * all the points of the polygon e.g. `new PIXI.Polygon(new PIXI.Point(), new PIXI.Point(), ...)`, or the
-        * arguments passed can be flat x,y values e.g. `new PIXI.Polygon(x,y, x,y, x,y, ...)` where `x` and `y` are
-        * Numbers.
+        *               a flat array of numbers that will be interpreted as [x,y, x,y, ...], or the arguments passed can be
+        *               all the points of the polygon e.g. `new PIXI.Polygon(new PIXI.Point(), new PIXI.Point(), ...)`, or the
+        *               arguments passed can be flat x,y values e.g. `new PIXI.Polygon(x,y, x,y, x,y, ...)` where `x` and `y` are
+        *               Numbers.
         */
         constructor(...points: number[]);
 
@@ -3142,7 +3129,7 @@ declare module PIXI {
 
         /**
         * Helper function that creates a sprite that will contain a texture from the TextureCache based on the frameId
-        * The frame ids are created when a Texture packer file has been loaded
+        *  The frame ids are created when a Texture packer file has been loaded
         * 
         * @param frameId The frame Id of the texture in the cache
         * @return A new Sprite using a texture from the texture cache matching the frameId
@@ -3151,7 +3138,7 @@ declare module PIXI {
 
         /**
         * Helper function that creates a sprite that will contain a texture based on an image url
-        * If the image is not in the texture cache it will be loaded
+        *  If the image is not in the texture cache it will be loaded
         * 
         * @param imageId The image url of the texture
         * @return A new Sprite using a texture from the texture cache matching the image id
@@ -3163,11 +3150,11 @@ declare module PIXI {
         * The Sprite object is the base for all textured objects that are rendered to the screen
         * 
         * @param texture The texture for this sprite
-        * 
-        * A sprite can be created directly from an image like this :
-        * var sprite = new PIXI.Sprite.fromImage('assets/image.png');
-        * yourStage.addChild(sprite);
-        * then obviously don't forget to add it to the stage you have already created
+        *                
+        *                A sprite can be created directly from an image like this :
+        *                var sprite = new PIXI.Sprite.fromImage('assets/image.png');
+        *                yourStage.addChild(sprite);
+        *                then obviously don't forget to add it to the stage you have already created
         */
         constructor(texture: Texture);
 
@@ -3215,38 +3202,38 @@ declare module PIXI {
 
 
     /**
-    * The SpriteBatch class is a really fast version of the DisplayObjectContainer
+    * The SpriteBatch class is a really fast version of the DisplayObjectContainer 
     * built solely for speed, so use when you need a lot of sprites or particles.
-    * And it's extremely easy to use :
+    * And it's extremely easy to use : 
     * 
-    * var container = new PIXI.SpriteBatch();
+    *    var container = new PIXI.SpriteBatch();
     * 
-    * stage.addChild(container);
+    *    stage.addChild(container);
     * 
-    * for(var i  = 0; i < 100; i++)
-    * {
-    * var sprite = new PIXI.Sprite.fromImage("myImage.png");
-    * container.addChild(sprite);
-    * }
+    *    for(var i  = 0; i < 100; i++)
+    *    {
+    *        var sprite = new PIXI.Sprite.fromImage("myImage.png");
+    *        container.addChild(sprite);
+    *    }
     * And here you have a hundred sprites that will be renderer at the speed of light
     */
     export class SpriteBatch extends DisplayObjectContainer {
 
 
         /**
-        * The SpriteBatch class is a really fast version of the DisplayObjectContainer
+        * The SpriteBatch class is a really fast version of the DisplayObjectContainer 
         * built solely for speed, so use when you need a lot of sprites or particles.
-        * And it's extremely easy to use :
+        * And it's extremely easy to use : 
         * 
-        * var container = new PIXI.SpriteBatch();
+        *    var container = new PIXI.SpriteBatch();
         * 
-        * stage.addChild(container);
+        *    stage.addChild(container);
         * 
-        * for(var i  = 0; i < 100; i++)
-        * {
-        * var sprite = new PIXI.Sprite.fromImage("myImage.png");
-        * container.addChild(sprite);
-        * }
+        *    for(var i  = 0; i < 100; i++)
+        *    {
+        *        var sprite = new PIXI.Sprite.fromImage("myImage.png");
+        *        container.addChild(sprite);
+        *    }
         * And here you have a hundred sprites that will be renderer at the speed of light
         * 
         * @param texture -
@@ -3341,14 +3328,14 @@ declare module PIXI {
         * A Stage represents the root of the display tree. Everything connected to the stage is rendered
         * 
         * @param backgroundColor the background color of the stage, you have to pass this in is in hex format
-        * like: 0xFFFFFF for white
-        * 
-        * Creating a stage is a mandatory process when you use Pixi, which is as simple as this :
-        * var stage = new PIXI.Stage(0xFFFFFF);
-        * where the parameter given is the background colour of the stage, in hex
-        * you will use this stage instance to add your sprites to it and therefore to the renderer
-        * Here is how to add a sprite to the stage :
-        * stage.addChild(sprite);
+        *                        like: 0xFFFFFF for white
+        *                        
+        *                        Creating a stage is a mandatory process when you use Pixi, which is as simple as this :
+        *                        var stage = new PIXI.Stage(0xFFFFFF);
+        *                        where the parameter given is the background colour of the stage, in hex
+        *                        you will use this stage instance to add your sprites to it and therefore to the renderer
+        *                        Here is how to add a sprite to the stage :
+        *                        stage.addChild(sprite);
         */
         constructor(backgroundColor: number);
 
@@ -3369,7 +3356,7 @@ declare module PIXI {
         * Sets the background color for the stage
         * 
         * @param backgroundColor the color of the background, easiest way to pass this in is in hex format
-        * like: 0xFFFFFF for white
+        *                        like: 0xFFFFFF for white
         */
         setBackgroundColor(backgroundColor: number): void;
 
@@ -3850,7 +3837,6 @@ declare module PIXI {
         * 
         * @param video -
         * @param scaleMode See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
-        * @return
         */
         static baseTextureFromVideo(video: HTMLVideoElement, scaleMode: number): BaseTexture;
 
@@ -3868,7 +3854,6 @@ declare module PIXI {
         * 
         * @param videoSrc The URL for the video.
         * @param scaleMode See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
-        * @return
         */
         static fromUrl(videoSrc: string, scaleMode: number): Texture;
 
@@ -4093,7 +4078,6 @@ declare module PIXI {
         * @param cpY Control point y
         * @param toX Destination point x
         * @param toY Destination point y
-        * @return
         */
         static quadraticBezierCurve(fromX: number, fromY: number, cpX: number, cpY: number, toX: number, toY: number): number[];
 
@@ -4523,19 +4507,19 @@ declare module PIXI {
     * 
     * A RenderTexture takes a snapshot of any Display Object given to its render method. The position and rotation of the given Display Objects is ignored. For example:
     * 
-    * var renderTexture = new PIXI.RenderTexture(800, 600);
-    * var sprite = PIXI.Sprite.fromImage("spinObj_01.png");
-    * sprite.position.x = 800/2;
-    * sprite.position.y = 600/2;
-    * sprite.anchor.x = 0.5;
-    * sprite.anchor.y = 0.5;
-    * renderTexture.render(sprite);
+    *    var renderTexture = new PIXI.RenderTexture(800, 600);
+    *    var sprite = PIXI.Sprite.fromImage("spinObj_01.png");
+    *    sprite.position.x = 800/2;
+    *    sprite.position.y = 600/2;
+    *    sprite.anchor.x = 0.5;
+    *    sprite.anchor.y = 0.5;
+    *    renderTexture.render(sprite);
     * 
     * The Sprite in this case will be rendered to a position of 0,0. To render this sprite at its actual position a DisplayObjectContainer should be used:
     * 
-    * var doc = new PIXI.DisplayObjectContainer();
-    * doc.addChild(sprite);
-    * renderTexture.render(doc);  // Renders to center of renderTexture
+    *    var doc = new PIXI.DisplayObjectContainer();
+    *    doc.addChild(sprite);
+    *    renderTexture.render(doc);  // Renders to center of renderTexture
     */
     export class RenderTexture extends Texture {
 
@@ -4547,19 +4531,19 @@ declare module PIXI {
         * 
         * A RenderTexture takes a snapshot of any Display Object given to its render method. The position and rotation of the given Display Objects is ignored. For example:
         * 
-        * var renderTexture = new PIXI.RenderTexture(800, 600);
-        * var sprite = PIXI.Sprite.fromImage("spinObj_01.png");
-        * sprite.position.x = 800/2;
-        * sprite.position.y = 600/2;
-        * sprite.anchor.x = 0.5;
-        * sprite.anchor.y = 0.5;
-        * renderTexture.render(sprite);
+        *    var renderTexture = new PIXI.RenderTexture(800, 600);
+        *    var sprite = PIXI.Sprite.fromImage("spinObj_01.png");
+        *    sprite.position.x = 800/2;
+        *    sprite.position.y = 600/2;
+        *    sprite.anchor.x = 0.5;
+        *    sprite.anchor.y = 0.5;
+        *    renderTexture.render(sprite);
         * 
         * The Sprite in this case will be rendered to a position of 0,0. To render this sprite at its actual position a DisplayObjectContainer should be used:
         * 
-        * var doc = new PIXI.DisplayObjectContainer();
-        * doc.addChild(sprite);
-        * renderTexture.render(doc);  // Renders to center of renderTexture
+        *    var doc = new PIXI.DisplayObjectContainer();
+        *    doc.addChild(sprite);
+        *    renderTexture.render(doc);  // Renders to center of renderTexture
         * 
         * @param width The width of the render texture
         * @param height The height of the render texture
@@ -4611,7 +4595,6 @@ declare module PIXI {
 
         /**
         * Will return a HTML Image of the texture
-        * @return
         */
         getImage(): HTMLImageElement;
 
