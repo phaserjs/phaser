@@ -47,6 +47,9 @@ var TypeScriptDocGenerator = (function () {
         }
         return 0;
     };
+    TypeScriptDocGenerator.prototype.extractPropertyName = function (pn) {
+        return pn.withLeadingTrivia().text().trim();
+    };
     TypeScriptDocGenerator.prototype.insertComment = function (commentLines, position) {
         if ((commentLines != null) && (commentLines.length > 0)) {
             var nbChars = 0;
@@ -207,10 +210,10 @@ var TypeScriptDocGenerator = (function () {
                         this.insertComment(this.generateConstructorComments(fullName), classPos + this.leadingWidth(elem));
                         break;
                     case ts.SyntaxKind.MemberVariableDeclaration:
-                        this.insertComment(this.generateMemberComments(fullName, elem.variableDeclarator.propertyName.fullText().trim()), classPos + this.leadingWidth(elem));
+                        this.insertComment(this.generateMemberComments(fullName, this.extractPropertyName(elem.variableDeclarator.propertyName)), classPos + this.leadingWidth(elem));
                         break;
                     case ts.SyntaxKind.MemberFunctionDeclaration:
-                        this.insertComment(this.generateFunctionComments(fullName, elem.propertyName.fullText().trim()), classPos + this.leadingWidth(elem));
+                        this.insertComment(this.generateFunctionComments(fullName, this.extractPropertyName(elem.propertyName)), classPos + this.leadingWidth(elem));
                         break;
                 }
                 if (elem.kind() !== ts.SyntaxKind.List) {
