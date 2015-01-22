@@ -50,7 +50,6 @@ declare module Phaser {
 
         constructor(game: Phaser.Game, parent: Phaser.Sprite, name: string, frameData: Phaser.FrameData, frames: any[], frameRate?: number, loop?: boolean);
 
-        currentAnim: Phaser.Animation;
         currentFrame: Phaser.Frame;
         delay: number;
         enableUpdate: boolean;
@@ -676,19 +675,6 @@ declare module Phaser {
         wheelEvent: string;
         worker: boolean;
 
-    }
-
-    class DOMSprite {
-        //constructor
-        constructor(game: Phaser.Game, id: string, x: number, y: number, text: string, style: any);
-        //members
-        alive: boolean;
-        exists: boolean;
-        game: Phaser.Game;
-        group: Phaser.Group;
-        name: string;
-        type: number;
-        visible: boolean;
     }
 
     module Easing {
@@ -2695,7 +2681,7 @@ declare module Phaser {
             createParticle(x: number, y: number, mass: number, addToWorld?: boolean, options?: p2.BodyOptions, data?: number[][]): Phaser.Physics.P2.Body;
             createParticle(x: number, y: number, mass: number, addToWorld?: boolean, options?: p2.BodyOptions, data?: number[]): Phaser.Physics.P2.Body;
             createPrismaticConstraint(body: any, bodyB: any, lockRotation?: boolean, anchorA?: number[], anchorB?: number[], axis?: Float32Array, maxForce?: number): Phaser.Physics.P2.PrismaticConstraint;
-            createRevoluteConstraint(bodyA: any, pivotA: number[], bodyB: any, pivotB: number[], maxForce?: number, worldPivot?: number[]): Phaser.Physics.P2.RevoluteContraint;
+            createRevoluteConstraint(bodyA: any, pivotA: number[], bodyB: any, pivotB: number[], maxForce?: number, worldPivot?: number[]): Phaser.Physics.P2.RevoluteConstraint;
             createRotationalSpring(bodyA: any, bodyB: any, restAngle?: number, stiffness?: number, damping?: number): p2.RotationalSpring;
             createSpring(bodyA: any, bodyB: any, restLength?: number, stiffness?: number, damping?: number, worldA?: number[], worldB?: number[], localA?: number[], localB?: number[]): Phaser.Physics.P2.Spring;
             destroy(): void;
@@ -2939,7 +2925,7 @@ declare module Phaser {
 
             }
 
-            class RevoluteContraint extends p2.RevoluteConstraint {
+            class RevoluteConstraint extends p2.RevoluteConstraint {
 
                 constructor(world: Phaser.Physics.P2, bodyA: Phaser.Physics.P2.Body, pivotA: number[], bodyB: Phaser.Physics.P2.Body, pivotB: number[], maxForce?: number);
 
@@ -2960,7 +2946,7 @@ declare module Phaser {
         }
     }
 
-    class Plugin extends StateCycle {
+    class Plugin implements IStateCycle {
 
         constructor(game: Phaser.Game, parent: any);
 
@@ -3155,7 +3141,7 @@ declare module Phaser {
 
     }
 
-    class PluginManager extends StateCycle {
+    class PluginManager implements IStateCycle {
 
         constructor(game: Phaser.Game, parent: any);
 
@@ -3959,14 +3945,13 @@ declare module Phaser {
 
     }
 
-    class StateCycle {
+    interface IStateCycle {
 
         preUpdate(): void;
         update(): void;
         render(): void;
         postRender(): void;
         destroy(): void;
-
     }
 
     class StateManager {
