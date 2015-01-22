@@ -21,7 +21,8 @@
             "./src/tilemap/", 
             "./src/time/", 
             "./src/tween/",
-            "./src/utils/"
+			"./src/utils/",
+			"./out/plugins/"
         ],
         "includePattern": ".+\\.js(doc)?$",
         "excludePattern": "(^|\\/|\\\\)_"
