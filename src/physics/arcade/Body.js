@@ -87,7 +87,7 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.width = sprite.width;
 
     /**
-    * @property .numInternal ID cache
+    * @property {number} height - The calculated height of the physics body.
     */
     this.height = sprite.height;
 
@@ -153,6 +153,11 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     * @default
     */
     this.maxVelocity = new Phaser.Point(10000, 10000);
+
+    /**
+    * @property {Phaser.Point} friction - x
+    */
+    this.friction = new Phaser.Point(1, 0);
 
     /**
     * @property {number} angularVelocity - The angular velocity in pixels per second sq. of the Body.

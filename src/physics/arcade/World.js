@@ -983,11 +983,23 @@ Phaser.Physics.Arcade.prototype = {
                 {
                     body1.x = body1.x - this._overlap;
                     body1.velocity.x = this._velocity2 - this._velocity1 * body1.bounce.x;
+
+                    //  This is special case code that handles things like vertically moving platforms you can ride
+                    if (body2.moves)
+                    {
+                        body1.y += (body2.y - body2.prev.y) * body2.friction.y;
+                    }
                 }
                 else if (!body2.immovable)
                 {
                     body2.x += this._overlap;
                     body2.velocity.x = this._velocity1 - this._velocity2 * body2.bounce.x;
+
+                    //  This is special case code that handles things like vertically moving platforms you can ride
+                    if (body1.moves)
+                    {
+                        body2.y += (body1.y - body1.prev.y) * body1.friction.y;
+                    }
                 }
 
                 return true;
@@ -1103,7 +1115,7 @@ Phaser.Physics.Arcade.prototype = {
                     //  This is special case code that handles things like horizontal moving platforms you can ride
                     if (body2.moves)
                     {
-                        body1.x += body2.x - body2.prev.x;
+                        body1.x += (body2.x - body2.prev.x) * body2.friction.x;
                     }
                 }
                 else if (!body2.immovable)
@@ -1114,7 +1126,7 @@ Phaser.Physics.Arcade.prototype = {
                     //  This is special case code that handles things like horizontal moving platforms you can ride
                     if (body1.moves)
                     {
-                        body2.x += body1.x - body1.prev.x;
+                        body2.x += (body1.x - body1.prev.x) * body1.friction.x;
                     }
                 }
 
