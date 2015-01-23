@@ -1466,6 +1466,7 @@ Phaser.Loader.prototype = {
         file.loaded = true;
 
         var loadNext = true;
+        var _this = this
 
         switch (file.type)
         {
@@ -1515,7 +1516,42 @@ Phaser.Loader.prototype = {
                 {
                     //  Load the XML before carrying on with the next file
                     loadNext = false;
-                    this.xhrLoad(this._fileIndex, this.baseURL + file.xmlURL, 'text', 'xmlLoadComplete', 'dataLoadError');
+
+                    if (this.useXDomainRequest && window.XDomainRequest)
+                    {
+                      this._ajax = new window.XDomainRequest();
+
+                      // XDomainRequest has a few quirks. Occasionally it will abort requests
+                      // A way to avoid this is to make sure ALL callbacks are set even if not used
+                      // More info here: http://stackoverflow.com/questions/15786966/xdomainrequest-aborts-post-on-ie-9
+                      this._ajax.timeout = 3000;
+
+                      this._ajax.onerror = function () {
+                        return _this.dataLoadError(_this._fileIndex);
+                      };
+
+                      this._ajax.ontimeout = function () {
+                        return _this.dataLoadError(_this._fileIndex);
+                      };
+
+                      this._ajax.onprogress = function() {};
+
+                      this._ajax.onload = function(){
+                        return _this.xmlLoadComplete(_this._fileIndex);
+                      };
+
+                      this._ajax.open('GET', this.baseURL + file.xmlURL, true);
+
+                      //  Note: The xdr.send() call is wrapped in a timeout to prevent an issue with the interface where some requests are lost
+                      //  if multiple XDomainRequests are being sent at the same time.
+                      setTimeout(function () {
+                        _this._ajax.send();
+                      }, 0);
+                    }
+                    else
+                    {
+                      this.xhrLoad(this._fileIndex, this.baseURL + file.xmlURL, 'text', 'xmlLoadComplete', 'dataLoadError');
+                    }
                 }
                 break;
 
@@ -1690,14 +1726,25 @@ Phaser.Loader.prototype = {
     * @param {number} index - The index of the file in the file queue that loaded.
     */
     xmlLoadComplete: function (index) {
+        var data;
 
-        if (this._xhr.responseType !== '' && this._xhr.responseType !== 'text')
-        {
+        if (this._ajax && this._ajax.responseText) {
+          if (this._ajax.contentType !== '' && this._ajax.contentType !== 'text/plain')
+          {
             console.warn('Invalid XML Response Type', this._fileList[index]);
-            console.warn(this._xhr);
+            console.warn(this._ajax);
+          }
+          data = this._ajax.responseText
+        }
+        else if (this._xhr && this._xhr.responseText) {
+          if (this._xhr.responseType !== '' && this._xhr.responseType !== 'text')
+          {
+              console.warn('Invalid XML Response Type', this._fileList[index]);
+              console.warn(this._xhr);
+          }
+          data = this._xhr.responseText;
         }
 
-        var data = this._xhr.responseText;
         var xml;
 
         try
