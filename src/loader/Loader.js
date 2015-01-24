@@ -1728,7 +1728,8 @@ Phaser.Loader.prototype = {
     xmlLoadComplete: function (index) {
         var data;
 
-        if (this._ajax && this._ajax.responseText) {
+        if (this._ajax && this._ajax.responseText)
+        {
           if (this._ajax.contentType !== '' && this._ajax.contentType !== 'text/plain')
           {
             console.warn('Invalid XML Response Type', this._fileList[index]);
@@ -1736,7 +1737,8 @@ Phaser.Loader.prototype = {
           }
           data = this._ajax.responseText
         }
-        else if (this._xhr && this._xhr.responseText) {
+        else if (this._xhr && this._xhr.responseText)
+        {
           if (this._xhr.responseType !== '' && this._xhr.responseType !== 'text')
           {
               console.warn('Invalid XML Response Type', this._fileList[index]);
