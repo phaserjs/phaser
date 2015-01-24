@@ -3161,7 +3161,7 @@ declare module Phaser {
         game: Phaser.Game;
         plugins: Phaser.Plugin[];
 
-        add(plugin: Phaser.Plugin, ...parameter: any[]): Phaser.Plugin;
+        add(plugin: any, ...parameter: any[]): Phaser.Plugin;
         destroy(): void;
         postRender(): void;
         postUpdate(): void;
