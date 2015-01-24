@@ -1466,7 +1466,7 @@ Phaser.Loader.prototype = {
         file.loaded = true;
 
         var loadNext = true;
-        var _this = this
+        var _this = this;
 
         switch (file.type)
         {
@@ -1734,7 +1734,7 @@ Phaser.Loader.prototype = {
                 console.warn('Invalid XML Response Type', this._fileList[index]);
                 console.warn(this._ajax);
             }
-            data = this._ajax.responseText
+            data = this._ajax.responseText;
         }
         else if (this._xhr && this._xhr.responseText) {
             if (this._xhr.responseType !== '' && this._xhr.responseType !== 'text')
