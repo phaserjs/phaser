@@ -133,17 +133,12 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
     *     Using a canvas bitblt/copy when the source and destinations region overlap produces unexpected behavior
     *     in some browsers, notably Safari. 
     *
-    * @property {integer} copySliceCount - [Internal] The number of vertical slices to copy when using a `copyCanvas`.
-    *     This is ratio of the pixel count of the primary canvas to the copy canvas.
-    *     *Note*: Safari 7 based canvas implemenations do not work correctly if slices are used.
-    *
     * @default
     */
     this.renderSettings = {
         enableScrollDelta: true,
         overdrawRatio: 0.20,
-        copyCanvas: null,
-        copySliceCount: 1
+        copyCanvas: null
     };
 
     /**
@@ -716,16 +711,7 @@ Phaser.TilemapLayer.prototype.shiftCanvas = function (context, x, y)
     }
 
     var copyCanvas = this.renderSettings.copyCanvas;
-    if (!copyCanvas)
-    {
-        // Avoids a second copy but flickers in Safari / Safari Mobile
-        // Ref. https://github.com/photonstorm/phaser/issues/1439
-        context.save();
-        context.globalCompositeOperation = 'copy';
-        context.drawImage(canvas, dx, dy, copyW, copyH, sx, sy, copyW, copyH);
-        context.restore();
-    }
-    else if (this.renderSettings.copySliceCount === 1)
+    if (copyCanvas)
     {
         // Use a second copy buffer, without slice support, for Safari .. again.
         // Ensure copy canvas is large enough
@@ -744,45 +730,14 @@ Phaser.TilemapLayer.prototype.shiftCanvas = function (context, x, y)
     }
     else
     {
-        // Copying happens in slices to minimize copy canvas size overhead
-        // (This does not work correctly in Safari 7 under move-region-up.)
-        var sliceCount = this.renderSettings.copySliceCount;
-        var sH = Math.ceil(copyH / sliceCount);
-        // Ensure copy canvas is large enough
-        if (copyCanvas.width < copyW || copyCanvas.height < sH)
-        {
-            copyCanvas.width = copyW;
-            copyCanvas.height = sH;
-        }
-
-        var vShift;
-        if (dy >= sy)
-        {
-            // move old region up, or don't change vertically - copy top to bottom
-            vShift = sH;
-        }
-        else
-        {
-            // move old region down - copy segments from bottom to top
-            vShift = -sH;
-            dy += (sH * (sliceCount - 1));
-            sy += (sH * (sliceCount - 1));
-        }
-
-        var copyContext = copyCanvas.getContext('2d');
-        while (sliceCount--)
-        {
-            copyContext.clearRect(0, 0, copyW, sH);
-            copyContext.drawImage(canvas, dx, dy, copyW, sH, 0, 0, copyW, sH);
-            // clear allows default 'source-over' semantics
-            context.clearRect(sx, sy, copyW, sH);
-            context.drawImage(copyCanvas, 0, 0, copyW, sH, sx, sy, copyW, sH);
-
-            dy += vShift;
-            sy += vShift;
-        }
-
+        // Avoids a second copy but flickers in Safari / Safari Mobile
+        // Ref. https://github.com/photonstorm/phaser/issues/1439
+        context.save();
+        context.globalCompositeOperation = 'copy';
+        context.drawImage(canvas, dx, dy, copyW, copyH, sx, sy, copyW, copyH);
+        context.restore();
     }
+    
 };
 
 /**
