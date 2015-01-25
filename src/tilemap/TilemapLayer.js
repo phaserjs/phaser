@@ -135,6 +135,7 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
     *
     * @property {integer} copySliceCount - [Internal] The number of vertical slices to copy when using a `copyCanvas`.
     *     This is ratio of the pixel count of the primary canvas to the copy canvas.
+    *     *Note*: Safari 7 based canvas implemenations do not work correctly if slices are used.
     *
     * @default
     */
@@ -142,7 +143,7 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
         enableScrollDelta: true,
         overdrawRatio: 0.20,
         copyCanvas: null,
-        copySliceCount: 4
+        copySliceCount: 1
     };
 
     /**
@@ -937,7 +938,7 @@ Phaser.TilemapLayer.prototype.renderDeltaScroll = function (shiftX, shiftY) {
         this.context.clearRect(((left * tw) - scrollX), 0, (right - left + 1) * tw, renderH);
 
         var trueTop = Math.floor((0 + scrollY) / th);
-        var trueBottom = Math.floor((renderH - 1 + scrollY) / th);
+        var trueBottom = Math.floor((renderH - 1 + scrollY) / th) + 1;
         this.renderRegion(scrollX, scrollY, left, trueTop, right, trueBottom);
     }
     if (top <= bottom)
