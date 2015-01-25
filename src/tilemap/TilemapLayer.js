@@ -938,7 +938,7 @@ Phaser.TilemapLayer.prototype.renderDeltaScroll = function (shiftX, shiftY) {
         this.context.clearRect(((left * tw) - scrollX), 0, (right - left + 1) * tw, renderH);
 
         var trueTop = Math.floor((0 + scrollY) / th);
-        var trueBottom = Math.floor((renderH - 1 + scrollY) / th) + 1;
+        var trueBottom = Math.floor((renderH - 1 + scrollY) / th);
         this.renderRegion(scrollX, scrollY, left, trueTop, right, trueBottom);
     }
     if (top <= bottom)
