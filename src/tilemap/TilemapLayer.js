@@ -716,14 +716,44 @@ Phaser.TilemapLayer.prototype.shiftCanvas = function (context, x, y)
     }
 
     var copyCanvas = this.renderSettings.copyCanvas;
-    if (copyCanvas)
+    if (!copyCanvas)
+    {
+        // Avoids a second copy but flickers in Safari / Safari Mobile
+        // Ref. https://github.com/photonstorm/phaser/issues/1439
+        context.save();
+        context.globalCompositeOperation = 'copy';
+        context.drawImage(canvas, dx, dy, copyW, copyH, sx, sy, copyW, copyH);
+        context.restore();
+    }
+    else if (this.renderSettings.copySliceCount === 1)
+    {
+        // Use a second copy buffer, without slice support, for Safari .. again.
+        // Ensure copy canvas is large enough
+        if (copyCanvas.width < copyW || copyCanvas.height < copyH)
+        {
+            copyCanvas.width = copyW;
+            copyCanvas.height = copyH;
+        }
+
+        var copyContext = copyCanvas.getContext('2d');
+        copyContext.clearRect(0, 0, copyW, copyH);
+        copyContext.drawImage(canvas, dx, dy, copyW, copyH, 0, 0, copyW, copyH);
+        // clear allows default 'source-over' semantics
+        context.clearRect(sx, sy, copyW, copyH);
+        context.drawImage(copyCanvas, 0, 0, copyW, copyH, sx, sy, copyW, copyH);
+    }
+    else
     {
         // Copying happens in slices to minimize copy canvas size overhead
+        // (This does not work correctly in Safari 7 under move-region-up.)
         var sliceCount = this.renderSettings.copySliceCount;
         var sH = Math.ceil(copyH / sliceCount);
         // Ensure copy canvas is large enough
-        if (copyCanvas.width < copyW) { copyCanvas.width = copyW; }
-        if (copyCanvas.height < sH) { copyCanvas.height = sH; }
+        if (copyCanvas.width < copyW || copyCanvas.height < sH)
+        {
+            copyCanvas.width = copyW;
+            copyCanvas.height = sH;
+        }
 
         var vShift;
         if (dy >= sy)
@@ -752,15 +782,6 @@ Phaser.TilemapLayer.prototype.shiftCanvas = function (context, x, y)
             sy += vShift;
         }
 
-    }
-    else
-    {
-        // Avoids a second copy but flickers in Safari / Safari Mobile
-        // Ref. https://github.com/photonstorm/phaser/issues/1439
-        context.save();
-        context.globalCompositeOperation = 'copy';
-        context.drawImage(canvas, dx, dy, copyW, copyH, sx, sy, copyW, copyH);
-        context.restore();
     }
 };
 
