@@ -133,16 +133,12 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
     *     Using a canvas bitblt/copy when the source and destinations region overlap produces unexpected behavior
     *     in some browsers, notably Safari. 
     *
-    * @property {integer} copySliceCount - [Internal] The number of vertical slices to copy when using a `copyCanvas`.
-    *     This is ratio of the pixel count of the primary canvas to the copy canvas.
-    *
     * @default
     */
     this.renderSettings = {
         enableScrollDelta: true,
         overdrawRatio: 0.20,
-        copyCanvas: null,
-        copySliceCount: 4
+        copyCanvas: null
     };
 
     /**
@@ -717,40 +713,20 @@ Phaser.TilemapLayer.prototype.shiftCanvas = function (context, x, y)
     var copyCanvas = this.renderSettings.copyCanvas;
     if (copyCanvas)
     {
-        // Copying happens in slices to minimize copy canvas size overhead
-        var sliceCount = this.renderSettings.copySliceCount;
-        var sH = Math.ceil(copyH / sliceCount);
+        // Use a second copy buffer, without slice support, for Safari .. again.
         // Ensure copy canvas is large enough
-        if (copyCanvas.width < copyW) { copyCanvas.width = copyW; }
-        if (copyCanvas.height < sH) { copyCanvas.height = sH; }
-
-        var vShift;
-        if (dy >= sy)
+        if (copyCanvas.width < copyW || copyCanvas.height < copyH)
         {
-            // move old region up, or don't change vertically - copy top to bottom
-            vShift = sH;
-        }
-        else
-        {
-            // move old region down - copy segments from bottom to top
-            vShift = -sH;
-            dy += (sH * (sliceCount - 1));
-            sy += (sH * (sliceCount - 1));
+            copyCanvas.width = copyW;
+            copyCanvas.height = copyH;
         }
 
         var copyContext = copyCanvas.getContext('2d');
-        while (sliceCount--)
-        {
-            copyContext.clearRect(0, 0, copyW, sH);
-            copyContext.drawImage(canvas, dx, dy, copyW, sH, 0, 0, copyW, sH);
-            // clear allows default 'source-over' semantics
-            context.clearRect(sx, sy, copyW, sH);
-            context.drawImage(copyCanvas, 0, 0, copyW, sH, sx, sy, copyW, sH);
-
-            dy += vShift;
-            sy += vShift;
-        }
-
+        copyContext.clearRect(0, 0, copyW, copyH);
+        copyContext.drawImage(canvas, dx, dy, copyW, copyH, 0, 0, copyW, copyH);
+        // clear allows default 'source-over' semantics
+        context.clearRect(sx, sy, copyW, copyH);
+        context.drawImage(copyCanvas, 0, 0, copyW, copyH, sx, sy, copyW, copyH);
     }
     else
     {
@@ -761,6 +737,7 @@ Phaser.TilemapLayer.prototype.shiftCanvas = function (context, x, y)
         context.drawImage(canvas, dx, dy, copyW, copyH, sx, sy, copyW, copyH);
         context.restore();
     }
+    
 };
 
 /**
