@@ -3152,8 +3152,45 @@ declare module Phaser {
             update(): void;
         }
 
+        class Juicy extends Phaser.Plugin {
 
+            constructor(game: Phaser.Game);
+            
+            createScreenFlash(color?: string) : Phaser.Plugin.Juicy.ScreenFlash;
+            createTrail(length?: number, color?:number): Phaser.Plugin.Juicy.Trail;
+            overScale(object: Phaser.Sprite, scale?: number, initialScale?: Phaser.Point): void;
+            jelly(object: Phaser.Sprite, strength?: number, delay?: number, initialScale?: Phaser.Point): void;
+            mouseStretch(object: Phaser.Sprite, strength?: number, initialScale?: Phaser.Point): void;
+            update(): void;
+            shake(duration?: number, strength?: number): void;
+        }
 
+        module Juicy {
+
+            class Trail {
+
+                constructor(game: Phaser.Game, trailLength?: number, color?: number);
+
+                target: Phaser.Sprite;
+                trailLength: number;
+                trailWidth: number;
+                trailScaling: boolean;
+                trailColor: number;
+
+                update(): void;
+                addSegment(x: number, y: number): void;
+                redrawSegments(offsetX: number, offsetY: number): void;
+
+            }
+
+            class ScreenFlash {
+
+                constructor(game: Phaser.Game, color?: string);
+
+                flash(maxAlpha?: number, duration?: number);
+
+            }
+        }
     }
 
     class PluginManager implements IStateCycle {
