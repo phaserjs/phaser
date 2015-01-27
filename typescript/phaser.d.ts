@@ -1444,8 +1444,6 @@ declare module Phaser {
         total: number;
         type: number;
         visible: boolean;
-        x: number;
-        y: number;
         z: number;
 
         add(child: any, silent?: boolean): any;
