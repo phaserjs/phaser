@@ -260,6 +260,7 @@ declare module Phaser {
         setPixel32(x: number, y: number, red: number, green: number, blue: number, alpha: number, immediate?: boolean): Phaser.BitmapData;
         shadow(color: string, blur?: number, x?: number, y?: number): Phaser.BitmapData;
         shiftHSL(h?: number, s?: number, l?: number, region?: Phaser.Rectangle): Phaser.BitmapData;
+        text(text: string, x?: number, y?: number, font?: string, color?: string, shadow?: boolean): Phaser.BitmapData;
         textureLine(line: Phaser.Line, key: string, repeat?: string): Phaser.BitmapData;
         update(x: number, y: number, width: number, height: number): Phaser.BitmapData;
 
@@ -367,7 +368,7 @@ declare module Phaser {
         addDefaultImage(): void;
         addImage(key: string, url: string, data: any): void;
         addJSON(key: string, urL: string, data: any): void;
-        addMisingImage(): void;
+        addMissingImage(): void;
         addPhysicsData(key: string, url: string, JSONData: any, format: number): void;
         addRenderTexture(key: string, texture: RenderTexture): void;
         addSound(key: string, url: string, data: any, webAudio: boolean, audioTag: boolean): void;
@@ -476,6 +477,7 @@ declare module Phaser {
         setBoundsToWorld(): void;
         setPosition(x: number, y: number): void;
         setSize(width: number, height: number): void;
+        unfollow(): void;
         update(): void;
 
     }
@@ -676,6 +678,7 @@ declare module Phaser {
         worker: boolean;
 
     }
+
 
     module Easing {
 
@@ -1018,6 +1021,7 @@ declare module Phaser {
         createFullLayer(children: PIXI.DisplayObject[]): Phaser.FlexLayer;
         createFixedLayer(children: PIXI.DisplayObject[]): Phaser.FlexLayer;
         debug(): void;
+        fitSprite(sprite: Phaser.Sprite): void;
         onResize(width: number, height: number): void;
         refresh(): void;
         reset(): void;
@@ -1036,6 +1040,7 @@ declare module Phaser {
         bottomMiddle: Phaser.Point;
         bottomRight: Phaser.Point;
         bounds: Phaser.Rectangle;
+        persist: boolean;
         position: Phaser.Point;
         scale: Phaser.Point;
         topLeft: Phaser.Point;
@@ -1211,7 +1216,7 @@ declare module Phaser {
         sprite(x: number, y: number, key?: any, frame?: any): Phaser.Sprite;
         spriteBatch(parent: any, name?: String, addToStage?: boolean): Phaser.SpriteBatch;
         text(x: number, y: number, text?: string, style?: any): Phaser.Text;
-        tileMap(key: string, tileWidth?: number, tileHeight?: number, width?: number, height?: number): Phaser.Tilemap;
+        tilemap(key: string, tileWidth?: number, tileHeight?: number, width?: number, height?: number): Phaser.Tilemap;
         tileSprite(x: number, y: number, width: number, height: number, key: any, frame: any): Phaser.TileSprite;
         tween(obj: any): Phaser.Tween;
 
@@ -1417,6 +1422,7 @@ declare module Phaser {
         static SORT_ASCENDING: number;
         static SORT_DESCENDING: number;
 
+        alpha: number;
         angle: number;
         alive: boolean;
         cameraOffset: Phaser.Point;
@@ -1433,9 +1439,13 @@ declare module Phaser {
         onDestroy: Phaser.Signal;
         physicsBodyType: number;
         position: Phaser.Point;
+        rotation: number;
         scale: Phaser.Point;
         total: number;
         type: number;
+        visible: boolean;
+        x: number;
+        y: number;
         z: number;
 
         add(child: any, silent?: boolean): any;
@@ -1485,7 +1495,8 @@ declare module Phaser {
         reverse(): void;
         sendToBack(child: any): any;
         set(child: any, key: string[], value: any, operation?: number, force?: boolean): boolean;
-        setAll(key: string, value: any, checkAlive?: boolean, checkVisible?: boolean, operation?: number, force?: boolean): boolean;
+        setAll(key: string, value: any, checkAlive?: boolean, checkVisible?: boolean, operation?: number, force?: boolean): void;
+        setAllChildren(key: string, value: any, checkAlive?: boolean, checkVisible?: boolean, operation?: number, force?: boolean): void;
         setProperty(child: any, key: string[], value: any, operation?: number, force?: boolean): boolean;
         sort(key?: string, order?: number): void;
         subAll(property: string, amount: number, checkAlive: boolean, checkVisible: boolean): void;
@@ -1503,9 +1514,11 @@ declare module Phaser {
         alive: boolean;
         angle: number;
         anchor: Phaser.Point;
+        animations: Phaser.AnimationManager; 
         autoCull: boolean;
         cameraOffset: Phaser.Point;
         cropRect: Phaser.Rectangle;
+        debug: boolean;
         deltaX: number;
         deltaY: number;
         deltaZ: number;
@@ -1527,6 +1540,7 @@ declare module Phaser {
         scale: Phaser.Point;
         smoothed: boolean;
         type: number;
+        world: Phaser.Point; 
         z: number;
 
         bringToTop(): Phaser.Image;
@@ -2057,6 +2071,7 @@ declare module Phaser {
         static randomSign(): number;
         static reverseAngle(angleRed: number): number;
         static removeRandom<T>(objects: T[], startIndex?: number, length?: number): T;
+        static roundAwayFromZero(value: number): number;
         static roundTo(value: number, place?: number, base?: number): number;
         static shear(n: number): number;
         static shift(stack: any[]): any;
@@ -3414,6 +3429,7 @@ declare module Phaser {
         crop: PIXI.Rectangle;
         game: Phaser.Game;
         key: string;
+        matrix: PIXI.Matrix;
         type: number;
 
         render(displayObject: PIXI.DisplayObject, position: Phaser.Point, clear?: boolean): void;
@@ -3425,6 +3441,7 @@ declare module Phaser {
 
         constructor(game: Phaser.Game, forceSetTimeOut?: boolean);
 
+        forceSetTimeOut: boolean;
         game: Phaser.Game;
         isRunning: boolean;
 
@@ -3510,6 +3527,7 @@ declare module Phaser {
         position: Phaser.Point;
         segments: Phaser.Rectangle[];
         type: number;
+        updateAnimation: Function;
         world: Phaser.Point;
         x: number;
         y: number;
@@ -3523,7 +3541,6 @@ declare module Phaser {
         reset(x: number, y: number): void;
         setFrame(frame: Phaser.Frame): void;
         update(): void;
-        updateAnimation(): void;
 
     }
 
@@ -3841,6 +3858,8 @@ declare module Phaser {
         height: number;
         incorrectOrientation: boolean;
         isFullScreen: boolean;
+        isGameLandscape: boolean; //readonly
+        isGamePortrait: boolean; //readonly
         isPortrait: boolean;
         isLandscape: boolean;
         leaveFullScreen: Signal;
@@ -3877,6 +3896,7 @@ declare module Phaser {
 
         boot(): void;
         checkOrientationState(): boolean;
+
         createFullScreenTarget(): HTMLDivElement;
         destroy(): void;
         forceOrientation(forceLandscape: boolean, forcePortrait?: boolean): void;
@@ -3910,7 +3930,6 @@ declare module Phaser {
         static getBounds(element: any, cushion?: number): any;
         static getOffset(element: any, point?: Point): Point;
         static inLayoutViewport(element: any, cushion?: number): boolean;
-
     }
 
     class State {
@@ -3934,9 +3953,11 @@ declare module Phaser {
         world: Phaser.World;
 
         create(): void;
+        init(): void;
         loadRender(): void;
         loadUpdate(): void;
         paused(): void;
+        pauseUpdate(): void;
         preload(): void;
         render(): void;
         resize(): void;
@@ -3982,7 +4003,6 @@ declare module Phaser {
         getCurrentState(): Phaser.State;
         link(key: string): void;
         loadComplete(): void;
-        pause(): void;
         preRender(elapsedTime: number): void;
         preUpdate(): void;
         render(): void;
@@ -4530,6 +4550,7 @@ declare module Phaser {
         static mixin(from: any, to: any): any;
         static pad(str: string, len: number, pad: number, dir?: number): string;
         static parseDimension(size: any, dimension: number): number;
+        static randomChoice(choice1: any, choice2: any): any;
         static rotateArray<T>(array: T[], direction: any): T;
         static setProperty(obj: any, prop: string, value: any): any;
         static shuffle<T>(array: T[]): T[];
