@@ -2575,7 +2575,7 @@ declare module Phaser {
                 COL_OTHER: number;
 
                 body: Phaser.Physics.Ninja.Body;
-                circleTileProjections: any;
+                circleTileProjections: { [index: number]: ((x: number, y: number, oH: number, oV: number, obj: Phaser.Physics.Ninja.Circle, t: Phaser.Physics.Ninja.Tile) => number); } ;
                 oldPos: Phaser.Point;
                 height: number;
                 pos: Phaser.Point;
@@ -2598,6 +2598,19 @@ declare module Phaser {
 
             }
 
+            enum TileType {
+                TYPE_EMPTY,
+                TYPE_FULL,
+                TYPE_45DEG,
+                TYPE_CONCAVE,
+                TYPE_CONVEX,
+                TYPE_22DEGs,
+                TYPE_22DEGb,
+                TYPE_67DEGs,
+                TYPE_67DEGb,
+                TYPE_HALF
+            }
+
             class Tile {
 
                 constructor(body: Phaser.Physics.Ninja.Body, x: number, y: number, width: number, height: number, type?: number);
@@ -2610,7 +2623,7 @@ declare module Phaser {
                 pos: Phaser.Point;
                 right: number;
                 system: Phaser.Physics.Ninja;
-                type: number;
+                type: Phaser.Physics.Ninja.TileType;
                 velocity: Phaser.Point;
                 width: number;
                 xw: number;
