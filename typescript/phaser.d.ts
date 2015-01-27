@@ -3802,7 +3802,7 @@ declare module Phaser {
         smoothed: boolean;
 
         boot(): void;
-        checkVisiblity(): void;
+        checkVisibility(): void;
         destroy(): void;
         parseConfig(config: any): void;
         postUpdate(): void;
