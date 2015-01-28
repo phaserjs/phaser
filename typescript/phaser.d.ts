@@ -262,7 +262,7 @@ declare module Phaser {
         shadow(color: string, blur?: number, x?: number, y?: number): Phaser.BitmapData;
         shiftHSL(h?: number, s?: number, l?: number, region?: Phaser.Rectangle): Phaser.BitmapData;
         textureLine(line: Phaser.Line, key: string, repeat?: string): Phaser.BitmapData;
-        update(x: number, y: number, width: number, height: number): Phaser.BitmapData;
+        update(x?: number, y?: number, width?: number, height?: number): Phaser.BitmapData;
 
     }
 
