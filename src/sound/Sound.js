@@ -126,6 +126,11 @@ Phaser.Sound = function (game, key, volume, loop, connect) {
     this.currentMarker = '';
 
     /**
+    * @property {Phaser.Tween} fadeTween - The tween that fades the audio, set via Sound.fadeIn and Sound.fadeOut.
+    */
+    this.fadeTween = null;
+
+    /**
     * @property {boolean} pendingPlayback - true if the sound file is pending playback
     * @readonly
     */
@@ -421,6 +426,8 @@ Phaser.Sound.prototype = {
                 }
                 else
                 {
+                    // console.log('Sound update stop: ' + this.currentTime + ' m: ' + this.currentMarker);
+
                     if (this.loop)
                     {
                         this.onLoop.dispatch(this);
@@ -449,6 +456,8 @@ Phaser.Sound.prototype = {
 
         if (typeof marker === 'undefined' || marker === false || marker === null) { marker = ''; }
         if (typeof forceRestart === 'undefined') { forceRestart = true; }
+
+        // console.log('Sound play: ' + marker);
 
         if (this.isPlaying && !this.allowMultiple && !forceRestart && !this.override)
         {
@@ -514,10 +523,12 @@ Phaser.Sound.prototype = {
                 this._tempPosition = this.position;
                 this._tempVolume = this.volume;
                 this._tempLoop = this.loop;
+
+                // console.log('Marker pos: ' + this.position + ' duration: ' + this.duration + ' ms: ' + this.durationMS);
             }
             else
             {
-                console.warn("Phaser.Sound.play: audio marker " + marker + " doesn't exist");
+                // console.warn("Phaser.Sound.play: audio marker " + marker + " doesn't exist");
                 return this;
             }
         }
@@ -644,6 +655,8 @@ Phaser.Sound.prototype = {
                     this.currentTime = 0;
                     this.stopTime = this.startTime + this.durationMS;
                     this.onPlay.dispatch(this);
+
+                    // console.log('stopTime: ' + this.stopTime + ' rs: ' + this._sound.readyState);
                 }
                 else
                 {
@@ -780,6 +793,7 @@ Phaser.Sound.prototype = {
             }
         }
 
+        this.pendingPlayback = false;
         this.isPlaying = false;
         var prevMarker = this.currentMarker;
 
@@ -860,9 +874,9 @@ Phaser.Sound.prototype = {
             return;
         }
 
-        var tween = this.game.add.tween(this).to( { volume: volume }, duration, Phaser.Easing.Linear.None, true);
+        this.fadeTween = this.game.add.tween(this).to( { volume: volume }, duration, Phaser.Easing.Linear.None, true);
 
-        tween.onComplete.add(this.fadeComplete, this);
+        this.fadeTween.onComplete.add(this.fadeComplete, this);
 
     },
 
@@ -894,6 +908,11 @@ Phaser.Sound.prototype = {
         if (typeof remove === 'undefined') { remove = true; }
 
         this.stop();
+
+        if (this.fadeTween !== null)
+        {
+            this.fadeTween.stop();
+        }
 
         if (remove)
         {
