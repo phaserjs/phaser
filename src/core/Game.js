@@ -202,6 +202,11 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     * @property {Phaser.Physics} physics - Reference to the physics manager.
     */
     this.physics = null;
+    
+    /**
+    * @property {Phaser.PluginManager} plugins - Reference to the plugin manager.
+    */
+    this.plugins = null;
 
     /**
     * @property {Phaser.RandomDataGenerator} rnd - Instance of repeatable random data generator helper.
