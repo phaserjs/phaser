@@ -69,6 +69,8 @@ Version 2.3.0 - "Tarabon" - in dev
 ### Updates
 
 * TypeScript definitions fixes and updates (thanks @clark-stevenson @TimvdEijnden @belohlavek @ivw)
+* Sound.fadeTween is now used for Sound.fadeIn and Sound.fadeOut audio tweens.
+* Sound.stop and Sound.destroy now halt a fade tween if in effect.
 
 ### Bug Fixes
 

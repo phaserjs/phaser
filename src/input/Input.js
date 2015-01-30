@@ -601,6 +601,7 @@ Phaser.Input.prototype = {
         {
             return this.pointer1.start(event);
         }
+
         if (!this.pointer2.active)
         {
             return this.pointer2.start(event);
@@ -609,6 +610,7 @@ Phaser.Input.prototype = {
         for (var i = 2; i < this.pointers.length; i++)
         {
             var pointer = this.pointers[i];
+
             if (!pointer.active)
             {
                 return pointer.start(event);
@@ -634,6 +636,7 @@ Phaser.Input.prototype = {
         {
             return this.pointer1.move(event);
         }
+
         if (this.pointer2.active && this.pointer2.identifier === event.identifier)
         {
             return this.pointer2.move(event);
@@ -642,6 +645,7 @@ Phaser.Input.prototype = {
         for (var i = 2; i < this.pointers.length; i++)
         {
             var pointer = this.pointers[i];
+
             if (pointer.active && pointer.identifier === event.identifier)
             {
                 return pointer.move(event);
@@ -666,6 +670,7 @@ Phaser.Input.prototype = {
         {
             return this.pointer1.stop(event);
         }
+
         if (this.pointer2.active && this.pointer2.identifier === event.identifier)
         {
             return this.pointer2.stop(event);
@@ -674,6 +679,7 @@ Phaser.Input.prototype = {
         for (var i = 2; i < this.pointers.length; i++)
         {
             var pointer = this.pointers[i];
+
             if (pointer.active && pointer.identifier === event.identifier)
             {
                 return pointer.stop(event);
@@ -697,9 +703,11 @@ Phaser.Input.prototype = {
         if (typeof limit === 'undefined') { limit = this.pointers.length; }
 
         var count = limit;
+
         for (var i = 0; i < this.pointers.length && count > 0; i++)
         {
             var pointer = this.pointers[i];
+
             if (pointer.active)
             {
                 count--;
@@ -727,6 +735,7 @@ Phaser.Input.prototype = {
         for (var i = 0; i < this.pointers.length; i++)
         {
             var pointer = this.pointers[i];
+
             if (pointer.active === isActive)
             {
                 return pointer;
@@ -753,6 +762,7 @@ Phaser.Input.prototype = {
         for (var i = 0; i < this.pointers.length; i++)
         {
             var pointer = this.pointers[i];
+
             if (pointer.identifier === identifier)
             {
                 return pointer;
