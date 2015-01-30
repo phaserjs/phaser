@@ -8,8 +8,8 @@
 * Create a new `Particle` object. Particles are extended Sprites that are emitted by a particle emitter such as Phaser.Particles.Arcade.Emitter.
 * 
 * @class Phaser.Particle
-* @constructor
 * @extends Phaser.Sprite
+* @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
 * @param {number} x - The x coordinate (in world space) to position the Particle at.
 * @param {number} y - The y coordinate (in world space) to position the Particle at.
@@ -154,30 +154,12 @@ Phaser.Particle.prototype.reset = function(x, y, health) {
 
     if (typeof health === 'undefined') { health = 1; }
 
-    this.world.setTo(x, y);
-    this.position.x = x;
-    this.position.y = y;
-    this.alive = true;
-    this.exists = true;
-    this.visible = true;
-    this.renderable = true;
-    this._outOfBoundsFired = false;
-
-    this.health = health;
-
-    if (this.body)
-    {
-        this.body.reset(x, y, false, false);
-    }
-
-    this._cache[4] = 1;
-
     this.alpha = 1;
     this.scale.set(1);
 
     this.autoScale = false;
     this.autoAlpha = false;
 
-    return this;
+    return Phaser.Sprite.prototype.reset.call(this, x, y, health);
 
 };

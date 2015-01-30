@@ -11,6 +11,11 @@
 *
 * @class Phaser.Text
 * @extends PIXI.Text
+* -- Google Closure Compiler and future jsdoc can use @implements instead of @extends
+* @extends Phaser.GameObject.CoreMixin
+* @extends Phaser.GameObject.CullingMixin
+* @extends Phaser.GameObject.InputMixin
+* @extends Phaser.GameObject.EventsMixin
 * @constructor
 * @param {Phaser.Game} game - Current game instance.
 * @param {number} x - X position of the new text object.
@@ -33,39 +38,6 @@ Phaser.Text = function (game, x, y, text, style) {
     {
         text = text.toString();
     }
-
-    /**
-    * @property {Phaser.Game} game - A reference to the currently running Game.
-    */
-    this.game = game;
-
-    /**
-    * @property {boolean} exists - If exists = false then the Text isn't updated by the core game loop.
-    * @default
-    */
-    this.exists = true;
-
-    /**
-    * @property {string} name - The user defined name given to this object.
-    * @default
-    */
-    this.name = '';
-
-    /**
-    * @property {number} type - The const type of this object.
-    * @default
-    */
-    this.type = Phaser.TEXT;
-
-    /**
-    * @property {number} z - The z-depth value of this object within its Group (remember the World is a Group as well). No two objects in a Group can have the same z value.
-    */
-    this.z = 0;
-
-    /**
-    * @property {Phaser.Point} world - The world coordinates of this Sprite. This differs from the x/y coordinates which are relative to the Sprites container.
-    */
-    this.world = new Phaser.Point(x, y);
 
     /**
     * @property {string} _text - Internal cache var.
@@ -104,21 +76,6 @@ Phaser.Text = function (game, x, y, text, style) {
     this._charCount = 0;
 
     /**
-    * @property {Phaser.Events} events - The Events you can subscribe to that are dispatched when certain things happen on this Sprite or its components.
-    */
-    this.events = new Phaser.Events(this);
-
-    /**
-    * @property {Phaser.InputHandler|null} input - The Input Handler for this object. Needs to be enabled with image.inputEnabled = true before you can use it.
-    */
-    this.input = null;
-
-    /**
-    * @property {Phaser.Point} cameraOffset - If this object is fixedToCamera then this stores the x/y offset that its drawn at, from the top-left of the camera view.
-    */
-    this.cameraOffset = new Phaser.Point();
-
-    /**
     * @property {array} colors - An array of the color values as specified by `Text.addColor`.
     */
     this.colors = [];
@@ -127,23 +84,10 @@ Phaser.Text = function (game, x, y, text, style) {
 
     PIXI.Text.call(this, text, this.style);
 
-    this.position.set(x, y);
+    Phaser.GameObject.init.call(this, game);
 
-    /**
-    * A small internal cache:
-    * 0 = previous position.x
-    * 1 = previous position.y
-    * 2 = previous rotation
-    * 3 = renderID
-    * 4 = fresh? (0 = no, 1 = yes)
-    * 5 = outOfBoundsFired (0 = no, 1 = yes)
-    * 6 = exists (0 = no, 1 = yes)
-    * 7 = fixed to camera (0 = no, 1 = yes)
-    * 8 = destroy phase? (0 = no, 1 = yes)
-    * @property {Array} _cache
-    * @private
-    */
-    this._cache = [ 0, 0, 0, 0, 1, 0, 1, 0, 0 ];
+    this.position.set(x, y);
+    this.world.setTo(x, y);
 
     if (text !== ' ')
     {
@@ -156,105 +100,19 @@ Phaser.Text.prototype = Object.create(PIXI.Text.prototype);
 Phaser.Text.prototype.constructor = Phaser.Text;
 
 /**
-* Automatically called by World.preUpdate.
-* 
-* @method Phaser.Text#preUpdate
+* @property {number} type - The const type of this object.
+* @readonly
+* @default
 */
-Phaser.Text.prototype.preUpdate = function () {
+Phaser.Text.prototype.type = Phaser.TEXT;
 
-    this._cache[0] = this.world.x;
-    this._cache[1] = this.world.y;
-    this._cache[2] = this.rotation;
-
-    if (!this.exists || !this.parent.exists)
-    {
-        this.renderOrderID = -1;
-        return false;
-    }
-
-    if (this.autoCull)
-    {
-        //  Won't get rendered but will still get its transform updated
-        this.renderable = this.game.world.camera.screenView.intersects(this.getBounds());
-    }
-
-    this.world.setTo(this.game.camera.x + this.worldTransform.tx, this.game.camera.y + this.worldTransform.ty);
-
-    if (this.visible)
-    {
-        this._cache[3] = this.game.stage.currentRenderOrderID++;
-    }
-
-    //  Update any Children
-    for (var i = 0, len = this.children.length; i < len; i++)
-    {
-        this.children[i].preUpdate();
-    }
-
-    return true;
-
-};
+Phaser.GameObject.mix(Phaser.Text.prototype, Phaser.GameObject.Traits.GRAPHICS_LIKE);
 
 /**
-* Override and use this function in your own custom objects to handle any update requirements you may have.
-*
-* @method Phaser.Text#update
+* @method Phaser.Text#destroyImpl
+* @protected
 */
-Phaser.Text.prototype.update = function() {
-
-};
-
-/**
-* Automatically called by World.postUpdate.
-* 
-* @method Phaser.Text#postUpdate
-*/
-Phaser.Text.prototype.postUpdate = function () {
-
-    if (this._cache[7] === 1)
-    {
-        this.position.x = (this.game.camera.view.x + this.cameraOffset.x) / this.game.camera.scale.x;
-        this.position.y = (this.game.camera.view.y + this.cameraOffset.y) / this.game.camera.scale.y;
-    }
-
-    //  Update any Children
-    for (var i = 0, len = this.children.length; i < len; i++)
-    {
-        this.children[i].postUpdate();
-    }
-
-};
-
-/**
-* @method Phaser.Text#destroy
-* @param {boolean} [destroyChildren=true] - Should every child of this object have its destroy method called?
-*/
-Phaser.Text.prototype.destroy = function (destroyChildren) {
-
-    if (this.game === null || this.destroyPhase) { return; }
-
-    if (typeof destroyChildren === 'undefined') { destroyChildren = true; }
-
-    this._cache[8] = 1;
-
-    if (this.events)
-    {
-        this.events.onDestroy$dispatch(this);
-    }
-
-    if (this.parent)
-    {
-        if (this.parent instanceof Phaser.Group)
-        {
-            this.parent.remove(this);
-        }
-        else
-        {
-            this.parent.removeChild(this);
-        }
-    }
-
-    this.texture.destroy(true);
+Phaser.Text.prototype.destroyImpl = function () {
 
     if (this.canvas.parentNode)
     {
@@ -265,32 +123,6 @@ Phaser.Text.prototype.destroy = function (destroyChildren) {
         this.canvas = null;
         this.context = null;
     }
-
-    var i = this.children.length;
-
-    if (destroyChildren)
-    {
-        while (i--)
-        {
-            this.children[i].destroy(destroyChildren);
-        }
-    }
-    else
-    {
-        while (i--)
-        {
-            this.removeChild(this.children[i]);
-        }
-    }
-
-    this.exists = false;
-    this.visible = false;
-
-    this.filters = null;
-    this.mask = null;
-    this.game = null;
-
-    this._cache[8] = 0;
 
 };
 
@@ -573,26 +405,6 @@ Phaser.Text.prototype.runWordWrap = function (text) {
     return result;
 
 };
-
-/**
-* Indicates the rotation of the Text, in degrees, from its original orientation. Values from 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation.
-* Values outside this range are added to or subtracted from 360 to obtain a value within the range. For example, the statement player.angle = 450 is the same as player.angle = 90.
-* If you wish to work in radians instead of degrees use the property Sprite.rotation instead.
-* 
-* @name Phaser.Text#angle
-* @property {number} angle - Gets or sets the angle of rotation in degrees.
-*/
-Object.defineProperty(Phaser.Text.prototype, 'angle', {
-
-    get: function() {
-        return Phaser.Math.radToDeg(this.rotation);
-    },
-
-    set: function(value) {
-        this.rotation = Phaser.Math.degToRad(value);
-    }
-
-});
 
 /**
 * The text string to be displayed by this Text object, taking into account the style settings.
@@ -950,92 +762,6 @@ Object.defineProperty(Phaser.Text.prototype, 'shadowBlur', {
             this.style.shadowBlur = value;
             this.dirty = true;
         }
-
-    }
-
-});
-
-/**
-* By default a Text object won't process any input events at all. By setting inputEnabled to true the Phaser.InputHandler is
-* activated for this object and it will then start to process click/touch events and more.
-*
-* @name Phaser.Text#inputEnabled
-* @property {boolean} inputEnabled - Set to true to allow this object to receive input events.
-*/
-Object.defineProperty(Phaser.Text.prototype, "inputEnabled", {
-
-    get: function () {
-
-        return (this.input && this.input.enabled);
-
-    },
-
-    set: function (value) {
-
-        if (value)
-        {
-            if (this.input === null)
-            {
-                this.input = new Phaser.InputHandler(this);
-                this.input.start();
-            }
-            else if (this.input && !this.input.enabled)
-            {
-                this.input.start();
-            }
-        }
-        else
-        {
-            if (this.input && this.input.enabled)
-            {
-                this.input.stop();
-            }
-        }
-
-    }
-
-});
-
-/**
-* An Text that is fixed to the camera uses its x/y coordinates as offsets from the top left of the camera. These are stored in Text.cameraOffset.
-* Note that the cameraOffset values are in addition to any parent in the display list.
-* So if this Text was in a Group that has x: 200, then this will be added to the cameraOffset.x
-*
-* @name Phaser.Text#fixedToCamera
-* @property {boolean} fixedToCamera - Set to true to fix this Text to the Camera at its current world coordinates.
-*/
-Object.defineProperty(Phaser.Text.prototype, "fixedToCamera", {
-
-    get: function () {
-
-        return !!this._cache[7];
-
-    },
-
-    set: function (value) {
-
-        if (value)
-        {
-            this._cache[7] = 1;
-            this.cameraOffset.set(this.x, this.y);
-        }
-        else
-        {
-            this._cache[7] = 0;
-        }
-    }
-
-});
-
-/**
-* @name Phaser.Text#destroyPhase
-* @property {boolean} destroyPhase - True if this object is currently being destroyed.
-*/
-Object.defineProperty(Phaser.Text.prototype, "destroyPhase", {
-
-    get: function () {
-
-        return !!this._cache[8];
 
     }
 

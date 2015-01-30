@@ -115,12 +115,6 @@ Phaser.BitmapData = function (game, key, width, height) {
     this.texture.frame = this.textureFrame;
 
     /**
-    * @property {number} type - The const type of this object.
-    * @default
-    */
-    this.type = Phaser.BITMAPDATA;
-
-    /**
     * @property {boolean} disableTextureUpload - If disableTextureUpload is true this BitmapData will never send its image data to the GPU when its dirty flag is true.
     */
     this.disableTextureUpload = false;
@@ -1829,7 +1823,7 @@ Phaser.BitmapData.prototype = {
 };
 
 /**
-* @name Phaser.Sprite#smoothed
+* @name Phaser.BitmapData#smoothed
 * @property {boolean} smoothed - Gets or sets this BitmapData.contexts smoothing enabled value.
 */
 Object.defineProperty(Phaser.BitmapData.prototype, "smoothed", {
@@ -1874,3 +1868,10 @@ Phaser.BitmapData.getTransform = function (translateX, translateY, scaleX, scale
 };
 
 Phaser.BitmapData.prototype.constructor = Phaser.BitmapData;
+
+/**
+* @property {number} type - The const type of this object.
+* @readonly
+* @default
+*/
+Phaser.BitmapData.prototype.type = Phaser.BITMAPDATA;

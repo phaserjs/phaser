@@ -36,11 +36,6 @@ Phaser.RenderTexture = function (game, width, height, key, scaleMode, resolution
     this.key = key;
 
     /**
-    * @property {number} type - Base Phaser object type.
-    */
-    this.type = Phaser.RENDERTEXTURE;
-
-    /**
     * @property {PIXI.Matrix} matrix - The matrix that is applied when display objects are rendered to this RenderTexture.
     */
     this.matrix = new PIXI.Matrix();
@@ -53,6 +48,13 @@ Phaser.RenderTexture = function (game, width, height, key, scaleMode, resolution
 
 Phaser.RenderTexture.prototype = Object.create(PIXI.RenderTexture.prototype);
 Phaser.RenderTexture.prototype.constructor = Phaser.RenderTexture;
+
+/**
+* @property {number} type - The const type of this object.
+* @readonly
+* @default
+*/
+Phaser.RenderTexture.prototype.type = Phaser.RENDERTEXTURE;
 
 /**
 * This function will draw the display object to the texture.

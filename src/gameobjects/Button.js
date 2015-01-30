@@ -19,8 +19,8 @@
 * Frames can be specified as either an integer (the frame ID) or a string (the frame name); the same values that can be used with a Sprite constructor.
 *
 * @class Phaser.Button
-* @constructor
 * @extends Phaser.Image
+* @constructor
 * @param {Phaser.Game} game Current game instance.
 * @param {number} [x=0] - X position of the Button.
 * @param {number} [y=0] - Y position of the Button.
@@ -41,13 +41,6 @@ Phaser.Button = function (game, x, y, key, callback, callbackContext, overFrame,
     callbackContext = callbackContext || this;
 
     Phaser.Image.call(this, game, x, y, key, outFrame);
-
-    /**
-    * The Phaser Object Type.
-    * @property {number} type
-    * @readonly
-    */
-    this.type = Phaser.BUTTON;
 
     /**
     * The name or ID of the Over state frame.
@@ -210,6 +203,13 @@ Phaser.Button = function (game, x, y, key, callback, callbackContext, overFrame,
 
 Phaser.Button.prototype = Object.create(Phaser.Image.prototype);
 Phaser.Button.prototype.constructor = Phaser.Button;
+
+/**
+* @property {number} type - The const type of this object.
+* @readonly
+* @default
+*/
+Phaser.Button.prototype.type = Phaser.BUTTON;
 
 //  State constants; local only. These are tied to property names in Phaser.Button.
 var STATE_OVER = 'Over';

@@ -26,14 +26,15 @@ Phaser.SpriteBatch = function (game, parent, name, addToStage) {
 
     Phaser.Group.call(this, game, parent, name, addToStage);
 
-    /**
-    * @property {number} type - Internal Phaser Type value.
-    * @protected
-    */
-    this.type = Phaser.SPRITEBATCH;
-
 };
 
 Phaser.SpriteBatch.prototype = Phaser.Utils.extend(true, Phaser.SpriteBatch.prototype, Phaser.Group.prototype, PIXI.SpriteBatch.prototype);
 
 Phaser.SpriteBatch.prototype.constructor = Phaser.SpriteBatch;
+
+/**
+* @property {number} type - The const type of this object.
+* @readonly
+* @default
+*/
+Phaser.SpriteBatch.prototype.type = Phaser.SPRITEBATCH;

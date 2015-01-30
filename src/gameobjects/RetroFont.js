@@ -173,15 +173,17 @@ Phaser.RetroFont = function (game, key, characterWidth, characterHeight, chars, 
 
     Phaser.RenderTexture.call(this, game, 100, 100, '', Phaser.scaleModes.NEAREST);
 
-    /**
-    * @property {number} type - Base Phaser object type.
-    */
-    this.type = Phaser.RETROFONT;
-
 };
 
 Phaser.RetroFont.prototype = Object.create(Phaser.RenderTexture.prototype);
 Phaser.RetroFont.prototype.constructor = Phaser.RetroFont;
+
+/**
+* @property {number} type - The const type of this object.
+* @readonly
+* @default
+*/
+Phaser.RetroFont.prototype.type = Phaser.RETROFONT;
 
 /**
 * Align each line of multi-line text to the left.
