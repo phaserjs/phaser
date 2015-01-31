@@ -6,7 +6,7 @@
         
         paths: {
             //  Edit the below path to point to where-ever you have placed the phaser.min.js file
-            phaser: 'libs/phaser/phaser.min'
+            phaser: 'libs/phaser/build/phaser.min'
         },
 
         shim: {
