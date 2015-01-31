@@ -13,8 +13,10 @@ $.fn.toc = function(options) {
       e.preventDefault();
       var elScrollTo = $(e.target).attr('href');
       var $el = $(elScrollTo);
+      var topOffset = parseInt($('h4.name:first').css('marginTop').replace('px',''))
+                      + $('.navbar-inner').height();
 
-      $('body,html').animate({ scrollTop: $el.offset().top }, 400, 'swing', function() {
+      $('body,html').animate({ scrollTop: $el.offset().top - topOffset }, 400, 'swing', function() {
         location.hash = elScrollTo;
       });
     }
