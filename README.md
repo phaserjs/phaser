@@ -73,6 +73,7 @@ Version 2.3.0 - "Tarabon" - in dev
 * Sound.stop and Sound.destroy now halt a fade tween if in effect.
 * Arcade Physics `computeVelocity` now allows a max velocity of 0 allowing movement to be constrained to a single axis (thanks @zekoff #1594)
 * Added missing properties to the InputHandler prototype, reducing hidden class modifications.
+* Updated docstrap-master toc.js to fix nav scrolling (thanks @abderrahmane-tj @vulvulune #1589)
 
 ### Bug Fixes
 
