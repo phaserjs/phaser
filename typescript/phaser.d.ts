@@ -1162,6 +1162,7 @@ declare module Phaser {
         pendingStep: boolean;
         physics: Phaser.Physics;
         physicsConfig: any;
+        plugins: PluginManager;
         preserveDrawingBuffer: Boolean;
         raf: Phaser.RequestAnimationFrame;
         renderer: number;
