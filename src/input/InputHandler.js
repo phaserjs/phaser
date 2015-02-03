@@ -1256,6 +1256,9 @@ Phaser.InputHandler.prototype = {
     */
     startDrag: function (pointer) {
 
+        var x = this.sprite.x;
+        var y = this.sprite.y;
+
         this.isDragged = true;
         this._draggedPointerID = pointer.id;
         this._pointerData[pointer.id].isDragged = true;
@@ -1293,7 +1296,7 @@ Phaser.InputHandler.prototype = {
             this.sprite.bringToTop();
         }
 
-        this.sprite.events.onDragStart$dispatch(this.sprite, pointer);
+        this.sprite.events.onDragStart$dispatch(this.sprite, pointer, x, y);
 
     },
 
