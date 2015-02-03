@@ -87,6 +87,10 @@ Version 2.3.0 - "Tarabon" - in dev
 * Error in diffX and diffY calculation in Tilemap.paste (thanks @amelia410 #1446)
 * Fixed issue in PIXI.canUseNewCanvasBlendModes which would create false positives in browsers that supported `multiply` in Canvas path/fill ops, but not for `drawImage` (Samsung S5 for example). Now uses more accurate magenta / yellow mix test.
 * Fixed FrameData.getFrame index out of bound error (thanks @jromer94 #1581 #1547)
+* In P2.Body calling adjust mass would desync the debug graphics from the real position of the body (thanks @tomlarkworthy #1549)
+* Fix CORS loading of BitmapFonts with IE9 (thanks @jeppester #1565)
+* TileSprites were not detecting Pointer up events correctly because of a branching condition (thanks @integricho #1580 #1551)
+* TileSprites weren't destroying WebGL textures, leading to eventual out of memory errors (thanks @chacal #1563)
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 
