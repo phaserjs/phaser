@@ -77,6 +77,7 @@ Version 2.3.0 - "Tarabon" - in dev
 * SoundManager.unlock checks for audio `start` support and falls back to `noteOn` if not found.
 * Sprite.frame and AnimationManager.frame wouldn't return the correct index if a sprite sheet was being used unless it had first been set via the setter.
 * Error in diffX and diffY calculation in Tilemap.paste (thanks @amelia410 #1446)
+* Fixed issue in PIXI.canUseNewCanvasBlendModes which would create false positives in browsers that supported `multiply` in Canvas path/fill ops, but not for `drawImage` (Samsung S5 for example). Now uses more accurate magenta / yellow mix test.
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 
