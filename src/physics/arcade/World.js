@@ -294,7 +294,7 @@ Phaser.Physics.Arcade.prototype = {
     */
     computeVelocity: function (axis, body, velocity, acceleration, drag, max) {
 
-        max = max || 10000;
+        max = typeof max !== 'undefined' ? max : 10000;
 
         if (axis == 1 && body.allowGravity)
         {
