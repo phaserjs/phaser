@@ -71,6 +71,8 @@ Version 2.3.0 - "Tarabon" - in dev
 * TypeScript definitions fixes and updates (thanks @clark-stevenson @TimvdEijnden @belohlavek @ivw)
 * Sound.fadeTween is now used for Sound.fadeIn and Sound.fadeOut audio tweens.
 * Sound.stop and Sound.destroy now halt a fade tween if in effect.
+* Arcade Physics `computeVelocity` now allows a max velocity of 0 allowing movement to be constrained to a single axis (thanks @zekoff #1594)
+* Added missing properties to the InputHandler prototype, reducing hidden class modifications.
 
 ### Bug Fixes
 
