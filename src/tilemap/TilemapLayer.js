@@ -596,7 +596,7 @@ Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides
         }
     }
 
-    return this._results;
+    return this._results.slice();
 
 };
 

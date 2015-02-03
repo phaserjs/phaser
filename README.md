@@ -68,12 +68,15 @@ Version 2.3.0 - "Tarabon" - in dev
 
 ### Updates
 
-* TypeScript definitions fixes and updates (thanks @clark-stevenson @TimvdEijnden @belohlavek @ivw)
+* TypeScript definitions fixes and updates (thanks @Phaiax @Bilge @clark-stevenson @TimvdEijnden @belohlavek @ivw @vulvulune)
 * Sound.fadeTween is now used for Sound.fadeIn and Sound.fadeOut audio tweens.
 * Sound.stop and Sound.destroy now halt a fade tween if in effect.
 * Arcade Physics `computeVelocity` now allows a max velocity of 0 allowing movement to be constrained to a single axis (thanks @zekoff #1594)
 * Added missing properties to the InputHandler prototype, reducing hidden class modifications.
 * Updated docstrap-master toc.js to fix nav scrolling (thanks @abderrahmane-tj @vulvulune #1589)
+* Added missing plugins member in Phaser.Game class (thanks @Bilge #1568)
+* Lots of JSDocs fixes (thanks @vulvulune @micahjohnston @Marchys)
+* TilemapLayer.getTiles now returns a copy of the Tiles found by the method, rather than references to the original Tile objects, so you're free to modify them without corrupting the source (thanks @Leekao #1585)
 
 ### Bug Fixes
 
@@ -81,6 +84,7 @@ Version 2.3.0 - "Tarabon" - in dev
 * Sprite.frame and AnimationManager.frame wouldn't return the correct index if a sprite sheet was being used unless it had first been set via the setter.
 * Error in diffX and diffY calculation in Tilemap.paste (thanks @amelia410 #1446)
 * Fixed issue in PIXI.canUseNewCanvasBlendModes which would create false positives in browsers that supported `multiply` in Canvas path/fill ops, but not for `drawImage` (Samsung S5 for example). Now uses more accurate magenta / yellow mix test.
+* Fixed FrameData.getFrame index out of bound error (thanks @jromer94 #1581 #1547)
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 
@@ -240,7 +244,9 @@ If you need to support IE9 / Android 2.x **and** use P2 physics then you must us
 
 Phaser is developed in JavaScript. We've made no assumptions about how you like to code and were careful not to impose a strict structure upon you. You won't find Phaser split into modules, requiring a build step, or making you use a class / inheritance OOP approach. That doesn't mean you can't do so, it just means we don't *force* you to. It's your choice.
 
-If you code with [TypeScript](http://www.typescriptlang.org/) there are comprehensive definition files in the `typescript` folder. They are for TypeScript 1.0+. If using an earlier version of TypeScript (i.e. 0.9.5) you will need to include [WebGL definitions](https://github.com/piersh/WebGL.ts) into your project first.
+If you code with [TypeScript](http://www.typescriptlang.org/) there are comprehensive definition files in the `typescript` folder. They are for TypeScript 1.4+ only.
+
+We don't officially support any version of TypeScript before 1.4, however you can use any of our defs files from January 2015 or before, although they will not be fully feature complete. If using a very early version of TypeScript (i.e. 0.9.5) you will need to include [WebGL definitions](https://github.com/piersh/WebGL.ts) into your project first.
 
 ![div](http://www.phaser.io/images/github/div.png)
 
