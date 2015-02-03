@@ -1588,6 +1588,7 @@ declare module Phaser {
         minPriorityID: number;
         mouse: Phaser.Mouse;
         mousePointer: Phaser.Pointer;
+        moveCallback: (pointer: Phaser.Pointer, x: number, y: number) => void;
         moveCallbacks: (pointer: Phaser.Pointer, x: number, y: number) => void[];
         moveCallbackContext: any;
         mspointer: Phaser.MSPointer;
@@ -3157,7 +3158,7 @@ declare module Phaser {
 
     class PluginManager extends StateCycle {
 
-        constructor(game: Phaser.Game, parent: any);
+        constructor(game: Phaser.Game);
 
         game: Phaser.Game;
         plugins: Phaser.Plugin[];
