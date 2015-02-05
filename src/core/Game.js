@@ -335,10 +335,16 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     this._lastCount = 0;
 
     /**
-    * @property {number} _spiralling - if the 'catch-up' iterations are spiralling out of control, this counter is incremented
+    * @property {number} _spiraling - if the 'catch-up' iterations are spiraling out of control, this counter is incremented
     * @private
     */
-    this._spiralling = 0;
+    this._spiraling = 0;
+
+    /**
+    * @property {boolean} _kickstart - Force a logic update + render by default (always on Boot and State swap)
+    * @private
+    */
+    this._kickstart = true;
 
     /**
     * If the game is struggling to maintain the desired FPS, this signal will be dispatched.
@@ -558,6 +564,8 @@ Phaser.Game.prototype = {
             this.raf = new Phaser.RequestAnimationFrame(this, false);
         }
 
+        this._kickstart = true;
+
         this.raf.start();
 
     },
@@ -710,8 +718,23 @@ Phaser.Game.prototype = {
 
         this.time.update(time);
 
+        if (this._kickstart)
+        {
+            this.updateLogic(1.0 / this.time.desiredFps);
+
+            //  Sync the scene graph after _every_ logic update to account for moved game objects                
+            this.stage.updateTransform();
+
+            // call the game render update exactly once every frame
+            this.updateRender(this.time.slowMotion * this.time.desiredFps);
+
+            this._kickstart = false;
+
+            return;
+        }
+
         // if the logic time is spiraling upwards, skip a frame entirely
-        if (this._spiralling > 1 && !this.forceSingleUpdate)
+        if (this._spiraling > 1 && !this.forceSingleUpdate)
         {
             // cause an event to warn the program that this CPU can't keep up with the current desiredFps rate
             if (this.time.time > this._nextFpsNotification)
@@ -725,7 +748,7 @@ Phaser.Game.prototype = {
 
             // reset the _deltaTime accumulator which will cause all pending dropped frames to be permanently skipped
             this._deltaTime = 0;
-            this._spiralling = 0;
+            this._spiraling = 0;
 
             // call the game render update exactly once every frame
             this.updateRender(this.time.slowMotion * this.time.desiredFps);
@@ -769,12 +792,12 @@ Phaser.Game.prototype = {
             // detect spiraling (if the catch-up loop isn't fast enough, the number of iterations will increase constantly)
             if (count > this._lastCount)
             {
-                this._spiralling++;
+                this._spiraling++;
             }
             else if (count < this._lastCount)
             {
                 // looks like it caught up successfully, reset the spiral alert counter
-                this._spiralling = 0;
+                this._spiraling = 0;
             }
 
             this._lastCount = count;
