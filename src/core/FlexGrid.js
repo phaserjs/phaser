@@ -26,7 +26,7 @@ Phaser.FlexGrid = function (manager, width, height) {
     this.game = manager.game;
 
     /**
-    * @property {Phaser.ScaleManager} scale - A reference to the ScaleManager.
+    * @property {Phaser.ScaleManager} manager - A reference to the ScaleManager.
     */
     this.manager = manager;
 

@@ -58,7 +58,7 @@ Phaser.Mouse = function (game) {
     this.mouseWheelCallback = null;
 
     /**
-    * @property {boolean} capture - If true the DOM mouse events will have event.preventDefault applied to them, if false they will propogate fully.
+    * @property {boolean} capture - If true the DOM mouse events will have event.preventDefault applied to them, if false they will propagate fully.
     */
     this.capture = false;
 

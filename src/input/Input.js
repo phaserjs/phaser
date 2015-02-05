@@ -62,7 +62,7 @@ Phaser.Input = function (game) {
     this.enabled = true;
 
     /**
-    * @property {number} multiInputOverride - Controls the expected behaviour when using a mouse and touch together on a multi-input device.
+    * @property {number} multiInputOverride - Controls the expected behavior when using a mouse and touch together on a multi-input device.
     * @default
     */
     this.multiInputOverride = Phaser.Input.MOUSE_TOUCH_COMBINE;
