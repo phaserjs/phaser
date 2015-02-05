@@ -186,7 +186,7 @@ var TypeScriptDocGenerator = (function () {
         var parent = node.parent;
         while (parent != null) {
             if (parent.kind === ts.SyntaxKind.ModuleDeclaration || parent.kind === ts.SyntaxKind.ClassDeclaration) {
-                fullName = parent.name.getText() + ((fullName != '') ? "." + fullName : fullName);
+                fullName = parent.name.getText() + ((fullName !== '') ? "." + fullName : fullName);
             }
             parent = parent.parent;
         }
