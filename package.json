@@ -44,7 +44,7 @@
     "yuidocjs": "^0.3.50",
     "jsdoc": "~3.3.0-alpha10",
     "grunt-jsdoc": "~0.6.2-beta",
-    "typescript-services": "~0.1.5",
-    "grunt-git": "^0.3.3"
+    "grunt-git": "^0.3.3",
+    "typescript": "^1.4.1"
   }
 }
