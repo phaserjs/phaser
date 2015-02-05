@@ -686,8 +686,7 @@ Phaser.Device._initialize = function () {
     */
     function _checkInput () {
 
-        if ('ontouchstart' in document.documentElement ||
-            (window.navigator.maxTouchPoints && window.navigator.maxTouchPoints > 1))
+        if ('ontouchstart' in document.documentElement || (window.navigator.maxTouchPoints && window.navigator.maxTouchPoints >= 1))
         {
             device.touch = true;
         }

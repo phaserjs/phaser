@@ -47,6 +47,12 @@ Phaser.MSPointer = function (game) {
     this.capture = false;
 
     /**
+    * @property {number} button- The type of click, either: Phaser.Mouse.NO_BUTTON, Phaser.Mouse.LEFT_BUTTON, Phaser.Mouse.MIDDLE_BUTTON or Phaser.Mouse.RIGHT_BUTTON.
+    * @default
+    */
+    this.button = -1;
+
+    /**
     * The browser MSPointer DOM event. Will be null if no event has ever been received.
     * Access this property only inside a Pointer event handler and do not keep references to it.
     * @property {MSPointerEvent|null} event
@@ -141,6 +147,8 @@ Phaser.MSPointer.prototype = {
             event.preventDefault();
         }
 
+        this.button = event.button;
+
         if (this.pointerDownCallback)
         {
             this.pointerDownCallback.call(this.callbackContext, event);
@@ -200,6 +208,8 @@ Phaser.MSPointer.prototype = {
         {
             event.preventDefault();
         }
+
+        this.button = Phaser.Mouse.NO_BUTTON;
 
         if (this.pointerUpCallback)
         {

@@ -249,6 +249,7 @@ Phaser.Mouse.prototype = {
         }
 
         var wheelEvent = this.game.device.wheelEvent;
+
         if (wheelEvent)
         {
             this.game.canvas.addEventListener(wheelEvent, this._onMouseWheel, true);

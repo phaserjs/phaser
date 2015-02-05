@@ -68,6 +68,7 @@ Version 2.3.0 - "Tarabon" - in dev
 * MSPointer.capture allows you to optionally event.preventDefault the pointer events (was previously always on)
 * MSPointer.event now stores the most recent pointer event.
 * MSPointer.pointerDownCallback, pointerMoveCallback and pointerUpCallback all allow you to set your own event based callbacks.
+* MSPointer.button now records which button was pressed down (if any)
 
 ### Updates
 
@@ -83,6 +84,7 @@ Version 2.3.0 - "Tarabon" - in dev
 * TilemapLayer.getTiles now returns a copy of the Tiles found by the method, rather than references to the original Tile objects, so you're free to modify them without corrupting the source (thanks @Leekao #1585)
 * Sprite.events.onDragStart has 2 new parameters `x` and `y` which is the position of the Sprite before the drag was started. The full list of parameters is: `(sprite, pointer, x, y)`. This allows you to retain the position of the Sprite prior to dragging should `dragFromCenter` have been enabled (thanks @vulvulune #1583)
 * Body.reset now resets the Body.speed value to zero.
+* Device.touch checks if `window.navigator.maxTouchPoints` is `>= 1` rather than > 1, which now allows touch events to work properly in Chrome mobile emulation.
 
 ### Bug Fixes
 
