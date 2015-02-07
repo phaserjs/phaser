@@ -678,16 +678,19 @@ Phaser.TilemapLayer.prototype.resetTilesetCache = function ()
  * This method will set the scale of the tilemap as well as update the underlying block data of this layer
  * 
  * @method Phaser.TilemapLayer#setScale
- * @param {number} [xScale=1] - The scale factor along the X-plane of this tilemap 
- * @param {number} [yScale] - The scale factor along the Y-plane of this tilemap
+ * @param {number} [xScale=1] - The scale factor along the X-plane 
+ * @param {number} [yScale] - The scale factor along the Y-plane
  */
 Phaser.TilemapLayer.prototype.setScale = function(xScale, yScale) {
     xScale = xScale || 1;
     yScale = yScale || xScale;
 
-    for (var y = 0; y < this.layer.data.length; y++) {
+    for (var y = 0; y < this.layer.data.length; y++)
+    {
         var row = this.layer.data[y];
-        for (var x = 0; x < row.length; x++) {
+
+        for (var x = 0; x < row.length; x++)
+        {
             var tile = row[x];
 
             tile.width = this.map.tileWidth * xScale;
