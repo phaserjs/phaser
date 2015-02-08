@@ -256,23 +256,31 @@ Phaser.TilemapParser = {
                 rotation = 0;
                 flipped = false;
                 gid = json.layers[i].data[t];
-                if (gid > 0x20000000) // if true the current tile is flipped or rotated (Tiled TMX format) 
+
+                //  If true the current tile is flipped or rotated (Tiled TMX format) 
+                if (gid > 0x20000000)
                 {
-                    flippedVal=0;
-                    if(gid>0x80000000) // FlippedX
+                    flippedVal = 0;
+
+                    // FlippedX
+                    if (gid > 0x80000000)
                     {
-                        gid-=0x80000000;
-                        flippedVal+=4;
+                        gid -= 0x80000000;
+                        flippedVal += 4;
                     }
-                    if(gid>0x40000000)  // FlippedY
+
+                    // FlippedY
+                    if (gid > 0x40000000)
                     {
-                        gid-=0x40000000;
-                        flippedVal+=2;
+                        gid -= 0x40000000;
+                        flippedVal += 2;
                     }
-                    if(gid>0x20000000) // FlippedAD
+
+                    // FlippedAD
+                    if (gid > 0x20000000)
                     {
-                        gid-=0x20000000;
-                        flippedVal+=1;
+                        gid -= 0x20000000;
+                        flippedVal += 1;
                     }
                    
                     switch (flippedVal)
@@ -304,6 +312,7 @@ Phaser.TilemapParser = {
                             break;
                     }
                 }
+
                 //  index, x, y, width, height
                 if (gid > 0)
                 {
@@ -404,11 +413,19 @@ Phaser.TilemapParser = {
         var collision = {};
 
         function slice (obj, fields) {
+
             var sliced = {};
-            for (var k in fields) {
+
+            for (var k in fields)
+            {
                 var key = fields[k];
-                sliced[key] = obj[key];
+
+                if (obj[key])
+                {
+                    sliced[key] = obj[key];
+                }
             }
+
             return sliced;
         }
 
@@ -438,6 +455,11 @@ Phaser.TilemapParser = {
 
                     };
 
+                    if (json.layers[i].objects[v].rotation)
+                    {
+                        object.rotation = json.layers[i].objects[v].rotation;
+                    }
+
                     objects[json.layers[i].name].push(object);
                 }
                 else if (json.layers[i].objects[v].polyline)
@@ -455,6 +477,11 @@ Phaser.TilemapParser = {
 
                     };
 
+                    if (json.layers[i].objects[v].rotation)
+                    {
+                        object.rotation = json.layers[i].objects[v].rotation;
+                    }
+
                     object.polyline = [];
 
                     //  Parse the polyline into an array
@@ -470,14 +497,16 @@ Phaser.TilemapParser = {
                 else if (json.layers[i].objects[v].polygon)
                 {
                     var object = slice(json.layers[i].objects[v],
-                                       ["name", "type", "x", "y", "visible", "properties" ]);
+                                       ["name", "type", "x", "y", "visible", "rotation", "properties" ]);
 
                     //  Parse the polygon into an array
                     object.polygon = [];
+
                     for (var p = 0; p < json.layers[i].objects[v].polygon.length; p++)
                     {
                         object.polygon.push([ json.layers[i].objects[v].polygon[p].x, json.layers[i].objects[v].polygon[p].y ]);
                     }
+
                     objects[json.layers[i].name].push(object);
 
                 }
@@ -485,14 +514,14 @@ Phaser.TilemapParser = {
                 else if (json.layers[i].objects[v].ellipse)
                 {
                     var object = slice(json.layers[i].objects[v],
-                                       ["name", "type", "ellipse", "x", "y", "width", "height", "visible", "properties" ]);
+                                       ["name", "type", "ellipse", "x", "y", "width", "height", "visible", "rotation", "properties" ]);
                     objects[json.layers[i].name].push(object);
                 }
                 // otherwise it's a rectangle
                 else
                 {
                     var object = slice(json.layers[i].objects[v],
-                                       ["name", "type", "x", "y", "width", "height", "visible", "properties" ]);
+                                       ["name", "type", "x", "y", "width", "height", "visible", "rotation", "properties" ]);
                     object.rectangle = true;
                     objects[json.layers[i].name].push(object);
                 }

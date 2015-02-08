@@ -70,7 +70,8 @@ Version 2.3.0 - "Tarabon" - in dev
 * MSPointer.pointerDownCallback, pointerMoveCallback and pointerUpCallback all allow you to set your own event based callbacks.
 * MSPointer.button now records which button was pressed down (if any)
 * Phaser now supports rotated and flipped tiles in tilemaps, as exported from the Tiled map editor (thanks @nkholski #1608)
-
+* TilemapParser now supports Tiled 0.11 version maps which includes the `rotation` property on all Object types.
+* Tilemap.createFromObjects now checks for a `rotation` property on the Object and if present will set it as the Sprite.angle (#1433)
 
 ### Updates
 
@@ -102,6 +103,7 @@ Version 2.3.0 - "Tarabon" - in dev
 * TileSprites weren't destroying WebGL textures, leading to eventual out of memory errors (thanks @chacal #1563)
 * P2.Body.clearCollision default values were incorrectly set to `false` if no parameters were provided, even though the docs said they were `true` (thanks @brianbunch #1597)
 * BitmapText.font wouldn't update an internal Pixi property (fontName) causing the text to fail to change font (thanks @starnut #1602)
+* Fixed issue in PIXI.Text where it was using the wrong string for descender text measurements.
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 

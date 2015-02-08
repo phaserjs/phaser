@@ -402,6 +402,11 @@ Phaser.Tilemap.prototype = {
                 sprite.autoCull = autoCull;
                 sprite.exists = exists;
 
+                if (this.objects[name][i].rotation)
+                {
+                    sprite.angle = this.objects[name][i].rotation;
+                }
+
                 if (adjustY)
                 {
                     sprite.y -= sprite.height;
