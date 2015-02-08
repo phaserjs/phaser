@@ -69,6 +69,8 @@ Version 2.3.0 - "Tarabon" - in dev
 * MSPointer.event now stores the most recent pointer event.
 * MSPointer.pointerDownCallback, pointerMoveCallback and pointerUpCallback all allow you to set your own event based callbacks.
 * MSPointer.button now records which button was pressed down (if any)
+* Phaser now supports rotated and flipped tiles in tilemaps, as exported from the Tiled map editor (thanks @nkholski #1608)
+
 
 ### Updates
 
@@ -85,6 +87,7 @@ Version 2.3.0 - "Tarabon" - in dev
 * Sprite.events.onDragStart has 2 new parameters `x` and `y` which is the position of the Sprite before the drag was started. The full list of parameters is: `(sprite, pointer, x, y)`. This allows you to retain the position of the Sprite prior to dragging should `dragFromCenter` have been enabled (thanks @vulvulune #1583)
 * Body.reset now resets the Body.speed value to zero.
 * Device.touch checks if `window.navigator.maxTouchPoints` is `>= 1` rather than > 1, which now allows touch events to work properly in Chrome mobile emulation.
+* Loader.XDomainRequest wasn't used for atlas json loading. It has now been moved to the `xhrLoad` method to ensure it's used for all request if required (thanks @draconisNoctis #1601)
 
 ### Bug Fixes
 
@@ -97,6 +100,7 @@ Version 2.3.0 - "Tarabon" - in dev
 * Fix CORS loading of BitmapFonts with IE9 (thanks @jeppester #1565)
 * TileSprites were not detecting Pointer up events correctly because of a branching condition (thanks @integricho #1580 #1551)
 * TileSprites weren't destroying WebGL textures, leading to eventual out of memory errors (thanks @chacal #1563)
+* P2.Body.clearCollision default values were incorrectly set to `false` if no parameters were provided, even though the docs said they were `true` (thanks @brianbunch #1597)
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 
