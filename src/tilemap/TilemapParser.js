@@ -270,19 +270,19 @@ Phaser.TilemapParser = {
                         flippedVal+=2;
                     }
                     if(gid>0x20000000) // FlippedAD
-                    { 
+                    {
                         gid-=0x20000000;
                         flippedVal+=1;
                     }
                    
-                    switch (flippedVal) 
+                    switch (flippedVal)
                     {
                         case 5:
                             rotation = Math.PI/2;
                             break;
                         case 6:
-                           rotation = Math.PI;
-                           break;
+                            rotation = Math.PI;
+                            break;
                         case 3:
                             rotation = 3*Math.PI/2;
                             break;
@@ -299,10 +299,10 @@ Phaser.TilemapParser = {
                             flipped = true;
                             break;
                         case 1:
-                            rotation = 3*Math.PI/2;;
+                            rotation = 3*Math.PI/2;
                             flipped = true;
                             break;
-                  }
+                    }
                 }
                 //  index, x, y, width, height
                 if (gid > 0)
