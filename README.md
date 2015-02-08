@@ -101,6 +101,7 @@ Version 2.3.0 - "Tarabon" - in dev
 * TileSprites were not detecting Pointer up events correctly because of a branching condition (thanks @integricho #1580 #1551)
 * TileSprites weren't destroying WebGL textures, leading to eventual out of memory errors (thanks @chacal #1563)
 * P2.Body.clearCollision default values were incorrectly set to `false` if no parameters were provided, even though the docs said they were `true` (thanks @brianbunch #1597)
+* BitmapText.font wouldn't update an internal Pixi property (fontName) causing the text to fail to change font (thanks @starnut #1602)
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 
