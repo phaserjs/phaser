@@ -243,6 +243,7 @@ Phaser.TilemapParser = {
             var x = 0;
             var row = [];
             var output = [];
+            var rotation, flipped, flippedVal, gid;
 
             //  Loop through the data field in the JSON.
 
@@ -252,10 +253,63 @@ Phaser.TilemapParser = {
 
             for (var t = 0, len = json.layers[i].data.length; t < len; t++)
             {
-                //  index, x, y, width, height
-                if (json.layers[i].data[t] > 0)
+                rotation = 0;
+                flipped = false;
+                gid = json.layers[i].data[t];
+                if (gid > 0x20000000) // if true the current tile is flipped or rotated (Tiled TMX format) 
                 {
-                    row.push(new Phaser.Tile(layer, json.layers[i].data[t], x, output.length, json.tilewidth, json.tileheight));
+                    flippedVal=0;
+                    if(gid>0x80000000) // FlippedX
+                    {
+                        gid-=0x80000000;
+                        flippedVal+=4;
+                    }
+                    if(gid>0x40000000)  // FlippedY
+                    {
+                        gid-=0x40000000;
+                        flippedVal+=2;
+                    }
+                    if(gid>0x20000000) // FlippedAD
+                    { 
+                        gid-=0x20000000;
+                        flippedVal+=1;
+                    }
+                   
+                    switch (flippedVal) 
+                    {
+                        case 5:
+                            rotation = Math.PI/2;
+                            break;
+                        case 6:
+                           rotation = Math.PI;
+                           break;
+                        case 3:
+                            rotation = 3*Math.PI/2;
+                            break;
+                        case 4:
+                            rotation = 0;
+                            flipped = true;
+                            break;
+                        case 7:
+                            rotation = Math.PI/2;
+                            flipped = true;
+                            break;
+                        case 2:
+                            rotation = Math.PI;
+                            flipped = true;
+                            break;
+                        case 1:
+                            rotation = 3*Math.PI/2;;
+                            flipped = true;
+                            break;
+                  }
+                }
+                //  index, x, y, width, height
+                if (gid > 0)
+                {
+                    row.push(new Phaser.Tile(layer, gid, x, output.length, json.tilewidth, json.tileheight));
+                    row[row.length - 1].rotation = rotation;
+                    row[row.length - 1].flipped = flipped;
                 }
                 else
                 {

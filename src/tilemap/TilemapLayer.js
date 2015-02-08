@@ -833,7 +833,21 @@ Phaser.TilemapLayer.prototype.renderRegion = function (scrollX, scrollY, left, t
 
             if (set)
             {
-                set.draw(context, tx, ty, index);
+                if (tile.rotation || tile.flipped)
+                {
+                    context.save();
+                    context.translate(tx + tile.centerX, ty + tile.centerY);
+                    context.rotate(tile.rotation);
+                    if (tile.flipped)
+                    {
+                        context.scale(-1, 1);
+                    }
+                    set.draw(context, -tile.centerX, -tile.centerY, index);
+                    context.restore();
+                }
+                else{
+                    set.draw(context, tx, ty, index);
+                }
             }
             else if (this.debugSettings.missingImageFill)
             {
