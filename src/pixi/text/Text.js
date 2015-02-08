@@ -362,8 +362,8 @@ PIXI.Text.prototype.determineFontProperties = function(fontStyle)
 
         context.font = fontStyle;
 
-        var width = Math.ceil(context.measureText('|Mq').width);
-        var baseline = Math.ceil(context.measureText('M').width);
+        var width = Math.ceil(context.measureText('|MÉq').width);
+        var baseline = Math.ceil(context.measureText('|MÉq').width);
         var height = 2 * baseline;
 
         baseline = baseline * 1.4 | 0;
