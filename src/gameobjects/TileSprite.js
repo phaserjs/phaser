@@ -499,6 +499,8 @@ Phaser.TileSprite.prototype.destroy = function(destroyChildren) {
 
     this._cache[8] = 0;
 
+    PIXI.TilingSprite.prototype.destroy.call(this);
+
 };
 
 /**

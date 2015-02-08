@@ -145,7 +145,7 @@ Phaser.Utils.extend(Phaser.Physics.P2.BodyDebug.prototype, {
     /**
     * Draws the P2 shapes to the Graphics object.
     *
-    * @method Phaser.Physics.P2.BodyDebug#draw
+    * @method Phaser.Physics.P2.BodyDebug#drawRectangle
     */
     drawRectangle: function(g, x, y, angle, w, h, color, fillColor, lineWidth) {
 
@@ -179,7 +179,7 @@ Phaser.Utils.extend(Phaser.Physics.P2.BodyDebug.prototype, {
     /**
     * Draws a P2 Line shape.
     *
-    * @method Phaser.Physics.P2.BodyDebug#drawCircle
+    * @method Phaser.Physics.P2.BodyDebug#drawLine
     */
     drawLine: function(g, len, color, lineWidth) {
 

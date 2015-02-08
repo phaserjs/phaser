@@ -612,7 +612,7 @@ Phaser.Particles.Arcade.Emitter.prototype.setRotation = function (min, max) {
 * @param {number} [min=1] - The minimum value for this range.
 * @param {number} [max=1] - The maximum value for this range.
 * @param {number} [rate=0] - The rate (in ms) at which the particles will change in alpha from min to max, or set to zero to pick a random alpha between the two.
-* @param {number} [ease=Phaser.Easing.Linear.None] - If you've set a rate > 0 this is the easing formula applied between the min and max values.
+* @param {function} [ease=Phaser.Easing.Linear.None] - If you've set a rate > 0 this is the easing formula applied between the min and max values.
 * @param {boolean} [yoyo=false] - If you've set a rate > 0 you can set if the ease will yoyo or not (i.e. ease back to its original values)
 */
 Phaser.Particles.Arcade.Emitter.prototype.setAlpha = function (min, max, rate, ease, yoyo) {
@@ -653,7 +653,7 @@ Phaser.Particles.Arcade.Emitter.prototype.setAlpha = function (min, max, rate, e
 * @param {number} [minY=1] - The minimum value of Particle.scale.y.
 * @param {number} [maxY=1] - The maximum value of Particle.scale.y.
 * @param {number} [rate=0] - The rate (in ms) at which the particles will change in scale from min to max, or set to zero to pick a random size between the two.
-* @param {number} [ease=Phaser.Easing.Linear.None] - If you've set a rate > 0 this is the easing formula applied between the min and max values.
+* @param {function} [ease=Phaser.Easing.Linear.None] - If you've set a rate > 0 this is the easing formula applied between the min and max values.
 * @param {boolean} [yoyo=false] - If you've set a rate > 0 you can set if the ease will yoyo or not (i.e. ease back to its original values)
 */
 Phaser.Particles.Arcade.Emitter.prototype.setScale = function (minX, maxX, minY, maxY, rate, ease, yoyo) {

@@ -321,7 +321,7 @@ Phaser.Camera.prototype = {
 
     /**
     * Method called to ensure the camera doesn't venture outside of the game world.
-    * @method Phaser.Camera#checkWorldBounds
+    * @method Phaser.Camera#checkBounds
     */
     checkBounds: function () {
 

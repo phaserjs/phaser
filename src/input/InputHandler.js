@@ -126,7 +126,7 @@ Phaser.InputHandler = function (sprite) {
     * Set to true to use pixel perfect hit detection when checking if the pointer is over this Sprite.
     * The x/y coordinates of the pointer are tested against the image in combination with the InputHandler.pixelPerfectAlpha value.
     * Warning: This is expensive, especially on mobile (where it's not even needed!) so only enable if required. Also see the less-expensive InputHandler.pixelPerfectClick.
-    * @property {number} pixelPerfectOver - Use a pixel perfect check when testing for pointer over.
+    * @property {boolean} pixelPerfectOver - Use a pixel perfect check when testing for pointer over.
     * @default
     */
     this.pixelPerfectOver = false;
@@ -135,7 +135,7 @@ Phaser.InputHandler = function (sprite) {
     * Set to true to use pixel perfect hit detection when checking if the pointer is over this Sprite when it's clicked or touched.
     * The x/y coordinates of the pointer are tested against the image in combination with the InputHandler.pixelPerfectAlpha value.
     * Warning: This is expensive so only enable if you really need it.
-    * @property {number} pixelPerfectClick - Use a pixel perfect check when testing for clicks or touches on the Sprite.
+    * @property {boolean} pixelPerfectClick - Use a pixel perfect check when testing for clicks or touches on the Sprite.
     * @default
     */
     this.pixelPerfectClick = false;
@@ -165,7 +165,7 @@ Phaser.InputHandler = function (sprite) {
     this.boundsSprite = null;
 
     /**
-    * If this object is set to consume the pointer event then it will stop all propogation from this object on.
+    * If this object is set to consume the pointer event then it will stop all propagation from this object on.
     * For example if you had a stack of 6 sprites with the same priority IDs and one consumed the event, none of the others would receive it.
     * @property {boolean} consumePointerEvent
     * @default
@@ -176,6 +176,22 @@ Phaser.InputHandler = function (sprite) {
     * @property {boolean} scaleLayer - EXPERIMENTAL: Please do not use this property unless you know what it does. Likely to change in the future.
     */
     this.scaleLayer = false;
+
+    /**
+    * @property {Phaser.Point} dragOffset - The offset from the Sprites position that dragging takes place from.
+    */
+    this.dragOffset = new Phaser.Point();
+
+    /**
+    * @property {boolean} dragFromCenter - Is the Sprite dragged from its center, or the point at which the Pointer was pressed down upon it?
+    */
+    this.dragFromCenter = false;
+
+    /**
+    * @property {Phaser.Point} _dragPoint - Internal cache var.
+    * @private
+    */
+    this._dragPoint = new Phaser.Point();
 
     /**
     * @property {boolean} _dragPhase - Internal cache var.
@@ -1240,6 +1256,9 @@ Phaser.InputHandler.prototype = {
     */
     startDrag: function (pointer) {
 
+        var x = this.sprite.x;
+        var y = this.sprite.y;
+
         this.isDragged = true;
         this._draggedPointerID = pointer.id;
         this._pointerData[pointer.id].isDragged = true;
@@ -1277,7 +1296,7 @@ Phaser.InputHandler.prototype = {
             this.sprite.bringToTop();
         }
 
-        this.sprite.events.onDragStart$dispatch(this.sprite, pointer);
+        this.sprite.events.onDragStart$dispatch(this.sprite, pointer, x, y);
 
     },
 

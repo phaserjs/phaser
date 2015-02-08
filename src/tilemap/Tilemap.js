@@ -1550,8 +1550,8 @@ Phaser.Tilemap.prototype = {
         }
 
         //  Find out the difference between tileblock[1].x/y and x/y and use it as an offset, as it's the top left of the block to paste
-        var diffX = tileblock[1].x - x;
-        var diffY = tileblock[1].y - y;
+        var diffX = x - tileblock[1].x;
+        var diffY = y - tileblock[1].y;
 
         for (var i = 1; i < tileblock.length; i++)
         {

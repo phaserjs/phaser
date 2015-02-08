@@ -1575,7 +1575,7 @@ Phaser.Group.prototype.descendingSortHandler = function (a, b) {
 * @method Phaser.Group#iterate
 * @param {string} key - The child property to check, i.e. 'exists', 'alive', 'health'
 * @param {any} value - A child matches if `child[key] === value` is true.
-* @param {integer} returnType - How to iterate the childen and what to return.
+* @param {integer} returnType - How to iterate the children and what to return.
 * @param {function} [callback=null] - Optional function that will be called on each matching child. The matched child is supplied as the first argument.
 * @param {object} [callbackContext] - The context in which the function should be called (usually 'this').
 * @param {any[]} [args=(none)] - The arguments supplied to to the callback; the first array index (argument) will be replaced with the matched child.

@@ -66,6 +66,11 @@ Phaser.Physics.Arcade = function (game) {
     this.skipQuadTree = true;
 
     /**
+    * @property {boolean} isPaused - If `true` the `Body.preUpdate` method will be skipped, halting all motion for all bodies. Note that other methods such as `collide` will still work, so be careful not to call them on paused bodies.
+    */
+    this.isPaused = false;
+
+    /**
     * @property {Phaser.QuadTree} quadTree - The world QuadTree.
     */
     this.quadTree = new Phaser.QuadTree(this.game.world.bounds.x, this.game.world.bounds.y, this.game.world.bounds.width, this.game.world.bounds.height, this.maxObjects, this.maxLevels);
@@ -258,7 +263,7 @@ Phaser.Physics.Arcade.prototype = {
     },
 
     /**
-    * Called automatically by a Physics body, it updates all motion related values on the Body.
+    * Called automatically by a Physics body, it updates all motion related values on the Body unless `World.isPaused` is `true`.
     *
     * @method Phaser.Physics.Arcade#updateMotion
     * @param {Phaser.Physics.Arcade.Body} The Body object to be updated.
@@ -289,7 +294,7 @@ Phaser.Physics.Arcade.prototype = {
     */
     computeVelocity: function (axis, body, velocity, acceleration, drag, max) {
 
-        max = max || 10000;
+        max = typeof max !== 'undefined' ? max : 10000;
 
         if (axis == 1 && body.allowGravity)
         {
@@ -978,11 +983,23 @@ Phaser.Physics.Arcade.prototype = {
                 {
                     body1.x = body1.x - this._overlap;
                     body1.velocity.x = this._velocity2 - this._velocity1 * body1.bounce.x;
+
+                    //  This is special case code that handles things like vertically moving platforms you can ride
+                    if (body2.moves)
+                    {
+                        body1.y += (body2.y - body2.prev.y) * body2.friction.y;
+                    }
                 }
                 else if (!body2.immovable)
                 {
                     body2.x += this._overlap;
                     body2.velocity.x = this._velocity1 - this._velocity2 * body2.bounce.x;
+
+                    //  This is special case code that handles things like vertically moving platforms you can ride
+                    if (body1.moves)
+                    {
+                        body2.y += (body1.y - body1.prev.y) * body1.friction.y;
+                    }
                 }
 
                 return true;
@@ -1098,7 +1115,7 @@ Phaser.Physics.Arcade.prototype = {
                     //  This is special case code that handles things like horizontal moving platforms you can ride
                     if (body2.moves)
                     {
-                        body1.x += body2.x - body2.prev.x;
+                        body1.x += (body2.x - body2.prev.x) * body2.friction.x;
                     }
                 }
                 else if (!body2.immovable)
@@ -1109,7 +1126,7 @@ Phaser.Physics.Arcade.prototype = {
                     //  This is special case code that handles things like horizontal moving platforms you can ride
                     if (body1.moves)
                     {
-                        body2.x += body1.x - body1.prev.x;
+                        body2.x += (body1.x - body1.prev.x) * body1.friction.x;
                     }
                 }
 
@@ -1417,7 +1434,8 @@ Phaser.Physics.Arcade.prototype = {
     * Note that the children are not checked for depth order, but simply if they overlap the coordinate or not.
     *
     * @method Phaser.Physics.Arcade#getObjectsAtLocation
-    * @param {Phaser.Pointer} pointer - The Pointer to check.
+    * @param {number} x - The x coordinate to check.
+    * @param {number} y - The y coordinate to check.
     * @param {Phaser.Group} group - The Group to check.
     * @param {function} [callback] - A callback function that is called if the object overlaps the coordinates. The callback will be sent two parameters: the callbackArg and the Object that overlapped the location.
     * @param {object} [callbackContext] - The context in which to run the callback.

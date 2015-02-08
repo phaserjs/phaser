@@ -559,6 +559,8 @@ Phaser.StateManager.prototype = {
             this._args = [];
         }
 
+        this.game._kickstart = true;
+
     },
 
     /**

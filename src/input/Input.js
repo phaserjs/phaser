@@ -62,7 +62,7 @@ Phaser.Input = function (game) {
     this.enabled = true;
 
     /**
-    * @property {number} multiInputOverride - Controls the expected behaviour when using a mouse and touch together on a multi-input device.
+    * @property {number} multiInputOverride - Controls the expected behavior when using a mouse and touch together on a multi-input device.
     * @default
     */
     this.multiInputOverride = Phaser.Input.MOUSE_TOUCH_COMBINE;
@@ -601,6 +601,7 @@ Phaser.Input.prototype = {
         {
             return this.pointer1.start(event);
         }
+
         if (!this.pointer2.active)
         {
             return this.pointer2.start(event);
@@ -609,6 +610,7 @@ Phaser.Input.prototype = {
         for (var i = 2; i < this.pointers.length; i++)
         {
             var pointer = this.pointers[i];
+
             if (!pointer.active)
             {
                 return pointer.start(event);
@@ -634,6 +636,7 @@ Phaser.Input.prototype = {
         {
             return this.pointer1.move(event);
         }
+
         if (this.pointer2.active && this.pointer2.identifier === event.identifier)
         {
             return this.pointer2.move(event);
@@ -642,6 +645,7 @@ Phaser.Input.prototype = {
         for (var i = 2; i < this.pointers.length; i++)
         {
             var pointer = this.pointers[i];
+
             if (pointer.active && pointer.identifier === event.identifier)
             {
                 return pointer.move(event);
@@ -666,6 +670,7 @@ Phaser.Input.prototype = {
         {
             return this.pointer1.stop(event);
         }
+
         if (this.pointer2.active && this.pointer2.identifier === event.identifier)
         {
             return this.pointer2.stop(event);
@@ -674,6 +679,7 @@ Phaser.Input.prototype = {
         for (var i = 2; i < this.pointers.length; i++)
         {
             var pointer = this.pointers[i];
+
             if (pointer.active && pointer.identifier === event.identifier)
             {
                 return pointer.stop(event);
@@ -697,9 +703,11 @@ Phaser.Input.prototype = {
         if (typeof limit === 'undefined') { limit = this.pointers.length; }
 
         var count = limit;
+
         for (var i = 0; i < this.pointers.length && count > 0; i++)
         {
             var pointer = this.pointers[i];
+
             if (pointer.active)
             {
                 count--;
@@ -727,6 +735,7 @@ Phaser.Input.prototype = {
         for (var i = 0; i < this.pointers.length; i++)
         {
             var pointer = this.pointers[i];
+
             if (pointer.active === isActive)
             {
                 return pointer;
@@ -753,6 +762,7 @@ Phaser.Input.prototype = {
         for (var i = 0; i < this.pointers.length; i++)
         {
             var pointer = this.pointers[i];
+
             if (pointer.identifier === identifier)
             {
                 return pointer;
@@ -834,10 +844,10 @@ Phaser.Input.prototype = {
         {
             return (displayObject.hitArea.contains(this._localPoint.x, this._localPoint.y));
         }
-        else if (displayObject instanceof PIXI.Sprite)
+        else if (displayObject instanceof Phaser.TileSprite)
         {
-            var width = displayObject.texture.frame.width;
-            var height = displayObject.texture.frame.height;
+            var width = displayObject.width;
+            var height = displayObject.height;
             var x1 = -width * displayObject.anchor.x;
 
             if (this._localPoint.x >= x1 && this._localPoint.x < x1 + width)
@@ -850,10 +860,10 @@ Phaser.Input.prototype = {
                 }
             }
         }
-        else if (displayObject instanceof Phaser.TileSprite)
+        else if (displayObject instanceof PIXI.Sprite)
         {
-            var width = displayObject.width;
-            var height = displayObject.height;
+            var width = displayObject.texture.frame.width;
+            var height = displayObject.texture.frame.height;
             var x1 = -width * displayObject.anchor.x;
 
             if (this._localPoint.x >= x1 && this._localPoint.x < x1 + width)

@@ -400,6 +400,7 @@ Phaser.Physics.P2.Body.prototype = {
     adjustCenterOfMass: function () {
 
         this.data.adjustCenterOfMass();
+        this.shapeChanged();
 
     },
 
