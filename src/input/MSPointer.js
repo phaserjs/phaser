@@ -44,7 +44,7 @@ Phaser.MSPointer = function (game) {
     /**
     * @property {boolean} capture - If true the Pointer events will have event.preventDefault applied to them, if false they will propagate fully.
     */
-    this.capture = false;
+    this.capture = true;
 
     /**
     * @property {number} button- The type of click, either: Phaser.Mouse.NO_BUTTON, Phaser.Mouse.LEFT_BUTTON, Phaser.Mouse.MIDDLE_BUTTON or Phaser.Mouse.RIGHT_BUTTON.
