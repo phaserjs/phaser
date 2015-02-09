@@ -354,9 +354,11 @@ Phaser.Loader.prototype = {
         for (var i = 0; i < this._fileList.length; i++)
         {
             var file = this._fileList[i];
+
             if (file.type === type && file.key === key)
             {
                 bestFound = i;
+
                 // An already loaded/loading file may be superceded.
                 if (!file.loaded && !file.loading)
                 {
@@ -460,6 +462,7 @@ Phaser.Loader.prototype = {
         if (overwrite && fileIndex > -1)
         {
             var currentFile = this._fileList[fileIndex];
+
             if (!currentFile.loading && !currentFile.loaded)
             {
                 this._fileList[fileIndex] = file;
@@ -655,6 +658,7 @@ Phaser.Loader.prototype = {
     script: function (key, url, callback, callbackContext) {
 
         if (typeof callback === 'undefined') { callback = false; }
+
         // Why is the default callback context the ..callback?
         if (callback !== false && typeof callbackContext === 'undefined') { callbackContext = callback; }
 
@@ -682,6 +686,7 @@ Phaser.Loader.prototype = {
     binary: function (key, url, callback, callbackContext) {
 
         if (typeof callback === 'undefined') { callback = false; }
+
         // Why is the default callback context the ..callback?
         if (callback !== false && typeof callbackContext === 'undefined') { callbackContext = callback; }
 
@@ -1039,6 +1044,7 @@ Phaser.Loader.prototype = {
     withSyncPoint: function (callback, callbackContext) {
 
         this._withSyncPointDepth++;
+
         try {
             callback.call(callbackContext || this, this);
         } finally {
@@ -1062,6 +1068,7 @@ Phaser.Loader.prototype = {
     addSyncPoint: function (type, key) {
 
         var asset = this.getAsset(type, key);
+
         if (asset)
         {
             asset.file.syncPoint = true;
@@ -1086,7 +1093,8 @@ Phaser.Loader.prototype = {
 
         if (asset)
         {
-            if (!asset.loaded && !asset.loading) {
+            if (!asset.loaded && !asset.loading)
+            {
                 this._fileList.splice(asset.index, 1);
             }
         }
@@ -1268,7 +1276,9 @@ Phaser.Loader.prototype = {
             // Flight queue is empty but file list is not done being processed.
             // This indicates a critical internal error with no known recovery.
             console.warn("Phaser.Loader - aborting: processing queue empty, loading may have stalled");
+
             var _this = this;
+
             setTimeout(function () {
                 _this.finishedLoading(true);
             }, 2000);
@@ -1321,6 +1331,7 @@ Phaser.Loader.prototype = {
 
         file.loaded = true;
         file.error = !!errorMessage;
+
         if (errorMessage)
         {
             file.errorMessage = errorMessage;
@@ -1765,7 +1776,8 @@ Phaser.Loader.prototype = {
                     url = url.substr(0, url.indexOf("?"));
                 }
 
-                var extension = url.substr((Math.max(0, extension.lastIndexOf(".")) || Infinity) + 1);
+                var extension = url.substr((Math.max(0, url.lastIndexOf(".")) || Infinity) + 1);
+
                 audioType = extension.toLowerCase();
             }
 
@@ -1780,7 +1792,7 @@ Phaser.Loader.prototype = {
     },
 
     /**
-    * Error occured when loading a file.
+    * Error occurred when loading a file.
     *
     * @method Phaser.Loader#fileError
     * @private
@@ -2167,7 +2179,7 @@ Phaser.Loader.prototype = {
 * A general indicator of the progress.
 * It is possible for the progress to decrease, after `onLoadStart`, if more files are dynamically added.
 *
-* @memberof Phaser.Loader#progressFloat
+* @name Phaser.Loader#progressFloat
 * @property {number}
 */
 Object.defineProperty(Phaser.Loader.prototype, "progressFloat", {
