@@ -10,7 +10,7 @@ Phaser.Filter.SampleFilter = function (game) {
     *
     * uniform float time - The current number of elapsed milliseconds in the game.
     * uniform vec2 resolution - The dimensions of the filter. Can be set via setSize(width, height)
-    * uniform vec4 mouse - The mouse / touch coordinates taken from the pointer given to the update function, if any.
+    * uniform vec2 mouse - The mouse / touch coordinates taken from the pointer given to the update function, if any.
     * uniform sampler2D uSampler - The current texture (usually the texture of the Sprite the shader is bound to)
     *
     * Add in any additional vars you require. Here is a new one called 'wobble' that is a 2f:

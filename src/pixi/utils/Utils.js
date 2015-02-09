@@ -16,6 +16,7 @@
  *
  * @method requestAnimationFrame
  */
+
 /**
  * A polyfill for cancelAnimationFrame
  *
@@ -91,7 +92,7 @@ if (typeof Function.prototype.bind !== 'function') {
                 var i = arguments.length, args = new Array(i);
                 while (i--) args[i] = arguments[i];
                 args = boundArgs.concat(args);
-                target.apply(this instanceof bound ? this : thisArg, args);
+                return target.apply(this instanceof bound ? this : thisArg, args);
             }
 
             bound.prototype = (function F(proto) {
@@ -204,4 +205,17 @@ PIXI.getNextPowerOfTwo = function(number)
         while (result < number) result <<= 1;
         return result;
     }
+};
+
+/**
+ * checks if the given width and height make a power of two texture
+ * @method isPowerOfTwo
+ * @param width {Number}
+ * @param height {Number}
+ * @return {Boolean} 
+ */
+PIXI.isPowerOfTwo = function(width, height)
+{
+    return (width > 0 && (width & (width - 1)) === 0 && height > 0 && (height & (height - 1)) === 0);
+
 };

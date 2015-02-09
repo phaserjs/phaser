@@ -66,25 +66,13 @@ Phaser.Utils.extend(Phaser.Physics.P2.BodyDebug.prototype, {
     /**
     * Core update.
     *
-    * @method Phaser.Physics.P2.BodyDebug#update
-    */
-    update: function() {
-
-        this.updateSpriteTransform();
-
-    },
-
-    /**
-    * Core update.
-    *
     * @method Phaser.Physics.P2.BodyDebug#updateSpriteTransform
     */
     updateSpriteTransform: function() {
 
         this.position.x = this.body.position[0] * this.ppu;
         this.position.y = this.body.position[1] * this.ppu;
-
-        return this.rotation = this.body.angle;
+        this.rotation = this.body.angle;
 
     },
 
@@ -181,7 +169,7 @@ Phaser.Utils.extend(Phaser.Physics.P2.BodyDebug.prototype, {
         if (typeof color === 'undefined') { color = 0xffffff; }
         g.lineStyle(lineWidth, 0x000000, 1);
         g.beginFill(color, 1.0);
-        g.drawCircle(x, y, -radius);
+        g.drawCircle(x, y, -radius*2);
         g.endFill();
         g.moveTo(x, y);
         g.lineTo(x + radius * Math.cos(-angle), y + radius * Math.sin(-angle));

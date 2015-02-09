@@ -95,6 +95,25 @@ Phaser.Rectangle.prototype = {
     },
 
     /**
+    * Scales the width and height of this Rectangle by the given amounts.
+    * 
+    * @method Phaser.Rectangle#scale
+    * @param {number} x - The amount to scale the width of the Rectangle by. A value of 0.5 would reduce by half, a value of 2 would double the width, etc.
+    * @param {number} [y] - The amount to scale the height of the Rectangle by. A value of 0.5 would reduce by half, a value of 2 would double the height, etc.
+    * @return {Phaser.Rectangle} This Rectangle object
+    */
+    scale: function (x, y) {
+
+        if (typeof y === 'undefined') { y = x; }
+
+        this.width *= x;
+        this.height *= y;
+
+        return this;
+
+    },
+
+    /**
     * Centers this Rectangle so that the center coordinates match the given x and y values.
     *
     * @method Phaser.Rectangle#centerOn
@@ -254,16 +273,16 @@ Phaser.Rectangle.prototype = {
     },
 
     /**
-    * Determines whether the two Rectangles intersect with each other.
-    * This method checks the x, y, width, and height properties of the Rectangles.
+    * Determines whether this Rectangle and another given Rectangle intersect with each other.
+    * This method checks the x, y, width, and height properties of the two Rectangles.
+    * 
     * @method Phaser.Rectangle#intersects
     * @param {Phaser.Rectangle} b - The second Rectangle object.
-    * @param {number} tolerance - A tolerance value to allow for an intersection test with padding, default to 0.
     * @return {boolean} A value of true if the specified object intersects with this Rectangle object; otherwise false.
     */
-    intersects: function (b, tolerance) {
+    intersects: function (b) {
 
-        return Phaser.Rectangle.intersects(this, b, tolerance);
+        return Phaser.Rectangle.intersects(this, b);
 
     },
 
@@ -687,7 +706,7 @@ Phaser.Rectangle.contains = function (a, x, y) {
         return false;
     }
 
-    return (x >= a.x && x <= a.right && y >= a.y && y <= a.bottom);
+    return (x >= a.x && x < a.right && y >= a.y && y < a.bottom);
 
 };
 
@@ -704,7 +723,7 @@ Phaser.Rectangle.contains = function (a, x, y) {
 */
 Phaser.Rectangle.containsRaw = function (rx, ry, rw, rh, x, y) {
 
-    return (x >= rx && x <= (rx + rw) && y >= ry && y <= (ry + rh));
+    return (x >= rx && x < (rx + rw) && y >= ry && y < (ry + rh));
 
 };
 
@@ -737,7 +756,7 @@ Phaser.Rectangle.containsRect = function (a, b) {
         return false;
     }
 
-    return (a.x >= b.x && a.y >= b.y && a.right <= b.right && a.bottom <= b.bottom);
+    return (a.x >= b.x && a.y >= b.y && a.right < b.right && a.bottom < b.bottom);
 
 };
 
@@ -752,6 +771,19 @@ Phaser.Rectangle.containsRect = function (a, b) {
 Phaser.Rectangle.equals = function (a, b) {
 
     return (a.x == b.x && a.y == b.y && a.width == b.width && a.height == b.height);
+
+};
+
+/**
+* Determines if the two objects (either Rectangles or Rectangle-like) have the same width and height values under strict equality.
+* @method Phaser.Rectangle.sameDimensions
+* @param {Rectangle-like} a - The first Rectangle object.
+* @param {Rectangle-like} b - The second Rectangle object.
+* @return {boolean} True if the object have equivalent values for the width and height properties.
+*/
+Phaser.Rectangle.sameDimensions = function (a, b) {
+
+    return (a.width === b.width && a.height === b.height);
 
 };
 

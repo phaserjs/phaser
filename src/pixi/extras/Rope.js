@@ -1,25 +1,27 @@
-/* @author Mat Groves http://matgroves.com/ @Doormat23
+/**
+ * @author Mat Groves http://matgroves.com/ @Doormat23
+ * @copyright Mat Groves, Rovanion Luckey
  */
 
 /**
- * 
+ *
  * @class Rope
  * @constructor
  * @extends Strip
- * @param texture {Texture} The texture to use
- * @param points {Array}
- * 
+ * @param {Texture} texture - The texture to use on the rope.
+ * @param {Array} points - An array of {PIXI.Point}.
+ *
  */
 PIXI.Rope = function(texture, points)
 {
     PIXI.Strip.call( this, texture );
     this.points = points;
 
-    this.verticies = new PIXI.Float32Array(points.length * 4);
+    this.vertices = new PIXI.Float32Array(points.length * 4);
     this.uvs = new PIXI.Float32Array(points.length * 4);
     this.colors = new PIXI.Float32Array(points.length * 2);
     this.indices = new PIXI.Uint16Array(points.length * 2);
-   
+
 
     this.refresh();
 };
@@ -30,7 +32,7 @@ PIXI.Rope.prototype = Object.create( PIXI.Strip.prototype );
 PIXI.Rope.prototype.constructor = PIXI.Rope;
 
 /*
- * Refreshes 
+ * Refreshes
  *
  * @method refresh
  */
@@ -115,7 +117,7 @@ PIXI.Rope.prototype.updateTransform = function()
 
     this.count-=0.2;
 
-    var verticies = this.verticies;
+    var vertices = this.vertices;
     var total = points.length,
         point, index, ratio, perpLength, num;
 
@@ -148,10 +150,10 @@ PIXI.Rope.prototype.updateTransform = function()
         perp.x *= num;
         perp.y *= num;
 
-        verticies[index] = point.x + perp.x;
-        verticies[index+1] = point.y + perp.y;
-        verticies[index+2] = point.x - perp.x;
-        verticies[index+3] = point.y - perp.y;
+        vertices[index] = point.x + perp.x;
+        vertices[index+1] = point.y + perp.y;
+        vertices[index+2] = point.x - perp.x;
+        vertices[index+3] = point.y - perp.y;
 
         lastPoint = point;
     }
@@ -159,7 +161,7 @@ PIXI.Rope.prototype.updateTransform = function()
     PIXI.DisplayObjectContainer.prototype.updateTransform.call( this );
 };
 /*
- * Sets the texture that the Rope will use 
+ * Sets the texture that the Rope will use
  *
  * @method setTexture
  * @param texture {Texture} the texture that will be used

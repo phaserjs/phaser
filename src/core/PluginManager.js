@@ -21,7 +21,7 @@ Phaser.PluginManager = function(game) {
     this.game = game;
 
     /**
-    * @property {array} plugins - An array of all the plugins being managed by this PluginManager.
+    * @property {Phaser.Plugin[]} plugins - An array of all the plugins being managed by this PluginManager.
     */
     this.plugins = [];
 

@@ -249,6 +249,21 @@ Phaser.Pointer = function (game, id) {
         this.isMouse = true;
     }
 
+    /**
+    * Click trampolines associated with this pointer. See `addClickTrampoline`.
+    * @property {object[]|null} _clickTrampolines
+    * @private
+    */
+    this._clickTrampolines = null;
+
+    /**
+    * When the Pointer has click trampolines the last target object is stored here
+    * so it can be used to check for validity of the trampoline in a post-Up/'stop'.
+    * @property {object} _trampolineTargetObject
+    * @private
+    */
+    this._trampolineTargetObject = null;
+
 };
 
 Phaser.Pointer.prototype = {
@@ -279,10 +294,12 @@ Phaser.Pointer.prototype = {
         this.isDown = true;
         this.isUp = false;
         this.dirty = false;
+        this._clickTrampolines = null;
+        this._trampolineTargetObject = null;
 
         //  Work out how long it has been since the last click
-        this.msSinceLastClick = this.game.time.now - this.timeDown;
-        this.timeDown = this.game.time.now;
+        this.msSinceLastClick = this.game.time.time - this.timeDown;
+        this.timeDown = this.game.time.time;
         this._holdSent = false;
 
         //  This sets the x/y and other local values
@@ -330,7 +347,7 @@ Phaser.Pointer.prototype = {
             {
                 if (this.game.input.interactiveItems.total > 0)
                 {
-                    this.processInteractiveObjects(true);
+                    this.processInteractiveObjects(false);
                 }
 
                 this.dirty = false;
@@ -347,9 +364,9 @@ Phaser.Pointer.prototype = {
             }
 
             //  Update the droppings history
-            if (this.game.input.recordPointerHistory && this.game.time.now >= this._nextDrop)
+            if (this.game.input.recordPointerHistory && this.game.time.time >= this._nextDrop)
             {
-                this._nextDrop = this.game.time.now + this.game.input.recordRate;
+                this._nextDrop = this.game.time.time + this.game.input.recordRate;
 
                 this._history.push({
                     x: this.position.x,
@@ -463,58 +480,63 @@ Phaser.Pointer.prototype = {
     */
     processInteractiveObjects: function (fromClick) {
 
-        this.game.input.interactiveItems.setAll('checked', false);
-
         //  Work out which object is on the top
-        this._highestRenderOrderID = Number.MAX_SAFE_INTEGER;
-        this._highestRenderObject = null;
-        this._highestInputPriorityID = -1;
+        var highestRenderOrderID = Number.MAX_VALUE;
+        var highestInputPriorityID = -1;
+        var candidateTarget = null;
 
         //  First pass gets all objects that the pointer is over that DON'T use pixelPerfect checks and get the highest ID
         //  We know they'll be valid for input detection but not which is the top just yet
 
         var currentNode = this.game.input.interactiveItems.first;
 
-        do
+        while (currentNode)
         {
-            if (currentNode && currentNode.validForInput(this._highestInputPriorityID, this._highestRenderOrderID, false))
+            //  Reset checked status
+            currentNode.checked = false;
+
+            if (currentNode.validForInput(highestInputPriorityID, highestRenderOrderID, false))
             {
                 //  Flag it as checked so we don't re-scan it on the next phase
                 currentNode.checked = true;
 
-                if ((fromClick && currentNode.checkPointerDown(this, true)) || (!fromClick && currentNode.checkPointerOver(this, true)))
+                if ((fromClick && currentNode.checkPointerDown(this, true)) ||
+                    (!fromClick && currentNode.checkPointerOver(this, true)))
                 {
-                    this._highestRenderOrderID = currentNode.sprite._cache[3]; // renderOrderID
-                    this._highestInputPriorityID = currentNode.priorityID;
-                    this._highestRenderObject = currentNode;
+                    highestRenderOrderID = currentNode.sprite._cache[3]; // renderOrderID
+                    highestInputPriorityID = currentNode.priorityID;
+                    candidateTarget = currentNode;
                 }
             }
+
             currentNode = this.game.input.interactiveItems.next;
         }
-        while (currentNode !== null);
 
         //  Then in the second sweep we process ONLY the pixel perfect ones that are checked and who have a higher ID
         //  because if their ID is lower anyway then we can just automatically discount them
+        //  (A node that was previously checked did not request a pixel-perfect check.)
 
         var currentNode = this.game.input.interactiveItems.first;
 
-        do
+        while(currentNode)
         {
-            if (currentNode && !currentNode.checked && currentNode.validForInput(this._highestInputPriorityID, this._highestRenderOrderID, true))
+            if (!currentNode.checked &&
+                currentNode.validForInput(highestInputPriorityID, highestRenderOrderID, true))
             {
-                if ((fromClick && currentNode.checkPointerDown(this, false)) || (!fromClick && currentNode.checkPointerOver(this, false)))
+                if ((fromClick && currentNode.checkPointerDown(this, false)) ||
+                    (!fromClick && currentNode.checkPointerOver(this, false)))
                 {
-                    this._highestRenderOrderID = currentNode.sprite._cache[3]; // renderOrderID
-                    this._highestInputPriorityID = currentNode.priorityID;
-                    this._highestRenderObject = currentNode;
+                    highestRenderOrderID = currentNode.sprite._cache[3]; // renderOrderID
+                    highestInputPriorityID = currentNode.priorityID;
+                    candidateTarget = currentNode;
                 }
             }
+
             currentNode = this.game.input.interactiveItems.next;
         }
-        while (currentNode !== null);
 
         //  Now we know the top-most item (if any) we can process it
-        if (this._highestRenderObject === null)
+        if (candidateTarget === null)
         {
             //  The pointer isn't currently over anything, check if we've got a lingering previous target
             if (this.targetObject)
@@ -528,16 +550,16 @@ Phaser.Pointer.prototype = {
             if (this.targetObject === null)
             {
                 //  And now set the new one
-                this.targetObject = this._highestRenderObject;
-                this._highestRenderObject._pointerOverHandler(this);
+                this.targetObject = candidateTarget;
+                candidateTarget._pointerOverHandler(this);
             }
             else
             {
                 //  We've got a target from the last update
-                if (this.targetObject === this._highestRenderObject)
+                if (this.targetObject === candidateTarget)
                 {
                     //  Same target as before, so update it
-                    if (this._highestRenderObject.update(this) === false)
+                    if (candidateTarget.update(this) === false)
                     {
                         this.targetObject = null;
                     }
@@ -548,7 +570,7 @@ Phaser.Pointer.prototype = {
                     this.targetObject._pointerOutHandler(this);
 
                     //  And now set the new one
-                    this.targetObject = this._highestRenderObject;
+                    this.targetObject = candidateTarget;
                     this.targetObject._pointerOverHandler(this);
                 }
             }
@@ -585,7 +607,7 @@ Phaser.Pointer.prototype = {
             return;
         }
 
-        this.timeUp = this.game.time.now;
+        this.timeUp = this.game.time.time;
 
         if (this.game.input.multiInputOverride === Phaser.Input.MOUSE_OVERRIDES_TOUCH || this.game.input.multiInputOverride === Phaser.Input.MOUSE_TOUCH_COMBINE || (this.game.input.multiInputOverride === Phaser.Input.TOUCH_OVERRIDES_MOUSE && this.game.input.currentPointers === 0))
         {
@@ -631,6 +653,10 @@ Phaser.Pointer.prototype = {
 
         this.game.input.interactiveItems.callAll('_releasedHandler', this);
 
+        if (this._clickTrampolines)
+        {
+            this._trampolineTargetObject = this.targetObject;
+        }
         this.targetObject = null;
 
         return this;
@@ -649,7 +675,7 @@ Phaser.Pointer.prototype = {
 
         duration = duration || this.game.input.justPressedRate;
 
-        return (this.isDown === true && (this.timeDown + duration) > this.game.time.now);
+        return (this.isDown === true && (this.timeDown + duration) > this.game.time.time);
 
     },
 
@@ -665,7 +691,80 @@ Phaser.Pointer.prototype = {
 
         duration = duration || this.game.input.justReleasedRate;
 
-        return (this.isUp === true && (this.timeUp + duration) > this.game.time.now);
+        return (this.isUp === true && (this.timeUp + duration) > this.game.time.time);
+
+    },
+
+    /**
+    * Add a click trampoline to this pointer.
+    *
+    * A click trampoline is a callback that is run on the DOM 'click' event; this is primarily
+    * needed with certain browsers (ie. IE11) which restrict some actions like requestFullscreen
+    * to the DOM 'click' event and reject it for 'pointer*' and 'mouse*' events.
+    *
+    * This is used internally by the ScaleManager; click trampoline usage is uncommon.
+    * Click trampolines can only be added to pointers that are currently down.
+    *
+    * @method Phaser.Pointer#addClickTrampoline
+    * @protected
+    * @param {string} name - The name of the trampoline; must be unique among active trampolines in this pointer.
+    * @param {function} callback - Callback to run/trampoline.
+    * @param {object} callbackContext - Context of the callback.
+    * @param {object[]|null} callbackArgs - Additional callback args, if any. Supplied as an array.
+    */
+    addClickTrampoline: function (name, callback, callbackContext, callbackArgs) {
+
+        if (!this.isDown)
+        {
+            return;
+        }
+
+        var trampolines = (this._clickTrampolines = this._clickTrampolines || []);
+
+        for (var i = 0; i < trampolines.length; i++)
+        {
+            if (trampolines[i].name === name)
+            {
+                trampolines.splice(i, 1);
+                break;
+            }
+        }
+
+        trampolines.push({
+            name: name,
+            targetObject: this.targetObject,
+            callback: callback,
+            callbackContext: callbackContext,
+            callbackArgs: callbackArgs
+        });
+
+    },
+
+    /**
+    * Fire all click trampolines for which the pointers are still refering to the registered object.
+    * @method Phaser.Pointer#processClickTrampolines
+    * @private
+    */
+    processClickTrampolines: function () {
+
+        var trampolines = this._clickTrampolines;
+        if (!trampolines)
+        {
+            return;
+        }
+
+        for (var i = 0; i < trampolines.length; i++)
+        {
+            var trampoline = trampolines[i];
+
+            if (trampoline.targetObject === this._trampolineTargetObject)
+            {
+                trampoline.callback.apply(trampoline.callbackContext, trampoline.callbackArgs);
+            }
+        }
+
+        this._clickTrampolines = null;
+        this._trampolineTargetObject = null;
 
     },
 
@@ -729,7 +828,7 @@ Object.defineProperty(Phaser.Pointer.prototype, "duration", {
             return -1;
         }
 
-        return this.game.time.now - this.timeDown;
+        return this.game.time.time - this.timeDown;
 
     }
 

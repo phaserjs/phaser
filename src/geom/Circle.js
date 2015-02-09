@@ -53,6 +53,8 @@ Phaser.Circle = function (x, y, diameter) {
 
 Phaser.Circle.prototype = {
 
+    type: null,
+
     /**
     * The circumference of the circle.
     * @method Phaser.Circle#circumference
@@ -60,6 +62,15 @@ Phaser.Circle.prototype = {
     */
     circumference: function () {
         return 2 * (Math.PI * this._radius);
+    },
+
+    /**
+    * Returns the framing rectangle of the circle as a Phaser.Rectangle object
+    * @method Phaser.Circle#getBounds
+    * @return {Phaser.Rectangle} The bounds of the Circle.
+    */
+    getBounds: function () {
+        return new Phaser.Rectangle(this.x - this.radius, this.y - this.radius, this.radius * 2, this.radius * 2);
     },
 
     /**
@@ -97,7 +108,7 @@ Phaser.Circle.prototype = {
     * Copies the x, y and diameter properties from this Circle to any given object.
     * @method Phaser.Circle#copyTo
     * @param {any} dest - The object to copy to.
-    * @return {Object} This dest object.
+    * @return {object} This dest object.
     */
     copyTo: function (dest) {
 
@@ -114,21 +125,13 @@ Phaser.Circle.prototype = {
     * (can be Circle, Point or anything with x/y properties)
     * @method Phaser.Circle#distance
     * @param {object} dest - The target object. Must have visible x and y properties that represent the center of the object.
-    * @param {boolean} [round] - Round the distance to the nearest integer (default false).
+    * @param {boolean} [round=false] - Round the distance to the nearest integer.
     * @return {number} The distance between this Point object and the destination Point object.
     */
     distance: function (dest, round) {
 
-        if (typeof round === "undefined") { round = false; }
-
-        if (round)
-        {
-            return Phaser.Math.distanceRounded(this.x, this.y, dest.x, dest.y);
-        }
-        else
-        {
-            return Phaser.Math.distance(this.x, this.y, dest.x, dest.y);
-        }
+        var distance = Phaser.Math.distance(this.x, this.y, dest.x, dest.y);
+        return round ? Math.round(distance) : distance;
 
     },
 

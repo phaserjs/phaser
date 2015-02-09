@@ -11,7 +11,6 @@
 * @class Phaser.State
 * @constructor
 */
-
 Phaser.State = function () {
 
     /**
@@ -102,6 +101,16 @@ Phaser.State = function () {
 };
 
 Phaser.State.prototype = {
+
+    /**
+    * init is the very first function called when your State starts up. It's called before preload, create or anything else.
+    * If you need to route the game away to another State you could do so here, or if you need to prepare a set of variables
+    * or objects before the preloading starts.
+    *
+    * @method Phaser.State#init
+    */
+    init: function () {
+    },
 
     /**
     * preload is called first. Normally you'd use this to load your game assets (or those needed for the current State)

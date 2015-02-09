@@ -5,8 +5,9 @@
 */
 
 /**
-* The Gamepad class handles looking after gamepad input for your game.
-* Remember to call gamepad.start(); expecting input!
+* The Gamepad class handles gamepad input and dispatches gamepad events.
+*
+* Remember to call `gamepad.start()`.
 *
 * HTML5 GAMEPAD API SUPPORT IS AT AN EXPERIMENTAL STAGE!
 * At moment of writing this (end of 2013) only Chrome supports parts of it out of the box. Firefox supports it
@@ -25,7 +26,7 @@ Phaser.Gamepad = function (game) {
     this.game = game;
 
     /**
-    * @property {Object} _gamepadIndexMap - Maps the browsers gamepad indices to our Phaser Gamepads
+    * @property {object} _gamepadIndexMap - Maps the browsers gamepad indices to our Phaser Gamepads
     * @private
     */
     this._gamepadIndexMap = {};
@@ -44,11 +45,11 @@ Phaser.Gamepad = function (game) {
     this._active = false;
 
     /**
-    * You can disable all Gamepad Input by setting disabled to true. While true all new input related events will be ignored.
-    * @property {boolean} disabled - The disabled state of the Gamepad.
+    * Gamepad input will only be processed if enabled.
+    * @property {boolean} enabled
     * @default
     */
-    this.disabled = false;
+    this.enabled = true;
 
     /**
     * Whether or not gamepads are supported in the current browser. Note that as of Dec. 2013 this check is actually not accurate at all due to poor implementation.
@@ -74,7 +75,7 @@ Phaser.Gamepad = function (game) {
     this._prevTimestamps = [];
 
     /**
-    * @property {Object} callbackContext - The context under which the callbacks are run.
+    * @property {object} callbackContext - The context under which the callbacks are run.
     */
     this.callbackContext = this;
 
@@ -136,10 +137,11 @@ Phaser.Gamepad = function (game) {
 Phaser.Gamepad.prototype = {
 
     /**
-    * Add callbacks to the main Gamepad handler to handle connect/disconnect/button down/button up/axis change/float value buttons
+    * Add callbacks to the main Gamepad handler to handle connect/disconnect/button down/button up/axis change/float value buttons.
+    * 
     * @method Phaser.Gamepad#addCallbacks
-    * @param {Object} context - The context under which the callbacks are run.
-    * @param {Object} callbacks - Object that takes six different callback methods:
+    * @param {object} context - The context under which the callbacks are run.
+    * @param {object} callbacks - Object that takes six different callback methods:
     * onConnectCallback, onDisconnectCallback, onDownCallback, onUpCallback, onAxisCallback, onFloatCallback
     */
     addCallbacks: function (context, callbacks) {
@@ -152,6 +154,7 @@ Phaser.Gamepad.prototype = {
             this.onUpCallback = (typeof callbacks.onUp === 'function') ? callbacks.onUp : this.onUpCallback;
             this.onAxisCallback = (typeof callbacks.onAxis === 'function') ? callbacks.onAxis : this.onAxisCallback;
             this.onFloatCallback = (typeof callbacks.onFloat === 'function') ? callbacks.onFloat : this.onFloatCallback;
+            this.callbackContext = context;
         }
 
     },
@@ -463,7 +466,7 @@ Phaser.Gamepad.prototype = {
     /**
      * Destroys this object and the associated event listeners.
      *
-     * @method destroy
+     * @method Phaser.Gamepad#destroy
      */
     destroy: function () {
 
@@ -479,6 +482,24 @@ Phaser.Gamepad.prototype = {
 };
 
 Phaser.Gamepad.prototype.constructor = Phaser.Gamepad;
+
+/**
+* If disabled all Gamepad input will be ignored.
+* @property {boolean} disabled
+* @memberof Phaser.Gamepad
+* @default false
+* @deprecated Use {@link Phaser.Gamepad#enabled} instead
+*/
+Object.defineProperty(Phaser.Gamepad.prototype, "disabled", {
+
+    get: function () {
+        return !this.enabled;
+    },
+    set: function (value) {
+        this.enabled = !value;
+    }
+
+});
 
 /**
 * If the gamepad input is active or not - if not active it should not be updated from Input.js

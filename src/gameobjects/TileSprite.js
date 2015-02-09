@@ -10,7 +10,7 @@
 *
 * @class Phaser.TileSprite
 * @constructor
-* @extends Pixi.TilingSprite
+* @extends PIXI.TilingSprite
 * @param {Phaser.Game} game - A reference to the currently running game.
 * @param {number} x - The x coordinate (in world space) to position the TileSprite at.
 * @param {number} y - The y coordinate (in world space) to position the TileSprite at.
@@ -219,13 +219,13 @@ Phaser.TileSprite.prototype.preUpdate = function() {
         if (this._cache[5] === 1 && this.game.world.bounds.intersects(this._bounds))
         {
             this._cache[5] = 0;
-            this.events.onEnterBounds.dispatch(this);
+            this.events.onEnterBounds$dispatch(this);
         }
         else if (this._cache[5] === 0 && !this.game.world.bounds.intersects(this._bounds))
         {
             //  The Sprite WAS in the screen, but has now left.
             this._cache[5] = 1;
-            this.events.onOutOfBounds.dispatch(this);
+            this.events.onOutOfBounds$dispatch(this);
         }
     }
 
@@ -377,6 +377,8 @@ Phaser.TileSprite.prototype.loadTexture = function (key, frame) {
             this.animations.loadFrameData(this.game.cache.getFrameData(key), frame);
         }
     }
+    
+    this.texture.baseTexture.dirty();
 
 };
 
@@ -424,10 +426,7 @@ Phaser.TileSprite.prototype.setFrame = function(frame) {
         this.texture.trim = null;
     }
 
-    if (this.game.renderType === Phaser.WEBGL)
-    {
-        PIXI.WebGLRenderer.updateTextureFrame(this.texture);
-    }
+    this.texture._updateUvs();
 
 };
 
@@ -449,7 +448,7 @@ Phaser.TileSprite.prototype.destroy = function(destroyChildren) {
 
     if (this.events)
     {
-        this.events.onDestroy.dispatch(this);
+        this.events.onDestroy$dispatch(this);
     }
 
     if (this.filters)

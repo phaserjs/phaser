@@ -9,8 +9,8 @@
  * @extends DisplayObjectContainer
  * @constructor
  * @param texture {Texture} The texture for this sprite
- * 
- * A sprite can be created directly from an image like this : 
+ *
+ * A sprite can be created directly from an image like this :
  * var sprite = new PIXI.Sprite.fromImage('assets/image.png');
  * yourStage.addChild(sprite);
  * then obviously don't forget to add it to the stage you have already created
@@ -22,7 +22,7 @@ PIXI.Sprite = function(texture)
     /**
      * The anchor sets the origin point of the texture.
      * The default is 0,0 this means the texture's origin is the top left
-     * Setting than anchor to 0.5,0.5 means the textures origin is centred
+     * Setting than anchor to 0.5,0.5 means the textures origin is centered
      * Setting the anchor to 1,1 would mean the textures origin points will be the bottom right corner
      *
      * @property anchor
@@ -36,7 +36,7 @@ PIXI.Sprite = function(texture)
      * @property texture
      * @type Texture
      */
-    this.texture = texture;
+    this.texture = texture || PIXI.Texture.emptyTexture;
 
     /**
      * The width of the sprite (this is initially set by the texture)
@@ -56,18 +56,17 @@ PIXI.Sprite = function(texture)
      */
     this._height = 0;
 
-
     /**
-     * The tint applied to the sprite. This is a hex value
+     * The tint applied to the sprite. This is a hex value. A value of 0xFFFFFF will remove any tint effect.
      *
      * @property tint
      * @type Number
      * @default 0xFFFFFF
      */
-    this.tint = 0xFFFFFF;// * Math.random();
-    
+    this.tint = 0xFFFFFF;
+
     /**
-     * The blend mode to be applied to the sprite
+     * The blend mode to be applied to the sprite. Set to PIXI.blendModes.NORMAL to remove any blend mode.
      *
      * @property blendMode
      * @type Number
@@ -75,17 +74,26 @@ PIXI.Sprite = function(texture)
      */
     this.blendMode = PIXI.blendModes.NORMAL;
 
-    if(texture.baseTexture.hasLoaded)
+    /**
+     * The shader that will be used to render the texture to the stage. Set to null to remove a current shader.
+     *
+     * @property shader
+     * @type AbstractFilter
+     * @default null
+     */
+    this.shader = null;
+
+    if(this.texture.baseTexture.hasLoaded)
     {
         this.onTextureUpdate();
     }
     else
     {
-        this.onTextureUpdateBind = this.onTextureUpdate.bind(this);
-        this.texture.addEventListener( 'update', this.onTextureUpdateBind );
+        this.texture.on( 'update', this.onTextureUpdate.bind(this) );
     }
 
     this.renderable = true;
+
 };
 
 // constructor
@@ -149,12 +157,11 @@ PIXI.Sprite.prototype.onTextureUpdate = function()
     if(this._width)this.scale.x = this._width / this.texture.frame.width;
     if(this._height)this.scale.y = this._height / this.texture.frame.height;
 
-
     //this.updateFrame = true;
 };
 
 /**
-* Returns the framing rectangle of the sprite as a PIXI.Rectangle object
+* Returns the bounds of the Sprite as a rectangle. The bounds calculation takes the worldTransform into account.
 *
 * @method getBounds
 * @param matrix {Matrix} the transformation matrix of the sprite
@@ -162,7 +169,6 @@ PIXI.Sprite.prototype.onTextureUpdate = function()
 */
 PIXI.Sprite.prototype.getBounds = function(matrix)
 {
-
     var width = this.texture.frame.width;
     var height = this.texture.frame.height;
 
@@ -175,23 +181,11 @@ PIXI.Sprite.prototype.getBounds = function(matrix)
     var worldTransform = matrix || this.worldTransform ;
 
     var a = worldTransform.a;
-    var b = worldTransform.c;
-    var c = worldTransform.b;
+    var b = worldTransform.b;
+    var c = worldTransform.c;
     var d = worldTransform.d;
     var tx = worldTransform.tx;
     var ty = worldTransform.ty;
-
-    var x1 = a * w1 + c * h1 + tx;
-    var y1 = d * h1 + b * w1 + ty;
-
-    var x2 = a * w0 + c * h1 + tx;
-    var y2 = d * h1 + b * w0 + ty;
-
-    var x3 = a * w0 + c * h0 + tx;
-    var y3 = d * h0 + b * w0 + ty;
-
-    var x4 =  a * w1 + c * h0 + tx;
-    var y4 =  d * h0 + b * w1 + ty;
 
     var maxX = -Infinity;
     var maxY = -Infinity;
@@ -199,25 +193,55 @@ PIXI.Sprite.prototype.getBounds = function(matrix)
     var minX = Infinity;
     var minY = Infinity;
 
-    minX = x1 < minX ? x1 : minX;
-    minX = x2 < minX ? x2 : minX;
-    minX = x3 < minX ? x3 : minX;
-    minX = x4 < minX ? x4 : minX;
+    if(b === 0 && c === 0)
+    {
+        // scale may be negative!
+        if(a < 0)a *= -1;
+        if(d < 0)d *= -1;
 
-    minY = y1 < minY ? y1 : minY;
-    minY = y2 < minY ? y2 : minY;
-    minY = y3 < minY ? y3 : minY;
-    minY = y4 < minY ? y4 : minY;
+        // this means there is no rotation going on right? RIGHT?
+        // if thats the case then we can avoid checking the bound values! yay         
+        minX = a * w1 + tx;
+        maxX = a * w0 + tx;
+        minY = d * h1 + ty;
+        maxY = d * h0 + ty;
+    }
+    else
+    {
+        var x1 = a * w1 + c * h1 + tx;
+        var y1 = d * h1 + b * w1 + ty;
 
-    maxX = x1 > maxX ? x1 : maxX;
-    maxX = x2 > maxX ? x2 : maxX;
-    maxX = x3 > maxX ? x3 : maxX;
-    maxX = x4 > maxX ? x4 : maxX;
+        var x2 = a * w0 + c * h1 + tx;
+        var y2 = d * h1 + b * w0 + ty;
 
-    maxY = y1 > maxY ? y1 : maxY;
-    maxY = y2 > maxY ? y2 : maxY;
-    maxY = y3 > maxY ? y3 : maxY;
-    maxY = y4 > maxY ? y4 : maxY;
+        var x3 = a * w0 + c * h0 + tx;
+        var y3 = d * h0 + b * w0 + ty;
+
+        var x4 =  a * w1 + c * h0 + tx;
+        var y4 =  d * h0 + b * w1 + ty;
+
+
+
+        minX = x1 < minX ? x1 : minX;
+        minX = x2 < minX ? x2 : minX;
+        minX = x3 < minX ? x3 : minX;
+        minX = x4 < minX ? x4 : minX;
+
+        minY = y1 < minY ? y1 : minY;
+        minY = y2 < minY ? y2 : minY;
+        minY = y3 < minY ? y3 : minY;
+        minY = y4 < minY ? y4 : minY;
+
+        maxX = x1 > maxX ? x1 : maxX;
+        maxX = x2 > maxX ? x2 : maxX;
+        maxX = x3 > maxX ? x3 : maxX;
+        maxX = x4 > maxX ? x4 : maxX;
+
+        maxY = y1 > maxY ? y1 : maxY;
+        maxY = y2 > maxY ? y2 : maxY;
+        maxY = y3 > maxY ? y3 : maxY;
+        maxY = y4 > maxY ? y4 : maxY;
+    }
 
     var bounds = this._bounds;
 
@@ -237,14 +261,14 @@ PIXI.Sprite.prototype.getBounds = function(matrix)
 * Renders the object using the WebGL renderer
 *
 * @method _renderWebGL
-* @param renderSession {RenderSession} 
+* @param renderSession {RenderSession}
 * @private
 */
 PIXI.Sprite.prototype._renderWebGL = function(renderSession)
 {
     // if the sprite is not visible or the alpha is 0 then no need to render this element
-    if(!this.visible || this.alpha <= 0)return;
-    
+    if (!this.visible || this.alpha <= 0 || !this.renderable) return;
+
     var i,j;
 
     // do a quick check to see if this element has a mask or a filter.
@@ -280,7 +304,7 @@ PIXI.Sprite.prototype._renderWebGL = function(renderSession)
 
         if(this._mask)renderSession.maskManager.popMask(this._mask, renderSession);
         if(this._filters)renderSession.filterManager.popFilter();
-        
+
         spriteBatch.start();
     }
     else
@@ -292,24 +316,22 @@ PIXI.Sprite.prototype._renderWebGL = function(renderSession)
         {
             this.children[i]._renderWebGL(renderSession);
         }
-    }
 
-   
-    //TODO check culling  
+    }
 };
 
 /**
 * Renders the object using the Canvas renderer
 *
 * @method _renderCanvas
-* @param renderSession {RenderSession} 
+* @param renderSession {RenderSession}
 * @private
 */
 PIXI.Sprite.prototype._renderCanvas = function(renderSession)
 {
     // If the sprite is not visible or the alpha is 0 then no need to render this element
-    if (this.visible === false || this.alpha === 0 || this.texture.crop.width <= 0 || this.texture.crop.height <= 0) return;
-    
+    if (this.visible === false || this.alpha === 0 || this.renderable === false || this.texture.crop.width <= 0 || this.texture.crop.height <= 0) return;
+
     if (this.blendMode !== renderSession.currentBlendMode)
     {
         renderSession.currentBlendMode = this.blendMode;
@@ -318,53 +340,55 @@ PIXI.Sprite.prototype._renderCanvas = function(renderSession)
 
     if (this._mask)
     {
-        renderSession.maskManager.pushMask(this._mask, renderSession.context);
+        renderSession.maskManager.pushMask(this._mask, renderSession);
     }
 
     //  Ignore null sources
     if (this.texture.valid)
     {
+        var resolution = this.texture.baseTexture.resolution / renderSession.resolution;
+
         renderSession.context.globalAlpha = this.worldAlpha;
 
-        //  Allow for pixel rounding
-        if (renderSession.roundPixels)
-        {
-            renderSession.context.setTransform(
-                this.worldTransform.a,
-                this.worldTransform.c,
-                this.worldTransform.b,
-                this.worldTransform.d,
-                this.worldTransform.tx | 0,
-                this.worldTransform.ty | 0);
-        }
-        else
-        {
-            renderSession.context.setTransform(
-                this.worldTransform.a,
-                this.worldTransform.c,
-                this.worldTransform.b,
-                this.worldTransform.d,
-                this.worldTransform.tx,
-                this.worldTransform.ty);
-        }
-
-        //  If smoothingEnabled is supported and we need to change the smoothing property for this texture
+         //  If smoothingEnabled is supported and we need to change the smoothing property for this texture
         if (renderSession.smoothProperty && renderSession.scaleMode !== this.texture.baseTexture.scaleMode)
         {
             renderSession.scaleMode = this.texture.baseTexture.scaleMode;
             renderSession.context[renderSession.smoothProperty] = (renderSession.scaleMode === PIXI.scaleModes.LINEAR);
         }
-
         //  If the texture is trimmed we offset by the trim x/y, otherwise we use the frame dimensions
         var dx = (this.texture.trim) ? this.texture.trim.x - this.anchor.x * this.texture.trim.width : this.anchor.x * -this.texture.frame.width;
         var dy = (this.texture.trim) ? this.texture.trim.y - this.anchor.y * this.texture.trim.height : this.anchor.y * -this.texture.frame.height;
+        //  Allow for pixel rounding
+        if (renderSession.roundPixels)
+        {
+            renderSession.context.setTransform(
+                this.worldTransform.a,
+                this.worldTransform.b,
+                this.worldTransform.c,
+                this.worldTransform.d,
+                (this.worldTransform.tx* renderSession.resolution) | 0,
+                (this.worldTransform.ty* renderSession.resolution) | 0);
+            dx = dx | 0;
+            dy = dy | 0;
+        }
+        else
+        {
+            renderSession.context.setTransform(
+                this.worldTransform.a,
+                this.worldTransform.b,
+                this.worldTransform.c,
+                this.worldTransform.d,
+                this.worldTransform.tx * renderSession.resolution,
+                this.worldTransform.ty * renderSession.resolution);
+        }
 
         if (this.tint !== 0xFFFFFF)
         {
             if (this.cachedTint !== this.tint)
             {
                 this.cachedTint = this.tint;
-                
+
                 //  TODO clean up caching - how to clean up the caches?
                 this.tintedTexture = PIXI.CanvasTinter.getTintedTexture(this, this.tint);
             }
@@ -375,10 +399,10 @@ PIXI.Sprite.prototype._renderCanvas = function(renderSession)
                                 0,
                                 this.texture.crop.width,
                                 this.texture.crop.height,
-                                dx,
-                                dy,
-                                this.texture.crop.width,
-                                this.texture.crop.height);
+                                dx / resolution,
+                                dy / resolution,
+                                this.texture.crop.width / resolution,
+                                this.texture.crop.height / resolution);
         }
         else
         {
@@ -388,10 +412,10 @@ PIXI.Sprite.prototype._renderCanvas = function(renderSession)
                                 this.texture.crop.y,
                                 this.texture.crop.width,
                                 this.texture.crop.height,
-                                dx,
-                                dy,
-                                this.texture.crop.width,
-                                this.texture.crop.height);
+                                dx / resolution,
+                                dy / resolution,
+                                this.texture.crop.width / resolution,
+                                this.texture.crop.height / resolution);
         }
     }
 
@@ -403,7 +427,7 @@ PIXI.Sprite.prototype._renderCanvas = function(renderSession)
 
     if (this._mask)
     {
-        renderSession.maskManager.popMask(renderSession.context);
+        renderSession.maskManager.popMask(renderSession);
     }
 };
 

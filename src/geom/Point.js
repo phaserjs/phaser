@@ -234,7 +234,7 @@ Phaser.Point.prototype = {
     *
     * @method Phaser.Point#copyTo
     * @param {any} dest - The object to copy to.
-    * @return {Object} The dest object.
+    * @return {object} The dest object.
     */
     copyTo: function (dest) {
 
@@ -292,19 +292,6 @@ Phaser.Point.prototype = {
         {
             return Math.atan2(a.y - this.y, a.x - this.x);
         }
-
-    },
-
-    /**
-    * Returns the angle squared between this Point object and another object with public x and y properties.
-    *
-    * @method Phaser.Point#angleSq
-    * @param {Phaser.Point|any} a - The object to get the angleSq from this Point to.
-    * @return {number} The angleSq between the two objects.
-    */
-    angleSq: function (a) {
-
-        return this.subtract(a).angle(a.subtract(this));
 
     },
 
@@ -456,6 +443,30 @@ Phaser.Point.prototype = {
     },
 
     /**
+    * Math.floor() both the x and y properties of this Point.
+    *
+    * @method Phaser.Point#floor
+    * @return {Phaser.Point} This Point object.
+    */
+    floor: function () {
+
+        return this.setTo(Math.floor(this.x), Math.floor(this.y));
+
+    },
+
+    /**
+    * Math.ceil() both the x and y properties of this Point.
+    *
+    * @method Phaser.Point#ceil
+    * @return {Phaser.Point} This Point object.
+    */
+    ceil: function () {
+
+        return this.setTo(Math.ceil(this.x), Math.ceil(this.y));
+
+    },
+
+    /**
     * Returns a string representation of this object.
     *
     * @method Phaser.Point#toString
@@ -581,20 +592,6 @@ Phaser.Point.angle = function (a, b) {
 };
 
 /**
-* Returns the angle squared between two Point objects.
-*
-* @method Phaser.Point.angleSq
-* @param {Phaser.Point} a - The first Point object.
-* @param {Phaser.Point} b - The second Point object.
-* @return {number} The angle squared between the two Points.
-*/
-Phaser.Point.angleSq = function (a, b) {
-
-    return a.subtract(b).angle(b.subtract(a));
-
-};
-
-/**
 * Creates a negative Point.
 *
 * @method Phaser.Point.negative
@@ -679,26 +676,18 @@ Phaser.Point.rperp = function (a, out) {
 };
 
 /**
-* Returns the distance of this Point object to the given object (can be a Circle, Point or anything with x/y properties).
+* Returns the euclidian distance of this Point object to the given object (can be a Circle, Point or anything with x/y properties).
 *
 * @method Phaser.Point.distance
 * @param {object} a - The target object. Must have visible x and y properties that represent the center of the object.
 * @param {object} b - The target object. Must have visible x and y properties that represent the center of the object.
-* @param {boolean} [round] - Round the distance to the nearest integer (default false).
+* @param {boolean} [round=false] - Round the distance to the nearest integer.
 * @return {number} The distance between this Point object and the destination Point object.
 */
 Phaser.Point.distance = function (a, b, round) {
 
-    if (typeof round === "undefined") { round = false; }
-
-    if (round)
-    {
-        return Phaser.Math.distanceRounded(a.x, a.y, b.x, b.y);
-    }
-    else
-    {
-        return Phaser.Math.distance(a.x, a.y, b.x, b.y);
-    }
+    var distance = Phaser.Math.distance(a.x, a.y, b.x, b.y);
+    return round ? Math.round(distance) : distance;
 
 };
 
@@ -870,7 +859,7 @@ Phaser.Point.centroid = function (points, out) {
 *
 * @method Phaser.Point.parse
 * @static
-* @param {Object} obj - The object to parse.
+* @param {object} obj - The object to parse.
 * @param {string} [xProp='x'] - The property used to set the Point.x value.
 * @param {string} [yProp='y'] - The property used to set the Point.y value.
 * @return {Phaser.Point} The new Point object.

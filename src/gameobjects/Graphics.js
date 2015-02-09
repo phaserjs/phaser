@@ -195,21 +195,19 @@ Phaser.Graphics.prototype.destroy = function(destroyChildren) {
 };
 
 /*
-* Draws a {Phaser.Polygon} or a {PIXI.Polygon} filled
+* Draws a circle.
 *
-* @method Phaser.Graphics.prototype.drawPolygon
+* @method Phaser.Graphics.prototype.drawCircle
+* @param {Number} x - The X coordinate of the center of the circle.
+* @param {Number} y - The Y coordinate of the center of the circle.
+* @param {Number} radius - The diameter of the circle.
+* @return {Phaser.Graphics} This Graphics object.
 */
-Phaser.Graphics.prototype.drawPolygon = function (poly) {
+Phaser.Graphics.prototype.drawCircle = function(x, y, diameter)
+{
+    this.drawShape(new Phaser.Circle(x, y, diameter));
 
-    this.moveTo(poly.points[0].x, poly.points[0].y);
-
-    for (var i = 1; i < poly.points.length; i += 1)
-    {
-        this.lineTo(poly.points[i].x, poly.points[i].y);
-    }
-
-    this.lineTo(poly.points[0].x, poly.points[0].y);
-
+    return this;
 };
 
 /*

@@ -4,36 +4,41 @@
 
 
 /**
- * A set of functions used by the canvas renderer to draw the primitive graphics data
+ * A set of functions used by the canvas renderer to draw the primitive graphics data.
  *
  * @class CanvasGraphics
+ * @static
  */
 PIXI.CanvasGraphics = function()
 {
-
 };
 
-
 /*
- * Renders the graphics object
+ * Renders a PIXI.Graphics object to a canvas.
  *
- * @static
- * @private
  * @method renderGraphics
+ * @static
  * @param graphics {Graphics} the actual graphics object to render
- * @param context {Context2D} the 2d drawing method of the canvas
+ * @param context {CanvasRenderingContext2D} the 2d drawing method of the canvas
  */
 PIXI.CanvasGraphics.renderGraphics = function(graphics, context)
 {
     var worldAlpha = graphics.worldAlpha;
-    var color = '';
+
+    if(graphics.dirty)
+    {
+        this.updateGraphicsTint(graphics);
+        graphics.dirty = false;
+    }
+    
 
     for (var i = 0; i < graphics.graphicsData.length; i++)
     {
         var data = graphics.graphicsData[i];
-        var points = data.points;
+        var shape = data.shape;
 
-        context.strokeStyle = color = '#' + ('00000' + ( data.lineColor | 0).toString(16)).substr(-6);
+        var fillColor = data._fillTint;
+        var lineColor = data._lineTint;
 
         context.lineWidth = data.lineWidth;
 
@@ -41,11 +46,18 @@ PIXI.CanvasGraphics.renderGraphics = function(graphics, context)
         {
             context.beginPath();
 
+            var points = shape.points;
+
             context.moveTo(points[0], points[1]);
 
             for (var j=1; j < points.length/2; j++)
             {
                 context.lineTo(points[j * 2], points[j * 2 + 1]);
+            }
+
+            if(shape.closed)
+            {
+                context.lineTo(points[0], points[1]);
             }
 
             // if the first and last point are the same close the path - much neater :)
@@ -57,12 +69,13 @@ PIXI.CanvasGraphics.renderGraphics = function(graphics, context)
             if(data.fill)
             {
                 context.globalAlpha = data.fillAlpha * worldAlpha;
-                context.fillStyle = color = '#' + ('00000' + ( data.fillColor | 0).toString(16)).substr(-6);
+                context.fillStyle = '#' + ('00000' + ( fillColor | 0).toString(16)).substr(-6);
                 context.fill();
             }
             if(data.lineWidth)
             {
                 context.globalAlpha = data.lineAlpha * worldAlpha;
+                context.strokeStyle = '#' + ('00000' + ( lineColor | 0).toString(16)).substr(-6);
                 context.stroke();
             }
         }
@@ -72,48 +85,46 @@ PIXI.CanvasGraphics.renderGraphics = function(graphics, context)
             if(data.fillColor || data.fillColor === 0)
             {
                 context.globalAlpha = data.fillAlpha * worldAlpha;
-                context.fillStyle = color = '#' + ('00000' + ( data.fillColor | 0).toString(16)).substr(-6);
-                context.fillRect(points[0], points[1], points[2], points[3]);
+                context.fillStyle = '#' + ('00000' + ( fillColor | 0).toString(16)).substr(-6);
+                context.fillRect(shape.x, shape.y, shape.width, shape.height);
 
             }
             if(data.lineWidth)
             {
                 context.globalAlpha = data.lineAlpha * worldAlpha;
-                context.strokeRect(points[0], points[1], points[2], points[3]);
+                context.strokeStyle = '#' + ('00000' + ( lineColor | 0).toString(16)).substr(-6);
+                context.strokeRect(shape.x, shape.y, shape.width, shape.height);
             }
-
         }
         else if(data.type === PIXI.Graphics.CIRC)
         {
             // TODO - need to be Undefined!
             context.beginPath();
-            context.arc(points[0], points[1], points[2],0,2*Math.PI);
+            context.arc(shape.x, shape.y, shape.radius,0,2*Math.PI);
             context.closePath();
 
             if(data.fill)
             {
                 context.globalAlpha = data.fillAlpha * worldAlpha;
-                context.fillStyle = color = '#' + ('00000' + ( data.fillColor | 0).toString(16)).substr(-6);
+                context.fillStyle = '#' + ('00000' + ( fillColor | 0).toString(16)).substr(-6);
                 context.fill();
             }
             if(data.lineWidth)
             {
                 context.globalAlpha = data.lineAlpha * worldAlpha;
+                context.strokeStyle = '#' + ('00000' + ( lineColor | 0).toString(16)).substr(-6);
                 context.stroke();
             }
         }
         else if(data.type === PIXI.Graphics.ELIP)
         {
-
             // ellipse code taken from: http://stackoverflow.com/questions/2172798/how-to-draw-an-oval-in-html5-canvas
 
-            var ellipseData =  data.points;
+            var w = shape.width * 2;
+            var h = shape.height * 2;
 
-            var w = ellipseData[2] * 2;
-            var h = ellipseData[3] * 2;
-
-            var x = ellipseData[0] - w/2;
-            var y = ellipseData[1] - h/2;
+            var x = shape.x - w/2;
+            var y = shape.y - h/2;
 
             context.beginPath();
 
@@ -136,22 +147,23 @@ PIXI.CanvasGraphics.renderGraphics = function(graphics, context)
             if(data.fill)
             {
                 context.globalAlpha = data.fillAlpha * worldAlpha;
-                context.fillStyle = color = '#' + ('00000' + ( data.fillColor | 0).toString(16)).substr(-6);
+                context.fillStyle = '#' + ('00000' + ( fillColor | 0).toString(16)).substr(-6);
                 context.fill();
             }
             if(data.lineWidth)
             {
                 context.globalAlpha = data.lineAlpha * worldAlpha;
+                context.strokeStyle = '#' + ('00000' + ( lineColor | 0).toString(16)).substr(-6);
                 context.stroke();
             }
         }
         else if (data.type === PIXI.Graphics.RREC)
         {
-            var rx = points[0];
-            var ry = points[1];
-            var width = points[2];
-            var height = points[3];
-            var radius = points[4];
+            var rx = shape.x;
+            var ry = shape.y;
+            var width = shape.width;
+            var height = shape.height;
+            var radius = shape.radius;
 
             var maxRadius = Math.min(width, height) / 2 | 0;
             radius = radius > maxRadius ? maxRadius : radius;
@@ -171,13 +183,14 @@ PIXI.CanvasGraphics.renderGraphics = function(graphics, context)
             if(data.fillColor || data.fillColor === 0)
             {
                 context.globalAlpha = data.fillAlpha * worldAlpha;
-                context.fillStyle = color = '#' + ('00000' + ( data.fillColor | 0).toString(16)).substr(-6);
+                context.fillStyle = '#' + ('00000' + ( fillColor | 0).toString(16)).substr(-6);
                 context.fill();
 
             }
             if(data.lineWidth)
             {
                 context.globalAlpha = data.lineAlpha * worldAlpha;
+                context.strokeStyle = '#' + ('00000' + ( lineColor | 0).toString(16)).substr(-6);
                 context.stroke();
             }
         }
@@ -191,7 +204,7 @@ PIXI.CanvasGraphics.renderGraphics = function(graphics, context)
  * @private
  * @method renderGraphicsMask
  * @param graphics {Graphics} the graphics which will be used as a mask
- * @param context {Context2D} the context 2d method of the canvas
+ * @param context {CanvasRenderingContext2D} the context 2d method of the canvas
  */
 PIXI.CanvasGraphics.renderGraphicsMask = function(graphics, context)
 {
@@ -208,11 +221,14 @@ PIXI.CanvasGraphics.renderGraphicsMask = function(graphics, context)
     for (var i = 0; i < 1; i++)
     {
         var data = graphics.graphicsData[i];
-        var points = data.points;
+        var shape = data.shape;
 
         if(data.type === PIXI.Graphics.POLY)
         {
             context.beginPath();
+        
+            var points = shape.points;
+        
             context.moveTo(points[0], points[1]);
 
             for (var j=1; j < points.length/2; j++)
@@ -230,27 +246,26 @@ PIXI.CanvasGraphics.renderGraphicsMask = function(graphics, context)
         else if(data.type === PIXI.Graphics.RECT)
         {
             context.beginPath();
-            context.rect(points[0], points[1], points[2], points[3]);
+            context.rect(shape.x, shape.y, shape.width, shape.height);
             context.closePath();
         }
         else if(data.type === PIXI.Graphics.CIRC)
         {
             // TODO - need to be Undefined!
             context.beginPath();
-            context.arc(points[0], points[1], points[2],0,2*Math.PI);
+            context.arc(shape.x, shape.y, shape.radius,0,2*Math.PI);
             context.closePath();
         }
         else if(data.type === PIXI.Graphics.ELIP)
         {
 
             // ellipse code taken from: http://stackoverflow.com/questions/2172798/how-to-draw-an-oval-in-html5-canvas
-            var ellipseData =  data.points;
 
-            var w = ellipseData[2] * 2;
-            var h = ellipseData[3] * 2;
+            var w = shape.width * 2;
+            var h = shape.height * 2;
 
-            var x = ellipseData[0] - w/2;
-            var y = ellipseData[1] - h/2;
+            var x = shape.x - w/2;
+            var y = shape.y - h/2;
 
             context.beginPath();
 
@@ -271,11 +286,13 @@ PIXI.CanvasGraphics.renderGraphicsMask = function(graphics, context)
         }
         else if (data.type === PIXI.Graphics.RREC)
         {
-            var rx = points[0];
-            var ry = points[1];
-            var width = points[2];
-            var height = points[3];
-            var radius = points[4];
+        
+            var pts = shape.points;
+            var rx = pts[0];
+            var ry = pts[1];
+            var width = pts[2];
+            var height = pts[3];
+            var radius = pts[4];
 
             var maxRadius = Math.min(width, height) / 2 | 0;
             radius = radius > maxRadius ? maxRadius : radius;
@@ -294,3 +311,48 @@ PIXI.CanvasGraphics.renderGraphicsMask = function(graphics, context)
         }
     }
 };
+
+PIXI.CanvasGraphics.updateGraphicsTint = function(graphics)
+{
+    if(graphics.tint === 0xFFFFFF)return;
+
+    var tintR = (graphics.tint >> 16 & 0xFF) / 255;
+    var tintG = (graphics.tint >> 8 & 0xFF) / 255;
+    var tintB = (graphics.tint & 0xFF)/ 255;
+
+    for (var i = 0; i < graphics.graphicsData.length; i++)
+    {
+        var data = graphics.graphicsData[i];
+
+        var fillColor = data.fillColor | 0;
+        var lineColor = data.lineColor | 0;
+
+        /*
+        var colorR = (fillColor >> 16 & 0xFF) / 255;
+        var colorG = (fillColor >> 8 & 0xFF) / 255;
+        var colorB = (fillColor & 0xFF) / 255; 
+
+        colorR *= tintR;
+        colorG *= tintG;
+        colorB *= tintB;
+
+        fillColor = ((colorR*255 << 16) + (colorG*255 << 8) + colorB*255);
+
+        colorR = (lineColor >> 16 & 0xFF) / 255;
+        colorG = (lineColor >> 8 & 0xFF) / 255;
+        colorB = (lineColor & 0xFF) / 255; 
+
+        colorR *= tintR;
+        colorG *= tintG;
+        colorB *= tintB;
+
+        lineColor = ((colorR*255 << 16) + (colorG*255 << 8) + colorB*255);   
+        */
+        
+        // super inline cos im an optimization NAZI :)
+        data._fillTint = (((fillColor >> 16 & 0xFF) / 255 * tintR*255 << 16) + ((fillColor >> 8 & 0xFF) / 255 * tintG*255 << 8) +  (fillColor & 0xFF) / 255 * tintB*255);
+        data._lineTint = (((lineColor >> 16 & 0xFF) / 255 * tintR*255 << 16) + ((lineColor >> 8 & 0xFF) / 255 * tintG*255 << 8) +  (lineColor & 0xFF) / 255 * tintB*255);
+
+    }
+};
+

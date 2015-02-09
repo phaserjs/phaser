@@ -24,9 +24,21 @@ Phaser.Physics.P2 = function (game, config) {
     */
     this.game = game;
 
-    if (typeof config === 'undefined' || !config.hasOwnProperty('gravity') || !config.hasOwnProperty('broadphase'))
+    if (typeof config === 'undefined')
     {
         config = { gravity: [0, 0], broadphase: new p2.SAPBroadphase() };
+    }
+    else
+    {
+        if (!config.hasOwnProperty('gravity'))
+        {
+            config.gravity = [0, 0];
+        }
+
+        if (!config.hasOwnProperty('broadphase'))
+        {
+            config.broadphase = new p2.SAPBroadphase();
+        }
     }
 
     /**
@@ -355,16 +367,16 @@ Phaser.Physics.P2.prototype = {
     */
     postBroadphaseHandler: function (event) {
 
-        var i = event.pairs.length;
-
-        if (this.postBroadphaseCallback && i > 0)
+        if (!this.postBroadphaseCallback || event.pairs.length === 0)
         {
-            while (i -= 2)
+            return;
+        }
+
+        for (var i = event.pairs.length - 2; i >= 0; i -= 2)
+        {
+            if (event.pairs[i].parent && event.pairs[i+1].parent && !this.postBroadphaseCallback.call(this.callbackContext, event.pairs[i].parent, event.pairs[i+1].parent))
             {
-                if (event.pairs[i].parent && event.pairs[i+1].parent && !this.postBroadphaseCallback.call(this.callbackContext, event.pairs[i].parent, event.pairs[i+1].parent))
-                {
-                    event.pairs.splice(i, 2);
-                }
+                event.pairs.splice(i, 2);
             }
         }
 
@@ -671,7 +683,7 @@ Phaser.Physics.P2.prototype = {
     */
     update: function () {
 
-        // Do nothing when the pysics engine was paused before
+        // Do nothing if the physics engine was paused before
         if (this.paused)
         {
             return;
@@ -689,13 +701,83 @@ Phaser.Physics.P2.prototype = {
     },
 
     /**
+    * Called by Phaser.Physics when a State swap occurs.
+    * Starts the begin and end Contact listeners again.
+    *
+    * @method Phaser.Physics.P2#reset
+    */
+    reset: function () {
+
+        this.world.on("beginContact", this.beginContactHandler, this);
+        this.world.on("endContact", this.endContactHandler, this);
+
+        this.nothingCollisionGroup = new Phaser.Physics.P2.CollisionGroup(1);
+        this.boundsCollisionGroup = new Phaser.Physics.P2.CollisionGroup(2);
+        this.everythingCollisionGroup = new Phaser.Physics.P2.CollisionGroup(2147483648);
+
+        this._collisionGroupID = 2;
+
+        this.setBoundsToWorld(true, true, true, true, false);
+
+    },
+
+    /**
     * Clears all bodies from the simulation, resets callbacks and resets the collision bitmask.
+    * 
+    * The P2 world is also cleared:
+    * 
+    * * Removes all solver equations
+    * * Removes all constraints
+    * * Removes all bodies
+    * * Removes all springs
+    * * Removes all contact materials
+    * 
+    * This is called automatically when you switch state.
     *
     * @method Phaser.Physics.P2#clear
     */
     clear: function () {
 
-        this.world.clear();
+        this.world.time = 0;
+        this.world.fixedStepTime = 0;
+
+        // Remove all solver equations
+        if (this.world.solver && this.world.solver.equations.length)
+        {
+            this.world.solver.removeAllEquations();
+        }
+
+        // Remove all constraints
+        var cs = this.world.constraints;
+
+        for (var i = cs.length - 1; i >= 0; i--)
+        {
+            this.world.removeConstraint(cs[i]);
+        }
+
+        // Remove all bodies
+        var bodies = this.world.bodies;
+
+        for (var i = bodies.length - 1; i >= 0; i--)
+        {
+            this.world.removeBody(bodies[i]);
+        }
+
+        // Remove all springs
+        var springs = this.world.springs;
+
+        for (var i = springs.length - 1; i >= 0; i--)
+        {
+            this.world.removeSpring(springs[i]);
+        }
+
+        // Remove all contact materials
+        var cms = this.world.contactMaterials;
+
+        for (var i = cms.length - 1; i >= 0; i--)
+        {
+            this.world.removeContactMaterial(cms[i]);
+        }
 
         this.world.off("beginContact", this.beginContactHandler, this);
         this.world.off("endContact", this.endContactHandler, this);
@@ -706,7 +788,6 @@ Phaser.Physics.P2.prototype = {
 
         this.collisionGroups = [];
         this._toRemove = [];
-        this._collisionGroupID = 2;
         this.boundsCollidesWith = [];
 
     },
