@@ -330,8 +330,8 @@ Phaser.TilemapLayer.prototype.postUpdate = function () {
 
     //  Stops you being able to auto-scroll the camera if it's not following a sprite
     var camera = this.game.camera;
-    this.scrollX = camera.x * this.scrollFactorX;
-    this.scrollY = camera.y * this.scrollFactorY;
+    this.scrollX = camera.x * this.scrollFactorX / this.scale.x;
+    this.scrollY = camera.y * this.scrollFactorY / this.scale.y;
 
     this.render();
 
@@ -358,7 +358,7 @@ Phaser.TilemapLayer.prototype.postUpdate = function () {
 */
 Phaser.TilemapLayer.prototype.resizeWorld = function () {
 
-    this.game.world.setBounds(0, 0, this.layer.widthInPixels, this.layer.heightInPixels);
+    this.game.world.setBounds(0, 0, this.layer.widthInPixels * this.scale.x, this.layer.heightInPixels * this.scale.y);
 
 };
 
@@ -570,11 +570,11 @@ Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides
     y = this._fixY(y);
 
     //  Convert the pixel values into tile coordinates
-    var tx = Math.floor(x / this._mc.cw);
-    var ty = Math.floor(y / this._mc.ch);
+    var tx = Math.floor(x / (this._mc.cw * this.scale.x));
+    var ty = Math.floor(y / (this._mc.ch * this.scale.y));
     //  Don't just use ceil(width/cw) to allow account for x/y diff within cell
-    var tw = Math.ceil((x + width) / this._mc.cw) - tx;
-    var th = Math.ceil((y + height) / this._mc.ch) - ty;
+    var tw = Math.ceil((x + width) / (this._mc.cw * this.scale.x)) - tx;
+    var th = Math.ceil((y + height) / (this._mc.ch * this.scale.y)) - ty;
 
     while (this._results.length)
     {
@@ -672,6 +672,36 @@ Phaser.TilemapLayer.prototype.resetTilesetCache = function ()
         tilesets.pop();
     }
 
+};
+
+/**
+ * This method will set the scale of the tilemap as well as update the underlying block data of this layer
+ * 
+ * @method Phaser.TilemapLayer#setScale
+ * @param {number} [xScale=1] - The scale factor along the X-plane 
+ * @param {number} [yScale] - The scale factor along the Y-plane
+ */
+Phaser.TilemapLayer.prototype.setScale = function(xScale, yScale) {
+    xScale = xScale || 1;
+    yScale = yScale || xScale;
+
+    for (var y = 0; y < this.layer.data.length; y++)
+    {
+        var row = this.layer.data[y];
+
+        for (var x = 0; x < row.length; x++)
+        {
+            var tile = row[x];
+
+            tile.width = this.map.tileWidth * xScale;
+            tile.height = this.map.tileHeight * yScale;
+
+            tile.worldX = tile.x * tile.width;
+            tile.worldY = tile.y * tile.height;
+        }
+    }
+
+    this.scale.setTo(xScale, yScale);
 };
 
 /**
