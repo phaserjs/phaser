@@ -10,8 +10,8 @@
 *
 * The loader uses a combination of tag loading (eg. Image elements) and XHR and provides progress and completion callbacks.
 *
-* Parallel loading is supported but must be enabled explicitly with {@link Phaser.Loader#enableParallel enableParallel}.
-* Load-before behavior of parallel resources is controlled by synchronization points as discussed in {@link Phaser.Loader#withSyncPoint withSyncPoint}.
+* Parallel loading (see {@link #enableParallel}) is supported and enabled by default.
+* Load-before behavior of parallel resources is controlled by synchronization points as discussed in {@link #withSyncPoint}.
 *
 * Texture Atlases can be created with tools such as [Texture Packer](https://www.codeandweb.com/texturepacker/phaser) and
 * [Shoebox](http://renderhjs.net/shoebox/)
@@ -141,13 +141,16 @@ Phaser.Loader = function (game) {
     this._warnedAboutXDomainRequest = false;
 
     /**
-    * If true then parallel downloading will be enabled.
+    * If true (the default) then parallel downloading will be enabled.
+    *
+    * To disable all parallel downloads this must be set to false prior to any resource being loaded.
+    *
     * @property {integer} enableParallel
     */
     this.enableParallel = true;
 
     /**
-    * The number of concurrent assets to try and fetch at once.
+    * The number of concurrent / parallel resources to try and fetch at once.
     *
     * Many current browsers limit 6 requests per domain; this is slightly conservative.
     *
