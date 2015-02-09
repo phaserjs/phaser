@@ -631,6 +631,11 @@ Phaser.Game.prototype = {
         if (this.__canvas) {
             console.log("~~~ ALL GOOD");
             this.canvas = this.__canvas;
+            if (!this.device.canvas)
+            {
+                // FIXME probably shouldn't do this here
+                this.device.canvas = this.canvas;
+            }
         }
         else
         {
