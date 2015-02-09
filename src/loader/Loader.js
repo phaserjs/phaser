@@ -718,14 +718,21 @@ Phaser.Loader.prototype = {
     *
     * @method Phaser.Loader#audio
     * @param {string} key - Unique asset key of the audio file.
-    * @param {string[]|string} urls - An array containing the URLs of the audio files, i.e.: [ 'jump.mp3', 'jump.ogg', 'jump.m4a' ] or a single string containing just one URL.
-    *     BLOB urls are supported, but Phaser will not validate the audio file's type in this case; the program must first ensure the BLOB url is playable.
-    * @param {boolean} autoDecode - When using Web Audio the audio files can either be decoded at load time or run-time. They can't be played until they are decoded, but this let's you control when that happens. Decoding is a non-blocking async process.
+    * @param {string|string[]|object[]} urls - Either a single string or an array of URIs or pairs of `{uri: .., type: ..}`.
+    *    If an array is specified then the first URI (or URI + mime pair) that is device-compatible will be selected.
+    *    For example: `"jump.mp3"`, `['jump.mp3', 'jump.ogg', 'jump.m4a']`, or `[{uri: "data:<opus_resource>", type: 'opus'}, 'fallback.mp3']`.
+    *    BLOB and DATA URIs can be used but only support automatic detection when used in the pair form; otherwise the format must be manually checked before adding the resource.
+    * @param {boolean} autoDecode - When using Web Audio the audio files can either be decoded at load time or run-time.
+    *    Audio files can't be played until they are decoded and, if specified, this enables immediate decoding. Decoding is a non-blocking async process.
     * @return {Phaser.Loader} This Loader instance.
     */
     audio: function (key, urls, autoDecode) {
 
         if (typeof autoDecode === 'undefined') { autoDecode = true; }
+
+        if (typeof urls === 'string') {
+            urls = [urls];
+        }
 
         this.addToFileList('audio', key, urls, { buffer: null, autoDecode: autoDecode });
 
@@ -1176,9 +1183,7 @@ Phaser.Loader.prototype = {
         // When true further non-pack file downloads are suppressed
         var syncblock = false;
 
-        var inflightLimit = this.enableParallel
-            ? Phaser.Math.clamp(this.maxParallelDownloads, 1, 12)
-            : 1;
+        var inflightLimit = this.enableParallel ? Phaser.Math.clamp(this.maxParallelDownloads, 1, 12) : 1;
 
         for (var i = this._processingHead; i < this._fileList.length; i++)
         {
@@ -1729,32 +1734,39 @@ Phaser.Loader.prototype = {
     *
     * @method Phaser.Loader#getAudioURL
     * @private
-    * @param {string[]|string} urls - Either an array of audio file URLs or a string containing a single URL path.
+    * @param {object[]||string[]} urls - See {@link #audio} for format.
     * @return {string} The URL to try and fetch; or null.
     */
     getAudioURL: function (urls) {
 
-        if (typeof urls === 'string') { urls = [urls]; }
-
         for (var i = 0; i < urls.length; i++)
         {
             var url = urls[i];
+            var audioType;
 
-            // It is assumed that a direct-data URI can be played.
-            if (url.indexOf("blob:") === 0 || url.indexOf("data:") === 0)
+            if (url.uri) // {uri: .., type: ..} pair
             {
-                return url;
+                url = url.uri;
+                audioType = url.type;
+            }
+            else
+            {
+                // Assume direct-data URI can be played if not in a paired form; select immediately
+                if (url.indexOf("blob:") === 0 || url.indexOf("data:") === 0)
+                {
+                    return url;
+                }
+
+                if (url.indexOf("?") >= 0) // Remove query from URL
+                {
+                    url = url.substr(0, url.indexOf("?"));
+                }
+
+                var extension = url.substr((Math.max(0, extension.lastIndexOf(".")) || Infinity) + 1);
+                audioType = extension.toLowerCase();
             }
 
-            var extension = url.toLowerCase();
-            extension = extension.substr((Math.max(0, extension.lastIndexOf(".")) || Infinity) + 1);
-
-            if (extension.indexOf("?") >= 0)
-            {
-                extension = extension.substr(0, extension.indexOf("?"));
-            }
-
-            if (this.game.device.canPlayAudio(extension))
+            if (this.game.device.canPlayAudio(audioType))
             {
                 return urls[i];
             }
