@@ -144,16 +144,17 @@ Phaser.Loader = function (game) {
     * If true then parallel downloading will be enabled.
     * @property {integer} enableParallel
     */
-    this.enableParallel = false;
+    this.enableParallel = true;
 
     /**
     * The number of concurrent assets to try and fetch at once.
-    * Most browsers limit 6 requests per domain.
+    *
+    * Many current browsers limit 6 requests per domain; this is slightly conservative.
     *
     * @property {integer} maxParallelDownloads
     * @protected
     */
-    this.maxParallelDownloads = 6;
+    this.maxParallelDownloads = 4;
 
     /**
     * A counter: if more than zero, files will be automatically added as a synchronization point.
@@ -1175,8 +1176,9 @@ Phaser.Loader.prototype = {
         // When true further non-pack file downloads are suppressed
         var syncblock = false;
 
-        var inflightLimit = Phaser.Math.clamp(
-            this.maxParallelDownloads, 1, this.enableParallel ? 12 : 1);
+        var inflightLimit = this.enableParallel
+            ? Phaser.Math.clamp(this.maxParallelDownloads, 1, 12)
+            : 1;
 
         for (var i = this._processingHead; i < this._fileList.length; i++)
         {
