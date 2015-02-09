@@ -11,7 +11,7 @@
 * @class Phaser.SinglePad
 * @constructor
 * @param {Phaser.Game} game - Current game instance.
-* @param {Object} padParent - The parent Phaser.Gamepad object (all gamepads reside under this)
+* @param {object} padParent - The parent Phaser.Gamepad object (all gamepads reside under this)
 */
 Phaser.SinglePad = function (game, padParent) {
 
@@ -33,7 +33,7 @@ Phaser.SinglePad = function (game, padParent) {
     this.connected = false;
 
     /**
-    * @property {Object} callbackContext - The context under which the callbacks are run.
+    * @property {object} callbackContext - The context under which the callbacks are run.
     */
     this.callbackContext = this;
 
@@ -79,7 +79,7 @@ Phaser.SinglePad = function (game, padParent) {
     this._padParent = padParent;
 
     /**
-    * @property {Object} _rawPad - The 'raw' gamepad data.
+    * @property {object} _rawPad - The 'raw' gamepad data.
     * @private
     */
     this._rawPad = null;
@@ -122,8 +122,8 @@ Phaser.SinglePad.prototype = {
     * Add callbacks to this Gamepad to handle connect / disconnect / button down / button up / axis change / float value buttons.
     * 
     * @method Phaser.SinglePad#addCallbacks
-    * @param {Object} context - The context under which the callbacks are run.
-    * @param {Object} callbacks - Object that takes six different callbak methods:
+    * @param {object} context - The context under which the callbacks are run.
+    * @param {object} callbacks - Object that takes six different callbak methods:
     * onConnectCallback, onDisconnectCallback, onDownCallback, onUpCallback, onAxisCallback, onFloatCallback
     */
     addCallbacks: function (context, callbacks) {
@@ -216,7 +216,7 @@ Phaser.SinglePad.prototype = {
     * Gamepad connect function, should be called by Phaser.Gamepad.
     * 
     * @method Phaser.SinglePad#connect
-    * @param {Object} rawPad - The raw gamepad object
+    * @param {object} rawPad - The raw gamepad object
     */
     connect: function (rawPad) {
 
@@ -327,7 +327,7 @@ Phaser.SinglePad.prototype = {
     * Handles changes in axis.
     * 
     * @method Phaser.SinglePad#processAxisChange
-    * @param {Object} axisState - State of the relevant axis
+    * @param {object} axisState - State of the relevant axis
     */
     processAxisChange: function (index, value) {
 
@@ -355,7 +355,7 @@ Phaser.SinglePad.prototype = {
     * 
     * @method Phaser.SinglePad#processButtonDown
     * @param {number} buttonCode - Which buttonCode of this button
-    * @param {Object} value - Button value
+    * @param {object} value - Button value
     */
     processButtonDown: function (buttonCode, value) {
 
@@ -381,7 +381,7 @@ Phaser.SinglePad.prototype = {
     * 
     * @method Phaser.SinglePad#processButtonUp
     * @param {number} buttonCode - Which buttonCode of this button
-    * @param {Object} value - Button value
+    * @param {object} value - Button value
     */
     processButtonUp: function (buttonCode, value) {
 
@@ -407,7 +407,7 @@ Phaser.SinglePad.prototype = {
     * 
     * @method Phaser.SinglePad#processButtonFloat
     * @param {number} buttonCode - Which buttonCode of this button
-    * @param {Object} value - Button value (will range somewhere between 0 and 1, but not specifically 0 or 1.
+    * @param {object} value - Button value (will range somewhere between 0 and 1, but not specifically 0 or 1.
     */
     processButtonFloat: function (buttonCode, value) {
 

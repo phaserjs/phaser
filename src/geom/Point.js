@@ -234,7 +234,7 @@ Phaser.Point.prototype = {
     *
     * @method Phaser.Point#copyTo
     * @param {any} dest - The object to copy to.
-    * @return {Object} The dest object.
+    * @return {object} The dest object.
     */
     copyTo: function (dest) {
 
@@ -292,19 +292,6 @@ Phaser.Point.prototype = {
         {
             return Math.atan2(a.y - this.y, a.x - this.x);
         }
-
-    },
-
-    /**
-    * Returns the angle squared between this Point object and another object with public x and y properties.
-    *
-    * @method Phaser.Point#angleSq
-    * @param {Phaser.Point|any} a - The object to get the angleSq from this Point to.
-    * @return {number} The angleSq between the two objects.
-    */
-    angleSq: function (a) {
-
-        return this.subtract(a).angle(a.subtract(this));
 
     },
 
@@ -605,20 +592,6 @@ Phaser.Point.angle = function (a, b) {
 };
 
 /**
-* Returns the angle squared between two Point objects.
-*
-* @method Phaser.Point.angleSq
-* @param {Phaser.Point} a - The first Point object.
-* @param {Phaser.Point} b - The second Point object.
-* @return {number} The angle squared between the two Points.
-*/
-Phaser.Point.angleSq = function (a, b) {
-
-    return a.subtract(b).angle(b.subtract(a));
-
-};
-
-/**
 * Creates a negative Point.
 *
 * @method Phaser.Point.negative
@@ -703,7 +676,7 @@ Phaser.Point.rperp = function (a, out) {
 };
 
 /**
-* Returns the distance of this Point object to the given object (can be a Circle, Point or anything with x/y properties).
+* Returns the euclidian distance of this Point object to the given object (can be a Circle, Point or anything with x/y properties).
 *
 * @method Phaser.Point.distance
 * @param {object} a - The target object. Must have visible x and y properties that represent the center of the object.
@@ -886,7 +859,7 @@ Phaser.Point.centroid = function (points, out) {
 *
 * @method Phaser.Point.parse
 * @static
-* @param {Object} obj - The object to parse.
+* @param {object} obj - The object to parse.
 * @param {string} [xProp='x'] - The property used to set the Point.x value.
 * @param {string} [yProp='y'] - The property used to set the Point.y value.
 * @return {Phaser.Point} The new Point object.

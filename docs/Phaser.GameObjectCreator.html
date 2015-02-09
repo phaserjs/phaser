@@ -124,50 +124,6 @@
 							<a href="Phaser.Easing.html">Easing</a>
 						</li>
 						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Back.html">Back</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Bounce.html">Bounce</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Circular.html">Circular</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Cubic.html">Cubic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Elastic.html">Elastic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Exponential.html">Exponential</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Linear.html">Linear</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Quadratic.html">Quadratic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Quartic.html">Quartic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Quintic.html">Quintic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Sinusoidal.html">Sinusoidal</a>
-						</li>
-						
 						<li class="class-depth-1">
 							<a href="Phaser.Ellipse.html">Ellipse</a>
 						</li>
@@ -876,6 +832,7 @@
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Core<b class="caret"></b></a>
 					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="Phaser.Game.html">Game</a></li>
 						<li class="class-depth-1"><a href="Phaser.Group.html">Group</a></li>
 						<li class="class-depth-1"><a href="Phaser.World.html">World</a></li>
 						<li class="class-depth-1"><a href="Phaser.Loader.html">Loader</a></li>
@@ -884,7 +841,7 @@
 						<li class="class-depth-1"><a href="Phaser.StateManager.html">State Manager</a></li>
 						<li class="class-depth-1"><a href="Phaser.TweenManager.html">Tween Manager</a></li>
 						<li class="class-depth-1"><a href="Phaser.SoundManager.html">Sound Manager</a></li>
-						<li class="class-depth-1"><a href="Phaser.InputManager.html">Input Manager</a></li>
+						<li class="class-depth-1"><a href="Phaser.Input.html">Input Manager</a></li>
 						<li class="class-depth-1"><a href="Phaser.ScaleManager.html">Scale Manager</a></li>
 					</ul>
 				</li>
@@ -897,7 +854,8 @@
 						<li class="class-depth-1"><a href="Phaser.Sprite.html">Sprite</a></li>
 						<li class="class-depth-1"><a href="Phaser.Image.html">Image</a></li>
 						<li class="class-depth-1"><a href="Phaser.Sound.html">Sound</a></li>
-						<li class="class-depth-1"><a href="Phaser.Emitter.html">Emitter</a></li>
+						<li class="class-depth-1"><a href="Phaser.Particles.Arcade.Emitter.html">Particle Emitter</a></li>
+						<li class="class-depth-1"><a href="Phaser.Particle.html">Particle</a></li>
 						<li class="class-depth-1"><a href="Phaser.Text.html">Text</a></li>
 						<li class="class-depth-1"><a href="Phaser.Tween.html">Tween</a></li>
 						<li class="class-depth-1"><a href="Phaser.BitmapText.html">BitmapText</a></li>
@@ -954,6 +912,7 @@
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Community<b class="caret"></b></a>
 					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="https://leanpub.com/u/photonstorm">Phaser Books</a></li>
 						<li class="class-depth-1"><a href="https://github.com/photonstorm/phaser">Phaser Github</a></li>
 						<li class="class-depth-1"><a href="http://examples.phaser.io">Phaser Examples</a></li>
 						<li class="class-depth-1"><a href="https://github.com/photonstorm/phaser-plugins">Phaser Plugins</a></li>
@@ -989,8 +948,6 @@
     GameObjectCreator
     </h2>
     
-        <div class="class-description"><p>Phaser.GameObjectCreator</p></div>
-    
 </header>
 
 <article>
@@ -1010,8 +967,8 @@
 
     
     <div class="description">
-        <p>The Game Object Creator is a quick way to create all of the different sorts of core objects that Phaser uses, but not add them to the game world.
-Use the GameObjectFactory to create and add the objects into the world.</p>
+        <p>The GameObjectCreator is a quick way to create common game objects <em>without</em> adding them to the game world.
+The object creator can be accessed with <a href="Phaser.Game.html#make"><code><code>game.make</code></code></a>.</p>
     </div>
     
 
@@ -1137,7 +1094,7 @@ Use the GameObjectFactory to create and add the objects into the world.</p>
             
 <dt>
     <h4 class="name "
-        id="game"><span class="type-signature"></span>game<span class="type-signature"> :<a href="Phaser.Game.html">Phaser.Game</a></span></h4>
+        id="game"><span class="type-signature">&lt;internal> </span>game<span class="type-signature"> :<a href="Phaser.Game.html">Phaser.Game</a></span></h4>
     
     
 </dt>
@@ -1163,6 +1120,13 @@ Use the GameObjectFactory to create and add the objects into the world.</p>
     
 
     
+        <dt class="important tag-deprecated">Internal:</dt>
+        <dd class="tag-deprecated"><ul>
+        
+            <li>This member is <em>internal (protected)</em> and may be modified or removed in the future.</li>
+        
+        </ul></dd>
+    
 
     
 
@@ -1174,7 +1138,7 @@ Use the GameObjectFactory to create and add the objects into the world.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="GameObjectCreator.js.html">gameobjects/GameObjectCreator.js</a>, <a href="GameObjectCreator.js.html#sunlight-1-line-20">line 20</a>
+    <a href="GameObjectCreator.js.html">gameobjects/GameObjectCreator.js</a>, <a href="GameObjectCreator.js.html#sunlight-1-line-21">line 21</a>
     </dt>
     
 
@@ -1193,7 +1157,7 @@ Use the GameObjectFactory to create and add the objects into the world.</p>
             
 <dt>
     <h4 class="name "
-        id="world"><span class="type-signature"></span>world<span class="type-signature"> :<a href="Phaser.World.html">Phaser.World</a></span></h4>
+        id="world"><span class="type-signature">&lt;internal> </span>world<span class="type-signature"> :<a href="Phaser.World.html">Phaser.World</a></span></h4>
     
     
 </dt>
@@ -1219,6 +1183,13 @@ Use the GameObjectFactory to create and add the objects into the world.</p>
     
 
     
+        <dt class="important tag-deprecated">Internal:</dt>
+        <dd class="tag-deprecated"><ul>
+        
+            <li>This member is <em>internal (protected)</em> and may be modified or removed in the future.</li>
+        
+        </ul></dd>
+    
 
     
 
@@ -1230,7 +1201,7 @@ Use the GameObjectFactory to create and add the objects into the world.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="GameObjectCreator.js.html">gameobjects/GameObjectCreator.js</a>, <a href="GameObjectCreator.js.html#sunlight-1-line-25">line 25</a>
+    <a href="GameObjectCreator.js.html">gameobjects/GameObjectCreator.js</a>, <a href="GameObjectCreator.js.html#sunlight-1-line-27">line 27</a>
     </dt>
     
 
@@ -1500,7 +1471,7 @@ Use the GameObjectFactory to create and add the objects into the world.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="GameObjectCreator.js.html">gameobjects/GameObjectCreator.js</a>, <a href="GameObjectCreator.js.html#sunlight-1-line-112">line 112</a>
+    <a href="GameObjectCreator.js.html">gameobjects/GameObjectCreator.js</a>, <a href="GameObjectCreator.js.html#sunlight-1-line-118">line 118</a>
     </dt>
     
 
@@ -1639,7 +1610,7 @@ Use the GameObjectFactory to create and add the objects into the world.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="GameObjectCreator.js.html">gameobjects/GameObjectCreator.js</a>, <a href="GameObjectCreator.js.html#sunlight-1-line-128">line 128</a>
+    <a href="GameObjectCreator.js.html">gameobjects/GameObjectCreator.js</a>, <a href="GameObjectCreator.js.html#sunlight-1-line-134">line 134</a>
     </dt>
     
 
@@ -1675,7 +1646,8 @@ Use the GameObjectFactory to create and add the objects into the world.</p>
 
     
     <div class="description">
-        <p>A BitmapData object which can be manipulated and drawn to like a traditional Canvas object and used to texture Sprites.</p>
+        <p>Create a BitmpaData object.</p>
+<p>A BitmapData object can be manipulated and drawn to like a traditional Canvas object and used to texture Sprites.</p>
     </div>
     
 
@@ -1915,7 +1887,7 @@ Use the GameObjectFactory to create and add the objects into the world.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="GameObjectCreator.js.html">gameobjects/GameObjectCreator.js</a>, <a href="GameObjectCreator.js.html#sunlight-1-line-350">line 350</a>
+    <a href="GameObjectCreator.js.html">gameobjects/GameObjectCreator.js</a>, <a href="GameObjectCreator.js.html#sunlight-1-line-362">line 362</a>
     </dt>
     
 
@@ -2192,7 +2164,7 @@ Use the GameObjectFactory to create and add the objects into the world.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="GameObjectCreator.js.html">gameobjects/GameObjectCreator.js</a>, <a href="GameObjectCreator.js.html#sunlight-1-line-287">line 287</a>
+    <a href="GameObjectCreator.js.html">gameobjects/GameObjectCreator.js</a>, <a href="GameObjectCreator.js.html#sunlight-1-line-297">line 297</a>
     </dt>
     
 
@@ -2619,7 +2591,7 @@ Use the GameObjectFactory to create and add the objects into the world.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="GameObjectCreator.js.html">gameobjects/GameObjectCreator.js</a>, <a href="GameObjectCreator.js.html#sunlight-1-line-209">line 209</a>
+    <a href="GameObjectCreator.js.html">gameobjects/GameObjectCreator.js</a>, <a href="GameObjectCreator.js.html#sunlight-1-line-215">line 215</a>
     </dt>
     
 
@@ -2655,7 +2627,8 @@ Use the GameObjectFactory to create and add the objects into the world.</p>
 
     
     <div class="description">
-        <p>Emitter is a lightweight particle emitter. It can be used for one-time explosions or for
+        <p>Creat a new Emitter.</p>
+<p>An Emitter is a lightweight particle emitter. It can be used for one-time explosions or for
 continuous effects like rain and fire. All it really does is launch Particle objects out
 at set intervals, and fixes their positions and velocities accorindgly.</p>
     </div>
@@ -2858,7 +2831,7 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="GameObjectCreator.js.html">gameobjects/GameObjectCreator.js</a>, <a href="GameObjectCreator.js.html#sunlight-1-line-244">line 244</a>
+    <a href="GameObjectCreator.js.html">gameobjects/GameObjectCreator.js</a>, <a href="GameObjectCreator.js.html#sunlight-1-line-250">line 250</a>
     </dt>
     
 
@@ -3020,7 +2993,7 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="GameObjectCreator.js.html">gameobjects/GameObjectCreator.js</a>, <a href="GameObjectCreator.js.html#sunlight-1-line-376">line 376</a>
+    <a href="GameObjectCreator.js.html">gameobjects/GameObjectCreator.js</a>, <a href="GameObjectCreator.js.html#sunlight-1-line-390">line 390</a>
     </dt>
     
 
@@ -3182,7 +3155,7 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="GameObjectCreator.js.html">gameobjects/GameObjectCreator.js</a>, <a href="GameObjectCreator.js.html#sunlight-1-line-230">line 230</a>
+    <a href="GameObjectCreator.js.html">gameobjects/GameObjectCreator.js</a>, <a href="GameObjectCreator.js.html#sunlight-1-line-236">line 236</a>
     </dt>
     
 
@@ -3493,7 +3466,7 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="GameObjectCreator.js.html">gameobjects/GameObjectCreator.js</a>, <a href="GameObjectCreator.js.html#sunlight-1-line-77">line 77</a>
+    <a href="GameObjectCreator.js.html">gameobjects/GameObjectCreator.js</a>, <a href="GameObjectCreator.js.html#sunlight-1-line-83">line 83</a>
     </dt>
     
 
@@ -3520,7 +3493,7 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
             
 <dt>
     <h4 class="name "
-        id="image"><span class="type-signature"></span>image<span class="signature">(x, y, key, <span class="optional">frame</span>)</span><span class="type-signature"> &rarr; {<a href="Phaser.Sprite.html">Phaser.Sprite</a>}</span></h4>
+        id="image"><span class="type-signature"></span>image<span class="signature">(x, y, key, <span class="optional">frame</span>)</span><span class="type-signature"> &rarr; {<a href="Phaser.Image.html">Phaser.Image</a>}</span></h4>
     
     
 </dt>
@@ -3529,7 +3502,8 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
 
     
     <div class="description">
-        <p>Create a new <code>Image</code> object. An Image is a light-weight object you can use to display anything that doesn't need physics or animation.
+        <p>Create a new Image object.</p>
+<p>An Image is a light-weight object you can use to display anything that doesn't need physics or animation.
 It can still rotate, scale, crop and receive input events. This makes it perfect for logos, backgrounds, simple buttons and other non-Sprite graphics.</p>
     </div>
     
@@ -3711,7 +3685,7 @@ It can still rotate, scale, crop and receive input events. This makes it perfect
     
         <div class="returns-type">
         
-<span class="param-type"><a href="Phaser.Sprite.html">Phaser.Sprite</a></span>
+<span class="param-type"><a href="Phaser.Image.html">Phaser.Image</a></span>
 
  -
         </div>
@@ -3747,7 +3721,7 @@ It can still rotate, scale, crop and receive input events. This makes it perfect
 
     
     <dt class="tag-source">Source -
-    <a href="GameObjectCreator.js.html">gameobjects/GameObjectCreator.js</a>, <a href="GameObjectCreator.js.html#sunlight-1-line-31">line 31</a>
+    <a href="GameObjectCreator.js.html">gameobjects/GameObjectCreator.js</a>, <a href="GameObjectCreator.js.html#sunlight-1-line-33">line 33</a>
     </dt>
     
 
@@ -4023,7 +3997,7 @@ It can still rotate, scale, crop and receive input events. This makes it perfect
 
     
     <dt class="tag-source">Source -
-    <a href="GameObjectCreator.js.html">gameobjects/GameObjectCreator.js</a>, <a href="GameObjectCreator.js.html#sunlight-1-line-324">line 324</a>
+    <a href="GameObjectCreator.js.html">gameobjects/GameObjectCreator.js</a>, <a href="GameObjectCreator.js.html#sunlight-1-line-336">line 336</a>
     </dt>
     
 
@@ -4059,7 +4033,8 @@ It can still rotate, scale, crop and receive input events. This makes it perfect
 
     
     <div class="description">
-        <p>Create a new RetroFont object to be used as a texture for an Image or Sprite and optionally add it to the Cache.
+        <p>Create a new RetroFont object.</p>
+<p>A RetroFont can be used as a texture for an Image or Sprite and optionally add it to the Cache.
 A RetroFont uses a bitmap which contains fixed with characters for the font set. You use character spacing to define the set.
 If you need variable width character support then use a BitmapText object instead. The main difference between a RetroFont and a BitmapText
 is that a RetroFont creates a single texture that you can apply to a game object, where-as a BitmapText creates one Sprite object per letter of text.
@@ -4479,7 +4454,7 @@ i.e. if you need each Image to have different text in it, then you need to creat
 
     
     <dt class="tag-source">Source -
-    <a href="GameObjectCreator.js.html">gameobjects/GameObjectCreator.js</a>, <a href="GameObjectCreator.js.html#sunlight-1-line-261">line 261</a>
+    <a href="GameObjectCreator.js.html">gameobjects/GameObjectCreator.js</a>, <a href="GameObjectCreator.js.html#sunlight-1-line-269">line 269</a>
     </dt>
     
 
@@ -4745,7 +4720,7 @@ i.e. if you need each Image to have different text in it, then you need to creat
 
     
     <dt class="tag-source">Source -
-    <a href="GameObjectCreator.js.html">gameobjects/GameObjectCreator.js</a>, <a href="GameObjectCreator.js.html#sunlight-1-line-175">line 175</a>
+    <a href="GameObjectCreator.js.html">gameobjects/GameObjectCreator.js</a>, <a href="GameObjectCreator.js.html#sunlight-1-line-181">line 181</a>
     </dt>
     
 
@@ -5017,7 +4992,7 @@ i.e. if you need each Image to have different text in it, then you need to creat
 
     
     <dt class="tag-source">Source -
-    <a href="GameObjectCreator.js.html">gameobjects/GameObjectCreator.js</a>, <a href="GameObjectCreator.js.html#sunlight-1-line-141">line 141</a>
+    <a href="GameObjectCreator.js.html">gameobjects/GameObjectCreator.js</a>, <a href="GameObjectCreator.js.html#sunlight-1-line-147">line 147</a>
     </dt>
     
 
@@ -5270,7 +5245,7 @@ i.e. if you need each Image to have different text in it, then you need to creat
 
     
     <dt class="tag-source">Source -
-    <a href="GameObjectCreator.js.html">gameobjects/GameObjectCreator.js</a>, <a href="GameObjectCreator.js.html#sunlight-1-line-48">line 48</a>
+    <a href="GameObjectCreator.js.html">gameobjects/GameObjectCreator.js</a>, <a href="GameObjectCreator.js.html#sunlight-1-line-52">line 52</a>
     </dt>
     
 
@@ -5297,7 +5272,7 @@ i.e. if you need each Image to have different text in it, then you need to creat
             
 <dt>
     <h4 class="name "
-        id="spriteBatch"><span class="type-signature"></span>spriteBatch<span class="signature">(parent, <span class="optional">name</span>, <span class="optional">addToStage</span>)</span><span class="type-signature"> &rarr; {<a href="Phaser.Group.html">Phaser.Group</a>}</span></h4>
+        id="spriteBatch"><span class="type-signature"></span>spriteBatch<span class="signature">(parent, <span class="optional">name</span>, <span class="optional">addToStage</span>)</span><span class="type-signature"> &rarr; {<a href="Phaser.SpriteBatch.html">Phaser.SpriteBatch</a>}</span></h4>
     
     
 </dt>
@@ -5306,7 +5281,7 @@ i.e. if you need each Image to have different text in it, then you need to creat
 
     
     <div class="description">
-        <p>A Group is a container for display objects that allows for fast pooling, recycling and collision checks.</p>
+        <p>Create a new SpriteBatch.</p>
     </div>
     
 
@@ -5467,7 +5442,7 @@ i.e. if you need each Image to have different text in it, then you need to creat
     
         <div class="returns-type">
         
-<span class="param-type"><a href="Phaser.Group.html">Phaser.Group</a></span>
+<span class="param-type"><a href="Phaser.SpriteBatch.html">Phaser.SpriteBatch</a></span>
 
  -
         </div>
@@ -5503,7 +5478,7 @@ i.e. if you need each Image to have different text in it, then you need to creat
 
     
     <dt class="tag-source">Source -
-    <a href="GameObjectCreator.js.html">gameobjects/GameObjectCreator.js</a>, <a href="GameObjectCreator.js.html#sunlight-1-line-94">line 94</a>
+    <a href="GameObjectCreator.js.html">gameobjects/GameObjectCreator.js</a>, <a href="GameObjectCreator.js.html#sunlight-1-line-100">line 100</a>
     </dt>
     
 
@@ -5711,7 +5686,7 @@ i.e. if you need each Image to have different text in it, then you need to creat
 
     
     <dt class="tag-source">Source -
-    <a href="GameObjectCreator.js.html">gameobjects/GameObjectCreator.js</a>, <a href="GameObjectCreator.js.html#sunlight-1-line-193">line 193</a>
+    <a href="GameObjectCreator.js.html">gameobjects/GameObjectCreator.js</a>, <a href="GameObjectCreator.js.html#sunlight-1-line-199">line 199</a>
     </dt>
     
 
@@ -5747,7 +5722,8 @@ i.e. if you need each Image to have different text in it, then you need to creat
 
     
     <div class="description">
-        <p>Creates a new Phaser.Tilemap object. The map can either be populated with data from a Tiled JSON file or from a CSV file.
+        <p>Creates a new Phaser.Tilemap object.</p>
+<p>The map can either be populated with data from a Tiled JSON file or from a CSV file.
 To do this pass the Cache key as the first parameter. When using Tiled data you need only provide the key.
 When using CSV data you must provide the key and the tileWidth and tileHeight parameters.
 If creating a blank tilemap to be populated later, you can either specify no parameters at all and then use <code>Tilemap.create</code> or pass the map and tile dimensions here.
@@ -6008,7 +5984,7 @@ Note that all Tilemaps use a base tile size to calculate dimensions from, but th
 
     
     <dt class="tag-source">Source -
-    <a href="GameObjectCreator.js.html">gameobjects/GameObjectCreator.js</a>, <a href="GameObjectCreator.js.html#sunlight-1-line-304">line 304</a>
+    <a href="GameObjectCreator.js.html">gameobjects/GameObjectCreator.js</a>, <a href="GameObjectCreator.js.html#sunlight-1-line-314">line 314</a>
     </dt>
     
 
@@ -6274,7 +6250,7 @@ Note that all Tilemaps use a base tile size to calculate dimensions from, but th
 
     
     <dt class="tag-source">Source -
-    <a href="GameObjectCreator.js.html">gameobjects/GameObjectCreator.js</a>, <a href="GameObjectCreator.js.html#sunlight-1-line-157">line 157</a>
+    <a href="GameObjectCreator.js.html">gameobjects/GameObjectCreator.js</a>, <a href="GameObjectCreator.js.html#sunlight-1-line-163">line 163</a>
     </dt>
     
 
@@ -6310,7 +6286,8 @@ Note that all Tilemaps use a base tile size to calculate dimensions from, but th
 
     
     <div class="description">
-        <p>Create a tween object for a specific object. The object can be any JavaScript object or Phaser object such as Sprite.</p>
+        <p>Create a tween object for a specific object.</p>
+<p>The object can be any JavaScript object or Phaser object such as Sprite.</p>
     </div>
     
 
@@ -6413,7 +6390,7 @@ Note that all Tilemaps use a base tile size to calculate dimensions from, but th
 
     
     <dt class="tag-source">Source -
-    <a href="GameObjectCreator.js.html">gameobjects/GameObjectCreator.js</a>, <a href="GameObjectCreator.js.html#sunlight-1-line-64">line 64</a>
+    <a href="GameObjectCreator.js.html">gameobjects/GameObjectCreator.js</a>, <a href="GameObjectCreator.js.html#sunlight-1-line-68">line 68</a>
     </dt>
     
 
@@ -6462,7 +6439,7 @@ Note that all Tilemaps use a base tile size to calculate dimensions from, but th
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Tue Nov 25 2014 00:17:33 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Tue Jan 06 2015 06:31:59 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

@@ -236,7 +236,15 @@ Phaser.SoundManager.prototype = {
             this._unlockSource = this.context.createBufferSource();
             this._unlockSource.buffer = buffer;
             this._unlockSource.connect(this.context.destination);
-            this._unlockSource.noteOn(0);
+
+            if (typeof this._unlockSource.start === 'undefined')
+            {
+                this._unlockSource.noteOn(0);
+            }
+            else
+            {
+                this._unlockSource.start(0);
+            }
         }
 
     },

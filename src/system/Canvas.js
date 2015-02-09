@@ -18,7 +18,7 @@ Phaser.Canvas = {
     * @method Phaser.Canvas.create
     * @param {number} [width=256] - The width of the canvas element.
     * @param {number} [height=256] - The height of the canvas element..
-    * @param {string} [id=''] - If given this will be set as the ID of the canvas element, otherwise no ID will be set.
+    * @param {string} [id=(none)] - If specified, and not the empty string, this will be set as the ID of the canvas element. Otherwise no ID will be set.
     * @return {HTMLCanvasElement} The newly created canvas element.
     */
     create: function (width, height, id) {
@@ -65,7 +65,7 @@ Phaser.Canvas = {
     *
     * @method Phaser.Canvas.setTouchAction
     * @param {HTMLCanvasElement} canvas - The canvas to set the touch action on.
-    * @param {String} [value] - The touch action to set. Defaults to 'none'.
+    * @param {string} [value] - The touch action to set. Defaults to 'none'.
     * @return {HTMLCanvasElement} The source canvas.
     */
     setTouchAction: function (canvas, value) {
@@ -85,7 +85,7 @@ Phaser.Canvas = {
     *
     * @method Phaser.Canvas.setUserSelect
     * @param {HTMLCanvasElement} canvas - The canvas to set the touch action on.
-    * @param {String} [value] - The touch action to set. Defaults to 'none'.
+    * @param {string} [value] - The touch action to set. Defaults to 'none'.
     * @return {HTMLCanvasElement} The source canvas.
     */
     setUserSelect: function (canvas, value) {

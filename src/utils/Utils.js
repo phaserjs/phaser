@@ -102,11 +102,11 @@ Phaser.Utils = {
     },
 
     /**
-    * Transposes the elements of the given Array.
+    * Transposes the elements of the given matrix (array of arrays).
     *
     * @method Phaser.Utils.transposeArray
-    * @param {array} array - The array to transpose.
-    * @return {array} The transposed array.
+    * @param {Array<any[]>} array - The matrix to transpose.
+    * @return {Array<any[]>} A new transposed matrix
     * @deprecated 2.2.0 - Use Phaser.ArrayUtils.transposeMatrix
     */
     transposeArray: function (array) {
@@ -114,13 +114,14 @@ Phaser.Utils = {
     },
 
     /**
-    * Rotates the given array.
-    * Based on the routine from http://jsfiddle.net/MrPolywhirl/NH42z/
+    * Rotates the given matrix (array of arrays).
+    *
+    * Based on the routine from {@link http://jsfiddle.net/MrPolywhirl/NH42z/}.
     *
     * @method Phaser.Utils.rotateArray
-    * @param {array} matrix - The array to rotate.
-    * @param {number|string} direction - The amount to rotate. Either a number: 90, -90, 270, -270, 180 or a string: 'rotateLeft', 'rotateRight' or 'rotate180'
-    * @return {array} The rotated array
+    * @param {Array<any[]>} matrix - The array to rotate; this matrix _may_ be altered.
+    * @param {number|string} direction - The amount to rotate: the roation in degrees (90, -90, 270, -270, 180) or a string command ('rotateLeft', 'rotateRight' or 'rotate180').
+    * @return {Array<any[]>} The rotated matrix. The source matrix should be discarded for the returned matrix.
     * @deprecated 2.2.0 - Use Phaser.ArrayUtils.rotateMatrix
     */
     rotateArray: function (matrix, direction) {
@@ -131,8 +132,8 @@ Phaser.Utils = {
     * A standard Fisher-Yates Array shuffle implementation.
     *
     * @method Phaser.Utils.shuffle
-    * @param {array} array - The array to shuffle.
-    * @return {array} The shuffled array.
+    * @param {any[]} array - The array to shuffle.
+    * @return {any[]} The shuffled array.
     * @deprecated 2.2.0 - User Phaser.ArrayUtils.shuffle
     */
     shuffle: function (array) {

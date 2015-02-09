@@ -8,6 +8,7 @@
 * A TilemapLayer is a Phaser.Image/Sprite that renders a specific TileLayer of a Tilemap.
 *
 * Since a TilemapLayer is a Sprite it can be moved around the display, added to other groups or display objects, etc.
+*
 * By default TilemapLayers have fixedToCamera set to `true`. Changing this will break Camera follow and scrolling behaviour.
 *
 * @class Phaser.TilemapLayer
@@ -61,7 +62,7 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
     * @property {HTMLCanvasElement} canvas
     * @protected
     */
-    this.canvas = Phaser.Canvas.create(width, height, '', true);
+    this.canvas = Phaser.Canvas.create(width, height);
 
     /**
     * The 2d context of the canvas.
@@ -124,15 +125,20 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
     /**
     * Settings that control standard (non-diagnostic) rendering.
     *
-    * @public
-    * @property {boolean} enableScrollDelta - When enabled, only new newly exposed areas of the layer are redraw after scrolling. This can greatly improve scrolling rendering performance, especially when there are many small tiles.
+    * @property {boolean} [enableScrollDelta=true] - Delta scroll rendering only draws tiles/edges as them come into view.
+    *     This can greatly improve scrolling rendering performance, especially when there are many small tiles.
+    *     It should only be disabled in rare cases.
+    *
+    * @property {?DOMCanvasElement} [copyCanvas=(auto)] - [Internal] If set, force using a separate (shared) copy canvas.
+    *     Using a canvas bitblt/copy when the source and destinations region overlap produces unexpected behavior
+    *     in some browsers, notably Safari. 
+    *
     * @default
     */
     this.renderSettings = {
-
         enableScrollDelta: true,
-        overdrawRatio: 0.20
-
+        overdrawRatio: 0.20,
+        copyCanvas: null
     };
 
     /**
@@ -257,6 +263,35 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
     */
     this._results = [];
 
+    if (!game.device.canvasBitBltShift)
+    {
+        this.renderSettings.copyCanvas = Phaser.TilemapLayer.ensureSharedCopyCanvas();
+    }
+
+};
+
+/**
+* The shared double-copy canvas, created as needed.
+*
+* @private
+* @static
+*/
+Phaser.TilemapLayer.sharedCopyCanvas = null;
+
+/**
+* Create if needed (and return) a shared copy canvas that is shared across all TilemapLayers.
+*
+* Code that uses the canvas is responsible to ensure the dimensions and save/restore state as appropriate.
+*
+* @protected
+* @static
+*/
+Phaser.TilemapLayer.ensureSharedCopyCanvas = function () {
+    if (!this.sharedCopyCanvas)
+    {
+        this.sharedCopyCanvas = Phaser.Canvas.create(2, 2);
+    }
+    return this.sharedCopyCanvas;
 };
 
 Phaser.TilemapLayer.prototype = Object.create(Phaser.Image.prototype);
@@ -534,9 +569,6 @@ Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides
     x = this._fixX(x);
     y = this._fixY(y);
 
-    var tw = this._mc.tileWidth;
-    var th = this._mc.tileHeight;
-
     //  Convert the pixel values into tile coordinates
     var tx = Math.floor(x / this._mc.cw);
     var ty = Math.floor(y / this._mc.ch);
@@ -564,7 +596,7 @@ Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides
         }
     }
 
-    return this._results;
+    return this._results.slice();
 
 };
 
@@ -590,7 +622,8 @@ Object.defineProperty(Phaser.TilemapLayer.prototype, "wrap", {
 });
 
 /**
-* Returns the appropriate tileset for the index, updating the internal cache as required. This should only be called if `tilesets[index]` evaluates to undefined.
+* Returns the appropriate tileset for the index, updating the internal cache as required.
+* This should only be called if `tilesets[index]` evaluates to undefined.
 *
 * @method Phaser.TilemapLayer#resolveTileset
 * @private
@@ -624,7 +657,9 @@ Phaser.TilemapLayer.prototype.resolveTileset = function (tileIndex)
 };
 
 /**
-* The TilemapLayer caches tileset look-ups. Call this method of clear the cache if tilesets have been added or updated after the layer has been rendered.
+* The TilemapLayer caches tileset look-ups.
+*
+* Call this method of clear the cache if tilesets have been added or updated after the layer has been rendered.
 *
 * @method Phaser.TilemapLayer#resetTilesetCache
 * @public
@@ -640,7 +675,9 @@ Phaser.TilemapLayer.prototype.resetTilesetCache = function ()
 };
 
 /**
-* Shifts the contents of the canvas - does extra math so that different browsers agree on the result. The specified (x/y) will be shifted to (0,0) after the copy. The newly exposed canvas area will need to be filled in. This method is problematic for transparent tiles.
+* Shifts the contents of the canvas - does extra math so that different browsers agree on the result.
+*
+* The specified (x/y) will be shifted to (0,0) after the copy and the newly exposed canvas area will need to be filled in.
 *
 * @method Phaser.TilemapLayer#shiftCanvas
 * @private
@@ -673,10 +710,34 @@ Phaser.TilemapLayer.prototype.shiftCanvas = function (context, x, y)
         sy = 0;
     }
 
-    context.save();
-    context.globalCompositeOperation = 'copy';
-    context.drawImage(canvas, dx, dy, copyW, copyH, sx, sy, copyW, copyH);
-    context.restore();
+    var copyCanvas = this.renderSettings.copyCanvas;
+    if (copyCanvas)
+    {
+        // Use a second copy buffer, without slice support, for Safari .. again.
+        // Ensure copy canvas is large enough
+        if (copyCanvas.width < copyW || copyCanvas.height < copyH)
+        {
+            copyCanvas.width = copyW;
+            copyCanvas.height = copyH;
+        }
+
+        var copyContext = copyCanvas.getContext('2d');
+        copyContext.clearRect(0, 0, copyW, copyH);
+        copyContext.drawImage(canvas, dx, dy, copyW, copyH, 0, 0, copyW, copyH);
+        // clear allows default 'source-over' semantics
+        context.clearRect(sx, sy, copyW, copyH);
+        context.drawImage(copyCanvas, 0, 0, copyW, copyH, sx, sy, copyW, copyH);
+    }
+    else
+    {
+        // Avoids a second copy but flickers in Safari / Safari Mobile
+        // Ref. https://github.com/photonstorm/phaser/issues/1439
+        context.save();
+        context.globalCompositeOperation = 'copy';
+        context.drawImage(canvas, dx, dy, copyW, copyH, sx, sy, copyW, copyH);
+        context.restore();
+    }
+    
 };
 
 /**
@@ -772,7 +833,21 @@ Phaser.TilemapLayer.prototype.renderRegion = function (scrollX, scrollY, left, t
 
             if (set)
             {
-                set.draw(context, tx, ty, index);
+                if (tile.rotation || tile.flipped)
+                {
+                    context.save();
+                    context.translate(tx + tile.centerX, ty + tile.centerY);
+                    context.rotate(tile.rotation);
+                    if (tile.flipped)
+                    {
+                        context.scale(-1, 1);
+                    }
+                    set.draw(context, -tile.centerX, -tile.centerY, index);
+                    context.restore();
+                }
+                else{
+                    set.draw(context, tx, ty, index);
+                }
             }
             else if (this.debugSettings.missingImageFill)
             {

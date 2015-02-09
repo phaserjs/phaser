@@ -124,50 +124,6 @@
 							<a href="Phaser.Easing.html">Easing</a>
 						</li>
 						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Back.html">Back</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Bounce.html">Bounce</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Circular.html">Circular</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Cubic.html">Cubic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Elastic.html">Elastic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Exponential.html">Exponential</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Linear.html">Linear</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Quadratic.html">Quadratic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Quartic.html">Quartic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Quintic.html">Quintic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Sinusoidal.html">Sinusoidal</a>
-						</li>
-						
 						<li class="class-depth-1">
 							<a href="Phaser.Ellipse.html">Ellipse</a>
 						</li>
@@ -876,6 +832,7 @@
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Core<b class="caret"></b></a>
 					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="Phaser.Game.html">Game</a></li>
 						<li class="class-depth-1"><a href="Phaser.Group.html">Group</a></li>
 						<li class="class-depth-1"><a href="Phaser.World.html">World</a></li>
 						<li class="class-depth-1"><a href="Phaser.Loader.html">Loader</a></li>
@@ -884,7 +841,7 @@
 						<li class="class-depth-1"><a href="Phaser.StateManager.html">State Manager</a></li>
 						<li class="class-depth-1"><a href="Phaser.TweenManager.html">Tween Manager</a></li>
 						<li class="class-depth-1"><a href="Phaser.SoundManager.html">Sound Manager</a></li>
-						<li class="class-depth-1"><a href="Phaser.InputManager.html">Input Manager</a></li>
+						<li class="class-depth-1"><a href="Phaser.Input.html">Input Manager</a></li>
 						<li class="class-depth-1"><a href="Phaser.ScaleManager.html">Scale Manager</a></li>
 					</ul>
 				</li>
@@ -897,7 +854,8 @@
 						<li class="class-depth-1"><a href="Phaser.Sprite.html">Sprite</a></li>
 						<li class="class-depth-1"><a href="Phaser.Image.html">Image</a></li>
 						<li class="class-depth-1"><a href="Phaser.Sound.html">Sound</a></li>
-						<li class="class-depth-1"><a href="Phaser.Emitter.html">Emitter</a></li>
+						<li class="class-depth-1"><a href="Phaser.Particles.Arcade.Emitter.html">Particle Emitter</a></li>
+						<li class="class-depth-1"><a href="Phaser.Particle.html">Particle</a></li>
 						<li class="class-depth-1"><a href="Phaser.Text.html">Text</a></li>
 						<li class="class-depth-1"><a href="Phaser.Tween.html">Tween</a></li>
 						<li class="class-depth-1"><a href="Phaser.BitmapText.html">BitmapText</a></li>
@@ -954,6 +912,7 @@
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Community<b class="caret"></b></a>
 					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="https://leanpub.com/u/photonstorm">Phaser Books</a></li>
 						<li class="class-depth-1"><a href="https://github.com/photonstorm/phaser">Phaser Github</a></li>
 						<li class="class-depth-1"><a href="http://examples.phaser.io">Phaser Examples</a></li>
 						<li class="class-depth-1"><a href="https://github.com/photonstorm/phaser-plugins">Phaser Plugins</a></li>
@@ -991,7 +950,11 @@
 
 /**
 * This is the core internal game clock.
-* It manages the elapsed time and calculation of elapsed values, used for game object motion and tweens.
+*
+* It manages the elapsed time and calculation of elapsed values, used for game object motion and tweens,
+* and also handlers the standard Timer pool.
+*
+* To create a general timed event, use the master {@link Phaser.Timer} accessible through {@link Phaser.Time.events events}.
 *
 * @class Phaser.Time
 * @constructor
@@ -1001,138 +964,211 @@ Phaser.Time = function (game) {
 
     /**
     * @property {Phaser.Game} game - Local reference to game.
+    * @protected
     */
     this.game = game;
 
     /**
-    * @property {number} time - This always contains the Date.now value.
+    * The `Date.now()` value when the time was last updated.
+    * @property {integer} time
     * @protected
     */
     this.time = 0;
 
     /**
-    * @property {number} prevTime - The time the previous update occurred.
+    * The `now` when the previous update occurred.
+    * @property {number} prevTime
     * @protected
     */
     this.prevTime = 0;
 
     /**
-    * @property {number} now - The high resolution RAF timer value (if RAF is available) or Date.now if using setTimeout.
+    * An increasing value representing cumulative milliseconds since an undisclosed epoch.
+    *
+    * While this value is in milliseconds and can be used to compute time deltas,
+    * it must must _not_ be used with `Date.now()` as it may not use the same epoch / starting reference. 
+    *
+    * The source may either be from a high-res source (eg. if RAF is available) or the standard Date.now;
+    * the value can only be relied upon within a particular game instance.
+    *
+    * @property {number} now
     * @protected
     */
     this.now = 0;
 
     /**
-    * @property {number} elapsed - Elapsed time since the last frame. In ms if running under setTimeout or an integer if using RAF.
+    * Elapsed time since the last time update, in milliseconds, based on `now`.
+    *
+    * This value _may_ include time that the game is paused/inactive.
+    *
+    * _Note:_ This is updated only once per game loop - even if multiple logic update steps are done.
+    * Use {@link Phaser.Timer#physicsTime physicsTime} as a basis of game/logic calculations instead.
+    *
+    * @property {number} elapsed
     * @see Phaser.Time.time
     * @protected
     */
     this.elapsed = 0;
 
     /**
-    * @property {number} elapsedMS - The time in ms since the last update. Will vary dramatically based on system performance, do not use for physics calculations!
+    * The time in ms since the last time update, in milliseconds, based on `time`.
+    *
+    * This value is corrected for game pauses and will be "about zero" after a game is resumed.
+    *
+    * _Note:_ This is updated once per game loop - even if multiple logic update steps are done.
+    * Use {@link Phaser.Timer#physicsTime physicsTime} as a basis of game/logic calculations instead.
+    *
+    * @property {integer} elapsedMS 
     * @protected
     */
     this.elapsedMS = 0;
 
     /**
-    * @property {number} pausedTime - Records how long the game has been paused for. Is reset each time the game pauses.
-    * @protected
+    * The physics update delta, in fractional seconds.
+    *    
+    * This should be used as an applicable multiplier by all logic update steps (eg. `preUpdate/postUpdate/update`)
+    * to ensure consistent game timing. Game/logic timing can drift from real-world time if the system
+    * is unable to consistently maintain the desired FPS.
+    *
+    * With fixed-step updates this is normally equivalent to `1.0 / desiredFps`.
+    *
+    * @property {number} physicsElapsed
     */
-    this.pausedTime = 0;
+    this.physicsElapsed = 0;
 
     /**
-    * @property {number} desiredFps - The desired frame rate of your game.
+    * The physics update delta, in milliseconds - equivalent to `physicsElapsed * 1000`.
+    *
+    * @property {number} physicsElapsedMS
+    */
+    this.physicsElapsedMS = 0;
+
+    /**
+    * The desired frame rate of the game.
+    *
+    * This is used is used to calculate the physic/logic multiplier and how to apply catch-up logic updates.
+    *
+    * @property {number} desiredFps
     * @default
     */
     this.desiredFps = 60;
 
     /**
-    * @property {number} suggestedFps = The suggested frame rate for your game, based on an averaged real frame rate.
-    * NOTE: Not available until after a few frames have passed, it is recommended to use this after a few seconds (eg. after the menus)
+    * The suggested frame rate for your game, based on an averaged real frame rate.
+    *
+    * _Note:_ This is not available until after a few frames have passed; use it after a few seconds (eg. after the menus)
+    *
+    * @property {number} suggestedFps
     * @default
     */
     this.suggestedFps = null;
 
     /**
-    * @property {number} slowMotion = 1.0 - Scaling factor to make the game move smoothly in slow motion (1.0 = normal speed, 2.0 = half speed)
+    * Scaling factor to make the game move smoothly in slow motion
+    * - 1.0 = normal speed
+    * - 2.0 = half speed
+    * @property {number} slowMotion
     * @default
     */
     this.slowMotion = 1.0;
 
     /**
-    * @property {boolean} advancedTiming - If true Phaser.Time will perform advanced profiling including the fps rate, fps min/max and msMin and msMax.
+    * If true then advanced profiling, including the fps rate, fps min/max and msMin/msMax are updated.
+    * @property {boolean} advancedTiming
     * @default
     */
     this.advancedTiming = false;
 
     /**
-    * @property {number} fps - Frames per second. Only calculated if Time.advancedTiming is true.
-    * @protected
+    * Advanced timing result: The number of render frames record in the last second.
+    *
+    * Only calculated if {@link Phaser.Time#advancedTiming advancedTiming} is enabled.
+    * @property {integer} frames
+    * @readonly
+    */
+    this.frames = 0;
+
+    /**
+    * Advanced timing result: Frames per second.
+    *
+    * Only calculated if {@link Phaser.Time#advancedTiming advancedTiming} is enabled.
+    * @property {number} fps
+    * @readonly
     */
     this.fps = 0;
 
     /**
-    * @property {number} fpsMin - The lowest rate the fps has dropped to. Only calculated if Time.advancedTiming is true.
+    * Advanced timing result: The lowest rate the fps has dropped to.
+    *
+    * Only calculated if {@link Phaser.Time#advancedTiming advancedTiming} is enabled.
+    * This value can be manually reset.
+    * @property {number} fpsMin
     */
     this.fpsMin = 1000;
 
     /**
-    * @property {number} fpsMax - The highest rate the fps has reached (usually no higher than 60fps). Only calculated if Time.advancedTiming is true.
+    * Advanced timing result: The highest rate the fps has reached (usually no higher than 60fps).
+    *
+    * Only calculated if {@link Phaser.Time#advancedTiming advancedTiming} is enabled.
+    * This value can be manually reset.
+    * @property {number} fpsMax
     */
     this.fpsMax = 0;
 
     /**
-    * @property {number} msMin - The minimum amount of time the game has taken between two frames. Only calculated if Time.advancedTiming is true.
+    * Advanced timing result: The minimum amount of time the game has taken between consecutive frames.
+    *
+    * Only calculated if {@link Phaser.Time#advancedTiming advancedTiming} is enabled.
+    * This value can be manually reset.
+    * @property {number} msMin
     * @default
     */
     this.msMin = 1000;
 
     /**
-    * @property {number} msMax - The maximum amount of time the game has taken between two frames. Only calculated if Time.advancedTiming is true.
+    * Advanced timing result: The maximum amount of time the game has taken between consecutive frames.
+    *
+    * Only calculated if {@link Phaser.Time#advancedTiming advancedTiming} is enabled.
+    * This value can be manually reset.
+    * @property {number} msMax
     */
     this.msMax = 0;
 
     /**
-    * @property {number} physicsElapsed - The physics motion value as used by Arcade Physics. Equivalent to 1.0 / Time.desiredFps.
-    */
-    this.physicsElapsed = 0;
-
-    /**
-    * @property {number} frames - The number of frames record in the last second. Only calculated if Time.advancedTiming is true.
-    */
-    this.frames = 0;
-
-    /**
-    * @property {number} pauseDuration - Records how long the game was paused for in miliseconds.
+    * Records how long the game was last paused, in miliseconds.
+    * (This is not updated until the game is resumed.)
+    * @property {number} pauseDuration
     */
     this.pauseDuration = 0;
 
     /**
     * @property {number} timeToCall - The value that setTimeout needs to work out when to next update
+    * @protected
     */
     this.timeToCall = 0;
 
     /**
     * @property {number} timeExpected - The time when the next call is expected when using setTimer to control the update loop
+    * @protected
     */
     this.timeExpected = 0;
 
     /**
-    * @property {Phaser.Timer} events - This is a Phaser.Timer object bound to the master clock to which you can add timed events.
+    * A {@link Phaser.Timer} object bound to the master clock (this Time object) which events can be added to.
+    * @property {Phaser.Timer} events
     */
     this.events = new Phaser.Timer(this.game, false);
 
     /**
-     * @property {number} _frameCount - count the number of calls to time.update since the last suggestedFps was calculated
-     * @private
-     */
+    * @property {number} _frameCount - count the number of calls to time.update since the last suggestedFps was calculated
+    * @private
+    */
     this._frameCount = 0;
 
     /**
-     * @property {number} _elapsedAcumulator - sum of the elapsed time since the last suggestedFps was calculated
-     * @private
-     */
+    * @property {number} _elapsedAcumulator - sum of the elapsed time since the last suggestedFps was calculated
+    * @private
+    */
     this._elapsedAccumulator = 0;
 
     /**
@@ -1160,22 +1196,10 @@ Phaser.Time = function (game) {
     this._justResumed = false;
 
     /**
-    * @property {array} _timers - Internal store of Phaser.Timer objects.
+    * @property {Phaser.Timer[]} _timers - Internal store of Phaser.Timer objects.
     * @private
     */
     this._timers = [];
-
-    /**
-    * @property {number} _len - Temp. array length variable.
-    * @private
-    */
-    this._len = 0;
-
-    /**
-    * @property {number} _i - Temp. array counter variable.
-    * @private
-    */
-    this._i = 0;
 
 };
 
@@ -1230,7 +1254,7 @@ Phaser.Time.prototype = {
     },
 
     /**
-    * Remove all Timer objects, regardless of their state. Also clears all Timers from the Time.events timer.
+    * Remove all Timer objects, regardless of their state and clears all Timers from the {@link Phaser.Time#events events} timer.
     *
     * @method Phaser.Time#removeAll
     */
@@ -1252,18 +1276,18 @@ Phaser.Time.prototype = {
     *
     * @method Phaser.Time#update
     * @protected
-    * @param {number} time - The current timestamp.
+    * @param {number} time - The current relative timestamp; see {@link Phaser.Time#now now}.
     */
     update: function (time) {
 
         //  Set to the old Date.now value
-        this.elapsedMS = this.time;
+        var previousDateNow = this.time;
 
         // this.time always holds Date.now, this.now may hold the RAF high resolution time value if RAF is available (otherwise it also holds Date.now)
         this.time = Date.now();
 
         //  Adjust accorindlgy.
-        this.elapsedMS = this.time - this.elapsedMS;
+        this.elapsedMS = this.time - previousDateNow;
 
         // 'now' is currently still holding the time of the last call, move it into prevTime
         this.prevTime = this.now;
@@ -1296,6 +1320,8 @@ Phaser.Time.prototype = {
         //  Set the physics elapsed time... this will always be 1 / this.desiredFps because we're using fixed time steps in game.update now
         this.physicsElapsed = 1 / this.desiredFps;
 
+        this.physicsElapsedMS = this.physicsElapsed * 1000;
+
         if (this.advancedTiming)
         {
             this.msMin = Math.min(this.msMin, this.elapsed);
@@ -1320,20 +1346,20 @@ Phaser.Time.prototype = {
             this.events.update(this.time);
 
             //  Any game level timers
-            this._i = 0;
-            this._len = this._timers.length;
+            var i = 0;
+            var len = this._timers.length;
 
-            while (this._i &lt; this._len)
+            while (i &lt; len)
             {
-                if (this._timers[this._i].update(this.time))
+                if (this._timers[i].update(this.time))
                 {
-                    this._i++;
+                    i++;
                 }
                 else
                 {
-                    this._timers.splice(this._i, 1);
-
-                    this._len--;
+                    //  Timer requests to be removed
+                    this._timers.splice(i, 1);
+                    len--;
                 }
             }
         }
@@ -1424,14 +1450,15 @@ Phaser.Time.prototype = {
     */
     reset: function () {
 
-        this._started = this.now;
+        this._started = this.time;
         this.removeAll();
 
     }
 
 };
 
-Phaser.Time.prototype.constructor = Phaser.Time;</pre>
+Phaser.Time.prototype.constructor = Phaser.Time;
+</pre>
         </article>
     </section>
 
@@ -1452,7 +1479,7 @@ Phaser.Time.prototype.constructor = Phaser.Time;</pre>
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Tue Nov 25 2014 00:17:19 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Tue Jan 06 2015 06:31:49 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

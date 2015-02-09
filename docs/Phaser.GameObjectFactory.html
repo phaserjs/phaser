@@ -124,50 +124,6 @@
 							<a href="Phaser.Easing.html">Easing</a>
 						</li>
 						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Back.html">Back</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Bounce.html">Bounce</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Circular.html">Circular</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Cubic.html">Cubic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Elastic.html">Elastic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Exponential.html">Exponential</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Linear.html">Linear</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Quadratic.html">Quadratic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Quartic.html">Quartic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Quintic.html">Quintic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Sinusoidal.html">Sinusoidal</a>
-						</li>
-						
 						<li class="class-depth-1">
 							<a href="Phaser.Ellipse.html">Ellipse</a>
 						</li>
@@ -876,6 +832,7 @@
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Core<b class="caret"></b></a>
 					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="Phaser.Game.html">Game</a></li>
 						<li class="class-depth-1"><a href="Phaser.Group.html">Group</a></li>
 						<li class="class-depth-1"><a href="Phaser.World.html">World</a></li>
 						<li class="class-depth-1"><a href="Phaser.Loader.html">Loader</a></li>
@@ -884,7 +841,7 @@
 						<li class="class-depth-1"><a href="Phaser.StateManager.html">State Manager</a></li>
 						<li class="class-depth-1"><a href="Phaser.TweenManager.html">Tween Manager</a></li>
 						<li class="class-depth-1"><a href="Phaser.SoundManager.html">Sound Manager</a></li>
-						<li class="class-depth-1"><a href="Phaser.InputManager.html">Input Manager</a></li>
+						<li class="class-depth-1"><a href="Phaser.Input.html">Input Manager</a></li>
 						<li class="class-depth-1"><a href="Phaser.ScaleManager.html">Scale Manager</a></li>
 					</ul>
 				</li>
@@ -897,7 +854,8 @@
 						<li class="class-depth-1"><a href="Phaser.Sprite.html">Sprite</a></li>
 						<li class="class-depth-1"><a href="Phaser.Image.html">Image</a></li>
 						<li class="class-depth-1"><a href="Phaser.Sound.html">Sound</a></li>
-						<li class="class-depth-1"><a href="Phaser.Emitter.html">Emitter</a></li>
+						<li class="class-depth-1"><a href="Phaser.Particles.Arcade.Emitter.html">Particle Emitter</a></li>
+						<li class="class-depth-1"><a href="Phaser.Particle.html">Particle</a></li>
 						<li class="class-depth-1"><a href="Phaser.Text.html">Text</a></li>
 						<li class="class-depth-1"><a href="Phaser.Tween.html">Tween</a></li>
 						<li class="class-depth-1"><a href="Phaser.BitmapText.html">BitmapText</a></li>
@@ -954,6 +912,7 @@
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Community<b class="caret"></b></a>
 					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="https://leanpub.com/u/photonstorm">Phaser Books</a></li>
 						<li class="class-depth-1"><a href="https://github.com/photonstorm/phaser">Phaser Github</a></li>
 						<li class="class-depth-1"><a href="http://examples.phaser.io">Phaser Examples</a></li>
 						<li class="class-depth-1"><a href="https://github.com/photonstorm/phaser-plugins">Phaser Plugins</a></li>
@@ -989,8 +948,6 @@
     GameObjectFactory
     </h2>
     
-        <div class="class-description"><p>Phaser.GameObjectFactory</p></div>
-    
 </header>
 
 <article>
@@ -1010,7 +967,9 @@
 
     
     <div class="description">
-        <p>The Game Object Factory is a quick way to create all of the different sorts of core objects that Phaser uses.</p>
+        <p>The GameObjectFactory is a quick way to create mamy common game objects
+using <a href="Phaser.Game.html#add"><code><code>game.add</code></code></a>.</p>
+<p>Created objects are <em>automtically added</em> to the appropriate Manager, World, or manually specified parent Group.</p>
     </div>
     
 
@@ -1093,7 +1052,7 @@
 
     
     <dt class="tag-source">Source -
-    <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-14">line 14</a>
+    <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-17">line 17</a>
     </dt>
     
 
@@ -1136,7 +1095,7 @@
             
 <dt>
     <h4 class="name "
-        id="game"><span class="type-signature"></span>game<span class="type-signature"> :<a href="Phaser.Game.html">Phaser.Game</a></span></h4>
+        id="game"><span class="type-signature">&lt;internal> </span>game<span class="type-signature"> :<a href="Phaser.Game.html">Phaser.Game</a></span></h4>
     
     
 </dt>
@@ -1162,6 +1121,13 @@
     
 
     
+        <dt class="important tag-deprecated">Internal:</dt>
+        <dd class="tag-deprecated"><ul>
+        
+            <li>This member is <em>internal (protected)</em> and may be modified or removed in the future.</li>
+        
+        </ul></dd>
+    
 
     
 
@@ -1173,7 +1139,7 @@
 
     
     <dt class="tag-source">Source -
-    <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-19">line 19</a>
+    <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-23">line 23</a>
     </dt>
     
 
@@ -1192,7 +1158,7 @@
             
 <dt>
     <h4 class="name "
-        id="world"><span class="type-signature"></span>world<span class="type-signature"> :<a href="Phaser.World.html">Phaser.World</a></span></h4>
+        id="world"><span class="type-signature">&lt;internal> </span>world<span class="type-signature"> :<a href="Phaser.World.html">Phaser.World</a></span></h4>
     
     
 </dt>
@@ -1218,6 +1184,13 @@
     
 
     
+        <dt class="important tag-deprecated">Internal:</dt>
+        <dd class="tag-deprecated"><ul>
+        
+            <li>This member is <em>internal (protected)</em> and may be modified or removed in the future.</li>
+        
+        </ul></dd>
+    
 
     
 
@@ -1229,7 +1202,7 @@
 
     
     <dt class="tag-source">Source -
-    <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-24">line 24</a>
+    <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-29">line 29</a>
     </dt>
     
 
@@ -1499,7 +1472,7 @@
 
     
     <dt class="tag-source">Source -
-    <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-150">line 150</a>
+    <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-155">line 155</a>
     </dt>
     
 
@@ -1638,7 +1611,7 @@
 
     
     <dt class="tag-source">Source -
-    <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-182">line 182</a>
+    <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-187">line 187</a>
     </dt>
     
 
@@ -1674,7 +1647,8 @@
 
     
     <div class="description">
-        <p>A BitmapData object which can be manipulated and drawn to like a traditional Canvas object and used to texture Sprites.</p>
+        <p>Create a BitmapData object.</p>
+<p>A BitmapData object can be manipulated and drawn to like a traditional Canvas object and used to texture Sprites.</p>
     </div>
     
 
@@ -1914,7 +1888,7 @@
 
     
     <dt class="tag-source">Source -
-    <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-407">line 407</a>
+    <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-418">line 418</a>
     </dt>
     
 
@@ -2224,7 +2198,7 @@
 
     
     <dt class="tag-source">Source -
-    <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-340">line 340</a>
+    <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-349">line 349</a>
     </dt>
     
 
@@ -2684,7 +2658,7 @@
 
     
     <dt class="tag-source">Source -
-    <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-256">line 256</a>
+    <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-261">line 261</a>
     </dt>
     
 
@@ -2720,7 +2694,8 @@
 
     
     <div class="description">
-        <p>Emitter is a lightweight particle emitter. It can be used for one-time explosions or for
+        <p>Create a new Emitter.</p>
+<p>A particle emitter can be used for one-time explosions or for
 continuous effects like rain and fire. All it really does is launch Particle objects out
 at set intervals, and fixes their positions and velocities accorindgly.</p>
     </div>
@@ -2923,7 +2898,7 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-297">line 297</a>
+    <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-302">line 302</a>
     </dt>
     
 
@@ -2950,7 +2925,7 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
             
 <dt>
     <h4 class="name "
-        id="existing"><span class="type-signature"></span>existing<span class="signature">(object)</span><span class="type-signature"> &rarr; {*}</span></h4>
+        id="existing"><span class="type-signature"></span>existing<span class="signature">(object)</span><span class="type-signature"> &rarr; {any}</span></h4>
     
     
 </dt>
@@ -2999,7 +2974,7 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
             <td class="type">
             
                 
-<span class="param-type">*</span>
+<span class="param-type">any</span>
 
 
             
@@ -3026,7 +3001,7 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
     
         <div class="returns-type">
         
-<span class="param-type">*</span>
+<span class="param-type">any</span>
 
  -
         </div>
@@ -3062,7 +3037,7 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-30">line 30</a>
+    <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-35">line 35</a>
     </dt>
     
 
@@ -3224,7 +3199,7 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-433">line 433</a>
+    <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-446">line 446</a>
     </dt>
     
 
@@ -3437,7 +3412,7 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-280">line 280</a>
+    <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-285">line 285</a>
     </dt>
     
 
@@ -3750,7 +3725,7 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-94">line 94</a>
+    <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-99">line 99</a>
     </dt>
     
 
@@ -4037,7 +4012,7 @@ It can still rotate, scale, crop and receive input events. This makes it perfect
 
     
     <dt class="tag-source">Source -
-    <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-42">line 42</a>
+    <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-47">line 47</a>
     </dt>
     
 
@@ -4313,7 +4288,7 @@ are automatically given a physics body.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-111">line 111</a>
+    <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-116">line 116</a>
     </dt>
     
 
@@ -4349,8 +4324,8 @@ are automatically given a physics body.</p>
 
     
     <div class="description">
-        <p>Add a new Plugin into the PluginManager.
-The Plugin must have 2 properties: game and parent. Plugin.game is set to the game reference the PluginManager uses, and parent is set to the PluginManager.</p>
+        <p>Add a new Plugin into the PluginManager.</p>
+<p>The Plugin must have 2 properties: <code>game</code> and <code>parent</code>. Plugin.game is set to the game reference the PluginManager uses, and parent is set to the PluginManager.</p>
     </div>
     
 
@@ -4499,7 +4474,7 @@ The Plugin must have 2 properties: game and parent. Plugin.game is set to the ga
 
     
     <dt class="tag-source">Source -
-    <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-453">line 453</a>
+    <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-466">line 466</a>
     </dt>
     
 
@@ -4775,7 +4750,7 @@ The Plugin must have 2 properties: game and parent. Plugin.game is set to the ga
 
     
     <dt class="tag-source">Source -
-    <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-381">line 381</a>
+    <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-392">line 392</a>
     </dt>
     
 
@@ -4811,7 +4786,8 @@ The Plugin must have 2 properties: game and parent. Plugin.game is set to the ga
 
     
     <div class="description">
-        <p>Create a new RetroFont object to be used as a texture for an Image or Sprite and optionally add it to the Cache.
+        <p>Create a new RetroFont object.</p>
+<p>A RetroFont can be used as a texture for an Image or Sprite and optionally add it to the Cache.
 A RetroFont uses a bitmap which contains fixed with characters for the font set. You use character spacing to define the set.
 If you need variable width character support then use a BitmapText object instead. The main difference between a RetroFont and a BitmapText
 is that a RetroFont creates a single texture that you can apply to a game object, where-as a BitmapText creates one Sprite object per letter of text.
@@ -5231,7 +5207,7 @@ i.e. if you need each Image to have different text in it, then you need to creat
 
     
     <dt class="tag-source">Source -
-    <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-314">line 314</a>
+    <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-321">line 321</a>
     </dt>
     
 
@@ -5550,7 +5526,7 @@ Example usage: <a href="https://github.com/codevinsky/phaser-rope-demo/blob/mast
 
     
     <dt class="tag-source">Source -
-    <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-216">line 216</a>
+    <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-221">line 221</a>
     </dt>
     
 
@@ -5822,7 +5798,7 @@ Example usage: <a href="https://github.com/codevinsky/phaser-rope-demo/blob/mast
 
     
     <dt class="tag-source">Source -
-    <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-166">line 166</a>
+    <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-171">line 171</a>
     </dt>
     
 
@@ -6108,7 +6084,7 @@ Example usage: <a href="https://github.com/codevinsky/phaser-rope-demo/blob/mast
 
     
     <dt class="tag-source">Source -
-    <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-62">line 62</a>
+    <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-67">line 67</a>
     </dt>
     
 
@@ -6346,7 +6322,7 @@ The speed gains are specifically for WebGL. In Canvas mode you won't see any rea
 
     
     <dt class="tag-source">Source -
-    <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-129">line 129</a>
+    <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-134">line 134</a>
     </dt>
     
 
@@ -6621,7 +6597,7 @@ The speed gains are specifically for WebGL. In Canvas mode you won't see any rea
 
     
     <dt class="tag-source">Source -
-    <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-237">line 237</a>
+    <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-242">line 242</a>
     </dt>
     
 
@@ -6657,7 +6633,8 @@ The speed gains are specifically for WebGL. In Canvas mode you won't see any rea
 
     
     <div class="description">
-        <p>Creates a new Phaser.Tilemap object. The map can either be populated with data from a Tiled JSON file or from a CSV file.
+        <p>Creates a new Phaser.Tilemap object.</p>
+<p>The map can either be populated with data from a Tiled JSON file or from a CSV file.
 To do this pass the Cache key as the first parameter. When using Tiled data you need only provide the key.
 When using CSV data you must provide the key and the tileWidth and tileHeight parameters.
 If creating a blank tilemap to be populated later, you can either specify no parameters at all and then use <code>Tilemap.create</code> or pass the map and tile dimensions here.
@@ -6938,7 +6915,7 @@ Note that all Tilemaps use a base tile size to calculate dimensions from, but th
 
     
     <dt class="tag-source">Source -
-    <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-360">line 360</a>
+    <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-369">line 369</a>
     </dt>
     
 
@@ -7287,7 +7264,7 @@ Note that all Tilemaps use a base tile size to calculate dimensions from, but th
 
     
     <dt class="tag-source">Source -
-    <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-195">line 195</a>
+    <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-200">line 200</a>
     </dt>
     
 
@@ -7426,7 +7403,7 @@ Note that all Tilemaps use a base tile size to calculate dimensions from, but th
 
     
     <dt class="tag-source">Source -
-    <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-81">line 81</a>
+    <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-86">line 86</a>
     </dt>
     
 
@@ -7475,7 +7452,7 @@ Note that all Tilemaps use a base tile size to calculate dimensions from, but th
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Tue Nov 25 2014 00:17:33 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Tue Jan 06 2015 06:31:59 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

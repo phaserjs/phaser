@@ -14,7 +14,9 @@ Phaser.ArrayUtils = {
 
     /**
     * Fetch a random entry from the given array.
-    * Will return null if random selection is missing, or array has no entries.
+    *
+    * Will return null if there are no array items that fall within the specified range
+    * or if there is no item for the randomly choosen index.
     *
     * @method
     * @param {any[]} objects - An array of objects.
@@ -32,13 +34,15 @@ Phaser.ArrayUtils = {
         if (typeof length === 'undefined') { length = objects.length; }
 
         var randomIndex = startIndex + Math.floor(Math.random() * length);
-        return objects[randomIndex] || null;
+        return objects[randomIndex] === undefined ? null : objects[randomIndex];
 
     },
 
     /**
     * Removes a random object from the given array and returns it.
-    * Will return null if random selection is missing, or array has no entries.
+    *
+    * Will return null if there are no array items that fall within the specified range
+    * or if there is no item for the randomly choosen index.
     *
     * @method
     * @param {any[]} objects - An array of objects.
@@ -59,7 +63,7 @@ Phaser.ArrayUtils = {
         if (randomIndex < objects.length)
         {
             var removed = objects.splice(randomIndex, 1);
-            return removed[0];
+            return removed[0] === undefined ? null : removed[0];
         }
         else
         {
@@ -72,8 +76,8 @@ Phaser.ArrayUtils = {
     * A standard Fisher-Yates Array shuffle implementation which modifies the array in place.
     *
     * @method
-    * @param {array} array - The array to shuffle.
-    * @return {array} The original array, now shuffled.
+    * @param {any[]} array - The array to shuffle.
+    * @return {any[]} The original array, now shuffled.
     */
     shuffle: function (array) {
 
@@ -90,21 +94,24 @@ Phaser.ArrayUtils = {
     },
 
     /**
-    * Transposes the elements of the given Array.
+    * Transposes the elements of the given matrix (array of arrays).
     *
     * @method
-    * @param {array} array - The array to transpose.
-    * @return {array} The transposed array.
+    * @param {Array<any[]>} array - The matrix to transpose.
+    * @return {Array<any[]>} A new transposed matrix
     */
     transposeMatrix: function (array) {
 
-        var result = new Array(array[0].length);
+        var sourceRowCount = array.length;
+        var sourceColCount = array[0].length;
 
-        for (var i = 0; i < array[0].length; i++)
+        var result = new Array(sourceColCount);
+
+        for (var i = 0; i < sourceColCount; i++)
         {
-            result[i] = new Array(array.length - 1);
+            result[i] = new Array(sourceRowCount);
 
-            for (var j = array.length - 1; j > -1; j--)
+            for (var j = sourceRowCount - 1; j > -1; j--)
             {
                 result[i][j] = array[j][i];
             }
@@ -115,13 +122,14 @@ Phaser.ArrayUtils = {
     },
 
     /**
-    * Rotates the given array.
-    * Based on the routine from http://jsfiddle.net/MrPolywhirl/NH42z/
+    * Rotates the given matrix (array of arrays).
+    *
+    * Based on the routine from {@link http://jsfiddle.net/MrPolywhirl/NH42z/}.
     *
     * @method
-    * @param {array} matrix - The array to rotate.
-    * @param {number|string} direction - The amount to rotate. Either a number: 90, -90, 270, -270, 180 or a string: 'rotateLeft', 'rotateRight' or 'rotate180'
-    * @return {array} The rotated array
+    * @param {Array<any[]>} matrix - The array to rotate; this matrix _may_ be altered.
+    * @param {number|string} direction - The amount to rotate: the roation in degrees (90, -90, 270, -270, 180) or a string command ('rotateLeft', 'rotateRight' or 'rotate180').
+    * @return {Array<any[]>} The rotated matrix. The source matrix should be discarded for the returned matrix.
     */
     rotateMatrix: function (matrix, direction) {
 
@@ -207,10 +215,10 @@ Phaser.ArrayUtils = {
     * Create an array representing the inclusive range of numbers (usually integers) in `[start, end]`.
     * This is equivalent to `numberArrayStep(start, end, 1)`.
     *
-    * @method Phaser.Math#numberArray
+    * @method Phaser.ArrayUtils#numberArray
     * @param {number} start - The minimum value the array starts with.
     * @param {number} end - The maximum value the array contains.
-    * @return {array} The array of number values.
+    * @return {number[]} The array of number values.
     */
     numberArray: function (start, end) {
 
@@ -234,28 +242,28 @@ Phaser.ArrayUtils = {
     * Certain values for `start` and `end` (eg. NaN/undefined/null) are currently coerced to 0;
     * for forward compatibility make sure to pass in actual numbers.
     *
-    * @method Phaser.Math#numberArrayStep
+    * @method Phaser.ArrayUtils#numberArrayStep
     * @param {number} start - The start of the range.
     * @param {number} end - The end of the range.
     * @param {number} [step=1] - The value to increment or decrement by.
     * @returns {Array} Returns the new array of numbers.
     * @example
-    * Phaser.Math.numberArrayStep(4);
+    * Phaser.ArrayUtils.numberArrayStep(4);
     * // => [0, 1, 2, 3]
     *
-    * Phaser.Math.numberArrayStep(1, 5);
+    * Phaser.ArrayUtils.numberArrayStep(1, 5);
     * // => [1, 2, 3, 4]
     *
-    * Phaser.Math.numberArrayStep(0, 20, 5);
+    * Phaser.ArrayUtils.numberArrayStep(0, 20, 5);
     * // => [0, 5, 10, 15]
     *
-    * Phaser.Math.numberArrayStep(0, -4, -1);
+    * Phaser.ArrayUtils.numberArrayStep(0, -4, -1);
     * // => [0, -1, -2, -3]
     *
-    * Phaser.Math.numberArrayStep(1, 4, 0);
+    * Phaser.ArrayUtils.numberArrayStep(1, 4, 0);
     * // => [1, 1, 1]
     *
-    * Phaser.Math.numberArrayStep(0);
+    * Phaser.ArrayUtils.numberArrayStep(0);
     * // => []
     */
     numberArrayStep: function(start, end, step) {

@@ -22,7 +22,7 @@ Phaser.StateManager = function (game, pendingState) {
     this.game = game;
 
     /**
-    * @property {Object} states - The object containing Phaser.States.
+    * @property {object} states - The object containing Phaser.States.
     */
     this.states = {};
 
@@ -56,7 +56,7 @@ Phaser.StateManager = function (game, pendingState) {
     this._created = false;
 
     /**
-    * @property {array} _args - Temporary container when you pass vars from one State to another.
+    * @property {any[]} _args - Temporary container when you pass vars from one State to another.
     * @private
     */
     this._args = [];
@@ -559,6 +559,8 @@ Phaser.StateManager.prototype = {
             this._args = [];
         }
 
+        this.game._kickstart = true;
+
     },
 
     /**
@@ -662,12 +664,13 @@ Phaser.StateManager.prototype = {
     /**
     * @method Phaser.StateManager#preRender
     * @protected
+    * @param {number} elapsedTime - The time elapsed since the last update.
     */
-    preRender: function () {
+    preRender: function (elapsedTime) {
 
         if (this.onPreRenderCallback)
         {
-            this.onPreRenderCallback.call(this.callbackContext, this.game);
+            this.onPreRenderCallback.call(this.callbackContext, this.game, elapsedTime);
         }
 
     },

@@ -340,6 +340,7 @@ Object.defineProperty(Phaser.BitmapText.prototype, 'font', {
         if (value !== this._font)
         {
             this._font = value.trim();
+            this.fontName = this._font;
             this.style.font = this._fontSize + "px '" + this._font + "'";
             this.dirty = true;
         }

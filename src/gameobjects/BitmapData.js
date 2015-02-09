@@ -51,7 +51,7 @@ Phaser.BitmapData = function (game, key, width, height) {
     * @property {CanvasRenderingContext2D} context - The 2d context of the canvas.
     * @default
     */
-    this.context = this.canvas.getContext('2d');
+    this.context = this.canvas.getContext('2d', { alpha: true });
 
     /**
     * @property {CanvasRenderingContext2D} ctx - A reference to BitmapData.context.
@@ -164,7 +164,7 @@ Phaser.BitmapData = function (game, key, width, height) {
     this._rotate = 0;
 
     /**
-    * @property {Object} _alpha - Internal cache var.
+    * @property {object} _alpha - Internal cache var.
     * @private
     */
     this._alpha = { prev: 1, current: 1 };
@@ -969,8 +969,8 @@ Phaser.BitmapData.prototype = {
      * @param {number} [y=0] - The y coordinate representing the top-left of the region to copy from the source image.
      * @param {number} [width] - The width of the region to copy from the source image. If not specified it will use the full source image width.
      * @param {number} [height] - The height of the region to copy from the source image. If not specified it will use the full source image height.
-     * @param {number} [tx] - The x coordinate to translate to before drawing. If not specified it will default to the `x` parameter.
-     * @param {number} [ty] - The y coordinate to translate to before drawing. If not specified it will default to the `y` parameter.
+     * @param {number} [tx] - The x coordinate to translate to before drawing. If not specified it will default to the `x` parameter. If `null` and `source` is a Display Object, it will default to `source.x`.
+     * @param {number} [ty] - The y coordinate to translate to before drawing. If not specified it will default to the `y` parameter. If `null` and `source` is a Display Object, it will default to `source.y`.
      * @param {number} [newWidth] - The new width of the block being copied. If not specified it will default to the `width` parameter.
      * @param {number} [newHeight] - The new height of the block being copied. If not specified it will default to the `height` parameter.
      * @param {number} [rotate=0] - The angle in radians to rotate the block to before drawing. Rotation takes place around the center by default, but can be changed with the `anchor` parameters.
@@ -999,6 +999,9 @@ Phaser.BitmapData.prototype = {
             this._rotate = source.rotation;
             this._alpha.current = source.alpha;
             this._image = source.texture.baseTexture.source;
+
+            if (typeof tx === 'undefined' || tx === null) { tx = source.x; }
+            if (typeof ty === 'undefined' || ty === null) { ty = source.y; }
 
             if (source.texture.trim)
             {
@@ -1189,6 +1192,30 @@ Phaser.BitmapData.prototype = {
     },
 
     /**
+    * Draws the immediate children of a Phaser.Group to this BitmapData.
+    * Children are only drawn if they have their `exists` property set to `true`.
+    * The children will be drawn at their `x` and `y` world space coordinates. If this is outside the bounds of the BitmapData they won't be drawn.
+    * When drawing it will take into account the child's rotation, scale and alpha values.
+    * No iteration takes place. Groups nested inside other Groups will not be iterated through.
+    *
+    * @method Phaser.BitmapData#drawGroup
+    * @param {Phaser.Group} group - The Group to draw onto this BitmapData.
+    * @param {number} [blendMode=null] - The composite blend mode that will be used when drawing the Group children. The default is no blend mode at all.
+    * @param {boolean} [roundPx=false] - Should the x and y values be rounded to integers before drawing? This prevents anti-aliasing in some instances.
+    * @return {Phaser.BitmapData} This BitmapData object for method chaining.
+    */
+    drawGroup: function (group, blendMode, roundPx) {
+
+        if (group.total > 0)
+        {
+            group.forEachExists(this.copy, this, null, null, null, null, null, null, null, null, null, null, null, null, null, null, blendMode, roundPx);
+        }
+
+        return this;
+
+    },
+
+    /**
     * Sets the shadow properties of this BitmapDatas context which will affect all draw operations made to it.
     * You can cancel an existing shadow by calling this method and passing no parameters.
     * Note: At the time of writing (October 2014) Chrome still doesn't support shadowBlur used with drawImage.
@@ -1324,6 +1351,45 @@ Phaser.BitmapData.prototype = {
         this.context.fillRect(x, y, width, height);
 
         return this;
+
+    },
+
+    /**
+    * Draws text to the BitmapData in the given font and color.
+    * The default font is 14px Courier, so useful for quickly drawing debug text.
+    * If you need to do a lot of font work to this BitmapData we'd recommend implementing your own text draw method.
+    *
+    * @method Phaser.BitmapData#text
+    * @param {string} text - The text to write to the BitmapData.
+    * @param {number} x - The x coordinate of the top-left of the text string.
+    * @param {number} y - The y coordinate of the top-left of the text string.
+    * @param {string} [font='14px Courier'] - The font. This is passed directly to Context.font, so anything that can support, this can.
+    * @param {string} [color='rgb(255,255,255)'] - The color the text will be drawn in.
+    * @param {boolean} [shadow=true] - Draw a single pixel black shadow below the text (offset by text.x/y + 1)
+    * @return {Phaser.BitmapData} This BitmapData object for method chaining.
+    */
+    text: function (text, x, y, font, color, shadow) {
+
+        if (typeof x === 'undefined') { x = 0; }
+        if (typeof y === 'undefined') { y = 0; }
+        if (typeof font === 'undefined') { font = '14px Courier'; }
+        if (typeof color === 'undefined') { color = 'rgb(255,255,255)'; }
+        if (typeof shadow === 'undefined') { shadow = true; }
+
+        var prevFont = this.context.font;
+
+        this.context.font = font;
+
+        if (shadow)
+        {
+            this.context.fillStyle = 'rgb(0,0,0)';
+            this.context.fillText(text, x + 1, y + 1);
+        }
+        
+        this.context.fillStyle = color;
+        this.context.fillText(text, x, y);
+
+        this.context.font = prevFont;
 
     },
 
@@ -1792,7 +1858,7 @@ Object.defineProperty(Phaser.BitmapData.prototype, "smoothed", {
  * @param {number} scaleY - The scale y value.
  * @param {number} skewX - The skew x value.
  * @param {number} skewY - The skew y value.
- * @return {Object} A JavaScript object containing all of the properties BitmapData needs for transforms.
+ * @return {object} A JavaScript object containing all of the properties BitmapData needs for transforms.
  */
 Phaser.BitmapData.getTransform = function (translateX, translateY, scaleX, scaleY, skewX, skewY) {
 

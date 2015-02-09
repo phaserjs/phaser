@@ -124,50 +124,6 @@
 							<a href="Phaser.Easing.html">Easing</a>
 						</li>
 						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Back.html">Back</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Bounce.html">Bounce</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Circular.html">Circular</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Cubic.html">Cubic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Elastic.html">Elastic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Exponential.html">Exponential</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Linear.html">Linear</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Quadratic.html">Quadratic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Quartic.html">Quartic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Quintic.html">Quintic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Sinusoidal.html">Sinusoidal</a>
-						</li>
-						
 						<li class="class-depth-1">
 							<a href="Phaser.Ellipse.html">Ellipse</a>
 						</li>
@@ -876,6 +832,7 @@
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Core<b class="caret"></b></a>
 					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="Phaser.Game.html">Game</a></li>
 						<li class="class-depth-1"><a href="Phaser.Group.html">Group</a></li>
 						<li class="class-depth-1"><a href="Phaser.World.html">World</a></li>
 						<li class="class-depth-1"><a href="Phaser.Loader.html">Loader</a></li>
@@ -884,7 +841,7 @@
 						<li class="class-depth-1"><a href="Phaser.StateManager.html">State Manager</a></li>
 						<li class="class-depth-1"><a href="Phaser.TweenManager.html">Tween Manager</a></li>
 						<li class="class-depth-1"><a href="Phaser.SoundManager.html">Sound Manager</a></li>
-						<li class="class-depth-1"><a href="Phaser.InputManager.html">Input Manager</a></li>
+						<li class="class-depth-1"><a href="Phaser.Input.html">Input Manager</a></li>
 						<li class="class-depth-1"><a href="Phaser.ScaleManager.html">Scale Manager</a></li>
 					</ul>
 				</li>
@@ -897,7 +854,8 @@
 						<li class="class-depth-1"><a href="Phaser.Sprite.html">Sprite</a></li>
 						<li class="class-depth-1"><a href="Phaser.Image.html">Image</a></li>
 						<li class="class-depth-1"><a href="Phaser.Sound.html">Sound</a></li>
-						<li class="class-depth-1"><a href="Phaser.Emitter.html">Emitter</a></li>
+						<li class="class-depth-1"><a href="Phaser.Particles.Arcade.Emitter.html">Particle Emitter</a></li>
+						<li class="class-depth-1"><a href="Phaser.Particle.html">Particle</a></li>
 						<li class="class-depth-1"><a href="Phaser.Text.html">Text</a></li>
 						<li class="class-depth-1"><a href="Phaser.Tween.html">Tween</a></li>
 						<li class="class-depth-1"><a href="Phaser.BitmapText.html">BitmapText</a></li>
@@ -954,6 +912,7 @@
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Community<b class="caret"></b></a>
 					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="https://leanpub.com/u/photonstorm">Phaser Books</a></li>
 						<li class="class-depth-1"><a href="https://github.com/photonstorm/phaser">Phaser Github</a></li>
 						<li class="class-depth-1"><a href="http://examples.phaser.io">Phaser Examples</a></li>
 						<li class="class-depth-1"><a href="https://github.com/photonstorm/phaser-plugins">Phaser Plugins</a></li>
@@ -988,8 +947,6 @@
     
     Loader
     </h2>
-    
-        <div class="class-description"><p>Phaser.Loader</p></div>
     
 </header>
 
@@ -3572,7 +3529,7 @@ This property is an object containing: sprite, rect, direction, width and height
 
             
 
-            <td class="description last"><p>An array containing the URLs of the audio files, i.e.: [ 'jump.mp3', 'jump.ogg', 'jump.m4a' ] or a single string containing just one URL.</p></td>
+            <td class="description last"><p>An array containing the URLs of the audio files, i.e.: [ 'jump.mp3', 'jump.ogg', 'jump.m4a' ] or a single string containing just one URL. BLOB urls are supported, but note that Phaser will not validate the audio file's type if a BLOB is provided; the user should ensure that a BLOB url is playable.</p></td>
         </tr>
 
 	
@@ -4709,7 +4666,7 @@ Use Phaser.Cache to access loaded assets, e.g. Phaser.Cache#checkImageKey</p>
 
     
     <dt class="tag-source">Source -
-    <a href="Loader.js.html">loader/Loader.js</a>, <a href="Loader.js.html#sunlight-1-line-1636">line 1636</a>
+    <a href="Loader.js.html">loader/Loader.js</a>, <a href="Loader.js.html#sunlight-1-line-1642">line 1642</a>
     </dt>
     
 
@@ -4828,7 +4785,7 @@ Use Phaser.Cache to access loaded assets, e.g. Phaser.Cache#checkImageKey</p>
 
     
     <dt class="tag-source">Source -
-    <a href="Loader.js.html">loader/Loader.js</a>, <a href="Loader.js.html#sunlight-1-line-1661">line 1661</a>
+    <a href="Loader.js.html">loader/Loader.js</a>, <a href="Loader.js.html#sunlight-1-line-1667">line 1667</a>
     </dt>
     
 
@@ -4947,7 +4904,7 @@ Use Phaser.Cache to access loaded assets, e.g. Phaser.Cache#checkImageKey</p>
 
     
     <dt class="tag-source">Source -
-    <a href="Loader.js.html">loader/Loader.js</a>, <a href="Loader.js.html#sunlight-1-line-1445">line 1445</a>
+    <a href="Loader.js.html">loader/Loader.js</a>, <a href="Loader.js.html#sunlight-1-line-1451">line 1451</a>
     </dt>
     
 
@@ -5066,7 +5023,7 @@ Use Phaser.Cache to access loaded assets, e.g. Phaser.Cache#checkImageKey</p>
 
     
     <dt class="tag-source">Source -
-    <a href="Loader.js.html">loader/Loader.js</a>, <a href="Loader.js.html#sunlight-1-line-1426">line 1426</a>
+    <a href="Loader.js.html">loader/Loader.js</a>, <a href="Loader.js.html#sunlight-1-line-1432">line 1432</a>
     </dt>
     
 
@@ -5967,7 +5924,7 @@ Use Phaser.Cache to access loaded assets, e.g. Phaser.Cache#checkImageKey</p>
 
     
     <dt class="tag-source">Source -
-    <a href="Loader.js.html">loader/Loader.js</a>, <a href="Loader.js.html#sunlight-1-line-1592">line 1592</a>
+    <a href="Loader.js.html">loader/Loader.js</a>, <a href="Loader.js.html#sunlight-1-line-1598">line 1598</a>
     </dt>
     
 
@@ -8564,7 +8521,7 @@ This allows you to easily make loading bars for games. Note that Sprite.visible 
 
     
     <dt class="tag-source">Source -
-    <a href="Loader.js.html">loader/Loader.js</a>, <a href="Loader.js.html#sunlight-1-line-1792">line 1792</a>
+    <a href="Loader.js.html">loader/Loader.js</a>, <a href="Loader.js.html#sunlight-1-line-1798">line 1798</a>
     </dt>
     
 
@@ -8654,7 +8611,7 @@ This allows you to easily make loading bars for games. Note that Sprite.visible 
 
     
     <dt class="tag-source">Source -
-    <a href="Loader.js.html">loader/Loader.js</a>, <a href="Loader.js.html#sunlight-1-line-1836">line 1836</a>
+    <a href="Loader.js.html">loader/Loader.js</a>, <a href="Loader.js.html#sunlight-1-line-1842">line 1842</a>
     </dt>
     
 
@@ -8744,7 +8701,7 @@ This allows you to easily make loading bars for games. Note that Sprite.visible 
 
     
     <dt class="tag-source">Source -
-    <a href="Loader.js.html">loader/Loader.js</a>, <a href="Loader.js.html#sunlight-1-line-1814">line 1814</a>
+    <a href="Loader.js.html">loader/Loader.js</a>, <a href="Loader.js.html#sunlight-1-line-1820">line 1820</a>
     </dt>
     
 
@@ -8834,7 +8791,7 @@ This allows you to easily make loading bars for games. Note that Sprite.visible 
 
     
     <dt class="tag-source">Source -
-    <a href="Loader.js.html">loader/Loader.js</a>, <a href="Loader.js.html#sunlight-1-line-1858">line 1858</a>
+    <a href="Loader.js.html">loader/Loader.js</a>, <a href="Loader.js.html#sunlight-1-line-1864">line 1864</a>
     </dt>
     
 
@@ -9182,7 +9139,7 @@ This allows you to easily make loading bars for games. Note that Sprite.visible 
 
     
     <dt class="tag-source">Source -
-    <a href="Loader.js.html">loader/Loader.js</a>, <a href="Loader.js.html#sunlight-1-line-1680">line 1680</a>
+    <a href="Loader.js.html">loader/Loader.js</a>, <a href="Loader.js.html#sunlight-1-line-1686">line 1686</a>
     </dt>
     
 
@@ -9231,7 +9188,7 @@ This allows you to easily make loading bars for games. Note that Sprite.visible 
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Tue Nov 25 2014 00:17:38 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Tue Jan 06 2015 06:32:03 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

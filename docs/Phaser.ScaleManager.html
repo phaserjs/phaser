@@ -124,50 +124,6 @@
 							<a href="Phaser.Easing.html">Easing</a>
 						</li>
 						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Back.html">Back</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Bounce.html">Bounce</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Circular.html">Circular</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Cubic.html">Cubic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Elastic.html">Elastic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Exponential.html">Exponential</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Linear.html">Linear</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Quadratic.html">Quadratic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Quartic.html">Quartic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Quintic.html">Quintic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Sinusoidal.html">Sinusoidal</a>
-						</li>
-						
 						<li class="class-depth-1">
 							<a href="Phaser.Ellipse.html">Ellipse</a>
 						</li>
@@ -876,6 +832,7 @@
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Core<b class="caret"></b></a>
 					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="Phaser.Game.html">Game</a></li>
 						<li class="class-depth-1"><a href="Phaser.Group.html">Group</a></li>
 						<li class="class-depth-1"><a href="Phaser.World.html">World</a></li>
 						<li class="class-depth-1"><a href="Phaser.Loader.html">Loader</a></li>
@@ -884,7 +841,7 @@
 						<li class="class-depth-1"><a href="Phaser.StateManager.html">State Manager</a></li>
 						<li class="class-depth-1"><a href="Phaser.TweenManager.html">Tween Manager</a></li>
 						<li class="class-depth-1"><a href="Phaser.SoundManager.html">Sound Manager</a></li>
-						<li class="class-depth-1"><a href="Phaser.InputManager.html">Input Manager</a></li>
+						<li class="class-depth-1"><a href="Phaser.Input.html">Input Manager</a></li>
 						<li class="class-depth-1"><a href="Phaser.ScaleManager.html">Scale Manager</a></li>
 					</ul>
 				</li>
@@ -897,7 +854,8 @@
 						<li class="class-depth-1"><a href="Phaser.Sprite.html">Sprite</a></li>
 						<li class="class-depth-1"><a href="Phaser.Image.html">Image</a></li>
 						<li class="class-depth-1"><a href="Phaser.Sound.html">Sound</a></li>
-						<li class="class-depth-1"><a href="Phaser.Emitter.html">Emitter</a></li>
+						<li class="class-depth-1"><a href="Phaser.Particles.Arcade.Emitter.html">Particle Emitter</a></li>
+						<li class="class-depth-1"><a href="Phaser.Particle.html">Particle</a></li>
 						<li class="class-depth-1"><a href="Phaser.Text.html">Text</a></li>
 						<li class="class-depth-1"><a href="Phaser.Tween.html">Tween</a></li>
 						<li class="class-depth-1"><a href="Phaser.BitmapText.html">BitmapText</a></li>
@@ -954,6 +912,7 @@
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Community<b class="caret"></b></a>
 					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="https://leanpub.com/u/photonstorm">Phaser Books</a></li>
 						<li class="class-depth-1"><a href="https://github.com/photonstorm/phaser">Phaser Github</a></li>
 						<li class="class-depth-1"><a href="http://examples.phaser.io">Phaser Examples</a></li>
 						<li class="class-depth-1"><a href="https://github.com/photonstorm/phaser-plugins">Phaser Plugins</a></li>
@@ -996,7 +955,7 @@ Game size and the game Display canvas.</p>
 dimenstions of the Display canvas's Parent container/element - the <em>effective CSS rules of the
 canvas's Parent element play an important role</em> in the operation of the ScaleManager. </p>
 <p>The Display canvas - or Game size, depending <a href="Phaser.ScaleManager.html#scaleMode">scaleMode</a> - is updated to best utilize the Parent size.
-When in Fullscreen mode or with <code>parentIsWindow</code> the Parent size is that of the visual viewport (see <a href="Phaser.ScaleManager.html#getParentBounds">getParentBounds</a>).</p>
+When in Fullscreen mode or with <a href="Phaser.ScaleManager.html#parentIsWindow">parentIsWindow</a> the Parent size is that of the visual viewport (see <a href="Phaser.ScaleManager.html#getParentBounds">getParentBounds</a>).</p>
 <p>Parent and Display canvas containment guidelines:</p>
 <ul>
 <li><p>Style the Parent element (of the game canvas) to control the Parent size and
@@ -1005,14 +964,14 @@ thus the Display canvas's size and layout.</p>
 <li><p>The Parent element's CSS styles should <em>effectively</em> apply maximum (and minimum) bounding behavior.</p>
 </li>
 <li><p>The Parent element should <em>not</em> apply a padding as this is not accounted for.
-If a padding is required apply it to the Parent's parent or apply a margin to the Parent.</p>
+If a padding is required apply it to the Parent's parent or apply a margin to the Parent.
+If you need to add a border, margin or any other CSS around your game container, then use a parent element and
+apply the CSS to this instead, otherwise you'll be constantly resizing the shape of the game container.</p>
 </li>
 <li><p>The Display canvas layout CSS styles (ie. margins, size) should not be altered/specified as
 they may be updated by the ScaleManager.</p>
 </li>
-</ul>
-<hr>
-<p>Some parts of ScaleManager were inspired by the research of Ryan Van Etten, released under MIT License 2013.</p></div>
+</ul></div>
     
 </header>
 
@@ -1169,7 +1128,7 @@ they may be updated by the ScaleManager.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-48">line 48</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-46">line 46</a>
     </dt>
     
 
@@ -1249,7 +1208,7 @@ they may be updated by the ScaleManager.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-635">line 635</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-644">line 644</a>
     </dt>
     
 
@@ -1305,7 +1264,7 @@ they may be updated by the ScaleManager.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-643">line 643</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-652">line 652</a>
     </dt>
     
 
@@ -1361,7 +1320,7 @@ they may be updated by the ScaleManager.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-659">line 659</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-668">line 668</a>
     </dt>
     
 
@@ -1417,7 +1376,7 @@ they may be updated by the ScaleManager.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-651">line 651</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-660">line 660</a>
     </dt>
     
 
@@ -1473,7 +1432,7 @@ they may be updated by the ScaleManager.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-667">line 667</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-676">line 676</a>
     </dt>
     
 
@@ -1529,7 +1488,65 @@ they may be updated by the ScaleManager.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-401">line 401</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-396">line 396</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="boundingParent"><span class="type-signature">&lt;readonly> </span>boundingParent<span class="type-signature"> :DOMElement</span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>The DOM element that is considered the Parent bounding element, if any.</p>
+<p>This <code>null</code> if <a href="Phaser.ScaleManager.html#parentIsWindow">parentIsWindow</a> is true or if fullscreen mode is entered and <a href="Phaser.ScaleManager.html#fullScreenTarget">fullScreenTarget</a> is specified.
+It will also be null if there is no game canvas or if the game canvas has no parent.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-2169">line 2169</a>
     </dt>
     
 
@@ -1585,7 +1602,7 @@ they may be updated by the ScaleManager.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-394">line 394</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-389">line 389</a>
     </dt>
     
 
@@ -1614,7 +1631,8 @@ they may be updated by the ScaleManager.</p>
     
     <div class="description">
         <p>Various compatibility settings.
-The <code>(auto)</code> value indicates the setting is configured based on device and runtime information.</p>
+A value of &quot;(auto)&quot; indicates the setting is configured based on device and runtime information.</p>
+<p>A <a href="Phaser.ScaleManager.html#refresh">refresh</a> may need to be peformed after making changes.</p>
     </div>
     
     
@@ -1829,12 +1847,13 @@ The <code>(auto)</code> value indicates the setting is configured based on devic
             
                 <td class="default">
                 
-                    true
+                    false
                 
                 </td>
             
 
-            <td class="description last"><p>If enabled the document element's minimum height is explicity set on updates.</p></td>
+            <td class="description last"><p>If enabled the document elements minimum height is explicity set on updates.
+   The height set varies by device and may either be the height of the window or the viewport.</p></td>
         </tr>
 
 	
@@ -1875,6 +1894,46 @@ The <code>(auto)</code> value indicates the setting is configured based on devic
         </tr>
 
 	
+
+        <tr>
+            
+                <td class="name"><code>clickTrampoline</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    (auto)
+                
+                </td>
+            
+
+            <td class="description last"><p>On certain browsers (eg. IE) FullScreen events need to be triggered via 'click' events.
+    A value of 'when-not-mouse' uses a click trampoline when a pointer that is not the primary mouse is used.
+    Any other string value (including the empty string) prevents using click trampolines.
+    For more details on click trampolines see <a href="Phaser.Pointer.html#addClickTrampoline">Phaser.Pointer#addClickTrampoline</a>.</p></td>
+        </tr>
+
+	
 	</tbody>
 </table>
 </dl>
@@ -1906,7 +1965,7 @@ The <code>(auto)</code> value indicates the setting is configured based on devic
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-453">line 453</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-457">line 457</a>
     </dt>
     
 
@@ -1970,7 +2029,7 @@ The <code>(auto)</code> value indicates the setting is configured based on devic
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-2254">line 2254</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-2299">line 2299</a>
     </dt>
     
 
@@ -2033,7 +2092,7 @@ The <code>(auto)</code> value indicates the setting is configured based on devic
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-64">line 64</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-62">line 62</a>
     </dt>
     
 
@@ -2100,7 +2159,7 @@ The <code>(auto)</code> value indicates the setting is configured based on devic
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-334">line 334</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-329">line 329</a>
     </dt>
     
 
@@ -2118,21 +2177,17 @@ The <code>(auto)</code> value indicates the setting is configured based on devic
         
             
 <dt>
-    <h4 class="name toc-deprecated"
+    <h4 class="name "
         id="enterIncorrectOrientation"><span class="type-signature"></span>enterIncorrectOrientation<span class="type-signature"> :<a href="Phaser.Signal.html">Phaser.Signal</a></span></h4>
     
     
 </dt>
 <dd>
     
-        <dt class="important deprecated-notice">
-            This method is <em>deprecated</em> and should not be used. It may be removed in the future.
-        </dt>
-    
 
     
     <div class="description">
-        <p>This signal is dispatched when the browser enters an incorrect orientation, as defined by <code>forceOrientation</code>.</p>
+        <p>This signal is dispatched when the browser enters an incorrect orientation, as defined by <a href="Phaser.ScaleManager.html#forceOrientation">forceOrientation</a>.</p>
 <p>This is signaled from <code>preUpdate</code> (or <code>pauseUpdate</code>) <em>even when</em> the game is paused.</p>
     </div>
     
@@ -2150,13 +2205,6 @@ The <code>(auto)</code> value indicates the setting is configured based on devic
     
 
     
-        <dt class="important tag-deprecated">Deprecated:</dt>
-        <dd class="tag-deprecated"><ul>
-        
-        
-            <li>2.2.0 - Use <a href="Phaser.ScaleManager.html#onOrientationChange">onOrientationChange</a></li>
-        </ul></dd>
-    
 
     
 
@@ -2168,7 +2216,7 @@ The <code>(auto)</code> value indicates the setting is configured based on devic
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-245">line 245</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-242">line 242</a>
     </dt>
     
 
@@ -2236,7 +2284,7 @@ The <code>(auto)</code> value indicates the setting is configured based on devic
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-223">line 223</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-221">line 221</a>
     </dt>
     
 
@@ -2304,7 +2352,7 @@ The <code>(auto)</code> value indicates the setting is configured based on devic
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-234">line 234</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-232">line 232</a>
     </dt>
     
 
@@ -2333,7 +2381,7 @@ The <code>(auto)</code> value indicates the setting is configured based on devic
     
     <div class="description">
         <p>If true, the game should only run in a landscape orientation.
-Change with <code>forceOrientation</code>.</p>
+Change with <a href="Phaser.ScaleManager.html#forceOrientation">forceOrientation</a>.</p>
     </div>
     
     
@@ -2371,7 +2419,7 @@ Change with <code>forceOrientation</code>.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-142">line 142</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-140">line 140</a>
     </dt>
     
 
@@ -2400,7 +2448,7 @@ Change with <code>forceOrientation</code>.</p>
     
     <div class="description">
         <p>If true, the game should only run in a portrait 
-Change with <code>forceOrientation</code>.</p>
+Change with <a href="Phaser.ScaleManager.html#forceOrientation">forceOrientation</a>.</p>
     </div>
     
     
@@ -2438,7 +2486,7 @@ Change with <code>forceOrientation</code>.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-152">line 152</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-150">line 150</a>
     </dt>
     
 
@@ -2471,7 +2519,7 @@ Change with <code>forceOrientation</code>.</p>
     
     <div class="description">
         <p>This signal is dispatched when the browser fails to enter fullscreen mode;
-or if the device does not support fullscreen mode and <code>startFullScreen</code> is invoked.</p>
+or if the device does not support fullscreen mode and <a href="Phaser.ScaleManager.html#startFullScreen">startFullScreen</a> is invoked.</p>
     </div>
     
     
@@ -2506,7 +2554,7 @@ or if the device does not support fullscreen mode and <code>startFullScreen</cod
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-353">line 353</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-348">line 348</a>
     </dt>
     
 
@@ -2563,7 +2611,7 @@ or if the device does not support fullscreen mode and <code>startFullScreen</cod
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-2213">line 2213</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-2258">line 2258</a>
     </dt>
     
 
@@ -2581,23 +2629,19 @@ or if the device does not support fullscreen mode and <code>startFullScreen</cod
         
             
 <dt>
-    <h4 class="name toc-deprecated"
+    <h4 class="name "
         id="fullScreenTarget"><span class="type-signature"></span>fullScreenTarget<span class="type-signature"> :DOMElement</span></h4>
     
     
 </dt>
 <dd>
     
-        <dt class="important deprecated-notice">
-            This method is <em>deprecated</em> and should not be used. It may be removed in the future.
-        </dt>
-    
 
     
     <div class="description">
         <p>If specified, this is the DOM element on which the Fullscreen API enter request will be invoked.
 The target element must have the correct CSS styling and contain the Display canvas.</p>
-<p>The element's style will be modified (ie. the width and height might be set to 100%)
+<p>The elements style will be modified (ie. the width and height might be set to 100%)
 but it will not be added to, removed from, or repositioned within the DOM.
 An attempt is made to restore relevant style changes when fullscreen mode is left.</p>
 <p>For pre-2.2.0 behavior set <code>game.scale.fullScreenTarget = game.canvas</code>.</p>
@@ -2617,13 +2661,6 @@ An attempt is made to restore relevant style changes when fullscreen mode is lef
     
 
     
-        <dt class="important tag-deprecated">Deprecated:</dt>
-        <dd class="tag-deprecated"><ul>
-        
-        
-            <li>2.2.0 - See onFulLScreenInit and <a href="Phaser.ScaleManager.html#createFullScreenTarget">createFullScreenTarget</a>.</li>
-        </ul></dd>
-    
 
     
 
@@ -2638,7 +2675,7 @@ An attempt is made to restore relevant style changes when fullscreen mode is lef
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-272">line 272</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-267">line 267</a>
     </dt>
     
 
@@ -2701,7 +2738,7 @@ An attempt is made to restore relevant style changes when fullscreen mode is lef
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-56">line 56</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-54">line 54</a>
     </dt>
     
 
@@ -2757,7 +2794,7 @@ An attempt is made to restore relevant style changes when fullscreen mode is lef
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-71">line 71</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-69">line 69</a>
     </dt>
     
 
@@ -2813,7 +2850,7 @@ An attempt is made to restore relevant style changes when fullscreen mode is lef
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-85">line 85</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-83">line 83</a>
     </dt>
     
 
@@ -2841,7 +2878,7 @@ An attempt is made to restore relevant style changes when fullscreen mode is lef
 
     
     <div class="description">
-        <p>True if the <code>forceLandscape</code> or <code>forcePortrait</code> are set and do not agree with the browser orientation.</p>
+        <p>True if <a href="Phaser.ScaleManager.html#forceLandscape">forceLandscape</a> or <a href="Phaser.ScaleManager.html#forcePortrait">forcePortrait</a> are set and do not agree with the browser orientation.</p>
 <p>This value is not updated immediately.</p>
     </div>
     
@@ -2877,7 +2914,7 @@ An attempt is made to restore relevant style changes when fullscreen mode is lef
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-163">line 163</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-161">line 161</a>
     </dt>
     
 
@@ -2933,7 +2970,7 @@ An attempt is made to restore relevant style changes when fullscreen mode is lef
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-2338">line 2338</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-2390">line 2390</a>
     </dt>
     
 
@@ -2989,7 +3026,7 @@ An attempt is made to restore relevant style changes when fullscreen mode is lef
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-2370">line 2370</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-2422">line 2422</a>
     </dt>
     
 
@@ -3045,7 +3082,7 @@ An attempt is made to restore relevant style changes when fullscreen mode is lef
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-2355">line 2355</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-2407">line 2407</a>
     </dt>
     
 
@@ -3112,7 +3149,7 @@ An attempt is made to restore relevant style changes when fullscreen mode is lef
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-343">line 343</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-338">line 338</a>
     </dt>
     
 
@@ -3130,21 +3167,17 @@ An attempt is made to restore relevant style changes when fullscreen mode is lef
         
             
 <dt>
-    <h4 class="name toc-deprecated"
+    <h4 class="name "
         id="leaveIncorrectOrientation"><span class="type-signature"></span>leaveIncorrectOrientation<span class="type-signature"> :<a href="Phaser.Signal.html">Phaser.Signal</a></span></h4>
     
     
 </dt>
 <dd>
     
-        <dt class="important deprecated-notice">
-            This method is <em>deprecated</em> and should not be used. It may be removed in the future.
-        </dt>
-    
 
     
     <div class="description">
-        <p>This signal is dispatched when the browser leaves an incorrect orientation, as defined by <code>forceOrientation</code>.</p>
+        <p>This signal is dispatched when the browser leaves an incorrect orientation, as defined by <a href="Phaser.ScaleManager.html#forceOrientation">forceOrientation</a>.</p>
 <p>This is signaled from <code>preUpdate</code> (or <code>pauseUpdate</code>) <em>even when</em> the game is paused.</p>
     </div>
     
@@ -3162,13 +3195,6 @@ An attempt is made to restore relevant style changes when fullscreen mode is lef
     
 
     
-        <dt class="important tag-deprecated">Deprecated:</dt>
-        <dd class="tag-deprecated"><ul>
-        
-        
-            <li>2.2.0 - Use <a href="Phaser.ScaleManager.html#onOrientationChange">onOrientationChange</a></li>
-        </ul></dd>
-    
 
     
 
@@ -3180,7 +3206,7 @@ An attempt is made to restore relevant style changes when fullscreen mode is lef
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-256">line 256</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-252">line 252</a>
     </dt>
     
 
@@ -3253,7 +3279,7 @@ An attempt is made to restore relevant style changes when fullscreen mode is lef
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-387">line 387</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-382">line 382</a>
     </dt>
     
 
@@ -3283,7 +3309,7 @@ An attempt is made to restore relevant style changes when fullscreen mode is lef
     <div class="description">
         <p>Maximum height the canvas should be scaled to (in pixels).
 If null it will scale to whatever height the browser can handle.
-Change with <code>setMinMax</code>.</p>
+Change with <a href="Phaser.ScaleManager.html#setMinMax">setMinMax</a>.</p>
     </div>
     
     
@@ -3318,7 +3344,7 @@ Change with <code>setMinMax</code>.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-123">line 123</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-121">line 121</a>
     </dt>
     
 
@@ -3386,7 +3412,7 @@ Change with <code>setMinMax</code>.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-186">line 186</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-184">line 184</a>
     </dt>
     
 
@@ -3423,7 +3449,7 @@ Change with <code>setMinMax</code>.</p>
     <div class="description">
         <p>Maximum width the canvas should be scaled to (in pixels).
 If null it will scale to whatever width the browser can handle.
-Change with <code>setMinMax</code>.</p>
+Change with <a href="Phaser.ScaleManager.html#setMinMax">setMinMax</a>.</p>
     </div>
     
     
@@ -3458,7 +3484,7 @@ Change with <code>setMinMax</code>.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-104">line 104</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-102">line 102</a>
     </dt>
     
 
@@ -3487,7 +3513,7 @@ Change with <code>setMinMax</code>.</p>
     
     <div class="description">
         <p>Minimum height the canvas should be scaled to (in pixels).
-Change with <code>setMinMax</code>.</p>
+Change with <a href="Phaser.ScaleManager.html#setMinMax">setMinMax</a>.</p>
     </div>
     
     
@@ -3522,7 +3548,7 @@ Change with <code>setMinMax</code>.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-113">line 113</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-111">line 111</a>
     </dt>
     
 
@@ -3551,7 +3577,7 @@ Change with <code>setMinMax</code>.</p>
     
     <div class="description">
         <p>Minimum width the canvas should be scaled to (in pixels).
-Change with <code>setMinMax</code>.</p>
+Change with <a href="Phaser.ScaleManager.html#setMinMax">setMinMax</a>.</p>
     </div>
     
     
@@ -3586,7 +3612,7 @@ Change with <code>setMinMax</code>.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-94">line 94</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-92">line 92</a>
     </dt>
     
 
@@ -3650,7 +3676,7 @@ The is used internally by Phaser.Pointer (for Input) and possibly other types.</
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-132">line 132</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-130">line 130</a>
     </dt>
     
 
@@ -3708,7 +3734,7 @@ if currently running in Fullscreen mode.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-314">line 314</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-309">line 309</a>
     </dt>
     
 
@@ -3766,7 +3792,7 @@ or if the device does not support fullscreen mode and <code>startFullScreen</cod
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-325">line 325</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-320">line 320</a>
     </dt>
     
 
@@ -3798,9 +3824,9 @@ or if the device does not support fullscreen mode and <code>startFullScreen</cod
 before the fullscreen request.</p>
 <p>The signal is passed two arguments: <code>scale</code> (the ScaleManager), and an object in the form <code>{targetElement: DOMElement}</code>.</p>
 <p>The <code>targetElement</code> is the <a href="Phaser.ScaleManager.html#fullScreenTarget">fullScreenTarget</a> element,
-if such is assigned, or a new element created by {@link Phaser.ScaleManager#createFullScreenTarget createFullScreenTarget}.</p>
+if such is assigned, or a new element created by <a href="Phaser.ScaleManager.html#createFullScreenTarget">createFullScreenTarget</a>.</p>
 <p>Custom CSS styling or resets can be applied to <code>targetElement</code> as required.</p>
-<p>If <code>targetElement</code> is <em>not</em> the same element as Phaser.ScaleManager.fullScreenTarget:
+<p>If <code>targetElement</code> is <em>not</em> the same element as <a href="Phaser.ScaleManager.html#fullScreenTarget">fullScreenTarget</a>:
 - After initialization the Display canvas is moved onto the <code>targetElement</code> for
   the duration of the fullscreen mode, and restored to it's original DOM location when fullscreen is exited.
 - The <code>targetElement</code> is moved/reparanted within the DOM and may have its CSS styles updated.</p>
@@ -3832,7 +3858,7 @@ if such is assigned, or a new element created by {@link Phaser.ScaleManager#crea
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-303">line 303</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-298">line 298</a>
     </dt>
     
 
@@ -3871,7 +3897,7 @@ Thus the following tests can be done:</p>
 scale.screenOrientation !== prevOrientation
 // The orientation just became incorrect:
 scale.incorrectOrientation &amp;&amp; !wasIncorrect</code></pre>
-<p>It is possible that this signal is triggered after <code>forceOrientation</code> so the orientation
+<p>It is possible that this signal is triggered after <a href="Phaser.ScaleManager.html#forceOrientation">forceOrientation</a> so the orientation
 correctness changes even if the orientation itself does not change.</p>
 <p>This is signaled from <code>preUpdate</code> (or <code>pauseUpdate</code>) <em>even when</em> the game is paused.</p>
     </div>
@@ -3901,7 +3927,7 @@ correctness changes even if the orientation itself does not change.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-212">line 212</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-210">line 210</a>
     </dt>
     
 
@@ -3909,6 +3935,75 @@ correctness changes even if the orientation itself does not change.</p>
 
     
 
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name "
+        id="onSizeChange"><span class="type-signature"></span>onSizeChange<span class="type-signature"> :<a href="Phaser.Signal.html">Phaser.Signal</a></span></h4>
+    
+    
+</dt>
+<dd>
+    
+
+    
+    <div class="description">
+        <p>This signal is dispatched when the size of the Display canvas changes <em>or</em> the size of the Game changes. 
+When invoked this is done <em>after</em> the Canvas size/position have been updated.</p>
+<p>This signal is <em>only</em> called when a change occurs and a reflow may be required.
+For example, if the canvas does not change sizes because of CSS settings (such as min-width)
+then this signal will <em>not</em> be triggered.</p>
+<p>Use this to handle responsive game layout options.</p>
+<p>This is signaled from <code>preUpdate</code> (or <code>pauseUpdate</code>) <em>even when</em> the game is paused.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source -
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-534">line 534</a>
+    </dt>
+    
+
+    
+
+    
+
+    
+    <dt class="tag-todo">To Do:</dt>
+    <dd class="tag-todo">
+        <ul>
+            <li>Formalize the arguments, if any, supplied to this signal.</li>
+        </ul>
+    </dd>
     
 </dl>
 
@@ -3954,7 +4049,7 @@ correctness changes even if the orientation itself does not change.</p>
         <dd class="tag-deprecated"><ul>
         
         
-            <li>2.2.0 - Use `ScaleManager.screenOrientation` instead.</li>
+            <li>2.2.0 - Use #screenOrientation instead.</li>
         </ul></dd>
     
 
@@ -3968,7 +4063,7 @@ correctness changes even if the orientation itself does not change.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-2385">line 2385</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-2437">line 2437</a>
     </dt>
     
 
@@ -3996,10 +4091,10 @@ correctness changes even if the orientation itself does not change.</p>
 
     
     <div class="description">
-        <p>If true then the Display canvas will be horizontally-aligned <em>in the parent container</em>.</p>
-<p>To align across the page the Display canvas should be added directly to page;
-or the parent container should itself be aligned.</p>
-<p>This is not applicable for the <code>RESIZE</code> scaling mode.</p>
+        <p>When enabled the Display canvas will be horizontally-aligned <em>in the Parent container</em> (or <a href="Phaser.ScaleManager.html#parentIsWindow">window</a>).</p>
+<p>To align horizontally across the page the Display canvas should be added directly to page;
+or the parent container should itself be horizontally aligned.</p>
+<p>Horizontal alignment is not applicable with the <a href="Phaser.ScaleManager.html#RESIZE">RESIZE</a> scaling mode.</p>
     </div>
     
     
@@ -4030,7 +4125,7 @@ or the parent container should itself be aligned.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-2274">line 2274</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-2319">line 2319</a>
     </dt>
     
 
@@ -4058,10 +4153,15 @@ or the parent container should itself be aligned.</p>
 
     
     <div class="description">
-        <p>If true then the Display canvas will be vertically-aligned <em>in the parent container</em>.</p>
-<p>To align across the page the Display canvas should be added directly to page;
-or the parent container should itself be aligned.</p>
-<p>This is not applicable for the <code>RESIZE</code> scaling mode.</p>
+        <p>When enabled the Display canvas will be vertically-aligned <em>in the Parent container</em> (or <a href="Phaser.ScaleManager.html#parentIsWindow">window</a>).</p>
+<p>To align vertically the Parent element should have a <em>non-collapsible</em> height, such that it will maintain
+a height <em>larger</em> than the height of the contained Game canvas - the game canvas will then be scaled vertically
+<em>within</em> the remaining available height dictated by the Parent element.</p>
+<p>One way to prevent the parent from collapsing is to add an absolute &quot;min-height&quot; CSS property to the parent element.
+If specifying a relative &quot;min-height/height&quot; or adjusting margins, the Parent height must still be non-collapsible (see note).</p>
+<p><em>Note</em>: In version 2.2 the minimum document height is <em>not</em> automatically set to the viewport/window height.
+To automatically update the minimum document height set <a href="Phaser.ScaleManager.html#compatibility">compatibility.forceMinimumDocumentHeight</a> to true.</p>
+<p>Vertical alignment is not applicable with the <a href="Phaser.ScaleManager.html#RESIZE">RESIZE</a> scaling mode.</p>
     </div>
     
     
@@ -4092,7 +4192,7 @@ or the parent container should itself be aligned.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-2306">line 2306</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-2351">line 2351</a>
     </dt>
     
 
@@ -4111,7 +4211,7 @@ or the parent container should itself be aligned.</p>
             
 <dt>
     <h4 class="name "
-        id="parentIsWindow"><span class="type-signature">&lt;readonly> </span>parentIsWindow<span class="type-signature"> :boolean</span></h4>
+        id="parentIsWindow"><span class="type-signature"></span>parentIsWindow<span class="type-signature"> :boolean</span></h4>
     
     
 </dt>
@@ -4120,7 +4220,9 @@ or the parent container should itself be aligned.</p>
 
     
     <div class="description">
-        <p>If the parent container of the game is the browser window (ie. document.body), rather than a div, this should set to <code>true</code>.</p>
+        <p>If the parent container of the Game canvas is the browser window itself (ie. document.body),
+rather than another div, this should set to <code>true</code>.</p>
+<p>The <a href="Phaser.ScaleManager.html#parentNode">parentNode</a> property is generally ignored while this is in effect.</p>
     </div>
     
     
@@ -4148,7 +4250,7 @@ or the parent container should itself be aligned.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-481">line 481</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-489">line 489</a>
     </dt>
     
 
@@ -4167,7 +4269,7 @@ or the parent container should itself be aligned.</p>
             
 <dt>
     <h4 class="name "
-        id="parentNode"><span class="type-signature">&lt;readonly> </span>parentNode<span class="type-signature"> :DOMElement</span></h4>
+        id="parentNode"><span class="type-signature"></span>parentNode<span class="type-signature"> :DOMElement</span></h4>
     
     
 </dt>
@@ -4177,7 +4279,8 @@ or the parent container should itself be aligned.</p>
     
     <div class="description">
         <p>The <em>original</em> DOM element for the parent of the Display canvas.
-This may be different in fullscreen - see <code>createFullScreenTarget</code>.</p>
+This may be different in fullscreen - see <a href="Phaser.ScaleManager.html#createFullScreenTarget">createFullScreenTarget</a>.</p>
+<p>This should only be changed after moving the Game canvas to a different DOM parent.</p>
     </div>
     
     
@@ -4205,7 +4308,7 @@ This may be different in fullscreen - see <code>createFullScreenTarget</code>.</
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-490">line 490</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-499">line 499</a>
     </dt>
     
 
@@ -4261,7 +4364,7 @@ This may be different in fullscreen - see <code>createFullScreenTarget</code>.</
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-497">line 497</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-506">line 506</a>
     </dt>
     
 
@@ -4317,7 +4420,7 @@ This may be different in fullscreen - see <code>createFullScreenTarget</code>.</
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-370">line 370</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-365">line 365</a>
     </dt>
     
 
@@ -4380,7 +4483,7 @@ This may be different in fullscreen - see <code>createFullScreenTarget</code>.</
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-378">line 378</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-373">line 373</a>
     </dt>
     
 
@@ -4429,7 +4532,7 @@ This may be different in fullscreen - see <code>createFullScreenTarget</code>.</
       The dimensions of the game display area are changed to match the size of the parent container.
       That is, this mode <em>changes the Game size</em> to match the display size.
       &lt;p&gt;
-      Any manually set Game size (see <code>setGameSize</code>) is ignored while in effect.
+      Any manually set Game size (see <a href="Phaser.ScaleManager.html#setGameSize">setGameSize</a>) is ignored while in effect.
   &lt;/dd&gt;
   &lt;dt&gt;<a href="Phaser.ScaleManager.html#USER_SCALE">Phaser.ScaleManager.USER_SCALE</a>&lt;/dt&gt;
   &lt;dd&gt;
@@ -4466,7 +4569,7 @@ This may be different in fullscreen - see <code>createFullScreenTarget</code>.</
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-2149">line 2149</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-2194">line 2194</a>
     </dt>
     
 
@@ -4523,7 +4626,7 @@ See <a href="Phaser.DOM.html#getScreenOrientation">Phaser.DOM.getScreenOrientati
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-363">line 363</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-358">line 358</a>
     </dt>
     
 
@@ -4579,7 +4682,7 @@ See <a href="Phaser.DOM.html#getScreenOrientation">Phaser.DOM.getScreenOrientati
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-408">line 408</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-403">line 403</a>
     </dt>
     
 
@@ -4646,7 +4749,7 @@ Update checks normally happen quicker in response to other events.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-508">line 508</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-517">line 517</a>
     </dt>
     
 
@@ -4709,7 +4812,7 @@ Update checks normally happen quicker in response to other events.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-78">line 78</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-76">line 76</a>
     </dt>
     
 
@@ -4847,7 +4950,7 @@ Update checks normally happen quicker in response to other events.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-431">line 431</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-426">line 426</a>
     </dt>
     
 
@@ -4927,7 +5030,7 @@ Update checks normally happen quicker in response to other events.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-2067">line 2067</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-2110">line 2110</a>
     </dt>
     
 
@@ -4967,7 +5070,8 @@ Update checks normally happen quicker in response to other events.</p>
 
     
     <div class="description">
-        <p>Checks if the browser is in the correct orientation for the game, dependent upon <code>forceLandscape</code> and <code>forcePortrait</code>, and updates the state.</p>
+        <p>Checks if the browser is in the correct orientation for the game,
+dependent upon <a href="Phaser.ScaleManager.html#forceLandscape">forceLandscape</a> and <a href="Phaser.ScaleManager.html#forcePortrait">forcePortrait</a>, and updates the state.</p>
 <p>The appropriate event is dispatched if the orientation became valid or invalid.</p>
     </div>
     
@@ -5030,7 +5134,7 @@ Update checks normally happen quicker in response to other events.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-2103">line 2103</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-2146">line 2146</a>
     </dt>
     
 
@@ -5112,7 +5216,7 @@ Update checks normally happen quicker in response to other events.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-2058">line 2058</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-2101">line 2101</a>
     </dt>
     
 
@@ -5197,7 +5301,7 @@ use the <a href="Phaser.ScaleManager.html#scaleMode">USER_SCALE scale mode</a>.<
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-2089">line 2089</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-2132">line 2132</a>
     </dt>
     
 
@@ -5274,7 +5378,7 @@ use the <a href="Phaser.ScaleManager.html#scaleMode">USER_SCALE scale mode</a>.<
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-672">line 672</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-681">line 681</a>
     </dt>
     
 
@@ -5311,7 +5415,7 @@ use the <a href="Phaser.ScaleManager.html#scaleMode">USER_SCALE scale mode</a>.<
     
     <div class="description">
         <p>Creates a fullscreen target. This is called automatically as as needed when entering
-fullscreen mode and the resulting element is supplied to <code>onFullScreenInit</code>.</p>
+fullscreen mode and the resulting element is supplied to <a href="Phaser.ScaleManager.html#onFullScreenInit">onFullScreenInit</a>.</p>
 <p>Use <a href="Phaser.ScaleManager.html#onFullScreenInit">onFullScreenInit</a> to customize the created object.</p>
     </div>
     
@@ -5353,7 +5457,7 @@ fullscreen mode and the resulting element is supplied to <code>onFullScreenInit<
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-1713">line 1713</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-1746">line 1746</a>
     </dt>
     
 
@@ -5431,7 +5535,7 @@ This should probably only be called when the game is destroyed.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-2025">line 2025</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-2068">line 2068</a>
     </dt>
     
 
@@ -5606,7 +5710,7 @@ This should probably only be called when the game is destroyed.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-1155">line 1155</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-1174">line 1174</a>
     </dt>
     
 
@@ -5645,7 +5749,7 @@ This should probably only be called when the game is destroyed.</p>
         <p>Returns the computed Parent size/bounds that the Display canvas is allowed/expected to fill.</p>
 <p>If in fullscreen mode or without parent (see <a href="Phaser.ScaleManager.html#parentIsWindow">parentIsWindow</a>),
 this will be the bounds of the visual viewport itself.</p>
-<p>This function takes the <code>windowConstraints</code> into consideration - if the parent is partially outside
+<p>This function takes the <a href="Phaser.ScaleManager.html#windowConstraints">windowConstraints</a> into consideration - if the parent is partially outside
 the viewport then this function may return a smaller than expected size.</p>
 <p>Values are rounded to the nearest pixel.</p>
     </div>
@@ -5777,7 +5881,7 @@ the viewport then this function may return a smaller than expected size.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-1402">line 1402</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-1427">line 1427</a>
     </dt>
     
 
@@ -5903,7 +6007,7 @@ the viewport then this function may return a smaller than expected size.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-760">line 760</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-771">line 771</a>
     </dt>
     
 
@@ -5980,7 +6084,7 @@ the viewport then this function may return a smaller than expected size.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-1029">line 1029</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-1040">line 1040</a>
     </dt>
     
 
@@ -6016,16 +6120,17 @@ the viewport then this function may return a smaller than expected size.</p>
 
     
     <div class="description">
-        <p>The <code>refresh</code> methods informs the ScaleManager that a layout refresh is required.</p>
+        <p>The &quot;refresh&quot; methods informs the ScaleManager that a layout refresh is required.</p>
 <p>The ScaleManager automatically queues a layout refresh (eg. updates the Game size or Display canvas layout)
 when the browser is resized, the orientation changes, or when there is a detected change
 of the Parent size. Refreshing is also done automatically when public properties,
-such as <code>scaleMode</code>, are updated or state-changing methods are invoked.</p>
-<p>The <code>refresh</code> method <em>may</em> need to be used in a few (rare) situtations when</p>
+such as <a href="Phaser.ScaleManager.html#scaleMode">scaleMode</a>, are updated or state-changing methods are invoked.</p>
+<p>The &quot;refresh&quot; method <em>may</em> need to be used in a few (rare) situtations when</p>
 <ul>
 <li>a device change event is not correctly detected; or</li>
 <li>the Parent size changes (and an immediate reflow is desired); or</li>
-<li>the ScaleManager state is updated by non-standard means.</li>
+<li>the ScaleManager state is updated by non-standard means; or</li>
+<li>certain <a href="Phaser.ScaleManager.html#compatibility">compatibility</a> properties are manually changed.</li>
 </ul>
 <p>The queued layout refresh is not immediate but will run promptly in an upcoming <code>preRender</code>.</p>
     </div>
@@ -6061,7 +6166,7 @@ such as <code>scaleMode</code>, are updated or state-changing methods are invoke
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-1296">line 1296</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-1320">line 1320</a>
     </dt>
     
 
@@ -6346,7 +6451,7 @@ the horizontal or vertical sides of the target dimensions. If you wish to stop t
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-1961">line 1961</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-2004">line 2004</a>
     </dt>
     
 
@@ -6494,7 +6599,7 @@ Use this instead of directly changing <code>game.width</code> or <code>game.heig
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-885">line 885</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-896">line 896</a>
     </dt>
     
 
@@ -6723,7 +6828,7 @@ Use this instead of directly changing <code>game.width</code> or <code>game.heig
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-997">line 997</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-1008">line 1008</a>
     </dt>
     
 
@@ -6766,15 +6871,15 @@ Use this instead of directly changing <code>game.width</code> or <code>game.heig
 
     
     <div class="description">
-        <p>Sets the callback that will be invoked before sizing calcualtions.</p>
-<p>This is the appropriate place to call <code>setUserScale</code> if needing custom dynamic scaling.</p>
+        <p>Sets the callback that will be invoked before sizing calculations.</p>
+<p>This is the appropriate place to call <a href="Phaser.ScaleManager.html#setUserScale">setUserScale</a> if needing custom dynamic scaling.</p>
 <p>The callback is supplied with two arguments <code>scale</code> and <code>parentBounds</code> where <code>scale</code> is the ScaleManager
 and <code>parentBounds</code>, a Phaser.Rectangle, is the size of the Parent element.</p>
 <p>This callback
 - May be invoked even though the parent container or canvas sizes have not changed
-- Unlike <code>onSizeChange</code>, it runs <em>before</em> the canvas is guaranteed to be updated
+- Unlike <a href="Phaser.ScaleManager.html#onSizeChange">onSizeChange</a>, it runs <em>before</em> the canvas is guaranteed to be updated
 - Will be invoked from <code>preUpdate</code>, <em>even when</em> the game is paused    </p>
-<p>See <code>onSizeChange</code> for a better way of reacting to layout updates.</p>
+<p>See <a href="Phaser.ScaleManager.html#onSizeChange">onSizeChange</a> for a better way of reacting to layout updates.</p>
     </div>
     
 
@@ -6880,7 +6985,7 @@ and <code>parentBounds</code>, a Phaser.Rectangle, is the size of the Parent ele
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-937">line 937</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-948">line 948</a>
     </dt>
     
 
@@ -6965,7 +7070,7 @@ use the <a href="Phaser.ScaleManager.html#scaleMode">USER_SCALE scale mode</a>.<
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-2076">line 2076</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-2119">line 2119</a>
     </dt>
     
 
@@ -7121,7 +7226,7 @@ use the <a href="Phaser.ScaleManager.html#scaleMode">USER_SCALE scale mode</a>.<
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-786">line 786</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-797">line 797</a>
     </dt>
     
 
@@ -7373,7 +7478,7 @@ canvas.height = (game.height * vScale) - vTrim</code></pre>
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-913">line 913</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-924">line 924</a>
     </dt>
     
 
@@ -7409,11 +7514,11 @@ canvas.height = (game.height * vScale) - vTrim</code></pre>
 
     
     <div class="description">
-        <p>Start the browser's fullscreen mode - this <em>must</em> be called from a user input Pointer or Mouse event.</p>
+        <p>Start the browsers fullscreen mode - this <em>must</em> be called from a user input Pointer or Mouse event.</p>
 <p>The Fullscreen API must be supported by the browser for this to work - it is not the same as setting
-the game size to fill the browser window See <code>compatibility.supportsFullScreen</code> to check if the current
+the game size to fill the browser window. See <a href="Phaser.ScaleManager.html#compatibility">compatibility.supportsFullScreen</a> to check if the current
 device is reported to support fullscreen mode.</p>
-<p>The <code>fullScreenFailed</code> signal will be dispatched if the fullscreen change request failed or the game does not support the Fullscreen API.</p>
+<p>The <a href="Phaser.ScaleManager.html#fullScreenFailed">fullScreenFailed</a> signal will be dispatched if the fullscreen change request failed or the game does not support the Fullscreen API.</p>
     </div>
     
 
@@ -7520,7 +7625,7 @@ device is reported to support fullscreen mode.</p>
                 </td>
             
 
-            <td class="description last"><p>Internal argument. If false click trampolining is suppressed.</p></td>
+            <td class="description last"><p>Internal argument. If <code>false</code> click trampolining is suppressed.</p></td>
         </tr>
 
 	
@@ -7573,7 +7678,7 @@ device is reported to support fullscreen mode.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-1730">line 1730</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-1767">line 1767</a>
     </dt>
     
 
@@ -7663,7 +7768,7 @@ device is reported to support fullscreen mode.</p>
 
     
     <dt class="tag-source">Source -
-    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-1815">line 1815</a>
+    <a href="ScaleManager.js.html">core/ScaleManager.js</a>, <a href="ScaleManager.js.html#sunlight-1-line-1856">line 1856</a>
     </dt>
     
 
@@ -7712,7 +7817,7 @@ device is reported to support fullscreen mode.</p>
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Tue Nov 25 2014 00:17:54 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Tue Jan 06 2015 06:32:18 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

@@ -124,50 +124,6 @@
 							<a href="Phaser.Easing.html">Easing</a>
 						</li>
 						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Back.html">Back</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Bounce.html">Bounce</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Circular.html">Circular</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Cubic.html">Cubic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Elastic.html">Elastic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Exponential.html">Exponential</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Linear.html">Linear</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Quadratic.html">Quadratic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Quartic.html">Quartic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Quintic.html">Quintic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Sinusoidal.html">Sinusoidal</a>
-						</li>
-						
 						<li class="class-depth-1">
 							<a href="Phaser.Ellipse.html">Ellipse</a>
 						</li>
@@ -876,6 +832,7 @@
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Core<b class="caret"></b></a>
 					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="Phaser.Game.html">Game</a></li>
 						<li class="class-depth-1"><a href="Phaser.Group.html">Group</a></li>
 						<li class="class-depth-1"><a href="Phaser.World.html">World</a></li>
 						<li class="class-depth-1"><a href="Phaser.Loader.html">Loader</a></li>
@@ -884,7 +841,7 @@
 						<li class="class-depth-1"><a href="Phaser.StateManager.html">State Manager</a></li>
 						<li class="class-depth-1"><a href="Phaser.TweenManager.html">Tween Manager</a></li>
 						<li class="class-depth-1"><a href="Phaser.SoundManager.html">Sound Manager</a></li>
-						<li class="class-depth-1"><a href="Phaser.InputManager.html">Input Manager</a></li>
+						<li class="class-depth-1"><a href="Phaser.Input.html">Input Manager</a></li>
 						<li class="class-depth-1"><a href="Phaser.ScaleManager.html">Scale Manager</a></li>
 					</ul>
 				</li>
@@ -897,7 +854,8 @@
 						<li class="class-depth-1"><a href="Phaser.Sprite.html">Sprite</a></li>
 						<li class="class-depth-1"><a href="Phaser.Image.html">Image</a></li>
 						<li class="class-depth-1"><a href="Phaser.Sound.html">Sound</a></li>
-						<li class="class-depth-1"><a href="Phaser.Emitter.html">Emitter</a></li>
+						<li class="class-depth-1"><a href="Phaser.Particles.Arcade.Emitter.html">Particle Emitter</a></li>
+						<li class="class-depth-1"><a href="Phaser.Particle.html">Particle</a></li>
 						<li class="class-depth-1"><a href="Phaser.Text.html">Text</a></li>
 						<li class="class-depth-1"><a href="Phaser.Tween.html">Tween</a></li>
 						<li class="class-depth-1"><a href="Phaser.BitmapText.html">BitmapText</a></li>
@@ -954,6 +912,7 @@
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Community<b class="caret"></b></a>
 					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="https://leanpub.com/u/photonstorm">Phaser Books</a></li>
 						<li class="class-depth-1"><a href="https://github.com/photonstorm/phaser">Phaser Github</a></li>
 						<li class="class-depth-1"><a href="http://examples.phaser.io">Phaser Examples</a></li>
 						<li class="class-depth-1"><a href="https://github.com/photonstorm/phaser-plugins">Phaser Plugins</a></li>
@@ -989,8 +948,6 @@
     Events
     </h2>
     
-        <div class="class-description"><p>Phaser.Events</p></div>
-    
 </header>
 
 <article>
@@ -1014,7 +971,8 @@
 <p>For example to tell when a Sprite has been added to a new group:</p>
 <p><code>sprite.events.onAddedToGroup.add(yourFunction, this);</code></p>
 <p>Where <code>yourFunction</code> is the function you want called when this event occurs.</p>
-<p>Note that the Input related events only exist if the Sprite has had <code>inputEnabled</code> set to <code>true</code>.</p>
+<p>The Input-related events will only be dispatched if the Sprite has had <code>inputEnabled</code> set to <code>true</code>
+and the Animation-related events only apply to game objects with animations like <a href="Phaser.Sprite.html">Phaser.Sprite</a>.</p>
     </div>
     
 
@@ -1064,7 +1022,7 @@
 
             
 
-            <td class="description last"><p>A reference to the Sprite that owns this Events object.</p></td>
+            <td class="description last"><p>A reference to the game object / Sprite that owns this Events object.</p></td>
         </tr>
 
 	
@@ -1097,7 +1055,7 @@
 
     
     <dt class="tag-source">Source -
-    <a href="Events.js.html">gameobjects/Events.js</a>, <a href="Events.js.html#sunlight-1-line-22">line 22</a>
+    <a href="Events.js.html">gameobjects/Events.js</a>, <a href="Events.js.html#sunlight-1-line-23">line 23</a>
     </dt>
     
 
@@ -1177,7 +1135,7 @@
 
     
     <dt class="tag-source">Source -
-    <a href="Events.js.html">gameobjects/Events.js</a>, <a href="Events.js.html#sunlight-1-line-32">line 32</a>
+    <a href="Events.js.html">gameobjects/Events.js</a>, <a href="Events.js.html#sunlight-1-line-72">line 72</a>
     </dt>
     
 
@@ -1230,13 +1188,10 @@
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source -
-    <a href="Events.js.html">gameobjects/Events.js</a>, <a href="Events.js.html#sunlight-1-line-115">line 115</a>
+    <a href="Events.js.html">gameobjects/Events.js</a>, <a href="Events.js.html#sunlight-1-line-147">line 147</a>
     </dt>
     
 
@@ -1289,13 +1244,10 @@
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source -
-    <a href="Events.js.html">gameobjects/Events.js</a>, <a href="Events.js.html#sunlight-1-line-121">line 121</a>
+    <a href="Events.js.html">gameobjects/Events.js</a>, <a href="Events.js.html#sunlight-1-line-152">line 152</a>
     </dt>
     
 
@@ -1348,13 +1300,10 @@
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source -
-    <a href="Events.js.html">gameobjects/Events.js</a>, <a href="Events.js.html#sunlight-1-line-109">line 109</a>
+    <a href="Events.js.html">gameobjects/Events.js</a>, <a href="Events.js.html#sunlight-1-line-142">line 142</a>
     </dt>
     
 
@@ -1410,7 +1359,7 @@
 
     
     <dt class="tag-source">Source -
-    <a href="Events.js.html">gameobjects/Events.js</a>, <a href="Events.js.html#sunlight-1-line-47">line 47</a>
+    <a href="Events.js.html">gameobjects/Events.js</a>, <a href="Events.js.html#sunlight-1-line-87">line 87</a>
     </dt>
     
 
@@ -1463,13 +1412,10 @@
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source -
-    <a href="Events.js.html">gameobjects/Events.js</a>, <a href="Events.js.html#sunlight-1-line-97">line 97</a>
+    <a href="Events.js.html">gameobjects/Events.js</a>, <a href="Events.js.html#sunlight-1-line-132">line 132</a>
     </dt>
     
 
@@ -1522,13 +1468,10 @@
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source -
-    <a href="Events.js.html">gameobjects/Events.js</a>, <a href="Events.js.html#sunlight-1-line-103">line 103</a>
+    <a href="Events.js.html">gameobjects/Events.js</a>, <a href="Events.js.html#sunlight-1-line-137">line 137</a>
     </dt>
     
 
@@ -1584,7 +1527,7 @@
 
     
     <dt class="tag-source">Source -
-    <a href="Events.js.html">gameobjects/Events.js</a>, <a href="Events.js.html#sunlight-1-line-67">line 67</a>
+    <a href="Events.js.html">gameobjects/Events.js</a>, <a href="Events.js.html#sunlight-1-line-107">line 107</a>
     </dt>
     
 
@@ -1637,13 +1580,10 @@
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source -
-    <a href="Events.js.html">gameobjects/Events.js</a>, <a href="Events.js.html#sunlight-1-line-85">line 85</a>
+    <a href="Events.js.html">gameobjects/Events.js</a>, <a href="Events.js.html#sunlight-1-line-122">line 122</a>
     </dt>
     
 
@@ -1696,13 +1636,10 @@
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source -
-    <a href="Events.js.html">gameobjects/Events.js</a>, <a href="Events.js.html#sunlight-1-line-79">line 79</a>
+    <a href="Events.js.html">gameobjects/Events.js</a>, <a href="Events.js.html#sunlight-1-line-117">line 117</a>
     </dt>
     
 
@@ -1755,13 +1692,10 @@
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source -
-    <a href="Events.js.html">gameobjects/Events.js</a>, <a href="Events.js.html#sunlight-1-line-73">line 73</a>
+    <a href="Events.js.html">gameobjects/Events.js</a>, <a href="Events.js.html#sunlight-1-line-112">line 112</a>
     </dt>
     
 
@@ -1814,13 +1748,10 @@
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source -
-    <a href="Events.js.html">gameobjects/Events.js</a>, <a href="Events.js.html#sunlight-1-line-91">line 91</a>
+    <a href="Events.js.html">gameobjects/Events.js</a>, <a href="Events.js.html#sunlight-1-line-127">line 127</a>
     </dt>
     
 
@@ -1876,7 +1807,7 @@
 
     
     <dt class="tag-source">Source -
-    <a href="Events.js.html">gameobjects/Events.js</a>, <a href="Events.js.html#sunlight-1-line-52">line 52</a>
+    <a href="Events.js.html">gameobjects/Events.js</a>, <a href="Events.js.html#sunlight-1-line-92">line 92</a>
     </dt>
     
 
@@ -1932,7 +1863,7 @@
 
     
     <dt class="tag-source">Source -
-    <a href="Events.js.html">gameobjects/Events.js</a>, <a href="Events.js.html#sunlight-1-line-62">line 62</a>
+    <a href="Events.js.html">gameobjects/Events.js</a>, <a href="Events.js.html#sunlight-1-line-102">line 102</a>
     </dt>
     
 
@@ -1988,7 +1919,7 @@
 
     
     <dt class="tag-source">Source -
-    <a href="Events.js.html">gameobjects/Events.js</a>, <a href="Events.js.html#sunlight-1-line-37">line 37</a>
+    <a href="Events.js.html">gameobjects/Events.js</a>, <a href="Events.js.html#sunlight-1-line-77">line 77</a>
     </dt>
     
 
@@ -2044,7 +1975,7 @@
 
     
     <dt class="tag-source">Source -
-    <a href="Events.js.html">gameobjects/Events.js</a>, <a href="Events.js.html#sunlight-1-line-42">line 42</a>
+    <a href="Events.js.html">gameobjects/Events.js</a>, <a href="Events.js.html#sunlight-1-line-82">line 82</a>
     </dt>
     
 
@@ -2100,7 +2031,7 @@
 
     
     <dt class="tag-source">Source -
-    <a href="Events.js.html">gameobjects/Events.js</a>, <a href="Events.js.html#sunlight-1-line-57">line 57</a>
+    <a href="Events.js.html">gameobjects/Events.js</a>, <a href="Events.js.html#sunlight-1-line-97">line 97</a>
     </dt>
     
 
@@ -2156,7 +2087,7 @@
 
     
     <dt class="tag-source">Source -
-    <a href="Events.js.html">gameobjects/Events.js</a>, <a href="Events.js.html#sunlight-1-line-27">line 27</a>
+    <a href="Events.js.html">gameobjects/Events.js</a>, <a href="Events.js.html#sunlight-1-line-28">line 28</a>
     </dt>
     
 
@@ -2224,7 +2155,7 @@
 
     
     <dt class="tag-source">Source -
-    <a href="Events.js.html">gameobjects/Events.js</a>, <a href="Events.js.html#sunlight-1-line-127">line 127</a>
+    <a href="Events.js.html">gameobjects/Events.js</a>, <a href="Events.js.html#sunlight-1-line-36">line 36</a>
     </dt>
     
 
@@ -2273,7 +2204,7 @@
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Tue Nov 25 2014 00:17:30 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Tue Jan 06 2015 06:31:56 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

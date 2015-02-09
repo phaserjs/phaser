@@ -440,7 +440,7 @@ Phaser.Math = {
     * @method Phaser.Math#numberArray
     * @param {number} start - The minimum value the array starts with.
     * @param {number} end - The maximum value the array contains.
-    * @return {array} The array of number values.
+    * @return {number[]} The array of number values.
     * @deprecated 2.2.0 - See {@link Phaser.ArrayUtils.numberArray}
     */
     numberArray: function (start, end) {
@@ -930,13 +930,15 @@ Phaser.Math = {
 
     /**
     * Fetch a random entry from the given array.
-    * Will return null if random selection is missing, or array has no entries.
+    *
+    * Will return null if there are no array items that fall within the specified range
+    * or if there is no item for the randomly choosen index.
     *
     * @method Phaser.Math#getRandom
-    * @param {array} objects - An array of objects.
-    * @param {number} startIndex - Optional offset off the front of the array. Default value is 0, or the beginning of the array.
-    * @param {number} length - Optional restriction on the number of values you want to randomly select from.
-    * @return {object} The random object that was selected.
+    * @param {any[]} objects - An array of objects.
+    * @param {integer} startIndex - Optional offset off the front of the array. Default value is 0, or the beginning of the array.
+    * @param {integer} length - Optional restriction on the number of values you want to randomly select from.
+    * @return {object} The random object that was selected.    
     * @deprecated 2.2.0 - Use {@link Phaser.ArrayUtils.getRandomItem}
     */
     getRandom: function (objects, startIndex, length) {
@@ -945,12 +947,14 @@ Phaser.Math = {
 
     /**
     * Removes a random object from the given array and returns it.
-    * Will return null if random selection is missing, or array has no entries.
+    *
+    * Will return null if there are no array items that fall within the specified range
+    * or if there is no item for the randomly choosen index.
     *
     * @method Phaser.Math#removeRandom
-    * @param {array} objects - An array of objects.
-    * @param {number} startIndex - Optional offset off the front of the array. Default value is 0, or the beginning of the array.
-    * @param {number} length - Optional restriction on the number of values you want to randomly select from.
+    * @param {any[]} objects - An array of objects.
+    * @param {integer} startIndex - Optional offset off the front of the array. Default value is 0, or the beginning of the array.
+    * @param {integer} length - Optional restriction on the number of values you want to randomly select from.
     * @return {object} The random object that was removed.
     * @deprecated 2.2.0 - Use {@link Phaser.ArrayUtils.removeRandomItem}
     */
@@ -1062,8 +1066,8 @@ Phaser.Math = {
     /**
     * Shuffles the data in the given array into a new order.
     * @method Phaser.Math#shuffleArray
-    * @param {array} array - The array to shuffle
-    * @return {array} The array
+    * @param {any[]} array - The array to shuffle
+    * @return {any[]} The array
     * @deprecated 2.2.0 - Use {@link Phaser.ArrayUtils.shuffle}
     */
     shuffleArray: function (array) {
@@ -1071,7 +1075,7 @@ Phaser.Math = {
     },
 
     /**
-    * Returns the distance between the two given set of coordinates.
+    * Returns the euclidian distance between the two given set of coordinates.
     *
     * @method Phaser.Math#distance
     * @param {number} x1

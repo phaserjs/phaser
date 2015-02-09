@@ -22,7 +22,7 @@ Phaser.Mouse = function (game) {
     this.game = game;
 
     /**
-    * @property {Object} callbackContext - The context under which callbacks are called.
+    * @property {object} callbackContext - The context under which callbacks are called.
     */
     this.callbackContext = this.game;
 
@@ -32,7 +32,8 @@ Phaser.Mouse = function (game) {
     this.mouseDownCallback = null;
 
     /**
-    * @property {function} mouseMoveCallback - A callback that can be fired when the mouse is moved while pressed down.
+    * @property {function} mouseMoveCallback - A callback that can be fired when the mouse is moved.
+    * @deprecated Will be removed soon. Please use `Input.addMoveCallback` instead.
     */
     this.mouseMoveCallback = null;
 
@@ -57,7 +58,7 @@ Phaser.Mouse = function (game) {
     this.mouseWheelCallback = null;
 
     /**
-    * @property {boolean} capture - If true the DOM mouse events will have event.preventDefault applied to them, if false they will propogate fully.
+    * @property {boolean} capture - If true the DOM mouse events will have event.preventDefault applied to them, if false they will propagate fully.
     */
     this.capture = false;
 
@@ -248,6 +249,7 @@ Phaser.Mouse.prototype = {
         }
 
         var wheelEvent = this.game.device.wheelEvent;
+
         if (wheelEvent)
         {
             this.game.canvas.addEventListener(wheelEvent, this._onMouseWheel, true);

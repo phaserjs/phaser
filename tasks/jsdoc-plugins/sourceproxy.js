@@ -1,6 +1,8 @@
 /**
-* For use with custom `@sourcepath`, `@sourceline`, `@nosource` properties
-* (which are used in YUIDoc-to-JSDoc to supply source documentation)
+* Moves information from custom `@sourcepath`, `@sourceline`, `@nosource` doclets
+* into the doclet meta-information.
+*
+* This is useful to maintain source file/lineno links with the YUIDoc-to-JSDoc output.
 */
 
 var path = require('path');
@@ -29,10 +31,5 @@ exports.defineTags = function(dictionary) {
            doclet.meta.lineno = lineno;
        }
     });
-
-};
-
-exports.handlers = {};
-exports.handlers.newDoclet = function (e) {
 
 };

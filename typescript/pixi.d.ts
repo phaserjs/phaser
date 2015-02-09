@@ -1,4 +1,4 @@
-// Type definitions for PIXI 2.1.1 dev 2014-11-23
+// Type definitions for PIXI 2.2.0 dev 2015-01-01
 // Project: https://github.com/GoodBoyDigital/pixi.js/
 
 declare module PIXI {
@@ -54,6 +54,8 @@ declare module PIXI {
     export var BaseTextureCache: { [key: string]: BaseTexture }
     export var TextureCache: { [key: string]: Texture }
 
+    export function isPowerOfTwo(width: number, height: number): boolean;
+
     export function rgb2hex(rgb: number[]): string;
     export function hex2rgb(hex: string): number[];
 
@@ -89,12 +91,15 @@ declare module PIXI {
     export interface PixiRenderer {
 
         autoResize: boolean;
+        clearBeforeRender: boolean;
         height: number;
+        resolution: number;
         transparent: boolean;
         type: number;
-        width: number;
         view: HTMLCanvasElement;
+        width: number;
 
+        destroy(): void;
         render(stage: Stage): void;
         resize(width: number, height: number): void;
 
@@ -254,6 +259,7 @@ declare module PIXI {
 
         height: number;
         hasLoaded: boolean;
+        mipmap: boolean;
         premultipliedAlpha: boolean;
         resolution: number;
         scaleMode: scaleModes;
@@ -909,7 +915,7 @@ declare module PIXI {
         constructor(...points: Point[]);
         constructor(...points: number[]);
 
-        points: number[];
+        points: any[]; //number[] Point[]
 
         clone(): Polygon;
         contains(x: number, y: number): boolean;
@@ -1085,7 +1091,7 @@ declare module PIXI {
         colors: number[];
         dirty: boolean;
         indices: number[];
-        padding: number;
+        canvasPadding: number;
         texture: Texture;
         uvs: number[];
         vertices: number[];
@@ -1097,6 +1103,10 @@ declare module PIXI {
     export class Text extends Sprite {
 
         constructor(text: string, style?: TextStyle);
+
+        static fontPropertiesCanvas: any;
+        static fontPropertiesContext: any;
+        static fontPropertiesCache: any;
 
         context: CanvasRenderingContext2D;
         resolution: number;
@@ -1394,6 +1404,7 @@ declare module PIXI {
     export class WebGLSpriteBatch {
 
         blendModes: number[];
+        colors: number[];
         currentBatchSize: number;
         currentBaseTexture: Texture;
         defaultShader: AbstractFilter;
@@ -1401,6 +1412,7 @@ declare module PIXI {
         drawing: boolean;
         indices: number[];
         lastIndexCount: number;
+        positions: number[];
         textures: Texture[];
         shaders: IPixiShader[];
         size: number;

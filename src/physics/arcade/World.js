@@ -66,6 +66,11 @@ Phaser.Physics.Arcade = function (game) {
     this.skipQuadTree = true;
 
     /**
+    * @property {boolean} isPaused - If `true` the `Body.preUpdate` method will be skipped, halting all motion for all bodies. Note that other methods such as `collide` will still work, so be careful not to call them on paused bodies.
+    */
+    this.isPaused = false;
+
+    /**
     * @property {Phaser.QuadTree} quadTree - The world QuadTree.
     */
     this.quadTree = new Phaser.QuadTree(this.game.world.bounds.x, this.game.world.bounds.y, this.game.world.bounds.width, this.game.world.bounds.height, this.maxObjects, this.maxLevels);
@@ -258,7 +263,7 @@ Phaser.Physics.Arcade.prototype = {
     },
 
     /**
-    * Called automatically by a Physics body, it updates all motion related values on the Body.
+    * Called automatically by a Physics body, it updates all motion related values on the Body unless `World.isPaused` is `true`.
     *
     * @method Phaser.Physics.Arcade#updateMotion
     * @param {Phaser.Physics.Arcade.Body} The Body object to be updated.
@@ -289,7 +294,7 @@ Phaser.Physics.Arcade.prototype = {
     */
     computeVelocity: function (axis, body, velocity, acceleration, drag, max) {
 
-        max = max || 10000;
+        max = typeof max !== 'undefined' ? max : 10000;
 
         if (axis == 1 && body.allowGravity)
         {
@@ -409,7 +414,7 @@ Phaser.Physics.Arcade.prototype = {
     * @param {function} [collideCallback=null] - An optional callback function that is called if the objects collide. The two objects will be passed to this function in the same order in which you specified them, unless you are colliding Group vs. Sprite, in which case Sprite will always be the first parameter.
     * @param {function} [processCallback=null] - A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then collision will only happen if processCallback returns true. The two objects will be passed to this function in the same order in which you specified them.
     * @param {object} [callbackContext] - The context in which to run the callbacks.
-    * @return {boolean} True if a collision occured otherwise false.
+    * @return {boolean} True if a collision occurred otherwise false.
     */
     collide: function (object1, object2, collideCallback, processCallback, callbackContext) {
 
@@ -978,11 +983,23 @@ Phaser.Physics.Arcade.prototype = {
                 {
                     body1.x = body1.x - this._overlap;
                     body1.velocity.x = this._velocity2 - this._velocity1 * body1.bounce.x;
+
+                    //  This is special case code that handles things like vertically moving platforms you can ride
+                    if (body2.moves)
+                    {
+                        body1.y += (body2.y - body2.prev.y) * body2.friction.y;
+                    }
                 }
                 else if (!body2.immovable)
                 {
                     body2.x += this._overlap;
                     body2.velocity.x = this._velocity1 - this._velocity2 * body2.bounce.x;
+
+                    //  This is special case code that handles things like vertically moving platforms you can ride
+                    if (body1.moves)
+                    {
+                        body2.y += (body1.y - body1.prev.y) * body1.friction.y;
+                    }
                 }
 
                 return true;
@@ -1005,7 +1022,7 @@ Phaser.Physics.Arcade.prototype = {
     */
     separateY: function (body1, body2, overlapOnly) {
 
-        //  Can't separate two immovable or non-existing bodys
+        //  Can't separate two immovable or non-existing bodies
         if (body1.immovable && body2.immovable)
         {
             return false;
@@ -1098,7 +1115,7 @@ Phaser.Physics.Arcade.prototype = {
                     //  This is special case code that handles things like horizontal moving platforms you can ride
                     if (body2.moves)
                     {
-                        body1.x += body2.x - body2.prev.x;
+                        body1.x += (body2.x - body2.prev.x) * body2.friction.x;
                     }
                 }
                 else if (!body2.immovable)
@@ -1109,7 +1126,7 @@ Phaser.Physics.Arcade.prototype = {
                     //  This is special case code that handles things like horizontal moving platforms you can ride
                     if (body1.moves)
                     {
-                        body2.x += body1.x - body1.prev.x;
+                        body2.x += (body1.x - body1.prev.x) * body1.friction.x;
                     }
                 }
 
@@ -1136,7 +1153,7 @@ Phaser.Physics.Arcade.prototype = {
         //  We re-check for collision in case body was separated in a previous step
         if (!body.enable || !tile.intersects(body.position.x, body.position.y, body.right, body.bottom))
         {
-            //  no collision so bail out (separted in a previous step)
+            //  no collision so bail out (separated in a previous step)
             return false;
         }
 
@@ -1232,7 +1249,7 @@ Phaser.Physics.Arcade.prototype = {
     * @method Phaser.Physics.Arcade#tileCheckX
     * @param {Phaser.Physics.Arcade.Body} body - The Body object to separate.
     * @param {Phaser.Tile} tile - The tile to check.
-    * @return {number} The amount of separation that occured.
+    * @return {number} The amount of separation that occurred.
     */
     tileCheckX: function (body, tile) {
 
@@ -1281,7 +1298,7 @@ Phaser.Physics.Arcade.prototype = {
     * @method Phaser.Physics.Arcade#tileCheckY
     * @param {Phaser.Physics.Arcade.Body} body - The Body object to separate.
     * @param {Phaser.Tile} tile - The tile to check.
-    * @return {number} The amount of separation that occured.
+    * @return {number} The amount of separation that occurred.
     */
     tileCheckY: function (body, tile) {
 
@@ -1398,7 +1415,7 @@ Phaser.Physics.Arcade.prototype = {
     * @param {Phaser.Group} group - The Group to check.
     * @param {function} [callback] - A callback function that is called if the object overlaps with the Pointer. The callback will be sent two parameters: the Pointer and the Object that overlapped with it.
     * @param {object} [callbackContext] - The context in which to run the callback.
-    * @return {array} An array of the Sprites from the Group that overlapped the Pointer coordinates.
+    * @return {PIXI.DisplayObject[]} An array of the Sprites from the Group that overlapped the Pointer coordinates.
     */
     getObjectsUnderPointer: function (pointer, group, callback, callbackContext) {
 
@@ -1417,12 +1434,13 @@ Phaser.Physics.Arcade.prototype = {
     * Note that the children are not checked for depth order, but simply if they overlap the coordinate or not.
     *
     * @method Phaser.Physics.Arcade#getObjectsAtLocation
-    * @param {Phaser.Pointer} pointer - The Pointer to check.
+    * @param {number} x - The x coordinate to check.
+    * @param {number} y - The y coordinate to check.
     * @param {Phaser.Group} group - The Group to check.
     * @param {function} [callback] - A callback function that is called if the object overlaps the coordinates. The callback will be sent two parameters: the callbackArg and the Object that overlapped the location.
     * @param {object} [callbackContext] - The context in which to run the callback.
     * @param {object} [callbackArg] - An argument to pass to the callback.
-    * @return {array} An array of the Sprites from the Group that overlapped the coordinates.
+    * @return {PIXI.DisplayObject[]} An array of the Sprites from the Group that overlapped the coordinates.
     */
     getObjectsAtLocation: function (x, y, group, callback, callbackContext, callbackArg) {
 

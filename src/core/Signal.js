@@ -6,7 +6,9 @@
 */
 
 /**
-* A Signal is used for object communication via a custom broadcaster instead of Events.
+* A Signal is an event dispatch mechansim than supports broadcasting to multiple listeners.
+*
+* Event listeners are uniquely identified by the listener/callback function and the context.
 * 
 * @class Phaser.Signal
 * @constructor
@@ -29,9 +31,11 @@ Phaser.Signal.prototype = {
     _prevParams: null,
 
     /**
-    * If Signal should keep record of previously dispatched parameters and
-    * automatically execute listener during `add()`/`addOnce()` if Signal was
-    * already dispatched before.
+    * Memorize the previously dispatched event?
+    *
+    * If an event has been memorized it is automatically dispatched when a new listener is added with {@link #add} or {@link #addOnce}.
+    * Use {@link #forget} to clear any currently memorized event.
+    *
     * @property {boolean} memorize
     */
     memorize: false,
@@ -43,8 +47,10 @@ Phaser.Signal.prototype = {
     _shouldPropagate: true,
 
     /**
-    * If Signal is active and should broadcast events.
-    * IMPORTANT: Setting this property during a dispatch will only affect the next dispatch, if you want to stop the propagation of a signal use `halt()` instead.
+    * Is the Signal active? Only active signal will broadcast dispatched events.
+    *
+    * Setting this property during a dispatch will only affect the next dispatch. To stop the propagation of a signal from a listener use {@link #halt}.
+    *
     * @property {boolean} active
     * @default
     */
@@ -167,7 +173,7 @@ Phaser.Signal.prototype = {
     },
 
     /**
-    * Check if listener was attached to Signal.
+    * Check if a specific listener is attached.
     *
     * @method Phaser.Signal#has
     * @param {function} listener - Signal handler function.
@@ -181,7 +187,7 @@ Phaser.Signal.prototype = {
     },
 
     /**
-    * Add a listener to the signal.
+    * Add an event listener.
     *
     * @method Phaser.Signal#add
     * @param {function} listener - The function to call when this Signal is dispatched.
@@ -198,7 +204,10 @@ Phaser.Signal.prototype = {
     },
 
     /**
-    * Add listener to the signal that should be removed after first execution (will be executed only once).
+    * Add a one-time listener - the listener is automatically removed after the first execution.
+    *
+    * If there is as {@link Phaser.Signal#memorize memorized} event then it will be dispatched and
+    * the listener will be removed immediately.
     *
     * @method Phaser.Signal#addOnce
     * @param {function} listener - The function to call when this Signal is dispatched.
@@ -215,7 +224,7 @@ Phaser.Signal.prototype = {
     },
 
     /**
-    * Remove a single listener from the dispatch queue.
+    * Remove a single event listener.
     *
     * @method Phaser.Signal#remove
     * @param {function} listener - Handler function that should be removed.
@@ -239,7 +248,7 @@ Phaser.Signal.prototype = {
     },
 
     /**
-    * Remove all listeners from the Signal.
+    * Remove all event listeners.
     *
     * @method Phaser.Signal#removeAll
     * @param {object} [context=null] - If specified only listeners for the given context will be removed.
@@ -282,7 +291,7 @@ Phaser.Signal.prototype = {
     * Gets the total number of listeners attached to this Signal.
     *
     * @method Phaser.Signal#getNumListeners
-    * @return {number} Number of listeners attached to the Signal.
+    * @return {integer} Number of listeners attached to the Signal.
     */
     getNumListeners: function () {
 
@@ -292,8 +301,9 @@ Phaser.Signal.prototype = {
 
     /**
     * Stop propagation of the event, blocking the dispatch to next listener on the queue.
-    * IMPORTANT: should be called only during signal dispatch, calling it before/after dispatch won't affect signal broadcast.
-    * @see Signal.prototype.disable
+    *
+    * This should be called only during event dispatch as calling it before/after dispatch won't affect other broadcast.
+    * See {@link #active} to enable/disable the signal entirely.
     *
     * @method Phaser.Signal#halt
     */
@@ -304,9 +314,9 @@ Phaser.Signal.prototype = {
     },
 
     /**
-    * Dispatch/Broadcast Signal to all listeners added to the queue.
+    * Dispatch / broadcast the event to all listeners.
     *
-    * To create a bound dispatch for this Signal, use {@link Phaser.Signal#boundDispatch}.
+    * To create an instance-bound dispatch for this Signal, use {@link #boundDispatch}.
     *
     * @method Phaser.Signal#dispatch
     * @param {any} [params] - Parameters that should be passed to each handler.
@@ -346,8 +356,7 @@ Phaser.Signal.prototype = {
     },
 
     /**
-    * Forget memorized arguments.
-    * @see Signal.memorize
+    * Forget the currently {@link Phaser.Signal#memorize memorized} event, if any.
     *
     * @method Phaser.Signal#forget
     */
@@ -361,8 +370,10 @@ Phaser.Signal.prototype = {
     },
 
     /**
-    * Remove all bindings from signal and destroy any reference to external objects (destroy Signal object).
-    * IMPORTANT: calling any method on the signal instance after calling dispose will throw errors.
+    * Dispose the signal - no more events can be dispatched.
+    *
+    * This removes all event listeners and clears references to external objects.
+    * Calling methods on a disposed objects results in undefined behavior.
     *
     * @method Phaser.Signal#dispose
     */
@@ -379,6 +390,7 @@ Phaser.Signal.prototype = {
     },
 
     /**
+    * A string representation of the object.
     *
     * @method Phaser.Signal#toString
     * @return {string} String representation of the object.
@@ -392,8 +404,10 @@ Phaser.Signal.prototype = {
 };
 
 /**
-* If the dispatch function needs to be passed somewhere, or called independently
-* of the Signal object, use this function.
+* Create a `dispatch` function that maintains a binding to the original Signal context.
+*
+* Use the resulting value if the dispatch function needs to be passed somewhere
+* or called independently of the Signal object.
 *
 * @memberof Phaser.Signal
 * @property {function} boundDispatch

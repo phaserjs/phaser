@@ -302,6 +302,9 @@ Phaser.Physics.P2.Body.prototype = {
     */
     clearCollision: function (clearGroup, clearMask, shape) {
 
+        if (typeof clearGroup === 'undefined') { clearGroup = true; }
+        if (typeof clearMask === 'undefined') { clearMask = true; }
+
         if (typeof shape === 'undefined')
         {
             for (var i = this.data.shapes.length - 1; i >= 0; i--)
@@ -400,6 +403,7 @@ Phaser.Physics.P2.Body.prototype = {
     adjustCenterOfMass: function () {
 
         this.data.adjustCenterOfMass();
+        this.shapeChanged();
 
     },
 

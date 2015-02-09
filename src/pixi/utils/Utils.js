@@ -166,7 +166,7 @@ PIXI.unpackColorRGB = function(r, g, b)//r, g, b, a)
 */
 
 /**
- * Checks whether the Canvas BlendModes are supported by the current browser
+ * Checks whether the Canvas BlendModes are supported by the current browser for drawImage
  *
  * @method canUseNewCanvasBlendModes
  * @return {Boolean} whether they are supported
@@ -174,16 +174,27 @@ PIXI.unpackColorRGB = function(r, g, b)//r, g, b, a)
 PIXI.canUseNewCanvasBlendModes = function()
 {
     if (typeof document === 'undefined') return false;
+
+    var pngHead = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAABAQMAAADD8p2OAAAAA1BMVEX/';
+    var pngEnd = 'AAAACklEQVQI12NgAAAAAgAB4iG8MwAAAABJRU5ErkJggg==';
+
+    var magenta = new Image();
+    magenta.src = pngHead + 'AP804Oa6' + pngEnd;
+
+    var yellow = new Image();
+    yellow.src = pngHead + '/wCKxvRF' + pngEnd;
+
     var canvas = document.createElement('canvas');
-    canvas.width = 1;
+    canvas.width = 6;
     canvas.height = 1;
     var context = canvas.getContext('2d');
-    context.fillStyle = '#000';
-    context.fillRect(0,0,1,1);
     context.globalCompositeOperation = 'multiply';
-    context.fillStyle = '#fff';
-    context.fillRect(0,0,1,1);
-    return context.getImageData(0,0,1,1).data[0] === 0;
+    context.drawImage(magenta, 0, 0);
+    context.drawImage(yellow, 2, 0);
+
+    var data = context.getImageData(2,0,1,1).data;
+
+    return (data[0] === 255 && data[1] === 0 && data[2] === 0);
 };
 
 /**
@@ -204,4 +215,17 @@ PIXI.getNextPowerOfTwo = function(number)
         while (result < number) result <<= 1;
         return result;
     }
+};
+
+/**
+ * checks if the given width and height make a power of two texture
+ * @method isPowerOfTwo
+ * @param width {Number}
+ * @param height {Number}
+ * @return {Boolean} 
+ */
+PIXI.isPowerOfTwo = function(width, height)
+{
+    return (width > 0 && (width & (width - 1)) === 0 && height > 0 && (height & (height - 1)) === 0);
+
 };

@@ -167,10 +167,8 @@ PIXI.TilingSprite.prototype._renderWebGL = function(renderSession)
 
         if (this.tilingTexture && this.tilingTexture.needsUpdate)
         {
-            //TODO - tweaking
-            PIXI.updateWebGLTexture(this.tilingTexture.baseTexture, renderSession.gl);
+            renderSession.renderer.updateTexture(this.tilingTexture.baseTexture);
             this.tilingTexture.needsUpdate = false;
-           // this.tilingTexture._uvs = null;
         }
     }
     else
@@ -218,8 +216,8 @@ PIXI.TilingSprite.prototype._renderCanvas = function(renderSession)
     var resolution = renderSession.resolution;
 
     context.setTransform(transform.a * resolution,
-                         transform.c * resolution,
                          transform.b * resolution,
+                         transform.c * resolution,
                          transform.d * resolution,
                          transform.tx * resolution,
                          transform.ty * resolution);
@@ -463,4 +461,17 @@ PIXI.TilingSprite.prototype.generateTilingTexture = function(forcePowerOfTwo)
     this.texture = this.tilingTexture;
     
     this.tilingTexture.baseTexture._powerOf2 = true;
+};
+
+PIXI.TilingSprite.prototype.destroy = function () {
+
+    PIXI.Sprite.prototype.destroy.call(this);
+
+    this.tileScale = null;
+    this.tileScaleOffset = null;
+    this.tilePosition = null;
+
+    this.tilingTexture.destroy(true);
+    this.tilingTexture = null;
+
 };

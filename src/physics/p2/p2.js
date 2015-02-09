@@ -10158,7 +10158,7 @@ Capsule.prototype = new Shape();
  * @method conputeMomentOfInertia
  * @param  {Number} mass
  * @return {Number}
- * @todo
+ * @todo !
  */
 Capsule.prototype.computeMomentOfInertia = function(mass){
     // Approximate with rectangle

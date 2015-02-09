@@ -16,7 +16,7 @@
 * @param {number} x - X position of the new text object.
 * @param {number} y - Y position of the new text object.
 * @param {string} text - The actual text that will be written.
-* @param {object} style - The style object containing style attributes like font, font size ,
+* @param {object} style - The style object containing style attributes like font, font size, etc.
 */
 Phaser.Text = function (game, x, y, text, style) {
 
@@ -239,7 +239,7 @@ Phaser.Text.prototype.destroy = function (destroyChildren) {
 
     if (this.events)
     {
-        this.events.onDestroy.dispatch(this);
+        this.events.onDestroy$dispatch(this);
     }
 
     if (this.parent)
@@ -295,20 +295,28 @@ Phaser.Text.prototype.destroy = function (destroyChildren) {
 };
 
 /**
-* Sets a drop-shadow effect on the Text.
+* Sets a drop shadow effect on the Text. You can specify the horizontal and vertical distance of the drop shadow with the `x` and `y` parameters.
+* The color controls the shade of the shadow (default is black) and can be either an `rgba` or `hex` value.
+* The blur is the strength of the shadow. A value of zero means a hard shadow, a value of 10 means a very soft shadow.
+* To remove a shadow already in place you can call this method with no parameters set.
 * 
 * @method Phaser.Text#setShadow
 * @param {number} [x=0] - The shadowOffsetX value in pixels. This is how far offset horizontally the shadow effect will be.
 * @param {number} [y=0] - The shadowOffsetY value in pixels. This is how far offset vertically the shadow effect will be.
-* @param {string} [color='rgba(0,0,0,0)'] - The color of the shadow, as given in CSS rgba format. Set the alpha component to 0 to disable the shadow.
+* @param {string} [color='rgba(0,0,0,1)'] - The color of the shadow, as given in CSS rgba or hex format. Set the alpha component to 0 to disable the shadow.
 * @param {number} [blur=0] - The shadowBlur value. Make the shadow softer by applying a Gaussian blur to it. A number from 0 (no blur) up to approx. 10 (depending on scene).
 */
 Phaser.Text.prototype.setShadow = function (x, y, color, blur) {
 
-    this.style.shadowOffsetX = x || 0;
-    this.style.shadowOffsetY = y || 0;
-    this.style.shadowColor = color || 'rgba(0,0,0,0)';
-    this.style.shadowBlur = blur || 0;
+    if (typeof x === 'undefined') { x = 0; }
+    if (typeof y === 'undefined') { y = 0; }
+    if (typeof color === 'undefined') { color = 'rgba(0, 0, 0, 1)'; }
+    if (typeof blur === 'undefined') { blur = 0; }
+
+    this.style.shadowOffsetX = x;
+    this.style.shadowOffsetY = y;
+    this.style.shadowColor = color;
+    this.style.shadowBlur = blur;
     this.dirty = true;
 
 };
@@ -317,7 +325,7 @@ Phaser.Text.prototype.setShadow = function (x, y, color, blur) {
 * Set the style of the text by passing a single style object to it.
 *
 * @method Phaser.Text#setStyle
-* @param {Object} [style] - The style properties to be set on the Text.
+* @param {object} [style] - The style properties to be set on the Text.
 * @param {string} [style.font='bold 20pt Arial'] - The style and size of the font.
 * @param {string} [style.fill='black'] - A canvas fillstyle that will be used on the text eg 'red', '#00FF00'.
 * @param {string} [style.align='left'] - Alignment for multiline text ('left', 'center' or 'right'), does not affect single line text.

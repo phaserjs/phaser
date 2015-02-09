@@ -10,6 +10,7 @@
 * Provides a useful Window and Element functions as well as cross-browser compatibility buffer.
 *
 * Some code originally derived from {@link https://github.com/ryanve/verge verge}.
+* Some parts were inspired by the research of Ryan Van Etten, released under MIT License 2013.
 * 
 * @class Phaser.DOM
 * @static
@@ -75,13 +76,13 @@ Phaser.DOM = {
     },
 
     /**
-    * Calibrates element coordinates for `inViewport` checks.
+    * Calibrates element coordinates for `inLayoutViewport` checks.
     *
     * @method Phaser.DOM.calibrate
     * @private
-    * @param {Object} coords - An object containing the following properties: `{top: number, right: number, bottom: number, left: number}`
+    * @param {object} coords - An object containing the following properties: `{top: number, right: number, bottom: number, left: number}`
     * @param {number} [cushion] - A value to adjust the coordinates by.
-    * @return {Object} The calibrated element coordinates
+    * @return {object} The calibrated element coordinates
     */
     calibrate: function (coords, cushion) {
 
@@ -129,10 +130,10 @@ Phaser.DOM = {
     * 
     * The optional cushion parameter allows you to specify a distance.
     * 
-    * inViewport(element, 100) is `true` if the element is in the viewport or 100px near it.
-    * inViewport(element, -100) is `true` if the element is in the viewport or at least 100px near it.
+    * inLayoutViewport(element, 100) is `true` if the element is in the viewport or 100px near it.
+    * inLayoutViewport(element, -100) is `true` if the element is in the viewport or at least 100px near it.
     * 
-    * @method Phaser.DOM.inViewport
+    * @method Phaser.DOM.inLayoutViewport
     * @param {DOMElement|Object} element - The DOM element to check. If no element is given it defaults to the Phaser game canvas.
     * @param {number} [cushion] - The cushion allows you to specify a distance within which the element must be within the viewport.
     * @return {boolean} True if the element is within the viewport, or within `cushion` distance from it.
@@ -335,11 +336,13 @@ Phaser.Device.whenReady(function (device) {
     if (treatAsDesktop)
     {
 
+        // PST- When scrollbars are not included this causes upstream issues in ScaleManager.
+        // So reverted to the old "include scrollbars."
         var clientWidth = function () {
-            return document.documentElement.clientWidth;
+            return Math.max(window.innerWidth, document.documentElement.clientWidth);
         };
         var clientHeight = function () {
-            return document.documentElement.clientHeight;
+            return Math.max(window.innerHeight, document.documentElement.clientHeight);
         };
 
         // Interested in area sans-scrollbar

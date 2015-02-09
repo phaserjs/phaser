@@ -196,14 +196,6 @@ Phaser.AnimationManager.prototype = {
             }
         }
 
-        //  Create the signals the AnimationManager will emit
-        if (this.sprite.events.onAnimationStart === null)
-        {
-            this.sprite.events.onAnimationStart = new Phaser.Signal();
-            this.sprite.events.onAnimationComplete = new Phaser.Signal();
-            this.sprite.events.onAnimationLoop = new Phaser.Signal();
-        }
-
         this._outputFrames.length = 0;
 
         this._frameData.getFrameIndexes(frames, useNumericIndex, this._outputFrames);
@@ -444,10 +436,12 @@ Phaser.AnimationManager.prototype = {
         }
 
         this._anims = {};
+        this._outputFrames = [];
         this._frameData = null;
-        this._frameIndex = 0;
         this.currentAnim = null;
         this.currentFrame = null;
+        this.sprite = null;
+        this.game = null;
 
     }
 
@@ -529,21 +523,19 @@ Object.defineProperty(Phaser.AnimationManager.prototype, 'frame', {
 
         if (this.currentFrame)
         {
-            return this._frameIndex;
+            return this.currentFrame.index;
         }
 
     },
 
     set: function (value) {
 
-        if (typeof value === 'number' && this._frameData.getFrame(value) !== null)
+        if (typeof value === 'number' && this._frameData && this._frameData.getFrame(value) !== null)
         {
             this.currentFrame = this._frameData.getFrame(value);
 
             if (this.currentFrame)
             {
-                this._frameIndex = value;
-
                 this.sprite.setFrame(this.currentFrame);
 
                 if (this.sprite.__tilePattern)

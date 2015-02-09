@@ -57,13 +57,13 @@ Phaser.TweenData = function (parent) {
 
     /**
     * @property {number} percent - A value between 0 and 1 that represents how far through the duration this tween is.
-    * @readOnly
+    * @readonly
     */
     this.percent = 0;
 
     /**
     * @property {number} value - The current calculated value.
-    * @readOnly
+    * @readonly
     */
     this.value = 0;
 

@@ -7,13 +7,16 @@
 
 /**
 * The Loader handles loading all external content such as Images, Sounds, Texture Atlases and data files.
-* It uses a combination of tag loading (eg. Image elements) and XHR and provides progress and completion callbacks.
+*
+* The loader uses a combination of tag loading (eg. Image elements) and XHR and provides progress and completion callbacks.
 *
 * Parallel loading is supported but must be enabled explicitly with {@link Phaser.Loader#enableParallel enableParallel}.
 * Load-before behavior of parallel resources is controlled by synchronization points as discussed in {@link Phaser.Loader#withSyncPoint withSyncPoint}.
 *
+* Texture Atlases can be created with tools such as [Texture Packer](https://www.codeandweb.com/texturepacker/phaser) and
+* [Shoebox](http://renderhjs.net/shoebox/)
+*
 * @class Phaser.Loader
-* @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
 */
 Phaser.Loader = function (game) {
@@ -83,6 +86,8 @@ Phaser.Loader = function (game) {
     /**
     * This event is dispatched when an asset pack has either loaded or failed to load.
     *
+    * This is called when the asset pack manifest file has loaded and successfully added its contents to the loader queue.
+    *
     * Params: `(pack key, success?, total packs loaded, total packs)`
     *
     * @property {Phaser.Signal} onPackComplete
@@ -130,6 +135,7 @@ Phaser.Loader = function (game) {
     this.useXDomainRequest = false;
 
     /**
+    * @private
     * @property {boolean} _warnedAboutXDomainRequest - Control number of warnings for using XDR outside of IE 9.
     */
     this._warnedAboutXDomainRequest = false;
@@ -296,7 +302,7 @@ Phaser.Loader.prototype = {
     /**
     * Called automatically by ScaleManager when the game resizes in RESIZE scalemode.
     *
-    * We use this to adjust the height of the preloading sprite, if set.
+    * This can be used to adjust the preloading sprite size, eg.
     *
     * @method Phaser.Loader#resize
     * @protected
@@ -712,8 +718,8 @@ Phaser.Loader.prototype = {
     * @method Phaser.Loader#audio
     * @param {string} key - Unique asset key of the audio file.
     * @param {string[]|string} urls - An array containing the URLs of the audio files, i.e.: [ 'jump.mp3', 'jump.ogg', 'jump.m4a' ] or a single string containing just one URL.
-    * @param {boolean} [autoDecode=true] - When using Web Audio the audio files can either be decoded at load time or run-time.
-    *     They can't be played until they are decoded, but this let's you control when that happens. Decoding is a non-blocking async process.
+    *     BLOB urls are supported, but Phaser will not validate the audio file's type in this case; the program must first ensure the BLOB url is playable.
+    * @param {boolean} autoDecode - When using Web Audio the audio files can either be decoded at load time or run-time. They can't be played until they are decoded, but this let's you control when that happens. Decoding is a non-blocking async process.
     * @return {Phaser.Loader} This Loader instance.
     */
     audio: function (key, urls, autoDecode) {
@@ -892,6 +898,9 @@ Phaser.Loader.prototype = {
     /**
     * Add a new texture atlas ('textureatlas') to the loader. This atlas uses the JSON Array data format.
     *
+    * Texture Atlases can be created with tools such as [Texture Packer](https://www.codeandweb.com/texturepacker/phaser) and
+    * [Shoebox](http://renderhjs.net/shoebox/)
+    *
     * @method Phaser.Loader#atlasJSONArray
     * @param {string} key - Unique asset key of the texture atlas file.
     * @param {string} textureURL - The url of the texture atlas image file.
@@ -907,6 +916,9 @@ Phaser.Loader.prototype = {
 
     /**
     * Add a new texture atlas ('textureatlas') to the loader. This atlas uses the JSON Hash data format.
+    *
+    * Texture Atlases can be created with tools such as [Texture Packer](https://www.codeandweb.com/texturepacker/phaser) and
+    * [Shoebox](http://renderhjs.net/shoebox/)
     *
     * @method Phaser.Loader#atlasJSONHash
     * @param {string} key - Unique asset key of the texture atlas file.
@@ -939,6 +951,9 @@ Phaser.Loader.prototype = {
 
     /**
     * Add a new texture atlas ('textureatlas') to the loader.
+    *
+    * Texture Atlases can be created with tools such as [Texture Packer](https://www.codeandweb.com/texturepacker/phaser) and
+    * [Shoebox](http://renderhjs.net/shoebox/)
     *
     * @method Phaser.Loader#atlas
     * @param {string} key - Unique asset key of the texture atlas file.
@@ -1708,6 +1723,8 @@ Phaser.Loader.prototype = {
     /**
     * Give a bunch of URLs, return the first URL that has an extension this device thinks it can play.
     *
+    * It is assumed that the device can play "blob:" or "data:" URIs - There is no mime-type checking on data URIs.
+    *
     * @method Phaser.Loader#getAudioURL
     * @private
     * @param {string[]|string} urls - Either an array of audio file URLs or a string containing a single URL path.
@@ -1719,7 +1736,15 @@ Phaser.Loader.prototype = {
 
         for (var i = 0; i < urls.length; i++)
         {
-            var extension = urls[i].toLowerCase();
+            var url = urls[i];
+
+            // It is assumed that a direct-data URI can be played.
+            if (url.indexOf("blob:") === 0 || url.indexOf("data:") === 0)
+            {
+                return url;
+            }
+
+            var extension = url.toLowerCase();
             extension = extension.substr((Math.max(0, extension.lastIndexOf(".")) || Infinity) + 1);
 
             if (extension.indexOf("?") >= 0)
@@ -1968,16 +1993,14 @@ Phaser.Loader.prototype = {
     */
     xmlLoadComplete: function (file, xhr) {
 
-        if (xhr.responseType !== '' && xhr.responseType !== 'text')
-        {
-            console.warn('Phaser.Loader - ' + file.key + ': invalid XML Response Type');
-        }
-
+        // Always try parsing the content as XML, regardless of actually response type
         var data = xhr.responseText;
         var xml = this.parseXml(data);
 
         if (!xml)
         {
+            var responseType = xhr.responseType || xhr.contentType; // contentType for MS-XDomainRequest
+            console.warn('Phaser.Loader - ' + file.key + ': invalid XML (' + responseType + ')');
             this.asyncComplete(file, "invalid XML");
             return;
         }

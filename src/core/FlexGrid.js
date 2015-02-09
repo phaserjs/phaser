@@ -26,7 +26,7 @@ Phaser.FlexGrid = function (manager, width, height) {
     this.game = manager.game;
 
     /**
-    * @property {Phaser.ScaleManager} scale - A reference to the ScaleManager.
+    * @property {Phaser.ScaleManager} manager - A reference to the ScaleManager.
     */
     this.manager = manager;
 
@@ -107,7 +107,7 @@ Phaser.FlexGrid.prototype = {
      * @method Phaser.FlexGrid#createCustomLayer
      * @param {number} width - Width of this layer in pixels.
      * @param {number} height - Height of this layer in pixels.
-     * @param {array} [children] - An array of children that are used to populate the FlexLayer.
+     * @param {PIXI.DisplayObject[]} [children] - An array of children that are used to populate the FlexLayer.
      * @return {Phaser.FlexLayer} The Layer object.
      */
     createCustomLayer: function (width, height, children, addToWorld) {
@@ -195,7 +195,7 @@ Phaser.FlexGrid.prototype = {
      * A fixed layer is centered on the game and is the size of the required dimensions and is never scaled.
      *
      * @method Phaser.FlexGrid#createFixedLayer
-     * @param {array} [children] - An array of children that are used to populate the FlexLayer.
+     * @param {PIXI.DisplayObject[]} [children] - An array of children that are used to populate the FlexLayer.
      * @return {Phaser.FlexLayer} The Layer object.
      */
     createFixedLayer: function (children) {

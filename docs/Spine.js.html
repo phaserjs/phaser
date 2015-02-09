@@ -124,50 +124,6 @@
 							<a href="Phaser.Easing.html">Easing</a>
 						</li>
 						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Back.html">Back</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Bounce.html">Bounce</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Circular.html">Circular</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Cubic.html">Cubic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Elastic.html">Elastic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Exponential.html">Exponential</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Linear.html">Linear</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Quadratic.html">Quadratic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Quartic.html">Quartic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Quintic.html">Quintic</a>
-						</li>
-						
-						<li class="class-depth-2">
-							<a href="Phaser.Easing.Sinusoidal.html">Sinusoidal</a>
-						</li>
-						
 						<li class="class-depth-1">
 							<a href="Phaser.Ellipse.html">Ellipse</a>
 						</li>
@@ -876,6 +832,7 @@
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Core<b class="caret"></b></a>
 					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="Phaser.Game.html">Game</a></li>
 						<li class="class-depth-1"><a href="Phaser.Group.html">Group</a></li>
 						<li class="class-depth-1"><a href="Phaser.World.html">World</a></li>
 						<li class="class-depth-1"><a href="Phaser.Loader.html">Loader</a></li>
@@ -884,7 +841,7 @@
 						<li class="class-depth-1"><a href="Phaser.StateManager.html">State Manager</a></li>
 						<li class="class-depth-1"><a href="Phaser.TweenManager.html">Tween Manager</a></li>
 						<li class="class-depth-1"><a href="Phaser.SoundManager.html">Sound Manager</a></li>
-						<li class="class-depth-1"><a href="Phaser.InputManager.html">Input Manager</a></li>
+						<li class="class-depth-1"><a href="Phaser.Input.html">Input Manager</a></li>
 						<li class="class-depth-1"><a href="Phaser.ScaleManager.html">Scale Manager</a></li>
 					</ul>
 				</li>
@@ -897,7 +854,8 @@
 						<li class="class-depth-1"><a href="Phaser.Sprite.html">Sprite</a></li>
 						<li class="class-depth-1"><a href="Phaser.Image.html">Image</a></li>
 						<li class="class-depth-1"><a href="Phaser.Sound.html">Sound</a></li>
-						<li class="class-depth-1"><a href="Phaser.Emitter.html">Emitter</a></li>
+						<li class="class-depth-1"><a href="Phaser.Particles.Arcade.Emitter.html">Particle Emitter</a></li>
+						<li class="class-depth-1"><a href="Phaser.Particle.html">Particle</a></li>
 						<li class="class-depth-1"><a href="Phaser.Text.html">Text</a></li>
 						<li class="class-depth-1"><a href="Phaser.Tween.html">Tween</a></li>
 						<li class="class-depth-1"><a href="Phaser.BitmapText.html">BitmapText</a></li>
@@ -954,6 +912,7 @@
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Community<b class="caret"></b></a>
 					<ul class="dropdown-menu ">
+						<li class="class-depth-1"><a href="https://leanpub.com/u/photonstorm">Phaser Books</a></li>
 						<li class="class-depth-1"><a href="https://github.com/photonstorm/phaser">Phaser Github</a></li>
 						<li class="class-depth-1"><a href="http://examples.phaser.io">Phaser Examples</a></li>
 						<li class="class-depth-1"><a href="https://github.com/photonstorm/phaser-plugins">Phaser Plugins</a></li>
@@ -1757,8 +1716,8 @@ spine.FfdTimeline.prototype = {
 		this.frameVertices[frameIndex] = vertices;
 	},
 	apply: function (skeleton, lastTime, time, firedEvents, alpha) {
-		var slot = skeleton.slots[slotIndex];
-		if (slot.attachment != attachment) return;
+		var slot = skeleton.slots[this.slotIndex];
+		if (slot.attachment != this.attachment) return;
 
 		var frames = this.frames;
 		if (time &lt; frames[0]) return; // Time is before first frame.
@@ -2806,8 +2765,8 @@ spine.SkeletonJson.prototype = {
 			var region = this.attachmentLoader.newRegionAttachment(skin, name, path);
 			if (!region) return null;
 			region.path = path;
-			region.x = (map["x"] || 0) * this.scale;
-			region.y = (map["y"] || 0) * this.scale;
+			region.x = (map["x"] || 0) * scale;
+			region.y = (map["y"] || 0) * scale;
 			region.scaleX = map.hasOwnProperty("scaleX") ? map["scaleX"] : 1;
 			region.scaleY = map.hasOwnProperty("scaleY") ? map["scaleY"] : 1;
 			region.rotation = map["rotation"] || 0;
@@ -2889,7 +2848,7 @@ spine.SkeletonJson.prototype = {
 			var attachment = this.attachmentLoader.newBoundingBoxAttachment(skin, name);
 			var vertices = map["vertices"];
 			for (var i = 0, n = vertices.length; i &lt; n; i++)
-				attachment.vertices.push(vertices[i] * this.scale);
+				attachment.vertices.push(vertices[i] * scale);
 			return attachment;
 		}
 		throw "Unknown attachment type: " + type;
@@ -3068,16 +3027,16 @@ spine.SkeletonJson.prototype = {
 							vertices.length = vertexCount;
 							var start = valueMap["offset"] || 0;
 							var nn = verticesValue.length;
-							if (scale == 1) {
+							if (this.scale == 1) {
 								for (var ii = 0; ii &lt; nn; ii++)
 									vertices[ii + start] = verticesValue[ii];
 							} else {
 								for (var ii = 0; ii &lt; nn; ii++)
-									vertices[ii + start] = verticesValue[ii] * scale;
+									vertices[ii + start] = verticesValue[ii] * this.scale;
 							}
 							if (isMesh) {
 								var meshVertices = attachment.vertices;
-								for (var ii = 0, nn = vertices.length; ii &lt; nn; i++)
+								for (var ii = 0, nn = vertices.length; ii &lt; nn; ii++)
 									vertices[ii] += meshVertices[ii];
 							}
 						}
@@ -3408,7 +3367,7 @@ spine.AtlasAttachmentLoader = function (atlas) {
 };
 spine.AtlasAttachmentLoader.prototype = {
 	newRegionAttachment: function (skin, name, path) {
-		var region = this.atlas.findRegion(name);
+		var region = this.atlas.findRegion(path);
 		if (!region) throw "Region not found in atlas: " + path + " (region attachment: " + name + ")";
 		var attachment = new spine.RegionAttachment(name);
 		attachment.rendererObject = region;
@@ -3422,7 +3381,7 @@ spine.AtlasAttachmentLoader.prototype = {
 		return attachment;
 	},
 	newMeshAttachment: function (skin, name, path) {
-		var region = this.atlas.findRegion(name);
+		var region = this.atlas.findRegion(path);
 		if (!region) throw "Region not found in atlas: " + path + " (mesh attachment: " + name + ")";
 		var attachment = new spine.MeshAttachment(name);
 		attachment.rendererObject = region;
@@ -3440,7 +3399,7 @@ spine.AtlasAttachmentLoader.prototype = {
 		return attachment;
 	},
 	newSkinnedMeshAttachment: function (skin, name, path) {
-		var region = this.atlas.findRegion(name);
+		var region = this.atlas.findRegion(path);
 		if (!region) throw "Region not found in atlas: " + path + " (skinned mesh attachment: " + name + ")";
 		var attachment = new spine.SkinnedMeshAttachment(name);
 		attachment.rendererObject = region;
@@ -3630,7 +3589,7 @@ spine.SkeletonBounds.prototype = {
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Tue Nov 25 2014 00:17:17 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Tue Jan 06 2015 06:31:48 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>
