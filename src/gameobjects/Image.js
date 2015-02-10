@@ -297,7 +297,10 @@ Phaser.Image.prototype.loadTexture = function (key, frame) {
         }
     }
     
-    this.texture.baseTexture.dirty();
+    if (!key instanceof Phaser.RenderTexture)
+    {
+        this.texture.baseTexture.dirty();
+    }
 
     if (setFrame)
     {

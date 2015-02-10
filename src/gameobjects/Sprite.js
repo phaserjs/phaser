@@ -437,7 +437,10 @@ Phaser.Sprite.prototype.loadTexture = function (key, frame, stopAnimation) {
         }
     }
     
-    this.texture.baseTexture.dirty();
+    if (!key instanceof Phaser.RenderTexture)
+    {
+        this.texture.baseTexture.dirty();
+    }
 
     if (setFrame)
     {
