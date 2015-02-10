@@ -29,6 +29,13 @@ Phaser.Loader = function (game) {
     this.game = game;
 
     /**
+    * If true all calls to Loader.reset will be ignored. Useful if you need to create a load queue before swapping to a preloader state.
+    * @property {boolean} resetLocked
+    * @default
+    */
+    this.resetLocked = false;
+
+    /**
     * True if the Loader is in the process of loading the queue.
     * @property {boolean} isLoading
     * @default
@@ -396,15 +403,25 @@ Phaser.Loader.prototype = {
     },
 
     /**
-    * Reset the loader and clear any queued assets.
+    * Reset the loader and clear any queued assets. If `Loader.resetLocked` is true this operation will abort.
     *
     * This will abort any loading and clear any queued assets.
+    *
+    * Optionally you can clear any associated events.
     *
     * @method Phaser.Loader#reset
     * @protected
     * @param {boolean} [hard=false] - If true then the preload sprite and other artifacts may also be cleared.
+    * @param {boolean} [clearEvents=false] - If true then the all Loader signals will have removeAll called on them.
     */
-    reset: function (hard) {
+    reset: function (hard, clearEvents) {
+
+        if (typeof clearEvents === 'undefined') { clearEvents = false; }
+
+        if (this.resetLocked)
+        {
+            return;
+        }
 
         if (hard)
         {
@@ -422,6 +439,16 @@ Phaser.Loader.prototype = {
         this._totalPackCount = 0;
         this._loadedPackCount = 0;
         this._loadedFileCount = 0;
+
+        if (clearEvents)
+        {
+            this.onLoadStart.removeAll();
+            this.onLoadComplete.removeAll();
+            this.onPackComplete.removeAll();
+            this.onFileStart.removeAll();
+            this.onFileComplete.removeAll();
+            this.onFileError.removeAll();
+        }
 
     },
 
@@ -757,14 +784,14 @@ Phaser.Loader.prototype = {
     * @method Phaser.Loader#audiosprite
     * @param {string} key - Unique asset key of the audio file.
     * @param {Array|string} urls - An array containing the URLs of the audio files, i.e.: [ 'audiosprite.mp3', 'audiosprite.ogg', 'audiosprite.m4a' ] or a single string containing just one URL.
-    * @param {string} atlasURL - The URL of the audiosprite configuration json.
+    * @param {string} jsonURL - The URL of the audiosprite configuration json.
     * @return {Phaser.Loader} This Loader instance.
     */
-    audiosprite: function(key, urls, atlasURL) {
+    audiosprite: function(key, urls, jsonURL) {
 
         this.audio(key, urls);
 
-        this.json(key + '-audioatlas', atlasURL);
+        this.json(key + '-audioatlas', jsonURL);
 
         return this;
 
@@ -1396,6 +1423,10 @@ Phaser.Loader.prototype = {
 
                 case "audio":
                     this.audio(file.key, file.urls, file.autoDecode);
+                    break;
+
+                case "audiosprite":
+                    this.audio(file.key, file.urls, file.jsonURL);
                     break;
 
                 case "tilemap":

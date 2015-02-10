@@ -80,7 +80,9 @@ The URL is always transformed through transformUrl, which can make adding some o
 
 This also incorporates the fast-cache path for Images tags that can greatly speed up the responsiveness of image loading.
 
-Thanks to @pnstickne for this update.
+Loader.resetLocked is a boolean that allows you to control what happens when the loader is reset, *which happens automatically on a State change*. If you set `resetLocked` to `true` it allows you to populate the loader queue in one State, then swap to another State without having the queue erased, and start the load going from there. After the load has completed you could then disable the lock again as needed.
+
+Thanks to @pnstickne for vast majority of this update.
 
 ### New Features
 
@@ -113,6 +115,7 @@ Thanks to @pnstickne for this update.
 * Body.reset now resets the Body.speed value to zero.
 * Device.touch checks if `window.navigator.maxTouchPoints` is `>= 1` rather than > 1, which now allows touch events to work properly in Chrome mobile emulation.
 * Loader.XDomainRequest wasn't used for atlas json loading. It has now been moved to the `xhrLoad` method to ensure it's used for all request if required (thanks @draconisNoctis #1601)
+* Loader.reset has a new optional 2nd parameter `clearEvents` which if set to `true` (the default is false) will reset all event listeners bound to the Loader.
 
 ### Bug Fixes
 
