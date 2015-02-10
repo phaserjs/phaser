@@ -4,6 +4,8 @@
  */
 'use strict';
 
+var path = require('jsdoc/path');
+
 function findClass(parentNode, className)
 {
     var elements =
@@ -109,5 +111,5 @@ exports.publish = function (data, opts) {
 
     graft2(root, data().get());
     var fs = require('fs');
-    fs.writeFileSync(opts.destination, JSON.stringify(root), 'utf8');
+    fs.writeFileSync(path.join(env.opts.destination, 'docs.json'), JSON.stringify(root), 'utf8');
 };

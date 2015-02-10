@@ -216,11 +216,10 @@ PIXI.CanvasTinter.roundColor = function(color)
 };
 
 /**
- * Rounds the specified color according to the PIXI.CanvasTinter.cacheStepsPerColorChannel.
+ * Checks if the browser correctly supports putImageData alpha channels.
  * 
- * @method roundColor
+ * @method checkInverseAlpha
  * @static
- * @param color {number} the color to round, should be a hex color
  */
 PIXI.CanvasTinter.checkInverseAlpha = function()
 {

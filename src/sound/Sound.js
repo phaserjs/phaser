@@ -804,6 +804,11 @@ Phaser.Sound.prototype = {
 
         this.currentMarker = '';
 
+        if (this.fadeTween !== null)
+        {
+            this.fadeTween.stop();
+        }
+
         if (!this.paused)
         {
             this.onStop.dispatch(this, prevMarker);
@@ -908,11 +913,6 @@ Phaser.Sound.prototype = {
         if (typeof remove === 'undefined') { remove = true; }
 
         this.stop();
-
-        if (this.fadeTween !== null)
-        {
-            this.fadeTween.stop();
-        }
 
         if (remove)
         {

@@ -60,23 +60,77 @@ Happy coding everyone! See you on the forums.
 
 Version 2.3.0 - "Tarabon" - in dev
 
+### Significant Update: Phaser.Loader
+
+The Phaser.Loader has been updated to support parallel downloads which is now enabled by default (you can toggle it via the `Loader.enableParallel` flag) as well as adding future extensibility points with a pack/file unified filelist and an inflight queue.
+
+There are no *known* incompatibilities with the previous Loader. Be aware that with parallel downloading enabled the order of the Loader events may vary (as can be seen in the "Load Events" example).
+
+The parallel file concurrency limit is available in `Loader.maxParallelDownloads` and is set to 4 by default. Under simulated slower network connections parallel loading was a good bit faster than sequential loading. Even under a direct localhost connection parallel loading was never slower, but benefited most when loading many small assets (large assets are more limited by bandwidth); both results are fairly expected.
+
+The Loader now supports synchronization points. An asset marked as a synchronization point must be loaded (or fail to load) before any *subsequent* assets can be loaded. This is enabled by using the `withSyncPoint` and `addSyncPoint` methods. Packs ('packfile' files) and Scripts ('script' files) are treated as synchronization points by default. This allows parallel downloads in general while allowing synchronization of select resources if required (packs, and potentially other assets in the future, can load-around synchronization points if they are written to delay final 'loading').
+
+Additional error handling / guards have been added, and the reported error message has been made more consistent. Invalid XML (when loading) no longer throws an exception but fails the particular file/asset that was being loaded. 
+
+Some public methods/properties have been marked as protected, but no (except in case of a should-have-been-private-method) public-facing interfaces have been removed. Some private methods have been renamed and/or removed.
+
+A new XHR object is created for each relevant asset (as there must be a different XHR for each asset loaded in parallel). Online searches indicated that there was no relevant benefit of XHR (as a particular use-case) re-use; and time will be dominated with the resource fetch. With the new flight queue an XHR cache could be re-added, at the cost of some complexity.
+
+The URL is always transformed through transformUrl, which can make adding some one-off special cases like #1355 easier to deal with.
+
+This also incorporates the fast-cache path for Images tags that can greatly speed up the responsiveness of image loading.
+
+Loader.resetLocked is a boolean that allows you to control what happens when the loader is reset, *which happens automatically on a State change*. If you set `resetLocked` to `true` it allows you to populate the loader queue in one State, then swap to another State without having the queue erased, and start the load going from there. After the load has completed you could then disable the lock again as needed.
+
+Thanks to @pnstickne for vast majority of this update.
+
 ### New Features
 
 * `Physics.Arcade.isPaused` allows you to toggle Arcade Physics processing on and off. If `true` the `Body.preUpdate` method will be skipped, halting all motion for all bodies. Note that other methods such as `collide` will still work, so be careful not to call them on paused bodies.
 * `Arcade.Body.friction` allows you to have more fine-grained control over the amount of velocity passed between bodies on collision.
 * BitmapData.text will render the given string to the BitmapData, with optional font, color and shadow settings.
+* MSPointer.capture allows you to optionally event.preventDefault the pointer events (was previously always on)
+* MSPointer.event now stores the most recent pointer event.
+* MSPointer.pointerDownCallback, pointerMoveCallback and pointerUpCallback all allow you to set your own event based callbacks.
+* MSPointer.button now records which button was pressed down (if any)
+* Phaser now supports rotated and flipped tiles in tilemaps, as exported from the Tiled map editor (thanks @nkholski #1608)
+* TilemapParser now supports Tiled 0.11 version maps which includes the `rotation` property on all Object types.
+* Tilemap.createFromObjects now checks for a `rotation` property on the Object and if present will set it as the Sprite.angle (#1433)
+* If for whatever reason you wish to hide the Phaser banner in the console.log you can set `window.PhaserGlobal.hideBanner` to `true` and it will skip the output. Honestly I'd rather if you didn't, but the option is now there.
+* TilemapLayer.setScale will allow you to apply scaling to a specific Tilemap layer, i.e. `layer.setScale(2)` would double the size of the layer. The way the Camera responds to the layer is adjusted accordingly based on the scale, as is Arcade collision (thanks @mickez #1605)
 
 ### Updates
 
-* TypeScript definitions fixes and updates (thanks @clark-stevenson @TimvdEijnden @belohlavek @ivw)
+* TypeScript definitions fixes and updates (thanks @Phaiax @Bilge @clark-stevenson @TimvdEijnden @belohlavek @ivw @vulvulune)
+* There is a new TypeScript defs file (phaser.comments.d.ts) which now has all of the jsdocs included! (thanks @vulvulune #1559)
 * Sound.fadeTween is now used for Sound.fadeIn and Sound.fadeOut audio tweens.
 * Sound.stop and Sound.destroy now halt a fade tween if in effect.
+* Arcade Physics `computeVelocity` now allows a max velocity of 0 allowing movement to be constrained to a single axis (thanks @zekoff #1594)
+* Added missing properties to the InputHandler prototype, reducing hidden class modifications.
+* Updated docstrap-master toc.js to fix nav scrolling (thanks @abderrahmane-tj @vulvulune #1589)
+* Added missing plugins member in Phaser.Game class (thanks @Bilge #1568)
+* Lots of JSDocs fixes (thanks @vulvulune @micahjohnston @Marchys)
+* TilemapLayer.getTiles now returns a copy of the Tiles found by the method, rather than references to the original Tile objects, so you're free to modify them without corrupting the source (thanks @Leekao #1585)
+* Sprite.events.onDragStart has 2 new parameters `x` and `y` which is the position of the Sprite before the drag was started. The full list of parameters is: `(sprite, pointer, x, y)`. This allows you to retain the position of the Sprite prior to dragging should `dragFromCenter` have been enabled (thanks @vulvulune #1583)
+* Body.reset now resets the Body.speed value to zero.
+* Device.touch checks if `window.navigator.maxTouchPoints` is `>= 1` rather than > 1, which now allows touch events to work properly in Chrome mobile emulation.
+* Loader.XDomainRequest wasn't used for atlas json loading. It has now been moved to the `xhrLoad` method to ensure it's used for all request if required (thanks @draconisNoctis #1601)
+* Loader.reset has a new optional 2nd parameter `clearEvents` which if set to `true` (the default is false) will reset all event listeners bound to the Loader.
 
 ### Bug Fixes
 
 * SoundManager.unlock checks for audio `start` support and falls back to `noteOn` if not found.
 * Sprite.frame and AnimationManager.frame wouldn't return the correct index if a sprite sheet was being used unless it had first been set via the setter.
 * Error in diffX and diffY calculation in Tilemap.paste (thanks @amelia410 #1446)
+* Fixed issue in PIXI.canUseNewCanvasBlendModes which would create false positives in browsers that supported `multiply` in Canvas path/fill ops, but not for `drawImage` (Samsung S5 for example). Now uses more accurate magenta / yellow mix test.
+* Fixed FrameData.getFrame index out of bound error (thanks @jromer94 #1581 #1547)
+* In P2.Body calling adjust mass would desync the debug graphics from the real position of the body (thanks @tomlarkworthy #1549)
+* Fix CORS loading of BitmapFonts with IE9 (thanks @jeppester #1565)
+* TileSprites were not detecting Pointer up events correctly because of a branching condition (thanks @integricho #1580 #1551)
+* TileSprites weren't destroying WebGL textures, leading to eventual out of memory errors (thanks @chacal #1563)
+* P2.Body.clearCollision default values were incorrectly set to `false` if no parameters were provided, even though the docs said they were `true` (thanks @brianbunch #1597)
+* BitmapText.font wouldn't update an internal Pixi property (fontName) causing the text to fail to change font (thanks @starnut #1602)
+* Fixed issue in PIXI.Text where it was using the wrong string for descender text measurements.
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 
@@ -236,7 +290,9 @@ If you need to support IE9 / Android 2.x **and** use P2 physics then you must us
 
 Phaser is developed in JavaScript. We've made no assumptions about how you like to code and were careful not to impose a strict structure upon you. You won't find Phaser split into modules, requiring a build step, or making you use a class / inheritance OOP approach. That doesn't mean you can't do so, it just means we don't *force* you to. It's your choice.
 
-If you code with [TypeScript](http://www.typescriptlang.org/) there are comprehensive definition files in the `typescript` folder. They are for TypeScript 1.0+. If using an earlier version of TypeScript (i.e. 0.9.5) you will need to include [WebGL definitions](https://github.com/piersh/WebGL.ts) into your project first.
+If you code with [TypeScript](http://www.typescriptlang.org/) there are comprehensive definition files in the `typescript` folder. They are for TypeScript 1.4+ only.
+
+We don't officially support any version of TypeScript before 1.4, however you can use any of our defs files from January 2015 or before, although they will not be fully feature complete. If using a very early version of TypeScript (i.e. 0.9.5) you will need to include [WebGL definitions](https://github.com/piersh/WebGL.ts) into your project first.
 
 ![div](http://www.phaser.io/images/github/div.png)
 

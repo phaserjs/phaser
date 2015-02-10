@@ -1,3 +1,4 @@
+/// <binding />
 module.exports = function (grunt) {
 
     var loadConfig = require('load-grunt-config');
@@ -20,7 +21,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('dist', ['replace:pixi', 'replace:p2', 'build', 'copy']);
 
-    grunt.registerTask('docs', [ 'clean:docs', 'pixidoc', 'builddoc', 'replace:docs', 'clean:out']);
+    grunt.registerTask('docs', [ 'clean:docs', 'pixidoc', 'jsdoc:html', 'replace:docs', 'clean:out']);
 
-    grunt.registerTask('tsdocs', ['pixidoc', 'exportdocjson', 'buildtsdoc:pixi', 'buildtsdoc:phaser', 'replace:phasertsdefheader', 'clean:out']);
+    grunt.registerTask('tsdocs', ['clean:out', 'pixidoc', 'gitclone:plugins', 'jsdoc:json', 'buildtsdoc:pixi', 'buildtsdoc:phaser', 'replace:phasertsdefheader', 'clean:out']);
 };

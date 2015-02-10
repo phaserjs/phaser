@@ -215,7 +215,7 @@ Phaser.ArrayUtils = {
     * Create an array representing the inclusive range of numbers (usually integers) in `[start, end]`.
     * This is equivalent to `numberArrayStep(start, end, 1)`.
     *
-    * @method Phaser.Math#numberArray
+    * @method Phaser.ArrayUtils#numberArray
     * @param {number} start - The minimum value the array starts with.
     * @param {number} end - The maximum value the array contains.
     * @return {number[]} The array of number values.
@@ -242,28 +242,28 @@ Phaser.ArrayUtils = {
     * Certain values for `start` and `end` (eg. NaN/undefined/null) are currently coerced to 0;
     * for forward compatibility make sure to pass in actual numbers.
     *
-    * @method Phaser.Math#numberArrayStep
+    * @method Phaser.ArrayUtils#numberArrayStep
     * @param {number} start - The start of the range.
     * @param {number} end - The end of the range.
     * @param {number} [step=1] - The value to increment or decrement by.
     * @returns {Array} Returns the new array of numbers.
     * @example
-    * Phaser.Math.numberArrayStep(4);
+    * Phaser.ArrayUtils.numberArrayStep(4);
     * // => [0, 1, 2, 3]
     *
-    * Phaser.Math.numberArrayStep(1, 5);
+    * Phaser.ArrayUtils.numberArrayStep(1, 5);
     * // => [1, 2, 3, 4]
     *
-    * Phaser.Math.numberArrayStep(0, 20, 5);
+    * Phaser.ArrayUtils.numberArrayStep(0, 20, 5);
     * // => [0, 5, 10, 15]
     *
-    * Phaser.Math.numberArrayStep(0, -4, -1);
+    * Phaser.ArrayUtils.numberArrayStep(0, -4, -1);
     * // => [0, -1, -2, -3]
     *
-    * Phaser.Math.numberArrayStep(1, 4, 0);
+    * Phaser.ArrayUtils.numberArrayStep(1, 4, 0);
     * // => [1, 1, 1]
     *
-    * Phaser.Math.numberArrayStep(0);
+    * Phaser.ArrayUtils.numberArrayStep(0);
     * // => []
     */
     numberArrayStep: function(start, end, step) {
