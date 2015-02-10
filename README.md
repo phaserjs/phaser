@@ -109,7 +109,7 @@ Thanks to @pnstickne for vast majority of this update.
 * Added missing properties to the InputHandler prototype, reducing hidden class modifications.
 * Updated docstrap-master toc.js to fix nav scrolling (thanks @abderrahmane-tj @vulvulune #1589)
 * Added missing plugins member in Phaser.Game class (thanks @Bilge #1568)
-* Lots of JSDocs fixes (thanks @vulvulune @micahjohnston @Marchys)
+* Lots of JSDocs fixes (thanks @vulvulune @micahjohnston @Marchys @JesseAldridge)
 * TilemapLayer.getTiles now returns a copy of the Tiles found by the method, rather than references to the original Tile objects, so you're free to modify them without corrupting the source (thanks @Leekao #1585)
 * Sprite.events.onDragStart has 2 new parameters `x` and `y` which is the position of the Sprite before the drag was started. The full list of parameters is: `(sprite, pointer, x, y)`. This allows you to retain the position of the Sprite prior to dragging should `dragFromCenter` have been enabled (thanks @vulvulune #1583)
 * Body.reset now resets the Body.speed value to zero.
@@ -118,6 +118,10 @@ Thanks to @pnstickne for vast majority of this update.
 * Loader.reset has a new optional 2nd parameter `clearEvents` which if set to `true` (the default is false) will reset all event listeners bound to the Loader.
 * If `Body.customSeparateX` or `customSeparateY` is `true` then the Body will no longer be automatically separated from a **Tilemap** collision or exchange any velocity. The amount of pixels that the Body has intersected the tile is available in `Body.overlapX` and `overlapY`, so you can use these values to perform your own separation in your collision callback (#992)
 * TilemapParser will now set the `.type` property for ObjectLayer Objects (thanks @mikaturunen #1609)
+* The Loader now directly calls StateManager.loadComplete rather than the StateManager listening for the loadComplete event, because Loader.reset unbinds this event (and it's easy to accidentally remove it too)
+* Loader.onLoadComplete is dispatched *before* the Loader is reset. If you have a `create` method in your State please note that the Loader will have been reset before this method is called. This allows you to immediately re-use the Loader without having to first reset it manually.
+* World.setBounds will now adjust the World.x/y values to match those given (#1555)
+* ArcadePhysics.distanceToPointer now calculates the distance in world space values.
 
 ### Bug Fixes
 
@@ -135,6 +139,7 @@ Thanks to @pnstickne for vast majority of this update.
 * Fixed issue in PIXI.Text where it was using the wrong string for descender text measurements.
 * Sprite.loadTexture and Image.loadTexture now no longer call `updateTexture` if the texture given is a RenderTexture. This fixes issues with RetroFonts in IE11 WebGL as well as other RenderTexture related IE11 problems (#1310 #1381 #1523)
 * You can now tint animated Sprites in Canvas mode. Or change the texture atlas frame of a tinted Sprite or Image. Please note that this is pretty expensive (depending in the browser), as the tint is re-applied every time the *frame changes*. The Pixi tint cache has also been removed to allow for subtle tint color shifts and to avoid blowing up memory. So use this feature sparingly! But at least it does now work (#1070)
+* ArcadePhysics.moveToPointer no longer goes crazy if the maxTime parameter is given and the Sprite is positioned in a larger game world (thanks @AnderbergE #1472)
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 
