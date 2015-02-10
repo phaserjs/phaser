@@ -406,14 +406,17 @@ Phaser.TilemapParser = {
                         }
                         // Keep track of layers with this particular animated tile
                         layersWithAnimatedTile = [];
-                        for (var i = 0; i < json.layers.length; i++)
+                        for (i2 = 0; i2 < json.layers.length; i2++)
                         {
-                            if (json.layers[i].type === 'tilelayer')
+                            if (json.layers[i2].type === 'tilelayer')
                             {
-                                if (json.layers[i].data[t] == gid)
+                                for (var t = 0, len = json.layers[i2].data.length; t < len; t++)
                                 {
-                                    layersWithAnimatedTile.push(i);
-                                    continue;
+                                    if (json.layers[i2].data[t] === gid)
+                                    {
+                                        layersWithAnimatedTile.push(i2);
+                                        continue;
+                                    }
                                 }
                             }
                         }
