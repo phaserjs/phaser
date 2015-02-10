@@ -505,6 +505,11 @@ Phaser.Sprite.prototype.setFrame = function(frame) {
         this.updateCrop();
     }
 
+    if (this.tint !== 0xFFFFFF)
+    {
+        this.cachedTint = -1;
+    }
+
     this.texture._updateUvs();
 
 };
