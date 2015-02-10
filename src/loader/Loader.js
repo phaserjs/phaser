@@ -69,7 +69,7 @@ Phaser.Loader = function (game) {
     /**
     * If you want to append a URL before the path of any asset you can set this here.
     * Useful if allowing the asset base url to be configured outside of the game code.
-    * The string _must_ end an "/".
+    * The string _must_ end with a "/".
     *
     * @property {string} baseURL
     */

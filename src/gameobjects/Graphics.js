@@ -200,7 +200,7 @@ Phaser.Graphics.prototype.destroy = function(destroyChildren) {
 * @method Phaser.Graphics.prototype.drawCircle
 * @param {Number} x - The X coordinate of the center of the circle.
 * @param {Number} y - The Y coordinate of the center of the circle.
-* @param {Number} radius - The diameter of the circle.
+* @param {Number} diameter - The diameter of the circle.
 * @return {Phaser.Graphics} This Graphics object.
 */
 Phaser.Graphics.prototype.drawCircle = function(x, y, diameter)
