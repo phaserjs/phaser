@@ -120,6 +120,7 @@ Thanks to @pnstickne for vast majority of this update.
 * TilemapParser will now set the `.type` property for ObjectLayer Objects (thanks @mikaturunen #1609)
 * The Loader now directly calls StateManager.loadComplete rather than the StateManager listening for the loadComplete event, because Loader.reset unbinds this event (and it's easy to accidentally remove it too)
 * Loader.onLoadComplete is dispatched *before* the Loader is reset. If you have a `create` method in your State please note that the Loader will have been reset before this method is called. This allows you to immediately re-use the Loader without having to first reset it manually.
+* World.setBounds will now adjust the World.x/y values to match those given (#1555)
 
 ### Bug Fixes
 
