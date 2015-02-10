@@ -1580,11 +1580,6 @@ Phaser.Cache.prototype = {
     */
     destroy: function () {
 
-        for (var item in this._canvases)
-        {
-            delete this._canvases[item];
-        }
-
         for (var item in this._images)
         {
             if (item !== '__default' && item !== '__missing')
@@ -1593,54 +1588,26 @@ Phaser.Cache.prototype = {
             }
         }
 
-        for (var item in this._sounds)
-        {
-            delete this._sounds[item];
-        }
+        var containers = [
+            this._canvases,
+            this._sounds,
+            this._text,
+            this._json,
+            this._xml,
+            this._textures,
+            this._physics,
+            this._tilemaps,
+            this._binary,
+            this._bitmapDatas,
+            this._bitmapFont
+        ];
 
-        for (var item in this._text)
+        for (var i = 0; i < containers.length; i++)
         {
-            delete this._text[item];
-        }
-
-        for (var item in this._json)
-        {
-            delete this._json[item];
-        }
-
-        for (var item in this._xml)
-        {
-            delete this._xml[item];
-        }
-
-        for (var item in this._textures)
-        {
-            delete this._textures[item];
-        }
-
-        for (var item in this._physics)
-        {
-            delete this._physics[item];
-        }
-
-        for (var item in this._tilemaps)
-        {
-            delete this._tilemaps[item];
-        }
-
-        for (var item in this._binary)
-        {
-            delete this._binary[item];
-        }
-
-        for (var item in this._bitmapDatas)
-        {
-            delete this._bitmapDatas[item];
-        }
-
-        for (var item in this._bitmapFont)
-        {
-            delete this._bitmapFont[item];
+            for (var item in containers[i])
+            {
+                delete containers[i][item];
+            }
         }
 
         this._urlMap = null;

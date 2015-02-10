@@ -578,6 +578,11 @@ Phaser.Game.prototype = {
     */
     showDebugHeader: function () {
 
+        if (window['PhaserGlobal'] && window['PhaserGlobal'].hideBanner)
+        {
+            return;
+        }
+
         var v = Phaser.VERSION;
         var r = 'Canvas';
         var a = 'HTML Audio';

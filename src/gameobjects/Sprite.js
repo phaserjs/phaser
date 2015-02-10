@@ -437,7 +437,10 @@ Phaser.Sprite.prototype.loadTexture = function (key, frame, stopAnimation) {
         }
     }
     
-    this.texture.baseTexture.dirty();
+    if (!key instanceof Phaser.RenderTexture)
+    {
+        this.texture.baseTexture.dirty();
+    }
 
     if (setFrame)
     {
@@ -500,6 +503,11 @@ Phaser.Sprite.prototype.setFrame = function(frame) {
     if (this.cropRect)
     {
         this.updateCrop();
+    }
+
+    if (this.tint !== 0xFFFFFF)
+    {
+        this.cachedTint = -1;
     }
 
     this.texture._updateUvs();

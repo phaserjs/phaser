@@ -297,7 +297,10 @@ Phaser.Image.prototype.loadTexture = function (key, frame) {
         }
     }
     
-    this.texture.baseTexture.dirty();
+    if (!key instanceof Phaser.RenderTexture)
+    {
+        this.texture.baseTexture.dirty();
+    }
 
     if (setFrame)
     {
@@ -360,6 +363,11 @@ Phaser.Image.prototype.setFrame = function(frame) {
     if (this.cropRect)
     {
         this.updateCrop();
+    }
+
+    if (this.tint !== 0xFFFFFF)
+    {
+        this.cachedTint = -1;
     }
 
     this.texture._updateUvs();
