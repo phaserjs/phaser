@@ -131,7 +131,7 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
     *
     * @property {?DOMCanvasElement} [copyCanvas=(auto)] - [Internal] If set, force using a separate (shared) copy canvas.
     *     Using a canvas bitblt/copy when the source and destinations region overlap produces unexpected behavior
-    *     in some browsers, notably Safari. 
+    *     in some browsers, notably Safari.
     *
     * @default
     */
@@ -233,7 +233,7 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
 
         // Collision width/height (pixels)
         // What purpose do these have? Most things use tile width/height directly.
-        // This also only extends collisions right and down.       
+        // This also only extends collisions right and down.
         cw: tilemap.tileWidth,
         ch: tilemap.tileHeight,
 
@@ -317,6 +317,41 @@ Object.defineProperty(Phaser.TilemapLayer.prototype, 'tileColor', {
     }
 
 });
+
+/**
+* Automatically called by World.update. Handles animated tiles.
+*
+* @method Phaser.TilemapLayer#update
+* @protected
+*/
+Phaser.TilemapLayer.prototype.update = function () { // Niklas
+  // Keep all animation timers in sync to prevent unnecessary draws
+    var baseTime = this.game.time.now;
+    for (var gid in this.map.animatedTiles)
+    {
+        if (!this.map.animatedTiles[gid].state.nextFrameTimestamp)
+        {
+            this.map.animatedTiles[gid].state.nextFrameTimestamp = baseTime + this.map.animatedTiles[gid].frames[this.map.animatedTiles[gid].state.currentFrame].duration;
+        }
+        else if (baseTime > this.map.animatedTiles[gid].state.nextFrameTimestamp)
+        {
+            this.map.animatedTiles[gid].state.currentFrame++;
+            if (this.map.animatedTiles[gid].state.currentFrame > (this.map.animatedTiles[gid].frames.length - 1))
+            {
+                this.map.animatedTiles[gid].state.currentFrame = 0;
+            }
+            this.map.animatedTiles[gid].state.currentGid = this.map.animatedTiles[gid].frames[this.map.animatedTiles[gid].state.currentFrame].gid;
+            this.map.animatedTiles[gid].state.nextFrameTimestamp = baseTime + this.map.animatedTiles[gid].frames[this.map.animatedTiles[gid].state.currentFrame].duration;
+            for (var layer in this.map.layers)
+            {
+            // Should I add a check requring that the tile is actually within Camera scope to prevent unnecessary rendering?
+                this.map.layers[layer].dirty = true;
+            }
+        }
+    }
+};
+
+
 
 /**
 * Automatically called by World.postUpdate. Handles cache updates.
@@ -737,7 +772,7 @@ Phaser.TilemapLayer.prototype.shiftCanvas = function (context, x, y)
         context.drawImage(canvas, dx, dy, copyW, copyH, sx, sy, copyW, copyH);
         context.restore();
     }
-    
+
 };
 
 /**
@@ -778,7 +813,7 @@ Phaser.TilemapLayer.prototype.renderRegion = function (scrollX, scrollY, left, t
             bottom = Math.min(height - 1, bottom);
         }
     }
-   
+
     // top-left pixel of top-left cell
     var baseX = (left * tw) - scrollX;
     var baseY = (top * th) - scrollY;
@@ -833,6 +868,11 @@ Phaser.TilemapLayer.prototype.renderRegion = function (scrollX, scrollY, left, t
 
             if (set)
             {
+
+                if (this.map.animatedTiles.hasOwnProperty(index))
+                {
+                    index = this.map.animatedTiles[index].state.currentGid;
+                }
                 if (tile.rotation || tile.flipped)
                 {
                     context.save();
@@ -860,7 +900,7 @@ Phaser.TilemapLayer.prototype.renderRegion = function (scrollX, scrollY, left, t
                 context.fillStyle = this.debugSettings.debuggedTileOverfill;
                 context.fillRect(tx, ty, tw, th);
             }
-           
+
         }
 
     }
@@ -951,7 +991,7 @@ Phaser.TilemapLayer.prototype.renderDeltaScroll = function (shiftX, shiftY) {
 */
 Phaser.TilemapLayer.prototype.renderFull = function ()
 {
-    
+
     var scrollX = this._mc.scrollX;
     var scrollY = this._mc.scrollY;
 
@@ -1152,7 +1192,7 @@ Phaser.TilemapLayer.prototype.renderDebug = function () {
 
                 context.stroke();
             }
-           
+
         }
 
     }

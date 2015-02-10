@@ -257,7 +257,7 @@ Phaser.TilemapParser = {
                 flipped = false;
                 gid = json.layers[i].data[t];
 
-                //  If true the current tile is flipped or rotated (Tiled TMX format) 
+                //  If true the current tile is flipped or rotated (Tiled TMX format)
                 if (gid > 0x20000000)
                 {
                     flippedVal = 0;
@@ -282,7 +282,7 @@ Phaser.TilemapParser = {
                         gid -= 0x20000000;
                         flippedVal += 1;
                     }
-                   
+
                     switch (flippedVal)
                     {
                         case 5:
@@ -383,6 +383,48 @@ Phaser.TilemapParser = {
         {
             //  name, firstgid, width, height, margin, spacing, properties
             var set = json.tilesets[i];
+
+            if (set.hasOwnProperty('tiles'))
+            {
+                var tileIndices = Object.keys(set.tiles);
+                var layersWithAnimatedTile;
+                for (var k in tileIndices)
+                {
+                    if (set.tiles[tileIndices[k]].hasOwnProperty('animation'))
+                    {
+                        gid = parseInt(tileIndices[k],10) + set.firstgid;
+                        map.animatedTiles[gid] = ({
+                            frames: [],
+                            state: {}
+                        });
+                        for (var i2 in set.tiles[tileIndices[k]].animation)
+                        {
+                            map.animatedTiles[gid].frames[i2] = {};
+                            map.animatedTiles[gid].frames[i2].gid = set.tiles[tileIndices[k]].animation[i2].tileid + set.firstgid;
+                            map.animatedTiles[gid].frames[i2].duration = set.tiles[tileIndices[k]].animation[i2].duration;
+                        }
+                        // Keep track of layers with this particular animated tile
+                        layersWithAnimatedTile = [];
+                        for (var i = 0; i < json.layers.length; i++)
+                        {
+                            if (json.layers[i].type === 'tilelayer')
+                            {
+                                if (json.layers[i].data[t] == gid)
+                                {
+                                    layersWithAnimatedTile.push(i);
+                                    continue;
+                                }
+                            }
+                        }
+                        map.animatedTiles[gid].state = {
+                            currentGid: map.animatedTiles[gid].frames[0].gid,
+                            currentFrame: 0,
+                            nextFrameTimestamp: false, //No time set until first update loop
+                            layers: layersWithAnimatedTile
+                        };
+                    }
+                }
+            }
 
             if (set.image)
             {
