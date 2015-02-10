@@ -378,7 +378,8 @@ Phaser.TilemapParser = {
 
         //  Tilesets
         var tilesets = [];
-
+        // Array with animated tiles information
+        map.animatedTiles = [];
         for (var i = 0; i < json.tilesets.length; i++)
         {
             //  name, firstgid, width, height, margin, spacing, properties
