@@ -1341,6 +1341,8 @@ Phaser.Loader.prototype = {
 
         this.reset();
 
+        this.game.state.loadComplete();
+
     },
 
     /**

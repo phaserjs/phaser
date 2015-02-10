@@ -118,6 +118,8 @@ Thanks to @pnstickne for vast majority of this update.
 * Loader.reset has a new optional 2nd parameter `clearEvents` which if set to `true` (the default is false) will reset all event listeners bound to the Loader.
 * If `Body.customSeparateX` or `customSeparateY` is `true` then the Body will no longer be automatically separated from a **Tilemap** collision or exchange any velocity. The amount of pixels that the Body has intersected the tile is available in `Body.overlapX` and `overlapY`, so you can use these values to perform your own separation in your collision callback (#992)
 * TilemapParser will now set the `.type` property for ObjectLayer Objects (thanks @mikaturunen #1609)
+* The Loader now directly calls StateManager.loadComplete rather than the StateManager listening for the loadComplete event, because Loader.reset unbinds this event (and it's easy to accidentally remove it too)
+* Loader.onLoadComplete is dispatched *before* the Loader is reset. If you have a `create` method in your State please note that the Loader will have been reset before this method is called. This allows you to immediately re-use the Loader without having to first reset it manually.
 
 ### Bug Fixes
 
