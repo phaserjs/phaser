@@ -324,7 +324,7 @@ Object.defineProperty(Phaser.TilemapLayer.prototype, 'tileColor', {
 * @method Phaser.TilemapLayer#update
 * @protected
 */
-Phaser.TilemapLayer.prototype.update = function () { // Niklas
+Phaser.TilemapLayer.prototype.update = function () {
   // Keep all animation timers in sync to prevent unnecessary draws
     var baseTime = this.game.time.now;
     for (var gid in this.map.animatedTiles)
@@ -342,10 +342,10 @@ Phaser.TilemapLayer.prototype.update = function () { // Niklas
             }
             this.map.animatedTiles[gid].state.currentGid = this.map.animatedTiles[gid].frames[this.map.animatedTiles[gid].state.currentFrame].gid;
             this.map.animatedTiles[gid].state.nextFrameTimestamp = baseTime + this.map.animatedTiles[gid].frames[this.map.animatedTiles[gid].state.currentFrame].duration;
-            for (var layer in this.map.layers)
+            for (var layer in this.map.animatedTiles[gid].state.layers)
             {
             // Should I add a check requring that the tile is actually within Camera scope to prevent unnecessary rendering?
-                this.map.layers[layer].dirty = true;
+                this.map.layers[this.map.animatedTiles[gid].state.layers[layer]].dirty = true;
             }
         }
     }
