@@ -396,7 +396,8 @@ Phaser.TilemapParser = {
                         gid = parseInt(tileIndices[k],10) + set.firstgid;
                         map.animatedTiles[gid] = ({
                             frames: [],
-                            state: {}
+                            currentFrame: 0,
+							nextFrameTimestamp: false //timestamp is set in first call to Phaser.TilemapLayer#update
                         });
                         for (var i2 in set.tiles[tileIndices[k]].animation)
                         {
@@ -406,7 +407,7 @@ Phaser.TilemapParser = {
                         }
                         // Keep track of layers with this particular animated tile
                         layersWithAnimatedTile = [];
-                        for (i2 = 0; i2 < json.layers.length; i2++)
+                        for (var i2 = 0; i2 < json.layers.length; i2++)
                         {
                             if (json.layers[i2].type === 'tilelayer')
                             {
@@ -420,12 +421,8 @@ Phaser.TilemapParser = {
                                 }
                             }
                         }
-                        map.animatedTiles[gid].state = {
-                            currentGid: map.animatedTiles[gid].frames[0].gid,
-                            currentFrame: 0,
-                            nextFrameTimestamp: false, //No time set until first update loop
-                            layers: layersWithAnimatedTile
-                        };
+                        map.animatedTiles[gid].currentGid = map.animatedTiles[gid].frames[0].gid;
+                        map.animatedTiles[gid].layers = layersWithAnimatedTile;
                     }
                 }
             }

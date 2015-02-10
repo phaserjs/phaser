@@ -325,27 +325,27 @@ Object.defineProperty(Phaser.TilemapLayer.prototype, 'tileColor', {
 * @protected
 */
 Phaser.TilemapLayer.prototype.update = function () {
-  // Keep all animation timers in sync to prevent unnecessary draws
+    // Keep all animation timers in sync to prevent unnecessary draws:
     var baseTime = this.game.time.now;
     for (var gid in this.map.animatedTiles)
     {
-        if (!this.map.animatedTiles[gid].state.nextFrameTimestamp)
+        if (!this.map.animatedTiles[gid].nextFrameTimestamp)
         {
-            this.map.animatedTiles[gid].state.nextFrameTimestamp = baseTime + this.map.animatedTiles[gid].frames[this.map.animatedTiles[gid].state.currentFrame].duration;
+            this.map.animatedTiles[gid].nextFrameTimestamp = baseTime + this.map.animatedTiles[gid].frames[this.map.animatedTiles[gid].currentFrame].duration;
         }
-        else if (baseTime > this.map.animatedTiles[gid].state.nextFrameTimestamp)
+        else if (baseTime > this.map.animatedTiles[gid].nextFrameTimestamp)
         {
-            this.map.animatedTiles[gid].state.currentFrame++;
-            if (this.map.animatedTiles[gid].state.currentFrame > (this.map.animatedTiles[gid].frames.length - 1))
+            this.map.animatedTiles[gid].currentFrame++;
+            if (this.map.animatedTiles[gid].currentFrame > (this.map.animatedTiles[gid].frames.length - 1))
             {
-                this.map.animatedTiles[gid].state.currentFrame = 0;
+                this.map.animatedTiles[gid].currentFrame = 0;
             }
-            this.map.animatedTiles[gid].state.currentGid = this.map.animatedTiles[gid].frames[this.map.animatedTiles[gid].state.currentFrame].gid;
-            this.map.animatedTiles[gid].state.nextFrameTimestamp = baseTime + this.map.animatedTiles[gid].frames[this.map.animatedTiles[gid].state.currentFrame].duration;
-            for (var layer in this.map.animatedTiles[gid].state.layers)
+            this.map.animatedTiles[gid].currentGid = this.map.animatedTiles[gid].frames[this.map.animatedTiles[gid].currentFrame].gid;
+            this.map.animatedTiles[gid].nextFrameTimestamp = baseTime + this.map.animatedTiles[gid].frames[this.map.animatedTiles[gid].currentFrame].duration;
+            for (var layer in this.map.animatedTiles[gid].layers)
             {
-            // Should I add a check requring that the tile is actually within Camera scope to prevent unnecessary rendering?
-                this.map.layers[this.map.animatedTiles[gid].state.layers[layer]].dirty = true;
+				//Possible TODO for improved performance: Check if tile with gid is actually within current camera view before setting dirty to true.
+                this.map.layers[this.map.animatedTiles[gid].layers[layer]].dirty = true;
             }
         }
     }
@@ -901,7 +901,7 @@ Phaser.TilemapLayer.prototype.renderRegion = function (scrollX, scrollY, left, t
 
                 if (this.map.animatedTiles.hasOwnProperty(index))
                 {
-                    index = this.map.animatedTiles[index].state.currentGid;
+                    index = this.map.animatedTiles[index].currentGid;
                 }
                 if (tile.rotation || tile.flipped)
                 {
