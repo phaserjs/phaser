@@ -116,6 +116,7 @@ Thanks to @pnstickne for vast majority of this update.
 * Device.touch checks if `window.navigator.maxTouchPoints` is `>= 1` rather than > 1, which now allows touch events to work properly in Chrome mobile emulation.
 * Loader.XDomainRequest wasn't used for atlas json loading. It has now been moved to the `xhrLoad` method to ensure it's used for all request if required (thanks @draconisNoctis #1601)
 * Loader.reset has a new optional 2nd parameter `clearEvents` which if set to `true` (the default is false) will reset all event listeners bound to the Loader.
+* If `Body.customSeparateX` or `customSeparateY` is `true` then the Body will no longer be automatically separated from a **Tilemap** collision or exchange any velocity. The amount of pixels that the Body has intersected the tile is available in `Body.overlapX` and `overlapY`, so you can use these values to perform your own separation in your collision callback (#992)
 
 ### Bug Fixes
 

@@ -1284,7 +1284,14 @@ Phaser.Physics.Arcade.prototype = {
 
         if (ox !== 0)
         {
-            this.processTileSeparationX(body, ox);
+            if (body.customSeparateX)
+            {
+                body.overlapX = ox;
+            }
+            else
+            {
+                this.processTileSeparationX(body, ox);
+            }
         }
 
         return ox;
@@ -1333,7 +1340,14 @@ Phaser.Physics.Arcade.prototype = {
 
         if (oy !== 0)
         {
-            this.processTileSeparationY(body, oy);
+            if (body.customSeparateY)
+            {
+                body.overlapY = oy;
+            }
+            else
+            {
+                this.processTileSeparationY(body, oy);
+            }
         }
 
         return oy;
@@ -1347,7 +1361,6 @@ Phaser.Physics.Arcade.prototype = {
     * @method Phaser.Physics.Arcade#processTileSeparationX
     * @param {Phaser.Physics.Arcade.Body} body - The Body object to separate.
     * @param {number} x - The x separation amount.
-    * @return {boolean} Returns true as a pass-thru to the separateTile method.
     */
     processTileSeparationX: function (body, x) {
 
