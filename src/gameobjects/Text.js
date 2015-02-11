@@ -5,9 +5,12 @@
 */
 
 /**
-* Create a new `Text` object. This uses a local hidden Canvas object and renders the type into it. It then makes a texture from this for renderning to the view.
-* Because of this you can only display fonts that are currently loaded and available to the browser. It won't load the fonts for you.
-* Here is a compatibility table showing the available default fonts across different mobile browsers: http://www.jordanm.co.uk/tinytype
+* Create a new game object for displaying Text.
+*
+* This uses a local hidden Canvas object and renders the type into it. It then makes a texture from this for renderning to the view.
+* Because of this you can only display fonts that are currently loaded and available to the browser: fonts must be pre-loaded.
+*
+* See {@link http://www.jordanm.co.uk/tinytype this compatibility table} for the available default fonts across mobile browsers.
 *
 * @class Phaser.Text
 * @extends PIXI.Text
@@ -36,6 +39,7 @@ Phaser.Text = function (game, x, y, text, style) {
 
     /**
     * @property {Phaser.Game} game - A reference to the currently running Game.
+    * @protected
     */
     this.game = game;
 
@@ -74,22 +78,10 @@ Phaser.Text = function (game, x, y, text, style) {
     this._text = text;
 
     /**
-    * @property {string} _font - Internal cache var.
+    * @property {object} _fontComponents - The font, broken down into components, set in `setStyle`.
     * @private
     */
-    this._font = '';
-
-    /**
-    * @property {number} _fontSize - Internal cache var.
-    * @private
-    */
-    this._fontSize = 32;
-
-    /**
-    * @property {string} _fontWeight - Internal cache var.
-    * @private
-    */
-    this._fontWeight = 'normal';
+    this._fontComponents = null;
 
     /**
     * @property {number} lineSpacing - Additional spacing (in pixels) between each line of text if multi-line.
@@ -109,7 +101,7 @@ Phaser.Text = function (game, x, y, text, style) {
     this.events = new Phaser.Events(this);
 
     /**
-    * @property {Phaser.InputHandler|null} input - The Input Handler for this object. Needs to be enabled with image.inputEnabled = true before you can use it.
+    * @property {?Phaser.InputHandler} input - The Input Handler for this object. Needs to be enabled with image.inputEnabled = true before you can use it.
     */
     this.input = null;
 
@@ -119,7 +111,7 @@ Phaser.Text = function (game, x, y, text, style) {
     this.cameraOffset = new Phaser.Point();
 
     /**
-    * @property {array} colors - An array of the color values as specified by `Text.addColor`.
+    * @property {array} colors - An array of the color values as specified by {@link Phaser.Text#addColor addColor}.
     */
     this.colors = [];
 
@@ -159,6 +151,7 @@ Phaser.Text.prototype.constructor = Phaser.Text;
 * Automatically called by World.preUpdate.
 * 
 * @method Phaser.Text#preUpdate
+* @protected
 */
 Phaser.Text.prototype.preUpdate = function () {
 
@@ -196,9 +189,10 @@ Phaser.Text.prototype.preUpdate = function () {
 };
 
 /**
-* Override and use this function in your own custom objects to handle any update requirements you may have.
+* Override this function to handle any special update requirements.
 *
 * @method Phaser.Text#update
+* @protected
 */
 Phaser.Text.prototype.update = function() {
 
@@ -208,6 +202,7 @@ Phaser.Text.prototype.update = function() {
 * Automatically called by World.postUpdate.
 * 
 * @method Phaser.Text#postUpdate
+* @protected
 */
 Phaser.Text.prototype.postUpdate = function () {
 
@@ -226,6 +221,8 @@ Phaser.Text.prototype.postUpdate = function () {
 };
 
 /**
+* Destroy this Text object, removing it from the group it belongs to.
+*
 * @method Phaser.Text#destroy
 * @param {boolean} [destroyChildren=true] - Should every child of this object have its destroy method called?
 */
@@ -327,6 +324,10 @@ Phaser.Text.prototype.setShadow = function (x, y, color, blur) {
 * @method Phaser.Text#setStyle
 * @param {object} [style] - The style properties to be set on the Text.
 * @param {string} [style.font='bold 20pt Arial'] - The style and size of the font.
+* @param {string} [style.fontStyle=(from font)] - The style of the font (eg. 'italic'): overrides the value in `style.font`.
+* @param {string} [style.fontVariant=(from font)] - The variant of the font (eg. 'small-caps'): overrides the value in `style.font`.
+* @param {string} [style.fontWeight=(from font)] - The weight of the font (eg. 'bold'): overrides the value in `style.font`.
+* @param {string|number} [style.fontSize=(from font)] - The size of the font (eg. 32 or '32px'): overrides the value in `style.font`.
 * @param {string} [style.fill='black'] - A canvas fillstyle that will be used on the text eg 'red', '#00FF00'.
 * @param {string} [style.align='left'] - Alignment for multiline text ('left', 'center' or 'right'), does not affect single line text.
 * @param {string} [style.stroke='black'] - A canvas stroke style that will be used on the text stroke eg 'blue', '#FCFF00'.
@@ -349,6 +350,31 @@ Phaser.Text.prototype.setStyle = function (style) {
     style.shadowColor = style.shadowColor || 'rgba(0,0,0,0)';
     style.shadowBlur = style.shadowBlur || 0;
 
+    var components = this.fontToComponents(style.font);
+    if (style.fontStyle)
+    {
+        components.fontStyle = style.fontStyle;
+    }
+    if (style.fontVariant)
+    {
+        components.fontVariant = style.fontVariant;
+    }
+    if (style.fontWeight)
+    {
+        components.fontWeight = style.fontWeight;
+    }
+    if (style.fontSize)
+    {
+        if (typeof style.fontSize === 'number')
+        {
+            style.fontSize = style.fontSize + 'px';
+        }
+        components.fontSize = style.fontSize;
+    }
+
+    this._fontComponents = components;
+
+    style.font = this.componentsToFont(this._fontComponents);
     this.style = style;
     this.dirty = true;
 
@@ -508,7 +534,8 @@ Phaser.Text.prototype.clearColors = function () {
 };
 
 /**
-* This method allows you to set specific colors within the Text.
+* Set specific colors for certain characters within the Text.
+*
 * It works by taking a color value, which is a typical HTML string such as `#ff0000` or `rgb(255,0,0)` and a position.
 * The position value is the index of the character in the Text string to start applying this color to.
 * Once set the color remains in use until either another color or the end of the string is encountered.
@@ -575,12 +602,114 @@ Phaser.Text.prototype.runWordWrap = function (text) {
 };
 
 /**
-* Indicates the rotation of the Text, in degrees, from its original orientation. Values from 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation.
+* Updates the internal `style.font` if it now differs according to generation from components.
+*
+* @method Phaser.Text#updateFont
+* @private
+* @param {object} components - Font components.
+*/
+Phaser.Text.prototype.updateFont = function (components) {
+
+    var font = this.componentsToFont(components);
+
+    if (this.style.font !== font)
+    {
+        this.style.font = font;
+        this.dirty = true;
+
+        if (this.parent)
+        {
+            this.updateTransform();
+        }
+    }
+
+};
+
+/**
+* Converting a short CSS-font string into the relevant components.
+*
+* @method Phaser.Text#fontToComponents
+* @private
+* @param {string} font - a CSS font string
+*/
+Phaser.Text.prototype.fontToComponents = function (font) {
+
+    // The format is specified in http://www.w3.org/TR/CSS2/fonts.html#font-shorthand:
+    // style - normal | italic | oblique | inherit
+    // variant - normal | small-caps | inherit
+    // weight - normal | bold | bolder | lighter | 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900 | inherit
+    // size - xx-small | x-small | small | medium | large | x-large | xx-large,
+    //        larger | smaller
+    //        {number} (em | ex | ch | rem | vh | vw | vmin | vmax | px | mm | cm | in | pt | pc | %)
+    // font-family - rest (but identifiers or quoted with comma separation)
+    var m = font.match(/^\s*(?:\b(normal|italic|oblique|inherit)?\b)\s*(?:\b(normal|small-caps|inherit)?\b)\s*(?:\b(normal|bold|bolder|lighter|100|200|300|400|500|600|700|800|900|inherit)?\b)\s*(?:\b(xx-small|x-small|small|medium|large|x-large|xx-large|larger|smaller|0|\d*(?:[.]\d*)?(?:%|[a-z]{2,5}))?\b)\s*(.*)\s*$/);
+    if (m)
+    {
+        return {
+            font: font,
+            fontStyle: m[1] || 'normal',
+            fontVariant: m[2] || 'normal',
+            fontWeight: m[3] || 'normal',
+            fontSize: m[4] || 'medium',
+            fontFamily: m[5]
+        };
+    }
+    else
+    {
+        console.warn("Phaser.Text - unparsable CSS font: " + font);
+        return {
+            font: font
+        };
+    }
+
+};
+
+/**
+* Converts individual font components (see `fontToComponents`) to a short CSS font string.
+*
+* @method Phaser.Text#componentsToFont
+* @private
+* @param {object} components - Font components.
+*/
+Phaser.Text.prototype.componentsToFont = function (components) {
+
+    var parts = [];
+    var v;
+
+    v = components.fontStyle;
+    if (v && v !== 'normal') { parts.push(v); }
+
+    v = components.fontVariant;
+    if (v && v !== 'normal') { parts.push(v); }
+
+    v = components.fontWeight;
+    if (v && v !== 'normal') { parts.push(v); }
+
+    v = components.fontSize;
+    if (v && v !== 'medium') { parts.push(v); }
+
+    v = components.fontFamily;
+    if (v) { parts.push(v); }
+
+    if (!parts.length)
+    {
+        // Fallback to whatever value the 'font' was
+        parts.push(components.font);
+    }
+
+    return parts.join(" ");
+
+};
+
+/**
+* The rotation of the Text, in degrees, from its original orientation.
+*
+* Values from 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation.
 * Values outside this range are added to or subtracted from 360 to obtain a value within the range. For example, the statement player.angle = 450 is the same as player.angle = 90.
 * If you wish to work in radians instead of degrees use the property Sprite.rotation instead.
 * 
 * @name Phaser.Text#angle
-* @property {number} angle - Gets or sets the angle of rotation in degrees.
+* @property {number} angle - 
 */
 Object.defineProperty(Phaser.Text.prototype, 'angle', {
 
@@ -596,8 +725,9 @@ Object.defineProperty(Phaser.Text.prototype, 'angle', {
 
 /**
 * The text string to be displayed by this Text object, taking into account the style settings.
+*
 * @name Phaser.Text#text
-* @property {string} text - The text string to be displayed by this Text object, taking into account the style settings.
+* @property {string} text
 */
 Object.defineProperty(Phaser.Text.prototype, 'text', {
 
@@ -623,86 +753,164 @@ Object.defineProperty(Phaser.Text.prototype, 'text', {
 });
 
 /**
+* Change the font used.
+*
+* This is equivalent of the `font` property specified to {@link Phaser.Text#setStyle setStyle}, except
+* that unlike using `setStyle` this will not change any current font fill/color settings.
+*
+* The CSS font string can also be invidually altered with the `font`, `fontSize`, `fontWeight`, `fontStyle`, and `fontVariant` properties.
+*
+* @name Phaser.Text#cssFont
+* @property {string} cssFont
+*/
+Object.defineProperty(Phaser.Text.prototype, 'cssFont', {
+
+    get: function() {
+        return this.componentsToFont(this._fontComponents);
+    },
+
+    set: function (value)
+    {
+        value = value || 'bold 20pt Arial';
+        this._fontComponents = this.fontToComponents(value);
+        this.updateFont(this._fontComponents);
+    }
+
+});
+
+/**
+* Change the font family that the text will be rendered in, such as 'Arial'.
+*
+* Multiple CSS font familes and generic fallbacks can be specified as long as
+* {@link http://www.w3.org/TR/CSS2/fonts.html#propdef-font-family CSS font-family rules} are followed.
+*
+* To change the entire font string use {@link Phaser.Text#cssFont cssFont} instead: eg. `text.cssFont = 'bold 20pt Arial'`.
+*
 * @name Phaser.Text#font
-* @property {string} font - The font the text will be rendered in, i.e. 'Arial'. Must be loaded in the browser before use.
+* @property {string} font
 */
 Object.defineProperty(Phaser.Text.prototype, 'font', {
 
     get: function() {
-        return this._font;
+        return this._fontComponents.fontFamily;
     },
 
     set: function(value) {
 
-        if (value !== this._font)
-        {
-            this._font = value.trim();
-            this.style.font = this._fontWeight + ' ' + this._fontSize + "px '" + this._font + "'";
-            this.dirty = true;
+        value = value || 'Arial';
+        value = value.trim();
 
-            if (this.parent)
-            {
-                this.updateTransform();
-            }
+        // If it looks like the value should be quoted, but isn't, then quote it.
+        if (!/^(?:inherit|serif|sans-serif|cursive|fantasy|monospace)$/.exec(value) && !/['",]/.exec(value))
+        {
+            value = "'" + value + "'";
         }
+
+        this._fontComponents.fontFamily = value;
+        this.updateFont(this._fontComponents);
 
     }
 
 });
 
 /**
+* The size of the font.
+*
+* If the font size is specified in pixels (eg. `32` or `'32px`') then a number (ie. `32`) representing
+* the font size in pixels is returned; otherwise the value with CSS unit is returned as a string (eg. `'12pt'`).
+*
 * @name Phaser.Text#fontSize
-* @property {number} fontSize - The size of the font in pixels.
+* @property {number|string} fontSize
 */
 Object.defineProperty(Phaser.Text.prototype, 'fontSize', {
 
     get: function() {
-        return this._fontSize;
+
+        var size = this._fontComponents.fontSize;
+        if (size && /(?:^0$|px$)/.exec(size))
+        {
+            return parseInt(size, 10);
+        }
+        else
+        {
+            return size;
+        }
+
     },
 
     set: function(value) {
 
-        value = parseInt(value, 10);
-
-        if (value !== this._fontSize)
+        value = value || '0';
+        if (typeof value === 'number')
         {
-            this._fontSize = value;
-            this.style.font = this._fontWeight + ' ' + this._fontSize + "px '" + this._font + "'";
-            this.dirty = true;
-
-            if (this.parent)
-            {
-                this.updateTransform();
-            }
+            value = value + 'px';
         }
+
+        this._fontComponents.fontSize = value;
+        this.updateFont(this._fontComponents);
 
     }
 
 });
 
 /**
+* The weight of the font: 'normal', 'bold', or {@link http://www.w3.org/TR/CSS2/fonts.html#propdef-font-weight a valid CSS font weight}.
 * @name Phaser.Text#fontWeight
-* @property {number} fontWeight - The weight of the font: 'normal', 'bold', 'italic'. You can combine settings too, such as 'bold italic'.
+* @property {string} fontWeight
 */
 Object.defineProperty(Phaser.Text.prototype, 'fontWeight', {
 
     get: function() {
-        return this._fontWeight;
+        return this._fontComponents.fontWeight || 'normal';
     },
 
     set: function(value) {
 
-        if (value !== this._fontWeight)
-        {
-            this._fontWeight = value;
-            this.style.font = this._fontWeight + ' ' + this._fontSize + "px '" + this._font + "'";
-            this.dirty = true;
+        value = value || 'normal';
+        this._fontComponents.fontWeight = value;
+        this.updateFont(this._fontComponents);
 
-            if (this.parent)
-            {
-                this.updateTransform();
-            }
-        }
+    }
+
+});
+
+/**
+* The style of the font: 'normal', 'italic', 'oblique'
+* @name Phaser.Text#fontStyle
+* @property {string} fontStyle
+*/
+Object.defineProperty(Phaser.Text.prototype, 'fontStyle', {
+
+    get: function() {
+        return this._fontComponents.fontStyle || 'normal';
+    },
+
+    set: function(value) {
+
+        value = value || 'normal';
+        this._fontComponents.fontStyle = value;
+        this.updateFont(this._fontComponents);
+
+    }
+
+});
+
+/**
+* The variant the font: 'normal', 'small-caps'
+* @name Phaser.Text#fontVariant
+* @property {string} fontVariant
+*/
+Object.defineProperty(Phaser.Text.prototype, 'fontVariant', {
+
+    get: function() {
+        return this._fontComponents.fontVariant || 'normal';
+    },
+
+    set: function(value) {
+
+        value = value || 'normal';
+        this._fontComponents.fontVariant = value;
+        this.updateFont(this._fontComponents);
 
     }
 
@@ -956,11 +1164,12 @@ Object.defineProperty(Phaser.Text.prototype, 'shadowBlur', {
 });
 
 /**
+* Set to true to allow this object to receive input events.
 * By default a Text object won't process any input events at all. By setting inputEnabled to true the Phaser.InputHandler is
 * activated for this object and it will then start to process click/touch events and more.
 *
 * @name Phaser.Text#inputEnabled
-* @property {boolean} inputEnabled - Set to true to allow this object to receive input events.
+* @property {boolean} inputEnabled
 */
 Object.defineProperty(Phaser.Text.prototype, "inputEnabled", {
 
@@ -997,12 +1206,14 @@ Object.defineProperty(Phaser.Text.prototype, "inputEnabled", {
 });
 
 /**
+* Set to true to fix this Text to the Camera at its current world coordinates.
+*
 * An Text that is fixed to the camera uses its x/y coordinates as offsets from the top left of the camera. These are stored in Text.cameraOffset.
 * Note that the cameraOffset values are in addition to any parent in the display list.
 * So if this Text was in a Group that has x: 200, then this will be added to the cameraOffset.x
 *
 * @name Phaser.Text#fixedToCamera
-* @property {boolean} fixedToCamera - Set to true to fix this Text to the Camera at its current world coordinates.
+* @property {boolean} fixedToCamera
 */
 Object.defineProperty(Phaser.Text.prototype, "fixedToCamera", {
 
@@ -1030,6 +1241,7 @@ Object.defineProperty(Phaser.Text.prototype, "fixedToCamera", {
 /**
 * @name Phaser.Text#destroyPhase
 * @property {boolean} destroyPhase - True if this object is currently being destroyed.
+* @protected
 */
 Object.defineProperty(Phaser.Text.prototype, "destroyPhase", {
 
