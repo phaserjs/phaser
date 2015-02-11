@@ -277,19 +277,18 @@ Object.defineProperty(Phaser.Ellipse.prototype, "empty", {
 */
 Phaser.Ellipse.contains = function (a, x, y) {
 
-    if (a.width <= 0 || a.height <= 0)
-    {
+    if (a.width <= 0 || a.height <= 0) {
         return false;
     }
 
-    //  Normalize the coords to an ellipse with center 0,0
-    var normx = ((x - a.x) / a.width);
-    var normy = ((y - a.y) / a.height);
+    //  Normalize the coords to an ellipse with center 0,0 and a radius of 0.5
+    var normx = ((x - a.x) / a.width) - 0.5;
+    var normy = ((y - a.y) / a.height) - 0.5;
 
     normx *= normx;
     normy *= normy;
 
-    return (normx + normy <= 1);
+    return (normx + normy < 0.25);
 
 };
 
