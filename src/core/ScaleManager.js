@@ -1176,6 +1176,10 @@ Phaser.ScaleManager.prototype = {
     * Force the game to run in only one orientation.
     *
     * This enables generation of incorrect orientation signals and affects resizing but does not otherwise rotate or lock the orientation.
+    *
+    * Orientation checks are performed via the Screen Orientation API, if available in browser. This means it will check your monitor
+    * orientation on desktop, or your device orientation on mobile, rather than comparing actual game dimensions. If you need to check the 
+    * viewport dimensions instead and bypass the Screen Orientation API then set: `ScaleManager.compatibility.orientationFallback = 'viewport'`
     * 
     * @method Phaser.ScaleManager#forceOrientation
     * @public

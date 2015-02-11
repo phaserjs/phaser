@@ -424,7 +424,6 @@ PIXI.WebGLRenderer.prototype.updateTexture = function(texture)
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture.source);
 
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, texture.scaleMode === PIXI.scaleModes.LINEAR ? gl.LINEAR : gl.NEAREST);
-    
 
     if(texture.mipmap && PIXI.isPowerOfTwo(texture.width, texture.height))
     {

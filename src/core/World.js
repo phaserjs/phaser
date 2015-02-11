@@ -76,7 +76,7 @@ Phaser.World.prototype.boot = function () {
 };
 
 /**
-* Updates the size of this world. Note that this doesn't modify the world x/y coordinates, just the width and height.
+* Updates the size of this world and sets World.x/y to the given values
 * The Camera bounds and Physics bounds (if set) are also updated to match the new World bounds.
 *
 * @method Phaser.World#setBounds
@@ -92,6 +92,9 @@ Phaser.World.prototype.setBounds = function (x, y, width, height) {
     this._height = height;
 
     this.bounds.setTo(x, y, width, height);
+
+    this.x = x;
+    this.y = y;
 
     if (this.camera.bounds)
     {

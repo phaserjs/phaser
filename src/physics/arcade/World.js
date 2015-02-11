@@ -1284,7 +1284,14 @@ Phaser.Physics.Arcade.prototype = {
 
         if (ox !== 0)
         {
-            this.processTileSeparationX(body, ox);
+            if (body.customSeparateX)
+            {
+                body.overlapX = ox;
+            }
+            else
+            {
+                this.processTileSeparationX(body, ox);
+            }
         }
 
         return ox;
@@ -1333,7 +1340,14 @@ Phaser.Physics.Arcade.prototype = {
 
         if (oy !== 0)
         {
-            this.processTileSeparationY(body, oy);
+            if (body.customSeparateY)
+            {
+                body.overlapY = oy;
+            }
+            else
+            {
+                this.processTileSeparationY(body, oy);
+            }
         }
 
         return oy;
@@ -1347,7 +1361,6 @@ Phaser.Physics.Arcade.prototype = {
     * @method Phaser.Physics.Arcade#processTileSeparationX
     * @param {Phaser.Physics.Arcade.Body} body - The Body object to separate.
     * @param {number} x - The x separation amount.
-    * @return {boolean} Returns true as a pass-thru to the separateTile method.
     */
     processTileSeparationX: function (body, x) {
 
@@ -1765,6 +1778,7 @@ Phaser.Physics.Arcade.prototype = {
     * Find the distance between a display object (like a Sprite) and a Pointer. If no Pointer is given the Input.activePointer is used.
     * The calculation is made from the display objects x/y coordinate. This may be the top-left if its anchor hasn't been changed.
     * If you need to calculate from the center of a display object instead use the method distanceBetweenCenters()
+    * The distance to the Pointer is returned in screen space, not world space.
     *
     * @method Phaser.Physics.Arcade#distanceToPointer
     * @param {any} displayObject - The Display Object to test from.
@@ -1775,8 +1789,8 @@ Phaser.Physics.Arcade.prototype = {
 
         pointer = pointer || this.game.input.activePointer;
 
-        this._dx = displayObject.x - pointer.x;
-        this._dy = displayObject.y - pointer.y;
+        this._dx = displayObject.x - pointer.worldX;
+        this._dy = displayObject.y - pointer.worldY;
 
         return Math.sqrt(this._dx * this._dx + this._dy * this._dy);
 

@@ -388,8 +388,6 @@ PIXI.Sprite.prototype._renderCanvas = function(renderSession)
             if (this.cachedTint !== this.tint)
             {
                 this.cachedTint = this.tint;
-
-                //  TODO clean up caching - how to clean up the caches?
                 this.tintedTexture = PIXI.CanvasTinter.getTintedTexture(this, this.tint);
             }
 

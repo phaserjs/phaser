@@ -287,11 +287,14 @@ Phaser.TilemapLayer.sharedCopyCanvas = null;
 * @static
 */
 Phaser.TilemapLayer.ensureSharedCopyCanvas = function () {
+
     if (!this.sharedCopyCanvas)
     {
         this.sharedCopyCanvas = Phaser.Canvas.create(2, 2);
     }
+
     return this.sharedCopyCanvas;
+
 };
 
 Phaser.TilemapLayer.prototype = Object.create(Phaser.Image.prototype);
@@ -312,6 +315,7 @@ Object.defineProperty(Phaser.TilemapLayer.prototype, 'tileColor', {
     get: function () {
         return this.debugSettings.missingImageFill;
     },
+
     set: function (value) {
         this.debugSettings.missingImageFill = value;
     }
@@ -635,8 +639,10 @@ Phaser.TilemapLayer.prototype.resolveTileset = function (tileIndex)
     var tilesets = this._mc.tilesets;
 
     //  Try for dense array if reasonable
-    if (tileIndex < 2000) {
-        while (tilesets.length < tileIndex) {
+    if (tileIndex < 2000)
+    {
+        while (tilesets.length < tileIndex)
+        {
             tilesets.push(undefined);
         }
     }
@@ -646,6 +652,7 @@ Phaser.TilemapLayer.prototype.resolveTileset = function (tileIndex)
     if (setIndex != null) // number: not null or undefined
     {
         var tileset = this.map.tilesets[setIndex];
+
         if (tileset && tileset.containsTileIndex(tileIndex))
         {
             return (tilesets[tileIndex] = tileset);
@@ -668,7 +675,9 @@ Phaser.TilemapLayer.prototype.resetTilesetCache = function ()
 {
 
     var tilesets = this._mc.tilesets;
-    while (tilesets.length) {
+
+    while (tilesets.length)
+    {
         tilesets.pop();
     }
 
@@ -682,6 +691,7 @@ Phaser.TilemapLayer.prototype.resetTilesetCache = function ()
  * @param {number} [yScale] - The scale factor along the Y-plane
  */
 Phaser.TilemapLayer.prototype.setScale = function(xScale, yScale) {
+
     xScale = xScale || 1;
     yScale = yScale || xScale;
 
@@ -702,6 +712,7 @@ Phaser.TilemapLayer.prototype.setScale = function(xScale, yScale) {
     }
 
     this.scale.setTo(xScale, yScale);
+
 };
 
 /**
@@ -717,7 +728,6 @@ Phaser.TilemapLayer.prototype.setScale = function(xScale, yScale) {
 */
 Phaser.TilemapLayer.prototype.shiftCanvas = function (context, x, y)
 {
-
     var canvas = context.canvas;
     var copyW = canvas.width - Math.abs(x);
     var copyH = canvas.height - Math.abs(y);
@@ -741,6 +751,7 @@ Phaser.TilemapLayer.prototype.shiftCanvas = function (context, x, y)
     }
 
     var copyCanvas = this.renderSettings.copyCanvas;
+
     if (copyCanvas)
     {
         // Use a second copy buffer, without slice support, for Safari .. again.
@@ -841,6 +852,7 @@ Phaser.TilemapLayer.prototype.renderRegion = function (scrollX, scrollY, left, t
             if (x >= width) { x -= width; }
 
             var tile = row[x];
+
             if (!tile || tile.index < 0)
             {
                 continue;
@@ -849,6 +861,7 @@ Phaser.TilemapLayer.prototype.renderRegion = function (scrollX, scrollY, left, t
             var index = tile.index;
 
             var set = tilesets[index];
+
             if (set === undefined)
             {
                 set = this.resolveTileset(index);
@@ -868,14 +881,17 @@ Phaser.TilemapLayer.prototype.renderRegion = function (scrollX, scrollY, left, t
                     context.save();
                     context.translate(tx + tile.centerX, ty + tile.centerY);
                     context.rotate(tile.rotation);
+
                     if (tile.flipped)
                     {
                         context.scale(-1, 1);
                     }
+
                     set.draw(context, -tile.centerX, -tile.centerY, index);
                     context.restore();
                 }
-                else{
+                else
+                {
                     set.draw(context, tx, ty, index);
                 }
             }
@@ -1055,6 +1071,7 @@ Phaser.TilemapLayer.prototype.render = function () {
     if (this.debug)
     {
         this.context.globalAlpha = this.debugSettings.debugAlpha;
+
         if (this.debugSettings.forceFullRedraw)
         {
             redrawAll = true;

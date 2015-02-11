@@ -448,6 +448,7 @@ Phaser.TilemapParser = {
 
                         gid: json.layers[i].objects[v].gid,
                         name: json.layers[i].objects[v].name,
+                        type: json.layers[i].objects[v].hasOwnProperty("type") ? json.layers[i].objects[v].type : "",
                         x: json.layers[i].objects[v].x,
                         y: json.layers[i].objects[v].y,
                         visible: json.layers[i].objects[v].visible,
