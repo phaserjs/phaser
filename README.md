@@ -125,6 +125,7 @@ Thanks to @pnstickne for vast majority of this update.
 * World.setBounds will now adjust the World.x/y values to match those given (#1555)
 * ArcadePhysics.distanceToPointer now calculates the distance in world space values.
 * Sound.fadeIn now supports fading from a marker, as well as the entire audio clip, so now works with audio sprites (thanks @vorrin #1413)
+* Text font components can now be specified as part of "style". There is a breaking change in that the `fontWeight` now only handles the CSS font-weight component. The `fontStyle` property handles 'italic', 'oblique', values from font-style. This makes the overall consistency cleaner but some code may need to be updated. This does not affect font-weight/font-style as with setStyle({font:..}). Also fixes overwrite font/size/weight oddities - which may result in different behavior for code that was relying on such. All of the text examples appear to work and modification using the new features (while respecting the change in previous behavior) work better (thanks @pnstickne #1375 #1370)
 
 ### Bug Fixes
 
