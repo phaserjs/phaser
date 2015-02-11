@@ -57,12 +57,15 @@ Phaser.Group = function (game, parent, name, addToStage, enableBody, physicsBody
 
     PIXI.DisplayObjectContainer.call(this);
 
-    if (addToStage) {
+    if (addToStage)
+    {
         this.game.stage.addChild(this);
         this.z = this.game.stage.children.length;
     }
-    else {
-        if (parent) {
+    else
+    {
+        if (parent)
+        {
             parent.addChild(this);
             this.z = parent.children.length;
         }
@@ -911,7 +914,7 @@ Phaser.Group.prototype.setAll = function (key, value, checkAlive, checkVisible, 
     key = key.split('.');
     operation = operation || 0;
 
-    for (var i = 0, len = this.children.length; i < len; i++)
+    for (var i = 0; i < this.children.length; i++)
     {
         if ((!checkAlive || (checkAlive && this.children[i].alive)) && (!checkVisible || (checkVisible && this.children[i].visible)))
         {
@@ -945,7 +948,7 @@ Phaser.Group.prototype.setAllChildren = function (key, value, checkAlive, checkV
 
     operation = operation || 0;
 
-    for (var i = 0, len = this.children.length; i < len; i++)
+    for (var i = 0; i < this.children.length; i++)
     {
         if ((!checkAlive || (checkAlive && this.children[i].alive)) && (!checkVisible || (checkVisible && this.children[i].visible)))
         {
@@ -980,7 +983,7 @@ Phaser.Group.prototype.checkAll = function (key, value, checkAlive, checkVisible
     if (typeof checkVisible === 'undefined') { checkVisible = false; }
     if (typeof force === 'undefined') { force = false; }
 
-    for (var i = 0, len = this.children.length; i < len; i++)
+    for (var i = 0; i < this.children.length; i++)
     {
         if ((!checkAlive || (checkAlive && this.children[i].alive)) && (!checkVisible || (checkVisible && this.children[i].visible)))
         {
@@ -1076,13 +1079,18 @@ Phaser.Group.prototype.divideAll = function (property, amount, checkAlive, check
 Phaser.Group.prototype.callAllExists = function (callback, existsValue) {
 
     var args;
+
     if (arguments.length > 2)
     {
         args = [];
-        for (var i = 2; i < arguments.length; i++) { args.push(arguments[i]); }
+
+        for (var i = 2; i < arguments.length; i++)
+        {
+            args.push(arguments[i]);
+        }
     }
 
-    for (var i = 0, len = this.children.length; i < len; i++)
+    for (var i = 0; i < this.children.length; i++)
     {
         if (this.children[i].exists === existsValue && this.children[i][callback])
         {
@@ -1183,16 +1191,21 @@ Phaser.Group.prototype.callAll = function (method, context) {
     }
 
     var args;
+
     if (arguments.length > 2)
     {
         args = [];
-        for (var i = 2; i < arguments.length; i++) { args.push(arguments[i]); }
+
+        for (var i = 2; i < arguments.length; i++)
+        {
+            args.push(arguments[i]);
+        }
     }
 
     var callback = null;
     var callbackContext = null;
 
-    for (var i = 0, len = this.children.length; i < len; i++)
+    for (var i = 0; i < this.children.length; i++)
     {
         callback = this.callbackFromArray(this.children[i], method, methodLength);
 
@@ -1324,9 +1337,9 @@ Phaser.Group.prototype.filter = function (predicate, checkExists) {
 *
 *     Group.forEach(awardBonusGold, this, true, 100, 500)
 *
-* would invoke thee `awardBonusGolds` with the parameters `(child, 100, 500)`.
+* would invoke `awardBonusGold` function with the parameters `(child, 100, 500)`.
 *
-* Note: Currently this will skip any children which are Groups themselves.
+* Note: This check will skip any children which are Groups themselves.
 *
 * @method Phaser.Group#forEach
 * @param {function} callback - The function that will be called for each applicable child. The child will be passed as the first argument.
@@ -1340,7 +1353,7 @@ Phaser.Group.prototype.forEach = function (callback, callbackContext, checkExist
 
     if (arguments.length <= 3)
     {
-        for (var i = 0, len = this.children.length; i < len; i++)
+        for (var i = 0; i < this.children.length; i++)
         {
             if (!checkExists || (checkExists && this.children[i].exists))
             {
@@ -1353,9 +1366,10 @@ Phaser.Group.prototype.forEach = function (callback, callbackContext, checkExist
         // Assigning to arguments properties causes Extreme Deoptimization in Chrome, FF, and IE.
         // Using an array and pushing each element (not a slice!) is _significantly_ faster.
         var args = [null];
+
         for (var i = 3; i < arguments.length; i++) { args.push(arguments[i]); }
 
-        for (var i = 0, len = this.children.length; i < len; i++)
+        for (var i = 0; i < this.children.length; i++)
         {
             if (!checkExists || (checkExists && this.children[i].exists))
             {
@@ -1380,10 +1394,15 @@ Phaser.Group.prototype.forEach = function (callback, callbackContext, checkExist
 Phaser.Group.prototype.forEachExists = function (callback, callbackContext) {
 
     var args;
+
     if (arguments.length > 2)
     {
         args = [null];
-        for (var i = 2; i < arguments.length; i++) { args.push(arguments[i]); }
+
+        for (var i = 2; i < arguments.length; i++)
+        {
+            args.push(arguments[i]);
+        }
     }
 
     this.iterate('exists', true, Phaser.Group.RETURN_TOTAL, callback, callbackContext, args);
@@ -1403,10 +1422,15 @@ Phaser.Group.prototype.forEachExists = function (callback, callbackContext) {
 Phaser.Group.prototype.forEachAlive = function (callback, callbackContext) {
 
     var args;
+
     if (arguments.length > 2)
     {
         args = [null];
-        for (var i = 2; i < arguments.length; i++) { args.push(arguments[i]); }
+
+        for (var i = 2; i < arguments.length; i++)
+        {
+            args.push(arguments[i]);
+        }
     }
 
     this.iterate('alive', true, Phaser.Group.RETURN_TOTAL, callback, callbackContext, args);
@@ -1426,10 +1450,15 @@ Phaser.Group.prototype.forEachAlive = function (callback, callbackContext) {
 Phaser.Group.prototype.forEachDead = function (callback, callbackContext) {
 
     var args;
+
     if (arguments.length > 2)
     {
         args = [null];
-        for (var i = 2; i < arguments.length; i++) { args.push(arguments[i]); }
+
+        for (var i = 2; i < arguments.length; i++)
+        {
+            args.push(arguments[i]);
+        }
     }
 
     this.iterate('alive', false, Phaser.Group.RETURN_TOTAL, callback, callbackContext, args);
@@ -1590,7 +1619,7 @@ Phaser.Group.prototype.iterate = function (key, value, returnType, callback, cal
 
     var total = 0;
 
-    for (var i = 0, len = this.children.length; i < len; i++)
+    for (var i = 0; i < this.children.length; i++)
     {
         if (this.children[i][key] === value)
         {
