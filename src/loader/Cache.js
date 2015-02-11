@@ -538,15 +538,7 @@ Phaser.Cache.prototype = {
             decoded = true;
         }
 
-        this._sounds[key] = { 
-            url: url, 
-            data: data, 
-            isDecoding: false, 
-            decoded: decoded, 
-            webAudio: webAudio, 
-            audioTag: audioTag, 
-            locked: this.game.sound.touchLocked 
-        };
+        this._sounds[key] = { url: url, data: data, isDecoding: false, decoded: decoded, webAudio: webAudio, audioTag: audioTag, locked: this.game.sound.touchLocked };
 
         this._resolveURL(url, this._sounds[key]);
 
