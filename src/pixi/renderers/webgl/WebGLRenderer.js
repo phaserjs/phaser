@@ -248,7 +248,7 @@ PIXI.WebGLRenderer.prototype.initContext = function()
         throw new Error('This browser does not support webGL. Try using the canvas renderer');
     }
 
-    this.glContextId = gl.id = PIXI.WebGLRenderer.glContextId ++;
+    this.glContextId = gl.id = PIXI.WebGLRenderer.glContextId++;
 
     PIXI.glContexts[this.glContextId] = gl;
 
@@ -502,7 +502,6 @@ PIXI.WebGLRenderer.prototype.destroy = function()
     this.projection = null;
     this.offset = null;
 
-    // time to create the render managers! each one focuses on managine a state in webGL
     this.shaderManager.destroy();
     this.spriteBatch.destroy();
     this.maskManager.destroy();
@@ -515,6 +514,10 @@ PIXI.WebGLRenderer.prototype.destroy = function()
 
     this.gl = null;
     this.renderSession = null;
+
+    PIXI.instances[this.glContextId] = null;
+
+    PIXI.WebGLRenderer.glContextId--;
 };
 
 /**
