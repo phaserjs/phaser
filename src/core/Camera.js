@@ -158,7 +158,11 @@ Phaser.Camera.prototype = {
     },
 
     /**
-    * Tells this camera which sprite to follow.
+    * Tell the camera which sprite to follow.
+    * 
+    * If you find you're getting a slight "jitter" effect when following a Sprite it's probably to do with sub-pixel rendering of the Sprite position.
+    * This can be disabled by setting `game.renderer.renderSession.roundPixels = true` to force full pixel rendering.
+    * 
     * @method Phaser.Camera#follow
     * @param {Phaser.Sprite|Phaser.Image|Phaser.Text} target - The object you want the camera to track. Set to null to not follow anything.
     * @param {number} [style] - Leverage one of the existing "deadzone" presets. If you use a custom deadzone, ignore this parameter and manually specify the deadzone after calling follow().
