@@ -124,6 +124,7 @@ Thanks to @pnstickne for vast majority of this update.
 * Loader.onLoadComplete is dispatched *before* the Loader is reset. If you have a `create` method in your State please note that the Loader will have been reset before this method is called. This allows you to immediately re-use the Loader without having to first reset it manually.
 * World.setBounds will now adjust the World.x/y values to match those given (#1555)
 * ArcadePhysics.distanceToPointer now calculates the distance in world space values.
+* Sound.fadeIn now supports fading from a marker, as well as the entire audio clip, so now works with audio sprites (thanks @vorrin #1413)
 
 ### Bug Fixes
 

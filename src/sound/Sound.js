@@ -840,28 +840,31 @@ Phaser.Sound.prototype = {
     /**
      * Starts this sound playing (or restarts it if already doing so) and sets the volume to zero.
      * Then increases the volume from 0 to 1 over the duration specified.
+     *
      * At the end of the fade Sound.onFadeComplete is dispatched with this Sound object as the first parameter,
      * and the final volume (1) as the second parameter.
      *
      * @method Phaser.Sound#fadeIn
      * @param {number} [duration=1000] - The time in milliseconds over which the Sound should fade in.
      * @param {boolean} [loop=false] - Should the Sound be set to loop? Note that this doesn't cause the fade to repeat.
+     * @param {string} [marker=(current marker)] - The marker to start at; defaults to the current (last played) marker. To start playing from the beginning specify specify a marker of `''`.
      */
-    fadeIn: function (duration, loop) {
+    fadeIn: function (duration, loop, marker) {
 
         if (typeof loop === 'undefined') { loop = false; }
+        if (typeof marker === 'undefined') { marker = this.currentMarker; }
 
         if (this.paused)
         {
             return;
         }
 
-        this.play('', 0, 0, loop);
+        this.play(marker, 0, 0, loop);
 
         this.fadeTo(duration, 1);
 
     },
-
+    
     /**
      * Decreases the volume of this Sound from its current value to 0 over the duration specified.
      * At the end of the fade Sound.onFadeComplete is dispatched with this Sound object as the first parameter,
