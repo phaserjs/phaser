@@ -785,14 +785,37 @@ Phaser.Loader.prototype = {
     * @method Phaser.Loader#audiosprite
     * @param {string} key - Unique asset key of the audio file.
     * @param {Array|string} urls - An array containing the URLs of the audio files, i.e.: [ 'audiosprite.mp3', 'audiosprite.ogg', 'audiosprite.m4a' ] or a single string containing just one URL.
-    * @param {string} jsonURL - The URL of the audiosprite configuration json.
+    * @param {string} [jsonURL=null] - The URL of the audiosprite configuration JSON object. If you wish to pass the data directly set this parameter to null.
+    * @param {string|object} [jsonData=null] - A JSON object or string containing the audiosprite configuration data. This is ignored if jsonURL is not null.
+    * @param {boolean} [autoDecode=true] - When using Web Audio the audio files can either be decoded at load time or run-time.
+    *    Audio files can't be played until they are decoded and, if specified, this enables immediate decoding. Decoding is a non-blocking async process.
     * @return {Phaser.Loader} This Loader instance.
     */
-    audiosprite: function(key, urls, jsonURL) {
+    audiosprite: function(key, urls, jsonURL, jsonData, autoDecode) {
 
-        this.audio(key, urls);
+        if (typeof jsonURL === 'undefined') { jsonURL = null; }
+        if (typeof jsonData === 'undefined') { jsonData = null; }
+        if (typeof autoDecode === 'undefined') { autoDecode = true; }
 
-        this.json(key + '-audioatlas', jsonURL);
+        this.audio(key, urls, autoDecode);
+
+        if (jsonURL)
+        {
+            this.json(key + '-audioatlas', jsonURL);
+        }
+        else if (jsonData)
+        {
+            if (typeof jsonData === 'string')
+            {
+                jsonData = JSON.parse(jsonData);
+            }
+
+            this.game.cache.addJSON(key + '-audioatlas', '', jsonData);
+        }
+        else
+        {
+            console.warn('Phaser.Loader.audiosprite - You must specify either a jsonURL or provide a jsonData object');
+        }
 
         return this;
 
