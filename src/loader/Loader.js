@@ -757,7 +757,7 @@ Phaser.Loader.prototype = {
     *    If an array is specified then the first URI (or URI + mime pair) that is device-compatible will be selected.
     *    For example: `"jump.mp3"`, `['jump.mp3', 'jump.ogg', 'jump.m4a']`, or `[{uri: "data:<opus_resource>", type: 'opus'}, 'fallback.mp3']`.
     *    BLOB and DATA URIs can be used but only support automatic detection when used in the pair form; otherwise the format must be manually checked before adding the resource.
-    * @param {boolean} autoDecode - When using Web Audio the audio files can either be decoded at load time or run-time.
+    * @param {boolean} [autoDecode=true] - When using Web Audio the audio files can either be decoded at load time or run-time.
     *    Audio files can't be played until they are decoded and, if specified, this enables immediate decoding. Decoding is a non-blocking async process.
     * @return {Phaser.Loader} This Loader instance.
     */
@@ -765,7 +765,8 @@ Phaser.Loader.prototype = {
 
         if (typeof autoDecode === 'undefined') { autoDecode = true; }
 
-        if (typeof urls === 'string') {
+        if (typeof urls === 'string')
+        {
             urls = [urls];
         }
 
@@ -1179,7 +1180,7 @@ Phaser.Loader.prototype = {
 
         if (!this.isLoading)
         {
-            console.warn('Phaser.Loader - active loading cancelled/reset');
+            console.warn('Phaser.Loader - active loading canceled / reset');
             this.finishedLoading(true);
             return;
         }
@@ -1366,6 +1367,7 @@ Phaser.Loader.prototype = {
             file.errorMessage = errorMessage;
 
             console.warn('Phaser.Loader - ' + file.type + '[' + file.key + ']' + ': ' + errorMessage);
+            // debugger;
         }
 
         this.processLoadQueue();
@@ -1933,18 +1935,7 @@ Phaser.Loader.prototype = {
 
                     if (file.autoDecode)
                     {
-                        var that = this;
-                        var key = file.key;
-
-                        this.game.cache.updateSound(key, 'isDecoding', true);
-
-                        this.game.sound.context.decodeAudioData(file.data, function (buffer) {
-                            if (buffer)
-                            {
-                                that.game.cache.decodedSound(key, buffer);
-                                that.game.sound.onSoundDecode.dispatch(key, that.game.cache.getSound(key));
-                            }
-                        });
+                        this.game.sound.decode(file.key);
                     }
                 }
                 else
