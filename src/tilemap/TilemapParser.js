@@ -257,7 +257,7 @@ Phaser.TilemapParser = {
                 flipped = false;
                 gid = json.layers[i].data[t];
 
-                //  If true the current tile is flipped or rotated (Tiled TMX format) 
+                //  If true the current tile is flipped or rotated (Tiled TMX format)
                 if (gid > 0x20000000)
                 {
                     flippedVal = 0;
@@ -282,7 +282,7 @@ Phaser.TilemapParser = {
                         gid -= 0x20000000;
                         flippedVal += 1;
                     }
-                   
+
                     switch (flippedVal)
                     {
                         case 5:
@@ -384,8 +384,9 @@ Phaser.TilemapParser = {
         
         for (var i = 0; i < json.tilesets.length; i++)
         {
-            //  name, firstgid, width, height, margin, spacing, properties
+            // name, firstgid, width, height, margin, spacing, properties
             var set = json.tilesets[i];
+
             if (set.hasOwnProperty('tiles'))
             {
                 var tileIndices = Object.keys(set.tiles);

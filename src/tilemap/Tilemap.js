@@ -431,7 +431,7 @@ Phaser.Tilemap.prototype = {
     /**
     * Creates a Sprite for every object matching the given tile indexes in the map data.
     * You can specify the group that the Sprite will be created in. If none is given it will be created in the World.
-    * You can optional specify if the tile will be replaced with another after the Sprite is created. This is useful if you want to lay down special 
+    * You can optional specify if the tile will be replaced with another after the Sprite is created. This is useful if you want to lay down special
     * tiles in a level that are converted to Sprites, but want to replace the tile itself with a floor tile or similar once converted.
     *
     * @method Phaser.Tilemap#createFromTiles
@@ -795,7 +795,7 @@ Phaser.Tilemap.prototype = {
 
         if (typeof collides === 'undefined') { collides = true; }
         if (typeof recalculate === 'undefined') { recalculate = true; }
-        
+
         layer = this.getLayer(layer);
 
         if (typeof indexes === 'number')
@@ -835,7 +835,7 @@ Phaser.Tilemap.prototype = {
 
         if (typeof collides === 'undefined') { collides = true; }
         if (typeof recalculate === 'undefined') { recalculate = true; }
-        
+
         layer = this.getLayer(layer);
 
         if (start > stop)
@@ -870,7 +870,7 @@ Phaser.Tilemap.prototype = {
 
         if (typeof collides === 'undefined') { collides = true; }
         if (typeof recalculate === 'undefined') { recalculate = true; }
-        
+
         layer = this.getLayer(layer);
 
         //  Collide everything, except the IDs given in the indexes array
@@ -984,7 +984,7 @@ Phaser.Tilemap.prototype = {
     },
 
     /**
-    * Turn off/on the recalculation of faces for tile or collision updates. 
+    * Turn off/on the recalculation of faces for tile or collision updates.
     * `setPreventRecalculate(true)` puts recalculation on hold while `setPreventRecalculate(false)` recalculates all the changed layers.
     *
     * @method Phaser.Tilemap#setPreventRecalculate
@@ -1026,7 +1026,7 @@ Phaser.Tilemap.prototype = {
             this.needToRecalculate[layer] = true;
             return;
         }
-        
+
         var above = null;
         var below = null;
         var left = null;
@@ -1501,7 +1501,7 @@ Phaser.Tilemap.prototype = {
         if (typeof y === "undefined") { y = 0; }
         if (typeof width === "undefined") { width = this.layers[layer].width; }
         if (typeof height === "undefined") { height = this.layers[layer].height; }
-        
+
         if (x < 0)
         {
             x = 0;
