@@ -601,7 +601,7 @@ Phaser.Pointer.prototype = {
     */
     stop: function (event) {
 
-        if (this._stateReset)
+        if (this._stateReset && this.withinGame)
         {
             event.preventDefault();
             return;
