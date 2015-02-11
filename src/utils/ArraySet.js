@@ -114,7 +114,7 @@ Phaser.ArraySet.prototype = {
     * Sets the property `key` to the given value on all members of this list.
     *
     * @method Phaser.ArraySet#setAll
-    * @param {any} key - The propety of the item to set.
+    * @param {any} key - The property of the item to set.
     * @param {any} value - The value to set the property to.
     */
     setAll: function (key, value) {
