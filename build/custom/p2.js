@@ -10158,7 +10158,7 @@ Capsule.prototype = new Shape();
  * @method conputeMomentOfInertia
  * @param  {Number} mass
  * @return {Number}
- * @todo
+ * @todo !
  */
 Capsule.prototype.computeMomentOfInertia = function(mass){
     // Approximate with rectangle
@@ -16328,6 +16328,9 @@ Phaser.Physics.P2.Body.prototype = {
     */
     clearCollision: function (clearGroup, clearMask, shape) {
 
+        if (typeof clearGroup === 'undefined') { clearGroup = true; }
+        if (typeof clearMask === 'undefined') { clearMask = true; }
+
         if (typeof shape === 'undefined')
         {
             for (var i = this.data.shapes.length - 1; i >= 0; i--)
@@ -16426,6 +16429,7 @@ Phaser.Physics.P2.Body.prototype = {
     adjustCenterOfMass: function () {
 
         this.data.adjustCenterOfMass();
+        this.shapeChanged();
 
     },
 
@@ -17952,7 +17956,7 @@ Phaser.Utils.extend(Phaser.Physics.P2.BodyDebug.prototype, {
     /**
     * Draws the P2 shapes to the Graphics object.
     *
-    * @method Phaser.Physics.P2.BodyDebug#draw
+    * @method Phaser.Physics.P2.BodyDebug#drawRectangle
     */
     drawRectangle: function(g, x, y, angle, w, h, color, fillColor, lineWidth) {
 
@@ -17986,7 +17990,7 @@ Phaser.Utils.extend(Phaser.Physics.P2.BodyDebug.prototype, {
     /**
     * Draws a P2 Line shape.
     *
-    * @method Phaser.Physics.P2.BodyDebug#drawCircle
+    * @method Phaser.Physics.P2.BodyDebug#drawLine
     */
     drawLine: function(g, len, color, lineWidth) {
 

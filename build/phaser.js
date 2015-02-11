@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.2.2 "Alkindar" - Built: Tue Jan 06 2015 06:57:43
+* v2.3.0 "Tarabon" - Built: Wed Feb 11 2015 15:20:20
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -2502,8 +2502,6 @@ PIXI.Sprite.prototype._renderCanvas = function(renderSession)
             if (this.cachedTint !== this.tint)
             {
                 this.cachedTint = this.tint;
-
-                //  TODO clean up caching - how to clean up the caches?
                 this.tintedTexture = PIXI.CanvasTinter.getTintedTexture(this, this.tint);
             }
 
@@ -3153,8 +3151,8 @@ PIXI.Text.prototype.determineFontProperties = function(fontStyle)
 
         context.font = fontStyle;
 
-        var width = Math.ceil(context.measureText('|Mq').width);
-        var baseline = Math.ceil(context.measureText('M').width);
+        var width = Math.ceil(context.measureText('|MÉq').width);
+        var baseline = Math.ceil(context.measureText('|MÉq').width);
         var height = 2 * baseline;
 
         baseline = baseline * 1.4 | 0;
@@ -3843,7 +3841,7 @@ PIXI.unpackColorRGB = function(r, g, b)//r, g, b, a)
 */
 
 /**
- * Checks whether the Canvas BlendModes are supported by the current browser
+ * Checks whether the Canvas BlendModes are supported by the current browser for drawImage
  *
  * @method canUseNewCanvasBlendModes
  * @return {Boolean} whether they are supported
@@ -3851,16 +3849,27 @@ PIXI.unpackColorRGB = function(r, g, b)//r, g, b, a)
 PIXI.canUseNewCanvasBlendModes = function()
 {
     if (typeof document === 'undefined') return false;
+
+    var pngHead = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAABAQMAAADD8p2OAAAAA1BMVEX/';
+    var pngEnd = 'AAAACklEQVQI12NgAAAAAgAB4iG8MwAAAABJRU5ErkJggg==';
+
+    var magenta = new Image();
+    magenta.src = pngHead + 'AP804Oa6' + pngEnd;
+
+    var yellow = new Image();
+    yellow.src = pngHead + '/wCKxvRF' + pngEnd;
+
     var canvas = document.createElement('canvas');
-    canvas.width = 1;
+    canvas.width = 6;
     canvas.height = 1;
     var context = canvas.getContext('2d');
-    context.fillStyle = '#000';
-    context.fillRect(0,0,1,1);
     context.globalCompositeOperation = 'multiply';
-    context.fillStyle = '#fff';
-    context.fillRect(0,0,1,1);
-    return context.getImageData(0,0,1,1).data[0] === 0;
+    context.drawImage(magenta, 0, 0);
+    context.drawImage(yellow, 2, 0);
+
+    var data = context.getImageData(2,0,1,1).data;
+
+    return (data[0] === 255 && data[1] === 0 && data[2] === 0);
 };
 
 /**
@@ -6672,7 +6681,6 @@ PIXI.WebGLRenderer.prototype.updateTexture = function(texture)
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture.source);
 
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, texture.scaleMode === PIXI.scaleModes.LINEAR ? gl.LINEAR : gl.NEAREST);
-    
 
     if(texture.mipmap && PIXI.isPowerOfTwo(texture.width, texture.height))
     {
@@ -9175,31 +9183,35 @@ PIXI.CanvasTinter.getTintedTexture = function(sprite, color)
 {
     var texture = sprite.texture;
 
-    color = PIXI.CanvasTinter.roundColor(color);
+    //  Disabling the tintCache for a number of reasons:
+    //  
+    //  1) It ate memory like it was going out of fashion if the texture was big
+    //  2) It doesn't work with animated sprites, only the first frame is ever tinted
+    //  3) The tinted texture is stored in Sprite.tintedTexture anyway, so isn't completed un-cached
+    //  4) The cache stopped you being to able to do subtle tint shifts as the color value was rounded
 
-    var stringColor = "#" + ("00000" + ( color | 0).toString(16)).substr(-6);
-   
-    texture.tintCache = texture.tintCache || {};
+    // color = PIXI.CanvasTinter.roundColor(color);
+    // var stringColor = "#" + ("00000" + ( color | 0).toString(16)).substr(-6);
+    // texture.tintCache = texture.tintCache || {};
+    // if(texture.tintCache[stringColor]) return texture.tintCache[stringColor];
 
-    if(texture.tintCache[stringColor]) return texture.tintCache[stringColor];
-
-     // clone texture..
+    // clone texture..
     var canvas = PIXI.CanvasTinter.canvas || document.createElement("canvas");
     
-    //PIXI.CanvasTinter.tintWithPerPixel(texture, stringColor, canvas);
     PIXI.CanvasTinter.tintMethod(texture, color, canvas);
 
-    if(PIXI.CanvasTinter.convertTintToImage)
+    if (PIXI.CanvasTinter.convertTintToImage)
     {
         // is this better?
         var tintImage = new Image();
         tintImage.src = canvas.toDataURL();
 
-        texture.tintCache[stringColor] = tintImage;
+        // texture.tintCache[stringColor] = tintImage;
     }
     else
     {
-        texture.tintCache[stringColor] = canvas;
+        // texture.tintCache = canvas;
+        // texture.tintCache[stringColor] = canvas;
         // if we are not converting the texture to an image then we need to lose the reference to the canvas
         PIXI.CanvasTinter.canvas = null;
     }
@@ -9366,11 +9378,10 @@ PIXI.CanvasTinter.roundColor = function(color)
 };
 
 /**
- * Rounds the specified color according to the PIXI.CanvasTinter.cacheStepsPerColorChannel.
+ * Checks if the browser correctly supports putImageData alpha channels.
  * 
- * @method roundColor
+ * @method checkInverseAlpha
  * @static
- * @param color {number} the color to round, should be a hex color
  */
 PIXI.CanvasTinter.checkInverseAlpha = function()
 {
@@ -11254,6 +11265,19 @@ PIXI.TilingSprite.prototype.generateTilingTexture = function(forcePowerOfTwo)
     this.tilingTexture.baseTexture._powerOf2 = true;
 };
 
+PIXI.TilingSprite.prototype.destroy = function () {
+
+    PIXI.Sprite.prototype.destroy.call(this);
+
+    this.tileScale = null;
+    this.tileScaleOffset = null;
+    this.tilePosition = null;
+
+    this.tilingTexture.destroy(true);
+    this.tilingTexture = null;
+
+};
+
 /**
  * @author Mat Groves http://matgroves.com/ @Doormat23
  */
@@ -12328,7 +12352,7 @@ PIXI.AbstractFilter.prototype.apply = function(frameBuffer)
 *
 * Phaser - http://phaser.io
 *
-* v2.2.2 "Alkindar" - Built: Tue Jan 06 2015 06:57:42
+* v2.3.0 "Tarabon" - Built: Wed Feb 11 2015 15:20:19
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -12371,7 +12395,7 @@ PIXI.AbstractFilter.prototype.apply = function(frameBuffer)
 */
 var Phaser = Phaser || {
 
-	VERSION: '2.2.2',
+	VERSION: '2.3.0-dev',
 	GAMES: [],
 
     AUTO: 0,
@@ -17873,7 +17897,7 @@ Phaser.Camera.prototype = {
 
     /**
     * Method called to ensure the camera doesn't venture outside of the game world.
-    * @method Phaser.Camera#checkWorldBounds
+    * @method Phaser.Camera#checkBounds
     */
     checkBounds: function () {
 
@@ -18417,7 +18441,6 @@ Phaser.StateManager.prototype = {
 
         this.game.onPause.add(this.pause, this);
         this.game.onResume.add(this.resume, this);
-        this.game.load.onLoadComplete.add(this.loadComplete, this);
 
         if (this._pendingState !== null)
         {
@@ -18830,6 +18853,8 @@ Phaser.StateManager.prototype = {
             this._args = [];
         }
 
+        this.game._kickstart = true;
+
     },
 
     /**
@@ -18849,7 +18874,7 @@ Phaser.StateManager.prototype = {
     */
     loadComplete: function () {
 
-        // console.log('loadComplete');
+        // console.log('SM loadComplete');
 
         if (this._created === false && this.onCreateCallback)
         {
@@ -20541,7 +20566,7 @@ Phaser.Stage.prototype.visibilityChange = function (event) {
 *
 * An alpha channel is _not_ supported and will be ignored.
 *
-* @name Phaser.Stage#setBackgroundColor
+* @method Phaser.Stage#setBackgroundColor
 * @param {number|string} backgroundColor - The color of the background.
 */
 Phaser.Stage.prototype.setBackgroundColor = function(backgroundColor)
@@ -20557,7 +20582,7 @@ Phaser.Stage.prototype.setBackgroundColor = function(backgroundColor)
 /**
 * Destroys the Stage and removes event listeners.
 *
-* @name Phaser.Stage#destroy
+* @method Phaser.Stage#destroy
 */
 Phaser.Stage.prototype.destroy  = function () {
 
@@ -22202,7 +22227,7 @@ Phaser.Group.prototype.descendingSortHandler = function (a, b) {
 * @method Phaser.Group#iterate
 * @param {string} key - The child property to check, i.e. 'exists', 'alive', 'health'
 * @param {any} value - A child matches if `child[key] === value` is true.
-* @param {integer} returnType - How to iterate the childen and what to return.
+* @param {integer} returnType - How to iterate the children and what to return.
 * @param {function} [callback=null] - Optional function that will be called on each matching child. The matched child is supplied as the first argument.
 * @param {object} [callbackContext] - The context in which the function should be called (usually 'this').
 * @param {any[]} [args=(none)] - The arguments supplied to to the callback; the first array index (argument) will be replaced with the matched child.
@@ -22772,7 +22797,7 @@ Phaser.World.prototype.boot = function () {
 };
 
 /**
-* Updates the size of this world. Note that this doesn't modify the world x/y coordinates, just the width and height.
+* Updates the size of this world and sets World.x/y to the given values
 * The Camera bounds and Physics bounds (if set) are also updated to match the new World bounds.
 *
 * @method Phaser.World#setBounds
@@ -22788,6 +22813,9 @@ Phaser.World.prototype.setBounds = function (x, y, width, height) {
     this._height = height;
 
     this.bounds.setTo(x, y, width, height);
+
+    this.x = x;
+    this.y = y;
 
     if (this.camera.bounds)
     {
@@ -23062,7 +23090,7 @@ Phaser.FlexGrid = function (manager, width, height) {
     this.game = manager.game;
 
     /**
-    * @property {Phaser.ScaleManager} scale - A reference to the ScaleManager.
+    * @property {Phaser.ScaleManager} manager - A reference to the ScaleManager.
     */
     this.manager = manager;
 
@@ -23492,7 +23520,7 @@ Phaser.FlexLayer.prototype.debug = function () {
 * The Game size is the logical size of the game; the Display canvas has size as an HTML element.
 *
 * The calculations of these are heavily influenced by the bounding Parent size which is the computed
-* dimenstions of the Display canvas's Parent container/element - the _effective CSS rules of the
+* dimensions of the Display canvas's Parent container/element - the _effective CSS rules of the
 * canvas's Parent element play an important role_ in the operation of the ScaleManager. 
 *
 * The Display canvas - or Game size, depending {@link #scaleMode} - is updated to best utilize the Parent size.
@@ -23510,7 +23538,7 @@ Phaser.FlexLayer.prototype.debug = function () {
 *   If you need to add a border, margin or any other CSS around your game container, then use a parent element and
 *   apply the CSS to this instead, otherwise you'll be constantly resizing the shape of the game container.
 *
-* - The Display canvas layout CSS styles (ie. margins, size) should not be altered/specified as
+* - The Display canvas layout CSS styles (i.e. margins, size) should not be altered/specified as
 *   they may be updated by the ScaleManager.
 *
 * @description
@@ -23768,7 +23796,7 @@ Phaser.ScaleManager = function (game, width, height) {
     * If `targetElement` is _not_ the same element as {@link #fullScreenTarget}:
     * - After initialization the Display canvas is moved onto the `targetElement` for
     *   the duration of the fullscreen mode, and restored to it's original DOM location when fullscreen is exited.
-    * - The `targetElement` is moved/reparanted within the DOM and may have its CSS styles updated.
+    * - The `targetElement` is moved/re-parented within the DOM and may have its CSS styles updated.
     *
     * The behavior of a pre-assigned target element is covered in {@link Phaser.ScaleManager#fullScreenTarget fullScreenTarget}.
     *
@@ -23912,7 +23940,7 @@ Phaser.ScaleManager = function (game, width, height) {
     * Various compatibility settings.
     * A value of "(auto)" indicates the setting is configured based on device and runtime information.
     *
-    * A {@link #refresh} may need to be peformed after making changes.
+    * A {@link #refresh} may need to be performed after making changes.
     *
     * @protected
     * 
@@ -23924,7 +23952,7 @@ Phaser.ScaleManager = function (game, width, height) {
     *
     * @property {?Phaser.Point} [scrollTo=(auto)] - If specified the window will be scrolled to this position on every refresh.
     *
-    * @property {boolean} [forceMinimumDocumentHeight=false] - If enabled the document elements minimum height is explicity set on updates.
+    * @property {boolean} [forceMinimumDocumentHeight=false] - If enabled the document elements minimum height is explicitly set on updates.
     *    The height set varies by device and may either be the height of the window or the viewport.
     *
     * @property {boolean} [canExpandParent=true] - If enabled then SHOW_ALL and USER_SCALE modes can try and expand the parent element. It may be necessary for the parent element to impose CSS width/height restrictions.
@@ -23959,7 +23987,7 @@ Phaser.ScaleManager = function (game, width, height) {
     this._fullScreenScaleMode = Phaser.ScaleManager.NO_SCALE;
 
     /**
-    * If the parent container of the Game canvas is the browser window itself (ie. document.body),
+    * If the parent container of the Game canvas is the browser window itself (i.e. document.body),
     * rather than another div, this should set to `true`.
     *
     * The {@link #parentNode} property is generally ignored while this is in effect.
@@ -24246,6 +24274,8 @@ Phaser.ScaleManager.prototype = {
         // Don't use updateOrientationState so events are not fired
         this.screenOrientation = this.dom.getScreenOrientation(this.compatibility.orientationFallback);
 
+        this.grid = new Phaser.FlexGrid(this, this.width, this.height);
+
     },
 
     /**
@@ -24355,8 +24385,6 @@ Phaser.ScaleManager.prototype = {
 
         this._gameSize.setTo(0, 0, newWidth, newHeight);
 
-        this.grid = new Phaser.FlexGrid(this, newWidth, newHeight);
-
         this.updateDimensions(newWidth, newHeight, false);
 
     },
@@ -24457,7 +24485,7 @@ Phaser.ScaleManager.prototype = {
     *
     * This also triggers updates on {@link #grid} (FlexGrid) and, if in a RESIZE mode, `game.state` (StateManager).
     *
-    * @method Phaser.ScaleMager#signalSizeChange
+    * @method Phaser.ScaleManager#signalSizeChange
     * @private
     */
     signalSizeChange: function () {
@@ -24641,6 +24669,7 @@ Phaser.ScaleManager.prototype = {
         {
             this.dom.getOffset(this.game.canvas, this.offset);
         }
+
         this.bounds.setTo(this.offset.x, this.offset.y, this.width, this.height);
 
         // Can be invoked in boot pre-input
@@ -24655,6 +24684,10 @@ Phaser.ScaleManager.prototype = {
     * Force the game to run in only one orientation.
     *
     * This enables generation of incorrect orientation signals and affects resizing but does not otherwise rotate or lock the orientation.
+    *
+    * Orientation checks are performed via the Screen Orientation API, if available in browser. This means it will check your monitor
+    * orientation on desktop, or your device orientation on mobile, rather than comparing actual game dimensions. If you need to check the 
+    * viewport dimensions instead and bypass the Screen Orientation API then set: `ScaleManager.compatibility.orientationFallback = 'viewport'`
     * 
     * @method Phaser.ScaleManager#forceOrientation
     * @public
@@ -25638,10 +25671,12 @@ Phaser.ScaleManager.prototype.setSize = Phaser.ScaleManager.prototype.reflowCanv
 Phaser.ScaleManager.prototype.checkOrientationState = function () {
 
     var changed = this.updateOrientationState();
+
     if (changed)
     {
         this.refresh();
     }
+
     return changed;
 
 };
@@ -25885,7 +25920,7 @@ Object.defineProperty(Phaser.ScaleManager.prototype, "isFullScreen", {
 });
 
 /**
-* Returns true if the browser is in portrait mode.
+* Returns true if the screen orientation is in portrait mode.
 *
 * @name Phaser.ScaleManager#isPortrait
 * @property {boolean} isPortrait
@@ -25900,7 +25935,7 @@ Object.defineProperty(Phaser.ScaleManager.prototype, "isPortrait", {
 });
 
 /**
-* Returns true if the browser is in landscape mode.
+* Returns true if the screen orientation is in landscape mode.
 *
 * @name Phaser.ScaleManager#isLandscape
 * @property {boolean} isLandscape
@@ -25915,7 +25950,7 @@ Object.defineProperty(Phaser.ScaleManager.prototype, "isLandscape", {
 });
 
 /**
-* The _last known_ orientation value of the game. A value of 90 is landscape and 0 is portrait.
+* The _last known_ orientation value of the screen. A value of 90 is landscape and 0 is portrait.
 * @name Phaser.ScaleManager#orientation
 * @property {integer} orientation
 * @readonly
@@ -25923,9 +25958,44 @@ Object.defineProperty(Phaser.ScaleManager.prototype, "isLandscape", {
 */
 Object.defineProperty(Phaser.ScaleManager.prototype, "orientation", {
 
-    get: function ()
-    {
+    get: function () {
         return (this.classifyOrientation(this.screenOrientation) === 'portrait' ? 0 : 90);
+    }
+
+});
+
+/**
+* Returns true if the game dimensions are portrait (height > width).
+* This is especially useful to check when using the RESIZE scale mode 
+* but wanting to maintain game orientation on desktop browsers, 
+* where typically the screen orientation will always be landscape regardless of the browser viewport.
+*
+* @name Phaser.ScaleManager#isGamePortrait
+* @property {boolean} isGamePortrait
+* @readonly
+*/
+Object.defineProperty(Phaser.ScaleManager.prototype, "isGamePortrait", {
+
+    get: function () {
+        return (this.height > this.width);
+    }
+
+});
+
+/**
+* Returns true if the game dimensions are landscape (width > height).
+* This is especially useful to check when using the RESIZE scale mode 
+* but wanting to maintain game orientation on desktop browsers, 
+* where typically the screen orientation will always be landscape regardless of the browser viewport.
+*
+* @name Phaser.ScaleManager#isGameLandscape
+* @property {boolean} isGameLandscape
+* @readonly
+*/
+Object.defineProperty(Phaser.ScaleManager.prototype, "isGameLandscape", {
+
+    get: function () {
+        return (this.width > this.height);
     }
 
 });
@@ -26134,6 +26204,11 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     * @property {Phaser.Physics} physics - Reference to the physics manager.
     */
     this.physics = null;
+    
+    /**
+    * @property {Phaser.PluginManager} plugins - Reference to the plugin manager.
+    */
+    this.plugins = null;
 
     /**
     * @property {Phaser.RandomDataGenerator} rnd - Instance of repeatable random data generator helper.
@@ -26262,10 +26337,16 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     this._lastCount = 0;
 
     /**
-    * @property {number} _spiralling - if the 'catch-up' iterations are spiralling out of control, this counter is incremented
+    * @property {number} _spiraling - if the 'catch-up' iterations are spiraling out of control, this counter is incremented
     * @private
     */
-    this._spiralling = 0;
+    this._spiraling = 0;
+
+    /**
+    * @property {boolean} _kickstart - Force a logic update + render by default (always on Boot and State swap)
+    * @private
+    */
+    this._kickstart = true;
 
     /**
     * If the game is struggling to maintain the desired FPS, this signal will be dispatched.
@@ -26485,6 +26566,8 @@ Phaser.Game.prototype = {
             this.raf = new Phaser.RequestAnimationFrame(this, false);
         }
 
+        this._kickstart = true;
+
         this.raf.start();
 
     },
@@ -26496,6 +26579,11 @@ Phaser.Game.prototype = {
     * @protected
     */
     showDebugHeader: function () {
+
+        if (window['PhaserGlobal'] && window['PhaserGlobal'].hideBanner)
+        {
+            return;
+        }
 
         var v = Phaser.VERSION;
         var r = 'Canvas';
@@ -26637,8 +26725,23 @@ Phaser.Game.prototype = {
 
         this.time.update(time);
 
+        if (this._kickstart)
+        {
+            this.updateLogic(1.0 / this.time.desiredFps);
+
+            //  Sync the scene graph after _every_ logic update to account for moved game objects                
+            this.stage.updateTransform();
+
+            // call the game render update exactly once every frame
+            this.updateRender(this.time.slowMotion * this.time.desiredFps);
+
+            this._kickstart = false;
+
+            return;
+        }
+
         // if the logic time is spiraling upwards, skip a frame entirely
-        if (this._spiralling > 1 && !this.forceSingleUpdate)
+        if (this._spiraling > 1 && !this.forceSingleUpdate)
         {
             // cause an event to warn the program that this CPU can't keep up with the current desiredFps rate
             if (this.time.time > this._nextFpsNotification)
@@ -26652,7 +26755,7 @@ Phaser.Game.prototype = {
 
             // reset the _deltaTime accumulator which will cause all pending dropped frames to be permanently skipped
             this._deltaTime = 0;
-            this._spiralling = 0;
+            this._spiraling = 0;
 
             // call the game render update exactly once every frame
             this.updateRender(this.time.slowMotion * this.time.desiredFps);
@@ -26696,12 +26799,12 @@ Phaser.Game.prototype = {
             // detect spiraling (if the catch-up loop isn't fast enough, the number of iterations will increase constantly)
             if (count > this._lastCount)
             {
-                this._spiralling++;
+                this._spiraling++;
             }
             else if (count < this._lastCount)
             {
                 // looks like it caught up successfully, reset the spiral alert counter
-                this._spiralling = 0;
+                this._spiraling = 0;
             }
 
             this._lastCount = count;
@@ -27076,7 +27179,7 @@ Phaser.Input = function (game) {
     this.enabled = true;
 
     /**
-    * @property {number} multiInputOverride - Controls the expected behaviour when using a mouse and touch together on a multi-input device.
+    * @property {number} multiInputOverride - Controls the expected behavior when using a mouse and touch together on a multi-input device.
     * @default
     */
     this.multiInputOverride = Phaser.Input.MOUSE_TOUCH_COMBINE;
@@ -27615,6 +27718,7 @@ Phaser.Input.prototype = {
         {
             return this.pointer1.start(event);
         }
+
         if (!this.pointer2.active)
         {
             return this.pointer2.start(event);
@@ -27623,6 +27727,7 @@ Phaser.Input.prototype = {
         for (var i = 2; i < this.pointers.length; i++)
         {
             var pointer = this.pointers[i];
+
             if (!pointer.active)
             {
                 return pointer.start(event);
@@ -27648,6 +27753,7 @@ Phaser.Input.prototype = {
         {
             return this.pointer1.move(event);
         }
+
         if (this.pointer2.active && this.pointer2.identifier === event.identifier)
         {
             return this.pointer2.move(event);
@@ -27656,6 +27762,7 @@ Phaser.Input.prototype = {
         for (var i = 2; i < this.pointers.length; i++)
         {
             var pointer = this.pointers[i];
+
             if (pointer.active && pointer.identifier === event.identifier)
             {
                 return pointer.move(event);
@@ -27680,6 +27787,7 @@ Phaser.Input.prototype = {
         {
             return this.pointer1.stop(event);
         }
+
         if (this.pointer2.active && this.pointer2.identifier === event.identifier)
         {
             return this.pointer2.stop(event);
@@ -27688,6 +27796,7 @@ Phaser.Input.prototype = {
         for (var i = 2; i < this.pointers.length; i++)
         {
             var pointer = this.pointers[i];
+
             if (pointer.active && pointer.identifier === event.identifier)
             {
                 return pointer.stop(event);
@@ -27711,9 +27820,11 @@ Phaser.Input.prototype = {
         if (typeof limit === 'undefined') { limit = this.pointers.length; }
 
         var count = limit;
+
         for (var i = 0; i < this.pointers.length && count > 0; i++)
         {
             var pointer = this.pointers[i];
+
             if (pointer.active)
             {
                 count--;
@@ -27741,6 +27852,7 @@ Phaser.Input.prototype = {
         for (var i = 0; i < this.pointers.length; i++)
         {
             var pointer = this.pointers[i];
+
             if (pointer.active === isActive)
             {
                 return pointer;
@@ -27767,6 +27879,7 @@ Phaser.Input.prototype = {
         for (var i = 0; i < this.pointers.length; i++)
         {
             var pointer = this.pointers[i];
+
             if (pointer.identifier === identifier)
             {
                 return pointer;
@@ -27848,10 +27961,10 @@ Phaser.Input.prototype = {
         {
             return (displayObject.hitArea.contains(this._localPoint.x, this._localPoint.y));
         }
-        else if (displayObject instanceof PIXI.Sprite)
+        else if (displayObject instanceof Phaser.TileSprite)
         {
-            var width = displayObject.texture.frame.width;
-            var height = displayObject.texture.frame.height;
+            var width = displayObject.width;
+            var height = displayObject.height;
             var x1 = -width * displayObject.anchor.x;
 
             if (this._localPoint.x >= x1 && this._localPoint.x < x1 + width)
@@ -27864,10 +27977,10 @@ Phaser.Input.prototype = {
                 }
             }
         }
-        else if (displayObject instanceof Phaser.TileSprite)
+        else if (displayObject instanceof PIXI.Sprite)
         {
-            var width = displayObject.width;
-            var height = displayObject.height;
+            var width = displayObject.texture.frame.width;
+            var height = displayObject.texture.frame.height;
             var x1 = -width * displayObject.anchor.x;
 
             if (this._localPoint.x >= x1 && this._localPoint.x < x1 + width)
@@ -29159,7 +29272,7 @@ Phaser.Mouse = function (game) {
     this.mouseWheelCallback = null;
 
     /**
-    * @property {boolean} capture - If true the DOM mouse events will have event.preventDefault applied to them, if false they will propogate fully.
+    * @property {boolean} capture - If true the DOM mouse events will have event.preventDefault applied to them, if false they will propagate fully.
     */
     this.capture = false;
 
@@ -29350,6 +29463,7 @@ Phaser.Mouse.prototype = {
         }
 
         var wheelEvent = this.game.device.wheelEvent;
+
         if (wheelEvent)
         {
             this.game.canvas.addEventListener(wheelEvent, this._onMouseWheel, true);
@@ -29808,6 +29922,40 @@ Phaser.MSPointer = function (game) {
     this.callbackContext = this.game;
 
     /**
+    * @property {function} pointerDownCallback - A callback that can be fired on a MSPointerDown event.
+    */
+    this.pointerDownCallback = null;
+
+    /**
+    * @property {function} pointerMoveCallback - A callback that can be fired on a MSPointerMove event.
+    */
+    this.pointerMoveCallback = null;
+
+    /**
+    * @property {function} pointerUpCallback - A callback that can be fired on a MSPointerUp event.
+    */
+    this.pointerUpCallback = null;
+
+    /**
+    * @property {boolean} capture - If true the Pointer events will have event.preventDefault applied to them, if false they will propagate fully.
+    */
+    this.capture = true;
+
+    /**
+    * @property {number} button- The type of click, either: Phaser.Mouse.NO_BUTTON, Phaser.Mouse.LEFT_BUTTON, Phaser.Mouse.MIDDLE_BUTTON or Phaser.Mouse.RIGHT_BUTTON.
+    * @default
+    */
+    this.button = -1;
+
+    /**
+    * The browser MSPointer DOM event. Will be null if no event has ever been received.
+    * Access this property only inside a Pointer event handler and do not keep references to it.
+    * @property {MSPointerEvent|null} event
+    * @default
+    */
+    this.event = null;
+
+    /**
     * MSPointer input will only be processed if enabled.
     * @property {boolean} enabled
     * @default
@@ -29887,12 +30035,25 @@ Phaser.MSPointer.prototype = {
     */
     onPointerDown: function (event) {
 
+        this.event = event;
+
+        if (this.capture)
+        {
+            event.preventDefault();
+        }
+
+        this.button = event.button;
+
+        if (this.pointerDownCallback)
+        {
+            this.pointerDownCallback.call(this.callbackContext, event);
+        }
+
         if (!this.game.input.enabled || !this.enabled)
         {
             return;
         }
 
-        event.preventDefault();
         event.identifier = event.pointerId;
 
         this.game.input.startPointer(event);
@@ -29906,12 +30067,23 @@ Phaser.MSPointer.prototype = {
     */
     onPointerMove: function (event) {
 
+        this.event = event;
+
+        if (this.capture)
+        {
+            event.preventDefault();
+        }
+
+        if (this.pointerMoveCallback)
+        {
+            this.pointerMoveCallback.call(this.callbackContext, event);
+        }
+
         if (!this.game.input.enabled || !this.enabled)
         {
             return;
         }
 
-        event.preventDefault();
         event.identifier = event.pointerId;
 
         this.game.input.updatePointer(event);
@@ -29925,12 +30097,25 @@ Phaser.MSPointer.prototype = {
     */
     onPointerUp: function (event) {
 
+        this.event = event;
+
+        if (this.capture)
+        {
+            event.preventDefault();
+        }
+
+        this.button = Phaser.Mouse.NO_BUTTON;
+
+        if (this.pointerUpCallback)
+        {
+            this.pointerUpCallback.call(this.callbackContext, event);
+        }
+
         if (!this.game.input.enabled || !this.enabled)
         {
             return;
         }
 
-        event.preventDefault();
         event.identifier = event.pointerId;
 
         this.game.input.stopPointer(event);
@@ -32819,7 +33004,7 @@ Phaser.InputHandler = function (sprite) {
     * Set to true to use pixel perfect hit detection when checking if the pointer is over this Sprite.
     * The x/y coordinates of the pointer are tested against the image in combination with the InputHandler.pixelPerfectAlpha value.
     * Warning: This is expensive, especially on mobile (where it's not even needed!) so only enable if required. Also see the less-expensive InputHandler.pixelPerfectClick.
-    * @property {number} pixelPerfectOver - Use a pixel perfect check when testing for pointer over.
+    * @property {boolean} pixelPerfectOver - Use a pixel perfect check when testing for pointer over.
     * @default
     */
     this.pixelPerfectOver = false;
@@ -32828,7 +33013,7 @@ Phaser.InputHandler = function (sprite) {
     * Set to true to use pixel perfect hit detection when checking if the pointer is over this Sprite when it's clicked or touched.
     * The x/y coordinates of the pointer are tested against the image in combination with the InputHandler.pixelPerfectAlpha value.
     * Warning: This is expensive so only enable if you really need it.
-    * @property {number} pixelPerfectClick - Use a pixel perfect check when testing for clicks or touches on the Sprite.
+    * @property {boolean} pixelPerfectClick - Use a pixel perfect check when testing for clicks or touches on the Sprite.
     * @default
     */
     this.pixelPerfectClick = false;
@@ -32858,7 +33043,7 @@ Phaser.InputHandler = function (sprite) {
     this.boundsSprite = null;
 
     /**
-    * If this object is set to consume the pointer event then it will stop all propogation from this object on.
+    * If this object is set to consume the pointer event then it will stop all propagation from this object on.
     * For example if you had a stack of 6 sprites with the same priority IDs and one consumed the event, none of the others would receive it.
     * @property {boolean} consumePointerEvent
     * @default
@@ -32869,6 +33054,22 @@ Phaser.InputHandler = function (sprite) {
     * @property {boolean} scaleLayer - EXPERIMENTAL: Please do not use this property unless you know what it does. Likely to change in the future.
     */
     this.scaleLayer = false;
+
+    /**
+    * @property {Phaser.Point} dragOffset - The offset from the Sprites position that dragging takes place from.
+    */
+    this.dragOffset = new Phaser.Point();
+
+    /**
+    * @property {boolean} dragFromCenter - Is the Sprite dragged from its center, or the point at which the Pointer was pressed down upon it?
+    */
+    this.dragFromCenter = false;
+
+    /**
+    * @property {Phaser.Point} _dragPoint - Internal cache var.
+    * @private
+    */
+    this._dragPoint = new Phaser.Point();
 
     /**
     * @property {boolean} _dragPhase - Internal cache var.
@@ -33933,6 +34134,9 @@ Phaser.InputHandler.prototype = {
     */
     startDrag: function (pointer) {
 
+        var x = this.sprite.x;
+        var y = this.sprite.y;
+
         this.isDragged = true;
         this._draggedPointerID = pointer.id;
         this._pointerData[pointer.id].isDragged = true;
@@ -33970,7 +34174,7 @@ Phaser.InputHandler.prototype = {
             this.sprite.bringToTop();
         }
 
-        this.sprite.events.onDragStart$dispatch(this.sprite, pointer);
+        this.sprite.events.onDragStart$dispatch(this.sprite, pointer, x, y);
 
     },
 
@@ -36644,6 +36848,45 @@ Phaser.BitmapData.prototype = {
     },
 
     /**
+    * Draws text to the BitmapData in the given font and color.
+    * The default font is 14px Courier, so useful for quickly drawing debug text.
+    * If you need to do a lot of font work to this BitmapData we'd recommend implementing your own text draw method.
+    *
+    * @method Phaser.BitmapData#text
+    * @param {string} text - The text to write to the BitmapData.
+    * @param {number} x - The x coordinate of the top-left of the text string.
+    * @param {number} y - The y coordinate of the top-left of the text string.
+    * @param {string} [font='14px Courier'] - The font. This is passed directly to Context.font, so anything that can support, this can.
+    * @param {string} [color='rgb(255,255,255)'] - The color the text will be drawn in.
+    * @param {boolean} [shadow=true] - Draw a single pixel black shadow below the text (offset by text.x/y + 1)
+    * @return {Phaser.BitmapData} This BitmapData object for method chaining.
+    */
+    text: function (text, x, y, font, color, shadow) {
+
+        if (typeof x === 'undefined') { x = 0; }
+        if (typeof y === 'undefined') { y = 0; }
+        if (typeof font === 'undefined') { font = '14px Courier'; }
+        if (typeof color === 'undefined') { color = 'rgb(255,255,255)'; }
+        if (typeof shadow === 'undefined') { shadow = true; }
+
+        var prevFont = this.context.font;
+
+        this.context.font = font;
+
+        if (shadow)
+        {
+            this.context.fillStyle = 'rgb(0,0,0)';
+            this.context.fillText(text, x + 1, y + 1);
+        }
+        
+        this.context.fillStyle = color;
+        this.context.fillText(text, x, y);
+
+        this.context.font = prevFont;
+
+    },
+
+    /**
     * Draws a filled Circle to the BitmapData at the given x, y coordinates and radius in size.
     *
     * @method Phaser.BitmapData#circle
@@ -37564,7 +37807,10 @@ Phaser.Sprite.prototype.loadTexture = function (key, frame, stopAnimation) {
         }
     }
     
-    this.texture.baseTexture.dirty();
+    if (!key instanceof Phaser.RenderTexture)
+    {
+        this.texture.baseTexture.dirty();
+    }
 
     if (setFrame)
     {
@@ -37627,6 +37873,11 @@ Phaser.Sprite.prototype.setFrame = function(frame) {
     if (this.cropRect)
     {
         this.updateCrop();
+    }
+
+    if (this.tint !== 0xFFFFFF)
+    {
+        this.cachedTint = -1;
     }
 
     this.texture._updateUvs();
@@ -38786,7 +39037,10 @@ Phaser.Image.prototype.loadTexture = function (key, frame) {
         }
     }
     
-    this.texture.baseTexture.dirty();
+    if (!key instanceof Phaser.RenderTexture)
+    {
+        this.texture.baseTexture.dirty();
+    }
 
     if (setFrame)
     {
@@ -38849,6 +39103,11 @@ Phaser.Image.prototype.setFrame = function(frame) {
     if (this.cropRect)
     {
         this.updateCrop();
+    }
+
+    if (this.tint !== 0xFFFFFF)
+    {
+        this.cachedTint = -1;
     }
 
     this.texture._updateUvs();
@@ -40029,6 +40288,8 @@ Phaser.TileSprite.prototype.destroy = function(destroyChildren) {
 
     this._cache[8] = 0;
 
+    PIXI.TilingSprite.prototype.destroy.call(this);
+
 };
 
 /**
@@ -41175,9 +41436,12 @@ Object.defineProperty(Phaser.Rope.prototype, "destroyPhase", {
 */
 
 /**
-* Create a new `Text` object. This uses a local hidden Canvas object and renders the type into it. It then makes a texture from this for renderning to the view.
-* Because of this you can only display fonts that are currently loaded and available to the browser. It won't load the fonts for you.
-* Here is a compatibility table showing the available default fonts across different mobile browsers: http://www.jordanm.co.uk/tinytype
+* Create a new game object for displaying Text.
+*
+* This uses a local hidden Canvas object and renders the type into it. It then makes a texture from this for renderning to the view.
+* Because of this you can only display fonts that are currently loaded and available to the browser: fonts must be pre-loaded.
+*
+* See {@link http://www.jordanm.co.uk/tinytype this compatibility table} for the available default fonts across mobile browsers.
 *
 * @class Phaser.Text
 * @extends PIXI.Text
@@ -41206,6 +41470,7 @@ Phaser.Text = function (game, x, y, text, style) {
 
     /**
     * @property {Phaser.Game} game - A reference to the currently running Game.
+    * @protected
     */
     this.game = game;
 
@@ -41244,22 +41509,10 @@ Phaser.Text = function (game, x, y, text, style) {
     this._text = text;
 
     /**
-    * @property {string} _font - Internal cache var.
+    * @property {object} _fontComponents - The font, broken down into components, set in `setStyle`.
     * @private
     */
-    this._font = '';
-
-    /**
-    * @property {number} _fontSize - Internal cache var.
-    * @private
-    */
-    this._fontSize = 32;
-
-    /**
-    * @property {string} _fontWeight - Internal cache var.
-    * @private
-    */
-    this._fontWeight = 'normal';
+    this._fontComponents = null;
 
     /**
     * @property {number} lineSpacing - Additional spacing (in pixels) between each line of text if multi-line.
@@ -41279,7 +41532,7 @@ Phaser.Text = function (game, x, y, text, style) {
     this.events = new Phaser.Events(this);
 
     /**
-    * @property {Phaser.InputHandler|null} input - The Input Handler for this object. Needs to be enabled with image.inputEnabled = true before you can use it.
+    * @property {?Phaser.InputHandler} input - The Input Handler for this object. Needs to be enabled with image.inputEnabled = true before you can use it.
     */
     this.input = null;
 
@@ -41289,7 +41542,7 @@ Phaser.Text = function (game, x, y, text, style) {
     this.cameraOffset = new Phaser.Point();
 
     /**
-    * @property {array} colors - An array of the color values as specified by `Text.addColor`.
+    * @property {array} colors - An array of the color values as specified by {@link Phaser.Text#addColor addColor}.
     */
     this.colors = [];
 
@@ -41329,6 +41582,7 @@ Phaser.Text.prototype.constructor = Phaser.Text;
 * Automatically called by World.preUpdate.
 * 
 * @method Phaser.Text#preUpdate
+* @protected
 */
 Phaser.Text.prototype.preUpdate = function () {
 
@@ -41366,9 +41620,10 @@ Phaser.Text.prototype.preUpdate = function () {
 };
 
 /**
-* Override and use this function in your own custom objects to handle any update requirements you may have.
+* Override this function to handle any special update requirements.
 *
 * @method Phaser.Text#update
+* @protected
 */
 Phaser.Text.prototype.update = function() {
 
@@ -41378,6 +41633,7 @@ Phaser.Text.prototype.update = function() {
 * Automatically called by World.postUpdate.
 * 
 * @method Phaser.Text#postUpdate
+* @protected
 */
 Phaser.Text.prototype.postUpdate = function () {
 
@@ -41396,6 +41652,8 @@ Phaser.Text.prototype.postUpdate = function () {
 };
 
 /**
+* Destroy this Text object, removing it from the group it belongs to.
+*
 * @method Phaser.Text#destroy
 * @param {boolean} [destroyChildren=true] - Should every child of this object have its destroy method called?
 */
@@ -41497,6 +41755,10 @@ Phaser.Text.prototype.setShadow = function (x, y, color, blur) {
 * @method Phaser.Text#setStyle
 * @param {object} [style] - The style properties to be set on the Text.
 * @param {string} [style.font='bold 20pt Arial'] - The style and size of the font.
+* @param {string} [style.fontStyle=(from font)] - The style of the font (eg. 'italic'): overrides the value in `style.font`.
+* @param {string} [style.fontVariant=(from font)] - The variant of the font (eg. 'small-caps'): overrides the value in `style.font`.
+* @param {string} [style.fontWeight=(from font)] - The weight of the font (eg. 'bold'): overrides the value in `style.font`.
+* @param {string|number} [style.fontSize=(from font)] - The size of the font (eg. 32 or '32px'): overrides the value in `style.font`.
 * @param {string} [style.fill='black'] - A canvas fillstyle that will be used on the text eg 'red', '#00FF00'.
 * @param {string} [style.align='left'] - Alignment for multiline text ('left', 'center' or 'right'), does not affect single line text.
 * @param {string} [style.stroke='black'] - A canvas stroke style that will be used on the text stroke eg 'blue', '#FCFF00'.
@@ -41519,6 +41781,31 @@ Phaser.Text.prototype.setStyle = function (style) {
     style.shadowColor = style.shadowColor || 'rgba(0,0,0,0)';
     style.shadowBlur = style.shadowBlur || 0;
 
+    var components = this.fontToComponents(style.font);
+    if (style.fontStyle)
+    {
+        components.fontStyle = style.fontStyle;
+    }
+    if (style.fontVariant)
+    {
+        components.fontVariant = style.fontVariant;
+    }
+    if (style.fontWeight)
+    {
+        components.fontWeight = style.fontWeight;
+    }
+    if (style.fontSize)
+    {
+        if (typeof style.fontSize === 'number')
+        {
+            style.fontSize = style.fontSize + 'px';
+        }
+        components.fontSize = style.fontSize;
+    }
+
+    this._fontComponents = components;
+
+    style.font = this.componentsToFont(this._fontComponents);
     this.style = style;
     this.dirty = true;
 
@@ -41678,7 +41965,8 @@ Phaser.Text.prototype.clearColors = function () {
 };
 
 /**
-* This method allows you to set specific colors within the Text.
+* Set specific colors for certain characters within the Text.
+*
 * It works by taking a color value, which is a typical HTML string such as `#ff0000` or `rgb(255,0,0)` and a position.
 * The position value is the index of the character in the Text string to start applying this color to.
 * Once set the color remains in use until either another color or the end of the string is encountered.
@@ -41745,12 +42033,114 @@ Phaser.Text.prototype.runWordWrap = function (text) {
 };
 
 /**
-* Indicates the rotation of the Text, in degrees, from its original orientation. Values from 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation.
+* Updates the internal `style.font` if it now differs according to generation from components.
+*
+* @method Phaser.Text#updateFont
+* @private
+* @param {object} components - Font components.
+*/
+Phaser.Text.prototype.updateFont = function (components) {
+
+    var font = this.componentsToFont(components);
+
+    if (this.style.font !== font)
+    {
+        this.style.font = font;
+        this.dirty = true;
+
+        if (this.parent)
+        {
+            this.updateTransform();
+        }
+    }
+
+};
+
+/**
+* Converting a short CSS-font string into the relevant components.
+*
+* @method Phaser.Text#fontToComponents
+* @private
+* @param {string} font - a CSS font string
+*/
+Phaser.Text.prototype.fontToComponents = function (font) {
+
+    // The format is specified in http://www.w3.org/TR/CSS2/fonts.html#font-shorthand:
+    // style - normal | italic | oblique | inherit
+    // variant - normal | small-caps | inherit
+    // weight - normal | bold | bolder | lighter | 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900 | inherit
+    // size - xx-small | x-small | small | medium | large | x-large | xx-large,
+    //        larger | smaller
+    //        {number} (em | ex | ch | rem | vh | vw | vmin | vmax | px | mm | cm | in | pt | pc | %)
+    // font-family - rest (but identifiers or quoted with comma separation)
+    var m = font.match(/^\s*(?:\b(normal|italic|oblique|inherit)?\b)\s*(?:\b(normal|small-caps|inherit)?\b)\s*(?:\b(normal|bold|bolder|lighter|100|200|300|400|500|600|700|800|900|inherit)?\b)\s*(?:\b(xx-small|x-small|small|medium|large|x-large|xx-large|larger|smaller|0|\d*(?:[.]\d*)?(?:%|[a-z]{2,5}))?\b)\s*(.*)\s*$/);
+    if (m)
+    {
+        return {
+            font: font,
+            fontStyle: m[1] || 'normal',
+            fontVariant: m[2] || 'normal',
+            fontWeight: m[3] || 'normal',
+            fontSize: m[4] || 'medium',
+            fontFamily: m[5]
+        };
+    }
+    else
+    {
+        console.warn("Phaser.Text - unparsable CSS font: " + font);
+        return {
+            font: font
+        };
+    }
+
+};
+
+/**
+* Converts individual font components (see `fontToComponents`) to a short CSS font string.
+*
+* @method Phaser.Text#componentsToFont
+* @private
+* @param {object} components - Font components.
+*/
+Phaser.Text.prototype.componentsToFont = function (components) {
+
+    var parts = [];
+    var v;
+
+    v = components.fontStyle;
+    if (v && v !== 'normal') { parts.push(v); }
+
+    v = components.fontVariant;
+    if (v && v !== 'normal') { parts.push(v); }
+
+    v = components.fontWeight;
+    if (v && v !== 'normal') { parts.push(v); }
+
+    v = components.fontSize;
+    if (v && v !== 'medium') { parts.push(v); }
+
+    v = components.fontFamily;
+    if (v) { parts.push(v); }
+
+    if (!parts.length)
+    {
+        // Fallback to whatever value the 'font' was
+        parts.push(components.font);
+    }
+
+    return parts.join(" ");
+
+};
+
+/**
+* The rotation of the Text, in degrees, from its original orientation.
+*
+* Values from 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation.
 * Values outside this range are added to or subtracted from 360 to obtain a value within the range. For example, the statement player.angle = 450 is the same as player.angle = 90.
 * If you wish to work in radians instead of degrees use the property Sprite.rotation instead.
 * 
 * @name Phaser.Text#angle
-* @property {number} angle - Gets or sets the angle of rotation in degrees.
+* @property {number} angle - 
 */
 Object.defineProperty(Phaser.Text.prototype, 'angle', {
 
@@ -41766,8 +42156,9 @@ Object.defineProperty(Phaser.Text.prototype, 'angle', {
 
 /**
 * The text string to be displayed by this Text object, taking into account the style settings.
+*
 * @name Phaser.Text#text
-* @property {string} text - The text string to be displayed by this Text object, taking into account the style settings.
+* @property {string} text
 */
 Object.defineProperty(Phaser.Text.prototype, 'text', {
 
@@ -41793,86 +42184,164 @@ Object.defineProperty(Phaser.Text.prototype, 'text', {
 });
 
 /**
+* Change the font used.
+*
+* This is equivalent of the `font` property specified to {@link Phaser.Text#setStyle setStyle}, except
+* that unlike using `setStyle` this will not change any current font fill/color settings.
+*
+* The CSS font string can also be invidually altered with the `font`, `fontSize`, `fontWeight`, `fontStyle`, and `fontVariant` properties.
+*
+* @name Phaser.Text#cssFont
+* @property {string} cssFont
+*/
+Object.defineProperty(Phaser.Text.prototype, 'cssFont', {
+
+    get: function() {
+        return this.componentsToFont(this._fontComponents);
+    },
+
+    set: function (value)
+    {
+        value = value || 'bold 20pt Arial';
+        this._fontComponents = this.fontToComponents(value);
+        this.updateFont(this._fontComponents);
+    }
+
+});
+
+/**
+* Change the font family that the text will be rendered in, such as 'Arial'.
+*
+* Multiple CSS font familes and generic fallbacks can be specified as long as
+* {@link http://www.w3.org/TR/CSS2/fonts.html#propdef-font-family CSS font-family rules} are followed.
+*
+* To change the entire font string use {@link Phaser.Text#cssFont cssFont} instead: eg. `text.cssFont = 'bold 20pt Arial'`.
+*
 * @name Phaser.Text#font
-* @property {string} font - The font the text will be rendered in, i.e. 'Arial'. Must be loaded in the browser before use.
+* @property {string} font
 */
 Object.defineProperty(Phaser.Text.prototype, 'font', {
 
     get: function() {
-        return this._font;
+        return this._fontComponents.fontFamily;
     },
 
     set: function(value) {
 
-        if (value !== this._font)
-        {
-            this._font = value.trim();
-            this.style.font = this._fontWeight + ' ' + this._fontSize + "px '" + this._font + "'";
-            this.dirty = true;
+        value = value || 'Arial';
+        value = value.trim();
 
-            if (this.parent)
-            {
-                this.updateTransform();
-            }
+        // If it looks like the value should be quoted, but isn't, then quote it.
+        if (!/^(?:inherit|serif|sans-serif|cursive|fantasy|monospace)$/.exec(value) && !/['",]/.exec(value))
+        {
+            value = "'" + value + "'";
         }
+
+        this._fontComponents.fontFamily = value;
+        this.updateFont(this._fontComponents);
 
     }
 
 });
 
 /**
+* The size of the font.
+*
+* If the font size is specified in pixels (eg. `32` or `'32px`') then a number (ie. `32`) representing
+* the font size in pixels is returned; otherwise the value with CSS unit is returned as a string (eg. `'12pt'`).
+*
 * @name Phaser.Text#fontSize
-* @property {number} fontSize - The size of the font in pixels.
+* @property {number|string} fontSize
 */
 Object.defineProperty(Phaser.Text.prototype, 'fontSize', {
 
     get: function() {
-        return this._fontSize;
+
+        var size = this._fontComponents.fontSize;
+        if (size && /(?:^0$|px$)/.exec(size))
+        {
+            return parseInt(size, 10);
+        }
+        else
+        {
+            return size;
+        }
+
     },
 
     set: function(value) {
 
-        value = parseInt(value, 10);
-
-        if (value !== this._fontSize)
+        value = value || '0';
+        if (typeof value === 'number')
         {
-            this._fontSize = value;
-            this.style.font = this._fontWeight + ' ' + this._fontSize + "px '" + this._font + "'";
-            this.dirty = true;
-
-            if (this.parent)
-            {
-                this.updateTransform();
-            }
+            value = value + 'px';
         }
+
+        this._fontComponents.fontSize = value;
+        this.updateFont(this._fontComponents);
 
     }
 
 });
 
 /**
+* The weight of the font: 'normal', 'bold', or {@link http://www.w3.org/TR/CSS2/fonts.html#propdef-font-weight a valid CSS font weight}.
 * @name Phaser.Text#fontWeight
-* @property {number} fontWeight - The weight of the font: 'normal', 'bold', 'italic'. You can combine settings too, such as 'bold italic'.
+* @property {string} fontWeight
 */
 Object.defineProperty(Phaser.Text.prototype, 'fontWeight', {
 
     get: function() {
-        return this._fontWeight;
+        return this._fontComponents.fontWeight || 'normal';
     },
 
     set: function(value) {
 
-        if (value !== this._fontWeight)
-        {
-            this._fontWeight = value;
-            this.style.font = this._fontWeight + ' ' + this._fontSize + "px '" + this._font + "'";
-            this.dirty = true;
+        value = value || 'normal';
+        this._fontComponents.fontWeight = value;
+        this.updateFont(this._fontComponents);
 
-            if (this.parent)
-            {
-                this.updateTransform();
-            }
-        }
+    }
+
+});
+
+/**
+* The style of the font: 'normal', 'italic', 'oblique'
+* @name Phaser.Text#fontStyle
+* @property {string} fontStyle
+*/
+Object.defineProperty(Phaser.Text.prototype, 'fontStyle', {
+
+    get: function() {
+        return this._fontComponents.fontStyle || 'normal';
+    },
+
+    set: function(value) {
+
+        value = value || 'normal';
+        this._fontComponents.fontStyle = value;
+        this.updateFont(this._fontComponents);
+
+    }
+
+});
+
+/**
+* The variant the font: 'normal', 'small-caps'
+* @name Phaser.Text#fontVariant
+* @property {string} fontVariant
+*/
+Object.defineProperty(Phaser.Text.prototype, 'fontVariant', {
+
+    get: function() {
+        return this._fontComponents.fontVariant || 'normal';
+    },
+
+    set: function(value) {
+
+        value = value || 'normal';
+        this._fontComponents.fontVariant = value;
+        this.updateFont(this._fontComponents);
 
     }
 
@@ -42126,11 +42595,12 @@ Object.defineProperty(Phaser.Text.prototype, 'shadowBlur', {
 });
 
 /**
+* Set to true to allow this object to receive input events.
 * By default a Text object won't process any input events at all. By setting inputEnabled to true the Phaser.InputHandler is
 * activated for this object and it will then start to process click/touch events and more.
 *
 * @name Phaser.Text#inputEnabled
-* @property {boolean} inputEnabled - Set to true to allow this object to receive input events.
+* @property {boolean} inputEnabled
 */
 Object.defineProperty(Phaser.Text.prototype, "inputEnabled", {
 
@@ -42167,12 +42637,14 @@ Object.defineProperty(Phaser.Text.prototype, "inputEnabled", {
 });
 
 /**
+* Set to true to fix this Text to the Camera at its current world coordinates.
+*
 * An Text that is fixed to the camera uses its x/y coordinates as offsets from the top left of the camera. These are stored in Text.cameraOffset.
 * Note that the cameraOffset values are in addition to any parent in the display list.
 * So if this Text was in a Group that has x: 200, then this will be added to the cameraOffset.x
 *
 * @name Phaser.Text#fixedToCamera
-* @property {boolean} fixedToCamera - Set to true to fix this Text to the Camera at its current world coordinates.
+* @property {boolean} fixedToCamera
 */
 Object.defineProperty(Phaser.Text.prototype, "fixedToCamera", {
 
@@ -42200,6 +42672,7 @@ Object.defineProperty(Phaser.Text.prototype, "fixedToCamera", {
 /**
 * @name Phaser.Text#destroyPhase
 * @property {boolean} destroyPhase - True if this object is currently being destroyed.
+* @protected
 */
 Object.defineProperty(Phaser.Text.prototype, "destroyPhase", {
 
@@ -42553,6 +43026,7 @@ Object.defineProperty(Phaser.BitmapText.prototype, 'font', {
         if (value !== this._font)
         {
             this._font = value.trim();
+            this.fontName = this._font;
             this.style.font = this._fontSize + "px '" + this._font + "'";
             this.dirty = true;
         }
@@ -43165,7 +43639,7 @@ Phaser.Button.prototype.setUpSound = function (sound, marker) {
 *
 * @method Phaser.Button#onInputOverHandler
 * @protected
-* @param {Phaser.Button} sprite - The Button that the event occured on.
+* @param {Phaser.Button} sprite - The Button that the event occurred on.
 * @param {Phaser.Pointer} pointer - The Pointer that activated the Button.
 */
 Phaser.Button.prototype.onInputOverHandler = function (sprite, pointer) {
@@ -43197,7 +43671,7 @@ Phaser.Button.prototype.onInputOverHandler = function (sprite, pointer) {
 *
 * @method Phaser.Button#onInputOutHandler
 * @protected
-* @param {Phaser.Button} sprite - The Button that the event occured on.
+* @param {Phaser.Button} sprite - The Button that the event occurred on.
 * @param {Phaser.Pointer} pointer - The Pointer that activated the Button.
 */
 Phaser.Button.prototype.onInputOutHandler = function (sprite, pointer) {
@@ -43217,7 +43691,7 @@ Phaser.Button.prototype.onInputOutHandler = function (sprite, pointer) {
 *
 * @method Phaser.Button#onInputDownHandler
 * @protected
-* @param {Phaser.Button} sprite - The Button that the event occured on.
+* @param {Phaser.Button} sprite - The Button that the event occurred on.
 * @param {Phaser.Pointer} pointer - The Pointer that activated the Button.
 */
 Phaser.Button.prototype.onInputDownHandler = function (sprite, pointer) {
@@ -43237,7 +43711,7 @@ Phaser.Button.prototype.onInputDownHandler = function (sprite, pointer) {
 *
 * @method Phaser.Button#onInputUpHandler
 * @protected
-* @param {Phaser.Button} sprite - The Button that the event occured on.
+* @param {Phaser.Button} sprite - The Button that the event occurred on.
 * @param {Phaser.Pointer} pointer - The Pointer that activated the Button.
 */
 Phaser.Button.prototype.onInputUpHandler = function (sprite, pointer, isOver) {
@@ -43480,7 +43954,7 @@ Phaser.Graphics.prototype.destroy = function(destroyChildren) {
 * @method Phaser.Graphics.prototype.drawCircle
 * @param {Number} x - The X coordinate of the center of the circle.
 * @param {Number} y - The Y coordinate of the center of the circle.
-* @param {Number} radius - The diameter of the circle.
+* @param {Number} diameter - The diameter of the circle.
 * @return {Phaser.Graphics} This Graphics object.
 */
 Phaser.Graphics.prototype.drawCircle = function(x, y, diameter)
@@ -44368,7 +44842,7 @@ Phaser.RetroFont.prototype.updateOffset = function (x, y) {
 };
 
 /**
-* @name Phaser.BitmapText#text
+* @name Phaser.RetroFont#text
 * @property {string} text - Set this value to update the text in this sprite. Carriage returns are automatically stripped out if multiLine is false. Text is converted to upper case if autoUpperCase is true.
 */
 Object.defineProperty(Phaser.RetroFont.prototype, "text", {
@@ -44406,7 +44880,7 @@ Object.defineProperty(Phaser.RetroFont.prototype, "text", {
 });
 
 /**
-* @name Phaser.BitmapText#smoothed
+* @name Phaser.RetroFont#smoothed
 * @property {string} text - Set this value to update the text in this sprite. Carriage returns are automatically stripped out if multiLine is false. Text is converted to upper case if autoUpperCase is true.
 */
 Object.defineProperty(Phaser.RetroFont.prototype, "smoothed", {
@@ -45298,8 +45772,7 @@ Phaser.Device._initialize = function () {
     */
     function _checkInput () {
 
-        if ('ontouchstart' in document.documentElement ||
-            (window.navigator.maxTouchPoints && window.navigator.maxTouchPoints > 1))
+        if ('ontouchstart' in document.documentElement || (window.navigator.maxTouchPoints && window.navigator.maxTouchPoints >= 1))
         {
             device.touch = true;
         }
@@ -45858,7 +46331,7 @@ Phaser.DOM = {
     },
 
     /**
-    * Calibrates element coordinates for `inViewport` checks.
+    * Calibrates element coordinates for `inLayoutViewport` checks.
     *
     * @method Phaser.DOM.calibrate
     * @private
@@ -45912,10 +46385,10 @@ Phaser.DOM = {
     * 
     * The optional cushion parameter allows you to specify a distance.
     * 
-    * inViewport(element, 100) is `true` if the element is in the viewport or 100px near it.
-    * inViewport(element, -100) is `true` if the element is in the viewport or at least 100px near it.
+    * inLayoutViewport(element, 100) is `true` if the element is in the viewport or 100px near it.
+    * inLayoutViewport(element, -100) is `true` if the element is in the viewport or at least 100px near it.
     * 
-    * @method Phaser.DOM.inViewport
+    * @method Phaser.DOM.inLayoutViewport
     * @param {DOMElement|Object} element - The DOM element to check. If no element is given it defaults to the Phaser game canvas.
     * @param {number} [cushion] - The cushion allows you to specify a distance within which the element must be within the viewport.
     * @return {boolean} True if the element is within the viewport, or within `cushion` distance from it.
@@ -51300,7 +51773,7 @@ Phaser.Time = function (game) {
     this.msMax = 0;
 
     /**
-    * Records how long the game was last paused, in miliseconds.
+    * Records how long the game was last paused, in milliseconds.
     * (This is not updated until the game is resumed.)
     * @property {number} pauseDuration
     */
@@ -51451,7 +51924,7 @@ Phaser.Time.prototype = {
         // this.time always holds Date.now, this.now may hold the RAF high resolution time value if RAF is available (otherwise it also holds Date.now)
         this.time = Date.now();
 
-        //  Adjust accorindlgy.
+        //  Adjust accordingly.
         this.elapsedMS = this.time - previousDateNow;
 
         // 'now' is currently still holding the time of the last call, move it into prevTime
@@ -51707,7 +52180,6 @@ Phaser.Timer = function (game, autoDestroy) {
     /**
     * @property {number} timeCap - If the difference in time between two frame updates exceeds this value, the event times are reset to avoid catch-up situations.
     */
-    // this.timeCap = 1 / 60 * 1000;
     this.timeCap = 1000;
 
     /**
@@ -52074,7 +52546,7 @@ Phaser.Timer.prototype = {
         {
             while (this._i < this._len && this.running)
             {
-                if (this._now >= this.events[this._i].tick)
+                if (this._now >= this.events[this._i].tick && !this.events[this._i].pendingDelete)
                 {
                     //  (now + delay) - (time difference from last tick to now)
                     this._newTick = (this._now + this.events[this._i].delay) - (this._now - this.events[this._i].tick);
@@ -52900,7 +53372,6 @@ Phaser.AnimationManager.prototype = {
         this._anims = {};
         this._outputFrames = [];
         this._frameData = null;
-        this._frameIndex = 0;
         this.currentAnim = null;
         this.currentFrame = null;
         this.sprite = null;
@@ -52986,7 +53457,7 @@ Object.defineProperty(Phaser.AnimationManager.prototype, 'frame', {
 
         if (this.currentFrame)
         {
-            return this._frameIndex;
+            return this.currentFrame.index;
         }
 
     },
@@ -52999,8 +53470,6 @@ Object.defineProperty(Phaser.AnimationManager.prototype, 'frame', {
 
             if (this.currentFrame)
             {
-                this._frameIndex = value;
-
                 this.sprite.setFrame(this.currentFrame);
 
                 if (this.sprite.__tilePattern)
@@ -53066,6 +53535,7 @@ Object.defineProperty(Phaser.AnimationManager.prototype, 'frameName', {
 /**
 * An Animation instance contains a single animation and the controls to play it.
 * It is created by the AnimationManager, consists of Animation.Frame objects and belongs to a single Game Object such as a Sprite.
+* Please note that you can only tint Sprites with animations in WebGL mode.
 *
 * @class Phaser.Animation
 * @constructor
@@ -54130,7 +54600,7 @@ Phaser.FrameData.prototype = {
     */
     getFrame: function (index) {
 
-        if (index > this._frames.length)
+        if (index >= this._frames.length)
         {
             index = 0;
         }
@@ -56228,11 +56698,6 @@ Phaser.Cache.prototype = {
     */
     destroy: function () {
 
-        for (var item in this._canvases)
-        {
-            delete this._canvases[item];
-        }
-
         for (var item in this._images)
         {
             if (item !== '__default' && item !== '__missing')
@@ -56241,54 +56706,26 @@ Phaser.Cache.prototype = {
             }
         }
 
-        for (var item in this._sounds)
-        {
-            delete this._sounds[item];
-        }
+        var containers = [
+            this._canvases,
+            this._sounds,
+            this._text,
+            this._json,
+            this._xml,
+            this._textures,
+            this._physics,
+            this._tilemaps,
+            this._binary,
+            this._bitmapDatas,
+            this._bitmapFont
+        ];
 
-        for (var item in this._text)
+        for (var i = 0; i < containers.length; i++)
         {
-            delete this._text[item];
-        }
-
-        for (var item in this._json)
-        {
-            delete this._json[item];
-        }
-
-        for (var item in this._xml)
-        {
-            delete this._xml[item];
-        }
-
-        for (var item in this._textures)
-        {
-            delete this._textures[item];
-        }
-
-        for (var item in this._physics)
-        {
-            delete this._physics[item];
-        }
-
-        for (var item in this._tilemaps)
-        {
-            delete this._tilemaps[item];
-        }
-
-        for (var item in this._binary)
-        {
-            delete this._binary[item];
-        }
-
-        for (var item in this._bitmapDatas)
-        {
-            delete this._bitmapDatas[item];
-        }
-
-        for (var item in this._bitmapFont)
-        {
-            delete this._bitmapFont[item];
+            for (var item in containers[i])
+            {
+                delete containers[i][item];
+            }
         }
 
         this._urlMap = null;
@@ -56310,144 +56747,239 @@ Phaser.Cache.prototype.constructor = Phaser.Cache;
 
 /**
 * The Loader handles loading all external content such as Images, Sounds, Texture Atlases and data files.
-* It uses a combination of Image() loading and xhr and provides progress and completion callbacks.
+*
+* The loader uses a combination of tag loading (eg. Image elements) and XHR and provides progress and completion callbacks.
+*
+* Parallel loading (see {@link #enableParallel}) is supported and enabled by default.
+* Load-before behavior of parallel resources is controlled by synchronization points as discussed in {@link #withSyncPoint}.
+*
+* Texture Atlases can be created with tools such as [Texture Packer](https://www.codeandweb.com/texturepacker/phaser) and
+* [Shoebox](http://renderhjs.net/shoebox/)
 *
 * @class Phaser.Loader
-* @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
 */
 Phaser.Loader = function (game) {
 
     /**
-    * @property {Phaser.Game} game - Local reference to game.
+    * Local reference to game.
+    * @property {Phaser.Game} game
+    * @protected
     */
     this.game = game;
 
     /**
-    * @property {boolean} isLoading - True if the Loader is in the process of loading the queue.
+    * If true all calls to Loader.reset will be ignored. Useful if you need to create a load queue before swapping to a preloader state.
+    * @property {boolean} resetLocked
+    * @default
+    */
+    this.resetLocked = false;
+
+    /**
+    * True if the Loader is in the process of loading the queue.
+    * @property {boolean} isLoading
     * @default
     */
     this.isLoading = false;
 
     /**
-    * @property {boolean} hasLoaded - True if all assets in the queue have finished loading.
+    * True if all assets in the queue have finished loading.
+    * @property {boolean} hasLoaded
     * @default
     */
     this.hasLoaded = false;
 
     /**
-    * @property {number} progress - The rounded load progress percentage value (from 0 to 100)
-    * @default
-    */
-    this.progress = 0;
-
-    /**
-    * @property {number} progressFloat - The non-rounded load progress value (from 0.0 to 100.0)
-    * @default
-    */
-    this.progressFloat = 0;
-
-    /**
-    * You can optionally link a sprite to the preloader.
-    * If you do so the Sprites width or height will be cropped based on the percentage loaded.
+    * You can optionally link a progress sprite with {@link Phaser.Loader#setPreloadSprite setPreloadSprite}.
+    *
     * This property is an object containing: sprite, rect, direction, width and height
     *
-    * @property {object} preloadSprite
+    * @property {?object} preloadSprite
+    * @protected
     */
     this.preloadSprite = null;
 
     /**
-    * @property {boolean|string} crossOrigin - The crossOrigin value applied to loaded images. Very often this needs to be set to 'anonymous'.
+    * The crossOrigin value applied to loaded images. Very often this needs to be set to 'anonymous'.
+    * @property {boolean|string} crossOrigin
     * @default
     */
     this.crossOrigin = false;
 
     /**
     * If you want to append a URL before the path of any asset you can set this here.
-    * Useful if you need to allow an asset url to be configured outside of the game code.
-    * MUST have / on the end of it!
+    * Useful if allowing the asset base url to be configured outside of the game code.
+    * The string _must_ end with a "/".
+    *
     * @property {string} baseURL
-    * @default
     */
     this.baseURL = '';
 
     /**
-    * @property {Phaser.Signal} onLoadStart - This event is dispatched when the loading process starts, before the first file has been requested.
+    * This event is dispatched when the loading process starts: before the first file has been requested,
+    * but after all the initial packs have been loaded.
+    *
+    * @property {Phaser.Signal} onLoadStart
     */
     this.onLoadStart = new Phaser.Signal();
 
     /**
-    * @property {Phaser.Signal} onFileStart - This event is dispatched immediately before a file starts loading. It's possible the file may still error (404, etc) after this event is sent.
-    */
-    this.onFileStart = new Phaser.Signal();
-
-    /**
-    * @property {Phaser.Signal} onFileComplete - This event is dispatched when a file completes loading successfully.
-    */
-    this.onFileComplete = new Phaser.Signal();
-
-    /**
-    * @property {Phaser.Signal} onFileError - This event is dispatched when a file errors as a result of the load request.
-    */
-    this.onFileError = new Phaser.Signal();
-
-    /**
-    * @property {Phaser.Signal} onLoadComplete - This event is dispatched when the final file in the load queue has either loaded or failed.
+    * This event is dispatched when the final file in the load queue has either loaded or failed.
+    *
+    * @property {Phaser.Signal} onLoadComplete
     */
     this.onLoadComplete = new Phaser.Signal();
 
     /**
-    * @property {Phaser.Signal} onPackComplete - This event is dispatched when an asset pack has either loaded or failed.
+    * This event is dispatched when an asset pack has either loaded or failed to load.
+    *
+    * This is called when the asset pack manifest file has loaded and successfully added its contents to the loader queue.
+    *
+    * Params: `(pack key, success?, total packs loaded, total packs)`
+    *
+    * @property {Phaser.Signal} onPackComplete
     */
     this.onPackComplete = new Phaser.Signal();
 
     /**
-    * @property {boolean} useXDomainRequest - If true and if the browser supports XDomainRequest, it will be used in preference for xhr when loading json files. This is only relevant for IE9 when you know your server/CDN requires it.
+    * This event is dispatched immediately before a file starts loading.
+    * It's possible the file may fail (eg. download error, invalid format) after this event is sent.
+    *
+    * Params: `(progress, file key, file url)`
+    *
+    * @property {Phaser.Signal} onFileStart
+    */
+    this.onFileStart = new Phaser.Signal();
+
+    /**
+    * This event is dispatched when a file has either loaded or failed to load.
+    *
+    * Params: `(progress, file key, success?, total loaded files, total files)`
+    * 
+    * @property {Phaser.Signal} onFileComplete
+    */
+    this.onFileComplete = new Phaser.Signal();
+   
+    /**
+    * This event is dispatched when a file (or pack) errors as a result of the load request.
+    *
+    * For files it will be triggered before `onFileComplete`. For packs it will be triggered before `onPackComplete`.
+    *
+    * Params: `(file key, file)`
+    *
+    * @property {Phaser.Signal} onFileError
+    */
+    this.onFileError = new Phaser.Signal();
+
+    /**
+    * If true and if the browser supports XDomainRequest, it will be used in preference for XHR.
+    *
+    * This is only relevant for IE 9 and should _only_ be enabled for IE 9 clients when required by the server/CDN.
+    *
+    * @property {boolean} useXDomainRequest
+    * @deprecated This is only relevant for IE 9.
     */
     this.useXDomainRequest = false;
 
     /**
-    * @property {array} _packList - Contains all the assets packs.
     * @private
+    * @property {boolean} _warnedAboutXDomainRequest - Control number of warnings for using XDR outside of IE 9.
     */
-    this._packList = [];
+    this._warnedAboutXDomainRequest = false;
 
     /**
-    * @property {number} _packIndex - The index of the current asset pack.
-    * @private
+    * If true (the default) then parallel downloading will be enabled.
+    *
+    * To disable all parallel downloads this must be set to false prior to any resource being loaded.
+    *
+    * @property {integer} enableParallel
     */
-    this._packIndex = 0;
+    this.enableParallel = true;
 
     /**
-    * @property {array} _fileList - Contains all the assets file infos.
+    * The number of concurrent / parallel resources to try and fetch at once.
+    *
+    * Many current browsers limit 6 requests per domain; this is slightly conservative.
+    *
+    * @property {integer} maxParallelDownloads
+    * @protected
+    */
+    this.maxParallelDownloads = 4;
+
+    /**
+    * A counter: if more than zero, files will be automatically added as a synchronization point.
+    * @property {integer} _withSyncPointDepth;
+    */
+    this._withSyncPointDepth = 0;
+
+    /**
+    * Contains all the information for asset files (including packs) to load.
+    *
+    * File/assets are only removed from the list after all loading completes.
+    *
+    * @property {file[]} _fileList
     * @private
     */
     this._fileList = [];
 
     /**
-    * @property {number} _fileIndex - The index of the current file being loaded.
+    * Inflight files (or packs) that are being fetched/processed.
+    *
+    * This means that if there are any files in the flight queue there should still be processing
+    * going on; it should only be empty before or after loading.
+    *
+    * The files in the queue may have additional properties added to them,
+    * including `requestObject` which is normally the associated XHR.
+    *
+    * @property {file[]} _flightQueue
     * @private
     */
-    this._fileIndex = 0;
+    this._flightQueue = [];
 
     /**
-    * @property {number} _progressChunk - Indicates the size of 1 file in terms of a percentage out of 100.
+    * The offset into the fileList past all the complete (loaded or error) entries.
+    *
+    * @property {integer} _processingHead
     * @private
-    * @default
     */
-    this._progressChunk = 0;
+    this._processingHead = 0;
 
     /**
-    * @property {XMLHttpRequest} - An XMLHttpRequest object used for loading text and audio data.
+    * True when the first file (not pack) has loading started.
+    * This used to to control dispatching `onLoadStart` which happens after any initial packs are loaded.
+    *
+    * @property {boolean} _initialPacksLoaded
     * @private
     */
-    this._xhr = new XMLHttpRequest();
+    this._fileLoadStarted = false;
 
     /**
-    * @property {XDomainRequest} - An ajax request used specifically by IE9 for CORs loading issues.
+    * Total packs seen - adjusted when a pack is added.
+    * @property {integer} _totalPackCount
     * @private
     */
-    this._ajax = null;
+    this._totalPackCount = 0;
+
+    /**
+    * Total files seen - adjusted when a file is added.
+    * @property {integer} _totalFileCount
+    * @private
+    */
+    this._totalFileCount = 0;
+    
+    /**
+    * Total packs loaded - adjusted just prior to `onPackComplete`.
+    * @property {integer} _loadedPackCount
+    * @private
+    */
+    this._loadedPackCount = 0;
+
+    /**
+    * Total files loaded - adjusted just prior to `onFileComplete`.
+    * @property {integer} _loadedFileCount
+    * @private
+    */
+    this._loadedFileCount = 0;
 
 };
 
@@ -56484,9 +57016,12 @@ Phaser.Loader.PHYSICS_PHASER_JSON = 4;
 Phaser.Loader.prototype = {
 
     /**
-    * You can set a Sprite to be a "preload" sprite by passing it to this method.
+    * Set a Sprite to be a "preload" sprite by passing it to this method.
+    *
     * A "preload" sprite will have its width or height crop adjusted based on the percentage of the loader in real-time.
-    * This allows you to easily make loading bars for games. Note that Sprite.visible = true will be set when calling this.
+    * This allows you to easily make loading bars for games.
+    *
+    * The sprite will automatically be made visible when calling this.
     *
     * @method Phaser.Loader#setPreloadSprite
     * @param {Phaser.Sprite|Phaser.Image} sprite - The sprite or image that will be cropped during the load.
@@ -56517,11 +57052,11 @@ Phaser.Loader.prototype = {
 
     /**
     * Called automatically by ScaleManager when the game resizes in RESIZE scalemode.
-    * We use this to adjust the height of the preloading sprite, if set.
+    *
+    * This can be used to adjust the preloading sprite size, eg.
     *
     * @method Phaser.Loader#resize
-    * @param {number} width - The new width of the game in pixels.
-    * @param {number} height - The new height of the game in pixels.
+    * @protected
     */
     resize: function () {
 
@@ -56533,8 +57068,9 @@ Phaser.Loader.prototype = {
     },
 
     /**
-    * Check whether asset exists with a specific key.
-    * Use Phaser.Cache to access loaded assets, e.g. Phaser.Cache#checkImageKey
+    * Check whether a file/asset with a specific key is queued to be loaded.
+    *
+    * To access a loaded asset use Phaser.Cache, eg. {@link Phaser.Cache#checkImageKey}
     *
     * @method Phaser.Loader#checkKeyExists
     * @param {string} type - The type asset you want to check.
@@ -56543,65 +57079,63 @@ Phaser.Loader.prototype = {
     */
     checkKeyExists: function (type, key) {
 
-        if (this._fileList.length > 0)
-        {
-            for (var i = 0; i < this._fileList.length; i++)
-            {
-                if (this._fileList[i].type === type && this._fileList[i].key === key)
-                {
-                    return true;
-                }
-            }
-        }
-
-        return false;
+        return this.getAssetIndex(type, key) > -1;
 
     },
 
     /**
-    * Gets the fileList index for the given key.
+    * Get the queue-index of the file/asset with a specific key.
+    *
+    * Only assets in the download file queue will be found.
     *
     * @method Phaser.Loader#getAssetIndex
     * @param {string} type - The type asset you want to check.
     * @param {string} key - Key of the asset you want to check.
     * @return {number} The index of this key in the filelist, or -1 if not found.
+    *     The index may change and should only be used immediately following this call
     */
     getAssetIndex: function (type, key) {
 
-        if (this._fileList.length > 0)
+        var bestFound = -1;
+
+        for (var i = 0; i < this._fileList.length; i++)
         {
-            for (var i = 0; i < this._fileList.length; i++)
+            var file = this._fileList[i];
+
+            if (file.type === type && file.key === key)
             {
-                if (this._fileList[i].type === type && this._fileList[i].key === key)
+                bestFound = i;
+
+                // An already loaded/loading file may be superceded.
+                if (!file.loaded && !file.loading)
                 {
-                    return i;
+                    break;
                 }
             }
         }
 
-        return -1;
+        return bestFound;
 
     },
 
     /**
-    * Gets the asset that is queued for load.
+    * Find a file/asset with a specific key.
+    *
+    * Only assets in the download file queue will be found.
     *
     * @method Phaser.Loader#getAsset
     * @param {string} type - The type asset you want to check.
     * @param {string} key - Key of the asset you want to check.
-    * @return {any} Returns an object if found that has 2 properties: index and file. Otherwise false.
+    * @return {any} Returns an object if found that has 2 properties: `index` and `file`; otherwise a non-true value is returned.
+    *     The index may change and should only be used immediately following this call.
     */
     getAsset: function (type, key) {
 
-        if (this._fileList.length > 0)
+        var fileIndex = this.getAssetIndex(type, key);
+
+        if (fileIndex > -1)
         {
-            for (var i = 0; i < this._fileList.length; i++)
-            {
-                if (this._fileList[i].type === type && this._fileList[i].key === key)
-                {
-                    return { index: i, file: this._fileList[i] };
-                }
-            }
+            return { index: fileIndex, file: this._fileList[fileIndex] };
         }
 
         return false;
@@ -56609,20 +57143,52 @@ Phaser.Loader.prototype = {
     },
 
     /**
-    * Reset loader, this will remove the load queue.
+    * Reset the loader and clear any queued assets. If `Loader.resetLocked` is true this operation will abort.
+    *
+    * This will abort any loading and clear any queued assets.
+    *
+    * Optionally you can clear any associated events.
     *
     * @method Phaser.Loader#reset
+    * @protected
+    * @param {boolean} [hard=false] - If true then the preload sprite and other artifacts may also be cleared.
+    * @param {boolean} [clearEvents=false] - If true then the all Loader signals will have removeAll called on them.
     */
-    reset: function () {
+    reset: function (hard, clearEvents) {
 
-        this.preloadSprite = null;
+        if (typeof clearEvents === 'undefined') { clearEvents = false; }
+
+        if (this.resetLocked)
+        {
+            return;
+        }
+
+        if (hard)
+        {
+            this.preloadSprite = null;
+        }
+
         this.isLoading = false;
 
-        this._packList.length = 0;
-        this._packIndex = 0;
-
+        this._processingHead = 0;
         this._fileList.length = 0;
-        this._fileIndex = 0;
+        this._flightQueue.length = 0;
+
+        this._fileLoadStarted = false;
+        this._totalFileCount = 0;
+        this._totalPackCount = 0;
+        this._loadedPackCount = 0;
+        this._loadedFileCount = 0;
+
+        if (clearEvents)
+        {
+            this.onLoadStart.removeAll();
+            this.onLoadComplete.removeAll();
+            this.onPackComplete.removeAll();
+            this.onFileStart.removeAll();
+            this.onFileComplete.removeAll();
+            this.onFileError.removeAll();
+        }
 
     },
 
@@ -56634,30 +57200,50 @@ Phaser.Loader.prototype = {
     * @param {string} type - The type of resource to add to the list (image, audio, xml, etc).
     * @param {string} key - The unique Cache ID key of this resource.
     * @param {string} url - The URL the asset will be loaded from.
-    * @param {object} properties - Any additional properties needed to load the file.
+    * @param {object} [properties=(none)] - Any additional properties needed to load the file. These are added directly to the added file object and overwrite any defaults.
+    * @param {boolean} [overwrite=false] - If true then this will overwrite a file asset of the same type/key. Otherwise it will will only add a new asset. If overwrite is true, and the asset is already being loaded (or has been loaded), then it is appended instead.
     */
-    addToFileList: function (type, key, url, properties) {
+    addToFileList: function (type, key, url, properties, overwrite) {
 
-        var entry = {
+        var file = {
             type: type,
             key: key,
             url: url,
+            syncPoint: this._withSyncPointDepth > 0,
             data: null,
-            error: false,
-            loaded: false
+            loading: false,
+            loaded: false,
+            error: false
         };
 
-        if (typeof properties !== "undefined")
+        if (properties)
         {
             for (var prop in properties)
             {
-                entry[prop] = properties[prop];
+                file[prop] = properties[prop];
             }
         }
 
-        if (this.checkKeyExists(type, key) === false)
+        var fileIndex = this.getAssetIndex(type, key);
+        
+        if (overwrite && fileIndex > -1)
         {
-            this._fileList.push(entry);
+            var currentFile = this._fileList[fileIndex];
+
+            if (!currentFile.loading && !currentFile.loaded)
+            {
+                this._fileList[fileIndex] = file;
+            }
+            else
+            {
+                this._fileList.push(file);
+                this._totalFileCount++;
+            }
+        }
+        else if (fileIndex === -1)
+        {
+            this._fileList.push(file);
+            this._totalFileCount++;
         }
 
     },
@@ -56666,65 +57252,56 @@ Phaser.Loader.prototype = {
     * Internal function that replaces an existing entry in the file list with a new one. Do not call directly.
     *
     * @method Phaser.Loader#replaceInFileList
+    * @protected
     * @param {string} type - The type of resource to add to the list (image, audio, xml, etc).
     * @param {string} key - The unique Cache ID key of this resource.
     * @param {string} url - The URL the asset will be loaded from.
     * @param {object} properties - Any additional properties needed to load the file.
-    * @protected
     */
     replaceInFileList: function (type, key, url, properties) {
 
-        var entry = {
-            type: type,
-            key: key,
-            url: url,
-            data: null,
-            error: false,
-            loaded: false
-        };
-
-        if (typeof properties !== "undefined")
-        {
-            for (var prop in properties)
-            {
-                entry[prop] = properties[prop];
-            }
-        }
-
-        var index = this.getAssetIndex(type, key);
-
-        if (index === -1)
-        {
-            this._fileList.push(entry);
-        }
-        else
-        {
-            this._fileList[index] = entry;
-        }
+        return this.addToFileList(type, key, url, properties, true);
 
     },
 
     /**
-    * Add an image to the Loader.
+    * Add a JSON resource pack ('packfile') to the Loader.
+    *
+    * Packs are always put before the first non-pack file that is not loaded/loading.
+    * This means that all packs added before any loading has started are added to the front
+    * of the file/asset list, in order added.
     *
     * @method Phaser.Loader#pack
-    * @param {string} key - Unique asset key of this image file.
+    * @param {string} key - Unique asset key of this resource pack.
     * @param {string} [url] - URL of the Asset Pack JSON file. If you wish to pass a json object instead set this to null and pass the object as the data parameter.
     * @param {object} [data] - The Asset Pack JSON data. Use this to pass in a json data object rather than loading it from a URL. TODO
-    * @param {object} [callbackContext] - Some Loader operations, like Binary and Script require a context for their callbacks. Pass the context here.
+    * @param {object} [callbackContext=(loader)] - Some Loader operations, like Binary and Script require a context for their callbacks. Pass the context here.
     * @return {Phaser.Loader} This Loader instance.
     */
     pack: function (key, url, data, callbackContext) {
 
-        if (typeof url === "undefined") { url = null; }
-        if (typeof data === "undefined") { data = null; }
-        if (typeof callbackContext === "undefined") { callbackContext = this; }
+        if (typeof url === 'undefined') { url = null; }
+        if (typeof data === 'undefined') { data = null; }
+        if (typeof callbackContext === 'undefined') { callbackContext = null; }
 
-        if (url === null && data === null)
+        if (!url && !data)
         {
             console.warn('Phaser.Loader.pack - Both url and data are null. One must be set.');
+
             return this;
         }
+
+        var pack = {
+            type: 'packfile',
+            key: key,
+            url: url,
+            syncPoint: true,
+            data: null,
+            loading: false,
+            loaded: false,
+            error: false,
+            callbackContext: callbackContext
+        };
 
         //  A data object has been given
         if (data)
@@ -56733,16 +57310,29 @@ Phaser.Loader.prototype = {
             {
                 data = JSON.parse(data);
             }
+            
+            pack.data = data || {};
         }
-
-        this._packList.push( { key: key, url: url, data: data, loaded: false, error: false, callbackContext: callbackContext } );
+        
+        // Add before first non-pack/no-loaded ~ last pack from start prior to loading
+        // (Read one past for splice-to-end)
+        for (var i = 0; i < this._fileList.length + 1; i++)
+        {
+            var file = this._fileList[i];
+            if (!file || (!file.loaded && !file.loading && file.type !== 'packfile'))
+            {
+                this._fileList.splice(i, 1, pack);
+                this._totalPackCount++;
+                break;
+            }
+        }
 
         return this;
 
     },
 
     /**
-    * Add an image to the Loader.
+    * Add an 'image' to the Loader.
     *
     * @method Phaser.Loader#image
     * @param {string} key - Unique asset key of this image file.
@@ -56752,23 +57342,16 @@ Phaser.Loader.prototype = {
     */
     image: function (key, url, overwrite) {
 
-        if (typeof overwrite === "undefined") { overwrite = false; }
+        if (typeof overwrite === 'undefined') { overwrite = false; }
 
-        if (overwrite)
-        {
-            this.replaceInFileList('image', key, url);
-        }
-        else
-        {
-            this.addToFileList('image', key, url);
-        }
+        this.addToFileList('image', key, url, undefined, overwrite);
 
         return this;
 
     },
 
     /**
-    * Add a text file to the Loader.
+    * Add a 'text' file to the Loader.
     *
     * @method Phaser.Loader#text
     * @param {string} key - Unique asset key of the text file.
@@ -56778,23 +57361,16 @@ Phaser.Loader.prototype = {
     */
     text: function (key, url, overwrite) {
 
-        if (typeof overwrite === "undefined") { overwrite = false; }
+        if (typeof overwrite === 'undefined') { overwrite = false; }
 
-        if (overwrite)
-        {
-            this.replaceInFileList('text', key, url);
-        }
-        else
-        {
-            this.addToFileList('text', key, url);
-        }
+        this.addToFileList('text', key, url, undefined, overwrite);
 
         return this;
 
     },
 
     /**
-    * Add a json file to the Loader.
+    * Add a 'json' file to the Loader.
     *
     * @method Phaser.Loader#json
     * @param {string} key - Unique asset key of the json file.
@@ -56804,23 +57380,16 @@ Phaser.Loader.prototype = {
     */
     json: function (key, url, overwrite) {
 
-        if (typeof overwrite === "undefined") { overwrite = false; }
+        if (typeof overwrite === 'undefined') { overwrite = false; }
 
-        if (overwrite)
-        {
-            this.replaceInFileList('json', key, url);
-        }
-        else
-        {
-            this.addToFileList('json', key, url);
-        }
+        this.addToFileList('json', key, url, undefined, overwrite);
 
         return this;
 
     },
 
     /**
-    * Add an XML file to the Loader.
+    * Add an XML ('xml') file to the Loader.
     *
     * @method Phaser.Loader#xml
     * @param {string} key - Unique asset key of the xml file.
@@ -56830,58 +57399,62 @@ Phaser.Loader.prototype = {
     */
     xml: function (key, url, overwrite) {
 
-        if (typeof overwrite === "undefined") { overwrite = false; }
+        if (typeof overwrite === 'undefined') { overwrite = false; }
 
-        if (overwrite)
-        {
-            this.replaceInFileList('xml', key, url);
-        }
-        else
-        {
-            this.addToFileList('xml', key, url);
-        }
+        this.addToFileList('xml', key, url, undefined, overwrite);
 
         return this;
 
     },
 
     /**
-    * Add a JavaScript file to the Loader. Once loaded the JavaScript file will be automatically turned into a script tag (and executed), so be careful what you load!
-    * You can also specify a callback. This will be executed as soon as the script tag has been created.
+    * Add a JavaScript ('script') file to the Loader.
+    *
+    * The loaded JavaScript is automatically turned into a script tag and executed, so be careful what you load!
+    *
+    * A callback, which will be invoked as the script tag has been created, can also be specified.
+    * The callback must return relevant `data`.
     *
     * @method Phaser.Loader#script
     * @param {string} key - Unique asset key of the script file.
     * @param {string} url - URL of the JavaScript file.
-    * @param {function} [callback] - Optional callback that will be called after the script tag has loaded, so you can perform additional processing.
-    * @param {function} [callbackContext] - The context under which the callback will be applied. If not specified it will use the callback itself as the context.
+    * @param {function} [callback=(none)] - Optional callback that will be called after the script tag has loaded, so you can perform additional processing.
+    * @param {object} [callbackContext=(loader)] - The context under which the callback will be applied. If not specified it will use the callback itself as the context.
     * @return {Phaser.Loader} This Loader instance.
     */
     script: function (key, url, callback, callbackContext) {
 
         if (typeof callback === 'undefined') { callback = false; }
+
+        // Why is the default callback context the ..callback?
         if (callback !== false && typeof callbackContext === 'undefined') { callbackContext = callback; }
 
-        this.addToFileList('script', key, url, { callback: callback, callbackContext: callbackContext });
+        this.addToFileList('script', key, url, { syncPoint: true, callback: callback, callbackContext: callbackContext });
 
         return this;
 
     },
 
     /**
-    * Add a binary file to the Loader. It will be loaded via xhr with a responseType of "arraybuffer". You can specify an optional callback to process the file after load.
+    * Add a 'binary' file to the Loader.
+    *
+    * It will be loaded via xhr with a responseType of "arraybuffer". You can specify an optional callback to process the file after load.
     * When the callback is called it will be passed 2 parameters: the key of the file and the file data.
-    * WARNING: If you specify a callback, the file data will be set to whatever your callback returns. So always return the data object, even if you didn't modify it.
+    *
+    * WARNING: If a callback is specified the data will be set to whatever it returns. Always return the data object, even if you didn't modify it.
     *
     * @method Phaser.Loader#binary
     * @param {string} key - Unique asset key of the binary file.
     * @param {string} url - URL of the binary file.
-    * @param {function} [callback] - Optional callback that will be passed the file after loading, so you can perform additional processing on it.
-    * @param {function} [callbackContext] - The context under which the callback will be applied. If not specified it will use the callback itself as the context.
+    * @param {function} [callback=(none)] - Optional callback that will be passed the file after loading, so you can perform additional processing on it.
+    * @param {object} [callbackContext] - The context under which the callback will be applied. If not specified it will use the callback itself as the context.
     * @return {Phaser.Loader} This Loader instance.
     */
     binary: function (key, url, callback, callbackContext) {
 
         if (typeof callback === 'undefined') { callback = false; }
+
+        // Why is the default callback context the ..callback?
         if (callback !== false && typeof callbackContext === 'undefined') { callbackContext = callback; }
 
         this.addToFileList('binary', key, url, { callback: callback, callbackContext: callbackContext });
@@ -56891,7 +57464,7 @@ Phaser.Loader.prototype = {
     },
 
     /**
-    * Add a new sprite sheet to the loader.
+    * Add a new sprite sheet ('spritesheet') to the loader.
     *
     * @method Phaser.Loader#spritesheet
     * @param {string} key - Unique asset key of the sheet file.
@@ -56905,9 +57478,9 @@ Phaser.Loader.prototype = {
     */
     spritesheet: function (key, url, frameWidth, frameHeight, frameMax, margin, spacing) {
 
-        if (typeof frameMax === "undefined") { frameMax = -1; }
-        if (typeof margin === "undefined") { margin = 0; }
-        if (typeof spacing === "undefined") { spacing = 0; }
+        if (typeof frameMax === 'undefined') { frameMax = -1; }
+        if (typeof margin === 'undefined') { margin = 0; }
+        if (typeof spacing === 'undefined') { spacing = 0; }
 
         this.addToFileList('spritesheet', key, url, { frameWidth: frameWidth, frameHeight: frameHeight, frameMax: frameMax, margin: margin, spacing: spacing });
 
@@ -56916,17 +57489,26 @@ Phaser.Loader.prototype = {
     },
 
     /**
-    * Add a new audio file to the loader.
+    * Add a new 'audio' file to the loader.
     *
     * @method Phaser.Loader#audio
     * @param {string} key - Unique asset key of the audio file.
-    * @param {Array|string} urls - An array containing the URLs of the audio files, i.e.: [ 'jump.mp3', 'jump.ogg', 'jump.m4a' ] or a single string containing just one URL. BLOB urls are supported, but note that Phaser will not validate the audio file's type if a BLOB is provided; the user should ensure that a BLOB url is playable.
-    * @param {boolean} autoDecode - When using Web Audio the audio files can either be decoded at load time or run-time. They can't be played until they are decoded, but this let's you control when that happens. Decoding is a non-blocking async process.
+    * @param {string|string[]|object[]} urls - Either a single string or an array of URIs or pairs of `{uri: .., type: ..}`.
+    *    If an array is specified then the first URI (or URI + mime pair) that is device-compatible will be selected.
+    *    For example: `"jump.mp3"`, `['jump.mp3', 'jump.ogg', 'jump.m4a']`, or `[{uri: "data:<opus_resource>", type: 'opus'}, 'fallback.mp3']`.
+    *    BLOB and DATA URIs can be used but only support automatic detection when used in the pair form; otherwise the format must be manually checked before adding the resource.
+    * @param {boolean} [autoDecode=true] - When using Web Audio the audio files can either be decoded at load time or run-time.
+    *    Audio files can't be played until they are decoded and, if specified, this enables immediate decoding. Decoding is a non-blocking async process.
     * @return {Phaser.Loader} This Loader instance.
     */
     audio: function (key, urls, autoDecode) {
 
-        if (typeof autoDecode === "undefined") { autoDecode = true; }
+        if (typeof autoDecode === 'undefined') { autoDecode = true; }
+
+        if (typeof urls === 'string')
+        {
+            urls = [urls];
+        }
 
         this.addToFileList('audio', key, urls, { buffer: null, autoDecode: autoDecode });
 
@@ -56935,27 +57517,29 @@ Phaser.Loader.prototype = {
     },
 
     /**
-     * Add a new audiosprite file to the loader. Audio Sprites are a combination of audio files and a JSON configuration.
-     * The JSON follows the format of that created by https://github.com/tonistiigi/audiosprite
-     *
-     * @method Phaser.Loader#audiosprite
-     * @param {string} key - Unique asset key of the audio file.
-     * @param {Array|string} urls - An array containing the URLs of the audio files, i.e.: [ 'audiosprite.mp3', 'audiosprite.ogg', 'audiosprite.m4a' ] or a single string containing just one URL.
-     * @param {string} atlasURL - The URL of the audiosprite configuration json.
-     * @return {Phaser.Loader} This Loader instance.
-     */
-    audiosprite: function(key, urls, atlasURL) {
+    * Add a new audiosprite file to the loader.
+    *
+    * Audio Sprites are a combination of audio files and a JSON configuration.
+    * The JSON follows the format of that created by https://github.com/tonistiigi/audiosprite
+    *
+    * @method Phaser.Loader#audiosprite
+    * @param {string} key - Unique asset key of the audio file.
+    * @param {Array|string} urls - An array containing the URLs of the audio files, i.e.: [ 'audiosprite.mp3', 'audiosprite.ogg', 'audiosprite.m4a' ] or a single string containing just one URL.
+    * @param {string} jsonURL - The URL of the audiosprite configuration json.
+    * @return {Phaser.Loader} This Loader instance.
+    */
+    audiosprite: function(key, urls, jsonURL) {
 
         this.audio(key, urls);
 
-        this.json(key + '-audioatlas', atlasURL);
+        this.json(key + '-audioatlas', jsonURL);
 
         return this;
 
     },
 
     /**
-    * Add a new tilemap loading request.
+    * Add a new 'tilemap' loading request. If data is supplied the object is loaded immediately.
     *
     * @method Phaser.Loader#tilemap
     * @param {string} key - Unique asset key of the tilemap data.
@@ -56966,11 +57550,11 @@ Phaser.Loader.prototype = {
     */
     tilemap: function (key, url, data, format) {
 
-        if (typeof url === "undefined") { url = null; }
-        if (typeof data === "undefined") { data = null; }
-        if (typeof format === "undefined") { format = Phaser.Tilemap.CSV; }
+        if (typeof url === 'undefined') { url = null; }
+        if (typeof data === 'undefined') { data = null; }
+        if (typeof format === 'undefined') { format = Phaser.Tilemap.CSV; }
 
-        if (url == null && data == null)
+        if (!url && !data)
         {
             console.warn('Phaser.Loader.tilemap - Both url and data are null. One must be set.');
 
@@ -57008,7 +57592,8 @@ Phaser.Loader.prototype = {
     },
 
     /**
-    * Add a new physics data object loading request.
+    * Add a new 'physics' data object loading request. If data is supplied the object is loaded immediately.
+    *
     * The data must be in Lime + Corona JSON format. Physics Editor by code'n'web exports in this format natively.
     *
     * @method Phaser.Loader#physics
@@ -57020,11 +57605,11 @@ Phaser.Loader.prototype = {
     */
     physics: function (key, url, data, format) {
 
-        if (typeof url === "undefined") { url = null; }
-        if (typeof data === "undefined") { data = null; }
-        if (typeof format === "undefined") { format = Phaser.Physics.LIME_CORONA_JSON; }
+        if (typeof url === 'undefined') { url = null; }
+        if (typeof data === 'undefined') { data = null; }
+        if (typeof format === 'undefined') { format = Phaser.Physics.LIME_CORONA_JSON; }
 
-        if (url == null && data == null)
+        if (!url && !data)
         {
             console.warn('Phaser.Loader.physics - Both url and data are null. One must be set.');
 
@@ -57051,7 +57636,7 @@ Phaser.Loader.prototype = {
     },
 
     /**
-    * Add a new bitmap font loading request.
+    * Add a new bitmap font ('bitmapfont') loading request.
     *
     * @method Phaser.Loader#bitmapFont
     * @param {string} key - Unique asset key of the bitmap font.
@@ -57064,10 +57649,10 @@ Phaser.Loader.prototype = {
     */
     bitmapFont: function (key, textureURL, xmlURL, xmlData, xSpacing, ySpacing) {
 
-        if (typeof xmlURL === "undefined") { xmlURL = null; }
-        if (typeof xmlData === "undefined") { xmlData = null; }
-        if (typeof xSpacing === "undefined") { xSpacing = 0; }
-        if (typeof ySpacing === "undefined") { ySpacing = 0; }
+        if (typeof xmlURL === 'undefined') { xmlURL = null; }
+        if (typeof xmlData === 'undefined') { xmlData = null; }
+        if (typeof xSpacing === 'undefined') { xSpacing = 0; }
+        if (typeof ySpacing === 'undefined') { ySpacing = 0; }
 
         //  A URL to a json/xml file has been given
         if (xmlURL)
@@ -57079,34 +57664,14 @@ Phaser.Loader.prototype = {
             //  An xml string or object has been given
             if (typeof xmlData === 'string')
             {
-                var xml;
+                var xml = this.parseXml(xmlData);
 
-                try  {
-                    if (window['DOMParser'])
-                    {
-                        var domparser = new DOMParser();
-                        xml = domparser.parseFromString(xmlData, "text/xml");
-                    }
-                    else
-                    {
-                        xml = new ActiveXObject("Microsoft.XMLDOM");
-                        xml.async = 'false';
-                        xml.loadXML(xmlData);
-                    }
-                }
-                catch (e)
-                {
-                    xml = undefined;
-                }
-
-                if (!xml || !xml.documentElement || xml.getElementsByTagName("parsererror").length)
+                if (!xml)
                 {
                     throw new Error("Phaser.Loader. Invalid Bitmap Font XML given");
                 }
-                else
-                {
-                    this.addToFileList('bitmapfont', key, textureURL, { xmlURL: null, xmlData: xml, xSpacing: xSpacing, ySpacing: ySpacing });
-                }
+
+                this.addToFileList('bitmapfont', key, textureURL, { xmlURL: null, xmlData: xml, xSpacing: xSpacing, ySpacing: ySpacing });
             }
         }
 
@@ -57115,7 +57680,10 @@ Phaser.Loader.prototype = {
     },
 
     /**
-    * Add a new texture atlas to the loader. This atlas uses the JSON Array data format.
+    * Add a new texture atlas ('textureatlas') to the loader. This atlas uses the JSON Array data format.
+    *
+    * Texture Atlases can be created with tools such as [Texture Packer](https://www.codeandweb.com/texturepacker/phaser) and
+    * [Shoebox](http://renderhjs.net/shoebox/)
     *
     * @method Phaser.Loader#atlasJSONArray
     * @param {string} key - Unique asset key of the texture atlas file.
@@ -57131,7 +57699,10 @@ Phaser.Loader.prototype = {
     },
 
     /**
-    * Add a new texture atlas to the loader. This atlas uses the JSON Hash data format.
+    * Add a new texture atlas ('textureatlas') to the loader. This atlas uses the JSON Hash data format.
+    *
+    * Texture Atlases can be created with tools such as [Texture Packer](https://www.codeandweb.com/texturepacker/phaser) and
+    * [Shoebox](http://renderhjs.net/shoebox/)
     *
     * @method Phaser.Loader#atlasJSONHash
     * @param {string} key - Unique asset key of the texture atlas file.
@@ -57147,7 +57718,7 @@ Phaser.Loader.prototype = {
     },
 
     /**
-    * Add a new texture atlas to the loader. This atlas uses the Starling XML data format.
+    * Add a new texture atlas ('textureatlas') to the loader. This atlas uses the Starling XML data format.
     *
     * @method Phaser.Loader#atlasXML
     * @param {string} key - Unique asset key of the texture atlas file.
@@ -57163,7 +57734,10 @@ Phaser.Loader.prototype = {
     },
 
     /**
-    * Add a new texture atlas to the loader.
+    * Add a new texture atlas ('textureatlas') to the loader.
+    *
+    * Texture Atlases can be created with tools such as [Texture Packer](https://www.codeandweb.com/texturepacker/phaser) and
+    * [Shoebox](http://renderhjs.net/shoebox/)
     *
     * @method Phaser.Loader#atlas
     * @param {string} key - Unique asset key of the texture atlas file.
@@ -57175,9 +57749,9 @@ Phaser.Loader.prototype = {
     */
     atlas: function (key, textureURL, atlasURL, atlasData, format) {
 
-        if (typeof atlasURL === "undefined") { atlasURL = null; }
-        if (typeof atlasData === "undefined") { atlasData = null; }
-        if (typeof format === "undefined") { format = Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY; }
+        if (typeof atlasURL === 'undefined') { atlasURL = null; }
+        if (typeof atlasData === 'undefined') { atlasData = null; }
+        if (typeof format === 'undefined') { format = Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY; }
 
         //  A URL to a json/xml file has been given
         if (atlasURL)
@@ -57202,34 +57776,14 @@ Phaser.Loader.prototype = {
 
                     if (typeof atlasData === 'string')
                     {
-                        var xml;
+                        var xml = this.parseXml(atlasData);
 
-                        try  {
-                            if (window['DOMParser'])
-                            {
-                                var domparser = new DOMParser();
-                                xml = domparser.parseFromString(atlasData, "text/xml");
-                            }
-                            else
-                            {
-                                xml = new ActiveXObject("Microsoft.XMLDOM");
-                                xml.async = 'false';
-                                xml.loadXML(atlasData);
-                            }
-                        }
-                        catch (e)
-                        {
-                            xml = undefined;
-                        }
-
-                        if (!xml || !xml.documentElement || xml.getElementsByTagName("parsererror").length)
+                        if (!xml)
                         {
                             throw new Error("Phaser.Loader. Invalid Texture Atlas XML given");
                         }
-                        else
-                        {
-                            atlasData = xml;
-                        }
+
+                        atlasData = xml;
                     }
                     break;
             }
@@ -57243,31 +57797,88 @@ Phaser.Loader.prototype = {
     },
 
     /**
-    * Remove loading request of a file.
+    * Add a synchronization point to the assets/files added within the supplied callback.
+    *
+    * A synchronization point denotes that an asset _must_ be completely loaded before
+    * subsequent assets can be loaded. An asset marked as a sync-point does not need to wait
+    * for previous assets to load (unless they are sync-points). Resources, such as packs, may still
+    * be downloaded around sync-points, as long as they do not finalize loading.
+    *
+    * @method Phader.Loader#withSyncPoints
+    * @param {function} callback - The callback is invoked and is supplied with a single argument: the loader.
+    * @param {object} [callbackContext=(loader)] - Context for the callback.
+    * @return {Phaser.Loader} This Loader instance.
+    */
+    withSyncPoint: function (callback, callbackContext) {
+
+        this._withSyncPointDepth++;
+
+        try {
+            callback.call(callbackContext || this, this);
+        } finally {
+            this._withSyncPointDepth--;
+        }
+
+        return this;
+    },
+
+    /**
+    * Add a synchronization point to a specific file/asset in the load queue.
+    *
+    * This has no effect on already loaded assets.    
+    *
+    * @method Phader.Loader#withSyncPoints
+    * @param {function} callback - The callback is invoked and is supplied with a single argument: the loader.
+    * @param {object} [callbackContext=(loader)] - Context for the callback.
+    * @return {Phaser.Loader} This Loader instance.
+    * @see {@link Phaser.Loader#withSyncPoint withSyncPoint}
+    */
+    addSyncPoint: function (type, key) {
+
+        var asset = this.getAsset(type, key);
+
+        if (asset)
+        {
+            asset.file.syncPoint = true;
+        }
+
+        return this;
+    },
+
+    /**
+    * Remove a file/asset from the loading queue.
+    *
+    * A file that is loaded or has started loading cannot be removed.
     *
     * @method Phaser.Loader#removeFile
+    * @protected
     * @param {string} type - The type of resource to add to the list (image, audio, xml, etc).
     * @param {string} key - Key of the file you want to remove.
     */
     removeFile: function (type, key) {
 
-        var file = this.getAsset(type, key);
+        var asset = this.getAsset(type, key);
 
-        if (file !== false)
+        if (asset)
         {
-            this._fileList.splice(file.index, 1);
+            if (!asset.loaded && !asset.loading)
+            {
+                this._fileList.splice(asset.index, 1);
+            }
         }
 
     },
 
     /**
-    * Remove all file loading requests.
+    * Remove all file loading requests - this is _insufficient_ to stop current loading. Use `reset` instead.
     *
     * @method Phaser.Loader#removeAll
+    * @protected
     */
     removeAll: function () {
 
         this._fileList.length = 0;
+        this._flightQueue.length = 0;
 
     },
 
@@ -57283,382 +57894,496 @@ Phaser.Loader.prototype = {
             return;
         }
 
-        if (this._packList.length > 0)
-        {
-            this._packIndex = 0;
-            this.loadPack();
-        }
-        else
-        {
-            this.beginLoad();
-        }
-
-    },
-
-    /**
-    * Starts off the actual loading process after the asset packs have been sorted out.
-    *
-    * @method Phaser.Loader#beginLoad
-    * @private
-    */
-    beginLoad: function () {
-
-        this.progress = 0;
-        this.progressFloat = 0;
         this.hasLoaded = false;
         this.isLoading = true;
 
-        this.onLoadStart.dispatch(this._fileList.length);
+        this.updateProgress();
 
-        if (this._fileList.length > 0)
-        {
-            this._fileIndex = 0;
-            this._progressChunk = 100 / this._fileList.length;
-            this.loadFile();
-        }
-        else
-        {
-            this.progress = 100;
-            this.progressFloat = 100;
-            this.hasLoaded = true;
-            this.isLoading = false;
-            this.onLoadComplete.dispatch();
-        }
+        this.processLoadQueue();
 
     },
 
     /**
-    * Loads the current asset pack in the queue.
+    * Process the next item(s) in the file/asset queue.
     *
-    * @method Phaser.Loader#loadPack
+    * Process the queue and start loading enough items to fill up the inflight queue.
+    *
+    * If a sync-file is encountered then subsequent asset processing is delayed until it completes.
+    * The exception to this rule is that packfiles can be downloaded (but not processed) even if
+    * there appear other sync files (ie. packs) - this enables multiple packfiles to be fetched in parallel.
+    * such as during the start phaser.
+    *
+    * @method Phaser.Loader#processLoadQueue
     * @private
     */
-    loadPack: function () {
+    processLoadQueue: function () {
 
-        if (!this._packList[this._packIndex])
+        if (!this.isLoading)
         {
-            console.warn('Phaser.Loader loadPackList invalid index ' + this._packIndex);
+            console.warn('Phaser.Loader - active loading canceled / reset');
+            this.finishedLoading(true);
             return;
         }
 
-        var pack = this._packList[this._packIndex];
-
-        if (pack.data !== null)
+        // Empty the flight queue as applicable
+        for (var i = 0; i < this._flightQueue.length; i++)
         {
-            this.packLoadComplete(this._packIndex, false);
-        }
-        else
-        {
-            //  Load it
-            this.xhrLoad(this._packIndex, this.baseURL + pack.url, 'text', 'packLoadComplete', 'packLoadError');
-        }
-
-    },
-
-    /**
-    * Handle the successful loading of a JSON asset pack.
-    *
-    * @method Phaser.Loader#packLoadComplete
-    * @private
-    * @param {number} index - The index of the file in the file queue that loaded.
-    * @param {boolean} [parse=true] - Automatically parse the JSON data?
-    */
-    packLoadComplete: function (index, parse) {
-
-        if (typeof parse === 'undefined') { parse = true; }
-
-        if (!this._packList[index])
-        {
-            console.warn('Phaser.Loader packLoadComplete invalid index ' + index);
-            return;
-        }
-
-        var pack = this._packList[index];
-
-        pack.loaded = true;
-
-        if (parse)
-        {
-            var data = JSON.parse(this._xhr.responseText);
-        }
-        else
-        {
-            var data = this._packList[index].data;
-        }
-
-        if (data[pack.key])
-        {
-            var file;
-
-            for (var i = 0; i < data[pack.key].length; i++)
+            var file = this._flightQueue[i];
+            
+            if (file.loaded || file.error)
             {
-                file = data[pack.key][i];
+                this._flightQueue.splice(i, 1);
+                i--;
 
-                switch (file.type)
+                file.loading = false;
+                file.requestUrl = null;
+                file.requestObject = null;
+
+                if (file.error)
                 {
-                    case "image":
-                        this.image(file.key, file.url, file.overwrite);
-                        break;
-
-                    case "text":
-                        this.text(file.key, file.url, file.overwrite);
-                        break;
-
-                    case "json":
-                        this.json(file.key, file.url, file.overwrite);
-                        break;
-
-                    case "xml":
-                        this.xml(file.key, file.url, file.overwrite);
-                        break;
-
-                    case "script":
-                        this.script(file.key, file.url, file.callback, pack.callbackContext);
-                        break;
-
-                    case "binary":
-                        this.binary(file.key, file.url, file.callback, pack.callbackContext);
-                        break;
-
-                    case "spritesheet":
-                        this.spritesheet(file.key, file.url, file.frameWidth, file.frameHeight, file.frameMax, file.margin, file.spacing);
-                        break;
-
-                    case "audio":
-                        this.audio(file.key, file.urls, file.autoDecode);
-                        break;
-
-                    case "tilemap":
-                        this.tilemap(file.key, file.url, file.data, Phaser.Tilemap[file.format]);
-                        break;
-
-                    case "physics":
-                        this.physics(file.key, file.url, file.data, Phaser.Loader[file.format]);
-                        break;
-
-                    case "bitmapFont":
-                        this.bitmapFont(file.key, file.textureURL, file.xmlURL, file.xmlData, file.xSpacing, file.ySpacing);
-                        break;
-
-                    case "atlasJSONArray":
-                        this.atlasJSONArray(file.key, file.textureURL, file.atlasURL, file.atlasData);
-                        break;
-
-                    case "atlasJSONHash":
-                        this.atlasJSONHash(file.key, file.textureURL, file.atlasURL, file.atlasData);
-                        break;
-
-                    case "atlasXML":
-                        this.atlasXML(file.key, file.textureURL, file.atlasURL, file.atlasData);
-                        break;
-
-                    case "atlas":
-                        this.atlas(file.key, file.textureURL, file.atlasURL, file.atlasData, Phaser.Loader[file.format]);
-                        break;
+                    this.onFileError.dispatch(file.key, file);
                 }
+
+                if (file.type !== 'packfile')
+                {
+                    this._loadedFileCount++;
+                    this.onFileComplete.dispatch(this.progress, file.key, !file.error, this._loadedFileCount, this._totalFileCount);
+                }
+                else if (file.type === 'packfile' && file.error)
+                {
+                    // Non-error pack files are handled when processing the file queue
+                    this._loadedPackCount++;
+                    this.onPackComplete.dispatch(file.key, !file.error, this._loadedPackCount, this._totalPackCount);
+                }
+
             }
         }
 
-        this.nextPack(index, true);
+        // When true further non-pack file downloads are suppressed
+        var syncblock = false;
 
-    },
+        var inflightLimit = this.enableParallel ? Phaser.Math.clamp(this.maxParallelDownloads, 1, 12) : 1;
 
-    /**
-    * Error occured when loading an asset pack.
-    *
-    * @method Phaser.Loader#packError
-    * @private
-    * @param {number} index - The index of the file in the file queue that errored.
-    */
-    packError: function (index) {
-
-        this._packList[index].loaded = true;
-        this._packList[index].error = true;
-
-        this.onFileError.dispatch(this._packList[index].key, this._packList[index]);
-
-        console.warn("Phaser.Loader error loading pack file: " + this._packList[index].key + ' from URL ' + this._packList[index].url);
-
-        this.nextPack(index, false);
-
-    },
-
-    /**
-    * Handle loading the next asset pack.
-    *
-    * @method Phaser.Loader#nextPack
-    * @private
-    */
-    nextPack: function (index, success) {
-
-        this.onPackComplete.dispatch(this._packList[index].key, success, this.totalLoadedPacks(), this._packList.length);
-
-        this._packIndex++;
-
-        if (this._packIndex < this._packList.length)
+        for (var i = this._processingHead; i < this._fileList.length; i++)
         {
-            this.loadPack();
+            var file = this._fileList[i];
+
+            // Pack is fetched (ie. has data) and is currently at the start of the process queue.
+            if (file.type === 'packfile' && !file.error && file.data && i === this._processingHead)
+            {
+                // Pack may have been supplied with initial data
+                this.loaded = true;
+
+                // Processing the pack / adds more files
+                this.processPack(file);
+
+                this._loadedPackCount++;
+                this.onPackComplete.dispatch(file.key, !file.error, this._loadedPackCount, this._totalPackCount);
+            }
+
+            if (file.loaded || file.error)
+            {
+                // Item at the start of file list finished, can skip it in future
+                if (i === this._processingHead)
+                {
+                    this._processingHead = i + 1;
+                }
+            }
+            else if (!file.loading && this._flightQueue.length < inflightLimit)
+            {
+                // -> not loaded/failed, not loading
+                if (file.type === 'packfile' && !file.data)
+                {
+                    // Fetches the pack data: the pack is processed above as it reaches queue-start.
+                    // (Packs do not trigger onLoadStart or onFileStart.)
+                    this._flightQueue.push(file);
+                    file.loading = true;
+
+                    this.loadFile(file);
+                }
+                else if (!syncblock)
+                {
+                    if (!this._fileLoadStarted)
+                    {
+                        this._fileLoadStarted = true;
+                        this.onLoadStart.dispatch();
+                    }
+
+                    this._flightQueue.push(file);
+                    file.loading = true;
+                    this.onFileStart.dispatch(this.progress, file.key, file.url);
+                    
+                    this.loadFile(file);
+                }
+            }
+
+            if (!file.loaded && file.syncPoint)
+            {
+                syncblock = true;
+            }
+
+            // Stop looking if queue full - or if syncblocked and there are no more packs.
+            // (As only packs can be loaded around a syncblock)
+            if (this._flightQueue.length >= inflightLimit ||
+                (syncblock && this._loadedPackCount === this._totalPackCount))
+            {
+                break;
+            }
         }
-        else
+
+        this.updateProgress();
+
+        // True when all items in the queue have been advanced over
+        // (There should be no inflight items as they are complete - loaded/error.)
+        if (this._processingHead >= this._fileList.length)
         {
-            this.beginLoad();
+            this.finishedLoading();
+        }
+        else if (!this._flightQueue.length)
+        {
+            // Flight queue is empty but file list is not done being processed.
+            // This indicates a critical internal error with no known recovery.
+            console.warn("Phaser.Loader - aborting: processing queue empty, loading may have stalled");
+
+            var _this = this;
+
+            setTimeout(function () {
+                _this.finishedLoading(true);
+            }, 2000);
         }
 
     },
 
     /**
-    * Load files. Private method ONLY used by loader.
+    * The loading is all finished.
     *
-    * @method Phaser.Loader#loadFile
+    * @method Phaser.Loader#finishedLoading
     * @private
+    * @param {boolean} [abnormal=true] - True if the loading finished abnormally.
     */
-    loadFile: function () {
+    finishedLoading: function (abnormal) {
 
-        if (!this._fileList[this._fileIndex])
+        if (this.hasLoaded)
         {
-            console.warn('Phaser.Loader loadFile invalid index ' + this._fileIndex);
             return;
         }
 
-        var file = this._fileList[this._fileIndex];
-        var _this = this;
+        this.hasLoaded = true;
+        this.isLoading = false;
 
-        this.onFileStart.dispatch(this.progress, file.key, file.url);
+        // If there were no files make sure to trigger the event anyway, for consistency
+        if (!abnormal && !this._fileLoadStarted)
+        {
+            this._fileLoadStarted = true;
+            this.onLoadStart.dispatch();
+        }
+
+        this.onLoadComplete.dispatch();
+
+        this.reset();
+
+        this.game.state.loadComplete();
+
+    },
+
+    /**
+    * Informs the loader that the given file resource has been fetched and processed;
+    * or such a request has failed.
+    *
+    * @method Phaser.Loader#asyncComplete
+    * @private
+    * @param {object} file
+    * @param {string} [error=''] - The error message, if any. No message implies no error.
+    */
+    asyncComplete: function (file, errorMessage) {
+
+        if (typeof errorMessage === 'undefined') { errorMessage = ''; }
+
+        file.loaded = true;
+        file.error = !!errorMessage;
+
+        if (errorMessage)
+        {
+            file.errorMessage = errorMessage;
+
+            console.warn('Phaser.Loader - ' + file.type + '[' + file.key + ']' + ': ' + errorMessage);
+            // debugger;
+        }
+
+        this.processLoadQueue();
+
+    },
+
+    /**
+    * Process pack data. This will usually modify the file list.
+    *
+    * @method Phaser.Loader#processPack
+    * @private
+    * @param {object} pack
+    */
+    processPack: function (pack) {
+
+        var packData = pack.data[pack.key];
+
+        if (!packData)
+        {
+            console.warn('Phaser.Loader - ' + pack.key + ': pack has data, but not for pack key');
+            return;
+        }
+
+        for (var i = 0; i < packData.length; i++)
+        {
+            var file = packData[i];
+
+            switch (file.type)
+            {
+                case "image":
+                    this.image(file.key, file.url, file.overwrite);
+                    break;
+
+                case "text":
+                    this.text(file.key, file.url, file.overwrite);
+                    break;
+
+                case "json":
+                    this.json(file.key, file.url, file.overwrite);
+                    break;
+
+                case "xml":
+                    this.xml(file.key, file.url, file.overwrite);
+                    break;
+
+                case "script":
+                    this.script(file.key, file.url, file.callback, pack.callbackContext || this);
+                    break;
+
+                case "binary":
+                    this.binary(file.key, file.url, file.callback, pack.callbackContext || this);
+                    break;
+
+                case "spritesheet":
+                    this.spritesheet(file.key, file.url, file.frameWidth, file.frameHeight, file.frameMax, file.margin, file.spacing);
+                    break;
+
+                case "audio":
+                    this.audio(file.key, file.urls, file.autoDecode);
+                    break;
+
+                case "audiosprite":
+                    this.audio(file.key, file.urls, file.jsonURL);
+                    break;
+
+                case "tilemap":
+                    this.tilemap(file.key, file.url, file.data, Phaser.Tilemap[file.format]);
+                    break;
+
+                case "physics":
+                    this.physics(file.key, file.url, file.data, Phaser.Loader[file.format]);
+                    break;
+
+                case "bitmapFont":
+                    this.bitmapFont(file.key, file.textureURL, file.xmlURL, file.xmlData, file.xSpacing, file.ySpacing);
+                    break;
+
+                case "atlasJSONArray":
+                    this.atlasJSONArray(file.key, file.textureURL, file.atlasURL, file.atlasData);
+                    break;
+
+                case "atlasJSONHash":
+                    this.atlasJSONHash(file.key, file.textureURL, file.atlasURL, file.atlasData);
+                    break;
+
+                case "atlasXML":
+                    this.atlasXML(file.key, file.textureURL, file.atlasURL, file.atlasData);
+                    break;
+
+                case "atlas":
+                    this.atlas(file.key, file.textureURL, file.atlasURL, file.atlasData, Phaser.Loader[file.format]);
+                    break;
+            }
+        }
+
+    },
+
+    /**
+    * Transforms the asset URL. The default implementation prepends the baseURL.
+    *
+    * @method Phaser.Loader#transformUrl
+    * @protected
+    */
+    transformUrl: function (url /*, file */) {
+        return this.baseURL + url;
+    },
+
+    /**
+    * Start fetching a resource.
+    *
+    * All code paths, async or otherwise, from this function must return to `asyncComplete`.
+    *
+    * @method Phaser.Loader#loadFile
+    * @private
+    * @param {object} file
+    */
+    loadFile: function (file) {
 
         //  Image or Data?
         switch (file.type)
         {
+            case 'packfile':
+                this.xhrLoad(file, this.transformUrl(file.url, file), 'text', this.fileComplete);
+                break;
+
             case 'image':
             case 'spritesheet':
             case 'textureatlas':
             case 'bitmapfont':
-                file.data = new Image();
-                file.data.name = file.key;
-                file.data.onload = function () {
-                    return _this.fileComplete(_this._fileIndex);
-                };
-                file.data.onerror = function () {
-                    return _this.fileError(_this._fileIndex);
-                };
-                if (this.crossOrigin)
-                {
-                    file.data.crossOrigin = this.crossOrigin;
-                }
-                file.data.src = this.baseURL + file.url;
+                this.loadImageTag(file);
                 break;
 
             case 'audio':
                 file.url = this.getAudioURL(file.url);
 
-                if (file.url !== null)
+                if (file.url)
                 {
                     //  WebAudio or Audio Tag?
                     if (this.game.sound.usingWebAudio)
                     {
-                        this.xhrLoad(this._fileIndex, this.baseURL + file.url, 'arraybuffer', 'fileComplete', 'fileError');
+                        this.xhrLoad(file, this.transformUrl(file.url, file), 'arraybuffer', this.fileComplete);
                     }
                     else if (this.game.sound.usingAudioTag)
                     {
-                        if (this.game.sound.touchLocked)
-                        {
-                            //  If audio is locked we can't do this yet, so need to queue this load request. Bum.
-                            file.data = new Audio();
-                            file.data.name = file.key;
-                            file.data.preload = 'auto';
-                            file.data.src = this.baseURL + file.url;
-                            this.fileComplete(this._fileIndex);
-                        }
-                        else
-                        {
-                            file.data = new Audio();
-                            file.data.name = file.key;
-                            file.data.onerror = function () {
-                                return _this.fileError(_this._fileIndex);
-                            };
-                            file.data.preload = 'auto';
-                            file.data.src = this.baseURL + file.url;
-                            file.data.addEventListener('canplaythrough', function () { Phaser.GAMES[_this.game.id].load.fileComplete(_this._fileIndex); }, false);
-                            file.data.load();
-                        }
+                        this.loadAudioTag(file);
                     }
                 }
                 else
                 {
-                    this.fileError(this._fileIndex);
+                    this.fileError(file, null, 'no supported audio URL specified');
                 }
-
                 break;
 
             case 'json':
 
-                if (this.useXDomainRequest && window.XDomainRequest)
-                {
-                    this._ajax = new window.XDomainRequest();
-
-                    // XDomainRequest has a few quirks. Occasionally it will abort requests
-                    // A way to avoid this is to make sure ALL callbacks are set even if not used
-                    // More info here: http://stackoverflow.com/questions/15786966/xdomainrequest-aborts-post-on-ie-9
-                    this._ajax.timeout = 3000;
-
-                    this._ajax.onerror = function () {
-                        return _this.dataLoadError(_this._fileIndex);
-                    };
-
-                    this._ajax.ontimeout = function () {
-                        return _this.dataLoadError(_this._fileIndex);
-                    };
-
-                    this._ajax.onprogress = function() {};
-
-                    this._ajax.onload = function(){
-                        return _this.jsonLoadComplete(_this._fileIndex);
-                    };
-
-                    this._ajax.open('GET', this.baseURL + file.url, true);
-
-                    //  Note: The xdr.send() call is wrapped in a timeout to prevent an issue with the interface where some requests are lost
-                    //  if multiple XDomainRequests are being sent at the same time.
-                    setTimeout(function () {
-                        _this._ajax.send();
-                    }, 0);
-                }
-                else
-                {
-                    this.xhrLoad(this._fileIndex, this.baseURL + file.url, 'text', 'jsonLoadComplete', 'dataLoadError');
-                }
-
+                this.xhrLoad(file, this.transformUrl(file.url, file), 'text', this.jsonLoadComplete);
                 break;
 
             case 'xml':
 
-                this.xhrLoad(this._fileIndex, this.baseURL + file.url, 'text', 'xmlLoadComplete', 'dataLoadError');
+                this.xhrLoad(file, this.transformUrl(file.url, file), 'text', this.xmlLoadComplete);
                 break;
 
             case 'tilemap':
 
                 if (file.format === Phaser.Tilemap.TILED_JSON)
                 {
-                    this.xhrLoad(this._fileIndex, this.baseURL + file.url, 'text', 'jsonLoadComplete', 'dataLoadError');
+                    this.xhrLoad(file, this.transformUrl(file.url, file), 'text', this.jsonLoadComplete);
                 }
                 else if (file.format === Phaser.Tilemap.CSV)
                 {
-                    this.xhrLoad(this._fileIndex, this.baseURL + file.url, 'text', 'csvLoadComplete', 'dataLoadError');
+                    this.xhrLoad(file, this.transformUrl(file.url, file), 'text', this.csvLoadComplete);
                 }
                 else
                 {
-                    throw new Error("Phaser.Loader. Invalid Tilemap format: " + file.format);
+                    this.asyncComplete(file, "invalid Tilemap format: " + file.format);
                 }
                 break;
 
             case 'text':
             case 'script':
             case 'physics':
-                this.xhrLoad(this._fileIndex, this.baseURL + file.url, 'text', 'fileComplete', 'fileError');
+                this.xhrLoad(file, this.transformUrl(file.url, file), 'text', this.fileComplete);
                 break;
 
             case 'binary':
-                this.xhrLoad(this._fileIndex, this.baseURL + file.url, 'arraybuffer', 'fileComplete', 'fileError');
+                this.xhrLoad(file, this.transformUrl(file.url, file), 'arraybuffer', this.fileComplete);
                 break;
+        }
+
+    },
+
+    /**
+    * Continue async loading through an Image tag.
+    * @private
+    */
+    loadImageTag: function (file) {
+
+        var _this = this;
+
+        file.data = new Image();
+        file.data.name = file.key;
+
+        if (this.crossOrigin)
+        {
+            file.data.crossOrigin = this.crossOrigin;
+        }
+        
+        file.data.onload = function () {
+            if (file.data.onload)
+            {
+                file.data.onload = null;
+                file.data.onerror = null;
+                _this.fileComplete(file);
+            }
+        };
+        file.data.onerror = function () {
+            if (file.data.onload)
+            {
+                file.data.onload = null;
+                file.data.onerror = null;
+                _this.fileError(file);
+            }
+        };
+
+        file.data.src = this.transformUrl(file.url, file);
+        
+        // Image is immediately-available/cached
+        if (file.data.complete && file.data.width && file.data.height)
+        {
+            file.data.onload = null;
+            file.data.onerror = null;
+            this.fileComplete(file);
+        }
+
+    },
+
+    /**
+    * Continue async loading through an Audio tag.
+    * @private
+    */
+    loadAudioTag: function (file) {
+
+        var _this = this;
+
+        if (this.game.sound.touchLocked)
+        {
+            //  If audio is locked we can't do this yet, so need to queue this load request. Bum.
+            file.data = new Audio();
+            file.data.name = file.key;
+            file.data.preload = 'auto';
+            file.data.src = this.transformUrl(file.url, file);
+
+            this.fileComplete(file);
+        }
+        else
+        {
+            file.data = new Audio();
+            file.data.name = file.key;
+            
+            var playThroughEvent = function () {
+                file.data.removeEventListener('canplaythrough', playThroughEvent, false);
+                file.data.onerror = null;
+                // Why does this cycle through games?
+                Phaser.GAMES[_this.game.id].load.fileComplete(file);
+            };
+            file.data.onerror = function () {
+                file.data.removeEventListener('canplaythrough', playThroughEvent, false);
+                file.data.onerror = null;
+                _this.fileError(file);
+            };
+
+            file.data.preload = 'auto';
+            file.data.src = this.transformUrl(file.url, file);
+            file.data.addEventListener('canplaythrough', playThroughEvent, false);
+            file.data.load();
         }
 
     },
@@ -57666,63 +58391,172 @@ Phaser.Loader.prototype = {
     /**
     * Starts the xhr loader.
     *
+    * This is designed specifically to use with asset file processing.
+    *
     * @method Phaser.Loader#xhrLoad
     * @private
-    * @param {number} index - The index of the file to load from the file list.
+    * @param {object} file - The file/pack to load.
     * @param {string} url - The URL of the file.
     * @param {string} type - The xhr responseType.
-    * @param {string} onload - A String of the name of the local function to be called on a successful file load.
-    * @param {string} onerror - A String of the name of the local function to be called on a file load error.
+    * @param {function} onload - The function to call on success. Invoked in `this` context and supplied with `(file, xhr)` arguments.
+    * @param {function} [onerror=fileError]  The function to call on error. Invoked in `this` context and supplied with `(file, xhr)` arguments.
     */
-    xhrLoad: function (index, url, type, onload, onerror) {
+    xhrLoad: function (file, url, type, onload, onerror) {
 
-        this._xhr.open("GET", url, true);
-        this._xhr.responseType = type;
+        if (this.useXDomainRequest && window.XDomainRequest)
+        {
+            this.xhrLoadWithXDR(file, url, type, onload, onerror);
+            return;
+        }
+
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", url, true);
+        xhr.responseType = type;
+
+        onerror = onerror || this.fileError;
 
         var _this = this;
 
-        this._xhr.onload = function () {
-            return _this[onload](index);
+        xhr.onload = function () {
+            try {
+                return onload.call(_this, file, xhr);
+            } catch (e) {
+                _this.asyncComplete(file, e.message || 'Exception');
+            }
         };
 
-        this._xhr.onerror = function () {
-            return _this[onerror](index);
+        xhr.onerror = function () {
+            try {
+                return onerror.call(_this, file, xhr);
+            } catch (e) {
+                _this.asyncComplete(file, e.message || 'Exception');
+            }
         };
 
-        this._xhr.send();
+        file.requestObject = xhr;
+        file.requestUrl = url;
+
+        xhr.send();
 
     },
 
     /**
-    * Private method ONLY used by loader.
+    * Starts the xhr loader - using XDomainRequest.
+    * This should _only_ be used with IE 9. Phaser does not support IE 8 and XDR is deprecated in IE 10.
+    * 
+    * This is designed specifically to use with asset file processing.
+    *
+    * @method Phaser.Loader#xhrLoad
+    * @private
+    * @param {object} file - The file/pack to load.
+    * @param {string} url - The URL of the file.
+    * @param {string} type - The xhr responseType.
+    * @param {function} onload - The function to call on success. Invoked in `this` context and supplied with `(file, xhr)` arguments.
+    * @param {function} [onerror=fileError]  The function to call on error. Invoked in `this` context and supplied with `(file, xhr)` arguments.
+    * @deprecated This is only relevant for IE 9.
+    */
+    xhrLoadWithXDR: function (file, url, type, onload, onerror) {
+
+        // Special IE9 magic .. only
+        if (!this._warnedAboutXDomainRequest &&
+            (!this.game.device.ie || this.game.device.ieVersion >= 10))
+        {
+            this._warnedAboutXDomainRequest = true;
+            console.warn("Phaser.Loader - using XDomainRequest outside of IE 9");
+        }
+
+        // Ref: http://blogs.msdn.com/b/ieinternals/archive/2010/05/13/xdomainrequest-restrictions-limitations-and-workarounds.aspx
+        var xhr = new window.XDomainRequest();
+        xhr.open('GET', url, true);
+        xhr.responseType = type;
+
+        // XDomainRequest has a few quirks. Occasionally it will abort requests
+        // A way to avoid this is to make sure ALL callbacks are set even if not used
+        // More info here: http://stackoverflow.com/questions/15786966/xdomainrequest-aborts-post-on-ie-9
+        xhr.timeout = 3000;
+
+        onerror = onerror || this.fileError;
+
+        var _this = this;
+
+        xhr.onerror = function () {
+            try {
+                return onerror.call(_this, file, xhr);
+            } catch (e) {
+                _this.asyncComplete(file, e.message || 'Exception');
+            }
+        };
+
+        xhr.ontimeout = function () {
+            try {
+                return onerror.call(_this, file, xhr);
+            } catch (e) {
+                _this.asyncComplete(file, e.message || 'Exception');
+            }
+        };
+
+        xhr.onprogress = function() {};
+
+        xhr.onload = function () {
+            try {
+                return onload.call(_this, file, xhr);
+            } catch (e) {
+                _this.asyncComplete(file, e.message || 'Exception');
+            }
+        };
+
+        file.requestObject = xhr;
+        file.requestUrl = url;
+
+        //  Note: The xdr.send() call is wrapped in a timeout to prevent an issue with the interface where some requests are lost
+        //  if multiple XDomainRequests are being sent at the same time.
+        setTimeout(function () {
+            xhr.send();
+        }, 0);
+
+    },
+
+    /**
+    * Give a bunch of URLs, return the first URL that has an extension this device thinks it can play.
+    *
+    * It is assumed that the device can play "blob:" or "data:" URIs - There is no mime-type checking on data URIs.
     *
     * @method Phaser.Loader#getAudioURL
     * @private
-    * @param {array|string} urls - Either an array of audio file URLs or a string containing a single URL path.
+    * @param {object[]||string[]} urls - See {@link #audio} for format.
+    * @return {string} The URL to try and fetch; or null.
     */
     getAudioURL: function (urls) {
 
-        var extension;
-
-        if (typeof urls === 'string') { urls = [urls]; }
-
         for (var i = 0; i < urls.length; i++)
         {
-            extension = urls[i].toLowerCase();
+            var url = urls[i];
+            var audioType;
 
-            if (extension.substr(0,5) === "blob:")
+            if (url.uri) // {uri: .., type: ..} pair
             {
-                return urls[i];
+                url = url.uri;
+                audioType = url.type;
+            }
+            else
+            {
+                // Assume direct-data URI can be played if not in a paired form; select immediately
+                if (url.indexOf("blob:") === 0 || url.indexOf("data:") === 0)
+                {
+                    return url;
+                }
+
+                if (url.indexOf("?") >= 0) // Remove query from URL
+                {
+                    url = url.substr(0, url.indexOf("?"));
+                }
+
+                var extension = url.substr((Math.max(0, url.lastIndexOf(".")) || Infinity) + 1);
+
+                audioType = extension.toLowerCase();
             }
 
-            extension = extension.substr((Math.max(0, extension.lastIndexOf(".")) || Infinity) + 1);
-
-            if (extension.indexOf("?") >= 0)
-            {
-                extension = extension.substr(0, extension.indexOf("?"));
-            }
-
-            if (this.game.device.canPlayAudio(extension))
+            if (this.game.device.canPlayAudio(audioType))
             {
                 return urls[i];
             }
@@ -57733,45 +58567,54 @@ Phaser.Loader.prototype = {
     },
 
     /**
-    * Error occured when loading a file.
+    * Error occurred when loading a file.
     *
     * @method Phaser.Loader#fileError
-    * @param {number} index - The index of the file in the file queue that errored.
+    * @private
+    * @param {object} file
+    * @param {?XMLHttpRequest} xhr - XHR request, unspecified if loaded via other means (eg. tags)
+    * @param {string} reason
     */
-    fileError: function (index) {
+    fileError: function (file, xhr, reason) {
 
-        this._fileList[index].loaded = true;
-        this._fileList[index].error = true;
+        var url = file.requestUrl || this.transformUrl(file.url, file);
+        var message = 'error loading asset from URL ' + url;
 
-        this.onFileError.dispatch(this._fileList[index].key, this._fileList[index]);
+        if (!reason && xhr)
+        {
+            reason = xhr.status;
+        }
 
-        console.warn("Phaser.Loader error loading file: " + this._fileList[index].key + ' from URL ' + this._fileList[index].url);
+        if (reason)
+        {
+            message = message + ' (' + reason + ')';
+        }
 
-        this.nextFile(index, false);
+        this.asyncComplete(file, message);
 
     },
 
     /**
-    * Called when a file is successfully loaded.
+    * Called when a file/resources had been downloaded and needs to be processed further.
     *
     * @method Phaser.Loader#fileComplete
-    * @param {number} index - The index of the file in the file queue that loaded.
+    * @private
+    * @param {object} file - File loaded
+    * @param {?XMLHttpRequest} xhr - XHR request, unspecified if loaded via other means (eg. tags)
     */
-    fileComplete: function (index) {
-
-        if (!this._fileList[index])
-        {
-            console.warn('Phaser.Loader fileComplete invalid index ' + index);
-            return;
-        }
-
-        var file = this._fileList[index];
-        file.loaded = true;
+    fileComplete: function (file, xhr) {
 
         var loadNext = true;
 
         switch (file.type)
         {
+            case 'packfile':
+                
+                // Pack data must never be false-ish after it is fetched without error
+                var data = JSON.parse(xhr.responseText);
+                file.data = data || {};
+                break;
+
             case 'image':
 
                 this.game.cache.addImage(file.key, file.url, file.data);
@@ -57795,11 +58638,11 @@ Phaser.Loader.prototype = {
 
                     if (file.format == Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY || file.format == Phaser.Loader.TEXTURE_ATLAS_JSON_HASH)
                     {
-                        this.xhrLoad(this._fileIndex, this.baseURL + file.atlasURL, 'text', 'jsonLoadComplete', 'dataLoadError');
+                        this.xhrLoad(file, this.transformUrl(file.atlasURL, file), 'text', this.jsonLoadComplete);
                     }
                     else if (file.format == Phaser.Loader.TEXTURE_ATLAS_XML_STARLING)
                     {
-                        this.xhrLoad(this._fileIndex, this.baseURL + file.atlasURL, 'text', 'xmlLoadComplete', 'dataLoadError');
+                        this.xhrLoad(file, this.transformUrl(file.atlasURL, file), 'text', this.xmlLoadComplete);
                     }
                     else
                     {
@@ -57810,7 +58653,7 @@ Phaser.Loader.prototype = {
 
             case 'bitmapfont':
 
-                if (file.xmlURL == null)
+                if (!file.xmlURL)
                 {
                     this.game.cache.addBitmapFont(file.key, file.url, file.data, file.xmlData, file.xSpacing, file.ySpacing);
                 }
@@ -57818,7 +58661,7 @@ Phaser.Loader.prototype = {
                 {
                     //  Load the XML before carrying on with the next file
                     loadNext = false;
-                    this.xhrLoad(this._fileIndex, this.baseURL + file.xmlURL, 'text', 'xmlLoadComplete', 'dataLoadError');
+                    this.xhrLoad(file, this.transformUrl(file.xmlURL, file), 'text', this.xmlLoadComplete);
                 }
                 break;
 
@@ -57826,40 +58669,28 @@ Phaser.Loader.prototype = {
 
                 if (this.game.sound.usingWebAudio)
                 {
-                    file.data = this._xhr.response;
+                    file.data = xhr.response;
 
                     this.game.cache.addSound(file.key, file.url, file.data, true, false);
 
                     if (file.autoDecode)
                     {
-                        var that = this;
-                        var key = file.key;
-
-                        this.game.cache.updateSound(key, 'isDecoding', true);
-
-                        this.game.sound.context.decodeAudioData(file.data, function (buffer) {
-                            if (buffer)
-                            {
-                                that.game.cache.decodedSound(key, buffer);
-                                that.game.sound.onSoundDecode.dispatch(key, that.game.cache.getSound(key));
-                            }
-                        });
+                        this.game.sound.decode(file.key);
                     }
                 }
                 else
                 {
-                    file.data.removeEventListener('canplaythrough', Phaser.GAMES[this.game.id].load.fileComplete);
                     this.game.cache.addSound(file.key, file.url, file.data, false, true);
                 }
                 break;
 
             case 'text':
-                file.data = this._xhr.responseText;
+                file.data = xhr.responseText;
                 this.game.cache.addText(file.key, file.url, file.data);
                 break;
 
             case 'physics':
-                var data = JSON.parse(this._xhr.responseText);
+                var data = JSON.parse(this.responseText);
                 this.game.cache.addPhysicsData(file.key, file.url, data, file.format);
                 break;
 
@@ -57868,22 +58699,22 @@ Phaser.Loader.prototype = {
                 file.data.language = 'javascript';
                 file.data.type = 'text/javascript';
                 file.data.defer = false;
-                file.data.text = this._xhr.responseText;
+                file.data.text = xhr.responseText;
                 document.head.appendChild(file.data);
                 if (file.callback)
                 {
-                    file.data = file.callback.call(file.callbackContext, file.key, this._xhr.responseText);
+                    file.data = file.callback.call(file.callbackContext, file.key, xhr.responseText);
                 }
                 break;
 
             case 'binary':
                 if (file.callback)
                 {
-                    file.data = file.callback.call(file.callbackContext, file.key, this._xhr.response);
+                    file.data = file.callback.call(file.callbackContext, file.key, this.response);
                 }
                 else
                 {
-                    file.data = this._xhr.response;
+                    file.data = xhr.response;
                 }
 
                 this.game.cache.addBinary(file.key, file.data);
@@ -57893,37 +58724,22 @@ Phaser.Loader.prototype = {
 
         if (loadNext)
         {
-            this.nextFile(index, true);
+            this.asyncComplete(file);
         }
 
     },
 
     /**
-    * Successfully loaded a JSON file.
+    * Successfully loaded a JSON file - only used for certain types.
     *
     * @method Phaser.Loader#jsonLoadComplete
-    * @param {number} index - The index of the file in the file queue that loaded.
+    * @private
+    * @param {object} file - File associated with this request
+    * @param {XMLHttpRequest} xhr
     */
-    jsonLoadComplete: function (index) {
+    jsonLoadComplete: function (file, xhr) {
 
-        if (!this._fileList[index])
-        {
-            console.warn('Phaser.Loader jsonLoadComplete invalid index ' + index);
-            return;
-        }
-
-        var file = this._fileList[index];
-
-        if (this._ajax && this._ajax.responseText)
-        {
-            var data = JSON.parse(this._ajax.responseText);
-        }
-        else
-        {
-            var data = JSON.parse(this._xhr.responseText);
-        }
-
-        file.loaded = true;
+        var data = JSON.parse(xhr.responseText);
 
         if (file.type === 'tilemap')
         {
@@ -57938,97 +58754,49 @@ Phaser.Loader.prototype = {
             this.game.cache.addTextureAtlas(file.key, file.url, file.data, data, file.format);
         }
 
-        this.nextFile(index, true);
+        this.asyncComplete(file);
 
     },
 
     /**
-    * Successfully loaded a CSV file.
+    * Successfully loaded a CSV file - only used for certain types.
     *
     * @method Phaser.Loader#csvLoadComplete
-    * @param {number} index - The index of the file in the file queue that loaded.
+    * @private
+    * @param {object} file - File associated with this request
+    * @param {XMLHttpRequest} xhr
     */
-    csvLoadComplete: function (index) {
+    csvLoadComplete: function (file, xhr) {
 
-        if (!this._fileList[index])
-        {
-            console.warn('Phaser.Loader csvLoadComplete invalid index ' + index);
-            return;
-        }
-
-        var file = this._fileList[index];
-        var data = this._xhr.responseText;
-
-        file.loaded = true;
+        var data = xhr.responseText;
 
         this.game.cache.addTilemap(file.key, file.url, data, file.format);
 
-        this.nextFile(index, true);
+        this.asyncComplete(file);
 
     },
 
     /**
-    * Error occured when load a JSON.
-    *
-    * @method Phaser.Loader#dataLoadError
-    * @param {number} index - The index of the file in the file queue that errored.
-    */
-    dataLoadError: function (index) {
-
-        var file = this._fileList[index];
-
-        file.loaded = true;
-        file.error = true;
-
-        console.warn("Phaser.Loader dataLoadError: " + file.key);
-
-        this.nextFile(index, true);
-
-    },
-
-    /**
-    * Successfully loaded an XML file.
+    * Successfully loaded an XML file - only used for certain types.
     *
     * @method Phaser.Loader#xmlLoadComplete
-    * @param {number} index - The index of the file in the file queue that loaded.
+    * @private
+    * @param {object} file - File associated with this request
+    * @param {XMLHttpRequest} xhr
     */
-    xmlLoadComplete: function (index) {
+    xmlLoadComplete: function (file, xhr) {
 
-        if (this._xhr.responseType !== '' && this._xhr.responseType !== 'text')
+        // Always try parsing the content as XML, regardless of actually response type
+        var data = xhr.responseText;
+        var xml = this.parseXml(data);
+
+        if (!xml)
         {
-            console.warn('Invalid XML Response Type', this._fileList[index]);
-            console.warn(this._xhr);
+            var responseType = xhr.responseType || xhr.contentType; // contentType for MS-XDomainRequest
+            console.warn('Phaser.Loader - ' + file.key + ': invalid XML (' + responseType + ')');
+            this.asyncComplete(file, "invalid XML");
+            return;
         }
-
-        var data = this._xhr.responseText;
-        var xml;
-
-        try
-        {
-            if (window['DOMParser'])
-            {
-                var domparser = new DOMParser();
-                xml = domparser.parseFromString(data, "text/xml");
-            }
-            else
-            {
-                xml = new ActiveXObject("Microsoft.XMLDOM");
-                xml.async = 'false';
-                xml.loadXML(data);
-            }
-        }
-        catch (e)
-        {
-            xml = undefined;
-        }
-
-        if (!xml || !xml.documentElement || xml.getElementsByTagName("parsererror").length)
-        {
-            throw new Error("Phaser.Loader. Invalid XML given");
-        }
-
-        var file = this._fileList[index];
-        file.loaded = true;
 
         if (file.type === 'bitmapfont')
         {
@@ -58043,29 +58811,63 @@ Phaser.Loader.prototype = {
             this.game.cache.addXML(file.key, file.url, xml);
         }
 
-        this.nextFile(index, true);
+        this.asyncComplete(file);
 
     },
 
     /**
-    * Handle loading next file.
+    * Parses string data as XML.
+    *
+    * @method parseXml
+    * @private
+    * @param {string} data - The XML text to parse
+    * @return {?XMLDocument} Returns the xml document, or null if such could not parsed to a valid document.
+    */
+    parseXml: function (data) {
+
+        var xml;
+        try
+        {
+            if (window['DOMParser'])
+            {
+                var domparser = new DOMParser();
+                xml = domparser.parseFromString(data, "text/xml");
+            }
+            else
+            {
+                xml = new ActiveXObject("Microsoft.XMLDOM");
+                // Why is this 'false'?
+                xml.async = 'false';
+                xml.loadXML(data);
+            }
+        }
+        catch (e)
+        {
+            xml = null;
+        }
+
+        if (!xml || !xml.documentElement || xml.getElementsByTagName("parsererror").length)
+        {
+            return null;
+        }
+        else
+        {
+            return xml;
+        }
+
+    },
+
+    /**
+    * Update the loading sprite progress.
     *
     * @method Phaser.Loader#nextFile
     * @private
-    * @param {number} previousIndex - Index of the previously loaded asset.
+    * @param {object} previousFile
     * @param {boolean} success - Whether the previous asset loaded successfully or not.
     */
-    nextFile: function (previousIndex, success) {
+    updateProgress: function () {
 
-        this.progressFloat += this._progressChunk;
-        this.progress = Math.round(this.progressFloat);
-
-        if (this.progress > 100)
-        {
-            this.progress = 100;
-        }
-
-        if (this.preloadSprite !== null)
+        if (this.preloadSprite)
         {
             if (this.preloadSprite.direction === 0)
             {
@@ -58079,44 +58881,18 @@ Phaser.Loader.prototype = {
             this.preloadSprite.sprite.updateCrop();
         }
 
-        this.onFileComplete.dispatch(this.progress, this._fileList[previousIndex].key, success, this.totalLoadedFiles(), this._fileList.length);
-
-        if (this.totalQueuedFiles() > 0)
-        {
-            this._fileIndex++;
-            this.loadFile();
-        }
-        else
-        {
-            this.hasLoaded = true;
-            this.isLoading = false;
-
-            this.removeAll();
-
-            this.onLoadComplete.dispatch();
-        }
-
     },
 
     /**
     * Returns the number of files that have already been loaded, even if they errored.
     *
     * @method Phaser.Loader#totalLoadedFiles
+    * @protected
     * @return {number} The number of files that have already been loaded (even if they errored)
     */
     totalLoadedFiles: function () {
 
-        var total = 0;
-
-        for (var i = 0; i < this._fileList.length; i++)
-        {
-            if (this._fileList[i].loaded)
-            {
-                total++;
-            }
-        }
-
-        return total;
+        return this._loadedFileCount;
 
     },
 
@@ -58124,21 +58900,12 @@ Phaser.Loader.prototype = {
     * Returns the number of files still waiting to be processed in the load queue. This value decreases as each file in the queue is loaded.
     *
     * @method Phaser.Loader#totalQueuedFiles
+    * @protected
     * @return {number} The number of files that still remain in the load queue.
     */
     totalQueuedFiles: function () {
 
-        var total = 0;
-
-        for (var i = 0; i < this._fileList.length; i++)
-        {
-            if (this._fileList[i].loaded === false)
-            {
-                total++;
-            }
-        }
-
-        return total;
+        return this._totalFileCount - this._loadedFileCount;
 
     },
 
@@ -58146,21 +58913,12 @@ Phaser.Loader.prototype = {
     * Returns the number of asset packs that have already been loaded, even if they errored.
     *
     * @method Phaser.Loader#totalLoadedPacks
+    * @protected
     * @return {number} The number of asset packs that have already been loaded (even if they errored)
     */
     totalLoadedPacks: function () {
 
-        var total = 0;
-
-        for (var i = 0; i < this._packList.length; i++)
-        {
-            if (this._packList[i].loaded)
-            {
-                total++;
-            }
-        }
-
-        return total;
+        return this._totalPackCount;
 
     },
 
@@ -58168,25 +58926,48 @@ Phaser.Loader.prototype = {
     * Returns the number of asset packs still waiting to be processed in the load queue. This value decreases as each pack in the queue is loaded.
     *
     * @method Phaser.Loader#totalQueuedPacks
+    * @protected
     * @return {number} The number of asset packs that still remain in the load queue.
     */
     totalQueuedPacks: function () {
 
-        var total = 0;
-
-        for (var i = 0; i < this._packList.length; i++)
-        {
-            if (this._packList[i].loaded === false)
-            {
-                total++;
-            }
-        }
-
-        return total;
+        return this._totalPackCount - this._loadedPackCount;
 
     }
 
 };
+
+/**
+* The non-rounded load progress value (from 0.0 to 100.0).
+*
+* A general indicator of the progress.
+* It is possible for the progress to decrease, after `onLoadStart`, if more files are dynamically added.
+*
+* @name Phaser.Loader#progressFloat
+* @property {number}
+*/
+Object.defineProperty(Phaser.Loader.prototype, "progressFloat", {
+
+    get: function () {
+        var progress = (this._loadedFileCount / this._totalFileCount) * 100;
+        return Phaser.Math.clamp(progress || 0, 0, 100);
+    }
+
+});
+
+/**
+* The rounded load progress percentage value (from 0 to 100). See {@link Phaser.Loader#progressFloat}.
+*
+* @name Phaser.Loader#progress
+* @property {integer}
+*/
+Object.defineProperty(Phaser.Loader.prototype, "progress", {
+
+    get: function () {
+        return Math.round(this.progressFloat);
+    }
+
+});
 
 Phaser.Loader.prototype.constructor = Phaser.Loader;
 
@@ -58522,6 +59303,11 @@ Phaser.Sound = function (game, key, volume, loop, connect) {
     this.currentMarker = '';
 
     /**
+    * @property {Phaser.Tween} fadeTween - The tween that fades the audio, set via Sound.fadeIn and Sound.fadeOut.
+    */
+    this.fadeTween = null;
+
+    /**
     * @property {boolean} pendingPlayback - true if the sound file is pending playback
     * @readonly
     */
@@ -58796,6 +59582,8 @@ Phaser.Sound.prototype = {
                 {
                     if (this.loop)
                     {
+                        // console.log('Sound update loop: ' + this.currentTime + ' m: ' + this.currentMarker);
+
                         //  won't work with markers, needs to reset the position
                         this.onLoop.dispatch(this);
 
@@ -58817,6 +59605,8 @@ Phaser.Sound.prototype = {
                 }
                 else
                 {
+                    // console.log('Sound update stop: ' + this.currentTime + ' m: ' + this.currentMarker);
+
                     if (this.loop)
                     {
                         this.onLoop.dispatch(this);
@@ -58832,12 +59622,26 @@ Phaser.Sound.prototype = {
     },
 
     /**
+     * Loops this entire sound. If you need to loop a section of it then use Sound.play and the marker and loop parameters.
+     *
+     * @method Phaser.Sound#loopFull
+     * @param {number} [volume=1] - Volume of the sound you want to play. If none is given it will use the volume given to the Sound when it was created (which defaults to 1 if none was specified).
+     * @return {Phaser.Sound} This sound instance.
+     */
+    loopFull: function (volume) {
+
+        this.play(null, 0, volume, true);
+
+    },
+
+    /**
     * Play this sound, or a marked section of it.
+    * 
     * @method Phaser.Sound#play
     * @param {string} [marker=''] - If you want to play a marker then give the key here, otherwise leave blank to play the full sound.
     * @param {number} [position=0] - The starting position to play the sound from - this is ignored if you provide a marker.
     * @param {number} [volume=1] - Volume of the sound you want to play. If none is given it will use the volume given to the Sound when it was created (which defaults to 1 if none was specified).
-    * @param {boolean} [loop=false] - Loop when it finished playing?
+    * @param {boolean} [loop=false] - Loop when finished playing? If not using a marker / audio sprite the looping will be done via the WebAudio loop property, otherwise it's time based.
     * @param {boolean} [forceRestart=true] - If the sound is already playing you can set forceRestart to restart it from the beginning.
     * @return {Phaser.Sound} This sound instance.
     */
@@ -58845,6 +59649,8 @@ Phaser.Sound.prototype = {
 
         if (typeof marker === 'undefined' || marker === false || marker === null) { marker = ''; }
         if (typeof forceRestart === 'undefined') { forceRestart = true; }
+
+        // console.log('Sound play: ' + marker);
 
         if (this.isPlaying && !this.allowMultiple && !forceRestart && !this.override)
         {
@@ -58910,10 +59716,12 @@ Phaser.Sound.prototype = {
                 this._tempPosition = this.position;
                 this._tempVolume = this.volume;
                 this._tempLoop = this.loop;
+
+                // console.log('Marker pos: ' + this.position + ' duration: ' + this.duration + ' ms: ' + this.durationMS);
             }
             else
             {
-                console.warn("Phaser.Sound.play: audio marker " + marker + " doesn't exist");
+                // console.warn("Phaser.Sound.play: audio marker " + marker + " doesn't exist");
                 return this;
             }
         }
@@ -58959,6 +59767,11 @@ Phaser.Sound.prototype = {
                     this._sound.connect(this.gainNode);
                 }
 
+                if (this.loop && marker === '')
+                {
+                    this._sound.loop = true;
+                }
+
                 this.totalDuration = this._sound.buffer.duration;
 
                 if (this.duration === 0)
@@ -58968,22 +59781,22 @@ Phaser.Sound.prototype = {
                     this.durationMS = this.totalDuration * 1000;
                 }
 
-                if (this.loop && marker === '')
-                {
-                    this._sound.loop = true;
-                }
-
                 //  Useful to cache this somewhere perhaps?
                 if (typeof this._sound.start === 'undefined')
                 {
                     this._sound.noteGrainOn(0, this.position, this.duration);
-                    // this._sound.noteGrainOn(0, this.position, this.duration / 1000);
                     //this._sound.noteOn(0); // the zero is vitally important, crashes iOS6 without it
                 }
                 else
                 {
-                    // this._sound.start(0, this.position, this.duration / 1000);
-                    this._sound.start(0, this.position, this.duration);
+                    if (this.loop && marker === '')
+                    {
+                        this._sound.start(0);
+                    }
+                    else
+                    {
+                        this._sound.start(0, this.position, this.duration);
+                    }
                 }
 
                 this.isPlaying = true;
@@ -59040,6 +59853,8 @@ Phaser.Sound.prototype = {
                     this.currentTime = 0;
                     this.stopTime = this.startTime + this.durationMS;
                     this.onPlay.dispatch(this);
+
+                    // console.log('stopTime: ' + this.stopTime + ' rs: ' + this._sound.readyState);
                 }
                 else
                 {
@@ -59176,6 +59991,7 @@ Phaser.Sound.prototype = {
             }
         }
 
+        this.pendingPlayback = false;
         this.isPlaying = false;
         var prevMarker = this.currentMarker;
 
@@ -59185,6 +60001,11 @@ Phaser.Sound.prototype = {
         }
 
         this.currentMarker = '';
+
+        if (this.fadeTween !== null)
+        {
+            this.fadeTween.stop();
+        }
 
         if (!this.paused)
         {
@@ -59196,28 +60017,31 @@ Phaser.Sound.prototype = {
     /**
      * Starts this sound playing (or restarts it if already doing so) and sets the volume to zero.
      * Then increases the volume from 0 to 1 over the duration specified.
+     *
      * At the end of the fade Sound.onFadeComplete is dispatched with this Sound object as the first parameter,
      * and the final volume (1) as the second parameter.
      *
      * @method Phaser.Sound#fadeIn
      * @param {number} [duration=1000] - The time in milliseconds over which the Sound should fade in.
      * @param {boolean} [loop=false] - Should the Sound be set to loop? Note that this doesn't cause the fade to repeat.
+     * @param {string} [marker=(current marker)] - The marker to start at; defaults to the current (last played) marker. To start playing from the beginning specify specify a marker of `''`.
      */
-    fadeIn: function (duration, loop) {
+    fadeIn: function (duration, loop, marker) {
 
         if (typeof loop === 'undefined') { loop = false; }
+        if (typeof marker === 'undefined') { marker = this.currentMarker; }
 
         if (this.paused)
         {
             return;
         }
 
-        this.play('', 0, 0, loop);
+        this.play(marker, 0, 0, loop);
 
         this.fadeTo(duration, 1);
 
     },
-
+    
     /**
      * Decreases the volume of this Sound from its current value to 0 over the duration specified.
      * At the end of the fade Sound.onFadeComplete is dispatched with this Sound object as the first parameter,
@@ -59256,9 +60080,9 @@ Phaser.Sound.prototype = {
             return;
         }
 
-        var tween = this.game.add.tween(this).to( { volume: volume }, duration, Phaser.Easing.Linear.None, true);
+        this.fadeTween = this.game.add.tween(this).to( { volume: volume }, duration, Phaser.Easing.Linear.None, true);
 
-        tween.onComplete.add(this.fadeComplete, this);
+        this.fadeTween.onComplete.add(this.fadeComplete, this);
 
     },
 
@@ -59493,6 +60317,30 @@ Phaser.SoundManager = function (game) {
     this._sounds = [];
 
     /**
+    * @property {Phaser.ArraySet} _watchList - An array set containing all the sounds being monitored for decoding status.
+    * @private
+    */
+    this._watchList = new Phaser.ArraySet();
+
+    /**
+    * @property {boolean} _watching - Is the SoundManager monitoring the watchList?
+    * @private
+    */
+    this._watching = false;
+
+    /**
+    * @property {function} _watchCallback - The callback to invoke once the watchlist is clear.
+    * @private
+    */
+    this._watchCallback = null;
+
+    /**
+    * @property {object} _watchContext - The context in which to call the watchlist callback.
+    * @private
+    */
+    this._watchContext = null;
+
+    /**
     * @property {AudioContext} context - The AudioContext being used for playback.
     * @default
     */
@@ -59664,7 +60512,15 @@ Phaser.SoundManager.prototype = {
             this._unlockSource = this.context.createBufferSource();
             this._unlockSource.buffer = buffer;
             this._unlockSource.connect(this.context.destination);
-            this._unlockSource.noteOn(0);
+
+            if (typeof this._unlockSource.start === 'undefined')
+            {
+                this._unlockSource.noteOn(0);
+            }
+            else
+            {
+                this._unlockSource.start(0);
+            }
         }
 
     },
@@ -59721,7 +60577,7 @@ Phaser.SoundManager.prototype = {
     },
 
     /**
-    * Decode a sound by its assets key.
+    * Decode a sound by its asset key.
     *
     * @method Phaser.SoundManager#decode
     * @param {string} key - Assets key of the sound to be decoded.
@@ -59733,6 +60589,8 @@ Phaser.SoundManager.prototype = {
 
         var soundData = this.game.cache.getSoundData(key);
 
+        // console.log(key, 'soundData', soundData);
+
         if (soundData)
         {
             if (this.game.cache.isSoundDecoded(key) === false)
@@ -59742,13 +60600,61 @@ Phaser.SoundManager.prototype = {
                 var that = this;
 
                 this.context.decodeAudioData(soundData, function (buffer) {
-                    that.game.cache.decodedSound(key, buffer);
-                    if (sound)
+
+                    if (buffer)
                     {
+                        that.game.cache.decodedSound(key, buffer);
                         that.onSoundDecode.dispatch(key, sound);
                     }
                 });
             }
+        }
+
+    },
+
+    /**
+     * This method allows you to give the SoundManager a list of Sound files, or keys, and a callback.
+     * Once all of the Sound files have finished decoding the callback will be invoked.
+     * The amount of time spent decoding depends on the codec used and file size.
+     * If all of the files given have already decoded the callback is triggered immediately.
+     *
+     * @method Phaser.SoundManager#setDecodedCallback
+     * @param {string|array} files - An array containing either Phaser.Sound objects or their key strings as found in the Phaser.Cache.
+     * @param {Function} callback - The callback which will be invoked once all files have finished decoding.
+     * @param {Object} callbackContext - The context in which the callback will run.
+     */
+    setDecodedCallback: function (files, callback, callbackContext) {
+
+        if (typeof files === 'string')
+        {
+            files = [ files ];
+        }
+
+        this._watchList.reset();
+
+        for (var i = 0; i < files.length; i++)
+        {
+            if (files[i] instanceof Phaser.Sound && !this.game.cache.isSoundDecoded(files[i].key))
+            {
+                this._watchList.add(files[i].key);
+            }
+            else if (!this.game.cache.isSoundDecoded(files[i]))
+            {
+                this._watchList.add(files[i]);
+            }
+        }
+
+        //  All decoded already?
+        if (this._watchList.total === 0)
+        {
+            this._watching = false;
+            callback.call(callbackContext);
+        }
+        else
+        {
+            this._watching = true;
+            this._watchCallback = callback;
+            this._watchContext = callbackContext;
         }
 
     },
@@ -59777,6 +60683,27 @@ Phaser.SoundManager.prototype = {
         for (var i = 0; i < this._sounds.length; i++)
         {
             this._sounds[i].update();
+        }
+
+        if (this._watching)
+        {
+            var key = this._watchList.first;
+
+            while (key)
+            {
+                if (this.game.cache.isSoundDecoded(key))
+                {
+                    this._watchList.remove(key);
+                }
+
+                key = this._watchList.next;
+            }
+
+            if (this._watchList.total === 0)
+            {
+                this._watching = false;
+                this._watchCallback.call(this._watchContext);
+            }
         }
 
     },
@@ -60186,7 +61113,7 @@ Phaser.ArraySet.prototype = {
     * Sets the property `key` to the given value on all members of this list.
     *
     * @method Phaser.ArraySet#setAll
-    * @param {any} key - The propety of the item to set.
+    * @param {any} key - The property of the item to set.
     * @param {any} value - The value to set the property to.
     */
     setAll: function (key, value) {
@@ -60712,7 +61639,7 @@ Phaser.ArrayUtils = {
     * Create an array representing the inclusive range of numbers (usually integers) in `[start, end]`.
     * This is equivalent to `numberArrayStep(start, end, 1)`.
     *
-    * @method Phaser.Math#numberArray
+    * @method Phaser.ArrayUtils#numberArray
     * @param {number} start - The minimum value the array starts with.
     * @param {number} end - The maximum value the array contains.
     * @return {number[]} The array of number values.
@@ -60739,28 +61666,28 @@ Phaser.ArrayUtils = {
     * Certain values for `start` and `end` (eg. NaN/undefined/null) are currently coerced to 0;
     * for forward compatibility make sure to pass in actual numbers.
     *
-    * @method Phaser.Math#numberArrayStep
+    * @method Phaser.ArrayUtils#numberArrayStep
     * @param {number} start - The start of the range.
     * @param {number} end - The end of the range.
     * @param {number} [step=1] - The value to increment or decrement by.
     * @returns {Array} Returns the new array of numbers.
     * @example
-    * Phaser.Math.numberArrayStep(4);
+    * Phaser.ArrayUtils.numberArrayStep(4);
     * // => [0, 1, 2, 3]
     *
-    * Phaser.Math.numberArrayStep(1, 5);
+    * Phaser.ArrayUtils.numberArrayStep(1, 5);
     * // => [1, 2, 3, 4]
     *
-    * Phaser.Math.numberArrayStep(0, 20, 5);
+    * Phaser.ArrayUtils.numberArrayStep(0, 20, 5);
     * // => [0, 5, 10, 15]
     *
-    * Phaser.Math.numberArrayStep(0, -4, -1);
+    * Phaser.ArrayUtils.numberArrayStep(0, -4, -1);
     * // => [0, -1, -2, -3]
     *
-    * Phaser.Math.numberArrayStep(1, 4, 0);
+    * Phaser.ArrayUtils.numberArrayStep(1, 4, 0);
     * // => [1, 1, 1]
     *
-    * Phaser.Math.numberArrayStep(0);
+    * Phaser.ArrayUtils.numberArrayStep(0);
     * // => []
     */
     numberArrayStep: function(start, end, step) {
@@ -63009,6 +63936,11 @@ Phaser.Physics.Arcade = function (game) {
     this.skipQuadTree = true;
 
     /**
+    * @property {boolean} isPaused - If `true` the `Body.preUpdate` method will be skipped, halting all motion for all bodies. Note that other methods such as `collide` will still work, so be careful not to call them on paused bodies.
+    */
+    this.isPaused = false;
+
+    /**
     * @property {Phaser.QuadTree} quadTree - The world QuadTree.
     */
     this.quadTree = new Phaser.QuadTree(this.game.world.bounds.x, this.game.world.bounds.y, this.game.world.bounds.width, this.game.world.bounds.height, this.maxObjects, this.maxLevels);
@@ -63201,7 +64133,7 @@ Phaser.Physics.Arcade.prototype = {
     },
 
     /**
-    * Called automatically by a Physics body, it updates all motion related values on the Body.
+    * Called automatically by a Physics body, it updates all motion related values on the Body unless `World.isPaused` is `true`.
     *
     * @method Phaser.Physics.Arcade#updateMotion
     * @param {Phaser.Physics.Arcade.Body} The Body object to be updated.
@@ -63232,7 +64164,7 @@ Phaser.Physics.Arcade.prototype = {
     */
     computeVelocity: function (axis, body, velocity, acceleration, drag, max) {
 
-        max = max || 10000;
+        max = typeof max !== 'undefined' ? max : 10000;
 
         if (axis == 1 && body.allowGravity)
         {
@@ -63921,11 +64853,23 @@ Phaser.Physics.Arcade.prototype = {
                 {
                     body1.x = body1.x - this._overlap;
                     body1.velocity.x = this._velocity2 - this._velocity1 * body1.bounce.x;
+
+                    //  This is special case code that handles things like vertically moving platforms you can ride
+                    if (body2.moves)
+                    {
+                        body1.y += (body2.y - body2.prev.y) * body2.friction.y;
+                    }
                 }
                 else if (!body2.immovable)
                 {
                     body2.x += this._overlap;
                     body2.velocity.x = this._velocity1 - this._velocity2 * body2.bounce.x;
+
+                    //  This is special case code that handles things like vertically moving platforms you can ride
+                    if (body1.moves)
+                    {
+                        body2.y += (body1.y - body1.prev.y) * body1.friction.y;
+                    }
                 }
 
                 return true;
@@ -64041,7 +64985,7 @@ Phaser.Physics.Arcade.prototype = {
                     //  This is special case code that handles things like horizontal moving platforms you can ride
                     if (body2.moves)
                     {
-                        body1.x += body2.x - body2.prev.x;
+                        body1.x += (body2.x - body2.prev.x) * body2.friction.x;
                     }
                 }
                 else if (!body2.immovable)
@@ -64052,7 +64996,7 @@ Phaser.Physics.Arcade.prototype = {
                     //  This is special case code that handles things like horizontal moving platforms you can ride
                     if (body1.moves)
                     {
-                        body2.x += body1.x - body1.prev.x;
+                        body2.x += (body1.x - body1.prev.x) * body1.friction.x;
                     }
                 }
 
@@ -64210,7 +65154,14 @@ Phaser.Physics.Arcade.prototype = {
 
         if (ox !== 0)
         {
-            this.processTileSeparationX(body, ox);
+            if (body.customSeparateX)
+            {
+                body.overlapX = ox;
+            }
+            else
+            {
+                this.processTileSeparationX(body, ox);
+            }
         }
 
         return ox;
@@ -64259,7 +65210,14 @@ Phaser.Physics.Arcade.prototype = {
 
         if (oy !== 0)
         {
-            this.processTileSeparationY(body, oy);
+            if (body.customSeparateY)
+            {
+                body.overlapY = oy;
+            }
+            else
+            {
+                this.processTileSeparationY(body, oy);
+            }
         }
 
         return oy;
@@ -64273,7 +65231,6 @@ Phaser.Physics.Arcade.prototype = {
     * @method Phaser.Physics.Arcade#processTileSeparationX
     * @param {Phaser.Physics.Arcade.Body} body - The Body object to separate.
     * @param {number} x - The x separation amount.
-    * @return {boolean} Returns true as a pass-thru to the separateTile method.
     */
     processTileSeparationX: function (body, x) {
 
@@ -64360,7 +65317,8 @@ Phaser.Physics.Arcade.prototype = {
     * Note that the children are not checked for depth order, but simply if they overlap the coordinate or not.
     *
     * @method Phaser.Physics.Arcade#getObjectsAtLocation
-    * @param {Phaser.Pointer} pointer - The Pointer to check.
+    * @param {number} x - The x coordinate to check.
+    * @param {number} y - The y coordinate to check.
     * @param {Phaser.Group} group - The Group to check.
     * @param {function} [callback] - A callback function that is called if the object overlaps the coordinates. The callback will be sent two parameters: the callbackArg and the Object that overlapped the location.
     * @param {object} [callbackContext] - The context in which to run the callback.
@@ -64690,6 +65648,7 @@ Phaser.Physics.Arcade.prototype = {
     * Find the distance between a display object (like a Sprite) and a Pointer. If no Pointer is given the Input.activePointer is used.
     * The calculation is made from the display objects x/y coordinate. This may be the top-left if its anchor hasn't been changed.
     * If you need to calculate from the center of a display object instead use the method distanceBetweenCenters()
+    * The distance to the Pointer is returned in screen space, not world space.
     *
     * @method Phaser.Physics.Arcade#distanceToPointer
     * @param {any} displayObject - The Display Object to test from.
@@ -64700,8 +65659,8 @@ Phaser.Physics.Arcade.prototype = {
 
         pointer = pointer || this.game.input.activePointer;
 
-        this._dx = displayObject.x - pointer.x;
-        this._dy = displayObject.y - pointer.y;
+        this._dx = displayObject.x - pointer.worldX;
+        this._dy = displayObject.y - pointer.worldY;
 
         return Math.sqrt(this._dx * this._dx + this._dy * this._dy);
 
@@ -64852,7 +65811,7 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.width = sprite.width;
 
     /**
-    * @property .numInternal ID cache
+    * @property {number} height - The calculated height of the physics body.
     */
     this.height = sprite.height;
 
@@ -64918,6 +65877,11 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     * @default
     */
     this.maxVelocity = new Phaser.Point(10000, 10000);
+
+    /**
+    * @property {Phaser.Point} friction - The amount of movement that will occur if another object 'rides' this one.
+    */
+    this.friction = new Phaser.Point(1, 0);
 
     /**
     * @property {number} angularVelocity - The angular velocity in pixels per second sq. of the Body.
@@ -65134,7 +66098,7 @@ Phaser.Physics.Arcade.Body.prototype = {
     */
     preUpdate: function () {
 
-        if (!this.enable)
+        if (!this.enable || this.game.physics.arcade.isPaused)
         {
             return;
         }
@@ -65378,6 +66342,7 @@ Phaser.Physics.Arcade.Body.prototype = {
         this.velocity.set(0);
         this.acceleration.set(0);
 
+        this.speed = 0;
         this.angularVelocity = 0;
         this.angularAcceleration = 0;
 
@@ -66301,7 +67266,7 @@ Phaser.Particles.Arcade.Emitter.prototype.setRotation = function (min, max) {
 * @param {number} [min=1] - The minimum value for this range.
 * @param {number} [max=1] - The maximum value for this range.
 * @param {number} [rate=0] - The rate (in ms) at which the particles will change in alpha from min to max, or set to zero to pick a random alpha between the two.
-* @param {number} [ease=Phaser.Easing.Linear.None] - If you've set a rate > 0 this is the easing formula applied between the min and max values.
+* @param {function} [ease=Phaser.Easing.Linear.None] - If you've set a rate > 0 this is the easing formula applied between the min and max values.
 * @param {boolean} [yoyo=false] - If you've set a rate > 0 you can set if the ease will yoyo or not (i.e. ease back to its original values)
 */
 Phaser.Particles.Arcade.Emitter.prototype.setAlpha = function (min, max, rate, ease, yoyo) {
@@ -66342,7 +67307,7 @@ Phaser.Particles.Arcade.Emitter.prototype.setAlpha = function (min, max, rate, e
 * @param {number} [minY=1] - The minimum value of Particle.scale.y.
 * @param {number} [maxY=1] - The maximum value of Particle.scale.y.
 * @param {number} [rate=0] - The rate (in ms) at which the particles will change in scale from min to max, or set to zero to pick a random size between the two.
-* @param {number} [ease=Phaser.Easing.Linear.None] - If you've set a rate > 0 this is the easing formula applied between the min and max values.
+* @param {function} [ease=Phaser.Easing.Linear.None] - If you've set a rate > 0 this is the easing formula applied between the min and max values.
 * @param {boolean} [yoyo=false] - If you've set a rate > 0 you can set if the ease will yoyo or not (i.e. ease back to its original values)
 */
 Phaser.Particles.Arcade.Emitter.prototype.setScale = function (minX, maxX, minY, maxY, rate, ease, yoyo) {
@@ -66556,7 +67521,17 @@ Phaser.Tile = function (layer, index, x, y, width, height) {
     * @property {number} y - The y map coordinate of this tile.
     */
     this.y = y;
+    
+    /**
+    * @property {number} rotation - The rotation angle of this tile.
+    */
+    this.rotation = 0;
 
+    /**
+    * @property {boolean} flipped - Whether this tile is flipped (mirrored) or not.
+    */
+    this.flipped = false;
+    
     /**
     * @property {number} x - The x map coordinate of this tile.
     */
@@ -67319,6 +68294,11 @@ Phaser.Tilemap.prototype = {
                 sprite.autoCull = autoCull;
                 sprite.exists = exists;
 
+                if (this.objects[name][i].rotation)
+                {
+                    sprite.angle = this.objects[name][i].rotation;
+                }
+
                 if (adjustY)
                 {
                     sprite.y -= sprite.height;
@@ -67345,9 +68325,9 @@ Phaser.Tilemap.prototype = {
     * @param {integer|Array} tiles - The tile index, or array of indexes, to create Sprites from.
     * @param {integer|Array} replacements - The tile index, or array of indexes, to change a converted tile to. Set to `null` to not change.
     * @param {string} key - The Game.cache key of the image that this Sprite will use.
+    * @param {number|string|Phaser.TilemapLayer} [layer] - The layer to operate on.
     * @param {Phaser.Group} [group=Phaser.World] - Group to add the Sprite to. If not specified it will be added to the World group.
     * @param {object} [properties] - An object that contains the default properties for your newly created Sprite. This object will be iterated and any matching Sprite property will be set.
-    * @param {number|string|Phaser.TilemapLayer} [layer] - The layer to operate on.
     * @return {integer} The number of Sprites that were created.
     */
     createFromTiles: function (tiles, replacements, key, layer, group, properties) {
@@ -68467,8 +69447,8 @@ Phaser.Tilemap.prototype = {
         }
 
         //  Find out the difference between tileblock[1].x/y and x/y and use it as an offset, as it's the top left of the block to paste
-        var diffX = tileblock[1].x - x;
-        var diffY = tileblock[1].y - y;
+        var diffX = x - tileblock[1].x;
+        var diffY = y - tileblock[1].y;
 
         for (var i = 1; i < tileblock.length; i++)
         {
@@ -68945,16 +69925,12 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
     *     Using a canvas bitblt/copy when the source and destinations region overlap produces unexpected behavior
     *     in some browsers, notably Safari. 
     *
-    * @property {integer} copySliceCount - [Internal] The number of vertical slices to copy when using a `copyCanvas`.
-    *     This is ratio of the pixel count of the primary canvas to the copy canvas.
-    *
     * @default
     */
     this.renderSettings = {
         enableScrollDelta: true,
         overdrawRatio: 0.20,
-        copyCanvas: null,
-        copySliceCount: 4
+        copyCanvas: null
     };
 
     /**
@@ -69103,11 +70079,14 @@ Phaser.TilemapLayer.sharedCopyCanvas = null;
 * @static
 */
 Phaser.TilemapLayer.ensureSharedCopyCanvas = function () {
+
     if (!this.sharedCopyCanvas)
     {
         this.sharedCopyCanvas = Phaser.Canvas.create(2, 2);
     }
+
     return this.sharedCopyCanvas;
+
 };
 
 Phaser.TilemapLayer.prototype = Object.create(Phaser.Image.prototype);
@@ -69128,6 +70107,7 @@ Object.defineProperty(Phaser.TilemapLayer.prototype, 'tileColor', {
     get: function () {
         return this.debugSettings.missingImageFill;
     },
+
     set: function (value) {
         this.debugSettings.missingImageFill = value;
     }
@@ -69146,8 +70126,8 @@ Phaser.TilemapLayer.prototype.postUpdate = function () {
 
     //  Stops you being able to auto-scroll the camera if it's not following a sprite
     var camera = this.game.camera;
-    this.scrollX = camera.x * this.scrollFactorX;
-    this.scrollY = camera.y * this.scrollFactorY;
+    this.scrollX = camera.x * this.scrollFactorX / this.scale.x;
+    this.scrollY = camera.y * this.scrollFactorY / this.scale.y;
 
     this.render();
 
@@ -69174,7 +70154,7 @@ Phaser.TilemapLayer.prototype.postUpdate = function () {
 */
 Phaser.TilemapLayer.prototype.resizeWorld = function () {
 
-    this.game.world.setBounds(0, 0, this.layer.widthInPixels, this.layer.heightInPixels);
+    this.game.world.setBounds(0, 0, this.layer.widthInPixels * this.scale.x, this.layer.heightInPixels * this.scale.y);
 
 };
 
@@ -69386,11 +70366,11 @@ Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides
     y = this._fixY(y);
 
     //  Convert the pixel values into tile coordinates
-    var tx = Math.floor(x / this._mc.cw);
-    var ty = Math.floor(y / this._mc.ch);
+    var tx = Math.floor(x / (this._mc.cw * this.scale.x));
+    var ty = Math.floor(y / (this._mc.ch * this.scale.y));
     //  Don't just use ceil(width/cw) to allow account for x/y diff within cell
-    var tw = Math.ceil((x + width) / this._mc.cw) - tx;
-    var th = Math.ceil((y + height) / this._mc.ch) - ty;
+    var tw = Math.ceil((x + width) / (this._mc.cw * this.scale.x)) - tx;
+    var th = Math.ceil((y + height) / (this._mc.ch * this.scale.y)) - ty;
 
     while (this._results.length)
     {
@@ -69412,7 +70392,7 @@ Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides
         }
     }
 
-    return this._results;
+    return this._results.slice();
 
 };
 
@@ -69451,8 +70431,10 @@ Phaser.TilemapLayer.prototype.resolveTileset = function (tileIndex)
     var tilesets = this._mc.tilesets;
 
     //  Try for dense array if reasonable
-    if (tileIndex < 2000) {
-        while (tilesets.length < tileIndex) {
+    if (tileIndex < 2000)
+    {
+        while (tilesets.length < tileIndex)
+        {
             tilesets.push(undefined);
         }
     }
@@ -69462,6 +70444,7 @@ Phaser.TilemapLayer.prototype.resolveTileset = function (tileIndex)
     if (setIndex != null) // number: not null or undefined
     {
         var tileset = this.map.tilesets[setIndex];
+
         if (tileset && tileset.containsTileIndex(tileIndex))
         {
             return (tilesets[tileIndex] = tileset);
@@ -69484,9 +70467,43 @@ Phaser.TilemapLayer.prototype.resetTilesetCache = function ()
 {
 
     var tilesets = this._mc.tilesets;
-    while (tilesets.length) {
+
+    while (tilesets.length)
+    {
         tilesets.pop();
     }
+
+};
+
+/**
+ * This method will set the scale of the tilemap as well as update the underlying block data of this layer
+ * 
+ * @method Phaser.TilemapLayer#setScale
+ * @param {number} [xScale=1] - The scale factor along the X-plane 
+ * @param {number} [yScale] - The scale factor along the Y-plane
+ */
+Phaser.TilemapLayer.prototype.setScale = function(xScale, yScale) {
+
+    xScale = xScale || 1;
+    yScale = yScale || xScale;
+
+    for (var y = 0; y < this.layer.data.length; y++)
+    {
+        var row = this.layer.data[y];
+
+        for (var x = 0; x < row.length; x++)
+        {
+            var tile = row[x];
+
+            tile.width = this.map.tileWidth * xScale;
+            tile.height = this.map.tileHeight * yScale;
+
+            tile.worldX = tile.x * tile.width;
+            tile.worldY = tile.y * tile.height;
+        }
+    }
+
+    this.scale.setTo(xScale, yScale);
 
 };
 
@@ -69503,7 +70520,6 @@ Phaser.TilemapLayer.prototype.resetTilesetCache = function ()
 */
 Phaser.TilemapLayer.prototype.shiftCanvas = function (context, x, y)
 {
-
     var canvas = context.canvas;
     var copyW = canvas.width - Math.abs(x);
     var copyH = canvas.height - Math.abs(y);
@@ -69527,42 +70543,23 @@ Phaser.TilemapLayer.prototype.shiftCanvas = function (context, x, y)
     }
 
     var copyCanvas = this.renderSettings.copyCanvas;
+
     if (copyCanvas)
     {
-        // Copying happens in slices to minimize copy canvas size overhead
-        var sliceCount = this.renderSettings.copySliceCount;
-        var sH = Math.ceil(copyH / sliceCount);
+        // Use a second copy buffer, without slice support, for Safari .. again.
         // Ensure copy canvas is large enough
-        if (copyCanvas.width < copyW) { copyCanvas.width = copyW; }
-        if (copyCanvas.height < sH) { copyCanvas.height = sH; }
-
-        var vShift;
-        if (dy >= sy)
+        if (copyCanvas.width < copyW || copyCanvas.height < copyH)
         {
-            // move old region up, or don't change vertically - copy top to bottom
-            vShift = sH;
-        }
-        else
-        {
-            // move old region down - copy segments from bottom to top
-            vShift = -sH;
-            dy += (sH * (sliceCount - 1));
-            sy += (sH * (sliceCount - 1));
+            copyCanvas.width = copyW;
+            copyCanvas.height = copyH;
         }
 
         var copyContext = copyCanvas.getContext('2d');
-        while (sliceCount--)
-        {
-            copyContext.clearRect(0, 0, copyW, sH);
-            copyContext.drawImage(canvas, dx, dy, copyW, sH, 0, 0, copyW, sH);
-            // clear allows default 'source-over' semantics
-            context.clearRect(sx, sy, copyW, sH);
-            context.drawImage(copyCanvas, 0, 0, copyW, sH, sx, sy, copyW, sH);
-
-            dy += vShift;
-            sy += vShift;
-        }
-
+        copyContext.clearRect(0, 0, copyW, copyH);
+        copyContext.drawImage(canvas, dx, dy, copyW, copyH, 0, 0, copyW, copyH);
+        // clear allows default 'source-over' semantics
+        context.clearRect(sx, sy, copyW, copyH);
+        context.drawImage(copyCanvas, 0, 0, copyW, copyH, sx, sy, copyW, copyH);
     }
     else
     {
@@ -69573,6 +70570,7 @@ Phaser.TilemapLayer.prototype.shiftCanvas = function (context, x, y)
         context.drawImage(canvas, dx, dy, copyW, copyH, sx, sy, copyW, copyH);
         context.restore();
     }
+    
 };
 
 /**
@@ -69646,6 +70644,7 @@ Phaser.TilemapLayer.prototype.renderRegion = function (scrollX, scrollY, left, t
             if (x >= width) { x -= width; }
 
             var tile = row[x];
+
             if (!tile || tile.index < 0)
             {
                 continue;
@@ -69654,6 +70653,7 @@ Phaser.TilemapLayer.prototype.renderRegion = function (scrollX, scrollY, left, t
             var index = tile.index;
 
             var set = tilesets[index];
+
             if (set === undefined)
             {
                 set = this.resolveTileset(index);
@@ -69668,7 +70668,24 @@ Phaser.TilemapLayer.prototype.renderRegion = function (scrollX, scrollY, left, t
 
             if (set)
             {
-                set.draw(context, tx, ty, index);
+                if (tile.rotation || tile.flipped)
+                {
+                    context.save();
+                    context.translate(tx + tile.centerX, ty + tile.centerY);
+                    context.rotate(tile.rotation);
+
+                    if (tile.flipped)
+                    {
+                        context.scale(-1, 1);
+                    }
+
+                    set.draw(context, -tile.centerX, -tile.centerY, index);
+                    context.restore();
+                }
+                else
+                {
+                    set.draw(context, tx, ty, index);
+                }
             }
             else if (this.debugSettings.missingImageFill)
             {
@@ -69846,6 +70863,7 @@ Phaser.TilemapLayer.prototype.render = function () {
     if (this.debug)
     {
         this.context.globalAlpha = this.debugSettings.debugAlpha;
+
         if (this.debugSettings.forceFullRedraw)
         {
             redrawAll = true;
@@ -70303,6 +71321,7 @@ Phaser.TilemapParser = {
             var x = 0;
             var row = [];
             var output = [];
+            var rotation, flipped, flippedVal, gid;
 
             //  Loop through the data field in the JSON.
 
@@ -70312,10 +71331,72 @@ Phaser.TilemapParser = {
 
             for (var t = 0, len = json.layers[i].data.length; t < len; t++)
             {
-                //  index, x, y, width, height
-                if (json.layers[i].data[t] > 0)
+                rotation = 0;
+                flipped = false;
+                gid = json.layers[i].data[t];
+
+                //  If true the current tile is flipped or rotated (Tiled TMX format) 
+                if (gid > 0x20000000)
                 {
-                    row.push(new Phaser.Tile(layer, json.layers[i].data[t], x, output.length, json.tilewidth, json.tileheight));
+                    flippedVal = 0;
+
+                    // FlippedX
+                    if (gid > 0x80000000)
+                    {
+                        gid -= 0x80000000;
+                        flippedVal += 4;
+                    }
+
+                    // FlippedY
+                    if (gid > 0x40000000)
+                    {
+                        gid -= 0x40000000;
+                        flippedVal += 2;
+                    }
+
+                    // FlippedAD
+                    if (gid > 0x20000000)
+                    {
+                        gid -= 0x20000000;
+                        flippedVal += 1;
+                    }
+                   
+                    switch (flippedVal)
+                    {
+                        case 5:
+                            rotation = Math.PI/2;
+                            break;
+                        case 6:
+                            rotation = Math.PI;
+                            break;
+                        case 3:
+                            rotation = 3*Math.PI/2;
+                            break;
+                        case 4:
+                            rotation = 0;
+                            flipped = true;
+                            break;
+                        case 7:
+                            rotation = Math.PI/2;
+                            flipped = true;
+                            break;
+                        case 2:
+                            rotation = Math.PI;
+                            flipped = true;
+                            break;
+                        case 1:
+                            rotation = 3*Math.PI/2;
+                            flipped = true;
+                            break;
+                    }
+                }
+
+                //  index, x, y, width, height
+                if (gid > 0)
+                {
+                    row.push(new Phaser.Tile(layer, gid, x, output.length, json.tilewidth, json.tileheight));
+                    row[row.length - 1].rotation = rotation;
+                    row[row.length - 1].flipped = flipped;
                 }
                 else
                 {
@@ -70410,11 +71491,19 @@ Phaser.TilemapParser = {
         var collision = {};
 
         function slice (obj, fields) {
+
             var sliced = {};
-            for (var k in fields) {
+
+            for (var k in fields)
+            {
                 var key = fields[k];
-                sliced[key] = obj[key];
+
+                if (obj[key])
+                {
+                    sliced[key] = obj[key];
+                }
             }
+
             return sliced;
         }
 
@@ -70437,12 +71526,18 @@ Phaser.TilemapParser = {
 
                         gid: json.layers[i].objects[v].gid,
                         name: json.layers[i].objects[v].name,
+                        type: json.layers[i].objects[v].hasOwnProperty("type") ? json.layers[i].objects[v].type : "",
                         x: json.layers[i].objects[v].x,
                         y: json.layers[i].objects[v].y,
                         visible: json.layers[i].objects[v].visible,
                         properties: json.layers[i].objects[v].properties
 
                     };
+
+                    if (json.layers[i].objects[v].rotation)
+                    {
+                        object.rotation = json.layers[i].objects[v].rotation;
+                    }
 
                     objects[json.layers[i].name].push(object);
                 }
@@ -70461,6 +71556,11 @@ Phaser.TilemapParser = {
 
                     };
 
+                    if (json.layers[i].objects[v].rotation)
+                    {
+                        object.rotation = json.layers[i].objects[v].rotation;
+                    }
+
                     object.polyline = [];
 
                     //  Parse the polyline into an array
@@ -70476,14 +71576,16 @@ Phaser.TilemapParser = {
                 else if (json.layers[i].objects[v].polygon)
                 {
                     var object = slice(json.layers[i].objects[v],
-                                       ["name", "type", "x", "y", "visible", "properties" ]);
+                                       ["name", "type", "x", "y", "visible", "rotation", "properties" ]);
 
                     //  Parse the polygon into an array
                     object.polygon = [];
+
                     for (var p = 0; p < json.layers[i].objects[v].polygon.length; p++)
                     {
                         object.polygon.push([ json.layers[i].objects[v].polygon[p].x, json.layers[i].objects[v].polygon[p].y ]);
                     }
+
                     objects[json.layers[i].name].push(object);
 
                 }
@@ -70491,14 +71593,14 @@ Phaser.TilemapParser = {
                 else if (json.layers[i].objects[v].ellipse)
                 {
                     var object = slice(json.layers[i].objects[v],
-                                       ["name", "type", "ellipse", "x", "y", "width", "height", "visible", "properties" ]);
+                                       ["name", "type", "ellipse", "x", "y", "width", "height", "visible", "rotation", "properties" ]);
                     objects[json.layers[i].name].push(object);
                 }
                 // otherwise it's a rectangle
                 else
                 {
                     var object = slice(json.layers[i].objects[v],
-                                       ["name", "type", "x", "y", "width", "height", "visible", "properties" ]);
+                                       ["name", "type", "x", "y", "width", "height", "visible", "rotation", "properties" ]);
                     object.rectangle = true;
                     objects[json.layers[i].name].push(object);
                 }
@@ -81040,7 +82142,7 @@ Capsule.prototype = new Shape();
  * @method conputeMomentOfInertia
  * @param  {Number} mass
  * @return {Number}
- * @todo
+ * @todo !
  */
 Capsule.prototype.computeMomentOfInertia = function(mass){
     // Approximate with rectangle
@@ -87210,6 +88312,9 @@ Phaser.Physics.P2.Body.prototype = {
     */
     clearCollision: function (clearGroup, clearMask, shape) {
 
+        if (typeof clearGroup === 'undefined') { clearGroup = true; }
+        if (typeof clearMask === 'undefined') { clearMask = true; }
+
         if (typeof shape === 'undefined')
         {
             for (var i = this.data.shapes.length - 1; i >= 0; i--)
@@ -87308,6 +88413,7 @@ Phaser.Physics.P2.Body.prototype = {
     adjustCenterOfMass: function () {
 
         this.data.adjustCenterOfMass();
+        this.shapeChanged();
 
     },
 
@@ -88834,7 +89940,7 @@ Phaser.Utils.extend(Phaser.Physics.P2.BodyDebug.prototype, {
     /**
     * Draws the P2 shapes to the Graphics object.
     *
-    * @method Phaser.Physics.P2.BodyDebug#draw
+    * @method Phaser.Physics.P2.BodyDebug#drawRectangle
     */
     drawRectangle: function(g, x, y, angle, w, h, color, fillColor, lineWidth) {
 
@@ -88868,7 +89974,7 @@ Phaser.Utils.extend(Phaser.Physics.P2.BodyDebug.prototype, {
     /**
     * Draws a P2 Line shape.
     *
-    * @method Phaser.Physics.P2.BodyDebug#drawCircle
+    * @method Phaser.Physics.P2.BodyDebug#drawLine
     */
     drawLine: function(g, len, color, lineWidth) {
 

@@ -2472,8 +2472,6 @@ PIXI.Sprite.prototype._renderCanvas = function(renderSession)
             if (this.cachedTint !== this.tint)
             {
                 this.cachedTint = this.tint;
-
-                //  TODO clean up caching - how to clean up the caches?
                 this.tintedTexture = PIXI.CanvasTinter.getTintedTexture(this, this.tint);
             }
 
@@ -3123,8 +3121,8 @@ PIXI.Text.prototype.determineFontProperties = function(fontStyle)
 
         context.font = fontStyle;
 
-        var width = Math.ceil(context.measureText('|Mq').width);
-        var baseline = Math.ceil(context.measureText('M').width);
+        var width = Math.ceil(context.measureText('|MÉq').width);
+        var baseline = Math.ceil(context.measureText('|MÉq').width);
         var height = 2 * baseline;
 
         baseline = baseline * 1.4 | 0;
@@ -3813,7 +3811,7 @@ PIXI.unpackColorRGB = function(r, g, b)//r, g, b, a)
 */
 
 /**
- * Checks whether the Canvas BlendModes are supported by the current browser
+ * Checks whether the Canvas BlendModes are supported by the current browser for drawImage
  *
  * @method canUseNewCanvasBlendModes
  * @return {Boolean} whether they are supported
@@ -3821,16 +3819,27 @@ PIXI.unpackColorRGB = function(r, g, b)//r, g, b, a)
 PIXI.canUseNewCanvasBlendModes = function()
 {
     if (typeof document === 'undefined') return false;
+
+    var pngHead = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAABAQMAAADD8p2OAAAAA1BMVEX/';
+    var pngEnd = 'AAAACklEQVQI12NgAAAAAgAB4iG8MwAAAABJRU5ErkJggg==';
+
+    var magenta = new Image();
+    magenta.src = pngHead + 'AP804Oa6' + pngEnd;
+
+    var yellow = new Image();
+    yellow.src = pngHead + '/wCKxvRF' + pngEnd;
+
     var canvas = document.createElement('canvas');
-    canvas.width = 1;
+    canvas.width = 6;
     canvas.height = 1;
     var context = canvas.getContext('2d');
-    context.fillStyle = '#000';
-    context.fillRect(0,0,1,1);
     context.globalCompositeOperation = 'multiply';
-    context.fillStyle = '#fff';
-    context.fillRect(0,0,1,1);
-    return context.getImageData(0,0,1,1).data[0] === 0;
+    context.drawImage(magenta, 0, 0);
+    context.drawImage(yellow, 2, 0);
+
+    var data = context.getImageData(2,0,1,1).data;
+
+    return (data[0] === 255 && data[1] === 0 && data[2] === 0);
 };
 
 /**
@@ -6642,7 +6651,6 @@ PIXI.WebGLRenderer.prototype.updateTexture = function(texture)
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture.source);
 
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, texture.scaleMode === PIXI.scaleModes.LINEAR ? gl.LINEAR : gl.NEAREST);
-    
 
     if(texture.mipmap && PIXI.isPowerOfTwo(texture.width, texture.height))
     {
@@ -9145,31 +9153,35 @@ PIXI.CanvasTinter.getTintedTexture = function(sprite, color)
 {
     var texture = sprite.texture;
 
-    color = PIXI.CanvasTinter.roundColor(color);
+    //  Disabling the tintCache for a number of reasons:
+    //  
+    //  1) It ate memory like it was going out of fashion if the texture was big
+    //  2) It doesn't work with animated sprites, only the first frame is ever tinted
+    //  3) The tinted texture is stored in Sprite.tintedTexture anyway, so isn't completed un-cached
+    //  4) The cache stopped you being to able to do subtle tint shifts as the color value was rounded
 
-    var stringColor = "#" + ("00000" + ( color | 0).toString(16)).substr(-6);
-   
-    texture.tintCache = texture.tintCache || {};
+    // color = PIXI.CanvasTinter.roundColor(color);
+    // var stringColor = "#" + ("00000" + ( color | 0).toString(16)).substr(-6);
+    // texture.tintCache = texture.tintCache || {};
+    // if(texture.tintCache[stringColor]) return texture.tintCache[stringColor];
 
-    if(texture.tintCache[stringColor]) return texture.tintCache[stringColor];
-
-     // clone texture..
+    // clone texture..
     var canvas = PIXI.CanvasTinter.canvas || document.createElement("canvas");
     
-    //PIXI.CanvasTinter.tintWithPerPixel(texture, stringColor, canvas);
     PIXI.CanvasTinter.tintMethod(texture, color, canvas);
 
-    if(PIXI.CanvasTinter.convertTintToImage)
+    if (PIXI.CanvasTinter.convertTintToImage)
     {
         // is this better?
         var tintImage = new Image();
         tintImage.src = canvas.toDataURL();
 
-        texture.tintCache[stringColor] = tintImage;
+        // texture.tintCache[stringColor] = tintImage;
     }
     else
     {
-        texture.tintCache[stringColor] = canvas;
+        // texture.tintCache = canvas;
+        // texture.tintCache[stringColor] = canvas;
         // if we are not converting the texture to an image then we need to lose the reference to the canvas
         PIXI.CanvasTinter.canvas = null;
     }
@@ -9336,11 +9348,10 @@ PIXI.CanvasTinter.roundColor = function(color)
 };
 
 /**
- * Rounds the specified color according to the PIXI.CanvasTinter.cacheStepsPerColorChannel.
+ * Checks if the browser correctly supports putImageData alpha channels.
  * 
- * @method roundColor
+ * @method checkInverseAlpha
  * @static
- * @param color {number} the color to round, should be a hex color
  */
 PIXI.CanvasTinter.checkInverseAlpha = function()
 {
@@ -11222,6 +11233,19 @@ PIXI.TilingSprite.prototype.generateTilingTexture = function(forcePowerOfTwo)
     this.texture = this.tilingTexture;
     
     this.tilingTexture.baseTexture._powerOf2 = true;
+};
+
+PIXI.TilingSprite.prototype.destroy = function () {
+
+    PIXI.Sprite.prototype.destroy.call(this);
+
+    this.tileScale = null;
+    this.tileScaleOffset = null;
+    this.tilePosition = null;
+
+    this.tilingTexture.destroy(true);
+    this.tilingTexture = null;
+
 };
 
 /**
