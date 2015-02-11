@@ -405,6 +405,8 @@ Phaser.Sound.prototype = {
                 {
                     if (this.loop)
                     {
+                        // console.log('Sound update loop: ' + this.currentTime + ' m: ' + this.currentMarker);
+
                         //  won't work with markers, needs to reset the position
                         this.onLoop.dispatch(this);
 
@@ -443,12 +445,26 @@ Phaser.Sound.prototype = {
     },
 
     /**
+     * Loops this entire sound. If you need to loop a section of it then use Sound.play and the marker and loop parameters.
+     *
+     * @method Phaser.Sound#loopFull
+     * @param {number} [volume=1] - Volume of the sound you want to play. If none is given it will use the volume given to the Sound when it was created (which defaults to 1 if none was specified).
+     * @return {Phaser.Sound} This sound instance.
+     */
+    loopFull: function (volume) {
+
+        this.play(null, 0, volume, true);
+
+    },
+
+    /**
     * Play this sound, or a marked section of it.
+    * 
     * @method Phaser.Sound#play
     * @param {string} [marker=''] - If you want to play a marker then give the key here, otherwise leave blank to play the full sound.
     * @param {number} [position=0] - The starting position to play the sound from - this is ignored if you provide a marker.
     * @param {number} [volume=1] - Volume of the sound you want to play. If none is given it will use the volume given to the Sound when it was created (which defaults to 1 if none was specified).
-    * @param {boolean} [loop=false] - Loop when it finished playing?
+    * @param {boolean} [loop=false] - Loop when finished playing? If not using a marker / audio sprite the looping will be done via the WebAudio loop property, otherwise it's time based.
     * @param {boolean} [forceRestart=true] - If the sound is already playing you can set forceRestart to restart it from the beginning.
     * @return {Phaser.Sound} This sound instance.
     */
@@ -574,6 +590,11 @@ Phaser.Sound.prototype = {
                     this._sound.connect(this.gainNode);
                 }
 
+                if (this.loop && marker === '')
+                {
+                    this._sound.loop = true;
+                }
+
                 this.totalDuration = this._sound.buffer.duration;
 
                 if (this.duration === 0)
@@ -583,22 +604,22 @@ Phaser.Sound.prototype = {
                     this.durationMS = this.totalDuration * 1000;
                 }
 
-                if (this.loop && marker === '')
-                {
-                    this._sound.loop = true;
-                }
-
                 //  Useful to cache this somewhere perhaps?
                 if (typeof this._sound.start === 'undefined')
                 {
                     this._sound.noteGrainOn(0, this.position, this.duration);
-                    // this._sound.noteGrainOn(0, this.position, this.duration / 1000);
                     //this._sound.noteOn(0); // the zero is vitally important, crashes iOS6 without it
                 }
                 else
                 {
-                    // this._sound.start(0, this.position, this.duration / 1000);
-                    this._sound.start(0, this.position, this.duration);
+                    if (this.loop && marker === '')
+                    {
+                        this._sound.start(0);
+                    }
+                    else
+                    {
+                        this._sound.start(0, this.position, this.duration);
+                    }
                 }
 
                 this.isPlaying = true;

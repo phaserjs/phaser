@@ -65,6 +65,30 @@ Phaser.SoundManager = function (game) {
     this._sounds = [];
 
     /**
+    * @property {Phaser.ArraySet} _watchList - An array set containing all the sounds being monitored for decoding status.
+    * @private
+    */
+    this._watchList = new Phaser.ArraySet();
+
+    /**
+    * @property {boolean} _watching - Is the SoundManager monitoring the watchList?
+    * @private
+    */
+    this._watching = false;
+
+    /**
+    * @property {function} _watchCallback - The callback to invoke once the watchlist is clear.
+    * @private
+    */
+    this._watchCallback = null;
+
+    /**
+    * @property {object} _watchContext - The context in which to call the watchlist callback.
+    * @private
+    */
+    this._watchContext = null;
+
+    /**
     * @property {AudioContext} context - The AudioContext being used for playback.
     * @default
     */
@@ -301,7 +325,7 @@ Phaser.SoundManager.prototype = {
     },
 
     /**
-    * Decode a sound by its assets key.
+    * Decode a sound by its asset key.
     *
     * @method Phaser.SoundManager#decode
     * @param {string} key - Assets key of the sound to be decoded.
@@ -313,6 +337,8 @@ Phaser.SoundManager.prototype = {
 
         var soundData = this.game.cache.getSoundData(key);
 
+        // console.log(key, 'soundData', soundData);
+
         if (soundData)
         {
             if (this.game.cache.isSoundDecoded(key) === false)
@@ -322,13 +348,61 @@ Phaser.SoundManager.prototype = {
                 var that = this;
 
                 this.context.decodeAudioData(soundData, function (buffer) {
-                    that.game.cache.decodedSound(key, buffer);
-                    if (sound)
+
+                    if (buffer)
                     {
+                        that.game.cache.decodedSound(key, buffer);
                         that.onSoundDecode.dispatch(key, sound);
                     }
                 });
             }
+        }
+
+    },
+
+    /**
+     * This method allows you to give the SoundManager a list of Sound files, or keys, and a callback.
+     * Once all of the Sound files have finished decoding the callback will be invoked.
+     * The amount of time spent decoding depends on the codec used and file size.
+     * If all of the files given have already decoded the callback is triggered immediately.
+     *
+     * @method Phaser.SoundManager#setDecodedCallback
+     * @param {string|array} files - An array containing either Phaser.Sound objects or their key strings as found in the Phaser.Cache.
+     * @param {Function} callback - The callback which will be invoked once all files have finished decoding.
+     * @param {Object} callbackContext - The context in which the callback will run.
+     */
+    setDecodedCallback: function (files, callback, callbackContext) {
+
+        if (typeof files === 'string')
+        {
+            files = [ files ];
+        }
+
+        this._watchList.reset();
+
+        for (var i = 0; i < files.length; i++)
+        {
+            if (files[i] instanceof Phaser.Sound && !this.game.cache.isSoundDecoded(files[i].key))
+            {
+                this._watchList.add(files[i].key);
+            }
+            else if (!this.game.cache.isSoundDecoded(files[i]))
+            {
+                this._watchList.add(files[i]);
+            }
+        }
+
+        //  All decoded already?
+        if (this._watchList.total === 0)
+        {
+            this._watching = false;
+            callback.call(callbackContext);
+        }
+        else
+        {
+            this._watching = true;
+            this._watchCallback = callback;
+            this._watchContext = callbackContext;
         }
 
     },
@@ -357,6 +431,27 @@ Phaser.SoundManager.prototype = {
         for (var i = 0; i < this._sounds.length; i++)
         {
             this._sounds[i].update();
+        }
+
+        if (this._watching)
+        {
+            var key = this._watchList.first;
+
+            while (key)
+            {
+                if (this.game.cache.isSoundDecoded(key))
+                {
+                    this._watchList.remove(key);
+                }
+
+                key = this._watchList.next;
+            }
+
+            if (this._watchList.total === 0)
+            {
+                this._watching = false;
+                this._watchCallback.call(this._watchContext);
+            }
         }
 
     },
