@@ -3345,7 +3345,7 @@ declare module Phaser {
 
     class Polygon {
 
-        constructor(points: any[]);
+        constructor(...points: any[]);
 
         area: number;
         points: any[]; //number : point

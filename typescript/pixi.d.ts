@@ -629,7 +629,7 @@ declare module PIXI {
         destroyCachedSprite(): void;
         drawCircle(x: number, y: number, radius: number): Graphics;
         drawEllipse(x: number, y: number, width: number, height: number): Graphics;
-        drawPolygon(path: any): Graphics;
+        drawPolygon(...path: any[]): Graphics;
         drawRect(x: number, y: number, width: number, height: number): Graphics;
         drawRoundedRect(x: number, y: number, width: number, height: number, radius: number): Graphics;
         drawShape(shape: Circle): GraphicsData;
