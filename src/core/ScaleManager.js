@@ -690,10 +690,10 @@ Phaser.ScaleManager.prototype = {
 
         var compat = this.compatibility;
         
-        compat.supportsFullScreen = this.game.device.fullscreen && !this.game.device.cocoonJS;
+        compat.supportsFullScreen = this.game.device.fullscreen && !this.game.device.cocoonJS && !PIXI.DEVKIT_NATIVE;
 
         //  We can't do anything about the status bars in iPads, web apps or desktops
-        if (!this.game.device.iPad && !this.game.device.webApp && !this.game.device.desktop)
+        if (!this.game.device.iPad && !this.game.device.webApp && !this.game.device.desktop && !PIXI.DEVKIT_NATIVE)
         {
             if (this.game.device.android && !this.game.device.chrome)
             {

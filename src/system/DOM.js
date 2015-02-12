@@ -31,15 +31,18 @@ Phaser.DOM = {
 
         point = point || new Phaser.Point();
 
-        var box = element.getBoundingClientRect();
+        if (element.getBoundingClientRect)
+        {
+            var box = element.getBoundingClientRect();
 
-        var scrollTop = Phaser.DOM.scrollY;
-        var scrollLeft = Phaser.DOM.scrollX;
-        var clientTop = document.documentElement.clientTop;
-        var clientLeft = document.documentElement.clientLeft;
+            var scrollTop = Phaser.DOM.scrollY;
+            var scrollLeft = Phaser.DOM.scrollX;
+            var clientTop = document.documentElement.clientTop;
+            var clientLeft = document.documentElement.clientLeft;
 
-        point.x = box.left + scrollLeft - clientLeft;
-        point.y = box.top + scrollTop - clientTop;
+            point.x = box.left + scrollLeft - clientLeft;
+            point.y = box.top + scrollTop - clientTop;
+        }
 
         return point;
 

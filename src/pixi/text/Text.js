@@ -355,93 +355,107 @@ PIXI.Text.prototype.determineFontProperties = function(fontStyle)
 
     if(!properties)
     {
-        properties = {};
-        
-        var canvas = PIXI.Text.fontPropertiesCanvas;
-        var context = PIXI.Text.fontPropertiesContext;
-
-        context.font = fontStyle;
-
-        var width = Math.ceil(context.measureText('|Mq').width);
-        var baseline = Math.ceil(context.measureText('M').width);
-        var height = 2 * baseline;
-
-        baseline = baseline * 1.4 | 0;
-
-        canvas.width = width;
-        canvas.height = height;
-
-        context.fillStyle = '#f00';
-        context.fillRect(0, 0, width, height);
-
-        context.font = fontStyle;
-
-        context.textBaseline = 'alphabetic';
-        context.fillStyle = '#000';
-        context.fillText('|MÉq', 0, baseline);
-
-        var imagedata = context.getImageData(0, 0, width, height).data;
-        var pixels = imagedata.length;
-        var line = width * 4;
-
-        var i, j;
-
-        var idx = 0;
-        var stop = false;
-
-        // ascent. scan from top to bottom until we find a non red pixel
-        for(i = 0; i < baseline; i++)
+        if (PIXI.DEVKIT_NATIVE)
         {
-            for(j = 0; j < line; j += 4)
+            // TODO actual implementation
+            //      If devkit gets around to implementing context.getImageData,
+            //      then there may not be a need for this if/else block.
+            properties = {
+                ascent: 0,
+                descent: 0,
+                fontSize: 42 // It's as good as anything else!
+            };
+        }
+        else
+        {
+            properties = {};
+
+            var canvas = PIXI.Text.fontPropertiesCanvas;
+            var context = PIXI.Text.fontPropertiesContext;
+
+            context.font = fontStyle;
+
+            var width = Math.ceil(context.measureText('|Mq').width);
+            var baseline = Math.ceil(context.measureText('M').width);
+            var height = 2 * baseline;
+
+            baseline = baseline * 1.4 | 0;
+
+            canvas.width = width;
+            canvas.height = height;
+
+            context.fillStyle = '#f00';
+            context.fillRect(0, 0, width, height);
+
+            context.font = fontStyle;
+
+            context.textBaseline = 'alphabetic';
+            context.fillStyle = '#000';
+            context.fillText('|MÉq', 0, baseline);
+
+            var imagedata = context.getImageData(0, 0, width, height).data;
+            var pixels = imagedata.length;
+            var line = width * 4;
+
+            var i, j;
+
+            var idx = 0;
+            var stop = false;
+
+            // ascent. scan from top to bottom until we find a non red pixel
+            for(i = 0; i < baseline; i++)
             {
-                if(imagedata[idx + j] !== 255)
+                for(j = 0; j < line; j += 4)
                 {
-                    stop = true;
+                    if(imagedata[idx + j] !== 255)
+                    {
+                        stop = true;
+                        break;
+                    }
+                }
+                if(!stop)
+                {
+                    idx += line;
+                }
+                else
+                {
                     break;
                 }
             }
-            if(!stop)
-            {
-                idx += line;
-            }
-            else
-            {
-                break;
-            }
-        }
 
-        properties.ascent = baseline - i;
+            properties.ascent = baseline - i;
 
-        idx = pixels - line;
-        stop = false;
+            idx = pixels - line;
+            stop = false;
 
-        // descent. scan from bottom to top until we find a non red pixel
-        for(i = height; i > baseline; i--)
-        {
-            for(j = 0; j < line; j += 4)
+            // descent. scan from bottom to top until we find a non red pixel
+            for(i = height; i > baseline; i--)
             {
-                if(imagedata[idx + j] !== 255)
+                for(j = 0; j < line; j += 4)
                 {
-                    stop = true;
+                    if(imagedata[idx + j] !== 255)
+                    {
+                        stop = true;
+                        break;
+                    }
+                }
+                if(!stop)
+                {
+                    idx -= line;
+                }
+                else
+                {
                     break;
                 }
             }
-            if(!stop)
-            {
-                idx -= line;
-            }
-            else
-            {
-                break;
-            }
+
+            properties.descent = i - baseline;
+            //TODO might need a tweak. kind of a temp fix!
+            properties.descent += 6;
+            properties.fontSize = properties.ascent + properties.descent;
+
+            PIXI.Text.fontPropertiesCache[fontStyle] = properties;
         }
-
-        properties.descent = i - baseline;
-        //TODO might need a tweak. kind of a temp fix!
-        properties.descent += 6;
-        properties.fontSize = properties.ascent + properties.descent;
-
-        PIXI.Text.fontPropertiesCache[fontStyle] = properties;
     }
 
     return properties;

@@ -512,10 +512,7 @@ Phaser.Device.whenReady = function (callback, context, nonPrimer) {
         }
         else
         {
-            if (!PIXI.DEVKIT_NATIVE)
-            {
-                document.addEventListener('DOMContentLoaded', readyCheck._monitor, false);
-            }
+            document.addEventListener('DOMContentLoaded', readyCheck._monitor, false);
             window.addEventListener('load', readyCheck._monitor, false);
         }
     }
@@ -726,6 +723,11 @@ Phaser.Device._initialize = function () {
     * Checks for support of the Full Screen API.
     */
     function _checkFullScreenSupport () {
+
+        if (PIXI.DEVKIT_NATIVE)
+        {
+            return false;
+        }
 
         var fs = [
             'requestFullscreen',
