@@ -614,7 +614,7 @@ declare module PIXI {
         fillAlpha: number;
         isMask: boolean;
         lineWidth: number;
-        lineColor: string;
+        lineColor: number;
         tint: number;
         worldAlpha: number;
 
