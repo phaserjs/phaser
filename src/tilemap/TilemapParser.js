@@ -418,7 +418,7 @@ Phaser.TilemapParser = {
                                     if (json.layers[i2].data[t] === gid)
                                     {
                                         layersWithAnimatedTile.push(i2);
-                                        continue;
+                                        break;
                                     }
                                 }
                             }
