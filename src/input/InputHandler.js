@@ -1480,22 +1480,22 @@ Phaser.InputHandler.prototype = {
 
         if (this.sprite.fixedToCamera && this.boundsSprite.fixedToCamera)
         {
-            if (this.sprite.cameraOffset.x < this.boundsSprite.camerOffset.x)
+            if (this.sprite.cameraOffset.x < this.boundsSprite.cameraOffset.x)
             {
-                this.sprite.cameraOffset.x = this.boundsSprite.camerOffset.x;
+                this.sprite.cameraOffset.x = this.boundsSprite.cameraOffset.x;
             }
-            else if ((this.sprite.cameraOffset.x + this.sprite.width) > (this.boundsSprite.camerOffset.x + this.boundsSprite.width))
+            else if ((this.sprite.cameraOffset.x + this.sprite.width) > (this.boundsSprite.cameraOffset.x + this.boundsSprite.width))
             {
-                this.sprite.cameraOffset.x = (this.boundsSprite.camerOffset.x + this.boundsSprite.width) - this.sprite.width;
+                this.sprite.cameraOffset.x = (this.boundsSprite.cameraOffset.x + this.boundsSprite.width) - this.sprite.width;
             }
 
-            if (this.sprite.cameraOffset.y < this.boundsSprite.camerOffset.y)
+            if (this.sprite.cameraOffset.y < this.boundsSprite.cameraOffset.y)
             {
-                this.sprite.cameraOffset.y = this.boundsSprite.camerOffset.y;
+                this.sprite.cameraOffset.y = this.boundsSprite.cameraOffset.y;
             }
-            else if ((this.sprite.cameraOffset.y + this.sprite.height) > (this.boundsSprite.camerOffset.y + this.boundsSprite.height))
+            else if ((this.sprite.cameraOffset.y + this.sprite.height) > (this.boundsSprite.cameraOffset.y + this.boundsSprite.height))
             {
-                this.sprite.cameraOffset.y = (this.boundsSprite.camerOffset.y + this.boundsSprite.height) - this.sprite.height;
+                this.sprite.cameraOffset.y = (this.boundsSprite.cameraOffset.y + this.boundsSprite.height) - this.sprite.height;
             }
         }
         else
