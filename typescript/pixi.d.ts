@@ -1,4 +1,4 @@
-// Type definitions for PIXI 2.2.0 dev 2014-16-12
+// Type definitions for PIXI 2.2.5 dev/master 2015-02-15
 // Project: https://github.com/GoodBoyDigital/pixi.js/
 
 declare module PIXI {
@@ -1161,6 +1161,7 @@ declare module PIXI {
         generateTilingTexture(forcePowerOfTwo: boolean): void;
         setTexture(texture: Texture): void;
 
+        destroy(): void;
     }
 
     export class TiltShiftFilter extends AbstractFilter {
