@@ -1423,6 +1423,7 @@ Phaser.InputHandler.prototype = {
 
     },
 
+
     /**
     * Bounds Rect check for the sprite drag
     * @method Phaser.InputHandler#checkBoundsRect
@@ -1451,22 +1452,22 @@ Phaser.InputHandler.prototype = {
         }
         else
         {
-            if (this.sprite.x < this.boundsRect.left)
+            if (this.sprite.left < this.boundsRect.left)
             {
-                this.sprite.x = this.boundsRect.x;
+                this.sprite.x = this.boundsRect.x + this.sprite.offsetX;
             }
-            else if ((this.sprite.x + this.sprite.width) > this.boundsRect.right)
+            else if (this.sprite.right > this.boundsRect.right)
             {
-                this.sprite.x = this.boundsRect.right - this.sprite.width;
+                this.sprite.x = this.boundsRect.right - (this.sprite.width - this.sprite.offsetX);
             }
 
-            if (this.sprite.y < this.boundsRect.top)
+            if (this.sprite.top < this.boundsRect.top)
             {
-                this.sprite.y = this.boundsRect.top;
+                this.sprite.y = this.boundsRect.top + this.sprite.offsetY;
             }
-            else if ((this.sprite.y + this.sprite.height) > this.boundsRect.bottom)
+            else if (this.sprite.bottom > this.boundsRect.bottom)
             {
-                this.sprite.y = this.boundsRect.bottom - this.sprite.height;
+                this.sprite.y = this.boundsRect.bottom - (this.sprite.height - this.sprite.offsetY);
             }
         }
 
@@ -1500,23 +1501,41 @@ Phaser.InputHandler.prototype = {
         }
         else
         {
-            if (this.sprite.x < this.boundsSprite.x)
+            if (this.sprite.left < this.boundsSprite.left)
             {
-                this.sprite.x = this.boundsSprite.x;
+                this.sprite.x = this.boundsSprite.left + this.sprite.offsetX;
             }
-            else if ((this.sprite.x + this.sprite.width) > (this.boundsSprite.x + this.boundsSprite.width))
+            else if (this.sprite.right > this.boundsSprite.right)
             {
-                this.sprite.x = (this.boundsSprite.x + this.boundsSprite.width) - this.sprite.width;
+                this.sprite.x = this.boundsSprite.right - (this.sprite.width - this.sprite.offsetX);
             }
 
-            if (this.sprite.y < this.boundsSprite.y)
+            if (this.sprite.top < this.boundsSprite.top)
             {
-                this.sprite.y = this.boundsSprite.y;
+                this.sprite.y = this.boundsSprite.top + this.sprite.offsetY;
             }
-            else if ((this.sprite.y + this.sprite.height) > (this.boundsSprite.y + this.boundsSprite.height))
+            else if (this.sprite.bottom > this.boundsSprite.bottom)
             {
-                this.sprite.y = (this.boundsSprite.y + this.boundsSprite.height) - this.sprite.height;
+                this.sprite.y = this.boundsSprite.bottom - (this.sprite.height - this.sprite.offsetY);
             }
+
+            // if (this.sprite.x < this.boundsSprite.x)
+            // {
+            //     this.sprite.x = this.boundsSprite.x;
+            // }
+            // else if ((this.sprite.x + this.sprite.width) > (this.boundsSprite.x + this.boundsSprite.width))
+            // {
+            //     this.sprite.x = (this.boundsSprite.x + this.boundsSprite.width) - this.sprite.width;
+            // }
+
+            // if (this.sprite.y < this.boundsSprite.y)
+            // {
+            //     this.sprite.y = this.boundsSprite.y;
+            // }
+            // else if ((this.sprite.y + this.sprite.height) > (this.boundsSprite.y + this.boundsSprite.height))
+            // {
+            //     this.sprite.y = (this.boundsSprite.y + this.boundsSprite.height) - this.sprite.height;
+            // }
         }
 
     }
