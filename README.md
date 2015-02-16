@@ -100,6 +100,8 @@ Thanks to @pnstickne for vast majority of this update.
 * TilemapLayer.setScale will allow you to apply scaling to a specific Tilemap layer, i.e. `layer.setScale(2)` would double the size of the layer. The way the Camera responds to the layer is adjusted accordingly based on the scale, as is Arcade collision (thanks @mickez #1605)
 * SoundManager.setDecodedCallback lets you specify a list of Sound files, or keys, and a callback. Once all of the Sound files have finished decoding the callback will be invoked. The amount of time spent decoding depends on the codec used and file size. If all of the files given have already decoded the callback is triggered immediately.
 * Sound.loopFull is a new method that will start playback of the Sound and set it to loop in its entirety.
+* Sprite.left, Sprite.right, Sprite.top, Sprite.bottom are new properties that contain the totals of the Sprite position and dimensions, adjusted for the anchor.
+* Sprite.offsetX and Sprite.offsetY contain the offsets from the Sprite.x/y coordinates to the top-left of the Sprite, taking anchor into consideration.
 
 ### Updates
 

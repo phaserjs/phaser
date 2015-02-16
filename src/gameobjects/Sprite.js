@@ -148,7 +148,7 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     this.debug = false;
 
     /**
-    * @property {Phaser.Point} cameraOffset - If this object is fixedToCamera then this stores the x/y offset that its drawn at, from the top-left of the camera view.
+    * @property {Phaser.Point} cameraOffset - If this object is fixedToCamera then this stores the x/y offset that it is drawn at. Values are relative to the top-left of the camera view.
     */
     this.cameraOffset = new Phaser.Point();
 
@@ -1349,6 +1349,112 @@ Object.defineProperty(Phaser.Sprite.prototype, "y", {
         {
             this.body._reset = 1;
         }
+
+    }
+
+});
+
+/**
+* The amount the sprite is visually offset from its x coordinate.
+* This is the same as `Sprite.width * Sprite.anchor.x`.
+* It will only be > 0 if the Sprite.anchor.x is not equal to zero.
+*
+* @name Phaser.Sprite#offsetX
+* @property {number} offsetX - The amount the sprite is visually offset from its x coordinate.
+* @readOnly
+*/
+Object.defineProperty(Phaser.Sprite.prototype, "offsetX", {
+
+    get: function () {
+
+        return this.anchor.x * this.width;
+
+    }
+
+});
+
+/**
+* The amount the sprite is visually offset from its y coordinate.
+* This is the same as `Sprite.height * Sprite.anchor.y`.
+* It will only be > 0 if the Sprite.anchor.y is not equal to zero.
+*
+* @name Phaser.Sprite#offsetY
+* @property {number} offsetY - The amount the sprite is visually offset from its y coordinate.
+* @readOnly
+*/
+Object.defineProperty(Phaser.Sprite.prototype, "offsetY", {
+
+    get: function () {
+
+        return this.anchor.y * this.height;
+
+    }
+
+});
+
+/**
+* The left coordinate of the Sprite, adjusted for the anchor.
+*
+* @name Phaser.Sprite#left
+* @property {number} left - The left coordinate of the Sprite, adjusted for the anchor.
+* @readOnly
+*/
+Object.defineProperty(Phaser.Sprite.prototype, "left", {
+
+    get: function () {
+
+        return this.x - this.offsetX;
+
+    }
+
+});
+
+/**
+* The right coordinate of the Sprite, adjusted for the anchor. This is the same as Sprite.x + Sprite.width - Sprite.offsetX.
+*
+* @name Phaser.Sprite#right
+* @property {number} right - The right coordinate of the Sprite, adjusted for the anchor. This is the same as Sprite.x + Sprite.width - Sprite.offsetX.
+* @readOnly
+*/
+Object.defineProperty(Phaser.Sprite.prototype, "right", {
+
+    get: function () {
+
+        return (this.x + this.width) - this.offsetX;
+
+    }
+
+});
+
+/**
+* The y coordinate of the Sprite, adjusted for the anchor.
+*
+* @name Phaser.Sprite#top
+* @property {number} top - The y coordinate of the Sprite, adjusted for the anchor.
+* @readOnly
+*/
+Object.defineProperty(Phaser.Sprite.prototype, "top", {
+
+    get: function () {
+
+        return this.y - this.offsetY;
+
+    }
+
+});
+
+/**
+* The sum of the y and height properties, adjusted for the anchor.
+*
+* @name Phaser.Sprite#bottom
+* @property {number} bottom - The sum of the y and height properties, adjusted for the anchor.
+* @readOnly
+*/
+Object.defineProperty(Phaser.Sprite.prototype, "bottom", {
+
+    get: function () {
+
+        return (this.y + this.height) - this.offsetY;
 
     }
 

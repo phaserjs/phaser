@@ -1034,6 +1034,112 @@ Object.defineProperty(Phaser.Image.prototype, "smoothed", {
 });
 
 /**
+* The amount the image is visually offset from its x coordinate.
+* This is the same as `Image.width * Image.anchor.x`.
+* It will only be > 0 if the Image.anchor.x is not equal to zero.
+*
+* @name Phaser.Image#offsetX
+* @property {number} offsetX - The amount the image is visually offset from its x coordinate.
+* @readOnly
+*/
+Object.defineProperty(Phaser.Image.prototype, "offsetX", {
+
+    get: function () {
+
+        return this.anchor.x * this.width;
+
+    }
+
+});
+
+/**
+* The amount the image is visually offset from its y coordinate.
+* This is the same as `Image.height * Image.anchor.y`.
+* It will only be > 0 if the Image.anchor.y is not equal to zero.
+*
+* @name Phaser.Image#offsetY
+* @property {number} offsetY - The amount the image is visually offset from its y coordinate.
+* @readOnly
+*/
+Object.defineProperty(Phaser.Image.prototype, "offsetY", {
+
+    get: function () {
+
+        return this.anchor.y * this.height;
+
+    }
+
+});
+
+/**
+* The left coordinate of the Image, adjusted for the anchor.
+*
+* @name Phaser.Image#left
+* @property {number} left - The left coordinate of the Image, adjusted for the anchor.
+* @readOnly
+*/
+Object.defineProperty(Phaser.Image.prototype, "left", {
+
+    get: function () {
+
+        return this.x - this.offsetX;
+
+    }
+
+});
+
+/**
+* The right coordinate of the Image, adjusted for the anchor. This is the same as Image.x + Image.width - Image.offsetX.
+*
+* @name Phaser.Image#right
+* @property {number} right - The right coordinate of the Image, adjusted for the anchor. This is the same as Image.x + Image.width - Image.offsetX.
+* @readOnly
+*/
+Object.defineProperty(Phaser.Image.prototype, "right", {
+
+    get: function () {
+
+        return (this.x + this.width) - this.offsetX;
+
+    }
+
+});
+
+/**
+* The y coordinate of the Image, adjusted for the anchor.
+*
+* @name Phaser.Image#top
+* @property {number} top - The y coordinate of the Image, adjusted for the anchor.
+* @readOnly
+*/
+Object.defineProperty(Phaser.Image.prototype, "top", {
+
+    get: function () {
+
+        return this.y - this.offsetY;
+
+    }
+
+});
+
+/**
+* The sum of the y and height properties, adjusted for the anchor.
+*
+* @name Phaser.Image#bottom
+* @property {number} bottom - The sum of the y and height properties, adjusted for the anchor.
+* @readOnly
+*/
+Object.defineProperty(Phaser.Image.prototype, "bottom", {
+
+    get: function () {
+
+        return (this.y + this.height) - this.offsetY;
+
+    }
+
+});
+
+/**
 * @name Phaser.Image#destroyPhase
 * @property {boolean} destroyPhase - True if this object is currently being destroyed.
 */
