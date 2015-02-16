@@ -78,6 +78,12 @@ Phaser.TweenData = function (parent) {
     this.repeatDelay = 0;
 
     /**
+    * @property {boolean} interpolate - True if the Tween will use interpolation (i.e. is an Array to Array tween)
+    * @default
+    */
+    this.interpolate = false;
+
+    /**
     * @property {boolean} yoyo - True if the Tween is set to yoyo, otherwise false.
     * @default
     */
@@ -116,6 +122,12 @@ Phaser.TweenData = function (parent) {
     * @default Phaser.Math.linearInterpolation
     */
     this.interpolationFunction = Phaser.Math.linearInterpolation;
+
+    /**
+    * @property {object} interpolationFunctionContext - The interpolation function context used for the Tween.
+    * @default Phaser.Math
+    */
+    this.interpolationFunctionContext = Phaser.Math;
 
     /**
     * @property {boolean} isRunning - If the tween is running this is set to `true`. Unless Phaser.Tween a TweenData that is waiting for a delay to expire is *not* considered as running.
@@ -273,7 +285,7 @@ Phaser.TweenData.prototype = {
             //  Load the property from the parent object
             this.vStart[property] = this.parent.properties[property];
 
-            //  Check if an Array was provided as property value (NEEDS TESTING)
+            //  Check if an Array was provided as property value
             if (Array.isArray(this.vEnd[property]))
             {
                 if (this.vEnd[property].length === 0)
@@ -282,7 +294,7 @@ Phaser.TweenData.prototype = {
                 }
 
                 //  Create a local copy of the Array with the start value at the front
-                this.vEnd[property] = [this.parent.properties[property]].concat(this.vEnd[property]);
+                this.vEnd[property] = [this.vStart[property]].concat(this.vEnd[property]);
             }
 
             if (typeof this.vEnd[property] !== 'undefined')
@@ -352,7 +364,7 @@ Phaser.TweenData.prototype = {
 
             if (Array.isArray(end))
             {
-                this.parent.target[property] = this.interpolationFunction(end, this.value);
+                this.parent.target[property] = this.interpolationFunction.call(this.interpolationFunctionContext, end, this.value);
             }
             else
             {
