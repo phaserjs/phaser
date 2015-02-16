@@ -503,7 +503,7 @@ Phaser.Pointer.prototype = {
                 if ((fromClick && currentNode.checkPointerDown(this, true)) ||
                     (!fromClick && currentNode.checkPointerOver(this, true)))
                 {
-                    highestRenderOrderID = currentNode.sprite._cache[3]; // renderOrderID
+                    highestRenderOrderID = currentNode.sprite.renderOrderID;
                     highestInputPriorityID = currentNode.priorityID;
                     candidateTarget = currentNode;
                 }
@@ -526,7 +526,7 @@ Phaser.Pointer.prototype = {
                 if ((fromClick && currentNode.checkPointerDown(this, false)) ||
                     (!fromClick && currentNode.checkPointerOver(this, false)))
                 {
-                    highestRenderOrderID = currentNode.sprite._cache[3]; // renderOrderID
+                    highestRenderOrderID = currentNode.sprite.renderOrderID;
                     highestInputPriorityID = currentNode.priorityID;
                     candidateTarget = currentNode;
                 }

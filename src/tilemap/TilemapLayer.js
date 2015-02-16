@@ -339,18 +339,11 @@ Phaser.TilemapLayer.prototype.postUpdate = function () {
 
     this.render();
 
-    //  Fixed to Camera?
-    if (this._cache[7] === 1)
+    if (this.fixedToCamera)
     {
         this.position.x = (camera.view.x + this.cameraOffset.x) / camera.scale.x;
         this.position.y = (camera.view.y + this.cameraOffset.y) / camera.scale.y;
     }
-
-    //  Update any Children
-    // for (var i = 0, len = this.children.length; i < len; i++)
-    // {
-        // this.children[i].postUpdate();
-    // }
 
 };
 

@@ -169,21 +169,54 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     this.scaleMax = null;
 
     /**
-    * A small internal cache:
-    *
-    * 0 = previous position.x
-    * 1 = previous position.y
-    * 2 = previous rotation
-    * 3 = renderID
-    * 4 = fresh? (0 = no, 1 = yes)
-    * 5 = outOfBoundsFired (0 = no, 1 = yes)
-    * 6 = exists (0 = no, 1 = yes)
-    * 7 = fixed to camera (0 = no, 1 = yes)
-    * 8 = destroy phase? (0 = no, 1 = yes)
-    * @property {Array} _cache
+    * @property {Phaser.Point} previousPosition - The position the Sprite was in at the last update.
+    * @readOnly
+    */
+    this.previousPosition = new Phaser.Point(x, y);
+
+    /**
+    * @property {number} previousRotation - The rotation angle the Sprite was in at the last update (in radians)
+    * @readOnly
+    */
+    this.previousRotation = 0;
+
+    /**
+    * @property {number} renderOrderID - The render order ID. This is used internally by the renderer and input manager and should not be modified.
+    * @readOnly
+    */
+    this.renderOrderID = 0;
+
+    /**
+    * @property {boolean} fresh - A fresh Sprite is one that has just been created or reset and is yet to receive a world level transform update.
+    * @readOnly
+    */
+    this.fresh = true;
+
+    /**
+    * A Sprite that is fixed to the camera uses its x/y coordinates as offsets from the top left of the camera. These are stored in Sprite.cameraOffset.
+    * Note that the cameraOffset values are in addition to any parent in the display list.
+    * So if this Sprite was in a Group that has x: 200, then this will be added to the cameraOffset.x
+    * @property {boolean} fixedToCamera
+    */
+    this.fixedToCamera = false;
+
+    /**
+    * @property {boolean} destroyPhase - As a Sprite runs through its destroy method this flag is set to true, and can be checked in any sub-systems it is being destroyed from.
+    * @readOnly
+    */
+    this.destroyPhase = false;
+
+    /**
+    * @property {boolean} _outOfBoundsFired - Internal cache var.
     * @private
     */
-    this._cache = [ 0, 0, 0, 0, 1, 0, 1, 0 ];
+    this._outOfBoundsFired = false;
+
+    /**
+    * @property {boolean} _exists - Internal cache var.
+    * @private
+    */
+    this._exists = false;
 
     /**
     * @property {Phaser.Rectangle} _crop - Internal cache var.
@@ -219,33 +252,32 @@ Phaser.Sprite.prototype.constructor = Phaser.Sprite;
 */
 Phaser.Sprite.prototype.preUpdate = function() {
 
-    if (this._cache[4] === 1 && this.exists)
+    if (this.fresh && this.exists)
     {
         this.world.setTo(this.parent.position.x + this.position.x, this.parent.position.y + this.position.y);
         this.worldTransform.tx = this.world.x;
         this.worldTransform.ty = this.world.y;
-        this._cache[0] = this.world.x;
-        this._cache[1] = this.world.y;
-        this._cache[2] = this.rotation;
+
+        this.previousPosition.set(this.world.x, this.world.y);
+        this.previousRotation = this.rotation;
 
         if (this.body)
         {
             this.body.preUpdate();
         }
 
-        this._cache[4] = 0;
+        this.fresh = false;
 
         return false;
     }
 
-    this._cache[0] = this.world.x;
-    this._cache[1] = this.world.y;
-    this._cache[2] = this.rotation;
+    this.previousPosition.set(this.world.x, this.world.y);
+    this.previousRotation = this.rotation;
 
-    if (!this.exists || !this.parent.exists)
+    if (!this._exists || !this.parent.exists)
     {
         //  Reset the renderOrderID
-        this._cache[3] = -1;
+        this.renderOrderID = -1;
         return false;
     }
 
@@ -285,15 +317,15 @@ Phaser.Sprite.prototype.preUpdate = function() {
         if (this.checkWorldBounds)
         {
             //  The Sprite is already out of the world bounds, so let's check to see if it has come back again
-            if (this._cache[5] === 1 && this.game.world.bounds.intersects(this._bounds))
+            if (this._outOfBoundsFired && this.game.world.bounds.intersects(this._bounds))
             {
-                this._cache[5] = 0;
+                this._outOfBoundsFired = false;
                 this.events.onEnterBounds$dispatch(this);
             }
-            else if (this._cache[5] === 0 && !this.game.world.bounds.intersects(this._bounds))
+            else if (!this._outOfBoundsFired && !this.game.world.bounds.intersects(this._bounds))
             {
                 //  The Sprite WAS in the screen, but has now left.
-                this._cache[5] = 1;
+                this._outOfBoundsFired = true;
                 this.events.onOutOfBounds$dispatch(this);
 
                 if (this.outOfBoundsKill)
@@ -309,7 +341,7 @@ Phaser.Sprite.prototype.preUpdate = function() {
 
     if (this.visible)
     {
-        this._cache[3] = this.game.stage.currentRenderOrderID++;
+        this.renderOrderID = this.game.stage.currentRenderOrderID++;
     }
 
     this.animations.update();
@@ -359,7 +391,7 @@ Phaser.Sprite.prototype.postUpdate = function() {
     }
 
     //  Fixed to Camera?
-    if (this._cache[7] === 1)
+    if (this.fixedToCamera)
     {
         this.position.x = (this.game.camera.view.x + this.cameraOffset.x) / this.game.camera.scale.x;
         this.position.y = (this.game.camera.view.y + this.cameraOffset.y) / this.game.camera.scale.y;
@@ -676,11 +708,11 @@ Phaser.Sprite.prototype.kill = function() {
 */
 Phaser.Sprite.prototype.destroy = function(destroyChildren) {
 
-    if (this.game === null || this._cache[8] === 1) { return; }
+    if (this.game === null || this.destroyPhase) { return; }
 
     if (typeof destroyChildren === 'undefined') { destroyChildren = true; }
 
-    this._cache[8] = 1;
+    this.destroyPhase = true;
 
     if (this.events)
     {
@@ -754,7 +786,7 @@ Phaser.Sprite.prototype.destroy = function(destroyChildren) {
     this.mask = null;
     this.game = null;
 
-    this._cache[8] = 0;
+    this.destroyPhase = false;
 
 };
 
@@ -815,7 +847,7 @@ Phaser.Sprite.prototype.reset = function(x, y, health) {
         this.body.reset(x, y, false, false);
     }
 
-    this._cache[4] = 1;
+    this.fresh = true;
 
     return this;
 
@@ -1019,7 +1051,7 @@ Object.defineProperty(Phaser.Sprite.prototype, "deltaX", {
 
     get: function() {
 
-        return this.world.x - this._cache[0];
+        return this.world.x - this.previousPosition.x;
 
     }
 
@@ -1036,7 +1068,7 @@ Object.defineProperty(Phaser.Sprite.prototype, "deltaY", {
 
     get: function() {
 
-        return this.world.y - this._cache[1];
+        return this.world.y - this.previousPosition.y;
 
     }
 
@@ -1053,7 +1085,7 @@ Object.defineProperty(Phaser.Sprite.prototype, "deltaZ", {
 
     get: function() {
 
-        return this.rotation - this._cache[2];
+        return this.rotation - this.previousRotation;
 
     }
 
@@ -1133,21 +1165,6 @@ Object.defineProperty(Phaser.Sprite.prototype, "frameName", {
 });
 
 /**
-* @name Phaser.Sprite#renderOrderID
-* @property {number} renderOrderID - The render order ID, reset every frame.
-* @readonly
-*/
-Object.defineProperty(Phaser.Sprite.prototype, "renderOrderID", {
-
-    get: function() {
-
-        return this._cache[3];
-
-    }
-
-});
-
-/**
 * By default a Sprite won't process any input events at all. By setting inputEnabled to true the Phaser.InputHandler is
 * activated for this object and it will then start to process click/touch events and more.
 *
@@ -1200,7 +1217,7 @@ Object.defineProperty(Phaser.Sprite.prototype, "exists", {
 
     get: function () {
 
-        return !!this._cache[6];
+        return this._exists;
 
     },
 
@@ -1209,7 +1226,7 @@ Object.defineProperty(Phaser.Sprite.prototype, "exists", {
         if (value)
         {
             //  exists = true
-            this._cache[6] = 1;
+            this._exists = true;
 
             if (this.body && this.body.type === Phaser.Physics.P2JS)
             {
@@ -1221,7 +1238,7 @@ Object.defineProperty(Phaser.Sprite.prototype, "exists", {
         else
         {
             //  exists = false
-            this._cache[6] = 0;
+            this._exists = false;
 
             if (this.body && this.body.type === Phaser.Physics.P2JS)
             {
@@ -1230,37 +1247,6 @@ Object.defineProperty(Phaser.Sprite.prototype, "exists", {
 
             this.visible = false;
 
-        }
-    }
-
-});
-
-/**
-* An Sprite that is fixed to the camera uses its x/y coordinates as offsets from the top left of the camera. These are stored in Sprite.cameraOffset.
-* Note that the cameraOffset values are in addition to any parent in the display list.
-* So if this Sprite was in a Group that has x: 200, then this will be added to the cameraOffset.x
-*
-* @name Phaser.Sprite#fixedToCamera
-* @property {boolean} fixedToCamera - Set to true to fix this Sprite to the Camera at its current world coordinates.
-*/
-Object.defineProperty(Phaser.Sprite.prototype, "fixedToCamera", {
-
-    get: function () {
-
-        return !!this._cache[7];
-
-    },
-
-    set: function (value) {
-
-        if (value)
-        {
-            this._cache[7] = 1;
-            this.cameraOffset.set(this.x, this.y);
-        }
-        else
-        {
-            this._cache[7] = 0;
         }
     }
 
@@ -1455,20 +1441,6 @@ Object.defineProperty(Phaser.Sprite.prototype, "bottom", {
     get: function () {
 
         return (this.y + this.height) - this.offsetY;
-
-    }
-
-});
-
-/**
-* @name Phaser.Sprite#destroyPhase
-* @property {boolean} destroyPhase - True if this object is currently being destroyed.
-*/
-Object.defineProperty(Phaser.Sprite.prototype, "destroyPhase", {
-
-    get: function () {
-
-        return !!this._cache[8];
 
     }
 

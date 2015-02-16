@@ -62,20 +62,36 @@ Phaser.Graphics = function (game, x, y) {
     this.position.set(x, y);
 
     /**
-    * A small internal cache:
-    * 0 = previous position.x
-    * 1 = previous position.y
-    * 2 = previous rotation
-    * 3 = renderID
-    * 4 = fresh? (0 = no, 1 = yes)
-    * 5 = outOfBoundsFired (0 = no, 1 = yes)
-    * 6 = exists (0 = no, 1 = yes)
-    * 7 = fixed to camera (0 = no, 1 = yes)
-    * 8 = destroy phase? (0 = no, 1 = yes)
-    * @property {Array} _cache
-    * @private
+    * @property {Phaser.Point} previousPosition - The position the Sprite was in at the last update.
+    * @readOnly
     */
-    this._cache = [ 0, 0, 0, 0, 1, 0, 1, 0, 0 ];
+    this.previousPosition = new Phaser.Point(x, y);
+
+    /**
+    * @property {number} previousRotation - The rotation angle the Sprite was in at the last update (in radians)
+    * @readOnly
+    */
+    this.previousRotation = 0;
+
+    /**
+    * @property {number} renderOrderID - The render order ID. This is used internally by the renderer and input manager and should not be modified.
+    * @readOnly
+    */
+    this.renderOrderID = 0;
+
+    /**
+    * A Sprite that is fixed to the camera uses its x/y coordinates as offsets from the top left of the camera. These are stored in Sprite.cameraOffset.
+    * Note that the cameraOffset values are in addition to any parent in the display list.
+    * So if this Sprite was in a Group that has x: 200, then this will be added to the cameraOffset.x
+    * @property {boolean} fixedToCamera
+    */
+    this.fixedToCamera = false;
+
+    /**
+    * @property {boolean} destroyPhase - As a Sprite runs through its destroy method this flag is set to true, and can be checked in any sub-systems it is being destroyed from.
+    * @readOnly
+    */
+    this.destroyPhase = false;
 
 };
 
@@ -88,9 +104,8 @@ Phaser.Graphics.prototype.constructor = Phaser.Graphics;
 */
 Phaser.Graphics.prototype.preUpdate = function () {
 
-    this._cache[0] = this.world.x;
-    this._cache[1] = this.world.y;
-    this._cache[2] = this.rotation;
+    this.previousPosition.set(this.world.x, this.world.y);
+    this.previousRotation = this.rotation;
 
     if (!this.exists || !this.parent.exists)
     {
@@ -108,7 +123,7 @@ Phaser.Graphics.prototype.preUpdate = function () {
 
     if (this.visible)
     {
-        this._cache[3] = this.game.stage.currentRenderOrderID++;
+        this.renderOrderID = this.game.stage.currentRenderOrderID++;
     }
 
     return true;
@@ -131,8 +146,7 @@ Phaser.Graphics.prototype.update = function() {
 */
 Phaser.Graphics.prototype.postUpdate = function () {
 
-    //  Fixed to Camera?
-    if (this._cache[7] === 1)
+    if (this.fixedToCamera)
     {
         this.position.x = (this.game.camera.view.x + this.cameraOffset.x) / this.game.camera.scale.x;
         this.position.y = (this.game.camera.view.y + this.cameraOffset.y) / this.game.camera.scale.y;
@@ -152,7 +166,7 @@ Phaser.Graphics.prototype.destroy = function(destroyChildren) {
 
     if (typeof destroyChildren === 'undefined') { destroyChildren = true; }
 
-    this._cache[8] = 1;
+    this.destroyPhase = false;
 
     this.clear();
 
@@ -190,7 +204,7 @@ Phaser.Graphics.prototype.destroy = function(destroyChildren) {
 
     this.game = null;
 
-    this._cache[8] = 0;
+    this.destroyPhase = true;
 
 };
 
@@ -334,51 +348,6 @@ Object.defineProperty(Phaser.Graphics.prototype, 'angle', {
 
     set: function(value) {
         this.rotation = Phaser.Math.degToRad(value);
-    }
-
-});
-
-/**
-* An Graphics that is fixed to the camera uses its x/y coordinates as offsets from the top left of the camera. These are stored in Graphics.cameraOffset.
-* Note that the cameraOffset values are in addition to any parent in the display list.
-* So if this Graphics was in a Group that has x: 200, then this will be added to the cameraOffset.x
-*
-* @name Phaser.Graphics#fixedToCamera
-* @property {boolean} fixedToCamera - Set to true to fix this Graphics to the Camera at its current world coordinates.
-*/
-Object.defineProperty(Phaser.Graphics.prototype, "fixedToCamera", {
-
-    get: function () {
-
-        return !!this._cache[7];
-
-    },
-
-    set: function (value) {
-
-        if (value)
-        {
-            this._cache[7] = 1;
-            this.cameraOffset.set(this.x, this.y);
-        }
-        else
-        {
-            this._cache[7] = 0;
-        }
-    }
-
-});
-
-/**
-* @name Phaser.Graphics#destroyPhase
-* @property {boolean} destroyPhase - True if this object is currently being destroyed.
-*/
-Object.defineProperty(Phaser.Graphics.prototype, "destroyPhase", {
-
-    get: function () {
-
-        return !!this._cache[8];
-
     }
 
 });

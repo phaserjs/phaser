@@ -170,7 +170,7 @@ Phaser.Particle.prototype.reset = function(x, y, health) {
         this.body.reset(x, y, false, false);
     }
 
-    this._cache[4] = 1;
+    this.fresh = true;
 
     this.alpha = 1;
     this.scale.set(1);

@@ -122,20 +122,36 @@ Phaser.Text = function (game, x, y, text, style) {
     this.position.set(x, y);
 
     /**
-    * A small internal cache:
-    * 0 = previous position.x
-    * 1 = previous position.y
-    * 2 = previous rotation
-    * 3 = renderID
-    * 4 = fresh? (0 = no, 1 = yes)
-    * 5 = outOfBoundsFired (0 = no, 1 = yes)
-    * 6 = exists (0 = no, 1 = yes)
-    * 7 = fixed to camera (0 = no, 1 = yes)
-    * 8 = destroy phase? (0 = no, 1 = yes)
-    * @property {Array} _cache
-    * @private
+    * @property {Phaser.Point} previousPosition - The position the Sprite was in at the last update.
+    * @readOnly
     */
-    this._cache = [ 0, 0, 0, 0, 1, 0, 1, 0, 0 ];
+    this.previousPosition = new Phaser.Point(x, y);
+
+    /**
+    * @property {number} previousRotation - The rotation angle the Sprite was in at the last update (in radians)
+    * @readOnly
+    */
+    this.previousRotation = 0;
+
+    /**
+    * @property {number} renderOrderID - The render order ID. This is used internally by the renderer and input manager and should not be modified.
+    * @readOnly
+    */
+    this.renderOrderID = 0;
+
+    /**
+    * A Sprite that is fixed to the camera uses its x/y coordinates as offsets from the top left of the camera. These are stored in Sprite.cameraOffset.
+    * Note that the cameraOffset values are in addition to any parent in the display list.
+    * So if this Sprite was in a Group that has x: 200, then this will be added to the cameraOffset.x
+    * @property {boolean} fixedToCamera
+    */
+    this.fixedToCamera = false;
+
+    /**
+    * @property {boolean} destroyPhase - As a Sprite runs through its destroy method this flag is set to true, and can be checked in any sub-systems it is being destroyed from.
+    * @readOnly
+    */
+    this.destroyPhase = false;
 
     if (text !== ' ')
     {
@@ -155,9 +171,8 @@ Phaser.Text.prototype.constructor = Phaser.Text;
 */
 Phaser.Text.prototype.preUpdate = function () {
 
-    this._cache[0] = this.world.x;
-    this._cache[1] = this.world.y;
-    this._cache[2] = this.rotation;
+    this.previousPosition.set(this.world.x, this.world.y);
+    this.previousRotation = this.rotation;
 
     if (!this.exists || !this.parent.exists)
     {
@@ -175,7 +190,7 @@ Phaser.Text.prototype.preUpdate = function () {
 
     if (this.visible)
     {
-        this._cache[3] = this.game.stage.currentRenderOrderID++;
+        this.renderOrderID = this.game.stage.currentRenderOrderID++;
     }
 
     //  Update any Children
@@ -206,7 +221,7 @@ Phaser.Text.prototype.update = function() {
 */
 Phaser.Text.prototype.postUpdate = function () {
 
-    if (this._cache[7] === 1)
+    if (this.fixedToCamera)
     {
         this.position.x = (this.game.camera.view.x + this.cameraOffset.x) / this.game.camera.scale.x;
         this.position.y = (this.game.camera.view.y + this.cameraOffset.y) / this.game.camera.scale.y;
@@ -232,7 +247,7 @@ Phaser.Text.prototype.destroy = function (destroyChildren) {
 
     if (typeof destroyChildren === 'undefined') { destroyChildren = true; }
 
-    this._cache[8] = 1;
+    this.destroyPhase = true;
 
     if (this.events)
     {
@@ -287,7 +302,7 @@ Phaser.Text.prototype.destroy = function (destroyChildren) {
     this.mask = null;
     this.game = null;
 
-    this._cache[8] = 0;
+    this.destroyPhase = false;
 
 };
 
@@ -643,6 +658,7 @@ Phaser.Text.prototype.fontToComponents = function (font) {
     //        {number} (em | ex | ch | rem | vh | vw | vmin | vmax | px | mm | cm | in | pt | pc | %)
     // font-family - rest (but identifiers or quoted with comma separation)
     var m = font.match(/^\s*(?:\b(normal|italic|oblique|inherit)?\b)\s*(?:\b(normal|small-caps|inherit)?\b)\s*(?:\b(normal|bold|bolder|lighter|100|200|300|400|500|600|700|800|900|inherit)?\b)\s*(?:\b(xx-small|x-small|small|medium|large|x-large|xx-large|larger|smaller|0|\d*(?:[.]\d*)?(?:%|[a-z]{2,5}))?\b)\s*(.*)\s*$/);
+
     if (m)
     {
         return {
@@ -758,7 +774,7 @@ Object.defineProperty(Phaser.Text.prototype, 'text', {
 * This is equivalent of the `font` property specified to {@link Phaser.Text#setStyle setStyle}, except
 * that unlike using `setStyle` this will not change any current font fill/color settings.
 *
-* The CSS font string can also be invidually altered with the `font`, `fontSize`, `fontWeight`, `fontStyle`, and `fontVariant` properties.
+* The CSS font string can also be individually altered with the `font`, `fontSize`, `fontWeight`, `fontStyle`, and `fontVariant` properties.
 *
 * @name Phaser.Text#cssFont
 * @property {string} cssFont
@@ -781,7 +797,7 @@ Object.defineProperty(Phaser.Text.prototype, 'cssFont', {
 /**
 * Change the font family that the text will be rendered in, such as 'Arial'.
 *
-* Multiple CSS font familes and generic fallbacks can be specified as long as
+* Multiple CSS font families and generic fallbacks can be specified as long as
 * {@link http://www.w3.org/TR/CSS2/fonts.html#propdef-font-family CSS font-family rules} are followed.
 *
 * To change the entire font string use {@link Phaser.Text#cssFont cssFont} instead: eg. `text.cssFont = 'bold 20pt Arial'`.
@@ -827,6 +843,7 @@ Object.defineProperty(Phaser.Text.prototype, 'fontSize', {
     get: function() {
 
         var size = this._fontComponents.fontSize;
+
         if (size && /(?:^0$|px$)/.exec(size))
         {
             return parseInt(size, 10);
@@ -841,6 +858,7 @@ Object.defineProperty(Phaser.Text.prototype, 'fontSize', {
     set: function(value) {
 
         value = value || '0';
+        
         if (typeof value === 'number')
         {
             value = value + 'px';
@@ -1200,54 +1218,6 @@ Object.defineProperty(Phaser.Text.prototype, "inputEnabled", {
                 this.input.stop();
             }
         }
-
-    }
-
-});
-
-/**
-* Set to true to fix this Text to the Camera at its current world coordinates.
-*
-* An Text that is fixed to the camera uses its x/y coordinates as offsets from the top left of the camera. These are stored in Text.cameraOffset.
-* Note that the cameraOffset values are in addition to any parent in the display list.
-* So if this Text was in a Group that has x: 200, then this will be added to the cameraOffset.x
-*
-* @name Phaser.Text#fixedToCamera
-* @property {boolean} fixedToCamera
-*/
-Object.defineProperty(Phaser.Text.prototype, "fixedToCamera", {
-
-    get: function () {
-
-        return !!this._cache[7];
-
-    },
-
-    set: function (value) {
-
-        if (value)
-        {
-            this._cache[7] = 1;
-            this.cameraOffset.set(this.x, this.y);
-        }
-        else
-        {
-            this._cache[7] = 0;
-        }
-    }
-
-});
-
-/**
-* @name Phaser.Text#destroyPhase
-* @property {boolean} destroyPhase - True if this object is currently being destroyed.
-* @protected
-*/
-Object.defineProperty(Phaser.Text.prototype, "destroyPhase", {
-
-    get: function () {
-
-        return !!this._cache[8];
 
     }
 
