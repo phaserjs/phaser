@@ -34,10 +34,9 @@ Phaser.Component.BringToTop.prototype.sendToBack = function() {
 * Moves the given child up one place in this group unless it's already at the top.
 *
 * @method Phaser.Group#moveUp
-* @param {any} child - The child to move up in the group.
 * @return {any} The child that was moved.
 */
-Phaser.Component.BringToTop.prototype.moveUp = function (child) {
+Phaser.Component.BringToTop.prototype.moveUp = function () {
 
     if (this.parent)
     {
@@ -52,10 +51,9 @@ Phaser.Component.BringToTop.prototype.moveUp = function (child) {
 * Moves the given child down one place in this group unless it's already at the bottom.
 *
 * @method Phaser.Group#moveDown
-* @param {any} child - The child to move down in the group.
 * @return {any} The child that was moved.
 */
-Phaser.Component.BringToTop.prototype.moveDown = function (child) {
+Phaser.Component.BringToTop.prototype.moveDown = function () {
 
     if (this.parent)
     {

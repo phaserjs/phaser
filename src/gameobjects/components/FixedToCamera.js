@@ -23,6 +23,6 @@ Phaser.Component.FixedToCamera.prototype = {
     /**
     * @property {Phaser.Point} cameraOffset - If this object is fixedToCamera then this stores the x/y offset that it is drawn at. Values are relative to the top-left of the camera view.
     */
-    cameraOffset: new Phaser.Point(),
+    cameraOffset: new Phaser.Point()
 
 };

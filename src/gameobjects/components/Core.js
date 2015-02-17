@@ -73,7 +73,6 @@ Phaser.Component.Core.preUpdate = function () {
         this.body.preUpdate();
     }
 
-    //  Update any Children
     for (var i = 0; i < this.children.length; i++)
     {
         this.children[i].preUpdate();
@@ -195,7 +194,6 @@ Phaser.Component.Core.prototype = {
             Phaser.Component.FixedToCamera.postUpdate.call(this);
         }
 
-        //  Update any Children
         for (var i = 0; i < this.children.length; i++)
         {
             this.children[i].postUpdate();
