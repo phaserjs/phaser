@@ -337,7 +337,7 @@ Phaser.AnimationManager.prototype = {
             return false;
         }
 
-        if (this.currentAnim && this.currentAnim.update() === true)
+        if (this.currentAnim && this.currentAnim.update())
         {
             this.currentFrame = this.currentAnim.currentFrame;
             return true;
