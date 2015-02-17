@@ -307,7 +307,6 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
 
     /**
     * The ID of the current/last logic update applied this render frame, starting from 0.
-    *
     * The first update is `currentUpdateID === 0` and the last update is `currentUpdateID === updatesThisFrame.`
     * @property {integer} currentUpdateID
     * @protected
@@ -315,33 +314,32 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     this.currentUpdateID = 0;
 
     /**
-    * Number of logic updates expected to occur this render frame;
-    * will be 1 unless there are catch-ups required (and allowed).
+    * Number of logic updates expected to occur this render frame; will be 1 unless there are catch-ups required (and allowed).
     * @property {integer} updatesThisFrame
     * @protected
     */
     this.updatesThisFrame = 1;
 
     /**
-    * @property {number} _deltaTime - accumulate elapsed time until a logic update is due
+    * @property {number} _deltaTime - Accumulate elapsed time until a logic update is due.
     * @private
     */
     this._deltaTime = 0;
 
     /**
-    * @property {number} _lastCount - remember how many 'catch-up' iterations were used on the logicUpdate last frame
+    * @property {number} _lastCount - Remember how many 'catch-up' iterations were used on the logicUpdate last frame.
     * @private
     */
     this._lastCount = 0;
 
     /**
-    * @property {number} _spiraling - if the 'catch-up' iterations are spiraling out of control, this counter is incremented
+    * @property {number} _spiraling - If the 'catch-up' iterations are spiraling out of control, this counter is incremented.
     * @private
     */
     this._spiraling = 0;
 
     /**
-    * @property {boolean} _kickstart - Force a logic update + render by default (always on Boot and State swap)
+    * @property {boolean} _kickstart - Force a logic update + render by default (always set on Boot and State swap)
     * @private
     */
     this._kickstart = true;
@@ -360,7 +358,7 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     this.forceSingleUpdate = false;
 
     /**
-    * @property {number} _nextNotification - the soonest game.time.time value that the next fpsProblemNotifier can be dispatched
+    * @property {number} _nextNotification - The soonest game.time.time value that the next fpsProblemNotifier can be dispatched.
     * @private
     */
     this._nextFpsNotification = 0;
