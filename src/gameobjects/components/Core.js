@@ -36,12 +36,12 @@ Phaser.Component.Core.init = function (game, x, y, key, frame) {
         this.animations = new Phaser.AnimationManager(this);
     }
 
-    if (this.components.LoadTexture)
+    if (this.components.LoadTexture && key !== null)
     {
         this.loadTexture(key, frame);
     }
 
-    // console.log('init', this.position, key);
+    // console.log('init', this);
 
 };
 
