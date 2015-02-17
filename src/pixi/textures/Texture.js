@@ -128,14 +128,14 @@ PIXI.Texture = function(baseTexture, frame, crop, trim)
         if (this.noFrame) frame = new PIXI.Rectangle(0, 0, baseTexture.width, baseTexture.height);
         this.setFrame(frame);
     }
-    else
-    {
-        baseTexture.addEventListener('loaded', this.onBaseTextureLoaded.bind(this));
-    }
+    // else
+    // {
+    //     baseTexture.addEventListener('loaded', this.onBaseTextureLoaded.bind(this));
+    // }
 };
 
 PIXI.Texture.prototype.constructor = PIXI.Texture;
-PIXI.EventTarget.mixin(PIXI.Texture.prototype);
+// PIXI.EventTarget.mixin(PIXI.Texture.prototype);
 
 /**
  * Called when the base texture is loaded
@@ -146,13 +146,13 @@ PIXI.EventTarget.mixin(PIXI.Texture.prototype);
 PIXI.Texture.prototype.onBaseTextureLoaded = function()
 {
     var baseTexture = this.baseTexture;
-    baseTexture.removeEventListener('loaded', this.onLoaded);
+    // baseTexture.removeEventListener('loaded', this.onLoaded);
 
     if (this.noFrame) this.frame = new PIXI.Rectangle(0, 0, baseTexture.width, baseTexture.height);
 
     this.setFrame(this.frame);
 
-    this.dispatchEvent( { type: 'update', content: this } );
+    // this.dispatchEvent( { type: 'update', content: this } );
 };
 
 /**
@@ -339,6 +339,3 @@ PIXI.TextureUvs = function()
     this.x3 = 0;
     this.y3 = 0;
 };
-
-PIXI.Texture.emptyTexture = new PIXI.Texture(new PIXI.BaseTexture());
-

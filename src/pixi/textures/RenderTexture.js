@@ -332,5 +332,3 @@ PIXI.RenderTexture.prototype.getCanvas = function()
         return this.textureBuffer.canvas;
     }
 };
-
-PIXI.RenderTexture.tempMatrix = new PIXI.Matrix();
