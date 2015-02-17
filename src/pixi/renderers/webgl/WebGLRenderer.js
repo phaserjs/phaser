@@ -39,7 +39,6 @@ PIXI.WebGLRenderer = function(width, height, options)
 
     if(!PIXI.defaultRenderer)
     {
-        PIXI.sayHello('webGL');
         PIXI.defaultRenderer = this;
     }
 
