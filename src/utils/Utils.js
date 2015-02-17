@@ -347,9 +347,12 @@ Phaser.Utils = {
     * @method Phaser.Utils.mixinPrototype
     * @param {object} target - The target object to receive the new functions.
     * @param {object} mixin - The object to copy the functions from.
+    * @param {boolean} [replace=false] - If the target object already has a matching function should it be overwritten or not?
     */
-    mixinPrototype: function (target, mixin) {
+    mixinPrototype: function (target, mixin, replace) {
     
+        if (typeof replace === 'undefined') { replace = false; }
+
         var mixinKeys = Object.keys(mixin);
 
         for (var i = 0; i < mixinKeys.length; i++)
@@ -357,13 +360,20 @@ Phaser.Utils = {
             var key = mixinKeys[i];
             var value = mixin[key];
 
-            if (value && (typeof value.get === 'function' || typeof value.set === 'function'))
+            if (!replace && target[key])
             {
-                Object.defineProperty(target, key, value);
+                continue;
             }
             else
             {
-                target[key] = value;
+                if (value && (typeof value.get === 'function' || typeof value.set === 'function'))
+                {
+                    Object.defineProperty(target, key, value);
+                }
+                else
+                {
+                    target[key] = value;
+                }
             }
         }
 
