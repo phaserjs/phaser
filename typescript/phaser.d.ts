@@ -1507,6 +1507,7 @@ declare module Phaser {
         fixedToCamera: boolean;
         frame: string|number;
         frameName: string;
+        fresh: boolean;
         game: Phaser.Game;
         inCamera: boolean;
         input: Phaser.InputHandler;
@@ -1518,6 +1519,8 @@ declare module Phaser {
         offsetX: number;
         offsetY: number;
         position: Phaser.Point;
+        previousPosition: Phaser.Point;
+        previousRotation: number;
         renderOrderID: number;
         right: number;
         scale: Phaser.Point;
@@ -4116,6 +4119,9 @@ declare module Phaser {
         lineSpacing: number;
         name: string;
         position: Phaser.Point;
+        previousPosition: Phaser.Point;
+        previousRotation: number;
+        renderOrderID: number;
         shadowBlur: number;
         shadowColor: string;
         shadowOffsetX: number;
