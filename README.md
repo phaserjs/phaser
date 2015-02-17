@@ -90,6 +90,14 @@ Thanks to @pnstickne for vast majority of this update.
 
 All of the core Game Objects have received a small but important restructuring.
 
+#### Pixi v2
+
+We are now using our own custom build of Pixi v2. The Pixi project has moved all development resources over to Pixi v3, but it wasn't ready in time for the release of Phaser 2.3 so we've started applying our own fixes to the version of Pixi that Phaser uses.
+
+To this end we have removed all files from the src/pixi folder that Phaser doesn't use, in order to make this distinction clearer. This includes `EventTarget`, so if you were relying on that in your game you'll need to add it back into your local build.
+
+We've also removed functions and properties from Pixi classes that Phaser doesn't require - such as the Interaction Manager, Stage.dirty, etc. This has helped us cut down the source code size and make the docs less confusing, as they no longer show properties for things that weren't even enabled.
+
 ### New Features
 
 * `Physics.Arcade.isPaused` allows you to toggle Arcade Physics processing on and off. If `true` the `Body.preUpdate` method will be skipped, halting all motion for all bodies. Note that other methods such as `collide` will still work, so be careful not to call them on paused bodies.
@@ -168,6 +176,7 @@ All of the core Game Objects have received a small but important restructuring.
 * InputHandler was using the wrong property in `checkBoundsSprite` when fixedToCamera (thanks @yig #1613)
 * Tween.to now correctly accepts arrays are destination values, which makes the Tween interpolate through each value specified in the array using the defined Tween.interpolation method (see new example, thanks @FridayMarch26th #1619)
 * Tween.interpolationFunction was using the incorrect context to invoke the function. This is now defined in `TweenData.interpolationFunctionContext` and defaults to `Phaser.Math`. If you provide your own interpolation function then please adjust the context accordingly (thanks @FridayMarch26th #1618)
+* Graphics.drawEllipse method was missing (thanks @jackrugile #1574)
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 
