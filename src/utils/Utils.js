@@ -341,6 +341,35 @@ Phaser.Utils = {
     },
 
     /**
+    * Mixes in an existing mixin object with the target.
+    * Prototype values with that have either `get` or `set` functions are created as properties via defineProperty.
+    *
+    * @method Phaser.Utils.mixinPrototype
+    * @param {object} target - The target object to receive the new functions.
+    * @param {object} mixin - The object to copy the functions from.
+    */
+    mixinPrototype: function (target, mixin) {
+    
+        var mixinKeys = Object.keys(mixin);
+
+        for (var i = 0; i < mixinKeys.length; i++)
+        {
+            var key = mixinKeys[i];
+            var value = mixin[key];
+
+            if (value && (typeof value.get === 'function' || typeof value.set === 'function'))
+            {
+                Object.defineProperty(target, key, value);
+            }
+            else
+            {
+                target[key] = value;
+            }
+        }
+
+    },
+
+    /**
     * Mixes the source object into the destination object, returning the newly modified destination object.
     * Based on original code by @mudcube
     *
