@@ -78,15 +78,18 @@ Phaser.RoundedRectangle.prototype.clone = function()
  */
 Phaser.RoundedRectangle.prototype.contains = function(x, y)
 {
-    if(this.width <= 0 || this.height <= 0)
+    if (this.width <= 0 || this.height <= 0)
+    {
         return false;
+    }
 
     var x1 = this.x;
-    if(x >= x1 && x <= x1 + this.width)
+
+    if (x >= x1 && x <= x1 + this.width)
     {
         var y1 = this.y;
 
-        if(y >= y1 && y <= y1 + this.height)
+        if (y >= y1 && y <= y1 + this.height)
         {
             return true;
         }

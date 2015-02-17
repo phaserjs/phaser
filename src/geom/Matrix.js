@@ -96,10 +96,14 @@ Phaser.Matrix.prototype.fromArray = function(array)
  */
 Phaser.Matrix.prototype.toArray = function(transpose)
 {
-    if(!this.array) this.array = new PIXI.Float32Array(9);
+    if (!this.array)
+    {
+        this.array = new PIXI.Float32Array(9);        
+    } 
+
     var array = this.array;
 
-    if(transpose)
+    if (transpose)
     {
         array[0] = this.a;
         array[1] = this.b;
@@ -141,7 +145,7 @@ Phaser.Matrix.prototype.apply = function(pos, newPos)
     newPos = newPos || new Phaser.Point();
 
     var x = pos.x;
-    var y = pos.y
+    var y = pos.y;
 
     newPos.x = this.a * x + this.c * y + this.tx;
     newPos.y = this.b * x + this.d * y + this.ty;
