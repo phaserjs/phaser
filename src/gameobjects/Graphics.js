@@ -80,22 +80,6 @@ Phaser.Graphics.prototype.destroy = function(destroyChildren) {
 };
 
 /*
-* Draws a circle.
-*
-* @method Phaser.Graphics.prototype.drawCircle
-* @param {Number} x - The X coordinate of the center of the circle.
-* @param {Number} y - The Y coordinate of the center of the circle.
-* @param {Number} diameter - The diameter of the circle.
-* @return {Phaser.Graphics} This Graphics object.
-*/
-Phaser.Graphics.prototype.drawCircle = function(x, y, diameter)
-{
-    this.drawShape(new Phaser.Circle(x, y, diameter));
-
-    return this;
-};
-
-/*
 * Draws a single {Phaser.Polygon} triangle from a {Phaser.Point} array
 *
 * @method Phaser.Graphics.prototype.drawTriangle
