@@ -427,7 +427,7 @@ Phaser.Physics.Arcade.prototype = {
 
         if (!Array.isArray(object1) && Array.isArray(object2))
         {
-            for (var i = 0,; i < object2.length; i++)
+            for (var i = 0; i < object2.length; i++)
             {
                 this.collideHandler(object1, object2[i], collideCallback, processCallback, callbackContext, false);
             }
