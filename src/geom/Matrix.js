@@ -55,6 +55,13 @@ Phaser.Matrix = function()
      * @default 0
      */
     this.ty = 0;
+
+    /**
+    * @property {number} type - The const type of this object.
+    * @readonly
+    */
+    this.type = Phaser.MATRIX;
+
 };
 
 /**

@@ -24,11 +24,6 @@
 Phaser.Polygon = function () {
 
     /**
-     * @property {number} type - The base object type.
-     */
-    this.type = Phaser.POLYGON;
-
-    /**
     * @property {number} area - The area of this Polygon.
     */
     this.area = 0;
@@ -48,6 +43,11 @@ Phaser.Polygon = function () {
     * @property {boolean} closed - Is the Polygon closed or not?
     */
     this.closed = true;
+
+    /**
+     * @property {number} type - The base object type.
+     */
+    this.type = Phaser.POLYGON;
 
 };
 
@@ -244,3 +244,6 @@ Object.defineProperty(Phaser.Polygon.prototype, 'points', {
     }
 
 });
+
+//  Because PIXI uses its own type, we'll replace it with ours to avoid duplicating code or confusion.
+PIXI.Polygon = Phaser.Polygon;

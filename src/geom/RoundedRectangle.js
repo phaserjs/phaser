@@ -51,12 +51,10 @@ Phaser.RoundedRectangle = function(x, y, width, height, radius)
     this.radius = radius || 20;
 
     /**
-     * The type of the object, should be one of the Graphics type consts, PIXI.Graphics.RRECT in this case
-     * @property type
-     * @type Number
-     * @default 0
-     */
-     this.type = 4;
+    * @property {number} type - The const type of this object.
+    * @readonly
+    */
+    this.type = Phaser.ROUNDEDRECTANGLE;
 };
 
 /**

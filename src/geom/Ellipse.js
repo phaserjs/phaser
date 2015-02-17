@@ -44,6 +44,12 @@ Phaser.Ellipse = function (x, y, width, height) {
     */
     this.height = height;
 
+    /**
+    * @property {number} type - The const type of this object.
+    * @readonly
+    */
+    this.type = Phaser.ELLIPSE;
+
 };
 
 Phaser.Ellipse.prototype = {
