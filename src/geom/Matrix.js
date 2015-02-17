@@ -140,8 +140,11 @@ Phaser.Matrix.prototype.apply = function(pos, newPos)
 {
     newPos = newPos || new Phaser.Point();
 
-    newPos.x = this.a * pos.x + this.c * pos.y + this.tx;
-    newPos.y = this.b * pos.x + this.d * pos.y + this.ty;
+    var x = pos.x;
+    var y = pos.y
+
+    newPos.x = this.a * x + this.c * y + this.tx;
+    newPos.y = this.b * x + this.d * y + this.ty;
 
     return newPos;
 };
