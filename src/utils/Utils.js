@@ -351,6 +351,10 @@ Phaser.Utils = {
     */
     mixinPrototype: function (target, mixin, replace) {
     
+        // console.log('------------------------------------------------------------------');
+        // console.log('mixin target', target);
+        // console.log('mixin source', mixin);
+
         if (typeof replace === 'undefined') { replace = false; }
 
         var mixinKeys = Object.keys(mixin);
@@ -366,13 +370,23 @@ Phaser.Utils = {
             }
             else
             {
-                if (value && (typeof value.get === 'function' || typeof value.set === 'function'))
+                if (value && typeof value.clone === 'function')
                 {
-                    Object.defineProperty(target, key, value);
+                    target[key] = value.clone();
                 }
                 else
                 {
-                    target[key] = value;
+                    //  Breaks in classes like Phaser.Point which has a 'set' function! Hence the clone exception above
+                    if (value && (typeof value.get === 'function' || typeof value.set === 'function'))
+                    {
+                        Object.defineProperty(target, key, value);
+                        // console.log('def prop', key, 'to', value);
+                    }
+                    else
+                    {
+                        target[key] = value;
+                        // console.log('set', key, 'to', value);
+                    }
                 }
             }
         }
