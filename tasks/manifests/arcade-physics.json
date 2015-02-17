@@ -1,4 +1,5 @@
 [
     "src/physics/arcade/World.js",
-    "src/physics/arcade/Body.js"
+    "src/physics/arcade/Body.js",
+    "src/physics/arcade/TilemapCollision.js"
 ]

@@ -1,17 +1,18 @@
 [
     "src/Intro.js",
+
     "src/Phaser.js",
     "src/polyfills.js",
     "src/utils/Utils.js",
 
     "src/geom/Circle.js",
-    "src/geom/Point.js",
-    "src/geom/Rectangle.js",
-    "src/geom/Line.js",
     "src/geom/Ellipse.js",
+    "src/geom/Line.js",
+    "src/geom/Matrix.js",
+    "src/geom/Point.js",
     "src/geom/Polygon.js",
-
-    "src/pixi/primitives/Graphics.js",
+    "src/geom/Rectangle.js",
+    "src/geom/RoundedRectangle.js",
 
     "src/core/Camera.js",
     "src/core/State.js",
@@ -40,6 +41,29 @@
     "src/input/SinglePad.js",
     "src/input/GamepadButton.js",
     "src/input/InputHandler.js",
+
+    "src/gameobjects/components/Component.js",
+    "src/gameobjects/components/Angle.js",
+    "src/gameobjects/components/Animation.js",
+    "src/gameobjects/components/AutoCull.js",
+    "src/gameobjects/components/Bounds.js",
+    "src/gameobjects/components/BringToTop.js",
+    "src/gameobjects/components/Core.js",
+    "src/gameobjects/components/Crop.js",
+    "src/gameobjects/components/Delta.js",
+    "src/gameobjects/components/Destroy.js",
+    "src/gameobjects/components/FixedToCamera.js",
+    "src/gameobjects/components/Health.js",
+    "src/gameobjects/components/InCamera.js",
+    "src/gameobjects/components/InputEnabled.js",
+    "src/gameobjects/components/InWorld.js",
+    "src/gameobjects/components/LifeSpan.js",
+    "src/gameobjects/components/LoadTexture.js",
+    "src/gameobjects/components/Overlap.js",
+    "src/gameobjects/components/PhysicsBody.js",
+    "src/gameobjects/components/Reset.js",
+    "src/gameobjects/components/ScaleMinMax.js",
+    "src/gameobjects/components/Smoothed.js",
 
     "src/gameobjects/Events.js",
     "src/gameobjects/GameObjectFactory.js",
@@ -99,8 +123,9 @@
     "src/utils/Color.js",
 
     "src/physics/Physics.js",
-
     "src/particles/Particles.js",
+
+    "src/PixiDefaults.js",
     
     "src/Outro.js"
 ]

@@ -1,17 +1,18 @@
 [
     "src/Intro.js",
+
     "src/Phaser.js",
     "src/polyfills.js",
     "src/utils/Utils.js",
 
     "src/geom/Circle.js",
-    "src/geom/Point.js",
-    "src/geom/Rectangle.js",
-    "src/geom/Line.js",
     "src/geom/Ellipse.js",
+    "src/geom/Line.js",
+    "src/geom/Matrix.js",
+    "src/geom/Point.js",
     "src/geom/Polygon.js",
-
-    "src/pixi/primitives/Graphics.js",
+    "src/geom/Rectangle.js",
+    "src/geom/RoundedRectangle.js",
 
     "src/core/Camera.js",
     "src/core/State.js",
@@ -28,6 +29,18 @@
     "src/core/FlexLayer.js",
     "src/core/ScaleManager.js",
     "src/core/Game.js",
+
+    "src/input/Input.js",
+    "src/input/Key.js",
+    "src/input/Keyboard.js",
+    "src/input/Mouse.js",
+    "src/input/MSPointer.js",
+    "src/input/Pointer.js",
+    "src/input/Touch.js",
+    "src/input/Gamepad.js",
+    "src/input/SinglePad.js",
+    "src/input/GamepadButton.js",
+    "src/input/InputHandler.js",
 
     "src/gameobjects/components/Component.js",
     "src/gameobjects/components/Angle.js",
@@ -51,18 +64,6 @@
     "src/gameobjects/components/Reset.js",
     "src/gameobjects/components/ScaleMinMax.js",
     "src/gameobjects/components/Smoothed.js",
-
-    "src/input/Input.js",
-    "src/input/Key.js",
-    "src/input/Keyboard.js",
-    "src/input/Mouse.js",
-    "src/input/MSPointer.js",
-    "src/input/Pointer.js",
-    "src/input/Touch.js",
-    "src/input/Gamepad.js",
-    "src/input/SinglePad.js",
-    "src/input/GamepadButton.js",
-    "src/input/InputHandler.js",
 
     "src/gameobjects/Events.js",
     "src/gameobjects/GameObjectFactory.js",
@@ -122,8 +123,17 @@
     "src/utils/Color.js",
 
     "src/physics/Physics.js",
+
+    "src/particles/Particles.js",
+    "src/particles/arcade/ArcadeParticles.js",
+    "src/particles/arcade/Emitter.js",
+
+    "src/PixiDefaults.js",
+
+    "src/physics/Physics.js",
     "src/physics/arcade/World.js",
     "src/physics/arcade/Body.js",
+    "src/physics/arcade/TilemapCollision.js",
 
     "src/particles/Particles.js",
     "src/particles/arcade/ArcadeParticles.js",

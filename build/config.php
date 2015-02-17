@@ -50,8 +50,6 @@
 
     echo <<<EOL
 
-    <script src="$path/src/polyfills.js"></script>
-
     <script src="$path/src/pixi/Pixi.js"></script>
     <script src="$path/src/pixi/display/DisplayObject.js"></script>
     <script src="$path/src/pixi/display/DisplayObjectContainer.js"></script>
@@ -110,7 +108,6 @@
     <script src="$path/src/geom/Polygon.js"></script>
     <script src="$path/src/geom/Rectangle.js"></script>
     <script src="$path/src/geom/RoundedRectangle.js"></script>
-
 
     <script src="$path/src/core/Camera.js"></script>
     <script src="$path/src/core/State.js"></script>
