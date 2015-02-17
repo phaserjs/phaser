@@ -367,23 +367,23 @@ Phaser.Physics.Arcade.prototype = {
 
         if (!Array.isArray(object1) && Array.isArray(object2))
         {
-            for (var i = 0,  len = object2.length; i < len; i++)
+            for (var i = 0; i < object2.length; i++)
             {
                 this.collideHandler(object1, object2[i], overlapCallback, processCallback, callbackContext, true);
             }
         }
         else if (Array.isArray(object1) && !Array.isArray(object2))
         {
-            for (var i = 0,  len = object1.length; i < len; i++)
+            for (var i = 0; i < object1.length; i++)
             {
                 this.collideHandler(object1[i], object2, overlapCallback, processCallback, callbackContext, true);
             }
         }
         else if (Array.isArray(object1) && Array.isArray(object2))
         {
-            for (var i = 0,  len = object1.length; i < len; i++)
+            for (var i = 0; i < object1.length; i++)
             {
-                for (var j = 0,  len2 = object2.length; j < len2; j++)
+                for (var j = 0; j < object2.length; j++)
                 {
                     this.collideHandler(object1[i], object2[j], overlapCallback, processCallback, callbackContext, true);
                 }
@@ -427,23 +427,23 @@ Phaser.Physics.Arcade.prototype = {
 
         if (!Array.isArray(object1) && Array.isArray(object2))
         {
-            for (var i = 0,  len = object2.length; i < len; i++)
+            for (var i = 0,; i < object2.length; i++)
             {
                 this.collideHandler(object1, object2[i], collideCallback, processCallback, callbackContext, false);
             }
         }
         else if (Array.isArray(object1) && !Array.isArray(object2))
         {
-            for (var i = 0,  len = object1.length; i < len; i++)
+            for (var i = 0; i < object1.length; i++)
             {
                 this.collideHandler(object1[i], object2, collideCallback, processCallback, callbackContext, false);
             }
         }
         else if (Array.isArray(object1) && Array.isArray(object2))
         {
-            for (var i = 0,  len1 = object1.length; i < len1; i++)
+            for (var i = 0; i < object1.length; i++)
             {
-                for (var j = 0,  len2 = object2.length; j < len2; j++)
+                for (var j = 0; j < object2.length; j++)
                 {
                     this.collideHandler(object1[i], object2[j], collideCallback, processCallback, callbackContext, false);
                 }
@@ -482,61 +482,61 @@ Phaser.Physics.Arcade.prototype = {
         if (object1 && object2 && object1.exists && object2.exists)
         {
             //  SPRITES
-            if (object1.type == Phaser.SPRITE || object1.type == Phaser.TILESPRITE)
+            if (object1.type === Phaser.SPRITE || object1.type === Phaser.TILESPRITE)
             {
-                if (object2.type == Phaser.SPRITE || object2.type == Phaser.TILESPRITE)
+                if (object2.type === Phaser.SPRITE || object2.type === Phaser.TILESPRITE)
                 {
                     this.collideSpriteVsSprite(object1, object2, collideCallback, processCallback, callbackContext, overlapOnly);
                 }
-                else if (object2.type == Phaser.GROUP || object2.type == Phaser.EMITTER)
+                else if (object2.type === Phaser.GROUP || object2.type === Phaser.EMITTER)
                 {
                     this.collideSpriteVsGroup(object1, object2, collideCallback, processCallback, callbackContext, overlapOnly);
                 }
-                else if (object2.type == Phaser.TILEMAPLAYER)
+                else if (object2.type === Phaser.TILEMAPLAYER)
                 {
                     this.collideSpriteVsTilemapLayer(object1, object2, collideCallback, processCallback, callbackContext);
                 }
             }
             //  GROUPS
-            else if (object1.type == Phaser.GROUP)
+            else if (object1.type === Phaser.GROUP)
             {
-                if (object2.type == Phaser.SPRITE || object2.type == Phaser.TILESPRITE)
+                if (object2.type === Phaser.SPRITE || object2.type === Phaser.TILESPRITE)
                 {
                     this.collideSpriteVsGroup(object2, object1, collideCallback, processCallback, callbackContext, overlapOnly);
                 }
-                else if (object2.type == Phaser.GROUP || object2.type == Phaser.EMITTER)
+                else if (object2.type === Phaser.GROUP || object2.type === Phaser.EMITTER)
                 {
                     this.collideGroupVsGroup(object1, object2, collideCallback, processCallback, callbackContext, overlapOnly);
                 }
-                else if (object2.type == Phaser.TILEMAPLAYER)
+                else if (object2.type === Phaser.TILEMAPLAYER)
                 {
                     this.collideGroupVsTilemapLayer(object1, object2, collideCallback, processCallback, callbackContext);
                 }
             }
             //  TILEMAP LAYERS
-            else if (object1.type == Phaser.TILEMAPLAYER)
+            else if (object1.type === Phaser.TILEMAPLAYER)
             {
-                if (object2.type == Phaser.SPRITE || object2.type == Phaser.TILESPRITE)
+                if (object2.type === Phaser.SPRITE || object2.type === Phaser.TILESPRITE)
                 {
                     this.collideSpriteVsTilemapLayer(object2, object1, collideCallback, processCallback, callbackContext);
                 }
-                else if (object2.type == Phaser.GROUP || object2.type == Phaser.EMITTER)
+                else if (object2.type === Phaser.GROUP || object2.type === Phaser.EMITTER)
                 {
                     this.collideGroupVsTilemapLayer(object2, object1, collideCallback, processCallback, callbackContext);
                 }
             }
             //  EMITTER
-            else if (object1.type == Phaser.EMITTER)
+            else if (object1.type === Phaser.EMITTER)
             {
-                if (object2.type == Phaser.SPRITE || object2.type == Phaser.TILESPRITE)
+                if (object2.type === Phaser.SPRITE || object2.type === Phaser.TILESPRITE)
                 {
                     this.collideSpriteVsGroup(object2, object1, collideCallback, processCallback, callbackContext, overlapOnly);
                 }
-                else if (object2.type == Phaser.GROUP || object2.type == Phaser.EMITTER)
+                else if (object2.type === Phaser.GROUP || object2.type === Phaser.EMITTER)
                 {
                     this.collideGroupVsGroup(object1, object2, collideCallback, processCallback, callbackContext, overlapOnly);
                 }
-                else if (object2.type == Phaser.TILEMAPLAYER)
+                else if (object2.type === Phaser.TILEMAPLAYER)
                 {
                     this.collideGroupVsTilemapLayer(object1, object2, collideCallback, processCallback, callbackContext);
                 }
