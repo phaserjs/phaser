@@ -105,6 +105,11 @@ Phaser.Physics.P2.Body = function (game, sprite, x, y, mass) {
     this.debugBody = null;
 
     /**
+    * @property {boolean} dirty - Internally used by Sprite.x/y
+    */
+    this.dirty = false;
+
+    /**
     * @property {boolean} _collideWorldBounds - Internal var that determines if this Body collides with the world bounds or not.
     * @private
     */
@@ -133,6 +138,12 @@ Phaser.Physics.P2.Body = function (game, sprite, x, y, mass) {
     * @private
     */
     this._groupCallbackContext = {};
+
+    /**
+    * @property {boolean} _reset - Internal var.
+    * @private
+    */
+    this._reset = false;
 
     //  Set-up the default shape
     if (sprite)
@@ -657,6 +668,8 @@ Phaser.Physics.P2.Body.prototype = {
     */
     preUpdate: function () {
 
+        this.dirty = true;
+
         if (this.removeNextStep)
         {
             this.removeFromWorld();
@@ -685,6 +698,8 @@ Phaser.Physics.P2.Body.prototype = {
         {
             this.debugBody.updateSpriteTransform();
         }
+
+        this.dirty = false;
 
     },
 
