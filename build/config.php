@@ -53,21 +53,17 @@
     <script src="$path/src/polyfills.js"></script>
 
     <script src="$path/src/pixi/Pixi.js"></script>
-    <script src="$path/src/pixi/geom/Matrix.js"></script>
-    <script src="$path/src/pixi/geom/Polygon.js"></script>
-    <script src="$path/src/pixi/geom/Rectangle.js"></script>
-    <script src="$path/src/pixi/geom/RoundedRectangle.js"></script>
     <script src="$path/src/pixi/display/DisplayObject.js"></script>
     <script src="$path/src/pixi/display/DisplayObjectContainer.js"></script>
     <script src="$path/src/pixi/display/Sprite.js"></script>
     <script src="$path/src/pixi/display/SpriteBatch.js"></script>
-    <script src="$path/src/pixi/filters/FilterBlock.js"></script>
     <script src="$path/src/pixi/text/Text.js"></script>
     <script src="$path/src/pixi/text/BitmapText.js"></script>
     <script src="$path/src/pixi/display/Stage.js"></script>
+
     <script src="$path/src/pixi/utils/Utils.js"></script>
-    <script src="$path/src/pixi/utils/EventTarget.js"></script>
     <script src="$path/src/pixi/utils/Polyk.js"></script>
+
     <script src="$path/src/pixi/renderers/webgl/utils/WebGLShaderUtils.js"></script>
     <script src="$path/src/pixi/renderers/webgl/shaders/PixiShader.js"></script>
     <script src="$path/src/pixi/renderers/webgl/shaders/PixiFastShader.js"></script>
@@ -90,12 +86,16 @@
     <script src="$path/src/pixi/renderers/canvas/CanvasRenderer.js"></script>
     <script src="$path/src/pixi/renderers/canvas/CanvasGraphics.js"></script>
 
+    <script src="$path/src/pixi/primitives/Graphics.js"></script>
+
     <script src="$path/src/pixi/extras/Strip.js"></script>
     <script src="$path/src/pixi/extras/Rope.js"></script>
     <script src="$path/src/pixi/extras/TilingSprite.js"></script>
+
     <script src="$path/src/pixi/textures/BaseTexture.js"></script>
     <script src="$path/src/pixi/textures/Texture.js"></script>
     <script src="$path/src/pixi/textures/RenderTexture.js"></script>
+
     <script src="$path/src/pixi/filters/AbstractFilter.js"></script>
 
     <script src="$path/src/Phaser.js"></script>
@@ -103,13 +103,14 @@
     <script src="$path/src/utils/Utils.js"></script>
 
     <script src="$path/src/geom/Circle.js"></script>
-    <script src="$path/src/geom/Point.js"></script>
-    <script src="$path/src/geom/Rectangle.js"></script>
-    <script src="$path/src/geom/Line.js"></script>
     <script src="$path/src/geom/Ellipse.js"></script>
+    <script src="$path/src/geom/Line.js"></script>
+    <script src="$path/src/geom/Matrix.js"></script>
+    <script src="$path/src/geom/Point.js"></script>
     <script src="$path/src/geom/Polygon.js"></script>
+    <script src="$path/src/geom/Rectangle.js"></script>
+    <script src="$path/src/geom/RoundedRectangle.js"></script>
 
-    <script src="$path/src/pixi/primitives/Graphics.js"></script>
 
     <script src="$path/src/core/Camera.js"></script>
     <script src="$path/src/core/State.js"></script>
@@ -225,6 +226,8 @@
     <script src="$path/src/particles/arcade/ArcadeParticles.js"></script>
     <script src="$path/src/particles/arcade/Emitter.js"></script>
 
+    <script src="$path/src/PixiDefaults.js"></script>
+
 EOL;
 
     if ($tilemap)
@@ -246,6 +249,7 @@ EOL;
 
     <script src="$path/src/physics/arcade/World.js"></script>
     <script src="$path/src/physics/arcade/Body.js"></script>
+    <script src="$path/src/physics/arcade/TilemapCollision.js"></script>
 EOL;
     }
 
