@@ -9,7 +9,7 @@
 *
 * Since a TilemapLayer is a Sprite it can be moved around the display, added to other groups or display objects, etc.
 *
-* By default TilemapLayers have fixedToCamera set to `true`. Changing this will break Camera follow and scrolling behaviour.
+* By default TilemapLayers have fixedToCamera set to `true`. Changing this will break Camera follow and scrolling behavior.
 *
 * @class Phaser.TilemapLayer
 * @extends {Phaser.Image}
@@ -25,13 +25,20 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
     width |= 0;
     height |= 0;
 
-    /**
-    * A reference to the currently running Game.
-    * @property {Phaser.Game} game
-    * @protected
-    * @readonly
-    */
-    this.game = game;
+    PIXI.Sprite.call(this, PIXI.TextureCache['__default']);
+
+    Phaser.Utils.mixinPrototype(this, Phaser.Component.Core.prototype);
+
+    var components = [
+        'Bounds',
+        'Destroy',
+        'FixedToCamera',
+        'Reset',
+        'Smoothed'
+    ];
+
+    Phaser.Component.Core.install.call(this, components);
+    Phaser.Component.Core.init.call(this, game, 0, 0, null, null);
 
     /**
     * The Tilemap to which this layer is bound.
@@ -92,14 +99,6 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
     */
     this.textureFrame = new Phaser.Frame(0, 0, 0, width, height, 'tilemapLayer', game.rnd.uuid());
 
-    Phaser.Image.call(this, this.game, 0, 0, this.texture, this.textureFrame);
-
-    /**
-    * The name of the layer.
-    * @property {string} name
-    */
-    this.name = '';
-
     /**
     * The const type of this object.
     * @property {number} type
@@ -108,19 +107,6 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
     * @default Phaser.TILEMAPLAYER
     */
     this.type = Phaser.TILEMAPLAYER;
-
-    /**
-    * An object that is fixed to the camera ignores the position of any ancestors in the display list and uses its x/y coordinates as offsets from the top left of the camera.
-    * @property {boolean} fixToCamera
-    * @default
-    */
-    this.fixedToCamera = true;
-
-    /**
-    * If this object is fixed to the camera then use this Point to specify how far away from the Camera x/y it's rendered.
-    * @property {Phaser.Point} cameraOffset
-    */
-    this.cameraOffset = new Phaser.Point(0, 0);
 
     /**
     * Settings that control standard (non-diagnostic) rendering.
@@ -268,6 +254,8 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
         this.renderSettings.copyCanvas = Phaser.TilemapLayer.ensureSharedCopyCanvas();
     }
 
+    this.fixedToCamera = true;
+
 };
 
 /**
@@ -297,30 +285,22 @@ Phaser.TilemapLayer.ensureSharedCopyCanvas = function () {
 
 };
 
-Phaser.TilemapLayer.prototype = Object.create(Phaser.Image.prototype);
+Phaser.TilemapLayer.prototype = Object.create(PIXI.Sprite.prototype);
 Phaser.TilemapLayer.prototype.constructor = Phaser.TilemapLayer;
 
 /**
-* If no valid tileset/image can be found for a tile, the tile is rendered as a rectangle using this as a fill value.
+* Automatically called by World.preUpdate.
 *
-* Set to `null` to disable rendering anything for tiles without value tileset images.
-*
-* @property {?string} tileColor
-* @memberof Phaser.TilemapLayer
-* @default 'rgb(255, 255, 255)'
-* @deprecated Use `debugSettings.missingImageFill` instead.
+* @method Phaser.Image#preUpdate
+* @memberof Phaser.Image
 */
-Object.defineProperty(Phaser.TilemapLayer.prototype, 'tileColor', {
+Phaser.TilemapLayer.prototype.preUpdate = function() {
 
-    get: function () {
-        return this.debugSettings.missingImageFill;
-    },
+    Phaser.Component.Core.preUpdate.call(this);
 
-    set: function (value) {
-        this.debugSettings.missingImageFill = value;
-    }
+    return true;
 
-});
+};
 
 /**
 * Automatically called by World.postUpdate. Handles cache updates.
@@ -330,20 +310,15 @@ Object.defineProperty(Phaser.TilemapLayer.prototype, 'tileColor', {
 */
 Phaser.TilemapLayer.prototype.postUpdate = function () {
 
-    Phaser.Image.prototype.postUpdate.call(this);
+    Phaser.Component.Core.prototype.postUpdate.call(this);
 
     //  Stops you being able to auto-scroll the camera if it's not following a sprite
     var camera = this.game.camera;
+
     this.scrollX = camera.x * this.scrollFactorX / this.scale.x;
     this.scrollY = camera.y * this.scrollFactorY / this.scale.y;
 
     this.render();
-
-    if (this.fixedToCamera)
-    {
-        this.position.x = (camera.view.x + this.cameraOffset.x) / camera.scale.x;
-        this.position.y = (camera.view.y + this.cameraOffset.y) / camera.scale.y;
-    }
 
 };
 
@@ -596,6 +571,28 @@ Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides
     return this._results.slice();
 
 };
+
+/**
+* If no valid tileset/image can be found for a tile, the tile is rendered as a rectangle using this as a fill value.
+*
+* Set to `null` to disable rendering anything for tiles without value tileset images.
+*
+* @property {?string} tileColor
+* @memberof Phaser.TilemapLayer
+* @default 'rgb(255, 255, 255)'
+* @deprecated Use `debugSettings.missingImageFill` instead.
+*/
+Object.defineProperty(Phaser.TilemapLayer.prototype, 'tileColor', {
+
+    get: function () {
+        return this.debugSettings.missingImageFill;
+    },
+
+    set: function (value) {
+        this.debugSettings.missingImageFill = value;
+    }
+
+});
 
 /**
 * Flag controlling if the layer tiles wrap at the edges. Only works if the World size matches the Map size.
