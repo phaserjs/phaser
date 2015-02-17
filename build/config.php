@@ -139,6 +139,29 @@
     <script src="$path/src/input/GamepadButton.js"></script>
     <script src="$path/src/input/InputHandler.js"></script>
 
+    <script src="$path/src/gameobjects/components/Component.js"></script>
+    <script src="$path/src/gameobjects/components/Angle.js"></script>
+    <script src="$path/src/gameobjects/components/Animation.js"></script>
+    <script src="$path/src/gameobjects/components/AutoCull.js"></script>
+    <script src="$path/src/gameobjects/components/Bounds.js"></script>
+    <script src="$path/src/gameobjects/components/BringToTop.js"></script>
+    <script src="$path/src/gameobjects/components/Core.js"></script>
+    <script src="$path/src/gameobjects/components/Crop.js"></script>
+    <script src="$path/src/gameobjects/components/Delta.js"></script>
+    <script src="$path/src/gameobjects/components/Destroy.js"></script>
+    <script src="$path/src/gameobjects/components/FixedToCamera.js"></script>
+    <script src="$path/src/gameobjects/components/Health.js"></script>
+    <script src="$path/src/gameobjects/components/InCamera.js"></script>
+    <script src="$path/src/gameobjects/components/InputEnabled.js"></script>
+    <script src="$path/src/gameobjects/components/InWorld.js"></script>
+    <script src="$path/src/gameobjects/components/LifeSpan.js"></script>
+    <script src="$path/src/gameobjects/components/LoadTexture.js"></script>
+    <script src="$path/src/gameobjects/components/Overlap.js"></script>
+    <script src="$path/src/gameobjects/components/PhysicsBody.js"></script>
+    <script src="$path/src/gameobjects/components/Reset.js"></script>
+    <script src="$path/src/gameobjects/components/ScaleMinMax.js"></script>
+    <script src="$path/src/gameobjects/components/Smoothed.js"></script>
+
     <script src="$path/src/gameobjects/Events.js"></script>
     <script src="$path/src/gameobjects/GameObjectFactory.js"></script>
     <script src="$path/src/gameobjects/GameObjectCreator.js"></script>
