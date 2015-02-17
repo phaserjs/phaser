@@ -60,7 +60,9 @@ Happy coding everyone! See you on the forums.
 
 Version 2.3.0 - "Tarabon" - in dev
 
-### Significant Update: Phaser.Loader
+### Significant Update
+
+#### Phaser.Loader
 
 The Phaser.Loader has been updated to support parallel downloads which is now enabled by default (you can toggle it via the `Loader.enableParallel` flag) as well as adding future extensibility points with a pack/file unified filelist and an inflight queue.
 
@@ -83,6 +85,10 @@ This also incorporates the fast-cache path for Images tags that can greatly spee
 Loader.resetLocked is a boolean that allows you to control what happens when the loader is reset, *which happens automatically on a State change*. If you set `resetLocked` to `true` it allows you to populate the loader queue in one State, then swap to another State without having the queue erased, and start the load going from there. After the load has completed you could then disable the lock again as needed.
 
 Thanks to @pnstickne for vast majority of this update.
+
+#### Game Objects
+
+All of the core Game Objects have received a small but important restructuring.
 
 ### New Features
 
