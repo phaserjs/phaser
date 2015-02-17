@@ -11,7 +11,7 @@
  */
 PIXI.Graphics = function()
 {
-    PIXI.DisplayObjectContainer.call( this );
+    PIXI.DisplayObjectContainer.call(this);
 
     this.renderable = true;
 
@@ -136,37 +136,9 @@ PIXI.Graphics = function()
 PIXI.Graphics.prototype = Object.create( PIXI.DisplayObjectContainer.prototype );
 PIXI.Graphics.prototype.constructor = PIXI.Graphics;
 
-/**
- * When cacheAsBitmap is set to true the graphics object will be rendered as if it was a sprite.
- * This is useful if your graphics element does not change often, as it will speed up the rendering of the object in exchange for taking up texture memory.
- * It is also useful if you need the graphics object to be anti-aliased, because it will be rendered using canvas.
- * This is not recommended if you are constantly redrawing the graphics element.
- *
- * @property cacheAsBitmap
- * @type Boolean
- * @default false
- * @private
- */
-Object.defineProperty(PIXI.Graphics.prototype, "cacheAsBitmap", {
-    get: function() {
-        return  this._cacheAsBitmap;
-    },
-    set: function(value) {
-        this._cacheAsBitmap = value;
-
-        if(this._cacheAsBitmap)
-        {
-
-            this._generateCachedSprite();
-        }
-        else
-        {
-            this.destroyCachedSprite();
-            this.dirty = true;
-        }
-
-    }
-});
+PIXI.Graphics.prototype.preUpdate = function() {};
+PIXI.Graphics.prototype.update = function() {};
+PIXI.Graphics.prototype.postUpdate = function() {};
 
 /**
  * Specifies the line style used for subsequent calls to Graphics methods such as the lineTo() method or the drawCircle() method.
@@ -183,12 +155,12 @@ PIXI.Graphics.prototype.lineStyle = function(lineWidth, color, alpha)
     this.lineColor = color || 0;
     this.lineAlpha = (arguments.length < 3) ? 1 : alpha;
 
-    if(this.currentPath)
+    if (this.currentPath)
     {
-        if(this.currentPath.shape.points.length)
+        if (this.currentPath.shape.points.length)
         {
             // halfway through a line? start a new one!
-            this.drawShape( new PIXI.Polygon( this.currentPath.shape.points.slice(-2) ));
+            this.drawShape(new PIXI.Polygon(this.currentPath.shape.points.slice(-2)));
             return this;
         }
 
@@ -212,7 +184,7 @@ PIXI.Graphics.prototype.lineStyle = function(lineWidth, color, alpha)
   */
 PIXI.Graphics.prototype.moveTo = function(x, y)
 {
-    this.drawShape(new PIXI.Polygon([x,y]));
+    this.drawShape(new PIXI.Polygon([x, y]));
 
     return this;
 };
@@ -228,6 +200,11 @@ PIXI.Graphics.prototype.moveTo = function(x, y)
  */
 PIXI.Graphics.prototype.lineTo = function(x, y)
 {
+    if (!this.currentPath)
+    {
+        this.moveTo(0, 0);
+    }
+
     this.currentPath.shape.points.push(x, y);
     this.dirty = true;
 
@@ -247,27 +224,24 @@ PIXI.Graphics.prototype.lineTo = function(x, y)
  */
 PIXI.Graphics.prototype.quadraticCurveTo = function(cpX, cpY, toX, toY)
 {
-    if( this.currentPath )
+    if (this.currentPath)
     {
-        if(this.currentPath.shape.points.length === 0)this.currentPath.shape.points = [0,0];
+        if (this.currentPath.shape.points.length === 0) this.currentPath.shape.points = [0, 0];
     }
     else
     {
         this.moveTo(0,0);
     }
 
-    var xa,
-    ya,
-    n = 20,
-    points = this.currentPath.shape.points;
-    if(points.length === 0)this.moveTo(0, 0);
-    
+    var xa, ya, n = 20, points = this.currentPath.shape.points;
 
-    var fromX = points[points.length-2];
-    var fromY = points[points.length-1];
+    if (points.length === 0) this.moveTo(0, 0);
 
+    var fromX = points[points.length - 2];
+    var fromY = points[points.length - 1];
     var j = 0;
-    for (var i = 1; i <= n; i++ )
+
+    for (var i = 1; i <= n; i++)
     {
         j = i / n;
 
@@ -277,7 +251,6 @@ PIXI.Graphics.prototype.quadraticCurveTo = function(cpX, cpY, toX, toY)
         points.push( xa + ( ((cpX + ( (toX - cpX) * j )) - xa) * j ),
                      ya + ( ((cpY + ( (toY - cpY) * j )) - ya) * j ) );
     }
-
 
     this.dirty = true;
 
@@ -298,29 +271,22 @@ PIXI.Graphics.prototype.quadraticCurveTo = function(cpX, cpY, toX, toY)
  */
 PIXI.Graphics.prototype.bezierCurveTo = function(cpX, cpY, cpX2, cpY2, toX, toY)
 {
-    if( this.currentPath )
+    if (this.currentPath)
     {
-        if(this.currentPath.shape.points.length === 0)this.currentPath.shape.points = [0,0];
+        if (this.currentPath.shape.points.length === 0) this.currentPath.shape.points = [0, 0];
     }
     else
     {
         this.moveTo(0,0);
     }
 
-    var n = 20,
-    dt,
-    dt2,
-    dt3,
-    t2,
-    t3,
-    points = this.currentPath.shape.points;
+    var n = 20, dt, dt2, dt3, t2, t3, points = this.currentPath.shape.points;
 
     var fromX = points[points.length-2];
     var fromY = points[points.length-1];
-    
     var j = 0;
 
-    for (var i=1; i<=n; i++)
+    for (var i = 1; i <= n; i++)
     {
         j = i / n;
 
@@ -355,9 +321,9 @@ PIXI.Graphics.prototype.bezierCurveTo = function(cpX, cpY, cpX2, cpY2, toX, toY)
  */
 PIXI.Graphics.prototype.arcTo = function(x1, y1, x2, y2, radius)
 {
-    if( this.currentPath )
+    if (this.currentPath)
     {
-        if(this.currentPath.shape.points.length === 0)
+        if (this.currentPath.shape.points.length === 0)
         {
             this.currentPath.shape.points.push(x1, y1);
         }
@@ -376,12 +342,10 @@ PIXI.Graphics.prototype.arcTo = function(x1, y1, x2, y2, radius)
     var b2 = x2   - x1;
     var mm = Math.abs(a1 * b2 - b1 * a2);
 
-
     if (mm < 1.0e-8 || radius === 0)
     {
-        if( points[points.length-2] !== x1 || points[points.length-1] !== y1)
+        if (points[points.length-2] !== x1 || points[points.length-1] !== y1)
         {
-            //console.log(">>")
             points.push(x1, y1);
         }
     }
@@ -567,22 +531,6 @@ PIXI.Graphics.prototype.drawRoundedRect = function(x, y, width, height, radius)
     return this;
 };
 
-/**
- * Draws a circle.
- *
- * @method drawCircle
- * @param x {Number} The X coordinate of the center of the circle
- * @param y {Number} The Y coordinate of the center of the circle
- * @param radius {Number} The radius of the circle
- * @return {Graphics}
-PIXI.Graphics.prototype.drawCircle = function(x, y, radius)
-{
-    this.drawShape(new PIXI.Circle(x,y, radius));
-
-    return this;
-};
- */
-
 /*
 * Draws a circle.
 *
@@ -594,7 +542,7 @@ PIXI.Graphics.prototype.drawCircle = function(x, y, radius)
 */
 PIXI.Graphics.prototype.drawCircle = function(x, y, diameter)
 {
-    this.drawShape(new Phaser.Circle(x, y, diameter));
+    this.drawShape(new PIXI.Circle(x, y, diameter));
 
     return this;
 };
@@ -957,7 +905,7 @@ PIXI.Graphics.prototype.updateLocalBounds = function()
                 minY = y - h < minY ? y - h : minY;
                 maxY = y + h > maxY ? y + h : maxY;
             }
-            else if(type === PIXI.Graphics.ELIP)
+            else if (type === PIXI.Graphics.ELIP)
             {
                 x = shape.x;
                 y = shape.y;
@@ -972,13 +920,26 @@ PIXI.Graphics.prototype.updateLocalBounds = function()
             }
             else
             {
-                // POLY
+                // POLY - assumes points are sequential, not Point objects
                 points = shape.points;
-                
-                for (var j = 0; j < points.length; j += 2)
+
+                for (var j = 0; j < points.length; j++)
                 {
-                    x = points[j];
-                    y = points[j + 1];
+                    if (points[j] instanceof Phaser.Point)
+                    {
+                        x = points[j].x;
+                        y = points[j].y;
+                    }
+                    else
+                    {
+                        x = points[j];
+                        y = points[j + 1];
+
+                        if (j < points.length - 1)
+                        {
+                            j++;
+                        }
+                    }
 
                     minX = x - lineWidth < minX ? x - lineWidth : minX;
                     maxX = x + lineWidth > maxX ? x + lineWidth : maxX;
@@ -1078,9 +1039,6 @@ PIXI.Graphics.prototype.updateCachedSpriteTexture = function()
 PIXI.Graphics.prototype.destroyCachedSprite = function()
 {
     this._cachedSprite.texture.destroy(true);
-
-    // let the gc collect the unused sprite
-    // TODO could be object pooled!
     this._cachedSprite = null;
 };
 
@@ -1096,15 +1054,24 @@ PIXI.Graphics.prototype.drawShape = function(shape)
     if (this.currentPath)
     {
         // check current path!
-        if (this.currentPath.shape.points.length <= 2) this.graphicsData.pop();
+        if (this.currentPath.shape.points.length <= 2)
+        {
+            this.graphicsData.pop();
+        }
     }
 
     this.currentPath = null;
 
+    //  Handle mixed-type polygons
+    if (shape instanceof PIXI.Polygon)
+    {
+        shape.flatten();
+    }
+
     var data = new PIXI.GraphicsData(this.lineWidth, this.lineColor, this.lineAlpha, this.fillColor, this.fillAlpha, this.filling, shape);
     
     this.graphicsData.push(data);
-    
+
     if (data.type === PIXI.Graphics.POLY)
     {
         data.shape.closed = this.filling;
@@ -1115,6 +1082,40 @@ PIXI.Graphics.prototype.drawShape = function(shape)
 
     return data;
 };
+
+/**
+ * When cacheAsBitmap is set to true the graphics object will be rendered as if it was a sprite.
+ * This is useful if your graphics element does not change often, as it will speed up the rendering of the object in exchange for taking up texture memory.
+ * It is also useful if you need the graphics object to be anti-aliased, because it will be rendered using canvas.
+ * This is not recommended if you are constantly redrawing the graphics element.
+ *
+ * @property cacheAsBitmap
+ * @type Boolean
+ * @default false
+ * @private
+ */
+Object.defineProperty(PIXI.Graphics.prototype, "cacheAsBitmap", {
+
+    get: function() {
+        return  this._cacheAsBitmap;
+    },
+
+    set: function(value) {
+
+        this._cacheAsBitmap = value;
+
+        if (this._cacheAsBitmap)
+        {
+            this._generateCachedSprite();
+        }
+        else
+        {
+            this.destroyCachedSprite();
+            this.dirty = true;
+        }
+
+    }
+});
 
 /**
  * A GraphicsData object.
