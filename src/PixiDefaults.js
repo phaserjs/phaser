@@ -31,3 +31,12 @@ if (PIXI.RenderTexture.tempMatrix === undefined)
 {
     PIXI.RenderTexture.tempMatrix = new PIXI.Matrix();
 }
+
+if (PIXI.Graphics.POLY === undefined)
+{
+    PIXI.Graphics.POLY = Phaser.POLYGON;
+    PIXI.Graphics.RECT = Phaser.RECTANGLE;
+    PIXI.Graphics.CIRC = Phaser.CIRCLE;
+    PIXI.Graphics.ELIP = Phaser.ELLIPSE;
+    PIXI.Graphics.RREC = Phaser.ROUNDEDRECTANGLE;
+}
