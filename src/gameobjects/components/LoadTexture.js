@@ -22,7 +22,7 @@ Phaser.Component.LoadTexture.prototype = {
 
         frame = frame || 0;
 
-        if (stopAnimation || typeof stopAnimation === 'undefined')
+        if ((stopAnimation || typeof stopAnimation === 'undefined') && this.animations)
         {
             this.animations.stop();
         }
