@@ -489,7 +489,6 @@ Phaser.Game.prototype = {
     */
     boot: function () {
 
-        console.log("~~~ BOOTING");
         if (this.isBooted)
         {
             return;
@@ -629,7 +628,6 @@ Phaser.Game.prototype = {
     setUpRenderer: function () {
 
         if (this.__canvas) {
-            console.log("~~~ ALL GOOD");
             this.canvas = this.__canvas;
             if (!this.device.canvas)
             {
