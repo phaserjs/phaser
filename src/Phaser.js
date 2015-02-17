@@ -45,6 +45,12 @@ var Phaser = Phaser || {
     RETROFONT: 18,
     POINTER: 19,
     ROPE: 20,
+    CIRCLE: 21,
+    RECTANGLE: 22,
+    LINE: 23,
+    MATRIX: 24,
+    POINT: 25,
+    ROUNDEDRECTANGLE: 26,
 
     /**
      * Various blend modes supported by pixi. IMPORTANT - The WebGL renderer only supports the NORMAL, ADD, MULTIPLY and SCREEN blend modes.
