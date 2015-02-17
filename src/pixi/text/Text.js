@@ -357,14 +357,12 @@ PIXI.Text.prototype.determineFontProperties = function(fontStyle)
     {
         if (PIXI.DEVKIT_NATIVE)
         {
-            // TODO actual implementation
-            //      If devkit gets around to implementing context.getImageData,
-            //      then there may not be a need for this if/else block.
-            properties = {
-                ascent: 0,
-                descent: 0,
-                fontSize: 42 // It's as good as anything else!
-            };
+            var Font = jsio('import ui.resource.Font');
+            var font = new Font(fontStyle);
+
+            // TODO properly get ascent and descent
+            properties.ascent = font.getSize();
+            properties.descent = 0;
         }
         else
         {
@@ -452,10 +450,11 @@ PIXI.Text.prototype.determineFontProperties = function(fontStyle)
             properties.descent = i - baseline;
             //TODO might need a tweak. kind of a temp fix!
             properties.descent += 6;
-            properties.fontSize = properties.ascent + properties.descent;
-
-            PIXI.Text.fontPropertiesCache[fontStyle] = properties;
         }
+
+        properties.fontSize = properties.ascent + properties.descent;
+
+        PIXI.Text.fontPropertiesCache[fontStyle] = properties;
     }
 
     return properties;
