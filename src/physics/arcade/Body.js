@@ -297,9 +297,9 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.tilePadding = new Phaser.Point();
 
     /**
-    * @property {number} phaser - Is this Body in a preUpdate (1) or postUpdate (2) state?
+    * @property {boolean} dirty - Is this Body dirty? I.e. still running its pre/post Update (true) or has it synced its changed the parent Sprite? (false)
     */
-    this.phase = 0;
+    this.dirty = true;
 
     /**
     * @property {boolean} skipQuadTree - If true and you collide this Sprite against a Group, it will disable the collision check from using a QuadTree.
@@ -379,7 +379,7 @@ Phaser.Physics.Arcade.Body.prototype = {
             return;
         }
 
-        this.phase = 1;
+        this.dirty = true;
 
         //  Store and reset collision flags
         this.wasTouching.none = this.touching.none;
@@ -454,18 +454,11 @@ Phaser.Physics.Arcade.Body.prototype = {
     */
     postUpdate: function () {
 
-        if (!this.enable)
-        {
-            return;
-        }
-
         //  Only allow postUpdate to be called once per frame
-        if (this.phase === 2)
+        if (!this.enable || !this.dirty)
         {
             return;
         }
-
-        this.phase = 2;
 
         if (this.deltaX() < 0)
         {
@@ -527,6 +520,8 @@ Phaser.Physics.Arcade.Body.prototype = {
 
         this.prev.x = this.position.x;
         this.prev.y = this.position.y;
+
+        this.dirty = false;
 
     },
 
