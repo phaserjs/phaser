@@ -217,7 +217,6 @@ var STATE_OUT = 'Out';
 var STATE_DOWN = 'Down';
 var STATE_UP = 'Up';
 
-
 /**
 * Clears all of the frames set on this Button.
 *

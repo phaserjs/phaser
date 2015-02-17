@@ -20,78 +20,30 @@ Phaser.Graphics = function (game, x, y) {
     y = y || 0;
 
     /**
-    * @property {Phaser.Game} game - A reference to the currently running Game.
-    */
-    this.game = game;
-
-    /**
-    * @property {boolean} exists - If exists = false then the Text isn't updated by the core game loop.
-    * @default
-    */
-    this.exists = true;
-
-    /**
-    * @property {string} name - The user defined name given to this object.
-    * @default
-    */
-    this.name = '';
-
-    /**
     * @property {number} type - The const type of this object.
     * @default
     */
     this.type = Phaser.GRAPHICS;
 
-    /**
-    * @property {number} z - The z-depth value of this object within its Group (remember the World is a Group as well). No two objects in a Group can have the same z value.
-    */
-    this.z = 0;
-
-    /**
-    * @property {Phaser.Point} world - The world coordinates of this Sprite. This differs from the x/y coordinates which are relative to the Sprites container.
-    */
-    this.world = new Phaser.Point(x, y);
-
-    /**
-    * @property {Phaser.Point} cameraOffset - If this object is fixedToCamera then this stores the x/y offset that its drawn at, from the top-left of the camera view.
-    */
-    this.cameraOffset = new Phaser.Point();
-
     PIXI.Graphics.call(this);
 
-    this.position.set(x, y);
+    Phaser.Utils.mixinPrototype(this, Phaser.Component.Core.prototype);
 
-    /**
-    * @property {Phaser.Point} previousPosition - The position the Sprite was in at the last update.
-    * @readOnly
-    */
-    this.previousPosition = new Phaser.Point(x, y);
+    var components = [
+        'Angle',
+        'AutoCull',
+        'Bounds',
+        'Destroy',
+        'FixedToCamera',
+        'InputEnabled',
+        'InWorld',
+        'LifeSpan',
+        'PhysicsBody',
+        'Reset'
+    ];
 
-    /**
-    * @property {number} previousRotation - The rotation angle the Sprite was in at the last update (in radians)
-    * @readOnly
-    */
-    this.previousRotation = 0;
-
-    /**
-    * @property {number} renderOrderID - The render order ID. This is used internally by the renderer and input manager and should not be modified.
-    * @readOnly
-    */
-    this.renderOrderID = 0;
-
-    /**
-    * A Sprite that is fixed to the camera uses its x/y coordinates as offsets from the top left of the camera. These are stored in Sprite.cameraOffset.
-    * Note that the cameraOffset values are in addition to any parent in the display list.
-    * So if this Sprite was in a Group that has x: 200, then this will be added to the cameraOffset.x
-    * @property {boolean} fixedToCamera
-    */
-    this.fixedToCamera = false;
-
-    /**
-    * @property {boolean} destroyPhase - As a Sprite runs through its destroy method this flag is set to true, and can be checked in any sub-systems it is being destroyed from.
-    * @readOnly
-    */
-    this.destroyPhase = false;
+    Phaser.Component.Core.install.call(this, components);
+    Phaser.Component.Core.init.call(this, game, x, y, '', null);
 
 };
 
@@ -104,53 +56,12 @@ Phaser.Graphics.prototype.constructor = Phaser.Graphics;
 */
 Phaser.Graphics.prototype.preUpdate = function () {
 
-    this.previousPosition.set(this.world.x, this.world.y);
-    this.previousRotation = this.rotation;
-
-    if (!this.exists || !this.parent.exists)
-    {
-        this.renderOrderID = -1;
-        return false;
-    }
-
-    if (this.autoCull)
-    {
-        //  Won't get rendered but will still get its transform updated
-        this.renderable = this.game.world.camera.screenView.intersects(this.getBounds());
-    }
-
-    this.world.setTo(this.game.camera.x + this.worldTransform.tx, this.game.camera.y + this.worldTransform.ty);
-
-    if (this.visible)
-    {
-        this.renderOrderID = this.game.stage.currentRenderOrderID++;
-    }
+    // Phaser.Component.PhysicsBody.preUpdate.call(this);
+    // Phaser.Component.LifeSpan.preUpdate.call(this);
+    Phaser.Component.InWorld.preUpdate.call(this);
+    Phaser.Component.Core.preUpdate.call(this);
 
     return true;
-
-};
-
-/**
-* Override and use this function in your own custom objects to handle any update requirements you may have.
-*
-* @method Phaser.Graphics#update
-* @memberof Phaser.Graphics
-*/
-Phaser.Graphics.prototype.update = function() {
-
-};
-
-/**
-* Automatically called by World.postUpdate.
-* @method Phaser.Graphics.prototype.postUpdate
-*/
-Phaser.Graphics.prototype.postUpdate = function () {
-
-    if (this.fixedToCamera)
-    {
-        this.position.x = (this.game.camera.view.x + this.cameraOffset.x) / this.game.camera.scale.x;
-        this.position.y = (this.game.camera.view.y + this.cameraOffset.y) / this.game.camera.scale.y;
-    }
 
 };
 
@@ -162,49 +73,9 @@ Phaser.Graphics.prototype.postUpdate = function () {
 */
 Phaser.Graphics.prototype.destroy = function(destroyChildren) {
 
-    if (this.game === null || this.destroyPhase) { return; }
-
-    if (typeof destroyChildren === 'undefined') { destroyChildren = true; }
-
-    this.destroyPhase = false;
-
     this.clear();
 
-    if (this.parent)
-    {
-        if (this.parent instanceof Phaser.Group)
-        {
-            this.parent.remove(this);
-        }
-        else
-        {
-            this.parent.removeChild(this);
-        }
-    }
-
-    var i = this.children.length;
-
-    if (destroyChildren)
-    {
-        while (i--)
-        {
-            this.children[i].destroy(destroyChildren);
-        }
-    }
-    else
-    {
-        while (i--)
-        {
-            this.removeChild(this.children[i]);
-        }
-    }
-
-    this.exists = false;
-    this.visible = false;
-
-    this.game = null;
-
-    this.destroyPhase = true;
+    Phaser.Component.Destroy.prototype.destroy.call(this, destroyChildren);
 
 };
 
@@ -331,23 +202,3 @@ Phaser.Graphics.prototype.drawTriangles = function(vertices, indices, cull) {
         }
     }
 };
-
-/**
-* Indicates the rotation of the Graphics, in degrees, from its original orientation. Values from 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation.
-* Values outside this range are added to or subtracted from 360 to obtain a value within the range. For example, the statement player.angle = 450 is the same as player.angle = 90.
-* If you wish to work in radians instead of degrees use the property Sprite.rotation instead.
-*
-* @name Phaser.Graphics#angle
-* @property {number} angle - Gets or sets the angle of rotation in degrees.
-*/
-Object.defineProperty(Phaser.Graphics.prototype, 'angle', {
-
-    get: function() {
-        return Phaser.Math.radToDeg(this.rotation);
-    },
-
-    set: function(value) {
-        this.rotation = Phaser.Math.degToRad(value);
-    }
-
-});
