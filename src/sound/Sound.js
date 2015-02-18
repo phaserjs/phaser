@@ -377,6 +377,20 @@ Phaser.Sound.prototype = {
     },
 
     /**
+    * Called automatically by the AudioContext when the sound stops playing.
+    * Doesn't get called if the sound is set to loop or is a section of an Audio Sprite.
+    * 
+    * @method Phaser.Sound#onEndedHandler
+    * @protected
+    */
+    onEndedHandler: function () {
+
+        this.isPlaying = false;
+        this.stop();
+
+    },
+
+    /**
     * Called automatically by Phaser.SoundManager.
     * @method Phaser.Sound#update
     * @protected
@@ -423,7 +437,11 @@ Phaser.Sound.prototype = {
                     }
                     else
                     {
-                        this.stop();
+                        //  Stop if we're using an audio marker, otherwise we let onended handle it
+                        if (this.currentMarker !== '')
+                        {
+                            this.stop();
+                        }
                     }
                 }
                 else
@@ -595,13 +613,20 @@ Phaser.Sound.prototype = {
                     this._sound.loop = true;
                 }
 
+                if (!this.loop && marker === '')
+                {
+                    this._sound.onended = this.onEndedHandler.bind(this);
+                }
+
                 this.totalDuration = this._sound.buffer.duration;
+
+                // console.log('dur', this._sound.buffer.duration, Math.ceil(this._sound.buffer.duration * 1000));
 
                 if (this.duration === 0)
                 {
                     // console.log('duration reset');
                     this.duration = this.totalDuration;
-                    this.durationMS = this.totalDuration * 1000;
+                    this.durationMS = Math.ceil(this.totalDuration * 1000);
                 }
 
                 //  Useful to cache this somewhere perhaps?
@@ -787,6 +812,8 @@ Phaser.Sound.prototype = {
     * @method Phaser.Sound#stop
     */
     stop: function () {
+
+        if (typeof fromNative === 'undefined') { fromNative = false; }
 
         if (this.isPlaying && this._sound)
         {
