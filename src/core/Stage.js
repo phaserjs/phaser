@@ -230,17 +230,17 @@ Phaser.Stage.prototype.checkVisibility = function () {
         this._hiddenVar = null;
     }
 
-    //  Does browser support it? If not (like in IE9 or old Android) we need to fall back to blur/focus
-    if (this._hiddenVar)
-    {
-        document.addEventListener(this._hiddenVar, this._onChange, false);
-    }
-
     var _this = this;
 
     this._onChange = function (event) {
         return _this.visibilityChange(event, true);
     };
+
+    //  Does browser support it? If not (like in IE9 or old Android) we need to fall back to blur/focus
+    if (this._hiddenVar)
+    {
+        document.addEventListener(this._hiddenVar, this._onChange, false);
+    }
 
     window.onblur = this._onChange;
     window.onfocus = this._onChange;
@@ -248,8 +248,6 @@ Phaser.Stage.prototype.checkVisibility = function () {
     window.onpagehide = this._onChange;
     window.onpageshow = this._onChange;
     
-    var _this = this;
-	
     if (this.game.device.cocoonJSApp)
     {
         CocoonJS.App.onSuspended.addEventListener(function () {
