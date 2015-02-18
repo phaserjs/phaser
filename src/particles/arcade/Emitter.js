@@ -229,6 +229,18 @@ Phaser.Particles.Arcade.Emitter = function (game, x, y, maxParticles) {
     this._counter = 0;
 
     /**
+    * @property {number} _flowQuantity - Internal counter for figuring out how many particles to launch per flow update.
+    * @private
+    */
+    this._flowQuantity = 0;
+
+    /**
+    * @property {number} _flowTotal - Internal counter for figuring out how many particles to launch in total.
+    * @private
+    */
+    this._flowTotal = 0;
+
+    /**
     * @property {boolean} _explode - Internal helper for the style of particle emission (all at once, or one at a time).
     * @private
     */
@@ -256,15 +268,50 @@ Phaser.Particles.Arcade.Emitter.prototype.update = function () {
     {
         this._timer = this.game.time.time + this.frequency * this.game.time.slowMotion;
 
-        if (this.emitParticle())
+        if (this._flowTotal !== 0)
         {
-            this._counter++;
-
-            if (this._quantity > 0 && this._counter >= this._quantity)
+            if (this._flowQuantity > 0)
             {
-                this.on = false;
+                for (var i = 0; i < this._flowQuantity; i++)
+                {
+                    if (this.emitParticle())
+                    {
+                        this._counter++;
+
+                        if (this._flowTotal !== -1 && this._counter >= this._flowTotal)
+                        {
+                            this.on = false;
+                            break;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                if (this.emitParticle())
+                {
+                    this._counter++;
+
+                    if (this._flowTotal !== -1 && this._counter >= this._flowTotal)
+                    {
+                        this.on = false;
+                    }
+                }
             }
         }
+        else
+        {
+            if (this.emitParticle())
+            {
+                this._counter++;
+
+                if (this._quantity > 0 && this._counter >= this._quantity)
+                {
+                    this.on = false;
+                }
+            }
+        }
+
     }
 
     var i = this.children.length;
@@ -385,21 +432,53 @@ Phaser.Particles.Arcade.Emitter.prototype.revive = function () {
 */
 Phaser.Particles.Arcade.Emitter.prototype.explode = function (lifespan, quantity) {
 
+    this._flowTotal = 0;
+
     this.start(true, lifespan, 0, quantity, false);
 
 };
 
 /**
 * Call this function to start emitting a flow of particles at the given frequency.
+* It will carry on going until the total given is reached.
+* Each time the flow is run the quantity number of particles will be emitted together.
+* If you set the total to be 20 and quantity to be 5 then flow will emit 4 times in total (4 x 5 = 20 total)
+* If you set the total to be -1 then no quantity cap is used and it will keep emitting.
 * 
 * @method Phaser.Particles.Arcade.Emitter#flow
 * @param {number} [lifespan=0] - How long each particle lives once emitted in ms. 0 = forever.
-* @param {number} [frequency=250] - Frequency is how often to emit a particle, given in ms.
-* @param {number} [quantity=0] - How many particles to launch.
+* @param {number} [frequency=250] - Frequency is how often to emit the particles, given in ms.
+* @param {number} [quantity=1] - How many particles to launch each time the frequency is met. Can never be > Emitter.maxParticles.
+* @param {number} [total=-1] - How many particles to launch in total. If -1 it will carry on indefinitely.
+* @param {boolean} [immediate=true] - Should the flow start immediately (true) or wait until the first frequency event? (false)
 */
-Phaser.Particles.Arcade.Emitter.prototype.flow = function (lifespan, frequency, quantity) {
+Phaser.Particles.Arcade.Emitter.prototype.flow = function (lifespan, frequency, quantity, total, immediate) {
 
-    this.start(false, lifespan, frequency, quantity, true);
+    if (typeof quantity === 'undefined' || quantity === 0) { quantity = 1; }
+    if (typeof total === 'undefined') { total = -1; }
+    if (typeof immediate === 'undefined') { immediate = true; }
+
+    if (quantity > this.maxParticles)
+    {
+        quantity = this.maxParticles;
+    }
+
+    this._counter = 0;
+    this._flowQuantity = quantity;
+    this._flowTotal = total;
+
+    if (immediate)
+    {
+        this.start(true, lifespan, frequency, quantity);
+
+        this._counter += quantity;
+        this.on = true;
+        this._timer = this.game.time.time + frequency * this.game.time.slowMotion;
+    }
+    else
+    {
+        this.start(false, lifespan, frequency, quantity);
+    }
 
 };
 

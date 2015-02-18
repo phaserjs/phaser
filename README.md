@@ -116,6 +116,7 @@ We've also removed functions and properties from Pixi classes that Phaser doesn'
 * Sound.loopFull is a new method that will start playback of the Sound and set it to loop in its entirety.
 * Sprite.left, Sprite.right, Sprite.top, Sprite.bottom are new properties that contain the totals of the Sprite position and dimensions, adjusted for the anchor.
 * Sprite.offsetX and Sprite.offsetY contain the offsets from the Sprite.x/y coordinates to the top-left of the Sprite, taking anchor into consideration.
+* Emitter.flow now works in a slightly different (and more useful!) way. You can now specify a `quantity` and a `total`. The `quantity` controls how many particles are emitted every time the flow frequency is met. The `total` controls how many particles will be emitted in total. You can set `total` to be -1 and it will carry on emitting at the given frequency forever (also fixes #1598 thanks @brianbunch)
 
 ### Updates
 
