@@ -813,8 +813,6 @@ Phaser.Sound.prototype = {
     */
     stop: function () {
 
-        if (typeof fromNative === 'undefined') { fromNative = false; }
-
         if (this.isPlaying && this._sound)
         {
             if (this.usingWebAudio)
