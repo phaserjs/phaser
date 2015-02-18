@@ -152,6 +152,7 @@ We've also removed functions and properties from Pixi classes that Phaser doesn'
 * Sound in Web Audio now uses AudioContext.onended to trigger when it will stop playing instead of using a time based value. This is only used if the sound doesn't loop and isn't an audio sprite, but will give a much more accurate `Sound.onStop` event. It also prevents short audio files from being cut off during playback (#1471) and accounts for time spent decoding.
 * If you load an image and provide a key that was already in-use in the Cache, then the old image is now destroyed (via `Cache.removeImage`) and the new image takes its place.
 * BitmapText has a new `maxWidth` property that will attempt to wrap the text if it exceeds the width specified.
+* Group.cursorIndex is the index of the item the Group cursor points to. This replaces Group._cache[8].
 
 ### Bug Fixes
 

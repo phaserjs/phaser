@@ -126,12 +126,6 @@ Phaser.Group = function (game, parent, name, addToStage, enableBody, physicsBody
     this.cursor = null;
 
     /**
-    * If this object is {@link #fixedToCamera} then this stores the x/y position offset relative to the top-left of the camera view.
-    * @property {Phaser.Point} cameraOffset
-    */
-    this.cameraOffset = new Phaser.Point();
-
-    /**
     * If true all Sprites created by, or added to this group, will have a physics body enabled on them.
     *
     * The default body type is controlled with {@link #physicsBodyType}.
@@ -163,28 +157,33 @@ Phaser.Group = function (game, parent, name, addToStage, enableBody, physicsBody
     this.onDestroy = new Phaser.Signal();
 
     /**
+    * @property {integer} cursorIndex - The current index of the Group cursor. Advance it with Group.next.
+    * @readOnly
+    */
+    this.cursorIndex = 0;
+
+    /**
+    * A Group that is fixed to the camera uses its x/y coordinates as offsets from the top left of the camera. These are stored in Group.cameraOffset.
+    * 
+    * Note that the cameraOffset values are in addition to any parent in the display list.
+    * So if this Group was in a Group that has x: 200, then this will be added to the cameraOffset.x
+    * 
+    * @property {boolean} fixedToCamera
+    */
+    this.fixedToCamera = false;
+
+    /**
+    * If this object is {@link #fixedToCamera} then this stores the x/y position offset relative to the top-left of the camera view.
+    * @property {Phaser.Point} cameraOffset
+    */
+    this.cameraOffset = new Phaser.Point();
+
+    /**
     * The property on which children are sorted.
     * @property {string} _sortProperty
     * @private
     */
     this._sortProperty = 'z';
-
-    /**
-    * A small internal cache:
-    * 0 = previous position.x
-    * 1 = previous position.y
-    * 2 = previous rotation
-    * 3 = renderID
-    * 4 = fresh? (0 = no, 1 = yes)
-    * 5 = outOfBoundsFired (0 = no, 1 = yes)
-    * 6 = exists (0 = no, 1 = yes)
-    * 7 = fixed to camera (0 = no, 1 = yes)
-    * 8 = cursor index
-    * 9 = sort order
-    * @property {Array} _cache
-    * @private
-    */
-    this._cache = [ 0, 0, 0, 0, 1, 0, 1, 0, 0, 0 ];
 
 };
 
@@ -465,8 +464,8 @@ Phaser.Group.prototype.resetCursor = function (index) {
 
     if (this.cursor)
     {
-        this._cache[8] = index;
-        this.cursor = this.children[this._cache[8]];
+        this.cursorIndex = index;
+        this.cursor = this.children[this.cursorIndex];
         return this.cursor;
     }
 
@@ -485,16 +484,16 @@ Phaser.Group.prototype.next = function () {
     if (this.cursor)
     {
         //  Wrap the cursor?
-        if (this._cache[8] >= this.children.length - 1)
+        if (this.cursorIndex >= this.children.length - 1)
         {
-            this._cache[8] = 0;
+            this.cursorIndex = 0;
         }
         else
         {
-            this._cache[8]++;
+            this.cursorIndex++;
         }
 
-        this.cursor = this.children[this._cache[8]];
+        this.cursor = this.children[this.cursorIndex];
 
         return this.cursor;
     }
@@ -514,16 +513,16 @@ Phaser.Group.prototype.previous = function () {
     if (this.cursor)
     {
         //  Wrap the cursor?
-        if (this._cache[8] === 0)
+        if (this.cursorIndex === 0)
         {
-            this._cache[8] = this.children.length - 1;
+            this.cursorIndex = this.children.length - 1;
         }
         else
         {
-            this._cache[8]--;
+            this.cursorIndex--;
         }
 
-        this.cursor = this.children[this._cache[8]];
+        this.cursor = this.children[this.cursorIndex];
 
         return this.cursor;
     }
@@ -1274,7 +1273,7 @@ Phaser.Group.prototype.update = function () {
 Phaser.Group.prototype.postUpdate = function () {
 
     //  Fixed to Camera?
-    if (this._cache[7] === 1)
+    if (this.fixedToCamera)
     {
         this.x = this.game.camera.view.x + this.cameraOffset.x;
         this.y = this.game.camera.view.y + this.cameraOffset.y;
@@ -2006,40 +2005,6 @@ Object.defineProperty(Phaser.Group.prototype, "angle", {
 
     set: function(value) {
         this.rotation = Phaser.Math.degToRad(value);
-    }
-
-});
-
-/**
-* Is this group fixed to the camera?
-*
-* A Group that is fixed to the camera uses its x/y coordinates as offsets from the top left of the camera.
-*
-* These are stored in {@link #cameraOffset} and are in addition to any parent in the display list.
-* So if this group was in a Group that has x: 200, then this will be added to the cameraOffset.x
-*
-* @name Phaser.Group#fixedToCamera
-* @property {boolean} fixedToCamera
-*/
-Object.defineProperty(Phaser.Group.prototype, "fixedToCamera", {
-
-    get: function () {
-
-        return !!this._cache[7];
-
-    },
-
-    set: function (value) {
-
-        if (value)
-        {
-            this._cache[7] = 1;
-            this.cameraOffset.set(this.x, this.y);
-        }
-        else
-        {
-            this._cache[7] = 0;
-        }
     }
 
 });
