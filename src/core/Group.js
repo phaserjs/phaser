@@ -174,6 +174,7 @@ Phaser.Group = function (game, parent, name, addToStage, enableBody, physicsBody
 
     /**
     * If this object is {@link #fixedToCamera} then this stores the x/y position offset relative to the top-left of the camera view.
+    * If the parent of this Group is also `fixedToCamera` then the offset here is in addition to that and should typically be disabled.
     * @property {Phaser.Point} cameraOffset
     */
     this.cameraOffset = new Phaser.Point();
