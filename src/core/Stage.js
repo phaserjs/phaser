@@ -233,7 +233,7 @@ Phaser.Stage.prototype.checkVisibility = function () {
     var _this = this;
 
     this._onChange = function (event) {
-        return _this.visibilityChange(event, true);
+        return _this.visibilityChange(event);
     };
 
     //  Does browser support it? If not (like in IE9 or old Android) we need to fall back to blur/focus
@@ -251,11 +251,11 @@ Phaser.Stage.prototype.checkVisibility = function () {
     if (this.game.device.cocoonJSApp)
     {
         CocoonJS.App.onSuspended.addEventListener(function () {
-            Phaser.Stage.prototype.visibilityChange.call(_this, {type: "pause"});
+            Phaser.Stage.prototype.visibilityChange.call(_this, { type: "pause" });
         });
 
         CocoonJS.App.onActivated.addEventListener(function () {
-            Phaser.Stage.prototype.visibilityChange.call(_this, {type: "resume"});
+            Phaser.Stage.prototype.visibilityChange.call(_this, { type: "resume" });
         });
     }
 
@@ -266,14 +266,8 @@ Phaser.Stage.prototype.checkVisibility = function () {
 * 
 * @method Phaser.Stage#visibilityChange
 * @param {Event} event - Its type will be used to decide whether the game should be paused or not.
-* @param {boolean} fromPhaser - Will be set if called by Phaser, will be undefined if not, causing this method to bail out early.
 */
-Phaser.Stage.prototype.visibilityChange = function (event, fromPhaser) {
-
-    if (typeof fromPhaser === 'undefined' || !fromPhaser)
-    {
-        return;
-    }
+Phaser.Stage.prototype.visibilityChange = function (event) {
 
     if (event.type === 'pagehide' || event.type === 'blur' || event.type === 'pageshow' || event.type === 'focus')
     {
