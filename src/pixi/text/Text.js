@@ -355,6 +355,8 @@ PIXI.Text.prototype.determineFontProperties = function(fontStyle)
 
     if(!properties)
     {
+        properties = {};
+
         if (PIXI.DEVKIT_NATIVE)
         {
             var Font = jsio('import ui.resource.Font');
@@ -366,8 +368,6 @@ PIXI.Text.prototype.determineFontProperties = function(fontStyle)
         }
         else
         {
-            properties = {};
-
             var canvas = PIXI.Text.fontPropertiesCanvas;
             var context = PIXI.Text.fontPropertiesContext;
 
