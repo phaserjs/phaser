@@ -29,13 +29,6 @@ Phaser.Stage = function (game) {
     this.name = '_stage_root';
 
     /**
-    * @property {boolean} interactive - Pixi level var, ignored by Phaser.
-    * @default
-    * @private
-    */
-    this.interactive = false;
-
-    /**
     * @property {boolean} disableVisibilityChange - By default if the browser tab loses focus the game will pause. You can stop that behaviour by setting this property to true.
     * @default
     */
@@ -57,6 +50,12 @@ Phaser.Stage = function (game) {
     * @private
     */
     this._hiddenVar = 'hidden';
+
+    /**
+    * @property {function} _onChange - The blur/focus event handler.
+    * @private
+    */
+    this._onChange = null;
 
     /**
     * @property {number} _backgroundColor - Stage background color.
@@ -104,12 +103,6 @@ Phaser.Stage.prototype.boot = function () {
 
     Phaser.DOM.getOffset(this.game.canvas, this.offset);
 
-    var _this = this;
-
-    this._onChange = function (event) {
-        return _this.visibilityChange(event);
-    };
-
     Phaser.Canvas.setUserSelect(this.game.canvas, 'none');
     Phaser.Canvas.setTouchAction(this.game.canvas, 'none');
 
@@ -128,7 +121,7 @@ Phaser.Stage.prototype.preUpdate = function () {
     this.currentRenderOrderID = 0;
 
     //  This can't loop in reverse, we need the orderID to be in sequence
-    for (var i = 0, len = this.children.length; i < len; i++)
+    for (var i = 0; i < this.children.length; i++)
     {
         this.children[i].preUpdate();
     }
@@ -201,7 +194,7 @@ Phaser.Stage.prototype.updateTransform = function () {
 
     this.worldAlpha = 1;
 
-    for (var i = 0, j = this.children.length; i < j; i++)
+    for (var i = 0; i < this.children.length; i++)
     {
         this.children[i].updateTransform();
     }
@@ -209,7 +202,9 @@ Phaser.Stage.prototype.updateTransform = function () {
 };
 
 /**
-* Starts a page visibility event listener running, or window.blur/focus if not supported by the browser.
+* Starts a page visibility event listener running, or window.onpagehide/onpageshow if not supported by the browser.
+* Also listens for window.onblur and window.onfocus.
+* 
 * @method Phaser.Stage#checkVisibility
 */
 Phaser.Stage.prototype.checkVisibility = function () {
@@ -241,11 +236,17 @@ Phaser.Stage.prototype.checkVisibility = function () {
         document.addEventListener(this._hiddenVar, this._onChange, false);
     }
 
-    window.onpagehide = this._onChange;
-    window.onpageshow = this._onChange;
+    var _this = this;
+
+    this._onChange = function (event) {
+        return _this.visibilityChange(event, true);
+    };
 
     window.onblur = this._onChange;
     window.onfocus = this._onChange;
+
+    window.onpagehide = this._onChange;
+    window.onpageshow = this._onChange;
     
     var _this = this;
 	
@@ -267,8 +268,14 @@ Phaser.Stage.prototype.checkVisibility = function () {
 * 
 * @method Phaser.Stage#visibilityChange
 * @param {Event} event - Its type will be used to decide whether the game should be paused or not.
+* @param {boolean} fromPhaser - Will be set if called by Phaser, will be undefined if not, causing this method to bail out early.
 */
-Phaser.Stage.prototype.visibilityChange = function (event) {
+Phaser.Stage.prototype.visibilityChange = function (event, fromPhaser) {
+
+    if (typeof fromPhaser === 'undefined' || !fromPhaser)
+    {
+        return;
+    }
 
     if (event.type === 'pagehide' || event.type === 'blur' || event.type === 'pageshow' || event.type === 'focus')
     {
