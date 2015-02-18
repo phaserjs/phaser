@@ -12,7 +12,7 @@
  */
 PIXI.AsciiFilter = function()
 {
-    PIXI.AbstractFilter.call( this );
+    PIXI.AbstractFilter.call(this);
 
     this.passes = [this];
 
@@ -45,7 +45,7 @@ PIXI.AsciiFilter = function()
         '    vec3 col = texture2D(uSampler, floor( uv / pixelSize ) * pixelSize / dimensions.xy).rgb;',
             
         '    #ifdef HAS_GREENSCREEN',
-        '    float gray = (col.r + col.b)/2.0;', 
+        '    float gray = (col.r + col.b)/2.0;',
         '    #else',
         '    float gray = (col.r + col.g + col.b)/3.0;',
         '    #endif',
@@ -77,9 +77,11 @@ PIXI.AsciiFilter.prototype.constructor = PIXI.AsciiFilter;
  * @type Number
  */
 Object.defineProperty(PIXI.AsciiFilter.prototype, 'size', {
+
     get: function() {
         return this.uniforms.pixelSize.value;
     },
+
     set: function(value) {
         this.dirty = true;
         this.uniforms.pixelSize.value = value;

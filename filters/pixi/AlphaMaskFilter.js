@@ -14,7 +14,7 @@
  */
 PIXI.AlphaMaskFilter = function(texture)
 {
-    PIXI.AbstractFilter.call( this );
+    PIXI.AbstractFilter.call(this);
 
     this.passes = [this];
     texture.baseTexture._powerOf2 = true;
@@ -26,7 +26,7 @@ PIXI.AlphaMaskFilter = function(texture)
         dimensions:   {type: '4fv', value:[0,0,0,0]}
     };
 
-    if(texture.baseTexture.hasLoaded)
+    if (texture.baseTexture.hasLoaded)
     {
         this.uniforms.mask.value.x = texture.width;
         this.uniforms.mask.value.y = texture.height;
@@ -58,9 +58,7 @@ PIXI.AlphaMaskFilter = function(texture)
         '   vec4 original =  texture2D(uSampler, vTextureCoord);',
         '   float maskAlpha =  texture2D(mask, mapCords).r;',
         '   original *= maskAlpha;',
-        //'   original.rgb *= maskAlpha;',
         '   gl_FragColor =  original;',
-        //'   gl_FragColor = gl_FragColor;',
         '}'
     ];
 };
@@ -88,9 +86,11 @@ PIXI.AlphaMaskFilter.prototype.onTextureLoaded = function()
  * @type Texture
  */
 Object.defineProperty(PIXI.AlphaMaskFilter.prototype, 'map', {
+
     get: function() {
         return this.uniforms.mask.value;
     },
+
     set: function(value) {
         this.uniforms.mask.value = value;
     }

@@ -98,8 +98,8 @@ Phaser.Matrix.prototype.toArray = function(transpose)
 {
     if (!this.array)
     {
-        this.array = new PIXI.Float32Array(9);        
-    } 
+        this.array = new PIXI.Float32Array(9);
+    }
 
     var array = this.array;
 

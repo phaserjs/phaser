@@ -15,111 +15,111 @@
  */
 PIXI.NormalMapFilter = function(texture)
 {
-	PIXI.AbstractFilter.call( this );
-	
-	this.passes = [this];
-	texture.baseTexture._powerOf2 = true;
+    PIXI.AbstractFilter.call( this );
+    
+    this.passes = [this];
+    texture.baseTexture._powerOf2 = true;
 
-	// set the uniforms
-	this.uniforms = {
-		displacementMap: {type: 'sampler2D', value:texture},
-		scale:			 {type: '2f', value:{x:15, y:15}},
-		offset:			 {type: '2f', value:{x:0, y:0}},
-		mapDimensions:   {type: '2f', value:{x:1, y:1}},
-		dimensions:   {type: '4f', value:[0,0,0,0]},
-	//	LightDir: {type: 'f3', value:[0, 1, 0]},
-		LightPos: {type: '3f', value:[0, 1, 0]}
-	};
-	
+    // set the uniforms
+    this.uniforms = {
+        displacementMap: {type: 'sampler2D', value:texture},
+        scale:           {type: '2f', value:{x:15, y:15}},
+        offset:          {type: '2f', value:{x:0, y:0}},
+        mapDimensions:   {type: '2f', value:{x:1, y:1}},
+        dimensions:   {type: '4f', value:[0,0,0,0]},
+    //  LightDir: {type: 'f3', value:[0, 1, 0]},
+        LightPos: {type: '3f', value:[0, 1, 0]}
+    };
+    
 
-	if(texture.baseTexture.hasLoaded)
-	{
-		this.uniforms.mapDimensions.value.x = texture.width;
-		this.uniforms.mapDimensions.value.y = texture.height;
-	}
-	else
-	{
-		this.boundLoadedFunction = this.onTextureLoaded.bind(this);
+    if(texture.baseTexture.hasLoaded)
+    {
+        this.uniforms.mapDimensions.value.x = texture.width;
+        this.uniforms.mapDimensions.value.y = texture.height;
+    }
+    else
+    {
+        this.boundLoadedFunction = this.onTextureLoaded.bind(this);
 
-		texture.baseTexture.on("loaded", this.boundLoadedFunction);
-	}
+        texture.baseTexture.on("loaded", this.boundLoadedFunction);
+    }
 
-	this.fragmentSrc = [
-	  "precision mediump float;",
-	  "varying vec2 vTextureCoord;",
-	  "varying float vColor;",
-	  "uniform sampler2D displacementMap;",
-	  "uniform sampler2D uSampler;",
-	 
-	  "uniform vec4 dimensions;",
-	  
-		"const vec2 Resolution = vec2(1.0,1.0);",      //resolution of screen
-		"uniform vec3 LightPos;",    //light position, normalized
-		"const vec4 LightColor = vec4(1.0, 1.0, 1.0, 1.0);",      //light RGBA -- alpha is intensity
-		"const vec4 AmbientColor = vec4(1.0, 1.0, 1.0, 0.5);",    //ambient RGBA -- alpha is intensity 
-		"const vec3 Falloff = vec3(0.0, 1.0, 0.2);",         //attenuation coefficients
+    this.fragmentSrc = [
+      "precision mediump float;",
+      "varying vec2 vTextureCoord;",
+      "varying float vColor;",
+      "uniform sampler2D displacementMap;",
+      "uniform sampler2D uSampler;",
+     
+      "uniform vec4 dimensions;",
+      
+        "const vec2 Resolution = vec2(1.0,1.0);",      //resolution of screen
+        "uniform vec3 LightPos;",    //light position, normalized
+        "const vec4 LightColor = vec4(1.0, 1.0, 1.0, 1.0);",      //light RGBA -- alpha is intensity
+        "const vec4 AmbientColor = vec4(1.0, 1.0, 1.0, 0.5);",    //ambient RGBA -- alpha is intensity 
+        "const vec3 Falloff = vec3(0.0, 1.0, 0.2);",         //attenuation coefficients
 
-		"uniform vec3 LightDir;",//" = vec3(1.0, 0.0, 1.0);",
+        "uniform vec3 LightDir;",//" = vec3(1.0, 0.0, 1.0);",
 
 
-	  "uniform vec2 mapDimensions;",// = vec2(256.0, 256.0);",
-	 
+      "uniform vec2 mapDimensions;",// = vec2(256.0, 256.0);",
+     
 
-	  "void main(void) {",
-	  	"vec2 mapCords = vTextureCoord.xy;",
+      "void main(void) {",
+        "vec2 mapCords = vTextureCoord.xy;",
 
-	  	"vec4 color = texture2D(uSampler, vTextureCoord.st);",
+        "vec4 color = texture2D(uSampler, vTextureCoord.st);",
         "vec3 nColor = texture2D(displacementMap, vTextureCoord.st).rgb;",
  
 
-	  	"mapCords *= vec2(dimensions.x/512.0, dimensions.y/512.0);",
-	  
-	  	"mapCords.y *= -1.0;",
-	 	"mapCords.y += 1.0;",
+        "mapCords *= vec2(dimensions.x/512.0, dimensions.y/512.0);",
+      
+        "mapCords.y *= -1.0;",
+        "mapCords.y += 1.0;",
 
-	 	//RGBA of our diffuse color
-		"vec4 DiffuseColor = texture2D(uSampler, vTextureCoord);",
+        //RGBA of our diffuse color
+        "vec4 DiffuseColor = texture2D(uSampler, vTextureCoord);",
 
-		//RGB of our normal map
-		"vec3 NormalMap = texture2D(displacementMap, mapCords).rgb;",
+        //RGB of our normal map
+        "vec3 NormalMap = texture2D(displacementMap, mapCords).rgb;",
 
-		//The delta position of light
-		//"vec3 LightDir = vec3(LightPos.xy - (gl_FragCoord.xy / Resolution.xy), LightPos.z);",
-		"vec3 LightDir = vec3(LightPos.xy - (mapCords.xy), LightPos.z);",
-		//Correct for aspect ratio
-		//"LightDir.x *= Resolution.x / Resolution.y;",
+        //The delta position of light
+        //"vec3 LightDir = vec3(LightPos.xy - (gl_FragCoord.xy / Resolution.xy), LightPos.z);",
+        "vec3 LightDir = vec3(LightPos.xy - (mapCords.xy), LightPos.z);",
+        //Correct for aspect ratio
+        //"LightDir.x *= Resolution.x / Resolution.y;",
 
-		//Determine distance (used for attenuation) BEFORE we normalize our LightDir
-		"float D = length(LightDir);",
+        //Determine distance (used for attenuation) BEFORE we normalize our LightDir
+        "float D = length(LightDir);",
 
-		//normalize our vectors
-		"vec3 N = normalize(NormalMap * 2.0 - 1.0);",
-		"vec3 L = normalize(LightDir);",
+        //normalize our vectors
+        "vec3 N = normalize(NormalMap * 2.0 - 1.0);",
+        "vec3 L = normalize(LightDir);",
 
-		//Pre-multiply light color with intensity
-		//Then perform "N dot L" to determine our diffuse term
-		"vec3 Diffuse = (LightColor.rgb * LightColor.a) * max(dot(N, L), 0.0);",
+        //Pre-multiply light color with intensity
+        //Then perform "N dot L" to determine our diffuse term
+        "vec3 Diffuse = (LightColor.rgb * LightColor.a) * max(dot(N, L), 0.0);",
 
-		//pre-multiply ambient color with intensity
-		"vec3 Ambient = AmbientColor.rgb * AmbientColor.a;",
+        //pre-multiply ambient color with intensity
+        "vec3 Ambient = AmbientColor.rgb * AmbientColor.a;",
 
-		//calculate attenuation
-		"float Attenuation = 1.0 / ( Falloff.x + (Falloff.y*D) + (Falloff.z*D*D) );",
+        //calculate attenuation
+        "float Attenuation = 1.0 / ( Falloff.x + (Falloff.y*D) + (Falloff.z*D*D) );",
 
-		//the calculation which brings it all together
-		"vec3 Intensity = Ambient + Diffuse * Attenuation;",
-		"vec3 FinalColor = DiffuseColor.rgb * Intensity;",
-		"gl_FragColor = vColor * vec4(FinalColor, DiffuseColor.a);",
-		//"gl_FragColor = vec4(1.0, 0.0, 0.0, Attenuation);",//vColor * vec4(FinalColor, DiffuseColor.a);",
-	/*
-	 	// normalise color
-	 	"vec3 normal = normalize(nColor * 2.0 - 1.0);",
-	 	
-	 	"vec3 deltaPos = vec3( (light.xy - gl_FragCoord.xy) / resolution.xy, light.z );",
+        //the calculation which brings it all together
+        "vec3 Intensity = Ambient + Diffuse * Attenuation;",
+        "vec3 FinalColor = DiffuseColor.rgb * Intensity;",
+        "gl_FragColor = vColor * vec4(FinalColor, DiffuseColor.a);",
+        //"gl_FragColor = vec4(1.0, 0.0, 0.0, Attenuation);",//vColor * vec4(FinalColor, DiffuseColor.a);",
+    /*
+        // normalise color
+        "vec3 normal = normalize(nColor * 2.0 - 1.0);",
+        
+        "vec3 deltaPos = vec3( (light.xy - gl_FragCoord.xy) / resolution.xy, light.z );",
 
-	 	"float lambert = clamp(dot(normal, lightDir), 0.0, 1.0);",
+        "float lambert = clamp(dot(normal, lightDir), 0.0, 1.0);",
 
-	 	"float d = sqrt(dot(deltaPos, deltaPos));", 
+        "float d = sqrt(dot(deltaPos, deltaPos));", 
         "float att = 1.0 / ( attenuation.x + (attenuation.y*d) + (attenuation.z*d*d) );",
 
         "vec3 result = (ambientColor * ambientIntensity) + (lightColor.rgb * lambert) * att;",
@@ -127,12 +127,12 @@ PIXI.NormalMapFilter = function(texture)
        
         "gl_FragColor = vec4(result, 1.0);",*/
 
-	  	
+        
 
-	  "}"
-	];
-	
-}
+      "}"
+    ];
+    
+};
 
 PIXI.NormalMapFilter.prototype = Object.create( PIXI.AbstractFilter.prototype );
 PIXI.NormalMapFilter.prototype.constructor = PIXI.NormalMapFilter;
@@ -144,10 +144,10 @@ PIXI.NormalMapFilter.prototype.constructor = PIXI.NormalMapFilter;
  */
 PIXI.NormalMapFilter.prototype.onTextureLoaded = function()
 {
-	this.uniforms.mapDimensions.value.x = this.uniforms.displacementMap.value.width;
-	this.uniforms.mapDimensions.value.y = this.uniforms.displacementMap.value.height;
+    this.uniforms.mapDimensions.value.x = this.uniforms.displacementMap.value.width;
+    this.uniforms.mapDimensions.value.y = this.uniforms.displacementMap.value.height;
 
-	this.uniforms.displacementMap.value.baseTexture.off("loaded", this.boundLoadedFunction)
+    this.uniforms.displacementMap.value.baseTexture.off("loaded", this.boundLoadedFunction);
 };
 
 /**
@@ -161,7 +161,7 @@ Object.defineProperty(PIXI.NormalMapFilter.prototype, 'map', {
         return this.uniforms.displacementMap.value;
     },
     set: function(value) {
-    	this.uniforms.displacementMap.value = value;
+        this.uniforms.displacementMap.value = value;
     }
 });
 
@@ -176,7 +176,7 @@ Object.defineProperty(PIXI.NormalMapFilter.prototype, 'scale', {
         return this.uniforms.scale.value;
     },
     set: function(value) {
-    	this.uniforms.scale.value = value;
+        this.uniforms.scale.value = value;
     }
 });
 
@@ -191,6 +191,6 @@ Object.defineProperty(PIXI.NormalMapFilter.prototype, 'offset', {
         return this.uniforms.offset.value;
     },
     set: function(value) {
-    	this.uniforms.offset.value = value;
+        this.uniforms.offset.value = value;
     }
 });
