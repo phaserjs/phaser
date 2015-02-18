@@ -140,7 +140,7 @@ Phaser.Text.prototype.destroy = function (destroyChildren) {
 
     this.texture.destroy(true);
 
-    if (this.canvas.parentNode)
+    if (this.canvas && this.canvas.parentNode)
     {
         this.canvas.parentNode.removeChild(this.canvas);
     }
