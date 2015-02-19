@@ -1,0 +1,11 @@
+[
+    "src/gameobjects/GameObjectFactory.js",
+    "src/gameobjects/GameObjectCreator.js",
+    "src/gameobjects/Sprite.js",
+    "src/gameobjects/Image.js",
+    "src/gameobjects/TileSprite.js",
+    "src/gameobjects/Rope.js",
+    "src/gameobjects/Button.js",
+    "src/gameobjects/SpriteBatch.js",
+    "src/gameobjects/Particle.js"
+]

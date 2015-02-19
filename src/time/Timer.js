@@ -81,7 +81,6 @@ Phaser.Timer = function (game, autoDestroy) {
     /**
     * @property {number} timeCap - If the difference in time between two frame updates exceeds this value, the event times are reset to avoid catch-up situations.
     */
-    // this.timeCap = 1 / 60 * 1000;
     this.timeCap = 1000;
 
     /**
@@ -448,7 +447,7 @@ Phaser.Timer.prototype = {
         {
             while (this._i < this._len && this.running)
             {
-                if (this._now >= this.events[this._i].tick)
+                if (this._now >= this.events[this._i].tick && !this.events[this._i].pendingDelete)
                 {
                     //  (now + delay) - (time difference from last tick to now)
                     this._newTick = (this._now + this.events[this._i].delay) - (this._now - this.events[this._i].tick);

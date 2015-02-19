@@ -41,6 +41,15 @@ PIXI.BitmapText = function(text, style)
     this.textHeight = 0;
 
     /**
+     * The max width of this bitmap text in pixels. If the text provided is longer than the value provided, line breaks will be 
+     * automatically inserted in the last whitespace. Disable by setting value to 0.
+     *
+     * @property maxWidth
+     * @type Number
+     */
+    this.maxWidth = 0;
+
+    /**
      * @property _pool
      * @type Array
      * @private
@@ -113,15 +122,33 @@ PIXI.BitmapText.prototype.updateText = function()
     var lineWidths = [];
     var line = 0;
     var scale = this.fontSize / data.size;
+    var lastSpace = 0;
 
-    for(var i = 0; i < this.text.length; i++)
+    for (var i = 0; i < this.text.length; i++)
     {
         var charCode = this.text.charCodeAt(i);
+        lastSpace = /(\s)/.test(this.text.charAt(i)) ? i : lastSpace;
 
-        if(/(?:\r\n|\r|\n)/.test(this.text.charAt(i)))
+        if (/(?:\r\n|\r|\n)/.test(this.text.charAt(i)))
         {
             lineWidths.push(pos.x);
             maxLineWidth = Math.max(maxLineWidth, pos.x);
+            line++;
+
+            pos.x = 0;
+            pos.y += data.lineHeight;
+            prevCharCode = null;
+            continue;
+        }
+
+        if (lastSpace !== -1 && this.maxWidth > 0 && pos.x * scale > this.maxWidth)
+        {
+            chars.splice(lastSpace, i - lastSpace);
+            i = lastSpace;
+            lastSpace = -1;
+
+            lineWidths.push(lastLineWidth);
+            maxLineWidth = Math.max(maxLineWidth, lastLineWidth);
             line++;
 
             pos.x = 0;

@@ -30,6 +30,12 @@ Phaser.Point = function (x, y) {
     */
     this.y = y;
 
+    /**
+    * @property {number} type - The const type of this object.
+    * @readonly
+    */
+    this.type = Phaser.POINT;
+
 };
 
 Phaser.Point.prototype = {

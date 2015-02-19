@@ -217,7 +217,6 @@ var STATE_OUT = 'Out';
 var STATE_DOWN = 'Down';
 var STATE_UP = 'Up';
 
-
 /**
 * Clears all of the frames set on this Button.
 *
@@ -468,7 +467,7 @@ Phaser.Button.prototype.setUpSound = function (sound, marker) {
 *
 * @method Phaser.Button#onInputOverHandler
 * @protected
-* @param {Phaser.Button} sprite - The Button that the event occured on.
+* @param {Phaser.Button} sprite - The Button that the event occurred on.
 * @param {Phaser.Pointer} pointer - The Pointer that activated the Button.
 */
 Phaser.Button.prototype.onInputOverHandler = function (sprite, pointer) {
@@ -500,7 +499,7 @@ Phaser.Button.prototype.onInputOverHandler = function (sprite, pointer) {
 *
 * @method Phaser.Button#onInputOutHandler
 * @protected
-* @param {Phaser.Button} sprite - The Button that the event occured on.
+* @param {Phaser.Button} sprite - The Button that the event occurred on.
 * @param {Phaser.Pointer} pointer - The Pointer that activated the Button.
 */
 Phaser.Button.prototype.onInputOutHandler = function (sprite, pointer) {
@@ -520,7 +519,7 @@ Phaser.Button.prototype.onInputOutHandler = function (sprite, pointer) {
 *
 * @method Phaser.Button#onInputDownHandler
 * @protected
-* @param {Phaser.Button} sprite - The Button that the event occured on.
+* @param {Phaser.Button} sprite - The Button that the event occurred on.
 * @param {Phaser.Pointer} pointer - The Pointer that activated the Button.
 */
 Phaser.Button.prototype.onInputDownHandler = function (sprite, pointer) {
@@ -540,7 +539,7 @@ Phaser.Button.prototype.onInputDownHandler = function (sprite, pointer) {
 *
 * @method Phaser.Button#onInputUpHandler
 * @protected
-* @param {Phaser.Button} sprite - The Button that the event occured on.
+* @param {Phaser.Button} sprite - The Button that the event occurred on.
 * @param {Phaser.Pointer} pointer - The Pointer that activated the Button.
 */
 Phaser.Button.prototype.onInputUpHandler = function (sprite, pointer, isOver) {

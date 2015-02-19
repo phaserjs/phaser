@@ -57,12 +57,15 @@ Phaser.Group = function (game, parent, name, addToStage, enableBody, physicsBody
 
     PIXI.DisplayObjectContainer.call(this);
 
-    if (addToStage) {
+    if (addToStage)
+    {
         this.game.stage.addChild(this);
         this.z = this.game.stage.children.length;
     }
-    else {
-        if (parent) {
+    else
+    {
+        if (parent)
+        {
             parent.addChild(this);
             this.z = parent.children.length;
         }
@@ -123,12 +126,6 @@ Phaser.Group = function (game, parent, name, addToStage, enableBody, physicsBody
     this.cursor = null;
 
     /**
-    * If this object is {@link #fixedToCamera} then this stores the x/y position offset relative to the top-left of the camera view.
-    * @property {Phaser.Point} cameraOffset
-    */
-    this.cameraOffset = new Phaser.Point();
-
-    /**
     * If true all Sprites created by, or added to this group, will have a physics body enabled on them.
     *
     * The default body type is controlled with {@link #physicsBodyType}.
@@ -160,28 +157,34 @@ Phaser.Group = function (game, parent, name, addToStage, enableBody, physicsBody
     this.onDestroy = new Phaser.Signal();
 
     /**
+    * @property {integer} cursorIndex - The current index of the Group cursor. Advance it with Group.next.
+    * @readOnly
+    */
+    this.cursorIndex = 0;
+
+    /**
+    * A Group that is fixed to the camera uses its x/y coordinates as offsets from the top left of the camera. These are stored in Group.cameraOffset.
+    * 
+    * Note that the cameraOffset values are in addition to any parent in the display list.
+    * So if this Group was in a Group that has x: 200, then this will be added to the cameraOffset.x
+    * 
+    * @property {boolean} fixedToCamera
+    */
+    this.fixedToCamera = false;
+
+    /**
+    * If this object is {@link #fixedToCamera} then this stores the x/y position offset relative to the top-left of the camera view.
+    * If the parent of this Group is also `fixedToCamera` then the offset here is in addition to that and should typically be disabled.
+    * @property {Phaser.Point} cameraOffset
+    */
+    this.cameraOffset = new Phaser.Point();
+
+    /**
     * The property on which children are sorted.
     * @property {string} _sortProperty
     * @private
     */
     this._sortProperty = 'z';
-
-    /**
-    * A small internal cache:
-    * 0 = previous position.x
-    * 1 = previous position.y
-    * 2 = previous rotation
-    * 3 = renderID
-    * 4 = fresh? (0 = no, 1 = yes)
-    * 5 = outOfBoundsFired (0 = no, 1 = yes)
-    * 6 = exists (0 = no, 1 = yes)
-    * 7 = fixed to camera (0 = no, 1 = yes)
-    * 8 = cursor index
-    * 9 = sort order
-    * @property {Array} _cache
-    * @private
-    */
-    this._cache = [ 0, 0, 0, 0, 1, 0, 1, 0, 0, 0 ];
 
 };
 
@@ -462,8 +465,8 @@ Phaser.Group.prototype.resetCursor = function (index) {
 
     if (this.cursor)
     {
-        this._cache[8] = index;
-        this.cursor = this.children[this._cache[8]];
+        this.cursorIndex = index;
+        this.cursor = this.children[this.cursorIndex];
         return this.cursor;
     }
 
@@ -482,16 +485,16 @@ Phaser.Group.prototype.next = function () {
     if (this.cursor)
     {
         //  Wrap the cursor?
-        if (this._cache[8] >= this.children.length - 1)
+        if (this.cursorIndex >= this.children.length - 1)
         {
-            this._cache[8] = 0;
+            this.cursorIndex = 0;
         }
         else
         {
-            this._cache[8]++;
+            this.cursorIndex++;
         }
 
-        this.cursor = this.children[this._cache[8]];
+        this.cursor = this.children[this.cursorIndex];
 
         return this.cursor;
     }
@@ -511,16 +514,16 @@ Phaser.Group.prototype.previous = function () {
     if (this.cursor)
     {
         //  Wrap the cursor?
-        if (this._cache[8] === 0)
+        if (this.cursorIndex === 0)
         {
-            this._cache[8] = this.children.length - 1;
+            this.cursorIndex = this.children.length - 1;
         }
         else
         {
-            this._cache[8]--;
+            this.cursorIndex--;
         }
 
-        this.cursor = this.children[this._cache[8]];
+        this.cursor = this.children[this.cursorIndex];
 
         return this.cursor;
     }
@@ -911,7 +914,7 @@ Phaser.Group.prototype.setAll = function (key, value, checkAlive, checkVisible, 
     key = key.split('.');
     operation = operation || 0;
 
-    for (var i = 0, len = this.children.length; i < len; i++)
+    for (var i = 0; i < this.children.length; i++)
     {
         if ((!checkAlive || (checkAlive && this.children[i].alive)) && (!checkVisible || (checkVisible && this.children[i].visible)))
         {
@@ -945,7 +948,7 @@ Phaser.Group.prototype.setAllChildren = function (key, value, checkAlive, checkV
 
     operation = operation || 0;
 
-    for (var i = 0, len = this.children.length; i < len; i++)
+    for (var i = 0; i < this.children.length; i++)
     {
         if ((!checkAlive || (checkAlive && this.children[i].alive)) && (!checkVisible || (checkVisible && this.children[i].visible)))
         {
@@ -980,7 +983,7 @@ Phaser.Group.prototype.checkAll = function (key, value, checkAlive, checkVisible
     if (typeof checkVisible === 'undefined') { checkVisible = false; }
     if (typeof force === 'undefined') { force = false; }
 
-    for (var i = 0, len = this.children.length; i < len; i++)
+    for (var i = 0; i < this.children.length; i++)
     {
         if ((!checkAlive || (checkAlive && this.children[i].alive)) && (!checkVisible || (checkVisible && this.children[i].visible)))
         {
@@ -1076,13 +1079,18 @@ Phaser.Group.prototype.divideAll = function (property, amount, checkAlive, check
 Phaser.Group.prototype.callAllExists = function (callback, existsValue) {
 
     var args;
+
     if (arguments.length > 2)
     {
         args = [];
-        for (var i = 2; i < arguments.length; i++) { args.push(arguments[i]); }
+
+        for (var i = 2; i < arguments.length; i++)
+        {
+            args.push(arguments[i]);
+        }
     }
 
-    for (var i = 0, len = this.children.length; i < len; i++)
+    for (var i = 0; i < this.children.length; i++)
     {
         if (this.children[i].exists === existsValue && this.children[i][callback])
         {
@@ -1183,16 +1191,21 @@ Phaser.Group.prototype.callAll = function (method, context) {
     }
 
     var args;
+
     if (arguments.length > 2)
     {
         args = [];
-        for (var i = 2; i < arguments.length; i++) { args.push(arguments[i]); }
+
+        for (var i = 2; i < arguments.length; i++)
+        {
+            args.push(arguments[i]);
+        }
     }
 
     var callback = null;
     var callbackContext = null;
 
-    for (var i = 0, len = this.children.length; i < len; i++)
+    for (var i = 0; i < this.children.length; i++)
     {
         callback = this.callbackFromArray(this.children[i], method, methodLength);
 
@@ -1261,7 +1274,7 @@ Phaser.Group.prototype.update = function () {
 Phaser.Group.prototype.postUpdate = function () {
 
     //  Fixed to Camera?
-    if (this._cache[7] === 1)
+    if (this.fixedToCamera)
     {
         this.x = this.game.camera.view.x + this.cameraOffset.x;
         this.y = this.game.camera.view.y + this.cameraOffset.y;
@@ -1324,9 +1337,9 @@ Phaser.Group.prototype.filter = function (predicate, checkExists) {
 *
 *     Group.forEach(awardBonusGold, this, true, 100, 500)
 *
-* would invoke thee `awardBonusGolds` with the parameters `(child, 100, 500)`.
+* would invoke `awardBonusGold` function with the parameters `(child, 100, 500)`.
 *
-* Note: Currently this will skip any children which are Groups themselves.
+* Note: This check will skip any children which are Groups themselves.
 *
 * @method Phaser.Group#forEach
 * @param {function} callback - The function that will be called for each applicable child. The child will be passed as the first argument.
@@ -1340,7 +1353,7 @@ Phaser.Group.prototype.forEach = function (callback, callbackContext, checkExist
 
     if (arguments.length <= 3)
     {
-        for (var i = 0, len = this.children.length; i < len; i++)
+        for (var i = 0; i < this.children.length; i++)
         {
             if (!checkExists || (checkExists && this.children[i].exists))
             {
@@ -1353,9 +1366,10 @@ Phaser.Group.prototype.forEach = function (callback, callbackContext, checkExist
         // Assigning to arguments properties causes Extreme Deoptimization in Chrome, FF, and IE.
         // Using an array and pushing each element (not a slice!) is _significantly_ faster.
         var args = [null];
+
         for (var i = 3; i < arguments.length; i++) { args.push(arguments[i]); }
 
-        for (var i = 0, len = this.children.length; i < len; i++)
+        for (var i = 0; i < this.children.length; i++)
         {
             if (!checkExists || (checkExists && this.children[i].exists))
             {
@@ -1380,10 +1394,15 @@ Phaser.Group.prototype.forEach = function (callback, callbackContext, checkExist
 Phaser.Group.prototype.forEachExists = function (callback, callbackContext) {
 
     var args;
+
     if (arguments.length > 2)
     {
         args = [null];
-        for (var i = 2; i < arguments.length; i++) { args.push(arguments[i]); }
+
+        for (var i = 2; i < arguments.length; i++)
+        {
+            args.push(arguments[i]);
+        }
     }
 
     this.iterate('exists', true, Phaser.Group.RETURN_TOTAL, callback, callbackContext, args);
@@ -1403,10 +1422,15 @@ Phaser.Group.prototype.forEachExists = function (callback, callbackContext) {
 Phaser.Group.prototype.forEachAlive = function (callback, callbackContext) {
 
     var args;
+
     if (arguments.length > 2)
     {
         args = [null];
-        for (var i = 2; i < arguments.length; i++) { args.push(arguments[i]); }
+
+        for (var i = 2; i < arguments.length; i++)
+        {
+            args.push(arguments[i]);
+        }
     }
 
     this.iterate('alive', true, Phaser.Group.RETURN_TOTAL, callback, callbackContext, args);
@@ -1426,10 +1450,15 @@ Phaser.Group.prototype.forEachAlive = function (callback, callbackContext) {
 Phaser.Group.prototype.forEachDead = function (callback, callbackContext) {
 
     var args;
+
     if (arguments.length > 2)
     {
         args = [null];
-        for (var i = 2; i < arguments.length; i++) { args.push(arguments[i]); }
+
+        for (var i = 2; i < arguments.length; i++)
+        {
+            args.push(arguments[i]);
+        }
     }
 
     this.iterate('alive', false, Phaser.Group.RETURN_TOTAL, callback, callbackContext, args);
@@ -1575,7 +1604,7 @@ Phaser.Group.prototype.descendingSortHandler = function (a, b) {
 * @method Phaser.Group#iterate
 * @param {string} key - The child property to check, i.e. 'exists', 'alive', 'health'
 * @param {any} value - A child matches if `child[key] === value` is true.
-* @param {integer} returnType - How to iterate the childen and what to return.
+* @param {integer} returnType - How to iterate the children and what to return.
 * @param {function} [callback=null] - Optional function that will be called on each matching child. The matched child is supplied as the first argument.
 * @param {object} [callbackContext] - The context in which the function should be called (usually 'this').
 * @param {any[]} [args=(none)] - The arguments supplied to to the callback; the first array index (argument) will be replaced with the matched child.
@@ -1590,7 +1619,7 @@ Phaser.Group.prototype.iterate = function (key, value, returnType, callback, cal
 
     var total = 0;
 
-    for (var i = 0, len = this.children.length; i < len; i++)
+    for (var i = 0; i < this.children.length; i++)
     {
         if (this.children[i][key] === value)
         {
@@ -1977,40 +2006,6 @@ Object.defineProperty(Phaser.Group.prototype, "angle", {
 
     set: function(value) {
         this.rotation = Phaser.Math.degToRad(value);
-    }
-
-});
-
-/**
-* Is this group fixed to the camera?
-*
-* A Group that is fixed to the camera uses its x/y coordinates as offsets from the top left of the camera.
-*
-* These are stored in {@link #cameraOffset} and are in addition to any parent in the display list.
-* So if this group was in a Group that has x: 200, then this will be added to the cameraOffset.x
-*
-* @name Phaser.Group#fixedToCamera
-* @property {boolean} fixedToCamera
-*/
-Object.defineProperty(Phaser.Group.prototype, "fixedToCamera", {
-
-    get: function () {
-
-        return !!this._cache[7];
-
-    },
-
-    set: function (value) {
-
-        if (value)
-        {
-            this._cache[7] = 1;
-            this.cameraOffset.set(this.x, this.y);
-        }
-        else
-        {
-            this._cache[7] = 0;
-        }
     }
 
 });

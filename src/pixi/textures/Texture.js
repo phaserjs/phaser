@@ -5,6 +5,15 @@
 PIXI.TextureCache = {};
 PIXI.FrameCache = {};
 
+/**
+ * TextureSilentFail is a boolean that defaults to `false`. 
+ * If `true` then `PIXI.Texture.setFrame` will no longer throw an error if the texture dimensions are incorrect. 
+ * Instead `Texture.valid` will be set to `false` (#1556)
+ *
+ * @type {boolean}
+ */
+PIXI.TextureSilentFail = false;
+
 PIXI.TextureCacheIdGenerator = 0;
 
 /**
@@ -119,14 +128,14 @@ PIXI.Texture = function(baseTexture, frame, crop, trim)
         if (this.noFrame) frame = new PIXI.Rectangle(0, 0, baseTexture.width, baseTexture.height);
         this.setFrame(frame);
     }
-    else
-    {
-        baseTexture.addEventListener('loaded', this.onBaseTextureLoaded.bind(this));
-    }
+    // else
+    // {
+    //     baseTexture.addEventListener('loaded', this.onBaseTextureLoaded.bind(this));
+    // }
 };
 
 PIXI.Texture.prototype.constructor = PIXI.Texture;
-PIXI.EventTarget.mixin(PIXI.Texture.prototype);
+// PIXI.EventTarget.mixin(PIXI.Texture.prototype);
 
 /**
  * Called when the base texture is loaded
@@ -137,13 +146,13 @@ PIXI.EventTarget.mixin(PIXI.Texture.prototype);
 PIXI.Texture.prototype.onBaseTextureLoaded = function()
 {
     var baseTexture = this.baseTexture;
-    baseTexture.removeEventListener('loaded', this.onLoaded);
+    // baseTexture.removeEventListener('loaded', this.onLoaded);
 
     if (this.noFrame) this.frame = new PIXI.Rectangle(0, 0, baseTexture.width, baseTexture.height);
 
     this.setFrame(this.frame);
 
-    this.dispatchEvent( { type: 'update', content: this } );
+    // this.dispatchEvent( { type: 'update', content: this } );
 };
 
 /**
@@ -180,7 +189,13 @@ PIXI.Texture.prototype.setFrame = function(frame)
 
     if (!this.trim && (frame.x + frame.width > this.baseTexture.width || frame.y + frame.height > this.baseTexture.height))
     {
-        throw new Error('Texture Error: frame does not fit inside the base Texture dimensions ' + this);
+        if (!PIXI.TextureSilentFail)
+        {
+            throw new Error('Texture Error: frame does not fit inside the base Texture dimensions ' + this);
+        }
+
+        this.valid = false;
+        return;
     }
 
     this.valid = frame && frame.width && frame.height && this.baseTexture.source && this.baseTexture.hasLoaded;
@@ -324,6 +339,3 @@ PIXI.TextureUvs = function()
     this.x3 = 0;
     this.y3 = 0;
 };
-
-PIXI.Texture.emptyTexture = new PIXI.Texture(new PIXI.BaseTexture());
-

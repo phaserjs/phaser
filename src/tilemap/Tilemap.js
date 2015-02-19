@@ -402,6 +402,11 @@ Phaser.Tilemap.prototype = {
                 sprite.autoCull = autoCull;
                 sprite.exists = exists;
 
+                if (this.objects[name][i].rotation)
+                {
+                    sprite.angle = this.objects[name][i].rotation;
+                }
+
                 if (adjustY)
                 {
                     sprite.y -= sprite.height;
@@ -428,9 +433,9 @@ Phaser.Tilemap.prototype = {
     * @param {integer|Array} tiles - The tile index, or array of indexes, to create Sprites from.
     * @param {integer|Array} replacements - The tile index, or array of indexes, to change a converted tile to. Set to `null` to not change.
     * @param {string} key - The Game.cache key of the image that this Sprite will use.
+    * @param {number|string|Phaser.TilemapLayer} [layer] - The layer to operate on.
     * @param {Phaser.Group} [group=Phaser.World] - Group to add the Sprite to. If not specified it will be added to the World group.
     * @param {object} [properties] - An object that contains the default properties for your newly created Sprite. This object will be iterated and any matching Sprite property will be set.
-    * @param {number|string|Phaser.TilemapLayer} [layer] - The layer to operate on.
     * @return {integer} The number of Sprites that were created.
     */
     createFromTiles: function (tiles, replacements, key, layer, group, properties) {
@@ -1550,8 +1555,8 @@ Phaser.Tilemap.prototype = {
         }
 
         //  Find out the difference between tileblock[1].x/y and x/y and use it as an offset, as it's the top left of the block to paste
-        var diffX = tileblock[1].x - x;
-        var diffY = tileblock[1].y - y;
+        var diffX = x - tileblock[1].x;
+        var diffY = y - tileblock[1].y;
 
         for (var i = 1; i < tileblock.length; i++)
         {

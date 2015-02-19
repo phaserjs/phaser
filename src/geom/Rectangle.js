@@ -42,6 +42,12 @@ Phaser.Rectangle = function (x, y, width, height) {
     */
     this.height = height;
 
+    /**
+    * @property {number} type - The const type of this object.
+    * @readonly
+    */
+    this.type = Phaser.RECTANGLE;
+
 };
 
 Phaser.Rectangle.prototype = {

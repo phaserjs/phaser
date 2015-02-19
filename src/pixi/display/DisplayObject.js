@@ -412,13 +412,15 @@ Object.defineProperty(PIXI.DisplayObject.prototype, 'filters', {
 
     set: function(value) {
 
-        if(value)
+        if (value)
         {
             // now put all the passes in one place..
             var passes = [];
+
             for (var i = 0; i < value.length; i++)
             {
                 var filterPasses = value[i].passes;
+
                 for (var j = 0; j < filterPasses.length; j++)
                 {
                     passes.push(filterPasses[j]);
@@ -426,7 +428,7 @@ Object.defineProperty(PIXI.DisplayObject.prototype, 'filters', {
             }
 
             // TODO change this as it is legacy
-            this._filterBlock = {target:this, filterPasses:passes};
+            this._filterBlock = { target: this, filterPasses: passes };
         }
 
         this._filters = value;
@@ -754,9 +756,6 @@ PIXI.DisplayObject.prototype._renderCanvas = function(renderSession)
     // this line is just here to pass jshinting :)
     renderSession = renderSession;
 };
-
-
-PIXI.DisplayObject._tempMatrix = new PIXI.Matrix();
 
 /**
  * The position of the displayObject on the x axis relative to the local coordinates of the parent.

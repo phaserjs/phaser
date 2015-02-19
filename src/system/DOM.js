@@ -76,7 +76,7 @@ Phaser.DOM = {
     },
 
     /**
-    * Calibrates element coordinates for `inViewport` checks.
+    * Calibrates element coordinates for `inLayoutViewport` checks.
     *
     * @method Phaser.DOM.calibrate
     * @private
@@ -130,10 +130,10 @@ Phaser.DOM = {
     * 
     * The optional cushion parameter allows you to specify a distance.
     * 
-    * inViewport(element, 100) is `true` if the element is in the viewport or 100px near it.
-    * inViewport(element, -100) is `true` if the element is in the viewport or at least 100px near it.
+    * inLayoutViewport(element, 100) is `true` if the element is in the viewport or 100px near it.
+    * inLayoutViewport(element, -100) is `true` if the element is in the viewport or at least 100px near it.
     * 
-    * @method Phaser.DOM.inViewport
+    * @method Phaser.DOM.inLayoutViewport
     * @param {DOMElement|Object} element - The DOM element to check. If no element is given it defaults to the Phaser game canvas.
     * @param {number} [cushion] - The cushion allows you to specify a distance within which the element must be within the viewport.
     * @return {boolean} True if the element is within the viewport, or within `cushion` distance from it.

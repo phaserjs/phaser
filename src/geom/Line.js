@@ -31,6 +31,12 @@ Phaser.Line = function (x1, y1, x2, y2) {
     */
     this.end = new Phaser.Point(x2, y2);
 
+    /**
+    * @property {number} type - The const type of this object.
+    * @readonly
+    */
+    this.type = Phaser.LINE;
+
 };
 
 Phaser.Line.prototype = {

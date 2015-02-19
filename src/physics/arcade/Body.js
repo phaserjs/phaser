@@ -87,7 +87,7 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.width = sprite.width;
 
     /**
-    * @property .numInternal ID cache
+    * @property {number} height - The calculated height of the physics body.
     */
     this.height = sprite.height;
 
@@ -153,6 +153,11 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     * @default
     */
     this.maxVelocity = new Phaser.Point(10000, 10000);
+
+    /**
+    * @property {Phaser.Point} friction - The amount of movement that will occur if another object 'rides' this one.
+    */
+    this.friction = new Phaser.Point(1, 0);
 
     /**
     * @property {number} angularVelocity - The angular velocity in pixels per second sq. of the Body.
@@ -292,9 +297,9 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.tilePadding = new Phaser.Point();
 
     /**
-    * @property {number} phaser - Is this Body in a preUpdate (1) or postUpdate (2) state?
+    * @property {boolean} dirty - Is this Body dirty? I.e. still running its pre/post Update (true) or has it synced its changed the parent Sprite? (false)
     */
-    this.phase = 0;
+    this.dirty = true;
 
     /**
     * @property {boolean} skipQuadTree - If true and you collide this Sprite against a Group, it will disable the collision check from using a QuadTree.
@@ -369,12 +374,12 @@ Phaser.Physics.Arcade.Body.prototype = {
     */
     preUpdate: function () {
 
-        if (!this.enable)
+        if (!this.enable || this.game.physics.arcade.isPaused)
         {
             return;
         }
 
-        this.phase = 1;
+        this.dirty = true;
 
         //  Store and reset collision flags
         this.wasTouching.none = this.touching.none;
@@ -404,7 +409,7 @@ Phaser.Physics.Arcade.Body.prototype = {
 
         this.preRotation = this.rotation;
 
-        if (this._reset || this.sprite._cache[4] === 1)
+        if (this._reset || this.sprite.fresh)
         {
             this.prev.x = this.position.x;
             this.prev.y = this.position.y;
@@ -449,18 +454,11 @@ Phaser.Physics.Arcade.Body.prototype = {
     */
     postUpdate: function () {
 
-        if (!this.enable)
-        {
-            return;
-        }
-
         //  Only allow postUpdate to be called once per frame
-        if (this.phase === 2)
+        if (!this.enable || !this.dirty)
         {
             return;
         }
-
-        this.phase = 2;
 
         if (this.deltaX() < 0)
         {
@@ -522,6 +520,8 @@ Phaser.Physics.Arcade.Body.prototype = {
 
         this.prev.x = this.position.x;
         this.prev.y = this.position.y;
+
+        this.dirty = false;
 
     },
 
@@ -613,6 +613,7 @@ Phaser.Physics.Arcade.Body.prototype = {
         this.velocity.set(0);
         this.acceleration.set(0);
 
+        this.speed = 0;
         this.angularVelocity = 0;
         this.angularAcceleration = 0;
 

@@ -119,6 +119,7 @@ PIXI.BaseTexture = function(source, scaleMode)
     }
     else
     {
+        /*
         var scope = this;
 
         this.source.onload = function() {
@@ -136,6 +137,7 @@ PIXI.BaseTexture = function(source, scaleMode)
         this.source.onerror = function() {
             scope.dispatchEvent( { type: 'error', content: scope } );
         };
+        */
     }
 
     /**
@@ -155,7 +157,7 @@ PIXI.BaseTexture = function(source, scaleMode)
 
 PIXI.BaseTexture.prototype.constructor = PIXI.BaseTexture;
 
-PIXI.EventTarget.mixin(PIXI.BaseTexture.prototype);
+// PIXI.EventTarget.mixin(PIXI.BaseTexture.prototype);
 
 /**
  * Destroys this base texture
@@ -256,6 +258,7 @@ PIXI.BaseTexture.fromImage = function(imageUrl, crossorigin, scaleMode)
         // new Image() breaks tex loading in some versions of Chrome.
         // See https://code.google.com/p/chromium/issues/detail?id=238071
         var image = new Image();//document.createElement('img');
+
         if (crossorigin)
         {
             image.crossOrigin = '';

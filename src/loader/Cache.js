@@ -495,6 +495,7 @@ Phaser.Cache.prototype = {
 
     /**
     * Adds an Image file into the Cache. The file must have already been loaded, typically via Phaser.Loader, but can also have been loaded into the DOM.
+    * If an image already exists in the cache with the same key then it is removed and destroyed, and the new image inserted in its place.
     *
     * @method Phaser.Cache#addImage
     * @param {string} key - The unique key by which you will reference this object.
@@ -502,6 +503,11 @@ Phaser.Cache.prototype = {
     * @param {object} data - Extra image data.
     */
     addImage: function (key, url, data) {
+
+        if (this.checkImageKey(key))
+        {
+            this.removeImage(key);
+        }
 
         this._images[key] = { url: url, data: data };
 
@@ -1580,11 +1586,6 @@ Phaser.Cache.prototype = {
     */
     destroy: function () {
 
-        for (var item in this._canvases)
-        {
-            delete this._canvases[item];
-        }
-
         for (var item in this._images)
         {
             if (item !== '__default' && item !== '__missing')
@@ -1593,54 +1594,26 @@ Phaser.Cache.prototype = {
             }
         }
 
-        for (var item in this._sounds)
-        {
-            delete this._sounds[item];
-        }
+        var containers = [
+            this._canvases,
+            this._sounds,
+            this._text,
+            this._json,
+            this._xml,
+            this._textures,
+            this._physics,
+            this._tilemaps,
+            this._binary,
+            this._bitmapDatas,
+            this._bitmapFont
+        ];
 
-        for (var item in this._text)
+        for (var i = 0; i < containers.length; i++)
         {
-            delete this._text[item];
-        }
-
-        for (var item in this._json)
-        {
-            delete this._json[item];
-        }
-
-        for (var item in this._xml)
-        {
-            delete this._xml[item];
-        }
-
-        for (var item in this._textures)
-        {
-            delete this._textures[item];
-        }
-
-        for (var item in this._physics)
-        {
-            delete this._physics[item];
-        }
-
-        for (var item in this._tilemaps)
-        {
-            delete this._tilemaps[item];
-        }
-
-        for (var item in this._binary)
-        {
-            delete this._binary[item];
-        }
-
-        for (var item in this._bitmapDatas)
-        {
-            delete this._bitmapDatas[item];
-        }
-
-        for (var item in this._bitmapFont)
-        {
-            delete this._bitmapFont[item];
+            for (var item in containers[i])
+            {
+                delete containers[i][item];
+            }
         }
 
         this._urlMap = null;

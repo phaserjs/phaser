@@ -558,7 +558,7 @@ Phaser.RetroFont.prototype.updateOffset = function (x, y) {
 };
 
 /**
-* @name Phaser.BitmapText#text
+* @name Phaser.RetroFont#text
 * @property {string} text - Set this value to update the text in this sprite. Carriage returns are automatically stripped out if multiLine is false. Text is converted to upper case if autoUpperCase is true.
 */
 Object.defineProperty(Phaser.RetroFont.prototype, "text", {
@@ -596,7 +596,7 @@ Object.defineProperty(Phaser.RetroFont.prototype, "text", {
 });
 
 /**
-* @name Phaser.BitmapText#smoothed
+* @name Phaser.RetroFont#smoothed
 * @property {string} text - Set this value to update the text in this sprite. Carriage returns are automatically stripped out if multiLine is false. Text is converted to upper case if autoUpperCase is true.
 */
 Object.defineProperty(Phaser.RetroFont.prototype, "smoothed", {
