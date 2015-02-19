@@ -6,10 +6,14 @@ module.exports = function (grunt) {
     loadConfig(grunt, {
         configPath: __dirname + '/tasks/options',
         config: {
+            target_dir: 'build',
             release_dir: 'build',
+            release_custom_dir: 'build/custom',
             compile_dir: 'dist',
             modules_dir: 'dist/modules',
             docs_dir: 'docs',
+            sourcemap: false,
+            filename: 'phaser',
             filelist: [],
             banner: require('fs').readFileSync(__dirname + '/tasks/banner.txt', 'utf8')
         }
@@ -18,6 +22,9 @@ module.exports = function (grunt) {
     grunt.loadTasks('tasks');
 
     grunt.registerTask('default', ['build']);
+
+    grunt.registerTask('docs', ['clean:docs', 'pixidoc', 'jsdoc:html', 'replace:docs', 'clean:out']);
+    grunt.registerTask('tsdocs', ['clean:out', 'pixidoc', 'gitclone:plugins', 'jsdoc:json', 'buildtsdoc:pixi', 'buildtsdoc:phaser', 'replace:phasertsdefheader', 'clean:out']);
 
     grunt.registerTask('custom', 'Build a custom version of Phaser', function(arg) {
 
@@ -59,24 +66,13 @@ module.exports = function (grunt) {
 
         };
 
-        var defaults = {
-
-            'all': [ 'ninja' ],
-            'minimal': [ 'keyboard', 'gamepad', 'graphics', 'text', 'retrofont', 'bitmapdata', 'rendertexture', 'tweens', 'sound', 'particles', 'debug', 'tilemaps', 'arcade', 'p2', 'ninja' ],
-            'nophysics': [ 'ninja', 'p2', 'arcade', 'tilemaps', 'particles' ],
-            'arcade': [ 'ninja', 'p2' ],
-            'p2': [ 'ninja', 'arcade', 'particles' ],
-            'arcadeMobile': [ 'ninja', 'p2', 'keyboard', 'gamepad' ],
-
-        };
-
-        grunt.log.writeln("----------------------------");
-        grunt.log.writeln("Building Phaser " + grunt.config.get('package.version') + '-custom');
-        grunt.log.writeln("----------------------------");
+        grunt.log.writeln("---------------------");
+        grunt.log.writeln("Building Phaser " + grunt.config.get('package.version'));
+        grunt.log.writeln("---------------------");
 
         if (!grunt.option('exclude'))
         {
-            grunt.log.writeln("\nUse --exclude to select which of the following modules to exclude:\n");
+            grunt.log.writeln("\nUse --exclude to select which modules to exclude:\n");
 
             for (var key in modules)
             {
@@ -86,7 +82,7 @@ module.exports = function (grunt) {
                 }
             }
 
-            grunt.log.writeln("\nFor example: --exclude p2,tilemap,retrofont\n");
+            grunt.log.writeln("\nFor example: --exclude p2,tilemap,retrofont --filename phaser-custom\n");
 
             grunt.log.writeln("Note that some modules have dependencies on others.\n");
 
@@ -94,6 +90,22 @@ module.exports = function (grunt) {
         }
         else
         {
+            //  Defaults
+            grunt.config.set('sourcemap', false);
+            grunt.config.set('filename', 'phaser');
+            grunt.config.set('target_dir', '<%= release_dir %>');
+
+            //  Overrides
+            if (grunt.option('filename'))
+            {
+                grunt.config.set('filename', grunt.option('filename'));
+            }
+
+            if (grunt.option('sourcemap'))
+            {
+                grunt.config.set('sourcemap', grunt.option('sourcemap'));
+            }
+
             grunt.log.writeln("Excluding modules:\n");
 
             var excludes = grunt.option('exclude').split(',');
@@ -133,8 +145,8 @@ module.exports = function (grunt) {
 
             var filelist = [];
 
-            //  Clean the dist folder
-            var tasks = [ 'clean:dist' ];
+            //  Clean the working folder
+            var tasks = [ 'clean:build' ];
 
             for (var key in modules)
             {
@@ -160,21 +172,77 @@ module.exports = function (grunt) {
 
             tasks.push('uglify:custom');
 
-            grunt.task.run(tasks);
+            if (grunt.option('copy'))
+            {
+                tasks.push('copy:custom');
+            }
+            else if (grunt.option('copycustom'))
+            {
+                grunt.config.set('target_dir', '<%= release_custom_dir %>');
+                tasks.push('copy:custom');
+            }
 
-            // grunt.log.writeln("\nCustom build of Phaser available in dist/phaser-custom.js\n");
+            grunt.task.run(tasks);
 
         }
 
     });
 
-    grunt.registerTask('test', ['clean:dist', 'concat', 'uglify']);
+    grunt.registerTask('dist', 'Build all Phaser versions', function() {
 
-    grunt.registerTask('build', ['clean:dist', 'jshint', 'concat', 'uglify']);
+        grunt.task.run('clean:release');
+        grunt.task.run('full');
+        grunt.task.run('arcadephysics');
+        grunt.task.run('nophysics');
+        grunt.task.run('minimum');
 
-    grunt.registerTask('dist', ['replace:pixi', 'replace:p2', 'build', 'copy']);
+    });
 
-    grunt.registerTask('docs', ['clean:docs', 'pixidoc', 'jsdoc:html', 'replace:docs', 'clean:out']);
+    grunt.registerTask('full', 'Phaser complete', function() {
 
-    grunt.registerTask('tsdocs', ['clean:out', 'pixidoc', 'gitclone:plugins', 'jsdoc:json', 'buildtsdoc:pixi', 'buildtsdoc:phaser', 'replace:phasertsdefheader', 'clean:out']);
+        grunt.option('exclude', 'ninja');
+        grunt.option('filename', 'phaser');
+        grunt.option('sourcemap', true);
+        grunt.option('copy', true);
+
+        grunt.task.run('custom');
+
+    });
+
+    grunt.registerTask('arcadephysics', 'Phaser with Arcade Physics, Tilemaps and Particles', function() {
+
+        grunt.option('exclude', 'ninja,p2');
+        grunt.option('filename', 'phaser-arcade-physics');
+        grunt.option('sourcemap', true);
+        grunt.option('copy', false);
+        grunt.option('copycustom', true);
+
+        grunt.task.run('custom');
+
+    });
+
+    grunt.registerTask('nophysics', 'Phaser without physics, tilemaps or particles', function() {
+
+        grunt.option('exclude', 'arcade,ninja,p2,tilemaps,particles');
+        grunt.option('filename', 'phaser-no-physics');
+        grunt.option('sourcemap', true);
+        grunt.option('copy', false);
+        grunt.option('copycustom', true);
+
+        grunt.task.run('custom');
+
+    });
+
+    grunt.registerTask('minimum', 'Phaser without any optional modules except Pixi', function() {
+
+        grunt.option('exclude', 'gamepad,keyboard,bitmapdata,graphics,rendertexture,text,bitmaptext,retrofont,net,tweens,sound,debug,arcade,ninja,p2,tilemaps,particles');
+        grunt.option('filename', 'phaser-minimum');
+        grunt.option('sourcemap', true);
+        grunt.option('copy', false);
+        grunt.option('copycustom', true);
+
+        grunt.task.run('custom');
+
+    });
+
 };

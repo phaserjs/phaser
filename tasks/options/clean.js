@@ -1,7 +1,8 @@
 module.exports = {
 
     docs: ['<%= docs_dir %>/*'],
-    dist: ['<%= compile_dir %>/*.js', '<%= compile_dir %>/modules/*.js'],
+    build: ['<%= compile_dir %>/*', '<%= modules_dir %>/*.js'],
+    release: ['<%= release_dir %>/*.js', '<%= release_dir %>/*.map', '<%= release_custom_dir %>/*'],
     out: ['out']
 
 };
