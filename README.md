@@ -153,6 +153,10 @@ We've also removed functions and properties from Pixi classes that Phaser doesn'
 * If you load an image and provide a key that was already in-use in the Cache, then the old image is now destroyed (via `Cache.removeImage`) and the new image takes its place.
 * BitmapText has a new `maxWidth` property that will attempt to wrap the text if it exceeds the width specified.
 * Group.cursorIndex is the index of the item the Group cursor points to. This replaces Group._cache[8].
+* Tween.updateTweenData allows you to set a property to the given value across one or all of the current tweens. All of the Tween methods like Tween.delay and Tween.repeat have been updated to use this.
+* Tween.repeat has a new parameter `repeatDelay` which allows you to set the delay (in ms) before a tween will repeat itself.
+* Tween.yoyo has a new parameter `yoyoDelay` which allows you to set the delay (in ms) before a tween will start a yoyo.
+* Tween.interpolation has a new parameter `context` which allows you to define the context in which the interpolation function will run.
 
 ### Bug Fixes
 
@@ -180,8 +184,9 @@ We've also removed functions and properties from Pixi classes that Phaser doesn'
 * World.setBounds if called after you had already started P2 Physics would incorrectly create a new collision group for the wall objects. P2.World now remembers the settings you provide for each wall and the collision group, and re-applies these settings should the world dimensions ever change (thanks @nextht #1455)
 * InputHandler was using the wrong property in `checkBoundsSprite` when fixedToCamera (thanks @yig #1613)
 * Tween.to now correctly accepts arrays are destination values, which makes the Tween interpolate through each value specified in the array using the defined Tween.interpolation method (see new example, thanks @FridayMarch26th #1619)
-* Tween.interpolationFunction was using the incorrect context to invoke the function. This is now defined in `TweenData.interpolationFunctionContext` and defaults to `Phaser.Math`. If you provide your own interpolation function then please adjust the context accordingly (thanks @FridayMarch26th #1618)
+* Tween.interpolationFunction was using the incorrect context to invoke the function. This is now defined in `TweenData.interpolationContext` and defaults to `Phaser.Math`. If you provide your own interpolation function then please adjust the context accordingly (thanks @FridayMarch26th #1618)
 * Graphics.drawEllipse method was missing (thanks @jackrugile #1574)
+* A TweenData wouldn't take into account the `repeatDelay` property when repeating the tween, but now does. A TweenData also has a new property `yoyoDelay` which controls the delay before the yoyo will start, allowing you to set both independently (thanks @DreadKnight #1469)
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 
