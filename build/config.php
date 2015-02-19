@@ -1,33 +1,22 @@
 <?php
-    if (!isset($path))
-    {
-        $path = '..';
-    }
+    if (!isset($path)) { $path = '..'; }
 
-    if (!isset($p2))
-    {
-        $p2 = true;
-    }
-
-    if (!isset($box2d))
-    {
-        $box2d = false;
-    }
-
-    if (!isset($ninja))
-    {
-        $ninja = false;
-    }
-
-    if (!isset($arcade))
-    {
-        $arcade = true;
-    }
-
-    if (!isset($tilemap))
-    {
-        $tilemap = true;
-    }
+    if (!isset($keyboard)) { $keyboard = true; }
+    if (!isset($gamepad)) { $gamepad = true; }
+    if (!isset($bitmapdata)) { $bitmapdata = true; }
+    if (!isset($graphics)) { $graphics = true; }
+    if (!isset($rendertexture)) { $rendertexture = true; }
+    if (!isset($text)) { $text = true; }
+    if (!isset($retrofont)) { $retrofont = true; }
+    if (!isset($tweens)) { $tweens = true; }
+    if (!isset($sound)) { $sound = true; }
+    if (!isset($particles)) { $particles = true; }
+    if (!isset($debug)) { $debug = true; }
+    if (!isset($tilemap)) { $tilemap = true; }
+    if (!isset($arcade)) { $arcade = true; }
+    if (!isset($p2)) { $p2 = true; }
+    if (!isset($ninja)) { $ninja = false; }
+    if (!isset($box2d)) { $box2d = false; }
 
     if (isset($nophysics))
     {
@@ -36,6 +25,7 @@
         $ninja = false;
         $arcade = false;
         $tilemap = false;
+        $particles = false;
     }
 
     if ($p2)
@@ -126,17 +116,37 @@
     <script src="$path/src/core/Game.js"></script>
 
     <script src="$path/src/input/Input.js"></script>
-    <script src="$path/src/input/Key.js"></script>
-    <script src="$path/src/input/Keyboard.js"></script>
     <script src="$path/src/input/Mouse.js"></script>
     <script src="$path/src/input/MSPointer.js"></script>
     <script src="$path/src/input/Pointer.js"></script>
     <script src="$path/src/input/Touch.js"></script>
+    <script src="$path/src/input/InputHandler.js"></script>
+
+
+EOL;
+
+    if ($keyboard)
+    {
+        echo <<<EOL
+    <script src="$path/src/input/Key.js"></script>
+    <script src="$path/src/input/Keyboard.js"></script>
+
+
+EOL;
+    }
+
+    if ($gamepad)
+    {
+        echo <<<EOL
     <script src="$path/src/input/Gamepad.js"></script>
     <script src="$path/src/input/SinglePad.js"></script>
     <script src="$path/src/input/GamepadButton.js"></script>
-    <script src="$path/src/input/InputHandler.js"></script>
 
+
+EOL;
+    }
+
+    echo <<<EOL
     <script src="$path/src/gameobjects/components/Component.js"></script>
     <script src="$path/src/gameobjects/components/Angle.js"></script>
     <script src="$path/src/gameobjects/components/Animation.js"></script>
@@ -147,6 +157,7 @@
     <script src="$path/src/gameobjects/components/Crop.js"></script>
     <script src="$path/src/gameobjects/components/Delta.js"></script>
     <script src="$path/src/gameobjects/components/Destroy.js"></script>
+    <script src="$path/src/gameobjects/components/Events.js"></script>
     <script src="$path/src/gameobjects/components/FixedToCamera.js"></script>
     <script src="$path/src/gameobjects/components/Health.js"></script>
     <script src="$path/src/gameobjects/components/InCamera.js"></script>
@@ -160,23 +171,66 @@
     <script src="$path/src/gameobjects/components/ScaleMinMax.js"></script>
     <script src="$path/src/gameobjects/components/Smoothed.js"></script>
 
-    <script src="$path/src/gameobjects/Events.js"></script>
     <script src="$path/src/gameobjects/GameObjectFactory.js"></script>
     <script src="$path/src/gameobjects/GameObjectCreator.js"></script>
-    <script src="$path/src/gameobjects/BitmapData.js"></script>
     <script src="$path/src/gameobjects/Sprite.js"></script>
     <script src="$path/src/gameobjects/Image.js"></script>
     <script src="$path/src/gameobjects/TileSprite.js"></script>
     <script src="$path/src/gameobjects/Rope.js"></script>
-    <script src="$path/src/gameobjects/Text.js"></script>
-    <script src="$path/src/gameobjects/BitmapText.js"></script>
     <script src="$path/src/gameobjects/Button.js"></script>
-    <script src="$path/src/gameobjects/Graphics.js"></script>
-    <script src="$path/src/gameobjects/RenderTexture.js"></script>
     <script src="$path/src/gameobjects/SpriteBatch.js"></script>
-    <script src="$path/src/gameobjects/RetroFont.js"></script>
     <script src="$path/src/gameobjects/Particle.js"></script>
 
+
+EOL;
+
+    if ($bitmapdata)
+    {
+        echo <<<EOL
+    <script src="$path/src/gameobjects/BitmapData.js"></script>
+
+
+EOL;
+    }
+
+    if ($graphics)
+    {
+        echo <<<EOL
+    <script src="$path/src/gameobjects/Graphics.js"></script>
+
+
+EOL;
+    }
+
+    if ($rendertexture)
+    {
+        echo <<<EOL
+    <script src="$path/src/gameobjects/RenderTexture.js"></script>
+
+
+EOL;
+    }
+
+    if ($text)
+    {
+        echo <<<EOL
+    <script src="$path/src/gameobjects/Text.js"></script>
+    <script src="$path/src/gameobjects/BitmapText.js"></script>
+
+
+EOL;
+    }
+
+    if ($retrofont && $rendertexture)
+    {
+        echo <<<EOL
+    <script src="$path/src/gameobjects/RetroFont.js"></script>
+
+
+EOL;
+    }
+
+    echo <<<EOL
     <script src="$path/src/system/Device.js"></script>
     <script src="$path/src/system/DOM.js"></script>
     <script src="$path/src/system/Canvas.js"></script>
@@ -188,11 +242,30 @@
 
     <script src="$path/src/net/Net.js"></script>
 
+
+EOL;
+
+    if ($tweens)
+    {
+        echo <<<EOL
     <script src="$path/src/tween/TweenManager.js"></script>
     <script src="$path/src/tween/Tween.js"></script>
     <script src="$path/src/tween/TweenData.js"></script>
     <script src="$path/src/tween/Easing.js"></script>
 
+
+EOL;
+    }
+    else
+    {
+        echo <<<EOL
+    <script src="$path/src/stubs/TweenManager.js"></script>
+
+
+EOL;
+    }
+
+    echo <<<EOL
     <script src="$path/src/time/Time.js"></script>
     <script src="$path/src/time/Timer.js"></script>
     <script src="$path/src/time/TimerEvent.js"></script>
@@ -207,35 +280,68 @@
     <script src="$path/src/loader/Loader.js"></script>
     <script src="$path/src/loader/LoaderParser.js"></script>
 
+
+EOL;
+
+    if ($sound)
+    {
+        echo <<<EOL
     <script src="$path/src/sound/AudioSprite.js"></script>
     <script src="$path/src/sound/Sound.js"></script>
     <script src="$path/src/sound/SoundManager.js"></script>
 
+
+EOL;
+    }
+    else
+    {
+        echo <<<EOL
+    <script src="$path/src/stubs/SoundManager.js"></script>
+
+
+EOL;
+    }
+
+    if ($debug)
+    {
+        echo <<<EOL
+    <script src="$path/src/utils/Debug.js"></script>
+
+
+EOL;
+    }
+
+    echo <<<EOL
     <script src="$path/src/utils/ArraySet.js"></script>
     <script src="$path/src/utils/LinkedList.js"></script>
     <script src="$path/src/utils/ArrayUtils.js"></script>
-    <script src="$path/src/utils/Debug.js"></script>
     <script src="$path/src/utils/Color.js"></script>
 
     <script src="$path/src/physics/Physics.js"></script>
-
     <script src="$path/src/particles/Particles.js"></script>
+
+
+EOL;
+
+    if ($particles && $arcade)
+    {
+        echo <<<EOL
     <script src="$path/src/particles/arcade/ArcadeParticles.js"></script>
     <script src="$path/src/particles/arcade/Emitter.js"></script>
 
-    <script src="$path/src/PixiDefaults.js"></script>
 
 EOL;
+    }
 
     if ($tilemap)
     {
         echo <<<EOL
-
     <script src="$path/src/tilemap/Tile.js"></script>
     <script src="$path/src/tilemap/Tilemap.js"></script>
     <script src="$path/src/tilemap/TilemapLayer.js"></script>
     <script src="$path/src/tilemap/TilemapParser.js"></script>
     <script src="$path/src/tilemap/Tileset.js"></script>
+
 
 EOL;
     }
@@ -243,17 +349,25 @@ EOL;
     if ($arcade)
     {
         echo <<<EOL
-
     <script src="$path/src/physics/arcade/World.js"></script>
     <script src="$path/src/physics/arcade/Body.js"></script>
+
+
+EOL;
+    }
+
+    if ($tilemap && $arcade)
+    {
+        echo <<<EOL
     <script src="$path/src/physics/arcade/TilemapCollision.js"></script>
+
+
 EOL;
     }
 
     if ($p2)
     {
         echo <<<EOL
-
     <script src="$path/src/physics/p2/World.js"></script>
     <script src="$path/src/physics/p2/FixtureList.js"></script>
     <script src="$path/src/physics/p2/PointProxy.js"></script>
@@ -270,36 +384,41 @@ EOL;
     <script src="$path/src/physics/p2/LockConstraint.js"></script>
     <script src="$path/src/physics/p2/PrismaticConstraint.js"></script>
     <script src="$path/src/physics/p2/RevoluteConstraint.js"></script>
+
+
 EOL;
     }
 
     if ($ninja)
     {
         echo <<<EOL
-
-    <script src="$path/src/physics/arcade/World.js"></script>
-    <script src="$path/src/physics/arcade/Body.js"></script>
-
     <script src="$path/src/physics/ninja/World.js"></script>
     <script src="$path/src/physics/ninja/Body.js"></script>
     <script src="$path/src/physics/ninja/AABB.js"></script>
     <script src="$path/src/physics/ninja/Tile.js"></script>
     <script src="$path/src/physics/ninja/Circle.js"></script>
+
+
 EOL;
     }
 
     if ($box2d)
     {
         echo <<<EOL
-
     <script src="$box2dpath/World.js"></script>
     <script src="$box2dpath/Body.js"></script>
     <script src="$box2dpath/PointProxy.js"></script>
     <script src="$box2dpath/DefaultDebugDraw.js"></script>
     <script src="$box2dpath/DefaultContactListener.js"></script>
     <script src="$box2dpath/Polygon.js"></script>
+
+
 EOL;
     }
+
+    echo <<<EOL
+    <script src="$path/src/PixiDefaults.js"></script>
+EOL;
 
     if (isset($custom))
     {
