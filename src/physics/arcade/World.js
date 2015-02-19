@@ -70,85 +70,11 @@ Phaser.Physics.Arcade = function (game) {
     */
     this.quadTree = new Phaser.QuadTree(this.game.world.bounds.x, this.game.world.bounds.y, this.game.world.bounds.width, this.game.world.bounds.height, this.maxObjects, this.maxLevels);
 
-    //  Avoid gc spikes by caching these values for re-use
-
-    /**
-    * @property {number} _overlap - Internal cache var.
-    * @private
-    */
-    this._overlap = 0;
-
-    /**
-    * @property {number} _maxOverlap - Internal cache var.
-    * @private
-    */
-    this._maxOverlap = 0;
-
-    /**
-    * @property {number} _velocity1 - Internal cache var.
-    * @private
-    */
-    this._velocity1 = 0;
-
-    /**
-    * @property {number} _velocity2 - Internal cache var.
-    * @private
-    */
-    this._velocity2 = 0;
-
-    /**
-    * @property {number} _newVelocity1 - Internal cache var.
-    * @private
-    */
-    this._newVelocity1 = 0;
-
-    /**
-    * @property {number} _newVelocity2 - Internal cache var.
-    * @private
-    */
-    this._newVelocity2 = 0;
-
-    /**
-    * @property {number} _average - Internal cache var.
-    * @private
-    */
-    this._average = 0;
-
-    /**
-    * @property {Array} _mapData - Internal cache var.
-    * @private
-    */
-    this._mapData = [];
-
-    /**
-    * @property {boolean} _result - Internal cache var.
-    * @private
-    */
-    this._result = false;
-
     /**
     * @property {number} _total - Internal cache var.
     * @private
     */
     this._total = 0;
-
-    /**
-    * @property {number} _angle - Internal cache var.
-    * @private
-    */
-    this._angle = 0;
-
-    /**
-    * @property {number} _dx - Internal cache var.
-    * @private
-    */
-    this._dx = 0;
-
-    /**
-    * @property {number} _dy - Internal cache var.
-    * @private
-    */
-    this._dy = 0;
 
     // By default we want the bounds the same size as the world bounds
     this.setBoundsToWorld();
@@ -357,7 +283,6 @@ Phaser.Physics.Arcade.prototype = {
         processCallback = processCallback || null;
         callbackContext = callbackContext || overlapCallback;
 
-        this._result = false;
         this._total = 0;
 
         if (!Array.isArray(object1) && Array.isArray(object2))
@@ -417,7 +342,6 @@ Phaser.Physics.Arcade.prototype = {
         processCallback = processCallback || null;
         callbackContext = callbackContext || collideCallback;
 
-        this._result = false;
         this._total = 0;
 
         if (!Array.isArray(object1) && Array.isArray(object2))
@@ -612,16 +536,16 @@ Phaser.Physics.Arcade.prototype = {
 
             this.quadTree.populate(group);
 
-            this._potentials = this.quadTree.retrieve(sprite);
+            var items = this.quadTree.retrieve(sprite);
 
-            for (var i = 0, len = this._potentials.length; i < len; i++)
+            for (var i = 0; i < items.length; i++)
             {
                 //  We have our potential suspects, are they in this group?
-                if (this.separate(sprite.body, this._potentials[i], processCallback, callbackContext, overlapOnly))
+                if (this.separate(sprite.body, items[i], processCallback, callbackContext, overlapOnly))
                 {
                     if (collideCallback)
                     {
-                        collideCallback.call(callbackContext, sprite, this._potentials[i].sprite);
+                        collideCallback.call(callbackContext, sprite, items[i].sprite);
                     }
 
                     this._total++;
@@ -650,11 +574,9 @@ Phaser.Physics.Arcade.prototype = {
             return;
         }
 
-        var len = group.children.length;
-
-        for (var i = 0; i < len - 1; i++)
+        for (var i = 0; i < group.children.length - 1; i++)
         {
-            for (var j = i + 1; j < len; j++)
+            for (var j = i + 1; j < group.children.length; j++)
             {
                 if (group.children[i] && group.children[j] && group.children[i].exists && group.children[j].exists)
                 {
@@ -684,7 +606,7 @@ Phaser.Physics.Arcade.prototype = {
             return;
         }
 
-        for (var i = 0, len = group1.children.length; i < len; i++)
+        for (var i = 0; i < group1.children.length; i++)
         {
             if (group1.children[i].exists)
             {
@@ -696,99 +618,6 @@ Phaser.Physics.Arcade.prototype = {
                 {
                     this.collideSpriteVsGroup(group1.children[i], group2, collideCallback, processCallback, callbackContext, overlapOnly);
                 }
-            }
-        }
-
-    },
-
-    /**
-    * An internal function. Use Phaser.Physics.Arcade.collide instead.
-    *
-    * @method Phaser.Physics.Arcade#collideSpriteVsTilemapLayer
-    * @private
-    * @param {Phaser.Sprite} sprite - The sprite to check.
-    * @param {Phaser.TilemapLayer} tilemapLayer - The layer to check.
-    * @param {function} collideCallback - An optional callback function that is called if the objects collide. The two objects will be passed to this function in the same order in which you specified them.
-    * @param {function} processCallback - A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then collision will only happen if processCallback returns true. The two objects will be passed to this function in the same order in which you specified them.
-    * @param {object} callbackContext - The context in which to run the callbacks.
-    * @param {boolean} overlapOnly - Just run an overlap or a full collision.
-    */
-    collideSpriteVsTilemapLayer: function (sprite, tilemapLayer, collideCallback, processCallback, callbackContext) {
-
-        if (!sprite.body)
-        {
-            return;
-        }
-
-        this._mapData = tilemapLayer.getTiles(
-            sprite.body.position.x - sprite.body.tilePadding.x,
-            sprite.body.position.y - sprite.body.tilePadding.y,
-            sprite.body.width + sprite.body.tilePadding.x,
-            sprite.body.height + sprite.body.tilePadding.y,
-            false, false);
-
-        if (this._mapData.length === 0)
-        {
-            return;
-        }
-
-        for (var i = 0; i < this._mapData.length; i++)
-        {
-            if (processCallback)
-            {
-                if (processCallback.call(callbackContext, sprite, this._mapData[i]))
-                {
-                    if (this.separateTile(i, sprite.body, this._mapData[i]))
-                    {
-                        this._total++;
-
-                        if (collideCallback)
-                        {
-                            collideCallback.call(callbackContext, sprite, this._mapData[i]);
-                        }
-                    }
-                }
-            }
-            else
-            {
-                if (this.separateTile(i, sprite.body, this._mapData[i]))
-                {
-                    this._total++;
-
-                    if (collideCallback)
-                    {
-                        collideCallback.call(callbackContext, sprite, this._mapData[i]);
-                    }
-                }
-            }
-        }
-
-    },
-
-    /**
-    * An internal function. Use Phaser.Physics.Arcade.collide instead.
-    *
-    * @private
-    * @method Phaser.Physics.Arcade#collideGroupVsTilemapLayer
-    * @param {Phaser.Group} group - The Group to check.
-    * @param {Phaser.TilemapLayer} tilemapLayer - The layer to check.
-    * @param {function} collideCallback - An optional callback function that is called if the objects collide. The two objects will be passed to this function in the same order in which you specified them.
-    * @param {function} processCallback - A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then collision will only happen if processCallback returns true. The two objects will be passed to this function in the same order in which you specified them.
-    * @param {object} callbackContext - The context in which to run the callbacks.
-    * @param {boolean} overlapOnly - Just run an overlap or a full collision.
-    */
-    collideGroupVsTilemapLayer: function (group, tilemapLayer, collideCallback, processCallback, callbackContext) {
-
-        if (group.length === 0)
-        {
-            return;
-        }
-
-        for (var i = 0, len = group.children.length; i < len; i++)
-        {
-            if (group.children[i].exists)
-            {
-                this.collideSpriteVsTilemapLayer(group.children[i], tilemapLayer, collideCallback, processCallback, callbackContext);
             }
         }
 
@@ -821,14 +650,16 @@ Phaser.Physics.Arcade.prototype = {
 
         //  Do we separate on x or y first?
 
+        var result = false;
+
         //  If we weren't having to carry around so much legacy baggage with us, we could do this properly. But alas ...
         if (this.forceX || Math.abs(this.gravity.y + body1.gravity.y) < Math.abs(this.gravity.x + body1.gravity.x))
         {
-            this._result = (this.separateX(body1, body2, overlapOnly) || this.separateY(body1, body2, overlapOnly));
+            result = (this.separateX(body1, body2, overlapOnly) || this.separateY(body1, body2, overlapOnly));
         }
         else
         {
-            this._result = (this.separateY(body1, body2, overlapOnly) || this.separateX(body1, body2, overlapOnly));
+            result = (this.separateY(body1, body2, overlapOnly) || this.separateX(body1, body2, overlapOnly));
         }
 
         if (overlapOnly)
@@ -838,7 +669,7 @@ Phaser.Physics.Arcade.prototype = {
         }
         else
         {
-            return this._result;
+            return result;
         }
 
     },
@@ -895,12 +726,12 @@ Phaser.Physics.Arcade.prototype = {
             return false;
         }
 
-        this._overlap = 0;
+        var overlap = 0;
 
         //  Check if the hulls actually overlap
         if (this.intersects(body1, body2))
         {
-            this._maxOverlap = body1.deltaAbsX() + body2.deltaAbsX() + this.OVERLAP_BIAS;
+            var maxOverlap = body1.deltaAbsX() + body2.deltaAbsX() + this.OVERLAP_BIAS;
 
             if (body1.deltaX() === 0 && body2.deltaX() === 0)
             {
@@ -911,11 +742,11 @@ Phaser.Physics.Arcade.prototype = {
             else if (body1.deltaX() > body2.deltaX())
             {
                 //  Body1 is moving right and/or Body2 is moving left
-                this._overlap = body1.right - body2.x;
+                overlap = body1.right - body2.x;
 
-                if ((this._overlap > this._maxOverlap) || body1.checkCollision.right === false || body2.checkCollision.left === false)
+                if ((overlap > maxOverlap) || body1.checkCollision.right === false || body2.checkCollision.left === false)
                 {
-                    this._overlap = 0;
+                    overlap = 0;
                 }
                 else
                 {
@@ -928,11 +759,11 @@ Phaser.Physics.Arcade.prototype = {
             else if (body1.deltaX() < body2.deltaX())
             {
                 //  Body1 is moving left and/or Body2 is moving right
-                this._overlap = body1.x - body2.width - body2.x;
+                overlap = body1.x - body2.width - body2.x;
 
-                if ((-this._overlap > this._maxOverlap) || body1.checkCollision.left === false || body2.checkCollision.right === false)
+                if ((-overlap > maxOverlap) || body1.checkCollision.left === false || body2.checkCollision.right === false)
                 {
-                    this._overlap = 0;
+                    overlap = 0;
                 }
                 else
                 {
@@ -944,40 +775,41 @@ Phaser.Physics.Arcade.prototype = {
             }
 
             //  Resets the overlapX to zero if there is no overlap, or to the actual pixel value if there is
-            body1.overlapX = this._overlap;
-            body2.overlapX = this._overlap;
+            body1.overlapX = overlap;
+            body2.overlapX = overlap;
 
             //  Then adjust their positions and velocities accordingly (if there was any overlap)
-            if (this._overlap !== 0)
+            if (overlap !== 0)
             {
                 if (overlapOnly || body1.customSeparateX || body2.customSeparateX)
                 {
                     return true;
                 }
 
-                this._velocity1 = body1.velocity.x;
-                this._velocity2 = body2.velocity.x;
+                var v1 = body1.velocity.x;
+                var v2 = body2.velocity.x;
 
                 if (!body1.immovable && !body2.immovable)
                 {
-                    this._overlap *= 0.5;
+                    overlap *= 0.5;
 
-                    body1.x = body1.x - this._overlap;
-                    body2.x += this._overlap;
+                    body1.x = body1.x - overlap;
+                    body2.x += overlap;
 
-                    this._newVelocity1 = Math.sqrt((this._velocity2 * this._velocity2 * body2.mass) / body1.mass) * ((this._velocity2 > 0) ? 1 : -1);
-                    this._newVelocity2 = Math.sqrt((this._velocity1 * this._velocity1 * body1.mass) / body2.mass) * ((this._velocity1 > 0) ? 1 : -1);
-                    this._average = (this._newVelocity1 + this._newVelocity2) * 0.5;
-                    this._newVelocity1 -= this._average;
-                    this._newVelocity2 -= this._average;
+                    var nv1 = Math.sqrt((v2 * v2 * body2.mass) / body1.mass) * ((v2 > 0) ? 1 : -1);
+                    var nv2 = Math.sqrt((v1 * v1 * body1.mass) / body2.mass) * ((v1 > 0) ? 1 : -1);
+                    var avg = (nv1 + nv2) * 0.5;
 
-                    body1.velocity.x = this._average + this._newVelocity1 * body1.bounce.x;
-                    body2.velocity.x = this._average + this._newVelocity2 * body2.bounce.x;
+                    nv1 -= avg;
+                    nv2 -= avg;
+
+                    body1.velocity.x = avg + nv1 * body1.bounce.x;
+                    body2.velocity.x = avg + nv2 * body2.bounce.x;
                 }
                 else if (!body1.immovable)
                 {
-                    body1.x = body1.x - this._overlap;
-                    body1.velocity.x = this._velocity2 - this._velocity1 * body1.bounce.x;
+                    body1.x = body1.x - overlap;
+                    body1.velocity.x = v2 - v1 * body1.bounce.x;
 
                     //  This is special case code that handles things like vertically moving platforms you can ride
                     if (body2.moves)
@@ -987,8 +819,8 @@ Phaser.Physics.Arcade.prototype = {
                 }
                 else if (!body2.immovable)
                 {
-                    body2.x += this._overlap;
-                    body2.velocity.x = this._velocity1 - this._velocity2 * body2.bounce.x;
+                    body2.x += overlap;
+                    body2.velocity.x = v1 - v2 * body2.bounce.x;
 
                     //  This is special case code that handles things like vertically moving platforms you can ride
                     if (body1.moves)
@@ -1023,12 +855,12 @@ Phaser.Physics.Arcade.prototype = {
             return false;
         }
 
-        this._overlap = 0;
+        var overlap = 0;
 
         //  Check if the hulls actually overlap
         if (this.intersects(body1, body2))
         {
-            this._maxOverlap = body1.deltaAbsY() + body2.deltaAbsY() + this.OVERLAP_BIAS;
+            var maxOverlap = body1.deltaAbsY() + body2.deltaAbsY() + this.OVERLAP_BIAS;
 
             if (body1.deltaY() === 0 && body2.deltaY() === 0)
             {
@@ -1039,11 +871,11 @@ Phaser.Physics.Arcade.prototype = {
             else if (body1.deltaY() > body2.deltaY())
             {
                 //  Body1 is moving down and/or Body2 is moving up
-                this._overlap = body1.bottom - body2.y;
+                overlap = body1.bottom - body2.y;
 
-                if ((this._overlap > this._maxOverlap) || body1.checkCollision.down === false || body2.checkCollision.up === false)
+                if ((overlap > maxOverlap) || body1.checkCollision.down === false || body2.checkCollision.up === false)
                 {
-                    this._overlap = 0;
+                    overlap = 0;
                 }
                 else
                 {
@@ -1056,11 +888,11 @@ Phaser.Physics.Arcade.prototype = {
             else if (body1.deltaY() < body2.deltaY())
             {
                 //  Body1 is moving up and/or Body2 is moving down
-                this._overlap = body1.y - body2.bottom;
+                overlap = body1.y - body2.bottom;
 
-                if ((-this._overlap > this._maxOverlap) || body1.checkCollision.up === false || body2.checkCollision.down === false)
+                if ((-overlap > maxOverlap) || body1.checkCollision.up === false || body2.checkCollision.down === false)
                 {
-                    this._overlap = 0;
+                    overlap = 0;
                 }
                 else
                 {
@@ -1072,40 +904,41 @@ Phaser.Physics.Arcade.prototype = {
             }
 
             //  Resets the overlapY to zero if there is no overlap, or to the actual pixel value if there is
-            body1.overlapY = this._overlap;
-            body2.overlapY = this._overlap;
+            body1.overlapY = overlap;
+            body2.overlapY = overlap;
 
             //  Then adjust their positions and velocities accordingly (if there was any overlap)
-            if (this._overlap !== 0)
+            if (overlap !== 0)
             {
                 if (overlapOnly || body1.customSeparateY || body2.customSeparateY)
                 {
                     return true;
                 }
 
-                this._velocity1 = body1.velocity.y;
-                this._velocity2 = body2.velocity.y;
+                var v1 = body1.velocity.y;
+                var v2 = body2.velocity.y;
 
                 if (!body1.immovable && !body2.immovable)
                 {
-                    this._overlap *= 0.5;
+                    overlap *= 0.5;
 
-                    body1.y = body1.y - this._overlap;
-                    body2.y += this._overlap;
+                    body1.y = body1.y - overlap;
+                    body2.y += overlap;
 
-                    this._newVelocity1 = Math.sqrt((this._velocity2 * this._velocity2 * body2.mass) / body1.mass) * ((this._velocity2 > 0) ? 1 : -1);
-                    this._newVelocity2 = Math.sqrt((this._velocity1 * this._velocity1 * body1.mass) / body2.mass) * ((this._velocity1 > 0) ? 1 : -1);
-                    this._average = (this._newVelocity1 + this._newVelocity2) * 0.5;
-                    this._newVelocity1 -= this._average;
-                    this._newVelocity2 -= this._average;
+                    var nv1 = Math.sqrt((v2 * v2 * body2.mass) / body1.mass) * ((v2 > 0) ? 1 : -1);
+                    var nv2 = Math.sqrt((v1 * v1 * body1.mass) / body2.mass) * ((v1 > 0) ? 1 : -1);
+                    var avg = (nv1 + nv2) * 0.5;
 
-                    body1.velocity.y = this._average + this._newVelocity1 * body1.bounce.y;
-                    body2.velocity.y = this._average + this._newVelocity2 * body2.bounce.y;
+                    nv1 -= avg;
+                    nv2 -= avg;
+
+                    body1.velocity.y = avg + nv1 * body1.bounce.y;
+                    body2.velocity.y = avg + nv2 * body2.bounce.y;
                 }
                 else if (!body1.immovable)
                 {
-                    body1.y = body1.y - this._overlap;
-                    body1.velocity.y = this._velocity2 - this._velocity1 * body1.bounce.y;
+                    body1.y = body1.y - overlap;
+                    body1.velocity.y = v2 - v1 * body1.bounce.y;
 
                     //  This is special case code that handles things like horizontal moving platforms you can ride
                     if (body2.moves)
@@ -1115,8 +948,8 @@ Phaser.Physics.Arcade.prototype = {
                 }
                 else if (!body2.immovable)
                 {
-                    body2.y += this._overlap;
-                    body2.velocity.y = this._velocity1 - this._velocity2 * body2.bounce.y;
+                    body2.y += overlap;
+                    body2.velocity.y = v1 - v2 * body2.bounce.y;
 
                     //  This is special case code that handles things like horizontal moving platforms you can ride
                     if (body1.moves)
@@ -1182,18 +1015,18 @@ Phaser.Physics.Arcade.prototype = {
         var rect = new Phaser.Rectangle(x, y, 1, 1);
         var output = [];
 
-        this._potentials = this.quadTree.retrieve(rect);
+        var items = this.quadTree.retrieve(rect);
 
-        for (var i = 0, len = this._potentials.length; i < len; i++)
+        for (var i = 0; i < items.length; i++)
         {
-            if (this._potentials[i].hitTest(x, y))
+            if (items[i].hitTest(x, y))
             {
                 if (callback)
                 {
-                    callback.call(callbackContext, callbackArg, this._potentials[i].sprite);
+                    callback.call(callbackContext, callbackArg, items[i].sprite);
                 }
 
-                output.push(this._potentials[i].sprite);
+                output.push(items[i].sprite);
             }
         }
 
@@ -1221,7 +1054,7 @@ Phaser.Physics.Arcade.prototype = {
         if (typeof speed === 'undefined') { speed = 60; }
         if (typeof maxTime === 'undefined') { maxTime = 0; }
 
-        this._angle = Math.atan2(destination.y - displayObject.y, destination.x - displayObject.x);
+        var angle = Math.atan2(destination.y - displayObject.y, destination.x - displayObject.x);
 
         if (maxTime > 0)
         {
@@ -1229,10 +1062,10 @@ Phaser.Physics.Arcade.prototype = {
             speed = this.distanceBetween(displayObject, destination) / (maxTime / 1000);
         }
 
-        displayObject.body.velocity.x = Math.cos(this._angle) * speed;
-        displayObject.body.velocity.y = Math.sin(this._angle) * speed;
+        displayObject.body.velocity.x = Math.cos(angle) * speed;
+        displayObject.body.velocity.y = Math.sin(angle) * speed;
 
-        return this._angle;
+        return angle;
 
     },
 
@@ -1256,7 +1089,7 @@ Phaser.Physics.Arcade.prototype = {
         pointer = pointer || this.game.input.activePointer;
         if (typeof maxTime === 'undefined') { maxTime = 0; }
 
-        this._angle = this.angleToPointer(displayObject, pointer);
+        var angle = this.angleToPointer(displayObject, pointer);
 
         if (maxTime > 0)
         {
@@ -1264,10 +1097,10 @@ Phaser.Physics.Arcade.prototype = {
             speed = this.distanceToPointer(displayObject, pointer) / (maxTime / 1000);
         }
 
-        displayObject.body.velocity.x = Math.cos(this._angle) * speed;
-        displayObject.body.velocity.y = Math.sin(this._angle) * speed;
+        displayObject.body.velocity.x = Math.cos(angle) * speed;
+        displayObject.body.velocity.y = Math.sin(angle) * speed;
 
-        return this._angle;
+        return angle;
 
     },
 
@@ -1292,7 +1125,7 @@ Phaser.Physics.Arcade.prototype = {
         if (typeof speed === 'undefined') { speed = 60; }
         if (typeof maxTime === 'undefined') { maxTime = 0; }
 
-        this._angle = Math.atan2(y - displayObject.y, x - displayObject.x);
+        var angle = Math.atan2(y - displayObject.y, x - displayObject.x);
 
         if (maxTime > 0)
         {
@@ -1300,10 +1133,10 @@ Phaser.Physics.Arcade.prototype = {
             speed = this.distanceToXY(displayObject, x, y) / (maxTime / 1000);
         }
 
-        displayObject.body.velocity.x = Math.cos(this._angle) * speed;
-        displayObject.body.velocity.y = Math.sin(this._angle) * speed;
+        displayObject.body.velocity.x = Math.cos(angle) * speed;
+        displayObject.body.velocity.y = Math.sin(angle) * speed;
 
-        return this._angle;
+        return angle;
 
     },
 
@@ -1384,12 +1217,12 @@ Phaser.Physics.Arcade.prototype = {
         if (typeof xSpeedMax === 'undefined') { xSpeedMax = 1000; }
         if (typeof ySpeedMax === 'undefined') { ySpeedMax = 1000; }
 
-        this._angle = this.angleBetween(displayObject, destination);
+        var angle = this.angleBetween(displayObject, destination);
 
-        displayObject.body.acceleration.setTo(Math.cos(this._angle) * speed, Math.sin(this._angle) * speed);
+        displayObject.body.acceleration.setTo(Math.cos(angle) * speed, Math.sin(angle) * speed);
         displayObject.body.maxVelocity.setTo(xSpeedMax, ySpeedMax);
 
-        return this._angle;
+        return angle;
 
     },
 
@@ -1414,12 +1247,12 @@ Phaser.Physics.Arcade.prototype = {
         if (typeof xSpeedMax === 'undefined') { xSpeedMax = 1000; }
         if (typeof ySpeedMax === 'undefined') { ySpeedMax = 1000; }
 
-        this._angle = this.angleToPointer(displayObject, pointer);
+        var angle = this.angleToPointer(displayObject, pointer);
 
-        displayObject.body.acceleration.setTo(Math.cos(this._angle) * speed, Math.sin(this._angle) * speed);
+        displayObject.body.acceleration.setTo(Math.cos(angle) * speed, Math.sin(angle) * speed);
         displayObject.body.maxVelocity.setTo(xSpeedMax, ySpeedMax);
 
-        return this._angle;
+        return angle;
 
     },
 
@@ -1444,12 +1277,12 @@ Phaser.Physics.Arcade.prototype = {
         if (typeof xSpeedMax === 'undefined') { xSpeedMax = 1000; }
         if (typeof ySpeedMax === 'undefined') { ySpeedMax = 1000; }
 
-        this._angle = this.angleToXY(displayObject, x, y);
+        var angle = this.angleToXY(displayObject, x, y);
 
-        displayObject.body.acceleration.setTo(Math.cos(this._angle) * speed, Math.sin(this._angle) * speed);
+        displayObject.body.acceleration.setTo(Math.cos(angle) * speed, Math.sin(angle) * speed);
         displayObject.body.maxVelocity.setTo(xSpeedMax, ySpeedMax);
 
-        return this._angle;
+        return angle;
 
     },
 
@@ -1463,10 +1296,10 @@ Phaser.Physics.Arcade.prototype = {
     */
     distanceBetween: function (source, target) {
 
-        this._dx = source.x - target.x;
-        this._dy = source.y - target.y;
+        var dx = source.x - target.x;
+        var dy = source.y - target.y;
 
-        return Math.sqrt(this._dx * this._dx + this._dy * this._dy);
+        return Math.sqrt(dx * dx + dy * dy);
 
     },
 
@@ -1483,10 +1316,10 @@ Phaser.Physics.Arcade.prototype = {
     */
     distanceToXY: function (displayObject, x, y) {
 
-        this._dx = displayObject.x - x;
-        this._dy = displayObject.y - y;
+        var dx = displayObject.x - x;
+        var dy = displayObject.y - y;
 
-        return Math.sqrt(this._dx * this._dx + this._dy * this._dy);
+        return Math.sqrt(dx * dx + dy * dy);
 
     },
 
@@ -1505,10 +1338,10 @@ Phaser.Physics.Arcade.prototype = {
 
         pointer = pointer || this.game.input.activePointer;
 
-        this._dx = displayObject.x - pointer.worldX;
-        this._dy = displayObject.y - pointer.worldY;
+        var dx = displayObject.x - pointer.worldX;
+        var dy = displayObject.y - pointer.worldY;
 
-        return Math.sqrt(this._dx * this._dx + this._dy * this._dy);
+        return Math.sqrt(dx * dx + dy * dy);
 
     },
 
@@ -1522,10 +1355,10 @@ Phaser.Physics.Arcade.prototype = {
     */
     angleBetween: function (source, target) {
 
-        this._dx = target.x - source.x;
-        this._dy = target.y - source.y;
+        var dx = target.x - source.x;
+        var dy = target.y - source.y;
 
-        return Math.atan2(this._dy, this._dx);
+        return Math.atan2(dy, dx);
 
     },
 
@@ -1540,10 +1373,10 @@ Phaser.Physics.Arcade.prototype = {
     */
     angleToXY: function (displayObject, x, y) {
 
-        this._dx = x - displayObject.x;
-        this._dy = y - displayObject.y;
+        var dx = x - displayObject.x;
+        var dy = y - displayObject.y;
 
-        return Math.atan2(this._dy, this._dx);
+        return Math.atan2(dy, dx);
 
     },
 
@@ -1559,10 +1392,10 @@ Phaser.Physics.Arcade.prototype = {
 
         pointer = pointer || this.game.input.activePointer;
 
-        this._dx = pointer.worldX - displayObject.x;
-        this._dy = pointer.worldY - displayObject.y;
+        var dx = pointer.worldX - displayObject.x;
+        var dy = pointer.worldY - displayObject.y;
 
-        return Math.atan2(this._dy, this._dx);
+        return Math.atan2(dy, dx);
 
     }
 
