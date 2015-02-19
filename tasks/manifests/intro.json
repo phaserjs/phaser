@@ -1,0 +1,8 @@
+[
+    "src/Intro.js",
+
+    "src/Phaser.js",
+    "src/polyfills.js",
+    "src/utils/Utils.js"
+
+]

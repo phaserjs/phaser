@@ -135,10 +135,6 @@
     "src/physics/arcade/Body.js",
     "src/physics/arcade/TilemapCollision.js",
 
-    "src/particles/Particles.js",
-    "src/particles/arcade/ArcadeParticles.js",
-    "src/particles/arcade/Emitter.js",
-
     "src/tilemap/Tile.js",
     "src/tilemap/Tilemap.js",
     "src/tilemap/TilemapLayer.js",
