@@ -215,6 +215,14 @@ EOL;
     {
         echo <<<EOL
     <script src="$path/src/gameobjects/Text.js"></script>
+
+
+EOL;
+    }
+
+    if ($bitmaptext)
+    {
+        echo <<<EOL
     <script src="$path/src/gameobjects/BitmapText.js"></script>
 
 

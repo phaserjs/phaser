@@ -17,24 +17,39 @@ module.exports = {
 
     //  Game Objects
 
-    display: {
-        src: require('../manifests/gameobjects.display'),
-        dest: '<%= modules_dir %>/gameobjects.display.js'
+    gameobjects: {
+        src: require('../manifests/gameobjects'),
+        dest: '<%= modules_dir %>/gameobjects.js'
     },
 
-    retrofont: {
-        src: require('../manifests/gameobjects.retrofont'),
-        dest: '<%= modules_dir %>/gameobjects.retrofont.js'
+    bitmapdata: {
+        src: require('../manifests/bitmapdata'),
+        dest: '<%= modules_dir %>/bitmapdata.js'
+    },
+
+    graphics: {
+        src: require('../manifests/graphics'),
+        dest: '<%= modules_dir %>/graphics.js'
+    },
+
+    rendertexture: {
+        src: require('../manifests/rendertexture'),
+        dest: '<%= modules_dir %>/rendertexture.js'
+    },
+
+    bitmaptext: {
+        src: require('../manifests/bitmaptext'),
+        dest: '<%= modules_dir %>/bitmaptext.js'
     },
 
     text: {
-        src: require('../manifests/gameobjects.text'),
-        dest: '<%= modules_dir %>/gameobjects.text.js'
+        src: require('../manifests/text'),
+        dest: '<%= modules_dir %>/text.js'
     },
 
-    textures: {
-        src: require('../manifests/gameobjects.textures'),
-        dest: '<%= modules_dir %>/gameobjects.textures.js'
+    retrofont: {
+        src: require('../manifests/retrofont'),
+        dest: '<%= modules_dir %>/retrofont.js'
     },
 
     geom: {
@@ -50,13 +65,13 @@ module.exports = {
     },
 
     gamepad: {
-        src: require('../manifests/input.gamepad'),
-        dest: '<%= modules_dir %>/input.gamepad.js'
+        src: require('../manifests/gamepad'),
+        dest: '<%= modules_dir %>/gamepad.js'
     },
 
     keyboard: {
-        src: require('../manifests/input.keyboard'),
-        dest: '<%= modules_dir %>/input.keyboard.js'
+        src: require('../manifests/keyboard'),
+        dest: '<%= modules_dir %>/keyboard.js'
     },
 
     intro: {
@@ -149,6 +164,14 @@ module.exports = {
     utils: {
         src: require('../manifests/utils'),
         dest: '<%= modules_dir %>/utils.js'
+    },
+
+    custom: {
+        options: {
+            banner: '<%= banner %>'
+        },
+        src: grunt.config.get('custom.filelist'),
+        dest: '<%= compile_dir %>/phaser-custom.js'
     },
 
     /*

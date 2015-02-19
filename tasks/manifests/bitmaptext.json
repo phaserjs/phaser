@@ -1,4 +1,3 @@
 [
-    "src/gameobjects/Text.js",
     "src/gameobjects/BitmapText.js"
 ]
