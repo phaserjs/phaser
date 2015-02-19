@@ -83,14 +83,14 @@ PIXI.Sprite = function(texture)
      */
     this.shader = null;
 
-    if(this.texture.baseTexture.hasLoaded)
+    if (this.texture.baseTexture.hasLoaded)
     {
         this.onTextureUpdate();
     }
-    else
-    {
-        this.texture.on( 'update', this.onTextureUpdate.bind(this) );
-    }
+    // else
+    // {
+    //     this.texture.on( 'update', this.onTextureUpdate.bind(this) );
+    // }
 
     this.renderable = true;
 
