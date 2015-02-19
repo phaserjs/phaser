@@ -361,10 +361,18 @@ Phaser.Input.prototype = {
         this.addPointer();
 
         this.mouse = new Phaser.Mouse(this.game);
-        this.keyboard = new Phaser.Keyboard(this.game);
         this.touch = new Phaser.Touch(this.game);
         this.mspointer = new Phaser.MSPointer(this.game);
-        this.gamepad = new Phaser.Gamepad(this.game);
+
+        if (Phaser.Keyboard)
+        {
+            this.keyboard = new Phaser.Keyboard(this.game);
+        }
+
+        if (Phaser.Gamepad)
+        {
+            this.gamepad = new Phaser.Gamepad(this.game);
+        }
 
         this.onDown = new Phaser.Signal();
         this.onUp = new Phaser.Signal();
@@ -387,12 +395,17 @@ Phaser.Input.prototype = {
         this.hitContext = this.hitCanvas.getContext('2d');
 
         this.mouse.start();
-        this.keyboard.start();
         this.touch.start();
         this.mspointer.start();
         this.mousePointer.active = true;
 
+        if (this.keyboard)
+        {
+            this.keyboard.start();
+        }
+
         var _this = this;
+
         this._onClickTrampoline = function (event) {
             _this.onClickTrampoline(event);
         };
@@ -409,10 +422,18 @@ Phaser.Input.prototype = {
     destroy: function () {
 
         this.mouse.stop();
-        this.keyboard.stop();
         this.touch.stop();
         this.mspointer.stop();
-        this.gamepad.stop();
+
+        if (this.keyboard)
+        {
+            this.keyboard.stop();
+        }
+
+        if (this.gamepad)
+        {
+            this.gamepad.stop();
+        }
 
         this.moveCallbacks = [];
 
@@ -489,7 +510,10 @@ Phaser.Input.prototype = {
     */
     update: function () {
 
-        this.keyboard.update();
+        if (this.keyboard)
+        {
+            this.keyboard.update();
+        }
 
         if (this.pollRate > 0 && this._pollCounter < this.pollRate)
         {
@@ -503,7 +527,10 @@ Phaser.Input.prototype = {
         this._oldPosition.copyFrom(this.position);
         this.mousePointer.update();
 
-        if (this.gamepad.active) { this.gamepad.update(); }
+        if (this.gamepad && this.gamepad.active)
+        {
+            this.gamepad.update();
+        }
 
         for (var i = 0; i < this.pointers.length; i++)
         {
@@ -534,9 +561,17 @@ Phaser.Input.prototype = {
 
         if (typeof hard === 'undefined') { hard = false; }
 
-        this.keyboard.reset(hard);
         this.mousePointer.reset();
-        this.gamepad.reset();
+
+        if (this.keyboard)
+        {
+            this.keyboard.reset(hard);
+        }
+
+        if (this.gamepad)
+        {
+            this.gamepad.reset();
+        }
 
         for (var i = 0; i < this.pointers.length; i++)
         {
