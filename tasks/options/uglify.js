@@ -4,7 +4,7 @@ module.exports = {
     custom: {
 
         options: {
-            banner: '/* Phaser (custom) v<%= package.version %> - http://phaser.io - @photonstorm - (c) 2014 Photon Storm Ltd. */\n'
+            banner: '/* Phaser (custom) v<%= package.version %> - http://phaser.io - @photonstorm - (c) 2015 Photon Storm Ltd. */\n'
         },
 
         src: ['<%= concat.custom.dest %>'],

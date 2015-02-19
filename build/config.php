@@ -7,11 +7,12 @@
     if (!isset($graphics)) { $graphics = true; }
     if (!isset($rendertexture)) { $rendertexture = true; }
     if (!isset($text)) { $text = true; }
+    if (!isset($bitmaptext)) { $bitmaptext = true; }
     if (!isset($retrofont)) { $retrofont = true; }
     if (!isset($tweens)) { $tweens = true; }
     if (!isset($sound)) { $sound = true; }
-    if (!isset($particles)) { $particles = true; }
     if (!isset($debug)) { $debug = true; }
+    if (!isset($particles)) { $particles = true; }
     if (!isset($tilemap)) { $tilemap = true; }
     if (!isset($arcade)) { $arcade = true; }
     if (!isset($p2)) { $p2 = true; }

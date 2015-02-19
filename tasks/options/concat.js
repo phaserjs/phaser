@@ -1,13 +1,23 @@
 module.exports = {
 
-    animation: {
-        src: require('../manifests/animation'),
-        dest: '<%= modules_dir %>/animation.js'
+    intro: {
+        src: require('../manifests/intro'),
+        dest: '<%= modules_dir %>/intro.js'
     },
 
-    components: {
-        src: require('../manifests/components'),
-        dest: '<%= modules_dir %>/components.js'
+    pixi: {
+        src: require('../manifests/pixi'),
+        dest: '<%= modules_dir %>/pixi.js'
+    },
+
+    phaser: {
+        src: require('../manifests/phaser'),
+        dest: '<%= modules_dir %>/phaser.js'
+    },
+
+    geom: {
+        src: require('../manifests/geom'),
+        dest: '<%= modules_dir %>/geom.js'
     },
 
     core: {
@@ -15,7 +25,25 @@ module.exports = {
         dest: '<%= modules_dir %>/core.js'
     },
 
-    //  Game Objects
+    input: {
+        src: require('../manifests/input'),
+        dest: '<%= modules_dir %>/input.js'
+    },
+
+    gamepad: {
+        src: require('../manifests/gamepad'),
+        dest: '<%= modules_dir %>/gamepad.js'
+    },
+
+    keyboard: {
+        src: require('../manifests/keyboard'),
+        dest: '<%= modules_dir %>/keyboard.js'
+    },
+
+    components: {
+        src: require('../manifests/components'),
+        dest: '<%= modules_dir %>/components.js'
+    },
 
     gameobjects: {
         src: require('../manifests/gameobjects'),
@@ -37,14 +65,14 @@ module.exports = {
         dest: '<%= modules_dir %>/rendertexture.js'
     },
 
-    bitmaptext: {
-        src: require('../manifests/bitmaptext'),
-        dest: '<%= modules_dir %>/bitmaptext.js'
-    },
-
     text: {
         src: require('../manifests/text'),
         dest: '<%= modules_dir %>/text.js'
+    },
+
+    bitmaptext: {
+        src: require('../manifests/bitmaptext'),
+        dest: '<%= modules_dir %>/bitmaptext.js'
     },
 
     retrofont: {
@@ -52,36 +80,9 @@ module.exports = {
         dest: '<%= modules_dir %>/retrofont.js'
     },
 
-    geom: {
-        src: require('../manifests/geom'),
-        dest: '<%= modules_dir %>/geom.js'
-    },
-
-    //  Input
-
-    input: {
-        src: require('../manifests/input'),
-        dest: '<%= modules_dir %>/input.js'
-    },
-
-    gamepad: {
-        src: require('../manifests/gamepad'),
-        dest: '<%= modules_dir %>/gamepad.js'
-    },
-
-    keyboard: {
-        src: require('../manifests/keyboard'),
-        dest: '<%= modules_dir %>/keyboard.js'
-    },
-
-    intro: {
-        src: require('../manifests/intro'),
-        dest: '<%= modules_dir %>/intro.js'
-    },
-
-    loader: {
-        src: require('../manifests/loader'),
-        dest: '<%= modules_dir %>/loader.js'
+    system: {
+        src: require('../manifests/system'),
+        dest: '<%= modules_dir %>/system.js'
     },
 
     math: {
@@ -94,61 +95,9 @@ module.exports = {
         dest: '<%= modules_dir %>/net.js'
     },
 
-    outro: {
-        src: require('../manifests/outro'),
-        dest: '<%= modules_dir %>/outro.js'
-    },
-
-    particles: {
-        src: require('../manifests/particles'),
-        dest: '<%= modules_dir %>/particles.js'
-    },
-
-    //  Physics
-
-    physics: {
-        src: require('../manifests/physics'),
-        dest: '<%= modules_dir %>/physics.js'
-    },
-
-    arcadeNoTilemap: {
-        src: require('../manifests/physics.arcade.no-tilemap'),
-        dest: '<%= modules_dir %>/physics.arcade.no-tilemap.js'
-    },
-
-    arcade: {
-        src: require('../manifests/physics.arcade.tilemap'),
-        dest: '<%= modules_dir %>/physics.arcade.tilemap.js'
-    },
-
-    ninja: {
-        src: require('../manifests/physics.ninja'),
-        dest: '<%= modules_dir %>/physics.ninja.js'
-    },
-
-    p2: {
-        src: require('../manifests/physics.p2'),
-        dest: '<%= modules_dir %>/physics.p2.js'
-    },
-
-    pixi: {
-        src: require('../manifests/pixi'),
-        dest: '<%= modules_dir %>/pixi.js'
-    },
-
-    sound: {
-        src: require('../manifests/sound'),
-        dest: '<%= modules_dir %>/sound.js'
-    },
-
-    system: {
-        src: require('../manifests/system'),
-        dest: '<%= modules_dir %>/system.js'
-    },
-
-    tilemaps: {
-        src: require('../manifests/tilemaps'),
-        dest: '<%= modules_dir %>/tilemaps.js'
+    tweens: {
+        src: require('../manifests/tweens'),
+        dest: '<%= modules_dir %>/tweens.js'
     },
 
     time: {
@@ -156,9 +105,24 @@ module.exports = {
         dest: '<%= modules_dir %>/time.js'
     },
 
-    tweens: {
-        src: require('../manifests/tweens'),
-        dest: '<%= modules_dir %>/tweens.js'
+    animation: {
+        src: require('../manifests/animation'),
+        dest: '<%= modules_dir %>/animation.js'
+    },
+
+    loader: {
+        src: require('../manifests/loader'),
+        dest: '<%= modules_dir %>/loader.js'
+    },
+
+    sound: {
+        src: require('../manifests/sound'),
+        dest: '<%= modules_dir %>/sound.js'
+    },
+
+    debug: {
+        src: require('../manifests/debug'),
+        dest: '<%= modules_dir %>/debug.js'
     },
 
     utils: {
@@ -166,11 +130,55 @@ module.exports = {
         dest: '<%= modules_dir %>/utils.js'
     },
 
+    physics: {
+        src: require('../manifests/physics'),
+        dest: '<%= modules_dir %>/physics.js'
+    },
+
+    arcade: {
+        src: require('../manifests/physics.arcade'),
+        dest: '<%= modules_dir %>/arcade.js'
+    },
+
+    arcadeTilemaps: {
+        src: require('../manifests/physics.arcade.tilemaps'),
+        dest: '<%= modules_dir %>/arcadeTilemaps.js'
+    },
+
+    ninja: {
+        src: require('../manifests/physics.ninja'),
+        dest: '<%= modules_dir %>/ninja.js'
+    },
+
+    p2: {
+        src: require('../manifests/physics.p2'),
+        dest: '<%= modules_dir %>/p2.js'
+    },
+
+    tilemaps: {
+        src: require('../manifests/tilemaps'),
+        dest: '<%= modules_dir %>/tilemaps.js'
+    },
+
+    particles: {
+        src: require('../manifests/particles'),
+        dest: '<%= modules_dir %>/particles.js'
+    },
+
+    outro: {
+        src: require('../manifests/outro'),
+        dest: '<%= modules_dir %>/outro.js'
+    },
+
+    ///////////////////
+    //  Custom Build //
+    ///////////////////
+
     custom: {
         options: {
-            banner: '<%= banner %>'
+            banner: '<%= banner %>',
         },
-        src: grunt.config.get('custom.filelist'),
+        src: ['<%= filelist %>'],
         dest: '<%= compile_dir %>/phaser-custom.js'
     },
 

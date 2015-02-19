@@ -10,6 +10,7 @@ module.exports = function (grunt) {
             compile_dir: 'dist',
             modules_dir: 'dist/modules',
             docs_dir: 'docs',
+            filelist: [],
             banner: require('fs').readFileSync(__dirname + '/tasks/banner.txt', 'utf8')
         }
     });
@@ -22,21 +23,50 @@ module.exports = function (grunt) {
 
         var modules = {
 
-            'keyboard': 'Keyboard Input',
-            'gamepad': 'Gamepad Input',
-            'graphics': 'Graphics Game Object',
-            'text': 'Text and BitmapText Game Objects',
-            'retrofont': 'RetroFont Game Object',
-            'bitmapdata': 'BitmapData',
-            'rendertexture': 'RenderTextures',
-            'tweens': 'Tween System',
-            'sound': 'Sound System',
-            'particles': 'Particle System',
-            'debug': 'Debug System',
-            'tilemap': 'Tilemap Support',
-            'arcade': 'Arcade Physics',
-            'ninja': 'Ninja Physics',
-            'p2': 'P2 Physics'
+            'pixi':             { 'description': 'Pixi.js',                                     'optional': true },
+            'intro':            { 'description': 'Phaser UMD wrapper',                          'optional': false },
+            'phaser':           { 'description': 'Phaser Globals',                              'optional': false },
+            'geom':             { 'description': 'Geometry Classes',                            'optional': false },
+            'core':             { 'description': 'Phaser Core',                                 'optional': false },
+            'input':            { 'description': 'Input Manager + Mouse and Touch Support',     'optional': false },
+            'gamepad':          { 'description': 'Gamepad Input',                               'optional': true },
+            'keyboard':         { 'description': 'Keyboard Input',                              'optional': true },
+            'components':       { 'description': 'Game Object Components',                      'optional': false },
+            'gameobjects':      { 'description': 'Core Game Objects',                           'optional': false },
+            'bitmapdata':       { 'description': 'BitmapData Game Object',                      'optional': true },
+            'graphics':         { 'description': 'Graphics Game Object',                        'optional': true },
+            'rendertexture':    { 'description': 'RenderTexture Game Object',                   'optional': true },
+            'text':             { 'description': 'Text Game Object (inc. Web Font Support)',    'optional': true },
+            'bitmaptext':       { 'description': 'BitmapText Support',                          'optional': true },
+            'retrofont':        { 'description': 'Retro Fonts Support',                         'optional': true },
+            'system':           { 'description': 'System Classes',                              'optional': false },
+            'math':             { 'description': 'Math, QuadTree and RND',                      'optional': false },
+            'net':              { 'description': 'Network Class',                               'optional': true },
+            'tweens':           { 'description': 'Tween Manager',                               'optional': true },
+            'time':             { 'description': 'Time and Clock Manager',                      'optional': false },
+            'animation':        { 'description': 'Animation and Frame Manager',                 'optional': false },
+            'loader':           { 'description': 'Loader and Cache',                            'optional': false },
+            'sound':            { 'description': 'Sound Support (Web Audio and HTML Audio)',    'optional': true },
+            'debug':            { 'description': 'Debug Class',                                 'optional': true },
+            'utils':            { 'description': 'Core Utilities',                              'optional': false },
+            'physics':          { 'description': 'Physics Manager',                             'optional': false },
+            'arcade':           { 'description': 'Arcade Physics',                              'optional': true },
+            'ninja':            { 'description': 'Ninja Physics',                               'optional': true },
+            'p2':               { 'description': 'P2 Physics',                                  'optional': true },
+            'tilemaps':         { 'description': 'Tilemap Support',                             'optional': true },
+            'particles':        { 'description': 'Arcade Physics Particle System',              'optional': true },
+            'outro':            { 'description': 'Phaser UMD closure',                          'optional': false }
+
+        };
+
+        var defaults = {
+
+            'all': [ 'ninja' ],
+            'minimal': [ 'keyboard', 'gamepad', 'graphics', 'text', 'retrofont', 'bitmapdata', 'rendertexture', 'tweens', 'sound', 'particles', 'debug', 'tilemaps', 'arcade', 'p2', 'ninja' ],
+            'nophysics': [ 'ninja', 'p2', 'arcade', 'tilemaps', 'particles' ],
+            'arcade': [ 'ninja', 'p2' ],
+            'p2': [ 'ninja', 'arcade', 'particles' ],
+            'arcadeMobile': [ 'ninja', 'p2', 'keyboard', 'gamepad' ],
 
         };
 
@@ -50,7 +80,10 @@ module.exports = function (grunt) {
 
             for (var key in modules)
             {
-                grunt.log.writeln(key + ' - ' + modules[key]);
+                if (modules[key].optional)
+                {
+                    grunt.log.writeln(key + ' - ' + modules[key].description);
+                }
             }
 
             grunt.log.writeln("\nFor example: --exclude p2,tilemap,retrofont\n");
@@ -65,156 +98,72 @@ module.exports = function (grunt) {
 
             var excludes = grunt.option('exclude').split(',');
 
-            for (var key in modules)
-            {
-                grunt.config.set(['custom', key], true);
-            }
-
+            //  Check the given modules are all valid
             for (var i = 0; i < excludes.length; i++)
             {
-                if (modules[excludes[i]])
+                var key = excludes[i];
+
+                if (modules[key])
                 {
-                    //  It's a valid module
-                    grunt.log.writeln("* " + excludes[i] + ' - ' + modules[excludes[i]]);
-                    grunt.config.set(['custom', excludes[i]], false);
+                    grunt.log.writeln("* " + key + ' - ' + modules[key].description);
                 }
                 else
                 {
-                    grunt.fail.fatal("Unknown module '" + excludes[i] + "'");
+                    grunt.fail.fatal("Unknown module '" + key + "'");
                 }
             }
 
-            grunt.log.writeln("\nBuilding ...:\n");
+            //  Handle basic dependencies
+
+            if (excludes['arcade'] && !excludes['particles'])
+            {
+                grunt.log.writeln("Warning: Particles rely on Arcade Physics. Excluding from build.");
+                excludes.push('particles');
+            }
+
+            if (excludes['rendertexture'] && !excludes['retrofont'])
+            {
+                grunt.log.writeln("Warning: RetroFonts rely on RenderTextures. Excluding from build.");
+                excludes.push('retrofont');
+            }
+
+            //  Ok we know the excludes array is fine, let's get this show started
+
+            grunt.log.writeln("\nBuilding ...\n");
+
+            var filelist = [];
 
             //  Clean the dist folder
             var tasks = [ 'clean:dist' ];
 
-            //  Concat the module files
             for (var key in modules)
             {
-                if (grunt.config.get(['custom', key]))
+                //  If it's required or NOT excluded, add it to the tasks list
+                if (modules[key].optional === false || excludes.indexOf(key) === -1)
                 {
                     tasks.push('concat:' + key);
+
+                    filelist.push('<%= modules_dir %>/' + key + '.js');
+
+                    //  Special case: If they have Arcade Physics AND Tilemaps we need to include the Tilemap Collision class
+                    if (key === 'arcade' && !excludes['tilemaps'])
+                    {
+                        tasks.push('concat:arcadeTilemaps');
+                        filelist.push('<%= modules_dir %>/arcadeTilemaps.js');
+                    }
                 }
             }
 
-            //  Concat all the modules together into a single custom build
-
-            var filelist = [];
-
-            filelist.push('<%= concat.intro.dest %>');
-            filelist.push('<%= concat.geom.dest %>');
-            filelist.push('<%= concat.core.dest %>');
-            filelist.push('<%= concat.input.dest %>');
-
-            if (grunt.config.get('custom.keyboard'))
-            {
-                filelist.push('<%= concat.keyboard.dest %>');
-            }
-
-            if (grunt.config.get('custom.gamepad'))
-            {
-                filelist.push('<%= concat.gamepad.dest %>');
-            }
-
-            filelist.push('<%= concat.components.dest %>');
-            filelist.push('<%= concat.gameobjects.dest %>');
-
-            if (grunt.config.get('custom.bitmapdata'))
-            {
-                filelist.push('<%= concat.bitmapdata.dest %>');
-            }
-
-            if (grunt.config.get('custom.graphics'))
-            {
-                filelist.push('<%= concat.graphics.dest %>');
-            }
-
-            if (grunt.config.get('custom.rendertexture'))
-            {
-                filelist.push('<%= concat.rendertexture.dest %>');
-            }
-
-            if (grunt.config.get('custom.text'))
-            {
-                filelist.push('<%= concat.text.dest %>');
-            }
-
-            if (grunt.config.get('custom.bitmaptext'))
-            {
-                filelist.push('<%= concat.bitmaptext.dest %>');
-            }
-
-            if (grunt.config.get('custom.retrofont'))
-            {
-                filelist.push('<%= concat.retrofont.dest %>');
-            }
-
-            filelist.push('<%= concat.system.dest %>');
-            filelist.push('<%= concat.math.dest %>');
-            filelist.push('<%= concat.net.dest %>');
-
-            if (grunt.config.get('custom.tweens'))
-            {
-                filelist.push('<%= concat.tweens.dest %>');
-            }
-            else
-            {
-                //  TweenManager stub
-            }
-
-            filelist.push('<%= concat.time.dest %>');
-            filelist.push('<%= concat.animation.dest %>');
-            filelist.push('<%= concat.loader.dest %>');
-
-            if (grunt.config.get('custom.sound'))
-            {
-                filelist.push('<%= concat.sound.dest %>');
-            }
-            else
-            {
-                //  SoundManager stub
-            }
-
-            if (grunt.config.get('custom.debug'))
-            {
-                filelist.push('<%= concat.debug.dest %>');
-            }
-
-            filelist.push('<%= concat.utils.dest %>');
-            filelist.push('<%= concat.physics.dest %>');
-
-            if (grunt.config.get('custom.particles'))
-            {
-                filelist.push('<%= concat.particles.dest %>');
-            }
-
-            if (grunt.config.get('custom.tilemap'))
-            {
-                filelist.push('<%= concat.tilemap.dest %>');
-            }
-
-            if (grunt.config.get('custom.arcade'))
-            {
-                filelist.push('<%= concat.arcade.dest %>');
-            }
-
-            //  + arcade tmap col
-
-            if (grunt.config.get('custom.p2'))
-            {
-                filelist.push('<%= concat.p2.dest %>');
-            }
-
-            if (grunt.config.get('custom.ninja'))
-            {
-                filelist.push('<%= concat.ninja.dest %>');
-            }
+            grunt.config.set('filelist', filelist);
 
             tasks.push('concat:custom');
+
             tasks.push('uglify:custom');
 
             grunt.task.run(tasks);
+
+            // grunt.log.writeln("\nCustom build of Phaser available in dist/phaser-custom.js\n");
+
         }
 
     });
