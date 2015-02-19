@@ -23,6 +23,99 @@ Phaser.Physics.Arcade.TilemapCollision.prototype = {
     TILE_BIAS: 16,
 
     /**
+    * An internal function. Use Phaser.Physics.Arcade.collide instead.
+    *
+    * @method Phaser.Physics.Arcade#collideSpriteVsTilemapLayer
+    * @private
+    * @param {Phaser.Sprite} sprite - The sprite to check.
+    * @param {Phaser.TilemapLayer} tilemapLayer - The layer to check.
+    * @param {function} collideCallback - An optional callback function that is called if the objects collide. The two objects will be passed to this function in the same order in which you specified them.
+    * @param {function} processCallback - A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then collision will only happen if processCallback returns true. The two objects will be passed to this function in the same order in which you specified them.
+    * @param {object} callbackContext - The context in which to run the callbacks.
+    * @param {boolean} overlapOnly - Just run an overlap or a full collision.
+    */
+    collideSpriteVsTilemapLayer: function (sprite, tilemapLayer, collideCallback, processCallback, callbackContext) {
+
+        if (!sprite.body)
+        {
+            return;
+        }
+
+        var mapData = tilemapLayer.getTiles(
+            sprite.body.position.x - sprite.body.tilePadding.x,
+            sprite.body.position.y - sprite.body.tilePadding.y,
+            sprite.body.width + sprite.body.tilePadding.x,
+            sprite.body.height + sprite.body.tilePadding.y,
+            false, false);
+
+        if (mapData.length === 0)
+        {
+            return;
+        }
+
+        for (var i = 0; i < mapData.length; i++)
+        {
+            if (processCallback)
+            {
+                if (processCallback.call(callbackContext, sprite, mapData[i]))
+                {
+                    if (this.separateTile(i, sprite.body, mapData[i]))
+                    {
+                        this._total++;
+
+                        if (collideCallback)
+                        {
+                            collideCallback.call(callbackContext, sprite, mapData[i]);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                if (this.separateTile(i, sprite.body, mapData[i]))
+                {
+                    this._total++;
+
+                    if (collideCallback)
+                    {
+                        collideCallback.call(callbackContext, sprite, mapData[i]);
+                    }
+                }
+            }
+        }
+
+    },
+
+    /**
+    * An internal function. Use Phaser.Physics.Arcade.collide instead.
+    *
+    * @private
+    * @method Phaser.Physics.Arcade#collideGroupVsTilemapLayer
+    * @param {Phaser.Group} group - The Group to check.
+    * @param {Phaser.TilemapLayer} tilemapLayer - The layer to check.
+    * @param {function} collideCallback - An optional callback function that is called if the objects collide. The two objects will be passed to this function in the same order in which you specified them.
+    * @param {function} processCallback - A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then collision will only happen if processCallback returns true. The two objects will be passed to this function in the same order in which you specified them.
+    * @param {object} callbackContext - The context in which to run the callbacks.
+    * @param {boolean} overlapOnly - Just run an overlap or a full collision.
+    */
+    collideGroupVsTilemapLayer: function (group, tilemapLayer, collideCallback, processCallback, callbackContext) {
+
+        if (group.length === 0)
+        {
+            return;
+        }
+
+        for (var i = 0; i < group.children.length; i++)
+        {
+            if (group.children[i].exists)
+            {
+                this.collideSpriteVsTilemapLayer(group.children[i], tilemapLayer, collideCallback, processCallback, callbackContext);
+            }
+        }
+
+    },
+
+    /**
     * The core separation function to separate a physics body and a tile.
     *
     * @private
