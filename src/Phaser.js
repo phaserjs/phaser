@@ -115,5 +115,3 @@ var Phaser = Phaser || {
 
 };
 
-window.Phaser = Phaser;
-

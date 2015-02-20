@@ -17,7 +17,6 @@
  * @static
  */
 var PIXI = PIXI || {};
-window.PIXI = PIXI;
 
 /**
  * @property {Number} WEBGL_RENDERER
