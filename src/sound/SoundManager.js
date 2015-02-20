@@ -382,9 +382,12 @@ Phaser.SoundManager.prototype = {
 
         for (var i = 0; i < files.length; i++)
         {
-            if (files[i] instanceof Phaser.Sound && !this.game.cache.isSoundDecoded(files[i].key))
+            if (files[i] instanceof Phaser.Sound)
             {
-                this._watchList.add(files[i].key);
+                if (!this.game.cache.isSoundDecoded(files[i].key))
+                {
+                    this._watchList.add(files[i].key);
+                }
             }
             else if (!this.game.cache.isSoundDecoded(files[i]))
             {
