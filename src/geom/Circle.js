@@ -49,6 +49,12 @@ Phaser.Circle = function (x, y, diameter) {
         this._radius = 0;
     }
 
+    /**
+    * @property {number} type - The const type of this object.
+    * @readonly
+    */
+    this.type = Phaser.CIRCLE;
+
 };
 
 Phaser.Circle.prototype = {

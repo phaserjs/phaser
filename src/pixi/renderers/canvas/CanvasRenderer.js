@@ -33,7 +33,6 @@ PIXI.CanvasRenderer = function(width, height, options)
 
     if(!PIXI.defaultRenderer)
     {
-        PIXI.sayHello("Canvas");
         PIXI.defaultRenderer = this;
     }
 

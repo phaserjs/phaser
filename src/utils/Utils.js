@@ -341,6 +341,59 @@ Phaser.Utils = {
     },
 
     /**
+    * Mixes in an existing mixin object with the target.
+    * Prototype values with that have either `get` or `set` functions are created as properties via defineProperty.
+    *
+    * @method Phaser.Utils.mixinPrototype
+    * @param {object} target - The target object to receive the new functions.
+    * @param {object} mixin - The object to copy the functions from.
+    * @param {boolean} [replace=false] - If the target object already has a matching function should it be overwritten or not?
+    */
+    mixinPrototype: function (target, mixin, replace) {
+    
+        // console.log('------------------------------------------------------------------');
+        // console.log('mixin target', target);
+        // console.log('mixin source', mixin);
+
+        if (typeof replace === 'undefined') { replace = false; }
+
+        var mixinKeys = Object.keys(mixin);
+
+        for (var i = 0; i < mixinKeys.length; i++)
+        {
+            var key = mixinKeys[i];
+            var value = mixin[key];
+
+            if (!replace && target[key])
+            {
+                continue;
+            }
+            else
+            {
+                if (value && typeof value.clone === 'function')
+                {
+                    target[key] = value.clone();
+                }
+                else
+                {
+                    //  Breaks in classes like Phaser.Point which has a 'set' function! Hence the clone exception above
+                    if (value && (typeof value.get === 'function' || typeof value.set === 'function'))
+                    {
+                        Object.defineProperty(target, key, value);
+                        // console.log('def prop', key, 'to', value);
+                    }
+                    else
+                    {
+                        target[key] = value;
+                        // console.log('set', key, 'to', value);
+                    }
+                }
+            }
+        }
+
+    },
+
+    /**
     * Mixes the source object into the destination object, returning the newly modified destination object.
     * Based on original code by @mudcube
     *

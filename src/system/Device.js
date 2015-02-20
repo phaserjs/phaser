@@ -687,7 +687,7 @@ Phaser.Device._initialize = function () {
     function _checkInput () {
 
         if (PIXI.DEVKIT_NATIVE || ('ontouchstart' in document.documentElement ||
-            (window.navigator.maxTouchPoints && window.navigator.maxTouchPoints > 1)))
+            (window.navigator.maxTouchPoints && window.navigator.maxTouchPoints >= 1)))
         {
             device.touch = true;
         }

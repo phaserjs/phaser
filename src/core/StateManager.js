@@ -146,7 +146,6 @@ Phaser.StateManager.prototype = {
 
         this.game.onPause.add(this.pause, this);
         this.game.onResume.add(this.resume, this);
-        this.game.load.onLoadComplete.add(this.loadComplete, this);
 
         if (this._pendingState !== null)
         {
@@ -559,6 +558,8 @@ Phaser.StateManager.prototype = {
             this._args = [];
         }
 
+        this.game._kickstart = true;
+
     },
 
     /**
@@ -578,7 +579,7 @@ Phaser.StateManager.prototype = {
     */
     loadComplete: function () {
 
-        // console.log('loadComplete');
+        // console.log('SM loadComplete');
 
         if (this._created === false && this.onCreateCallback)
         {

@@ -191,7 +191,7 @@ Phaser.Time = function (game) {
     this.msMax = 0;
 
     /**
-    * Records how long the game was last paused, in miliseconds.
+    * Records how long the game was last paused, in milliseconds.
     * (This is not updated until the game is resumed.)
     * @property {number} pauseDuration
     */
@@ -342,7 +342,7 @@ Phaser.Time.prototype = {
         // this.time always holds Date.now, this.now may hold the RAF high resolution time value if RAF is available (otherwise it also holds Date.now)
         this.time = Date.now();
 
-        //  Adjust accorindlgy.
+        //  Adjust accordingly.
         this.elapsedMS = this.time - previousDateNow;
 
         // 'now' is currently still holding the time of the last call, move it into prevTime
