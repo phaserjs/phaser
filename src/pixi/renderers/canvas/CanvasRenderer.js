@@ -190,7 +190,12 @@ PIXI.CanvasRenderer.prototype.render = function(stage)
 {
     stage.updateTransform();
 
-    this.context.setTransform(1,0,0,1,0,0);
+    // TODO: CHANGE THIS TO NOT LOOK FOR A DEVKIT SPECIFIC FUNCTION
+    if (PIXI.DEVKIT_NATIVE) {
+        this.context.loadIdentity();
+    } else {
+        this.context.setTransform(1,0,0,1,0,0);
+    }
 
     this.context.globalAlpha = 1;
 

@@ -295,7 +295,7 @@ Phaser.Text.prototype.updateText = function () {
 
     this.context.scale(this.resolution, this.resolution);
 
-    if (navigator.isCocoonJS)
+    if (navigator.isCocoonJS || PIXI.DEVKIT_NATIVE)
     {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }

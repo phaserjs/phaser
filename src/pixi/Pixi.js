@@ -39,6 +39,8 @@ PIXI.CANVAS_RENDERER = 1;
  */
 PIXI.VERSION = "v2.2.5c";
 
+PIXI.DEVKIT_NATIVE = window.jsio && window.jsio('import device').isMobileNative;
+
 // used to create uids for various pixi objects..
 PIXI._UID = 0;
 

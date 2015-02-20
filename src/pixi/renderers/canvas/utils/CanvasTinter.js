@@ -227,24 +227,31 @@ PIXI.CanvasTinter.roundColor = function(color)
  */
 PIXI.CanvasTinter.checkInverseAlpha = function()
 {
-    var canvas = new PIXI.CanvasBuffer(2, 1);
+    if (!PIXI.DEVKIT_NATIVE)
+    {
+        var canvas = new PIXI.CanvasBuffer(2, 1);
 
-    canvas.context.fillStyle = "rgba(10, 20, 30, 0.5)";
+        canvas.context.fillStyle = "rgba(10, 20, 30, 0.5)";
 
-    //  Draw a single pixel
-    canvas.context.fillRect(0, 0, 1, 1);
+        //  Draw a single pixel
+        canvas.context.fillRect(0, 0, 1, 1);
 
-    //  Get the color values
-    var s1 = canvas.context.getImageData(0, 0, 1, 1);
+        //  Get the color values
+        var s1 = canvas.context.getImageData(0, 0, 1, 1);
 
-    //  Plot them to x2
-    canvas.context.putImageData(s1, 1, 0);
+        //  Plot them to x2
+        canvas.context.putImageData(s1, 1, 0);
 
-    //  Get those values
-    var s2 = canvas.context.getImageData(1, 0, 1, 1);
+        //  Get those values
+        var s2 = canvas.context.getImageData(1, 0, 1, 1);
 
-    //  Compare and return
-    return (s2.data[0] === s1.data[0] && s2.data[1] === s1.data[1] && s2.data[2] === s1.data[2] && s2.data[3] === s1.data[3]);
+        //  Compare and return
+        return (s2.data[0] === s1.data[0] && s2.data[1] === s1.data[1] && s2.data[2] === s1.data[2] && s2.data[3] === s1.data[3]);
+    }
+    else
+    {
+        return false;
+    }
 };
 
 /**

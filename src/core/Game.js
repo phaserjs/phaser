@@ -643,13 +643,24 @@ Phaser.Game.prototype = {
     */
     setUpRenderer: function () {
 
-        if (this.config['canvasID'])
-        {
-            this.canvas = Phaser.Canvas.create(this.width, this.height, this.config['canvasID']);
+        if (this.__canvas) {
+            this.canvas = this.__canvas;
+            if (!this.device.canvas)
+            {
+                // FIXME probably shouldn't do this here
+                this.device.canvas = this.canvas;
+            }
         }
         else
         {
-            this.canvas = Phaser.Canvas.create(this.width, this.height);
+            if (this.config['canvasID'])
+            {
+                this.canvas = Phaser.Canvas.create(this.width, this.height, this.config['canvasID']);
+            }
+            else
+            {
+                this.canvas = Phaser.Canvas.create(this.width, this.height);
+            }
         }
 
         if (this.config['canvasStyle'])
@@ -1036,6 +1047,10 @@ Phaser.Game.prototype = {
             this.gameResumed(event);
         }
 
+    },
+
+    setCanvas: function(canvas) {
+        this.__canvas = canvas;
     }
 
 };

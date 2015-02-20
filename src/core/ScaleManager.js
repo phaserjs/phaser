@@ -690,10 +690,10 @@ Phaser.ScaleManager.prototype = {
 
         var compat = this.compatibility;
         
-        compat.supportsFullScreen = this.game.device.fullscreen && !this.game.device.cocoonJS;
+        compat.supportsFullScreen = this.game.device.fullscreen && !this.game.device.cocoonJS && !PIXI.DEVKIT_NATIVE;
 
         //  We can't do anything about the status bars in iPads, web apps or desktops
-        if (!this.game.device.iPad && !this.game.device.webApp && !this.game.device.desktop)
+        if (!this.game.device.iPad && !this.game.device.webApp && !this.game.device.desktop && !PIXI.DEVKIT_NATIVE)
         {
             if (this.game.device.android && !this.game.device.chrome)
             {
@@ -742,15 +742,18 @@ Phaser.ScaleManager.prototype = {
                 return _this.fullScreenError(event);
             };
 
-            document.addEventListener('webkitfullscreenchange', this._fullScreenChange, false);
-            document.addEventListener('mozfullscreenchange', this._fullScreenChange, false);
-            document.addEventListener('MSFullscreenChange', this._fullScreenChange, false);
-            document.addEventListener('fullscreenchange', this._fullScreenChange, false);
+            if (!PIXI.DEVKIT_NATIVE)
+            {
+                document.addEventListener('webkitfullscreenchange', this._fullScreenChange, false);
+                document.addEventListener('mozfullscreenchange', this._fullScreenChange, false);
+                document.addEventListener('MSFullscreenChange', this._fullScreenChange, false);
+                document.addEventListener('fullscreenchange', this._fullScreenChange, false);
 
-            document.addEventListener('webkitfullscreenerror', this._fullScreenError, false);
-            document.addEventListener('mozfullscreenerror', this._fullScreenError, false);
-            document.addEventListener('MSFullscreenError', this._fullScreenError, false);
-            document.addEventListener('fullscreenerror', this._fullScreenError, false);
+                document.addEventListener('webkitfullscreenerror', this._fullScreenError, false);
+                document.addEventListener('mozfullscreenerror', this._fullScreenError, false);
+                document.addEventListener('MSFullscreenError', this._fullScreenError, false);
+                document.addEventListener('fullscreenerror', this._fullScreenError, false);
+            }
         }
 
         this.game.onResume.add(this._gameResumed, this);

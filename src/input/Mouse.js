@@ -195,7 +195,7 @@ Phaser.Mouse.prototype = {
     */
     start: function () {
 
-        if (this.game.device.android && this.game.device.chrome === false)
+        if (this.game.device.android && this.game.device.chrome === false && !PIXI.DEVKIT_NATIVE)
         {
             //  Android stock browser fires mouse events even if you preventDefault on the touchStart, so ...
             return;

@@ -118,6 +118,10 @@ Phaser.Canvas = {
 
         var target;
 
+        if (PIXI.DEVKIT_NATIVE) {
+            return canvas;
+        }
+
         if (typeof overflowHidden === 'undefined') { overflowHidden = true; }
 
         if (parent)

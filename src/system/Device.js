@@ -686,7 +686,8 @@ Phaser.Device._initialize = function () {
     */
     function _checkInput () {
 
-        if ('ontouchstart' in document.documentElement || (window.navigator.maxTouchPoints && window.navigator.maxTouchPoints >= 1))
+        if (PIXI.DEVKIT_NATIVE || ('ontouchstart' in document.documentElement ||
+            (window.navigator.maxTouchPoints && window.navigator.maxTouchPoints >= 1)))
         {
             device.touch = true;
         }
@@ -722,6 +723,11 @@ Phaser.Device._initialize = function () {
     * Checks for support of the Full Screen API.
     */
     function _checkFullScreenSupport () {
+
+        if (PIXI.DEVKIT_NATIVE)
+        {
+            return false;
+        }
 
         var fs = [
             'requestFullscreen',
@@ -861,8 +867,9 @@ Phaser.Device._initialize = function () {
                 device.nodeWebkit = false;
             }
         }
-        
-        if (navigator['isCocoonJS'])
+
+        // TODO: probably should not share this variable
+        if (navigator['isCocoonJS'] || PIXI.DEVKIT_NATIVE)
         {
             device.cocoonJS = true;
         }
@@ -945,7 +952,7 @@ Phaser.Device._initialize = function () {
         device.iPhone4 = (device.pixelRatio == 2 && device.iPhone);
         device.iPad = navigator.userAgent.toLowerCase().indexOf('ipad') != -1;
 
-        if (typeof Int8Array !== 'undefined')
+        if (typeof Int8Array !== 'undefined' || PIXI.DEVKIT_NATIVE)
         {
             device.typedArray = true;
         }
@@ -1034,6 +1041,12 @@ Phaser.Device._initialize = function () {
     * Check whether the host environment support 3D CSS.
     */
     function _checkCSS3D () {
+
+        if (PIXI.DEVKIT_NATIVE)
+        {
+            this.css3D = false;
+            return;
+        }
 
         var el = document.createElement('p');
         var has3d;

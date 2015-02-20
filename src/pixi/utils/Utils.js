@@ -30,6 +30,7 @@ PIXI.rgb2hex = function(rgb) {
  */
 PIXI.canUseNewCanvasBlendModes = function()
 {
+    if (PIXI.DEVKIT_NATIVE) return false;
     if (typeof document === 'undefined') return false;
 
     var pngHead = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAABAQMAAADD8p2OAAAAA1BMVEX/';
