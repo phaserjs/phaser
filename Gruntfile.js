@@ -82,8 +82,8 @@ module.exports = function (grunt) {
                 }
             }
 
-            grunt.log.writeln("\nFor example: --exclude p2,tilemap,retrofont --filename phaser-custom\n");
-
+            grunt.log.writeln("\nFor example: --exclude p2,tilemap,retrofont");
+            grunt.log.writeln("Optional flags: --filename yourfilename and --sourcemap true");
             grunt.log.writeln("Note that some modules have dependencies on others.\n");
 
             grunt.fail.fatal("No build options were specified.");
