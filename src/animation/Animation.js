@@ -575,6 +575,9 @@ Phaser.Animation.prototype = {
     */
     complete: function () {
 
+        this._frameIndex = this._frames.length - 1;
+        this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
+
         this.isPlaying = false;
         this.isFinished = true;
         this.paused = false;
