@@ -31,13 +31,15 @@ Phaser.Component.LoadTexture.prototype = {
 
         var setFrame = true;
         var smoothed = !this.texture.baseTexture.scaleMode;
+        var isRenderTexture = false;
 
-        if (key instanceof Phaser.RenderTexture)
+        if (Phaser.RenderTexture && key instanceof Phaser.RenderTexture)
         {
             this.key = key.key;
             this.setTexture(key);
+            isRenderTexture = true;
         }
-        else if (key instanceof Phaser.BitmapData)
+        else if (Phaser.BitmapData && key instanceof Phaser.BitmapData)
         {
             //  This works from a reference, which probably isn't what we need here
             this.setTexture(key.texture);
@@ -72,7 +74,7 @@ Phaser.Component.LoadTexture.prototype = {
             }
         }
         
-        if (!key instanceof Phaser.RenderTexture)
+        if (!isRenderTexture)
         {
             this.texture.baseTexture.dirty();
         }
