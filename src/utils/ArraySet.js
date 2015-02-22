@@ -68,6 +68,31 @@ Phaser.ArraySet.prototype = {
     },
 
     /**
+    * Gets an item from the set based on the property strictly equaling the value given.
+    * Returns null if not found.
+    *
+    * @method Phaser.ArraySet#getByKey
+    * @param {string} property - The property to check against the value.
+    * @param {any} value - The value to check if the property strictly equals.
+    * @return {any} The item that was found, or null if nothing matched.
+    */
+    getByKey: function (property, value) {
+
+        var i = this.list.length;
+
+        while (i--)
+        {
+            if (this.list[i][property] === value)
+            {
+                return this.list[i];
+            }
+        }
+
+        return null;
+
+    },
+
+    /**
     * Checks for the item within this list.
     *
     * @method Phaser.ArraySet#exists

@@ -157,6 +157,7 @@ We've also removed functions and properties from Pixi classes that Phaser doesn'
 * Tween.repeat has a new parameter `repeatDelay` which allows you to set the delay (in ms) before a tween will repeat itself.
 * Tween.yoyo has a new parameter `yoyoDelay` which allows you to set the delay (in ms) before a tween will start a yoyo.
 * Tween.interpolation has a new parameter `context` which allows you to define the context in which the interpolation function will run.
+* ArraySet.getByKey gets an item from the set based on the property strictly equaling the value given.
 
 ### Bug Fixes
 
