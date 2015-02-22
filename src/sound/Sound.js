@@ -174,6 +174,12 @@ Phaser.Sound = function (game, key, volume, loop, connect) {
     */
     this.gainNode = null;
 
+    /**
+    * @property {object} _sound - Internal var.
+    * @private
+    */
+    this._sound = null;
+
     if (this.usingWebAudio)
     {
         this.context = this.game.sound.context;
@@ -195,7 +201,7 @@ Phaser.Sound = function (game, key, volume, loop, connect) {
             this.gainNode.connect(this.masterGainNode);
         }
     }
-    else
+    else if (this.usingAudioTag)
     {
         if (this.game.cache.getSound(key) && this.game.cache.isSoundReady(key))
         {
