@@ -390,7 +390,6 @@ Phaser.TilemapParser = {
             if (set.hasOwnProperty('tiles'))
             {
                 var tileIndices = Object.keys(set.tiles);
-                var layersWithAnimatedTile;
                 for (var k in tileIndices)
                 {
                     if (set.tiles[tileIndices[k]].hasOwnProperty('animation'))
@@ -408,7 +407,8 @@ Phaser.TilemapParser = {
                             map.animatedTiles[gid].frames[i2].duration = set.tiles[tileIndices[k]].animation[i2].duration;
                         }
                         // Keep track of layers with this particular animated tile
-                        layersWithAnimatedTile = [];
+                        var layersWithAnimatedTile = [];
+                        var tilelayerIndex = 0;
                         for (var i2 = 0; i2 < json.layers.length; i2++)
                         {
                             if (json.layers[i2].type === 'tilelayer')
@@ -417,10 +417,11 @@ Phaser.TilemapParser = {
                                 {
                                     if (json.layers[i2].data[t] === gid)
                                     {
-                                        layersWithAnimatedTile.push(i2);
+                                        layersWithAnimatedTile.push(tilelayerIndex);
                                         break;
                                     }
                                 }
+                                tilelayerIndex++;
                             }
                         }
                         map.animatedTiles[gid].currentGid = map.animatedTiles[gid].frames[0].gid;
