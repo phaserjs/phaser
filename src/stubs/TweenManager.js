@@ -9,7 +9,7 @@
 * It allows you to exclude the default Tween Manager from your build, without making Game crash.
 */
 
-Phaser.TweenManager = function (game) {};
+Phaser.TweenManager = function () {};
 
 Phaser.TweenManager.prototype.update = function () {};
 

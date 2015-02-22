@@ -74,11 +74,11 @@ module.exports = function (grunt) {
         {
             grunt.log.writeln("\nUse --exclude to select which modules to exclude:\n");
 
-            for (var key in modules)
+            for (var module in modules)
             {
-                if (modules[key].optional)
+                if (modules[module].optional)
                 {
-                    grunt.log.writeln(key + ' - ' + modules[key].description);
+                    grunt.log.writeln(module + ' - ' + modules[module].description);
                 }
             }
 
@@ -113,15 +113,15 @@ module.exports = function (grunt) {
             //  Check the given modules are all valid
             for (var i = 0; i < excludes.length; i++)
             {
-                var key = excludes[i];
+                var exclude = excludes[i];
 
-                if (modules[key])
+                if (modules[exclude])
                 {
-                    grunt.log.writeln("* " + key + ' - ' + modules[key].description);
+                    grunt.log.writeln("* " + exclude + ' - ' + modules[exclude].description);
                 }
                 else
                 {
-                    grunt.fail.fatal("Unknown module '" + key + "'");
+                    grunt.fail.fatal("Unknown module '" + exclude + "'");
                 }
             }
 
