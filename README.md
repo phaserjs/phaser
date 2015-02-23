@@ -120,7 +120,7 @@ We've also removed functions and properties from Pixi classes that Phaser doesn'
 
 ### Updates
 
-* TypeScript definitions fixes and updates (thanks @Phaiax @Bilge @clark-stevenson @TimvdEijnden @belohlavek @ivw @vulvulune)
+* TypeScript definitions fixes and updates (thanks @Phaiax @Bilge @clark-stevenson @TimvdEijnden @belohlavek @ivw @vulvulune @zeh)
 * There is a new TypeScript defs file (phaser.comments.d.ts) which now has all of the jsdocs included! (thanks @vulvulune #1559)
 * Sound.fadeTween is now used for Sound.fadeIn and Sound.fadeOut audio tweens.
 * Sound.stop and Sound.destroy now halt a fade tween if in effect.
