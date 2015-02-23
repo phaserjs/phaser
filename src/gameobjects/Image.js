@@ -32,32 +32,31 @@ Phaser.Image = function (game, x, y, key, frame) {
 
     PIXI.Sprite.call(this, PIXI.TextureCache['__default']);
 
-    Phaser.Utils.mixinPrototype(this, Phaser.Component.Core.prototype);
-
-    var components = [
-        'Angle',
-        'Animation',
-        'AutoCull',
-        'Bounds',
-        'BringToTop',
-        'Crop',
-        'Destroy',
-        'FixedToCamera',
-        'InputEnabled',
-        'LifeSpan',
-        'LoadTexture',
-        'Overlap',
-        'Reset',
-        'Smoothed'
-    ];
-
-    Phaser.Component.Core.install.call(this, components);
     Phaser.Component.Core.init.call(this, game, x, y, key, frame);
 
 };
 
 Phaser.Image.prototype = Object.create(PIXI.Sprite.prototype);
 Phaser.Image.prototype.constructor = Phaser.Image;
+
+var components = [
+    'Angle',
+    'Animation',
+    'AutoCull',
+    'Bounds',
+    'BringToTop',
+    'Crop',
+    'Destroy',
+    'FixedToCamera',
+    'InputEnabled',
+    'LifeSpan',
+    'LoadTexture',
+    'Overlap',
+    'Reset',
+    'Smoothed'
+];
+
+Phaser.Component.Core.install.call(Phaser.Image.prototype, components);
 
 /**
 * Automatically called by World.preUpdate.

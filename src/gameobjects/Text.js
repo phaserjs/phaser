@@ -76,23 +76,6 @@ Phaser.Text = function (game, x, y, text, style) {
 
     PIXI.Text.call(this, text, this.style);
 
-    Phaser.Utils.mixinPrototype(this, Phaser.Component.Core.prototype);
-
-    var components = [
-        'Angle',
-        'AutoCull',
-        'Bounds',
-        'BringToTop',
-        'Destroy',
-        'FixedToCamera',
-        'InputEnabled',
-        'InWorld',
-        'Overlap',
-        'Reset',
-        'Smoothed'
-    ];
-
-    Phaser.Component.Core.install.call(this, components);
     Phaser.Component.Core.init.call(this, game, x, y, '', null);
 
     if (text !== ' ')
@@ -104,6 +87,23 @@ Phaser.Text = function (game, x, y, text, style) {
 
 Phaser.Text.prototype = Object.create(PIXI.Text.prototype);
 Phaser.Text.prototype.constructor = Phaser.Text;
+
+var components = [
+    'Angle',
+    'AutoCull',
+    'Bounds',
+    'BringToTop',
+    'Destroy',
+    'FixedToCamera',
+    'InputEnabled',
+    'InWorld',
+    'Overlap',
+    'Reset',
+    'Smoothed'
+];
+
+Phaser.Component.Core.install.call(Phaser.Text.prototype, components);
+
 
 /**
 * Automatically called by World.preUpdate.

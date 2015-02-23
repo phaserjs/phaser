@@ -27,17 +27,6 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
 
     PIXI.Sprite.call(this, PIXI.TextureCache['__default']);
 
-    Phaser.Utils.mixinPrototype(this, Phaser.Component.Core.prototype);
-
-    var components = [
-        'Bounds',
-        'Destroy',
-        'FixedToCamera',
-        'Reset',
-        'Smoothed'
-    ];
-
-    Phaser.Component.Core.install.call(this, components);
     Phaser.Component.Core.init.call(this, game, 0, 0, null, null);
 
     /**
@@ -258,6 +247,19 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
 
 };
 
+Phaser.TilemapLayer.prototype = Object.create(PIXI.Sprite.prototype);
+Phaser.TilemapLayer.prototype.constructor = Phaser.TilemapLayer;
+
+var components = [
+    'Bounds',
+    'Destroy',
+    'FixedToCamera',
+    'Reset',
+    'Smoothed'
+];
+
+Phaser.Component.Core.install.call(Phaser.TilemapLayer.prototype, components);
+
 /**
 * The shared double-copy canvas, created as needed.
 *
@@ -284,9 +286,6 @@ Phaser.TilemapLayer.ensureSharedCopyCanvas = function () {
     return this.sharedCopyCanvas;
 
 };
-
-Phaser.TilemapLayer.prototype = Object.create(PIXI.Sprite.prototype);
-Phaser.TilemapLayer.prototype.constructor = Phaser.TilemapLayer;
 
 /**
 * Automatically called by World.preUpdate.
