@@ -1806,7 +1806,7 @@ Phaser.Loader.prototype = {
     *
     * @method Phaser.Loader#getAudioURL
     * @private
-    * @param {object[]||string[]} urls - See {@link #audio} for format.
+    * @param {object[]|string[]} urls - See {@link #audio} for format.
     * @return {string} The URL to try and fetch; or null.
     */
     getAudioURL: function (urls) {
