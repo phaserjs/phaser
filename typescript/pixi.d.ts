@@ -313,6 +313,7 @@ declare module PIXI {
         dirty: boolean;
         fontName: string;
         fontSize: number;
+        maxWidth: number;
         textWidth: number;
         textHeight: number;
         tint: number;
