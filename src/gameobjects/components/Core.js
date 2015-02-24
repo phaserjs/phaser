@@ -161,6 +161,12 @@ Phaser.Component.Core.prototype = {
     _bounds: null,
 
     /**
+    * @property {boolean} _exists - Internal cache var.
+    * @private
+    */
+    _exists: false,
+
+    /**
     * Override and use this function in your own custom objects to handle any update requirements you may have.
     * Remember if this Sprite has any children you should call update on them too.
     *
@@ -197,6 +203,51 @@ Phaser.Component.Core.prototype = {
         for (var i = 0; i < this.children.length; i++)
         {
             this.children[i].postUpdate();
+        }
+
+    },
+
+    /**
+    * Sprite.exists controls if the core game loop and physics update this Sprite or not.
+    * When you set Sprite.exists to false it will remove its Body from the physics world (if it has one) and also set Sprite.visible to false.
+    * Setting Sprite.exists to true will re-add the Body to the physics world (if it has a body) and set Sprite.visible to true.
+    *
+    * @name Phaser.Sprite#exists
+    * @property {boolean} exists - If the Sprite is processed by the core game update and physics.
+    */
+    exists: {
+
+        get: function () {
+
+            return this._exists;
+
+        },
+
+        set: function (value) {
+
+            if (value)
+            {
+                this._exists = true;
+
+                if (this.body && this.body.type === Phaser.Physics.P2JS)
+                {
+                    this.body.addToWorld();
+                }
+
+                this.visible = true;
+            }
+            else
+            {
+                this._exists = false;
+
+                if (this.body && this.body.type === Phaser.Physics.P2JS)
+                {
+                    this.body.removeFromWorld();
+                }
+
+                this.visible = false;
+            }
+
         }
 
     }
