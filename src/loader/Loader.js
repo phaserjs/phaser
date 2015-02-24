@@ -1816,18 +1816,20 @@ Phaser.Loader.prototype = {
             var url = urls[i];
             var audioType;
 
-            if (url.uri) // {uri: .., type: ..} pair
+            if (url.uri)
             {
+                // Supplied as {uri: .., type: ..} pair - trust user
                 url = url.uri;
                 audioType = url.type;
             }
-            else
+            else if (url.indexOf("blob:") === 0 || url.indexOf("data:") === 0)
             {
                 // Assume direct-data URI can be played if not in a paired form; select immediately
-                if (url.indexOf("blob:") === 0 || url.indexOf("data:") === 0)
-                {
-                    return url;
-                }
+                return url;
+            }
+            else
+            {
+                // Use extension to determine audio type
 
                 if (url.indexOf("?") >= 0) // Remove query from URL
                 {
@@ -1841,7 +1843,7 @@ Phaser.Loader.prototype = {
 
             if (this.game.device.canPlayAudio(audioType))
             {
-                return urls[i];
+                return url;
             }
         }
 
