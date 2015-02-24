@@ -1,40 +1,35 @@
 <?php
     if (!isset($path)) { $path = '..'; }
 
-    if (!isset($keyboard)) { $keyboard = true; }
-    if (!isset($gamepad)) { $gamepad = true; }
-    if (!isset($bitmapdata)) { $bitmapdata = true; }
-    if (!isset($graphics)) { $graphics = true; }
-    if (!isset($rendertexture)) { $rendertexture = true; }
-    if (!isset($text)) { $text = true; }
-    if (!isset($bitmaptext)) { $bitmaptext = true; }
-    if (!isset($retrofont)) { $retrofont = true; }
-    if (!isset($tweens)) { $tweens = true; }
-    if (!isset($sound)) { $sound = true; }
-    if (!isset($debug)) { $debug = true; }
-    if (!isset($particles)) { $particles = true; }
-    if (!isset($tilemap)) { $tilemap = true; }
-    if (!isset($arcade)) { $arcade = true; }
-    if (!isset($p2)) { $p2 = true; }
-    if (!isset($ninja)) { $ninja = false; }
-    if (!isset($box2d)) { $box2d = false; }
-
-    if (isset($nophysics))
+    if (!isset($modules))
     {
-        $p2 = false;
-        $box2d = false;
-        $ninja = false;
-        $arcade = false;
-        $tilemap = false;
-        $particles = false;
+        $modules = array(
+            'keyboard' => true,
+            'gamepad' => true,
+            'bitmapdata' => true,
+            'graphics' => true,
+            'rendertexture' => true,
+            'text' => true,
+            'bitmaptext' => true,
+            'retrofont' => true,
+            'tweens' => true,
+            'sound' => true,
+            'particles' => true,
+            'debug' => true,
+            'tilemap' => true,
+            'arcade' => true,
+            'p2' => true,
+            'ninja' => false,
+            'box2d' => false
+        );
     }
 
-    if ($p2)
+    if ($modules['p2'])
     {
         echo "    <script src=\"$path/src/physics/p2/p2.js\"></script>";
     }
 
-    if ($box2d)
+    if ($modules['box2d'] && isset($box2dpath))
     {
         echo "    <script src=\"$box2dpath/box2d-html5.js\"></script>";
     }
@@ -126,7 +121,7 @@
 
 EOL;
 
-    if ($keyboard)
+    if ($modules['keyboard'])
     {
         echo <<<EOL
     <script src="$path/src/input/Key.js"></script>
@@ -136,7 +131,7 @@ EOL;
 EOL;
     }
 
-    if ($gamepad)
+    if ($modules['gamepad'])
     {
         echo <<<EOL
     <script src="$path/src/input/Gamepad.js"></script>
@@ -185,7 +180,7 @@ EOL;
 
 EOL;
 
-    if ($bitmapdata)
+    if ($modules['bitmapdata'])
     {
         echo <<<EOL
     <script src="$path/src/gameobjects/BitmapData.js"></script>
@@ -194,7 +189,7 @@ EOL;
 EOL;
     }
 
-    if ($graphics)
+    if ($modules['graphics'])
     {
         echo <<<EOL
     <script src="$path/src/gameobjects/Graphics.js"></script>
@@ -203,7 +198,7 @@ EOL;
 EOL;
     }
 
-    if ($rendertexture)
+    if ($modules['rendertexture'])
     {
         echo <<<EOL
     <script src="$path/src/gameobjects/RenderTexture.js"></script>
@@ -212,7 +207,7 @@ EOL;
 EOL;
     }
 
-    if ($text)
+    if ($modules['text'])
     {
         echo <<<EOL
     <script src="$path/src/gameobjects/Text.js"></script>
@@ -221,7 +216,7 @@ EOL;
 EOL;
     }
 
-    if ($bitmaptext)
+    if ($modules['bitmaptext'])
     {
         echo <<<EOL
     <script src="$path/src/gameobjects/BitmapText.js"></script>
@@ -230,7 +225,7 @@ EOL;
 EOL;
     }
 
-    if ($retrofont && $rendertexture)
+    if ($modules['retrofont'] && $modules['rendertexture'])
     {
         echo <<<EOL
     <script src="$path/src/gameobjects/RetroFont.js"></script>
@@ -254,7 +249,7 @@ EOL;
 
 EOL;
 
-    if ($tweens)
+    if ($modules['tweens'])
     {
         echo <<<EOL
     <script src="$path/src/tween/TweenManager.js"></script>
@@ -292,7 +287,7 @@ EOL;
 
 EOL;
 
-    if ($sound)
+    if ($modules['sound'])
     {
         echo <<<EOL
     <script src="$path/src/sound/AudioSprite.js"></script>
@@ -311,7 +306,7 @@ EOL;
 EOL;
     }
 
-    if ($debug)
+    if ($modules['debug'])
     {
         echo <<<EOL
     <script src="$path/src/utils/Debug.js"></script>
@@ -332,7 +327,7 @@ EOL;
 
 EOL;
 
-    if ($particles && $arcade)
+    if ($modules['particles'] && $modules['arcade'])
     {
         echo <<<EOL
     <script src="$path/src/particles/arcade/ArcadeParticles.js"></script>
@@ -342,7 +337,7 @@ EOL;
 EOL;
     }
 
-    if ($tilemap)
+    if ($modules['tilemap'])
     {
         echo <<<EOL
     <script src="$path/src/tilemap/Tile.js"></script>
@@ -355,7 +350,7 @@ EOL;
 EOL;
     }
 
-    if ($arcade)
+    if ($modules['arcade'])
     {
         echo <<<EOL
     <script src="$path/src/physics/arcade/World.js"></script>
@@ -365,7 +360,7 @@ EOL;
 EOL;
     }
 
-    if ($tilemap && $arcade)
+    if ($modules['tilemap'] && $modules['arcade'])
     {
         echo <<<EOL
     <script src="$path/src/physics/arcade/TilemapCollision.js"></script>
@@ -374,7 +369,7 @@ EOL;
 EOL;
     }
 
-    if ($p2)
+    if ($modules['p2'])
     {
         echo <<<EOL
     <script src="$path/src/physics/p2/World.js"></script>
@@ -398,7 +393,7 @@ EOL;
 EOL;
     }
 
-    if ($ninja)
+    if ($modules['ninja'])
     {
         echo <<<EOL
     <script src="$path/src/physics/ninja/World.js"></script>
@@ -411,7 +406,7 @@ EOL;
 EOL;
     }
 
-    if ($box2d)
+    if ($modules['box2d'] && isset($box2dpath))
     {
         echo <<<EOL
     <script src="$box2dpath/World.js"></script>
