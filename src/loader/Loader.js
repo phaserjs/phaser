@@ -67,13 +67,46 @@ Phaser.Loader = function (game) {
     this.crossOrigin = false;
 
     /**
-    * If you want to append a URL before the path of any asset you can set this here.
+    * The default URL to append before the path of any asset.
+    *
     * Useful if allowing the asset base url to be configured outside of the game code.
-    * The string _must_ end with a "/".
+    * The string _must_ end with a "/" if set.
     *
     * @property {string} baseURL
     */
     this.baseURL = '';
+
+    /**
+    * Invoked before a request is created to allow specific overriding.
+    *
+    * The signal is invoked with the following parameters:
+    *
+    * - `loader`: Loader; the loader instance.
+    * - `config`: An object with the properties
+    *    - `requestType`: A string; The type of the request being made. Read-only.
+    *    - `requestObject`: An object; If re-assigned this will be the custom object handling this request.
+    *    - `url`: A string; The requested URL. Should be re-assigned if a different URL is desired.
+    *
+    * The signal handlers should check the requested type (`requestType`) before deciding what kind of
+    * request object to create, if any. Only the last-assigned configuration values will be used.
+    *
+    * The `requestObject` property may be re-assigned according to the following rules.
+    * If no request object is assigned then the "default" implementation/settings will be used.
+    *
+    * - For XHR Requests (requestType="xhr") it must be an XMLHttpRequest (or XHR-like object).
+    *   The XHR object _must_ already be open'ed asynchronously (to the stated `url`), but _cannot_ be sent.
+    *   The default is created with {@link #createXMLHttpRequest}.
+    *
+    * - For Image requests (requestType="image") it must be an Image Element (or Image-like object).
+    *   The `src` should _not_ be set yet. If manually specified the `crossOrigin` property will _not_ be automatically set.
+    *
+    * - For Audio requests (requestType="audio") it must be an Audio Element (or Audio-like object).
+    *   The `src` should _not_ bet set yet.
+    *
+    * @property {Phaser.Signal} onCreateRequest
+    * @protected
+    */
+    this.onCreateRequest = new Phaser.Signal();
 
     /**
     * This event is dispatched when the loading process starts: before the first file has been requested,
@@ -1114,7 +1147,7 @@ Phaser.Loader.prototype = {
     * @param {function} callback - The callback is invoked and is supplied with a single argument: the loader.
     * @param {object} [callbackContext=(loader)] - Context for the callback.
     * @return {Phaser.Loader} This Loader instance.
-    * @see {@link Phaser.Loader#withSyncPoint withSyncPoint}
+    * @see {@link #withSyncPoint}
     */
     addSyncPoint: function (type, key) {
 
@@ -1153,7 +1186,9 @@ Phaser.Loader.prototype = {
     },
 
     /**
-    * Remove all file loading requests - this is _insufficient_ to stop current loading. Use `reset` instead.
+    * Remove all file loading requests.
+    *
+    * This is _insufficient_ to stop current loading: use {@link #reset} instead.
     *
     * @method Phaser.Loader#removeAll
     * @protected
@@ -1193,8 +1228,8 @@ Phaser.Loader.prototype = {
     *
     * If a sync-file is encountered then subsequent asset processing is delayed until it completes.
     * The exception to this rule is that packfiles can be downloaded (but not processed) even if
-    * there appear other sync files (ie. packs) - this enables multiple packfiles to be fetched in parallel.
-    * such as during the start phaser.
+    * there appear other sync files (ie. packs) - this enables multiple packfiles to be fetched in parallel
+    * such as during the start phase.
     *
     * @method Phaser.Loader#processLoadQueue
     * @private
@@ -1591,39 +1626,56 @@ Phaser.Loader.prototype = {
 
         var _this = this;
 
-        file.data = new Image();
-        file.data.name = file.key;
+        var config = {
+            requestType: "image",
+            requestObject: null,
+            url: this.transformUrl(file.url, file)
+        };
 
-        if (this.crossOrigin)
+        this.onCreateRequest.dispatch(this, config);
+
+        var image = config.requestObject;
+        var url = config.url;
+
+        if (!image)
         {
-            file.data.crossOrigin = this.crossOrigin;
-        }
-        
-        file.data.onload = function () {
-            if (file.data.onload)
+            image = new Image();
+            if (this.crossOrigin)
             {
-                file.data.onload = null;
-                file.data.onerror = null;
+                image.crossOrigin = this.crossOrigin;
+            }
+        }
+
+        file.data = image;
+        
+        image.name = file.key;
+        
+        image.onload = function () {
+            if (image.onload)
+            {
+                image.onload = null;
+                image.onerror = null;
                 _this.fileComplete(file);
             }
         };
-        file.data.onerror = function () {
-            if (file.data.onload)
+        image.onerror = function () {
+            if (image.onload)
             {
-                file.data.onload = null;
-                file.data.onerror = null;
+                image.onload = null;
+                image.onerror = null;
                 _this.fileError(file);
             }
         };
 
-        file.data.src = this.transformUrl(file.url, file);
+        // Set only after handlers
+        image.src = url;
         
         // Image is immediately-available/cached
-        if (file.data.complete && file.data.width && file.data.height)
+        if (image.complete && image.width && image.height)
         {
-            file.data.onload = null;
-            file.data.onerror = null;
-            this.fileComplete(file);
+            image.onload = null;
+            image.onerror = null;
+            _this.fileComplete(file);
         }
 
     },
@@ -1636,37 +1688,85 @@ Phaser.Loader.prototype = {
 
         var _this = this;
 
+        var config = {
+            requestType: "audio",
+            requestObject: null,
+            url: this.transformUrl(file.url, file)
+        };
+
+        this.onCreateRequest.dispatch(this, config);
+
+        var audio = config.requestObject;
+        var url = config.url;
+
+        if (!audio)
+        {
+            audio = new Audio();
+            audio.preload = 'auto';
+        }
+
+        file.data = audio;
+
+        audio.name = file.key;
+
         if (this.game.sound.touchLocked)
         {
             //  If audio is locked we can't do this yet, so need to queue this load request. Bum.
-            file.data = new Audio();
-            file.data.name = file.key;
-            file.data.preload = 'auto';
-            file.data.src = this.transformUrl(file.url, file);
+            audio.src = url;
 
-            this.fileComplete(file);
+            _this.fileComplete(file);
         }
         else
         {
-            file.data = new Audio();
-            file.data.name = file.key;
-            
+            //  Wait until playthrough is allowed.            
             var playThroughEvent = function () {
-                file.data.removeEventListener('canplaythrough', playThroughEvent, false);
-                file.data.onerror = null;
-                // Why does this cycle through games?
-                Phaser.GAMES[_this.game.id].load.fileComplete(file);
+                audio.removeEventListener('canplaythrough', playThroughEvent, false);
+                audio.onerror = null;
+                _this.fileComplete(file);
             };
-            file.data.onerror = function () {
-                file.data.removeEventListener('canplaythrough', playThroughEvent, false);
-                file.data.onerror = null;
+            audio.onerror = function () {
+                audio.removeEventListener('canplaythrough', playThroughEvent, false);
+                audio.onerror = null;
                 _this.fileError(file);
             };
 
-            file.data.preload = 'auto';
-            file.data.src = this.transformUrl(file.url, file);
-            file.data.addEventListener('canplaythrough', playThroughEvent, false);
-            file.data.load();
+            audio.src = url;
+
+            audio.addEventListener('canplaythrough', playThroughEvent, false);
+            
+            audio.load();
+        }
+
+    },
+
+    /**
+    * Creates a XHR object.
+    *
+    * This will return an XDomainRequest in IE9 if the deprecated {@link #useXDomainRequest} is set.
+    *
+    * @method Phaser.Loader#createXMLHttpRequest
+    * @protected
+    * @returns An XHR (or XHR-like) object.
+    */
+    createXMLHttpRequest: function () {
+
+        var useXhr = !(this.useXDomainRequest && window.XDomainRequest);
+        
+        if (useXhr)
+        {
+            return new XMLHttpRequest();
+        }
+        else
+        {
+            // Special IE9 magic .. only
+            if (!this._warnedAboutXDomainRequest &&
+                (!this.game.device.ie || this.game.device.ieVersion >= 10))
+            {
+                this._warnedAboutXDomainRequest = true;
+                console.warn("Phaser.Loader - using XDomainRequest outside of IE 9");
+            }
+
+            return new window.XDomainRequest();
         }
 
     },
@@ -1679,21 +1779,37 @@ Phaser.Loader.prototype = {
     * @method Phaser.Loader#xhrLoad
     * @private
     * @param {object} file - The file/pack to load.
-    * @param {string} url - The URL of the file.
+    * @param {string} url - The URL of the file; should already have been processed via {@link #transformUrl}.
     * @param {string} type - The xhr responseType.
     * @param {function} onload - The function to call on success. Invoked in `this` context and supplied with `(file, xhr)` arguments.
     * @param {function} [onerror=fileError]  The function to call on error. Invoked in `this` context and supplied with `(file, xhr)` arguments.
     */
     xhrLoad: function (file, url, type, onload, onerror) {
 
-        if (this.useXDomainRequest && window.XDomainRequest)
+        var config = {
+            requestType: "xhr",
+            requestObject: null,
+            responseType: type,
+            url: url
+        };
+        
+        this.onCreateRequest.dispatch(this, config);
+
+        // Accept reassignments, if any
+        var xhr = config.requestObject;
+        url = config.url;
+
+        if (!xhr)
         {
-            this.xhrLoadWithXDR(file, url, type, onload, onerror);
-            return;
+            xhr = this.createXMLHttpRequest();
+            xhr.open("GET", url, true);
         }
 
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", url, true);
+        // Update in-flight file data
+        file.requestObject = xhr;
+        file.requestUrl = url;
+
+        // responseType can't be changed
         xhr.responseType = type;
 
         onerror = onerror || this.fileError;
@@ -1716,86 +1832,34 @@ Phaser.Loader.prototype = {
             }
         };
 
-        file.requestObject = xhr;
-        file.requestUrl = url;
-
-        xhr.send();
-
-    },
-
-    /**
-    * Starts the xhr loader - using XDomainRequest.
-    * This should _only_ be used with IE 9. Phaser does not support IE 8 and XDR is deprecated in IE 10.
-    * 
-    * This is designed specifically to use with asset file processing.
-    *
-    * @method Phaser.Loader#xhrLoad
-    * @private
-    * @param {object} file - The file/pack to load.
-    * @param {string} url - The URL of the file.
-    * @param {string} type - The xhr responseType.
-    * @param {function} onload - The function to call on success. Invoked in `this` context and supplied with `(file, xhr)` arguments.
-    * @param {function} [onerror=fileError]  The function to call on error. Invoked in `this` context and supplied with `(file, xhr)` arguments.
-    * @deprecated This is only relevant for IE 9.
-    */
-    xhrLoadWithXDR: function (file, url, type, onload, onerror) {
-
-        // Special IE9 magic .. only
-        if (!this._warnedAboutXDomainRequest &&
-            (!this.game.device.ie || this.game.device.ieVersion >= 10))
+        // Re-decide if it's XDR after created.
+        if (!window.XDomainRequest || !(xhr instanceof window.XDomainRequest))
         {
-            this._warnedAboutXDomainRequest = true;
-            console.warn("Phaser.Loader - using XDomainRequest outside of IE 9");
-        }
-
-        // Ref: http://blogs.msdn.com/b/ieinternals/archive/2010/05/13/xdomainrequest-restrictions-limitations-and-workarounds.aspx
-        var xhr = new window.XDomainRequest();
-        xhr.open('GET', url, true);
-        xhr.responseType = type;
-
-        // XDomainRequest has a few quirks. Occasionally it will abort requests
-        // A way to avoid this is to make sure ALL callbacks are set even if not used
-        // More info here: http://stackoverflow.com/questions/15786966/xdomainrequest-aborts-post-on-ie-9
-        xhr.timeout = 3000;
-
-        onerror = onerror || this.fileError;
-
-        var _this = this;
-
-        xhr.onerror = function () {
-            try {
-                return onerror.call(_this, file, xhr);
-            } catch (e) {
-                _this.asyncComplete(file, e.message || 'Exception');
-            }
-        };
-
-        xhr.ontimeout = function () {
-            try {
-                return onerror.call(_this, file, xhr);
-            } catch (e) {
-                _this.asyncComplete(file, e.message || 'Exception');
-            }
-        };
-
-        xhr.onprogress = function() {};
-
-        xhr.onload = function () {
-            try {
-                return onload.call(_this, file, xhr);
-            } catch (e) {
-                _this.asyncComplete(file, e.message || 'Exception');
-            }
-        };
-
-        file.requestObject = xhr;
-        file.requestUrl = url;
-
-        //  Note: The xdr.send() call is wrapped in a timeout to prevent an issue with the interface where some requests are lost
-        //  if multiple XDomainRequests are being sent at the same time.
-        setTimeout(function () {
+            // Normal
             xhr.send();
-        }, 0);
+        }
+        else
+        {
+            // Ref: http://blogs.msdn.com/b/ieinternals/archive/2010/05/13/xdomainrequest-restrictions-limitations-and-workarounds.aspx
+
+            // XDomainRequest has a few quirks. Occasionally it will abort requests
+            // A way to avoid this is to make sure ALL callbacks are set even if not used
+            // More info here: http://stackoverflow.com/questions/15786966/xdomainrequest-aborts-post-on-ie-9
+            xhr.timeout = xhr.timeout || 3000;
+            xhr.ontimeout = function () {
+                try {
+                    return onerror.call(_this, file, xhr);
+                } catch (e) {
+                    _this.asyncComplete(file, e.message || 'Exception');
+                }
+            };
+
+            //  Note: The xdr.send() call is wrapped in a timeout to prevent an issue where
+            //  some requests are lostif multiple XDomainRequests are being sent at the same time.
+            setTimeout(function () {
+                xhr.send();
+            }, 0);
+        }
 
     },
 
