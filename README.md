@@ -192,6 +192,13 @@ We've also removed functions and properties from Pixi classes that Phaser doesn'
 * Animation.update skips ahead frames when the system is lagging, however it failed to set the animation to the final frame in the sequence if the animation skipped ahead too far (thanks @richpixel #1628)
 * Loader.preloadSprite had an extra guard added to ensure it didn't try to updateCrop a non-existent sprite (thanks @noidexe #1636)
 
+### Pixi 2.2.7 Bug Fixes
+
+* SpriteBatch added fix to handle batch context loss on change.
+* RenderTexture resolution fix.
+* WebGL Filter Resolution fix.
+* TilingSprite fixes when masked in canvas mode.
+
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 
 ![div](http://www.phaser.io/images/github/div.png)
@@ -361,12 +368,10 @@ We don't officially support any version of TypeScript before 1.4, however you ca
 
 Here are some of the features planned for future releases. Not all are promised to be delivered and no timescale is given. But they serve as a good indication of the direction Phaser is heading in.
 
-### Version 2.3 ("Tarabon")
+### Version 2.4
 
-* New parallel asset loader (already started in dev branch)
 * Enhance the State Management, so you can perform non-destructive State swaps and persistence.
 * Updated Text handling
-* Look carefully at the internal structure of Phaser to avoid method repetition (such as Sprite.crop and Image.crop), investigate using mixins to help reduce overall codebase size.
 * Restore Math.interpolateAngles and Math.nearestAngleBetween
 * Scene Manager - json scene parser.
 * Touch Gestures.
@@ -376,12 +381,8 @@ Here are some of the features planned for future releases. Not all are promised 
 * Allow Groups to be InputEnabled? Dragging a Group would be really useful.
 * Cache to localStorage using If-Modified-Since. [See github request](https://github.com/photonstorm/phaser/issues/495)
 * Allow for complex assets like Bitmap Fonts to be stored within a texture atlas.
-
-### Version 2.4
-
+* Add more support for [Legacy Audio Events](https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Media_events)
 * Ability to control DOM elements from the core game and layer them into the game.
-* Game parameters stored in Google Docs.
-* Optimised global Animation manager to cut down on object creation.
 * Flash CC HTML5 export integration.
 * Massively enhance the audio side of Phaser. Take more advantage of Web Audio: echo effects, positional sound, etc.
 * DragonBones support.
