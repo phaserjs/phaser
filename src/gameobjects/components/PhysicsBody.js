@@ -30,6 +30,8 @@ Phaser.Component.PhysicsBody.preUpdate = function () {
         return false;
     }
 
+    return true;
+
 };
 
 Phaser.Component.PhysicsBody.postUpdate = function () {

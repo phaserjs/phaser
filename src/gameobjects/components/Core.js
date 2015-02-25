@@ -2,8 +2,6 @@ Phaser.Component.Core = function () {};
 
 Phaser.Component.Core.install = function (components) {
 
-    // console.log('install', this);
-
     this.components = {};
 
     for (var i = 0; i < components.length; i++)
@@ -41,8 +39,6 @@ Phaser.Component.Core.init = function (game, x, y, key, frame) {
         this.loadTexture(key, frame);
     }
 
-    // console.log('init', this);
-
 };
 
 Phaser.Component.Core.preUpdate = function () {
@@ -56,6 +52,7 @@ Phaser.Component.Core.preUpdate = function () {
         return false;
     }
 
+    console.log(this.world.y, this.worldTransform.ty);
     this.world.setTo(this.game.camera.x + this.worldTransform.tx, this.game.camera.y + this.worldTransform.ty);
 
     if (this.visible)
@@ -77,6 +74,8 @@ Phaser.Component.Core.preUpdate = function () {
     {
         this.children[i].preUpdate();
     }
+
+    return true;
 
 };
 
