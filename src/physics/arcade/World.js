@@ -56,6 +56,11 @@ Phaser.Physics.Arcade = function (game) {
     this.forceX = false;
 
     /**
+    * @property {number} sortDirection - Used when colliding a Sprite vs. a Group, or a Group vs. a Group, this defines the direction the sort is based on. Default is Phaser.Physics.Arcade.LEFT_RIGHT.
+    */
+    this.sortDirection = Phaser.Physics.Arcade.LEFT_RIGHT;
+
+    /**
     * @property {boolean} skipQuadTree - If true the QuadTree will not be used for any collision. QuadTrees are great if objects are well spread out in your game, otherwise they are a performance hit. If you enable this you can disable on a per body basis via `Body.skipQuadTree`.
     */
     this.skipQuadTree = true;
@@ -82,6 +87,38 @@ Phaser.Physics.Arcade = function (game) {
 };
 
 Phaser.Physics.Arcade.prototype.constructor = Phaser.Physics.Arcade;
+
+/**
+* A constant used for the sortDirection value.
+* Use this if your game world is wide but short and scrolls from the left to the right (ala Mario)
+* @constant
+* @type {number}
+*/
+Phaser.Physics.Arcade.LEFT_RIGHT = 0;
+
+/**
+* A constant used for the sortDirection value.
+* Use this if your game world is wide but short and scrolls from the right to the left (ala Mario backwards)
+* @constant
+* @type {number}
+*/
+Phaser.Physics.Arcade.RIGHT_LEFT = 1;
+
+/**
+* A constant used for the sortDirection value.
+* Use this if your game world is narrow but tall and scrolls from the top to the bottom (ala Dig Dug)
+* @constant
+* @type {number}
+*/
+Phaser.Physics.Arcade.TOP_BOTTOM = 2;
+
+/**
+* A constant used for the sortDirection value.
+* Use this if your game world is narrow but tall and scrolls from the bottom to the top (ala Doodle Jump)
+* @constant
+* @type {number}
+*/
+Phaser.Physics.Arcade.BOTTOM_TOP = 3;
 
 Phaser.Physics.Arcade.prototype = {
 
@@ -378,6 +415,39 @@ Phaser.Physics.Arcade.prototype = {
 
     },
 
+    sort: function (group) {
+
+        if (this.sortDirection === Phaser.Physics.Arcade.LEFT_RIGHT)
+        {
+            //  Game world is say 2000x600 and you start at 0
+            group._hash.sort(function(a, b) {
+                return a.body.x - b.body.x;
+            });
+        }
+        else if (this.sortDirection === Phaser.Physics.Arcade.RIGHT_LEFT)
+        {
+            //  Game world is say 2000x600 and you start at 2000
+            group._hash.sort(function(a, b) {
+                return b.body.x - a.body.x;
+            });
+        }
+        else if (this.sortDirection === Phaser.Physics.Arcade.TOP_BOTTOM)
+        {
+            //  Game world is say 800x2000 and you start at 0
+            group._hash.sort(function(a, b) {
+                return a.body.y - b.body.y;
+            });
+        }
+        else if (this.sortDirection === Phaser.Physics.Arcade.BOTTOM_TOP)
+        {
+            //  Game world is say 800x2000 and you start at 2000
+            group._hash.sort(function(a, b) {
+                return b.body.y - a.body.y;
+            });
+        }
+
+    },
+
     /**
     * Internal collision handler.
     *
@@ -395,12 +465,23 @@ Phaser.Physics.Arcade.prototype = {
         //  Only collide valid objects
         if (typeof object2 === 'undefined' && (object1.type === Phaser.GROUP || object1.type === Phaser.EMITTER))
         {
+            this.sort(object1);
             this.collideGroupVsSelf(object1, collideCallback, processCallback, callbackContext, overlapOnly);
             return;
         }
 
         if (object1 && object2 && object1.exists && object2.exists)
         {
+            if (object1.type === Phaser.GROUP || object1.type === Phaser.EMITTER)
+            {
+                this.sort(object1);
+            }
+
+            if (object2.type === Phaser.GROUP || object2.type === Phaser.EMITTER)
+            {
+                this.sort(object2);
+            }
+
             //  SPRITES
             if (object1.type === Phaser.SPRITE || object1.type === Phaser.TILESPRITE)
             {
@@ -518,13 +599,92 @@ Phaser.Physics.Arcade.prototype = {
             return;
         }
 
-        if (sprite.body.skipQuadTree || this.skipQuadTree)
+        if (this.skipQuadTree || sprite.body.skipQuadTree)
         {
-            for (var i = 0, len = group.children.length; i < len; i++)
+            window.skipped = 0;
+            window.ignored = 0;
+            window.checked = 0;
+
+            for (var i = 0; i < group._hash.length; i++)
             {
-                if (group.children[i] && group.children[i].exists)
+                //  Skip duff entries
+                if (!group._hash[i] || !group._hash[i].exists)
                 {
-                    this.collideSpriteVsSprite(sprite, group.children[i], collideCallback, processCallback, callbackContext, overlapOnly);
+                    continue;
+                }
+
+                //  Skip items either side of the sprite
+                if (this.sortDirection === Phaser.Physics.Arcade.LEFT_RIGHT)
+                {
+                    if (group._hash[i].body.right < sprite.body.x)
+                    {
+                        window.ignored++;
+                        continue;
+                    }
+                    else if (sprite.body.right < group._hash[i].body.x)
+                    {
+                        window.skipped = group._hash.length - i;
+                        break;
+                    }
+                    else
+                    {
+                        window.checked++;
+                        this.collideSpriteVsSprite(sprite, group._hash[i], collideCallback, processCallback, callbackContext, overlapOnly);
+                    }
+                }
+                else if (this.sortDirection === Phaser.Physics.Arcade.RIGHT_LEFT)
+                {
+                    if (group._hash[i].body.x > sprite.body.right)
+                    {
+                        window.ignored++;
+                        continue;
+                    }
+                    else if (sprite.body.x > group._hash[i].body.right)
+                    {
+                        window.skipped = group._hash.length - i;
+                        break;
+                    }
+                    else
+                    {
+                        window.checked++;
+                        this.collideSpriteVsSprite(sprite, group._hash[i], collideCallback, processCallback, callbackContext, overlapOnly);
+                    }
+                }
+                else if (this.sortDirection === Phaser.Physics.Arcade.TOP_BOTTOM)
+                {
+                    if (group._hash[i].body.bottom < sprite.body.y)
+                    {
+                        window.ignored++;
+                        continue;
+                    }
+                    else if (sprite.body.bottom < group._hash[i].body.y)
+                    {
+                        window.skipped = group._hash.length - i;
+                        break;
+                    }
+                    else
+                    {
+                        window.checked++;
+                        this.collideSpriteVsSprite(sprite, group._hash[i], collideCallback, processCallback, callbackContext, overlapOnly);
+                    }
+                }
+                else if (this.sortDirection === Phaser.Physics.Arcade.BOTTOM_TOP)
+                {
+                    if (group._hash[i].body.y > sprite.body.bottom)
+                    {
+                        window.ignored++;
+                        continue;
+                    }
+                    else if (sprite.body.y > group._hash[i].body.bottom)
+                    {
+                        window.skipped = group._hash.length - i;
+                        break;
+                    }
+                    else
+                    {
+                        window.checked++;
+                        this.collideSpriteVsSprite(sprite, group._hash[i], collideCallback, processCallback, callbackContext, overlapOnly);
+                    }
                 }
             }
         }
