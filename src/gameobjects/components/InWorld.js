@@ -47,6 +47,8 @@ Phaser.Component.InWorld.preUpdate = function () {
         }
     }
 
+    return true;
+
 };
 
 Phaser.Component.InWorld.prototype = {

@@ -781,7 +781,8 @@ Phaser.Game.prototype = {
                 this.currentUpdateID = count;
 
                 this.updateLogic(1.0 / this.time.desiredFps);
-                //  Sync the scene graph after _every_ logic update to account for moved game objects                
+
+                //  Sync the scene graph after _every_ logic update to account for moved game objects
                 this.stage.updateTransform();
 
                 count++;

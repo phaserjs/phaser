@@ -136,6 +136,11 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
     this.debug = false;
 
     /**
+    * @property {boolean} exists - Controls if the core game loop and physics update this game object or not.
+    */
+    this.exists = true;
+
+    /**
     * Settings used for debugging and diagnostics.
     *
     * @property {?string} missingImageFill - A tile is rendered as a rectangle using the following fill if a valid tileset/image cannot be found. A value of `null` prevents additional rendering for tiles without a valid tileset image. _This takes effect even when debug rendering for the layer is not enabled._

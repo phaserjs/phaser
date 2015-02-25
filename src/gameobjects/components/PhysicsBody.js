@@ -30,6 +30,8 @@ Phaser.Component.PhysicsBody.preUpdate = function () {
         return false;
     }
 
+    return true;
+
 };
 
 Phaser.Component.PhysicsBody.postUpdate = function () {
@@ -55,59 +57,6 @@ Phaser.Component.PhysicsBody.prototype = {
     * @default
     */
     body: null,
-
-    /**
-    * @property {boolean} _exists - Internal cache var.
-    * @private
-    */
-    _exists: false,
-
-    /**
-    * Sprite.exists controls if the core game loop and physics update this Sprite or not.
-    * When you set Sprite.exists to false it will remove its Body from the physics world (if it has one) and also set Sprite.visible to false.
-    * Setting Sprite.exists to true will re-add the Body to the physics world (if it has a body) and set Sprite.visible to true.
-    *
-    * @name Phaser.Sprite#exists
-    * @property {boolean} exists - If the Sprite is processed by the core game update and physics.
-    */
-    exists: {
-
-        get: function () {
-
-            return this._exists;
-
-        },
-
-        set: function (value) {
-
-            if (value)
-            {
-                //  exists = true
-                this._exists = true;
-
-                if (this.body && this.body.type === Phaser.Physics.P2JS)
-                {
-                    this.body.addToWorld();
-                }
-
-                this.visible = true;
-            }
-            else
-            {
-                //  exists = false
-                this._exists = false;
-
-                if (this.body && this.body.type === Phaser.Physics.P2JS)
-                {
-                    this.body.removeFromWorld();
-                }
-
-                this.visible = false;
-
-            }
-        }
-
-    },
 
     /**
     * The position of the Sprite on the x axis relative to the local coordinates of the parent.
