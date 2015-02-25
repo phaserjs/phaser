@@ -87,7 +87,9 @@ Phaser.Text = function (game, x, y, text, style) {
         'FixedToCamera',
         'InputEnabled',
         'InWorld',
+        'LifeSpan',
         'Overlap',
+        'PhysicsBody',
         'Reset',
         'Smoothed'
     ];
@@ -105,6 +107,11 @@ Phaser.Text = function (game, x, y, text, style) {
 Phaser.Text.prototype = Object.create(PIXI.Text.prototype);
 Phaser.Text.prototype.constructor = Phaser.Text;
 
+Phaser.Text.prototype.preUpdatePhysics = Phaser.Component.PhysicsBody.preUpdate;
+Phaser.Text.prototype.preUpdateLifeSpan = Phaser.Component.LifeSpan.preUpdate;
+Phaser.Text.prototype.preUpdateInWorld = Phaser.Component.InWorld.preUpdate;
+Phaser.Text.prototype.preUpdateCore = Phaser.Component.Core.preUpdate;
+
 /**
 * Automatically called by World.preUpdate.
 * 
@@ -113,10 +120,12 @@ Phaser.Text.prototype.constructor = Phaser.Text;
 */
 Phaser.Text.prototype.preUpdate = function () {
 
-    Phaser.Component.InWorld.preUpdate.call(this);
-    Phaser.Component.Core.preUpdate.call(this);
+    if (!this.preUpdatePhysics() || !this.preUpdateLifeSpan() || !this.preUpdateInWorld())
+    {
+        return false;
+    }
 
-    return true;
+    return this.preUpdateCore();
 
 };
 

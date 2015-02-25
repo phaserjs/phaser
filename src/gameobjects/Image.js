@@ -59,6 +59,9 @@ Phaser.Image = function (game, x, y, key, frame) {
 Phaser.Image.prototype = Object.create(PIXI.Sprite.prototype);
 Phaser.Image.prototype.constructor = Phaser.Image;
 
+Phaser.Image.prototype.preUpdateInWorld = Phaser.Component.InWorld.preUpdate;
+Phaser.Image.prototype.preUpdateCore = Phaser.Component.Core.preUpdate;
+
 /**
 * Automatically called by World.preUpdate.
 *
@@ -67,9 +70,11 @@ Phaser.Image.prototype.constructor = Phaser.Image;
 */
 Phaser.Image.prototype.preUpdate = function() {
 
-    Phaser.Component.InWorld.preUpdate.call(this);
-    Phaser.Component.Core.preUpdate.call(this);
+    if (!this.preUpdateInWorld())
+    {
+        return false;
+    }
 
-    return true;
+    return this.preUpdateCore();
 
 };
