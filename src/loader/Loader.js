@@ -2161,7 +2161,15 @@ Phaser.Loader.prototype = {
                 this.preloadSprite.rect.height = Math.floor((this.preloadSprite.height / 100) * this.progress);
             }
 
-            this.preloadSprite.sprite.updateCrop();
+            if (this.preloadSprite.sprite)
+            {
+                this.preloadSprite.sprite.updateCrop();
+            }
+            else
+            {
+                //  We seem to have lost our sprite - maybe it was destroyed?
+                this.preloadSprite = null;
+            }
         }
 
     },
