@@ -188,13 +188,24 @@ module.exports = function (grunt) {
 
     });
 
-    grunt.registerTask('dist', 'Build all Phaser versions', function() {
+    grunt.registerTask('dist', 'Compile all Phaser versions and copy to the build folder', function() {
 
         grunt.task.run('clean:release');
         grunt.task.run('full');
         grunt.task.run('arcadephysics');
         grunt.task.run('nophysics');
         grunt.task.run('minimum');
+
+    });
+
+    grunt.registerTask('build', 'Compile all Phaser versions just to the dist folder', function() {
+
+        grunt.option('exclude', 'ninja');
+        grunt.option('filename', 'phaser');
+        grunt.option('sourcemap', true);
+        grunt.option('copy', false);
+
+        grunt.task.run('custom');
 
     });
 

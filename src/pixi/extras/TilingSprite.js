@@ -391,19 +391,36 @@ PIXI.TilingSprite.prototype.generateTilingTexture = function(forcePowerOfTwo)
     {
         if (isFrame)
         {
-            targetWidth = frame.width;
-            targetHeight = frame.height;
+            if (texture.crop)
+            {
+                targetWidth = texture.crop.width;
+                targetHeight = texture.crop.height;
+            }
+            else
+            {
+                targetWidth = frame.width;
+                targetHeight = frame.height;
+            }
            
             newTextureRequired = true;
         }
     }
     else
     {
-        targetWidth = PIXI.getNextPowerOfTwo(frame.width);
-        targetHeight = PIXI.getNextPowerOfTwo(frame.height);
+        if (texture.crop)
+        {
+            targetWidth = PIXI.getNextPowerOfTwo(texture.crop.width);
+            targetHeight = PIXI.getNextPowerOfTwo(texture.crop.height);
+        }
+        else
+        {
+            targetWidth = PIXI.getNextPowerOfTwo(frame.width);
+            targetHeight = PIXI.getNextPowerOfTwo(frame.height);
+        }
+            newTextureRequired = true;
 
         //  If the BaseTexture dimensions don't match the texture frame then we need a new texture anyway because it's part of a texture atlas
-        if (frame.width !== targetWidth || frame.height !== targetHeight || texture.baseTexture.width !== targetWidth || texture.baseTexture.height || targetHeight) newTextureRequired = true;
+        // if (frame.width !== targetWidth || frame.height !== targetHeight || texture.baseTexture.width !== targetWidth || texture.baseTexture.height || targetHeight) newTextureRequired = true;
     }
 
     if (newTextureRequired)

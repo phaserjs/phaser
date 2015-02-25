@@ -1,7 +1,7 @@
 /* jshint wsh:true */
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -2240,7 +2240,15 @@ Phaser.Loader.prototype = {
                 this.preloadSprite.rect.height = Math.floor((this.preloadSprite.height / 100) * this.progress);
             }
 
-            this.preloadSprite.sprite.updateCrop();
+            if (this.preloadSprite.sprite)
+            {
+                this.preloadSprite.sprite.updateCrop();
+            }
+            else
+            {
+                //  We seem to have lost our sprite - maybe it was destroyed?
+                this.preloadSprite = null;
+            }
         }
 
     },
