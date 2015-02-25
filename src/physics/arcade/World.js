@@ -191,8 +191,8 @@ Phaser.Physics.Arcade.prototype = {
     */
     updateMotion: function (body) {
 
-        this._velocityDelta = this.computeVelocity(0, body, body.angularVelocity, body.angularAcceleration, body.angularDrag, body.maxAngular) - body.angularVelocity;
-        body.angularVelocity += this._velocityDelta;
+        var velocityDelta = this.computeVelocity(0, body, body.angularVelocity, body.angularAcceleration, body.angularDrag, body.maxAngular) - body.angularVelocity;
+        body.angularVelocity += velocityDelta;
         body.rotation += (body.angularVelocity * this.game.time.physicsElapsed);
 
         body.velocity.x = this.computeVelocity(1, body, body.velocity.x, body.acceleration.x, body.drag.x, body.maxVelocity.x);
@@ -215,13 +215,13 @@ Phaser.Physics.Arcade.prototype = {
     */
     computeVelocity: function (axis, body, velocity, acceleration, drag, max) {
 
-        max = typeof max !== 'undefined' ? max : 10000;
+        if (typeof max === 'undefined') { max = 10000 };
 
-        if (axis == 1 && body.allowGravity)
+        if (axis === 1 && body.allowGravity)
         {
             velocity += (this.gravity.x + body.gravity.x) * this.game.time.physicsElapsed;
         }
-        else if (axis == 2 && body.allowGravity)
+        else if (axis === 2 && body.allowGravity)
         {
             velocity += (this.gravity.y + body.gravity.y) * this.game.time.physicsElapsed;
         }
@@ -232,15 +232,16 @@ Phaser.Physics.Arcade.prototype = {
         }
         else if (drag)
         {
-            this._drag = drag * this.game.time.physicsElapsed;
+            // var _drag = drag * this.game.time.physicsElapsed;
+            drag *= this.game.time.physicsElapsed;
 
-            if (velocity - this._drag > 0)
+            if (velocity - drag > 0)
             {
-                velocity -= this._drag;
+                velocity -= drag;
             }
-            else if (velocity + this._drag < 0)
+            else if (velocity + drag < 0)
             {
-                velocity += this._drag;
+                velocity += drag;
             }
             else
             {
