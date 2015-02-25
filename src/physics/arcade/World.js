@@ -76,6 +76,11 @@ Phaser.Physics.Arcade = function (game) {
     this.quadTree = new Phaser.QuadTree(this.game.world.bounds.x, this.game.world.bounds.y, this.game.world.bounds.width, this.game.world.bounds.height, this.maxObjects, this.maxLevels);
 
     /**
+    * @property {object} stats - Stats collected for each collision iteration.
+    */
+    this.stats = { 'skipped': 0, 'ignored': 0, 'checked': 0 };
+
+    /**
     * @property {number} _total - Internal cache var.
     * @private
     */
@@ -415,34 +420,71 @@ Phaser.Physics.Arcade.prototype = {
 
     },
 
+    /**
+     * This method will sort a Groups _hash array based on the sortDirection property.
+     * 
+     * Each function should return -1 if `a > b`, 1 if `a < b` or 0 if `a === b`.
+     *
+     * @method sort
+     * @protected
+     * @param {Phaser.Group} group - The Group to sort.
+     */
     sort: function (group) {
 
         if (this.sortDirection === Phaser.Physics.Arcade.LEFT_RIGHT)
         {
             //  Game world is say 2000x600 and you start at 0
             group._hash.sort(function(a, b) {
+
+                if (!a.body || !b.body)
+                {
+                    return -1;
+                }
+
                 return a.body.x - b.body.x;
+
             });
         }
         else if (this.sortDirection === Phaser.Physics.Arcade.RIGHT_LEFT)
         {
             //  Game world is say 2000x600 and you start at 2000
             group._hash.sort(function(a, b) {
+
+                if (!a.body || !b.body)
+                {
+                    return -1;
+                }
+
                 return b.body.x - a.body.x;
+
             });
         }
         else if (this.sortDirection === Phaser.Physics.Arcade.TOP_BOTTOM)
         {
             //  Game world is say 800x2000 and you start at 0
             group._hash.sort(function(a, b) {
+
+                if (!a.body || !b.body)
+                {
+                    return -1;
+                }
+
                 return a.body.y - b.body.y;
+
             });
         }
         else if (this.sortDirection === Phaser.Physics.Arcade.BOTTOM_TOP)
         {
             //  Game world is say 800x2000 and you start at 2000
             group._hash.sort(function(a, b) {
+
+                if (!a.body || !b.body)
+                {
+                    return -1;
+                }
+
                 return b.body.y - a.body.y;
+
             });
         }
 
@@ -601,14 +643,14 @@ Phaser.Physics.Arcade.prototype = {
 
         if (this.skipQuadTree || sprite.body.skipQuadTree)
         {
-            window.skipped = 0;
-            window.ignored = 0;
-            window.checked = 0;
+            this.stats.skipped = 0;
+            this.stats.ignored = 0;
+            this.stats.checked = 0;
 
             for (var i = 0; i < group._hash.length; i++)
             {
-                //  Skip duff entries
-                if (!group._hash[i] || !group._hash[i].exists)
+                //  Skip duff entries - we can't check a non-existent sprite or one with no body
+                if (!group._hash[i] || !group._hash[i].exists || !group._hash[i].body)
                 {
                     continue;
                 }
@@ -618,74 +660,57 @@ Phaser.Physics.Arcade.prototype = {
                 {
                     if (group._hash[i].body.right < sprite.body.x)
                     {
-                        window.ignored++;
+                        this.stats.ignored++;
                         continue;
                     }
                     else if (sprite.body.right < group._hash[i].body.x)
                     {
-                        window.skipped = group._hash.length - i;
+                        this.stats.skipped = group._hash.length - i;
                         break;
-                    }
-                    else
-                    {
-                        window.checked++;
-                        this.collideSpriteVsSprite(sprite, group._hash[i], collideCallback, processCallback, callbackContext, overlapOnly);
                     }
                 }
                 else if (this.sortDirection === Phaser.Physics.Arcade.RIGHT_LEFT)
                 {
                     if (group._hash[i].body.x > sprite.body.right)
                     {
-                        window.ignored++;
+                        this.stats.ignored++;
                         continue;
                     }
                     else if (sprite.body.x > group._hash[i].body.right)
                     {
-                        window.skipped = group._hash.length - i;
+                        this.stats.skipped = group._hash.length - i;
                         break;
-                    }
-                    else
-                    {
-                        window.checked++;
-                        this.collideSpriteVsSprite(sprite, group._hash[i], collideCallback, processCallback, callbackContext, overlapOnly);
                     }
                 }
                 else if (this.sortDirection === Phaser.Physics.Arcade.TOP_BOTTOM)
                 {
                     if (group._hash[i].body.bottom < sprite.body.y)
                     {
-                        window.ignored++;
+                        this.stats.ignored++;
                         continue;
                     }
                     else if (sprite.body.bottom < group._hash[i].body.y)
                     {
-                        window.skipped = group._hash.length - i;
+                        this.stats.skipped = group._hash.length - i;
                         break;
-                    }
-                    else
-                    {
-                        window.checked++;
-                        this.collideSpriteVsSprite(sprite, group._hash[i], collideCallback, processCallback, callbackContext, overlapOnly);
                     }
                 }
                 else if (this.sortDirection === Phaser.Physics.Arcade.BOTTOM_TOP)
                 {
                     if (group._hash[i].body.y > sprite.body.bottom)
                     {
-                        window.ignored++;
+                        this.stats.ignored++;
                         continue;
                     }
                     else if (sprite.body.y > group._hash[i].body.bottom)
                     {
-                        window.skipped = group._hash.length - i;
+                        this.stats.skipped = group._hash.length - i;
                         break;
                     }
-                    else
-                    {
-                        window.checked++;
-                        this.collideSpriteVsSprite(sprite, group._hash[i], collideCallback, processCallback, callbackContext, overlapOnly);
-                    }
                 }
+                
+                this.stats.checked++;
+                this.collideSpriteVsSprite(sprite, group._hash[i], collideCallback, processCallback, callbackContext, overlapOnly);
             }
         }
         else
