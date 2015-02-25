@@ -162,7 +162,7 @@ Phaser.Component.Core.prototype = {
     * @property {boolean} _exists - Internal cache var.
     * @private
     */
-    _exists: false,
+    _exists: true,
 
     /**
     * Override and use this function in your own custom objects to handle any update requirements you may have.
