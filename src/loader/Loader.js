@@ -97,16 +97,16 @@ Phaser.Loader = function (game) {
     *   The XHR object _must_ already be open'ed asynchronously (to the stated `url`), but _cannot_ be sent.
     *   The default is created with {@link #createXMLHttpRequest}.
     *
-    * - For Image requests (requestType="image") it must be an Image Element (or Image-like object).
+    * - For Image requests (requestType="image") it must be an Image Element.
     *   The `src` should _not_ be set yet. If manually specified the `crossOrigin` property will _not_ be automatically set.
     *
-    * - For Audio requests (requestType="audio") it must be an Audio Element (or Audio-like object).
+    * - For Audio requests (requestType="audio") it must be an Audio Element.
     *   The `src` should _not_ bet set yet.
     *
-    * @property {Phaser.Signal} onCreateRequest
+    * @property {Phaser.Signal} onCreatingRequest
     * @protected
     */
-    this.onCreateRequest = new Phaser.Signal();
+    this.onCreatingRequest = new Phaser.Signal();
 
     /**
     * This event is dispatched when the loading process starts: before the first file has been requested,
@@ -1632,7 +1632,7 @@ Phaser.Loader.prototype = {
             url: this.transformUrl(file.url, file)
         };
 
-        this.onCreateRequest.dispatch(this, config);
+        this.onCreatingRequest.dispatch(this, config);
 
         var image = config.requestObject;
         var url = config.url;
@@ -1658,6 +1658,7 @@ Phaser.Loader.prototype = {
                 _this.fileComplete(file);
             }
         };
+
         image.onerror = function () {
             if (image.onload)
             {
@@ -1670,7 +1671,7 @@ Phaser.Loader.prototype = {
         // Set only after handlers
         image.src = url;
         
-        // Image is immediately-available/cached
+        // Image is immediately-available/cached - saves having to wait for event
         if (image.complete && image.width && image.height)
         {
             image.onload = null;
@@ -1694,7 +1695,7 @@ Phaser.Loader.prototype = {
             url: this.transformUrl(file.url, file)
         };
 
-        this.onCreateRequest.dispatch(this, config);
+        this.onCreatingRequest.dispatch(this, config);
 
         var audio = config.requestObject;
         var url = config.url;
@@ -1724,6 +1725,7 @@ Phaser.Loader.prototype = {
                 audio.onerror = null;
                 _this.fileComplete(file);
             };
+
             audio.onerror = function () {
                 audio.removeEventListener('canplaythrough', playThroughEvent, false);
                 audio.onerror = null;
@@ -1744,17 +1746,20 @@ Phaser.Loader.prototype = {
     *
     * This will return an XDomainRequest in IE9 if the deprecated {@link #useXDomainRequest} is set.
     *
-    * @method Phaser.Loader#createXMLHttpRequest
+    * @method Phaser.Loader#createXMLHttpRequest   
     * @protected
+    * @param {string} [url=(none)] If specified the XHR object will be open'ed to the specified URL for an asynchronous GET.
     * @returns An XHR (or XHR-like) object.
     */
-    createXMLHttpRequest: function () {
+    createXMLHttpRequest: function (url) {
 
-        var useXhr = !(this.useXDomainRequest && window.XDomainRequest);
+        var ieXDomainRequest = this.useXDomainRequest && window.XDomainRequest;
         
-        if (useXhr)
+        var xhr;
+
+        if (!ieXDomainRequest)
         {
-            return new XMLHttpRequest();
+            xhr = new XMLHttpRequest();
         }
         else
         {
@@ -1766,8 +1771,15 @@ Phaser.Loader.prototype = {
                 console.warn("Phaser.Loader - using XDomainRequest outside of IE 9");
             }
 
-            return new window.XDomainRequest();
+            xhr = new window.XDomainRequest();
         }
+
+        if (url)
+        {
+            xhr.open('GET', url, true);
+        }
+
+        return xhr;
 
     },
 
@@ -1786,6 +1798,8 @@ Phaser.Loader.prototype = {
     */
     xhrLoad: function (file, url, type, onload, onerror) {
 
+        onerror = onerror || this.fileError;
+
         var config = {
             requestType: "xhr",
             requestObject: null,
@@ -1793,7 +1807,7 @@ Phaser.Loader.prototype = {
             url: url
         };
         
-        this.onCreateRequest.dispatch(this, config);
+        this.onCreatingRequest.dispatch(this, config);
 
         // Accept reassignments, if any
         var xhr = config.requestObject;
@@ -1801,8 +1815,7 @@ Phaser.Loader.prototype = {
 
         if (!xhr)
         {
-            xhr = this.createXMLHttpRequest();
-            xhr.open("GET", url, true);
+            xhr = this.createXMLHttpRequest(url);
         }
 
         // Update in-flight file data
@@ -1811,8 +1824,6 @@ Phaser.Loader.prototype = {
 
         // responseType can't be changed
         xhr.responseType = type;
-
-        onerror = onerror || this.fileError;
 
         var _this = this;
 
@@ -1833,7 +1844,9 @@ Phaser.Loader.prototype = {
         };
 
         // Re-decide if it's XDR after created.
-        if (!window.XDomainRequest || !(xhr instanceof window.XDomainRequest))
+        var ieXDomainRequest = window.XDomainRequest && (xhr instanceof window.XDomainRequest);
+
+        if (!ieXDomainRequest)
         {
             // Normal
             xhr.send();
