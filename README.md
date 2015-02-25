@@ -158,6 +158,7 @@ We've also removed functions and properties from Pixi classes that Phaser doesn'
 * Tween.yoyo has a new parameter `yoyoDelay` which allows you to set the delay (in ms) before a tween will start a yoyo.
 * Tween.interpolation has a new parameter `context` which allows you to define the context in which the interpolation function will run.
 * ArraySet.getByKey gets an item from the set based on the property strictly equaling the value given.
+* A State swap now sets the Loader.reset `hard` parameter to `true` by default. This will null any Loader.preloadSprite that may have been set.
 
 ### Bug Fixes
 
