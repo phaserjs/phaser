@@ -69,6 +69,15 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     this.height = 600;
 
     /**
+    * The resolution of your game. This value is read only, but can be changed at start time it via a game configuration object.
+    *
+    * @property {integer} resolution
+    * @readonly
+    * @default
+    */
+    this.resolution = 1;
+
+    /**
     * @property {integer} _width - Private internal var.
     * @private
     */
@@ -460,6 +469,11 @@ Phaser.Game.prototype = {
             this.antialias = config['antialias'];
         }
 
+        if (config['resolution'])
+        {
+            this.resolution = config['resolution'];
+        }
+
         if (config['preserveDrawingBuffer'])
         {
             this.preserveDrawingBuffer = config['preserveDrawingBuffer'];
@@ -683,7 +697,10 @@ Phaser.Game.prototype = {
                     this.renderType = Phaser.CANVAS;
                 }
 
-                this.renderer = new PIXI.CanvasRenderer(this.width, this.height, { "view": this.canvas, "transparent": this.transparent, "resolution": 1, "clearBeforeRender": true });
+                this.renderer = new PIXI.CanvasRenderer(this.width, this.height, { "view": this.canvas, 
+                                                                                    "transparent": this.transparent, 
+                                                                                    "resolution": this.resolution, 
+                                                                                    "clearBeforeRender": true });
                 this.context = this.renderer.context;
             }
             else
@@ -696,7 +713,11 @@ Phaser.Game.prototype = {
             //  They requested WebGL and their browser supports it
             this.renderType = Phaser.WEBGL;
 
-            this.renderer = new PIXI.WebGLRenderer(this.width, this.height, { "view": this.canvas, "transparent": this.transparent, "resolution": 1, "antialias": this.antialias, "preserveDrawingBuffer": this.preserveDrawingBuffer });
+            this.renderer = new PIXI.WebGLRenderer(this.width, this.height, { "view": this.canvas, 
+                                                                                "transparent": this.transparent, 
+                                                                                "resolution": this.resolution, 
+                                                                                "antialias": this.antialias, 
+                                                                                "preserveDrawingBuffer": this.preserveDrawingBuffer });
             this.context = null;
         }
 

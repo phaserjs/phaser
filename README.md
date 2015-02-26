@@ -159,6 +159,7 @@ We've also removed functions and properties from Pixi classes that Phaser doesn'
 * Tween.interpolation has a new parameter `context` which allows you to define the context in which the interpolation function will run.
 * ArraySet.getByKey gets an item from the set based on the property strictly equaling the value given.
 * A State swap now sets the Loader.reset `hard` parameter to `true` by default. This will null any Loader.preloadSprite that may have been set.
+* You can now set a `resolution` property in your Game Configuration object. This will be read when the Pixi renderer instance is created and used to set the resolution within that (#1621)
 
 ### Bug Fixes
 
