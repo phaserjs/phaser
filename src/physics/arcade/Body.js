@@ -83,26 +83,31 @@ Phaser.Physics.Arcade.Body = function (sprite) {
 
     /**
     * @property {number} width - The calculated width of the physics body.
+    * @readonly
     */
     this.width = sprite.width;
 
     /**
     * @property {number} height - The calculated height of the physics body.
+    * @readonly
     */
     this.height = sprite.height;
 
     /**
     * @property {number} halfWidth - The calculated width / 2 of the physics body.
+    * @readonly
     */
     this.halfWidth = Math.abs(sprite.width / 2);
 
     /**
     * @property {number} halfHeight - The calculated height / 2 of the physics body.
+    * @readonly
     */
     this.halfHeight = Math.abs(sprite.height / 2);
 
     /**
     * @property {Phaser.Point} center - The center coordinate of the Physics Body.
+    * @readonly
     */
     this.center = new Phaser.Point(sprite.x + this.halfWidth, sprite.y + this.halfHeight);
 
