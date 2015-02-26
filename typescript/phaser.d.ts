@@ -1,6 +1,6 @@
 /// <reference path="pixi.d.ts" />
 
-// Type definitions for Phaser dev2.3.0 2015-11-02
+// Type definitions for Phaser dev2.3.0 2015-24-02
 // Project: https://github.com/photonstorm/phaser
 
 declare class Phaser {
@@ -18,13 +18,19 @@ declare class Phaser {
     static BITMAPTEXT: number;
     static BUTTON: number;
     static CANVAS_FILTER: number;
+    static CIRCLE: number;
     static ELLIPSE: number;
     static EMITTER: number;
     static GRAPHICS: number;
     static GROUP: number;
     static IMAGE: number;
+    static LINE: number;
+    static MATRIX: number;
+    static POINT: number;
     static POINTER: number;
     static POLYGON: number;
+    static RECTANGLE: number;
+    static ROUNDEDRECTANGLE: number;
     static RENDERTEXTURE: number;
     static RETROFONT: number;
     static SPRITE: number;
@@ -154,6 +160,7 @@ declare module Phaser {
         next: any;
 
         add(item: any): any;
+        getByKey(property: string, value: any): any;
         getIndex(item: any): number;
         exists(item: any): boolean;
         reset(): void;
@@ -283,7 +290,10 @@ declare module Phaser {
         input: Phaser.InputHandler;
         inputEnabled: boolean;
         name: string;
+        previousPosition: Phaser.Point;
+        previousRotation: Phaser.Point;
         position: Phaser.Point;
+        renderOrderID: number;
         text: string;
         tint: number;
         type: number;
@@ -745,6 +755,7 @@ declare module Phaser {
         left: number;
         right: number;
         top: number;
+        type: number;
         width: number;
         x: number;
         y: number;
@@ -1379,6 +1390,8 @@ declare module Phaser {
         height: number;
         name: string;
         position: Phaser.Point;
+        previousPosition: Point;
+        previousRotation: number;
         type: number;
         world: Phaser.Point;
         z: number;
@@ -1408,6 +1421,7 @@ declare module Phaser {
         cameraOffset: Phaser.Point;
         classType: any;
         cursor: any;
+        cursorIndex: number;
         enableBody: boolean;
         enableBodyDebug: boolean;
         exists: boolean;
@@ -1430,7 +1444,7 @@ declare module Phaser {
         addAll(property: string, amount: number, checkAlive: boolean, checkVisible: boolean): void;
         addAt(child: any, index: number, silent?: boolean): any;
         addMultiple(children: any[], silent?: boolean): any[];
-        bringToTop(child: any): any;
+        bringToTop(): PIXI.DisplayObject;
         callAll(method: string, context: any, ...parameters: any[]): void;
         callAllExists(callback: Function, existsValue: boolean, ...parameters: any[]): void;
         callbackFromArray(child: any, callback: Function, length: number): void;
@@ -1458,7 +1472,7 @@ declare module Phaser {
         getTop(): any;
         hasProperty(child: any, key: string[]): boolean;
         iterate(key: string, value: any, returnType: number, callback?: Function, callbackContext?: any, ...args: any[]): any;
-        moveDown(child: any): any;
+        moveDown(): PIXI.DisplayObject;
         moveUp(child: any): any;
         multiplyAll(property: string, amount: number, checkAlive: boolean, checkVisible: boolean): void;
         next(): void;
@@ -1896,6 +1910,7 @@ declare module Phaser {
         slope: number;
         start: Phaser.Point;
         top: number;
+        type: number;
         width: number;
         x: number;
         y: number;
@@ -2018,6 +2033,28 @@ declare module Phaser {
     class LoaderParser {
 
         static bitmapFont(game: Phaser.Game, xml: any, cacheKey: string, xSpacing: number, ySpacing: number): Phaser.FrameData;
+
+    }
+
+    class Matrix extends PIXI.Matrix {
+
+        a: number;
+        b: number;
+        c: number;
+        d: number;
+        tx: number;
+        ty: number;
+        type: number;
+
+        apply(pos: Phaser.Point, newPos?: Phaser.Point): Phaser.Point;
+        applyInverse(pos: Phaser.Point, newPos?: Phaser.Point): Phaser.Point;
+        fromArray(array: number[]);
+        toArray(transpose: boolean): number[];
+        translate(x: number, y: number): Phaser.Matrix;
+        scale(x: number, y: number): Phaser.Matrix;
+        rotate(angle: number): Phaser.Matrix;
+        append(matrix: Phaser.Matrix): Phaser.Matrix;
+        identity(): Phaser.Matrix;
 
     }
 
@@ -2206,6 +2243,8 @@ declare module Phaser {
 
         constructor(game: Phaser.Game, x: number, y: number, key?: any, frame?: any);
 
+        fresh: boolean;
+
         onEmit(): void;
         reset(x: number, y: number, health?: number): Phaser.Particle;
         setAlphaData(data: any[]): void;
@@ -2277,7 +2316,7 @@ declare module Phaser {
                 at(object: any): void;
                 emitParticle(): void;
                 explode(lifespan?: number, quantity?: number): void;
-                flow(lifespan?: number, frequency?: number, quantity?: number): void;
+                flow(lifespan?: number, frequency?: number, quantity?: number, total?: number, immediate?: boolean): void;
                 kill(): void;
                 makeParticles(keys: any, frames?: any, quantity?: number, collide?: boolean, collideWorldBounds?: boolean): Phaser.Particles.Arcade.Emitter;
                 reset(x: number, y: number, health?: number): Phaser.Particles;
@@ -2399,6 +2438,7 @@ declare module Phaser {
                 customSeparateX: boolean;
                 customSeparateY: boolean;
                 deltaMax: Phaser.Point;
+                dirty: boolean;
                 drag: Phaser.Point;
                 embedded: boolean;
                 enable: boolean;
@@ -2596,6 +2636,7 @@ declare module Phaser {
                 pos: Phaser.Point;
                 radius: number;
                 system: Phaser.Physics.Ninja;
+                type: number;
                 velocity: Phaser.Point;
                 width: number;
                 xw: number;
@@ -3248,6 +3289,7 @@ declare module Phaser {
 
         x: number;
         y: number;
+        type: number;
 
         static add(a: Phaser.Point, b: Phaser.Point, out?: Phaser.Point): Phaser.Point;
         static subtract(a: Phaser.Point, b: Phaser.Point, out?: Phaser.Point): Phaser.Point;
@@ -3373,9 +3415,11 @@ declare module Phaser {
 
         clone(output: Phaser.Polygon): Phaser.Polygon;
         contains(x: number, y: number): boolean;
+        flatten(): Phaser.Polygon;
         setTo(points: Phaser.Point[]|number[]): void;
         setTo(...points: Phaser.Point[]): void;
         setTo(...points: number[]): void;
+        toNumberArray(output?: number[]): number[];
 
     }
 
@@ -3450,6 +3494,7 @@ declare module Phaser {
         top: number;
         topLeft: Phaser.Point;
         topRight: Phaser.Point;
+        type: number;
         volume: number;
         width: number;
         x: number;
@@ -3589,6 +3634,7 @@ declare module Phaser {
         fixedToCamera: boolean;
         frame: string|number;
         frameName: string;
+        fresh: boolean;
         game: Phaser.Game;
         input: Phaser.InputHandler;
         inputEnabled: boolean;
@@ -3596,6 +3642,9 @@ declare module Phaser {
         name: string;
         points: Phaser.Point[];
         position: Phaser.Point;
+        previousPosition: Phaser.Point;
+        previousRotation: number;
+        renderOrderID: number;
         segments: Phaser.Rectangle[];
         type: number;
         updateAnimation: Function;
@@ -3612,6 +3661,20 @@ declare module Phaser {
         reset(x: number, y: number): void;
         setFrame(frame: Phaser.Frame): void;
         update(): void;
+
+    }
+
+    class RoundedRectangle extends PIXI.RoundedRectangle {
+
+        x: number;
+        y: number;
+        width: number;
+        height: number;
+        radius: number;
+        type: number;
+
+        clone(): RoundedRectangle;
+        contains(x: number, y: number): boolean;
 
     }
 
@@ -3717,6 +3780,7 @@ declare module Phaser {
         mute: boolean;
         name: string;
         onDecoded: Phaser.Signal;
+        onEndedHandler: () => void;
         onFadeComplete: Phaser.Signal;
         onLoop: Phaser.Signal;
         onMarkerComplete: Phaser.Signal;
@@ -3812,6 +3876,7 @@ declare module Phaser {
         fixedToCamera: boolean;
         frame: string|number;
         frameName: string;
+        fresh: boolean;
         game: Phaser.Game;
         health: number;
         inCamera: boolean;
@@ -3825,6 +3890,8 @@ declare module Phaser {
         offsetX: number;
         offsetY: number;
         outOfBoundsKill: boolean;
+        previousPosition: Phaser.Point;
+        previousRotation: number;
         position: Phaser.Point;
         physicsEnabled: boolean;
         renderOrderID: number;
@@ -3890,7 +3957,7 @@ declare module Phaser {
         setBackgroundColor(backgroundColor: number|string): void;
         update(): void;
         updateTransform(): void;
-        visibilityChange(event: any): void;
+        visibilityChange(event: Event): void;
 
     }
 
@@ -4380,12 +4447,16 @@ declare module Phaser {
         fixedToCamera: boolean;
         frame: string|number;
         frameName: string;
+        fresh: boolean;
         game: Phaser.Game;
         input: Phaser.InputHandler;
         inputEnabled: boolean;
         key: string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture;
         name: string;
         position: Phaser.Point;
+        previousPosition: Phaser.Point;
+        previousRoation: number;
+        renderOrderID: number;
         type: number;
         world: Phaser.Point;
         z: number;
@@ -4547,7 +4618,7 @@ declare module Phaser {
         pendingDelete: boolean;
         properties: any;
         repeatCounter: number;
-        repeatDelay: number;
+        //repeatDelay: number;
         reverse: boolean;
         target: any;
         timeline: Phaser.TweenData[];
@@ -4561,11 +4632,12 @@ declare module Phaser {
         from(properties: any, duration?: number, ease?: Function, autoStart?: boolean, delay?: number, repeat?: number, yoyo?: boolean): Phaser.Tween;
         from(properties: any, duration?: number, ease?: string, autoStart?: boolean, delay?: number, repeat?: number, yoyo?: boolean): Phaser.Tween;
         generateData(frameRate?: number, data?: any): any[];
-        interpolation(interpolation: Function, index?: number): Phaser.Tween;
+        interpolation(interpolation: Function, context?: any, index?: number): Phaser.Tween;
         loop(value?: boolean): Phaser.Tween;
         onUpdateCallback(callback: Function, callbackContext: any): Phaser.Tween;
         pause(): void;
-        repeat(total: number, index?: number): Phaser.Tween;
+        repeat(total: number, repeatDelay?: number, index?: number): Phaser.Tween;
+        repeatDelay(duration: number, index?: number): Phaser.Tween;
         repeatAll(total?: number): Phaser.Tween;
         resume(): void;
         start(index?: number): Phaser.Tween;
@@ -4573,7 +4645,9 @@ declare module Phaser {
         to(properties: any, duration?: number, ease?: Function, autoStart?: boolean, delay?: number, repeat?: number, yoyo?: boolean): Phaser.Tween;
         to(properties: any, duration?: number, ease?: string, autoStart?: boolean, delay?: number, repeat?: number, yoyo?: boolean): Phaser.Tween;
         update(time: number): boolean;
-        yoyo(enable: boolean, index?: number): Phaser.Tween;
+        updateTweenData(property: string, value: number | Function, index?: number): Phaser.Tween;
+        yoyo(enable: boolean, yoyoDelay?: number, index?: number): Phaser.Tween;
+        yoyoDelay(duration: number, index?: number): Phaser.Tween;
 
     }
 
@@ -4592,6 +4666,9 @@ declare module Phaser {
         easingFunction: Function;
         game: Phaser.Game;
         inReverse: boolean;
+        interpolate: boolean;
+        interpolateFunctionContext: Phaser.Math;
+        interpolationContext: Phaser.Math;
         interpolationFunction: Function;
         isRunning: boolean;
         isFrom: boolean;
@@ -4601,6 +4678,7 @@ declare module Phaser {
         startTime: number;
         value: number;
         yoyo: boolean;
+        yoyoDelay: number;
 
         from(properties: any, duration?: number, ease?: Function, delay?: number, repeat?: number, yoyo?: boolean): Phaser.TweenData;
         generateData(frameRate?: number): any[];
