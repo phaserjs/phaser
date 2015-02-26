@@ -697,9 +697,9 @@ Phaser.Game.prototype = {
                     this.renderType = Phaser.CANVAS;
                 }
 
-                this.renderer = new PIXI.CanvasRenderer(this.width, this.height, { "view": this.canvas, 
-                                                                                    "transparent": this.transparent, 
-                                                                                    "resolution": this.resolution, 
+                this.renderer = new PIXI.CanvasRenderer(this.width, this.height, { "view": this.canvas,
+                                                                                    "transparent": this.transparent,
+                                                                                    "resolution": this.resolution,
                                                                                     "clearBeforeRender": true });
                 this.context = this.renderer.context;
             }
@@ -713,10 +713,10 @@ Phaser.Game.prototype = {
             //  They requested WebGL and their browser supports it
             this.renderType = Phaser.WEBGL;
 
-            this.renderer = new PIXI.WebGLRenderer(this.width, this.height, { "view": this.canvas, 
-                                                                                "transparent": this.transparent, 
-                                                                                "resolution": this.resolution, 
-                                                                                "antialias": this.antialias, 
+            this.renderer = new PIXI.WebGLRenderer(this.width, this.height, { "view": this.canvas,
+                                                                                "transparent": this.transparent,
+                                                                                "resolution": this.resolution,
+                                                                                "antialias": this.antialias,
                                                                                 "preserveDrawingBuffer": this.preserveDrawingBuffer });
             this.context = null;
         }
