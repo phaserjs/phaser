@@ -214,8 +214,8 @@ Phaser.Tileset.prototype = {
     updateTileData: function (imageWidth, imageHeight) {
 
         // May be fractional values
-        var rowCount = (imageHeight - this.tileMargin) / (this.tileHeight + this.tileSpacing);
-        var colCount = (imageWidth - this.tileMargin) / (this.tileWidth + this.tileSpacing);
+        var rowCount = (imageHeight - this.tileMargin * 2 + this.tileSpacing) / (this.tileHeight + this.tileSpacing);
+        var colCount = (imageWidth - this.tileMargin * 2 + this.tileSpacing) / (this.tileWidth + this.tileSpacing);
 
         if (rowCount % 1 !== 0 || colCount % 1 !== 0)
         {
