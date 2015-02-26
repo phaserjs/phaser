@@ -60,7 +60,21 @@ Happy coding everyone! See you on the forums.
 
 Version 2.3.0 - "Tarabon" - in dev
 
-### Significant Update
+### Significant Updates
+
+#### Game Objects, Components and Custom Builds
+
+All of the core Game Objects have received a small but important restructuring.
+
+### Arcade Physics
+
+We've updated the core of Arcade Physics in a couple of significant ways. First we've dropped lots of internal private vars and moved to local cars. Equally array lengths are no longer cached and we've been a nice improvement all around as a result.
+
+More importantly we're now using a spacial pre-sort for all Sprite vs. Group and Group vs. Group collisions. You can define the direction the sort will prioritise via the new `sortDirection` property. By default it is set to `Phaser.Physics.Arcade.LEFT_RIGHT`. For example if you are making a horizontally scrolling game, where the player starts on the left and moves to the right, then this sort order will allow the physics system to quickly eliminate any object to the right of the players bounds. This cuts down on the sheer volume of actual collision checks needing to be made. In a densely populated level it can improve fps rate dramatically.
+
+There are 3 other directions available (`RIGHT_LEFT`, `TOP_BOTTOM` and `BOTTOM_TOP`) and which one you need will depend on your game type. If you were making a vertically scrolling shoot-em-up then you'd pick `BOTTOM_TOP` so it sorts all objects above and can bail out quickly.
+
+More importantly you can switch the `sortDirection` at run-time with no loss of performance. Just make sure you do it *before* running any collision checks. So if you had a large 8-way scrolling world you could set the `sortDirection` to match the direction the player was moving in and adjust it in real-time, getting the benefits as you go. My thanks to Aaron Lahman for inspiring this update.
 
 #### Phaser.Loader
 
@@ -85,10 +99,6 @@ This also incorporates the fast-cache path for Images tags that can greatly spee
 Loader.resetLocked is a boolean that allows you to control what happens when the loader is reset, *which happens automatically on a State change*. If you set `resetLocked` to `true` it allows you to populate the loader queue in one State, then swap to another State without having the queue erased, and start the load going from there. After the load has completed you could then disable the lock again as needed.
 
 Thanks to @pnstickne for vast majority of this update.
-
-#### Game Objects
-
-All of the core Game Objects have received a small but important restructuring.
 
 #### Pixi v2
 
