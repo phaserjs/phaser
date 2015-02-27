@@ -789,6 +789,11 @@ Phaser.Sound.prototype = {
                     this._sound.loop = true;
                 }
 
+                if (!this.loop && this.currentMarker === '')
+                {
+                    this._sound.onended = this.onEndedHandler.bind(this);
+                }
+
                 if (typeof this._sound.start === 'undefined')
                 {
                     this._sound.noteGrainOn(0, p, this.duration);
