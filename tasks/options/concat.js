@@ -100,6 +100,11 @@ module.exports = {
         dest: '<%= modules_dir %>/tweens.js'
     },
 
+    tweensStub: {
+        src: require('../manifests/tweens.stub'),
+        dest: '<%= modules_dir %>/tweens.js'
+    },
+
     time: {
         src: require('../manifests/time'),
         dest: '<%= modules_dir %>/time.js'
@@ -117,6 +122,11 @@ module.exports = {
 
     sound: {
         src: require('../manifests/sound'),
+        dest: '<%= modules_dir %>/sound.js'
+    },
+
+    soundStub: {
+        src: require('../manifests/sound.stub'),
         dest: '<%= modules_dir %>/sound.js'
     },
 
@@ -162,6 +172,11 @@ module.exports = {
 
     particles: {
         src: require('../manifests/particles'),
+        dest: '<%= modules_dir %>/particles.js'
+    },
+
+    particlesStub: {
+        src: require('../manifests/particles.stub'),
         dest: '<%= modules_dir %>/particles.js'
     },
 

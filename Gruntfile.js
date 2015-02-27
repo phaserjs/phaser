@@ -30,39 +30,39 @@ module.exports = function (grunt) {
 
         var modules = {
 
-            'pixi':             { 'description': 'Pixi.js',                                     'optional': true },
-            'intro':            { 'description': 'Phaser UMD wrapper',                          'optional': false },
-            'phaser':           { 'description': 'Phaser Globals',                              'optional': false },
-            'geom':             { 'description': 'Geometry Classes',                            'optional': false },
-            'core':             { 'description': 'Phaser Core',                                 'optional': false },
-            'input':            { 'description': 'Input Manager + Mouse and Touch Support',     'optional': false },
-            'gamepad':          { 'description': 'Gamepad Input',                               'optional': true },
-            'keyboard':         { 'description': 'Keyboard Input',                              'optional': true },
-            'components':       { 'description': 'Game Object Components',                      'optional': false },
-            'gameobjects':      { 'description': 'Core Game Objects',                           'optional': false },
-            'bitmapdata':       { 'description': 'BitmapData Game Object',                      'optional': true },
-            'graphics':         { 'description': 'Graphics Game Object',                        'optional': true },
-            'rendertexture':    { 'description': 'RenderTexture Game Object',                   'optional': true },
-            'text':             { 'description': 'Text Game Object (inc. Web Font Support)',    'optional': true },
-            'bitmaptext':       { 'description': 'BitmapText Support',                          'optional': true },
-            'retrofont':        { 'description': 'Retro Fonts Support',                         'optional': true },
-            'system':           { 'description': 'System Classes',                              'optional': false },
-            'math':             { 'description': 'Math, QuadTree and RND',                      'optional': false },
-            'net':              { 'description': 'Network Class',                               'optional': true },
-            'tweens':           { 'description': 'Tween Manager',                               'optional': true },
-            'time':             { 'description': 'Time and Clock Manager',                      'optional': false },
-            'animation':        { 'description': 'Animation and Frame Manager',                 'optional': false },
-            'loader':           { 'description': 'Loader and Cache',                            'optional': false },
-            'sound':            { 'description': 'Sound Support (Web Audio and HTML Audio)',    'optional': true },
-            'debug':            { 'description': 'Debug Class',                                 'optional': true },
-            'utils':            { 'description': 'Core Utilities',                              'optional': false },
-            'physics':          { 'description': 'Physics Manager',                             'optional': false },
-            'arcade':           { 'description': 'Arcade Physics',                              'optional': true },
-            'ninja':            { 'description': 'Ninja Physics',                               'optional': true },
-            'p2':               { 'description': 'P2 Physics',                                  'optional': true },
-            'tilemaps':         { 'description': 'Tilemap Support',                             'optional': true },
-            'particles':        { 'description': 'Arcade Physics Particle System',              'optional': true },
-            'outro':            { 'description': 'Phaser UMD closure',                          'optional': false }
+            'pixi':             { 'description': 'Pixi.js',                                     'optional': true, 'stub': false },
+            'intro':            { 'description': 'Phaser UMD wrapper',                          'optional': false, 'stub': false },
+            'phaser':           { 'description': 'Phaser Globals',                              'optional': false, 'stub': false },
+            'geom':             { 'description': 'Geometry Classes',                            'optional': false, 'stub': false },
+            'core':             { 'description': 'Phaser Core',                                 'optional': false, 'stub': false },
+            'input':            { 'description': 'Input Manager + Mouse and Touch Support',     'optional': false, 'stub': false },
+            'gamepad':          { 'description': 'Gamepad Input',                               'optional': true, 'stub': false },
+            'keyboard':         { 'description': 'Keyboard Input',                              'optional': true, 'stub': false },
+            'components':       { 'description': 'Game Object Components',                      'optional': false, 'stub': false },
+            'gameobjects':      { 'description': 'Core Game Objects',                           'optional': false, 'stub': false },
+            'bitmapdata':       { 'description': 'BitmapData Game Object',                      'optional': true, 'stub': false },
+            'graphics':         { 'description': 'Graphics Game Object',                        'optional': true, 'stub': false },
+            'rendertexture':    { 'description': 'RenderTexture Game Object',                   'optional': true, 'stub': false },
+            'text':             { 'description': 'Text Game Object (inc. Web Font Support)',    'optional': true, 'stub': false },
+            'bitmaptext':       { 'description': 'BitmapText Support',                          'optional': true, 'stub': false },
+            'retrofont':        { 'description': 'Retro Fonts Support',                         'optional': true, 'stub': false },
+            'system':           { 'description': 'System Classes',                              'optional': false, 'stub': false },
+            'math':             { 'description': 'Math, QuadTree and RND',                      'optional': false, 'stub': false },
+            'net':              { 'description': 'Network Class',                               'optional': true, 'stub': false },
+            'tweens':           { 'description': 'Tween Manager',                               'optional': true, 'stub': true },
+            'time':             { 'description': 'Time and Clock Manager',                      'optional': false, 'stub': false },
+            'animation':        { 'description': 'Animation and Frame Manager',                 'optional': false, 'stub': false },
+            'loader':           { 'description': 'Loader and Cache',                            'optional': false, 'stub': false },
+            'sound':            { 'description': 'Sound Support (Web Audio and HTML Audio)',    'optional': true, 'stub': true },
+            'debug':            { 'description': 'Debug Class',                                 'optional': true, 'stub': false },
+            'utils':            { 'description': 'Core Utilities',                              'optional': false, 'stub': false },
+            'physics':          { 'description': 'Physics Manager',                             'optional': false, 'stub': false },
+            'arcade':           { 'description': 'Arcade Physics',                              'optional': true, 'stub': false },
+            'ninja':            { 'description': 'Ninja Physics',                               'optional': true, 'stub': false },
+            'p2':               { 'description': 'P2 Physics',                                  'optional': true, 'stub': false },
+            'tilemaps':         { 'description': 'Tilemap Support',                             'optional': true, 'stub': false },
+            'particles':        { 'description': 'Arcade Physics Particle System',              'optional': true, 'stub': true },
+            'outro':            { 'description': 'Phaser UMD closure',                          'optional': false, 'stub': false }
 
         };
 
@@ -150,9 +150,16 @@ module.exports = function (grunt) {
 
             for (var key in modules)
             {
-                //  If it's required or NOT excluded, add it to the tasks list
-                if (modules[key].optional === false || excludes.indexOf(key) === -1)
+                if (modules[key].stub && excludes.indexOf(key) !== -1)
                 {
+                    //  If the module IS excluded and has a stub, we need that
+                    tasks.push('concat:' + key + 'Stub');
+
+                    filelist.push('<%= modules_dir %>/' + key + '.js');
+                }
+                else if (modules[key].optional === false || excludes.indexOf(key) === -1)
+                {
+                    //  If it's required or NOT excluded, add it to the tasks list
                     tasks.push('concat:' + key);
 
                     filelist.push('<%= modules_dir %>/' + key + '.js');
