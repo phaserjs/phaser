@@ -13,6 +13,8 @@ Phaser.Component.LifeSpan.preUpdate = function () {
         }
     }
 
+    return true;
+
 };
 
 Phaser.Component.LifeSpan.prototype = {

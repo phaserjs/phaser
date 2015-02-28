@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -118,7 +118,7 @@ Phaser.Group = function (game, parent, name, addToStage, enableBody, physicsBody
     this.scale = new Phaser.Point(1, 1);
 
     /**
-    * The current display object that the group cursor is pointing to, if any. (Can be set manully.)
+    * The current display object that the group cursor is pointing to, if any. (Can be set manually.)
     *
     * The cursor is a way to iterate through the children in a Group using {@link #next} and {@link #previous}.
     * @property {?DisplayObject} cursor
@@ -178,6 +178,13 @@ Phaser.Group = function (game, parent, name, addToStage, enableBody, physicsBody
     * @property {Phaser.Point} cameraOffset
     */
     this.cameraOffset = new Phaser.Point();
+
+    /**
+    * An internal array used by physics for fast non z-index destructive sorting.
+    * @property {array} _hash
+    * @private
+    */
+    this._hash = [];
 
     /**
     * The property on which children are sorted.
@@ -251,6 +258,8 @@ Phaser.Group.prototype.add = function (child, silent) {
 
         this.addChild(child);
 
+        this._hash.push(child);
+
         child.z = this.children.length;
 
         if (!silent && child.events)
@@ -318,6 +327,8 @@ Phaser.Group.prototype.addAt = function (child, index, silent) {
 
         this.addChildAt(child, index);
 
+        this._hash.push(child);
+
         this.updateZ();
 
         if (!silent && child.events)
@@ -384,6 +395,8 @@ Phaser.Group.prototype.create = function (x, y, key, frame, exists) {
     child.alive = exists;
 
     this.addChild(child);
+
+    this._hash.push(child);
 
     child.z = this.children.length;
 
@@ -1811,6 +1824,13 @@ Phaser.Group.prototype.remove = function (child, destroy, silent) {
 
     var removed = this.removeChild(child);
 
+    var index = this._hash.indexOf(removed);
+
+    if (index !== -1)
+    {
+        this._hash.splice(index, 1);
+    }
+
     this.updateZ();
 
     if (this.cursor === child)
@@ -1853,12 +1873,21 @@ Phaser.Group.prototype.removeAll = function (destroy, silent) {
 
         var removed = this.removeChild(this.children[0]);
 
+        var index = this._hash.indexOf(removed);
+
+        if (index !== -1)
+        {
+            this._hash.splice(index, 1);
+        }
+
         if (destroy && removed)
         {
             removed.destroy(true);
         }
     }
     while (this.children.length > 0);
+
+    this._hash = [];
 
     this.cursor = null;
 
@@ -1899,6 +1928,13 @@ Phaser.Group.prototype.removeBetween = function (startIndex, endIndex, destroy, 
         }
 
         var removed = this.removeChild(this.children[i]);
+
+        var index = this._hash.indexOf(removed);
+
+        if (index !== -1)
+        {
+            this._hash.splice(index, 1);
+        }
 
         if (destroy && removed)
         {

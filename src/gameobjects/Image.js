@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -58,6 +58,9 @@ var components = [
 
 Phaser.Component.Core.install.call(Phaser.Image.prototype, components);
 
+Phaser.Image.prototype.preUpdateInWorld = Phaser.Component.InWorld.preUpdate;
+Phaser.Image.prototype.preUpdateCore = Phaser.Component.Core.preUpdate;
+
 /**
 * Automatically called by World.preUpdate.
 *
@@ -66,9 +69,11 @@ Phaser.Component.Core.install.call(Phaser.Image.prototype, components);
 */
 Phaser.Image.prototype.preUpdate = function() {
 
-    Phaser.Component.InWorld.preUpdate.call(this);
-    Phaser.Component.Core.preUpdate.call(this);
+    if (!this.preUpdateInWorld())
+    {
+        return false;
+    }
 
-    return true;
+    return this.preUpdateCore();
 
 };

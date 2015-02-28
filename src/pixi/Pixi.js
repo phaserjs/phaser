@@ -37,7 +37,7 @@ PIXI.CANVAS_RENDERER = 1;
  * @property {String} VERSION
  * @static 
  */
-PIXI.VERSION = "v2.2.5c";
+PIXI.VERSION = "v2.2.7c";
 
 // used to create uids for various pixi objects..
 PIXI._UID = 0;

@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -97,13 +97,19 @@ var components = [
     'FixedToCamera',
     'InputEnabled',
     'InWorld',
+    'LifeSpan',
     'Overlap',
+    'PhysicsBody',
     'Reset',
     'Smoothed'
 ];
 
 Phaser.Component.Core.install.call(Phaser.Text.prototype, components);
 
+Phaser.Text.prototype.preUpdatePhysics = Phaser.Component.PhysicsBody.preUpdate;
+Phaser.Text.prototype.preUpdateLifeSpan = Phaser.Component.LifeSpan.preUpdate;
+Phaser.Text.prototype.preUpdateInWorld = Phaser.Component.InWorld.preUpdate;
+Phaser.Text.prototype.preUpdateCore = Phaser.Component.Core.preUpdate;
 
 /**
 * Automatically called by World.preUpdate.
@@ -113,10 +119,12 @@ Phaser.Component.Core.install.call(Phaser.Text.prototype, components);
 */
 Phaser.Text.prototype.preUpdate = function () {
 
-    Phaser.Component.InWorld.preUpdate.call(this);
-    Phaser.Component.Core.preUpdate.call(this);
+    if (!this.preUpdatePhysics() || !this.preUpdateLifeSpan() || !this.preUpdateInWorld())
+    {
+        return false;
+    }
 
-    return true;
+    return this.preUpdateCore();
 
 };
 

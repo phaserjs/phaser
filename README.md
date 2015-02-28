@@ -60,7 +60,21 @@ Happy coding everyone! See you on the forums.
 
 Version 2.3.0 - "Tarabon" - in dev
 
-### Significant Update
+### Significant Updates
+
+#### Game Objects, Components and Custom Builds
+
+All of the core Game Objects have received a small but important restructuring.
+
+### Arcade Physics
+
+We've updated the core of Arcade Physics in a couple of significant ways. First we've dropped lots of internal private vars and moved to local cars. Equally array lengths are no longer cached and we've been a nice improvement all around as a result.
+
+More importantly we're now using a spacial pre-sort for all Sprite vs. Group and Group vs. Group collisions. You can define the direction the sort will prioritise via the new `sortDirection` property. By default it is set to `Phaser.Physics.Arcade.LEFT_RIGHT`. For example if you are making a horizontally scrolling game, where the player starts on the left and moves to the right, then this sort order will allow the physics system to quickly eliminate any object to the right of the players bounds. This cuts down on the sheer volume of actual collision checks needing to be made. In a densely populated level it can improve fps rate dramatically.
+
+There are 3 other directions available (`RIGHT_LEFT`, `TOP_BOTTOM` and `BOTTOM_TOP`) and which one you need will depend on your game type. If you were making a vertically scrolling shoot-em-up then you'd pick `BOTTOM_TOP` so it sorts all objects above and can bail out quickly.
+
+More importantly you can switch the `sortDirection` at run-time with no loss of performance. Just make sure you do it *before* running any collision checks. So if you had a large 8-way scrolling world you could set the `sortDirection` to match the direction the player was moving in and adjust it in real-time, getting the benefits as you go. My thanks to Aaron Lahman for inspiring this update.
 
 #### Phaser.Loader
 
@@ -85,10 +99,6 @@ This also incorporates the fast-cache path for Images tags that can greatly spee
 Loader.resetLocked is a boolean that allows you to control what happens when the loader is reset, *which happens automatically on a State change*. If you set `resetLocked` to `true` it allows you to populate the loader queue in one State, then swap to another State without having the queue erased, and start the load going from there. After the load has completed you could then disable the lock again as needed.
 
 Thanks to @pnstickne for vast majority of this update.
-
-#### Game Objects
-
-All of the core Game Objects have received a small but important restructuring.
 
 #### Pixi v2
 
@@ -120,7 +130,7 @@ We've also removed functions and properties from Pixi classes that Phaser doesn'
 
 ### Updates
 
-* TypeScript definitions fixes and updates (thanks @Phaiax @Bilge @clark-stevenson @TimvdEijnden @belohlavek @ivw @vulvulune)
+* TypeScript definitions fixes and updates (thanks @Phaiax @Bilge @clark-stevenson @TimvdEijnden @belohlavek @ivw @vulvulune @zeh)
 * There is a new TypeScript defs file (phaser.comments.d.ts) which now has all of the jsdocs included! (thanks @vulvulune #1559)
 * Sound.fadeTween is now used for Sound.fadeIn and Sound.fadeOut audio tweens.
 * Sound.stop and Sound.destroy now halt a fade tween if in effect.
@@ -158,6 +168,8 @@ We've also removed functions and properties from Pixi classes that Phaser doesn'
 * Tween.yoyo has a new parameter `yoyoDelay` which allows you to set the delay (in ms) before a tween will start a yoyo.
 * Tween.interpolation has a new parameter `context` which allows you to define the context in which the interpolation function will run.
 * ArraySet.getByKey gets an item from the set based on the property strictly equaling the value given.
+* A State swap now sets the Loader.reset `hard` parameter to `true` by default. This will null any Loader.preloadSprite that may have been set.
+* You can now set a `resolution` property in your Game Configuration object. This will be read when the Pixi renderer instance is created and used to set the resolution within that (#1621)
 
 ### Bug Fixes
 
@@ -189,6 +201,15 @@ We've also removed functions and properties from Pixi classes that Phaser doesn'
 * Graphics.drawEllipse method was missing (thanks @jackrugile #1574)
 * A TweenData wouldn't take into account the `repeatDelay` property when repeating the tween, but now does. A TweenData also has a new property `yoyoDelay` which controls the delay before the yoyo will start, allowing you to set both independently (thanks @DreadKnight #1469)
 * Animation.update skips ahead frames when the system is lagging, however it failed to set the animation to the final frame in the sequence if the animation skipped ahead too far (thanks @richpixel #1628)
+* Loader.preloadSprite had an extra guard added to ensure it didn't try to updateCrop a non-existent sprite (thanks @noidexe #1636)
+* The `TilemapParser` has had its row / column calculations updated to account for margins and and spacing on all sides of the tileset (thanks @zekoff #1642)
+
+### Pixi 2.2.7 Bug Fixes
+
+* SpriteBatch added fix to handle batch context loss on change.
+* RenderTexture resolution fix.
+* WebGL Filter Resolution fix.
+* TilingSprite fixes when masked in canvas mode.
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 
@@ -359,12 +380,10 @@ We don't officially support any version of TypeScript before 1.4, however you ca
 
 Here are some of the features planned for future releases. Not all are promised to be delivered and no timescale is given. But they serve as a good indication of the direction Phaser is heading in.
 
-### Version 2.3 ("Tarabon")
+### Version 2.4
 
-* New parallel asset loader (already started in dev branch)
 * Enhance the State Management, so you can perform non-destructive State swaps and persistence.
 * Updated Text handling
-* Look carefully at the internal structure of Phaser to avoid method repetition (such as Sprite.crop and Image.crop), investigate using mixins to help reduce overall codebase size.
 * Restore Math.interpolateAngles and Math.nearestAngleBetween
 * Scene Manager - json scene parser.
 * Touch Gestures.
@@ -374,12 +393,8 @@ Here are some of the features planned for future releases. Not all are promised 
 * Allow Groups to be InputEnabled? Dragging a Group would be really useful.
 * Cache to localStorage using If-Modified-Since. [See github request](https://github.com/photonstorm/phaser/issues/495)
 * Allow for complex assets like Bitmap Fonts to be stored within a texture atlas.
-
-### Version 2.4
-
+* Add more support for [Legacy Audio Events](https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Media_events)
 * Ability to control DOM elements from the core game and layer them into the game.
-* Game parameters stored in Google Docs.
-* Optimised global Animation manager to cut down on object creation.
 * Flash CC HTML5 export integration.
 * Massively enhance the audio side of Phaser. Take more advantage of Web Audio: echo effects, positional sound, etc.
 * DragonBones support.

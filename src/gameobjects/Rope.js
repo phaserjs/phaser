@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd, Richard Davey
+* @copyright    2015 Photon Storm Ltd, Richard Davey
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -74,6 +74,11 @@ var components = [
 
 Phaser.Component.Core.install.call(Phaser.Rope.prototype, components);
 
+Phaser.Rope.prototype.preUpdatePhysics = Phaser.Component.PhysicsBody.preUpdate;
+Phaser.Rope.prototype.preUpdateLifeSpan = Phaser.Component.LifeSpan.preUpdate;
+Phaser.Rope.prototype.preUpdateInWorld = Phaser.Component.InWorld.preUpdate;
+Phaser.Rope.prototype.preUpdateCore = Phaser.Component.Core.preUpdate;
+
 /**
 * Automatically called by World.preUpdate.
 *
@@ -92,12 +97,12 @@ Phaser.Rope.prototype.preUpdate = function() {
         this.tilePosition.y += this._scroll.y * this.game.time.physicsElapsed;
     }
 
-    Phaser.Component.PhysicsBody.preUpdate.call(this);
-    Phaser.Component.LifeSpan.preUpdate.call(this);
-    Phaser.Component.InWorld.preUpdate.call(this);
-    Phaser.Component.Core.preUpdate.call(this);
+    if (!this.preUpdatePhysics() || !this.preUpdateLifeSpan() || !this.preUpdateInWorld())
+    {
+        return false;
+    }
 
-    return true;
+    return this.preUpdateCore();
 
 };
 

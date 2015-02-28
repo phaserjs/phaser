@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -214,8 +214,8 @@ Phaser.Tileset.prototype = {
     updateTileData: function (imageWidth, imageHeight) {
 
         // May be fractional values
-        var rowCount = (imageHeight - this.tileMargin) / (this.tileHeight + this.tileSpacing);
-        var colCount = (imageWidth - this.tileMargin) / (this.tileWidth + this.tileSpacing);
+        var rowCount = (imageHeight - this.tileMargin * 2 + this.tileSpacing) / (this.tileHeight + this.tileSpacing);
+        var colCount = (imageWidth - this.tileMargin * 2 + this.tileSpacing) / (this.tileWidth + this.tileSpacing);
 
         if (rowCount % 1 !== 0 || colCount % 1 !== 0)
         {

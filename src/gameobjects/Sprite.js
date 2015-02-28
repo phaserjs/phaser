@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -65,6 +65,10 @@ var components = [
 
 Phaser.Component.Core.install.call(Phaser.Sprite.prototype, components);
 
+Phaser.Sprite.prototype.preUpdatePhysics = Phaser.Component.PhysicsBody.preUpdate;
+Phaser.Sprite.prototype.preUpdateLifeSpan = Phaser.Component.LifeSpan.preUpdate;
+Phaser.Sprite.prototype.preUpdateInWorld = Phaser.Component.InWorld.preUpdate;
+Phaser.Sprite.prototype.preUpdateCore = Phaser.Component.Core.preUpdate;
 
 /**
 * Automatically called by World.preUpdate.
@@ -75,11 +79,11 @@ Phaser.Component.Core.install.call(Phaser.Sprite.prototype, components);
 */
 Phaser.Sprite.prototype.preUpdate = function() {
 
-    Phaser.Component.PhysicsBody.preUpdate.call(this);
-    Phaser.Component.LifeSpan.preUpdate.call(this);
-    Phaser.Component.InWorld.preUpdate.call(this);
-    Phaser.Component.Core.preUpdate.call(this);
+    if (!this.preUpdatePhysics() || !this.preUpdateLifeSpan() || !this.preUpdateInWorld())
+    {
+        return false;
+    }
 
-    return true;
+    return this.preUpdateCore();
 
 };
