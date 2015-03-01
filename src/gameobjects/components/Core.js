@@ -46,6 +46,12 @@ Phaser.Component.Core.init = function (game, x, y, key, frame) {
 
     this._bounds = new Phaser.Rectangle();
 
+    if (this.components.PhysicsBody)
+    {
+        // Enable-body checks for hasOwnProperty; makes sure to lift property from prototype.
+        this.body = this.body;
+    }
+
     if (this.components.Animation)
     {
         this.animations = new Phaser.AnimationManager(this);

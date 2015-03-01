@@ -342,7 +342,10 @@ Phaser.Utils = {
 
     /**
     * Mixes in an existing mixin object with the target.
-    * Prototype values with that have either `get` or `set` functions are created as properties via defineProperty.
+    *
+    * Values in the mixin that have either `get` or `set` functions are created as properties via `defineProperty`
+    * _except_ if they also define a `clone` method - if a clone method is defined that is called instead and
+    * the result is assigned directly.
     *
     * @method Phaser.Utils.mixinPrototype
     * @param {object} target - The target object to receive the new functions.
@@ -364,29 +367,31 @@ Phaser.Utils = {
             var key = mixinKeys[i];
             var value = mixin[key];
 
-            if (!replace && target[key])
+            if (!replace && (key in target))
             {
+                //  Not overwriting existing property
                 continue;
             }
             else
             {
-                if (value && typeof value.clone === 'function')
+                if (value &&
+                    (typeof value.get === 'function' || typeof value.set === 'function'))
                 {
-                    target[key] = value.clone();
-                }
-                else
-                {
-                    //  Breaks in classes like Phaser.Point which has a 'set' function! Hence the clone exception above
-                    if (value && (typeof value.get === 'function' || typeof value.set === 'function'))
+                    //  Special case for classes like Phaser.Point which has a 'set' function!
+                    if (typeof value.clone === 'function')
                     {
-                        Object.defineProperty(target, key, value);
+                        target[key] = value.clone();
                         // console.log('def prop', key, 'to', value);
                     }
                     else
                     {
-                        target[key] = value;
-                        // console.log('set', key, 'to', value);
+                        Object.defineProperty(target, key, value);
                     }
+                }
+                else
+                {
+                    target[key] = value;
+                    // console.log('set', key, 'to', value);
                 }
             }
         }
