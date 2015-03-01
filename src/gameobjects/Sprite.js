@@ -14,6 +14,25 @@
 * @class Phaser.Sprite
 * @constructor
 * @extends PIXI.Sprite
+* @extends Phaser.Component.Core
+* @extends Phaser.Component.Angle
+* @extends Phaser.Component.Animation
+* @extends Phaser.Component.AutoCull
+* @extends Phaser.Component.Bounds
+* @extends Phaser.Component.BringToTop
+* @extends Phaser.Component.Crop
+* @extends Phaser.Component.Delta
+* @extends Phaser.Component.Destroy
+* @extends Phaser.Component.FixedToCamera
+* @extends Phaser.Component.InputEnabled
+* @extends Phaser.Component.InWorld
+* @extends Phaser.Component.LifeSpan
+* @extends Phaser.Component.LoadTexture
+* @extends Phaser.Component.Overlap
+* @extends Phaser.Component.PhysicsBody
+* @extends Phaser.Component.Reset
+* @extends Phaser.Component.ScaleMinMax
+* @extends Phaser.Component.Smoothed
 * @param {Phaser.Game} game - A reference to the currently running game.
 * @param {number} x - The x coordinate (in world space) to position the Sprite at.
 * @param {number} y - The y coordinate (in world space) to position the Sprite at.
@@ -74,7 +93,7 @@ Phaser.Sprite.prototype.preUpdateCore = Phaser.Component.Core.preUpdate;
 /**
 * Automatically called by World.preUpdate.
 *
-* @method Phaser.Sprite#preUpdate
+* @method
 * @memberof Phaser.Sprite
 * @return {boolean} True if the Sprite was rendered, otherwise false.
 */

@@ -1,3 +1,8 @@
+/**
+* Smoothed Component Features.
+*
+* @class
+*/
 Phaser.Component.Smoothed = function () {};
 
 Phaser.Component.Smoothed.prototype = {
@@ -5,7 +10,6 @@ Phaser.Component.Smoothed.prototype = {
     /**
     * Enable or disable texture smoothing for this Sprite. Only works for bitmap/image textures. Smoothing is enabled by default.
     *
-    * @name Phaser.Sprite#smoothed
     * @property {boolean} smoothed - Set to true to smooth the texture of this Sprite, or false to disable smoothing (great for pixel art)
     */
     smoothed: {

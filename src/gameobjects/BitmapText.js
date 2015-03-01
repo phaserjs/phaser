@@ -14,6 +14,17 @@
 * @class Phaser.BitmapText
 * @constructor
 * @extends PIXI.BitmapText
+* @extends Phaser.Component.Core
+* @extends Phaser.Component.Angle
+* @extends Phaser.Component.AutoCull
+* @extends Phaser.Component.Bounds
+* @extends Phaser.Component.Destroy
+* @extends Phaser.Component.FixedToCamera
+* @extends Phaser.Component.InputEnabled
+* @extends Phaser.Component.InWorld
+* @extends Phaser.Component.LifeSpan
+* @extends Phaser.Component.PhysicsBody
+* @extends Phaser.Component.Reset
 * @param {Phaser.Game} game - A reference to the currently running game.
 * @param {number} x - X position of the new bitmapText object.
 * @param {number} y - Y position of the new bitmapText object.

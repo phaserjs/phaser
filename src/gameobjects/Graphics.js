@@ -10,6 +10,17 @@
 * @class Phaser.Graphics
 * @constructor
 * @extends PIXI.Graphics
+* @extends Phaser.Component.Core
+* @extends Phaser.Component.Angle
+* @extends Phaser.Component.AutoCull
+* @extends Phaser.Component.Bounds
+* @extends Phaser.Component.Destroy
+* @extends Phaser.Component.FixedToCamera
+* @extends Phaser.Component.InputEnabled
+* @extends Phaser.Component.InWorld
+* @extends Phaser.Component.LifeSpan
+* @extends Phaser.Component.PhysicsBody
+* @extends Phaser.Component.Reset
 * @param {Phaser.Game} game Current game instance.
 * @param {number} x - X position of the new graphics object.
 * @param {number} y - Y position of the new graphics object.

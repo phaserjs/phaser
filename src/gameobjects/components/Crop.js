@@ -1,3 +1,8 @@
+/**
+* Crop Component Features.
+*
+* @class
+*/
 Phaser.Component.Crop = function () {};
 
 Phaser.Component.Crop.prototype = {
@@ -24,8 +29,7 @@ Phaser.Component.Crop.prototype = {
     * The rectangle object given to this method can be either a Phaser.Rectangle or any object so long as it has public x, y, width and height properties.
     * A reference to the rectangle is stored in Sprite.cropRect unless the `copy` parameter is `true` in which case the values are duplicated to a local object.
     *
-    * @method Phaser.Sprite#crop
-    * @memberof Phaser.Sprite
+    * @method
     * @param {Phaser.Rectangle} rect - The Rectangle used during cropping. Pass null or no parameters to clear a previously set crop rectangle.
     * @param {boolean} [copy=false] - If false Sprite.cropRect will be a reference to the given rect. If true it will copy the rect values into a local Sprite.cropRect object.
     */
@@ -64,8 +68,7 @@ Phaser.Component.Crop.prototype = {
     * If you have set a crop rectangle on this Sprite via Sprite.crop and since modified the Sprite.cropRect property (or the rectangle it references)
     * then you need to update the crop frame by calling this method.
     *
-    * @method Phaser.Sprite#updateCrop
-    * @memberof Phaser.Sprite
+    * @method
     */
     updateCrop: function() {
 

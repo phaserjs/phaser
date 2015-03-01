@@ -1,3 +1,8 @@
+/**
+* InWorld Component Features.
+*
+* @class
+*/
 Phaser.Component.InWorld = function () {};
 
 Phaser.Component.InWorld.preUpdate = function () {
@@ -77,7 +82,6 @@ Phaser.Component.InWorld.prototype = {
     /**
     * Checks if the Sprite bounds are within the game world, otherwise false if fully outside of it.
     *
-    * @name Phaser.Sprite#inWorld
     * @property {boolean} inWorld - True if the Sprite bounds is within the game world, even if only partially. Otherwise false if fully outside of it.
     * @readonly
     */

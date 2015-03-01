@@ -11,6 +11,20 @@
 * @class Phaser.TileSprite
 * @constructor
 * @extends PIXI.TilingSprite
+* @extends Phaser.Component.Core
+* @extends Phaser.Component.Angle
+* @extends Phaser.Component.Animation
+* @extends Phaser.Component.AutoCull
+* @extends Phaser.Component.Bounds
+* @extends Phaser.Component.Destroy
+* @extends Phaser.Component.FixedToCamera
+* @extends Phaser.Component.InputEnabled
+* @extends Phaser.Component.InWorld
+* @extends Phaser.Component.LoadTexture
+* @extends Phaser.Component.Overlap
+* @extends Phaser.Component.PhysicsBody
+* @extends Phaser.Component.Reset
+* @extends Phaser.Component.Smoothed
 * @param {Phaser.Game} game - A reference to the currently running game.
 * @param {number} x - The x coordinate (in world space) to position the TileSprite at.
 * @param {number} y - The y coordinate (in world space) to position the TileSprite at.
