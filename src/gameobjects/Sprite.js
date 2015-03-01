@@ -35,36 +35,35 @@ Phaser.Sprite = function (game, x, y, key, frame) {
 
     PIXI.Sprite.call(this, PIXI.TextureCache['__default']);
 
-    Phaser.Utils.mixinPrototype(this, Phaser.Component.Core.prototype);
-
-    var components = [
-        'Angle',
-        'Animation',
-        'AutoCull',
-        'Bounds',
-        'BringToTop',
-        'Crop',
-        'Delta',
-        'Destroy',
-        'FixedToCamera',
-        'InputEnabled',
-        'InWorld',
-        'LifeSpan',
-        'LoadTexture',
-        'Overlap',
-        'PhysicsBody',
-        'Reset',
-        'ScaleMinMax',
-        'Smoothed'
-    ];
-
-    Phaser.Component.Core.install.call(this, components);
     Phaser.Component.Core.init.call(this, game, x, y, key, frame);
 
 };
 
 Phaser.Sprite.prototype = Object.create(PIXI.Sprite.prototype);
 Phaser.Sprite.prototype.constructor = Phaser.Sprite;
+
+var components = [
+    'Angle',
+    'Animation',
+    'AutoCull',
+    'Bounds',
+    'BringToTop',
+    'Crop',
+    'Delta',
+    'Destroy',
+    'FixedToCamera',
+    'InputEnabled',
+    'InWorld',
+    'LifeSpan',
+    'LoadTexture',
+    'Overlap',
+    'PhysicsBody',
+    'Reset',
+    'ScaleMinMax',
+    'Smoothed'
+];
+
+Phaser.Component.Core.install.call(Phaser.Sprite.prototype, components);
 
 Phaser.Sprite.prototype.preUpdatePhysics = Phaser.Component.PhysicsBody.preUpdate;
 Phaser.Sprite.prototype.preUpdateLifeSpan = Phaser.Component.LifeSpan.preUpdate;

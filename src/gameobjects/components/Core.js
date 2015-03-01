@@ -1,6 +1,16 @@
 Phaser.Component.Core = function () {};
 
+/**
+* Installs / registers mixin components.
+*
+* The `this` context should be that of the applicable object instance or prototype.
+*
+* @protected
+*/
 Phaser.Component.Core.install = function (components) {
+
+    // Always install 'Core' first
+    Phaser.Utils.mixinPrototype(this, Phaser.Component.Core.prototype);
 
     this.components = {};
 
@@ -15,6 +25,13 @@ Phaser.Component.Core.install = function (components) {
 
 };
 
+/**
+* Initializes the mixin components.
+*
+* The `this` context should be an instance of the component mixin target.
+*
+* @protected
+*/
 Phaser.Component.Core.init = function (game, x, y, key, frame) {
 
     this.game = game;
@@ -28,6 +45,12 @@ Phaser.Component.Core.init = function (game, x, y, key, frame) {
     this.events = new Phaser.Events(this);
 
     this._bounds = new Phaser.Rectangle();
+
+    if (this.components.PhysicsBody)
+    {
+        // Enable-body checks for hasOwnProperty; makes sure to lift property from prototype.
+        this.body = this.body;
+    }
 
     if (this.components.Animation)
     {

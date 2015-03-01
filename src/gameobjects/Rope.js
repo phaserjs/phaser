@@ -44,36 +44,35 @@ Phaser.Rope = function (game, x, y, key, frame, points) {
 
     PIXI.Rope.call(this, key, this.points);
 
-    Phaser.Utils.mixinPrototype(this, Phaser.Component.Core.prototype);
-
-    var components = [
-        'Angle',
-        'Animation',
-        'AutoCull',
-        'Bounds',
-        'BringToTop',
-        'Crop',
-        'Delta',
-        'Destroy',
-        'FixedToCamera',
-        'InputEnabled',
-        'InWorld',
-        'LifeSpan',
-        'LoadTexture',
-        'Overlap',
-        'PhysicsBody',
-        'Reset',
-        'ScaleMinMax',
-        'Smoothed'
-    ];
-
-    Phaser.Component.Core.install.call(this, components);
     Phaser.Component.Core.init.call(this, game, x, y, key, frame);
 
 };
 
 Phaser.Rope.prototype = Object.create(PIXI.Rope.prototype);
 Phaser.Rope.prototype.constructor = Phaser.Rope;
+
+var components = [
+    'Angle',
+    'Animation',
+    'AutoCull',
+    'Bounds',
+    'BringToTop',
+    'Crop',
+    'Delta',
+    'Destroy',
+    'FixedToCamera',
+    'InputEnabled',
+    'InWorld',
+    'LifeSpan',
+    'LoadTexture',
+    'Overlap',
+    'PhysicsBody',
+    'Reset',
+    'ScaleMinMax',
+    'Smoothed'
+];
+
+Phaser.Component.Core.install.call(Phaser.Rope.prototype, components);
 
 Phaser.Rope.prototype.preUpdatePhysics = Phaser.Component.PhysicsBody.preUpdate;
 Phaser.Rope.prototype.preUpdateLifeSpan = Phaser.Component.LifeSpan.preUpdate;

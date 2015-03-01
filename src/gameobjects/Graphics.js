@@ -27,28 +27,27 @@ Phaser.Graphics = function (game, x, y) {
 
     PIXI.Graphics.call(this);
 
-    Phaser.Utils.mixinPrototype(this, Phaser.Component.Core.prototype);
-
-    var components = [
-        'Angle',
-        'AutoCull',
-        'Bounds',
-        'Destroy',
-        'FixedToCamera',
-        'InputEnabled',
-        'InWorld',
-        'LifeSpan',
-        'PhysicsBody',
-        'Reset'
-    ];
-
-    Phaser.Component.Core.install.call(this, components);
     Phaser.Component.Core.init.call(this, game, x, y, '', null);
 
 };
 
 Phaser.Graphics.prototype = Object.create(PIXI.Graphics.prototype);
 Phaser.Graphics.prototype.constructor = Phaser.Graphics;
+
+var components = [
+    'Angle',
+    'AutoCull',
+    'Bounds',
+    'Destroy',
+    'FixedToCamera',
+    'InputEnabled',
+    'InWorld',
+    'LifeSpan',
+    'PhysicsBody',
+    'Reset'
+];
+
+Phaser.Component.Core.install.call(Phaser.Graphics.prototype, components);
 
 /**
 * Automatically called by World.preUpdate.

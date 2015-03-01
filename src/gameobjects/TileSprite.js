@@ -42,31 +42,30 @@ Phaser.TileSprite = function (game, x, y, width, height, key, frame) {
 
     PIXI.TilingSprite.call(this, PIXI.TextureCache['__default'], width, height);
 
-    Phaser.Utils.mixinPrototype(this, Phaser.Component.Core.prototype);
-
-    var components = [
-        'Angle',
-        'Animation',
-        'AutoCull',
-        'Bounds',
-        'Destroy',
-        'FixedToCamera',
-        'InputEnabled',
-        'InWorld',
-        'LoadTexture',
-        'Overlap',
-        'PhysicsBody',
-        'Reset',
-        'Smoothed'
-    ];
-
-    Phaser.Component.Core.install.call(this, components);
     Phaser.Component.Core.init.call(this, game, x, y, key, frame);
 
 };
 
 Phaser.TileSprite.prototype = Object.create(PIXI.TilingSprite.prototype);
 Phaser.TileSprite.prototype.constructor = Phaser.TileSprite;
+
+var components = [
+    'Angle',
+    'Animation',
+    'AutoCull',
+    'Bounds',
+    'Destroy',
+    'FixedToCamera',
+    'InputEnabled',
+    'InWorld',
+    'LoadTexture',
+    'Overlap',
+    'PhysicsBody',
+    'Reset',
+    'Smoothed'
+];
+
+Phaser.Component.Core.install.call(Phaser.TileSprite.prototype, components);
 
 Phaser.TileSprite.prototype.preUpdatePhysics = Phaser.Component.PhysicsBody.preUpdate;
 Phaser.TileSprite.prototype.preUpdateLifeSpan = Phaser.Component.LifeSpan.preUpdate;

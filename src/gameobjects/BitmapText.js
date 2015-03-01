@@ -67,28 +67,27 @@ Phaser.BitmapText = function (game, x, y, font, text, size) {
 
     PIXI.BitmapText.call(this, text);
 
-    Phaser.Utils.mixinPrototype(this, Phaser.Component.Core.prototype);
-
-    var components = [
-        'Angle',
-        'AutoCull',
-        'Bounds',
-        'Destroy',
-        'FixedToCamera',
-        'InputEnabled',
-        'InWorld',
-        'LifeSpan',
-        'PhysicsBody',
-        'Reset'
-    ];
-
-    Phaser.Component.Core.install.call(this, components);
     Phaser.Component.Core.init.call(this, game, x, y, '', null);
 
 };
 
 Phaser.BitmapText.prototype = Object.create(PIXI.BitmapText.prototype);
 Phaser.BitmapText.prototype.constructor = Phaser.BitmapText;
+
+var components = [
+    'Angle',
+    'AutoCull',
+    'Bounds',
+    'Destroy',
+    'FixedToCamera',
+    'InputEnabled',
+    'InWorld',
+    'LifeSpan',
+    'PhysicsBody',
+    'Reset'
+];
+
+Phaser.Component.Core.install.call(Phaser.BitmapText.prototype, components);
 
 /**
 * @method Phaser.BitmapText.prototype.setStyle
