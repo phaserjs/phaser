@@ -1,3 +1,8 @@
+/**
+* Reset Component Features.
+*
+* @class
+*/
 Phaser.Component.Reset = function () {};
 
 /**
@@ -5,8 +10,7 @@ Phaser.Component.Reset = function () {};
 * sets alive, exists, visible and renderable all to true. Also resets the outOfBounds state and health values.
 * If the Sprite has a physics body that too is reset.
 *
-* @method Phaser.Sprite#reset
-* @memberof Phaser.Sprite
+* @method
 * @param {number} x - The x coordinate (in world space) to position the Sprite at.
 * @param {number} y - The y coordinate (in world space) to position the Sprite at.
 * @param {number} [health=1] - The health to give the Sprite. Only applies if the GameObject has the Health component.

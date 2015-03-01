@@ -1,3 +1,8 @@
+/**
+* ScaleMinMax Component Features.
+*
+* @class
+*/
 Phaser.Component.ScaleMinMax = function () {};
 
 Phaser.Component.ScaleMinMax.prototype = {
@@ -25,7 +30,7 @@ Phaser.Component.ScaleMinMax.prototype = {
     /**
      * Adjust scaling limits, if set, to this Sprite.
      *
-     * @method Phaser.Sprite#checkTransform
+     * @method
      * @private
      * @param {PIXI.Matrix} wt - The updated worldTransform matrix.
      */
@@ -74,8 +79,7 @@ Phaser.Component.ScaleMinMax.prototype = {
      * 
      * Call setScaleMinMax(null) to clear both the scaleMin and scaleMax values.
      *
-     * @method Phaser.Sprite#setScaleMinMax
-     * @memberof Phaser.Sprite
+     * @method
      * @param {number|null} minX - The minimum horizontal scale value this Sprite can scale down to.
      * @param {number|null} minY - The minimum vertical scale value this Sprite can scale down to.
      * @param {number|null} maxX - The maximum horizontal scale value this Sprite can scale up to.

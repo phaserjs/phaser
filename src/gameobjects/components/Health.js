@@ -1,3 +1,8 @@
+/**
+* Health Component Features.
+*
+* @class
+*/
 Phaser.Component.Health = function () {};
 
 Phaser.Component.Health.prototype = {
@@ -11,8 +16,7 @@ Phaser.Component.Health.prototype = {
     * Damages the Sprite, this removes the given amount from the Sprites health property.
     * If health is then taken below or is equal to zero `Sprite.kill` is called.
     *
-    * @method Phaser.Sprite#damage
-    * @memberof Phaser.Sprite
+    * @member
     * @param {number} amount - The amount to subtract from the Sprite.health value.
     * @return (Phaser.Sprite) This instance.
     */

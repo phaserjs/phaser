@@ -1,3 +1,8 @@
+/**
+* PhysicsBody Component Features.
+*
+* @class
+*/
 Phaser.Component.PhysicsBody = function () {};
 
 Phaser.Component.PhysicsBody.preUpdate = function () {
@@ -61,7 +66,6 @@ Phaser.Component.PhysicsBody.prototype = {
     /**
     * The position of the Sprite on the x axis relative to the local coordinates of the parent.
     *
-    * @name Phaser.Sprite#x
     * @property {number} x - The position of the Sprite on the x axis relative to the local coordinates of the parent.
     */
     x: {
@@ -88,7 +92,6 @@ Phaser.Component.PhysicsBody.prototype = {
     /**
     * The position of the Sprite on the y axis relative to the local coordinates of the parent.
     *
-    * @name Phaser.Sprite#y
     * @property {number} y - The position of the Sprite on the y axis relative to the local coordinates of the parent.
     */
     y: {
