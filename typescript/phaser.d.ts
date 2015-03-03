@@ -1,6 +1,6 @@
 /// <reference path="pixi.d.ts" />
 
-// Type definitions for Phaser dev2.3.0 2015-24-02
+// Type definitions for Phaser 2.3.0 2015-03-03
 // Project: https://github.com/photonstorm/phaser
 
 declare class Phaser {
@@ -1148,6 +1148,7 @@ declare module Phaser {
         raf: Phaser.RequestAnimationFrame;
         renderer: number;
         renderType: number;
+        resolution: number;
         rnd: Phaser.RandomDataGenerator;
         scale: Phaser.ScaleManager;
         scratch: Phaser.BitmapData;
@@ -2365,6 +2366,10 @@ declare module Phaser {
 
         class Arcade {
 
+            static LEFT_RIGHT: number;
+            static RIGHT_LEFT: number;
+            static TOP_BOTTOM: number;
+            static BOTTOM_TOP: number;
             static OVERLAP_BIAS: number;
             static TILE_BIAS: number;
 
@@ -2379,6 +2384,7 @@ declare module Phaser {
             maxObjects: number;
             maxLevels: number;
             skipQuadTree: boolean;
+            sortDirection: number;
 
             accelerationFromRotation(rotation: number, speed?: number, point?: Phaser.Point): Phaser.Point;
             accelerateToObject(displayObject: any, destination: any, speed?: number, xSpeedMax?: number, ySpeedMax?: number): number;
@@ -2408,6 +2414,7 @@ declare module Phaser {
             separateX(body1: Phaser.Physics.Arcade.Body, body2: Phaser.Physics.Arcade.Body, overlapOnly: boolean): boolean;
             separateY(body1: Phaser.Physics.Arcade.Body, body2: Phaser.Physics.Arcade.Body, overlapOnly: boolean): boolean;
             separateTile(i: number, body: Phaser.Physics.Arcade.Body, tile: Phaser.Tile): boolean;
+            sort(group: Phaser.Group): void;
             tileCheckX(body: Phaser.Physics.Arcade.Body, tile: Phaser.Tile): number;
             tileCheckY(body: Phaser.Physics.Arcade.Body, tile: Phaser.Tile): number;
             updateMotion(body: Phaser.Physics.Arcade.Body): void;
@@ -4366,6 +4373,7 @@ declare module Phaser {
         debugColor: string;
         debugSettings: { missingImageFill: string; debuggedTileOverfill: string; forceFullRedraw: boolean; debugAlpha: number; facingEdgeStroke: string; collidingTileOverfill: string; };
         dirty: boolean;
+        exists: boolean;
         fixedToCamera: boolean;
         game: Phaser.Game;
         index: number;
@@ -4790,6 +4798,11 @@ declare module Phaser {
         isPaused: boolean;
         randomX: number;
         randomY: number;
+        stats: {
+            skipped: number;
+            ignored: number;
+            checked: number;
+        };
         width: number;
 
         boot(): void;
