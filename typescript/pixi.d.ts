@@ -1,4 +1,4 @@
-// Type definitions for PIXI 2.2.0 dev 2015-01-01
+// Type definitions for PIXI 2.2.7 2015-03-03
 // Project: https://github.com/GoodBoyDigital/pixi.js/
 
 declare module PIXI {
