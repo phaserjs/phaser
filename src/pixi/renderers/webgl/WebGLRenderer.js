@@ -281,13 +281,11 @@ PIXI.WebGLRenderer.prototype.initContext = function()
 PIXI.WebGLRenderer.prototype.render = function(stage)
 {
     // no point rendering if our context has been blown up!
-    if(this.contextLost)return;
+    if (this.contextLost) return;
 
     // if rendering a new stage clear the batches..
-    if(this.__stage !== stage)
+    if (this.__stage !== stage)
     {
-        if(stage.interactive)stage.interactionManager.removeEvents();
-
         // TODO make this work
         // dont think this is needed any more?
         this.__stage = stage;
@@ -298,25 +296,6 @@ PIXI.WebGLRenderer.prototype.render = function(stage)
 
     var gl = this.gl;
 
-    // interaction
-    if(stage._interactive)
-    {
-        //need to add some events!
-        if(!stage._interactiveEventsAdded)
-        {
-            stage._interactiveEventsAdded = true;
-            stage.interactionManager.setTarget(this);
-        }
-    }
-    else
-    {
-        if(stage._interactiveEventsAdded)
-        {
-            stage._interactiveEventsAdded = false;
-            stage.interactionManager.setTarget(this);
-        }
-    }
-
     // -- Does this need to be set every frame? -- //
     gl.viewport(0, 0, this.width, this.height);
 
@@ -324,8 +303,8 @@ PIXI.WebGLRenderer.prototype.render = function(stage)
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
     if (this.clearBeforeRender)
-        {
-        if(this.transparent)
+    {
+        if (this.transparent)
         {
             gl.clearColor(0, 0, 0, 0);
         }
