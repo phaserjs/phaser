@@ -494,7 +494,7 @@ PIXI.DisplayObjectContainer.prototype._renderCanvas = function(renderSession)
         renderSession.maskManager.pushMask(this._mask, renderSession);
     }
 
-    for (i = 0; i < this.children.length; i++)
+    for (var i = 0; i < this.children.length; i++)
     {
         this.children[i]._renderCanvas(renderSession);
     }
