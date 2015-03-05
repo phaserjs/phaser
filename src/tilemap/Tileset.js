@@ -159,8 +159,7 @@ Phaser.Tileset.prototype = {
     * @public
     * @return {boolean} True if this tileset contains the given index.
     */
-    containsTileIndex: function (tileIndex)
-    {
+    containsTileIndex: function (tileIndex) {
 
         return (
             tileIndex >= this.firstgid &&
