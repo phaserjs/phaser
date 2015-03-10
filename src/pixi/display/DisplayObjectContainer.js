@@ -31,7 +31,6 @@ PIXI.DisplayObjectContainer = function()
 PIXI.DisplayObjectContainer.prototype = Object.create( PIXI.DisplayObject.prototype );
 PIXI.DisplayObjectContainer.prototype.constructor = PIXI.DisplayObjectContainer;
 
-
 /**
  * The width of the displayObjectContainer, setting this will actually modify the scale to achieve the value set
  *

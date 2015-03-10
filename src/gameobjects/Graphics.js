@@ -60,18 +60,23 @@ var components = [
 
 Phaser.Component.Core.install.call(Phaser.Graphics.prototype, components);
 
+Phaser.Graphics.prototype.preUpdatePhysics = Phaser.Component.PhysicsBody.preUpdate;
+Phaser.Graphics.prototype.preUpdateLifeSpan = Phaser.Component.LifeSpan.preUpdate;
+Phaser.Graphics.prototype.preUpdateInWorld = Phaser.Component.InWorld.preUpdate;
+Phaser.Graphics.prototype.preUpdateCore = Phaser.Component.Core.preUpdate;
+
 /**
 * Automatically called by World.preUpdate.
 * @method Phaser.Graphics.prototype.preUpdate
 */
 Phaser.Graphics.prototype.preUpdate = function () {
 
-    // Phaser.Component.PhysicsBody.preUpdate.call(this);
-    // Phaser.Component.LifeSpan.preUpdate.call(this);
-    Phaser.Component.InWorld.preUpdate.call(this);
-    Phaser.Component.Core.preUpdate.call(this);
+    if (!this.preUpdatePhysics() || !this.preUpdateLifeSpan() || !this.preUpdateInWorld())
+    {
+        return false;
+    }
 
-    return true;
+    return this.preUpdateCore();
 
 };
 
