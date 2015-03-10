@@ -12,7 +12,7 @@
  */
 PIXI.DisplayObjectContainer = function()
 {
-    PIXI.DisplayObject.call( this );
+    PIXI.DisplayObject.call(this);
 
     /**
      * [read-only] The array of children of this container.
@@ -22,8 +22,6 @@ PIXI.DisplayObjectContainer = function()
      * @readOnly
      */
     this.children = [];
-
-    // fast access to update transform..
     
 };
 
@@ -38,9 +36,11 @@ PIXI.DisplayObjectContainer.prototype.constructor = PIXI.DisplayObjectContainer;
  * @type Number
  */
 Object.defineProperty(PIXI.DisplayObjectContainer.prototype, 'width', {
+
     get: function() {
         return this.scale.x * this.getLocalBounds().width;
     },
+
     set: function(value) {
         
         var width = this.getLocalBounds().width;
@@ -66,14 +66,16 @@ Object.defineProperty(PIXI.DisplayObjectContainer.prototype, 'width', {
  * @type Number
  */
 Object.defineProperty(PIXI.DisplayObjectContainer.prototype, 'height', {
+
     get: function() {
         return  this.scale.y * this.getLocalBounds().height;
     },
+
     set: function(value) {
 
         var height = this.getLocalBounds().height;
 
-        if(height !== 0)
+        if (height !== 0)
         {
             this.scale.y = value / height ;
         }
@@ -84,6 +86,7 @@ Object.defineProperty(PIXI.DisplayObjectContainer.prototype, 'height', {
 
         this._height = value;
     }
+
 });
 
 /**

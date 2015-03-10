@@ -17,7 +17,7 @@ PIXI.DisplayObject = function()
      * @property position
      * @type Point
      */
-    this.position = new PIXI.Point();
+    this.position = new PIXI.Point(0, 0);
 
     /**
      * The scale factor of the object.
@@ -25,7 +25,7 @@ PIXI.DisplayObject = function()
      * @property scale
      * @type Point
      */
-    this.scale = new PIXI.Point(1,1);//{x:1, y:1};
+    this.scale = new PIXI.Point(1, 1);
 
     /**
      * The transform callback is an optional callback that if set will be called at the end of the updateTransform method and sent two parameters:
@@ -52,7 +52,7 @@ PIXI.DisplayObject = function()
      * @property pivot
      * @type Point
      */
-    this.pivot = new PIXI.Point(0,0);
+    this.pivot = new PIXI.Point(0, 0);
 
     /**
      * The rotation of the object in radians.
@@ -86,14 +86,6 @@ PIXI.DisplayObject = function()
      * @type Rectangle|Circle|Ellipse|Polygon
      */
     this.hitArea = null;
-
-    /**
-     * This is used to indicate if the displayObject should display a mouse hand cursor on rollover
-     *
-     * @property buttonMode
-     * @type Boolean
-     */
-    this.buttonMode = false;
 
     /**
      * Can this object be rendered
@@ -131,15 +123,6 @@ PIXI.DisplayObject = function()
     this.worldAlpha = 1;
 
     /**
-     * This is the cursor that will be used when the mouse is over this object. To enable this the element must have interaction = true and buttonMode = true
-     *
-     * @property defaultCursor
-     * @type String
-     *
-    */
-    this.defaultCursor = 'pointer';
-
-    /**
      * [read-only] Current transform of the object based on world (parent) factors
      *
      * @property worldTransform
@@ -174,7 +157,7 @@ PIXI.DisplayObject = function()
      * @property filterArea
      * @type Rectangle
      */
-    this.filterArea = null;//new PIXI.Rectangle(0,0,1,1);
+    this.filterArea = null;
 
     /**
      * The original, cached bounds of the object
@@ -197,7 +180,7 @@ PIXI.DisplayObject = function()
     /**
      * The original, cached mask of the object
      *
-     * @property _currentBounds
+     * @property _mask
      * @type Rectangle
      * @private
      */
@@ -227,24 +210,61 @@ PIXI.DisplayObject = function()
 PIXI.DisplayObject.prototype.constructor = PIXI.DisplayObject;
 
 /**
+ * Destroy this DisplayObject.
+ * Removes all references to transformCallbacks, its parent, the stage, filters, bounds, mask and cached Sprites.
+ *
+ * @method destroy
+ */
+PIXI.DisplayObject.prototype.destroy = function()
+{
+    if (this.children)
+    {
+        var i = this.children.length;
+
+        while (i--)
+        {
+            this.children[i].destroy();
+        }
+
+        this.children = [];
+    }
+
+    this.transformCallback = null;
+    this.transformCallbackContext = null;
+    this.hitArea = null;
+    this.parent = null;
+    this.stage = null;
+    this.worldTransform = null;
+    this.filterArea = null;
+    this._bounds = null;
+    this._currentBounds = null;
+    this._mask = null;
+
+    this._destroyCachedSprite();
+};
+
+/**
  * [read-only] Indicates if the sprite is globally visible.
  *
  * @property worldVisible
  * @type Boolean
  */
 Object.defineProperty(PIXI.DisplayObject.prototype, 'worldVisible', {
+
     get: function() {
+
         var item = this;
 
         do
         {
-            if(!item.visible)return false;
+            if (!item.visible) return false;
             item = item.parent;
         }
         while(item);
 
         return true;
     }
+
 });
 
 /**
@@ -256,15 +276,20 @@ Object.defineProperty(PIXI.DisplayObject.prototype, 'worldVisible', {
  * @type Graphics
  */
 Object.defineProperty(PIXI.DisplayObject.prototype, 'mask', {
+
     get: function() {
         return this._mask;
     },
+
     set: function(value) {
 
-        if(this._mask)this._mask.isMask = false;
+        if (this._mask) this._mask.isMask = false;
+
         this._mask = value;
-        if(this._mask)this._mask.isMask = true;
+
+        if (this._mask) this._mask.isMask = true;
     }
+
 });
 
 /**
@@ -320,9 +345,9 @@ Object.defineProperty(PIXI.DisplayObject.prototype, 'cacheAsBitmap', {
 
     set: function(value) {
 
-        if(this._cacheAsBitmap === value)return;
+        if (this._cacheAsBitmap === value) return;
 
-        if(value)
+        if (value)
         {
             this._generateCachedSprite();
         }
@@ -351,10 +376,10 @@ PIXI.DisplayObject.prototype.updateTransform = function()
     var a, b, c, d, tx, ty;
 
     // so if rotation is between 0 then we can simplify the multiplication process..
-    if(this.rotation % PIXI.PI_2)
+    if (this.rotation % PIXI.PI_2)
     {
         // check to see if the rotation is the same as the previous render. This means we only need to use sin and cos when rotation actually changes
-        if(this.rotation !== this.rotationCache)
+        if (this.rotation !== this.rotationCache)
         {
             this.rotationCache = this.rotation;
             this._sr = Math.sin(this.rotation);
@@ -370,7 +395,7 @@ PIXI.DisplayObject.prototype.updateTransform = function()
         ty =  this.position.y;
         
         // check for pivot.. not often used so geared towards that fact!
-        if(this.pivot.x || this.pivot.y)
+        if (this.pivot.x || this.pivot.y)
         {
             tx -= this.pivot.x * a + this.pivot.y * c;
             ty -= this.pivot.x * b + this.pivot.y * d;
@@ -517,7 +542,6 @@ PIXI.DisplayObject.prototype.toGlobal = function(position)
  */
 PIXI.DisplayObject.prototype.toLocal = function(position, from)
 {
-     // 
     if (from)
     {
         position = from.toGlobal(position);
@@ -525,6 +549,7 @@ PIXI.DisplayObject.prototype.toLocal = function(position, from)
 
     // don't need to u[date the lot
     this.displayObjectUpdateTransform();
+
     return this.worldTransform.applyInverse(position);
 };
 
@@ -539,7 +564,7 @@ PIXI.DisplayObject.prototype._renderCachedSprite = function(renderSession)
 {
     this._cachedSprite.worldAlpha = this.worldAlpha;
 
-    if(renderSession.gl)
+    if (renderSession.gl)
     {
         PIXI.Sprite.prototype._renderWebGL.call(this._cachedSprite, renderSession);
     }
@@ -558,9 +583,10 @@ PIXI.DisplayObject.prototype._renderCachedSprite = function(renderSession)
 PIXI.DisplayObject.prototype._generateCachedSprite = function()
 {
     this._cacheAsBitmap = false;
+
     var bounds = this.getLocalBounds();
 
-    if(!this._cachedSprite)
+    if (!this._cachedSprite)
     {
         var renderTexture = new PIXI.RenderTexture(bounds.width | 0, bounds.height | 0);//, renderSession.renderer);
 
@@ -599,7 +625,7 @@ PIXI.DisplayObject.prototype._generateCachedSprite = function()
 */
 PIXI.DisplayObject.prototype._destroyCachedSprite = function()
 {
-    if(!this._cachedSprite)return;
+    if (!this._cachedSprite) return;
 
     this._cachedSprite.texture.destroy(true);
 
@@ -642,12 +668,15 @@ PIXI.DisplayObject.prototype._renderCanvas = function(renderSession)
  * @type Number
  */
 Object.defineProperty(PIXI.DisplayObject.prototype, 'x', {
+
     get: function() {
         return  this.position.x;
     },
+
     set: function(value) {
         this.position.x = value;
     }
+
 });
 
 /**
@@ -657,10 +686,13 @@ Object.defineProperty(PIXI.DisplayObject.prototype, 'x', {
  * @type Number
  */
 Object.defineProperty(PIXI.DisplayObject.prototype, 'y', {
+
     get: function() {
         return  this.position.y;
     },
+
     set: function(value) {
         this.position.y = value;
     }
+
 });
