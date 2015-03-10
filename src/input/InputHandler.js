@@ -264,16 +264,6 @@ Phaser.InputHandler.prototype = {
             this.enabled = true;
             this._wasEnabled = true;
 
-            //  Create the signals the Input component will emit
-            if (this.sprite.events && this.sprite.events.onInputOver === null)
-            {
-                this.sprite.events.onInputOver = new Phaser.Signal();
-                this.sprite.events.onInputOut = new Phaser.Signal();
-                this.sprite.events.onInputDown = new Phaser.Signal();
-                this.sprite.events.onInputUp = new Phaser.Signal();
-                this.sprite.events.onDragStart = new Phaser.Signal();
-                this.sprite.events.onDragStop = new Phaser.Signal();
-            }
         }
 
         this.sprite.events.onAddedToGroup.add(this.addedToGroup, this);
@@ -844,7 +834,7 @@ Phaser.InputHandler.prototype = {
         {
             this._pointerData[pointer.id].isOver = true;
             this._pointerData[pointer.id].isOut = false;
-            this._pointerData[pointer.id].timeOver = this.game.time.now;
+            this._pointerData[pointer.id].timeOver = this.game.time.time;
             this._pointerData[pointer.id].x = pointer.x - this.sprite.x;
             this._pointerData[pointer.id].y = pointer.y - this.sprite.y;
 
@@ -856,7 +846,7 @@ Phaser.InputHandler.prototype = {
 
             if (this.sprite && this.sprite.events)
             {
-                this.sprite.events.onInputOver.dispatch(this.sprite, pointer);
+                this.sprite.events.onInputOver$dispatch(this.sprite, pointer);
             }
         }
 
@@ -879,7 +869,7 @@ Phaser.InputHandler.prototype = {
 
         this._pointerData[pointer.id].isOver = false;
         this._pointerData[pointer.id].isOut = true;
-        this._pointerData[pointer.id].timeOut = this.game.time.now;
+        this._pointerData[pointer.id].timeOut = this.game.time.time;
 
         if (this.useHandCursor && this._pointerData[pointer.id].isDragged === false)
         {
@@ -889,7 +879,7 @@ Phaser.InputHandler.prototype = {
 
         if (this.sprite && this.sprite.events)
         {
-            this.sprite.events.onInputOut.dispatch(this.sprite, pointer);
+            this.sprite.events.onInputOut$dispatch(this.sprite, pointer);
         }
 
     },
@@ -917,11 +907,11 @@ Phaser.InputHandler.prototype = {
 
             this._pointerData[pointer.id].isDown = true;
             this._pointerData[pointer.id].isUp = false;
-            this._pointerData[pointer.id].timeDown = this.game.time.now;
+            this._pointerData[pointer.id].timeDown = this.game.time.time;
 
             if (this.sprite && this.sprite.events)
             {
-                this.sprite.events.onInputDown.dispatch(this.sprite, pointer);
+                this.sprite.events.onInputDown$dispatch(this.sprite, pointer);
             }
 
             //  It's possible the onInputDown event created a new Sprite that is on-top of this one, so we ought to force a Pointer update
@@ -963,7 +953,7 @@ Phaser.InputHandler.prototype = {
         {
             this._pointerData[pointer.id].isDown = false;
             this._pointerData[pointer.id].isUp = true;
-            this._pointerData[pointer.id].timeUp = this.game.time.now;
+            this._pointerData[pointer.id].timeUp = this.game.time.time;
             this._pointerData[pointer.id].downDuration = this._pointerData[pointer.id].timeUp - this._pointerData[pointer.id].timeDown;
 
             //  Only release the InputUp signal if the pointer is still over this sprite
@@ -972,7 +962,7 @@ Phaser.InputHandler.prototype = {
                 //  Release the inputUp signal and provide optional parameter if pointer is still over the sprite or not
                 if (this.sprite && this.sprite.events)
                 {
-                    this.sprite.events.onInputUp.dispatch(this.sprite, pointer, true);
+                    this.sprite.events.onInputUp$dispatch(this.sprite, pointer, true);
                 }
             }
             else
@@ -980,7 +970,7 @@ Phaser.InputHandler.prototype = {
                 //  Release the inputUp signal and provide optional parameter if pointer is still over the sprite or not
                 if (this.sprite && this.sprite.events)
                 {
-                    this.sprite.events.onInputUp.dispatch(this.sprite, pointer, false);
+                    this.sprite.events.onInputUp$dispatch(this.sprite, pointer, false);
                 }
 
                 //  Pointer outside the sprite? Reset the cursor
@@ -1109,7 +1099,7 @@ Phaser.InputHandler.prototype = {
         pointer = pointer || 0;
         delay = delay || 500;
 
-        return (this._pointerData[pointer].isOut && (this.game.time.now - this._pointerData[pointer].timeOut < delay));
+        return (this._pointerData[pointer].isOut && (this.game.time.time - this._pointerData[pointer].timeOut < delay));
 
     },
 
@@ -1141,7 +1131,7 @@ Phaser.InputHandler.prototype = {
         pointer = pointer || 0;
         delay = delay || 500;
 
-        return (this._pointerData[pointer].isUp && (this.game.time.now - this._pointerData[pointer].timeUp < delay));
+        return (this._pointerData[pointer].isUp && (this.game.time.time - this._pointerData[pointer].timeUp < delay));
 
     },
 
@@ -1157,7 +1147,7 @@ Phaser.InputHandler.prototype = {
 
         if (this._pointerData[pointer].isOver)
         {
-            return this.game.time.now - this._pointerData[pointer].timeOver;
+            return this.game.time.time - this._pointerData[pointer].timeOver;
         }
 
         return -1;
@@ -1176,7 +1166,7 @@ Phaser.InputHandler.prototype = {
 
         if (this._pointerData[pointer].isDown)
         {
-            return this.game.time.now - this._pointerData[pointer].timeDown;
+            return this.game.time.time - this._pointerData[pointer].timeDown;
         }
 
         return -1;
@@ -1287,7 +1277,7 @@ Phaser.InputHandler.prototype = {
             this.sprite.bringToTop();
         }
 
-        this.sprite.events.onDragStart.dispatch(this.sprite, pointer);
+        this.sprite.events.onDragStart$dispatch(this.sprite, pointer);
 
     },
 
@@ -1351,7 +1341,7 @@ Phaser.InputHandler.prototype = {
             }
         }
 
-        this.sprite.events.onDragStop.dispatch(this.sprite, pointer);
+        this.sprite.events.onDragStop$dispatch(this.sprite, pointer);
 
         if (this.checkPointerOver(pointer) === false)
         {

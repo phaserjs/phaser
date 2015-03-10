@@ -36,6 +36,61 @@ Phaser.TweenManager = function (game) {
     */
     this._add = [];
 
+    this.easeMap = {
+
+        "Power0": Phaser.Easing.Power0,
+        "Power1": Phaser.Easing.Power1,
+        "Power2": Phaser.Easing.Power2,
+        "Power3": Phaser.Easing.Power3,
+        "Power4": Phaser.Easing.Power4,
+
+        "Linear": Phaser.Easing.Linear.None,
+        "Quad": Phaser.Easing.Quadratic.Out,
+        "Cubic": Phaser.Easing.Cubic.Out,
+        "Quart": Phaser.Easing.Quartic.Out,
+        "Quint": Phaser.Easing.Quintic.Out,
+        "Sine": Phaser.Easing.Sinusoidal.Out,
+        "Expo": Phaser.Easing.Exponential.Out,
+        "Circ": Phaser.Easing.Circular.Out,
+        "Elastic": Phaser.Easing.Elastic.Out,
+        "Back": Phaser.Easing.Back.Out,
+        "Bounce": Phaser.Easing.Bounce.Out,
+
+        "Quad.easeIn": Phaser.Easing.Quadratic.In,
+        "Cubic.easeIn": Phaser.Easing.Cubic.In,
+        "Quart.easeIn": Phaser.Easing.Quartic.In,
+        "Quint.easeIn": Phaser.Easing.Quintic.In,
+        "Sine.easeIn": Phaser.Easing.Sinusoidal.In,
+        "Expo.easeIn": Phaser.Easing.Exponential.In,
+        "Circ.easeIn": Phaser.Easing.Circular.In,
+        "Elastic.easeIn": Phaser.Easing.Elastic.In,
+        "Back.easeIn": Phaser.Easing.Back.In,
+        "Bounce.easeIn": Phaser.Easing.Bounce.In,
+
+        "Quad.easeOut": Phaser.Easing.Quadratic.Out,
+        "Cubic.easeOut": Phaser.Easing.Cubic.Out,
+        "Quart.easeOut": Phaser.Easing.Quartic.Out,
+        "Quint.easeOut": Phaser.Easing.Quintic.Out,
+        "Sine.easeOut": Phaser.Easing.Sinusoidal.Out,
+        "Expo.easeOut": Phaser.Easing.Exponential.Out,
+        "Circ.easeOut": Phaser.Easing.Circular.Out,
+        "Elastic.easeOut": Phaser.Easing.Elastic.Out,
+        "Back.easeOut": Phaser.Easing.Back.Out,
+        "Bounce.easeOut": Phaser.Easing.Bounce.Out,
+
+        "Quad.easeInOut": Phaser.Easing.Quadratic.InOut,
+        "Cubic.easeInOut": Phaser.Easing.Cubic.InOut,
+        "Quart.easeInOut": Phaser.Easing.Quartic.InOut,
+        "Quint.easeInOut": Phaser.Easing.Quintic.InOut,
+        "Sine.easeInOut": Phaser.Easing.Sinusoidal.InOut,
+        "Expo.easeInOut": Phaser.Easing.Exponential.InOut,
+        "Circ.easeInOut": Phaser.Easing.Circular.InOut,
+        "Elastic.easeInOut": Phaser.Easing.Elastic.InOut,
+        "Back.easeInOut": Phaser.Easing.Back.InOut,
+        "Bounce.easeInOut": Phaser.Easing.Bounce.InOut
+
+    };
+
     this.game.onPause.add(this._pauseAll, this);
     this.game.onResume.add(this._resumeAll, this);
 
@@ -68,6 +123,55 @@ Phaser.TweenManager.prototype = {
         this._add = [];
 
     },
+    
+    /**
+    * Remove all tweens from a specific object, array of objects or Group.
+    * 
+    * @method Phaser.TweenManager#removeFrom
+    * @param {object|object[]|Phaser.Group} obj - The object you want to remove the tweens from.
+    * @param {boolean} [children=true] - If passing a group, setting this to true will remove the tweens from all of its children instead of the group itself.
+    */
+    removeFrom: function (obj, children) {
+        
+        if (typeof children === 'undefined') { children = true; }
+
+        var i;
+        var len;
+
+        if (Array.isArray(obj))
+        {
+            for (i = 0, len = obj.length; i < len; i++)
+            {
+                this.removeFrom(obj[i]);
+            }
+        }
+        else if (obj.type === Phaser.GROUP && children)
+        {
+            for (var i = 0, len = obj.children.length; i < len; i++)
+            {
+                this.removeFrom(obj.children[i]);
+            }
+        }
+        else
+        {
+            for (i = 0, len = this._tweens.length; i < len; i++)
+            {
+                if (obj === this._tweens[i].target)
+                {
+                    this.remove(this._tweens[i]);
+                }
+            }
+
+            for (i = 0, len = this._add.length; i < len; i++)
+            {
+                if (obj === this._add[i].target)
+                {
+                    this.remove(this._add[i]);
+                }
+            }
+        }
+        
+    },
 
     /**
     * Add a new tween into the TweenManager.
@@ -87,7 +191,7 @@ Phaser.TweenManager.prototype = {
     * Create a tween object for a specific object. The object can be any JavaScript object or Phaser object such as Sprite.
     *
     * @method Phaser.TweenManager#create
-    * @param {Object} object - Object the tween will be run on.
+    * @param {object} object - Object the tween will be run on.
     * @returns {Phaser.Tween} The newly created tween object.
     */
     create: function (object) {
@@ -142,7 +246,7 @@ Phaser.TweenManager.prototype = {
 
         while (i < numTweens)
         {
-            if (this._tweens[i].update(this.game.time.now))
+            if (this._tweens[i].update(this.game.time.time))
             {
                 i++;
             }
@@ -175,7 +279,7 @@ Phaser.TweenManager.prototype = {
     isTweening: function(object) {
 
         return this._tweens.some(function(tween) {
-            return tween._object === object;
+            return tween.target === object;
         });
 
     },

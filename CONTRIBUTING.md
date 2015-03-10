@@ -2,6 +2,7 @@
 
 It's important to us that you feel you can contribute towards the evolution of Phaser. This can take many forms: from helping to fix bugs or improve the docs, to adding in new features to the source. This guide should help you in making that process as smooth as possible.
 
+Before contributing, please read the [code of conduct](https://github.com/photonstorm/phaser/blob/master/CODE_OF_CONDUCT.md).
 
 ##Reporting issues
 
@@ -49,6 +50,11 @@ make your changes and submit a Pull Request:
 - **Never commit new builds.** When making a code change you should always run `grunt` which will rebuild the project so you can test, *however* please do not commit these new builds or your PR will be closed. Builds by default are placed in the `dist` folder, to keep them separate from the `build` folder releases.
 
 - **Only commit relevant changes.** Don't include changes that are not directly relevant to the fix you are making. The more focused a PR is, the faster it will get attention and be merged. Extra files changing only whitespace or trash files will likely get your PR closed.
+
+
+##Coding style preferences are not contributions
+
+If your PR is doing little more than changing the Phaser source code into a format / coding style that you prefer then we will automatically close it. All PRs must adhere to the coding style already set-out across the thousands of lines of code in Phaser. Your personal preferences for how things should "look" or be structured do not apply here, sorry. PRs should fix bugs, fix documentation or add features. No changes for the sake of change.
 
 
 ##I don't really like git / node.js, but I can fix this bug

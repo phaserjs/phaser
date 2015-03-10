@@ -677,6 +677,11 @@ Phaser.Physics.P2.Body.prototype = {
             this.sprite.rotation = this.data.angle;
         }
 
+        if (this.debugBody)
+        {
+            this.debugBody.updateSpriteTransform();
+        }
+
     },
 
     /**
@@ -769,7 +774,7 @@ Phaser.Physics.P2.Body.prototype = {
 
         if (this.debugBody)
         {
-            this.debugBody.destroy();
+            this.debugBody.destroy(true, true);
         }
 
         this.debugBody = null;

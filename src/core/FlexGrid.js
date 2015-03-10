@@ -77,7 +77,7 @@ Phaser.FlexGrid.prototype = {
     /**
      * Sets the core game size. This resets the w/h parameters and bounds.
      *
-     * @method setSize
+     * @method Phaser.FlexGrid#setSize
      * @param {number} width - The new dimensions.
      * @param {number} height - The new dimensions.
      */
@@ -104,10 +104,10 @@ Phaser.FlexGrid.prototype = {
     /**
      * A custom layer is centered on the game and maintains its aspect ratio as it scales up and down.
      *
-     * @method createCustomLayer
+     * @method Phaser.FlexGrid#createCustomLayer
      * @param {number} width - Width of this layer in pixels.
      * @param {number} height - Height of this layer in pixels.
-     * @param {array} [children] - An array of children that are used to populate the FlexLayer.
+     * @param {PIXI.DisplayObject[]} [children] - An array of children that are used to populate the FlexLayer.
      * @return {Phaser.FlexLayer} The Layer object.
      */
     createCustomLayer: function (width, height, children, addToWorld) {
@@ -141,7 +141,7 @@ Phaser.FlexGrid.prototype = {
     /**
      * A fluid layer is centered on the game and maintains its aspect ratio as it scales up and down.
      *
-     * @method createFluidLayer
+     * @method Phaser.FlexGrid#createFluidLayer
      * @param {array} [children] - An array of children that are used to populate the FlexLayer.
      * @return {Phaser.FlexLayer} The Layer object.
      */
@@ -170,7 +170,7 @@ Phaser.FlexGrid.prototype = {
     /**
      * A full layer is placed at 0,0 and extends to the full size of the game. Children are scaled according to the fluid ratios.
      *
-     * @method createFullLayer
+     * @method Phaser.FlexGrid#createFullLayer
      * @param {array} [children] - An array of children that are used to populate the FlexLayer.
      * @return {Phaser.FlexLayer} The Layer object.
      */
@@ -194,8 +194,8 @@ Phaser.FlexGrid.prototype = {
     /**
      * A fixed layer is centered on the game and is the size of the required dimensions and is never scaled.
      *
-     * @method createFixedLayer
-     * @param {array} [children] - An array of children that are used to populate the FlexLayer.
+     * @method Phaser.FlexGrid#createFixedLayer
+     * @param {PIXI.DisplayObject[]} [children] - An array of children that are used to populate the FlexLayer.
      * @return {Phaser.FlexLayer} The Layer object.
      */
     createFixedLayer: function (children) {
@@ -218,7 +218,7 @@ Phaser.FlexGrid.prototype = {
     /**
      * Resets the layer children references
      *
-     * @method reset
+     * @method Phaser.FlexGrid#reset
      */
     reset: function () {
 
@@ -240,11 +240,14 @@ Phaser.FlexGrid.prototype = {
     /**
      * Called when the game container changes dimensions.
      *
-     * @method onResize
+     * @method Phaser.FlexGrid#onResize
      * @param {number} width - The new width of the game container.
      * @param {number} height - The new height of the game container.
      */
     onResize: function (width, height) {
+
+        this.ratioH = width / height;
+        this.ratioV = height / width;
 
         this.refresh(width, height);
 
@@ -253,7 +256,7 @@ Phaser.FlexGrid.prototype = {
     /**
      * Updates all internal vars such as the bounds and scale values.
      *
-     * @method refresh
+     * @method Phaser.FlexGrid#refresh
      */
     refresh: function () {
 
@@ -267,8 +270,8 @@ Phaser.FlexGrid.prototype = {
 
         this.scaleFull.set(this.boundsFull.width / this.width, this.boundsFull.height / this.height);
 
-        this.boundsFull.width = this.manager.width * this.scaleFluidInversed.x;
-        this.boundsFull.height = this.manager.height * this.scaleFluidInversed.y;
+        this.boundsFull.width = Math.round(this.manager.width * this.scaleFluidInversed.x);
+        this.boundsFull.height = Math.round(this.manager.height * this.scaleFluidInversed.y);
 
         this.boundsFluid.centerOn(this.manager.bounds.centerX, this.manager.bounds.centerY);
         this.boundsNone.centerOn(this.manager.bounds.centerX, this.manager.bounds.centerY);
@@ -276,30 +279,27 @@ Phaser.FlexGrid.prototype = {
         this.positionFluid.set(this.boundsFluid.x, this.boundsFluid.y);
         this.positionNone.set(this.boundsNone.x, this.boundsNone.y);
 
-        //  Custom Layer
+    },
 
-        /*
-        if (this.customWidth > 0)
-        {
-            var customMultiplier = Math.min((this.manager.height / this.customHeight), (this.manager.width / this.customWidth));
+    /**
+     * Fits a sprites width to the bounds.
+     *
+     * @method Phaser.FlexGrid#fitSprite
+     * @param {Phaser.Sprite} sprite - The Sprite to fit.
+     */
+    fitSprite: function (sprite) {
 
-            this.boundsCustom.width = Math.round(this.customWidth * customMultiplier);
-            this.boundsCustom.height = Math.round(this.customHeight * customMultiplier);
+        this.manager.scaleSprite(sprite);
 
-            this.boundsCustom.centerOn(this.manager.bounds.centerX, this.manager.bounds.centerY);
-
-            this.scaleCustom.set(this.boundsCustom.width / this.width, this.boundsCustom.height / this.height);
-
-            this.positionCustom.set(this.boundsCustom.x, this.boundsCustom.y);
-        }
-        */
+        sprite.x = this.manager.bounds.centerX;
+        sprite.y = this.manager.bounds.centerY;
 
     },
 
     /**
      * Call in the render function to output the bounds rects.
      *
-     * @method debug
+     * @method Phaser.FlexGrid#debug
      */
     debug: function () {
 

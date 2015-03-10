@@ -5,9 +5,9 @@
 */
 
 /**
-* The Keyboard class handles looking after keyboard input for your game.
-* It will recognise and respond to key presses and dispatch the required events.
-* Please be aware that lots of keyboards are unable to process certain combinations of keys due to hardware
+* The Keyboard class monitors keyboard input and dispatches keyboard events.
+*
+* _Be aware_ that many keyboards are unable to process certain combinations of keys due to hardware
 * limitations known as ghosting. Full details here: http://www.html5gamedevs.com/topic/4876-impossible-to-use-more-than-2-keyboard-input-buttons-at-the-same-time/
 *
 * @class Phaser.Keyboard
@@ -22,24 +22,24 @@ Phaser.Keyboard = function (game) {
     this.game = game;
 
     /**
-    * You can disable all Keyboard Input by setting disabled to true. While true all new input related events will be ignored.
-    * @property {boolean} disabled - The disabled state of the Keyboard.
+    * Keyboard input will only be processed if enabled.
+    * @property {boolean} enabled
     * @default
     */
-    this.disabled = false;
+    this.enabled = true;
 
     /**
-    * @property {Object} event - The most recent DOM event from keydown or keyup. This is updated every time a new key is pressed or released.
+    * @property {object} event - The most recent DOM event from keydown or keyup. This is updated every time a new key is pressed or released.
     */
     this.event = null;
 
     /**
-    * @property {Object} pressEvent - The most recent DOM event from keypress.
+    * @property {object} pressEvent - The most recent DOM event from keypress.
     */
     this.pressEvent = null;
 
     /**
-    * @property {Object} callbackContext - The context under which the callbacks are run.
+    * @property {object} callbackContext - The context under which the callbacks are run.
     */
     this.callbackContext = this;
 
@@ -111,7 +111,7 @@ Phaser.Keyboard.prototype = {
     * Add callbacks to the Keyboard handler so that each time a key is pressed down or released the callbacks are activated.
     *
     * @method Phaser.Keyboard#addCallbacks
-    * @param {Object} context - The context under which the callbacks are run.
+    * @param {object} context - The context under which the callbacks are run.
     * @param {function} [onDown=null] - This callback is invoked every time a key is pressed down.
     * @param {function} [onUp=null] - This callback is invoked every time a key is released.
     * @param {function} [onPress=null] - This callback is invoked every time the onkeypress event is raised.
@@ -342,7 +342,7 @@ Phaser.Keyboard.prototype = {
 
         this.event = event;
 
-        if (this.game.input.disabled || this.disabled)
+        if (!this.game.input.enabled || !this.enabled)
         {
             return;
         }
@@ -380,7 +380,7 @@ Phaser.Keyboard.prototype = {
 
         this.pressEvent = event;
 
-        if (this.game.input.disabled || this.disabled)
+        if (!this.game.input.enabled || !this.enabled)
         {
             return;
         }
@@ -403,7 +403,7 @@ Phaser.Keyboard.prototype = {
 
         this.event = event;
 
-        if (this.game.input.disabled || this.disabled)
+        if (!this.game.input.enabled || !this.enabled)
         {
             return;
         }
@@ -452,47 +452,45 @@ Phaser.Keyboard.prototype = {
     },
 
     /**
-    * Returns the "just pressed" state of the key. Just pressed is considered true if the key was pressed down within the duration given (default 250ms)
-    *
-    * @method Phaser.Keyboard#justPressed
-    * @param {number} keycode - The keycode of the key to remove, i.e. Phaser.Keyboard.UP or Phaser.Keyboard.SPACEBAR
-    * @param {number} [duration=50] - The duration below which the key is considered as being just pressed.
-    * @return {boolean} True if the key is just pressed otherwise false.
+    * Returns `true` if the Key was pressed down within the `duration` value given, or `false` if it either isn't down,
+    * or was pressed down longer ago than then given duration.
+    * 
+    * @method Phaser.Keyboard#downDuration
+    * @param {number} keycode - The keycode of the key to check, i.e. Phaser.Keyboard.UP or Phaser.Keyboard.SPACEBAR
+    * @param {number} [duration=50] - The duration within which the key is considered as being just pressed. Given in ms.
+    * @return {boolean} True if the key was pressed down within the given duration, false if not or null if the Key wasn't found.
     */
-    justPressed: function (keycode, duration) {
-
-        if (typeof duration === 'undefined') { duration = 50; }
+    downDuration: function (keycode, duration) {
 
         if (this._keys[keycode])
         {
-            return this._keys[keycode].justPressed(duration);
+            return this._keys[keycode].downDuration(duration);
         }
         else
         {
-            return false;
+            return null;
         }
 
     },
 
     /**
-    * Returns the "just released" state of the Key. Just released is considered as being true if the key was released within the duration given (default 250ms)
-    *
-    * @method Phaser.Keyboard#justReleased
-    * @param {number} keycode - The keycode of the key to remove, i.e. Phaser.Keyboard.UP or Phaser.Keyboard.SPACEBAR
-    * @param {number} [duration=50] - The duration below which the key is considered as being just released.
-    * @return {boolean} True if the key is just released otherwise false.
+    * Returns `true` if the Key was pressed down within the `duration` value given, or `false` if it either isn't down,
+    * or was pressed down longer ago than then given duration.
+    * 
+    * @method Phaser.Keyboard#upDuration
+    * @param {number} keycode - The keycode of the key to check, i.e. Phaser.Keyboard.UP or Phaser.Keyboard.SPACEBAR
+    * @param {number} [duration=50] - The duration within which the key is considered as being just released. Given in ms.
+    * @return {boolean} True if the key was released within the given duration, false if not or null if the Key wasn't found.
     */
-    justReleased: function (keycode, duration) {
-
-        if (typeof duration === 'undefined') { duration = 50; }
+    upDuration: function (keycode, duration) {
 
         if (this._keys[keycode])
         {
-            return this._keys[keycode].justReleased(duration);
+            return this._keys[keycode].upDuration(duration);
         }
         else
         {
-            return false;
+            return null;
         }
 
     },
@@ -501,8 +499,8 @@ Phaser.Keyboard.prototype = {
     * Returns true of the key is currently pressed down. Note that it can only detect key presses on the web browser.
     *
     * @method Phaser.Keyboard#isDown
-    * @param {number} keycode - The keycode of the key to remove, i.e. Phaser.Keyboard.UP or Phaser.Keyboard.SPACEBAR
-    * @return {boolean} True if the key is currently down.
+    * @param {number} keycode - The keycode of the key to check, i.e. Phaser.Keyboard.UP or Phaser.Keyboard.SPACEBAR
+    * @return {boolean} True if the key is currently down, false if not or null if the Key wasn't found.
     */
     isDown: function (keycode) {
 
@@ -510,12 +508,32 @@ Phaser.Keyboard.prototype = {
         {
             return this._keys[keycode].isDown;
         }
-
-        return false;
+        else
+        {
+            return null;
+        }
 
     }
 
 };
+
+/**
+* If disabled all Keyboard input will be ignored.
+* @property {boolean} disabled
+* @memberof Phaser.Keyboard
+* @default false
+* @deprecated Use {@link Phaser.Keyboard#enabled} instead
+*/
+Object.defineProperty(Phaser.Keyboard.prototype, "disabled", {
+
+    get: function () {
+        return !this.enabled;
+    },
+    set: function (value) {
+        this.enabled = !value;
+    }
+
+});
 
 /**
 * Returns the string value of the most recently pressed key.

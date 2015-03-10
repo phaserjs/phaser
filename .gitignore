@@ -2,10 +2,6 @@
 Thumbs.db
 .DS_Store
 .idea
-Phaser OSX.sublime-project
-Phaser OSX.sublime-workspace
-Phaser.sublime-project
-Phaser.sublime-workspace
 *.suo
 *.sublime-project
 *.sublime-workspace
@@ -16,3 +12,4 @@ node_modules/
 # Build
 dist/
 /npm-debug.log
+out/

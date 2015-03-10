@@ -167,10 +167,8 @@ PIXI.TilingSprite.prototype._renderWebGL = function(renderSession)
 
         if (this.tilingTexture && this.tilingTexture.needsUpdate)
         {
-            //TODO - tweaking
-            PIXI.updateWebGLTexture(this.tilingTexture.baseTexture, renderSession.gl);
+            renderSession.renderer.updateTexture(this.tilingTexture.baseTexture);
             this.tilingTexture.needsUpdate = false;
-           // this.tilingTexture._uvs = null;
         }
     }
     else
@@ -218,8 +216,8 @@ PIXI.TilingSprite.prototype._renderCanvas = function(renderSession)
     var resolution = renderSession.resolution;
 
     context.setTransform(transform.a * resolution,
-                         transform.c * resolution,
                          transform.b * resolution,
+                         transform.c * resolution,
                          transform.d * resolution,
                          transform.tx * resolution,
                          transform.ty * resolution);
@@ -297,8 +295,8 @@ PIXI.TilingSprite.prototype.getBounds = function()
     var worldTransform = this.worldTransform;
 
     var a = worldTransform.a;
-    var b = worldTransform.c;
-    var c = worldTransform.b;
+    var b = worldTransform.b;
+    var c = worldTransform.c;
     var d = worldTransform.d;
     var tx = worldTransform.tx;
     var ty = worldTransform.ty;
@@ -404,7 +402,8 @@ PIXI.TilingSprite.prototype.generateTilingTexture = function(forcePowerOfTwo)
         targetWidth = PIXI.getNextPowerOfTwo(frame.width);
         targetHeight = PIXI.getNextPowerOfTwo(frame.height);
 
-        if (frame.width !== targetWidth || frame.height !== targetHeight) newTextureRequired = true;
+        //  If the BaseTexture dimensions don't match the texture frame then we need a new texture anyway because it's part of a texture atlas
+        if (frame.width !== targetWidth || frame.height !== targetHeight || texture.baseTexture.width !== targetWidth || texture.baseTexture.height || targetHeight) newTextureRequired = true;
     }
 
     if (newTextureRequired)

@@ -61,9 +61,9 @@ Phaser.Physics.Arcade = function (game) {
     this.forceX = false;
 
     /**
-    * @property {boolean} skipQuadTree - If true a QuadTree will never be used for any collision. Handy for tightly packed games. See also Body.skipQuadTree.
+    * @property {boolean} skipQuadTree - If true the QuadTree will not be used for any collision. QuadTrees are great if objects are well spread out in your game, otherwise they are a performance hit. If you enable this you can disable on a per body basis via `Body.skipQuadTree`.
     */
-    this.skipQuadTree = false;
+    this.skipQuadTree = true;
 
     /**
     * @property {Phaser.QuadTree} quadTree - The world QuadTree.
@@ -409,7 +409,7 @@ Phaser.Physics.Arcade.prototype = {
     * @param {function} [collideCallback=null] - An optional callback function that is called if the objects collide. The two objects will be passed to this function in the same order in which you specified them, unless you are colliding Group vs. Sprite, in which case Sprite will always be the first parameter.
     * @param {function} [processCallback=null] - A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then collision will only happen if processCallback returns true. The two objects will be passed to this function in the same order in which you specified them.
     * @param {object} [callbackContext] - The context in which to run the callbacks.
-    * @return {boolean} True if a collision occured otherwise false.
+    * @return {boolean} True if a collision occurred otherwise false.
     */
     collide: function (object1, object2, collideCallback, processCallback, callbackContext) {
 
@@ -652,9 +652,9 @@ Phaser.Physics.Arcade.prototype = {
 
         var len = group.children.length;
 
-        for (var i = 0; i < len; i++)
+        for (var i = 0; i < len - 1; i++)
         {
-            for (var j = i + 1; j <= len; j++)
+            for (var j = i + 1; j < len; j++)
             {
                 if (group.children[i] && group.children[j] && group.children[i].exists && group.children[j].exists)
                 {
@@ -1005,7 +1005,7 @@ Phaser.Physics.Arcade.prototype = {
     */
     separateY: function (body1, body2, overlapOnly) {
 
-        //  Can't separate two immovable or non-existing bodys
+        //  Can't separate two immovable or non-existing bodies
         if (body1.immovable && body2.immovable)
         {
             return false;
@@ -1136,7 +1136,7 @@ Phaser.Physics.Arcade.prototype = {
         //  We re-check for collision in case body was separated in a previous step
         if (!body.enable || !tile.intersects(body.position.x, body.position.y, body.right, body.bottom))
         {
-            //  no collision so bail out (separted in a previous step)
+            //  no collision so bail out (separated in a previous step)
             return false;
         }
 
@@ -1232,7 +1232,7 @@ Phaser.Physics.Arcade.prototype = {
     * @method Phaser.Physics.Arcade#tileCheckX
     * @param {Phaser.Physics.Arcade.Body} body - The Body object to separate.
     * @param {Phaser.Tile} tile - The tile to check.
-    * @return {number} The amount of separation that occured.
+    * @return {number} The amount of separation that occurred.
     */
     tileCheckX: function (body, tile) {
 
@@ -1281,7 +1281,7 @@ Phaser.Physics.Arcade.prototype = {
     * @method Phaser.Physics.Arcade#tileCheckY
     * @param {Phaser.Physics.Arcade.Body} body - The Body object to separate.
     * @param {Phaser.Tile} tile - The tile to check.
-    * @return {number} The amount of separation that occured.
+    * @return {number} The amount of separation that occurred.
     */
     tileCheckY: function (body, tile) {
 
@@ -1398,7 +1398,7 @@ Phaser.Physics.Arcade.prototype = {
     * @param {Phaser.Group} group - The Group to check.
     * @param {function} [callback] - A callback function that is called if the object overlaps with the Pointer. The callback will be sent two parameters: the Pointer and the Object that overlapped with it.
     * @param {object} [callbackContext] - The context in which to run the callback.
-    * @return {array} An array of the Sprites from the Group that overlapped the Pointer coordinates.
+    * @return {PIXI.DisplayObject[]} An array of the Sprites from the Group that overlapped the Pointer coordinates.
     */
     getObjectsUnderPointer: function (pointer, group, callback, callbackContext) {
 
@@ -1407,24 +1407,43 @@ Phaser.Physics.Arcade.prototype = {
             return;
         }
 
+        return this.getObjectsAtLocation(pointer.x, pointer.y, group, callback, callbackContext, pointer);
+
+    },
+
+    /**
+    * Given a Group and a location this will check to see which Group children overlap with the coordinates.
+    * Each child will be sent to the given callback for further processing.
+    * Note that the children are not checked for depth order, but simply if they overlap the coordinate or not.
+    *
+    * @method Phaser.Physics.Arcade#getObjectsAtLocation
+    * @param {Phaser.Pointer} pointer - The Pointer to check.
+    * @param {Phaser.Group} group - The Group to check.
+    * @param {function} [callback] - A callback function that is called if the object overlaps the coordinates. The callback will be sent two parameters: the callbackArg and the Object that overlapped the location.
+    * @param {object} [callbackContext] - The context in which to run the callback.
+    * @param {object} [callbackArg] - An argument to pass to the callback.
+    * @return {PIXI.DisplayObject[]} An array of the Sprites from the Group that overlapped the coordinates.
+    */
+    getObjectsAtLocation: function (x, y, group, callback, callbackContext, callbackArg) {
+
         this.quadTree.clear();
 
         this.quadTree.reset(this.game.world.bounds.x, this.game.world.bounds.y, this.game.world.bounds.width, this.game.world.bounds.height, this.maxObjects, this.maxLevels);
 
         this.quadTree.populate(group);
 
-        var rect = new Phaser.Rectangle(pointer.x, pointer.y, 1, 1);
+        var rect = new Phaser.Rectangle(x, y, 1, 1);
         var output = [];
 
         this._potentials = this.quadTree.retrieve(rect);
 
         for (var i = 0, len = this._potentials.length; i < len; i++)
         {
-            if (this._potentials[i].hitTest(pointer.x, pointer.y))
+            if (this._potentials[i].hitTest(x, y))
             {
                 if (callback)
                 {
-                    callback.call(callbackContext, pointer, this._potentials[i].sprite);
+                    callback.call(callbackContext, callbackArg, this._potentials[i].sprite);
                 }
 
                 output.push(this._potentials[i].sprite);
@@ -1432,7 +1451,7 @@ Phaser.Physics.Arcade.prototype = {
         }
 
         return output;
-
+        
     },
 
     /**

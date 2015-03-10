@@ -3,6 +3,8 @@
     "src/pixi/Pixi.js",
     "src/pixi/geom/Polygon.js",
     "src/pixi/geom/Matrix.js",
+    "src/pixi/geom/Rectangle.js",
+    "src/pixi/geom/RoundedRectangle.js",
     "src/pixi/display/DisplayObject.js",
     "src/pixi/display/DisplayObjectContainer.js",
     "src/pixi/display/Sprite.js",
