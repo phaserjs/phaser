@@ -3764,6 +3764,7 @@ declare module Phaser {
         kill(): Phaser.Sprite;
         loadTexture(key: any, frame: any, stopAnimation?: boolean): void;
         overlap(displayObject: any): boolean;
+        loadTexture(key: string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture, frame?: string|number, stopAnimation?: boolean): void;
         play(name: string, frameRate?: number, loop?: boolean, killOnComplete?: boolean): Phaser.Animation;
         postUpdate(): void;
         preUpdate(): void;
