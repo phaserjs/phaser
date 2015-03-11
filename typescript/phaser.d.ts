@@ -3812,7 +3812,7 @@ declare module Phaser {
     }
 
     interface ResizeCallback {
-        (width: number, height: number): any;
+        (scale: ScaleManager, parentBounds: Rectangle): any;
     }
 
     class ScaleManager {
