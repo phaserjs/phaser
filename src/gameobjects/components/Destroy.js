@@ -100,6 +100,23 @@ Phaser.Component.Destroy.prototype = {
         this.mask = null;
         this.game = null;
 
+        //  In case Pixi is still going to try and render it even though destroyed
+        this.renderable = false;
+
+        //  Pixi level DisplayObject destroy
+        this.transformCallback = null;
+        this.transformCallbackContext = null;
+        this.hitArea = null;
+        this.parent = null;
+        this.stage = null;
+        this.worldTransform = null;
+        this.filterArea = null;
+        this._bounds = null;
+        this._currentBounds = null;
+        this._mask = null;
+
+        this._destroyCachedSprite();
+
         this.destroyPhase = false;
 
     }

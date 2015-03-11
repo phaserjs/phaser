@@ -240,6 +240,9 @@ PIXI.DisplayObject.prototype.destroy = function()
     this._currentBounds = null;
     this._mask = null;
 
+    //  In case Pixi is still going to try and render it even though destroyed
+    this.renderable = false;
+
     this._destroyCachedSprite();
 };
 
@@ -368,6 +371,11 @@ Object.defineProperty(PIXI.DisplayObject.prototype, 'cacheAsBitmap', {
  */
 PIXI.DisplayObject.prototype.updateTransform = function()
 {
+    if (!this.parent)
+    {
+        return;
+    }
+
     // create some matrix refs for easy access
     var pt = this.parent.worldTransform;
     var wt = this.worldTransform;

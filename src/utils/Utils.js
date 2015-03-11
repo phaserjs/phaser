@@ -354,10 +354,6 @@ Phaser.Utils = {
     */
     mixinPrototype: function (target, mixin, replace) {
     
-        // console.log('------------------------------------------------------------------');
-        // console.log('mixin target', target);
-        // console.log('mixin source', mixin);
-
         if (typeof replace === 'undefined') { replace = false; }
 
         var mixinKeys = Object.keys(mixin);
@@ -381,7 +377,6 @@ Phaser.Utils = {
                     if (typeof value.clone === 'function')
                     {
                         target[key] = value.clone();
-                        // console.log('def prop', key, 'to', value);
                     }
                     else
                     {
@@ -391,7 +386,6 @@ Phaser.Utils = {
                 else
                 {
                     target[key] = value;
-                    // console.log('set', key, 'to', value);
                 }
             }
         }

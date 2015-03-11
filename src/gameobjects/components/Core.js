@@ -22,8 +22,14 @@ Phaser.Component.Core.install = function (components) {
     for (var i = 0; i < components.length; i++)
     {
         var id = components[i];
+        var replace = false;
 
-        Phaser.Utils.mixinPrototype(this, Phaser.Component[id].prototype);
+        if (id === 'Destroy')
+        {
+            replace = true;
+        }
+
+        Phaser.Utils.mixinPrototype(this, Phaser.Component[id].prototype, replace);
 
         this.components[id] = true;
     }
