@@ -76,6 +76,12 @@ Phaser.Utils.Debug = function (game) {
     this.currentY = 0;
 
     /**
+    * @property {string} currentColor - The current color the debug information will be rendered at.
+    * @default
+    */
+    this.currentColor = '#ffffff';
+
+    /**
     * @property {number} currentAlpha - The current alpha the debug information will be rendered at.
     * @default
     */
