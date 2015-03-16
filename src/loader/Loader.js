@@ -572,6 +572,9 @@ Phaser.Loader.prototype = {
             }
             
             pack.data = data || {};
+
+            //  Already consider 'loaded'
+            pack.loaded = true;
         }
         
         // Add before first non-pack/no-loaded ~ last pack from start prior to loading
@@ -1252,11 +1255,8 @@ Phaser.Loader.prototype = {
             var file = this._fileList[i];
 
             // Pack is fetched (ie. has data) and is currently at the start of the process queue.
-            if (file.type === 'packfile' && !file.error && file.data && i === this._processingHead)
+            if (file.type === 'packfile' && !file.error && file.loaded && i === this._processingHead)
             {
-                // Pack may have been supplied with initial data
-                this.loaded = true;
-
                 // Processing the pack / adds more files
                 this.processPack(file);
 
