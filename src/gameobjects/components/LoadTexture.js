@@ -1,3 +1,8 @@
+/**
+* LoadTexture Component Features.
+*
+* @class
+*/
 Phaser.Component.LoadTexture = function () {};
 
 Phaser.Component.LoadTexture.prototype = {
@@ -12,8 +17,7 @@ Phaser.Component.LoadTexture.prototype = {
     * Changes the Texture the Sprite is using entirely. The old texture is removed and the new one is referenced or fetched from the Cache.
     * This causes a WebGL texture update, so use sparingly or in low-intensity portions of your game.
     *
-    * @method Phaser.Sprite#loadTexture
-    * @memberof Phaser.Sprite
+    * @method
     * @param {string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture} key - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture, BitmapData or PIXI.Texture.
     * @param {string|number} [frame] - If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
     * @param {boolean} [stopAnimation=true] - If an animation is already playing on this Sprite you can choose to stop it or let it carry on playing.
@@ -95,8 +99,7 @@ Phaser.Component.LoadTexture.prototype = {
     * Sets the Texture frame the Sprite uses for rendering.
     * This is primarily an internal method used by Sprite.loadTexture, although you may call it directly.
     *
-    * @method Phaser.Sprite#setFrame
-    * @memberof Phaser.Sprite
+    * @method
     * @param {Phaser.Frame} frame - The Frame to be used by the Sprite texture.
     */
     setFrame: function(frame) {
@@ -154,8 +157,7 @@ Phaser.Component.LoadTexture.prototype = {
     /**
     * Resets the Texture frame dimensions that the Sprite uses for rendering.
     *
-    * @method Phaser.Sprite#resetFrame
-    * @memberof Phaser.Sprite
+    * @method
     */
     resetFrame: function() {
 
@@ -167,7 +169,6 @@ Phaser.Component.LoadTexture.prototype = {
     },
 
     /**
-    * @name Phaser.Sprite#frame
     * @property {number} frame - Gets or sets the current frame index and updates the Texture Cache for display.
     */
     frame: {
@@ -183,7 +184,6 @@ Phaser.Component.LoadTexture.prototype = {
     },
 
     /**
-    * @name Phaser.Sprite#frameName
     * @property {string} frameName - Gets or sets the current frame name and updates the Texture Cache for display.
     */
     frameName: {

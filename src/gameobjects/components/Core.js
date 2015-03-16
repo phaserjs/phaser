@@ -1,20 +1,48 @@
+/**
+* Core Component Features.
+*
+* @class
+*/
 Phaser.Component.Core = function () {};
 
+/**
+* Installs / registers mixin components.
+*
+* The `this` context should be that of the applicable object instance or prototype.
+*
+* @protected
+*/
 Phaser.Component.Core.install = function (components) {
+
+    // Always install 'Core' first
+    Phaser.Utils.mixinPrototype(this, Phaser.Component.Core.prototype);
 
     this.components = {};
 
     for (var i = 0; i < components.length; i++)
     {
         var id = components[i];
+        var replace = false;
 
-        Phaser.Utils.mixinPrototype(this, Phaser.Component[id].prototype);
+        if (id === 'Destroy')
+        {
+            replace = true;
+        }
+
+        Phaser.Utils.mixinPrototype(this, Phaser.Component[id].prototype, replace);
 
         this.components[id] = true;
     }
 
 };
 
+/**
+* Initializes the mixin components.
+*
+* The `this` context should be an instance of the component mixin target.
+*
+* @protected
+*/
 Phaser.Component.Core.init = function (game, x, y, key, frame) {
 
     this.game = game;
@@ -28,6 +56,12 @@ Phaser.Component.Core.init = function (game, x, y, key, frame) {
     this.events = new Phaser.Events(this);
 
     this._bounds = new Phaser.Rectangle();
+
+    if (this.components.PhysicsBody)
+    {
+        // Enable-body checks for hasOwnProperty; makes sure to lift property from prototype.
+        this.body = this.body;
+    }
 
     if (this.components.Animation)
     {
@@ -135,7 +169,8 @@ Phaser.Component.Core.prototype = {
     previousPosition: null,
 
     /**
-    * @property {number} previousRotation - The rotation angle the Sprite was in at the last update (in radians)
+    * The rotation angle the Sprite was in at the last update (in radians)   
+    * @property {number} previousRotation2
     * @readOnly
     */
     previousRotation: 0,
@@ -165,53 +200,12 @@ Phaser.Component.Core.prototype = {
     _exists: true,
 
     /**
-    * Override and use this function in your own custom objects to handle any update requirements you may have.
-    * Remember if this Sprite has any children you should call update on them too.
+    * Controls if the core game loop and physics update this Sprite or not.
     *
-    * @method Phaser.Sprite#update
-    * @memberof Phaser.Sprite
-    */
-    update: function() {
-
-    },
-
-    /**
-    * Internal function called by the World postUpdate cycle.
-    *
-    * @method Phaser.Sprite#postUpdate
-    * @memberof Phaser.Sprite
-    */
-    postUpdate: function() {
-
-        if (this.key instanceof Phaser.BitmapData)
-        {
-            this.key.render();
-        }
-
-        if (this.components.PhysicsBody)
-        {
-            Phaser.Component.PhysicsBody.postUpdate.call(this);
-        }
-
-        if (this.components.FixedToCamera)
-        {
-            Phaser.Component.FixedToCamera.postUpdate.call(this);
-        }
-
-        for (var i = 0; i < this.children.length; i++)
-        {
-            this.children[i].postUpdate();
-        }
-
-    },
-
-    /**
-    * Sprite.exists controls if the core game loop and physics update this Sprite or not.
-    * When you set Sprite.exists to false it will remove its Body from the physics world (if it has one) and also set Sprite.visible to false.
+    * When `exists` is set to to false it will remove its Body from the physics world (if it has one) and also set Sprite.visible to false.
     * Setting Sprite.exists to true will re-add the Body to the physics world (if it has a body) and set Sprite.visible to true.
     *
-    * @name Phaser.Sprite#exists
-    * @property {boolean} exists - If the Sprite is processed by the core game update and physics.
+    * @property {boolean} exists - True if this game objects exists.
     */
     exists: {
 
@@ -246,6 +240,46 @@ Phaser.Component.Core.prototype = {
                 this.visible = false;
             }
 
+        }
+
+    },
+
+    /**
+    * Override and use this function in your own custom objects to handle any update requirements you may have.
+    * Remember if this Sprite has any children you should call update on them too.
+    *
+    * @method
+    */
+    update: function() {
+
+    },
+
+    /**
+    * Internal function called by the World postUpdate cycle.
+    *
+    * @method
+    * @protected
+    */
+    postUpdate: function() {
+
+        if (this.key instanceof Phaser.BitmapData)
+        {
+            this.key.render();
+        }
+
+        if (this.components.PhysicsBody)
+        {
+            Phaser.Component.PhysicsBody.postUpdate.call(this);
+        }
+
+        if (this.components.FixedToCamera)
+        {
+            Phaser.Component.FixedToCamera.postUpdate.call(this);
+        }
+
+        for (var i = 0; i < this.children.length; i++)
+        {
+            this.children[i].postUpdate();
         }
 
     }

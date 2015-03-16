@@ -136,10 +136,6 @@ PIXI.Graphics = function()
 PIXI.Graphics.prototype = Object.create( PIXI.DisplayObjectContainer.prototype );
 PIXI.Graphics.prototype.constructor = PIXI.Graphics;
 
-PIXI.Graphics.prototype.preUpdate = function() {};
-PIXI.Graphics.prototype.update = function() {};
-PIXI.Graphics.prototype.postUpdate = function() {};
-
 /**
  * Specifies the line style used for subsequent calls to Graphics methods such as the lineTo() method or the drawCircle() method.
  *

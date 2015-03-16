@@ -1,3 +1,8 @@
+/**
+* LifeSpan Component Features.
+*
+* @class
+*/
 Phaser.Component.LifeSpan = function () {};
 
 Phaser.Component.LifeSpan.preUpdate = function () {
@@ -41,8 +46,7 @@ Phaser.Component.LifeSpan.prototype = {
     * A resurrected Sprite has its alive, exists and visible properties all set to true.
     * It will dispatch the onRevived event, you can listen to Sprite.events.onRevived for the signal.
     *
-    * @method Phaser.Sprite#revive
-    * @memberof Phaser.Sprite
+    * @method
     * @param {number} [health=1] - The health to give the Sprite. Only applies if the GameObject has the Health component.
     * @return (Phaser.Sprite) This instance.
     */
@@ -74,8 +78,7 @@ Phaser.Component.LifeSpan.prototype = {
     * Note that killing a Sprite is a way for you to quickly recycle it in a Sprite pool, it doesn't free it up from memory.
     * If you don't need this Sprite any more you should call Sprite.destroy instead.
     *
-    * @method Phaser.Sprite#kill
-    * @memberof Phaser.Sprite
+    * @method
     * @return (Phaser.Sprite) This instance.
     */
     kill: function() {

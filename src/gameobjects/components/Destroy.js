@@ -1,3 +1,8 @@
+/**
+* Destroy Component Features.
+*
+* @class
+*/
 Phaser.Component.Destroy = function () {};
 
 Phaser.Component.Destroy.prototype = {
@@ -12,8 +17,7 @@ Phaser.Component.Destroy.prototype = {
     * Destroys the Sprite. This removes it from its parent group, destroys the input, event and animation handlers if present
     * and nulls its reference to game, freeing it up for garbage collection.
     *
-    * @method Phaser.Sprite#destroy
-    * @memberof Phaser.Sprite
+    * @method
     * @param {boolean} [destroyChildren=true] - Should every child of this object have its destroy method called?
     */
     destroy: function(destroyChildren) {
@@ -95,6 +99,23 @@ Phaser.Component.Destroy.prototype = {
         this.filters = null;
         this.mask = null;
         this.game = null;
+
+        //  In case Pixi is still going to try and render it even though destroyed
+        this.renderable = false;
+
+        //  Pixi level DisplayObject destroy
+        this.transformCallback = null;
+        this.transformCallbackContext = null;
+        this.hitArea = null;
+        this.parent = null;
+        this.stage = null;
+        this.worldTransform = null;
+        this.filterArea = null;
+        this._bounds = null;
+        this._currentBounds = null;
+        this._mask = null;
+
+        this._destroyCachedSprite();
 
         this.destroyPhase = false;
 

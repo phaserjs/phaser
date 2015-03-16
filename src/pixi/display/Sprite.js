@@ -17,7 +17,7 @@
  */
 PIXI.Sprite = function(texture)
 {
-    PIXI.DisplayObjectContainer.call( this );
+    PIXI.DisplayObjectContainer.call(this);
 
     /**
      * The anchor sets the origin point of the texture.
@@ -87,17 +87,13 @@ PIXI.Sprite = function(texture)
     {
         this.onTextureUpdate();
     }
-    // else
-    // {
-    //     this.texture.on( 'update', this.onTextureUpdate.bind(this) );
-    // }
 
     this.renderable = true;
 
 };
 
 // constructor
-PIXI.Sprite.prototype = Object.create( PIXI.DisplayObjectContainer.prototype );
+PIXI.Sprite.prototype = Object.create(PIXI.DisplayObjectContainer.prototype);
 PIXI.Sprite.prototype.constructor = PIXI.Sprite;
 
 /**
@@ -107,13 +103,16 @@ PIXI.Sprite.prototype.constructor = PIXI.Sprite;
  * @type Number
  */
 Object.defineProperty(PIXI.Sprite.prototype, 'width', {
+
     get: function() {
         return this.scale.x * this.texture.frame.width;
     },
+
     set: function(value) {
         this.scale.x = value / this.texture.frame.width;
         this._width = value;
     }
+
 });
 
 /**
@@ -123,13 +122,16 @@ Object.defineProperty(PIXI.Sprite.prototype, 'width', {
  * @type Number
  */
 Object.defineProperty(PIXI.Sprite.prototype, 'height', {
+
     get: function() {
         return  this.scale.y * this.texture.frame.height;
     },
+
     set: function(value) {
         this.scale.y = value / this.texture.frame.height;
         this._height = value;
     }
+
 });
 
 /**
@@ -154,10 +156,8 @@ PIXI.Sprite.prototype.setTexture = function(texture)
 PIXI.Sprite.prototype.onTextureUpdate = function()
 {
     // so if _width is 0 then width was not set..
-    if(this._width)this.scale.x = this._width / this.texture.frame.width;
-    if(this._height)this.scale.y = this._height / this.texture.frame.height;
-
-    //this.updateFrame = true;
+    if (this._width) this.scale.x = this._width / this.texture.frame.width;
+    if (this._height) this.scale.y = this._height / this.texture.frame.height;
 };
 
 /**
@@ -178,7 +178,7 @@ PIXI.Sprite.prototype.getBounds = function(matrix)
     var h0 = height * (1-this.anchor.y);
     var h1 = height * -this.anchor.y;
 
-    var worldTransform = matrix || this.worldTransform ;
+    var worldTransform = matrix || this.worldTransform;
 
     var a = worldTransform.a;
     var b = worldTransform.b;
@@ -193,11 +193,11 @@ PIXI.Sprite.prototype.getBounds = function(matrix)
     var minX = Infinity;
     var minY = Infinity;
 
-    if(b === 0 && c === 0)
+    if (b === 0 && c === 0)
     {
         // scale may be negative!
-        if(a < 0)a *= -1;
-        if(d < 0)d *= -1;
+        if (a < 0) a *= -1;
+        if (d < 0) d *= -1;
 
         // this means there is no rotation going on right? RIGHT?
         // if thats the case then we can avoid checking the bound values! yay         
@@ -219,8 +219,6 @@ PIXI.Sprite.prototype.getBounds = function(matrix)
 
         var x4 =  a * w1 + c * h0 + tx;
         var y4 =  d * h0 + b * w1 + ty;
-
-
 
         minX = x1 < minX ? x1 : minX;
         minX = x2 < minX ? x2 : minX;
@@ -269,21 +267,21 @@ PIXI.Sprite.prototype._renderWebGL = function(renderSession)
     // if the sprite is not visible or the alpha is 0 then no need to render this element
     if (!this.visible || this.alpha <= 0 || !this.renderable) return;
 
-    var i,j;
+    var i, j;
 
     // do a quick check to see if this element has a mask or a filter.
-    if(this._mask || this._filters)
+    if (this._mask || this._filters)
     {
         var spriteBatch =  renderSession.spriteBatch;
 
         // push filter first as we need to ensure the stencil buffer is correct for any masking
-        if(this._filters)
+        if (this._filters)
         {
             spriteBatch.flush();
             renderSession.filterManager.pushFilter(this._filterBlock);
         }
 
-        if(this._mask)
+        if (this._mask)
         {
             spriteBatch.stop();
             renderSession.maskManager.pushMask(this.mask, renderSession);
@@ -294,7 +292,7 @@ PIXI.Sprite.prototype._renderWebGL = function(renderSession)
         spriteBatch.render(this);
 
         // now loop through the children and make sure they get rendered
-        for(i=0,j=this.children.length; i<j; i++)
+        for (i = 0; i < this.children.length; i++)
         {
             this.children[i]._renderWebGL(renderSession);
         }
@@ -302,8 +300,8 @@ PIXI.Sprite.prototype._renderWebGL = function(renderSession)
         // time to stop the sprite batch as either a mask element or a filter draw will happen next
         spriteBatch.stop();
 
-        if(this._mask)renderSession.maskManager.popMask(this._mask, renderSession);
-        if(this._filters)renderSession.filterManager.popFilter();
+        if (this._mask) renderSession.maskManager.popMask(this._mask, renderSession);
+        if (this._filters) renderSession.filterManager.popFilter();
 
         spriteBatch.start();
     }
@@ -312,7 +310,7 @@ PIXI.Sprite.prototype._renderWebGL = function(renderSession)
         renderSession.spriteBatch.render(this);
 
         // simple render children!
-        for(i=0,j=this.children.length; i<j; i++)
+        for (i = 0; i < this.children.length; i++)
         {
             this.children[i]._renderWebGL(renderSession);
         }
@@ -356,9 +354,11 @@ PIXI.Sprite.prototype._renderCanvas = function(renderSession)
             renderSession.scaleMode = this.texture.baseTexture.scaleMode;
             renderSession.context[renderSession.smoothProperty] = (renderSession.scaleMode === PIXI.scaleModes.LINEAR);
         }
+
         //  If the texture is trimmed we offset by the trim x/y, otherwise we use the frame dimensions
         var dx = (this.texture.trim) ? this.texture.trim.x - this.anchor.x * this.texture.trim.width : this.anchor.x * -this.texture.frame.width;
         var dy = (this.texture.trim) ? this.texture.trim.y - this.anchor.y * this.texture.trim.height : this.anchor.y * -this.texture.frame.height;
+
         //  Allow for pixel rounding
         if (renderSession.roundPixels)
         {
@@ -367,8 +367,8 @@ PIXI.Sprite.prototype._renderCanvas = function(renderSession)
                 this.worldTransform.b,
                 this.worldTransform.c,
                 this.worldTransform.d,
-                (this.worldTransform.tx* renderSession.resolution) | 0,
-                (this.worldTransform.ty* renderSession.resolution) | 0);
+                (this.worldTransform.tx * renderSession.resolution) | 0,
+                (this.worldTransform.ty * renderSession.resolution) | 0);
             dx = dx | 0;
             dy = dy | 0;
         }
@@ -418,7 +418,7 @@ PIXI.Sprite.prototype._renderCanvas = function(renderSession)
     }
 
     // OVERWRITE
-    for (var i = 0, j = this.children.length; i < j; i++)
+    for (var i = 0; i < this.children.length; i++)
     {
         this.children[i]._renderCanvas(renderSession);
     }
@@ -444,7 +444,9 @@ PIXI.Sprite.prototype._renderCanvas = function(renderSession)
 PIXI.Sprite.fromFrame = function(frameId)
 {
     var texture = PIXI.TextureCache[frameId];
-    if(!texture) throw new Error('The frameId "' + frameId + '" does not exist in the texture cache' + this);
+
+    if (!texture) throw new Error('The frameId "' + frameId + '" does not exist in the texture cache' + this);
+
     return new PIXI.Sprite(texture);
 };
 
@@ -461,5 +463,6 @@ PIXI.Sprite.fromFrame = function(frameId)
 PIXI.Sprite.fromImage = function(imageId, crossorigin, scaleMode)
 {
     var texture = PIXI.Texture.fromImage(imageId, crossorigin, scaleMode);
+
     return new PIXI.Sprite(texture);
 };

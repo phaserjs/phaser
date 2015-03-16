@@ -336,7 +336,7 @@ Phaser.StateManager.prototype = {
             {
                 // console.log('-> preload (', this.current, ')');
 
-                this.game.load.reset();
+                this.game.load.reset(true);
                 this.onPreloadCallback.call(this.callbackContext, this.game);
 
                 //  Is the loader empty?
