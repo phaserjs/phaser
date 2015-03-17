@@ -798,7 +798,7 @@ Phaser.TilemapLayer.prototype.renderRegion = function (scrollX, scrollY, left, t
     var th = this._mc.tileHeight;
 
     var tilesets = this._mc.tilesets;
-    var lastAlpha = NaN;
+    var lastAlpha = 1;
 
     if (!this._wrap)
     {
@@ -827,7 +827,10 @@ Phaser.TilemapLayer.prototype.renderRegion = function (scrollX, scrollY, left, t
     // xmax/ymax - remaining cells to render on column/row
     var tx, ty, x, y, xmax, ymax;
 
+    // Restore assumed states
+    context.globalAlpha = 1;
     context.fillStyle = this.tileColor;
+    context.globalCompositeOperation = 'source-over';
 
     for (y = normStartY, ymax = bottom - top, ty = baseY;
         ymax >= 0;
