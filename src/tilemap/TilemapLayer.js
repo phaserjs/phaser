@@ -798,7 +798,7 @@ Phaser.TilemapLayer.prototype.renderRegion = function (scrollX, scrollY, left, t
     var th = this._mc.tileHeight;
 
     var tilesets = this._mc.tilesets;
-    var lastAlpha = 1;
+    var lastAlpha = NaN;
 
     if (!this._wrap)
     {
@@ -827,10 +827,7 @@ Phaser.TilemapLayer.prototype.renderRegion = function (scrollX, scrollY, left, t
     // xmax/ymax - remaining cells to render on column/row
     var tx, ty, x, y, xmax, ymax;
 
-    // Restore assumed states
-    context.globalAlpha = 1;
     context.fillStyle = this.tileColor;
-    context.globalCompositeOperation = 'source-over';
 
     for (y = normStartY, ymax = bottom - top, ty = baseY;
         ymax >= 0;
@@ -1030,6 +1027,8 @@ Phaser.TilemapLayer.prototype.render = function () {
         return;
     }
 
+    this.context.save();
+
     if (this.dirty || this.layer.dirty)
     {
         this.layer.dirty = false;
@@ -1096,6 +1095,8 @@ Phaser.TilemapLayer.prototype.render = function () {
     this.baseTexture.dirty();
 
     this.dirty = false;
+
+    this.context.restore();
 
     return true;
 
