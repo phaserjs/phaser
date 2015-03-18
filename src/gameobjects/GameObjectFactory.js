@@ -5,7 +5,7 @@
 */
 
 /**
-* The GameObjectFactory is a quick way to create mamy common game objects
+* The GameObjectFactory is a quick way to create many common game objects
 * using {@linkcode Phaser.Game#add `game.add`}.
 *
 * Created objects are _automatically added_ to the appropriate Manager, World, or manually specified parent Group.

@@ -8,7 +8,7 @@
 * This is the core internal game clock.
 *
 * It manages the elapsed time and calculation of elapsed values, used for game object motion and tweens,
-* and also handlers the standard Timer pool.
+* and also handles the standard Timer pool.
 *
 * To create a general timed event, use the master {@link Phaser.Timer} accessible through {@link Phaser.Time.events events}.
 *
@@ -42,7 +42,7 @@ Phaser.Time = function (game) {
     * An increasing value representing cumulative milliseconds since an undisclosed epoch.
     *
     * While this value is in milliseconds and can be used to compute time deltas,
-    * it must must _not_ be used with `Date.now()` as it may not use the same epoch / starting reference. 
+    * it must must _not_ be used with `Date.now()` as it may not use the same epoch / starting reference.
     *
     * The source may either be from a high-res source (eg. if RAF is available) or the standard Date.now;
     * the value can only be relied upon within a particular game instance.
@@ -74,14 +74,14 @@ Phaser.Time = function (game) {
     * _Note:_ This is updated once per game loop - even if multiple logic update steps are done.
     * Use {@link Phaser.Timer#physicsTime physicsTime} as a basis of game/logic calculations instead.
     *
-    * @property {integer} elapsedMS 
+    * @property {integer} elapsedMS
     * @protected
     */
     this.elapsedMS = 0;
 
     /**
     * The physics update delta, in fractional seconds.
-    *    
+    *
     * This should be used as an applicable multiplier by all logic update steps (eg. `preUpdate/postUpdate/update`)
     * to ensure consistent game timing. Game/logic timing can drift from real-world time if the system
     * is unable to consistently maintain the desired FPS.
