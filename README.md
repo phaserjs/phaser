@@ -204,6 +204,8 @@ We've also removed functions and properties from Pixi classes that Phaser doesn'
 * Loader.preloadSprite had an extra guard added to ensure it didn't try to updateCrop a non-existent sprite (thanks @noidexe #1636)
 * The `TilemapParser` has had its row / column calculations updated to account for margins and and spacing on all sides of the tileset (thanks @zekoff #1642)
 * Any Tile set with alpha !== 1 would cause the whole layer to render incorrectly (thanks @nkholski #1666)
+* P2 Debug Body class: The shape check in draw() needed to check for Convex last, since other shapes (like Rectangle) inherit from Convex (thanks @englercj #1674)
+* P2 Debug Body class: The updateSpriteTransform() function needed to be called from the ctor. Otherwise bodies with no sprite (so no postUpdate call) would never be moved to draw in the correct position (thanks @englercj #1674)
 
 ### Pixi 2.2.7 Bug Fixes
 
@@ -261,7 +263,7 @@ Phaser is released under the [MIT License](http://opensource.org/licenses/MIT).
 
 <img src="http://phaser.io/images/github/learn.jpg" align="right">
 
-We have a [Getting Started Guide](http://phaser.io/getting-started-js.php) which covers all you need to begin developing games with Phaser. From setting up a web server, to picking an IDE and coding your first game.
+We have a [Getting Started Guide](http://phaser.io/tutorials/getting-started) which covers all you need to begin developing games with Phaser. From setting up a web server, to picking an IDE and coding your first game.
 
 Prefer **videos** to reading? Lynda.com have published a free course: [HTML5 Game Development with Phaser](http://www.lynda.com/Phaser-tutorials/HTML5-Game-Development-Phaser/163641-2.html)
 
@@ -275,7 +277,7 @@ Using Phaser with **TypeScript**? Check out this great series of [Game From Scra
 
 Ever since we started Phaser we've been growing and expanding our extensive set of source code examples. Currently there are over 400 of them!
 
-Browse the [Phaser Examples](http://examples.phaser.io) or clone the [examples repo][examples] and eat your heart out!
+Browse the [Phaser Examples](http://phaser.io/examples) or clone the [examples repo][examples] and eat your heart out!
 
 ### Phaser Books
 
