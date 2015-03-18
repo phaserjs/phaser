@@ -222,7 +222,7 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     * If you have a Body that is being moved around the world via a tween or a Group motion, but its local x/y position never
     * actually changes, then you should set Body.moves = false. Otherwise it will most likely fly off the screen.
     * If you want the physics system to move the body around, then set moves to true.
-    * @property {boolean} moves - Set to true to allow the Physics system to move this Body, other false to move it manually.
+    * @property {boolean} moves - Set to true to allow the Physics system to move this Body, otherwise false to move it manually.
     * @default
     */
     this.moves = true;
@@ -297,7 +297,7 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     /**
     * If this is an especially small or fast moving object then it can sometimes skip over tilemap collisions if it moves through a tile in a step.
     * Set this padding value to add extra padding to its bounds. tilePadding.x applied to its width, y to its height.
-    * @property {Phaser.Point} tilePadding - Extra padding to be added to this sprites dimensions when checking for tile collision.
+    * @property {Phaser.Point} tilePadding - Extra padding to be added to this sprite's dimensions when checking for tile collision.
     */
     this.tilePadding = new Phaser.Point();
 
@@ -532,7 +532,7 @@ Phaser.Physics.Arcade.Body.prototype = {
     },
 
     /**
-    * Removes this bodies reference to its parent sprite, freeing it up for gc.
+    * Removes this body's reference to its parent sprite, freeing it up for gc.
     *
     * @method Phaser.Physics.Arcade.Body#destroy
     */
