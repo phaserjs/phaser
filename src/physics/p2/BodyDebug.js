@@ -56,6 +56,8 @@ Phaser.Physics.P2.BodyDebug = function(game, body, settings) {
 
     this.draw();
 
+    this.updateSpriteTransform();
+
 };
 
 Phaser.Physics.P2.BodyDebug.prototype = Object.create(Phaser.Group.prototype);
@@ -109,6 +111,18 @@ Phaser.Utils.extend(Phaser.Physics.P2.BodyDebug.prototype, {
                 {
                     this.drawCircle(sprite, offset[0] * this.ppu, offset[1] * this.ppu, angle, child.radius * this.ppu, color, lw);
                 }
+                else if (child instanceof p2.Plane)
+                {
+                    this.drawPlane(sprite, offset[0] * this.ppu, -offset[1] * this.ppu, color, lineColor, lw * 5, lw * 10, lw * 10, this.ppu * 100, angle);
+                }
+                else if (child instanceof p2.Line)
+                {
+                    this.drawLine(sprite, child.length * this.ppu, lineColor, lw);
+                }
+                else if (child instanceof p2.Rectangle)
+                {
+                    this.drawRectangle(sprite, offset[0] * this.ppu, offset[1] * this.ppu, angle, child.width * this.ppu, child.height * this.ppu, lineColor, color, lw);
+                }
                 else if (child instanceof p2.Convex)
                 {
                     verts = [];
@@ -122,18 +136,6 @@ Phaser.Utils.extend(Phaser.Physics.P2.BodyDebug.prototype, {
                     }
 
                     this.drawConvex(sprite, verts, child.triangles, lineColor, color, lw, this.settings.debugPolygons, [offset[0] * this.ppu, -offset[1] * this.ppu]);
-                }
-                else if (child instanceof p2.Plane)
-                {
-                    this.drawPlane(sprite, offset[0] * this.ppu, -offset[1] * this.ppu, color, lineColor, lw * 5, lw * 10, lw * 10, this.ppu * 100, angle);
-                }
-                else if (child instanceof p2.Line)
-                {
-                    this.drawLine(sprite, child.length * this.ppu, lineColor, lw);
-                }
-                else if (child instanceof p2.Rectangle)
-                {
-                    this.drawRectangle(sprite, offset[0] * this.ppu, -offset[1] * this.ppu, angle, child.width * this.ppu, child.height * this.ppu, lineColor, color, lw);
                 }
 
                 i++;
@@ -155,7 +157,6 @@ Phaser.Utils.extend(Phaser.Physics.P2.BodyDebug.prototype, {
         g.lineStyle(lineWidth, color, 1);
         g.beginFill(fillColor);
         g.drawRect(x - w / 2, y - h / 2, w, h);
-
     },
 
     /**
