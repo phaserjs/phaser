@@ -82,7 +82,7 @@ Phaser.Events.prototype = {
     onRemovedFromWorld: null,
 
     /**
-    * @property {Phaser.Signal} onDestroy - This signal is dispatched when the parent is destoyed.
+    * @property {Phaser.Signal} onDestroy - This signal is dispatched when the parent is destroyed.
     */
     onDestroy: null,
 

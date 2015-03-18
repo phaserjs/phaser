@@ -304,7 +304,7 @@ Phaser.GameObjectFactory.prototype = {
     *
     * A particle emitter can be used for one-time explosions or for
     * continuous effects like rain and fire. All it really does is launch Particle objects out
-    * at set intervals, and fixes their positions and velocities accorindgly.
+    * at set intervals, and fixes their positions and velocities accordingly.
     *
     * @method Phaser.GameObjectFactory#emitter
     * @param {number} [x=0] - The x coordinate within the Emitter that the particles are emitted from.
@@ -478,8 +478,6 @@ Phaser.GameObjectFactory.prototype = {
         return this.game.plugins.add(plugin);
 
     }
-
-
 
 };
 
