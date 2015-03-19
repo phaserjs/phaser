@@ -180,6 +180,36 @@ Phaser.ArraySet.prototype = {
             }
         }
 
+    },
+
+    /**
+    * Removes every member from this ArraySet and optionally destroys it.
+    *
+    * @method Phaser.ArraySet#removeAll
+    * @param {boolean} [destroy=false] - Call `destroy` on each member as it's removed from this set.
+    */
+    removeAll: function (destroy) {
+
+        if (typeof destroy === 'undefined') { destroy = false; }
+
+        var i = this.list.length;
+
+        while (i--)
+        {
+            if (this.list[i])
+            {
+                var item = this.remove(this.list[i]);
+
+                if (destroy)
+                {
+                    item.destroy();
+                }
+            }
+        }
+
+        this.position = 0;
+        this.list = [];
+
     }
 
 };

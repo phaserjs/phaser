@@ -188,6 +188,11 @@ Phaser.InputHandler = function (sprite) {
     this.dragFromCenter = false;
 
     /**
+    * @property {Phaser.Point} dragStartPoint - The Point from which the most recent drag started from. Useful if you need to return an object to its starting position.
+    */
+    this.dragStartPoint = new Phaser.Point();
+
+    /**
     * @property {Phaser.Point} _dragPoint - Internal cache var.
     * @private
     */
@@ -1296,6 +1301,7 @@ Phaser.InputHandler.prototype = {
             this.sprite.bringToTop();
         }
 
+        this.dragStartPoint.set(x, y);
         this.sprite.events.onDragStart$dispatch(this.sprite, pointer, x, y);
 
     },
