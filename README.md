@@ -209,12 +209,13 @@ We've also removed functions and properties from Pixi classes that Phaser doesn'
 * P2 Debug Body class: The shape check in draw() needed to check for Convex last, since other shapes (like Rectangle) inherit from Convex (thanks @englercj #1674)
 * P2 Debug Body class: The updateSpriteTransform() function needed to be called from the ctor. Otherwise bodies with no sprite (so no postUpdate call) would never be moved to draw in the correct position (thanks @englercj #1674)
 
-### Pixi 2.2.7 Bug Fixes
+### Pixi 2.2.8 Bug Fixes
 
 * SpriteBatch added fix to handle batch context loss on change.
 * RenderTexture resolution fix.
 * WebGL Filter Resolution fix.
 * TilingSprite fixes when masked in canvas mode.
+* TilingSprite.destroy fixed if TilingSprite hasn't ever been rendered.
 
 For changes in previous releases please see the extensive [Version History](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md).
 
