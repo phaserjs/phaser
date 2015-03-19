@@ -7,7 +7,7 @@
 /**
 * Create a new game object for displaying Text.
 *
-* This uses a local hidden Canvas object and renders the type into it. It then makes a texture from this for renderning to the view.
+* This uses a local hidden Canvas object and renders the type into it. It then makes a texture from this for rendering to the view.
 * Because of this you can only display fonts that are currently loaded and available to the browser: fonts must be pre-loaded.
 *
 * See {@link http://www.jordanm.co.uk/tinytype this compatibility table} for the available default fonts across mobile browsers.
@@ -56,6 +56,13 @@ Phaser.Text = function (game, x, y, text, style) {
     * @default
     */
     this.type = Phaser.TEXT;
+
+    /**
+    * Specify a padding value which is added to the line width and height when calculating the Text size.
+    * ALlows you to add extra spacing if Phaser is unable to accurately determine the true font dimensions.
+    * @property {Phaser.Point} padding
+    */
+    this.padding = new Phaser.Point();
 
     /**
     * @property {string} _text - Internal cache var.
@@ -299,7 +306,7 @@ Phaser.Text.prototype.updateText = function () {
 
     for (var i = 0; i < lines.length; i++)
     {
-        var lineWidth = this.context.measureText(lines[i]).width;
+        var lineWidth = this.context.measureText(lines[i]).width + this.padding.x;
         lineWidths[i] = lineWidth;
         maxLineWidth = Math.max(maxLineWidth, lineWidth);
     }
@@ -309,7 +316,7 @@ Phaser.Text.prototype.updateText = function () {
     this.canvas.width = width * this.resolution;
     
     //calculate text height
-    var lineHeight = fontProperties.fontSize + this.style.strokeThickness + this._lineSpacing;
+    var lineHeight = fontProperties.fontSize + this.style.strokeThickness + this._lineSpacing + this.padding.y;
 
     var height = (lineHeight + this._lineSpacing) * lines.length;
 

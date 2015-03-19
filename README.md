@@ -129,6 +129,7 @@ We've also removed functions and properties from Pixi classes that Phaser doesn'
 * Emitter.flow now works in a slightly different (and more useful!) way. You can now specify a `quantity` and a `total`. The `quantity` controls how many particles are emitted every time the flow frequency is met. The `total` controls how many particles will be emitted in total. You can set `total` to be -1 and it will carry on emitting at the given frequency forever (also fixes #1598 thanks @brianbunch)
 * ArraySet.removeAll allows you to remove all members of an ArraySet and optionally call `destroy` on them as well.
 * GameObject.input.dragStartPoint now stores the coordinates the object was at when the drag started. This value is populated when the drag starts. It can be used to return an object to its pre-drag position, for example if it was dropped in an invalid place in-game.
+* Text.padding specifies a padding value which is added to the line width and height when calculating the Text size. ALlows you to add extra spacing if Phaser is unable to accurately determine the true font dimensions (#1561 #1518)
 
 ### Updates
 
