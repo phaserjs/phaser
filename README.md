@@ -175,7 +175,7 @@ Phaser is released under the [MIT License](http://opensource.org/licenses/MIT).
 
 <img src="http://phaser.io/images/github/learn.jpg" align="right">
 
-We have a [Getting Started Guide](http://phaser.io/getting-started-js.php) which covers all you need to begin developing games with Phaser. From setting up a web server to picking an IDE to coding your first game.
+We have a [Getting Started Guide](http://phaser.io/tutorials/getting-started) which covers all you need to begin developing games with Phaser. From setting up a web server to picking an IDE to coding your first game.
 
 Prefer **videos** to reading? Lynda.com have published a free course: [HTML5 Game Development with Phaser](http://www.lynda.com/Phaser-tutorials/HTML5-Game-Development-Phaser/163641-2.html)
 
