@@ -1994,7 +1994,7 @@ Phaser.Loader.prototype = {
             case 'binary':
                 if (file.callback)
                 {
-                    file.data = file.callback.call(file.callbackContext, file.key, this.response);
+                    file.data = file.callback.call(file.callbackContext, file.key, xhr.response);
                 }
                 else
                 {
