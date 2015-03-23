@@ -130,6 +130,7 @@ We've also removed functions and properties from Pixi classes that Phaser doesn'
 * ArraySet.removeAll allows you to remove all members of an ArraySet and optionally call `destroy` on them as well.
 * GameObject.input.dragStartPoint now stores the coordinates the object was at when the drag started. This value is populated when the drag starts. It can be used to return an object to its pre-drag position, for example if it was dropped in an invalid place in-game.
 * Text.padding specifies a padding value which is added to the line width and height when calculating the Text size. ALlows you to add extra spacing if Phaser is unable to accurately determine the true font dimensions (#1561 #1518)
+* P2 Capsule Shapes now support BodyDebug drawinging (thanks @englercj #1686)
 
 ### Updates
 
@@ -209,6 +210,7 @@ We've also removed functions and properties from Pixi classes that Phaser doesn'
 * Any Tile set with alpha !== 1 would cause the whole layer to render incorrectly (thanks @nkholski #1666)
 * P2 Debug Body class: The shape check in draw() needed to check for Convex last, since other shapes (like Rectangle) inherit from Convex (thanks @englercj #1674)
 * P2 Debug Body class: The updateSpriteTransform() function needed to be called from the ctor. Otherwise bodies with no sprite (so no postUpdate call) would never be moved to draw in the correct position (thanks @englercj #1674)
+* Animations are now guarded allowing Sprites with animations to be destroyed from within onUpdate, onLoop or onComplete events (thanks @pnstickne #1685 #1679)
 
 ### Pixi 2.2.8 Bug Fixes
 
