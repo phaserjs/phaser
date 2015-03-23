@@ -5,11 +5,19 @@
 */
 
 /**
-* BitmapText objects work by taking a texture file and an XML file that describes the font layout.
+* BitmapText objects work by taking a texture file and an XML file that describes the font structure.
+* It then generates a new Sprite object for each letter of the text, proportionally spaced out and aligned to 
+* match the font structure.
+* 
+* BitmapText objects are less flexible than Text objects, in that they have less features such as shadows, fills and the ability 
+* to use Web Fonts, however you trade this flexibility for rendering speed. You can also create visually compelling BitmapTexts by 
+* processing the font texture in an image editor, applying fills and any other effects required.
 *
-* On Windows you can use the free app BMFont: http://www.angelcode.com/products/bmfont/
-* On OS X we recommend Glyph Designer: http://www.71squared.com/en/glyphdesigner
-* For Web there is the great Littera: http://kvazars.com/littera/
+* To create a BitmapText you can use:
+*
+* BMFont (Windows, free): http://www.angelcode.com/products/bmfont/
+* Glyph Designer (OS X, commercial): http://www.71squared.com/en/glyphdesigner
+* Littera (Web-based, free): http://kvazars.com/littera/
 *
 * @class Phaser.BitmapText
 * @constructor
@@ -47,6 +55,12 @@ Phaser.BitmapText = function (game, x, y, font, text, size) {
     this.type = Phaser.BITMAPTEXT;
 
     /**
+    * @property {number} physicsType - The const physics body type of this object.
+    * @readonly
+    */
+    this.physicsType = Phaser.SPRITE;
+
+    /**
     * @property {string} _text - Internal cache var.
     * @private
     */
@@ -76,6 +90,18 @@ Phaser.BitmapText = function (game, x, y, font, text, size) {
     */
     this._tint = 0xFFFFFF;
 
+    /**
+    * @property {number} _tw - Internal cache var. Holds the previous textWidth.
+    * @private
+    */
+    this._tw = 0;
+
+    /**
+    * @property {number} _th - Internal cache var. Holds the previous textHeight.
+    * @private
+    */
+    this._th = 0;
+
     PIXI.BitmapText.call(this, text);
 
     Phaser.Component.Core.init.call(this, game, x, y, '', null);
@@ -85,7 +111,7 @@ Phaser.BitmapText = function (game, x, y, font, text, size) {
 Phaser.BitmapText.prototype = Object.create(PIXI.BitmapText.prototype);
 Phaser.BitmapText.prototype.constructor = Phaser.BitmapText;
 
-var components = [
+Phaser.Component.Core.install.call(Phaser.BitmapText.prototype, [
     'Angle',
     'AutoCull',
     'Bounds',
@@ -96,33 +122,28 @@ var components = [
     'LifeSpan',
     'PhysicsBody',
     'Reset'
-];
+]);
 
-Phaser.Component.Core.install.call(Phaser.BitmapText.prototype, components);
-
-/**
-* @method Phaser.BitmapText.prototype.setStyle
-* @private
-*/
-Phaser.BitmapText.prototype.setStyle = function() {
-
-    this.style = { align: this._align };
-    this.fontName = this._font;
-    this.fontSize = this._fontSize;
-    this.dirty = true;
-
-};
+Phaser.BitmapText.prototype.preUpdatePhysics = Phaser.Component.PhysicsBody.preUpdate;
+Phaser.BitmapText.prototype.preUpdateLifeSpan = Phaser.Component.LifeSpan.preUpdate;
+Phaser.BitmapText.prototype.preUpdateInWorld = Phaser.Component.InWorld.preUpdate;
+Phaser.BitmapText.prototype.preUpdateCore = Phaser.Component.Core.preUpdate;
 
 /**
 * Automatically called by World.preUpdate.
-* @method Phaser.BitmapText.prototype.preUpdate
+*
+* @method
+* @memberof Phaser.BitmapText
+* @return {boolean} True if the BitmapText was rendered, otherwise false.
 */
 Phaser.BitmapText.prototype.preUpdate = function () {
 
-    Phaser.Component.InWorld.preUpdate.call(this);
-    Phaser.Component.Core.preUpdate.call(this);
+    if (!this.preUpdatePhysics() || !this.preUpdateLifeSpan() || !this.preUpdateInWorld())
+    {
+        return false;
+    }
 
-    return true;
+    return this.preUpdateCore();
 
 };
 
@@ -134,6 +155,26 @@ Phaser.BitmapText.prototype.postUpdate = function () {
 
     Phaser.Component.PhysicsBody.postUpdate.call(this);
     Phaser.Component.FixedToCamera.postUpdate.call(this);
+
+    if (this.body && ((this.textWidth !== this._tw) || (this.textHeight !== this._th)))
+    {
+        this.body.setSize(this.textWidth, this.textHeight);
+        this._tw = this.textWidth;
+        this._th = this.textHeight;
+    }
+
+};
+
+/**
+* @method Phaser.BitmapText.prototype.setStyle
+* @private
+*/
+Phaser.BitmapText.prototype.setStyle = function() {
+
+    this.style = { align: this._align };
+    this.fontName = this._font;
+    this.fontSize = this._fontSize;
+    this.dirty = true;
 
 };
 
