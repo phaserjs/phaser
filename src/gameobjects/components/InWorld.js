@@ -1,5 +1,7 @@
 /**
-* InWorld Component Features.
+* The InWorld component checks if a Game Object is within the Game World Bounds.
+* An object is considered as being "in bounds" so long as its own bounds intersects at any point with the World bounds.
+* If the AutoCull component is enabled on the Game Object then it will check the Game Object against the Camera bounds as well.
 *
 * @class
 */
@@ -59,30 +61,37 @@ Phaser.Component.InWorld.preUpdate = function () {
 Phaser.Component.InWorld.prototype = {
 
     /**
-    * If true the Sprite checks if it is still within the world each frame, when it leaves the world it dispatches Sprite.events.onOutOfBounds
-    * and optionally kills the sprite (if Sprite.outOfBoundsKill is true). By default this is disabled because the Sprite has to calculate its
-    * bounds every frame to support it, and not all games need it. Enable it by setting the value to true.
+    * If this is set to `true` the Game Object checks if it is within the World bounds each frame. 
+    * When it is no longer within or intersecting the world bounds it dispatches the `onOutOfBounds` event.
+    * If it was *previously* out of bounds but is now intersecting the world bounds again it dispatches the `onEnterBounds` event.
+    * It also optionally kills the Game Object if `outOfBoundsKill` is `true`. 
+    * When `checkWorldBounds` is enabled it forces the Game Object has to calculate its full bounds every frame.
+    * This is a relatively expensive operation, especially if enabled on hundreds of Game Objects. So enable it only if you know it's required,
+    * or you have tested performance and find it acceptable.
+    * 
     * @property {boolean} checkWorldBounds
     * @default
     */
     checkWorldBounds: false,
 
     /**
-    * @property {boolean} outOfBoundsKill - If true Sprite.kill is called as soon as Sprite.inWorld returns false, as long as Sprite.checkWorldBounds is true.
+    * If this and the `checkWorldBounds` property are both set to `true` then the `kill` method is called as soon as `inWorld` returns false.
+    * 
+    * @property {boolean} outOfBoundsKill
     * @default
     */
     outOfBoundsKill: false,
 
     /**
-    * @property {boolean} _outOfBoundsFired - Internal cache var.
+    * @property {boolean} _outOfBoundsFired - Internal state var.
     * @private
     */
     _outOfBoundsFired: false,
 
     /**
-    * Checks if the Sprite bounds are within the game world, otherwise false if fully outside of it.
+    * Checks if the Game Objects bounds are within, or intersect at any point with the Game World bounds.
     *
-    * @property {boolean} inWorld - True if the Sprite bounds is within the game world, even if only partially. Otherwise false if fully outside of it.
+    * @property {boolean} inWorld
     * @readonly
     */
     inWorld: {

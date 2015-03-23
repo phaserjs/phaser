@@ -1,5 +1,6 @@
 /**
-* AutoCull Component Features.
+* The AutoCull Component is responsible for providing methods that check if a Game Object is within the bounds of the World Camera.
+* It is used by the InWorld component.
 *
 * @class
 */
@@ -8,19 +9,23 @@ Phaser.Component.AutoCull = function () {};
 Phaser.Component.AutoCull.prototype = {
 
     /**
-    * Should this Sprite be automatically culled if out of range of the camera?
-    * A culled sprite has its renderable property set to 'false'.
-    * Be advised this is quite an expensive operation, as it has to calculate the bounds of the object every frame, so only enable it if you really need it.
+    * A Game Object with `autoCull` set to true will check its bounds against the World Camera every frame.
+    * If it is not intersecting the Camera bounds at any point then it has its `renderable` property set to `false`.
+    * This keeps the Game Object alive and still processing updates, but forces it to skip the render step entirely.
+    * 
+    * This is a relatively expensive operation, especially if enabled on hundreds of Game Objects. So enable it only if you know it's required,
+    * or you have tested performance and find it acceptable.
     *
-    * @property {boolean} autoCull - A flag indicating if the Sprite should be automatically camera culled or not.
+    * @property {boolean} autoCull
     * @default
     */
     autoCull: false,
 
     /**
-    * Checks if the Sprite bounds are within the game camera, otherwise false if fully outside of it.
+    * Checks if the Game Objects bounds intersect with the Game Camera bounds.
+    * Returns `true` if they do, otherwise `false` if fully outside of the Cameras bounds.
     *
-    * @property {boolean} inCamera - True if the Sprite bounds is within the game camera, even if only partially. Otherwise false if fully outside of it.
+    * @property {boolean} inCamera
     * @readonly
     */
     inCamera: {
