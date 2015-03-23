@@ -226,6 +226,7 @@ Phaser.Text.prototype.setShadow = function (x, y, color, blur) {
 * @param {string} [style.fontVariant=(from font)] - The variant of the font (eg. 'small-caps'): overrides the value in `style.font`.
 * @param {string} [style.fontWeight=(from font)] - The weight of the font (eg. 'bold'): overrides the value in `style.font`.
 * @param {string|number} [style.fontSize=(from font)] - The size of the font (eg. 32 or '32px'): overrides the value in `style.font`.
+* @param {string} [style.backgroundColor=null] - A canvas fillstyle that will be used as the background for the whole Text object. Set to `null` to disable.
 * @param {string} [style.fill='black'] - A canvas fillstyle that will be used on the text eg 'red', '#00FF00'.
 * @param {string} [style.align='left'] - Alignment for multiline text ('left', 'center' or 'right'), does not affect single line text.
 * @param {string} [style.stroke='black'] - A canvas stroke style that will be used on the text stroke eg 'blue', '#FCFF00'.
@@ -237,6 +238,7 @@ Phaser.Text.prototype.setStyle = function (style) {
 
     style = style || {};
     style.font = style.font || 'bold 20pt Arial';
+    style.backgroundColor = style.backgroundColor || null;
     style.fill = style.fill || 'black';
     style.align = style.align || 'left';
     style.stroke = style.stroke || 'black'; //provide a default, see: https://github.com/GoodBoyDigital/pixi.js/issues/136
@@ -322,9 +324,21 @@ Phaser.Text.prototype.updateText = function () {
     this.canvas.width = width * this.resolution;
     
     //calculate text height
-    var lineHeight = fontProperties.fontSize + this.style.strokeThickness + this._lineSpacing + this.padding.y;
+    var lineHeight = fontProperties.fontSize + this.style.strokeThickness + this.padding.y;
+    var height = lineHeight * lines.length;
+    var lineSpacing = this._lineSpacing;
 
-    var height = (lineHeight + this._lineSpacing) * lines.length;
+    if (lineSpacing < 0 && Math.abs(lineSpacing) > lineHeight)
+    {
+        lineSpacing = -lineHeight;
+    }
+
+    //  Adjust for line spacing
+    if (lineSpacing !== 0)
+    {
+        var diff = lineSpacing * (lines.length - 1);
+        height += diff;
+    }
 
     this.canvas.height = height * this.resolution;
 
@@ -333,6 +347,12 @@ Phaser.Text.prototype.updateText = function () {
     if (navigator.isCocoonJS)
     {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    }
+
+    if (this.style.backgroundColor)
+    {
+        this.context.fillStyle = this.style.backgroundColor;
+        this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
     }
     
     this.context.fillStyle = this.style.fill;
@@ -352,11 +372,16 @@ Phaser.Text.prototype.updateText = function () {
 
     this._charCount = 0;
 
-    //draw lines line by line
+    //  Draw text line by line
     for (i = 0; i < lines.length; i++)
     {
         linePositionX = this.style.strokeThickness / 2;
         linePositionY = (this.style.strokeThickness / 2 + i * lineHeight) + fontProperties.ascent;
+
+        if (i > 0)
+        {
+            linePositionY += (lineSpacing * i);
+        }
 
         if (this.style.align === 'right')
         {
@@ -383,6 +408,7 @@ Phaser.Text.prototype.updateText = function () {
                 this.context.fillText(lines[i], linePositionX, linePositionY);
             }
         }
+
     }
 
     this.updateTexture();
