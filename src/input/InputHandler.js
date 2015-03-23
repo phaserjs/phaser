@@ -125,6 +125,7 @@ Phaser.InputHandler = function (sprite) {
     /**
     * Set to true to use pixel perfect hit detection when checking if the pointer is over this Sprite.
     * The x/y coordinates of the pointer are tested against the image in combination with the InputHandler.pixelPerfectAlpha value.
+    * This feature only works for display objects with image based textures such as Sprites. It won't work on BitmapText or Rope.
     * Warning: This is expensive, especially on mobile (where it's not even needed!) so only enable if required. Also see the less-expensive InputHandler.pixelPerfectClick.
     * @property {boolean} pixelPerfectOver - Use a pixel perfect check when testing for pointer over.
     * @default
@@ -134,6 +135,7 @@ Phaser.InputHandler = function (sprite) {
     /**
     * Set to true to use pixel perfect hit detection when checking if the pointer is over this Sprite when it's clicked or touched.
     * The x/y coordinates of the pointer are tested against the image in combination with the InputHandler.pixelPerfectAlpha value.
+    * This feature only works for display objects with image based textures such as Sprites. It won't work on BitmapText or Rope.
     * Warning: This is expensive so only enable if you really need it.
     * @property {boolean} pixelPerfectClick - Use a pixel perfect check when testing for clicks or touches on the Sprite.
     * @default
