@@ -399,8 +399,8 @@ PIXI.Sprite.prototype._renderCanvas = function(renderSession)
                                 this.texture.crop.height,
                                 dx / resolution,
                                 dy / resolution,
-                                this.texture.crop.width / resolution,
-                                this.texture.crop.height / resolution);
+                                this.texture.frame.width / resolution,
+                                this.texture.frame.height / resolution);
         }
         else
         {
@@ -412,8 +412,8 @@ PIXI.Sprite.prototype._renderCanvas = function(renderSession)
                                 this.texture.crop.height,
                                 dx / resolution,
                                 dy / resolution,
-                                this.texture.crop.width / resolution,
-                                this.texture.crop.height / resolution);
+                                this.texture.frame.width / resolution,
+                                this.texture.frame.height / resolution);
         }
     }
 
