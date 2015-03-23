@@ -582,6 +582,7 @@ Phaser.Loader.prototype = {
         for (var i = 0; i < this._fileList.length + 1; i++)
         {
             var file = this._fileList[i];
+
             if (!file || (!file.loaded && !file.loading && file.type !== 'packfile'))
             {
                 this._fileList.splice(i, 1, pack);
@@ -1973,7 +1974,7 @@ Phaser.Loader.prototype = {
                 break;
 
             case 'physics':
-                var data = JSON.parse(this.responseText);
+                var data = JSON.parse(xhr.responseText);
                 this.game.cache.addPhysicsData(file.key, file.url, data, file.format);
                 break;
 
