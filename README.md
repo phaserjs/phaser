@@ -181,6 +181,7 @@ We've rolled our own fixes into our version of Pixi, ensuring we keep it as bug-
 * ArraySet.getByKey gets an item from the set based on the property strictly equaling the value given.
 * A State swap now sets the Loader.reset `hard` parameter to `true` by default. This will null any Loader.preloadSprite that may have been set.
 * You can now set a `resolution` property in your Game Configuration object. This will be read when the Pixi renderer instance is created and used to set the resolution within that (#1621)
+* Text style has a new optional property: `backgroundColor` which is a Canvas fill style that is set behind all Text in the Text object. It allows you to set a background color without having to use an additional Graphics object.
 
 ### Bug Fixes
 
@@ -218,6 +219,8 @@ We've rolled our own fixes into our version of Pixi, ensuring we keep it as bug-
 * P2 Debug Body class: The shape check in draw() needed to check for Convex last, since other shapes (like Rectangle) inherit from Convex (thanks @englercj #1674)
 * P2 Debug Body class: The updateSpriteTransform() function needed to be called from the ctor. Otherwise bodies with no sprite (so no postUpdate call) would never be moved to draw in the correct position (thanks @englercj #1674)
 * Animations are now guarded allowing Sprites with animations to be destroyed from within onUpdate, onLoop or onComplete events (thanks @pnstickne #1685 #1679)
+* Text.lineSpacing can now accept negative values without cutting the bottom of the Text object off. The value can never be less than the height of a single line of text (thanks @anthonysapp #1690)
+* Text.lineSpacing is no longer applied to the first line of Text, which prevents text from being cut off further down the Text object.
 
 ### Pixi 2.2.8 Bug Fixes
 
