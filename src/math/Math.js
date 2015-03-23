@@ -1009,10 +1009,10 @@ Phaser.Math = {
     },
 
     /**
-    * Generate a sine and cosine table simultaneously and extremely quickly. Based on research by Franky of scene.at
-    *
-    * The parameters allow you to specify the length, amplitude and frequency of the wave. Once you have called this function
-    * you should get the results via getSinTable() and getCosTable(). This generator is fast enough to be used in real-time.
+    * Generate a sine and cosine table simultaneously and extremely quickly.
+    * The parameters allow you to specify the length, amplitude and frequency of the wave.
+    * This generator is fast enough to be used in real-time.
+    * Code based on research by Franky of scene.at
     *
     * @method Phaser.Math#sinCosGenerator
     * @param {number} length - The length of the wave
