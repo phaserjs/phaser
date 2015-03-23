@@ -98,6 +98,12 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
     this.type = Phaser.TILEMAPLAYER;
 
     /**
+    * @property {number} physicsType - The const physics body type of this object.
+    * @readonly
+    */
+    this.physicsType = Phaser.TILEMAPLAYER;
+
+    /**
     * Settings that control standard (non-diagnostic) rendering.
     *
     * @property {boolean} [enableScrollDelta=true] - Delta scroll rendering only draws tiles/edges as them come into view.

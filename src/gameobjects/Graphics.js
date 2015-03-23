@@ -36,6 +36,12 @@ Phaser.Graphics = function (game, x, y) {
     */
     this.type = Phaser.GRAPHICS;
 
+    /**
+    * @property {number} physicsType - The const physics body type of this object.
+    * @readonly
+    */
+    this.physicsType = Phaser.SPRITE;
+
     PIXI.Graphics.call(this);
 
     Phaser.Component.Core.init.call(this, game, x, y, '', null);

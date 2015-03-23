@@ -52,6 +52,12 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     */
     this.type = Phaser.SPRITE;
 
+    /**
+    * @property {number} physicsType - The const physics body type of this object.
+    * @readonly
+    */
+    this.physicsType = Phaser.SPRITE;
+
     PIXI.Sprite.call(this, PIXI.TextureCache['__default']);
 
     Phaser.Component.Core.init.call(this, game, x, y, key, frame);
@@ -61,7 +67,7 @@ Phaser.Sprite = function (game, x, y, key, frame) {
 Phaser.Sprite.prototype = Object.create(PIXI.Sprite.prototype);
 Phaser.Sprite.prototype.constructor = Phaser.Sprite;
 
-var components = [
+Phaser.Component.Core.install.call(Phaser.Sprite.prototype, [
     'Angle',
     'Animation',
     'AutoCull',
@@ -80,9 +86,7 @@ var components = [
     'Reset',
     'ScaleMinMax',
     'Smoothed'
-];
-
-Phaser.Component.Core.install.call(Phaser.Sprite.prototype, components);
+]);
 
 Phaser.Sprite.prototype.preUpdatePhysics = Phaser.Component.PhysicsBody.preUpdate;
 Phaser.Sprite.prototype.preUpdateLifeSpan = Phaser.Component.LifeSpan.preUpdate;

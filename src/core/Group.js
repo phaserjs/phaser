@@ -79,6 +79,12 @@ Phaser.Group = function (game, parent, name, addToStage, enableBody, physicsBody
     this.type = Phaser.GROUP;
 
     /**
+    * @property {number} physicsType - The const physics body type of this object.
+    * @readonly
+    */
+    this.physicsType = Phaser.GROUP;
+
+    /**
     * The alive property is useful for Groups that are children of other Groups and need to be included/excluded in checks like forEachAlive.
     * @property {boolean} alive
     * @default

@@ -50,6 +50,12 @@ Phaser.Button = function (game, x, y, key, callback, callbackContext, overFrame,
     this.type = Phaser.BUTTON;
 
     /**
+    * @property {number} physicsType - The const physics body type of this object.
+    * @readonly
+    */
+    this.physicsType = Phaser.SPRITE;
+
+    /**
     * The name or ID of the Over state frame.
     * @property {string|integer} onOverFrame
     * @private

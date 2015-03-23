@@ -58,6 +58,12 @@ Phaser.Text = function (game, x, y, text, style) {
     this.type = Phaser.TEXT;
 
     /**
+    * @property {number} physicsType - The const physics body type of this object.
+    * @readonly
+    */
+    this.physicsType = Phaser.SPRITE;
+
+    /**
     * Specify a padding value which is added to the line width and height when calculating the Text size.
     * ALlows you to add extra spacing if Phaser is unable to accurately determine the true font dimensions.
     * @property {Phaser.Point} padding

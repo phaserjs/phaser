@@ -39,6 +39,12 @@ Phaser.Particles.Arcade.Emitter = function (game, x, y, maxParticles) {
     this.type = Phaser.EMITTER;
 
     /**
+    * @property {number} physicsType - The const physics body type of this object.
+    * @readonly
+    */
+    this.physicsType = Phaser.GROUP;
+
+    /**
     * @property {Phaser.Rectangle} area - The area of the emitter. Particles can be randomly generated from anywhere within this rectangle.
     * @default
     */
