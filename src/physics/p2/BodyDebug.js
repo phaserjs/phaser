@@ -366,7 +366,7 @@ Phaser.Utils.extend(Phaser.Physics.P2.BodyDebug.prototype, {
     drawCapsule: function(g, x, y, angle, len, radius, color, fillColor, lineWidth) {
 
         if (typeof lineWidth === 'undefined') { lineWidth = 1; }
-        if (typeof color === 'undefined') { color =  0x000000 }
+        if (typeof color === 'undefined') { color =  0x000000; }
 
         g.lineStyle(lineWidth, color, 1);
 
