@@ -124,6 +124,7 @@ Phaser.Cache = function (game) {
 
     /**
     * @property {array} _cacheMap - Const to cache object look-up array.
+    * @private
     */
     this._cacheMap = [];
 
