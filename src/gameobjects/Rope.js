@@ -70,7 +70,7 @@ Phaser.Rope = function (game, x, y, key, frame, points) {
 Phaser.Rope.prototype = Object.create(PIXI.Rope.prototype);
 Phaser.Rope.prototype.constructor = Phaser.Rope;
 
-var components = [
+Phaser.Component.Core.install.call(Phaser.Rope.prototype, [
     'Angle',
     'Animation',
     'AutoCull',
@@ -89,9 +89,7 @@ var components = [
     'Reset',
     'ScaleMinMax',
     'Smoothed'
-];
-
-Phaser.Component.Core.install.call(Phaser.Rope.prototype, components);
+]);
 
 Phaser.Rope.prototype.preUpdatePhysics = Phaser.Component.PhysicsBody.preUpdate;
 Phaser.Rope.prototype.preUpdateLifeSpan = Phaser.Component.LifeSpan.preUpdate;

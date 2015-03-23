@@ -63,7 +63,7 @@ Phaser.TileSprite = function (game, x, y, width, height, key, frame) {
 Phaser.TileSprite.prototype = Object.create(PIXI.TilingSprite.prototype);
 Phaser.TileSprite.prototype.constructor = Phaser.TileSprite;
 
-var components = [
+Phaser.Component.Core.install.call(Phaser.TileSprite.prototype, [
     'Angle',
     'Animation',
     'AutoCull',
@@ -77,9 +77,7 @@ var components = [
     'PhysicsBody',
     'Reset',
     'Smoothed'
-];
-
-Phaser.Component.Core.install.call(Phaser.TileSprite.prototype, components);
+]);
 
 Phaser.TileSprite.prototype.preUpdatePhysics = Phaser.Component.PhysicsBody.preUpdate;
 Phaser.TileSprite.prototype.preUpdateLifeSpan = Phaser.Component.LifeSpan.preUpdate;

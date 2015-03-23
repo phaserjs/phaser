@@ -54,7 +54,7 @@ Phaser.Image = function (game, x, y, key, frame) {
 Phaser.Image.prototype = Object.create(PIXI.Sprite.prototype);
 Phaser.Image.prototype.constructor = Phaser.Image;
 
-var components = [
+Phaser.Component.Core.install.call(Phaser.Image.prototype, [
     'Angle',
     'Animation',
     'AutoCull',
@@ -69,9 +69,7 @@ var components = [
     'Overlap',
     'Reset',
     'Smoothed'
-];
-
-Phaser.Component.Core.install.call(Phaser.Image.prototype, components);
+]);
 
 Phaser.Image.prototype.preUpdateInWorld = Phaser.Component.InWorld.preUpdate;
 Phaser.Image.prototype.preUpdateCore = Phaser.Component.Core.preUpdate;

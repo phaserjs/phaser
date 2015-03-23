@@ -115,7 +115,7 @@ Phaser.Text = function (game, x, y, text, style) {
 Phaser.Text.prototype = Object.create(PIXI.Text.prototype);
 Phaser.Text.prototype.constructor = Phaser.Text;
 
-var components = [
+Phaser.Component.Core.install.call(Phaser.Text.prototype, [
     'Angle',
     'AutoCull',
     'Bounds',
@@ -129,9 +129,7 @@ var components = [
     'PhysicsBody',
     'Reset',
     'Smoothed'
-];
-
-Phaser.Component.Core.install.call(Phaser.Text.prototype, components);
+]);
 
 Phaser.Text.prototype.preUpdatePhysics = Phaser.Component.PhysicsBody.preUpdate;
 Phaser.Text.prototype.preUpdateLifeSpan = Phaser.Component.LifeSpan.preUpdate;

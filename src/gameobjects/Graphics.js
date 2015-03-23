@@ -51,7 +51,7 @@ Phaser.Graphics = function (game, x, y) {
 Phaser.Graphics.prototype = Object.create(PIXI.Graphics.prototype);
 Phaser.Graphics.prototype.constructor = Phaser.Graphics;
 
-var components = [
+Phaser.Component.Core.install.call(Phaser.Graphics.prototype, [
     'Angle',
     'AutoCull',
     'Bounds',
@@ -62,9 +62,7 @@ var components = [
     'LifeSpan',
     'PhysicsBody',
     'Reset'
-];
-
-Phaser.Component.Core.install.call(Phaser.Graphics.prototype, components);
+]);
 
 Phaser.Graphics.prototype.preUpdatePhysics = Phaser.Component.PhysicsBody.preUpdate;
 Phaser.Graphics.prototype.preUpdateLifeSpan = Phaser.Component.LifeSpan.preUpdate;
@@ -73,7 +71,9 @@ Phaser.Graphics.prototype.preUpdateCore = Phaser.Component.Core.preUpdate;
 
 /**
 * Automatically called by World.preUpdate.
-* @method Phaser.Graphics.prototype.preUpdate
+* 
+* @method
+* @memberof Phaser.Graphics
 */
 Phaser.Graphics.prototype.preUpdate = function () {
 
