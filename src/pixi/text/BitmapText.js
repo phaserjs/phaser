@@ -222,11 +222,6 @@ PIXI.BitmapText.prototype.updateText = function()
         if (c) c.setTexture(chars[i].texture); // check if got one before.
         else c = new PIXI.Sprite(chars[i].texture); // if no create new one.
 
-        // c.position.x = (chars[i].position.x + lineAlignOffsets[chars[i].line]) * scale;
-        // c.position.y = chars[i].position.y * scale;
-        // c.position.x -= this.textWidth * this.anchor.x;
-        // c.position.y -= this.textHeight * this.anchor.y;
-
         c.position.x = ((chars[i].position.x + lineAlignOffsets[chars[i].line]) * scale) - ax;
         c.position.y = (chars[i].position.y * scale) - ay;
 

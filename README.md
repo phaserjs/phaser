@@ -68,13 +68,15 @@ All of the core Game Objects have received a small but important restructuring.
 
 ### Arcade Physics
 
-We've updated the core of Arcade Physics in a couple of significant ways. First we've dropped lots of internal private vars and moved to local cars. Equally array lengths are no longer cached and we've been a nice improvement all around as a result.
+We've updated the core of Arcade Physics in a number of significant ways. 
 
-More importantly we're now using a spacial pre-sort for all Sprite vs. Group and Group vs. Group collisions. You can define the direction the sort will prioritise via the new `sortDirection` property. By default it is set to `Phaser.Physics.Arcade.LEFT_RIGHT`. For example if you are making a horizontally scrolling game, where the player starts on the left and moves to the right, then this sort order will allow the physics system to quickly eliminate any object to the right of the players bounds. This cuts down on the sheer volume of actual collision checks needing to be made. In a densely populated level it can improve fps rate dramatically.
+First we've dropped lots of internal private vars and moved to using non-cached local vars. Array lengths are no longer cached and we've implemented physicsType properties on Game Objects to speed-up the core World collideHandler. All of these small changes have lead to a nice improvement in speed as a result, and also allows us to now offer things like physics enabled BitmapText objects.
 
-There are 3 other directions available (`RIGHT_LEFT`, `TOP_BOTTOM` and `BOTTOM_TOP`) and which one you need will depend on your game type. If you were making a vertically scrolling shoot-em-up then you'd pick `BOTTOM_TOP` so it sorts all objects above and can bail out quickly.
+More importantly we're now using a spacial pre-sort for all Sprite vs. Group and Group vs. Group collisions. You can define the direction the sort will prioritize via the new `sortDirection` property. By default it is set to `Phaser.Physics.Arcade.LEFT_RIGHT`. For example if you are making a horizontally scrolling game, where the player starts on the left of the world and moves to the right, then this sort order will allow the physics system to quickly eliminate any objects to the right of the player bounds. This cuts down on the sheer volume of actual collision checks needing to be made. In a densely populated level it can improve the fps rate *dramatically*.
 
-More importantly you can switch the `sortDirection` at run-time with no loss of performance. Just make sure you do it *before* running any collision checks. So if you had a large 8-way scrolling world you could set the `sortDirection` to match the direction the player was moving in and adjust it in real-time, getting the benefits as you go. My thanks to Aaron Lahman for inspiring this update.
+There are 3 other directions available (`RIGHT_LEFT`, `TOP_BOTTOM` and `BOTTOM_TOP`) and which one you need will depend on your game type. If you were making a vertically scrolling shoot-em-up then you'd pick `BOTTOM_TOP` so it sorts all objects above and can bail out quickly. There is also `SORT_NONE` if you would like to pre-sort the Groups yourself or disable this feature.
+
+Another handy feature is that you can switch the `sortDirection` at run-time with no loss of performance. Just make sure you do it *before* running any collision checks. So if you had a large 8-way scrolling world you could set the `sortDirection` to match the direction the player was moving in and adjust it in real-time, getting the benefits as you go. My thanks to Aaron Lahman for inspiring this update.
 
 #### Phaser.Loader
 
@@ -104,9 +106,11 @@ Thanks to @pnstickne for vast majority of this update.
 
 We are now using our own custom build of Pixi v2. The Pixi project has moved all development resources over to Pixi v3, but it wasn't ready in time for the release of Phaser 2.3 so we've started applying our own fixes to the version of Pixi that Phaser uses.
 
-To this end we have removed all files from the src/pixi folder that Phaser doesn't use, in order to make this distinction clearer. This includes `EventTarget`, so if you were relying on that in your game you'll need to add it back into your local build.
+As a result we have removed all files from the src/pixi folder that Phaser doesn't use in order to make this distinction clearer. This includes `EventTarget`, so if you were relying on that in your game you'll need to add it back in to your local build.
 
 We've also removed functions and properties from Pixi classes that Phaser doesn't require - such as the Interaction Manager, Stage.dirty, etc. This has helped us cut down the source code size and make the docs less confusing, as they no longer show properties for things that weren't even enabled.
+
+We've rolled our own fixes into our version of Pixi, ensuring we keep it as bug-free as possible.
 
 ### New Features
 
@@ -130,7 +134,10 @@ We've also removed functions and properties from Pixi classes that Phaser doesn'
 * ArraySet.removeAll allows you to remove all members of an ArraySet and optionally call `destroy` on them as well.
 * GameObject.input.dragStartPoint now stores the coordinates the object was at when the drag started. This value is populated when the drag starts. It can be used to return an object to its pre-drag position, for example if it was dropped in an invalid place in-game.
 * Text.padding specifies a padding value which is added to the line width and height when calculating the Text size. ALlows you to add extra spacing if Phaser is unable to accurately determine the true font dimensions (#1561 #1518)
-* P2 Capsule Shapes now support BodyDebug drawinging (thanks @englercj #1686)
+* P2 Capsule Shapes now support BodyDebug drawing (thanks @englercj #1686)
+* Game Objects now have a new `physicsType` property. This maps to a Phaser const such as `SPRITE` or `GROUP` and has allowed us sort out pairings for collision checks in the core World collide handler much quicker than before.
+* BitmapText objects can now have physics enabled on them. When the physics body is first created it will use the dimensions of the BitmapText at the time you enable it. If you update the text it will adjust the body width and height as well, however any applied offset will be retained.
+* BitmapText objects now have an `anchor` property. This works in a similar way to Sprite.anchor except that it offsets the position of each letter of the BitmapText by the given amount, based on the overall BitmapText width - whereas Sprite.anchor offsets the position the texture is drawn at.
 
 ### Updates
 
