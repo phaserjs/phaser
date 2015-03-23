@@ -1,5 +1,11 @@
 /**
-* Smoothed Component Features.
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2015 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+*/
+
+/**
+* The Smoothed component allows a Game Object to control anti-aliasing of an image based texture.
 *
 * @class
 */
@@ -8,9 +14,13 @@ Phaser.Component.Smoothed = function () {};
 Phaser.Component.Smoothed.prototype = {
 
     /**
-    * Enable or disable texture smoothing for this Sprite. Only works for bitmap/image textures. Smoothing is enabled by default.
+    * Enable or disable texture smoothing for this Game Object.
+    * 
+    * It only takes effect if the Game Object is using an image based texture.
+    * 
+    * Smoothing is enabled by default.
     *
-    * @property {boolean} smoothed - Set to true to smooth the texture of this Sprite, or false to disable smoothing (great for pixel art)
+    * @property {boolean} smoothed
     */
     smoothed: {
 

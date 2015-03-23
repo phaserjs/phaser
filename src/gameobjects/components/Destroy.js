@@ -1,5 +1,11 @@
 /**
-* Destroy Component Features.
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2015 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+*/
+
+/**
+* The Destroy component is responsible for destroying a Game Object.
 *
 * @class
 */
@@ -8,17 +14,21 @@ Phaser.Component.Destroy = function () {};
 Phaser.Component.Destroy.prototype = {
 
     /**
-    * @property {boolean} destroyPhase - As a Sprite runs through its destroy method this flag is set to true, and can be checked in any sub-systems it is being destroyed from.
+    * As a Game Object runs through its destroy method this flag is set to true, 
+    * and can be checked in any sub-systems or plugins it is being destroyed from.
+    * @property {boolean} destroyPhase
     * @readOnly
     */
     destroyPhase: false,
 
     /**
-    * Destroys the Sprite. This removes it from its parent group, destroys the input, event and animation handlers if present
-    * and nulls its reference to game, freeing it up for garbage collection.
+    * Destroys the Game Object. This removes it from its parent group, destroys the input, event and animation handlers if present
+    * and nulls its reference to `game`, freeing it up for garbage collection.
+    * 
+    * If this Game Object has the Events component it will also dispatch the `onDestroy` event.
     *
     * @method
-    * @param {boolean} [destroyChildren=true] - Should every child of this object have its destroy method called?
+    * @param {boolean} [destroyChildren=true] - Should every child of this object have its destroy method called as well?
     */
     destroy: function(destroyChildren) {
 

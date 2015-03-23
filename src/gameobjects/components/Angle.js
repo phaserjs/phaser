@@ -1,5 +1,11 @@
 /**
-* Angle Component Features.
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2015 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+*/
+
+/**
+* The Angle Component provides access to an `angle` property; the rotation of a Game Object in degrees.
 *
 * @class
 */
@@ -8,11 +14,17 @@ Phaser.Component.Angle = function () {};
 Phaser.Component.Angle.prototype = {
 
     /**
-    * Indicates the rotation of the Sprite, in degrees, from its original orientation. Values from 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation.
-    * Values outside this range are added to or subtracted from 360 to obtain a value within the range. For example, the statement player.angle = 450 is the same as player.angle = 90.
-    * If you wish to work in radians instead of degrees use the property Sprite.rotation instead. Working in radians is also a little faster as it doesn't have to convert the angle.
+    * The angle property is the rotation of the Game Object in *degrees* from its original orientation.
+    * 
+    * Values from 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation.
+    * 
+    * Values outside this range are added to or subtracted from 360 to obtain a value within the range. 
+    * For example, the statement player.angle = 450 is the same as player.angle = 90.
+    * 
+    * If you wish to work in radians instead of degrees you can use the property `rotation` instead. 
+    * Working in radians is slightly faster as it doesn't have to perform any calculations.
     *
-    * @property {number} angle - The angle of this Sprite in degrees.
+    * @property {number} angle
     */
     angle: {
 

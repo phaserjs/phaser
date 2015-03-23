@@ -1,10 +1,22 @@
 /**
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2015 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+*/
+
+/**
 * LifeSpan Component Features.
 *
 * @class
 */
 Phaser.Component.LifeSpan = function () {};
 
+/**
+ * The LifeSpan component preUpdate handler.
+ * Called automatically by the Game Object.
+ *
+ * @method
+ */
 Phaser.Component.LifeSpan.preUpdate = function () {
 
     if (this.lifespan > 0)
@@ -25,16 +37,27 @@ Phaser.Component.LifeSpan.preUpdate = function () {
 Phaser.Component.LifeSpan.prototype = {
 
     /**
-    * @property {boolean} alive - A useful boolean to control if the Sprite is alive or dead (in terms of your gameplay, it doesn't effect rendering). Also linked to Sprite.health and Sprite.damage.
+    * A useful flag to control if the Game Object is alive or dead.
+    * 
+    * This is set automatically by the Health components `damage` method should the object run out of health.
+    * Or you can toggle it via your game code.
+    * 
+    * This property is mostly just provided to be used by your game - it doesn't effect rendering or logic updates.
+    * However you can use `Group.getFirstAlive` in conjunction with this property for fast object pooling and recycling.
+    * @property {boolean} alive
     * @default
     */
     alive: true,
 
     /**
-    * To given a Sprite a lifespan, in milliseconds, once 'born' you can set this to a positive value. Handy for particles, bullets, etc.
-    *
-    * The lifespan is decremented by `game.time.physicsElapsed` (converted to milliseconds) each logic update,
-    * and {@link Phaser.Sprite.kill kill} is called once the lifespan reaches 0.
+    * The lifespan allows you to give a Game Object a lifespan in milliseconds.
+    * 
+    * Once the Game Object is 'born' you can set this to a positive value.
+    * 
+    * It is automatically decremented by the millisecond equivalent of `game.time.physicsElapsed` each frame.
+    * When it reaches zero it will call the `kill` method.
+    * 
+    * Very handy for particles, bullets, collectibles, or any other short-lived entity.
     *
     * @property {number} lifespan
     * @default
@@ -42,13 +65,15 @@ Phaser.Component.LifeSpan.prototype = {
     lifespan: 0,
 
     /**
-    * Brings a 'dead' Sprite back to life, optionally giving it the health value specified.
-    * A resurrected Sprite has its alive, exists and visible properties all set to true.
-    * It will dispatch the onRevived event, you can listen to Sprite.events.onRevived for the signal.
+    * Brings a 'dead' Game Object back to life, optionally resetting its health value in the process.
+    * 
+    * A resurrected Game Object has its `alive`, `exists` and `visible` properties all set to true.
+    * 
+    * It will dispatch the `onRevived` event. Listen to `events.onRevived` for the signal.
     *
     * @method
-    * @param {number} [health=1] - The health to give the Sprite. Only applies if the GameObject has the Health component.
-    * @return (Phaser.Sprite) This instance.
+    * @param {number} [health=1] - The health to give the Game Object. Only set if the GameObject has the Health component.
+    * @return {PIXI.DisplayObject} This instance.
     */
     revive: function(health) {
 
@@ -73,13 +98,17 @@ Phaser.Component.LifeSpan.prototype = {
     },
 
     /**
-    * Kills a Sprite. A killed Sprite has its alive, exists and visible properties all set to false.
-    * It will dispatch the onKilled event, you can listen to Sprite.events.onKilled for the signal.
-    * Note that killing a Sprite is a way for you to quickly recycle it in a Sprite pool, it doesn't free it up from memory.
-    * If you don't need this Sprite any more you should call Sprite.destroy instead.
+    * Kills a Game Object. A killed Game Object has its `alive`, `exists` and `visible` properties all set to false.
+    * 
+    * It will dispatch the `onKilled` event. You can listen to `events.onKilled` for the signal.
+    * 
+    * Note that killing a Game Object is a way for you to quickly recycle it in an object pool, 
+    * it doesn't destroy the object or free it up from memory.
+    * 
+    * If you don't need this Game Object any more you should call `destroy` instead.
     *
     * @method
-    * @return (Phaser.Sprite) This instance.
+    * @return {PIXI.DisplayObject} This instance.
     */
     kill: function() {
 

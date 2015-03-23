@@ -1,5 +1,11 @@
 /**
-* Bounds Component Features.
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2015 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+*/
+
+/**
+* The Bounds component contains properties related to the bounds of the Game Object.
 *
 * @class
 */
@@ -8,11 +14,11 @@ Phaser.Component.Bounds = function () {};
 Phaser.Component.Bounds.prototype = {
 
     /**
-    * The amount the sprite is visually offset from its x coordinate.
-    * This is the same as `Sprite.width * Sprite.anchor.x`.
-    * It will only be > 0 if the Sprite.anchor.x is not equal to zero.
+    * The amount the Game Object is visually offset from its x coordinate.
+    * This is the same as `width * anchor.x`.
+    * It will only be > 0 if anchor.x is not equal to zero.
     *
-    * @property {number} offsetX - The amount the sprite is visually offset from its x coordinate.
+    * @property {number} offsetX
     * @readOnly
     */
     offsetX: {
@@ -26,11 +32,11 @@ Phaser.Component.Bounds.prototype = {
     },
 
     /**
-    * The amount the sprite is visually offset from its y coordinate.
-    * This is the same as `Sprite.height * Sprite.anchor.y`.
-    * It will only be > 0 if the Sprite.anchor.y is not equal to zero.
+    * The amount the Game Object is visually offset from its y coordinate.
+    * This is the same as `height * anchor.y`.
+    * It will only be > 0 if anchor.y is not equal to zero.
     *
-    * @property {number} offsetY - The amount the sprite is visually offset from its y coordinate.
+    * @property {number} offsetY
     * @readOnly
     */
     offsetY: {
@@ -44,9 +50,10 @@ Phaser.Component.Bounds.prototype = {
     },
 
     /**
-    * The left coordinate of the Sprite, adjusted for the anchor.
+    * The left coordinate of the Game Object.
+    * This is the same as `x - offsetX`.
     *
-    * @property {number} left - The left coordinate of the Sprite, adjusted for the anchor.
+    * @property {number} left
     * @readOnly
     */
     left: {
@@ -60,9 +67,10 @@ Phaser.Component.Bounds.prototype = {
     },
 
     /**
-    * The right coordinate of the Sprite, adjusted for the anchor. This is the same as Sprite.x + Sprite.width - Sprite.offsetX.
+    * The right coordinate of the Game Object.
+    * This is the same as `x + width - offsetX`.
     *
-    * @property {number} right - The right coordinate of the Sprite, adjusted for the anchor. This is the same as Sprite.x + Sprite.width - Sprite.offsetX.
+    * @property {number} right
     * @readOnly
     */
     right: {
@@ -76,9 +84,10 @@ Phaser.Component.Bounds.prototype = {
     },
 
     /**
-    * The y coordinate of the Sprite, adjusted for the anchor.
+    * The y coordinate of the Game Object.
+    * This is the same as `y - offsetY`.
     *
-    * @property {number} top - The y coordinate of the Sprite, adjusted for the anchor.
+    * @property {number} top
     * @readOnly
     */
     top: {
@@ -92,9 +101,10 @@ Phaser.Component.Bounds.prototype = {
     },
 
     /**
-    * The sum of the y and height properties, adjusted for the anchor.
+    * The sum of the y and height properties.
+    * This is the same as `y + height - offsetY`.
     *
-    * @property {number} bottom - The sum of the y and height properties, adjusted for the anchor.
+    * @property {number} bottom
     * @readOnly
     */
     bottom: {

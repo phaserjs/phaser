@@ -1,5 +1,11 @@
 /**
-* InputEnabled Component Features.
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2015 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+*/
+
+/**
+* The InputEnabled component allows a Game Object to have its own InputHandler and process input related events.
 *
 * @class
 */
@@ -8,15 +14,26 @@ Phaser.Component.InputEnabled = function () {};
 Phaser.Component.InputEnabled.prototype = {
 
     /**
-    * @property {Phaser.InputHandler|null} input - The Input Handler for this object. Needs to be enabled with image.inputEnabled = true before you can use it.
+    * The Input Handler for this Game Object.
+    * 
+    * By default it is disabled. If you wish this Game Object to process input events you should enable it with: `inputEnabled = true`.
+    * 
+    * After you have done this, this property will be a reference to the Phaser InputHandler.
+    * @property {Phaser.InputHandler|null} input 
     */
     input: null,
 
     /**
-    * By default a Sprite won't process any input events at all. By setting inputEnabled to true the Phaser.InputHandler is
-    * activated for this object and it will then start to process click/touch events and more.
+    * By default a Game Object won't process any input events. By setting `inputEnabled` to true a Phaser.InputHandler is created
+    * for this Game Object and it will then start to process click / touch events and more.
+    * 
+    * You can then access the Input Handler via `this.input`.
+    * 
+    * Note that Input related events are dispatched from `this.events`, i.e.: `events.onInputDown`.
+    * 
+    * If you set this property to false it will stop the Input Handler from processing any more input events.
     *
-    * @property {boolean} inputEnabled - Set to true to allow this object to receive input events.
+    * @property {boolean} inputEnabled
     */
     inputEnabled: {
 

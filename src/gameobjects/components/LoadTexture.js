@@ -1,5 +1,11 @@
 /**
-* LoadTexture Component Features.
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2015 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+*/
+
+/**
+* The LoadTexture component manages the loading of a texture into the Game Object and the changing of frames.
 *
 * @class
 */
@@ -14,8 +20,13 @@ Phaser.Component.LoadTexture.prototype = {
     _frame: null,
 
     /**
-    * Changes the Texture the Sprite is using entirely. The old texture is removed and the new one is referenced or fetched from the Cache.
-    * This causes a WebGL texture update, so use sparingly or in low-intensity portions of your game.
+    * Changes the base texture the Game Object is using. The old texture is removed and the new one is referenced or fetched from the Cache.
+    * 
+    * If your Game Object is using a frame from a texture atlas and you just wish to change to another frame, then see the `frame` or `frameName` properties instead.
+    * 
+    * You should only use `loadTexture` if you want to replace the base texture entirely.
+    * 
+    * Calling this method causes a WebGL texture update, so use sparingly or in low-intensity portions of your game, or if you know the new texture is already on the GPU.
     *
     * @method
     * @param {string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture} key - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture, BitmapData or PIXI.Texture.
@@ -96,13 +107,14 @@ Phaser.Component.LoadTexture.prototype = {
     },
 
     /**
-    * Sets the Texture frame the Sprite uses for rendering.
-    * This is primarily an internal method used by Sprite.loadTexture, although you may call it directly.
+    * Sets the texture frame the Game Object uses for rendering.
+    * 
+    * This is primarily an internal method used by `loadTexture`, but is exposed for the use of plugins and custom classes.
     *
     * @method
-    * @param {Phaser.Frame} frame - The Frame to be used by the Sprite texture.
+    * @param {Phaser.Frame} frame - The Frame to be used by the texture.
     */
-    setFrame: function(frame) {
+    setFrame: function (frame) {
 
         this._frame = frame;
 
@@ -155,7 +167,7 @@ Phaser.Component.LoadTexture.prototype = {
     },
 
     /**
-    * Resets the Texture frame dimensions that the Sprite uses for rendering.
+    * Resets the texture frame dimensions that the Game Object uses for rendering.
     *
     * @method
     */
@@ -169,7 +181,17 @@ Phaser.Component.LoadTexture.prototype = {
     },
 
     /**
-    * @property {number} frame - Gets or sets the current frame index and updates the Texture Cache for display.
+    * Gets or sets the current frame index of the texture being used to render this Game Object.
+    *
+    * To change the frame set `frame` to the index of the new frame in the sprite sheet you wish this Game Object to use,
+    * for example: `player.frame = 4`.
+    * 
+    * If the frame index given doesn't exist it will revert to the first frame found in the texture.
+    * 
+    * If you are using a texture atlas then you should use the `frameName` property instead.
+    * 
+    * If you wish to fully replace the texture being used see `loadTexture`.
+    * @property {integer} frame
     */
     frame: {
 
@@ -184,7 +206,17 @@ Phaser.Component.LoadTexture.prototype = {
     },
 
     /**
-    * @property {string} frameName - Gets or sets the current frame name and updates the Texture Cache for display.
+    * Gets or sets the current frame name of the texture being used to render this Game Object.
+    * 
+    * To change the frame set `frameName` to the name of the new frame in the texture atlas you wish this Game Object to use, 
+    * for example: `player.frameName = "idle"`.
+    *
+    * If the frame name given doesn't exist it will revert to the first frame found in the texture and throw a console warning.
+    * 
+    * If you are using a sprite sheet then you should use the `frame` property instead.
+    * 
+    * If you wish to fully replace the texture being used see `loadTexture`.
+    * @property {string} frameName
     */
     frameName: {
 

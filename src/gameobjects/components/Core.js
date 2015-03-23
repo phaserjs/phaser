@@ -1,4 +1,10 @@
 /**
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2015 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+*/
+
+/**
 * Core Component Features.
 *
 * @class
@@ -10,6 +16,7 @@ Phaser.Component.Core = function () {};
 *
 * The `this` context should be that of the applicable object instance or prototype.
 *
+* @method
 * @protected
 */
 Phaser.Component.Core.install = function (components) {
@@ -41,6 +48,7 @@ Phaser.Component.Core.install = function (components) {
 *
 * The `this` context should be an instance of the component mixin target.
 *
+* @method
 * @protected
 */
 Phaser.Component.Core.init = function (game, x, y, key, frame) {
@@ -115,74 +123,101 @@ Phaser.Component.Core.preUpdate = function () {
 Phaser.Component.Core.prototype = {
 
     /**
-    * @property {Phaser.Game} game - A reference to the currently running Game.
+    * A reference to the currently running Game.
+    * @property {Phaser.Game} game
     */
     game: null,
 
     /**
-    * @property {string} name - The user defined name given to this Sprite.
+    * A user defined name given to this Game Object.
+    * This value isn't ever used internally by Phaser, it is meant as a game level property.
+    * @property {string} name
     * @default
     */
     name: '',
 
     /**
-    * @property {object} components - The components this GameObject has.
+    * The components this Game Object has installed.
+    * @property {object} components
     * @protected
     */
     components: {},
 
     /**
-    * @property {number} z - The z-depth value of this object within its Group (remember the World is a Group as well). No two objects in a Group can have the same z value.
+    * The z depth of this Game Object within its parent Group.
+    * No two objects in a Group can have the same z value.
+    * This value is adjusted automatically whenever the Group hierarchy changes.
+    * @property {number} z
     */
     z: 0,
 
     /**
-    * @property {Phaser.Events} events - The Events you can subscribe to that are dispatched when certain things happen on this Sprite or its components.
+    * All Phaser Game Objects have an Events class which contains all of the events that are dispatched when certain things happen to this
+    * Game Object, or any of its components.
+    * @see Phaser.Events
+    * @property {Phaser.Events} events
     */
     events: undefined,
 
     /**
-    * @property {Phaser.AnimationManager} animations - This manages animations of the sprite. You can modify animations through it (see Phaser.AnimationManager)
+    * If the Game Object is enabled for animation (such as a Phaser.Sprite) this is a reference to its AnimationManager instance.
+    * Through it you can create, play, pause and stop animations.
+    * @see Phaser.AnimationManager
+    * @property {Phaser.AnimationManager} animations
     */
     animations: undefined,
 
     /**
-    *  @property {string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture} key - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture, BitmapData or PIXI.Texture.
+    * The key of the image or texture used by this Game Object during rendering.
+    * If it is a string it's the string used to retrieve the texture from the Phaser.Cache.
+    * It can also be an instance of a RenderTexture, BitmapData or PIXI.Texture.
+    * If a Game Object is created without a key it is automatically assigned the key `__default` which is a 32x32 transparent PNG stored within the Cache.
+    * If a Game Object is given a key which doesn't exist in the Cache it is re-assigned the key `__missing` which is a 32x32 PNG of a green box with a line through it.
+    *  @property {string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture} key
     */
     key: '',
 
     /**
-    * @property {Phaser.Point} world - The world coordinates of this Sprite. This differs from the x/y coordinates which are relative to the Sprites container.
+    * The world coordinates of this Game Object in pixels.
+    * Depending on where in the display list this Game Object is placed this value can differ from `position`, 
+    * which contains the x/y coordinates relative to the Game Objects parent.
+    * @property {Phaser.Point} world
     */
     world: null,
 
     /**
-    * @property {boolean} debug - Handy flag to use with Game.enableStep
+    * A debug flag designed for use with `Game.enableStep`.
+    * @property {boolean} debug
     * @default
     */
     debug: false,
 
     /**
-    * @property {Phaser.Point} previousPosition - The position the Sprite was in at the last update.
+    * The position the Game Object was located in the previous frame.
+    * @property {Phaser.Point} previousPosition
     * @readOnly
     */
     previousPosition: null,
 
     /**
-    * The rotation angle the Sprite was in at the last update (in radians)   
-    * @property {number} previousRotation2
+    * The rotation the Game Object was in set to in the previous frame. Value is in radians.
+    * @property {number} previousRotation
     * @readOnly
     */
     previousRotation: 0,
 
     /**
-    * @property {number} renderOrderID - The render order ID. This is used internally by the renderer and input manager and should not be modified.
+    * The render order ID is used internally by the renderer and Input Manager and should not be modified.
+    * This property is mostly used internally by the renderers, but is exposed for the use of plugins.
+    * @property {number} renderOrderID
     * @readOnly
     */
     renderOrderID: 0,
 
     /**
-    * @property {boolean} fresh - A fresh Sprite is one that has just been created or reset and is yet to receive a world level transform update.
+    * A Game Object is considered `fresh` if it has just been created or reset and is yet to receive a renderer transform update.
+    * This property is mostly used internally by the physics systems, but is exposed for the use of plugins.
+    * @property {boolean} fresh
     * @readOnly
     */
     fresh: true,
@@ -200,12 +235,15 @@ Phaser.Component.Core.prototype = {
     _exists: true,
 
     /**
-    * Controls if the core game loop and physics update this Sprite or not.
+    * Controls if this Game Object is processed by the core game loop.
+    * If this Game Object has a physics body it also controls if its physics body is updated or not.
+    * When `exists` is set to `false` it will remove its physics body from the physics world if it has one.
+    * It also toggles the `visible` property to false as well.
     *
-    * When `exists` is set to to false it will remove its Body from the physics world (if it has one) and also set Sprite.visible to false.
-    * Setting Sprite.exists to true will re-add the Body to the physics world (if it has a body) and set Sprite.visible to true.
+    * Setting `exists` to true will add its physics body back in to the physics world, if it has one.
+    * It will also set the `visible` property to `true`.
     *
-    * @property {boolean} exists - True if this game objects exists.
+    * @property {boolean} exists
     */
     exists: {
 
@@ -245,8 +283,9 @@ Phaser.Component.Core.prototype = {
     },
 
     /**
-    * Override and use this function in your own custom objects to handle any update requirements you may have.
-    * Remember if this Sprite has any children you should call update on them too.
+    * Override this method in your own custom objects to handle any update requirements.
+    * It is called immediately after `preUpdate` and before `postUpdate`.
+    * Remember if this Game Object has any children you should call update on those too.
     *
     * @method
     */
@@ -255,7 +294,7 @@ Phaser.Component.Core.prototype = {
     },
 
     /**
-    * Internal function called by the World postUpdate cycle.
+    * Internal method called by the World postUpdate cycle.
     *
     * @method
     * @protected
