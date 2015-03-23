@@ -111,6 +111,9 @@ Phaser.Utils.extend(Phaser.Physics.P2.BodyDebug.prototype, {
                 {
                     this.drawCircle(sprite, offset[0] * this.ppu, offset[1] * this.ppu, angle, child.radius * this.ppu, color, lw);
                 }
+                else if (child instanceof p2.Capsule) {
+                    this.drawCapsule(sprite, offset[0] * this.ppu, offset[1] * this.ppu, angle, child.length * this.ppu, child.radius * this.ppu, lineColor, color, lw);
+                }
                 else if (child instanceof p2.Plane)
                 {
                     this.drawPlane(sprite, offset[0] * this.ppu, -offset[1] * this.ppu, color, lineColor, lw * 5, lw * 10, lw * 10, this.ppu * 100, angle);
@@ -357,6 +360,40 @@ Phaser.Utils.extend(Phaser.Physics.P2.BodyDebug.prototype, {
         xd = x0 + Math.cos(angle) * -this.game.width;
         yd = x1 + Math.sin(angle) * -this.game.height;
         g.lineTo(xd, -yd);
+
+    },
+
+    drawCapsule: function(g, x, y, angle, len, radius, color, fillColor, lineWidth) {
+
+        if (typeof lineWidth === 'undefined') { lineWidth = 1; }
+        if (typeof color === 'undefined') { color =  0x000000; }
+
+        g.lineStyle(lineWidth, color, 1);
+
+        // Draw circles at ends
+        var c = Math.cos(angle);
+        var s = Math.sin(angle);
+
+        g.beginFill(fillColor, 1);
+        g.drawCircle(-len/2*c + x, -len/2*s + y, -radius * 2);
+        g.drawCircle( len/2*c + x,  len/2*s + y, -radius * 2);
+        g.endFill();
+
+        // Draw rectangle
+        g.lineStyle(lineWidth, color, 0);
+        g.beginFill(fillColor, 1);
+        g.moveTo(-len/2*c + radius*s + x, -len/2*s + radius*c + y);
+        g.lineTo( len/2*c + radius*s + x,  len/2*s + radius*c + y);
+        g.lineTo( len/2*c - radius*s + x,  len/2*s - radius*c + y);
+        g.lineTo(-len/2*c - radius*s + x, -len/2*s - radius*c + y);
+        g.endFill();
+
+        // Draw lines in between
+        g.lineStyle(lineWidth, color, 1);
+        g.moveTo(-len/2*c + radius*s + x, -len/2*s + radius*c + y);
+        g.lineTo( len/2*c + radius*s + x,  len/2*s + radius*c + y);
+        g.moveTo(-len/2*c - radius*s + x, -len/2*s - radius*c + y);
+        g.lineTo( len/2*c - radius*s + x,  len/2*s - radius*c + y);
 
     },
 
