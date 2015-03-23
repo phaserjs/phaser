@@ -72,18 +72,6 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.preRotation = sprite.rotation;
 
     /**
-    * @property {number} sourceWidth - The un-scaled original size.
-    * @readonly
-    */
-    this.sourceWidth = sprite.texture.frame.width;
-
-    /**
-    * @property {number} sourceHeight - The un-scaled original size.
-    * @readonly
-    */
-    this.sourceHeight = sprite.texture.frame.height;
-
-    /**
     * @property {number} width - The calculated width of the physics body.
     * @readonly
     */
@@ -94,6 +82,24 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     * @readonly
     */
     this.height = sprite.height;
+
+    /**
+    * @property {number} sourceWidth - The un-scaled original size.
+    * @readonly
+    */
+    this.sourceWidth = sprite.width;
+
+    /**
+    * @property {number} sourceHeight - The un-scaled original size.
+    * @readonly
+    */
+    this.sourceHeight = sprite.height;
+
+    if (sprite.texture)
+    {
+        this.sourceWidth = sprite.texture.frame.width;
+        this.sourceHeight = sprite.texture.frame.height;
+    }
 
     /**
     * @property {number} halfWidth - The calculated width / 2 of the physics body.
@@ -650,9 +656,7 @@ Phaser.Physics.Arcade.Body.prototype = {
     * @return {boolean} True if the given coordinates are inside this Body, otherwise false.
     */
     hitTest: function (x, y) {
-
         return Phaser.Rectangle.contains(this, x, y);
-
     },
 
     /**
