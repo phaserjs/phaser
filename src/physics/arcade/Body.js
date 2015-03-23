@@ -155,7 +155,7 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.maxVelocity = new Phaser.Point(10000, 10000);
 
     /**
-    * @property {number} angularVelocity - The angular velocity in pixels per second sq. of the Body.
+    * @property {number} angularVelocity - The angular velocity in radians per second of the Body.
     * @default
     */
     this.angularVelocity = 0;
