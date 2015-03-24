@@ -387,15 +387,18 @@ Phaser.Animation.prototype = {
                     this.loopCount++;
                     this._parent.events.onAnimationLoop$dispatch(this._parent, this);
                     this.onLoop.dispatch(this._parent, this);
+                    return this.updateCurrentFrame(true);
                 }
                 else
                 {
                     this.complete();
+                    return false;
                 }
             }
-
-            return this.updateCurrentFrame(true);
-
+            else
+            {
+                return this.updateCurrentFrame(true);
+            }
         }
 
         return false;
