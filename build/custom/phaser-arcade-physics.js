@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.3.0 "Tarabon" - Built: Tue Mar 24 2015 16:05:22
+* v2.3.0 "Tarabon" - Built: Tue Mar 24 2015 21:33:54
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -12288,7 +12288,7 @@ PIXI.AbstractFilter.prototype.apply = function(frameBuffer)
 */
 var Phaser = Phaser || {
 
-	VERSION: '2.3.0-RC1',
+	VERSION: '2.3.0-RC2',
 	GAMES: [],
 
     AUTO: 0,
@@ -34264,6 +34264,11 @@ Phaser.Component.Core.init = function (game, x, y, key, frame) {
         this.loadTexture(key, frame);
     }
 
+    if (this.components.FixedToCamera)
+    {
+        this.cameraOffset = new Phaser.Point(x, y);
+    }
+
 };
 
 Phaser.Component.Core.preUpdate = function () {
@@ -35051,6 +35056,12 @@ Phaser.Component.FixedToCamera.postUpdate = function () {
 Phaser.Component.FixedToCamera.prototype = {
 
     /**
+    * @property {boolean} _fixedToCamera
+    * @private
+    */
+    _fixedToCamera: false,
+
+    /**
     * A Game Object that is "fixed" to the camera uses its x/y coordinates as offsets from the top left of the camera during rendering.
     * 
     * The values are adjusted at the rendering stage, overriding the Game Objects actual world position.
@@ -35067,7 +35078,29 @@ Phaser.Component.FixedToCamera.prototype = {
     *
     * @property {boolean} fixedToCamera
     */
-    fixedToCamera: false,
+    fixedToCamera: {
+
+        get: function () {
+
+            return this._fixedToCamera;
+
+        },
+
+        set: function (value) {
+
+            if (value)
+            {
+                this._fixedToCamera = true;
+                this.cameraOffset.set(this.x, this.y);
+            }
+            else
+            {
+                this._fixedToCamera = false;
+            }
+
+        }
+
+    },
 
     /**
     * The x/y coordinate offset applied to the top-left of the camera that this Game Object will be drawn at if `fixedToCamera` is true.
@@ -35357,7 +35390,7 @@ Phaser.Component.InWorld.prototype = {
     */
     inWorld: {
 
-        get: function() {
+        get: function () {
 
             return this.game.world.bounds.intersects(this.getBounds());
 
@@ -35444,7 +35477,7 @@ Phaser.Component.LifeSpan.prototype = {
     * @param {number} [health=1] - The health to give the Game Object. Only set if the GameObject has the Health component.
     * @return {PIXI.DisplayObject} This instance.
     */
-    revive: function(health) {
+    revive: function (health) {
 
         if (typeof health === 'undefined') { health = 1; }
 
@@ -35479,7 +35512,7 @@ Phaser.Component.LifeSpan.prototype = {
     * @method
     * @return {PIXI.DisplayObject} This instance.
     */
-    kill: function() {
+    kill: function () {
 
         this.alive = false;
         this.exists = false;
@@ -35669,7 +35702,7 @@ Phaser.Component.LoadTexture.prototype = {
     *
     * @method
     */
-    resetFrame: function() {
+    resetFrame: function () {
 
         if (this._frame)
         {
@@ -35941,7 +35974,7 @@ Phaser.Component.Reset = function () {};
 * @param {number} [health=1] - The health to give the Game Object if it has the Health component.
 * @return {PIXI.DisplayObject} This instance.
 */
-Phaser.Component.Reset.prototype.reset = function(x, y, health) {
+Phaser.Component.Reset.prototype.reset = function (x, y, health) {
 
     if (typeof health === 'undefined') { health = 1; }
 
