@@ -19,6 +19,11 @@ Phaser.State = function () {
     this.game = null;
 
     /**
+    * @property {string} key - The string based identifier given to the State when added into the State Manager.
+    */
+    this.key = '';
+
+    /**
     * @property {Phaser.GameObjectFactory} add - A reference to the GameObjectFactory which can be used to add new objects to the World.
     */
     this.add = null;

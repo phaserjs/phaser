@@ -182,6 +182,8 @@ We've rolled our own fixes into our version of Pixi, ensuring we keep it as bug-
 * A State swap now sets the Loader.reset `hard` parameter to `true` by default. This will null any Loader.preloadSprite that may have been set.
 * You can now set a `resolution` property in your Game Configuration object. This will be read when the Pixi renderer instance is created and used to set the resolution within that (#1621)
 * Text style has a new optional property: `backgroundColor` which is a Canvas fill style that is set behind all Text in the Text object. It allows you to set a background color without having to use an additional Graphics object.
+* The Physics Manager now has a new `reset` method which will reset the active physics systems. This is called automatically on a State swap (thanks @englercj #1691)
+* When a State is started and linked to Phaser it has a new property created on it: `key`, which is the string identifier used by the State.
 
 ### Bug Fixes
 

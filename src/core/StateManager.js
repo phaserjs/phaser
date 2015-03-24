@@ -62,72 +62,86 @@ Phaser.StateManager = function (game, pendingState) {
     this._args = [];
 
     /**
-    * @property {string} current - The current active State object (defaults to null).
+    * @property {string} current - The current active State object.
+    * @default
     */
     this.current = '';
 
     /**
     * @property {function} onInitCallback - This is called when the state is set as the active state.
+    * @default
     */
     this.onInitCallback = null;
 
     /**
     * @property {function} onPreloadCallback - This is called when the state starts to load assets.
+    * @default
     */
     this.onPreloadCallback = null;
 
     /**
     * @property {function} onCreateCallback - This is called when the state preload has finished and creation begins.
+    * @default
     */
     this.onCreateCallback = null;
 
     /**
     * @property {function} onUpdateCallback - This is called when the state is updated, every game loop. It doesn't happen during preload (@see onLoadUpdateCallback).
+    * @default
     */
     this.onUpdateCallback = null;
 
     /**
     * @property {function} onRenderCallback - This is called post-render. It doesn't happen during preload (see onLoadRenderCallback).
+    * @default
     */
     this.onRenderCallback = null;
 
     /**
     * @property {function} onResizeCallback - This is called if ScaleManager.scalemode is RESIZE and a resize event occurs. It's passed the new width and height.
+    * @default
     */
     this.onResizeCallback = null;
 
     /**
     * @property {function} onPreRenderCallback - This is called before the state is rendered and before the stage is cleared but after all game objects have had their final properties adjusted.
+    * @default
     */
     this.onPreRenderCallback = null;
 
     /**
     * @property {function} onLoadUpdateCallback - This is called when the State is updated during the preload phase.
+    * @default
     */
     this.onLoadUpdateCallback = null;
 
     /**
     * @property {function} onLoadRenderCallback - This is called when the State is rendered during the preload phase.
+    * @default
     */
     this.onLoadRenderCallback = null;
 
     /**
     * @property {function} onPausedCallback - This is called when the game is paused.
+    * @default
     */
     this.onPausedCallback = null;
 
     /**
     * @property {function} onResumedCallback - This is called when the game is resumed from a paused state.
+    * @default
     */
     this.onResumedCallback = null;
 
     /**
     * @property {function} onPauseUpdateCallback - This is called every frame while the game is paused.
+    * @default
     */
     this.onPauseUpdateCallback = null;
 
     /**
     * @property {function} onShutDownCallback - This is called when the state is shut down (i.e. swapped to another state).
+    * @default
     */
     this.onShutDownCallback = null;
 
@@ -142,17 +156,12 @@ Phaser.StateManager.prototype = {
     */
     boot: function () {
 
-        // console.log('StateManager boot');
-
         this.game.onPause.add(this.pause, this);
         this.game.onResume.add(this.resume, this);
 
-        if (this._pendingState !== null)
+        if (this._pendingState !== null && typeof this._pendingState !== 'string')
         {
-            if (typeof this._pendingState !== 'string')
-            {
-                this.add('default', this._pendingState, true);
-            }
+            this.add('default', this._pendingState, true);
         }
 
     },
@@ -247,17 +256,12 @@ Phaser.StateManager.prototype = {
     */
     start: function (key, clearWorld, clearCache) {
 
-        // console.log('-----------------------------------------------------------------------------------------');
-        // console.log('START:', key);
-
         if (typeof clearWorld === "undefined") { clearWorld = true; }
         if (typeof clearCache === "undefined") { clearCache = false; }
 
         if (this.checkState(key))
         {
-            //  Place the state in the queue. It will be started the next time the game loop starts.
-            // console.log('set to pending', key);
-
+            //  Place the state in the queue. It will be started the next time the game loop begins.
             this._pendingState = key;
             this._clearWorld = clearWorld;
             this._clearCache = clearCache;
@@ -312,8 +316,6 @@ Phaser.StateManager.prototype = {
 
         if (this._pendingState && this.game.isBooted)
         {
-            // console.log('preUpdate - has pending:', this._pendingState, 'current:', this.current);
-
             //  Already got a state running?
             this.clearCurrentState();
 
@@ -321,41 +323,34 @@ Phaser.StateManager.prototype = {
 
             if (this.current !== this._pendingState)
             {
-                // console.log('-> init called StateManager.start(', this._pendingState, ') so bail out');
                 return;
             }
             else
             {
                 this._pendingState = null;
-                // console.log('pending nulled');
             }
 
             //  If StateManager.start has been called from the init of a State that ALSO has a preload, then
             //  onPreloadCallback will be set, but must be ignored
             if (this.onPreloadCallback)
             {
-                // console.log('-> preload (', this.current, ')');
-
                 this.game.load.reset(true);
                 this.onPreloadCallback.call(this.callbackContext, this.game);
 
                 //  Is the loader empty?
                 if (this.game.load.totalQueuedFiles() === 0 && this.game.load.totalQueuedPacks() === 0)
                 {
-                    // console.log('loadComplete from empty preloader', this.current);
                     this.loadComplete();
                 }
                 else
                 {
                     //  Start the loader going as we have something in the queue
-                    // console.log('load start', this.current);
                     this.game.load.start();
                 }
             }
             else
             {
                 //  No init? Then there was nothing to load either
-                // console.log('loadComplete from no preloader', this.current);
                 this.loadComplete();
             }
         }
@@ -370,15 +365,10 @@ Phaser.StateManager.prototype = {
     */
     clearCurrentState: function () {
 
-        // console.log('clearCurrentState', this.current);
-
         if (this.current)
         {
-            // console.log('removing all', this.current);
-
             if (this.onShutDownCallback)
             {
-                // console.log('-> shutdown (', this.current, ')');
                 this.onShutDownCallback.call(this.callbackContext, this.game);
             }
 
@@ -420,8 +410,6 @@ Phaser.StateManager.prototype = {
     * @return {boolean} true if the State has the required functions, otherwise false.
     */
     checkState: function (key) {
-
-        // console.log('checking', key);
 
         if (this.states[key])
         {
@@ -475,6 +463,7 @@ Phaser.StateManager.prototype = {
         this.states[key].particles = this.game.particles;
         this.states[key].rnd = this.game.rnd;
         this.states[key].physics = this.game.physics;
+        this.states[key].key = key;
 
     },
 
@@ -520,8 +509,6 @@ Phaser.StateManager.prototype = {
     */
     setCurrentState: function (key) {
 
-        // console.log('setCurrentState', key);
-
         this.callbackContext = this.states[key];
 
         this.link(key);
@@ -544,12 +531,16 @@ Phaser.StateManager.prototype = {
         //  Used when the state is no longer the current active state
         this.onShutDownCallback = this.states[key]['shutdown'] || this.dummy;
 
+        //  Reset the physics system, but not on the first state start
+        if (this.current !== '')
+        {
+            this.game.physics.reset();
+        }
+
         this.current = key;
         this._created = false;
 
         //  At this point key and pendingState should equal each other
-        // console.log('-> init (', key, ')', this._pendingState);
-
         this.onInitCallback.apply(this.callbackContext, this._args);
 
         //  If they no longer do then the init callback hit StateManager.start
@@ -579,11 +570,8 @@ Phaser.StateManager.prototype = {
     */
     loadComplete: function () {
 
-        // console.log('SM loadComplete');
-
         if (this._created === false && this.onCreateCallback)
         {
-            // console.log('-> create (', this.current, ')');
             this._created = true;
             this.onCreateCallback.call(this.callbackContext, this.game);
         }
@@ -699,13 +687,12 @@ Phaser.StateManager.prototype = {
             {
                 this.game.context.save();
                 this.game.context.setTransform(1, 0, 0, 1, 0, 0);
-            }
-
-            this.onRenderCallback.call(this.callbackContext, this.game);
-
-            if (this.game.renderType === Phaser.CANVAS)
-            {
+                this.onRenderCallback.call(this.callbackContext, this.game);
                 this.game.context.restore();
+            }
+            else
+            {
+                this.onRenderCallback.call(this.callbackContext, this.game);
             }
         }
         else
@@ -745,6 +732,7 @@ Phaser.StateManager.prototype = {
         this.game = null;
         this.states = {};
         this._pendingState = null;
+        this.current = '';
 
     }
 
