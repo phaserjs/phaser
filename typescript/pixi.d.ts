@@ -1167,7 +1167,7 @@ declare module PIXI {
         tileScaleOffset: Point;
 
         destroy(): void;
-        generateTilingTexture(forcePowerOfTwo: boolean): void;
+        generateTilingTexture(forcePowerOfTwo?: boolean): void;
         setTexture(texture: Texture): void;
 
     }
