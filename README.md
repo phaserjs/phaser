@@ -184,6 +184,7 @@ We've rolled our own fixes into our version of Pixi, ensuring we keep it as bug-
 * Text style has a new optional property: `backgroundColor` which is a Canvas fill style that is set behind all Text in the Text object. It allows you to set a background color without having to use an additional Graphics object.
 * The Physics Manager now has a new `reset` method which will reset the active physics systems. This is called automatically on a State swap (thanks @englercj #1691)
 * When a State is started and linked to Phaser it has a new property created on it: `key`, which is the string identifier used by the State.
+* When the Game first boots it will now call `window.focus()`. This allows keyboard events to work properly in IE when the game is running inside an iframe. You can stop this from happening by setting `window.PhaserGlobal.stopFocus = true` (thanks @webholics #1681)
 
 ### Bug Fixes
 

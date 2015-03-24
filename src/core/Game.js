@@ -578,6 +578,14 @@ Phaser.Game.prototype = {
 
         this._kickstart = true;
 
+        if (window['focus'])
+        {
+            if (!window['PhaserGlobal'] || (window['PhaserGlobal'] && !window['PhaserGlobal'].stopFocus))
+            {
+                window.focus();
+            }
+        }
+
         this.raf.start();
 
     },
