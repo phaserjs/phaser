@@ -1,7 +1,7 @@
 /// <reference path="pixi.d.ts" />
 /// <reference path="p2.d.ts" />
 
-// Type definitions for Phaser 2.3.0 2015-03-03
+// Type definitions for Phaser 2.3.0 RC1 2015-03-24
 // Project: https://github.com/photonstorm/phaser
 
 declare class Phaser {
@@ -166,6 +166,7 @@ declare module Phaser {
         exists(item: any): boolean;
         reset(): void;
         remove(item: any): any;
+        removeAll(destoy?: boolean): void;
         setAll(key: any, value: any): void;
         callAll(key: string, ...parameter: any[]): void;
 
@@ -291,6 +292,7 @@ declare module Phaser {
         input: Phaser.InputHandler;
         inputEnabled: boolean;
         name: string;
+        physicsType: number;
         previousPosition: Phaser.Point;
         previousRotation: Phaser.Point;
         position: Phaser.Point;
@@ -329,6 +331,7 @@ declare module Phaser {
         onOverMouseOnly: boolean;
         onUpSound: Phaser.Sound|Phaser.AudioSprite;
         onUpSoundMaker: string;
+        physicsType: number;
         type: number;
 
         clearFrames(): void;
@@ -1391,6 +1394,7 @@ declare module Phaser {
         game: Phaser.Game;
         height: number;
         name: string;
+        physicsType: number;
         position: Phaser.Point;
         previousPosition: Point;
         previousRotation: number;
@@ -1434,6 +1438,7 @@ declare module Phaser {
         name: string;
         onDestroy: Phaser.Signal;
         physicsBodyType: number;
+        physicsType: number;
         position: Phaser.Point;
         rotation: number;
         scale: Phaser.Point;
@@ -1662,6 +1667,7 @@ declare module Phaser {
         dragOffset: Phaser.Point;
         dragFromCenter: boolean;
         draggable: boolean;
+        dragStartPoint: Phaser.Point;
         enabled: boolean;
         game: Phaser.Game;
         globalToLocalX(x: number): number;
@@ -2306,6 +2312,7 @@ declare module Phaser {
                 particleSendToBack: boolean;
                 particleClass: Phaser.Sprite;
                 particleDrag: Phaser.Point;
+                physicsType: number;
                 position: Phaser.Point;
                 right: number;
                 scaleData: any[];
@@ -2357,6 +2364,7 @@ declare module Phaser {
         enable(object: any, system?: number, debug?: boolean): void;
         parseConfig(): void;
         preUpdate(): void;
+        reset(): void;
         setBoundsToWorld(): void;
         startSystem(system: number): void;
         update(): void;
@@ -2367,6 +2375,7 @@ declare module Phaser {
 
         class Arcade {
 
+            static SORT_NONE: number;
             static LEFT_RIGHT: number;
             static RIGHT_LEFT: number;
             static TOP_BOTTOM: number;
@@ -3902,6 +3911,7 @@ declare module Phaser {
         previousRotation: number;
         position: Phaser.Point;
         physicsEnabled: boolean;
+        physicsType: number;
         renderOrderID: number;
         right: number;
         scale: Phaser.Point;
@@ -4092,6 +4102,7 @@ declare module Phaser {
         camera: Phaser.Camera;
         game: Phaser.Game;
         input: Phaser.Input;
+        key: string;
         load: Phaser.Loader;
         make: Phaser.GameObjectCreator;
         math: Phaser.Math;
@@ -4193,6 +4204,8 @@ declare module Phaser {
         inputEnabled: boolean;
         lineSpacing: number;
         name: string;
+        padding: Phaser.Point;
+        physicsType: number;
         position: Phaser.Point;
         previousPosition: Phaser.Point;
         previousRotation: number;
@@ -4381,6 +4394,7 @@ declare module Phaser {
         layer: Phaser.TilemapLayer;
         map: Phaser.Tilemap;
         name: string;
+        physicsType: number;
         rayStepRate: number;
         renderSettings: { enableScrollDelta: boolean; overdrawRatio: number; copyCanvas: any; };
         scrollFactorX: number;

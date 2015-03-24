@@ -1,4 +1,4 @@
-// Type definitions for PIXI 2.2.7 2015-03-03
+// Type definitions for PIXI 2.2.8 2015-03-24
 // Project: https://github.com/GoodBoyDigital/pixi.js/
 
 declare module PIXI {
@@ -134,6 +134,7 @@ declare module PIXI {
         dropShadowDistance?: number;
         fill?: string;
         font?: string;
+        lineJoin?: string;
         stroke?: string;
         strokeThickness?: number;
         wordWrap?: boolean;
@@ -677,7 +678,7 @@ declare module PIXI {
         target: Sprite;
         originalEvent: Event;
 
-        getLocalPosition(displayObject: DisplayObject): Point;
+        getLocalPosition(displayObject: DisplayObject, point?: Point, globalPos?: Point): Point;
 
     }
 
