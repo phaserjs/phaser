@@ -794,14 +794,16 @@ Phaser.Sound.prototype = {
                     this._sound.onended = this.onEndedHandler.bind(this);
                 }
 
+                var duration = this.duration - (this.pausedPosition / 1000);
+
                 if (typeof this._sound.start === 'undefined')
                 {
-                    this._sound.noteGrainOn(0, p, this.duration);
+                    this._sound.noteGrainOn(0, p, duration);
                     //this._sound.noteOn(0); // the zero is vitally important, crashes iOS6 without it
                 }
                 else
                 {
-                    this._sound.start(0, p, this.duration);
+                    this._sound.start(0, p, duration);
                 }
             }
             else
