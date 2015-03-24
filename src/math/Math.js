@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -763,10 +763,11 @@ Phaser.Math = {
 
     /**
     * A Linear Interpolation Method, mostly used by Phaser.Tween.
+    * 
     * @method Phaser.Math#linearInterpolation
-    * @param {Array} v
-    * @param {number} k
-    * @return {number}
+    * @param {Array} v - The input array of values to interpolate between.
+    * @param {number} k - The percentage of interpolation, between 0 and 1.
+    * @return {number} The interpolated value
     */
     linearInterpolation: function (v, k) {
 
@@ -790,10 +791,11 @@ Phaser.Math = {
 
     /**
     * A Bezier Interpolation Method, mostly used by Phaser.Tween.
+    * 
     * @method Phaser.Math#bezierInterpolation
-    * @param {Array} v
-    * @param {number} k
-    * @return {number}
+    * @param {Array} v - The input array of values to interpolate between.
+    * @param {number} k - The percentage of interpolation, between 0 and 1.
+    * @return {number} The interpolated value
     */
     bezierInterpolation: function (v, k) {
 
@@ -811,10 +813,11 @@ Phaser.Math = {
 
     /**
     * A Catmull Rom Interpolation Method, mostly used by Phaser.Tween.
+    * 
     * @method Phaser.Math#catmullRomInterpolation
-    * @param {Array} v
-    * @param {number} k
-    * @return {number}
+    * @param {Array} v - The input array of values to interpolate between.
+    * @param {number} k - The percentage of interpolation, between 0 and 1.
+    * @return {number} The interpolated value
     */
     catmullRomInterpolation: function (v, k) {
 
@@ -830,7 +833,6 @@ Phaser.Math = {
             }
 
             return this.catmullRom(v[(i - 1 + m) % m], v[i], v[(i + 1) % m], v[(i + 2) % m], f - i);
-
         }
         else
         {
@@ -880,14 +882,14 @@ Phaser.Math = {
     */
     factorial : function( value ){
 
-        if(value === 0)
+        if (value === 0)
         {
             return 1;
         }
 
         var res = value;
 
-        while( --value )
+        while(--value)
         {
             res *= value;
         }
@@ -897,7 +899,7 @@ Phaser.Math = {
     },
 
     /**
-    * Calculates a callmum rom value.
+    * Calculates a catmum rom value.
     * 
     * @method Phaser.Math#catmullRom
     * @protected
@@ -1007,10 +1009,10 @@ Phaser.Math = {
     },
 
     /**
-    * Generate a sine and cosine table simultaneously and extremely quickly. Based on research by Franky of scene.at
-    *
-    * The parameters allow you to specify the length, amplitude and frequency of the wave. Once you have called this function
-    * you should get the results via getSinTable() and getCosTable(). This generator is fast enough to be used in real-time.
+    * Generate a sine and cosine table simultaneously and extremely quickly.
+    * The parameters allow you to specify the length, amplitude and frequency of the wave.
+    * This generator is fast enough to be used in real-time.
+    * Code based on research by Franky of scene.at
     *
     * @method Phaser.Math#sinCosGenerator
     * @param {number} length - The length of the wave

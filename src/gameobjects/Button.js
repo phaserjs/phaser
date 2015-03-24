@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -48,6 +48,12 @@ Phaser.Button = function (game, x, y, key, callback, callbackContext, overFrame,
     * @readonly
     */
     this.type = Phaser.BUTTON;
+
+    /**
+    * @property {number} physicsType - The const physics body type of this object.
+    * @readonly
+    */
+    this.physicsType = Phaser.SPRITE;
 
     /**
     * The name or ID of the Over state frame.
@@ -216,7 +222,6 @@ var STATE_OVER = 'Over';
 var STATE_OUT = 'Out';
 var STATE_DOWN = 'Down';
 var STATE_UP = 'Up';
-
 
 /**
 * Clears all of the frames set on this Button.

@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -124,6 +124,7 @@ Phaser.Cache = function (game) {
 
     /**
     * @property {array} _cacheMap - Const to cache object look-up array.
+    * @private
     */
     this._cacheMap = [];
 
@@ -495,6 +496,7 @@ Phaser.Cache.prototype = {
 
     /**
     * Adds an Image file into the Cache. The file must have already been loaded, typically via Phaser.Loader, but can also have been loaded into the DOM.
+    * If an image already exists in the cache with the same key then it is removed and destroyed, and the new image inserted in its place.
     *
     * @method Phaser.Cache#addImage
     * @param {string} key - The unique key by which you will reference this object.
@@ -502,6 +504,11 @@ Phaser.Cache.prototype = {
     * @param {object} data - Extra image data.
     */
     addImage: function (key, url, data) {
+
+        if (this.checkImageKey(key))
+        {
+            this.removeImage(key);
+        }
 
         this._images[key] = { url: url, data: data };
 

@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -67,6 +67,15 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     * @default
     */
     this.height = 600;
+
+    /**
+    * The resolution of your game. This value is read only, but can be changed at start time it via a game configuration object.
+    *
+    * @property {integer} resolution
+    * @readonly
+    * @default
+    */
+    this.resolution = 1;
 
     /**
     * @property {integer} _width - Private internal var.
@@ -307,7 +316,6 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
 
     /**
     * The ID of the current/last logic update applied this render frame, starting from 0.
-    *
     * The first update is `currentUpdateID === 0` and the last update is `currentUpdateID === updatesThisFrame.`
     * @property {integer} currentUpdateID
     * @protected
@@ -315,33 +323,32 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     this.currentUpdateID = 0;
 
     /**
-    * Number of logic updates expected to occur this render frame;
-    * will be 1 unless there are catch-ups required (and allowed).
+    * Number of logic updates expected to occur this render frame; will be 1 unless there are catch-ups required (and allowed).
     * @property {integer} updatesThisFrame
     * @protected
     */
     this.updatesThisFrame = 1;
 
     /**
-    * @property {number} _deltaTime - accumulate elapsed time until a logic update is due
+    * @property {number} _deltaTime - Accumulate elapsed time until a logic update is due.
     * @private
     */
     this._deltaTime = 0;
 
     /**
-    * @property {number} _lastCount - remember how many 'catch-up' iterations were used on the logicUpdate last frame
+    * @property {number} _lastCount - Remember how many 'catch-up' iterations were used on the logicUpdate last frame.
     * @private
     */
     this._lastCount = 0;
 
     /**
-    * @property {number} _spiraling - if the 'catch-up' iterations are spiraling out of control, this counter is incremented
+    * @property {number} _spiraling - If the 'catch-up' iterations are spiraling out of control, this counter is incremented.
     * @private
     */
     this._spiraling = 0;
 
     /**
-    * @property {boolean} _kickstart - Force a logic update + render by default (always on Boot and State swap)
+    * @property {boolean} _kickstart - Force a logic update + render by default (always set on Boot and State swap)
     * @private
     */
     this._kickstart = true;
@@ -360,7 +367,7 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     this.forceSingleUpdate = false;
 
     /**
-    * @property {number} _nextNotification - the soonest game.time.time value that the next fpsProblemNotifier can be dispatched
+    * @property {number} _nextNotification - The soonest game.time.time value that the next fpsProblemNotifier can be dispatched.
     * @private
     */
     this._nextFpsNotification = 0;
@@ -460,6 +467,11 @@ Phaser.Game.prototype = {
         if (config['antialias'])
         {
             this.antialias = config['antialias'];
+        }
+
+        if (config['resolution'])
+        {
+            this.resolution = config['resolution'];
         }
 
         if (config['preserveDrawingBuffer'])
@@ -565,6 +577,14 @@ Phaser.Game.prototype = {
         }
 
         this._kickstart = true;
+
+        if (window['focus'])
+        {
+            if (!window['PhaserGlobal'] || (window['PhaserGlobal'] && !window['PhaserGlobal'].stopFocus))
+            {
+                window.focus();
+            }
+        }
 
         this.raf.start();
 
@@ -685,7 +705,10 @@ Phaser.Game.prototype = {
                     this.renderType = Phaser.CANVAS;
                 }
 
-                this.renderer = new PIXI.CanvasRenderer(this.width, this.height, { "view": this.canvas, "transparent": this.transparent, "resolution": 1, "clearBeforeRender": true });
+                this.renderer = new PIXI.CanvasRenderer(this.width, this.height, { "view": this.canvas,
+                                                                                    "transparent": this.transparent,
+                                                                                    "resolution": this.resolution,
+                                                                                    "clearBeforeRender": true });
                 this.context = this.renderer.context;
             }
             else
@@ -698,7 +721,11 @@ Phaser.Game.prototype = {
             //  They requested WebGL and their browser supports it
             this.renderType = Phaser.WEBGL;
 
-            this.renderer = new PIXI.WebGLRenderer(this.width, this.height, { "view": this.canvas, "transparent": this.transparent, "resolution": 1, "antialias": this.antialias, "preserveDrawingBuffer": this.preserveDrawingBuffer });
+            this.renderer = new PIXI.WebGLRenderer(this.width, this.height, { "view": this.canvas,
+                                                                                "transparent": this.transparent,
+                                                                                "resolution": this.resolution,
+                                                                                "antialias": this.antialias,
+                                                                                "preserveDrawingBuffer": this.preserveDrawingBuffer });
             this.context = null;
         }
 
@@ -783,7 +810,8 @@ Phaser.Game.prototype = {
                 this.currentUpdateID = count;
 
                 this.updateLogic(1.0 / this.time.desiredFps);
-                //  Sync the scene graph after _every_ logic update to account for moved game objects                
+
+                //  Sync the scene graph after _every_ logic update to account for moved game objects
                 this.stage.updateTransform();
 
                 count++;
@@ -956,31 +984,8 @@ Phaser.Game.prototype = {
         this.world = null;
         this.isBooted = false;
 
-        if (this.renderType === Phaser.WEBGL)
-        {
-            PIXI.glContexts[this.renderer.glContextId] = null;
-
-            this.renderer.projection = null;
-            this.renderer.offset = null;
-
-            this.renderer.shaderManager.destroy();
-            this.renderer.spriteBatch.destroy();
-            this.renderer.maskManager.destroy();
-            this.renderer.filterManager.destroy();
-
-            this.renderer.shaderManager = null;
-            this.renderer.spriteBatch = null;
-            this.renderer.maskManager = null;
-            this.renderer.filterManager = null;
-
-            this.renderer.gl = null;
-            this.renderer.renderSession = null;
-            Phaser.Canvas.removeFromDOM(this.canvas);
-        }
-        else
-        {
-            this.renderer.destroy(true);
-        }
+        this.renderer.destroy(false);
+        Phaser.Canvas.removeFromDOM(this.canvas);
 
         Phaser.GAMES[this.id] = null;
 

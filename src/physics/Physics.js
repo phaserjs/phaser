@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -312,6 +312,26 @@ Phaser.Physics.prototype = {
         if (this.box2d)
         {
             this.box2d.clear();
+        }
+
+    },
+
+    /**
+    * Resets the active physics system. Called automatically on a Phaser.State swap.
+    *
+    * @method Phaser.Physics#reset
+    * @protected
+    */
+    reset: function () {
+
+        if (this.p2)
+        {
+            this.p2.reset();
+        }
+
+        if (this.box2d)
+        {
+            this.box2d.reset();
         }
 
     },

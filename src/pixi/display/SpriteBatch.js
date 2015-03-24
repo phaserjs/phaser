@@ -22,8 +22,6 @@
  * @constructor
  * @param texture {Texture}
  */
-
-//TODO RENAME to PARTICLE CONTAINER?
 PIXI.SpriteBatch = function(texture)
 {
     PIXI.DisplayObjectContainer.call( this);
@@ -72,10 +70,18 @@ PIXI.SpriteBatch.prototype.updateTransform = function()
 */
 PIXI.SpriteBatch.prototype._renderWebGL = function(renderSession)
 {
-    if(!this.visible || this.alpha <= 0 || !this.children.length)return;
+    if (!this.visible || this.alpha <= 0 || !this.children.length) return;
 
-    if(!this.ready)this.initWebGL( renderSession.gl );
+    if (!this.ready)
+    {
+        this.initWebGL(renderSession.gl);
+    }
     
+    if (this.fastSpriteBatch.gl !== renderSession.gl)
+    {
+        this.fastSpriteBatch.setContext(renderSession.gl);
+    }
+
     renderSession.spriteBatch.stop();
     
     renderSession.shaderManager.setShader(renderSession.shaderManager.fastShader);
@@ -96,32 +102,32 @@ PIXI.SpriteBatch.prototype._renderWebGL = function(renderSession)
 */
 PIXI.SpriteBatch.prototype._renderCanvas = function(renderSession)
 {
-    if(!this.visible || this.alpha <= 0 || !this.children.length)return;
+    if (!this.visible || this.alpha <= 0 || !this.children.length) return;
     
     var context = renderSession.context;
+
     context.globalAlpha = this.worldAlpha;
 
     this.displayObjectUpdateTransform();
 
     var transform = this.worldTransform;
-    // alow for trimming
        
     var isRotated = true;
 
-    for (var i = 0; i < this.children.length; i++) {
-       
+    for (var i = 0; i < this.children.length; i++)
+    {
         var child = this.children[i];
 
-        if(!child.visible)continue;
+        if (!child.visible) continue;
 
         var texture = child.texture;
         var frame = texture.frame;
 
         context.globalAlpha = this.worldAlpha * child.alpha;
 
-        if(child.rotation % (Math.PI * 2) === 0)
+        if (child.rotation % (Math.PI * 2) === 0)
         {
-            if(isRotated)
+            if (isRotated)
             {
                 context.setTransform(transform.a, transform.b, transform.c, transform.d, transform.tx, transform.ty);
                 isRotated = false;
@@ -140,7 +146,7 @@ PIXI.SpriteBatch.prototype._renderCanvas = function(renderSession)
         }
         else
         {
-            if(!isRotated)isRotated = true;
+            if (!isRotated) isRotated = true;
     
             child.displayObjectUpdateTransform();
            
@@ -166,12 +172,7 @@ PIXI.SpriteBatch.prototype._renderCanvas = function(renderSession)
                                  ((child.anchor.y) * (-frame.height) + 0.5) | 0,
                                  frame.width,
                                  frame.height);
-           
-
         }
-
-       // context.restore();
     }
 
-//    context.restore();
 };

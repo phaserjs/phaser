@@ -300,6 +300,7 @@ Phaser.TilemapLayer.ensureSharedCopyCanvas = function () {
 
 /**
 * Automatically called by World.preUpdate.
+<<<<<<< HEAD
 *
 * @method Phaser.Image#preUpdate
 * @memberof Phaser.Image
@@ -343,6 +344,18 @@ Phaser.TilemapLayer.prototype.update = function () {
       }
     }
   }
+=======
+*
+* @method Phaser.Image#preUpdate
+* @memberof Phaser.Image
+*/
+Phaser.TilemapLayer.prototype.preUpdate = function() {
+
+    Phaser.Component.Core.preUpdate.call(this);
+
+    return true;
+
+>>>>>>> upstream/dev
 };
 
 /**

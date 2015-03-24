@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -802,10 +802,10 @@ Phaser.Tilemap.prototype = {
         {
             return this.setCollisionByIndex(indexes, collides, layer, true);
         }
-        else
+        else if (Array.isArray(indexes))
         {
             //  Collide all of the IDs given in the indexes array
-            for (var i = 0, len = indexes.length; i < len; i++)
+            for (var i = 0; i < indexes.length; i++)
             {
                 this.setCollisionByIndex(indexes[i], collides, layer, false);
             }
@@ -1347,7 +1347,7 @@ Phaser.Tilemap.prototype = {
     * Searches the entire map layer for the first tile matching the given index, then returns that Phaser.Tile object.
     * If no match is found it returns null.
     * The search starts from the top-left tile and continues horizontally until it hits the end of the row, then it drops down to the next column.
-    * If the reverse boolean is true, it scans starting from the bottom-right corner travelling up to the top-left.
+    * If the reverse boolean is true, it scans starting from the bottom-right corner traveling up to the top-left.
     *
     * @method Phaser.Tilemap#searchTileIndex
     * @param {number} index - The tile index value to search for.

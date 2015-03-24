@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -196,6 +196,36 @@ Phaser.Physics.P2 = function (game, config) {
     * @private
     */
     this._collisionGroupID = 2;
+
+    /**
+    * @property {boolean} _boundsLeft - Internal var that keeps track of world bounds settings.
+    * @private
+    */
+    this._boundsLeft = true;
+
+    /**
+    * @property {boolean} _boundsRight - Internal var that keeps track of world bounds settings.
+    * @private
+    */
+    this._boundsRight = true;
+
+    /**
+    * @property {boolean} _boundsTop - Internal var that keeps track of world bounds settings.
+    * @private
+    */
+    this._boundsTop = true;
+
+    /**
+    * @property {boolean} _boundsBottom - Internal var that keeps track of world bounds settings.
+    * @private
+    */
+    this._boundsBottom = true;
+
+    /**
+    * @property {boolean} _boundsOwnGroup - Internal var that keeps track of world bounds settings.
+    * @private
+    */
+    this._boundsOwnGroup = false;
 
     //  By default we want everything colliding with everything
     this.setBoundsToWorld(true, true, true, true, false);
@@ -560,6 +590,10 @@ Phaser.Physics.P2.prototype = {
     /**
     * Sets the bounds of the Physics world to match the given world pixel dimensions.
     * You can optionally set which 'walls' to create: left, right, top or bottom.
+    * If none of the walls are given it will default to use the walls settings it had previously.
+    * I.e. if you previously told it to not have the left or right walls, and you then adjust the world size
+    * the newly created bounds will also not have the left and right walls.
+    * Explicitly state them in the parameters to override this.
     *
     * @method Phaser.Physics.P2#setBounds
     * @param {number} x - The x coordinate of the top-left corner of the bounds.
@@ -574,11 +608,11 @@ Phaser.Physics.P2.prototype = {
     */
     setBounds: function (x, y, width, height, left, right, top, bottom, setCollisionGroup) {
 
-        if (typeof left === 'undefined') { left = true; }
-        if (typeof right === 'undefined') { right = true; }
-        if (typeof top === 'undefined') { top = true; }
-        if (typeof bottom === 'undefined') { bottom = true; }
-        if (typeof setCollisionGroup === 'undefined') { setCollisionGroup = true; }
+        if (typeof left === 'undefined') { left = this._boundsLeft; }
+        if (typeof right === 'undefined') { right = this._boundsRight; }
+        if (typeof top === 'undefined') { top = this._boundsTop; }
+        if (typeof bottom === 'undefined') { bottom = this._boundsBottom; }
+        if (typeof setCollisionGroup === 'undefined') { setCollisionGroup = this._boundsOwnGroup; }
 
         if (this.walls.left)
         {
@@ -651,6 +685,13 @@ Phaser.Physics.P2.prototype = {
 
             this.world.addBody(this.walls.bottom);
         }
+
+        //  Remember the bounds settings in case they change later on via World.setBounds
+        this._boundsLeft = left;
+        this._boundsRight = right;
+        this._boundsTop = top;
+        this._boundsBottom = bottom;
+        this._boundsOwnGroup = setCollisionGroup;
 
     },
 

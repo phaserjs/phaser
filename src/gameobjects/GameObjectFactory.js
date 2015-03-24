@@ -1,14 +1,14 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
 /**
-* The GameObjectFactory is a quick way to create mamy common game objects
+* The GameObjectFactory is a quick way to create many common game objects
 * using {@linkcode Phaser.Game#add `game.add`}.
 *
-* Created objects are _automtically added_ to the appropriate Manager, World, or manually specified parent Group.
+* Created objects are _automatically added_ to the appropriate Manager, World, or manually specified parent Group.
 *
 * @class Phaser.GameObjectFactory
 * @constructor
@@ -304,7 +304,7 @@ Phaser.GameObjectFactory.prototype = {
     *
     * A particle emitter can be used for one-time explosions or for
     * continuous effects like rain and fire. All it really does is launch Particle objects out
-    * at set intervals, and fixes their positions and velocities accorindgly.
+    * at set intervals, and fixes their positions and velocities accordingly.
     *
     * @method Phaser.GameObjectFactory#emitter
     * @param {number} [x=0] - The x coordinate within the Emitter that the particles are emitted from.
@@ -478,8 +478,6 @@ Phaser.GameObjectFactory.prototype = {
         return this.game.plugins.add(plugin);
 
     }
-
-
 
 };
 

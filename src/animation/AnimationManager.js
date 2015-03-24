@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -337,7 +337,7 @@ Phaser.AnimationManager.prototype = {
             return false;
         }
 
-        if (this.currentAnim && this.currentAnim.update() === true)
+        if (this.currentAnim && this.currentAnim.update())
         {
             this.currentFrame = this.currentAnim.currentFrame;
             return true;

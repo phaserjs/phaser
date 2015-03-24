@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -1829,7 +1829,7 @@ Phaser.BitmapData.prototype = {
 };
 
 /**
-* @name Phaser.Sprite#smoothed
+* @memberof Phaser.BitmapData
 * @property {boolean} smoothed - Gets or sets this BitmapData.contexts smoothing enabled value.
 */
 Object.defineProperty(Phaser.BitmapData.prototype, "smoothed", {

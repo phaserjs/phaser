@@ -32,36 +32,8 @@ PIXI.Stage = function(backgroundColor)
      */
     this.worldTransform = new PIXI.Matrix();
 
-    /**
-     * Whether or not the stage is interactive
-     *
-     * @property interactive
-     * @type Boolean
-     */
-    this.interactive = true;
-
-    /**
-     * The interaction manage for this stage, manages all interactive activity on the stage
-     *
-     * @property interactionManager
-     * @type InteractionManager
-     */
-    this.interactionManager = new PIXI.InteractionManager(this);
-
-    /**
-     * Whether the stage is dirty and needs to have interactions updated
-     *
-     * @property dirty
-     * @type Boolean
-     * @private
-     */
-    this.dirty = true;
-
     //the stage is its own stage
     this.stage = this;
-
-    //optimize hit detection a bit
-    this.stage.hitArea = new PIXI.Rectangle(0, 0, 100000, 100000);
 
     this.setBackgroundColor(backgroundColor);
 };
@@ -69,18 +41,6 @@ PIXI.Stage = function(backgroundColor)
 // constructor
 PIXI.Stage.prototype = Object.create( PIXI.DisplayObjectContainer.prototype );
 PIXI.Stage.prototype.constructor = PIXI.Stage;
-
-/**
- * Sets another DOM element which can receive mouse/touch interactions instead of the default Canvas element.
- * This is useful for when you have other DOM elements on top of the Canvas element.
- *
- * @method setInteractionDelegate
- * @param domElement {DOMElement} This new domElement which will receive mouse/touch events
- */
-PIXI.Stage.prototype.setInteractionDelegate = function(domElement)
-{
-    this.interactionManager.setTargetDomElement( domElement );
-};
 
 /*
  * Updates the object transform for rendering
@@ -92,19 +52,10 @@ PIXI.Stage.prototype.updateTransform = function()
 {
     this.worldAlpha = 1;
 
-    for(var i=0,j=this.children.length; i<j; i++)
+    for (var i = 0; i < this.children.length; i++)
     {
         this.children[i].updateTransform();
     }
-
-    if(this.dirty)
-    {
-        this.dirty = false;
-        // update interactive!
-        this.interactionManager.dirty = true;
-    }
-
-    if(this.interactive)this.interactionManager.update();
 };
 
 /**
@@ -121,15 +72,4 @@ PIXI.Stage.prototype.setBackgroundColor = function(backgroundColor)
     var hex = this.backgroundColor.toString(16);
     hex = '000000'.substr(0, 6 - hex.length) + hex;
     this.backgroundColorString = '#' + hex;
-};
-
-/**
- * This will return the point containing global coordinates of the mouse.
- *
- * @method getMousePosition
- * @return {Point} A point containing the coordinates of the global InteractionData position.
- */
-PIXI.Stage.prototype.getMousePosition = function()
-{
-    return this.interactionManager.mouse.global;
 };

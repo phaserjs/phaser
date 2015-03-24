@@ -17,14 +17,14 @@ This is an abstract class and should not be used on its own rather it should be 
 /**
 * @description The coordinate of the object relative to the local coordinates of the parent.
 * @member PIXI.DisplayObject#position
-* @type {PIXI.Point}
+* @type {Point}
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
 * @sourceline 14
 */
 /**
 * @description The scale factor of the object.
 * @member PIXI.DisplayObject#scale
-* @type {PIXI.Point}
+* @type {Point}
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
 * @sourceline 22
 */
@@ -48,7 +48,7 @@ This ability allows you to check any of the matrix values and perform actions su
 /**
 * @description The pivot point of the displayObject that it rotates around
 * @member PIXI.DisplayObject#pivot
-* @type {PIXI.Point}
+* @type {Point}
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
 * @sourceline 49
 */
@@ -77,23 +77,16 @@ This ability allows you to check any of the matrix values and perform actions su
 * @description This is the defined area that will pick up mouse / touch events. It is null by default.
 Setting it is a neat way of optimising the hitTest function that the interactionManager will use (as it will not need to hit test all the children)
 * @member PIXI.DisplayObject#hitArea
-* @type {(PIXI.Rectangle|PIXI.Circle|PIXI.Ellipse|PIXI.Polygon)}
+* @type {(Rectangle|Circle|Ellipse|Polygon)}
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
 * @sourceline 81
-*/
-/**
-* @description This is used to indicate if the displayObject should display a mouse hand cursor on rollover
-* @member PIXI.DisplayObject#buttonMode
-* @type {Boolean}
-* @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 90
 */
 /**
 * @description Can this object be rendered
 * @member PIXI.DisplayObject#renderable
 * @type {Boolean}
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 98
+* @sourceline 90
 */
 /**
 * @description [read-only] The display object container that contains this display object.
@@ -101,7 +94,7 @@ Setting it is a neat way of optimising the hitTest function that the interaction
 * @type {PIXI.DisplayObjectContainer}
 * @readonly 
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 106
+* @sourceline 98
 */
 /**
 * @description [read-only] The stage the display object is connected to, or undefined if it is not connected to the stage.
@@ -109,7 +102,7 @@ Setting it is a neat way of optimising the hitTest function that the interaction
 * @type {PIXI.Stage}
 * @readonly 
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 115
+* @sourceline 107
 */
 /**
 * @description [read-only] The multiplied alpha of the displayObject
@@ -117,32 +110,16 @@ Setting it is a neat way of optimising the hitTest function that the interaction
 * @type {Number}
 * @readonly 
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 124
-*/
-/**
-* @description [read-only] Whether or not the object is interactive, do not toggle directly! use the `interactive` property
-* @member PIXI.DisplayObject#_interactive
-* @type {Boolean}
-* @readonly 
-* @access private
-* @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 133
-*/
-/**
-* @description This is the cursor that will be used when the mouse is over this object. To enable this the element must have interaction = true and buttonMode = true
-* @member PIXI.DisplayObject#defaultCursor
-* @type {String}
-* @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 143
+* @sourceline 116
 */
 /**
 * @description [read-only] Current transform of the object based on world (parent) factors
 * @member PIXI.DisplayObject#worldTransform
-* @type {PIXI.Matrix}
+* @type {Matrix}
 * @readonly 
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 152
+* @sourceline 125
 */
 /**
 * @description cached sin rotation and cos rotation
@@ -150,7 +127,7 @@ Setting it is a neat way of optimising the hitTest function that the interaction
 * @type {Number}
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 162
+* @sourceline 135
 */
 /**
 * @description cached sin rotation and cos rotation
@@ -158,39 +135,39 @@ Setting it is a neat way of optimising the hitTest function that the interaction
 * @type {Number}
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 171
+* @sourceline 144
 */
 /**
 * @description The area the filter is applied to like the hitArea this is used as more of an optimisation
 rather than figuring out the dimensions of the displayObject each frame you can set this rectangle
 * @member PIXI.DisplayObject#filterArea
-* @type {PIXI.Rectangle}
+* @type {Rectangle}
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 180
+* @sourceline 153
 */
 /**
 * @description The original, cached bounds of the object
 * @member PIXI.DisplayObject#_bounds
-* @type {PIXI.Rectangle}
+* @type {Rectangle}
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 189
+* @sourceline 162
 */
 /**
 * @description The most up-to-date bounds of the object
 * @member PIXI.DisplayObject#_currentBounds
-* @type {PIXI.Rectangle}
+* @type {Rectangle}
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 198
+* @sourceline 171
 */
 /**
 * @description The original, cached mask of the object
-* @member PIXI.DisplayObject#_currentBounds
-* @type {PIXI.Rectangle}
+* @member PIXI.DisplayObject#_mask
+* @type {Rectangle}
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 207
+* @sourceline 180
 */
 /**
 * @description Cached internal flag.
@@ -198,7 +175,7 @@ rather than figuring out the dimensions of the displayObject each frame you can 
 * @type {Boolean}
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 216
+* @sourceline 189
 */
 /**
 * @description Cached internal flag.
@@ -206,126 +183,21 @@ rather than figuring out the dimensions of the displayObject each frame you can 
 * @type {Boolean}
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 225
+* @sourceline 198
 */
 /**
-* @description A callback that is used when the users mouse rolls over the displayObject
-* @method PIXI.DisplayObject#mouseover
-* @param {PIXI.InteractionData} interactionData - 
+* @description Destroy this DisplayObject.
+Removes all references to transformCallbacks, its parent, the stage, filters, bounds, mask and cached Sprites.
+* @method PIXI.DisplayObject#destroy
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 239
-*/
-/**
-* @description A callback that is used when the users mouse leaves the displayObject
-* @method PIXI.DisplayObject#mouseout
-* @param {PIXI.InteractionData} interactionData - 
-* @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 245
-*/
-/**
-* @description A callback that is used when the users clicks on the displayObject with their mouse's left button
-* @method PIXI.DisplayObject#click
-* @param {PIXI.InteractionData} interactionData - 
-* @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 252
-*/
-/**
-* @description A callback that is used when the user clicks the mouse's left button down over the sprite
-* @method PIXI.DisplayObject#mousedown
-* @param {PIXI.InteractionData} interactionData - 
-* @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 258
-*/
-/**
-* @description A callback that is used when the user releases the mouse's left button that was over the displayObject
-for this callback to be fired, the mouse's left button must have been pressed down over the displayObject
-* @method PIXI.DisplayObject#mouseup
-* @param {PIXI.InteractionData} interactionData - 
-* @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 264
-*/
-/**
-* @description A callback that is used when the user releases the mouse's left button that was over the displayObject but is no longer over the displayObject
-for this callback to be fired, the mouse's left button must have been pressed down over the displayObject
-* @method PIXI.DisplayObject#mouseupoutside
-* @param {PIXI.InteractionData} interactionData - 
-* @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 271
-*/
-/**
-* @description A callback that is used when the users clicks on the displayObject with their mouse's right button
-* @method PIXI.DisplayObject#rightclick
-* @param {PIXI.InteractionData} interactionData - 
-* @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 279
-*/
-/**
-* @description A callback that is used when the user clicks the mouse's right button down over the sprite
-* @method PIXI.DisplayObject#rightdown
-* @param {PIXI.InteractionData} interactionData - 
-* @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 285
-*/
-/**
-* @description A callback that is used when the user releases the mouse's right button that was over the displayObject
-for this callback to be fired the mouse's right button must have been pressed down over the displayObject
-* @method PIXI.DisplayObject#rightup
-* @param {PIXI.InteractionData} interactionData - 
-* @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 291
-*/
-/**
-* @description A callback that is used when the user releases the mouse's right button that was over the displayObject but is no longer over the displayObject
-for this callback to be fired, the mouse's right button must have been pressed down over the displayObject
-* @method PIXI.DisplayObject#rightupoutside
-* @param {PIXI.InteractionData} interactionData - 
-* @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 298
-*/
-/**
-* @description A callback that is used when the users taps on the sprite with their finger
-basically a touch version of click
-* @method PIXI.DisplayObject#tap
-* @param {PIXI.InteractionData} interactionData - 
-* @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 309
-*/
-/**
-* @description A callback that is used when the user touches over the displayObject
-* @method PIXI.DisplayObject#touchstart
-* @param {PIXI.InteractionData} interactionData - 
-* @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 316
-*/
-/**
-* @description A callback that is used when the user releases a touch over the displayObject
-* @method PIXI.DisplayObject#touchend
-* @param {PIXI.InteractionData} interactionData - 
-* @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 322
-*/
-/**
-* @description A callback that is used when the user releases the touch that was over the displayObject
-for this callback to be fired, The touch must have started over the sprite
-* @method PIXI.DisplayObject#touchendoutside
-* @param {PIXI.InteractionData} interactionData - 
-* @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 328
-*/
-/**
-* @description Indicates if the sprite will have touch and mouse interactivity. It is false by default
-* @member PIXI.DisplayObject#interactive
-* @type {Boolean}
-* @default false
-* @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 339
+* @sourceline 212
 */
 /**
 * @description [read-only] Indicates if the sprite is globally visible.
 * @member PIXI.DisplayObject#worldVisible
 * @type {Boolean}
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 359
+* @sourceline 249
 */
 /**
 * @description Sets a mask for the displayObject. A mask is an object that limits the visibility of an object to the shape of the mask applied to it.
@@ -334,7 +206,7 @@ To remove a mask, set this property to null.
 * @member PIXI.DisplayObject#mask
 * @type {PIXI.Graphics}
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 380
+* @sourceline 273
 */
 /**
 * @description Sets the filters for the displayObject.
@@ -343,7 +215,7 @@ To remove filters simply set this property to 'null'
 * @member PIXI.DisplayObject#filters
 * @type {Array<Filter>}
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 400
+* @sourceline 298
 */
 /**
 * @description Set if this display object is cached as a bitmap.
@@ -352,29 +224,35 @@ To remove simply set this property to 'null'
 * @member PIXI.DisplayObject#cacheAsBitmap
 * @type {Boolean}
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 436
+* @sourceline 336
 */
 /**
 * @description Retrieves the bounds of the displayObject as a rectangle object
 * @method PIXI.DisplayObject#getBounds
-* @param {PIXI.Matrix} matrix - 
-* @return {PIXI.Rectangle} the rectangular bounding area
+* @param {Matrix} matrix - 
+* @return {Rectangle} the rectangular bounding area
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 546
+* @sourceline 451
 */
 /**
 * @description Retrieves the local bounds of the displayObject as a rectangle object
 * @method PIXI.DisplayObject#getLocalBounds
-* @return {PIXI.Rectangle} the rectangular bounding area
+* @return {Rectangle} the rectangular bounding area
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 559
+* @sourceline 464
 */
 /**
 * @description Sets the object's stage reference, the stage this object is connected to
 * @method PIXI.DisplayObject#setStageReference
 * @param {PIXI.Stage} stage - the stage that the object will have as its current stage reference
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 570
+* @sourceline 475
+*/
+/**
+* @description Empty, to be overridden by classes that require it.
+* @method PIXI.DisplayObject#preUpdate
+* @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
+* @sourceline 486
 */
 /**
 * @description Useful function that returns a texture of the displayObject object that can then be used to create sprites
@@ -385,30 +263,30 @@ This can be quite useful if your displayObject is static / complicated and needs
 * @param {(PIXI.CanvasRenderer|PIXI.WebGLRenderer)} renderer - The renderer used to generate the texture.
 * @return {PIXI.Texture} a texture of the graphics object
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 582
+* @sourceline 495
 */
 /**
 * @description Generates and updates the cached sprite for this object.
 * @method PIXI.DisplayObject#updateCache
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 606
+* @sourceline 519
 */
 /**
 * @description Calculates the global position of the display object
 * @method PIXI.DisplayObject#toGlobal
-* @param {PIXI.Point} position - The world origin to calculate from
-* @return {PIXI.Point} A point object representing the position of this object
+* @param {Point} position - The world origin to calculate from
+* @return {Point} A point object representing the position of this object
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 616
+* @sourceline 529
 */
 /**
 * @description Calculates the local position of the display object relative to another point
 * @method PIXI.DisplayObject#toLocal
-* @param {PIXI.Point} position - The world origin to calculate from
+* @param {Point} position - The world origin to calculate from
 * @param {PIXI.DisplayObject} [from] - The DisplayObject to calculate the global position from
-* @return {PIXI.Point} A point object representing the position of this object
+* @return {Point} A point object representing the position of this object
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 630
+* @sourceline 543
 */
 /**
 * @description Internal method.
@@ -416,21 +294,21 @@ This can be quite useful if your displayObject is static / complicated and needs
 * @param {Object} renderSession - The render session
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 651
+* @sourceline 564
 */
 /**
 * @description Internal method.
 * @method PIXI.DisplayObject#_generateCachedSprite
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 672
+* @sourceline 585
 */
 /**
 * @description Destroys the cached sprite.
 * @method PIXI.DisplayObject#_destroyCachedSprite
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 714
+* @sourceline 628
 */
 /**
 * @description Renders the object using the WebGL renderer
@@ -438,7 +316,7 @@ This can be quite useful if your displayObject is static / complicated and needs
 * @param {RenderSession} renderSession - 
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 730
+* @sourceline 644
 */
 /**
 * @description Renders the object using the Canvas renderer
@@ -446,21 +324,21 @@ This can be quite useful if your displayObject is static / complicated and needs
 * @param {RenderSession} renderSession - 
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 744
+* @sourceline 658
 */
 /**
 * @description The position of the displayObject on the x axis relative to the local coordinates of the parent.
 * @member PIXI.DisplayObject#x
 * @type {Number}
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 761
+* @sourceline 672
 */
 /**
 * @description The position of the displayObject on the y axis relative to the local coordinates of the parent.
 * @member PIXI.DisplayObject#y
 * @type {Number}
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObject.js
-* @sourceline 776
+* @sourceline 690
 */
 /**
 * @fileoverview
@@ -489,14 +367,14 @@ It is the base class of all display objects that act as a container for other ob
 * @member PIXI.DisplayObjectContainer#width
 * @type {Number}
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObjectContainer.js
-* @sourceline 35
+* @sourceline 32
 */
 /**
 * @description The height of the displayObjectContainer, setting this will actually modify the scale to achieve the value set
 * @member PIXI.DisplayObjectContainer#height
 * @type {Number}
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObjectContainer.js
-* @sourceline 63
+* @sourceline 62
 */
 /**
 * @description Adds a child to the container.
@@ -504,7 +382,7 @@ It is the base class of all display objects that act as a container for other ob
 * @param {PIXI.DisplayObject} child - The DisplayObject to add to the container
 * @return {PIXI.DisplayObject} The child that was added.
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObjectContainer.js
-* @sourceline 90
+* @sourceline 92
 */
 /**
 * @description Adds a child to the container at a specified index. If the index is out of bounds an error will be thrown
@@ -513,7 +391,7 @@ It is the base class of all display objects that act as a container for other ob
 * @param {Number} index - The index to place the child in
 * @return {PIXI.DisplayObject} The child that was added.
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObjectContainer.js
-* @sourceline 102
+* @sourceline 104
 */
 /**
 * @description Swaps the position of 2 Display Objects within this container.
@@ -521,7 +399,7 @@ It is the base class of all display objects that act as a container for other ob
 * @param {PIXI.DisplayObject} child - 
 * @param {PIXI.DisplayObject} child2 - 
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObjectContainer.js
-* @sourceline 133
+* @sourceline 135
 */
 /**
 * @description Returns the index position of a child DisplayObject instance
@@ -529,7 +407,7 @@ It is the base class of all display objects that act as a container for other ob
 * @param {PIXI.DisplayObject} child - The DisplayObject instance to identify
 * @return {Number} The index position of the child display object to identify
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObjectContainer.js
-* @sourceline 158
+* @sourceline 160
 */
 /**
 * @description Changes the position of an existing child in the display object container
@@ -537,7 +415,7 @@ It is the base class of all display objects that act as a container for other ob
 * @param {PIXI.DisplayObject} child - The child DisplayObject instance for which you want to change the index number
 * @param {Number} index - The resulting index number for the child display object
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObjectContainer.js
-* @sourceline 175
+* @sourceline 177
 */
 /**
 * @description Returns the child at the specified index
@@ -545,7 +423,7 @@ It is the base class of all display objects that act as a container for other ob
 * @param {Number} index - The index to get the child from
 * @return {PIXI.DisplayObject} The child at the given index, if any.
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObjectContainer.js
-* @sourceline 193
+* @sourceline 195
 */
 /**
 * @description Removes a child from the container.
@@ -553,7 +431,7 @@ It is the base class of all display objects that act as a container for other ob
 * @param {PIXI.DisplayObject} child - The DisplayObject to remove
 * @return {PIXI.DisplayObject} The child that was removed.
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObjectContainer.js
-* @sourceline 210
+* @sourceline 212
 */
 /**
 * @description Removes a child from the specified index position.
@@ -561,7 +439,7 @@ It is the base class of all display objects that act as a container for other ob
 * @param {Number} index - The index to get the child from
 * @return {PIXI.DisplayObject} The child that was removed.
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObjectContainer.js
-* @sourceline 225
+* @sourceline 227
 */
 /**
 * @description Removes all children from this container that are within the begin and end indexes.
@@ -569,28 +447,28 @@ It is the base class of all display objects that act as a container for other ob
 * @param {Number} beginIndex - The beginning position. Default value is 0.
 * @param {Number} endIndex - The ending position. Default value is size of the container.
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObjectContainer.js
-* @sourceline 243
+* @sourceline 245
 */
 /**
 * @description Retrieves the bounds of the displayObjectContainer as a rectangle. The bounds calculation takes all visible children into consideration.
 * @method PIXI.DisplayObjectContainer#getBounds
-* @return {PIXI.Rectangle} The rectangular bounding area
+* @return {Rectangle} The rectangular bounding area
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObjectContainer.js
-* @sourceline 302
+* @sourceline 304
 */
 /**
 * @description Retrieves the non-global local bounds of the displayObjectContainer as a rectangle. The calculation takes all visible children into consideration.
 * @method PIXI.DisplayObjectContainer#getLocalBounds
-* @return {PIXI.Rectangle} The rectangular bounding area
+* @return {Rectangle} The rectangular bounding area
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObjectContainer.js
-* @sourceline 362
+* @sourceline 364
 */
 /**
 * @description Sets the containers Stage reference. This is the Stage that this object, and all of its children, is connected to.
 * @method PIXI.DisplayObjectContainer#setStageReference
 * @param {PIXI.Stage} stage - the stage that the container will have as its current stage reference
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObjectContainer.js
-* @sourceline 386
+* @sourceline 388
 */
 /**
 * @description Removes the current stage reference from the container and all of its children.
@@ -604,7 +482,7 @@ It is the base class of all display objects that act as a container for other ob
 * @param {RenderSession} renderSession - 
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObjectContainer.js
-* @sourceline 423
+* @sourceline 419
 */
 /**
 * @description Renders the object using the Canvas renderer
@@ -612,118 +490,7 @@ It is the base class of all display objects that act as a container for other ob
 * @param {RenderSession} renderSession - 
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\DisplayObjectContainer.js
-* @sourceline 482
-*/
-/**
-* @fileoverview
-* @author Mat Groves http://matgroves.com/ @Doormat23
-* @sourcefile d:\wamp\www\phaser\src\pixi\display\MovieClip.js
-* @sourceline 1
-*/
-/**
-* @class PIXI.MovieClip
-* @description A MovieClip is a simple way to display an animation depicted by a list of textures.
-* @augments PIXI.Sprite
-* @param {Array<Texture>} textures - an array of {Texture} objects that make up the animation
-* @sourcefile d:\wamp\www\phaser\src\pixi\display\MovieClip.js
-* @sourceline 5
-*/
-/**
-* @description The array of textures that make up the animation
-* @member PIXI.MovieClip#textures
-* @type {Array<Texture>}
-* @sourcefile d:\wamp\www\phaser\src\pixi\display\MovieClip.js
-* @sourceline 17
-*/
-/**
-* @description The speed that the MovieClip will play at. Higher is faster, lower is slower
-* @member PIXI.MovieClip#animationSpeed
-* @type {Number}
-* @default 1
-* @sourcefile d:\wamp\www\phaser\src\pixi\display\MovieClip.js
-* @sourceline 25
-*/
-/**
-* @description Whether or not the movie clip repeats after playing.
-* @member PIXI.MovieClip#loop
-* @type {Boolean}
-* @default true
-* @sourcefile d:\wamp\www\phaser\src\pixi\display\MovieClip.js
-* @sourceline 34
-*/
-/**
-* @description Function to call when a MovieClip finishes playing
-* @member PIXI.MovieClip#onComplete
-* @type {Function}
-* @sourcefile d:\wamp\www\phaser\src\pixi\display\MovieClip.js
-* @sourceline 43
-*/
-/**
-* @description [read-only] The MovieClips current frame index (this may not have to be a whole number)
-* @member PIXI.MovieClip#currentFrame
-* @type {Number}
-* @readonly 
-* @default 0
-* @sourcefile d:\wamp\www\phaser\src\pixi\display\MovieClip.js
-* @sourceline 51
-*/
-/**
-* @description [read-only] Indicates if the MovieClip is currently playing
-* @member PIXI.MovieClip#playing
-* @type {Boolean}
-* @readonly 
-* @sourcefile d:\wamp\www\phaser\src\pixi\display\MovieClip.js
-* @sourceline 61
-*/
-/**
-* @description [read-only] totalFrames is the total number of frames in the MovieClip. This is the same as number of textures
-assigned to the MovieClip.
-* @member PIXI.MovieClip#totalFrames
-* @type {Number}
-* @readonly 
-* @default 0
-* @sourcefile d:\wamp\www\phaser\src\pixi\display\MovieClip.js
-* @sourceline 75
-*/
-/**
-* @description Stops the MovieClip
-* @method PIXI.MovieClip#stop
-* @sourcefile d:\wamp\www\phaser\src\pixi\display\MovieClip.js
-* @sourceline 91
-*/
-/**
-* @description Plays the MovieClip
-* @method PIXI.MovieClip#play
-* @sourcefile d:\wamp\www\phaser\src\pixi\display\MovieClip.js
-* @sourceline 101
-*/
-/**
-* @description Stops the MovieClip and goes to a specific frame
-* @method PIXI.MovieClip#gotoAndStop
-* @param {Number} frameNumber - frame index to stop at
-* @sourcefile d:\wamp\www\phaser\src\pixi\display\MovieClip.js
-* @sourceline 111
-*/
-/**
-* @description Goes to a specific frame and begins playing the MovieClip
-* @method PIXI.MovieClip#gotoAndPlay
-* @param {Number} frameNumber - frame index to start at
-* @sourcefile d:\wamp\www\phaser\src\pixi\display\MovieClip.js
-* @sourceline 125
-*/
-/**
-* @description A short hand way of creating a movieclip from an array of frame ids
-* @method PIXI.MovieClip.fromFrames
-* @param {Array} frames - the array of frames ids the movieclip will use as its texture frames
-* @sourcefile d:\wamp\www\phaser\src\pixi\display\MovieClip.js
-* @sourceline 169
-*/
-/**
-* @description A short hand way of creating a movieclip from an array of image ids
-* @method PIXI.MovieClip.fromImages
-* @param {Array} frames - the array of image ids the movieclip will use as its texture frames
-* @sourcefile d:\wamp\www\phaser\src\pixi\display\MovieClip.js
-* @sourceline 188
+* @sourceline 477
 */
 /**
 * @fileoverview
@@ -750,7 +517,7 @@ The default is 0,0 this means the texture's origin is the top left
 Setting than anchor to 0.5,0.5 means the textures origin is centered
 Setting the anchor to 1,1 would mean the textures origin points will be the bottom right corner
 * @member PIXI.Sprite#anchor
-* @type {PIXI.Point}
+* @type {Point}
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\Sprite.js
 * @sourceline 22
 */
@@ -806,21 +573,21 @@ Setting the anchor to 1,1 would mean the textures origin points will be the bott
 * @member PIXI.Sprite#width
 * @type {Number}
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\Sprite.js
-* @sourceline 103
+* @sourceline 99
 */
 /**
 * @description The height of the sprite, setting this will actually modify the scale to achieve the value set
 * @member PIXI.Sprite#height
 * @type {Number}
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\Sprite.js
-* @sourceline 119
+* @sourceline 118
 */
 /**
 * @description Sets the texture of the sprite
 * @method PIXI.Sprite#setTexture
 * @param {PIXI.Texture} texture - The PIXI texture that is displayed by the sprite
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\Sprite.js
-* @sourceline 135
+* @sourceline 137
 */
 /**
 * @description When the texture is updated, this event will fire to update the scale and frame
@@ -828,13 +595,13 @@ Setting the anchor to 1,1 would mean the textures origin points will be the bott
 * @param {} event - 
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\Sprite.js
-* @sourceline 147
+* @sourceline 149
 */
 /**
 * @description Returns the bounds of the Sprite as a rectangle. The bounds calculation takes the worldTransform into account.
 * @method PIXI.Sprite#getBounds
-* @param {PIXI.Matrix} matrix - the transformation matrix of the sprite
-* @return {PIXI.Rectangle} the framing rectangle
+* @param {Matrix} matrix - the transformation matrix of the sprite
+* @return {Rectangle} the framing rectangle
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\Sprite.js
 * @sourceline 163
 */
@@ -844,7 +611,7 @@ Setting the anchor to 1,1 would mean the textures origin points will be the bott
 * @param {RenderSession} renderSession - 
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\Sprite.js
-* @sourceline 260
+* @sourceline 258
 */
 /**
 * @description Renders the object using the Canvas renderer
@@ -852,7 +619,7 @@ Setting the anchor to 1,1 would mean the textures origin points will be the bott
 * @param {RenderSession} renderSession - 
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\Sprite.js
-* @sourceline 323
+* @sourceline 321
 */
 /**
 * @description Helper function that creates a sprite that will contain a texture from the TextureCache based on the frameId
@@ -861,7 +628,7 @@ Setting the anchor to 1,1 would mean the textures origin points will be the bott
 * @param {String} frameId - The frame Id of the texture in the cache
 * @return {PIXI.Sprite} A new Sprite using a texture from the texture cache matching the frameId
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\Sprite.js
-* @sourceline 436
+* @sourceline 434
 */
 /**
 * @description Helper function that creates a sprite that will contain a texture based on an image url
@@ -904,7 +671,7 @@ And here you have a hundred sprites that will be renderer at the speed of light
 * @param {RenderSession} renderSession - 
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\SpriteBatch.js
-* @sourceline 66
+* @sourceline 64
 */
 /**
 * @description Renders the object using the Canvas renderer
@@ -912,7 +679,7 @@ And here you have a hundred sprites that will be renderer at the speed of light
 * @param {RenderSession} renderSession - 
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\SpriteBatch.js
-* @sourceline 90
+* @sourceline 96
 */
 /**
 * @fileoverview
@@ -939,41 +706,11 @@ stage.addChild(sprite);
 /**
 * @description [read-only] Current transform of the object based on world (parent) factors
 * @member PIXI.Stage#worldTransform
-* @type {PIXI.Matrix}
+* @type {Matrix}
 * @readonly 
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\Stage.js
 * @sourceline 25
-*/
-/**
-* @description Whether or not the stage is interactive
-* @member PIXI.Stage#interactive
-* @type {Boolean}
-* @sourcefile d:\wamp\www\phaser\src\pixi\display\Stage.js
-* @sourceline 35
-*/
-/**
-* @description The interaction manage for this stage, manages all interactive activity on the stage
-* @member PIXI.Stage#interactionManager
-* @type {PIXI.InteractionManager}
-* @sourcefile d:\wamp\www\phaser\src\pixi\display\Stage.js
-* @sourceline 43
-*/
-/**
-* @description Whether the stage is dirty and needs to have interactions updated
-* @member PIXI.Stage#dirty
-* @type {Boolean}
-* @access private
-* @sourcefile d:\wamp\www\phaser\src\pixi\display\Stage.js
-* @sourceline 51
-*/
-/**
-* @description Sets another DOM element which can receive mouse/touch interactions instead of the default Canvas element.
-This is useful for when you have other DOM elements on top of the Canvas element.
-* @method PIXI.Stage#setInteractionDelegate
-* @param {DOMElement} domElement - This new domElement which will receive mouse/touch events
-* @sourcefile d:\wamp\www\phaser\src\pixi\display\Stage.js
-* @sourceline 73
 */
 /**
 * @description Sets the background color for the stage
@@ -981,82 +718,7 @@ This is useful for when you have other DOM elements on top of the Canvas element
 * @param {Number} backgroundColor - the color of the background, easiest way to pass this in is in hex format
      like: 0xFFFFFF for white
 * @sourcefile d:\wamp\www\phaser\src\pixi\display\Stage.js
-* @sourceline 110
-*/
-/**
-* @description This will return the point containing global coordinates of the mouse.
-* @method PIXI.Stage#getMousePosition
-* @return {PIXI.Point} A point containing the coordinates of the global InteractionData position.
-* @sourcefile d:\wamp\www\phaser\src\pixi\display\Stage.js
-* @sourceline 126
-*/
-/**
-* @class PIXI.SpineTextureLoader
-* @description Supporting class to load images from spine atlases as per spine spec.
-* @param {String} basePath - Tha base path where to look for the images to be loaded
-* @param {Boolean} crossorigin - Whether requests should be treated as crossorigin
-* @sourcefile d:\wamp\www\phaser\src\pixi\extras\PIXISpine.js
-* @sourceline 6
-*/
-/**
-* @description Starts loading a base texture as per spine specification
-* @method PIXI.SpineTextureLoader#load
-* @param {spineAtlasPage} page - Atlas page to which texture belongs
-* @param {String} file - The file to load, this is just the file path relative to the base path configured in the constructor
-* @sourcefile d:\wamp\www\phaser\src\pixi\extras\PIXISpine.js
-* @sourceline 27
-*/
-/**
-* @description Unloads a previously loaded texture as per spine specification
-* @method PIXI.SpineTextureLoader#unload
-* @param {PIXI.BaseTexture} texture - Texture object to destroy
-* @sourcefile d:\wamp\www\phaser\src\pixi\extras\PIXISpine.js
-* @sourceline 51
-*/
-/**
-* @class PIXI.Spine
-* @description A class that enables the you to import and run your spine animations in pixi.
-Spine animation data needs to be loaded using the PIXI.AssetLoader or PIXI.SpineLoader before it can be used by this class
-See example 12 (http://www.goodboydigital.com/pixijs/examples/12/) to see a working example and check out the source
-* @augments PIXI.DisplayObjectContainer
-* @param {String} url - The url of the spine anim file to be used
-* @sourcefile d:\wamp\www\phaser\src\pixi\extras\PIXISpine.js
-* @sourceline 62
-*/
-/**
-* @description If this flag is set to true, the spine animation will be autoupdated every time
-the object id drawn. The down side of this approach is that the delta time is
-automatically calculated and you could miss out on cool effects like slow motion,
-pause, skip ahead and the sorts. Most of these effects can be achieved even with
-autoupdate enabled but are harder to achieve.
-* @member PIXI.Spine#autoUpdate
-* @type {Boolean}
-* @default true
-* @sourcefile d:\wamp\www\phaser\src\pixi\extras\PIXISpine.js
-* @sourceline 124
-*/
-/**
-* @description Update the spine skeleton and its animations by delta time (dt)
-* @method PIXI.Spine#update
-* @param {Number} dt - Delta time. Time by which the animation should be updated
-* @sourcefile d:\wamp\www\phaser\src\pixi\extras\PIXISpine.js
-* @sourceline 147
-*/
-/**
-* @description When autoupdate is set to yes this function is used as pixi's updateTransform function
-* @method PIXI.Spine#autoUpdateTransform
-* @access private
-* @sourcefile d:\wamp\www\phaser\src\pixi\extras\PIXISpine.js
-* @sourceline 249
-*/
-/**
-* @description Create a new sprite to be used with spine.RegionAttachment
-* @method PIXI.Spine#createSprite
-* @param {spineSlot} slot - The slot to which the attachment is parented
-* @param {spineRegionAttachment} attachment - The attachment that the sprite will represent
-* @access private
-* @sourcefile d:\wamp\www\phaser\src\pixi\extras\PIXISpine.js
-* @sourceline 265
+* @sourceline 61
 */
 /**
 * @fileoverview
@@ -1073,34 +735,9 @@ autoupdate enabled but are harder to achieve.
 * @sourceline 6
 */
 /**
-* @fileoverview Spine Runtimes Software License
-Version 2.1
-
-Copyright (c) 2013, Esoteric Software
-All rights reserved.
-
-You are granted a perpetual, non-exclusive, non-sublicensable and
-non-transferable license to install, execute and perform the Spine Runtimes
-Software (the "Software") solely for internal use. Without the written
-permission of Esoteric Software (typically granted by licensing Spine), you
-may not (a) modify, translate, adapt or otherwise create derivative works,
-improvements of the Software or develop new applications using the Software
-or (b) remove, delete, alter or obscure any trademarks or any copyright,
-trademark, patent or other intellectual property or proprietary rights
-notices on or in the Software, including any copy thereof. Redistributions
-in binary or source form must include this license and terms.
-
-THIS SOFTWARE IS PROVIDED BY ESOTERIC SOFTWARE "AS IS" AND ANY EXPRESS OR
-IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO
-EVENT SHALL ESOTERIC SOFTARE BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
-OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
-WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
-OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
-ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-* @sourcefile d:\wamp\www\phaser\src\pixi\extras\Spine.js
+* @fileoverview
+* @author Mat Groves http://matgroves.com/
+* @sourcefile d:\wamp\www\phaser\src\pixi\extras\Strip.js
 * @sourceline 1
 */
 /**
@@ -1112,43 +749,6 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 * @sourcefile d:\wamp\www\phaser\src\pixi\extras\Strip.js
 * @sourceline 5
 */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /**
 * @description The texture of the strip
 * @member PIXI.Strip#texture
@@ -1197,8 +797,8 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 /**
 * @description Returns the bounds of the mesh as a rectangle. The bounds calculation takes the worldTransform into account.
 * @method PIXI.Strip#getBounds
-* @param {PIXI.Matrix} matrix - the transformation matrix of the sprite
-* @return {PIXI.Rectangle} the framing rectangle
+* @param {Matrix} matrix - the transformation matrix of the sprite
+* @return {Rectangle} the framing rectangle
 * @sourcefile d:\wamp\www\phaser\src\pixi\extras\Strip.js
 * @sourceline 402
 */
@@ -1242,21 +842,21 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 /**
 * @description The scaling of the image that is being tiled
 * @member PIXI.TilingSprite#tileScale
-* @type {PIXI.Point}
+* @type {Point}
 * @sourcefile d:\wamp\www\phaser\src\pixi\extras\TilingSprite.js
 * @sourceline 35
 */
 /**
 * @description A point that represents the scale of the texture object
 * @member PIXI.TilingSprite#tileScaleOffset
-* @type {PIXI.Point}
+* @type {Point}
 * @sourcefile d:\wamp\www\phaser\src\pixi\extras\TilingSprite.js
 * @sourceline 43
 */
 /**
 * @description The offset position of the image that is being tiled
 * @member PIXI.TilingSprite#tilePosition
-* @type {PIXI.Point}
+* @type {Point}
 * @sourcefile d:\wamp\www\phaser\src\pixi\extras\TilingSprite.js
 * @sourceline 51
 */
@@ -1317,7 +917,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 /**
 * @description Returns the framing rectangle of the sprite as a PIXI.Rectangle object
 * @method PIXI.TilingSprite#getBounds
-* @return {PIXI.Rectangle} the framing rectangle
+* @return {Rectangle} the framing rectangle
 * @sourcefile d:\wamp\www\phaser\src\pixi\extras\TilingSprite.js
 * @sourceline 278
 */
@@ -1397,1656 +997,6 @@ For example the blur filter has two passes blurX and blurY.
 * @method PIXI.AbstractFilter#syncUniforms
 * @sourcefile d:\wamp\www\phaser\src\pixi\filters\AbstractFilter.js
 * @sourceline 60
-*/
-/**
-* @fileoverview
-* @author Mat Groves http://matgroves.com/ @Doormat23
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\AlphaMaskFilter.js
-* @sourceline 1
-*/
-/**
-* @class PIXI.AlphaMaskFilter
-* @description The AlphaMaskFilter class uses the pixel values from the specified texture (called the displacement map) to perform a displacement of an object.
-You can use this filter to apply all manor of crazy warping effects
-Currently the r property of the texture is used to offset the x and the g property of the texture is used to offset the y.
-* @augments PIXI.AbstractFilter
-* @param {PIXI.Texture} texture - The texture used for the displacement map * must be power of 2 texture at the moment
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\AlphaMaskFilter.js
-* @sourceline 5
-*/
-/**
-* @description Sets the map dimensions uniforms when the texture becomes available.
-* @method PIXI.AlphaMaskFilter#onTextureLoaded
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\AlphaMaskFilter.js
-* @sourceline 71
-*/
-/**
-* @description The texture used for the displacement map. Must be power of 2 sized texture.
-* @member PIXI.AlphaMaskFilter#map
-* @type {PIXI.Texture}
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\AlphaMaskFilter.js
-* @sourceline 84
-*/
-/**
-* @fileoverview
-* @author Vico @vicocotea
-original shader : https://www.shadertoy.com/view/lssGDj by @movAX13h
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\AsciiFilter.js
-* @sourceline 1
-*/
-/**
-* @class PIXI.AsciiFilter
-* @description An ASCII filter.
-* @augments PIXI.AbstractFilter
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\AsciiFilter.js
-* @sourceline 6
-*/
-/**
-* @description The pixel size used by the filter.
-* @member PIXI.AsciiFilter#size
-* @type {Number}
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\AsciiFilter.js
-* @sourceline 73
-*/
-/**
-* @fileoverview
-* @author Mat Groves http://matgroves.com/ @Doormat23
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\BlurFilter.js
-* @sourceline 1
-*/
-/**
-* @class PIXI.BlurFilter
-* @description The BlurFilter applies a Gaussian blur to an object.
-The strength of the blur can be set for x- and y-axis separately (always relative to the stage).
-* @augments PIXI.AbstractFilter
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\BlurFilter.js
-* @sourceline 5
-*/
-/**
-* @description Sets the strength of both the blurX and blurY properties simultaneously
-* @member PIXI.BlurFilter#blur
-* @type {Number}
-* @default 2
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\BlurFilter.js
-* @sourceline 24
-*/
-/**
-* @description Sets the strength of the blurX property
-* @member PIXI.BlurFilter#blurX
-* @type {Number}
-* @default 2
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\BlurFilter.js
-* @sourceline 40
-*/
-/**
-* @description Sets the strength of the blurY property
-* @member PIXI.BlurFilter#blurY
-* @type {Number}
-* @default 2
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\BlurFilter.js
-* @sourceline 56
-*/
-/**
-* @fileoverview
-* @author Mat Groves http://matgroves.com/ @Doormat23
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\BlurXFilter.js
-* @sourceline 1
-*/
-/**
-* @class PIXI.BlurXFilter
-* @description The BlurXFilter applies a horizontal Gaussian blur to an object.
-* @augments PIXI.AbstractFilter
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\BlurXFilter.js
-* @sourceline 5
-*/
-/**
-* @description Sets the strength of both the blur.
-* @member PIXI.BlurXFilter#blur
-* @type {Number}
-* @default 2
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\BlurXFilter.js
-* @sourceline 51
-*/
-/**
-* @fileoverview
-* @author Mat Groves http://matgroves.com/ @Doormat23
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\BlurYFilter.js
-* @sourceline 1
-*/
-/**
-* @class PIXI.BlurYFilter
-* @description The BlurYFilter applies a vertical Gaussian blur to an object.
-* @augments PIXI.AbstractFilter
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\BlurYFilter.js
-* @sourceline 5
-*/
-/**
-* @description Sets the strength of both the blur.
-* @member PIXI.BlurYFilter#blur
-* @type {Number}
-* @default 2
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\BlurYFilter.js
-* @sourceline 51
-*/
-/**
-* @fileoverview
-* @author Mat Groves http://matgroves.com/ @Doormat23
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\ColorMatrixFilter.js
-* @sourceline 1
-*/
-/**
-* @class PIXI.ColorMatrixFilter
-* @description The ColorMatrixFilter class lets you apply a 4x4 matrix transformation on the RGBA
-color and alpha values of every pixel on your displayObject to produce a result
-with a new set of RGBA color and alpha values. It's pretty powerful!
-* @augments PIXI.AbstractFilter
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\ColorMatrixFilter.js
-* @sourceline 5
-*/
-/**
-* @description Sets the matrix of the color matrix filter
-* @member PIXI.ColorMatrixFilter#matrix
-* @type {Array<Number>}
-* @default [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\ColorMatrixFilter.js
-* @sourceline 46
-*/
-/**
-* @fileoverview
-* @author Mat Groves http://matgroves.com/ @Doormat23
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\ColorStepFilter.js
-* @sourceline 1
-*/
-/**
-* @class PIXI.ColorStepFilter
-* @description This lowers the color depth of your image by the given amount, producing an image with a smaller palette.
-* @augments PIXI.AbstractFilter
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\ColorStepFilter.js
-* @sourceline 5
-*/
-/**
-* @description The number of steps to reduce the palette by.
-* @member PIXI.ColorStepFilter#step
-* @type {Number}
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\ColorStepFilter.js
-* @sourceline 41
-*/
-/**
-* @class PIXI.ConvolutionFilter
-* @description The ConvolutionFilter class applies a matrix convolution filter effect. 
-A convolution combines pixels in the input image with neighboring pixels to produce a new image. 
-A wide variety of image effects can be achieved through convolutions, including blurring, edge detection, sharpening, embossing, and beveling.
-The matrix should be specified as a 9 point Array. See http://docs.gimp.org/en/plug-in-convmatrix.html for more info.
-* @augments PIXI.AbstractFilter
-* @param {Array} matrix - An array of values used for matrix transformation. Specified as a 9 point Array.
-* @param {Number} width - Width of the object you are transforming
-* @param {Number} height - Height of the object you are transforming
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\ConvolutionFilter.js
-* @sourceline 1
-*/
-/**
-* @description An array of values used for matrix transformation. Specified as a 9 point Array.
-* @member PIXI.ConvolutionFilter#matrix
-* @type {Array}
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\ConvolutionFilter.js
-* @sourceline 63
-*/
-/**
-* @description Width of the object you are transforming
-* @member PIXI.ConvolutionFilter#width
-* @type {Number}
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\ConvolutionFilter.js
-* @sourceline 78
-*/
-/**
-* @description Height of the object you are transforming
-* @member PIXI.ConvolutionFilter#height
-* @type {Number}
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\ConvolutionFilter.js
-* @sourceline 93
-*/
-/**
-* @fileoverview
-* @author Mat Groves http://matgroves.com/ @Doormat23
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\CrossHatchFilter.js
-* @sourceline 1
-*/
-/**
-* @class PIXI.CrossHatchFilter
-* @description A Cross Hatch effect filter.
-* @augments PIXI.AbstractFilter
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\CrossHatchFilter.js
-* @sourceline 5
-*/
-/**
-* @description Sets the strength of both the blur.
-* @member PIXI.CrossHatchFilter#blur
-* @type {Number}
-* @default 2
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\CrossHatchFilter.js
-* @sourceline 65
-*/
-/**
-* @fileoverview
-* @author Mat Groves http://matgroves.com/ @Doormat23
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\DisplacementFilter.js
-* @sourceline 1
-*/
-/**
-* @class PIXI.DisplacementFilter
-* @description The DisplacementFilter class uses the pixel values from the specified texture (called the displacement map) to perform a displacement of an object.
-You can use this filter to apply all manor of crazy warping effects
-Currently the r property of the texture is used offset the x and the g property of the texture is used to offset the y.
-* @augments PIXI.AbstractFilter
-* @param {PIXI.Texture} texture - The texture used for the displacement map * must be power of 2 texture at the moment
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\DisplacementFilter.js
-* @sourceline 5
-*/
-/**
-* @description Sets the map dimensions uniforms when the texture becomes available.
-* @method PIXI.DisplacementFilter#onTextureLoaded
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\DisplacementFilter.js
-* @sourceline 78
-*/
-/**
-* @description The texture used for the displacement map. Must be power of 2 texture.
-* @member PIXI.DisplacementFilter#map
-* @type {PIXI.Texture}
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\DisplacementFilter.js
-* @sourceline 91
-*/
-/**
-* @description The multiplier used to scale the displacement result from the map calculation.
-* @member PIXI.DisplacementFilter#scale
-* @type {PIXI.Point}
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\DisplacementFilter.js
-* @sourceline 106
-*/
-/**
-* @description The offset used to move the displacement map.
-* @member PIXI.DisplacementFilter#offset
-* @type {PIXI.Point}
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\DisplacementFilter.js
-* @sourceline 121
-*/
-/**
-* @fileoverview
-* @author Mat Groves http://matgroves.com/ @Doormat23
-original filter: https://github.com/evanw/glfx.js/blob/master/src/filters/fun/dotscreen.js
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\DotScreenFilter.js
-* @sourceline 1
-*/
-/**
-* @class PIXI.DotScreenFilter
-* @description This filter applies a dotscreen effect making display objects appear to be made out of black and white halftone dots like an old printer.
-* @augments PIXI.AbstractFilter
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\DotScreenFilter.js
-* @sourceline 6
-*/
-/**
-* @description The scale of the effect.
-* @member PIXI.DotScreenFilter#scale
-* @type {Number}
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\DotScreenFilter.js
-* @sourceline 57
-*/
-/**
-* @description The radius of the effect.
-* @member PIXI.DotScreenFilter#angle
-* @type {Number}
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\DotScreenFilter.js
-* @sourceline 72
-*/
-/**
-* @fileoverview
-* @author Mat Groves http://matgroves.com/ @Doormat23
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\FilterBlock.js
-* @sourceline 1
-*/
-/**
-* @class PIXI.FilterBlock
-* @description A target and pass info object for filters.
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\FilterBlock.js
-* @sourceline 5
-*/
-/**
-* @description The visible state of this FilterBlock.
-* @member PIXI.FilterBlock#visible
-* @type {Boolean}
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\FilterBlock.js
-* @sourceline 13
-*/
-/**
-* @description The renderable state of this FilterBlock.
-* @member PIXI.FilterBlock#renderable
-* @type {Boolean}
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\FilterBlock.js
-* @sourceline 21
-*/
-/**
-* @fileoverview
-* @author Mat Groves http://matgroves.com/ @Doormat23
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\GrayFilter.js
-* @sourceline 1
-*/
-/**
-* @class PIXI.GrayFilter
-* @description This greyscales the palette of your Display Objects.
-* @augments PIXI.AbstractFilter
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\GrayFilter.js
-* @sourceline 5
-*/
-/**
-* @description The strength of the gray. 1 will make the object black and white, 0 will make the object its normal color.
-* @member PIXI.GrayFilter#gray
-* @type {Number}
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\GrayFilter.js
-* @sourceline 41
-*/
-/**
-* @fileoverview
-* @author Mat Groves http://matgroves.com/ @Doormat23
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\InvertFilter.js
-* @sourceline 1
-*/
-/**
-* @class PIXI.InvertFilter
-* @description This inverts your Display Objects colors.
-* @augments PIXI.AbstractFilter
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\InvertFilter.js
-* @sourceline 5
-*/
-/**
-* @description The strength of the invert. 1 will fully invert the colors, 0 will make the object its normal color
-* @member PIXI.InvertFilter#invert
-* @type {Number}
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\InvertFilter.js
-* @sourceline 42
-*/
-/**
-* @fileoverview
-* @author Vico @vicocotea
-original filter: https://github.com/evanw/glfx.js/blob/master/src/filters/adjust/noise.js
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\NoiseFilter.js
-* @sourceline 1
-*/
-/**
-* @class PIXI.NoiseFilter
-* @description A Noise effect filter.
-* @augments PIXI.AbstractFilter
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\NoiseFilter.js
-* @sourceline 6
-*/
-/**
-* @description The amount of noise to apply.
-* @member PIXI.NoiseFilter#noise
-* @type {Number}
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\NoiseFilter.js
-* @sourceline 49
-*/
-/**
-* @fileoverview
-* @author Mat Groves http://matgroves.com/ @Doormat23
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\NormalMapFilter.js
-* @sourceline 1
-*/
-/**
-* @class PIXI.NormalMapFilter
-* @description The NormalMapFilter class uses the pixel values from the specified texture (called the displacement map) to perform a displacement of an object. 
-You can use this filter to apply all manor of crazy warping effects
-Currently the r property of the texture is used offset the x and the g property of the texture is used to offset the y.
-* @augments PIXI.AbstractFilter
-* @param {PIXI.Texture} texture - The texture used for the displacement map * must be power of 2 texture at the moment
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\NormalMapFilter.js
-* @sourceline 6
-*/
-/**
-* @description Sets the map dimensions uniforms when the texture becomes available.
-* @method PIXI.NormalMapFilter#onTextureLoaded
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\NormalMapFilter.js
-* @sourceline 140
-*/
-/**
-* @description The texture used for the displacement map. Must be power of 2 texture.
-* @member PIXI.NormalMapFilter#map
-* @type {PIXI.Texture}
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\NormalMapFilter.js
-* @sourceline 153
-*/
-/**
-* @description The multiplier used to scale the displacement result from the map calculation.
-* @member PIXI.NormalMapFilter#scale
-* @type {PIXI.Point}
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\NormalMapFilter.js
-* @sourceline 168
-*/
-/**
-* @description The offset used to move the displacement map.
-* @member PIXI.NormalMapFilter#offset
-* @type {PIXI.Point}
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\NormalMapFilter.js
-* @sourceline 183
-*/
-/**
-* @fileoverview
-* @author Mat Groves http://matgroves.com/ @Doormat23
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\PixelateFilter.js
-* @sourceline 1
-*/
-/**
-* @class PIXI.PixelateFilter
-* @description This filter applies a pixelate effect making display objects appear 'blocky'.
-* @augments PIXI.AbstractFilter
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\PixelateFilter.js
-* @sourceline 5
-*/
-/**
-* @description This a point that describes the size of the blocks. x is the width of the block and y is the height.
-* @member PIXI.PixelateFilter#size
-* @type {PIXI.Point}
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\PixelateFilter.js
-* @sourceline 48
-*/
-/**
-* @fileoverview
-* @author Mat Groves http://matgroves.com/ @Doormat23
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\RGBSplitFilter.js
-* @sourceline 1
-*/
-/**
-* @class PIXI.RGBSplitFilter
-* @description An RGB Split Filter.
-* @augments PIXI.AbstractFilter
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\RGBSplitFilter.js
-* @sourceline 5
-*/
-/**
-* @description Red channel offset.
-* @member PIXI.RGBSplitFilter#red
-* @type {PIXI.Point}
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\RGBSplitFilter.js
-* @sourceline 48
-*/
-/**
-* @description Green channel offset.
-* @member PIXI.RGBSplitFilter#green
-* @type {PIXI.Point}
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\RGBSplitFilter.js
-* @sourceline 63
-*/
-/**
-* @description Blue offset.
-* @member PIXI.RGBSplitFilter#blue
-* @type {PIXI.Point}
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\RGBSplitFilter.js
-* @sourceline 78
-*/
-/**
-* @fileoverview
-* @author Mat Groves http://matgroves.com/ @Doormat23
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\SepiaFilter.js
-* @sourceline 1
-*/
-/**
-* @class PIXI.SepiaFilter
-* @description This applies a sepia effect to your Display Objects.
-* @augments PIXI.AbstractFilter
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\SepiaFilter.js
-* @sourceline 5
-*/
-/**
-* @description The strength of the sepia. 1 will apply the full sepia effect, 0 will make the object its normal color.
-* @member PIXI.SepiaFilter#sepia
-* @type {Number}
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\SepiaFilter.js
-* @sourceline 43
-*/
-/**
-* @fileoverview
-* @author Mat Groves http://matgroves.com/ @Doormat23
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\SmartBlurFilter.js
-* @sourceline 1
-*/
-/**
-* @class PIXI.SmartBlurFilter
-* @description A Smart Blur Filter.
-* @augments PIXI.AbstractFilter
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\SmartBlurFilter.js
-* @sourceline 5
-*/
-/**
-* @description The strength of the blur.
-* @member PIXI.SmartBlurFilter#blur
-* @type {Number}
-* @default 2
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\SmartBlurFilter.js
-* @sourceline 61
-*/
-/**
-* @fileoverview
-* @author Vico @vicocotea
-original filter https://github.com/evanw/glfx.js/blob/master/src/filters/blur/tiltshift.js by Evan Wallace : http://madebyevan.com/
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\TiltShiftFilter.js
-* @sourceline 1
-*/
-/**
-* @class PIXI.TiltShiftFilter
-* @description A TiltShift Filter. Manages the pass of both a TiltShiftXFilter and TiltShiftYFilter.
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\TiltShiftFilter.js
-* @sourceline 6
-*/
-/**
-* @description The strength of the blur.
-* @member PIXI.TiltShiftFilter#blur
-* @type {Number}
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\TiltShiftFilter.js
-* @sourceline 24
-*/
-/**
-* @description The strength of the gradient blur.
-* @member PIXI.TiltShiftFilter#gradientBlur
-* @type {Number}
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\TiltShiftFilter.js
-* @sourceline 39
-*/
-/**
-* @description The Y value to start the effect at.
-* @member PIXI.TiltShiftFilter#start
-* @type {Number}
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\TiltShiftFilter.js
-* @sourceline 54
-*/
-/**
-* @description The Y value to end the effect at.
-* @member PIXI.TiltShiftFilter#end
-* @type {Number}
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\TiltShiftFilter.js
-* @sourceline 69
-*/
-/**
-* @fileoverview
-* @author Vico @vicocotea
-original filter https://github.com/evanw/glfx.js/blob/master/src/filters/blur/tiltshift.js by Evan Wallace : http://madebyevan.com/
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\TiltShiftXFilter.js
-* @sourceline 1
-*/
-/**
-* @class PIXI.TiltShiftXFilter
-* @description A TiltShiftXFilter.
-* @augments PIXI.AbstractFilter
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\TiltShiftXFilter.js
-* @sourceline 6
-*/
-/**
-* @description The strength of the blur.
-* @member PIXI.TiltShiftXFilter#blur
-* @type {Number}
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\TiltShiftXFilter.js
-* @sourceline 72
-*/
-/**
-* @description The strength of the gradient blur.
-* @member PIXI.TiltShiftXFilter#gradientBlur
-* @type {Number}
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\TiltShiftXFilter.js
-* @sourceline 88
-*/
-/**
-* @description The X value to start the effect at.
-* @member PIXI.TiltShiftXFilter#start
-* @type {Number}
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\TiltShiftXFilter.js
-* @sourceline 104
-*/
-/**
-* @description The X value to end the effect at.
-* @member PIXI.TiltShiftXFilter#end
-* @type {Number}
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\TiltShiftXFilter.js
-* @sourceline 121
-*/
-/**
-* @description Updates the filter delta values.
-* @method PIXI.TiltShiftXFilter#updateDelta
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\TiltShiftXFilter.js
-* @sourceline 138
-*/
-/**
-* @fileoverview
-* @author Vico @vicocotea
-original filter https://github.com/evanw/glfx.js/blob/master/src/filters/blur/tiltshift.js by Evan Wallace : http://madebyevan.com/
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\TiltShiftYFilter.js
-* @sourceline 1
-*/
-/**
-* @class PIXI.TiltShiftYFilter
-* @description A TiltShiftYFilter.
-* @augments PIXI.AbstractFilter
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\TiltShiftYFilter.js
-* @sourceline 6
-*/
-/**
-* @description The strength of the blur.
-* @member PIXI.TiltShiftYFilter#blur
-* @type {Number}
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\TiltShiftYFilter.js
-* @sourceline 72
-*/
-/**
-* @description The strength of the gradient blur.
-* @member PIXI.TiltShiftYFilter#gradientBlur
-* @type {Number}
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\TiltShiftYFilter.js
-* @sourceline 88
-*/
-/**
-* @description The Y value to start the effect at.
-* @member PIXI.TiltShiftYFilter#start
-* @type {Number}
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\TiltShiftYFilter.js
-* @sourceline 104
-*/
-/**
-* @description The Y value to end the effect at.
-* @member PIXI.TiltShiftYFilter#end
-* @type {Number}
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\TiltShiftYFilter.js
-* @sourceline 121
-*/
-/**
-* @description Updates the filter delta values.
-* @method PIXI.TiltShiftYFilter#updateDelta
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\TiltShiftYFilter.js
-* @sourceline 138
-*/
-/**
-* @fileoverview
-* @author Mat Groves http://matgroves.com/ @Doormat23
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\TwistFilter.js
-* @sourceline 1
-*/
-/**
-* @class PIXI.TwistFilter
-* @description This filter applies a twist effect making display objects appear twisted in the given direction.
-* @augments PIXI.AbstractFilter
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\TwistFilter.js
-* @sourceline 5
-*/
-/**
-* @description This point describes the the offset of the twist.
-* @member PIXI.TwistFilter#offset
-* @type {PIXI.Point}
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\TwistFilter.js
-* @sourceline 56
-*/
-/**
-* @description This radius of the twist.
-* @member PIXI.TwistFilter#radius
-* @type {Number}
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\TwistFilter.js
-* @sourceline 72
-*/
-/**
-* @description This angle of the twist.
-* @member PIXI.TwistFilter#angle
-* @type {Number}
-* @sourcefile d:\wamp\www\phaser\src\pixi\filters\TwistFilter.js
-* @sourceline 88
-*/
-/**
-* @fileoverview
-* @author Chad Engler <chad@pantherdev.com>
-* @sourcefile d:\wamp\www\phaser\src\pixi\geom\Circle.js
-* @sourceline 1
-*/
-/**
-* @class PIXI.Circle
-* @description The Circle object can be used to specify a hit area for displayObjects
-* @param {Number} x - The X coordinate of the center of this circle
-* @param {Number} y - The Y coordinate of the center of this circle
-* @param {Number} radius - The radius of the circle
-* @sourcefile d:\wamp\www\phaser\src\pixi\geom\Circle.js
-* @sourceline 5
-*/
-/**
-* @member PIXI.Circle#x
-* @type {Number}
-* @default 0
-* @sourcefile d:\wamp\www\phaser\src\pixi\geom\Circle.js
-* @sourceline 16
-*/
-/**
-* @member PIXI.Circle#y
-* @type {Number}
-* @default 0
-* @sourcefile d:\wamp\www\phaser\src\pixi\geom\Circle.js
-* @sourceline 23
-*/
-/**
-* @member PIXI.Circle#radius
-* @type {Number}
-* @default 0
-* @sourcefile d:\wamp\www\phaser\src\pixi\geom\Circle.js
-* @sourceline 30
-*/
-/**
-* @description The type of the object, should be one of the Graphics type consts, PIXI.Graphics.CIRC in this case
-* @member PIXI.Circle#type
-* @type {Number}
-* @default 0
-* @sourcefile d:\wamp\www\phaser\src\pixi\geom\Circle.js
-* @sourceline 37
-*/
-/**
-* @description Creates a clone of this Circle instance
-* @method PIXI.Circle#clone
-* @return {PIXI.Circle} a copy of the Circle
-* @sourcefile d:\wamp\www\phaser\src\pixi\geom\Circle.js
-* @sourceline 45
-*/
-/**
-* @description Checks whether the x and y coordinates given are contained within this circle
-* @method PIXI.Circle#contains
-* @param {Number} x - The X coordinate of the point to test
-* @param {Number} y - The Y coordinate of the point to test
-* @return {Boolean} Whether the x/y coordinates are within this Circle
-* @sourcefile d:\wamp\www\phaser\src\pixi\geom\Circle.js
-* @sourceline 56
-*/
-/**
-* @description Returns the framing rectangle of the circle as a PIXI.Rectangle object
-* @method PIXI.Circle#getBounds
-* @return {PIXI.Rectangle} the framing rectangle
-* @sourcefile d:\wamp\www\phaser\src\pixi\geom\Circle.js
-* @sourceline 79
-*/
-/**
-* @fileoverview
-* @author Chad Engler <chad@pantherdev.com>
-* @sourcefile d:\wamp\www\phaser\src\pixi\geom\Ellipse.js
-* @sourceline 1
-*/
-/**
-* @class PIXI.Ellipse
-* @description The Ellipse object can be used to specify a hit area for displayObjects
-* @param {Number} x - The X coordinate of the center of the ellipse
-* @param {Number} y - The Y coordinate of the center of the ellipse
-* @param {Number} width - The half width of this ellipse
-* @param {Number} height - The half height of this ellipse
-* @sourcefile d:\wamp\www\phaser\src\pixi\geom\Ellipse.js
-* @sourceline 5
-*/
-/**
-* @member PIXI.Ellipse#x
-* @type {Number}
-* @default 0
-* @sourcefile d:\wamp\www\phaser\src\pixi\geom\Ellipse.js
-* @sourceline 17
-*/
-/**
-* @member PIXI.Ellipse#y
-* @type {Number}
-* @default 0
-* @sourcefile d:\wamp\www\phaser\src\pixi\geom\Ellipse.js
-* @sourceline 24
-*/
-/**
-* @member PIXI.Ellipse#width
-* @type {Number}
-* @default 0
-* @sourcefile d:\wamp\www\phaser\src\pixi\geom\Ellipse.js
-* @sourceline 31
-*/
-/**
-* @member PIXI.Ellipse#height
-* @type {Number}
-* @default 0
-* @sourcefile d:\wamp\www\phaser\src\pixi\geom\Ellipse.js
-* @sourceline 38
-*/
-/**
-* @description The type of the object, should be one of the Graphics type consts, PIXI.Graphics.ELIP in this case
-* @member PIXI.Ellipse#type
-* @type {Number}
-* @default 0
-* @sourcefile d:\wamp\www\phaser\src\pixi\geom\Ellipse.js
-* @sourceline 46
-*/
-/**
-* @description Creates a clone of this Ellipse instance
-* @method PIXI.Ellipse#clone
-* @return {PIXI.Ellipse} a copy of the ellipse
-* @sourcefile d:\wamp\www\phaser\src\pixi\geom\Ellipse.js
-* @sourceline 54
-*/
-/**
-* @description Checks whether the x and y coordinates given are contained within this ellipse
-* @method PIXI.Ellipse#contains
-* @param {Number} x - The X coordinate of the point to test
-* @param {Number} y - The Y coordinate of the point to test
-* @return {Boolean} Whether the x/y coords are within this ellipse
-* @sourcefile d:\wamp\www\phaser\src\pixi\geom\Ellipse.js
-* @sourceline 65
-*/
-/**
-* @description Returns the framing rectangle of the ellipse as a PIXI.Rectangle object
-* @method PIXI.Ellipse#getBounds
-* @return {PIXI.Rectangle} the framing rectangle
-* @sourcefile d:\wamp\www\phaser\src\pixi\geom\Ellipse.js
-* @sourceline 88
-*/
-/**
-* @fileoverview
-* @author Mat Groves http://matgroves.com/ @Doormat23
-* @sourcefile d:\wamp\www\phaser\src\pixi\geom\Matrix.js
-* @sourceline 1
-*/
-/**
-* @class PIXI.Matrix
-* @description The Matrix class is now an object, which makes it a lot faster, 
-here is a representation of it : 
-| a | b | tx|
-| c | d | ty|
-| 0 | 0 | 1 |
-* @sourcefile d:\wamp\www\phaser\src\pixi\geom\Matrix.js
-* @sourceline 5
-*/
-/**
-* @member PIXI.Matrix#a
-* @type {Number}
-* @default 1
-* @sourcefile d:\wamp\www\phaser\src\pixi\geom\Matrix.js
-* @sourceline 17
-*/
-/**
-* @member PIXI.Matrix#b
-* @type {Number}
-* @default 0
-* @sourcefile d:\wamp\www\phaser\src\pixi\geom\Matrix.js
-* @sourceline 24
-*/
-/**
-* @member PIXI.Matrix#c
-* @type {Number}
-* @default 0
-* @sourcefile d:\wamp\www\phaser\src\pixi\geom\Matrix.js
-* @sourceline 31
-*/
-/**
-* @member PIXI.Matrix#d
-* @type {Number}
-* @default 1
-* @sourcefile d:\wamp\www\phaser\src\pixi\geom\Matrix.js
-* @sourceline 38
-*/
-/**
-* @member PIXI.Matrix#tx
-* @type {Number}
-* @default 0
-* @sourcefile d:\wamp\www\phaser\src\pixi\geom\Matrix.js
-* @sourceline 45
-*/
-/**
-* @member PIXI.Matrix#ty
-* @type {Number}
-* @default 0
-* @sourcefile d:\wamp\www\phaser\src\pixi\geom\Matrix.js
-* @sourceline 52
-*/
-/**
-* @description Creates a Matrix object based on the given array. The Element to Matrix mapping order is as follows:
-
-a = array[0]
-b = array[1]
-c = array[3]
-d = array[4]
-tx = array[2]
-ty = array[5]
-* @method PIXI.Matrix#fromArray
-* @param {Array} array - The array that the matrix will be populated from.
-* @sourcefile d:\wamp\www\phaser\src\pixi\geom\Matrix.js
-* @sourceline 60
-*/
-/**
-* @description Creates an array from the current Matrix object.
-* @method PIXI.Matrix#toArray
-* @param {Boolean} transpose - Whether we need to transpose the matrix or not
-* @return {Array} the newly created array which contains the matrix
-* @sourcefile d:\wamp\www\phaser\src\pixi\geom\Matrix.js
-* @sourceline 83
-*/
-/**
-* @description Get a new position with the current transformation applied.
-Can be used to go from a child's coordinate space to the world coordinate space. (e.g. rendering)
-* @method PIXI.Matrix#apply
-* @param {PIXI.Point} pos - The origin
-* @param {PIXI.Point} [newPos] - The point that the new position is assigned to (allowed to be same as input)
-* @return {PIXI.Point} The new point, transformed through this matrix
-* @sourcefile d:\wamp\www\phaser\src\pixi\geom\Matrix.js
-* @sourceline 123
-*/
-/**
-* @description Get a new position with the inverse of the current transformation applied.
-Can be used to go from the world coordinate space to a child's coordinate space. (e.g. input)
-* @method PIXI.Matrix#applyInverse
-* @param {PIXI.Point} pos - The origin
-* @param {PIXI.Point} [newPos] - The point that the new position is assigned to (allowed to be same as input)
-* @return {PIXI.Point} The new point, inverse-transformed through this matrix
-* @sourcefile d:\wamp\www\phaser\src\pixi\geom\Matrix.js
-* @sourceline 142
-*/
-/**
-* @description Translates the matrix on the x and y.
-* @method PIXI.Matrix#translate
-* @param {Number} x - 
-* @param {Number} y - 
-* @return {PIXI.Matrix} This matrix. Good for chaining method calls.
-* @sourcefile d:\wamp\www\phaser\src\pixi\geom\Matrix.js
-* @sourceline 163
-*/
-/**
-* @description Applies a scale transformation to the matrix.
-* @method PIXI.Matrix#scale
-* @param {Number} x - The amount to scale horizontally
-* @param {Number} y - The amount to scale vertically
-* @return {PIXI.Matrix} This matrix. Good for chaining method calls.
-* @sourcefile d:\wamp\www\phaser\src\pixi\geom\Matrix.js
-* @sourceline 179
-*/
-/**
-* @description Applies a rotation transformation to the matrix.
-* @method PIXI.Matrix#rotate
-* @param {Number} angle - The angle in radians.
-* @return {PIXI.Matrix} This matrix. Good for chaining method calls.
-* @sourcefile d:\wamp\www\phaser\src\pixi\geom\Matrix.js
-* @sourceline 200
-*/
-/**
-* @description Appends the given Matrix to this Matrix.
-* @method PIXI.Matrix#append
-* @param {PIXI.Matrix} matrix - 
-* @return {PIXI.Matrix} This matrix. Good for chaining method calls.
-* @sourcefile d:\wamp\www\phaser\src\pixi\geom\Matrix.js
-* @sourceline 225
-*/
-/**
-* @description Resets this Matix to an identity (default) matrix.
-* @method PIXI.Matrix#identity
-* @return {PIXI.Matrix} This matrix. Good for chaining method calls.
-* @sourcefile d:\wamp\www\phaser\src\pixi\geom\Matrix.js
-* @sourceline 250
-*/
-/**
-* @fileoverview
-* @author Mat Groves http://matgroves.com/ @Doormat23
-* @sourcefile d:\wamp\www\phaser\src\pixi\geom\Point.js
-* @sourceline 1
-*/
-/**
-* @class PIXI.Point
-* @description The Point object represents a location in a two-dimensional coordinate system, where x represents the horizontal axis and y represents the vertical axis.
-* @param {Number} x - position of the point on the x axis
-* @param {Number} y - position of the point on the y axis
-* @sourcefile d:\wamp\www\phaser\src\pixi\geom\Point.js
-* @sourceline 5
-*/
-/**
-* @member PIXI.Point#x
-* @type {Number}
-* @default 0
-* @sourcefile d:\wamp\www\phaser\src\pixi\geom\Point.js
-* @sourceline 15
-*/
-/**
-* @member PIXI.Point#y
-* @type {Number}
-* @default 0
-* @sourcefile d:\wamp\www\phaser\src\pixi\geom\Point.js
-* @sourceline 22
-*/
-/**
-* @description Creates a clone of this point
-* @method PIXI.Point#clone
-* @return {PIXI.Point} a copy of the point
-* @sourcefile d:\wamp\www\phaser\src\pixi\geom\Point.js
-* @sourceline 30
-*/
-/**
-* @description Sets the point to a new x and y position.
-If y is omitted, both x and y will be set to x.
-* @method PIXI.Point#set
-* @param {Number} [x=0] - position of the point on the x axis
-* @param {Number} [y=0] - position of the point on the y axis
-* @sourcefile d:\wamp\www\phaser\src\pixi\geom\Point.js
-* @sourceline 41
-*/
-/**
-* @fileoverview
-* @author Adrien Brault <adrien.brault@gmail.com>
-* @sourcefile d:\wamp\www\phaser\src\pixi\geom\Polygon.js
-* @sourceline 1
-*/
-/**
-* @class PIXI.Polygon
-* @param {(Array<Point>|Array<Number>|...PIXI.Point|...Number)} points - This can be an array of Points that form the polygon,
-     a flat array of numbers that will be interpreted as [x,y, x,y, ...], or the arguments passed can be
-     all the points of the polygon e.g. `new PIXI.Polygon(new PIXI.Point(), new PIXI.Point(), ...)`, or the
-     arguments passed can be flat x,y values e.g. `new PIXI.Polygon(x,y, x,y, x,y, ...)` where `x` and `y` are
-     Numbers.
-* @sourcefile d:\wamp\www\phaser\src\pixi\geom\Polygon.js
-* @sourceline 5
-*/
-/**
-* @description An array of the points of this polygon
-* @member PIXI.Polygon#points
-* @type {(Array<Point>|Array<Number>)}
-* @sourcefile d:\wamp\www\phaser\src\pixi\geom\Polygon.js
-* @sourceline 33
-*/
-/**
-* @description The type of the object, should be one of the Graphics type consts, PIXI.Graphics.POLY in this case
-* @member PIXI.Polygon#type
-* @type {Number}
-* @default 0
-* @sourcefile d:\wamp\www\phaser\src\pixi\geom\Polygon.js
-* @sourceline 41
-*/
-/**
-* @description Creates a clone of this polygon
-* @method PIXI.Polygon#clone
-* @return {PIXI.Polygon} a copy of the polygon
-* @sourcefile d:\wamp\www\phaser\src\pixi\geom\Polygon.js
-* @sourceline 49
-*/
-/**
-* @description Checks whether the x and y coordinates passed to this function are contained within this polygon
-* @method PIXI.Polygon#contains
-* @param {Number} x - The X coordinate of the point to test
-* @param {Number} y - The Y coordinate of the point to test
-* @return {Boolean} Whether the x/y coordinates are within this polygon
-* @sourcefile d:\wamp\www\phaser\src\pixi\geom\Polygon.js
-* @sourceline 61
-*/
-/**
-* @fileoverview
-* @author Mat Groves http://matgroves.com/
-* @sourcefile d:\wamp\www\phaser\src\pixi\geom\Rectangle.js
-* @sourceline 1
-*/
-/**
-* @class PIXI.Rectangle
-* @description the Rectangle object is an area defined by its position, as indicated by its top-left corner point (x, y) and by its width and its height.
-* @param {Number} x - The X coordinate of the upper-left corner of the rectangle
-* @param {Number} y - The Y coordinate of the upper-left corner of the rectangle
-* @param {Number} width - The overall width of this rectangle
-* @param {Number} height - The overall height of this rectangle
-* @sourcefile d:\wamp\www\phaser\src\pixi\geom\Rectangle.js
-* @sourceline 5
-*/
-/**
-* @member PIXI.Rectangle#x
-* @type {Number}
-* @default 0
-* @sourcefile d:\wamp\www\phaser\src\pixi\geom\Rectangle.js
-* @sourceline 17
-*/
-/**
-* @member PIXI.Rectangle#y
-* @type {Number}
-* @default 0
-* @sourcefile d:\wamp\www\phaser\src\pixi\geom\Rectangle.js
-* @sourceline 24
-*/
-/**
-* @member PIXI.Rectangle#width
-* @type {Number}
-* @default 0
-* @sourcefile d:\wamp\www\phaser\src\pixi\geom\Rectangle.js
-* @sourceline 31
-*/
-/**
-* @member PIXI.Rectangle#height
-* @type {Number}
-* @default 0
-* @sourcefile d:\wamp\www\phaser\src\pixi\geom\Rectangle.js
-* @sourceline 38
-*/
-/**
-* @description The type of the object, should be one of the Graphics type consts, PIXI.Graphics.RECT in this case
-* @member PIXI.Rectangle#type
-* @type {Number}
-* @default 0
-* @sourcefile d:\wamp\www\phaser\src\pixi\geom\Rectangle.js
-* @sourceline 45
-*/
-/**
-* @description Creates a clone of this Rectangle
-* @method PIXI.Rectangle#clone
-* @return {PIXI.Rectangle} a copy of the rectangle
-* @sourcefile d:\wamp\www\phaser\src\pixi\geom\Rectangle.js
-* @sourceline 53
-*/
-/**
-* @description Checks whether the x and y coordinates given are contained within this Rectangle
-* @method PIXI.Rectangle#contains
-* @param {Number} x - The X coordinate of the point to test
-* @param {Number} y - The Y coordinate of the point to test
-* @return {Boolean} Whether the x/y coordinates are within this Rectangle
-* @sourcefile d:\wamp\www\phaser\src\pixi\geom\Rectangle.js
-* @sourceline 64
-*/
-/**
-* @fileoverview
-* @author Mat Groves http://matgroves.com/
-* @sourcefile d:\wamp\www\phaser\src\pixi\geom\RoundedRectangle.js
-* @sourceline 1
-*/
-/**
-* @class PIXI.RoundedRectangle
-* @description The Rounded Rectangle object is an area defined by its position and has nice rounded corners, as indicated by its top-left corner point (x, y) and by its width and its height.
-* @param {Number} x - The X coordinate of the upper-left corner of the rounded rectangle
-* @param {Number} y - The Y coordinate of the upper-left corner of the rounded rectangle
-* @param {Number} width - The overall width of this rounded rectangle
-* @param {Number} height - The overall height of this rounded rectangle
-* @param {Number} radius - Controls the radius of the rounded corners
-* @sourcefile d:\wamp\www\phaser\src\pixi\geom\RoundedRectangle.js
-* @sourceline 5
-*/
-/**
-* @member PIXI.RoundedRectangle#x
-* @type {Number}
-* @default 0
-* @sourcefile d:\wamp\www\phaser\src\pixi\geom\RoundedRectangle.js
-* @sourceline 18
-*/
-/**
-* @member PIXI.RoundedRectangle#y
-* @type {Number}
-* @default 0
-* @sourcefile d:\wamp\www\phaser\src\pixi\geom\RoundedRectangle.js
-* @sourceline 25
-*/
-/**
-* @member PIXI.RoundedRectangle#width
-* @type {Number}
-* @default 0
-* @sourcefile d:\wamp\www\phaser\src\pixi\geom\RoundedRectangle.js
-* @sourceline 32
-*/
-/**
-* @member PIXI.RoundedRectangle#height
-* @type {Number}
-* @default 0
-* @sourcefile d:\wamp\www\phaser\src\pixi\geom\RoundedRectangle.js
-* @sourceline 39
-*/
-/**
-* @member PIXI.RoundedRectangle#radius
-* @type {Number}
-* @default 20
-* @sourcefile d:\wamp\www\phaser\src\pixi\geom\RoundedRectangle.js
-* @sourceline 46
-*/
-/**
-* @description The type of the object, should be one of the Graphics type consts, PIXI.Graphics.RRECT in this case
-* @member PIXI.RoundedRectangle#type
-* @type {Number}
-* @default 0
-* @sourcefile d:\wamp\www\phaser\src\pixi\geom\RoundedRectangle.js
-* @sourceline 53
-*/
-/**
-* @description Creates a clone of this Rounded Rectangle
-* @method PIXI.RoundedRectangle#clone
-* @return {PIXI.RoundedRectangle} a copy of the rounded rectangle
-* @sourcefile d:\wamp\www\phaser\src\pixi\geom\RoundedRectangle.js
-* @sourceline 61
-*/
-/**
-* @description Checks whether the x and y coordinates given are contained within this Rounded Rectangle
-* @method PIXI.RoundedRectangle#contains
-* @param {Number} x - The X coordinate of the point to test
-* @param {Number} y - The Y coordinate of the point to test
-* @return {Boolean} Whether the x/y coordinates are within this Rounded Rectangle
-* @sourcefile d:\wamp\www\phaser\src\pixi\geom\RoundedRectangle.js
-* @sourceline 72
-*/
-/**
-* @fileoverview
-* @author Mat Groves http://matgroves.com/ @Doormat23
-* @sourcefile d:\wamp\www\phaser\src\pixi\loaders\AssetLoader.js
-* @sourceline 1
-*/
-/**
-* @class PIXI.AssetLoader
-* @description A Class that loads a bunch of images / sprite sheet / bitmap font files. Once the
-assets have been loaded they are added to the PIXI Texture cache and can be accessed
-easily through PIXI.Texture.fromImage() and PIXI.Sprite.fromImage()
-When all items have been loaded this class will dispatch a 'onLoaded' event
-As each individual item is loaded this class will dispatch a 'onProgress' event
-* @param {Array<String>} assetURLs - An array of image/sprite sheet urls that you would like loaded
-     supported. Supported image formats include 'jpeg', 'jpg', 'png', 'gif'. Supported
-     sprite sheet data formats only include 'JSON' at this time. Supported bitmap font
-     data formats include 'xml' and 'fnt'.
-* @param {Boolean} crossorigin - Whether requests should be treated as crossorigin
-* @sourcefile d:\wamp\www\phaser\src\pixi\loaders\AssetLoader.js
-* @sourceline 5
-*/
-/**
-* @description The array of asset URLs that are going to be loaded
-* @member PIXI.AssetLoader#assetURLs
-* @type {Array<String>}
-* @sourcefile d:\wamp\www\phaser\src\pixi\loaders\AssetLoader.js
-* @sourceline 23
-*/
-/**
-* @description Whether the requests should be treated as cross origin
-* @member PIXI.AssetLoader#crossorigin
-* @type {Boolean}
-* @sourcefile d:\wamp\www\phaser\src\pixi\loaders\AssetLoader.js
-* @sourceline 31
-*/
-/**
-* @description Maps file extension to loader types
-* @member PIXI.AssetLoader#loadersByType
-* @type {Object}
-* @sourcefile d:\wamp\www\phaser\src\pixi\loaders\AssetLoader.js
-* @sourceline 39
-*/
-
-
-/**
-* @description Given a filename, returns its extension.
-* @method PIXI.AssetLoader#_getDataType
-* @param {String} str - the name of the asset
-* @sourcefile d:\wamp\www\phaser\src\pixi\loaders\AssetLoader.js
-* @sourceline 74
-*/
-/**
-* @description Starts loading the assets sequentially
-* @method PIXI.AssetLoader#load
-* @sourcefile d:\wamp\www\phaser\src\pixi\loaders\AssetLoader.js
-* @sourceline 107
-*/
-/**
-* @description Invoked after each file is loaded
-* @method PIXI.AssetLoader#onAssetLoaded
-* @access private
-* @sourcefile d:\wamp\www\phaser\src\pixi\loaders\AssetLoader.js
-* @sourceline 143
-*/
-/**
-* @fileoverview
-* @author Martin Kelm http://mkelm.github.com
-* @sourcefile d:\wamp\www\phaser\src\pixi\loaders\AtlasLoader.js
-* @sourceline 1
-*/
-/**
-* @class PIXI.AtlasLoader
-* @description The atlas file loader is used to load in Texture Atlas data and parse it. When loaded this class will dispatch a 'loaded' event. If loading fails this class will dispatch an 'error' event.
-
-To generate the data you can use http://www.codeandweb.com/texturepacker and publish in the 'JSON' format.
-
-It is highly recommended to use texture atlases (also know as 'sprite sheets') as it allowed sprites to be batched and drawn together for highly increased rendering speed.
-Once the data has been loaded the frames are stored in the PIXI texture cache and can be accessed though PIXI.Texture.fromFrameId() and PIXI.Sprite.fromFrameId()
-* @param {String} url - The url of the JSON file
-* @param {Boolean} crossorigin - Whether requests should be treated as crossorigin
-* @sourcefile d:\wamp\www\phaser\src\pixi\loaders\AtlasLoader.js
-* @sourceline 5
-*/
-/**
-* @description Starts loading the JSON file
-* @method PIXI.AtlasLoader#load
-* @sourcefile d:\wamp\www\phaser\src\pixi\loaders\AtlasLoader.js
-* @sourceline 32
-*/
-/**
-* @description Invoked when the Atlas has fully loaded. Parses the JSON and builds the texture frames.
-* @method PIXI.AtlasLoader#onAtlasLoaded
-* @access private
-* @sourcefile d:\wamp\www\phaser\src\pixi\loaders\AtlasLoader.js
-* @sourceline 46
-*/
-/**
-* @description Invoked when json file has loaded.
-* @method PIXI.AtlasLoader#onLoaded
-* @access private
-* @sourcefile d:\wamp\www\phaser\src\pixi\loaders\AtlasLoader.js
-* @sourceline 166
-*/
-/**
-* @description Invoked when an error occurs.
-* @method PIXI.AtlasLoader#onError
-* @access private
-* @sourcefile d:\wamp\www\phaser\src\pixi\loaders\AtlasLoader.js
-* @sourceline 182
-*/
-/**
-* @fileoverview
-* @author Mat Groves http://matgroves.com/ @Doormat23
-* @sourcefile d:\wamp\www\phaser\src\pixi\loaders\BitmapFontLoader.js
-* @sourceline 1
-*/
-/**
-* @class PIXI.BitmapFontLoader
-* @description The xml loader is used to load in XML bitmap font data ('xml' or 'fnt')
-To generate the data you can use http://www.angelcode.com/products/bmfont/
-This loader will also load the image file as the data.
-When loaded this class will dispatch a 'loaded' event
-* @param {String} url - The url of the sprite sheet JSON file
-* @param {Boolean} crossorigin - Whether requests should be treated as crossorigin
-* @sourcefile d:\wamp\www\phaser\src\pixi\loaders\BitmapFontLoader.js
-* @sourceline 5
-*/
-/**
-* @description The url of the bitmap font data
-* @member PIXI.BitmapFontLoader#url
-* @type {String}
-* @sourcefile d:\wamp\www\phaser\src\pixi\loaders\BitmapFontLoader.js
-* @sourceline 19
-*/
-/**
-* @description Whether the requests should be treated as cross origin
-* @member PIXI.BitmapFontLoader#crossorigin
-* @type {Boolean}
-* @sourcefile d:\wamp\www\phaser\src\pixi\loaders\BitmapFontLoader.js
-* @sourceline 27
-*/
-/**
-* @description [read-only] The base url of the bitmap font data
-* @member PIXI.BitmapFontLoader#baseUrl
-* @type {String}
-* @readonly 
-* @sourcefile d:\wamp\www\phaser\src\pixi\loaders\BitmapFontLoader.js
-* @sourceline 35
-*/
-/**
-* @description [read-only] The texture of the bitmap font
-* @member PIXI.BitmapFontLoader#texture
-* @type {PIXI.Texture}
-* @sourcefile d:\wamp\www\phaser\src\pixi\loaders\BitmapFontLoader.js
-* @sourceline 44
-*/
-/**
-* @description Loads the XML font data
-* @method PIXI.BitmapFontLoader#load
-* @sourcefile d:\wamp\www\phaser\src\pixi\loaders\BitmapFontLoader.js
-* @sourceline 57
-*/
-/**
-* @description Invoked when the XML file is loaded, parses the data.
-* @method PIXI.BitmapFontLoader#onXMLLoaded
-* @access private
-* @sourcefile d:\wamp\www\phaser\src\pixi\loaders\BitmapFontLoader.js
-* @sourceline 72
-*/
-/**
-* @description Invoked when all files are loaded (xml/fnt and texture)
-* @method PIXI.BitmapFontLoader#onLoaded
-* @access private
-* @sourcefile d:\wamp\www\phaser\src\pixi\loaders\BitmapFontLoader.js
-* @sourceline 152
-*/
-/**
-* @fileoverview
-* @author Mat Groves http://matgroves.com/ @Doormat23
-* @sourcefile d:\wamp\www\phaser\src\pixi\loaders\ImageLoader.js
-* @sourceline 1
-*/
-/**
-* @class PIXI.ImageLoader
-* @description The image loader class is responsible for loading images file formats ('jpeg', 'jpg', 'png' and 'gif')
-Once the image has been loaded it is stored in the PIXI texture cache and can be accessed though PIXI.Texture.fromFrame() and PIXI.Sprite.fromFrame()
-When loaded this class will dispatch a 'loaded' event
-* @param {String} url - The url of the image
-* @param {Boolean} crossorigin - Whether requests should be treated as crossorigin
-* @sourcefile d:\wamp\www\phaser\src\pixi\loaders\ImageLoader.js
-* @sourceline 5
-*/
-/**
-* @description The texture being loaded
-* @member PIXI.ImageLoader#texture
-* @type {PIXI.Texture}
-* @sourcefile d:\wamp\www\phaser\src\pixi\loaders\ImageLoader.js
-* @sourceline 18
-*/
-/**
-* @description if the image is loaded with loadFramedSpriteSheet
-frames will contain the sprite sheet frames
-* @member PIXI.ImageLoader#frames
-* @type {Array}
-* @readonly 
-* @sourcefile d:\wamp\www\phaser\src\pixi\loaders\ImageLoader.js
-* @sourceline 26
-*/
-/**
-* @description Loads image or takes it from cache
-* @method PIXI.ImageLoader#load
-* @sourcefile d:\wamp\www\phaser\src\pixi\loaders\ImageLoader.js
-* @sourceline 42
-*/
-/**
-* @description Invoked when image file is loaded or it is already cached and ready to use
-* @method PIXI.ImageLoader#onLoaded
-* @access private
-* @sourcefile d:\wamp\www\phaser\src\pixi\loaders\ImageLoader.js
-* @sourceline 59
-*/
-/**
-* @description Loads image and split it to uniform sized frames
-* @method PIXI.ImageLoader#loadFramedSpriteSheet
-* @param {Number} frameWidth - width of each frame
-* @param {Number} frameHeight - height of each frame
-* @param {String} textureName - if given, the frames will be cached in <textureName>-<ord> format
-* @sourcefile d:\wamp\www\phaser\src\pixi\loaders\ImageLoader.js
-* @sourceline 70
-*/
-/**
-* @fileoverview
-* @author Mat Groves http://matgroves.com/ @Doormat23
-* @sourcefile d:\wamp\www\phaser\src\pixi\loaders\JsonLoader.js
-* @sourceline 1
-*/
-/**
-* @class PIXI.JsonLoader
-* @description The json file loader is used to load in JSON data and parse it
-When loaded this class will dispatch a 'loaded' event
-If loading fails this class will dispatch an 'error' event
-* @param {String} url - The url of the JSON file
-* @param {Boolean} crossorigin - Whether requests should be treated as crossorigin
-* @sourcefile d:\wamp\www\phaser\src\pixi\loaders\JsonLoader.js
-* @sourceline 5
-*/
-/**
-* @description The url of the bitmap font data
-* @member PIXI.JsonLoader#url
-* @type {String}
-* @sourcefile d:\wamp\www\phaser\src\pixi\loaders\JsonLoader.js
-* @sourceline 17
-*/
-/**
-* @description Whether the requests should be treated as cross origin
-* @member PIXI.JsonLoader#crossorigin
-* @type {Boolean}
-* @sourcefile d:\wamp\www\phaser\src\pixi\loaders\JsonLoader.js
-* @sourceline 25
-*/
-/**
-* @description [read-only] The base url of the bitmap font data
-* @member PIXI.JsonLoader#baseUrl
-* @type {String}
-* @readonly 
-* @sourcefile d:\wamp\www\phaser\src\pixi\loaders\JsonLoader.js
-* @sourceline 33
-*/
-/**
-* @description [read-only] Whether the data has loaded yet
-* @member PIXI.JsonLoader#loaded
-* @type {Boolean}
-* @readonly 
-* @sourcefile d:\wamp\www\phaser\src\pixi\loaders\JsonLoader.js
-* @sourceline 42
-*/
-/**
-* @description Loads the JSON data
-* @method PIXI.JsonLoader#load
-* @sourcefile d:\wamp\www\phaser\src\pixi\loaders\JsonLoader.js
-* @sourceline 57
-*/
-/**
-* @description Bridge function to be able to use the more reliable onreadystatechange in XMLHttpRequest.
-* @method PIXI.JsonLoader#onReadyStateChanged
-* @access private
-* @sourcefile d:\wamp\www\phaser\src\pixi\loaders\JsonLoader.js
-* @sourceline 100
-*/
-/**
-* @description Invoke when JSON file is loaded
-* @method PIXI.JsonLoader#onJSONLoaded
-* @access private
-* @sourcefile d:\wamp\www\phaser\src\pixi\loaders\JsonLoader.js
-* @sourceline 112
-*/
-/**
-* @description Invoke when json file loaded
-* @method PIXI.JsonLoader#onLoaded
-* @access private
-* @sourcefile d:\wamp\www\phaser\src\pixi\loaders\JsonLoader.js
-* @sourceline 226
-*/
-/**
-* @description Invoke when error occured
-* @method PIXI.JsonLoader#onError
-* @access private
-* @sourcefile d:\wamp\www\phaser\src\pixi\loaders\JsonLoader.js
-* @sourceline 240
-*/
-/**
-* @fileoverview
-* @author Mat Groves http://matgroves.com/ @Doormat23
-based on pixi impact spine implementation made by Eemeli Kelokorpi (@ekelokorpi) https://github.com/ekelokorpi
-
-Awesome JS run time provided by EsotericSoftware
-https://github.com/EsotericSoftware/spine-runtimes
-* @sourcefile d:\wamp\www\phaser\src\pixi\loaders\SpineLoader.js
-* @sourceline 1
-*/
-/**
-* @class PIXI.SpineLoader
-* @description The Spine loader is used to load in JSON spine data
-To generate the data you need to use http://esotericsoftware.com/ and export in the "JSON" format
-Due to a clash of names  You will need to change the extension of the spine file from *.json to *.anim for it to load
-See example 12 (http://www.goodboydigital.com/pixijs/examples/12/) to see a working example and check out the source
-You will need to generate a sprite sheet to accompany the spine data
-When loaded this class will dispatch a "loaded" event
-* @param {String} url - The url of the JSON file
-* @param {Boolean} crossorigin - Whether requests should be treated as crossorigin
-* @sourcefile d:\wamp\www\phaser\src\pixi\loaders\SpineLoader.js
-* @sourceline 10
-*/
-/**
-* @description The url of the bitmap font data
-* @member PIXI.SpineLoader#url
-* @type {String}
-* @sourcefile d:\wamp\www\phaser\src\pixi\loaders\SpineLoader.js
-* @sourceline 26
-*/
-/**
-* @description Whether the requests should be treated as cross origin
-* @member PIXI.SpineLoader#crossorigin
-* @type {Boolean}
-* @sourcefile d:\wamp\www\phaser\src\pixi\loaders\SpineLoader.js
-* @sourceline 34
-*/
-/**
-* @description [read-only] Whether the data has loaded yet
-* @member PIXI.SpineLoader#loaded
-* @type {Boolean}
-* @readonly 
-* @sourcefile d:\wamp\www\phaser\src\pixi\loaders\SpineLoader.js
-* @sourceline 42
-*/
-/**
-* @description Loads the JSON data
-* @method PIXI.SpineLoader#load
-* @sourcefile d:\wamp\www\phaser\src\pixi\loaders\SpineLoader.js
-* @sourceline 56
-*/
-/**
-* @description Invoked when JSON file is loaded.
-* @method PIXI.SpineLoader#onLoaded
-* @access private
-* @sourcefile d:\wamp\www\phaser\src\pixi\loaders\SpineLoader.js
-* @sourceline 72
-*/
-/**
-* @fileoverview
-* @author Mat Groves http://matgroves.com/ @Doormat23
-* @sourcefile d:\wamp\www\phaser\src\pixi\loaders\SpriteSheetLoader.js
-* @sourceline 1
-*/
-/**
-* @class PIXI.SpriteSheetLoader
-* @description The sprite sheet loader is used to load in JSON sprite sheet data
-To generate the data you can use http://www.codeandweb.com/texturepacker and publish in the 'JSON' format
-There is a free version so thats nice, although the paid version is great value for money.
-It is highly recommended to use Sprite sheets (also know as a 'texture atlas') as it means sprites can be batched and drawn together for highly increased rendering speed.
-Once the data has been loaded the frames are stored in the PIXI texture cache and can be accessed though PIXI.Texture.fromFrameId() and PIXI.Sprite.fromFrameId()
-This loader will load the image file that the Spritesheet points to as well as the data.
-When loaded this class will dispatch a 'loaded' event
-* @param {String} url - The url of the sprite sheet JSON file
-* @param {Boolean} crossorigin - Whether requests should be treated as crossorigin
-* @sourcefile d:\wamp\www\phaser\src\pixi\loaders\SpriteSheetLoader.js
-* @sourceline 5
-*/
-/**
-* @description The url of the atlas data
-* @member PIXI.SpriteSheetLoader#url
-* @type {String}
-* @sourcefile d:\wamp\www\phaser\src\pixi\loaders\SpriteSheetLoader.js
-* @sourceline 22
-*/
-/**
-* @description Whether the requests should be treated as cross origin
-* @member PIXI.SpriteSheetLoader#crossorigin
-* @type {Boolean}
-* @sourcefile d:\wamp\www\phaser\src\pixi\loaders\SpriteSheetLoader.js
-* @sourceline 30
-*/
-/**
-* @description [read-only] The base url of the bitmap font data
-* @member PIXI.SpriteSheetLoader#baseUrl
-* @type {String}
-* @readonly 
-* @sourcefile d:\wamp\www\phaser\src\pixi\loaders\SpriteSheetLoader.js
-* @sourceline 38
-*/
-/**
-* @description The texture being loaded
-* @member PIXI.SpriteSheetLoader#texture
-* @type {PIXI.Texture}
-* @sourcefile d:\wamp\www\phaser\src\pixi\loaders\SpriteSheetLoader.js
-* @sourceline 47
-*/
-/**
-* @description The frames of the sprite sheet
-* @member PIXI.SpriteSheetLoader#frames
-* @type {Object}
-* @sourcefile d:\wamp\www\phaser\src\pixi\loaders\SpriteSheetLoader.js
-* @sourceline 55
-*/
-/**
-* @description This will begin loading the JSON file
-* @method PIXI.SpriteSheetLoader#load
-* @sourcefile d:\wamp\www\phaser\src\pixi\loaders\SpriteSheetLoader.js
-* @sourceline 69
-*/
-/**
-* @description Invoke when all files are loaded (json and texture)
-* @method PIXI.SpriteSheetLoader#onLoaded
-* @access private
-* @sourcefile d:\wamp\www\phaser\src\pixi\loaders\SpriteSheetLoader.js
-* @sourceline 84
 */
 /**
 * @fileoverview
@@ -3162,18 +1112,6 @@ When loaded this class will dispatch a 'loaded' event
 * @sourceline 124
 */
 /**
-* @description When cacheAsBitmap is set to true the graphics object will be rendered as if it was a sprite.
-This is useful if your graphics element does not change often, as it will speed up the rendering of the object in exchange for taking up texture memory.
-It is also useful if you need the graphics object to be anti-aliased, because it will be rendered using canvas.
-This is not recommended if you are constantly redrawing the graphics element.
-* @member PIXI.Graphics#cacheAsBitmap
-* @type {Boolean}
-* @default false
-* @access private
-* @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 139
-*/
-/**
 * @description Specifies the line style used for subsequent calls to Graphics methods such as the lineTo() method or the drawCircle() method.
 * @method PIXI.Graphics#lineStyle
 * @param {Number} lineWidth - width of the line to draw, will update the objects stored style
@@ -3181,7 +1119,7 @@ This is not recommended if you are constantly redrawing the graphics element.
 * @param {Number} alpha - alpha of the line to draw, will update the objects stored style
 * @return {PIXI.Graphics} 
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 171
+* @sourceline 139
 */
 /**
 * @description Moves the current drawing position to x, y.
@@ -3190,7 +1128,7 @@ This is not recommended if you are constantly redrawing the graphics element.
 * @param {Number} y - the Y coordinate to move to
 * @return {PIXI.Graphics} 
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 205
+* @sourceline 173
 */
 /**
 * @description Draws a line using the current line style from the current drawing position to (x, y);
@@ -3200,7 +1138,7 @@ The current drawing position is then set to (x, y).
 * @param {Number} y - the Y coordinate to draw to
 * @return {PIXI.Graphics} 
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 220
+* @sourceline 188
 */
 /**
 * @description Calculate the points for a quadratic bezier curve and then draws it.
@@ -3212,7 +1150,7 @@ Based on: https://stackoverflow.com/questions/785097/how-do-i-implement-a-bezier
 * @param {Number} toY - Destination point y
 * @return {PIXI.Graphics} 
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 237
+* @sourceline 210
 */
 /**
 * @description Calculate the points for a bezier curve and then draws it.
@@ -3225,7 +1163,7 @@ Based on: https://stackoverflow.com/questions/785097/how-do-i-implement-a-bezier
 * @param {Number} toY - Destination point y
 * @return {PIXI.Graphics} 
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 287
+* @sourceline 256
 */
 /**
 * @description The arc method creates an arc/curve (used to create circles, or parts of circles).
@@ -3238,7 +1176,7 @@ Based on: https://stackoverflow.com/questions/785097/how-do-i-implement-a-bezier
 * @param {Boolean} anticlockwise - Optional. Specifies whether the drawing should be counterclockwise or clockwise. False is default, and indicates clockwise, while true indicates counter-clockwise.
 * @return {PIXI.Graphics} 
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 414
+* @sourceline 374
 */
 /**
 * @description Specifies a simple one-color fill that subsequent calls to other Graphics methods
@@ -3248,14 +1186,14 @@ Based on: https://stackoverflow.com/questions/785097/how-do-i-implement-a-bezier
 * @param {Number} alpha - the alpha of the fill
 * @return {PIXI.Graphics} 
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 496
+* @sourceline 455
 */
 /**
 * @description Applies a fill to the lines and shapes that were added since the last call to the beginFill() method.
 * @method PIXI.Graphics#endFill
 * @return {PIXI.Graphics} 
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 523
+* @sourceline 483
 */
 /**
 * @method PIXI.Graphics#drawRect
@@ -3265,7 +1203,7 @@ Based on: https://stackoverflow.com/questions/785097/how-do-i-implement-a-bezier
 * @param {Number} height - The height of the rectangle
 * @return {PIXI.Graphics} 
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 538
+* @sourceline 498
 */
 /**
 * @method PIXI.Graphics#drawRoundedRect
@@ -3275,17 +1213,7 @@ Based on: https://stackoverflow.com/questions/785097/how-do-i-implement-a-bezier
 * @param {Number} height - The height of the rectangle
 * @param {Number} radius - Radius of the rectangle corners
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 554
-*/
-/**
-* @description Draws a circle.
-* @method PIXI.Graphics#drawCircle
-* @param {Number} x - The X coordinate of the center of the circle
-* @param {Number} y - The Y coordinate of the center of the circle
-* @param {Number} radius - The radius of the circle
-* @return {PIXI.Graphics} 
-* @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 570
+* @sourceline 514
 */
 /**
 * @description Draws an ellipse.
@@ -3296,7 +1224,7 @@ Based on: https://stackoverflow.com/questions/785097/how-do-i-implement-a-bezier
 * @param {Number} height - The half height of the ellipse
 * @return {PIXI.Graphics} 
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 586
+* @sourceline 546
 */
 /**
 * @description Draws a polygon using the given path.
@@ -3304,14 +1232,14 @@ Based on: https://stackoverflow.com/questions/785097/how-do-i-implement-a-bezier
 * @param {Array} path - The path data used to construct the polygon.
 * @return {PIXI.Graphics} 
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 603
+* @sourceline 563
 */
 /**
 * @description Clears the graphics that were drawn to this Graphics object, and resets fill and line style settings.
 * @method PIXI.Graphics#clear
 * @return {PIXI.Graphics} 
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 617
+* @sourceline 579
 */
 /**
 * @description Useful function that returns a texture of the graphics object that can then be used to create sprites
@@ -3321,7 +1249,7 @@ This can be quite useful if your geometry is complicated and needs to be reused 
 * @param {Number} scaleMode - Should be one of the PIXI.scaleMode consts
 * @return {PIXI.Texture} a texture of the graphics object
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 635
+* @sourceline 597
 */
 /**
 * @description Renders the object using the WebGL renderer
@@ -3329,7 +1257,7 @@ This can be quite useful if your geometry is complicated and needs to be reused 
 * @param {RenderSession} renderSession - 
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 664
+* @sourceline 626
 */
 /**
 * @description Renders the object using the Canvas renderer
@@ -3337,54 +1265,66 @@ This can be quite useful if your geometry is complicated and needs to be reused 
 * @param {RenderSession} renderSession - 
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 744
+* @sourceline 705
 */
 /**
 * @description Retrieves the bounds of the graphic shape as a rectangle object
 * @method PIXI.Graphics#getBounds
-* @return {PIXI.Rectangle} the rectangular bounding area
+* @return {Rectangle} the rectangular bounding area
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 813
+* @sourceline 775
 */
 /**
 * @description Update the bounds of the object
 * @method PIXI.Graphics#updateLocalBounds
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 892
+* @sourceline 854
 */
 /**
 * @description Generates the cached sprite when the sprite has cacheAsBitmap = true
 * @method PIXI.Graphics#_generateCachedSprite
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 991
+* @sourceline 966
 */
 /**
 * @description Updates texture size based on canvas size
 * @method PIXI.Graphics#updateCachedSpriteTexture
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 1031
+* @sourceline 1006
 */
 /**
 * @description Destroys a previous cached sprite.
 * @method PIXI.Graphics#destroyCachedSprite
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 1055
+* @sourceline 1030
 */
 /**
 * @description Draws the given shape to this Graphics object. Can be any of Circle, Rectangle, Ellipse, Line or Polygon.
 * @method PIXI.Graphics#drawShape
-* @param {(PIXI.Circle|PIXI.Rectangle|PIXI.Ellipse|Line|PIXI.Polygon)} shape - The Shape object to draw.
+* @param {(Circle|Rectangle|Ellipse|Line|Polygon)} shape - The Shape object to draw.
 * @return {PIXI.GraphicsData} The generated GraphicsData object.
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 1069
+* @sourceline 1041
+*/
+/**
+* @description When cacheAsBitmap is set to true the graphics object will be rendered as if it was a sprite.
+This is useful if your graphics element does not change often, as it will speed up the rendering of the object in exchange for taking up texture memory.
+It is also useful if you need the graphics object to be anti-aliased, because it will be rendered using canvas.
+This is not recommended if you are constantly redrawing the graphics element.
+* @member PIXI.Graphics#cacheAsBitmap
+* @type {Boolean}
+* @default false
+* @access private
+* @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
+* @sourceline 1082
 */
 /**
 * @class PIXI.GraphicsData
 * @description A GraphicsData object.
 * @sourcefile d:\wamp\www\phaser\src\pixi\primitives\Graphics.js
-* @sourceline 1101
+* @sourceline 1116
 */
 /**
 * @fileoverview
@@ -3498,7 +1438,7 @@ This can be quite useful if your geometry is complicated and needs to be reused 
 * @param {Number} color - the color to use to tint the sprite with
 * @param {HTMLCanvasElement} canvas - the current canvas
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\canvas\utils\CanvasTinter.js
-* @sourceline 60
+* @sourceline 64
 */
 /**
 * @description Tint a texture using the "overlay" operation.
@@ -3507,7 +1447,7 @@ This can be quite useful if your geometry is complicated and needs to be reused 
 * @param {Number} color - the color to use to tint the sprite with
 * @param {HTMLCanvasElement} canvas - the current canvas
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\canvas\utils\CanvasTinter.js
-* @sourceline 107
+* @sourceline 111
 */
 /**
 * @description Tint a texture pixel per pixel.
@@ -3516,35 +1456,34 @@ This can be quite useful if your geometry is complicated and needs to be reused 
 * @param {Number} color - the color to use to tint the sprite with
 * @param {HTMLCanvasElement} canvas - the current canvas
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\canvas\utils\CanvasTinter.js
-* @sourceline 143
+* @sourceline 147
 */
 /**
 * @description Rounds the specified color according to the PIXI.CanvasTinter.cacheStepsPerColorChannel.
 * @method PIXI.CanvasTinter.roundColor
 * @param {Number} color - the color to round, should be a hex color
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\canvas\utils\CanvasTinter.js
-* @sourceline 198
+* @sourceline 202
 */
 /**
-* @description Rounds the specified color according to the PIXI.CanvasTinter.cacheStepsPerColorChannel.
-* @method PIXI.CanvasTinter.roundColor
-* @param {Number} color - the color to round, should be a hex color
+* @description Checks if the browser correctly supports putImageData alpha channels.
+* @method PIXI.CanvasTinter.checkInverseAlpha
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\canvas\utils\CanvasTinter.js
-* @sourceline 218
+* @sourceline 222
 */
 /**
 * @description Number of steps which will be used as a cap when rounding colors.
 * @member PIXI.CanvasTinter.cacheStepsPerColorChannel
 * @type {Number}
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\canvas\utils\CanvasTinter.js
-* @sourceline 247
+* @sourceline 250
 */
 /**
 * @description Tint cache boolean flag.
 * @member PIXI.CanvasTinter.convertTintToImage
 * @type {Boolean}
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\canvas\utils\CanvasTinter.js
-* @sourceline 256
+* @sourceline 259
 */
 /**
 * @description If the browser isn't capable of handling tinting with alpha this will be false.
@@ -3552,20 +1491,20 @@ This property is only applicable if using tintWithPerPixel.
 * @member PIXI.CanvasTinter.canHandleAlpha
 * @type {Boolean}
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\canvas\utils\CanvasTinter.js
-* @sourceline 265
+* @sourceline 268
 */
 /**
 * @description Whether or not the Canvas BlendModes are supported, consequently the ability to tint using the multiply method.
 * @member PIXI.CanvasTinter.canUseMultiply
 * @type {Boolean}
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\canvas\utils\CanvasTinter.js
-* @sourceline 275
+* @sourceline 278
 */
 /**
 * @description The tinting method that will be used.
 * @method PIXI.CanvasTinter.tintMethod
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\canvas\utils\CanvasTinter.js
-* @sourceline 284
+* @sourceline 287
 */
 /**
 * @fileoverview
@@ -3600,14 +1539,14 @@ Don't forget to add the CanvasRenderer.view to your DOM or you will not see anyt
 * @member PIXI.CanvasRenderer#type
 * @type {Number}
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\canvas\CanvasRenderer.js
-* @sourceline 40
+* @sourceline 39
 */
 /**
 * @description The resolution of the canvas.
 * @member PIXI.CanvasRenderer#resolution
 * @type {Number}
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\canvas\CanvasRenderer.js
-* @sourceline 48
+* @sourceline 47
 */
 /**
 * @description This sets if the CanvasRenderer will clear the canvas or not before the new render pass.
@@ -3618,21 +1557,21 @@ Disable this by setting this to false. For example if your game has a canvas fil
 * @type {Boolean}
 * @default 
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\canvas\CanvasRenderer.js
-* @sourceline 56
+* @sourceline 55
 */
 /**
 * @description Whether the render view is transparent
 * @member PIXI.CanvasRenderer#transparent
 * @type {Boolean}
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\canvas\CanvasRenderer.js
-* @sourceline 68
+* @sourceline 67
 */
 /**
 * @description Whether the render view should be resized automatically
 * @member PIXI.CanvasRenderer#autoResize
 * @type {Boolean}
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\canvas\CanvasRenderer.js
-* @sourceline 76
+* @sourceline 75
 */
 /**
 * @description The width of the canvas view
@@ -3640,7 +1579,7 @@ Disable this by setting this to false. For example if your game has a canvas fil
 * @type {Number}
 * @default 800
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\canvas\CanvasRenderer.js
-* @sourceline 85
+* @sourceline 84
 */
 /**
 * @description The height of the canvas view
@@ -3648,49 +1587,49 @@ Disable this by setting this to false. For example if your game has a canvas fil
 * @type {Number}
 * @default 600
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\canvas\CanvasRenderer.js
-* @sourceline 94
+* @sourceline 93
 */
 /**
 * @description The canvas element that everything is drawn to.
 * @member PIXI.CanvasRenderer#view
 * @type {HTMLCanvasElement}
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\canvas\CanvasRenderer.js
-* @sourceline 106
+* @sourceline 105
 */
 /**
 * @description The canvas 2d context that everything is drawn with
 * @member PIXI.CanvasRenderer#context
 * @type {CanvasRenderingContext2D}
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\canvas\CanvasRenderer.js
-* @sourceline 114
+* @sourceline 113
 */
 /**
 * @description Boolean flag controlling canvas refresh.
 * @member PIXI.CanvasRenderer#refresh
 * @type {Boolean}
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\canvas\CanvasRenderer.js
-* @sourceline 121
+* @sourceline 120
 */
 /**
 * @description Internal var.
 * @member PIXI.CanvasRenderer#count
 * @type {Number}
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\canvas\CanvasRenderer.js
-* @sourceline 132
+* @sourceline 131
 */
 /**
 * @description Instance of a PIXI.CanvasMaskManager, handles masking when using the canvas renderer
 * @member PIXI.CanvasRenderer#CanvasMaskManager
 * @type {PIXI.CanvasMaskManager}
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\canvas\CanvasRenderer.js
-* @sourceline 140
+* @sourceline 139
 */
 /**
 * @description The render session is just a bunch of parameter used for rendering
 * @member PIXI.CanvasRenderer#renderSession
 * @type {Object}
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\canvas\CanvasRenderer.js
-* @sourceline 147
+* @sourceline 146
 */
 
 /**
@@ -3698,14 +1637,14 @@ Disable this by setting this to false. For example if your game has a canvas fil
 * @method PIXI.CanvasRenderer#render
 * @param {PIXI.Stage} stage - the Stage element to be rendered
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\canvas\CanvasRenderer.js
-* @sourceline 184
+* @sourceline 183
 */
 /**
 * @description Removes everything from the renderer and optionally removes the Canvas DOM element.
 * @method PIXI.CanvasRenderer#destroy
 * @param {Boolean} [removeView=true] - Removes the Canvas element from the DOM.
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\canvas\CanvasRenderer.js
-* @sourceline 233
+* @sourceline 223
 */
 /**
 * @description Resizes the canvas view to the specified width and height
@@ -3713,7 +1652,7 @@ Disable this by setting this to false. For example if your game has a canvas fil
 * @param {Number} width - the new width of the canvas view
 * @param {Number} height - the new height of the canvas view
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\canvas\CanvasRenderer.js
-* @sourceline 255
+* @sourceline 245
 */
 /**
 * @description Renders a display object
@@ -3722,14 +1661,14 @@ Disable this by setting this to false. For example if your game has a canvas fil
 * @param {CanvasRenderingContext2D} context - the context 2d method of the canvas
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\canvas\CanvasRenderer.js
-* @sourceline 276
+* @sourceline 266
 */
 /**
 * @description Maps Pixi blend modes to canvas blend modes.
 * @method PIXI.CanvasRenderer#mapBlendModes
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\canvas\CanvasRenderer.js
-* @sourceline 291
+* @sourceline 281
 */
 /**
 * @fileoverview
@@ -4281,7 +2220,7 @@ https://github.com/libgdx/libgdx/blob/master/gdx/src/com/badlogic/gdx/graphics/g
 */
 /**
 * @member PIXI.WebGLFastSpriteBatch#matrix
-* @type {PIXI.Matrix}
+* @type {Matrix}
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\utils\WebGLFastSpriteBatch.js
 * @sourceline 119
 */
@@ -4925,7 +2864,7 @@ Don't forget to add the view to your DOM or you will not see anything :)
 * @member PIXI.WebGLRenderer#type
 * @type {Number}
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\WebGLRenderer.js
-* @sourceline 46
+* @sourceline 45
 */
 /**
 * @description The resolution of the renderer
@@ -4933,28 +2872,28 @@ Don't forget to add the view to your DOM or you will not see anything :)
 * @type {Number}
 * @default 1
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\WebGLRenderer.js
-* @sourceline 52
+* @sourceline 51
 */
 /**
 * @description Whether the render view is transparent
 * @member PIXI.WebGLRenderer#transparent
 * @type {Boolean}
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\WebGLRenderer.js
-* @sourceline 63
+* @sourceline 62
 */
 /**
 * @description Whether the render view should be resized automatically
 * @member PIXI.WebGLRenderer#autoResize
 * @type {Boolean}
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\WebGLRenderer.js
-* @sourceline 71
+* @sourceline 70
 */
 /**
 * @description The value of the preserveDrawingBuffer flag affects whether or not the contents of the stencil buffer is retained after rendering.
 * @member PIXI.WebGLRenderer#preserveDrawingBuffer
 * @type {Boolean}
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\WebGLRenderer.js
-* @sourceline 79
+* @sourceline 78
 */
 /**
 * @description This sets if the WebGLRenderer will clear the context texture or not before the new render pass. If true:
@@ -4965,7 +2904,7 @@ Disable this by setting this to false. For example: if your game has a canvas fi
 * @type {Boolean}
 * @default 
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\WebGLRenderer.js
-* @sourceline 87
+* @sourceline 86
 */
 /**
 * @description The width of the canvas view
@@ -4973,7 +2912,7 @@ Disable this by setting this to false. For example: if your game has a canvas fi
 * @type {Number}
 * @default 800
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\WebGLRenderer.js
-* @sourceline 99
+* @sourceline 98
 */
 /**
 * @description The height of the canvas view
@@ -4981,115 +2920,115 @@ Disable this by setting this to false. For example: if your game has a canvas fi
 * @type {Number}
 * @default 600
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\WebGLRenderer.js
-* @sourceline 108
+* @sourceline 107
 */
 /**
 * @description The canvas element that everything is drawn to
 * @member PIXI.WebGLRenderer#view
 * @type {HTMLCanvasElement}
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\WebGLRenderer.js
-* @sourceline 117
+* @sourceline 116
 */
 /**
 * @member PIXI.WebGLRenderer#contextLostBound
 * @type {Function}
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\WebGLRenderer.js
-* @sourceline 127
+* @sourceline 126
 */
 /**
 * @member PIXI.WebGLRenderer#contextRestoredBound
 * @type {Function}
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\WebGLRenderer.js
-* @sourceline 133
+* @sourceline 132
 */
 /**
 * @member PIXI.WebGLRenderer#_contextOptions
 * @type {Object}
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\WebGLRenderer.js
-* @sourceline 142
+* @sourceline 141
 */
 /**
 * @member PIXI.WebGLRenderer#projection
-* @type {PIXI.Point}
+* @type {Point}
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\WebGLRenderer.js
-* @sourceline 155
+* @sourceline 154
 */
 /**
 * @member PIXI.WebGLRenderer#offset
-* @type {PIXI.Point}
+* @type {Point}
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\WebGLRenderer.js
-* @sourceline 161
+* @sourceline 160
 */
 /**
 * @description Deals with managing the shader programs and their attribs
 * @member PIXI.WebGLRenderer#shaderManager
 * @type {PIXI.WebGLShaderManager}
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\WebGLRenderer.js
-* @sourceline 169
+* @sourceline 168
 */
 /**
 * @description Manages the rendering of sprites
 * @member PIXI.WebGLRenderer#spriteBatch
 * @type {PIXI.WebGLSpriteBatch}
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\WebGLRenderer.js
-* @sourceline 176
+* @sourceline 175
 */
 /**
 * @description Manages the masks using the stencil buffer
 * @member PIXI.WebGLRenderer#maskManager
 * @type {PIXI.WebGLMaskManager}
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\WebGLRenderer.js
-* @sourceline 183
+* @sourceline 182
 */
 /**
 * @description Manages the filters
 * @member PIXI.WebGLRenderer#filterManager
 * @type {PIXI.WebGLFilterManager}
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\WebGLRenderer.js
-* @sourceline 190
+* @sourceline 189
 */
 /**
 * @description Manages the stencil buffer
 * @member PIXI.WebGLRenderer#stencilManager
 * @type {PIXI.WebGLStencilManager}
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\WebGLRenderer.js
-* @sourceline 197
+* @sourceline 196
 */
 /**
 * @description Manages the blendModes
 * @member PIXI.WebGLRenderer#blendModeManager
 * @type {PIXI.WebGLBlendModeManager}
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\WebGLRenderer.js
-* @sourceline 204
+* @sourceline 203
 */
 /**
 * @description TODO remove
 * @member PIXI.WebGLRenderer#renderSession
 * @type {Object}
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\WebGLRenderer.js
-* @sourceline 211
+* @sourceline 210
 */
 /**
 * @method PIXI.WebGLRenderer#initContext
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\WebGLRenderer.js
-* @sourceline 238
+* @sourceline 237
 */
 /**
 * @description Renders the stage to its webGL view
 * @method PIXI.WebGLRenderer#render
 * @param {PIXI.Stage} stage - the Stage element to be rendered
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\WebGLRenderer.js
-* @sourceline 276
+* @sourceline 275
 */
 /**
 * @description Renders a Display Object.
 * @method PIXI.WebGLRenderer#renderDisplayObject
 * @param {PIXI.DisplayObject} displayObject - The DisplayObject to render
-* @param {PIXI.Point} projection - The projection
+* @param {Point} projection - The projection
 * @param {Array} buffer - a standard WebGL buffer
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\WebGLRenderer.js
-* @sourceline 344
+* @sourceline 322
 */
 /**
 * @description Resizes the webGL view to the specified width and height.
@@ -5097,14 +3036,14 @@ Disable this by setting this to false. For example: if your game has a canvas fi
 * @param {Number} width - the new width of the webGL view
 * @param {Number} height - the new height of the webGL view
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\WebGLRenderer.js
-* @sourceline 381
+* @sourceline 359
 */
 /**
 * @description Updates and Creates a WebGL texture for the renderers context.
 * @method PIXI.WebGLRenderer#updateTexture
 * @param {PIXI.Texture} texture - the texture to update
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\WebGLRenderer.js
-* @sourceline 407
+* @sourceline 385
 */
 /**
 * @description Handles a lost webgl context
@@ -5112,7 +3051,7 @@ Disable this by setting this to false. For example: if your game has a canvas fi
 * @param {PIXI.Event} event - 
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\WebGLRenderer.js
-* @sourceline 456
+* @sourceline 433
 */
 /**
 * @description Handles a restored webgl context
@@ -5120,19 +3059,19 @@ Disable this by setting this to false. For example: if your game has a canvas fi
 * @param {PIXI.Event} event - 
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\WebGLRenderer.js
-* @sourceline 469
+* @sourceline 446
 */
 /**
 * @description Removes everything from the renderer (event listeners, spritebatch, etc...)
 * @method PIXI.WebGLRenderer#destroy
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\WebGLRenderer.js
-* @sourceline 490
+* @sourceline 467
 */
 /**
 * @description Maps Pixi blend modes to WebGL blend modes.
 * @method PIXI.WebGLRenderer#mapBlendModes
 * @sourcefile d:\wamp\www\phaser\src\pixi\renderers\webgl\WebGLRenderer.js
-* @sourceline 521
+* @sourceline 501
 */
 /**
 * @fileoverview
@@ -5171,25 +3110,45 @@ which is defined in the style object
 * @sourceline 33
 */
 /**
+* @description The max width of this bitmap text in pixels. If the text provided is longer than the value provided, line breaks will be 
+automatically inserted in the last whitespace. Disable by setting value to 0.
+* @member PIXI.BitmapText#maxWidth
+* @type {Number}
+* @sourcefile d:\wamp\www\phaser\src\pixi\text\BitmapText.js
+* @sourceline 43
+*/
+/**
+* @member PIXI.BitmapText#anchor
+* @type {Point}
+* @sourcefile d:\wamp\www\phaser\src\pixi\text\BitmapText.js
+* @sourceline 52
+*/
+/**
+* @member PIXI.BitmapText#_prevAnchor
+* @type {Point}
+* @sourcefile d:\wamp\www\phaser\src\pixi\text\BitmapText.js
+* @sourceline 58
+*/
+/**
 * @member PIXI.BitmapText#_pool
 * @type {Array}
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\text\BitmapText.js
-* @sourceline 43
+* @sourceline 64
 */
 /**
 * @description The dirty state of this object.
 * @member PIXI.BitmapText#dirty
 * @type {Boolean}
 * @sourcefile d:\wamp\www\phaser\src\pixi\text\BitmapText.js
-* @sourceline 54
+* @sourceline 75
 */
 /**
 * @description Set the text string to be rendered.
 * @method PIXI.BitmapText#setText
 * @param {String} text - The text that you would like displayed
 * @sourcefile d:\wamp\www\phaser\src\pixi\text\BitmapText.js
-* @sourceline 66
+* @sourceline 87
 */
 /**
 * @description Set the style of the text
@@ -5198,21 +3157,21 @@ style.font {String} The size (optional) and bitmap font id (required) eq 'Arial'
 * @method PIXI.BitmapText#setStyle
 * @param {Object} style - The style parameters, contained as properties of an object
 * @sourcefile d:\wamp\www\phaser\src\pixi\text\BitmapText.js
-* @sourceline 78
+* @sourceline 99
 */
 /**
 * @description Renders text and updates it when needed
 * @method PIXI.BitmapText#updateText
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\text\BitmapText.js
-* @sourceline 100
+* @sourceline 121
 */
 /**
 * @description Updates the transform of this object
 * @method PIXI.BitmapText#updateTransform
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\text\BitmapText.js
-* @sourceline 198
+* @sourceline 243
 */
 /**
 * @fileoverview
@@ -5341,8 +3300,8 @@ bounds set by the Text object's wordWrapWidth property.
 /**
 * @description Returns the bounds of the Text as a rectangle. The bounds calculation takes the worldTransform into account.
 * @method PIXI.Text#getBounds
-* @param {PIXI.Matrix} matrix - the transformation matrix of the Text
-* @return {PIXI.Rectangle} the framing rectangle
+* @param {Matrix} matrix - the transformation matrix of the Text
+* @return {Rectangle} the framing rectangle
 * @sourcefile d:\wamp\www\phaser\src\pixi\text\Text.js
 * @sourceline 498
 */
@@ -5447,40 +3406,40 @@ bounds set by the Text object's wordWrapWidth property.
 * @member PIXI.BaseTexture#imageUrl
 * @type {String}
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\BaseTexture.js
-* @sourceline 141
+* @sourceline 143
 */
 /**
 * @member PIXI.BaseTexture#_powerOf2
 * @type {Boolean}
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\BaseTexture.js
-* @sourceline 147
+* @sourceline 149
 */
 /**
 * @description Destroys this base texture
 * @method PIXI.BaseTexture#destroy
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\BaseTexture.js
-* @sourceline 160
+* @sourceline 162
 */
 /**
 * @description Changes the source image of the texture
 * @method PIXI.BaseTexture#updateSourceImage
 * @param {String} newSrc - the path of the image
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\BaseTexture.js
-* @sourceline 183
+* @sourceline 185
 */
 /**
 * @description Sets all glTextures to be dirty.
 * @method PIXI.BaseTexture#dirty
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\BaseTexture.js
-* @sourceline 196
+* @sourceline 198
 */
 /**
 * @description Removes the base texture from the GPU, useful for managing resources on the GPU.
 Atexture is still 100% usable and will simply be reuploaded if there is a sprite on screen that is using it.
 * @method PIXI.BaseTexture#unloadFromGPU
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\BaseTexture.js
-* @sourceline 209
+* @sourceline 211
 */
 /**
 * @description Helper function that creates a base texture from the given image url.
@@ -5491,7 +3450,7 @@ If the image is not in the base texture cache it will be created and loaded.
 * @param {Number} scaleMode - See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
 * @return BaseTexture
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\BaseTexture.js
-* @sourceline 237
+* @sourceline 239
 */
 /**
 * @description Helper function that creates a base texture from the given canvas element.
@@ -5500,7 +3459,7 @@ If the image is not in the base texture cache it will be created and loaded.
 * @param {Number} scaleMode - See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
 * @return BaseTexture
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\BaseTexture.js
-* @sourceline 279
+* @sourceline 282
 */
 /**
 * @fileoverview
@@ -5562,7 +3521,7 @@ The Sprite in this case will be rendered to a position of 0,0. To render this sp
 /**
 * @description The framing rectangle of the render texture
 * @member PIXI.RenderTexture#frame
-* @type {PIXI.Rectangle}
+* @type {Rectangle}
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\RenderTexture.js
 * @sourceline 61
 */
@@ -5570,7 +3529,7 @@ The Sprite in this case will be rendered to a position of 0,0. To render this sp
 * @description This is the area of the BaseTexture image to actually copy to the Canvas / WebGL when rendering,
 irrespective of the actual frame size or placement (which can be influenced by trimmed texture atlases)
 * @member PIXI.RenderTexture#crop
-* @type {PIXI.Rectangle}
+* @type {Rectangle}
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\RenderTexture.js
 * @sourceline 69
 */
@@ -5607,48 +3566,48 @@ irrespective of the actual frame size or placement (which can be influenced by t
 * @description Clears the RenderTexture.
 * @method PIXI.RenderTexture#clear
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\RenderTexture.js
-* @sourceline 171
+* @sourceline 173
 */
 /**
 * @description This function will draw the display object to the texture.
 * @method PIXI.RenderTexture#renderWebGL
 * @param {PIXI.DisplayObject} displayObject - The display object to render this texture on
-* @param {PIXI.Matrix} [matrix] - Optional matrix to apply to the display object before rendering.
+* @param {Matrix} [matrix] - Optional matrix to apply to the display object before rendering.
 * @param {Boolean} [clear] - If true the texture will be cleared before the displayObject is drawn
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\RenderTexture.js
-* @sourceline 188
+* @sourceline 190
 */
 /**
 * @description This function will draw the display object to the texture.
 * @method PIXI.RenderTexture#renderCanvas
 * @param {PIXI.DisplayObject} displayObject - The display object to render this texture on
-* @param {PIXI.Matrix} [matrix] - Optional matrix to apply to the display object before rendering.
+* @param {Matrix} [matrix] - Optional matrix to apply to the display object before rendering.
 * @param {Boolean} [clear] - If true the texture will be cleared before the displayObject is drawn
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\RenderTexture.js
-* @sourceline 237
+* @sourceline 239
 */
 /**
 * @description Will return a HTML Image of the texture
 * @method PIXI.RenderTexture#getImage
 * @return {Image} 
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\RenderTexture.js
-* @sourceline 278
+* @sourceline 280
 */
 /**
 * @description Will return a a base64 encoded string of this texture. It works by calling RenderTexture.getCanvas and then running toDataURL on that.
 * @method PIXI.RenderTexture#getBase64
 * @return {String} A base64 encoded string of the texture.
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\RenderTexture.js
-* @sourceline 291
+* @sourceline 293
 */
 /**
 * @description Creates a Canvas element, renders this RenderTexture to it and then returns it.
 * @method PIXI.RenderTexture#getCanvas
 * @return {HTMLCanvasElement} A Canvas element with the texture rendered on.
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\RenderTexture.js
-* @sourceline 302
+* @sourceline 304
 */
 /**
 * @fileoverview
@@ -5661,53 +3620,54 @@ irrespective of the actual frame size or placement (which can be influenced by t
 * @description A texture stores the information that represents an image or part of an image. It cannot be added
 to the display list directly. Instead use it as the texture for a PIXI.Sprite. If no frame is provided then the whole image is used.
 * @param {PIXI.BaseTexture} baseTexture - The base texture source to create the texture from
-* @param {PIXI.Rectangle} frame - The rectangle frame of the texture to show
-* @param {PIXI.Rectangle} [crop] - The area of original texture
-* @param {PIXI.Rectangle} [trim] - Trimmed texture rectangle
+* @param {Rectangle} frame - The rectangle frame of the texture to show
+* @param {Rectangle} [crop] - The area of original texture
+* @param {Rectangle} [trim] - Trimmed texture rectangle
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\Texture.js
-* @sourceline 10
+* @sourceline 19
 */
+
 /**
 * @description Does this Texture have any frame data assigned to it?
 * @member PIXI.Texture#noFrame
 * @type {Boolean}
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\Texture.js
-* @sourceline 24
+* @sourceline 33
 */
 /**
 * @description The base texture that this texture uses.
 * @member PIXI.Texture#baseTexture
 * @type {PIXI.BaseTexture}
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\Texture.js
-* @sourceline 43
+* @sourceline 52
 */
 /**
 * @description The frame specifies the region of the base texture that this texture uses
 * @member PIXI.Texture#frame
-* @type {PIXI.Rectangle}
+* @type {Rectangle}
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\Texture.js
-* @sourceline 51
+* @sourceline 60
 */
 /**
 * @description The texture trim data.
 * @member PIXI.Texture#trim
-* @type {PIXI.Rectangle}
+* @type {Rectangle}
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\Texture.js
-* @sourceline 59
+* @sourceline 68
 */
 /**
 * @description This will let the renderer know if the texture is valid. If it's not then it cannot be rendered.
 * @member PIXI.Texture#valid
 * @type {Boolean}
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\Texture.js
-* @sourceline 67
+* @sourceline 76
 */
 /**
 * @description This will let a renderer know that a texture has been updated (used mainly for webGL uv updates)
 * @member PIXI.Texture#requiresUpdate
 * @type {Boolean}
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\Texture.js
-* @sourceline 75
+* @sourceline 84
 */
 /**
 * @description The WebGL UV data cache.
@@ -5715,57 +3675,57 @@ to the display list directly. Instead use it as the texture for a PIXI.Sprite. I
 * @type {Object}
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\Texture.js
-* @sourceline 83
+* @sourceline 92
 */
 /**
 * @description The width of the Texture in pixels.
 * @member PIXI.Texture#width
 * @type {Number}
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\Texture.js
-* @sourceline 92
+* @sourceline 101
 */
 /**
 * @description The height of the Texture in pixels.
 * @member PIXI.Texture#height
 * @type {Number}
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\Texture.js
-* @sourceline 100
+* @sourceline 109
 */
 /**
 * @description This is the area of the BaseTexture image to actually copy to the Canvas / WebGL when rendering,
 irrespective of the actual frame size or placement (which can be influenced by trimmed texture atlases)
 * @member PIXI.Texture#crop
-* @type {PIXI.Rectangle}
+* @type {Rectangle}
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\Texture.js
-* @sourceline 108
+* @sourceline 117
 */
 /**
 * @description Called when the base texture is loaded
 * @method PIXI.Texture#onBaseTextureLoaded
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\Texture.js
-* @sourceline 131
+* @sourceline 140
 */
 /**
 * @description Destroys this texture
 * @method PIXI.Texture#destroy
 * @param {Boolean} destroyBase - Whether to destroy the base texture as well
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\Texture.js
-* @sourceline 149
+* @sourceline 158
 */
 /**
 * @description Specifies the region of the baseTexture that this texture will use.
 * @method PIXI.Texture#setFrame
-* @param {PIXI.Rectangle} frame - The frame of the texture to set it to
+* @param {Rectangle} frame - The frame of the texture to set it to
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\Texture.js
-* @sourceline 162
+* @sourceline 171
 */
 /**
 * @description Updates the internal WebGL UV cache.
 * @method PIXI.Texture#_updateUvs
 * @access private
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\Texture.js
-* @sourceline 200
+* @sourceline 215
 */
 /**
 * @description Helper function that creates a Texture object from the given image url.
@@ -5776,7 +3736,7 @@ If the image is not in the texture cache it will be  created and loaded.
 * @param {Number} scaleMode - See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
 * @return Texture
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\Texture.js
-* @sourceline 227
+* @sourceline 242
 */
 /**
 * @description Helper function that returns a Texture objected based on the given frame id.
@@ -5785,7 +3745,7 @@ If the frame id is not in the texture cache an error will be thrown.
 * @param {String} frameId - The frame id of the texture
 * @return Texture
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\Texture.js
-* @sourceline 251
+* @sourceline 266
 */
 /**
 * @description Helper function that creates a new a Texture based on the given canvas element.
@@ -5794,7 +3754,7 @@ If the frame id is not in the texture cache an error will be thrown.
 * @param {Number} scaleMode - See {{#crossLink "PIXI/scaleModes:property"}}PIXI.scaleModes{{/crossLink}} for possible values
 * @return Texture
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\Texture.js
-* @sourceline 267
+* @sourceline 282
 */
 /**
 * @description Adds a texture to the global PIXI.TextureCache. This cache is shared across the whole PIXI object.
@@ -5802,7 +3762,7 @@ If the frame id is not in the texture cache an error will be thrown.
 * @param {PIXI.Texture} texture - The Texture to add to the cache.
 * @param {String} id - The id that the texture will be stored against.
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\Texture.js
-* @sourceline 284
+* @sourceline 299
 */
 /**
 * @description Remove a texture from the global PIXI.TextureCache.
@@ -5810,7 +3770,7 @@ If the frame id is not in the texture cache an error will be thrown.
 * @param {String} id - The id of the texture to be removed
 * @return {PIXI.Texture} The texture that was removed
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\Texture.js
-* @sourceline 297
+* @sourceline 312
 */
 /**
 * @class PIXI.VideoTexture
@@ -5849,135 +3809,6 @@ See the ["deus" demo](http://www.goodboydigital.com/pixijs/examples/deus/).
 * @return {PIXI.VideoTexture} 
 * @sourcefile d:\wamp\www\phaser\src\pixi\textures\VideoTexture.js
 * @sourceline 152
-*/
-/**
-* @fileoverview
-* @author Mat Groves http://matgroves.com/ @Doormat23
-* @sourcefile d:\wamp\www\phaser\src\pixi\utils\Detector.js
-* @sourceline 1
-*/
-/**
-* @class PIXI.PIXI
-* @description Namespace-class for [pixi.js](http://www.pixijs.com/).
-
-Contains assorted static properties and enumerations.
-* @sourcefile d:\wamp\www\phaser\src\pixi\Pixi.js
-* @sourceline 11
-*/
-/**
-* @description This helper function will automatically detect which renderer you should be using.
-WebGL is the preferred renderer as it is a lot faster. If webGL is not supported by
-the browser then this function will return a canvas renderer
-* @method PIXI.PIXI.autoDetectRenderer
-* @param {Number} width=800 - the width of the renderers view
-* @param {Number} height=600 - the height of the renderers view
-* @param {Object} [options] - The optional renderer parameters
-* @param {HTMLCanvasElement} [options.view] - the canvas to use as a view, optional
-* @param {Boolean} [options.transparent=false] - If the render view is transparent, default false
-* @param {Boolean} [options.antialias=false] - sets antialias (only applicable in chrome at the moment)
-* @param {Boolean} [options.preserveDrawingBuffer=false] - enables drawing buffer preservation, enable this if you need to call toDataUrl on the webgl context
-* @param {Number} [options.resolution=1] - the resolution of the renderer retina would be 2
-* @sourcefile d:\wamp\www\phaser\src\pixi\utils\Detector.js
-* @sourceline 5
-*/
-/**
-* @description This helper function will automatically detect which renderer you should be using.
-This function is very similar to the autoDetectRenderer function except that is will return a canvas renderer for android.
-Even thought both android chrome supports webGL the canvas implementation perform better at the time of writing. 
-This function will likely change and update as webGL performance improves on these devices.
-* @method PIXI.PIXI.autoDetectRecommendedRenderer
-* @param {Number} width=800 - the width of the renderers view
-* @param {Number} height=600 - the height of the renderers view
-* @param {Object} [options] - The optional renderer parameters
-* @param {HTMLCanvasElement} [options.view] - the canvas to use as a view, optional
-* @param {Boolean} [options.transparent=false] - If the render view is transparent, default false
-* @param {Boolean} [options.antialias=false] - sets antialias (only applicable in chrome at the moment)
-* @param {Boolean} [options.preserveDrawingBuffer=false] - enables drawing buffer preservation, enable this if you need to call toDataUrl on the webgl context
-* @param {Number} [options.resolution=1] - the resolution of the renderer retina would be 2
-* @sourcefile d:\wamp\www\phaser\src\pixi\utils\Detector.js
-* @sourceline 46
-*/
-
-
-
-/**
-* @member PIXI.PIXI.WEBGL_RENDERER
-* @type {Number}
-* @access protected
-* @sourcefile d:\wamp\www\phaser\src\pixi\Pixi.js
-* @sourceline 21
-*/
-/**
-* @member PIXI.PIXI.CANVAS_RENDERER
-* @type {Number}
-* @access protected
-* @sourcefile d:\wamp\www\phaser\src\pixi\Pixi.js
-* @sourceline 27
-*/
-/**
-* @description Version of pixi that is loaded.
-* @member PIXI.PIXI.VERSION
-* @type {String}
-* @sourcefile d:\wamp\www\phaser\src\pixi\Pixi.js
-* @sourceline 34
-*/
-/**
-* @description Various blend modes supported by pixi. IMPORTANT - The WebGL renderer only supports the NORMAL, ADD, MULTIPLY and SCREEN blend modes.
-* @member PIXI.PIXI.blendModes
-* @type {Object}
-* @sourcefile d:\wamp\www\phaser\src\pixi\Pixi.js
-* @sourceline 41
-*/
-/**
-* @description The scale modes that are supported by pixi.
-
-The DEFAULT scale mode affects the default scaling mode of future operations.
-It can be re-assigned to either LINEAR or NEAREST, depending upon suitability.
-* @member PIXI.PIXI.scaleModes
-* @type {Object}
-* @sourcefile d:\wamp\www\phaser\src\pixi\Pixi.js
-* @sourceline 83
-*/
-/**
-* @member PIXI.PIXI.PI_2
-* @type {Number}
-* @sourcefile d:\wamp\www\phaser\src\pixi\Pixi.js
-* @sourceline 127
-*/
-/**
-* @member PIXI.PIXI.RAD_TO_DEG
-* @type {Number}
-* @sourcefile d:\wamp\www\phaser\src\pixi\Pixi.js
-* @sourceline 133
-*/
-/**
-* @member PIXI.PIXI.DEG_TO_RAD
-* @type {Number}
-* @sourcefile d:\wamp\www\phaser\src\pixi\Pixi.js
-* @sourceline 139
-*/
-/**
-* @member PIXI.PIXI.RETINA_PREFIX
-* @type {String}
-* @access protected
-* @sourcefile d:\wamp\www\phaser\src\pixi\Pixi.js
-* @sourceline 145
-*/
-/**
-* @description If true the default pixi startup (console) banner message will be suppressed.
-* @member PIXI.PIXI.dontSayHello
-* @type {Boolean}
-* @default false
-* @sourcefile d:\wamp\www\phaser\src\pixi\Pixi.js
-* @sourceline 153
-*/
-/**
-* @description The default render options if none are supplied to
-{{#crossLink "WebGLRenderer"}}{{/crossLink}} or {{#crossLink "CanvasRenderer"}}{{/crossLink}}.
-* @member PIXI.PIXI.defaultRenderOptions
-* @type {Object}
-* @sourcefile d:\wamp\www\phaser\src\pixi\Pixi.js
-* @sourceline 162
 */
 /**
 * @fileoverview
@@ -6166,361 +3997,106 @@ Slightly modified by Mat Groves (matgroves.com);
 * @sourceline 1
 */
 /**
-* @class PIXI.AjaxRequest
-* @description A wrapper for ajax requests to be handled cross browser
-* @sourcefile d:\wamp\www\phaser\src\pixi\utils\Utils.js
-* @sourceline 108
-*/
-/**
-* @description A polyfill for requestAnimationFrame
-You can actually use both requestAnimationFrame and requestAnimFrame, 
-you will still benefit from the polyfill
-* @method PIXI.AjaxRequest#requestAnimationFrame
-* @sourcefile d:\wamp\www\phaser\src\pixi\utils\Utils.js
-* @sourceline 12
-*/
-/**
-* @description A polyfill for cancelAnimationFrame
-* @method PIXI.AjaxRequest#cancelAnimationFrame
-* @sourcefile d:\wamp\www\phaser\src\pixi\utils\Utils.js
-* @sourceline 20
+* @class PIXI.PIXI
+* @description Namespace-class for [pixi.js](http://www.pixijs.com/).
+
+Contains assorted static properties and enumerations.
+* @sourcefile d:\wamp\www\phaser\src\pixi\Pixi.js
+* @sourceline 11
 */
 /**
 * @description Converts a hex color number to an [R, G, B] array
-* @method PIXI.AjaxRequest#hex2rgb
+* @method PIXI.PIXI#hex2rgb
 * @param {Number} hex - 
 * @sourcefile d:\wamp\www\phaser\src\pixi\utils\Utils.js
-* @sourceline 54
+* @sourceline 5
 */
 /**
 * @description Converts a color as an [R, G, B] array to a hex number
-* @method PIXI.AjaxRequest#rgb2hex
+* @method PIXI.PIXI#rgb2hex
 * @param {Array} rgb - 
 * @sourcefile d:\wamp\www\phaser\src\pixi\utils\Utils.js
-* @sourceline 64
+* @sourceline 15
 */
 /**
-* @description A polyfill for Function.prototype.bind
-* @method PIXI.AjaxRequest#bind
-* @sourcefile d:\wamp\www\phaser\src\pixi\utils\Utils.js
-* @sourceline 74
-*/
-/**
-* @description Checks whether the Canvas BlendModes are supported by the current browser
-* @method PIXI.AjaxRequest#canUseNewCanvasBlendModes
+* @description Checks whether the Canvas BlendModes are supported by the current browser for drawImage
+* @method PIXI.PIXI#canUseNewCanvasBlendModes
 * @return {Boolean} whether they are supported
 * @sourcefile d:\wamp\www\phaser\src\pixi\utils\Utils.js
-* @sourceline 168
+* @sourceline 25
 */
 /**
 * @description Given a number, this function returns the closest number that is a power of two
 this function is taken from Starling Framework as its pretty neat ;)
-* @method PIXI.AjaxRequest#getNextPowerOfTwo
+* @method PIXI.PIXI#getNextPowerOfTwo
 * @param {Number} number - 
 * @return {Number} the closest number that is a power of two
 * @sourcefile d:\wamp\www\phaser\src\pixi\utils\Utils.js
-* @sourceline 189
+* @sourceline 57
 */
 /**
 * @description checks if the given width and height make a power of two texture
-* @method PIXI.AjaxRequest#isPowerOfTwo
+* @method PIXI.PIXI#isPowerOfTwo
 * @param {Number} width - 
 * @param {Number} height - 
 * @return {Boolean} 
 * @sourcefile d:\wamp\www\phaser\src\pixi\utils\Utils.js
-* @sourceline 209
+* @sourceline 77
 */
+
+
+
 /**
-* @fileoverview
-* @author Mat Groves http://matgroves.com/ @Doormat23
-* @sourcefile d:\wamp\www\phaser\src\pixi\InteractionData.js
-* @sourceline 1
-*/
-/**
-* @class PIXI.InteractionData
-* @description Holds all information related to an Interaction event
-* @sourcefile d:\wamp\www\phaser\src\pixi\InteractionData.js
-* @sourceline 5
-*/
-/**
-* @description This point stores the global coords of where the touch/mouse event happened
-* @member PIXI.InteractionData#global
-* @type {PIXI.Point}
-* @sourcefile d:\wamp\www\phaser\src\pixi\InteractionData.js
-* @sourceline 13
-*/
-/**
-* @description The target Sprite that was interacted with
-* @member PIXI.InteractionData#target
-* @type {PIXI.Sprite}
-* @sourcefile d:\wamp\www\phaser\src\pixi\InteractionData.js
+* @member PIXI.PIXI.WEBGL_RENDERER
+* @type {Number}
+* @access protected
+* @sourcefile d:\wamp\www\phaser\src\pixi\Pixi.js
 * @sourceline 21
 */
 /**
-* @description When passed to an event handler, this will be the original DOM Event that was captured
-* @member PIXI.InteractionData#originalEvent
-* @type {PIXI.Event}
-* @sourcefile d:\wamp\www\phaser\src\pixi\InteractionData.js
-* @sourceline 29
+* @member PIXI.PIXI.CANVAS_RENDERER
+* @type {Number}
+* @access protected
+* @sourcefile d:\wamp\www\phaser\src\pixi\Pixi.js
+* @sourceline 28
 */
 /**
-* @description This will return the local coordinates of the specified displayObject for this InteractionData
-* @method PIXI.InteractionData#getLocalPosition
-* @param {PIXI.DisplayObject} displayObject - The DisplayObject that you would like the local coords off
-* @param {PIXI.Point} [point] - A Point object in which to store the value, optional (otherwise will create a new point)
-* @return {PIXI.Point} A point containing the coordinates of the InteractionData position relative to the DisplayObject
-* @sourcefile d:\wamp\www\phaser\src\pixi\InteractionData.js
-* @sourceline 38
+* @description Version of pixi that is loaded.
+* @member PIXI.PIXI.VERSION
+* @type {String}
+* @sourcefile d:\wamp\www\phaser\src\pixi\Pixi.js
+* @sourceline 35
 */
 /**
-* @fileoverview
-* @author Mat Groves http://matgroves.com/ @Doormat23
-* @sourcefile d:\wamp\www\phaser\src\pixi\InteractionManager.js
-* @sourceline 1
+* @member PIXI.PIXI.PI_2
+* @type {Number}
+* @sourcefile d:\wamp\www\phaser\src\pixi\Pixi.js
+* @sourceline 64
 */
 /**
-* @class PIXI.InteractionManager
-* @description The interaction manager deals with mouse and touch events. Any DisplayObject can be interactive
-if its interactive parameter is set to true
-This manager also supports multitouch.
-* @param {PIXI.Stage} stage - The stage to handle interactions
-* @sourcefile d:\wamp\www\phaser\src\pixi\InteractionManager.js
-* @sourceline 5
-*/
-/**
-* @description A reference to the stage
-* @member PIXI.InteractionManager#stage
-* @type {PIXI.Stage}
-* @sourcefile d:\wamp\www\phaser\src\pixi\InteractionManager.js
-* @sourceline 16
-*/
-/**
-* @description The mouse data
-* @member PIXI.InteractionManager#mouse
-* @type {PIXI.InteractionData}
-* @sourcefile d:\wamp\www\phaser\src\pixi\InteractionManager.js
-* @sourceline 24
-*/
-/**
-* @description An object that stores current touches (InteractionData) by id reference
-* @member PIXI.InteractionManager#touches
-* @type {Object}
-* @sourcefile d:\wamp\www\phaser\src\pixi\InteractionManager.js
-* @sourceline 32
-*/
-/**
-* @member PIXI.InteractionManager#tempPoint
-* @type {PIXI.Point}
-* @access private
-* @sourcefile d:\wamp\www\phaser\src\pixi\InteractionManager.js
-* @sourceline 40
-*/
-/**
-* @member PIXI.InteractionManager#mouseoverEnabled
-* @type {Boolean}
-* @default 
-* @sourcefile d:\wamp\www\phaser\src\pixi\InteractionManager.js
-* @sourceline 47
-*/
-/**
-* @description Tiny little interactiveData pool !
-* @member PIXI.InteractionManager#pool
-* @type {Array}
-* @sourcefile d:\wamp\www\phaser\src\pixi\InteractionManager.js
-* @sourceline 54
-*/
-/**
-* @description An array containing all the iterative items from the our interactive tree
-* @member PIXI.InteractionManager#interactiveItems
-* @type {Array}
-* @access private
-* @sourcefile d:\wamp\www\phaser\src\pixi\InteractionManager.js
-* @sourceline 62
-*/
-/**
-* @description Our canvas
-* @member PIXI.InteractionManager#interactionDOMElement
-* @type {HTMLCanvasElement}
-* @access private
-* @sourcefile d:\wamp\www\phaser\src\pixi\InteractionManager.js
+* @member PIXI.PIXI.RAD_TO_DEG
+* @type {Number}
+* @sourcefile d:\wamp\www\phaser\src\pixi\Pixi.js
 * @sourceline 70
 */
 /**
-* @member PIXI.InteractionManager#onMouseMove
-* @type {Function}
-* @sourcefile d:\wamp\www\phaser\src\pixi\InteractionManager.js
-* @sourceline 80
-*/
-/**
-* @member PIXI.InteractionManager#onMouseDown
-* @type {Function}
-* @sourcefile d:\wamp\www\phaser\src\pixi\InteractionManager.js
-* @sourceline 86
-*/
-/**
-* @member PIXI.InteractionManager#onMouseOut
-* @type {Function}
-* @sourcefile d:\wamp\www\phaser\src\pixi\InteractionManager.js
-* @sourceline 92
-*/
-/**
-* @member PIXI.InteractionManager#onMouseUp
-* @type {Function}
-* @sourcefile d:\wamp\www\phaser\src\pixi\InteractionManager.js
-* @sourceline 98
-*/
-/**
-* @member PIXI.InteractionManager#onTouchStart
-* @type {Function}
-* @sourcefile d:\wamp\www\phaser\src\pixi\InteractionManager.js
-* @sourceline 104
-*/
-/**
-* @member PIXI.InteractionManager#onTouchEnd
-* @type {Function}
-* @sourcefile d:\wamp\www\phaser\src\pixi\InteractionManager.js
-* @sourceline 110
-*/
-/**
-* @member PIXI.InteractionManager#onTouchMove
-* @type {Function}
-* @sourcefile d:\wamp\www\phaser\src\pixi\InteractionManager.js
-* @sourceline 116
-*/
-/**
-* @member PIXI.InteractionManager#last
+* @member PIXI.PIXI.DEG_TO_RAD
 * @type {Number}
-* @sourcefile d:\wamp\www\phaser\src\pixi\InteractionManager.js
-* @sourceline 122
+* @sourcefile d:\wamp\www\phaser\src\pixi\Pixi.js
+* @sourceline 76
 */
 /**
-* @description The css style of the cursor that is being used
-* @member PIXI.InteractionManager#currentCursorStyle
+* @member PIXI.PIXI.RETINA_PREFIX
 * @type {String}
-* @sourcefile d:\wamp\www\phaser\src\pixi\InteractionManager.js
-* @sourceline 128
+* @access protected
+* @sourcefile d:\wamp\www\phaser\src\pixi\Pixi.js
+* @sourceline 82
 */
 /**
-* @description Is set to true when the mouse is moved out of the canvas
-* @member PIXI.InteractionManager#mouseOut
-* @type {Boolean}
-* @sourcefile d:\wamp\www\phaser\src\pixi\InteractionManager.js
-* @sourceline 135
-*/
-/**
-* @member PIXI.InteractionManager#resolution
-* @type {Number}
-* @sourcefile d:\wamp\www\phaser\src\pixi\InteractionManager.js
-* @sourceline 142
-*/
-/**
-* @description Collects an interactive sprite recursively to have their interactions managed
-* @method PIXI.InteractionManager#collectInteractiveSprite
-* @param {PIXI.DisplayObject} displayObject - the displayObject to collect
-* @param {PIXI.DisplayObject} iParent - the display object's parent
-* @access private
-* @sourcefile d:\wamp\www\phaser\src\pixi\InteractionManager.js
-* @sourceline 155
-*/
-/**
-* @description Sets the target for event delegation
-* @method PIXI.InteractionManager#setTarget
-* @param {(PIXI.WebGLRenderer|PIXI.CanvasRenderer)} target - the renderer to bind events to
-* @access private
-* @sourcefile d:\wamp\www\phaser\src\pixi\InteractionManager.js
-* @sourceline 196
-*/
-/**
-* @description Sets the DOM element which will receive mouse/touch events. This is useful for when you have other DOM
-elements on top of the renderers Canvas element. With this you'll be able to delegate another DOM element
-to receive those events
-* @method PIXI.InteractionManager#setTargetDomElement
-* @param {DOMElement} domElement - the DOM element which will receive mouse and touch events
-* @access private
-* @sourcefile d:\wamp\www\phaser\src\pixi\InteractionManager.js
-* @sourceline 214
-*/
-/**
-* @method PIXI.InteractionManager#removeEvents
-* @access private
-* @sourcefile d:\wamp\www\phaser\src\pixi\InteractionManager.js
-* @sourceline 248
-*/
-/**
-* @description updates the state of interactive objects
-* @method PIXI.InteractionManager#update
-* @access private
-* @sourcefile d:\wamp\www\phaser\src\pixi\InteractionManager.js
-* @sourceline 273
-*/
-/**
-* @method PIXI.InteractionManager#rebuildInteractiveGraph
-* @access private
-* @sourcefile d:\wamp\www\phaser\src\pixi\InteractionManager.js
-* @sourceline 358
-*/
-/**
-* @description Is called when the mouse moves across the renderer element
-* @method PIXI.InteractionManager#onMouseMove
-* @param {PIXI.Event} event - The DOM event of the mouse moving
-* @access private
-* @sourcefile d:\wamp\www\phaser\src\pixi\InteractionManager.js
-* @sourceline 383
-*/
-/**
-* @description Is called when the mouse button is pressed down on the renderer element
-* @method PIXI.InteractionManager#onMouseDown
-* @param {PIXI.Event} event - The DOM event of a mouse button being pressed down
-* @access private
-* @sourcefile d:\wamp\www\phaser\src\pixi\InteractionManager.js
-* @sourceline 419
-*/
-/**
-* @description Is called when the mouse is moved out of the renderer element
-* @method PIXI.InteractionManager#onMouseOut
-* @param {PIXI.Event} event - The DOM event of a mouse being moved out
-* @access private
-* @sourcefile d:\wamp\www\phaser\src\pixi\InteractionManager.js
-* @sourceline 480
-*/
-/**
-* @description Is called when the mouse button is released on the renderer element
-* @method PIXI.InteractionManager#onMouseUp
-* @param {PIXI.Event} event - The DOM event of a mouse button being released
-* @access private
-* @sourcefile d:\wamp\www\phaser\src\pixi\InteractionManager.js
-* @sourceline 521
-*/
-/**
-* @description Tests if the current mouse coordinates hit a sprite
-* @method PIXI.InteractionManager#hitTest
-* @param {PIXI.DisplayObject} item - The displayObject to test for a hit
-* @param {PIXI.InteractionData} interactionData - The interactionData object to update in the case there is a hit
-* @access private
-* @sourcefile d:\wamp\www\phaser\src\pixi\InteractionManager.js
-* @sourceline 589
-*/
-/**
-* @description Is called when a touch is moved across the renderer element
-* @method PIXI.InteractionManager#onTouchMove
-* @param {PIXI.Event} event - The DOM event of a touch moving across the renderer view
-* @access private
-* @sourcefile d:\wamp\www\phaser\src\pixi\InteractionManager.js
-* @sourceline 675
-*/
-/**
-* @description Is called when a touch is started on the renderer element
-* @method PIXI.InteractionManager#onTouchStart
-* @param {PIXI.Event} event - The DOM event of a touch starting on the renderer view
-* @access private
-* @sourcefile d:\wamp\www\phaser\src\pixi\InteractionManager.js
-* @sourceline 721
-*/
-/**
-* @description Is called when a touch is ended on the renderer element
-* @method PIXI.InteractionManager#onTouchEnd
-* @param {PIXI.Event} event - The DOM event of a touch ending on the renderer view
-* @access private
-* @sourcefile d:\wamp\www\phaser\src\pixi\InteractionManager.js
-* @sourceline 790
+* @description The default render options if none are supplied to
+{{#crossLink "WebGLRenderer"}}{{/crossLink}} or {{#crossLink "CanvasRenderer"}}{{/crossLink}}.
+* @member PIXI.PIXI.defaultRenderOptions
+* @type {Object}
+* @sourcefile d:\wamp\www\phaser\src\pixi\Pixi.js
+* @sourceline 89
 */

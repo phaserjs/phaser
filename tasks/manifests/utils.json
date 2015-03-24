@@ -1,0 +1,6 @@
+[
+    "src/utils/ArraySet.js",
+    "src/utils/ArrayUtils.js",
+    "src/utils/Color.js",
+    "src/utils/LinkedList.js"
+]

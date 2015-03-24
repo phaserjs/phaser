@@ -33,7 +33,6 @@ PIXI.CanvasRenderer = function(width, height, options)
 
     if(!PIXI.defaultRenderer)
     {
-        PIXI.sayHello("Canvas");
         PIXI.defaultRenderer = this;
     }
 
@@ -198,7 +197,8 @@ PIXI.CanvasRenderer.prototype.render = function(stage)
     this.renderSession.currentBlendMode = PIXI.blendModes.NORMAL;
     this.context.globalCompositeOperation = PIXI.blendModesCanvas[PIXI.blendModes.NORMAL];
 
-    if (navigator.isCocoonJS && this.view.screencanvas) {
+    if (navigator.isCocoonJS && this.view.screencanvas)
+    {
         this.context.fillStyle = "black";
         this.context.clear();
     }
@@ -218,16 +218,6 @@ PIXI.CanvasRenderer.prototype.render = function(stage)
     
     this.renderDisplayObject(stage);
 
-    // run interaction!
-    if(stage.interactive)
-    {
-        //need to add some events!
-        if(!stage._interactiveEventsAdded)
-        {
-            stage._interactiveEventsAdded = true;
-            stage.interactionManager.setTarget(this);
-        }
-    }
 };
 
 /**

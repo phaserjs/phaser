@@ -1,7 +1,7 @@
 /* jshint wsh:true */
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -572,6 +572,9 @@ Phaser.Loader.prototype = {
             }
             
             pack.data = data || {};
+
+            //  Already consider 'loaded'
+            pack.loaded = true;
         }
         
         // Add before first non-pack/no-loaded ~ last pack from start prior to loading
@@ -579,6 +582,7 @@ Phaser.Loader.prototype = {
         for (var i = 0; i < this._fileList.length + 1; i++)
         {
             var file = this._fileList[i];
+
             if (!file || (!file.loaded && !file.loading && file.type !== 'packfile'))
             {
                 this._fileList.splice(i, 1, pack);
@@ -757,7 +761,7 @@ Phaser.Loader.prototype = {
     *    If an array is specified then the first URI (or URI + mime pair) that is device-compatible will be selected.
     *    For example: `"jump.mp3"`, `['jump.mp3', 'jump.ogg', 'jump.m4a']`, or `[{uri: "data:<opus_resource>", type: 'opus'}, 'fallback.mp3']`.
     *    BLOB and DATA URIs can be used but only support automatic detection when used in the pair form; otherwise the format must be manually checked before adding the resource.
-    * @param {boolean} autoDecode - When using Web Audio the audio files can either be decoded at load time or run-time.
+    * @param {boolean} [autoDecode=true] - When using Web Audio the audio files can either be decoded at load time or run-time.
     *    Audio files can't be played until they are decoded and, if specified, this enables immediate decoding. Decoding is a non-blocking async process.
     * @return {Phaser.Loader} This Loader instance.
     */
@@ -765,7 +769,8 @@ Phaser.Loader.prototype = {
 
         if (typeof autoDecode === 'undefined') { autoDecode = true; }
 
-        if (typeof urls === 'string') {
+        if (typeof urls === 'string')
+        {
             urls = [urls];
         }
 
@@ -784,14 +789,37 @@ Phaser.Loader.prototype = {
     * @method Phaser.Loader#audiosprite
     * @param {string} key - Unique asset key of the audio file.
     * @param {Array|string} urls - An array containing the URLs of the audio files, i.e.: [ 'audiosprite.mp3', 'audiosprite.ogg', 'audiosprite.m4a' ] or a single string containing just one URL.
-    * @param {string} jsonURL - The URL of the audiosprite configuration json.
+    * @param {string} [jsonURL=null] - The URL of the audiosprite configuration JSON object. If you wish to pass the data directly set this parameter to null.
+    * @param {string|object} [jsonData=null] - A JSON object or string containing the audiosprite configuration data. This is ignored if jsonURL is not null.
+    * @param {boolean} [autoDecode=true] - When using Web Audio the audio files can either be decoded at load time or run-time.
+    *    Audio files can't be played until they are decoded and, if specified, this enables immediate decoding. Decoding is a non-blocking async process.
     * @return {Phaser.Loader} This Loader instance.
     */
-    audiosprite: function(key, urls, jsonURL) {
+    audiosprite: function(key, urls, jsonURL, jsonData, autoDecode) {
 
-        this.audio(key, urls);
+        if (typeof jsonURL === 'undefined') { jsonURL = null; }
+        if (typeof jsonData === 'undefined') { jsonData = null; }
+        if (typeof autoDecode === 'undefined') { autoDecode = true; }
 
-        this.json(key + '-audioatlas', jsonURL);
+        this.audio(key, urls, autoDecode);
+
+        if (jsonURL)
+        {
+            this.json(key + '-audioatlas', jsonURL);
+        }
+        else if (jsonData)
+        {
+            if (typeof jsonData === 'string')
+            {
+                jsonData = JSON.parse(jsonData);
+            }
+
+            this.game.cache.addJSON(key + '-audioatlas', '', jsonData);
+        }
+        else
+        {
+            console.warn('Phaser.Loader.audiosprite - You must specify either a jsonURL or provide a jsonData object');
+        }
 
         return this;
 
@@ -1179,7 +1207,7 @@ Phaser.Loader.prototype = {
 
         if (!this.isLoading)
         {
-            console.warn('Phaser.Loader - active loading cancelled/reset');
+            console.warn('Phaser.Loader - active loading canceled / reset');
             this.finishedLoading(true);
             return;
         }
@@ -1228,11 +1256,8 @@ Phaser.Loader.prototype = {
             var file = this._fileList[i];
 
             // Pack is fetched (ie. has data) and is currently at the start of the process queue.
-            if (file.type === 'packfile' && !file.error && file.data && i === this._processingHead)
+            if (file.type === 'packfile' && !file.error && file.loaded && i === this._processingHead)
             {
-                // Pack may have been supplied with initial data
-                this.loaded = true;
-
                 // Processing the pack / adds more files
                 this.processPack(file);
 
@@ -1366,6 +1391,7 @@ Phaser.Loader.prototype = {
             file.errorMessage = errorMessage;
 
             console.warn('Phaser.Loader - ' + file.type + '[' + file.key + ']' + ': ' + errorMessage);
+            // debugger;
         }
 
         this.processLoadQueue();
@@ -1781,7 +1807,7 @@ Phaser.Loader.prototype = {
     *
     * @method Phaser.Loader#getAudioURL
     * @private
-    * @param {object[]||string[]} urls - See {@link #audio} for format.
+    * @param {object[]|string[]} urls - See {@link #audio} for format.
     * @return {string} The URL to try and fetch; or null.
     */
     getAudioURL: function (urls) {
@@ -1933,18 +1959,7 @@ Phaser.Loader.prototype = {
 
                     if (file.autoDecode)
                     {
-                        var that = this;
-                        var key = file.key;
-
-                        this.game.cache.updateSound(key, 'isDecoding', true);
-
-                        this.game.sound.context.decodeAudioData(file.data, function (buffer) {
-                            if (buffer)
-                            {
-                                that.game.cache.decodedSound(key, buffer);
-                                that.game.sound.onSoundDecode.dispatch(key, that.game.cache.getSound(key));
-                            }
-                        });
+                        this.game.sound.decode(file.key);
                     }
                 }
                 else
@@ -1959,7 +1974,7 @@ Phaser.Loader.prototype = {
                 break;
 
             case 'physics':
-                var data = JSON.parse(this.responseText);
+                var data = JSON.parse(xhr.responseText);
                 this.game.cache.addPhysicsData(file.key, file.url, data, file.format);
                 break;
 
@@ -1979,7 +1994,7 @@ Phaser.Loader.prototype = {
             case 'binary':
                 if (file.callback)
                 {
-                    file.data = file.callback.call(file.callbackContext, file.key, this.response);
+                    file.data = file.callback.call(file.callbackContext, file.key, xhr.response);
                 }
                 else
                 {
@@ -2147,7 +2162,15 @@ Phaser.Loader.prototype = {
                 this.preloadSprite.rect.height = Math.floor((this.preloadSprite.height / 100) * this.progress);
             }
 
-            this.preloadSprite.sprite.updateCrop();
+            if (this.preloadSprite.sprite)
+            {
+                this.preloadSprite.sprite.updateCrop();
+            }
+            else
+            {
+                //  We seem to have lost our sprite - maybe it was destroyed?
+                this.preloadSprite = null;
+            }
         }
 
     },
