@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2014 Photon Storm Ltd.
+* @copyright    2015 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -9,7 +9,7 @@
 *
 * Since a TilemapLayer is a Sprite it can be moved around the display, added to other groups or display objects, etc.
 *
-* By default TilemapLayers have fixedToCamera set to `true`. Changing this will break Camera follow and scrolling behaviour.
+* By default TilemapLayers have fixedToCamera set to `true`. Changing this will break Camera follow and scrolling behavior.
 *
 * @class Phaser.TilemapLayer
 * @extends {Phaser.Image}
@@ -25,13 +25,9 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
     width |= 0;
     height |= 0;
 
-    /**
-    * A reference to the currently running Game.
-    * @property {Phaser.Game} game
-    * @protected
-    * @readonly
-    */
-    this.game = game;
+    PIXI.Sprite.call(this, PIXI.TextureCache['__default']);
+
+    Phaser.Component.Core.init.call(this, game, 0, 0, null, null);
 
     /**
     * The Tilemap to which this layer is bound.
@@ -92,14 +88,6 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
     */
     this.textureFrame = new Phaser.Frame(0, 0, 0, width, height, 'tilemapLayer', game.rnd.uuid());
 
-    Phaser.Image.call(this, this.game, 0, 0, this.texture, this.textureFrame);
-
-    /**
-    * The name of the layer.
-    * @property {string} name
-    */
-    this.name = '';
-
     /**
     * The const type of this object.
     * @property {number} type
@@ -110,17 +98,10 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
     this.type = Phaser.TILEMAPLAYER;
 
     /**
-    * An object that is fixed to the camera ignores the position of any ancestors in the display list and uses its x/y coordinates as offsets from the top left of the camera.
-    * @property {boolean} fixToCamera
-    * @default
+    * @property {number} physicsType - The const physics body type of this object.
+    * @readonly
     */
-    this.fixedToCamera = true;
-
-    /**
-    * If this object is fixed to the camera then use this Point to specify how far away from the Camera x/y it's rendered.
-    * @property {Phaser.Point} cameraOffset
-    */
-    this.cameraOffset = new Phaser.Point(0, 0);
+    this.physicsType = Phaser.TILEMAPLAYER;
 
     /**
     * Settings that control standard (non-diagnostic) rendering.
@@ -131,7 +112,7 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
     *
     * @property {?DOMCanvasElement} [copyCanvas=(auto)] - [Internal] If set, force using a separate (shared) copy canvas.
     *     Using a canvas bitblt/copy when the source and destinations region overlap produces unexpected behavior
-    *     in some browsers, notably Safari. 
+    *     in some browsers, notably Safari.
     *
     * @default
     */
@@ -148,6 +129,11 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
     * @default
     */
     this.debug = false;
+
+    /**
+    * @property {boolean} exists - Controls if the core game loop and physics update this game object or not.
+    */
+    this.exists = true;
 
     /**
     * Settings used for debugging and diagnostics.
@@ -233,7 +219,7 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
 
         // Collision width/height (pixels)
         // What purpose do these have? Most things use tile width/height directly.
-        // This also only extends collisions right and down.       
+        // This also only extends collisions right and down.
         cw: tilemap.tileWidth,
         ch: tilemap.tileHeight,
 
@@ -268,7 +254,22 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
         this.renderSettings.copyCanvas = Phaser.TilemapLayer.ensureSharedCopyCanvas();
     }
 
+    this.fixedToCamera = true;
+
 };
+
+Phaser.TilemapLayer.prototype = Object.create(PIXI.Sprite.prototype);
+Phaser.TilemapLayer.prototype.constructor = Phaser.TilemapLayer;
+
+var components = [
+    'Bounds',
+    'Destroy',
+    'FixedToCamera',
+    'Reset',
+    'Smoothed'
+];
+
+Phaser.Component.Core.install.call(Phaser.TilemapLayer.prototype, components);
 
 /**
 * The shared double-copy canvas, created as needed.
@@ -297,64 +298,52 @@ Phaser.TilemapLayer.ensureSharedCopyCanvas = function () {
 
 };
 
-Phaser.TilemapLayer.prototype = Object.create(Phaser.Image.prototype);
-Phaser.TilemapLayer.prototype.constructor = Phaser.TilemapLayer;
-
 /**
-* If no valid tileset/image can be found for a tile, the tile is rendered as a rectangle using this as a fill value.
+* Automatically called by World.preUpdate.
 *
-* Set to `null` to disable rendering anything for tiles without value tileset images.
-*
-* @property {?string} tileColor
-* @memberof Phaser.TilemapLayer
-* @default 'rgb(255, 255, 255)'
-* @deprecated Use `debugSettings.missingImageFill` instead.
+* @method Phaser.Image#preUpdate
+* @memberof Phaser.Image
 */
-Object.defineProperty(Phaser.TilemapLayer.prototype, 'tileColor', {
+Phaser.TilemapLayer.prototype.preUpdate = function() {
 
-    get: function () {
-        return this.debugSettings.missingImageFill;
-    },
+    Phaser.Component.Core.preUpdate.call(this);
 
-    set: function (value) {
-        this.debugSettings.missingImageFill = value;
-    }
+    return true;
 
-});
-
+};
 /**
 * Automatically called by World.update. Handles animated tiles.
 *
 * @method Phaser.TilemapLayer#update
 * @protected
 */
-Phaser.TilemapLayer.prototype.update = function () {
-    // Keep all animation timers in sync to prevent unnecessary draws:
-    var baseTime = this.game.time.now;
-    for (var gid in this.map.animatedTiles)
-    {
-        if (!this.map.animatedTiles[gid].nextFrameTimestamp)
-        {
-            this.map.animatedTiles[gid].nextFrameTimestamp = baseTime + this.map.animatedTiles[gid].frames[this.map.animatedTiles[gid].currentFrame].duration;
-        }
-        else if (baseTime > this.map.animatedTiles[gid].nextFrameTimestamp)
-        {
-            this.map.animatedTiles[gid].currentFrame++;
-            if (this.map.animatedTiles[gid].currentFrame > (this.map.animatedTiles[gid].frames.length - 1))
-            {
-                this.map.animatedTiles[gid].currentFrame = 0;
-            }
-            this.map.animatedTiles[gid].currentGid = this.map.animatedTiles[gid].frames[this.map.animatedTiles[gid].currentFrame].gid;
-            this.map.animatedTiles[gid].nextFrameTimestamp = baseTime + this.map.animatedTiles[gid].frames[this.map.animatedTiles[gid].currentFrame].duration;
-            for (var layer in this.map.animatedTiles[gid].layers)
-            {
-				//Possible TODO for improved performance: Check if tile with gid is actually within current camera view before setting dirty to true.
-                this.map.layers[this.map.animatedTiles[gid].layers[layer]].dirty = true;
-            }
-        }
-    }
-};
 
+Phaser.TilemapLayer.prototype.update = function () {
+  // Keep all animation timers in sync to prevent unnecessary draws:
+  var baseTime = this.game.time.now;
+  for (var gid in this.map.animatedTiles)
+  {
+    if (!this.map.animatedTiles[gid].nextFrameTimestamp)
+    {
+      this.map.animatedTiles[gid].nextFrameTimestamp = baseTime + this.map.animatedTiles[gid].frames[this.map.animatedTiles[gid].currentFrame].duration;
+    }
+    else if (baseTime > this.map.animatedTiles[gid].nextFrameTimestamp)
+    {
+      this.map.animatedTiles[gid].currentFrame++;
+      if (this.map.animatedTiles[gid].currentFrame > (this.map.animatedTiles[gid].frames.length - 1))
+      {
+        this.map.animatedTiles[gid].currentFrame = 0;
+      }
+      this.map.animatedTiles[gid].currentGid = this.map.animatedTiles[gid].frames[this.map.animatedTiles[gid].currentFrame].gid;
+      this.map.animatedTiles[gid].nextFrameTimestamp = baseTime + this.map.animatedTiles[gid].frames[this.map.animatedTiles[gid].currentFrame].duration;
+      for (var layer in this.map.animatedTiles[gid].layers)
+      {
+        //Possible TODO for improved performance: Check if tile with gid is actually within current camera view before setting dirty to true.
+        this.map.layers[this.map.animatedTiles[gid].layers[layer]].dirty = true;
+      }
+    }
+  }
+};
 
 /**
 * Automatically called by World.postUpdate. Handles cache updates.
@@ -364,27 +353,15 @@ Phaser.TilemapLayer.prototype.update = function () {
 */
 Phaser.TilemapLayer.prototype.postUpdate = function () {
 
-    Phaser.Image.prototype.postUpdate.call(this);
+    Phaser.Component.Core.prototype.postUpdate.call(this);
 
     //  Stops you being able to auto-scroll the camera if it's not following a sprite
     var camera = this.game.camera;
+
     this.scrollX = camera.x * this.scrollFactorX / this.scale.x;
     this.scrollY = camera.y * this.scrollFactorY / this.scale.y;
 
     this.render();
-
-    //  Fixed to Camera?
-    if (this._cache[7] === 1)
-    {
-        this.position.x = (camera.view.x + this.cameraOffset.x) / camera.scale.x;
-        this.position.y = (camera.view.y + this.cameraOffset.y) / camera.scale.y;
-    }
-
-    //  Update any Children
-    // for (var i = 0, len = this.children.length; i < len; i++)
-    // {
-        // this.children[i].postUpdate();
-    // }
 
 };
 
@@ -639,6 +616,28 @@ Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides
 };
 
 /**
+* If no valid tileset/image can be found for a tile, the tile is rendered as a rectangle using this as a fill value.
+*
+* Set to `null` to disable rendering anything for tiles without value tileset images.
+*
+* @property {?string} tileColor
+* @memberof Phaser.TilemapLayer
+* @default 'rgb(255, 255, 255)'
+* @deprecated Use `debugSettings.missingImageFill` instead.
+*/
+Object.defineProperty(Phaser.TilemapLayer.prototype, 'tileColor', {
+
+    get: function () {
+        return this.debugSettings.missingImageFill;
+    },
+
+    set: function (value) {
+        this.debugSettings.missingImageFill = value;
+    }
+
+});
+
+/**
 * Flag controlling if the layer tiles wrap at the edges. Only works if the World size matches the Map size.
 *
 * @property {boolean} wrap
@@ -719,9 +718,9 @@ Phaser.TilemapLayer.prototype.resetTilesetCache = function ()
 
 /**
  * This method will set the scale of the tilemap as well as update the underlying block data of this layer
- * 
+ *
  * @method Phaser.TilemapLayer#setScale
- * @param {number} [xScale=1] - The scale factor along the X-plane 
+ * @param {number} [xScale=1] - The scale factor along the X-plane
  * @param {number} [yScale] - The scale factor along the Y-plane
  */
 Phaser.TilemapLayer.prototype.setScale = function(xScale, yScale) {
@@ -812,7 +811,7 @@ Phaser.TilemapLayer.prototype.shiftCanvas = function (context, x, y)
         context.drawImage(canvas, dx, dy, copyW, copyH, sx, sy, copyW, copyH);
         context.restore();
     }
-    
+
 };
 
 /**
@@ -853,7 +852,7 @@ Phaser.TilemapLayer.prototype.renderRegion = function (scrollX, scrollY, left, t
             bottom = Math.min(height - 1, bottom);
         }
     }
-   
+
     // top-left pixel of top-left cell
     var baseX = (left * tw) - scrollX;
     var baseY = (top * th) - scrollY;
@@ -944,7 +943,7 @@ Phaser.TilemapLayer.prototype.renderRegion = function (scrollX, scrollY, left, t
                 context.fillStyle = this.debugSettings.debuggedTileOverfill;
                 context.fillRect(tx, ty, tw, th);
             }
-           
+
         }
 
     }
@@ -1035,7 +1034,7 @@ Phaser.TilemapLayer.prototype.renderDeltaScroll = function (shiftX, shiftY) {
 */
 Phaser.TilemapLayer.prototype.renderFull = function ()
 {
-    
+
     var scrollX = this._mc.scrollX;
     var scrollY = this._mc.scrollY;
 
@@ -1070,6 +1069,8 @@ Phaser.TilemapLayer.prototype.render = function () {
     {
         return;
     }
+
+    this.context.save();
 
     if (this.dirty || this.layer.dirty)
     {
@@ -1137,6 +1138,8 @@ Phaser.TilemapLayer.prototype.render = function () {
     this.baseTexture.dirty();
 
     this.dirty = false;
+
+    this.context.restore();
 
     return true;
 
@@ -1237,7 +1240,7 @@ Phaser.TilemapLayer.prototype.renderDebug = function () {
 
                 context.stroke();
             }
-           
+
         }
 
     }
