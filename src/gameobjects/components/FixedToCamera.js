@@ -31,6 +31,12 @@ Phaser.Component.FixedToCamera.postUpdate = function () {
 Phaser.Component.FixedToCamera.prototype = {
 
     /**
+    * @property {boolean} _fixedToCamera
+    * @private
+    */
+    _fixedToCamera: false,
+
+    /**
     * A Game Object that is "fixed" to the camera uses its x/y coordinates as offsets from the top left of the camera during rendering.
     * 
     * The values are adjusted at the rendering stage, overriding the Game Objects actual world position.
@@ -47,7 +53,29 @@ Phaser.Component.FixedToCamera.prototype = {
     *
     * @property {boolean} fixedToCamera
     */
-    fixedToCamera: false,
+    fixedToCamera: {
+
+        get: function () {
+
+            return this._fixedToCamera;
+
+        },
+
+        set: function (value) {
+
+            if (value)
+            {
+                this._fixedToCamera = true;
+                this.cameraOffset.set(this.x, this.y);
+            }
+            else
+            {
+                this._fixedToCamera = false;
+            }
+
+        }
+
+    },
 
     /**
     * The x/y coordinate offset applied to the top-left of the camera that this Game Object will be drawn at if `fixedToCamera` is true.

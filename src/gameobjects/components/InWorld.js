@@ -113,7 +113,7 @@ Phaser.Component.InWorld.prototype = {
     */
     inWorld: {
 
-        get: function() {
+        get: function () {
 
             return this.game.world.bounds.intersects(this.getBounds());
 

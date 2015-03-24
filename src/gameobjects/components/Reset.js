@@ -27,7 +27,7 @@ Phaser.Component.Reset = function () {};
 * @param {number} [health=1] - The health to give the Game Object if it has the Health component.
 * @return {PIXI.DisplayObject} This instance.
 */
-Phaser.Component.Reset.prototype.reset = function(x, y, health) {
+Phaser.Component.Reset.prototype.reset = function (x, y, health) {
 
     if (typeof health === 'undefined') { health = 1; }
 

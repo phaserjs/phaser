@@ -171,7 +171,7 @@ Phaser.Component.LoadTexture.prototype = {
     *
     * @method
     */
-    resetFrame: function() {
+    resetFrame: function () {
 
         if (this._frame)
         {

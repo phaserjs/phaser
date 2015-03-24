@@ -81,6 +81,11 @@ Phaser.Component.Core.init = function (game, x, y, key, frame) {
         this.loadTexture(key, frame);
     }
 
+    if (this.components.FixedToCamera)
+    {
+        this.cameraOffset = new Phaser.Point(x, y);
+    }
+
 };
 
 Phaser.Component.Core.preUpdate = function () {
