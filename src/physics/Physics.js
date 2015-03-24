@@ -317,6 +317,26 @@ Phaser.Physics.prototype = {
     },
 
     /**
+    * Resets the active physics system. Called automatically on a Phaser.State swap.
+    *
+    * @method Phaser.Physics#reset
+    * @protected
+    */
+    reset: function () {
+
+        if (this.p2)
+        {
+            this.p2.reset();
+        }
+
+        if (this.box2d)
+        {
+            this.box2d.reset();
+        }
+
+    },
+
+    /**
     * Destroys all active physics systems. Usually only called on a Game Shutdown, not on a State swap.
     *
     * @method Phaser.Physics#destroy
