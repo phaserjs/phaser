@@ -300,35 +300,41 @@ Phaser.TilemapLayer.ensureSharedCopyCanvas = function () {
 
 /**
 * Automatically called by World.preUpdate.
-<<<<<<< HEAD
 *
 * @method Phaser.Image#preUpdate
 * @memberof Phaser.Image
 */
 Phaser.TilemapLayer.prototype.preUpdate = function() {
 
-    Phaser.Component.Core.preUpdate.call(this);
+  Phaser.Component.Core.preUpdate.call(this);
+  this.map.animatedTiles["updated"] = false;
 
-    return true;
+  return true;
 
 };
+
 /**
 * Automatically called by World.update. Handles animated tiles.
 *
 * @method Phaser.TilemapLayer#update
 * @protected
 */
-
 Phaser.TilemapLayer.prototype.update = function () {
-  // Keep all animation timers in sync to prevent unnecessary draws:
-  var baseTime = this.game.time.now;
+  // Update is called on all tilemap layers but only required, and wanted, once.
+  if(this.map.animatedTiles["updated"]){
+    return;
+  }
+  this.map.animatedTiles["updated"] = true;
+
   for (var gid in this.map.animatedTiles)
   {
-    if (!this.map.animatedTiles[gid].nextFrameTimestamp)
+    if(gid==="updated"){ continue; }
+
+    if (!this.map.animatedTiles[gid].msToNextFrame)
     {
-      this.map.animatedTiles[gid].nextFrameTimestamp = baseTime + this.map.animatedTiles[gid].frames[this.map.animatedTiles[gid].currentFrame].duration;
+      this.map.animatedTiles[gid].msToNextFrame = this.map.animatedTiles[gid].frames[this.map.animatedTiles[gid].currentFrame].duration;
     }
-    else if (baseTime > this.map.animatedTiles[gid].nextFrameTimestamp)
+    else if ((this.map.animatedTiles[gid].msToNextFrame-=this.game.time.physicsElapsedMS)<=0)
     {
       this.map.animatedTiles[gid].currentFrame++;
       if (this.map.animatedTiles[gid].currentFrame > (this.map.animatedTiles[gid].frames.length - 1))
@@ -336,7 +342,7 @@ Phaser.TilemapLayer.prototype.update = function () {
         this.map.animatedTiles[gid].currentFrame = 0;
       }
       this.map.animatedTiles[gid].currentGid = this.map.animatedTiles[gid].frames[this.map.animatedTiles[gid].currentFrame].gid;
-      this.map.animatedTiles[gid].nextFrameTimestamp = baseTime + this.map.animatedTiles[gid].frames[this.map.animatedTiles[gid].currentFrame].duration;
+      this.map.animatedTiles[gid].msToNextFrame = this.map.animatedTiles[gid].frames[this.map.animatedTiles[gid].currentFrame].duration;
       for (var layer in this.map.animatedTiles[gid].layers)
       {
         //Possible TODO for improved performance: Check if tile with gid is actually within current camera view before setting dirty to true.
@@ -344,18 +350,6 @@ Phaser.TilemapLayer.prototype.update = function () {
       }
     }
   }
-=======
-*
-* @method Phaser.Image#preUpdate
-* @memberof Phaser.Image
-*/
-Phaser.TilemapLayer.prototype.preUpdate = function() {
-
-    Phaser.Component.Core.preUpdate.call(this);
-
-    return true;
-
->>>>>>> upstream/dev
 };
 
 /**
@@ -922,7 +916,7 @@ Phaser.TilemapLayer.prototype.renderRegion = function (scrollX, scrollY, left, t
 
             if (set)
             {
-                if (this.map.animatedTiles.hasOwnProperty(index))
+				if (this.map.animatedTiles.hasOwnProperty(index))
                 {
                     index = this.map.animatedTiles[index].currentGid;
                 }

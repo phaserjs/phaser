@@ -378,10 +378,10 @@ Phaser.TilemapParser = {
 
         //  Tilesets
         var tilesets = [];
-        
+
         // Array with animated tiles information
-        map.animatedTiles = [];
-        
+        map.animatedTiles = {"updated": false};
+
         for (var i = 0; i < json.tilesets.length; i++)
         {
             // name, firstgid, width, height, margin, spacing, properties
@@ -398,7 +398,7 @@ Phaser.TilemapParser = {
                         map.animatedTiles[gid] = ({
                             frames: [],
                             currentFrame: 0,
-                            nextFrameTimestamp: false //timestamp is set in first call to Phaser.TilemapLayer#update
+                            msToNextFrame: false //timestamp is set in first call to Phaser.TilemapLayer#update
                         });
                         for (var i2 in set.tiles[tileIndices[k]].animation)
                         {
