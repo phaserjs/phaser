@@ -6,8 +6,8 @@
 
 /**
 * An Animation instance contains a single animation and the controls to play it.
+* 
 * It is created by the AnimationManager, consists of Animation.Frame objects and belongs to a single Game Object such as a Sprite.
-* Please note that you can only tint Sprites with animations in WebGL mode.
 *
 * @class Phaser.Animation
 * @constructor
@@ -198,6 +198,9 @@ Phaser.Animation.prototype = {
 
         this.onStart.dispatch(this._parent, this);
 
+        this._parent.animations.currentAnim = this;
+        this._parent.animations.currentFrame = this.currentFrame;
+
         return this;
 
     },
@@ -222,6 +225,9 @@ Phaser.Animation.prototype = {
         this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
 
         this._parent.setFrame(this.currentFrame);
+
+        this._parent.animations.currentAnim = this;
+        this._parent.animations.currentFrame = this.currentFrame;
 
         this.onStart.dispatch(this._parent, this);
 

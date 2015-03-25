@@ -236,6 +236,7 @@ We've rolled our own fixes into our version of Pixi, ensuring we keep it as bug-
 * Text.lineSpacing can now accept negative values without cutting the bottom of the Text object off. The value can never be less than the height of a single line of text (thanks @anthonysapp #1690)
 * Text.lineSpacing is no longer applied to the first line of Text, which prevents text from being cut off further down the Text object.
 * If you paused a Sound object that is using audio markers and then resumed it, it wouldn't correctly calculate the resume duration - causing the sound to sometimes play into the marker that followed it (thanks @AnderbergE #1669)
+* Animation.play wouldn't correctly set the play state on the Game Objects AnimationManager causing the animation to fail to start (calling AnimationManager.play did work however), now they're both consistently working.
 
 ### Pixi 2.2.8 Bug Fixes
 
