@@ -15,7 +15,7 @@
 *
 * Performance note on animated tiles: Since there is no current way to render only a selection of tiles, every tile frame change
 * will cause a full re-render of all layers with that tile within camera view. The rendering will be done only once per update
-* loop. Therfore it's a good idea to make animations run as much in sync with eachother as possible. Setting one tile to update
+* loop. Therefore it's a good idea to make animations run as much in sync with each other as possible. Setting one tile to update
 * every 260ms and another every 500ms will result in up to 6 redraws per second, while adjusting the first to 250ms will result
 * in only up to 4 redraws in total.
 *
