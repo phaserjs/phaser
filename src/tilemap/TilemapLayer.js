@@ -301,13 +301,13 @@ Phaser.TilemapLayer.ensureSharedCopyCanvas = function () {
 /**
 * Automatically called by World.preUpdate.
 *
-* @method Phaser.Image#preUpdate
-* @memberof Phaser.Image
+* @method Phaser.TilemapLayer#preUpdate
+* @protected
 */
 Phaser.TilemapLayer.prototype.preUpdate = function() {
 
     Phaser.Component.Core.preUpdate.call(this);
-    this.map.animatedTiles["updated"] = false;
+    this.map.animatedTiles.updated = false;
 
     return true;
 
@@ -322,10 +322,10 @@ Phaser.TilemapLayer.prototype.preUpdate = function() {
 Phaser.TilemapLayer.prototype.update = function () {
     var tile;
     // Update is called on all tilemap layers but only required, and wanted, once. Also skip if there is no defined animated tiles.
-    if(this.map.animatedTiles["updated"] || Object.keys(this.map.animatedTiles).length===1){
+    if(this.map.animatedTiles.updated || Object.keys(this.map.animatedTiles).length===1){
         return;
     }
-    this.map.animatedTiles["updated"] = true;
+    this.map.animatedTiles.updated = true;
 
     for (var gid in this.map.animatedTiles)
     {
