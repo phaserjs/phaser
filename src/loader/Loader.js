@@ -1702,18 +1702,50 @@ Phaser.Loader.prototype = {
         var _this = this;
 
         xhr.onload = function () {
+
             try {
+
                 return onload.call(_this, file, xhr);
+
             } catch (e) {
-                _this.asyncComplete(file, e.message || 'Exception');
+
+                //  If this was the last file in the queue and an error is thrown in the create method
+                //  then it's caught here, so be sure we don't carry on processing it
+
+                if (!_this.hasLoaded)
+                {
+                    _this.asyncComplete(file, e.message || 'Exception');
+                }
+                else
+                {
+                    if (window['console'])
+                    {
+                        console.error(e);
+                    }
+                }
             }
         };
 
         xhr.onerror = function () {
+
             try {
+
                 return onerror.call(_this, file, xhr);
+
             } catch (e) {
-                _this.asyncComplete(file, e.message || 'Exception');
+
+                if (!_this.hasLoaded)
+                {
+                    _this.asyncComplete(file, e.message || 'Exception');
+                }
+                else
+                {
+                    if (window['console'])
+                    {
+                        console.error(e);
+                    }
+                }
+
             }
         };
 
