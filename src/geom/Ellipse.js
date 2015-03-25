@@ -17,8 +17,6 @@
 */
 Phaser.Ellipse = function (x, y, width, height) {
 
-    this.type = Phaser.ELLIPSE;
-
     x = x || 0;
     y = y || 0;
     width = width || 0;

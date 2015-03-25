@@ -36,17 +36,15 @@ Phaser.Circle = function (x, y, diameter) {
     */
     this._diameter = diameter;
 
+    /**
+   * @property {number} _radius - The radius of the circle.
+   * @private
+   */
+    this._radius = 0;
+
     if (diameter > 0)
     {
-        /**
-       * @property {number} _radius - The radius of the circle.
-       * @private
-       */
         this._radius = diameter * 0.5;
-    }
-    else
-    {
-        this._radius = 0;
     }
 
     /**
@@ -59,24 +57,28 @@ Phaser.Circle = function (x, y, diameter) {
 
 Phaser.Circle.prototype = {
 
-    type: null,
-
     /**
     * The circumference of the circle.
+    * 
     * @method Phaser.Circle#circumference
-    * @return {number}
+    * @return {number} The circumference of the circle.
     */
     circumference: function () {
+
         return 2 * (Math.PI * this._radius);
+
     },
 
     /**
-    * Returns the framing rectangle of the circle as a Phaser.Rectangle object
+    * Returns the framing rectangle of the circle as a Phaser.Rectangle object.
+    * 
     * @method Phaser.Circle#getBounds
     * @return {Phaser.Rectangle} The bounds of the Circle.
     */
     getBounds: function () {
-        return new Phaser.Rectangle(this.x - this.radius, this.y - this.radius, this.radius * 2, this.radius * 2);
+
+        return new Phaser.Rectangle(this.x - this.radius, this.y - this.radius, this.diameter, this.diameter);
+
     },
 
     /**
@@ -230,6 +232,7 @@ Phaser.Circle.prototype.constructor = Phaser.Circle;
 
 /**
 * The largest distance between any two points on the circle. The same as the radius * 2.
+* 
 * @name Phaser.Circle#diameter
 * @property {number} diameter - Gets or sets the diameter of the circle.
 */
