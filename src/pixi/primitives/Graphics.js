@@ -149,7 +149,7 @@ PIXI.Graphics.prototype.lineStyle = function(lineWidth, color, alpha)
 {
     this.lineWidth = lineWidth || 0;
     this.lineColor = color || 0;
-    this.lineAlpha = (arguments.length < 3) ? 1 : alpha;
+    this.lineAlpha = (alpha === undefined) ? 1 : alpha;
 
     if (this.currentPath)
     {
@@ -402,33 +402,12 @@ PIXI.Graphics.prototype.arcTo = function(x1, y1, x2, y2, radius)
  */
 PIXI.Graphics.prototype.arc = function(cx, cy, radius, startAngle, endAngle, anticlockwise)
 {
-    var startX = cx + Math.cos(startAngle) * radius;
-    var startY = cy + Math.sin(startAngle) * radius;
-    var points;
-
-    if (this.currentPath)
-    {
-        points = this.currentPath.shape.points;
-
-        if (points.length === 0)
-        {
-            points.push(startX, startY);
-        }
-        else if (points[points.length-2] !== startX || points[points.length-1] !== startY)
-        {
-            points.push(startX, startY);
-        }
-    }
-    else
-    {
-        this.moveTo(startX, startY);
-        points = this.currentPath.shape.points;
-    }
-
     if (startAngle === endAngle)
     {
         return this;
     }
+
+    if (typeof anticlockwise === 'undefined') { anticlockwise = false; }
 
     if (!anticlockwise && endAngle <= startAngle)
     {
@@ -439,13 +418,29 @@ PIXI.Graphics.prototype.arc = function(cx, cy, radius, startAngle, endAngle, ant
         startAngle += Math.PI * 2;
     }
 
-    var sweep = anticlockwise ? (startAngle - endAngle) *-1 : (endAngle - startAngle);
-    var segs =  Math.ceil( Math.abs(sweep)/ (Math.PI * 2) ) * 40;
+    var sweep = anticlockwise ? (startAngle - endAngle) * -1 : (endAngle - startAngle);
+    var segs =  Math.ceil(Math.abs(sweep) / (Math.PI * 2)) * 40;
 
-    if( sweep === 0 )
+    //  Sweep check - moved here because we don't want to do the moveTo below if the arc fails
+    if (sweep === 0)
     {
         return this;
     }
+
+    var startX = cx + Math.cos(startAngle) * radius;
+    var startY = cy + Math.sin(startAngle) * radius;
+
+    if (anticlockwise && this.filling)
+    {
+        this.moveTo(cx, cy);
+    }
+    else
+    {
+        this.moveTo(startX, startY);
+    }
+
+    //  currentPath will always exist after calling a moveTo
+    var points = this.currentPath.shape.points;
 
     var theta = sweep / (segs * 2);
     var theta2 = theta * 2;
@@ -587,7 +582,7 @@ PIXI.Graphics.prototype.drawEllipse = function(x, y, width, height)
  * Draws a polygon using the given path.
  *
  * @method drawPolygon
- * @param path {Array} The path data used to construct the polygon.
+ * @param path {Array} The path data used to construct the polygon. If you've got a Phaser.Polygon object then pass `polygon.points` here.
  * @return {Graphics}
  */
 PIXI.Graphics.prototype.drawPolygon = function(path)
@@ -602,7 +597,8 @@ PIXI.Graphics.prototype.drawPolygon = function(path)
         // see section 3.2: https://github.com/petkaantonov/bluebird/wiki/Optimization-killers#3-managing-arguments
         points = new Array(arguments.length);
 
-        for (var i = 0; i < points.length; ++i) {
+        for (var i = 0; i < points.length; ++i)
+        {
             points[i] = arguments[i];
         }
     }

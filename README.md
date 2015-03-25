@@ -238,6 +238,11 @@ We've rolled our own fixes into our version of Pixi, ensuring we keep it as bug-
 * Text.lineSpacing is no longer applied to the first line of Text, which prevents text from being cut off further down the Text object.
 * If you paused a Sound object that is using audio markers and then resumed it, it wouldn't correctly calculate the resume duration - causing the sound to sometimes play into the marker that followed it (thanks @AnderbergE #1669)
 * Animation.play wouldn't correctly set the play state on the Game Objects AnimationManager causing the animation to fail to start (calling AnimationManager.play did work however), now they're both consistently working.
+* Graphics.drawArc would fail to draw any subsequent arcs if you set `beginFill` on it after drawing the first arc.
+* Graphics.drawArc would only move to the center position of the first arc created and ignore any subsequent arcs.
+* Graphics.drawArc now correctly renders multiple arcs across both WebGL and Canvas. You no longer need to specifically call moveTo to move into the correct place to draw the arc.
+* Graphics.drawArc now bails out if the startAngle = the endAngle and/or the sweep is invalid *before* adjusting any points.
+* Graphics.drawArc now correctly handles the fill on the CanvasRenderer if the arc is a subsequent arc and no line style is set.
 
 ### Pixi 2.2.8 Bug Fixes
 
