@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.3.0 "Tarabon" - Built: Tue Mar 24 2015 21:33:54
+* v2.3.0 "Tarabon" - Built: Wed Mar 25 2015 16:17:29
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -8606,13 +8606,13 @@ PIXI.CanvasGraphics.renderGraphics = function(graphics, context)
                 context.lineTo(points[j * 2], points[j * 2 + 1]);
             }
 
-            if(shape.closed)
+            if (shape.closed)
             {
                 context.lineTo(points[0], points[1]);
             }
 
             // if the first and last point are the same close the path - much neater :)
-            if (points[0] === points[points.length - 2] && points[1] === points[points.length - 1])
+            if (points[0] === points[points.length-2] && points[1] === points[points.length-1])
             {
                 context.closePath();
             }
@@ -8763,23 +8763,21 @@ PIXI.CanvasGraphics.renderGraphicsMask = function(graphics, context)
 {
     var len = graphics.graphicsData.length;
 
-    if (len === 0) return;
-
-    if (len > 1)
+    if (len === 0)
     {
-        len = 1;
-        window.console.log('Pixi.js warning: masks in canvas can only mask using the first path in the graphics object');
+        return;
     }
 
-    for (var i = 0; i < 1; i++)
+    context.beginPath();
+
+    for (var i = 0; i < len; i++)
     {
         var data = graphics.graphicsData[i];
         var shape = data.shape;
 
         if (data.type === PIXI.Graphics.POLY)
         {
-            context.beginPath();
-        
+
             var points = shape.points;
         
             context.moveTo(points[0], points[1]);
@@ -8790,7 +8788,7 @@ PIXI.CanvasGraphics.renderGraphicsMask = function(graphics, context)
             }
 
             // if the first and last point are the same close the path - much neater :)
-            if (points[0] === points[points.length - 2] && points[1] === points[points.length - 1])
+            if (points[0] === points[points.length-2] && points[1] === points[points.length-1])
             {
                 context.closePath();
             }
@@ -8798,19 +8796,18 @@ PIXI.CanvasGraphics.renderGraphicsMask = function(graphics, context)
         }
         else if (data.type === PIXI.Graphics.RECT)
         {
-            context.beginPath();
             context.rect(shape.x, shape.y, shape.width, shape.height);
             context.closePath();
         }
         else if (data.type === PIXI.Graphics.CIRC)
         {
             // TODO - need to be Undefined!
-            context.beginPath();
-            context.arc(shape.x, shape.y, shape.radius,0,2*Math.PI);
+            context.arc(shape.x, shape.y, shape.radius, 0, 2 * Math.PI);
             context.closePath();
         }
         else if (data.type === PIXI.Graphics.ELIP)
         {
+
             // ellipse code taken from: http://stackoverflow.com/questions/2172798/how-to-draw-an-oval-in-html5-canvas
 
             var w = shape.width * 2;
@@ -8818,8 +8815,6 @@ PIXI.CanvasGraphics.renderGraphicsMask = function(graphics, context)
 
             var x = shape.x - w/2;
             var y = shape.y - h/2;
-
-            context.beginPath();
 
             var kappa = 0.5522848,
                 ox = (w / 2) * kappa, // control point offset horizontal
@@ -8838,17 +8833,16 @@ PIXI.CanvasGraphics.renderGraphicsMask = function(graphics, context)
         }
         else if (data.type === PIXI.Graphics.RREC)
         {
-            var pts = shape.points;
-            var rx = pts[0];
-            var ry = pts[1];
-            var width = pts[2];
-            var height = pts[3];
-            var radius = pts[4];
+
+            var rx = shape.x;
+            var ry = shape.y;
+            var width = shape.width;
+            var height = shape.height;
+            var radius = shape.radius;
 
             var maxRadius = Math.min(width, height) / 2 | 0;
             radius = radius > maxRadius ? maxRadius : radius;
 
-            context.beginPath();
             context.moveTo(rx, ry + radius);
             context.lineTo(rx, ry + height - radius);
             context.quadraticCurveTo(rx, ry + height, rx + radius, ry + height);
@@ -8865,7 +8859,10 @@ PIXI.CanvasGraphics.renderGraphicsMask = function(graphics, context)
 
 PIXI.CanvasGraphics.updateGraphicsTint = function(graphics)
 {
-    if (graphics.tint === 0xFFFFFF) return;
+    if (graphics.tint === 0xFFFFFF)
+    {
+        return;
+    }
 
     var tintR = (graphics.tint >> 16 & 0xFF) / 255;
     var tintG = (graphics.tint >> 8 & 0xFF) / 255;
@@ -9057,7 +9054,7 @@ PIXI.Graphics.prototype.lineStyle = function(lineWidth, color, alpha)
 {
     this.lineWidth = lineWidth || 0;
     this.lineColor = color || 0;
-    this.lineAlpha = (arguments.length < 3) ? 1 : alpha;
+    this.lineAlpha = (alpha === undefined) ? 1 : alpha;
 
     if (this.currentPath)
     {
@@ -9065,14 +9062,14 @@ PIXI.Graphics.prototype.lineStyle = function(lineWidth, color, alpha)
         {
             // halfway through a line? start a new one!
             this.drawShape(new PIXI.Polygon(this.currentPath.shape.points.slice(-2)));
-            return this;
         }
-
-        // otherwise its empty so lets just set the line properties
-        this.currentPath.lineWidth = this.lineWidth;
-        this.currentPath.lineColor = this.lineColor;
-        this.currentPath.lineAlpha = this.lineAlpha;
-        
+        else
+        {
+            // otherwise its empty so lets just set the line properties
+            this.currentPath.lineWidth = this.lineWidth;
+            this.currentPath.lineColor = this.lineColor;
+            this.currentPath.lineAlpha = this.lineAlpha;
+        }
     }
 
     return this;
@@ -9130,22 +9127,30 @@ PIXI.Graphics.prototype.quadraticCurveTo = function(cpX, cpY, toX, toY)
 {
     if (this.currentPath)
     {
-        if (this.currentPath.shape.points.length === 0) this.currentPath.shape.points = [0, 0];
+        if (this.currentPath.shape.points.length === 0)
+        {
+            this.currentPath.shape.points = [0, 0];
+        }
     }
     else
     {
         this.moveTo(0,0);
     }
 
-    var xa, ya, n = 20, points = this.currentPath.shape.points;
+    var xa,
+        ya,
+        n = 20,
+        points = this.currentPath.shape.points;
 
-    if (points.length === 0) this.moveTo(0, 0);
+    if (points.length === 0)
+    {
+        this.moveTo(0, 0);
+    }
 
     var fromX = points[points.length - 2];
     var fromY = points[points.length - 1];
     var j = 0;
-
-    for (var i = 1; i <= n; i++)
+    for (var i = 1; i <= n; ++i)
     {
         j = i / n;
 
@@ -9177,20 +9182,29 @@ PIXI.Graphics.prototype.bezierCurveTo = function(cpX, cpY, cpX2, cpY2, toX, toY)
 {
     if (this.currentPath)
     {
-        if (this.currentPath.shape.points.length === 0) this.currentPath.shape.points = [0, 0];
+        if (this.currentPath.shape.points.length === 0)
+        {
+            this.currentPath.shape.points = [0, 0];
+        }
     }
     else
     {
         this.moveTo(0,0);
     }
 
-    var n = 20, dt, dt2, dt3, t2, t3, points = this.currentPath.shape.points;
+    var n = 20,
+        dt,
+        dt2,
+        dt3,
+        t2,
+        t3,
+        points = this.currentPath.shape.points;
 
     var fromX = points[points.length-2];
     var fromY = points[points.length-1];
     var j = 0;
 
-    for (var i = 1; i <= n; i++)
+    for (var i = 1; i <= n; ++i)
     {
         j = i / n;
 
@@ -9237,14 +9251,14 @@ PIXI.Graphics.prototype.arcTo = function(x1, y1, x2, y2, radius)
         this.moveTo(x1, y1);
     }
 
-    var points = this.currentPath.shape.points;
-    var fromX = points[points.length-2];
-    var fromY = points[points.length-1];
-    var a1 = fromY - y1;
-    var b1 = fromX - x1;
-    var a2 = y2   - y1;
-    var b2 = x2   - x1;
-    var mm = Math.abs(a1 * b2 - b1 * a2);
+    var points = this.currentPath.shape.points,
+        fromX = points[points.length-2],
+        fromY = points[points.length-1],
+        a1 = fromY - y1,
+        b1 = fromX - x1,
+        a2 = y2   - y1,
+        b2 = x2   - x1,
+        mm = Math.abs(a1 * b2 - b1 * a2);
 
     if (mm < 1.0e-8 || radius === 0)
     {
@@ -9255,21 +9269,21 @@ PIXI.Graphics.prototype.arcTo = function(x1, y1, x2, y2, radius)
     }
     else
     {
-        var dd = a1 * a1 + b1 * b1;
-        var cc = a2 * a2 + b2 * b2;
-        var tt = a1 * a2 + b1 * b2;
-        var k1 = radius * Math.sqrt(dd) / mm;
-        var k2 = radius * Math.sqrt(cc) / mm;
-        var j1 = k1 * tt / dd;
-        var j2 = k2 * tt / cc;
-        var cx = k1 * b2 + k2 * b1;
-        var cy = k1 * a2 + k2 * a1;
-        var px = b1 * (k2 + j1);
-        var py = a1 * (k2 + j1);
-        var qx = b2 * (k1 + j2);
-        var qy = a2 * (k1 + j2);
-        var startAngle = Math.atan2(py - cy, px - cx);
-        var endAngle   = Math.atan2(qy - cy, qx - cx);
+        var dd = a1 * a1 + b1 * b1,
+            cc = a2 * a2 + b2 * b2,
+            tt = a1 * a2 + b1 * b2,
+            k1 = radius * Math.sqrt(dd) / mm,
+            k2 = radius * Math.sqrt(cc) / mm,
+            j1 = k1 * tt / dd,
+            j2 = k2 * tt / cc,
+            cx = k1 * b2 + k2 * b1,
+            cy = k1 * a2 + k2 * a1,
+            px = b1 * (k2 + j1),
+            py = a1 * (k2 + j1),
+            qx = b2 * (k1 + j2),
+            qy = a2 * (k1 + j2),
+            startAngle = Math.atan2(py - cy, px - cx),
+            endAngle   = Math.atan2(qy - cy, qx - cx);
 
         this.arc(cx + x1, cy + y1, radius, startAngle, endAngle, b1 * a2 > b2 * a1);
     }
@@ -9293,30 +9307,13 @@ PIXI.Graphics.prototype.arcTo = function(x1, y1, x2, y2, radius)
  */
 PIXI.Graphics.prototype.arc = function(cx, cy, radius, startAngle, endAngle, anticlockwise)
 {
-    var startX = cx + Math.cos(startAngle) * radius;
-    var startY = cy + Math.sin(startAngle) * radius;
-    var points;
-
-    if (this.currentPath)
+    //  If we do this we can never draw a full circle
+    if (startAngle === endAngle)
     {
-        points = this.currentPath.shape.points;
+        return this;
+    }
 
-        if (points.length === 0)
-        {
-            points.push(startX, startY);
-        }
-        else if (points[points.length-2] !== startX || points[points.length-1] !== startY)
-        {
-            points.push(startX, startY);
-        }
-    }
-    else
-    {
-        this.moveTo(startX, startY);
-        points = this.currentPath.shape.points;
-    }
-    
-    if (startAngle === endAngle) return this;
+    if (typeof anticlockwise === 'undefined') { anticlockwise = false; }
 
     if (!anticlockwise && endAngle <= startAngle)
     {
@@ -9327,10 +9324,29 @@ PIXI.Graphics.prototype.arc = function(cx, cy, radius, startAngle, endAngle, ant
         startAngle += Math.PI * 2;
     }
 
-    var sweep = anticlockwise ? (startAngle - endAngle) *-1 : (endAngle - startAngle);
-    var segs = (Math.abs(sweep) / (Math.PI * 2)) * 40;
+    var sweep = anticlockwise ? (startAngle - endAngle) * -1 : (endAngle - startAngle);
+    var segs =  Math.ceil(Math.abs(sweep) / (Math.PI * 2)) * 40;
 
-    if (sweep === 0) return this;
+    //  Sweep check - moved here because we don't want to do the moveTo below if the arc fails
+    if (sweep === 0)
+    {
+        return this;
+    }
+
+    var startX = cx + Math.cos(startAngle) * radius;
+    var startY = cy + Math.sin(startAngle) * radius;
+
+    if (anticlockwise && this.filling)
+    {
+        this.moveTo(cx, cy);
+    }
+    else
+    {
+        this.moveTo(startX, startY);
+    }
+
+    //  currentPath will always exist after calling a moveTo
+    var points = this.currentPath.shape.points;
 
     var theta = sweep / (segs * 2);
     var theta2 = theta * 2;
@@ -9472,14 +9488,28 @@ PIXI.Graphics.prototype.drawEllipse = function(x, y, width, height)
  * Draws a polygon using the given path.
  *
  * @method drawPolygon
- * @param path {Array} The path data used to construct the polygon.
+ * @param path {Array} The path data used to construct the polygon. If you've got a Phaser.Polygon object then pass `polygon.points` here.
  * @return {Graphics}
  */
 PIXI.Graphics.prototype.drawPolygon = function(path)
 {
-    if (!(path instanceof Array)) path = Array.prototype.slice.call(arguments);
+    // prevents an argument assignment deopt
+    // see section 3.1: https://github.com/petkaantonov/bluebird/wiki/Optimization-killers#3-managing-arguments
+    var points = path;
 
-    this.drawShape(new PIXI.Polygon(path));
+    if (!Array.isArray(points))
+    {
+        // prevents an argument leak deopt
+        // see section 3.2: https://github.com/petkaantonov/bluebird/wiki/Optimization-killers#3-managing-arguments
+        points = new Array(arguments.length);
+
+        for (var i = 0; i < points.length; ++i)
+        {
+            points[i] = arguments[i];
+        }
+    }
+
+    this.drawShape(new Phaser.Polygon(points));
 
     return this;
 };
@@ -9619,9 +9649,17 @@ PIXI.Graphics.prototype._renderWebGL = function(renderSession)
 */
 PIXI.Graphics.prototype._renderCanvas = function(renderSession)
 {
-    // if the sprite is not visible or the alpha is 0 then no need to render this element
-    if (this.visible === false || this.alpha === 0 || this.isMask === true) return;
-    
+    if (this.isMask === true)
+    {
+        return;
+    }
+
+    // if the tint has changed, set the graphics object to dirty.
+    if (this._prevTint !== this.tint) {
+        this.dirty = true;
+        this._prevTint = this.tint;
+    }
+
     if (this._cacheAsBitmap)
     {
         if (this.dirty || this.cachedSpriteDirty)
@@ -9688,8 +9726,14 @@ PIXI.Graphics.prototype._renderCanvas = function(renderSession)
  */
 PIXI.Graphics.prototype.getBounds = function(matrix)
 {
-    // return an empty object if the item is a mask!
-    if (this.isMask) return PIXI.EmptyRectangle;
+    if(!this._currentBounds)
+    {
+
+        // return an empty object if the item is a mask!
+        if (!this.renderable)
+        {
+            return PIXI.EmptyRectangle;
+        }
 
     if (this.dirty)
     {
@@ -9756,7 +9800,44 @@ PIXI.Graphics.prototype.getBounds = function(matrix)
     this._bounds.y = minY;
     this._bounds.height = maxY - minY;
 
-    return  this._bounds;
+        this._currentBounds = this._bounds;
+    }
+
+    return this._currentBounds;
+};
+
+/**
+* Tests if a point is inside this graphics object
+*
+* @param point {Point} the point to test
+* @return {boolean} the result of the test
+*/
+PIXI.Graphics.prototype.containsPoint = function( point )
+{
+    this.worldTransform.applyInverse(point,  tempPoint);
+
+    var graphicsData = this.graphicsData;
+
+    for (var i = 0; i < graphicsData.length; i++)
+    {
+        var data = graphicsData[i];
+
+        if (!data.fill)
+        {
+            continue;
+        }
+
+        // only deal with fills..
+        if (data.shape)
+        {
+            if ( data.shape.contains( tempPoint.x, tempPoint.y ) )
+            {
+                return true;
+            }
+        }
+    }
+
+    return false;
 };
 
 /**
@@ -10026,7 +10107,6 @@ Object.defineProperty(PIXI.Graphics.prototype, "cacheAsBitmap", {
  * 
  * @class GraphicsData
  * @constructor
- */
 PIXI.GraphicsData = function(lineWidth, lineColor, lineAlpha, fillColor, fillAlpha, fill, shape)
 {
     this.lineWidth = lineWidth;
@@ -10042,7 +10122,96 @@ PIXI.GraphicsData = function(lineWidth, lineColor, lineAlpha, fillColor, fillAlp
     this.shape = shape;
     this.type = shape.type;
 };
+ */
 
+/**
+ * A GraphicsData object.
+ *
+ * @class
+ * @memberof PIXI
+ * @param lineWidth {number} the width of the line to draw
+ * @param lineColor {number} the color of the line to draw
+ * @param lineAlpha {number} the alpha of the line to draw
+ * @param fillColor {number} the color of the fill
+ * @param fillAlpha {number} the alpha of the fill
+ * @param fill      {boolean} whether or not the shape is filled with a colour
+ * @param shape     {Circle|Rectangle|Ellipse|Line|Polygon} The shape object to draw.
+ */
+
+PIXI.GraphicsData = function(lineWidth, lineColor, lineAlpha, fillColor, fillAlpha, fill, shape) {
+
+    /*
+     * @member {number} the width of the line to draw
+     */
+    this.lineWidth = lineWidth;
+
+    /*
+     * @member {number} the color of the line to draw
+     */
+    this.lineColor = lineColor;
+
+    /*
+     * @member {number} the alpha of the line to draw
+     */
+    this.lineAlpha = lineAlpha;
+
+    /*
+     * @member {number} cached tint of the line to draw
+     */
+    this._lineTint = lineColor;
+
+    /*
+     * @member {number} the color of the fill
+     */
+    this.fillColor = fillColor;
+
+    /*
+     * @member {number} the alpha of the fill
+     */
+    this.fillAlpha = fillAlpha;
+
+    /*
+     * @member {number} cached tint of the fill
+     */
+    this._fillTint = fillColor;
+
+    /*
+     * @member {boolean} whether or not the shape is filled with a color
+     */
+    this.fill = fill;
+
+    /*
+     * @member {Circle|Rectangle|Ellipse|Line|Polygon} The shape object to draw.
+     */
+    this.shape = shape;
+
+    /*
+     * @member {number} The type of the shape, see the Const.Shapes file for all the existing types,
+     */
+    this.type = shape.type;
+
+};
+
+PIXI.GraphicsData.prototype.constructor = PIXI.GraphicsData;
+
+/**
+ * Creates a new GraphicsData object with the same values as this one.
+ *
+ * @return {GraphicsData}
+ */
+PIXI.GraphicsData.prototype.clone = function() {
+
+    return new GraphicsData(
+        this.lineWidth,
+        this.lineColor,
+        this.lineAlpha,
+        this.fillColor,
+        this.fillAlpha,
+        this.fill,
+        this.shape
+    );
+
+};
 /**
  * @author Mat Groves http://matgroves.com/
  */
@@ -12288,7 +12457,7 @@ PIXI.AbstractFilter.prototype.apply = function(frameBuffer)
 */
 var Phaser = Phaser || {
 
-	VERSION: '2.3.0-RC2',
+	VERSION: '2.3.0-RC3',
 	GAMES: [],
 
     AUTO: 0,
@@ -13030,17 +13199,15 @@ Phaser.Circle = function (x, y, diameter) {
     */
     this._diameter = diameter;
 
+    /**
+   * @property {number} _radius - The radius of the circle.
+   * @private
+   */
+    this._radius = 0;
+
     if (diameter > 0)
     {
-        /**
-       * @property {number} _radius - The radius of the circle.
-       * @private
-       */
         this._radius = diameter * 0.5;
-    }
-    else
-    {
-        this._radius = 0;
     }
 
     /**
@@ -13053,24 +13220,28 @@ Phaser.Circle = function (x, y, diameter) {
 
 Phaser.Circle.prototype = {
 
-    type: null,
-
     /**
     * The circumference of the circle.
+    * 
     * @method Phaser.Circle#circumference
-    * @return {number}
+    * @return {number} The circumference of the circle.
     */
     circumference: function () {
+
         return 2 * (Math.PI * this._radius);
+
     },
 
     /**
-    * Returns the framing rectangle of the circle as a Phaser.Rectangle object
+    * Returns the framing rectangle of the circle as a Phaser.Rectangle object.
+    * 
     * @method Phaser.Circle#getBounds
     * @return {Phaser.Rectangle} The bounds of the Circle.
     */
     getBounds: function () {
-        return new Phaser.Rectangle(this.x - this.radius, this.y - this.radius, this.radius * 2, this.radius * 2);
+
+        return new Phaser.Rectangle(this.x - this.radius, this.y - this.radius, this.diameter, this.diameter);
+
     },
 
     /**
@@ -13224,6 +13395,7 @@ Phaser.Circle.prototype.constructor = Phaser.Circle;
 
 /**
 * The largest distance between any two points on the circle. The same as the radius * 2.
+* 
 * @name Phaser.Circle#diameter
 * @property {number} diameter - Gets or sets the diameter of the circle.
 */
@@ -13556,8 +13728,6 @@ PIXI.Circle = Phaser.Circle;
 * @param {number} [height=0] - The overall height of this ellipse.
 */
 Phaser.Ellipse = function (x, y, width, height) {
-
-    this.type = Phaser.ELLIPSE;
 
     x = x || 0;
     y = y || 0;
@@ -50849,8 +51019,10 @@ Phaser.AnimationManager.prototype = {
     },
 
     /**
-    * Play an animation based on the given key. The animation should previously have been added via sprite.animations.add()
-    * If the requested animation is already playing this request will be ignored. If you need to reset an already running animation do so directly on the Animation object itself.
+    * Play an animation based on the given key. The animation should previously have been added via `animations.add`
+    * 
+    * If the requested animation is already playing this request will be ignored. 
+    * If you need to reset an already running animation do so directly on the Animation object itself.
     *
     * @method Phaser.AnimationManager#play
     * @param {string} name - The name of the animation to be played, e.g. "fire", "walk", "jump".
@@ -51195,8 +51367,8 @@ Object.defineProperty(Phaser.AnimationManager.prototype, 'frameName', {
 
 /**
 * An Animation instance contains a single animation and the controls to play it.
+* 
 * It is created by the AnimationManager, consists of Animation.Frame objects and belongs to a single Game Object such as a Sprite.
-* Please note that you can only tint Sprites with animations in WebGL mode.
 *
 * @class Phaser.Animation
 * @constructor
@@ -51387,6 +51559,9 @@ Phaser.Animation.prototype = {
 
         this.onStart.dispatch(this._parent, this);
 
+        this._parent.animations.currentAnim = this;
+        this._parent.animations.currentFrame = this.currentFrame;
+
         return this;
 
     },
@@ -51411,6 +51586,9 @@ Phaser.Animation.prototype = {
         this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
 
         this._parent.setFrame(this.currentFrame);
+
+        this._parent.animations.currentAnim = this;
+        this._parent.animations.currentFrame = this.currentFrame;
 
         this.onStart.dispatch(this._parent, this);
 
@@ -51576,15 +51754,18 @@ Phaser.Animation.prototype = {
                     this.loopCount++;
                     this._parent.events.onAnimationLoop$dispatch(this._parent, this);
                     this.onLoop.dispatch(this._parent, this);
+                    return this.updateCurrentFrame(true);
                 }
                 else
                 {
                     this.complete();
+                    return false;
                 }
             }
-
-            return this.updateCurrentFrame(true);
-
+            else
+            {
+                return this.updateCurrentFrame(true);
+            }
         }
 
         return false;
@@ -56103,18 +56284,50 @@ Phaser.Loader.prototype = {
         var _this = this;
 
         xhr.onload = function () {
+
             try {
+
                 return onload.call(_this, file, xhr);
+
             } catch (e) {
-                _this.asyncComplete(file, e.message || 'Exception');
+
+                //  If this was the last file in the queue and an error is thrown in the create method
+                //  then it's caught here, so be sure we don't carry on processing it
+
+                if (!_this.hasLoaded)
+                {
+                    _this.asyncComplete(file, e.message || 'Exception');
+                }
+                else
+                {
+                    if (window['console'])
+                    {
+                        console.error(e);
+                    }
+                }
             }
         };
 
         xhr.onerror = function () {
+
             try {
+
                 return onerror.call(_this, file, xhr);
+
             } catch (e) {
-                _this.asyncComplete(file, e.message || 'Exception');
+
+                if (!_this.hasLoaded)
+                {
+                    _this.asyncComplete(file, e.message || 'Exception');
+                }
+                else
+                {
+                    if (window['console'])
+                    {
+                        console.error(e);
+                    }
+                }
+
             }
         };
 
@@ -69743,9 +69956,9 @@ Phaser.Particles.Arcade.Emitter.prototype.emitParticle = function () {
 
     particle.body.bounce.setTo(this.bounce.x, this.bounce.y);
 
-    particle.body.velocity.x = this.game.rnd.integerInRange(this.minParticleSpeed.x, this.maxParticleSpeed.x);
-    particle.body.velocity.y = this.game.rnd.integerInRange(this.minParticleSpeed.y, this.maxParticleSpeed.y);
-    particle.body.angularVelocity = this.game.rnd.integerInRange(this.minRotation, this.maxRotation);
+    particle.body.velocity.x = this.game.rnd.between(this.minParticleSpeed.x, this.maxParticleSpeed.x);
+    particle.body.velocity.y = this.game.rnd.between(this.minParticleSpeed.y, this.maxParticleSpeed.y);
+    particle.body.angularVelocity = this.game.rnd.between(this.minRotation, this.maxRotation);
 
     particle.body.gravity.y = this.gravity;
 
@@ -69757,6 +69970,19 @@ Phaser.Particles.Arcade.Emitter.prototype.emitParticle = function () {
     particle.onEmit();
 
     return true;
+
+};
+
+/**
+* Destroys this Emitter, all associated child Particles and then removes itself from the Particle Manager.
+* 
+* @method Phaser.Particles.Arcade.Emitter#destroy
+*/
+Phaser.Particles.Arcade.Emitter.prototype.destroy = function () {
+
+    this.game.particles.remove(this);
+
+    Phaser.Group.prototype.destroy.call(this, true, false);
 
 };
 

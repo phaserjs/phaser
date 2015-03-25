@@ -10,7 +10,7 @@
 */
 var Phaser = Phaser || {
 
-	VERSION: '2.3.0-RC2',
+	VERSION: '2.3.0-RC3',
 	GAMES: [],
 
     AUTO: 0,
