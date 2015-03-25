@@ -306,10 +306,10 @@ Phaser.TilemapLayer.ensureSharedCopyCanvas = function () {
 */
 Phaser.TilemapLayer.prototype.preUpdate = function() {
 
-  Phaser.Component.Core.preUpdate.call(this);
-  this.map.animatedTiles["updated"] = false;
+    Phaser.Component.Core.preUpdate.call(this);
+    this.map.animatedTiles["updated"] = false;
 
-  return true;
+    return true;
 
 };
 
@@ -320,36 +320,47 @@ Phaser.TilemapLayer.prototype.preUpdate = function() {
 * @protected
 */
 Phaser.TilemapLayer.prototype.update = function () {
-  // Update is called on all tilemap layers but only required, and wanted, once.
-  if(this.map.animatedTiles["updated"]){
-    return;
-  }
-  this.map.animatedTiles["updated"] = true;
-
-  for (var gid in this.map.animatedTiles)
-  {
-    if(gid==="updated"){ continue; }
-
-    if (!this.map.animatedTiles[gid].msToNextFrame)
-    {
-      this.map.animatedTiles[gid].msToNextFrame = this.map.animatedTiles[gid].frames[this.map.animatedTiles[gid].currentFrame].duration;
+    var tile;
+    // Update is called on all tilemap layers but only required, and wanted, once. Also skip if there is no defined animated tiles.
+    if(this.map.animatedTiles["updated"] || Object.keys(this.map.animatedTiles).length===1){
+        return;
     }
-    else if ((this.map.animatedTiles[gid].msToNextFrame-=this.game.time.physicsElapsedMS)<=0)
+    this.map.animatedTiles["updated"] = true;
+
+    for (var gid in this.map.animatedTiles)
     {
-      this.map.animatedTiles[gid].currentFrame++;
-      if (this.map.animatedTiles[gid].currentFrame > (this.map.animatedTiles[gid].frames.length - 1))
-      {
-        this.map.animatedTiles[gid].currentFrame = 0;
-      }
-      this.map.animatedTiles[gid].currentGid = this.map.animatedTiles[gid].frames[this.map.animatedTiles[gid].currentFrame].gid;
-      this.map.animatedTiles[gid].msToNextFrame = this.map.animatedTiles[gid].frames[this.map.animatedTiles[gid].currentFrame].duration;
-      for (var layer in this.map.animatedTiles[gid].layers)
-      {
-        //Possible TODO for improved performance: Check if tile with gid is actually within current camera view before setting dirty to true.
-        this.map.layers[this.map.animatedTiles[gid].layers[layer]].dirty = true;
-      }
+        if(gid==="updated"){ continue; }
+
+        if (!this.map.animatedTiles[gid].msToNextFrame)
+        {
+            this.map.animatedTiles[gid].msToNextFrame = this.map.animatedTiles[gid].frames[this.map.animatedTiles[gid].currentFrame].duration;
+        }
+        else if ((this.map.animatedTiles[gid].msToNextFrame-=this.game.time.physicsElapsedMS)<=0)
+        {
+            this.map.animatedTiles[gid].currentFrame++;
+            if (this.map.animatedTiles[gid].currentFrame > (this.map.animatedTiles[gid].frames.length - 1))
+            {
+                this.map.animatedTiles[gid].currentFrame = 0;
+            }
+            this.map.animatedTiles[gid].currentGid = this.map.animatedTiles[gid].frames[this.map.animatedTiles[gid].currentFrame].gid;
+            this.map.animatedTiles[gid].msToNextFrame = this.map.animatedTiles[gid].frames[this.map.animatedTiles[gid].currentFrame].duration;
+            for (var layer in this.map.animatedTiles[gid].layers)
+            {
+                //Check if there is any animated tiles within camera view before setting dirty = true
+                if(this.map.layers[this.map.animatedTiles[gid].layers[layer]].dirty){continue;}
+                tileLoop:
+                for(var x2 = Math.ceil((this.game.camera.x+this.game.camera.width)/this.map.tileWidth), x = Math.floor(this.game.camera.x/this.map.tileWidth); x<x2; x+=1){
+                    for(var y2 = Math.ceil((this.game.camera.y+this.game.camera.height)/this.map.tileHeight), y = Math.floor(this.game.camera.y/this.map.tileHeight); y<y2; y+=1) {
+                        tile = this.map.getTile(x,y,this.map.layers[this.map.animatedTiles[gid].layers[layer]].name);
+                        if(tile && tile.index == gid){
+                            this.map.layers[this.map.animatedTiles[gid].layers[layer]].dirty = true;
+                            break tileLoop;
+                        }
+                    }
+                }
+            }
+        }
     }
-  }
 };
 
 /**
