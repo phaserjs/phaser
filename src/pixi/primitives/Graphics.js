@@ -402,6 +402,7 @@ PIXI.Graphics.prototype.arcTo = function(x1, y1, x2, y2, radius)
  */
 PIXI.Graphics.prototype.arc = function(cx, cy, radius, startAngle, endAngle, anticlockwise)
 {
+    //  If we do this we can never draw a full circle
     if (startAngle === endAngle)
     {
         return this;
