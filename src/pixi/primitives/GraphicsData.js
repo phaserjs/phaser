@@ -88,14 +88,14 @@ PIXI.GraphicsData = function(lineWidth, lineColor, lineAlpha, fillColor, fillAlp
 
 };
 
-GraphicsData.prototype.constructor = GraphicsData;
+PIXI.GraphicsData.prototype.constructor = PIXI.GraphicsData;
 
 /**
  * Creates a new GraphicsData object with the same values as this one.
  *
  * @return {GraphicsData}
  */
-GraphicsData.prototype.clone = function() {
+PIXI.GraphicsData.prototype.clone = function() {
 
     return new GraphicsData(
         this.lineWidth,
