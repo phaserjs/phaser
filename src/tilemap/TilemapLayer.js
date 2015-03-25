@@ -343,7 +343,7 @@ Phaser.TilemapLayer.prototype.update = function () {
                 this.map.animatedTiles[gid].currentFrame = 0;
             }
             this.map.animatedTiles[gid].currentGid = this.map.animatedTiles[gid].frames[this.map.animatedTiles[gid].currentFrame].gid;
-            this.map.animatedTiles[gid].msToNextFrame = this.map.animatedTiles[gid].frames[this.map.animatedTiles[gid].currentFrame].duration;
+            this.map.animatedTiles[gid].msToNextFrame += this.map.animatedTiles[gid].frames[this.map.animatedTiles[gid].currentFrame].duration;
             for (var layer in this.map.animatedTiles[gid].layers)
             {
                 //Check if there is any animated tiles within camera view before setting dirty = true
