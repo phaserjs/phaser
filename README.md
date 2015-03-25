@@ -196,6 +196,7 @@ We've rolled our own fixes into our version of Pixi, ensuring we keep it as bug-
 * When a State is started and linked to Phaser it has a new property created on it: `key`, which is the string identifier used by the State.
 * When the Game first boots it will now call `window.focus()`. This allows keyboard events to work properly in IE when the game is running inside an iframe. You can stop this from happening by setting `window.PhaserGlobal.stopFocus = true` (thanks @webholics #1681)
 * When an Animation completes playback and isn't set to loop it would change the `currentFrame` property to be the first frame in the set after the `onComplete` callback had fired. This meant if you set a Sprite to a new frame within an Animation onComplete callback then your change would have been overwritten by the animation itself. This is now no longer the case.
+* When an Emitter is destroyed via Emitter.destroy it now removes itself from the Phaser Particle Manager, freeing it up for garbage collection and stopping it from being processed.
 
 ### Bug Fixes
 

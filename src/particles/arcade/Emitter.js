@@ -608,9 +608,9 @@ Phaser.Particles.Arcade.Emitter.prototype.emitParticle = function () {
 
     particle.body.bounce.setTo(this.bounce.x, this.bounce.y);
 
-    particle.body.velocity.x = this.game.rnd.integerInRange(this.minParticleSpeed.x, this.maxParticleSpeed.x);
-    particle.body.velocity.y = this.game.rnd.integerInRange(this.minParticleSpeed.y, this.maxParticleSpeed.y);
-    particle.body.angularVelocity = this.game.rnd.integerInRange(this.minRotation, this.maxRotation);
+    particle.body.velocity.x = this.game.rnd.between(this.minParticleSpeed.x, this.maxParticleSpeed.x);
+    particle.body.velocity.y = this.game.rnd.between(this.minParticleSpeed.y, this.maxParticleSpeed.y);
+    particle.body.angularVelocity = this.game.rnd.between(this.minRotation, this.maxRotation);
 
     particle.body.gravity.y = this.gravity;
 
@@ -622,6 +622,19 @@ Phaser.Particles.Arcade.Emitter.prototype.emitParticle = function () {
     particle.onEmit();
 
     return true;
+
+};
+
+/**
+* Destroys this Emitter, all associated child Particles and then removes itself from the Particle Manager.
+* 
+* @method Phaser.Particles.Arcade.Emitter#destroy
+*/
+Phaser.Particles.Arcade.Emitter.prototype.destroy = function () {
+
+    this.game.particles.remove(this);
+
+    Phaser.Group.prototype.destroy.call(this, true, false);
 
 };
 
