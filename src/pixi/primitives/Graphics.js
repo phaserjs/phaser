@@ -157,14 +157,14 @@ PIXI.Graphics.prototype.lineStyle = function(lineWidth, color, alpha)
         {
             // halfway through a line? start a new one!
             this.drawShape(new PIXI.Polygon(this.currentPath.shape.points.slice(-2)));
-            return this;
         }
-
-        // otherwise its empty so lets just set the line properties
-        this.currentPath.lineWidth = this.lineWidth;
-        this.currentPath.lineColor = this.lineColor;
-        this.currentPath.lineAlpha = this.lineAlpha;
-        
+        else
+        {
+            // otherwise its empty so lets just set the line properties
+            this.currentPath.lineWidth = this.lineWidth;
+            this.currentPath.lineColor = this.lineColor;
+            this.currentPath.lineAlpha = this.lineAlpha;
+        }
     }
 
     return this;
@@ -222,22 +222,30 @@ PIXI.Graphics.prototype.quadraticCurveTo = function(cpX, cpY, toX, toY)
 {
     if (this.currentPath)
     {
-        if (this.currentPath.shape.points.length === 0) this.currentPath.shape.points = [0, 0];
+        if (this.currentPath.shape.points.length === 0)
+        {
+            this.currentPath.shape.points = [0, 0];
+        }
     }
     else
     {
         this.moveTo(0,0);
     }
 
-    var xa, ya, n = 20, points = this.currentPath.shape.points;
+    var xa,
+        ya,
+        n = 20,
+        points = this.currentPath.shape.points;
 
-    if (points.length === 0) this.moveTo(0, 0);
+    if (points.length === 0)
+    {
+        this.moveTo(0, 0);
+    }
 
     var fromX = points[points.length - 2];
     var fromY = points[points.length - 1];
     var j = 0;
-
-    for (var i = 1; i <= n; i++)
+    for (var i = 1; i <= n; ++i)
     {
         j = i / n;
 
@@ -269,20 +277,29 @@ PIXI.Graphics.prototype.bezierCurveTo = function(cpX, cpY, cpX2, cpY2, toX, toY)
 {
     if (this.currentPath)
     {
-        if (this.currentPath.shape.points.length === 0) this.currentPath.shape.points = [0, 0];
+        if (this.currentPath.shape.points.length === 0)
+        {
+            this.currentPath.shape.points = [0, 0];
+        }
     }
     else
     {
         this.moveTo(0,0);
     }
 
-    var n = 20, dt, dt2, dt3, t2, t3, points = this.currentPath.shape.points;
+    var n = 20,
+        dt,
+        dt2,
+        dt3,
+        t2,
+        t3,
+        points = this.currentPath.shape.points;
 
     var fromX = points[points.length-2];
     var fromY = points[points.length-1];
     var j = 0;
 
-    for (var i = 1; i <= n; i++)
+    for (var i = 1; i <= n; ++i)
     {
         j = i / n;
 
@@ -329,14 +346,14 @@ PIXI.Graphics.prototype.arcTo = function(x1, y1, x2, y2, radius)
         this.moveTo(x1, y1);
     }
 
-    var points = this.currentPath.shape.points;
-    var fromX = points[points.length-2];
-    var fromY = points[points.length-1];
-    var a1 = fromY - y1;
-    var b1 = fromX - x1;
-    var a2 = y2   - y1;
-    var b2 = x2   - x1;
-    var mm = Math.abs(a1 * b2 - b1 * a2);
+    var points = this.currentPath.shape.points,
+        fromX = points[points.length-2],
+        fromY = points[points.length-1],
+        a1 = fromY - y1,
+        b1 = fromX - x1,
+        a2 = y2   - y1,
+        b2 = x2   - x1,
+        mm = Math.abs(a1 * b2 - b1 * a2);
 
     if (mm < 1.0e-8 || radius === 0)
     {
@@ -347,21 +364,21 @@ PIXI.Graphics.prototype.arcTo = function(x1, y1, x2, y2, radius)
     }
     else
     {
-        var dd = a1 * a1 + b1 * b1;
-        var cc = a2 * a2 + b2 * b2;
-        var tt = a1 * a2 + b1 * b2;
-        var k1 = radius * Math.sqrt(dd) / mm;
-        var k2 = radius * Math.sqrt(cc) / mm;
-        var j1 = k1 * tt / dd;
-        var j2 = k2 * tt / cc;
-        var cx = k1 * b2 + k2 * b1;
-        var cy = k1 * a2 + k2 * a1;
-        var px = b1 * (k2 + j1);
-        var py = a1 * (k2 + j1);
-        var qx = b2 * (k1 + j2);
-        var qy = a2 * (k1 + j2);
-        var startAngle = Math.atan2(py - cy, px - cx);
-        var endAngle   = Math.atan2(qy - cy, qx - cx);
+        var dd = a1 * a1 + b1 * b1,
+            cc = a2 * a2 + b2 * b2,
+            tt = a1 * a2 + b1 * b2,
+            k1 = radius * Math.sqrt(dd) / mm,
+            k2 = radius * Math.sqrt(cc) / mm,
+            j1 = k1 * tt / dd,
+            j2 = k2 * tt / cc,
+            cx = k1 * b2 + k2 * b1,
+            cy = k1 * a2 + k2 * a1,
+            px = b1 * (k2 + j1),
+            py = a1 * (k2 + j1),
+            qx = b2 * (k1 + j2),
+            qy = a2 * (k1 + j2),
+            startAngle = Math.atan2(py - cy, px - cx),
+            endAngle   = Math.atan2(qy - cy, qx - cx);
 
         this.arc(cx + x1, cy + y1, radius, startAngle, endAngle, b1 * a2 > b2 * a1);
     }
@@ -407,8 +424,11 @@ PIXI.Graphics.prototype.arc = function(cx, cy, radius, startAngle, endAngle, ant
         this.moveTo(startX, startY);
         points = this.currentPath.shape.points;
     }
-    
-    if (startAngle === endAngle) return this;
+
+    if (startAngle === endAngle)
+    {
+        return this;
+    }
 
     if (!anticlockwise && endAngle <= startAngle)
     {
@@ -420,9 +440,12 @@ PIXI.Graphics.prototype.arc = function(cx, cy, radius, startAngle, endAngle, ant
     }
 
     var sweep = anticlockwise ? (startAngle - endAngle) *-1 : (endAngle - startAngle);
-    var segs = (Math.abs(sweep) / (Math.PI * 2)) * 40;
+    var segs =  Math.ceil( Math.abs(sweep)/ (Math.PI * 2) ) * 40;
 
-    if (sweep === 0) return this;
+    if( sweep === 0 )
+    {
+        return this;
+    }
 
     var theta = sweep / (segs * 2);
     var theta2 = theta * 2;
@@ -569,9 +592,22 @@ PIXI.Graphics.prototype.drawEllipse = function(x, y, width, height)
  */
 PIXI.Graphics.prototype.drawPolygon = function(path)
 {
-    if (!(path instanceof Array)) path = Array.prototype.slice.call(arguments);
+    // prevents an argument assignment deopt
+    // see section 3.1: https://github.com/petkaantonov/bluebird/wiki/Optimization-killers#3-managing-arguments
+    var points = path;
 
-    this.drawShape(new PIXI.Polygon(path));
+    if (!Array.isArray(points))
+    {
+        // prevents an argument leak deopt
+        // see section 3.2: https://github.com/petkaantonov/bluebird/wiki/Optimization-killers#3-managing-arguments
+        points = new Array(arguments.length);
+
+        for (var i = 0; i < points.length; ++i) {
+            points[i] = arguments[i];
+        }
+    }
+
+    this.drawShape(new Phaser.Polygon(points));
 
     return this;
 };
@@ -711,9 +747,17 @@ PIXI.Graphics.prototype._renderWebGL = function(renderSession)
 */
 PIXI.Graphics.prototype._renderCanvas = function(renderSession)
 {
-    // if the sprite is not visible or the alpha is 0 then no need to render this element
-    if (this.visible === false || this.alpha === 0 || this.isMask === true) return;
-    
+    if (this.isMask === true)
+    {
+        return;
+    }
+
+    // if the tint has changed, set the graphics object to dirty.
+    if (this._prevTint !== this.tint) {
+        this.dirty = true;
+        this._prevTint = this.tint;
+    }
+
     if (this._cacheAsBitmap)
     {
         if (this.dirty || this.cachedSpriteDirty)
@@ -780,8 +824,14 @@ PIXI.Graphics.prototype._renderCanvas = function(renderSession)
  */
 PIXI.Graphics.prototype.getBounds = function(matrix)
 {
-    // return an empty object if the item is a mask!
-    if (this.isMask) return PIXI.EmptyRectangle;
+    if(!this._currentBounds)
+    {
+
+        // return an empty object if the item is a mask!
+        if (!this.renderable)
+        {
+            return PIXI.EmptyRectangle;
+        }
 
     if (this.dirty)
     {
@@ -848,7 +898,44 @@ PIXI.Graphics.prototype.getBounds = function(matrix)
     this._bounds.y = minY;
     this._bounds.height = maxY - minY;
 
-    return  this._bounds;
+        this._currentBounds = this._bounds;
+    }
+
+    return this._currentBounds;
+};
+
+/**
+* Tests if a point is inside this graphics object
+*
+* @param point {Point} the point to test
+* @return {boolean} the result of the test
+*/
+PIXI.Graphics.prototype.containsPoint = function( point )
+{
+    this.worldTransform.applyInverse(point,  tempPoint);
+
+    var graphicsData = this.graphicsData;
+
+    for (var i = 0; i < graphicsData.length; i++)
+    {
+        var data = graphicsData[i];
+
+        if (!data.fill)
+        {
+            continue;
+        }
+
+        // only deal with fills..
+        if (data.shape)
+        {
+            if ( data.shape.contains( tempPoint.x, tempPoint.y ) )
+            {
+                return true;
+            }
+        }
+    }
+
+    return false;
 };
 
 /**
@@ -1112,25 +1199,3 @@ Object.defineProperty(PIXI.Graphics.prototype, "cacheAsBitmap", {
 
     }
 });
-
-/**
- * A GraphicsData object.
- * 
- * @class GraphicsData
- * @constructor
- */
-PIXI.GraphicsData = function(lineWidth, lineColor, lineAlpha, fillColor, fillAlpha, fill, shape)
-{
-    this.lineWidth = lineWidth;
-    this.lineColor = lineColor;
-    this.lineAlpha = lineAlpha;
-    this._lineTint = lineColor;
-
-    this.fillColor = fillColor;
-    this.fillAlpha = fillAlpha;
-    this._fillTint = fillColor;
-    this.fill = fill;
-
-    this.shape = shape;
-    this.type = shape.type;
-};
