@@ -71,6 +71,7 @@
     <script src="$path/src/pixi/renderers/canvas/CanvasGraphics.js"></script>
 
     <script src="$path/src/pixi/primitives/Graphics.js"></script>
+    <script src="$path/src/pixi/primitives/GraphicsData.js"></script>
 
     <script src="$path/src/pixi/extras/Strip.js"></script>
     <script src="$path/src/pixi/extras/Rope.js"></script>

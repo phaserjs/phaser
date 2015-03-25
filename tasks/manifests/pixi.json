@@ -36,6 +36,7 @@
     "src/pixi/renderers/canvas/CanvasGraphics.js",
 
     "src/pixi/primitives/Graphics.js",
+    "src/pixi/primitives/GraphicsData.js",
 
     "src/pixi/extras/Strip.js",
     "src/pixi/extras/Rope.js",
