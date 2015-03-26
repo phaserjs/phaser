@@ -35,27 +35,33 @@ Thousands of developers worldwide use it. From indies and multi-national digital
 ![div](http://www.phaser.io/images/github/div.png)
 
 <a name="whats-new"></a>
-## What's new in 2.3.0?
+## What's new in Phaser 2.3.0
 
 <div align="center"><img src="http://phaser.io/images/github/news.jpg"></div>
 
+> 26th March 2015
+
 Phaser 2.3.0 marks the second release in 2015 and easily one of our most significant for a while. In terms of API changes they're actually quite minimal, but under the hood we've taken Phaser for a serious workout.
 
-We've traditionally had something of a 'kitchen sink' issue with Phaser - in that as we thought of great new features to give you, they all added to the overall file size and it just kept on growing as a result.
+We've traditionally had something of a 'kitchen sink' issue with Phaser. As we thought of great new features to give you we just added them in. And like too much of a good thing they all added to the overall size. And Phaser just kept on growing.
 
-So one of the biggest changes 2.3.0 has is an internal shift to using Game Object components, and allowing Phaser to be broken up into modules. We've provided a new build system which lets you selective exclude modules from being bundled in. For example if your game doesn't need Gamepad or Keyboard support you can now tell Phaser to skip those parts entirely.
+So two of the biggest changes 2.3.0 has is an internal shift to using Game Object components, and allowing you to exclude features in your own custom builds. The new build system allows you to selective exclude features from being bundled in: for example if your game doesn't need Gamepad or Keyboard support you can now tell Phaser to skip those parts entirely.
 
-[This tutorial](http://phaser.io/tutorials/creating-custom-phaser-builds) explains the process in detail. But the end result is that thanks to these changes we've managed to shave thousands of lines of code out and put Phaser on a diet. The minimum build size is now just 83KB minified and gzipped (and that's still including both the WebGL and Canvas renderers).
+[This tutorial](http://phaser.io/tutorials/creating-custom-phaser-builds) explains the process in detail. But the end result is that thanks to these changes we've both managed to remove thousands of lines of code and let you decide what Phaser contains. The minimum build size is now just 83KB minified and gzipped and that's still including both the WebGL and Canvas renderers.
 
-Even though we've been cutting down on size we still managed to pack a whole load of great new features in. For example the new spacial sorting added to Arcade Physics allows for incredible speed increases when dealing with densely populated game worlds. The Loader has received a complete overhaul - now offering full parallel asset loading, sync points and more! The Tilemap system was upgraded to support new Tiled 0.11 editor features. Audio has been also been enhanced, with better marker and loop handling. You can see the full change log for yourself - literally hundreds of improvements across the whole framework.
+Even though we've been cutting down on size we still managed to pack a whole load of great new features in. For example the new spacial sorting added to Arcade Physics allows for incredible speed increases when dealing with densely populated game worlds. The Loader has received a complete overhaul - now offering full parallel asset loading, sync points and more! The Tilemap system was upgraded to support new Tiled 0.11 editor features. Audio has been also been enhanced, with better marker and loop handling. See the full change log for yourself. Literally hundreds of improvements across the whole codebase.
 
 Your games will run faster, have a smaller footprint and load faster than ever.
 
-But it's not just Phaser that has been updated - we also finally released the [new Phaser web site](http://phaser.io)! For the past few years it had been a huge "wall of text", with hundreds of links filling up the single page site. Now it's all changed! With a much more attractive layout and structure - we've got a healthy and daily-updating news section, all of the examples are online to play with, lots of tutorials and even a great new Sandbox to play in.
+But it's not just Phaser that has been updated - we also finally released the [new Phaser web site](http://phaser.io)! For the past few years it was a huge "wall of text", with hundreds of links filling up the single page site. Now it's all changed! with a much more attractive layout and structure. We've got a healthy and constantly updating [news section](http://phaser.io/news), the [examples](http://phaser.io/examples) have a great new visual showcase and there's even a [Sandbox](http://phaser.io/sandbox) to play in.
 
-It was a lot of hard work but we're super-happy with the result - and judging by our page hits which are going off the charts, you are too :) We'll be sure to keep enhancing it over the coming months, especially as Phaser 3 development ramps up.
+It was a lot of hard work but we're super-happy with the result - and judging by our page hits, which are going off the charts, you are too :) We'll be sure to keep enhancing it over the coming months, especially as Phaser 3 development ramps up.
 
-That's all for now. I hope you enjoy Phaser 2.3.0, the new site, the new features and the New Year! Happy coding everyone! See you on the forums.
+That's all for now. I hope you enjoy Phaser 2.3.0, the new site, the new features and the New Year. Happy coding everyone! See you on the forums.
+
+Cheers,
+
+[Rich](https://twitter.com/photonstorm)
 
 ![boogie](http://www.phaser.io/images/spacedancer.gif)
 
