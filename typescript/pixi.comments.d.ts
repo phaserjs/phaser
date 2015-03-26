@@ -1,4 +1,4 @@
-// Type definitions for PIXI 2.2.0 dev 2015-01-01
+// Type definitions for PIXI 2.2.8 2015-03-24
 // Project: https://github.com/GoodBoyDigital/pixi.js/
 
 declare module PIXI {
@@ -134,6 +134,7 @@ declare module PIXI {
         dropShadowDistance?: number;
         fill?: string;
         font?: string;
+        lineJoin?: string;
         stroke?: string;
         strokeThickness?: number;
         wordWrap?: boolean;
@@ -206,92 +207,28 @@ declare module PIXI {
 
     }
 
-
-    /**
-    * The AlphaMaskFilter class uses the pixel values from the specified texture (called the displacement map) to perform a displacement of an object.
-    * You can use this filter to apply all manor of crazy warping effects
-    * Currently the r property of the texture is used to offset the x and the g property of the texture is used to offset the y.
-    */
     export class AlphaMaskFilter extends AbstractFilter {
 
-
-        /**
-        * The AlphaMaskFilter class uses the pixel values from the specified texture (called the displacement map) to perform a displacement of an object.
-        * You can use this filter to apply all manor of crazy warping effects
-        * Currently the r property of the texture is used to offset the x and the g property of the texture is used to offset the y.
-        * 
-        * @param texture The texture used for the displacement map * must be power of 2 texture at the moment
-        */
         constructor(texture: Texture);
 
-
-        /**
-        * The texture used for the displacement map. Must be power of 2 sized texture.
-        */
         map: Texture;
 
-
-        /**
-        * Sets the map dimensions uniforms when the texture becomes available.
-        */
         onTextureLoaded(): void;
 
     }
 
-
-    /**
-    * An ASCII filter.
-    */
     export class AsciiFilter extends AbstractFilter {
 
-
-        /**
-        * The pixel size used by the filter.
-        */
         size: number;
 
     }
 
-
-    /**
-    * A Class that loads a bunch of images / sprite sheet / bitmap font files. Once the
-    * assets have been loaded they are added to the PIXI Texture cache and can be accessed
-    * easily through PIXI.Texture.fromImage() and PIXI.Sprite.fromImage()
-    * When all items have been loaded this class will dispatch a 'onLoaded' event
-    * As each individual item is loaded this class will dispatch a 'onProgress' event
-    */
     export class AssetLoader implements Mixin {
 
-
-        /**
-        * The array of asset URLs that are going to be loaded
-        */
         assetURLs: string[];
-
-        /**
-        * Whether the requests should be treated as cross origin
-        */
         crossorigin: boolean;
-
-        /**
-        * Maps file extension to loader types
-        */
         loadersByType: { [key: string]: Loader };
 
-
-        /**
-        * A Class that loads a bunch of images / sprite sheet / bitmap font files. Once the
-        * assets have been loaded they are added to the PIXI Texture cache and can be accessed
-        * easily through PIXI.Texture.fromImage() and PIXI.Sprite.fromImage()
-        * When all items have been loaded this class will dispatch a 'onLoaded' event
-        * As each individual item is loaded this class will dispatch a 'onProgress' event
-        * 
-        * @param assetURLs An array of image/sprite sheet urls that you would like loaded
-        *                  supported. Supported image formats include 'jpeg', 'jpg', 'png', 'gif'. Supported
-        *                  sprite sheet data formats only include 'JSON' at this time. Supported bitmap font
-        *                  data formats include 'xml' and 'fnt'.
-        * @param crossorigin Whether requests should be treated as crossorigin
-        */
         constructor(assetURLs: string[], crossorigin: boolean);
 
         listeners(eventName: string): Function[];
@@ -303,24 +240,11 @@ declare module PIXI {
         off(eventName: string, fn: Function): Function;
         removeAllEventListeners(eventName: string): void;
 
-
-        /**
-        * Starts loading the assets sequentially
-        */
         load(): void;
 
 
     }
 
-
-    /**
-    * The atlas file loader is used to load in Texture Atlas data and parse it. When loaded this class will dispatch a 'loaded' event. If loading fails this class will dispatch an 'error' event.
-    * 
-    * To generate the data you can use http://www.codeandweb.com/texturepacker and publish in the 'JSON' format.
-    * 
-    * It is highly recommended to use texture atlases (also know as 'sprite sheets') as it allowed sprites to be batched and drawn together for highly increased rendering speed.
-    * Once the data has been loaded the frames are stored in the PIXI texture cache and can be accessed though PIXI.Texture.fromFrameId() and PIXI.Sprite.fromFrameId()
-    */
     export class AtlasLoader implements Mixin {
 
         url: string;
@@ -328,18 +252,6 @@ declare module PIXI {
         crossorigin: boolean;
         loaded: boolean;
 
-
-        /**
-        * The atlas file loader is used to load in Texture Atlas data and parse it. When loaded this class will dispatch a 'loaded' event. If loading fails this class will dispatch an 'error' event.
-        * 
-        * To generate the data you can use http://www.codeandweb.com/texturepacker and publish in the 'JSON' format.
-        * 
-        * It is highly recommended to use texture atlases (also know as 'sprite sheets') as it allowed sprites to be batched and drawn together for highly increased rendering speed.
-        * Once the data has been loaded the frames are stored in the PIXI texture cache and can be accessed though PIXI.Texture.fromFrameId() and PIXI.Sprite.fromFrameId()
-        * 
-        * @param url The url of the JSON file
-        * @param crossorigin Whether requests should be treated as crossorigin
-        */
         constructor(url: string, crossorigin: boolean);
 
         listeners(eventName: string): Function[];
@@ -351,10 +263,6 @@ declare module PIXI {
         off(eventName: string, fn: Function): Function;
         removeAllEventListeners(eventName: string): void;
 
-
-        /**
-        * Starts loading the JSON file
-        */
         load(): void;
 
     }
@@ -482,46 +390,13 @@ declare module PIXI {
 
     }
 
-
-    /**
-    * The xml loader is used to load in XML bitmap font data ('xml' or 'fnt')
-    * To generate the data you can use http://www.angelcode.com/products/bmfont/
-    * This loader will also load the image file as the data.
-    * When loaded this class will dispatch a 'loaded' event
-    */
     export class BitmapFontLoader implements Mixin {
 
-
-        /**
-        * The xml loader is used to load in XML bitmap font data ('xml' or 'fnt')
-        * To generate the data you can use http://www.angelcode.com/products/bmfont/
-        * This loader will also load the image file as the data.
-        * When loaded this class will dispatch a 'loaded' event
-        * 
-        * @param url The url of the sprite sheet JSON file
-        * @param crossorigin Whether requests should be treated as crossorigin
-        */
         constructor(url: string, crossorigin: boolean);
 
-
-        /**
-        * [read-only] The base url of the bitmap font data
-        */
         baseUrl: string;
-
-        /**
-        * Whether the requests should be treated as cross origin
-        */
         crossorigin: boolean;
-
-        /**
-        * [read-only] The texture of the bitmap font
-        */
         texture: Texture;
-
-        /**
-        * The url of the bitmap font data
-        */
         url: string;
 
         listeners(eventName: string): Function[];
@@ -533,10 +408,6 @@ declare module PIXI {
         off(eventName: string, fn: Function): Function;
         removeAllEventListeners(eventName: string): void;
 
-
-        /**
-        * Loads the XML font data
-        */
         load(): void;
 
     }
@@ -573,6 +444,12 @@ declare module PIXI {
         fontSize: number;
 
         /**
+        * The max width of this bitmap text in pixels. If the text provided is longer than the value provided, line breaks will be
+        * automatically inserted in the last whitespace. Disable by setting value to 0.
+        */
+        maxWidth: number;
+
+        /**
         * [read-only] The width of the overall text, different from fontSize,
         * which is defined in the style object
         */
@@ -605,60 +482,22 @@ declare module PIXI {
 
     }
 
-
-    /**
-    * The BlurFilter applies a Gaussian blur to an object.
-    * The strength of the blur can be set for x- and y-axis separately (always relative to the stage).
-    */
     export class BlurFilter extends AbstractFilter {
 
-
-        /**
-        * Sets the strength of both the blurX and blurY properties simultaneously
-        * Default: 2
-        */
         blur: number;
-
-        /**
-        * Sets the strength of the blurX property
-        * Default: 2
-        */
         blurX: number;
-
-        /**
-        * Sets the strength of the blurY property
-        * Default: 2
-        */
         blurY: number;
 
     }
 
-
-    /**
-    * The BlurXFilter applies a horizontal Gaussian blur to an object.
-    */
     export class BlurXFilter extends AbstractFilter {
 
-
-        /**
-        * Sets the strength of both the blur.
-        * Default: 2
-        */
         blur: number;
 
     }
 
-
-    /**
-    * The BlurYFilter applies a vertical Gaussian blur to an object.
-    */
     export class BlurYFilter extends AbstractFilter {
 
-
-        /**
-        * Sets the strength of both the blur.
-        * Default: 2
-        */
         blur: number;
 
     }
@@ -910,202 +749,61 @@ declare module PIXI {
 
     }
 
-
-    /**
-    * The Circle object can be used to specify a hit area for displayObjects
-    */
     export class Circle implements HitArea {
 
-
-        /**
-        * The Circle object can be used to specify a hit area for displayObjects
-        * 
-        * @param x The X coordinate of the center of this circle
-        * @param y The Y coordinate of the center of this circle
-        * @param radius The radius of the circle
-        */
         constructor(x: number, y: number, radius: number);
 
-
-        /**
-        * 
-        * Default: 0
-        */
         x: number;
-
-        /**
-        * 
-        * Default: 0
-        */
         y: number;
-
-        /**
-        * 
-        * Default: 0
-        */
         radius: number;
 
-
-        /**
-        * Creates a clone of this Circle instance
-        * @return a copy of the Circle
-        */
         clone(): Circle;
-
-        /**
-        * Checks whether the x and y coordinates given are contained within this circle
-        * 
-        * @param x The X coordinate of the point to test
-        * @param y The Y coordinate of the point to test
-        * @return Whether the x/y coordinates are within this Circle
-        */
         contains(x: number, y: number): boolean;
-
-        /**
-        * Returns the framing rectangle of the circle as a PIXI.Rectangle object
-        * @return the framing rectangle
-        */
         getBounds(): Rectangle;
 
     }
 
-
-    /**
-    * The ColorMatrixFilter class lets you apply a 4x4 matrix transformation on the RGBA
-    * color and alpha values of every pixel on your displayObject to produce a result
-    * with a new set of RGBA color and alpha values. It's pretty powerful!
-    */
     export class ColorMatrixFilter extends AbstractFilter {
 
-
-        /**
-        * Sets the matrix of the color matrix filter
-        * Default: [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]
-        */
         matrix: Matrix;
 
     }
 
-
-    /**
-    * This lowers the color depth of your image by the given amount, producing an image with a smaller palette.
-    */
     export class ColorStepFilter extends AbstractFilter {
 
-
-        /**
-        * The number of steps to reduce the palette by.
-        */
         step: number;
 
     }
 
-
-    /**
-    * The ConvolutionFilter class applies a matrix convolution filter effect.
-    * A convolution combines pixels in the input image with neighboring pixels to produce a new image.
-    * A wide variety of image effects can be achieved through convolutions, including blurring, edge detection, sharpening, embossing, and beveling.
-    * The matrix should be specified as a 9 point Array. See http://docs.gimp.org/en/plug-in-convmatrix.html for more info.
-    */
     export class ConvolutionFilter extends AbstractFilter {
 
-
-        /**
-        * The ConvolutionFilter class applies a matrix convolution filter effect.
-        * A convolution combines pixels in the input image with neighboring pixels to produce a new image.
-        * A wide variety of image effects can be achieved through convolutions, including blurring, edge detection, sharpening, embossing, and beveling.
-        * The matrix should be specified as a 9 point Array. See http://docs.gimp.org/en/plug-in-convmatrix.html for more info.
-        * 
-        * @param matrix An array of values used for matrix transformation. Specified as a 9 point Array.
-        * @param width Width of the object you are transforming
-        * @param height Height of the object you are transforming
-        */
         constructor(matrix: number[], width: number, height: number);
 
-
-        /**
-        * An array of values used for matrix transformation. Specified as a 9 point Array.
-        */
         matrix: Matrix;
-
-        /**
-        * Width of the object you are transforming
-        */
         width: number;
-
-        /**
-        * Height of the object you are transforming
-        */
         height: number;
 
     }
 
-
-    /**
-    * A Cross Hatch effect filter.
-    */
     export class CrossHatchFilter extends AbstractFilter {
 
-
-        /**
-        * Sets the strength of both the blur.
-        * Default: 2
-        */
         blur: number;
 
     }
 
-
-    /**
-    * The DisplacementFilter class uses the pixel values from the specified texture (called the displacement map) to perform a displacement of an object.
-    * You can use this filter to apply all manor of crazy warping effects
-    * Currently the r property of the texture is used offset the x and the g property of the texture is used to offset the y.
-    */
     export class DisplacementFilter extends AbstractFilter {
 
-
-        /**
-        * The DisplacementFilter class uses the pixel values from the specified texture (called the displacement map) to perform a displacement of an object.
-        * You can use this filter to apply all manor of crazy warping effects
-        * Currently the r property of the texture is used offset the x and the g property of the texture is used to offset the y.
-        * 
-        * @param texture The texture used for the displacement map * must be power of 2 texture at the moment
-        */
         constructor(texture: Texture);
 
-
-        /**
-        * The texture used for the displacement map. Must be power of 2 texture.
-        */
         map: Texture;
-
-        /**
-        * The offset used to move the displacement map.
-        */
         offset: Point;
-
-        /**
-        * The multiplier used to scale the displacement result from the map calculation.
-        */
         scale: Point;
 
     }
 
-
-    /**
-    * This filter applies a dotscreen effect making display objects appear to be made out of black and white halftone dots like an old printer.
-    */
     export class DotScreenFilter extends AbstractFilter {
 
-
-        /**
-        * The radius of the effect.
-        */
         angle: number;
-
-        /**
-        * The scale of the effect.
-        */
         scale: Point;
 
     }
@@ -1122,10 +820,6 @@ declare module PIXI {
         * The opacity of the object.
         */
         alpha: number;
-
-        /**
-        * This is used to indicate if the displayObject should display a mouse hand cursor on rollover
-        */
         buttonMode: boolean;
 
         /**
@@ -1134,10 +828,6 @@ declare module PIXI {
         * To remove simply set this property to 'null'
         */
         cacheAsBitmap: boolean;
-
-        /**
-        * This is the cursor that will be used when the mouse is over this object. To enable this the element must have interaction = true and buttonMode = true
-        */
         defaultCursor: string;
 
         /**
@@ -1158,11 +848,6 @@ declare module PIXI {
         * Setting it is a neat way of optimising the hitTest function that the interactionManager will use (as it will not need to hit test all the children)
         */
         hitArea: HitArea;
-
-        /**
-        * Indicates if the sprite will have touch and mouse interactivity. It is false by default
-        * Default: false
-        */
         interactive: boolean;
 
         /**
@@ -1232,12 +917,6 @@ declare module PIXI {
         */
         y: number;
 
-
-        /**
-        * A callback that is used when the users clicks on the displayObject with their mouse's left button
-        * 
-        * @param interactionData -
-        */
         click(e: InteractionData): void;
         displayObjectUpdateTransform(): void;
 
@@ -1265,73 +944,15 @@ declare module PIXI {
         * @return a texture of the graphics object
         */
         generateTexture(resolution: number, scaleMode: scaleModes, renderer: PixiRenderer): RenderTexture;
-
-        /**
-        * A callback that is used when the user clicks the mouse's left button down over the sprite
-        * 
-        * @param interactionData -
-        */
         mousedown(e: InteractionData): void;
-
-        /**
-        * A callback that is used when the users mouse leaves the displayObject
-        * 
-        * @param interactionData -
-        */
         mouseout(e: InteractionData): void;
-
-        /**
-        * A callback that is used when the users mouse rolls over the displayObject
-        * 
-        * @param interactionData -
-        */
         mouseover(e: InteractionData): void;
-
-        /**
-        * A callback that is used when the user releases the mouse's left button that was over the displayObject
-        * for this callback to be fired, the mouse's left button must have been pressed down over the displayObject
-        * 
-        * @param interactionData -
-        */
         mouseup(e: InteractionData): void;
         mousemove(e: InteractionData): void;
-
-        /**
-        * A callback that is used when the user releases the mouse's left button that was over the displayObject but is no longer over the displayObject
-        * for this callback to be fired, the mouse's left button must have been pressed down over the displayObject
-        * 
-        * @param interactionData -
-        */
         mouseupoutside(e: InteractionData): void;
-
-        /**
-        * A callback that is used when the users clicks on the displayObject with their mouse's right button
-        * 
-        * @param interactionData -
-        */
         rightclick(e: InteractionData): void;
-
-        /**
-        * A callback that is used when the user clicks the mouse's right button down over the sprite
-        * 
-        * @param interactionData -
-        */
         rightdown(e: InteractionData): void;
-
-        /**
-        * A callback that is used when the user releases the mouse's right button that was over the displayObject
-        * for this callback to be fired the mouse's right button must have been pressed down over the displayObject
-        * 
-        * @param interactionData -
-        */
         rightup(e: InteractionData): void;
-
-        /**
-        * A callback that is used when the user releases the mouse's right button that was over the displayObject but is no longer over the displayObject
-        * for this callback to be fired, the mouse's right button must have been pressed down over the displayObject
-        * 
-        * @param interactionData -
-        */
         rightupoutside(e: InteractionData): void;
 
         /**
@@ -1340,13 +961,6 @@ declare module PIXI {
         * @param stage the stage that the object will have as its current stage reference
         */
         setStageReference(stage: Stage): void;
-
-        /**
-        * A callback that is used when the users taps on the sprite with their finger
-        * basically a touch version of click
-        * 
-        * @param interactionData -
-        */
         tap(e: InteractionData): void;
 
         /**
@@ -1365,27 +979,8 @@ declare module PIXI {
         * @return A point object representing the position of this object
         */
         toLocal(position: Point, from: DisplayObject): Point;
-
-        /**
-        * A callback that is used when the user releases a touch over the displayObject
-        * 
-        * @param interactionData -
-        */
         touchend(e: InteractionData): void;
-
-        /**
-        * A callback that is used when the user releases the touch that was over the displayObject
-        * for this callback to be fired, The touch must have started over the sprite
-        * 
-        * @param interactionData -
-        */
         touchendoutside(e: InteractionData): void;
-
-        /**
-        * A callback that is used when the user touches over the displayObject
-        * 
-        * @param interactionData -
-        */
         touchstart(e: InteractionData): void;
         touchmove(e: InteractionData): void;
         updateTransform(): void;
@@ -1515,68 +1110,17 @@ declare module PIXI {
 
     }
 
-
-    /**
-    * The Ellipse object can be used to specify a hit area for displayObjects
-    */
     export class Ellipse implements HitArea {
 
-
-        /**
-        * The Ellipse object can be used to specify a hit area for displayObjects
-        * 
-        * @param x The X coordinate of the center of the ellipse
-        * @param y The Y coordinate of the center of the ellipse
-        * @param width The half width of this ellipse
-        * @param height The half height of this ellipse
-        */
         constructor(x: number, y: number, width: number, height: number);
 
-
-        /**
-        * 
-        * Default: 0
-        */
         x: number;
-
-        /**
-        * 
-        * Default: 0
-        */
         y: number;
-
-        /**
-        * 
-        * Default: 0
-        */
         width: number;
-
-        /**
-        * 
-        * Default: 0
-        */
         height: number;
 
-
-        /**
-        * Creates a clone of this Ellipse instance
-        * @return a copy of the ellipse
-        */
         clone(): Ellipse;
-
-        /**
-        * Checks whether the x and y coordinates given are contained within this ellipse
-        * 
-        * @param x The X coordinate of the point to test
-        * @param y The Y coordinate of the point to test
-        * @return Whether the x/y coords are within this ellipse
-        */
         contains(x: number, y: number): boolean;
-
-        /**
-        * Returns the framing rectangle of the ellipse as a PIXI.Rectangle object
-        * @return the framing rectangle
-        */
         getBounds(): Rectangle;
 
     }
@@ -1755,7 +1299,7 @@ declare module PIXI {
         * The color of any lines drawn.
         * Default: 0
         */
-        lineColor: string;
+        lineColor: number;
 
         /**
         * The tint applied to the graphic shape. This is a hex value. Apply a value of 0xFFFFFF to reset the tint.
@@ -1812,14 +1356,6 @@ declare module PIXI {
         * Destroys a previous cached sprite.
         */
         destroyCachedSprite(): void;
-
-        /**
-        * Draws a circle.
-        * 
-        * @param x The X coordinate of the center of the circle
-        * @param y The Y coordinate of the center of the circle
-        * @param radius The radius of the circle
-        */
         drawCircle(x: number, y: number, radius: number): Graphics;
 
         /**
@@ -1835,9 +1371,9 @@ declare module PIXI {
         /**
         * Draws a polygon using the given path.
         * 
-        * @param path The path data used to construct the polygon.
+        * @param path The path data used to construct the polygon. If you've got a Phaser.Polygon object then pass `polygon.points` here.
         */
-        drawPolygon(path: any): Graphics;
+        drawPolygon(...path: any[]): Graphics;
 
         /**
         * 
@@ -1936,43 +1472,16 @@ declare module PIXI {
 
     }
 
-
-    /**
-    * This greyscales the palette of your Display Objects.
-    */
     export class GrayFilter extends AbstractFilter {
 
-
-        /**
-        * The strength of the gray. 1 will make the object black and white, 0 will make the object its normal color.
-        */
         gray: number;
 
     }
 
-
-    /**
-    * The image loader class is responsible for loading images file formats ('jpeg', 'jpg', 'png' and 'gif')
-    * Once the image has been loaded it is stored in the PIXI texture cache and can be accessed though PIXI.Texture.fromFrame() and PIXI.Sprite.fromFrame()
-    * When loaded this class will dispatch a 'loaded' event
-    */
     export class ImageLoader implements Mixin {
 
-
-        /**
-        * The image loader class is responsible for loading images file formats ('jpeg', 'jpg', 'png' and 'gif')
-        * Once the image has been loaded it is stored in the PIXI texture cache and can be accessed though PIXI.Texture.fromFrame() and PIXI.Sprite.fromFrame()
-        * When loaded this class will dispatch a 'loaded' event
-        * 
-        * @param url The url of the image
-        * @param crossorigin Whether requests should be treated as crossorigin
-        */
         constructor(url: string, crossorigin?: boolean);
 
-
-        /**
-        * The texture being loaded
-        */
         texture: Texture;
 
         listeners(eventName: string): Function[];
@@ -1984,80 +1493,26 @@ declare module PIXI {
         off(eventName: string, fn: Function): Function;
         removeAllEventListeners(eventName: string): void;
 
-
-        /**
-        * Loads image or takes it from cache
-        */
         load(): void;
-
-        /**
-        * Loads image and split it to uniform sized frames
-        * 
-        * @param frameWidth width of each frame
-        * @param frameHeight height of each frame
-        * @param textureName if given, the frames will be cached in <textureName>-<ord> format
-        */
         loadFramedSpriteSheet(frameWidth: number, frameHeight: number, textureName: string): void;
 
     }
 
-
-    /**
-    * Holds all information related to an Interaction event
-    */
     export class InteractionData {
 
-
-        /**
-        * This point stores the global coords of where the touch/mouse event happened
-        */
         global: Point;
-
-        /**
-        * The target Sprite that was interacted with
-        */
         target: Sprite;
-
-        /**
-        * When passed to an event handler, this will be the original DOM Event that was captured
-        */
         originalEvent: Event;
 
-
-        /**
-        * This will return the local coordinates of the specified displayObject for this InteractionData
-        * 
-        * @param displayObject The DisplayObject that you would like the local coords off
-        * @param point A Point object in which to store the value, optional (otherwise will create a new point)
-        * @return A point containing the coordinates of the InteractionData position relative to the DisplayObject
-        */
-        getLocalPosition(displayObject: DisplayObject): Point;
+        getLocalPosition(displayObject: DisplayObject, point?: Point, globalPos?: Point): Point;
 
     }
 
-
-    /**
-    * The interaction manager deals with mouse and touch events. Any DisplayObject can be interactive
-    * if its interactive parameter is set to true
-    * This manager also supports multitouch.
-    */
     export class InteractionManager {
 
-
-        /**
-        * The css style of the cursor that is being used
-        */
         currentCursorStyle: string;
         last: number;
-
-        /**
-        * The mouse data
-        */
         mouse: InteractionData;
-
-        /**
-        * Is set to true when the mouse is moved out of the canvas
-        */
         mouseOut: boolean;
         mouseoverEnabled: boolean;
         onMouseMove: Function;
@@ -2067,86 +1522,27 @@ declare module PIXI {
         onTouchStart: Function;
         onTouchEnd: Function;
         onTouchMove: Function;
-
-        /**
-        * Tiny little interactiveData pool !
-        */
         pool: InteractionData[];
         resolution: number;
-
-        /**
-        * A reference to the stage
-        */
         stage: Stage;
-
-        /**
-        * An object that stores current touches (InteractionData) by id reference
-        */
         touches: { [id: string]: InteractionData };
 
-
-        /**
-        * The interaction manager deals with mouse and touch events. Any DisplayObject can be interactive
-        * if its interactive parameter is set to true
-        * This manager also supports multitouch.
-        * 
-        * @param stage The stage to handle interactions
-        */
         constructor(stage: Stage);
     }
 
-
-    /**
-    * This inverts your Display Objects colors.
-    */
     export class InvertFilter extends AbstractFilter {
 
-
-        /**
-        * The strength of the invert. 1 will fully invert the colors, 0 will make the object its normal color
-        */
         invert: number;
 
     }
 
-
-    /**
-    * The json file loader is used to load in JSON data and parse it
-    * When loaded this class will dispatch a 'loaded' event
-    * If loading fails this class will dispatch an 'error' event
-    */
     export class JsonLoader implements Mixin {
 
-
-        /**
-        * The json file loader is used to load in JSON data and parse it
-        * When loaded this class will dispatch a 'loaded' event
-        * If loading fails this class will dispatch an 'error' event
-        * 
-        * @param url The url of the JSON file
-        * @param crossorigin Whether requests should be treated as crossorigin
-        */
         constructor(url: string, crossorigin?: boolean);
 
-
-        /**
-        * [read-only] The base url of the bitmap font data
-        */
         baseUrl: string;
-
-        /**
-        * Whether the requests should be treated as cross origin
-        */
         crossorigin: boolean;
-
-        /**
-        * [read-only] Whether the data has loaded yet
-        */
         loaded: boolean;
-
-        /**
-        * The url of the bitmap font data
-        */
         url: string;
 
         listeners(eventName: string): Function[];
@@ -2158,143 +1554,28 @@ declare module PIXI {
         off(eventName: string, fn: Function): Function;
         removeAllEventListeners(eventName: string): void;
 
-
-        /**
-        * Loads the JSON data
-        */
         load(): void;
 
     }
 
-
-    /**
-    * The Matrix class is now an object, which makes it a lot faster,
-    * here is a representation of it :
-    * | a | b | tx|
-    * | c | d | ty|
-    * | 0 | 0 | 1 |
-    */
     export class Matrix {
 
-
-        /**
-        * 
-        * Default: 1
-        */
         a: number;
-
-        /**
-        * 
-        * Default: 0
-        */
         b: number;
-
-        /**
-        * 
-        * Default: 0
-        */
         c: number;
-
-        /**
-        * 
-        * Default: 1
-        */
         d: number;
-
-        /**
-        * 
-        * Default: 0
-        */
         tx: number;
-
-        /**
-        * 
-        * Default: 0
-        */
         ty: number;
 
-
-        /**
-        * Appends the given Matrix to this Matrix.
-        * 
-        * @param matrix -
-        * @return This matrix. Good for chaining method calls.
-        */
         append(matrix: Matrix): Matrix;
-
-        /**
-        * Get a new position with the current transformation applied.
-        * Can be used to go from a child's coordinate space to the world coordinate space. (e.g. rendering)
-        * 
-        * @param pos The origin
-        * @param newPos The point that the new position is assigned to (allowed to be same as input)
-        * @return The new point, transformed through this matrix
-        */
         apply(pos: Point, newPos: Point): Point;
-
-        /**
-        * Get a new position with the inverse of the current transformation applied.
-        * Can be used to go from the world coordinate space to a child's coordinate space. (e.g. input)
-        * 
-        * @param pos The origin
-        * @param newPos The point that the new position is assigned to (allowed to be same as input)
-        * @return The new point, inverse-transformed through this matrix
-        */
         applyInverse(pos: Point, newPos: Point): Point;
         determineMatrixArrayType(): number[];
-
-        /**
-        * Resets this Matix to an identity (default) matrix.
-        * @return This matrix. Good for chaining method calls.
-        */
         identity(): Matrix;
-
-        /**
-        * Applies a rotation transformation to the matrix.
-        * 
-        * @param angle The angle in radians.
-        * @return This matrix. Good for chaining method calls.
-        */
         rotate(angle: number): Matrix;
-
-        /**
-        * Creates a Matrix object based on the given array. The Element to Matrix mapping order is as follows:
-        * 
-        * a = array[0]
-        * b = array[1]
-        * c = array[3]
-        * d = array[4]
-        * tx = array[2]
-        * ty = array[5]
-        * 
-        * @param array The array that the matrix will be populated from.
-        */
         fromArray(array: number[]): void;
-
-        /**
-        * Translates the matrix on the x and y.
-        * 
-        * @param x -
-        * @param y -
-        * @return This matrix. Good for chaining method calls.
-        */
         translate(x: number, y: number): Matrix;
-
-        /**
-        * Creates an array from the current Matrix object.
-        * 
-        * @param transpose Whether we need to transpose the matrix or not
-        * @return the newly created array which contains the matrix
-        */
         toArray(transpose: boolean): number[];
-
-        /**
-        * Applies a scale transformation to the matrix.
-        * 
-        * @param x The amount to scale horizontally
-        * @param y The amount to scale vertically
-        * @return This matrix. Good for chaining method calls.
-        */
         scale(x: number, y: number): Matrix;
 
     }
@@ -2312,149 +1593,44 @@ declare module PIXI {
 
     }
 
-
-    /**
-    * A MovieClip is a simple way to display an animation depicted by a list of textures.
-    */
     export class MovieClip extends Sprite {
 
-
-        /**
-        * A short hand way of creating a movieclip from an array of frame ids
-        * 
-        * @param frames the array of frames ids the movieclip will use as its texture frames
-        */
         static fromFrames(frames: string[]): MovieClip;
-
-        /**
-        * A short hand way of creating a movieclip from an array of image ids
-        * 
-        * @param frames the array of image ids the movieclip will use as its texture frames
-        */
         static fromImages(images: HTMLImageElement[]): HTMLImageElement;
 
-
-        /**
-        * A MovieClip is a simple way to display an animation depicted by a list of textures.
-        * 
-        * @param textures an array of {Texture} objects that make up the animation
-        */
         constructor(textures: Texture[]);
 
-
-        /**
-        * The speed that the MovieClip will play at. Higher is faster, lower is slower
-        * Default: 1
-        */
         animationSpeed: number;
-
-        /**
-        * [read-only] The MovieClips current frame index (this may not have to be a whole number)
-        * Default: 0
-        */
         currentFrame: number;
-
-        /**
-        * Whether or not the movie clip repeats after playing.
-        * Default: true
-        */
         loop: boolean;
-
-        /**
-        * [read-only] Indicates if the MovieClip is currently playing
-        */
         playing: boolean;
-
-        /**
-        * The array of textures that make up the animation
-        */
         textures: Texture[];
-
-        /**
-        * [read-only] totalFrames is the total number of frames in the MovieClip. This is the same as number of textures
-        * assigned to the MovieClip.
-        * Default: 0
-        */
         totalFrames: number;
 
-
-        /**
-        * Goes to a specific frame and begins playing the MovieClip
-        * 
-        * @param frameNumber frame index to start at
-        */
         gotoAndPlay(frameNumber: number): void;
-
-        /**
-        * Stops the MovieClip and goes to a specific frame
-        * 
-        * @param frameNumber frame index to stop at
-        */
         gotoAndStop(frameNumber: number): void;
         onComplete(): void;
-
-        /**
-        * Plays the MovieClip
-        */
         play(): void;
-
-        /**
-        * Stops the MovieClip
-        */
         stop(): void;
 
     }
 
-
-    /**
-    * A Noise effect filter.
-    */
     export class NoiseFilter extends AbstractFilter {
 
-
-        /**
-        * The amount of noise to apply.
-        */
         noise: number;
 
     }
 
-
-    /**
-    * The NormalMapFilter class uses the pixel values from the specified texture (called the displacement map) to perform a displacement of an object.
-    * You can use this filter to apply all manor of crazy warping effects
-    * Currently the r property of the texture is used offset the x and the g property of the texture is used to offset the y.
-    */
     export class NormalMapFilter extends AbstractFilter {
 
-
-        /**
-        * The texture used for the displacement map. Must be power of 2 texture.
-        */
         map: Texture;
-
-        /**
-        * The offset used to move the displacement map.
-        */
         offset: Point;
-
-        /**
-        * The multiplier used to scale the displacement result from the map calculation.
-        */
         scale: Point;
 
     }
 
-
-    /**
-    * This filter applies a pixelate effect making display objects appear 'blocky'.
-    */
     export class PixelateFilter extends AbstractFilter {
 
-
-        /**
-        * This a point that describes the size of the blocks. x is the width of the block and y is the height.
-        */
         size: number;
 
     }
@@ -2713,203 +1889,50 @@ declare module PIXI {
 
     }
 
-
-    /**
-    * The Point object represents a location in a two-dimensional coordinate system, where x represents the horizontal axis and y represents the vertical axis.
-    */
     export class Point {
 
-
-        /**
-        * The Point object represents a location in a two-dimensional coordinate system, where x represents the horizontal axis and y represents the vertical axis.
-        * 
-        * @param x position of the point on the x axis
-        * @param y position of the point on the y axis
-        */
         constructor(x?: number, y?: number);
 
-
-        /**
-        * 
-        * Default: 0
-        */
         x: number;
-
-        /**
-        * 
-        * Default: 0
-        */
         y: number;
 
-
-        /**
-        * Creates a clone of this point
-        * @return a copy of the point
-        */
         clone(): Point;
-
-        /**
-        * Sets the point to a new x and y position.
-        * If y is omitted, both x and y will be set to x.
-        * 
-        * @param x position of the point on the x axis - Default: 0
-        * @param y position of the point on the y axis - Default: 0
-        */
         set(x: number, y: number): void;
 
     }
 
     export class Polygon implements HitArea {
 
-
-        /**
-        * 
-        * 
-        * @param points This can be an array of Points that form the polygon,
-        *               a flat array of numbers that will be interpreted as [x,y, x,y, ...], or the arguments passed can be
-        *               all the points of the polygon e.g. `new PIXI.Polygon(new PIXI.Point(), new PIXI.Point(), ...)`, or the
-        *               arguments passed can be flat x,y values e.g. `new PIXI.Polygon(x,y, x,y, x,y, ...)` where `x` and `y` are
-        *               Numbers.
-        */
         constructor(points: Point[]);
-
-        /**
-        * 
-        * 
-        * @param points This can be an array of Points that form the polygon,
-        *               a flat array of numbers that will be interpreted as [x,y, x,y, ...], or the arguments passed can be
-        *               all the points of the polygon e.g. `new PIXI.Polygon(new PIXI.Point(), new PIXI.Point(), ...)`, or the
-        *               arguments passed can be flat x,y values e.g. `new PIXI.Polygon(x,y, x,y, x,y, ...)` where `x` and `y` are
-        *               Numbers.
-        */
         constructor(points: number[]);
-
-        /**
-        * 
-        * 
-        * @param points This can be an array of Points that form the polygon,
-        *               a flat array of numbers that will be interpreted as [x,y, x,y, ...], or the arguments passed can be
-        *               all the points of the polygon e.g. `new PIXI.Polygon(new PIXI.Point(), new PIXI.Point(), ...)`, or the
-        *               arguments passed can be flat x,y values e.g. `new PIXI.Polygon(x,y, x,y, x,y, ...)` where `x` and `y` are
-        *               Numbers.
-        */
         constructor(...points: Point[]);
-
-        /**
-        * 
-        * 
-        * @param points This can be an array of Points that form the polygon,
-        *               a flat array of numbers that will be interpreted as [x,y, x,y, ...], or the arguments passed can be
-        *               all the points of the polygon e.g. `new PIXI.Polygon(new PIXI.Point(), new PIXI.Point(), ...)`, or the
-        *               arguments passed can be flat x,y values e.g. `new PIXI.Polygon(x,y, x,y, x,y, ...)` where `x` and `y` are
-        *               Numbers.
-        */
         constructor(...points: number[]);
 
-
-        /**
-        * An array of the points of this polygon
-        */
         points: any[]; //number[] Point[]
 
-
-        /**
-        * Creates a clone of this polygon
-        * @return a copy of the polygon
-        */
         clone(): Polygon;
-
-        /**
-        * Checks whether the x and y coordinates passed to this function are contained within this polygon
-        * 
-        * @param x The X coordinate of the point to test
-        * @param y The Y coordinate of the point to test
-        * @return Whether the x/y coordinates are within this polygon
-        */
         contains(x: number, y: number): boolean;
 
     }
 
-
-    /**
-    * the Rectangle object is an area defined by its position, as indicated by its top-left corner point (x, y) and by its width and its height.
-    */
     export class Rectangle implements HitArea {
 
-
-        /**
-        * the Rectangle object is an area defined by its position, as indicated by its top-left corner point (x, y) and by its width and its height.
-        * 
-        * @param x The X coordinate of the upper-left corner of the rectangle
-        * @param y The Y coordinate of the upper-left corner of the rectangle
-        * @param width The overall width of this rectangle
-        * @param height The overall height of this rectangle
-        */
         constructor(x?: number, y?: number, width?: number, height?: number);
 
-
-        /**
-        * 
-        * Default: 0
-        */
         x: number;
-
-        /**
-        * 
-        * Default: 0
-        */
         y: number;
-
-        /**
-        * 
-        * Default: 0
-        */
         width: number;
-
-        /**
-        * 
-        * Default: 0
-        */
         height: number;
 
-
-        /**
-        * Creates a clone of this Rectangle
-        * @return a copy of the rectangle
-        */
         clone(): Rectangle;
-
-        /**
-        * Checks whether the x and y coordinates given are contained within this Rectangle
-        * 
-        * @param x The X coordinate of the point to test
-        * @param y The Y coordinate of the point to test
-        * @return Whether the x/y coordinates are within this Rectangle
-        */
         contains(x: number, y: number): boolean;
 
     }
 
-
-    /**
-    * An RGB Split Filter.
-    */
     export class RGBSplitFilter extends AbstractFilter {
 
-
-        /**
-        * Red channel offset.
-        */
         red: Point;
-
-        /**
-        * Green channel offset.
-        */
         green: Point;
-
-        /**
-        * Blue offset.
-        */
         blue: Point;
 
     }
@@ -2933,141 +1956,39 @@ declare module PIXI {
 
     }
 
-
-    /**
-    * The Rounded Rectangle object is an area defined by its position and has nice rounded corners, as indicated by its top-left corner point (x, y) and by its width and its height.
-    */
     export class RoundedRectangle implements HitArea {
 
-
-        /**
-        * The Rounded Rectangle object is an area defined by its position and has nice rounded corners, as indicated by its top-left corner point (x, y) and by its width and its height.
-        * 
-        * @param x The X coordinate of the upper-left corner of the rounded rectangle
-        * @param y The Y coordinate of the upper-left corner of the rounded rectangle
-        * @param width The overall width of this rounded rectangle
-        * @param height The overall height of this rounded rectangle
-        * @param radius Controls the radius of the rounded corners
-        */
         constructor(x?: number, y?: number, width?: number, height?: number, radius?: number);
 
-
-        /**
-        * 
-        * Default: 0
-        */
         x: number;
-
-        /**
-        * 
-        * Default: 0
-        */
         y: number;
-
-        /**
-        * 
-        * Default: 0
-        */
         width: number;
-
-        /**
-        * 
-        * Default: 0
-        */
         height: number;
-
-        /**
-        * 
-        * Default: 20
-        */
         radius: number;
 
-
-        /**
-        * Creates a clone of this Rounded Rectangle
-        * @return a copy of the rounded rectangle
-        */
         clone(): RoundedRectangle;
-
-        /**
-        * Checks whether the x and y coordinates given are contained within this Rounded Rectangle
-        * 
-        * @param x The X coordinate of the point to test
-        * @param y The Y coordinate of the point to test
-        * @return Whether the x/y coordinates are within this Rounded Rectangle
-        */
         contains(x: number, y: number): boolean;
 
     }
 
-
-    /**
-    * This applies a sepia effect to your Display Objects.
-    */
     export class SepiaFilter extends AbstractFilter {
 
-
-        /**
-        * The strength of the sepia. 1 will apply the full sepia effect, 0 will make the object its normal color.
-        */
         sepia: number;
 
     }
 
-
-    /**
-    * A Smart Blur Filter.
-    */
     export class SmartBlurFilter extends AbstractFilter {
 
-
-        /**
-        * The strength of the blur.
-        * Default: 2
-        */
         blur: number;
 
     }
 
-
-    /**
-    * The Spine loader is used to load in JSON spine data
-    * To generate the data you need to use http://esotericsoftware.com/ and export in the "JSON" format
-    * Due to a clash of names  You will need to change the extension of the spine file from *.json to *.anim for it to load
-    * See example 12 (http://www.goodboydigital.com/pixijs/examples/12/) to see a working example and check out the source
-    * You will need to generate a sprite sheet to accompany the spine data
-    * When loaded this class will dispatch a "loaded" event
-    */
     export class SpineLoader implements Mixin {
 
-
-        /**
-        * The url of the bitmap font data
-        */
         url: string;
-
-        /**
-        * Whether the requests should be treated as cross origin
-        */
         crossorigin: boolean;
-
-        /**
-        * [read-only] Whether the data has loaded yet
-        */
         loaded: boolean;
 
-
-        /**
-        * The Spine loader is used to load in JSON spine data
-        * To generate the data you need to use http://esotericsoftware.com/ and export in the "JSON" format
-        * Due to a clash of names  You will need to change the extension of the spine file from *.json to *.anim for it to load
-        * See example 12 (http://www.goodboydigital.com/pixijs/examples/12/) to see a working example and check out the source
-        * You will need to generate a sprite sheet to accompany the spine data
-        * When loaded this class will dispatch a "loaded" event
-        * 
-        * @param url The url of the JSON file
-        * @param crossorigin Whether requests should be treated as crossorigin
-        */
         constructor(url: string, crossOrigin: boolean);
 
         listeners(eventName: string): Function[];
@@ -3079,43 +2000,15 @@ declare module PIXI {
         off(eventName: string, fn: Function): Function;
         removeAllEventListeners(eventName: string): void;
 
-
-        /**
-        * Loads the JSON data
-        */
         load(): void;
 
     }
 
-
-    /**
-    * Supporting class to load images from spine atlases as per spine spec.
-    */
     export class SpineTextureLoader {
 
-
-        /**
-        * Supporting class to load images from spine atlases as per spine spec.
-        * 
-        * @param basePath Tha base path where to look for the images to be loaded
-        * @param crossorigin Whether requests should be treated as crossorigin
-        */
         constructor(basePath: string, crossorigin: boolean);
 
-
-        /**
-        * Starts loading a base texture as per spine specification
-        * 
-        * @param page Atlas page to which texture belongs
-        * @param file The file to load, this is just the file path relative to the base path configured in the constructor
-        */
         load(page: AtlasPage, file: string): void;
-
-        /**
-        * Unloads a previously loaded texture as per spine specification
-        * 
-        * @param texture Texture object to destroy
-        */
         unload(texture: BaseTexture): void;
 
     }
@@ -3247,57 +2140,14 @@ declare module PIXI {
 
     }
 
-
-    /**
-    * The sprite sheet loader is used to load in JSON sprite sheet data
-    * To generate the data you can use http://www.codeandweb.com/texturepacker and publish in the 'JSON' format
-    * There is a free version so thats nice, although the paid version is great value for money.
-    * It is highly recommended to use Sprite sheets (also know as a 'texture atlas') as it means sprites can be batched and drawn together for highly increased rendering speed.
-    * Once the data has been loaded the frames are stored in the PIXI texture cache and can be accessed though PIXI.Texture.fromFrameId() and PIXI.Sprite.fromFrameId()
-    * This loader will load the image file that the Spritesheet points to as well as the data.
-    * When loaded this class will dispatch a 'loaded' event
-    */
     export class SpriteSheetLoader implements Mixin {
 
-
-        /**
-        * The sprite sheet loader is used to load in JSON sprite sheet data
-        * To generate the data you can use http://www.codeandweb.com/texturepacker and publish in the 'JSON' format
-        * There is a free version so thats nice, although the paid version is great value for money.
-        * It is highly recommended to use Sprite sheets (also know as a 'texture atlas') as it means sprites can be batched and drawn together for highly increased rendering speed.
-        * Once the data has been loaded the frames are stored in the PIXI texture cache and can be accessed though PIXI.Texture.fromFrameId() and PIXI.Sprite.fromFrameId()
-        * This loader will load the image file that the Spritesheet points to as well as the data.
-        * When loaded this class will dispatch a 'loaded' event
-        * 
-        * @param url The url of the sprite sheet JSON file
-        * @param crossorigin Whether requests should be treated as crossorigin
-        */
         constructor(url: string, crossorigin?: boolean);
 
-
-        /**
-        * [read-only] The base url of the bitmap font data
-        */
         baseUrl: string;
-
-        /**
-        * Whether the requests should be treated as cross origin
-        */
         crossorigin: boolean;
-
-        /**
-        * The frames of the sprite sheet
-        */
         frames: any;
-
-        /**
-        * The texture being loaded
-        */
         texture: Texture;
-
-        /**
-        * The url of the atlas data
-        */
         url: string;
 
         listeners(eventName: string): Function[];
@@ -3309,10 +2159,6 @@ declare module PIXI {
         off(eventName: string, fn: Function): Function;
         removeAllEventListeners(eventName: string): void;
 
-
-        /**
-        * This will begin loading the JSON file
-        */
         load(): void;
 
     }
@@ -3339,17 +2185,8 @@ declare module PIXI {
         */
         constructor(backgroundColor: number);
 
-
-        /**
-        * The interaction manage for this stage, manages all interactive activity on the stage
-        */
         interactionManager: InteractionManager;
 
-
-        /**
-        * This will return the point containing global coordinates of the mouse.
-        * @return A point containing the coordinates of the global InteractionData position.
-        */
         getMousePosition(): Point;
 
         /**
@@ -3359,13 +2196,6 @@ declare module PIXI {
         *                        like: 0xFFFFFF for white
         */
         setBackgroundColor(backgroundColor: number): void;
-
-        /**
-        * Sets another DOM element which can receive mouse/touch interactions instead of the default Canvas element.
-        * This is useful for when you have other DOM elements on top of the Canvas element.
-        * 
-        * @param domElement This new domElement which will receive mouse/touch events
-        */
         setInteractionDelegate(domElement: HTMLElement): void;
 
     }
@@ -3685,11 +2515,17 @@ declare module PIXI {
 
 
         /**
+        * Destroy this DisplayObject.
+        * Removes all references to transformCallbacks, its parent, the stage, filters, bounds, mask and cached Sprites.
+        */
+        destroy(): void;
+
+        /**
         * 
         * 
         * @param forcePowerOfTwo Whether we want to force the texture to be a power of two
         */
-        generateTilingTexture(forcePowerOfTwo: boolean): void;
+        generateTilingTexture(forcePowerOfTwo?: boolean): void;
 
         /**
         * Sets the texture of the sprite
@@ -3700,125 +2536,41 @@ declare module PIXI {
 
     }
 
-
-    /**
-    * A TiltShift Filter. Manages the pass of both a TiltShiftXFilter and TiltShiftYFilter.
-    */
     export class TiltShiftFilter extends AbstractFilter {
 
-
-        /**
-        * The strength of the blur.
-        */
         blur: number;
-
-        /**
-        * The strength of the gradient blur.
-        */
         gradientBlur: number;
-
-        /**
-        * The Y value to start the effect at.
-        */
         start: number;
-
-        /**
-        * The Y value to end the effect at.
-        */
         end: number;
 
     }
 
-
-    /**
-    * A TiltShiftXFilter.
-    */
     export class TiltShiftXFilter extends AbstractFilter {
 
-
-        /**
-        * The strength of the blur.
-        */
         blur: number;
-
-        /**
-        * The strength of the gradient blur.
-        */
         gradientBlur: number;
-
-        /**
-        * The X value to start the effect at.
-        */
         start: number;
-
-        /**
-        * The X value to end the effect at.
-        */
         end: number;
 
-
-        /**
-        * Updates the filter delta values.
-        */
         updateDelta(): void;
 
     }
 
-
-    /**
-    * A TiltShiftYFilter.
-    */
     export class TiltShiftYFilter extends AbstractFilter {
 
-
-        /**
-        * The strength of the blur.
-        */
         blur: number;
-
-        /**
-        * The strength of the gradient blur.
-        */
         gradientBlur: number;
-
-        /**
-        * The Y value to start the effect at.
-        */
         start: number;
-
-        /**
-        * The Y value to end the effect at.
-        */
         end: number;
 
-
-        /**
-        * Updates the filter delta values.
-        */
         updateDelta(): void;
 
     }
 
-
-    /**
-    * This filter applies a twist effect making display objects appear twisted in the given direction.
-    */
     export class TwistFilter extends AbstractFilter {
 
-
-        /**
-        * This angle of the twist.
-        */
         angle: number;
-
-        /**
-        * This point describes the the offset of the twist.
-        */
         offset: Point;
-
-        /**
-        * This radius of the twist.
-        */
         radius: number;
 
     }
@@ -5039,33 +3791,10 @@ declare module PIXI {
 
     }
 
-
-    /**
-    * A class that enables the you to import and run your spine animations in pixi.
-    * Spine animation data needs to be loaded using the PIXI.AssetLoader or PIXI.SpineLoader before it can be used by this class
-    * See example 12 (http://www.goodboydigital.com/pixijs/examples/12/) to see a working example and check out the source
-    */
     export class Spine extends DisplayObjectContainer {
 
-
-        /**
-        * A class that enables the you to import and run your spine animations in pixi.
-        * Spine animation data needs to be loaded using the PIXI.AssetLoader or PIXI.SpineLoader before it can be used by this class
-        * See example 12 (http://www.goodboydigital.com/pixijs/examples/12/) to see a working example and check out the source
-        * 
-        * @param url The url of the spine anim file to be used
-        */
         constructor(url: string);
 
-
-        /**
-        * If this flag is set to true, the spine animation will be autoupdated every time
-        * the object id drawn. The down side of this approach is that the delta time is
-        * automatically calculated and you could miss out on cool effects like slow motion,
-        * pause, skip ahead and the sorts. Most of these effects can be achieved even with
-        * autoupdate enabled but are harder to achieve.
-        * Default: true
-        */
         autoUpdate: boolean;
         spineData: any;
         skeleton: Skeleton;
@@ -5073,20 +3802,7 @@ declare module PIXI {
         state: AnimationState;
         slotContainers: DisplayObjectContainer[];
 
-
-        /**
-        * Create a new sprite to be used with spine.RegionAttachment
-        * 
-        * @param slot The slot to which the attachment is parented
-        * @param attachment The attachment that the sprite will represent
-        */
         createSprite(slot: Slot, descriptor: { name: string }): Sprite[];
-
-        /**
-        * Update the spine skeleton and its animations by delta time (dt)
-        * 
-        * @param dt Delta time. Time by which the animation should be updated
-        */
         update(dt: number): void;
 
     }
