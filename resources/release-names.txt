@@ -25,7 +25,7 @@ POI: Mountains of Mist, Tower of Ghenjei, Two Rivers, Whitebridge *
 Arad Doman
 
 Capital: Bandar Eban
-Cities: Coron Ford, Kandelmar, Katar, Maseen, Solanje
+Cities: Coron Ford, Kandelmar, Katar *, Maseen, Solanje
 POI: Aryth Ocean, Lake Somal, Natrin's Barrow, River Dhagon
 
 Arafel *

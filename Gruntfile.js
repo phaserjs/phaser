@@ -30,8 +30,8 @@ module.exports = function (grunt) {
 
         var modules = {
 
-            'pixi':             { 'description': 'Pixi.js',                                     'optional': true, 'stub': false },
-            'intro':            { 'description': 'Phaser UMD wrapper',                          'optional': false, 'stub': false },
+            'pixi':             { 'description': 'Pixi.js (custom Phaser build)',               'optional': true, 'stub': false },
+            'intro':            { 'description': 'Phaser UMD wrapper',                          'optional': true, 'stub': false },
             'phaser':           { 'description': 'Phaser Globals',                              'optional': false, 'stub': false },
             'geom':             { 'description': 'Geometry Classes',                            'optional': false, 'stub': false },
             'core':             { 'description': 'Phaser Core',                                 'optional': false, 'stub': false },
@@ -44,8 +44,8 @@ module.exports = function (grunt) {
             'graphics':         { 'description': 'Graphics Game Object',                        'optional': true, 'stub': false },
             'rendertexture':    { 'description': 'RenderTexture Game Object',                   'optional': true, 'stub': false },
             'text':             { 'description': 'Text Game Object (inc. Web Font Support)',    'optional': true, 'stub': false },
-            'bitmaptext':       { 'description': 'BitmapText Support',                          'optional': true, 'stub': false },
-            'retrofont':        { 'description': 'Retro Fonts Support',                         'optional': true, 'stub': false },
+            'bitmaptext':       { 'description': 'BitmapText Game Object',                      'optional': true, 'stub': false },
+            'retrofont':        { 'description': 'Retro Fonts Game Object',                     'optional': true, 'stub': false },
             'system':           { 'description': 'System Classes',                              'optional': false, 'stub': false },
             'math':             { 'description': 'Math, QuadTree and RND',                      'optional': false, 'stub': false },
             'net':              { 'description': 'Network Class',                               'optional': true, 'stub': false },
@@ -62,7 +62,7 @@ module.exports = function (grunt) {
             'p2':               { 'description': 'P2 Physics',                                  'optional': true, 'stub': false },
             'tilemaps':         { 'description': 'Tilemap Support',                             'optional': true, 'stub': false },
             'particles':        { 'description': 'Arcade Physics Particle System',              'optional': true, 'stub': true },
-            'outro':            { 'description': 'Phaser UMD closure',                          'optional': false, 'stub': false }
+            'outro':            { 'description': 'Phaser UMD closure',                          'optional': true, 'stub': false }
 
         };
 
