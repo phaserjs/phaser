@@ -24,6 +24,9 @@
 			"./src/utils/",
 			"./out/plugins/"
         ],
+        "exclude": [
+            "./src/physics/p2/p2.js"
+        ],
         "includePattern": ".+\\.js(doc)?$",
         "excludePattern": "(^|\\/|\\\\)_"
     },
