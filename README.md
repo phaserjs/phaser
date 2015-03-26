@@ -43,13 +43,13 @@ Thousands of developers worldwide use it. From indies and multi-national digital
 
 Phaser 2.3.0 marks the second release in 2015 and easily one of our most significant for a while. In terms of API changes they're actually quite minimal, but under the hood we've taken Phaser for a serious workout.
 
-We've traditionally had something of a 'kitchen sink' issue with Phaser. As we thought of great new features to give you we just added them in. And like too much of a good thing they all added to the overall size. And Phaser just kept on growing.
+We've traditionally had something of a 'kitchen sink' issue with Phaser. As we thought of great new features to give you we just added them in. And like too much of a good thing they contributed to an ever growing file size.
 
-So two of the biggest changes 2.3.0 has is an internal shift to using Game Object components, and allowing you to exclude features in your own custom builds. The new build system allows you to selective exclude features from being bundled in: for example if your game doesn't need Gamepad or Keyboard support you can now tell Phaser to skip those parts entirely.
+So two of the biggest changes 2.3.0 has is an internal shift to using Game Object components, and allowing you to exclude features in your own custom builds. The new build system lets you selectively exclude features from being bundled in: for example if your game doesn't need Gamepad or Keyboard support you can now tell Phaser to skip those parts entirely.
 
 [This tutorial](http://phaser.io/tutorials/creating-custom-phaser-builds) explains the process in detail. But the end result is that thanks to these changes we've both managed to remove thousands of lines of code and let you decide what Phaser contains. The minimum build size is now just 83KB minified and gzipped and that's still including both the WebGL and Canvas renderers.
 
-Even though we've been cutting down on size we still managed to pack a whole load of great new features in. For example the new spacial sorting added to Arcade Physics allows for incredible speed increases when dealing with densely populated game worlds. The Loader has received a complete overhaul - now offering full parallel asset loading, sync points and more! The Tilemap system was upgraded to support new Tiled 0.11 editor features. Audio has been also been enhanced, with better marker and loop handling. See the full change log for yourself. Literally hundreds of improvements across the whole codebase.
+Even though we've been cutting down on size we still managed to pack a whole load of great new features in. For example the new spacial sorting added to Arcade Physics allows for incredible speed increases when dealing with densely populated game worlds. The Loader has received a complete overhaul - now offering full parallel asset loading, sync points and more! The Tilemap system was upgraded to support new Tiled 0.11 editor features. Audio has been also been enhanced, with better marker and loop handling. See the Change Log for all the details.
 
 Your games will run faster, have a smaller footprint and load faster than ever.
 
@@ -61,7 +61,7 @@ That's all for now. I hope you enjoy Phaser 2.3.0, the new site, the new feature
 
 Cheers,
 
-[Rich](https://twitter.com/photonstorm)
+Rich - [@photonstorm](https://twitter.com/photonstorm)
 
 ![boogie](http://www.phaser.io/images/spacedancer.gif)
 
@@ -120,13 +120,13 @@ We have a [Getting Started Guide](http://phaser.io/tutorials/getting-started) wh
 
 Prefer **videos** to reading? Lynda.com have published a free course: [HTML5 Game Development with Phaser](http://www.lynda.com/Phaser-tutorials/HTML5-Game-Development-Phaser/163641-2.html)
 
-The single biggest Phaser tutorial resource is the new [Phaser web site](http://phaser.io/news). It has hundreds of tutorials listed and fresh ones are added every week, so keep coming back to see what's new!
+The single biggest Phaser resource is the new [Phaser web site](http://phaser.io/news). It has hundreds of tutorials listed and fresh ones are added every week, so keep coming back to see what's new!
 
 Using Phaser with **TypeScript**? Check out this great series of [Game From Scratch](http://www.gamefromscratch.com/page/Adventures-in-Phaser-with-TypeScript-tutorial-series.aspx) tutorials.
 
 ### Source Code Examples
 
-Ever since we started Phaser we've been growing and expanding our extensive set of source code examples. Currently there are over 400 of them!
+Ever since we started Phaser we've been growing and expanding our extensive set of source code examples. Currently there are over 500 of them!
 
 Browse the [Phaser Examples](http://phaser.io/examples) or clone the [examples repo][examples] and eat your heart out!
 
@@ -155,8 +155,6 @@ The [Game Mechanic Explorer](http://gamemechanicexplorer.com) is a great interac
 ## Using Phaser
 
 Phaser is provided ready compiled in the `build` folder of the repository. There are both plain and minified versions. The plain version is for use during development and the minified version for production.
-
-This current release of Phaser is 153 KB *gzipped and minified* with both **Arcade Physics** and **P2 Physics** included.
 
 ### Custom Builds
 
@@ -229,7 +227,7 @@ All Phaser development is now taking place on the Phaser 3 project. The Phaser 2
 <a name="phaser3"></a>
 ## Phaser 3
 
-We're now several months in to development of Phaser 3. We've been working hard on creating a brand new and extremely powerful renderer. Progress reports are posted to the Phaser web site and you the [Phaser 3 repo](https://github.com/photonstorm/phaser3).
+We're now several months in to development of Phaser 3. We've been working hard on creating a brand new and extremely powerful renderer. Progress reports are posted to the web site and [Phaser 3 repo](https://github.com/photonstorm/phaser3).
 
 There is still plenty of time to add your suggestions and feedback in [this forum thread](http://www.html5gamedevs.com/topic/7949-the-phaser-3-wishlist-thread/).
 

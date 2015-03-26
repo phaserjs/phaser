@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.3.0 "Tarabon" - Built: Wed Mar 25 2015 16:17:23
+* v2.3.0 "Tarabon" - Built: Thu Mar 26 2015 02:36:37
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -12457,7 +12457,7 @@ PIXI.AbstractFilter.prototype.apply = function(frameBuffer)
 */
 var Phaser = Phaser || {
 
-	VERSION: '2.3.0-RC3',
+	VERSION: '2.3.0',
 	GAMES: [],
 
     AUTO: 0,
@@ -26143,11 +26143,11 @@ Phaser.Game.prototype = {
         {
             var args = [
                 '%c %c %c Phaser v' + v + ' | Pixi.js ' + PIXI.VERSION + ' | ' + r + ' | ' + a + '  %c %c ' + '%c http://phaser.io %c\u2665%c\u2665%c\u2665',
-                'background: #3db79f',
-                'background: #329582',
-                'color: #ffffff; background: #226558;',
-                'background: #329582',
-                'background: #3db79f',
+                'background: #9854d8',
+                'background: #6c2ca7',
+                'color: #ffffff; background: #450f78;',
+                'background: #6c2ca7',
+                'background: #9854d8',
                 'background: #ffffff'
             ];
 

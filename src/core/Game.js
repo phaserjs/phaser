@@ -628,11 +628,11 @@ Phaser.Game.prototype = {
         {
             var args = [
                 '%c %c %c Phaser v' + v + ' | Pixi.js ' + PIXI.VERSION + ' | ' + r + ' | ' + a + '  %c %c ' + '%c http://phaser.io %c\u2665%c\u2665%c\u2665',
-                'background: #3db79f',
-                'background: #329582',
-                'color: #ffffff; background: #226558;',
-                'background: #329582',
-                'background: #3db79f',
+                'background: #9854d8',
+                'background: #6c2ca7',
+                'color: #ffffff; background: #450f78;',
+                'background: #6c2ca7',
+                'background: #9854d8',
                 'background: #ffffff'
             ];
 
